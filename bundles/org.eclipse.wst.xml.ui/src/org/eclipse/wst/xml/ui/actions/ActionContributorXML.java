@@ -174,6 +174,9 @@ public class ActionContributorXML extends ActionContributor {
 		fCleanupDocument.setAction(getAction(textEditor, StructuredTextEditorActionConstants.ACTION_NAME_CLEANUP_DOCUMENT));
 		fFormatDocument.setAction(getAction(textEditor, StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_DOCUMENT));
 		fFormatActiveElements.setAction(getAction(textEditor, StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_ACTIVE_ELEMENTS));
+		fCleanupDocument.setEnabled(textEditor != null && textEditor.isEditable());
+		fFormatDocument.setEnabled(textEditor != null && textEditor.isEditable());
+		fFormatActiveElements.setEnabled(textEditor != null && textEditor.isEditable());
 
 		fOpenFileAction.setAction(getAction(textEditor, StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE));
 
