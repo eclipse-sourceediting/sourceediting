@@ -230,6 +230,8 @@ public class DTDContentOutlineConfiguration extends StructuredContentOutlineConf
 	public void unconfigure(TreeViewer viewer) {
 		super.unconfigure(viewer);
 		fViewerContributions.remove(viewer);
-		fMenuHelper.removeMenuListenersFor(viewer);
+		if (fMenuHelper != null) {
+			fMenuHelper.removeMenuListenersFor(viewer);
+		}
 	}
 }
