@@ -16,7 +16,6 @@ package org.eclipse.wst.xml.core.internal.parser;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
-import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.text.TextRegionListImpl;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -24,6 +23,7 @@ import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
+import org.eclipse.wst.xml.core.Logger;
 
 
 public class ContextRegionContainer implements ITextRegionContainer {
