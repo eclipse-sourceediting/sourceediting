@@ -41,15 +41,20 @@ public class LineStyleProviderForDTDSubSet extends AbstractLineStyleProvider imp
 	private StyleRange[] fInternalRanges;
 	private String fPartitioning = null;
 
-	public LineStyleProviderForDTDSubSet(String partitioning) {
+	public LineStyleProviderForDTDSubSet() {
 		super();
-		if (partitioning == null) {
-			throw new IllegalArgumentException("a null partitioning can not be passed to LineStyleProviderForDTDSubSet");
-		}
 		fInternalProvider = new LineStyleProviderForDTD();
 		fInternalRanges = new StyleRange[0];
-		fPartitioning = partitioning;
+		fPartitioning = IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING;
+	}
 
+	/**
+	 * @deprecated - will be removed in M5
+	 * @param partitioning
+	 */
+	public LineStyleProviderForDTDSubSet(String partitioning) {
+		this();
+		fPartitioning = partitioning;
 	}
 
 	/**
@@ -147,7 +152,8 @@ public class LineStyleProviderForDTDSubSet extends AbstractLineStyleProvider imp
 					fInternalProvider.prepareRegions(regions[i], regions[i].getOffset(), regions[i].getLength(), ranges);
 				}
 				fInternalRanges = (StyleRange[]) ranges.toArray(new StyleRange[0]);
-			} catch (BadLocationException e) {
+			}
+			catch (BadLocationException e) {
 				fInternalRanges = new StyleRange[0];
 			}
 		}

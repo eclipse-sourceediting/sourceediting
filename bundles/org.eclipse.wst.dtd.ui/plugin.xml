@@ -65,6 +65,11 @@
       		type="preferencepages"
             value="org.eclipse.wst.sse.ui.preferences.dtd.styles"
             target="org.eclipse.wst.dtd.core.dtdsource"/>
+      <!-- provides syntax highlighting for DTD subset within XML -->
+      <configuration
+      		type="linestyleprovider"
+      		class="org.eclipse.wst.dtd.ui.style.LineStyleProviderForDTDSubSet"
+      		target="org.eclipse.wst.xml.dtd.internal_subset"/>
    </extension>
    <extension
       point="org.eclipse.core.filebuffers.annotationModelCreation">

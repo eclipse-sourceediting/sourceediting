@@ -33,7 +33,6 @@ import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.dtd.ui.style.LineStyleProviderForDTDSubSet;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
@@ -161,7 +160,6 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 			highlighter.addProvider(StructuredTextPartitionerForXML.ST_XML_COMMENT, xmlProvider);
 			highlighter.addProvider(StructuredTextPartitionerForXML.ST_XML_DECLARATION, xmlProvider);
 			highlighter.addProvider(StructuredTextPartitionerForXML.ST_XML_PI, xmlProvider);
-			highlighter.addProvider(StructuredTextPartitionerForXML.ST_DTD_SUBSET, new LineStyleProviderForDTDSubSet(getConfiguredDocumentPartitioning(sourceViewer)));
 		}
 		return highlighter;
 	}
