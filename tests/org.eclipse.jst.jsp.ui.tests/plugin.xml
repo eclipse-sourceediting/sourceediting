@@ -51,10 +51,6 @@
    -->
    <extension
          point="org.eclipse.ui.views">
-      <category
-            name="Experimental"
-            id="org.eclipse.wst.sse.tests">
-      </category>
       <view
             name="Embedded JSP Structured Text Viewer"
             icon="icons/sourceEditor.gif"
