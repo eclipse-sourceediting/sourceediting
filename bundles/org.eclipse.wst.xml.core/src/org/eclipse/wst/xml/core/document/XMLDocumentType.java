@@ -24,11 +24,18 @@ import org.w3c.dom.DocumentType;
  */
 public interface XMLDocumentType extends XMLNode, DocumentType {
 
+
 	/**
+	 * Sets document type's public id, as source.
+	 * 
+	 * @param publicId
 	 */
 	void setPublicId(String publicId);
 
 	/**
+	 * Sets docment type's system id, as source.
+	 * 
+	 * @param systemId
 	 */
 	void setSystemId(String systemId);
 }

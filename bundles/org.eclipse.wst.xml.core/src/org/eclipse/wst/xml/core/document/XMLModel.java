@@ -30,10 +30,9 @@ public interface XMLModel extends IStructuredModel {
 	XMLDocument getDocument();
 
 	/**
-	 * Returns an XMLGenerator. Clients should not use.
+	 * Returns an source generator appropriate for this model.
 	 * 
-	 * ISSUE: should be "internalized".
-	 * 
+	 * @return the source generator
 	 */
 	XMLGenerator getGenerator();
 
