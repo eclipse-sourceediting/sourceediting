@@ -12,7 +12,7 @@ package org.eclipse.jst.jsp.core.internal.java;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -211,14 +211,22 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 		IJavaProject javaProject = null;
 		try {
 			String baseLocation = getXMLModel().getBaseLocation();
-			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(baseLocation));
+			// 20041129 (pa) the base location changed for xml model 
+			// because of FileBuffers, so this code had to be updated
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=79686
+			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 			IProject project = null;
-			for (int i = 0; project == null && i < files.length; i++) {
-				if (files[i].getType() != IResource.PROJECT) {
-					project = files[i].getProject();
-					break;
-				}
+			IFile file = root.getFile(new Path(baseLocation));
+			if(file != null) {
+			    project = file.getProject(); 
 			}
+//			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(baseLocation));
+//			for (int i = 0; project == null && i < files.length; i++) {
+//				if (files[i].getType() != IResource.PROJECT) {
+//					project = files[i].getProject();
+//					break;
+//				}
+//			}
 			if(project != null) {
 				javaProject = JavaCore.create(project);
 			}
