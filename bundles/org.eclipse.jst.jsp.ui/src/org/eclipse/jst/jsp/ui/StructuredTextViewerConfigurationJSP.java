@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jdt.ui.PreferenceConstants;
+import org.eclipse.jdt.ui.text.IJavaPartitions;
 import org.eclipse.jdt.ui.text.JavaSourceViewerConfiguration;
 import org.eclipse.jdt.ui.text.JavaTextTools;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -108,9 +109,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
             result.put(StructuredTextPartitionerForHTML.ST_HTML_DECLARATION, new ArrayList(1));
 
         List strategies = (List) result.get(StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA);
-        // IJavaPartitions.JAVA_PARTITIONING = "___java_partitioning", but is
-        // internal
-        strategies.add(getJavaSourceViewerConfiguration().getAutoEditStrategies(sourceViewer, "___java_partitioning")[0]);
+        strategies.add(getJavaSourceViewerConfiguration().getAutoEditStrategies(sourceViewer, IJavaPartitions.JAVA_PARTITIONING)[0]);
 
         IAutoEditStrategy autoEditStrategy = new StructuredAutoEditStrategyJSP();
         strategies = (List) result.get(StructuredTextPartitionerForHTML.ST_DEFAULT_HTML);
