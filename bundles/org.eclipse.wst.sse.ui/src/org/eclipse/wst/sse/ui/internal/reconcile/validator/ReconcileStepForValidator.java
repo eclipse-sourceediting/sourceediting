@@ -34,12 +34,12 @@ import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
-import org.eclipse.wst.validation.core.FileDelta;
 import org.eclipse.wst.validation.core.IFileDelta;
 import org.eclipse.wst.validation.core.IHelper;
 import org.eclipse.wst.validation.core.IMessage;
 import org.eclipse.wst.validation.core.IValidator;
 import org.eclipse.wst.validation.core.SeverityEnum;
+import org.eclispe.wst.validation.internal.core.FileDelta;
 
 
 /**
