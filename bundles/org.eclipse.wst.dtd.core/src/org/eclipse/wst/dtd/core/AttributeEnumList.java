@@ -42,7 +42,7 @@ public class AttributeEnumList extends DTDNode {
 		while (iter.hasNext()) {
 			ITextRegion name = getNextRegion(iter, DTDRegionTypes.NAME);
 			if (name != null) {
-				list.add(getStructuredDocumentRegion().getText(name));
+				list.add(getStructuredDTDDocumentRegion().getText(name));
 			}
 		}
 		return list;

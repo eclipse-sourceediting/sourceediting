@@ -100,7 +100,7 @@ public class CMGroupNode extends CMRepeatableNode {
 			// note that this stream includes the last region of the first
 			// sibling and the first region of the next sibling.
 			// both these should be ignored
-			RegionIterator iter = new RegionIterator(getStructuredDocumentRegion(), childA.getEndOffset(), childB.getStartOffset());
+			RegionIterator iter = new RegionIterator(getStructuredDTDDocumentRegion(), childA.getEndOffset(), childB.getStartOffset());
 			//      stream.setFirstRegion(childA.getLastRegion());
 			//      stream.setLastRegion(childB.getFirstRegion());
 			//      Iterator iter = stream.iterator();
@@ -111,7 +111,7 @@ public class CMGroupNode extends CMRepeatableNode {
 			while (iter.hasNext() && currentRegion != childB.getStartRegion()) {
 				currentRegion = iter.next();
 				if (currentRegion.getType() == DTDRegionTypes.CONNECTOR) {
-					connector = getStructuredDocumentRegion().getText(currentRegion).charAt(0);
+					connector = getStructuredDTDDocumentRegion().getText(currentRegion).charAt(0);
 					return connector;
 				}
 			}
@@ -260,7 +260,7 @@ public class CMGroupNode extends CMRepeatableNode {
 			if (nesting == 0) {
 				if (currentRegion.getType().equals(DTDRegionTypes.CONTENT_PCDATA)) {
 					currentGroupNode = currentReferenceNode = null;
-					DTDNode pcData = new CMBasicNode(getDTDFile(), getStructuredDocumentRegion());
+					DTDNode pcData = new CMBasicNode(getDTDFile(), getStructuredDTDDocumentRegion());
 					pcData.addRegion(currentRegion);
 					appendChild(pcData);
 					//          children.add(pcData);
@@ -268,7 +268,7 @@ public class CMGroupNode extends CMRepeatableNode {
 					// we have hit a new reference node. Make sure we reset
 					// the groupnode var so it doesn't collect more regions
 					currentGroupNode = null;
-					currentReferenceNode = new CMBasicNode(getDTDFile(), getStructuredDocumentRegion());
+					currentReferenceNode = new CMBasicNode(getDTDFile(), getStructuredDTDDocumentRegion());
 					currentReferenceNode.addRegion(currentRegion);
 					appendChild(currentReferenceNode);
 					//          children.add(currentReferenceNode);
@@ -292,7 +292,7 @@ public class CMGroupNode extends CMRepeatableNode {
 						// referencenode var so it doesn't collect any more
 						// regions
 						currentReferenceNode = null;
-						currentGroupNode = new CMGroupNode(getDTDFile(), getStructuredDocumentRegion());
+						currentGroupNode = new CMGroupNode(getDTDFile(), getStructuredDTDDocumentRegion());
 						appendChild(currentGroupNode);
 						//            children.add(currentGroupNode);
 					}
@@ -383,7 +383,7 @@ public class CMGroupNode extends CMRepeatableNode {
 				// note that this stream includes the last region of the first
 				// sibling and the first region of the next sibling.
 				// both these should be ignored
-				RegionIterator iter = new RegionIterator(getStructuredDocumentRegion(), childA.getEndOffset(), childB.getStartOffset());
+				RegionIterator iter = new RegionIterator(getStructuredDTDDocumentRegion(), childA.getEndOffset(), childB.getStartOffset());
 				// skip the first region which is the last region of childA
 
 				// do we still need this
@@ -397,7 +397,7 @@ public class CMGroupNode extends CMRepeatableNode {
 						//            Region oldRegion = currentRegion.createCopy();
 						// found a connector! on to the next sibling pair
 						//            currentRegion.updateText(String.valueOf(v));
-						replaceText(this, getStructuredDocumentRegion().getStartOffset(currentRegion), 1, String.valueOf(connector));
+						replaceText(this, getStructuredDTDDocumentRegion().getStartOffset(currentRegion), 1, String.valueOf(connector));
 						//changeStructuredDocument(oldRegion, currentRegion);
 						break;
 					}

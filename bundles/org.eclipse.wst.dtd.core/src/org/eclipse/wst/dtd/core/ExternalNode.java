@@ -120,7 +120,7 @@ public abstract class ExternalNode extends NamedTopLevelNode {
 	public String getValueFromQuotedRegion(ITextRegion region) {
 		String type = region.getType();
 		if (type.equals(DTDRegionTypes.SINGLEQUOTED_LITERAL) || type.equals(DTDRegionTypes.DOUBLEQUOTED_LITERAL)) {
-			String text = getStructuredDocumentRegion().getText(region);
+			String text = getStructuredDTDDocumentRegion().getText(region);
 			return text.substring(1, text.length() - 1);
 		}
 		return ""; //$NON-NLS-1$
@@ -144,30 +144,30 @@ public abstract class ExternalNode extends NamedTopLevelNode {
 				if (publicKeyword != null) {
 					// time to get rid of the public keyword and value
 					// and replace it with the system one
-					int startOffset = getStructuredDocumentRegion().getStartOffset(publicKeyword);
+					int startOffset = getStructuredDTDDocumentRegion().getStartOffset(publicKeyword);
 					String newString = "SYSTEM"; //$NON-NLS-1$
 					if (systemValue == null) {
 						newString += " \"\""; //$NON-NLS-1$
 					}
-					replaceText(requestor, startOffset, getStructuredDocumentRegion().getEndOffset(publicValue) - startOffset, newString);
+					replaceText(requestor, startOffset, getStructuredDTDDocumentRegion().getEndOffset(publicValue) - startOffset, newString);
 				}
 			} else {
 				// here were setting a non empty value
 				String quoteChar = v.indexOf("\"") == -1 ? "\"" : "'"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				if (publicValue != null) {
-					replaceText(requestor, getStructuredDocumentRegion().getStartOffset(publicValue), publicValue.getLength(), quoteChar + publicID + quoteChar);
+					replaceText(requestor, getStructuredDTDDocumentRegion().getStartOffset(publicValue), publicValue.getLength(), quoteChar + publicID + quoteChar);
 				} else {
 					// time to create stuff
 					if (publicKeyword != null) {
 						// then just put our new value after the keyword
-						replaceText(requestor, getStructuredDocumentRegion().getEndOffset(publicKeyword), 0, " " + quoteChar + v + quoteChar); //$NON-NLS-1$
+						replaceText(requestor, getStructuredDTDDocumentRegion().getEndOffset(publicKeyword), 0, " " + quoteChar + v + quoteChar); //$NON-NLS-1$
 					} else {
 						// we need the public keyword as well
 						if (systemKeyword != null) {
-							replaceText(requestor, getStructuredDocumentRegion().getStartOffset(systemKeyword), systemKeyword.getLength(), "PUBLIC " + quoteChar + v + quoteChar); //$NON-NLS-1$
+							replaceText(requestor, getStructuredDTDDocumentRegion().getStartOffset(systemKeyword), systemKeyword.getLength(), "PUBLIC " + quoteChar + v + quoteChar); //$NON-NLS-1$
 						} else {
 							ITextRegion nameRegion = getNameRegion();
-							replaceText(requestor, getStructuredDocumentRegion().getEndOffset(nameRegion), 0, " PUBLIC " + quoteChar + v + quoteChar); //$NON-NLS-1$
+							replaceText(requestor, getStructuredDTDDocumentRegion().getEndOffset(nameRegion), 0, " PUBLIC " + quoteChar + v + quoteChar); //$NON-NLS-1$
 						}
 					}
 				}
@@ -200,25 +200,25 @@ public abstract class ExternalNode extends NamedTopLevelNode {
 			String quoteChar = v.indexOf("\"") == -1 ? "\"" : "'"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			ITextRegion systemValue = getSystemValueRegion();
 			if (systemValue != null) {
-				replaceText(requestor, getStructuredDocumentRegion().getStartOffset(systemValue), systemValue.getLength(), quoteChar + systemID + quoteChar);
+				replaceText(requestor, getStructuredDTDDocumentRegion().getStartOffset(systemValue), systemValue.getLength(), quoteChar + systemID + quoteChar);
 			} else {
 				ITextRegion systemKeyword = getSystemKeywordRegion(iterator());
 
 				// time to create stuff
 				if (systemKeyword != null) {
 					// then just put our new value after the keyword
-					replaceText(requestor, getStructuredDocumentRegion().getEndOffset(systemKeyword), 0, " " + quoteChar + v + quoteChar); //$NON-NLS-1$
+					replaceText(requestor, getStructuredDTDDocumentRegion().getEndOffset(systemKeyword), 0, " " + quoteChar + v + quoteChar); //$NON-NLS-1$
 				} else {
 					// see if we have a public keyword
 					ITextRegion publicKeyword = getPublicKeywordRegion(iterator());
 					if (publicKeyword == null) {
 						ITextRegion nameRegion = getNameRegion();
 
-						replaceText(requestor, getStructuredDocumentRegion().getEndOffset(nameRegion), 0, " SYSTEM " + quoteChar + v + quoteChar); //$NON-NLS-1$
+						replaceText(requestor, getStructuredDTDDocumentRegion().getEndOffset(nameRegion), 0, " SYSTEM " + quoteChar + v + quoteChar); //$NON-NLS-1$
 					} else {
 						// put it after the public value region
 						ITextRegion publicValueRegion = getPublicValueRegion();
-						replaceText(requestor, getStructuredDocumentRegion().getEndOffset(publicValueRegion), 0, " " + quoteChar + v + quoteChar); //$NON-NLS-1$
+						replaceText(requestor, getStructuredDTDDocumentRegion().getEndOffset(publicValueRegion), 0, " " + quoteChar + v + quoteChar); //$NON-NLS-1$
 					}
 
 				}

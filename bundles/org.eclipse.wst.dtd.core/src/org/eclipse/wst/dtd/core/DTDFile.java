@@ -271,14 +271,14 @@ public class DTDFile implements IndexedRegion {
 		if (node != null) {
 			if (isAfter) {
 				// then get the next node and use it's start offset
-				int index = getNodes().indexOf(getNode(node.getStructuredDocumentRegion()));
+				int index = getNodes().indexOf(getNode(node.getStructuredDTDDocumentRegion()));
 
 				DTDNode afterNode = null;
 				if (index + 1 < getNodes().size()) {
 					afterNode = (DTDNode) getNodes().get(index + 1);
 				}
 				if (afterNode != null) {
-					offset = afterNode.getStructuredDocumentRegion().getStartOffset();
+					offset = afterNode.getStructuredDTDDocumentRegion().getStartOffset();
 				} else {
 					// add to end
 					if (getStructuredDocument().getLastStructuredDocumentRegion() != null) {
@@ -286,7 +286,7 @@ public class DTDFile implements IndexedRegion {
 					}
 				}
 			} else {
-				offset = node.getStructuredDocumentRegion().getStartOffset();
+				offset = node.getStructuredDTDDocumentRegion().getStartOffset();
 			}
 		} else {
 			// add to end
@@ -305,7 +305,7 @@ public class DTDFile implements IndexedRegion {
 	public DTDNode getNode(IStructuredDocumentRegion flatNode) {
 		for (int i = 0; i < nodeList.size(); i++) {
 			DTDNode node = (DTDNode) nodeList.get(i);
-			if (node.getStructuredDocumentRegion() == flatNode) {
+			if (node.getStructuredDTDDocumentRegion() == flatNode) {
 				return node;
 			}
 		}
@@ -485,7 +485,7 @@ public class DTDFile implements IndexedRegion {
 	}
 
 	boolean isSameTopLevelType(DTDNode affectedNode) {
-		IStructuredDocumentRegion flatNode = affectedNode.getStructuredDocumentRegion();
+		IStructuredDocumentRegion flatNode = affectedNode.getStructuredDTDDocumentRegion();
 		// return true if the flatnode still matches what the affectedNode
 		// is representing
 		if (affectedNode instanceof Element && isElement(flatNode)) {
@@ -543,7 +543,7 @@ public class DTDFile implements IndexedRegion {
 
 			for (Iterator iter = getNodes().iterator(); iter.hasNext();) {
 				DTDNode node = (DTDNode) iter.next();
-				if (node.getStructuredDocumentRegion() == flatNode) {
+				if (node.getStructuredDTDDocumentRegion() == flatNode) {
 					removedDTDNodes.add(node);
 				}
 			}
@@ -593,7 +593,7 @@ public class DTDFile implements IndexedRegion {
 			//      System.out.println("rebuilding " +
 			// dtdNode.getStructuredDocumentRegion().getText());
 
-			DTDNode node = buildNode(dtdNode.getStructuredDocumentRegion());
+			DTDNode node = buildNode(dtdNode.getStructuredDTDDocumentRegion());
 			if (node != null) {
 				addedDTDNodes.add(node);
 			}

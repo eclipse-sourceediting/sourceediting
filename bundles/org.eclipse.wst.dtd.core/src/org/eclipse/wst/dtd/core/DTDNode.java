@@ -58,7 +58,7 @@ public abstract class DTDNode extends NodeContainer implements IndexedRegion {
 	}
 
 	public org.w3c.dom.Node appendChild(org.w3c.dom.Node newChild) throws org.w3c.dom.DOMException {
-		//    System.out.println("appendchild called with " + newChild);
+		// System.out.println("appendchild called with " + newChild);
 		return super.appendChild(newChild);
 	}
 
@@ -146,11 +146,11 @@ public abstract class DTDNode extends NodeContainer implements IndexedRegion {
 	}
 
 	public int getEndOffset() {
-		return getStructuredDocumentRegion().getEndOffset(getEndRegion());
+		return getStructuredDTDDocumentRegion().getEndOffset(getEndRegion());
 	}
 
 	public ITextRegion getEndRegion() {
-		return regions.get(regions.size() - 1);//endRegion;
+		return regions.get(regions.size() - 1);// endRegion;
 	}
 
 	/**
@@ -175,7 +175,7 @@ public abstract class DTDNode extends NodeContainer implements IndexedRegion {
 			RegionIterator iter = new RegionIterator(whitespace);
 			while (iter.hasNext()) {
 				ITextRegion region = iter.next();
-				text += getStructuredDocumentRegion().getText(region);
+				text += getStructuredDTDDocumentRegion().getText(region);
 			}
 		}
 		return text;
@@ -186,7 +186,7 @@ public abstract class DTDNode extends NodeContainer implements IndexedRegion {
 	public String getName() {
 		ITextRegion region = getNameRegion();
 		if (region != null) {
-			return getStructuredDocumentRegion().getText(region);
+			return getStructuredDTDDocumentRegion().getText(region);
 		}
 		return ""; //$NON-NLS-1$
 	}
@@ -227,7 +227,7 @@ public abstract class DTDNode extends NodeContainer implements IndexedRegion {
 		RegionIterator iter = iterator();
 		while (iter.hasNext()) {
 			ITextRegion region = iter.next();
-			sb.append(getStructuredDocumentRegion().getText(region));
+			sb.append(getStructuredDTDDocumentRegion().getText(region));
 		}
 		return sb.toString();
 	}
@@ -237,21 +237,25 @@ public abstract class DTDNode extends NodeContainer implements IndexedRegion {
 	}
 
 	public int getStartOffset() {
-		return getStructuredDocumentRegion().getStartOffset(getStartRegion());
+		return getStructuredDTDDocumentRegion().getStartOffset(getStartRegion());
 	}
 
-	//  private Region startRegion,endRegion;
+	// private Region startRegion,endRegion;
 	public ITextRegion getStartRegion() {
 		return regions.get(0);
-		//    return startRegion;
+		// return startRegion;
 	}
 
 	/**
 	 * Get the value of flatNode.
 	 * 
 	 * @return value of flatNode.
+	 * 
+	 * ISSUE:named changed not to be confused with default access protected
+	 * super class method, but should re-think if this is correct technique.
+	 * Perhaps getFirstRegion?
 	 */
-	public IStructuredDocumentRegion getStructuredDocumentRegion() {
+	public IStructuredDocumentRegion getStructuredDTDDocumentRegion() {
 		return flatNode;
 	}
 
@@ -260,7 +264,7 @@ public abstract class DTDNode extends NodeContainer implements IndexedRegion {
 	public int getWhitespaceEndOffset() {
 		if (whitespace.size() > 0) {
 			ITextRegion region = whitespace.get(whitespace.size() - 1);
-			return getStructuredDocumentRegion().getEndOffset(region);
+			return getStructuredDTDDocumentRegion().getEndOffset(region);
 		}
 
 		return getEndOffset();
@@ -271,7 +275,7 @@ public abstract class DTDNode extends NodeContainer implements IndexedRegion {
 	}
 
 	public RegionIterator iterator() {
-		//    System.out.println("create region iter " + this.getClass() + " with
+		// System.out.println("create region iter " + this.getClass() + " with
 		// start , end = " + getStartOffset() + ", " +getEndOffset());
 		return new RegionIterator(regions);
 	}
@@ -287,9 +291,9 @@ public abstract class DTDNode extends NodeContainer implements IndexedRegion {
 		if (!getName().equals(name)) {
 			ITextRegion nameRegion = getNameRegion();
 			if (nameRegion != null) {
-				//        nameToken.updateText(name);
+				// nameToken.updateText(name);
 				getDTDFile().getDTDModel().getReferenceUpdater().nameAboutToChange(requestor, this, name);
-				replaceText(requestor, getStructuredDocumentRegion().getStartOffset(nameRegion), nameRegion.getLength(), name);
+				replaceText(requestor, getStructuredDTDDocumentRegion().getStartOffset(nameRegion), nameRegion.getLength(), name);
 			}
 		}
 	}
@@ -304,9 +308,11 @@ public abstract class DTDNode extends NodeContainer implements IndexedRegion {
 	 * Set the value of flatNode.
 	 * 
 	 * @param v
-	 *            Value to assign to flatNode.
+	 *            Value to assign to flatNode. ISSUE:named changed not to be
+	 *            confused with default access protected super class method,
+	 *            but should re-think if this is correct technique
 	 */
-	public void setStructuredDocumentRegion(IStructuredDocumentRegion v) {
+	void setStructuredDTDDocumentRegion(IStructuredDocumentRegion v) {
 		this.flatNode = v;
 	}
 

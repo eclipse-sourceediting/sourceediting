@@ -38,7 +38,7 @@ public abstract class CMRepeatableNode extends CMNode {
 	public char getOccurrence() {
 		ITextRegion occurRegion = getOccurrenceRegion();
 		if (occurRegion != null && occurRegion.getType() == DTDRegionTypes.OCCUR_TYPE) {
-			return getStructuredDocumentRegion().getText(occurRegion).charAt(0);
+			return getStructuredDTDDocumentRegion().getText(occurRegion).charAt(0);
 		}
 		return CMRepeatableNode.ONCE;
 	}
@@ -61,16 +61,16 @@ public abstract class CMRepeatableNode extends CMNode {
 					if (occurrence == CMRepeatableNode.ONCE) {
 						// we need to remove the occur region from the flat
 						// model;
-						getDTDFile().getStructuredDocument().replaceText(requestor, getStructuredDocumentRegion().getStartOffset(region), 1, ""); //$NON-NLS-1$
+						getDTDFile().getStructuredDocument().replaceText(requestor, getStructuredDTDDocumentRegion().getStartOffset(region), 1, ""); //$NON-NLS-1$
 					} else {
 						//            Region oldOccur = region.createCopy();
-						getDTDFile().getStructuredDocument().replaceText(requestor, getStructuredDocumentRegion().getStartOffset(region), 1, String.valueOf(occurrence));
+						getDTDFile().getStructuredDocument().replaceText(requestor, getStructuredDTDDocumentRegion().getStartOffset(region), 1, String.valueOf(occurrence));
 						//            changeStructuredDocument(oldOccur, region);
 					}
 				} else if (occurrence != CMRepeatableNode.ONCE) {
 					//          System.out.println(getString());
 					// we need to create an occurrenceRegion
-					replaceText(requestor, getStructuredDocumentRegion().getEndOffset(region), 0, String.valueOf(occurrence));
+					replaceText(requestor, getStructuredDTDDocumentRegion().getEndOffset(region), 0, String.valueOf(occurrence));
 				}
 			}
 		}

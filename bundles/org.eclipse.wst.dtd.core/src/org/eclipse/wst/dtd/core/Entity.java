@@ -45,7 +45,7 @@ public class Entity extends ExternalNode {
 	public String getNotationName() {
 		ITextRegion ndataRegion = getNextRegion(iterator(), DTDRegionTypes.NDATA_VALUE);
 		if (ndataRegion != null) {
-			return getStructuredDocumentRegion().getText(ndataRegion);
+			return getStructuredDTDDocumentRegion().getText(ndataRegion);
 		}
 		return ""; //$NON-NLS-1$
 	}
@@ -94,15 +94,15 @@ public class Entity extends ExternalNode {
 		ndataRegion = getNextRegion(iterator(), DTDRegionTypes.NDATA_KEYWORD);
 		int startOffset = 0, endOffset = 0;
 		if (ndataRegion != null) {
-			startOffset = getStructuredDocumentRegion().getStartOffset(ndataRegion);
-			endOffset = getStructuredDocumentRegion().getEndOffset(ndataRegion);
+			startOffset = getStructuredDTDDocumentRegion().getStartOffset(ndataRegion);
+			endOffset = getStructuredDTDDocumentRegion().getEndOffset(ndataRegion);
 		}
 		ITextRegion value = getNextRegion(iterator(), DTDRegionTypes.NDATA_VALUE);
 		if (value != null) {
 			if (startOffset == 0) {
-				startOffset = getStructuredDocumentRegion().getStartOffset(value);
+				startOffset = getStructuredDTDDocumentRegion().getStartOffset(value);
 			}
-			endOffset = getStructuredDocumentRegion().getEndOffset(value);
+			endOffset = getStructuredDTDDocumentRegion().getEndOffset(value);
 		}
 		replaceText(requestor, startOffset, endOffset - startOffset, ""); //$NON-NLS-1$
 	}
@@ -124,7 +124,7 @@ public class Entity extends ExternalNode {
 					quote = getNextRegion(iterator(), DTDRegionTypes.DOUBLEQUOTED_LITERAL);
 				}
 				if (quote != null) {
-					replaceText(this, getStructuredDocumentRegion().getStartOffset(quote), quote.getLength(), ""); //$NON-NLS-1$
+					replaceText(this, getStructuredDTDDocumentRegion().getStartOffset(quote), quote.getLength(), ""); //$NON-NLS-1$
 				}
 				setSystemID(""); //$NON-NLS-1$
 			} else {
@@ -140,14 +140,14 @@ public class Entity extends ExternalNode {
 					keyword = getPublicKeywordRegion(iter);
 				}
 				if (keyword != null) {
-					startOffset = getStructuredDocumentRegion().getStartOffset(keyword);
+					startOffset = getStructuredDTDDocumentRegion().getStartOffset(keyword);
 					// start with a length just equal to the keyword for now
 					length = keyword.getLength();
 				} else {
 					// reset the iterator since we didn't find the keyword
 					iter = iterator();
 					// just go from after the name
-					startOffset = getStructuredDocumentRegion().getEndOffset(getNameRegion());
+					startOffset = getStructuredDTDDocumentRegion().getEndOffset(getNameRegion());
 				}
 
 				// now that we have the start, look for the end
@@ -164,7 +164,7 @@ public class Entity extends ExternalNode {
 				}
 
 				if (lastRegion != null) {
-					length = getStructuredDocumentRegion().getEndOffset(lastRegion) - startOffset;
+					length = getStructuredDTDDocumentRegion().getEndOffset(lastRegion) - startOffset;
 				}
 				replaceText(this, startOffset, length, "\"\""); //$NON-NLS-1$
 				removeNData(this);
@@ -179,7 +179,7 @@ public class Entity extends ExternalNode {
 				// 
 				ITextRegion ndataRegion = getNextRegion(iterator(), DTDRegionTypes.NDATA_VALUE);
 				if (ndataRegion != null) {
-					replaceText(requestor, getStructuredDocumentRegion().getStartOffset(ndataRegion), ndataRegion.getLength(), newNotation);
+					replaceText(requestor, getStructuredDTDDocumentRegion().getStartOffset(ndataRegion), ndataRegion.getLength(), newNotation);
 				} else {
 					// time to create one
 					int startOffset = 0;
@@ -200,7 +200,7 @@ public class Entity extends ExternalNode {
 							}
 						}
 						if (lastQuotedLiteral != null) {
-							startOffset = getStructuredDocumentRegion().getEndOffset(lastQuotedLiteral);
+							startOffset = getStructuredDTDDocumentRegion().getEndOffset(lastQuotedLiteral);
 						} else {
 							// created after the system or public keyword
 							ITextRegion keyword = getPublicKeywordRegion(iterator());
@@ -209,11 +209,11 @@ public class Entity extends ExternalNode {
 							}
 							// we shouldn't be null here since we check if we
 							// were external already
-							startOffset = getStructuredDocumentRegion().getEndOffset(keyword);
+							startOffset = getStructuredDTDDocumentRegion().getEndOffset(keyword);
 						}
 
 					} else {
-						startOffset = getStructuredDocumentRegion().getEndOffset(ndataKeyword);
+						startOffset = getStructuredDTDDocumentRegion().getEndOffset(ndataKeyword);
 					}
 					replaceText(requestor, startOffset, 0, string + newNotation);
 				}
@@ -252,12 +252,12 @@ public class Entity extends ExternalNode {
 
 				if (iter.hasNext()) {
 					ITextRegion region = iter.next();
-					startOffset = getStructuredDocumentRegion().getStartOffset(region);
+					startOffset = getStructuredDTDDocumentRegion().getStartOffset(region);
 					if (region.getType() == DTDRegionTypes.WHITESPACE && region.getLength() > 1) {
 						length = 1;
 					}
 				} else {
-					startOffset = getStructuredDocumentRegion().getEndOffset(startTag);
+					startOffset = getStructuredDTDDocumentRegion().getEndOffset(startTag);
 				}
 				replaceText(this, startOffset, length, " %"); //$NON-NLS-1$
 				// now get rid of any NData since it is only allowed if the
@@ -266,7 +266,7 @@ public class Entity extends ExternalNode {
 			} else {
 				// get rid of percent region
 				ITextRegion percentRegion = getPercentRegion();
-				replaceText(this, getStructuredDocumentRegion().getStartOffset(percentRegion), percentRegion.getLength(), ""); //$NON-NLS-1$
+				replaceText(this, getStructuredDTDDocumentRegion().getStartOffset(percentRegion), percentRegion.getLength(), ""); //$NON-NLS-1$
 			}
 
 			endRecording(this);
@@ -286,7 +286,7 @@ public class Entity extends ExternalNode {
 				ITextRegion valueRegion = getNextQuotedLiteral(iterator());
 				String quoteChar = v.indexOf("\"") == -1 ? "\"" : "'"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				if (valueRegion != null) {
-					replaceText(requestor, getStructuredDocumentRegion().getStartOffset(valueRegion), valueRegion.getLength(), quoteChar + v + quoteChar);
+					replaceText(requestor, getStructuredDTDDocumentRegion().getStartOffset(valueRegion), valueRegion.getLength(), quoteChar + v + quoteChar);
 				} else {
 					int startOffset = 0, length = 0;
 					RegionIterator iter = iterator();
@@ -301,7 +301,7 @@ public class Entity extends ExternalNode {
 					}
 
 					if (region != null) {
-						startOffset = getStructuredDocumentRegion().getEndOffset(region);
+						startOffset = getStructuredDTDDocumentRegion().getEndOffset(region);
 						replaceText(requestor, startOffset, 0, quoteChar + v + quoteChar);
 					}
 				}

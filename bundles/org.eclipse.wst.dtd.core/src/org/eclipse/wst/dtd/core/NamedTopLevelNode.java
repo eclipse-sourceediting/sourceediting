@@ -126,7 +126,7 @@ public abstract class NamedTopLevelNode extends TopLevelNode {
 
 			//      beginRecording(requestor, "Name Change");
 			String newText = " " + name; //$NON-NLS-1$
-			replaceText(requestor, getStructuredDocumentRegion().getEndOffset(elementTagRegion), replaceLength, newText);
+			replaceText(requestor, getStructuredDTDDocumentRegion().getEndOffset(elementTagRegion), replaceLength, newText);
 			//      endRecording(requestor);
 		}
 	}

@@ -35,7 +35,7 @@ public class AttributeList extends NamedTopLevelNode {
 		} else {
 			ITextRegion nameRegion = getNameRegion();
 			if (nameRegion != null) {
-				replaceText(this, getStructuredDocumentRegion().getEndOffset(nameRegion), 0, "\n\t" + name + " CDATA #IMPLIED"); //$NON-NLS-1$ //$NON-NLS-2$
+				replaceText(this, getStructuredDTDDocumentRegion().getEndOffset(nameRegion), 0, "\n\t" + name + " CDATA #IMPLIED"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
 		}
@@ -86,7 +86,7 @@ public class AttributeList extends NamedTopLevelNode {
 		while (iter.hasNext()) {
 			ITextRegion currentRegion = iter.next();
 			if (currentRegion.getType().equals(DTDRegionTypes.ATTRIBUTE_NAME)) {
-				attribute = new Attribute(getDTDFile(), getStructuredDocumentRegion());
+				attribute = new Attribute(getDTDFile(), getStructuredDTDDocumentRegion());
 				children.add(attribute);
 				appendChild(attribute);
 				trailingWhitespace = false;

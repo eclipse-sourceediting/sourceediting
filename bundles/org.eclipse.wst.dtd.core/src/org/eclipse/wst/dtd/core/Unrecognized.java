@@ -27,7 +27,7 @@ public class Unrecognized extends TopLevelNode {
 	}
 
 	public String getName() {
-		String text = getStructuredDocumentRegion().getText();
+		String text = getStructuredDTDDocumentRegion().getText();
 		if (text.length() <= 30) {
 			return text;
 		} else {

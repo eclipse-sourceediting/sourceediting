@@ -82,7 +82,7 @@ public class Attribute extends DTDNode {
 	public String getDefaultKind() {
 		ITextRegion defaultKindRegion = getDefaultKindRegion();
 		if (defaultKindRegion != null) {
-			return getStructuredDocumentRegion().getText(defaultKindRegion);
+			return getStructuredDTDDocumentRegion().getText(defaultKindRegion);
 		}
 
 		return ""; //$NON-NLS-1$
@@ -141,10 +141,10 @@ public class Attribute extends DTDNode {
 			}
 		}
 		if (typeRegion != null) {
-			return getStructuredDocumentRegion().getEndOffset(typeRegion);
+			return getStructuredDTDDocumentRegion().getEndOffset(typeRegion);
 		} else {
 			ITextRegion nameRegion = getNameRegion();
-			return getStructuredDocumentRegion().getEndOffset(nameRegion);
+			return getStructuredDTDDocumentRegion().getEndOffset(nameRegion);
 			//        // create one
 			//        typeRegion =
 			// findOrCreateTypeRegion((String)typeHash.get(CDATA));
@@ -158,7 +158,7 @@ public class Attribute extends DTDNode {
 			if (type == null) {
 				// just return the text of the type region since this may be
 				// an entity representing the type;
-				return getStructuredDocumentRegion().getText(region);
+				return getStructuredDTDDocumentRegion().getText(region);
 			}
 			return type;
 		} else if (getEnumList() != null) {
@@ -185,7 +185,7 @@ public class Attribute extends DTDNode {
 	public String getValueFromQuotedRegion(ITextRegion region) {
 		String type = region.getType();
 		if (type.equals(DTDRegionTypes.SINGLEQUOTED_LITERAL) || type.equals(DTDRegionTypes.DOUBLEQUOTED_LITERAL)) {
-			String text = getStructuredDocumentRegion().getText(region);
+			String text = getStructuredDTDDocumentRegion().getText(region);
 			return text.substring(1, text.length() - 1);
 		}
 		return ""; //$NON-NLS-1$
@@ -198,7 +198,7 @@ public class Attribute extends DTDNode {
 		while (iter.hasNext()) {
 			ITextRegion currentRegion = iter.next();
 			if (currentRegion.getType().equals(DTDRegionTypes.LEFT_PAREN)) {
-				enumList = new AttributeEnumList(getDTDFile(), getStructuredDocumentRegion());
+				enumList = new AttributeEnumList(getDTDFile(), getStructuredDTDDocumentRegion());
 			}
 			if (enumList != null) {
 				enumList.addRegion(currentRegion);
@@ -213,14 +213,14 @@ public class Attribute extends DTDNode {
 	public void setDefaultKind(Object requestor, String kind) {
 
 		ITextRegion defaultKindRegion = getDefaultKindRegion();
-		String oldDefaultKind = defaultKindRegion == null ? "" : getStructuredDocumentRegion().getText(defaultKindRegion); //$NON-NLS-1$
+		String oldDefaultKind = defaultKindRegion == null ? "" : getStructuredDTDDocumentRegion().getText(defaultKindRegion); //$NON-NLS-1$
 		if (!kind.equals(oldDefaultKind)) {
 			String newText = kind;
 			int startOffset = 0;
 			int length = 0;
 			if (defaultKindRegion != null) {
-				startOffset = getStructuredDocumentRegion().getStartOffset(defaultKindRegion);
-				length = getStructuredDocumentRegion().getEndOffset(defaultKindRegion) - startOffset;
+				startOffset = getStructuredDTDDocumentRegion().getStartOffset(defaultKindRegion);
+				length = getStructuredDTDDocumentRegion().getEndOffset(defaultKindRegion) - startOffset;
 			} else {
 				startOffset = getOffsetAfterType();
 				newText = " " + newText; //$NON-NLS-1$
@@ -236,7 +236,7 @@ public class Attribute extends DTDNode {
 				}
 			} else {
 				if (defaultValue != null) {
-					length = getStructuredDocumentRegion().getEndOffset(defaultValue) - startOffset;
+					length = getStructuredDTDDocumentRegion().getEndOffset(defaultValue) - startOffset;
 				}
 			}
 			replaceText(requestor, startOffset, length, newText);
@@ -265,14 +265,14 @@ public class Attribute extends DTDNode {
 		}
 
 		if (defaultValue != null) {
-			startOffset = getStructuredDocumentRegion().getStartOffset(defaultValue);
-			endOffset = getStructuredDocumentRegion().getEndOffset(defaultValue);
+			startOffset = getStructuredDTDDocumentRegion().getStartOffset(defaultValue);
+			endOffset = getStructuredDTDDocumentRegion().getEndOffset(defaultValue);
 		}
 
 		ITextRegion defaultKindRegion = getDefaultKindRegion();
 		if (defaultKindRegion != null) {
-			startOffset = getStructuredDocumentRegion().getStartOffset(defaultKindRegion);
-			endOffset = endOffset == 0 ? getStructuredDocumentRegion().getEndOffset(defaultKindRegion) : endOffset;
+			startOffset = getStructuredDTDDocumentRegion().getStartOffset(defaultKindRegion);
+			endOffset = endOffset == 0 ? getStructuredDTDDocumentRegion().getEndOffset(defaultKindRegion) : endOffset;
 		} else {
 			if (startOffset == 0) {
 				endOffset = startOffset = getOffsetAfterType();
@@ -326,14 +326,14 @@ public class Attribute extends DTDNode {
 
 			ITextRegion region = getTypeRegion();
 			if (region != null) {
-				startOffset = getStructuredDocumentRegion().getStartOffset(region);
+				startOffset = getStructuredDTDDocumentRegion().getStartOffset(region);
 				if (endOffset == 0) {
-					endOffset = getStructuredDocumentRegion().getEndOffset(region);
+					endOffset = getStructuredDTDDocumentRegion().getEndOffset(region);
 				}
 			} else if (startOffset == 0) {
 				ITextRegion nameRegion = getNameRegion();
 				newText += " "; //$NON-NLS-1$
-				endOffset = startOffset = getStructuredDocumentRegion().getEndOffset(nameRegion);
+				endOffset = startOffset = getStructuredDTDDocumentRegion().getEndOffset(nameRegion);
 			}
 
 			String newTypeWord = (String) typeHash.get(type);

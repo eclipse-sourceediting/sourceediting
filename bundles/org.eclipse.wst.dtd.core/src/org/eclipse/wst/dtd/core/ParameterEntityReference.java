@@ -62,7 +62,7 @@ public class ParameterEntityReference extends NamedTopLevelNode {
 	}
 
 	public String getName() {
-		return getStructuredDocumentRegion().getText();
+		return getStructuredDTDDocumentRegion().getText();
 	}
 
 	public String getReferencedEntity() {
@@ -74,25 +74,25 @@ public class ParameterEntityReference extends NamedTopLevelNode {
 		RegionIterator iter = iterator();
 		ITextRegion commentStartTag = getStartTag(iter);
 		ITextRegion endCommentTag = getNextRegion(iter, DTDRegionTypes.COMMENT_END);
-		pair.endOffset = getStructuredDocumentRegion().getEndOffset();
+		pair.endOffset = getStructuredDTDDocumentRegion().getEndOffset();
 		if (commentStartTag != null) {
-			pair.startOffset = getStructuredDocumentRegion().getEndOffset(commentStartTag);
+			pair.startOffset = getStructuredDTDDocumentRegion().getEndOffset(commentStartTag);
 		}
 		if (endCommentTag != null) {
-			pair.endOffset = getStructuredDocumentRegion().getEndOffset(endCommentTag);
+			pair.endOffset = getStructuredDTDDocumentRegion().getEndOffset(endCommentTag);
 		}
 	}
 
 	public String getText() {
-		String text = getStructuredDocumentRegion().getText();
-		int flatNodeStart = getStructuredDocumentRegion().getStartOffset();
+		String text = getStructuredDTDDocumentRegion().getText();
+		int flatNodeStart = getStructuredDTDDocumentRegion().getStartOffset();
 		StartEndPair pair = new StartEndPair();
 		getStartAndEndOffsetForText(pair);
 		return text.substring(pair.startOffset - flatNodeStart, pair.endOffset - flatNodeStart);
 	}
 
 	public void setReferencedEntity(Object requestor, String name) {
-		replaceText(requestor, getStructuredDocumentRegion().getStartOffset(), getStructuredDocumentRegion().getLength(), "%" + name + ";"); //$NON-NLS-1$ //$NON-NLS-2$
+		replaceText(requestor, getStructuredDTDDocumentRegion().getStartOffset(), getStructuredDTDDocumentRegion().getLength(), "%" + name + ";"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public void setReferencedEntity(String name) {
@@ -103,7 +103,7 @@ public class ParameterEntityReference extends NamedTopLevelNode {
 
 	public void setText(String newText) {
 		beginRecording(this, DTDPlugin.getDTDString("_UI_LABEL_PARM_ENTITY_REF_COMMENT_CHG")); //$NON-NLS-1$
-		int flatNodeStart = getStructuredDocumentRegion().getStartOffset();
+		int flatNodeStart = getStructuredDTDDocumentRegion().getStartOffset();
 		StartEndPair pair = new StartEndPair();
 		getStartAndEndOffsetForText(pair);
 		replaceText(this, pair.startOffset, pair.endOffset - pair.startOffset, newText);

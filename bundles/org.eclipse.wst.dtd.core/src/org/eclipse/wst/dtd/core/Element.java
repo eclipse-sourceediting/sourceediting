@@ -61,15 +61,15 @@ public class Element extends NamedTopLevelNode {
 		int startOffset = 0;
 		int length = 0;
 		if (whitespace != null) {
-			startOffset = getStructuredDocumentRegion().getStartOffset(whitespace);
+			startOffset = getStructuredDTDDocumentRegion().getStartOffset(whitespace);
 			length = whitespace.getLength() >= 2 ? 1 : 0;
 		} else {
 			ITextRegion nameRegion = getNameRegion();
 			if (nameRegion != null) {
-				startOffset = getStructuredDocumentRegion().getEndOffset(nameRegion);
+				startOffset = getStructuredDTDDocumentRegion().getEndOffset(nameRegion);
 			} else {
 				ITextRegion elementTag = getNextRegion(iterator(), DTDRegionTypes.ELEMENT_TAG);
-				startOffset = getStructuredDocumentRegion().getEndOffset(elementTag);
+				startOffset = getStructuredDTDDocumentRegion().getEndOffset(elementTag);
 			}
 		}
 		replaceText(requestor, startOffset, length, content);
@@ -159,11 +159,11 @@ public class Element extends NamedTopLevelNode {
 
 			if (contentModel == null) {
 				if (currentRegion.getType().equals(DTDRegionTypes.NAME)) {
-					contentModel = basicNode = new CMBasicNode(getDTDFile(), getStructuredDocumentRegion());
+					contentModel = basicNode = new CMBasicNode(getDTDFile(), getStructuredDTDDocumentRegion());
 				} else if (currentRegion.getType().equals(DTDRegionTypes.CONTENT_PCDATA)) {
-					contentModel = basicNode = new CMBasicNode(getDTDFile(), getStructuredDocumentRegion());
+					contentModel = basicNode = new CMBasicNode(getDTDFile(), getStructuredDTDDocumentRegion());
 				} else if (currentRegion.getType().equals(DTDRegionTypes.LEFT_PAREN)) {
-					contentModel = new CMGroupNode(getDTDFile(), getStructuredDocumentRegion());
+					contentModel = new CMGroupNode(getDTDFile(), getStructuredDTDDocumentRegion());
 				}
 			}
 
