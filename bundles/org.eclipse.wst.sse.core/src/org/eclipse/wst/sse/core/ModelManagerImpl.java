@@ -810,7 +810,7 @@ class ModelManagerImpl implements IModelManager {
 	}
 
 	/**
-	 * Conveience method. This method can be used when the resource does not
+	 * Convenience method. This method can be used when the resource does not
 	 * really exist (e.g. when content is being created, but hasn't been
 	 * written to disk yet). Note that since the content is being provided as
 	 * a String, it is assumed to already be decoded correctly so no
@@ -820,7 +820,7 @@ class ModelManagerImpl implements IModelManager {
 		// TODO: avoid all these String instances
 		StringBuffer contentBuffer = new StringBuffer(content);
 		IDocumentLoader loader = null;
-		IModelHandler handler = calculateType(filename, null); //inputStream);
+		IModelHandler handler = calculateType(filename, null);
 		loader = handler.getDocumentLoader();
 		IStructuredDocument result = (IStructuredDocument) loader.createNewStructuredDocument();
 		StringBuffer convertedContent = loader.handleLineDelimiter(contentBuffer, result);
@@ -1243,11 +1243,11 @@ class ModelManagerImpl implements IModelManager {
 		return getModelForRead(stringId, Utilities.getMarkSupportedStream(inputStream), resolver);
 	}
 
-	public synchronized IStructuredModel getModelForRead(String filename, InputStream inputStream, URIResolver resolver) throws IOException {
+	public synchronized IStructuredModel getModelForRead(String id, InputStream inputStream, URIResolver resolver) throws IOException {
 		InputStream istream = Utilities.getMarkSupportedStream(inputStream);
-		IModelHandler handler = calculateType(filename, istream);
+		IModelHandler handler = calculateType(id, istream);
 		IStructuredModel result = null;
-		result = _commonCreateModel(istream, filename, handler, resolver, READ, null, null);
+		result = _commonCreateModel(istream, id, handler, resolver, READ, null, null);
 		return result;
 	}
 
