@@ -16,5 +16,5 @@ package org.eclipse.wst.web.internal.operation;
  * The IWebNature defines the web related behaviour of a project.
  */
 public interface IStaticWebNature extends IBaseWebNature {
-
+	//Default
 }

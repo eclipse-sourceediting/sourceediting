@@ -36,6 +36,7 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 		try {
 			return project.hasNature(ISimpleWebNatureConstants.STATIC_NATURE_ID);
 		} catch (Exception e) {
+			//Ignore
 		}
 		return false;
 	}
@@ -59,6 +60,7 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 			}
 			return deployable;
 		} catch (Exception e) {
+			//Ignore
 		}
 		return null;
 	}

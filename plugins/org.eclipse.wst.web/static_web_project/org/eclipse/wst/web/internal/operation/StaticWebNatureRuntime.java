@@ -76,6 +76,7 @@ public class StaticWebNatureRuntime implements IStaticWebNature {
 								try {
 									delta.accept(this);
 								} catch (CoreException e) {
+									//Ignore
 								}
 							}
 							break;
@@ -114,6 +115,7 @@ public class StaticWebNatureRuntime implements IStaticWebNature {
 	 */
 
 	public void addCVSIgnoreFile() {
+		//Do nothing
 	}
 
 	/**
@@ -359,6 +361,7 @@ public class StaticWebNatureRuntime implements IStaticWebNature {
 				if (versionString != null)
 					fVersion = Integer.parseInt(versionString);
 			} catch (NumberFormatException e) {
+				//Ignore
 			}
 		}
 		return fVersion;
@@ -570,6 +573,7 @@ public class StaticWebNatureRuntime implements IStaticWebNature {
 		try {
 			configure();
 		} catch (CoreException e) {
+			//Ignore
 		}
 	}
 

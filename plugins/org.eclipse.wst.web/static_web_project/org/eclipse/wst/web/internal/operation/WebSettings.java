@@ -82,7 +82,9 @@ public class WebSettings{
 			try {
 				createNewDocument();
 			} catch (CoreException e) {
+				//Ignore
 			} catch (IOException e) {
+				//Ignore
 			}
 		}
 	}
@@ -364,7 +366,9 @@ public class WebSettings{
 				createNewDocument();
 				doc = getDOMDocument();
 			} catch (CoreException e) {
+				//Ignore
 			} catch (IOException e) {
+				//Ignore
 			}
 		}
 		return doc;
@@ -393,16 +397,23 @@ public class WebSettings{
 				}
 			}
 		} catch (UnsupportedEncodingException e) {
+			//Ignore
 		} catch (ParserConfigurationException e) {
+			//Ignore
 		} catch (FactoryConfigurationError e) {
+			//Ignore
 		} catch (SAXException e) {
+			//Ignore
 		} catch (IOException e) {
+			//Ignore
 		} catch (Exception e) {
+			//Ignore
 		} finally {
 			if (fileStream != null)
 				try {
 					fileStream.close();
 				} catch (IOException e1) {
+					//Ignore
 				}
 		}
 		return null;
@@ -412,6 +423,7 @@ public class WebSettings{
 			try {
 				read();
 			} catch (IOException e) {
+				//Ignore
 			}
 		}
 		return fDomDocument;
@@ -423,6 +435,7 @@ public class WebSettings{
 			try {
 				read(webSettings);
 			} catch (IOException e) {
+				//Ignore
 			}
 		}
 		return fDomDocument;

@@ -19,8 +19,8 @@ public class ResourceHandler
 	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
 			.getBundle(BUNDLE_NAME);
 
-	private ResourceHandler()
-	{
+	private ResourceHandler() {
+		//Default constructor
 	}
 
 	public static String getString(String key)
