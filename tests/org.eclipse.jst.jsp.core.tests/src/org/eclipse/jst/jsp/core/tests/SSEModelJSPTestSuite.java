@@ -8,16 +8,14 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.tests.application;
+package org.eclipse.jst.jsp.core.tests;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.jst.jsp.core.tests.CleanupFormatTests;
-import org.eclipse.jst.jsp.core.tests.ModelCloneTests;
+import org.eclipse.jst.jsp.core.tests.cleanupformat.FormatTester;
 import org.eclipse.jst.jsp.core.tests.contenttypeidentifier.contentspecific.TestContentTypeHandlers;
 import org.eclipse.jst.jsp.core.tests.contenttypeidentifier.contentspecific.TestModelHandlers;
-import org.eclipse.jst.jsp.core.tests.model.TestModelsFromFiles;
 
 
 
@@ -33,6 +31,8 @@ public class SSEModelJSPTestSuite extends TestSuite {
 		addTest(ModelCloneTests.suite());
 		addTest(new TestSuite(TestModelHandlers.class, "TestModelHandlers"));
 		addTest(new TestSuite(TestContentTypeHandlers.class, "TestContentTypeHandlers"));
-		addTest(new TestSuite(TestModelsFromFiles.class, "TestModelsFromFiles"));
+		addTest(new TestSuite(TestModelManager.class, "TestModelManager"));
+		addTest(new TestSuite(FormatTester.class, "FormatTester"));
+		//addTest(new TestSuite(TestModelsFromFiles.class, "TestModelsFromFiles"));
 	}
 }

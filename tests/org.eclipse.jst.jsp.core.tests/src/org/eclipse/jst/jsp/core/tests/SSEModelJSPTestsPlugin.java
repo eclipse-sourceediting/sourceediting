@@ -10,10 +10,14 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.tests;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.eclipse.core.runtime.IPluginDescriptor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 
 /**
@@ -66,4 +70,27 @@ public class SSEModelJSPTestsPlugin extends Plugin {
 	public ResourceBundle getResourceBundle() {
 		return resourceBundle;
 	}
+
+	public static URL getInstallLocation() {
+		URL installLocation = getDefault().getDescriptor().getInstallURL();
+		URL resolvedLocation = null;
+		try {
+			resolvedLocation = Platform.resolve(installLocation);
+		}
+		catch (IOException e) {
+			// impossible
+			throw new Error(e);
+		}
+		return resolvedLocation;
+	}
+	
+	public static File getTestFile(String filepath) {
+		URL installURL = getInstallLocation();
+		//String scheme = installURL.getProtocol();
+		String path = installURL.getPath();
+		String location = path + filepath;
+		File result = new File(location);
+		return result;
+	}
+
 }

@@ -15,29 +15,14 @@
 	<requires>
 		<import plugin="org.eclipse.core.runtime.compatibility" />
 		<import plugin="org.junit" />
-		<import plugin="org.eclipse.wst.sse.ui" />
-		<import plugin="org.eclipse.jst.jsp.core" />
 		<import plugin="org.eclipse.wst.html.core" />
-		<import plugin="org.eclipse.wst.css.core" />
 		<import plugin="org.eclipse.wst.xml.core" />
 		<import plugin="org.eclipse.wst.sse.core" />
-		<import plugin="org.eclipse.core.resources" />
 		<import plugin="org.eclipse.wst.common.encoding" />
-		<import plugin="org.eclipse.jdt.core" />
-		<import plugin="org.eclipse.core.filebuffers"/>
-		<import plugin="org.eclipse.wst.xml.core.tests"/>
+  <import plugin="org.eclipse.core.resources"/>
 	</requires>
 
 
-	<extension
-		id="ssemodeljsptests"
-		point="org.eclipse.core.runtime.applications">
-		<application>
-			<run
-				class="org.eclipse.jst.jsp.core.tests.application.SSEModelJSPTests">
-			</run>
-		</application>
-	</extension>
 	<!-- TO GET PICKED UP BY com.ibm.etools.commontests.testcollector -->
 	<!--
 	<extension
