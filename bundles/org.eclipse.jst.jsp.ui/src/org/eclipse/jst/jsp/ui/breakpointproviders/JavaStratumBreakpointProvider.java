@@ -25,6 +25,7 @@ import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.jdt.debug.core.JDIDebugModel;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
@@ -50,9 +51,9 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 	 *      org.eclipse.jface.text.IDocument, org.eclipse.ui.IEditorInput,
 	 *      org.w3c.dom.Node, int, int)
 	 */
-	public IStatus addBreakpoint(Document doc, IDocument idoc, IEditorInput input, Node node, int lineNumber, int offset) throws CoreException {
+	public IStatus addBreakpoint(Document doc, IDocument idoc, IEditorInput input, Node node, int editorLineNumber, int offset) throws CoreException {
 		// check if there is a valid position to set breakpoint
-		int pos = getValidPosition(idoc, lineNumber);
+		int pos = getValidPosition(idoc, editorLineNumber);
 		IStatus status = null;
 		if (pos >= 0) {
 			//SSE C3 behavior
@@ -65,7 +66,7 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 			// null);
 			IResource res = getResourceFromInput(input);
 			if (res != null) {
-				IBreakpoint point = JDIDebugModel.createStratumBreakpoint(res, "JSP", res.getName(), null, getClassPattern(), lineNumber, pos, pos, 0, true, null); //$NON-NLS-1$ //$NON-NLS-2$
+				IBreakpoint point = JDIDebugModel.createStratumBreakpoint(res, "JSP", res.getName(), null, getClassPattern(), editorLineNumber, pos, pos, 0, true, null); //$NON-NLS-1$ //$NON-NLS-2$
 				if (point == null) {
 					status = new Status(IStatus.ERROR, JSPUIPlugin.ID, IStatus.ERROR, "unsupported input type", null); //$NON-NLS-1$
 				}
@@ -82,7 +83,7 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 				}
 				Map attributes = new HashMap();
 				attributes.put(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, id);
-				IBreakpoint point = JDIDebugModel.createStratumBreakpoint(res, "JSP", input.getName(), null, getClassPattern(), lineNumber, pos, pos, 0, true, attributes); //$NON-NLS-1$ //$NON-NLS-2$
+				IBreakpoint point = JDIDebugModel.createStratumBreakpoint(res, "JSP", input.getName(), null, getClassPattern(), editorLineNumber, pos, pos, 0, true, attributes); //$NON-NLS-1$ //$NON-NLS-2$
 				if (point == null) {
 					status = new Status(IStatus.ERROR, JSPUIPlugin.ID, IStatus.ERROR, "unsupported input type", null); //$NON-NLS-1$
 				}
@@ -121,18 +122,19 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 	 * position could not be found.
 	 * 
 	 * @param idoc
-	 * @param lineNumber
+	 * @param editorLineNumber
 	 * @return position to set breakpoint or -1 if no position could be found
 	 */
-	private int getValidPosition(IDocument idoc, int lineNumber) {
+	private int getValidPosition(IDocument idoc, int editorLineNumber) {
 		int result = -1;
 		if (idoc != null) {
 
 			int startOffset = 0;
 			int endOffset = 0;
 			try {
-				startOffset = idoc.getLineOffset(lineNumber - 1);
-				endOffset = idoc.getLineOffset(lineNumber) - 1;
+				IRegion line = idoc.getLineInformation(editorLineNumber - 1);
+				startOffset = line.getOffset();
+				endOffset = Math.max(line.getOffset(), line.getOffset() + line.getLength());
 
 				String lineText = idoc.get(startOffset, endOffset - startOffset).trim();
 
