@@ -198,7 +198,7 @@
    * @param number  the number of characters to be read again.
    *                This number must not be greater than yylength()!
    */
-  private void yypushback(int number) {
+  void yypushback(int number) {
     if ( number > yylength() )
       yy_ScanError(YY_PUSHBACK_2BIG);
 
