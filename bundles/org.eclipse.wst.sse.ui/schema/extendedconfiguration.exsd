@@ -57,7 +57,7 @@
          <attribute name="type" type="string" use="required">
             <annotation>
                <documentation>
-                  The type of configuration to find.  Current types used include &quot;textviewerconfiguration&quot;, &quot;contentoutlineconfiguration&quot;, &quot;propertysheetconfiguration&quot;, &quot;sourceeditingtexttools&quot;, &quot;spellchecktarget&quot;, and &quot;characterpairmatcher&quot;.
+                  The type of configuration to find.  Current types used include &quot;textviewerconfiguration&quot;, &quot;contentoutlineconfiguration&quot;, &quot;propertysheetconfiguration&quot;, and &quot;characterpairmatcher&quot;.
                </documentation>
             </annotation>
          </attribute>
@@ -124,20 +124,20 @@
 &lt;!-- associating a SourceViewerConfiguration to an input&apos;s Content Type--&gt;
      &lt;configuration
           type=&quot;textviewerconfiguration&quot;
-          class=&quot;org.eclipse.wst.sse.ui.html.StructuredTextViewerConfigurationHTML&quot;
-          target=&quot;org.eclipse.wst.html.contenttype&quot;/&gt;
+          class=&quot;org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML&quot;
+          target=&quot;org.eclipse.wst.html.core.htmlsource&quot;/&gt;
 
 &lt;!-- associating a ContentOutlineConfiguration for multiple editor IDs --&gt;
      &lt;configuration
           type=&quot;contentoutlineconfiguration&quot;
-          class=&quot;org.eclipse.wst.sse.ui.xml.views.contentoutline.XMLContentOutlineConfiguration&quot;
-          target=&quot;org.eclipse.wst.sse.ui.xml.StructuredTextEditorXML, com.ibm.xmleditor.internal.XMLMultiPageEditorPart&quot;/&gt;
+          class=&quot;org.eclipse.wst.sse.xml.ui.views.contentoutline.XMLContentOutlineConfiguration&quot;
+          target=&quot;org.eclipse.wst.xml.ui.StructuredTextEditorXML, org.eclipse.wst.xml.ui.XMLMultiPageEditorPart&quot;/&gt;
 
 &lt;!-- associating a PropertySheetConfiguration to multiple Content Types --&gt;
      &lt;configuration
           type=&quot;propertysheetconfiguration&quot;
-          class=&quot;org.eclipse.wst.sse.ui.xml.views.properties.XMLPropertySheetConfiguration&quot;
-          target=&quot;org.eclipse.wst.sse.contenttype.xml, org.eclipse.wst.html.contenttype.html, org.eclipse.jst.jsp.contenttype.jsp&quot;/&gt;
+          class=&quot;org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration&quot;
+          target=&quot;org.eclipse.wst.sse.contenttype.xml, org.eclipse.wst.html.core.htmlsource, org.eclipse.jst.jsp.core.jspsource&quot;/&gt;
 
 &lt;!-- add a view to the Navigate/Show In menu --&gt;
      &lt;definition

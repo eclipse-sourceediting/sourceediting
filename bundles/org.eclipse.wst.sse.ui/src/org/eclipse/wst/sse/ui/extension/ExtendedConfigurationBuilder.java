@@ -40,7 +40,7 @@ import org.osgi.framework.Bundle;
  * &lt;/extension&gt;
  * 
  * Used in code by getConfiguration(&quot;contentoutlineconfiguration&quot;,
- * &quot;org.eclipse.wst.sse.ui.dtd.StructuredTextEditorDTD&quot;);
+ * &quot;org.eclipse.wst.dtd.ui.StructuredTextEditorDTD&quot;);
  * 
  */
 public class ExtendedConfigurationBuilder extends RegistryReader {
@@ -147,7 +147,8 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 
 	/**
 	 * Returns a configuration for the given extensionType matching the
-	 * targetID, if one is available.
+	 * targetID, if one is available. If more than one configuration is
+	 * defined, the first one found is returned.
 	 * 
 	 * @param extensionType
 	 * @param targetID
