@@ -241,7 +241,7 @@ public class FileBufferModelManager {
 				for (int i = 0; i < danglingDocuments.length; i++) {
 					DocumentInfo info = (DocumentInfo) instance.fDocumentMap.get(danglingDocuments[i]);
 					if (info.modelReferenceCount > 0)
-						System.err.println("LEAKED MODEL: " + info.buffer.getLocation() + " " + info.buffer.getDocument());
+						System.err.println("LEAKED MODEL: " + info.buffer.getLocation() + " " + (info.model != null ? info.model.getId() : null));
 					if (info.bufferReferenceCount > 0)
 						System.err.println("LEAKED BUFFER: " + info.buffer.getLocation() + " " + info.buffer.getDocument());
 				}
