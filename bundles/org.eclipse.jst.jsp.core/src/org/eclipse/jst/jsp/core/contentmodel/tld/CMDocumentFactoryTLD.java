@@ -44,7 +44,6 @@ import org.w3c.dom.NodeList;
  */
 public class CMDocumentFactoryTLD implements CMDocumentFactory {
 
-	public static final String KEY = "com.ibm.sse.contentmodel.tld.CMDocumentFactoryTLD"; //$NON-NLS-1$
 	static final boolean _debug = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/tldcmdocument/factory")); //$NON-NLS-1$ //$NON-NLS-2$
 
 	/**
@@ -467,10 +466,6 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 			child = child.getNextSibling();
 		}
 		return s.toString().trim();
-	}
-
-	public Object getKey() {
-		return KEY;
 	}
 
 	public boolean isBuilderForGrammar(String grammarFileName) {
