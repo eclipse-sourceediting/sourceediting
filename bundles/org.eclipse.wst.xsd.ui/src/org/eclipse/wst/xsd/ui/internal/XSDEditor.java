@@ -28,7 +28,6 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-//import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -55,7 +54,9 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.internal.document.XMLModelImpl;
 import org.eclipse.wst.xsd.ui.internal.graph.XSDGraphViewer;
+//import org.eclipse.wst.xsd.ui.internal.graph.model.XSDModelAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.util.OpenOnSelectionHelper;
+import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDPackage;
 import org.eclipse.xsd.XSDSchema;
@@ -500,11 +501,6 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
 
 		public void notifyChanged(INodeNotifier notifier, int eventType, Object feature, Object oldValue, Object newValue, int index)
 		{
-			if (eventType == INodeNotifier.REMOVE) // don't handle remove events
-			{
-				return;
-			}
-
 			if (!handlingNotifyChanged)
 			{
 				handlingNotifyChanged = true;
@@ -515,7 +511,6 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
 							!(getActivePart() instanceof PropertySheet) && 
 							!(getActivePart() instanceof org.eclipse.ui.views.contentoutline.ContentOutline)) {
 						startDelayedEvent(notifier, eventType, feature, oldValue, newValue, index);
-				    //handleNotifyChange(notifier, eventType, feature, oldValue, newValue, index);
 					}
 					else // all other views, just handle the events right away
 					{
@@ -544,12 +539,41 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
 					}
 					break;
 				}
+        case INodeNotifier.REMOVE:
+        {
+          Node node = (Node)notifier;
+          XSDConcreteComponent listener = xsdSchema.getCorrespondingComponent(node);
+         
+          if (listener instanceof XSDSchema)
+          {
+            // we want to reset the schema's external elements when the directive is deleted
+            if (feature instanceof Element)
+            {
+              Element elem = (Element)feature;
+              if (XSDDOMHelper.inputEquals(elem, XSDConstants.INCLUDE_ELEMENT_TAG, false) ||
+                  XSDDOMHelper.inputEquals(elem, XSDConstants.IMPORT_ELEMENT_TAG, false) ||
+                  XSDDOMHelper.inputEquals(elem, XSDConstants.REDEFINE_ELEMENT_TAG, false))
+              {
+                xsdSchema.reset();
+                xsdSchema.update();
+              }
+            }
+          }          
+        }
 				case INodeNotifier.CHANGE:
 				{
 					Node node = (Node)notifier;
 			    XSDConcreteComponent listener = xsdSchema.getCorrespondingComponent(node);
-  		    listener.elementAttributesChanged((Element)node);
-    	    listener.elementChanged((Element)node);
+          if (node.getNodeType() == Node.ELEMENT_NODE)
+          {
+  		      listener.elementAttributesChanged((Element)node);
+    	      listener.elementChanged((Element)node);
+          }
+          else if (node.getNodeType() == Node.DOCUMENT_NODE)
+          {
+            listener.elementAttributesChanged(((Document)node).getDocumentElement());
+            listener.elementChanged(((Document)node).getDocumentElement());
+          }
     	    break;
 				}
 				case INodeNotifier.STRUCTURE_CHANGED:
@@ -557,7 +581,7 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
 				{
 					Node node = (Node)notifier;
 					XSDConcreteComponent listener = xsdSchema.getCorrespondingComponent(node);
-					if (node.getNodeType() == Node.ELEMENT_NODE)
+          if (node.getNodeType() == Node.ELEMENT_NODE)
 					{
 						listener.elementContentsChanged((Element)node);
 						break;
@@ -574,7 +598,7 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
 						  boolean doParse = false;
 						  if (attr != null)
 						  {
-						    if (attr.getValue().equals("http://www.w3.org/2001/XMLSchema") && docElement.getLocalName().equals("schema"))
+						    if (attr.getValue().equals(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001) && docElement.getLocalName().equals("schema"))
 						    {
 						      // We have a viable schema so parse it
 						      doParse = true;
