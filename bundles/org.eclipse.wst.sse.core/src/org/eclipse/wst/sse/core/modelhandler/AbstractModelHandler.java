@@ -28,9 +28,6 @@ public abstract class AbstractModelHandler implements IModelHandler {
 	private boolean defaultSetting;
 	private String modelHandlerID;
 
-	// XXX: can be removed once we transition completely
-	protected boolean USE_FILE_BUFFERS = false;
-
 	public AbstractModelHandler() {
 		super();
 	}
