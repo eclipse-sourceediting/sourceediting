@@ -57,7 +57,7 @@
    <extension
          point="org.eclipse.ui.views">
       <category
-            name="Experimental"
+            name="SSE Testing"
             id="org.eclipse.wst.sse.ui.tests">
       </category>
       <view
