@@ -23,12 +23,16 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
@@ -36,10 +40,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.ModelPlugin;
 import org.eclipse.wst.sse.core.builder.IBuilderDelegate;
@@ -53,11 +59,57 @@ public class StructuredDocumentBuilder extends IncrementalProjectBuilder impleme
 	protected static final boolean _debugBuilder = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/builder")); //$NON-NLS-1$ //$NON-NLS-2$
 	protected static final boolean _debugBuilderContentTypeDetection = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/builder/detection")); //$NON-NLS-1$ //$NON-NLS-2$
 	protected static final boolean _debugBuilderPerf = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/builder/time")); //$NON-NLS-1$ //$NON-NLS-2$
-	private static final boolean doValidateEdit = false;
+	private static final boolean performValidateEdit = false;
 
 	protected static IModelManagerPlugin fPlugin = null;
 	private static boolean isGloballyEnabled = true;
 	private static final String OFF = "off"; //$NON-NLS-1$
+	static final boolean _debugResourceChangeListener = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/resourcechangehandling")); //$NON-NLS-1$ //$NON-NLS-2$
+
+	protected static class ProjectChangeListener implements IResourceChangeListener, IResourceDeltaVisitor {
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
+		 */
+		public void resourceChanged(IResourceChangeEvent event) {
+			IResourceDelta delta = event.getDelta();
+			if (delta.getResource() != null) {
+				int resourceType = delta.getResource().getType();
+				if (resourceType == IResource.PROJECT || resourceType == IResource.ROOT) {
+					try {
+						delta.accept(this);
+					}
+					catch (CoreException e) {
+						Logger.logException("Exception managing buildspec list", e); //$NON-NLS-1$
+					}
+				}
+			}
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.core.resources.IResourceDeltaVisitor#visit(org.eclipse.core.resources.IResourceDelta)
+		 */
+		public boolean visit(IResourceDelta delta) throws CoreException {
+			IResource resource = delta.getResource();
+			if (resource != null) {
+				if (resource.getType() == IResource.ROOT)
+					return true;
+				else if (resource.getType() == IResource.PROJECT) {
+					if (delta.getKind() == IResourceDelta.ADDED) {
+						if (_debugResourceChangeListener) {
+							System.out.println("Project " + delta.getResource().getName() + " added to workspace and registering with SDMB");//$NON-NLS-2$//$NON-NLS-1$
+						}
+						add(new NullProgressMonitor(), (IProject) resource, null);
+					}
+					return false;
+				}
+			}
+			return false;
+		}
+	}
 
 	static {
 		String build = System.getProperty(ModelPlugin.STRUCTURED_BUILDER);
@@ -93,7 +145,7 @@ public class StructuredDocumentBuilder extends IncrementalProjectBuilder impleme
 				if (!isBuilderPresent && !monitor.isCanceled()) {
 					// validate for edit
 					IStatus status = null;
-					if (doValidateEdit) {
+					if (performValidateEdit) {
 						ISchedulingRule validateEditRule = null;
 						try {
 							if (_debugBuilder) {
@@ -107,11 +159,13 @@ public class StructuredDocumentBuilder extends IncrementalProjectBuilder impleme
 							if (_debugBuilder) {
 								if (status.isOK()) {
 									System.out.println("ValidateEdit completed for " + descriptionFile.getFullPath().toString()); //$NON-NLS-1$
-								} else {
+								}
+								else {
 									System.out.println("ValidateEdit failed for " + descriptionFile.getFullPath().toString() + " " + status.getMessage()); //$NON-NLS-2$//$NON-NLS-1$
 								}
 							}
-						} finally {
+						}
+						finally {
 							if (validateEditRule != null) {
 								Platform.getJobManager().endRule(validateEditRule);
 							}
@@ -126,7 +180,8 @@ public class StructuredDocumentBuilder extends IncrementalProjectBuilder impleme
 							newCommands = new ICommand[commands.length + 1];
 							System.arraycopy(commands, 0, newCommands, 0, commands.length);
 							newCommands[commands.length] = newCommand;
-						} else {
+						}
+						else {
 							newCommands = new ICommand[1];
 							newCommands[0] = newCommand;
 						}
@@ -143,29 +198,34 @@ public class StructuredDocumentBuilder extends IncrementalProjectBuilder impleme
 						// IProgressMonitor.UNKNOWN));
 						try {
 							project.setDescription(description, subMonitorFor(monitor, 1, IProgressMonitor.UNKNOWN));
-						} catch (CoreException e) {
+						}
+						catch (CoreException e) {
 							if (_debugBuilder) {
-								if (doValidateEdit) {
+								if (performValidateEdit) {
 									System.out.println("Description for project \"" + project.getName() + "\" could not be updated despite successful validateEdit"); //$NON-NLS-2$//$NON-NLS-1$
-								} else {
+								}
+								else {
 									System.out.println("Description for project \"" + project.getName() + "\" could not be updated"); //$NON-NLS-2$//$NON-NLS-1$
 								}
 							}
-							if (doValidateEdit) {
+							if (performValidateEdit) {
 								Logger.log(Logger.WARNING, "Description for project \"" + project.getName() + "\" could not be updated despite successful validateEdit"); //$NON-NLS-2$//$NON-NLS-1$					
-							} else {
+							}
+							else {
 								Logger.log(Logger.WARNING, "Description for project \"" + project.getName() + "\" could not be updated"); //$NON-NLS-2$//$NON-NLS-1$					
 							}
 						}
 					}
 				}
-			} else {
+			}
+			else {
 				if (_debugBuilder) {
 					System.out.println("Description for project \"" + project.getName() + "\" could not be updated"); //$NON-NLS-2$//$NON-NLS-1$
 				}
 				Logger.log(Logger.WARNING, "Description for project \"" + project.getName() + "\" could not be updated"); //$NON-NLS-2$//$NON-NLS-1$
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			// if we can't read the information, the project isn't open,
 			// so it can't run auto-validate
 			Logger.logException("Exception caught when adding Model Builder", e); //$NON-NLS-1$
@@ -222,9 +282,10 @@ public class StructuredDocumentBuilder extends IncrementalProjectBuilder impleme
 	protected BuilderParticipantRegistryReader registry = null;
 
 	private long time0;
+	private IResourceChangeListener changeListener;
 
 	/**
-	 *  
+	 * 
 	 */
 	public StructuredDocumentBuilder() {
 		super();
@@ -243,7 +304,7 @@ public class StructuredDocumentBuilder extends IncrementalProjectBuilder impleme
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
 		IProject currentProject = getProject();
 		// Currently, just use the Task Tags preference
-		boolean locallyEnabled = isGloballyEnabled && ModelPlugin.getDefault().getPluginPreferences().getBoolean(CommonModelPreferenceNames.TASK_TAG_ENABLE);
+		boolean locallyEnabled = isGloballyEnabled && Platform.getPlugin(IModelManagerPlugin.ID).getPluginPreferences().getBoolean(CommonModelPreferenceNames.TASK_TAG_ENABLE);
 		if (!locallyEnabled || currentProject == null || !currentProject.isAccessible()) {
 			if (_debugBuilderPerf || _debugBuilder) {
 				System.out.println(getClass().getName() + " skipping build of " + currentProject.getName()); //$NON-NLS-1$
@@ -262,7 +323,8 @@ public class StructuredDocumentBuilder extends IncrementalProjectBuilder impleme
 			// check the kind of delta if one was given
 			if (kind == FULL_BUILD || kind == CLEAN_BUILD || delta == null) {
 				doFullBuild(kind, args, localMonitor, getProject());
-			} else {
+			}
+			else {
 				doIncrementalBuild(kind, args, localMonitor);
 			}
 		}
@@ -273,7 +335,8 @@ public class StructuredDocumentBuilder extends IncrementalProjectBuilder impleme
 			if (kind == FULL_BUILD || delta == null) {
 				System.out.println(getClass().getName() + " finished FULL build of " + currentProject.getName() //$NON-NLS-1$
 							+ " in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
-			} else {
+			}
+			else {
 				System.out.println(getClass().getName() + " finished INCREMENTAL/CLEAN/AUTO build of " + currentProject.getName() //$NON-NLS-1$
 							+ " in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
@@ -302,7 +365,8 @@ public class StructuredDocumentBuilder extends IncrementalProjectBuilder impleme
 						fActiveDelegates.add(delegates[j]);
 					}
 					delegates[j].build((IFile) resource, kind, args, subMonitorFor(monitor, 100));
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					Logger.logException(e);
 				}
 			}
@@ -340,7 +404,8 @@ public class StructuredDocumentBuilder extends IncrementalProjectBuilder impleme
 				if (d != null) {
 					types = new IContentType[]{d.getContentType()};
 				}
-			} catch (CoreException e) {
+			}
+			catch (CoreException e) {
 				// should not be possible given the accessible and file type
 				// check above
 			}
@@ -387,7 +452,8 @@ public class StructuredDocumentBuilder extends IncrementalProjectBuilder impleme
 						visitorMonitor.worked(1);
 					}
 					return false;
-				} else {
+				}
+				else {
 					return true;
 				}
 			}
@@ -395,13 +461,14 @@ public class StructuredDocumentBuilder extends IncrementalProjectBuilder impleme
 		};
 		try {
 			project.accept(internalBuilder);
-		} catch (CoreException e) {
+		}
+		catch (CoreException e) {
 			Logger.logException(e);
 		}
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	protected void doIncrementalBuild(int kind, Map args, IProgressMonitor monitor) {
 		IResourceDelta projectDelta = getDelta(getProject());
@@ -411,7 +478,8 @@ public class StructuredDocumentBuilder extends IncrementalProjectBuilder impleme
 		if (_debugBuilder) {
 			if (projectDelta != null && projectDelta.getResource() != null) {
 				System.out.println(getClass().getName() + " building " + projectDelta.getResource().getFullPath()); //$NON-NLS-1$
-			} else {
+			}
+			else {
 				System.out.println(getClass().getName() + " building project " + getProject().getName()); //$NON-NLS-1$
 			}
 		}
@@ -431,7 +499,8 @@ public class StructuredDocumentBuilder extends IncrementalProjectBuilder impleme
 		};
 		try {
 			projectDelta.accept(participantVisitor);
-		} catch (CoreException e) {
+		}
+		catch (CoreException e) {
 			Logger.logException(e);
 		}
 		monitor.worked(1);
@@ -454,16 +523,57 @@ public class StructuredDocumentBuilder extends IncrementalProjectBuilder impleme
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	private void shutdownDelegates() {
 		for (int j = 0; j < fActiveDelegates.size(); j++) {
 			try {
 				((IBuilderDelegate) fActiveDelegates.get(j)).shutdown(getProject());
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				Logger.logException(e);
 			}
 		}
 		fActiveDelegates = new ArrayList(1);
+	}
+
+	// make private if ever used again
+	void doTaskTagProcessing() {
+		// Must make sure the builder is registered for projects which may
+		// have been created before this plugin was activated.
+		Job adder = new WorkspaceJob(ResourceHandler.getString("ModelPlugin.0")) { //$NON-NLS-1$
+			public IStatus runInWorkspace(IProgressMonitor monitor) {
+				add(monitor, ResourcesPlugin.getWorkspace().getRoot(), null);
+				return Status.OK_STATUS;
+			}
+		};
+		adder.setSystem(true);
+		// use SHORT, since once executing, this job should be quick
+		adder.setPriority(Job.SHORT);
+		// since we have potential to change several .project files,
+		// we should wait until we can get exclusive access to
+		// whole workspace.
+		// TODO: future re-design should not require this.
+		adder.setRule(ResourcesPlugin.getWorkspace().getRoot());
+		adder.schedule();
+
+		// Register the ProjectChangeListener so that it can add the
+		// builder
+		// to projects as needed
+		changeListener = new ProjectChangeListener();
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(changeListener, IResourceChangeEvent.PRE_BUILD);
+	}
+
+	/**
+	 * Only for use by ModelPlugin class
+	 */
+	public static void shutdown() {
+	}
+
+	/**
+	 * Only for use by ModelPlugin class
+	 */
+	public static void startup() {
+		// TODO:disabled for now
 	}
 }

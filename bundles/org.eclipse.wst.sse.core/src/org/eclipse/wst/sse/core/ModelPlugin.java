@@ -12,30 +12,13 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.IResourceDeltaVisitor;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPluginDescriptor;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.wst.common.encoding.CommonEncodingPreferenceNames;
-import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.builder.StructuredDocumentBuilder;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
-import org.eclipse.wst.sse.core.internal.nls.ResourceHandler;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.osgi.framework.Bundle;
 
@@ -71,54 +54,10 @@ import org.osgi.framework.Bundle;
  * as a parameter ("org.eclipse.wst.sse.core" in the above example).
  */
 public class ModelPlugin extends Plugin implements IModelManagerPlugin {
-	protected static class ProjectChangeListener implements IResourceChangeListener, IResourceDeltaVisitor {
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.core.resources.IResourceChangeListener#resourceChanged(org.eclipse.core.resources.IResourceChangeEvent)
-		 */
-		public void resourceChanged(IResourceChangeEvent event) {
-			IResourceDelta delta = event.getDelta();
-			if (delta.getResource() != null) {
-				int resourceType = delta.getResource().getType();
-				if (resourceType == IResource.PROJECT || resourceType == IResource.ROOT) {
-					try {
-						delta.accept(this);
-					} catch (CoreException e) {
-						Logger.logException("Exception managing buildspec list", e); //$NON-NLS-1$
-					}
-				}
-			}
-		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.core.resources.IResourceDeltaVisitor#visit(org.eclipse.core.resources.IResourceDelta)
-		 */
-		public boolean visit(IResourceDelta delta) throws CoreException {
-			IResource resource = delta.getResource();
-			if (resource != null) {
-				if (resource.getType() == IResource.ROOT)
-					return true;
-				else if (resource.getType() == IResource.PROJECT) {
-					if (delta.getKind() == IResourceDelta.ADDED) {
-						if (_debugResourceChangeListener) {
-							System.out.println("Project " + delta.getResource().getName() + " added to workspace and registering with SDMB");//$NON-NLS-2$//$NON-NLS-1$
-						}
-						StructuredDocumentBuilder.add(new NullProgressMonitor(), (IProject) resource, null);
-					}
-					return false;
-				}
-			}
-			return false;
-		}
-	}
-
-	static final boolean _debugResourceChangeListener = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/resourcechangehandling")); //$NON-NLS-1$ //$NON-NLS-2$
 	static ModelPlugin instance = null;
-	private static final String OFF = "off"; //$NON-NLS-1$
 
+	private static final String OFF = "off"; //$NON-NLS-1$
 	public static final String STRUCTURED_BUILDER = "org.eclipse.wst.sse.core.structuredbuilder"; //$NON-NLS-1$
 
 	public static ModelPlugin getDefault() {
@@ -128,8 +67,6 @@ public class ModelPlugin extends Plugin implements IModelManagerPlugin {
 	public static String getID() {
 		return getDefault().getBundle().getSymbolicName();
 	}
-
-	private ProjectChangeListener changeListener;
 
 	public ModelPlugin() {
 		super();
@@ -156,19 +93,24 @@ public class ModelPlugin extends Plugin implements IModelManagerPlugin {
 				isReady = true;
 				// getInstance is a synchronized static method.
 				modelManager = ModelManagerImpl.getInstance();
-			} else if (state == Bundle.STARTING) {
+			}
+			else if (state == Bundle.STARTING) {
 				try {
 					Thread.sleep(100);
-				} catch (InterruptedException e) {
+				}
+				catch (InterruptedException e) {
 					// ignore, just loop again
 				}
-			} else if (state == Bundle.STOPPING) {
+			}
+			else if (state == Bundle.STOPPING) {
 				isReady = true;
 				modelManager = new NullModelManager();
-			} else if (state == Bundle.UNINSTALLED) {
+			}
+			else if (state == Bundle.UNINSTALLED) {
 				isReady = true;
 				modelManager = new NullModelManager();
-			} else {
+			}
+			else {
 				// not sure about other states, 'resolved', 'installed'
 				isReady = true;
 			}
@@ -211,11 +153,7 @@ public class ModelPlugin extends Plugin implements IModelManagerPlugin {
 	public void shutdown() throws CoreException {
 		super.shutdown();
 		savePluginPreferences();
-		// Remove the listener from the workspace
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		if (changeListener != null && workspace != null) {
-			workspace.removeResourceChangeListener(changeListener);
-		}
+		StructuredDocumentBuilder.shutdown();
 		FileBufferModelManager.shutdown();
 	}
 
@@ -227,46 +165,14 @@ public class ModelPlugin extends Plugin implements IModelManagerPlugin {
 	public void startup() throws CoreException {
 		super.startup();
 
-		String build = System.getProperty(STRUCTURED_BUILDER);
-		if (build == null || !build.equalsIgnoreCase(OFF)) {
-			// TODO: always off, until redesigned
-			// doTaskTagProcessing();
-		}
-		// initialize FileBuffer handling
+		// initialize FileBuffer support
 		FileBufferModelManager.startup();
 
+		// allow for explicitly disabling the builder (testing)
+		String build = System.getProperty(STRUCTURED_BUILDER);
+		if (build == null || !build.equalsIgnoreCase(OFF)) {
+			StructuredDocumentBuilder.startup();
+		}
 	}
 
-	// make private if ever used again
-	 void doTaskTagProcessing() {
-		// Must make sure the builder is registered for projects which may
-		// have
-		// been created before this plugin was activated.
-		Job adder = new WorkspaceJob(ResourceHandler.getString("ModelPlugin.0")) { //$NON-NLS-1$
-			public IStatus runInWorkspace(IProgressMonitor monitor) {
-				StructuredDocumentBuilder.add(monitor, ResourcesPlugin.getWorkspace().getRoot(), null);
-				return Status.OK_STATUS;
-			}
-		};
-		adder.setSystem(true);
-		// use SHORT, since once executing,
-		// this job should be quick, since
-		// this is the job that just adds
-		// to the .project files. Its later
-		// that files are scanned for task
-		// tags.
-		adder.setPriority(Job.SHORT);
-		// since we have potential to change several .project files,
-		// we should wait until we can get exclusive access to
-		// whole workspace.
-		// TODO: future re-design should not require this.
-		adder.setRule(ResourcesPlugin.getWorkspace().getRoot());
-		adder.schedule();
-
-		// Register the ProjectChangeListener so that it can add the
-		// builder
-		// to projects as needed
-		changeListener = new ProjectChangeListener();
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(changeListener, IResourceChangeEvent.PRE_BUILD);
-	}
 }
