@@ -47,19 +47,19 @@ import org.eclipse.wst.sse.ui.internal.Logger;
  * @author pavery
  */
 public abstract class StructuredReconcileStep extends AbstractReconcileStep implements IReleasable {
-    
-    /** debug flag */
-    protected static final boolean DEBUG;
-    static {
-        String value = Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/reconcilerjob"); //$NON-NLS-1$
-        DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
-    }
 
-    // these limits are safetys for "runaway" validation cases
-    // should be used to safeguard potentially dangerous loops or potentially
-    // long annotations
-    // (since the painter seems to affect performance when painting long
-    // annotations)
+	/** debug flag */
+	protected static final boolean DEBUG;
+	static {
+		String value = Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/reconcilerjob"); //$NON-NLS-1$
+		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+	}
+
+	// these limits are safetys for "runaway" validation cases
+	// should be used to safeguard potentially dangerous loops or potentially
+	// long annotations
+	// (since the painter seems to affect performance when painting long
+	// annotations)
 	public static final int ANNOTATION_LENGTH_LIMIT = 100;
 	public static final int ELEMENT_ERROR_LIMIT = 100;
 
@@ -87,34 +87,39 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 	}
 
 	public ReconcileAnnotationKey createKey(IStructuredDocumentRegion sdRegion, int scope) {
-		
-        ITypedRegion tr = getPartition(sdRegion);
+
+		ITypedRegion tr = getPartition(sdRegion);
 		String partitionType = (tr != null) ? tr.getType() : StructuredTextPartitioner.ST_UNKNOWN_PARTITION;
 		return createKey(partitionType, scope);
 	}
 
-    /**
-     * @param sdRegion
-     * @return
-     */
-    private ITypedRegion getPartition(IStructuredDocumentRegion sdRegion) {
-        ITypedRegion tr = null;
-        if(!sdRegion.isDeleted())
-            tr = getPartition(sdRegion.getParentDocument(), sdRegion.getStartOffset());
-        return tr;
-    }
-    
-    private ITypedRegion getPartition(IDocument doc, int offset) {
-        ITypedRegion tr = null;
-        try {
-            tr = TextUtilities.getPartition(doc,IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING , offset, false);
-        } catch (BadLocationException e) {
-            if(DEBUG)
-                Logger.logException("problem getting partition at: " + offset, e);
-        }
-        return tr;
-    }
-    
+	/**
+	 * @param sdRegion
+	 * @return
+	 */
+	private ITypedRegion getPartition(IStructuredDocumentRegion sdRegion) {
+		ITypedRegion tr = null;
+		if (!sdRegion.isDeleted())
+			tr = getPartition(sdRegion.getParentDocument(), sdRegion.getStartOffset());
+		return tr;
+	}
+
+	private ITypedRegion getPartition(IDocument doc, int offset) {
+		ITypedRegion tr = null;
+		// not sure why document would ever be null, but put in this 
+		// guard for 
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=86069
+		if (doc != null) {
+			try {
+				tr = TextUtilities.getPartition(doc, IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING, offset, false);
+			} catch (BadLocationException e) {
+				if (DEBUG)
+					Logger.logException("problem getting partition at: " + offset, e);
+			}
+		}
+		return tr;
+	}
+
 	/**
 	 * Clients should use this method to create annotation keys as it
 	 * registers the key for removal later.
@@ -142,7 +147,7 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 	}
 
 	public String getPartitionType(IDocument doc, int offset) {
-        ITypedRegion tr = getPartition(doc, offset);
+		ITypedRegion tr = getPartition(doc, offset);
 		return (tr != null) ? tr.getType() : StructuredTextPartitioner.ST_UNKNOWN_PARTITION;
 	}
 
@@ -226,6 +231,6 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 			fNextStructuredStep.release();
 		// we don't to null out the steps, in case
 		// it's reconfigured later
-		//fNextStructuredStep = null;
+		// fNextStructuredStep = null;
 	}
 }
