@@ -29,7 +29,7 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMModel;
 import org.eclipse.wst.xml.core.internal.document.StructuredDocumentRegionChecker;
 import org.w3c.dom.Node;
 
@@ -68,7 +68,7 @@ public abstract class ModelTest extends TestCase {
 		//		}
 	}
 
-	public static XMLModel createHTMLModel() {
+	public static DOMModel createHTMLModel() {
 
 		//return new XMLModelImpl();
 
@@ -88,11 +88,11 @@ public abstract class ModelTest extends TestCase {
 		}
 		//assertTrue("basic XML empty model could not be created", model !=
 		// null);
-		return (XMLModel) model;
+		return (DOMModel) model;
 
 	}
 
-	public static XMLModel createXMLModel() {
+	public static DOMModel createXMLModel() {
 
 		//return new XMLModelImpl();
 
@@ -116,7 +116,7 @@ public abstract class ModelTest extends TestCase {
 		}
 		//assertTrue("basic XML empty model could not be created", model !=
 		// null);
-		return (XMLModel) model;
+		return (DOMModel) model;
 
 	}
 
@@ -149,7 +149,7 @@ public abstract class ModelTest extends TestCase {
 		}
 	}
 
-	public void printSource(XMLModel model) {
+	public void printSource(DOMModel model) {
 		try {
 			fOutputWriter.writeln("Source :");
 			fOutputWriter.writeln(model.getStructuredDocument().getText());
@@ -160,7 +160,7 @@ public abstract class ModelTest extends TestCase {
 		}
 	}
 
-	public void printTree(XMLModel model) {
+	public void printTree(DOMModel model) {
 		try {
 			printFlatModel(model.getStructuredDocument());
 			new StructuredDocumentRegionChecker(fOutputWriter).checkModel(model);

@@ -14,8 +14,8 @@ import java.util.Iterator;
 
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.xml.core.document.XMLModel;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -38,7 +38,7 @@ public class UpdaterTest10 extends ModelTest {
 	}
 
 	public void testModel() {
-		XMLModel model = createXMLModel();
+		DOMModel model = createXMLModel();
 		try {
 			Document document = model.getDocument();
 
@@ -52,7 +52,7 @@ public class UpdaterTest10 extends ModelTest {
 			printTree(model);
 
 			fOutputWriter.writeln("IStructuredDocumentRegion:");
-			XMLNode node = (XMLNode) b;
+			DOMNode node = (DOMNode) b;
 			IStructuredDocumentRegion flatNode = node.getStartStructuredDocumentRegion();
 			fOutputWriter.writeln(flatNode.getText());
 			Iterator e = flatNode.getRegions().iterator();
@@ -71,7 +71,7 @@ public class UpdaterTest10 extends ModelTest {
 			printTree(model);
 
 			fOutputWriter.writeln("IStructuredDocumentRegion:");
-			node = (XMLNode) b;
+			node = (DOMNode) b;
 			flatNode = node.getStartStructuredDocumentRegion();
 			fOutputWriter.writeln(flatNode.getText());
 			e = flatNode.getRegions().iterator();
@@ -90,7 +90,7 @@ public class UpdaterTest10 extends ModelTest {
 			printTree(model);
 
 			fOutputWriter.writeln("IStructuredDocumentRegion:");
-			node = (XMLNode) b;
+			node = (DOMNode) b;
 			flatNode = node.getStartStructuredDocumentRegion();
 			fOutputWriter.writeln(flatNode.getText());
 			e = flatNode.getRegions().iterator();

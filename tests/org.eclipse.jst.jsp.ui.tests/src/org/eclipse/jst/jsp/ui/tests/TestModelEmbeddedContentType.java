@@ -25,7 +25,7 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerUtility;
 import org.eclipse.wst.sse.core.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMModel;
 import org.w3c.dom.Document;
 
 /**
@@ -52,7 +52,7 @@ public class TestModelEmbeddedContentType extends TestCase {
 	}
 
 	protected void checkEmbeddedType(IStructuredModel clonedModel, Object expectedType) {
-		Document doc = ((XMLModel) clonedModel).getDocument();
+		Document doc = ((DOMModel) clonedModel).getDocument();
 		PageDirectiveAdapter embeddedTypeAdapter = (PageDirectiveAdapter) ((INodeNotifier) doc).getAdapterFor(PageDirectiveAdapter.class);
 		assertNotNull("cloned model did not have embedded adapter", embeddedTypeAdapter);
 
@@ -69,7 +69,7 @@ public class TestModelEmbeddedContentType extends TestCase {
 		assertTrue("model could not be created!", model != null);
 
 		// XML should NOT have an embedded type
-		Document doc = ((XMLModel) model).getDocument();
+		Document doc = ((DOMModel) model).getDocument();
 		EmbeddedTypeHandler embeddedHandler = (EmbeddedTypeHandler) ((INodeNotifier) doc).getAdapterFor(EmbeddedTypeHandler.class);
 		assertTrue("embededHanlder should be null for XML", embeddedHandler == null);
 
@@ -82,7 +82,7 @@ public class TestModelEmbeddedContentType extends TestCase {
 		assertTrue("model could not be created!", model != null);
 
 		// should NOT have an embedded type
-		Document doc = ((XMLModel) model).getDocument();
+		Document doc = ((DOMModel) model).getDocument();
 		EmbeddedTypeHandler embeddedHandler = (EmbeddedTypeHandler) ((INodeNotifier) doc).getAdapterFor(EmbeddedTypeHandler.class);
 		assertTrue("embededHanlder should be null for HTML", embeddedHandler == null);
 
@@ -95,7 +95,7 @@ public class TestModelEmbeddedContentType extends TestCase {
 		assertTrue("model could not be created!", model != null);
 
 		// should have an embedded type
-		Document doc = ((XMLModel) model).getDocument();
+		Document doc = ((DOMModel) model).getDocument();
 		PageDirectiveAdapter embeddedHandler = (PageDirectiveAdapter) ((INodeNotifier) doc).getAdapterFor(PageDirectiveAdapter.class);
 		assertTrue("embededHanlder should NOT be null for JSP", embeddedHandler != null);
 

@@ -41,8 +41,8 @@ import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.xml.core.document.XMLDocument;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMDocument;
+import org.eclipse.wst.xml.core.document.DOMModel;
 
 
 /**
@@ -202,14 +202,14 @@ public class JSPSearchTests extends TestCase implements IJavaSearchConstants {
 
 	public void testSearchLocalVariable() {
 
-		XMLModel xmlModel = null;
+		DOMModel xmlModel = null;
 		try {
 			IPath jspTestFilePath = new Path("judo/SEARCH/searchTestJSP3.jsp");
 			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(jspTestFilePath);
-			xmlModel = (XMLModel) getStructuredModelForRead(file);
+			xmlModel = (DOMModel) getStructuredModelForRead(file);
 			setupAdapterFactory(xmlModel);
 
-			XMLDocument doc = xmlModel.getDocument();
+			DOMDocument doc = xmlModel.getDocument();
 			JSPTranslationAdapter adapter = (JSPTranslationAdapter) doc.getAdapterFor(IJSPTranslation.class);
 			JSPTranslation translation = adapter.getJSPTranslation();
 			IJavaElement element = translation.getElementsFromJspRange(377, 384)[0];

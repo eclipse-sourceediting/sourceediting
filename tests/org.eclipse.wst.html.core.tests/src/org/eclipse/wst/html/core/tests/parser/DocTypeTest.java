@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.tests.parser;
 
-import org.eclipse.wst.xml.core.document.XMLDocument;
-import org.eclipse.wst.xml.core.document.XMLDocumentType;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMDocument;
+import org.eclipse.wst.xml.core.document.DOMDocumentType;
+import org.eclipse.wst.xml.core.document.DOMModel;
 import org.w3c.dom.Element;
 
 public class DocTypeTest extends ModelTest {
@@ -34,11 +34,11 @@ public class DocTypeTest extends ModelTest {
 	}
 
 	public void testModel() {
-		XMLModel model = createHTMLModel();
+		DOMModel model = createHTMLModel();
 		try {
-			XMLDocument document = model.getDocument();
+			DOMDocument document = model.getDocument();
 
-			XMLDocumentType docType = (XMLDocumentType) document.createDoctype("HTML");
+			DOMDocumentType docType = (DOMDocumentType) document.createDoctype("HTML");
 			document.appendChild(docType);
 			Element html = document.createElement("HTML");
 			document.appendChild(html);

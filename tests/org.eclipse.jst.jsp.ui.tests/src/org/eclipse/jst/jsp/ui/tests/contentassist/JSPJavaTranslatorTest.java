@@ -20,7 +20,7 @@ import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMNode;
 
 /**
  * This class tests the sed JSPJavaTranslator class
@@ -43,7 +43,7 @@ public class JSPJavaTranslatorTest extends TestCase {
 			IStructuredDocument structuredDocument = sm.getStructuredDocument();
 			String text = structuredDocument.getText();
 
-			XMLNode xmlNode = (XMLNode) sm.getIndexedRegion(0);
+			DOMNode xmlNode = (DOMNode) sm.getIndexedRegion(0);
 
 			if (xmlNode != null) {
 				JSPTranslator jspt = new JSPTranslator();

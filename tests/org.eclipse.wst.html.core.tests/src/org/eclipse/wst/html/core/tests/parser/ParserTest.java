@@ -11,8 +11,8 @@
 package org.eclipse.wst.html.core.tests.parser;
 
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.xml.core.document.XMLModel;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -35,7 +35,7 @@ public class ParserTest extends ModelTest {
 	}
 
 	public void testModel() {
-		XMLModel model = createXMLModel();
+		DOMModel model = createXMLModel();
 		try {
 			IStructuredDocument structuredDocument = model.getStructuredDocument();
 			Document document = model.getDocument();
@@ -61,32 +61,32 @@ public class ParserTest extends ModelTest {
 			printSource(model);
 			printTree(model);
 
-			structuredDocument.replaceText(null, ((XMLNode) b).getStartOffset(), 0, "b");
+			structuredDocument.replaceText(null, ((DOMNode) b).getStartOffset(), 0, "b");
 
 			printSource(model);
 			printTree(model);
 
-			structuredDocument.replaceText(null, ((XMLNode) b2).getStartOffset(), 0, "c");
+			structuredDocument.replaceText(null, ((DOMNode) b2).getStartOffset(), 0, "c");
 
 			printSource(model);
 			printTree(model);
 
-			structuredDocument.replaceText(null, ((XMLNode) b2).getEndOffset(), 0, "d");
+			structuredDocument.replaceText(null, ((DOMNode) b2).getEndOffset(), 0, "d");
 
 			printSource(model);
 			printTree(model);
 
-			structuredDocument.replaceText(null, ((XMLNode) p2).getStartOffset(), 0, "e");
+			structuredDocument.replaceText(null, ((DOMNode) p2).getStartOffset(), 0, "e");
 
 			printSource(model);
 			printTree(model);
 
-			structuredDocument.replaceText(null, ((XMLNode) p2).getStartOffset() + 3, 0, "f");
+			structuredDocument.replaceText(null, ((DOMNode) p2).getStartOffset() + 3, 0, "f");
 
 			printSource(model);
 			printTree(model);
 
-			structuredDocument.replaceText(null, ((XMLNode) p2).getEndOffset(), 0, "g");
+			structuredDocument.replaceText(null, ((DOMNode) p2).getEndOffset(), 0, "g");
 
 			printSource(model);
 			printTree(model);

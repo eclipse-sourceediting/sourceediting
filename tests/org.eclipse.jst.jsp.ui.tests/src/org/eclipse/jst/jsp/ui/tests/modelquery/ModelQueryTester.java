@@ -32,7 +32,7 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
 import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMModel;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
@@ -56,7 +56,7 @@ public class ModelQueryTester extends TestCase {
 	private final boolean testShippedDTDLookup = false;
 
 	// Our Structured Model, which should always be an XMLModel (or subclass)
-	protected XMLModel fModel = null;
+	protected DOMModel fModel = null;
 
 	protected ModelQuery fModelQuery = null;
 
@@ -94,7 +94,7 @@ public class ModelQueryTester extends TestCase {
 	 * Create an empty HTML model
 	 */
 	protected void setUpHTML() {
-		fModel = (XMLModel) createModel(ContentTypeIdForHTML.ContentTypeID_HTML);
+		fModel = (DOMModel) createModel(ContentTypeIdForHTML.ContentTypeID_HTML);
 		initVars();
 	}
 
@@ -102,7 +102,7 @@ public class ModelQueryTester extends TestCase {
 	 * Create an empty XML model
 	 */
 	protected void setUpXML() {
-		fModel = (XMLModel) createModel(ContentTypeIdForXML.ContentTypeID_XML);
+		fModel = (DOMModel) createModel(ContentTypeIdForXML.ContentTypeID_XML);
 		initVars();
 	}
 

@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.tests.parser;
 
-import org.eclipse.wst.xml.core.document.XMLModel;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xml.core.internal.document.InvalidCharacterException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -35,13 +35,13 @@ public class TextTest3 extends ModelTest {
 	}
 
 	public void testModel() {
-		XMLModel model = createXMLModel();
+		DOMModel model = createXMLModel();
 		try {
 			Document document = model.getDocument();
 
 			Element a = document.createElement("a");
 			document.appendChild(a);
-			XMLNode text = (XMLNode) document.createTextNode("text");
+			DOMNode text = (DOMNode) document.createTextNode("text");
 			a.appendChild(text);
 
 			try {

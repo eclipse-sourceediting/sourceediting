@@ -37,7 +37,7 @@ import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.Debug;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMModel;
 import org.eclipse.wst.xml.core.internal.document.XMLModelImpl;
 import org.eclipse.wst.xml.core.internal.parser.XMLSourceParser;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
@@ -45,7 +45,7 @@ import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 public class UnitTests extends TestCase {
 
 	protected IStructuredDocument fModel;
-	protected XMLModel tree;
+	protected DOMModel tree;
 	protected int eventCase = 1;
 	protected boolean eventResult;
 
