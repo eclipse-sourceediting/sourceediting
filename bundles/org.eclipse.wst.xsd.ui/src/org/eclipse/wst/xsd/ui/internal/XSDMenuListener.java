@@ -17,6 +17,7 @@ import org.eclipse.gef.ui.parts.AbstractEditPartViewer;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -39,6 +40,7 @@ import org.eclipse.wst.xsd.ui.internal.actions.GraphRenameAction;
 import org.eclipse.wst.xsd.ui.internal.actions.MakeAnonymousGlobal;
 import org.eclipse.wst.xsd.ui.internal.actions.OpenSchemaAction;
 import org.eclipse.wst.xsd.ui.internal.actions.SetBaseTypeAction;
+import org.eclipse.wst.xsd.ui.internal.actions.SetMultiplicityAction;
 import org.eclipse.wst.xsd.ui.internal.actions.XSDEditNamespacesAction;
 import org.eclipse.wst.xsd.ui.internal.graph.editparts.ComplexTypeDefinitionEditPart;
 import org.eclipse.wst.xsd.ui.internal.graph.editparts.ElementDeclarationEditPart;
@@ -361,7 +363,7 @@ public class XSDMenuListener implements IMenuListener
     }
     
     // insertion point for popupMenus extension
-	manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));    
+  manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));    
   }
 
   protected String getBuiltInStringQName()
@@ -433,7 +435,8 @@ public class XSDMenuListener implements IMenuListener
       addCreateElementAction(manager, XSDConstants.APPINFO_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_APP_INFO"), attributes, parent, null);
     }
     else if (XSDDOMHelper.inputEquals(parent, XSDConstants.ELEMENT_ELEMENT_TAG, false))
-    { //
+    {
+      XSDConcreteComponent concreteComponent = getXSDSchema().getCorrespondingComponent(parent);
       Element parentNode = (Element) parent.getParentNode();
       boolean isGlobalElement = false;
       if (XSDDOMHelper.inputEquals(parentNode, XSDConstants.SCHEMA_ELEMENT_TAG, false))
@@ -474,7 +477,6 @@ public class XSDMenuListener implements IMenuListener
         //addCreateLocalComplexTypeActionIfNotExist(manager,
         // XSDConstants.COMPLEXTYPE_ELEMENT_TAG, "Add Local Complex Type",
         // attributes, parent, parent.getFirstChild());
-        XSDConcreteComponent concreteComponent = getXSDSchema().getCorrespondingComponent(parent);
         if (concreteComponent != null)
         {
           AddModelGroupAction addModelGroupAction = new AddModelGroupAction(concreteComponent, XSDCompositor.SEQUENCE_LITERAL);
@@ -521,9 +523,16 @@ public class XSDMenuListener implements IMenuListener
         addMoveAnonymousGlobal(manager, XSDConstants.SIMPLETYPE_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_MAKE_ANONYMOUS_TYPE_GLOBAL"), attributes, anonymousType, null);
         attributes = null;
       }
+      
+      if (!isGlobalElement)
+      {
+        addMultiplicityMenu(concreteComponent, manager);
+      }
     }
     else if (XSDDOMHelper.inputEquals(parent, XSDConstants.SEQUENCE_ELEMENT_TAG, false) || XSDDOMHelper.inputEquals(parent, XSDConstants.CHOICE_ELEMENT_TAG, false))
     { //
+      XSDConcreteComponent concreteComponent = getXSDSchema().getCorrespondingComponent(parent);
+      
       addCreateAnnotationActionIfNotExist(manager, XSDConstants.ANNOTATION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANNOTATION"), attributes, parent, parent.getFirstChild());
       manager.add(new Separator());
       addCreateElementAction(manager, XSDConstants.CHOICE_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_CHOICE"), attributes, parent, null);
@@ -538,9 +547,13 @@ public class XSDMenuListener implements IMenuListener
       manager.add(new Separator());
       attributes = null;
       addCreateElementAction(manager, XSDConstants.ANY_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANY_ELEMENT"), attributes, parent, null);
+      
+      addMultiplicityMenu(concreteComponent, manager);
     }
     else if (XSDDOMHelper.inputEquals(parent, XSDConstants.ALL_ELEMENT_TAG, false))
     { //
+      XSDConcreteComponent concreteComponent = getXSDSchema().getCorrespondingComponent(parent);
+      
       addCreateAnnotationActionIfNotExist(manager, XSDConstants.ANNOTATION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANNOTATION"), attributes, parent, parent.getFirstChild());
       manager.add(new Separator());
       attributes = new ArrayList();
@@ -548,6 +561,8 @@ public class XSDMenuListener implements IMenuListener
       attributes.add(new DOMAttribute(XSDConstants.TYPE_ATTRIBUTE, getBuiltInStringQName()));
       addCreateElementAction(manager, XSDConstants.ELEMENT_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ELEMENT"), attributes, parent, null);
       addCreateElementRefAction(manager, XSDConstants.ELEMENT_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ELEMENT_REF"), parent, null);
+      
+      addMultiplicityMenu(concreteComponent, manager);
     }
     else if (XSDDOMHelper.inputEquals(parent, XSDConstants.ATTRIBUTEGROUP_ELEMENT_TAG, false))
     { //
@@ -1432,6 +1447,7 @@ public class XSDMenuListener implements IMenuListener
             attributes = null;
           }
         }
+        addMultiplicityMenu(xsdConcreteComponent, manager);
       }
     }
     /*
@@ -2052,5 +2068,32 @@ public class XSDMenuListener implements IMenuListener
   public DeleteAction getDeleteAction()
   {
     return deleteAction;
+  }
+  
+  protected void addMultiplicityMenu(XSDConcreteComponent concreteComponent, IMenuManager manager)
+  {
+    SetMultiplicityAction oneMultiplicity = new SetMultiplicityAction(concreteComponent, "1");
+    oneMultiplicity.setMaxOccurs(1);
+    oneMultiplicity.setMinOccurs(1);
+    SetMultiplicityAction zeroMultiplicity = new SetMultiplicityAction(concreteComponent, "0");
+    zeroMultiplicity.setMaxOccurs(0);
+    zeroMultiplicity.setMinOccurs(0);
+    SetMultiplicityAction zeroOrMoreMultiplicity = new SetMultiplicityAction(concreteComponent, "Zero or More");
+    zeroOrMoreMultiplicity.setMaxOccurs(-1);
+    zeroOrMoreMultiplicity.setMinOccurs(0);
+    SetMultiplicityAction zeroOrOneMultiplicity = new SetMultiplicityAction(concreteComponent, "Zero or One");
+    zeroOrOneMultiplicity.setMaxOccurs(1);
+    zeroOrOneMultiplicity.setMinOccurs(0);
+    SetMultiplicityAction oneOrMoreMultiplicity = new SetMultiplicityAction(concreteComponent, "One or More");
+    oneOrMoreMultiplicity.setMaxOccurs(-1);
+    oneOrMoreMultiplicity.setMinOccurs(1);
+    
+    MenuManager multiplicityMenu = new MenuManager("Set Multiplicity");
+    manager.add(multiplicityMenu);
+    multiplicityMenu.add(oneMultiplicity);
+    multiplicityMenu.add(zeroMultiplicity);
+    multiplicityMenu.add(oneOrMoreMultiplicity);    
+    multiplicityMenu.add(zeroOrMoreMultiplicity);
+    multiplicityMenu.add(zeroOrOneMultiplicity);
   }
 }
