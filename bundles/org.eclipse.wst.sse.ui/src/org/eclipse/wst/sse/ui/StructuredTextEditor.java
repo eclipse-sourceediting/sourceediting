@@ -450,7 +450,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	private InternalModelStateListener fInternalModelStateListener;
 
 	protected MouseTracker fMouseTracker;
-	private boolean forceReadOnly = false;
 	protected IContentOutlinePage fOutlinePage;
 	/** This editor's projection model updater */
 	private IStructuredTextFoldingProvider fProjectionModelUpdater;
@@ -811,15 +810,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		selectionHistory.setHistoryAction((StructureSelectHistoryAction) action);
 	}
 
-	/**
-	 * Creates and returns a <code>LineChangeHover</code> to be used on this
-	 * editor's change ruler column. This default implementation returns a
-	 * plain <code>LineChangeHover</code>. Subclasses may override.
-	 * 
-	 * @return the change hover to be used by this editors quick diff display
-	 */
 	protected LineChangeHover createChangeHover() {
-		// return new LineChangeHover();
 		return new StructuredLineChangeHover();
 	}
 
@@ -878,26 +869,22 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	}
 
 	/**
-	 * We override the super version of this method for the sole purpose of
-	 * using one of our own special viewer configuration objects.
+	 * Use StructuredTextViewerConfiguration if a viewerconfiguration has not
+	 * already been set. Also initialize StructuredTextViewer.
+	 * 
+	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
 	public void createPartControl(Composite parent) {
-		StructuredTextViewerConfiguration newViewerConfiguration = createSourceViewerConfiguration();
-		SourceViewerConfiguration oldViewerConfiguration = getSourceViewerConfiguration();
-		if ((oldViewerConfiguration == null) || (oldViewerConfiguration instanceof StructuredTextViewerConfiguration && !((StructuredTextViewerConfiguration) oldViewerConfiguration).getDeclaringID().equals(newViewerConfiguration.getDeclaringID())))
+		if (getSourceViewerConfiguration() == null) {
+			StructuredTextViewerConfiguration newViewerConfiguration = createSourceViewerConfiguration();
 			setSourceViewerConfiguration(newViewerConfiguration);
+		}
 
 		super.createPartControl(parent);
 
 		// instead of calling setInput twice, use initializeSourceViewer() to
 		// handle source viewer initialization previously handled by setInput
 		initializeSourceViewer();
-
-		// do not even install projection support until folding is actually
-		// enabled
-		if (isFoldingEnabled()) {
-			installProjectionSupport();
-		}
 	}
 
 	protected PropertySheetConfiguration createPropertySheetConfiguration() {
@@ -1402,7 +1389,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			result = fOutlinePage;
 		}
 		// property sheet page, but only if the input's editable
-		else if (IPropertySheetPage.class.equals(required) && !forceReadOnly && isEditable()) {
+		else if (IPropertySheetPage.class.equals(required) && isEditable()) {
 			if (fPropertySheetPage == null || fPropertySheetPage.getControl() == null || fPropertySheetPage.getControl().isDisposed()) {
 				PropertySheetConfiguration cfg = createPropertySheetConfiguration();
 				if (cfg != null) {
@@ -1975,6 +1962,12 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		if (openHyperlinkAction instanceof OpenHyperlinkAction) {
 			((OpenHyperlinkAction) openHyperlinkAction).setHyperlinkDetectors(getSourceViewerConfiguration().getHyperlinkDetectors(getSourceViewer()));
 		}
+
+		// do not even install projection support until folding is actually
+		// enabled
+		if (isFoldingEnabled()) {
+			installProjectionSupport();
+		}
 	}
 
 	/**
@@ -2042,46 +2035,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			projectionViewer.doOperation(ProjectionViewer.TOGGLE);
 	}
 
-	/*
-	 * @see IEditorPart#isDirty
-	 */
-	public boolean isDirty() {
-		// because we're not perfectly forced read only ...
-		if (forceReadOnly)
-			return false;
-		// IDocumentProvider p = getDocumentProvider();
-		// if (p == null)
-		// return false;
-		//
-		// if (getModel() == null)
-		// return false;
-		// return getModel().isDirty();
-		return super.isDirty();
-	}
-
-	/*
-	 * temp impl for V2 (eventually will use super's method, keying off of
-	 * IDocumentProvider ... or IDocumentProviderExtension
-	 */
-	public boolean isEditable() {
-		boolean result = true;
-		if (forceReadOnly) {
-			result = false;
-		} else {
-			result = super.isEditable();
-		}
-		return result;
-	}
-
-	/*
-	 * @see ITextEditorExtension#isEditorInputReadOnly()
-	 */
-	public boolean isEditorInputReadOnly() {
-		if (forceReadOnly)
-			return true;
-		return super.isEditorInputReadOnly();
-	}
-
 	/**
 	 * @deprecated - will be removed in M4
 	 * @param type
@@ -2136,9 +2089,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 * @see IEditorPart#isSaveOnCloseNeeded()
 	 */
 	public boolean isSaveOnCloseNeeded() {
-		// because we're not perfect, never allow
-		// save attempt on forceReadOnly
-		if (forceReadOnly || getModel() == null)
+		if (getModel() == null)
 			return false;
 		return getModel().isSaveNeeded();
 	}
