@@ -17,6 +17,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IDocumentPartitioner;
+import org.eclipse.wst.sse.core.internal.document.NullStructuredDocumentPartitioner;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
 import org.eclipse.wst.sse.core.internal.text.JobSafeStructuredDocument;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
@@ -40,6 +42,12 @@ public class BasicStructuredDocumentFactory implements IDocumentFactory, IExecut
 		}
 		else {
 			document = new JobSafeStructuredDocument();
+		}
+
+		if (document.getDocumentPartitioner() == null) {
+			IDocumentPartitioner defaultPartitioner = new NullStructuredDocumentPartitioner();
+			document.setDocumentPartitioner(defaultPartitioner);
+			defaultPartitioner.connect(document);
 		}
 		return document;
 	}
