@@ -113,7 +113,6 @@ public class ProjectUnzipUtility {
 		try {
 			if (fileToImport.exists()) {
 				IPath containerPath = new Path(folderPath);
-				//fCreatedProjects.add(folderPath);
 				IImportStructureProvider provider = FileSystemStructureProvider.INSTANCE;
 				IOverwriteQuery overwriteImplementor = new MyOverwriteQuery();
 				File[] filesToImport = {fileToImport};
@@ -152,56 +151,62 @@ public class ProjectUnzipUtility {
 			File unzipDestinationDirectory = new File(destinationDirectory);
 			// Open Zip file for reading
 			ZipFile zipFile = new ZipFile(sourceZipFile, ZipFile.OPEN_READ);
-			// Create an enumeration of the entries in the zip file
-			Enumeration zipFileEntries = zipFile.entries();
-			String projectFolderName = null;
 			IProject currentProject = null;
-			// Process each entry
-			while (zipFileEntries.hasMoreElements()) {
-				// grab a zip file entry
-				ZipEntry entry = (ZipEntry) zipFileEntries.nextElement();
-				String currentEntry = entry.getName();
-				//System.out.println("Extracting: " + entry);
-				File destFile = new File(unzipDestinationDirectory, currentEntry);
-				// grab file's parent directory structure
-				File destinationParent = destFile.getParentFile();
-				// create the parent directory structure if needed
-				destinationParent.mkdirs();
-				// extract file if not a directory
-				if (!entry.isDirectory()) {
-					BufferedInputStream is = new BufferedInputStream(zipFile.getInputStream(entry));
-					int currentByte;
-					// establish buffer for writing file
-					byte data[] = new byte[BUFFER];
-					// write the current file to disk
-					FileOutputStream fos = new FileOutputStream(destFile);
-					BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER);
-					// read and write until last byte is encountered
-					while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
-						dest.write(data, 0, currentByte);
+			try {
+				// Create an enumeration of the entries in the zip file
+				Enumeration zipFileEntries = zipFile.entries();
+				String projectFolderName = null;
+				
+				// Process each entry
+				while (zipFileEntries.hasMoreElements()) {
+					// grab a zip file entry
+					ZipEntry entry = (ZipEntry) zipFileEntries.nextElement();
+					String currentEntry = entry.getName();
+					//System.out.println("Extracting: " + entry);
+					File destFile = new File(unzipDestinationDirectory, currentEntry);
+					// grab file's parent directory structure
+					File destinationParent = destFile.getParentFile();
+					// create the parent directory structure if needed
+					destinationParent.mkdirs();
+					// extract file if not a directory
+					if (!entry.isDirectory()) {
+						BufferedInputStream is = new BufferedInputStream(zipFile.getInputStream(entry));
+						int currentByte;
+						// establish buffer for writing file
+						byte data[] = new byte[BUFFER];
+						// write the current file to disk
+						FileOutputStream fos = new FileOutputStream(destFile);
+						BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER);
+						try {
+							// read and write until last byte is encountered
+							while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
+								dest.write(data, 0, currentByte);
+							}
+						}
+						finally {
+							dest.flush();
+							dest.close();
+							is.close();
+							fos.close();
+						}
+						if (projectFolderName != null)
+							importFile(destFile, projectFolderName);
 					}
-					dest.flush();
-					dest.close();
-					is.close();
-					if (projectFolderName != null)
-						importFile(destFile, projectFolderName);
-				}
-				else {
-					// need handle to the main project folder to create
-					// containerPath
-					// unlike version in sse.tests, we don't create project
-					// for
-					// every directory
-					//					if(projectFolderName == null) {
-					//						projectFolderName = destFile.getName();
-					//						fCreatedProjects.add(projectFolderName);
-					//						
-					//						currentProject =
-					// ResourcesPlugin.getWorkspace().getRoot().getProject(projectFolderName);
-					//					}
+					else {
+						// need handle to the main project folder to create containerPath 
+						if (projectFolderName == null) {
+							projectFolderName = destFile.getName();
+							fCreatedProjects.add(projectFolderName);
+	
+							currentProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectFolderName);
+						}
+					}
 				}
 			}
-			zipFile.close();
+			finally {
+				zipFile.close();
+			}
+			
 			// fixes workspace metadata for the project
 			// for clean startup next run
 			if (currentProject != null) {
@@ -223,7 +228,7 @@ public class ProjectUnzipUtility {
 	 *  
 	 */
 	public void refreshWorkspace() throws CoreException {
-		IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();
+		IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();	
 		IProject[] projects = wsRoot.getProjects();
 		for (int i = 0; i < projects.length; i++) {
 			projects[i].refreshLocal(IResource.DEPTH_INFINITE, null);
