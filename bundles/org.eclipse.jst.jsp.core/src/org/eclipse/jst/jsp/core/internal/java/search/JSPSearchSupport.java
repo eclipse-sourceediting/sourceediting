@@ -430,8 +430,10 @@ public class JSPSearchSupport {
 		String classname = split[split.length-1];
 	
 		String filePath = JSP2ServletNameUtil.unmangle(classname); 
-		
-		IFile f = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(filePath));	
+		IFile f = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(filePath));
+		// (pa) another place where relative base location is now used
+		// probably a side effect of using FileBuffers now
+		//IFile f = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(filePath));	
 		return f;
 	}
 
