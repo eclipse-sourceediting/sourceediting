@@ -12,7 +12,6 @@
 
 package org.eclipse.wst.sse.unittests;
 
-import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
 import org.eclipse.jst.jsp.core.tests.JSPCoreTestSuite;
@@ -58,12 +57,9 @@ public class MasterListTestSuite extends TestSuite {
 		addTest(EncodingTestSuite.suite());
 		addTest(XMLUITestSuite.suite());
 
-
 	}
 
 	public void testAll() {
-		TestResult testResult = new TestResult();
-		run(testResult);
+		// this method needs to exist, but doesn't really do anything
 	}
-
 }

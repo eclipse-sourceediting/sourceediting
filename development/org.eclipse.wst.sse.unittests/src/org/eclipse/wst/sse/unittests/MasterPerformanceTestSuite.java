@@ -46,8 +46,7 @@ public class MasterPerformanceTestSuite extends TestSuite {
 	}
 
 	public void testAll() {
-		TestResult testResult = new TestResult();
-		run(testResult);
+		// this method needs to exist, but doesn't really do anything
 	}
 
 }
