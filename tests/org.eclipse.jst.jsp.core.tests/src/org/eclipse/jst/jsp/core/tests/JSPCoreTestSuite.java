@@ -33,6 +33,5 @@ public class JSPCoreTestSuite extends TestSuite {
 		addTest(new TestSuite(TestContentTypeHandlers.class, "TestContentTypeHandlers"));
 		addTest(new TestSuite(TestModelManager.class, "TestModelManager"));
 		addTest(new TestSuite(FormatTester.class, "FormatTester"));
-		//addTest(new TestSuite(TestModelsFromFiles.class, "TestModelsFromFiles"));
 	}
 }

@@ -50,6 +50,7 @@ public class VerifyEditorPlugin extends TestCase {
 		assertNotNull("display could not be instantiated", display);
 		for (int i = 0; i < 256; i++) {
 			for (int j = 0; j < 256; j++) {
+// 256 cubed runs out of memory				
 //				for (int k = 0; k < 256; k++) {
 					colorList.add(
 								new Color(display, 

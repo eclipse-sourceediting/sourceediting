@@ -23,12 +23,5 @@ public class XMLUITestSuite extends TestSuite {
 	public XMLUITestSuite() {
 		super("XML UI Test Suite");
 		addTest(new TestSuite(VerifyEditorPlugin.class));
-		//		addTest(new SSEModelTestSuite());
-		//		addTest(new EncodingTestSuite());
-		//		addTest(CleanupFormatTests.suite());
-		//		addTest(EncodingTests.suite());
-		//		addTest(ModelCloneTests.suite());
-		//		addTest(ModelParserTests.suite());
-		//		addTest(OtherTests.suite());
 	}
 }

@@ -17,6 +17,7 @@ import org.eclipse.jst.jsp.ui.tests.contentassist.BeanInfoProviderTest;
 import org.eclipse.jst.jsp.ui.tests.contentassist.JSPJavaTranslatorTest;
 import org.eclipse.jst.jsp.ui.tests.contentassist.JSPTranslationTest;
 import org.eclipse.jst.jsp.ui.tests.document.FileBufferDocumentTester;
+import org.eclipse.jst.jsp.ui.tests.model.TestModelsFromFiles;
 import org.eclipse.jst.jsp.ui.tests.modelquery.ModelQueryTester;
 import org.eclipse.jst.jsp.ui.tests.other.PreferencesTest;
 import org.eclipse.jst.jsp.ui.tests.other.ScannerUnitTests;
@@ -35,8 +36,6 @@ public class JSPUITestSuite extends TestSuite {
 
 	public JSPUITestSuite() {
 		super("SSE JSP UI Test Suite");
-
-		//addTest(OtherTests.suite());
 		
 		addTest(new TestSuite(PreferencesTest.class, "PreferencesTest"));
 		addTest(new TestSuite(ScannerUnitTests.class, "ScannerUnitTests"));
@@ -53,6 +52,10 @@ public class JSPUITestSuite extends TestSuite {
 		addTest(new TestSuite(TestPageDirective.class));
 		addTest(new TestSuite(FileBufferDocumentTester.class));
 		addTest(new TestSuite(TestModelClone.class));
+		
+		addTest(new TestSuite(TestModelsFromFiles.class, "TestModelsFromFiles"));
+		addTest(new TestSuite(TestModelEmbeddedContentType.class, "TestModelEmbeddedContentType"));
+
 		
 		// pa_TODO fix this test
 		//addTest(new TestSuite(JSPSearchTests.class));

@@ -19,6 +19,7 @@ import java.io.Writer;
 
 import junit.framework.TestCase;
 
+import org.eclipse.wst.common.encoding.NullInputStream;
 import org.eclipse.wst.html.core.tests.utils.DateUtil;
 import org.eclipse.wst.html.core.tests.utils.FileUtil;
 import org.eclipse.wst.html.core.tests.utils.StringCompareUtil;
@@ -76,7 +77,7 @@ public abstract class ModelTest extends TestCase {
 		try {
 			IModelManager modelManager = StructuredModelManager.getModelManager();
 
-			model = modelManager.getModelForEdit("test.html", null, null);
+			model = modelManager.getModelForEdit("test.html", new NullInputStream(), null);
 
 			// always use the same line delimiter for these tests, regardless
 			// of
@@ -102,7 +103,7 @@ public abstract class ModelTest extends TestCase {
 			//assertTrue("modelManager must not be null", modelManager !=
 			// null);
 
-			model = modelManager.getModelForEdit("test.xml", null, null);
+			model = modelManager.getModelForEdit("test.xml", new NullInputStream(), null);
 
 			// always use the same line delimiter for these tests, regardless
 			// of

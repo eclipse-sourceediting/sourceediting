@@ -11,19 +11,21 @@ package org.eclipse.wst.xml.ui.tests;
 
 import junit.framework.TestCase;
 
+import org.eclipse.core.runtime.Plugin;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+
 public class VerifyEditorPlugin extends TestCase {
 
 	public void testPluginExists() {
 		// TODO: see https://bugs.eclipse.org/bugs/show_bug.cgi?id=81527
 		assertTrue(true);
-//		Plugin plugin = null;
-//		try {
-//			plugin = XMLUIPlugin.getInstance();
-//		}
-//		catch (Exception e) {
-//			plugin = null;
-//		}
-//		assertNotNull("xml editor plugin could not be instantiated", plugin);
+		Plugin plugin = null;
+		try {
+			plugin = XMLUIPlugin.getInstance();
+		} catch (Exception e) {
+			plugin = null;
+		}
+		assertNotNull("xml editor plugin could not be instantiated", plugin);
 
 	}
 }

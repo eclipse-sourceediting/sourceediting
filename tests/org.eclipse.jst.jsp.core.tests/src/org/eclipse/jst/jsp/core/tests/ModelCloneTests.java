@@ -22,7 +22,5 @@ public class ModelCloneTests extends TestSuite {
 		super("ModelCloneTests");
 
 		addTest(new TestSuite(TestStructuredDocumentClone.class, "TestStructuredDocumentClone"));
-		//addTest(new TestSuite(TestModelEmbeddedContentType.class, "TestModelEmbeddedContentType"));
-		//addTest(new TestSuite(TestModelClone.class, "TestModelClone"));
 	}
 }

@@ -128,8 +128,6 @@ public class ModelParserTests extends TestSuite {
 		addTest(new TestSuite(CDATASectionTest2.class, "CDATASectionTest2"));
 		addTest(new TestSuite(CDATASectionTest3.class, "CDATASectionTest3"));
 		addTest(new TestSuite(PITest.class, "PITest"));
-		// the follow is fairly long running
-		//addTest(new TestSuite(TestExampleFiles.class, "TestExampleFiles"));
 
 	}
 }

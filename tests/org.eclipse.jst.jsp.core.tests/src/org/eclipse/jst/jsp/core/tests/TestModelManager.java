@@ -15,6 +15,7 @@ import java.io.UnsupportedEncodingException;
 
 import junit.framework.TestCase;
 
+import org.eclipse.wst.common.encoding.NullInputStream;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -42,7 +43,7 @@ public class TestModelManager extends TestCase {
 		assertTrue("modelManager must not be null", modelManager != null);
 
 		try {
-			model = modelManager.getModelForEdit("test.xml", null, null);
+			model = modelManager.getModelForEdit("test.xml", new NullInputStream(), null);
 			assertTrue("basic XML empty model could not be created", model != null);
 		} finally {
 			if (model != null) {

@@ -110,7 +110,6 @@ public class TestStructuredPartitioner extends TestCase {
 
 	public void testJSP4() throws IOException, BadLocationException {
 		int expectedPartitions = 8;
-		//TODO Nitin, we need to review the Unknown to Script change (8/1/03, 9:00PM)
 		int nPartitions = doComputePartitioningTest("testfiles/jsp/example04.jsp");
 		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		checkSeams();
@@ -119,7 +118,6 @@ public class TestStructuredPartitioner extends TestCase {
 
 	public void testJSP5() throws IOException, BadLocationException {
 		int expectedPartitions = 17;
-		//TODO Nitin, we need to review the Unknown to Script change (8/1/03, 9:00PM)
 		int nPartitions = doComputePartitioningTest("testfiles/jsp/example05.jsp");
 		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		checkSeams();

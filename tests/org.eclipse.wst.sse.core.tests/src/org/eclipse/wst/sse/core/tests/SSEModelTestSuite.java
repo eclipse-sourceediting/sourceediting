@@ -18,6 +18,7 @@ public class SSEModelTestSuite extends TestSuite {
 
 	/**
 	 * to get picked up by BVT
+	 * 
 	 * @return
 	 */
 	public static Test suite() {
@@ -25,18 +26,17 @@ public class SSEModelTestSuite extends TestSuite {
 	}
 
 	// not ready for threaded tests, yet.
-//	private static Class[] classes = new Class[]{TestOfThreadLocalImprovement.class, TestOfThreadLocalWithChanges.class, TestCreation.class};
+	// private static Class[] classes = new Class[]{TestOfThreadLocalImprovement.class, TestOfThreadLocalWithChanges.class, TestCreation.class};
 
-//	private static Class[] classes = new Class[]{TestCreation.class, TestDocumentReader.class};
-//	private static Class[] classes = new Class[]{TestCreation.class, TestDocumentReader.class, TestCharSequenceReader.class, TestRegionMatches.class};
-	
+	// private static Class[] classes = new Class[]{TestCreation.class, TestDocumentReader.class};
+	// private static Class[] classes = new Class[]{TestCreation.class, TestDocumentReader.class, TestCharSequenceReader.class, TestRegionMatches.class};
+
 	private static Class[] classes = new Class[]{ExistenceTest.class};
-	
+
 	public SSEModelTestSuite() {
 		super("SSE Model Basic Test Suite");
 		for (int i = 0; i < classes.length; i++) {
-			//addTest(new TestSuite(classes[i], classes[i].getName()));
-			addTestSuite(ExistenceTest.class);
+			addTest(new TestSuite(classes[i], classes[i].getName()));
 		}
 	}
 

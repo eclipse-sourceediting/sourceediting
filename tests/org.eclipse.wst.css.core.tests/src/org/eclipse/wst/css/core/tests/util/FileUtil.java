@@ -76,18 +76,13 @@ public class FileUtil {
 	public static ICSSModel createModel() {
 		IStructuredModel model = null;
 		try {
-			// assertTrue("modelManagerPlugin must not be null",
-			// modelManagerPlugin != null);
 
 			IModelManager modelManager = StructuredModelManager.getModelManager();
-			// assertTrue("modelManager must not be null", modelManager !=
-			// null);
 
-			model = modelManager.getModelForEdit("test" + uniqueNum++ + ".css", null, null); //$NON-NLS-1$
+			model = modelManager.getModelForEdit("test" + uniqueNum++ + ".css", new NullInputStream(), null); //$NON-NLS-1$
 
 			// always use the same line delimiter for these tests, regardless
-			// of
-			// plaform or preference settings
+			// of plaform or preference settings
 			model.getStructuredDocument().setLineDelimiter(commonEOL);
 
 
@@ -95,8 +90,6 @@ public class FileUtil {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		// assertTrue("basic XML empty model could not be created", model !=
-		// null);
 		return (ICSSModel) model;
 
 	}
