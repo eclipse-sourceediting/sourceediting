@@ -53,17 +53,6 @@
 <!-- not for use by clients -->
    <extension-point id="builderdelegate" name="%Structured_Builder_Delegate_Extension_Point.name"/>
 
-   <extension point="org.eclipse.core.resources.builders"
-       id="structuredbuilder"
-       name="%SDMB.name">
-      <builder
-           hasNature="false">
-         <run
-            class="org.eclipse.wst.sse.core.internal.builder.StructuredDocumentBuilder"
-			>
-         </run>
-      </builder>
-   </extension>
 <!-- define our task marker type -->
 	<extension id="task" name="%Structured_Sources_Task_Extension.name" point="org.eclipse.core.resources.markers">
     	<super type="org.eclipse.core.resources.taskmarker"/> 
