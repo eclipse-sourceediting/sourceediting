@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.resources.IFile;
@@ -30,7 +31,15 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jdt.core.ElementChangedEvent;
+import org.eclipse.jdt.core.IElementChangedListener;
+import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IJavaElementDelta;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jst.jsp.core.internal.Logger;
+import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.xml.uriresolver.util.URIHelper;
 
 /**
@@ -46,6 +55,61 @@ import org.eclipse.wst.xml.uriresolver.util.URIHelper;
  * contents should be examined for any further information.
  */
 public class TaglibIndex {
+
+	class ClasspathChangeListener implements IElementChangedListener {
+		Stack projectStack = new Stack();
+
+		public void elementChanged(ElementChangedEvent event) {
+			projectStack.clear();
+			elementChanged(event.getDelta());
+		}
+
+		private void elementChanged(IJavaElementDelta delta) {
+			if (delta.getElement().getElementType() == IJavaElement.JAVA_MODEL) {
+				IJavaElementDelta[] changed = delta.getChangedChildren();
+				for (int i = 0; i < changed.length; i++) {
+					elementChanged(changed[i]);
+				}
+			}
+			else if (delta.getElement().getElementType() == IJavaElement.JAVA_PROJECT) {
+				if ((delta.getFlags() & IJavaElementDelta.F_CLASSPATH_CHANGED) != 0) {
+					IJavaElement proj = delta.getElement();
+					handleClasspathChange((IJavaProject) proj);
+				}
+			}
+		}
+
+		private void handleClasspathChange(IJavaProject project) {
+			projectStack.push(project.getElementName());
+			try {
+				/* Handle changes to this project's build path */
+				IResource resource = project.getCorrespondingResource();
+				if (resource.getType() == IResource.PROJECT) {
+					boolean classpathIndexIsOld = fProjectDescriptions.containsKey(resource);
+					ProjectDescription description = createDescription((IProject) resource);
+					if (classpathIndexIsOld) {
+						description.indexClasspath();
+					}
+				}
+				/*
+				 * Update indeces for projects who include this project in
+				 * their build path (e.g. toggling the "exportation" of a
+				 * taglib JAR in this project affects the JAR's visibility in
+				 * other projects)
+				 */
+				IJavaProject[] projects = project.getJavaModel().getJavaProjects();
+				for (int i = 0; i < projects.length; i++) {
+					IJavaProject otherProject = projects[i];
+					if (StringUtils.contains(otherProject.getRequiredProjectNames(), project.getElementName(), false) && !projectStack.contains(otherProject.getElementName())) {
+						handleClasspathChange(otherProject);
+					}
+				}
+			}
+			catch (JavaModelException e) {
+			}
+			projectStack.pop();
+		}
+	}
 
 	class ResourceChangeListener implements IResourceChangeListener {
 		public void resourceChanged(IResourceChangeEvent event) {
@@ -106,7 +170,6 @@ public class TaglibIndex {
 				Logger.logException("Exception while processing resource change", e); //$NON-NLS-1$
 			}
 		}
-
 	}
 
 	static final boolean _debugChangeListener = false;
@@ -118,15 +181,16 @@ public class TaglibIndex {
 		_instance = new TaglibIndex();
 	}
 
-	public void addTaglibIndexListener(ITaglibIndexListener listener) {
-		_instance.internalAddTaglibIndexListener(listener);
-	}
-
 	static void fireTaglibRecordEvent(ITaglibRecordEvent event) {
 		ITaglibIndexListener[] listeners = _instance.fTaglibIndexListeners;
 		if (listeners != null) {
 			for (int i = 0; i < listeners.length; i++) {
-				listeners[i].indexChanged(event);
+				try {
+					listeners[i].indexChanged(event);
+				}
+				catch (Exception e) {
+					Logger.log(Logger.WARNING, e.getMessage());
+				}
 			}
 		}
 	}
@@ -154,29 +218,29 @@ public class TaglibIndex {
 	/**
 	 * Find a matching ITaglibRecord given the reference.
 	 * 
-	 * @param fullPath -
+	 * @param basePath -
 	 *            the workspace-relative path for IResources, full filesystem
 	 *            path otherwise
 	 * @param reference
 	 * @param crossProjects
 	 * @return
 	 */
-	public static ITaglibRecord resolve(String fullPath, String reference, boolean crossProjects) {
-		ITaglibRecord result = _instance.internalResolve(fullPath, reference, crossProjects);
+	public static ITaglibRecord resolve(String basePath, String reference, boolean crossProjects) {
+		ITaglibRecord result = _instance.internalResolve(basePath, reference, crossProjects);
 		if (_debugResolution) {
 			if (result == null) {
-				System.out.println("TaglibIndex could not resolve \"" + reference + "\" from " + fullPath);
+				System.out.println("TaglibIndex could not resolve \"" + reference + "\" from " + basePath);
 			}
 			else {
 				switch (result.getRecordType()) {
 					case (ITaglibRecord.TLD) : {
 						TLDRecord record = (TLDRecord) result;
-						System.out.println("TaglibIndex resolved " + fullPath + ":" + reference + " = " + record.getLocation());
+						System.out.println("TaglibIndex resolved " + basePath + ":" + reference + " = " + record.getLocation());
 					}
 						break;
 					case (ITaglibRecord.JAR) : {
 						JarRecord record = (JarRecord) result;
-						System.out.println("TaglibIndex resolved " + fullPath + ":" + reference + " = " + record.getLocation());
+						System.out.println("TaglibIndex resolved " + basePath + ":" + reference + " = " + record.getLocation());
 					}
 						break;
 					case (ITaglibRecord.TAGDIR) : {
@@ -184,7 +248,7 @@ public class TaglibIndex {
 						break;
 					case (ITaglibRecord.URL) : {
 						URLRecord record = (URLRecord) result;
-						System.out.println("TaglibIndex resolved " + fullPath + ":" + reference + " = " + record.getURL());
+						System.out.println("TaglibIndex resolved " + basePath + ":" + reference + " = " + record.getURL());
 					}
 						break;
 				}
@@ -192,6 +256,8 @@ public class TaglibIndex {
 		}
 		return result;
 	}
+
+	private ClasspathChangeListener fClasspathChangeListener = null;
 
 	Map fProjectDescriptions;
 	private ResourceChangeListener fResourceChangeListener;
@@ -202,7 +268,13 @@ public class TaglibIndex {
 		super();
 		fResourceChangeListener = new ResourceChangeListener();
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(fResourceChangeListener);
+		fClasspathChangeListener = new ClasspathChangeListener();
+		JavaCore.addElementChangedListener(fClasspathChangeListener);
 		fProjectDescriptions = new HashMap();
+	}
+
+	public void addTaglibIndexListener(ITaglibIndexListener listener) {
+		_instance.internalAddTaglibIndexListener(listener);
 	}
 
 	/**
@@ -214,6 +286,7 @@ public class TaglibIndex {
 		if (description == null) {
 			description = new ProjectDescription(project);
 			description.index();
+			description.indexClasspath();
 			fProjectDescriptions.put(project, description);
 		}
 		return description;
@@ -270,20 +343,20 @@ public class TaglibIndex {
 		}
 	}
 
-	private ITaglibRecord internalResolve(String fullPath, String reference, boolean crossProjects) {
+	private ITaglibRecord internalResolve(String basePath, String reference, boolean crossProjects) {
 		IProject project = null;
 		ITaglibRecord resolved = null;
-		IFile baseResource = FileBuffers.getWorkspaceFileAtLocation(new Path(fullPath));
+		IFile baseResource = FileBuffers.getWorkspaceFileAtLocation(new Path(basePath));
 		if (baseResource != null) {
 			project = baseResource.getProject();
 			ProjectDescription description = createDescription(project);
-			resolved = description.resolve(fullPath, reference);
+			resolved = description.resolve(basePath, reference);
 		}
 		else {
 			// try simple file support outside of the workspace
-			File baseFile = FileBuffers.getSystemFileAtLocation(new Path(fullPath));
+			File baseFile = FileBuffers.getSystemFileAtLocation(new Path(basePath));
 			if (baseFile != null) {
-				String normalizedReference = URIHelper.normalize(reference, fullPath, "/"); //$NON-NLS-1$
+				String normalizedReference = URIHelper.normalize(reference, basePath, "/"); //$NON-NLS-1$
 				if (normalizedReference != null) {
 					TLDRecord record = new TLDRecord();
 					record.location = new Path(normalizedReference);

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Stack;
 
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.resources.IContainer;
@@ -35,6 +36,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jst.jsp.core.contentmodel.tld.JSP12TLDNames;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.util.DocumentProvider;
@@ -133,11 +138,22 @@ class ProjectDescription {
 	private static final IPath WEB_INF_PATH = new Path("WEB-INF");
 	private static final String WEB_XML = "web.xml";
 
+	/*
+	 * Records active JARs on the classpath. Taglib descriptors should be
+	 * usable, but the jars by themselves should not.
+	 */
+	Hashtable fClasspathJars;
+
+	// holds references by URI to TLDs
+	Hashtable fClasspathReferences;
+
 	// this table is special in that it holds tables of references according
 	// to local roots
 	Hashtable fImplicitReferences;
 	Hashtable fJARReferences;
 	IProject fProject;
+
+	Stack fProjectStack = null;
 	Hashtable fServletReferences;
 	Hashtable fTagDirReferences;
 
@@ -150,11 +166,49 @@ class ProjectDescription {
 	ProjectDescription(IProject project) {
 		super();
 		fProject = project;
+		fClasspathReferences = new Hashtable(0);
+		fClasspathJars = new Hashtable(0);
 		fJARReferences = new Hashtable(0);
 		fTagDirReferences = new Hashtable(0);
 		fTLDReferences = new Hashtable(0);
 		fServletReferences = new Hashtable(0);
 		fImplicitReferences = new Hashtable(0);
+	}
+
+	void addClasspathLibrary(String libraryLocation) {
+		String[] entries = JarUtilities.getEntryNames(libraryLocation);
+		JarRecord libraryRecord = (JarRecord) createJARRecord(libraryLocation);
+		fClasspathJars.put(libraryLocation, libraryRecord);
+		for (int i = 0; i < entries.length; i++) {
+			if (entries[i].endsWith(".tld")) {
+				InputStream contents = JarUtilities.getInputStream(libraryLocation, entries[i]);
+				if (contents != null) {
+					String uri = extractURI(libraryLocation, contents);
+					if (uri != null && uri.length() > 0) {
+						URLRecord record = new URLRecord();
+						record.uri = uri;
+						record.baseLocation = libraryLocation;
+						try {
+							record.url = new URL("jar:file:" + libraryLocation + "!/" + entries[i]);
+							libraryRecord.urlRecords.add(record);
+							fClasspathReferences.put(uri, record);
+							if (_debugIndexCreation)
+								System.out.println("created record for " + uri + "@" + record.getURL());
+						}
+						catch (MalformedURLException e) {
+							// don't record this URI
+							Logger.logException(e);
+						}
+					}
+					try {
+						contents.close();
+					}
+					catch (IOException e) {
+					}
+				}
+			}
+		}
+		TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(libraryRecord, ITaglibRecordEvent.ADD));
 	}
 
 	void addJAR(IResource jar) {
@@ -284,8 +338,12 @@ class ProjectDescription {
 	 * @return
 	 */
 	private ITaglibRecord createJARRecord(IResource jar) {
+		return createJARRecord(jar.getLocation().toString());
+	}
+
+	private ITaglibRecord createJARRecord(String fileLocation) {
 		JarRecord record = new JarRecord();
-		record.location = jar.getLocation();
+		record.location = new Path(fileLocation);
 		record.urlRecords = new ArrayList(0);
 		return record;
 	}
@@ -469,8 +527,78 @@ class ProjectDescription {
 		catch (CoreException e) {
 			Logger.logException(e);
 		}
+
 		if (_debugIndexTime)
 			System.out.println("indexed " + fProject.getName() + " in " + (System.currentTimeMillis() - time0) + "ms");
+	}
+
+	void indexClasspath() {
+		time0 = System.currentTimeMillis();
+		fProjectStack = new Stack();
+		fClasspathReferences.clear();
+		IJavaProject javaProject = JavaCore.create(fProject);
+		indexClasspath(javaProject);
+		if (_debugIndexTime)
+			System.out.println("indexed " + fProject.getName() + " classpath in " + (System.currentTimeMillis() - time0) + "ms");
+	}
+
+	/**
+	 * @param javaProject
+	 */
+	private void indexClasspath(IJavaProject javaProject) {
+		if (javaProject != null && javaProject.exists()) {
+			fProjectStack.push(javaProject.getElementName());
+			try {
+				IClasspathEntry[] entries = javaProject.getResolvedClasspath(true);
+				for (int i = 0; i < entries.length; i++) {
+					IClasspathEntry entry = entries[i];
+					switch (entry.getEntryKind()) {
+						case IClasspathEntry.CPE_CONTAINER :
+							break;
+						case IClasspathEntry.CPE_LIBRARY : {
+							/*
+							 * Ignore libs in required projects that are not
+							 * exported
+							 */
+							if (fProjectStack.size() < 2 || entry.isExported()) {
+								IPath libPath = entry.getPath();
+								if (libPath.toFile().exists()) {
+									addClasspathLibrary(libPath.toString());
+								}
+								else {
+									IFile libFile = ResourcesPlugin.getWorkspace().getRoot().getFile(libPath);
+									if (libFile != null && libFile.exists()) {
+										addClasspathLibrary(libFile.getLocation().toString());
+									}
+								}
+							}
+						}
+							break;
+						case IClasspathEntry.CPE_PROJECT : {
+							/*
+							 * Ignore required projects of required projects
+							 * that are not exported
+							 */
+							if (fProjectStack.size() < 2 || entry.isExported()) {
+								IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(entry.getPath().lastSegment());
+								if (project != null && !fProjectStack.contains(project.getName())) {
+									indexClasspath(JavaCore.create(project));
+								}
+							}
+						}
+							break;
+						case IClasspathEntry.CPE_SOURCE :
+							break;
+						case IClasspathEntry.CPE_VARIABLE :
+							break;
+					}
+				}
+			}
+			catch (JavaModelException e) {
+				Logger.logException("Error searching Java Build Path + (" + fProject.getName() + ") for tag libraries", e);
+			}
+			fProjectStack.pop();
+		}
 	}
 
 	protected String readTextofChild(Node node, String childName) {
@@ -487,6 +615,17 @@ class ProjectDescription {
 			}
 		}
 		return buffer.toString();
+	}
+
+	void removeClasspathLibrary(String libraryLocation) {
+		JarRecord record = (JarRecord) fClasspathJars.remove(libraryLocation);
+		if (record != null) {
+			URLRecord[] records = (URLRecord[]) record.getURLRecords().toArray(new URLRecord[0]);
+			for (int i = 0; i < records.length; i++) {
+				fClasspathReferences.remove(records[i].getURI());
+			}
+			TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.REMOVE));
+		}
 	}
 
 	void removeJAR(IResource jar) {
@@ -536,11 +675,11 @@ class ProjectDescription {
 	}
 
 	/**
-	 * @param path
+	 * @param basePath
 	 * @param reference
 	 * @return
 	 */
-	ITaglibRecord resolve(String path, String reference) {
+	ITaglibRecord resolve(String basePath, String reference) {
 		ITaglibRecord record = null;
 		String location = null;
 
@@ -549,10 +688,10 @@ class ProjectDescription {
 		 * returned as-is.
 		 */
 		if (reference.startsWith("/")) {
-			location = getLocalRoot(path) + reference;
+			location = getLocalRoot(basePath) + reference;
 		}
 		else {
-			location = URIHelper.normalize(reference, path, getLocalRoot(path));
+			location = URIHelper.normalize(reference, basePath, getLocalRoot(basePath));
 		}
 		// order dictated by JSP spec 2.0 section 7.2.3
 		if (record == null) {
@@ -565,10 +704,13 @@ class ProjectDescription {
 			record = (ITaglibRecord) fTLDReferences.get(location);
 		}
 		if (record == null) {
-			record = (ITaglibRecord) getImplicitReferences(path).get(reference);
+			record = (ITaglibRecord) getImplicitReferences(basePath).get(reference);
 		}
 		if (record == null) {
 			record = (ITaglibRecord) fTagDirReferences.get(location);
+		}
+		if (record == null) {
+			record = (ITaglibRecord) fClasspathReferences.get(reference);
 		}
 		return record;
 	}
