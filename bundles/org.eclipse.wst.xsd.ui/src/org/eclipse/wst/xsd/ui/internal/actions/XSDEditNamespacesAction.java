@@ -83,7 +83,8 @@ public class XSDEditNamespacesAction extends Action {
 		      dialog.setNamespaceInfoList(namespaceInfoList);   
 		      dialog.create();      
 		      //dialog.getShell().setSize(500, 300);
-		      dialog.getShell().setText(XMLCommonResources.getInstance().getString("_UI_MENU_EDIT_SCHEMA_INFORMATION_TITLE"));
+		      dialog.getShell().setText("Edit Schema Information");
+//		      dialog.getShell().setText(XMLCommonResources.getInstance().getString("_UI_MENU_EDIT_SCHEMA_INFORMATION_TITLE"));
 		      dialog.setBlockOnOpen(true);                                 
 		      dialog.open();
           String xsdPrefix = "";    
@@ -144,7 +145,7 @@ public class XSDEditNamespacesAction extends Action {
                 TargetNamespaceChangeHandler targetNamespaceChangeHandler = new TargetNamespaceChangeHandler(xsdSchema, targetNamespace, dialog.getTargetNamespace());
                 targetNamespaceChangeHandler.resolve();
 
-				    	} finally {
+				    	} catch (Exception e){ e.printStackTrace(); }finally {
 //				      manager.getModel().changedModel();
 
                 XSDSchemaHelper.updateElement(xsdSchema);
