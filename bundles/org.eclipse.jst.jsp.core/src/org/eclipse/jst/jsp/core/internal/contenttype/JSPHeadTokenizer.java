@@ -15,9 +15,9 @@ package org.eclipse.jst.jsp.core.internal.contenttype;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.eclipse.wst.common.encoding.EncodingParserConstants;
 import org.eclipse.wst.common.encoding.HeadParserToken;
 import org.eclipse.wst.common.encoding.IntStack;
+import org.eclipse.wst.xml.core.contenttype.EncodingParserConstants;
 import org.eclipse.wst.xml.core.contenttype.XMLHeadTokenizerConstants;
 
 

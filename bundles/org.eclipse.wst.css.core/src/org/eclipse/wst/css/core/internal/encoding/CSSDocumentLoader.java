@@ -13,8 +13,8 @@ package org.eclipse.wst.css.core.internal.encoding;
 
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.wst.common.encoding.ContentTypeEncodingPreferences;
-import org.eclipse.wst.common.encoding.EncodingGuesser;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
+import org.eclipse.wst.css.core.internal.content.EncodingGuesser;
 import org.eclipse.wst.css.core.internal.parser.CSSSourceParser;
 import org.eclipse.wst.css.core.internal.text.CSSStructuredDocumentReParser;
 import org.eclipse.wst.css.core.internal.text.rules.StructuredTextPartitionerForCSS;

@@ -15,12 +15,12 @@ import java.util.List;
 
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.wst.common.encoding.ContentTypeEncodingPreferences;
-import org.eclipse.wst.common.encoding.EncodingGuesser;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.html.core.document.HTMLDocumentTypeAdapterFactory;
 import org.eclipse.wst.html.core.document.HTMLModelParserAdapterFactory;
 import org.eclipse.wst.html.core.htmlcss.HTMLStyleSelectorAdapterFactory;
 import org.eclipse.wst.html.core.htmlcss.StyleAdapterFactory;
+import org.eclipse.wst.html.core.internal.contenttype.EncodingGuesser;
 import org.eclipse.wst.html.core.internal.text.rules.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.html.core.modelquery.ModelQueryAdapterFactoryForHTML;
 import org.eclipse.wst.sse.core.AdapterFactory;
