@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.sse.ui.StructuredDocumentToTextAdapter;
+import org.eclipse.wst.sse.ui.internal.StructuredDocumentToTextAdapter;
 
 public class StyledTextContentSpec implements TextChangeListener {
 	static String contentClassName;
