@@ -22,6 +22,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
 import org.eclipse.ui.views.properties.IPropertySource;
+import org.eclipse.ui.views.properties.IPropertySource2;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.eclipse.wst.common.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.common.contentmodel.CMDataType;
@@ -49,7 +50,7 @@ import org.w3c.dom.Node;
  * properties of DOM nodes. Requires an adapter factory to create JFace
  * adapters for the nodes in the tree.
  */
-public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, IPropertySourceExtension {
+public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, IPropertySourceExtension, IPropertySource2 {
 	protected final static String CATEGORY_ATTRIBUTES = XMLUIPlugin.getResourceString("%XMLPropertySourceAdapter.0"); //$NON-NLS-1$
 
 	private static final boolean fSetExpertFilter = false;
@@ -111,14 +112,16 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 			// FIXED value
 			currentValueKnown = currentValue != null && valuesHelper.getImpliedValue().equals(currentValue);
 			values.add(valuesHelper.getImpliedValue());
-		} else {
+		}
+		else {
 			// ENUMERATED values
 			String[] valueStrings = null;
-			//			valueStrings = valuesHelper.getEnumeratedValues();
+			// valueStrings = valuesHelper.getEnumeratedValues();
 			ModelQuery modelQuery = ModelQueryUtil.getModelQuery(fNode.getOwnerDocument());
 			if (modelQuery != null && fNode.getNodeType() == Node.ELEMENT_NODE) {
 				valueStrings = modelQuery.getPossibleDataTypeValues((Element) fNode, attrDecl);
-			} else {
+			}
+			else {
 				valueStrings = attrDecl.getAttrType().getEnumeratedValues();
 			}
 			if (valueStrings != null) {
@@ -202,13 +205,16 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 			// handle declarations that provide FIXED/ENUMERATED values
 			if (attrType.getEnumeratedValues() != null && attrType.getEnumeratedValues().length > 0) {
 				descriptor = createEnumeratedPropertyDescriptor(attrDecl, attrType);
-			} else if ((attrDecl.getUsage() == CMAttributeDeclaration.FIXED || attrType.getImpliedValueKind() == CMDataType.IMPLIED_VALUE_FIXED) && attrType.getImpliedValue() != null) {
+			}
+			else if ((attrDecl.getUsage() == CMAttributeDeclaration.FIXED || attrType.getImpliedValueKind() == CMDataType.IMPLIED_VALUE_FIXED) && attrType.getImpliedValue() != null) {
 				descriptor = createFixedPropertyDescriptor(attrDecl, attrType);
-			} else {
+			}
+			else {
 				// plain text
 				descriptor = createTextPropertyDescriptor(attrDecl);
 			}
-		} else {
+		}
+		else {
 			// no extra information given
 			descriptor = createTextPropertyDescriptor(attrDecl);
 		}
@@ -259,7 +265,8 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 					descriptor = createPropertyDescriptor(attrDecl);
 					if (descriptor != null)
 						names.add(attrDecl.getNodeName());
-				} else {
+				}
+				else {
 					descriptor = createDefaultPropertyDescriptor(attr.getName());
 					if (descriptor != null)
 						names.add(attr.getName());
@@ -341,7 +348,8 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 	public IPropertyDescriptor[] getPropertyDescriptors() {
 		if (fDescriptors == null || fDescriptors.length == 0) {
 			fDescriptors = createPropertyDescriptors();
-		} else {
+		}
+		else {
 			updatePropertyDescriptors();
 		}
 		return fDescriptors;
@@ -404,6 +412,30 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 		return false;
 	}
 
+	public boolean isPropertyResettable(Object id) {
+		boolean resettable = false;
+		String property = id.toString();
+		CMNamedNodeMap attrDecls = null;
+
+		CMElementDeclaration ed = getDeclaration();
+		if (ed != null) {
+			attrDecls = ed.getAttributes();
+		}
+
+		if (attrDecls != null) {
+			CMAttributeDeclaration attrDecl = (CMAttributeDeclaration) attrDecls.getNamedItem(property);
+			if (attrDecl != null) {
+				if (attrDecl.getAttrType() != null) {
+					CMDataType helper = attrDecl.getAttrType();
+					if (helper.getImpliedValueKind() != CMDataType.IMPLIED_VALUE_NONE && helper.getImpliedValue() != null) {
+						resettable = true;
+					}
+				}
+			}
+		}
+		return resettable;
+	}
+
 	/**
 	 * Returns whether the property value has changed from the default.
 	 * 
@@ -435,7 +467,8 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 			if (attribute != null) {
 				try {
 					attrMap.removeNamedItem(propertyObject.toString());
-				} catch (DOMException e) {
+				}
+				catch (DOMException e) {
 					if (e.code != DOMException.INVALID_MODIFICATION_ERR) {
 						Logger.logException(e);
 					}
@@ -470,10 +503,12 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 			}
 			if (defValue != null && defValue.length() > 0) {
 				((Attr) attrMap.getNamedItem(property)).setValue(defValue);
-			} else {
+			}
+			else {
 				attrMap.removeNamedItem(property);
 			}
-		} else {
+		}
+		else {
 			attrMap.removeNamedItem(property);
 		}
 	}
@@ -510,7 +545,8 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 						else
 							attr.setValue(valueString);
 					}
-				} else {
+				}
+				else {
 					// NEW(?) value
 					if (value != null) { // never create an empty attribute
 						Attr newAttr = fNode.getOwnerDocument().createAttribute(name);
@@ -521,12 +557,14 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 						attrMap.setNamedItem(newAttr);
 					}
 				}
-			} else {
+			}
+			else {
 				if (fNode instanceof Element) {
 					((Element) fNode).setAttribute(name, valueString);
 				}
 			}
-		} catch (DOMException e) {
+		}
+		catch (DOMException e) {
 			Display d = getDisplay();
 			if (d != null)
 				d.beep();
@@ -580,7 +618,8 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 					}
 				}
 			}
-		} else {
+		}
+		else {
 			// Update existing descriptors based on not having any metainfo
 			for (int j = 0; j < fDescriptors.length; j++) {
 				// Replace with basic descriptor
@@ -621,7 +660,8 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 							descriptors.add(descriptor);
 						}
 					}
-				} else {
+				}
+				else {
 					boolean exists = false;
 					for (int j = 0; j < descriptorNames.size(); j++)
 						exists = (descriptorNames.get(j).toString().equalsIgnoreCase(attrName)) || exists;
@@ -647,7 +687,8 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 						descriptorNames.add(attrName);
 						descriptors.add(createDefaultPropertyDescriptor(attrName));
 					}
-				} else {
+				}
+				else {
 					boolean exists = false;
 					for (int j = 0; j < descriptorNames.size(); j++)
 						exists = (descriptorNames.get(j).toString().equalsIgnoreCase(attrName)) || exists;
