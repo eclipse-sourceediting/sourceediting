@@ -43,19 +43,21 @@ public class MasterListTestSuite extends TestSuite {
 	public MasterListTestSuite() {
 		super("All Tests");
 
-		addTest(JSPCoreTestSuite.suite());
-		addTest(JSPEncodingTestSuite.suite());
-		addTest(JSPUITestSuite.suite());
-		addTest(CSSCoreTestSuite.suite());
-		addTest(CSSEncodingTestSuite.suite());
-		addTest(HTMLCoreTestSuite.suite());
-		addTest(HTMLEncodingTestSuite.suite());
-		addTest(HTMLUITestSuite.suite());
 		addTest(SSEModelTestSuite.suite());
-		addTest(SSEUITestSuite.suite());
 		addTest(SSEModelXMLTestSuite.suite());
+		addTest(CSSCoreTestSuite.suite());
+		addTest(HTMLCoreTestSuite.suite());
+		addTest(JSPCoreTestSuite.suite());
+
 		addTest(EncodingTestSuite.suite());
+		addTest(CSSEncodingTestSuite.suite());
+		addTest(HTMLEncodingTestSuite.suite());
+		addTest(JSPEncodingTestSuite.suite());
+
+		addTest(HTMLUITestSuite.suite());
+		addTest(SSEUITestSuite.suite());
 		addTest(XMLUITestSuite.suite());
+		addTest(JSPUITestSuite.suite());
 
 	}
 
