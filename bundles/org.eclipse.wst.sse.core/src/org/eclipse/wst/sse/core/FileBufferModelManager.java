@@ -62,13 +62,18 @@ class FileBufferModelManager {
 	}
 
 	/**
-	 * A URIResolver instance of models built on java.io.Files
+	 * A URIResolver instance of models built on java.io.Files TODO: complete
+	 * implementation
 	 */
 	class ExternalURIResolver implements URIResolver {
-		String location = null;
+		IPath fLocation;
+
+		ExternalURIResolver(IPath location) {
+			fLocation = location;
+		}
 
 		public String getFileBaseLocation() {
-			return location;
+			return fLocation.toOSString();
 		}
 
 		public String getLocationByURI(String uri) {
@@ -100,7 +105,6 @@ class FileBufferModelManager {
 		}
 
 		public void setFileBaseLocation(String newLocation) {
-			location = newLocation;
 		}
 
 		public void setProject(IProject newProject) {
@@ -124,7 +128,7 @@ class FileBufferModelManager {
 				if (!(textBuffer.getDocument() instanceof IStructuredDocument))
 					return;
 				if (debugTextBufferLifeCycle) {
-					System.out.println("Learned new buffer: " + buffer.getLocation().toString() + " " + buffer + " " + ((ITextFileBuffer)buffer).getDocument());
+					System.out.println("Learned new buffer: " + buffer.getLocation().toString() + " " + buffer + " " + ((ITextFileBuffer) buffer).getDocument());
 				}
 				DocumentInfo info = new DocumentInfo();
 				info.buffer = textBuffer;
@@ -140,7 +144,7 @@ class FileBufferModelManager {
 				if (!(textBuffer.getDocument() instanceof IStructuredDocument))
 					return;
 				if (debugTextBufferLifeCycle) {
-					System.out.println("Discarded buffer: " + buffer.getLocation().toString() + " " + buffer + " " + ((ITextFileBuffer)buffer).getDocument());
+					System.out.println("Discarded buffer: " + buffer.getLocation().toString() + " " + buffer + " " + ((ITextFileBuffer) buffer).getDocument());
 				}
 				DocumentInfo info = (DocumentInfo) fDocumentMap.get(textBuffer.getDocument());
 				if (info != null) {
@@ -154,7 +158,7 @@ class FileBufferModelManager {
 		public void dirtyStateChanged(IFileBuffer buffer, boolean isDirty) {
 			if (buffer instanceof ITextFileBuffer) {
 				if (debugTextBufferLifeCycle) {
-					System.out.println("Buffer dirty state changed: (" + isDirty + ") " + buffer.getLocation().toString() + " " + buffer + " " + ((ITextFileBuffer)buffer).getDocument());
+					System.out.println("Buffer dirty state changed: (" + isDirty + ") " + buffer.getLocation().toString() + " " + buffer + " " + ((ITextFileBuffer) buffer).getDocument());
 				}
 				ITextFileBuffer textBuffer = (ITextFileBuffer) buffer;
 				if (!(textBuffer.getDocument() instanceof IStructuredDocument))
@@ -198,14 +202,6 @@ class FileBufferModelManager {
 					System.out.println("Moved buffer from: " + buffer.getLocation().toOSString() + " " + buffer);
 					System.out.println("Moved buffer to: " + path.toOSString() + " " + buffer);
 				}
-//				ITextFileBuffer textBuffer = (ITextFileBuffer) buffer;
-//				DocumentInfo info = (DocumentInfo) fDocumentMap.get(textBuffer.getDocument());
-//				if (info != null) {
-//					info.contentTypeID = detectContentType(path).getId();
-//					if (info.model != null) {
-//						info.model.setBaseLocation(path.toString());
-//					}
-//				}
 			}
 		}
 	}
@@ -315,8 +311,9 @@ class FileBufferModelManager {
 			if (resolver == null) {
 				resolver = new ProjectResolver(project);
 			}
-		} else {
-			resolver = new ExternalURIResolver();
+		}
+		else {
+			resolver = new ExternalURIResolver(location);
 		}
 		resolver.setFileBaseLocation(location.toString());
 		return resolver;
@@ -336,7 +333,8 @@ class FileBufferModelManager {
 					if (d != null) {
 						type = d.getContentType();
 					}
-				} catch (CoreException e) {
+				}
+				catch (CoreException e) {
 					// Should not be possible given the accessible and file
 					// type check above
 				}
@@ -344,20 +342,25 @@ class FileBufferModelManager {
 					type = Platform.getContentTypeManager().findContentTypeFor(resource.getName());
 				}
 			}
-		} else {
+		}
+		else {
 			File file = FileBuffers.getSystemFileAtLocation(location);
 			if (file != null) {
 				InputStream input = null;
 				try {
 					input = new FileInputStream(file);
 					type = Platform.getContentTypeManager().findContentTypeFor(input, location.toOSString());
-				} catch (FileNotFoundException e) {
-				} catch (IOException e) {
-				} finally {
+				}
+				catch (FileNotFoundException e) {
+				}
+				catch (IOException e) {
+				}
+				finally {
 					if (input != null) {
 						try {
 							input.close();
-						} catch (IOException e1) {
+						}
+						catch (IOException e1) {
 						}
 					}
 				}
@@ -401,9 +404,9 @@ class FileBufferModelManager {
 				info.selfConnected = true;
 				model = getModel((IStructuredDocument) buffer.getDocument());
 			}
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}
+		catch (CoreException e) {
+			Logger.log(Logger.ERROR, "Error getting model for " + file.getPath(), e);
 		}
 		return model;
 	}
@@ -422,9 +425,9 @@ class FileBufferModelManager {
 				info.selfConnected = true;
 				model = getModel((IStructuredDocument) buffer.getDocument());
 			}
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}
+		catch (CoreException e) {
+			Logger.log(Logger.ERROR, "Error getting model for " + file.getLocation(), e);
 		}
 		return model;
 	}
@@ -447,7 +450,8 @@ class FileBufferModelManager {
 			if (loader instanceof IModelLoaderExtension) {
 				mustSetDocument = false;
 				model = ((IModelLoaderExtension) loader).createModel(document);
-			} else {
+			}
+			else {
 				model = loader.createModel();
 			}
 			try {
@@ -460,10 +464,11 @@ class FileBufferModelManager {
 					model.setStructuredDocument(document);
 				}
 				addFactories(model, handler);
-				if(info.buffer.isDirty()) {
+				if (info.buffer.isDirty()) {
 					model.setDirtyState(true);
 				}
-			} catch (ResourceInUse e) {
+			}
+			catch (ResourceInUse e) {
 				Logger.log(Logger.ERROR, "attempted to create new model with existing ID", e);
 				model = null;
 			}
@@ -493,7 +498,7 @@ class FileBufferModelManager {
 		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
 		if (info != null) {
 			if (debugFileBufferModelManagement) {
-				System.out.println("FileBufferModelManager noticed full release of model for " + info.buffer.getLocation()  + " " + info.buffer.getDocument());
+				System.out.println("FileBufferModelManager noticed full release of model for " + info.buffer.getLocation() + " " + info.buffer.getDocument());
 			}
 			info.model = null;
 			info.modelReferenceCount--;
@@ -501,11 +506,12 @@ class FileBufferModelManager {
 				if (debugFileBufferModelManagement) {
 					System.out.println("FileBufferModelManager disconnecting from " + info.buffer.getLocation() + " " + info.buffer.getDocument());
 				}
+				IPath location = info.buffer.getLocation();
 				try {
 					FileBuffers.getTextFileBufferManager().disconnect(info.buffer.getLocation(), getProgressMonitor());
-				} catch (CoreException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				}
+				catch (CoreException e) {
+					Logger.log(Logger.ERROR, "Error releasing model for " + location, e);
 				}
 			}
 		}
