@@ -22,7 +22,6 @@ import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.xml.core.document.TagAdapter;
 import org.eclipse.wst.xml.core.document.XMLElement;
 import org.eclipse.wst.xml.core.document.XMLModel;
-import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 
 /**
@@ -66,7 +65,7 @@ public class MetaDataAdapter implements TagAdapter, MetaData {
 		while (e.hasNext()) {
 			ITextRegion region = (ITextRegion) e.next();
 			String regionType = region.getType();
-			if (regionType == XMLRegionContext.XML_COMMENT_TEXT || regionType == XMLJSPRegionContexts.JSP_COMMENT_TEXT) {
+			if (isCommentText(regionType)) {
 				data = flatNode.getText(region);
 				break;
 			}
@@ -91,8 +90,27 @@ public class MetaDataAdapter implements TagAdapter, MetaData {
 		return data.substring(offset);
 	}
 
+	private boolean isCommentText(String regionType) {
+		boolean result = false;
+		result = isDOMComment(regionType) || isNestedContentComment(regionType);
+		return result;
+	}
+
 	/**
+	 * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
+	 * way for expedency. Should be evolved in future to depend on
+	 * "nestedContext".
 	 */
+
+	private boolean isNestedContentComment(String regionType) {
+		final String JSP_COMMENT_TEXT = "JSP_COMMENT_TEXT"; //$NON-NLS-1$
+		return regionType.equals(JSP_COMMENT_TEXT);
+	}
+
+	private boolean isDOMComment(String regionType) {
+		return regionType == XMLRegionContext.XML_COMMENT_TEXT;
+	}
+
 	public String getData() {
 		if (this.element == null)
 			return null;

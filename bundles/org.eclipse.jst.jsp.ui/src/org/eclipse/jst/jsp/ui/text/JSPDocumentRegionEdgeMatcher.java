@@ -11,8 +11,8 @@
 package org.eclipse.jst.jsp.ui.text;
 
 import org.eclipse.jdt.internal.ui.text.JavaPairMatcher;
+import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
 import org.eclipse.wst.sse.ui.text.DocumentRegionEdgeMatcher;
-import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 
 public class JSPDocumentRegionEdgeMatcher extends DocumentRegionEdgeMatcher {

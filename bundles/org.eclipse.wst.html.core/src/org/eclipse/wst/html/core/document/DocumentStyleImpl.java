@@ -39,7 +39,7 @@ public class DocumentStyleImpl extends DocumentImpl implements XMLDocument, Docu
 		super();
 	}
 
-	public DocumentStyleImpl(DocumentImpl that) {
+	protected DocumentStyleImpl(DocumentImpl that) {
 		super(that);
 	}
 

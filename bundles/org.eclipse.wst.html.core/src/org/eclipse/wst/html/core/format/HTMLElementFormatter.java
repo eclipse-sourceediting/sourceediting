@@ -25,14 +25,13 @@ import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.xml.core.document.XMLElement;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.core.format.IStructuredFormatPreferencesXML;
-import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.w3c.dom.Attr;
 import org.w3c.dom.NamedNodeMap;
 
 // nakamori_TODO: check and remove CSS formatting
 
-public class HTMLElementFormatter extends HTMLFormatter implements XMLRegionContext, XMLJSPRegionContexts {
+public class HTMLElementFormatter extends HTMLFormatter implements XMLRegionContext {
 
 	/**
 	 */
@@ -79,19 +78,19 @@ public class HTMLElementFormatter extends HTMLFormatter implements XMLRegionCont
 			if (region == null)
 				continue;
 			String regionType = region.getType();
-			if (regionType == XML_TAG_NAME || regionType == JSP_ROOT_TAG_NAME || regionType == JSP_DIRECTIVE_NAME) {
+			if (regionType == XML_TAG_NAME || isNestedTag(regionType)) {
 				if (prevRegion != null && prevRegion.getType() == XML_END_TAG_OPEN) {
 					removeTailingSpaces(endStructuredDocumentRegion, prevRegion);
 				}
 			}
 			else if (regionType == XML_TAG_CLOSE) {
-				if (prevRegion != null && (prevRegion.getType() == XML_TAG_NAME || prevRegion.getType() == JSP_ROOT_TAG_NAME)) {
+				if (prevRegion != null && (prevRegion.getType() == XML_TAG_NAME || isNestedRootTag(prevRegion.getType()))) {
 					removeTailingSpaces(endStructuredDocumentRegion, prevRegion);
 				}
 			}
 			prevRegion = region;
 		}
-		if (prevRegion != null && (prevRegion.getType() == XML_TAG_NAME || prevRegion.getType() == JSP_ROOT_TAG_NAME)) {
+		if (prevRegion != null && (prevRegion.getType() == XML_TAG_NAME || isNestedRootTag(prevRegion.getType()))) {
 			removeTailingSpaces(endStructuredDocumentRegion, prevRegion);
 		}
 
@@ -123,7 +122,7 @@ public class HTMLElementFormatter extends HTMLFormatter implements XMLRegionCont
 			return;
 
 		// We should format attributes in JSPTag?
-		//if (element.isJSPTag() || element.isCommentTag()) {
+		// if (element.isJSPTag() || element.isCommentTag()) {
 		if (element.isCommentTag()) {
 			String startTag = startStructuredDocumentRegion.getText();
 			if (startTag != null && startTag.length() > 0) {
@@ -164,7 +163,7 @@ public class HTMLElementFormatter extends HTMLFormatter implements XMLRegionCont
 			ITextRegion breakRegion = null;
 
 			String regionType = region.getType();
-			if (regionType == XML_TAG_NAME || regionType == JSP_ROOT_TAG_NAME || regionType == JSP_DIRECTIVE_NAME) {
+			if (regionType == XML_TAG_NAME || isNestedTag(regionType)) {
 				if (prevRegion != null && prevRegion.getType() == XML_TAG_OPEN) {
 					removeTailingSpaces(startStructuredDocumentRegion, prevRegion);
 				}
@@ -254,6 +253,30 @@ public class HTMLElementFormatter extends HTMLFormatter implements XMLRegionCont
 			addWidth(contraints, startStructuredDocumentRegion.getLength());
 		}
 	}
+
+	/**
+	 * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
+	 * way for expedency. Should be evolved in future to depend on
+	 * "nestedContext".
+	 */
+	private boolean isNestedTag(String regionType) {
+		final String JSP_ROOT_TAG_NAME = "JSP_ROOT_TAG_NAME"; //$NON-NLS-1$
+		final String JSP_DIRECTIVE_NAME = "JSP_DIRECTIVE_NAME"; //$NON-NLS-1$
+		boolean result = regionType.equals(JSP_ROOT_TAG_NAME) || regionType.equals(JSP_DIRECTIVE_NAME);
+		return result;
+	}
+
+	/**
+	 * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
+	 * way for expedency. Should be evolved in future to depend on
+	 * "nestedContext".
+	 */
+	private boolean isNestedRootTag(String regionType) {
+		final String JSP_ROOT_TAG_NAME = "JSP_ROOT_TAG_NAME"; //$NON-NLS-1$
+		boolean result = regionType.equals(JSP_ROOT_TAG_NAME);
+		return result;
+	}
+
 
 	/**
 	 */

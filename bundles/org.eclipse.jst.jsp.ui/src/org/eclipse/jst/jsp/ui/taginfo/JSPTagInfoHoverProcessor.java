@@ -12,12 +12,12 @@ package org.eclipse.jst.jsp.ui.taginfo;
 
 
 
+import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
 import org.eclipse.wst.html.ui.taginfo.HTMLTagInfoHoverProcessor;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.xml.core.document.XMLNode;
-import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 
 /**
  * Provides hover help documentation for JSP tags

@@ -42,7 +42,8 @@ public class PageDirectiveWatcherFactory extends PropagatingAdapterFactoryImpl i
 			XMLElement xmlElement = (XMLElement) target;
 			if (xmlElement.getNodeType() == Node.ELEMENT_NODE) {
 				//                if (xmlElement.getNodeName() == JSP12Namespace.ElementName.DIRECTIVE_PAGE) {   // not sure why identity to  JSP11Namespace.ElementName.DIRECTIVE_PAGE doesn't work
-				if (xmlElement.getNodeName().equals("jsp:directive.page")) { //$NON-NLS-1$
+				String nodeName = xmlElement.getNodeName();
+				if (nodeName.equals("jsp:directive.page")) { //$NON-NLS-1$
 					result = new PageDirectiveWatcherImpl(xmlElement);
 				}
 
