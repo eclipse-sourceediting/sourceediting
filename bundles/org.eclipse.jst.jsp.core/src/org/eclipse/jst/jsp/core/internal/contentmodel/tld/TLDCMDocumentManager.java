@@ -49,8 +49,6 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibIndex;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.wst.common.uriresolver.URIResolverPlugin;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMDocument;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.sse.core.parser.BlockMarker;
 import org.eclipse.wst.sse.core.parser.StructuredDocumentRegionHandler;
 import org.eclipse.wst.sse.core.parser.StructuredDocumentRegionHandlerExtension;
@@ -61,6 +59,8 @@ import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.Assert;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.core.util.StringUtils;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.eclipse.wst.xml.uriresolver.util.URIHelper;
 

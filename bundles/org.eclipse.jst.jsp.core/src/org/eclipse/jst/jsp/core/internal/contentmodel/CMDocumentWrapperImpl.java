@@ -15,12 +15,12 @@ package org.eclipse.jst.jsp.core.internal.contentmodel;
 import java.util.Hashtable;
 import java.util.Iterator;
 
-import org.eclipse.wst.sse.core.contentmodel.CMNodeWrapper;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMDocument;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNamespace;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.contentmodel.CMNodeWrapper;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNamespace;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 
 public class CMDocumentWrapperImpl implements CMDocument, CMNodeWrapper {
 
@@ -107,7 +107,7 @@ public class CMDocumentWrapperImpl implements CMDocument, CMNodeWrapper {
 
 	/**
 	 * 
-	 * @return org.eclipse.wst.sse.core.internal.contentmodel.CMDocument
+	 * @return org.eclipse.wst.xml.core.internal.contentmodel.CMDocument
 	 */
 	public CMDocument getDocument() {
 		return fDocument;

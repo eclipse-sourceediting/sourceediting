@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import org.eclipse.wst.html.core.HTML40Namespace;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMAttributeDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 
 /**
  * COLGROUP.

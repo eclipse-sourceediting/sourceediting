@@ -12,8 +12,8 @@ package org.eclipse.wst.html.core.modelquery;
 
 import java.util.Enumeration;
 
-import org.eclipse.wst.sse.core.internal.contentmodel.CMAttributeDeclaration;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMDataType;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 
 /**
  */

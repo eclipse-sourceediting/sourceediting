@@ -15,7 +15,7 @@ package org.eclipse.wst.html.core.contentmodel;
 import java.util.Arrays;
 
 import org.eclipse.wst.html.core.HTML40Namespace;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMAttributeDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 
 /**
  * OPTGROUP.

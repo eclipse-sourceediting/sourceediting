@@ -12,7 +12,7 @@ package org.eclipse.wst.html.core.contentmodel;
 
 
 
-import org.eclipse.wst.sse.core.internal.contentmodel.CMDataType;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 
 /**
  * HTML extension for data types.

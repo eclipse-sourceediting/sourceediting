@@ -22,12 +22,12 @@ import org.eclipse.wst.sse.core.IModelStateListener;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.contentmodel.modelquery.ModelQuery;
-import org.eclipse.wst.sse.core.internal.contentmodel.util.CMDocumentCache;
-import org.eclipse.wst.sse.core.modelquery.ModelQueryAdapter;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.xml.core.document.XMLNode;
-import org.eclipse.wst.xml.core.modelquery.XMLCatalogIdResolver;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
+import org.eclipse.wst.xml.core.internal.modelquery.XMLCatalogIdResolver;
+import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
 import org.eclipse.wst.xml.uriresolver.util.IdResolver;
 
 public class ModelQueryAdapterFactoryForJSP extends AbstractAdapterFactory implements IModelStateListener {

@@ -13,10 +13,10 @@ package org.eclipse.jst.jsp.core.internal.contentmodel;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMGroup;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNodeList;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMGroup;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNodeList;
 
 public class CMGroupWrapperImpl extends CMContentWrapperImpl implements CMGroup {
 	class CMNodeListImpl implements CMNodeList {
@@ -31,8 +31,8 @@ public class CMGroupWrapperImpl extends CMContentWrapperImpl implements CMGroup 
 		}
 
 		/**
-		 * @return org.eclipse.wst.sse.core.internal.contentmodel.CMNode
-		 * @param node org.eclipse.wst.sse.core.internal.contentmodel.CMNode
+		 * @return org.eclipse.wst.xml.core.internal.contentmodel.CMNode
+		 * @param node org.eclipse.wst.xml.core.internal.contentmodel.CMNode
 		 */
 		public void appendItem(CMNode node) {
 			nodes.add(node);
@@ -64,7 +64,7 @@ public class CMGroupWrapperImpl extends CMContentWrapperImpl implements CMGroup 
 	/**
 	 * CMGroupWrapper constructor comment.
 	 * @param prefix java.lang.String
-	 * @param node org.eclipse.wst.sse.core.internal.contentmodel.CMContent
+	 * @param node org.eclipse.wst.xml.core.internal.contentmodel.CMContent
 	 */
 	public CMGroupWrapperImpl(String prefix, CMGroup node) {
 		super(prefix, node);

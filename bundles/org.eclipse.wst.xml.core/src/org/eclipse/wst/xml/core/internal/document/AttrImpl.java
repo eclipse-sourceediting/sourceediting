@@ -16,9 +16,6 @@ package org.eclipse.wst.xml.core.internal.document;
 
 import java.util.Iterator;
 
-import org.eclipse.wst.sse.core.internal.contentmodel.CMAttributeDeclaration;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionContainer;
@@ -26,6 +23,9 @@ import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.xml.core.document.XMLAttr;
 import org.eclipse.wst.xml.core.document.XMLCharEntity;
 import org.eclipse.wst.xml.core.document.XMLNamespace;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;

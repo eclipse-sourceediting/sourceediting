@@ -14,7 +14,7 @@ package org.eclipse.wst.xml.ui.contentassist;
 
 
 
-public class SimpleCMElementDeclaration implements org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration {
+public class SimpleCMElementDeclaration implements org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration {
 
 	String fNodeName;
 
@@ -37,7 +37,7 @@ public class SimpleCMElementDeclaration implements org.eclipse.wst.sse.core.inte
 	 * 
 	 * Returns CMNamedNodeMap of AttributeDeclaration
 	 */
-	public org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap getAttributes() {
+	public org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap getAttributes() {
 		return null;
 	}
 
@@ -49,7 +49,7 @@ public class SimpleCMElementDeclaration implements org.eclipse.wst.sse.core.inte
 	 * Returns the root node of this element's content model. This can be an
 	 * CMElementDeclaration or a CMGroup
 	 */
-	public org.eclipse.wst.sse.core.internal.contentmodel.CMContent getContent() {
+	public org.eclipse.wst.xml.core.internal.contentmodel.CMContent getContent() {
 		return null;
 	}
 
@@ -69,7 +69,7 @@ public class SimpleCMElementDeclaration implements org.eclipse.wst.sse.core.inte
 	 * 
 	 * @return java.lang.String
 	 */
-	public org.eclipse.wst.sse.core.internal.contentmodel.CMDataType getDataType() {
+	public org.eclipse.wst.xml.core.internal.contentmodel.CMDataType getDataType() {
 		return null;
 	}
 
@@ -89,7 +89,7 @@ public class SimpleCMElementDeclaration implements org.eclipse.wst.sse.core.inte
 	 * 
 	 * Returns a list of locally defined elements.
 	 */
-	public org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap getLocalElements() {
+	public org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap getLocalElements() {
 		return null;
 	}
 

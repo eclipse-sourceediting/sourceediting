@@ -15,9 +15,9 @@ package org.eclipse.wst.html.core.contentmodel;
 import java.util.Arrays;
 
 import org.eclipse.wst.html.core.HTML40Namespace;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMContent;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMGroup;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMGroup;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 
 /**
  * MENU/DIR.

@@ -16,10 +16,10 @@ import java.util.Enumeration;
 
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDAttributeDeclaration;
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDDocument;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMDataType;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMDocument;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.sse.core.util.StringUtils;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 
 public class CMAttributeDeclarationImpl implements TLDAttributeDeclaration {
 

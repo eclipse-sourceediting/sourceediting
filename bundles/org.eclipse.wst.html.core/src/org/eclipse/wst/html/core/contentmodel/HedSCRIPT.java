@@ -15,10 +15,10 @@ package org.eclipse.wst.html.core.contentmodel;
 import java.util.Arrays;
 
 import org.eclipse.wst.html.core.HTML40Namespace;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMAttributeDeclaration;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMContent;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMDataType;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 
 /**
  * SCRIPT.
@@ -65,7 +65,7 @@ final class HedSCRIPT extends HTMLElemDeclImpl {
 	 * <code>SCRIPT</code> is CDATA type.
 	 * So, the method always returns <code>null</code>.
 	 * <br>
-	 * @return org.eclipse.wst.sse.core.internal.contentmodel.CMContent
+	 * @return org.eclipse.wst.xml.core.internal.contentmodel.CMContent
 	 */
 	public CMContent getContent() {
 		return null;

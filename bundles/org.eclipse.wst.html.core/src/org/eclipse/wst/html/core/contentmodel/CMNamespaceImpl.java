@@ -12,8 +12,8 @@ package org.eclipse.wst.html.core.contentmodel;
 
 
 
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNamespace;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNamespace;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 
 /**
  * CMNamespace implementation.

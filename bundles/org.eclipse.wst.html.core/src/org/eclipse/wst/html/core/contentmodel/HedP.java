@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import org.eclipse.wst.html.core.HTML40Namespace;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 
 /**
  * P.

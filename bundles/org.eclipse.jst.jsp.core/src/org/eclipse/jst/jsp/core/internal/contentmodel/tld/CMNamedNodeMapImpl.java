@@ -15,8 +15,8 @@ package org.eclipse.jst.jsp.core.internal.contentmodel.tld;
 import java.util.Hashtable;
 import java.util.Iterator;
 
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 
 public class CMNamedNodeMapImpl implements CMNamedNodeMap {
 

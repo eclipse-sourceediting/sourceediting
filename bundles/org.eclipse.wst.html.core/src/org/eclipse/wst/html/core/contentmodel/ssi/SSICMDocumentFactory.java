@@ -15,12 +15,12 @@ import java.util.Iterator;
 
 import org.eclipse.wst.html.core.HTML40Namespace;
 import org.eclipse.wst.html.core.contentmodel.HTMLCMDocumentFactory;
-import org.eclipse.wst.sse.core.contentmodel.CMDocType;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMDocument;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNamespace;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.contentmodel.CMDocType;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNamespace;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 
 /**
  * CMDocument factory for SSI documents.

@@ -12,8 +12,8 @@ package org.eclipse.jst.jsp.core.contentmodel.tld;
 
 
 
-import org.eclipse.wst.sse.core.internal.contentmodel.CMAttributeDeclaration;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMDocument;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 
 /**
  * Represents an attribute definition from a TLD

@@ -14,10 +14,10 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
-import org.eclipse.wst.sse.core.internal.contentmodel.CMAnyElement;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration;
-import org.eclipse.wst.sse.core.internal.contentmodel.util.ContentBuilder;
-import org.eclipse.wst.sse.core.internal.contentmodel.util.NamespaceInfo;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMAnyElement;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.util.ContentBuilder;
+import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 
 public class NamespaceInfoContentBuilder extends ContentBuilder
   {      

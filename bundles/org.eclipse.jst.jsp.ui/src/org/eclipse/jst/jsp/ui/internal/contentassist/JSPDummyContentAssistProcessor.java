@@ -21,15 +21,15 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMAttributeDeclaration;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMContent;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.ui.contentassist.IResourceDependentProcessor;
 import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.ui.contentassist.AbstractContentAssistProcessor;
 import org.eclipse.wst.xml.ui.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.contentassist.XMLContentModelGenerator;
@@ -68,7 +68,7 @@ public class JSPDummyContentAssistProcessor extends AbstractContentAssistProcess
 	}
 
 	/**
-	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#addContent(java.util.List, org.eclipse.wst.sse.core.internal.contentmodel.CMContent)
+	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#addContent(java.util.List, org.eclipse.wst.xml.core.internal.contentmodel.CMContent)
 	 */
 	protected void addContent(List contentList, CMContent content) {
 		super.addContent(contentList, content);
@@ -159,7 +159,7 @@ public class JSPDummyContentAssistProcessor extends AbstractContentAssistProcess
 	}
 
 	/**
-	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#attributeInList(com.ibm.sed.model.xml.XMLNode, org.w3c.dom.Node, org.eclipse.wst.sse.core.internal.contentmodel.CMNode)
+	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#attributeInList(com.ibm.sed.model.xml.XMLNode, org.w3c.dom.Node, org.eclipse.wst.xml.core.internal.contentmodel.CMNode)
 	 */
 	protected boolean attributeInList(XMLNode node, Node parent, CMNode cmnode) {
 		return super.attributeInList(node, parent, cmnode);
@@ -264,7 +264,7 @@ public class JSPDummyContentAssistProcessor extends AbstractContentAssistProcess
 	}
 
 	/**
-	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#getAdditionalInfo(org.eclipse.wst.sse.core.internal.contentmodel.CMNode, org.eclipse.wst.sse.core.internal.contentmodel.CMNode)
+	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#getAdditionalInfo(org.eclipse.wst.xml.core.internal.contentmodel.CMNode, org.eclipse.wst.xml.core.internal.contentmodel.CMNode)
 	 */
 	protected String getAdditionalInfo(CMNode parentOrOwner, CMNode cmnode) {
 		return super.getAdditionalInfo(parentOrOwner, cmnode);
@@ -362,28 +362,28 @@ public class JSPDummyContentAssistProcessor extends AbstractContentAssistProcess
 	}
 
 	/**
-	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#getPossibleDataTypeValues(org.w3c.dom.Node, org.eclipse.wst.sse.core.internal.contentmodel.CMAttributeDeclaration)
+	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#getPossibleDataTypeValues(org.w3c.dom.Node, org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration)
 	 */
 	protected List getPossibleDataTypeValues(Node node, CMAttributeDeclaration ad) {
 		return super.getPossibleDataTypeValues(node, ad);
 	}
 
 	/**
-	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#getRequiredName(org.w3c.dom.Node, org.eclipse.wst.sse.core.internal.contentmodel.CMNode)
+	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#getRequiredName(org.w3c.dom.Node, org.eclipse.wst.xml.core.internal.contentmodel.CMNode)
 	 */
 	protected String getRequiredName(Node parentOrOwner, CMNode cmnode) {
 		return super.getRequiredName(parentOrOwner, cmnode);
 	}
 
 	/**
-	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#getRequiredText(org.w3c.dom.Node, org.eclipse.wst.sse.core.internal.contentmodel.CMAttributeDeclaration)
+	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#getRequiredText(org.w3c.dom.Node, org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration)
 	 */
 	protected String getRequiredText(Node parentOrOwner, CMAttributeDeclaration attrDecl) {
 		return super.getRequiredText(parentOrOwner, attrDecl);
 	}
 
 	/**
-	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#getRequiredText(org.w3c.dom.Node, org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration)
+	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#getRequiredText(org.w3c.dom.Node, org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration)
 	 */
 	protected String getRequiredText(Node parentOrOwner, CMElementDeclaration elementDecl) {
 		return super.getRequiredText(parentOrOwner, elementDecl);
@@ -432,7 +432,7 @@ public class JSPDummyContentAssistProcessor extends AbstractContentAssistProcess
 	}
 
 	/**
-	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#mapToProperties(org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap)
+	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#mapToProperties(org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap)
 	 */
 	protected Properties mapToProperties(CMNamedNodeMap map) {
 		return super.mapToProperties(map);

@@ -14,7 +14,7 @@ package org.eclipse.wst.html.core.modelquery;
 
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.sse.core.modelquery.ModelQueryAdapter;
+import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
 
 public class ModelQueryAdapterFactoryForEmbeddedHTML extends ModelQueryAdapterFactoryForHTML {
 

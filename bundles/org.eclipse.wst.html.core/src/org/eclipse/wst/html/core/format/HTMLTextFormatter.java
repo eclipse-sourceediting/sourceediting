@@ -14,11 +14,11 @@ package org.eclipse.wst.html.core.format;
 
 import org.eclipse.wst.html.core.HTMLCMProperties;
 import org.eclipse.wst.html.core.HTMLFormatContraints;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.xml.core.document.XMLElement;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.core.document.XMLText;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

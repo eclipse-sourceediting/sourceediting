@@ -15,16 +15,16 @@ import java.util.Iterator;
 
 import org.eclipse.wst.html.core.HTMLCMProperties;
 import org.eclipse.wst.html.core.modelquery.HMQUtil;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMAttributeDeclaration;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMContent;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMDataType;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMGroup;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNodeList;
-import org.eclipse.wst.sse.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.document.XMLElement;
-import org.eclipse.wst.xml.core.modelquery.ModelQueryUtil;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMGroup;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNodeList;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

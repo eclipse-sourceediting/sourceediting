@@ -17,7 +17,7 @@ package org.eclipse.wst.html.core.contentmodel;
  * This interface provides some short hand methods to get declarations
  * by a name.
  */
-public interface JSPCMDocument extends org.eclipse.wst.sse.core.internal.contentmodel.CMDocument {
+public interface JSPCMDocument extends org.eclipse.wst.xml.core.internal.contentmodel.CMDocument {
 
 	/**
 	 * A short hand method to get a element declaration for a JSP element.

@@ -12,12 +12,12 @@ package org.eclipse.jst.jsp.core.internal.contentmodel;
 
 
 
-import org.eclipse.wst.sse.core.internal.contentmodel.CMContent;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMDataType;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMGroup;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMGroup;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 
 public class CMElementDeclarationWrapperImpl extends CMNodeWrapperImpl implements CMElementDeclaration {
 	private CMContent fCMContent = null;
@@ -27,7 +27,7 @@ public class CMElementDeclarationWrapperImpl extends CMNodeWrapperImpl implement
 	/**
 	 * CMElementDeclarationWrapper constructor comment.
 	 * @param prefix java.lang.String
-	 * @param node org.eclipse.wst.sse.core.internal.contentmodel.CMNode
+	 * @param node org.eclipse.wst.xml.core.internal.contentmodel.CMNode
 	 */
 	public CMElementDeclarationWrapperImpl(String prefix, CMElementDeclaration node) {
 		super(prefix, node);

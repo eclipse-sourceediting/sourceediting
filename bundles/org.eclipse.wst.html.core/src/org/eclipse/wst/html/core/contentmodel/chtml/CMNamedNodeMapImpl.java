@@ -14,7 +14,7 @@ package org.eclipse.wst.html.core.contentmodel.chtml;
 
 import java.util.Iterator;
 
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 
 /**
  * An implementation of the CMNamedNodeMap interface.
@@ -23,7 +23,7 @@ import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
  * to the fact that this class is tolerant of the key name case.  That is, this
  * class does not distinguish "name", "NAME", and "Name" as a key name.
  */
-class CMNamedNodeMapImpl implements org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap {
+class CMNamedNodeMapImpl implements org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap {
 
 	private java.util.Hashtable items = null;
 

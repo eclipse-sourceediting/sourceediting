@@ -21,13 +21,13 @@ import java.util.Map;
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDDocument;
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDValidator;
 import org.eclipse.jst.jsp.core.internal.Logger;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNamespace;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
-import org.eclipse.wst.sse.core.internal.contentmodel.ContentModelManager;
-import org.eclipse.wst.sse.core.internal.contentmodel.annotation.AnnotationMap;
-import org.eclipse.wst.sse.core.internal.contentmodel.internal.annotation.AnnotationFileParser;
 import org.eclipse.wst.sse.core.util.StringUtils;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNamespace;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.ContentModelManager;
+import org.eclipse.wst.xml.core.internal.contentmodel.annotation.AnnotationMap;
+import org.eclipse.wst.xml.core.internal.contentmodel.internal.annotation.AnnotationFileParser;
 
 public class CMDocumentImpl implements TLDDocument {
 	

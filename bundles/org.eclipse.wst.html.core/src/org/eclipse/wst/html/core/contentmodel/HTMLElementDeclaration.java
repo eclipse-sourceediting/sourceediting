@@ -12,7 +12,7 @@ package org.eclipse.wst.html.core.contentmodel;
 
 
 
-import org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 
 /**
  * This interface is intended to be a public interface which has

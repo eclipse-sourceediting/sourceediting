@@ -16,7 +16,7 @@ import org.eclipse.wst.html.core.HTMLCMProperties;
 
 /**
  */
-abstract class CMNodeImpl implements org.eclipse.wst.sse.core.internal.contentmodel.CMNode {
+abstract class CMNodeImpl implements org.eclipse.wst.xml.core.internal.contentmodel.CMNode {
 
 	private java.lang.String name = null;
 

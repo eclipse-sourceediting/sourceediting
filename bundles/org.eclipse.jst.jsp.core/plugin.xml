@@ -36,7 +36,7 @@
       </modelHandler>
    </extension>
    <extension
-         point="org.eclipse.wst.sse.core.documentFactories">
+         point="org.eclipse.wst.xml.core.documentFactories">
       <factory
             type="tld"
             class="org.eclipse.jst.jsp.core.internal.contentmodel.tld.CMDocumentFactoryTLD">

@@ -103,7 +103,7 @@
    </extension>
 <!-- Extension point for taghelp documentation -->
    <extension
-         point="org.eclipse.wst.sse.core.annotationFiles">
+         point="org.eclipse.wst.xml.core.annotationFiles">
       <annotationFile
             location="data/htmref.xml"
             publicId="-//W3C//DTD XHTML 1.0 Strict//EN">

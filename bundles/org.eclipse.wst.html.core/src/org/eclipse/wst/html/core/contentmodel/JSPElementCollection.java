@@ -19,13 +19,13 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import org.eclipse.wst.html.core.HTMLCMProperties;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMAttributeDeclaration;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMContent;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMDataType;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMGroup;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMGroup;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 
 /**
  * Factory for element declarations of the JSP 1.1.
@@ -683,7 +683,7 @@ final class JSPElementCollection extends DeclCollection implements JSP11Namespac
 	}
 
 	/**
-	 * @return org.eclipse.wst.sse.core.internal.contentmodel.CMNode
+	 * @return org.eclipse.wst.xml.core.internal.contentmodel.CMNode
 	 * @param elementName java.lang.String
 	 */
 	protected CMNode create(String elementName) {

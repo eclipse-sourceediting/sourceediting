@@ -15,7 +15,7 @@ import java.util.Hashtable;
 import org.eclipse.wst.html.core.HTMLCMProperties;
 import org.eclipse.wst.html.core.contentmodel.HTMLElementDeclaration;
 import org.eclipse.wst.html.core.contentmodel.HTMLPropertyDeclaration;
-import org.eclipse.wst.sse.core.internal.contentmodel.annotation.AnnotationMap;
+import org.eclipse.wst.xml.core.internal.contentmodel.annotation.AnnotationMap;
 
 /**
  * The factory object of PropertyProvider.

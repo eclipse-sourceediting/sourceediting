@@ -12,7 +12,7 @@ package org.eclipse.wst.html.core.contentmodel;
 
 
 
-import org.eclipse.wst.sse.core.internal.contentmodel.CMGroup;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMGroup;
 
 /**
  * This class is intended to represent a complex type definition
@@ -40,7 +40,7 @@ abstract class ComplexTypeDefinition {
 	protected abstract void createContent();
 
 	/**
-	 * @return org.eclipse.wst.sse.core.internal.contentmodel.CMGroup
+	 * @return org.eclipse.wst.xml.core.internal.contentmodel.CMGroup
 	 */
 	public CMGroup getContent() {
 		return content;

@@ -27,8 +27,8 @@ import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.encoding.XMLDocumentLoader;
 import org.eclipse.wst.xml.core.internal.DebugAdapterFactory;
 import org.eclipse.wst.xml.core.internal.document.XMLModelImpl;
+import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryAdapterFactoryForXML;
 import org.eclipse.wst.xml.core.internal.propagate.PropagatingAdapterFactoryImpl;
-import org.eclipse.wst.xml.core.modelquery.ModelQueryAdapterFactoryForXML;
 
 
 /**

@@ -14,9 +14,9 @@ package org.eclipse.wst.xml.ui.contentassist;
 
 
 
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 
-public class NonValidatingModelQueryAction implements org.eclipse.wst.sse.core.internal.contentmodel.modelquery.ModelQueryAction {
+public class NonValidatingModelQueryAction implements org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQueryAction {
 
 	protected CMNode cmnode = null;
 	protected int endIndex = 0;
@@ -46,7 +46,7 @@ public class NonValidatingModelQueryAction implements org.eclipse.wst.sse.core.i
 	/**
 	 * getCMNode method comment.
 	 */
-	public org.eclipse.wst.sse.core.internal.contentmodel.CMNode getCMNode() {
+	public org.eclipse.wst.xml.core.internal.contentmodel.CMNode getCMNode() {
 		return cmnode;
 	}
 
@@ -97,7 +97,7 @@ public class NonValidatingModelQueryAction implements org.eclipse.wst.sse.core.i
 	/**
 	 * setCMNode method comment.
 	 */
-	protected void setCMNode(org.eclipse.wst.sse.core.internal.contentmodel.CMNode newNode) {
+	protected void setCMNode(org.eclipse.wst.xml.core.internal.contentmodel.CMNode newNode) {
 		cmnode = newNode;
 	}
 

@@ -16,8 +16,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.wst.sse.core.internal.contentmodel.util.DOMNamespaceInfoManager;
-import org.eclipse.wst.sse.core.internal.contentmodel.util.NamespaceInfo;
+import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceInfoManager;
+import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.uriresolver.util.IdResolver;
 import org.eclipse.wst.xml.uriresolver.util.URIHelper;

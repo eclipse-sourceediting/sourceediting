@@ -28,12 +28,12 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.wst.sse.core.AdapterFactory;
 import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMDocument;
-import org.eclipse.wst.sse.core.internal.contentmodel.modelquery.CMDocumentManager;
-import org.eclipse.wst.sse.core.internal.contentmodel.modelquery.CMDocumentManagerListener;
-import org.eclipse.wst.sse.core.internal.contentmodel.util.CMDocumentCache;
 import org.eclipse.wst.sse.ui.views.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.sse.ui.views.contentoutline.IJFaceNodeAdapterFactory;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManager;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManagerListener;
+import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.contentoutline.BufferedOutlineUpdater;
 import org.eclipse.wst.xml.ui.internal.editor.CMImageUtil;
@@ -50,7 +50,7 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 
 		List beingRefreshed = Collections.synchronizedList(new ArrayList());
 
-		public void cacheCleared(org.eclipse.wst.sse.core.internal.contentmodel.util.CMDocumentCache cache) {
+		public void cacheCleared(org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache cache) {
 
 		}
 
@@ -201,7 +201,7 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 	 * Returns a CMDocumentManagerListener that can update JFace views when
 	 * notified of CMDocumentManager events
 	 */
-	public org.eclipse.wst.sse.core.internal.contentmodel.modelquery.CMDocumentManagerListener getCMDocumentManagerListener() {
+	public org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManagerListener getCMDocumentManagerListener() {
 
 		if (cmDocumentManagerListener == null)
 			cmDocumentManagerListener = new CMDocumentManagerListenerImpl();

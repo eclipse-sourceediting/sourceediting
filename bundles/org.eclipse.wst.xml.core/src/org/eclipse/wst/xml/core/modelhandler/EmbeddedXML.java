@@ -18,7 +18,7 @@ import java.util.List;
 import org.eclipse.wst.sse.core.IFactoryRegistry;
 import org.eclipse.wst.sse.core.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.sse.core.parser.JSPCapableParser;
-import org.eclipse.wst.xml.core.modelquery.ModelQueryAdapterFactoryForEmbeddedXML;
+import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryAdapterFactoryForEmbeddedXML;
 
 
 public class EmbeddedXML implements EmbeddedTypeHandler {

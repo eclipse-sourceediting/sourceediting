@@ -98,7 +98,7 @@
    </extension>
 
    <extension
-         point="org.eclipse.wst.sse.core.documentFactories">
+         point="org.eclipse.wst.xml.core.documentFactories">
       <factory
             type="dtd, ent, mod, xml"
             class="org.eclipse.wst.dtd.core.internal.contentmodel.CMDocumentFactoryDTD">

@@ -58,22 +58,6 @@
 	</extension>
 	
 	
-	<!-- added following from content model plugin.xml -->
-	
-	
-	
-	  	<extension-point name="%Content_Model_Document_Factories_Extension.name" id="documentFactories"/>
 
-  		<extension-point name="%Content_Model_Annotation_Files_Extension.name" id="annotationFiles"/>
-
-  		<!--  <extension-point name="DOM Extension Provider" id="DOMExtensionProvider"/>-->
-
-  		<extension 
-  		  id="Test" 
- 		   point="org.eclipse.core.runtime.applications">      
- 		   <application>
- 		      <run class="org.eclipse.wst.sse.core.internal.contentmodel.internal.test.Test"/>
-  		  </application>
- 		 </extension>
 	
 </plugin>

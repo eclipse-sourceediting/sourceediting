@@ -13,8 +13,8 @@ package org.eclipse.wst.dtd.core.internal.contentmodel;
 import java.io.InputStream;
 import java.net.URL;
 
-import org.eclipse.wst.sse.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingHelper;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 
 public class CMDocumentEncodingHelper {
 	protected static void setEncodingInfo(CMDocument cmDocument, String uri) {

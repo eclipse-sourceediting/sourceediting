@@ -118,7 +118,7 @@
 <!-- Support help on the tags                             -->
 <!-- ==================================================== -->
 <!--   <extension
-         point="org.eclipse.wst.sse.core.internal.contentmodel.annotationFiles">
+         point="org.eclipse.wst.xml.core.internal.contentmodel.annotationFiles">
       <annotationFile
             location="/w3c/schemaForCodeAssist-annotations.xml"
             publicId="http://www.w3.org/2001/XMLSchema">

@@ -16,8 +16,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import org.eclipse.wst.html.core.HTML40Namespace;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMContent;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMGroup;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMGroup;
 
 /**
  * BODY.
@@ -71,7 +71,7 @@ final class HedBODY extends HedFlowContainer {
 	/**
 	 * Inclusion.
 	 * "Lazy eval."<br>
-	 * @return org.eclipse.wst.sse.core.internal.contentmodel.CMContent
+	 * @return org.eclipse.wst.xml.core.internal.contentmodel.CMContent
 	 */
 	public CMContent getInclusion() {
 		if (inclusion != null)

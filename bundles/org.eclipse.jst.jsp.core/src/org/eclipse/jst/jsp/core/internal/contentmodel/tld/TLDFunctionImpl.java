@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDFunction;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMDocument;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 
 public class TLDFunctionImpl implements TLDFunction {
 	private String fClassName = null;

@@ -12,15 +12,15 @@ package org.eclipse.wst.html.core.commentelement.handlers;
 
 
 
-import org.eclipse.wst.sse.core.internal.contentmodel.CMDocument;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap;
-import org.eclipse.wst.sse.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.commentelement.CommentElementHandler;
 import org.eclipse.wst.xml.core.commentelement.util.CommentElementFactory;
 import org.eclipse.wst.xml.core.commentelement.util.TagScanner;
 import org.eclipse.wst.xml.core.document.XMLElement;
 import org.eclipse.wst.xml.core.document.XMLGenerator;
-import org.eclipse.wst.xml.core.modelquery.ModelQueryUtil;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

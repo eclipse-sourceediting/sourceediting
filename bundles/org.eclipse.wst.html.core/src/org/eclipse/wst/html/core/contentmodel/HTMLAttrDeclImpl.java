@@ -17,8 +17,8 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import org.eclipse.wst.html.core.HTMLCMProperties;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMDataType;
-import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 
 /**
  * Implementation class of {@link <code>HTMLAttributeDeclaration</code>} interface.<br>

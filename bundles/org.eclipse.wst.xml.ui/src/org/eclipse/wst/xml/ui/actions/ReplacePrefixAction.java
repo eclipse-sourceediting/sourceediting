@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.wst.sse.core.internal.contentmodel.util.DOMVisitor;
+import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMVisitor;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
