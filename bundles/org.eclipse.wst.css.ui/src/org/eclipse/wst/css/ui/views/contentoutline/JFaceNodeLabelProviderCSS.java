@@ -36,7 +36,7 @@ import org.w3c.dom.stylesheets.MediaList;
  * A class that uses a JFaceNodeAdapterFactory to provide adapters to provide
  * the labels and images for DOM nodes.
  */
-public class JFaceNodeLabelProviderCSS implements ILabelProvider {
+class JFaceNodeLabelProviderCSS implements ILabelProvider {
 	protected IAdapterFactory fAdapterFactory;
 
 	/**

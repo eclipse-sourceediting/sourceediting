@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.html.ui.views.contentoutline;
+package org.eclipse.wst.html.ui.internal.contentoutline;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.viewers.Viewer;
@@ -22,7 +22,7 @@ import org.eclipse.wst.sse.core.format.IStructuredFormatProcessor;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMContentBuilder;
-import org.eclipse.wst.xml.ui.views.contentoutline.XMLNodeActionManager;
+import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 

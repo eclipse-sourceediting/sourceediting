@@ -12,16 +12,16 @@ package org.eclipse.wst.html.ui.registry;
 
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.wst.html.core.modelhandler.ModelHandlerForHTML;
-import org.eclipse.wst.html.ui.views.contentoutline.JFaceNodeAdapterFactoryForHTML;
+import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterFactoryForHTML;
 import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.FactoryRegistry;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.modelhandler.IDocumentTypeHandler;
+import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
 import org.eclipse.wst.sse.ui.util.Assert;
-import org.eclipse.wst.sse.ui.views.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.xml.core.document.XMLModel;
-import org.eclipse.wst.xml.ui.views.properties.XMLPropertySourceAdapterFactory;
+import org.eclipse.wst.xml.ui.internal.properties.XMLPropertySourceAdapterFactory;
 
 /**
  * 

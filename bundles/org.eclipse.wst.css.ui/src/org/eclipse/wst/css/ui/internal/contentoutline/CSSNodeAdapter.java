@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.css.ui.views.contentoutline;
+package org.eclipse.wst.css.ui.internal.contentoutline;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,10 +32,9 @@ import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapterFactory;
 
 /**
- * Adapts a DOM node to a JFace viewer.
+ * Adapts the CSS DOM node to a JFace viewer.
  */
-//public class CSSNodeAdapter extends JFaceNodeAdapter {
-public class CSSNodeAdapter implements INodeAdapter, Runnable {
+class CSSNodeAdapter implements INodeAdapter, Runnable {
 	class NotifyContext {
 		NotifyContext(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
 			this.notifier = notifier;

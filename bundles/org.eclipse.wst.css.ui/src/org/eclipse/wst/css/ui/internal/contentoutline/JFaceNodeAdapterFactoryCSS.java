@@ -6,7 +6,7 @@
  * 
  * Contributors: IBM Corporation - initial API and implementation
  ****************************************************************************/
-package org.eclipse.wst.css.ui.views.contentoutline;
+package org.eclipse.wst.css.ui.internal.contentoutline;
 
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;

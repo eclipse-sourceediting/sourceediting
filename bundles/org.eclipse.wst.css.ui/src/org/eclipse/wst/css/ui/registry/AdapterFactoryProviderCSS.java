@@ -10,8 +10,8 @@ package org.eclipse.wst.css.ui.registry;
 
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.wst.css.core.modelhandler.ModelHandlerForCSS;
-import org.eclipse.wst.css.ui.views.contentoutline.JFaceNodeAdapterFactoryCSS;
-import org.eclipse.wst.css.ui.views.properties.CSSPropertySourceAdapterFactory;
+import org.eclipse.wst.css.ui.internal.contentoutline.JFaceNodeAdapterFactoryCSS;
+import org.eclipse.wst.css.ui.internal.properties.CSSPropertySourceAdapterFactory;
 import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.FactoryRegistry;
 import org.eclipse.wst.sse.core.IStructuredModel;

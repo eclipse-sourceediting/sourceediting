@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.html.ui.views.contentoutline;
+package org.eclipse.wst.html.ui.internal.contentoutline;
 
 
 
@@ -18,7 +18,7 @@ import org.eclipse.wst.html.core.HTML40Namespace;
 import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImageHelper;
 import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImages;
 import org.eclipse.wst.sse.core.IAdapterFactory;
-import org.eclipse.wst.xml.ui.views.contentoutline.JFaceNodeAdapter;
+import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeAdapter;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 

@@ -6,7 +6,7 @@
  * 
  * Contributors: IBM Corporation - initial API and implementation
  ****************************************************************************/
-package org.eclipse.wst.css.ui.views.properties;
+package org.eclipse.wst.css.ui.internal.properties;
 
 import org.eclipse.wst.sse.core.AbstractAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;

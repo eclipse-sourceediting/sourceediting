@@ -34,7 +34,7 @@ import org.w3c.dom.stylesheets.MediaList;
  * content provider takes an adapter factory to create JFace adapters for the
  * nodes in the tree.
  */
-public class JFaceNodeContentProviderCSS extends JFaceNodeContentProvider {
+class JFaceNodeContentProviderCSS extends JFaceNodeContentProvider {
 	protected IAdapterFactory adapterFactory;
 
 	//protected DomainNotifier domainNotifier;

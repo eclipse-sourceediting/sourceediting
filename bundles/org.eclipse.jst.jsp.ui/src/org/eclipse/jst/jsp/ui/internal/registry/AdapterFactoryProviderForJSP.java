@@ -18,7 +18,7 @@ import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapterFactory;
 import org.eclipse.jst.jsp.core.modelhandler.ModelHandlerForJSP;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.ui.views.properties.IPropertySource;
-import org.eclipse.wst.html.ui.views.contentoutline.JFaceNodeAdapterFactoryForHTML;
+import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterFactoryForHTML;
 import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.FactoryRegistry;
 import org.eclipse.wst.sse.core.IStructuredModel;
@@ -33,9 +33,6 @@ import org.eclipse.wst.xml.core.document.XMLDocument;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.ui.internal.properties.XMLPropertySourceAdapterFactory;
 
-/**
- * @author pavery
- */
 public class AdapterFactoryProviderForJSP implements AdapterFactoryProvider {
 
 	/*
