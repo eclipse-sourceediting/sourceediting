@@ -43,7 +43,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.wst.sse.core.ModelPlugin;
+import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.builder.IBuilderDelegate;
 import org.eclipse.wst.sse.core.document.DocumentReader;
 import org.eclipse.wst.sse.core.document.IEncodedDocument;
@@ -81,7 +81,7 @@ public abstract class TaskTagSeeker implements IBuilderDelegate {
 	protected static final boolean _debugBuilderPerf = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/builder/time")); //$NON-NLS-1$ //$NON-NLS-2$
 
 	public static String getTaskMarkerType() {
-		return ModelPlugin.getID() + ".task"; //$NON-NLS-1$
+		return IModelManagerPlugin.ID + ".task"; //$NON-NLS-1$
 	}
 
 	// TODO: implement per-project enablement according to
@@ -349,7 +349,7 @@ public abstract class TaskTagSeeker implements IBuilderDelegate {
 	}
 
 	final protected String getMarkerType() {
-		return ModelPlugin.getID() + ".task"; //$NON-NLS-1$
+		return IModelManagerPlugin.ID + ".task"; //$NON-NLS-1$
 	}
 
 	/**
@@ -368,9 +368,9 @@ public abstract class TaskTagSeeker implements IBuilderDelegate {
 		if (_debug) {
 			System.out.println(this + " loadPreference()"); //$NON-NLS-1$
 		}
-		fEnabled = ModelPlugin.getDefault().getPluginPreferences().getBoolean(CommonModelPreferenceNames.TASK_TAG_ENABLE);
-		String tagsString = ModelPlugin.getDefault().getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_TAGS);
-		String prioritiesString = ModelPlugin.getDefault().getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_PRIORITIES);
+		fEnabled = Platform.getPlugin(IModelManagerPlugin.ID).getPluginPreferences().getBoolean(CommonModelPreferenceNames.TASK_TAG_ENABLE);
+		String tagsString = Platform.getPlugin(IModelManagerPlugin.ID).getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_TAGS);
+		String prioritiesString = Platform.getPlugin(IModelManagerPlugin.ID).getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_PRIORITIES);
 
 		List list = new ArrayList();
 		StringTokenizer toker = null;

@@ -30,7 +30,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.wst.sse.core.ModelPlugin;
+import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.builder.IBuilderModelProvider;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
@@ -189,8 +189,9 @@ public abstract class TaskTagParticipant extends MarkerParticipant {
 		if (_debug) {
 			System.out.println(this + " loadPreference()"); //$NON-NLS-1$
 		}
-		String tagsString = ModelPlugin.getDefault().getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_TAGS);
-		String prioritiesString = ModelPlugin.getDefault().getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_PRIORITIES);
+		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
+		String tagsString = plugin.getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_TAGS);
+		String prioritiesString = plugin.getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_PRIORITIES);
 
 		StringTokenizer toker = new StringTokenizer(tagsString, ","); //$NON-NLS-1$
 		List list = new ArrayList();
