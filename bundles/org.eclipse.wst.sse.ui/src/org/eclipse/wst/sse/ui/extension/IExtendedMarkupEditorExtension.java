@@ -14,6 +14,11 @@ package org.eclipse.wst.sse.ui.extension;
 
 import org.w3c.dom.Node;
 
+/**
+ * @deprecated - no longer used
+ * 
+ * @author nsd
+ */
 
 public interface IExtendedMarkupEditorExtension extends IExtendedMarkupEditor {
 
