@@ -30,7 +30,7 @@
 		<ant target="core-test" antfile="${library-file}" dir="${eclipse-home}">
 			<property name="data-dir" value="${wst-folder}" />
 			<property name="plugin-name" value="org.eclipse.wst.xml.tests.encoding" />
-			<property name="classname" value="${plugin-name}.EncodingTestSuite" />
+			<property name="classname" value="${plugin-name}.application.EncodingTestSuite" />
 			<property name="plugin-path" value="${eclipse-home}/plugins/${plugin-name}"/>
 		</ant>
 	</target>

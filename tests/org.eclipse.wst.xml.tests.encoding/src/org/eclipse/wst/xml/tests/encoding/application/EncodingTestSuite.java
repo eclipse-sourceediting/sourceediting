@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xml.tests.encoding;
+package org.eclipse.wst.xml.tests.encoding.application;
 
 import org.eclipse.wst.xml.tests.encoding.properties.TestCommonNames;
 import org.eclipse.wst.xml.tests.encoding.properties.TestOverrides;

@@ -23,7 +23,6 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.xml.tests.encoding.EncodingTestSuite;
 
 
 
