@@ -15,7 +15,9 @@ package org.eclipse.jst.jsp.ui.internal.editor;
  */
 public class JSPEditorPluginImages { 	
 	public static final String IMG_OBJ_CLASS_OBJ = "icons/full/obj16/class_obj.gif";			//$NON-NLS-1$
+	public static final String IMG_OBJ_TAG_GENERIC = "icons/full/obj16/tag-generic.gif";			//$NON-NLS-1$
 	public static final String IMG_OBJ_TAG_JSP = "icons/full/obj16/tag-jsp.gif";			//$NON-NLS-1$
+	public static final String IMG_OBJ_TAG_TEMPLATE = "icons/full/obj16/tag-template.gif";			//$NON-NLS-1$
 	public static final String IMG_OBJ_PUBLIC = "icons/full/obj16/public.gif";			//$NON-NLS-1$
     
     public static final String FIELD_PROTECTED_OBJ = "icons/full/obj16/field_protected_obj.gif"; //$NON-NLS-1$

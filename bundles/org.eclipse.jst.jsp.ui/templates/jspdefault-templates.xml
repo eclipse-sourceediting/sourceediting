@@ -15,4 +15,9 @@
 
 <template name="%Templates.jsptaglibdirective.name" description="%Templates.jsptaglibdirective.desc" id="com.ibm.sse.editor.jsp.templates.jsptaglibdirective" context="jsp_tag" enabled="true">%Templates.jsptaglibdirective.content</template>
 
+<template name="%Templates.jsphtml.name" description="%Templates.jsphtml.desc" id="com.ibm.sse.editor.jsp.templates.jsphtml" context="jsp_new" enabled="true">%Templates.jsphtml.content</template>
+
+<template name="%Templates.jspxhtml.name" description="%Templates.jspxhtml.desc" id="com.ibm.sse.editor.jsp.templates.jspxhtml" context="jsp_new" enabled="true">%Templates.jspxhtml.content</template>
+
+<template name="%Templates.jspxhtmlxml.name" description="%Templates.jspxhtmlxml.desc" id="com.ibm.sse.editor.jsp.templates.jspxhtmlxml" context="jsp_new" enabled="true">%Templates.jspxhtmlxml.content</template>
 </templates>

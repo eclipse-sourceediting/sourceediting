@@ -39,6 +39,8 @@ import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerFor
 import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.Logger;
+import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImageHelper;
+import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImages;
 import org.eclipse.jst.jsp.ui.internal.preferences.JSPUIPreferenceNames;
 import org.eclipse.jst.jsp.ui.internal.templates.TemplateContextTypeIdsJSP;
 import org.eclipse.wst.common.contentmodel.CMDocument;
@@ -74,7 +76,6 @@ import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.contentassist.IRelevanceCompletionProposal;
 import org.eclipse.wst.sse.ui.contentassist.IResourceDependentProcessor;
-import org.eclipse.wst.sse.ui.edit.util.SharedEditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.sse.ui.internal.contentassist.IRelevanceConstants;
@@ -93,7 +94,6 @@ import org.eclipse.wst.xml.ui.contentassist.ProposalComparator;
 import org.eclipse.wst.xml.ui.contentassist.XMLContentAssistProcessor;
 import org.eclipse.wst.xml.ui.contentassist.XMLContentAssistUtilities;
 import org.eclipse.wst.xml.ui.contentassist.XMLRelevanceConstants;
-import org.eclipse.wst.xml.ui.util.SharedXMLEditorPluginImageHelper;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -285,7 +285,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 				StringBuffer contents = new StringBuffer("\""); //$NON-NLS-1$
 				getContentGenerator().generateTag(node, ed, contents);
 				contents.append('"');
-				CustomCompletionProposal proposal = new CustomCompletionProposal(contents.toString(), contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), contents.length(), SharedEditorPluginImageHelper.getImage(SharedXMLEditorPluginImageHelper.IMG_OBJ_TAG_GENERIC), tagname, null, null, XMLRelevanceConstants.R_JSP_ATTRIBUTE_VALUE);
+				CustomCompletionProposal proposal = new CustomCompletionProposal(contents.toString(), contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), contents.length(), JSPEditorPluginImageHelper.getInstance().getImage(JSPEditorPluginImages.IMG_OBJ_TAG_GENERIC), tagname, null, null, XMLRelevanceConstants.R_JSP_ATTRIBUTE_VALUE);
 				contentAssistRequest.addProposal(proposal);
 
 				addTemplates(contentAssistRequest, TemplateContextTypeIdsJSP.TAG);
@@ -1134,7 +1134,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		if (completionRegion.getType() == XMLRegionContext.XML_COMMENT_TEXT && !isXMLFormat(doc)) {
 			if (request == null)
 				request = newContentAssistRequest(treeNode, xmlnode, sdRegion, completionRegion, documentPosition, 0, ""); //$NON-NLS-1$
-			request.addProposal(new CustomCompletionProposal("<%=  %>", documentPosition, 0, 4, SharedXMLEditorPluginImageHelper.getImage(SharedXMLEditorPluginImageHelper.IMG_OBJ_TAG_MACRO), "jsp:expression", null, "&lt;%= %&gt;", XMLRelevanceConstants.R_JSP)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			request.addProposal(new CustomCompletionProposal("<%=  %>", documentPosition, 0, 4, JSPEditorPluginImageHelper.getInstance().getImage(JSPEditorPluginImages.IMG_OBJ_TAG_GENERIC), "jsp:expression", null, "&lt;%= %&gt;", XMLRelevanceConstants.R_JSP)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		}
 		// handle proposals in and around JSP_DIRECTIVE_OPEN and
 		// JSP_DIRECTIVE_NAME
@@ -1159,14 +1159,14 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 					nameString = ""; //$NON-NLS-1$
 				for (int i = 0; i < directiveNames.length; i++) {
 					if (directiveNames[i].startsWith(nameString) || documentPosition <= begin)
-						request.addProposal(new CustomCompletionProposal(directiveNames[i], begin, length, directiveNames[i].length(), SharedXMLEditorPluginImageHelper.getImage(SharedXMLEditorPluginImageHelper.IMG_OBJ_TAG_GENERIC), directiveNames[i], null, null, XMLRelevanceConstants.R_JSP));
+						request.addProposal(new CustomCompletionProposal(directiveNames[i], begin, length, directiveNames[i].length(), JSPEditorPluginImageHelper.getInstance().getImage(JSPEditorPluginImages.IMG_OBJ_TAG_GENERIC), directiveNames[i], null, null, XMLRelevanceConstants.R_JSP));
 				}
 			} else { // by default, JSP_DIRECTIVE_NAME
 				if (request == null)
 					request = newContentAssistRequest(xmlnode, xmlnode, sdRegion, completionRegion, sdRegion.getStartOffset(completionRegion), completionRegion.getTextLength(), matchString);
 				for (int i = 0; i < directiveNames.length; i++) {
 					if (directiveNames[i].startsWith(matchString))
-						request.addProposal(new CustomCompletionProposal(directiveNames[i], request.getReplacementBeginPosition(), request.getReplacementLength(), directiveNames[i].length(), SharedXMLEditorPluginImageHelper.getImage(SharedXMLEditorPluginImageHelper.IMG_OBJ_TAG_GENERIC), directiveNames[i], null, null, XMLRelevanceConstants.R_JSP));
+						request.addProposal(new CustomCompletionProposal(directiveNames[i], request.getReplacementBeginPosition(), request.getReplacementLength(), directiveNames[i].length(), JSPEditorPluginImageHelper.getInstance().getImage(JSPEditorPluginImages.IMG_OBJ_TAG_GENERIC), directiveNames[i], null, null, XMLRelevanceConstants.R_JSP));
 				}
 			}
 		} else if ((completionRegion.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME && documentPosition > sdRegion.getTextEndOffset(completionRegion)) || (completionRegion.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_CLOSE && documentPosition <= sdRegion.getStartOffset(completionRegion))) {
@@ -1192,7 +1192,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 			}
 			if (nameString == null) {
 				for (int i = 0; i < directiveNames.length; i++) {
-					request.addProposal(new CustomCompletionProposal(directiveNames[i], request.getReplacementBeginPosition(), request.getReplacementLength(), directiveNames[i].length(), SharedXMLEditorPluginImageHelper.getImage(SharedXMLEditorPluginImageHelper.IMG_OBJ_TAG_GENERIC), directiveNames[i], null, null, XMLRelevanceConstants.R_JSP));
+					request.addProposal(new CustomCompletionProposal(directiveNames[i], request.getReplacementBeginPosition(), request.getReplacementLength(), directiveNames[i].length(), JSPEditorPluginImageHelper.getInstance().getImage(JSPEditorPluginImages.IMG_OBJ_TAG_GENERIC), directiveNames[i], null, null, XMLRelevanceConstants.R_JSP));
 				}
 			}
 		}
