@@ -14,6 +14,7 @@ package org.eclipse.jst.jsp.core.internal.contentmodel.tld;
 
 import java.util.Enumeration;
 
+import org.eclipse.jst.jsp.core.contentmodel.tld.JSP12TLDNames;
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDAttributeDeclaration;
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDDocument;
 import org.eclipse.wst.sse.core.util.StringUtils;
@@ -129,8 +130,14 @@ public class CMAttributeDeclarationImpl implements TLDAttributeDeclaration {
 	 *
 	 */
 	public Object getProperty(String propertyName) {
-		if (propertyName.equals(TLDDocument.CM_KIND)) {
+		if (propertyName != null && propertyName.equals(JSP12TLDNames.DESCRIPTION)) {
+			return getDescription(); // return attribute description
+		}
+		else if (propertyName.equals(TLDDocument.CM_KIND)) {
 			return TLDDocument.JSP_TLD;
+		}
+		else if (propertyName.equals(JSP12TLDNames.SMALL_ICON) || propertyName.equals(JSP12TLDNames.LARGE_ICON)) {
+			return getOwnerDocument().getProperty(propertyName);
 		}
 		return null;
 	}
