@@ -1213,7 +1213,9 @@ public class JSPTranslator {
 		if (filename != null) {
 			String fileLocation = null;
 			if (getResolver() != null) {
-				fileLocation = (getIncludes().empty()) ? getResolver().getLocationByURI(StringUtils.strip(filename)) : getResolver().getLocationByURI(StringUtils.strip(filename), (String) getIncludes().peek());
+				fileLocation = (getIncludes().empty()) 
+                                    ? getResolver().getLocationByURI(StringUtils.strip(filename)) 
+                                    : getResolver().getLocationByURI(StringUtils.strip(filename), (String) getIncludes().peek());
 			}
 			else {
 				// shouldn't happen

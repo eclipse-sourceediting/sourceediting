@@ -185,17 +185,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				}
 			}
 		} else {
-			setErrorMessage(SSEUIPlugin.getResourceString("%25concat", (new Object[]{node.getNodeName()}))); //+
-			// node.getNodeName()
-			// + ">
-			// is
-			// unknown");
-			// //$NON-NLS-1$
-			// =
-			// "Element
-			// <{0}>
-			// is
-			// unknown."
+			setErrorMessage(SSEUIPlugin.getResourceString("%25concat", (new Object[]{node.getNodeName()}))); 
 		}
 		addTemplates(contentAssistRequest, TemplateContextTypeIds.ATTRIBUTE);
 	}

@@ -23,7 +23,6 @@ import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationExtension;
-import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
@@ -31,9 +30,7 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.sse.ui.StructuredTextReconciler;
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentAdapter;
-import org.eclipse.wst.sse.ui.internal.reconcile.IReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 import org.eclipse.wst.xml.core.document.XMLDocument;
@@ -71,7 +68,8 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 	 */
 	protected IReconcileResult[] reconcileModel(DirtyRegion dirtyRegion, IRegion subRegion) {
 
-		Logger.trace(StructuredTextReconciler.TRACE_FILTER, "[trace reconciler] > translating JSP in JSP TRANSLATE step"); //$NON-NLS-1$	
+		if(DEBUG)
+            System.out.println("[trace reconciler] > translating JSP in JSP TRANSLATE step"); //$NON-NLS-1$	
 
 		if (isCanceled() || dirtyRegion == null)
 			return EMPTY_RECONCILE_RESULT_SET;
@@ -81,7 +79,8 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 		fJSPTranslation = adapter.getJSPTranslation();
 		fModel = new JSPTranslationWrapper(fJSPTranslation);
 
-		Logger.trace(StructuredTextReconciler.TRACE_FILTER, "[trace reconciler] > JSP TRANSLATE step done"); //$NON-NLS-1$	
+		if(DEBUG)
+            System.out.println("[trace reconciler] > JSP TRANSLATE step done"); //$NON-NLS-1$	
 
 		// this step doesn't actually produce results, only creates the java
 		// model
@@ -218,15 +217,17 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 					// do nothing for usebean for now...
 					break;
 				}
-				else {
-					// catch all for all other cases for now, at least we'll
-					// get
-					// the squiggle in the general area of the problem instead
-					// of some random place
-					pos.offset = sdRegion.getStartOffset(r);
-					pos.length = 1;
-					break;
-				}
+                // this can actually cause the WRONG node to be underlined
+                // esp in the case of embedded attr regions
+//				else {
+//					// catch all for all other cases for now, at least we'll
+//					// get
+//					// the squiggle in the general area of the problem instead
+//					// of some random place
+//					pos.offset = sdRegion.getStartOffset(r);
+//					pos.length = 1;
+//					break;
+//				}
 			}
 		}
 	}
@@ -287,11 +288,7 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 		}
 		super.release();
 	}
-
-	public int getScope() {
-		return IReconcileAnnotationKey.TOTAL;
-	}
-
+    
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -25,11 +25,9 @@ import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationExtension;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
-import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.sse.ui.StructuredTextReconciler;
 import org.eclipse.wst.sse.ui.internal.reconcile.IReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
@@ -107,9 +105,8 @@ public class ReconcileStepForJava extends StructuredReconcileStep {
 		Assert.isTrue(getInputModel() instanceof JSPTranslationWrapper, "wrong model"); //$NON-NLS-1$
 		fJspTranslation = ((JSPTranslationWrapper) getInputModel()).getTranslation();
 		
-		// logging ------------------
-		Logger.trace(StructuredTextReconciler.TRACE_FILTER, "[trace reconciler] > reconciling model in JAVA step w/ dirty region: " + dirtyRegion.getText()); //$NON-NLS-1$
-		// --------------------------
+        if(DEBUG)
+            System.out.println("[trace reconciler] > reconciling model in JAVA step w/ dirty region: " + dirtyRegion.getText()); //$NON-NLS-1$
 
 		try {
 			fJspTranslation.setProblemCollectingActive(true);
@@ -181,10 +178,6 @@ public class ReconcileStepForJava extends StructuredReconcileStep {
 			fModel = new CompilationUnitAdapter(fJspTranslation.getCompilationUnit());
 		}
 		return fModel;
-	}
-
-	public int getScope() {
-		return IReconcileAnnotationKey.TOTAL;
 	}
 
 	/*

@@ -84,7 +84,6 @@ import org.eclipse.wst.sse.ui.util.EditorUtility;
 import org.eclipse.wst.xml.core.text.rules.StructuredTextPartitionerForXML;
 import org.eclipse.wst.xml.ui.doubleclick.XMLDoubleClickStrategy;
 import org.eclipse.wst.xml.ui.internal.correction.CorrectionProcessorXML;
-import org.eclipse.wst.xml.ui.reconcile.StructuredTextReconcilingStrategyForContentModel;
 import org.eclipse.wst.xml.ui.reconcile.StructuredTextReconcilingStrategyForMarkup;
 
 public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerConfiguration {
@@ -403,11 +402,9 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 
                     IReconcilingStrategy markupStrategy = new StructuredTextReconcilingStrategyForMarkup((ITextEditor) editorPart);
                     IReconcilingStrategy jspStrategy = new StructuredTextReconcilingStrategyForJSP((ITextEditor) editorPart);
-                    IReconcilingStrategy xmlStrategy = new StructuredTextReconcilingStrategyForContentModel((ITextEditor) editorPart);
 
                     fReconciler.setReconcilingStrategy(markupStrategy, StructuredTextPartitioner.ST_DEFAULT_PARTITION);
-
-                    fReconciler.setReconcilingStrategy(xmlStrategy, StructuredTextPartitionerForXML.ST_DEFAULT_XML);
+                    fReconciler.setReconcilingStrategy(markupStrategy, StructuredTextPartitionerForXML.ST_DEFAULT_XML);
 
                     fReconciler.setReconcilingStrategy(jspStrategy, StructuredTextPartitionerForJSP.ST_DEFAULT_JSP);
                     fReconciler.setReconcilingStrategy(jspStrategy, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA);
