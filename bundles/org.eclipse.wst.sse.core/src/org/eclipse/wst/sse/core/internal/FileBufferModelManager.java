@@ -315,11 +315,11 @@ public class FileBufferModelManager {
 			if (resolver == null) {
 				resolver = new ProjectResolver(project);
 			}
+			resolver.setFileBaseLocation(workspaceFile.getLocation().toString());
 		}
 		else {
 			resolver = new ExternalURIResolver(location);
 		}
-		resolver.setFileBaseLocation(workspaceFile.getLocation().toString());
 		return resolver;
 	}
 
