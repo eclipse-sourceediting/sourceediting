@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xml.core.tests;
+package org.eclipse.wst.xml.core.tests.utils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

@@ -8,12 +8,12 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xml.core.tests.application;
-
-import org.eclipse.wst.xml.core.tests.model.TestModelsFromFiles;
+package org.eclipse.wst.xml.core.tests;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
+
+import org.eclipse.wst.xml.core.tests.model.TestModelsFromFiles;
 
 
 
@@ -23,8 +23,8 @@ public class SSEModelXMLTestSuite extends TestSuite {
 	}
 
 	public SSEModelXMLTestSuite() {
-		super("SSEModelTestSuiteForXML");
-		addTest(new TestSuite(TestModelsFromFiles.class, "TestModelsFromFiles"));
+		super("Test Suite for org.eclipse.wst.xml.core.tests");
+		addTest(new TestSuite(TestModelsFromFiles.class));
 
 	}
 }
