@@ -49,7 +49,7 @@ import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
  * Based on org.eclipse.jdt.internal.ui.javaeditor.GotoAnnotationAction and
  * the org.eclipse.jdt.internal.ui.JavaEditor's gotoError() method. Rewritten
  * based on 3.0M7 version to operate generically.
- *  
+ * 
  */
 public class GotoAnnotationAction extends TextEditorAction {
 
@@ -153,7 +153,8 @@ public class GotoAnnotationAction extends TextEditorAction {
 						containingAnnotationPosition = p;
 						currentAnnotation = p.length == length;
 					}
-				} else {
+				}
+				else {
 					int currentDistance = 0;
 
 					if (forward) {
@@ -167,7 +168,8 @@ public class GotoAnnotationAction extends TextEditorAction {
 							nextAnnotation = a;
 							nextAnnotationPosition = p;
 						}
-					} else {
+					}
+					else {
 						currentDistance = offset + length - (p.getOffset() + p.length);
 						if (currentDistance < 0)
 							currentDistance = endOfDocument + currentDistance;
@@ -240,13 +242,15 @@ public class GotoAnnotationAction extends TextEditorAction {
 		if (false /* delayed - see bug 18316 */) {
 			getNextAnnotation(selection.getOffset(), selection.getLength(), forward, position);
 			getTextEditor().selectAndReveal(position.getOffset(), position.getLength());
-		} else /* no delay - see bug 18316 */{
+		}
+		else /* no delay - see bug 18316 */{
 			Annotation annotation = getNextAnnotation(selection.getOffset(), selection.getLength(), forward, position);
 			IEditorStatusLine editorStatusLine = (IEditorStatusLine) getTextEditor().getAdapter(IEditorStatusLine.class);
 			if (editorStatusLine != null) {
 				editorStatusLine.setMessage(true, null, null);
 				editorStatusLine.setMessage(false, null, null);
-			} else {
+			}
+			else {
 				IStatusLineManager mgr = getStatusLineManager();
 				if (mgr != null) {
 					mgr.setErrorMessage(null);
@@ -259,7 +263,8 @@ public class GotoAnnotationAction extends TextEditorAction {
 				if (editorStatusLine != null) {
 					editorStatusLine.setMessage(true, null, null);
 					editorStatusLine.setMessage(false, annotation.getText(), null);
-				} else {
+				}
+				else {
 					IStatusLineManager mgr = getStatusLineManager();
 					if (mgr != null) {
 						mgr.setErrorMessage(null);
@@ -284,8 +289,8 @@ public class GotoAnnotationAction extends TextEditorAction {
 	protected boolean isNavigationTarget(Annotation annotation) {
 		Preferences preferences = EditorsUI.getPluginPreferences();
 		AnnotationPreference preference = EditorsUI.getAnnotationPreferenceLookup().getAnnotationPreference(annotation);
-		//	See bug 41689
-		//	String key= forward ? preference.getIsGoToNextNavigationTargetKey()
+		// See bug 41689
+		// String key= forward ? preference.getIsGoToNextNavigationTargetKey()
 		// : preference.getIsGoToPreviousNavigationTargetKey();
 		String key = preference == null ? null : preference.getIsGoToNextNavigationTargetKey();
 		return (key != null && preferences.getBoolean(key));
@@ -320,9 +325,11 @@ public class GotoAnnotationAction extends TextEditorAction {
 						IViewPart view = null;
 						if (marker.isSubtypeOf(IMarker.PROBLEM)) {
 							view = page.findView(IPageLayout.ID_PROBLEM_VIEW);
-						} else if (marker.isSubtypeOf(IMarker.TASK)) {
+						}
+						else if (marker.isSubtypeOf(IMarker.TASK)) {
 							view = page.findView(IPageLayout.ID_TASK_LIST);
-						} else if (marker.isSubtypeOf(IMarker.BOOKMARK)) {
+						}
+						else if (marker.isSubtypeOf(IMarker.BOOKMARK)) {
 							view = page.findView(IPageLayout.ID_BOOKMARKS);
 						}
 						// If the view isn't open on this perspective, don't
@@ -341,11 +348,14 @@ public class GotoAnnotationAction extends TextEditorAction {
 			// statusline
 			catch (CoreException x) {
 				//
-			} catch (NoSuchMethodException x) {
+			}
+			catch (NoSuchMethodException x) {
 				//
-			} catch (IllegalAccessException x) {
+			}
+			catch (IllegalAccessException x) {
 				//
-			} catch (InvocationTargetException x) {
+			}
+			catch (InvocationTargetException x) {
 				//
 			}
 		}
