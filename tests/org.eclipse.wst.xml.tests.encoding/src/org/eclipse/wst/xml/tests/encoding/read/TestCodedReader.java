@@ -34,8 +34,8 @@ import org.eclipse.wst.common.encoding.EncodingMemento;
 import org.eclipse.wst.common.encoding.IContentDescriptionExtended;
 import org.eclipse.wst.common.encoding.NonContentBasedEncodingRules;
 import org.eclipse.wst.common.encoding.exceptions.UnsupportedCharsetExceptionWithDetail;
-import org.eclipse.wst.xml.tests.encoding.ProjectUnzipUtility;
 import org.eclipse.wst.xml.tests.encoding.TestsPlugin;
+import org.eclipse.wst.xml.tests.encoding.util.ProjectUnzipUtility;
 
 
 public class TestCodedReader extends TestCase {

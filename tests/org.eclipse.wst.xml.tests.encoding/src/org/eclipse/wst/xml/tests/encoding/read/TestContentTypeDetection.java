@@ -28,8 +28,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.wst.xml.tests.encoding.ProjectUnzipUtility;
 import org.eclipse.wst.xml.tests.encoding.TestsPlugin;
+import org.eclipse.wst.xml.tests.encoding.util.ProjectUnzipUtility;
 
 
 public class TestContentTypeDetection extends TestCase {

@@ -38,6 +38,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.common.encoding.CodedReaderCreator;
 import org.eclipse.wst.common.encoding.NonContentBasedEncodingRules;
 import org.eclipse.wst.common.encoding.exceptions.UnsupportedCharsetExceptionWithDetail;
+import org.eclipse.wst.xml.tests.encoding.util.ProjectUnzipUtility;
 
 /**
  * This class is intended to be executed only at development time, and it
