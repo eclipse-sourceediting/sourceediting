@@ -1325,7 +1325,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 * @see IDocumentPartitioner
 	 */
 	public IDocumentPartitioner getDocumentPartitioner() {
-		return getDocumentPartitioner(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING);
+		return getDocumentPartitioner(IDocumentExtension3.DEFAULT_PARTITIONING);
 	}
 
 	/*
@@ -1958,6 +1958,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		((BasicStructuredDocument) newInstance).setReParser(getReParser().newInstance());
 		if (getDocumentPartitioner() instanceof StructuredTextPartitioner) {
 			newInstance.setDocumentPartitioner(((StructuredTextPartitioner) getDocumentPartitioner()).newInstance());
+			newInstance.getDocumentPartitioner().connect(newInstance);
 		}
 		newInstance.setLineDelimiter(getLineDelimiter());
 		if (getEncodingMemento() != null) {
@@ -2369,19 +2370,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 * @see IDocumentPartitioner
 	 */
 	public void setDocumentPartitioner(IDocumentPartitioner partitioner) {
-		Assert.isNotNull(getStore(), "text store must be set before document partitioner"); //$NON-NLS-1$
-		IDocumentPartitioner oldPartioner = null;
-		oldPartioner = getDocumentPartitioner(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING);
-		if (oldPartioner != null) {
-			oldPartioner.disconnect();
-		}
-		// some operations, such as convert line delimters, sets the partioner
-		// to null
-		// then resets it when done.
-		if (partitioner != null) {
-			partitioner.connect(this);
-		}
-		setDocumentPartitioner(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING, partitioner);
+		setDocumentPartitioner(IDocumentExtension3.DEFAULT_PARTITIONING, partitioner);
 	}
 
 	/*

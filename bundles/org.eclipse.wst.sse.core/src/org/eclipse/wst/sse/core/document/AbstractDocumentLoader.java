@@ -24,6 +24,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.wst.common.encoding.CodedIO;
 import org.eclipse.wst.common.encoding.CodedReaderCreator;
@@ -33,6 +34,7 @@ import org.eclipse.wst.common.encoding.EncodingRule;
 import org.eclipse.wst.common.encoding.exceptions.MalformedInputExceptionWithDetail;
 import org.eclipse.wst.sse.core.internal.document.NullStructuredDocumentPartitioner;
 import org.eclipse.wst.sse.core.internal.document.TextUtilities;
+import org.eclipse.wst.sse.core.text.IStructuredDocument;
 
 
 
@@ -92,12 +94,21 @@ public abstract class AbstractDocumentLoader implements IDocumentLoader {
 	 */
 	public IEncodedDocument createNewStructuredDocument() {
 		IEncodedDocument structuredDocument = newEncodedDocument();
-		// make sure every structuredDocument has an encodoing memento,
+		// Make sure every structuredDocument has an Encoding Memento,
 		// which is the default one for "empty" structuredDocuments
 		String charset = ContentTypeEncodingPreferences.useDefaultNameRules(getDocumentEncodingDetector());
 		String specDefaultCharset = getDocumentEncodingDetector().getSpecDefaultEncoding();
 		structuredDocument.setEncodingMemento(CodedIO.createEncodingMemento(charset, EncodingMemento.DEFAULTS_ASSUMED_FOR_EMPTY_INPUT, specDefaultCharset));
-		structuredDocument.setDocumentPartitioner(getDefaultDocumentPartitioner());
+
+		IDocumentPartitioner defaultPartitioner = getDefaultDocumentPartitioner();
+		if (structuredDocument instanceof IDocumentExtension3) {
+			((IDocumentExtension3) structuredDocument).setDocumentPartitioner(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING, defaultPartitioner);
+		}
+		else {
+			structuredDocument.setDocumentPartitioner(defaultPartitioner);
+		}
+		defaultPartitioner.connect(structuredDocument);
+		
 		return structuredDocument;
 	}
 
@@ -334,7 +345,7 @@ public abstract class AbstractDocumentLoader implements IDocumentLoader {
 			}
 			// remember -- we didn't open stream ... so we don't close it
 		} catch (MalformedInputException e) {
-			int pos = e.getInputLength();
+//			int pos = e.getInputLength();
 			EncodingMemento localEncodingMemento = getEncodingMemento();
 			boolean couldReset = true;
 			String encodingNameInError = localEncodingMemento.getJavaCharsetName();

@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.wst.common.encoding.EncodingMemento;
 import org.eclipse.wst.common.encoding.EncodingRule;
 import org.eclipse.wst.sse.core.document.IDocumentLoader;
@@ -66,7 +67,7 @@ public abstract class AbstractModelLoader implements ModelLoader, IModelLoaderEx
 	protected void addFactories(IStructuredModel model, List factoryList) {
 		Assert.isNotNull(model);
 		IFactoryRegistry registry = model.getFactoryRegistry();
-		Assert.isNotNull(registry);
+		Assert.isNotNull(registry, "IStructuredModel " + model.getId() + " has a null IFactoryRegistry");
 		if (factoryList != null) {
 			Iterator iterator = factoryList.iterator();
 			while (iterator.hasNext()) {
@@ -446,9 +447,25 @@ public abstract class AbstractModelLoader implements ModelLoader, IModelLoaderEx
 		((BasicStructuredDocument) oldInstance).setParser(newParser);
 
 		((BasicStructuredDocument) oldInstance).setReParser(newInstance.getReParser().newInstance());
+		
 		if (newInstance.getDocumentPartitioner() instanceof StructuredTextPartitioner) {
-			oldInstance.setDocumentPartitioner(((StructuredTextPartitioner) newInstance.getDocumentPartitioner()).newInstance());
+			StructuredTextPartitioner partitioner = null;
+			if (oldInstance instanceof IDocumentExtension3 && newInstance instanceof IDocumentExtension3) {
+				partitioner = ((StructuredTextPartitioner) ((IDocumentExtension3) newInstance).getDocumentPartitioner(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING));
+				if (partitioner != null) {
+					partitioner = (StructuredTextPartitioner) partitioner.newInstance();
+				}
+				((IDocumentExtension3) oldInstance).setDocumentPartitioner(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING, partitioner);
+			}
+			if (partitioner == null) {
+				partitioner = (StructuredTextPartitioner) ((StructuredTextPartitioner) newInstance.getDocumentPartitioner()).newInstance();
+				oldInstance.setDocumentPartitioner(partitioner);
+			}
+			if (partitioner != null) {
+				partitioner.connect(oldInstance);
+			}
 		}
+
 		oldInstance.setLineDelimiter(newInstance.getLineDelimiter());
 		if (newInstance.getEncodingMemento() != null) {
 			oldInstance.setEncodingMemento((EncodingMemento) newInstance.getEncodingMemento().clone());
