@@ -300,6 +300,10 @@ public class TypesSection extends AbstractSection
         
         XSDComponentSelectionProvider provider = new XSDComponentSelectionProvider(currentIFile, schema);
         XSDComponentSelectionDialog dialog = new XSDComponentSelectionDialog(shell, "Set Type", provider);  // TODO: Externalize This
+        if (input instanceof XSDAttributeDeclaration)
+        {
+          provider.showComplexTypes(false);
+        }
         provider.setDialog(dialog);
         
         dialog.setBlockOnOpen(true);
