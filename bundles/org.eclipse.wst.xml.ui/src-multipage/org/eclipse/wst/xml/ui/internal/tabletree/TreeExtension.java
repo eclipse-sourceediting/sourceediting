@@ -66,7 +66,7 @@ public class TreeExtension implements PaintListener {
 		editManager = new EditManager(tree);
 		delayedDrawTimer = new DelayedDrawTimer(tree);
 
-		tableLineColor = tree.getDisplay().getSystemColor(SWT.COLOR_LIST_FOREGROUND);
+		tableLineColor = tree.getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW);
 	}
 
 	public void dispose() {
