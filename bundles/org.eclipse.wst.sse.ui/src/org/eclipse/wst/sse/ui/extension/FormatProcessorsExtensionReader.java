@@ -52,7 +52,6 @@ public class FormatProcessorsExtensionReader extends RegistryReader {
 		} else {
 			IContentTypeManager manager = Platform.getContentTypeManager();
 			IContentType queryContentType = manager.getContentType(contentTypeId);
-			Iterator iterator = map.keySet().iterator();
 			boolean found = false;
 			for (Iterator iter = map.keySet().iterator(); iter.hasNext();) {
 				String elementContentTypeId = (String) iter.next();

@@ -2465,9 +2465,9 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		IDocumentCharsetDetector detector = getModel().getModelHandler().getEncodingDetector();
 		if (memento != null && detector != null)
 			detector.set(doc);
-		String enc = null;
+//		String detectedEncoding = null;
 		try {
-			enc = detector.getEncoding();
+			detector.getEncoding();
 		} catch (IOException e) {
 			failed = true;
 		}
