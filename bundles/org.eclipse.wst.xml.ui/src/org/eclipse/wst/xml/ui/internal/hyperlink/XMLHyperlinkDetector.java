@@ -401,29 +401,30 @@ public class XMLHyperlinkDetector implements IHyperlinkDetector {
 	 * @return boolean
 	 */
 	private boolean isValidURI(String uriString) {
-		// try to create a uri
-		if (uriString != null) {
-			URI uri = null;
-			try {
-				uri = new URI(uriString);
-			}
-			catch (URISyntaxException e) {
-				// it is okay that this is not a uri
-			}
+		boolean isValid = false;
 
-			File file = null;
-			// create a file from uri if it's not an absolute uri (ex:
-			// http://myfile)
-			if (uri != null && !uri.isAbsolute())
-				file = new File(uri);
-			else
-				// create a file from uriString which is an absolute path (ex:
-				// d:/myfile)
-				file = new File(uriString);
-			// check if the newly created file exists
-			return file.exists();
+		if (uriString != null) {
+			// first do a quick check to see if this is some sort of http://
+			String tempString = uriString.toLowerCase();
+			if (tempString.startsWith(HTTP_PROTOCOL))
+				isValid = true;
+			else {
+				File file = new File(uriString);
+				try {
+					URI uri = new URI(uriString);
+					file = new File(uri);
+				}
+				catch (URISyntaxException e) {
+					// it is okay that a uri could not be created out of
+					// uriString
+				}
+				catch (IllegalArgumentException e) {
+					// it is okay that file could not be created out of uri
+				}
+				isValid = file.exists();
+			}
 		}
-		return false;
+		return isValid;
 	}
 
 	/**
