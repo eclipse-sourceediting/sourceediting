@@ -2,6 +2,7 @@ package org.eclipse.wst.css.ui.internal.wizard;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -23,14 +24,15 @@ public class NewCSSWizard extends Wizard implements INewWizard {
 
 	public void addPages() {
 		fNewFilePage = new WizardNewFileCreationPage("CSSWizardNewFileCreationPage", new StructuredSelection(IDE.computeSelectedResources(fSelection))) {
-			protected IFile createFileHandle(IPath filePath) {
-				// enforce the creation of a ".css" file
-				IPath handlePath = filePath;
+			protected boolean validatePage() {
+				IPath handlePath = new Path(getFileName());
 				String extension = handlePath.getFileExtension();
 				if (extension == null || !extension.equalsIgnoreCase("css")) {
-					handlePath = handlePath.addFileExtension("css");
+					setErrorMessage(CSSUIPlugin.getResourceString("%_ERROR_FILENAME_MUST_END_CSS"));
+					return false;
 				}
-				return super.createFileHandle(handlePath);
+				setErrorMessage(null);
+				return super.validatePage();
 			}
 		};
 		fNewFilePage.setTitle(CSSUIPlugin.getResourceString("%_UI_WIZARD_NEW_HEADING"));
