@@ -23,10 +23,7 @@ import org.eclipse.wst.dtd.ui.internal.editor.DTDEditorPluginImages;
 import org.eclipse.wst.sse.ui.views.contentoutline.PropertyChangeUpdateAction;
 
 
-/**
- * Based on com.ibm.etools.dtd.editor.DTDContentOutlinePage#SortAction
- */
-class SortAction extends PropertyChangeUpdateAction {
+public class SortAction extends PropertyChangeUpdateAction {
 	private TreeViewer treeViewer;
 
 	public SortAction(TreeViewer viewer, IPreferenceStore store, String preferenceKey) {

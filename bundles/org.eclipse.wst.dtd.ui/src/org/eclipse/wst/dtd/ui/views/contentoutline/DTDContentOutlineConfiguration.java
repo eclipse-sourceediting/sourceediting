@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.dtd.ui.internal.views.contentoutline;
+package org.eclipse.wst.dtd.ui.views.contentoutline;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,13 +31,20 @@ import org.eclipse.wst.common.ui.dnd.ViewerDragAdapter;
 import org.eclipse.wst.common.ui.dnd.ViewerDropAdapter;
 import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.dtd.ui.internal.dnd.DTDDragAndDropManager;
+import org.eclipse.wst.dtd.ui.internal.views.contentoutline.DTDContextMenuHelper;
+import org.eclipse.wst.dtd.ui.internal.views.contentoutline.DTDLabelProvider;
+import org.eclipse.wst.dtd.ui.internal.views.contentoutline.DTDTreeContentProvider;
+import org.eclipse.wst.dtd.ui.internal.views.contentoutline.OrderAction;
+import org.eclipse.wst.dtd.ui.internal.views.contentoutline.SortAction;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.util.Assert;
 import org.eclipse.wst.sse.ui.views.contentoutline.PropertyChangeUpdateActionContributionItem;
 import org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration;
 
 /**
- * @author nitin
+ * A StructuredContentOutlineConfiguration for DTD models
+ * 
+ * @since 1.0
  * 
  */
 public class DTDContentOutlineConfiguration extends StructuredContentOutlineConfiguration {
@@ -49,14 +56,16 @@ public class DTDContentOutlineConfiguration extends StructuredContentOutlineConf
 	private final String OUTLINE_ORDER_PREF = "outline-order"; //$NON-NLS-1$
 	private final String OUTLINE_SORT_PREF = "outline-sort"; //$NON-NLS-1$
 
-	/**
-	 * @param editor
-	 */
 	public DTDContentOutlineConfiguration() {
 		super();
 		fViewerContributions = new HashMap(2);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration#createToolbarContributions(org.eclipse.jface.viewers.TreeViewer)
+	 */
 	public IContributionItem[] createToolbarContributions(TreeViewer viewer) {
 		Assert.isTrue(getContentProvider(viewer) instanceof DTDTreeContentProvider, "invalid content provider on viewer"); //$NON-NLS-1$
 		IContributionItem[] items = super.createToolbarContributions(viewer);
@@ -81,7 +90,9 @@ public class DTDContentOutlineConfiguration extends StructuredContentOutlineConf
 		return items;
 	}
 
-	/**
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getContentProvider(org.eclipse.jface.viewers.TreeViewer)
 	 */
 	public IContentProvider getContentProvider(TreeViewer viewer) {
@@ -91,7 +102,9 @@ public class DTDContentOutlineConfiguration extends StructuredContentOutlineConf
 		return super.getContentProvider(viewer);
 	}
 
-	/**
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getLabelProvider(org.eclipse.jface.viewers.TreeViewer)
 	 */
 	public ILabelProvider getLabelProvider(TreeViewer viewer) {
@@ -101,7 +114,9 @@ public class DTDContentOutlineConfiguration extends StructuredContentOutlineConf
 		return super.getLabelProvider(viewer);
 	}
 
-	/**
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getMenuListener(org.eclipse.jface.viewers.TreeViewer)
 	 */
 	public IMenuListener getMenuListener(TreeViewer viewer) {
@@ -109,25 +124,18 @@ public class DTDContentOutlineConfiguration extends StructuredContentOutlineConf
 		return fMenuHelper.getMenuListener();
 	}
 
-	/**
-	 * @deprecated use key directly (no need for generator)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration#getPreferenceStore()
 	 */
-	public String getOrderPreferenceKey() {
-		// return PreferenceKeyGenerator.generateKey(OUTLINE_ORDER_PREF,
-		// getDeclaringID());
-		return OUTLINE_ORDER_PREF;
+	protected IPreferenceStore getPreferenceStore() {
+		return DTDUIPlugin.getDefault().getPreferenceStore();
 	}
 
-	/**
-	 * @deprecated use key directly (no need for generator)
-	 */
-	public String getSortPreferenceKey() {
-		// return PreferenceKeyGenerator.generateKey(OUTLINE_SORT_PREF,
-		// getDeclaringID());
-		return OUTLINE_SORT_PREF;
-	}
-
-	/**
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getTransferDragSourceListeners(org.eclipse.jface.viewers.TreeViewer)
 	 */
 	public TransferDragSourceListener[] getTransferDragSourceListeners(TreeViewer treeViewer) {
@@ -202,6 +210,11 @@ public class DTDContentOutlineConfiguration extends StructuredContentOutlineConf
 		return fTransferDropTargetListeners;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration#setEditor(org.eclipse.wst.sse.ui.StructuredTextEditor)
+	 */
 	public void setEditor(StructuredTextEditor editor) {
 		super.setEditor(editor);
 		fMenuHelper = new DTDContextMenuHelper(editor);
@@ -216,14 +229,5 @@ public class DTDContentOutlineConfiguration extends StructuredContentOutlineConf
 		super.unconfigure(viewer);
 		fViewerContributions.remove(viewer);
 		fMenuHelper.removeMenuListenersFor(viewer);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration#getPreferenceStore()
-	 */
-	protected IPreferenceStore getPreferenceStore() {
-		return DTDUIPlugin.getDefault().getPreferenceStore();
 	}
 }
