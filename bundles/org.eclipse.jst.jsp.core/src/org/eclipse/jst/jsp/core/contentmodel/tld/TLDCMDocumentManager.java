@@ -22,6 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
+import org.eclipse.core.filebuffers.FileBuffers;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jst.jsp.core.JSP12Namespace;
 import org.eclipse.jst.jsp.core.contentmodel.ITaglibRecord;
@@ -522,7 +524,15 @@ public class TLDCMDocumentManager {
 			JSPSourceParser p = new JSPSourceParser();
 			fLocalParser = p;
 			List blockTags = fParentParser.getBlockMarkers();
-			String s = getContents(filename);
+			String includedFilename = filename;
+			File baseFile = FileBuffers.getSystemFileAtLocation(new Path(includedFilename));
+			try {
+				if (baseFile != null)
+					includedFilename = baseFile.getCanonicalPath();
+			}
+			catch (IOException e) {
+			}
+			String s = getContents(includedFilename);
 			fLocalParser.addStructuredDocumentRegionHandler(this);
 			fLocalParser.reset(s);
 			for (int i = 0; i < blockTags.size(); i++) {
