@@ -15,12 +15,12 @@ package org.eclipse.wst.dtd.ui.dnd;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.wst.common.ui.dnd.DefaultDragAndDropCommand;
 import org.eclipse.wst.dtd.core.Attribute;
 import org.eclipse.wst.dtd.core.AttributeList;
 import org.eclipse.wst.dtd.core.DTDFile;
 import org.eclipse.wst.dtd.core.DTDNode;
 import org.eclipse.wst.dtd.ui.DTDEditorPlugin;
-import org.eclipse.wst.ui.dnd.DefaultDragAndDropCommand;
 
 
 

@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.swt.dnd.DND;
+import org.eclipse.wst.common.ui.dnd.DefaultDragAndDropCommand;
 import org.eclipse.wst.dtd.core.CMBasicNode;
 import org.eclipse.wst.dtd.core.CMGroupNode;
 import org.eclipse.wst.dtd.core.CMNode;
@@ -25,7 +26,6 @@ import org.eclipse.wst.dtd.core.DTDFile;
 import org.eclipse.wst.dtd.core.DTDNode;
 import org.eclipse.wst.dtd.core.Element;
 import org.eclipse.wst.dtd.ui.DTDEditorPlugin;
-import org.eclipse.wst.ui.dnd.DefaultDragAndDropCommand;
 
 
 public class DragContentModelCommand extends DefaultDragAndDropCommand {

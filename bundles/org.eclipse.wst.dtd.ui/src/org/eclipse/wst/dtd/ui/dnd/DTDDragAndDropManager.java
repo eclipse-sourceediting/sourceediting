@@ -16,12 +16,12 @@ package org.eclipse.wst.dtd.ui.dnd;
 
 import java.util.Collection;
 
+import org.eclipse.wst.common.ui.dnd.DragAndDropCommand;
+import org.eclipse.wst.common.ui.dnd.DragAndDropManager;
 import org.eclipse.wst.dtd.core.Attribute;
 import org.eclipse.wst.dtd.core.CMNode;
 import org.eclipse.wst.dtd.core.DTDNode;
 import org.eclipse.wst.dtd.core.TopLevelNode;
-import org.eclipse.wst.ui.dnd.DragAndDropCommand;
-import org.eclipse.wst.ui.dnd.DragAndDropManager;
 
 public class DTDDragAndDropManager implements DragAndDropManager {
 

@@ -25,6 +25,9 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.wst.common.ui.dnd.ObjectTransfer;
+import org.eclipse.wst.common.ui.dnd.ViewerDragAdapter;
+import org.eclipse.wst.common.ui.dnd.ViewerDropAdapter;
 import org.eclipse.wst.dtd.ui.DTDEditorPlugin;
 import org.eclipse.wst.dtd.ui.dnd.DTDDragAndDropManager;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
@@ -32,9 +35,6 @@ import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.util.Assert;
 import org.eclipse.wst.sse.ui.views.contentoutline.PropertyChangeUpdateActionContributionItem;
 import org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration;
-import org.eclipse.wst.ui.dnd.ObjectTransfer;
-import org.eclipse.wst.ui.dnd.ViewerDragAdapter;
-import org.eclipse.wst.ui.dnd.ViewerDropAdapter;
 
 /**
  * @author nitin
