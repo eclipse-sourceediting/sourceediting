@@ -99,7 +99,7 @@
       point="org.eclipse.core.filebuffers.annotationModelCreation">
       <factory
             contentTypeId="org.eclipse.wst.html.core.htmlsource"
-            class="org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModelFactoryelFactory"/>
+            class="org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModelFactory"/>
    </extension>
    <extension
          point="org.eclipse.wst.sse.ui.adapterFactoryDescription">
