@@ -19,14 +19,18 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.text.Document;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.TextViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.builder.StructuredDocumentBuilder;
 
 
@@ -61,6 +65,30 @@ public class ActionTestView extends ViewPart {
 		}
 	}
 
+	class EmptyTextSetter extends Action {
+		public EmptyTextSetter() {
+			super("Set Text Editor text to empty");
+			setToolTipText("Set Text Editor text to empty using set() API");
+		}
+
+		public void run() {
+			super.run();
+			IEditorPart editor = getViewSite().getPage().getActiveEditor();
+			ITextEditor textEditor = null;
+			if (editor instanceof ITextEditor)
+				textEditor = (ITextEditor) editor;
+			else
+				textEditor = (ITextEditor) editor.getAdapter(ITextEditor.class);
+			if (textEditor != null) {
+				IDocument document = textEditor.getDocumentProvider().getDocument(editor.getEditorInput());
+				document.set("");
+			}
+			else {
+				print("Error getting IDocument.\n");
+			}
+		}
+	}
+
 	Control fControl = null;
 
 	private List createActions() {
@@ -68,6 +96,7 @@ public class ActionTestView extends ViewPart {
 
 		actions.add(new RegisterBuilderAction());
 		actions.add(new RegisterBuilderActionWithContext());
+		actions.add(new EmptyTextSetter());
 
 		return actions;
 	}
@@ -89,7 +118,7 @@ public class ActionTestView extends ViewPart {
 		ITextViewer text = new TextViewer(parent, SWT.READ_ONLY);
 		text.setDocument(new Document());
 		fControl = text.getTextWidget();
-		text.getDocument().set("Use either the toolbar or the menu to run your actions");
+		text.getDocument().set("Use either the toolbar or the menu to run your actions\n\n");
 	}
 
 	/*
@@ -110,6 +139,11 @@ public class ActionTestView extends ViewPart {
 			site.getActionBars().getMenuManager().add((IContributionItem) contributions.get(i));
 		}
 	}
+
+	void print(String s) {
+		((StyledText) fControl).append(s);
+	}
+
 
 	/*
 	 * (non-Javadoc)
