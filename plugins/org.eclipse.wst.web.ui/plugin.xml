@@ -35,12 +35,12 @@
        point="org.eclipse.ui.newWizards">
       <category
             name="%web.category_ui_"
-            id="org.eclipse.jst.servlet.ui">
+            id="org.eclipse.wst.web.ui">
       </category>
       <wizard
             name="%StaticWebProject.name"
             icon="icons/full/ctool16/newwebprj_wiz.gif"
-            category="org.eclipse.jst.servlet.ui"
+            category="org.eclipse.wst.web.ui"
             class="org.eclipse.wst.web.ui.internal.wizards.SimpleWebModuleCreationWizard"
             project="true"
             id="org.eclipse.wst.web.ui.internal.wizards.SimpleWebModuleCreation">
