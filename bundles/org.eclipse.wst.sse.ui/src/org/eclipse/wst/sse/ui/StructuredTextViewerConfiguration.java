@@ -80,7 +80,6 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 	 * use this constructor to have reconciler
 	 */
 	public StructuredTextViewerConfiguration(IEditorPart textEditor) {
-
 		this();
 		editorPart = textEditor;
 	}
@@ -94,7 +93,6 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 	 * @param partitionType
 	 */
 	public void addContentAssistProcessor(ContentAssistant ca, IContentAssistProcessor processor, String partitionType) {
-
 		// save for reinit and release
 		fContentAssistProcessors.add(processor);
 		if (processor instanceof IResourceDependentProcessor)
@@ -103,13 +101,11 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 	}
 
 	public void configureOn(IResource resource) {
-
 		fResource = resource;
 		updateForResource();
 	}
 
 	protected ValidatorStrategy createValidatorStrategy(String contentTypeId) {
-
 		ValidatorStrategy validatorStrategy = new ValidatorStrategy((ITextEditor) editorPart, contentTypeId);
 		ValidatorBuilder vBuilder = new ValidatorBuilder();
 		ValidatorMetaData[] vmds = vBuilder.getValidatorMetaData("org.eclipse.wst.sse.ui"); //$NON-NLS-1$
@@ -145,8 +141,10 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 	public Map getAutoEditStrategies(ISourceViewer sourceViewer) {
 		return new HashMap();
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getConfiguredDocumentPartitioning(org.eclipse.jface.text.source.ISourceViewer)
 	 */
 	public String getConfiguredDocumentPartitioning(ISourceViewer sourceViewer) {
@@ -188,7 +186,6 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 	 * @see ISourceViewerConfiguration#getContentAssistant
 	 */
 	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
-
 		if (fContentAssistant == null) {
 			// Ensure that only one assistant is ever returned. Creating a
 			// second assistant
@@ -209,7 +206,6 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 	}
 
 	public IContentAssistant getCorrectionAssistant(ISourceViewer sourceViewer) {
-
 		if (fCorrectionAssistant == null) {
 			// Ensure that only one assistant is ever returned. Creating a
 			// second assistant
@@ -227,7 +223,6 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 	 * @return Returns the declaringID.
 	 */
 	public String getDeclaringID() {
-
 		return fDeclaringID;
 	}
 
@@ -235,28 +230,28 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 	 * @return Returns the editorPart.
 	 */
 	public IEditorPart getEditorPart() {
-
 		return editorPart;
 	}
 
 	public IHighlighter getHighlighter(ISourceViewer viewer) {
-
-		// assuming for now that only one highlighter is needed per
-		// configuration,
-		// and that its just configured for lots of different content types.
-		// In the future, this may change, if its tied closer to the acutual
-		// content
-		// type (for example, made specifc for HTML vs. XML). I think it would
-		// be little
-		// imact to create a new instance each time.
+		/*
+		 * Assuming for now that only one highlighter is needed per
+		 * configuration, and that its just configured for lots of different
+		 * content types. In the future, this may change, if its tied closer
+		 * to the actual content type (for example, made specifc for HTML vs.
+		 * XML). I think it would be little impact to create a new instance
+		 * each time.
+		 */
 		if (fHighlighter != null) {
 			fHighlighter.uninstall();
-		} else {
-			fHighlighter = new Highlighter();
-			fHighlighter.setDocumentPartitioning(getConfiguredDocumentPartitioning(viewer));
 		}
-		// allowed viewer to be null for easier unit testing,
-		// but during normal use, would not be null
+		else {
+			Highlighter highlighter = new Highlighter();
+			highlighter.setDocumentPartitioning(getConfiguredDocumentPartitioning(viewer));
+			fHighlighter = highlighter;
+		}
+		// Allow viewer to be null for easier unit testing, but during normal
+		// use, would not be null
 		if (viewer != null) {
 			IStructuredDocument document = (IStructuredDocument) viewer.getDocument();
 			fHighlighter.setDocument(document);
@@ -273,12 +268,9 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 	}
 
 	private IInformationControlCreator getInformationControlCreator(ISourceViewer sourceViewer, final boolean cutDown) {
-
 		return new IInformationControlCreator() {
-
 			public IInformationControl createInformationControl(Shell parent) {
-
-				//int style= cutDown ? SWT.NONE : (SWT.V_SCROLL |
+				// int style= cutDown ? SWT.NONE : (SWT.V_SCROLL |
 				// SWT.H_SCROLL);
 				int style = SWT.NONE;
 				return new DefaultInformationControl(parent, style, new HTMLTextPresenter(cutDown));
@@ -298,11 +290,8 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 	 * @return an information control creator
 	 */
 	protected IInformationControlCreator getInformationPresenterControlCreator(ISourceViewer sourceViewer) {
-
 		return new IInformationControlCreator() {
-
 			public IInformationControl createInformationControl(Shell parent) {
-
 				int shellStyle = SWT.RESIZE;
 				int style = SWT.V_SCROLL | SWT.H_SCROLL;
 				return new DefaultInformationControl(parent, shellStyle, style, new HTMLTextPresenter(false));
@@ -316,12 +305,10 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getOverviewRulerAnnotationHover(org.eclipse.jface.text.source.ISourceViewer)
 	 */
 	public IAnnotationHover getOverviewRulerAnnotationHover(ISourceViewer arg0) {
-
 		return new StructuredTextAnnotationHover();
 	}
 
 	public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
-
 		return null;
 	}
 
@@ -335,13 +322,21 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 	}
 
 	protected ITextEditor getTextEditor() {
-
 		ITextEditor editor = null;
 		if (editorPart instanceof ITextEditor)
 			editor = (ITextEditor) editorPart;
 		if (editor == null && editorPart != null)
 			editor = (ITextEditor) editorPart.getAdapter(ITextEditor.class);
 		return editor;
+	}
+
+	/**
+	 * Returns the text hovers available in StructuredTextEditors
+	 * 
+	 * @return TextHoverManager.TextHoverDescriptor[]
+	 */
+	protected TextHoverManager.TextHoverDescriptor[] getTextHovers() {
+		return SSEUIPlugin.getDefault().getTextHoverManager().getTextHovers();
 	}
 
 	/*
@@ -359,7 +354,6 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 	 * @see org.eclipse.wst.sse.ui.extension.IExtendedConfiguration#setDeclaringID(java.lang.String)
 	 */
 	public void setDeclaringID(String targetID) {
-
 		fDeclaringID = targetID;
 	}
 
@@ -368,7 +362,6 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 	 *            The editorPart to set.
 	 */
 	public void setEditorPart(IEditorPart editorPart) {
-
 		this.editorPart = editorPart;
 	}
 
@@ -378,10 +371,9 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 	 * done "twice" ... so uninstall, release, etc., should be prepared.
 	 */
 	public void unConfigure(ISourceViewer viewer) {
-
 		editorPart = null;
-		// if there's any processor's we're hanging on to,
-		// be sure they have a chance to clean themselves up.
+		// If there're any processors we're hanging on to, be sure they have a
+		// chance to clean themselves up.
 		if (fHighlighter != null) {
 			fHighlighter.uninstall();
 		}
@@ -400,10 +392,9 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	private void unconfigureContentAssistProcessors() {
-
 		if (!fContentAssistProcessors.isEmpty()) {
 			Iterator it = fContentAssistProcessors.iterator();
 			IContentAssistProcessor p = null;
@@ -416,7 +407,6 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 	}
 
 	protected void updateForResource() {
-
 		if (!fContentAssistProcessors.isEmpty()) {
 			Iterator it = fContentAssistProcessors.iterator();
 			IContentAssistProcessor p = null;
@@ -426,13 +416,5 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 					((IResourceDependentProcessor) p).initialize(fResource);
 			}
 		}
-	}
-	
-	/**
-	 * Returns the text hovers available in StructuredTextEditors
-	 * @return TextHoverManager.TextHoverDescriptor[]
-	 */
-	protected TextHoverManager.TextHoverDescriptor[] getTextHovers() {
-		return SSEUIPlugin.getDefault().getTextHoverManager().getTextHovers();
 	}
 }
