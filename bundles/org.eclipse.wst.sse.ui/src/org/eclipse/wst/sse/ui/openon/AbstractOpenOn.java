@@ -31,6 +31,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.wst.sse.core.IModelManager;
+import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.extensions.openon.IOpenOn;
 import org.eclipse.wst.sse.ui.internal.Logger;
@@ -38,13 +39,15 @@ import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.openon.ExternalFileEditorInput;
 import org.eclipse.wst.sse.ui.util.PlatformStatusLineUtil;
 
+
 /**
  * This action class retrieves the link/file selected by the cursor and
  * attempts to open the link/file in the default editor or web browser
  */
 abstract public class AbstractOpenOn implements IOpenOn {
 	protected final String CANNOT_OPEN = SSEUIPlugin.getResourceString("%AbstractOpenOn.0"); //$NON-NLS-1$
-	private IDocument fDocument; // document currention associated with open
+	// document currently associated with open
+	private IDocument fDocument;
 	protected final String FILE_PROTOCOL = "file:/";//$NON-NLS-1$
 	private final String HTTP_PROTOCOL = "http://";//$NON-NLS-1$
 
@@ -85,13 +88,44 @@ abstract public class AbstractOpenOn implements IOpenOn {
 	 * @return returns IFile if fileString exists in the workspace
 	 */
 	protected IFile getFile(String fileString) {
-		if (fileString != null) {
-			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(fileString));
-			for (int i = 0; i < files.length; i++)
-				if (files[i].exists())
-					return files[i];
+		IStructuredModel model = null;
+		IFile file = null;
+		try {
+			model = getModelManager().getExistingModelForRead(getDocument());
+			if (model != null) {
+				// use the base location to obtain the in-workspace IFile
+				IFile modelFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(model.getBaseLocation()));
+				if (modelFile != null) {
+					// find the referenced file's location on disk
+					String filesystemLocation = model.getResolver().getLocationByURI(fileString);
+					if (filesystemLocation != null) {
+						IFile[] workspaceFiles = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(filesystemLocation));
+						// favor a workspace file in the same project
+						for (int i = 0; i < workspaceFiles.length && file == null; i++) {
+							if (workspaceFiles[i].getProject().equals(modelFile.getProject())) {
+								file = workspaceFiles[i];
+							}
+						}
+						// if none were in the same project, just pick one
+						if (file == null && workspaceFiles.length > 0) {
+							file = workspaceFiles[0];
+						}
+					}
+				}
+			}
 		}
-		return null;
+		catch (Exception e) {
+			Logger.log(Logger.WARNING, e.getMessage());
+		}
+		finally {
+			if (model != null) {
+				model.releaseFromRead();
+			}
+		}
+		if (file == null && fileString.startsWith("/")) {
+			file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(fileString));
+		}
+		return file;
 	}
 
 	protected IModelManager getModelManager() {
@@ -131,7 +165,8 @@ abstract public class AbstractOpenOn implements IOpenOn {
 			try {
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				return page.openEditor(input, editorId, true);
-			} catch (PartInitException pie) {
+			}
+			catch (PartInitException pie) {
 				Logger.log(Logger.WARNING_DEBUG, pie.getMessage(), pie);
 			}
 		}
@@ -160,7 +195,8 @@ abstract public class AbstractOpenOn implements IOpenOn {
 			try {
 				IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 				return IDE.openEditor(page, input, true);
-			} catch (PartInitException pie) {
+			}
+			catch (PartInitException pie) {
 				Logger.log(Logger.WARNING_DEBUG, pie.getMessage(), pie);
 			}
 		}
@@ -195,7 +231,8 @@ abstract public class AbstractOpenOn implements IOpenOn {
 			if (file != null) {
 				// file exists in workspace
 				editor = openFileInEditor(file);
-			} else {
+			}
+			else {
 				// file does not exist in workspace
 				editor = openExternalFile(fileString);
 			}
