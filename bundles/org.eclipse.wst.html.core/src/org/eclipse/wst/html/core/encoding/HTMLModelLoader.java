@@ -45,8 +45,6 @@ public class HTMLModelLoader extends AbstractModelLoader {
 	 * Convenience method to add tag names using BlockMarker object
 	 */
 	protected void addHTMLishTag(XMLSourceParser parser, String tagname) {
-		//DMW: Nitin, perhaps we should provide some convenience methods
-		// in the parser itself? e.g. addCaseInsensitiveBlockedTag(tagname)
 		BlockMarker bm = new BlockMarker(tagname, null, XMLRegionContext.BLOCK_TEXT, false);
 		parser.addBlockMarker(bm);
 	}

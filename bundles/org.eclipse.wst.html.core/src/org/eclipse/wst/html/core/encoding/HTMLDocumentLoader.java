@@ -52,8 +52,6 @@ public class HTMLDocumentLoader extends AbstractDocumentLoader {
 	 * Convenience method to add tag names using BlockMarker object
 	 */
 	protected void addHTMLishTag(XMLSourceParser parser, String tagname) {
-		//DMW: Nitin, perhaps we should provide some convenience methods
-		// in the parser itself? e.g. addCaseInsensitiveBlockedTag(tagname)
 		BlockMarker bm = new BlockMarker(tagname, null, XMLRegionContext.BLOCK_TEXT, false);
 		parser.addBlockMarker(bm);
 	}
@@ -139,8 +137,6 @@ public class HTMLDocumentLoader extends AbstractDocumentLoader {
 	}
 
 	protected void preLoadAdapt(IStructuredModel structuredModel) {
-		//		* TODO - how to best handle model requirements
-		//		* if/when document already loaded?
 		// DMW: just added this preload on 8/16/2002
 		// I noticed the ProagatingAdapterFactory was being added,
 		// that that the ProagatingAdapterAdapter was not being
@@ -162,5 +158,4 @@ public class HTMLDocumentLoader extends AbstractDocumentLoader {
 	public IDocumentLoader newInstance() {
 		return new HTMLDocumentLoader();
 	}
-
 }

@@ -401,26 +401,11 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 						}
 					}
 
-					// the internal adapter does all the real work of
-					// using the JSP content model to form proposals
-					// TODO : Nitin and Phil, please take a look
-					//// ContentAssistAdapter internalAdapter =
-					// (ContentAssistAdapter) ((INodeNotifier)
-					// internalNode).getAdapterFor(ContentAssistAdapter.class);
+					/**
+					 * the internal adapter does all the real work of using
+					 * the JSP content model to form proposals
+					 */
 					ICompletionProposal[] results = null;
-					//// if (internalAdapter != null) {
-					//// internalAdapter.initialize(resource);
-					//// if(internalAdapter instanceof
-					// JSPContentAssistProcessor)
-					////
-					// ((JSPContentAssistProcessor)internalAdapter).isInternalAdapter
-					// = true;
-					//// results =
-					// internalAdapter.computeCompletionProposals(fViewer,
-					// internalOffset, internalNode);
-					//// }
-					//// // results = computeCompletionProposals(null,
-					// internalOffset, internalNode);
 					depthCount--;
 					if (results != null) {
 						for (i = 0; i < results.length; i++) {
@@ -439,9 +424,10 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 
 	private List getAdditionalChildren(List elementDecls, Node node, int childIndex) {
 		if (node instanceof XMLNode) {
-			// find the location of the intended insertion as it will give us
-			// the
-			// correct offset for checking position dependent CMDocuments
+			/*
+			 * find the location of the intended insertion as it will give us
+			 * the correct offset for checking position dependent CMDocuments
+			 */
 			int textInsertionOffset = 0;
 			NodeList children = node.getChildNodes();
 			if (children.getLength() >= childIndex && childIndex >= 0) {

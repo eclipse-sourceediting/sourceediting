@@ -40,28 +40,7 @@ public class LineStyleProviderForHTML extends LineStyleProviderForXML implements
 			return (TextAttribute)getTextAttributes().get(IStyleConstantsXML.XML_CONTENT);
 		}
 		// first try "standard" tag attributes from super class
-		TextAttribute result = super.getAttributeFor(region);
-		if (result == null) {
-			// the HTML adapter is used for *embedded* JSP code,
-			// so the HTML adapter can decide whether to treat
-			// as HTML, or as JSP code. By *embedded* when mean when
-			// it is postioned as something other than content (e.g. an
-			// attribute value)
-			//			String type = region.getType();
-			//			if ((type == XMLJSPRegionContexts.JSP_SCRIPTLET_OPEN) //                || (type == XMLJSPRegionContexts.JSP_DECLARATION_OPEN)
-			//				|| (type == XMLJSPRegionContexts.JSP_EXPRESSION_OPEN) //                || (type == XMLJSPRegionContexts.JSP_DIRECTIVE_OPEN)
-			//				//                || (type == XMLJSPRegionContexts.JSP_DIRECTIVE_CLOSE)
-			//				|| (type == XMLJSPRegionContexts.JSP_CLOSE)) {
-			//				result = fStructuredTextColors.SCRIPT_AREA_BORDER;
-			//			} else
-			//				// Nitin: do you recall why these were put here? from their name, sounds like
-			//				// they should be in "XML one"?
-			//				if ((type == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE_DQUOTE) || (type == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE_SQUOTE)) {
-			//					result = fStructuredTextColors.RTF_TAG_ATTRIBUTE_VALUE;
-			//				}
-
-		}
-		return result;
+		return super.getAttributeFor(region);
 	}
 
 	protected void loadColors() {
