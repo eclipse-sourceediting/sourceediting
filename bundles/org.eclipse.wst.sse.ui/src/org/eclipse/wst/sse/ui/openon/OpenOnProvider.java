@@ -89,7 +89,7 @@ public class OpenOnProvider {
 
 			IContentType contentType = Platform.getContentTypeManager().getContentType(contentTypeID);
 
-			while (openOn != null && contentType != null) {
+			while (openOn == null && contentType != null) {
 				// Query OpenOnBuilder and get the list of OpenOns for the
 				// current partition
 				OpenOnDefinition[] defs = OpenOnBuilder.getInstance().getOpenOnDefinitions(contentType.getId(), partitionType);
