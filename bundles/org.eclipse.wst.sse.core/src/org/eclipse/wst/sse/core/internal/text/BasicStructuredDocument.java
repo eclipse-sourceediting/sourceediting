@@ -1015,7 +1015,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	public ITypedRegion[] computePartitioning(int offset, int length) throws BadLocationException {
 		ITypedRegion[] typedRegions = null;
 		try {
-			typedRegions = computePartitioning(IDocumentExtension3.DEFAULT_PARTITIONING, offset, length, false);
+			typedRegions = computePartitioning(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING, offset, length, false);
 		} catch (BadPartitioningException e) {
 			// impossible in this context
 			throw new Error(e);
@@ -1041,7 +1041,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			return ((IDocumentPartitionerExtension2) partitioner).computePartitioning(offset, length, includeZeroLengthPartitions);
 		else if (partitioner != null)
 			return partitioner.computePartitioning(offset, length);
-		else if (DEFAULT_PARTITIONING.equals(partitioning))
+		else if (IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING.equals(partitioning))
 			return new TypedRegion[]{new TypedRegion(offset, length, DEFAULT_CONTENT_TYPE)};
 		else
 			throw new BadPartitioningException();
@@ -1294,7 +1294,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			return ((IDocumentPartitionerExtension2) partitioner).getContentType(offset, preferOpenPartitions);
 		else if (partitioner != null)
 			return partitioner.getContentType(offset);
-		else if (DEFAULT_PARTITIONING.equals(partitioning))
+		else if (IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING.equals(partitioning))
 			return DEFAULT_CONTENT_TYPE;
 		else
 			throw new BadPartitioningException();
@@ -1306,7 +1306,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 * @see IDocumentPartitioner
 	 */
 	public IDocumentPartitioner getDocumentPartitioner() {
-		return getDocumentPartitioner(IDocumentExtension3.DEFAULT_PARTITIONING);
+		return getDocumentPartitioner(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING);
 	}
 
 	/*
@@ -1354,7 +1354,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	public String[] getLegalContentTypes() {
 		String[] result = null;
 		try {
-			result = getLegalContentTypes(IDocumentExtension3.DEFAULT_PARTITIONING);
+			result = getLegalContentTypes(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING);
 		} catch (BadPartitioningException e) {
 			// impossible in this context
 			throw new Error(e);
@@ -1370,7 +1370,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		IDocumentPartitioner partitioner = getDocumentPartitioner(partitioning);
 		if (partitioner != null)
 			return partitioner.getLegalContentTypes();
-		if (DEFAULT_PARTITIONING.equals(partitioning))
+		if (IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING.equals(partitioning))
 			return new String[]{DEFAULT_CONTENT_TYPE};
 		throw new BadPartitioningException();
 	}
@@ -1514,7 +1514,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	public ITypedRegion getPartition(int offset) throws BadLocationException {
 		ITypedRegion partition = null;
 		try {
-			partition = getPartition(IDocumentExtension3.DEFAULT_PARTITIONING, offset, false);
+			partition = getPartition(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING, offset, false);
 		} catch (BadPartitioningException e) {
 			throw new Error(e);
 		}
@@ -1540,7 +1540,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			result = ((IDocumentPartitionerExtension2) partitioner).getPartition(offset, preferOpenPartitions);
 		} else if (partitioner != null) {
 			result = partitioner.getPartition(offset);
-		} else if (DEFAULT_PARTITIONING.equals(partitioning)) {
+		} else if (IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING.equals(partitioning)) {
 			result = new TypedRegion(0, getLength(), DEFAULT_CONTENT_TYPE);
 		} else
 			throw new BadPartitioningException();
@@ -2352,7 +2352,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	public void setDocumentPartitioner(IDocumentPartitioner partitioner) {
 		Assert.isNotNull(getStore(), "text store must be set before document partitioner"); //$NON-NLS-1$
 		IDocumentPartitioner oldPartioner = null;
-		oldPartioner = getDocumentPartitioner(IDocumentExtension3.DEFAULT_PARTITIONING);
+		oldPartioner = getDocumentPartitioner(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING);
 		if (oldPartioner != null) {
 			oldPartioner.disconnect();
 		}
@@ -2362,7 +2362,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		if (partitioner != null) {
 			partitioner.connect(this);
 		}
-		setDocumentPartitioner(IDocumentExtension3.DEFAULT_PARTITIONING, partitioner);
+		setDocumentPartitioner(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING, partitioner);
 	}
 
 	/*

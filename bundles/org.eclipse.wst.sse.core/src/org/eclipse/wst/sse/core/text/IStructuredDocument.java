@@ -31,6 +31,8 @@ import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
  */
 public interface IStructuredDocument extends IEncodedDocument, IDocumentExtension, IAdaptable {
 
+	String DEFAULT_STRUCTURED_PARTITIONING = "___structured_text_partitioning";
+
 	void addDocumentAboutToChangeListener(IModelAboutToBeChangedListener listener);
 
 	/**

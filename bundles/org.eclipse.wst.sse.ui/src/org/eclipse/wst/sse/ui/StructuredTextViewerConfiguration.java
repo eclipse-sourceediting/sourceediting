@@ -145,6 +145,13 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 	public Map getAutoEditStrategies(ISourceViewer sourceViewer) {
 		return new HashMap();
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getConfiguredDocumentPartitioning(org.eclipse.jface.text.source.ISourceViewer)
+	 */
+	public String getConfiguredDocumentPartitioning(ISourceViewer sourceViewer) {
+		return IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING;
+	}
 
 	/*
 	 * @see SourceViewerConfiguration#getConfiguredTextHoverStateMasks(ISourceViewer,
