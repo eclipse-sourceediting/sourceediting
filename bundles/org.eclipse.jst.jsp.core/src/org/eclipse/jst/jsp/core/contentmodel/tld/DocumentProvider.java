@@ -45,18 +45,17 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * An XML Creator/Reader/Writer that
- * 1) Ignores any DocumentType Nodes found within the document
- *    (as well as any entities)
- * 2) Ignores any errors/exceptions from Xerces when loading a
- *    document
- * 3) Can load Documents from within a .JAR file (***read-only***)
+ * An XML Creator/Reader/Writer that 1) Ignores any DocumentType Nodes found
+ * within the document (as well as any entities) 2) Ignores any
+ * errors/exceptions from Xerces when loading a document 3) Can load Documents
+ * from within a .JAR file (***read-only***)
  */
 
 public class DocumentProvider {
 	/**
 	 * 
-	 * @param args java.lang.String[]
+	 * @param args
+	 *            java.lang.String[]
 	 */
 	public static void main(String[] args) {
 		if (args.length < 2)
@@ -89,12 +88,14 @@ public class DocumentProvider {
 		InputStream is = null;
 		try {
 			DocumentBuilder builder = getDocumentBuilder();
-			//		DOMParser parser = new DOMParser();
-			//		parser.setFeature("http://apache.org/xml/features/continue-after-fatal-error", false);//$NON-NLS-1$
-			//		parser.setFeature("http://apache.org/xml/features/nonvalidating/load-dtd-grammar", false);//$NON-NLS-1$
-			//		parser.setErrorHandler(getNullErrorHandler());
-			//		parser.setEntityResolver(getNullEntityResolver());
-			//		is = getInputStream();
+			// DOMParser parser = new DOMParser();
+			// parser.setFeature("http://apache.org/xml/features/continue-after-fatal-error",
+			// false);//$NON-NLS-1$
+			// parser.setFeature("http://apache.org/xml/features/nonvalidating/load-dtd-grammar",
+			// false);//$NON-NLS-1$
+			// parser.setErrorHandler(getNullErrorHandler());
+			// parser.setEntityResolver(getNullEntityResolver());
+			// is = getInputStream();
 			builder.setEntityResolver(getEntityResolver());
 			builder.setErrorHandler(getNullErrorHandler());
 			is = getInputStream();
@@ -104,7 +105,7 @@ public class DocumentProvider {
 		catch (SAXException e) {
 			result = null;
 			// parsing exception, notify the user?
-			Logger.log(Logger.WARNING, "SAXException while reading descriptor" + e); //$NON-NLS-1$
+			Logger.log(Logger.WARNING, "SAXException while reading descriptor: " + e); //$NON-NLS-1$
 		}
 		catch (FileNotFoundException e) {
 			// NOT an "exceptional case"; do not Log
@@ -161,16 +162,14 @@ public class DocumentProvider {
 		return impl;
 	}
 
-	/****************************************************
-	 * Takes a single string of the form "a/b/c" and
-	 * ensures that that structure exists below the
-	 * head element, down through 'c', and returns a
-	 * <em>single</em> element 'c'.  For multiple
-	 * elements (such as multiple &lt;macro&gt; elements
-	 * contained within a single &lt;macros&gt; element,
-	 * full DOM access is required for searching and
+	/*************************************************************************
+	 * Takes a single string of the form "a/b/c" and ensures that that
+	 * structure exists below the head element, down through 'c', and returns
+	 * a <em>single</em> element 'c'. For multiple elements (such as
+	 * multiple &lt;macro&gt; elements contained within a single
+	 * &lt;macros&gt; element, full DOM access is required for searching and
 	 * child element manipulation.
-	 ***************************************************/
+	 ************************************************************************/
 	public Element getElement(String name) {
 		if (document == null)
 			load();
@@ -181,7 +180,8 @@ public class DocumentProvider {
 	}
 
 	/**
-	 * Returns an EntityResolver that won't try to load and resolve ANY entities
+	 * Returns an EntityResolver that won't try to load and resolve ANY
+	 * entities
 	 */
 	private EntityResolver getEntityResolver() {
 		if (resolver == null) {
@@ -192,7 +192,7 @@ public class DocumentProvider {
 						try {
 							URL spec = new URL("file://" + getBaseReference()); //$NON-NLS-1$
 							URL url = new URL(spec, systemID);
-							if(url.getProtocol().startsWith("file:")) { //$NON-NLS-1$
+							if (url.getProtocol().startsWith("file:")) { //$NON-NLS-1$
 								URLConnection connection = url.openConnection();
 								result = new InputSource(systemID != null ? systemID : "/_" + toString()); //$NON-NLS-1$
 								result.setPublicId(publicID);
@@ -224,10 +224,9 @@ public class DocumentProvider {
 	}
 
 	/**
-	 * Returns and input stream to use as the source of the Document
-	 * 1) from an InputStream set on this instance
-	 * 2) from a JAR file with the given entry name
-	 * 3) from a normal file
+	 * Returns and input stream to use as the source of the Document 1) from
+	 * an InputStream set on this instance 2) from a JAR file with the given
+	 * entry name 3) from a normal file
 	 * 
 	 * @return InputStream
 	 */
@@ -281,12 +280,11 @@ public class DocumentProvider {
 		return null;
 	}
 
-	/****************************************************
-	 * Takes a single string of the form "a/b/c" and
-	 * ensures that that structure exists below the
-	 * head element, down through 'c', and returns the
-	 * element 'c'.
-	 ***************************************************/
+	/*************************************************************************
+	 * Takes a single string of the form "a/b/c" and ensures that that
+	 * structure exists below the head element, down through 'c', and returns
+	 * the element 'c'.
+	 ************************************************************************/
 	protected Node getNode(Node node, String name) {
 		StringTokenizer tokenizer = new StringTokenizer(name, "/"); //$NON-NLS-1$
 		String token = null;
@@ -300,21 +298,22 @@ public class DocumentProvider {
 	}
 
 	/**
-	 * Returns an ErrorHandler that will not stop the parser on reported errors
+	 * Returns an ErrorHandler that will not stop the parser on reported
+	 * errors
 	 */
 	private ErrorHandler getNullErrorHandler() {
 		if (errorHandler == null) {
 			errorHandler = new ErrorHandler() {
 				public void error(SAXParseException exception) throws SAXException {
-					Logger.log(Logger.WARNING, "SAXParseException while reading descriptor" + exception.getMessage()); //$NON-NLS-1$
+					Logger.log(Logger.WARNING, "SAXParseException while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$
 				}
 
 				public void fatalError(SAXParseException exception) throws SAXException {
-					Logger.log(Logger.WARNING, "SAXParseException while reading descriptor" + exception.getMessage()); //$NON-NLS-1$
+					Logger.log(Logger.WARNING, "SAXParseException while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$
 				}
 
 				public void warning(SAXParseException exception) throws SAXException {
-					Logger.log(Logger.WARNING, "SAXParseException while reading descriptor" + exception.getMessage()); //$NON-NLS-1$
+					Logger.log(Logger.WARNING, "SAXParseException while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$
 				}
 			};
 		}
@@ -341,6 +340,7 @@ public class DocumentProvider {
 
 	/**
 	 * Returns the root Element of the current document
+	 * 
 	 * @return org.w3c.dom.Element
 	 */
 	public Node getRootElement() {
@@ -349,6 +349,7 @@ public class DocumentProvider {
 
 	/**
 	 * Returns the/a root Element for the current document
+	 * 
 	 * @return org.w3c.dom.Element
 	 */
 	protected Node getRootElement(Document doc) {
@@ -387,10 +388,14 @@ public class DocumentProvider {
 	}
 
 	public void load() {
-		// rootElementName and fileName are expected to be defined at this point
+		// rootElementName and fileName are expected to be defined at this
+		// point
 		document = getParsedDocument();
 		if (document != null) {
-			rootElement = getRootElement(document);
+			if (rootElementName != null)
+				rootElement = getRootElement(document);
+			else
+				rootElement = document.getDocumentElement();
 		}
 
 		if (document == null || rootElement == null) {
@@ -426,7 +431,8 @@ public class DocumentProvider {
 
 	/**
 	 * 
-	 * @param newFileName java.lang.String
+	 * @param newFileName
+	 *            java.lang.String
 	 */
 	public void setFileName(java.lang.String newFileName) {
 		fileName = newFileName;
@@ -434,7 +440,9 @@ public class DocumentProvider {
 
 	/**
 	 * Sets the inputStream for which to provide a Document.
-	 * @param inputStream The inputStream to set
+	 * 
+	 * @param inputStream
+	 *            The inputStream to set
 	 */
 	public void setInputStream(InputStream inputStream) {
 		this.inputStream = inputStream;
@@ -442,7 +450,8 @@ public class DocumentProvider {
 
 	/**
 	 * 
-	 * @param newJarFileName java.lang.String
+	 * @param newJarFileName
+	 *            java.lang.String
 	 */
 	public void setJarFileName(java.lang.String newJarFileName) {
 		jarFileName = newJarFileName;
@@ -450,7 +459,8 @@ public class DocumentProvider {
 
 	/**
 	 * 
-	 * @param newRootElementName java.lang.String
+	 * @param newRootElementName
+	 *            java.lang.String
 	 */
 	public void setRootElementName(java.lang.String newRootElementName) {
 		rootElementName = newRootElementName;
