@@ -8,28 +8,27 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.html.core.tests.application;
+package org.eclipse.wst.html.core.tests;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.wst.html.core.tests.ModelParserTests;
 import org.eclipse.wst.html.core.tests.misc.TestPreferenceValues;
 
 
 
-public class SSEModelHTMLTestSuite extends TestSuite {
+public class HTMLCoreTestSuite extends TestSuite {
 
 	/**
 	 * to get picked up by BVT
 	 * @return
 	 */
 	public static Test suite() {
-		return new SSEModelHTMLTestSuite();
+		return new HTMLCoreTestSuite();
 	}
 
-	public SSEModelHTMLTestSuite() {
-		super("SSEModelHTMLTestSuite");
+	public HTMLCoreTestSuite() {
+		super("HTML Core TestSuite");
 
 		addTest(ModelParserTests.suite());
 		addTest(new TestSuite(TestPreferenceValues.class));

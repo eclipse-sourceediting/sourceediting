@@ -2,13 +2,13 @@
 <?eclipse version="3.0"?>
 <plugin
 	id="org.eclipse.wst.html.core.tests"
-	name="SSE Model HTML Tests"
+	name="HTML Core Tests"
 	version="1.0.0"
 	provider-name="Eclipse.org"
-	class="org.eclipse.wst.html.core.tests.SSEModelHTMLTestsPlugin">
+	class="org.eclipse.wst.html.core.tests.HTMLCoreTestsPlugin">
 
 	<runtime>
-		<library name="ssemodelhtmltests.jar">
+		<library name="htmlcoretests.jar">
 			<export name="*" />
 		</library>
 	</runtime>
@@ -20,28 +20,6 @@
 		<import plugin="org.eclipse.wst.sse.core" />
 		<import plugin="org.eclipse.core.resources" />
 		<import plugin="org.eclipse.wst.common.encoding" />
-		<import plugin="org.eclipse.ui" />
 	</requires>
-
-
-	<extension
-		id="ssemodelhtmltests"
-		point="org.eclipse.core.runtime.applications">
-		<application>
-			<run
-				class="org.eclipse.wst.html.core.tests.application.SSEModelHTMLTests">
-			</run>
-		</application>
-	</extension>
-	<!-- TO GET PICKED UP BY com.ibm.etools.commontests.testcollector -->
-	<!--
-	<extension
-		point="com.ibm.etools.commontests.testcollector.suites">
-		<suite
-			suiteClass="org.eclipse.wst.html.core.tests.application.SSEModelHTMLTestSuite"
-			suiteName="SSE Model HTML Tests">
-		</suite>
-	</extension>
-	-->
-
+	
 </plugin>
