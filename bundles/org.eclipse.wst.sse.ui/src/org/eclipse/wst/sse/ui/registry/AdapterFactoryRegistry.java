@@ -16,13 +16,17 @@ import java.util.Iterator;
 
 /**
  * This is basically a "factory for factories". It is to used to associate
- * "edit time" AdapterFactories with a StrucutredModel, based on the
+ * "edit time" AdapterFactories with a StructuredModel, based on the
  * IStructuredModel's ContentTypeDescription. In plugin.xml files, there
  * should be an AdapterFactoryProvider defined for every definition of
  * ContentTypeDescription.
  */
 public interface AdapterFactoryRegistry {
 
-	//NSD: David, shouldn't this be named getAdapterFactoryProviders?
+	/**
+	 * Returns an Iterator over a Collection of AdapterFactoryProviders
+	 * 
+	 * @return
+	 */
 	public Iterator getAdapterFactories();
 }
