@@ -406,6 +406,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	protected static final String DOT = "."; //$NON-NLS-1$
 
 	/** Non-NLS strings */
+	private static final String EDITOR_KEYBINDING_SCOPE_ID = "org.eclipse.wst.sse.ui.structuredTextEditorScope"; //$NON-NLS-1$
 	private static final String EDITOR_CONTEXT_MENU_ID = "org.eclipse.wst.sse.ui.StructuredTextEditor.context"; //$NON-NLS-1$
 	public static final String GROUP_NAME_ADDITIONS = "additions"; //$NON-NLS-1$
 	public static final String GROUP_NAME_FORMAT = "Format"; //$NON-NLS-1$
@@ -1944,7 +1945,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 * @see org.eclipse.ui.editors.text.TextEditor#initializeKeyBindingScopes()
 	 */
 	protected void initializeKeyBindingScopes() {
-		setKeyBindingScopes(new String[]{"org.eclipse.wst.sse.ui.structuredTextEditorScope"}); //$NON-NLS-1$
+		setKeyBindingScopes(new String[]{EDITOR_KEYBINDING_SCOPE_ID});
 	}
 
 	protected void initSourceViewer(StructuredTextViewer sourceViewer) {
@@ -2096,7 +2097,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			fBusyTimer.cancel();
 		}
 		startBusyTimer();
-
 	}
 
 	/**
