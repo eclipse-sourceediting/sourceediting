@@ -43,7 +43,7 @@ import org.eclipse.wst.sse.ui.nls.ResourceHandler;
  * Note that this class is still valid for single page editor.
  */
 public class ActionContributorXML extends ActionContributor {
-	private static final String[] EDITOR_IDS = {"org.eclipse.wst.xml.ui.StructuredTextEditorXML", "org.eclipse.wst.sse.ui.StructuredTextEditor", "org.eclipse.wst.xml.ui.StructuredTextEditorXML2"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	private static final String[] EDITOR_IDS = {"org.eclipse.wst.xml.ui.StructuredTextEditorXML", "org.eclipse.wst.sse.ui.StructuredTextEditor"}; //$NON-NLS-1$ //$NON-NLS-2$
 	protected RetargetTextEditorAction fCleanupDocument = null;
 	protected RetargetTextEditorAction fComment = null;
 	// tooltip
