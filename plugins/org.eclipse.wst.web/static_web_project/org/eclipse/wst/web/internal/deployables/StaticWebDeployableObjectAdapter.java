@@ -2,8 +2,9 @@ package org.eclipse.wst.web.internal.deployables;
 
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.wst.server.core.IModuleArtifact;
+import org.eclipse.wst.server.core.model.ModuleArtifactAdapterDelegate;
 
-public class StaticWebDeployableObjectAdapter implements IAdapterFactory
+public class StaticWebDeployableObjectAdapter extends ModuleArtifactAdapterDelegate implements IAdapterFactory
 
 {
 
@@ -15,11 +16,7 @@ public class StaticWebDeployableObjectAdapter implements IAdapterFactory
 
 		IModuleArtifact moduleArtifact = null;
 		if (adapterType == IStaticWebModuleArtifact.class) {
-			moduleArtifact = StaticWebDeployableObjectAdapterUtil.getModuleObject(adaptableObject);
-			/*
-			 * else if (adapterType == ILaunchable.class) { if (adaptableObject instanceof EObject) {
-			 * return adaptableObject; }
-			 */
+			getModuleArtifact(adaptableObject);
 		}
 
 		return moduleArtifact;
@@ -28,5 +25,9 @@ public class StaticWebDeployableObjectAdapter implements IAdapterFactory
 	public Class[] getAdapterList() {
 
 		return new Class[]{IStaticWebModuleArtifact.class};
+	}
+
+	public IModuleArtifact getModuleArtifact(Object obj) {
+		return StaticWebDeployableObjectAdapterUtil.getModuleObject(obj);
 	}
 }
