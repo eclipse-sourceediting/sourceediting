@@ -2,24 +2,6 @@
 <projectDescription>
 	<name>org.eclipse.wst.dtd.ui</name>
 	<comment></comment>
-	<projects>
-		<project>com.ibm.base.extensions.ui</project>
-		<project>org.eclipse.wst.sse.ui</project>
-		<project>org.eclipse.wst.sse.ui.extensions</project>
-		<project>org.eclipse.wst.sse.core</project>
-		<project>org.eclipse.wst.dtd.core</project>
-		<project>org.eclipse.wst.xml.core</project>
-		<project>org.eclipse.core.resources</project>
-		<project>org.eclipse.core.runtime</project>
-		<project>org.eclipse.core.runtime.compatibility</project>
-		<project>org.eclipse.jface.text</project>
-		<project>org.eclipse.ui</project>
-		<project>org.eclipse.ui.editors</project>
-		<project>org.eclipse.ui.ide</project>
-		<project>org.eclipse.ui.views</project>
-		<project>org.eclipse.ui.workbench</project>
-		<project>org.eclipse.ui.workbench.texteditor</project>
-	</projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>
