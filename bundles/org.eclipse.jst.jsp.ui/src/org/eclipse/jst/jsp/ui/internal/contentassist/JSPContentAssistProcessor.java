@@ -454,6 +454,23 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 			else {
 				textInsertionOffset = ((XMLNode) node).getStartOffset();
 			}
+			TLDCMDocumentManager mgr = TaglibController.getTLDCMDocumentManager(((XMLNode) node).getStructuredDocument());
+			if (mgr != null) {
+				List moreCMDocuments = mgr.getCMDocumentTrackers(textInsertionOffset);
+				if (moreCMDocuments != null) {
+					for (int i = 0; i < moreCMDocuments.size(); i++) {
+						CMDocument doc = (CMDocument) moreCMDocuments.get(i);
+						CMNamedNodeMap elements = doc.getElements();
+						if (elements != null) {
+							for (int j = 0; j < elements.getLength(); j++) {
+								CMElementDeclaration ed = (CMElementDeclaration) elements.item(j);
+								elementDecls.add(ed);
+							}
+						}
+					}
+				}
+			}
+
 			// get position dependent CMDocuments and insert their tags as
 			// proposals
 
@@ -462,24 +479,6 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 				mqAdapter = (ModelQueryAdapter) ((XMLNode) node).getAdapterFor(ModelQueryAdapter.class);
 			else
 				mqAdapter = (ModelQueryAdapter) ((XMLNode) node.getOwnerDocument()).getAdapterFor(ModelQueryAdapter.class);
-			if (mqAdapter != null) {
-				TLDCMDocumentManager mgr = TaglibController.getTLDCMDocumentManager(((XMLNode) node).getStructuredDocument());
-				if (mgr != null) {
-					List moreCMDocuments = mgr.getCMDocumentTrackers(textInsertionOffset);
-					if (moreCMDocuments != null) {
-						for (int i = 0; i < moreCMDocuments.size(); i++) {
-							CMDocument doc = (CMDocument) moreCMDocuments.get(i);
-							CMNamedNodeMap elements = doc.getElements();
-							if (elements != null) {
-								for (int j = 0; j < elements.getLength(); j++) {
-									CMElementDeclaration ed = (CMElementDeclaration) elements.item(j);
-									elementDecls.add(ed);
-								}
-							}
-						}
-					}
-				}
-			}
 
 			if (mqAdapter != null) {
 				CMDocument doc = mqAdapter.getModelQuery().getCorrespondingCMDocument(node);
