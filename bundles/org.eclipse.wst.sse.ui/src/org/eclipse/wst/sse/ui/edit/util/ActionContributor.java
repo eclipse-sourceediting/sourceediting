@@ -25,6 +25,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.editors.text.TextEditorActionContributor;
 import org.eclipse.ui.ide.IDEActionFactory;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -291,7 +292,9 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 		if (actionBars != null) {
 			actionBars.setGlobalActionHandler(ITextEditorActionDefinitionIds.GOTO_NEXT_ANNOTATION, fNextAnnotation);
 			actionBars.setGlobalActionHandler(ITextEditorActionDefinitionIds.GOTO_PREVIOUS_ANNOTATION, fPreviousAnnotation);
-
+			actionBars.setGlobalActionHandler(ActionFactory.PREVIOUS.getId(), fPreviousAnnotation);
+			actionBars.setGlobalActionHandler(ActionFactory.NEXT.getId(), fNextAnnotation);
+			
 			if (textEditor != null) {
 				actionBars.setGlobalActionHandler(IDEActionFactory.ADD_TASK.getId(), getAction(textEditor, IDEActionFactory.ADD_TASK.getId()));
 				actionBars.setGlobalActionHandler(IDEActionFactory.BOOKMARK.getId(), getAction(textEditor, IDEActionFactory.BOOKMARK.getId()));
