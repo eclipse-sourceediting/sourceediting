@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component xmlns="http://eclipse.org/wtp/releng/tools/component-model"
-	name="wst.dtd">
+	name="org.eclipse.wst.dtd">
 	<component-depends unrestricted="true"/>
 	<plugin id="org.eclipse.wst.dtd.core" />
 	<plugin id="org.eclipse.wst.dtd.ui" />
