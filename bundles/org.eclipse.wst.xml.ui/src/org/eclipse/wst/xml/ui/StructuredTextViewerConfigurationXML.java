@@ -159,7 +159,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 			highlighter.addProvider(StructuredTextPartitionerForXML.ST_XML_COMMENT, xmlProvider);
 			highlighter.addProvider(StructuredTextPartitionerForXML.ST_XML_DECLARATION, xmlProvider);
 			highlighter.addProvider(StructuredTextPartitionerForXML.ST_XML_PI, xmlProvider);
-			highlighter.addProvider(StructuredTextPartitionerForXML.ST_DTD_SUBSET, new LineStyleProviderForDTDSubSet());
+			highlighter.addProvider(StructuredTextPartitionerForXML.ST_DTD_SUBSET, new LineStyleProviderForDTDSubSet(getConfiguredDocumentPartitioning(sourceViewer)));
 		}
 		return highlighter;
 	}

@@ -18,13 +18,14 @@ import java.util.List;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TextAttribute;
+import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.dtd.core.rules.StructuredTextPartitionerForDTD;
-import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
@@ -37,18 +38,18 @@ import org.eclipse.wst.sse.ui.style.AbstractLineStyleProvider;
 import org.eclipse.wst.sse.ui.style.LineStyleProvider;
 
 public class LineStyleProviderForDTDSubSet extends AbstractLineStyleProvider implements LineStyleProvider {
-	private int fInternalAdjustment;
-
 	private IStructuredModel fInternalModel = null;
 	private LineStyleProviderForDTD fInternalProvider = null;
 	private StyleRange[] fInternalRanges;
+	private String fPartitioning = IDocumentExtension3.DEFAULT_PARTITIONING;
 
-	public LineStyleProviderForDTDSubSet() {
-
+	public LineStyleProviderForDTDSubSet(String partitioning) {
 		super();
 		fInternalProvider = new LineStyleProviderForDTD();
 		fInternalRanges = new StyleRange[0];
-		fInternalAdjustment = 0;
+		if (partitioning != null) {
+			fPartitioning = partitioning;
+		}
 	}
 
 	/**
@@ -56,8 +57,22 @@ public class LineStyleProviderForDTDSubSet extends AbstractLineStyleProvider imp
 	 * @param lineRequestLength
 	 * @param holdResults
 	 */
-	private void addStyleRanges(int lineRequestStart, int lineRequestLength, Collection holdResults) {
-
+	private void addStyleRanges(int lineRequestStart, int lineRequestLength, Collection holdResults, int adjustment) {
+		int lineRequestEnd = lineRequestStart + lineRequestLength;
+		for (int i = 0; i < fInternalRanges.length; i++) {
+			int adjustedStyleRangeStart = adjustment + fInternalRanges[i].start;
+			int adjustedStyleRangeEnd = adjustedStyleRangeStart + fInternalRanges[i].length;
+			if (adjustedStyleRangeEnd < lineRequestStart || lineRequestEnd < adjustedStyleRangeStart)
+				continue;
+			int end = Math.min(adjustedStyleRangeEnd, lineRequestEnd);
+			StyleRange range = new StyleRange();
+			range.start = Math.max(adjustedStyleRangeStart, lineRequestStart);
+			range.length = end - range.start;
+			range.fontStyle = fInternalRanges[i].fontStyle;
+			range.foreground = fInternalRanges[i].foreground;
+			range.background = fInternalRanges[i].background;
+			holdResults.add(range);
+		}
 	}
 
 	protected TextAttribute getAttributeFor(ITextRegion region) {
@@ -83,13 +98,9 @@ public class LineStyleProviderForDTDSubSet extends AbstractLineStyleProvider imp
 	 */
 	private IStructuredDocument getInternalDocument() {
 		if (fInternalModel == null) {
-			fInternalModel = getModelManager().createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_DTD);
+			fInternalModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_DTD);
 		}
 		return fInternalModel.getStructuredDocument();
-	}
-
-	private IModelManager getModelManager() {
-		return StructuredModelManager.getInstance().getModelManager();
 	}
 
 	protected String getPreferenceKey(String key) {
@@ -104,7 +115,6 @@ public class LineStyleProviderForDTDSubSet extends AbstractLineStyleProvider imp
 	 *      int, int, java.util.Collection)
 	 */
 	public boolean prepareRegions(ITypedRegion typedRegion, int lineRequestStart, int lineRequestLength, Collection holdResults) {
-
 		if (!StructuredTextPartitionerForDTD.ST_DTD_DEFAULT.equals(typedRegion.getType())) {
 			// compute an internal DTD model and return linestyles for it
 			ITextRegion dtdContentRegion = null;
@@ -115,8 +125,10 @@ public class LineStyleProviderForDTDSubSet extends AbstractLineStyleProvider imp
 			IStructuredDocument document = getInternalDocument();
 			if (document == null)
 				return false;
-			updateStyleRanges(document, contents, typedRegion.getOffset());
-			addStyleRanges(lineRequestStart, lineRequestLength, holdResults);
+
+			updateStyleRanges(document, contents);
+
+			addStyleRanges(lineRequestStart, lineRequestLength, holdResults, doctype.getStartOffset(dtdContentRegion));
 			return true;
 		}
 		return false;
@@ -129,22 +141,19 @@ public class LineStyleProviderForDTDSubSet extends AbstractLineStyleProvider imp
 		super.release();
 	}
 
-	private void updateStyleRanges(IStructuredDocument document, String contents, int adjustment) {
-
-		if (!document.get().equals(contents) || fInternalAdjustment != adjustment) {
+	private void updateStyleRanges(IStructuredDocument document, String contents) {
+		if (!document.get().equals(contents)) {
 			document.set(contents);
 			try {
-				ITypedRegion regions[] = getInternalDocument().computePartitioning(0, document.getLength());
+				ITypedRegion regions[] = TextUtilities.computePartitioning(getInternalDocument(), fPartitioning, 0, document.getLength(), false);
 				List ranges = new ArrayList();
 				fInternalProvider.init(getInternalDocument(), getHighlighter());
 				for (int i = 0; i < regions.length; i++) {
 					fInternalProvider.prepareRegions(regions[i], regions[i].getOffset(), regions[i].getLength(), ranges);
 				}
-				fInternalAdjustment = adjustment;
 				fInternalRanges = (StyleRange[]) ranges.toArray(new StyleRange[0]);
-				for (int i = 0; i < fInternalRanges.length; i++)
-					fInternalRanges[i].start += fInternalAdjustment;
-			} catch (BadLocationException e) {
+			}
+			catch (BadLocationException e) {
 				fInternalRanges = new StyleRange[0];
 			}
 		}
