@@ -14,9 +14,7 @@ package org.eclipse.wst.sse.core;
 
 import java.util.List;
 
-
-
-public interface PropagatingAdapter extends org.eclipse.wst.sse.core.INodeAdapter {
+public interface PropagatingAdapter extends INodeAdapter {
 
 	void addAdaptOnCreateFactory(AdapterFactory factory);
 
