@@ -288,7 +288,7 @@ public class BreakpointProviderBuilder extends RegistryReader {
 			if (providers == null) {
 				providers = createBreakpointProviders(ATT_CONTENT_TYPES, contentType.getId());
 				if (providers != null) {
-					map.put(contentTypeID, providers);
+					map.put(contentType.getId(), providers);
 					holdProviders.addAll(Arrays.asList(providers));
 				}
 			}
