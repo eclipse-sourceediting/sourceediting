@@ -1,6 +1,7 @@
 package org.eclipse.wst.dtd.ui.internal.wizard;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
@@ -26,7 +27,12 @@ public class NewDTDWizard extends Wizard implements INewWizard {
 	public void init(IWorkbench aWorkbench, IStructuredSelection aSelection) {
 		fSelection = aSelection;
 		setWindowTitle(DTDUIPlugin.getResourceString("_UI_WIZARD_NEW_DTD_TITLE"));
-		setDefaultPageImageDescriptor(DTDUIPlugin.getDefault().getImageRegistry().getDescriptor(DTDResource.NEWDTD));
+		ImageDescriptor descriptor = DTDUIPlugin.getDefault().getImageRegistry().getDescriptor(DTDResource.NEWDTD);
+		if (descriptor == null) {
+			descriptor = ImageDescriptor.createFromURL(DTDUIPlugin.getDefault().getBundle().getEntry(DTDResource.NEWDTD));
+			DTDUIPlugin.getDefault().getImageRegistry().put(DTDResource.NEWDTD, descriptor);
+		}
+		setDefaultPageImageDescriptor(descriptor);
 	}
 
 	private void openEditor(final IFile file) {
