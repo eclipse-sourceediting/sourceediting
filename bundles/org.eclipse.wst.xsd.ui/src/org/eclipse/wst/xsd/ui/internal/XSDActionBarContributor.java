@@ -26,7 +26,6 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.RetargetAction;
-import org.eclipse.ui.part.EditorActionBarContributor;
 import org.eclipse.ui.part.MultiPageEditorActionBarContributor;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
@@ -109,9 +108,6 @@ public class XSDActionBarContributor extends MultiPageEditorActionBarContributor
 
   private IMenuManager editMenu;
 
-  /*
-   * @see EditorActionBarContributor#contributeToMenu(IMenuManager)
-   */
   public void addToMenu(IMenuManager menuManager)
   {
     editMenu = menuManager.findMenuUsingPath(IWorkbenchActionConstants.M_EDIT);
@@ -127,10 +123,8 @@ public class XSDActionBarContributor extends MultiPageEditorActionBarContributor
     treeMenu.add(new Separator("group2"));
   }
 
-  /**
-   * @see EditorActionBarContributor#contributeToToolBar(IToolBarManager)
-   */
-  public void addToToolBar(IToolBarManager toolBarManager)
+
+public void addToToolBar(IToolBarManager toolBarManager)
   {
     toolBarManager.add(new Separator("XMLSchema.2"));
 //  Add retarget actions

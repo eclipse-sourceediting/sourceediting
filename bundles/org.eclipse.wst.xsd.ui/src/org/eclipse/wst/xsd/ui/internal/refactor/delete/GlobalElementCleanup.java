@@ -13,7 +13,6 @@ package org.eclipse.wst.xsd.ui.internal.refactor.delete;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.wst.xsd.ui.internal.refactor.XSDVisitor;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
@@ -56,7 +55,7 @@ public class GlobalElementCleanup extends BaseGlobalCleanup
   }
   
   /**
-   * @see XSDVisitor#visitElementDeclaration(XSDElementDeclaration)
+   * @see org.eclipse.wst.xsd.ui.internal.refactor.XSDVisitor#visitElementDeclaration(XSDElementDeclaration)
    */
   public void visitElementDeclaration(XSDElementDeclaration element)
   {

@@ -11,7 +11,6 @@
 package org.eclipse.wst.xsd.ui.internal.properties;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTError;
 import org.eclipse.swt.accessibility.ACC;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
 import org.eclipse.swt.accessibility.AccessibleControlAdapter;
@@ -122,13 +121,13 @@ static int checkStyle (int style) {
 *
 * @param string the new item
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
-* @exception SWTError(ERROR_NULL_ARGUMENT)
+* @exception org.eclipse.swt.SWTError(ERROR_NULL_ARGUMENT)
 *	when the string is null
-* @exception SWTError(ERROR_ITEM_NOT_ADDED)
+* @exception org.eclipse.swt.SWTError(ERROR_ITEM_NOT_ADDED)
 *	when the item cannot be added
 */
 public void add (String string) {
@@ -148,13 +147,13 @@ public void add (String string) {
 * @param string the new item
 * @param index the index for the item
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
-* @exception SWTError(ERROR_NULL_ARGUMENT)
+* @exception org.eclipse.swt.SWTError(ERROR_NULL_ARGUMENT)
 *	when the string is null
-* @exception SWTError(ERROR_ITEM_NOT_ADDED)
+* @exception org.eclipse.swt.SWTError(ERROR_ITEM_NOT_ADDED)
 *	when the item cannot be added
 */
 public void add (String string, int index) {
@@ -168,11 +167,11 @@ public void add (String string, int index) {
 *
 * @param listener the listener
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
-* @exception SWTError(ERROR_NULL_ARGUMENT)
+* @exception org.eclipse.swt.SWTError(ERROR_NULL_ARGUMENT)
 *	when listener is null
 */
 public void addModifyListener (ModifyListener listener) {;
@@ -187,11 +186,11 @@ public void addModifyListener (ModifyListener listener) {;
 *
 * @param listener the listener
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
-* @exception SWTError(ERROR_NULL_ARGUMENT)
+* @exception org.eclipse.swt.SWTError(ERROR_NULL_ARGUMENT)
 *	when listener is null
 */
 public void addSelectionListener(SelectionListener listener) {
@@ -235,9 +234,9 @@ void arrowEvent (Event event) {
 * Clears the current selection.
 * <p>
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
 */
 public void clearSelection () {
@@ -286,9 +285,9 @@ public Point computeSize (int wHint, int hHint, boolean changed) {
 *
 * @param index the index of the item
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
 */
 public void deselect (int index) {
@@ -302,9 +301,9 @@ public void deselect (int index) {
 * If an item is selected, it is deselected.
 * If an item is not selected, it remains unselected.
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
 */
 public void deselectAll () {
@@ -354,11 +353,11 @@ boolean getEditable () {
 * @param index the index of the item
 * @return the item
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
-* @exception SWTError(ERROR_CANNOT_GET_ITEM)
+* @exception org.eclipse.swt.SWTError(ERROR_CANNOT_GET_ITEM)
 *	when the operation fails
 */
 public String getItem (int index) {
@@ -373,11 +372,11 @@ public String getItem (int index) {
 *
 * @return the number of items in the widget
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
-* @exception SWTError(ERROR_CANNOT_GET_COUNT)
+* @exception org.eclipse.swt.SWTError(ERROR_CANNOT_GET_COUNT)
 *	when the operation fails
 */
 public int getItemCount () {
@@ -392,11 +391,11 @@ public int getItemCount () {
 *
 * @return the height of one item in the widget
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
-* @exception SWTError(ERROR_CANNOT_GET_ITEM_HEIGHT)
+* @exception org.eclipse.swt.SWTError(ERROR_CANNOT_GET_ITEM_HEIGHT)
 *	when the operation fails
 */
 public int getItemHeight () {
@@ -411,11 +410,11 @@ public int getItemHeight () {
 *
 * @return the items in the widget
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
-* @exception SWTError(ERROR_CANNOT_GET_ITEM)
+* @exception org.eclipse.swt.SWTError(ERROR_CANNOT_GET_ITEM)
 *	when the operation fails
 */
 public String [] getItems () {
@@ -427,9 +426,9 @@ public String [] getItems () {
 * <p>
 * @return a point representing the selection start and end
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
 */
 public Point getSelection () {
@@ -444,9 +443,9 @@ public Point getSelection () {
 *
 * @return the index of the selected item.
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
 */
 public int getSelectionIndex () {
@@ -460,9 +459,9 @@ public int getSelectionIndex () {
 *
 * @return the widget text
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
 */
 public String getText () {
@@ -477,11 +476,11 @@ public String getText () {
 
 * @return the height of the combo's text field.
 * 
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
-* @exception SWTError(ERROR_ERROR_CANNOT_GET_ITEM_HEIGHT)
+* @exception org.eclipse.swt.SWTError(ERROR_ERROR_CANNOT_GET_ITEM_HEIGHT)
 *	when the operation fails
 */
 public int getTextHeight () {
@@ -493,9 +492,9 @@ public int getTextHeight () {
 * <p>
 * @return the text limit
 * 
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
 */
 public int getTextLimit () {
@@ -513,11 +512,11 @@ public int getTextLimit () {
 * @param string the search item
 * @return the index of the item
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
-* @exception SWTError(ERROR_NULL_ARGUMENT)
+* @exception org.eclipse.swt.SWTError(ERROR_NULL_ARGUMENT)
 *	when string is null
 */
 public int indexOf (String string) {
@@ -537,11 +536,11 @@ public int indexOf (String string) {
 * @param index the starting position
 * @return the index of the item
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
-* @exception SWTError(ERROR_NULL_ARGUMENT)
+* @exception org.eclipse.swt.SWTError(ERROR_NULL_ARGUMENT)
 *	when string is null
 */
 public int indexOf (String string, int start) {
@@ -770,11 +769,11 @@ public void redraw (int x, int y, int width, int height, boolean all) {
 * @param index the index of the item
 * @return the selection state
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
-* @exception SWTError(ERROR_ITEM_NOT_REMOVED)
+* @exception org.eclipse.swt.SWTError(ERROR_ITEM_NOT_REMOVED)
 *	when the operation fails
 */
 public void remove (int index) {
@@ -795,11 +794,11 @@ public void remove (int index) {
 * @param start the start of the range
 * @param end the end of the range
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
-* @exception SWTError(ERROR_ITEM_NOT_REMOVED)
+* @exception org.eclipse.swt.SWTError(ERROR_ITEM_NOT_REMOVED)
 *	when the operation fails
 */
 public void remove (int start, int end) {
@@ -814,13 +813,13 @@ public void remove (int start, int end) {
 *
 * @param string the search item
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
-* @exception SWTError(ERROR_NULL_ARGUMENT)
+* @exception org.eclipse.swt.SWTError(ERROR_NULL_ARGUMENT)
 *	when string is null
-* @exception SWTError(ERROR_ITEM_NOT_REMOVED)
+* @exception org.eclipse.swt.SWTError(ERROR_ITEM_NOT_REMOVED)
 *	when the operation fails
 */
 public void remove (String string) {
@@ -831,9 +830,9 @@ public void remove (String string) {
 /**
 * Removes all items.
 * <p>
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
 */
 public void removeAll () {
@@ -847,11 +846,11 @@ public void removeAll () {
 *
 * @param listener the listener
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
-* @exception SWTError(ERROR_NULL_ARGUMENT)
+* @exception org.eclipse.swt.SWTError(ERROR_NULL_ARGUMENT)
 *	when listener is null
 */
 public void removeModifyListener (ModifyListener listener) {
@@ -865,11 +864,11 @@ public void removeModifyListener (ModifyListener listener) {
 *
 * @param listener the listener
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
-* @exception SWTError(ERROR_NULL_ARGUMENT)
+* @exception org.eclipse.swt.SWTError(ERROR_NULL_ARGUMENT)
 *	when listener is null
 */
 public void removeSelectionListener (SelectionListener listener) {
@@ -887,9 +886,9 @@ public void removeSelectionListener (SelectionListener listener) {
 *
 * @param index the index of the item
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
 */
 public void select (int index) {
@@ -940,13 +939,13 @@ public void setForeground (Color color) {
 * @param index the index for the item
 * @param string the item
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
-* @exception SWTError(ERROR_NULL_ARGUMENT)
+* @exception org.eclipse.swt.SWTError(ERROR_NULL_ARGUMENT)
 *	when items is null
-* @exception SWTError(ERROR_ITEM_NOT_MODIFIED)
+* @exception org.eclipse.swt.SWTError(ERROR_ITEM_NOT_MODIFIED)
 *	when the operation fails
 */
 public void setItem (int index, String string) {
@@ -959,13 +958,13 @@ public void setItem (int index, String string) {
 *
 * @param items the array of items
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
-* @exception SWTError(ERROR_NULL_ARGUMENT)
+* @exception org.eclipse.swt.SWTError(ERROR_NULL_ARGUMENT)
 *	when items is null
-* @exception SWTError(ERROR_ITEM_NOT_ADDED)
+* @exception org.eclipse.swt.SWTError(ERROR_ITEM_NOT_ADDED)
 *	when the operation fails
 */
 public void setItems (String [] items) {
@@ -980,11 +979,11 @@ public void setItems (String [] items) {
 *
 * @param selection point representing the start and the end of the new selection
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
-* @exception SWTError(ERROR_NULL_ARGUMENT)
+* @exception org.eclipse.swt.SWTError(ERROR_NULL_ARGUMENT)
 *	when selection is null
 */
 public void setSelection (Point selection) {
@@ -998,11 +997,11 @@ public void setSelection (Point selection) {
 *
 * @param string the widget text
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
-* @exception SWTError(ERROR_NULL_ARGUMENT)
+* @exception org.eclipse.swt.SWTError(ERROR_NULL_ARGUMENT)
 *	when string is null
 */
 public void setText (String string) {
@@ -1024,11 +1023,11 @@ public void setText (String string) {
 * 
 * @param limit new text limit
 *
-* @exception SWTError(ERROR_THREAD_INVALID_ACCESS)
+* @exception org.eclipse.swt.SWTError(ERROR_THREAD_INVALID_ACCESS)
 *	when called from the wrong thread
-* @exception SWTError(ERROR_WIDGET_DISPOSED)
+* @exception org.eclipse.swt.SWTError(ERROR_WIDGET_DISPOSED)
 *	when the widget has been disposed
-* @exception SWTError(ERROR_CANNOT_BE_ZERO)
+* @exception org.eclipse.swt.SWTError(ERROR_CANNOT_BE_ZERO)
 *	when limit is 0
 */
 public void setTextLimit (int limit) {
