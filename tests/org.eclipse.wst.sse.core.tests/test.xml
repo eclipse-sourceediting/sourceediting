@@ -9,17 +9,14 @@
 		<echo message="eclipse place ${eclipse-home}" />
 	
 	<!-- sets the properties plugin-name, and library-file -->
-	<property
-		name="plugin-name"
-		value="org.eclipse.wst.sse.core.tests" />
-	<property
-		name="library-file"
-		value="${eclipse-home}/plugins/org.eclipse.test_3.1.0/library.xml" />
+	<property name="plugin-name" value="org.eclipse.wst.sse.core.tests" />
+	<property name="library-file" value="${eclipse-home}/plugins/org.eclipse.test_3.1.0/library.xml" />
 
 	<!-- This target holds all initialization code that needs to be done for -->
 	<!-- all tests that are to be run. Initialization for individual tests -->
 	<!-- should be done within the body of the suite target. -->
 	<target name="init">
+		<tstamp/>
 		<delete>
 			<fileset dir="${eclipse-home}" includes="org.eclipse.wst.sse.*.tests.*.xml" />
 		</delete>
