@@ -855,7 +855,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	public void createPartControl(Composite parent) {
 		StructuredTextViewerConfiguration newViewerConfiguration = createSourceViewerConfiguration();
 		SourceViewerConfiguration oldViewerConfiguration = getSourceViewerConfiguration();
-		if (oldViewerConfiguration instanceof StructuredTextViewerConfiguration && !((StructuredTextViewerConfiguration) oldViewerConfiguration).getDeclaringID().equals(newViewerConfiguration.getDeclaringID()))
+		if ((oldViewerConfiguration == null) || (oldViewerConfiguration instanceof StructuredTextViewerConfiguration && !((StructuredTextViewerConfiguration) oldViewerConfiguration).getDeclaringID().equals(newViewerConfiguration.getDeclaringID())))
 			setSourceViewerConfiguration(newViewerConfiguration);
 
 		super.createPartControl(parent);
@@ -867,8 +867,36 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		// ANYMORE - but for now, have to to get 'configure' to work right?
 		// but causes two pass initialization! Does fixing this require base
 		// fix?
-		setInput(getEditorInput());
+//		setInput(getEditorInput());
+		// instead of calling setInput twice, use initializeSourceViewer() to
+		// handle source viewer initialization previously handled by setInput
+		initializeSourceViewer();
+	}
+	
+	/**
+	 * Initializes the editor's source viewer and other items that were 
+	 * source viewer-dependent.
+	 */
+	private void initializeSourceViewer() {
+		IAnnotationModel annotationModel = getDocumentProvider().getAnnotationModel(getEditorInput());
+		if (getTextViewer() != null)
+			getTextViewer().setModel(getModel(), annotationModel);
 
+		if (getViewerSelectionManager() != null)
+			getViewerSelectionManager().setModel(getModel());
+
+		// workaround for bugzilla#56801
+		// updates/reinstalls QuickDiff because some QuickDiff info is lost
+		// when SourceViewer.setModel/setDocument is called
+		updateDiffer();
+
+		computeAndSetDoubleClickAction(getModel());
+		
+		IAction contentAssistAction = getAction(StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_PROPOSALS);
+		if (contentAssistAction instanceof IUpdate) {
+			((IUpdate) contentAssistAction).update();
+		}
+		
 		if (isBrowserLikeLinks())
 			enableBrowserLikeLinks();
 	}
@@ -958,6 +986,15 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			cfg.setDeclaringID(getClass().getName() + "#default"); //$NON-NLS-1$
 		}
 		cfg.setEditorPart(this);
+		
+		// set the resource for this configuration
+		IResource resource = null;
+		if (getEditorInput() instanceof IFileEditorInput) {
+			resource = ((IFileEditorInput) getEditorInput()).getFile();
+			if (resource.getType() != IResource.PROJECT)
+				resource = resource.getProject();
+			cfg.configureOn(resource);
+		}
 		return cfg;
 	}
 
@@ -2566,7 +2603,13 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 
 	protected void updateSourceViewerConfiguration() {
 		SourceViewerConfiguration configuration = getSourceViewerConfiguration();
-		if ((configuration == null) || !(configuration instanceof StructuredTextViewerConfiguration)) {
+		// no need to update source viewer configuration if one does not exist yet
+		if (configuration == null) {
+			return;
+		}
+		
+		// structuredtextviewer only works with structuredtextviewerconfiguration
+		if (!(configuration instanceof StructuredTextViewerConfiguration)) {
 			configuration = createSourceViewerConfiguration();
 			setSourceViewerConfiguration(configuration);
 		} else {
@@ -2576,14 +2619,17 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 				configuration = newViewerConfiguration;
 				setSourceViewerConfiguration(configuration);
 			}
+			
+			// update the configuration's resource
+			IResource resource = null;
+			if (getEditorInput() instanceof IFileEditorInput) {
+				resource = ((IFileEditorInput) getEditorInput()).getFile();
+				if (resource.getType() != IResource.PROJECT)
+					resource = resource.getProject();
+				((StructuredTextViewerConfiguration) configuration).configureOn(resource);
+			}
 		}
-		IResource resource = null;
-		if (getEditorInput() instanceof IFileEditorInput) {
-			resource = ((IFileEditorInput) getEditorInput()).getFile();
-			if (resource.getType() != IResource.PROJECT)
-				resource = resource.getProject();
-			((StructuredTextViewerConfiguration) configuration).configureOn(resource);
-		}
+
 		if (getSourceViewer() != null) {
 			getSourceViewer().configure(configuration);
 			IAction contentAssistAction = getAction(StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_PROPOSALS);
