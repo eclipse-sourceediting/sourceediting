@@ -3,13 +3,14 @@ package org.eclipse.wst.sse.ui.internal.hyperlink;
 import java.util.ResourceBundle;
 
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.TextEditorAction;
-import org.eclipse.wst.sse.ui.extension.IExtendedSimpleEditor;
 
 /**
  * Open hyperlink action
@@ -28,31 +29,38 @@ public class OpenHyperlinkAction extends TextEditorAction {
 	}
 
 	public void run() {
-		if (getTextEditor() instanceof IExtendedSimpleEditor) {
-			int offset = ((IExtendedSimpleEditor) getTextEditor()).getCaretPosition();
-			if (offset == -1 || fHyperlinkDetectors == null)
-				return;
-			IRegion region = new Region(offset, 0);
-			IHyperlink hyperlink = null;
+		if (fHyperlinkDetectors == null)
+			return;
+		ISelection selection = getTextEditor().getSelectionProvider().getSelection();
+		if (selection == null || !(selection instanceof ITextSelection)) {
+			return;
+		}
 
-			synchronized (fHyperlinkDetectors) {
-				for (int i = 0, length = fHyperlinkDetectors.length; i < length && hyperlink == null; i++) {
-					IHyperlinkDetector detector = fHyperlinkDetectors[i];
-					if (detector == null)
-						continue;
+		ITextSelection textSelection = (ITextSelection) selection;
+		IRegion region = new Region(textSelection.getOffset(), textSelection.getLength());
+		IHyperlink hyperlink = null;
 
-					IHyperlink[] hyperlinks = detector.detectHyperlinks(fTextViewer, region, false);
-					if (hyperlinks == null)
-						continue;
+		synchronized (fHyperlinkDetectors) {
+			for (int i = 0, length = fHyperlinkDetectors.length; i < length && hyperlink == null; i++) {
+				IHyperlinkDetector detector = fHyperlinkDetectors[i];
+				if (detector == null)
+					continue;
 
-					if (hyperlinks.length > 0)
-						hyperlink = hyperlinks[0];
-				}
+				IHyperlink[] hyperlinks = detector.detectHyperlinks(fTextViewer, region, false);
+				if (hyperlinks == null)
+					continue;
+
+				if (hyperlinks.length > 0)
+					hyperlink = hyperlinks[0];
 			}
-			if (hyperlink != null) {
-				getTextEditor().setHighlightRange(offset, 0, false);
-				hyperlink.open();
-			}
+		}
+		if (hyperlink != null) {
+			/**
+			 * Force the highlight range to change when the hyperlink is
+			 * opened by altering the highlighted range beforehand.
+			 */
+			getTextEditor().setHighlightRange(Math.max(0, region.getOffset() - 1), 0, false);
+			hyperlink.open();
 		}
 	}
 }
