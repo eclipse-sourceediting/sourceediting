@@ -35,6 +35,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.debug.ui.actions.IToggleBreakpointsTarget;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
@@ -117,12 +118,12 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.wst.common.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.IModelLifecycleListener;
+import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IModelStateListenerExtended;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.ModelLifecycleEvent;
-import org.eclipse.wst.sse.core.ModelPlugin;
 import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.internal.text.IExecutionDelegatable;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
@@ -148,6 +149,7 @@ import org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction;
 import org.eclipse.wst.sse.ui.internal.debug.EditBreakpointAction;
 import org.eclipse.wst.sse.ui.internal.debug.ManageBreakpointAction;
 import org.eclipse.wst.sse.ui.internal.debug.ToggleBreakpointAction;
+import org.eclipse.wst.sse.ui.internal.debug.ToggleBreakpointsTarget;
 import org.eclipse.wst.sse.ui.internal.editor.EditorExecutionContext;
 import org.eclipse.wst.sse.ui.internal.editor.EditorModelUtil;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
@@ -1277,9 +1279,10 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			} else {
 				IDocument doc = getDocument();
 				Assert.isTrue(doc instanceof IStructuredDocument, "Editing document must be an IStructuredDocument");
-				model = ModelPlugin.getDefault().getModelManager().getExistingModelForEdit(doc);
+				IModelManagerPlugin modelPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
+				model = modelPlugin.getModelManager().getExistingModelForEdit(doc);
 				if (model == null) {
-					model = ModelPlugin.getDefault().getModelManager().getModelForEdit((IStructuredDocument) doc);
+					model = modelPlugin.getModelManager().getModelForEdit((IStructuredDocument) doc);
 					EditorModelUtil.addFactoriesTo(model);
 				}
 			}
@@ -1429,6 +1432,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			result = getSpellCheckTarget();
 		} else if (SourceEditingTextTools.class.equals(required)) {
 			result = createSourceEditingTextTools();
+		} else if(IToggleBreakpointsTarget.class.equals(required)) {
+			result = ToggleBreakpointsTarget.getInstance();
 		} else {
 			Document document = getDOMDocument();
 			if (document != null && document instanceof INodeNotifier) {
@@ -1616,9 +1621,10 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			} else { // nsd_TODO: FileBuffer cleanup
 				IDocument doc = getDocument();
 				Assert.isTrue(doc instanceof IStructuredDocument);
-				IStructuredModel model = ModelPlugin.getDefault().getModelManager().getExistingModelForEdit(doc);
+				IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
+				IStructuredModel model = plugin.getModelManager().getExistingModelForEdit(doc);
 				if (model == null) {
-					model = ModelPlugin.getDefault().getModelManager().getModelForEdit((IStructuredDocument) doc);
+					model = plugin.getModelManager().getModelForEdit((IStructuredDocument) doc);
 					EditorModelUtil.addFactoriesTo(model);
 				}
 				fStructuredModel = model;
