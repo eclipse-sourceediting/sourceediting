@@ -8,18 +8,8 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsd.ui.internal.dialogs.types;
+package org.eclipse.wst.xsd.ui.internal.dialogs.types.common;
 
-import org.eclipse.core.resources.IFile;
-
-/*
- * Loads Avaliable Types/Elements from the given IFile.  Implementors
- * needed to handle certain File types (xsd, wsdl, etc...)
- */
-public abstract class LoadAvaliableItems {		
-	public java.util.List getAvaliableItems(IFile file) {		                
-		return loadFile(file);
-	}
-	
-	protected abstract java.util.List loadFile(IFile iFile);
+public interface IComponentList {
+   void addComponent(Object o);   
 }

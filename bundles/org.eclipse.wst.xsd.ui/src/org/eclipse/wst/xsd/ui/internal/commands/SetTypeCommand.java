@@ -1,7 +1,17 @@
 package org.eclipse.wst.xsd.ui.internal.commands;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.wst.xsd.ui.internal.dialogs.types.XSDSetTypeDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
+import org.eclipse.wst.xsd.ui.internal.dialogs.types.xsd.XSDComponentSelectionDialog;
+import org.eclipse.wst.xsd.ui.internal.dialogs.types.xsd.XSDComponentSelectionProvider;
+import org.eclipse.wst.xsd.ui.internal.dialogs.types.xsd.XSDSetTypeHelper;
 import org.eclipse.xsd.XSDCompositor;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
@@ -47,14 +57,37 @@ public class SetTypeCommand extends AbstractCommand
       }
       else
       {
-        XSDSetTypeDialog setTypeDialog = new XSDSetTypeDialog(Display.getDefault().getActiveShell(), element.getElement(), "Set Type", schema);
-        setTypeDialog.create();
-        setTypeDialog.open();
-        int rc = setTypeDialog.getReturnCode();
+          Shell shell = Display.getCurrent().getActiveShell();
+          IWorkbench workbench = XSDEditorPlugin.getPlugin().getWorkbench();
+          IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+          IEditorPart editorPart = workbenchWindow.getActivePage().getActiveEditor();
+          IFile currentIFile = ((IFileEditorInput)getActiveEditor().getEditorInput()).getFile();
+          
+          XSDComponentSelectionProvider provider = new XSDComponentSelectionProvider(currentIFile, schema);
+          XSDComponentSelectionDialog dialog = new XSDComponentSelectionDialog(shell, "Set Type", provider);  // TODO: Externalize This
+          provider.setDialog(dialog);
+          
+          dialog.setBlockOnOpen(true);
+          dialog.create();
+          
+          if (dialog.open() == Window.OK) {
+              XSDSetTypeHelper helper = new XSDSetTypeHelper(currentIFile, schema);
+              helper.setType(element.getElement(), "type", dialog.getSelection());
+          }
       }
       formatChild(element.getElement());
     }
 
+  }
+  
+  private IEditorPart getActiveEditor()
+  {
+    IWorkbench workbench = XSDEditorPlugin.getPlugin().getWorkbench();
+    IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+    IEditorPart editorPart = workbenchWindow.getActivePage().getActiveEditor();
+//    IEditorPart editorPart = part.getSite().getWorkbenchWindow().getActivePage().getActiveEditor();
+
+    return editorPart;
   }
 
   protected boolean adopt(XSDConcreteComponent model)

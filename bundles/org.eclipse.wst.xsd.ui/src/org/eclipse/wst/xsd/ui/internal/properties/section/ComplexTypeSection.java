@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.properties.section;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -23,12 +24,21 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.wst.common.ui.properties.ITabbedPropertyConstants;
 import org.eclipse.wst.common.ui.properties.TabbedPropertySheetWidgetFactory;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.actions.SetBaseTypeAction;
+import org.eclipse.wst.xsd.ui.internal.dialogs.types.xml.XMLComponentSpecification;
+import org.eclipse.wst.xsd.ui.internal.dialogs.types.xsd.XSDComponentSelectionDialog;
+import org.eclipse.wst.xsd.ui.internal.dialogs.types.xsd.XSDComponentSelectionProvider;
+import org.eclipse.wst.xsd.ui.internal.dialogs.types.xsd.XSDSetTypeHelper;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDConcreteComponent;
+import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
 
@@ -173,25 +183,44 @@ public class ComplexTypeSection extends AbstractSection
   	    element = ((XSDComplexTypeDefinition)getInput()).getContent().getElement();
 	    }
 	    
-	    SimpleContentBaseTypeOptionsDialog dialog = new SimpleContentBaseTypeOptionsDialog(shell, element, BASE_TYPE_ID, ((XSDConcreteComponent)getInput()).getSchema());
-
-	    dialog.setBlockOnOpen(true);
-	    dialog.create();
-	    
-	    int result = dialog.open();
+//	    SimpleContentBaseTypeOptionsDialog dialog = new SimpleContentBaseTypeOptionsDialog(shell, element, BASE_TYPE_ID, ((XSDConcreteComponent)getInput()).getSchema());
+//	    dialog.setBlockOnOpen(true);
+//	    dialog.create();
+//	    int result = dialog.open();
+        
+        IWorkbench workbench = XSDEditorPlugin.getPlugin().getWorkbench();
+        IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+        IEditorPart editorPart = workbenchWindow.getActivePage().getActiveEditor();
+        IFile currentIFile = ((IFileEditorInput)getActiveEditor().getEditorInput()).getFile();
+        
+        Object input = getInput();
+        XSDSchema schema = null;
+        if (input instanceof XSDConcreteComponent) {
+            schema = ((XSDConcreteComponent) input).getSchema();
+        }
+        
+        XSDComponentSelectionProvider provider = new XSDComponentSelectionProvider(currentIFile, schema);
+        XSDComponentSelectionDialog dialog = new XSDComponentSelectionDialog(shell, "Set Type", provider);  // TODO: Externalize This
+        provider.setDialog(dialog);
+        dialog.setBlockOnOpen(true);
+        dialog.create();
+        int result = dialog.open();
    
 	    if (result == Window.OK)
 	    {
-	      String typeString = dialog.getType();
-	     
-        String derivedBy = getDomHelper().getDerivedByName(element);
-        SetBaseTypeAction setBaseTypeAction = new SetBaseTypeAction(XSDEditorPlugin.getXSDString("_UI_LABEL_SET_BASE_TYPE")); //$NON-NLS-1$
-        setBaseTypeAction.setXSDSchema(xsdSchema);
-        setBaseTypeAction.setComplexTypeElement(ctElement);
-        setBaseTypeAction.setType(typeString);
-        setBaseTypeAction.setDerivedBy(derivedBy);
-        setBaseTypeAction.performAction();
-	      
+            XMLComponentSpecification spec = dialog.getSelection();            
+            XSDSetTypeHelper helper = new XSDSetTypeHelper(currentIFile, schema);
+            helper.addImportIfNecessary(element, spec);
+            
+            String typeString = helper.getPrefixedTypeName(spec);
+            String derivedBy = getDomHelper().getDerivedByName(element);
+            SetBaseTypeAction setBaseTypeAction = new SetBaseTypeAction(XSDEditorPlugin.getXSDString("_UI_LABEL_SET_BASE_TYPE")); //$NON-NLS-1$
+            setBaseTypeAction.setXSDSchema(xsdSchema);
+            setBaseTypeAction.setComplexTypeElement(ctElement);
+            setBaseTypeAction.setType(typeString);
+            setBaseTypeAction.setDerivedBy(derivedBy);
+            setBaseTypeAction.performAction();
+
 	    }
 
       refresh();

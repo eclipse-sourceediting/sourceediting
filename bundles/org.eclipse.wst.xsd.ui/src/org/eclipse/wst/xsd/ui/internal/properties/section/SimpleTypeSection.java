@@ -15,7 +15,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -28,11 +30,18 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.wst.common.ui.properties.ITabbedPropertyConstants;
 import org.eclipse.wst.common.ui.properties.TabbedPropertySheetWidgetFactory;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.actions.CreateElementAction;
 import org.eclipse.wst.xsd.ui.internal.actions.DOMAttribute;
+import org.eclipse.wst.xsd.ui.internal.dialogs.types.xsd.XSDComponentSelectionDialog;
+import org.eclipse.wst.xsd.ui.internal.dialogs.types.xsd.XSDComponentSelectionProvider;
+import org.eclipse.wst.xsd.ui.internal.dialogs.types.xsd.XSDSetTypeHelper;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
@@ -255,8 +264,19 @@ public class SimpleTypeSection extends AbstractSection
     {
       Shell shell = Display.getCurrent().getActiveShell();
       Element element = ((XSDConcreteComponent)input).getElement();
-      TypesDialog dialog = null;
+      Dialog dialog = null;
+      String property = "";
+      Element secondaryElement = null;
+      
+      IWorkbench workbench = XSDEditorPlugin.getPlugin().getWorkbench();
+      IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+      IEditorPart editorPart = workbenchWindow.getActivePage().getActiveEditor();
+      IFile currentIFile = ((IFileEditorInput)getActiveEditor().getEditorInput()).getFile();
 
+      XSDComponentSelectionProvider provider = new XSDComponentSelectionProvider(currentIFile, xsdSchema);
+      dialog = new XSDComponentSelectionDialog(shell, "Set Type", provider);  // TODO: Externalize This
+      provider.setDialog((XSDComponentSelectionDialog) dialog);
+      
       if (input instanceof XSDSimpleTypeDefinition)
       {
         XSDSimpleTypeDefinition st = (XSDSimpleTypeDefinition)input;
@@ -264,8 +284,12 @@ public class SimpleTypeSection extends AbstractSection
         if (st.getVariety() == XSDVariety.LIST_LITERAL)
         {
           Element listElement = (Element)domHelper.getChildNode(simpleTypeElement, XSDConstants.LIST_ELEMENT_TAG);
-          dialog = new TypesDialog(shell, listElement, XSDConstants.ITEMTYPE_ATTRIBUTE, xsdSchema);
-          dialog.showComplexTypes = false;
+//          dialog = new TypesDialog(shell, listElement, XSDConstants.ITEMTYPE_ATTRIBUTE, xsdSchema);
+//          dialog.showComplexTypes = false;
+          provider.showComplexTypes(false);
+          
+          secondaryElement = listElement;
+          property = XSDConstants.ITEMTYPE_ATTRIBUTE;
         }
         else if (st.getVariety() == XSDVariety.ATOMIC_LITERAL)
         {
@@ -277,8 +301,12 @@ public class SimpleTypeSection extends AbstractSection
           }
           if (derivedByElement != null)
           {
-            dialog = new TypesDialog(shell, derivedByElement, XSDConstants.BASE_ATTRIBUTE, xsdSchema);
-            dialog.showComplexTypes = false;
+//            dialog = new TypesDialog(shell, derivedByElement, XSDConstants.BASE_ATTRIBUTE, xsdSchema);
+//            dialog.showComplexTypes = false;
+              provider.showComplexTypes(false);
+
+              secondaryElement = derivedByElement;
+              property = XSDConstants.BASE_ATTRIBUTE;
           }
           else
           {
@@ -317,12 +345,14 @@ public class SimpleTypeSection extends AbstractSection
         }
         else
         {
-          dialog = new TypesDialog(shell, element, "type", xsdSchema); //$NON-NLS-1$
+//          dialog = new TypesDialog(shell, element, "type", xsdSchema); //$NON-NLS-1$
+            property = "type";
         }
       }
       else
       {
-        dialog = new TypesDialog(shell, element, "type", xsdSchema); //$NON-NLS-1$
+//        dialog = new TypesDialog(shell, element, "type", xsdSchema); //$NON-NLS-1$
+          property = "type";
       }
       beginRecording(XSDEditorPlugin.getXSDString("_UI_TYPE_CHANGE"), element); //$NON-NLS-1$
       dialog.setBlockOnOpen(true);
@@ -331,6 +361,12 @@ public class SimpleTypeSection extends AbstractSection
       
       if (result == Window.OK)
       {
+          if (secondaryElement == null) {
+              secondaryElement = element;
+          }
+          XSDSetTypeHelper helper = new XSDSetTypeHelper(currentIFile, xsdSchema);
+          helper.setType(secondaryElement, property, ((XSDComponentSelectionDialog) dialog).getSelection());          
+
         XSDSimpleTypeDefinition st = (XSDSimpleTypeDefinition)getInput();
         st.setElement(element);
         updateSimpleTypeFacets();

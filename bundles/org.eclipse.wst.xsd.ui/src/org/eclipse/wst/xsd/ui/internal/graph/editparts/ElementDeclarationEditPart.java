@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
@@ -27,8 +28,18 @@ import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.requests.LocationRequest;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
+import org.eclipse.wst.xsd.ui.internal.dialogs.types.xsd.XSDComponentSelectionDialog;
+import org.eclipse.wst.xsd.ui.internal.dialogs.types.xsd.XSDComponentSelectionProvider;
+import org.eclipse.wst.xsd.ui.internal.dialogs.types.xsd.XSDSetTypeHelper;
 import org.eclipse.wst.xsd.ui.internal.gef.util.figures.SpacingFigure;
 import org.eclipse.wst.xsd.ui.internal.graph.XSDChildUtility;
 import org.eclipse.wst.xsd.ui.internal.graph.XSDGraphUtil;
@@ -37,7 +48,6 @@ import org.eclipse.wst.xsd.ui.internal.graph.XSDSubstitutionGroupsViewer;
 import org.eclipse.wst.xsd.ui.internal.graph.editpolicies.ComboBoxCellEditorManager;
 import org.eclipse.wst.xsd.ui.internal.graph.editpolicies.ComponentNameDirectEditManager;
 import org.eclipse.wst.xsd.ui.internal.graph.editpolicies.SimpleDirectEditPolicy;
-import org.eclipse.wst.xsd.ui.internal.graph.editpolicies.TypeReferenceDirectEditManager;
 import org.eclipse.wst.xsd.ui.internal.graph.figures.ContainerFigure;
 import org.eclipse.wst.xsd.ui.internal.graph.figures.ExpandableGraphNodeFigure;
 import org.eclipse.wst.xsd.ui.internal.graph.figures.FillLayout;
@@ -50,6 +60,7 @@ import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
+import org.w3c.dom.Element;
 
               
 
@@ -308,9 +319,33 @@ public class ElementDeclarationEditPart extends ExpandableGraphNodeEditPart
   {
 		if (!getXSDElementDeclaration().isElementDeclarationReference())
 		{    
-      TypeReferenceDirectEditManager manager = new TypeReferenceDirectEditManager(this, getXSDElementDeclaration(), typeValueLabel);   
-      simpleDirectEditPolicy.setDelegate(manager);
-      manager.show();
+//      TypeReferenceDirectEditManager manager = new TypeReferenceDirectEditManager(this, getXSDElementDeclaration(), typeValueLabel);   
+//      simpleDirectEditPolicy.setDelegate(manager);
+//      manager.show();
+//TODO remove TypeReferenceDirectEditManager since it is not used any longer
+            
+            Shell shell = Display.getCurrent().getActiveShell();
+            IWorkbench workbench = XSDEditorPlugin.getPlugin().getWorkbench();
+            IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+            IEditorPart editorPart = workbenchWindow.getActivePage().getActiveEditor();
+            IFile currentIFile = ((IFileEditorInput)editorPart.getEditorInput()).getFile();
+            
+            XSDSchema schema = getXSDElementDeclaration().getSchema();
+                
+            XSDComponentSelectionProvider provider = new XSDComponentSelectionProvider(currentIFile, schema);
+            XSDComponentSelectionDialog dialog = new XSDComponentSelectionDialog(shell, "Set Type", provider);  // TODO: Externalize This
+            provider.setDialog(dialog);
+            
+            dialog.setBlockOnOpen(true);
+            dialog.create();
+
+            if (dialog.open() == Window.OK) {
+                Element element = getXSDElementDeclaration().getElement();
+                XSDSetTypeHelper helper = new XSDSetTypeHelper(currentIFile, schema);
+                helper.setType(element, "type", dialog.getSelection());
+            }        
+
+            
 		}
 		// just ignore type edit for element ref's
   }                                                                

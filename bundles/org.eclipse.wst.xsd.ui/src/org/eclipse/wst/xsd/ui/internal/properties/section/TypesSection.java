@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.properties.section;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -22,13 +23,21 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.wst.common.ui.properties.TabbedPropertySheetWidgetFactory;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
+import org.eclipse.wst.xsd.ui.internal.dialogs.types.xsd.XSDComponentSelectionDialog;
+import org.eclipse.wst.xsd.ui.internal.dialogs.types.xsd.XSDComponentSelectionProvider;
+import org.eclipse.wst.xsd.ui.internal.dialogs.types.xsd.XSDSetTypeHelper;
 import org.eclipse.wst.xsd.ui.internal.widgets.TypeSection;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDAttributeUse;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
+import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
@@ -221,6 +230,7 @@ public class TypesSection extends AbstractSection
   {
     if (e.widget == button)
     {
+/*        
 	    Shell shell = Display.getCurrent().getActiveShell();
 	    Object input = getInput();
 	    Element element = ((XSDConcreteComponent)getInput()).getElement();
@@ -262,7 +272,7 @@ public class TypesSection extends AbstractSection
 //	    {
 	      dialog = new TypesDialog(shell, element, "type", xsdSchema); //$NON-NLS-1$
 //	    }
-	    
+
 	    dialog.setBlockOnOpen(true);
 	    dialog.create();
 	    int result = dialog.open();
@@ -281,6 +291,31 @@ public class TypesSection extends AbstractSection
 //          endRecording(element);
 //		    }
 	    }
+*/        
+        Shell shell = Display.getCurrent().getActiveShell();
+        IWorkbench workbench = XSDEditorPlugin.getPlugin().getWorkbench();
+        IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+        IEditorPart editorPart = workbenchWindow.getActivePage().getActiveEditor();
+        IFile currentIFile = ((IFileEditorInput)getActiveEditor().getEditorInput()).getFile();
+        
+        Object input = getInput();
+        XSDSchema schema = null;
+        if (input instanceof XSDConcreteComponent) {
+            schema = ((XSDConcreteComponent) input).getSchema();
+        }
+        
+        XSDComponentSelectionProvider provider = new XSDComponentSelectionProvider(currentIFile, schema);
+        XSDComponentSelectionDialog dialog = new XSDComponentSelectionDialog(shell, "Set Type", provider);  // TODO: Externalize This
+        provider.setDialog(dialog);
+        
+        dialog.setBlockOnOpen(true);
+        dialog.create();
+
+        if (dialog.open() == Window.OK) {
+            Element element = ((XSDConcreteComponent)getInput()).getElement();
+            XSDSetTypeHelper helper = new XSDSetTypeHelper(currentIFile, schema);
+            helper.setType(element, "type", dialog.getSelection());
+        }        
 
       refresh();
     }
