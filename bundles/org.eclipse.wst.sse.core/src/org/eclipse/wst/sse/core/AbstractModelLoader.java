@@ -104,15 +104,17 @@ public abstract class AbstractModelLoader implements ModelLoader, IModelLoaderEx
 		documentLoaderInstance = null;
 		IStructuredModel model = newModel();
 		model.setBaseLocation(baseLocation);
-		model.setStructuredDocument(structuredDocument);
+		
 		addFactories(model, getAdapterFactories());
-		//
-		initEmbeddedType(model);
-
 		// For types with propagating adapters, it's important
 		// that the propagating adapter be in place before the contents
 		// are set.
 		preLoadAdapt(model);
+
+		model.setStructuredDocument(structuredDocument);
+		//
+		initEmbeddedType(model);
+
 		return model;
 	}
 

@@ -17,8 +17,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.filebuffers.FileBuffers;
@@ -30,6 +31,7 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -40,8 +42,6 @@ import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.wst.sse.core.AdapterFactory;
-import org.eclipse.wst.sse.core.IFactoryRegistry;
 import org.eclipse.wst.sse.core.IModelLoaderExtension;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.ModelLoader;
@@ -49,9 +49,9 @@ import org.eclipse.wst.sse.core.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.util.Assert;
 import org.eclipse.wst.sse.core.util.ProjectResolver;
 import org.eclipse.wst.sse.core.util.URIResolver;
+import org.eclipse.wst.xml.uriresolver.util.URIHelper;
 
 
 public class FileBufferModelManager {
@@ -66,8 +66,7 @@ public class FileBufferModelManager {
 	}
 
 	/**
-	 * A URIResolver instance of models built on java.io.Files TODO: complete
-	 * implementation
+	 * A URIResolver instance of models built on java.io.Files
 	 */
 	class ExternalURIResolver implements URIResolver {
 		IPath fLocation;
@@ -77,23 +76,34 @@ public class FileBufferModelManager {
 		}
 
 		public String getFileBaseLocation() {
-			return fLocation.toOSString();
+			return fLocation.toString();
 		}
 
 		public String getLocationByURI(String uri) {
-			return null;
+			return getLocationByURI(uri, getFileBaseLocation(), false);
 		}
 
 		public String getLocationByURI(String uri, boolean resolveCrossProjectLinks) {
-			return null;
+			return getLocationByURI(uri, getFileBaseLocation(), resolveCrossProjectLinks);
 		}
 
 		public String getLocationByURI(String uri, String baseReference) {
-			return null;
+			return getLocationByURI(uri, baseReference, false);
 		}
 
 		public String getLocationByURI(String uri, String baseReference, boolean resolveCrossProjectLinks) {
-			return null;
+			// ignore resolveCrossProjectLinks value
+			if (uri == null)
+				return null;
+			if (uri.startsWith("file:")) {
+				try {
+					URL url = new URL(uri);
+					return url.getFile();
+				}
+				catch (MalformedURLException e) {
+				}
+			}
+			return URIHelper.normalize(uri, baseReference, Path.ROOT.toString());
 		}
 
 		public IProject getProject() {
@@ -101,7 +111,7 @@ public class FileBufferModelManager {
 		}
 
 		public IContainer getRootLocation() {
-			return null;
+			return ResourcesPlugin.getWorkspace().getRoot();
 		}
 
 		public InputStream getURIStream(String uri) {
@@ -253,29 +263,6 @@ public class FileBufferModelManager {
 		super();
 		fDocumentMap = new Hashtable(4);
 		FileBuffers.getTextFileBufferManager().addFileBufferListener(fFileBufferListener = new FileBufferMapper());
-	}
-
-	private void addFactories(IStructuredModel model, IModelHandler handler) {
-		Assert.isNotNull(model, "model can not be null"); //$NON-NLS-1$
-		Assert.isNotNull(handler, "model handler can not be null"); //$NON-NLS-1$
-		IFactoryRegistry registry = model.getFactoryRegistry();
-		Assert.isNotNull(registry, "Factory Registry can not be null"); //$NON-NLS-1$
-		List factoryList = handler.getAdapterFactories();
-		addFactories(model, factoryList);
-	}
-
-	private void addFactories(IStructuredModel model, List factoryList) {
-		Assert.isNotNull(model, "model can not be null"); //$NON-NLS-1$
-		IFactoryRegistry registry = model.getFactoryRegistry();
-		Assert.isNotNull(registry, "Factory Registry can not be null"); //$NON-NLS-1$
-		// Note: we add all of them from handler, even if
-		// already exists. May need to reconsider this.
-		if (factoryList != null) {
-			for (int i = 0; i < factoryList.size(); i++) {
-				AdapterFactory factory = (AdapterFactory) factoryList.get(i);
-				registry.addFactory(factory);
-			}
-		}
 	}
 
 	public String calculateId(IFile file) {
@@ -457,17 +444,16 @@ public class FileBufferModelManager {
 			}
 			else {
 				model = loader.createModel();
+				model.setBaseLocation(info.buffer.getLocation().toString());
 			}
 			try {
 				info.model = model;
 				model.setId(info.buffer.getLocation().toString());
-				model.setBaseLocation(info.buffer.getLocation().toString());
 				model.setModelHandler(handler);
 				model.setResolver(createURIResolver(getBuffer(document)));
 				if (mustSetDocument) {
 					model.setStructuredDocument(document);
 				}
-				addFactories(model, handler);
 				if (info.buffer.isDirty()) {
 					model.setDirtyState(true);
 				}
