@@ -202,6 +202,7 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 		String contents = null;
 		IModelManager modelManager = getModelManager();
 		IFile file = (IFile) fTestProject.findMember(filePath);
+		// file will be null if the resource does not exist
 		if (file == null) {
 			file = fTestProject.getFile(filePath);
 		}
