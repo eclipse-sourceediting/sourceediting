@@ -77,7 +77,7 @@ public class WSTWebPlugin extends AbstractUIPlugin
 			try {
 				return new URL(bundle.getEntry("/"), path.toString());
 			} catch (MalformedURLException exception) {
-				com.ibm.wtp.common.logger.proxy.Logger.getLogger().logWarning("Load_Image_Error_"); //$NON-NLS-1$
+				org.eclipse.jem.util.logger.proxy.Logger.getLogger().logWarning("Load_Image_Error_"); //$NON-NLS-1$
 				exception.printStackTrace();
 				continue;
 			}

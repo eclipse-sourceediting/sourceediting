@@ -30,7 +30,7 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.web.internal.ISimpleWebNatureConstants;
 import org.eclipse.wst.web.internal.WSTWebPlugin;
 
-import com.ibm.wtp.emf.workbench.ProjectUtilities;
+import org.eclipse.jem.util.emf.workbench.ProjectUtilities;
 
 /*
  * Licensed Materials - Property of IBM, WebSphere Studio Workbench (c) Copyright IBM Corp 2000

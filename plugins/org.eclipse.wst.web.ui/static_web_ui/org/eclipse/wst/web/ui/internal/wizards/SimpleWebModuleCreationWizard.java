@@ -59,7 +59,7 @@ public class SimpleWebModuleCreationWizard extends WTPWizard implements IExecuta
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ibm.wtp.common.ui.wizard.WTPWizard#createDefaultModel()
+	 * @see org.eclipse.jem.util.ui.wizard.WTPWizard#createDefaultModel()
 	 */
 	protected WTPOperationDataModel createDefaultModel() {
 		return new SimpleWebModuleCreationDataModel();
@@ -68,7 +68,7 @@ public class SimpleWebModuleCreationWizard extends WTPWizard implements IExecuta
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ibm.wtp.common.ui.wizard.WTPWizard#createOperation()
+	 * @see org.eclipse.jem.util.ui.wizard.WTPWizard#createOperation()
 	 */
 	protected WTPOperation createBaseOperation() {
 		return new SimpleWebModuleCreationOperation((SimpleWebModuleCreationDataModel) model);
@@ -99,7 +99,7 @@ public class SimpleWebModuleCreationWizard extends WTPWizard implements IExecuta
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ibm.wtp.common.ui.wizard.WTPWizard#postPerformFinish()
+	 * @see org.eclipse.jem.util.ui.wizard.WTPWizard#postPerformFinish()
 	 */
 	protected void postPerformFinish() throws InvocationTargetException {
 		IWizardRegistry newWizardRegistry = WorkbenchPlugin.getDefault().getNewWizardRegistry();		

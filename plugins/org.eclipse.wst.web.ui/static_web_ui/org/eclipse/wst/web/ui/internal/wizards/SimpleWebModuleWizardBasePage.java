@@ -61,7 +61,7 @@ class SimpleWebModuleWizardBasePage extends WTPWizardPage {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ibm.wtp.common.ui.wizard.WTPWizardPage#getValidationPropertyNames()
+	 * @see org.eclipse.jem.util.ui.wizard.WTPWizardPage#getValidationPropertyNames()
 	 */
 	protected String[] getValidationPropertyNames() {
 		return new String[]{ProjectCreationDataModel.PROJECT_NAME, ProjectCreationDataModel.PROJECT_LOCATION};
@@ -70,7 +70,7 @@ class SimpleWebModuleWizardBasePage extends WTPWizardPage {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ibm.wtp.common.ui.wizard.WTPWizardPage#createTopLevelComposite(org.eclipse.swt.widgets.Composite)
+	 * @see org.eclipse.jem.util.ui.wizard.WTPWizardPage#createTopLevelComposite(org.eclipse.swt.widgets.Composite)
 	 */
 	protected Composite createTopLevelComposite(Composite parent) {
 		Composite top = new Composite(parent, SWT.NONE);

@@ -13,7 +13,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.web.internal.operation.IStaticWebNature;
 import org.eclipse.wst.web.internal.operation.StaticWebNatureRuntime;
 
-import com.ibm.wtp.emf.workbench.ProjectUtilities;
+import org.eclipse.jem.util.emf.workbench.ProjectUtilities;
 
 
 public class SimpleWebNatureRuntimeUtilities {

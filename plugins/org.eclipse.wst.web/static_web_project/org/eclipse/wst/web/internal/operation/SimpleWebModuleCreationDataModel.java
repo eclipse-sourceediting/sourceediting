@@ -43,7 +43,7 @@ public class SimpleWebModuleCreationDataModel extends ProjectCreationDataModel
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ibm.wtp.common.operation.ProjectCreationDataModel#initValidBaseProperties()
+	 * @see org.eclipse.jem.util.operation.ProjectCreationDataModel#initValidBaseProperties()
 	 */
 	protected void initValidBaseProperties()
 	{
@@ -54,7 +54,7 @@ public class SimpleWebModuleCreationDataModel extends ProjectCreationDataModel
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ibm.wtp.common.operation.ProjectCreationDataModel#getDefaultOperation()
+	 * @see org.eclipse.jem.util.operation.ProjectCreationDataModel#getDefaultOperation()
 	 */
 	public WTPOperation getDefaultOperation()
 	{
@@ -84,7 +84,7 @@ public class SimpleWebModuleCreationDataModel extends ProjectCreationDataModel
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ibm.wtp.common.operation.ProjectCreationDataModel#doValidateProperty(java.lang.String)
+	 * @see org.eclipse.jem.util.operation.ProjectCreationDataModel#doValidateProperty(java.lang.String)
 	 */
 	protected IStatus doValidateProperty(String propertyName)
 	{
@@ -98,7 +98,7 @@ public class SimpleWebModuleCreationDataModel extends ProjectCreationDataModel
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ibm.wtp.common.operation.WTPOperationDataModel#getTargetProject()
+	 * @see org.eclipse.jem.util.operation.WTPOperationDataModel#getTargetProject()
 	 */
 	public IProject getTargetProject()
 	{
