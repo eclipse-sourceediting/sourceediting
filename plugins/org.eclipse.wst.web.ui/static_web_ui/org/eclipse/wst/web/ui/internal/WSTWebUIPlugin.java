@@ -8,7 +8,6 @@
  **************************************************************************************************/
 package org.eclipse.wst.web.ui.internal;
 
-import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -24,13 +23,6 @@ public class WSTWebUIPlugin extends AbstractUIPlugin {
 	 */
 	public WSTWebUIPlugin() {
 		super();
-		plugin = this;
-	}
-	/**
-	 * The constructor.
-	 */
-	public WSTWebUIPlugin(IPluginDescriptor descriptor) {
-		super(descriptor);
 		plugin = this;
 	}
 	/**
