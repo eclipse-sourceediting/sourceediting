@@ -38,8 +38,8 @@ import org.eclipse.wst.xml.core.document.XMLModel;
 
 /**
  * Created with a .jsp file, but should appear to be a .java file for indexing
- * and searching purposes.  There are purposely few fields in this class,
- * and those fields are lightweight since it's possible for many JSP search
+ * and searching purposes. There are purposely few fields in this class, and
+ * those fields are lightweight since it's possible for many JSP search
  * documents to exist in memory at one time (eg. after importing a project
  * with a large number of JSP files)
  * 
@@ -51,7 +51,7 @@ public class JSPSearchDocument {
 	private String fJSPPathString = UNKNOWN_PATH;
 	private String fCUPath = UNKNOWN_PATH;
 	private SearchParticipant fParticipant = null;
-	
+
 	/**
 	 * @param file
 	 * @param participant
@@ -71,35 +71,39 @@ public class JSPSearchDocument {
 	 * @see org.eclipse.jdt.core.search.SearchDocument#getCharContents()
 	 */
 	public char[] getCharContents() {
-        JSPTranslation trans = getJSPTranslation();
+		JSPTranslation trans = getJSPTranslation();
 		return trans != null ? trans.getJavaText().toCharArray() : new char[0];
 	}
 
 	public String getJavaText() {
 		return new String(getCharContents());
 	}
-	
+
 	private IModelManager getModelManager() {
 		return StructuredModelManager.getModelManager();
 	}
-	
+
 	/**
 	 * It's not recommended for clients to hold on to this JSPTranslation
-	 * since it's kind of large.  If possible, hold on to the JSPSearchDocument,
-	 * which is more of a lightweight proxy.
+	 * since it's kind of large. If possible, hold on to the
+	 * JSPSearchDocument, which is more of a lightweight proxy.
 	 * 
-	 * @return the JSPTranslation for the jsp file, or null if it's an unsupported file.
+	 * @return the JSPTranslation for the jsp file, or null if it's an
+	 *         unsupported file.
 	 */
 	public final JSPTranslationExtension getJSPTranslation() {
 		JSPTranslationExtension translation = null;
 		IFile jspFile = getFile();
-		if(!JSPSearchSupport.isJsp(jspFile))
+		if (!JSPSearchSupport.isJsp(jspFile))
 			return translation;
-		
+
 		XMLModel xmlModel = null;
 		try {
 			// get existing model for read, then get document from it
-			xmlModel = (XMLModel) getModelManager().getModelForRead(jspFile);
+			IModelManager modelManager = getModelManager();
+			if (modelManager != null) {
+				xmlModel = (XMLModel) modelManager.getModelForRead(jspFile);
+			}
 			// handle unsupported
 			if (xmlModel != null) {
 				setupAdapterFactory(xmlModel);
@@ -117,7 +121,7 @@ public class JSPSearchDocument {
 		catch (UnsupportedCharsetExceptionWithDetail e) {
 			// no need to log this. Just consider it an invalid file for our
 			// purposes.
-			//Logger.logException(e);
+			// Logger.logException(e);
 		}
 		finally {
 			if (xmlModel != null)
@@ -125,7 +129,7 @@ public class JSPSearchDocument {
 		}
 		return translation;
 	}
-	
+
 	/**
 	 * add the factory for JSPTranslationAdapter here
 	 * 
@@ -142,61 +146,61 @@ public class JSPSearchDocument {
 	 * @see org.eclipse.jdt.core.search.SearchDocument#getPath()
 	 */
 	public String getPath() {
-        JSPTranslation trans = getJSPTranslation();
-	    // caching the path since it's expensive to get translation
-	    if(this.fCUPath == null || this.fCUPath == UNKNOWN_PATH) {  
-            if(trans != null)
-                this.fCUPath = trans.getJavaPath();
-        }
+		JSPTranslation trans = getJSPTranslation();
+		// caching the path since it's expensive to get translation
+		if (this.fCUPath == null || this.fCUPath == UNKNOWN_PATH) {
+			if (trans != null)
+				this.fCUPath = trans.getJavaPath();
+		}
 		return fCUPath != null ? fCUPath : UNKNOWN_PATH;
 	}
-	
+
 	public int getJspOffset(int javaOffset) {
-	    // copied from JSPTranslation
+		// copied from JSPTranslation
 		int result = -1;
 		int offsetInRange = 0;
 		Position jspPos, javaPos = null;
 		JSPTranslation trans = getJSPTranslation();
-        if(trans != null) {
-    		HashMap java2jspMap = trans.getJava2JspMap();
-    		
-    		// iterate all mapped java ranges
-    		Iterator it = java2jspMap.keySet().iterator();
-    		while (it.hasNext()) {
-    			javaPos = (Position) it.next();
-    			// need to count the last position as included
-    			if (!javaPos.includes(javaOffset) && !(javaPos.offset+javaPos.length == javaOffset))
-    				continue;
-    
-    			offsetInRange = javaOffset - javaPos.offset;
-    			jspPos = (Position) java2jspMap.get(javaPos);
-    			
-    			if(jspPos != null)
-    				result = jspPos.offset + offsetInRange;
-    			else  {
-    				Logger.log(Logger.ERROR, "jspPosition was null!" + javaOffset); //$NON-NLS-1$
-    			}
-    			break;
-    		}
-        }
+		if (trans != null) {
+			HashMap java2jspMap = trans.getJava2JspMap();
+
+			// iterate all mapped java ranges
+			Iterator it = java2jspMap.keySet().iterator();
+			while (it.hasNext()) {
+				javaPos = (Position) it.next();
+				// need to count the last position as included
+				if (!javaPos.includes(javaOffset) && !(javaPos.offset + javaPos.length == javaOffset))
+					continue;
+
+				offsetInRange = javaOffset - javaPos.offset;
+				jspPos = (Position) java2jspMap.get(javaPos);
+
+				if (jspPos != null)
+					result = jspPos.offset + offsetInRange;
+				else {
+					Logger.log(Logger.ERROR, "jspPosition was null!" + javaOffset); //$NON-NLS-1$
+				}
+				break;
+			}
+		}
 		return result;
 	}
 
 	public IFile getFile() {
-	    IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-	    IPath jspPath = new Path(this.fJSPPathString);
-	    IFile jspFile = root.getFile(jspPath);
-	    if(!jspFile.exists()) {
-	        // possibly outside workspace
-	        jspFile = root.getFileForLocation(jspPath);
-	    }
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		IPath jspPath = new Path(this.fJSPPathString);
+		IFile jspFile = root.getFile(jspPath);
+		if (!jspFile.exists()) {
+			// possibly outside workspace
+			jspFile = root.getFileForLocation(jspPath);
+		}
 		return jspFile;
 	}
-	
+
 	public void release() {
 		// nothing to do now since JSPTranslation is created on the fly
 	}
-	
+
 	/**
 	 * for debugging
 	 */

@@ -414,7 +414,9 @@ public class FileBufferModelManager {
 			ITextFileBuffer buffer = bufferManager.getTextFileBuffer(file.getLocation());
 			if (buffer != null) {
 				DocumentInfo info = (DocumentInfo) fDocumentMap.get(buffer.getDocument());
-				info.selfConnected = true;
+				if (info != null) {
+					info.selfConnected = true;
+				}
 				model = getModel((IStructuredDocument) buffer.getDocument());
 			}
 		}

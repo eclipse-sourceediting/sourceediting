@@ -78,12 +78,17 @@ public class ModelQueryAdapterFactoryForHTML extends AbstractAdapterFactory impl
 					File file = new Path(modelsBaseLocation).toFile();
 					if (file.exists()) {
 						baseLocation = file.getAbsolutePath();
-					} else {
+					}
+					else {
 						IPath basePath = new Path(model.getBaseLocation());
-						if(basePath.segmentCount() > 1)
-							baseLocation = ResourcesPlugin.getWorkspace().getRoot().getFile(basePath).getLocation().toString();
+						IPath derivedPath = null;
+						if (basePath.segmentCount() > 1)
+							derivedPath = ResourcesPlugin.getWorkspace().getRoot().getFile(basePath).getLocation();
 						else
-							baseLocation = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(basePath).toString();
+							derivedPath = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(basePath);
+						if (derivedPath != null) {
+							baseLocation = derivedPath.toString();
+						}
 					}
 				}
 				if (Debug.displayInfo)
