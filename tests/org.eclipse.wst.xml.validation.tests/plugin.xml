@@ -8,7 +8,9 @@
    class="org.eclipse.wst.xml.validation.tests.internal.XMLValidatorTestsPlugin">
 
    <runtime>
-      <library name="validatexmltests.jar"/>
+      <library name="validatexmltests.jar">
+         <export name="*"/>
+      </library>
    </runtime>
    <requires>
       <import plugin="org.eclipse.core.resources"/>
