@@ -19,10 +19,21 @@ package org.eclipse.jst.jsp.core.contenttype;
  */
 
 public class ContentTypeIdForJSP {
-	/*
+	/**
 	 * The value of the contenttype id field must match what is specified in
-	 * plugin.xml file. Note: this value is intentially not declared as final,
-	 * so it will not be inlined.
+	 * plugin.xml file. Note: this value is intentially set with default
+	 * protected method so it will not be inlined.
 	 */
-	public static String ContentTypeID_JSP = "org.eclipse.jst.jsp.core.jspsource"; //$NON-NLS-1$
+	public final static String ContentTypeID_JSP = getConstantString();
+
+	/**
+	 * Don't allow instantiation.
+	 */
+	private ContentTypeIdForJSP() {
+		super();
+	}
+
+	static String getConstantString() {
+		return "org.eclipse.jst.jsp.core.jspsource"; //$NON-NLS-1$
+	}
 }

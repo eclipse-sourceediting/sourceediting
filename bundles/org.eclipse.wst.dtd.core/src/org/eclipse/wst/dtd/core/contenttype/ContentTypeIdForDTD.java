@@ -27,12 +27,16 @@ public class ContentTypeIdForDTD {
 	 * specified in org.eclipse.wst.dtd.core/plugin.xml for the DTD content
 	 * type
 	 * 
-	 * Note: this value is intentially not declared as final, so it will not
-	 * be inlined.
+	 * Note: this value is intentially set with default protected method so it
+	 * will not be inlined.
 	 */
-	public static String ContentTypeID_DTD = "org.eclipse.wst.dtd.core.dtdsource"; //$NON-NLS-1$
+	public final static String ContentTypeID_DTD = getConstantString();
 
 	private ContentTypeIdForDTD() {
 		super();
+	}
+
+	static String getConstantString() {
+		return "org.eclipse.wst.dtd.core.dtdsource"; //$NON-NLS-1$
 	}
 }

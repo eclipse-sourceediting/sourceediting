@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.wst.css.core.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.css.core.document.ICSSDocument;
 import org.eclipse.wst.css.core.document.ICSSModel;
 import org.eclipse.wst.css.core.document.ICSSNode;
@@ -26,7 +27,6 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.cleanup.AbstractStructuredCleanupProcessor;
 import org.eclipse.wst.sse.core.cleanup.IStructuredCleanupHandler;
-import org.eclipse.wst.sse.core.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.sse.core.format.IStructuredFormatProcessor;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.w3c.dom.Node;

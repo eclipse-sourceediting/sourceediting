@@ -24,15 +24,30 @@ public class ContentTypeIdForXML {
 	 * just as documentation for WTP based clients. Typically, clients should
 	 * use the values/constants supplied by base Eclipse.
 	 */
-	public final static String ContentTypeID_XML = "org.eclipse.core.runtime.xml"; //$NON-NLS-1$
+	public final static String ContentTypeID_XML = getConstantString2();
 	/**
 	 * This value is public only for testing and special infrastructure The
 	 * constant nor is value should not be referenced by clients.
 	 * 
 	 * The value of the contenttype id field must match what is specified in
-	 * plugin.xml file. Note: this value is intentially not declared as final,
-	 * so it will not be inlined.
+	 * plugin.xml file. Note: this value is intentially set with default
+	 * protected method so it will not be inlined.
 	 */
-	public static String ContentTypeID_SSEXML = "org.eclipse.wst.xml.core.xmlsource"; //$NON-NLS-1$
+	public final static String ContentTypeID_SSEXML = getConstantString();
+
+	/**
+	 * Don't allow instantiation.
+	 */
+	private ContentTypeIdForXML() {
+		super();
+	}
+
+	static String getConstantString() {
+		return "org.eclipse.wst.xml.core.xmlsource"; //$NON-NLS-1$
+	}
+
+	static String getConstantString2() {
+		return "org.eclipse.core.runtime.xml"; //$NON-NLS-1$
+	}
 
 }

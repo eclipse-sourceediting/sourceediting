@@ -13,9 +13,9 @@
 package org.eclipse.wst.html.core.contenttype;
 
 /**
- * This class, with its one field, is a convience to provide compile-time
- * safety when refering to a contentType ID. The value of the contenttype id
- * field must match what is specified in plugin.xml file.
+ * The value of the contenttype id field must match what is specified in
+ * plugin.xml file. Note: this value is intentially set with default protected
+ * method so it will not be inlined.
  */
 
 public class ContentTypeIdForHTML {
@@ -24,6 +24,17 @@ public class ContentTypeIdForHTML {
 	 * plugin.xml file. Note: this value is intentially not declared as final,
 	 * so it will not be inlined.
 	 */
-	public static String ContentTypeID_HTML = "org.eclipse.wst.html.core.htmlsource"; //$NON-NLS-1$
+	public final static String ContentTypeID_HTML = getConstantString();
+
+	/**
+	 * Don't allow instantiation.
+	 */
+	private ContentTypeIdForHTML() {
+		super();
+	}
+
+	static String getConstantString() {
+		return "org.eclipse.wst.html.core.htmlsource"; //$NON-NLS-1$
+	}
 
 }
