@@ -64,6 +64,31 @@ public class JSPEditorPluginImageHelper {
 		}
 		return image;
 	}
+   
+    /**
+     * Retrieves the Image associated with ImageDescriptor from the image
+     * descriptor registry. If the Image cannot be retrieved, it is created
+     * from the ImageDescriptor
+     * 
+     * @param resource
+     *            the image descriptor to retrieve
+     * @return Image the associated with the ImageDescriptor or
+     *         the default "missing" image descriptor if one could not be
+     *         found
+     */
+    public Image getImage(ImageDescriptor descriptor) {
+        if (descriptor == null)
+            descriptor= ImageDescriptor.getMissingImageDescriptor();
+            
+        Image result= (Image)getImageDescriptorRegistry().get(descriptor);
+        if (result != null)
+            return result;
+        
+        result= descriptor.createImage();
+        if (result != null)
+            getImageDescriptorRegistry().put(descriptor, result);
+        return result;
+    }
 
 	/**
 	 * Retrieves the image descriptor associated with resource from the image

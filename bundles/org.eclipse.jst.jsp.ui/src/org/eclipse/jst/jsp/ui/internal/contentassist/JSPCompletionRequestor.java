@@ -272,7 +272,7 @@ public class JSPCompletionRequestor extends CompletionRequestor {
         String completionString = new String(completionName);
         int offset = start + getJavaToJSPOffset();
         int length = end - start;
-        Image image = calculateMethodImage(modifiers);
+        Image image = createMethodImage(modifiers);
 
         CustomCompletionProposal proposal = new CustomCompletionProposal(completionString, offset, length, completionString.length(), image, displayString.toString(), null, null, relevance + 100);
         // proposal.setRelevance(relevance + 100);
@@ -298,7 +298,7 @@ public class JSPCompletionRequestor extends CompletionRequestor {
         String displayString = getMethodDisplayString(declaringTypeName, name, parameterTypeNames, parameterNames, returnTypeName).toString();
         int offset = start + getJavaToJSPOffset();
         int length = end - start;
-        Image image = calculateMethodImage(modifiers);
+        Image image = createMethodImage(modifiers);
 
         boolean hasOpeningBracket = completionName.length == 0 || (completionName.length > 0 && completionName[completionName.length - 1] == ')');
         ContextInformation contextInformation = null;
@@ -373,7 +373,7 @@ public class JSPCompletionRequestor extends CompletionRequestor {
      * @param flags
      * @return
      */
-    private Image calculateMethodImage(int flags) {
+    private Image createMethodImage(int flags) {
         ImageDescriptor imageDescriptor = null;
         if ((flags & Flags.AccDefault) != 0) {
             imageDescriptor = JSPEditorPluginImageHelper.getInstance().getImageDescriptor(JSPEditorPluginImages.DEFAULT_CO);
@@ -386,9 +386,7 @@ public class JSPCompletionRequestor extends CompletionRequestor {
         } else {
             imageDescriptor = JSPEditorPluginImageHelper.getInstance().getImageDescriptor(JSPEditorPluginImages.PUBLIC_CO);
         }
-
-        Image image = decorateImage(imageDescriptor, flags).createImage();
-
+        Image image = JSPEditorPluginImageHelper.getInstance().getImage(decorateImage(imageDescriptor, flags));
         return image;
     }
 
@@ -417,7 +415,7 @@ public class JSPCompletionRequestor extends CompletionRequestor {
         int offset = start + getJavaToJSPOffset();
         int length = end - start;
 
-        Image image = calculateFieldImage(modifiers);
+        Image image = createFieldImage(modifiers);
 
         StringBuffer nameBuffer = new StringBuffer();
         nameBuffer.append(name);
@@ -447,7 +445,7 @@ public class JSPCompletionRequestor extends CompletionRequestor {
      * @param flags
      * @return
      */
-    private Image calculateFieldImage(int flags) {
+    private Image createFieldImage(int flags) {
         ImageDescriptor imageDescriptor = null;
         if ((flags & Flags.AccDefault) != 0) {
             imageDescriptor = JSPEditorPluginImageHelper.getInstance().getImageDescriptor(JSPEditorPluginImages.FIELD_DEFAULT_OBJ);
@@ -460,9 +458,7 @@ public class JSPCompletionRequestor extends CompletionRequestor {
         } else {
             imageDescriptor = JSPEditorPluginImageHelper.getInstance().getImageDescriptor(JSPEditorPluginImages.FIELD_DEFAULT_OBJ);
         }
-
-        Image image = decorateImage(imageDescriptor, flags).createImage();
-
+        Image image = JSPEditorPluginImageHelper.getInstance().getImage(decorateImage(imageDescriptor, flags));
         return image;
     }
 
@@ -477,7 +473,7 @@ public class JSPCompletionRequestor extends CompletionRequestor {
 
         int offset = start + getJavaToJSPOffset();
         int length = end - start;
-        Image image = calculateClassImage(modifiers);
+        Image image = createClassImage(modifiers);
 
         String completionNameString = new String(completionName);
         
@@ -520,8 +516,8 @@ public class JSPCompletionRequestor extends CompletionRequestor {
     /**
      * @param modifiers
      */
-    private Image calculateClassImage(int modifiers) {
-
+    private Image createClassImage(int modifiers) {
+     
         ImageDescriptor descriptor = JSPEditorPluginImageHelper.getInstance().getImageDescriptor(JSPEditorPluginImages.IMG_OBJ_CLASS_OBJ);
         if ((modifiers & Flags.AccDefault) != 0) {
             descriptor = JSPEditorPluginImageHelper.getInstance().getImageDescriptor(JSPEditorPluginImages.INNERCLASS_DEFAULT_OBJ);
@@ -534,7 +530,7 @@ public class JSPCompletionRequestor extends CompletionRequestor {
         } else {
             descriptor = JSPEditorPluginImageHelper.getInstance().getImageDescriptor(JSPEditorPluginImages.INNERCLASS_DEFAULT_OBJ);
         }
-        Image image = decorateImage(descriptor, modifiers).createImage();
+        Image image = JSPEditorPluginImageHelper.getInstance().getImage(decorateImage(descriptor, modifiers));
         return image;
     }
 
@@ -565,7 +561,7 @@ public class JSPCompletionRequestor extends CompletionRequestor {
 
         int offset = start + getJavaToJSPOffset();
         int length = end - start;
-        Image image = calculateInterfaceImage(modifiers);
+        Image image = createInterfaceImage(modifiers);
 
         String containerNameString = new String(packageName);
         String typeNameString = fixupTypeName(new String(typeName));
@@ -596,7 +592,7 @@ public class JSPCompletionRequestor extends CompletionRequestor {
      * @param modifiers
      * @return
      */
-    private Image calculateInterfaceImage(int modifiers) {
+    private Image createInterfaceImage(int modifiers) {
         ImageDescriptor imageDescriptor = JSPEditorPluginImageHelper.getInstance().getImageDescriptor(JSPEditorPluginImages.INNERINTERFACE_PUBLIC_OBJ);
         if ((modifiers & Flags.AccDefault) != 0) {
             imageDescriptor = JSPEditorPluginImageHelper.getInstance().getImageDescriptor(JSPEditorPluginImages.INNERINTERFACE_DEFAULT_OBJ);
@@ -609,7 +605,7 @@ public class JSPCompletionRequestor extends CompletionRequestor {
         } else {
             imageDescriptor = JSPEditorPluginImageHelper.getInstance().getImageDescriptor(JSPEditorPluginImages.INNERINTERFACE_DEFAULT_OBJ);
         }
-        Image image = decorateImage(imageDescriptor, modifiers).createImage();
+        Image image = JSPEditorPluginImageHelper.getInstance().getImage(decorateImage(imageDescriptor, modifiers));
         return image;
     }
 
@@ -710,10 +706,13 @@ public class JSPCompletionRequestor extends CompletionRequestor {
      */
     private String fixupTypeName(String typeName) {
         String mangledName = getMangledName();
-        if (typeName.equals(mangledName))
-            return getJspName();
-        else if (typeName.startsWith(mangledName))
-            return typeName.substring(typeName.lastIndexOf('.')+1);
+        // can be null if no CU was ever set
+        if(mangledName != null) {
+            if (typeName.equals(mangledName))
+                return getJspName();
+            else if (typeName.startsWith(mangledName))
+                return typeName.substring(typeName.lastIndexOf('.')+1);
+        }
         return typeName;
     }
 

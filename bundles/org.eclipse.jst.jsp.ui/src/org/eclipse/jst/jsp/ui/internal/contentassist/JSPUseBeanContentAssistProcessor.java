@@ -72,8 +72,8 @@ public class JSPUseBeanContentAssistProcessor extends JSPDummyContentAssistProce
 				ICompletionProposal[] classProposals = JavaTypeFinder.getClassProposals(fResource, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength());
 				if (classProposals != null) {
 					for (int j = 0; j < classProposals.length; j++) {
-						JavaTypeCompletionProposal proposal = (JavaTypeCompletionProposal) classProposals[j];
-						if (matchString.length() == 0 || proposal.getQualifiedName().toLowerCase().startsWith(matchString.toLowerCase()) || proposal.getShortName().toLowerCase().startsWith(matchString.toLowerCase()))
+                        CustomCompletionProposal proposal = (CustomCompletionProposal) classProposals[j];
+						//if (matchString.length() == 0 || proposal.getQualifiedName().toLowerCase().startsWith(matchString.toLowerCase()) || proposal.getShortName().toLowerCase().startsWith(matchString.toLowerCase()))
 							contentAssistRequest.addProposal(proposal);
 					}
 				}
@@ -82,8 +82,8 @@ public class JSPUseBeanContentAssistProcessor extends JSPDummyContentAssistProce
 				ICompletionProposal[] typeProposals = JavaTypeFinder.getTypeProposals(fResource, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength());
 				if (typeProposals != null) {
 					for (int j = 0; j < typeProposals.length; j++) {
-						JavaTypeCompletionProposal proposal = (JavaTypeCompletionProposal) typeProposals[j];
-						if (matchString.length() == 0 || proposal.getQualifiedName().toLowerCase().startsWith(matchString.toLowerCase()) || proposal.getShortName().toLowerCase().startsWith(matchString.toLowerCase()))
+                        CustomCompletionProposal proposal = (CustomCompletionProposal) typeProposals[j];
+						//if (matchString.length() == 0 || proposal.getQualifiedName().toLowerCase().startsWith(matchString.toLowerCase()) || proposal.getShortName().toLowerCase().startsWith(matchString.toLowerCase()))
 							contentAssistRequest.addProposal(proposal);
 					}
 				}
@@ -94,12 +94,12 @@ public class JSPUseBeanContentAssistProcessor extends JSPDummyContentAssistProce
 					for (int j = 0; j < beanNameProposals.length; j++) {
 						if (beanNameProposals[j] instanceof CustomCompletionProposal) {
 							CustomCompletionProposal proposal = (CustomCompletionProposal) beanNameProposals[j];
-							if (matchString.length() == 0 || proposal.getDisplayString().toLowerCase().startsWith(matchString.toLowerCase()))
+							//if (matchString.length() == 0 || proposal.getDisplayString().toLowerCase().startsWith(matchString.toLowerCase()))
 								contentAssistRequest.addProposal(proposal);
 						}
 						else if (beanNameProposals[j] instanceof JavaTypeCompletionProposal) {
-							JavaTypeCompletionProposal proposal = (JavaTypeCompletionProposal) beanNameProposals[j];
-							if (matchString.length() == 0 || proposal.getQualifiedName().toLowerCase().startsWith(matchString.toLowerCase()) || proposal.getShortName().toLowerCase().startsWith(matchString.toLowerCase()))
+                            CustomCompletionProposal proposal = (CustomCompletionProposal) beanNameProposals[j];
+							//if (matchString.length() == 0 || proposal.getQualifiedName().toLowerCase().startsWith(matchString.toLowerCase()) || proposal.getShortName().toLowerCase().startsWith(matchString.toLowerCase()))
 								contentAssistRequest.addProposal(proposal);
 						}
 					}
