@@ -46,10 +46,12 @@ public class JarUtilities {
 			return;
 		try {
 			file.close();
-		} catch (IOException ioe) {
+		}
+		catch (IOException ioe) {
 			// no cleanup can be done
 			Logger.log(Logger.ERROR, "Could not close file " + file.getName()); //$NON-NLS-1$
-		} finally {
+		}
+		finally {
 			file = null;
 		}
 	}
@@ -65,7 +67,8 @@ public class JarUtilities {
 		JarFile jarfile = null;
 		try {
 			jarfile = new JarFile(jarFilename);
-		} catch (IOException ioExc) {
+		}
+		catch (IOException ioExc) {
 			Logger.logException(ioExc);
 			closeJarFile(jarfile);
 			return null;
@@ -80,7 +83,8 @@ public class JarUtilities {
 		InputStream entryInputStream = null;
 		try {
 			entryInputStream = jarfile.getInputStream(zentry);
-		} catch (IOException ioExc) {
+		}
+		catch (IOException ioExc) {
 			Logger.logException(ioExc);
 			return null;
 		}
@@ -92,7 +96,8 @@ public class JarUtilities {
 			ByteArrayOutputStream buffer = null;
 			if (zentry.getSize() > 0) {
 				buffer = new ByteArrayOutputStream((int) zentry.getSize());
-			} else {
+			}
+			else {
 				buffer = new ByteArrayOutputStream();
 			}
 			// array dim restriction?
@@ -103,11 +108,12 @@ public class JarUtilities {
 				}
 				cache = new ByteArrayInputStream(buffer.toByteArray());
 				entryInputStream.close();
-			} catch (IOException ioe) {
+			}
+			catch (IOException ioe) {
 				// no cleanup can be done
 			}
 		}
-		//		}
+		// }
 
 		closeJarFile(jarfile);
 
@@ -127,7 +133,6 @@ public class JarUtilities {
 	public static String[] getEntryNames(String jarFilename, boolean excludeDirectories) {
 		JarFile jarfile = null;
 		List entryNames = new ArrayList();
-		String[] names = null;
 		try {
 			jarfile = new JarFile(jarFilename);
 			Enumeration entries = jarfile.entries();
@@ -136,20 +141,21 @@ public class JarUtilities {
 				if (!(z.isDirectory() && excludeDirectories))
 					entryNames.add(z.getName());
 			}
-		} catch (IOException ioExc) {
+		}
+		catch (IOException ioExc) {
 			Logger.logException(ioExc);
-			return null;
-		} finally {
+		}
+		finally {
 			try {
 				if (jarfile != null) {
 					jarfile.close();
 				}
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				// nothing can be done
 			}
 		}
-		names = new String[entryNames.size()];
-		entryNames.toArray(names);
+		String[] names = (String[]) entryNames.toArray(new String[0]);
 		return names;
 	}
 
