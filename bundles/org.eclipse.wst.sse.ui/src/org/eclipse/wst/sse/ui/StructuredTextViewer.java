@@ -33,6 +33,7 @@ import org.eclipse.jface.text.formatter.FormattingContext;
 import org.eclipse.jface.text.formatter.FormattingContextProperties;
 import org.eclipse.jface.text.formatter.IContentFormatterExtension;
 import org.eclipse.jface.text.formatter.IFormattingContext;
+import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.projection.ChildDocument;
 import org.eclipse.jface.text.projection.ProjectionDocument;
@@ -47,6 +48,7 @@ import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
@@ -330,6 +332,16 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 		setOverviewRulerAnnotationHover(configuration.getOverviewRulerAnnotationHover(this));
 		// added for V2
 		setHoverControlCreator(configuration.getInformationControlCreator(this));
+		
+		// if hyperlink manager has already been created, uninstall it
+		if (fHyperlinkManager != null) {
+			setHyperlinkDetectors(null, SWT.NONE);
+		}
+		setHyperlinkPresenter(configuration.getHyperlinkPresenter(this));
+		IHyperlinkDetector[] hyperlinkDetectors= configuration.getHyperlinkDetectors(this);
+		int eventStateMask= configuration.getHyperlinkStateMask(this);
+		setHyperlinkDetectors(hyperlinkDetectors, eventStateMask);
+		
 		// install content type specific plugins
 		String[] types = configuration.getConfiguredContentTypes(this);
 
@@ -1088,6 +1100,8 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 		}
 		if (fInformationPresenter != null)
 			fInformationPresenter.uninstall();
+		
+		setHyperlinkDetectors(null, SWT.NONE);
 
 		// doesn't seem to be handled elsewhere, so we'll be sure error
 		// messages's are cleared.

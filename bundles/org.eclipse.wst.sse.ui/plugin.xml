@@ -494,6 +494,4 @@
 <!-- extension point for reconcile validation -->
 <!-- interfaces for this extension point can be found in com.ibm.wtp.validation.core -->
    <extension-point id="reconcileValidator" name="%Reconcile_Validator_Extension_Point.name" schema="schema/org.eclipse.wst.sse.editor.reconcileValidator.exsd"/>
-   <extension-point id="openon" name="%Open_On_Extension_Point.name" schema="schema/org.eclipse.wst.sse.editor.openon.exsd"/>
-
 </plugin>

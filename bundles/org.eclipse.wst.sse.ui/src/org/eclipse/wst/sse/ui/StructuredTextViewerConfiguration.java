@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
@@ -26,14 +27,14 @@ import org.eclipse.jface.text.IUndoManager;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
+import org.eclipse.jface.text.hyperlink.IHyperlinkPresenter;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
+import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.ui.contentassist.IResourceDependentProcessor;
@@ -41,6 +42,7 @@ import org.eclipse.wst.sse.ui.extension.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.extension.IExtendedConfiguration;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.HTMLTextPresenter;
+import org.eclipse.wst.sse.ui.internal.hyperlink.HighlighterHyperlinkPresenter;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessorExtension;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorBuilder;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorMetaData;
@@ -54,7 +56,7 @@ import org.eclipse.wst.sse.ui.util.EditorUtility;
 /**
  * Configuration for a SourceViewer that shows an IStructuredDocument
  */
-public class StructuredTextViewerConfiguration extends SourceViewerConfiguration implements IExtendedConfiguration {
+public class StructuredTextViewerConfiguration extends TextSourceViewerConfiguration implements IExtendedConfiguration {
 
 	private static final String CONTENT_ASSIST_PROCESSOR_EXTENDED_ID = "contentassistprocessor";
 	public static final String ID = "textviewerconfiguration"; //$NON-NLS-1$
@@ -340,15 +342,6 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getTabWidth(org.eclipse.jface.text.source.ISourceViewer)
-	 */
-	public int getTabWidth(ISourceViewer sourceViewer) {
-		return SSEUIPlugin.getDefault().getPreferenceStore().getInt(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH);
-	}
-
 	protected ITextEditor getTextEditor() {
 		ITextEditor editor = null;
 		if (editorPart instanceof ITextEditor)
@@ -444,5 +437,25 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 					((IResourceDependentProcessor) p).initialize(fResource);
 			}
 		}
+	}
+	
+	
+	/**
+	 * Use a special hyperlink presenter that is aware of how Highlighter works instead of
+	 * PresentationReconciler.
+	 */
+	public IHyperlinkPresenter getHyperlinkPresenter(ISourceViewer sourceViewer) {
+		if (fPreferenceStore == null) {
+			return super.getHyperlinkPresenter(sourceViewer);
+		}
+		return new HighlighterHyperlinkPresenter(fPreferenceStore);
+	}
+	
+	/**
+	 * Set the preference store used to initialize this configuration.
+	 * @param store
+	 */
+	void setPreferenceStore(IPreferenceStore store) {
+		fPreferenceStore = store;
 	}
 }

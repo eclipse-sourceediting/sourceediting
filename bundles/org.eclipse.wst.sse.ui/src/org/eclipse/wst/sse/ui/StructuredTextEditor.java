@@ -97,7 +97,6 @@ import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.ui.part.EditorActionBarContributor;
 import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
-import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.AnnotationPreference;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.DefaultRangeIndicator;
@@ -156,8 +155,7 @@ import org.eclipse.wst.sse.ui.internal.editor.EditorModelUtil;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.ui.internal.editor.StructuredModelDocumentProvider;
 import org.eclipse.wst.sse.ui.internal.extension.BreakpointProviderBuilder;
-import org.eclipse.wst.sse.ui.internal.openon.OpenFileHyperlinkTracker;
-import org.eclipse.wst.sse.ui.internal.openon.OpenOnAction;
+import org.eclipse.wst.sse.ui.internal.hyperlink.OpenHyperlinkAction;
 import org.eclipse.wst.sse.ui.internal.selection.SelectionHistory;
 import org.eclipse.wst.sse.ui.internal.selection.StructureSelectEnclosingAction;
 import org.eclipse.wst.sse.ui.internal.selection.StructureSelectHistoryAction;
@@ -407,7 +405,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		public void processPreModelEvent(ModelLifecycleEvent event) {
 		}
 	}
-
+	
 	protected final static char[] BRACKETS = {'{', '}', '(', ')', '[', ']'};
 	private static final long BUSY_STATE_DELAY = 1000;
 	public static final String CORE_SSE_ACTIVITY_ID = "com.ibm.wtp.xml.core"; //$NON-NLS-1$
@@ -468,8 +466,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	protected DropTarget fDropTarget;
 	protected boolean fEditorDisposed = false;
 	private IEditorPart fEditorPart;
-	/** The open file hyperlink tracker */
-	private OpenFileHyperlinkTracker fHyperlinkTracker;
 	private IModelLifecycleListener fInternalLifeCycleListener = new ViewerModelLifecycleListener();
 	private InternalModelStateListener fInternalModelStateListener;
 
@@ -768,7 +764,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		action = new EditBreakpointAction(this, getVerticalRuler());
 		setAction(ActionDefinitionIds.EDIT_BREAKPOINTS, action);
 		// StructuredTextViewer Action - open file on selection
-		action = new OpenOnAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE + DOT, this);
+		action = new OpenHyperlinkAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE + DOT, this, getSourceViewer());
 		action.setActionDefinitionId(ActionDefinitionIds.OPEN_FILE);
 		setAction(StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE, action);
 
@@ -907,9 +903,10 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		if (contentAssistAction instanceof IUpdate) {
 			((IUpdate) contentAssistAction).update();
 		}
-
-		if (isBrowserLikeLinks())
-			enableBrowserLikeLinks();
+		IAction openHyperlinkAction = getAction(StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE);
+		if (openHyperlinkAction instanceof OpenHyperlinkAction) {
+			((OpenHyperlinkAction)openHyperlinkAction).setHyperlinkDetectors(getSourceViewerConfiguration().getHyperlinkDetectors(getSourceViewer()));
+		}
 	}
 
 	protected PropertySheetConfiguration createPropertySheetConfiguration() {
@@ -1019,16 +1016,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	}
 
 	/**
-	 * Disables browser like links.
-	 */
-	private void disableBrowserLikeLinks() {
-		if (fHyperlinkTracker != null) {
-			fHyperlinkTracker.uninstall();
-			fHyperlinkTracker = null;
-		}
-	}
-
-	/**
 	 * @see DekstopPart#dispose
 	 */
 	public void dispose() {
@@ -1065,9 +1052,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			fMouseTracker.stop();
 			fMouseTracker = null;
 		}
-
-		if (isBrowserLikeLinks())
-			disableBrowserLikeLinks();
 
 		// added this 2/19/2004 to match the 'add' in
 		// intializeDocumentProvider.
@@ -1228,9 +1212,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 */
 	protected void doSetInput(IEditorInput input) throws CoreException {
 		try {
-			if (isBrowserLikeLinks())
-				disableBrowserLikeLinks();
-
 			// TODO: if opened in more than one editor, this will cause
 			// problems.
 			IEditorInput oldInput = getEditorInput();
@@ -1249,10 +1230,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 
 			if (getDocument() instanceof IExecutionDelegatable) {
 				((IExecutionDelegatable) getDocument()).setExecutionDelegate(new EditorExecutionContext(this));
-			}
-
-			if (isBrowserLikeLinks()) {
-				enableBrowserLikeLinks();
 			}
 
 			IStructuredModel model = null;
@@ -1312,17 +1289,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 
 		addContextMenuActions(menu);
 		addExtendedContextMenuActions(menu);
-	}
-
-	/**
-	 * Enables browser like links.
-	 */
-	private void enableBrowserLikeLinks() {
-		if (fHyperlinkTracker == null && (getSourceViewer() != null)) {
-			fHyperlinkTracker = new OpenFileHyperlinkTracker(getSourceViewer());
-			fHyperlinkTracker.setHyperlinkPreferenceKeys(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINK_COLOR, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINK_KEY_MODIFIER);
-			fHyperlinkTracker.install(getPreferenceStore());
-		}
 	}
 
 	/**
@@ -1864,13 +1830,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		if (CommonEditorPreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS.equals(property)) {
 			updateHoverBehavior();
 		}
-		if (AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED.equals(property)) {
-			if (isBrowserLikeLinks())
-				enableBrowserLikeLinks();
-			else
-				disableBrowserLikeLinks();
-			return;
-		}
 		super.handlePreferenceStoreChanged(event);
 	}
 
@@ -1974,6 +1933,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 */
 	void initializeSourceViewerConfiguration(StructuredTextViewerConfiguration configuration) {
 		configuration.setEditorPart(this);
+		configuration.setPreferenceStore(getPreferenceStore());
+
 		IResource resource = null;
 		IFile file = (IFile) getEditorInput().getAdapter(IFile.class);
 		if (file != null) {
@@ -1987,17 +1948,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		// TODO: install our custom support that can
 		// update document appropriately
 		// super.installEncodingSupport();
-	}
-
-	/**
-	 * Return whether the browser like links should be enabled according to
-	 * the preference store settings.
-	 * 
-	 * @return <code>true</code> if the browser like links should be enabled
-	 */
-	private boolean isBrowserLikeLinks() {
-		IPreferenceStore store = getPreferenceStore();
-		return store.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED);
 	}
 
 	/*
@@ -2669,6 +2619,10 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			IAction contentAssistAction = getAction(StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_PROPOSALS);
 			if (contentAssistAction instanceof IUpdate) {
 				((IUpdate) contentAssistAction).update();
+			}
+			IAction openHyperlinkAction = getAction(StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE);
+			if (openHyperlinkAction instanceof OpenHyperlinkAction) {
+				((OpenHyperlinkAction) openHyperlinkAction).setHyperlinkDetectors(getSourceViewerConfiguration().getHyperlinkDetectors(getSourceViewer()));
 			}
 		}
 		// eventually will replace above with something
