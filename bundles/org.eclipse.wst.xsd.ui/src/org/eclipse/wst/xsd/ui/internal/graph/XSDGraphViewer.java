@@ -444,13 +444,6 @@ public class XSDGraphViewer implements ISelectionChangedListener
         EditPart newSelectedEditPart = getComponentViewer().getEditPart(editPart, obj);
         if (newSelectedEditPart != null)
         {
-          if (newSelectedEditPart instanceof TopLevelComponentEditPart)
-          {
-            TopLevelComponentEditPart topLevel = (TopLevelComponentEditPart) newSelectedEditPart;
-            CategoryEditPart categoryEP = (CategoryEditPart) topLevel.getParent();
-            categoryEP.scrollTo(topLevel);
-            getComponentViewer().reveal(newSelectedEditPart);          
-          }                           
           getComponentViewer().setSelection(new StructuredSelection(newSelectedEditPart));
         }
       }      

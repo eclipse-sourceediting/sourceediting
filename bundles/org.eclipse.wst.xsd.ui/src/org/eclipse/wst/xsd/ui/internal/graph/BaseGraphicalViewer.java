@@ -135,7 +135,7 @@ public abstract class BaseGraphicalViewer extends ScrollingGraphicalViewer imple
     
 //    getControl().addKeyListener(keyListener);
 
-    figureCanvasKeyboardHandler = new FigureCanvasKeyboardHandler();
+    figureCanvasKeyboardHandler = new FigureCanvasKeyboardHandler(this);
     getFigureCanvas().addKeyListener(figureCanvasKeyboardHandler);
     
   	getRootEditPart().activate();		
