@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.ui;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.dtd.core.text.IDTDPartitions;
@@ -31,11 +32,28 @@ import org.eclipse.wst.sse.ui.util.EditorUtility;
 
 /**
  * A source viewer configuration for DTDs.
+ * 
  * @since 1.0
  */
 public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerConfiguration {
 
-	/* (non-Javadoc)
+	/**
+	 * 
+	 */
+	public StructuredTextViewerConfigurationDTD() {
+		super();
+	}
+
+	/**
+	 * @param store
+	 */
+	public StructuredTextViewerConfigurationDTD(IPreferenceStore store) {
+		super(store);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getConfiguredContentTypes(org.eclipse.jface.text.source.ISourceViewer)
 	 */
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
@@ -45,7 +63,9 @@ public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerCo
 		return configuredContentTypes;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration#getHighlighter(org.eclipse.jface.text.source.ISourceViewer)
 	 */
 	public IHighlighter getHighlighter(ISourceViewer sourceViewer) {
@@ -65,8 +85,11 @@ public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerCo
 		return highlighter;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getTextHover(org.eclipse.jface.text.source.ISourceViewer, java.lang.String, int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getTextHover(org.eclipse.jface.text.source.ISourceViewer,
+	 *      java.lang.String, int)
 	 */
 	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {
 		/*
