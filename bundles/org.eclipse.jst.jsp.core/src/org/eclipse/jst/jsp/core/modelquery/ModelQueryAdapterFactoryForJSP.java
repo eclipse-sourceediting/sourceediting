@@ -64,18 +64,21 @@ public class ModelQueryAdapterFactoryForJSP extends AbstractAdapterFactory imple
 			if (target instanceof XMLNode) {
 				XMLNode xmlNode = (XMLNode) target;
 				IStructuredModel model = stateNotifier = xmlNode.getModel();
-				stateNotifier.addModelStateListener(this);
-				CMDocumentCache cmDocumentCache = new CMDocumentCache();
 				String baseLocation = model.getBaseLocation();
-				IFile baseFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(model.getBaseLocation()));
-				if (baseFile != null) {
-					baseLocation = baseFile.getLocation().toString();
+				// continue only if the location is known
+				if(baseLocation != null) {
+					stateNotifier.addModelStateListener(this);
+					CMDocumentCache cmDocumentCache = new CMDocumentCache();
+					IFile baseFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(model.getBaseLocation()));
+					if (baseFile != null) {
+						baseLocation = baseFile.getLocation().toString();
+					}
+					IdResolver resolver = new XMLCatalogIdResolver(baseLocation, model.getResolver());
+	
+					ModelQuery modelQuery = new JSPModelQueryImpl(model, resolver);
+					modelQuery.setEditMode(ModelQuery.EDIT_MODE_UNCONSTRAINED);
+					modelQueryAdapterImpl = new JSPModelQueryAdapterImpl(cmDocumentCache, modelQuery, resolver);
 				}
-				IdResolver resolver = new XMLCatalogIdResolver(baseLocation, model.getResolver());
-
-				ModelQuery modelQuery = new JSPModelQueryImpl(model, resolver);
-				modelQuery.setEditMode(ModelQuery.EDIT_MODE_UNCONSTRAINED);
-				modelQueryAdapterImpl = new JSPModelQueryAdapterImpl(cmDocumentCache, modelQuery, resolver);
 			}
 		}
 		return modelQueryAdapterImpl;
