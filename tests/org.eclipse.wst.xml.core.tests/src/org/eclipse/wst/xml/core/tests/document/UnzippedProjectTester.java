@@ -30,8 +30,10 @@ import org.eclipse.wst.xml.core.tests.SSEModelXMLTestsPlugin;
 import org.eclipse.wst.xml.core.tests.util.ProjectUnzipUtility;
 
 
-
-public class UnzippedProjectTester extends TestCase {
+/* 
+ * Made abstract, so won't be automatically picked up as test (since intended to be subclassed).
+ */
+public abstract class UnzippedProjectTester extends TestCase {
 
 	protected static IProject fTestProject;
 	private static boolean fTestProjectInitialized;
