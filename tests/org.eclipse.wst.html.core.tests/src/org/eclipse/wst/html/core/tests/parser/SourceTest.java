@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.tests.parser;
 
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.document.InvalidCharacterException;
 import org.eclipse.wst.xml.core.internal.document.SourceValidator;
 import org.w3c.dom.Document;
@@ -35,7 +35,7 @@ public class SourceTest extends ModelTest {
 	}
 
 	public void testModel() {
-		DOMModel model = createHTMLModel();
+		IDOMModel model = createHTMLModel();
 		try {
 			Document document = model.getDocument();
 

@@ -11,7 +11,7 @@
 package org.eclipse.wst.html.core.tests.parser;
 
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 
 public class AttrTest extends ModelTest {
 	/**
@@ -32,7 +32,7 @@ public class AttrTest extends ModelTest {
 	}
 
 	public void testModel() {
-		DOMModel model = createHTMLModel();
+		IDOMModel model = createHTMLModel();
 		try {
 			IStructuredDocument structuredDocument = model.getStructuredDocument();
 			//Document document = model.getDocument();

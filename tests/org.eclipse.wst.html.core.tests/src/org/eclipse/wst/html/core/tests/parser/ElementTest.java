@@ -11,7 +11,7 @@
 package org.eclipse.wst.html.core.tests.parser;
 
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -57,7 +57,7 @@ public class ElementTest extends ModelTest {
 	}
 
 	public void testModel() {
-		DOMModel model = createXMLModel();
+		IDOMModel model = createXMLModel();
 		try {
 			IStructuredDocument structuredDocument = model.getStructuredDocument();
 			Document document = model.getDocument();

@@ -18,8 +18,8 @@ import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.xml.core.document.DOMElement;
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMElement;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.format.NodeFormatter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -50,10 +50,10 @@ public class CreatingJSPExpression extends TestCase {
 		// Now, assigning use a page directive, but leaving embedded type the same as default
 		model.getStructuredDocument().setText(this, "<%@ page contentType=\"text/html\" language=\"java\" %>");
 
-		Document doc = ((DOMModel) model).getDocument();
+		Document doc = ((IDOMModel) model).getDocument();
 
 		Element jspexpression = doc.createElement("jsp:expression");
-		((DOMElement) jspexpression).setJSPTag(true);
+		((IDOMElement) jspexpression).setJSPTag(true);
 		doc.appendChild(jspexpression);
 		Text javacode = doc.createTextNode(" // some java code here; if (x <0) return new String(\"0\") else return new String (\"1\"); ");
 		jspexpression.appendChild(javacode);

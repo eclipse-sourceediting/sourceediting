@@ -27,7 +27,7 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.document.XMLModelImpl;
 import org.eclipse.wst.xml.core.internal.util.DebugDocument;
 import org.w3c.dom.Node;
@@ -70,7 +70,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 		}
 	}
 
-	void makeChange1(DOMModel tree) {
+	void makeChange1(IDOMModel tree) {
 
 		//	
 		// pick a parent and ones of its children to delete 
@@ -97,7 +97,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 		structuredDocument.replaceText(this, 19, 1, null);
 	}
 
-	void makeChange3(DOMModel tree) {
+	void makeChange3(IDOMModel tree) {
 
 		//	
 		// pick a parent and ones of its children to delete 
@@ -198,7 +198,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 		f.addDocumentChangedListener(this);
 		//
 
-		DOMModel tree = new XMLModelImpl();
+		IDOMModel tree = new XMLModelImpl();
 		f.addDocumentChangingListener((IStructuredDocumentListener) tree);
 
 		// set text to structuredDocument (which updates tree)
@@ -254,7 +254,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 		f.addDocumentChangedListener(this);
 		//
 
-		DOMModel tree = new XMLModelImpl();
+		IDOMModel tree = new XMLModelImpl();
 		f.addDocumentChangingListener((IStructuredDocumentListener) tree);
 
 		// set text to structuredDocument (which updates tree)
@@ -310,7 +310,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 		f.addDocumentChangedListener(this);
 		//
 
-		DOMModel tree = new XMLModelImpl();
+		IDOMModel tree = new XMLModelImpl();
 		f.addDocumentChangingListener((IStructuredDocumentListener) tree);
 
 		// set text to structuredDocument (which updates tree)

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.tests.parser;
 
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -33,7 +33,7 @@ public class UpdaterTest12 extends ModelTest {
 	}
 
 	public void testModel() {
-		DOMModel model = createXMLModel();
+		IDOMModel model = createXMLModel();
 		try {
 			Document document = model.getDocument();
 

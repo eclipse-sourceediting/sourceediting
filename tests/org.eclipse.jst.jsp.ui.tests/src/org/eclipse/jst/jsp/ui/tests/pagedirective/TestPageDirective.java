@@ -23,7 +23,7 @@ import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.modelhandler.EmbeddedTypeHandler;
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
 import org.eclipse.wst.xml.core.modelhandler.EmbeddedXML;
 import org.w3c.dom.Node;
@@ -72,7 +72,7 @@ public class TestPageDirective extends TestCase {
 
 		// Now, assigning use a page directive, but leaving embedded type the same as default
 		model.getStructuredDocument().setText(this, "<%@ page contentType=\"text/html\" language=\"java\" %>");
-		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) ((DOMModel) model).getDocument().getAdapterFor(PageDirectiveAdapter.class);
+		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) ((IDOMModel) model).getDocument().getAdapterFor(PageDirectiveAdapter.class);
 
 		String contentType = pageDirectiveAdapter.getContentType();
 		String language = pageDirectiveAdapter.getLanguage();
@@ -90,7 +90,7 @@ public class TestPageDirective extends TestCase {
 
 		// Now, assigning use a page directive, but leaving embedded type the same as default
 		model.getStructuredDocument().setText(this, "<%@ page contentType=\"text/html\" language=\"java\" %>");
-		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) ((DOMModel) model).getDocument().getAdapterFor(PageDirectiveAdapter.class);
+		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) ((IDOMModel) model).getDocument().getAdapterFor(PageDirectiveAdapter.class);
 
 		String contentType = pageDirectiveAdapter.getContentType();
 		String language = pageDirectiveAdapter.getLanguage();
@@ -117,7 +117,7 @@ public class TestPageDirective extends TestCase {
 
 		// Now, assigning use a page directive, but leaving embedded type the same as default
 		model.getStructuredDocument().setText(this, "<%@ page contentType=\"text/html\" language=\"java\" %>");
-		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) ((DOMModel) model).getDocument().getAdapterFor(PageDirectiveAdapter.class);
+		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) ((IDOMModel) model).getDocument().getAdapterFor(PageDirectiveAdapter.class);
 
 		String contentType = pageDirectiveAdapter.getContentType();
 		String language = pageDirectiveAdapter.getLanguage();
@@ -146,7 +146,7 @@ public class TestPageDirective extends TestCase {
 	
 	public void testSetEmbeddedType(){
 		IStructuredModel model = createUnmanagedHTMLModel();
-		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) ((DOMModel) model).getDocument().getAdapterFor(PageDirectiveAdapter.class);
+		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) ((IDOMModel) model).getDocument().getAdapterFor(PageDirectiveAdapter.class);
 		EmbeddedTypeHandler embeddedXMLHandler = new EmbeddedXML();
 		pageDirectiveAdapter.setEmbeddedType(embeddedXMLHandler);
 		
@@ -155,7 +155,7 @@ public class TestPageDirective extends TestCase {
 	}
 	
 	public void testAdapt() {
-		DOMModel model = createUnmanagedHTMLModel();
+		IDOMModel model = createUnmanagedHTMLModel();
 		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) model.getDocument().getAdapterFor(PageDirectiveAdapter.class);
 		Node ownerNode = model.getDocument();
 		
@@ -164,32 +164,32 @@ public class TestPageDirective extends TestCase {
 	}
 	
 	public void testAddEmbeddedFactory() {
-		DOMModel model = createUnmanagedHTMLModel();
+		IDOMModel model = createUnmanagedHTMLModel();
 		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) model.getDocument().getAdapterFor(PageDirectiveAdapter.class);
 		pageDirectiveAdapter.addEmbeddedFactory(new MyEmbeddedFactory());
 	}
 	
 	public void testSetLanguage() {
-		DOMModel model = createUnmanagedHTMLModel();
+		IDOMModel model = createUnmanagedHTMLModel();
 		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) model.getDocument().getAdapterFor(PageDirectiveAdapter.class);
 		pageDirectiveAdapter.setLanguage("text/xml");
 		assertTrue("set language failed", pageDirectiveAdapter.getLanguage().equals("text/xml"));
 	}
 	
 	public void testGetTarget() {
-		DOMModel model = createUnmanagedHTMLModel();
+		IDOMModel model = createUnmanagedHTMLModel();
 		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) model.getDocument().getAdapterFor(PageDirectiveAdapter.class);
 		INodeNotifier notifier = pageDirectiveAdapter.getTarget();
 		assertNotNull("target is null", notifier);
 	}
 	
 	public void testRelease() {
-		DOMModel model = createUnmanagedHTMLModel();
+		IDOMModel model = createUnmanagedHTMLModel();
 		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) model.getDocument().getAdapterFor(PageDirectiveAdapter.class);
 		pageDirectiveAdapter.release(MyAdaptedClass.class);
 	}
 	
-	private DOMModel createUnmanagedHTMLModel() {
+	private IDOMModel createUnmanagedHTMLModel() {
 		// First make (empty) structuredDocument
 		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(ContentTypeIdForJSP.ContentTypeID_JSP);
@@ -197,6 +197,6 @@ public class TestPageDirective extends TestCase {
 
 		// Now, assigning use a page directive, but leaving embedded type the same as default
 		model.getStructuredDocument().setText(this, "<%@ page contentType=\"text/html\" language=\"java\" %>");
-		return (DOMModel)model;
+		return (IDOMModel)model;
 	}
 }

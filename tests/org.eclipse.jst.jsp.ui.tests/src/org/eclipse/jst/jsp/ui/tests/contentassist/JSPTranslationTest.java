@@ -35,8 +35,8 @@ import org.eclipse.osgi.service.datalocation.Location;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.xml.core.document.DOMDocument;
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMDocument;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 
 /**
  * This class unit tests the sed JSPTranslation mechanism.
@@ -85,7 +85,7 @@ public class JSPTranslationTest extends TestCase {
 
 	private void translationPositionsTest() {
 
-		DOMModel model = getIncludeTestModelForRead();
+		IDOMModel model = getIncludeTestModelForRead();
 		JSPTranslationAdapter adapter = (JSPTranslationAdapter) model.getDocument().getAdapterFor(IJSPTranslation.class);
 		JSPTranslation translation = adapter.getJSPTranslation();
 		try {
@@ -140,7 +140,7 @@ public class JSPTranslationTest extends TestCase {
 
 	private void translationTextTest() {
 
-		DOMModel model = getIncludeTestModelForRead();
+		IDOMModel model = getIncludeTestModelForRead();
 		ScannerUnitTests.verifyLengths(model, model.getStructuredDocument().get());
 		JSPTranslationAdapter adapter = (JSPTranslationAdapter) model.getDocument().getAdapterFor(IJSPTranslation.class);
 		JSPTranslation translation = adapter.getJSPTranslation();
@@ -170,7 +170,7 @@ public class JSPTranslationTest extends TestCase {
 	 * 
 	 */
 	private void translationAdapterTest() {
-		DOMModel model = getIncludeTestModelForRead();
+		IDOMModel model = getIncludeTestModelForRead();
 		JSPTranslationAdapter adapter = (JSPTranslationAdapter) model.getDocument().getAdapterFor(IJSPTranslation.class);
 		JSPTranslation translation = adapter.getJSPTranslation();
 
@@ -188,7 +188,7 @@ public class JSPTranslationTest extends TestCase {
 	}
 
 	private void getTranslationAdapterTest() {
-		DOMModel model = getIncludeTestModelForRead();
+		IDOMModel model = getIncludeTestModelForRead();
 		JSPTranslationAdapter adapter = (JSPTranslationAdapter) model.getDocument().getAdapterFor(IJSPTranslation.class);
 
 		try {
@@ -196,7 +196,7 @@ public class JSPTranslationTest extends TestCase {
 
 			setupAdapterFactory(model);
 
-			DOMDocument doc = model.getDocument();
+			IDOMDocument doc = model.getDocument();
 			adapter = (JSPTranslationAdapter) doc.getAdapterFor(IJSPTranslation.class);
 			assertNotNull("couldn't get JSPTranslationAdapter:", adapter);
 		}
@@ -234,11 +234,11 @@ public class JSPTranslationTest extends TestCase {
 		return null;
 	}
 
-	private DOMModel getIncludeTestModelForRead() {
+	private IDOMModel getIncludeTestModelForRead() {
 
 		IPath jspTestFilePath = new Path("INCLUDES_TESTS/jsp_include_test.jsp");
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(jspTestFilePath);
-		DOMModel xmlModel = (DOMModel) getStructuredModelForRead(file);
+		IDOMModel xmlModel = (IDOMModel) getStructuredModelForRead(file);
 		setupAdapterFactory(xmlModel);
 		return xmlModel;
 	}

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.tests.parser;
 
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
@@ -34,7 +34,7 @@ public class UpdaterTest extends ModelTest {
 	}
 
 	public void testModel() {
-		DOMModel model = createHTMLModel();
+		IDOMModel model = createHTMLModel();
 		try {
 			Document document = model.getDocument();
 

@@ -11,7 +11,7 @@
 package org.eclipse.wst.html.core.tests.parser.css;
 
 import org.eclipse.wst.html.core.tests.parser.ModelTest;
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
@@ -38,7 +38,7 @@ public class StyleTest extends ModelTest {
 	}
 
 	public void testModel() {
-		DOMModel model = createHTMLModel(); //new HTMLModelImpl();
+		IDOMModel model = createHTMLModel(); //new HTMLModelImpl();
 		Document document = model.getDocument();
 
 		Element style = document.createElement("STYLE");

@@ -27,7 +27,7 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.modelhandler.EmbeddedXML;
 import org.w3c.dom.Document;
 
@@ -96,7 +96,7 @@ public class TestModelClone extends TestCase {
 		assertTrue("cloned model could not be created!", clonedModel != null);
 		// make sure the embedded type is correct
 		boolean passed = true;
-		Document doc = ((DOMModel) clonedModel).getDocument();
+		Document doc = ((IDOMModel) clonedModel).getDocument();
 		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) ((INodeNotifier) doc).getExistingAdapter(PageDirectiveAdapter.class);
 		assertNotNull("cloned model did not have embedded adapter", pageDirectiveAdapter);
 
@@ -141,7 +141,7 @@ public class TestModelClone extends TestCase {
 	}
 
 	private void checkEmbeddedType(IStructuredModel model, Class expectedType) {
-		Document doc = ((DOMModel) model).getDocument();
+		Document doc = ((IDOMModel) model).getDocument();
 		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) ((INodeNotifier) doc).getExistingAdapter(PageDirectiveAdapter.class);
 		assertNotNull("model did not have embedded adapter", pageDirectiveAdapter);
 
@@ -231,7 +231,7 @@ public class TestModelClone extends TestCase {
 	}
 
 	private EmbeddedTypeHandler getEmbeddedType(IStructuredModel model) {
-		Document doc = ((DOMModel) model).getDocument();
+		Document doc = ((IDOMModel) model).getDocument();
 		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) ((INodeNotifier) doc).getExistingAdapter(PageDirectiveAdapter.class);
 		assertNotNull("model did not have embedded adapter", pageDirectiveAdapter);
 
