@@ -47,6 +47,8 @@ public class CommonXML {
 		try {
 			DocumentBuilderFactory instance = DocumentBuilderFactory.newInstance();
 			instance.setValidating(validating);
+			instance.setExpandEntityReferences(false);
+			instance.setCoalescing(true);
 			result = instance.newDocumentBuilder();
 		}
 		catch (ParserConfigurationException e) {

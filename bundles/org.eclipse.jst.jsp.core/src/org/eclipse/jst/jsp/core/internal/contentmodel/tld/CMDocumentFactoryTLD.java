@@ -39,6 +39,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.factory.CMDocumentFactory;
 import org.eclipse.wst.xml.uriresolver.util.URIHelper;
 import org.w3c.dom.Element;
+import org.w3c.dom.EntityReference;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -314,7 +315,6 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 				}
 				// info (1.1 only) or description (1.2 only)
 				else if ((nodeName.equals(JSP11TLDNames.INFO) || nodeName.equals(JSP12TLDNames.DESCRIPTION)) && child.hasChildNodes()) {
-					// ed.setDescription(getContainedText(child));
 					ed.setDescription(getContainedText(child));
 				}
 				// attributes
@@ -476,7 +476,18 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 		StringBuffer s = new StringBuffer();
 		Node child = parent.getFirstChild();
 		while (child != null) {
-			s.append(child.getNodeValue());
+			if (child.getNodeType() == Node.ENTITY_REFERENCE_NODE) {
+				String reference = ((EntityReference) child).getNodeValue();
+				if (reference == null && child.getNodeName() != null) {
+					reference = "&" + child.getNodeName() + ";";
+				}
+				if (reference != null) {
+					s.append(reference.trim());
+				}
+			}
+			else {
+				s.append(child.getNodeValue().trim());
+			}
 			child = child.getNextSibling();
 		}
 		return s.toString().trim();
