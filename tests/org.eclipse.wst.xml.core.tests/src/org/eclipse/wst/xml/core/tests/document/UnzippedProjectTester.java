@@ -47,7 +47,7 @@ public class UnzippedProjectTester extends TestCase {
 			String destinationProjectString = fTestProject.getLocation().toOSString();
 			String destinationFolder = destinationProjectString + "/";
 			// this zip file is sitting in the "root" of test plugin
-			File zipFile = SSEModelXMLTestsPlugin.getTestFile("testFiles.zip");
+			File zipFile = SSEModelXMLTestsPlugin.getTestFile("testfiles.zip");
 			ProjectUnzipUtility projUtil = new ProjectUnzipUtility();
 			projUtil.unzipAndImport(zipFile, destinationFolder);
 			projUtil.initJavaProject(TEST_PROJECT_NAME);
