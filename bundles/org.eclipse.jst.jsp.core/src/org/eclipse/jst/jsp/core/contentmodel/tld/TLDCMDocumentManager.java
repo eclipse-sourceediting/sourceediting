@@ -16,6 +16,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -23,8 +26,15 @@ import java.util.List;
 import java.util.Stack;
 
 import org.eclipse.core.filebuffers.FileBuffers;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.jst.jsp.core.JSP12Namespace;
 import org.eclipse.jst.jsp.core.contentmodel.ITaglibRecord;
 import org.eclipse.jst.jsp.core.contentmodel.TaglibController;
@@ -46,6 +56,7 @@ import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.uriresolver.util.URIHelper;
 
 public class TLDCMDocumentManager {
 
@@ -245,11 +256,12 @@ public class TLDCMDocumentManager {
 		/**
 		 * Process an include directive found by the textSource parser and
 		 * anchor any taglibs found within at the
-		 * anchorStructuredDocumentRegion.
+		 * anchorStructuredDocumentRegion. Includes use the including file as
+		 * the point of reference, not necessarily the "top" file.
 		 */
 		protected void processInclude(IStructuredDocumentRegion includeStructuredDocumentRegion, IStructuredDocumentRegion anchorStructuredDocumentRegion, JSPSourceParser textSource) {
 			ITextRegionList regions = includeStructuredDocumentRegion.getRegions();
-			String file = null;
+			String includedFile = null;
 			boolean isFilename = false;
 			try {
 				for (int i = 0; i < regions.size(); i++) {
@@ -263,23 +275,23 @@ public class TLDCMDocumentManager {
 						}
 					}
 					else if (isFilename && region.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
-						file = textSource.getText(includeStructuredDocumentRegion.getStartOffset(region), region.getTextLength());
+						includedFile = textSource.getText(includeStructuredDocumentRegion.getStartOffset(region), region.getTextLength());
 						isFilename = false;
 					}
 				}
 			}
 			catch (StringIndexOutOfBoundsException sioobExc) {
 				// nothing to be done
-				file = null;
+				includedFile = null;
 			}
-			if (file != null) {
-				String fileLocation = getBaseLocation();
-				// hopefully, a resolver is present and has returned a
-				// canonical file path
-				if (!getIncludes().contains(fileLocation) && getBaseLocation() != null && !fileLocation.equals(getBaseLocation())) {
+			if (includedFile != null) {
+				IPath root = TaglibIndex.getContextRoot(getCurrentBaseLocation());
+				IPath fileLocation = new Path(URIHelper.normalize(StringUtils.strip(includedFile).trim(), getCurrentBaseLocation().toString(), root.toString()));
+				// check for "loops"
+				if (!getIncludes().contains(fileLocation) && fileLocation != null && !fileLocation.equals(getCurrentBaseLocation())) {
 					getIncludes().push(fileLocation);
 					if (getParser() != null)
-						new IncludeHelper(anchorStructuredDocumentRegion, getParser()).parse(fileLocation);
+						new IncludeHelper(anchorStructuredDocumentRegion, getParser()).parse(fileLocation.toString());
 					else
 						Logger.log(Logger.WARNING, "Warning: parser text was requested by " + getClass().getName() + " but none was available; taglib support disabled"); //$NON-NLS-1$ //$NON-NLS-2$
 					getIncludes().pop();
@@ -448,48 +460,121 @@ public class TLDCMDocumentManager {
 			fParentParser = rootParser;
 		}
 
-		protected String getContents(String fileName) {
-			StringBuffer s = new StringBuffer();
-			int c = 0;
-			int length = 0;
-			int count = 0;
-			File file = null;
-			FileInputStream fis = null;
-			try {
-				file = new File(fileName);
-				length = (int) file.length();
-				fis = new FileInputStream(file);
-				while (((c = fis.read()) >= 0) && (count < length)) {
-					count++;
-					s.append((char) c);
+		private String detectCharset(IFile file) {
+			if (file.getType() == IResource.FILE && file.isAccessible()) {
+				IContentDescription d = null;
+				try {
+					// optimized description lookup, might not succeed
+					d = file.getContentDescription();
+					if (d != null)
+						return d.getCharset();
+				}
+				catch (CoreException e) {
+					// should not be possible given the accessible and file
+					// type
+					// check above
+				}
+				InputStream contents = null;
+				try {
+					contents = file.getContents();
+					IContentDescription description = Platform.getContentTypeManager().getDescriptionFor(contents, file.getName(), new QualifiedName[]{IContentDescription.CHARSET});
+					if (description != null) {
+						return description.getCharset();
+					}
+				}
+				catch (IOException e) {
+					// will try to cleanup in finally
+				}
+				catch (CoreException e) {
+					Logger.logException(e);
+				}
+				finally {
+					if (contents != null) {
+						try {
+							contents.close();
+						}
+						catch (Exception e) {
+							// not sure how to recover at this point
+						}
+					}
 				}
 			}
-			catch (FileNotFoundException e) {
-				if (Debug.debugStructuredDocument)
-					System.out.println("File not found : \"" + fileName + "\""); //$NON-NLS-2$//$NON-NLS-1$
-			}
-			catch (ArrayIndexOutOfBoundsException e) {
-				if (Debug.debugStructuredDocument)
-					System.out.println("Usage wrong: specify inputfile"); //$NON-NLS-1$
-				//$NON-NLS-1$
-			}
-			catch (IOException e) {
-				if (Debug.debugStructuredDocument)
-					System.out.println("An I/O error occured while scanning :"); //$NON-NLS-1$
-				//$NON-NLS-1$
-			}
-			catch (Exception e) {
-				if (Debug.debugStructuredDocument)
-					e.printStackTrace();
-			}
-			finally {
+			return ResourcesPlugin.getEncoding();
+		}
+
+		protected String getContents(String fileName) {
+			StringBuffer s = new StringBuffer();
+			IFile iFile = FileBuffers.getWorkspaceFileAtLocation(new Path(fileName));
+			if (iFile != null && iFile.exists()) {
+				String charset = detectCharset(iFile);
+				InputStream contents = null;
 				try {
-					if (fis != null) {
-						fis.close();
+					contents = iFile.getContents();
+					Reader reader = new InputStreamReader(contents, charset);
+					char[] readBuffer = new char[2048];
+					int n = reader.read(readBuffer);
+					while (n > 0) {
+						s.append(readBuffer, 0, n);
+						n = reader.read(readBuffer);
 					}
 				}
 				catch (Exception e) {
-					// nothing to do
+					if (Debug.debugStructuredDocument)
+						Logger.log(Logger.WARNING, "An exception occured while scanning " + fileName, e); //$NON-NLS-1$
+				}
+				finally {
+					try {
+						if (contents != null) {
+							contents.close();
+						}
+					}
+					catch (Exception e) {
+						// nothing to do
+					}
+				}
+			}
+			else {
+				int c = 0;
+				int length = 0;
+				int count = 0;
+				File file = null;
+				FileInputStream fis = null;
+				try {
+					file = new File(fileName);
+					length = (int) file.length();
+					fis = new FileInputStream(file);
+					while (((c = fis.read()) >= 0) && (count < length)) {
+						count++;
+						s.append((char) c);
+					}
+				}
+				catch (FileNotFoundException e) {
+					if (Debug.debugStructuredDocument)
+						System.out.println("File not found : \"" + fileName + "\""); //$NON-NLS-2$//$NON-NLS-1$
+				}
+				catch (ArrayIndexOutOfBoundsException e) {
+					if (Debug.debugStructuredDocument)
+						System.out.println("Usage wrong: specify inputfile"); //$NON-NLS-1$
+					//$NON-NLS-1$
+				}
+				catch (IOException e) {
+					if (Debug.debugStructuredDocument)
+						System.out.println("An I/O error occured while scanning :"); //$NON-NLS-1$
+					//$NON-NLS-1$
+				}
+				catch (Exception e) {
+					if (Debug.debugStructuredDocument)
+						e.printStackTrace();
+				}
+				finally {
+					try {
+						if (fis != null) {
+							fis.close();
+						}
+					}
+					catch (Exception e) {
+						// nothing to do
+					}
 				}
 			}
 			return s.toString();
@@ -546,6 +631,7 @@ public class TLDCMDocumentManager {
 
 		public void resetNodes() {
 		}
+
 	}
 
 	static final boolean _debug = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/tldcmdocument/manager")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -574,7 +660,8 @@ public class TLDCMDocumentManager {
 
 	private JSPSourceParser fParser = null;
 
-//	 trivial hand edit to remove unused variable  	private URIResolverProvider fResolverProvider = null;
+	// trivial hand edit to remove unused variable private URIResolverProvider
+	// fResolverProvider = null;
 
 	private List fTaglibTrackers = null;
 
@@ -587,14 +674,6 @@ public class TLDCMDocumentManager {
 			System.out.println("TLDCMDocumentManager cleared its CMDocument cache"); //$NON-NLS-1$
 		}
 		getDocuments().clear();
-	}
-
-	/**
-	 * 
-	 * @return java.lang.String
-	 */
-	public String getBaseLocation() {
-		return TaglibController.getFileBuffer(this).getLocation().toString();
 	}
 
 	/**
@@ -663,6 +742,24 @@ public class TLDCMDocumentManager {
 			}
 		}
 		return validDocs;
+	}
+
+	/**
+	 * 
+	 * @return java.lang.String
+	 */
+	IPath getCurrentBaseLocation() {
+		IPath baseLocation = null;
+		if (!getIncludes().isEmpty()) {
+			baseLocation = (IPath) getIncludes().peek();
+		}
+		else {
+			IPath path = TaglibController.getFileBuffer(this).getLocation();
+			if (path.toFile().exists())
+				baseLocation = path;
+			baseLocation = ResourcesPlugin.getWorkspace().getRoot().getFile(path).getLocation();
+		}
+		return baseLocation;
 	}
 
 	protected DirectiveStructuredDocumentRegionHandler getDirectiveStructuredDocumentRegionHandler() {
@@ -759,7 +856,7 @@ public class TLDCMDocumentManager {
 	 * tag files to work.
 	 */
 	protected CMDocument loadTagDir(String uri) {
-		ITaglibRecord reference = TaglibIndex.resolve(getBaseLocation(), uri, false);
+		ITaglibRecord reference = TaglibIndex.resolve(getCurrentBaseLocation().toString(), uri, false);
 		if (reference != null) {
 			CMDocument document = getCMDocumentBuilder().createCMDocument(reference);
 			if (document != null) {
@@ -767,7 +864,7 @@ public class TLDCMDocumentManager {
 			}
 		}
 		// JSP2_TODO: implement for JSP 2.0
-		String location = URIResolverPlugin.createResolver().resolve(getBaseLocation(), null, uri);
+		String location = URIResolverPlugin.createResolver().resolve(getCurrentBaseLocation().toString(), null, uri);
 		if (location == null)
 			return null;
 		if (_debug) {
@@ -782,7 +879,7 @@ public class TLDCMDocumentManager {
 	 */
 	protected CMDocument loadTaglib(String uri) {
 		CMDocument document = null;
-		ITaglibRecord reference = TaglibIndex.resolve(getBaseLocation(), uri, false);
+		ITaglibRecord reference = TaglibIndex.resolve(getCurrentBaseLocation().toString(), uri, false);
 		if (reference != null) {
 			document = getCMDocumentBuilder().createCMDocument(reference);
 		}
