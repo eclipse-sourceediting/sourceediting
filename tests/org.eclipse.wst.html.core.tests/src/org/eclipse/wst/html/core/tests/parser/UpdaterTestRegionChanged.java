@@ -14,7 +14,6 @@ import org.eclipse.wst.sse.core.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.document.XMLModel;
-import org.eclipse.wst.xml.core.internal.document.XMLModelImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
