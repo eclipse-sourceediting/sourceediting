@@ -13,7 +13,9 @@ package org.eclipse.wst.xsd.ui.internal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ResourceBundle;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -29,8 +31,11 @@ import org.eclipse.ui.actions.RetargetAction;
 import org.eclipse.ui.part.MultiPageEditorActionBarContributor;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
+import org.eclipse.ui.texteditor.RetargetTextEditorAction;
+import org.eclipse.wst.sse.ui.edit.util.StructuredTextEditorActionConstants;
 import org.eclipse.wst.xsd.ui.internal.actions.ISchemaEditorActionConstants;
 import org.eclipse.wst.xsd.ui.internal.actions.ReloadDependenciesAction;
+import org.eclipse.wst.xsd.ui.internal.refactor.actions.RefactorActionGroup;
 
 public class XSDActionBarContributor extends MultiPageEditorActionBarContributor
 {
@@ -42,6 +47,8 @@ public class XSDActionBarContributor extends MultiPageEditorActionBarContributor
   protected List fPartListeners= new ArrayList();
 
   protected RetargetAction retargetReloadDependenciesAction;
+  private RetargetTextEditorAction renameElementAction = null;
+  private IMenuManager refactorMenu = null;
  
   /**
    * Constructor for XSDActionBarContributor.
@@ -57,6 +64,14 @@ public class XSDActionBarContributor extends MultiPageEditorActionBarContributor
     retargetReloadDependenciesAction.setImageDescriptor(
         ImageDescriptor.createFromFile(XSDEditorPlugin.getPlugin().getClass(), "icons/reloadgrammar.gif"));
     fPartListeners.add(retargetReloadDependenciesAction);
+    
+    ResourceBundle bundle = Platform.getResourceBundle(XSDEditorPlugin.getPlugin().getBundle());
+	renameElementAction = new RetargetTextEditorAction(bundle, ISchemaEditorActionConstants.RETARGET_RENAME_ELEMENT_ACTION_ID + StructuredTextEditorActionConstants.DOT);
+	renameElementAction.setActionDefinitionId("org.eclipse.wst.xsd.ui.refactor.rename.element"); // TODO: add to contstants command id
+		
+	// the refactor menu, add the menu itself to add all refactor actions
+	refactorMenu = new MenuManager("Refactor", RefactorActionGroup.MENU_ID); //TODO: externalize string
+	refactorMenu.add(this.renameElementAction);
   }
 
   protected void updateActions()
@@ -110,6 +125,7 @@ public class XSDActionBarContributor extends MultiPageEditorActionBarContributor
 
   public void addToMenu(IMenuManager menuManager)
   {
+  	//menuManager.insertAfter(IWorkbenchActionConstants.M_EDIT, refactorMenu);
     editMenu = menuManager.findMenuUsingPath(IWorkbenchActionConstants.M_EDIT);
 
     MenuManager treeMenu = new MenuManager(XSDEditorPlugin.getXSDString("_UI_MENU_XSD_EDITOR"));
@@ -160,6 +176,8 @@ public void addToToolBar(IToolBarManager toolBarManager)
       textEditor = ((XSDEditor)targetEditor).getXSDTextEditor();
       if (textEditor != null)
       {      
+      	 
+      	renameElementAction.setAction(getAction(textEditor, ISchemaEditorActionConstants.RETARGET_RENAME_ELEMENT_ACTION_ID));
         updateActions();  
         getActionBars().updateActionBars();
       }
