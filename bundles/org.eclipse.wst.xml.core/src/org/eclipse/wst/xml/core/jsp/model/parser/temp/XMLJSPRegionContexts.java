@@ -19,7 +19,7 @@ import org.eclipse.wst.xml.core.parser.XMLRegionContext;
  * //TODO
  * 
  * @deprecated - marked as deprecated to warn of pending changes. See the
- *             package.html file for full explaination.
+ *             package.html file for full explanation.
  */
 
 public interface XMLJSPRegionContexts extends XMLRegionContext {
