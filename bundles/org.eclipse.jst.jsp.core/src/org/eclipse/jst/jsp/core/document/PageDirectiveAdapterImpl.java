@@ -18,6 +18,7 @@ import java.util.StringTokenizer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
@@ -29,6 +30,7 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.modelhandler.EmbeddedTypeRegistry;
 import org.eclipse.wst.sse.core.internal.modelhandler.EmbeddedTypeRegistryImpl;
 import org.eclipse.wst.sse.core.modelhandler.EmbeddedTypeHandler;
+import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.core.util.ResourceUtil;
 import org.eclipse.wst.sse.core.util.StringUtils;
@@ -476,7 +478,7 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 	 */
 	public void setLanguage(String newLanguage) {
 		this.cachedLanguage = newLanguage;
-		IDocumentPartitioner partitioner = model.getStructuredDocument().getDocumentPartitioner();
+		IDocumentPartitioner partitioner = ((IDocumentExtension3) model.getStructuredDocument()).getDocumentPartitioner(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING);
 		if (partitioner instanceof StructuredTextPartitionerForJSP) {
 			((StructuredTextPartitionerForJSP) partitioner).setLanguage(newLanguage);
 		}
