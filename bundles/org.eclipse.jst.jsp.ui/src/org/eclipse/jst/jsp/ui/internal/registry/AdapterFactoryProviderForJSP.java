@@ -29,8 +29,8 @@ import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
 import org.eclipse.wst.sse.ui.registry.embedded.EmbeddedAdapterFactoryProvider;
 import org.eclipse.wst.sse.ui.util.Assert;
-import org.eclipse.wst.xml.core.document.XMLDocument;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMDocument;
+import org.eclipse.wst.xml.core.document.DOMModel;
 import org.eclipse.wst.xml.ui.internal.properties.XMLPropertySourceAdapterFactory;
 
 public class AdapterFactoryProviderForJSP implements AdapterFactoryProvider {
@@ -103,9 +103,9 @@ public class AdapterFactoryProviderForJSP implements AdapterFactoryProvider {
 
 	protected void addEmbeddedContentFactories(IStructuredModel structuredModel) {
 
-		if (structuredModel instanceof XMLModel) {
-			XMLModel xmlModel = (XMLModel) structuredModel;
-			XMLDocument document = xmlModel.getDocument();
+		if (structuredModel instanceof DOMModel) {
+			DOMModel xmlModel = (DOMModel) structuredModel;
+			DOMDocument document = xmlModel.getDocument();
 			PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) document.getAdapterFor(PageDirectiveAdapter.class);
 			if (pageDirectiveAdapter != null) {
 				// made into registry mechanism
@@ -140,10 +140,10 @@ public class AdapterFactoryProviderForJSP implements AdapterFactoryProvider {
 		//			}
 		//		}
 
-		if (structuredModel instanceof XMLModel) {
+		if (structuredModel instanceof DOMModel) {
 //			IAdapterFactory factory = null;
-			XMLModel xmlModel = (XMLModel) structuredModel;
-			XMLDocument document = xmlModel.getDocument();
+			DOMModel xmlModel = (DOMModel) structuredModel;
+			DOMDocument document = xmlModel.getDocument();
 			PropagatingAdapter propagatingAdapter = (PropagatingAdapter) document.getAdapterFor(PropagatingAdapter.class);
 			if (propagatingAdapter != null) {
 				//	checking if we should bother adding this factory

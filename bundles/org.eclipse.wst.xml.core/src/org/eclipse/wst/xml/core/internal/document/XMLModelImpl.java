@@ -25,11 +25,10 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.xml.core.document.XMLDocument;
-import org.eclipse.wst.xml.core.document.XMLGenerator;
-import org.eclipse.wst.xml.core.document.XMLModel;
-import org.eclipse.wst.xml.core.document.XMLModelNotifier;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMDocument;
+import org.eclipse.wst.xml.core.document.ISourceGenerator;
+import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
@@ -43,11 +42,11 @@ import org.w3c.dom.Node;
 /**
  * XMLModelImpl class
  */
-public class XMLModelImpl extends AbstractStructuredModel implements IStructuredDocumentListener, XMLModel, DOMImplementation {
+public class XMLModelImpl extends AbstractStructuredModel implements IStructuredDocumentListener, DOMModel, DOMImplementation {
 	private static String TRACE_PARSER_MANAGEMENT_EXCEPTION = "parserManagement"; //$NON-NLS-1$
 	private Object active = null;
 	private DocumentImpl document = null;
-	private XMLGenerator generator = null;
+	private ISourceGenerator generator = null;
 	private XMLModelNotifier notifier = null;
 	private XMLModelParser parser = null;
 	private boolean refresh = false;
@@ -327,11 +326,11 @@ public class XMLModelImpl extends AbstractStructuredModel implements IStructured
 	 * 
 	 * @return XMLDocument
 	 */
-	public XMLDocument getDocument() {
+	public DOMDocument getDocument() {
 		return this.document;
 	}
 
-	public XMLGenerator getGenerator() {
+	public ISourceGenerator getGenerator() {
 		if (this.generator == null) {
 			this.generator = XMLGeneratorImpl.getInstance();
 		}
@@ -348,14 +347,14 @@ public class XMLModelImpl extends AbstractStructuredModel implements IStructured
 		if (this.document == null)
 			return null;
 		// search in document children
-		XMLNode parent = null;
+		DOMNode parent = null;
 		int length = this.document.getEndOffset();
 		if (offset * 2 < length) {
 			// search from the first
-			XMLNode child = (XMLNode) this.document.getFirstChild();
+			DOMNode child = (DOMNode) this.document.getFirstChild();
 			while (child != null) {
 				if (child.getEndOffset() <= offset) {
-					child = (XMLNode) child.getNextSibling();
+					child = (DOMNode) child.getNextSibling();
 					continue;
 				}
 				if (child.getStartOffset() > offset) {
@@ -373,14 +372,14 @@ public class XMLModelImpl extends AbstractStructuredModel implements IStructured
 				}
 				// dig more
 				parent = child;
-				child = (XMLNode) parent.getFirstChild();
+				child = (DOMNode) parent.getFirstChild();
 			}
 		} else {
 			// search from the last
-			XMLNode child = (XMLNode) this.document.getLastChild();
+			DOMNode child = (DOMNode) this.document.getLastChild();
 			while (child != null) {
 				if (child.getStartOffset() > offset) {
-					child = (XMLNode) child.getPreviousSibling();
+					child = (DOMNode) child.getPreviousSibling();
 					continue;
 				}
 				if (child.getEndOffset() <= offset) {
@@ -398,7 +397,7 @@ public class XMLModelImpl extends AbstractStructuredModel implements IStructured
 				}
 				// dig more
 				parent = child;
-				child = (XMLNode) parent.getLastChild();
+				child = (DOMNode) parent.getLastChild();
 			}
 		}
 		return parent;
@@ -807,7 +806,7 @@ public class XMLModelImpl extends AbstractStructuredModel implements IStructured
 
 	/**
 	 */
-	public void setGenerator(XMLGenerator generator) {
+	public void setGenerator(ISourceGenerator generator) {
 		this.generator = generator;
 	}
 

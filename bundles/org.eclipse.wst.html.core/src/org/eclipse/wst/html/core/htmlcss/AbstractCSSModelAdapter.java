@@ -20,7 +20,7 @@ import org.eclipse.wst.css.core.internal.document.CSSModelImpl;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.w3c.dom.Element;
 
 /**
@@ -43,7 +43,7 @@ public abstract class AbstractCSSModelAdapter implements ICSSModelAdapter {
 		// create embedded CSS model (not for external CSS)
 		if (getElement() == null)
 			return null;
-		IStructuredModel baseModel = ((XMLNode) getElement()).getModel();
+		IStructuredModel baseModel = ((DOMNode) getElement()).getModel();
 		ICSSModel newModel = (ICSSModel) baseModel.getModelManager().createUnManagedStructuredModelFor(CSS_ID);
 		((CSSModelImpl) newModel).setOwnerDOMNode(getElement());
 		return newModel;

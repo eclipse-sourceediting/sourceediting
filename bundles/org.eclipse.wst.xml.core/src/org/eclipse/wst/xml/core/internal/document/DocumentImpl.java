@@ -22,11 +22,11 @@ import java.util.Map;
 
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 import org.eclipse.wst.xml.core.NameValidator;
+import org.eclipse.wst.xml.core.XMLCharEntity;
 import org.eclipse.wst.xml.core.commentelement.impl.CommentElementRegistry;
-import org.eclipse.wst.xml.core.document.XMLCharEntity;
-import org.eclipse.wst.xml.core.document.XMLDocument;
-import org.eclipse.wst.xml.core.document.XMLElement;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMDocument;
+import org.eclipse.wst.xml.core.document.DOMElement;
+import org.eclipse.wst.xml.core.document.DOMModel;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMEntityDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
@@ -56,7 +56,7 @@ import org.w3c.dom.traversal.TreeWalker;
 /**
  * DocumentImpl class
  */
-public class DocumentImpl extends NodeContainer implements XMLDocument {
+public class DocumentImpl extends NodeContainer implements DOMDocument {
 
 	/**
 	 * Internal-use only class. This class was added to better able to handle
@@ -476,7 +476,7 @@ public class DocumentImpl extends NodeContainer implements XMLDocument {
 		for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
 			if (child.getNodeType() == DOCUMENT_TYPE_NODE && child instanceof DocumentType) {
 				return (DocumentType) child;
-			} else if (child.getNodeType() == ELEMENT_NODE && ((XMLElement) child).isCommentTag()) {
+			} else if (child.getNodeType() == ELEMENT_NODE && ((DOMElement) child).isCommentTag()) {
 				// search DOCTYPE inside of generic comment element
 				DocumentType docType = findDoctype(child);
 				if (docType != null) {
@@ -799,7 +799,7 @@ public class DocumentImpl extends NodeContainer implements XMLDocument {
 	/**
 	 * other nodes will be referring to this one to get the owning model
 	 */
-	public XMLModel getModel() {
+	public DOMModel getModel() {
 		return model;
 	}
 
@@ -1018,7 +1018,7 @@ public class DocumentImpl extends NodeContainer implements XMLDocument {
 	 *            XMLModel
 	 */
 
-	protected void setModel(XMLModel model) {
+	protected void setModel(DOMModel model) {
 		this.model = (XMLModelImpl) model;
 	}
 

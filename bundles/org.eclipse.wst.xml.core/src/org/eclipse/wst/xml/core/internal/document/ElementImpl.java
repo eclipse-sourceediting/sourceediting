@@ -24,9 +24,9 @@ import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.xml.core.XMLNamespace;
 import org.eclipse.wst.xml.core.commentelement.CommentElementAdapter;
-import org.eclipse.wst.xml.core.document.XMLElement;
-import org.eclipse.wst.xml.core.document.XMLModel;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMElement;
+import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
@@ -46,7 +46,7 @@ import org.w3c.dom.traversal.NodeIterator;
 /**
  * ElementImpl class
  */
-public class ElementImpl extends NodeContainer implements XMLElement {
+public class ElementImpl extends NodeContainer implements DOMElement {
 
 	private class Attributes implements NamedNodeMap {
 		Attributes() {
@@ -696,7 +696,7 @@ public class ElementImpl extends NodeContainer implements XMLElement {
 	protected boolean isCDATAContainer() {
 		// use BlockMaker instead of CMElementDeclaration
 		// because <style> and <script> in XHTML is not CDATA content type
-		XMLModel model = getModel();
+		DOMModel model = getModel();
 		if (model == null)
 			return false; // error
 		IStructuredDocument structuredDocument = model.getStructuredDocument();
@@ -1283,7 +1283,7 @@ public class ElementImpl extends NodeContainer implements XMLElement {
 	/**
 	 */
 	public void setCommentTag(boolean isCommentTag) {
-		XMLNode parent = (XMLNode) getParentNode();
+		DOMNode parent = (DOMNode) getParentNode();
 		if (parent != null && !parent.isChildEditable()) {
 			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
 		}
@@ -1298,7 +1298,7 @@ public class ElementImpl extends NodeContainer implements XMLElement {
 	 *            boolean
 	 */
 	public void setEmptyTag(boolean isEmptyTag) {
-		XMLNode parent = (XMLNode) getParentNode();
+		DOMNode parent = (DOMNode) getParentNode();
 		if (parent != null && !parent.isChildEditable()) {
 			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
 		}
@@ -1328,7 +1328,7 @@ public class ElementImpl extends NodeContainer implements XMLElement {
 	 *            boolean
 	 */
 	public void setJSPTag(boolean isJSPTag) {
-		XMLNode parent = (XMLNode) getParentNode();
+		DOMNode parent = (DOMNode) getParentNode();
 		if (parent != null && !parent.isChildEditable()) {
 			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
 		}
@@ -1362,7 +1362,7 @@ public class ElementImpl extends NodeContainer implements XMLElement {
 	/**
 	 */
 	public void setPrefix(String prefix) throws DOMException {
-		XMLNode parent = (XMLNode) getParentNode();
+		DOMNode parent = (DOMNode) getParentNode();
 		if (parent != null && !parent.isChildEditable()) {
 			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
 		}

@@ -21,9 +21,9 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
+import org.eclipse.wst.xml.core.XMLCharEntity;
 import org.eclipse.wst.xml.core.XMLNamespace;
-import org.eclipse.wst.xml.core.document.XMLAttr;
-import org.eclipse.wst.xml.core.document.XMLCharEntity;
+import org.eclipse.wst.xml.core.document.DOMAttr;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
@@ -37,7 +37,7 @@ import org.w3c.dom.Node;
 /**
  * AttrImpl class
  */
-public class AttrImpl extends NodeImpl implements XMLAttr {
+public class AttrImpl extends NodeImpl implements DOMAttr {
 	private ITextRegion equalRegion = null;
 
 	private String name = null;

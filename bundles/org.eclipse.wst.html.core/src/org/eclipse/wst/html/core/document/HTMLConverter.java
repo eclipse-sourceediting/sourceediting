@@ -25,9 +25,9 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.xml.core.document.XMLDocument;
-import org.eclipse.wst.xml.core.document.XMLDocumentType;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMDocument;
+import org.eclipse.wst.xml.core.document.DOMDocumentType;
+import org.eclipse.wst.xml.core.document.DOMModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -45,7 +45,7 @@ public class HTMLConverter {
 
 	}
 
-	public void cleanupModel(XMLModel model) {
+	public void cleanupModel(DOMModel model) {
 		if (model == null)
 			return;
 
@@ -92,7 +92,7 @@ public class HTMLConverter {
 	 * declaratoin: "data" for XML declaration, such as "version=\"1.0\""
 	 * publicId: publicId for DOCTYPE declaration
 	 */
-	public void convert(XMLModel model, String declaration, String publicId) {
+	public void convert(DOMModel model, String declaration, String publicId) {
 		if (model == null)
 			return;
 		setDeclaration(model, declaration, publicId);
@@ -104,7 +104,7 @@ public class HTMLConverter {
 	 * publicId: publicId for DOCTYPE declaration
 	 */
 	public void convert(InputStream input, OutputStream output, String declaration, String publicId) throws UnsupportedEncodingException, IOException, CoreException {
-		XMLModel model = readModel(input);
+		DOMModel model = readModel(input);
 		if (model == null)
 			return;
 		try {
@@ -122,7 +122,7 @@ public class HTMLConverter {
 	 * publicId: publicId for DOCTYPE declaration
 	 */
 	public void convert(IFile file, String declaration, String publicId) throws IOException, CoreException {
-		XMLModel model = readModel(file);
+		DOMModel model = readModel(file);
 		if (model == null)
 			return;
 		try {
@@ -137,7 +137,7 @@ public class HTMLConverter {
 
 	/**
 	 */
-	private static void insertBreak(XMLModel model, Node node) {
+	private static void insertBreak(DOMModel model, Node node) {
 		if (model == null || node == null)
 			return;
 		if (node.getNodeType() == Node.TEXT_NODE)
@@ -163,42 +163,42 @@ public class HTMLConverter {
 
 	/**
 	 */
-	private XMLModel readModel(InputStream input) throws IOException, UnsupportedEncodingException {
+	private DOMModel readModel(InputStream input) throws IOException, UnsupportedEncodingException {
 		if (input == null)
 			return null;
 		// create temporary model
 		String id = input.toString() + ".html"; //$NON-NLS-1$
 		IModelManager manager = StructuredModelManager.getModelManager();
 		IStructuredModel model = manager.getModelForEdit(id, input, null);
-		if (!(model instanceof XMLModel)) {
+		if (!(model instanceof DOMModel)) {
 			if (model == null)
 				model.releaseFromEdit();
 			return null;
 		}
-		return (XMLModel) model;
+		return (DOMModel) model;
 	}
 
 	/**
 	 */
-	private XMLModel readModel(IFile file) throws IOException, CoreException {
+	private DOMModel readModel(IFile file) throws IOException, CoreException {
 		if (file == null)
 			return null;
 		IModelManager manager = StructuredModelManager.getModelManager();
 		IStructuredModel model = manager.getModelForEdit(file);
-		if (!(model instanceof XMLModel)) {
+		if (!(model instanceof DOMModel)) {
 			if (model != null)
 				model.releaseFromEdit();
 			return null;
 		}
-		return (XMLModel) model;
+		return (DOMModel) model;
 	}
 
 	/**
 	 */
-	public void setDeclaration(XMLModel model, String declaration, String publicId) {
+	public void setDeclaration(DOMModel model, String declaration, String publicId) {
 		if (model == null)
 			return;
-		XMLDocument document = model.getDocument();
+		DOMDocument document = model.getDocument();
 		if (document == null)
 			return;
 
@@ -214,7 +214,7 @@ public class HTMLConverter {
 					child = child.getNextSibling();
 				}
 			}
-			XMLDocumentType docType = (XMLDocumentType) document.getDoctype();
+			DOMDocumentType docType = (DOMDocumentType) document.getDoctype();
 
 			if (declaration != null) {
 				if (pi != null) {
@@ -236,13 +236,13 @@ public class HTMLConverter {
 					if (!name.equals(docType.getName())) { // replace
 						Node parent = docType.getParentNode();
 						child = docType;
-						docType = (XMLDocumentType) document.createDoctype(name);
+						docType = (DOMDocumentType) document.createDoctype(name);
 						parent.insertBefore(docType, child);
 						parent.removeChild(child);
 					}
 				}
 				else {
-					docType = (XMLDocumentType) document.createDoctype(name);
+					docType = (DOMDocumentType) document.createDoctype(name);
 					document.insertBefore(docType, child);
 					insertBreak(model, child);
 				}
@@ -268,7 +268,7 @@ public class HTMLConverter {
 
 	/**
 	 */
-	private void writeModel(XMLModel model, OutputStream output) throws UnsupportedEncodingException, IOException, CoreException {
+	private void writeModel(DOMModel model, OutputStream output) throws UnsupportedEncodingException, IOException, CoreException {
 		if (model == null || output == null)
 			return;
 		model.save();
@@ -276,7 +276,7 @@ public class HTMLConverter {
 
 	/**
 	 */
-	private void writeModel(XMLModel model, IFile file) throws IOException, CoreException {
+	private void writeModel(DOMModel model, IFile file) throws IOException, CoreException {
 		if (model == null || file == null)
 			return;
 		IStructuredDocument structuredDocument = model.getStructuredDocument();

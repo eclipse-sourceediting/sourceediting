@@ -27,7 +27,7 @@ import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.ui.views.properties.IPropertySourceExtension;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
@@ -68,7 +68,7 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 	public XMLPropertySourceAdapter(INodeNotifier target) {
 		super();
 		fNode = (Node) target;
-		if (fNode instanceof XMLNode) {
+		if (fNode instanceof DOMNode) {
 			Document ownerDocument = fNode.getOwnerDocument();
 			if (ownerDocument == null) {
 				// if ownerDocument is null, then it must be the Document Node
@@ -361,8 +361,8 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 		if (attrMap != null) {
 			Node attribute = attrMap.getNamedItem(name);
 			if (attribute != null) {
-				if (attribute instanceof XMLNode)
-					returnedValue = ((XMLNode) attribute).getValueSource();
+				if (attribute instanceof DOMNode)
+					returnedValue = ((DOMNode) attribute).getValueSource();
 				else
 					returnedValue = attribute.getNodeValue();
 			}
@@ -528,8 +528,8 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 					// active cell editor to save its value and causing the
 					// loop to continue
 					if (attr.getValue() == null || !attr.getValue().equals(valueString)) {
-						if (attr instanceof XMLNode)
-							((XMLNode) attr).setValueSource(valueString);
+						if (attr instanceof DOMNode)
+							((DOMNode) attr).setValueSource(valueString);
 						else
 							attr.setValue(valueString);
 					}
@@ -538,8 +538,8 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 					// NEW(?) value
 					if (value != null) { // never create an empty attribute
 						Attr newAttr = fNode.getOwnerDocument().createAttribute(name);
-						if (newAttr instanceof XMLNode)
-							((XMLNode) newAttr).setValueSource(valueString);
+						if (newAttr instanceof DOMNode)
+							((DOMNode) newAttr).setValueSource(valueString);
 						else
 							newAttr.setValue(valueString);
 						attrMap.setNamedItem(newAttr);

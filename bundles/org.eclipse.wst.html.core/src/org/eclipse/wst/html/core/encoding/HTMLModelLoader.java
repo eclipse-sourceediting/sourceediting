@@ -28,7 +28,7 @@ import org.eclipse.wst.sse.core.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
 import org.eclipse.wst.sse.core.parser.BlockMarker;
 import org.eclipse.wst.sse.core.util.Debug;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMModel;
 import org.eclipse.wst.xml.core.internal.DebugAdapterFactory;
 import org.eclipse.wst.xml.core.internal.parser.XMLSourceParser;
 import org.eclipse.wst.xml.core.internal.propagate.PropagatingAdapterFactoryImpl;
@@ -86,7 +86,7 @@ public class HTMLModelLoader extends AbstractModelLoader {
 		// I noticed the ProagatingAdapterFactory was being added,
 		// that that the ProagatingAdapterAdapter was not being
 		// preload adapted -- I'm assuing it ALWAYS has to be.
-		XMLModel domModel = (XMLModel) structuredModel;
+		DOMModel domModel = (DOMModel) structuredModel;
 		// if there is a model in the adapter, this will adapt it to
 		// first node. After that the PropagatingAdater spreads over the
 		// children being

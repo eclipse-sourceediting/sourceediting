@@ -27,7 +27,7 @@ import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
@@ -73,7 +73,7 @@ public class XMLTagInfoHoverProcessor implements ITextHover {
 
 		while (node != null && node.getNodeType() == Node.TEXT_NODE && node.getParentNode() != null)
 			node = node.getParentNode();
-		XMLNode parentNode = (XMLNode) node;
+		DOMNode parentNode = (DOMNode) node;
 
 		IStructuredDocumentRegion flatNode = ((IStructuredDocument) textViewer.getDocument()).getRegionAtCharacterOffset(documentPosition);
 		if (flatNode != null) {
@@ -91,24 +91,24 @@ public class XMLTagInfoHoverProcessor implements ITextHover {
 	 * 
 	 * @return String hoverhelp
 	 */
-	protected String computeRegionHelp(IndexedRegion treeNode, XMLNode parentNode, IStructuredDocumentRegion flatNode, ITextRegion region) {
+	protected String computeRegionHelp(IndexedRegion treeNode, DOMNode parentNode, IStructuredDocumentRegion flatNode, ITextRegion region) {
 		String result = null;
 		if (region == null)
 			return null;
 		String regionType = region.getType();
 		if (regionType == XMLRegionContext.XML_TAG_NAME)
-			result = computeTagNameHelp((XMLNode) treeNode, parentNode, flatNode, region);
+			result = computeTagNameHelp((DOMNode) treeNode, parentNode, flatNode, region);
 		else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME)
-			result = computeTagAttNameHelp((XMLNode) treeNode, parentNode, flatNode, region);
+			result = computeTagAttNameHelp((DOMNode) treeNode, parentNode, flatNode, region);
 		else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE)
-			result = computeTagAttValueHelp((XMLNode) treeNode, parentNode, flatNode, region);
+			result = computeTagAttValueHelp((DOMNode) treeNode, parentNode, flatNode, region);
 		return result;
 	}
 
 	/**
 	 * Computes the hover help for the attribute name
 	 */
-	protected String computeTagAttNameHelp(XMLNode xmlnode, XMLNode parentNode, IStructuredDocumentRegion flatNode, ITextRegion region) {
+	protected String computeTagAttNameHelp(DOMNode xmlnode, DOMNode parentNode, IStructuredDocumentRegion flatNode, ITextRegion region) {
 		CMElementDeclaration elementDecl = getCMElementDeclaration(xmlnode);
 		String attName = flatNode.getText(region);
 		CMAttributeDeclaration attDecl = getCMAttributeDeclaration(elementDecl, attName);
@@ -119,7 +119,7 @@ public class XMLTagInfoHoverProcessor implements ITextHover {
 	 * Computes the hover help for the attribute value (this is the same as
 	 * the attribute name's help)
 	 */
-	protected String computeTagAttValueHelp(XMLNode xmlnode, XMLNode parentNode, IStructuredDocumentRegion flatNode, ITextRegion region) {
+	protected String computeTagAttValueHelp(DOMNode xmlnode, DOMNode parentNode, IStructuredDocumentRegion flatNode, ITextRegion region) {
 		CMElementDeclaration elementDecl = getCMElementDeclaration(xmlnode);
 		ITextRegion attrNameRegion = getAttrNameRegion(xmlnode, region);
 
@@ -131,7 +131,7 @@ public class XMLTagInfoHoverProcessor implements ITextHover {
 	/**
 	 * Computes the hover help for the tag name
 	 */
-	protected String computeTagNameHelp(XMLNode xmlnode, XMLNode parentNode, IStructuredDocumentRegion flatNode, ITextRegion region) {
+	protected String computeTagNameHelp(DOMNode xmlnode, DOMNode parentNode, IStructuredDocumentRegion flatNode, ITextRegion region) {
 		CMElementDeclaration elementDecl = getCMElementDeclaration(xmlnode);
 		CMElementDeclaration pelementDecl = getCMElementDeclaration(parentNode);
 		return getAdditionalInfo(pelementDecl, elementDecl);
@@ -166,7 +166,7 @@ public class XMLTagInfoHoverProcessor implements ITextHover {
 	 * region
 	 * 
 	 */
-	protected ITextRegion getAttrNameRegion(XMLNode node, ITextRegion region) {
+	protected ITextRegion getAttrNameRegion(DOMNode node, ITextRegion region) {
 		// Find the attribute name for which this position should have a value
 		IStructuredDocumentRegion open = node.getFirstStructuredDocumentRegion();
 		ITextRegionList openRegions = open.getRegions();

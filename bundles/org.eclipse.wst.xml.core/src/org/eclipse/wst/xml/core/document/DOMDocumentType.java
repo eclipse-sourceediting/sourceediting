@@ -22,7 +22,7 @@ import org.w3c.dom.DocumentType;
  * 
  * @since 1.0
  */
-public interface XMLDocumentType extends XMLNode, DocumentType {
+public interface DOMDocumentType extends DOMNode, DocumentType {
 
 
 	/**

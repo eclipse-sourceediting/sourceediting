@@ -23,9 +23,9 @@ import org.eclipse.wst.css.core.event.ICSSStyleListener;
 import org.eclipse.wst.css.core.util.ImportedCollector;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.xml.core.document.XMLModel;
-import org.eclipse.wst.xml.core.document.XMLModelNotifier;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.internal.document.XMLModelNotifier;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -186,10 +186,10 @@ public abstract class AbstractStyleSheetAdapter extends AbstractCSSModelAdapter 
 	 * @param srcModel com.ibm.sed.css.model.interfaces.ICSSModel
 	 */
 	public void styleUpdate(ICSSModel srcModel) {
-		XMLNode node = (XMLNode) getElement();
+		DOMNode node = (DOMNode) getElement();
 		if (node == null)
 			return;
-		XMLModel model = node.getModel();
+		DOMModel model = node.getModel();
 		if (model == null)
 			return;
 		XMLModelNotifier notifier = model.getModelNotifier();

@@ -21,8 +21,8 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.internal.StructuredDocumentCommand;
 import org.eclipse.wst.sse.ui.internal.autoedit.BasicAutoEditStrategy;
-import org.eclipse.wst.xml.core.document.XMLElement;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMElement;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.w3c.dom.Node;
 
@@ -49,15 +49,15 @@ public class StructuredAutoEditStrategyXML extends BasicAutoEditStrategy {
 		}
 	}
 
-	private boolean isCommentNode(XMLNode node) {
-		return (node != null && node instanceof XMLElement && ((XMLElement) node).isCommentTag());
+	private boolean isCommentNode(DOMNode node) {
+		return (node != null && node instanceof DOMElement && ((DOMElement) node).isCommentTag());
 	}
 
-	private boolean isDocumentNode(XMLNode node) {
+	private boolean isDocumentNode(DOMNode node) {
 		return (node != null && node.getNodeType() == Node.DOCUMENT_NODE);
 	}
 
-	protected boolean isEndTagRequired(XMLNode node) {
+	protected boolean isEndTagRequired(DOMNode node) {
 
 		if (node == null)
 			return false;
@@ -90,11 +90,11 @@ public class StructuredAutoEditStrategyXML extends BasicAutoEditStrategy {
 	protected void smartInsertForEndTag(StructuredDocumentCommand structuredDocumentCommand, IDocument document, IStructuredModel model) {
 		try {
 			if (structuredDocumentCommand.text.equals("/") && document.getLength() >= 1 && document.get(structuredDocumentCommand.offset - 1, 1).equals("<")) { //$NON-NLS-1$ //$NON-NLS-2$
-				XMLNode parentNode = (XMLNode) ((XMLNode) model.getIndexedRegion(structuredDocumentCommand.offset - 1)).getParentNode();
+				DOMNode parentNode = (DOMNode) ((DOMNode) model.getIndexedRegion(structuredDocumentCommand.offset - 1)).getParentNode();
 				if (isCommentNode(parentNode)) {
 					// loop and find non comment node parent
 					while (parentNode != null && isCommentNode(parentNode)) {
-						parentNode = (XMLNode) parentNode.getParentNode();
+						parentNode = (DOMNode) parentNode.getParentNode();
 					}
 				}
 

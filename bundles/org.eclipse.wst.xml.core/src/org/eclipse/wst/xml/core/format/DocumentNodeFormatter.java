@@ -14,11 +14,11 @@ package org.eclipse.wst.xml.core.format;
 
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatContraints;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMNode;
 
 
 public class DocumentNodeFormatter extends NodeFormatter {
-	protected void formatChildren(XMLNode node, IStructuredFormatContraints formatContraints) {
+	protected void formatChildren(DOMNode node, IStructuredFormatContraints formatContraints) {
 		String singleIndent = getFormatPreferences().getIndent();
 		String lineIndent = formatContraints.getCurrentIndent();
 
@@ -26,10 +26,10 @@ public class DocumentNodeFormatter extends NodeFormatter {
 			// normalize node first to combine adjacent text nodes
 			node.normalize();
 
-			XMLNode nextChild = (XMLNode) node.getFirstChild();
+			DOMNode nextChild = (DOMNode) node.getFirstChild();
 			while (nextChild != null) {
-				XMLNode eachChildNode = nextChild;
-				nextChild = (XMLNode) eachChildNode.getNextSibling();
+				DOMNode eachChildNode = nextChild;
+				nextChild = (DOMNode) eachChildNode.getNextSibling();
 				IStructuredFormatter formatter = getFormatter(eachChildNode);
 				IStructuredFormatContraints childFormatContraints = formatter.getFormatContraints();
 				String childIndent = lineIndent + singleIndent;
@@ -41,12 +41,12 @@ public class DocumentNodeFormatter extends NodeFormatter {
 
 				if (nextChild != null && nextChild.getParentNode() == null)
 					// nextNode is deleted during format
-					nextChild = (XMLNode) eachChildNode.getNextSibling();
+					nextChild = (DOMNode) eachChildNode.getNextSibling();
 			}
 		}
 	}
 
-	protected void formatNode(XMLNode node, IStructuredFormatContraints formatContraints) {
+	protected void formatNode(DOMNode node, IStructuredFormatContraints formatContraints) {
 		if (node != null)
 			formatChildren(node, formatContraints);
 	}

@@ -15,7 +15,7 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 import org.eclipse.wst.sse.core.INodeAdapter;
-import org.eclipse.wst.xml.core.document.XMLElement;
+import org.eclipse.wst.xml.core.document.DOMElement;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -51,5 +51,5 @@ public interface ModelParserAdapter extends INodeAdapter {
 
 	/**
 	 */
-	public boolean isEndTag(XMLElement element);
+	public boolean isEndTag(DOMElement element);
 }

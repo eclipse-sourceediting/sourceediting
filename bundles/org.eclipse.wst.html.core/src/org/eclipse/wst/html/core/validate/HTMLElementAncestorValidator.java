@@ -14,7 +14,7 @@ package org.eclipse.wst.html.core.validate;
 
 import org.eclipse.wst.html.core.HTMLCMProperties;
 import org.eclipse.wst.sse.core.IndexedRegion;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
@@ -59,7 +59,7 @@ public class HTMLElementAncestorValidator extends PrimeValidator {
 		while (parent != null) {
 			CMNode pdec = prohibited.getNamedItem(parent.getNodeName());
 			if (pdec != null) { // prohibited element is found in ancestors.
-				Segment errorSeg = FMUtil.getSegment((XMLNode) node, FMUtil.SEG_START_TAG);
+				Segment errorSeg = FMUtil.getSegment((DOMNode) node, FMUtil.SEG_START_TAG);
 				if (errorSeg != null)
 					reporter.report(MessageFactory.createMessage(new ErrorInfoImpl(ErrorState.INVALID_CONTENT_ERROR, errorSeg, target)));
 				break; // If one prohibited ancestor is found, it's enough.

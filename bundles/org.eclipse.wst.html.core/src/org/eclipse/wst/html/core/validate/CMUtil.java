@@ -15,7 +15,7 @@ import java.util.Iterator;
 
 import org.eclipse.wst.html.core.HTMLCMProperties;
 import org.eclipse.wst.html.core.modelquery.HMQUtil;
-import org.eclipse.wst.xml.core.document.XMLElement;
+import org.eclipse.wst.xml.core.document.DOMElement;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
@@ -164,9 +164,9 @@ final class CMUtil {
 	}
 
 	public static boolean isForeign(Element target) {
-		if (!(target instanceof XMLElement))
+		if (!(target instanceof DOMElement))
 			return true;
-		XMLElement element = (XMLElement) target;
+		DOMElement element = (DOMElement) target;
 		return !element.isGlobalTag();
 	}
 

@@ -13,6 +13,7 @@
 package org.eclipse.wst.xml.core.document;
 
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.xml.core.internal.document.XMLModelNotifier;
 
 /**
  * Provides means to get the XMLModel form of IStrucutredModel. Not to be
@@ -20,21 +21,21 @@ import org.eclipse.wst.sse.core.IStructuredModel;
  * 
  * @since 1.0
  */
-public interface XMLModel extends IStructuredModel {
+public interface DOMModel extends IStructuredModel {
 
 	/**
 	 * Returns the DOM Document.
 	 * 
 	 * @return the DOM Document.
 	 */
-	XMLDocument getDocument();
+	DOMDocument getDocument();
 
 	/**
 	 * Returns an source generator appropriate for this model.
 	 * 
 	 * @return the source generator
 	 */
-	XMLGenerator getGenerator();
+	ISourceGenerator getGenerator();
 
 	/**
 	 * Returns an XMLModelNotifier. Clients should not use.

@@ -35,8 +35,8 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.search.FindOccurrencesActionProvider;
-import org.eclipse.wst.xml.core.document.XMLDocument;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMDocument;
+import org.eclipse.wst.xml.core.document.DOMModel;
 import org.eclipse.wst.xml.ui.actions.AddBlockCommentActionXML;
 import org.eclipse.wst.xml.ui.actions.RemoveBlockCommentActionXML;
 import org.eclipse.wst.xml.ui.actions.ToggleCommentActionXML;
@@ -92,10 +92,10 @@ public class StructuredTextEditorJSP extends StructuredTextEditor {
 
 		IJavaElement[] elements = new IJavaElement[0];
 		// get JSP translation object for this viewer's document
-		XMLModel xmlModel = (XMLModel) StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
+		DOMModel xmlModel = (DOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
 		try {
 			if (xmlModel != null) {
-				XMLDocument xmlDoc = xmlModel.getDocument();
+				DOMDocument xmlDoc = xmlModel.getDocument();
 
 				JSPTranslationAdapter adapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
 				if (adapter != null) {

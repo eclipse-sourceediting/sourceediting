@@ -38,8 +38,8 @@ import org.eclipse.wst.sse.core.internal.encoding.EncodingRule;
 import org.eclipse.wst.sse.core.util.PathHelper;
 import org.eclipse.wst.sse.core.util.ProjectResolver;
 import org.eclipse.wst.sse.core.util.URIResolver;
-import org.eclipse.wst.xml.core.document.XMLDocument;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMDocument;
+import org.eclipse.wst.xml.core.document.DOMModel;
 import org.eclipse.wst.xml.core.internal.document.DocumentTypeAdapter;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -340,8 +340,8 @@ public class URLModelProvider {
 	 * Utility to check the model is HTML family or not
 	 */
 	static private boolean isHTMLFamily(IStructuredModel model) {
-		if (model instanceof XMLModel) {
-			XMLDocument document = ((XMLModel) model).getDocument();
+		if (model instanceof DOMModel) {
+			DOMDocument document = ((DOMModel) model).getDocument();
 			DocumentTypeAdapter adapter = (DocumentTypeAdapter) document.getAdapterFor(DocumentTypeAdapter.class);
 			if (adapter != null)
 				return adapter.hasFeature(HTMLDocumentTypeConstants.HTML);
@@ -365,8 +365,8 @@ public class URLModelProvider {
 		// dmw_TODO needs to be changed to handle a content model
 		// of HTML or XHTML
 		if (isHTMLFamily(baseModel)) {
-			final XMLModel xmlmodel = (XMLModel) baseModel;
-			final XMLDocument doc = xmlmodel.getDocument();
+			final DOMModel xmlmodel = (DOMModel) baseModel;
+			final DOMDocument doc = xmlmodel.getDocument();
 			// look for <BASE> w/ href
 			final NodeList nl = doc.getElementsByTagName("BASE");//$NON-NLS-1$
 			if ((nl != null) && (nl.getLength() > 0)) {

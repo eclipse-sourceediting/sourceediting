@@ -28,7 +28,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMModel;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.CMDocumentLoader;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.InferredGrammarBuildingCMDocumentLoader;
@@ -302,7 +302,7 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 		public void run() {
 			if (model != null) {
 				ModelQuery modelQuery = ModelQueryUtil.getModelQuery(model);
-				Document document = ((XMLModel) model).getDocument();
+				Document document = ((DOMModel) model).getDocument();
 				if (modelQuery != null && modelQuery.getCMDocumentManager() != null) {
 					modelQuery.getCMDocumentManager().getCMDocumentCache().clear();
 					// TODO... need to figure out how to access the

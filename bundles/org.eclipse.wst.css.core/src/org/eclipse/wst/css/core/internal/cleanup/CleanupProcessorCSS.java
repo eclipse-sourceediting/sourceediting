@@ -28,7 +28,7 @@ import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.cleanup.AbstractStructuredCleanupProcessor;
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupHandler;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMModel;
 import org.w3c.dom.Node;
 
 
@@ -46,7 +46,7 @@ public class CleanupProcessorCSS extends AbstractStructuredCleanupProcessor {
 				formatUtil.replaceSource(doc.getModel(), startOffset, endOffset - startOffset, buf.toString());
 			}
 		}
-		else if (structuredModel instanceof XMLModel) {
+		else if (structuredModel instanceof DOMModel) {
 			List cssnodes = formatUtil.collectCSSNodes(structuredModel, start, length);
 			if (cssnodes != null && !cssnodes.isEmpty()) {
 				ICSSModel model = null;

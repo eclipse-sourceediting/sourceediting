@@ -20,8 +20,8 @@ import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.xml.core.document.XMLDocument;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMDocument;
+import org.eclipse.wst.xml.core.document.DOMModel;
 
 class JSPJavaSelectionProvider {
 	static IJavaElement[] getSelection(ITextEditor textEditor) {
@@ -32,10 +32,10 @@ class JSPJavaSelectionProvider {
 		if (selection instanceof ITextSelection) {
 			ITextSelection textSelection = (ITextSelection) selection;
 			// get the JSP translation object for this editor's document
-			XMLModel xmlModel = (XMLModel) StructuredModelManager.getModelManager().getExistingModelForRead(document);
+			DOMModel xmlModel = (DOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(document);
 			try {
 				if (xmlModel != null) {
-					XMLDocument xmlDoc = xmlModel.getDocument();
+					DOMDocument xmlDoc = xmlModel.getDocument();
 
 					JSPTranslationAdapter adapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
 					if (adapter != null) {

@@ -24,7 +24,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xsd.ui.internal.XSDEditor;
 import org.eclipse.wst.xsd.ui.internal.util.ViewUtility;
 import org.eclipse.xsd.XSDConcreteComponent;
@@ -146,7 +146,7 @@ public class LinkedGraphViewer
 
               // this test ensures that we don't attempt to select an element for an external schema
               //
-              if (element instanceof XMLNode)
+              if (element instanceof DOMNode)
               {
                 // now update the minor viewer based on the selected component in the major viewer
                 minorViewer.setInput((XSDConcreteComponent)model);

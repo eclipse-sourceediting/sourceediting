@@ -37,7 +37,7 @@ import org.eclipse.wst.common.ui.properties.internal.provisional.ISection;
 import org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetPage;
 import org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetWidgetFactory;
 import org.eclipse.wst.xml.core.NameValidator;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.actions.CreateElementAction;
@@ -103,7 +103,7 @@ public class AbstractSection implements ISection, IPropertyChangeListener, Liste
       xsdSchema = ((XSDConcreteComponent)input).getSchema();
       
       Element element = ((XSDConcreteComponent)input).getElement();
-      if (element instanceof XMLNode)
+      if (element instanceof DOMNode)
       {
         isReadOnly = false;
       }

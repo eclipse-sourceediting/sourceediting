@@ -11,8 +11,8 @@
 package org.eclipse.wst.html.core.validate;
 
 import org.eclipse.wst.sse.core.IndexedRegion;
-import org.eclipse.wst.xml.core.document.XMLNode;
-import org.eclipse.wst.xml.core.document.XMLText;
+import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.DOMText;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -144,7 +144,7 @@ public class HTMLElementContentValidator extends PrimeValidator {
 						return;
 					case CMElementDeclaration.ELEMENT :
 					case CMElementDeclaration.EMPTY :
-						if (((XMLText) child).isWhitespace())
+						if (((DOMText) child).isWhitespace())
 							return;
 						error = ErrorState.INVALID_CONTENT_ERROR;
 						break;
@@ -170,7 +170,7 @@ public class HTMLElementContentValidator extends PrimeValidator {
 				break;
 		}
 		if (error != ErrorState.NONE_ERROR) {
-			Segment errorSeg = FMUtil.getSegment((XMLNode) child, segType);
+			Segment errorSeg = FMUtil.getSegment((DOMNode) child, segType);
 			if (errorSeg != null)
 				reporter.report(MessageFactory.createMessage(new ErrorInfoImpl(error, errorSeg, child)));
 		}

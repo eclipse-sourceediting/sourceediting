@@ -22,8 +22,8 @@ import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.xml.core.document.XMLElement;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMElement;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xml.core.format.IStructuredFormatPreferencesXML;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.w3c.dom.Attr;
@@ -57,7 +57,7 @@ public class HTMLElementFormatter extends HTMLFormatter implements XMLRegionCont
 
 	/**
 	 */
-	private void formatEndTag(XMLElement element, HTMLFormatContraints contraints) {
+	private void formatEndTag(DOMElement element, HTMLFormatContraints contraints) {
 		IStructuredDocumentRegion endStructuredDocumentRegion = element.getEndStructuredDocumentRegion();
 		if (endStructuredDocumentRegion == null)
 			return;
@@ -102,10 +102,10 @@ public class HTMLElementFormatter extends HTMLFormatter implements XMLRegionCont
 
 	/**
 	 */
-	protected void formatNode(XMLNode node, HTMLFormatContraints contraints) {
+	protected void formatNode(DOMNode node, HTMLFormatContraints contraints) {
 		if (node == null)
 			return;
-		XMLElement element = (XMLElement) node;
+		DOMElement element = (DOMElement) node;
 
 		formatStartTag(element, contraints);
 
@@ -116,7 +116,7 @@ public class HTMLElementFormatter extends HTMLFormatter implements XMLRegionCont
 
 	/**
 	 */
-	private void formatStartTag(XMLElement element, HTMLFormatContraints contraints) {
+	private void formatStartTag(DOMElement element, HTMLFormatContraints contraints) {
 		IStructuredDocumentRegion startStructuredDocumentRegion = element.getStartStructuredDocumentRegion();
 		if (startStructuredDocumentRegion == null)
 			return;
@@ -286,7 +286,7 @@ public class HTMLElementFormatter extends HTMLFormatter implements XMLRegionCont
 		String value = getCSSValue(attr);
 		if (value == null)
 			return;
-		String oldValue = ((XMLNode) attr).getValueSource();
+		String oldValue = ((DOMNode) attr).getValueSource();
 		if (oldValue != null && value.equals(oldValue))
 			return;
 		attr.setValue(value);

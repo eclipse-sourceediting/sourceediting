@@ -19,7 +19,7 @@ import java.util.TimerTask;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMModel;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.CMDocumentLoader;
@@ -148,7 +148,7 @@ public class DOMObserver {
 	protected int timerTaskCount = 0;
 
 	public DOMObserver(IStructuredModel model) {
-		this.document = (model instanceof XMLModel) ? ((XMLModel) model).getDocument() : null;
+		this.document = (model instanceof DOMModel) ? ((DOMModel) model).getDocument() : null;
 
 		if (document != null) {
 			ModelQuery modelQuery = ModelQueryUtil.getModelQuery(document);

@@ -26,7 +26,7 @@ import org.eclipse.wst.sse.core.IModelStateListener;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
@@ -84,8 +84,8 @@ public class ModelQueryAdapterFactoryForXML extends AbstractAdapterFactory imple
 		if (org.eclipse.wst.sse.core.util.Debug.displayInfo)
 			System.out.println("-----------------------ModelQueryAdapterFactoryForXML.createAdapter" + target); //$NON-NLS-1$
 		if (modelQueryAdapterImpl == null) {
-			if (target instanceof XMLNode) {
-				XMLNode xmlNode = (XMLNode) target;
+			if (target instanceof DOMNode) {
+				DOMNode xmlNode = (DOMNode) target;
 				IStructuredModel model = stateNotifier = xmlNode.getModel();
 				stateNotifier.addModelStateListener(this);
 				String baseLocation = null;

@@ -14,9 +14,7 @@ package org.eclipse.wst.xml.core.document;
 
 
 
-import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.w3c.dom.Attr;
-
+import org.w3c.dom.Text;
 
 /**
  * This interface provides extensions to corresponding DOM interface to enable
@@ -25,46 +23,24 @@ import org.w3c.dom.Attr;
  * @since 1.0
  * 
  */
-public interface XMLAttr extends XMLNode, Attr {
+
+public interface DOMText extends DOMNode, Text {
+
+	/**
+	 * Appends the content of the text node
+	 */
+	void appendText(Text text);
+
+	/**
+	 * Inserts the content of the text node at the specified position
+	 */
+	void insertText(Text text, int offset);
 
 	/**
 	 */
-	ITextRegion getEqualRegion();
-
-	/**
-	 * @return
-	 */
-	int getNameRegionEndOffset();
-
-	int getNameRegionStartOffset();
-
-	String getNameRegionText();
-
-	/**
-	 * @return
-	 */
-	int getNameRegionTextEndOffset();
-
-	int getValueRegionStartOffset();
-
-	String getValueRegionText();
-
-	/**
-	 * Check if Attr has JSP in value
-	 */
-	boolean hasNestedValue();
-
-	/**
-	 * Check if Attr has only name but not equal sign nor value
-	 */
-	boolean hasNameOnly();
+	boolean isInvalid();
 
 	/**
 	 */
-	boolean isGlobalAttr();
-
-	/**
-	 */
-	boolean isXMLAttr();
-
+	boolean isWhitespace();
 }

@@ -15,7 +15,7 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
@@ -491,11 +491,11 @@ public abstract class NodeContainer extends NodeImpl implements Node, NodeList {
 		Node node;
 		if (editable) {
 			for (node = getFirstChild(); node != null; node = node.getNextSibling()) {
-				roc.unlockNode((XMLNode) node);
+				roc.unlockNode((DOMNode) node);
 			}
 		} else {
 			for (node = getFirstChild(); node != null; node = node.getNextSibling()) {
-				roc.lockNode((XMLNode) node);
+				roc.lockNode((DOMNode) node);
 			}
 		}
 

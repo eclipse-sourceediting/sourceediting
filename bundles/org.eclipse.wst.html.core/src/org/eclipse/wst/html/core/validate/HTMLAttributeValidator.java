@@ -18,9 +18,9 @@ import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.xml.core.document.XMLAttr;
-import org.eclipse.wst.xml.core.document.XMLElement;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMAttr;
+import org.eclipse.wst.xml.core.document.DOMElement;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
@@ -48,7 +48,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 
 	/**
 	 */
-	private Segment getErrorSegment(XMLNode errorNode, int regionType) {
+	private Segment getErrorSegment(DOMNode errorNode, int regionType) {
 		ITextRegion rgn = null;
 		switch (regionType) {
 			case REGION_NAME :
@@ -62,8 +62,8 @@ public class HTMLAttributeValidator extends PrimeValidator {
 				break;
 		}
 		if (rgn != null) {
-			if (errorNode instanceof XMLAttr) {
-				XMLElement ownerElement = (XMLElement) ((XMLAttr) errorNode).getOwnerElement();
+			if (errorNode instanceof DOMAttr) {
+				DOMElement ownerElement = (DOMElement) ((DOMAttr) errorNode).getOwnerElement();
 				if (ownerElement != null) {
 					int regionStartOffset = ownerElement.getFirstStructuredDocumentRegion().getStartOffset(rgn);
 					int regionLength = rgn.getLength();
@@ -104,9 +104,9 @@ public class HTMLAttributeValidator extends PrimeValidator {
 			// whether
 			// an attr has prefix or not by calling XMLAttr#isGlobalAttr().
 			// When a attr has prefix (not global), it returns false.
-			boolean isXMLAttr = a instanceof XMLAttr;
+			boolean isXMLAttr = a instanceof DOMAttr;
 			if (isXMLAttr) {
-				XMLAttr xmlattr = (XMLAttr) a;
+				DOMAttr xmlattr = (DOMAttr) a;
 				if (!xmlattr.isGlobalAttr())
 					continue; // skip futher validation and begin next loop.
 			}
@@ -116,7 +116,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 				// No attr declaration was found. That is, the attr name is
 				// undefined.
 				// but not regard it as undefined name if it includes JSP
-				if (hasJSPRegion(((XMLNode) a).getNameRegion())) {
+				if (hasJSPRegion(((DOMNode) a).getNameRegion())) {
 					rgnType = REGION_NAME;
 					state = ErrorState.UNDEFINED_NAME_ERROR;
 				}
@@ -129,7 +129,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 					// attributes
 					// might be written in boolean format. It should be check
 					// specifically.
-					if (CMUtil.isBooleanAttr(adec) && ((XMLAttr) a).hasNameOnly())
+					if (CMUtil.isBooleanAttr(adec) && ((DOMAttr) a).hasNameOnly())
 						continue; // OK, keep going. No more check is needed
 					// against this attr.
 				}
@@ -179,7 +179,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 								// actualValue is invalid.
 								// but not regard it as undefined value if it
 								// includes JSP.
-								if (hasJSPRegion(((XMLNode) a).getValueRegion())) {
+								if (hasJSPRegion(((DOMNode) a).getValueRegion())) {
 									rgnType = REGION_VALUE;
 									state = ErrorState.UNDEFINED_VALUE_ERROR;
 								}
@@ -190,7 +190,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 				// <<D210422
 				if (state == ErrorState.NONE_ERROR) { // Need more check.
 					if (isXMLAttr) {
-						String source = ((XMLAttr) a).getValueRegionText();
+						String source = ((DOMAttr) a).getValueRegionText();
 						if (source != null) {
 							char firstChar = source.charAt(0);
 							char lastChar = source.charAt(source.length() - 1);
@@ -206,7 +206,7 @@ public class HTMLAttributeValidator extends PrimeValidator {
 				// D210422
 			}
 			if (state != ErrorState.NONE_ERROR) {
-				Segment seg = getErrorSegment((XMLNode) a, rgnType);
+				Segment seg = getErrorSegment((DOMNode) a, rgnType);
 				if (seg != null)
 					reporter.report(MessageFactory.createMessage(new ErrorInfoImpl(state, seg, a)));
 			}

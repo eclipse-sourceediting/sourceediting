@@ -24,8 +24,8 @@ import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.xml.core.document.XMLDocument;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMDocument;
+import org.eclipse.wst.xml.core.document.DOMModel;
 
 /**
  * Provides javadoc hover help documentation for java code inside JSPs
@@ -100,10 +100,10 @@ public class JSPJavaJavadocHoverProcessor implements ITextHover {
 	 */
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		// get JSP translation object for this viewer's document
-		XMLModel xmlModel = (XMLModel) StructuredModelManager.getModelManager().getExistingModelForRead(textViewer.getDocument());
+		DOMModel xmlModel = (DOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(textViewer.getDocument());
 		try {
 			if(xmlModel != null) {
-				XMLDocument xmlDoc = xmlModel.getDocument();
+				DOMDocument xmlDoc = xmlModel.getDocument();
 				JSPTranslationAdapter adapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
 				if (adapter != null) {
 					JSPTranslation translation = adapter.getJSPTranslation();

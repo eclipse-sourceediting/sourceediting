@@ -15,7 +15,7 @@ package org.eclipse.wst.xml.core.internal.util;
 import java.io.PrintStream;
 
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -75,8 +75,8 @@ public class DebugDocument {
 	public static void printNode(Node topNode, PrintStream out) {
 		// print out this node
 		//
-		IStructuredDocumentRegion firstStructuredDocumentRegion = ((XMLNode) topNode).getFirstStructuredDocumentRegion();
-		IStructuredDocumentRegion lastStructuredDocumentRegion = ((XMLNode) topNode).getLastStructuredDocumentRegion();
+		IStructuredDocumentRegion firstStructuredDocumentRegion = ((DOMNode) topNode).getFirstStructuredDocumentRegion();
+		IStructuredDocumentRegion lastStructuredDocumentRegion = ((DOMNode) topNode).getLastStructuredDocumentRegion();
 		if ((firstStructuredDocumentRegion == null) || (lastStructuredDocumentRegion == null)) {
 			// no text to output
 		} else {

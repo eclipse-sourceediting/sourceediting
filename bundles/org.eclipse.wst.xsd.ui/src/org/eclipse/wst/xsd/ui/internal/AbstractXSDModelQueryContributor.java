@@ -13,7 +13,7 @@ import java.net.URL;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMModel;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
@@ -23,7 +23,7 @@ public abstract class AbstractXSDModelQueryContributor
 { 
   protected AbstractXSDDataTypeValueExtension xsdDataTypeValueExtension;
 
-  public void setModel(XMLModel model)
+  public void setModel(DOMModel model)
   {                    
     // remove our old DataTypeValueExtension
     //

@@ -33,7 +33,7 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.sse.ui.internal.contentassist.IResourceDependentProcessor;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.eclipse.wst.xml.ui.contentassist.XMLRelevanceConstants;
 import org.eclipse.wst.xml.ui.util.SharedXMLEditorPluginImageHelper;
@@ -151,10 +151,10 @@ public class JSPJavaContentAssistProcessor implements IContentAssistProcessor, I
 			fErrorMessage = UNKNOWN_CONTEXT;
 		}
 
-		XMLNode xNode = null;
+		DOMNode xNode = null;
 		IStructuredDocumentRegion flat = null;
-		if (treeNode instanceof XMLNode) {
-			xNode = (XMLNode) treeNode;
+		if (treeNode instanceof DOMNode) {
+			xNode = (DOMNode) treeNode;
 			flat = xNode.getFirstStructuredDocumentRegion();
 			if (flat != null && flat.getType() == DOMJSPRegionContexts.JSP_CONTENT) {
 				flat = flat.getPrevious();

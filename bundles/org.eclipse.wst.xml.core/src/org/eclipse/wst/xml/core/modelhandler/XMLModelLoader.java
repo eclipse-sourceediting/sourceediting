@@ -23,7 +23,7 @@ import org.eclipse.wst.sse.core.IModelLoader;
 import org.eclipse.wst.sse.core.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
 import org.eclipse.wst.sse.core.util.Debug;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMModel;
 import org.eclipse.wst.xml.core.encoding.XMLDocumentLoader;
 import org.eclipse.wst.xml.core.internal.DebugAdapterFactory;
 import org.eclipse.wst.xml.core.internal.document.XMLModelImpl;
@@ -74,7 +74,7 @@ public class XMLModelLoader extends AbstractModelLoader {
 
 	protected void preLoadAdapt(IStructuredModel structuredModel) {
 		super.preLoadAdapt(structuredModel);
-		XMLModel domModel = (XMLModel) structuredModel;
+		DOMModel domModel = (DOMModel) structuredModel;
 		// if there is a model in the adapter, this will adapt it to
 		// first node. After that the PropagatingAdater spreads over the
 		// children being

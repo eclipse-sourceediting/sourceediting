@@ -34,12 +34,12 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.xml.core.document.XMLAttr;
-import org.eclipse.wst.xml.core.document.XMLDocument;
-import org.eclipse.wst.xml.core.document.XMLElement;
-import org.eclipse.wst.xml.core.document.XMLGenerator;
-import org.eclipse.wst.xml.core.document.XMLModel;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMAttr;
+import org.eclipse.wst.xml.core.document.DOMDocument;
+import org.eclipse.wst.xml.core.document.DOMElement;
+import org.eclipse.wst.xml.core.document.ISourceGenerator;
+import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
@@ -67,7 +67,7 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 	protected static final char DOUBLE_QUOTE = '\"'; //$NON-NLS-1$
 
 	public Node cleanup(Node node) {
-		XMLNode renamedNode = (XMLNode) cleanupChildren(node);
+		DOMNode renamedNode = (DOMNode) cleanupChildren(node);
 
 		// call quoteAttrValue() first so it will close any unclosed attr
 		// quoteAttrValue() will return the new start tag if there is a structure change
@@ -76,8 +76,8 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 		// insert tag close if missing
 		// if node is not comment tag
 		// and not implicit tag
-		if (!((XMLElement) renamedNode).isCommentTag() && (renamedNode.getStartStructuredDocumentRegion() != null)) {
-			XMLModel structuredModel = renamedNode.getModel();
+		if (!((DOMElement) renamedNode).isCommentTag() && (renamedNode.getStartStructuredDocumentRegion() != null)) {
+			DOMModel structuredModel = renamedNode.getModel();
 
 			// save start offset before insertTagClose()
 			// or else renamedNode.getStartOffset() will be zero if renamedNode replaced by insertTagClose()
@@ -88,7 +88,7 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 			insertTagClose(structuredModel, startTagStructuredDocumentRegion);
 
 			// update renamedNode and startTagStructuredDocumentRegion after insertTagClose()
-			renamedNode = (XMLNode) structuredModel.getIndexedRegion(startTagStartOffset);
+			renamedNode = (DOMNode) structuredModel.getIndexedRegion(startTagStartOffset);
 			startTagStructuredDocumentRegion = renamedNode.getStartStructuredDocumentRegion();
 
 			// for end tag
@@ -110,7 +110,7 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 		return renamedNode;
 	}
 
-	private boolean shouldIgnoreCase(XMLElement element) {
+	private boolean shouldIgnoreCase(DOMElement element) {
 		// case option can be applied to no namespace tags
 		return element.isGlobalTag();
 		/*
@@ -128,8 +128,8 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 		 */
 	}
 
-	protected void applyAttrNameCase(XMLNode node) {
-		XMLElement element = (XMLElement) node;
+	protected void applyAttrNameCase(DOMNode node) {
+		DOMElement element = (DOMElement) node;
 		if (element.isCommentTag())
 			return; // do nothing
 
@@ -142,7 +142,7 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 		int attributesLength = attributes.getLength();
 
 		for (int i = 0; i < attributesLength; i++) {
-			XMLNode eachAttr = (XMLNode) attributes.item(i);
+			DOMNode eachAttr = (DOMNode) attributes.item(i);
 			String oldAttrName = eachAttr.getNodeName();
 			String newAttrName = oldAttrName;
 			// 254961 - all HTML tag names and attribute names should be in English
@@ -159,15 +159,15 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 				int attrNameStartOffset = eachAttr.getStartOffset();
 				int attrNameLength = oldAttrName.length();
 
-				XMLModel structuredModel = node.getModel();
+				DOMModel structuredModel = node.getModel();
 				IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
 				replaceSource(structuredModel, structuredDocument, attrNameStartOffset, attrNameLength, newAttrName);
 			}
 		}
 	}
 
-	protected XMLNode applyTagNameCase(XMLNode node) {
-		XMLElement element = (XMLElement) node;
+	protected DOMNode applyTagNameCase(DOMNode node) {
+		DOMElement element = (DOMElement) node;
 		if (element.isCommentTag())
 			return node; // do nothing
 
@@ -178,7 +178,7 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 
 		String oldTagName = node.getNodeName();
 		String newTagName = oldTagName;
-		XMLNode newNode = node;
+		DOMNode newNode = node;
 
 		// 254961 - all HTML tag names and attribute names should be in English
 		//          even for HTML files in other languages like Japanese or Turkish.
@@ -190,7 +190,7 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 		else if (tagNameCase == CommonModelPreferenceNames.UPPER)
 			newTagName = oldTagName.toUpperCase(Locale.US);
 
-		XMLModel structuredModel = node.getModel();
+		DOMModel structuredModel = node.getModel();
 		IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
 
 		IStructuredDocumentRegion startTagStructuredDocumentRegion = node.getStartStructuredDocumentRegion();
@@ -202,7 +202,7 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 				int startTagNameLength = startTagStructuredDocumentRegion.getTextEndOffset(startTagNameRegion) - startTagNameStartOffset;
 
 				replaceSource(structuredModel, structuredDocument, startTagNameStartOffset, startTagNameLength, newTagName);
-				newNode = (XMLNode) structuredModel.getIndexedRegion(startTagNameStartOffset); // save new node
+				newNode = (DOMNode) structuredModel.getIndexedRegion(startTagNameStartOffset); // save new node
 			}
 		}
 
@@ -234,10 +234,10 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 				childNode = cleanupHandler.cleanup(childNode);
 
 				// get new parent node
-				parentNode = (XMLNode) childNode.getParentNode();
+				parentNode = (DOMNode) childNode.getParentNode();
 
 				// get next child node
-				childNode = (XMLNode) childNode.getNextSibling();
+				childNode = (DOMNode) childNode.getNextSibling();
 			}
 		}
 
@@ -246,10 +246,10 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 
 	/**
 	 */
-	protected void cleanupCSSAttrValue(XMLNode node) {
+	protected void cleanupCSSAttrValue(DOMNode node) {
 		if (node == null || node.getNodeType() != Node.ELEMENT_NODE)
 			return;
-		XMLElement element = (XMLElement) node;
+		DOMElement element = (DOMElement) node;
 		if (!element.isGlobalTag())
 			return;
 
@@ -259,7 +259,7 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 		String value = getCSSValue(attr);
 		if (value == null)
 			return;
-		String oldValue = ((XMLNode) attr).getValueSource();
+		String oldValue = ((DOMNode) attr).getValueSource();
 		if (oldValue != null && value.equals(oldValue))
 			return;
 		attr.setValue(value);
@@ -302,7 +302,7 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 		return buffer.toString();
 	}
 
-	private boolean isEmptyElement(XMLElement element) {
+	private boolean isEmptyElement(DOMElement element) {
 		Document document = element.getOwnerDocument();
 		if (document == null)
 			// undefined tag, return default
@@ -321,12 +321,12 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 		return (decl.getContentType() == CMElementDeclaration.EMPTY);
 	}
 
-	protected XMLNode insertEndTag(XMLNode node) {
-		XMLElement element = (XMLElement) node;
+	protected DOMNode insertEndTag(DOMNode node) {
+		DOMElement element = (DOMElement) node;
 
 		int startTagStartOffset = node.getStartOffset();
-		XMLModel structuredModel = node.getModel();
-		XMLNode newNode = null;
+		DOMModel structuredModel = node.getModel();
+		DOMNode newNode = null;
 
 		if (element.isCommentTag()) {
 			// do nothing
@@ -350,7 +350,7 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 			String tagName = node.getNodeName();
 			String endTag = END_TAG_OPEN.concat(tagName).concat(TAG_CLOSE);
 
-			XMLNode lastChild = (XMLNode) node.getLastChild();
+			DOMNode lastChild = (DOMNode) node.getLastChild();
 			int endTagStartOffset = 0;
 			if (lastChild != null)
 				// if this node has children, insert the end tag after the last child
@@ -363,14 +363,14 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 			replaceSource(structuredModel, structuredDocument, endTagStartOffset, 0, endTag);
 		}
 
-		newNode = (XMLNode) structuredModel.getIndexedRegion(startTagStartOffset); // save new node
+		newNode = (DOMNode) structuredModel.getIndexedRegion(startTagStartOffset); // save new node
 
 		return newNode;
 	}
 
-	protected XMLNode insertMissingTags(XMLNode node) {
+	protected DOMNode insertMissingTags(DOMNode node) {
 		boolean insertMissingTags = getCleanupPreferences().getInsertMissingTags();
-		XMLNode newNode = node;
+		DOMNode newNode = node;
 
 		if (insertMissingTags) {
 			IStructuredDocumentRegion startTagStructuredDocumentRegion = node.getStartStructuredDocumentRegion();
@@ -403,26 +403,26 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 		return newNode;
 	}
 
-	protected XMLNode insertStartTag(XMLNode node) {
-		XMLElement element = (XMLElement) node;
+	protected DOMNode insertStartTag(DOMNode node) {
+		DOMElement element = (DOMElement) node;
 		if (element.isCommentTag())
 			return node; // do nothing
 
-		XMLNode newNode = null;
+		DOMNode newNode = null;
 
 		String tagName = node.getNodeName();
 		String startTag = START_TAG_OPEN.concat(tagName).concat(TAG_CLOSE);
 		int startTagStartOffset = node.getStartOffset();
 
-		XMLModel structuredModel = node.getModel();
+		DOMModel structuredModel = node.getModel();
 		IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
 		replaceSource(structuredModel, structuredDocument, startTagStartOffset, 0, startTag);
-		newNode = (XMLNode) structuredModel.getIndexedRegion(startTagStartOffset); // save new node
+		newNode = (DOMNode) structuredModel.getIndexedRegion(startTagStartOffset); // save new node
 
 		return newNode;
 	}
 
-	protected void insertTagClose(XMLModel structuredModel, IStructuredDocumentRegion flatNode) {
+	protected void insertTagClose(DOMModel structuredModel, IStructuredDocumentRegion flatNode) {
 		if ((flatNode != null) && (flatNode.getRegions() != null)) {
 			ITextRegionList regionList = flatNode.getRegions();
 			ITextRegion lastRegion = regionList.get(regionList.size() - 1);
@@ -439,7 +439,7 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 		}
 	}
 
-	protected boolean isEndTagRequired(XMLNode node) {
+	protected boolean isEndTagRequired(DOMNode node) {
 		if (node == null)
 			return false;
 		return node.isContainer();
@@ -450,17 +450,17 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 	 * and HTML undefined tags are parsed separately from the start tags.
 	 * So inserting the missing start tag is useless and even harmful.
 	 */
-	protected boolean isStartTagRequired(XMLNode node) {
+	protected boolean isStartTagRequired(DOMNode node) {
 		if (node == null)
 			return false;
 		return node.isContainer();
 	}
 
-	protected boolean isXMLType(XMLModel structuredModel) {
+	protected boolean isXMLType(DOMModel structuredModel) {
 		boolean result = false;
 
 		if (structuredModel != null && structuredModel != null) {
-			XMLDocument document = structuredModel.getDocument();
+			DOMDocument document = structuredModel.getDocument();
 
 			if (document != null)
 				result = document.isXMLType();
@@ -469,34 +469,34 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 		return result;
 	}
 
-	protected XMLNode quoteAttrValue(XMLNode node) {
-		XMLElement element = (XMLElement) node;
+	protected DOMNode quoteAttrValue(DOMNode node) {
+		DOMElement element = (DOMElement) node;
 		if (element.isCommentTag())
 			return node; // do nothing
 
 		boolean quoteAttrValues = getCleanupPreferences().getQuoteAttrValues();
-		XMLNode newNode = node;
+		DOMNode newNode = node;
 
 		if (quoteAttrValues) {
 			NamedNodeMap attributes = newNode.getAttributes();
 			int attributesLength = attributes.getLength();
-			XMLGenerator generator = node.getModel().getGenerator();
+			ISourceGenerator generator = node.getModel().getGenerator();
 
 			for (int i = 0; i < attributesLength; i++) {
 				attributes = newNode.getAttributes();
 				attributesLength = attributes.getLength();
-				XMLAttr eachAttr = (XMLAttr) attributes.item(i);
+				DOMAttr eachAttr = (DOMAttr) attributes.item(i);
 				//ITextRegion oldAttrValueRegion = eachAttr.getValueRegion();
 				String oldAttrValue = eachAttr.getValueRegionText();
 				if (oldAttrValue == null) {
-					XMLModel structuredModel = node.getModel();
+					DOMModel structuredModel = node.getModel();
 					if (isXMLType(structuredModel)) {
 						// TODO: Kit, please check. Is there any way to not rely on getting regions from attributes?
 						String newAttrValue = "=\"" + eachAttr.getNameRegionText() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
 
 						IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
 						replaceSource(structuredModel, structuredDocument, eachAttr.getNameRegionEndOffset(), 0, newAttrValue);
-						newNode = (XMLNode) structuredModel.getIndexedRegion(node.getStartOffset()); // save new node
+						newNode = (DOMNode) structuredModel.getIndexedRegion(node.getStartOffset()); // save new node
 					}
 				}
 				else {
@@ -520,10 +520,10 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 							int attrValueLength = oldAttrValue.length();
 							int startTagStartOffset = node.getStartOffset();
 
-							XMLModel structuredModel = node.getModel();
+							DOMModel structuredModel = node.getModel();
 							IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
 							replaceSource(structuredModel, structuredDocument, attrValueStartOffset, attrValueLength, newAttrValue);
-							newNode = (XMLNode) structuredModel.getIndexedRegion(startTagStartOffset); // save new node
+							newNode = (DOMNode) structuredModel.getIndexedRegion(startTagStartOffset); // save new node
 						}
 					}
 				}
@@ -533,9 +533,9 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 		return newNode;
 	}
 
-	private XMLNode insertRequiredAttrs(XMLNode node) {
+	private DOMNode insertRequiredAttrs(DOMNode node) {
 		boolean insertRequiredAttrs = getCleanupPreferences().getInsertRequiredAttrs();
-		XMLNode newNode = node;
+		DOMNode newNode = node;
 
 		if (insertRequiredAttrs) {
 			List requiredAttrs = getRequiredAttrs(newNode);

@@ -17,7 +17,7 @@ import org.eclipse.wst.html.core.contentmodel.HTMLCMDocumentFactory;
 import org.eclipse.wst.html.core.document.HTMLDocumentTypeEntry;
 import org.eclipse.wst.html.core.document.HTMLDocumentTypeRegistry;
 import org.eclipse.wst.xml.core.contentmodel.CMDocType;
-import org.eclipse.wst.xml.core.document.XMLDocument;
+import org.eclipse.wst.xml.core.document.DOMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQueryCMProvider;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
@@ -49,7 +49,7 @@ public class HTMLModelQueryCMProvider implements ModelQueryCMProvider {
 	 * or null if no CMDocument is appropriate for the DOM Node.
 	 */
 	public CMDocument getCorrespondingCMDocument(Node node) {
-		XMLDocument owner = getOwnerXMLDocument(node);
+		DOMDocument owner = getOwnerXMLDocument(node);
 		if (owner == null)
 			return null;
 
@@ -80,18 +80,18 @@ public class HTMLModelQueryCMProvider implements ModelQueryCMProvider {
 	}
 
 	// private methods
-	private XMLDocument getOwnerXMLDocument(Node node) {
+	private DOMDocument getOwnerXMLDocument(Node node) {
 		if (node == null)
 			return null;
 		Document owner = (node.getNodeType() == Node.DOCUMENT_NODE) ? (Document) node : node.getOwnerDocument();
 		if (owner == null)
 			return null;
-		if (!(owner instanceof XMLDocument))
+		if (!(owner instanceof DOMDocument))
 			return null;
-		return (XMLDocument) owner;
+		return (DOMDocument) owner;
 	}
 
-	private String getPublicId(XMLDocument doc) {
+	private String getPublicId(DOMDocument doc) {
 		if (doc == null)
 			return null;
 		DocumentType doctype = doc.getDoctype();

@@ -25,8 +25,8 @@ import org.eclipse.wst.sse.core.util.ScriptLanguageKeys;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
-import org.eclipse.wst.xml.core.document.XMLElement;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMElement;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.w3c.dom.Document;
@@ -83,19 +83,19 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 		// check if tag is closed
 		boolean hasEndTag = true;
 		boolean isJSPTag = false;
-		XMLNode xnode = null;
+		DOMNode xnode = null;
 		String tagName = ""; //$NON-NLS-1$
-		if (indexedNode instanceof XMLNode) {
-			xnode = ((XMLNode) indexedNode);
+		if (indexedNode instanceof DOMNode) {
+			xnode = ((DOMNode) indexedNode);
 			// it's ended already...
 			if (xnode.getEndStructuredDocumentRegion() != null)
 				return null;
-			XMLNode openNode = null;
+			DOMNode openNode = null;
 			if (!xnode.getNodeName().equalsIgnoreCase(parentTagName))
-				openNode = (XMLNode) xnode.getParentNode();
+				openNode = (DOMNode) xnode.getParentNode();
 			if (openNode != null) {
-				if (openNode instanceof XMLElement) {
-					isJSPTag = ((XMLElement) openNode).isJSPTag();
+				if (openNode instanceof DOMElement) {
+					isJSPTag = ((DOMElement) openNode).isJSPTag();
 				}
 				tagName = openNode.getNodeName();
 				hasEndTag = (openNode.getEndStructuredDocumentRegion() != null);
@@ -184,16 +184,16 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 
 		// check if tag is closed
 		boolean hasEndTag = true;
-		XMLNode xnode = null;
+		DOMNode xnode = null;
 		String tagName = ""; //$NON-NLS-1$
-		if (indexedNode instanceof XMLNode) {
-			xnode = ((XMLNode) indexedNode);
+		if (indexedNode instanceof DOMNode) {
+			xnode = ((DOMNode) indexedNode);
 			// it's ended already...
 			if (xnode.getEndStructuredDocumentRegion() != null)
 				return null;
-			XMLNode styleNode = null;
+			DOMNode styleNode = null;
 			if (!xnode.getNodeName().equalsIgnoreCase(parentTagName))
-				styleNode = (XMLNode) xnode.getParentNode();
+				styleNode = (DOMNode) xnode.getParentNode();
 			if (styleNode != null) {
 				tagName = styleNode.getNodeName();
 				hasEndTag = (styleNode.getEndStructuredDocumentRegion() != null);

@@ -22,9 +22,9 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.xml.core.document.XMLElement;
-import org.eclipse.wst.xml.core.document.XMLGenerator;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMElement;
+import org.eclipse.wst.xml.core.document.ISourceGenerator;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -41,7 +41,7 @@ public class XMLModelUpdater {
 	private int gapLength = 0;
 	private int gapOffset = 0;
 	private IStructuredDocumentRegion gapStructuredDocumentRegion = null;
-	private XMLGenerator generator = null;
+	private ISourceGenerator generator = null;
 	private XMLModelImpl model = null;
 	private NodeImpl nextNode = null;
 	private NodeImpl parentNode = null;
@@ -532,7 +532,7 @@ public class XMLModelUpdater {
 		// make sure previous tag is closed
 		Node prev = text.getPreviousSibling();
 		if (prev != null) {
-			String preTag = getCloseTag((XMLNode) prev);
+			String preTag = getCloseTag((DOMNode) prev);
 			if (preTag != null && preTag.length() > 0) {
 				offset += preTag.length();
 				source = preTag + source;
@@ -621,7 +621,7 @@ public class XMLModelUpdater {
 
 	/**
 	 */
-	private String getAttrValueClose(XMLElement element) {
+	private String getAttrValueClose(DOMElement element) {
 		if (element == null)
 			return null;
 
@@ -673,7 +673,7 @@ public class XMLModelUpdater {
 	/**
 	 * Gather close tags recursively.
 	 */
-	private String getCloseTag(XMLNode node) {
+	private String getCloseTag(DOMNode node) {
 		if (node == null || node.isClosed())
 			return null;
 
@@ -691,7 +691,7 @@ public class XMLModelUpdater {
 		int offset = element.getEndOffset();
 		StringBuffer buffer = new StringBuffer();
 
-		XMLNode lastChild = (XMLNode) element.getLastChild();
+		DOMNode lastChild = (DOMNode) element.getLastChild();
 		if (lastChild == null) {
 			if (!element.isStartTagClosed()) {
 				if (element.preferEmptyTag())
@@ -732,7 +732,7 @@ public class XMLModelUpdater {
 
 	/**
 	 */
-	private String getStartCloseTag(XMLElement element) {
+	private String getStartCloseTag(DOMElement element) {
 		if (element == null || element.isStartTagClosed())
 			return null;
 
@@ -1397,7 +1397,7 @@ public class XMLModelUpdater {
 					start = next.getStartOffset();
 					end = start;
 					if (parentNode.getNodeType() == Node.ELEMENT_NODE) {
-						preTag = getStartCloseTag((XMLElement) parentNode);
+						preTag = getStartCloseTag((DOMElement) parentNode);
 					}
 				}
 				else {

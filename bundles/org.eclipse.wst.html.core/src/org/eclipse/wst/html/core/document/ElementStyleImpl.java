@@ -19,7 +19,7 @@ package org.eclipse.wst.html.core.document;
 import org.eclipse.wst.css.core.adapters.IStyleDeclarationAdapter;
 import org.eclipse.wst.css.core.adapters.IStyleSheetAdapter;
 import org.eclipse.wst.sse.core.INodeAdapter;
-import org.eclipse.wst.xml.core.document.XMLElement;
+import org.eclipse.wst.xml.core.document.DOMElement;
 import org.eclipse.wst.xml.core.internal.document.ElementImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -28,7 +28,7 @@ import org.w3c.dom.css.ElementCSSInlineStyle;
 import org.w3c.dom.stylesheets.LinkStyle;
 import org.w3c.dom.stylesheets.StyleSheet;
 
-public class ElementStyleImpl extends ElementImpl implements XMLElement, ElementCSSInlineStyle, LinkStyle {
+public class ElementStyleImpl extends ElementImpl implements DOMElement, ElementCSSInlineStyle, LinkStyle {
 	public ElementStyleImpl() {
 		super();
 	}

@@ -47,8 +47,8 @@ import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.sse.core.util.URIResolver;
 import org.eclipse.wst.xml.core.contentmodel.CMDocumentTracker;
 import org.eclipse.wst.xml.core.contentmodel.CMNodeWrapper;
-import org.eclipse.wst.xml.core.document.XMLModel;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
@@ -118,7 +118,7 @@ public class JSPTranslator {
 	private StringBuffer fCursorOwner = null; // the buffer where the cursor
 	// is
 
-	private XMLModel fStructuredModel = null;
+	private DOMModel fStructuredModel = null;
 	private IStructuredDocument fStructuredDocument = null;
 	private ModelQuery fModelQuery = null;
 	// private XMLNode fPositionNode; // position in the DOM
@@ -191,7 +191,7 @@ public class JSPTranslator {
 	 * @param node
 	 * @param monitor
 	 */
-	private void configure(XMLNode node, IProgressMonitor monitor) {
+	private void configure(DOMNode node, IProgressMonitor monitor) {
 
 		fProgressMonitor = monitor;
 		fStructuredModel = node.getModel();
@@ -256,7 +256,7 @@ public class JSPTranslator {
 	 * @param node
 	 * @return
 	 */
-	private String createClassname(XMLNode node) {
+	private String createClassname(DOMNode node) {
 
 		String classname = ""; //$NON-NLS-1$
 		if (node != null) {
@@ -290,7 +290,7 @@ public class JSPTranslator {
 	/**
 	 * So that the JSPTranslator can be reused.
 	 */
-	public void reset(XMLNode node, IProgressMonitor progress) {
+	public void reset(DOMNode node, IProgressMonitor progress) {
 
 		// initialize some things on node
 		configure(node, progress);

@@ -21,8 +21,8 @@ import org.eclipse.wst.css.core.document.ICSSModel;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.util.URIResolver;
-import org.eclipse.wst.xml.core.document.XMLModel;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -69,7 +69,7 @@ public class LinkElementAdapter extends AbstractStyleSheetAdapter {
 		// create phantom(broken link) external CSS model
 		if (getElement() == null)
 			return null;
-		IStructuredModel baseModel = ((XMLNode) getElement()).getModel();
+		IStructuredModel baseModel = ((DOMNode) getElement()).getModel();
 		ICSSModel newModel = (ICSSModel) baseModel.getModelManager().createUnManagedStructuredModelFor(CSS_ID);
 
 		// calculate base location and set
@@ -145,7 +145,7 @@ public class LinkElementAdapter extends AbstractStyleSheetAdapter {
 			removed();
 			replaceModel = true;
 
-			XMLNode node = (XMLNode) getElement();
+			DOMNode node = (DOMNode) getElement();
 			if (node != null) {
 				node.notify(INodeNotifier.CHANGE, getElement().getAttributeNode(org.eclipse.wst.html.core.HTML40Namespace.ATTR_NAME_HREF), null, null, node.getStartOffset());
 			}
@@ -224,7 +224,7 @@ public class LinkElementAdapter extends AbstractStyleSheetAdapter {
 		Element element = getElement();
 		String href = element.getAttribute("href");//$NON-NLS-1$
 
-		XMLModel baseModel = ((XMLNode) element).getModel();
+		DOMModel baseModel = ((DOMNode) element).getModel();
 		if (baseModel == null)
 			return null;
 		Object id = baseModel.getId();

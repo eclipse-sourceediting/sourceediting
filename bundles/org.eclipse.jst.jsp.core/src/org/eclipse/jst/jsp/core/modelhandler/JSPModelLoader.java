@@ -48,8 +48,8 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.util.Assert;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
-import org.eclipse.wst.xml.core.document.XMLDocument;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMDocument;
+import org.eclipse.wst.xml.core.document.DOMModel;
 import org.eclipse.wst.xml.core.internal.DebugAdapterFactory;
 import org.eclipse.wst.xml.core.internal.document.XMLModelImpl;
 import org.eclipse.wst.xml.core.internal.propagate.PropagatingAdapterFactoryImpl;
@@ -163,7 +163,7 @@ public class JSPModelLoader extends AbstractModelLoader {
 
 	protected void preLoadAdapt(IStructuredModel structuredModel) {
 		super.preLoadAdapt(structuredModel);
-		XMLModel domModel = (XMLModel) structuredModel;
+		DOMModel domModel = (DOMModel) structuredModel;
 		//
 		// document must have already been set for this to
 		// work.
@@ -263,8 +263,8 @@ public class JSPModelLoader extends AbstractModelLoader {
 		// critical here, the doc must have been created, but its contents not
 		// set yet,
 		// and all factories must have been set up also.
-		XMLModel domModel = (XMLModel) model;
-		XMLDocument document = domModel.getDocument();
+		DOMModel domModel = (DOMModel) model;
+		DOMDocument document = domModel.getDocument();
 		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) document.getAdapterFor(PageDirectiveAdapter.class);
 		pageDirectiveAdapter.setEmbeddedType(embeddedContentType);
 		embeddedContentType.initializeFactoryRegistry(model.getFactoryRegistry());
@@ -343,9 +343,9 @@ public class JSPModelLoader extends AbstractModelLoader {
 		// critical here, the doc must have been created, but its contents not
 		// set yet,
 		// and all factories must have been set up also.
-		XMLModel domModel = (XMLModel) model;
+		DOMModel domModel = (DOMModel) model;
 		IStructuredDocument structuredDocument = model.getStructuredDocument();
-		XMLDocument document = domModel.getDocument();
+		DOMDocument document = domModel.getDocument();
 		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) document.getExistingAdapter(PageDirectiveAdapter.class);
 		// ==> // PropagatingAdapter propagatingAdapter = (PropagatingAdapter)
 		// ((INodeNotifier)
@@ -432,9 +432,9 @@ public class JSPModelLoader extends AbstractModelLoader {
 		// critical here, the doc must have been created, but its contents not
 		// set yet,
 		// and all factories must have been set up also.
-		XMLModel domModel = (XMLModel) model;
+		DOMModel domModel = (DOMModel) model;
 		IStructuredDocument structuredDocument = model.getStructuredDocument();
-		XMLDocument document = domModel.getDocument();
+		DOMDocument document = domModel.getDocument();
 		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) document.getAdapterFor(PageDirectiveAdapter.class);
 		// ==> // PropagatingAdapter propagatingAdapter = (PropagatingAdapter)
 		// ((INodeNotifier) document).getAdapterFor(PropagatingAdapter.class);
@@ -466,7 +466,7 @@ public class JSPModelLoader extends AbstractModelLoader {
 	}
 
 	private EmbeddedTypeHandler getEmbeddedType(IStructuredModel model) {
-		Document doc = ((XMLModel) model).getDocument();
+		Document doc = ((DOMModel) model).getDocument();
 		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) ((INodeNotifier) doc).getAdapterFor(PageDirectiveAdapter.class);
 		EmbeddedTypeHandler embeddedHandler = pageDirectiveAdapter.getEmbeddedType();
 		return embeddedHandler;
@@ -495,8 +495,8 @@ public class JSPModelLoader extends AbstractModelLoader {
 	}
 
 	protected void setLanguageInPageDirective(IStructuredModel newModel) {
-		if (newModel instanceof XMLModel) {
-			XMLDocument document = ((XMLModel) newModel).getDocument();
+		if (newModel instanceof DOMModel) {
+			DOMDocument document = ((DOMModel) newModel).getDocument();
 			PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) document.getAdapterFor(PageDirectiveAdapter.class);
 			String language = getLanguage(newModel);
 			pageDirectiveAdapter.setLanguage(language);

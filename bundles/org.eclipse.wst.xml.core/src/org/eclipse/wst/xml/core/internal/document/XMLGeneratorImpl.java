@@ -14,13 +14,13 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 
+import org.eclipse.wst.xml.core.XMLCharEntity;
 import org.eclipse.wst.xml.core.commentelement.impl.CommentElementRegistry;
-import org.eclipse.wst.xml.core.document.XMLAttr;
-import org.eclipse.wst.xml.core.document.XMLCharEntity;
-import org.eclipse.wst.xml.core.document.XMLDocument;
-import org.eclipse.wst.xml.core.document.XMLElement;
-import org.eclipse.wst.xml.core.document.XMLGenerator;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMAttr;
+import org.eclipse.wst.xml.core.document.DOMDocument;
+import org.eclipse.wst.xml.core.document.DOMElement;
+import org.eclipse.wst.xml.core.document.ISourceGenerator;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.w3c.dom.Attr;
@@ -37,7 +37,7 @@ import org.w3c.dom.Text;
 
 /** 
  */
-public class XMLGeneratorImpl implements XMLGenerator {
+public class XMLGeneratorImpl implements ISourceGenerator {
 	private static final String CDATA_CLOSE = "]]>";//$NON-NLS-1$
 	private static final String CDATA_OPEN = "<![CDATA[";//$NON-NLS-1$
 	private static final String COMMENT_CLOSE = "-->";//$NON-NLS-1$
@@ -58,7 +58,7 @@ public class XMLGeneratorImpl implements XMLGenerator {
 
 	/**
 	 */
-	public synchronized static XMLGenerator getInstance() {
+	public synchronized static ISourceGenerator getInstance() {
 		if (instance == null)
 			instance = new XMLGeneratorImpl();
 		return instance;
@@ -106,7 +106,7 @@ public class XMLGeneratorImpl implements XMLGenerator {
 				return (attrName + JSPTag.TAG_CLOSE);
 			}
 		}
-		if (((XMLAttr) attr).isGlobalAttr() && CMNodeUtil.getAttributeDeclaration(attr) != null) {
+		if (((DOMAttr) attr).isGlobalAttr() && CMNodeUtil.getAttributeDeclaration(attr) != null) {
 			switch (getAttrNameCase(attr)) {
 				case DocumentTypeAdapter.UPPER_CASE :
 					attrName = attrName.toUpperCase();
@@ -135,7 +135,7 @@ public class XMLGeneratorImpl implements XMLGenerator {
 			return null;
 		String name = attr.getName();
 		SourceValidator validator = new SourceValidator(attr);
-		String value = validator.convertSource(((XMLNode) attr).getValueSource());
+		String value = validator.convertSource(((DOMNode) attr).getValueSource());
 		if (value == null || value.length() == 0) {
 			if (name != null && name.startsWith(JSPTag.TAG_OPEN))
 				return null;
@@ -495,7 +495,7 @@ public class XMLGeneratorImpl implements XMLGenerator {
 
 		if (impl.isJSPTag()) {
 			// check if JSP content type and JSP Document
-			XMLDocument document = (XMLDocument) element.getOwnerDocument();
+			DOMDocument document = (DOMDocument) element.getOwnerDocument();
 			if (document != null && document.isJSPType()) {
 				if (document.isJSPDocument() && !impl.hasChildNodes()) {
 					impl.setJSPTag(false);
@@ -571,7 +571,7 @@ public class XMLGeneratorImpl implements XMLGenerator {
 	public String generateTagName(Element element) {
 		if (element == null)
 			return null;
-		XMLElement xe = (XMLElement) element;
+		DOMElement xe = (DOMElement) element;
 		String tagName = element.getTagName();
 		if (tagName == null)
 			return null;

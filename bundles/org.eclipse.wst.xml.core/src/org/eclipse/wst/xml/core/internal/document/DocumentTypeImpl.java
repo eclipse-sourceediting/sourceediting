@@ -15,7 +15,7 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.xml.core.document.XMLDocumentType;
+import org.eclipse.wst.xml.core.document.DOMDocumentType;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.NamedNodeMap;
@@ -25,7 +25,7 @@ import org.w3c.dom.Node;
 /**
  * DocumentType class
  */
-public class DocumentTypeImpl extends NodeImpl implements XMLDocumentType {
+public class DocumentTypeImpl extends NodeImpl implements DOMDocumentType {
 	private String internalSubset = null;
 
 	private String name = null;

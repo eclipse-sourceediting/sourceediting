@@ -26,8 +26,8 @@ import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.xml.core.document.XMLDocument;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMDocument;
+import org.eclipse.wst.xml.core.document.DOMModel;
 
 /**
  * Detects hyperlinks in JSP Java content
@@ -172,11 +172,11 @@ public class JSPJavaHyperlinkDetector implements IHyperlinkDetector {
 	private JSPTranslation getJSPTranslation(IDocument document) {
 		JSPTranslation translation = null;
 
-		XMLModel xmlModel = null;
+		DOMModel xmlModel = null;
 		try {
-			xmlModel = (XMLModel) StructuredModelManager.getModelManager().getExistingModelForRead(document);
+			xmlModel = (DOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(document);
 			if (xmlModel != null) {
-				XMLDocument xmlDoc = xmlModel.getDocument();
+				DOMDocument xmlDoc = xmlModel.getDocument();
 				JSPTranslationAdapter adapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
 				if (adapter != null) {
 					translation = adapter.getJSPTranslation();

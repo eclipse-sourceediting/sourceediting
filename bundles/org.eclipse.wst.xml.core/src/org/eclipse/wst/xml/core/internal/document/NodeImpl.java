@@ -19,8 +19,8 @@ import org.eclipse.wst.sse.core.FactoryRegistry;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.xml.core.document.XMLModel;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -35,7 +35,7 @@ import org.w3c.dom.Text;
 /**
  * NodeImpl class
  */
-public abstract class NodeImpl extends AbstractNotifier implements XMLNode {
+public abstract class NodeImpl extends AbstractNotifier implements DOMNode {
 	// define one empty nodelist, for repeated use
 	private final static NodeList EMPTY_NODE_LIST = new NodeListImpl();
 
@@ -226,7 +226,7 @@ public abstract class NodeImpl extends AbstractNotifier implements XMLNode {
 	/**
 	 */
 	public FactoryRegistry getFactoryRegistry() {
-		XMLModel model = getModel();
+		DOMModel model = getModel();
 		if (model != null) {
 			FactoryRegistry reg = model.getFactoryRegistry();
 			if (reg != null)
@@ -295,7 +295,7 @@ public abstract class NodeImpl extends AbstractNotifier implements XMLNode {
 	/**
 	 * the default implementation can just refer to the owning document
 	 */
-	public XMLModel getModel() {
+	public DOMModel getModel() {
 		if (this.ownerDocument == null)
 			return null;
 		return this.ownerDocument.getModel();
@@ -331,11 +331,11 @@ public abstract class NodeImpl extends AbstractNotifier implements XMLNode {
 	 *            int
 	 */
 	Node getNodeAt(int offset) {
-		XMLNode parent = this;
-		XMLNode child = (XMLNode) getFirstChild();
+		DOMNode parent = this;
+		DOMNode child = (DOMNode) getFirstChild();
 		while (child != null) {
 			if (child.getEndOffset() <= offset) {
-				child = (XMLNode) child.getNextSibling();
+				child = (DOMNode) child.getNextSibling();
 				continue;
 			}
 			if (child.getStartOffset() > offset) {
@@ -350,7 +350,7 @@ public abstract class NodeImpl extends AbstractNotifier implements XMLNode {
 
 			// dig more
 			parent = child;
-			child = (XMLNode) parent.getFirstChild();
+			child = (DOMNode) parent.getFirstChild();
 		}
 
 		return parent;
@@ -695,10 +695,10 @@ public abstract class NodeImpl extends AbstractNotifier implements XMLNode {
 
 	public void setEditable(boolean editable, boolean deep) {
 		if (deep) {
-			XMLNode node = (XMLNode) getFirstChild();
+			DOMNode node = (DOMNode) getFirstChild();
 			while (node != null) {
 				node.setEditable(editable, deep);
-				node = (XMLNode) node.getNextSibling();
+				node = (DOMNode) node.getNextSibling();
 			}
 		}
 		setChildEditable(editable);

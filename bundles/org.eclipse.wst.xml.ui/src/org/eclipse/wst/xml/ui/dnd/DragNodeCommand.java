@@ -21,7 +21,7 @@ import java.util.Vector;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.wst.common.ui.dnd.DefaultDragAndDropCommand;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -184,8 +184,8 @@ public class DragNodeCommand extends DefaultDragAndDropCommand {
 
 	protected IStructuredModel getStructedModel(Node node) {
 		IStructuredModel result = null;
-		if (node instanceof XMLNode) {
-			result = ((XMLNode) node).getModel();
+		if (node instanceof DOMNode) {
+			result = ((DOMNode) node).getModel();
 		}
 		return result;
 	}

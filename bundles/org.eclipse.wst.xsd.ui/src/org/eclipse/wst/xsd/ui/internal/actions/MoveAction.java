@@ -14,8 +14,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.wst.xml.core.document.XMLModel;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
@@ -83,7 +83,7 @@ public class MoveAction extends Action
 
   protected void beginRecording()
   {
-    XMLModel model = getModel();      
+    DOMModel model = getModel();      
     if (model != null)
     {
       model.beginRecording(this, "Move");
@@ -92,19 +92,19 @@ public class MoveAction extends Action
   
   protected void endRecording()
   {
-    XMLModel model = getModel();      
+    DOMModel model = getModel();      
     if (model != null)
     {
       model.endRecording(this);    
     }
   }
 
-  protected XMLModel getModel()
+  protected DOMModel getModel()
   {
-    XMLModel model = null;
-    if (parentNode instanceof XMLNode)
+    DOMModel model = null;
+    if (parentNode instanceof DOMNode)
     {                            
-      model = ((XMLNode)parentNode).getModel();
+      model = ((DOMNode)parentNode).getModel();
     }
     return model;
   }

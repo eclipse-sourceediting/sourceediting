@@ -11,7 +11,7 @@ import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -117,7 +117,7 @@ public class StructuredTextFoldingProviderHTML implements IStructuredTextFolding
 					factoryRegistry.addFactory(newFactory);
 
 					// add factory to propogating adapter
-					XMLModel domModel = (XMLModel) sModel;
+					DOMModel domModel = (DOMModel) sModel;
 					Document document = domModel.getDocument();
 					PropagatingAdapter propagatingAdapter = (PropagatingAdapter) ((INodeNotifier) document).getAdapterFor(PropagatingAdapter.class);
 					if (propagatingAdapter != null) {

@@ -24,7 +24,7 @@ import org.w3c.dom.Element;
  * 
  */
 
-public interface XMLElement extends XMLNode, Element {
+public interface DOMElement extends DOMNode, Element {
 
 	/**
 	 * @deprecated this should probably not be public, but already implemented

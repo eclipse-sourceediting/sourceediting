@@ -27,7 +27,7 @@ import org.w3c.dom.Node;
  * three other interfaces.
  *  
  */
-public interface XMLNode extends IndexedRegion, INodeNotifier, Node {
+public interface DOMNode extends IndexedRegion, INodeNotifier, Node {
 
 	/**
 	 * 
@@ -45,7 +45,7 @@ public interface XMLNode extends IndexedRegion, INodeNotifier, Node {
 
 	/**
 	 */
-	XMLModel getModel();
+	DOMModel getModel();
 
 	/**
 	 */

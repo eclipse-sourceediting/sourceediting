@@ -26,8 +26,8 @@ import org.eclipse.wst.sse.core.events.StructuredDocumentRegionsReplacedEvent;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
-import org.eclipse.wst.xml.core.document.XMLModel;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -66,7 +66,7 @@ public class StyleElementAdapter extends AbstractStyleSheetAdapter implements IS
 		Node child = element.getFirstChild();
 		if (child == null || child.getNodeType() != Node.TEXT_NODE)
 			return;
-		XMLNode content = (XMLNode) child;
+		DOMNode content = (DOMNode) child;
 		int oldLength = content.getEndOffset() - content.getStartOffset();
 
 		// get new content length
@@ -214,7 +214,7 @@ public class StyleElementAdapter extends AbstractStyleSheetAdapter implements IS
 	/**
 	 */
 	private Object getRequesterH2C() {
-		return (getElement() != null && ((XMLNode) getElement()).getModel() != null) ? (Object) ((XMLNode) getElement()).getModel() : this;
+		return (getElement() != null && ((DOMNode) getElement()).getModel() != null) ? (Object) ((DOMNode) getElement()).getModel() : this;
 	}
 
 	/**
@@ -337,10 +337,10 @@ public class StyleElementAdapter extends AbstractStyleSheetAdapter implements IS
 	 * Apply changes from CSS sub-model to HTML model
 	 */
 	private void replaceData(int offset, int length, String data) {
-		XMLNode element = (XMLNode) getElement();
+		DOMNode element = (DOMNode) getElement();
 		if (element == null)
 			return;
-		XMLModel ownerModel = element.getModel();
+		DOMModel ownerModel = element.getModel();
 		if (ownerModel == null)
 			return;
 		IStructuredDocument structuredDocument = ownerModel.getStructuredDocument();

@@ -13,7 +13,7 @@
 package org.eclipse.jst.jsp.core.internal.domdocument;
 
 import org.eclipse.wst.html.core.document.DocumentStyleImpl;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMModel;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Comment;
@@ -114,7 +114,7 @@ public class DOMDocumentForJSP extends DocumentStyleImpl {
 		text.setData(data);
 		return text;
 	}
-	protected void setModel(XMLModel model) {
+	protected void setModel(DOMModel model) {
 		super.setModel(model);
 	}
 }

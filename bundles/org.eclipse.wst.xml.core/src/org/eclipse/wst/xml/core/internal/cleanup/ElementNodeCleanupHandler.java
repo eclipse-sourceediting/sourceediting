@@ -26,12 +26,12 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.xml.core.document.XMLAttr;
-import org.eclipse.wst.xml.core.document.XMLDocument;
-import org.eclipse.wst.xml.core.document.XMLElement;
-import org.eclipse.wst.xml.core.document.XMLGenerator;
-import org.eclipse.wst.xml.core.document.XMLModel;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMAttr;
+import org.eclipse.wst.xml.core.document.DOMDocument;
+import org.eclipse.wst.xml.core.document.DOMElement;
+import org.eclipse.wst.xml.core.document.ISourceGenerator;
+import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
@@ -59,7 +59,7 @@ public class ElementNodeCleanupHandler extends NodeCleanupHandler {
 
 	public Node cleanup(Node node) {
 		Node newNode = cleanupChildren(node);
-		XMLNode renamedNode = newNode instanceof XMLNode ? (XMLNode) newNode : null;
+		DOMNode renamedNode = newNode instanceof DOMNode ? (DOMNode) newNode : null;
 
 		// call quoteAttrValue() first so it will close any unclosed attr
 		// quoteAttrValue() will return the new start tag if there is a
@@ -70,7 +70,7 @@ public class ElementNodeCleanupHandler extends NodeCleanupHandler {
 		// if node is not comment tag
 		// and not implicit tag
 		if (!isCommentTag(renamedNode) && !isImplicitTag(renamedNode)) {
-			XMLModel structuredModel = renamedNode.getModel();
+			DOMModel structuredModel = renamedNode.getModel();
 
 			// save start offset before insertTagClose()
 			// or else renamedNode.getStartOffset() will be zero if
@@ -83,7 +83,7 @@ public class ElementNodeCleanupHandler extends NodeCleanupHandler {
 
 			// update renamedNode and startTagStructuredDocumentRegion after
 			// insertTagClose()
-			renamedNode = (XMLNode) structuredModel.getIndexedRegion(startTagStartOffset);
+			renamedNode = (DOMNode) structuredModel.getIndexedRegion(startTagStartOffset);
 			startTagStructuredDocumentRegion = renamedNode.getStartStructuredDocumentRegion();
 
 			// for end tag
@@ -118,19 +118,19 @@ public class ElementNodeCleanupHandler extends NodeCleanupHandler {
 				childNode = cleanupHandler.cleanup(childNode);
 
 				// get new parent node
-				parentNode = (XMLNode) childNode.getParentNode();
+				parentNode = (DOMNode) childNode.getParentNode();
 
 				// get next child node
-				childNode = (XMLNode) childNode.getNextSibling();
+				childNode = (DOMNode) childNode.getNextSibling();
 			}
 		}
 
 		return parentNode;
 	}
 
-	private XMLNode compressEmptyElementTag(XMLNode node) {
+	private DOMNode compressEmptyElementTag(DOMNode node) {
 		boolean compressEmptyElementTags = getCleanupPreferences().getCompressEmptyElementTags();
-		XMLNode newNode = node;
+		DOMNode newNode = node;
 
 		IStructuredDocumentRegion startTagStructuredDocumentRegion = newNode.getFirstStructuredDocumentRegion();
 		IStructuredDocumentRegion endTagStructuredDocumentRegion = newNode.getLastStructuredDocumentRegion();
@@ -142,18 +142,18 @@ public class ElementNodeCleanupHandler extends NodeCleanupHandler {
 			if (lastRegion.getType() != XMLRegionContext.XML_EMPTY_TAG_CLOSE) {
 				NodeList childNodes = newNode.getChildNodes();
 				if (childNodes == null || childNodes.getLength() == 0 || (childNodes.getLength() == 1 && (childNodes.item(0)).getNodeType() == Node.TEXT_NODE && ((childNodes.item(0)).getNodeValue().trim().length() == 0))) {
-					XMLModel structuredModel = newNode.getModel();
+					DOMModel structuredModel = newNode.getModel();
 					IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
 
 					int startTagStartOffset = newNode.getStartOffset();
 					int offset = endTagStructuredDocumentRegion.getStart();
 					int length = endTagStructuredDocumentRegion.getLength();
 					structuredDocument.replaceText(structuredDocument, offset, length, ""); //$NON-NLS-1$
-					newNode = (XMLNode) structuredModel.getIndexedRegion(startTagStartOffset); // save
+					newNode = (DOMNode) structuredModel.getIndexedRegion(startTagStartOffset); // save
 
 					offset = startTagStructuredDocumentRegion.getStart() + lastRegion.getStart();
 					structuredDocument.replaceText(structuredDocument, offset, 0, "/"); //$NON-NLS-1$
-					newNode = (XMLNode) structuredModel.getIndexedRegion(startTagStartOffset); // save
+					newNode = (DOMNode) structuredModel.getIndexedRegion(startTagStartOffset); // save
 				}
 			}
 		}
@@ -215,14 +215,14 @@ public class ElementNodeCleanupHandler extends NodeCleanupHandler {
 		return result;
 	}
 
-	private XMLNode insertEndTag(XMLNode node) {
-		XMLNode newNode = node;
-		XMLElement element = (XMLElement) node;
+	private DOMNode insertEndTag(DOMNode node) {
+		DOMNode newNode = node;
+		DOMElement element = (DOMElement) node;
 		if (element.isCommentTag())
 			return node; // do nothing
 
 		int startTagStartOffset = node.getStartOffset();
-		XMLModel structuredModel = node.getModel();
+		DOMModel structuredModel = node.getModel();
 
 		if (isEmptyElement(element)) {
 			IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
@@ -243,7 +243,7 @@ public class ElementNodeCleanupHandler extends NodeCleanupHandler {
 			String tagName = node.getNodeName();
 			String endTag = END_TAG_OPEN.concat(tagName).concat(TAG_CLOSE);
 
-			XMLNode lastChild = (XMLNode) node.getLastChild();
+			DOMNode lastChild = (DOMNode) node.getLastChild();
 			int endTagStartOffset = 0;
 			if (lastChild != null)
 				// if this node has children, insert the end tag after the
@@ -258,16 +258,16 @@ public class ElementNodeCleanupHandler extends NodeCleanupHandler {
 			structuredDocument.replaceText(structuredDocument, endTagStartOffset, 0, endTag);
 		}
 
-		newNode = (XMLNode) structuredModel.getIndexedRegion(startTagStartOffset); // save
+		newNode = (DOMNode) structuredModel.getIndexedRegion(startTagStartOffset); // save
 		// new
 		// node
 
 		return newNode;
 	}
 
-	private XMLNode insertMissingTags(XMLNode node) {
+	private DOMNode insertMissingTags(DOMNode node) {
 		boolean insertMissingTags = getCleanupPreferences().getInsertMissingTags();
-		XMLNode newNode = node;
+		DOMNode newNode = node;
 
 		if (insertMissingTags) {
 			IStructuredDocumentRegion startTagStructuredDocumentRegion = node.getStartStructuredDocumentRegion();
@@ -297,9 +297,9 @@ public class ElementNodeCleanupHandler extends NodeCleanupHandler {
 		return newNode;
 	}
 
-	private XMLNode insertRequiredAttrs(XMLNode node) {
+	private DOMNode insertRequiredAttrs(DOMNode node) {
 		boolean insertRequiredAttrs = getCleanupPreferences().getInsertRequiredAttrs();
-		XMLNode newNode = node;
+		DOMNode newNode = node;
 
 		if (insertRequiredAttrs) {
 			List requiredAttrs = getRequiredAttrs(newNode);
@@ -366,8 +366,8 @@ public class ElementNodeCleanupHandler extends NodeCleanupHandler {
 		return newNode;
 	}
 
-	private XMLNode insertStartTag(XMLNode node) {
-		XMLNode newNode = node;
+	private DOMNode insertStartTag(DOMNode node) {
+		DOMNode newNode = node;
 
 		if (isCommentTag(node))
 			return node; // do nothing
@@ -376,17 +376,17 @@ public class ElementNodeCleanupHandler extends NodeCleanupHandler {
 		String startTag = START_TAG_OPEN.concat(tagName).concat(TAG_CLOSE);
 		int startTagStartOffset = node.getStartOffset();
 
-		XMLModel structuredModel = node.getModel();
+		DOMModel structuredModel = node.getModel();
 		IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
 		structuredDocument.replaceText(structuredDocument, startTagStartOffset, 0, startTag);
-		newNode = (XMLNode) structuredModel.getIndexedRegion(startTagStartOffset); // save
+		newNode = (DOMNode) structuredModel.getIndexedRegion(startTagStartOffset); // save
 		// new
 		// node
 
 		return newNode;
 	}
 
-	private void insertTagClose(XMLModel structuredModel, IStructuredDocumentRegion flatNode) {
+	private void insertTagClose(DOMModel structuredModel, IStructuredDocumentRegion flatNode) {
 		if (flatNode != null) {
 			ITextRegionList flatnodeRegions = flatNode.getRegions();
 			if (flatnodeRegions != null) {
@@ -412,14 +412,14 @@ public class ElementNodeCleanupHandler extends NodeCleanupHandler {
 	 */
 	private boolean isCommentTag(Node renamedNode) {
 		boolean result = false;
-		if (renamedNode instanceof XMLElement) {
-			XMLElement element = (XMLElement) renamedNode;
+		if (renamedNode instanceof DOMElement) {
+			DOMElement element = (DOMElement) renamedNode;
 			result = element.isCommentTag();
 		}
 		return result;
 	}
 
-	private boolean isEmptyElement(XMLElement element) {
+	private boolean isEmptyElement(DOMElement element) {
 		Document document = element.getOwnerDocument();
 		if (document == null)
 			// undefined tag, return default
@@ -438,7 +438,7 @@ public class ElementNodeCleanupHandler extends NodeCleanupHandler {
 		return (decl.getContentType() == CMElementDeclaration.EMPTY);
 	}
 
-	private boolean isEndTagRequired(XMLNode node) {
+	private boolean isEndTagRequired(DOMNode node) {
 		if (node == null)
 			return false;
 		return node.isContainer();
@@ -450,7 +450,7 @@ public class ElementNodeCleanupHandler extends NodeCleanupHandler {
 	 * @param renamedNode
 	 * @return
 	 */
-	private boolean isImplicitTag(XMLNode renamedNode) {
+	private boolean isImplicitTag(DOMNode renamedNode) {
 		return renamedNode.getStartStructuredDocumentRegion() == null;
 	}
 
@@ -459,17 +459,17 @@ public class ElementNodeCleanupHandler extends NodeCleanupHandler {
 	 * undefined tags are parsed separately from the start tags. So inserting
 	 * the missing start tag is useless and even harmful.
 	 */
-	private boolean isStartTagRequired(XMLNode node) {
+	private boolean isStartTagRequired(DOMNode node) {
 		if (node == null)
 			return false;
 		return node.isContainer();
 	}
 
-	private boolean isXMLType(XMLModel structuredModel) {
+	private boolean isXMLType(DOMModel structuredModel) {
 		boolean result = false;
 
 		if (structuredModel != null && structuredModel != null) {
-			XMLDocument document = structuredModel.getDocument();
+			DOMDocument document = structuredModel.getDocument();
 
 			if (document != null)
 				result = document.isXMLType();
@@ -478,8 +478,8 @@ public class ElementNodeCleanupHandler extends NodeCleanupHandler {
 		return result;
 	}
 
-	private XMLNode quoteAttrValue(XMLNode node) {
-		XMLNode newNode = node;
+	private DOMNode quoteAttrValue(DOMNode node) {
+		DOMNode newNode = node;
 		//XMLElement element = (XMLElement) node;
 		if (isCommentTag(node))
 			return node; // do nothing
@@ -490,17 +490,17 @@ public class ElementNodeCleanupHandler extends NodeCleanupHandler {
 			NamedNodeMap attributes = newNode.getAttributes();
 			if (attributes != null) {
 				int attributesLength = attributes.getLength();
-				XMLGenerator generator = node.getModel().getGenerator();
+				ISourceGenerator generator = node.getModel().getGenerator();
 
 				for (int i = 0; i < attributesLength; i++) {
 					attributes = newNode.getAttributes();
 					attributesLength = attributes.getLength();
-					XMLAttr eachAttr = (XMLAttr) attributes.item(i);
+					DOMAttr eachAttr = (DOMAttr) attributes.item(i);
 					//ITextRegion oldAttrValueRegion =
 					// eachAttr.getValueRegion();
 					String oldAttrValue = eachAttr.getValueRegionText();
 					if (oldAttrValue == null) {
-						XMLModel structuredModel = node.getModel();
+						DOMModel structuredModel = node.getModel();
 						if (isXMLType(structuredModel)) {
 							String newAttrValue = "\"" + eachAttr.getNameRegionText() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -511,7 +511,7 @@ public class ElementNodeCleanupHandler extends NodeCleanupHandler {
 							else
 								// no equal region
 								structuredDocument.replaceText(structuredDocument, eachAttr.getNameRegionTextEndOffset(), 0, "=".concat(newAttrValue)); //$NON-NLS-1$
-							newNode = (XMLNode) structuredModel.getIndexedRegion(node.getStartOffset()); // save
+							newNode = (DOMNode) structuredModel.getIndexedRegion(node.getStartOffset()); // save
 							// new
 							// node
 						}
@@ -538,10 +538,10 @@ public class ElementNodeCleanupHandler extends NodeCleanupHandler {
 								int attrValueLength = oldAttrValue.length();
 								int startTagStartOffset = node.getStartOffset();
 
-								XMLModel structuredModel = node.getModel();
+								DOMModel structuredModel = node.getModel();
 								IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
 								structuredDocument.replaceText(structuredDocument, attrValueStartOffset, attrValueLength, newAttrValue);
-								newNode = (XMLNode) structuredModel.getIndexedRegion(startTagStartOffset); // save
+								newNode = (DOMNode) structuredModel.getIndexedRegion(startTagStartOffset); // save
 								// new
 								// node
 							}

@@ -17,9 +17,9 @@ package org.eclipse.wst.xml.core.commentelement.impl;
 import org.eclipse.wst.xml.core.commentelement.CommentElementHandler;
 import org.eclipse.wst.xml.core.commentelement.util.CommentElementFactory;
 import org.eclipse.wst.xml.core.commentelement.util.TagScanner;
-import org.eclipse.wst.xml.core.document.XMLAttr;
-import org.eclipse.wst.xml.core.document.XMLElement;
-import org.eclipse.wst.xml.core.document.XMLGenerator;
+import org.eclipse.wst.xml.core.document.DOMAttr;
+import org.eclipse.wst.xml.core.document.DOMElement;
+import org.eclipse.wst.xml.core.document.ISourceGenerator;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -65,7 +65,7 @@ class BasicCommentElementHandler implements CommentElementHandler {
 					Attr attr = document.createAttribute(attrName);
 					if (attr != null) {
 						if (attrValue != null)
-							((XMLAttr) attr).setValueSource(attrValue);
+							((DOMAttr) attr).setValueSource(attrValue);
 						element.setAttributeNode(attr);
 					}
 					attrName = scanner.nextName();
@@ -76,13 +76,13 @@ class BasicCommentElementHandler implements CommentElementHandler {
 	}
 
 	/**
-	 * @see com.ibm.sed.model.commentelement.CommentElementHandler#getEndTag(XMLElement)
+	 * @see com.ibm.sed.model.commentelement.CommentElementHandler#getEndTag(DOMElement)
 	 */
-	public String generateEndTagContent(XMLElement element) {
+	public String generateEndTagContent(DOMElement element) {
 		if (isEmpty) {
 			return null;
 		}
-		XMLGenerator generator = element.getModel().getGenerator();
+		ISourceGenerator generator = element.getModel().getGenerator();
 		StringBuffer buffer = new StringBuffer();
 
 		buffer.append(" /"); //$NON-NLS-1$
@@ -96,10 +96,10 @@ class BasicCommentElementHandler implements CommentElementHandler {
 	}
 
 	/**
-	 * @see com.ibm.sed.model.commentelement.CommentElementHandler#getStartTag(XMLElement)
+	 * @see com.ibm.sed.model.commentelement.CommentElementHandler#getStartTag(DOMElement)
 	 */
-	public String generateStartTagContent(XMLElement element) {
-		XMLGenerator generator = element.getModel().getGenerator();
+	public String generateStartTagContent(DOMElement element) {
+		ISourceGenerator generator = element.getModel().getGenerator();
 		StringBuffer buffer = new StringBuffer();
 
 		buffer.append(' ');
@@ -138,7 +138,7 @@ class BasicCommentElementHandler implements CommentElementHandler {
 	 * 
 	 * @see com.ibm.sed.model.commentelement.CommentElementHandler#isCommentElement(com.ibm.sed.model.xml.XMLElement)
 	 */
-	public boolean isCommentElement(XMLElement element) {
+	public boolean isCommentElement(DOMElement element) {
 		return (element != null && element.getTagName().equals(elementName)) ? true : false;
 	}
 

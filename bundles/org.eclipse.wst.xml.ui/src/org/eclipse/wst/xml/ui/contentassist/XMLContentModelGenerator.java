@@ -15,7 +15,7 @@ package org.eclipse.wst.xml.ui.contentassist;
 
 
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
@@ -113,8 +113,8 @@ public class XMLContentModelGenerator extends AbstractContentModelGenerator {
 	}
 
 	protected String getOtherClose(Node notATagNode) {
-		if (notATagNode instanceof XMLNode) {
-			IStructuredDocumentRegion node = ((XMLNode) notATagNode).getStartStructuredDocumentRegion();
+		if (notATagNode instanceof DOMNode) {
+			IStructuredDocumentRegion node = ((DOMNode) notATagNode).getStartStructuredDocumentRegion();
 			if (node != null && node.getNumberOfRegions() > 1 && node.getRegions().get(0).getType().equals(DOMJSPRegionContextsPrivateCopy.JSP_DIRECTIVE_OPEN)) {
 				return "%>"; //$NON-NLS-1$
 			}

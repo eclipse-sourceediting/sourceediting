@@ -17,7 +17,7 @@ import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.ui.contentproperties.ContentSettingsChangeSubject;
 import org.eclipse.wst.sse.ui.util.Assert;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.w3c.dom.Node;
 
 /**
@@ -52,8 +52,8 @@ public class PageDirectiveAdapterFactory extends AbstractAdapterFactory implemen
 
 	protected INodeAdapter createAdapter(INodeNotifier target) {
 		PageDirectiveAdapter result = null;
-		if (target instanceof XMLNode) {
-			XMLNode node = (XMLNode) target;
+		if (target instanceof DOMNode) {
+			DOMNode node = (DOMNode) target;
 			if (node.getNodeType() == Node.DOCUMENT_NODE) {
 				result = getAdapterInstance(target);
 				ContentSettingsChangeSubject.getSubject().addListener(result);

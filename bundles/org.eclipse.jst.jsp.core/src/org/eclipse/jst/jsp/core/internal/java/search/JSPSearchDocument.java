@@ -32,8 +32,8 @@ import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.exceptions.UnsupportedCharsetExceptionWithDetail;
-import org.eclipse.wst.xml.core.document.XMLDocument;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMDocument;
+import org.eclipse.wst.xml.core.document.DOMModel;
 
 
 /**
@@ -97,17 +97,17 @@ public class JSPSearchDocument {
 		if (!JSPSearchSupport.isJsp(jspFile))
 			return translation;
 
-		XMLModel xmlModel = null;
+		DOMModel xmlModel = null;
 		try {
 			// get existing model for read, then get document from it
 			IModelManager modelManager = getModelManager();
 			if (modelManager != null) {
-				xmlModel = (XMLModel) modelManager.getModelForRead(jspFile);
+				xmlModel = (DOMModel) modelManager.getModelForRead(jspFile);
 			}
 			// handle unsupported
 			if (xmlModel != null) {
 				setupAdapterFactory(xmlModel);
-				XMLDocument doc = xmlModel.getDocument();
+				DOMDocument doc = xmlModel.getDocument();
 				JSPTranslationAdapter adapter = (JSPTranslationAdapter) doc.getAdapterFor(IJSPTranslation.class);
 				translation = adapter.getJSPTranslation();
 			}

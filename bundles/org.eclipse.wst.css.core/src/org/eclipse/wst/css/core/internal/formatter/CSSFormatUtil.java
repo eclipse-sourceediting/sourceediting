@@ -21,8 +21,8 @@ import org.eclipse.wst.css.core.document.ICSSNode;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.xml.core.document.XMLModel;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
@@ -49,7 +49,7 @@ public class CSSFormatUtil {
 				}
 			}
 		}
-		else if (model instanceof XMLModel && startNode instanceof XMLNode && endNode instanceof XMLNode) {
+		else if (model instanceof DOMModel && startNode instanceof DOMNode && endNode instanceof DOMNode) {
 			if (startNode instanceof Text) {
 				startNode = (IndexedRegion) ((Text) startNode).getParentNode();
 			}
@@ -57,7 +57,7 @@ public class CSSFormatUtil {
 				endNode = (IndexedRegion) ((Text) endNode).getParentNode();
 			}
 			// HTML model, maybe
-			XMLNode ca = (XMLNode) getCommonAncestor((Node) startNode, (Node) endNode);
+			DOMNode ca = (DOMNode) getCommonAncestor((Node) startNode, (Node) endNode);
 			findCSS(nodes, ca);
 		}
 
@@ -84,7 +84,7 @@ public class CSSFormatUtil {
 		return null; // not found
 	}
 
-	private void findCSS(List cssNodes, XMLNode node) {
+	private void findCSS(List cssNodes, DOMNode node) {
 		ICSSModelAdapter adapter;
 		adapter = (ICSSModelAdapter) node.getAdapterFor(IStyleSheetAdapter.class);
 		if (adapter != null) {
@@ -103,7 +103,7 @@ public class CSSFormatUtil {
 			}
 		}
 
-		for (XMLNode child = (XMLNode) node.getFirstChild(); child != null; child = (XMLNode) child.getNextSibling()) {
+		for (DOMNode child = (DOMNode) node.getFirstChild(); child != null; child = (DOMNode) child.getNextSibling()) {
 			findCSS(cssNodes, child);
 		}
 	}

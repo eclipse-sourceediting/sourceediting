@@ -27,7 +27,7 @@ import org.w3c.dom.traversal.DocumentTraversal;
  * 
  * @since 1.0
  */
-public interface XMLDocument extends XMLNode, Document, DocumentRange, DocumentTraversal {
+public interface DOMDocument extends DOMNode, Document, DocumentRange, DocumentTraversal {
 
 	/**
 	 * create comment element. tagName must be registered as comment element

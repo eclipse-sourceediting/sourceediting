@@ -23,9 +23,9 @@ import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.xml.core.document.XMLElement;
-import org.eclipse.wst.xml.core.document.XMLModel;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMElement;
+import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xml.core.format.IStructuredFormatPreferencesXML;
 import org.eclipse.wst.xml.core.format.StructuredFormatPreferencesXML;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
@@ -101,13 +101,13 @@ public class HTMLFormatter implements IStructuredFormatter {
 		if (parent.getNodeType() == Node.DOCUMENT_NODE) {
 			if (node.getNodeType() == Node.ELEMENT_NODE) {
 				// do not insert break after unclosed tag
-				if (!((XMLElement) node).isClosed())
+				if (!((DOMElement) node).isClosed())
 					return false;
 			}
 			return true;
 		}
 		else if (parent.getNodeType() == Node.ELEMENT_NODE) {
-			XMLElement element = (XMLElement) parent;
+			DOMElement element = (DOMElement) parent;
 			// do not insert break before missing end tag
 			if (next == null && element.getEndStructuredDocumentRegion() == null)
 				return false;
@@ -128,7 +128,7 @@ public class HTMLFormatter implements IStructuredFormatter {
 		}
 
 		if (node.getNodeType() == Node.ELEMENT_NODE) {
-			XMLElement element = (XMLElement) node;
+			DOMElement element = (DOMElement) node;
 			CMElementDeclaration decl = getElementDeclaration(element);
 			if (canInsertBreakAfter(decl)) {
 				// spcial for BR
@@ -172,7 +172,7 @@ public class HTMLFormatter implements IStructuredFormatter {
 			return true;
 		}
 		else if (parent.getNodeType() == Node.ELEMENT_NODE) {
-			XMLElement element = (XMLElement) parent;
+			DOMElement element = (DOMElement) parent;
 			// do not insert break after missing start tag
 			if (prev == null && element.getStartStructuredDocumentRegion() == null)
 				return false;
@@ -216,11 +216,11 @@ public class HTMLFormatter implements IStructuredFormatter {
 	/**
 	 */
 	public void format(Node node, IStructuredFormatContraints contraints) {
-		if (node instanceof XMLNode && contraints instanceof HTMLFormatContraints)
-			format((XMLNode) node, (HTMLFormatContraints) contraints);
+		if (node instanceof DOMNode && contraints instanceof HTMLFormatContraints)
+			format((DOMNode) node, (HTMLFormatContraints) contraints);
 	}
 
-	public void format(XMLNode node, HTMLFormatContraints contraints) {
+	public void format(DOMNode node, HTMLFormatContraints contraints) {
 		if (node == null)
 			return;
 		if (node.getParentNode() == null)
@@ -239,7 +239,7 @@ public class HTMLFormatter implements IStructuredFormatter {
 
 	/**
 	 */
-	protected void formatChildNodes(XMLNode node, HTMLFormatContraints contraints) {
+	protected void formatChildNodes(DOMNode node, HTMLFormatContraints contraints) {
 		if (node == null)
 			return;
 		if (!node.hasChildNodes())
@@ -256,11 +256,11 @@ public class HTMLFormatter implements IStructuredFormatter {
 		}
 
 		boolean insertBreak = true;
-		XMLNode child = (XMLNode) node.getFirstChild();
+		DOMNode child = (DOMNode) node.getFirstChild();
 		while (child != null) {
 			if (child.getParentNode() != node)
 				break;
-			XMLNode next = (XMLNode) child.getNextSibling();
+			DOMNode next = (DOMNode) child.getNextSibling();
 
 			if (insertBreak && canInsertBreakBefore(child)) {
 				insertBreakBefore(child, contraints);
@@ -294,7 +294,7 @@ public class HTMLFormatter implements IStructuredFormatter {
 
 	/**
 	 */
-	protected void formatNode(XMLNode node, HTMLFormatContraints contraints) {
+	protected void formatNode(DOMNode node, HTMLFormatContraints contraints) {
 		if (node == null)
 			return;
 
@@ -319,7 +319,7 @@ public class HTMLFormatter implements IStructuredFormatter {
 			return null;
 		StringBuffer buffer = new StringBuffer();
 
-		String delim = ((XMLNode) node).getModel().getStructuredDocument().getLineDelimiter();
+		String delim = ((DOMNode) node).getModel().getStructuredDocument().getLineDelimiter();
 		if (delim != null && delim.length() > 0)
 			buffer.append(delim);
 
@@ -329,10 +329,10 @@ public class HTMLFormatter implements IStructuredFormatter {
 				if (parent.getNodeType() != Node.ELEMENT_NODE)
 					break;
 				// ignore omitted tag
-				if (((XMLNode) parent).getStartStructuredDocumentRegion() == null)
+				if (((DOMNode) parent).getStartStructuredDocumentRegion() == null)
 					continue;
 
-				XMLElement element = (XMLElement) parent;
+				DOMElement element = (DOMElement) parent;
 				if (element.getPrefix() != null) {
 					String localName = element.getLocalName();
 					// special for html:html
@@ -383,7 +383,7 @@ public class HTMLFormatter implements IStructuredFormatter {
 
 	/**
 	 */
-	protected void insertBreakAfter(XMLNode node, HTMLFormatContraints contraints) {
+	protected void insertBreakAfter(DOMNode node, HTMLFormatContraints contraints) {
 		if (node == null)
 			return;
 		if (node.getNodeType() == Node.TEXT_NODE)
@@ -400,7 +400,7 @@ public class HTMLFormatter implements IStructuredFormatter {
 		}
 		else if (next.getNodeType() == Node.TEXT_NODE) {
 			if (contraints != null && contraints.getFormatWithSiblingIndent()) {
-				XMLNode text = (XMLNode) next;
+				DOMNode text = (DOMNode) next;
 				IStructuredFormatter formatter = HTMLFormatterFactory.getInstance().createFormatter(text, getFormatPreferences());
 				if (formatter instanceof HTMLTextFormatter) {
 					HTMLTextFormatter textFormatter = (HTMLTextFormatter) formatter;
@@ -421,7 +421,7 @@ public class HTMLFormatter implements IStructuredFormatter {
 
 	/**
 	 */
-	protected void insertBreakBefore(XMLNode node, HTMLFormatContraints contraints) {
+	protected void insertBreakBefore(DOMNode node, HTMLFormatContraints contraints) {
 		if (node == null)
 			return;
 		if (node.getNodeType() == Node.TEXT_NODE)
@@ -434,7 +434,7 @@ public class HTMLFormatter implements IStructuredFormatter {
 		String spaces = null;
 		if (prev != null && prev.getNodeType() == Node.TEXT_NODE) {
 			if (contraints != null && contraints.getFormatWithSiblingIndent()) {
-				XMLNode text = (XMLNode) prev;
+				DOMNode text = (DOMNode) prev;
 				IStructuredFormatter formatter = HTMLFormatterFactory.getInstance().createFormatter(text, getFormatPreferences());
 				if (formatter instanceof HTMLTextFormatter) {
 					HTMLTextFormatter textFormatter = (HTMLTextFormatter) formatter;
@@ -495,7 +495,7 @@ public class HTMLFormatter implements IStructuredFormatter {
 
 	/**
 	 */
-	protected void replaceSource(XMLModel model, int offset, int length, String source) {
+	protected void replaceSource(DOMModel model, int offset, int length, String source) {
 		if (model == null)
 			return;
 		IStructuredDocument structuredDocument = model.getStructuredDocument();
@@ -557,7 +557,7 @@ public class HTMLFormatter implements IStructuredFormatter {
 			return;
 		if (node == null)
 			return;
-		IStructuredDocument structuredDocument = ((XMLNode) node).getStructuredDocument();
+		IStructuredDocument structuredDocument = ((DOMNode) node).getStructuredDocument();
 		if (structuredDocument == null)
 			return; // error
 
@@ -567,7 +567,7 @@ public class HTMLFormatter implements IStructuredFormatter {
 		if (lineWidth < 0)
 			return;
 
-		int offset = ((XMLNode) node).getStartOffset();
+		int offset = ((DOMNode) node).getStartOffset();
 		int line = structuredDocument.getLineOfOffset(offset);
 		int lineOffset = 0;
 		try {

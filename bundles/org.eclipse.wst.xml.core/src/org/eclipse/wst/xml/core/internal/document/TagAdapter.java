@@ -15,7 +15,7 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 import org.eclipse.wst.sse.core.INodeAdapter;
-import org.eclipse.wst.xml.core.document.XMLElement;
+import org.eclipse.wst.xml.core.document.DOMElement;
 
 /**
  */
@@ -23,11 +23,11 @@ public interface TagAdapter extends INodeAdapter {
 
 	/**
 	 */
-	String getEndTag(XMLElement element);
+	String getEndTag(DOMElement element);
 
 	/**
 	 */
-	String getStartTag(XMLElement element);
+	String getStartTag(DOMElement element);
 
 	/**
 	 */

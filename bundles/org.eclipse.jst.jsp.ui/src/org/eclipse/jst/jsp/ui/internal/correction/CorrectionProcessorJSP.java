@@ -36,8 +36,8 @@ import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.correction.StructuredCorrectionProcessor;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
-import org.eclipse.wst.xml.core.document.XMLDocument;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMDocument;
+import org.eclipse.wst.xml.core.document.DOMModel;
 
 public class CorrectionProcessorJSP extends StructuredCorrectionProcessor {
 	protected IQuickFixProcessor fQuickFixProcessor;
@@ -70,8 +70,8 @@ public class CorrectionProcessorJSP extends StructuredCorrectionProcessor {
 			if (documentOffset >= pos.offset && documentOffset <= pos.offset + pos.length) {
 				IQuickFixProcessor processor = getQuickFixProcessorJSP();
 
-				XMLModel xmlModel = (XMLModel) StructuredModelManager.getModelManager().getExistingModelForRead(viewer.getDocument());
-				XMLDocument xmlDoc = xmlModel.getDocument();
+				DOMModel xmlModel = (DOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(viewer.getDocument());
+				DOMDocument xmlDoc = xmlModel.getDocument();
 				xmlModel.releaseFromRead();
 				JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
 				if (translationAdapter != null) {
@@ -113,8 +113,8 @@ public class CorrectionProcessorJSP extends StructuredCorrectionProcessor {
 		try {
 			IQuickAssistProcessor processor = getQuickAssistProcessorJSP();
 
-			XMLModel xmlModel = (XMLModel) StructuredModelManager.getModelManager().getExistingModelForRead(viewer.getDocument());
-			XMLDocument xmlDoc = xmlModel.getDocument();
+			DOMModel xmlModel = (DOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(viewer.getDocument());
+			DOMDocument xmlDoc = xmlModel.getDocument();
 			xmlModel.releaseFromRead();
 			JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
 			if (translationAdapter != null) {

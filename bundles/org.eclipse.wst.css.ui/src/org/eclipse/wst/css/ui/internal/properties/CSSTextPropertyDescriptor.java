@@ -29,7 +29,7 @@ import org.eclipse.wst.css.core.document.ICSSNode;
 import org.eclipse.wst.css.core.util.CSSPathService;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMNode;
 
 /**
  */
@@ -70,7 +70,7 @@ public class CSSTextPropertyDescriptor extends TextPropertyDescriptor {
 		// validateEdit()
 		IStructuredModel structuredModel = model;
 		if (model.getStyleSheetType() != ICSSModel.EXTERNAL) {
-			structuredModel = ((XMLNode) model.getOwnerDOMNode()).getModel();
+			structuredModel = ((DOMNode) model.getOwnerDOMNode()).getModel();
 			if (structuredModel == null)
 				return null;
 		}

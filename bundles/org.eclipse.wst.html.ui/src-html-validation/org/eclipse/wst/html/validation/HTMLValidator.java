@@ -26,8 +26,8 @@ import org.eclipse.wst.validation.core.IValidationContext;
 import org.eclipse.wst.validation.core.IValidator;
 import org.eclipse.wst.validation.internal.operations.IWorkbenchHelper;
 import org.eclipse.wst.validation.internal.operations.WorkbenchReporter;
-import org.eclipse.wst.xml.core.document.XMLDocument;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMDocument;
+import org.eclipse.wst.xml.core.document.DOMModel;
 import org.eclipse.wst.xml.core.internal.document.DocumentTypeAdapter;
 import org.eclispe.wst.validation.internal.core.Message;
 
@@ -46,7 +46,7 @@ public class HTMLValidator implements IValidator {
 
 	/**
 	 */
-	protected XMLModel getModel(IProject project, IFile file) {
+	protected DOMModel getModel(IProject project, IFile file) {
 		if (project == null || file == null)
 			return null;
 		if (!file.exists())
@@ -76,16 +76,16 @@ public class HTMLValidator implements IValidator {
 
 		if (model == null)
 			return null;
-		if (!(model instanceof XMLModel)) {
+		if (!(model instanceof DOMModel)) {
 			releaseModel(model);
 			return null;
 		}
-		return (XMLModel) model;
+		return (DOMModel) model;
 	}
 
 	/**
 	 */
-	protected HTMLValidationReporter getReporter(IReporter reporter, IFile file, XMLModel model) {
+	protected HTMLValidationReporter getReporter(IReporter reporter, IFile file, DOMModel model) {
 		return new HTMLValidationReporter(this, reporter, file, model);
 	}
 
@@ -116,7 +116,7 @@ public class HTMLValidator implements IValidator {
 
 	/**
 	 */
-	private boolean hasHTMLFeature(XMLDocument document) {
+	private boolean hasHTMLFeature(DOMDocument document) {
 		DocumentTypeAdapter adapter = (DocumentTypeAdapter) document.getAdapterFor(DocumentTypeAdapter.class);
 		if (adapter == null)
 			return false;
@@ -148,7 +148,7 @@ public class HTMLValidator implements IValidator {
 
 	/**
 	 */
-	protected HTMLValidationResult validate(XMLModel model, IFile file) {
+	protected HTMLValidationResult validate(DOMModel model, IFile file) {
 		IProject prj = null;
 		if (file != null) {
 			prj = file.getProject();
@@ -165,10 +165,10 @@ public class HTMLValidator implements IValidator {
 
 	/**
 	 */
-	private HTMLValidationResult validate(IReporter reporter, IFile file, XMLModel model) {
+	private HTMLValidationResult validate(IReporter reporter, IFile file, DOMModel model) {
 		if (file == null || model == null)
 			return null; // error
-		XMLDocument document = model.getDocument();
+		DOMDocument document = model.getDocument();
 		if (document == null)
 			return null; // error
 		if (!hasHTMLFeature(document))
@@ -237,7 +237,7 @@ public class HTMLValidator implements IValidator {
 		if ((reporter != null) && (reporter.isCancelled() == true)) {
 			throw new OperationCanceledException();
 		}
-		XMLModel model = getModel(file.getProject(), file);
+		DOMModel model = getModel(file.getProject(), file);
 		if (model == null)
 			return;
 

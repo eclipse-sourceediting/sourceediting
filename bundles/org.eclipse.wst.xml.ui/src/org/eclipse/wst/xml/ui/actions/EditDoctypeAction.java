@@ -19,8 +19,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.xml.core.document.XMLDocument;
-import org.eclipse.wst.xml.core.document.XMLDocumentType;
+import org.eclipse.wst.xml.core.document.DOMDocument;
+import org.eclipse.wst.xml.core.document.DOMDocumentType;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.eclipse.wst.xml.ui.dialogs.EditDoctypeDialog;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
@@ -66,8 +66,8 @@ public class EditDoctypeAction extends Action {
 	protected DocumentType createDoctype(EditDoctypeDialog dialog, Document document) {
 		DocumentType result = null;
 		if (document instanceof DocumentImpl) {
-			XMLDocument documentImpl = (XMLDocument) document;
-			XMLDocumentType doctypeImpl = (XMLDocumentType) documentImpl.createDoctype(dialog.getName());
+			DOMDocument documentImpl = (DOMDocument) document;
+			DOMDocumentType doctypeImpl = (DOMDocumentType) documentImpl.createDoctype(dialog.getName());
 			doctypeImpl.setPublicId(dialog.getPublicId());
 			doctypeImpl.setSystemId(dialog.getSystemId());
 			result = doctypeImpl;
@@ -168,8 +168,8 @@ public class EditDoctypeAction extends Action {
 
 
 	protected void updateDoctype(EditDoctypeDialog dialog, DocumentType doctype) {
-		if (doctype instanceof XMLDocumentType) {
-			XMLDocumentType doctypeImpl = (XMLDocumentType) doctype;
+		if (doctype instanceof DOMDocumentType) {
+			DOMDocumentType doctypeImpl = (DOMDocumentType) doctype;
 			if (doctypeImpl.getName().equals(dialog.getName())) {
 				doctypeImpl.setPublicId(dialog.getPublicId());
 				doctypeImpl.setSystemId(dialog.getSystemId());

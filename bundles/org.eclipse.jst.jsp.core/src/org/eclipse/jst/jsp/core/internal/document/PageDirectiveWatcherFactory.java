@@ -14,7 +14,7 @@ import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.PropagatingAdapterFactory;
-import org.eclipse.wst.xml.core.document.XMLElement;
+import org.eclipse.wst.xml.core.document.DOMElement;
 import org.eclipse.wst.xml.core.internal.propagate.PropagatingAdapterFactoryImpl;
 import org.w3c.dom.Node;
 
@@ -38,8 +38,8 @@ public class PageDirectiveWatcherFactory extends PropagatingAdapterFactoryImpl i
 
 	protected INodeAdapter createAdapter(INodeNotifier target) {
 		PageDirectiveWatcher result = null;
-		if (target instanceof XMLElement) {
-			XMLElement xmlElement = (XMLElement) target;
+		if (target instanceof DOMElement) {
+			DOMElement xmlElement = (DOMElement) target;
 			if (xmlElement.getNodeType() == Node.ELEMENT_NODE) {
 				//                if (xmlElement.getNodeName() == JSP12Namespace.ElementName.DIRECTIVE_PAGE) {   // not sure why identity to  JSP11Namespace.ElementName.DIRECTIVE_PAGE doesn't work
 				String nodeName = xmlElement.getNodeName();

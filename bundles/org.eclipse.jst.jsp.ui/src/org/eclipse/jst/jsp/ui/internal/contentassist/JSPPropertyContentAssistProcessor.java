@@ -23,7 +23,7 @@ import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.eclipse.wst.xml.ui.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.contentassist.XMLRelevanceConstants;
@@ -46,7 +46,7 @@ public class JSPPropertyContentAssistProcessor extends JSPDummyContentAssistProc
 	}
 
 	protected void addAttributeValueProposals(ContentAssistRequest contentAssistRequest) {
-		XMLNode node = (XMLNode) contentAssistRequest.getNode();
+		DOMNode node = (DOMNode) contentAssistRequest.getNode();
 
 		// Find the attribute name for which this position should have a value
 		IStructuredDocumentRegion open = node.getFirstStructuredDocumentRegion();
@@ -105,7 +105,7 @@ public class JSPPropertyContentAssistProcessor extends JSPDummyContentAssistProc
 		}
 	}
 
-	private void addBeanPropertyProposals(ContentAssistRequest contentAssistRequest, XMLNode node, boolean isGetProperty, String matchString) {
+	private void addBeanPropertyProposals(ContentAssistRequest contentAssistRequest, DOMNode node, boolean isGetProperty, String matchString) {
 		// assumes that the node is the [gs]etProperty tag
 		String useBeanName = ((Element) node).getAttribute(JSP11Namespace.ATTR_NAME_NAME);
 		// properties can only be provided if a class/type/beanName has been declared
@@ -156,7 +156,7 @@ public class JSPPropertyContentAssistProcessor extends JSPDummyContentAssistProc
 		}
 	}
 
-	private void addBeanNameProposals(ContentAssistRequest contentAssistRequest, XMLNode node, String matchString) {
+	private void addBeanNameProposals(ContentAssistRequest contentAssistRequest, DOMNode node, String matchString) {
 		// will not catch useBeans specified using other than actual DOM Nodes
 		NodeList useBeans = node.getOwnerDocument().getElementsByTagName(JSP11Namespace.ElementName.USEBEAN);
 		if (useBeans != null) {

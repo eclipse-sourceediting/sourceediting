@@ -26,7 +26,7 @@ import org.eclipse.wst.sse.core.parser.RegionParser;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -196,12 +196,12 @@ public class StyleAttrAdapter extends AbstractCSSModelAdapter implements IStruct
 		else {
 			Attr attr = element.getAttributeNode(STYLE);
 			if (attr != null) {
-				((XMLNode) attr).setValueSource(value);
+				((DOMNode) attr).setValueSource(value);
 			}
 			else {
 				Document document = element.getOwnerDocument();
 				attr = document.createAttribute(STYLE);
-				((XMLNode) attr).setValueSource(value);
+				((DOMNode) attr).setValueSource(value);
 				element.setAttributeNode(attr);
 			}
 		}
@@ -233,7 +233,7 @@ public class StyleAttrAdapter extends AbstractCSSModelAdapter implements IStruct
 		String value = null;
 		Attr attr = element.getAttributeNode(org.eclipse.wst.html.core.HTML40Namespace.ATTR_NAME_STYLE);
 		if (attr != null)
-			value = ((XMLNode) attr).getValueSource();
+			value = ((DOMNode) attr).getValueSource();
 		structuredDocument.setText(this, value);
 
 		notifyStyleChanged(element);

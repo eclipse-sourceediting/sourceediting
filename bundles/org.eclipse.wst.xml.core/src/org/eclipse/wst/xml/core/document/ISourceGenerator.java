@@ -24,7 +24,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.ProcessingInstruction;
 import org.w3c.dom.Text;
 
-public interface XMLGenerator {
+public interface ISourceGenerator {
 
 	/**
 	 */

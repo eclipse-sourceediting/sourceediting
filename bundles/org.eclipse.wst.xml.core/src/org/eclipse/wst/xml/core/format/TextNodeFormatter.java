@@ -20,12 +20,12 @@ import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatContraints;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.w3c.dom.Node;
 
 
 public class TextNodeFormatter extends NodeFormatter {
-	protected void formatNode(XMLNode node, IStructuredFormatContraints formatContraints) {
+	protected void formatNode(DOMNode node, IStructuredFormatContraints formatContraints) {
 		if (node != null) {
 			IStructuredDocument doc = node.getModel().getStructuredDocument();
 			int line = doc.getLineOfOffset(node.getStartOffset());
@@ -38,7 +38,7 @@ public class TextNodeFormatter extends NodeFormatter {
 				throw new SourceEditingRuntimeException(exception);
 			}
 			int lineWidth = getFormatPreferences().getLineWidth();
-			XMLNode parentNode = (XMLNode) node.getParentNode();
+			DOMNode parentNode = (DOMNode) node.getParentNode();
 			String nodeIndentation = formatContraints.getCurrentIndent();
 
 			// compute current available line width
@@ -55,7 +55,7 @@ public class TextNodeFormatter extends NodeFormatter {
 
 			String compressedText = getCompressedNodeText(node, formatContraints);
 
-			if (((compressedText.length() <= (currentAvailableLineWidth - node.getParentNode().getNodeName().length() - 3) && !StringUtils.containsLineDelimiter(compressedText)) && (!nodeHasSiblings(node) || (!StringUtils.containsLineDelimiter(node.getNodeValue()) && node.getNextSibling() != null && node.getNextSibling().getNodeType() == Node.COMMENT_NODE && !StringUtils.containsLineDelimiter(node.getNextSibling().getNodeValue()))) && !firstStructuredDocumentRegionContainsLineDelimiters((XMLNode) node.getParentNode())) || node.getStartStructuredDocumentRegion().getStartOffset() == 0) {
+			if (((compressedText.length() <= (currentAvailableLineWidth - node.getParentNode().getNodeName().length() - 3) && !StringUtils.containsLineDelimiter(compressedText)) && (!nodeHasSiblings(node) || (!StringUtils.containsLineDelimiter(node.getNodeValue()) && node.getNextSibling() != null && node.getNextSibling().getNodeType() == Node.COMMENT_NODE && !StringUtils.containsLineDelimiter(node.getNextSibling().getNodeValue()))) && !firstStructuredDocumentRegionContainsLineDelimiters((DOMNode) node.getParentNode())) || node.getStartStructuredDocumentRegion().getStartOffset() == 0) {
 				// enough space
 				// and text has no line delimiters
 				// and (node has no siblings or followed by inline comment)
@@ -63,9 +63,9 @@ public class TextNodeFormatter extends NodeFormatter {
 				// parentFirstStructuredDocumentRegionContainsLineDelimiters
 
 				if (isEndTagMissing(parentNode)) {
-					parentNode = (XMLNode) parentNode.getParentNode();
+					parentNode = (DOMNode) parentNode.getParentNode();
 					while (isEndTagMissing(parentNode))
-						parentNode = (XMLNode) parentNode.getParentNode();
+						parentNode = (DOMNode) parentNode.getParentNode();
 
 					// add parent's indentation to end
 					nodeIndentation = getNodeIndent(parentNode);

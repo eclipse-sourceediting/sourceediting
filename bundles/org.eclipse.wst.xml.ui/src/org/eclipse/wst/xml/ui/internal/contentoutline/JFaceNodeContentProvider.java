@@ -18,7 +18,7 @@ import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMModel;
 
 
 /**
@@ -70,8 +70,8 @@ public class JFaceNodeContentProvider implements ITreeContentProvider {
 		// The root is usually an instance of an XMLStructuredModel in
 		// which case we want to extract the document.
 		Object topNode = object;
-		if (object instanceof XMLModel)
-			topNode = ((XMLModel) object).getDocument();
+		if (object instanceof DOMModel)
+			topNode = ((DOMModel) object).getDocument();
 
 		IJFaceNodeAdapter adapter = getAdapter(topNode);
 

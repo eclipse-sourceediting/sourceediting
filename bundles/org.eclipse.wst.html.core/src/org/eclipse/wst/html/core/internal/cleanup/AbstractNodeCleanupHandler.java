@@ -19,7 +19,7 @@ import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.internal.cleanup.StructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMModel;
 
 abstract class AbstractNodeCleanupHandler implements IStructuredCleanupHandler {
 
@@ -63,7 +63,7 @@ abstract class AbstractNodeCleanupHandler implements IStructuredCleanupHandler {
 		fProgressMonitor = progressMonitor;
 	}
 
-	static protected StructuredDocumentEvent replaceSource(XMLModel model, Object requester, int offset, int length, String source) {
+	static protected StructuredDocumentEvent replaceSource(DOMModel model, Object requester, int offset, int length, String source) {
 
 		StructuredDocumentEvent result = null;
 		if (model == null)

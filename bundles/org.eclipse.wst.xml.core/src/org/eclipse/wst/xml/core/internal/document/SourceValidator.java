@@ -12,8 +12,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
-import org.eclipse.wst.xml.core.document.XMLCharEntity;
-import org.eclipse.wst.xml.core.document.XMLDocument;
+import org.eclipse.wst.xml.core.XMLCharEntity;
+import org.eclipse.wst.xml.core.document.DOMDocument;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
@@ -51,7 +51,7 @@ public class SourceValidator {
 		boolean acceptJSPEnd = true;
 		String endTagName = null;
 		if (this.node.getNodeType() == Node.ATTRIBUTE_NODE) {
-			XMLDocument document = (XMLDocument) this.node.getOwnerDocument();
+			DOMDocument document = (DOMDocument) this.node.getOwnerDocument();
 			if (document != null && document.isJSPType())
 				acceptTag = true;
 			if (acceptTag) {
@@ -84,11 +84,11 @@ public class SourceValidator {
 				acceptAmpersand = true;
 			}
 		} else {
-			XMLDocument document = null;
+			DOMDocument document = null;
 			if (this.node.getNodeType() == Node.DOCUMENT_NODE) {
-				document = (XMLDocument) this.node;
+				document = (DOMDocument) this.node;
 			} else {
-				document = (XMLDocument) this.node.getOwnerDocument();
+				document = (DOMDocument) this.node.getOwnerDocument();
 			}
 			if (document != null && document.isJSPType())
 				acceptTag = true;
@@ -250,7 +250,7 @@ public class SourceValidator {
 		boolean acceptEntityRef = true;
 		String endTagName = null;
 		if (this.node.getNodeType() == Node.ATTRIBUTE_NODE) {
-			XMLDocument document = (XMLDocument) this.node.getOwnerDocument();
+			DOMDocument document = (DOMDocument) this.node.getOwnerDocument();
 			if (document != null && document.isJSPType())
 				acceptTag = true;
 			if (acceptTag) {
@@ -278,11 +278,11 @@ public class SourceValidator {
 				acceptClose = true;
 			}
 		} else {
-			XMLDocument document = null;
+			DOMDocument document = null;
 			if (this.node.getNodeType() == Node.DOCUMENT_NODE) {
-				document = (XMLDocument) this.node;
+				document = (DOMDocument) this.node;
 			} else {
-				document = (XMLDocument) this.node.getOwnerDocument();
+				document = (DOMDocument) this.node.getOwnerDocument();
 			}
 			if (document != null && document.isJSPType())
 				acceptTag = true;

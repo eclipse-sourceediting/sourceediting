@@ -19,8 +19,8 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.xml.core.document.XMLElement;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMElement;
+import org.eclipse.wst.xml.core.document.DOMModel;
 import org.eclipse.wst.xml.core.internal.document.TagAdapter;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 
@@ -28,7 +28,7 @@ import org.eclipse.wst.xml.core.parser.XMLRegionContext;
  */
 public class MetaDataAdapter implements TagAdapter, MetaData {
 
-	private XMLElement element = null;
+	private DOMElement element = null;
 	private String type = null;
 	private String data = null;
 	private String endData = null;
@@ -124,7 +124,7 @@ public class MetaDataAdapter implements TagAdapter, MetaData {
 
 	/**
 	 */
-	private String getDelimiter(XMLModel model) {
+	private String getDelimiter(DOMModel model) {
 		String delim = null;
 		if (model != null) {
 			IStructuredDocument structuredDocument = model.getStructuredDocument();
@@ -151,7 +151,7 @@ public class MetaDataAdapter implements TagAdapter, MetaData {
 
 	/**
 	 */
-	public String getEndTag(XMLElement element) {
+	public String getEndTag(DOMElement element) {
 		StringBuffer buffer = new StringBuffer();
 		if (element.isJSPTag())
 			buffer.append("<%--");//$NON-NLS-1$
@@ -181,7 +181,7 @@ public class MetaDataAdapter implements TagAdapter, MetaData {
 
 	/**
 	 */
-	public String getStartTag(XMLElement element) {
+	public String getStartTag(DOMElement element) {
 		StringBuffer buffer = new StringBuffer();
 		if (element.isJSPTag())
 			buffer.append("<%--");//$NON-NLS-1$
@@ -266,7 +266,7 @@ public class MetaDataAdapter implements TagAdapter, MetaData {
 
 	/**
 	 */
-	public void setElement(XMLElement element) {
+	public void setElement(DOMElement element) {
 		this.element = element;
 
 		if (this.element != null) {
@@ -287,7 +287,7 @@ public class MetaDataAdapter implements TagAdapter, MetaData {
 		if (isRuntimeContainer())
 			return;
 
-		XMLModel model = this.element.getModel();
+		DOMModel model = this.element.getModel();
 		if (model == null)
 			return;
 		IStructuredDocument structuredDocument = model.getStructuredDocument();

@@ -11,8 +11,8 @@
 package org.eclipse.wst.xsd.ui.internal.commands;
 
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
-import org.eclipse.wst.xml.core.document.XMLModel;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xml.core.format.FormatProcessorXML;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.w3c.dom.Element;
@@ -49,9 +49,9 @@ public abstract class AbstractCommand
 
   protected void formatChild(Element child)
   {
-    if (child instanceof XMLNode)
+    if (child instanceof DOMNode)
     {
-      XMLModel model = ((XMLNode)child).getModel();
+      DOMModel model = ((DOMNode)child).getModel();
       try
       {
         // tell the model that we are about to make a big model change

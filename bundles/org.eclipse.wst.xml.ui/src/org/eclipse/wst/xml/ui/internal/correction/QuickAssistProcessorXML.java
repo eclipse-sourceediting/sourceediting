@@ -23,7 +23,7 @@ import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.correction.IQuickAssistProcessor;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
@@ -53,11 +53,11 @@ public class QuickAssistProcessorXML implements IQuickAssistProcessor {
 	 * @param offset
 	 */
 	protected void getInsertRequiredAttrs(ArrayList proposals, StructuredTextViewer viewer, int offset) {
-		XMLNode node = (XMLNode) ContentAssistUtils.getNodeAt(viewer, offset);
+		DOMNode node = (DOMNode) ContentAssistUtils.getNodeAt(viewer, offset);
 		if (node != null && node.getNodeType() == Node.ELEMENT_NODE) {
 			IStructuredDocumentRegion startStructuredDocumentRegion = node.getStartStructuredDocumentRegion();
 			if (startStructuredDocumentRegion != null && startStructuredDocumentRegion.containsOffset(offset)) {
-				XMLNode cursorNode = (XMLNode) ContentAssistUtils.getNodeAt(viewer, offset);
+				DOMNode cursorNode = (DOMNode) ContentAssistUtils.getNodeAt(viewer, offset);
 				List requiredAttrs = getRequiredAttrs(cursorNode);
 				if (requiredAttrs.size() > 0) {
 					NamedNodeMap currentAttrs = node.getAttributes();
@@ -92,7 +92,7 @@ public class QuickAssistProcessorXML implements IQuickAssistProcessor {
 	 * @param offset
 	 */
 	protected void getLocalRenameQuickAssistProposal(ArrayList proposals, StructuredTextViewer viewer, int offset) {
-		XMLNode node = (XMLNode) ContentAssistUtils.getNodeAt(viewer, offset);
+		DOMNode node = (DOMNode) ContentAssistUtils.getNodeAt(viewer, offset);
 		IStructuredDocumentRegion startStructuredDocumentRegion = node == null ? null : node.getStartStructuredDocumentRegion();
 		IStructuredDocumentRegion endStructuredDocumentRegion = node == null ? null : node.getEndStructuredDocumentRegion();
 
@@ -162,7 +162,7 @@ public class QuickAssistProcessorXML implements IQuickAssistProcessor {
 	 * @param offset
 	 */
 	protected void getSurroundWithNewElementQuickAssistProposal(ArrayList proposals, StructuredTextViewer viewer, int offset) {
-		XMLNode node = (XMLNode) ContentAssistUtils.getNodeAt(viewer, offset);
+		DOMNode node = (DOMNode) ContentAssistUtils.getNodeAt(viewer, offset);
 		if (node != null)
 			proposals.add(new SurroundWithNewElementQuickAssistProposal());
 	}

@@ -15,7 +15,7 @@ import org.eclipse.wst.sse.core.AbstractAdapterFactory;
 import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMNode;
 
 /**
  * Factory for JSPTranslationAdapters.
@@ -46,8 +46,8 @@ public class JSPTranslationAdapterFactory extends AbstractAdapterFactory {
 	}
 
 	protected INodeAdapter createAdapter(INodeNotifier target) {
-		if (target instanceof XMLNode && fAdapter == null) {
-			fAdapter = new JSPTranslationAdapter(((XMLNode) target).getModel());
+		if (target instanceof DOMNode && fAdapter == null) {
+			fAdapter = new JSPTranslationAdapter(((DOMNode) target).getModel());
 			if(DEBUG) {
 				System.out.println("(+) JSPTranslationAdapterFactory [" + this + "] created adapter: " + fAdapter);
 			}

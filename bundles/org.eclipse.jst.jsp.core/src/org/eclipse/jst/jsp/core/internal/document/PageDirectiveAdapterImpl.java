@@ -36,7 +36,7 @@ import org.eclipse.wst.sse.core.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.sse.core.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMNode;
 
 /**
  * This class has the responsibility to provide 
@@ -64,8 +64,8 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 		notifierAtCreation = target;
 		// we need to remember our instance of model, 
 		// in case we need to "signal" a re-init needed.
-		if (target instanceof XMLNode) {
-			XMLNode node = (XMLNode) target;
+		if (target instanceof DOMNode) {
+			DOMNode node = (DOMNode) target;
 			model = node.getModel();
 		}
 

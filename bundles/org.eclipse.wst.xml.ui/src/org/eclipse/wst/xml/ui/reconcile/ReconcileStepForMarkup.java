@@ -30,7 +30,7 @@ import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.eclipse.wst.xml.ui.internal.correction.ProblemIDsXML;
 import org.w3c.dom.Node;
@@ -335,7 +335,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
             return;
         
 		// check start/end tag pairs
-		XMLNode xmlNode = getXMLNode(sdRegion);
+		DOMNode xmlNode = getXMLNode(sdRegion);
         
         if(xmlNode == null)
             return;
@@ -379,9 +379,9 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
     						tagClose = "/"; //$NON-NLS-1$
     						tagCloseOffset--;
     					}
-    					XMLNode firstChild = (XMLNode) xmlNode.getFirstChild();
+    					DOMNode firstChild = (DOMNode) xmlNode.getFirstChild();
     					while (firstChild != null && firstChild.getNodeType() == Node.TEXT_NODE) {
-    						firstChild = (XMLNode) firstChild.getNextSibling();
+    						firstChild = (DOMNode) firstChild.getNextSibling();
     					}
     					int endOffset = xmlNode.getEndOffset();
     					int firstChildStartOffset = firstChild == null ? endOffset : firstChild.getStartOffset();
@@ -441,7 +441,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 			if (!sdRegion.isDeleted())
 				regions.add(sdRegion);
             
-            XMLNode xmlNode = getXMLNode(sdRegion);
+            DOMNode xmlNode = getXMLNode(sdRegion);
             
 			while (sdRegion != null 
                     && !sdRegion.isDeleted() 
@@ -456,19 +456,19 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 		return (IStructuredDocumentRegion[]) regions.toArray(new IStructuredDocumentRegion[regions.size()]);
 	}
 
-	private XMLNode getXMLNode(IStructuredDocumentRegion sdRegion) {
+	private DOMNode getXMLNode(IStructuredDocumentRegion sdRegion) {
         
         if(sdRegion == null)
             return null;
         
 		IStructuredModel xModel = null;
-		XMLNode xmlNode = null;
+		DOMNode xmlNode = null;
 		// get/release models should always be in a try/finally block
 		try {
 			xModel = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
 			// xModel is sometime null, when closing editor, for example
 			if (xModel != null) {
-				xmlNode = (XMLNode) xModel.getIndexedRegion(sdRegion.getStart());
+				xmlNode = (DOMNode) xModel.getIndexedRegion(sdRegion.getStart());
 			}
 		} finally {
 			if (xModel != null) {

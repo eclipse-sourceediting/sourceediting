@@ -30,7 +30,7 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
-import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.document.DOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
@@ -62,7 +62,7 @@ public class InsertRequiredAttrsQuickAssistProposal implements ICompletionPropos
 	 *      char, int, int)
 	 */
 	public void apply(ITextViewer viewer, char trigger, int stateMask, int offset) {
-		XMLNode node = (XMLNode) ContentAssistUtils.getNodeAt((StructuredTextViewer) viewer, offset);
+		DOMNode node = (DOMNode) ContentAssistUtils.getNodeAt((StructuredTextViewer) viewer, offset);
 		IStructuredDocumentRegion startStructuredDocumentRegion = node.getStartStructuredDocumentRegion();
 		int index = startStructuredDocumentRegion.getEndOffset();
 		ITextRegion lastRegion = startStructuredDocumentRegion.getLastRegion();

@@ -25,9 +25,9 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.NodeLocation;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.SourceEditingTextTools;
-import org.eclipse.wst.xml.core.document.XMLModel;
-import org.eclipse.wst.xml.core.document.XMLNode;
-import org.eclipse.wst.xml.core.document.XMLText;
+import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.DOMText;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -38,9 +38,9 @@ import org.w3c.dom.Node;
 public class XMLSourceEditingTextTools implements SourceEditingTextTools, INodeAdapter {
 
 	protected class NodeLocationImpl implements NodeLocation {
-		private XMLNode node;
+		private DOMNode node;
 
-		public NodeLocationImpl(XMLNode xmlnode) {
+		public NodeLocationImpl(DOMNode xmlnode) {
 			super();
 			node = xmlnode;
 		}
@@ -83,10 +83,10 @@ public class XMLSourceEditingTextTools implements SourceEditingTextTools, INodeA
 		IStructuredModel model = null;
 		try {
 			model = mm.getExistingModelForRead((IFile) res);
-			if (model == null || !(model instanceof XMLModel))
+			if (model == null || !(model instanceof DOMModel))
 				return null;
 
-			return ((XMLModel) model).getDocument();
+			return ((DOMModel) model).getDocument();
 		} finally {
 			if (model != null)
 				model.releaseFromRead();
@@ -99,8 +99,8 @@ public class XMLSourceEditingTextTools implements SourceEditingTextTools, INodeA
 	 * @see org.eclipse.wst.sse.ui.extensions.SourceEditingTextTools#getNodeLocation(org.w3c.dom.Node)
 	 */
 	public NodeLocation getNodeLocation(Node node) {
-		if (node.getNodeType() == Node.ELEMENT_NODE && node instanceof XMLNode)
-			return new NodeLocationImpl((XMLNode) node);
+		if (node.getNodeType() == Node.ELEMENT_NODE && node instanceof DOMNode)
+			return new NodeLocationImpl((DOMNode) node);
 		return null;
 	}
 
@@ -109,10 +109,10 @@ public class XMLSourceEditingTextTools implements SourceEditingTextTools, INodeA
 	}
 
 	public int getStartOffset(Node node) {
-		if (node == null || !(node instanceof XMLText))
+		if (node == null || !(node instanceof DOMText))
 			return -1;
 
-		IStructuredDocumentRegion fnode = ((XMLText) node).getFirstStructuredDocumentRegion();
+		IStructuredDocumentRegion fnode = ((DOMText) node).getFirstStructuredDocumentRegion();
 		return fnode.getStartOffset();
 	}
 

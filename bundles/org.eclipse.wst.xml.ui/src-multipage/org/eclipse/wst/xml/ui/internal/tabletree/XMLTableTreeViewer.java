@@ -30,7 +30,7 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.ViewerSelectionManager;
 import org.eclipse.wst.sse.ui.view.events.INodeSelectionListener;
 import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMModel;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.internal.ui.IDesignViewer;
@@ -306,11 +306,11 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 		fModel = model;
 		Document domDoc = null;
 
-		if (fModel != null && fModel instanceof XMLModel) {
+		if (fModel != null && fModel instanceof DOMModel) {
 			model.addModelStateListener(fInternalModelStateListener);
 			ModelQuery mq = ModelQueryUtil.getModelQuery(model);
 			treeExtension.setModelQuery(mq);
-			domDoc = ((XMLModel) fModel).getDocument();
+			domDoc = ((DOMModel) fModel).getDocument();
 			setInput(domDoc);
 		}
 	}

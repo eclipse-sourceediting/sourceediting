@@ -20,7 +20,7 @@ import org.eclipse.wst.sse.core.modelhandler.IDocumentTypeHandler;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
 import org.eclipse.wst.sse.ui.util.Assert;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMModel;
 import org.eclipse.wst.xml.ui.internal.properties.XMLPropertySourceAdapterFactory;
 
 /**
@@ -37,7 +37,7 @@ public class AdapterFactoryProviderForHTML implements AdapterFactoryProvider {
 		addContentBasedFactories(structuredModel);
 		// ===
 		// Must update/add to propagating adapter here too
-		if (structuredModel instanceof XMLModel) {
+		if (structuredModel instanceof DOMModel) {
 			addPropagatingAdapters(structuredModel);
 		}
 		// ===

@@ -13,7 +13,7 @@ package org.eclipse.wst.html.core.document;
 
 
 import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.xml.core.document.XMLElement;
+import org.eclipse.wst.xml.core.document.DOMElement;
 import org.eclipse.wst.xml.core.internal.document.TagAdapter;
 
 /**
@@ -31,7 +31,7 @@ public class UnknownTagAdapter implements TagAdapter {
 
 	/**
 	 */
-	public String getEndTag(XMLElement element) {
+	public String getEndTag(DOMElement element) {
 		String tag = null;
 		if (this.endTag != null) {
 			tag = this.endTag;
@@ -42,7 +42,7 @@ public class UnknownTagAdapter implements TagAdapter {
 
 	/**
 	 */
-	public String getStartTag(XMLElement element) {
+	public String getStartTag(DOMElement element) {
 		String tag = null;
 		if (this.startTag != null) {
 			tag = this.startTag;

@@ -17,9 +17,9 @@ import java.util.Vector;
 
 import org.eclipse.wst.html.core.HTML40Namespace;
 import org.eclipse.wst.sse.core.IndexedRegion;
-import org.eclipse.wst.xml.core.document.XMLDocument;
-import org.eclipse.wst.xml.core.document.XMLNode;
-import org.eclipse.wst.xml.core.document.XMLText;
+import org.eclipse.wst.xml.core.document.DOMDocument;
+import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.DOMText;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.document.DocumentTypeAdapter;
 import org.w3c.dom.Document;
@@ -68,7 +68,7 @@ public class HTMLDocumentContentValidator extends PrimeValidator {
 		}
 
 		private static String getRootTagName(Document document) {
-			DocumentTypeAdapter adapter = (DocumentTypeAdapter) ((XMLDocument) document).getAdapterFor(DocumentTypeAdapter.class);
+			DocumentTypeAdapter adapter = (DocumentTypeAdapter) ((DOMDocument) document).getAdapterFor(DocumentTypeAdapter.class);
 			if (adapter != null) {
 				DocumentType docType = adapter.getDocumentType();
 				if (docType != null) {
@@ -115,7 +115,7 @@ public class HTMLDocumentContentValidator extends PrimeValidator {
 				for (int i = 1; i < explicits.size(); i++) {
 					Element html = (Element) explicits.get(i);
 					// report error (duplicate)
-					Segment errorSeg = FMUtil.getSegment((XMLNode) html, FMUtil.SEG_START_TAG);
+					Segment errorSeg = FMUtil.getSegment((DOMNode) html, FMUtil.SEG_START_TAG);
 					if (errorSeg != null)
 						reporter.report(MessageFactory.createMessage(new ErrorInfoImpl(ErrorState.DUPLICATE_ERROR, errorSeg, html)));
 				}
@@ -130,7 +130,7 @@ public class HTMLDocumentContentValidator extends PrimeValidator {
 	private void validateContent(Iterator children, boolean isFragment) {
 		boolean foundDoctype = false;
 		while (children.hasNext()) {
-			XMLNode child = (XMLNode) children.next();
+			DOMNode child = (DOMNode) children.next();
 
 			int error = ErrorState.NONE_ERROR;
 			int segType = FMUtil.SEG_WHOLE_TAG;
@@ -157,7 +157,7 @@ public class HTMLDocumentContentValidator extends PrimeValidator {
 					if (! isFragment) {
 						// TEXT node is valid when it contains white space characters only.
 						// Otherwise, it is invalid content.
-						if (((XMLText) child).isWhitespace())
+						if (((DOMText) child).isWhitespace())
 							continue;
 						error = ErrorState.INVALID_CONTENT_ERROR;
 						segType = FMUtil.SEG_WHOLE_TAG;

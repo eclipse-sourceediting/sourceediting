@@ -18,9 +18,9 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.xml.core.document.XMLElement;
-import org.eclipse.wst.xml.core.document.XMLNode;
-import org.eclipse.wst.xml.core.document.XMLText;
+import org.eclipse.wst.xml.core.document.DOMElement;
+import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.DOMText;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.w3c.dom.Node;
 
@@ -79,18 +79,18 @@ class ReadOnlyController {
 		super();
 	}
 
-	private Span getDataSpan(XMLNode node) {
+	private Span getDataSpan(DOMNode node) {
 		switch (node.getNodeType()) {
 			case Node.ELEMENT_NODE :
-				return getDataSpanForElement((XMLElement) node);
+				return getDataSpanForElement((DOMElement) node);
 			case Node.TEXT_NODE :
-				return getDataSpanForText((XMLText) node);
+				return getDataSpanForText((DOMText) node);
 			default :
 				return new Span(0, -1);
 		}
 	}
 
-	private Span getDataSpanForElement(XMLElement node) {
+	private Span getDataSpanForElement(DOMElement node) {
 		IStructuredDocumentRegion docRegion = node.getStartStructuredDocumentRegion();
 		if (docRegion == null) {
 			return new Span(0, -1);
@@ -133,7 +133,7 @@ class ReadOnlyController {
 		}
 	}
 
-	private Span getDataSpanForText(XMLText node) {
+	private Span getDataSpanForText(DOMText node) {
 		IStructuredDocumentRegion docRegion = ((NodeImpl) node).getStructuredDocumentRegion();
 		if (docRegion == null) {
 			return new Span(0, -1);
@@ -149,7 +149,7 @@ class ReadOnlyController {
 	 * </child> </node> </parent> x###################? ?#######x (? :
 	 * editable if node.isEditable() == true)
 	 */
-	void lockBoth(XMLNode node) {
+	void lockBoth(DOMNode node) {
 		if (node == null) {
 			return;
 		}
@@ -172,7 +172,7 @@ class ReadOnlyController {
 		}
 	}
 
-	void lockData(XMLNode node) {
+	void lockData(DOMNode node) {
 		if (node == null) {
 			return;
 		}
@@ -186,7 +186,7 @@ class ReadOnlyController {
 	/**
 	 * lock itself and all descendants
 	 */
-	void lockDeep(XMLNode node) {
+	void lockDeep(DOMNode node) {
 		if (node == null) {
 			return;
 		}
@@ -195,7 +195,7 @@ class ReadOnlyController {
 		int length = node.getEndOffset() - offset;
 
 		boolean canInsert = true;
-		XMLNode parent = (XMLNode) node.getParentNode();
+		DOMNode parent = (DOMNode) node.getParentNode();
 		if (parent != null && !parent.isChildEditable()) {
 			canInsert = false;
 		}
@@ -209,7 +209,7 @@ class ReadOnlyController {
 	 * case 2:<parent><node attr="value"> <child></child> </node> </parent>
 	 * x######x x#? ?#######x (? : editable if node.isEditable() == true)
 	 */
-	void lockNode(XMLNode node) {
+	void lockNode(DOMNode node) {
 		if (node == null) {
 			return;
 		}
@@ -255,7 +255,7 @@ class ReadOnlyController {
 		doc.clearReadOnly(offset, length);
 	}
 
-	void unlockBoth(XMLNode node) {
+	void unlockBoth(DOMNode node) {
 		if (node == null) {
 			return;
 		}
@@ -273,7 +273,7 @@ class ReadOnlyController {
 		}
 	}
 
-	void unlockData(XMLNode node) {
+	void unlockData(DOMNode node) {
 		if (node == null) {
 			return;
 		}
@@ -284,7 +284,7 @@ class ReadOnlyController {
 		}
 	}
 
-	void unlockDeep(XMLNode node) {
+	void unlockDeep(DOMNode node) {
 		if (node == null) {
 			return;
 		}
@@ -295,7 +295,7 @@ class ReadOnlyController {
 		unlock(node.getStructuredDocument(), offset, length);
 	}
 
-	void unlockNode(XMLNode node) {
+	void unlockNode(DOMNode node) {
 		if (node == null) {
 			return;
 		}

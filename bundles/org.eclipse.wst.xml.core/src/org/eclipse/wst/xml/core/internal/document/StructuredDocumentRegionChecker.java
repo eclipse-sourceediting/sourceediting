@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.document.DOMModel;
 import org.w3c.dom.Node;
 
 
@@ -52,7 +52,7 @@ public class StructuredDocumentRegionChecker {
 
 	/**
 	 */
-	public void checkModel(XMLModel model) {
+	public void checkModel(DOMModel model) {
 		checkChildNodes(model.getDocument());
 	}
 
