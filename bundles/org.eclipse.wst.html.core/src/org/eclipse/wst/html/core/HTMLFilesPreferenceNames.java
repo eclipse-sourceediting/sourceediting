@@ -23,9 +23,12 @@ public interface HTMLFilesPreferenceNames extends CommonModelPreferenceNames {
 	static final String HTML_SUFFIX = "html";//$NON-NLS-1$
 	static final String GENERATE_DOCUMENT_TYPE = "generateDocumentType";//$NON-NLS-1$
 	static final String GENERATE_GENERATOR = "generateGenerator";//$NON-NLS-1$
-	// added this as a potential why to handle changing
+	// added this as a potential way to handle changing
 	// product names "up" the stack. Note, not declared final 
 	// to avoid getting 'inlined' by compiler.
 	static IProduct product = Platform.getProduct();
-	static String GENERATOR = product.getName();
+	// Platform.getProduct() is spec'd so it might return null.
+	// Its expected for any final product it would not be, so we'll return 
+	// "WTP" for development/interim builds. No need to translate. 
+	static String GENERATOR = (product == null) ? "WTP": product.getName();
 }
