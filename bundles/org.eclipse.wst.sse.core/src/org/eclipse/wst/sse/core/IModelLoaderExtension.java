@@ -22,5 +22,5 @@ public interface IModelLoaderExtension {
 	 * Create a Structured Model with the given StructuredDocument instance as
 	 * its document (instead of a new document instance as well)
 	 */
-	IStructuredModel createModel(IStructuredDocument document);
+	IStructuredModel createModel(IStructuredDocument document, String baseLocation);
 }

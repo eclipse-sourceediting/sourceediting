@@ -319,7 +319,7 @@ public class FileBufferModelManager {
 		else {
 			resolver = new ExternalURIResolver(location);
 		}
-		resolver.setFileBaseLocation(location.toString());
+		resolver.setFileBaseLocation(workspaceFile.getLocation().toString());
 		return resolver;
 	}
 
@@ -453,15 +453,15 @@ public class FileBufferModelManager {
 			boolean mustSetDocument = true;
 			if (loader instanceof IModelLoaderExtension) {
 				mustSetDocument = false;
-				model = ((IModelLoaderExtension) loader).createModel(document);
+				model = ((IModelLoaderExtension) loader).createModel(document, info.buffer.getLocation().toString());
 			}
 			else {
 				model = loader.createModel();
 			}
 			try {
 				info.model = model;
-				model.setBaseLocation(info.buffer.getLocation().toOSString());
 				model.setId(info.buffer.getLocation().toString());
+				model.setBaseLocation(info.buffer.getLocation().toString());
 				model.setModelHandler(handler);
 				model.setResolver(createURIResolver(getBuffer(document)));
 				if (mustSetDocument) {

@@ -100,9 +100,10 @@ public abstract class AbstractModelLoader implements ModelLoader, IModelLoaderEx
 		return model;
 	}
 
-	public IStructuredModel createModel(IStructuredDocument structuredDocument) {
+	public IStructuredModel createModel(IStructuredDocument structuredDocument, String baseLocation) {
 		documentLoaderInstance = null;
 		IStructuredModel model = newModel();
+		model.setBaseLocation(baseLocation);
 		model.setStructuredDocument(structuredDocument);
 		addFactories(model, getAdapterFactories());
 		//
