@@ -37,6 +37,7 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.ui.contentassist.IResourceDependentProcessor;
+import org.eclipse.wst.sse.ui.extension.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.extension.IExtendedConfiguration;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.HTMLTextPresenter;
@@ -51,10 +52,11 @@ import org.eclipse.wst.sse.ui.util.EditorUtility;
 
 
 /**
- * Configuration for a TextViewer that shows Structured Text (XML)
+ * Configuration for a SourceViewer that shows an IStructuredDocument
  */
 public class StructuredTextViewerConfiguration extends SourceViewerConfiguration implements IExtendedConfiguration {
 
+	private static final String CONTENT_ASSIST_PROCESSOR_EXTENDED_ID = "contentassistprocessor";
 	public static final String ID = "textviewerconfiguration"; //$NON-NLS-1$
 	protected String[] configuredContentTypes;
 	protected IEditorPart editorPart;
@@ -64,8 +66,8 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 	protected IContentAssistant fCorrectionAssistant;
 	private String fDeclaringID;
 	protected IHighlighter fHighlighter;
-	//protected StructuredRegionProcessor fReconciler;
-    protected StructuredRegionProcessorExtension fReconciler;
+
+	protected StructuredRegionProcessorExtension fReconciler;
 	protected IResource fResource = null;
 	protected final String SSE_EDITOR_ID = "org.eclipse.wst.sse.ui"; //$NON-NLS-1$
 	protected final String SSE_MODEL_ID = "org.eclipse.wst.sse.core"; //$NON-NLS-1$
@@ -87,6 +89,8 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 	}
 
 	/**
+	 * @deprecated - to be made "protected" instead of "public"
+	 * 
 	 * Content assist processors should be added to the ContentAssistant via
 	 * this method so that they are initialized/released properly.
 	 * 
@@ -189,11 +193,33 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 	 */
 	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
 		if (fContentAssistant == null) {
-			// Ensure that only one assistant is ever returned. Creating a
-			// second assistant
-			// that is added to a viewer can cause odd key-eating by the wrong
-			// one.
-			ContentAssistant assistant = new ContentAssistant();
+			/**
+			 * Ensure that only one assistant is ever returned. Creating a
+			 * second assistant that is added to a viewer can cause odd
+			 * key-eating by the wrong one.
+			 */
+			ContentAssistant assistant = new ContentAssistant() {
+				private Map fExtendedProcessors = new HashMap(0);
+
+				public IContentAssistProcessor getContentAssistProcessor(String contentType) {
+					IContentAssistProcessor processor = super.getContentAssistProcessor(contentType);
+					// NOT YET FINALIZED - DO NOT CONSIDER AS API
+					if (processor == null && !fExtendedProcessors.containsKey(contentType)) {
+						processor = (IContentAssistProcessor) ExtendedConfigurationBuilder.getInstance().getConfiguration(CONTENT_ASSIST_PROCESSOR_EXTENDED_ID, contentType);
+						fExtendedProcessors.put(contentType, processor);
+						/*
+						 * Copied from addContentAssistProcessor since this
+						 * assitant may not be fully initialized
+						 */
+						fContentAssistProcessors.add(processor);
+						if (processor instanceof IResourceDependentProcessor)
+							((IResourceDependentProcessor) processor).initialize(fResource);
+						setContentAssistProcessor(processor, contentType);
+					}
+					return processor;
+				}
+			};
+
 			// content assistant configurations
 			assistant.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
 			assistant.enableAutoActivation(true);
@@ -209,10 +235,11 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 
 	public IContentAssistant getCorrectionAssistant(ISourceViewer sourceViewer) {
 		if (fCorrectionAssistant == null) {
-			// Ensure that only one assistant is ever returned. Creating a
-			// second assistant
-			// that is added to a viewer can cause odd key-eating by the wrong
-			// one.
+			/**
+			 * Ensure that only one assistant is ever returned. Creating a
+			 * second assistant that is added to a viewer can cause odd
+			 * key-eating by the wrong one.
+			 */
 			ContentAssistant assistant = new ContentAssistant();
 			assistant.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
 			fCorrectionAssistant = assistant;
@@ -265,7 +292,6 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 	 * @see SourceViewerConfiguration#getHoverControlCreator(ISourceViewer)
 	 */
 	public IInformationControlCreator getInformationControlCreator(ISourceViewer sourceViewer) {
-
 		return getInformationControlCreator(sourceViewer, false);
 	}
 
