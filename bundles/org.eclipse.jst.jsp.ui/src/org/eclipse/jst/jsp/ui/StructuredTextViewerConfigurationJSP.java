@@ -27,6 +27,7 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
+import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.InformationPresenter;
@@ -40,6 +41,9 @@ import org.eclipse.jst.jsp.ui.internal.contentassist.JSPContentAssistProcessor;
 import org.eclipse.jst.jsp.ui.internal.contentassist.JSPJavaContentAssistProcessor;
 import org.eclipse.jst.jsp.ui.internal.contentassist.NoRegionContentAssistProcessorForJSP;
 import org.eclipse.jst.jsp.ui.internal.correction.CorrectionProcessorJSP;
+import org.eclipse.jst.jsp.ui.internal.hyperlink.JSPJavaHyperlinkDetector;
+import org.eclipse.jst.jsp.ui.internal.hyperlink.TaglibHyperlinkDetector;
+import org.eclipse.jst.jsp.ui.internal.hyperlink.URIHyperlinkDetector;
 import org.eclipse.jst.jsp.ui.internal.reconcile.StructuredTextReconcilingStrategyForJSP;
 import org.eclipse.jst.jsp.ui.internal.taginfo.JSPJavaJavadocHoverProcessor;
 import org.eclipse.jst.jsp.ui.style.LineStyleProviderForJSP;
@@ -47,6 +51,7 @@ import org.eclipse.jst.jsp.ui.style.java.LineStyleProviderForJava;
 import org.eclipse.jst.jsp.ui.taginfo.JSPBestMatchHoverProcessor;
 import org.eclipse.jst.jsp.ui.taginfo.JSPJavaBestMatchHoverProcessor;
 import org.eclipse.jst.jsp.ui.taginfo.JSPTagInfoHoverProcessor;
+import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.css.core.internal.text.rules.StructuredTextPartitionerForCSS;
 import org.eclipse.wst.css.ui.contentassist.CSSContentAssistProcessor;
@@ -68,7 +73,6 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.format.StructuredFormattingStrategy;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessorExtension;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
@@ -386,8 +390,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
             fReconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
         }
 
-        IPreferenceStore store = SSEUIPlugin.getDefault().getPreferenceStore();
-        boolean reconcilingEnabled = store.getBoolean(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
+        boolean reconcilingEnabled = fPreferenceStore.getBoolean(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
 
         if (!reconcilingEnabled) 
             return fReconciler;
@@ -434,4 +437,27 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
         }
         return fJavaSourceViewerConfiguration;
     }
+    
+	/*
+	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getHyperlinkDetectors(org.eclipse.jface.text.source.ISourceViewer)
+	 * @since 3.1
+	 */
+	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
+		if (sourceViewer == null || !fPreferenceStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED))
+			return null;
+		
+		List allDetectors = new ArrayList(0);
+		allDetectors.add(new JSPJavaHyperlinkDetector());
+		allDetectors.add(new TaglibHyperlinkDetector());
+		allDetectors.add(new URIHyperlinkDetector());
+		
+		IHyperlinkDetector[] superDetectors =  super.getHyperlinkDetectors(sourceViewer);
+		for (int m = 0; m < superDetectors.length; m++) {
+			IHyperlinkDetector detector = superDetectors[m];
+			if (!allDetectors.contains(detector)) {
+				allDetectors.add(detector);
+			}
+		}
+		return (IHyperlinkDetector[]) allDetectors.toArray(new IHyperlinkDetector[0]);
+	}
 }

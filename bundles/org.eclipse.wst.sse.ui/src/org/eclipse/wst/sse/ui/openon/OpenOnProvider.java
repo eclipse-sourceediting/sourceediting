@@ -31,6 +31,8 @@ import org.eclipse.wst.sse.ui.internal.openon.OpenOnDefinition;
 
 /**
  * Determines the appropriate IOpenOn to call based on current partition.
+ * 
+ * @deprecated Use base support for hyperlink navigation
  */
 public class OpenOnProvider {
 	private static OpenOnProvider fInstance;

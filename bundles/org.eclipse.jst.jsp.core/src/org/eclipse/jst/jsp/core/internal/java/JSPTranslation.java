@@ -287,7 +287,7 @@ public class JSPTranslation implements IJSPTranslation {
 	 * @param javaPos
 	 * @return
 	 */
-	protected boolean isIndirect(int javaOffset) {
+	public boolean isIndirect(int javaOffset) {
 		return isInRanges(javaOffset, fJava2JspIndirectMap, false);
 	}
 	

@@ -29,6 +29,8 @@ import org.eclipse.wst.sse.ui.openon.OpenOnProvider;
 /**
  * Determines the appropriate IOpenFileAction to call based on current
  * partition.
+ * 
+ * @deprecated Use base support for hyperlink navigation
  */
 public class OpenOnAction extends TextEditorAction {
 	public OpenOnAction(ResourceBundle bundle, String prefix, ITextEditor editor) {

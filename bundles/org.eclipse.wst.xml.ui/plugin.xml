@@ -169,17 +169,7 @@
          </part>
       </actionSetPartAssociation>
    </extension>
-   
-<!-- add a default open on action for xml content type -->
-   <extension
-         point="org.eclipse.wst.sse.ui.openon">
-      <openon
-            class="org.eclipse.wst.xml.ui.openon.DefaultOpenOnXML"
-            id="org.eclipse.wst.xml.ui.openon.DefaultOpenOnXML">
-         <contenttypeidentifier
-               id="org.eclipse.core.runtime.xml"/>
-      </openon>
-   </extension>
+
 <!-- Templates -->
    <extension
          point="org.eclipse.ui.editors.templates">
@@ -364,5 +354,16 @@
 	<extension point="org.eclipse.core.runtime.preferences">
 	   <initializer class="org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceInitializer"/>
 	</extension>
+
+	<!--======================================================================================-->
+	<!-- Document provider for ExternalFileEditorInput                                        -->
+	<!--======================================================================================-->
+	<extension point="org.eclipse.ui.editors.documentProviders"> 
+		<provider 
+			inputTypes="org.eclipse.wst.xml.ui.internal.hyperlink.ExternalFileEditorInput" 
+			class="org.eclipse.ui.editors.text.TextFileDocumentProvider" 
+			id="org.eclipse.wst.xml.ui.internal.ExternalFileDocumentProvider"> 
+		</provider> 
+	</extension> 
 
 </plugin>

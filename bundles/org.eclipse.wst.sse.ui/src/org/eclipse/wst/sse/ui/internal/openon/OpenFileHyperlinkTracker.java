@@ -52,8 +52,8 @@ import org.eclipse.wst.sse.ui.openon.OpenOnProvider;
 import org.eclipse.wst.sse.ui.util.EditorUtility;
 
 
-/*
- * Link mode.
+/**
+ * @deprecated Use org.eclipse.jface.text.hyperlink.HyperlinkManager
  */
 public class OpenFileHyperlinkTracker implements KeyListener, MouseListener, MouseMoveListener, FocusListener, PaintListener, IPropertyChangeListener, IDocumentListener, ITextInputListener {
 

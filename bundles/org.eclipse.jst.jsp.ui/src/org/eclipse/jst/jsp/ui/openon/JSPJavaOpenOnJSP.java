@@ -42,6 +42,8 @@ import org.eclipse.wst.xml.core.document.XMLModel;
 
 /**
  * This action opens classes referenced in JSP Java content of a JSP page.
+ * 
+ * @deprecated Use base support for hyperlink navigation
  */
 public class JSPJavaOpenOnJSP extends AbstractOpenOn {
 

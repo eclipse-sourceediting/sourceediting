@@ -28,12 +28,14 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
+import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.InformationPresenter;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.css.core.internal.text.rules.StructuredTextPartitionerForCSS;
 import org.eclipse.wst.css.ui.contentassist.CSSContentAssistProcessor;
@@ -42,6 +44,7 @@ import org.eclipse.wst.html.core.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.html.core.internal.text.rules.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.html.ui.internal.contentassist.HTMLContentAssistProcessor;
 import org.eclipse.wst.html.ui.internal.contentassist.NoRegionContentAssistProcessorForHTML;
+import org.eclipse.wst.html.ui.internal.hyperlink.URIHyperlinkDetector;
 import org.eclipse.wst.html.ui.style.LineStyleProviderForHTML;
 import org.eclipse.wst.html.ui.taginfo.HTMLBestMatchHoverProcessor;
 import org.eclipse.wst.html.ui.taginfo.HTMLInformationProvider;
@@ -57,7 +60,6 @@ import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.format.StructuredFormattingStrategy;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessorExtension;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
@@ -250,8 +252,7 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
             fReconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
         }
 
-        IPreferenceStore store = SSEUIPlugin.getDefault().getPreferenceStore();
-        boolean reconcilingEnabled = store.getBoolean(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
+        boolean reconcilingEnabled = fPreferenceStore.getBoolean(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
 
         if (!reconcilingEnabled)
             return fReconciler;
@@ -340,4 +341,24 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
         }
         return fJavaSourceViewerConfiguration;
     }
+    
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.editors.text.TextSourceViewerConfiguration#getHyperlinkDetectors(org.eclipse.jface.text.source.ISourceViewer)
+	 */
+	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
+		if (sourceViewer == null || !fPreferenceStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED))
+			return null;
+		
+		List allDetectors = new ArrayList(0);
+		allDetectors.add(new URIHyperlinkDetector());
+		
+		IHyperlinkDetector[] superDetectors =  super.getHyperlinkDetectors(sourceViewer);
+		for (int m = 0; m < superDetectors.length; m++) {
+			IHyperlinkDetector detector = superDetectors[m];
+			if (!allDetectors.contains(detector)) {
+				allDetectors.add(detector);
+			}
+		}
+		return (IHyperlinkDetector[]) allDetectors.toArray(new IHyperlinkDetector[0]);
+	}
 }

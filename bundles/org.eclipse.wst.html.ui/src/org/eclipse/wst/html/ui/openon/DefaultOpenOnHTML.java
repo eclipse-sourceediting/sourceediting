@@ -20,6 +20,8 @@ import org.eclipse.wst.xml.ui.openon.DefaultOpenOnXML;
 /**
  * This action class retrieves the link/file selected by the cursor and
  * attempts to open the link/file in the default editor or web browser
+ * 
+ * @deprecated Use base support for hyperlink navigation
  */
 public class DefaultOpenOnHTML extends DefaultOpenOnXML {
 	/*

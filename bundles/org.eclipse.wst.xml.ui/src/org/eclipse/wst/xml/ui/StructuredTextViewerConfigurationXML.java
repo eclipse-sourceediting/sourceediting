@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextHover;
@@ -25,12 +24,14 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
+import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.InformationPresenter;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.dtd.ui.style.LineStyleProviderForDTDSubSet;
 import org.eclipse.wst.sse.core.IStructuredModel;
@@ -39,7 +40,6 @@ import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.format.StructuredFormattingStrategy;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessorExtension;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
@@ -55,6 +55,7 @@ import org.eclipse.wst.xml.ui.contentassist.XMLContentAssistProcessor;
 import org.eclipse.wst.xml.ui.doubleclick.XMLDoubleClickStrategy;
 import org.eclipse.wst.xml.ui.internal.autoedit.StructuredAutoEditStrategyXML;
 import org.eclipse.wst.xml.ui.internal.correction.CorrectionProcessorXML;
+import org.eclipse.wst.xml.ui.internal.hyperlink.XMLHyperlinkDetector;
 import org.eclipse.wst.xml.ui.reconcile.StructuredTextReconcilingStrategyForMarkup;
 import org.eclipse.wst.xml.ui.style.LineStyleProviderForXML;
 import org.eclipse.wst.xml.ui.taginfo.XMLBestMatchHoverProcessor;
@@ -191,8 +192,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 			fReconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
 		}
 
-		IPreferenceStore store = SSEUIPlugin.getDefault().getPreferenceStore();
-		boolean reconcilingEnabled = store.getBoolean(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
+		boolean reconcilingEnabled = fPreferenceStore.getBoolean(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
 		
         if(!reconcilingEnabled)
             return fReconciler;
@@ -262,5 +262,25 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		if (fInformationPresenter != null) {
 			fInformationPresenter.uninstall();
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.editors.text.TextSourceViewerConfiguration#getHyperlinkDetectors(org.eclipse.jface.text.source.ISourceViewer)
+	 */
+	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
+		if (sourceViewer == null || !fPreferenceStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED))
+			return null;
+		
+		List allDetectors = new ArrayList(0);
+		allDetectors.add(new XMLHyperlinkDetector());
+		
+		IHyperlinkDetector[] superDetectors =  super.getHyperlinkDetectors(sourceViewer);
+		for (int m = 0; m < superDetectors.length; m++) {
+			IHyperlinkDetector detector = superDetectors[m];
+			if (!allDetectors.contains(detector)) {
+				allDetectors.add(detector);
+			}
+		}
+		return (IHyperlinkDetector[]) allDetectors.toArray(new IHyperlinkDetector[0]);
 	}
 }

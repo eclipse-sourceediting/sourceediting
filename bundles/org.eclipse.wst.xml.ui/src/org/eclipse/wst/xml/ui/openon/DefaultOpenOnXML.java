@@ -44,6 +44,8 @@ import org.w3c.dom.Node;
 /**
  * This action class retrieves the link/file selected by the cursor and
  * attempts to open the link/file in the default editor or web browser
+ * 
+ * @deprecated Use base support for hyperlink navigation
  */
 public class DefaultOpenOnXML extends AbstractOpenOn {
 	private final String NO_NAMESPACE_SCHEMA_LOCATION = "noNamespaceSchemaLocation"; //$NON-NLS-1$

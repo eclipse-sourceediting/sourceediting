@@ -52,6 +52,8 @@ import org.w3c.dom.Node;
 
 /**
  * This action opens classes referenced in JSP directive tags of a JSP page.
+ * 
+ * @deprecated Use base support for hyperlink navigation
  */
 public class JSPDirectiveOpenOnJSP extends DefaultOpenOnHTML {
 	JSPJavaOpenOnJSP jspJavaOpenOn;

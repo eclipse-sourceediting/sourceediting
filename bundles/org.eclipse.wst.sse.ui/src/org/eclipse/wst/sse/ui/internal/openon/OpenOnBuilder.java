@@ -24,6 +24,8 @@ import org.eclipse.wst.sse.ui.internal.extension.RegistryReader;
 /**
  * Reads extensions for open on extension point,
  * org.eclipse.wst.sse.ui.extensions.openon
+ * 
+ * @deprecated Use base support for hyperlink navigation
  */
 public class OpenOnBuilder extends RegistryReader {
 	public static final String ATT_CLASS = "class"; //$NON-NLS-1$

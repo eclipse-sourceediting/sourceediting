@@ -28,7 +28,7 @@ import org.osgi.framework.Bundle;
 /**
  * Open on definition object
  * 
- * @author amywu
+ * @deprecated Use base support for hyperlink navigation
  */
 public class OpenOnDefinition {
 	private String fClassName = null;

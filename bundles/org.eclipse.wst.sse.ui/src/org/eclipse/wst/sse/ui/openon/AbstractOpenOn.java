@@ -42,6 +42,8 @@ import org.eclipse.wst.sse.ui.util.PlatformStatusLineUtil;
 /**
  * This action class retrieves the link/file selected by the cursor and
  * attempts to open the link/file in the default editor or web browser
+ * 
+ * @deprecated Use base support for hyperlink navigation
  */
 abstract public class AbstractOpenOn implements IOpenOn {
 	protected final String CANNOT_OPEN = SSEUIPlugin.getResourceString("%AbstractOpenOn.0"); //$NON-NLS-1$

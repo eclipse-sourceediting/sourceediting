@@ -38,6 +38,7 @@
 		<import plugin="org.eclipse.search" />
 		<import plugin="org.eclipse.ltk.core.refactoring" />
 		<import plugin="org.eclipse.ltk.ui.refactoring" />
+		<import plugin="org.eclipse.wst.common.uriresolver"/>
 	</requires>
 
 
@@ -342,36 +343,6 @@
 		</keyBinding>
 	</extension>
 
-	<extension point="org.eclipse.wst.sse.ui.openon">
-		<!-- add a default open on action for jsp content type -->
-		<openon class="org.eclipse.wst.html.ui.openon.DefaultOpenOnHTML"
-			id="org.eclipse.wst.html.ui.openon.DefaultOpenOnHTML">
-			<contenttypeidentifier
-				id="org.eclipse.jst.jsp.core.jspsource">
-			</contenttypeidentifier>
-		</openon>
-		<!-- add an open on action for jsp java partitions -->
-		<openon class="org.eclipse.jst.jsp.ui.openon.JSPJavaOpenOnJSP"
-			id="org.eclipse.jst.jsp.ui.openon.JSPJavaOpenOnJSP">
-			<contenttypeidentifier
-				id="org.eclipse.jst.jsp.core.jspsource">
-				<partitiontype
-					id="org.eclipse.jst.jsp.SCRIPT.JAVA">
-				</partitiontype>
-			</contenttypeidentifier>
-		</openon>
-		<!-- add an open on action for jsp directive partitions -->
-		<openon
-			class="org.eclipse.jst.jsp.ui.openon.JSPDirectiveOpenOnJSP"
-			id="org.eclipse.jst.jsp.ui.openon.JSPDirectiveOpenOnJSP">
-			<contenttypeidentifier
-				id="org.eclipse.jst.jsp.core.jspsource">
-				<partitiontype id="org.eclipse.jst.jsp.JSP_DIRECTIVE">
-				</partitiontype>
-			</contenttypeidentifier>
-		</openon>
-	</extension>
-
 	<!--======================================================================================-->
 	<!-- Templates                                                                            -->
 	<!--======================================================================================-->
@@ -414,4 +385,16 @@
 	<extension point="org.eclipse.core.runtime.preferences">
 	   <initializer class="org.eclipse.jst.jsp.ui.internal.preferences.JSPUIPreferenceInitializer"/>
 	</extension>
+	
+	<!--======================================================================================-->
+	<!-- Document provider for ExternalFileEditorInput                                        -->
+	<!--======================================================================================-->
+	<extension point="org.eclipse.ui.editors.documentProviders"> 
+		<provider 
+			inputTypes="org.eclipse.jst.jsp.ui.internal.hyperlink.ExternalFileEditorInput" 
+			class="org.eclipse.ui.editors.text.TextFileDocumentProvider" 
+			id="org.eclipse.jst.jsp.ui.internal.ExternalFileDocumentProvider"> 
+		</provider> 
+	</extension> 
+
 </plugin>

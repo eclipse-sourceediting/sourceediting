@@ -25,6 +25,8 @@ import org.eclipse.ui.editors.text.ILocationProvider;
 /**
  * EditorInput for external files. Copied from
  * org.eclipse.ui.internal.editors.text.JavaFileEditorInput
+ * 
+ * @deprecated Use base support for hyperlink navigation
  */
 public class ExternalFileEditorInput implements IEditorInput, ILocationProvider {
 
