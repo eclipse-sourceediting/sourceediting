@@ -22,8 +22,7 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 
 
 /**
- * Note: this class should probably go in com.ibm.sed.util package. Seems
- * general purpose enough.
+ * @deprecated - incorrect and not updated for M3 changes
  */
 public class ResourceUtil {
 
