@@ -63,10 +63,6 @@
             class="org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration"
             target="org.eclipse.wst.html.core.htmlsource"/>
       <configuration
-      		type="spellchecktarget"
-            class="org.eclipse.wst.xml.ui.XMLSpellCheckTarget"
-            target="org.eclipse.wst.html.core.htmlsource"/>
-      <configuration
       		type="sourceeditingtexttools"
             class="org.eclipse.wst.xml.ui.extensions.XMLSourceEditingTextTools"
             target="org.eclipse.wst.html.core.htmlsource"/>

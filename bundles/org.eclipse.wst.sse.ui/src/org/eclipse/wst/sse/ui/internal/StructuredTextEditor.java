@@ -140,7 +140,6 @@ import org.eclipse.wst.sse.ui.extension.IPopupMenuContributor;
 import org.eclipse.wst.sse.ui.extensions.ConfigurationPointCalculator;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.NullSourceEditingTextTools;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.SourceEditingTextTools;
-import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckTarget;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction;
@@ -971,23 +970,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		return cfg;
 	}
 
-	/**
-	 * @deprecated - will be removed in M4
-	 */
-	protected SpellCheckTarget createSpellCheckTarget() {
-		SpellCheckTarget target = null;
-		ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
-		String[] ids = getConfigurationPoints();
-		for (int i = 0; target == null && i < ids.length; i++) {
-			target = (SpellCheckTarget) builder.getConfiguration(SpellCheckTargetImpl.ID, ids[i]);
-		}
-		if (target == null) {
-			target = new SpellCheckTargetImpl();
-		}
-		target.setTextEditor(this);
-		return target;
-	}
-
 	protected StructuredTextViewer createStructedTextViewer(Composite parent, IVerticalRuler verticalRuler, int styles) {
 		return new StructuredTextViewer(parent, verticalRuler, getOverviewRuler(), isOverviewRulerVisible(), styles);
 	}
@@ -1742,13 +1724,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			return new Point(-1, -1);
 		else
 			return tv.getSelectedRange();
-	}
-
-	/**
-	 * @deprecated - will be removed in M4
-	 */
-	public SpellCheckTarget getSpellCheckTarget() {
-		return null;
 	}
 
 	private IStatusLineManager getStatusLineManager() {

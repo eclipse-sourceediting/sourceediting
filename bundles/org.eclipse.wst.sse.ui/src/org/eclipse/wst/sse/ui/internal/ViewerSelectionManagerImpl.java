@@ -31,8 +31,6 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.core.util.Utilities;
-import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckSelectionListener;
-import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckSelectionManager;
 import org.eclipse.wst.sse.ui.view.events.CaretEvent;
 import org.eclipse.wst.sse.ui.view.events.INodeSelectionListener;
 import org.eclipse.wst.sse.ui.view.events.ITextSelectionListener;
@@ -40,7 +38,7 @@ import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
 import org.eclipse.wst.sse.ui.view.events.TextSelectionChangedEvent;
 
 
-public class ViewerSelectionManagerImpl implements ViewerSelectionManager, SpellCheckSelectionManager {
+public class ViewerSelectionManagerImpl implements ViewerSelectionManager {
 
 	class InternalModelStateListener implements IModelStateListener {
 
@@ -78,8 +76,6 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager, Spell
 	private INodeSelectionListener[] fNodeSelectionListeners;
 	private List fSelectedNodes;
 
-	// ISpellCheckSelectionManager
-	protected SpellCheckSelectionListener[] fSpellCheckSelectionListeners;
 	private int fTextSelectionEnd;
 	// TODO: private field never read locally
 	IndexedRegion fTextSelectionEndNode;
@@ -178,48 +174,6 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager, Spell
 			// now switch new for old
 			fNodeSelectionListeners = newListeners;
 
-		}
-	}
-
-	/**
-	 * @see SpellCheckSelectionManager#addSpellCheckSelectionListener(SpellCheckSelectionListener)
-	 */
-	public void addSpellCheckSelectionListener(SpellCheckSelectionListener listener) {
-		// since its most certainly an error if someone is trying to add a
-		// null listner,
-		// we'll flag it explicitly and ignore
-		if (listener == null) {
-			Logger.log(Logger.WARNING, "Likely error in ViewerSelectionManagerImpl::addSpellCheckSelectionListener should not but called with null listener"); //$NON-NLS-1$
-			return;
-		}
-		// make sure listener is not already in listening array
-		// (and if it is, print a warning to aid debugging, if needed)
-
-		if (Utilities.contains(fSpellCheckSelectionListeners, listener)) {
-			if (Debug.displayWarnings) {
-				System.out.println("ViewerSelectionManager::addSpellCheckSelectionListener. listener " + listener + " was added more than once. "); //$NON-NLS-2$//$NON-NLS-1$
-			}
-		}
-		else {
-			if (Debug.debugStructuredDocument) {
-				System.out.println("ViewerSelectionManager::addSpellCheckSelectionListener. Adding an instance of " + listener.getClass() + " as a listener on ViewerSelectionManager."); //$NON-NLS-2$//$NON-NLS-1$
-			}
-			int oldSize = 0;
-			if (fSpellCheckSelectionListeners != null) {
-				// normally won't be null, but we need to be sure, for first
-				// time through
-				oldSize = fSpellCheckSelectionListeners.length;
-			}
-			int newSize = oldSize + 1;
-			SpellCheckSelectionListener[] newListeners = new SpellCheckSelectionListener[newSize];
-			if (fSpellCheckSelectionListeners != null) {
-				System.arraycopy(fSpellCheckSelectionListeners, 0, newListeners, 0, oldSize);
-			}
-			// add listener to last position
-			newListeners[newSize - 1] = listener;
-			//
-			// now switch new for old
-			fSpellCheckSelectionListeners = newListeners;
 		}
 	}
 
@@ -338,22 +292,6 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager, Spell
 			}
 			finally {
 				isFiringNodeSelectionChanged = false;
-			}
-		}
-	}
-
-	protected void fireSpellCheckSelectionChangedEvent() {
-		if ((fSpellCheckSelectionListeners != null) && (!isModelChanging())) {
-			// we must assign listeners to local variable to be thread safe,
-			// since the add and remove listner methods
-			// can change this object's actual instance of the listener array
-			// from another thread
-			// (and since object assignment is atomic, we don't need to
-			// synchronize
-			SpellCheckSelectionListener[] holdListeners = fSpellCheckSelectionListeners;
-			//
-			for (int i = 0; i < holdListeners.length; i++) {
-				holdListeners[i].selectionChanged();
 			}
 		}
 	}
@@ -493,32 +431,6 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager, Spell
 				// now that we have a new array, let's switch it for the old
 				// one
 				fNodeSelectionListeners = newListeners;
-			}
-		}
-	}
-
-	/**
-	 * @see SpellCheckSelectionManager#removeSpellCheckSelectionListener(SpellCheckSelectionListener)
-	 */
-	public void removeSpellCheckSelectionListener(SpellCheckSelectionListener listener) {
-		if ((fSpellCheckSelectionListeners != null) && (listener != null)) {
-			// if its not in the listeners, we'll ignore the request
-			if (Utilities.contains(fSpellCheckSelectionListeners, listener)) {
-				int oldSize = fSpellCheckSelectionListeners.length;
-				int newSize = oldSize - 1;
-				SpellCheckSelectionListener[] newListeners = new SpellCheckSelectionListener[newSize];
-				int index = 0;
-				for (int i = 0; i < oldSize; i++) {
-					if (fSpellCheckSelectionListeners[i] == listener) { // ignore
-					}
-					else {
-						// copy old to new if its not the one we are removing
-						newListeners[index++] = fSpellCheckSelectionListeners[i];
-					}
-				}
-				// now that we have a new array, let's switch it for the old
-				// one
-				fSpellCheckSelectionListeners = newListeners;
 			}
 		}
 	}
@@ -680,9 +592,6 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager, Spell
 		// generate and fire event
 		TextSelectionChangedEvent textSelectionChangedEvent = new TextSelectionChangedEvent(source, fTextSelectionStart, fTextSelectionEnd);
 		fireTextSelectionChangedEvent(textSelectionChangedEvent);
-
-		// SpellCheck dialog also needs to listen text selection change
-		fireSpellCheckSelectionChangedEvent();
 	}
 
 	/**

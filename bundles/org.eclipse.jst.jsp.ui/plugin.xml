@@ -62,12 +62,6 @@
       		type="propertysheetconfiguration"
 			class="org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration"
 			target="org.eclipse.jst.jsp.core.jspsource"/>
-			<!--
-		<configuration 
-      		type="spellchecktarget"
-			class="org.eclipse.jst.jsp.ui.JSPSpellCheckTarget"
-			target="org.eclipse.jst.jsp.core.jspsource"/>
-			-->
 		<configuration 
       		type="sourceeditingtexttools"
 			class="org.eclipse.jst.jsp.ui.internal.editor.JSPSourceEditingTextTools"

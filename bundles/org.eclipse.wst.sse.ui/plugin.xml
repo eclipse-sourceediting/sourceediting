@@ -464,29 +464,6 @@
          </action>
       </objectContribution>
    </extension>
-   <extension
-         point="org.eclipse.wst.sse.ui.extendedEditorActions">     
-      <editorContribution
-            targetID="org.eclipse.wst.sse.ui.internal.StructuredTextEditor"
-            id="org.eclipse.wst.sse.ui.extendedActions">
-<!-- contribute the Edit Preferences action -->
-<!-- (base now provides an open preferences dialog in editor so this is no longer needed)
-         <action
-               popupmenuPath="group.add"
-               class="org.eclipse.wst.sse.ui.preferences.ui.EditStructuredTextEditorPreferencesAction"
-               id="org.eclipse.wst.sse.ui.preferences.ui.EditStructuredTextEditorPreferencesAction">
-         </actioorg.eclipse.wst.sse.ui.internal.SpellCheckActionWrappern -->
-<!--
-         <action
-               class="org.eclipse.wst.sse.ui.SpellCheckActionWrapper"
-               definitionId="com.ibm.etools.spellcheck"
-               menubarPath="edit/MenuAdditions"
-               toolbarPath="Normal/ToolbarAdditions"
-               id="org.eclipse.wst.sse.ui.spellcheck">
-         </action>
--->
-      </editorContribution>     
-   </extension>
    
 <!--================================================================================================-->
 <!-- contribute a SearchResultViewPage for Occurrences in file                                      -->
@@ -504,9 +481,7 @@
 	
 <!-- extension point for breakpoint extension -->
    <extension-point id="breakpoint" name="%Breakpoint_Extension_Point.name"/>
-<!-- extension point for spellcheck extension -->
-   <extension-point id="spellcheck" name="%SpellCheck_Extension_Point.name"/>
 <!-- extension point for source validation -->
-<!-- interfaces for this extension point can be found in com.ibm.wtp.validation.core -->
+<!-- interfaces for this extension point can be found in org.eclipse.wst.validation -->
    <extension-point id="sourcevalidation" name="%Source_Validation_Extension_Point.name" schema="schema/org.eclipse.wst.sse.editor.sourcevalidation.exsd"/>
 </plugin>
