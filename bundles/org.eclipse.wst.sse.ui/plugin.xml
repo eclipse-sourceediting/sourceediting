@@ -514,6 +514,7 @@
                id="org.eclipse.wst.sse.ui.preferences.ui.EditStructuredTextEditorPreferencesAction">
          </action>
 <!-- contribute the Spell Check action -->
+<!--
          <action
                class="org.eclipse.wst.sse.ui.SpellCheckActionWrapper"
                definitionId="com.ibm.etools.spellcheck"
@@ -521,6 +522,7 @@
                toolbarPath="Normal/ToolbarAdditions"
                id="org.eclipse.wst.sse.ui.spellcheck">
          </action>
+-->
       </editorContribution>     
    </extension>
    
