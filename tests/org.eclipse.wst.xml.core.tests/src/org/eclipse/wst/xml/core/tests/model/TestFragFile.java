@@ -25,24 +25,36 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 
 public class TestFragFile extends TestCase {
 
-	public void test() throws UnsupportedEncodingException, IOException {
+//	public void testFrag() throws UnsupportedEncodingException, IOException {
+//		IStructuredModel model = null;
+//
+//		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
+//
+//		String testString1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" + "<!--This is an internally generated file - manual changes to it will be ignored and overwritten.-->\r\n" + "<Fragment parent=\"/ejb-jar/enterprise-beans&lt;description,display-name,small-icon,large-icon\" destination=\"ejb-jar.xml\" type=\"xml\" xmlid=\"id,xmi:id\" tagSet=\"ejb\">\r\n" + "<session id=\"ejbs.TestBean\">\r\n" + "<ejb-name>Test</ejb-name>\r\n" + "<home>ejbs.TestHome</home>\r\n" + "<remote>ejbs.Test</remote>\r\n" + "<ejb-class>ejbs.TestBean</ejb-class>\r\n" + "<session-type>Stateless</session-type>\r\n" + "<transaction-type>Container</transaction-type>\r\n" + "</session>\r\n" + "</Fragment>";
+//
+//
+//		InputStream inputStream = new ByteArrayInputStream(testString1.getBytes("utf8"));
+//
+//		model = modelManager.getModelForRead("test.frag", inputStream, null); //$NON-NLS-1$
+//
+//		System.out.println(model);
+//		System.out.println(model.getStructuredDocument().get());
+//	}
+
+	public void testFragX() throws UnsupportedEncodingException, IOException {
 		IStructuredModel model = null;
 
 		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
 
-//		String testString1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" + "<!--This is an internally generated file - manual changes to it will be ignored and overwritten.-->\r\n" + "<Fragment parent=\"/ejb-jar/enterprise-beans&lt;description,display-name,small-icon,large-icon\" destination=\"ejb-jar.xml\" type=\"xml\" xmlid=\"id,xmi:id\" tagSet=\"ejb\">\r\n" + "<session id=\"ejbs.TestBean\">\r\n" + "<ejb-name>Test</ejb-name>\r\n" + "<home>ejbs.TestHome</home>\r\n" + "<remote>ejbs.Test</remote>\r\n" + "<ejb-class>ejbs.TestBean</ejb-class>\r\n" + "<session-type>Stateless</session-type>\r\n" + "<transaction-type>Container</transaction-type>\r\n" + "</session>\r\n" + "</Fragment>";
-		String testString2 = "<!--This is an internally generated file - manual changes to it will be ignored and overwritten.-->\r\n" + "<Fragment parent=\"/ejb-jar/enterprise-beans&lt;description,display-name,small-icon,large-icon\" destination=\"ejb-jar.xml\" type=\"xml\" xmlid=\"id,xmi:id\" tagSet=\"ejb\">\r\n" + "<session id=\"ejbs.TestBean\">\r\n" + "<ejb-name>Test</ejb-name>\r\n" + "<home>ejbs.TestHome</home>\r\n" + "<remote>ejbs.Test</remote>\r\n" + "<ejb-class>ejbs.TestBean</ejb-class>\r\n" + "<session-type>Stateless</session-type>\r\n" + "<transaction-type>Container</transaction-type>\r\n" + "</session>\r\n" + "</Fragment>";
+		String testString = "<!--This is an internally generated file - manual changes to it will be ignored and overwritten.-->\r\n" + "<Fragment parent=\"/ejb-jar/enterprise-beans&lt;description,display-name,small-icon,large-icon\" destination=\"ejb-jar.xml\" type=\"xml\" xmlid=\"id,xmi:id\" tagSet=\"ejb\">\r\n" + "<session id=\"ejbs.TestBean\">\r\n" + "<ejb-name>Test</ejb-name>\r\n" + "<home>ejbs.TestHome</home>\r\n" + "<remote>ejbs.Test</remote>\r\n" + "<ejb-class>ejbs.TestBean</ejb-class>\r\n" + "<session-type>Stateless</session-type>\r\n" + "<transaction-type>Container</transaction-type>\r\n" + "</session>\r\n" + "</Fragment>";
 
 
-		InputStream inputStream = new StringBufferInputStream(testString2);
+		InputStream inputStream = new StringBufferInputStream(testString);
 
-		model = modelManager.getModelForRead("test.frag", inputStream, null); //$NON-NLS-1$
+		model = modelManager.getModelForRead("test.fragx", inputStream, null); //$NON-NLS-1$
 
 		System.out.println(model);
 		System.out.println(model.getStructuredDocument().get());
-
-
-
 	}
 
 }

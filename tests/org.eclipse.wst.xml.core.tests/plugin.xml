@@ -26,6 +26,16 @@
 	</requires>
 
 
+   <extension
+         point="org.eclipse.core.runtime.contentTypes">
+		<!-- associate .fragx files with the XML content type -->
+		<file-association
+			content-type="org.eclipse.core.runtime.xml"
+			file-extensions="fragx"/>
+		<file-association
+			content-type="org.eclipse.wst.xml.core.xmlsource"
+			file-extensions="fragx"/>
+	</extension>		 
 
 
 </plugin>
