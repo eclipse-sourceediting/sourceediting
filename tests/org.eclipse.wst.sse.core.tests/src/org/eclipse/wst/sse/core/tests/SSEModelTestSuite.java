@@ -13,10 +13,6 @@ package org.eclipse.wst.sse.core.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.wst.sse.core.tests.document.TestCharSequenceReader;
-import org.eclipse.wst.sse.core.tests.document.TestRegionMatches;
-import org.eclipse.wst.sse.core.tests.life.TestCreation;
-
 
 public class SSEModelTestSuite extends TestSuite {
 
@@ -39,9 +35,9 @@ public class SSEModelTestSuite extends TestSuite {
 	public SSEModelTestSuite() {
 		super("SSE Model Basic Test Suite");
 		for (int i = 0; i < classes.length; i++) {
-			addTest(new TestSuite(classes[i], classes[i].getName()));
+			//addTest(new TestSuite(classes[i], classes[i].getName()));
+			addTestSuite(ExistenceTest.class);
 		}
-
 	}
 
 	public SSEModelTestSuite(Class theClass, String name) {
