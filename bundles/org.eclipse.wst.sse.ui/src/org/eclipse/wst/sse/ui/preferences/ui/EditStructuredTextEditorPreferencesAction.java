@@ -48,7 +48,6 @@ import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
  * @author amywu
  */
 public class EditStructuredTextEditorPreferencesAction extends Action implements IExtendedEditorAction {
-	private final String EXTENSION_ATTRIBUTE_PREFERENCE_IDS = "preferenceids"; //$NON-NLS-1$
 	private final String EXTENSION_TYPE_ID = "preferencepages"; //$NON-NLS-1$
 	private IExtendedSimpleEditor fEditor;
 

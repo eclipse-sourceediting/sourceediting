@@ -833,11 +833,7 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 		if (Debug.debugStructuredDocument) {
 			System.out.println("maybe redraw stuff"); //$NON-NLS-1$
 		}
-		// no redraw needed if mere region change
-		// unless its one of our embedded regions,
-		// in which case we redraw the whole thing
-		ITextRegion region = structuredDocumentEvent.getRegion();
-		//String type = region.getType();
+
 
 		// (nsd) TODO: try to make this reliable somehow
 		// without being directly content dependent

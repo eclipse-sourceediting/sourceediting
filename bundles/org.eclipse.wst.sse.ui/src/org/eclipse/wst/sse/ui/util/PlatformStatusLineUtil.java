@@ -99,10 +99,6 @@ public class PlatformStatusLineUtil {
 		}
 	}
 
-	// end OneTimeListener
-
-	private static PlatformStatusLineUtil singleton = null;
-
 	/**
 	 * Status line will be cleared w/ key type, or selection change
 	 * 
@@ -180,12 +176,6 @@ public class PlatformStatusLineUtil {
 				editor = page.getActiveEditor();
 		}
 		return editor;
-	}
-
-	private static PlatformStatusLineUtil getInstance() {
-		if (singleton == null)
-			singleton = new PlatformStatusLineUtil();
-		return singleton;
 	}
 
 	private PlatformStatusLineUtil() {
