@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
+import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
@@ -17,6 +18,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
+import org.eclipse.wst.sse.core.text.IStructuredPartitionTypes;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
@@ -212,5 +214,19 @@ public class TestViewerConfigurationXML extends TestCase {
 		IHyperlinkDetector[] detectors = fConfig.getHyperlinkDetectors(fViewer);
 		assertNotNull(detectors);
 		assertTrue("there are no hyperlink detectors", detectors.length > 0);
+	}
+	
+	public void testGetTextHover() {
+		
+		// probably no display
+		if(!fDisplayExists)
+			return;
+
+		String[] hoverPartitions = new String[]{IStructuredPartitionTypes.DEFAULT_PARTITION, IXMLPartitions.XML_DEFAULT};
+		
+		for (int i = 0; i < hoverPartitions.length; i++) {
+			ITextHover hover = fConfig.getTextHover(fViewer, hoverPartitions[i], SWT.NONE);
+			assertNotNull("hover was null for partition: " + hoverPartitions[i], hover);
+		}
 	}
 }

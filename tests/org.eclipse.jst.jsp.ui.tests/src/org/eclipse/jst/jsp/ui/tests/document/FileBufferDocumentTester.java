@@ -24,7 +24,7 @@ import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jst.jsp.core.internal.text.StructuredTextPartitionerForJSP;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.util.Utilities;
 
 
@@ -42,7 +42,7 @@ public class FileBufferDocumentTester extends UnzippedProjectTester {
 		assertTrue("wrong class of document", expectedDocumentClass.isInstance(document));
 		IDocumentPartitioner setupPartitioner = null;
 		if (Utilities.contains(expectedDocumentClass.getInterfaces(), IDocumentExtension3.class)) {
-			setupPartitioner = ((IDocumentExtension3) document).getDocumentPartitioner(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING);
+			setupPartitioner = ((IDocumentExtension3) document).getDocumentPartitioner(IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING);
 		}
 		else {
 			setupPartitioner = document.getDocumentPartitioner();

@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
+import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
@@ -17,7 +18,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
-import org.eclipse.wst.html.core.text.IHTMLPartitions;
+import org.eclipse.wst.html.core.text.IHTMLPartitionTypes;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.tests.Logger;
@@ -84,7 +85,7 @@ public class TestViewerConfigurationHTML extends TestCase {
 		if(!fDisplayExists)
 			return;
 		
-		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, IHTMLPartitions.HTML_DEFAULT);
+		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, IHTMLPartitionTypes.HTML_DEFAULT);
 		assertNotNull(strategies);
 		assertTrue("there are no auto edit strategies", strategies.length>0);
 	}
@@ -209,5 +210,18 @@ public class TestViewerConfigurationHTML extends TestCase {
 		IHyperlinkDetector[] detectors = fConfig.getHyperlinkDetectors(fViewer);
 		assertNotNull(detectors);
 		assertTrue("there are no hyperlink detectors", detectors.length > 1);
+	}
+	
+	public void testGetTextHover() {
+		
+		// probably no display
+		if(!fDisplayExists)
+			return;
+
+		String[] hoverPartitions = new String[]{IHTMLPartitionTypes.HTML_DEFAULT, IHTMLPartitionTypes.SCRIPT};
+		for (int i = 0; i < hoverPartitions.length; i++) {
+			ITextHover hover = fConfig.getTextHover(fViewer, hoverPartitions[i], SWT.NONE);
+			assertNotNull("hover was null for partition: " + hoverPartitions[i], hover);
+		}
 	}
 }

@@ -27,6 +27,7 @@ import org.eclipse.wst.sse.core.exceptions.ResourceAlreadyExists;
 import org.eclipse.wst.sse.core.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.util.Utilities;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 
@@ -110,7 +111,7 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 		assertTrue("wrong class of document", expectedDocumentClass.isInstance(document));
 		IDocumentPartitioner setupPartitioner = null;
 		if (Utilities.contains(expectedDocumentClass.getInterfaces(), IDocumentExtension3.class)) {
-			setupPartitioner = ((IDocumentExtension3) document).getDocumentPartitioner(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING);
+			setupPartitioner = ((IDocumentExtension3) document).getDocumentPartitioner(IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING);
 		}
 		else {
 			setupPartitioner = document.getDocumentPartitioner();
@@ -143,7 +144,7 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 			assertTrue("wrong class of document", expectedDocumentClass.isInstance(document));
 			IDocumentPartitioner setupPartitioner = null;
 			if (Utilities.contains(expectedDocumentClass.getInterfaces(), IDocumentExtension3.class)) {
-				setupPartitioner = ((IDocumentExtension3) document).getDocumentPartitioner(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING);
+				setupPartitioner = ((IDocumentExtension3) document).getDocumentPartitioner(IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING);
 			}
 			else {
 				setupPartitioner = document.getDocumentPartitioner();
@@ -181,7 +182,7 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 			assertTrue("wrong class of document", expectedDocumentClass.isInstance(document));
 			IDocumentPartitioner setupPartitioner = null;
 			if (Utilities.contains(expectedDocumentClass.getInterfaces(), IDocumentExtension3.class)) {
-				setupPartitioner = ((IDocumentExtension3) document).getDocumentPartitioner(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING);
+				setupPartitioner = ((IDocumentExtension3) document).getDocumentPartitioner(IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING);
 			}
 			else {
 				setupPartitioner = document.getDocumentPartitioner();
@@ -237,7 +238,7 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 			assertTrue("wrong class of document", expectedDocumentClass.isInstance(document));
 			IDocumentPartitioner setupPartitioner = null;
 			if (Utilities.contains(expectedDocumentClass.getInterfaces(), IDocumentExtension3.class)) {
-				setupPartitioner = ((IDocumentExtension3) document).getDocumentPartitioner(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING);
+				setupPartitioner = ((IDocumentExtension3) document).getDocumentPartitioner(IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING);
 			}
 			else {
 				setupPartitioner = document.getDocumentPartitioner();

@@ -13,6 +13,7 @@ package org.eclipse.wst.xml.core.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.wst.xml.core.tests.document.TestXMLDocumentLoader;
 import org.eclipse.wst.xml.core.tests.model.TestModelsFromFiles;
 
 
@@ -25,6 +26,6 @@ public class SSEModelXMLTestSuite extends TestSuite {
 	public SSEModelXMLTestSuite() {
 		super("Test Suite for org.eclipse.wst.xml.core.tests");
 		addTest(new TestSuite(TestModelsFromFiles.class));
-		//addTest(new TestSuite(TestXMLDocumentLoader.class));
+		addTest(new TestSuite(TestXMLDocumentLoader.class));
 	}
 }

@@ -5,13 +5,14 @@ import junit.framework.TestCase;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
+import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.IAnnotationHover;
-import org.eclipse.jst.jsp.core.text.IJSPPartitions;
+import org.eclipse.jst.jsp.core.text.IJSPPartitionTypes;
 import org.eclipse.jst.jsp.ui.StructuredTextViewerConfigurationJSP;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.tests.Logger;
@@ -21,8 +22,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
+import org.eclipse.wst.html.core.text.IHTMLPartitionTypes;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
+import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
 /**
  * @author pavery
@@ -84,7 +87,7 @@ public class TestViewerConfigurationJSP extends TestCase {
 		if(!fDisplayExists)
 			return;
 		
-		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, IJSPPartitions.JSP_DEFAULT);
+		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, IJSPPartitionTypes.JSP_DEFAULT);
 		assertNotNull(strategies);
 		assertTrue("there are no auto edit strategies", strategies.length > 0);
 	}
@@ -209,5 +212,24 @@ public class TestViewerConfigurationJSP extends TestCase {
 		IHyperlinkDetector[] detectors = fConfig.getHyperlinkDetectors(fViewer);
 		assertNotNull(detectors);
 		assertTrue("there are no hyperlink detectors", detectors.length > 1);
+	}
+	
+	public void testGetTextHover() {
+		
+		// probably no display
+		if(!fDisplayExists)
+			return;
+
+		String[] hoverPartitions = new String[]{IHTMLPartitionTypes.HTML_DEFAULT,
+													IHTMLPartitionTypes.SCRIPT,
+													IJSPPartitionTypes.JSP_DEFAULT,
+													IJSPPartitionTypes.JSP_DIRECTIVE,
+													IJSPPartitionTypes.JSP_CONTENT_JAVA,
+													IXMLPartitions.XML_DEFAULT};
+		
+		for (int i = 0; i < hoverPartitions.length; i++) {
+			ITextHover hover = fConfig.getTextHover(fViewer, hoverPartitions[i], SWT.NONE);
+			assertNotNull("hover was null for partition: " + hoverPartitions[i], hover);
+		}
 	}
 }

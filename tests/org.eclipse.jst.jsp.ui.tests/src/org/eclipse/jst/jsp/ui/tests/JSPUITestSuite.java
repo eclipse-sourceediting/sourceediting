@@ -22,7 +22,7 @@ import org.eclipse.jst.jsp.ui.tests.modelquery.ModelQueryTester;
 import org.eclipse.jst.jsp.ui.tests.other.ScannerUnitTests;
 import org.eclipse.jst.jsp.ui.tests.other.UnitTests;
 import org.eclipse.jst.jsp.ui.tests.pagedirective.TestPageDirective;
-import org.eclipse.jst.jsp.ui.tests.partitioning.TestStructuredPartitioner;
+import org.eclipse.jst.jsp.ui.tests.partitioning.TestStructuredPartitionerJSP;
 import org.eclipse.jst.jsp.ui.tests.registry.AdapterFactoryRegistryTest;
 import org.eclipse.jst.jsp.ui.tests.viewer.TestViewerConfigurationJSP;
 
@@ -39,7 +39,7 @@ public class JSPUITestSuite extends TestSuite {
 		
 		addTest(new TestSuite(ScannerUnitTests.class, "ScannerUnitTests"));
 		addTest(new TestSuite(UnitTests.class, "UnitTests"));
-		addTest(new TestSuite(TestStructuredPartitioner.class, "TestStructuredPartioner"));
+		addTest(new TestSuite(TestStructuredPartitionerJSP.class, "TestStructuredPartioner"));
 		addTest(new TestSuite(ModelQueryTester.class, "ModelQueryTester"));
 		addTest(new TestSuite(JSPJavaTranslatorTest.class, "JSPJavaTranslatorTest"));
 		addTest(new TestSuite(TestEmailNotice.class, "TestEmailNotice"));

@@ -1,7 +1,6 @@
 package org.eclipse.wst.xml.core.tests.document;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 
 import junit.framework.TestCase;
@@ -89,27 +88,6 @@ public class TestXMLDocumentLoader extends TestCase {
 			e.printStackTrace();
 		}
 		assertNotNull("failed to create document from InputStream", document);
-	}
-	
-	public void testCreateNewStructuredDocumentFromReader() {
-		
-		String fileLocation = "/files/simple.xml";
-		String absoluteFileLocation = Platform.getInstanceLocation().getURL().getPath().toString() + fProjectName + fileLocation;
-		
-		XMLDocumentLoader xmlDocumentLoader = new XMLDocumentLoader();
-		IDocument document = null;
-		
-		try {
-			File f = new File(absoluteFileLocation);
-			if(f != null && f.exists()) {
-				FileReader reader = new FileReader(f);
-				document = xmlDocumentLoader.createNewStructuredDocument(reader);
-			}
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		assertNotNull("failed to create document from Reader", document);
 	}
 	
 	public void testCreateNewDocumentFromReaderWithEncodingRule() {
