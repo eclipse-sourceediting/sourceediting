@@ -19,6 +19,7 @@ import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
+import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -27,7 +28,6 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.search.BasicFindOccurrencesAction;
 import org.eclipse.wst.xml.core.document.XMLDocument;
 import org.eclipse.wst.xml.core.document.XMLModel;
-import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 
 /**

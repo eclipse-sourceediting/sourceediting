@@ -10,16 +10,13 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.xml.core.jsp.model.parser.temp;
+package org.eclipse.jst.jsp.core.model.parser;
 
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 
 
 /**
- * //TODO
- * 
- * @deprecated - marked as deprecated to warn of pending changes. See the
- *             package.html file for full explanation.
+ *
  */
 
 public interface XMLJSPRegionContexts extends XMLRegionContext {

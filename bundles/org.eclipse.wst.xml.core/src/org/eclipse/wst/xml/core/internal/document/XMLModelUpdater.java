@@ -26,7 +26,6 @@ import org.eclipse.wst.xml.core.document.JSPTag;
 import org.eclipse.wst.xml.core.document.XMLElement;
 import org.eclipse.wst.xml.core.document.XMLGenerator;
 import org.eclipse.wst.xml.core.document.XMLNode;
-import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -38,7 +37,7 @@ import org.w3c.dom.Text;
 /**
  * XMLModelUpdater class
  */
-public class XMLModelUpdater implements XMLJSPRegionContexts {
+public class XMLModelUpdater {
 	private int diff = 0;
 	private int gapLength = 0;
 	private int gapOffset = 0;
@@ -153,7 +152,8 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 			// use getTextEnd() because getEnd() may include the tailing
 			// spaces
 			end += valueRegion.getTextEnd();
-		} else {
+		}
+		else {
 			ITextRegion equalRegion = attr.getEqualRegion();
 
 			value = this.generator.generateAttrValue(attr);
@@ -164,12 +164,14 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 				// remove equal
 				start += equalRegion.getStart();
 				end += equalRegion.getTextEnd();
-			} else {
+			}
+			else {
 				if (equalRegion != null) {
 					// use getTextEnd() because getEnd() may include the
 					// tailing spaces
 					start += equalRegion.getTextEnd();
-				} else {
+				}
+				else {
 					ITextRegion nameRegion = attr.getNameRegion();
 					if (nameRegion == null)
 						return; // must never happen
@@ -367,11 +369,13 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 			ElementImpl element = (ElementImpl) ownerNode;
 			if (isEndTag) {
 				element.setEndStructuredDocumentRegion(oldStructuredDocumentRegion);
-			} else {
+			}
+			else {
 				element.setStartStructuredDocumentRegion(oldStructuredDocumentRegion);
 				updateAttrRegions(element, oldStructuredDocumentRegion);
 			}
-		} else if (nodeType == Node.TEXT_NODE) {
+		}
+		else if (nodeType == Node.TEXT_NODE) {
 			TextImpl text = (TextImpl) ownerNode;
 
 			IStructuredDocumentRegion flatNode = text.getStructuredDocumentRegion();
@@ -380,7 +384,8 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 				int newEnd = oldEnd;
 				if (oldOffset == this.gapOffset) {
 					newOffset += this.diff;
-				} else {
+				}
+				else {
 					newEnd = this.gapOffset;
 				}
 				int newLength = newEnd - newOffset;
@@ -401,7 +406,8 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 				if (proxy.getStructuredDocumentRegion() == null) {
 					if (offset == oldOffset && end == oldEnd) {
 						text.setStructuredDocumentRegion(oldStructuredDocumentRegion);
-					} else {
+					}
+					else {
 						if (end > oldEnd) {
 							StructuredDocumentRegionContainer container = new StructuredDocumentRegionContainer();
 							container.appendStructuredDocumentRegion(oldStructuredDocumentRegion);
@@ -409,7 +415,8 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 							proxy.setLength(end - oldEnd);
 							container.appendStructuredDocumentRegion(proxy);
 							text.setStructuredDocumentRegion(container);
-						} else {
+						}
+						else {
 							proxy.setStructuredDocumentRegion(oldStructuredDocumentRegion);
 
 							if (end < oldEnd) { // to be shared
@@ -430,7 +437,8 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 					changeStructuredDocumentRegion(oldStructuredDocumentRegion);
 					return;
 				}
-			} else if (flatNode instanceof StructuredDocumentRegionContainer) {
+			}
+			else if (flatNode instanceof StructuredDocumentRegionContainer) {
 				StructuredDocumentRegionContainer container = (StructuredDocumentRegionContainer) flatNode;
 				int count = container.getStructuredDocumentRegionCount();
 				for (int i = 0; i < count; i++) {
@@ -442,7 +450,8 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 						int newEnd = oldEnd;
 						if (oldOffset == this.gapOffset) {
 							newOffset += this.diff;
-						} else {
+						}
+						else {
 							newEnd = this.gapOffset;
 						}
 						int newLength = newEnd - newOffset;
@@ -465,12 +474,14 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 						if (proxy.getStructuredDocumentRegion() == null) {
 							if (offset == oldOffset && end == oldEnd) {
 								container.replaceStructuredDocumentRegion(oldStructuredDocumentRegion, i);
-							} else {
+							}
+							else {
 								if (end > oldEnd) {
 									container.insertStructuredDocumentRegion(oldStructuredDocumentRegion, i);
 									proxy.setOffset(oldEnd);
 									proxy.setLength(end - oldEnd);
-								} else {
+								}
+								else {
 									proxy.setStructuredDocumentRegion(oldStructuredDocumentRegion);
 
 									if (end < oldEnd) { // to be shared
@@ -493,10 +504,12 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 						}
 					}
 				}
-			} else {
+			}
+			else {
 				throw new StructuredDocumentRegionManagementException();
 			}
-		} else {
+		}
+		else {
 			ownerNode.setStructuredDocumentRegion(oldStructuredDocumentRegion);
 		}
 	}
@@ -525,7 +538,8 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 				offset += preTag.length();
 				source = preTag + source;
 			}
-		} else {
+		}
+		else {
 			Node parent = text.getParentNode();
 			if (parent != null && parent.getNodeType() == Node.ELEMENT_NODE) {
 				ElementImpl element = (ElementImpl) parent;
@@ -692,7 +706,8 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 					}
 				}
 			}
-		} else {
+		}
+		else {
 			String closeTag = getCloseTag(lastChild);
 			if (closeTag != null) {
 				int length = closeTag.length();
@@ -758,7 +773,8 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 			IStructuredDocumentRegion flatNode = proxy.getStructuredDocumentRegion();
 			if (flatNode != null)
 				insertStructuredDocumentRegion(flatNode);
-		} else if (this.gapStructuredDocumentRegion instanceof StructuredDocumentRegionContainer) {
+		}
+		else if (this.gapStructuredDocumentRegion instanceof StructuredDocumentRegionContainer) {
 			StructuredDocumentRegionContainer container = (StructuredDocumentRegionContainer) this.gapStructuredDocumentRegion;
 			int count = container.getStructuredDocumentRegionCount();
 			for (int i = 0; i < count; i++) {
@@ -772,11 +788,13 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 					IStructuredDocumentRegion flatNode = proxy.getStructuredDocumentRegion();
 					if (flatNode != null)
 						insertStructuredDocumentRegion(flatNode);
-				} else {
+				}
+				else {
 					insertStructuredDocumentRegion(content);
 				}
 			}
-		} else {
+		}
+		else {
 			insertStructuredDocumentRegion(this.gapStructuredDocumentRegion);
 		}
 	}
@@ -790,7 +808,8 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 			IStructuredDocumentRegion flatNode = proxy.getStructuredDocumentRegion();
 			if (flatNode != null)
 				insertStructuredDocumentRegion(flatNode);
-		} else if (this.gapStructuredDocumentRegion instanceof StructuredDocumentRegionContainer) {
+		}
+		else if (this.gapStructuredDocumentRegion instanceof StructuredDocumentRegionContainer) {
 			StructuredDocumentRegionContainer container = (StructuredDocumentRegionContainer) this.gapStructuredDocumentRegion;
 			int count = container.getStructuredDocumentRegionCount();
 			for (int i = 0; i < count; i++) {
@@ -804,11 +823,13 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 					IStructuredDocumentRegion flatNode = proxy.getStructuredDocumentRegion();
 					if (flatNode != null)
 						insertStructuredDocumentRegion(flatNode);
-				} else {
+				}
+				else {
 					insertStructuredDocumentRegion(content);
 				}
 			}
-		} else {
+		}
+		else {
 			insertStructuredDocumentRegion(this.gapStructuredDocumentRegion);
 		}
 	}
@@ -887,11 +908,13 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 			ElementImpl element = (ElementImpl) ownerNode;
 			if (isEndTag) {
 				element.setEndStructuredDocumentRegion(newStructuredDocumentRegion);
-			} else {
+			}
+			else {
 				element.setStartStructuredDocumentRegion(newStructuredDocumentRegion);
 				updateAttrRegions(element, newStructuredDocumentRegion);
 			}
-		} else if (nodeType == Node.TEXT_NODE) {
+		}
+		else if (nodeType == Node.TEXT_NODE) {
 			TextImpl text = (TextImpl) ownerNode;
 			IStructuredDocumentRegion oldStructuredDocumentRegion = text.getStructuredDocumentRegion();
 			if (oldStructuredDocumentRegion == null) {
@@ -910,7 +933,8 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 					StructuredDocumentRegionContainer container = new StructuredDocumentRegionContainer();
 					if (oldOffset == newOffset) {
 						container.appendStructuredDocumentRegion(newStructuredDocumentRegion);
-					} else {
+					}
+					else {
 						StructuredDocumentRegionProxy newProxy = new StructuredDocumentRegionProxy();
 						newProxy.setOffset(oldOffset);
 						newProxy.setLength(newEnd - oldOffset);
@@ -921,7 +945,8 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 					proxy.setLength(oldEnd - newEnd);
 					container.appendStructuredDocumentRegion(proxy);
 					text.setStructuredDocumentRegion(container);
-				} else {
+				}
+				else {
 					proxy.setStructuredDocumentRegion(newStructuredDocumentRegion);
 
 					if (oldEnd < newEnd) { // to be shared
@@ -953,7 +978,8 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 						if (end > newEnd) {
 							if (offset == newOffset) {
 								container.insertStructuredDocumentRegion(newStructuredDocumentRegion, i);
-							} else {
+							}
+							else {
 								StructuredDocumentRegionProxy newProxy = new StructuredDocumentRegionProxy();
 								newProxy.setOffset(offset);
 								newProxy.setLength(newEnd - offset);
@@ -963,7 +989,8 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 							proxy.setOffset(newEnd);
 							proxy.setLength(end - newEnd);
 							return;
-						} else {
+						}
+						else {
 							proxy.setStructuredDocumentRegion(newStructuredDocumentRegion);
 							if (end == newEnd)
 								return;
@@ -976,10 +1003,12 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 					insertStructuredDocumentRegion(newStructuredDocumentRegion);
 				}
 				return;
-			} else {
+			}
+			else {
 				throw new StructuredDocumentRegionManagementException();
 			}
-		} else {
+		}
+		else {
 			ownerNode.setStructuredDocumentRegion(newStructuredDocumentRegion);
 		}
 	}
@@ -998,7 +1027,8 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 			IStructuredDocumentRegion flatNode = proxy.getStructuredDocumentRegion();
 			if (flatNode == oldStructuredDocumentRegion)
 				this.gapStructuredDocumentRegion = null;
-		} else if (this.gapStructuredDocumentRegion instanceof StructuredDocumentRegionContainer) {
+		}
+		else if (this.gapStructuredDocumentRegion instanceof StructuredDocumentRegionContainer) {
 			StructuredDocumentRegionContainer container = (StructuredDocumentRegionContainer) this.gapStructuredDocumentRegion;
 			int count = container.getStructuredDocumentRegionCount();
 			for (int i = 0; i < count; i++) {
@@ -1117,7 +1147,8 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 					removeStructuredDocumentRegion(oldStructuredDocumentRegion);
 					return;
 				}
-			} else if (flatNode instanceof StructuredDocumentRegionContainer) {
+			}
+			else if (flatNode instanceof StructuredDocumentRegionContainer) {
 				StructuredDocumentRegionContainer container = (StructuredDocumentRegionContainer) flatNode;
 				int count = container.getStructuredDocumentRegionCount();
 				for (int i = 0; i < count; i++) {
@@ -1147,14 +1178,17 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 						}
 					}
 				}
-			} else {
+			}
+			else {
 				throw new StructuredDocumentRegionManagementException();
 			}
-		} else {
+		}
+		else {
 			IStructuredDocumentRegion newStructuredDocumentRegion = new StructuredDocumentRegionProxy(oldOffset, oldLength);
 			if (ownerEndTag != null) {
 				ownerEndTag.setEndStructuredDocumentRegion(newStructuredDocumentRegion);
-			} else {
+			}
+			else {
 				ownerNode.setStructuredDocumentRegion(newStructuredDocumentRegion);
 			}
 		}
@@ -1200,11 +1234,13 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 			ITextRegion lastRegion = impl.getValueRegion();
 			if (lastRegion != null) {
 				end += lastRegion.getEnd();
-			} else {
+			}
+			else {
 				lastRegion = impl.getEqualRegion();
 				if (lastRegion != null) {
 					end += lastRegion.getEnd();
-				} else {
+				}
+				else {
 					end += nameRegion.getEnd();
 					lastRegion = nameRegion;
 				}
@@ -1235,19 +1271,21 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 			boolean isLastAttr = false;
 			if (nextRegion != null) {
 				String regionType = nextRegion.getType();
-				if (regionType == XMLRegionContext.XML_TAG_CLOSE || regionType == XMLRegionContext.XML_EMPTY_TAG_CLOSE || regionType == JSP_CLOSE || regionType == JSP_DIRECTIVE_CLOSE) {
+				if (regionType == XMLRegionContext.XML_TAG_CLOSE || regionType == XMLRegionContext.XML_EMPTY_TAG_CLOSE || isNestedTagClose(regionType)) {
 					isLastAttr = true;
 				}
 			}
 			if (isLastAttr && prevRegion != null) {
 				start += prevRegion.getTextEnd();
-			} else {
+			}
+			else {
 				start += nameRegion.getStart();
 			}
 
-			//		impl.resetRegions(ownerElement);
+			// impl.resetRegions(ownerElement);
 			impl.resetRegions(element);
-		} else { // append attribute
+		}
+		else { // append attribute
 			IStructuredDocumentRegion flatNode = element.getStartStructuredDocumentRegion();
 			if (flatNode == null)
 				return; // must never happen
@@ -1257,7 +1295,8 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 				insertSpace = true;
 				start = flatNode.getEndOffset();
 				end = start;
-			} else {
+			}
+			else {
 				ITextRegionList regions = flatNode.getRegions();
 				if (regions == null)
 					return; // must never happen
@@ -1265,7 +1304,7 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 				for (int i = regions.size() - 1; i >= 0; i--) {
 					ITextRegion region = regions.get(i);
 					String regionType = region.getType();
-					if (regionType == XMLRegionContext.XML_TAG_CLOSE || regionType == XMLRegionContext.XML_EMPTY_TAG_CLOSE || regionType == JSP_CLOSE || regionType == JSP_DIRECTIVE_CLOSE)
+					if (regionType == XMLRegionContext.XML_TAG_CLOSE || regionType == XMLRegionContext.XML_EMPTY_TAG_CLOSE || isNestedTagClose(regionType))
 						continue;
 					int regionEnd = region.getEnd();
 					if (regionEnd == region.getTextEnd())
@@ -1307,6 +1346,11 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 		replaceSource(source, start, end);
 	}
 
+	protected boolean isNestedTagClose(String regionType) {
+		boolean result = false;
+		return result;
+	}
+
 	/**
 	 * replaceChild method
 	 * 
@@ -1339,13 +1383,15 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 			}
 			node.resetStructuredDocumentRegions(); // reset values from
 			// IStructuredDocumentRegion
-		} else {
+		}
+		else {
 			NodeImpl prev = (NodeImpl) newChild.getPreviousSibling();
 			if (prev != null) {
 				start = prev.getEndOffset();
 				end = start;
 				preTag = getCloseTag(prev);
-			} else {
+			}
+			else {
 				// first child
 				NodeImpl next = (NodeImpl) newChild.getNextSibling();
 				if (next != null) {
@@ -1354,7 +1400,8 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 					if (parentNode.getNodeType() == Node.ELEMENT_NODE) {
 						preTag = getStartCloseTag((XMLElement) parentNode);
 					}
-				} else {
+				}
+				else {
 					// newly having a child
 					if (parentNode.getNodeType() == Node.ELEMENT_NODE) {
 						ElementImpl element = (ElementImpl) parentNode;
@@ -1366,7 +1413,8 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 							preTag = this.generator.generateCloseTag(element);
 							postTag = this.generator.generateEndTag(element);
 							postElement = element;
-						} else if (!element.hasStartTag()) {
+						}
+						else if (!element.hasStartTag()) {
 							start = element.getStartOffset();
 							end = start;
 							// invalid end tag or implicit tag
@@ -1385,7 +1433,8 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 								postTag = this.generator.generateEndTag(element);
 								postElement = element;
 							}
-						} else {
+						}
+						else {
 							start = element.getStartEndOffset();
 							end = start;
 							preTag = getStartCloseTag(element);
@@ -1432,7 +1481,8 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 						}
 					}
 					element.setStartStructuredDocumentRegion(flatNode);
-				} else {
+				}
+				else {
 					String content = this.generator.generateSource(node);
 					if (content == null)
 						content = new String();
@@ -1593,12 +1643,14 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 			}
 			if (lastStructuredDocumentRegion != null) {
 				insertGapStructuredDocumentRegionAfter(lastStructuredDocumentRegion.getEnd());
-			} else {
+			}
+			else {
 				insertGapStructuredDocumentRegionBefore(this.gapOffset);
 				// make sure to restore all backuped StructuredDocumentRegions
 				insertGapStructuredDocumentRegionAfter(this.gapOffset);
 			}
-		} else {
+		}
+		else {
 			this.parentNode = root;
 			this.nextNode = (NodeImpl) root.getFirstChild();
 
@@ -1633,10 +1685,12 @@ public class XMLModelUpdater implements XMLJSPRegionContexts {
 					attr.setEqualRegion(null);
 					attr.setValueRegion(null);
 				}
-			} else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+			}
+			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
 				if (attr != null)
 					attr.setEqualRegion(region);
-			} else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+			}
+			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 				if (attr != null) {
 					attr.setValueRegion(region);
 					attr = null;

@@ -27,6 +27,7 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
+import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -37,7 +38,6 @@ import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.xml.core.document.XMLDocument;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.document.XMLNode;
-import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 
@@ -48,12 +48,12 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 	// for debugging
 	private static final boolean DEBUG;
 	static {
-		String value= Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jsptranslation"); //$NON-NLS-1$
-		DEBUG= value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+		String value = Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jsptranslation"); //$NON-NLS-1$
+		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
-	
+
 	private static final String JDT_CORE_PLUGIN_ID = "org.eclipse.jdt.core"; //$NON-NLS-1$
-    
+
 	protected int fJspSourcePosition, fJavaPosition;
 	protected IResource fResource;
 	protected JSPCompletionRequestor fCollector;
@@ -66,43 +66,48 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 	}
 
 	/**
-	 * Returns a list of completion proposals based on the
-	 * specified location within the document that corresponds
-	 * to the current cursor position within the text viewer.
-	 *
-	 * @param viewer the viewer whose document is used to compute the proposals
-	 * @param documentPosition an offset within the document for which completions should be computed
-	 * @return an array of completion proposals or <code>null</code> if no proposals are possible
+	 * Returns a list of completion proposals based on the specified location
+	 * within the document that corresponds to the current cursor position
+	 * within the text viewer.
+	 * 
+	 * @param viewer
+	 *            the viewer whose document is used to compute the proposals
+	 * @param documentPosition
+	 *            an offset within the document for which completions should
+	 *            be computed
+	 * @return an array of completion proposals or <code>null</code> if no
+	 *         proposals are possible
 	 */
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int pos) {
 		initialize(pos);
+		XMLModel xmlModel = null;
 		try {
 			if (viewer instanceof StructuredTextViewer)
 				fViewer = (StructuredTextViewer) viewer;
 
-			XMLModel xmlModel = (XMLModel) StructuredModelManager.getModelManager().getExistingModelForRead(fViewer.getDocument());
+			xmlModel = (XMLModel) StructuredModelManager.getModelManager().getExistingModelForRead(fViewer.getDocument());
+
 			XMLDocument xmlDoc = xmlModel.getDocument();
-			xmlModel.releaseFromRead();
 			if (fTranslationAdapter == null)
 				fTranslationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
 			if (fTranslationAdapter != null) {
-				
+
 				JSPTranslation translation = fTranslationAdapter.getJSPTranslation();
 				fJavaPosition = translation.getJavaOffset(getDocumentPosition());
-				
-                fCollector.setCodeAssistOffset(fJavaPosition);
-                fCollector.setJavaToJSPOffset(fJspSourcePosition - fJavaPosition);
-                fCollector.setCursorInExpression(cursorInExpression());
-                
+
+				fCollector.setCodeAssistOffset(fJavaPosition);
+				fCollector.setJavaToJSPOffset(fJspSourcePosition - fJavaPosition);
+				fCollector.setCursorInExpression(cursorInExpression());
+
 
 				if (DEBUG)
 					System.out.println(debug(translation));
 
 				try {
-                    			
+
 					ICompilationUnit cu = translation.getCompilationUnit();
 					fCollector.setCompilationUnit(cu);
-                    
+
 					// can't get java proposals w/out a compilation unit
 					if (cu == null)
 						return new ICompletionProposal[0];
@@ -112,7 +117,8 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 					}
 				}
 				catch (CoreException coreEx) {
-					// a possible Java Model Exception due to not being a Web (Java) Project
+					// a possible Java Model Exception due to not being a Web
+					// (Java) Project
 					coreEx.printStackTrace();
 				}
 			}
@@ -121,7 +127,11 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 			exc.printStackTrace();
 			// throw out exceptions on code assist.
 		}
-        
+		finally {
+			if (xmlModel != null) {
+				xmlModel.releaseFromRead();
+			}
+		}
 		ICompletionProposal[] results = fCollector.getResults();
 		if (results == null || results.length < 1)
 			fErrorMessage = SSEUIPlugin.getResourceString("%Java_Content_Assist_is_not_UI_"); //$NON-NLS-1$ = "Java Content Assist is not available for the current cursor location"
@@ -131,6 +141,7 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 
 	/**
 	 * For debugging translation mapping only.
+	 * 
 	 * @param translation
 	 */
 	private String debug(JSPTranslation translation) {
@@ -166,33 +177,38 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 		XMLNode xmlNode = null;
 		xmlModel.releaseFromRead();
 		xmlNode = (XMLNode) xmlModel.getIndexedRegion(fJspSourcePosition);
-        if(xmlNode != null) {
-            XMLNode parent = (XMLNode)xmlNode.getParentNode();
-            if(parent != null) {
-                sdRegion = parent.getFirstStructuredDocumentRegion();
-                inExpression = sdRegion != null && (sdRegion.getType() == XMLJSPRegionContexts.JSP_EXPRESSION_OPEN || sdRegion.getType() == XMLJSPRegionContexts.JSP_SCRIPTLET_OPEN);
-            }
-        }
+		if (xmlNode != null) {
+			XMLNode parent = (XMLNode) xmlNode.getParentNode();
+			if (parent != null) {
+				sdRegion = parent.getFirstStructuredDocumentRegion();
+				inExpression = sdRegion != null && (sdRegion.getType() == XMLJSPRegionContexts.JSP_EXPRESSION_OPEN || sdRegion.getType() == XMLJSPRegionContexts.JSP_SCRIPTLET_OPEN);
+			}
+		}
 		return inExpression;
 	}
 
 	/**
-	 * Returns information about possible contexts based on the
-	 * specified location within the document that corresponds
-	 * to the current cursor position within the text viewer.
-	 *
-	 * @param viewer the viewer whose document is used to compute the possible contexts
-	 * @param documentPosition an offset within the document for which context information should be computed
-	 * @return an array of context information objects or <code>null</code> if no context could be found
+	 * Returns information about possible contexts based on the specified
+	 * location within the document that corresponds to the current cursor
+	 * position within the text viewer.
+	 * 
+	 * @param viewer
+	 *            the viewer whose document is used to compute the possible
+	 *            contexts
+	 * @param documentPosition
+	 *            an offset within the document for which context information
+	 *            should be computed
+	 * @return an array of context information objects or <code>null</code>
+	 *         if no context could be found
 	 */
 	public org.eclipse.jface.text.contentassist.IContextInformation[] computeContextInformation(org.eclipse.jface.text.ITextViewer viewer, int documentOffset) {
 		return null;
 	}
 
 	/**
-	 * Returns a string of characters which when pressed should
-	 * automatically display content-assist proposals.
-	 *
+	 * Returns a string of characters which when pressed should automatically
+	 * display content-assist proposals.
+	 * 
 	 * @return string of characters
 	 */
 	public java.lang.String getAutoProposalInvocationCharacters() {
@@ -200,9 +216,9 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 	}
 
 	/**
-	 * Returns a string of characters which when pressed should
-	 * automatically display a content-assist tip.
-	 *
+	 * Returns a string of characters which when pressed should automatically
+	 * display a content-assist tip.
+	 * 
 	 * @return string of characters
 	 */
 	public java.lang.String getAutoTipInvocationCharacters() {
@@ -212,9 +228,9 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 	/**
 	 * Returns the characters which when entered by the user should
 	 * automatically trigger the presentation of possible completions.
-	 *
-	 * @return the auto activation characters for completion proposal or <code>null</code>
-	 *		if no auto activation is desired
+	 * 
+	 * @return the auto activation characters for completion proposal or
+	 *         <code>null</code> if no auto activation is desired
 	 */
 	public char[] getCompletionProposalAutoActivationCharacters() {
 		return null;
@@ -223,21 +239,22 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 	/**
 	 * Returns the characters which when entered by the user should
 	 * automatically trigger the presentation of context information.
-	 *
-	 * @return the auto activation characters for presenting context information
-	 *		or <code>null</code> if no auto activation is desired
+	 * 
+	 * @return the auto activation characters for presenting context
+	 *         information or <code>null</code> if no auto activation is
+	 *         desired
 	 */
 	public char[] getContextInformationAutoActivationCharacters() {
 		return null;
 	}
 
 	/**
-	 * Returns a validator used to determine when displayed context information
-	 * should be dismissed. May only return <code>null</code> if the processor is
-	 * incapable of computing context information.
-	 *
-	 * @return a context information validator, or <code>null</code> if the processor
-	 * 			is incapable of computing context information
+	 * Returns a validator used to determine when displayed context
+	 * information should be dismissed. May only return <code>null</code> if
+	 * the processor is incapable of computing context information.
+	 * 
+	 * @return a context information validator, or <code>null</code> if the
+	 *         processor is incapable of computing context information
 	 */
 	public org.eclipse.jface.text.contentassist.IContextInformationValidator getContextInformationValidator() {
 		return null;
@@ -248,9 +265,10 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 	}
 
 	public String getErrorMessage() {
-        // TODO:
-//		if (fCollector.getErrorMessage() != null && fCollector.getErrorMessage().length() > 0)
-//			return fCollector.getErrorMessage();
+		// TODO:
+		// if (fCollector.getErrorMessage() != null &&
+		// fCollector.getErrorMessage().length() > 0)
+		// return fCollector.getErrorMessage();
 		return fErrorMessage;
 	}
 
@@ -272,7 +290,7 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 		initializeJavaPlugins();
 
 		// fCollector = new JSPResultCollector();
-        fCollector = new JSPCompletionRequestor();
+		fCollector = new JSPCompletionRequestor();
 		fJspSourcePosition = pos;
 		fErrorMessage = null;
 	}
@@ -290,7 +308,9 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.ibm.sse.editor.IReleasable#release()
 	 */
 	public void release() {

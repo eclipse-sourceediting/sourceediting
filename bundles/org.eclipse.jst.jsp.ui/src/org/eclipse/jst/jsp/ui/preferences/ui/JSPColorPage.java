@@ -17,6 +17,7 @@ import java.util.Iterator;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
+import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.editor.IHelpContextIds;
 import org.eclipse.swt.widgets.Composite;
@@ -28,7 +29,6 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore.OverlayKey;
 import org.eclipse.wst.sse.ui.preferences.ui.StyledTextColorPicker;
-import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.eclipse.wst.xml.ui.preferences.XMLColorPage;
 import org.eclipse.wst.xml.ui.style.IStyleConstantsXML;

@@ -22,6 +22,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jst.jsp.core.JSP11Namespace;
 import org.eclipse.jst.jsp.core.JSP12Namespace;
+import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -30,7 +31,6 @@ import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.sse.ui.contentassist.IRelevanceCompletionProposal;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
-import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 
 /**

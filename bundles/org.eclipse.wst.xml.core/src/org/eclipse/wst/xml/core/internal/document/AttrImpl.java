@@ -26,7 +26,6 @@ import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.xml.core.document.XMLAttr;
 import org.eclipse.wst.xml.core.document.XMLCharEntity;
 import org.eclipse.wst.xml.core.document.XMLNamespace;
-import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
@@ -210,7 +209,8 @@ public class AttrImpl extends NodeImpl implements XMLAttr {
 				return XMLNamespace.XMLNS_URI;
 			}
 			nsAttrName = XMLNamespace.XMLNS_PREFIX + prefix;
-		} else {
+		}
+		else {
 			String name = getName();
 			if (name != null && name.equals(XMLNamespace.XMLNS)) {
 				// fixed URI
@@ -463,7 +463,7 @@ public class AttrImpl extends NodeImpl implements XMLAttr {
 	/**
 	 * Check if Attr has JSP in value
 	 */
-	public boolean hasJSPValue() {
+public boolean hasNestedValue() {
 		if (this.valueRegion == null)
 			return false;
 		if (!(this.valueRegion instanceof ITextRegionContainer))
@@ -477,7 +477,7 @@ public class AttrImpl extends NodeImpl implements XMLAttr {
 			if (region == null)
 				continue;
 			String regionType = region.getType();
-			if (regionType == XMLRegionContext.XML_TAG_OPEN || regionType == XMLJSPRegionContexts.JSP_SCRIPTLET_OPEN || regionType == XMLJSPRegionContexts.JSP_EXPRESSION_OPEN || regionType == XMLJSPRegionContexts.JSP_DECLARATION_OPEN || regionType == XMLJSPRegionContexts.JSP_DIRECTIVE_OPEN)
+			if (regionType == XMLRegionContext.XML_TAG_OPEN || isNestedLanguageOpening(regionType))
 				return true;
 		}
 		return false;
@@ -510,7 +510,8 @@ public class AttrImpl extends NodeImpl implements XMLAttr {
 			if (this.ownerElement.ignoreCase()) {
 				return !hasPrefix();
 			}
-		} else {
+		}
+		else {
 			DocumentImpl document = (DocumentImpl) getOwnerDocument();
 			if (document != null && document.ignoreCase()) {
 				// even in case insensitive document, if having prefix, it's
@@ -538,7 +539,8 @@ public class AttrImpl extends NodeImpl implements XMLAttr {
 			if (!this.ownerElement.isXMLTag()) {
 				return hasPrefix();
 			}
-		} else {
+		}
+		else {
 			DocumentImpl document = (DocumentImpl) getOwnerDocument();
 			if (document != null && !document.isXMLType()) {
 				// even in non-XML document, if having prefix, it's XML tag
@@ -726,7 +728,8 @@ public class AttrImpl extends NodeImpl implements XMLAttr {
 		try {
 			getModel().aboutToChangeModel();
 			setValueSource(getValueSource(value));
-		} finally {
+		}
+		finally {
 			getModel().changedModel();
 		}
 	}
@@ -752,5 +755,15 @@ public class AttrImpl extends NodeImpl implements XMLAttr {
 		this.valueSource = source;
 
 		notifyValueChanged();
+	}
+
+	/**
+	 * Subclasses must override
+	 * @param regionType
+	 * @return
+	 */
+	protected boolean isNestedLanguageOpening(String regionType) {
+		boolean result = false;
+		return result;
 	}
 }

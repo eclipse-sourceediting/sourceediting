@@ -16,13 +16,14 @@ import org.eclipse.wst.sse.core.cleanup.IStructuredCleanupHandler;
 import org.eclipse.wst.sse.core.cleanup.IStructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.xml.core.document.XMLNode;
-import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.w3c.dom.Node;
 
 // nakamori_TODO: check and remove CSS formatting
 
 class HTMLCleanupHandlerFactory {
+
+
 
 	private static HTMLCleanupHandlerFactory fInstance = null;
 
@@ -41,26 +42,23 @@ class HTMLCleanupHandlerFactory {
 		short nodeType = node.getNodeType();
 		IStructuredCleanupHandler handler = null;
 		switch (nodeType) {
-			case Node.ELEMENT_NODE :
-				{
-					if (isJSPTag(node))
-						handler = new JSPElementNodeCleanupHandler();
-					else
-						handler = new ElementNodeCleanupHandler();
-					break;
-				}
-			case Node.TEXT_NODE :
-				{
-					if (isParentStyleTag(node))
-						handler = new CSSTextNodeCleanupHandler();
-					else
-						handler = new NodeCleanupHandler();
-					break;
-				}
-			default :
-				{
+			case Node.ELEMENT_NODE : {
+				if (isJSPTag(node))
+					handler = new JSPElementNodeCleanupHandler();
+				else
+					handler = new ElementNodeCleanupHandler();
+				break;
+			}
+			case Node.TEXT_NODE : {
+				if (isParentStyleTag(node))
+					handler = new CSSTextNodeCleanupHandler();
+				else
 					handler = new NodeCleanupHandler();
-				}
+				break;
+			}
+			default : {
+				handler = new NodeCleanupHandler();
+			}
 		}
 
 		handler.setCleanupPreferences(cleanupPreferences);
@@ -68,20 +66,50 @@ class HTMLCleanupHandlerFactory {
 		return handler;
 	}
 
+	/**
+	 * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
+	 * way for expedency. Should be evolved in future to depend on "nestedContext".
+	 */
+
 	private boolean isJSPTag(Node node) {
+
+		final String JSP_CLOSE = "JSP_CLOSE"; //$NON-NLS-1$
+		// final String JSP_COMMENT_CLOSE = "JSP_COMMENT_CLOSE"; //$NON-NLS-1$
+
+		// final String JSP_COMMENT_OPEN = "JSP_COMMENT_OPEN"; //$NON-NLS-1$
+		// final String JSP_COMMENT_TEXT = "JSP_COMMENT_TEXT"; //$NON-NLS-1$
+
+		final String JSP_CONTENT = "JSP_CONTENT"; //$NON-NLS-1$
+		final String JSP_DECLARATION_OPEN = "JSP_DECLARATION_OPEN"; //$NON-NLS-1$
+		final String JSP_DIRECTIVE_CLOSE = "JSP_DIRECTIVE_CLOSE"; //$NON-NLS-1$
+		final String JSP_DIRECTIVE_NAME = "JSP_DIRECTIVE_NAME"; //$NON-NLS-1$
+
+		final String JSP_DIRECTIVE_OPEN = "JSP_DIRECTIVE_OPEN"; //$NON-NLS-1$
+		final String JSP_EXPRESSION_OPEN = "JSP_EXPRESSION_OPEN"; //$NON-NLS-1$
+
+		// final String JSP_ROOT_TAG_NAME = "JSP_ROOT_TAG_NAME"; //$NON-NLS-1$
+
+		final String JSP_SCRIPTLET_OPEN = "JSP_SCRIPTLET_OPEN"; //$NON-NLS-1$
+
 		boolean result = false;
 
 		if (node instanceof XMLNode) {
 			IStructuredDocumentRegion flatNode = ((XMLNode) node).getFirstStructuredDocumentRegion();
-			// in some cases, the nodes exists, but hasn't been associated with
-			// a flatnode yet (the screen updates can be initiated on a different thread,
-			// so the request for a flatnode can come in before the node is fully formed.
-			// if the flatnode is null, we'll just allow the defaults to apply.
-			// (html adapter in this case).
+			// in some cases, the nodes exists, but hasn't been associated
+			// with
+			// a flatnode yet (the screen updates can be initiated on a
+			// different thread,
+			// so the request for a flatnode can come in before the node is
+			// fully formed.
+			// if the flatnode is null, we'll just allow the defaults to
+			// apply.
 			if (flatNode != null) {
 				String flatNodeType = flatNode.getType();
-				if ((flatNodeType == XMLJSPRegionContexts.JSP_CONTENT) || (flatNodeType == XMLJSPRegionContexts.JSP_EXPRESSION_OPEN) || (flatNodeType == XMLJSPRegionContexts.JSP_SCRIPTLET_OPEN) || (flatNodeType == XMLJSPRegionContexts.JSP_DECLARATION_OPEN) || (flatNodeType == XMLJSPRegionContexts.JSP_DIRECTIVE_CLOSE) || (flatNodeType == XMLJSPRegionContexts.JSP_DIRECTIVE_NAME) || (flatNodeType == XMLJSPRegionContexts.JSP_DIRECTIVE_OPEN) || (flatNodeType == XMLJSPRegionContexts.JSP_CLOSE)) {
-					result = true;
+				// should not be null, but just to be sure
+				if (flatNodeType != null) {
+					if ((flatNodeType.equals(JSP_CONTENT)) || (flatNodeType.equals(JSP_EXPRESSION_OPEN)) || (flatNodeType.equals(JSP_SCRIPTLET_OPEN)) || (flatNodeType.equals(JSP_DECLARATION_OPEN)) || (flatNodeType.equals(JSP_DIRECTIVE_CLOSE)) || (flatNodeType.equals(JSP_DIRECTIVE_NAME)) || (flatNodeType.equals(JSP_DIRECTIVE_OPEN)) || (flatNodeType.equals(JSP_CLOSE))) {
+						result = true;
+					}
 				}
 			}
 		}

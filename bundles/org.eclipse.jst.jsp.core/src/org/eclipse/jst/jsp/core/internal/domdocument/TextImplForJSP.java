@@ -9,14 +9,20 @@
  *     IBM Corporation - initial API and implementation
  *     
  *******************************************************************************/
-package org.eclipse.jst.jsp.core;
 
-/**
- * @deprecated moved to internal package because only this plugin should be
- * using this Logger class.
- * 
- * will be removed in M4
- */
-public class Logger extends org.eclipse.jst.jsp.core.internal.Logger {
-	// see org.eclipse.jst.jsp.core.internal.Logger
+package org.eclipse.jst.jsp.core.internal.domdocument;
+
+import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
+import org.eclipse.wst.xml.core.internal.document.TextImpl;
+import org.w3c.dom.Document;
+
+public class TextImplForJSP extends TextImpl {
+	protected boolean isNotNestedContent(String regionType) {
+		boolean result = regionType != XMLJSPRegionContexts.JSP_CONTENT;
+		return result;
+	}
+	protected void setOwnerDocument(Document ownerDocument) {
+		super.setOwnerDocument(ownerDocument);
+	}
+
 }

@@ -47,7 +47,7 @@ public interface XMLAttr extends XMLNode, Attr {
 	/**
 	 * Check if Attr has JSP in value
 	 */
-	boolean hasJSPValue();
+	boolean hasNestedValue();
 
 	/**
 	 * Check if Attr has only name but not equal sign nor value

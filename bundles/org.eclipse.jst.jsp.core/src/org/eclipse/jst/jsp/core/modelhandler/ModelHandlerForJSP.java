@@ -16,12 +16,12 @@ import org.eclipse.jst.jsp.core.encoding.JSPDocumentLoader;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.document.DocumentLoaderForJSP;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
+import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
 import org.eclipse.wst.sse.core.ModelLoader;
 import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.modelhandler.AbstractModelHandler;
 import org.eclipse.wst.sse.core.parser.BlockMarker;
-import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 
 public class ModelHandlerForJSP extends AbstractModelHandler {
 

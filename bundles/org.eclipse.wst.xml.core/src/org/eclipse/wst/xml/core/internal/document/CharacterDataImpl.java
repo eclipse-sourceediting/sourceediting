@@ -15,7 +15,6 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.w3c.dom.CharacterData;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
@@ -24,7 +23,7 @@ import org.w3c.dom.Node;
 /**
  * CharacterDataImpl class
  */
-public abstract class CharacterDataImpl extends NodeImpl implements XMLJSPRegionContexts, CharacterData {
+public abstract class CharacterDataImpl extends NodeImpl implements CharacterData {
 
 	private String data = null;
 

@@ -15,7 +15,6 @@ package org.eclipse.wst.xml.core.internal.parser;
 import org.eclipse.wst.sse.core.internal.text.StructuredDocumentReParser;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredTextReParser;
-import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 
 
@@ -114,7 +113,7 @@ public class XMLStructuredDocumentReParser extends StructuredDocumentReParser {
 	protected boolean isPartOfBlockRegion(IStructuredDocumentRegion flatNode) {
 		boolean result = false;
 		String type = flatNode.getType();
-		result = (type == XMLRegionContext.BLOCK_TEXT || type == XMLJSPRegionContexts.JSP_CONTENT);
+		result = (type == XMLRegionContext.BLOCK_TEXT);
 		return result;
 	}
 

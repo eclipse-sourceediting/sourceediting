@@ -27,7 +27,6 @@ import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xml.core.document.XMLElement;
 import org.eclipse.wst.xml.core.document.XMLNode;
-import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.w3c.dom.Document;
@@ -38,6 +37,20 @@ import org.w3c.dom.Node;
  * @author pavery
  */
 public class XMLContentAssistUtilities extends ContentAssistUtils {
+	
+    /**
+     * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
+     * way for expedency. Should be evolved in future to depend on "nestedContext".
+     */
+	private class XMLJSPRegionContexts {
+		private static final String JSP_CLOSE = "JSP_CLOSE"; //$NON-NLS-1$
+		private static final String JSP_DECLARATION_OPEN = "JSP_DECLARATION_OPEN"; //$NON-NLS-1$
+		private static final String JSP_SCRIPTLET_OPEN = "JSP_SCRIPTLET_OPEN"; //$NON-NLS-1$
+		private static final String JSP_EXPRESSION_OPEN = "JSP_EXPRESSION_OPEN"; //$NON-NLS-1$
+
+	}
+
+
 	public static final String CONTENT = "Content"; //$NON-NLS-1$
 	public static final String CONTENT_SCRIPT_TYPE = "Content-Script-Type"; //$NON-NLS-1$
 	public static final String HEAD = "HEAD"; //$NON-NLS-1$
@@ -112,10 +125,12 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 						documentPosition, 0, proposedText.length() + 1, XMLEditorPluginImageHelper.getInstance().getImage(imagePath), //$NON-NLS-1$
 						SSEUIPlugin.getResourceString("%15concat", (new Object[]{proposedText})), //$NON-NLS-1$ = "End with '{0}>'"
 						null, null, XMLRelevanceConstants.R_END_TAG);
-		} else if (!hasEndTag && isJSPTag) {
+		}
+		else if (!hasEndTag && isJSPTag) {
 
 			// create appropriate close tag text
-			String proposedText = proposedText = "%"; // ResourceHandler wants
+			String proposedText = proposedText = "%"; // ResourceHandler
+			// wants
 			// text w/out ending '>'
 			// //$NON-NLS-1$
 			String viewerText = viewer.getTextWidget().getText();
@@ -221,12 +236,12 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 		Node html = null;
 		Node head = null;
 		Node child = null;
-		//----------------------------------------------------------------------
+		// ----------------------------------------------------------------------
 		// (pa) 20021217
 		// cmvc defect 235554
 		// performance enhancement: using child.getNextSibling() rather than
 		// nodeList(item) for O(n) vs. O(n*n)
-		//----------------------------------------------------------------------
+		// ----------------------------------------------------------------------
 
 		for (child = doc.getFirstChild(); child != null; child = child.getNextSibling()) {
 			if (child.getNodeType() != Node.ELEMENT_NODE)
@@ -236,16 +251,16 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 			else if (child.getNodeName().equalsIgnoreCase(HTML))
 				html = child;
 		}
-		//		NodeList children = doc.getChildNodes();
-		//		for(int i = 0; i < children.getLength(); i++) {
-		//			child = children.item(i);
-		//			if(child.getNodeType() != Node.ELEMENT_NODE)
-		//				continue;
-		//			if(child.getNodeName().equalsIgnoreCase(META))
-		//				metas.add(child);
-		//			else if(child.getNodeName().equalsIgnoreCase(HTML))
-		//				html = child;
-		//		}
+		// NodeList children = doc.getChildNodes();
+		// for(int i = 0; i < children.getLength(); i++) {
+		// child = children.item(i);
+		// if(child.getNodeType() != Node.ELEMENT_NODE)
+		// continue;
+		// if(child.getNodeName().equalsIgnoreCase(META))
+		// metas.add(child);
+		// else if(child.getNodeName().equalsIgnoreCase(HTML))
+		// html = child;
+		// }
 
 		// check for META tags under HEAD
 		if (html != null) {
@@ -255,14 +270,14 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 				if (child.getNodeName().equalsIgnoreCase(HEAD))
 					head = child;
 			}
-			//			children = html.getChildNodes();
-			//			for(int i = 0; i < children.getLength() && head == null; i++) {
-			//				child = children.item(i);
-			//				if(child.getNodeType() != Node.ELEMENT_NODE)
-			//					continue;
-			//				if(child.getNodeName().equalsIgnoreCase(HEAD))
-			//					head = child;
-			//			}
+			// children = html.getChildNodes();
+			// for(int i = 0; i < children.getLength() && head == null; i++) {
+			// child = children.item(i);
+			// if(child.getNodeType() != Node.ELEMENT_NODE)
+			// continue;
+			// if(child.getNodeName().equalsIgnoreCase(HEAD))
+			// head = child;
+			// }
 		}
 
 		if (head != null) {
@@ -272,14 +287,14 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 				if (child.getNodeName().equalsIgnoreCase(META))
 					metas.add(child);
 			}
-			//			children = head.getChildNodes();
-			//			for(int i = 0 ; i < children.getLength(); i++) {
-			//				child = children.item(i);
-			//				if(child.getNodeType() != Node.ELEMENT_NODE)
-			//					continue;
-			//				if(child.getNodeName().equalsIgnoreCase(META))
-			//					metas.add(child);
-			//			}
+			// children = head.getChildNodes();
+			// for(int i = 0 ; i < children.getLength(); i++) {
+			// child = children.item(i);
+			// if(child.getNodeType() != Node.ELEMENT_NODE)
+			// continue;
+			// if(child.getNodeName().equalsIgnoreCase(META))
+			// metas.add(child);
+			// }
 		}
 
 		return getMetaScriptType(metas);
@@ -299,7 +314,8 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 			for (int j = 0; j < attributes.getLength(); j++) {
 				if (attributes.item(j).getNodeName().equalsIgnoreCase(HTTP_EQUIV)) {
 					httpEquiv = attributes.item(j).getNodeValue().equalsIgnoreCase(CONTENT_SCRIPT_TYPE);
-				} else if (attributes.item(j).getNodeName().equalsIgnoreCase(CONTENT)) {
+				}
+				else if (attributes.item(j).getNodeName().equalsIgnoreCase(CONTENT)) {
 					contentScriptType = attributes.item(j).getNodeValue();
 				}
 			}
@@ -356,8 +372,9 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 	/**
 	 * Tells you if the flatnode is the %> delimiter
 	 * 
-	 * @param fn
-	 * @return boolean
+	 * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
+	 * way for expedency. Should be evolved in future to depend on
+	 * "nestedContext".
 	 */
 	public static boolean isJSPCloseDelimiter(IStructuredDocumentRegion fn) {
 		if (fn == null)
@@ -365,17 +382,23 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 		return isJSPCloseDelimiter(fn.getType());
 	}
 
+	/**
+	 * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
+	 * way for expedency. Should be evolved in future to depend on
+	 * "nestedContext".
+	 */
 	public static boolean isJSPCloseDelimiter(String type) {
 		if (type == null)
 			return false;
-		return (type == XMLJSPRegionContexts.JSP_CLOSE || type == XMLRegionContext.XML_TAG_CLOSE);
+		return (type.equals(XMLJSPRegionContexts.JSP_CLOSE) || type.equals(XMLRegionContext.XML_TAG_CLOSE));
 	}
 
 	/**
 	 * Tells you if the flatnode is the JSP region <%%>, <%=%>, <%!%>
 	 * 
-	 * @param fn
-	 * @return boolean
+	 * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
+	 * way for expedency. Should be evolved in future to depend on
+	 * "nestedContext".
 	 */
 	public static boolean isJSPDelimiter(IStructuredDocumentRegion fn) {
 		boolean isDelimiter = false;
@@ -386,6 +409,11 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 		return isDelimiter;
 	}
 
+	/**
+	 * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
+	 * way for expedency. Should be evolved in future to depend on
+	 * "nestedContext".
+	 */
 	public static boolean isJSPDelimiter(String type) {
 		if (type == null)
 			return false;
@@ -393,10 +421,9 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 	}
 
 	/**
-	 * Tells you if the flatnode is <%, <%=, or <%!
-	 * 
-	 * @param fn
-	 * @return boolean
+	 * Tells you if the flatnode is <%, <%=, or <%! ISSUE: this is a bit of
+	 * hidden JSP knowledge that was implemented this way for expedency.
+	 * Should be evolved in future to depend on "nestedContext".
 	 */
 	public static boolean isJSPOpenDelimiter(IStructuredDocumentRegion fn) {
 		if (fn == null)
@@ -404,18 +431,24 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 		return isJSPOpenDelimiter(fn.getType());
 	}
 
+    /**
+	 * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
+	 * way for expedency. Should be evolved in future to depend on
+	 * "nestedContext".
+	 */
 	public static boolean isJSPOpenDelimiter(String type) {
 		if (type == null)
 			return false;
-		return (type == XMLJSPRegionContexts.JSP_SCRIPTLET_OPEN || type == XMLJSPRegionContexts.JSP_DECLARATION_OPEN || type == XMLJSPRegionContexts.JSP_EXPRESSION_OPEN);
+		return (type.equals(XMLJSPRegionContexts.JSP_SCRIPTLET_OPEN) || type.equals(XMLJSPRegionContexts.JSP_DECLARATION_OPEN) || type.equals(XMLJSPRegionContexts.JSP_EXPRESSION_OPEN));
 	}
 
 	/**
 	 * Tells you if the flatnode is the <jsp:scriptlet>, <jsp:expression>, or
 	 * <jsp:declaration>tag
 	 * 
-	 * @param fn
-	 * @return boolean
+	 * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
+	 * way for expedency. Should be evolved in future to depend on
+	 * "nestedContext".
 	 */
 	public static boolean isXMLJSPDelimiter(IStructuredDocumentRegion fn) {
 		boolean isDelimiter = false;

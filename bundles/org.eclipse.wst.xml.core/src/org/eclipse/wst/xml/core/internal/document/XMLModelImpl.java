@@ -46,7 +46,7 @@ import org.w3c.dom.Node;
 public class XMLModelImpl extends AbstractStructuredModel implements IStructuredDocumentListener, XMLModel, DOMImplementation {
 	private static String TRACE_PARSER_MANAGEMENT_EXCEPTION = "parserManagement"; //$NON-NLS-1$
 	private Object active = null;
-	protected DocumentImpl document = null;
+	private DocumentImpl document = null;
 	private XMLGenerator generator = null;
 	private XMLModelNotifier notifier = null;
 	private XMLModelParser parser = null;
@@ -417,18 +417,26 @@ public class XMLModelImpl extends AbstractStructuredModel implements IStructured
 	 */
 	private XMLModelParser getModelParser() {
 		if (this.parser == null) {
-			this.parser = new XMLModelParser(this);
+			this.parser = createModelParser();
 		}
 		return this.parser;
+	}
+
+	protected XMLModelParser createModelParser() {
+		return new XMLModelParser(this);
 	}
 
 	/**
 	 */
 	private XMLModelUpdater getModelUpdater() {
 		if (this.updater == null) {
-			this.updater = new XMLModelUpdater(this);
+			this.updater = createModelUpdater();
 		}
 		return this.updater;
+	}
+
+	protected XMLModelUpdater createModelUpdater() {
+		return new XMLModelUpdater(this);
 	}
 
 	/**

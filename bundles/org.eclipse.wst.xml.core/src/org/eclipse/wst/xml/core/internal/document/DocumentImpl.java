@@ -370,9 +370,7 @@ public class DocumentImpl extends NodeContainer implements XMLDocument {
 			throw new DOMException(DOMException.INVALID_CHARACTER_ERR, new String());
 		}
 
-		ElementImpl element = new ElementImpl();
-		element.setOwnerDocument(this);
-		element.setTagName(tagName);
+		ElementImpl element = (ElementImpl) createElement(tagName);
 		element.setNamespaceURI(uri);
 		return element;
 	}

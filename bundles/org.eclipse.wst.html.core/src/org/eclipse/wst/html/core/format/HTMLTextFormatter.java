@@ -19,7 +19,6 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.xml.core.document.XMLElement;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.core.document.XMLText;
-import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -45,7 +44,7 @@ public class HTMLTextFormatter extends HTMLFormatter {
 		IStructuredDocumentRegion flatNode = text.getFirstStructuredDocumentRegion();
 		if (flatNode != null) {
 			String type = flatNode.getType();
-			if (type == XMLJSPRegionContexts.JSP_CONTENT || type == XMLRegionContext.BLOCK_TEXT)
+			if (isUnparsedRegion(type))
 				return false;
 		}
 
@@ -57,6 +56,24 @@ public class HTMLTextFormatter extends HTMLFormatter {
 		}
 
 		return canFormatChild(parent);
+	}
+
+	private boolean isUnparsedRegion(String type) {
+		boolean result = isNestedScannedRegion(type) || isBlockScannedRegion(type);
+		return result;
+	}
+
+	private boolean isBlockScannedRegion(String type) {
+		return type == XMLRegionContext.BLOCK_TEXT;
+	}
+
+    /**
+     * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
+     * way for expedency. Should be evolved in future to depend on "nestedContext".
+     */
+	private boolean isNestedScannedRegion(String type) {
+		final String JSP_CONTENT = "JSP_CONTENT"; //$NON-NLS-1$
+		return type.equals(JSP_CONTENT);
 	}
 
 	/**

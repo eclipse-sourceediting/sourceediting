@@ -114,7 +114,8 @@ public class TextImpl extends CharacterDataImpl implements XMLText {
 		if (flatNode instanceof StructuredDocumentRegionContainer) {
 			StructuredDocumentRegionContainer container = (StructuredDocumentRegionContainer) flatNode;
 			container.appendStructuredDocumentRegion(newStructuredDocumentRegion);
-		} else {
+		}
+		else {
 			StructuredDocumentRegionContainer container = new StructuredDocumentRegionContainer();
 			container.appendStructuredDocumentRegion(flatNode);
 			container.appendStructuredDocumentRegion(newStructuredDocumentRegion);
@@ -582,11 +583,16 @@ public class TextImpl extends CharacterDataImpl implements XMLText {
 		}
 
 		String regionType = StructuredDocumentRegionUtil.getFirstRegionType(flatNode);
-		if (regionType != XMLRegionContext.XML_CONTENT && regionType != JSP_CONTENT && regionType != XMLRegionContext.XML_ENTITY_REFERENCE && regionType != XMLRegionContext.XML_CHAR_REFERENCE && regionType != XMLRegionContext.BLOCK_TEXT && regionType != XMLRegionContext.WHITE_SPACE) {
+		if (regionType != XMLRegionContext.XML_CONTENT && isNotNestedContent(regionType) && regionType != XMLRegionContext.XML_ENTITY_REFERENCE && regionType != XMLRegionContext.XML_CHAR_REFERENCE && regionType != XMLRegionContext.BLOCK_TEXT && regionType != XMLRegionContext.WHITE_SPACE) {
 			return true;
 		}
 
 		return false;
+	}
+
+	protected boolean isNotNestedContent(String regionType) {
+		boolean result = true;
+		return result;
 	}
 
 	/**
@@ -772,7 +778,8 @@ public class TextImpl extends CharacterDataImpl implements XMLText {
 				if (newStructuredDocumentRegion instanceof StructuredDocumentRegionProxy) {
 					// proxy must not be nested
 					setStructuredDocumentRegion(newStructuredDocumentRegion);
-				} else {
+				}
+				else {
 					proxy.setStructuredDocumentRegion(newStructuredDocumentRegion);
 				}
 				return oldStructuredDocumentRegion;
@@ -798,7 +805,8 @@ public class TextImpl extends CharacterDataImpl implements XMLText {
 						if (newStructuredDocumentRegion instanceof StructuredDocumentRegionProxy) {
 							// proxy must not be nested
 							container.replaceStructuredDocumentRegion(newStructuredDocumentRegion, i);
-						} else {
+						}
+						else {
 							proxy.setStructuredDocumentRegion(newStructuredDocumentRegion);
 						}
 						return oldStructuredDocumentRegion;

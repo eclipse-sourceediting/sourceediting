@@ -7,16 +7,28 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.internal.tasks;
+
+package org.eclipse.jst.jsp.core.internal.domdocument;
 
 import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.xml.core.builder.delegates.XMLTaskTagSeeker;
+import org.eclipse.wst.xml.core.internal.document.XMLModelImpl;
+import org.eclipse.wst.xml.core.internal.document.XMLModelUpdater;
 
-public class JSPTaskTagSeeker extends XMLTaskTagSeeker {
-	protected boolean isCommentRegion(IStructuredDocumentRegion region, ITextRegion textRegion) {
-		return super.isCommentRegion(region, textRegion) || textRegion.getType().equals(XMLJSPRegionContexts.JSP_COMMENT_TEXT);
+
+public class NestDOMModelUpdater extends XMLModelUpdater {
+
+	/**
+	 * @param model
+	 */
+	public NestDOMModelUpdater(XMLModelImpl model) {
+		super(model);
 	}
+
+	protected boolean isNestedTagClose(String regionType) {
+		boolean result = regionType == XMLJSPRegionContexts.JSP_CLOSE || regionType == XMLJSPRegionContexts.JSP_DIRECTIVE_CLOSE;
+		return result;
+	}
+
 }
