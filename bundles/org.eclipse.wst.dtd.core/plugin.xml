@@ -13,18 +13,18 @@
 		</library>
 	</runtime>
 	<requires>
-		<import plugin="org.eclipse.core.runtime.compatibility" />
-		<import plugin="org.eclipse.ui.ide" />
-		<import plugin="org.eclipse.ui.views" />
-		<import plugin="org.eclipse.jface.text" />
-		<import plugin="org.eclipse.ui.workbench.texteditor" />
-		<import plugin="org.eclipse.ui.editors" />
-		<import plugin="org.eclipse.wst.sse.core" />
-		<import plugin="org.eclipse.wst.xml.core" />
-		<import plugin="org.eclipse.core.resources" />
-		<import plugin="org.eclipse.core.runtime" />
-		<import plugin="org.eclipse.wst.encoding" />
-		<import plugin="org.eclipse.ui" />
+		<import plugin="org.eclipse.core.runtime.compatibility" version="3.0.0" match="equivalent" />
+		<import plugin="org.eclipse.ui.ide" version="3.0.0" match="equivalent"/>
+		<import plugin="org.eclipse.ui.views" version="3.0.0" match="equivalent"/>
+		<import plugin="org.eclipse.jface.text" version="3.0.0" match="equivalent"/>
+		<import plugin="org.eclipse.ui.workbench.texteditor" version="3.0.0" match="equivalent"/>
+		<import plugin="org.eclipse.ui.editors" version="3.0.0" match="equivalent"/>
+		<import plugin="org.eclipse.wst.sse.core" version="1.0.0" match="equivalent"/>
+		<import plugin="org.eclipse.wst.xml.core" version="1.0.0" match="equivalent"/>
+		<import plugin="org.eclipse.core.resources" version="3.0.0" match="equivalent"/>
+		<import plugin="org.eclipse.core.runtime" version="3.0.0" match="equivalent"/>
+		<import plugin="org.eclipse.wst.encoding" version="1.0.0" match="equivalent"/>
+		<import plugin="org.eclipse.ui" version="3.0.0" match="equivalent"/>
 	</requires>
 
 
