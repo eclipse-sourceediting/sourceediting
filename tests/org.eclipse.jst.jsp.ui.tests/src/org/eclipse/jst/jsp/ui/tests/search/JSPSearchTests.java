@@ -150,14 +150,14 @@ public class JSPSearchTests extends TestCase implements IJavaSearchConstants {
 
 	public void testIndexWorkspace() {
 		JSPSearchSupport support = JSPSearchSupport.getInstance();
-		SearchDocument doc = JSPSearchSupport.getInstance().getSearchDocument("/judo/SearchTestJSP.java");
-		assertNotNull("couldn't retrieve:'/judo/SearchTestJSP.java'", doc);
+		SearchDocument doc = JSPSearchSupport.getInstance().getSearchDocument("/judo/searchTestJSP.java");
+		assertNotNull("couldn't retrieve:'/judo/searchTestJSP.java'", doc);
 
-		doc = support.getSearchDocument("/judo/SearchTestJSP2.java");
-		assertNotNull("couldn't retrieve:'/judo/SearchTestJSP2.java'", doc);
+		doc = support.getSearchDocument("/judo/searchTestJSP2.java");
+		assertNotNull("couldn't retrieve:'/judo/searchTestJSP2.java'", doc);
 
-		doc = support.getSearchDocument("/judo/SearchTestJSP3.java");
-		assertNotNull("couldn't retrieve:'/judo/SearchTestJSP3.java'", doc);
+		doc = support.getSearchDocument("/judo/searchTestJSP3.java");
+		assertNotNull("couldn't retrieve:'/judo/searchTestJSP3.java'", doc);
 	}
 
 	public void testSearchField() {
