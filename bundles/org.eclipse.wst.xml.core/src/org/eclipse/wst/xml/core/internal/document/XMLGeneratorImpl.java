@@ -14,13 +14,13 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 
-import org.eclipse.wst.xml.core.XMLCharEntity;
+import org.eclipse.wst.xml.core.IXMLCharEntity;
 import org.eclipse.wst.xml.core.commentelement.impl.CommentElementRegistry;
-import org.eclipse.wst.xml.core.document.DOMAttr;
-import org.eclipse.wst.xml.core.document.DOMDocument;
-import org.eclipse.wst.xml.core.document.DOMElement;
+import org.eclipse.wst.xml.core.document.IDOMAttr;
+import org.eclipse.wst.xml.core.document.IDOMDocument;
+import org.eclipse.wst.xml.core.document.IDOMElement;
 import org.eclipse.wst.xml.core.document.ISourceGenerator;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.w3c.dom.Attr;
@@ -106,7 +106,7 @@ public class XMLGeneratorImpl implements ISourceGenerator {
 				return (attrName + JSPTag.TAG_CLOSE);
 			}
 		}
-		if (((DOMAttr) attr).isGlobalAttr() && CMNodeUtil.getAttributeDeclaration(attr) != null) {
+		if (((IDOMAttr) attr).isGlobalAttr() && CMNodeUtil.getAttributeDeclaration(attr) != null) {
 			switch (getAttrNameCase(attr)) {
 				case DocumentTypeAdapter.UPPER_CASE :
 					attrName = attrName.toUpperCase();
@@ -135,7 +135,7 @@ public class XMLGeneratorImpl implements ISourceGenerator {
 			return null;
 		String name = attr.getName();
 		SourceValidator validator = new SourceValidator(attr);
-		String value = validator.convertSource(((DOMNode) attr).getValueSource());
+		String value = validator.convertSource(((IDOMNode) attr).getValueSource());
 		if (value == null || value.length() == 0) {
 			if (name != null && name.startsWith(JSPTag.TAG_OPEN))
 				return null;
@@ -495,7 +495,7 @@ public class XMLGeneratorImpl implements ISourceGenerator {
 
 		if (impl.isJSPTag()) {
 			// check if JSP content type and JSP Document
-			DOMDocument document = (DOMDocument) element.getOwnerDocument();
+			IDOMDocument document = (IDOMDocument) element.getOwnerDocument();
 			if (document != null && document.isJSPType()) {
 				if (document.isJSPDocument() && !impl.hasChildNodes()) {
 					impl.setJSPTag(false);
@@ -571,7 +571,7 @@ public class XMLGeneratorImpl implements ISourceGenerator {
 	public String generateTagName(Element element) {
 		if (element == null)
 			return null;
-		DOMElement xe = (DOMElement) element;
+		IDOMElement xe = (IDOMElement) element;
 		String tagName = element.getTagName();
 		if (tagName == null)
 			return null;
@@ -693,13 +693,13 @@ public class XMLGeneratorImpl implements ISourceGenerator {
 	private String getCharName(char c) {
 		switch (c) {
 			case '<' :
-				return XMLCharEntity.LT_NAME;
+				return IXMLCharEntity.LT_NAME;
 			case '>' :
-				return XMLCharEntity.GT_NAME;
+				return IXMLCharEntity.GT_NAME;
 			case '&' :
-				return XMLCharEntity.AMP_NAME;
+				return IXMLCharEntity.AMP_NAME;
 			case '"' :
-				return XMLCharEntity.QUOT_NAME;
+				return IXMLCharEntity.QUOT_NAME;
 		}
 		return null;
 	}

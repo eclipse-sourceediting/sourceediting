@@ -22,7 +22,7 @@ import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.format.FormatProcessorXML;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
@@ -44,10 +44,10 @@ public class SurroundWithNewElementQuickAssistProposal extends RenameInFileQuick
 
 			// surround the node if no selection
 			if (startTagOffset == endTagOffset) {
-				DOMNode cursorNode = (DOMNode) ContentAssistUtils.getNodeAt((StructuredTextViewer) viewer, offset);
+				IDOMNode cursorNode = (IDOMNode) ContentAssistUtils.getNodeAt((StructuredTextViewer) viewer, offset);
 				// use parent node if text node is empty
 				if (cursorNode.getNodeType() == Node.TEXT_NODE && cursorNode.getNodeValue().trim().length() == 0)
-					cursorNode = (DOMNode) cursorNode.getParentNode();
+					cursorNode = (IDOMNode) cursorNode.getParentNode();
 
 				startTagOffset = cursorNode.getStartOffset();
 				endTagOffset = cursorNode.getEndOffset();
@@ -62,7 +62,7 @@ public class SurroundWithNewElementQuickAssistProposal extends RenameInFileQuick
 			multiTextEdit.apply(viewer.getDocument());
 
 			// get new element node
-			DOMNode newElementNode = (DOMNode) ContentAssistUtils.getNodeAt((StructuredTextViewer) viewer, startTagOffset);
+			IDOMNode newElementNode = (IDOMNode) ContentAssistUtils.getNodeAt((StructuredTextViewer) viewer, startTagOffset);
 
 			// format new element
 			IStructuredFormatProcessor formatProcessor = new FormatProcessorXML();

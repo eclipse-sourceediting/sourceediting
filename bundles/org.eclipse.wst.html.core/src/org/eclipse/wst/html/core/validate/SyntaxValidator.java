@@ -18,9 +18,9 @@ import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.xml.core.document.DOMDocument;
-import org.eclipse.wst.xml.core.document.DOMElement;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMDocument;
+import org.eclipse.wst.xml.core.document.IDOMElement;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.document.InvalidCharacterException;
 import org.eclipse.wst.xml.core.internal.document.SourceValidator;
@@ -70,7 +70,7 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 			super();
 		}
 
-		public DOMElement target = null;
+		public IDOMElement target = null;
 		public CMElementDeclaration decl = null;
 		public IStructuredDocumentRegion startTag = null;
 		public IStructuredDocumentRegion endTag = null;
@@ -85,11 +85,11 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 
 		if (node.getNodeType() != Node.ELEMENT_NODE)
 			return;
-		if (!(node instanceof DOMElement))
+		if (!(node instanceof IDOMElement))
 			return;
 
 		ElementInfo info = new ElementInfo();
-		info.target = (DOMElement) node;
+		info.target = (IDOMElement) node;
 
 		// gather information to validate from target at once.
 		getInfo(info);
@@ -112,9 +112,9 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 		info.hasEndTag = (info.endTag != null);
 
 		Document doc = info.target.getOwnerDocument();
-		if (!(doc instanceof DOMDocument))
+		if (!(doc instanceof IDOMDocument))
 			return;
-		String typeid = ((DOMDocument) doc).getDocumentTypeId();
+		String typeid = ((IDOMDocument) doc).getDocumentTypeId();
 		if (typeid != null) {
 			HTMLDocumentTypeEntry entry = HTMLDocumentTypeRegistry.getInstance().getEntry(typeid);
 			info.isXHTML = (entry != null && entry.isXMLType());
@@ -298,7 +298,7 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 			switch (child.getNodeType()) {
 				case Node.TEXT_NODE :
 					{
-						DOMNode text = (DOMNode) child;
+						IDOMNode text = (IDOMNode) child;
 						int charOffset = validateTextSource(text);
 						if (charOffset >= 0) {
 							charOffset += text.getStartOffset();
@@ -313,7 +313,7 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 				case Node.PROCESSING_INSTRUCTION_NODE :
 				case Node.CDATA_SECTION_NODE :
 					{
-						DOMNode tag = (DOMNode) child;
+						IDOMNode tag = (IDOMNode) child;
 						if (!tag.isClosed()) {
 							Segment errorSeg = FMUtil.getSegment(tag, FMUtil.SEG_WHOLE_TAG);
 							if (errorSeg != null)
@@ -327,7 +327,7 @@ class SyntaxValidator extends PrimeValidator implements ErrorState {
 		}
 	}
 
-	private int validateTextSource(DOMNode text) {
+	private int validateTextSource(IDOMNode text) {
 		try {
 			SourceValidator validator = new SourceValidator(text);
 			validator.validateSource(text.getSource());

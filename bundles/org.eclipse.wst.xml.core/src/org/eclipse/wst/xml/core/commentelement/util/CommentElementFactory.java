@@ -16,7 +16,7 @@ package org.eclipse.wst.xml.core.commentelement.util;
 
 import org.eclipse.wst.xml.core.commentelement.CommentElementAdapter;
 import org.eclipse.wst.xml.core.commentelement.CommentElementHandler;
-import org.eclipse.wst.xml.core.document.DOMElement;
+import org.eclipse.wst.xml.core.document.IDOMElement;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -48,7 +48,7 @@ public class CommentElementFactory {
 	}
 
 	public Element create(String name, int nodeType) {
-		DOMElement element = (DOMElement) fDocument.createElement(name);
+		IDOMElement element = (IDOMElement) fDocument.createElement(name);
 		if (element == null)
 			return null;
 		element.setCommentTag(true);

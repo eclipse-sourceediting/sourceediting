@@ -24,7 +24,7 @@ import org.w3c.dom.Text;
  * 
  */
 
-public interface DOMText extends DOMNode, Text {
+public interface IDOMText extends IDOMNode, Text {
 
 	/**
 	 * Appends the content of the text node
@@ -37,10 +37,12 @@ public interface DOMText extends DOMNode, Text {
 	void insertText(Text text, int offset);
 
 	/**
+	 * Returns true if is not valid.
 	 */
 	boolean isInvalid();
 
 	/**
+	 * Returns true if is entirely white space
 	 */
 	boolean isWhitespace();
 }

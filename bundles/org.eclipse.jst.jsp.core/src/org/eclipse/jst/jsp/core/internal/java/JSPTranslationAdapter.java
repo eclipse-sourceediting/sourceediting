@@ -27,8 +27,8 @@ import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.xml.core.document.DOMModel;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMModel;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 
 /**
  * An adapter for getting a JSPTranslation of the document.
@@ -48,11 +48,11 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 	private IDocument fJavaDocument = null;
 	private JSPTranslationExtension fJSPTranslation = null;
 	private boolean fDocumentIsDirty = true;
-	private DOMModel fXMLModel;
+	private IDOMModel fXMLModel;
 	private JSPTranslator fTranslator = null;
 	private NullProgressMonitor fTranslationMonitor = null;
 
-	public JSPTranslationAdapter(DOMModel xmlModel) {
+	public JSPTranslationAdapter(IDOMModel xmlModel) {
 		setXMLModel(xmlModel);
 		initializeJavaPlugins();
 	}
@@ -139,7 +139,7 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 		if (fJSPTranslation == null || fDocumentIsDirty) {
 			JSPTranslator translator = null;
 			if (getXMLModel() != null && getXMLModel().getIndexedRegion(0) != null) {
-				translator = getTranslator((DOMNode) getXMLModel().getIndexedRegion(0));
+				translator = getTranslator((IDOMNode) getXMLModel().getIndexedRegion(0));
 				translator.translate();
 				StringBuffer javaContents = translator.getTranslation();
 				fJavaDocument = new Document(javaContents.toString());
@@ -173,7 +173,7 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 	 *            the first node of the JSP document to be translated
 	 * @return the JSPTranslator for this adapter (creates if null)
 	 */
-	private JSPTranslator getTranslator(DOMNode xmlNode) {
+	private JSPTranslator getTranslator(IDOMNode xmlNode) {
 		if (fTranslator == null) {
 			fTranslationMonitor = new NullProgressMonitor();
 			fTranslator = new JSPTranslator();
@@ -189,7 +189,7 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 	 * 
 	 * @param xmlModel
 	 */
-	public void setXMLModel(DOMModel xmlModel) {
+	public void setXMLModel(IDOMModel xmlModel) {
 		fXMLModel = xmlModel;
 		setDocument(fXMLModel.getStructuredDocument());
 	}
@@ -197,7 +197,7 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 	/**
 	 * @return the XMLModel for this adapter.
 	 */
-	public DOMModel getXMLModel() {
+	public IDOMModel getXMLModel() {
 		return fXMLModel;
 	}
 

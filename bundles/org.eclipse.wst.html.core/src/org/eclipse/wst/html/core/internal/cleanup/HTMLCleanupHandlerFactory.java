@@ -15,7 +15,7 @@ package org.eclipse.wst.html.core.internal.cleanup;
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupHandler;
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.w3c.dom.Node;
 
@@ -93,8 +93,8 @@ class HTMLCleanupHandlerFactory {
 
 		boolean result = false;
 
-		if (node instanceof DOMNode) {
-			IStructuredDocumentRegion flatNode = ((DOMNode) node).getFirstStructuredDocumentRegion();
+		if (node instanceof IDOMNode) {
+			IStructuredDocumentRegion flatNode = ((IDOMNode) node).getFirstStructuredDocumentRegion();
 			// in some cases, the nodes exists, but hasn't been associated
 			// with
 			// a flatnode yet (the screen updates can be initiated on a
@@ -122,9 +122,9 @@ class HTMLCleanupHandlerFactory {
 			return false;
 		if (node.getNodeType() != Node.TEXT_NODE)
 			return false;
-		if (!(node instanceof DOMNode))
+		if (!(node instanceof IDOMNode))
 			return false;
-		IStructuredDocumentRegion flatNode = ((DOMNode) node).getFirstStructuredDocumentRegion();
+		IStructuredDocumentRegion flatNode = ((IDOMNode) node).getFirstStructuredDocumentRegion();
 		if (flatNode == null)
 			return false;
 		if (flatNode.getType() != XMLRegionContext.BLOCK_TEXT)

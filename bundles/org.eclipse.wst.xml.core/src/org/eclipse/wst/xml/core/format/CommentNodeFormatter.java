@@ -14,7 +14,7 @@ package org.eclipse.wst.xml.core.format;
 
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatContraints;
 import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.w3c.dom.Node;
 
 
@@ -68,7 +68,7 @@ public class CommentNodeFormatter extends NodeFormatter {
 		return result;
 	}
 
-	protected void formatNode(DOMNode node, IStructuredFormatContraints formatContraints) {
+	protected void formatNode(IDOMNode node, IStructuredFormatContraints formatContraints) {
 		if (node != null) {
 			// lineDelimiterFound means multi line comment
 			String nodeValue = node.getNodeValue();

@@ -19,8 +19,8 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
-import org.eclipse.wst.xml.core.document.DOMModel;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMModel;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.format.FormatProcessorXML;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.eclipse.wst.xsd.ui.internal.graph.editparts.ComplexTypeDefinitionEditPart;
@@ -187,9 +187,9 @@ public class CreateElementAction extends Action
     
   protected void formatChild(Element child)
   {
-    if (child instanceof DOMNode)
+    if (child instanceof IDOMNode)
     {
-      DOMModel model = ((DOMNode)child).getModel();
+      IDOMModel model = ((IDOMNode)child).getModel();
       try
       {
         // tell the model that we are about to make a big model change

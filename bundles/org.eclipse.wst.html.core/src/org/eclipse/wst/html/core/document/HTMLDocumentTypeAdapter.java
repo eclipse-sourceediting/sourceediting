@@ -24,9 +24,9 @@ import org.eclipse.wst.sse.ui.contentproperties.ContentSettings;
 import org.eclipse.wst.sse.ui.contentproperties.ContentSettingsChangeSubject;
 import org.eclipse.wst.sse.ui.contentproperties.IContentSettings;
 import org.eclipse.wst.sse.ui.contentproperties.IContentSettingsListener;
-import org.eclipse.wst.xml.core.document.DOMDocument;
-import org.eclipse.wst.xml.core.document.DOMDocumentType;
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMDocument;
+import org.eclipse.wst.xml.core.document.IDOMDocumentType;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.document.DocumentTypeAdapter;
 import org.eclipse.wst.xml.core.internal.document.DocumentTypeAdapterImpl;
 import org.w3c.dom.DOMImplementation;
@@ -54,7 +54,7 @@ public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements 
 
 	/**
 	 */
-	protected HTMLDocumentTypeAdapter(DOMDocument document, HTMLDocumentTypeAdapterFactory factory) {
+	protected HTMLDocumentTypeAdapter(IDOMDocument document, HTMLDocumentTypeAdapterFactory factory) {
 		super(document);
 
 		this.factory = factory;
@@ -70,10 +70,10 @@ public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements 
 	public void contentSettingsChanged(IResource resource) {
 		if (resource == null)
 			return;
-		DOMDocument document = getDocument();
+		IDOMDocument document = getDocument();
 		if (document == null)
 			return;
-		DOMModel model = document.getModel();
+		IDOMModel model = document.getModel();
 		if (model == null)
 			return;
 		IFile file = getFile(model);
@@ -90,10 +90,10 @@ public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements 
 	/**
 	 */
 	private void documentTypeChanged() {
-		DOMDocument document = getDocument();
+		IDOMDocument document = getDocument();
 		if (document == null)
 			return; // error
-		DOMModel model = document.getModel();
+		IDOMModel model = document.getModel();
 		if (model == null)
 			return; // error
 
@@ -186,8 +186,8 @@ public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements 
 
 	/**
 	 */
-	private DOMDocumentType findDocumentType(DOMDocument document) {
-		DOMDocumentType documentType = (DOMDocumentType) document.getDoctype();
+	private IDOMDocumentType findDocumentType(IDOMDocument document) {
+		IDOMDocumentType documentType = (IDOMDocumentType) document.getDoctype();
 		if (documentType != null && documentType.getExistingAdapter(DocumentTypeAdapter.class) == null) {
 			// watch future changes
 			documentType.addAdapter(this);
@@ -284,7 +284,7 @@ public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements 
 	public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
 		if (notifier == null)
 			return;
-		if (notifier instanceof DOMDocument) {
+		if (notifier instanceof IDOMDocument) {
 			if (eventType != INodeNotifier.STRUCTURE_CHANGED)
 				return;
 		} else {

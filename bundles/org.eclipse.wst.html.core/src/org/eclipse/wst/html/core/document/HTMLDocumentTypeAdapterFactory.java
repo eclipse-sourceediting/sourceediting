@@ -18,7 +18,7 @@ import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
-import org.eclipse.wst.xml.core.document.DOMDocument;
+import org.eclipse.wst.xml.core.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.document.DocumentTypeAdapter;
 
 /**
@@ -58,9 +58,9 @@ public class HTMLDocumentTypeAdapterFactory implements IAdapterFactory, Preferen
 		DocumentTypeAdapter adapter = (DocumentTypeAdapter)notifier.getExistingAdapter(DocumentTypeAdapter.class);
 		if (adapter != null)
 			return adapter;
-		if (!(notifier instanceof DOMDocument))
+		if (!(notifier instanceof IDOMDocument))
 			return null;
-		adapter = new HTMLDocumentTypeAdapter((DOMDocument) notifier, this);
+		adapter = new HTMLDocumentTypeAdapter((IDOMDocument) notifier, this);
 		notifier.addAdapter(adapter);
 		
 		fAdapter = adapter;

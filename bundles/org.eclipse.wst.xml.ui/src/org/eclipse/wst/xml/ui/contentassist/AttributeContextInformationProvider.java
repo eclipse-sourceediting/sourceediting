@@ -24,7 +24,7 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
@@ -77,7 +77,7 @@ class AttributeContextInformationProvider {
 		if (!canProposeInfo(sdRegion))
 			return EMPTY_CONTEXT_INFO;
 
-		DOMNode node = fModelUtil.getXMLNode(offset);
+		IDOMNode node = fModelUtil.getXMLNode(offset);
 		if (node != null) {
 			switch (node.getNodeType()) {
 				case Node.ELEMENT_NODE :
@@ -111,7 +111,7 @@ class AttributeContextInformationProvider {
 	 * @param node
 	 
 	 */
-	private IContextInformation[] getInfoForElement(DOMNode node) {
+	private IContextInformation[] getInfoForElement(IDOMNode node) {
 		IContextInformation[] results = EMPTY_CONTEXT_INFO;
 		CMElementDeclaration decl = fModelUtil.getModelQuery().getCMElementDeclaration((Element) node);
 		if (decl != null) {
@@ -155,7 +155,7 @@ class AttributeContextInformationProvider {
 	 * @param node
 	 
 	 */
-	 IContextInformation[] getInfoForText(DOMNode node) {
+	 IContextInformation[] getInfoForText(IDOMNode node) {
 		Node parent = node.getParentNode();
 		String contextString = node.getNodeName();
 		StringBuffer info = new StringBuffer(" "); //$NON-NLS-1$

@@ -24,7 +24,7 @@ import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.format.AbstractStructuredFormatProcessor;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatPreferences;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.w3c.dom.Node;
 
 
@@ -54,7 +54,7 @@ public class FormatProcessorCSS extends AbstractStructuredFormatProcessor {
 				formatUtil.replaceSource(doc.getModel(), startOffset, endOffset - startOffset, buf.toString());
 			}
 		}
-		else if (structuredModel instanceof DOMModel) {
+		else if (structuredModel instanceof IDOMModel) {
 			List cssnodes = formatUtil.collectCSSNodes(structuredModel, start, length);
 			if (cssnodes != null && !cssnodes.isEmpty()) {
 				ICSSModel model = null;

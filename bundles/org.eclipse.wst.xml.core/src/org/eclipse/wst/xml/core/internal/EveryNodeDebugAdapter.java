@@ -27,7 +27,7 @@ import org.eclipse.wst.sse.core.events.RegionsReplacedEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentRegionsReplacedEvent;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.util.Debug;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 
 
 /**
@@ -240,8 +240,8 @@ public class EveryNodeDebugAdapter implements IDebugAdapter {
 	 *      int, java.lang.Object, java.lang.Object, java.lang.Object, int)
 	 */
 	public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
-		if (notifier instanceof DOMNode) {
-			setModel(((DOMNode) notifier).getModel());
+		if (notifier instanceof IDOMNode) {
+			setModel(((IDOMNode) notifier).getModel());
 		}
 		Debug.println("notifier: " + notifier + " " + INodeNotifier.EVENT_TYPE_STRINGS[eventType] + " changedFeature: " + changedFeature + " oldValue: " + oldValue + " newValue: " + newValue + " pos: " + pos); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 

@@ -24,7 +24,7 @@ import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.ui.internal.contentassist.IResourceDependentProcessor;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
@@ -103,9 +103,9 @@ public class JSPDummyContentAssistProcessor extends AbstractContentAssistProcess
 	}
 
 	/**
-	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#addEntityProposals(com.ibm.sed.structured.contentassist.xml.ContentAssistRequest, int, com.ibm.sed.structuredDocument.ITextRegion, com.ibm.sed.model.xml.DOMNode)
+	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#addEntityProposals(com.ibm.sed.structured.contentassist.xml.ContentAssistRequest, int, com.ibm.sed.structuredDocument.ITextRegion, com.ibm.sed.model.xml.IDOMNode)
 	 */
-	protected void addEntityProposals(ContentAssistRequest contentAssistRequest, int documentPosition, ITextRegion completionRegion, DOMNode treeNode) {
+	protected void addEntityProposals(ContentAssistRequest contentAssistRequest, int documentPosition, ITextRegion completionRegion, IDOMNode treeNode) {
 		super.addEntityProposals(contentAssistRequest, documentPosition, completionRegion, treeNode);
 	}
 
@@ -159,9 +159,9 @@ public class JSPDummyContentAssistProcessor extends AbstractContentAssistProcess
 	}
 
 	/**
-	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#attributeInList(com.ibm.sed.model.xml.DOMNode, org.w3c.dom.Node, org.eclipse.wst.xml.core.internal.contentmodel.CMNode)
+	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#attributeInList(com.ibm.sed.model.xml.IDOMNode, org.w3c.dom.Node, org.eclipse.wst.xml.core.internal.contentmodel.CMNode)
 	 */
-	protected boolean attributeInList(DOMNode node, Node parent, CMNode cmnode) {
+	protected boolean attributeInList(IDOMNode node, Node parent, CMNode cmnode) {
 		return super.attributeInList(node, parent, cmnode);
 	}
 
@@ -173,23 +173,23 @@ public class JSPDummyContentAssistProcessor extends AbstractContentAssistProcess
 	}
 
 	/**
-	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#computeAttributeProposals(int, java.lang.String, com.ibm.sed.structuredDocument.ITextRegion, com.ibm.sed.model.xml.DOMNode, com.ibm.sed.model.xml.DOMNode)
+	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#computeAttributeProposals(int, java.lang.String, com.ibm.sed.structuredDocument.ITextRegion, com.ibm.sed.model.xml.IDOMNode, com.ibm.sed.model.xml.IDOMNode)
 	 */
-	protected ContentAssistRequest computeAttributeProposals(int documentPosition, String matchString, ITextRegion completionRegion, DOMNode nodeAtOffset, DOMNode node) {
+	protected ContentAssistRequest computeAttributeProposals(int documentPosition, String matchString, ITextRegion completionRegion, IDOMNode nodeAtOffset, IDOMNode node) {
 		return super.computeAttributeProposals(documentPosition, matchString, completionRegion, nodeAtOffset, node);
 	}
 
 	/**
-	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#computeAttributeValueProposals(int, java.lang.String, com.ibm.sed.structuredDocument.ITextRegion, com.ibm.sed.model.xml.DOMNode, com.ibm.sed.model.xml.DOMNode)
+	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#computeAttributeValueProposals(int, java.lang.String, com.ibm.sed.structuredDocument.ITextRegion, com.ibm.sed.model.xml.IDOMNode, com.ibm.sed.model.xml.IDOMNode)
 	 */
-	protected ContentAssistRequest computeAttributeValueProposals(int documentPosition, String matchString, ITextRegion completionRegion, DOMNode nodeAtOffset, DOMNode node) {
+	protected ContentAssistRequest computeAttributeValueProposals(int documentPosition, String matchString, ITextRegion completionRegion, IDOMNode nodeAtOffset, IDOMNode node) {
 		return super.computeAttributeValueProposals(documentPosition, matchString, completionRegion, nodeAtOffset, node);
 	}
 
 	/**
-	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#computeCompletionProposals(int, java.lang.String, com.ibm.sed.structuredDocument.ITextRegion, com.ibm.sed.model.xml.DOMNode, com.ibm.sed.model.xml.DOMNode)
+	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#computeCompletionProposals(int, java.lang.String, com.ibm.sed.structuredDocument.ITextRegion, com.ibm.sed.model.xml.IDOMNode, com.ibm.sed.model.xml.IDOMNode)
 	 */
-	protected ContentAssistRequest computeCompletionProposals(int documentPosition, String matchString, ITextRegion completionRegion, DOMNode treeNode, DOMNode xmlnode) {
+	protected ContentAssistRequest computeCompletionProposals(int documentPosition, String matchString, ITextRegion completionRegion, IDOMNode treeNode, IDOMNode xmlnode) {
 		return super.computeCompletionProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
 	}
 
@@ -201,9 +201,9 @@ public class JSPDummyContentAssistProcessor extends AbstractContentAssistProcess
 	}
 
 	/**
-	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#computeContentProposals(int, java.lang.String, com.ibm.sed.structuredDocument.ITextRegion, com.ibm.sed.model.xml.DOMNode, com.ibm.sed.model.xml.DOMNode)
+	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#computeContentProposals(int, java.lang.String, com.ibm.sed.structuredDocument.ITextRegion, com.ibm.sed.model.xml.IDOMNode, com.ibm.sed.model.xml.IDOMNode)
 	 */
-	protected ContentAssistRequest computeContentProposals(int documentPosition, String matchString, ITextRegion completionRegion, DOMNode nodeAtOffset, DOMNode node) {
+	protected ContentAssistRequest computeContentProposals(int documentPosition, String matchString, ITextRegion completionRegion, IDOMNode nodeAtOffset, IDOMNode node) {
 		return super.computeContentProposals(documentPosition, matchString, completionRegion, nodeAtOffset, node);
 	}
 
@@ -215,51 +215,51 @@ public class JSPDummyContentAssistProcessor extends AbstractContentAssistProcess
 	}
 
 	/**
-	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#computeEndTagOpenProposals(int, java.lang.String, com.ibm.sed.structuredDocument.ITextRegion, com.ibm.sed.model.xml.DOMNode, com.ibm.sed.model.xml.DOMNode)
+	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#computeEndTagOpenProposals(int, java.lang.String, com.ibm.sed.structuredDocument.ITextRegion, com.ibm.sed.model.xml.IDOMNode, com.ibm.sed.model.xml.IDOMNode)
 	 */
-	protected ContentAssistRequest computeEndTagOpenProposals(int documentPosition, String matchString, ITextRegion completionRegion, DOMNode nodeAtOffset, DOMNode node) {
+	protected ContentAssistRequest computeEndTagOpenProposals(int documentPosition, String matchString, ITextRegion completionRegion, IDOMNode nodeAtOffset, IDOMNode node) {
 		return super.computeEndTagOpenProposals(documentPosition, matchString, completionRegion, nodeAtOffset, node);
 	}
 
 	/**
-	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#computeEntityReferenceProposals(int, com.ibm.sed.structuredDocument.ITextRegion, com.ibm.sed.model.xml.DOMNode)
+	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#computeEntityReferenceProposals(int, com.ibm.sed.structuredDocument.ITextRegion, com.ibm.sed.model.xml.IDOMNode)
 	 */
-	protected ICompletionProposal[] computeEntityReferenceProposals(int documentPosition, ITextRegion completionRegion, DOMNode treeNode) {
+	protected ICompletionProposal[] computeEntityReferenceProposals(int documentPosition, ITextRegion completionRegion, IDOMNode treeNode) {
 		return super.computeEntityReferenceProposals(documentPosition, completionRegion, treeNode);
 	}
 
 	/**
-	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#computeEqualsProposals(int, java.lang.String, com.ibm.sed.structuredDocument.ITextRegion, com.ibm.sed.model.xml.DOMNode, com.ibm.sed.model.xml.DOMNode)
+	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#computeEqualsProposals(int, java.lang.String, com.ibm.sed.structuredDocument.ITextRegion, com.ibm.sed.model.xml.IDOMNode, com.ibm.sed.model.xml.IDOMNode)
 	 */
-	protected ContentAssistRequest computeEqualsProposals(int documentPosition, String matchString, ITextRegion completionRegion, DOMNode nodeAtOffset, DOMNode node) {
+	protected ContentAssistRequest computeEqualsProposals(int documentPosition, String matchString, ITextRegion completionRegion, IDOMNode nodeAtOffset, IDOMNode node) {
 		return super.computeEqualsProposals(documentPosition, matchString, completionRegion, nodeAtOffset, node);
 	}
 
 	/**
-	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#computeStartDocumentProposals(int, java.lang.String, com.ibm.sed.structuredDocument.ITextRegion, com.ibm.sed.model.xml.DOMNode, com.ibm.sed.model.xml.DOMNode)
+	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#computeStartDocumentProposals(int, java.lang.String, com.ibm.sed.structuredDocument.ITextRegion, com.ibm.sed.model.xml.IDOMNode, com.ibm.sed.model.xml.IDOMNode)
 	 */
-	protected ContentAssistRequest computeStartDocumentProposals(int documentPosition, String matchString, ITextRegion completionRegion, DOMNode nodeAtOffset, DOMNode node) {
+	protected ContentAssistRequest computeStartDocumentProposals(int documentPosition, String matchString, ITextRegion completionRegion, IDOMNode nodeAtOffset, IDOMNode node) {
 		return super.computeStartDocumentProposals(documentPosition, matchString, completionRegion, nodeAtOffset, node);
 	}
 
 	/**
-	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#computeTagCloseProposals(int, java.lang.String, com.ibm.sed.structuredDocument.ITextRegion, com.ibm.sed.model.xml.DOMNode, com.ibm.sed.model.xml.DOMNode)
+	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#computeTagCloseProposals(int, java.lang.String, com.ibm.sed.structuredDocument.ITextRegion, com.ibm.sed.model.xml.IDOMNode, com.ibm.sed.model.xml.IDOMNode)
 	 */
-	protected ContentAssistRequest computeTagCloseProposals(int documentPosition, String matchString, ITextRegion completionRegion, DOMNode nodeAtOffset, DOMNode node) {
+	protected ContentAssistRequest computeTagCloseProposals(int documentPosition, String matchString, ITextRegion completionRegion, IDOMNode nodeAtOffset, IDOMNode node) {
 		return super.computeTagCloseProposals(documentPosition, matchString, completionRegion, nodeAtOffset, node);
 	}
 
 	/**
-	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#computeTagNameProposals(int, java.lang.String, com.ibm.sed.structuredDocument.ITextRegion, com.ibm.sed.model.xml.DOMNode, com.ibm.sed.model.xml.DOMNode)
+	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#computeTagNameProposals(int, java.lang.String, com.ibm.sed.structuredDocument.ITextRegion, com.ibm.sed.model.xml.IDOMNode, com.ibm.sed.model.xml.IDOMNode)
 	 */
-	protected ContentAssistRequest computeTagNameProposals(int documentPosition, String matchString, ITextRegion completionRegion, DOMNode nodeAtOffset, DOMNode node) {
+	protected ContentAssistRequest computeTagNameProposals(int documentPosition, String matchString, ITextRegion completionRegion, IDOMNode nodeAtOffset, IDOMNode node) {
 		return super.computeTagNameProposals(documentPosition, matchString, completionRegion, nodeAtOffset, node);
 	}
 
 	/**
-	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#computeTagOpenProposals(int, java.lang.String, com.ibm.sed.structuredDocument.ITextRegion, com.ibm.sed.model.xml.DOMNode, com.ibm.sed.model.xml.DOMNode)
+	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#computeTagOpenProposals(int, java.lang.String, com.ibm.sed.structuredDocument.ITextRegion, com.ibm.sed.model.xml.IDOMNode, com.ibm.sed.model.xml.IDOMNode)
 	 */
-	protected ContentAssistRequest computeTagOpenProposals(int documentPosition, String matchString, ITextRegion completionRegion, DOMNode nodeAtOffset, DOMNode node) {
+	protected ContentAssistRequest computeTagOpenProposals(int documentPosition, String matchString, ITextRegion completionRegion, IDOMNode nodeAtOffset, IDOMNode node) {
 		return super.computeTagOpenProposals(documentPosition, matchString, completionRegion, nodeAtOffset, node);
 	}
 

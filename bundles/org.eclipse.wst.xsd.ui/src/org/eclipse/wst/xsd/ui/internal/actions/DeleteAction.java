@@ -17,7 +17,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.actions.SelectionListenerAction;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.refactor.delete.BaseGlobalCleanup;
@@ -110,7 +110,7 @@ public class DeleteAction extends SelectionListenerAction
         xsdSchema = ((XSDConcreteComponent)obj).getSchema();
         
         node = ((XSDConcreteComponent)obj).getElement();
-        if (node instanceof DOMNode)
+        if (node instanceof IDOMNode)
         {
           parentXSDComponent = ((XSDConcreteComponent)obj).getContainer();
         
@@ -124,7 +124,7 @@ public class DeleteAction extends SelectionListenerAction
       }
       if (!XSDDOMHelper.inputEquals(node, XSDConstants.SCHEMA_ELEMENT_TAG, false))
       {
-        if (node instanceof DOMNode)
+        if (node instanceof IDOMNode)
         {
           if (doc == null)
           {

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.graph;
 
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.w3c.dom.Element;
               
@@ -25,7 +25,7 @@ public class XSDGraphUtil
       Element element = ((XSDConcreteComponent)model).getElement();
       // this test ensures that we don't attempt to select an element for an external schema
       //
-      if (element instanceof DOMNode)
+      if (element instanceof IDOMNode)
       {
          result = true;
       }

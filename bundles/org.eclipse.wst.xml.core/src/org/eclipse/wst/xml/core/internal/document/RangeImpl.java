@@ -14,7 +14,7 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Node;
@@ -175,7 +175,7 @@ public class RangeImpl implements Range {
 		}
 
 		// get node offsets
-		DOMNode node1 = null;
+		IDOMNode node1 = null;
 		if (container1.hasChildNodes()) {
 			Node child = container1.getFirstChild();
 			for (int i = 0; i < offset1; i++) {
@@ -184,13 +184,13 @@ public class RangeImpl implements Range {
 					break;
 				child = next;
 			}
-			node1 = (DOMNode) child;
+			node1 = (IDOMNode) child;
 			offset1 = 0;
 		} else {
-			node1 = (DOMNode) container1;
+			node1 = (IDOMNode) container1;
 		}
 		int nodeOffset1 = node1.getStartOffset();
-		DOMNode node2 = null;
+		IDOMNode node2 = null;
 		if (container2.hasChildNodes()) {
 			Node child = container2.getFirstChild();
 			for (int i = 0; i < offset2; i++) {
@@ -199,10 +199,10 @@ public class RangeImpl implements Range {
 					break;
 				child = next;
 			}
-			node2 = (DOMNode) child;
+			node2 = (IDOMNode) child;
 			offset2 = 0;
 		} else {
-			node2 = (DOMNode) container1;
+			node2 = (IDOMNode) container1;
 		}
 		int nodeOffset2 = node2.getStartOffset();
 

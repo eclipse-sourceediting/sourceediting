@@ -15,9 +15,9 @@ package org.eclipse.wst.html.core.format;
 import org.eclipse.wst.html.core.HTMLCMProperties;
 import org.eclipse.wst.html.core.HTMLFormatContraints;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.xml.core.document.DOMElement;
-import org.eclipse.wst.xml.core.document.DOMNode;
-import org.eclipse.wst.xml.core.document.DOMText;
+import org.eclipse.wst.xml.core.document.IDOMElement;
+import org.eclipse.wst.xml.core.document.IDOMNode;
+import org.eclipse.wst.xml.core.document.IDOMText;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.w3c.dom.Element;
@@ -37,7 +37,7 @@ public class HTMLTextFormatter extends HTMLFormatter {
 
 	/**
 	 */
-	private boolean canFormatText(DOMText text) {
+	private boolean canFormatText(IDOMText text) {
 		if (text == null)
 			return false;
 
@@ -50,7 +50,7 @@ public class HTMLTextFormatter extends HTMLFormatter {
 
 		Node parent = text.getParentNode();
 		if (parent != null && parent.getNodeType() == Node.ELEMENT_NODE) {
-			DOMElement element = (DOMElement) parent;
+			IDOMElement element = (IDOMElement) parent;
 			if (!element.isGlobalTag() && !text.isWhitespace())
 				return false;
 		}
@@ -78,7 +78,7 @@ public class HTMLTextFormatter extends HTMLFormatter {
 
 	/**
 	 */
-	private boolean canRemoveHeadingSpaces(DOMNode node) {
+	private boolean canRemoveHeadingSpaces(IDOMNode node) {
 		if (node == null)
 			return false;
 		if (node.getPreviousSibling() != null)
@@ -96,7 +96,7 @@ public class HTMLTextFormatter extends HTMLFormatter {
 
 	/**
 	 */
-	private boolean canRemoveTailingSpaces(DOMNode node) {
+	private boolean canRemoveTailingSpaces(IDOMNode node) {
 		if (node == null)
 			return false;
 		if (node.getNextSibling() != null)
@@ -114,20 +114,20 @@ public class HTMLTextFormatter extends HTMLFormatter {
 
 	/**
 	 */
-	protected void formatNode(DOMNode node, HTMLFormatContraints contraints) {
+	protected void formatNode(IDOMNode node, HTMLFormatContraints contraints) {
 		formatText(node, contraints, FORMAT_ALL); // full format
 	}
 
 	/**
 	 */
-	protected void formatText(DOMNode node, HTMLFormatContraints contraints, int mode) {
+	protected void formatText(IDOMNode node, HTMLFormatContraints contraints, int mode) {
 		if (node == null)
 			return;
 		Node parent = node.getParentNode();
 		if (parent == null)
 			return;
 
-		DOMText text = (DOMText) node;
+		IDOMText text = (IDOMText) node;
 		String source = text.getSource();
 
 		if (!canFormatText(text)) {
@@ -142,7 +142,7 @@ public class HTMLTextFormatter extends HTMLFormatter {
 		if (mode == FORMAT_HEAD) {
 			Node next = node.getNextSibling();
 			while (next != null && next.getNodeType() == Node.TEXT_NODE) {
-				DOMText nextText = (DOMText) next;
+				IDOMText nextText = (IDOMText) next;
 				length += (nextText.getEndOffset() - nextText.getStartOffset());
 				String nextSource = nextText.getSource();
 				if (nextSource != null && nextSource.length() > 0) {
@@ -157,7 +157,7 @@ public class HTMLTextFormatter extends HTMLFormatter {
 		else if (mode == FORMAT_TAIL) {
 			Node prev = node.getPreviousSibling();
 			while (prev != null && prev.getNodeType() == Node.TEXT_NODE) {
-				DOMText prevText = (DOMText) prev;
+				IDOMText prevText = (IDOMText) prev;
 				offset = prevText.getStartOffset();
 				length += (prevText.getEndOffset() - offset);
 				String prevSource = prevText.getSource();
@@ -180,7 +180,7 @@ public class HTMLTextFormatter extends HTMLFormatter {
 			boolean removeSpaces = false;
 			if (parent.getNodeType() == Node.ELEMENT_NODE) {
 				// check if tags are omitted
-				DOMNode element = (DOMNode) parent;
+				IDOMNode element = (IDOMNode) parent;
 				if (node.getPreviousSibling() == null && element.getStartStructuredDocumentRegion() == null) {
 					removeSpaces = true;
 				}

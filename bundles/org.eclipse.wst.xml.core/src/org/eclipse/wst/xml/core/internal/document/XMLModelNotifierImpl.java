@@ -17,7 +17,7 @@ import java.util.Vector;
 
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.util.Debug;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -95,7 +95,7 @@ public class XMLModelNotifierImpl implements XMLModelNotifier {
 			attr = newAttr;
 			newValue = newAttr.getValue();
 		}
-		DOMNode notifier = (DOMNode) element;
+		IDOMNode notifier = (IDOMNode) element;
 		int offset = notifier.getStartOffset();
 		notify(notifier, INodeNotifier.CHANGE, attr, oldValue, newValue, offset);
 		propertyChanged(notifier);
@@ -149,7 +149,7 @@ public class XMLModelNotifierImpl implements XMLModelNotifier {
 	public void childReplaced(Node parentNode, Node newChild, Node oldChild) {
 		if (parentNode == null)
 			return;
-		DOMNode notifier = (DOMNode) parentNode;
+		IDOMNode notifier = (IDOMNode) parentNode;
 		int type = INodeNotifier.CHANGE;
 		if (newChild == null)
 			type = INodeNotifier.REMOVE;
@@ -163,7 +163,7 @@ public class XMLModelNotifierImpl implements XMLModelNotifier {
 	public void editableChanged(Node node) {
 		if (node == null)
 			return;
-		DOMNode notifier = (DOMNode) node;
+		IDOMNode notifier = (IDOMNode) node;
 		int offset = notifier.getStartOffset();
 		notify(notifier, INodeNotifier.CHANGE, null, null, null, offset);
 		propertyChanged(notifier);
@@ -192,7 +192,7 @@ public class XMLModelNotifierImpl implements XMLModelNotifier {
 	public void endTagChanged(Element element) {
 		if (element == null)
 			return;
-		DOMNode notifier = (DOMNode) element;
+		IDOMNode notifier = (IDOMNode) element;
 		int offset = notifier.getStartOffset();
 		notify(notifier, INodeNotifier.CHANGE, null, null, null, offset);
 		propertyChanged(element);
@@ -400,7 +400,7 @@ public class XMLModelNotifierImpl implements XMLModelNotifier {
 	public void startTagChanged(Element element) {
 		if (element == null)
 			return;
-		DOMNode notifier = (DOMNode) element;
+		IDOMNode notifier = (IDOMNode) element;
 		int offset = notifier.getStartOffset();
 		notify(notifier, INodeNotifier.CHANGE, null, null, null, offset);
 		propertyChanged(element);
@@ -435,10 +435,10 @@ public class XMLModelNotifierImpl implements XMLModelNotifier {
 	public void valueChanged(Node node) {
 		if (node == null)
 			return;
-		DOMNode notifier = null;
+		IDOMNode notifier = null;
 		if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
 			Attr attr = (Attr) node;
-			notifier = (DOMNode) attr.getOwnerElement();
+			notifier = (IDOMNode) attr.getOwnerElement();
 			// TODO_dmw: experimental: changed 06/29/2004 to send "strucuture
 			// changed" even for attribute value changes
 			// there are pros and cons to considering attribute value
@@ -452,12 +452,12 @@ public class XMLModelNotifierImpl implements XMLModelNotifier {
 		} else {
 			// note: we do not send structured changed event for content
 			// changed
-			notifier = (DOMNode) node;
+			notifier = (IDOMNode) node;
 			String value = node.getNodeValue();
 			int offset = notifier.getStartOffset();
 			notify(notifier, INodeNotifier.CHANGE, null, null, value, offset);
 			if (node.getNodeType() != Node.ELEMENT_NODE) {
-				DOMNode parent = (DOMNode) node.getParentNode();
+				IDOMNode parent = (IDOMNode) node.getParentNode();
 				if (parent != null) {
 					notify(parent, INodeNotifier.CONTENT_CHANGED, node, null, value, offset);
 				}

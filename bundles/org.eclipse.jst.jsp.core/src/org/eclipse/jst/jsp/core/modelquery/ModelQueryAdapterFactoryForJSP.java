@@ -23,7 +23,7 @@ import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.util.Debug;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
 import org.eclipse.wst.xml.core.internal.modelquery.XMLCatalogIdResolver;
@@ -64,8 +64,8 @@ public class ModelQueryAdapterFactoryForJSP extends AbstractAdapterFactory imple
 		if (Debug.displayInfo)
 			System.out.println("-----------------------ModelQueryAdapterFactoryForJSP.createAdapter" + target); //$NON-NLS-1$
 		if (modelQueryAdapterImpl == null) {
-			if (target instanceof DOMNode) {
-				DOMNode xmlNode = (DOMNode) target;
+			if (target instanceof IDOMNode) {
+				IDOMNode xmlNode = (IDOMNode) target;
 				IStructuredModel model = stateNotifier = xmlNode.getModel();
 				String baseLocation = model.getBaseLocation();
 				// continue only if the location is known

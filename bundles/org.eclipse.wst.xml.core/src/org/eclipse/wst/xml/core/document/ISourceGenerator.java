@@ -24,21 +24,31 @@ import org.w3c.dom.Node;
 import org.w3c.dom.ProcessingInstruction;
 import org.w3c.dom.Text;
 
+/**
+ * 
+ * ISourceGenerator allows DOM models to generate source appropriate for their
+ * parameter, relative to the model that provides the source generator.
+ */
+
 public interface ISourceGenerator {
 
 	/**
+	 * Generate attribute name.
 	 */
 	String generateAttrName(Attr attr);
 
 	/**
+	 * generateAttrValue
 	 */
 	String generateAttrValue(Attr attr);
 
 	/**
+	 * generateAttrValue
 	 */
 	String generateAttrValue(Attr attr, char quote);
 
 	/**
+	 * generateAttrValue
 	 */
 	String generateAttrValue(String value, char quote);
 
@@ -60,6 +70,7 @@ public interface ISourceGenerator {
 	String generateChild(Node parentNode);
 
 	/**
+	 * generateCloseTag
 	 */
 	String generateCloseTag(Node node);
 
@@ -136,6 +147,7 @@ public interface ISourceGenerator {
 	String generateStartTag(Element element);
 
 	/**
+	 * Generate tag name.
 	 */
 	String generateTagName(Element element);
 
@@ -149,6 +161,7 @@ public interface ISourceGenerator {
 	String generateText(Text text);
 
 	/**
+	 * generate text data
 	 */
 	String generateTextData(Text text, String data);
 }

@@ -50,7 +50,7 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.Assert;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -137,8 +137,8 @@ public class CSSModelImpl extends AbstractStructuredModel implements ICSSModel, 
 		getStyleNotifier().beginRecording();
 
 		Node node = getOwnerDOMNode();
-		if (node != null && node instanceof DOMNode) {
-			IStructuredModel model = ((DOMNode) node).getModel();
+		if (node != null && node instanceof IDOMNode) {
+			IStructuredModel model = ((IDOMNode) node).getModel();
 			if (model != null) {
 				model.beginRecording(requester, label, description);
 				return;
@@ -279,8 +279,8 @@ public class CSSModelImpl extends AbstractStructuredModel implements ICSSModel, 
 	 */
 	public void endRecording(Object requester) {
 		Node node = getOwnerDOMNode();
-		if (node != null && node instanceof DOMNode) {
-			IStructuredModel model = ((DOMNode) node).getModel();
+		if (node != null && node instanceof IDOMNode) {
+			IStructuredModel model = ((IDOMNode) node).getModel();
 			if (model != null) {
 				model.endRecording(requester);
 				return;

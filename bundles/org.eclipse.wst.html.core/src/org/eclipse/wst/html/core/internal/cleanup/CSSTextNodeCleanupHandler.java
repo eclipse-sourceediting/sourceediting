@@ -19,8 +19,8 @@ import org.eclipse.wst.css.core.format.CSSSourceFormatter;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.xml.core.document.DOMModel;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMModel;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.w3c.dom.Node;
 
 // nakamori_TODO: check and remove
@@ -30,7 +30,7 @@ public class CSSTextNodeCleanupHandler extends AbstractNodeCleanupHandler {
 	public Node cleanup(Node node) {
 		if (node == null)
 			return node;
-		DOMModel model = ((DOMNode) node).getModel();
+		IDOMModel model = ((IDOMNode) node).getModel();
 		if (model == null)
 			return node;
 		IStructuredDocument structuredDocument = model.getStructuredDocument();
@@ -41,10 +41,10 @@ public class CSSTextNodeCleanupHandler extends AbstractNodeCleanupHandler {
 		if (content == null)
 			return node;
 
-		int offset = ((DOMNode) node).getStartOffset();
-		int length = ((DOMNode) node).getEndOffset() - offset;
+		int offset = ((IDOMNode) node).getStartOffset();
+		int length = ((IDOMNode) node).getEndOffset() - offset;
 		replaceSource(model, this, offset, length, content);
-		return (DOMNode) model.getIndexedRegion(offset);
+		return (IDOMNode) model.getIndexedRegion(offset);
 	}
 
 	/**

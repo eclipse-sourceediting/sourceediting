@@ -14,7 +14,7 @@ package org.eclipse.wst.xml.core.internal.cleanup;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
-import org.eclipse.wst.xml.core.XMLPreferenceNames;
+import org.eclipse.wst.xml.core.IXMLPreferenceNames;
 
 /**
  * @deprecated renamed to StructuredCleanupPreferences
@@ -131,12 +131,12 @@ public class XMLCleanupPreferencesImpl {
 	protected void updateOptions() {
 
 		Preferences p = getPreferences();
-		fTagNameCase = p.getInt(XMLPreferenceNames.CLEANUP_TAG_NAME_CASE);
-		fAttrNameCase = p.getInt(XMLPreferenceNames.CLEANUP_ATTR_NAME_CASE);
-		fInsertMissingTags = p.getBoolean(XMLPreferenceNames.INSERT_MISSING_TAGS);
-		fQuoteAttrValues = p.getBoolean(XMLPreferenceNames.QUOTE_ATTR_VALUES);
-		fFormatSource = p.getBoolean(XMLPreferenceNames.FORMAT_SOURCE);
-		fConvertEOLCodes = p.getBoolean(XMLPreferenceNames.CONVERT_EOL_CODES);
-		fEOLCode = p.getString(XMLPreferenceNames.CLEANUP_EOL_CODE);
+		fTagNameCase = p.getInt(IXMLPreferenceNames.CLEANUP_TAG_NAME_CASE);
+		fAttrNameCase = p.getInt(IXMLPreferenceNames.CLEANUP_ATTR_NAME_CASE);
+		fInsertMissingTags = p.getBoolean(IXMLPreferenceNames.INSERT_MISSING_TAGS);
+		fQuoteAttrValues = p.getBoolean(IXMLPreferenceNames.QUOTE_ATTR_VALUES);
+		fFormatSource = p.getBoolean(IXMLPreferenceNames.FORMAT_SOURCE);
+		fConvertEOLCodes = p.getBoolean(IXMLPreferenceNames.CONVERT_EOL_CODES);
+		fEOLCode = p.getString(IXMLPreferenceNames.CLEANUP_EOL_CODE);
 	}
 }

@@ -39,8 +39,8 @@ import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstan
 import org.eclipse.wst.sse.ui.internal.openon.OpenOnAction;
 import org.eclipse.wst.sse.ui.view.events.INodeSelectionListener;
 import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
-import org.eclipse.wst.xml.core.document.DOMModel;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMModel;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.ui.StructuredTextEditorXML;
 import org.eclipse.wst.xsd.ui.internal.properties.section.XSDTabbedPropertySheetPage;
@@ -163,7 +163,7 @@ public class XSDTextEditor extends StructuredTextEditorXML implements INodeSelec
 
       // the text editor can only accept sed nodes!
       //
-      if (!(node instanceof DOMNode))
+      if (!(node instanceof IDOMNode))
       {
         node = null;
       }
@@ -301,9 +301,9 @@ public class XSDTextEditor extends StructuredTextEditorXML implements INodeSelec
   public void setModel(IFileEditorInput input)
   {                     
     super.setModel(input);
-    if (getModel() instanceof DOMModel)
+    if (getModel() instanceof IDOMModel)
     {
-      xsdModelQueryContributor.setModel((DOMModel)getModel());
+      xsdModelQueryContributor.setModel((IDOMModel)getModel());
     }
     file = input.getFile();
   }

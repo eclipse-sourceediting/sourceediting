@@ -21,14 +21,14 @@ import org.eclipse.wst.xml.core.internal.document.XMLModelNotifier;
  * 
  * @since 1.0
  */
-public interface DOMModel extends IStructuredModel {
+public interface IDOMModel extends IStructuredModel {
 
 	/**
 	 * Returns the DOM Document.
 	 * 
 	 * @return the DOM Document.
 	 */
-	DOMDocument getDocument();
+	IDOMDocument getDocument();
 
 	/**
 	 * Returns an source generator appropriate for this model.

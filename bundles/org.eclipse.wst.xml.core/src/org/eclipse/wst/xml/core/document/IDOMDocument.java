@@ -27,7 +27,7 @@ import org.w3c.dom.traversal.DocumentTraversal;
  * 
  * @since 1.0
  */
-public interface DOMDocument extends DOMNode, Document, DocumentRange, DocumentTraversal {
+public interface IDOMDocument extends IDOMNode, Document, DocumentRange, DocumentTraversal {
 
 	/**
 	 * create comment element. tagName must be registered as comment element
@@ -46,22 +46,37 @@ public interface DOMDocument extends DOMNode, Document, DocumentRange, DocumentT
 	Element createCommentElement(String tagName, boolean isJSPTag) throws DOMException;
 
 	/**
+	 * Creates a DocumentType node
 	 */
 	DocumentType createDoctype(String name);
 
 	/**
+	 * Returns the DocumnetType ID
+	 * 
 	 */
 	String getDocumentTypeId();
 
 	/**
+	 * isJSPDocument
+	 * 
+	 * ISSUE: need to specify
+	 * 
 	 */
 	boolean isJSPDocument();
 
 	/**
+	 * isJSPType
+	 * 
+	 * ISSUE: need to specify
+	 * 
 	 */
 	boolean isJSPType();
 
 	/**
+	 * isXMLType
+	 * 
+	 * ISSUE: need to specify
+	 * 
 	 */
 	boolean isXMLType();
 

@@ -24,9 +24,9 @@ import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.xml.core.commentelement.impl.CommentElementConfiguration;
 import org.eclipse.wst.xml.core.commentelement.impl.CommentElementRegistry;
-import org.eclipse.wst.xml.core.document.DOMDocument;
-import org.eclipse.wst.xml.core.document.DOMElement;
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMDocument;
+import org.eclipse.wst.xml.core.document.IDOMElement;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
@@ -862,7 +862,7 @@ public class XMLModelParser {
 
 	/**
 	 */
-	protected final DOMDocument getDocument() {
+	protected final IDOMDocument getDocument() {
 		return this.document;
 	}
 
@@ -877,7 +877,7 @@ public class XMLModelParser {
 
 	/**
 	 */
-	protected final DOMModel getModel() {
+	protected final IDOMModel getModel() {
 		return this.model;
 	}
 
@@ -1634,7 +1634,7 @@ public class XMLModelParser {
 
 	/**
 	 */
-	protected boolean isEndTag(DOMElement element) {
+	protected boolean isEndTag(IDOMElement element) {
 		if (this.adapter != null) {
 			return this.adapter.isEndTag(element);
 		}

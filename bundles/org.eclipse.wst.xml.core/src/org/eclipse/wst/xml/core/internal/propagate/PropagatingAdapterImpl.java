@@ -21,7 +21,7 @@ import java.util.List;
 import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
@@ -43,7 +43,7 @@ public class PropagatingAdapterImpl implements PropagatingAdapter {
 		super();
 	}
 
-	protected void adaptOnCreate(DOMNode node) {
+	protected void adaptOnCreate(IDOMNode node) {
 		// give each of the factories a chance to adapt the node, if it
 		// chooses to
 		if (adaptOnCreateFactories != null) {
@@ -97,8 +97,8 @@ public class PropagatingAdapterImpl implements PropagatingAdapter {
 	 */
 	public void initializeForFactory(IAdapterFactory factory, INodeNotifier node) {
 		// we're DOM specific implimentation
-		if (node instanceof DOMNode) {
-			DOMNode xmlNode = (DOMNode) node;
+		if (node instanceof IDOMNode) {
+			IDOMNode xmlNode = (IDOMNode) node;
 			propagateTo(xmlNode);
 		}
 	}
@@ -124,7 +124,7 @@ public class PropagatingAdapterImpl implements PropagatingAdapter {
 		// if anyone was depending on
 		// this being proagate to attributes.
 		if (eventType == INodeNotifier.ADD && isInteresting(newValue)) {
-			propagateTo((DOMNode) newValue);
+			propagateTo((IDOMNode) newValue);
 		}
 		//	else if (eventType == INodeNotifier.CONTENT_CHANGED) {
 		//		notifier.getAdapterFor(PropagatingAdapterClass);
@@ -139,16 +139,16 @@ public class PropagatingAdapterImpl implements PropagatingAdapter {
 		//	}
 	}
 
-	protected void propagateTo(DOMNode node) {
+	protected void propagateTo(IDOMNode node) {
 		// get adapter to ensure its created
 		node.getAdapterFor(PropagatingAdapterClass);
 		adaptOnCreate(node);
 		propagateToChildren(node);
 	}
 
-	protected void propagateToChildren(DOMNode parent) {
+	protected void propagateToChildren(IDOMNode parent) {
 		for (Node child = parent.getFirstChild(); child != null; child = child.getNextSibling()) {
-			propagateTo((DOMNode) child);
+			propagateTo((IDOMNode) child);
 		}
 	}
 

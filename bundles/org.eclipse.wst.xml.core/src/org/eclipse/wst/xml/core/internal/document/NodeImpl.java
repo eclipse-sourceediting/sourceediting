@@ -19,8 +19,8 @@ import org.eclipse.wst.sse.core.FactoryRegistry;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.xml.core.document.DOMModel;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMModel;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -35,7 +35,7 @@ import org.w3c.dom.Text;
 /**
  * NodeImpl class
  */
-public abstract class NodeImpl extends AbstractNotifier implements DOMNode {
+public abstract class NodeImpl extends AbstractNotifier implements IDOMNode {
 	// define one empty nodelist, for repeated use
 	private final static NodeList EMPTY_NODE_LIST = new NodeListImpl();
 
@@ -226,7 +226,7 @@ public abstract class NodeImpl extends AbstractNotifier implements DOMNode {
 	/**
 	 */
 	public FactoryRegistry getFactoryRegistry() {
-		DOMModel model = getModel();
+		IDOMModel model = getModel();
 		if (model != null) {
 			FactoryRegistry reg = model.getFactoryRegistry();
 			if (reg != null)
@@ -295,7 +295,7 @@ public abstract class NodeImpl extends AbstractNotifier implements DOMNode {
 	/**
 	 * the default implementation can just refer to the owning document
 	 */
-	public DOMModel getModel() {
+	public IDOMModel getModel() {
 		if (this.ownerDocument == null)
 			return null;
 		return this.ownerDocument.getModel();
@@ -331,11 +331,11 @@ public abstract class NodeImpl extends AbstractNotifier implements DOMNode {
 	 *            int
 	 */
 	Node getNodeAt(int offset) {
-		DOMNode parent = this;
-		DOMNode child = (DOMNode) getFirstChild();
+		IDOMNode parent = this;
+		IDOMNode child = (IDOMNode) getFirstChild();
 		while (child != null) {
 			if (child.getEndOffset() <= offset) {
-				child = (DOMNode) child.getNextSibling();
+				child = (IDOMNode) child.getNextSibling();
 				continue;
 			}
 			if (child.getStartOffset() > offset) {
@@ -350,7 +350,7 @@ public abstract class NodeImpl extends AbstractNotifier implements DOMNode {
 
 			// dig more
 			parent = child;
-			child = (DOMNode) parent.getFirstChild();
+			child = (IDOMNode) parent.getFirstChild();
 		}
 
 		return parent;
@@ -695,10 +695,10 @@ public abstract class NodeImpl extends AbstractNotifier implements DOMNode {
 
 	public void setEditable(boolean editable, boolean deep) {
 		if (deep) {
-			DOMNode node = (DOMNode) getFirstChild();
+			IDOMNode node = (IDOMNode) getFirstChild();
 			while (node != null) {
 				node.setEditable(editable, deep);
-				node = (DOMNode) node.getNextSibling();
+				node = (IDOMNode) node.getNextSibling();
 			}
 		}
 		setChildEditable(editable);

@@ -17,7 +17,7 @@ import org.eclipse.wst.css.core.document.ICSSModel;
 import org.eclipse.wst.css.core.document.ICSSSelector;
 import org.eclipse.wst.css.core.event.ICSSStyleListener;
 import org.eclipse.wst.sse.core.INodeAdapter;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 
 
 public class CSSEmbededStyleNotifyAdapter extends CSSStyleNotifyAdapter {
@@ -36,7 +36,7 @@ public class CSSEmbededStyleNotifyAdapter extends CSSStyleNotifyAdapter {
 	 * 
 	 */
 	public void styleChanged(ICSSModel srcModel, ICSSSelector[] removed, ICSSSelector[] added, String media) {
-		DOMNode node = (DOMNode) model.getOwnerDOMNode();
+		IDOMNode node = (IDOMNode) model.getOwnerDOMNode();
 		if (node != null)
 			return;
 		INodeAdapter adapter = node.getAdapterFor(IStyleSheetAdapter.class);
@@ -49,7 +49,7 @@ public class CSSEmbededStyleNotifyAdapter extends CSSStyleNotifyAdapter {
 	 * 
 	 */
 	public void styleUpdate(ICSSModel srcModel) {
-		DOMNode node = (DOMNode) model.getOwnerDOMNode();
+		IDOMNode node = (IDOMNode) model.getOwnerDOMNode();
 		if (node != null)
 			return;
 		INodeAdapter adapter = node.getAdapterFor(IStyleSheetAdapter.class);

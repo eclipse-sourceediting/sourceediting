@@ -15,7 +15,7 @@ package org.eclipse.wst.xml.ui.contentassist;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 
@@ -50,12 +50,12 @@ public class ContextInfoModelUtil {
 		return mq;
 	}
 
-	public DOMNode getXMLNode(int offset) {
+	public IDOMNode getXMLNode(int offset) {
 		IStructuredModel xmlModel = null;
-		DOMNode xmlNode = null;
+		IDOMNode xmlNode = null;
 		try {
 			xmlModel = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
-			xmlNode = (DOMNode) xmlModel.getIndexedRegion(offset);
+			xmlNode = (IDOMNode) xmlModel.getIndexedRegion(offset);
 		}
 		finally {
 			xmlModel.releaseFromRead();

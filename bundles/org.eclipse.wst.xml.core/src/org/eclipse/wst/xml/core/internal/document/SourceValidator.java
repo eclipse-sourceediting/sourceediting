@@ -12,8 +12,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
-import org.eclipse.wst.xml.core.XMLCharEntity;
-import org.eclipse.wst.xml.core.document.DOMDocument;
+import org.eclipse.wst.xml.core.IXMLCharEntity;
+import org.eclipse.wst.xml.core.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
@@ -51,7 +51,7 @@ public class SourceValidator {
 		boolean acceptJSPEnd = true;
 		String endTagName = null;
 		if (this.node.getNodeType() == Node.ATTRIBUTE_NODE) {
-			DOMDocument document = (DOMDocument) this.node.getOwnerDocument();
+			IDOMDocument document = (IDOMDocument) this.node.getOwnerDocument();
 			if (document != null && document.isJSPType())
 				acceptTag = true;
 			if (acceptTag) {
@@ -84,11 +84,11 @@ public class SourceValidator {
 				acceptAmpersand = true;
 			}
 		} else {
-			DOMDocument document = null;
+			IDOMDocument document = null;
 			if (this.node.getNodeType() == Node.DOCUMENT_NODE) {
-				document = (DOMDocument) this.node;
+				document = (IDOMDocument) this.node;
 			} else {
-				document = (DOMDocument) this.node.getOwnerDocument();
+				document = (IDOMDocument) this.node.getOwnerDocument();
 			}
 			if (document != null && document.isJSPType())
 				acceptTag = true;
@@ -115,12 +115,12 @@ public class SourceValidator {
 						}
 						// invalid JSP tag
 					}
-					ref = XMLCharEntity.LT_REF;
+					ref = IXMLCharEntity.LT_REF;
 					break;
 				case '>' :
 					if (acceptClose)
 						continue;
-					ref = XMLCharEntity.GT_REF;
+					ref = IXMLCharEntity.GT_REF;
 					break;
 				case '&' :
 					if (acceptAmpersand)
@@ -132,12 +132,12 @@ public class SourceValidator {
 							continue;
 						}
 					}
-					ref = XMLCharEntity.AMP_REF;
+					ref = IXMLCharEntity.AMP_REF;
 					break;
 				case '"' :
 					if (acceptQuote)
 						continue;
-					ref = XMLCharEntity.QUOT_REF;
+					ref = IXMLCharEntity.QUOT_REF;
 					break;
 				case '%' :
 					if (acceptJSPEnd)
@@ -145,7 +145,7 @@ public class SourceValidator {
 					if (source.charAt(i + 1) != '>')
 						continue;
 					i++;
-					ref = XMLCharEntity.GT_REF;
+					ref = IXMLCharEntity.GT_REF;
 					break;
 				default :
 					continue;
@@ -250,7 +250,7 @@ public class SourceValidator {
 		boolean acceptEntityRef = true;
 		String endTagName = null;
 		if (this.node.getNodeType() == Node.ATTRIBUTE_NODE) {
-			DOMDocument document = (DOMDocument) this.node.getOwnerDocument();
+			IDOMDocument document = (IDOMDocument) this.node.getOwnerDocument();
 			if (document != null && document.isJSPType())
 				acceptTag = true;
 			if (acceptTag) {
@@ -278,11 +278,11 @@ public class SourceValidator {
 				acceptClose = true;
 			}
 		} else {
-			DOMDocument document = null;
+			IDOMDocument document = null;
 			if (this.node.getNodeType() == Node.DOCUMENT_NODE) {
-				document = (DOMDocument) this.node;
+				document = (IDOMDocument) this.node;
 			} else {
-				document = (DOMDocument) this.node.getOwnerDocument();
+				document = (IDOMDocument) this.node.getOwnerDocument();
 			}
 			if (document != null && document.isJSPType())
 				acceptTag = true;

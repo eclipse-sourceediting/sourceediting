@@ -43,9 +43,9 @@ import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
-import org.eclipse.wst.xml.core.document.DOMDocument;
-import org.eclipse.wst.xml.core.document.DOMModel;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMDocument;
+import org.eclipse.wst.xml.core.document.IDOMModel;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
@@ -151,7 +151,7 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 		return beginning.equalsIgnoreCase(prefix);
 	}
 
-	protected ContentAssistRequest computeCompletionProposals(int documentPosition, String matchString, ITextRegion completionRegion, DOMNode treeNode, DOMNode xmlnode) {
+	protected ContentAssistRequest computeCompletionProposals(int documentPosition, String matchString, ITextRegion completionRegion, IDOMNode treeNode, IDOMNode xmlnode) {
 		ContentAssistRequest request = super.computeCompletionProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
 		addTemplates(request, TemplateContextTypeIdsHTML.ALL);
 		return request;
@@ -170,7 +170,7 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 		fTemplateContexts.clear();
 
 		IndexedRegion treeNode = ContentAssistUtils.getNodeAt((StructuredTextViewer) textViewer, documentPosition);
-		DOMNode node = (DOMNode) treeNode;
+		IDOMNode node = (IDOMNode) treeNode;
 		setErrorMessage(null);
 
 		// check if it's in a comment node
@@ -325,7 +325,7 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 			if (mm != null)
 				model = mm.getExistingModelForRead(viewer.getDocument());
 
-			DOMDocument doc = ((DOMModel) model).getDocument();
+			IDOMDocument doc = ((IDOMModel) model).getDocument();
 
 			ModelQuery mq = ModelQueryUtil.getModelQuery(doc);
 			// XHTML requires lowercase tagname for lookup
@@ -366,7 +366,7 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 		return fGenerator;
 	}
 
-	protected ICompletionProposal[] getCSSProposals(ITextViewer viewer, int pos, DOMNode element, int offset, char quote) {
+	protected ICompletionProposal[] getCSSProposals(ITextViewer viewer, int pos, IDOMNode element, int offset, char quote) {
 
 		CSSContentAssistProcessor cssProcessor = new CSSContentAssistProcessor();
 		cssProcessor.setDocumentOffset(offset);
@@ -402,8 +402,8 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 		else
 			doc = ((Document) node);
 
-		if (doc instanceof DOMDocument)
-			return ((DOMDocument) doc).isXMLType();
+		if (doc instanceof IDOMDocument)
+			return ((IDOMDocument) doc).isXMLType();
 
 
 		if (doc instanceof INodeNotifier) {

@@ -18,7 +18,7 @@ import org.eclipse.wst.css.core.document.ICSSNode;
 import org.eclipse.wst.css.core.document.ICSSPrimitiveValue;
 import org.eclipse.wst.css.core.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.w3c.dom.css.CSSValue;
 
@@ -42,7 +42,7 @@ public class CSSLinkConverter extends org.eclipse.wst.css.core.util.AbstractCssT
 		super();
 		baseModel = model;
 		if (model instanceof ICSSModel && ((ICSSModel) model).getStyleSheetType() != ICSSModel.EXTERNAL) {
-			DOMNode node = (DOMNode) ((ICSSModel) model).getOwnerDOMNode();
+			IDOMNode node = (IDOMNode) ((ICSSModel) model).getOwnerDOMNode();
 			baseModel = node.getModel();
 		}
 	}
@@ -80,7 +80,7 @@ public class CSSLinkConverter extends org.eclipse.wst.css.core.util.AbstractCssT
 		if (baseModel == null) {
 			baseModel = node.getOwnerDocument().getModel();
 			if (baseModel instanceof ICSSModel && ((ICSSModel) baseModel).getStyleSheetType() != ICSSModel.EXTERNAL) {
-				DOMNode xmlNode = (DOMNode) ((ICSSModel) baseModel).getOwnerDOMNode();
+				IDOMNode xmlNode = (IDOMNode) ((ICSSModel) baseModel).getOwnerDOMNode();
 				baseModel = xmlNode.getModel();
 			}
 		}

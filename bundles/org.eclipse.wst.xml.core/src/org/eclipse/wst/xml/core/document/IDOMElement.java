@@ -24,32 +24,36 @@ import org.w3c.dom.Element;
  * 
  */
 
-public interface DOMElement extends DOMNode, Element {
+public interface IDOMElement extends IDOMNode, Element {
 
 	/**
-	 * @deprecated this should probably not be public, but already implemented
+	 * @deprecated this should probably not be public
 	 */
 	int getEndStartOffset();
 
 	/**
+	 * get's the end tag name
 	 */
 	String getEndTagName();
 
 	/**
-	 * @deprecated this should probably not be public, but already implemented
-	 *  
+	 * @deprecated this should probably not be public
+	 * 
 	 */
 	int getStartEndOffset();
 
 	/**
+	 * Returns true if has an end tag
 	 */
 	boolean hasEndTag();
 
 	/**
+	 * returns true if has a start tag.
 	 */
 	boolean hasStartTag();
 
 	/**
+	 * returns true if this element is a comment
 	 */
 	boolean isCommentTag();
 
@@ -71,6 +75,9 @@ public interface DOMElement extends DOMNode, Element {
 
 	/**
 	 * Returns true for no the start and the end tags
+	 * 
+	 * Provided for some very special cases when, for example, and HTML tag is
+	 * assumed in an HTML document that does not have an HTML tag.
 	 */
 	boolean isImplicitTag();
 
@@ -78,36 +85,59 @@ public interface DOMElement extends DOMNode, Element {
 	 * isJSPTag method
 	 * 
 	 * @return boolean
+	 * 
+	 * ISSUE: change to isContainerLanguageTag(String type);
 	 */
 	boolean isJSPTag();
 
 	/**
+	 * Returns true if start tag is closed.
+	 * 
 	 */
 	boolean isStartTagClosed();
 
 	/**
+	 * returns true if is xml tag
+	 * 
+	 * ISSUE: I need to spec this better.
+	 * 
 	 */
 	boolean isXMLTag();
 
 	/**
-	 * @deprecated this should probably not be public, but already implemented
+	 * notifyEndTagChanged
+	 * 
+	 * @deprecated this should probably not be public
 	 */
 	void notifyEndTagChanged();
 
 	/**
-	 * @deprecated this should probably not be public, but already implemented
+	 * notifyStartTagChanged
+	 * 
+	 * @deprecated this should probably not be public
 	 */
 	void notifyStartTagChanged();
 
 	/**
+	 * Signify that this tag is a comment
+	 * 
+	 * For use only by parsers?
+	 * 
 	 */
 	void setCommentTag(boolean isCommentTag);
 
 	/**
+	 * Signify that this tag is an empty tag
+	 * 
+	 * For use only by parsers?
 	 */
 	void setEmptyTag(boolean isEmptyTag);
 
 	/**
+	 * Signify that this tag is a JSP tag
+	 * 
+	 * For use only by parsers?
+	 * 
 	 */
 	void setJSPTag(boolean isJSPTag);
 }

@@ -23,8 +23,8 @@ import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.xml.core.document.DOMDocument;
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMDocument;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 
 public class JSPTranslationUtil {
 	protected IDocument fDocument = null;
@@ -87,9 +87,9 @@ public class JSPTranslationUtil {
 
 	public JSPTranslationExtension getTranslation() {
 		if (fTranslation == null) {
-			DOMModel xmlModel = (DOMModel) getModelManager().getExistingModelForRead(fDocument);
+			IDOMModel xmlModel = (IDOMModel) getModelManager().getExistingModelForRead(fDocument);
 			try {
-				DOMDocument xmlDoc = xmlModel.getDocument();
+				IDOMDocument xmlDoc = xmlModel.getDocument();
 
 				JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
 				if (translationAdapter != null)

@@ -35,9 +35,9 @@ import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.IResourceDependentProcessor;
-import org.eclipse.wst.xml.core.document.DOMDocument;
-import org.eclipse.wst.xml.core.document.DOMModel;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMDocument;
+import org.eclipse.wst.xml.core.document.IDOMModel;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 
@@ -80,14 +80,14 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 	 */
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int pos) {
 		initialize(pos);
-		DOMModel xmlModel = null;
+		IDOMModel xmlModel = null;
 		try {
 			if (viewer instanceof StructuredTextViewer)
 				fViewer = (StructuredTextViewer) viewer;
 
-			xmlModel = (DOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(fViewer.getDocument());
+			xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(fViewer.getDocument());
 
-			DOMDocument xmlDoc = xmlModel.getDocument();
+			IDOMDocument xmlDoc = xmlModel.getDocument();
 			if (fTranslationAdapter == null)
 				fTranslationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
 			if (fTranslationAdapter != null) {
@@ -173,12 +173,12 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 	private boolean cursorInExpression() {
 		boolean inExpression = false;
 		IStructuredDocumentRegion sdRegion = null;
-		DOMModel xmlModel = (DOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(fViewer.getDocument());
-		DOMNode xmlNode = null;
+		IDOMModel xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(fViewer.getDocument());
+		IDOMNode xmlNode = null;
 		xmlModel.releaseFromRead();
-		xmlNode = (DOMNode) xmlModel.getIndexedRegion(fJspSourcePosition);
+		xmlNode = (IDOMNode) xmlModel.getIndexedRegion(fJspSourcePosition);
 		if (xmlNode != null) {
-			DOMNode parent = (DOMNode) xmlNode.getParentNode();
+			IDOMNode parent = (IDOMNode) xmlNode.getParentNode();
 			if (parent != null) {
 				sdRegion = parent.getFirstStructuredDocumentRegion();
 				inExpression = sdRegion != null && (sdRegion.getType() == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN || sdRegion.getType() == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN);

@@ -31,12 +31,12 @@ import org.eclipse.wst.validation.core.IReporter;
 import org.eclipse.wst.validation.core.IValidationContext;
 import org.eclipse.wst.validation.core.IValidator;
 import org.eclipse.wst.validation.core.ValidationException;
-import org.eclipse.wst.xml.core.document.DOMAttr;
-import org.eclipse.wst.xml.core.document.DOMDocument;
-import org.eclipse.wst.xml.core.document.DOMElement;
-import org.eclipse.wst.xml.core.document.DOMModel;
-import org.eclipse.wst.xml.core.document.DOMNode;
-import org.eclipse.wst.xml.core.document.DOMText;
+import org.eclipse.wst.xml.core.document.IDOMAttr;
+import org.eclipse.wst.xml.core.document.IDOMDocument;
+import org.eclipse.wst.xml.core.document.IDOMElement;
+import org.eclipse.wst.xml.core.document.IDOMModel;
+import org.eclipse.wst.xml.core.document.IDOMNode;
+import org.eclipse.wst.xml.core.document.IDOMText;
 import org.eclispe.wst.validation.internal.core.IMessageAccess;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -173,9 +173,9 @@ public class DelegatingSourceValidator implements IValidator { // these are
 		if (delta.length > 0) {
 			// get the file, model and document:
 			IFile file = getFile(delta[0]);
-			DOMModel xmlModel = getModelForResource(file);
+			IDOMModel xmlModel = getModelForResource(file);
 			try {
-				DOMDocument document = xmlModel.getDocument();
+				IDOMDocument document = xmlModel.getDocument();
 
 				// store the text in a byte array; make a full copy to ease
 				// any threading problems
@@ -212,7 +212,7 @@ public class DelegatingSourceValidator implements IValidator { // these are
 	 * @param reporter -
 	 *            the reporter the messages are to be added to
 	 */
-	protected void updateValidationMessages(List messages, DOMDocument document, IReporter reporter) {
+	protected void updateValidationMessages(List messages, IDOMDocument document, IReporter reporter) {
 		for (int i = 0; i < messages.size(); i++) {
 			IMessage message = (IMessage) messages.get(i);
 			try {
@@ -257,7 +257,7 @@ public class DelegatingSourceValidator implements IValidator { // these are
 	 *            the file to get the model for
 	 * @return the file's XMLModel
 	 */
-	protected DOMModel getModelForResource(IFile file) {
+	protected IDOMModel getModelForResource(IFile file) {
 		IStructuredModel model = null;
 		IModelManager manager = StructuredModelManager.getModelManager();
 
@@ -269,7 +269,7 @@ public class DelegatingSourceValidator implements IValidator { // these are
 			// e.printStackTrace();
 		}
 
-		return model instanceof DOMModel ? (DOMModel) model : null;
+		return model instanceof IDOMModel ? (IDOMModel) model : null;
 	}
 
 	/**
@@ -295,7 +295,7 @@ public class DelegatingSourceValidator implements IValidator { // these are
 	 * information from nameOrValue and the DOM to get better offsets
 	 * 
 	 */
-	protected int[] computeStartEndLocation(int startOffset, String errorMessage, String selectionStrategy, String nameOrValue, DOMDocument document) {
+	protected int[] computeStartEndLocation(int startOffset, String errorMessage, String selectionStrategy, String nameOrValue, IDOMDocument document) {
 		try {
 			int startEndPositions[] = new int[2];
 
@@ -329,7 +329,7 @@ public class DelegatingSourceValidator implements IValidator { // these are
 															// highlight the
 															// opening tag
 					if (node.getNodeType() == Node.ELEMENT_NODE) {
-						DOMElement element = (DOMElement) node;
+						IDOMElement element = (IDOMElement) node;
 						startEndPositions[0] = element.getStartOffset() + 1;
 						startEndPositions[1] = startEndPositions[0] + element.getTagName().length();
 					}
@@ -346,8 +346,8 @@ public class DelegatingSourceValidator implements IValidator { // these are
 																		// attribute
 																		// name
 					if (node.getNodeType() == Node.ELEMENT_NODE) {
-						DOMElement element = (DOMElement) node;
-						DOMNode attributeNode = (DOMNode) (element.getAttributeNode(nameOrValue));
+						IDOMElement element = (IDOMElement) node;
+						IDOMNode attributeNode = (IDOMNode) (element.getAttributeNode(nameOrValue));
 						if (attributeNode != null) {
 							startEndPositions[0] = attributeNode.getStartOffset();
 							startEndPositions[1] = attributeNode.getStartOffset() + nameOrValue.length();
@@ -365,8 +365,8 @@ public class DelegatingSourceValidator implements IValidator { // these are
 																		// attribute's
 																		// value
 					if (node.getNodeType() == Node.ELEMENT_NODE) {
-						DOMElement element = (DOMElement) node;
-						DOMAttr attributeNode = (DOMAttr) (element.getAttributeNode(nameOrValue));
+						IDOMElement element = (IDOMElement) node;
+						IDOMAttr attributeNode = (IDOMAttr) (element.getAttributeNode(nameOrValue));
 						if (attributeNode != null) {
 							startEndPositions[0] = attributeNode.getValueRegionStartOffset();
 							startEndPositions[1] = startEndPositions[0] + attributeNode.getValueRegionText().length();
@@ -378,11 +378,11 @@ public class DelegatingSourceValidator implements IValidator { // these are
 																	// ALL
 																	// attributes
 					if (node.getNodeType() == Node.ELEMENT_NODE) {
-						DOMElement element = (DOMElement) node;
+						IDOMElement element = (IDOMElement) node;
 						NamedNodeMap attributes = element.getAttributes();
 						if (attributes != null) {
-							DOMNode first = (DOMNode) attributes.item(0);
-							DOMNode last = (DOMNode) attributes.item(attributes.getLength() - 1);
+							IDOMNode first = (IDOMNode) attributes.item(0);
+							IDOMNode last = (IDOMNode) attributes.item(attributes.getLength() - 1);
 							if (first != null && last != null) {
 								startEndPositions[0] = first.getStartOffset();
 								startEndPositions[1] = last.getEndOffset();
@@ -397,7 +397,7 @@ public class DelegatingSourceValidator implements IValidator { // these are
 															// any extra
 															// whitespace)
 					if (node.getNodeType() == Node.TEXT_NODE) {
-						DOMText textNode = (DOMText) node;
+						IDOMText textNode = (IDOMText) node;
 						int start = textNode.getStartOffset();
 						String value = textNode.getNodeValue();
 						int index = 0;
@@ -413,10 +413,10 @@ public class DelegatingSourceValidator implements IValidator { // these are
 						startEndPositions[1] = start + value.trim().length() - 1;
 					}
 					else if (node.getNodeType() == Node.ELEMENT_NODE) {
-						DOMElement element = (DOMElement) node;
+						IDOMElement element = (IDOMElement) node;
 						Node child = element.getFirstChild();
-						if (child instanceof DOMNode) {
-							DOMNode xmlChild = ((DOMNode) child);
+						if (child instanceof IDOMNode) {
+							IDOMNode xmlChild = ((IDOMNode) child);
 							startEndPositions[0] = xmlChild.getStartOffset();
 							startEndPositions[1] = xmlChild.getEndOffset();
 						}
@@ -440,7 +440,7 @@ public class DelegatingSourceValidator implements IValidator { // these are
 						for (int i = 0; i < nodes.getLength(); i++) {
 							Node currentNode = nodes.item(i);
 							if (currentNode.getNodeType() == Node.TEXT_NODE) {
-								DOMText textNode = (DOMText) currentNode;
+								IDOMText textNode = (IDOMText) currentNode;
 								if (textNode.getNodeValue().trim().length() > 0) {
 									String value = textNode.getNodeValue();
 									int index = 0;
@@ -489,7 +489,7 @@ public class DelegatingSourceValidator implements IValidator { // these are
 						// with the value we want:
 						NamedNodeMap attributes = node.getAttributes();
 						for (int i = 0; i < attributes.getLength(); i++) {
-							DOMAttr attr = (DOMAttr) attributes.item(i);
+							IDOMAttr attr = (IDOMAttr) attributes.item(i);
 							String nodeValue = attr.getNodeValue().trim();
 							if (nodeValue.equals(nameOrValue)) {
 								startEndPositions[0] = attr.getValueRegionStartOffset() + 1;

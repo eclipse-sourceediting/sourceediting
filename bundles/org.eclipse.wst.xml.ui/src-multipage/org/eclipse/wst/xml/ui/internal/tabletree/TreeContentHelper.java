@@ -19,8 +19,8 @@ import java.util.Vector;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.xml.core.document.DOMModel;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMModel;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMWriter;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CharacterData;
@@ -365,9 +365,9 @@ public class TreeContentHelper {
 	protected String getValueForTextContent(List list) {
 		String result = null;
 		if (list.size() > 0) {
-			DOMNode first = (DOMNode) list.get(0);
-			DOMNode last = (DOMNode) list.get(list.size() - 1);
-			DOMModel model = first.getModel();
+			IDOMNode first = (IDOMNode) list.get(0);
+			IDOMNode last = (IDOMNode) list.get(list.size() - 1);
+			IDOMModel model = first.getModel();
 			int start = first.getStartOffset();
 			int end = last.getEndOffset();
 			try {
@@ -392,8 +392,8 @@ public class TreeContentHelper {
 		//String oldValue = getValueForTextContent();
 		// we worry about preserving trimmed text
 		if (list.size() > 0) {
-			DOMNode first = (DOMNode) list.get(0);
-			DOMNode last = (DOMNode) list.get(list.size() - 1);
+			IDOMNode first = (IDOMNode) list.get(0);
+			IDOMNode last = (IDOMNode) list.get(list.size() - 1);
 			int start = first.getStartOffset();
 			int end = last.getEndOffset();
 			first.getModel().getStructuredDocument().replaceText(this, start, end - start, value);

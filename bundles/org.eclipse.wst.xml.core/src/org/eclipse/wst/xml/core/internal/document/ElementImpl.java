@@ -22,11 +22,11 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.xml.core.XMLNamespace;
+import org.eclipse.wst.xml.core.IXMLNamespace;
 import org.eclipse.wst.xml.core.commentelement.CommentElementAdapter;
-import org.eclipse.wst.xml.core.document.DOMElement;
-import org.eclipse.wst.xml.core.document.DOMModel;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMElement;
+import org.eclipse.wst.xml.core.document.IDOMModel;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
@@ -46,7 +46,7 @@ import org.w3c.dom.traversal.NodeIterator;
 /**
  * ElementImpl class
  */
-public class ElementImpl extends NodeContainer implements DOMElement {
+public class ElementImpl extends NodeContainer implements IDOMElement {
 
 	private class Attributes implements NamedNodeMap {
 		Attributes() {
@@ -492,10 +492,10 @@ public class ElementImpl extends NodeContainer implements DOMElement {
 		String nsAttrName = null;
 		String prefix = getPrefix();
 		if (prefix != null && prefix.length() > 0) {
-			nsAttrName = XMLNamespace.XMLNS_PREFIX + prefix;
+			nsAttrName = IXMLNamespace.XMLNS_PREFIX + prefix;
 		}
 		else {
-			nsAttrName = XMLNamespace.XMLNS;
+			nsAttrName = IXMLNamespace.XMLNS;
 		}
 
 		for (Node node = this; node != null; node = node.getParentNode()) {
@@ -696,7 +696,7 @@ public class ElementImpl extends NodeContainer implements DOMElement {
 	protected boolean isCDATAContainer() {
 		// use BlockMaker instead of CMElementDeclaration
 		// because <style> and <script> in XHTML is not CDATA content type
-		DOMModel model = getModel();
+		IDOMModel model = getModel();
 		if (model == null)
 			return false; // error
 		IStructuredDocument structuredDocument = model.getStructuredDocument();
@@ -1283,7 +1283,7 @@ public class ElementImpl extends NodeContainer implements DOMElement {
 	/**
 	 */
 	public void setCommentTag(boolean isCommentTag) {
-		DOMNode parent = (DOMNode) getParentNode();
+		IDOMNode parent = (IDOMNode) getParentNode();
 		if (parent != null && !parent.isChildEditable()) {
 			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
 		}
@@ -1298,7 +1298,7 @@ public class ElementImpl extends NodeContainer implements DOMElement {
 	 *            boolean
 	 */
 	public void setEmptyTag(boolean isEmptyTag) {
-		DOMNode parent = (DOMNode) getParentNode();
+		IDOMNode parent = (IDOMNode) getParentNode();
 		if (parent != null && !parent.isChildEditable()) {
 			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
 		}
@@ -1328,7 +1328,7 @@ public class ElementImpl extends NodeContainer implements DOMElement {
 	 *            boolean
 	 */
 	public void setJSPTag(boolean isJSPTag) {
-		DOMNode parent = (DOMNode) getParentNode();
+		IDOMNode parent = (IDOMNode) getParentNode();
 		if (parent != null && !parent.isChildEditable()) {
 			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
 		}
@@ -1362,7 +1362,7 @@ public class ElementImpl extends NodeContainer implements DOMElement {
 	/**
 	 */
 	public void setPrefix(String prefix) throws DOMException {
-		DOMNode parent = (DOMNode) getParentNode();
+		IDOMNode parent = (IDOMNode) getParentNode();
 		if (parent != null && !parent.isChildEditable()) {
 			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());
 		}

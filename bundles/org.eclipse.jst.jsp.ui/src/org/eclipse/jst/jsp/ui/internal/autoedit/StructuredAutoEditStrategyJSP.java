@@ -18,7 +18,7 @@ import org.eclipse.ui.texteditor.ITextEditorExtension3;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.StructuredDocumentCommand;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.ui.internal.autoedit.StructuredAutoEditStrategyXML;
 
 public class StructuredAutoEditStrategyJSP extends StructuredAutoEditStrategyXML {
@@ -35,7 +35,7 @@ public class StructuredAutoEditStrategyJSP extends StructuredAutoEditStrategyXML
 			if (model != null) {
 				if (structuredDocumentCommand.text != null) {
 					if (structuredDocumentCommand.text.equals("%")) { //$NON-NLS-1$
-						DOMNode node = (DOMNode) model.getIndexedRegion(structuredDocumentCommand.offset);
+						IDOMNode node = (IDOMNode) model.getIndexedRegion(structuredDocumentCommand.offset);
 						try {
 							if (prefixedWith(document, structuredDocumentCommand.offset, "<") && !node.getSource().endsWith("%>")) { //$NON-NLS-1$ //$NON-NLS-2$
 								structuredDocumentCommand.doit = false;

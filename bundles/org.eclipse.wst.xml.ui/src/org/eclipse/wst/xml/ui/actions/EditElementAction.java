@@ -16,8 +16,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.xml.core.document.DOMElement;
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMElement;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.ui.dialogs.EditElementDialog;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
@@ -82,9 +82,9 @@ public class EditElementAction extends NodeAction {
 			if (element != null) {
 				// here we need to do a rename... which seems to be quite hard
 				// to do :-(
-				if (element instanceof DOMElement) {
-					DOMElement elementImpl = (DOMElement) element;
-					DOMModel model = elementImpl.getModel();
+				if (element instanceof IDOMElement) {
+					IDOMElement elementImpl = (IDOMElement) element;
+					IDOMModel model = elementImpl.getModel();
 					String oldName = elementImpl.getNodeName();
 					String newName = dialog.getElementName();
 					setStructuredDocumentRegionElementName(model, elementImpl.getStartStructuredDocumentRegion(), oldName, newName);
@@ -103,7 +103,7 @@ public class EditElementAction extends NodeAction {
 		manager.endNodeAction(this);
 	}
 
-	protected void setStructuredDocumentRegionElementName(DOMModel model, IStructuredDocumentRegion flatNode, String oldName, String newName) {
+	protected void setStructuredDocumentRegionElementName(IDOMModel model, IStructuredDocumentRegion flatNode, String oldName, String newName) {
 		if (flatNode != null) {
 			String string = flatNode.getText();
 			int index = string.indexOf(oldName);

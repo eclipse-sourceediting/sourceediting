@@ -47,8 +47,8 @@ import org.eclipse.wst.sse.core.parser.RegionParser;
 import org.eclipse.wst.sse.core.parser.TagMarker;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.ui.util.Assert;
-import org.eclipse.wst.xml.core.document.DOMDocument;
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMDocument;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
 import org.w3c.dom.Document;
 
@@ -191,7 +191,7 @@ public class JSPDocumentLoader extends AbstractDocumentLoader {
 	}
 
 	private EmbeddedTypeHandler getEmbeddedType(IStructuredModel model) {
-		Document doc = ((DOMModel) model).getDocument();
+		Document doc = ((IDOMModel) model).getDocument();
 		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) ((INodeNotifier) doc).getAdapterFor(PageDirectiveAdapter.class);
 		EmbeddedTypeHandler embeddedHandler = pageDirectiveAdapter.getEmbeddedType();
 		return embeddedHandler;
@@ -314,9 +314,9 @@ public class JSPDocumentLoader extends AbstractDocumentLoader {
 		// set
 		// yet,
 		// and all factories must have been set up also.
-		DOMModel domModel = (DOMModel) model;
+		IDOMModel domModel = (IDOMModel) model;
 		IStructuredDocument structuredDocument = model.getStructuredDocument();
-		DOMDocument document = domModel.getDocument();
+		IDOMDocument document = domModel.getDocument();
 		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) document.getAdapterFor(PageDirectiveAdapter.class);
 		// ==> // PropagatingAdapter propagatingAdapter = (PropagatingAdapter)
 		// ((INodeNotifier) document).getAdapterFor(PropagatingAdapter.class);
@@ -384,8 +384,8 @@ public class JSPDocumentLoader extends AbstractDocumentLoader {
 		// set
 		// yet,
 		// and all factories must have been set up also.
-		DOMModel domModel = (DOMModel) model;
-		DOMDocument document = domModel.getDocument();
+		IDOMModel domModel = (IDOMModel) model;
+		IDOMDocument document = domModel.getDocument();
 		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) document.getAdapterFor(PageDirectiveAdapter.class);
 		pageDirectiveAdapter.setEmbeddedType(embeddedContentType);
 		embeddedContentType.initializeFactoryRegistry(model.getFactoryRegistry());
@@ -443,7 +443,7 @@ public class JSPDocumentLoader extends AbstractDocumentLoader {
 	}
 
 	protected void preLoadAdapt(IStructuredModel structuredModel) {
-		DOMModel domModel = (DOMModel) structuredModel;
+		IDOMModel domModel = (IDOMModel) structuredModel;
 		//
 		// document must have already been set for this to
 		// work.
@@ -480,9 +480,9 @@ public class JSPDocumentLoader extends AbstractDocumentLoader {
 		// set
 		// yet,
 		// and all factories must have been set up also.
-		DOMModel domModel = (DOMModel) model;
+		IDOMModel domModel = (IDOMModel) model;
 		IStructuredDocument structuredDocument = model.getStructuredDocument();
-		DOMDocument document = domModel.getDocument();
+		IDOMDocument document = domModel.getDocument();
 		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) document.getExistingAdapter(PageDirectiveAdapter.class);
 		// ==> // PropagatingAdapter propagatingAdapter = (PropagatingAdapter)
 		// ((INodeNotifier)
@@ -543,8 +543,8 @@ public class JSPDocumentLoader extends AbstractDocumentLoader {
 	}
 
 	private void setLanguageInPageDirective(IStructuredModel newModel) throws IOException {
-		if (newModel instanceof DOMModel) {
-			DOMDocument document = ((DOMModel) newModel).getDocument();
+		if (newModel instanceof IDOMModel) {
+			IDOMDocument document = ((IDOMModel) newModel).getDocument();
 			PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) document.getAdapterFor(PageDirectiveAdapter.class);
 			String language = getLanguage(newModel);
 			pageDirectiveAdapter.setLanguage(language);

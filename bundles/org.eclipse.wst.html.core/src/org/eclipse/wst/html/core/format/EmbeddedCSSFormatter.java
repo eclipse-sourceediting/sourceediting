@@ -19,8 +19,8 @@ import org.eclipse.wst.css.core.format.CSSSourceFormatter;
 import org.eclipse.wst.html.core.HTMLFormatContraints;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.xml.core.document.DOMNode;
-import org.eclipse.wst.xml.core.document.DOMText;
+import org.eclipse.wst.xml.core.document.IDOMNode;
+import org.eclipse.wst.xml.core.document.IDOMText;
 
 // nakamori_TODO: check and remove
 
@@ -35,10 +35,10 @@ public class EmbeddedCSSFormatter extends HTMLFormatter {
 
 	/**
 	 */
-	protected void formatNode(DOMNode node, HTMLFormatContraints contraints) {
+	protected void formatNode(IDOMNode node, HTMLFormatContraints contraints) {
 		if (node == null)
 			return;
-		DOMText text = (DOMText) node;
+		IDOMText text = (IDOMText) node;
 
 		String source = getCSSContent(node);
 		if (source == null) { // fallback
@@ -53,7 +53,7 @@ public class EmbeddedCSSFormatter extends HTMLFormatter {
 
 	/**
 	 */
-	private String getCSSContent(DOMNode text) {
+	private String getCSSContent(IDOMNode text) {
 		ICSSModel model = getCSSModel(text);
 		if (model == null)
 			return null;
@@ -73,7 +73,7 @@ public class EmbeddedCSSFormatter extends HTMLFormatter {
 
 	/**
 	 */
-	private ICSSModel getCSSModel(DOMNode text) {
+	private ICSSModel getCSSModel(IDOMNode text) {
 		if (text == null)
 			return null;
 		INodeNotifier notifier = (INodeNotifier) text.getParentNode();

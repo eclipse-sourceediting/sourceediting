@@ -16,8 +16,8 @@ import org.eclipse.wst.html.core.HTML40Namespace;
 import org.eclipse.wst.html.core.HTMLCMProperties;
 import org.eclipse.wst.html.core.contentmodel.HTMLElementDeclaration;
 import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.xml.core.document.DOMElement;
-import org.eclipse.wst.xml.core.document.DOMText;
+import org.eclipse.wst.xml.core.document.IDOMElement;
+import org.eclipse.wst.xml.core.document.IDOMText;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMGroup;
@@ -67,12 +67,12 @@ public class HTMLModelParserAdapter implements ModelParserAdapter {
 	public boolean canContain(Element element, Node child) {
 		if (element == null || child == null)
 			return false;
-		DOMElement impl = (DOMElement) element;
+		IDOMElement impl = (IDOMElement) element;
 
 		if (child.getNodeType() == Node.ELEMENT_NODE) {
 			if (!impl.isGlobalTag())
 				return true; // non HTML tag
-			DOMElement childElement = (DOMElement) child;
+			IDOMElement childElement = (IDOMElement) child;
 
 			CMElementDeclaration myDec = CMNodeUtil.getElementDeclaration(element);
 			if (myDec == null)
@@ -114,7 +114,7 @@ public class HTMLModelParserAdapter implements ModelParserAdapter {
 
 				Node parent = element.getParentNode();
 				if (parent != null && parent.getNodeType() == Node.ELEMENT_NODE) {
-					DOMElement parentElement = (DOMElement) parent;
+					IDOMElement parentElement = (IDOMElement) parent;
 					if (!parentElement.hasStartTag() && !parentElement.hasEndTag()) {
 						if (!canContain(parentElement, child))
 							return false;
@@ -146,7 +146,7 @@ public class HTMLModelParserAdapter implements ModelParserAdapter {
 				for (Node parent = element.getParentNode(); parent != null; parent = parent.getParentNode()) {
 					if (parent.getNodeType() != Node.ELEMENT_NODE)
 						break;
-					DOMElement parentElement = (DOMElement) parent;
+					IDOMElement parentElement = (IDOMElement) parent;
 					String parentName = parentElement.getTagName();
 					if (parentName == null)
 						continue;
@@ -162,7 +162,7 @@ public class HTMLModelParserAdapter implements ModelParserAdapter {
 		else if (child.getNodeType() == Node.TEXT_NODE) {
 			String tagName = impl.getTagName();
 			if (tagName != null && tagName.equalsIgnoreCase(HTML40Namespace.ElementName.EMBED)) {
-				DOMText text = (DOMText) child;
+				IDOMText text = (IDOMText) child;
 				if (!text.isWhitespace())
 					return false;
 			}
@@ -260,7 +260,7 @@ public class HTMLModelParserAdapter implements ModelParserAdapter {
 		if (metaData == null)
 			metaData = new String();
 
-		DOMElement element = (DOMElement) document.createElement(MetaData.PREFIX + type);
+		IDOMElement element = (IDOMElement) document.createElement(MetaData.PREFIX + type);
 
 		MetaDataAdapter adapter = new MetaDataAdapter(type);
 		if (isStartSpan) {
@@ -297,7 +297,7 @@ public class HTMLModelParserAdapter implements ModelParserAdapter {
 
 	/**
 	 */
-	public boolean isEndTag(DOMElement element) {
+	public boolean isEndTag(IDOMElement element) {
 		TagAdapter adapter = (TagAdapter) element.getExistingAdapter(TagAdapter.class);
 		if (adapter != null)
 			return adapter.isEndTag();

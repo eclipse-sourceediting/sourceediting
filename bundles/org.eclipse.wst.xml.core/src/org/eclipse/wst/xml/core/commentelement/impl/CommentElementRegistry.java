@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.xml.core.commentelement.CommentElementHandler;
-import org.eclipse.wst.xml.core.document.DOMElement;
+import org.eclipse.wst.xml.core.document.IDOMElement;
 
 
 /**
@@ -65,7 +65,7 @@ public class CommentElementRegistry {
 		return fConfigurations;
 	}
 
-	public boolean setupCommentElement(DOMElement element) {
+	public boolean setupCommentElement(IDOMElement element) {
 		CommentElementConfiguration configurations[] = getConfigurations();
 		int length = configurations.length;
 		for (int i = 0; i < length; i++) {

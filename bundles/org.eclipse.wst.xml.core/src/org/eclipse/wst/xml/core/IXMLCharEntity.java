@@ -19,7 +19,7 @@ package org.eclipse.wst.xml.core;
  * 
  * @since 1.0
  */
-public interface XMLCharEntity {
+public interface IXMLCharEntity {
 	static final String AMP_NAME = "amp";//$NON-NLS-1$
 	static final String AMP_REF = "&amp;";//$NON-NLS-1$
 	static final String AMP_VALUE = "&";//$NON-NLS-1$

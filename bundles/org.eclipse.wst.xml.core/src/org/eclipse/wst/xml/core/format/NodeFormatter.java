@@ -28,8 +28,8 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.xml.core.document.DOMModel;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMModel;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.document.CDATASectionImpl;
 import org.eclipse.wst.xml.core.internal.document.CharacterDataImpl;
@@ -125,7 +125,7 @@ public class NodeFormatter implements IStructuredFormatter {
 		return compressedString.toString();
 	}
 
-	protected boolean firstStructuredDocumentRegionContainsLineDelimiters(DOMNode node) {
+	protected boolean firstStructuredDocumentRegionContainsLineDelimiters(IDOMNode node) {
 		boolean result = false;
 
 		if (node != null) {
@@ -149,13 +149,13 @@ public class NodeFormatter implements IStructuredFormatter {
 		if (formatContraints.getFormatWithSiblingIndent())
 			formatContraints.setCurrentIndent(getSiblingIndent(node));
 
-		if (node instanceof DOMNode)
-			formatNode((DOMNode) node, formatContraints);
+		if (node instanceof IDOMNode)
+			formatNode((IDOMNode) node, formatContraints);
 	}
 
-	protected void formatIndentationAfterNode(DOMNode node, IStructuredFormatContraints formatContraints) {
+	protected void formatIndentationAfterNode(IDOMNode node, IStructuredFormatContraints formatContraints) {
 		if (node != null) {
-			DOMNode nextSibling = (DOMNode) node.getNextSibling();
+			IDOMNode nextSibling = (IDOMNode) node.getNextSibling();
 			IStructuredDocument doc = node.getModel().getStructuredDocument();
 			int line = doc.getLineOfOffset(node.getEndOffset());
 			String lineDelimiter = doc.getLineDelimiter();
@@ -191,9 +191,9 @@ public class NodeFormatter implements IStructuredFormatter {
 						insertAfterNode(node, lineDelimiter + lineIndent);
 					}
 				else {
-					DOMNode indentNode = getParentIndentNode(node);
+					IDOMNode indentNode = getParentIndentNode(node);
 					String lineIndent = getNodeIndent(indentNode);
-					DOMNode lastChild = getDeepestChildNode(node);
+					IDOMNode lastChild = getDeepestChildNode(node);
 					boolean clearAllBlankLines = formatContraints.getClearAllBlankLines();
 
 					if (lastChild != null) {
@@ -227,9 +227,9 @@ public class NodeFormatter implements IStructuredFormatter {
 		}
 	}
 
-	protected void formatIndentationBeforeNode(DOMNode node, IStructuredFormatContraints formatContraints) {
+	protected void formatIndentationBeforeNode(IDOMNode node, IStructuredFormatContraints formatContraints) {
 		if (node != null) {
-			DOMNode previousSibling = (DOMNode) node.getPreviousSibling();
+			IDOMNode previousSibling = (IDOMNode) node.getPreviousSibling();
 			IStructuredDocument doc = node.getModel().getStructuredDocument();
 			int line = doc.getLineOfOffset(node.getStartOffset());
 			String lineDelimiter = doc.getLineDelimiter();
@@ -289,7 +289,7 @@ public class NodeFormatter implements IStructuredFormatter {
 		}
 	}
 
-	protected void formatNode(DOMNode node, IStructuredFormatContraints formatContraints) {
+	protected void formatNode(IDOMNode node, IStructuredFormatContraints formatContraints) {
 		if (node != null && (fProgressMonitor == null || !fProgressMonitor.isCanceled())) {
 			// format indentation before node
 			formatIndentationBeforeNode(node, formatContraints);
@@ -304,14 +304,14 @@ public class NodeFormatter implements IStructuredFormatter {
 	 * depending on the indentations of its sibling nodes and parent node. Not
 	 * needed anymore?
 	 */
-	protected void formatTrailingText(DOMNode node, IStructuredFormatContraints formatContraints) {
+	protected void formatTrailingText(IDOMNode node, IStructuredFormatContraints formatContraints) {
 		String lineDelimiter = node.getModel().getStructuredDocument().getLineDelimiter();
 		String lineIndent = formatContraints.getCurrentIndent();
 		String parentLineIndent = getNodeIndent(node.getParentNode());
 		boolean clearAllBlankLines = formatContraints.getClearAllBlankLines();
 
 		if ((node != null) && (node.getNodeType() != Node.DOCUMENT_NODE)) {
-			DOMNode nextSibling = (DOMNode) node.getNextSibling();
+			IDOMNode nextSibling = (IDOMNode) node.getNextSibling();
 			if ((nextSibling != null) && (nextSibling.getNodeType() == Node.TEXT_NODE)) {
 				String nextSiblingText = nextSibling.getNodeValue();
 				if (nextSibling.getNextSibling() == null)
@@ -380,13 +380,13 @@ public class NodeFormatter implements IStructuredFormatter {
 		}
 	}
 
-	protected String getCompressedNodeText(DOMNode node, IStructuredFormatContraints formatContraints) {
+	protected String getCompressedNodeText(IDOMNode node, IStructuredFormatContraints formatContraints) {
 		return compressSpaces(getNodeText(node), formatContraints);
 	}
 
-	protected DOMNode getDeepestChildNode(DOMNode node) {
-		DOMNode result = null;
-		DOMNode lastChild = (DOMNode) node.getLastChild();
+	protected IDOMNode getDeepestChildNode(IDOMNode node) {
+		IDOMNode result = null;
+		IDOMNode lastChild = (IDOMNode) node.getLastChild();
 
 		if (lastChild == null)
 			result = node;
@@ -436,7 +436,7 @@ public class NodeFormatter implements IStructuredFormatter {
 		return fFormatPreferences;
 	}
 
-	protected IStructuredFormatter getFormatter(DOMNode node) {
+	protected IStructuredFormatter getFormatter(IDOMNode node) {
 		// 262135 - NPE during format of empty document
 		if (node == null)
 			return null;
@@ -513,7 +513,7 @@ public class NodeFormatter implements IStructuredFormatter {
 		String result = EMPTY_STRING;
 
 		if ((node != null) && (node.getNodeType() != Node.DOCUMENT_NODE) && (node.getParentNode() != null) && (node.getParentNode().getNodeType() != Node.DOCUMENT_NODE)) {
-			DOMNode siblingTextNode = (DOMNode) node.getPreviousSibling();
+			IDOMNode siblingTextNode = (IDOMNode) node.getPreviousSibling();
 			if ((siblingTextNode != null) && (siblingTextNode.getNodeType() == Node.TEXT_NODE)) {
 				// find the indentation
 				String siblingText = siblingTextNode.getNodeValue();
@@ -532,11 +532,11 @@ public class NodeFormatter implements IStructuredFormatter {
 		return result;
 	}
 
-	protected String getNodeName(DOMNode node) {
+	protected String getNodeName(IDOMNode node) {
 		return node.getNodeName();
 	}
 
-	protected String getNodeText(DOMNode node) {
+	protected String getNodeText(IDOMNode node) {
 		String text = null;
 
 		if ((node instanceof CharacterDataImpl) && !(node instanceof CommentImpl) && !(node instanceof CDATASectionImpl) && !isJSPTag(node))
@@ -547,9 +547,9 @@ public class NodeFormatter implements IStructuredFormatter {
 		return text;
 	}
 
-	protected DOMNode getParentIndentNode(DOMNode node) {
-		DOMNode result = null;
-		DOMNode parentNode = (DOMNode) node.getParentNode();
+	protected IDOMNode getParentIndentNode(IDOMNode node) {
+		IDOMNode result = null;
+		IDOMNode parentNode = (IDOMNode) node.getParentNode();
 
 		if (parentNode.getNodeType() == Node.DOCUMENT_NODE)
 			result = parentNode;
@@ -582,16 +582,16 @@ public class NodeFormatter implements IStructuredFormatter {
 			// find the text node before the previous non-text sibling
 			// if that's not found, we will try the text node before the next
 			// non-text sibling
-			DOMNode sibling = (DOMNode) node.getPreviousSibling();
+			IDOMNode sibling = (IDOMNode) node.getPreviousSibling();
 			while ((sibling != null) && (sibling.getNodeType() == Node.TEXT_NODE || sibling.getNodeType() == Node.COMMENT_NODE)) {
 				if (sibling.getNodeType() == Node.COMMENT_NODE && sibling.getPreviousSibling() != null && sibling.getPreviousSibling().getNodeType() == Node.TEXT_NODE && StringUtils.containsLineDelimiter(sibling.getPreviousSibling().getNodeValue()))
 					break;
-				sibling = (DOMNode) sibling.getPreviousSibling();
+				sibling = (IDOMNode) sibling.getPreviousSibling();
 			}
 			if (sibling == null) {
-				sibling = (DOMNode) node.getNextSibling();
+				sibling = (IDOMNode) node.getNextSibling();
 				while ((sibling != null) && (sibling.getNodeType() == Node.TEXT_NODE))
-					sibling = (DOMNode) sibling.getNextSibling();
+					sibling = (IDOMNode) sibling.getNextSibling();
 			}
 			String singleIndent = getFormatPreferences().getIndent();
 			String parentLineIndent = getNodeIndent(node.getParentNode());
@@ -623,8 +623,8 @@ public class NodeFormatter implements IStructuredFormatter {
 		return result;
 	}
 
-	protected void insertAfterNode(DOMNode node, String string) {
-		DOMModel structuredModel = node.getModel();
+	protected void insertAfterNode(IDOMNode node, String string) {
+		IDOMModel structuredModel = node.getModel();
 		IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
 
 		int offset = node.getEndOffset();
@@ -638,8 +638,8 @@ public class NodeFormatter implements IStructuredFormatter {
 		replace(structuredDocument, offset, length, string);
 	}
 
-	protected void insertBeforeNode(DOMNode node, String string) {
-		DOMModel structuredModel = node.getModel();
+	protected void insertBeforeNode(IDOMNode node, String string) {
+		IDOMModel structuredModel = node.getModel();
 		IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
 
 		replace(structuredDocument, node.getStartOffset(), 0, string);
@@ -653,7 +653,7 @@ public class NodeFormatter implements IStructuredFormatter {
 		return type.equals(IStructuredFormatter.class);
 	}
 
-	protected boolean isEndTagMissing(DOMNode node) {
+	protected boolean isEndTagMissing(IDOMNode node) {
 		boolean result = false;
 
 		if ((node != null) && (node.getNodeType() != Node.DOCUMENT_NODE) && !isJSPTag(node)) {
@@ -676,7 +676,7 @@ public class NodeFormatter implements IStructuredFormatter {
 		return result;
 	}
 
-	protected boolean nodeHasSiblings(DOMNode node) {
+	protected boolean nodeHasSiblings(IDOMNode node) {
 		return (node.getPreviousSibling() != null) || (node.getNextSibling() != null);
 	}
 
@@ -686,9 +686,9 @@ public class NodeFormatter implements IStructuredFormatter {
 	public void notifyChanged(org.eclipse.wst.sse.core.INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
 	}
 
-	protected void removeRegionSpaces(DOMNode node, IStructuredDocumentRegion flatNode, ITextRegion region) {
+	protected void removeRegionSpaces(IDOMNode node, IStructuredDocumentRegion flatNode, ITextRegion region) {
 		if ((region != null) && (region instanceof ContextRegion || region instanceof TagNameRegion) && (flatNode.getEndOffset(region) > flatNode.getTextEndOffset(region))) {
-			DOMModel structuredModel = node.getModel();
+			IDOMModel structuredModel = node.getModel();
 			IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
 
 			replace(structuredDocument, flatNode.getTextEndOffset(region), flatNode.getEndOffset(region) - flatNode.getTextEndOffset(region), EMPTY_STRING);
@@ -715,8 +715,8 @@ public class NodeFormatter implements IStructuredFormatter {
 	 * value to be replaced is the same as the new string, the node value will
 	 * not be replaced.
 	 */
-	protected void replaceNodeValue(DOMNode node, String string) {
-		DOMModel structuredModel = node.getModel();
+	protected void replaceNodeValue(IDOMNode node, String string) {
+		IDOMModel structuredModel = node.getModel();
 		IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
 		int offset = node.getStartOffset();
 		int length = node.getEndOffset() - node.getStartOffset();
@@ -769,8 +769,8 @@ public class NodeFormatter implements IStructuredFormatter {
 	
 		boolean result = false;
 	
-		if (node instanceof DOMNode) {
-			IStructuredDocumentRegion flatNode = ((DOMNode) node).getFirstStructuredDocumentRegion();
+		if (node instanceof IDOMNode) {
+			IStructuredDocumentRegion flatNode = ((IDOMNode) node).getFirstStructuredDocumentRegion();
 			// in some cases, the nodes exists, but hasn't been associated
 			// with
 			// a flatnode yet (the screen updates can be initiated on a

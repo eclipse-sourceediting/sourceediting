@@ -12,8 +12,8 @@ package org.eclipse.wst.html.core.validate;
 
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.xml.core.document.DOMAttr;
-import org.eclipse.wst.xml.core.document.DOMElement;
+import org.eclipse.wst.xml.core.document.IDOMAttr;
+import org.eclipse.wst.xml.core.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
@@ -38,7 +38,7 @@ public class NamespaceValidator extends PrimeValidator implements ErrorState {
 	public void validate(IndexedRegion node) {
 		Element target = (Element) node;
 		if (isXMLElement(target) && hasUnknownPrefix(target)) {
-			DOMElement e = (DOMElement) target;
+			IDOMElement e = (IDOMElement) target;
 			if (!isValidPrefix(e.getPrefix(), target) && !e.isCommentTag()) {
 				// report unknown tag error.
 				Segment errorSeg = FMUtil.getSegment(e, FMUtil.SEG_START_TAG);
@@ -50,9 +50,9 @@ public class NamespaceValidator extends PrimeValidator implements ErrorState {
 		NamedNodeMap attrs = target.getAttributes();
 		for (int i = 0; i < attrs.getLength(); i++) {
 			Node n = attrs.item(i);
-			if (!(n instanceof DOMAttr))
+			if (!(n instanceof IDOMAttr))
 				continue;
-			DOMAttr a = (DOMAttr) n;
+			IDOMAttr a = (IDOMAttr) n;
 			String prefix = a.getPrefix();
 			if ((prefix != null) && isUnknownAttr(a, target)) {
 				// The attr has unknown prefix.  So, check it.
@@ -71,7 +71,7 @@ public class NamespaceValidator extends PrimeValidator implements ErrorState {
 
 	// private methods	
 	private boolean isXMLElement(Element target) {
-		return target instanceof DOMElement;
+		return target instanceof IDOMElement;
 	}
 
 	private boolean hasUnknownPrefix(Element target) {
@@ -83,7 +83,7 @@ public class NamespaceValidator extends PrimeValidator implements ErrorState {
 		return dec == null;
 	}
 
-	private boolean isUnknownAttr(DOMAttr attr, Element target) {
+	private boolean isUnknownAttr(IDOMAttr attr, Element target) {
 		CMElementDeclaration dec = CMUtil.getDeclaration(target);
 		if (dec == null)
 			return true; // unknown.

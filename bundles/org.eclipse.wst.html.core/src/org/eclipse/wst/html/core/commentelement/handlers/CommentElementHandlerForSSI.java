@@ -15,7 +15,7 @@ package org.eclipse.wst.html.core.commentelement.handlers;
 import org.eclipse.wst.xml.core.commentelement.CommentElementHandler;
 import org.eclipse.wst.xml.core.commentelement.util.CommentElementFactory;
 import org.eclipse.wst.xml.core.commentelement.util.TagScanner;
-import org.eclipse.wst.xml.core.document.DOMElement;
+import org.eclipse.wst.xml.core.document.IDOMElement;
 import org.eclipse.wst.xml.core.document.ISourceGenerator;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
@@ -81,9 +81,9 @@ public class CommentElementHandlerForSSI implements CommentElementHandler {
 	}
 
 	/**
-	 * @see com.ibm.sed.model.commentelement.CommentElementHandler#generateStartTagContent(DOMElement)
+	 * @see com.ibm.sed.model.commentelement.CommentElementHandler#generateStartTagContent(IDOMElement)
 	 */
-	public String generateStartTagContent(DOMElement element) {
+	public String generateStartTagContent(IDOMElement element) {
 		ISourceGenerator generator = element.getModel().getGenerator();
 		StringBuffer buffer = new StringBuffer();
 
@@ -114,9 +114,9 @@ public class CommentElementHandlerForSSI implements CommentElementHandler {
 	}
 
 	/**
-	 * @see com.ibm.sed.model.commentelement.CommentElementHandler#generateEndTagContent(DOMElement)
+	 * @see com.ibm.sed.model.commentelement.CommentElementHandler#generateEndTagContent(IDOMElement)
 	 */
-	public String generateEndTagContent(DOMElement element) {
+	public String generateEndTagContent(IDOMElement element) {
 		return null; // always empty
 	}
 
@@ -127,7 +127,7 @@ public class CommentElementHandlerForSSI implements CommentElementHandler {
 	/* (non-Javadoc)
 	 * @see com.ibm.sed.model.commentelement.CommentElementHandler#isCommentElement(com.ibm.sed.model.xml.XMLElement)
 	 */
-	public boolean isCommentElement(DOMElement element) {
+	public boolean isCommentElement(IDOMElement element) {
 		if (element == null) {
 			return false;
 		}

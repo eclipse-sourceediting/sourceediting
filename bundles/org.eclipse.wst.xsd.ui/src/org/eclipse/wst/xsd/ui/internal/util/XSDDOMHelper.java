@@ -11,8 +11,8 @@
 package org.eclipse.wst.xsd.ui.internal.util;
 
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
-import org.eclipse.wst.xml.core.document.DOMModel;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMModel;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.format.FormatProcessorXML;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Document;
@@ -825,9 +825,9 @@ public class XSDDOMHelper
 
 	public static void formatChild(Node child)
 	{
-    if (child instanceof DOMNode)
+    if (child instanceof IDOMNode)
     {
-      DOMModel model = ((DOMNode)child).getModel();
+      IDOMModel model = ((IDOMNode)child).getModel();
       try
       {
         // tell the model that we are about to make a big model change

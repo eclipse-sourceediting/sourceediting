@@ -25,45 +25,86 @@ import org.w3c.dom.Attr;
  * @since 1.0
  * 
  */
-public interface DOMAttr extends DOMNode, Attr {
+public interface IDOMAttr extends IDOMNode, Attr {
 
 	/**
+	 * Get's the region in attribute representing the '=' sign. May or may not
+	 * have whitespace surrounding it.
+	 * 
 	 */
 	ITextRegion getEqualRegion();
 
 	/**
+	 * Gets the source location of the end of the attribute name, including
+	 * whitespace.
+	 * 
 	 * @return
 	 */
 	int getNameRegionEndOffset();
 
+	/**
+	 * Gets the source location of the start of the attribute name.
+	 * 
+	 * @return
+	 */
 	int getNameRegionStartOffset();
 
+
+	/**
+	 * Gets the text associated with the attribute name.
+	 * 
+	 * @return
+	 */
 	String getNameRegionText();
 
 	/**
+	 * Gets the source location of the end of the attribute name, excluding
+	 * whitespace.
+	 * 
 	 * @return
 	 */
 	int getNameRegionTextEndOffset();
 
+	/**
+	 * Gets the source location of the start of the attribute value.
+	 * 
+	 * @return
+	 */
 	int getValueRegionStartOffset();
 
+	/**
+	 * Gets the text associated with the attribute value.
+	 * 
+	 * @return
+	 */
 	String getValueRegionText();
 
 	/**
-	 * Check if Attr has JSP in value
+	 * Check if Attr has a nested value (such as a JSP expression).
+	 * 
+	 * @return true if contains a nested value
 	 */
 	boolean hasNestedValue();
 
 	/**
-	 * Check if Attr has only name but not equal sign nor value
+	 * Check if Attr has only name but not equal sign nor value.
+	 * 
+	 * @return true if has only name but not equal sign nor value.
 	 */
 	boolean hasNameOnly();
 
 	/**
+	 * Returns true if attribute is defined globally for document. Returns
+	 * false if attribute is preceeded by a prefix (whether valid name space
+	 * or not). Returns true if its owning element is a global element.
+	 * 
 	 */
 	boolean isGlobalAttr();
 
 	/**
+	 * Returns true if is xml attr
+	 * 
+	 * ISSUE: need to figure out how to specify this one.
 	 */
 	boolean isXMLAttr();
 

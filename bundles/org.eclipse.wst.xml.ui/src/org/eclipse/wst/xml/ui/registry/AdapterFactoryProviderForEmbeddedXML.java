@@ -15,8 +15,8 @@ package org.eclipse.wst.xml.ui.registry;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.sse.ui.registry.embedded.EmbeddedAdapterFactoryProvider;
-import org.eclipse.wst.xml.core.document.DOMDocument;
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMDocument;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.modelhandler.EmbeddedXML;
 
 
@@ -26,8 +26,8 @@ public class AdapterFactoryProviderForEmbeddedXML implements EmbeddedAdapterFact
 	 * @see AdapterFactoryProvider#addAdapterFactories(IStructuredModel)
 	 */
 	public void addAdapterFactories(IStructuredModel structuredModel) {
-		if (structuredModel instanceof DOMModel) {
-			DOMDocument doc = ((DOMModel) structuredModel).getDocument();
+		if (structuredModel instanceof IDOMModel) {
+			IDOMDocument doc = ((IDOMModel) structuredModel).getDocument();
 		}
 	}
 

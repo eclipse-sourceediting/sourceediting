@@ -15,7 +15,7 @@ import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.XSDTextEditor;
 import org.eclipse.xsd.XSDAttributeDeclaration;
@@ -117,7 +117,7 @@ public class XSDSectionLabelProvider extends LabelProvider
             sb.append(XSDEditorPlugin.getXSDString("_UI_PAGE_HEADING_REFERENCE"));
           }
           
-          if (!(element instanceof DOMNode))
+          if (!(element instanceof IDOMNode))
           {
             sb.append(" (" + XSDEditorPlugin.getXSDString("_UI_LABEL_READ_ONLY") + ")");   //$NON-NLS-1$
           }

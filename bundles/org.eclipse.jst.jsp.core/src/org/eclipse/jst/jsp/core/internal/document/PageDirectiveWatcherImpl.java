@@ -13,9 +13,9 @@ package org.eclipse.jst.jsp.core.internal.document;
 import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IndexedRegion;
-import org.eclipse.wst.xml.core.document.DOMDocument;
-import org.eclipse.wst.xml.core.document.DOMElement;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMDocument;
+import org.eclipse.wst.xml.core.document.IDOMElement;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.document.AttrImpl;
 
 
@@ -28,24 +28,24 @@ import org.eclipse.wst.xml.core.internal.document.AttrImpl;
 class PageDirectiveWatcherImpl implements PageDirectiveWatcher {
 
 	private static Object adapterType = PageDirectiveWatcher.class;
-	DOMElement targetElement;
+	IDOMElement targetElement;
 
 	/**
 	 * Constructor for PageDirectiveWatcherImpl.
 	 */
-	public PageDirectiveWatcherImpl(DOMElement target) {
+	public PageDirectiveWatcherImpl(IDOMElement target) {
 		super();
 		targetElement = target;
 		String contentTypeValue = target.getAttribute("contentType"); //$NON-NLS-1$
 		if (contentTypeValue != null) {
 			// using concrete class below, since "changed" is something of an internal method
-			PageDirectiveAdapterImpl pageDirectiveAdapter = (PageDirectiveAdapterImpl) ((DOMDocument) targetElement.getOwnerDocument()).getAdapterFor(PageDirectiveAdapter.class);
+			PageDirectiveAdapterImpl pageDirectiveAdapter = (PageDirectiveAdapterImpl) ((IDOMDocument) targetElement.getOwnerDocument()).getAdapterFor(PageDirectiveAdapter.class);
 			pageDirectiveAdapter.changedContentType(((IndexedRegion) targetElement).getStartOffset(), contentTypeValue);
 		}
 		String languageValue = target.getAttribute("language"); //$NON-NLS-1$
 		if (languageValue != null) {
 			// using concrete class below, since "changed" is something of an internal method
-			PageDirectiveAdapterImpl pageDirectiveAdapter = (PageDirectiveAdapterImpl) ((DOMDocument) targetElement.getOwnerDocument()).getAdapterFor(PageDirectiveAdapter.class);
+			PageDirectiveAdapterImpl pageDirectiveAdapter = (PageDirectiveAdapterImpl) ((IDOMDocument) targetElement.getOwnerDocument()).getAdapterFor(PageDirectiveAdapter.class);
 			pageDirectiveAdapter.changedLanguage(((IndexedRegion) targetElement).getStartOffset(), languageValue);
 		}
 
@@ -66,7 +66,7 @@ class PageDirectiveWatcherImpl implements PageDirectiveWatcher {
 		// we should only be added to page directives, so if we see a page directive
 		// change, we need to check its attributes, and notify the PageDirectiveAdapter when 
 		// certain ones chane, so it can make its "centralized" decisions.
-		if (notifier instanceof DOMNode) {
+		if (notifier instanceof IDOMNode) {
 
 			switch (eventType) {
 				case INodeNotifier.CHANGE :
@@ -75,12 +75,12 @@ class PageDirectiveWatcherImpl implements PageDirectiveWatcher {
 						String name = attribute.getName();
 						if (name.equals("contentType")) { //$NON-NLS-1$
 							// using concrete class below, since "changed" is something of an internal method
-							PageDirectiveAdapterImpl pageDirectiveAdapter = (PageDirectiveAdapterImpl) ((DOMDocument) targetElement.getOwnerDocument()).getAdapterFor(PageDirectiveAdapter.class);
+							PageDirectiveAdapterImpl pageDirectiveAdapter = (PageDirectiveAdapterImpl) ((IDOMDocument) targetElement.getOwnerDocument()).getAdapterFor(PageDirectiveAdapter.class);
 							pageDirectiveAdapter.changedContentType(((IndexedRegion) targetElement).getStartOffset(), (String) newValue);
 						}
 						if (name.equals("language")) { //$NON-NLS-1$ //$NON-NLS-2$
 							// using concrete class below, since "changed" is something of an internal method
-							PageDirectiveAdapterImpl pageDirectiveAdapter = (PageDirectiveAdapterImpl) ((DOMDocument) targetElement.getOwnerDocument()).getAdapterFor(PageDirectiveAdapter.class);
+							PageDirectiveAdapterImpl pageDirectiveAdapter = (PageDirectiveAdapterImpl) ((IDOMDocument) targetElement.getOwnerDocument()).getAdapterFor(PageDirectiveAdapter.class);
 							pageDirectiveAdapter.changedLanguage(((IndexedRegion) targetElement).getStartOffset(), (String) newValue);
 						}
 					}

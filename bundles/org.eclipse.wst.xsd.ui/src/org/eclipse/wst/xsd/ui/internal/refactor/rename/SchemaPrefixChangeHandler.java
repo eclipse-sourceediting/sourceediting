@@ -13,7 +13,7 @@ package org.eclipse.wst.xsd.ui.internal.refactor.rename;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xsd.ui.internal.refactor.XSDVisitor;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.XSDAttributeDeclaration;
@@ -87,7 +87,7 @@ public class SchemaPrefixChangeHandler
         if (ns.equals(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001))        
         {
           Element domElement = element.getElement();
-          if (domElement != null && domElement instanceof DOMNode)
+          if (domElement != null && domElement instanceof IDOMNode)
           {
             Attr typeAttr = domElement.getAttributeNode(XSDConstants.TYPE_ATTRIBUTE);
             if (typeAttr != null)
@@ -114,7 +114,7 @@ public class SchemaPrefixChangeHandler
         {
           XSDDOMHelper domHelper = new XSDDOMHelper();
           Element derivedBy = domHelper.getDerivedByElement(simpleType.getElement());
-          if (derivedBy != null && derivedBy instanceof DOMNode)
+          if (derivedBy != null && derivedBy instanceof IDOMNode)
           {
             Attr typeAttr = derivedBy.getAttributeNode(XSDConstants.BASE_ATTRIBUTE);
             if (typeAttr != null)
@@ -137,7 +137,7 @@ public class SchemaPrefixChangeHandler
           if (listNode != null && listNode instanceof Element)
           {
             Element listElement = (Element)listNode;          
-            if (listElement instanceof DOMNode)
+            if (listElement instanceof IDOMNode)
             {
               Attr typeAttr = listElement.getAttributeNode(XSDConstants.ITEMTYPE_ATTRIBUTE);
               if (typeAttr != null)
@@ -157,7 +157,7 @@ public class SchemaPrefixChangeHandler
         if (unionNode != null && unionNode instanceof Element)
         {
           Element unionElement = (Element)unionNode;          
-          if (unionElement instanceof DOMNode)
+          if (unionElement instanceof IDOMNode)
           {
             Attr typeAttr = unionElement.getAttributeNode(XSDConstants.MEMBERTYPES_ATTRIBUTE);
             StringBuffer sb = new StringBuffer("");
@@ -197,7 +197,7 @@ public class SchemaPrefixChangeHandler
         if (ns.equals(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001))
         {
           Element domElement = attr.getElement();
-          if (domElement != null && domElement instanceof DOMNode)
+          if (domElement != null && domElement instanceof IDOMNode)
           {
             Attr typeAttr = domElement.getAttributeNode(XSDConstants.TYPE_ATTRIBUTE);
             if (typeAttr != null)

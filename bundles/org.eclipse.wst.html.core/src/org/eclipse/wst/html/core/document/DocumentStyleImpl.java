@@ -18,8 +18,8 @@ package org.eclipse.wst.html.core.document;
 
 import org.eclipse.wst.css.core.adapters.IStyleSheetListAdapter;
 import org.eclipse.wst.sse.core.INodeAdapter;
-import org.eclipse.wst.xml.core.document.DOMDocument;
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMDocument;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
@@ -34,7 +34,7 @@ import org.w3c.dom.stylesheets.StyleSheetList;
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
-public class DocumentStyleImpl extends DocumentImpl implements DOMDocument, DocumentCSS {
+public class DocumentStyleImpl extends DocumentImpl implements IDOMDocument, DocumentCSS {
 	public DocumentStyleImpl() {
 		super();
 	}
@@ -90,7 +90,7 @@ public class DocumentStyleImpl extends DocumentImpl implements DOMDocument, Docu
 		return cloned;
 	}
 
-	protected void setModel(DOMModel model) {
+	protected void setModel(IDOMModel model) {
 		super.setModel(model);
 	}
 }

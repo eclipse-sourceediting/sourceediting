@@ -23,7 +23,7 @@ import org.eclipse.wst.css.core.util.CSSUtil;
 import org.eclipse.wst.css.core.util.URLModelProviderCSS;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.css.CSSStyleSheet;
 import org.w3c.dom.stylesheets.MediaList;
@@ -142,7 +142,7 @@ class CSSImportRuleImpl extends CSSRuleImpl implements ICSSImportRule {
 				if (getOwnerDocument().getModel().getStyleSheetType() == ICSSModel.EMBEDDED) { // case
 																								// STYLE
 																								// tag
-					baseModel = ((DOMNode) getOwnerDocument().getModel().getOwnerDOMNode()).getModel();
+					baseModel = ((IDOMNode) getOwnerDocument().getModel().getOwnerDOMNode()).getModel();
 				}
 				// get ModelProvideAdapter
 				IModelProvideAdapter adapter = (IModelProvideAdapter) getAdapterFor(IModelProvideAdapter.class);

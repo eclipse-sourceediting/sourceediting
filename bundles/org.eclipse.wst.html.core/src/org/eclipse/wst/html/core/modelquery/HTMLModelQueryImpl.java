@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.wst.html.core.HTMLCMProperties;
-import org.eclipse.wst.xml.core.document.DOMElement;
+import org.eclipse.wst.xml.core.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
@@ -124,8 +124,8 @@ public class HTMLModelQueryImpl extends ModelQueryImpl implements MovableModelQu
 		Node p = child.getParentNode();
 		while (p != null) {
 			if (p.getNodeType() == Node.ELEMENT_NODE) {
-				if (p instanceof DOMElement) {
-					if (((DOMElement) p).isImplicitTag()) {
+				if (p instanceof IDOMElement) {
+					if (((IDOMElement) p).isImplicitTag()) {
 						p = p.getParentNode();
 						continue;
 					}

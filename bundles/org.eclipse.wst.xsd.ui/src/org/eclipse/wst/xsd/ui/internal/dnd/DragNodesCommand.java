@@ -13,7 +13,7 @@ package org.eclipse.wst.xsd.ui.internal.dnd;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.format.NodeFormatter;
 import org.w3c.dom.Node;
 
@@ -68,7 +68,7 @@ public class DragNodesCommand extends BaseDragNodesCommand
       if (isSiblingNodes(referenceNode,node)) 
       {
         moveNode(referenceNode, node, !isAfter());
-        formatProcessor.format((DOMNode)node);
+        formatProcessor.format((IDOMNode)node);
       }
     }
 //    formatProcessor.format((XMLNode)referenceNode.getParentNode());

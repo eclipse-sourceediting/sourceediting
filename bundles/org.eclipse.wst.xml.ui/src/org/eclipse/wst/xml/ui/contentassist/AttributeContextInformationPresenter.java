@@ -26,7 +26,7 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 
 
@@ -78,7 +78,7 @@ public class AttributeContextInformationPresenter implements IContextInformation
 			return false;
 
 		// iterate existing attributes from current node
-		DOMNode xmlNode = fModelUtil.getXMLNode(documentPosition);
+		IDOMNode xmlNode = fModelUtil.getXMLNode(documentPosition);
 		IStructuredDocumentRegion sdRegion = xmlNode.getFirstStructuredDocumentRegion();
 		ITextRegionList regions = sdRegion.getRegions();
 		ITextRegion r = null;

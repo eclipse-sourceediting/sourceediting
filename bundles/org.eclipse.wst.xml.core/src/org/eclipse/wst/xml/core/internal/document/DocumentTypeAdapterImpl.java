@@ -15,8 +15,8 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.xml.core.document.DOMDocument;
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMDocument;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.w3c.dom.DocumentType;
 
 
@@ -24,7 +24,7 @@ import org.w3c.dom.DocumentType;
  */
 public class DocumentTypeAdapterImpl implements DocumentTypeAdapter {
 
-	private DOMDocument document = null;
+	private IDOMDocument document = null;
 	private DocumentType documentType = null;
 
 	/**
@@ -35,7 +35,7 @@ public class DocumentTypeAdapterImpl implements DocumentTypeAdapter {
 
 	/**
 	 */
-	protected DocumentTypeAdapterImpl(DOMDocument document) {
+	protected DocumentTypeAdapterImpl(IDOMDocument document) {
 		this.document = document;
 		if (document != null) {
 			this.documentType = document.getDoctype();
@@ -50,7 +50,7 @@ public class DocumentTypeAdapterImpl implements DocumentTypeAdapter {
 
 	/**
 	 */
-	protected DOMDocument getDocument() {
+	protected IDOMDocument getDocument() {
 		return this.document;
 	}
 
@@ -89,9 +89,9 @@ public class DocumentTypeAdapterImpl implements DocumentTypeAdapter {
 	public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
 		if (eventType != INodeNotifier.STRUCTURE_CHANGED)
 			return;
-		if (notifier == null || !(notifier instanceof DOMDocument))
+		if (notifier == null || !(notifier instanceof IDOMDocument))
 			return;
-		this.documentType = ((DOMDocument) notifier).getDoctype();
+		this.documentType = ((IDOMDocument) notifier).getDoctype();
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class DocumentTypeAdapterImpl implements DocumentTypeAdapter {
 	protected void notifyDocumentTypeChanged() {
 		if (this.document == null)
 			return;
-		DOMModel model = this.document.getModel();
+		IDOMModel model = this.document.getModel();
 		if (model == null)
 			return;
 		((XMLModelImpl) model).documentTypeChanged();

@@ -34,8 +34,8 @@ import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentAdapter;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
-import org.eclipse.wst.xml.core.document.DOMDocument;
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMDocument;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 
 /**
@@ -103,7 +103,7 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 				try {
 					model = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
 					if (model != null) {
-						DOMDocument xmlDoc = ((DOMModel) model).getDocument();
+						IDOMDocument xmlDoc = ((IDOMModel) model).getDocument();
 						fTranslationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
 					}
 				}
@@ -321,7 +321,7 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 			try {
 				model = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
 				if(getJSPTranslationAdapter() != null)
-					getJSPTranslationAdapter().setXMLModel((DOMModel) model);
+					getJSPTranslationAdapter().setXMLModel((IDOMModel) model);
 			}
 			finally {
 				if (model != null)

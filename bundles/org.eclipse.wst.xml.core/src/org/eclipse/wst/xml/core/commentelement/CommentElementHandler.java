@@ -14,7 +14,7 @@ package org.eclipse.wst.xml.core.commentelement;
 
 
 
-import org.eclipse.wst.xml.core.document.DOMElement;
+import org.eclipse.wst.xml.core.document.IDOMElement;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -72,7 +72,7 @@ public interface CommentElementHandler {
 	 *            the comment element
 	 * @return generated tag string
 	 */
-	String generateEndTagContent(DOMElement element);
+	String generateEndTagContent(IDOMElement element);
 
 	/**
 	 * This method generates the source text of the start tag for the passed
@@ -84,7 +84,7 @@ public interface CommentElementHandler {
 	 *            the comment element
 	 * @return generated tag string
 	 */
-	String generateStartTagContent(DOMElement element);
+	String generateStartTagContent(IDOMElement element);
 
 	/**
 	 * 
@@ -92,7 +92,7 @@ public interface CommentElementHandler {
 	 *            the element
 	 * @return boolean whether the element is comment element or not
 	 */
-	boolean isCommentElement(DOMElement element);
+	boolean isCommentElement(IDOMElement element);
 
 	/**
 	 * 

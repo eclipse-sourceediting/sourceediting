@@ -22,7 +22,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
@@ -144,7 +144,7 @@ public abstract class BaseNodeActionManager {
 		}
 
 		if (selection.size() == 0) {
-			Document document = ((DOMModel) model).getDocument();
+			Document document = ((IDOMModel) model).getDocument();
 			contributeAddDocumentChildActions(menu, document, ic, vc);
 			contributeEditGrammarInformationActions(menu, document);
 		}

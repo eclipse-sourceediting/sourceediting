@@ -18,9 +18,9 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.xml.core.document.DOMElement;
-import org.eclipse.wst.xml.core.document.DOMNode;
-import org.eclipse.wst.xml.core.document.DOMText;
+import org.eclipse.wst.xml.core.document.IDOMElement;
+import org.eclipse.wst.xml.core.document.IDOMNode;
+import org.eclipse.wst.xml.core.document.IDOMText;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.w3c.dom.Node;
 
@@ -79,18 +79,18 @@ class ReadOnlyController {
 		super();
 	}
 
-	private Span getDataSpan(DOMNode node) {
+	private Span getDataSpan(IDOMNode node) {
 		switch (node.getNodeType()) {
 			case Node.ELEMENT_NODE :
-				return getDataSpanForElement((DOMElement) node);
+				return getDataSpanForElement((IDOMElement) node);
 			case Node.TEXT_NODE :
-				return getDataSpanForText((DOMText) node);
+				return getDataSpanForText((IDOMText) node);
 			default :
 				return new Span(0, -1);
 		}
 	}
 
-	private Span getDataSpanForElement(DOMElement node) {
+	private Span getDataSpanForElement(IDOMElement node) {
 		IStructuredDocumentRegion docRegion = node.getStartStructuredDocumentRegion();
 		if (docRegion == null) {
 			return new Span(0, -1);
@@ -133,7 +133,7 @@ class ReadOnlyController {
 		}
 	}
 
-	private Span getDataSpanForText(DOMText node) {
+	private Span getDataSpanForText(IDOMText node) {
 		IStructuredDocumentRegion docRegion = ((NodeImpl) node).getStructuredDocumentRegion();
 		if (docRegion == null) {
 			return new Span(0, -1);
@@ -149,7 +149,7 @@ class ReadOnlyController {
 	 * </child> </node> </parent> x###################? ?#######x (? :
 	 * editable if node.isEditable() == true)
 	 */
-	void lockBoth(DOMNode node) {
+	void lockBoth(IDOMNode node) {
 		if (node == null) {
 			return;
 		}
@@ -172,7 +172,7 @@ class ReadOnlyController {
 		}
 	}
 
-	void lockData(DOMNode node) {
+	void lockData(IDOMNode node) {
 		if (node == null) {
 			return;
 		}
@@ -186,7 +186,7 @@ class ReadOnlyController {
 	/**
 	 * lock itself and all descendants
 	 */
-	void lockDeep(DOMNode node) {
+	void lockDeep(IDOMNode node) {
 		if (node == null) {
 			return;
 		}
@@ -195,7 +195,7 @@ class ReadOnlyController {
 		int length = node.getEndOffset() - offset;
 
 		boolean canInsert = true;
-		DOMNode parent = (DOMNode) node.getParentNode();
+		IDOMNode parent = (IDOMNode) node.getParentNode();
 		if (parent != null && !parent.isChildEditable()) {
 			canInsert = false;
 		}
@@ -209,7 +209,7 @@ class ReadOnlyController {
 	 * case 2:<parent><node attr="value"> <child></child> </node> </parent>
 	 * x######x x#? ?#######x (? : editable if node.isEditable() == true)
 	 */
-	void lockNode(DOMNode node) {
+	void lockNode(IDOMNode node) {
 		if (node == null) {
 			return;
 		}
@@ -255,7 +255,7 @@ class ReadOnlyController {
 		doc.clearReadOnly(offset, length);
 	}
 
-	void unlockBoth(DOMNode node) {
+	void unlockBoth(IDOMNode node) {
 		if (node == null) {
 			return;
 		}
@@ -273,7 +273,7 @@ class ReadOnlyController {
 		}
 	}
 
-	void unlockData(DOMNode node) {
+	void unlockData(IDOMNode node) {
 		if (node == null) {
 			return;
 		}
@@ -284,7 +284,7 @@ class ReadOnlyController {
 		}
 	}
 
-	void unlockDeep(DOMNode node) {
+	void unlockDeep(IDOMNode node) {
 		if (node == null) {
 			return;
 		}
@@ -295,7 +295,7 @@ class ReadOnlyController {
 		unlock(node.getStructuredDocument(), offset, length);
 	}
 
-	void unlockNode(DOMNode node) {
+	void unlockNode(IDOMNode node) {
 		if (node == null) {
 			return;
 		}

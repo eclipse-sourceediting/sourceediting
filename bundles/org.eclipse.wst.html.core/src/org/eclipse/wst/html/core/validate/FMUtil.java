@@ -13,7 +13,7 @@ package org.eclipse.wst.html.core.validate;
 
 
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 
 final class FMUtil {
 
@@ -30,7 +30,7 @@ final class FMUtil {
 
 	/**
 	 */
-	public final static Segment getSegment(DOMNode target, int segType) {
+	public final static Segment getSegment(IDOMNode target, int segType) {
 		if (target == null)
 			return new Segment(0, 0);
 		Segment seg = null;

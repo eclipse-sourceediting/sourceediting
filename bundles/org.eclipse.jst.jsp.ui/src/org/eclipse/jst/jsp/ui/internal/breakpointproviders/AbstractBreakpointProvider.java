@@ -27,7 +27,7 @@ import org.eclipse.wst.sse.core.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.IBreakpointProvider;
 import org.eclipse.wst.xml.core.contentmodel.CMNodeWrapper;
-import org.eclipse.wst.xml.core.document.DOMDocument;
+import org.eclipse.wst.xml.core.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
@@ -88,7 +88,7 @@ public abstract class AbstractBreakpointProvider implements IBreakpointProvider 
 		// go through the node's regions looking for JSP content
 		// until reaching the end of the line
 		while (flatNode != null) {
-			int validPosition = getValidRegionPosition(((DOMDocument) doc).getModel(), flatNode, startOffset, endOffset);
+			int validPosition = getValidRegionPosition(((IDOMDocument) doc).getModel(), flatNode, startOffset, endOffset);
 
 			if (validPosition == END_OF_LINE)
 				return NO_VALID_CONTENT;

@@ -10,26 +10,32 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.xml.core.internal.document;
+package org.eclipse.wst.xml.core.document;
 
 
 
-import org.eclipse.wst.sse.core.INodeAdapter;
-import org.eclipse.wst.xml.core.document.IDOMElement;
+import org.w3c.dom.DocumentType;
 
 /**
+ * This interface enables setting of Public and System ID for DOCTYPE
+ * declaration.
+ * 
+ * @since 1.0
  */
-public interface TagAdapter extends INodeAdapter {
+public interface IDOMDocumentType extends IDOMNode, DocumentType {
+
 
 	/**
+	 * Sets document type's public id, as source.
+	 * 
+	 * @param publicId
 	 */
-	String getEndTag(IDOMElement element);
+	void setPublicId(String publicId);
 
 	/**
+	 * Sets docment type's system id, as source.
+	 * 
+	 * @param systemId
 	 */
-	String getStartTag(IDOMElement element);
-
-	/**
-	 */
-	boolean isEndTag();
+	void setSystemId(String systemId);
 }

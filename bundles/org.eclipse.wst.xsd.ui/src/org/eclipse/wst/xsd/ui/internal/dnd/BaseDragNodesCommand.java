@@ -13,7 +13,7 @@ package org.eclipse.wst.xsd.ui.internal.dnd;
 import java.util.Collection;
 
 import org.eclipse.wst.common.ui.dnd.DefaultDragAndDropCommand;
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.util.XSDConstants;
@@ -64,7 +64,7 @@ public abstract class BaseDragNodesCommand extends DefaultDragAndDropCommand
   {
     if (target != null)
     {
-      DOMModel model = getModel((Node)target);
+      IDOMModel model = getModel((Node)target);
       
       if (model != null)
       {
@@ -77,7 +77,7 @@ public abstract class BaseDragNodesCommand extends DefaultDragAndDropCommand
   {
     if (target != null)
     {
-      DOMModel model = getModel((Node)target);
+      IDOMModel model = getModel((Node)target);
       
       if (model != null)
       {
@@ -85,7 +85,7 @@ public abstract class BaseDragNodesCommand extends DefaultDragAndDropCommand
       }
     }
   }
-  protected DOMModel getModel(Node node)
+  protected IDOMModel getModel(Node node)
   {
     Object object = node.getOwnerDocument();
     if (object instanceof DocumentImpl)

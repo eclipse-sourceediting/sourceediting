@@ -20,10 +20,10 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.xml.core.document.DOMDocument;
+import org.eclipse.wst.xml.core.document.IDOMDocument;
 import org.eclipse.wst.xml.core.document.ISourceGenerator;
-import org.eclipse.wst.xml.core.document.DOMModel;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMModel;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.document.AttrImpl;
@@ -42,21 +42,21 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 	static protected final char SINGLE_QUOTE = '\'';//$NON-NLS-1$
 	static protected final String XML_SPACE = "xml:space";//$NON-NLS-1$
 
-	protected void formatEndTag(DOMNode node, IStructuredFormatContraints formatContraints) {
+	protected void formatEndTag(IDOMNode node, IStructuredFormatContraints formatContraints) {
 		if (!isEndTagMissing(node)) {
 			// end tag exists
 
 			IStructuredDocument structuredDocument = node.getModel().getStructuredDocument();
 			String lineDelimiter = structuredDocument.getLineDelimiter();
 			String nodeIndentation = getNodeIndent(node);
-			DOMNode lastChild = (DOMNode) node.getLastChild();
+			IDOMNode lastChild = (IDOMNode) node.getLastChild();
 			if (lastChild != null && lastChild.getNodeType() != Node.TEXT_NODE) {
 				if (isEndTagMissing(lastChild)) {
 					// find deepest child
-					DOMNode deepestChild = (DOMNode) lastChild.getLastChild();
+					IDOMNode deepestChild = (IDOMNode) lastChild.getLastChild();
 					while (deepestChild != null && deepestChild.getLastChild() != null && isEndTagMissing(deepestChild)) {
 						lastChild = deepestChild;
-						deepestChild = (DOMNode) deepestChild.getLastChild();
+						deepestChild = (IDOMNode) deepestChild.getLastChild();
 					}
 
 					if (deepestChild != null) {
@@ -91,19 +91,19 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 		}
 	}
 
-	protected void formatNode(DOMNode node, IStructuredFormatContraints formatContraints) {
+	protected void formatNode(IDOMNode node, IStructuredFormatContraints formatContraints) {
 		if (node != null) {
 			// format indentation before node
 			formatIndentationBeforeNode(node, formatContraints);
 
 			// format start tag
-			DOMNode newNode = node;
+			IDOMNode newNode = node;
 			int startTagStartOffset = node.getStartOffset();
-			DOMModel structuredModel = node.getModel();
+			IDOMModel structuredModel = node.getModel();
 
 			formatStartTag(node, formatContraints);
 			// save new node
-			newNode = (DOMNode) structuredModel.getIndexedRegion(startTagStartOffset);
+			newNode = (IDOMNode) structuredModel.getIndexedRegion(startTagStartOffset);
 
 			IStructuredDocumentRegion flatNode = newNode.getFirstStructuredDocumentRegion();
 			if (flatNode != null) {
@@ -115,7 +115,7 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 					formatChildren(newNode, formatContraints);
 
 					// save new node
-					newNode = (DOMNode) structuredModel.getIndexedRegion(startTagStartOffset);
+					newNode = (IDOMNode) structuredModel.getIndexedRegion(startTagStartOffset);
 
 					// format end tag
 					formatEndTag(newNode, formatContraints);
@@ -131,7 +131,7 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 	 * This method formats the start tag name, and formats the attributes if
 	 * available.
 	 */
-	protected void formatStartTag(DOMNode node, IStructuredFormatContraints formatContraints) {
+	protected void formatStartTag(IDOMNode node, IStructuredFormatContraints formatContraints) {
 		String singleIndent = getFormatPreferences().getIndent();
 		String lineIndent = formatContraints.getCurrentIndent();
 		String attrIndent = lineIndent + singleIndent;
@@ -174,7 +174,7 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 				// check for xml:space attribute
 				if (flatNode.getText(nameRegion).compareTo(XML_SPACE) == 0) {
 					if (valueRegion == null) {
-						ModelQueryAdapter adapter = (ModelQueryAdapter) ((DOMDocument) node.getOwnerDocument()).getAdapterFor(ModelQueryAdapter.class);
+						ModelQueryAdapter adapter = (ModelQueryAdapter) ((IDOMDocument) node.getOwnerDocument()).getAdapterFor(ModelQueryAdapter.class);
 						CMElementDeclaration elementDeclaration = (CMElementDeclaration) adapter.getModelQuery().getCMNode(node);
 						if (elementDeclaration == null)
 							// CMElementDeclaration not found, default to
@@ -303,7 +303,7 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 			String undefinedRegion = getUndefinedRegions(node, lastUndefinedRegionOffset, node.getEndOffset() - lastUndefinedRegionOffset);
 			stringBuffer.append(undefinedRegion);
 
-			DOMModel structuredModel = node.getModel();
+			IDOMModel structuredModel = node.getModel();
 			IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
 			// 1 is for "<"
 			int offset = node.getStartOffset() + 1 + node.getNodeName().length();
@@ -332,7 +332,7 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 		}
 	}
 
-	protected String getUndefinedRegions(DOMNode node, int startOffset, int length) {
+	protected String getUndefinedRegions(IDOMNode node, int startOffset, int length) {
 		String result = new String();
 
 		IStructuredDocumentRegion flatNode = node.getFirstStructuredDocumentRegion();

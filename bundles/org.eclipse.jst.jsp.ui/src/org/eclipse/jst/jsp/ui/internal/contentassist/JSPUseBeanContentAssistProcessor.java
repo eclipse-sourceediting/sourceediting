@@ -20,7 +20,7 @@ import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.eclipse.wst.xml.ui.contentassist.ContentAssistRequest;
 
@@ -32,7 +32,7 @@ public class JSPUseBeanContentAssistProcessor extends JSPDummyContentAssistProce
 
 	protected void addAttributeValueProposals(ContentAssistRequest contentAssistRequest) {
 
-		DOMNode node = (DOMNode) contentAssistRequest.getNode();
+		IDOMNode node = (IDOMNode) contentAssistRequest.getNode();
 
 		// Find the attribute name for which this position should have a value
 		IStructuredDocumentRegion open = node.getFirstStructuredDocumentRegion();

@@ -17,8 +17,8 @@ package org.eclipse.wst.xml.core.internal.document;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.xml.core.document.ISourceGenerator;
-import org.eclipse.wst.xml.core.document.DOMModel;
-import org.eclipse.wst.xml.core.document.DOMText;
+import org.eclipse.wst.xml.core.document.IDOMModel;
+import org.eclipse.wst.xml.core.document.IDOMText;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -29,7 +29,7 @@ import org.w3c.dom.Text;
 /**
  * TextImpl class
  */
-public class TextImpl extends CharacterDataImpl implements DOMText {
+public class TextImpl extends CharacterDataImpl implements IDOMText {
 
 	/**
 	 */
@@ -352,7 +352,7 @@ public class TextImpl extends CharacterDataImpl implements DOMText {
 	private String getSource(String data) {
 		if (data == null)
 			return null;
-		DOMModel model = getModel();
+		IDOMModel model = getModel();
 		if (model == null)
 			return null; // error
 		ISourceGenerator generator = model.getGenerator();

@@ -26,8 +26,8 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.search.BasicFindOccurrencesAction;
-import org.eclipse.wst.xml.core.document.DOMDocument;
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMDocument;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 
 /**
@@ -80,8 +80,8 @@ public class JSPFindOccurrencesAction extends BasicFindOccurrencesAction impleme
 		StructuredTextEditor editor = (StructuredTextEditor) getTextEditor();
 		// get JSP translation object for this viewer's document
 		IStructuredModel model = editor.getModel();
-		if (model != null && model instanceof DOMModel) {
-			DOMDocument xmlDoc = ((DOMModel) model).getDocument();
+		if (model != null && model instanceof IDOMModel) {
+			IDOMDocument xmlDoc = ((IDOMModel) model).getDocument();
 			JSPTranslationAdapter adapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
 			if (adapter != null) {
 				JSPTranslation translation = adapter.getJSPTranslation();

@@ -76,8 +76,8 @@ import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
 import org.eclipse.wst.xml.core.contentmodel.CMDocType;
 import org.eclipse.wst.xml.core.contentmodel.CMDocumentTracker;
 import org.eclipse.wst.xml.core.contentmodel.CMNodeWrapper;
-import org.eclipse.wst.xml.core.document.DOMModel;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMModel;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
@@ -218,7 +218,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 	protected void addAttributeValueProposals(ContentAssistRequest contentAssistRequest) {
 		addTemplates(contentAssistRequest, TemplateContextTypeIdsJSP.ATTRIBUTE_VALUE);
 
-		DOMNode node = (DOMNode) contentAssistRequest.getNode();
+		IDOMNode node = (IDOMNode) contentAssistRequest.getNode();
 
 		// add JSP extra proposals from JSPBeanInfoContentAssistProcessor
 		// JSPPropertyContentAssistProcessor
@@ -303,10 +303,10 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 				IStructuredModel internalModel = null;
 				IModelManager mmanager = StructuredModelManager.getModelManager();
 				internalModel = mmanager.createUnManagedStructuredModelFor(ContentTypeIdForJSP.ContentTypeID_JSP);
-				DOMNode xmlNode = null;
-				DOMModel xmlOuterModel = null;
-				if (contentAssistRequest.getNode() instanceof DOMNode) {
-					xmlNode = (DOMNode) contentAssistRequest.getNode();
+				IDOMNode xmlNode = null;
+				IDOMModel xmlOuterModel = null;
+				if (contentAssistRequest.getNode() instanceof IDOMNode) {
+					xmlNode = (IDOMNode) contentAssistRequest.getNode();
 					xmlOuterModel = xmlNode.getModel();
 					internalModel.setResolver(xmlOuterModel.getResolver());
 					internalModel.setBaseLocation(xmlOuterModel.getBaseLocation());
@@ -340,7 +340,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 						doc = node.getOwnerDocument();
 					NodeList useBeans = doc.getElementsByTagName(JSP12Namespace.ElementName.USEBEAN);
 					for (int k = 0; k < useBeans.getLength(); k++) {
-						DOMNode useBean = (DOMNode) useBeans.item(k);
+						IDOMNode useBean = (IDOMNode) useBeans.item(k);
 						if (useBean.getStartOffset() < contentAssistRequest.getReplacementBeginPosition()) {
 							StringBuffer useBeanText = new StringBuffer("<jsp:useBean"); //$NON-NLS-1$
 							for (int j = 0; j < useBean.getAttributes().getLength(); j++) {
@@ -421,7 +421,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 	}
 
 	private List getAdditionalChildren(List elementDecls, Node node, int childIndex) {
-		if (node instanceof DOMNode) {
+		if (node instanceof IDOMNode) {
 			/*
 			 * find the location of the intended insertion as it will give us
 			 * the correct offset for checking position dependent CMDocuments
@@ -430,12 +430,12 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 			NodeList children = node.getChildNodes();
 			if (children.getLength() >= childIndex && childIndex >= 0) {
 				Node nodeAlreadyAtIndex = children.item(childIndex);
-				if (nodeAlreadyAtIndex instanceof DOMNode)
-					textInsertionOffset = ((DOMNode) nodeAlreadyAtIndex).getEndOffset();
+				if (nodeAlreadyAtIndex instanceof IDOMNode)
+					textInsertionOffset = ((IDOMNode) nodeAlreadyAtIndex).getEndOffset();
 			} else {
-				textInsertionOffset = ((DOMNode) node).getStartOffset();
+				textInsertionOffset = ((IDOMNode) node).getStartOffset();
 			}
-			TLDCMDocumentManager mgr = TaglibController.getTLDCMDocumentManager(((DOMNode) node).getStructuredDocument());
+			TLDCMDocumentManager mgr = TaglibController.getTLDCMDocumentManager(((IDOMNode) node).getStructuredDocument());
 			if (mgr != null) {
 				List moreCMDocuments = mgr.getCMDocumentTrackers(textInsertionOffset);
 				if (moreCMDocuments != null) {
@@ -457,9 +457,9 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 
 			ModelQueryAdapter mqAdapter = null;
 			if (node.getNodeType() == Node.DOCUMENT_NODE)
-				mqAdapter = (ModelQueryAdapter) ((DOMNode) node).getAdapterFor(ModelQueryAdapter.class);
+				mqAdapter = (ModelQueryAdapter) ((IDOMNode) node).getAdapterFor(ModelQueryAdapter.class);
 			else
-				mqAdapter = (ModelQueryAdapter) ((DOMNode) node.getOwnerDocument()).getAdapterFor(ModelQueryAdapter.class);
+				mqAdapter = (ModelQueryAdapter) ((IDOMNode) node.getOwnerDocument()).getAdapterFor(ModelQueryAdapter.class);
 
 			if (mqAdapter != null) {
 				CMDocument doc = mqAdapter.getModelQuery().getCorrespondingCMDocument(node);
@@ -507,7 +507,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 						// don't show jsp:root if a document element already
 						// exists
 						Element docElement = domDoc.getDocumentElement();
-						if (docElement != null && ((docElement.getNodeName().equals("jsp:root")) || ((((DOMNode) docElement).getStartStructuredDocumentRegion() != null || ((DOMNode) docElement).getEndStructuredDocumentRegion() != null)))) //$NON-NLS-1$
+						if (docElement != null && ((docElement.getNodeName().equals("jsp:root")) || ((((IDOMNode) docElement).getStartStructuredDocumentRegion() != null || ((IDOMNode) docElement).getEndStructuredDocumentRegion() != null)))) //$NON-NLS-1$
 							rejectElements.add(JSP12Namespace.ElementName.ROOT);
 
 						for (int j = 0; j < jspelements.getLength(); j++) {
@@ -1073,7 +1073,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		if (doc == null)
 			return false;
 		Element docElement = doc.getDocumentElement();
-		return docElement != null && ((docElement.getNodeName().equals("jsp:root")) || ((((DOMNode) docElement).getStartStructuredDocumentRegion() == null && ((DOMNode) docElement).getEndStructuredDocumentRegion() == null))); //$NON-NLS-1$
+		return docElement != null && ((docElement.getNodeName().equals("jsp:root")) || ((((IDOMNode) docElement).getStartStructuredDocumentRegion() == null && ((IDOMNode) docElement).getEndStructuredDocumentRegion() == null))); //$NON-NLS-1$
 	}
 
 	/*
@@ -1116,9 +1116,9 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 
 	/**
 	 * @see AbstractContentAssistProcessor#computeCompletionProposals(int,
-	 *      String, ITextRegion, DOMNode, DOMNode)
+	 *      String, ITextRegion, IDOMNode, IDOMNode)
 	 */
-	protected ContentAssistRequest computeCompletionProposals(int documentPosition, String matchString, ITextRegion completionRegion, DOMNode treeNode, DOMNode xmlnode) {
+	protected ContentAssistRequest computeCompletionProposals(int documentPosition, String matchString, ITextRegion completionRegion, IDOMNode treeNode, IDOMNode xmlnode) {
 
 		ContentAssistRequest request = super.computeCompletionProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
 		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) fTextViewer, documentPosition);
@@ -1240,9 +1240,9 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 
 	/**
 	 * @see com.ibm.sed.contentassist.old.xml.AbstractContentAssistProcessor#addEntityProposals(ContentAssistRequest,
-	 *      int, ITextRegion, DOMNode)
+	 *      int, ITextRegion, IDOMNode)
 	 */
-	protected void addEntityProposals(ContentAssistRequest contentAssistRequest, int documentPosition, ITextRegion completionRegion, DOMNode treeNode) {
+	protected void addEntityProposals(ContentAssistRequest contentAssistRequest, int documentPosition, ITextRegion completionRegion, IDOMNode treeNode) {
 	}
 
 	/**

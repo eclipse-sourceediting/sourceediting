@@ -24,7 +24,7 @@ import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.ui.contentassist.XMLContentAssistUtilities;
 import org.eclipse.wst.xml.ui.util.SharedXMLEditorPluginImageHelper;
 
@@ -45,15 +45,15 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int documentPosition) {
 
 		IndexedRegion indexedNode = ContentAssistUtils.getNodeAt((StructuredTextViewer) viewer, documentPosition + fDocumentOffset);
-		DOMNode xNode = null;
-		DOMNode parent = null;
+		IDOMNode xNode = null;
+		IDOMNode parent = null;
 		CSSProposalArranger arranger = null;
 
 		// bail if we couldn't get an indexed node
 		// if(indexedNode == null) return new ICompletionProposal[0];
-		if (indexedNode instanceof DOMNode) {
-			xNode = (DOMNode) indexedNode;
-			parent = (DOMNode) xNode.getParentNode();
+		if (indexedNode instanceof IDOMNode) {
+			xNode = (IDOMNode) indexedNode;
+			parent = (IDOMNode) xNode.getParentNode();
 		}
 		// need to get in here if there in the no 0 region <style>|</style>
 		// case
@@ -86,9 +86,9 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 				arranger = new CSSProposalArranger(pos, (ICSSNode) keyIndexedNode, offset, (char) 0);
 			}
 		}
-		else if (indexedNode instanceof DOMNode) {
+		else if (indexedNode instanceof IDOMNode) {
 			// get model for node w/ style attribute
-			IStructuredModel cssModel = getCSSModel((DOMNode) indexedNode);
+			IStructuredModel cssModel = getCSSModel((IDOMNode) indexedNode);
 			if (cssModel != null) {
 				IndexedRegion keyIndexedNode = cssModel.getIndexedRegion(documentPosition - fDocumentOffset);
 				if (keyIndexedNode == null) {
@@ -197,7 +197,7 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 	 * @param element
 	 * @return IStructuredModel
 	 */
-	private IStructuredModel getCSSModel(DOMNode element) {
+	private IStructuredModel getCSSModel(IDOMNode element) {
 		if (element == null)
 			return null;
 		INodeAdapter adapter = StyleAdapterFactory.getInstance().adapt(element);

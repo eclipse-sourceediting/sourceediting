@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.wst.xml.core.commentelement.CommentElementAdapter;
 import org.eclipse.wst.xml.core.commentelement.CommentElementHandler;
-import org.eclipse.wst.xml.core.document.DOMElement;
+import org.eclipse.wst.xml.core.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -74,7 +74,7 @@ public class CommentElementConfiguration {
 	}
 
 	public Element createElement(Document document, String data, boolean isJSPTag) {
-		DOMElement element = (DOMElement) getHandler().createElement(document, data, isJSPTag);
+		IDOMElement element = (IDOMElement) getHandler().createElement(document, data, isJSPTag);
 		if (element != null) {
 			CommentElementAdapter adapter = (CommentElementAdapter) element.getAdapterFor(CommentElementAdapter.class);
 			if (adapter != null) {
@@ -125,11 +125,11 @@ public class CommentElementConfiguration {
 						return null;
 					}
 
-					public String generateEndTagContent(DOMElement element) {
+					public String generateEndTagContent(IDOMElement element) {
 						return null;
 					}
 
-					public String generateStartTagContent(DOMElement element) {
+					public String generateStartTagContent(IDOMElement element) {
 						return null;
 					}
 
@@ -137,7 +137,7 @@ public class CommentElementConfiguration {
 						return null;
 					}
 
-					public boolean isCommentElement(DOMElement element) {
+					public boolean isCommentElement(IDOMElement element) {
 						return false;
 					}
 
@@ -220,7 +220,7 @@ public class CommentElementConfiguration {
 		return fEmpty;
 	}
 
-	void setupCommentElement(DOMElement element) {
+	void setupCommentElement(IDOMElement element) {
 		element.setCommentTag(true);
 		CommentElementAdapter adapter = new CommentElementAdapter(false, fHandler);
 		adapter.setConfiguration(this);

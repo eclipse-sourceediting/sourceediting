@@ -50,7 +50,7 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
-import org.eclipse.wst.xml.core.XMLPreferenceNames;
+import org.eclipse.wst.xml.core.IXMLPreferenceNames;
 import org.eclipse.wst.xml.ui.StructuredTextEditorXML;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -679,7 +679,7 @@ public class XSDMultiPageEditorPart extends MultiPageEditorPart implements IProp
 
   protected void saveLastActivePageIndex(int newPageIndex) {
     // save the last active page index to preference manager
-    getPreferenceStore().setValue(XMLPreferenceNames.LAST_ACTIVE_PAGE, newPageIndex);
+    getPreferenceStore().setValue(IXMLPreferenceNames.LAST_ACTIVE_PAGE, newPageIndex);
   }
 
   /**
@@ -687,7 +687,7 @@ public class XSDMultiPageEditorPart extends MultiPageEditorPart implements IProp
    */
   protected void setActivePage() {
     // retrieve the last active page index from preference manager
-    int activePageIndex = getPreferenceStore().getInt(XMLPreferenceNames.LAST_ACTIVE_PAGE);
+    int activePageIndex = getPreferenceStore().getInt(IXMLPreferenceNames.LAST_ACTIVE_PAGE);
 
     // We check this range since someone could hand edit the XML
     // preference file to an invalid value ... which I know from

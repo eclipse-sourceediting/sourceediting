@@ -21,7 +21,7 @@ import org.eclipse.wst.css.core.document.ICSSStyleRule;
 import org.eclipse.wst.css.ui.image.CSSImageType;
 import org.eclipse.wst.html.core.contentmodel.HTMLCMDocumentFactory;
 import org.eclipse.wst.xml.core.contentmodel.CMDocType;
-import org.eclipse.wst.xml.core.document.DOMDocument;
+import org.eclipse.wst.xml.core.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
@@ -62,8 +62,8 @@ class CSSProposalGeneratorForHTMLTag extends CSSProposalGenerator {
 			Node domNode = fContext.getModel().getOwnerDOMNode();
 			if (domNode != null && !(domNode instanceof Document)) {
 				domNode = domNode.getOwnerDocument();
-				if (domNode instanceof DOMDocument) {
-					DocumentTypeAdapter adapter = (DocumentTypeAdapter) ((DOMDocument) domNode).getAdapterFor(DocumentTypeAdapter.class);
+				if (domNode instanceof IDOMDocument) {
+					DocumentTypeAdapter adapter = (DocumentTypeAdapter) ((IDOMDocument) domNode).getAdapterFor(DocumentTypeAdapter.class);
 					if (adapter != null)
 						bLowerCase = (adapter.getTagNameCase() == DocumentTypeAdapter.LOWER_CASE);
 				}

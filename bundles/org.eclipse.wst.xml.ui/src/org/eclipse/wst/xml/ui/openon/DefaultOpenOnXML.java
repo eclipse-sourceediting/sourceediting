@@ -27,8 +27,8 @@ import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.sse.ui.openon.AbstractOpenOn;
-import org.eclipse.wst.xml.core.document.DOMAttr;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMAttr;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
@@ -64,14 +64,14 @@ public class DefaultOpenOnXML extends AbstractOpenOn {
 		if (currNode != null) {
 			// handle doc type node
 			if (currNode.getNodeType() == Node.DOCUMENT_TYPE_NODE) {
-				DOMNode docNode = (DOMNode) currNode;
+				IDOMNode docNode = (IDOMNode) currNode;
 				return new Region(docNode.getStartOffset(), docNode.getEndOffset() - docNode.getStartOffset());
 			}
 
 			Attr linkableAtt = getLinkableAttrFromNode(currNode, offset);
 			// found attribute to open on
 			if (linkableAtt != null) {
-				DOMAttr att = (DOMAttr) linkableAtt;
+				IDOMAttr att = (IDOMAttr) linkableAtt;
 				// do not include quotes in attribute value region
 				int regOffset = att.getValueRegionStartOffset();
 				int regLength = att.getValueRegion().getTextLength();

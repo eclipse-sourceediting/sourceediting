@@ -16,7 +16,7 @@ package org.eclipse.wst.xml.core.internal.modelquery;
 
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
@@ -46,9 +46,9 @@ public class ModelQueryUtil {
 	}
 
 	public static ModelQuery getModelQuery(IStructuredModel model) {
-		if ((!(model instanceof DOMModel)) || model == null)
+		if ((!(model instanceof IDOMModel)) || model == null)
 			return null;
-		return getModelQuery(((DOMModel) model).getDocument());
+		return getModelQuery(((IDOMModel) model).getDocument());
 	}
 
 	public static ModelQueryAdapter getModelQueryAdapter(Document node) {

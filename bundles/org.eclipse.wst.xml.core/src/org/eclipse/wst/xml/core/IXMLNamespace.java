@@ -7,35 +7,20 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.xml.core.document;
+package org.eclipse.wst.xml.core;
 
 
-
-import org.w3c.dom.DocumentType;
 
 /**
- * This interface enables setting of Public and System ID for DOCTYPE
- * declaration.
+ * XML Namespace constants
  * 
  * @since 1.0
  */
-public interface DOMDocumentType extends DOMNode, DocumentType {
+public interface IXMLNamespace {
 
-
-	/**
-	 * Sets document type's public id, as source.
-	 * 
-	 * @param publicId
-	 */
-	void setPublicId(String publicId);
-
-	/**
-	 * Sets docment type's system id, as source.
-	 * 
-	 * @param systemId
-	 */
-	void setSystemId(String systemId);
+	static final String XMLNS = "xmlns";//$NON-NLS-1$
+	static final String XMLNS_PREFIX = "xmlns:";//$NON-NLS-1$
+	static final String XMLNS_URI = "http://www.w3.org/2000/xmlns/";//$NON-NLS-1$
 }

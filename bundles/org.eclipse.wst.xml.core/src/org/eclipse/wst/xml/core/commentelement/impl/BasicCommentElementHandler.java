@@ -17,8 +17,8 @@ package org.eclipse.wst.xml.core.commentelement.impl;
 import org.eclipse.wst.xml.core.commentelement.CommentElementHandler;
 import org.eclipse.wst.xml.core.commentelement.util.CommentElementFactory;
 import org.eclipse.wst.xml.core.commentelement.util.TagScanner;
-import org.eclipse.wst.xml.core.document.DOMAttr;
-import org.eclipse.wst.xml.core.document.DOMElement;
+import org.eclipse.wst.xml.core.document.IDOMAttr;
+import org.eclipse.wst.xml.core.document.IDOMElement;
 import org.eclipse.wst.xml.core.document.ISourceGenerator;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -65,7 +65,7 @@ class BasicCommentElementHandler implements CommentElementHandler {
 					Attr attr = document.createAttribute(attrName);
 					if (attr != null) {
 						if (attrValue != null)
-							((DOMAttr) attr).setValueSource(attrValue);
+							((IDOMAttr) attr).setValueSource(attrValue);
 						element.setAttributeNode(attr);
 					}
 					attrName = scanner.nextName();
@@ -76,9 +76,9 @@ class BasicCommentElementHandler implements CommentElementHandler {
 	}
 
 	/**
-	 * @see com.ibm.sed.model.commentelement.CommentElementHandler#getEndTag(DOMElement)
+	 * @see com.ibm.sed.model.commentelement.CommentElementHandler#getEndTag(IDOMElement)
 	 */
-	public String generateEndTagContent(DOMElement element) {
+	public String generateEndTagContent(IDOMElement element) {
 		if (isEmpty) {
 			return null;
 		}
@@ -96,9 +96,9 @@ class BasicCommentElementHandler implements CommentElementHandler {
 	}
 
 	/**
-	 * @see com.ibm.sed.model.commentelement.CommentElementHandler#getStartTag(DOMElement)
+	 * @see com.ibm.sed.model.commentelement.CommentElementHandler#getStartTag(IDOMElement)
 	 */
-	public String generateStartTagContent(DOMElement element) {
+	public String generateStartTagContent(IDOMElement element) {
 		ISourceGenerator generator = element.getModel().getGenerator();
 		StringBuffer buffer = new StringBuffer();
 
@@ -138,7 +138,7 @@ class BasicCommentElementHandler implements CommentElementHandler {
 	 * 
 	 * @see com.ibm.sed.model.commentelement.CommentElementHandler#isCommentElement(com.ibm.sed.model.xml.XMLElement)
 	 */
-	public boolean isCommentElement(DOMElement element) {
+	public boolean isCommentElement(IDOMElement element) {
 		return (element != null && element.getTagName().equals(elementName)) ? true : false;
 	}
 

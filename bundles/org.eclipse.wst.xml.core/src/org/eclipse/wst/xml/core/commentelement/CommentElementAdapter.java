@@ -17,7 +17,7 @@ package org.eclipse.wst.xml.core.commentelement;
 import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.xml.core.commentelement.impl.CommentElementConfiguration;
-import org.eclipse.wst.xml.core.document.DOMElement;
+import org.eclipse.wst.xml.core.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.document.TagAdapter;
 
 
@@ -34,11 +34,11 @@ public class CommentElementAdapter implements TagAdapter {
 		fHandler = handler;
 	}
 
-	private String generateCommentClose(DOMElement element) {
+	private String generateCommentClose(IDOMElement element) {
 		return (element.isJSPTag()) ? "--%>" : "-->"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
-	private String generateCommentOpen(DOMElement element) {
+	private String generateCommentOpen(IDOMElement element) {
 		return (element.isJSPTag()) ? "<%--" : "<!--"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
@@ -47,9 +47,9 @@ public class CommentElementAdapter implements TagAdapter {
 	}
 
 	/**
-	 * @see com.ibm.sed.model.xml.TagAdapter#getEndTag(DOMElement)
+	 * @see com.ibm.sed.model.xml.TagAdapter#getEndTag(IDOMElement)
 	 */
-	public String getEndTag(DOMElement element) {
+	public String getEndTag(IDOMElement element) {
 		String content = fHandler.generateEndTagContent(element);
 		if (content == null) {
 			return null;
@@ -79,9 +79,9 @@ public class CommentElementAdapter implements TagAdapter {
 	}
 
 	/**
-	 * @see com.ibm.sed.model.xml.TagAdapter#getStartTag(DOMElement)
+	 * @see com.ibm.sed.model.xml.TagAdapter#getStartTag(IDOMElement)
 	 */
-	public String getStartTag(DOMElement element) {
+	public String getStartTag(IDOMElement element) {
 		String content = fHandler.generateStartTagContent(element);
 		if (content == null) {
 			return null;

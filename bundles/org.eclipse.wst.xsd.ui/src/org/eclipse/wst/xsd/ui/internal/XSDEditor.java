@@ -51,7 +51,7 @@ import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.document.XMLModelImpl;
 import org.eclipse.wst.xsd.ui.internal.graph.XSDGraphViewer;
 //import org.eclipse.wst.xsd.ui.internal.graph.model.XSDModelAdapterFactory;
@@ -428,7 +428,7 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
 
   public void reparseSchema()
   {
-    Document document  = ((DOMModel)getModel()).getDocument();
+    Document document  = ((IDOMModel)getModel()).getDocument();
     createSchema(document.getDocumentElement());
   }
   
@@ -768,7 +768,7 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
    */
   public void createDefaultSchemaNode()
   {
-    Document document  = ((DOMModel)getModel()).getDocument();
+    Document document  = ((IDOMModel)getModel()).getDocument();
     if (document.getChildNodes().getLength() == 0)
     {
       // if it is a completely empty file, then add the encoding and version processing instruction
@@ -811,7 +811,7 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
   {
     try
     {
-      Document document  = ((DOMModel)getModel()).getDocument();
+      Document document  = ((IDOMModel)getModel()).getDocument();
       if (document.getChildNodes().getLength() == 0)
       {
         // this is an empty document.  Create a default schema tag now
@@ -821,7 +821,7 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
       createSchema(document.getDocumentElement());
 
 			XSDDocumentAdapter documentAdapter =
-				new XSDDocumentAdapter(((DOMModel)getModel()).getDocument());
+				new XSDDocumentAdapter(((IDOMModel)getModel()).getDocument());
     }
     catch (Exception e)
     {

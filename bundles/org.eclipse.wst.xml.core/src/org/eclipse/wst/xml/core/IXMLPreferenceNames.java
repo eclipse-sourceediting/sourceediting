@@ -18,7 +18,7 @@ package org.eclipse.wst.xml.core;
  * @since 1.0
  */
 
-public interface XMLPreferenceNames {
+public interface IXMLPreferenceNames {
 	String CLEANUP_ATTR_NAME_CASE = "cleanupAttrNameCase";//$NON-NLS-1$
 	String CLEANUP_EOL_CODE = "cleanupEOLCode";//$NON-NLS-1$
 	// cleanup preference names

@@ -21,9 +21,9 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.xml.core.XMLCharEntity;
-import org.eclipse.wst.xml.core.XMLNamespace;
-import org.eclipse.wst.xml.core.document.DOMAttr;
+import org.eclipse.wst.xml.core.IXMLCharEntity;
+import org.eclipse.wst.xml.core.IXMLNamespace;
+import org.eclipse.wst.xml.core.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
@@ -37,7 +37,7 @@ import org.w3c.dom.Node;
 /**
  * AttrImpl class
  */
-public class AttrImpl extends NodeImpl implements DOMAttr {
+public class AttrImpl extends NodeImpl implements IDOMAttr {
 	private ITextRegion equalRegion = null;
 
 	private String name = null;
@@ -205,17 +205,17 @@ public class AttrImpl extends NodeImpl implements DOMAttr {
 		String nsAttrName = null;
 		String prefix = getPrefix();
 		if (prefix != null && prefix.length() > 0) {
-			if (prefix.equals(XMLNamespace.XMLNS)) {
+			if (prefix.equals(IXMLNamespace.XMLNS)) {
 				// fixed URI
-				return XMLNamespace.XMLNS_URI;
+				return IXMLNamespace.XMLNS_URI;
 			}
-			nsAttrName = XMLNamespace.XMLNS_PREFIX + prefix;
+			nsAttrName = IXMLNamespace.XMLNS_PREFIX + prefix;
 		}
 		else {
 			String name = getName();
-			if (name != null && name.equals(XMLNamespace.XMLNS)) {
+			if (name != null && name.equals(IXMLNamespace.XMLNS)) {
 				// fixed URI
-				return XMLNamespace.XMLNS_URI;
+				return IXMLNamespace.XMLNS_URI;
 			}
 			// does not inherit namespace from owner element
 			// if (this.ownerElement != null) return
@@ -450,7 +450,7 @@ public class AttrImpl extends NodeImpl implements DOMAttr {
 				buffer = new StringBuffer(length + 4);
 			if (amp > offset)
 				buffer.append(value.substring(offset, amp));
-			buffer.append(XMLCharEntity.AMP_REF);
+			buffer.append(IXMLCharEntity.AMP_REF);
 			offset = amp + 1;
 			amp = value.indexOf('&', offset);
 		}

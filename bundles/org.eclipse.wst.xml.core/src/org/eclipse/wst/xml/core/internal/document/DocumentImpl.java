@@ -22,11 +22,11 @@ import java.util.Map;
 
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 import org.eclipse.wst.xml.core.NameValidator;
-import org.eclipse.wst.xml.core.XMLCharEntity;
+import org.eclipse.wst.xml.core.IXMLCharEntity;
 import org.eclipse.wst.xml.core.commentelement.impl.CommentElementRegistry;
-import org.eclipse.wst.xml.core.document.DOMDocument;
-import org.eclipse.wst.xml.core.document.DOMElement;
-import org.eclipse.wst.xml.core.document.DOMModel;
+import org.eclipse.wst.xml.core.document.IDOMDocument;
+import org.eclipse.wst.xml.core.document.IDOMElement;
+import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMEntityDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
@@ -56,7 +56,7 @@ import org.w3c.dom.traversal.TreeWalker;
 /**
  * DocumentImpl class
  */
-public class DocumentImpl extends NodeContainer implements DOMDocument {
+public class DocumentImpl extends NodeContainer implements IDOMDocument {
 
 	/**
 	 * Internal-use only class. This class was added to better able to handle
@@ -476,7 +476,7 @@ public class DocumentImpl extends NodeContainer implements DOMDocument {
 		for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
 			if (child.getNodeType() == DOCUMENT_TYPE_NODE && child instanceof DocumentType) {
 				return (DocumentType) child;
-			} else if (child.getNodeType() == ELEMENT_NODE && ((DOMElement) child).isCommentTag()) {
+			} else if (child.getNodeType() == ELEMENT_NODE && ((IDOMElement) child).isCommentTag()) {
 				// search DOCTYPE inside of generic comment element
 				DocumentType docType = findDoctype(child);
 				if (docType != null) {
@@ -572,17 +572,17 @@ public class DocumentImpl extends NodeContainer implements DOMDocument {
 		}
 
 		// implicit character entities for XML
-		if (name.equals(XMLCharEntity.LT_NAME))
-			return XMLCharEntity.LT_VALUE;
-		if (name.equals(XMLCharEntity.GT_NAME))
-			return XMLCharEntity.GT_VALUE;
-		if (name.equals(XMLCharEntity.AMP_NAME))
-			return XMLCharEntity.AMP_VALUE;
-		if (name.equals(XMLCharEntity.QUOT_NAME))
-			return XMLCharEntity.QUOT_VALUE;
+		if (name.equals(IXMLCharEntity.LT_NAME))
+			return IXMLCharEntity.LT_VALUE;
+		if (name.equals(IXMLCharEntity.GT_NAME))
+			return IXMLCharEntity.GT_VALUE;
+		if (name.equals(IXMLCharEntity.AMP_NAME))
+			return IXMLCharEntity.AMP_VALUE;
+		if (name.equals(IXMLCharEntity.QUOT_NAME))
+			return IXMLCharEntity.QUOT_VALUE;
 		if (isXMLType()) {
-			if (name.equals(XMLCharEntity.APOS_NAME))
-				return XMLCharEntity.APOS_VALUE;
+			if (name.equals(IXMLCharEntity.APOS_NAME))
+				return IXMLCharEntity.APOS_VALUE;
 		}
 
 		CMDocument cm = getCMDocument();
@@ -799,7 +799,7 @@ public class DocumentImpl extends NodeContainer implements DOMDocument {
 	/**
 	 * other nodes will be referring to this one to get the owning model
 	 */
-	public DOMModel getModel() {
+	public IDOMModel getModel() {
 		return model;
 	}
 
@@ -1018,7 +1018,7 @@ public class DocumentImpl extends NodeContainer implements DOMDocument {
 	 *            XMLModel
 	 */
 
-	protected void setModel(DOMModel model) {
+	protected void setModel(IDOMModel model) {
 		this.model = (XMLModelImpl) model;
 	}
 

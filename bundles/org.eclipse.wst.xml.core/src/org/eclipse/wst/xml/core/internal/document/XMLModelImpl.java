@@ -25,10 +25,10 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.xml.core.document.DOMDocument;
+import org.eclipse.wst.xml.core.document.IDOMDocument;
 import org.eclipse.wst.xml.core.document.ISourceGenerator;
-import org.eclipse.wst.xml.core.document.DOMModel;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMModel;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
@@ -42,7 +42,7 @@ import org.w3c.dom.Node;
 /**
  * XMLModelImpl class
  */
-public class XMLModelImpl extends AbstractStructuredModel implements IStructuredDocumentListener, DOMModel, DOMImplementation {
+public class XMLModelImpl extends AbstractStructuredModel implements IStructuredDocumentListener, IDOMModel, DOMImplementation {
 	private static String TRACE_PARSER_MANAGEMENT_EXCEPTION = "parserManagement"; //$NON-NLS-1$
 	private Object active = null;
 	private DocumentImpl document = null;
@@ -326,7 +326,7 @@ public class XMLModelImpl extends AbstractStructuredModel implements IStructured
 	 * 
 	 * @return XMLDocument
 	 */
-	public DOMDocument getDocument() {
+	public IDOMDocument getDocument() {
 		return this.document;
 	}
 
@@ -347,14 +347,14 @@ public class XMLModelImpl extends AbstractStructuredModel implements IStructured
 		if (this.document == null)
 			return null;
 		// search in document children
-		DOMNode parent = null;
+		IDOMNode parent = null;
 		int length = this.document.getEndOffset();
 		if (offset * 2 < length) {
 			// search from the first
-			DOMNode child = (DOMNode) this.document.getFirstChild();
+			IDOMNode child = (IDOMNode) this.document.getFirstChild();
 			while (child != null) {
 				if (child.getEndOffset() <= offset) {
-					child = (DOMNode) child.getNextSibling();
+					child = (IDOMNode) child.getNextSibling();
 					continue;
 				}
 				if (child.getStartOffset() > offset) {
@@ -372,14 +372,14 @@ public class XMLModelImpl extends AbstractStructuredModel implements IStructured
 				}
 				// dig more
 				parent = child;
-				child = (DOMNode) parent.getFirstChild();
+				child = (IDOMNode) parent.getFirstChild();
 			}
 		} else {
 			// search from the last
-			DOMNode child = (DOMNode) this.document.getLastChild();
+			IDOMNode child = (IDOMNode) this.document.getLastChild();
 			while (child != null) {
 				if (child.getStartOffset() > offset) {
-					child = (DOMNode) child.getPreviousSibling();
+					child = (IDOMNode) child.getPreviousSibling();
 					continue;
 				}
 				if (child.getEndOffset() <= offset) {
@@ -397,7 +397,7 @@ public class XMLModelImpl extends AbstractStructuredModel implements IStructured
 				}
 				// dig more
 				parent = child;
-				child = (DOMNode) parent.getLastChild();
+				child = (IDOMNode) parent.getLastChild();
 			}
 		}
 		return parent;

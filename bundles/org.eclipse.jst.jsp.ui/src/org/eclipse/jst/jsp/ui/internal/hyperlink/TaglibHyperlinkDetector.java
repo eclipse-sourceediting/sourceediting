@@ -26,8 +26,8 @@ import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.xml.core.document.DOMAttr;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMAttr;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -116,12 +116,12 @@ public class TaglibHyperlinkDetector implements IHyperlinkDetector {
 			short nodeType = node.getNodeType();
 			if (nodeType == Node.DOCUMENT_TYPE_NODE) {
 				// handle doc type node
-				DOMNode docNode = (DOMNode) node;
+				IDOMNode docNode = (IDOMNode) node;
 				hyperRegion = new Region(docNode.getStartOffset(), docNode.getEndOffset() - docNode.getStartOffset());
 			}
 			else if (nodeType == Node.ATTRIBUTE_NODE) {
 				// handle attribute nodes
-				DOMAttr att = (DOMAttr) node;
+				IDOMAttr att = (IDOMAttr) node;
 				// do not include quotes in attribute value region
 				int regOffset = att.getValueRegionStartOffset();
 				int regLength = att.getValueRegion().getTextLength();

@@ -17,7 +17,7 @@ import java.util.List;
 import org.eclipse.jst.jsp.core.internal.contentmodel.JSPCMDocumentFactory;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
-import org.eclipse.wst.xml.core.document.DOMNode;
+import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQueryCMProvider;
@@ -54,9 +54,9 @@ public class JSPModelQueryCMProvider implements ModelQueryCMProvider {
 
 			String prefix = node.getPrefix();
 
-			if (result == null && prefix != null && prefix.length() > 0 && node instanceof DOMNode) {
+			if (result == null && prefix != null && prefix.length() > 0 && node instanceof IDOMNode) {
 				// check position dependent
-				DOMNode xmlNode = (DOMNode) node;
+				IDOMNode xmlNode = (IDOMNode) node;
 				TLDCMDocumentManager tldmgr = TaglibController.getTLDCMDocumentManager(xmlNode.getStructuredDocument());
 				if (tldmgr != null) {
 					List documents = tldmgr.getCMDocumentTrackers(node.getPrefix(), xmlNode.getStartOffset());
