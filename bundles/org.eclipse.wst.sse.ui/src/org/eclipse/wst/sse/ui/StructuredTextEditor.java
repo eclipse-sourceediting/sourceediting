@@ -1567,7 +1567,10 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 */
 	public IFile getFileInEditor() {
 		IStructuredModel model = getModel();
-		return ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(model.getBaseLocation()));
+		return ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(model.getBaseLocation()));
+		// (pa) this changed because FileBuffers don't use absolute location
+		// plain old getFile(...) should work now (for the relative URL)
+		//return ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(model.getBaseLocation()));
 	}
 
 	/**
