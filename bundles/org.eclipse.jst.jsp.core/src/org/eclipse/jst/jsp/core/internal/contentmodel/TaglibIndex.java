@@ -113,66 +113,131 @@ public class TaglibIndex {
 
 	class ResourceChangeListener implements IResourceChangeListener {
 		public void resourceChanged(IResourceChangeEvent event) {
-			try {
-				// pair deltas with projects
-				IResourceDelta[] deltas = new IResourceDelta[]{event.getDelta()};
-				IProject[] projects = null;
+			switch (event.getType()) {
+				case IResourceChangeEvent.PRE_CLOSE :
+				case IResourceChangeEvent.PRE_DELETE : {
+					try {
+						// pair deltas with projects
+						IResourceDelta[] deltas = new IResourceDelta[]{event.getDelta()};
+						IProject[] projects = null;
 
-				if (deltas != null && deltas.length > 0) {
-					IResource resource = null;
-					if (deltas[0] != null) {
-						resource = deltas[0].getResource();
-					}
-					else {
-						resource = event.getResource();
-					}
-
-					if (resource != null) {
-						if (resource.getType() == IResource.ROOT) {
-							deltas = deltas[0].getAffectedChildren();
-							projects = new IProject[deltas.length];
-							for (int i = 0; i < deltas.length; i++) {
-								if (deltas[i].getResource().getType() == IResource.PROJECT) {
-									projects[i] = (IProject) deltas[i].getResource();
-								}
-							}
-						}
-						else {
-							projects = new IProject[1];
-							if (resource.getType() != IResource.PROJECT) {
-								projects[0] = resource.getProject();
+						if (deltas != null && deltas.length > 0) {
+							IResource resource = null;
+							if (deltas[0] != null) {
+								resource = deltas[0].getResource();
 							}
 							else {
-								projects[0] = (IProject) resource;
+								resource = event.getResource();
 							}
-						}
-					}
-					for (int i = 0; i < projects.length; i++) {
-						try {
-							if (deltas[i] != null) {
-								ProjectDescription description = createDescription(projects[i]);
-								deltas[i].accept(description.getVisitor());
+
+							if (resource != null) {
+								if (resource.getType() == IResource.ROOT) {
+									deltas = deltas[0].getAffectedChildren();
+									projects = new IProject[deltas.length];
+									for (int i = 0; i < deltas.length; i++) {
+										if (deltas[i].getResource().getType() == IResource.PROJECT) {
+											projects[i] = (IProject) deltas[i].getResource();
+										}
+									}
+								}
+								else {
+									projects = new IProject[1];
+									if (resource.getType() != IResource.PROJECT) {
+										projects[0] = resource.getProject();
+									}
+									else {
+										projects[0] = (IProject) resource;
+									}
+								}
 							}
-							if (!projects[i].isAccessible()) {
+							for (int i = 0; i < projects.length; i++) {
+								if (_debugIndexCreation) {
+									System.out.println("TaglibIndex noticed " + projects[i].getName() + " is about to be deleted/closed");
+								}
 								ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(projects[i]);
 								if (description != null) {
+									if (_debugIndexCreation) {
+										System.out.println("removing index of " + description.fProject.getName());
+									}
 									description.clear();
 								}
 							}
 						}
-						catch (CoreException e) {
-							Logger.logException(e);
-						}
+					}
+					catch (Exception e) {
+						Logger.logException("Exception while processing resource deletion", e); //$NON-NLS-1$
 					}
 				}
-			}
-			catch (Exception e) {
-				Logger.logException("Exception while processing resource change", e); //$NON-NLS-1$
+				case IResourceChangeEvent.POST_CHANGE : {
+					try {
+						// pair deltas with projects
+						IResourceDelta[] deltas = new IResourceDelta[]{event.getDelta()};
+						IProject[] projects = null;
+
+						if (deltas != null && deltas.length > 0) {
+							IResource resource = null;
+							if (deltas[0] != null) {
+								resource = deltas[0].getResource();
+							}
+							else {
+								resource = event.getResource();
+							}
+
+							if (resource != null) {
+								if (resource.getType() == IResource.ROOT) {
+									deltas = deltas[0].getAffectedChildren();
+									projects = new IProject[deltas.length];
+									for (int i = 0; i < deltas.length; i++) {
+										if (deltas[i].getResource().getType() == IResource.PROJECT) {
+											projects[i] = (IProject) deltas[i].getResource();
+										}
+									}
+								}
+								else {
+									projects = new IProject[1];
+									if (resource.getType() != IResource.PROJECT) {
+										projects[0] = resource.getProject();
+									}
+									else {
+										projects[0] = (IProject) resource;
+									}
+								}
+							}
+							for (int i = 0; i < projects.length; i++) {
+								try {
+									if (deltas[i] != null && deltas[i].getKind() != IResourceDelta.REMOVED && projects[i].isAccessible()) {
+										ProjectDescription description = createDescription(projects[i]);
+										deltas[i].accept(description.getVisitor());
+									}
+									if (!projects[i].isAccessible() || (deltas[i] != null && deltas[i].getKind() == IResourceDelta.REMOVED)) {
+										if (_debugIndexCreation) {
+											System.out.println("TaglibIndex noticed " + projects[i].getName() + " is no longer accessible");
+										}
+										ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(projects[i]);
+										if (description != null) {
+											if (_debugIndexCreation) {
+												System.out.println("removing index of " + description.fProject.getName());
+											}
+											description.clear();
+										}
+									}
+								}
+								catch (CoreException e) {
+									Logger.logException(e);
+								}
+							}
+						}
+					}
+					catch (Exception e) {
+						Logger.logException("Exception while processing resource change", e); //$NON-NLS-1$
+					}
+				}
 			}
 		}
 	}
 
 	static final boolean _debugChangeListener = false;
+	static boolean _debugIndexCreation = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/indexcreation"));
 	static final boolean _debugResolution = "true".equals(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/resolve"));
 
 	static TaglibIndex _instance;
