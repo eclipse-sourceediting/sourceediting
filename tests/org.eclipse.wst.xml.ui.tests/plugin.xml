@@ -61,9 +61,10 @@
             targetID="org.eclipse.wst.sse.ui.StructuredTextEditor"
             id="org.eclipse.wst.xml.ui.tests.actions">
          <action
-               popupmenuPath="group.add"
+               popupmenuPath="group.editor"
                class="org.eclipse.wst.xml.ui.tests.breakpoints.EnableWarningAction"
                menubarPath="edit/MenuAdditions"
+               icon="icons/brkp_obj.gif"
                id="org.eclipse.wst.xml.ui.tests.breakpoints.EnableWarningAction">
          </action>
       </editorContribution>
