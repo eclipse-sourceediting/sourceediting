@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui;
+package org.eclipse.wst.sse.ui.internal;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,9 +38,8 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.util.Utilities;
+import org.eclipse.wst.sse.ui.StructuredResourceMarkerAnnotationModel;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.IExtendedStorageEditorInput;
-import org.eclipse.wst.sse.ui.internal.Logger;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction;
 import org.eclipse.wst.sse.ui.internal.editor.EditorModelUtil;
 import org.eclipse.wst.sse.ui.internal.extension.BreakpointProviderBuilder;

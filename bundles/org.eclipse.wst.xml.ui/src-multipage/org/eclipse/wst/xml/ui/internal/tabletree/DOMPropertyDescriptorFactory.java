@@ -12,7 +12,7 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.eclipse.wst.common.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
-import org.eclipse.wst.sse.ui.views.properties.EnumeratedStringPropertyDescriptor;
+import org.eclipse.wst.xml.ui.internal.properties.EnumeratedStringPropertyDescriptor;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Comment;

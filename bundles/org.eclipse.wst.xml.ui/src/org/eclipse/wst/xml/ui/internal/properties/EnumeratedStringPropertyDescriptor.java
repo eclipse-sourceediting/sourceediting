@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui.views.properties;
+package org.eclipse.wst.xml.ui.internal.properties;
 
 
 
@@ -33,16 +33,6 @@ public class EnumeratedStringPropertyDescriptor extends PropertyDescriptor {
 	 */
 	protected String fValues[] = null;
 
-	/**
-	 * Returns a property descriptor with a name.
-	 * 
-	 * @param name
-	 *            the unique name of the property
-	 * @param displayName
-	 *            the name to display for the property
-	 * @param valuesArray
-	 *            an array of possible values
-	 */
 	public EnumeratedStringPropertyDescriptor(Object id, String newDisplayName, String[] valuesArray) {
 		super(id, newDisplayName);
 		setDescription((String) id);

@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui;
+package org.eclipse.wst.sse.ui.internal;
 
 import java.util.ArrayList;
 import java.util.Iterator;

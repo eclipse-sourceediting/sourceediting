@@ -28,7 +28,9 @@ import org.eclipse.ui.part.IShowInSource;
 import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.wst.sse.core.IFactoryRegistry;
+import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.ViewerSelectionManager;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
@@ -85,8 +87,8 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 
 	private final String OUTLINE_LINK_PREF = "outline-link-editor"; //$NON-NLS-1$
 
-	protected ImageDescriptor SYNCED_D = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_DLCL_SYNCED);
-	protected ImageDescriptor SYNCED_E = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_ELCL_SYNCED);
+	ImageDescriptor SYNCED_D = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_DLCL_SYNCED);
+	ImageDescriptor SYNCED_E = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_ELCL_SYNCED);
 
 	public StructuredContentOutlineConfiguration() {
 		super();
@@ -102,7 +104,8 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 		items = super.getMenuContributions(viewer);
 		if (items == null) {
 			items = new IContributionItem[]{toggleLinkItem};
-		} else {
+		}
+		else {
 			IContributionItem[] combinedItems = new IContributionItem[items.length + 1];
 			System.arraycopy(items, 0, combinedItems, 0, items.length);
 			combinedItems[items.length] = toggleLinkItem;
@@ -117,11 +120,12 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 		items = super.getToolbarContributions(viewer);
 		if (items == null) {
 			items = new IContributionItem[]{collapseAllItem};
-		} else {
+		}
+		else {
 			IContributionItem[] combinedItems = new IContributionItem[items.length + 1];
 			System.arraycopy(items, 0, combinedItems, 0, items.length);
 			combinedItems[items.length] = collapseAllItem;
-			//			combinedItems[items.length + 1] = toggleLinkItem;
+			// combinedItems[items.length + 1] = toggleLinkItem;
 			items = combinedItems;
 		}
 		return items;
@@ -140,9 +144,11 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 					return new ShowInContext(getEditor().getEditorInput(), getEditor().getSelectionProvider().getSelection());
 				}
 			};
-		} else if (key.equals(IShowInTargetList.class)) {
+		}
+		else if (key.equals(IShowInTargetList.class)) {
 			adapter = getEditor().getAdapter(key);
-		} else
+		}
+		else
 			adapter = super.getAdapter(key);
 		return adapter;
 	}
@@ -151,7 +157,7 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getDoubleClickListener(org.eclipse.jface.viewers.TreeViewer)
 	 */
 	public IDoubleClickListener getDoubleClickListener(TreeViewer viewer) {
-		return getEditor().getViewerSelectionManager();
+		return (ViewerSelectionManager) getEditor().getAdapter(ViewerSelectionManager.class);
 	}
 
 	/**
@@ -161,6 +167,10 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 		return fEditor;
 	}
 
+	/**
+	 * @deprecated - will be removed in M4
+	 * @return
+	 */
 	protected IJFaceNodeAdapterFactory getFactory() {
 		IFactoryRegistry factoryRegistry = getEditor().getModel().getFactoryRegistry();
 		IJFaceNodeAdapterFactory adapterFactory = (IJFaceNodeAdapterFactory) factoryRegistry.getFactoryFor(IJFaceNodeAdapter.class);
@@ -170,12 +180,28 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 		return adapterFactory;
 	}
 
+	protected IJFaceNodeAdapterFactory getFactory(TreeViewer viewer) {
+		IFactoryRegistry factoryRegistry = getModel(viewer).getFactoryRegistry();
+		IJFaceNodeAdapterFactory adapterFactory = (IJFaceNodeAdapterFactory) factoryRegistry.getFactoryFor(IJFaceNodeAdapter.class);
+		if (adapterFactory == null) {
+			Logger.log(Logger.ERROR, "model has no JFace adapter factory"); //$NON-NLS-1$
+		}
+		return adapterFactory;
+	}
+
+	/**
+	 * @param viewer
+	 * @return
+	 */
+	protected IStructuredModel getModel(TreeViewer viewer) {
+		return ((IStructuredModel) viewer.getInput());
+	}
+
 	/**
 	 * @deprecated just use the preference key directly
 	 * @return
 	 */
 	protected String getLinkPreferenceKey() {
-//		return PreferenceKeyGenerator.generateKey(OUTLINE_LINK_PREF, getDeclaringID());
 		return OUTLINE_LINK_PREF;
 	}
 
@@ -213,7 +239,7 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getSelectionChangedListener(org.eclipse.jface.viewers.TreeViewer)
 	 */
 	public ISelectionChangedListener getSelectionChangedListener(TreeViewer viewer) {
-		return getEditor().getViewerSelectionManager();
+		return (ViewerSelectionManager) getEditor().getAdapter(ViewerSelectionManager.class);
 	}
 
 	/*
@@ -285,7 +311,7 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 		fLabelProvider = null;
 		fContentProvider = null;
 	}
-	
+
 	protected IPreferenceStore getPreferenceStore() {
 		return SSEUIPlugin.getInstance().getPreferenceStore();
 	}

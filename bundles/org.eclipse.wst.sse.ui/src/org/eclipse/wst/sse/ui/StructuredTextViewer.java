@@ -70,6 +70,8 @@ import org.eclipse.wst.sse.core.undo.UndoDocumentEvent;
 import org.eclipse.wst.sse.ui.extension.IExtendedSimpleEditor;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.StructuredDocumentToTextAdapter;
+import org.eclipse.wst.sse.ui.internal.ViewerSelectionManagerImpl;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessorExtension;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
 import org.eclipse.wst.sse.ui.util.PlatformStatusLineUtil;

@@ -34,6 +34,7 @@ import org.eclipse.wst.sse.core.IFactoryRegistry;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.ui.ViewerSelectionManager;
 import org.eclipse.wst.sse.ui.edit.util.ActiveEditorActionHandler;
+import org.eclipse.wst.sse.ui.internal.properties.RemoveAction;
 import org.eclipse.wst.sse.ui.view.events.INodeSelectionListener;
 import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
 import org.eclipse.wst.sse.ui.views.contentoutline.IJFaceNodeAdapter;

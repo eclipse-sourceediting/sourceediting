@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui;
+package org.eclipse.wst.sse.ui.internal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,9 +31,10 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.core.util.Utilities;
+import org.eclipse.wst.sse.ui.CaretMediator;
+import org.eclipse.wst.sse.ui.ViewerSelectionManager;
 import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckSelectionListener;
 import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckSelectionManager;
-import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.view.events.CaretEvent;
 import org.eclipse.wst.sse.ui.view.events.INodeSelectionListener;
 import org.eclipse.wst.sse.ui.view.events.ITextSelectionListener;

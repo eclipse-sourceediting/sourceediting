@@ -10,13 +10,25 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui;
+package org.eclipse.wst.sse.ui.internal.properties;
 
 
-/**
- * @deprecated moved to internal package because only this plugin should be
- * using this Logger class.
- */
-public class Logger extends org.eclipse.wst.sse.ui.internal.Logger {
-	// see org.eclipse.wst.sse.ui.internal.Logger
+
+import org.eclipse.ui.views.properties.IPropertySource;
+import org.eclipse.ui.views.properties.IPropertySourceProvider;
+import org.eclipse.wst.sse.core.INodeNotifier;
+
+
+public class AdapterPropertySourceProvider implements IPropertySourceProvider {
+
+	public AdapterPropertySourceProvider() {
+		super();
+	}
+
+	public IPropertySource getPropertySource(Object object) {
+		if (object instanceof INodeNotifier) {
+			return (IPropertySource) ((INodeNotifier) object).getAdapterFor(IPropertySource.class);
+		}
+		return null;
+	}
 }

@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui;
+package org.eclipse.wst.sse.ui.internal;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -63,8 +63,7 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
-import org.eclipse.wst.sse.ui.internal.Logger;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.StructuredResourceMarkerAnnotationModel;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistryImpl;
@@ -77,7 +76,7 @@ import org.eclipse.wst.sse.ui.util.Assert;
  * responsibilities include providing editing related models, such as
  * annotation models, undo command stack, etc.
  * 
- * @deprecated - no longer used
+ * @deprecated - will be removed in M4
  */
 public class FileModelProvider extends FileDocumentProvider implements IModelProvider {
 

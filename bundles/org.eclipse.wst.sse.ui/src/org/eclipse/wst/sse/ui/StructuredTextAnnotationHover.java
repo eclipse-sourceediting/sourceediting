@@ -40,6 +40,7 @@ import org.eclipse.ui.texteditor.MarkerAnnotation;
 import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.StructuredTextLineBreakingReader;
 
 public class StructuredTextAnnotationHover implements IAnnotationHover, IReleasable {
 

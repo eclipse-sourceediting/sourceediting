@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui.views.properties;
+package org.eclipse.wst.xml.ui.internal.properties;
 
 
 

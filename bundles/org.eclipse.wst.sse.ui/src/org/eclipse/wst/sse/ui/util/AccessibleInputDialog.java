@@ -37,6 +37,8 @@ import org.eclipse.swt.widgets.Text;
  * turned into a read-only text widget to make the dialog accessible.
  * (https://bugs.eclipse.org/bugs/show_bug.cgi?id=61069)
  * </p>
+ * 
+ * @deprecated - will be removed in M4
  */
 public class AccessibleInputDialog extends Dialog {
 

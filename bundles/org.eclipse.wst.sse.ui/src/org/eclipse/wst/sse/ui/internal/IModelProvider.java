@@ -10,25 +10,12 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui.views.properties;
+package org.eclipse.wst.sse.ui.internal;
+
+import org.eclipse.ui.texteditor.IDocumentProvider;
+import org.eclipse.wst.sse.core.IStructuredModel;
 
 
-
-import org.eclipse.ui.views.properties.IPropertySource;
-import org.eclipse.ui.views.properties.IPropertySourceProvider;
-import org.eclipse.wst.sse.core.INodeNotifier;
-
-
-public class AdapterPropertySourceProvider implements IPropertySourceProvider {
-
-	public AdapterPropertySourceProvider() {
-		super();
-	}
-
-	public IPropertySource getPropertySource(Object object) {
-		if (object instanceof INodeNotifier) {
-			return (IPropertySource) ((INodeNotifier) object).getAdapterFor(IPropertySource.class);
-		}
-		return null;
-	}
+public interface IModelProvider extends IDocumentProvider {
+	IStructuredModel getModel(Object element);
 }

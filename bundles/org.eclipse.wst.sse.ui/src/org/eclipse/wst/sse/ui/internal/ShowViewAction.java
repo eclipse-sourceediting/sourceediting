@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui.util;
+package org.eclipse.wst.sse.ui.internal;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.ErrorDialog;
@@ -19,7 +19,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 /**
  * Surfaces a View.

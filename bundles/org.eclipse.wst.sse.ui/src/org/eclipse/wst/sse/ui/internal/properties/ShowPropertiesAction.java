@@ -10,14 +10,14 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui.views.properties;
+package org.eclipse.wst.sse.ui.internal.properties;
 
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.ShowViewAction;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
-import org.eclipse.wst.sse.ui.util.ShowViewAction;
 
 /**
  * Surfaces the Properties view

@@ -10,12 +10,13 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui.views.properties;
+package org.eclipse.wst.sse.ui.internal.properties;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
+import org.eclipse.wst.sse.ui.views.properties.ConfigurablePropertySheetPage;
 
 public class RemoveAction extends Action {
 	private ConfigurablePropertySheetPage fPage;
