@@ -38,4 +38,16 @@
          </run>
       </runtime>
   </extension>
+     <extension
+         point="org.eclipse.wst.server.core.moduleFactories">
+      <moduleFactory
+            projects="true"
+            class="org.eclipse.wst.web.internal.deployables.StaticWebDeployableFactory"
+            id="org.eclipse.jst.j2ee.internal.web.deployables.static">
+         <moduleType
+               versions="1.0"
+               types="web.static">
+         </moduleType>
+      </moduleFactory>
+   </extension>
 </plugin>

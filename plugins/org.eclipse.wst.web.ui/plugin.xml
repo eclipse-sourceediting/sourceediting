@@ -131,4 +131,16 @@
 			</mapping>
 		</natureMapping>
 	</extension>
+	<!-- ====================================================== -->
+<!-- Extension point: org.eclipse.ui.projectNatureImages    -->
+<!-- Purpose: Attach icon overlays for J2EE project natures -->
+<!-- ====================================================== -->
+   <extension
+         point="org.eclipse.ui.ide.projectNatureImages">
+      <image
+            icon="icons/full/ovr16/web_module_ovr.gif"
+            natureId="org.eclipse.wst.web.StaticWebNature"
+            id="org.eclipse.ui.simpleWebProjectNatureImage">
+      </image>
+   </extension>
 </plugin>

@@ -57,7 +57,8 @@ public class WebSettings{
 	public static String VERSION_V4 = "400"; //$NON-NLS-1$
 	public static final String ELEMENT_WORKSPACE_VERSION = "version"; //$NON-NLS-1$
 	
-	static final String ELEMENT_WEBSETTINGS = "websettings"; //$NON-NLS-1$
+
+	static final String ELEMENT_WEBSETTINGS = "j2eesettings"; //$NON-NLS-1$
 	static final String ELEMENT_PROJECTTYPE = "project-type"; //$NON-NLS-1$
 	static final String ELEMENT_CONTEXTROOT = "context-root"; //$NON-NLS-1$
 	static final String ELEMENT_WEBCONTENT = "webcontent"; //$NON-NLS-1$
@@ -203,11 +204,11 @@ public class WebSettings{
 		StringWriter writer = new StringWriter();
 		writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"); //$NON-NLS-1$
 		writer.write("\n"); //$NON-NLS-1$
-		writer.write("<websettings version=\""); //$NON-NLS-1$
+		writer.write("<j2eesettings version=\""); //$NON-NLS-1$
 		writer.write(getCurrentVersion());
 		writer.write("\">");//$NON-NLS-1$
 		writer.write("\n"); //$NON-NLS-1$
-		writer.write("</websettings>"); //$NON-NLS-1$
+		writer.write("</j2eesettings>"); //$NON-NLS-1$
 		writer.write("\n"); //$NON-NLS-1$
 
 		InputStream sourceStream = new ByteArrayInputStream(writer.toString().getBytes("UTF8")); //$NON-NLS-1$

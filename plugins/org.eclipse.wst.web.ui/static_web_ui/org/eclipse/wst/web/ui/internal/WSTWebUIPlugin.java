@@ -62,29 +62,4 @@ public class WSTWebUIPlugin extends AbstractUIPlugin {
 		return plugin;
 	}
 
-	/**
-	 * Returns the string from the plugin's resource bundle,
-	 * or 'key' if not found.
-	 */
-	public static String getResourceString(String key) {
-		ResourceBundle bundle = WSTWebUIPlugin.getDefault().getResourceBundle();
-		try {
-			return (bundle != null) ? bundle.getString(key) : key;
-		} catch (MissingResourceException e) {
-			return key;
-		}
-	}
-
-	/**
-	 * Returns the plugin's resource bundle,
-	 */
-	public ResourceBundle getResourceBundle() {
-		try {
-			if (resourceBundle == null)
-				resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.staticweb.ui.StaticWebUIPluginResources"); //$NON-NLS-1$
-		} catch (MissingResourceException x) {
-			resourceBundle = null;
-		}
-		return resourceBundle;
-	}
 }

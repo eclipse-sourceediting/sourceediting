@@ -21,7 +21,7 @@ public interface ISimpleWebNatureConstants {
 	String INFO_DIRECTORY = "WEB-INF"; //$NON-NLS-1$
 	String LIBRARY_DIRECTORY = "lib"; //$NON-NLS-1$
 	String WEB_MODULE_DIRECTORY_V4 = "webApplication";//$NON-NLS-1$
-	String WEBSETTINGS_FILE_NAME = ".websettings"; //$NON-NLS-1$
+	String WEBSETTINGS_FILE_NAME = ".j2ee"; //$NON-NLS-1$
 	String WEB_MODULE_DIRECTORY_ = "Web Content";//$NON-NLS-1$
 	IPath WEB_MODULE_PATH_V4 = new Path(WEB_MODULE_DIRECTORY_V4);
 	IPath WEB_MODULE_PATH_ = new Path(WEB_MODULE_DIRECTORY_);
