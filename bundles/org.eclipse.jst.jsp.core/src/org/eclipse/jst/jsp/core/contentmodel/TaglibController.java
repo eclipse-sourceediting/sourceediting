@@ -82,7 +82,7 @@ public class TaglibController implements IDocumentSetupParticipant {
 					if (!fJSPdocuments.contains(document))
 						return;
 				}
-				Assert.isTrue(document instanceof IStructuredDocument);
+				Assert.isTrue(document instanceof IStructuredDocument, getClass().getName() + " SetupParticipant was called for non-IStructuredDocument");
 				DocumentInfo info = new DocumentInfo();
 				info.document = (IStructuredDocument) document;
 				info.textFileBuffer = (ITextFileBuffer) buffer;
