@@ -17,6 +17,11 @@ package org.eclipse.jst.jsp.ui.tests.other;
  */
 public class ColorRegions extends java.util.Vector {
 	/**
+	 * Default <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * ColorRegions constructor comment.
 	 */
 	public ColorRegions() {
