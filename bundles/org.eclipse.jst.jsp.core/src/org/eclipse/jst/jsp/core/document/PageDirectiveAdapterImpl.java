@@ -18,6 +18,9 @@ import java.util.StringTokenizer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
@@ -32,7 +35,6 @@ import org.eclipse.wst.sse.core.internal.modelhandler.EmbeddedTypeRegistryImpl;
 import org.eclipse.wst.sse.core.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.util.Debug;
-import org.eclipse.wst.sse.core.util.ResourceUtil;
 import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.xml.core.document.XMLNode;
 
@@ -509,6 +511,15 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 		return (StringUtils.contains(JAVA_LANGUAGE_KEYS, language, false) || StringUtils.contains(JAVASCRIPT_LANGUAGE_KEYS, language, false));
 	}
 
+	private IFile getFile(IStructuredModel model) {
+		String location = model.getBaseLocation();
+		IPath path = new Path(location);
+		if (!path.toFile().exists() && path.segmentCount() > 1) {
+			return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+		}
+		return null;
+	}
+
 	private EmbeddedTypeHandler getHandlerFor(String contentType) {
 		EmbeddedTypeRegistry reg = getEmbeddedContentTypeRegistry();
 		EmbeddedTypeHandler handler = null;
@@ -550,7 +561,7 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 			return;
 		if (resource == null)
 			return;
-		IFile file = ResourceUtil.getFileFor(model);
+		IFile file = getFile(model);
 		if (file == null)
 			return;
 		//        String filename = null;

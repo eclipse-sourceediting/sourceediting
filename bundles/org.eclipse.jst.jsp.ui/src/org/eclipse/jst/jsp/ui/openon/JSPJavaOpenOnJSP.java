@@ -11,6 +11,9 @@
 package org.eclipse.jst.jsp.ui.openon;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.ILocalVariable;
 import org.eclipse.jdt.core.ISourceRange;
@@ -33,7 +36,6 @@ import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.util.ResourceUtil;
 import org.eclipse.wst.sse.ui.openon.AbstractOpenOn;
 import org.eclipse.wst.xml.core.document.XMLDocument;
 import org.eclipse.wst.xml.core.document.XMLModel;
@@ -114,6 +116,15 @@ public class JSPJavaOpenOnJSP extends AbstractOpenOn {
 				}
 			}
 		}
+	}
+	
+	private IFile[] getFiles(IStructuredModel model) {
+		String location = model.getBaseLocation();
+		IPath path = new Path(location);
+		if (!path.toFile().exists() && path.segmentCount() > 1) {
+			return ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(path);
+		}
+		return new IFile[0];
 	}
 
 	/**
@@ -253,7 +264,7 @@ public class JSPJavaOpenOnJSP extends AbstractOpenOn {
 		IFile file = null;
 		try {
 			model = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
-			IFile[] files = ResourceUtil.getFilesFor(model);
+			IFile[] files = getFiles(model);
 			int i = 0;
 			while (i < files.length && file == null) {
 				if (files[i].exists()) {

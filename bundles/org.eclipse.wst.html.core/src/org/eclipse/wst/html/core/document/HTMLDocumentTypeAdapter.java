@@ -15,8 +15,11 @@ package org.eclipse.wst.html.core.document;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.sse.core.util.ResourceUtil;
+import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.ui.contentproperties.ContentSettings;
 import org.eclipse.wst.sse.ui.contentproperties.ContentSettingsChangeSubject;
 import org.eclipse.wst.sse.ui.contentproperties.IContentSettings;
@@ -73,7 +76,7 @@ public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements 
 		XMLModel model = document.getModel();
 		if (model == null)
 			return;
-		IFile file = ResourceUtil.getFileFor(model);
+		IFile file = getFile(model);
 		if (file == null)
 			return;
 		IProject project = file.getProject();
@@ -100,7 +103,7 @@ public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements 
 			// this pass.
 			return;
 		}
-		IFile file = ResourceUtil.getFileFor(model);
+		IFile file = getFile(model);
 
 		// find DOCTYPE delcaration and Public ID
 		String publicId = null;
@@ -237,6 +240,15 @@ public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements 
 			publicId = settings.getProperty(project, IContentSettings.HTML_DOCUMENT_TYPE);
 		}
 		return publicId;
+	}
+	
+	private IFile getFile(IStructuredModel model) {
+		String location = model.getBaseLocation();
+		IPath path = new Path(location);
+		if (!path.toFile().exists() && path.segmentCount() > 1) {
+			return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+		}
+		return null;
 	}
 
 	/**
