@@ -100,15 +100,9 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 			ContentAssistant contentAssistant = (ContentAssistant) ca;
 			IContentAssistProcessor xmlContentAssistProcessor = new XMLContentAssistProcessor();
 			IContentAssistProcessor noRegionProcessor = new NoRegionContentAssistProcessor();
-			addContentAssistProcessor(contentAssistant, xmlContentAssistProcessor, StructuredTextPartitioner.ST_DEFAULT_PARTITION);
-			addContentAssistProcessor(contentAssistant, xmlContentAssistProcessor, StructuredTextPartitionerForXML.ST_DEFAULT_XML);
-			addContentAssistProcessor(contentAssistant, noRegionProcessor, StructuredTextPartitioner.ST_UNKNOWN_PARTITION);
-			// contentAssistant.setContentAssistProcessor(xmlContentAssistProcessor,
-			// StructuredTextPartitioner.ST_DEFAULT_PARTITION);
-			// contentAssistant.setContentAssistProcessor(xmlContentAssistProcessor,
-			// StructuredTextPartitionerForXML.ST_DEFAULT_XML);
-			// contentAssistant.setContentAssistProcessor(noRegionProcessor,
-			// StructuredTextPartitioner.ST_UNKNOWN_PARTITION);
+			setContentAssistProcessor(contentAssistant, xmlContentAssistProcessor, StructuredTextPartitioner.ST_DEFAULT_PARTITION);
+			setContentAssistProcessor(contentAssistant, xmlContentAssistProcessor, StructuredTextPartitionerForXML.ST_DEFAULT_XML);
+			setContentAssistProcessor(contentAssistant, noRegionProcessor, StructuredTextPartitioner.ST_UNKNOWN_PARTITION);
 		}
 		return ca;
 	}

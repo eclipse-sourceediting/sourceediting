@@ -91,21 +91,16 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	}
 
 	/**
-	 * @deprecated - to be made "protected" instead of "public"
+	 * @deprecated - to be removed in M4
 	 * 
-	 * Content assist processors should be added to the ContentAssistant via
-	 * this method so that they are initialized/released properly.
+	 * Call setContentAssistProcessor instead.
 	 * 
 	 * @param ca
 	 * @param processor
 	 * @param partitionType
 	 */
 	public void addContentAssistProcessor(ContentAssistant ca, IContentAssistProcessor processor, String partitionType) {
-		// save for reinit and release
-		fContentAssistProcessors.add(processor);
-		if (processor instanceof IResourceDependentProcessor)
-			((IResourceDependentProcessor) processor).initialize(fResource);
-		ca.setContentAssistProcessor(processor, partitionType);
+		setContentAssistProcessor(ca, processor, partitionType);
 	}
 
 	public void configureOn(IResource resource) {
@@ -114,7 +109,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	}
 
 	protected ValidatorStrategy createValidatorStrategy(String contentTypeId) {
-		ValidatorStrategy validatorStrategy = new ValidatorStrategy((ITextEditor) editorPart, contentTypeId);
+		ValidatorStrategy validatorStrategy = new ValidatorStrategy(getTextEditor(), contentTypeId);
 		ValidatorBuilder vBuilder = new ValidatorBuilder();
 		ValidatorMetaData[] vmds = vBuilder.getValidatorMetaData("org.eclipse.wst.sse.ui"); //$NON-NLS-1$
 		for (int i = 0; i < vmds.length; i++) {
@@ -210,8 +205,9 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 						processor = (IContentAssistProcessor) ExtendedConfigurationBuilder.getInstance().getConfiguration(CONTENT_ASSIST_PROCESSOR_EXTENDED_ID, contentType);
 						fExtendedProcessors.put(contentType, processor);
 						/*
-						 * Copied from addContentAssistProcessor since this
-						 * assitant may not be fully initialized
+						 * Copied from setContentAssistProcessor to avoid
+						 * calling getContentAssistProcessor() from within
+						 * getContentAssistProcessor()
 						 */
 						fContentAssistProcessors.add(processor);
 						if (processor instanceof IResourceDependentProcessor)
@@ -369,6 +365,26 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 		return new StructuredTextViewerUndoManager();
 	}
 
+	/**
+	 * Sets the given IContentAssistProcessor into the given ContentAssistant
+	 * for the partitionType, handling certain extra initialization steps.
+	 * 
+	 * @param ca
+	 * @param newProcessor
+	 * @param partitionType
+	 */
+	protected void setContentAssistProcessor(ContentAssistant ca, IContentAssistProcessor newProcessor, String partitionType) {
+		// save for reinit and release
+		IContentAssistProcessor previousProcessor = ca.getContentAssistProcessor(partitionType);
+		if (previousProcessor != null) {
+			fContentAssistProcessors.remove(previousProcessor);
+		}
+		fContentAssistProcessors.add(newProcessor);
+		if (newProcessor instanceof IResourceDependentProcessor)
+			((IResourceDependentProcessor) newProcessor).initialize(fResource);
+		ca.setContentAssistProcessor(newProcessor, partitionType);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -438,11 +454,11 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 			}
 		}
 	}
-	
-	
+
+
 	/**
-	 * Use a special hyperlink presenter that is aware of how Highlighter works instead of
-	 * PresentationReconciler.
+	 * Use a special hyperlink presenter that is aware of how Highlighter
+	 * works instead of PresentationReconciler.
 	 */
 	public IHyperlinkPresenter getHyperlinkPresenter(ISourceViewer sourceViewer) {
 		if (fPreferenceStore == null) {
@@ -450,9 +466,10 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 		}
 		return new HighlighterHyperlinkPresenter(fPreferenceStore);
 	}
-	
+
 	/**
 	 * Set the preference store used to initialize this configuration.
+	 * 
 	 * @param store
 	 */
 	void setPreferenceStore(IPreferenceStore store) {

@@ -154,38 +154,38 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
             IContentAssistProcessor noRegionProcessorJsp = new NoRegionContentAssistProcessorForJSP();
 
             // HTML
-            addContentAssistProcessor(contentAssistant, htmlContentAssistProcessor, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML);
-            addContentAssistProcessor(contentAssistant, htmlContentAssistProcessor, StructuredTextPartitionerForHTML.ST_HTML_COMMENT);
+            setContentAssistProcessor(contentAssistant, htmlContentAssistProcessor, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML);
+            setContentAssistProcessor(contentAssistant, htmlContentAssistProcessor, StructuredTextPartitionerForHTML.ST_HTML_COMMENT);
 
             // HTML JavaScript
-            addContentAssistProcessor(contentAssistant, jsContentAssistProcessor, StructuredTextPartitionerForHTML.ST_SCRIPT);
-            addContentAssistProcessor(contentAssistant, jsContentAssistProcessor, StructuredTextPartitionerForHTML.ST_SCRIPT);
+            setContentAssistProcessor(contentAssistant, jsContentAssistProcessor, StructuredTextPartitionerForHTML.ST_SCRIPT);
+            setContentAssistProcessor(contentAssistant, jsContentAssistProcessor, StructuredTextPartitionerForHTML.ST_SCRIPT);
 
             // CSS
-            addContentAssistProcessor(contentAssistant, cssContentAssistProcessor, StructuredTextPartitionerForCSS.ST_STYLE);
-            addContentAssistProcessor(contentAssistant, cssContentAssistProcessor, StructuredTextPartitionerForCSS.ST_STYLE);
+            setContentAssistProcessor(contentAssistant, cssContentAssistProcessor, StructuredTextPartitionerForCSS.ST_STYLE);
+            setContentAssistProcessor(contentAssistant, cssContentAssistProcessor, StructuredTextPartitionerForCSS.ST_STYLE);
 
             // JSP
-            addContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitioner.ST_DEFAULT_PARTITION);
-            addContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForXML.ST_DEFAULT_XML);
-            addContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML);
-            addContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForHTML.ST_HTML_COMMENT);
-            addContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForJSP.ST_DEFAULT_JSP);
+            setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitioner.ST_DEFAULT_PARTITION);
+            setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForXML.ST_DEFAULT_XML);
+            setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML);
+            setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForHTML.ST_HTML_COMMENT);
+            setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForJSP.ST_DEFAULT_JSP);
             // SCRIPT region
-            addContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForHTML.ST_SCRIPT);
+            setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForHTML.ST_SCRIPT);
             // JSP directives
-            addContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForJSP.ST_JSP_DIRECTIVE);
+            setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForJSP.ST_JSP_DIRECTIVE);
             // JSP delimiters
-            addContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER);
+            setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER);
             // JSP JavaScript
-            addContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVASCRIPT);
+            setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVASCRIPT);
             // JSP Java
-            addContentAssistProcessor(contentAssistant, jspJavaContentAssistProcessor, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA);
+            setContentAssistProcessor(contentAssistant, jspJavaContentAssistProcessor, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA);
             // unknown
-            addContentAssistProcessor(contentAssistant, noRegionProcessorJsp, StructuredTextPartitioner.ST_UNKNOWN_PARTITION);
+            setContentAssistProcessor(contentAssistant, noRegionProcessorJsp, StructuredTextPartitioner.ST_UNKNOWN_PARTITION);
             // CMVC 269718
             // JSP COMMENT
-            addContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForJSP.ST_JSP_COMMENT);
+            setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForJSP.ST_JSP_COMMENT);
         }
 
         return ca;

@@ -71,8 +71,8 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 			// CSSContentAssistProcessor(),
 			// StructuredTextPartitionerForCSS.ST_STYLE);
 			IContentAssistProcessor cssProcessor = new CSSContentAssistProcessor();
-			addContentAssistProcessor((ContentAssistant) contentAssistant, cssProcessor, StructuredTextPartitionerForCSS.ST_STYLE);
-			addContentAssistProcessor((ContentAssistant) contentAssistant, cssProcessor, StructuredTextPartitioner.ST_UNKNOWN_PARTITION);
+			setContentAssistProcessor((ContentAssistant) contentAssistant, cssProcessor, StructuredTextPartitionerForCSS.ST_STYLE);
+			setContentAssistProcessor((ContentAssistant) contentAssistant, cssProcessor, StructuredTextPartitioner.ST_UNKNOWN_PARTITION);
 		}
 
 		return contentAssistant;

@@ -130,17 +130,17 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 			IContentAssistProcessor noRegionProcessorForHTML = new NoRegionContentAssistProcessorForHTML();
 
 			// HTML
-			addContentAssistProcessor(contentAssistant, htmlContentAssistProcessor, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML);
-			addContentAssistProcessor(contentAssistant, htmlContentAssistProcessor, StructuredTextPartitionerForHTML.ST_HTML_COMMENT);
+			setContentAssistProcessor(contentAssistant, htmlContentAssistProcessor, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML);
+			setContentAssistProcessor(contentAssistant, htmlContentAssistProcessor, StructuredTextPartitionerForHTML.ST_HTML_COMMENT);
 
 			// JavaScript
-			addContentAssistProcessor(contentAssistant, jsContentAssistProcessor, StructuredTextPartitionerForHTML.ST_SCRIPT);
+			setContentAssistProcessor(contentAssistant, jsContentAssistProcessor, StructuredTextPartitionerForHTML.ST_SCRIPT);
 
 			// CSS
-			addContentAssistProcessor(contentAssistant, cssContentAssistProcessor, StructuredTextPartitionerForCSS.ST_STYLE);
+			setContentAssistProcessor(contentAssistant, cssContentAssistProcessor, StructuredTextPartitionerForCSS.ST_STYLE);
 
 			// unknown
-			addContentAssistProcessor(contentAssistant, noRegionProcessorForHTML, StructuredTextPartitioner.ST_UNKNOWN_PARTITION);
+			setContentAssistProcessor(contentAssistant, noRegionProcessorForHTML, StructuredTextPartitioner.ST_UNKNOWN_PARTITION);
 		}
 
 		return ca;
