@@ -1,7 +1,13 @@
 public class  extends javax.servlet.http.HttpServlet{
  String argh = "argh"; 
+
+
  protected String with_space = "withspace";
+
+
  public String globalIncludedString = "included";
+
+
 public void _jspService(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response)
 		throws javax.servlet.ServletException {
 javax.servlet.jsp.PageContext pageContext = null;
@@ -9,6 +15,18 @@ javax.servlet.http.HttpSession session = null;
 javax.servlet.ServletContext application = null;
 javax.servlet.ServletConfig config = null;
 javax.servlet.jsp.JspWriter out = null;
-Object page = null; int include_include_int = 5; javax.swing.JButton includesUseBean;
- String localIncludedString = globalIncludedString;for(int i=0; i<5; i++) {}javax.swing.JButton BEAN_includedBean;
-out.print(""+i);out.print(""+   );}}
+Object page = null; int include_include_int = 5; 
+javax.swing.JButton includesUseBean;
+
+ String localIncludedString = globalIncludedString;
+for(int i=0; i<5; i++) {
+}
+javax.swing.JButton BEAN_includedBean;
+
+out.print(""+
+i
+);
+out.print(""+
+   
+);
+}}

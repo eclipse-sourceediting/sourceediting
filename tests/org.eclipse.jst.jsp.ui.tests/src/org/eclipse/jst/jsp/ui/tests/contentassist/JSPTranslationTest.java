@@ -104,14 +104,14 @@ public class JSPTranslationTest extends TestCase {
 			
 			int jspTestPosition = translation.getJspText().indexOf("<%= ") + 4;
 			int javaOffset = translation.getJavaOffset(jspTestPosition) - classnameLength;
-			assertEquals("JSPTranslation java offset:", 794, javaOffset);
+			assertEquals("JSPTranslation java offset:", 810, javaOffset);
 			
 			// (<%= | %>)
-			int javaTestPostition = translation.getJavaText().indexOf("out.print(\"\"+   );") + 14;
+			int javaTestPostition = translation.getJavaText().indexOf("out.print(\"\"+\n   \n);") + 14;
 			// dont' need to worry about classname length here because we are comparing
 			// with a position in the JSP document (which doesn't contain classname)
 			int jspOffset = translation.getJspOffset(javaTestPostition);
-			assertEquals("JSPTranslation jsp offset:", 565, jspOffset);
+			assertEquals("JSPTranslation jsp offset:", 564, jspOffset);
 		}
 		finally {
 			if (model != null)
@@ -158,7 +158,7 @@ public class JSPTranslationTest extends TestCase {
 			
 			assertNotNull("JSP translation text:", newText);
 			assertEquals("JSP translation text does not match expected", knownTranslationText, newText);
-			assertEquals("translation length:", 800, newText.length());
+			assertEquals("translation length:", 818, newText.length());
 		}
 		finally {
 			if (model != null)
