@@ -60,7 +60,7 @@ public class BasicStructuredDocumentFactory implements IDocumentFactory, IExecut
 		return document;
 	}
 
-	protected String getContentTypeIdentifier() {
+	private String getContentTypeIdentifier() {
 		return fContentTypeIdentifier;
 	}
 
