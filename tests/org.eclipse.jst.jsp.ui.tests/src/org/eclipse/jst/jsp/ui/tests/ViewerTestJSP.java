@@ -18,6 +18,7 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.ui.StructuredTextViewerConfigurationJSP;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -35,7 +36,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -355,7 +355,7 @@ public class ViewerTestJSP extends ViewPart {
 		
 		IModelManager modelManager = StructuredModelManager.getModelManager();
 
-		IDocument doc = modelManager.createStructuredDocumentFor(IContentTypeIdentifier.ContentTypeID_JSP);
+		IDocument doc = modelManager.createStructuredDocumentFor(ContentTypeIdForJSP.ContentTypeID_JSP);
 		doc.set(DEFAULT_VIEWER_CONTENTS);
 		
 		fSourceViewer.setDocument(doc);

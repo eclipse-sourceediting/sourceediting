@@ -16,23 +16,24 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 
 import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
+import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
+import org.eclipse.wst.html.core.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerUtility;
 import org.eclipse.wst.sse.core.modelhandler.EmbeddedTypeHandler;
+import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.w3c.dom.Document;
 
 /**
  * @author davidw
- *
+ * 
  * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
+ * Window>Preferences>Java>Templates. To enable and disable the creation of
+ * type comments go to Window>Preferences>Java>Code Generation.
  */
 public class TestModelEmbeddedContentType extends TestCase {
 
@@ -64,7 +65,7 @@ public class TestModelEmbeddedContentType extends TestCase {
 	public void testStructuredModelEmbeddedXML() throws IOException {
 		// First make (empty) structuredDocument
 		IModelManager modelManager = StructuredModelManager.getModelManager();
-		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_SSEXML);
+		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(ContentTypeIdForXML.ContentTypeID_XML);
 		assertTrue("model could not be created!", model != null);
 
 		// XML should NOT have an embedded type
@@ -77,7 +78,7 @@ public class TestModelEmbeddedContentType extends TestCase {
 	public void testStructuredModelEmbeddedHTML() throws IOException {
 		// First make (empty) structuredDocument
 		IModelManager modelManager = StructuredModelManager.getModelManager();
-		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_HTML);
+		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(ContentTypeIdForHTML.ContentTypeID_HTML);
 		assertTrue("model could not be created!", model != null);
 
 		// should NOT have an embedded type
@@ -90,7 +91,7 @@ public class TestModelEmbeddedContentType extends TestCase {
 	protected IStructuredModel doStructuredModelEmbeddedJSP() throws IOException {
 		// First make (empty) structuredDocument
 		IModelManager modelManager = StructuredModelManager.getModelManager();
-		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_JSP);
+		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(ContentTypeIdForJSP.ContentTypeID_JSP);
 		assertTrue("model could not be created!", model != null);
 
 		// should have an embedded type
@@ -105,7 +106,8 @@ public class TestModelEmbeddedContentType extends TestCase {
 		model.getStructuredDocument().replaceText(this, 0, 0, testContent);
 		assertTrue("reinit should NOT be needed in this case", !model.isReinitializationNeeded());
 
-		// embedded type should STILL be HTML since no contentType was text/html
+		// embedded type should STILL be HTML since no contentType was
+		// text/html
 		checkEmbeddedType(model, ModelHandlerUtility.getDefaultEmbeddedType());
 
 		return model;
@@ -123,7 +125,8 @@ public class TestModelEmbeddedContentType extends TestCase {
 		// change "html" to "xml"
 		model.getStructuredDocument().replaceText(this, 27, 4, "xml");
 		// with reinit in XML model ... its already been re-initialized
-		//		assertTrue("reinit SHOULD be needed in this case", model.isReiniitializationNeeded());
+		// assertTrue("reinit SHOULD be needed in this case",
+		// model.isReiniitializationNeeded());
 
 		if (model.isReinitializationNeeded()) {
 			model.reinit();

@@ -18,7 +18,10 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
+import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
+import org.eclipse.wst.html.core.contenttype.ContentTypeIdForHTML;
+import org.eclipse.wst.sse.core.contenttype.ContentTypeIdForCSS;
+import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
 
 /**
  * This class is to test very basics of content type handlers.
@@ -58,77 +61,77 @@ public class TestContentTypeHandlers extends TestCase {
 	}
 
 	public void testXMLExists() {
-		String id = IContentTypeIdentifier.ContentTypeID_SSEXML;
+		String id = ContentTypeIdForXML.ContentTypeID_SSEXML;
 		IContentTypeManager registry = getContentTypeRegistry();
 		IContentType identifier = registry.getContentType(id);
-		assertTrue("content type identifier registry does not have XML type ", identifier != null);
+		assertTrue("content type identifier " + id + " does not have custom XML type ", identifier != null);
 	}
 
 	public void testHTMLExists() {
-		String id = IContentTypeIdentifier.ContentTypeID_HTML;
+		String id = ContentTypeIdForHTML.ContentTypeID_HTML;
 		IContentTypeManager registry = getContentTypeRegistry();
 		IContentType identifier = registry.getContentType(id);
-		assertTrue("content type identifier registry does not have HTML type ", identifier != null);
+		assertTrue("content type identifier " + id + " does not have HTML type ", identifier != null);
 	}
 
 	public void testJSPExists() {
-		String id = IContentTypeIdentifier.ContentTypeID_JSP;
+		String id = ContentTypeIdForJSP.ContentTypeID_JSP;
 		IContentTypeManager registry = getContentTypeRegistry();
 		IContentType identifier = registry.getContentType(id);
-		assertTrue("content type identifier registry does not have JSP type ", identifier != null);
+		assertTrue("content type identifier " + id + " does not have JSP type ", identifier != null);
 	}
 
 	public void testCSSExists() {
-		String id = IContentTypeIdentifier.ContentTypeID_CSS;
+		String id = ContentTypeIdForCSS.ContentTypeID_CSS;
 		IContentTypeManager registry = getContentTypeRegistry();
 		IContentType identifier = registry.getContentType(id);
-		assertTrue("content type identifier registry does not have CSS type ", identifier != null);
+		assertTrue("content type identifier " + id + " does not have CSS type ", identifier != null);
 	}
 
 	public void testDTDExists() {
-		String id = IContentTypeIdentifier.ContentTypeID_DTD;
+		String id = "org.eclipse.wst.dtd.core.dtdsource";
 		IContentTypeManager registry = getContentTypeRegistry();
 		IContentType identifier = registry.getContentType(id);
-		assertTrue("content type identifier registry does not have DTD type ", identifier != null);
+		assertTrue("content type identifier " + id + " does not have DTD type ", identifier != null);
 	}
 
 	public void testXMLExistsByFileExtension() throws IOException {
 		String filename = "test.xml";
 		IContentTypeManager registry = getContentTypeRegistry();
 		IContentType identifier = registry.getDescriptionFor(new NullStream(), filename, IContentDescription.ALL).getContentType();
-		assertTrue("content type identifier registry does not have XML type ", identifier != null);
+		assertTrue("content type identifier for " + filename + " does not have XML type ", identifier != null);
 	}
 
 	public void testHTMLExistsByFileExtension() throws IOException {
 		String filename = "test.html";
 		IContentTypeManager registry = getContentTypeRegistry();
 		IContentType identifier = registry.getDescriptionFor(new NullStream(), filename, IContentDescription.ALL).getContentType();
-		assertTrue("content type identifier registry does not have HTML type ", identifier != null);
+		assertTrue("content type identifier for " + filename + " does not have HTML type ", identifier != null);
 	}
 
 	public void testJSPExistsByFileExtension() throws IOException {
 		String filename = "test.jsp";
 		IContentTypeManager registry = getContentTypeRegistry();
 		IContentType identifier = registry.getDescriptionFor(new NullStream(), filename, IContentDescription.ALL).getContentType();
-		assertTrue("content type identifier registry does not have JSP type ", identifier != null);
+		assertTrue("content type identifier for " + filename + " does not have JSP type ", identifier != null);
 	}
 
 	public void testCSSExistsByFileExtension() throws IOException {
 		String filename = "test.css";
 		IContentTypeManager registry = getContentTypeRegistry();
 		IContentType identifier = registry.getDescriptionFor(new NullStream(), filename, IContentDescription.ALL).getContentType();
-		assertTrue("content type identifier registry does not have CSS type ", identifier != null);
+		assertTrue("content type identifier for " + filename + " does not have CSS type ", identifier != null);
 	}
 
 	public void testDTDExistsByFileExtension() throws IOException {
 		String filename = "test.dtd";
 		IContentTypeManager registry = getContentTypeRegistry();
 		IContentType identifier = registry.getDescriptionFor(new NullStream(), filename, IContentDescription.ALL).getContentType();
-		assertTrue("content type identifier registry does not have DTD type ", identifier != null);
+		assertTrue("content type identifier for " + filename + " does not have DTD type ", identifier != null);
 	}
 
 	public void testMultipleDefinitions() throws IOException {
-		String id = IContentTypeIdentifier.ContentTypeID_CSS;
+		String id = ContentTypeIdForCSS.ContentTypeID_CSS;
 		String filename = "test.css";
 		IContentTypeManager registry = getContentTypeRegistry();
 		IContentType identifier1 = registry.getContentType(id);

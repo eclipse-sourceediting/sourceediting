@@ -15,7 +15,7 @@ import java.io.IOException;
 import junit.framework.TestCase;
 
 import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
+import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -42,7 +42,7 @@ public class TestPageDirective extends TestCase {
 	public void testBasicPD() throws IOException {
 		// First make (empty) structuredDocument
 		IModelManager modelManager = StructuredModelManager.getModelManager();
-		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_JSP);
+		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(ContentTypeIdForJSP.ContentTypeID_JSP);
 		assertTrue("model could not be created!", model != null);
 
 		// Now, assigning use a page directive, but leaving embedded type the same as default
@@ -60,7 +60,7 @@ public class TestPageDirective extends TestCase {
 	public void testBasicChangedPD() throws IOException {
 		// First make (empty) structuredDocument
 		IModelManager modelManager = StructuredModelManager.getModelManager();
-		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_JSP);
+		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(ContentTypeIdForJSP.ContentTypeID_JSP);
 		assertTrue("model could not be created!", model != null);
 
 		// Now, assigning use a page directive, but leaving embedded type the same as default
@@ -87,7 +87,7 @@ public class TestPageDirective extends TestCase {
 	public void testBasicChangedPDBack() throws IOException {
 		// First make (empty) structuredDocument
 		IModelManager modelManager = StructuredModelManager.getModelManager();
-		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_JSP);
+		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(ContentTypeIdForJSP.ContentTypeID_JSP);
 		assertTrue("model could not be created!", model != null);
 
 		// Now, assigning use a page directive, but leaving embedded type the same as default

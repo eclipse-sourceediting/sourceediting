@@ -18,9 +18,9 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.modelhandler.ModelHandlerForJSP;
 import org.eclipse.jst.jsp.ui.tests.JSPUITestsPlugin;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.text.CoreNodeList;
@@ -383,7 +383,7 @@ public class ScannerUnitTests extends TestCase {
 
 	public void testBufferOverrun_2_JSP() {
 
-		IStructuredModel model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_JSP);
+		IStructuredModel model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(ContentTypeIdForJSP.ContentTypeID_JSP);
 		InputStream testInput = JSPUITestsPlugin.class.getResourceAsStream("parsing/testfiles/DefaultSubPerson0ResultsForm.jsp");
 		assertTrue("no input loaded", testInput != null);
 		String text = loadChars(testInput);
@@ -400,7 +400,7 @@ public class ScannerUnitTests extends TestCase {
 
 	public void testBufferOverrun_JSP() {
 
-		IStructuredModel model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_JSP);
+		IStructuredModel model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(ContentTypeIdForJSP.ContentTypeID_JSP);
 		InputStream input = JSPUITestsPlugin.class.getResourceAsStream("parsing/testfiles/ChecksApprover.jsp");
 		assertTrue("no input loaded", input != null);
 		String text = loadChars(input);

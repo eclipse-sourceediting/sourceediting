@@ -35,12 +35,13 @@ import org.eclipse.wst.common.contentmodel.CMNode;
 import org.eclipse.wst.common.contentmodel.CMNodeList;
 import org.eclipse.wst.common.contentmodel.modelquery.CMDocumentManager;
 import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.html.core.HTML40Namespace;
+import org.eclipse.wst.html.core.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
+import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.modelquery.ModelQueryUtil;
 import org.w3c.dom.Attr;
@@ -93,7 +94,7 @@ public class ModelQueryTester extends TestCase {
 	 * Create an empty HTML model
 	 */
 	protected void setUpHTML() {
-		fModel = (XMLModel) createModel(IContentTypeIdentifier.ContentTypeID_HTML);
+		fModel = (XMLModel) createModel(ContentTypeIdForHTML.ContentTypeID_HTML);
 		initVars();
 	}
 
@@ -101,7 +102,7 @@ public class ModelQueryTester extends TestCase {
 	 * Create an empty XML model
 	 */
 	protected void setUpXML() {
-		fModel = (XMLModel) createModel(IContentTypeIdentifier.ContentTypeID_SSEXML);
+		fModel = (XMLModel) createModel(ContentTypeIdForXML.ContentTypeID_XML);
 		initVars();
 	}
 

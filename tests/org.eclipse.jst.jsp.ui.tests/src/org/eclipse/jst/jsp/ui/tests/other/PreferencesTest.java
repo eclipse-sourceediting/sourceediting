@@ -15,20 +15,23 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.tests.Logger;
 import org.eclipse.wst.common.encoding.CommonEncodingPreferenceNames;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
+import org.eclipse.wst.html.core.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
+import org.eclipse.wst.sse.core.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
+import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.osgi.framework.Bundle;
@@ -146,29 +149,29 @@ public class PreferencesTest extends TestCase {
 	}
 
 	private Preferences getPluginPreferencesForContentType(String contentTypeId) {
-		if(contentTypeId.equals(IContentTypeIdentifier.ContentTypeID_CSS))
+		if(contentTypeId.equals(ContentTypeIdForCSS.ContentTypeID_CSS))
 			return CSSCorePlugin.getDefault().getPluginPreferences();
 //		if(contentTypeId.equals(IContentTypeIdentifier.ContentTypeID_DTD))
 //			return DTDCorePlugin.getDefault().getPluginPreferences();
-		if(contentTypeId.equals(IContentTypeIdentifier.ContentTypeID_XML) || contentTypeId.equals(IContentTypeIdentifier.ContentTypeID_SSEXML))
+		if(contentTypeId.equals(ContentTypeIdForXML.ContentTypeID_XML) || contentTypeId.equals(ContentTypeIdForXML.ContentTypeID_SSEXML))
 			return CSSCorePlugin.getDefault().getPluginPreferences();
-		if(contentTypeId.equals(IContentTypeIdentifier.ContentTypeID_JSP))
+		if(contentTypeId.equals(ContentTypeIdForJSP.ContentTypeID_JSP))
 			return JSPCorePlugin.getDefault().getPluginPreferences();
-		if(contentTypeId.equals(IContentTypeIdentifier.ContentTypeID_HTML))
+		if(contentTypeId.equals(ContentTypeIdForHTML.ContentTypeID_HTML))
 			return HTMLCorePlugin.getDefault().getPluginPreferences();
 		return SSECorePlugin.getDefault().getPluginPreferences();
 	}
 	
 	private IPreferenceStore getStoreForContentType(String contentTypeId) {
-		if(contentTypeId.equals(IContentTypeIdentifier.ContentTypeID_CSS))
+		if(contentTypeId.equals(ContentTypeIdForCSS.ContentTypeID_CSS))
 			return CSSUIPlugin.getDefault().getPreferenceStore();
 //		if(contentTypeId.equals(IContentTypeIdentifier.ContentTypeID_DTD))
 //			return DTDUIPlugin.getDefault().getPreferenceStore();
-		if(contentTypeId.equals(IContentTypeIdentifier.ContentTypeID_XML) || contentTypeId.equals(IContentTypeIdentifier.ContentTypeID_SSEXML))
+		if(contentTypeId.equals(ContentTypeIdForXML.ContentTypeID_XML) || contentTypeId.equals(ContentTypeIdForXML.ContentTypeID_SSEXML))
 			return XMLUIPlugin.getDefault().getPreferenceStore();
-		if(contentTypeId.equals(IContentTypeIdentifier.ContentTypeID_JSP))
+		if(contentTypeId.equals(ContentTypeIdForJSP.ContentTypeID_JSP))
 			return JSPUIPlugin.getDefault().getPreferenceStore();
-		if(contentTypeId.equals(IContentTypeIdentifier.ContentTypeID_HTML))
+		if(contentTypeId.equals(ContentTypeIdForHTML.ContentTypeID_HTML))
 			return HTMLUIPlugin.getDefault().getPreferenceStore();
 		return SSEUIPlugin.getDefault().getPreferenceStore();
 	}
@@ -260,21 +263,21 @@ public class PreferencesTest extends TestCase {
 	}
 
 	public void testExistPreferenceHTML() {
-		existsInModelPreference(IContentTypeIdentifier.ContentTypeID_HTML, CommonModelPreferenceNames.TAG_NAME_CASE);
-		existsInModelPreference(IContentTypeIdentifier.ContentTypeID_HTML, CommonModelPreferenceNames.TAB_WIDTH);
-		existsInModelPreference(IContentTypeIdentifier.ContentTypeID_HTML, CommonEncodingPreferenceNames.OUTPUT_CODESET);
-		existsInEditorPreferenceStore(IContentTypeIdentifier.ContentTypeID_HTML, CommonEditorPreferenceNames.AUTO_PROPOSE_CODE);
+		existsInModelPreference(ContentTypeIdForHTML.ContentTypeID_HTML, CommonModelPreferenceNames.TAG_NAME_CASE);
+		existsInModelPreference(ContentTypeIdForHTML.ContentTypeID_HTML, CommonModelPreferenceNames.TAB_WIDTH);
+		existsInModelPreference(ContentTypeIdForHTML.ContentTypeID_HTML, CommonEncodingPreferenceNames.OUTPUT_CODESET);
+		existsInEditorPreferenceStore(ContentTypeIdForHTML.ContentTypeID_HTML, CommonEditorPreferenceNames.AUTO_PROPOSE_CODE);
 	}
 
 	// Test searching for an existing preference
 	public void testExistPreferenceXML() {
-		existsInModelPreference(IContentTypeIdentifier.ContentTypeID_SSEXML, CommonModelPreferenceNames.INDENT_USING_TABS);
-		existsInModelPreference(IContentTypeIdentifier.ContentTypeID_SSEXML, CommonEncodingPreferenceNames.END_OF_LINE_CODE);
-		existsInEditorPreferenceStore(IContentTypeIdentifier.ContentTypeID_SSEXML, CommonEditorPreferenceNames.AUTO_PROPOSE);
+		existsInModelPreference(ContentTypeIdForXML.ContentTypeID_SSEXML, CommonModelPreferenceNames.INDENT_USING_TABS);
+		existsInModelPreference(ContentTypeIdForXML.ContentTypeID_SSEXML, CommonEncodingPreferenceNames.END_OF_LINE_CODE);
+		existsInEditorPreferenceStore(ContentTypeIdForXML.ContentTypeID_SSEXML, CommonEditorPreferenceNames.AUTO_PROPOSE);
 	}
 
 	public void testGetDefaultPreferenceHTML() {
-		String contentTypeId = IContentTypeIdentifier.ContentTypeID_HTML;
+		String contentTypeId = ContentTypeIdForHTML.ContentTypeID_HTML;
 		Preferences prefs = HTMLCorePlugin.getDefault().getPluginPreferences();
 		getDefaultModelPreferenceInt(contentTypeId, prefs, CommonModelPreferenceNames.TAB_WIDTH, CommonModelPreferenceNames.DEFAULT_TAB_WIDTH);
 		checkPreferenceStoreDefault(contentTypeId, CommonEditorPreferenceNames.AUTO_PROPOSE_CODE, CommonEditorPreferenceNames.LT);
@@ -286,7 +289,7 @@ public class PreferencesTest extends TestCase {
 
 	// Test getting default preferences
 	public void testGetDefaultPreferenceXML() {
-		String contentTypeId = IContentTypeIdentifier.ContentTypeID_XML;
+		String contentTypeId = ContentTypeIdForXML.ContentTypeID_XML;
 		Preferences prefs = XMLCorePlugin.getDefault().getPluginPreferences();
 		getDefaultModelPreferenceInt(contentTypeId, prefs, CommonModelPreferenceNames.TAB_WIDTH, CommonModelPreferenceNames.DEFAULT_TAB_WIDTH);
 		checkPreferenceStoreDefault(contentTypeId, CommonEditorPreferenceNames.AUTO_PROPOSE_CODE, CommonEditorPreferenceNames.LT);
@@ -302,7 +305,7 @@ public class PreferencesTest extends TestCase {
 
 	// Test searching for a nonexisting preference
 	public void testNonExistPreferenceXML() {
-		nonExistPreference(IContentTypeIdentifier.ContentTypeID_SSEXML);
+		nonExistPreference(ContentTypeIdForXML.ContentTypeID_SSEXML);
 	}
 
 	public void testSetGetDefaultPreferenceFake() {
@@ -310,7 +313,7 @@ public class PreferencesTest extends TestCase {
 	}
 
 	public void testSetGetDefaultPreferenceHTML() {
-		setGetDefaultPreference(IContentTypeIdentifier.ContentTypeID_HTML);
+		setGetDefaultPreference(ContentTypeIdForHTML.ContentTypeID_HTML);
 	}
 
 	// Uncomment when the content-type specific preferences are implemented
@@ -325,11 +328,11 @@ public class PreferencesTest extends TestCase {
 	//	}
 	// Test setting then getting default preference
 	public void testSetGetDefaultPreferenceSSEXML() {
-		setGetDefaultPreference(IContentTypeIdentifier.ContentTypeID_SSEXML);
+		setGetDefaultPreference(ContentTypeIdForXML.ContentTypeID_SSEXML);
 	}
 
 	public void testSetGetDefaultPreferenceXML() {
-		setGetDefaultPreference(IContentTypeIdentifier.ContentTypeID_XML);
+		setGetDefaultPreference(ContentTypeIdForXML.ContentTypeID_XML);
 	}
 
 	public void testSetGetPreferenceFake() {
@@ -337,11 +340,11 @@ public class PreferencesTest extends TestCase {
 	}
 
 	public void testSetGetPreferenceHTML() {
-		setGetPreference(IContentTypeIdentifier.ContentTypeID_HTML);
+		setGetPreference(ContentTypeIdForHTML.ContentTypeID_HTML);
 	}
 
 	public void testSetGetPreferenceJSP() {
-		setGetPreference(IContentTypeIdentifier.ContentTypeID_JSP);
+		setGetPreference(ContentTypeIdForJSP.ContentTypeID_JSP);
 	}
 
 	// Tests that getting a non-existant preference store returns XML preference store
@@ -361,10 +364,10 @@ public class PreferencesTest extends TestCase {
 	//	}
 	// Test setting then getting preference
 	public void testSetGetPreferenceSSEXML() {
-		setGetPreference(IContentTypeIdentifier.ContentTypeID_SSEXML);
+		setGetPreference(ContentTypeIdForXML.ContentTypeID_SSEXML);
 	}
 
 	public void testSetGetPreferenceXML() {
-		setGetPreference(IContentTypeIdentifier.ContentTypeID_XML);
+		setGetPreference(ContentTypeIdForXML.ContentTypeID_XML);
 	}
 }

@@ -16,32 +16,35 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
+import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
+import org.eclipse.wst.html.core.contenttype.ContentTypeIdForHTML;
+import org.eclipse.wst.sse.core.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistryImpl;
+import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
 
 /**
  * @author pavery
  */
 public class AdapterFactoryRegistryTest extends TestCase {
-	
+
 	private final String CLASSNAME_HTML_FACTORY = "org.eclipse.wst.html.ui.registry.AdapterFactoryProviderForHTML";
 	private final String CLASSNAME_DTD_FACTORY = "org.eclipse.wst.dtd.ui.registry.AdapterFactoryProviderForDTD";
 	private final String CLASSNAME_JSP_FACTORY = "org.eclipse.jst.jsp.ui.registry.AdapterFactoryProviderForJSP";
 	private final String CLASSNAME_CSS_FACTORY = "org.eclipse.wst.css.ui.registry.AdapterFactoryProviderCSS";
 	private final String CLASSNAME_XML_FACTORY = "org.eclipse.wst.xml.ui.registry.AdapterFactoryProviderForXML";
-	
-	
+
+
 	public void testCreate() {
-		AdapterFactoryRegistry instance  = AdapterFactoryRegistryImpl.getInstance();
+		AdapterFactoryRegistry instance = AdapterFactoryRegistryImpl.getInstance();
 		assertNotNull(instance);
 	}
-	
+
 	public void testGetAllFactories() {
-		AdapterFactoryRegistry instance  = AdapterFactoryRegistryImpl.getInstance();
+		AdapterFactoryRegistry instance = AdapterFactoryRegistryImpl.getInstance();
 		Iterator it = instance.getAdapterFactories();
 		Object provider = null;
-		
+
 		// all providers expected classnames added here
 		List known = new ArrayList();
 		known.add(CLASSNAME_HTML_FACTORY);
@@ -49,74 +52,76 @@ public class AdapterFactoryRegistryTest extends TestCase {
 		known.add(CLASSNAME_JSP_FACTORY);
 		known.add(CLASSNAME_CSS_FACTORY);
 		known.add(CLASSNAME_XML_FACTORY);
-			
-		while(it.hasNext()) {
+
+		while (it.hasNext()) {
 			provider = it.next();
 			known.remove(provider.getClass().getName());
-			//System.out.println(provider.getClass().getName());
+			// System.out.println(provider.getClass().getName());
 		}
-		
+
 		// should have encountered all expected adater factories.
 		assertTrue(known.isEmpty());
 	}
-	
+
 	public void testGetFactoriesXML() {
-		
+
 		List known = new ArrayList();
 		known.add(CLASSNAME_XML_FACTORY);
-		
-		getFactoriesForContentType(known, IContentTypeIdentifier.ContentTypeID_SSEXML, CLASSNAME_HTML_FACTORY);
+
+		getFactoriesForContentType(known, ContentTypeIdForXML.ContentTypeID_XML, CLASSNAME_HTML_FACTORY);
 	}
-	
+
 	public void testGetFactoriesHTML() {
-		
+
 		List known = new ArrayList();
 		known.add(CLASSNAME_JSP_FACTORY);
-		
-		getFactoriesForContentType(known, IContentTypeIdentifier.ContentTypeID_JSP, CLASSNAME_XML_FACTORY);
+
+		getFactoriesForContentType(known, ContentTypeIdForJSP.ContentTypeID_JSP, CLASSNAME_XML_FACTORY);
 	}
-	
+
 	public void testGetFactoriesJSP() {
-		
+
 		List known = new ArrayList();
 		known.add(CLASSNAME_HTML_FACTORY);
-		
-		getFactoriesForContentType(known, IContentTypeIdentifier.ContentTypeID_HTML,CLASSNAME_DTD_FACTORY);
+
+		getFactoriesForContentType(known, ContentTypeIdForHTML.ContentTypeID_HTML, CLASSNAME_DTD_FACTORY);
 	}
-	
+
 	public void testGetFactoriesDTD() {
-		
+
 		List known = new ArrayList();
 		known.add(CLASSNAME_DTD_FACTORY);
-		
-		getFactoriesForContentType(known, IContentTypeIdentifier.ContentTypeID_DTD,CLASSNAME_HTML_FACTORY);
+
+		getFactoriesForContentType(known, "org.eclipse.wst.dtd.core.dtdsource", CLASSNAME_HTML_FACTORY);
 	}
-	
+
 	public void testGetFactoriesCSS() {
-		
+
 		List known = new ArrayList();
 		known.add(CLASSNAME_CSS_FACTORY);
-		
-		getFactoriesForContentType(known, IContentTypeIdentifier.ContentTypeID_CSS, CLASSNAME_JSP_FACTORY);
+
+		getFactoriesForContentType(known, ContentTypeIdForCSS.ContentTypeID_CSS, CLASSNAME_JSP_FACTORY);
 	}
-	
+
 	/**
-	 * Compare to a expected list of AdapterFactoryProviders (may be smaller than the actual list)
-	 * for a given contentTypeId.  At minimum these expected providers must be found to pass.
+	 * Compare to a expected list of AdapterFactoryProviders (may be smaller
+	 * than the actual list) for a given contentTypeId. At minimum these
+	 * expected providers must be found to pass.
 	 * 
 	 * @param expected
 	 * @param contentTypeId
 	 */
 	private void getFactoriesForContentType(List expected, String contentTypeId, String notExpectedClassname) {
-		
-		AdapterFactoryRegistryImpl instance  = (AdapterFactoryRegistryImpl)AdapterFactoryRegistryImpl.getInstance();
+
+		AdapterFactoryRegistryImpl instance = (AdapterFactoryRegistryImpl) AdapterFactoryRegistryImpl.getInstance();
 		Iterator it = instance.getAdapterFactories(contentTypeId);
 		Object provider = null;
-		while(it.hasNext()) {
+		while (it.hasNext()) {
 			provider = it.next();
 			expected.remove(provider.getClass().getName());
-			
-			// System.out.println("encountered provider: " + provider.getClass().getName());
+
+			// System.out.println("encountered provider: " +
+			// provider.getClass().getName());
 			assertTrue("!provider: " + notExpectedClassname + " shouldn't be in the list!", !notExpectedClassname.equals(provider.getClass().getName()));
 		}
 		// we should have at least found the expected factory (or factories)

@@ -14,10 +14,13 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
+import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
+import org.eclipse.wst.html.core.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.sse.core.ModelPlugin;
+import org.eclipse.wst.sse.core.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
+import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
 
 public class TestModelHandlers extends TestCase {
 	private static ModelHandlerRegistry getModelHandlerRegistry() {
@@ -35,7 +38,7 @@ public class TestModelHandlers extends TestCase {
 	}
 
 	public void testCSSExists() {
-		String id = IContentTypeIdentifier.ContentTypeID_CSS; //"com.ibm.sse.model.handler.css"; 
+		String id = ContentTypeIdForCSS.ContentTypeID_CSS; //"com.ibm.sse.model.handler.css"; 
 		ModelHandlerRegistry registry = getModelHandlerRegistry();
 		IModelHandler handler = registry.getHandlerForContentTypeId(id);
 		assertTrue("model handler registry does not have CSS type ", handler != null && handler.getAssociatedContentTypeId().equals(id));
@@ -45,11 +48,11 @@ public class TestModelHandlers extends TestCase {
 		String filename = "test.css";
 		ModelHandlerRegistry registry = getModelHandlerRegistry();
 		IModelHandler handler = registry.getHandlerFor(filename, null);
-		assertTrue("model handler registry does not have CSS type ", handler != null && handler.getAssociatedContentTypeId().equals(IContentTypeIdentifier.ContentTypeID_CSS));
+		assertTrue("model handler registry does not have CSS type ", handler != null && handler.getAssociatedContentTypeId().equals(ContentTypeIdForCSS.ContentTypeID_CSS));
 	}
 
 	public void testDTDExists() {
-		String id = IContentTypeIdentifier.ContentTypeID_DTD; // "com.ibm.sse.model.handler.dtd"; 
+		String id = "org.eclipse.wst.dtd.core.dtdsource"; 
 		ModelHandlerRegistry registry = getModelHandlerRegistry();
 		IModelHandler handler = registry.getHandlerForContentTypeId(id);
 		assertTrue("model handler registry does not have DTD type ", handler != null && handler.getAssociatedContentTypeId().equals(id));
@@ -59,11 +62,11 @@ public class TestModelHandlers extends TestCase {
 		String filename = "test.dtd";
 		ModelHandlerRegistry registry = getModelHandlerRegistry();
 		IModelHandler handler = registry.getHandlerFor(filename, null);
-		assertTrue("model handler registry does not have DTD type ", handler != null && handler.getAssociatedContentTypeId().equals(IContentTypeIdentifier.ContentTypeID_DTD));
+		assertTrue("model handler registry does not have DTD type ", handler != null && handler.getAssociatedContentTypeId().equals("org.eclipse.wst.dtd.core.dtdsource"));
 	}
 
 	public void testHTMLExists() {
-		String id = IContentTypeIdentifier.ContentTypeID_HTML;
+		String id = ContentTypeIdForHTML.ContentTypeID_HTML;
 		ModelHandlerRegistry registry = getModelHandlerRegistry();
 		IModelHandler handler = registry.getHandlerForContentTypeId(id);
 		assertTrue("model handler registry does not have HTML type ", handler != null && handler.getAssociatedContentTypeId().equals(id));
@@ -73,11 +76,11 @@ public class TestModelHandlers extends TestCase {
 		String filename = "test.html";
 		ModelHandlerRegistry registry = getModelHandlerRegistry();
 		IModelHandler handler = registry.getHandlerFor(filename, null);
-		assertTrue("model handler registry does not have HTML type ", handler != null && handler.getAssociatedContentTypeId().equals(IContentTypeIdentifier.ContentTypeID_HTML));
+		assertTrue("model handler registry does not have HTML type ", handler != null && handler.getAssociatedContentTypeId().equals(ContentTypeIdForHTML.ContentTypeID_HTML));
 	}
 
 	public void testJSPExists() {
-		String id = IContentTypeIdentifier.ContentTypeID_JSP;
+		String id = ContentTypeIdForJSP.ContentTypeID_JSP;
 		ModelHandlerRegistry registry = getModelHandlerRegistry();
 		IModelHandler handler = registry.getHandlerForContentTypeId(id);
 		assertTrue("model handler registry does not have JSP type ", handler != null && handler.getAssociatedContentTypeId().equals(id));
@@ -87,11 +90,11 @@ public class TestModelHandlers extends TestCase {
 		String filename = "test.jsp";
 		ModelHandlerRegistry registry = getModelHandlerRegistry();
 		IModelHandler handler = registry.getHandlerFor(filename, null);
-		assertTrue("model handler registry does not have JSP type ", handler != null && handler.getAssociatedContentTypeId().equals(IContentTypeIdentifier.ContentTypeID_JSP));
+		assertTrue("model handler registry does not have JSP type ", handler != null && handler.getAssociatedContentTypeId().equals(ContentTypeIdForJSP.ContentTypeID_JSP));
 	}
 
 	public void testXMLExists() {
-		String id = IContentTypeIdentifier.ContentTypeID_XML;
+		String id = ContentTypeIdForXML.ContentTypeID_XML;
 		ModelHandlerRegistry registry = getModelHandlerRegistry();
 		IModelHandler handler = registry.getHandlerForContentTypeId(id);
 		assertEquals("model handler registry does not have XML type ", id, handler.getAssociatedContentTypeId());
@@ -101,7 +104,7 @@ public class TestModelHandlers extends TestCase {
 		String filename = "test.xml";
 		ModelHandlerRegistry registry = getModelHandlerRegistry();
 		IModelHandler handler = registry.getHandlerFor(filename, null);
-		assertEquals("model handler registry does not have XML type ", IContentTypeIdentifier.ContentTypeID_XML, handler.getAssociatedContentTypeId());
+		assertEquals("model handler registry does not have XML type ", ContentTypeIdForXML.ContentTypeID_XML, handler.getAssociatedContentTypeId());
 	}
 
 
