@@ -8,7 +8,9 @@
    class="org.eclipse.wst.dtd.ui.internal.DTDUIPlugin">
 
    <runtime>
-      <library name="dtdui.jar"/>
+      <library name="dtdui.jar">
+         <export name="*"/>
+      </library>
    </runtime>
    <requires>
 		<import plugin="org.eclipse.core.resources"/>
