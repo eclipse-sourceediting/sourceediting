@@ -111,12 +111,12 @@ public class TaglibController implements IDocumentSetupParticipant {
 				}
 			}
 			synchronized (fDocumentMap) {
-				Object[] mapEntrys = fDocumentMap.entrySet().toArray();
+				Object[] keys = fDocumentMap.keySet().toArray();
 				boolean removed = false;
-				for (int i = 0; i < mapEntrys.length && !removed; i++) {
-					DocumentInfo info = (DocumentInfo) ((Map.Entry) mapEntrys[i]).getValue();
+				for (int i = 0; i < keys.length && !removed; i++) {
+					DocumentInfo info = (DocumentInfo) fDocumentMap.get(keys[i]);
 					if (info != null && info.textFileBuffer.equals(buffer)) {
-						fDocumentMap.remove(mapEntrys[i]);
+						fDocumentMap.remove(keys[i]);
 						removed = true;
 					}
 				}
