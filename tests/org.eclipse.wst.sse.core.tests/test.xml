@@ -24,7 +24,7 @@
 
 	<!-- This target defines the tests that need to be run. -->
 	<target name="suite">
-		<property name="wst-folder" value="${eclipse-home}/wst-folder"/>
+		<property name="wst-folder" value="${eclipse-home}/wst_folder"/>
 		<delete dir="${wst-folder}" quiet="true"/>
     	<ant target="core-test" antfile="${library-file}" dir="${eclipse-home}">
       		<property name="data-dir" value="${wst-folder}"/>
