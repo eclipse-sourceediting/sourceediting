@@ -14,14 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.jdt.internal.ui.text.IJavaPartitions;
-import org.eclipse.jdt.internal.ui.text.java.SmartSemicolonAutoEditStrategy;
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jdt.ui.text.JavaSourceViewerConfiguration;
 import org.eclipse.jdt.ui.text.JavaTextTools;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IAutoEditStrategy;
-import org.eclipse.jface.text.IAutoIndentStrategy;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
@@ -110,7 +107,8 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 			result.put(StructuredTextPartitionerForHTML.ST_HTML_DECLARATION, new ArrayList(1));
 
 		List strategies = (List) result.get(StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA);
-		strategies.add(new SmartSemicolonAutoEditStrategy(IJavaPartitions.JAVA_PARTITIONING));
+		// IJavaPartitions.JAVA_PARTITIONING = "___java_partitioning", but is internal
+		strategies.add(getJavaSourceViewerConfiguration().getAutoEditStrategies(sourceViewer, "___java_partitioning")[0]);
 
 		IAutoEditStrategy autoEditStrategy = new StructuredAutoEditStrategyJSP();
 		strategies = (List) result.get(StructuredTextPartitionerForHTML.ST_DEFAULT_HTML);
@@ -119,16 +117,6 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 		strategies.add(autoEditStrategy);
 
 		return result;
-	}
-
-	public IAutoIndentStrategy getAutoIndentStrategy(ISourceViewer sourceViewer, String contentType) {
-		if (contentType.compareTo(StructuredTextPartitionerForHTML.ST_SCRIPT) == 0 || contentType.compareTo(StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA) == 0
-					|| contentType.compareTo(StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVASCRIPT) == 0)
-			// HTML JavaScript
-			// JSP Java or JSP JavaScript
-			return getJavaSourceViewerConfiguration().getAutoIndentStrategy(sourceViewer, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA);
-		else
-			return super.getAutoIndentStrategy(sourceViewer, contentType);
 	}
 
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
