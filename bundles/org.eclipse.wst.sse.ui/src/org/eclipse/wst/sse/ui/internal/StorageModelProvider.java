@@ -48,7 +48,7 @@ import org.eclipse.wst.sse.ui.internal.extension.BreakpointProviderBuilder;
  */
 public class StorageModelProvider extends StorageDocumentProvider implements IModelProvider {
 
-	protected class InternalElementStateListener implements IElementStateListener {
+	private class InternalElementStateListener implements IElementStateListener {
 		public void elementContentAboutToBeReplaced(Object element) {
 			if (debugElementStatelistener) {
 				System.out.println("StorageModelProvider: elementContentAboutToBeReplaced: " + ((IEditorInput) element).getName()); //$NON-NLS-1$
@@ -78,7 +78,7 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 			IStructuredDocument innerdocument = null;
 			try {
 				// update document from input's contents
-				CodedReaderCreator codedReaderCreator = new CodedReaderCreator(computePath((IStorageEditorInput) element).toString(), Utilities.getMarkSupportedStream(((IStorageEditorInput) element).getStorage().getContents()));
+				CodedReaderCreator codedReaderCreator = new CodedReaderCreator(calculateID((IStorageEditorInput) element), Utilities.getMarkSupportedStream(((IStorageEditorInput) element).getStorage().getContents()));
 				reader = codedReaderCreator.getCodedReader();
 
 				innerdocument = (IStructuredDocument) info.fDocument;
@@ -160,7 +160,7 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 	/**
 	 * Collection of info that goes with a model.
 	 */
-	protected class ModelInfo {
+	private class ModelInfo {
 		public IEditorInput fElement;
 		public boolean fShouldReleaseOnInfoDispose;
 		public IStructuredModel fStructuredModel;
@@ -183,17 +183,17 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 		return fInstance;
 	}
 
-	protected IElementStateListener fInternalListener;
+	private IElementStateListener fInternalListener;
 	/** IStructuredModel information of all connected elements */
 	private Map fModelInfoMap = new HashMap();
 	private boolean fReuseModelDocument = true;
 
-	protected StorageModelProvider() {
+	private StorageModelProvider() {
 		super();
 		fInternalListener = new InternalElementStateListener();
 	}
 
-	protected String computePath(IStorageEditorInput input) {
+	String calculateID(IStorageEditorInput input) {
 		/**
 		 * Typically CVS will return a path of "filename.ext" and the input's
 		 * name will be "filename.ext version". The path must be used to load
@@ -306,27 +306,25 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 					try {
 						// update document from input's contents
 
-						CodedReaderCreator codedReaderCreator = new CodedReaderCreator(computePath((IStorageEditorInput) element).toString(), Utilities.getMarkSupportedStream(((IStorageEditorInput) element).getStorage().getContents()));
+						CodedReaderCreator codedReaderCreator = new CodedReaderCreator(calculateID((IStorageEditorInput) element), Utilities.getMarkSupportedStream(((IStorageEditorInput) element).getStorage().getContents()));
 						reader = codedReaderCreator.getCodedReader();
 
 						innerdocument = model.getStructuredDocument();
 
 						int originalLengthToReplace = innerdocument.getLength();
 
-						// TODO_future: we could implement with sequential
-						// rewrite, if we don't
-						// pickup automatically from FileBuffer support, so
-						// not so
-						// much has to be pulled into memory (as an extra big
-						// string), but
-						// we need to carry that API through so that
-						// StructuredModel is not
-						// notified until done.
+						/*
+						 * TODO_future: we could implement with sequential
+						 * rewrite, if we don't pickup automatically from
+						 * FileBuffer support, so not so much has to be pulled
+						 * into memory (as an extra big string), but we need
+						 * to carry that API through so that StructuredModel
+						 * is not notified until done.
+						 */
 
 						// innerdocument.startSequentialRewrite(true);
 						// innerdocument.replaceText(this, 0,
 						// innerdocument.getLength(), "");
-
 
 						StringBuffer stringBuffer = new StringBuffer();
 						int bufferSize = 2048;
@@ -540,21 +538,6 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 		new FileDocumentProvider().saveDocument(monitor, element, document, overwrite);
 	}
 
-	protected IEditorInput getInputFor(IDocument document) {
-		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
-		IEditorInput input = getInputFor(model);
-		model.releaseFromRead();
-		return input;
-	}
-
-	protected IEditorInput getInputFor(IStructuredModel structuredModel) {
-		IEditorInput result = null;
-		ModelInfo info = getModelInfoFor(structuredModel);
-		if (info != null)
-			result = info.fElement;
-		return result;
-	}
-
 	public IStructuredModel getModel(IEditorInput element) {
 		IStructuredModel result = null;
 		ModelInfo info = getModelInfoFor(element);
@@ -575,12 +558,12 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 		return null;
 	}
 
-	protected ModelInfo getModelInfoFor(IEditorInput element) {
+	private ModelInfo getModelInfoFor(IEditorInput element) {
 		ModelInfo result = (ModelInfo) fModelInfoMap.get(element);
 		return result;
 	}
 
-	protected ModelInfo getModelInfoFor(IStructuredModel structuredModel) {
+	private ModelInfo getModelInfoFor(IStructuredModel structuredModel) {
 		ModelInfo result = null;
 		if (structuredModel != null) {
 			ModelInfo[] modelInfos = (ModelInfo[]) fModelInfoMap.values().toArray(new ModelInfo[0]);
@@ -613,8 +596,8 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 	 * @return IStructuredModel
 	 */
 	public IStructuredModel loadModel(IStorageEditorInput input, boolean logExceptions) {
-		String path = computePath(input);
-		if (path == null) {
+		String id = calculateID(input);
+		if (id == null) {
 			return null;
 		}
 
@@ -630,7 +613,7 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 		IStructuredModel model = null;
 		try {
 			// first parameter must be unique
-			model = StructuredModelManager.getModelManager().getModelForEdit(path, contents, null);
+			model = StructuredModelManager.getModelManager().getModelForEdit(id, contents, null);
 			model.setBaseLocation(input.getName());
 		}
 		catch (IOException e) {
@@ -657,7 +640,7 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 	 * @param input
 	 * @return
 	 */
-	protected IStructuredModel selfCreateModel(IEditorInput input) {
+	private IStructuredModel selfCreateModel(IEditorInput input) {
 		return loadModel((IStorageEditorInput) input);
 	}
 
