@@ -26,6 +26,9 @@
       <import plugin="org.eclipse.wst.validation"/>
       <import plugin="org.eclipse.wst.common.emfworkbench.integration"/>
       <import plugin="org.eclipse.wst.server.core"/>
+      <import plugin="org.eclipse.jst.j2ee.web"/>
+      <import plugin="org.eclipse.jst.j2ee"/>
+      <import plugin="org.eclipse.jst.server.core"/>
    </requires>
    
    <extension
@@ -38,7 +41,7 @@
          </run>
       </runtime>
   </extension>
-     <extension
+   <!--  <extension
          point="org.eclipse.wst.server.core.moduleFactories">
       <moduleFactory
             projects="true"
@@ -46,6 +49,37 @@
             id="org.eclipse.jst.j2ee.internal.web.deployables.static">
          <moduleType
                versions="1.0"
+               types="web.static">
+         </moduleType>
+      </moduleFactory> -->
+    
+    <extension
+         point="org.eclipse.wst.server.ui.moduleArtifactAdapters">
+       <moduleArtifactAdapter
+            id="org.eclipse.jst.web.server.webstatic1">
+         <enablement>
+           <with variable="selection">
+             <adapt type="org.eclipse.core.resources.IProject"/>
+           </with>
+         </enablement>
+       </moduleArtifactAdapter>    
+   </extension>
+   <extension point="org.eclipse.core.runtime.adapters">
+         <factory
+             class="org.eclipse.wst.web.internal.deployables.StaticWebDeployableObjectAdapter"
+             adaptableType="org.eclipse.core.resources.IProject">
+            <adapter type="org.eclipse.wst.web.internal.deployables.IStaticWebModuleArtifact"/>
+        </factory>    
+   </extension> 
+   
+     <extension
+         point="org.eclipse.wst.server.core.moduleFactories">
+      <moduleFactory
+            projects="true"
+            class="org.eclipse.wst.web.internal.deployables.StaticWebDeployableFactory"
+            id="org.eclipse.jst.j2ee.internal.web.deployables.static">
+         <moduleType
+               versions="1.2, 1.3, 1.4"
                types="web.static">
          </moduleType>
       </moduleFactory>
