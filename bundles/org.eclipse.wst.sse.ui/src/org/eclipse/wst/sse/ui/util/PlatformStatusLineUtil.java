@@ -22,10 +22,12 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 
@@ -36,7 +38,7 @@ import org.eclipse.wst.sse.ui.StructuredTextEditor;
  */
 public class PlatformStatusLineUtil {
 
-	private class ClearErrorMessage implements Runnable {
+	private static class ClearErrorMessage implements Runnable {
 		public void run() {
 			displayMessage(null);
 		}
@@ -46,7 +48,7 @@ public class PlatformStatusLineUtil {
 	 * Used to clear message on focus loss, change of selection, key type,
 	 * etc...
 	 */
-	private class OneTimeListener extends FocusAdapter implements VerifyKeyListener, SelectionListener, MouseListener {
+	private static class OneTimeListener extends FocusAdapter implements VerifyKeyListener, SelectionListener, MouseListener {
 
 		private Runnable fRunner = null;
 		private StyledText fStyledText;
@@ -108,8 +110,20 @@ public class PlatformStatusLineUtil {
 	 */
 	public static void addOneTimeClearListener() {
 		IEditorPart editor = getActiveEditor();
-		if (editor != null && editor instanceof StructuredTextEditor)
-			addOneTimeClearListener((StructuredTextEditor) editor);
+		if (editor != null) {
+			if (editor instanceof StructuredTextEditor) {
+				addOneTimeClearListener((StructuredTextEditor) editor);
+			}
+			else {
+				ITextEditor textEditor = (ITextEditor) editor.getAdapter(ITextEditor.class);
+				if (textEditor != null) {
+					Control control = (Control) textEditor.getAdapter(Control.class);
+					if (control instanceof StyledText) {
+						addOneTimeClearListener(((StyledText) control));
+					}
+				}
+			}
+		}
 	}
 
 	private static void addOneTimeClearListener(StructuredTextEditor editor) {
@@ -121,7 +135,7 @@ public class PlatformStatusLineUtil {
 	}
 
 	private static void addOneTimeClearListener(StyledText widget) {
-		getInstance().new OneTimeListener(widget, getInstance().new ClearErrorMessage());
+		new OneTimeListener(widget, new ClearErrorMessage());
 	}
 
 	/**
@@ -148,7 +162,6 @@ public class PlatformStatusLineUtil {
 	 * @param msg
 	 */
 	public static void displayMessage(String msg) {
-
 		IEditorPart editor = getActiveEditor();
 		if (editor != null)
 			editor.getEditorSite().getActionBars().getStatusLineManager().setErrorMessage(msg);
@@ -156,13 +169,10 @@ public class PlatformStatusLineUtil {
 	}
 
 	private static IEditorPart getActiveEditor() {
-
 		IEditorPart editor = null;
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window == null) {
-			IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
-			if (windows.length > 0)
-				window = windows[0];
+			window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		}
 		if (window != null) {
 			IWorkbenchPage page = window.getActivePage();
