@@ -2146,15 +2146,16 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	}
 
 	/**
-	 * Ensure that the correct IDocumentProvider is used. For IFile and Files,
-	 * the default provider with a specified AnnotationModelFactory is used.
-	 * For StorageEditorInputs, use a custom provider that creates a usable
-	 * ResourceAnnotationModel
+	 * Ensure that the correct IDocumentProvider is used. For direct models, a
+	 * special provider is used. For StorageEditorInputs, use a custom
+	 * provider that creates a usable ResourceAnnotationModel. For everything
+	 * else, use the base support.
 	 * 
 	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#setDocumentProvider(org.eclipse.ui.IEditorInput)
 	 */
 	protected void setDocumentProvider(IEditorInput input) {
 		if (input instanceof IStructuredModel) {
+			// largely untested
 			setDocumentProvider(StructuredModelDocumentProvider.getInstance());
 		} else if (input instanceof IStorageEditorInput && !(input instanceof IFileEditorInput)) {
 			setDocumentProvider(StorageModelProvider.getInstance());
@@ -2185,65 +2186,68 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	}
 
 	/**
-	 * @deprecated - use initializeDocumentProvider/setInput
+	 * @deprecated - use setInput as if we were a text editor
 	 * 
 	 * Note: this weird API, setModel which takes input as parameter. Is
 	 * provided for those editors which don't otherwise have to know about
 	 * models's. (Is hard/impossible to override the setInput method.)
 	 */
 	public void setModel(IFileEditorInput input) {
-		org.eclipse.wst.sse.core.util.Assert.isNotNull(getDocumentProvider());
-		if (fStructuredModel != null) {
-			if (getDocument() != null) {
-				getDocument().removeDocumentListener(this);
-				fStructuredModel.removeModelStateListener(getInternalModelStateListener());
-			}
-		}
-		if (!(getDocumentProvider() instanceof FileModelProvider)) {
-			initializeDocumentProvider(FileModelProvider.getInstance());
-		}
-		//		((FileModelProvider)
-		// getDocumentProvider()).createModelInfo(input);
-		//		fStructuredModel = ((FileModelProvider)
-		// getDocumentProvider()).getModel(input);
-		// model will be null in some error conditions.
-		if (fStructuredModel == null) {
-			close(false);
-		}
-		// DMW: checked for site after moving to 3/22
-		// (2.1M4) Eclipse base.
-		/// Later code in super classes were causing NPE's
-		// because site, etc.,
-		// hasn't been
-		//      initialized yet. If site is still null at this
-		// point, we are
-		// assuming
-		//      setInput and update are called later, perhaps
-		// elsewhere.
-		//      But if site is not null (such as in DTD Editor)
-		// then setInput and
-		// update must
-		//      be called here.
-		//		if (getSite() != null) {
+//		Assert.isNotNull(getDocumentProvider());
+//		if (fStructuredModel != null) {
+//			if (getDocument() != null) {
+//				getDocument().removeDocumentListener(this);
+//				fStructuredModel.removeModelStateListener(getInternalModelStateListener());
+//			}
+//		}
+//		if (!(getDocumentProvider() instanceof FileModelProvider)) {
+//			initializeDocumentProvider(FileModelProvider.getInstance());
+//		}
+//		//		((FileModelProvider)
+//		// getDocumentProvider()).createModelInfo(input);
+//		//		fStructuredModel = ((FileModelProvider)
+//		// getDocumentProvider()).getModel(input);
+//		// model will be null in some error conditions.
+//		if (fStructuredModel == null) {
+//			close(false);
+//		}
+//		// DMW: checked for site after moving to 3/22
+//		// (2.1M4) Eclipse base.
+//		/// Later code in super classes were causing NPE's
+//		// because site, etc.,
+//		// hasn't been
+//		//      initialized yet. If site is still null at this
+//		// point, we are
+//		// assuming
+//		//      setInput and update are called later, perhaps
+//		// elsewhere.
+//		//      But if site is not null (such as in DTD Editor)
+//		// then setInput and
+//		// update must
+//		//      be called here.
+//		//		if (getSite() != null) {
+//		setInput(input);
+//		fStructuredModel = ((FileModelProvider) getDocumentProvider()).getModel(input);
+//		if (fStructuredModel != null) {
+//			getDocument().addDocumentListener(this);
+//			fStructuredModel.addModelStateListener(getInternalModelStateListener());
+//		}
+//		// update() should be called whenever the model is
+//		// set or changed
+//		update();
+//		//		}
 		setInput(input);
-		fStructuredModel = ((FileModelProvider) getDocumentProvider()).getModel(input);
-		if (fStructuredModel != null) {
-			getDocument().addDocumentListener(this);
-			fStructuredModel.addModelStateListener(getInternalModelStateListener());
-		}
-		// update() should be called whenever the model is
-		// set or changed
-		update();
-		//		}
 	}
 
 	/**
 	 * Sets the model field within this editor, use only when: 1) there is no
 	 * IEditorInput (very special case, not well tested) 2) there is an
 	 * IEditorInput but the corresponding model needs to be set separately
+	 * 
+	 * @deprecated - this is a laregely untested usage
 	 */
 	public void setModel(IStructuredModel newModel) {
-		org.eclipse.wst.sse.core.util.Assert.isNotNull(getDocumentProvider());
+		Assert.isNotNull(getDocumentProvider());
 		if (fStructuredModel != null) {
 			fStructuredModel.removeModelLifecycleListener(fInternalLifeCycleListener);
 			if (fStructuredModel.getStructuredDocument() != null) {
@@ -2273,7 +2277,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	public void setModel(IStructuredModel newModel, IFileEditorInput input) {
 		//  _setAnnotationModel(input);
 		//  setModel(newModel);
-		org.eclipse.wst.sse.core.util.Assert.isNotNull(getDocumentProvider());
+		Assert.isNotNull(getDocumentProvider());
 		if (fStructuredModel != null) {
 			fStructuredModel.removeModelLifecycleListener(fInternalLifeCycleListener);
 			fStructuredModel.removeModelStateListener(getInternalModelStateListener());
