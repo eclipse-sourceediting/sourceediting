@@ -40,7 +40,7 @@ import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellChecker;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 /**
- * SpellCheckTargetImpl
+ * @deprecated - will be removed in M4
  */
 public class SpellCheckTargetImpl implements SpellCheckTarget {
 

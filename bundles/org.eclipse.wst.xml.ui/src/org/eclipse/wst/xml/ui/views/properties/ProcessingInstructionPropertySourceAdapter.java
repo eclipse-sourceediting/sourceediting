@@ -33,6 +33,8 @@ import org.w3c.dom.ProcessingInstruction;
  * An IPropertySource implementation for a JFace viewer used to display
  * properties of DOM nodes. Requires an adapter factory to create JFace
  * adapters for the nodes in the tree.
+ * 
+ * @deprecated - to be removed in M4
  */
 public class ProcessingInstructionPropertySourceAdapter implements INodeAdapter, IPropertySource, IPropertySourceExtension {
 	protected final static String CATEGORY_ATTRIBUTES = "Instructions"; //$NON-NLS-1$
