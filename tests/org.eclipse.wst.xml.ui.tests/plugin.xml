@@ -4,7 +4,7 @@
    id="org.eclipse.wst.xml.ui.tests"
    name="Structured Source Editor for XML Tests"
    version="1.0.0"
-   provider-name="IBM"
+   provider-name="Eclipse.org"
    class="org.eclipse.wst.xml.ui.tests.SSEForXMLTestsPlugin">
 
    <runtime>
@@ -41,14 +41,11 @@
 
    <extension
          point="org.eclipse.ui.views">
-      <category
-            name="Experimental"
-            id="org.eclipse.wst.xml.ui.tests">
-      </category>
+
       <view
             name="Embedded XML Structured Text Viewer"
             icon="icons/sourceEditor.gif"
-            category="org.eclipse.wst.xml.ui.tests"
+            category="org.eclipse.wst.sse.ui.tests"
             class="org.eclipse.wst.xml.ui.tests.ViewerTestXML"
             id="org.eclipse.wst.xml.ui.tests.ViewerTestXML">
       </view>
