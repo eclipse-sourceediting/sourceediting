@@ -249,7 +249,7 @@ public class DTDTreeContentProvider implements ITreeContentProvider, IDTDFileLis
 			List newSelection = new ArrayList();
 			while (iter.hasNext()) {
 				DTDNode node = (DTDNode) iter.next();
-				if (oldSelectedNode == null || node.getStructuredDocumentRegion() != oldSelectedNode.getStructuredDocumentRegion() || node.getStartOffset() != oldSelectedNode.getStartOffset() || node.getEndOffset() != oldSelectedNode.getEndOffset()) {
+				if (oldSelectedNode == null || node.getStructuredDTDDocumentRegion() != oldSelectedNode.getStructuredDTDDocumentRegion() || node.getStartOffset() != oldSelectedNode.getStartOffset() || node.getEndOffset() != oldSelectedNode.getEndOffset()) {
 					// add to selection
 					newSelection.add(node);
 					expandToNode(node);
