@@ -84,11 +84,16 @@ public class ProblemAnnotation extends Annotation implements IJavaAnnotation {
 		fProblem = problem;
 		fCompilationUnit = cu;
 
-		if (SpellProblem.Spelling == fProblem.getID()) {
-			setType(SPELLING_ANNOTATION_TYPE);
-			fLayer = WARNING_LAYER;
-		}
-		else if (IProblem.Task == fProblem.getID()) {
+		// TODO: commented out for M3 to M4 compatibility
+		// Not sure what longer term solution is, or if we 
+		// can just drop this as spell checking done in text level?. 
+//		if (SpellProblem.Spelling == fProblem.getID()) {
+//			setType(SPELLING_ANNOTATION_TYPE);
+//			fLayer = WARNING_LAYER;
+//		}
+//		else 
+		
+		if (IProblem.Task == fProblem.getID()) {
 			setType(JavaMarkerAnnotation.TASK_ANNOTATION_TYPE);
 			fLayer = TASK_LAYER;
 		}
