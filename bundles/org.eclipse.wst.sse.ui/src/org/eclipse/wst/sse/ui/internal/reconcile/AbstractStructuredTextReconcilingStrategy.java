@@ -452,7 +452,7 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
             for(int j=lastFoundAdded; j<sortedAdditions.size(); j++) {             
                 TemporaryAnnotation addition = (TemporaryAnnotation)sortedAdditions.get(j);
                 // quick position check here
-                if(removal.getPosition().getOffset() == addition.getPosition().getOffset()) {
+                if(removal.getPosition().equals(addition.getPosition())) {
                     lastFoundAdded = j;
                     // remove performs TemporaryAnnotation.equals()
                     // which checks text as well
