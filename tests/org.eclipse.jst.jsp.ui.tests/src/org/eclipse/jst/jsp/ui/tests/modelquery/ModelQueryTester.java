@@ -301,26 +301,28 @@ public class ModelQueryTester extends TestCase {
 	 * loaded from a public reference registered in the XML catalog
 	 */
 	public void testDTDLoadFromPublicID() {
-		if (testShippedDTDLookup) {
-			setUpXML();
-			String contents = "<!DOCTYPE taglib PUBLIC \"-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN\"> <taglib><tag>foo</tag></taglib>";
-			fModel.getStructuredDocument().set(contents);
-
-			CMDocumentManager documentManagaer = fModelQuery.getCMDocumentManager();
-			documentManagaer.setPropertyEnabled(CMDocumentManager.PROPERTY_ASYNC_LOAD, false);
-			documentManagaer.setPropertyEnabled(CMDocumentManager.PROPERTY_AUTO_LOAD, true);
-
-
-			// taglib
-			CMNode node = fModelQuery.getCMNode((Node) fModel.getIndexedRegion(contents.length() - 2));
-			assertTrue("web-jsptaglibrary_1_2.dtd failed to load through catalog", node != null && node.getNodeType() == CMNode.ELEMENT_DECLARATION && node.getNodeName().equalsIgnoreCase("taglib"));
-
-			// tag
-			node = fModelQuery.getCMNode((Node) fModel.getIndexedRegion(contents.length() - 12));
-			assertTrue("CMElementDeclaration for \"tag\" from web-jsptaglibrary_1_2.dtd is missing", node != null && node.getNodeType() == CMNode.ELEMENT_DECLARATION && node.getNodeName().equalsIgnoreCase("tag"));
-			CMContent content = ((CMElementDeclaration) node).getContent();
-			assertTrue("only one occurrence of child group allowed", content.getNodeType() == CMNode.GROUP && content.getMaxOccur() == 1);
-		}
+		// No longer provided in WTP
+		// TODO: provide DTD?
+//		if (testShippedDTDLookup) {
+//			setUpXML();
+//			String contents = "<!DOCTYPE taglib PUBLIC \"-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN\"> <taglib><tag>foo</tag></taglib>";
+//			fModel.getStructuredDocument().set(contents);
+//
+//			CMDocumentManager documentManagaer = fModelQuery.getCMDocumentManager();
+//			documentManagaer.setPropertyEnabled(CMDocumentManager.PROPERTY_ASYNC_LOAD, false);
+//			documentManagaer.setPropertyEnabled(CMDocumentManager.PROPERTY_AUTO_LOAD, true);
+//
+//
+//			// taglib
+//			CMNode node = fModelQuery.getCMNode((Node) fModel.getIndexedRegion(contents.length() - 2));
+//			assertTrue("web-jsptaglibrary_1_2.dtd failed to load through catalog", node != null && node.getNodeType() == CMNode.ELEMENT_DECLARATION && node.getNodeName().equalsIgnoreCase("taglib"));
+//
+//			// tag
+//			node = fModelQuery.getCMNode((Node) fModel.getIndexedRegion(contents.length() - 12));
+//			assertTrue("CMElementDeclaration for \"tag\" from web-jsptaglibrary_1_2.dtd is missing", node != null && node.getNodeType() == CMNode.ELEMENT_DECLARATION && node.getNodeName().equalsIgnoreCase("tag"));
+//			CMContent content = ((CMElementDeclaration) node).getContent();
+//			assertTrue("only one occurrence of child group allowed", content.getNodeType() == CMNode.GROUP && content.getMaxOccur() == 1);
+//		}
 	}
 
 	/**
