@@ -6,18 +6,13 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
-import org.eclipse.jface.text.formatter.IContentFormatter;
-import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
-import org.eclipse.jface.text.information.IInformationPresenter;
-import org.eclipse.jface.text.reconciler.IReconciler;
-import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
-import org.eclipse.wst.dtd.core.text.IDTDPartitions;
+import org.eclipse.wst.dtd.core.text.IDTDPartitionTypes;
 import org.eclipse.wst.dtd.ui.StructuredTextViewerConfigurationDTD;
 import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.dtd.ui.tests.internal.Logger;
@@ -82,7 +77,7 @@ public class TestViewerConfigurationDTD extends TestCase {
 		if (!fDisplayExists)
 			return;
 
-		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, IDTDPartitions.DTD_DEFAULT);
+		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, IDTDPartitionTypes.DTD_DEFAULT);
 		assertNotNull(strategies);
 		assertTrue("there are no auto edit strategies", strategies.length > 0);
 	}
