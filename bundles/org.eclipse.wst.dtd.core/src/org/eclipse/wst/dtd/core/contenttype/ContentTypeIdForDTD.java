@@ -14,18 +14,22 @@ package org.eclipse.wst.dtd.core.contenttype;
 
 /**
  * This class, with its one field, is a convience to provide compile-time
- * safety when refering to a contentType ID. The value of the contenttype id
- * field must match what is specified in plugin.xml file.
+ * safety when referring to a contentType ID. The value of the
+ * ContentTypeID_DTD field must match what is specified in the
+ * org.eclipse.wst.dtd.core/plugin.xml file.
+ * 
+ * This class is not meant to be instantiated or subclassed.
  */
 
 public class ContentTypeIdForDTD {
-
-	/*
+	/**
 	 * The value of the contenttype id field must match what is specified in
 	 * plugin.xml file. Note: this value is intentially not declared as final,
 	 * so it will not be inlined.
 	 */
 	public static String ContentTypeID_DTD = "org.eclipse.wst.dtd.core.dtdsource"; //$NON-NLS-1$
 
-
+	private ContentTypeIdForDTD() {
+		super();
+	}
 }
