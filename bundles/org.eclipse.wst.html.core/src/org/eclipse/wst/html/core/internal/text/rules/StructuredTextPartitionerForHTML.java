@@ -35,7 +35,7 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 
 	public final static String ST_DEFAULT_HTML = "org.eclipse.wst.html.DEFAULT_HTML"; //$NON-NLS-1$
 	public final static String ST_HTML_DECLARATION = "org.eclipse.wst.html.HTML_DECLARATION"; //$NON-NLS-1$
-	public final static String ST_HTML_COMMENT = "org.eclipse.wst.htmlHTML_COMMENT"; //$NON-NLS-1$
+	public final static String ST_HTML_COMMENT = "org.eclipse.wst.html.HTML_COMMENT"; //$NON-NLS-1$
 	public final static String ST_SCRIPT = "org.eclipse.wst.html.SCRIPT"; //$NON-NLS-1$
 	private final static String[] configuredContentTypes = new String[]{ST_DEFAULT_HTML, ST_HTML_DECLARATION, ST_HTML_COMMENT, ST_SCRIPT, StructuredTextPartitionerForCSS.ST_STYLE};
 
@@ -128,14 +128,14 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 		for (int i = 0; i < ScriptLanguageKeys.JAVASCRIPT_MIME_TYPE_KEYS.length; i++)
 			if (ScriptLanguageKeys.JAVASCRIPT_MIME_TYPE_KEYS[i].equalsIgnoreCase(type))
 				return ST_SCRIPT;
-		return "SCRIPT.type:" + type.toUpperCase(Locale.ENGLISH); //$NON-NLS-1$
+		return ST_SCRIPT + ".type." + type.toUpperCase(Locale.ENGLISH); //$NON-NLS-1$
 	}
 
 	private String lookupScriptLanguage(String language) {
 		for (int i = 0; i < ScriptLanguageKeys.JAVASCRIPT_LANGUAGE_KEYS.length; i++)
 			if (ScriptLanguageKeys.JAVASCRIPT_LANGUAGE_KEYS[i].equalsIgnoreCase(language))
 				return ST_SCRIPT;
-		return "SCRIPT.language:" + language.toUpperCase(Locale.ENGLISH); //$NON-NLS-1$
+		return ST_SCRIPT + ".language." + language.toUpperCase(Locale.ENGLISH); //$NON-NLS-1$
 	}
 
 	/**

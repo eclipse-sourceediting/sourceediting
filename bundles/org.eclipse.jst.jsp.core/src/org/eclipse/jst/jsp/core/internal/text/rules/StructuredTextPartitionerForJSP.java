@@ -172,11 +172,11 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 
 	public final static String ST_DEFAULT_JSP = "org.eclipse.jst.jsp.DEFAULT_JSP"; //$NON-NLS-1$
 	public final static String ST_JSP_COMMENT = "org.eclipse.jst.jsp.JSP_COMMENT"; //$NON-NLS-1$
-	private final static String ST_JSP_CONTENT = "org.eclipse.jst.jsp.JSP_CONTENT."; //$NON-NLS-1$
-	public final static String ST_JSP_CONTENT_DELIMITER = ST_JSP_CONTENT + "DELIMITER"; //$NON-NLS-1$
-	public final static String ST_JSP_CONTENT_JAVA = ST_JSP_CONTENT + "JAVA"; //$NON-NLS-1$
-	public final static String ST_JSP_CONTENT_JAVASCRIPT = ST_JSP_CONTENT + "JAVASCRIPT"; //$NON-NLS-1$
-	public final static String ST_JSP_DEFAULT_EL = "org.eclipse.jst.jsp.JSP_DEFAULT_EL"; //$NON-NLS-1$
+	private final static String ST_JSP_SCRIPT = "org.eclipse.jst.jsp.SCRIPT."; //$NON-NLS-1$
+	public final static String ST_JSP_CONTENT_DELIMITER = ST_JSP_SCRIPT + "DELIMITER"; //$NON-NLS-1$
+	public final static String ST_JSP_CONTENT_JAVA = ST_JSP_SCRIPT + "JAVA"; //$NON-NLS-1$
+	public final static String ST_JSP_CONTENT_JAVASCRIPT = ST_JSP_SCRIPT + "JAVASCRIPT"; //$NON-NLS-1$
+	public final static String ST_JSP_DEFAULT_EL = ST_JSP_SCRIPT + "JSP_EL"; //$NON-NLS-1$
 	public final static String ST_JSP_DIRECTIVE = "org.eclipse.jst.jsp.JSP_DIRECTIVE"; //$NON-NLS-1$
 	private static final String XHTML_CONTENT_TYPE = "text/xhtml"; //$NON-NLS-1$
 	private static final String XML_CONTENT_TYPE = "text/xml"; //$NON-NLS-1$
@@ -416,7 +416,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 			result = ST_JSP_CONTENT_JAVASCRIPT;
 		}
 		else {
-			result = ST_JSP_CONTENT + getLanguage().toUpperCase(Locale.ENGLISH);
+			result = ST_JSP_SCRIPT + getLanguage().toUpperCase(Locale.ENGLISH);
 		}
 		return result;
 	}
