@@ -16,7 +16,9 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Hashtable;
+import java.util.List;
 
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.resources.IContainer;
@@ -34,7 +36,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jst.jsp.core.contentmodel.tld.DocumentProvider;
-import org.eclipse.jst.jsp.core.contentmodel.tld.JSP20TLDNames;
+import org.eclipse.jst.jsp.core.contentmodel.tld.JSP12TLDNames;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.wst.sse.core.util.JarUtilities;
 import org.eclipse.wst.xml.uriresolver.util.URIHelper;
@@ -112,16 +114,16 @@ class ProjectDescription {
 
 	private static final IPath WEB_INF_PATH = new Path("WEB-INF");
 	private static final String WEB_XML = "web.xml";
+
+	// this table is special in that it holds tables of references according
+	// to local roots
+	Hashtable fImplicitReferences;
 	Hashtable fJARReferences;
 	IProject fProject;
 	Hashtable fServletReferences;
 	Hashtable fTagDirReferences;
 
 	Hashtable fTLDReferences;
-
-	// TODO: there should be a separate list of implicit references kept per
-	// local root
-	Hashtable fImplicitReferences;
 
 	IResourceDeltaVisitor fVisitor;
 
@@ -165,6 +167,11 @@ class ProjectDescription {
 							Logger.logException(e);
 						}
 					}
+					try {
+						contents.close();
+					}
+					catch (IOException e) {
+					}
 				}
 			}
 		}
@@ -192,6 +199,7 @@ class ProjectDescription {
 					webxmlContents.close();
 				}
 				catch (IOException e1) {
+					// ignore
 				}
 		}
 		if (document == null)
@@ -202,7 +210,7 @@ class ProjectDescription {
 		ServletRecord servletRecord = new ServletRecord();
 		servletRecord.location = webxml.getLocation();
 		fServletReferences.put(servletRecord.getWebXML().toString(), servletRecord);
-		NodeList taglibs = document.getElementsByTagName(JSP20TLDNames.TAGLIB);
+		NodeList taglibs = document.getElementsByTagName(JSP12TLDNames.TAGLIB);
 		for (int i = 0; i < taglibs.getLength(); i++) {
 			String uri = readTextofChild(taglibs.item(i), "taglib-uri");
 			// specified location is relative to root of the webapp
@@ -215,7 +223,7 @@ class ProjectDescription {
 			else {
 				record.location = new Path(URIHelper.normalize(location, webxml.getLocation().toString(), getLocalRoot(webxml.getLocation().toString())));
 			}
-			servletRecord.urlRecords.add(record);
+			servletRecord.tldRecords.add(record);
 			getImplicitReferences(webxml.getLocation().toString()).put(uri, record);
 			if (_debugIndexCreation)
 				System.out.println("created record for " + uri + "@" + record.location);
@@ -237,10 +245,34 @@ class ProjectDescription {
 		// }
 	}
 
+	void addTLD(IResource tld) {
+		if (_debugIndexCreation)
+			System.out.println("creating record for " + tld.getFullPath());
+		TLDRecord record = createTLDRecord(tld);
+		fTLDReferences.put(tld.getFullPath().toString(), record);
+		if (record.uri != null) {
+			getImplicitReferences(tld.getLocation().toString()).put(record.uri, record);
+		}
+	}
+
+	void clear() {
+	}
+
+	/**
+	 * @param resource
+	 * @return
+	 */
+	private ITaglibRecord createJARRecord(IResource jar) {
+		JarRecord record = new JarRecord();
+		record.location = jar.getLocation();
+		record.urlRecords = new ArrayList(0);
+		return record;
+	}
+
 	/**
 	 * @return
 	 */
-	private TagDirRecord createTagdirRecord(IResource tagFile) {
+	TagDirRecord createTagdirRecord(IResource tagFile) {
 		IContainer tagdir = tagFile.getParent();
 		String tagdirLocation = tagdir.getFullPath().toString();
 		TagDirRecord record = (TagDirRecord) fTagDirReferences.get(tagdirLocation);
@@ -262,27 +294,6 @@ class ProjectDescription {
 			}
 
 		}
-		return record;
-	}
-
-	void addTLD(IResource tld) {
-		if (_debugIndexCreation)
-			System.out.println("creating record for " + tld.getFullPath());
-		TLDRecord record = createTLDRecord(tld);
-		fTLDReferences.put(tld.getFullPath().toString(), record);
-		if (record.uri != null) {
-			getImplicitReferences(tld.getLocation().toString()).put(record.uri, record);
-		}
-	}
-
-	/**
-	 * @param resource
-	 * @return
-	 */
-	private ITaglibRecord createJARRecord(IResource jar) {
-		JarRecord record = new JarRecord();
-		record.location = jar.getLocation();
-		record.urlRecords = new ArrayList(0);
 		return record;
 	}
 
@@ -312,6 +323,7 @@ class ProjectDescription {
 				}
 			}
 			catch (IOException e) {
+				// ignore
 			}
 		}
 		return record;
@@ -327,7 +339,7 @@ class ProjectDescription {
 		DocumentProvider provider = new DocumentProvider();
 		provider.setInputStream(tldContents);
 		provider.setValidating(false);
-		provider.setRootElementName(JSP20TLDNames.TAGLIB);
+		provider.setRootElementName(JSP12TLDNames.TAGLIB);
 		provider.setBaseReference(baseLocation);
 		result = provider.getRootElement();
 		if (result.getNodeType() != Node.ELEMENT_NODE)
@@ -335,7 +347,7 @@ class ProjectDescription {
 		Element taglibElement = (Element) result;
 		if (taglibElement != null) {
 			Node child = taglibElement.getFirstChild();
-			while (child != null && !(child.getNodeType() == Node.ELEMENT_NODE && child.getNodeName().equals(JSP20TLDNames.URI))) {
+			while (child != null && !(child.getNodeType() == Node.ELEMENT_NODE && child.getNodeName().equals(JSP12TLDNames.URI))) {
 				child = child.getNextSibling();
 			}
 			if (child != null) {
@@ -349,6 +361,17 @@ class ProjectDescription {
 			}
 		}
 		return uri.toString();
+	}
+
+	synchronized List getAvailableTaglibRecords(IPath location) {
+		Collection implicitReferences = getImplicitReferences(location.toString()).values();
+		List records = new ArrayList(fTLDReferences.size() + fTagDirReferences.size() + fJARReferences.size() + fServletReferences.size());
+		records.addAll(fTLDReferences.values());
+		records.addAll(fTagDirReferences.values());
+		records.addAll(fJARReferences.values());
+		records.addAll(fServletReferences.values());
+		records.addAll(implicitReferences);
+		return records;
 	}
 
 	/**
@@ -452,12 +475,12 @@ class ProjectDescription {
 	void removeServlets(IResource webxml) {
 		if (_debugIndexCreation)
 			System.out.println("removing records for " + webxml.getFullPath());
-		ServletRecord record = (ServletRecord) fServletReferences.remove(webxml.getFullPath());
+		ServletRecord record = (ServletRecord) fServletReferences.remove(webxml.getLocation().toString());
 		if (record != null) {
-			URLRecord[] records = (URLRecord[]) record.getURLRecords().toArray(new URLRecord[0]);
+			TLDRecord[] records = (TLDRecord[]) record.getTLDRecords().toArray(new TLDRecord[0]);
 			for (int i = 0; i < records.length; i++) {
 				if (_debugIndexCreation)
-					System.out.println("removed record for " + records[i].uri + "@" + records[i].baseLocation);
+					System.out.println("removed record for " + records[i].uri + "@" + records[i].location);
 				getImplicitReferences(webxml.getLocation().toString()).remove(records[i].getURI());
 			}
 		}

@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IPath;
 
 public class ServletRecord implements ITaglibRecord {
 	IPath location;
-	List urlRecords = new ArrayList(0);
+	List tldRecords = new ArrayList(0);
 
 	public short getRecordType() {
 		return ITaglibRecord.WEB_XML;
@@ -35,7 +35,7 @@ public class ServletRecord implements ITaglibRecord {
 	/**
 	 * 
 	 */
-	public List getURLRecords() {
-		return urlRecords;
+	public List getTLDRecords() {
+		return tldRecords;
 	}
 }
