@@ -30,7 +30,6 @@ import org.eclipse.wst.validation.core.IMessage;
 import org.eclipse.wst.validation.core.IMessageAccess;
 import org.eclipse.wst.validation.core.IReporter;
 import org.eclipse.wst.validation.core.IValidator;
-import org.eclipse.wst.validation.core.MessageLimitException;
 import org.eclipse.wst.validation.core.ValidationException;
 import org.eclipse.wst.xml.core.document.XMLAttr;
 import org.eclipse.wst.xml.core.document.XMLDocument;
@@ -38,6 +37,7 @@ import org.eclipse.wst.xml.core.document.XMLElement;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.core.document.XMLText;
+import org.eclispe.wst.validation.internal.core.MessageLimitException;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -210,7 +210,7 @@ public class DelegatingReconcileValidator implements IValidator
         String nameOrValue = params[2];//The name or value of what should be squiggled
                                     
         // convert the line and Column numbers to an offset:        
-        int start = document.getStructuredDocument().getLineOffset(message.getLineNo() - 1) + column - 1;
+        int start = document.getStructuredDocument().getLineOffset(message.getLineNumber() - 1) + column - 1;
 
         // calculate the "better" start and end offset:
         int[] result = computeStartEndLocation(start, message.getText(), key, nameOrValue, document);
