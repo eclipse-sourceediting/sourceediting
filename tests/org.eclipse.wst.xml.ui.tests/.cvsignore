@@ -1,7 +1,2 @@
 bin
-bin.project
-.project
-build.xml
-org.eclipse.wst.xml.ui.tests_1.0.0.jar
-ssexmltests.jar
-temp.folder
+
