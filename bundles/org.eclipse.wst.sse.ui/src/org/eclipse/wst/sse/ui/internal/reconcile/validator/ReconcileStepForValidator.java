@@ -13,8 +13,6 @@
 package org.eclipse.wst.sse.ui.internal.reconcile.validator;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -35,8 +33,8 @@ import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 import org.eclipse.wst.validation.core.IFileDelta;
-import org.eclipse.wst.validation.core.IHelper;
 import org.eclipse.wst.validation.core.IMessage;
+import org.eclipse.wst.validation.core.IValidationContext;
 import org.eclipse.wst.validation.core.IValidator;
 import org.eclispe.wst.validation.internal.core.FileDelta;
 
@@ -57,7 +55,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
     }
     
 	private final IReconcileResult[] EMPTY_RECONCILE_RESULT_SET = new IReconcileResult[0];
-	private IHelper fHelper = null;
+	private IValidationContext fHelper = null;
 	private IncrementalReporter fReporter = null;
 	private int fScope = -1;
 	private IValidator fValidator = null;
@@ -82,15 +80,11 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 	 * @param messages
 	 * @return
 	 */
-	protected IReconcileResult[] createAnnotations(HashMap messages) {
+	protected IReconcileResult[] createAnnotations(List messageList) {
 		List annotations = new ArrayList();
-		Iterator keys = messages.keySet().iterator();
-
-		while (keys.hasNext() && !isCanceled()) {
-			IValidator validator = (IValidator) keys.next();
-			List messageList = (List) messages.get(validator);
 			for (int i = 0; i < messageList.size(); i++) {
 				IMessage validationMessage = (IMessage) messageList.get(i);
+				
 				int offset = validationMessage.getOffset();
 
 				if (offset < 0)
@@ -98,7 +92,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 
 				String messageText = null;
 				try {
-                    messageText = validationMessage.getText(validator.getClass().getClassLoader());
+                    messageText = validationMessage.getText(validationMessage.getClass().getClassLoader());
 				} catch (Exception t) {
 					Logger.logException("exception reporting message from validator", t); //$NON-NLS-1$
 					continue;
@@ -122,7 +116,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 				ReconcileAnnotationKey key = createKey(getPartitionType(getDocument(), offset), getScope());
 				annotations.add(new TemporaryAnnotation(p, type, messageText, key));
 			}
-		}
+		
 		return (IReconcileResult[]) annotations.toArray(new IReconcileResult[annotations.size()]);
 	}
 
@@ -139,7 +133,9 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 					model = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
 					// (pa) with FileBuffers, model base location is relative
 					// so we need to use the getFile(...) call
-					//file = project.getWorkspace().getRoot().getFileForLocation(new Path(model.getBaseLocation()));
+					// file =
+					// project.getWorkspace().getRoot().getFileForLocation(new
+					// Path(model.getBaseLocation()));
 					file = project.getWorkspace().getRoot().getFile(new Path(model.getBaseLocation()));
 				} finally {
 					if (model != null)
@@ -150,7 +146,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 		return file;
 	}
 
-	private IHelper getHelper(IProject project) {
+	private IValidationContext getHelper(IProject project) {
 		if (fHelper == null)
 			fHelper = new IncrementalHelper(getStructuredDocument(), project);
 		return fHelper;
@@ -181,9 +177,10 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 	}
 
     /**
-     * remove from extension point
-     * @return
-     */
+	 * remove from extension point
+	 * 
+	 * @return
+	 */
 	public int getScope() {
 		return fScope;
 	}
@@ -228,7 +225,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 
 		if (file != null) {
 			try {
-				IHelper helper = getHelper(project);
+				IValidationContext helper = getHelper(project);
 				IncrementalReporter reporter = getReporter();
 
 				IFileDelta fullDelta = new FileDelta(file.getFullPath().toString(), IFileDelta.CHANGED);

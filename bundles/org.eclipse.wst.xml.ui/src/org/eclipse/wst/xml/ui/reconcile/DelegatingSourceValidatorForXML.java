@@ -11,31 +11,28 @@
 
 package org.eclipse.wst.xml.ui.reconcile;
 
+import org.eclipse.wst.validation.core.IValidationRegistry;
 import org.eclipse.wst.validation.core.IValidator;
-import org.eclipse.wst.validation.plugin.ValidationPlugin;
+import org.eclipse.wst.validation.internal.ValidationRegistryReader;
 
 /**
  * @author Mark Hutchinson
- *
+ * 
  */
-public class DelegatingSourceValidatorForXML extends DelegatingSourceValidator
-{
- private final static String VALIDATOR_CLASS = "org.eclipse.wst.xml.validation.internal.ui.eclipse.Validator";
- 
-  public DelegatingSourceValidatorForXML()
-  { super();
-  }
- 
-  protected IValidator getDelegateValidator()
-  {
-    try
-    {
-	  ValidationPlugin validationPlugin = new ValidationPlugin();
-	  return validationPlugin.getValidator(VALIDATOR_CLASS);	  
-    }
-    catch (Exception e)
-    { //
-    }
-    return null;
-  }
+public class DelegatingSourceValidatorForXML extends DelegatingSourceValidator {
+	private final static String VALIDATOR_CLASS = "org.eclipse.wst.xml.validation.internal.ui.eclipse.Validator";
+
+	public DelegatingSourceValidatorForXML() {
+		super();
+	}
+
+	protected IValidator getDelegateValidator() {
+		try {
+			IValidationRegistry registry = ValidationRegistryReader.getReader();
+			return registry.getValidator(VALIDATOR_CLASS);
+		}
+		catch (Exception e) { //
+		}
+		return null;
+	}
 }

@@ -16,11 +16,11 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.wst.validation.core.IHelper;
+import org.eclipse.wst.validation.core.IValidationContext;
 
 
 
-public class IncrementalHelper implements IHelper {
+public class IncrementalHelper implements IValidationContext {
 	private IProject fProject;
 
 	public IncrementalHelper(IDocument sourceDocument, IProject project) {
@@ -29,8 +29,8 @@ public class IncrementalHelper implements IHelper {
 	}
 
 	public IFile getFileFromFilename(String filename) {
-        // true means include phantom resources
-		IResource res = getProject().findMember(filename, true); 
+		// true means include phantom resources
+		IResource res = getProject().findMember(filename, true);
 		if (res instanceof IFile) {
 			return (IFile) res;
 		}

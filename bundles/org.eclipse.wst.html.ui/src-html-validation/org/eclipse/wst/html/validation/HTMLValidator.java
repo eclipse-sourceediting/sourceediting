@@ -20,9 +20,9 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.util.URIResolver;
 import org.eclipse.wst.sse.core.validate.ValidationAdapter;
 import org.eclipse.wst.validation.core.IFileDelta;
-import org.eclipse.wst.validation.core.IHelper;
 import org.eclipse.wst.validation.core.IMessage;
 import org.eclipse.wst.validation.core.IReporter;
+import org.eclipse.wst.validation.core.IValidationContext;
 import org.eclipse.wst.validation.core.IValidator;
 import org.eclipse.wst.validation.internal.operations.IWorkbenchHelper;
 import org.eclipse.wst.validation.internal.operations.WorkbenchReporter;
@@ -132,7 +132,7 @@ public class HTMLValidator implements IValidator {
 
 	/**
 	 */
-	public void validate(IHelper helper, IReporter reporter, IFileDelta[] deltaArray) {
+	public void validate(IValidationContext helper, IReporter reporter, IFileDelta[] deltaArray) {
 		if (helper == null)
 			return;
 		if ((reporter != null) && (reporter.isCancelled() == true)) {
@@ -198,7 +198,7 @@ public class HTMLValidator implements IValidator {
 
 	/**
 	 */
-	private void validateContainer(IHelper helper, IReporter reporter, IContainer container) {
+	private void validateContainer(IValidationContext helper, IReporter reporter, IContainer container) {
 		try {
 			IResource[] resourceArray = container.members(false);
 			for (int i = 0; i < resourceArray.length; i++) {
@@ -219,7 +219,7 @@ public class HTMLValidator implements IValidator {
 
 	/**
 	 */
-	private void validateDelta(IHelper helper, IReporter reporter, IFileDelta[] deltaArray) {
+	private void validateDelta(IValidationContext helper, IReporter reporter, IFileDelta[] deltaArray) {
 		for (int i = 0; i < deltaArray.length; i++) {
 			IFileDelta delta = deltaArray[i];
 			if (delta == null || delta.getDeltaType() == IFileDelta.DELETED)
@@ -233,7 +233,7 @@ public class HTMLValidator implements IValidator {
 
 	/**
 	 */
-	private void validateFile(IHelper helper, IReporter reporter, IFile file) {
+	private void validateFile(IValidationContext helper, IReporter reporter, IFile file) {
 		if ((reporter != null) && (reporter.isCancelled() == true)) {
 			throw new OperationCanceledException();
 		}
@@ -251,7 +251,7 @@ public class HTMLValidator implements IValidator {
 
 	/**
 	 */
-	private void validateFull(IHelper helper, IReporter reporter, IFileDelta[] fileDelta) {
+	private void validateFull(IValidationContext helper, IReporter reporter, IFileDelta[] fileDelta) {
 		IProject project = null;
 		if(helper instanceof IWorkbenchHelper) {
 			IWorkbenchHelper wbHelper = (IWorkbenchHelper)helper;

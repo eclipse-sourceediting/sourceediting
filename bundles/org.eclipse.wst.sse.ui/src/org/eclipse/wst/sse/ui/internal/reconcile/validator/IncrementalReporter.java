@@ -18,7 +18,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.validation.core.IMessage;
-import org.eclipse.wst.validation.core.IMessageAccess;
 import org.eclipse.wst.validation.core.IReporter;
 import org.eclipse.wst.validation.core.IValidator;
 
@@ -39,7 +38,8 @@ public class IncrementalReporter implements IReporter {
 		Object existingValue = messages.get(validator);
 		if (existingValue != null) {
 			((List) existingValue).add(message);
-		} else {
+		}
+		else {
 			List newValue = new ArrayList(1);
 			newValue.add(message);
 			messages.put(validator, newValue);
@@ -55,13 +55,8 @@ public class IncrementalReporter implements IReporter {
 		}
 	}
 
-	public IMessageAccess getMessageAccess() {
-		// we may want to use this eventually
-		return null;
-	}
-
-	public HashMap getMessages() {
-		return messages;
+	public List getMessages() {
+		return new ArrayList(messages.values());
 	}
 
 	public boolean isCancelled() {

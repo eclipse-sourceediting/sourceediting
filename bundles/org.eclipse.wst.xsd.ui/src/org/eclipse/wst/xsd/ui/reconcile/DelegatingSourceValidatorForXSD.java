@@ -3,8 +3,9 @@
  */
 package org.eclipse.wst.xsd.ui.reconcile;
 
+import org.eclipse.wst.validation.core.IValidationRegistry;
 import org.eclipse.wst.validation.core.IValidator;
-import org.eclipse.wst.validation.plugin.ValidationPlugin;
+import org.eclipse.wst.validation.internal.ValidationRegistryReader;
 import org.eclipse.wst.xml.ui.reconcile.DelegatingSourceValidator;
 
 /**
@@ -24,8 +25,8 @@ public class DelegatingSourceValidatorForXSD extends DelegatingSourceValidator
   {
     try
     {
-	  ValidationPlugin validationPlugin = new ValidationPlugin();
-      return validationPlugin.getValidator(VALIDATOR_CLASS);
+		IValidationRegistry registry = ValidationRegistryReader.getReader();
+      return registry.getValidator(VALIDATOR_CLASS);
     }
     catch (Exception e)
     { //
