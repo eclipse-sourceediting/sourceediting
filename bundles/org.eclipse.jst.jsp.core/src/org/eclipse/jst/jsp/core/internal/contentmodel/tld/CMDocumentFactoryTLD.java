@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jst.jsp.core.contentmodel.tld.JSP11TLDNames;
@@ -636,8 +637,13 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 			case (ITaglibRecord.URL) : {
 				URLRecord record = (URLRecord) reference;
 				InputStream urlContents = null;
+				boolean doCache = false;
+				URLConnection connection = null;
 				try {
-					urlContents = record.getURL().openStream();
+					connection = record.getURL().openConnection();
+					doCache = connection.getUseCaches();
+					connection.setUseCaches(false);
+					urlContents = connection.getInputStream();
 					document = (CMDocumentImpl) buildCMDocument(record.getBaseLocation(), urlContents);
 					if (document.getSmallIcon() != null) {
 						String iconPath = URIHelper.normalize(((TLDDocument) document).getSmallIcon(), record.getURL().toString(), "/");
@@ -647,6 +653,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 						String iconPath = URIHelper.normalize(((TLDDocument) document).getLargeIcon(), record.getURL().toString(), "/");
 						document.setProperty(JSP12TLDNames.LARGE_ICON, iconPath);
 					}
+					connection.setUseCaches(doCache);
 				}
 				catch (IOException e) {
 					Logger.logException(e);
