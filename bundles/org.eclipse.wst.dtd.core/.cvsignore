@@ -1,5 +1,6 @@
 bin
-dtdmodel.jar
+runtime
+dtdcore.jar
+*.zip
 build.xml
 temp.folder
-org.eclipse.wst.dtd.core_1.0.0.jar

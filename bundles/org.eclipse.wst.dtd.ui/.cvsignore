@@ -1,6 +1,6 @@
 bin
-
+runtime
+dtdui.jar
+*.zip
 build.xml
-dtdeditor.jar
 temp.folder
-org.eclipse.wst.dtd.ui_1.0.0.jar
