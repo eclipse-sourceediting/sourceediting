@@ -47,7 +47,7 @@ public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerCo
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ibm.sed.editor.StructuredTextViewerConfiguration#getHighlighter(org.eclipse.jface.text.source.ISourceViewer)
+	 * @see org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration#getHighlighter(org.eclipse.jface.text.source.ISourceViewer)
 	 */
 	public IHighlighter getHighlighter(ISourceViewer viewer) {
 		if (fHighlighter == null) {
