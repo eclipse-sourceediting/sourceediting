@@ -56,6 +56,8 @@ public final class Assert {
 	 * <code>true</code>, an <code>IllegalArgumentException</code> is
 	 * thrown.
 	 * 
+	 * @deprecated - use the method that expresses a message as well
+	 * 
 	 * @param expression
 	 *            the outcode of the check
 	 * @return <code>true</code> if the check passes (does not return if the
@@ -92,6 +94,8 @@ public final class Assert {
 	 * Asserts that the given object is not <code>null</code>. If this is
 	 * not the case, some kind of unchecked exception is thrown.
 	 * 
+	 * @deprecated - use the method that expresses a message as well
+	 * 
 	 * @param object
 	 *            the value to test
 	 * @exception IllegalArgumentException
@@ -123,6 +127,8 @@ public final class Assert {
 	/**
 	 * Asserts that the given boolean is <code>true</code>. If this is not
 	 * the case, some kind of unchecked exception is thrown.
+	 * 
+	 * @deprecated - use the method that expresses a message as well
 	 * 
 	 * @param expression
 	 *            the outcode of the check
