@@ -9,7 +9,7 @@ public class  extends javax.servlet.http.HttpServlet{
 
 
 public void _jspService(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response)
-		throws javax.servlet.ServletException {
+		throws java.io.IOException, javax.servlet.ServletException {
 javax.servlet.jsp.PageContext pageContext = null;
 javax.servlet.http.HttpSession session = null;
 javax.servlet.ServletContext application = null;
