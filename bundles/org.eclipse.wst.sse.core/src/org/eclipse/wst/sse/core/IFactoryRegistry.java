@@ -18,6 +18,12 @@ import java.util.List;
 
 public interface IFactoryRegistry {
 
+	/**
+	 * Adds an AdapterFactory to this registry. No checking is done to prevent
+	 * multiple factories for the same adapter type.
+	 * 
+	 * @param factory
+	 */
 	void addFactory(AdapterFactory factory);
 
 	void clearFactories();
@@ -35,7 +41,7 @@ public interface IFactoryRegistry {
 	List getFactories();
 
 	/**
-	 * This method is a not a pure resistry. Factories retrieved based on
+	 * This method is a not a pure registry. Factories retrieved based on
 	 * their response to "isFactoryForType(type)". Note that if there is more
 	 * than one factory that can answer 'true' that the most recently added
 	 * factory is used.
@@ -43,7 +49,7 @@ public interface IFactoryRegistry {
 	AdapterFactory getFactoryFor(Object type);
 
 	/**
-	 *  
+	 * Releases all of the factories within this registry.
 	 */
 	void release();
 
@@ -51,8 +57,15 @@ public interface IFactoryRegistry {
 	 * Removes a factory if it can be retrieved by getFactoryFor(type). If
 	 * there is more than one, all are removed. If there is none, the call
 	 * simply returns (that is, it is not considered an error).
+
+	 * @param type
 	 */
 	void removeFactoriesFor(Object type);
 
+	/**
+	 * Removes a specific factory from this registry
+	 * 
+	 * @param factory
+	 */
 	void removeFactory(AdapterFactory factory);
 }
