@@ -29,11 +29,6 @@ import org.eclipse.wst.sse.ui.taginfo.TextHoverManager;
 import org.eclipse.wst.sse.ui.util.EditorUtility;
 
 
-/**
- * Provides the best dtd hover help documentation (by using other hover help
- * processors) Priority of hover help processors is: ProblemHoverProcessor,
- * AnnotationHoverProcessor
- */
 public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerConfiguration {
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 		if (configuredContentTypes == null) {
@@ -59,7 +54,6 @@ public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerCo
 		highlighter.addProvider(StructuredTextPartitioner.ST_DEFAULT_PARTITION, dtdProvider);
 		highlighter.addProvider(StructuredTextPartitioner.ST_UNKNOWN_PARTITION, noopProvider);
 
-		// fHighlighter.setModel(((StructuredTextViewer) viewer).getModel());
 		highlighter.setDocument((IStructuredDocument) sourceViewer.getDocument());
 
 		return highlighter;
@@ -72,11 +66,12 @@ public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerCo
 	 *      java.lang.String, int)
 	 */
 	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {
-		// content type does not really matter since only combo, problem,
-		// annotation hover is available
+		/*
+		 * content type does not really matter since only combo, problem,
+		 * annotation hover are available
+		 */
 		TextHoverManager.TextHoverDescriptor[] hoverDescs = getTextHovers();
-		int i = 0;
-		while (i < hoverDescs.length) {
+		for (int i = 0; i < hoverDescs.length; i++) {
 			if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {
 				String hoverType = hoverDescs[i].getId();
 				if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType))
@@ -86,7 +81,6 @@ public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerCo
 				else if (TextHoverManager.ANNOTATION_HOVER.equalsIgnoreCase(hoverType))
 					return new AnnotationHoverProcessor();
 			}
-			i++;
 		}
 		return super.getTextHover(sourceViewer, contentType, stateMask);
 	}
