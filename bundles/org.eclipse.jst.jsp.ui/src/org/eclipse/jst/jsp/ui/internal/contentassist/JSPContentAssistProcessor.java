@@ -50,7 +50,7 @@ import org.eclipse.wst.html.core.contentmodel.HTMLElementDeclaration;
 import org.eclipse.wst.html.core.contentmodel.JSPCMDocument;
 import org.eclipse.wst.html.core.internal.text.rules.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.html.ui.internal.contentassist.HTMLContentAssistProcessor;
-import org.eclipse.wst.javascript.common.ui.contentassist.JavaScriptContentAssistProcessor;
+import org.eclipse.wst.javascript.common.ui.internal.contentassist.JavaScriptContentAssistProcessor;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;

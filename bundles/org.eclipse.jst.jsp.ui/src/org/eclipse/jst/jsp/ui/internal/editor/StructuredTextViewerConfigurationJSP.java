@@ -64,11 +64,11 @@ import org.eclipse.wst.html.ui.style.LineStyleProviderForHTML;
 import org.eclipse.wst.html.ui.taginfo.HTMLBestMatchHoverProcessor;
 import org.eclipse.wst.html.ui.taginfo.HTMLInformationProvider;
 import org.eclipse.wst.html.ui.taginfo.HTMLTagInfoHoverProcessor;
-import org.eclipse.wst.javascript.common.ui.contentassist.JavaScriptContentAssistProcessor;
-import org.eclipse.wst.javascript.common.ui.style.LineStyleProviderForJavaScript;
-import org.eclipse.wst.javascript.common.ui.taginfo.JavaScriptBestMatchHoverProcessor;
-import org.eclipse.wst.javascript.common.ui.taginfo.JavaScriptInformationProvider;
-import org.eclipse.wst.javascript.common.ui.taginfo.JavaScriptTagInfoHoverProcessor;
+import org.eclipse.wst.javascript.common.ui.internal.contentassist.JavaScriptContentAssistProcessor;
+import org.eclipse.wst.javascript.common.ui.internal.style.LineStyleProviderForJavaScript;
+import org.eclipse.wst.javascript.common.ui.internal.taginfo.JavaScriptBestMatchHoverProcessor;
+import org.eclipse.wst.javascript.common.ui.internal.taginfo.JavaScriptInformationProvider;
+import org.eclipse.wst.javascript.common.ui.internal.taginfo.JavaScriptTagInfoHoverProcessor;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
@@ -158,7 +158,6 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 
             // HTML JavaScript
             setContentAssistProcessor(contentAssistant, jsContentAssistProcessor, StructuredTextPartitionerForHTML.ST_SCRIPT);
-            setContentAssistProcessor(contentAssistant, jsContentAssistProcessor, StructuredTextPartitionerForHTML.ST_SCRIPT);
 
             // CSS
             setContentAssistProcessor(contentAssistant, cssContentAssistProcessor, StructuredTextPartitionerForCSS.ST_STYLE);
@@ -170,8 +169,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
             setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML);
             setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForHTML.ST_HTML_COMMENT);
             setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForJSP.ST_DEFAULT_JSP);
-            // SCRIPT region
-            setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForHTML.ST_SCRIPT);
+
             // JSP directives
             setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForJSP.ST_JSP_DIRECTIVE);
             // JSP delimiters

@@ -14,7 +14,7 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.wst.css.core.internal.text.rules.StructuredTextPartitionerForCSS;
 import org.eclipse.wst.css.ui.contentassist.CSSContentAssistProcessor;
 import org.eclipse.wst.html.core.internal.text.rules.StructuredTextPartitionerForHTML;
-import org.eclipse.wst.javascript.common.ui.contentassist.JavaScriptContentAssistProcessor;
+import org.eclipse.wst.javascript.common.ui.internal.contentassist.JavaScriptContentAssistProcessor;
 import org.eclipse.wst.xml.ui.contentassist.NoRegionContentAssistProcessor;
 
 /**
