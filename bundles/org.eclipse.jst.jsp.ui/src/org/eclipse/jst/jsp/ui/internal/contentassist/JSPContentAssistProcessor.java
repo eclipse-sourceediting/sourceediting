@@ -24,7 +24,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.ITypedRegion;
+import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
@@ -1009,28 +1009,17 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 	}
 
 	/**
-	 * 
 	 * @param viewer
 	 * @param documentPosition
 	 * @return String
 	 */
 	protected String getPartitionType(StructuredTextViewer viewer, int documentPosition) {
 		String partitionType = null;
-		IStructuredModel sModel = null;
 		try {
-			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(viewer.getDocument());
-			IDocument document = sModel.getStructuredDocument();
-
-			ITypedRegion regionType = document.getPartition(documentPosition);
-			partitionType = regionType.getType();
+			partitionType = TextUtilities.getContentType(viewer.getDocument(), IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING, documentPosition + viewer.getVisibleRegion().getOffset(), false);
 		}
 		catch (BadLocationException e) {
-			partitionType = null;
-		}
-		finally {
-			if (sModel != null) {
-				sModel.releaseFromRead();
-			}
+			partitionType = IDocument.DEFAULT_CONTENT_TYPE;
 		}
 		return partitionType;
 	}
