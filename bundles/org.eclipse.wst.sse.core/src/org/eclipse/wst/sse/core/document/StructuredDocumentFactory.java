@@ -14,7 +14,6 @@ package org.eclipse.wst.sse.core.document;
 
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 import org.eclipse.wst.sse.core.internal.text.JobSafeStructuredDocument;
-import org.eclipse.wst.sse.core.internal.text.SynchronizedStructuredDocument;
 import org.eclipse.wst.sse.core.parser.RegionParser;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 
@@ -27,8 +26,6 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
 public class StructuredDocumentFactory {
 	public static final int WRITE_SYNCHRONIZED = 3;
 	public static final int DEFAULT = WRITE_SYNCHRONIZED;
-	public static final int SYNCHRONIZED = 2;
-
 	public static final int UNSYNCHRONIZED = 1;
 
 	public static IStructuredDocument getNewStructuredDocumentInstance() {
@@ -42,9 +39,7 @@ public class StructuredDocumentFactory {
 			case UNSYNCHRONIZED :
 				result = new BasicStructuredDocument();
 				break;
-			case SYNCHRONIZED :
-				result = new SynchronizedStructuredDocument();
-				break;
+
 			case WRITE_SYNCHRONIZED :
 				result = new JobSafeStructuredDocument();
 				break;
@@ -61,9 +56,6 @@ public class StructuredDocumentFactory {
 		switch (type) {
 			case UNSYNCHRONIZED :
 				result = new BasicStructuredDocument(parser);
-				break;
-			case SYNCHRONIZED :
-				result = new SynchronizedStructuredDocument(parser);
 				break;
 			case WRITE_SYNCHRONIZED :
 				result = new JobSafeStructuredDocument(parser);
