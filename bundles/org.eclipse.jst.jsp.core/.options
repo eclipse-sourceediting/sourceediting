@@ -12,7 +12,7 @@ org.eclipse.jst.jsp.core/debug/tldcmdocument/manager=false
 org.eclipse.jst.jsp.core/debug/tldcmdocument/factory=false
 
 #org.eclipse.jst.jsp.core.internal.contentmodel/index.ProjectDescription._debugIndexCreation
-org.eclipse.jst.jsp.core/taglib/indexcreation=true
+org.eclipse.jst.jsp.core/taglib/indexcreation=false
 #org.eclipse.jst.jsp.core.internal.contentmodel/index.ProjectDescription._debugIndexTime
 org.eclipse.jst.jsp.core/taglib/indextime=false
 

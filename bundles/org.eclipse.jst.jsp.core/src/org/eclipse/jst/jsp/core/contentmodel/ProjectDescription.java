@@ -438,6 +438,8 @@ class ProjectDescription {
 	}
 
 	void removeJAR(IResource jar) {
+		if (_debugIndexCreation)
+			System.out.println("removing records for JAR " + jar.getFullPath());
 		JarRecord record = (JarRecord) fJARReferences.remove(jar.getFullPath());
 		if (record != null) {
 			URLRecord[] records = (URLRecord[]) record.getURLRecords().toArray(new URLRecord[0]);
@@ -448,10 +450,14 @@ class ProjectDescription {
 	}
 
 	void removeServlets(IResource webxml) {
+		if (_debugIndexCreation)
+			System.out.println("removing records for " + webxml.getFullPath());
 		ServletRecord record = (ServletRecord) fServletReferences.remove(webxml.getFullPath());
 		if (record != null) {
 			URLRecord[] records = (URLRecord[]) record.getURLRecords().toArray(new URLRecord[0]);
 			for (int i = 0; i < records.length; i++) {
+				if (_debugIndexCreation)
+					System.out.println("removed record for " + records[i].uri + "@" + records[i].baseLocation);
 				getImplicitReferences(webxml.getLocation().toString()).remove(records[i].getURI());
 			}
 		}
@@ -464,6 +470,8 @@ class ProjectDescription {
 	}
 
 	void removeTLD(IResource tld) {
+		if (_debugIndexCreation)
+			System.out.println("removing record for " + tld.getFullPath());
 		TLDRecord record = (TLDRecord) fTLDReferences.remove(tld.getFullPath());
 		if (record != null && record.uri != null) {
 			getImplicitReferences(tld.getLocation().toString()).remove(record.uri);

@@ -25,6 +25,7 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jst.jsp.core.internal.Logger;
 
 /**
  * @author nsd
@@ -36,41 +37,56 @@ public class TaglibIndex {
 
 	class ResourceChangeListener implements IResourceChangeListener {
 		public void resourceChanged(IResourceChangeEvent event) {
-			// pair deltas with projects
-			IResourceDelta[] deltas = new IResourceDelta[]{event.getDelta()};
-			IProject[] projects = null;
+			try {
+				// pair deltas with projects
+				IResourceDelta[] deltas = new IResourceDelta[]{event.getDelta()};
+				IProject[] projects = null;
 
-			if (deltas != null && deltas.length > 0) {
-				IResource resource = deltas[0].getResource();
+				if (deltas != null && deltas.length > 0) {
+					IResource resource = null;
+					if (deltas[0] != null) {
+						resource = deltas[0].getResource();
+					}
+					else {
+						resource = event.getResource();
+					}
 
-				if (resource.getType() == IResource.ROOT) {
-					deltas = deltas[0].getAffectedChildren();
-					projects = new IProject[deltas.length];
-					for (int i = 0; i < deltas.length; i++) {
-						if (deltas[i].getResource().getType() == IResource.PROJECT) {
-							projects[i] = (IProject) deltas[i].getResource();
+					if (resource != null) {
+						if (resource.getType() == IResource.ROOT) {
+							deltas = deltas[0].getAffectedChildren();
+							projects = new IProject[deltas.length];
+							for (int i = 0; i < deltas.length; i++) {
+								if (deltas[i].getResource().getType() == IResource.PROJECT) {
+									projects[i] = (IProject) deltas[i].getResource();
+								}
+							}
+						}
+						else {
+							projects = new IProject[1];
+							if (resource.getType() != IResource.PROJECT) {
+								projects[0] = resource.getProject();
+							}
+							else {
+								projects[0] = (IProject) resource;
+							}
+						}
+					}
+					for (int i = 0; i < projects.length; i++) {
+						ProjectDescription description = createDescription(projects[i]);
+						try {
+							// TODO: handle the lack of a delta
+							if (deltas[i] != null) {
+								deltas[i].accept(description.getVisitor());
+							}
+						}
+						catch (CoreException e) {
+							Logger.logException(e);
 						}
 					}
 				}
-				else {
-					projects = new IProject[1];
-					if (resource.getType() != IResource.PROJECT) {
-						projects[0] = resource.getProject();
-					}
-					else {
-						projects[0] = (IProject) resource;
-					}
-				}
-				for (int i = 0; i < projects.length; i++) {
-					ProjectDescription description = createDescription(projects[i]);
-					try {
-						deltas[i].accept(description.getVisitor());
-					}
-					catch (CoreException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
+			}
+			catch (Exception e) {
+				Logger.logException("Exception while processing resource change", e); //$NON-NLS-1$
 			}
 		}
 
