@@ -27,9 +27,7 @@ public class XMLExampleProjectCreationWizard extends ExampleProjectCreationWizar
 		
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.ibm.samplegallery.wizards.ExampleProjectCreationWizard#getImageDescriptor(java.lang.String)
-	 */
+
 	protected ImageDescriptor getImageDescriptor(String banner) {
 		return XMLWizard.getInstance().getImageDescriptor(banner);
 	}
