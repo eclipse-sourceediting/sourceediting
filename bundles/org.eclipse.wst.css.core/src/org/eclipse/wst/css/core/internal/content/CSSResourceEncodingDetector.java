@@ -12,7 +12,6 @@ package org.eclipse.wst.css.core.internal.content;
 
 import java.io.IOException;
 
-import org.eclipse.wst.common.encoding.AbstractResourceEncodingDetector;
 import org.eclipse.wst.common.encoding.EncodingGuesser;
 import org.eclipse.wst.common.encoding.EncodingMemento;
 import org.eclipse.wst.common.encoding.EncodingParserConstants;

@@ -13,7 +13,6 @@ package org.eclipse.wst.html.core.internal.contenttype;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-import org.eclipse.wst.common.encoding.AbstractResourceEncodingDetector;
 import org.eclipse.wst.common.encoding.CodedIO;
 import org.eclipse.wst.common.encoding.EncodingGuesser;
 import org.eclipse.wst.common.encoding.EncodingMemento;

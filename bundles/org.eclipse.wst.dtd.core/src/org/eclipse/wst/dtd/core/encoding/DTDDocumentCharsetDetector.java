@@ -21,7 +21,6 @@ package org.eclipse.wst.dtd.core.encoding;
 import java.io.IOException;
 
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.wst.common.encoding.AbstractResourceEncodingDetector;
 import org.eclipse.wst.sse.core.document.DocumentReader;
 import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;
 import org.eclipse.wst.xml.core.encoding.XMLDocumentCharsetDetector;
