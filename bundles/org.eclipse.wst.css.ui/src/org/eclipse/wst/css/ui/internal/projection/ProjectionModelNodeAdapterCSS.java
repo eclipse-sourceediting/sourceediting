@@ -22,6 +22,9 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.wst.css.core.document.ICSSNode;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
@@ -35,6 +38,7 @@ import org.eclipse.wst.xml.ui.internal.Logger;
 public class ProjectionModelNodeAdapterCSS implements INodeAdapter {
 
 	private class TagProjectionAnnotation extends ProjectionAnnotation {
+		private boolean fIsVisible = false; /* workaround for BUG85874 */
 		private ICSSNode fNode;
 
 		public TagProjectionAnnotation(ICSSNode node, boolean isCollapsed) {
@@ -49,11 +53,52 @@ public class ProjectionModelNodeAdapterCSS implements INodeAdapter {
 		public void setNode(ICSSNode node) {
 			fNode = node;
 		}
+		/**
+		 * Does not paint hidden annotations. Annotations are hidden when they
+		 * only span one line.
+		 * 
+		 * @see ProjectionAnnotation#paint(org.eclipse.swt.graphics.GC,
+		 *      org.eclipse.swt.widgets.Canvas,
+		 *      org.eclipse.swt.graphics.Rectangle)
+		 */
+		public void paint(GC gc, Canvas canvas, Rectangle rectangle) {
+			/* workaround for BUG85874 */
+			/*
+			 * only need to check annotations that are expanded because hidden
+			 * annotations should never have been given the chance to
+			 * collapse.
+			 */
+			if (!isCollapsed()) {
+				// working with rectangle, so need the styledtext line height
+				int lineHeight = fAdapterFactory.getProjectionViewer().getTextWidget().getLineHeight();
+
+				// do not draw annotations that only span one line and mark
+				// them as not visible
+				if ((rectangle.height / lineHeight) <= 1) {
+					fIsVisible = false;
+					return;
+				}
+			}
+			fIsVisible = true;
+			super.paint(gc, canvas, rectangle);
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.jface.text.source.projection.ProjectionAnnotation#markCollapsed()
+		 */
+		public void markCollapsed() {
+			/* workaround for BUG85874 */
+			// do not mark collapsed if annotation is not visible
+			if (fIsVisible)
+				super.markCollapsed();
+		}
 	}
 
 	private final static boolean debugProjectionPerf = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.css.ui/projectionperf")); //$NON-NLS-1$ //$NON-NLS-2$\
 
-	private ProjectionModelNodeAdapterFactoryCSS fAdapterFactory;
+	ProjectionModelNodeAdapterFactoryCSS fAdapterFactory;
 	private Map fTagAnnotations = new HashMap();
 
 	public ProjectionModelNodeAdapterCSS(ProjectionModelNodeAdapterFactoryCSS factory) {
@@ -77,21 +122,30 @@ public class ProjectionModelNodeAdapterCSS implements INodeAdapter {
 				int end = inode.getEndOffset();
 				if (start >= 0 && start < end) {
 					try {
+//						// region-based
+//						// extra line when collapsed, but no region increase when add newline
+//						pos = new Position(start, end - start);
+						
+//						// line-based
+//						// extra line when collapsed, but no region increase when add newline
+//						IRegion startLineRegion = document.getLineInformationOfOffset(start);
+//						IRegion endLineRegion = document.getLineInformationOfOffset(end);
+//						int startOffset = startLineRegion.getOffset();
+//						int endOffset = endLineRegion.getOffset() + endLineRegion.getLength();
+//						if (endOffset > startOffset) {
+//							pos = new Position(startOffset, endOffset - startOffset);
+//						}
+						
+						// line-based
+						// no extra line when collapsed, but region increase when add newline
 						int startLine = document.getLineOfOffset(start);
 						int endLine = document.getLineOfOffset(end);
 						if (endLine + 1 < document.getNumberOfLines()) {
-							// projection_TODO allow only multi-line
-							// projection
-							// // check if projection start/end region is on
-							// the same line
-							// if (startLine < endLine) {
 							int offset = document.getLineOffset(startLine);
 							int endOffset = document.getLineOffset(endLine + 1);
 							pos = new Position(offset, endOffset - offset);
-							// }
 						}
-					} // }
-					catch (BadLocationException x) {
+					} catch (BadLocationException x) {
 						Logger.log(Logger.WARNING_DEBUG, null, x);
 					}
 				}
@@ -156,16 +210,6 @@ public class ProjectionModelNodeAdapterCSS implements INodeAdapter {
 		if ((eventType == INodeNotifier.ADD || eventType == INodeNotifier.REMOVE) && (notifier instanceof ICSSNode)) {
 			updateAdapter((ICSSNode) notifier);
 		}
-
-		// projection_TODO allow only multi-line projection
-		// if ((eventType == INodeNotifier.CONTENT_CHANGED) && (changedFeature
-		// instanceof Node)) {
-		// Node node = (Node) changedFeature;
-		// if (node.getNodeType() == Node.TEXT_NODE)
-		// node = node.getParentNode();
-		// if (node != null)
-		// updateOneNode(node);
-		// }
 	}
 
 	/**
@@ -195,8 +239,7 @@ public class ProjectionModelNodeAdapterCSS implements INodeAdapter {
 						projectionAnnotations.put(newAnnotation, newPos);
 						// add to map containing annotations to add
 						additions.put(newAnnotation, newPos);
-					}
-					else {
+					} else {
 						// add to map containing all annotations for this
 						// adapter
 						projectionAnnotations.put(existing, newPos);
@@ -232,25 +275,4 @@ public class ProjectionModelNodeAdapterCSS implements INodeAdapter {
 			System.out.println("ProjectionModelNodeAdapterCSS.updateAdapter (" + nodeName + "):" + (end - start));
 		}
 	}
-
-	// projection_TODO allow only multi-line projection
-	// private void updateOneNode(Node node) {
-	// TagProjectionAnnotation existing = getExistingAnnotation(node);
-	// if (isNodeProjectable(node)) {
-	// Position pos = createProjectionPosition(node);
-	// // if node > 1 line and not existing, create and add
-	// if (pos != null && existing == null) {
-	// TagProjectionAnnotation newAnnotation = new
-	// TagProjectionAnnotation(node, false);
-	// fAdapterFactory.getProjectionViewer().getProjectionAnnotationModel().addAnnotation(newAnnotation,
-	// pos);
-	// fTagAnnotations.put(newAnnotation, pos);
-	// }
-	// // if node == 1 line and existing, remove
-	// if (pos == null && existing != null) {
-	// fAdapterFactory.getProjectionViewer().getProjectionAnnotationModel().removeAnnotation(existing);
-	// fTagAnnotations.remove(existing);
-	// }
-	// }
-	// }
 }
