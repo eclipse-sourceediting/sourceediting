@@ -5,7 +5,7 @@
    name="Structured Source Editor for JSP Tests"
    version="1.0.0"
    provider-name="Eclipse.org"
-   class="org.eclipse.jst.jsp.ui.tests.SSEJSPTestsPlugin">
+   class="org.eclipse.jst.jsp.ui.tests.JSPUITestsPlugin">
 
    <runtime>
       <library name="jspuitests.jar">
@@ -34,6 +34,8 @@
       <import plugin="org.eclipse.wst.html.ui"/>
       <import plugin="org.eclipse.wst.xml.ui"/>
       <import plugin="org.eclipse.ui.views"/>
+      <import plugin="org.eclipse.wst.css.ui"/>
+      <import plugin="org.eclipse.wst.javascript.common.ui"/>
    </requires>
 
 
