@@ -11,6 +11,9 @@
       <library name="xmleditor.jar">
          <export name="*"/>
       </library>
+      <library name="xmlwizard.jar">
+         <export name="*"/>
+      </library>
    </runtime>
    <requires>
       <import plugin="org.eclipse.core.runtime.compatibility"/>
@@ -244,5 +247,107 @@
       </actionSetPartAssociation>
    </extension>
    
+<!-- ================================================== -->
+<!-- Contribute a 'New Wizard' for XML files            -->
+<!-- ================================================== -->
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            name="XML"
+            id="com.ibm.XMLCategory">
+      </category>
+      <wizard
+            name="%_UI_WIZARD_NEW_XML"
+            icon="icons/XMLFile.gif"
+            category="com.ibm.XMLCategory"
+            class="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard"
+            id="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard">
+         <description>
+            %_UI_CREATE_NEW_XML_FILE
+         </description>
+         <selection
+               class="org.eclipse.core.resources.IResource">
+         </selection>
+      </wizard>
+   </extension>
    
+<!-- =============================================================================== -->
+<!-- Allow the 'New XML' wizard to be accessed via the 'Generate' menu on a XSD file -->
+<!-- =============================================================================== -->
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IFile"
+            nameFilter="*.xsd"
+            id="com.ibm.xmlwizard.createXMLFromXSD">
+         <menu
+               label="%genMenuLabel"
+               path="additions"
+               id="generateXMLArtifacts">
+            <separator name="xml"/>
+         </menu>
+         <action
+               label="%_UI_ACTION_CREATE_XML"
+               class="org.eclipse.wst.xml.ui.internal.wizards.XMLImportActionDelegate"
+               menubarPath="generateXMLArtifacts/xml"
+               enablesFor="1"
+               id="com.ibm.xmlwizard.createXMLFromXSDAction">
+         </action>
+      </objectContribution>
+   </extension>
+
+<!-- =============================================================================== -->
+<!-- Allow the 'New XML' wizard to be accessed via the 'Generate' menu on a DTD file -->
+<!-- =============================================================================== -->
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IFile"
+            nameFilter="*.dtd"
+            id="com.ibm.xmlwizard.createXMLFromDTD">
+         <action
+               label="%_UI_ACTION_CREATE_XML"
+               class="org.eclipse.wst.xml.ui.internal.wizards.XMLImportActionDelegate"
+               menubarPath="generateXMLArtifacts/xml"
+               enablesFor="1"
+               id="com.ibm.xmlwizard.createXMLFromDTDAction">
+         </action>
+      </objectContribution>
+   </extension>
+   
+<!-- =============================================================================== -->
+<!-- Contribute a New->Example... entry for Editing and Validating XML files         -->
+<!-- =============================================================================== -->
+   <extension point="org.eclipse.ui.newWizards"> 
+       <category
+            name="%_UI_WIZARD_NEW_XML"
+            parentCategory="org.eclipse.ui.Examples"
+            id="org.eclipse.wst.xml.examples">
+        </category>
+       <wizard
+            name="%XMLExample.name"
+            class="org.eclipse.wst.xml.ui.internal.wizards.XMLExampleProjectCreationWizard"
+            category="org.eclipse.ui.Examples/org.eclipse.wst.xml.examples" 
+            finalPerspective="org.eclipse.ui.resourcePerspective"
+            id="org.eclipse.wst.xml.ui.internal.wizards.XMLExampleProjectCreationWizard"
+            project="true" 
+            icon="icons/newSampleProject_wiz.gif"
+            banner="icons/newSampleProject_wizbanner.gif">
+         <description>
+           %XMLExampleProjectCreationWizard.description
+         </description> 
+         <projectsetup
+           pagetitle="%XMLExampleProjectCreationWizard.pagetitle"
+           name="%XMLExampleProjectCreationWizard.projectname"
+           label="%XMLExampleProjectCreationWizard.label"
+           pagedescription="%XMLExampleProjectCreationWizard.pagedescription"
+           open="readme.html">
+            <import
+                  dest=""
+                  src="examples/EditingAndValidatingXML.zip">
+            </import>
+         </projectsetup>
+      </wizard>
+   </extension>
+
 </plugin>
