@@ -27,6 +27,7 @@ import org.eclipse.wst.sse.ui.tests.SSEUITestSuite;
 import org.eclipse.wst.xml.core.tests.SSEModelXMLTestSuite;
 import org.eclipse.wst.xml.tests.encoding.EncodingTestSuite;
 import org.eclipse.wst.xml.ui.tests.XMLUITestSuite;
+import org.eclipse.wst.xml.validation.tests.internal.AllXMLTests;
 
 /*****************************************************************************
  * Copyright (c) 2004 IBM Corporation and others. All rights reserved. This
@@ -49,6 +50,8 @@ public class MasterListTestSuite extends TestSuite {
 		addTest(HTMLCoreTestSuite.suite());
 		addTest(JSPCoreTestSuite.suite());
 
+		addTest(AllXMLTests.suite());
+		
 		addTest(EncodingTestSuite.suite());
 		addTest(CSSEncodingTestSuite.suite());
 		addTest(HTMLEncodingTestSuite.suite());
