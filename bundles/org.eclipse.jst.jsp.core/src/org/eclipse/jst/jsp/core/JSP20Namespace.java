@@ -15,6 +15,9 @@ package org.eclipse.jst.jsp.core;
  */
 
 public interface JSP20Namespace extends JSP12Namespace {
+	/**
+	 * New elements for JSP 2.0 spec.
+	 */
 	public static interface ElementName extends JSP12Namespace.ElementName {
 		String DIRECTIVE_TAG = "jsp:directive.tag"; //$NON-NLS-1$
 		String DIRECTIVE_ATTRIBUTE = "jsp:directive.attribute"; //$NON-NLS-1$
