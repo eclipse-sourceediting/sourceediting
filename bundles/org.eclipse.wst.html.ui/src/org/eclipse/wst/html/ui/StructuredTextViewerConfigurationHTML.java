@@ -20,6 +20,7 @@ import org.eclipse.jdt.ui.text.JavaTextTools;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IAutoIndentStrategy;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
@@ -53,8 +54,8 @@ import org.eclipse.wst.javascript.common.ui.taginfo.JavaScriptTagInfoHoverProces
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
+import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.StructuredTextReconciler;
-import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
@@ -260,12 +261,13 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 
 		// the second time through, the strategies are set
 		if (fReconciler != null && !reconcilerStrategiesAreSet && reconcilingEnabled) {
-			StructuredTextViewer viewer = null;
-			if (sourceViewer instanceof StructuredTextViewer) {
-				viewer = ((StructuredTextViewer) sourceViewer);
-			}
-
-			IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(viewer.getDocument());
+//			StructuredTextViewer viewer = null;
+//			if (sourceViewer instanceof StructuredTextViewer) {
+//				viewer = ((StructuredTextViewer) sourceViewer);
+//			}
+			IDocument doc = ((StructuredTextEditor)editorPart).getDocumentProvider().getDocument(editorPart.getEditorInput());
+			IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
+			//IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(viewer.getDocument());
 				try {
 				if (sModel != null) {
 					// check language (ContentTypeID)....
