@@ -27,9 +27,7 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore.OverlayKey;
 import org.eclipse.wst.sse.ui.preferences.ui.StyledTextColorPicker;
-import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.ui.preferences.XMLColorPage;
-import org.eclipse.wst.xml.ui.style.IStyleConstantsXML;
 
 public class HTMLColorPage extends XMLColorPage {
 
@@ -60,18 +58,12 @@ public class HTMLColorPage extends XMLColorPage {
 
 		initCommonContextStyleMap(contextStyleMap);
 		initDocTypeContextStyleMap(contextStyleMap);
-		//	contextStyleMap.put(XMLJSPRegionContexts.JSP_SCRIPTLET_OPEN, HTMLColorManager.SCRIPT_AREA_BORDER);
-		//	contextStyleMap.put(XMLJSPRegionContexts.JSP_CONTENT, HTMLColorManager.SCRIPT_AREA);
-		//	contextStyleMap.put(XMLJSPRegionContexts.BLOCK_TEXT, HTMLColorManager.SCRIPT_AREA);
-		//	contextStyleMap.put(XMLJSPRegionContexts.JSP_DECLARATION_OPEN, HTMLColorManager.SCRIPT_AREA_BORDER);
-		//	contextStyleMap.put(XMLJSPRegionContexts.JSP_EXPRESSION_OPEN, HTMLColorManager.SCRIPT_AREA_BORDER);
-		//	contextStyleMap.put(XMLJSPRegionContexts.JSP_DIRECTIVE_OPEN, HTMLColorManager.SCRIPT_AREA_BORDER);
-		//	contextStyleMap.put(XMLJSPRegionContexts.JSP_DIRECTIVE_CLOSE, HTMLColorManager.SCRIPT_AREA_BORDER);
-		//	contextStyleMap.put(XMLJSPRegionContexts.JSP_CLOSE, HTMLColorManager.SCRIPT_AREA_BORDER);
-		contextStyleMap.put(XMLJSPRegionContexts.JSP_DIRECTIVE_NAME, IStyleConstantsXML.TAG_NAME);
-		contextStyleMap.put(XMLJSPRegionContexts.JSP_COMMENT_OPEN, IStyleConstantsXML.COMMENT_BORDER);
-		contextStyleMap.put(XMLJSPRegionContexts.JSP_COMMENT_TEXT, IStyleConstantsXML.COMMENT_TEXT);
-		contextStyleMap.put(XMLJSPRegionContexts.JSP_COMMENT_CLOSE, IStyleConstantsXML.COMMENT_BORDER);
+		// FIXME: these were "brute forced" commented out when moving XMLJSPRegionContexts
+		// effect is unknown, but thought just to effect preference page
+		//contextStyleMap.put(XMLJSPRegionContexts.JSP_DIRECTIVE_NAME, IStyleConstantsXML.TAG_NAME);
+		//contextStyleMap.put(XMLJSPRegionContexts.JSP_COMMENT_OPEN, IStyleConstantsXML.COMMENT_BORDER);
+		//contextStyleMap.put(XMLJSPRegionContexts.JSP_COMMENT_TEXT, IStyleConstantsXML.COMMENT_TEXT);
+		//contextStyleMap.put(XMLJSPRegionContexts.JSP_COMMENT_CLOSE, IStyleConstantsXML.COMMENT_BORDER);
 	}
 
 	protected void initDescriptions(Dictionary descriptions) {
