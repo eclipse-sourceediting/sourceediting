@@ -122,9 +122,9 @@ public class JSPJavaOpenOnJSP extends AbstractOpenOn {
 		String location = model.getBaseLocation();
 		IPath path = new Path(location);
 		if (!path.toFile().exists() && path.segmentCount() > 1) {
-			return ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(path);
+			return new IFile[]{ResourcesPlugin.getWorkspace().getRoot().getFile(path)};
 		}
-		return new IFile[0];
+		return ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(path);
 	}
 
 	/**
