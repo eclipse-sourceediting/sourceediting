@@ -1,0 +1,166 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.wst.sse.ui">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.wst.sse.ui" id="reconcileValidator" name="reconcileValidator"/>
+      </appInfo>
+      <documentation>
+         To allow clients to contribute a content/partition dependent as-you-type validator for the SSE Editor via extension point.
+
+   Required plugins are:
+   org.eclipse.wst.sse.ui
+   org.eclipse.wst.validation
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <complexType>
+         <sequence>
+            <element ref="validator"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="validator">
+      <complexType>
+         <sequence>
+            <element ref="contentTypeIdentifier" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="scope" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="partitionType">
+      <complexType>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="contentTypeIdentifier">
+      <complexType>
+         <sequence>
+            <element ref="partitionType" minOccurs="0" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         WTP 1.0
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         &lt;extension
+           point=&quot;org.eclipse.wst.sse.ui.extensions.reconcileValidator&quot;&gt;
+        &lt;validator
+              scope=&quot;total&quot;
+              class=&quot;org.eclipse.wst.validation.html.HTMLValidator&quot;
+              id=&quot;org.eclipse.wst.validation.htmlreconcilevalidator&quot;&gt;
+           &lt;contentTypeIdentifier
+                 id=&quot;org.eclipse.wst.html.core.htmlsource&quot;&gt;
+              &lt;partitionType
+                    id=&quot;org.eclipse.wst.html.DEFAULT_HTML&quot;&gt;
+              &lt;/partitionType&gt;
+           &lt;/contentTypeIdentifier&gt;
+           &lt;contentTypeIdentifier
+                 id=&quot;org.eclipse.jst.jsp.core.jspsource&quot;&gt;
+              &lt;partitionType
+                    id=&quot;org.eclipse.wst.html.DEFAULT_HTML&quot;&gt;
+              &lt;/partitionType&gt;
+           &lt;/contentTypeIdentifier&gt;
+        &lt;/validator&gt;
+&lt;/extension&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+</schema>
