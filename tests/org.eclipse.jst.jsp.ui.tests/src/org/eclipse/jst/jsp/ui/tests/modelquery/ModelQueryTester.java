@@ -51,6 +51,9 @@ import org.w3c.dom.Node;
  * @author pavery
  */
 public class ModelQueryTester extends TestCase {
+
+	private final boolean testShippedDTDLookup = false;
+
 	// Our Structured Model, which should always be an XMLModel (or subclass)
 	protected XMLModel fModel = null;
 
@@ -67,8 +70,7 @@ public class ModelQueryTester extends TestCase {
 	public static void main(java.lang.String[] args) {
 		if (args == null || args.length == 0) {
 			runAll();
-		}
-		else if (args.length == 1) {
+		} else if (args.length == 1) {
 			String methodToRun = args[0].trim();
 			runOne(methodToRun);
 		}
@@ -110,8 +112,10 @@ public class ModelQueryTester extends TestCase {
 		super.setUp();
 
 		// This method was emptied when a test case required a different model
-		// type than HTML.  At that point, we needed separate methods to create each type
-		// and had to call them from the test cases directly, like in ScannerUnitTests
+		// type than HTML. At that point, we needed separate methods to create
+		// each type
+		// and had to call them from the test cases directly, like in
+		// ScannerUnitTests
 	}
 
 	/**
@@ -128,10 +132,14 @@ public class ModelQueryTester extends TestCase {
 	 */
 	public void testBodyElement() {
 		setUpHTML();
-		fModel.getStructuredDocument().set("<html><body bgcolor=\"#ffffff\"><form method=\"post\"></form></body></html>"); // set text
+		fModel.getStructuredDocument().set("<html><body bgcolor=\"#ffffff\"><form method=\"post\"></form></body></html>"); // set
+		// text
 
 		// TEST getting a CMElementDeclaration
-		Element bodyElement = (Element) fModel.getIndexedRegion(7); // node at offset7--should be <body>
+		Element bodyElement = (Element) fModel.getIndexedRegion(7); // node at
+		// offset7--should
+		// be
+		// <body>
 		CMElementDeclaration bodyDecl = fModelQuery.getCMElementDeclaration(bodyElement);
 
 		int contentType = bodyDecl.getContentType();
@@ -176,21 +184,24 @@ public class ModelQueryTester extends TestCase {
 		int max = contents.getMaxOccur();
 		int min = contents.getMinOccur();
 
-		// the group should be allowed once, with a sequence whose first entry is the declaration for HEAD
+		// the group should be allowed once, with a sequence whose first entry
+		// is the declaration for HEAD
 		assertTrue("occurrance of group", min == 1 && max == 1);
 		assertTrue("relationship in group", operator == CMGroup.SEQUENCE);
 		assertTrue("content descriptor type, position 0", contents.getNodeType() == CMNode.GROUP);
 		assertTrue("child order (HEAD first)", childList.item(0).getNodeName().equalsIgnoreCase(HTML40Namespace.ElementName.HEAD));
 
 		assertTrue("content descriptor type, position 1", childList.item(1).getNodeType() == CMNode.GROUP);
-		// The second child should be a group as well, containing BODY and FRAMESET with an
+		// The second child should be a group as well, containing BODY and
+		// FRAMESET with an
 		// operator of CMGroup.CHOICE
 		assertTrue("content descriptor type, position 1 - relationship of group", ((CMGroup) childList.item(1)).getOperator() == CMGroup.CHOICE);
 	}
 
 	public void testFormMethodAttr() {
 		setUpHTML();
-		fModel.getStructuredDocument().set("<html><body bgcolor=\"#ffffff\"><form method=\"post\"></form></body></html>"); // set text
+		fModel.getStructuredDocument().set("<html><body bgcolor=\"#ffffff\"><form method=\"post\"></form></body></html>"); // set
+		// text
 
 		// TEST GETTING A CMAttributeDeclaratoin
 		Element formElement = (Element) fModel.getIndexedRegion(31); // <form>
@@ -204,107 +215,112 @@ public class ModelQueryTester extends TestCase {
 	}
 
 	/**
-	 * A short test to ensure that a DTD can be loaded from a system reference.
+	 * A short test to ensure that a DTD can be loaded from a system
+	 * reference.
 	 * 
-	 * Note: May require a functioning network connection for the references to
-	 *       be resolved properly.
+	 * Note: May require a functioning network connection for the references
+	 * to be resolved properly.
 	 */
 	public void testDTDLoadFromSystemID_1() {
-		setUpXML();
-		URL installationPath = Platform.getBundle(JSPUITestsPlugin.ID).getEntry("/");
-		String diskLocation = null;
-		try {
-			diskLocation = Platform.resolve(installationPath).toExternalForm();
-		}
-		catch (IOException e) {
-		}
-		catch (NullPointerException e) {
-		}
-		assertTrue("failed to resolve plugin install path", diskLocation != null);
-		String content = "<?xml version=\"1.0\"?><!DOCTYPE html SYSTEM " + diskLocation + "TestFiles/DTDs/wapDTDs/WAP-2-0/wml20.dtd\"" + "><html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:wml=\"http://www.wapforum.org/2001/wml\"></html>";
-		fModel.getStructuredDocument().set(content);
-		CMDocumentManager documentManagaer = fModelQuery.getCMDocumentManager();
-		documentManagaer.setPropertyEnabled(CMDocumentManager.PROPERTY_ASYNC_LOAD, false);
-		documentManagaer.setPropertyEnabled(CMDocumentManager.PROPERTY_AUTO_LOAD, true);
+		if (testShippedDTDLookup) {
+			setUpXML();
+			URL installationPath = Platform.getBundle(JSPUITestsPlugin.ID).getEntry("/");
+			String diskLocation = null;
+			try {
+				diskLocation = Platform.resolve(installationPath).toExternalForm();
+			} catch (IOException e) {
+			} catch (NullPointerException e) {
+			}
+			assertTrue("failed to resolve plugin install path", diskLocation != null);
+			String content = "<?xml version=\"1.0\"?><!DOCTYPE html SYSTEM " + diskLocation + "TestFiles/DTDs/wapDTDs/WAP-2-0/wml20.dtd\"" + "><html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:wml=\"http://www.wapforum.org/2001/wml\"></html>";
+			fModel.getStructuredDocument().set(content);
+			CMDocumentManager documentManagaer = fModelQuery.getCMDocumentManager();
+			documentManagaer.setPropertyEnabled(CMDocumentManager.PROPERTY_ASYNC_LOAD, false);
+			documentManagaer.setPropertyEnabled(CMDocumentManager.PROPERTY_AUTO_LOAD, true);
 
-		Node domNode = (Node) fModel.getIndexedRegion(content.length() - 2);
-		CMNode node = fModelQuery.getCMNode(domNode);
-		assertTrue("wml20.dtd failed to load", node != null && node.getNodeName().equalsIgnoreCase("html"));
+			Node domNode = (Node) fModel.getIndexedRegion(content.length() - 2);
+			CMNode node = fModelQuery.getCMNode(domNode);
+			assertTrue("wml20.dtd failed to load", node != null && node.getNodeName().equalsIgnoreCase("html"));
+		}
 	}
 
 
 	/**
-	 * A short test to ensure that a DTD, the XHTML 1.0 Transitional one, can be
-	 * loaded from a system reference.
+	 * A short test to ensure that a DTD, the XHTML 1.0 Transitional one, can
+	 * be loaded from a system reference.
 	 * 
-	 * Note: May require a functioning network connection for the references to
-	 *       be resolved properly.
+	 * Note: May require a functioning network connection for the references
+	 * to be resolved properly.
 	 */
 	public void testDTDLoadFromSystemID_2() {
-		URL installationPath = Platform.getBundle(JSPUITestsPlugin.ID).getEntry("/");
-		String diskLocation = null;
-		try {
-			diskLocation = Platform.resolve(installationPath).toExternalForm();
+		if (testShippedDTDLookup) {
+			URL installationPath = Platform.getBundle(JSPUITestsPlugin.ID).getEntry("/");
+			String diskLocation = null;
+			try {
+				diskLocation = Platform.resolve(installationPath).toExternalForm();
+			} catch (IOException e) {
+			} catch (NullPointerException e) {
+			}
+			assertTrue("failed to resolve plugin install path", diskLocation != null);
+			setUpXML();
+			String content = "<?xml version=\"1.0\"?><!DOCTYPE html SYSTEM " + diskLocation + "testfiles/XHTML/xhtml1-transitional.dtd\"" + "><html></html>";
+			fModel.getStructuredDocument().set(content);
+
+			CMDocumentManager documentManagaer = fModelQuery.getCMDocumentManager();
+			documentManagaer.setPropertyEnabled(CMDocumentManager.PROPERTY_ASYNC_LOAD, false);
+			documentManagaer.setPropertyEnabled(CMDocumentManager.PROPERTY_AUTO_LOAD, true);
+
+			// see defect 282429
+			CMElementDeclaration htmlDecl = (CMElementDeclaration) fModelQuery.getCMNode((Node) fModel.getIndexedRegion(content.length() - 2));
+			assertTrue("xhtml1-transitional.dtd not loaded", htmlDecl != null);
+
+			// HTML's children are within a group
+			CMContent contents = htmlDecl.getContent();
+
+			assertTrue("content type is not a group", contents.getNodeType() == CMNode.GROUP);
+
+			CMGroup group = (CMGroup) contents;
+			int operator = group.getOperator();
+			CMNodeList childList = group.getChildNodes();
+			int max = contents.getMaxOccur();
+			int min = contents.getMinOccur();
+
+			// the group should be allowed once, with a sequence whose first
+			// entry
+			// is the declaration for HEAD
+			assertTrue("occurrance of group", min == 1 && max == 1);
+			assertTrue("relationship in group", operator == CMGroup.SEQUENCE);
+			assertTrue("content descriptor type, position 0", contents.getNodeType() == CMNode.GROUP);
+			assertTrue("child order (HEAD first)", childList.item(0).getNodeName().equals(HTML40Namespace.ElementName.HEAD.toLowerCase()));
+			assertTrue("child order (BODY second)", childList.item(1).getNodeName().equals(HTML40Namespace.ElementName.BODY.toLowerCase()));
 		}
-		catch (IOException e) {
-		}
-		catch (NullPointerException e) {
-		}
-		assertTrue("failed to resolve plugin install path", diskLocation != null);
-		setUpXML();
-		String content = "<?xml version=\"1.0\"?><!DOCTYPE html SYSTEM " + diskLocation + "testfiles/XHTML/xhtml1-transitional.dtd\"" + "><html></html>";
-		fModel.getStructuredDocument().set(content);
-
-		CMDocumentManager documentManagaer = fModelQuery.getCMDocumentManager();
-		documentManagaer.setPropertyEnabled(CMDocumentManager.PROPERTY_ASYNC_LOAD, false);
-		documentManagaer.setPropertyEnabled(CMDocumentManager.PROPERTY_AUTO_LOAD, true);
-
-		// see defect 282429
-		CMElementDeclaration htmlDecl = (CMElementDeclaration) fModelQuery.getCMNode((Node) fModel.getIndexedRegion(content.length() - 2));
-		assertTrue("xhtml1-transitional.dtd not loaded", htmlDecl != null);
-
-		// HTML's children are within a group
-		CMContent contents = htmlDecl.getContent();
-
-		assertTrue("content type is not a group", contents.getNodeType() == CMNode.GROUP);
-
-		CMGroup group = (CMGroup) contents;
-		int operator = group.getOperator();
-		CMNodeList childList = group.getChildNodes();
-		int max = contents.getMaxOccur();
-		int min = contents.getMinOccur();
-
-		// the group should be allowed once, with a sequence whose first entry is the declaration for HEAD
-		assertTrue("occurrance of group", min == 1 && max == 1);
-		assertTrue("relationship in group", operator == CMGroup.SEQUENCE);
-		assertTrue("content descriptor type, position 0", contents.getNodeType() == CMNode.GROUP);
-		assertTrue("child order (HEAD first)", childList.item(0).getNodeName().equals(HTML40Namespace.ElementName.HEAD.toLowerCase()));
-		assertTrue("child order (BODY second)", childList.item(1).getNodeName().equals(HTML40Namespace.ElementName.BODY.toLowerCase()));
 	}
 
 	/**
-	 * A short test to ensure that the DTD for JSP 1.2 tag libraries can be loaded from a public reference
-	 * registered in the XML catalog
+	 * A short test to ensure that the DTD for JSP 1.2 tag libraries can be
+	 * loaded from a public reference registered in the XML catalog
 	 */
 	public void testDTDLoadFromPublicID() {
-		setUpXML();
-		String contents = "<!DOCTYPE taglib PUBLIC \"-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN\"> <taglib><tag>foo</tag></taglib>";
-		fModel.getStructuredDocument().set(contents);
+		if (testShippedDTDLookup) {
+			setUpXML();
+			String contents = "<!DOCTYPE taglib PUBLIC \"-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN\"> <taglib><tag>foo</tag></taglib>";
+			fModel.getStructuredDocument().set(contents);
 
-		CMDocumentManager documentManagaer = fModelQuery.getCMDocumentManager();
-		documentManagaer.setPropertyEnabled(CMDocumentManager.PROPERTY_ASYNC_LOAD, false);
-		documentManagaer.setPropertyEnabled(CMDocumentManager.PROPERTY_AUTO_LOAD, true);
+			CMDocumentManager documentManagaer = fModelQuery.getCMDocumentManager();
+			documentManagaer.setPropertyEnabled(CMDocumentManager.PROPERTY_ASYNC_LOAD, false);
+			documentManagaer.setPropertyEnabled(CMDocumentManager.PROPERTY_AUTO_LOAD, true);
 
 
-		// taglib
-		CMNode node = fModelQuery.getCMNode((Node) fModel.getIndexedRegion(contents.length() - 2));
-		assertTrue("web-jsptaglibrary_1_2.dtd failed to load through catalog", node != null && node.getNodeType() == CMNode.ELEMENT_DECLARATION && node.getNodeName().equalsIgnoreCase("taglib"));
+			// taglib
+			CMNode node = fModelQuery.getCMNode((Node) fModel.getIndexedRegion(contents.length() - 2));
+			assertTrue("web-jsptaglibrary_1_2.dtd failed to load through catalog", node != null && node.getNodeType() == CMNode.ELEMENT_DECLARATION && node.getNodeName().equalsIgnoreCase("taglib"));
 
-		// tag
-		node = fModelQuery.getCMNode((Node) fModel.getIndexedRegion(contents.length() - 12));
-		assertTrue("CMElementDeclaration for \"tag\" from web-jsptaglibrary_1_2.dtd is missing", node != null && node.getNodeType() == CMNode.ELEMENT_DECLARATION && node.getNodeName().equalsIgnoreCase("tag"));
-		CMContent content = ((CMElementDeclaration) node).getContent();
-		assertTrue("only one occurrence of child group allowed", content.getNodeType() == CMNode.GROUP && content.getMaxOccur() == 1);
+			// tag
+			node = fModelQuery.getCMNode((Node) fModel.getIndexedRegion(contents.length() - 12));
+			assertTrue("CMElementDeclaration for \"tag\" from web-jsptaglibrary_1_2.dtd is missing", node != null && node.getNodeType() == CMNode.ELEMENT_DECLARATION && node.getNodeName().equalsIgnoreCase("tag"));
+			CMContent content = ((CMElementDeclaration) node).getContent();
+			assertTrue("only one occurrence of child group allowed", content.getNodeType() == CMNode.GROUP && content.getMaxOccur() == 1);
+		}
 	}
 
 	/**
@@ -328,8 +344,7 @@ public class ModelQueryTester extends TestCase {
 				if (provider.isFor(model.getModelHandler())) {
 					provider.addAdapterFactories(model);
 				}
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				Logger.logException(e);
 			}
 		}
@@ -337,8 +352,8 @@ public class ModelQueryTester extends TestCase {
 	}
 
 	/**
-	 * Return the valid values for an attribute with the given declaration on the given element.
-	 * Derived from XMLPropertySourceAdapter
+	 * Return the valid values for an attribute with the given declaration on
+	 * the given element. Derived from XMLPropertySourceAdapter
 	 */
 	private List getValidStrings(Element element, CMAttributeDeclaration attrDecl) {
 		CMDataType valuesHelper = attrDecl.getAttrType();
@@ -347,8 +362,7 @@ public class ModelQueryTester extends TestCase {
 		if (valuesHelper.getImpliedValueKind() == CMDataType.IMPLIED_VALUE_FIXED && valuesHelper.getImpliedValue() != null) {
 			// FIXED value
 			values.add(valuesHelper.getImpliedValue());
-		}
-		else {
+		} else {
 			// ENUMERATED values
 			String[] valueStrings = null;
 			// new way
