@@ -12,10 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.ui.registry;
 
-import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.wst.dtd.core.modelhandler.ModelHandlerForDTD;
-import org.eclipse.wst.dtd.ui.views.properties.DTDPropertySourceAdapterFactory;
-import org.eclipse.wst.sse.core.AdapterFactory;
 import org.eclipse.wst.sse.core.IFactoryRegistry;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.modelhandler.IDocumentTypeHandler;
@@ -36,7 +33,6 @@ public class AdapterFactoryProviderForDTD implements AdapterFactoryProvider {
 	 */
 	public AdapterFactoryProviderForDTD() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/*
@@ -45,13 +41,7 @@ public class AdapterFactoryProviderForDTD implements AdapterFactoryProvider {
 	public void addAdapterFactories(IStructuredModel structuredModel) {
 		IFactoryRegistry factoryRegistry = structuredModel.getFactoryRegistry();
 		Assert.isNotNull(factoryRegistry, "Program Error: client caller must ensure model has factory registry"); //$NON-NLS-1$
-		AdapterFactory factory = null;
-
-		factory = factoryRegistry.getFactoryFor(IPropertySource.class);
-		if (factory == null) {
-			factory = new DTDPropertySourceAdapterFactory();
-			factoryRegistry.addFactory(factory);
-		}
+		//		AdapterFactory factory = null;
 
 		//		factory = factoryRegistry.getFactoryFor(JFaceNodeAdapter.class);
 		//		if (factory == null) {
