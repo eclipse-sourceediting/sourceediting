@@ -4,6 +4,11 @@
    id="org.eclipse.wst.sse.unittests"
    name="Unittests"
    version="1.0.0">
+   <runtime>
+      <library name="ssejunit.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
    <requires>
       <import plugin="org.junit"/>
       <import plugin="org.eclipse.core.resources"/>
