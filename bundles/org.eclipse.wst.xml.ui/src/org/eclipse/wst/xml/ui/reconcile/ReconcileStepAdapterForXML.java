@@ -36,7 +36,7 @@ import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.ui.IReleasable;
 import org.eclipse.wst.sse.ui.StructuredTextReconciler;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.internal.reconcile.IReconcileAnnotationKey;
+import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 import org.eclipse.wst.xml.core.document.XMLAttr;
 import org.eclipse.wst.xml.core.document.XMLElement;
@@ -562,7 +562,7 @@ public class ReconcileStepAdapterForXML extends AbstractReconcileStepAdapter imp
 							Object[] args = {currentValue.trim()};
 							String message = SSEUIPlugin.getResourceString("%Invalid_value_{0}", args);
 							Position p = new Position(start, length);
-							IReconcileAnnotationKey key = createKey(elementNode.getFirstStructuredDocumentRegion(), IReconcileAnnotationKey.PARTIAL);
+							ReconcileAnnotationKey key = createKey(elementNode.getFirstStructuredDocumentRegion(), ReconcileAnnotationKey.PARTIAL);
 							results.add(new TemporaryAnnotation(p, SEVERITY_UNKNOWN_ATTR, message, key));
 						}
 						// remove from known required attribute list
@@ -573,7 +573,7 @@ public class ReconcileStepAdapterForXML extends AbstractReconcileStepAdapter imp
 						int start = attr.getNameRegionStartOffset();
 						int length = attr.getNameRegion().getTextLength();
 						Position p = new Position(start, length);
-						IReconcileAnnotationKey key = createKey(elementNode.getFirstStructuredDocumentRegion(), IReconcileAnnotationKey.PARTIAL);
+						ReconcileAnnotationKey key = createKey(elementNode.getFirstStructuredDocumentRegion(), ReconcileAnnotationKey.PARTIAL);
 						results.add(new TemporaryAnnotation(p, SEVERITY_UNKNOWN_ATTR, message, key, ProblemIDsXML.UnknownAttr));
 					}
 				} else {
@@ -600,7 +600,7 @@ public class ReconcileStepAdapterForXML extends AbstractReconcileStepAdapter imp
 					String message = SSEUIPlugin.getResourceString("%Missing_required_attribute_{0}", args);
 
 					Position p = new Position(start, length);
-					IReconcileAnnotationKey key = createKey(elementNode.getFirstStructuredDocumentRegion(), IReconcileAnnotationKey.PARTIAL);
+					ReconcileAnnotationKey key = createKey(elementNode.getFirstStructuredDocumentRegion(), ReconcileAnnotationKey.PARTIAL);
 					TemporaryAnnotation annotation = new TemporaryAnnotation(p, SEVERITY_MISSING_REQUIRED_ATTR, message, key, ProblemIDsXML.MissingRequiredAttr);
 
 					IStructuredDocumentRegion startStructuredDocumentRegion = element.getStartStructuredDocumentRegion();
@@ -636,7 +636,7 @@ public class ReconcileStepAdapterForXML extends AbstractReconcileStepAdapter imp
 			Object[] args = {element.getNodeName()};
 			String message = SSEUIPlugin.getResourceString("%Unknown_element_{0}", args);
 			Position p = new Position(start, length);
-			IReconcileAnnotationKey key = createKey(elementNode.getFirstStructuredDocumentRegion(), IReconcileAnnotationKey.PARTIAL);
+			ReconcileAnnotationKey key = createKey(elementNode.getFirstStructuredDocumentRegion(), ReconcileAnnotationKey.PARTIAL);
 			TemporaryAnnotation annotation = new TemporaryAnnotation(p, SEVERITY_UNKNOWN_ELEMENT, message, key, ProblemIDsXML.UnknownElement);
 
 			// quick fix info

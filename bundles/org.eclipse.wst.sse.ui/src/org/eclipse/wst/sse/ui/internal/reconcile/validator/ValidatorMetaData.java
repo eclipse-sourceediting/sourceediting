@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.wst.sse.ui.internal.Logger;
+import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.validation.core.IValidator;
 import org.osgi.framework.Bundle;
 
@@ -39,6 +40,7 @@ public class ValidatorMetaData {
 	private String fClass = null;
 	private IConfigurationElement fConfigurationElement = null;
 	private String fId = null;
+    private String fScope;
 
 	// a hash map of content type Ids (String) that points to lists of
 	// partition types (List of Strings)
@@ -51,7 +53,7 @@ public class ValidatorMetaData {
 		fId = vId;
 		fClass = vClass;
 		fConfigurationElement = element;
-
+		fScope = vScope;
 		fMatrix = new HashMap();
 	}
 
@@ -199,6 +201,10 @@ public class ValidatorMetaData {
 		result[0] = null;
 	}
 
+    public int getValidatorScope() {
+        return fScope.equalsIgnoreCase("total") ? ReconcileAnnotationKey.TOTAL : ReconcileAnnotationKey.PARTIAL; //$NON-NLS-1$
+    }
+    
 	/**
 	 * @see java.lang.Object#toString()
 	 */

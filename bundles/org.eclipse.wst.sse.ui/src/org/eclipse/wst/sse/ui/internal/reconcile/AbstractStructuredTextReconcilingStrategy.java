@@ -131,7 +131,7 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 					continue;
 
 				ITemporaryAnnotation annotation = (ITemporaryAnnotation) obj;
-				IReconcileAnnotationKey key = (IReconcileAnnotationKey) annotation.getKey();
+				ReconcileAnnotationKey key = (ReconcileAnnotationKey) annotation.getKey();
 				// then if this strategy knows how to add/remove this
 				// partition type
 				if (canHandlePartition(key.getPartitionType()) && containsStep(key.getStep()))
@@ -162,14 +162,15 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 					continue;
 
 				TemporaryAnnotation annotation = (TemporaryAnnotation) obj;
-				IReconcileAnnotationKey key = (IReconcileAnnotationKey) annotation.getKey();
+				ReconcileAnnotationKey key = (ReconcileAnnotationKey) annotation.getKey();
 				
 				// then if this strategy knows how to add/remove this
 				// partition type
 				if (canHandlePartition(key.getPartitionType()) && containsStep(key.getStep())) {
-					if (key.getScope() == IReconcileAnnotationKey.PARTIAL && overlaps(annotation.getPosition(), sdRegions)) {
+					if (key.getScope() == ReconcileAnnotationKey.PARTIAL && overlaps(annotation.getPosition(), sdRegions)) {
 						remove.add(annotation);
-					} else if (key.getScope() == IReconcileAnnotationKey.TOTAL) {
+					}
+					else if (key.getScope() == ReconcileAnnotationKey.TOTAL) {
 						remove.add(annotation);
 					}
 				}

@@ -23,11 +23,6 @@ import org.eclipse.ui.texteditor.IAnnotationImageProvider;
  * @author pavery
  */
 public class StructuredTextAnnotationImageProvider implements IAnnotationImageProvider {
-	/**
-	 * The descriptor currently has no associated image so that temporary
-	 * annotations do not show up in the vertical ruler.
-	 */
-	private final String IMAGE_DESCRIPTOR_ID = null; //"org.eclipse.wst.sse.temp.imageDescriptor"; //$NON-NLS-1$
 
 	/*
 	 * (non-Javadoc)
@@ -37,20 +32,14 @@ public class StructuredTextAnnotationImageProvider implements IAnnotationImagePr
 	public ImageDescriptor getImageDescriptor(String imageDescritporId) {
 		return null;
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.ui.texteditor.IAnnotationImageProvider#getImageDescriptorId(org.eclipse.jface.text.source.Annotation)
 	 */
 	public String getImageDescriptorId(Annotation annotation) {
-		String descriptorId = null;
-		if (!annotation.isPersistent())
-			// this allows temporary annotations to not show up in vertical
-			// ruler
-			descriptorId = IMAGE_DESCRIPTOR_ID;
-
-		return descriptorId;
+        return null;
 	}
 
 	/*

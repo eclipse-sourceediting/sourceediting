@@ -355,20 +355,17 @@
          </dropAction>
       </dropTargetContribution>
    </extension>
-<!-- 
-not using super-marker-type, or elseerror/warning icons will show up in the vertical ruler
 
-super="org.eclipse.ui.workbench.texteditor.error"
-super="org.eclipse.ui.workbench.texteditor.warning"
--->
    <extension
          point="org.eclipse.ui.editors.annotationTypes">
       <type
+      		super="org.eclipse.ui.workbench.texteditor.error"
             markerType="org.eclipse.wst.sse.problem"
             name="org.eclipse.wst.sse.ui.temp.error"
             markerSeverity="2">
       </type>
       <type
+			super="org.eclipse.ui.workbench.texteditor.warning"
             markerType="org.eclipse.wst.sse.problem"
             name="org.eclipse.wst.sse.ui.temp.warning"
             markerSeverity="1">
@@ -390,53 +387,15 @@ super="org.eclipse.ui.workbench.texteditor.warning"
       <specification
             annotationType="org.eclipse.wst.sse.ui.temp.error"
             annotationImageProvider="org.eclipse.wst.sse.ui.internal.ui.StructuredTextAnnotationImageProvider"
-            
-            textPreferenceKey="errorIndication"
-            presentationLayer="6"
-            highlightPreferenceValue="false"
-            showInNextPrevDropdownToolbarAction="true"
-            textPreferenceValue="true"
-            isGoToPreviousNavigationTargetKey="isErrorGoToPreviousNavigationTarget"
-            label="SSE Errors"
-            colorPreferenceKey="errorIndicationColor"
-            showInNextPrevDropdownToolbarActionKey="showErrorInNextPrevDropdownToolbarAction"
-            symbolicIcon="error"
-            isGoToNextNavigationTargetKey="isErrorGoToNextNavigationTarget"
-            isGoToNextNavigationTarget="true"
-            overviewRulerPreferenceKey="errorIndicationInOverviewRuler"
-            highlightPreferenceKey="errorIndicationHighlighting"
-            isGoToPreviousNavigationTarget="true"
-            contributesToHeader="true"
-            colorPreferenceValue="255,0,128"
-            overviewRulerPreferenceValue="true"
-            
-            verticalRulerPreferenceValue="false"
+  
+            verticalRulerPreferenceValue="true"
             verticalRulerPreferenceKey="sseErrorIndicationInVerticalRuler"
             includeOnPreferencePage="false">
       </specification>
       <specification
             annotationType="org.eclipse.wst.sse.ui.temp.warning"
             annotationImageProvider="org.eclipse.wst.sse.ui.internal.ui.StructuredTextAnnotationImageProvider"
-            
-            textPreferenceKey="warningIndication"
-            presentationLayer="5"
-            highlightPreferenceValue="false"
-            showInNextPrevDropdownToolbarAction="true"
-            textPreferenceValue="true"
-            isGoToPreviousNavigationTargetKey="isWarningGoToPreviousNavigationTarget"
-            label="SSE Warnings"
-            colorPreferenceKey="warningIndicationColor"
-            showInNextPrevDropdownToolbarActionKey="showWarningInNextPrevDropdownToolbarAction"
-            symbolicIcon="warning"
-            isGoToNextNavigationTargetKey="isWarningGoToNextNavigationTarget"
-            isGoToNextNavigationTarget="true"
-            overviewRulerPreferenceKey="warningIndicationInOverviewRuler"
-            highlightPreferenceKey="warningIndicationHighlighting"
-            isGoToPreviousNavigationTarget="true"
-            contributesToHeader="true"
-            colorPreferenceValue="244,200,45"
-            overviewRulerPreferenceValue="true"
-            
+         
             verticalRulerPreferenceValue="false"
             verticalRulerPreferenceKey="sseWarningIndicationInVerticalRuler"
             includeOnPreferencePage="false">

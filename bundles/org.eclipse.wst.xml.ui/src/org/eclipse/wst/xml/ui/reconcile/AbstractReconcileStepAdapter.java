@@ -26,10 +26,9 @@ import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
 import org.eclipse.wst.sse.ui.StructuredTextReconciler;
-import org.eclipse.wst.sse.ui.internal.reconcile.IReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.IReconcileStepAdapter;
-import org.eclipse.wst.sse.ui.internal.reconcile.IStructuredReconcileStep;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
+import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
 import org.eclipse.wst.xml.ui.internal.Logger;
 
 
@@ -45,7 +44,7 @@ public class AbstractReconcileStepAdapter implements IReconcileStepAdapter {
 
 	protected static final IReconcileResult[] EMPTY_RECONCILE_RESULT_SET = new IReconcileResult[0];
 	protected List fDirtyElements = new ArrayList();
-	private IStructuredReconcileStep fParentStep = null;
+	private StructuredReconcileStep fParentStep = null;
 	private HashSet fPartitionTypes = null;
 
 	public AbstractReconcileStepAdapter() {
@@ -53,7 +52,7 @@ public class AbstractReconcileStepAdapter implements IReconcileStepAdapter {
 		fPartitionTypes = new HashSet();
 	}
 
-	public IReconcileAnnotationKey createKey(IStructuredDocumentRegion sdRegion, int scope) {
+	public ReconcileAnnotationKey createKey(IStructuredDocumentRegion sdRegion, int scope) {
 		ITypedRegion tr = null;
 		if (!sdRegion.isDeleted()) {
 			try {
@@ -67,12 +66,12 @@ public class AbstractReconcileStepAdapter implements IReconcileStepAdapter {
 		return createKey(partitionType, scope);
 	}
 
-	public IReconcileAnnotationKey createKey(String partitionType, int scope) {
+	public ReconcileAnnotationKey createKey(String partitionType, int scope) {
 		fPartitionTypes.add(partitionType);
 		return new ReconcileAnnotationKey(getParentStep(), partitionType, scope);
 	}
 
-	public IStructuredReconcileStep getParentStep() {
+	public StructuredReconcileStep getParentStep() {
 		return fParentStep;
 	}
 
@@ -152,7 +151,7 @@ public class AbstractReconcileStepAdapter implements IReconcileStepAdapter {
 		// nothing to release
 	}
 
-	public void setParentStep(IStructuredReconcileStep parentStep) {
+	public void setParentStep(StructuredReconcileStep parentStep) {
 		fParentStep = parentStep;
 	}
 }

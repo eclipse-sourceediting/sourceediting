@@ -31,7 +31,7 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.util.URIResolver;
 import org.eclipse.wst.sse.ui.internal.Logger;
-import org.eclipse.wst.sse.ui.internal.reconcile.IReconcileAnnotationKey;
+import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 import org.eclipse.wst.validation.core.FileDelta;
@@ -64,14 +64,16 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 	private IValidator fValidator = null;
 
 
-	public ReconcileStepForValidator(IValidator v) {
+	public ReconcileStepForValidator(IValidator v, int scope) {
 		super();
 		fValidator = v;
+        fScope = scope;
 	}
 
-	public ReconcileStepForValidator(IValidator v, IReconcileStep step) {
+	public ReconcileStepForValidator(IValidator v, IReconcileStep step, int scope) {
 		super(step);
 		fValidator = v;
+        fScope = scope;
 	}
 
 	/**
@@ -118,7 +120,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 						break;
 				}
 				Position p = new Position(offset, validationMessage.getLength());
-				IReconcileAnnotationKey key = createKey(getPartitionType(getDocument(), offset), IReconcileAnnotationKey.TOTAL);
+				ReconcileAnnotationKey key = createKey(getPartitionType(getDocument(), offset), getScope());
 				annotations.add(new TemporaryAnnotation(p, type, messageText, key));
 			}
 		}
@@ -184,7 +186,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
      * @return
      */
 	public int getScope() {
-		return this.fScope;
+		return fScope;
 	}
 
 	public void initialReconcile() {
@@ -193,7 +195,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 
 	protected IReconcileResult[] reconcileModel(DirtyRegion dirtyRegion, IRegion subRegion) {
 		if(DEBUG)
-            System.out.println("[trace reconciler] > reconciling model in VALIDATOR step w/ dirty region: " + dirtyRegion.getText()); //$NON-NLS-1$
+            System.out.println("[trace reconciler] > reconciling model in VALIDATOR step w/ dirty region: [" + dirtyRegion.getText() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		// pa_TODO need to use dirty region if Validators can ever handle
 		// partial file validation

@@ -22,7 +22,11 @@ import org.eclipse.jface.text.reconciler.IReconcileStep;
  * 
  * @author pavery
  */
-public class ReconcileAnnotationKey implements IReconcileAnnotationKey {
+public class ReconcileAnnotationKey {
+    
+    public static final int PARTIAL = 1;
+    public static final int TOTAL = 0;
+    
 	private String fPartitionType = null;
 
 	private IReconcileStep fReconcileStep = null;
@@ -34,28 +38,19 @@ public class ReconcileAnnotationKey implements IReconcileAnnotationKey {
 		fScope = scope;
 	}
 
-	/**
-	 * @see org.eclipse.wst.sse.ui.xml.reconcile.IReconcileAnnotationKey#getId()
-	 */
 	public String getPartitionType() {
 		return fPartitionType;
 	}
 
-	/**
-	 * @see org.eclipse.wst.sse.ui.xml.reconcile.IReconcileAnnotationKey#getScope()
-	 */
 	public int getScope() {
 		return fScope;
 	}
 
-	/**
-	 * @see org.eclipse.wst.sse.ui.xml.reconcile.IReconcileAnnotationKey#getStep()
-	 */
 	public IReconcileStep getStep() {
 		return fReconcileStep;
 	}
 
 	public String toString() {
-		return this.getClass() + "\r\nid: " + fPartitionType + "\nscope: " + fScope; //$NON-NLS-1$ //$NON-NLS-2$
+		return this.getClass() + "\r\nid: " + fPartitionType; //$NON-NLS-1$
 	}
 }

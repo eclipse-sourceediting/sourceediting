@@ -19,6 +19,8 @@ import org.eclipse.jface.text.reconciler.IReconcileStep;
  * <code>AbstractStructuredTextReconcilingStrategy</code> knows how to
  * remove appropriately.
  * 
+ * @deprecated not API, this will probably just become an abstract class
+ * 
  * @author pavery
  */
 public interface IReconcileAnnotationKey {
@@ -27,7 +29,7 @@ public interface IReconcileAnnotationKey {
 
 	String getPartitionType();
 
-	int getScope();
+	//int getScope();
 
 	IReconcileStep getStep();
 }

@@ -27,7 +27,7 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.internal.reconcile.IReconcileAnnotationKey;
+import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 import org.eclipse.wst.xml.core.document.XMLNode;
@@ -67,7 +67,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
             return;
         
         Position p = new Position(start, length);
-		IReconcileAnnotationKey key = createKey(sdRegion, getScope());
+		ReconcileAnnotationKey key = createKey(sdRegion, getScope());
 		TemporaryAnnotation annotation = new TemporaryAnnotation(p, SEVERITY_SYNTAX_ERROR, message, key, problemId);
 		annotation.setAdditionalFixInfo(attributeValueText);
 		results.add(annotation);
@@ -124,7 +124,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 			int start = structuredDocumentRegion.getStartOffset();
 			int length = structuredDocumentRegion.getText().trim().length();
 			Position p = new Position(start, length);
-			IReconcileAnnotationKey key = createKey(structuredDocumentRegion, getScope());
+			ReconcileAnnotationKey key = createKey(structuredDocumentRegion, getScope());
 
 			TemporaryAnnotation annotation = new TemporaryAnnotation(p, SEVERITY_SYNTAX_ERROR, message, key, ProblemIDsXML.MissingClosingBracket);
 			results.add(annotation);
@@ -145,7 +145,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 				int start = structuredDocumentRegion.getStartOffset();
 				int length = structuredDocumentRegion.getLength();
 				Position p = new Position(start, length);
-				IReconcileAnnotationKey key = createKey(structuredDocumentRegion, getScope());
+				ReconcileAnnotationKey key = createKey(structuredDocumentRegion, getScope());
 
 				TemporaryAnnotation annotation = new TemporaryAnnotation(p, SEVERITY_SYNTAX_ERROR, message, key, ProblemIDsXML.EmptyTag);
 				results.add(annotation);
@@ -163,7 +163,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 		// representing the name, =, and value, respectively
 		int attrState = 0;
 		ITextRegionList textRegions = structuredDocumentRegion.getRegions();
-		IReconcileAnnotationKey key = createKey(structuredDocumentRegion, getScope());
+		ReconcileAnnotationKey key = createKey(structuredDocumentRegion, getScope());
 		int errorCount = 0;
 		for (int i = 0; i < textRegions.size() && errorCount < ELEMENT_ERROR_LIMIT; i++) {
 			ITextRegion textRegion = textRegions.get(i);
@@ -233,7 +233,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 					int length = sdRegionText.trim().equals("") ? sdRegionText.length() : sdRegionText.indexOf(sdRegionText.trim()); //$NON-NLS-1$
 
 					Position p = new Position(start, length);
-					IReconcileAnnotationKey key = createKey(structuredDocumentRegion, getScope());
+					ReconcileAnnotationKey key = createKey(structuredDocumentRegion, getScope());
 
 					TemporaryAnnotation annotation = new TemporaryAnnotation(p, SEVERITY_SYNTAX_ERROR, message, key, ProblemIDsXML.SpacesBeforeTagName);
 					results.add(annotation);
@@ -261,7 +261,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 					int start = structuredDocumentRegion.getStartOffset(r) + index;
 					int length = piText.trim().length() - index;
 					Position p = new Position(start, length);
-					IReconcileAnnotationKey key = createKey(structuredDocumentRegion, getScope());
+					ReconcileAnnotationKey key = createKey(structuredDocumentRegion, getScope());
 
 					TemporaryAnnotation annotation = new TemporaryAnnotation(p, SEVERITY_SYNTAX_ERROR, message, key, ProblemIDsXML.NamespaceInPI);
 					results.add(annotation);
@@ -411,7 +411,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 				int start = prev.getStartOffset();
 				int length = prev.getLength();
 				Position p = new Position(start, length);
-				IReconcileAnnotationKey key = createKey(structuredDocumentRegion, getScope());
+				ReconcileAnnotationKey key = createKey(structuredDocumentRegion, getScope());
 
 				TemporaryAnnotation annotation = new TemporaryAnnotation(p, SEVERITY_SYNTAX_ERROR, message, key, ProblemIDsXML.SpacesBeforePI);
 				results.add(annotation);
@@ -420,7 +420,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 	}
 
 	public int getScope() {
-		return IReconcileAnnotationKey.PARTIAL;
+		return ReconcileAnnotationKey.PARTIAL;
 	}
 
 	/**

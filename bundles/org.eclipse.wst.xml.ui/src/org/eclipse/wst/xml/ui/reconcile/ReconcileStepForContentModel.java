@@ -29,8 +29,8 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.ui.StructuredTextReconciler;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
-import org.eclipse.wst.sse.ui.internal.reconcile.IReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.IReconcileStepAdapter;
+import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
 import org.eclipse.wst.xml.core.document.XMLDocument;
 import org.eclipse.wst.xml.core.document.XMLModel;
@@ -76,7 +76,7 @@ public class ReconcileStepForContentModel extends StructuredReconcileStep {
 	}
 
 	public int getScope() {
-		return IReconcileAnnotationKey.PARTIAL;
+		return ReconcileAnnotationKey.PARTIAL;
 	}
 
 	public void initialValidate() {

@@ -45,14 +45,15 @@ import org.eclipse.wst.validation.core.IValidator;
 public class ValidatorStrategy extends AbstractStructuredTextReconcilingStrategy {
 	
     private String[] fContentTypeIds = null;
-	private HashMap fIdToStepMap = null;
+    /** validator id (as declared in ext point) -> ReconcileStepForValidator **/
+	private HashMap fVidToVStepMap = null;
 	private List fMetaData = null;
 
 	public ValidatorStrategy(ITextEditor editor, String contentType) {
 		super(editor);
 		fMetaData = new ArrayList();
 		fContentTypeIds = calculateParentContentTypeIds(contentType);
-		fIdToStepMap = new HashMap();
+		fVidToVStepMap = new HashMap();
 	}
 
 	/**
@@ -108,7 +109,7 @@ public class ValidatorStrategy extends AbstractStructuredTextReconcilingStrategy
 	 * @see org.eclipse.wst.sse.ui.reconcile.AbstractStructuredTextReconcilingStrategy#containsStep(org.eclipse.jface.text.reconciler.IReconcileStep)
 	 */
 	protected boolean containsStep(IReconcileStep step) {
-		return step != null ? fIdToStepMap.values().contains(step) : false;
+		return step != null ? fVidToVStepMap.values().contains(step) : false;
 	}
 
 	/**
@@ -129,11 +130,11 @@ public class ValidatorStrategy extends AbstractStructuredTextReconcilingStrategy
 	 */
 	public String[] getPartitionTypes() {
 		List partitionTypes = new ArrayList();
-		Iterator keys = fIdToStepMap.keySet().iterator();
+		Iterator keys = fVidToVStepMap.keySet().iterator();
 		String key = null;
 		while (keys.hasNext()) {
 			key = (String) keys.next();
-			StructuredReconcileStep step = (StructuredReconcileStep) fIdToStepMap.get(key);
+			StructuredReconcileStep step = (StructuredReconcileStep) fVidToVStepMap.get(key);
 			partitionTypes.addAll(Arrays.asList(step.getPartitionTypes()));
 		}
 		return (String[]) partitionTypes.toArray(new String[partitionTypes.size()]);
@@ -148,46 +149,48 @@ public class ValidatorStrategy extends AbstractStructuredTextReconcilingStrategy
 			if (canValidatePartition(partitionType)) {
 				ValidatorMetaData vmd = null;
 
-				//TemporaryAnnotation[]
-				List annotationsToRemove = new ArrayList();
-				//IReconcileResult[]
-				List annotationsToAdd = new ArrayList();
+
+				// IReconcileResult[]
+				ArrayList annotationsToAdd = new ArrayList();
+                // loop all of the relevant validator meta data
+                // to find new annotations
 				for (int i = 0; i < fMetaData.size(); i++) {
 					vmd = (ValidatorMetaData) fMetaData.get(i);
 					if (vmd.canHandleParitionType(getContentTypeIds(), partitionType)) {
 						// get step for partition type
-						Object o = fIdToStepMap.get(vmd.getValidatorId());
+						Object o = fVidToVStepMap.get(vmd.getValidatorId());
 						ReconcileStepForValidator validatorStep = null;
 						if (o != null) {
 							validatorStep = (ReconcileStepForValidator) o;
 						} else {
 							// if doesn't exist, create one
 							IValidator validator = vmd.createValidator();
-							validatorStep = new ReconcileStepForValidator(validator);
+							validatorStep = new ReconcileStepForValidator(validator, vmd.getValidatorScope());
 							validatorStep.setInputModel(new DocumentAdapter(fDocument));
 
-							fIdToStepMap.put(vmd.getValidatorId(), validatorStep);
+							fVidToVStepMap.put(vmd.getValidatorId(), validatorStep);
 						}
-						annotationsToRemove.addAll(Arrays.asList(getAnnotationsToRemove(dr)));
-                        annotationsToAdd.addAll(Arrays.asList(validatorStep.reconcile(dr, dr)));
+						annotationsToAdd.addAll(Arrays.asList(validatorStep.reconcile(dr, dr)));
 					}
-					// remove/add if there is anything to remove/add
-					if (annotationsToRemove.size() + annotationsToAdd.size() > 0)
-						smartProcess((TemporaryAnnotation[]) annotationsToRemove.toArray(new TemporaryAnnotation[annotationsToRemove.size()]), (IReconcileResult[]) annotationsToAdd.toArray(new IReconcileResult[annotationsToAdd.size()]));
 				}
+                
+                TemporaryAnnotation[] annotationsToRemove= getAnnotationsToRemove(dr);   
+                if (annotationsToRemove.length + annotationsToAdd.size() > 0)
+                    smartProcess(annotationsToRemove, (IReconcileResult[]) annotationsToAdd.toArray(new IReconcileResult[annotationsToAdd.size()]));
+      
 			}
 		}
 	}
 
-	/**
+    /**
 	 * @see org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcilingStrategy#setDocument(org.eclipse.jface.text.IDocument)
 	 */
 	public void setDocument(IDocument document) {
 
 		super.setDocument(document);
-		// validator steps are in "fIdToStepMap" (as opposed to fFirstStep >
+		// validator steps are in "fVIdToVStepMap" (as opposed to fFirstStep >
 		// next step etc...)
-		Iterator it = fIdToStepMap.values().iterator();
+		Iterator it = fVidToVStepMap.values().iterator();
 		IReconcileStep step = null;
 		while (it.hasNext()) {
 			step = (IReconcileStep) it.next();

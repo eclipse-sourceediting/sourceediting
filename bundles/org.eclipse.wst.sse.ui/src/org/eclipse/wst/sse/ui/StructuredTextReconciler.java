@@ -47,7 +47,7 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
 import org.eclipse.wst.sse.ui.internal.Logger;
-import org.eclipse.wst.sse.ui.internal.reconcile.IStructuredReconcilingStrategy;
+import org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcilingStrategy;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorStrategy;
 import org.eclipse.wst.sse.ui.util.Assert;
 
@@ -520,8 +520,8 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 			durty = createDirtyRegion(tr[i], DirtyRegion.INSERT);
 			s = getReconcilingStrategy(tr[i].getType());
 			if (s != null) {
-				if (s instanceof IStructuredReconcilingStrategy)
-					((IStructuredReconcilingStrategy) s).reconcile(durty, durty, true);
+				if (s instanceof AbstractStructuredTextReconcilingStrategy)
+					((AbstractStructuredTextReconcilingStrategy) s).reconcile(durty, durty);
 				else
 					s.reconcile(durty, durty);
 			}
@@ -679,13 +679,13 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 	 * Resets any flags that were set (eg. flags set during processAll())
 	 */
 	protected void resetStrategies() {
-		Iterator it = fStrategyTypes.iterator();
-		String type = null;
-		while (it.hasNext()) {
-			type = (String) it.next();
-			if (getReconcilingStrategy(type) instanceof IStructuredReconcilingStrategy)
-				((IStructuredReconcilingStrategy) getReconcilingStrategy(type)).reset();
-		}
+//		Iterator it = fStrategyTypes.iterator();
+//		String type = null;
+//		while (it.hasNext()) {
+//			type = (String) it.next();
+//			if (getReconcilingStrategy(type) instanceof AbstractStructuredTextReconcilingStrategy)
+//				((AbstractStructuredTextReconcilingStrategy) getReconcilingStrategy(type)).reset();
+//		}
 	}
 
 	/**

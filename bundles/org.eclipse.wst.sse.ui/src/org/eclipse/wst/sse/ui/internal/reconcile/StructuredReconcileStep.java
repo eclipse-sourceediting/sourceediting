@@ -86,7 +86,7 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 		fPartitionTypes = new HashSet();
 	}
 
-	public IReconcileAnnotationKey createKey(IStructuredDocumentRegion sdRegion, int scope) {
+	public ReconcileAnnotationKey createKey(IStructuredDocumentRegion sdRegion, int scope) {
 		
         ITypedRegion tr = getPartition(sdRegion);
 		String partitionType = (tr != null) ? tr.getType() : StructuredTextPartitioner.ST_UNKNOWN_PARTITION;
@@ -123,7 +123,7 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 	 * @param scope
 	 * @return
 	 */
-	public IReconcileAnnotationKey createKey(String partitionType, int scope) {
+	public ReconcileAnnotationKey createKey(String partitionType, int scope) {
 		fPartitionTypes.add(partitionType);
 		return new ReconcileAnnotationKey(this, partitionType, scope);
 	}

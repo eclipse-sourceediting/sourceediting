@@ -15,6 +15,17 @@ package org.eclipse.wst.sse.ui.internal.reconcile;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.source.Annotation;
+import org.eclipse.jface.text.source.IAnnotationAccessExtension;
+import org.eclipse.jface.text.source.IAnnotationPresentation;
+import org.eclipse.jface.text.source.ImageUtilities;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.ui.editors.text.EditorsUI;
+import org.eclipse.ui.texteditor.AnnotationPreference;
+import org.eclipse.ui.texteditor.AnnotationPreferenceLookup;
 import org.eclipse.wst.sse.ui.ITemporaryAnnotation;
 
 
@@ -22,7 +33,7 @@ import org.eclipse.wst.sse.ui.ITemporaryAnnotation;
  * An implementation of ITemporaryAnnotation @
  * @author pavery
  */
-public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotation, IReconcileResult {
+public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotation, IReconcileResult, IAnnotationPresentation {
 
 	public final static String ANNOT_BOOKMARK = "org.eclipse.ui.workbench.texteditor.bookmark"; //$NON-NLS-1$
 
@@ -37,6 +48,42 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
 	public final static String ANNOT_TASK = "org.eclipse.ui.workbench.texteditor.task"; //$NON-NLS-1$
 	public final static String ANNOT_UNKNOWN = Annotation.TYPE_UNKNOWN;
 	public final static String ANNOT_WARNING = "org.eclipse.wst.sse.ui.temp.warning"; //$NON-NLS-1$
+    
+    // copied from CompilationUnitDocumentProvider.ProblemAnnotation
+    //XXX: To be fully correct these constants should be non-static
+
+    private static final int TASK_LAYER;
+
+    private static final int INFO_LAYER;
+
+    private static final int WARNING_LAYER;
+
+    private static final int ERROR_LAYER;
+
+    private static final int BOOKMARK_LAYER;
+
+    private static final int SEARCH_LAYER;
+
+    static {
+        AnnotationPreferenceLookup lookup= EditorsUI.getAnnotationPreferenceLookup();
+        TASK_LAYER= computeLayer("org.eclipse.ui.workbench.texteditor.task", lookup); //$NON-NLS-1$
+        INFO_LAYER= computeLayer("org.eclipse.wst.sse.ui.temp.info", lookup); //$NON-NLS-1$
+        WARNING_LAYER= computeLayer("org.eclipse.wst.sse.ui.temp.warning", lookup); //$NON-NLS-1$
+        ERROR_LAYER= computeLayer("org.eclipse.wst.sse.ui.temp.error", lookup); //$NON-NLS-1$
+        BOOKMARK_LAYER= computeLayer("org.eclipse.ui.workbench.texteditor.bookmark", lookup); //$NON-NLS-1$
+        SEARCH_LAYER= computeLayer("org.eclipse.search.results", lookup); //$NON-NLS-1$
+    }
+    
+    private static int computeLayer(String annotationType, AnnotationPreferenceLookup lookup) {
+        Annotation annotation= new Annotation(annotationType, false, null);
+        AnnotationPreference preference= lookup.getAnnotationPreference(annotation);
+        if (preference != null)
+            return preference.getPresentationLayer() + 1;
+        else
+            return IAnnotationAccessExtension.DEFAULT_LAYER + 1;
+    }
+    
+    
 	private Object fAdditionalFixInfo = null;
 
 	private Object fKey = null;
@@ -44,22 +91,76 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
 
 	private int fProblemID;
 
-	public TemporaryAnnotation(Position p, String type, String message, IReconcileAnnotationKey key) {
+    private int fLayer = DEFAULT_LAYER;
+    
+    private Image fImage = null;
+
+	public TemporaryAnnotation(Position p, String type, String message, ReconcileAnnotationKey key) {
 		super();
 		fPosition = p;
 		setType(type);
 		fKey = key;
 		setText(message);
+        initLayer();
+        initImage();
 	}
 
-	public TemporaryAnnotation(Position p, String type, String message, IReconcileAnnotationKey key, int problemId) {
+	public TemporaryAnnotation(Position p, String type, String message, ReconcileAnnotationKey key, int problemId) {
 		super();
 		fPosition = p;
 		fKey = key;
 		setType(type);
 		setText(message);
 		fProblemID = problemId;
+        initLayer();
+        initImage();
 	}
+
+    private void initLayer() {
+        
+        String type = getType();
+        if(type.equals(ANNOT_ERROR)) {
+            fLayer = ERROR_LAYER;
+        }
+        else if(type.equals(ANNOT_WARNING)) {
+            fLayer = WARNING_LAYER;
+        }
+        else if(type.equals(ANNOT_INFO)) {
+            fLayer = INFO_LAYER;
+        }
+        else if(type.equals(ANNOT_BOOKMARK)) {
+            fLayer = BOOKMARK_LAYER;
+        }
+        else if(type.equals(ANNOT_SEARCH)) {
+            fLayer = SEARCH_LAYER;
+        }
+        else if(type.equals(ANNOT_TASK)) {
+            fLayer = TASK_LAYER;
+        }
+    }
+    
+    private void initImage() {
+        // later we can add support for quick fix images.
+        String type = getType();
+        if(type.equals(ANNOT_ERROR)) {
+            fImage = null;
+        }
+        else if(type.equals(ANNOT_WARNING)) {
+            fImage = null;
+        }
+        else if(type.equals(ANNOT_INFO)) {
+            fImage = null;
+        }
+        else if(type.equals(ANNOT_BOOKMARK)) {
+            fImage = null;
+        }
+        else if(type.equals(ANNOT_SEARCH)) {
+            fImage = null;
+        }
+        else if(type.equals(ANNOT_TASK)) {
+            fImage = null;
+        }
+    }
 
 	/*
 	 * (non-Javadoc)
@@ -142,6 +243,19 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
 		fAdditionalFixInfo = info;
 	}
 
+    public int getLayer() {
+        return fLayer;
+    }
+    
+    /*
+     * @see Annotation#paint
+     */
+    public void paint(GC gc, Canvas canvas, Rectangle r) {
+        //initializeImages();
+        if (fImage != null)
+            ImageUtilities.drawImage(fImage, gc, canvas, r, SWT.CENTER, SWT.TOP);
+    }
+    
 	public String toString() {
 		return "" + fPosition.getOffset() + ':' + fPosition.getLength() + ": " + getText(); //$NON-NLS-1$ //$NON-NLS-2$
 	}
