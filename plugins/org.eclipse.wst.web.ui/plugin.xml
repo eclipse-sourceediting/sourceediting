@@ -83,8 +83,8 @@
             objectClass="org.eclipse.core.resources.IProject"
             adaptable="true"
             name="%WebProjectFeatures.name"
-            class="com.ibm.itp.wt.ui.WebFeaturesPropertiesPage"
-            id="WebFeaturesPropertiesPage">
+            class="org.eclipse.wst.web.ui.internal.wizards.StaticWebSettingsPropertiesPage"
+            id="StaticWebSettingsPropertiesPage">
          <filter
                name="nature"
                value="org.eclipse.jst.j2ee.web.StaticWebNature">
