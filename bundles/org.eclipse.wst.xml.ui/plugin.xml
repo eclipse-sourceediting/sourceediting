@@ -158,20 +158,7 @@
          </part>
       </actionSetPartAssociation>
    </extension>
-   <extension
-         point="org.eclipse.ui.perspectiveExtensions">
-<!-- added to enable "Navigator > Show In" for various views... -->
-      <perspectiveExtension
-            targetID="com.ibm.etools.xml.tools.XMLPerspective">
-         <showInPart
-               id="org.eclipse.ui.views.ResourceNavigator">
-         </showInPart>
-<!-- add the "navigate" action set (Navigate > Open Resource...) -->
-         <actionSet
-               id="org.eclipse.ui.NavigateActionSet">
-         </actionSet>
-      </perspectiveExtension>
-   </extension>
+   
 <!-- add a default open on action for xml content type -->
    <extension
          point="org.eclipse.wst.sse.ui.openon">
@@ -244,6 +231,8 @@
       </actionSetPartAssociation>
    </extension>
    
+   
+   
 <!-- ================================================== -->
 <!-- Contribute a 'New Wizard' for XML files            -->
 <!-- ================================================== -->
@@ -251,12 +240,12 @@
          point="org.eclipse.ui.newWizards">
       <category
             name="XML"
-            id="com.ibm.XMLCategory">
+            id="org.eclipse.wst.XMLCategory">
       </category>
       <wizard
             name="%_UI_WIZARD_NEW_XML"
             icon="icons/XMLFile.gif"
-            category="com.ibm.XMLCategory"
+            category="org.eclipse.wst.XMLCategory"
             class="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard"
             id="org.eclipse.wst.xml.ui.internal.wizards.NewXMLWizard">
          <description>
@@ -276,7 +265,7 @@
       <objectContribution
             objectClass="org.eclipse.core.resources.IFile"
             nameFilter="*.xsd"
-            id="com.ibm.xmlwizard.createXMLFromXSD">
+            id="org.eclipse.wst.xmlwizard.createXMLFromXSD">
          <menu
                label="%genMenuLabel"
                path="additions"
@@ -288,7 +277,7 @@
                class="org.eclipse.wst.xml.ui.internal.wizards.XMLImportActionDelegate"
                menubarPath="generateXMLArtifacts/xml"
                enablesFor="1"
-               id="com.ibm.xmlwizard.createXMLFromXSDAction">
+               id="org.eclipse.wst.xmlwizard.createXMLFromXSDAction">
          </action>
       </objectContribution>
    </extension>
@@ -301,13 +290,13 @@
       <objectContribution
             objectClass="org.eclipse.core.resources.IFile"
             nameFilter="*.dtd"
-            id="com.ibm.xmlwizard.createXMLFromDTD">
+            id="org.eclipse.wst.xmlwizard.createXMLFromDTD">
          <action
                label="%_UI_ACTION_CREATE_XML"
                class="org.eclipse.wst.xml.ui.internal.wizards.XMLImportActionDelegate"
                menubarPath="generateXMLArtifacts/xml"
                enablesFor="1"
-               id="com.ibm.xmlwizard.createXMLFromDTDAction">
+               id="org.eclipse.wst.xmlwizard.createXMLFromDTDAction">
          </action>
       </objectContribution>
    </extension>
@@ -315,9 +304,10 @@
 <!-- =============================================================================== -->
 <!-- Contribute a New->Example... entry for Editing and Validating XML files         -->
 <!-- =============================================================================== -->
-   <extension point="org.eclipse.ui.newWizards"> 
+   
+  <extension point="org.eclipse.ui.newWizards"> 
        <category
-            name="%_UI_WIZARD_NEW_XML"
+            name="XML"
             parentCategory="org.eclipse.ui.Examples"
             id="org.eclipse.wst.xml.examples">
         </category>
@@ -326,25 +316,32 @@
             class="org.eclipse.wst.xml.ui.internal.wizards.XMLExampleProjectCreationWizard"
             category="org.eclipse.ui.Examples/org.eclipse.wst.xml.examples" 
             finalPerspective="org.eclipse.ui.resourcePerspective"
-            id="org.eclipse.wst.xml.ui.internal.wizards.XMLExampleProjectCreationWizard"
+            id="org.eclipse.wst.xml.ui.XMLExampleProjectCreationWizard"
             project="true" 
-            icon="icons/newSampleProject_wiz.gif"
-            banner="icons/newSampleProject_wizbanner.gif">
+            icon="icons/newSampleProject_wiz.gif">
          <description>
            %XMLExampleProjectCreationWizard.description
-         </description> 
-         <projectsetup
-           pagetitle="%XMLExampleProjectCreationWizard.pagetitle"
-           name="%XMLExampleProjectCreationWizard.projectname"
-           label="%XMLExampleProjectCreationWizard.label"
-           pagedescription="%XMLExampleProjectCreationWizard.pagedescription"
-           open="readme.html">
+         </description>  
+      </wizard> 
+   </extension>
+   
+   <extension point="org.eclipse.wst.common.ui.exampleProjectCreationWizard"
+   		id="XMLExampleProjectCreationWizardExtension"> 
+  	 <wizard
+           id="org.eclipse.wst.xml.ui.XMLExampleProjectCreationWizard"
+           banner="icons/newSampleProject_wizbanner.gif">
+        <projectsetup
+           	pagetitle="%XMLExampleProjectCreationWizard.pagetitle"
+           	name="%XMLExampleProjectCreationWizard.projectname"
+           	label="%XMLExampleProjectCreationWizard.label"
+           	pagedescription="%XMLExampleProjectCreationWizard.pagedescription"
+           	open="readme.html">
             <import
                   dest=""
                   src="examples/EditingAndValidatingXML.zip">
             </import>
-         </projectsetup>
-      </wizard>
+        </projectsetup>
+     </wizard>
    </extension>
-
+   
 </plugin>

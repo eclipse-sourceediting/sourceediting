@@ -14,10 +14,13 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.wst.common.ui.wizards.ExampleProjectCreationWizard;
 
 /**
- * Wizard used for creating the HelloWord sample.
+ * Wizard used for creating the XML samples.
  * Most functionality is inherited from ExampleProjectCreationWizard.
  */
 public class XMLExampleProjectCreationWizard extends ExampleProjectCreationWizard {
+	
+	public static String EXAMPLE_WIZARD_XP_ID = "org.eclipse.wst.xml.ui.XMLExampleProjectCreationWizardExtension";  //$NON-NLS-1$
+
 
 	public XMLExampleProjectCreationWizard() {
 		super();
@@ -29,5 +32,9 @@ public class XMLExampleProjectCreationWizard extends ExampleProjectCreationWizar
 	 */
 	protected ImageDescriptor getImageDescriptor(String banner) {
 		return XMLWizard.getInstance().getImageDescriptor(banner);
+	}
+	
+	public String getWizardExtensionId(){
+		return EXAMPLE_WIZARD_XP_ID;
 	}
 }
