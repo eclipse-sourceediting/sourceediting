@@ -55,7 +55,7 @@ public class StaticWebNatureRuntime implements IStaticWebNature {
 	protected IModule module;
 	protected IProject project;
 
-	private static final String LINKS_BUILDER_ID = "com.ibm.etools.webtools.additions.linksbuilder"; //$NON-NLS-1$
+//	private static final String LINKS_BUILDER_ID = "com.ibm.etools.webtools.additions.linksbuilder"; //$NON-NLS-1$
 
 	/**
 	 * WebNatureRuntime constructor comment.
@@ -500,7 +500,7 @@ public class StaticWebNatureRuntime implements IStaticWebNature {
 
 		// this order is depended upon (see RATLC00855322)
 		addToFrontOfBuildSpec(WSTWebPlugin.VALIDATION_BUILDER_ID);
-		addToFrontOfBuildSpec(LINKS_BUILDER_ID);
+//		addToFrontOfBuildSpec(LINKS_BUILDER_ID);
 	}
 
 	public void setContextRoot(String newContextRoot) throws CoreException {
