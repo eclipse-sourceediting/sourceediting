@@ -466,7 +466,7 @@ class ProjectDescription {
 	void removeTLD(IResource tld) {
 		TLDRecord record = (TLDRecord) fTLDReferences.remove(tld.getFullPath());
 		if (record != null && record.uri != null) {
-			getImplicitReferences(tld.getLocation().toString()).put(record.uri, record);
+			getImplicitReferences(tld.getLocation().toString()).remove(record.uri);
 		}
 	}
 
