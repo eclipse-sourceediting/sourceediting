@@ -49,8 +49,6 @@ public class XMLModelLoader extends AbstractModelLoader {
 	public List getAdapterFactories() {
 		List result = new ArrayList();
 		AdapterFactory factory = null;
-		// TODO different ModelQueryAdapterFactories need to be made for each
-		// type/loader
 		factory = new ModelQueryAdapterFactoryForXML();
 		result.add(factory);
 		// Does XML need propagating adapter? Or just JSP?
