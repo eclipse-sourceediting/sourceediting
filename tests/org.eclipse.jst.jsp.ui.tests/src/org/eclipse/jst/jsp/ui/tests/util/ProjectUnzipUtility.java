@@ -143,11 +143,14 @@ public class ProjectUnzipUtility {
 	public void unzipAndImport(File inFile, String destinationDirectory) {
 		try {
 			// Specify file to decompress
-			String inFileName = inFile.getAbsolutePath(); //"c:/example.zip";
+			// (nsd) redundant?
+//			String inFileName = inFile.getAbsolutePath(); //"c:/example.zip";
+//			File sourceZipFile = new File(inFileName);
+			File sourceZipFile = inFile;
+
 			// Specify destination where file will be unzipped
 			//String destinationDirectory =
 			// "d:/eclipsedev/M5_SSE_TESTS_WORKSPACE/"; //"c:/temp/";
-			File sourceZipFile = new File(inFileName);
 			File unzipDestinationDirectory = new File(destinationDirectory);
 			// Open Zip file for reading
 			ZipFile zipFile = new ZipFile(sourceZipFile, ZipFile.OPEN_READ);
@@ -311,13 +314,15 @@ public class ProjectUnzipUtility {
 		refreshWorkspace();
 		//change prereqs to get this functionality back in
 		IProject proj = ResourcesPlugin.getWorkspace().getRoot().getProject(projName);
+		if(!proj.exists())
+			proj.create(new NullProgressMonitor());
+		if (!proj.isOpen()) {
+			proj.open(null);
+		}
 		// need to add java nature, or else project won't "exist()" in the
 		// java
 		// element sense
 		String[] natureIds = {"org.eclipse.jdt.core.javanature"};
-		if (!proj.isOpen()) {
-			proj.open(null);
-		}
 		IProjectDescription desc = proj.getDescription();
 		desc.setNatureIds(natureIds);
 		proj.setDescription(desc, new NullProgressMonitor());
