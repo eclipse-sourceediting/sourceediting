@@ -188,7 +188,7 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	 * @return the corresponding node for sdRegion
 	 */
 	protected IndexedRegion getCorrespondingNode(IStructuredDocumentRegion sdRegion) {
-		IStructuredModel sModel = StructuredModelManager.getInstance().getModelManager().getExistingModelForRead(fDocument);
+		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
 		IndexedRegion xmlNode = sModel.getIndexedRegion(sdRegion.getStart());
 		sModel.releaseFromRead();
 		return xmlNode;

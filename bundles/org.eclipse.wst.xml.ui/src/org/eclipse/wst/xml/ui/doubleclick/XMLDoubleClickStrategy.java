@@ -15,7 +15,6 @@ package org.eclipse.wst.xml.ui.doubleclick;
 import org.eclipse.jface.text.DefaultTextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -42,7 +41,7 @@ public class XMLDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 		if (textViewer instanceof StructuredTextViewer) {
 			fStructuredTextViewer = (StructuredTextViewer) textViewer;
 			try {
-				fStructuredModel = getModelManager().getExistingModelForRead(fStructuredTextViewer.getDocument());
+				fStructuredModel = StructuredModelManager.getModelManager().getExistingModelForRead(fStructuredTextViewer.getDocument());
 
 				if (fStructuredModel != null) {
 					int caretPosition = textViewer.getSelectedRange().x;
@@ -67,10 +66,6 @@ public class XMLDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 					fStructuredModel.releaseFromRead();
 			}
 		}
-	}
-
-	protected IModelManager getModelManager() {
-		return StructuredModelManager.getInstance().getModelManager();
 	}
 
 	protected Point getWord(String string, int cursor) {

@@ -21,7 +21,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
-import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 
@@ -31,13 +30,6 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
  * StructuredModels
  */
 public class StructuredPropertySheetConfiguration extends PropertySheetConfiguration {
-	/**
-	 * Utility method also used in subclasses
-	 */
-	protected static IModelManager getModelManager() {
-		return StructuredModelManager.getInstance().getModelManager();
-	}
-
 	protected IStructuredModel fModel;
 
 	/**
@@ -101,7 +93,7 @@ public class StructuredPropertySheetConfiguration extends PropertySheetConfigura
 			if (textEditor != null) {
 				IDocument document = textEditor.getDocumentProvider().getDocument(editor.getEditorInput());
 				if (document != null)
-					model = getModelManager().getExistingModelForRead(document);
+					model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 				else
 					model = null;
 			}

@@ -112,7 +112,7 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 	}
 
 	protected String getContentType(IDocument document) {
-		IModelManager mgr = StructuredModelManager.getInstance().getModelManager();
+		IModelManager mgr = StructuredModelManager.getModelManager();
 		String contentType = null;
 		IStructuredModel model = null;
 		try {

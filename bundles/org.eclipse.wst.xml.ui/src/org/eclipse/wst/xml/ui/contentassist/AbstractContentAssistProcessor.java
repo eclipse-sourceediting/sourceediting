@@ -1216,7 +1216,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		// Handle empty Documents
 		if (completionRegion == null) {
 			if (((treeNode == null) || ((Node) treeNode).getNodeType() == Node.DOCUMENT_NODE) && completionRegion == null && (xmlnode == null || xmlnode.getChildNodes() == null || xmlnode.getChildNodes().getLength() == 0)) {
-				IStructuredModel sModel = StructuredModelManager.getInstance().getModelManager().getExistingModelForRead(textViewer.getDocument());
+				IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(textViewer.getDocument());
 				try {
 					if (sModel != null) {
 						XMLDocument docNode = ((XMLModel) sModel).getDocument();
@@ -2170,7 +2170,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 */
 	private boolean needsEndTag(IStructuredDocumentRegion startTag) {
 		boolean result = false;
-		IStructuredModel sModel = StructuredModelManager.getInstance().getModelManager().getExistingModelForRead(fTextViewer.getDocument());
+		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fTextViewer.getDocument());
 		try {
 			if (sModel != null) {
 				XMLNode xmlNode = (XMLNode) sModel.getIndexedRegion(startTag.getStart());

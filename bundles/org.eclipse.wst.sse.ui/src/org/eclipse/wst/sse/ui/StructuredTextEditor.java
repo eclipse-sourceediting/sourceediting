@@ -1257,9 +1257,9 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			} else {
 				IDocument doc = getDocument();
 				Assert.isTrue(doc instanceof IStructuredDocument, "Editing document must be an IStructuredDocument");
-				model = StructuredModelManager.getInstance().getModelManager().getExistingModelForEdit(doc);
+				model = StructuredModelManager.getModelManager().getExistingModelForEdit(doc);
 				if (model == null) {
-					model = StructuredModelManager.getInstance().getModelManager().getModelForEdit((IStructuredDocument) doc);
+					model = StructuredModelManager.getModelManager().getModelForEdit((IStructuredDocument) doc);
 					EditorModelUtil.addFactoriesTo(model);
 				}
 			}
@@ -1602,10 +1602,10 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 				fStructuredModel = ((IModelProvider) getDocumentProvider()).getModel(getEditorInput());
 			} else { // nsd_TODO: FileBuffer cleanup
 				IDocument doc = getDocument();
-				Assert.isTrue(doc instanceof IStructuredDocument);
-				IStructuredModel model = StructuredModelManager.getInstance().getModelManager().getExistingModelForEdit(doc);
+				Assert.isTrue(doc instanceof IStructuredDocument, "StructuredTextEditor must be used with an IStructuredDocument");
+				IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForEdit(doc);
 				if (model == null) {
-					model = StructuredModelManager.getInstance().getModelManager().getModelForEdit((IStructuredDocument) doc);
+					model = StructuredModelManager.getModelManager().getModelForEdit((IStructuredDocument) doc);
 					EditorModelUtil.addFactoriesTo(model);
 				}
 				fStructuredModel = model;

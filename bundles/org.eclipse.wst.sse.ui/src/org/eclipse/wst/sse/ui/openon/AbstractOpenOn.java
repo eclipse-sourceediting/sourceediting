@@ -30,7 +30,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.ide.IDE;
-import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.extensions.openon.IOpenOn;
@@ -91,7 +90,7 @@ abstract public class AbstractOpenOn implements IOpenOn {
 		IStructuredModel model = null;
 		IFile file = null;
 		try {
-			model = getModelManager().getExistingModelForRead(getDocument());
+			model = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
 			if (model != null) {
 				// use the base location to obtain the in-workspace IFile
 				IFile modelFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(model.getBaseLocation()));
@@ -126,10 +125,6 @@ abstract public class AbstractOpenOn implements IOpenOn {
 			file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(fileString));
 		}
 		return file;
-	}
-
-	protected IModelManager getModelManager() {
-		return StructuredModelManager.getInstance().getModelManager();
 	}
 
 	/*

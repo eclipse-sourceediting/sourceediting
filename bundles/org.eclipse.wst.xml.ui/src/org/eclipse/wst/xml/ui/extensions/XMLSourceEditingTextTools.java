@@ -79,7 +79,7 @@ public class XMLSourceEditingTextTools implements SourceEditingTextTools, INodeA
 		if (res == null || !(res instanceof IFile))
 			return null;
 
-		IModelManager mm = StructuredModelManager.getInstance().getModelManager();
+		IModelManager mm = StructuredModelManager.getModelManager();
 		IStructuredModel model = null;
 		try {
 			model = mm.getExistingModelForRead((IFile) res);

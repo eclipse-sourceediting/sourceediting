@@ -189,12 +189,9 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 	/**
 	 * Utility method also used in subclasses
 	 */
-	protected static IModelManager getModelManager() {
+	private static IModelManager getModelManager() {
 		if (fModelManager == null) {
-			// get the model manager from the plugin
-			// note: we can use the static "ID" variable, since we pre-req
-			// that plugin
-			fModelManager = StructuredModelManager.getInstance().getModelManager();
+			fModelManager = StructuredModelManager.getModelManager();
 		}
 		return fModelManager;
 	}

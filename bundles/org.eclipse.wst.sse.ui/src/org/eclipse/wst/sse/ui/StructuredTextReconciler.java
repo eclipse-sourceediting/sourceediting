@@ -304,7 +304,7 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 	protected IModelManager getModelManager() {
 
 		if (this.fModelManager == null)
-			this.fModelManager = StructuredModelManager.getInstance().getModelManager();
+			this.fModelManager = StructuredModelManager.getModelManager();
 		return this.fModelManager;
 	}
 

@@ -74,7 +74,7 @@ public abstract class ContentSettingsPropertyPage extends PropertyPage {
 		final long afterModifiedFromIFile = file.getModificationStamp();
 
 		if (beforeModifiedFromJavaIO != afterModifiedFromJavaIO) {
-			IModelManager manager = StructuredModelManager.getInstance().getModelManager();
+			IModelManager manager = StructuredModelManager.getModelManager();
 			IStructuredModel model = manager.getExistingModelForRead(file);
 			if (model != null) {
 				if (!model.isDirty()) {

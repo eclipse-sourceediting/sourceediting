@@ -25,7 +25,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
@@ -77,7 +76,7 @@ public class DropActionProxy implements InvocationHandler {
 		if (editor != null) {
 			document = editor.getDocument();
 			if (document != null)
-				fRecorder = getModelManager().getExistingModelForEdit(document);
+				fRecorder = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
 			// Prepare for Undo
 			if (fRecorder != null) {
 				IStructuredTextUndoManager um = fRecorder.getUndoManager();
@@ -103,13 +102,6 @@ public class DropActionProxy implements InvocationHandler {
 
 	private Display getDisplay() {
 		return PlatformUI.getWorkbench().getDisplay();
-	}
-
-	/**
-	 *  
-	 */
-	private IModelManager getModelManager() {
-		return StructuredModelManager.getInstance().getModelManager();
 	}
 
 	/**

@@ -265,8 +265,7 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 	 * @return ICompletionProposal
 	 */
 	private ICompletionProposal getHTMLTagPropsosal(StructuredTextViewer viewer, int documentPosition) {
-
-		IModelManager mm = StructuredModelManager.getInstance().getModelManager();
+		IModelManager mm = StructuredModelManager.getModelManager();
 		IStructuredModel model = null;
 		try {
 			if (mm != null)

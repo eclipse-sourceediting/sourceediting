@@ -28,6 +28,7 @@ import org.eclipse.wst.common.contentmodel.util.DOMNamespaceHelper;
 import org.eclipse.wst.common.uriresolver.URIResolverPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.sse.ui.openon.AbstractOpenOn;
 import org.eclipse.wst.xml.core.document.XMLAttr;
@@ -103,7 +104,7 @@ public class DefaultOpenOnXML extends AbstractOpenOn {
 		// get the base location from the current model
 		IStructuredModel sModel = null;
 		try {
-			sModel = getModelManager().getExistingModelForRead(getDocument());
+			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
 			if (sModel != null) {
 				IPath location = new Path(sModel.getBaseLocation());
 				if (location.toFile().exists()) {
@@ -156,7 +157,7 @@ public class DefaultOpenOnXML extends AbstractOpenOn {
 	protected Node getCurrentNode(int offset) {
 		// get the current node at the offset (returns element, doctype, text)
 		IndexedRegion inode = null;
-		IStructuredModel sModel = getModelManager().getExistingModelForRead(getDocument());
+		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
 		inode = sModel.getIndexedRegion(offset);
 		if (inode == null)
 			inode = sModel.getIndexedRegion(offset - 1);

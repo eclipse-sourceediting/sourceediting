@@ -66,7 +66,7 @@ public class URLModelProvider {
 		super();
 
 		// obtain model manager
-		modelManager = StructuredModelManager.getInstance().getModelManager();
+		modelManager = StructuredModelManager.getModelManager();
 	}
 
 	/**

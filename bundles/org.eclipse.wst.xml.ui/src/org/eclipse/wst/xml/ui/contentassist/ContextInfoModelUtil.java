@@ -13,7 +13,6 @@
 package org.eclipse.wst.xml.ui.contentassist;
 
 import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
-import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.document.XMLModel;
@@ -36,14 +35,10 @@ public class ContextInfoModelUtil {
 		return fDocument;
 	}
 
-	public IModelManager getModelManager() {
-		return StructuredModelManager.getInstance().getModelManager();
-	}
-
 	public ModelQuery getModelQuery() {
 		ModelQuery mq = null;
 
-		XMLModel xmlModel = (XMLModel) getModelManager().getExistingModelForRead(getDocument());
+		XMLModel xmlModel = (XMLModel) StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
 		mq = ModelQueryUtil.getModelQuery(xmlModel.getDocument());
 		xmlModel.releaseFromRead();
 
@@ -51,7 +46,7 @@ public class ContextInfoModelUtil {
 	}
 
 	public XMLNode getXMLNode(int offset) {
-		XMLModel xmlModel = (XMLModel) getModelManager().getExistingModelForRead(getDocument());
+		XMLModel xmlModel = (XMLModel) StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
 		XMLNode xmlNode = (XMLNode) xmlModel.getIndexedRegion(offset);
 		xmlModel.releaseFromRead();
 		return xmlNode;

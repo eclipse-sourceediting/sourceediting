@@ -195,7 +195,7 @@ public class CSSColorPage extends AbstractColorPage {
 	 * setupPicker method comment.
 	 */
 	protected void setupPicker(StyledTextColorPicker picker) {
-		IModelManager mmanager = StructuredModelManager.getInstance().getModelManager();
+		IModelManager mmanager = StructuredModelManager.getModelManager();
 		picker.setParser(mmanager.createStructuredDocumentFor(IContentTypeIdentifier.ContentTypeID_CSS).getParser());
 
 		Dictionary descriptions = new Hashtable();

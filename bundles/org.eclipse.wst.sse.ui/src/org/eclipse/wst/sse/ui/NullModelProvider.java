@@ -21,9 +21,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.AnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.ui.texteditor.AbstractDocumentProvider;
-import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.StructuredModelManager;
 
 
 /**
@@ -43,16 +41,6 @@ public class NullModelProvider extends AbstractDocumentProvider implements IMode
 			_instance = new NullModelProvider();
 		}
 		return _instance;
-	}
-
-	/**
-	 * Utility method also used in subclasses
-	 */
-	protected static IModelManager getModelManager() {
-		// get the model manager from the plugin
-		// note: we can use the static "ID" variable, since we pre-req that
-		// plugin
-		return StructuredModelManager.getInstance().getModelManager();
 	}
 
 	private HashMap fModelMap = new HashMap(1);

@@ -198,7 +198,7 @@ public class XMLColorPage extends AbstractColorPage {
 	}
 
 	protected void setupPicker(StyledTextColorPicker picker) {
-		IModelManager mmanager = StructuredModelManager.getInstance().getModelManager();
+		IModelManager mmanager = StructuredModelManager.getModelManager();
 		picker.setParser(mmanager.createStructuredDocumentFor(IContentTypeIdentifier.ContentTypeID_SSEXML).getParser());
 
 		Dictionary descriptions = new Hashtable();

@@ -54,7 +54,7 @@ public class OpenOnProvider {
 	protected String getContentType(IDocument document) {
 		String type = null;
 
-		IModelManager mgr = StructuredModelManager.getInstance().getModelManager();
+		IModelManager mgr = StructuredModelManager.getModelManager();
 		IStructuredModel model = null;
 		try {
 			model = mgr.getExistingModelForRead(document);

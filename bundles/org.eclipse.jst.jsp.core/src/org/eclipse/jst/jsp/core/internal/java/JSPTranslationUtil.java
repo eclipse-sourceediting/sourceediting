@@ -107,6 +107,6 @@ public class JSPTranslationUtil {
 	}
 
 	protected IModelManager getModelManager() {
-		return StructuredModelManager.getInstance().getModelManager();
+		return StructuredModelManager.getModelManager();
 	}
 }

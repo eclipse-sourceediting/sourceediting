@@ -134,7 +134,7 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 	 */
 	protected IModelManager getModelManager() {
 		if (fModelManager == null)
-			fModelManager = StructuredModelManager.getInstance().getModelManager();
+			fModelManager = StructuredModelManager.getModelManager();
 		return fModelManager;
 	}
 

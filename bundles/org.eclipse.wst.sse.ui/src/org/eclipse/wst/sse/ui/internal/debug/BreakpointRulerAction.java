@@ -45,8 +45,8 @@ import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.IBreakpointProvider;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.Logger;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.extension.BreakpointProviderBuilder;
 
 
@@ -120,7 +120,7 @@ public abstract class BreakpointRulerAction extends Action implements IUpdate {
 									}
 									if (textEditor != null) {
 										IDocument textDocument = textEditor.getDocumentProvider().getDocument(input);
-										model = StructuredModelManager.getInstance().getModelManager().getExistingModelForRead(textDocument);
+										model = StructuredModelManager.getModelManager().getExistingModelForRead(textDocument);
 										if (model != null) {
 											resource = BreakpointProviderBuilder.getInstance().getResource(input, model.getContentTypeIdentifier(), getFileExtension(input));
 										}

@@ -28,7 +28,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.util.DocumentInputStream;
@@ -141,7 +140,7 @@ public class EditStructuredTextEditorPreferencesAction extends Action implements
 	private String getContentType() {
 		String contentType = null;
 
-		IStructuredModel model = getModelManager().getExistingModelForRead(getEditor().getDocument());
+		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(getEditor().getDocument());
 		if (model != null) {
 			contentType = model.getContentTypeIdentifier();
 			model.releaseFromRead();
@@ -162,10 +161,6 @@ public class EditStructuredTextEditorPreferencesAction extends Action implements
 
 	private IExtendedSimpleEditor getEditor() {
 		return fEditor;
-	}
-
-	private IModelManager getModelManager() {
-		return StructuredModelManager.getInstance().getModelManager();
 	}
 
 	public boolean isVisible() {

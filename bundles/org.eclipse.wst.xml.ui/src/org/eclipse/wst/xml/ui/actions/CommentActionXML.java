@@ -37,10 +37,6 @@ public class CommentActionXML extends TextEditorAction {
 	protected static final String CLOSE_COMMENT = "-->"; //$NON-NLS-1$
 	protected static final String OPEN_COMMENT = "<!--"; //$NON-NLS-1$
 
-	static IModelManager getModelManager() {
-		return StructuredModelManager.getInstance().getModelManager();
-	}
-
 	protected IDocument fDocument;
 	protected IStructuredModel fModel;
 	protected ITextSelection fSelection;
@@ -107,7 +103,7 @@ public class CommentActionXML extends TextEditorAction {
 		if (fDocument == null)
 			return;
 
-		IModelManager modelManager = getModelManager();
+		IModelManager modelManager = StructuredModelManager.getModelManager();
 		fModel = modelManager.getExistingModelForEdit(fDocument);
 		if (fModel == null)
 			return;

@@ -16,7 +16,6 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.texteditor.ITextEditorExtension3;
-import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -37,7 +36,7 @@ public class StructuredAutoEditStrategyXML extends BasicAutoEditStrategy {
 
 		IStructuredModel model = null;
 		try {
-			model = getModelManager().getExistingModelForRead(document);
+			model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 			if (model != null) {
 				if (structuredDocumentCommand.text != null) {
 					smartInsertForComment(structuredDocumentCommand, document, model);
@@ -48,10 +47,6 @@ public class StructuredAutoEditStrategyXML extends BasicAutoEditStrategy {
 			if (model != null)
 				model.releaseFromRead();
 		}
-	}
-
-	private IModelManager getModelManager() {
-		return StructuredModelManager.getInstance().getModelManager();
 	}
 
 	private boolean isCommentNode(XMLNode node) {

@@ -150,8 +150,8 @@ public class DTDColorPage extends AbstractColorPage {
 	}
 
 	protected void setupPicker(StyledTextColorPicker picker) {
-			IModelManager mmanager = StructuredModelManager.getInstance().getModelManager();
-			picker.setParser(mmanager.createStructuredDocumentFor(IContentTypeIdentifier.ContentTypeID_DTD).getParser());
+		IModelManager mmanager = StructuredModelManager.getModelManager();
+		picker.setParser(mmanager.createStructuredDocumentFor(IContentTypeIdentifier.ContentTypeID_DTD).getParser());
 
 		Dictionary descriptions = new Hashtable();
 		initDescriptions(descriptions);

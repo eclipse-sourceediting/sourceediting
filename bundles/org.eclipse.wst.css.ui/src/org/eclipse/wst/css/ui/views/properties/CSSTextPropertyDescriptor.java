@@ -98,7 +98,7 @@ public class CSSTextPropertyDescriptor extends TextPropertyDescriptor {
 								//TODO Urgent needs to be fixed
 								// I think we need 'equals' (or 'equivalent'
 								// on model) for cases like this
-								if (StructuredModelManager.getInstance().getModelManager().calculateId(file).equals(model.getId())) {
+								if (StructuredModelManager.getModelManager().calculateId(file).equals(model.getId())) {
 									return editPart;
 								}
 							}

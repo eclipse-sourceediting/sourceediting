@@ -45,7 +45,7 @@ public class ContentAssistUtils {
 			return null;
 
 		IndexedRegion node = null;
-		IModelManager mm = StructuredModelManager.getInstance().getModelManager();
+		IModelManager mm = StructuredModelManager.getModelManager();
 		IStructuredModel model = null;
 		if (mm != null)
 			model = mm.getExistingModelForRead(viewer.getDocument());

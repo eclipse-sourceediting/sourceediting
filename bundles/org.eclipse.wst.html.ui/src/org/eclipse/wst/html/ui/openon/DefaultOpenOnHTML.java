@@ -11,6 +11,7 @@
 package org.eclipse.wst.html.ui.openon;
 
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.util.PathHelper;
 import org.eclipse.wst.sse.core.util.URIResolver;
 import org.eclipse.wst.sse.ui.internal.Logger;
@@ -35,7 +36,7 @@ public class DefaultOpenOnHTML extends DefaultOpenOnXML {
 		String resolvedURI = systemId;
 
 		if (systemId != null) {
-			IStructuredModel sModel = getModelManager().getExistingModelForRead(getDocument());
+			IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
 			try {
 				if (sModel != null) {
 					URIResolver resolver = sModel.getResolver();

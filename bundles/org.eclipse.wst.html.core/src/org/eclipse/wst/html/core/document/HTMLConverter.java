@@ -137,12 +137,6 @@ public class HTMLConverter {
 
 	/**
 	 */
-	private static IModelManager getModelManager() {
-		return StructuredModelManager.getInstance().getModelManager();
-	}
-
-	/**
-	 */
 	private static void insertBreak(XMLModel model, Node node) {
 		if (model == null || node == null)
 			return;
@@ -174,7 +168,7 @@ public class HTMLConverter {
 			return null;
 		// create temporary model
 		String id = input.toString() + ".html"; //$NON-NLS-1$
-		IModelManager manager = getModelManager();
+		IModelManager manager = StructuredModelManager.getModelManager();
 		IStructuredModel model = manager.getModelForEdit(id, input, null);
 		if (!(model instanceof XMLModel)) {
 			if (model == null)
@@ -189,7 +183,7 @@ public class HTMLConverter {
 	private XMLModel readModel(IFile file) throws IOException, CoreException {
 		if (file == null)
 			return null;
-		IModelManager manager = getModelManager();
+		IModelManager manager = StructuredModelManager.getModelManager();
 		IStructuredModel model = manager.getModelForEdit(file);
 		if (!(model instanceof XMLModel)) {
 			if (model != null)

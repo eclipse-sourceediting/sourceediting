@@ -32,7 +32,6 @@ import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.dtd.ui.style.LineStyleProviderForDTDSubSet;
-import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
@@ -177,10 +176,6 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		return fInformationPresenter;
 	}
 
-	private IModelManager getModelManager() {
-		return StructuredModelManager.getInstance().getModelManager();
-	}
-
 	public IReconciler getReconciler(ISourceViewer sourceViewer) {
 
 		if (fReconciler != null) {
@@ -210,7 +205,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 			if (sourceViewer instanceof StructuredTextViewer) {
 				viewer = ((StructuredTextViewer) sourceViewer);
 			}
-			IStructuredModel sModel = getModelManager().getExistingModelForRead(viewer.getDocument());
+			IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(viewer.getDocument());
 			try {
 
 

@@ -40,7 +40,7 @@ public class JSPCodeRegion extends ForeignRegion {
 	 */
 	protected RegionParser getBlockNodeChecker() {
 		if (fBlockNodeChecker == null) {
-			IModelManager mmanager = StructuredModelManager.getInstance().getModelManager();
+			IModelManager mmanager = StructuredModelManager.getModelManager();
 			fBlockNodeChecker = mmanager.createStructuredDocumentFor(IContentTypeIdentifier.ContentTypeID_JSP).getParser();
 		}
 		return fBlockNodeChecker;
