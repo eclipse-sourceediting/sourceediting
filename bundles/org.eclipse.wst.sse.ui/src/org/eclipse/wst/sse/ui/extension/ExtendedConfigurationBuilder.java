@@ -90,6 +90,9 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 				}
 			});
 		}
+		if (result[0] != null && result[0] instanceof IExtendedConfiguration) {
+			((IExtendedConfiguration) result[0]).setDeclaringID(targetID);
+		}
 		return result[0];
 	}
 
@@ -118,9 +121,6 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 				result = createExtension(element, ATT_CLASS, targetID);
 			}
 			if (result != null) {
-				if (result instanceof IExtendedConfiguration) {
-					((IExtendedConfiguration) result).setDeclaringID(targetID);
-				}
 				return result;
 			}
 		}
