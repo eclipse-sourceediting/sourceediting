@@ -36,7 +36,7 @@ public class TestViewerConfiguration extends TestCase {
 	private boolean fDisplayExists = true;
 	
     public TestViewerConfiguration() {
-        super("TestViewerConfigurationXML");
+        super("TestViewerConfiguration");
     }
     protected void setUp() throws Exception {
 		
@@ -69,7 +69,7 @@ public class TestViewerConfiguration extends TestCase {
 		}
 		else {
 			fDisplayExists = false;
-			Logger.log(Logger.INFO, "TestViewerConfigurationHTML tests cannot run because there is no DISPLAY available");
+			Logger.log(Logger.INFO, "TestViewerConfiguration tests cannot run because there is no DISPLAY available");
 		}
 	}
     

@@ -37,7 +37,7 @@ public class TestViewerConfigurationHTML extends TestCase {
 	private boolean fDisplayExists = true;
 	
     public TestViewerConfigurationHTML() {
-        super("TestViewerConfigurationJSP");
+        super("TestViewerConfigurationHTML");
     }
     protected void setUp() throws Exception {
 		

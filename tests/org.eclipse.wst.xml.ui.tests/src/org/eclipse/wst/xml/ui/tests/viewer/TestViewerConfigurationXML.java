@@ -73,7 +73,7 @@ public class TestViewerConfigurationXML extends TestCase {
 		}
 		else {
 			fDisplayExists = false;
-			Logger.log(Logger.INFO, "TestViewerConfigurationHTML tests cannot run because there is no DISPLAY available");
+			Logger.log(Logger.INFO, "TestViewerConfigurationXML tests cannot run because there is no DISPLAY available");
 		}
 	}
     
