@@ -389,4 +389,16 @@
       </validator>
    </extension>
 	
+
+	<!-- New JSP wizard -->
+	<extension point="org.eclipse.ui.newWizards">
+		<wizard id="org.eclipse.wst.html.ui.internal.wizard.NewHTMLWizard"
+			name="%_UI_WIZARD_NAME"
+			class="org.eclipse.wst.html.ui.internal.wizard.NewHTMLWizard"
+			category="org.eclipse.wst.web.ui"
+			icon="icons/full/ctool16/newhtml_wiz.gif">
+			<description>%_UI_WIZARD_CREATE_NEW_FILE</description>
+			<selection class="org.eclipse.core.resources.IResource" />
+		</wizard>
+	</extension>
 </plugin>
