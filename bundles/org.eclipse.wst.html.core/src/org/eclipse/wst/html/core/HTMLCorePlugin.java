@@ -114,7 +114,7 @@ public class HTMLCorePlugin extends Plugin {
 		prefs.setDefault(CommonModelPreferenceNames.CLEAR_ALL_BLANK_LINES, false);
 
 		prefs.setDefault(CommonModelPreferenceNames.PREFERRED_MARKUP_CASE_SUPPORTED, true);
-		prefs.setDefault(CommonModelPreferenceNames.TAG_NAME_CASE, CommonModelPreferenceNames.UPPER);
+		prefs.setDefault(CommonModelPreferenceNames.TAG_NAME_CASE, CommonModelPreferenceNames.LOWER);
 		prefs.setDefault(CommonModelPreferenceNames.ATTR_NAME_CASE, CommonModelPreferenceNames.LOWER);
 		
 		prefs.setDefault(HTMLFilesPreferenceNames.DEFAULT_SUFFIX, HTMLFilesPreferenceNames.HTML_SUFFIX);

@@ -12,13 +12,13 @@ package org.eclipse.wst.html.ui.views.contentoutline;
 
 
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.wst.common.contentmodel.CMNode;
 import org.eclipse.wst.common.contentmodel.util.DOMContentBuilder;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.html.core.HTMLCMProperties;
+import org.eclipse.wst.html.core.HTMLCorePlugin;
 import org.eclipse.wst.html.core.PreferenceNames;
 import org.eclipse.wst.html.core.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.html.core.preferences.HTMLContentBuilder;
@@ -33,8 +33,8 @@ import org.w3c.dom.Node;
  * 
  */
 public class HTMLNodeActionManager extends XMLNodeActionManager {
-	protected String fTagCase;
-	protected String fAttrCase;
+	protected int fTagCase;
+	protected int fAttrCase;
 
 	public HTMLNodeActionManager(IStructuredModel model, Viewer viewer) {
 		super(model, viewer);
@@ -47,7 +47,7 @@ public class HTMLNodeActionManager extends XMLNodeActionManager {
 	 */
 	public DOMContentBuilder createDOMContentBuilder(Document document) {
 		DOMContentBuilder builder = null;
-		if (model.getModelHandler().getId().equals(IContentTypeIdentifier.ContentTypeID_HTML))
+		if (model.getModelHandler().getAssociatedContentTypeId().equals(IContentTypeIdentifier.ContentTypeID_HTML))
 			builder = new HTMLContentBuilder(document);
 		else
 			builder = super.createDOMContentBuilder(document);
@@ -72,22 +72,18 @@ public class HTMLNodeActionManager extends XMLNodeActionManager {
 		if (shouldIgnoreCase(cmnode)) {
 			String name = cmnode.getNodeName();
 			if (cmnode.getNodeType() == CMNode.ELEMENT_DECLARATION) {
-				if (fTagCase.length() > 0) {
-					if (fTagCase.equals(PreferenceNames.LOWER))
-						name = name.toLowerCase();
-					else if (fTagCase.equals(PreferenceNames.UPPER))
-						name = name.toUpperCase();
-					// else do nothing
-				}
+				if (fTagCase == CommonModelPreferenceNames.LOWER)
+					name = name.toLowerCase();
+				else if (fTagCase == CommonModelPreferenceNames.UPPER)
+					name = name.toUpperCase();
+				// else do nothing
 			}
 			else if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
-				if (fAttrCase.length() > 0) {
-					if (fAttrCase.equals(PreferenceNames.LOWER))
-						name = name.toLowerCase();
-					else if (fAttrCase.equals(PreferenceNames.UPPER))
-						name = name.toUpperCase();
-					// else do nothing
-				}
+				if (fAttrCase == CommonModelPreferenceNames.LOWER)
+					name = name.toLowerCase();
+				else if (fAttrCase == CommonModelPreferenceNames.UPPER)
+					name = name.toUpperCase();
+				// else do nothing
 			}
 			result = name;
 		}
@@ -103,16 +99,12 @@ public class HTMLNodeActionManager extends XMLNodeActionManager {
 	 */
 	protected void updateCase() {
 		if (model.getModelHandler().getAssociatedContentTypeId().equals(IContentTypeIdentifier.ContentTypeID_HTML)) {
-			Preferences prefs = Platform.getPlugin("com.ibm.sse.model.html").getPluginPreferences(); //$NON-NLS-1$
-			fTagCase = prefs.getString(CommonModelPreferenceNames.TAG_NAME_CASE);
-			fAttrCase = prefs.getString(CommonModelPreferenceNames.ATTR_NAME_CASE);
+			Preferences prefs = HTMLCorePlugin.getDefault().getPluginPreferences(); //$NON-NLS-1$
+			fTagCase = prefs.getInt(CommonModelPreferenceNames.TAG_NAME_CASE);
+			fAttrCase = prefs.getInt(CommonModelPreferenceNames.ATTR_NAME_CASE);
 			//		Element caseSettings = HTMLPreferenceManager.getHTMLInstance().getElement(PreferenceNames.PREFERRED_CASE);
 			//		fTagCase = caseSettings.getAttribute(PreferenceNames.TAGNAME);
 			//		fAttrCase = caseSettings.getAttribute(PreferenceNames.ATTRIBUTENAME);
-		}
-		else {
-			fTagCase = "";//$NON-NLS-1$
-			fAttrCase = "";//$NON-NLS-1$
 		}
 	}
 
