@@ -149,8 +149,18 @@ public class TaglibIndex {
 		_instance.internalRemoveTaglibIndexListener(listener);
 	}
 
-	public static ITaglibRecord resolve(String baseLocation, String reference, boolean crossProjects) {
-		return _instance.internalResolve(baseLocation, reference, crossProjects);
+	/**
+	 * Find a matching ITaglibRecord given the reference.
+	 * 
+	 * @param fullPath -
+	 *            the workspace-relative path for IResources, full filesystem
+	 *            path otherwise
+	 * @param reference
+	 * @param crossProjects
+	 * @return
+	 */
+	public static ITaglibRecord resolve(String fullPath, String reference, boolean crossProjects) {
+		return _instance.internalResolve(fullPath, reference, crossProjects);
 	}
 
 	Map fProjectDescriptions;
@@ -230,20 +240,20 @@ public class TaglibIndex {
 		}
 	}
 
-	private ITaglibRecord internalResolve(String baseLocation, String reference, boolean crossProjects) {
+	private ITaglibRecord internalResolve(String fullPath, String reference, boolean crossProjects) {
 		IProject project = null;
 		ITaglibRecord resolved = null;
-		IFile baseResource = FileBuffers.getWorkspaceFileAtLocation(new Path(baseLocation));
+		IFile baseResource = FileBuffers.getWorkspaceFileAtLocation(new Path(fullPath));
 		if (baseResource != null) {
 			project = baseResource.getProject();
 			ProjectDescription description = createDescription(project);
-			resolved = description.resolve(baseLocation, reference);
+			resolved = description.resolve(fullPath, reference);
 		}
 		else {
 			// try simple file support outside of the workspace
-			File baseFile = FileBuffers.getSystemFileAtLocation(new Path(baseLocation));
+			File baseFile = FileBuffers.getSystemFileAtLocation(new Path(fullPath));
 			if (baseFile != null) {
-				String normalizedReference = URIHelper.normalize(reference, baseLocation, "/"); //$NON-NLS-1$
+				String normalizedReference = URIHelper.normalize(reference, fullPath, "/"); //$NON-NLS-1$
 				if (normalizedReference != null) {
 					TLDRecord record = new TLDRecord();
 					record.location = new Path(normalizedReference);
