@@ -12,60 +12,19 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.ui.internal.views.contentoutline;
 
-import java.util.List;
-
-import org.eclipse.wst.dtd.core.internal.DTDNode;
 import org.eclipse.wst.dtd.core.internal.NodeList;
-import org.eclipse.wst.sse.core.IndexedRegion;
 
 
 /* package */
-class IndexedNodeList implements IndexedRegion {
+class IndexedNodeList {
 	public NodeList fTarget;
 
 	public IndexedNodeList(NodeList target) {
 		fTarget = target;
 	}
 
-	/**
-	 * @see org.eclipse.wst.sse.core.IndexedRegion#contains(int)
-	 */
-	public boolean contains(int testPosition) {
-		return getStartOffset() <= testPosition && testPosition <= getEndOffset();
-	}
-
 	public boolean contains(Object child) {
 		return fTarget.getNodes().contains(child);
-	}
-
-	/**
-	 * @see org.eclipse.wst.sse.core.IndexedRegion#getEndOffset()
-	 */
-	public int getEndOffset() {
-		int end = 0;
-		List nodes = fTarget.getNodes();
-		for (int i = 0; i < nodes.size(); i++) {
-			int thisEnd = ((DTDNode) nodes.get(i)).getEndOffset();
-			if (end < thisEnd)
-				end = thisEnd;
-		}
-		return end;
-	}
-
-	/**
-	 * @see org.eclipse.wst.sse.core.IndexedRegion#getStartOffset()
-	 */
-	public int getStartOffset() {
-		int start = -1;
-		List nodes = fTarget.getNodes();
-		for (int i = 0; i < nodes.size(); i++) {
-			int thisStart = ((DTDNode) nodes.get(i)).getStartOffset();
-			if (start > thisStart || start < 0)
-				start = thisStart;
-		}
-		if (start < 0)
-			start = 0;
-		return start;
 	}
 
 	/**

@@ -683,7 +683,8 @@ public abstract class NodeImpl extends AbstractNotifier implements XMLNode {
 		ReadOnlyController roc = ReadOnlyController.getInstance();
 		if (editable) {
 			roc.unlockData(this);
-		} else {
+		}
+		else {
 			roc.lockData(this);
 		}
 
@@ -792,7 +793,8 @@ public abstract class NodeImpl extends AbstractNotifier implements XMLNode {
 		ReadOnlyController roc = ReadOnlyController.getInstance();
 		if (fDataEditable) {
 			roc.unlockData(this);
-		} else {
+		}
+		else {
 			roc.lockData(this);
 		}
 	}
@@ -804,5 +806,20 @@ public abstract class NodeImpl extends AbstractNotifier implements XMLNode {
 	 */
 	public String toString() {
 		return getNodeName();
+	}
+
+	public int getLength() {
+		int result = -1;
+		int start = getStartOffset();
+		if (start >= 0) {
+			int end = getEndOffset();
+			if (end >= 0) {
+				result = end - start;
+				if (result < -1) {
+					result = -1;
+				}
+			}
+		}
+		return result;
 	}
 }

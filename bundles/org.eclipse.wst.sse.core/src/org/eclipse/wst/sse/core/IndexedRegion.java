@@ -15,7 +15,15 @@ package org.eclipse.wst.sse.core;
 
 
 /**
- * This type is used to indicate positions and lengths in source.
+ * This type is used to indicate positions and lengths in source. Notice that
+ * while getEndOffset and getLength are redundant, given that
+ * <pre>
+ * <code>
+ *      getEndOffset() == getStartOffset() + getLength();
+ * </code>
+ * </pre> 
+ * we provide (require) both since in some cases implementors may be
+ * able to provide one or the other more efficiently.
  * 
  * @since 1.0
  */
@@ -31,17 +39,29 @@ public interface IndexedRegion {
 	boolean contains(int testPosition);
 
 	/**
-	 * ISSUE: should be replaced with getLength, to be consistent
+	 * Can be used to get end offset of source text, relative to beginning of
+	 * documnt. Implementers should return -1 if, or some reason, the region
+	 * is not valid.
 	 * 
-	 * @deprecated -
-	 * @return
+	 * @return endoffset
 	 */
 	int getEndOffset();
 
 	/**
 	 * Can be used to get source postion of beginning of indexed region.
+	 * Implementers should return -1 if, or some reason, the region is not
+	 * valid.
 	 * 
 	 * @return int position of start of index region.
 	 */
 	int getStartOffset();
+
+	/**
+	 * Can be used to get the length of the source text. Implementers should
+	 * return -1 if, or some reason, the region is not valid.
+	 * 
+	 * @return int position of length of index region.
+	 */
+	int getLength();
+
 }

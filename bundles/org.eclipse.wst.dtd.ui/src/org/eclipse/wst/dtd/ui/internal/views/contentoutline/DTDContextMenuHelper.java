@@ -53,7 +53,7 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 public class DTDContextMenuHelper // extends FocusAdapter
 {
 
-	private class DTDMenuListener implements IMenuListener {
+	class DTDMenuListener implements IMenuListener {
 		/*
 		 * (non-Javadoc)
 		 * 
@@ -61,37 +61,38 @@ public class DTDContextMenuHelper // extends FocusAdapter
 		 */
 		public void menuAboutToShow(IMenuManager manager) {
 			updateActions();
-			List selection = DTDContextMenuHelper.this.editor.getSelectedNodes();
+			List selection = DTDContextMenuHelper.this.fEditor.getSelectedNodes();
 			if (selection != null && selection.size() == 1)
 				addActionItemsForSelection(selection.get(0), manager);
 		}
 	}
 
-	protected AddAttributeAction addAttributeAction;
-	protected AddAttributeListAction addAttributeListAction;
-	protected AddCommentAction addCommentAction;
-	protected AddElementAction addElementAction;
-	protected AddElementToContentModelAction addElementToContentModelAction;
-	protected AddEntityAction addEntityAction;
-	protected AddGroupToContentModelAction addGroupToContentModelAction;
-	protected AddNotationAction addNotationAction;
-	protected AddParameterEntityReferenceAction addParameterEntityReferenceAction;
-	protected DeleteAction deleteAction;
+	private AddAttributeAction addAttributeAction;
+	private AddAttributeListAction addAttributeListAction;
+	private AddCommentAction addCommentAction;
+	private AddElementAction addElementAction;
+	private AddElementToContentModelAction addElementToContentModelAction;
+	private AddEntityAction addEntityAction;
+	private AddGroupToContentModelAction addGroupToContentModelAction;
+	private AddNotationAction addNotationAction;
+	private AddParameterEntityReferenceAction addParameterEntityReferenceAction;
+	private DeleteAction deleteAction;
 
-	private StructuredTextEditor editor;
+	// default access, for inner class
+	StructuredTextEditor fEditor;
 
 	private IMenuListener fMenuListener;
-	protected IAction redoAction;
+	private IAction redoAction;
 
 	// protected CutAction cutAction;
 	// protected CopyAction copyAction;
 	// protected PasteAction pasteAction;
-	protected IAction undoAction;
+	private IAction undoAction;
 
 	// private List viewerList = new Vector();
 
 	public DTDContextMenuHelper(StructuredTextEditor editor) {
-		this.editor = editor;
+		this.fEditor = editor;
 		fMenuListener = new DTDMenuListener();
 		addNotationAction = new AddNotationAction(editor, DTDUIPlugin.getResourceString("_UI_ACTION_ADD_DTD_NOTATION")); //$NON-NLS-1$
 		addEntityAction = new AddEntityAction(editor, DTDUIPlugin.getResourceString("_UI_ACTION_ADD_DTD_ENTITY")); //$NON-NLS-1$
@@ -135,8 +136,8 @@ public class DTDContextMenuHelper // extends FocusAdapter
 
 	public void addActionItemsForSelection(Object selectedObject, IMenuManager menu) {
 		if (undoAction == null) {
-			undoAction = editor.getAction(ActionFactory.UNDO.getId());
-			redoAction = editor.getAction(ActionFactory.REDO.getId());
+			undoAction = fEditor.getAction(ActionFactory.UNDO.getId());
+			redoAction = fEditor.getAction(ActionFactory.REDO.getId());
 		}
 
 		menu.add(undoAction);
@@ -154,7 +155,7 @@ public class DTDContextMenuHelper // extends FocusAdapter
 				menu.add(addEntityAction);
 			}
 			else if (folder.getListType().equals(DTDRegionTypes.ELEMENT_TAG)) {
-				LabelValuePair[] availableEntities = ((DTDModelImpl) editor.getModel()).createParmEntityContentItems(null);
+				LabelValuePair[] availableEntities = ((DTDModelImpl) fEditor.getModel()).createParmEntityContentItems(null);
 				addParameterEntityReferenceAction.setEnabled(availableEntities.length > 0);
 
 				menu.add(addElementAction);
@@ -162,7 +163,7 @@ public class DTDContextMenuHelper // extends FocusAdapter
 			}
 		}
 		if (selectedObject instanceof DTDFile || selectedObject == null) {
-			LabelValuePair[] availableEntities = ((DTDModelImpl) editor.getModel()).createParmEntityContentItems(null);
+			LabelValuePair[] availableEntities = ((DTDModelImpl) fEditor.getModel()).createParmEntityContentItems(null);
 			addParameterEntityReferenceAction.setEnabled(availableEntities.length > 0);
 
 			menu.add(addElementAction);

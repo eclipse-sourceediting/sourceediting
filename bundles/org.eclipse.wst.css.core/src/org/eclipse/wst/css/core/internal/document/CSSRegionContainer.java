@@ -76,26 +76,12 @@ abstract class CSSRegionContainer extends CSSNodeImpl {
 	 * @return int
 	 */
 	public int getEndOffset() {
+		int result = -1;
 		ITextRegion region = getLastRegion();
-		if (region == null || fParentRegion == null) {
-			return -1;
+		if (!(region == null || fParentRegion == null)) {
+			result = fParentRegion.getEndOffset(region);
 		}
-		else {
-			return fParentRegion.getEndOffset(region);
-		}
-		/*
-		 * int offset = 0; if (lastRegion != null) offset =
-		 * lastRegion.getEnd();
-		 * 
-		 * CSSStructuredDocumentRegionContainer item = null; ICSSNode node =
-		 * getParentNode(); while (node != null) { if (node instanceof
-		 * CSSStructuredDocumentRegionContainer) item =
-		 * (CSSStructuredDocumentRegionContainer) node; node =
-		 * node.getParentNode(); } if (item != null) { // assumption: regions
-		 * are attached to FIRST node IStructuredDocumentRegion flatNode =
-		 * item.getFirstStructuredDocumentRegion(); if (flatNode != null)
-		 * return (flatNode.getStart() + offset); } return 0;
-		 */
+		return result;
 	}
 
 	IStructuredDocumentRegion getDocumentRegion() {
@@ -166,27 +152,15 @@ abstract class CSSRegionContainer extends CSSNodeImpl {
 	 * @return int
 	 */
 	public int getStartOffset() {
+		int result = -1;
 		ITextRegion region = getFirstRegion();
-		if (region == null || fParentRegion == null) {
-			return -1;
+		if (!(region == null || fParentRegion == null)) {
+			result = fParentRegion.getStartOffset(region);
 		}
-		else {
-			return fParentRegion.getStartOffset(region);
-		}
-		/*
-		 * int offset = 0; if (firstRegion != null) offset =
-		 * firstRegion.getStart();
-		 * 
-		 * CSSStructuredDocumentRegionContainer item = null; ICSSNode node =
-		 * getParentNode(); while (node != null) { if (node instanceof
-		 * CSSStructuredDocumentRegionContainer) item =
-		 * (CSSStructuredDocumentRegionContainer) node; node =
-		 * node.getParentNode(); } if (item != null) { // assumption: regions
-		 * are attached to FIRST node IStructuredDocumentRegion flatNode =
-		 * item.getFirstStructuredDocumentRegion(); if (flatNode != null)
-		 * return (flatNode.getStart() + offset); } return 0;
-		 */
+		return result;
 	}
+
+
 
 	/**
 	 * @param region

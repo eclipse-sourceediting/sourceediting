@@ -36,29 +36,28 @@ import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 
 public class DTDFile implements IndexedRegion {
-	protected NodeList attlistList = new NodeList(this, DTDRegionTypes.ATTLIST_TAG);
-	protected NodeList commentList = new NodeList(this, DTDRegionTypes.COMMENT_START);
+	// private NodeList attlistList = new NodeList(this,
+	// DTDRegionTypes.ATTLIST_TAG);
+	private NodeList commentList = new NodeList(this, DTDRegionTypes.COMMENT_START);
 
 	boolean creatingNewModel = false;
-	protected DTDModelImpl dtdModel;
+	private DTDModelImpl fDTDModel;
 
-	protected NodeList elementList = new NodeList(this, DTDRegionTypes.ELEMENT_TAG);
-	protected NodeList entityList = new NodeList(this, DTDRegionTypes.ENTITY_TAG);
+	private NodeList elementList = new NodeList(this, DTDRegionTypes.ELEMENT_TAG);
+	private NodeList entityList = new NodeList(this, DTDRegionTypes.ENTITY_TAG);
 
-	protected List folderList = null;
+	private List folderList = null;
 
 	private boolean isMovingNode = false;
 
-	protected List lists = new ArrayList();
+	private List modelListeners = new ArrayList();
 
-	protected List modelListeners = new ArrayList();
-
-	protected List nodeList = new ArrayList();
-	protected NodeList notationList = new NodeList(this, DTDRegionTypes.NOTATION_TAG);
-	protected NodeList unrecognizedList = new NodeList(this, DTDRegionTypes.UNKNOWN_CONTENT);
+	private List nodeList = new ArrayList();
+	private NodeList notationList = new NodeList(this, DTDRegionTypes.NOTATION_TAG);
+	private NodeList unrecognizedList = new NodeList(this, DTDRegionTypes.UNKNOWN_CONTENT);
 
 	public DTDFile(DTDModelImpl dtdModel) {
-		this.dtdModel = dtdModel;
+		this.fDTDModel = dtdModel;
 	}
 
 	public void addDTDFileListener(IDTDFileListener listener) {
@@ -239,7 +238,7 @@ public class DTDFile implements IndexedRegion {
 	}
 
 	public DTDModelImpl getDTDModel() {
-		return dtdModel;
+		return fDTDModel;
 	}
 
 	public NodeList getElementsAndParameterEntityReferences() {
@@ -247,11 +246,27 @@ public class DTDFile implements IndexedRegion {
 	}
 
 	public int getEndOffset() {
-		IStructuredDocumentRegion region = getStructuredDocument().getFirstStructuredDocumentRegion();
-		if (region != null)
-			return region.getEndOffset();
-		else
-			return 1;
+		int result = -1;
+		IStructuredDocumentRegion region = getStructuredDocument().getLastStructuredDocumentRegion();
+		if (region != null) {
+			result = region.getEndOffset();
+		}
+		return result;
+	}
+
+	public int getLength() {
+		int result = -1;
+		int start = getStartOffset();
+		if (start >= 0) {
+			int end = getEndOffset();
+			if (end >= 0) {
+				result = end - start;
+				if (result < -1) {
+					result = -1;
+				}
+			}
+		}
+		return result;
 	}
 
 	public NodeList getEntities() {
@@ -352,15 +367,16 @@ public class DTDFile implements IndexedRegion {
 	}
 
 	public int getStartOffset() {
+		int result = -1;
 		IStructuredDocumentRegion region = getStructuredDocument().getFirstStructuredDocumentRegion();
-		if (region != null)
-			return region.getStartOffset();
-		else
-			return 1;
+		if (region != null) {
+			result = region.getStartOffset();
+		}
+		return result;
 	}
 
 	public IStructuredDocument getStructuredDocument() {
-		return dtdModel.getStructuredDocument();
+		return fDTDModel.getStructuredDocument();
 	}
 
 	public DTDNode getTopLevelNodeAt(int offset) {

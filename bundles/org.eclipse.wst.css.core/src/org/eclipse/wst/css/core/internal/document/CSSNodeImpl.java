@@ -556,4 +556,19 @@ abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, Indexed
 	private void setPreviousSibling(ICSSNode previousSibling) {
 		this.fPreviousSibling = (CSSNodeImpl) previousSibling;
 	}
+
+	public int getLength() {
+		int result = -1;
+		int start = getStartOffset();
+		if (start >= 0) {
+			int end = getEndOffset();
+			if (end >= 0) {
+				result = end - start;
+				if (result < -1) {
+					result = -1;
+				}
+			}
+		}
+		return result;
+	}
 }
