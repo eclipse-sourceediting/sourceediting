@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.modelquery;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.common.contentmodel.util.CMDocumentCache;
 import org.eclipse.wst.sse.core.AbstractAdapterFactory;
@@ -63,7 +66,12 @@ public class ModelQueryAdapterFactoryForJSP extends AbstractAdapterFactory imple
 				IStructuredModel model = stateNotifier = xmlNode.getModel();
 				stateNotifier.addModelStateListener(this);
 				CMDocumentCache cmDocumentCache = new CMDocumentCache();
-				IdResolver resolver = new XMLCatalogIdResolver(model.getBaseLocation(), model.getResolver());
+				String baseLocation = model.getBaseLocation();
+				IFile baseFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(model.getBaseLocation()));
+				if (baseFile != null) {
+					baseLocation = baseFile.getLocation().toString();
+				}
+				IdResolver resolver = new XMLCatalogIdResolver(baseLocation, model.getResolver());
 
 				ModelQuery modelQuery = new JSPModelQueryImpl(model, resolver);
 				modelQuery.setEditMode(ModelQuery.EDIT_MODE_UNCONSTRAINED);
@@ -123,7 +131,12 @@ public class ModelQueryAdapterFactoryForJSP extends AbstractAdapterFactory imple
 	}
 
 	protected void updateResolver(IStructuredModel model) {
-		modelQueryAdapterImpl.setIdResolver(new XMLCatalogIdResolver(model.getBaseLocation(), model.getResolver()));
+		String baseLocation = model.getBaseLocation();
+		IFile baseFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(model.getBaseLocation()));
+		if (baseFile != null) {
+			baseLocation = baseFile.getLocation().toString();
+		}
+		modelQueryAdapterImpl.setIdResolver(new XMLCatalogIdResolver(baseLocation, model.getResolver()));
 	}
 
 }
