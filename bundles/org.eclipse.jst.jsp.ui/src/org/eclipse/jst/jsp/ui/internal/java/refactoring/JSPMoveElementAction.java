@@ -26,7 +26,6 @@ import org.eclipse.jdt.internal.ui.refactoring.reorg.ReorgMoveWizard;
 import org.eclipse.jdt.internal.ui.refactoring.reorg.ReorgQueries;
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jst.jsp.ui.StructuredTextEditorJSP;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.ltk.core.refactoring.participants.MoveRefactoring;
@@ -70,8 +69,8 @@ public class JSPMoveElementAction extends TextEditorAction {
 	private IJavaElement[] getSelectedElements() {
 		
 		IJavaElement[] elements = new IJavaElement[0];
-		if(getTextEditor() != null) 
-			elements = ((StructuredTextEditorJSP)getTextEditor()).getJavaElementsForCurrentSelection();
+		if (getTextEditor() != null)
+			elements = JSPJavaSelectionProvider.getSelection(getTextEditor());
 		return elements;
 	}
 	

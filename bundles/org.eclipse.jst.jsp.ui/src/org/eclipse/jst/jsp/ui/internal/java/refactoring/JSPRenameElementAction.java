@@ -18,7 +18,6 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.ui.refactoring.RenameSupport;
-import org.eclipse.jst.jsp.ui.StructuredTextEditorJSP;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.ui.PlatformUI;
@@ -54,9 +53,9 @@ public class JSPRenameElementAction extends TextEditorAction {
 	
 	private IJavaElement getSelectedElement() {
 		IJavaElement element = null;
-		if(getTextEditor() != null) {
-			IJavaElement[] elements = ((StructuredTextEditorJSP)getTextEditor()).getJavaElementsForCurrentSelection();
-			if(elements.length == 1) 
+		if (getTextEditor() != null) {
+			IJavaElement[] elements = JSPJavaSelectionProvider.getSelection(getTextEditor());
+			if (elements.length == 1)
 				element = elements[0];
 		}
 		return element;

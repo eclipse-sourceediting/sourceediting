@@ -82,9 +82,12 @@ public class StructuredTextEditorJSP extends StructuredTextEditor {
 	}
 
 	/**
-	 * Uses JSPTranslation to get currently selected Java elements.
+	 * Uses the input's JSPTranslation to get currently selected Java
+	 * elements.
 	 * 
-	 * @return currently selected IJavaElements
+	 * @return currently selected IJavaElements *
+	 * @deprecated - to be refactored and made to use the editor's selection
+	 *             provider
 	 */
 	public IJavaElement[] getJavaElementsForCurrentSelection() {
 
@@ -92,9 +95,9 @@ public class StructuredTextEditorJSP extends StructuredTextEditor {
 		// get JSP translation object for this viewer's document
 		XMLModel xmlModel = (XMLModel) StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
 		try {
-			if(xmlModel != null) {
+			if (xmlModel != null) {
 				XMLDocument xmlDoc = xmlModel.getDocument();
-	
+
 				JSPTranslationAdapter adapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
 				if (adapter != null) {
 					JSPTranslation translation = adapter.getJSPTranslation();
@@ -121,13 +124,14 @@ public class StructuredTextEditorJSP extends StructuredTextEditor {
 
 		if (getSourceViewer().isEditable()) {
 			String label = JSPUIPlugin.getResourceString("%Refactor.label"); //$NON-NLS-1$ = "Format"
-			MenuManager subMenu = new MenuManager(label, "Refactor"); // menu id //$NON-NLS-1$
+			MenuManager subMenu = new MenuManager(label, "Refactor"); //$NON-NLS-1$
 			addAction(subMenu, IActionConstantsJSP.ACTION_NAME_RENAME_ELEMENT);
 			addAction(subMenu, IActionConstantsJSP.ACTION_NAME_MOVE_ELEMENT);
 			subMenu.add(new GroupMarker(GROUP_NAME_ADDITIONS));
 			menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT, subMenu);
 		}
 	}
+
 	protected void initializeEditor() {
 		super.initializeEditor();
 		setHelpContextId(IHelpContextIds.JSP_SOURCEVIEW_HELPID);
