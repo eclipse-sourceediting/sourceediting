@@ -217,7 +217,7 @@ public class EditNamespaceInfoDialog extends Dialog {
 
 			try {
 				CMDocument document = CMPlugin.getInstance().createCMDocument(grammarURI, "xsd"); //$NON-NLS-1$
-				List namespaceInfoList = (List) document.getProperty("http://com.ibm.etools/cm/properties/namespaceInfo"); //$NON-NLS-1$
+				List namespaceInfoList = (List) document.getProperty("http://org.eclipse.wst/cm/properties/namespaceInfo"); //$NON-NLS-1$
 				NamespaceInfo info = (NamespaceInfo) namespaceInfoList.get(0);
 				if (uriField.getText().trim().length() == 0 && info.uri != null) {
 					uriField.setText(info.uri);

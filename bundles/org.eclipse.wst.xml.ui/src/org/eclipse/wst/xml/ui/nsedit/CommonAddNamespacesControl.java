@@ -150,7 +150,7 @@ public class CommonAddNamespacesControl extends Composite implements SelectionLi
 					//TODO CMDocument document =
 					// CMDocumentBuilderRegistry.getInstance().buildCMDocument(grammarURI);
 					//				 List namespaceInfoList =
-					// (List)document.getProperty("http://com.ibm.etools/cm/properties/namespaceInfo");
+					// (List)document.getProperty("http://org.eclipse.wst/cm/properties/namespaceInfo");
 					//				 NamespaceInfo info =
 					// (NamespaceInfo)namespaceInfoList.get(0);
 					//				 if (uriField.getText().trim().length() == 0 && info.uri

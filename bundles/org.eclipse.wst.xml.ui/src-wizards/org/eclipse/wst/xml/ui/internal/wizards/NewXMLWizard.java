@@ -616,7 +616,7 @@ public class NewXMLWizard extends NewModelWizard
               Arrays.sort(nameNodeArray, Collator.getInstance());
             }
 
-            String defaultRootName = (String) (generator.getCMDocument()).getProperty("http://com.ibm.etools/cm/properties/defaultRootName");
+            String defaultRootName = (String) (generator.getCMDocument()).getProperty("http://org.eclipse.wst/cm/properties/defaultRootName");
             int defaultRootIndex = -1;
             combo.removeAll();
 

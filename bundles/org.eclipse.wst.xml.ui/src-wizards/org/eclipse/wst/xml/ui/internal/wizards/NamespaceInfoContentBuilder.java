@@ -32,7 +32,7 @@ public class NamespaceInfoContentBuilder extends ContentBuilder
    
     public void visitCMElementDeclaration(CMElementDeclaration ed)
     {                      
-      if (ed.getProperty("http://com.ibm.etools/cm/properties/definitionInfo") != null)
+      if (ed.getProperty("http://org.eclipse.wst/cm/properties/definitionInfo") != null)
       {
         super.visitCMElementDeclaration(ed);
       }

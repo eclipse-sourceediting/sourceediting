@@ -210,7 +210,7 @@ public class NewXMLGenerator
     XMLCatalog xmlCatalog = XMLCatalogPlugin.getInstance().getDefaultXMLCatalog();
     if (cmDocument != null)
     {  
-      result = (List)cmDocument.getProperty("http://com.ibm.etools/cm/properties/namespaceInfo");
+      result = (List)cmDocument.getProperty("http://org.eclipse.wst/cm/properties/namespaceInfo");
       if (result != null)
       {
         int size = result.size();
