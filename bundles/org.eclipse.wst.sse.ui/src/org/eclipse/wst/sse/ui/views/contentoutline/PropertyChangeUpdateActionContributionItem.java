@@ -20,7 +20,8 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.texteditor.IUpdate;
 
 /**
- * A listerner
+ * A listener on the given action's PreferenceStore. It calls .update() on the
+ * action when the given key changes value.
  */
 public class PropertyChangeUpdateActionContributionItem extends ActionContributionItem {
 

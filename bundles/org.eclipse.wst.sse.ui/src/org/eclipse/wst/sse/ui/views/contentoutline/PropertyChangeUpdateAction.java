@@ -21,7 +21,7 @@ import org.eclipse.ui.texteditor.IUpdate;
  * An IAction.AS_CHECK_BOX action that sets and gets its checked state along
  * with a value from a preference store. Should be used with
  * PropertyChangeUpdateActionContributionItem to listen to changes in the
- * store.
+ * store and update the checked state from PropertyChangeEvents.
  */
 public class PropertyChangeUpdateAction extends Action implements IUpdate {
 	private String fPreferenceKey;
