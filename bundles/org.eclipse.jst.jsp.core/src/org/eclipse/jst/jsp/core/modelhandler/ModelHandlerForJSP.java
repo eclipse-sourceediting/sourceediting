@@ -14,7 +14,6 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jst.jsp.core.encoding.JSPDocumentHeadContentDetector;
 import org.eclipse.jst.jsp.core.encoding.JSPDocumentLoader;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
-import org.eclipse.jst.jsp.core.internal.document.DocumentLoaderForJSP;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.ModelLoader;
@@ -66,10 +65,7 @@ public class ModelHandlerForJSP extends AbstractModelHandler {
 	}
 
 	public IDocumentLoader getDocumentLoader() {
-		if (USE_FILE_BUFFERS)
-			return new DocumentLoaderForJSP();
-		else
-			return new JSPDocumentLoader();
+		return new JSPDocumentLoader();
 	}
 
 }
