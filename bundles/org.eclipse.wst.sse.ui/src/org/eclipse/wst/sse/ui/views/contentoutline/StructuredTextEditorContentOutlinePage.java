@@ -41,6 +41,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.ActionFactory;
@@ -83,7 +84,8 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 			// check if we're on a Display Thread
 			if (Display.getCurrent() != null) {
 				setRedraw(doRedraw);
-			} else {
+			}
+			else {
 				final boolean redrawOrNot = doRedraw;
 				Runnable modifyRedraw = new Runnable() {
 					public void run() {
@@ -137,11 +139,11 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 	protected SourceEditorTreeViewer fTreeViewer;
 	protected ViewerSelectionManager fViewerSelectionManager;
 
-	//private IModelStateListener fInternalModelStateListener;
+	// private IModelStateListener fInternalModelStateListener;
 
 	public StructuredTextEditorContentOutlinePage() {
 		super();
-		//fInternalModelStateListener = new ControlRedrawEnabler();
+		// fInternalModelStateListener = new ControlRedrawEnabler();
 		fSelection = StructuredSelection.EMPTY;
 	}
 
@@ -172,14 +174,19 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 			}
 		});
 		fTreeViewer.addPostSelectionChangedListener(this);
+
+		IEditorPart ownerEditor = getSite().getWorkbenchWindow().getActivePage().getActiveEditor();
+		if (ownerEditor != null) {
+			getSite().registerContextMenu(ownerEditor.getEditorSite().getId() + "#outlinecontext", fContextMenuManager, this);
+		}
 	}
 
 	public void dispose() {
 		super.dispose();
 		// remove this text viewer from the old model's list of model state
 		// listeners
-		//if (fModel != null)
-		//	fModel.removeModelStateListener(fInternalModelStateListener);
+		// if (fModel != null)
+		// fModel.removeModelStateListener(fInternalModelStateListener);
 		// disconnect from the ViewerSelectionManager
 		if (fViewerSelectionManager != null) {
 			fViewerSelectionManager.removeNodeSelectionListener(this);
@@ -437,9 +444,9 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 	 */
 	public void setModel(IStructuredModel newModel) {
 		if (newModel != fModel) {
-			//if (fModel != null) {
-			//	fModel.removeModelStateListener(fInternalModelStateListener);
-			//}
+			// if (fModel != null) {
+			// fModel.removeModelStateListener(fInternalModelStateListener);
+			// }
 			IJFaceNodeAdapterFactory adapterFactory = getViewerRefreshFactory();
 			if (adapterFactory != null) {
 				adapterFactory.removeListener(fTreeViewer);
@@ -450,7 +457,7 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 				fTreeViewer.setInput(fModel);
 				update();
 			}
-			//fModel.addModelStateListener(fInternalModelStateListener);
+			// fModel.addModelStateListener(fInternalModelStateListener);
 			adapterFactory = getViewerRefreshFactory();
 			if (adapterFactory != null) {
 				adapterFactory.addListener(fTreeViewer);
@@ -482,7 +489,8 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 			if (!fSelection.equals(selection)) {
 				if (selection == null || ((IStructuredSelection) selection).getFirstElement() == null) {
 					fSelection = StructuredSelection.EMPTY;
-				} else {
+				}
+				else {
 					fSelection = selection;
 				}
 				getTreeViewer().setSelection(fSelection, reveal);
