@@ -123,6 +123,9 @@ public abstract class SelectionDispatchAction extends Action implements ISelecti
 			Object object = selection.getFirstElement();
 			setEnabled(canEnable(object));
 		}
+		else{
+			setEnabled(false);
+		}
 	}
 	
 	protected boolean canEnable(Object selectedObject){

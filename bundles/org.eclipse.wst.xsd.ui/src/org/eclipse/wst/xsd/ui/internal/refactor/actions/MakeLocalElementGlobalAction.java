@@ -17,7 +17,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.eclipse.wst.xsd.ui.internal.XSDEditor;
-import org.eclipse.wst.xsd.ui.internal.XSDTextEditor;
 import org.eclipse.wst.xsd.ui.internal.commands.MakeLocalElementGlobalCommand;
 import org.eclipse.wst.xsd.ui.internal.refactor.RefactoringMessages;
 import org.eclipse.xsd.XSDConcreteComponent;
@@ -57,6 +56,10 @@ public class MakeLocalElementGlobalAction extends SelectionDispatchAction {
 
 	public void selectionChanged(ITextSelection selection) {
 
+		if(fEditor == null){
+			setEnabled(false);
+			return;
+		}
 		List elements = fEditor.getSelectedNodes();
 		if (elements.size() == 1) {
 			Object object = elements.get(0);
@@ -65,8 +68,9 @@ public class MakeLocalElementGlobalAction extends SelectionDispatchAction {
 
 	}
 
-	protected boolean canEnable(Object selectedObject) {
+	protected boolean canEnable(XSDConcreteComponent selectedObject) {
 
+		if(fEditor == null) return false;
 		if (selectedObject instanceof XSDElementDeclaration) {
 			XSDElementDeclaration element = (XSDElementDeclaration) selectedObject;
 			if (!element.isElementDeclarationReference() && !element.isGlobal()) {
@@ -75,6 +79,7 @@ public class MakeLocalElementGlobalAction extends SelectionDispatchAction {
 			}
 		} else if (selectedObject instanceof Node) {
 			Node node = (Node) selectedObject;
+			
 			XSDConcreteComponent concreteComponent = fEditor.getXSDSchema()
 					.getCorrespondingComponent(node);
 			if (selectedObject instanceof XSDElementDeclaration) {
@@ -88,10 +93,25 @@ public class MakeLocalElementGlobalAction extends SelectionDispatchAction {
 		}
 		return false;
 	}
+	
+	protected boolean canEnable(Object selectedObject) {
+		
+		if(fEditor == null) return false;
+		if (selectedObject instanceof XSDConcreteComponent) {
+			return canEnable((XSDConcreteComponent)selectedObject);
+		}
+		else if (selectedObject instanceof Node) {
+			Node node = (Node) selectedObject;
+			XSDConcreteComponent concreteComponent = fEditor.getXSDSchema()
+					.getCorrespondingComponent(node);
+			return canEnable((XSDConcreteComponent)selectedObject);
+		}
+		return false;
+		
+	}
+
 
 	public void run() {
-		fEditor.getTextEditor().getViewerSelectionManager().removeNodeSelectionListener((XSDTextEditor)fEditor.getTextEditor());
-		
 		DocumentImpl doc = (DocumentImpl) fSelectedComponent.getElement()
 				.getOwnerDocument();
 		doc.getModel().beginRecording(this, getText());
@@ -99,9 +119,6 @@ public class MakeLocalElementGlobalAction extends SelectionDispatchAction {
 				fSelectedComponent);
 		command.run();
 		doc.getModel().endRecording(this);
-		fEditor.getTextEditor().getViewerSelectionManager().addNodeSelectionListener((XSDTextEditor)fEditor.getTextEditor());
-		
-
 	}
 
 }
