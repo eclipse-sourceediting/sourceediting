@@ -15,10 +15,10 @@ import java.io.Reader;
 
 import junit.framework.TestCase;
 
-import org.eclipse.wst.xml.core.contenttype.EncodingParserConstants;
-import org.eclipse.wst.xml.core.contenttype.XMLHeadTokenizerConstants;
+import org.eclipse.wst.xml.core.internal.contenttype.EncodingParserConstants;
 import org.eclipse.wst.xml.core.internal.contenttype.HeadParserToken;
 import org.eclipse.wst.xml.core.internal.contenttype.XMLHeadTokenizer;
+import org.eclipse.wst.xml.core.internal.contenttype.XMLHeadTokenizerConstants;
 import org.eclipse.wst.xml.tests.encoding.TestsPlugin;
 
 

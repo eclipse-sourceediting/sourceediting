@@ -34,7 +34,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
+import org.eclipse.wst.html.core.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IndexedRegion;
@@ -359,7 +359,7 @@ public class ViewerTestHTML extends ViewPart {
 		stopFollowSelection(); // if was following selection, stop
 
 		IModelManager modelManager = StructuredModelManager.getModelManager();
-		IDocument doc = modelManager.createStructuredDocumentFor(IContentTypeIdentifier.ContentTypeID_HTML);
+		IDocument doc = modelManager.createStructuredDocumentFor(ContentTypeIdForHTML.ContentTypeID_HTML);
 		doc.set(DEFAULT_VIEWER_CONTENTS);
 
 		fSourceViewer.setDocument(doc);

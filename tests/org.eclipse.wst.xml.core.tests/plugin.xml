@@ -32,9 +32,6 @@
 		<file-association
 			content-type="org.eclipse.core.runtime.xml"
 			file-extensions="fragx"/>
-		<file-association
-			content-type="org.eclipse.wst.xml.core.xmlsource"
-			file-extensions="fragx"/>
 	</extension>		 
 
 

@@ -34,7 +34,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -43,6 +42,7 @@ import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.view.events.INodeSelectionListener;
 import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
 import org.eclipse.wst.sse.ui.views.contentoutline.StructuredTextEditorContentOutlinePage;
+import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
 import org.w3c.dom.Attr;
 
@@ -77,8 +77,7 @@ public class ViewerTestXML extends ViewPart {
 				fSourceViewer.resetVisibleRegion();
 				fSourceViewer.setVisibleRegion(start, end - start);
 				fSourceViewer.setSelectedRange(start, 0);
-			}
-			else {
+			} else {
 				fSourceViewer.resetVisibleRegion();
 			}
 		}
@@ -119,30 +118,30 @@ public class ViewerTestXML extends ViewPart {
 			length.setText("" + lengthValue);
 			length.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-			//			start.addModifyListener(new ModifyListener() {
-			//				public void modifyText(ModifyEvent e) {
-			//					if (e.widget == start) {
-			//						try {
-			//							startValue = Integer.decode(start.getText()).intValue();
-			//						}
-			//						catch (NumberFormatException e2) {
-			//							startValue = 0;
-			//						}
-			//					}
-			//				}
-			//			});
-			//			length.addModifyListener(new ModifyListener() {
-			//				public void modifyText(ModifyEvent e) {
-			//					if (e.widget == length) {
-			//						try {
-			//							lengthValue = Integer.decode(length.getText()).intValue();
-			//						}
-			//						catch (NumberFormatException e2) {
-			//							lengthValue = 0;
-			//						}
-			//					}
-			//				}
-			//			});
+			// start.addModifyListener(new ModifyListener() {
+			// public void modifyText(ModifyEvent e) {
+			// if (e.widget == start) {
+			// try {
+			// startValue = Integer.decode(start.getText()).intValue();
+			// }
+			// catch (NumberFormatException e2) {
+			// startValue = 0;
+			// }
+			// }
+			// }
+			// });
+			// length.addModifyListener(new ModifyListener() {
+			// public void modifyText(ModifyEvent e) {
+			// if (e.widget == length) {
+			// try {
+			// lengthValue = Integer.decode(length.getText()).intValue();
+			// }
+			// catch (NumberFormatException e2) {
+			// lengthValue = 0;
+			// }
+			// }
+			// }
+			// });
 
 			return composite;
 		}
@@ -155,14 +154,12 @@ public class ViewerTestXML extends ViewPart {
 		protected void okPressed() {
 			try {
 				startValue = Integer.decode(start.getText()).intValue();
-			}
-			catch (NumberFormatException e2) {
+			} catch (NumberFormatException e2) {
 				startValue = 0;
 			}
 			try {
 				lengthValue = Integer.decode(length.getText()).intValue();
-			}
-			catch (NumberFormatException e2) {
+			} catch (NumberFormatException e2) {
 				lengthValue = 0;
 			}
 			super.okPressed();
@@ -226,19 +223,19 @@ public class ViewerTestXML extends ViewPart {
 			});
 			mgr.add(new Separator());
 			// no longer able to set input to NULL
-			//			mgr.add(new Action() {
-			//				public String getText() {
-			//					return getToolTipText();
-			//				}
+			// mgr.add(new Action() {
+			// public String getText() {
+			// return getToolTipText();
+			// }
 			//
-			//				public String getToolTipText() {
-			//					return "Set Input to NULL";
-			//				}
-			//				public void run() {
-			//					super.run();
-			//					viewer.setInput(null);
-			//				}
-			//			});
+			// public String getToolTipText() {
+			// return "Set Input to NULL";
+			// }
+			// public void run() {
+			// super.run();
+			// viewer.setInput(null);
+			// }
+			// });
 			mgr.add(new Action() {
 				public String getText() {
 					return getToolTipText();
@@ -361,7 +358,7 @@ public class ViewerTestXML extends ViewPart {
 
 		IModelManager modelManager = StructuredModelManager.getModelManager();
 
-		IDocument doc = modelManager.createStructuredDocumentFor(IContentTypeIdentifier.ContentTypeID_SSEXML);
+		IDocument doc = modelManager.createStructuredDocumentFor(ContentTypeIdForXML.ContentTypeID_XML);
 		doc.set(DEFAULT_VIEWER_CONTENTS);
 
 		fSourceViewer.setDocument(doc);

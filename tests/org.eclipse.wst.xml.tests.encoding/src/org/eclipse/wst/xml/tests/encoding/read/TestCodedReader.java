@@ -29,7 +29,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.wst.common.encoding.CodedReaderCreator;
-import org.eclipse.wst.common.encoding.EncodingMemento;
 import org.eclipse.wst.common.encoding.IContentDescriptionExtended;
 import org.eclipse.wst.common.encoding.NonContentBasedEncodingRules;
 import org.eclipse.wst.xml.tests.encoding.TestsPlugin;
@@ -37,10 +36,10 @@ import org.eclipse.wst.xml.tests.encoding.util.ProjectUnzipUtility;
 
 
 public class TestCodedReader extends TestCase {
-	//	private final String fileDir = "html/";
-	//	private final String fileRoot =
+	// private final String fileDir = "html/";
+	// private final String fileRoot =
 	// "/builds/Workspaces/HeadWorkspace/org.eclipse.wst.xml.tests.encoding/";
-	//	private final String fileLocation = fileRoot + fileDir;
+	// private final String fileLocation = fileRoot + fileDir;
 	private static final boolean DEBUG = false;
 	private static final boolean DEBUG_TEST_DETAIL = false;
 	// needs to be static, since JUnit creates difference instances for each
@@ -54,11 +53,9 @@ public class TestCodedReader extends TestCase {
 		String result = foundCharset;
 		if ("UTF-16LE".equals(foundCharset)) {
 			result = "UTF-16";
-		}
-		else if ("X-UnicodeLittle".equals(foundCharset)) {
+		} else if ("X-UnicodeLittle".equals(foundCharset)) {
 			result = "UTF-16";
-		}
-		else if ("X-UnicodeBig".equals(foundCharset)) {
+		} else if ("X-UnicodeBig".equals(foundCharset)) {
 			result = "UTF-16BE";
 		}
 
@@ -66,21 +63,21 @@ public class TestCodedReader extends TestCase {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	public TestCodedReader() {
 		super();
-		//System.out.println(currentPlatformCharset);
+		// System.out.println(currentPlatformCharset);
 	}
 
 	public static void main(String[] args) {
-		//		try {
-		//			new TestCodedReader().doAllFiles();
-		//		} catch (CoreException e) {
-		//			e.printStackTrace();
-		//		} catch (IOException e) {
-		//			e.printStackTrace();
-		//		}
+		// try {
+		// new TestCodedReader().doAllFiles();
+		// } catch (CoreException e) {
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// }
 	}
 
 	private static void createProject(IProject project, IPath locationPath, IProgressMonitor monitor) throws CoreException {
@@ -103,8 +100,7 @@ public class TestCodedReader extends TestCase {
 				project.open(monitor);
 				monitor = null;
 			}
-		}
-		finally {
+		} finally {
 			if (monitor != null) {
 				monitor.done();
 			}
@@ -112,20 +108,20 @@ public class TestCodedReader extends TestCase {
 	}
 
 	private static void getAndCreateProject() throws CoreException {
-		//TestsPlugin testsPlugin = (TestsPlugin)
+		// TestsPlugin testsPlugin = (TestsPlugin)
 		// Platform.getPlugin("org.eclipse.wst.xml.tests.encoding");
 		IWorkspace workspace = TestsPlugin.getWorkspace();
 		IWorkspaceRoot root = workspace.getRoot();
 		fTestProject = root.getProject(TEST_PROJECT_NAME);
 		// this form creates project as "linked" back to 'fileRoot'
-		//createProject(testProject, new Path(fileRoot), null);
+		// createProject(testProject, new Path(fileRoot), null);
 		createProject(fTestProject, null, null);
 		fTestProject.refreshLocal(IResource.DEPTH_INFINITE, null);
 		assertTrue(fTestProject.exists());
-		//		IContainer dotestFiles = testProject.getFolder("dotestFiles");
-		//		assertTrue(dotestFiles.exists());
-		//		IResource[] allFolders = dotestFiles.members();
-		//		assertNotNull(allFolders);
+		// IContainer dotestFiles = testProject.getFolder("dotestFiles");
+		// assertTrue(dotestFiles.exists());
+		// IResource[] allFolders = dotestFiles.members();
+		// assertNotNull(allFolders);
 	}
 
 	private StringBuffer readInputStream(Reader reader) throws IOException {
@@ -161,19 +157,19 @@ public class TestCodedReader extends TestCase {
 		nSetups--;
 		if (nSetups == 0) {
 			if (!DEBUG) {
-				//				Display display = PlatformUI.getWorkbench().getDisplay();
-				//				display.asyncExec(new Runnable() {
-				//					public void run() {
-				//						ProjectUnzipUtility projUtil = new ProjectUnzipUtility();
-				//						IProject proj = fTestProject;
-				//						fTestProject = null;
-				//						try {
-				//							projUtil.deleteProject(proj);
-				//						} catch (Exception e) {
-				//							e.printStackTrace();
-				//						}
-				//					}
-				//				});
+				// Display display = PlatformUI.getWorkbench().getDisplay();
+				// display.asyncExec(new Runnable() {
+				// public void run() {
+				// ProjectUnzipUtility projUtil = new ProjectUnzipUtility();
+				// IProject proj = fTestProject;
+				// fTestProject = null;
+				// try {
+				// projUtil.deleteProject(proj);
+				// } catch (Exception e) {
+				// e.printStackTrace();
+				// }
+				// }
+				// });
 			}
 		}
 	}
@@ -196,19 +192,16 @@ public class TestCodedReader extends TestCase {
 
 		try {
 			reader = doCoreTest(expectedJavaCharset, expectedDetectedCharset, file);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			if (expectedException != null) {
 				boolean result = expectedException.isInstance(e);
 				assertTrue("Unexpected Exception: " + getGoodFullMsg(e), result);
-			}
-			else {
+			} else {
 				// will alway assert if gets to here
 				String msg = getGoodFullMsg(e);
 				assertNull("Unexpected Exception: " + msg, e);
 			}
-		}
-		finally {
+		} finally {
 			if (reader != null) {
 				reader.close();
 			}
@@ -225,12 +218,11 @@ public class TestCodedReader extends TestCase {
 
 		String javaCharsetName = file.getCharset();
 		javaCharsetName = massageCharset(javaCharsetName);
-		//codedReaderCreator.getEncodingMemento().getJavaCharsetName();
+		// codedReaderCreator.getEncodingMemento().getJavaCharsetName();
 		if (expectedJavaCharset.equals("expectPlatformCharset")) {
 			String platformDefault = NonContentBasedEncodingRules.useDefaultNameRules(null);
 			assertTrue(javaCharsetName.equals(platformDefault));
-		}
-		else {
+		} else {
 			boolean asExpected = javaCharsetName.equals(expectedJavaCharset);
 			assertTrue(javaCharsetName + " did not equal the expected " + expectedJavaCharset + " (this is a VM dependent test)", asExpected);
 		}
@@ -238,14 +230,13 @@ public class TestCodedReader extends TestCase {
 		String javaCharsetNameProperty = (String) description.getProperty(IContentDescription.CHARSET);
 		String detectedCharsetNameProperty = getDetectedCharsetName(description);
 		detectedCharsetNameProperty = massageCharset(detectedCharsetNameProperty);
-		//		if (detectedCharsetName == null) {
-		//			detectedCharsetName = javaCharsetNameProperty;
-		//		}
+		// if (detectedCharsetName == null) {
+		// detectedCharsetName = javaCharsetNameProperty;
+		// }
 		if (!expectedJavaCharset.equals("expectPlatformCharset")) {
 			boolean expecedResult = expectedJavaCharset.equals(javaCharsetNameProperty);
 			assertTrue("java based charset name was not as expected", expecedResult);
-		}
-		else {
+		} else {
 			String expectedDefault = NonContentBasedEncodingRules.useDefaultNameRules(null);
 			boolean ExpectedResult = expectedDefault.equals(javaCharsetNameProperty);
 			assertTrue("java based charset name not as expected when platform default expected", ExpectedResult);
@@ -269,14 +260,7 @@ public class TestCodedReader extends TestCase {
 	 */
 	private String getDetectedCharsetName(IContentDescription description) {
 		String result = null;
-		EncodingMemento encodingMemento = (EncodingMemento) description.getProperty(IContentDescriptionExtended.ENCODING_MEMENTO);
-		if (encodingMemento == null) {
-			result = (String) description.getProperty(IContentDescriptionExtended.DETECTED_CHARSET);
-		}
-		else {
-			result = encodingMemento.getDetectedCharsetName();
-		}
-
+		result = (String) description.getProperty(IContentDescriptionExtended.DETECTED_CHARSET);
 		return result;
 	}
 
@@ -514,17 +498,20 @@ public class TestCodedReader extends TestCase {
 		doTest("EUC-JP", "EUC-JP", "testfiles/xml/eucjp.xml", null);
 	}
 
-//	public void testFile105() throws CoreException, IOException {
-//		doTest("ISO-8859-1", "ISO-8859-1", "testfiles/xml/IllformedNormalNonDefault.xml", null);
-//	}
+	// public void testFile105() throws CoreException, IOException {
+	// doTest("ISO-8859-1", "ISO-8859-1",
+	// "testfiles/xml/IllformedNormalNonDefault.xml", null);
+	// }
 
-//	public void testFile106() throws CoreException, IOException {
-//		doTest("UTF-8", "UTF-8", "testfiles/xml/MalformedNoEncoding.xml", CharacterCodingException.class);
-//	}
+	// public void testFile106() throws CoreException, IOException {
+	// doTest("UTF-8", "UTF-8", "testfiles/xml/MalformedNoEncoding.xml",
+	// CharacterCodingException.class);
+	// }
 
-//	public void testFile107() throws CoreException, IOException {
-//		doTest("UTF-8", "UTF-8", "testfiles/xml/MalformedNoEncoding.xsl", CharacterCodingException.class);
-//	}
+	// public void testFile107() throws CoreException, IOException {
+	// doTest("UTF-8", "UTF-8", "testfiles/xml/MalformedNoEncoding.xsl",
+	// CharacterCodingException.class);
+	// }
 
 	public void testFile108() throws CoreException, IOException {
 		doTest("UTF-8", "UTF-8", "testfiles/xml/NoEncoding.xml", null);
@@ -546,17 +533,18 @@ public class TestCodedReader extends TestCase {
 		doTest("UTF-8", "UTF-8", "testfiles/xml/testExtraValidStuff.xml", null);
 	}
 
-//	public void testFile113() throws CoreException, IOException {
-//		doTest("UTF-8", "UTF-8", "testfiles/xml/testIllFormed.xml", null);
-//	}
+	// public void testFile113() throws CoreException, IOException {
+	// doTest("UTF-8", "UTF-8", "testfiles/xml/testIllFormed.xml", null);
+	// }
 
 	public void testFile114() throws CoreException, IOException {
 		doTest("UTF-8", "UTF-8", "testfiles/xml/testIllFormed2.xml", null);
 	}
 
-//	public void testFile115() throws CoreException, IOException {
-//		doTest("null", "null", "testfiles/xml/testIllFormed3.xml", UnsupportedCharsetExceptionWithDetail.class);
-//	}
+	// public void testFile115() throws CoreException, IOException {
+	// doTest("null", "null", "testfiles/xml/testIllFormed3.xml",
+	// UnsupportedCharsetExceptionWithDetail.class);
+	// }
 
 	public void testFile116() throws CoreException, IOException {
 		doTest("UTF-8", "UTF-8", "testfiles/xml/testIllFormed4.xml", null);
@@ -586,25 +574,31 @@ public class TestCodedReader extends TestCase {
 		doTest("UTF-8", "UTF-8", "testfiles/xml/testNoXMLDeclInLargeFile.xml", null);
 	}
 
-//	public void testFile123() throws CoreException, IOException {
-//		doTest("UTF-16BE", "UTF-16BE", "testfiles/xml/testUTF16.xml", CharacterCodingException.class);
-//	}
+	// public void testFile123() throws CoreException, IOException {
+	// doTest("UTF-16BE", "UTF-16BE", "testfiles/xml/testUTF16.xml",
+	// CharacterCodingException.class);
+	// }
 
-//	public void testFile124() throws CoreException, IOException {
-//		doTest("UTF-16LE", "UTF-16LE", "testfiles/xml/UTF16LEAtStartOfLargeFile.xml", null);
-//	}
+	// public void testFile124() throws CoreException, IOException {
+	// doTest("UTF-16LE", "UTF-16LE",
+	// "testfiles/xml/UTF16LEAtStartOfLargeFile.xml", null);
+	// }
 
-//	public void testFile125() throws CoreException, IOException {
-//		doTest("UTF-16LE", "UTF-16LE", "testfiles/xml/utf16UnicodeStreamWithNoEncodingInHeader2.xml", null);
-//	}
+	// public void testFile125() throws CoreException, IOException {
+	// doTest("UTF-16LE", "UTF-16LE",
+	// "testfiles/xml/utf16UnicodeStreamWithNoEncodingInHeader2.xml", null);
+	// }
 
-//	public void testFile126() throws CoreException, IOException {
-//		doTest("UTF-16BE", "UTF-16BE", "testfiles/xml/utf16UnicodeStreamWithNoEncodingInHeaderBE.xml", CharacterCodingException.class);
-//	}
+	// public void testFile126() throws CoreException, IOException {
+	// doTest("UTF-16BE", "UTF-16BE",
+	// "testfiles/xml/utf16UnicodeStreamWithNoEncodingInHeaderBE.xml",
+	// CharacterCodingException.class);
+	// }
 
-//	public void testFile127() throws CoreException, IOException {
-//		doTest("UTF-16BE", "UTF-16BE", "testfiles/xml/utf16WithJapaneseChars.xml", null);
-//	}
+	// public void testFile127() throws CoreException, IOException {
+	// doTest("UTF-16BE", "UTF-16BE",
+	// "testfiles/xml/utf16WithJapaneseChars.xml", null);
+	// }
 
 	public void testFile128() throws CoreException, IOException {
 		doTest("UTF-8", "UTF-8", "testfiles/xml/UTF8With3ByteBOM.xml", null);

@@ -27,7 +27,7 @@ import junit.framework.TestCase;
 import org.eclipse.wst.common.encoding.EncodingMemento;
 import org.eclipse.wst.common.encoding.IResourceCharsetDetector;
 import org.eclipse.wst.common.encoding.exceptions.MalformedInputExceptionWithDetail;
-import org.eclipse.wst.xml.core.contenttype.XMLResourceEncodingDetector;
+import org.eclipse.wst.xml.core.internal.contenttype.XMLResourceEncodingDetector;
 import org.eclipse.wst.xml.tests.encoding.TestsPlugin;
 
 

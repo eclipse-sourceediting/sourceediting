@@ -27,7 +27,7 @@ import org.eclipse.wst.common.encoding.EncodingMemento;
 import org.eclipse.wst.common.encoding.IResourceCharsetDetector;
 import org.eclipse.wst.html.core.internal.contenttype.HTMLResourceEncodingDetector;
 import org.eclipse.wst.html.tests.encoding.HTMLEncodingTestsPlugin;
-import org.eclipse.wst.xml.core.contenttype.XMLResourceEncodingDetector;
+import org.eclipse.wst.xml.core.internal.contenttype.XMLResourceEncodingDetector;
 
 public class HTMLEncodingTests extends TestCase {
 
