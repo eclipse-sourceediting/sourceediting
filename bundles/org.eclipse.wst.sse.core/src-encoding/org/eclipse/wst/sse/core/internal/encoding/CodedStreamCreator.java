@@ -34,8 +34,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.internal.encoding.util.Assert;
-import org.eclipse.wst.sse.core.internal.encoding.util.CodedResourcePlugin;
 import org.eclipse.wst.sse.core.internal.encoding.util.Logger;
 import org.eclipse.wst.sse.core.internal.exceptions.CharConversionErrorWithDetail;
 import org.eclipse.wst.sse.core.internal.exceptions.MalformedOutputExceptionWithDetail;
@@ -354,7 +354,7 @@ public class CodedStreamCreator extends CodedIO {
 	}
 
 	private boolean get3ByteBOMPreference() {
-		return CodedResourcePlugin.getDefault().getPluginPreferences().getBoolean(CommonEncodingPreferenceNames.USE_3BYTE_BOM_WITH_UTF8);
+		return SSECorePlugin.getDefault().getPluginPreferences().getBoolean(CommonEncodingPreferenceNames.USE_3BYTE_BOM_WITH_UTF8);
 	}
 
 	public ByteArrayOutputStream getCodedByteArrayOutputStream() throws CoreException, IOException {

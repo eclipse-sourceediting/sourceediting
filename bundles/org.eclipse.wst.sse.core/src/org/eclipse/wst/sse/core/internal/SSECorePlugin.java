@@ -104,6 +104,12 @@ public class SSECorePlugin extends Plugin implements IModelManagerPlugin {
 		prefs.setDefault(CommonModelPreferenceNames.TASK_TAG_ENABLE, false);
 		prefs.setDefault(CommonModelPreferenceNames.TASK_TAG_TAGS, "TODO,FIXME,XXX"); //$NON-NLS-1$
 		prefs.setDefault(CommonModelPreferenceNames.TASK_TAG_PRIORITIES, "1,2,1"); //$NON-NLS-1$
+		
+		initializeDefaultPluginPreferencesForEncoding(prefs);
+		
+	}
+	private void initializeDefaultPluginPreferencesForEncoding(Preferences prefs) {
+		prefs.setDefault(CommonEncodingPreferenceNames.USE_3BYTE_BOM_WITH_UTF8, false);
 	}
 	
 	/* (non-Javadoc)

@@ -14,6 +14,6 @@ package org.eclipse.wst.sse.core.internal.encoding;
 
 
 public interface ICodedResourcePlugin {
-	String ID = "org.eclipse.wst.sse.core.internal.encoding"; //$NON-NLS-1$
+	String ID = "org.eclipse.wst.sse.core"; //$NON-NLS-1$
 
 }
