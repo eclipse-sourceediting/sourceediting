@@ -72,8 +72,18 @@ public class TemporaryAnnotation extends Annotation implements ITemporaryAnnotat
 		// we should be checking if the annotation is still on the same line,
 		// and the distance from the start of the line is the same
 		if (obj instanceof TemporaryAnnotation) {
+
 			TemporaryAnnotation ta = (TemporaryAnnotation) obj;
-			return ta.getText().equals(this.getText()) && ta.getPosition().equals(this.getPosition());
+
+            boolean samePosition = ta.getPosition().equals(this.getPosition());
+            boolean sameText = false;
+
+            if(ta.getText() != null && this.getText() != null && ta.getText().equals(this.getText()))
+                sameText = true;
+            else if(ta.getText( )== null && this.getText() == null)
+                sameText = true;
+            
+			return  sameText && samePosition;
 		}
 		return super.equals(obj);
 	}

@@ -13,6 +13,9 @@
 package org.eclipse.wst.sse.ui.internal.reconcile;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -449,15 +452,58 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	}
 
 	/**
-	 * pa_TODO make adding/removing smarter... Check if the annotation is
-	 * already there, if it is, no need to remove or add again. this will
-	 * avoid a lot of flickering behavior...
+	 * Check if the annotation is already there, if it is, no need to 
+     * remove or add again. this will avoid a lot of flickering behavior...
 	 * 
 	 * @param annotationsToRemove
 	 * @param annotationsToAdd
 	 */
 	protected void smartProcess(TemporaryAnnotation[] annotationsToRemove, IReconcileResult[] annotationsToAdd) {
-		removeAnnotations(annotationsToRemove);
-		process(annotationsToAdd);
+        
+        // TODO: investigate a better algorithm, 
+        // also see if this is a bad performance hit.
+        
+        Comparator comp = new Comparator( ) {
+            public int compare(Object arg0, Object arg1) {
+                TemporaryAnnotation ta1 = (TemporaryAnnotation)arg0;
+                TemporaryAnnotation ta2 = (TemporaryAnnotation)arg1;
+                return ta1.getPosition().getOffset() - ta2.getPosition().getOffset();
+            }
+        };
+        List sortedRemovals = Arrays.asList(annotationsToRemove);
+	    Collections.sort(sortedRemovals, comp);
+        
+        List sortedAdditions = Arrays.asList(annotationsToAdd);
+        Collections.sort(sortedAdditions, comp);
+        
+        List filteredRemovals = new ArrayList(sortedRemovals);
+        List filteredAdditions = new ArrayList(sortedAdditions);
+        
+        boolean ignore = false;
+        int lastFoundAdded = 0;
+        for(int i=0; i<sortedRemovals.size(); i++) {
+            TemporaryAnnotation removal = (TemporaryAnnotation)sortedRemovals.get(i);       
+            for(int j=lastFoundAdded; j<sortedAdditions.size(); j++) {             
+                TemporaryAnnotation addition = (TemporaryAnnotation)sortedAdditions.get(j);
+                // quick position check here
+                if(removal.getPosition().getOffset() == addition.getPosition().getOffset()) {
+                    lastFoundAdded = j;
+                    // remove performs TemporaryAnnotation.equals()
+                    // which checks text as well
+                    filteredAdditions.remove(addition);
+                    ignore = true;
+                    if(DEBUG)
+                        System.out.println(" ~ smart process ignoring: " + removal.getPosition().getOffset());
+                    break;
+                }
+            }
+            if(ignore) {
+                filteredRemovals.remove(removal);
+            }
+            ignore = false;
+        }
+        
+        removeAnnotations((TemporaryAnnotation[])filteredRemovals.toArray(new TemporaryAnnotation[filteredRemovals.size()]));
+        process((IReconcileResult[])filteredAdditions.toArray(new IReconcileResult[filteredAdditions.size()]));
 	}
 }
