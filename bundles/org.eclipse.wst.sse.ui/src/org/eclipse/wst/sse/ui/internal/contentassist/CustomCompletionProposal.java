@@ -31,25 +31,26 @@ import org.eclipse.wst.sse.core.util.Debug;
  * creation.
  */
 public class CustomCompletionProposal implements ICompletionProposal, ICompletionProposalExtension, ICompletionProposalExtension2, IRelevanceCompletionProposal {
-    protected String fAdditionalProposalInfo;
+    
+	private String fAdditionalProposalInfo;
 
-    protected IContextInformation fContextInformation;
+    private IContextInformation fContextInformation;
 
-    protected int fCursorPosition = 0;
+    private int fCursorPosition = 0;
 
-    protected String fDisplayString;
+    private String fDisplayString;
 
-    protected Image fImage;
+    private Image fImage;
 
-    protected int fOriginalReplacementLength;
+    private int fOriginalReplacementLength;
 
-    protected int fRelevance = IRelevanceConstants.R_NONE;
+    private int fRelevance = IRelevanceConstants.R_NONE;
 
-    protected int fReplacementLength = 0;
+    private int fReplacementLength = 0;
 
-    protected int fReplacementOffset = 0;
+    private int fReplacementOffset = 0;
 
-    protected String fReplacementString = null;
+    private String fReplacementString = null;
 
     private boolean fUpdateLengthOnValidate;
 

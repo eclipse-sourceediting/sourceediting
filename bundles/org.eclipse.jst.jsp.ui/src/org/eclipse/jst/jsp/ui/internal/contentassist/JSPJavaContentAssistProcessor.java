@@ -55,82 +55,6 @@ public class JSPJavaContentAssistProcessor implements IContentAssistProcessor, I
 		fResource = file;
 	}
 
-	public static void main(String[] args) {
-		JSPJavaContentAssistProcessor instance = new JSPJavaContentAssistProcessor();
-		// unit test for 'reverse' function
-		instance._unitTest0();
-		instance._unitTestNormal1();
-		instance._unitTestNormal2();
-		instance._unitTestNormal3();
-		instance._unitTestNormal4();
-		instance._unitTestNormal5();
-	}
-
-	private void _printList(Object[] list) {
-		for (int i = 0; i < list.length; i++) {
-			System.out.print(list[i] + " "); //$NON-NLS-1$
-		}
-		System.out.println();
-
-	}
-
-	private void _unitTest0() {
-		Object[] listOfObjects = new Object[0];
-		_printList(listOfObjects);
-		reverse(listOfObjects);
-		_printList(listOfObjects);
-	}
-
-	private void _unitTestNormal1() {
-		Object[] listOfObjects = new Object[1];
-		listOfObjects[0] = "one"; //$NON-NLS-1$
-		_printList(listOfObjects);
-		reverse(listOfObjects);
-		_printList(listOfObjects);
-	}
-
-	private void _unitTestNormal2() {
-		Object[] listOfObjects = new Object[2];
-		listOfObjects[0] = "one"; //$NON-NLS-1$
-		listOfObjects[1] = "two"; //$NON-NLS-1$
-		_printList(listOfObjects);
-		reverse(listOfObjects);
-		_printList(listOfObjects);
-	}
-
-	private void _unitTestNormal3() {
-		Object[] listOfObjects = new Object[3];
-		listOfObjects[0] = "one"; //$NON-NLS-1$
-		listOfObjects[1] = "two"; //$NON-NLS-1$
-		listOfObjects[2] = "three"; //$NON-NLS-1$
-		_printList(listOfObjects);
-		reverse(listOfObjects);
-		_printList(listOfObjects);
-	}
-
-	private void _unitTestNormal4() {
-		Object[] listOfObjects = new Object[4];
-		listOfObjects[0] = "one"; //$NON-NLS-1$
-		listOfObjects[1] = "two"; //$NON-NLS-1$
-		listOfObjects[2] = "three"; //$NON-NLS-1$
-		listOfObjects[3] = "four"; //$NON-NLS-1$
-		_printList(listOfObjects);
-		reverse(listOfObjects);
-		_printList(listOfObjects);
-	}
-
-	private void _unitTestNormal5() {
-		Object[] listOfObjects = new Object[5];
-		listOfObjects[0] = "one"; //$NON-NLS-1$
-		listOfObjects[1] = "two"; //$NON-NLS-1$
-		listOfObjects[2] = "three"; //$NON-NLS-1$
-		listOfObjects[3] = "four"; //$NON-NLS-1$
-		listOfObjects[4] = "five"; //$NON-NLS-1$
-		_printList(listOfObjects);
-		reverse(listOfObjects);
-		_printList(listOfObjects);
-	}
-
 	/**
 	 * Return a list of proposed code completions based on the
 	 * specified location within the document that corresponds
@@ -203,19 +127,7 @@ public class JSPJavaContentAssistProcessor implements IContentAssistProcessor, I
 		//			}
 		//		}
 
-		reverse(results); // so variables show up first	
 		return results;
-	}
-
-	// reverses an array of objects 
-	public void reverse(Object[] array) {
-		Object temp = null;
-		//DMW: 8/16/2002 this was <=, but was thrown out of bounds occasionally
-		for (int i = 0; i < (array.length / 2); i++) {
-			temp = array[i];
-			array[i] = array[(array.length - 1) - i];
-			array[(array.length - 1) - i] = temp;
-		}
 	}
 
 	private CustomCompletionProposal createCDATAProposal(int adjustedDocPosition, int selectionLength) {

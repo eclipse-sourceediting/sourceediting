@@ -27,17 +27,14 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
-import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.IResourceDependentProcessor;
 import org.eclipse.wst.xml.core.document.IDOMDocument;
 import org.eclipse.wst.xml.core.document.IDOMModel;
-import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 
@@ -56,7 +53,6 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 
 	protected int fJspSourcePosition, fJavaPosition;
 	protected IResource fResource;
-	protected JSPCompletionRequestor fCollector;
 	protected String fErrorMessage = null;
 	protected StructuredTextViewer fViewer = null;
 	private JSPTranslationAdapter fTranslationAdapter = null;
@@ -80,6 +76,9 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 	 */
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int pos) {
 		initialize(pos);
+
+		JSPProposalCollector collector = null;
+		
 		IDOMModel xmlModel = null;
 		try {
 			if (viewer instanceof StructuredTextViewer)
@@ -95,25 +94,20 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 				JSPTranslation translation = fTranslationAdapter.getJSPTranslation();
 				fJavaPosition = translation.getJavaOffset(getDocumentPosition());
 
-				fCollector.setCodeAssistOffset(fJavaPosition);
-				fCollector.setJavaToJSPOffset(fJspSourcePosition - fJavaPosition);
-				fCollector.setCursorInExpression(cursorInExpression());
-
-
 				if (DEBUG)
 					System.out.println(debug(translation));
 
 				try {
 
 					ICompilationUnit cu = translation.getCompilationUnit();
-					fCollector.setCompilationUnit(cu);
 
 					// can't get java proposals w/out a compilation unit
 					if (cu == null)
 						return new ICompletionProposal[0];
-
+					
+					collector = new JSPProposalCollector(cu, translation);
 					synchronized (cu) {
-						cu.codeComplete(fJavaPosition, fCollector, null);
+						cu.codeComplete(fJavaPosition, collector, null);
 					}
 				}
 				catch (CoreException coreEx) {
@@ -132,10 +126,12 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 				xmlModel.releaseFromRead();
 			}
 		}
-		ICompletionProposal[] results = fCollector.getResults();
-		if (results == null || results.length < 1)
-			fErrorMessage = SSEUIPlugin.getResourceString("%Java_Content_Assist_is_not_UI_"); //$NON-NLS-1$ = "Java Content Assist is not available for the current cursor location"
-
+		ICompletionProposal[] results = new ICompletionProposal[0];
+		if(collector != null) {
+			results = collector.getJSPCompletionProposals();
+			if (results == null || results.length < 1)
+				fErrorMessage = SSEUIPlugin.getResourceString("%Java_Content_Assist_is_not_UI_"); //$NON-NLS-1$ = "Java Content Assist is not available for the current cursor location"
+		}
 		return results;
 	}
 
@@ -165,26 +161,6 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 			}
 		}
 		return debugString.toString();
-	}
-
-	/**
-	 * @return whether the source cursor is in an expression
-	 */
-	private boolean cursorInExpression() {
-		boolean inExpression = false;
-		IStructuredDocumentRegion sdRegion = null;
-		IDOMModel xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(fViewer.getDocument());
-		IDOMNode xmlNode = null;
-		xmlModel.releaseFromRead();
-		xmlNode = (IDOMNode) xmlModel.getIndexedRegion(fJspSourcePosition);
-		if (xmlNode != null) {
-			IDOMNode parent = (IDOMNode) xmlNode.getParentNode();
-			if (parent != null) {
-				sdRegion = parent.getFirstStructuredDocumentRegion();
-				inExpression = sdRegion != null && (sdRegion.getType() == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN || sdRegion.getType() == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN);
-			}
-		}
-		return inExpression;
 	}
 
 	/**
@@ -289,8 +265,6 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 	protected void initialize(int pos) {
 		initializeJavaPlugins();
 
-		// fCollector = new JSPResultCollector();
-		fCollector = new JSPCompletionRequestor();
 		fJspSourcePosition = pos;
 		fErrorMessage = null;
 	}
@@ -308,18 +282,10 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.editor.IReleasable#release()
-	 */
 	public void release() {
 		fTranslationAdapter = null;
 	}
 
-	/*
-	 * @see com.ibm.sse.editor.contentassist.IResourceDependent#initialize(org.eclipse.core.resources.IResource)
-	 */
 	public void initialize(IResource resource) {
 		fResource = resource;
 	}

@@ -1462,7 +1462,9 @@ public class JSPTranslator {
 	 * @param addToMap
 	 */
 	private void appendToBuffer(String newText, StringBuffer buffer, boolean addToMap, ITextRegionCollection jspReferenceRegion, int jspPositionStart, int jspPositionLength, boolean isIndirect) {
-
+		
+		int origNewTextLength = newText.length();
+		
 		// nothing to append
 		if (jspReferenceRegion == null)
 			return;
@@ -1486,7 +1488,7 @@ public class JSPTranslator {
 				}
 				else {
 					// all other cases
-					Position javaRange = new Position(fOffsetInUserCode, newText.length());
+					Position javaRange = new Position(fOffsetInUserCode, origNewTextLength);
 					Position jspRange = new Position(jspPositionStart, jspPositionLength);
 
 					fCodeRanges.put(javaRange, jspRange);

@@ -36,6 +36,7 @@ import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 
 /**
  * Most "accept" methods copied from JDT ResultCollector.
+ * @deprecated should be able to use JSPProposalCollector
  * @since 1.0
  */
 public class JSPCompletionRequestor extends CompletionRequestor {
