@@ -36,7 +36,7 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
+import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.format.StructuredFormattingStrategy;
@@ -49,7 +49,8 @@ import org.eclipse.wst.sse.ui.taginfo.ProblemAnnotationHoverProcessor;
 import org.eclipse.wst.sse.ui.taginfo.TextHoverManager;
 import org.eclipse.wst.sse.ui.util.EditorUtility;
 import org.eclipse.wst.xml.core.format.FormatProcessorXML;
-import org.eclipse.wst.xml.core.text.rules.StructuredTextPartitionerForXML;
+import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
+import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.contentassist.NoRegionContentAssistProcessor;
 import org.eclipse.wst.xml.ui.contentassist.XMLContentAssistProcessor;
 import org.eclipse.wst.xml.ui.doubleclick.XMLDoubleClickStrategy;
@@ -85,7 +86,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 			allStrategies.add(superStrategies[i]);
 		}
 		
-		if (contentType == StructuredTextPartitionerForXML.ST_DEFAULT_XML) {
+		if (contentType == IXMLPartitions.XML_DEFAULT) {
 			allStrategies.add(new StructuredAutoEditStrategyXML());
 		}
 
@@ -97,8 +98,8 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		if (configuredContentTypes == null) {
 			String[] xmlTypes = StructuredTextPartitionerForXML.getConfiguredContentTypes();
 			configuredContentTypes = new String[xmlTypes.length + 2];
-			configuredContentTypes[0] = StructuredTextPartitioner.ST_DEFAULT_PARTITION;
-			configuredContentTypes[1] = StructuredTextPartitioner.ST_UNKNOWN_PARTITION;
+			configuredContentTypes[0] = IStructuredPartitions.DEFAULT_PARTITION;
+			configuredContentTypes[1] = IStructuredPartitions.UNKNOWN_PARTITION;
 			int index = 0;
 			System.arraycopy(xmlTypes, 0, configuredContentTypes, index += 2, xmlTypes.length);
 		}
@@ -112,15 +113,15 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 			ContentAssistant contentAssistant = (ContentAssistant) ca;
 			IContentAssistProcessor xmlContentAssistProcessor = new XMLContentAssistProcessor();
 			IContentAssistProcessor noRegionProcessor = new NoRegionContentAssistProcessor();
-			setContentAssistProcessor(contentAssistant, xmlContentAssistProcessor, StructuredTextPartitioner.ST_DEFAULT_PARTITION);
-			setContentAssistProcessor(contentAssistant, xmlContentAssistProcessor, StructuredTextPartitionerForXML.ST_DEFAULT_XML);
-			setContentAssistProcessor(contentAssistant, noRegionProcessor, StructuredTextPartitioner.ST_UNKNOWN_PARTITION);
+			setContentAssistProcessor(contentAssistant, xmlContentAssistProcessor, IStructuredPartitions.DEFAULT_PARTITION);
+			setContentAssistProcessor(contentAssistant, xmlContentAssistProcessor, IXMLPartitions.XML_DEFAULT);
+			setContentAssistProcessor(contentAssistant, noRegionProcessor, IStructuredPartitions.UNKNOWN_PARTITION);
 		}
 		return ca;
 	}
 
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
-		final MultiPassContentFormatter formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), StructuredTextPartitionerForXML.ST_DEFAULT_XML);
+		final MultiPassContentFormatter formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), IXMLPartitions.XML_DEFAULT);
 
 		formatter.setMasterStrategy(new StructuredFormattingStrategy(new FormatProcessorXML()));
 
@@ -135,12 +136,12 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 			ITextEditor editor = getTextEditor();
 			if (editor != null) {
 				IContentAssistProcessor correctionProcessor = new CorrectionProcessorXML(editor);
-				correctionAssistant.setContentAssistProcessor(correctionProcessor, StructuredTextPartitionerForXML.ST_DEFAULT_XML);
-				correctionAssistant.setContentAssistProcessor(correctionProcessor, StructuredTextPartitionerForXML.ST_XML_CDATA);
-				correctionAssistant.setContentAssistProcessor(correctionProcessor, StructuredTextPartitionerForXML.ST_XML_COMMENT);
-				correctionAssistant.setContentAssistProcessor(correctionProcessor, StructuredTextPartitionerForXML.ST_XML_DECLARATION);
-				correctionAssistant.setContentAssistProcessor(correctionProcessor, StructuredTextPartitionerForXML.ST_XML_PI);
-				correctionAssistant.setContentAssistProcessor(correctionProcessor, StructuredTextPartitionerForXML.ST_DTD_SUBSET);
+				correctionAssistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.XML_DEFAULT);
+				correctionAssistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.XML_CDATA);
+				correctionAssistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.XML_COMMENT);
+				correctionAssistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.XML_DECLARATION);
+				correctionAssistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.XML_PI);
+				correctionAssistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.DTD_SUBSET);
 			}
 		}
 		return ca;
@@ -149,7 +150,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 	public ITextDoubleClickStrategy getDoubleClickStrategy(ISourceViewer sourceViewer, String contentType) {
 
 		ITextDoubleClickStrategy doubleClickStrategy = null;
-		if (contentType.compareTo(StructuredTextPartitionerForXML.ST_DEFAULT_XML) == 0)
+		if (contentType.compareTo(IXMLPartitions.XML_DEFAULT) == 0)
 			doubleClickStrategy = new XMLDoubleClickStrategy();
 		else
 			doubleClickStrategy = super.getDoubleClickStrategy(sourceViewer, contentType);
@@ -161,11 +162,11 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		IHighlighter highlighter = super.getHighlighter(sourceViewer);
 		if (highlighter != null) {
 			LineStyleProvider xmlProvider = new LineStyleProviderForXML();
-			highlighter.addProvider(StructuredTextPartitionerForXML.ST_DEFAULT_XML, xmlProvider);
-			highlighter.addProvider(StructuredTextPartitionerForXML.ST_XML_CDATA, xmlProvider);
-			highlighter.addProvider(StructuredTextPartitionerForXML.ST_XML_COMMENT, xmlProvider);
-			highlighter.addProvider(StructuredTextPartitionerForXML.ST_XML_DECLARATION, xmlProvider);
-			highlighter.addProvider(StructuredTextPartitionerForXML.ST_XML_PI, xmlProvider);
+			highlighter.addProvider(IXMLPartitions.XML_DEFAULT, xmlProvider);
+			highlighter.addProvider(IXMLPartitions.XML_CDATA, xmlProvider);
+			highlighter.addProvider(IXMLPartitions.XML_COMMENT, xmlProvider);
+			highlighter.addProvider(IXMLPartitions.XML_DECLARATION, xmlProvider);
+			highlighter.addProvider(IXMLPartitions.XML_PI, xmlProvider);
 		}
 		return highlighter;
 	}
@@ -175,8 +176,8 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		if (fInformationPresenter == null) {
 			fInformationPresenter = new InformationPresenter(getInformationPresenterControlCreator(sourceViewer));
 			IInformationProvider xmlInformationProvider = new XMLInformationProvider();
-			fInformationPresenter.setInformationProvider(xmlInformationProvider, StructuredTextPartitioner.ST_DEFAULT_PARTITION);
-			fInformationPresenter.setInformationProvider(xmlInformationProvider, StructuredTextPartitionerForXML.ST_DEFAULT_XML);
+			fInformationPresenter.setInformationProvider(xmlInformationProvider, IStructuredPartitions.DEFAULT_PARTITION);
+			fInformationPresenter.setInformationProvider(xmlInformationProvider, IXMLPartitions.XML_DEFAULT);
 			fInformationPresenter.setSizeConstraints(60, 10, true, true);
 		}
 		return fInformationPresenter;
@@ -212,7 +213,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 				if (sModel != null) {
 					
 					IReconcilingStrategy markupStrategy = new StructuredTextReconcilingStrategyForMarkup((ITextEditor) editorPart);
-                    fReconciler.setReconcilingStrategy(markupStrategy, StructuredTextPartitionerForXML.ST_DEFAULT_XML);
+                    fReconciler.setReconcilingStrategy(markupStrategy, IXMLPartitions.XML_DEFAULT);
 					fReconciler.setDefaultStrategy(markupStrategy);
 
 					String contentTypeId = sModel.getContentTypeIdentifier();
@@ -236,7 +237,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {
 		// look for appropriate text hover processor to return based on
 		// content type and state mask
-		if ((contentType == StructuredTextPartitioner.ST_DEFAULT_PARTITION) || (contentType == StructuredTextPartitionerForXML.ST_DEFAULT_XML)) {
+		if ((contentType == IStructuredPartitions.DEFAULT_PARTITION) || (contentType == IXMLPartitions.XML_DEFAULT)) {
 			// check which of xml's text hover is handling stateMask
 			TextHoverManager.TextHoverDescriptor[] hoverDescs = getTextHovers();
 			int i = 0;

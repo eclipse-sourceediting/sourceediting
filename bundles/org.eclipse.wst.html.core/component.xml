@@ -6,4 +6,5 @@
 	<plugin id="org.eclipse.wst.html.ui" />
 	<package name="org.eclipse.wst.html.core" />
 	<package name="org.eclipse.wst.html.core.contenttype" />
+	<package name="org.eclipse.wst.html.core.text" />
 </component>

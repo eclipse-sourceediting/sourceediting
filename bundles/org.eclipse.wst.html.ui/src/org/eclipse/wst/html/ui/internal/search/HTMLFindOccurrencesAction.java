@@ -13,10 +13,10 @@ package org.eclipse.wst.html.ui.internal.search;
 import java.util.ResourceBundle;
 
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.html.core.internal.text.rules.StructuredTextPartitionerForHTML;
+import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.sse.ui.internal.search.BasicFindOccurrencesAction;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
-import org.eclipse.wst.xml.core.text.rules.StructuredTextPartitionerForXML;
+import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
 
 /**
@@ -35,7 +35,7 @@ public class HTMLFindOccurrencesAction extends BasicFindOccurrencesAction {
 	 */
 	public String[] getPartitionTypes() {
 
-		return new String[]{StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, StructuredTextPartitionerForXML.ST_DEFAULT_XML};
+		return new String[]{IHTMLPartitions.HTML_DEFAULT, IXMLPartitions.XML_DEFAULT};
 	}
 
 	/**

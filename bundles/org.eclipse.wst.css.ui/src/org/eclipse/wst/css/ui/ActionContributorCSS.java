@@ -19,10 +19,10 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
-import org.eclipse.wst.sse.ui.edit.util.ActionContributor;
-import org.eclipse.wst.sse.ui.edit.util.ActionDefinitionIds;
-import org.eclipse.wst.sse.ui.edit.util.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.actions.ActionContributor;
+import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
+import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
 
 /**
  * ActionContributorCSS

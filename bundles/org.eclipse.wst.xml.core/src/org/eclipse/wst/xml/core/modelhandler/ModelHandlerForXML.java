@@ -39,7 +39,7 @@ public class ModelHandlerForXML extends AbstractModelHandler implements IModelHa
 	private static String ModelHandlerID = "org.eclipse.wst.xml.core.modelhandler"; //$NON-NLS-1$
 
 	public ModelHandlerForXML() {
-		super();
+		super();	
 		setId(ModelHandlerID);
 		setAssociatedContentTypeId(AssociatedContentTypeID);
 	}

@@ -14,11 +14,11 @@ package org.eclipse.wst.dtd.ui;
 
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.wst.dtd.core.internal.rules.StructuredTextPartitionerForDTD;
+import org.eclipse.wst.dtd.core.text.IDTDPartitions;
 import org.eclipse.wst.dtd.ui.internal.style.LineStyleProviderForDTD;
 import org.eclipse.wst.dtd.ui.internal.taginfo.DTDBestMatchHoverProcessor;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
+import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
 import org.eclipse.wst.sse.ui.style.LineStyleProvider;
@@ -40,7 +40,7 @@ public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerCo
 	 */
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 		if (configuredContentTypes == null) {
-			configuredContentTypes = new String[]{StructuredTextPartitionerForDTD.ST_DTD_DEFAULT, StructuredTextPartitioner.ST_DEFAULT_PARTITION, StructuredTextPartitioner.ST_UNKNOWN_PARTITION};
+			configuredContentTypes = new String[]{IDTDPartitions.DTD_DEFAULT, IStructuredPartitions.DEFAULT_PARTITION, IStructuredPartitions.UNKNOWN_PARTITION};
 		}
 		return configuredContentTypes;
 	}
@@ -56,9 +56,9 @@ public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerCo
 		LineStyleProvider dtdProvider = new LineStyleProviderForDTD();
 		LineStyleProvider noopProvider = new LineStyleProviderForNoOp();
 
-		highlighter.addProvider(StructuredTextPartitionerForDTD.ST_DTD_DEFAULT, dtdProvider);
-		highlighter.addProvider(StructuredTextPartitioner.ST_DEFAULT_PARTITION, dtdProvider);
-		highlighter.addProvider(StructuredTextPartitioner.ST_UNKNOWN_PARTITION, noopProvider);
+		highlighter.addProvider(IDTDPartitions.DTD_DEFAULT, dtdProvider);
+		highlighter.addProvider(IStructuredPartitions.DEFAULT_PARTITION, dtdProvider);
+		highlighter.addProvider(IStructuredPartitions.UNKNOWN_PARTITION, noopProvider);
 
 		highlighter.setDocument((IStructuredDocument) sourceViewer.getDocument());
 

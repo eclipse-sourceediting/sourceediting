@@ -37,8 +37,8 @@ import org.eclipse.wst.validation.core.IValidator;
 
 
 /**
- * Special validator strategy. Runs validator steps contributed via
- * reconcileValidator extension point
+ * Special validator strategy. Runs validator steps contributed via the
+ * <code>org.eclipse.wst.sse.ui.extensions.sourcevalidation</code> extension point
  * 
  * @author pavery
  */

@@ -30,8 +30,8 @@ import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
-import org.eclipse.wst.sse.ui.edit.util.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
 
 public class CommentActionXML extends TextEditorAction {
 	protected static final String CLOSE_COMMENT = "-->"; //$NON-NLS-1$

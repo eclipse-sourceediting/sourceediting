@@ -18,8 +18,8 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
-import org.eclipse.wst.sse.ui.edit.util.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
 
 public class UncommentActionXML extends CommentActionXML {
 	public UncommentActionXML(ResourceBundle bundle, String prefix, ITextEditor editor) {

@@ -20,7 +20,7 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.StructuredDocumentCommand;
-import org.eclipse.wst.sse.ui.edit.util.BasicAutoEditStrategy;
+import org.eclipse.wst.sse.ui.internal.autoedit.BasicAutoEditStrategy;
 import org.eclipse.wst.xml.core.document.XMLElement;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.ui.internal.Logger;

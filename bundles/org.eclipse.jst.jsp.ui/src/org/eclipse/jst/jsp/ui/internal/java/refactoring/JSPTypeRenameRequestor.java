@@ -42,7 +42,7 @@ public class JSPTypeRenameRequestor extends BasicRefactorSearchRequestor {
 		String matchText = trans.getJavaText().substring(javaMatch.getOffset(), javaMatch.getOffset() + javaMatch.getLength());
 		
 		// if it's an import or jsp:useBean or fully qualified type, we need to add the package name as well
-		if(trans.isImport(javaMatch.getOffset()) || trans.isUseBean(javaMatch.getOffset()) || isFullyQualified(matchText)) {
+		if(trans.isImport(javaMatch.getOffset()) || /*trans.isUseBean(javaMatch.getOffset()) ||*/ isFullyQualified(matchText)) {
 			if(!pkg.equals("")) //$NON-NLS-1$
 				renameText = pkg + "." + renameText; //$NON-NLS-1$
 		}

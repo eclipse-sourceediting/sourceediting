@@ -57,7 +57,7 @@ import org.eclipse.wst.sse.core.FactoryRegistry;
 import org.eclipse.wst.sse.core.IModelStateListener;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.ui.ViewerSelectionManager;
-import org.eclipse.wst.sse.ui.edit.util.ActiveEditorActionHandler;
+import org.eclipse.wst.sse.ui.actions.ActiveEditorActionHandler;
 import org.eclipse.wst.sse.ui.view.events.INodeSelectionListener;
 import org.eclipse.wst.sse.ui.view.events.ITextSelectionListener;
 import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;

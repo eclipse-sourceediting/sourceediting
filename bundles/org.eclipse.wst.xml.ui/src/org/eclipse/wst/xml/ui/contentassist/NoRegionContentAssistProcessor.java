@@ -29,10 +29,10 @@ import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.IReleasable;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
-import org.eclipse.wst.sse.ui.contentassist.IResourceDependentProcessor;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
+import org.eclipse.wst.sse.ui.internal.contentassist.IResourceDependentProcessor;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
-import org.eclipse.wst.xml.core.text.rules.StructuredTextPartitionerForXML;
+import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
 
 /**
@@ -210,7 +210,7 @@ public class NoRegionContentAssistProcessor implements IContentAssistProcessor, 
 	 */
 	protected void initPartitionToProcessorMap() {
 		XMLContentAssistProcessor xmlProcessor = new XMLContentAssistProcessor();
-		fPartitionToProcessorMap.put(StructuredTextPartitionerForXML.ST_DEFAULT_XML, xmlProcessor);
+		fPartitionToProcessorMap.put(IXMLPartitions.XML_DEFAULT, xmlProcessor);
 	}
 
 	public void release() {

@@ -20,8 +20,8 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
-import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
 import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.text.IJSPPartitions;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
@@ -29,10 +29,10 @@ import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.ui.IReleasable;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
-import org.eclipse.wst.sse.ui.contentassist.IResourceDependentProcessor;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
+import org.eclipse.wst.sse.ui.internal.contentassist.IResourceDependentProcessor;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.eclipse.wst.xml.ui.contentassist.XMLRelevanceConstants;
@@ -306,7 +306,7 @@ public class JSPJavaContentAssistProcessor implements IContentAssistProcessor, I
 		// need to compute context info here, if it's JSP, call java computer
 		IDocumentPartitioner dp = viewer.getDocument().getDocumentPartitioner();
 		String type = dp.getPartition(documentOffset).getType();
-		if (type == StructuredTextPartitionerForJSP.ST_DEFAULT_JSP || type == StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA) {
+		if (type == IJSPPartitions.JSP_DEFAULT || type == IJSPPartitions.JSP_CONTENT_JAVA) {
 			// get context info from completion results...
 			ICompletionProposal[] proposals = computeCompletionProposals(viewer, documentOffset);
 			for (int i = 0; i < proposals.length; i++) {

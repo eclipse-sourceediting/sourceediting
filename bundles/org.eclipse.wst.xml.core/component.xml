@@ -15,6 +15,9 @@
         <package name="org.eclipse.wst.xml.core.document" />
         <package name="org.eclipse.wst.xml.core.parser" />
 
+		<!-- probably should exclude some classes... -->
+		<package name="org.eclipse.wst.xml.core.text" />
+		
          <!-- <package name="org.w3c.dom" /> -->
 
         <package name="org.eclipse.wst.xml.uriresolver" />

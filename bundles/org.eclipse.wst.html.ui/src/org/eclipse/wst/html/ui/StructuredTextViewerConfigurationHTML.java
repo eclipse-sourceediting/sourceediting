@@ -35,11 +35,12 @@ import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.css.core.internal.text.rules.StructuredTextPartitionerForCSS;
+import org.eclipse.wst.css.core.text.ICSSPartitions;
 import org.eclipse.wst.css.ui.contentassist.CSSContentAssistProcessor;
 import org.eclipse.wst.css.ui.style.LineStyleProviderForEmbeddedCSS;
 import org.eclipse.wst.html.core.format.HTMLFormatProcessorImpl;
-import org.eclipse.wst.html.core.internal.text.rules.StructuredTextPartitionerForHTML;
+import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
+import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.internal.contentassist.HTMLContentAssistProcessor;
 import org.eclipse.wst.html.ui.internal.contentassist.NoRegionContentAssistProcessorForHTML;
 import org.eclipse.wst.html.ui.internal.hyperlink.URIHyperlinkDetector;
@@ -54,7 +55,7 @@ import org.eclipse.wst.javascript.common.ui.internal.taginfo.JavaScriptInformati
 import org.eclipse.wst.javascript.common.ui.internal.taginfo.JavaScriptTagInfoHoverProcessor;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
+import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.format.StructuredFormattingStrategy;
@@ -66,7 +67,8 @@ import org.eclipse.wst.sse.ui.taginfo.AnnotationHoverProcessor;
 import org.eclipse.wst.sse.ui.taginfo.ProblemAnnotationHoverProcessor;
 import org.eclipse.wst.sse.ui.taginfo.TextHoverManager;
 import org.eclipse.wst.sse.ui.util.EditorUtility;
-import org.eclipse.wst.xml.core.text.rules.StructuredTextPartitionerForXML;
+import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
+import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.doubleclick.XMLDoubleClickStrategy;
 import org.eclipse.wst.xml.ui.internal.autoedit.StructuredAutoEditStrategyXML;
 import org.eclipse.wst.xml.ui.internal.correction.CorrectionProcessorXML;
@@ -98,7 +100,7 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 			allStrategies.add(superStrategies[i]);
 		}
 		
-		if (contentType == StructuredTextPartitionerForHTML.ST_DEFAULT_HTML || contentType == StructuredTextPartitionerForHTML.ST_HTML_DECLARATION) {
+		if (contentType == IHTMLPartitions.HTML_DEFAULT || contentType == IHTMLPartitions.HTML_DECLARATION) {
 			allStrategies.add(new StructuredAutoEditStrategyXML());
 		}
 
@@ -111,8 +113,8 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 			String[] htmlTypes = StructuredTextPartitionerForHTML.getConfiguredContentTypes();
 			configuredContentTypes = new String[2 + xmlTypes.length + htmlTypes.length];
 
-			configuredContentTypes[0] = StructuredTextPartitioner.ST_DEFAULT_PARTITION;
-			configuredContentTypes[1] = StructuredTextPartitioner.ST_UNKNOWN_PARTITION;
+			configuredContentTypes[0] = IStructuredPartitions.DEFAULT_PARTITION;
+			configuredContentTypes[1] = IStructuredPartitions.UNKNOWN_PARTITION;
 
 			int index = 0;
 			System.arraycopy(xmlTypes, 0, configuredContentTypes, index += 2, xmlTypes.length);
@@ -134,24 +136,24 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 			IContentAssistProcessor noRegionProcessorForHTML = new NoRegionContentAssistProcessorForHTML();
 
 			// HTML
-			setContentAssistProcessor(contentAssistant, htmlContentAssistProcessor, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML);
-			setContentAssistProcessor(contentAssistant, htmlContentAssistProcessor, StructuredTextPartitionerForHTML.ST_HTML_COMMENT);
+			setContentAssistProcessor(contentAssistant, htmlContentAssistProcessor, IHTMLPartitions.HTML_DEFAULT);
+			setContentAssistProcessor(contentAssistant, htmlContentAssistProcessor, IHTMLPartitions.HTML_COMMENT);
 
 			// JavaScript
-			setContentAssistProcessor(contentAssistant, jsContentAssistProcessor, StructuredTextPartitionerForHTML.ST_SCRIPT);
+			setContentAssistProcessor(contentAssistant, jsContentAssistProcessor, IHTMLPartitions.SCRIPT);
 
 			// CSS
-			setContentAssistProcessor(contentAssistant, cssContentAssistProcessor, StructuredTextPartitionerForCSS.ST_STYLE);
+			setContentAssistProcessor(contentAssistant, cssContentAssistProcessor, ICSSPartitions.STYLE);
 
 			// unknown
-			setContentAssistProcessor(contentAssistant, noRegionProcessorForHTML, StructuredTextPartitioner.ST_UNKNOWN_PARTITION);
+			setContentAssistProcessor(contentAssistant, noRegionProcessorForHTML, IStructuredPartitions.UNKNOWN_PARTITION);
 		}
 
 		return ca;
 	}
 
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
-		final MultiPassContentFormatter formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), StructuredTextPartitionerForHTML.ST_DEFAULT_HTML);
+		final MultiPassContentFormatter formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), IHTMLPartitions.HTML_DEFAULT);
 
 		formatter.setMasterStrategy(new StructuredFormattingStrategy(new HTMLFormatProcessorImpl()));
 
@@ -166,12 +168,12 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 			ITextEditor editor = getTextEditor();
 			if (editor != null) {
 				IContentAssistProcessor correctionProcessor = new CorrectionProcessorXML(editor);
-				correctionAssistant.setContentAssistProcessor(correctionProcessor, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML);
-				correctionAssistant.setContentAssistProcessor(correctionProcessor, StructuredTextPartitionerForXML.ST_XML_CDATA);
-				correctionAssistant.setContentAssistProcessor(correctionProcessor, StructuredTextPartitionerForXML.ST_XML_COMMENT);
-				correctionAssistant.setContentAssistProcessor(correctionProcessor, StructuredTextPartitionerForXML.ST_XML_DECLARATION);
-				correctionAssistant.setContentAssistProcessor(correctionProcessor, StructuredTextPartitionerForXML.ST_XML_PI);
-				correctionAssistant.setContentAssistProcessor(correctionProcessor, StructuredTextPartitionerForXML.ST_DTD_SUBSET);
+				correctionAssistant.setContentAssistProcessor(correctionProcessor, IHTMLPartitions.HTML_DEFAULT);
+				correctionAssistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.XML_CDATA);
+				correctionAssistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.XML_COMMENT);
+				correctionAssistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.XML_DECLARATION);
+				correctionAssistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.XML_PI);
+				correctionAssistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.DTD_SUBSET);
 			}
 		}
 
@@ -179,10 +181,10 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 	}
 
 	public ITextDoubleClickStrategy getDoubleClickStrategy(ISourceViewer sourceViewer, String contentType) {
-		if (contentType.compareTo(StructuredTextPartitionerForHTML.ST_DEFAULT_HTML) == 0)
+		if (contentType.compareTo(IHTMLPartitions.HTML_DEFAULT) == 0)
 			// HTML
 			return new XMLDoubleClickStrategy();
-		else if (contentType.compareTo(StructuredTextPartitionerForHTML.ST_SCRIPT) == 0)
+		else if (contentType.compareTo(IHTMLPartitions.SCRIPT) == 0)
 			// JavaScript
 			return getJavaSourceViewerConfiguration(sourceViewer).getDoubleClickStrategy(sourceViewer, contentType);
 		else
@@ -195,17 +197,17 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 		if (highlighter != null) {
 			// HTML
 			LineStyleProvider htmlLineStyleProvider = new LineStyleProviderForHTML();
-			highlighter.addProvider(StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, htmlLineStyleProvider);
-			highlighter.addProvider(StructuredTextPartitionerForHTML.ST_HTML_COMMENT, htmlLineStyleProvider);
-			highlighter.addProvider(StructuredTextPartitionerForHTML.ST_HTML_DECLARATION, htmlLineStyleProvider);
+			highlighter.addProvider(IHTMLPartitions.HTML_DEFAULT, htmlLineStyleProvider);
+			highlighter.addProvider(IHTMLPartitions.HTML_COMMENT, htmlLineStyleProvider);
+			highlighter.addProvider(IHTMLPartitions.HTML_DECLARATION, htmlLineStyleProvider);
 
 			// JavaScript
 			LineStyleProvider jsLineStyleProvider = new LineStyleProviderForJavaScript();
-			highlighter.addProvider(StructuredTextPartitionerForHTML.ST_SCRIPT, jsLineStyleProvider);
+			highlighter.addProvider(IHTMLPartitions.SCRIPT, jsLineStyleProvider);
 
 			// CSS
 			LineStyleProvider cssLineStyleProvider = new LineStyleProviderForEmbeddedCSS();
-			highlighter.addProvider(StructuredTextPartitionerForCSS.ST_STYLE, cssLineStyleProvider);
+			highlighter.addProvider(ICSSPartitions.STYLE, cssLineStyleProvider);
 		}
 
 		return highlighter;
@@ -239,11 +241,11 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 
 			// HTML
 			IInformationProvider htmlInformationProvider = new HTMLInformationProvider();
-			fInformationPresenter.setInformationProvider(htmlInformationProvider, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML);
+			fInformationPresenter.setInformationProvider(htmlInformationProvider, IHTMLPartitions.HTML_DEFAULT);
 
 			// JavaScript
 			IInformationProvider javascriptInformationProvider = new JavaScriptInformationProvider();
-			fInformationPresenter.setInformationProvider(javascriptInformationProvider, StructuredTextPartitionerForHTML.ST_SCRIPT);
+			fInformationPresenter.setInformationProvider(javascriptInformationProvider, IHTMLPartitions.SCRIPT);
 
 			fInformationPresenter.setSizeConstraints(60, 10, true, true);
 		}
@@ -292,8 +294,8 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 
 					IReconcilingStrategy markupStrategy = new StructuredTextReconcilingStrategyForMarkup((ITextEditor) editorPart);
 
-					fReconciler.setReconcilingStrategy(markupStrategy, StructuredTextPartitioner.ST_DEFAULT_PARTITION);
-					fReconciler.setReconcilingStrategy(markupStrategy, StructuredTextPartitionerForXML.ST_DEFAULT_XML);
+					fReconciler.setReconcilingStrategy(markupStrategy, IStructuredPartitions.DEFAULT_PARTITION);
+					fReconciler.setReconcilingStrategy(markupStrategy, IXMLPartitions.XML_DEFAULT);
 
 					fReconciler.setDefaultStrategy(markupStrategy);
 
@@ -318,7 +320,7 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 				String hoverType = hoverDescs[i].getId();
 				if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType)) {
 					// treat specially if it's JavaScript, HTML otherwise
-					if (contentType.equals(StructuredTextPartitionerForHTML.ST_SCRIPT)) {
+					if (contentType.equals(IHTMLPartitions.SCRIPT)) {
 						hover = new JavaScriptBestMatchHoverProcessor();
 					}
 					else {
@@ -333,7 +335,7 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 				}
 				else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType)) {
 					// treat specially if it's JavaScript, HTML otherwise
-					if (contentType.equals(StructuredTextPartitionerForHTML.ST_SCRIPT)) {
+					if (contentType.equals(IHTMLPartitions.SCRIPT)) {
 						hover = new JavaScriptTagInfoHoverProcessor();
 					}
 					else {

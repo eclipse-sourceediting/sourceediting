@@ -17,7 +17,7 @@ import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jface.text.templates.TemplateProposal;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.sse.ui.contentassist.IRelevanceCompletionProposal;
+import org.eclipse.wst.sse.ui.internal.contentassist.IRelevanceCompletionProposal;
 
 /**
  * Purpose of this class is to make the additional proposal info into content

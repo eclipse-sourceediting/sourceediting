@@ -8,4 +8,6 @@
 	<package name="org.eclipse.jst.jsp.core" />
 	<package name="org.eclipse.jst.jsp.core.model.parser" />
 	<package name="org.eclipse.jst.jsp.core.contenttype" />
+	<package name="org.eclipse.jst.jsp.core.text" />
+	
 </component>

@@ -14,8 +14,8 @@ package org.eclipse.wst.dtd.core.internal.encoding;
 
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.wst.dtd.core.internal.parser.DTDRegionParser;
-import org.eclipse.wst.dtd.core.internal.rules.StructuredTextPartitionerForDTD;
 import org.eclipse.wst.dtd.core.internal.text.DTDStructuredDocumentReParser;
+import org.eclipse.wst.dtd.core.internal.text.StructuredTextPartitionerForDTD;
 import org.eclipse.wst.sse.core.document.AbstractDocumentLoader;
 import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.document.IEncodedDocument;

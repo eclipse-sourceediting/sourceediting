@@ -13,7 +13,7 @@ package org.eclipse.jst.jsp.core.internal.document;
 import org.eclipse.core.filebuffers.IDocumentSetupParticipant;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
+import org.eclipse.jst.jsp.core.internal.text.StructuredTextPartitionerForJSP;
 
 /**
  * @deprecated - not used and will be removed in WTP 1.0M4

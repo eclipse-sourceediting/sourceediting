@@ -50,8 +50,6 @@ import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorStrategy;
  * 
  * Adds default and validator strategies.
  * Adds DirtyRegion processing logic.
- * 
- * @author pavery
  */
 public class StructuredRegionProcessor extends DirtyRegionProcessor implements IStructuredDocumentListener, IModelLifecycleListener{
 	
@@ -95,7 +93,7 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
     private IReconcilingStrategy fDefaultStrategy;
     
     /**
-     * the strategy that runs validators contributed via reconcileValidator
+     * The strategy that runs validators contributed via <code>org.eclipse.wst.sse.ui.extensions.sourcevalidation</code>
      * extension point
      */
     private ValidatorStrategy fValidatorStrategy;

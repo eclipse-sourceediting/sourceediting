@@ -18,7 +18,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupProcessor;
-import org.eclipse.wst.sse.ui.edit.util.CleanupAction;
+import org.eclipse.wst.sse.ui.internal.actions.CleanupAction;
 import org.eclipse.wst.xml.core.internal.cleanup.CleanupProcessorXML;
 
 

@@ -19,7 +19,7 @@ import org.eclipse.wst.css.ui.internal.Logger;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.sse.ui.edit.util.BasicAutoEditStrategy;
+import org.eclipse.wst.sse.ui.internal.autoedit.BasicAutoEditStrategy;
 
 public class StructuredAutoEditStrategyCSS extends BasicAutoEditStrategy {
 	protected IStructuredDocument structuredDocument = null;

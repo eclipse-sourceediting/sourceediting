@@ -30,7 +30,7 @@ import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
+import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.IReleasable;
 import org.eclipse.wst.sse.ui.internal.Logger;
 
@@ -89,7 +89,7 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 	public ReconcileAnnotationKey createKey(IStructuredDocumentRegion sdRegion, int scope) {
 
 		ITypedRegion tr = getPartition(sdRegion);
-		String partitionType = (tr != null) ? tr.getType() : StructuredTextPartitioner.ST_UNKNOWN_PARTITION;
+		String partitionType = (tr != null) ? tr.getType() : IStructuredPartitions.UNKNOWN_PARTITION;
 		return createKey(partitionType, scope);
 	}
 
@@ -148,7 +148,7 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 
 	public String getPartitionType(IDocument doc, int offset) {
 		ITypedRegion tr = getPartition(doc, offset);
-		return (tr != null) ? tr.getType() : StructuredTextPartitioner.ST_UNKNOWN_PARTITION;
+		return (tr != null) ? tr.getType() : IStructuredPartitions.UNKNOWN_PARTITION;
 	}
 
 	public String[] getPartitionTypes() {

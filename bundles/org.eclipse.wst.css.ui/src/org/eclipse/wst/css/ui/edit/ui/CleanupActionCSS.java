@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.css.core.internal.cleanup.CleanupProcessorCSS;
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupProcessor;
-import org.eclipse.wst.sse.ui.edit.util.CleanupAction;
+import org.eclipse.wst.sse.ui.internal.actions.CleanupAction;
 
 public class CleanupActionCSS extends CleanupAction {
 	protected IStructuredCleanupProcessor fCleanupProcessor;

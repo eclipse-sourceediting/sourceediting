@@ -207,15 +207,15 @@
  
   	<!-- intialize xsd reconcile validator -->
 	 <extension
-         point="org.eclipse.wst.sse.ui.reconcileValidator">
+         point="org.eclipse.wst.sse.ui.sourcevalidation">
       <validator
             scope="total"
-            class="org.eclipse.wst.xsd.ui.reconcile.DelegatingReconcileValidatorForXSD"
-            id="org.eclipse.wst.xsd.ui.reconcile.DelegatingReconcileValidatorForXSD">
+            class="org.eclipse.wst.xsd.ui.reconcile.DelegatingSourceValidatorForXSD"
+            id="org.eclipse.wst.xsd.ui.reconcile.DelegatingSourceValidatorForXSD">
   	<contentTypeIdentifier
                id="org.eclipse.wst.xsd.contentmodel.xsdsource">
             <partitionType
-                  id="org.eclipse.wst.xml.DEFAULT_XML">
+                  id="org.eclipse.wst.xml.XML_DEFAULT">
             </partitionType>
          </contentTypeIdentifier>       
       </validator>

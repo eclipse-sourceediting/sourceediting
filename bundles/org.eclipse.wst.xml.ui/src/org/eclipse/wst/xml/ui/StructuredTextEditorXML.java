@@ -16,9 +16,9 @@ import java.util.ResourceBundle;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
-import org.eclipse.wst.sse.ui.edit.util.ActionDefinitionIds;
-import org.eclipse.wst.sse.ui.edit.util.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
+import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.search.FindOccurrencesActionProvider;
 import org.eclipse.wst.xml.ui.actions.AddBlockCommentActionXML;
 import org.eclipse.wst.xml.ui.actions.CleanupActionXML;

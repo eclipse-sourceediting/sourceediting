@@ -37,6 +37,7 @@ import org.eclipse.jst.jsp.core.internal.java.search.JavaSearchDocumentDelegate;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.ltk.core.refactoring.Change;
+import org.eclipse.ltk.core.refactoring.DocumentChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.MultiTextEdit;
@@ -116,7 +117,7 @@ public class BasicRefactorSearchRequestor extends SearchRequestor {
 	/**
 	 * Change class that wraps a text edit on the jsp document
 	 */
-	private class RenameChange extends Change {
+	private class RenameChange extends DocumentChange {
 
 		private TextEdit fEdit = null;
 		private IFile fJSPFile = null;
@@ -124,6 +125,7 @@ public class BasicRefactorSearchRequestor extends SearchRequestor {
 		private String fDescription = JSPUIPlugin.getResourceString("%BasicRefactorSearchRequestor.0"); //$NON-NLS-1$
 		
 		public RenameChange(IFile jspFile, IDocument jspDoc, TextEdit edit, String description) {
+			super("JSP Rename Change", jspDoc);
 			this.fEdit = edit;
 			this.fJSPFile = jspFile;
 			this.fJSPDoc = jspDoc;
@@ -210,10 +212,6 @@ public class BasicRefactorSearchRequestor extends SearchRequestor {
 				}
 			}
 			return false;
-		}
-
-		public void initializeValidationData(IProgressMonitor pm) {
-			// TODO Auto-generated method stub
 		}
 
 		public String getName() {

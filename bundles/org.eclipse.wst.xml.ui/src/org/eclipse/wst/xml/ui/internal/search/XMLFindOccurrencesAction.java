@@ -17,7 +17,7 @@ import java.util.ResourceBundle;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.ui.internal.search.BasicFindOccurrencesAction;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
-import org.eclipse.wst.xml.core.text.rules.StructuredTextPartitionerForXML;
+import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
 
 
@@ -40,7 +40,7 @@ public class XMLFindOccurrencesAction extends BasicFindOccurrencesAction {
 
 	public String[] getPartitionTypes() {
 
-		return new String[]{StructuredTextPartitionerForXML.ST_DEFAULT_XML};
+		return new String[]{IXMLPartitions.XML_DEFAULT};
 	}
 
 	public String[] getRegionTypes() {

@@ -25,7 +25,6 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.wst.sse.core.util.Debug;
-import org.eclipse.wst.sse.ui.contentassist.IRelevanceCompletionProposal;
 
 /**
  * An implementation of ICompletionProposal whose values can be read after

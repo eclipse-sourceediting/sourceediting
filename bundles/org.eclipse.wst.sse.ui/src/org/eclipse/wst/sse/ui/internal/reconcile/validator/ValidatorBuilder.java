@@ -24,9 +24,7 @@ import org.eclipse.wst.sse.ui.internal.extension.RegistryReader;
 
 /**
  * Based off of TransferBuilder. Reads the extension point for
- * org.eclipse.wst.sse.ui.extensions.reconcileValidator
- * 
- * @author pavery
+ * <code>org.eclipse.wst.sse.ui.extensions.sourcevalidation</code>
  */
 public class ValidatorBuilder extends RegistryReader {
     
@@ -37,7 +35,7 @@ public class ValidatorBuilder extends RegistryReader {
 	public static final ValidatorMetaData[] EMTPY_VMD_ARRAY = new ValidatorMetaData[0];
 
 	// extension point ID
-	public static final String PL_RECONCILE_VALIDATOR = "reconcileValidator"; //$NON-NLS-1$
+	public static final String PL_SOURCE_VALIDATION = "sourcevalidation"; //$NON-NLS-1$
 
 	public static final String PLUGIN_ID = "org.eclipse.wst.sse.ui"; //$NON-NLS-1$
 	public static final String TAG_CONTENT_TYPE_IDENTIFIER = "contentTypeIdentifier"; //$NON-NLS-1$
@@ -78,7 +76,7 @@ public class ValidatorBuilder extends RegistryReader {
 	 * @return Transfer[]
 	 */
 	public ValidatorMetaData[] getValidatorMetaData(String editorId) {
-		readContributions(editorId, TAG_VALIDATOR, PL_RECONCILE_VALIDATOR);
+		readContributions(editorId, TAG_VALIDATOR, PL_SOURCE_VALIDATION);
 		return (ValidatorMetaData[]) fVmds.toArray(new ValidatorMetaData[fVmds.size()]);
 	}
 

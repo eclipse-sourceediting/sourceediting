@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.ui.internal.editor;
 
-import org.eclipse.wst.sse.ui.edit.util.ActionContributor;
+import org.eclipse.wst.sse.ui.internal.actions.ActionContributor;
 
 /**
  * XMLEditorActionContributor

@@ -17,7 +17,7 @@ package org.eclipse.wst.xml.ui.contentassist;
 import java.util.Comparator;
 
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.wst.sse.ui.contentassist.IRelevanceCompletionProposal;
+import org.eclipse.wst.sse.ui.internal.contentassist.IRelevanceCompletionProposal;
 
 
 public class ProposalComparator implements Comparator {

@@ -19,7 +19,7 @@ import org.eclipse.jst.jsp.core.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.contentmodel.ITaglibRecord;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TLDRecord;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibIndex;
-import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
+import org.eclipse.jst.jsp.core.text.IJSPPartitions;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
@@ -47,7 +47,7 @@ public class TaglibHyperlinkDetector implements IHyperlinkDetector {
 				try {
 					// check if jsp tag/directive first
 					ITypedRegion partition = TextUtilities.getPartition(doc, IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING, region.getOffset(), false);
-					if (partition != null && partition.getType() == StructuredTextPartitionerForJSP.ST_JSP_DIRECTIVE) {
+					if (partition != null && partition.getType() == IJSPPartitions.JSP_DIRECTIVE) {
 						// check if jsp taglib directive
 						Node currentNode = getCurrentNode(doc, region.getOffset());
 						if (currentNode != null && currentNode.getNodeType() == Node.ELEMENT_NODE && JSP11Namespace.ElementName.DIRECTIVE_TAGLIB.equalsIgnoreCase(currentNode.getNodeName())) {

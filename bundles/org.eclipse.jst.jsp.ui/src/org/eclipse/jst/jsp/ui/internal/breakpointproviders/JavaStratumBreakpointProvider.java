@@ -27,7 +27,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITypedRegion;
-import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
+import org.eclipse.jst.jsp.core.text.IJSPPartitions;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
@@ -158,7 +158,7 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 						// custom
 						// tags,
 						// return that position
-						if (type == StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA || type == StructuredTextPartitionerForJSP.ST_JSP_DIRECTIVE) {
+						if (type == IJSPPartitions.JSP_CONTENT_JAVA || type == IJSPPartitions.JSP_DIRECTIVE) {
 							result = partitions[i].getOffset();
 						}
 					}

@@ -9,7 +9,13 @@
 	<package name="org.eclipse.wst.css.core.contenttype" />
 	<package name="org.eclipse.wst.css.core.parser" />
 	<package name="org.eclipse.wst.css.core.document" />
-
+	<package name="org.eclipse.wst.css.core.text" />
+	
+	<!-- ui -->
+	
+	<!-- phil -->
+	<package name="org.eclipse.wst.css.ui" />
+	
 	<!-- 
 	<package name="org.w3c.dom.css" />
 	<package name="org.w3c.dom.stylesheets" />
