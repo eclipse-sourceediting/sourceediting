@@ -69,14 +69,14 @@ public class JSPTranslator {
 	private String fClassname = "_JSPServlet"; //$NON-NLS-1$
 	
 	private String fServiceHeader = "public void _jspService(javax.servlet.http.HttpServletRequest request," + //$NON-NLS-1$
-				" javax.servlet.http.HttpServletResponse response)\n" + //$NON-NLS-1$
-				"\t\tthrows java.io.IOException, javax.servlet.ServletException {\n" + //$NON-NLS-1$
-				"javax.servlet.jsp.PageContext pageContext = null;\n" + //$NON-NLS-1$
-				"javax.servlet.http.HttpSession session = null;\n" + //$NON-NLS-1$
-				"javax.servlet.ServletContext application = null;\n" + //$NON-NLS-1$
-				"javax.servlet.ServletConfig config = null;\n" + //$NON-NLS-1$ 
-				"javax.servlet.jsp.JspWriter out = null;\n" + //$NON-NLS-1$
-				"Object page = null;"; //$NON-NLS-1$
+				" javax.servlet.http.HttpServletResponse response)" + ENDL + //$NON-NLS-1$
+				"\t\tthrows java.io.IOException, javax.servlet.ServletException {" + ENDL +//$NON-NLS-1$
+				"javax.servlet.jsp.PageContext pageContext = null;" + ENDL + //$NON-NLS-1$
+				"javax.servlet.http.HttpSession session = null;" + ENDL +//$NON-NLS-1$
+				"javax.servlet.ServletContext application = null;" + ENDL +//$NON-NLS-1$
+				"javax.servlet.ServletConfig config = null;" + ENDL + //$NON-NLS-1$ 
+				"javax.servlet.jsp.JspWriter out = null;" + ENDL + //$NON-NLS-1$
+				"Object page = null;" + ENDL; //$NON-NLS-1$
 
 	private String fFooter = "}}"; //$NON-NLS-1$
 	private String fException = "Throwable exception = null;"; //$NON-NLS-1$
@@ -154,17 +154,7 @@ public class JSPTranslator {
 	 * may just want to read this from the file or strucdtured document depending what is available
 	 * */
 	private StringBuffer fJspTextBuffer = new StringBuffer();
-	
-	/** 
-	 * Bits indicates what state the translator is in
-	 * use stateMask | MASK to set
-	 * use (stateMask & MASK) == MASK to check
-	 * USE stateMask 
-	 */
-	
-	/** no state */
-	public static final int S_NONE = 0;
-	
+
 	/**
 	 * configure using an XMLNode
 	 * @param node
@@ -354,13 +344,14 @@ public class JSPTranslator {
 	private final void buildResult() {
 		// to build the java document this is the order:
 		// 
-		// + default imports
 		// + user imports
 		// + class header
 		// [+ error page]
 		// + user declarations
 		// + service method header
+		// + try/catch start
 		// + user code
+		// + try/catch end
 		// + service method footer
 		fResult = new StringBuffer(fImports.length() + fUserDeclarations.length() + fUserCode.length() + 2048);
 		int javaOffset = 0;
@@ -378,9 +369,9 @@ public class JSPTranslator {
 		// class header
 		fResult.append(fClassHeader); //$NON-NLS-1$
 		javaOffset += fClassHeader.length();
-		fResult.append(fSuperclass + "{\n"); //$NON-NLS-1$
+		fResult.append(fSuperclass + "{" + ENDL); //$NON-NLS-1$
 		javaOffset += fSuperclass.length() + 2;
-
+		
 		updateRanges(fDeclarationRanges, javaOffset);
 		// user declarations
 		append(fUserDeclarations);
@@ -393,12 +384,21 @@ public class JSPTranslator {
 			fResult.append(fException);
 			javaOffset += fException.length();
 		}
+		
+		String tryCatchStart = ENDL + "try {" + ENDL;
+		fResult.append(tryCatchStart);
+		javaOffset += tryCatchStart.length();
+		
 		updateRanges(fCodeRanges, javaOffset);
 		
 		// user code
 		append(fUserCode);
 		javaOffset += fUserCode.length();
 
+		String tryCatchEnd = " } catch (java.lang.Exception e) {} " + ENDL;
+		fResult.append(tryCatchEnd);
+		javaOffset += tryCatchEnd.length();
+		
 		// footer
 		fResult.append(fFooter);
 		javaOffset += fFooter.length();
@@ -1727,9 +1727,9 @@ public class JSPTranslator {
 			if (type == null)
 				type = className;
 			String prefix = type + " " + id + " = "; //$NON-NLS-1$ //$NON-NLS-2$
-			String suffix = "null;\n"; //$NON-NLS-1$
+			String suffix = "null;" + ENDL; //$NON-NLS-1$
 			if (className != null)
-				suffix = "new " + className + "();\n"; //$NON-NLS-1$ //$NON-NLS-2$
+				suffix = "new " + className + "();" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$
 			IStructuredDocumentRegion referenceRegion = fCurrentNode.getPrevious() != null ? fCurrentNode.getPrevious() : fCurrentNode;
 			appendToBuffer(prefix + suffix, fUserCode, true, referenceRegion);
 		}
