@@ -1,1 +1,0 @@
-nice /opt/IBMJava2-13/bin/javac -classpath . $*
