@@ -18,7 +18,6 @@ import java.util.regex.Pattern;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.common.encoding.EncodingMemento;
-import org.eclipse.wst.common.encoding.HeadParserToken;
 import org.eclipse.wst.common.encoding.IResourceCharsetDetector;
 import org.eclipse.wst.xml.core.contenttype.EncodingParserConstants;
 import org.eclipse.wst.xml.core.contenttype.XMLHeadTokenizerConstants;

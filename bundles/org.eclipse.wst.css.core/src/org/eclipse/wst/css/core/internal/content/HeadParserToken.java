@@ -10,15 +10,35 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.xml.core.internal.contenttype;
+package org.eclipse.wst.css.core.internal.content;
 
-import org.eclipse.wst.xml.core.contenttype.EncodingParserConstants;
+public class HeadParserToken {
+	private int fStart;
 
+	private String fText;
+	private String fType;
 
-public interface XMLHeadTokenizerConstants extends EncodingParserConstants {
+	protected HeadParserToken() {
+		super();
+	}
 
-	final String XMLDeclEnd = "XMLDeclEnd"; //$NON-NLS-1$
-	final String XMLDeclStart = "XMLDeclStart"; //$NON-NLS-1$
-	final String XMLDelEncoding = "XMLDelEncoding"; //$NON-NLS-1$
-	//	final String XMLDeclVersion = "XMLDeclVersion";
+	public HeadParserToken(String type, int start, String text) {
+		this();
+		fType = type;
+		fStart = start;
+		fText = text;
+
+	}
+
+	public String getText() {
+		return fText;
+	}
+
+	public String getType() {
+		return fType;
+	}
+
+	public String toString() {
+		return ("text: " + fText + " offset: " + fStart + " type: " + fType); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	}
 }

@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 
 import org.eclipse.wst.common.encoding.CodedIO;
 import org.eclipse.wst.common.encoding.EncodingMemento;
-import org.eclipse.wst.common.encoding.HeadParserToken;
 import org.eclipse.wst.common.encoding.IResourceCharsetDetector;
 import org.eclipse.wst.xml.core.contenttype.EncodingParserConstants;
 

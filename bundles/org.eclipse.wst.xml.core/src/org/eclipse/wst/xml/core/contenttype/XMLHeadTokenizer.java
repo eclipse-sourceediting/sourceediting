@@ -18,8 +18,6 @@ package org.eclipse.wst.xml.core.contenttype;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.eclipse.wst.common.encoding.IntStack;
-import org.eclipse.wst.xml.core.internal.contenttype.EncodingParserConstants;
 import org.eclipse.wst.xml.core.internal.contenttype.HeadParserToken;
 
 
