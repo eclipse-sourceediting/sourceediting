@@ -11,13 +11,41 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.contentmodel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.IPath;
 
 
 public class TagDirRecord implements ITaglibRecord {
 	IPath location;
+	String shortName;
+	// a List holding Strings of .tag and .tagx filenames relative to the
+	// tagdir's location
+	List tags = new ArrayList(0);
+
+	/**
+	 * @return Returns the location.
+	 */
+	public IPath getLocation() {
+		return location;
+	}
 
 	public short getRecordType() {
 		return ITaglibRecord.TAGDIR;
+	}
+
+	/**
+	 * @return Returns the shortName.
+	 */
+	public String getShortName() {
+		return shortName;
+	}
+
+	/**
+	 * @return Returns the tags.
+	 */
+	public String[] getTags() {
+		return (String[]) tags.toArray(new String[tags.size()]);
 	}
 }
