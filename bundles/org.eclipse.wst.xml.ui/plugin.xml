@@ -239,7 +239,7 @@
    <extension
          point="org.eclipse.ui.newWizards">
       <category
-            name="XML"
+            name="%_UI_WIZARD_NEW_XML"
             id="org.eclipse.wst.XMLCategory">
       </category>
       <wizard
@@ -304,44 +304,44 @@
 <!-- =============================================================================== -->
 <!-- Contribute a New->Example... entry for Editing and Validating XML files         -->
 <!-- =============================================================================== -->
-   
+ 
+  <!-- define the XMLSamples project wizard -->  
   <extension point="org.eclipse.ui.newWizards"> 
        <category
-            name="XML"
+            name="%_UI_WIZARD_NEW_XML"
             parentCategory="org.eclipse.ui.Examples"
             id="org.eclipse.wst.xml.examples">
-        </category>
+       </category>
        <wizard
             name="%XMLExample.name"
-            class="org.eclipse.wst.xml.ui.internal.wizards.XMLExampleProjectCreationWizard"
-            category="org.eclipse.ui.Examples/org.eclipse.wst.xml.examples" 
-            finalPerspective="org.eclipse.ui.resourcePerspective"
+            class="org.eclipse.wst.common.ui.wizards.ExampleProjectCreationWizard"
+            category="org.eclipse.ui.Examples/org.eclipse.wst.xml.examples"
             id="org.eclipse.wst.xml.ui.XMLExampleProjectCreationWizard"
             project="true" 
             icon="icons/newSampleProject_wiz.gif">
          <description>
            %XMLExampleProjectCreationWizard.description
          </description>  
-      </wizard> 
+       </wizard>
    </extension>
    
+   <!-- configure the XMLSamples project wizard -->
    <extension point="org.eclipse.wst.common.ui.exampleProjectCreationWizard"
-   		id="XMLExampleProjectCreationWizardExtension"> 
-  	 <wizard
-           id="org.eclipse.wst.xml.ui.XMLExampleProjectCreationWizard"
-           banner="icons/newSampleProject_wizbanner.gif">
-        <projectsetup
-           	pagetitle="%XMLExampleProjectCreationWizard.pagetitle"
-           	name="%XMLExampleProjectCreationWizard.projectname"
-           	label="%XMLExampleProjectCreationWizard.label"
-           	pagedescription="%XMLExampleProjectCreationWizard.pagedescription"
-           	open="readme.html">
-            <import
-                  dest=""
-                  src="examples/EditingAndValidatingXML.zip">
-            </import>
-        </projectsetup>
-     </wizard>
-   </extension>
+	   id="XMLExampleProjectCreationWizardExtension">
+	   <wizard
+	   		id="org.eclipse.wst.xml.ui.XMLExampleProjectCreationWizard"
+			banner="icons/newSampleProject_wizbanner.gif">
+		    <projectsetup
+		       	pagetitle="%XMLExampleProjectCreationWizard.pagetitle"
+		       	name="%XMLExampleProjectCreationWizard.projectname"
+		       	label="%XMLExampleProjectCreationWizard.label"
+		       	pagedescription="%XMLExampleProjectCreationWizard.pagedescription"
+		       	open="readme.html">
+		        <import
+		              dest=""
+		              src="examples/EditingAndValidatingXML.zip"/>
+		    </projectsetup>
+		</wizard>
+	</extension>
    
 </plugin>
