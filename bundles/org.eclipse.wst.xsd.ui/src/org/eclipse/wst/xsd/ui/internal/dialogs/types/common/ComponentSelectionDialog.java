@@ -13,9 +13,14 @@ package org.eclipse.wst.xsd.ui.internal.dialogs.types.common;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ILabelProvider;
@@ -41,10 +46,12 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
 public class ComponentSelectionDialog extends Dialog {
+    private Display display = Display.getCurrent();
     private String dialogTitle;
 
     protected IComponentSelectionProvider provider;
     private List componentTreeViewerInput;
+    private List masterComponentList;
     
     // widgets
     protected Composite topComposite;
@@ -64,6 +71,7 @@ public class ComponentSelectionDialog extends Dialog {
         this.provider = provider;
         
         componentTreeViewerInput = new ArrayList();
+        masterComponentList = new ArrayList();
     }
 
     /*
@@ -78,6 +86,15 @@ public class ComponentSelectionDialog extends Dialog {
      */
     public void setFilterLabel(String string) {
         filterTextLabel = string;
+    }
+    
+    public void create() {
+        super.create();
+        setTextFilterFocus();
+    }
+    
+    protected void setTextFilterFocus() {
+        textFilter.setFocus();        
     }
 
     public Control createDialogArea(Composite parent) {
@@ -113,6 +130,10 @@ public class ComponentSelectionDialog extends Dialog {
         textFilterData.grabExcessHorizontalSpace = true;
         textFilter.setLayoutData(textFilterData);
 
+        //textFilter.setSelection(0);
+        //textFilter.setf
+        
+        
         // Create Component TreeViewer
         createComponentTreeViewer(filterLabelAndTree);
 
@@ -132,7 +153,10 @@ public class ComponentSelectionDialog extends Dialog {
         componentTreeViewer.setContentProvider(new ComponentTreeContentProvider());
         componentTreeViewer.setLabelProvider(provider.getLabelProvider());
         componentTreeViewer.setSorter(new ViewerSorter());
-        populateComponentTreeViewer("");
+        componentTreeViewer.setInput(componentTreeViewerInput);
+        
+        populateMasterComponentList();
+        refreshTreeViewer("");
 
         return mainComposite;
     }
@@ -158,8 +182,9 @@ public class ComponentSelectionDialog extends Dialog {
         componentTreeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
             public void selectionChanged(SelectionChangedEvent event) {
                 IStructuredSelection structuredSelection = (IStructuredSelection) event.getSelection();
-                List qualifiers = provider.getQualifier(structuredSelection.getFirstElement());
+                List qualifiers = provider.getQualifiers(structuredSelection.getFirstElement());
                 updateQualifierList(qualifiers);
+                updateCanFinish();
             }
         });
     }
@@ -242,7 +267,7 @@ public class ComponentSelectionDialog extends Dialog {
 
         public void run() {
             if (!CANCEL) {
-                populateComponentTreeViewer(getProcessedFilterString());
+                refreshTreeViewer(getProcessedFilterString());
                 
                 // Select first match
                 if (componentTreeViewer.getTree().getItemCount() > 0) {
@@ -254,7 +279,7 @@ public class ComponentSelectionDialog extends Dialog {
                 
                 // Update qualifierList
                 IStructuredSelection structuredSelection = (IStructuredSelection) componentTreeViewer.getSelection();
-                List qualifiers = provider.getQualifier(structuredSelection.getFirstElement());
+                List qualifiers = provider.getQualifiers(structuredSelection.getFirstElement());
                 updateQualifierList(qualifiers);
                 
                 updateCanFinish();
@@ -262,39 +287,101 @@ public class ComponentSelectionDialog extends Dialog {
         }
     }
 
-    class ComponentList implements IComponentList
-    {
+    class ComponentList implements IComponentList {
+        private Vector objectVector = new Vector();
+        private long currentChangeCounter = 0;
         
-        
-            public void addComponent(Object o) {
-            // TODO Auto-generated method stub
-
+        public void addComponent(Object o) {
+            objectVector.add(o);
+            currentChangeCounter++;
+            doViewerUpdate();
         }
-}
+        
+        private void doViewerUpdate() {
+            // TODO: Investigate if we should also add a timer condition??
+            if (currentChangeCounter == 10) {
+                currentChangeCounter = 0;
+                fireUpdateList(this);
+            }
+        }
+
+        public int size() {
+            return objectVector.size();
+        }
+        
+        public List subList(int startIndex, int endIndex) {
+            return objectVector.subList(startIndex, endIndex);
+        }
+        
+        public Iterator iterator() {
+            return objectVector.iterator();
+        }
+    }
+
+    
+    // this method gets called from a non-ui thread so needs to call
+    // asyncExec to ensure the UI updates happen on the UI thread
+    //
+    protected void fireUpdateList(final ComponentList list) {    
+        Runnable runnable = new Runnable() {
+            public void run(){
+                // add new objects
+                int growingListSize = list.size();
+                int currentSize = masterComponentList.size();
+                if (growingListSize > currentSize) {
+                    masterComponentList.addAll(list.subList(currentSize, growingListSize));
+                }
+
+                refreshTreeViewer(getProcessedFilterString());
+            }
+        };
+        display.asyncExec(runnable);        
+    }
+
     
     /*
-     * Populate the Component TreeViewer with items.  If a filter text is
-     * available, filter out the items.
+     * Populate the Component TreeViewer with items.
      */
-    protected void populateComponentTreeViewer(String filter) {
-        componentTreeViewerInput.clear();
+    protected void populateMasterComponentList() {
+        masterComponentList.clear();
         ILabelProvider labelProvider = provider.getLabelProvider();
         
-        // TODO: We need to use getComponents(IComponentList) instead...        
-//       IComponentList
-        Pattern regex = Pattern.compile(filter);
-        Iterator it = provider.getComponents().iterator();
+        final ComponentList componentList = new ComponentList();
+        provider.getComponents(componentList, true);
+        
+        Job job = new Job("read components") {
+          protected IStatus run(IProgressMonitor monitor) {
+            try {
+              // this stuff gets executed on a non-UI thread
+              //
+              provider.getComponents(componentList, false);
+              
+              // Do a final update of our Input for the component tree viewer.
+              fireUpdateList(componentList);
+            }
+            catch (Exception e) {
+            }
+            return Status.OK_STATUS;
+          }          
+        };
+        job.schedule();
+    }
+    
+    protected void refreshTreeViewer(String filterText) {
+        componentTreeViewerInput.clear();
+        ILabelProvider labelProvider = provider.getLabelProvider();
+        Pattern regex = Pattern.compile(filterText);
+        Iterator it = masterComponentList.iterator();
         while (it.hasNext()) {
             Object item = it.next();
             String itemString = labelProvider.getText(item);           
             Matcher m = regex.matcher(itemString.toLowerCase());
-            if (itemString.toLowerCase().startsWith(filter) || m.matches()) {
+            if (itemString.toLowerCase().startsWith(filterText) || m.matches()) {
                 componentTreeViewerInput.add(item);
             }
         }
         
-        
-        componentTreeViewer.setInput(componentTreeViewerInput);
+        componentTreeViewer.refresh();
     }
     
     /*

@@ -23,10 +23,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.wst.common.ui.properties.TabbedPropertySheetWidgetFactory;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.dialogs.types.xsd.XSDComponentSelectionDialog;
@@ -293,9 +290,6 @@ public class TypesSection extends AbstractSection
 	    }
 */        
         Shell shell = Display.getCurrent().getActiveShell();
-        IWorkbench workbench = XSDEditorPlugin.getPlugin().getWorkbench();
-        IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
-        IEditorPart editorPart = workbenchWindow.getActivePage().getActiveEditor();
         IFile currentIFile = ((IFileEditorInput)getActiveEditor().getEditorInput()).getFile();
         
         Object input = getInput();

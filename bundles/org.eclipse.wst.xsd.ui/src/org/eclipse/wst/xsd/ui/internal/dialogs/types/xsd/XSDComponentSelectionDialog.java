@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.wst.xsd.ui.internal.dialogs.types.common.ComponentSelectionDialog;
 import org.eclipse.wst.xsd.ui.internal.dialogs.types.common.IComponentSelectionProvider;
 import org.eclipse.wst.xsd.ui.internal.dialogs.types.xml.XMLComponentSpecification;
-import org.eclipse.wst.xsd.ui.internal.dialogs.types.xsd.XSDComponentSelectionProvider.XMLComponentTreeObject;
+import org.eclipse.wst.xsd.ui.internal.dialogs.types.xml.XMLComponentSelectionProvider.XMLComponentTreeObject;
 
 public class XSDComponentSelectionDialog extends ComponentSelectionDialog {
     private CCombo scopeCombo;
@@ -98,7 +98,8 @@ public class XSDComponentSelectionDialog extends ComponentSelectionDialog {
         public void widgetSelected(SelectionEvent e) {
             if (e.widget == scopeCombo) {
                 searchScopeString = scopeCombo.getItem(scopeCombo.getSelectionIndex());
-                populateComponentTreeViewer(getProcessedFilterString());
+                populateMasterComponentList();
+                refreshTreeViewer(getProcessedFilterString());
                 
                 // Select the first matching component.  Though we should be smarter here
                 // and determine if there was a selection before the scope switch (and if

@@ -58,9 +58,6 @@ public class SetTypeCommand extends AbstractCommand
       else
       {
           Shell shell = Display.getCurrent().getActiveShell();
-          IWorkbench workbench = XSDEditorPlugin.getPlugin().getWorkbench();
-          IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
-          IEditorPart editorPart = workbenchWindow.getActivePage().getActiveEditor();
           IFile currentIFile = ((IFileEditorInput)getActiveEditor().getEditorInput()).getFile();
           
           XSDComponentSelectionProvider provider = new XSDComponentSelectionProvider(currentIFile, schema);

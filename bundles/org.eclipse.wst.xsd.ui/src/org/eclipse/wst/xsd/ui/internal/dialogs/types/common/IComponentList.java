@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.dialogs.types.common;
 
+import java.util.Iterator;
+
 public interface IComponentList {
-   void addComponent(Object o);   
+   public void addComponent(Object o);
+   public Iterator iterator();
 }

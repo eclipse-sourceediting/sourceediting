@@ -47,7 +47,7 @@ public class XMLCommonResources {
 		this.editorPlugin = editorPlugin;
 		//imageFactory = new ImageFactory();
 		try {
-			resourceBundle = ResourceBundle.getBundle("EditingXML"); //$NON-NLS-1$
+			resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.xml.ui.internal.XMLUIPluginResources"); //$NON-NLS-1$
 			imageFactory = new ImageFactory();
 		} catch (java.util.MissingResourceException exception) {
 			//TODO... log an error message

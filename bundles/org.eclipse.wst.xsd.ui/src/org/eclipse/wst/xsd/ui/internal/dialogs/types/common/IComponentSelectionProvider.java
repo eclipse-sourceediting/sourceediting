@@ -15,15 +15,11 @@ import java.util.List;
 import org.eclipse.jface.viewers.ILabelProvider;
 
 public interface IComponentSelectionProvider {
-
-    // don't use
-	List getComponents();
     
-    // instead use this one
     // warning ... this will get called on a non UI thread
-    void getComponents(IComponentList list);
+    void getComponents(IComponentList list, boolean quick);
     
 	String getType(Object component);
 	ILabelProvider getLabelProvider();
-	List getQualifier(Object component);
+	List getQualifiers(Object component);
 }

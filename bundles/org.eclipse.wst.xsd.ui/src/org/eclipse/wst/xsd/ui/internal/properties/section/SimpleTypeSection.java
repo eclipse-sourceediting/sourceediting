@@ -30,10 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.wst.common.ui.properties.ITabbedPropertyConstants;
 import org.eclipse.wst.common.ui.properties.TabbedPropertySheetWidgetFactory;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
@@ -268,9 +265,6 @@ public class SimpleTypeSection extends AbstractSection
       String property = "";
       Element secondaryElement = null;
       
-      IWorkbench workbench = XSDEditorPlugin.getPlugin().getWorkbench();
-      IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
-      IEditorPart editorPart = workbenchWindow.getActivePage().getActiveEditor();
       IFile currentIFile = ((IFileEditorInput)getActiveEditor().getEditorInput()).getFile();
 
       XSDComponentSelectionProvider provider = new XSDComponentSelectionProvider(currentIFile, xsdSchema);
