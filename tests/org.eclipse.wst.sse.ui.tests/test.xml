@@ -9,7 +9,7 @@
 		<echo message="eclipse place ${eclipse-home}" />
 	
 	<!-- sets the properties plugin-name, and library-file -->
-	<property name="plugin-name" value="org.eclipse.wst.sse.core.tests" />
+	<property name="plugin-name" value="org.eclipse.wst.sse.ui.tests" />
     <property name="library-file" value="${eclipse-home}/plugins/org.eclipse.test_3.1.0/library.xml"/>
 
 	<!-- This target holds all initialization code that needs to be done for -->
