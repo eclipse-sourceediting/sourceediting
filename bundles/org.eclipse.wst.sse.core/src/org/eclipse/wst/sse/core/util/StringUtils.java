@@ -147,7 +147,8 @@ public class StringUtils {
 				if (!stringFound)
 					list.add(null);
 				stringFound = false;
-			} else {
+			}
+			else {
 				list.add(token);
 				stringFound = true;
 			}
@@ -183,7 +184,8 @@ public class StringUtils {
 					break;
 				}
 			}
-		} else {
+		}
+		else {
 			for (int i = 0; i < arrayOfStrings.length; i++) {
 				if (needle.equalsIgnoreCase(arrayOfStrings[i])) {
 					result = true;
@@ -229,7 +231,8 @@ public class StringUtils {
 
 				if ((i < lineCount - 1) && (tempDoc.getLineDelimiter(i) != null))
 					newText += lineDelimiterToUse;
-			} catch (BadLocationException exception) {
+			}
+			catch (BadLocationException exception) {
 				throw new SourceEditingRuntimeException(exception);
 			}
 		}
@@ -280,13 +283,17 @@ public class StringUtils {
 			chunk = toker.nextToken();
 			if (chunk.equals(EQUAL_SIGN)) {
 				escapedBuffer.append(EQUAL_SIGN_ENTITY);
-			} else if (chunk.equals(LINE_FEED)) {
+			}
+			else if (chunk.equals(LINE_FEED)) {
 				escapedBuffer.append(LINE_FEED_ENTITY);
-			} else if (chunk.equals(CARRIAGE_RETURN)) {
+			}
+			else if (chunk.equals(CARRIAGE_RETURN)) {
 				escapedBuffer.append(CARRIAGE_RETURN_ENTITY);
-			} else if (chunk.equals(LINE_TAB)) {
+			}
+			else if (chunk.equals(LINE_TAB)) {
 				escapedBuffer.append(LINE_TAB_ENTITY);
-			} else {
+			}
+			else {
 				escapedBuffer.append(chunk);
 			}
 		}
@@ -295,6 +302,7 @@ public class StringUtils {
 
 	/**
 	 * Returns the first line of the given text without a trailing delimiter
+	 * 
 	 * @param text
 	 * @return
 	 */
@@ -307,7 +315,8 @@ public class StringUtils {
 			int lineNumber = doc.getLineOfOffset(0);
 			IRegion line = doc.getLineInformation(lineNumber);
 			return doc.get(line.getOffset(), line.getLength());
-		} catch (BadLocationException e) {
+		}
+		catch (BadLocationException e) {
 			// do nothing
 		}
 		return text;
@@ -402,7 +411,7 @@ public class StringUtils {
 	 *            java.lang.String[]
 	 */
 	public static void main(String[] args) {
-		//testPaste();
+		// testPaste();
 		testStripNonLetterDigits();
 	}
 
@@ -440,18 +449,22 @@ public class StringUtils {
 		String[] results = null;
 		if (start != null && end == null) {
 			results = new String[]{start, "", ""}; //$NON-NLS-2$//$NON-NLS-1$
-		} else if (start == null && end != null) {
+		}
+		else if (start == null && end != null) {
 			results = new String[]{"", "", end}; //$NON-NLS-2$//$NON-NLS-1$
-		} else if (start == null && end == null) {
+		}
+		else if (start == null && end == null) {
 			results = new String[]{"", "", ""}; //$NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$
-		} else if (start != null && end != null) {
+		}
+		else if (start != null && end != null) {
 
 			int startLength = start.length();
 			int endLength = end.length();
 
 			if (startLength == 0 || endLength == 0) {
 				results = new String[]{"", "", ""}; //$NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$
-			} else {
+			}
+			else {
 				results = new String[3];
 				String testStart = ""; //$NON-NLS-1$
 				String testEnd = ""; //$NON-NLS-1$
@@ -460,7 +473,7 @@ public class StringUtils {
 				while (mergeLength > 0 && !finished) {
 					testStart = start.substring(startLength - mergeLength);
 					testEnd = end.substring(0, mergeLength);
-					//case sensitive
+					// case sensitive
 					if (testStart.equals(testEnd)) {
 						finished = true;
 						results[0] = start.substring(0, startLength - mergeLength);
@@ -707,6 +720,8 @@ public class StringUtils {
 	 * @todo Generated comment
 	 */
 	public static String[] unpack(String s) {
+		if (s == null)
+			return new String[0];
 		StringTokenizer toker = new StringTokenizer(s, ","); //$NON-NLS-1$
 		List list = new ArrayList();
 		while (toker.hasMoreTokens()) {
