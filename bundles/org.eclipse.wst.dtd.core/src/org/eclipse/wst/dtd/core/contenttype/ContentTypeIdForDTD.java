@@ -23,9 +23,12 @@ package org.eclipse.wst.dtd.core.contenttype;
 
 public class ContentTypeIdForDTD {
 	/**
-	 * The value of the contenttype id field must match what is specified in
-	 * plugin.xml file. Note: this value is intentially not declared as final,
-	 * so it will not be inlined.
+	 * The value of the ContentTypeID_DTD id field must match what is
+	 * specified in org.eclipse.wst.dtd.core/plugin.xml for the DTD content
+	 * type
+	 * 
+	 * Note: this value is intentially not declared as final, so it will not
+	 * be inlined.
 	 */
 	public static String ContentTypeID_DTD = "org.eclipse.wst.dtd.core.dtdsource"; //$NON-NLS-1$
 
