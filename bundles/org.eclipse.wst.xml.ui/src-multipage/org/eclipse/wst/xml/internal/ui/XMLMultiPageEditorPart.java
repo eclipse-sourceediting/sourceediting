@@ -182,8 +182,8 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 		} catch (PartInitException exception) {
 			// dispose editor
 			dispose();
-
-			throw new SourceEditingRuntimeException(ResourceHandler.getString("An_error_has_occurred_when1_ERROR_")); //$NON-NLS-1$
+			Logger.logException(exception);
+			throw new SourceEditingRuntimeException(exception, ResourceHandler.getString("An_error_has_occurred_when1_ERROR_")); //$NON-NLS-1$
 		}
 	}
 
