@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.tests.parser;
 
-import org.eclipse.wst.xml.core.document.InvalidCharacterException;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.internal.document.InvalidCharacterException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
