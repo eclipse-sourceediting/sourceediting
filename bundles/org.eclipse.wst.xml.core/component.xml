@@ -14,7 +14,8 @@
         <package name="org.eclipse.wst.xml.core.contenttype" />
         <package name="org.eclipse.wst.xml.core.document" />
         <package name="org.eclipse.wst.xml.core.parser" />
-        <package name="org.w3c.dom" />
+
+         <!-- <package name="org.w3c.dom" /> -->
 
         <package name="org.eclipse.wst.xml.uriresolver" />
 
