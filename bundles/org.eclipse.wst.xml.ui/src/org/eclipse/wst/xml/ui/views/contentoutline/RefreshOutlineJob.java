@@ -23,10 +23,10 @@ import org.eclipse.ui.progress.UIJob;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.w3c.dom.Node;
 
-
-
+/**
+ * @deprecated should be using org.eclipse.wst.sse.ui.views.contentoutline.RefreshOutlineJob
+ */
 public class RefreshOutlineJob extends UIJob {
-
 
 	private INodeNotifier fNodeNotifier;
 	private StructuredViewer fStructuredViewer;
