@@ -4,7 +4,7 @@
    id="org.eclipse.wst.sse.core"
    name="%Structured_Text_Model.name"
    version="1.0.0"
-   provider-name="IBM"
+   provider-name="Eclipse.org"
    class="org.eclipse.wst.sse.core.ModelPlugin">
 
    <runtime>
@@ -52,8 +52,6 @@
    <extension-point id="commentElementHandler" name="%Comment_Element_Handler_Extension.name"/>
 <!-- this plug-in provides support for this extension point -->
    <extension-point id="modelHandler" name="%Model_Handler_Extension.name"/>
-<!-- builder participant; must implement org.eclipse.wst.sse.core.builder.IBuilderParticipant -->
-   <extension-point id="builderparticipant" name="%Structured_Builder_Participant_Extension.name" schema="schema/builderparticipant.exsd"/>
    <extension-point id="formatProcessors" name="%Format_Processors_Extension.name" schema="schema/formatProcessors.exsd"/>
 
 <!-- not for use by clients -->

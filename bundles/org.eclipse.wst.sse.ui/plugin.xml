@@ -4,7 +4,7 @@
    id="org.eclipse.wst.sse.ui"
    name="%Structured_Source_Editor.name"
    version="1.0.0"
-   provider-name="IBM"
+   provider-name="Eclipse.org"
    class="org.eclipse.wst.sse.ui.EditorPlugin">
 
    <runtime>
@@ -324,7 +324,7 @@
          point="org.eclipse.wst.sse.ui.dropTargetTransfers">
       <dropTargetContribution
             targetID="org.eclipse.wst.sse.ui.StructuredTextEditor"
-            id="org.eclipse.wst.sse.edit.extention.ExtendedTransfers">
+            id="org.eclipse.wst.sse.ui.extention.ExtendedTransfers">
          <transfer
                priority="mid"
                singleton="true"
