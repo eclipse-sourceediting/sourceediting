@@ -114,7 +114,7 @@ public class TestStructuredPartitioner extends TestCase {
 		int nPartitions = doComputePartitioningTest("testfiles/jsp/example04.jsp");
 		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		checkSeams();
-		verifyPartitionTypes(partitions, new String[]{StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER, "SCRIPT.language:MYLANGUAGE", StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, StructuredTextPartitionerForJSP.ST_JSP_COMMENT, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML});
+		verifyPartitionTypes(partitions, new String[]{StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER, "org.eclipse.wst.html.SCRIPT.language.MYLANGUAGE", StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, StructuredTextPartitionerForJSP.ST_JSP_COMMENT, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML});
 	}
 
 	public void testJSP5() throws IOException, BadLocationException {
