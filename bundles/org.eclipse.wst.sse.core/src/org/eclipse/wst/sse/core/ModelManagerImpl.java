@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -489,17 +490,7 @@ class ModelManagerImpl implements IModelManager {
 	 * is an instance method so can be accessed via interface.
 	 */
 	public String calculateId(IFile file) {
-
-		String id = null;
-		// if file doesn't exist, getLocation can return null
-		// and we'll return null in that case.
-		// (normally this is not called if file doesn't exist, but
-		// can in certain situations of a project being deleted
-		// that had a file which is open in an editor.
-		IPath path = file.getLocation();
-		if (path != null)
-			id = path.toString();
-		return id;
+		return FileBufferModelManager.getInstance().calculateId(file);
 	}
 
 	/**

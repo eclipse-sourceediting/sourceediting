@@ -57,6 +57,8 @@ class FileBufferModelManager {
 		String contentTypeID = null;
 		IStructuredModel model = null;
 		boolean selfConnected = false;
+		int bufferReferenceCount = 0;
+		int modelReferenceCount = 0;
 	}
 
 	/**
@@ -127,6 +129,7 @@ class FileBufferModelManager {
 				DocumentInfo info = new DocumentInfo();
 				info.buffer = textBuffer;
 				info.contentTypeID = detectContentType(buffer.getLocation()).getId();
+				info.bufferReferenceCount++;
 				fDocumentMap.put(textBuffer.getDocument(), info);
 			}
 		}
@@ -138,15 +141,22 @@ class FileBufferModelManager {
 				}
 				ITextFileBuffer textBuffer = (ITextFileBuffer) buffer;
 				DocumentInfo info = (DocumentInfo) fDocumentMap.get(textBuffer.getDocument());
-				if (info != null && info.model != null) {
-					String msg = "Leftover model instance for" + info.buffer.getLocation();
-					if (debugFileBufferModelManagement || debugTextBufferLifeCycle) {
-						System.out.println(msg);
-					} else {
-						Logger.log(Logger.WARNING, msg);
-					}
+				if (info != null) {
+					// if (info.model != null) {
+					// String msg = "Leftover model instance for " +
+					// info.buffer.getLocation();
+					// if (debugFileBufferModelManagement ||
+					// debugTextBufferLifeCycle) {
+					// System.err.println(msg);
+					// }
+					// else {
+					// Logger.log(Logger.WARNING, msg);
+					// }
+					// }
+					info.bufferReferenceCount--;
+					if (info.bufferReferenceCount == 0 && info.modelReferenceCount == 0)
+						fDocumentMap.remove(textBuffer.getDocument());
 				}
-				fDocumentMap.remove(textBuffer.getDocument());
 			}
 		}
 
@@ -224,6 +234,16 @@ class FileBufferModelManager {
 
 	static final void shutdown() {
 		if (instance != null) {
+			if (debugFileBufferModelManagement) {
+				IDocument[] danglingDocuments = (IDocument[]) instance.fDocumentMap.keySet().toArray(new IDocument[0]);
+				for (int i = 0; i < danglingDocuments.length; i++) {
+					DocumentInfo info = (DocumentInfo) instance.fDocumentMap.get(danglingDocuments[i]);
+					if (info.modelReferenceCount > 0)
+						System.err.println("LEAKED MODEL: " + info.buffer.getLocation());
+					if (info.bufferReferenceCount > 0)
+						System.err.println("LEAKED BUFFER: " + info.buffer.getLocation());
+				}
+			}
 			FileBuffers.getTextFileBufferManager().removeFileBufferListener(instance.fFileBufferListener);
 			instance = null;
 		}
@@ -265,6 +285,24 @@ class FileBufferModelManager {
 				registry.addFactory(factory);
 			}
 		}
+	}
+
+	String calculateId(IFile file) {
+		String id = null;
+		IPath path = file.getLocation();
+		if (path != null) {
+			/*
+			 * The ID of models must be the same as the normalized paths
+			 * stored in the underlying FileBuffers to retrieve them by common
+			 * ID later on. We chose the FileBuffer normalized path over the
+			 * previously used absolute IFile path because the buffers should
+			 * already exist before we build a model and we can't retrieve a
+			 * FileBuffer using the ID of a model that doesn't yet exist.
+			 */
+			id = FileBuffers.normalizeLocation(path).toString();
+		}
+		return id;
+
 	}
 
 	String calculateId(IStructuredDocument document) {
@@ -409,6 +447,7 @@ class FileBufferModelManager {
 			if (debugFileBufferModelManagement) {
 				System.out.println("FileBufferModelManager creating model for " + info.buffer.getLocation());
 			}
+			info.modelReferenceCount++;
 
 			IStructuredModel model = null;
 			IModelHandler handler = ModelHandlerRegistry.getInstance().getHandlerForContentTypeId(info.contentTypeID);
@@ -474,6 +513,9 @@ class FileBufferModelManager {
 			if (debugFileBufferModelManagement) {
 				System.out.println("FileBufferModelManager noticed full release of model for " + info.buffer.getLocation());
 			}
+			info.modelReferenceCount--;
+			if (info.bufferReferenceCount == 0 && info.modelReferenceCount == 0)
+				fDocumentMap.remove(document);
 		}
 	}
 }
