@@ -433,7 +433,7 @@ class ProjectDescription {
 				Node text = child.getFirstChild();
 				while (text != null) {
 					if (text.getNodeType() == Node.TEXT_NODE || text.getNodeType() == Node.CDATA_SECTION_NODE) {
-						uri.append(text.getNodeValue());
+						uri.append(text.getNodeValue().trim());
 					}
 					text = text.getNextSibling();
 				}
@@ -609,7 +609,7 @@ class ProjectDescription {
 			if (child.getNodeType() == Node.ELEMENT_NODE && child.getNodeName().equals(childName)) {
 				Node text = child.getFirstChild();
 				while (text != null) {
-					buffer.append(text.getNodeValue());
+					buffer.append(text.getNodeValue().trim());
 					text = text.getNextSibling();
 				}
 			}
