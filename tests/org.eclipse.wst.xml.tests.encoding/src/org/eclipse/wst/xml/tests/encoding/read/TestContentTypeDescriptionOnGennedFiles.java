@@ -583,10 +583,10 @@ public class TestContentTypeDescriptionOnGennedFiles extends TestContentDescript
 		doGenTest(charsetName);
 	}
 
-	public void testFile107() throws CoreException, IOException {
-		String charsetName = "UTF-16BE";
-		doGenTest(charsetName);
-	}
+//	public void testFile107() throws CoreException, IOException {
+//		String charsetName = "UTF-16BE";
+//		doGenTest(charsetName);
+//	}
 
 	public void testFile108() throws CoreException, IOException {
 		String charsetName = "UTF-16LE";

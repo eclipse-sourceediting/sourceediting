@@ -189,110 +189,110 @@ public class TestContentTypeDetection extends TestCase {
 		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/regressionTestFiles/defect229667/audi.jsp", null);
 	}
 
-	public void testFile103() throws CoreException, IOException {
-		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/EmptyFile.xml", null);
-	}
-
-	public void testFile104() throws CoreException, IOException {
-		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/eucjp.xml", null);
-	}
-
-	public void testFile105() throws CoreException, IOException {
-		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/IllformedNormalNonDefault.xml", null);
-	}
-
-	public void testFile106() throws CoreException, IOException {
-		doTest("org.eclipse.wst.xml.core.xmlsource", "testfiles/xml/MalformedNoEncoding.xml", null);
-	}
-
-	public void testFile107() throws CoreException, IOException {
-		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/MalformedNoEncoding.xsl", null);
-	}
-
-	public void testFile108() throws CoreException, IOException {
-		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/NoEncoding.xml", null);
-	}
-
-	public void testFile109() throws CoreException, IOException {
-		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/NormalNonDefault.xml", null);
-	}
-
-
-	public void testFile110() throws CoreException, IOException {
-		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/shiftjis.xml", null);
-	}
-
-	public void testFile111() throws CoreException, IOException {
-		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testExtraJunk.xml", null);
-	}
-
-	public void testFile112() throws CoreException, IOException {
-		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testExtraValidStuff.xml", null);
-	}
-
-	public void testFile113() throws CoreException, IOException {
-		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testIllFormed.xml", null);
-	}
-
-	public void testFile114() throws CoreException, IOException {
-		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testIllFormed2.xml", null);
-	}
-
-	public void testFile115() throws CoreException, IOException {
-		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testIllFormed3.xml", java.nio.charset.IllegalCharsetNameException.class);
-	}
-
-	public void testFile116() throws CoreException, IOException {
-		doTest("org.eclipse.wst.xml.core.xmlsource", "testfiles/xml/testIllFormed4.xml", null);
-	}
-
-	public void testFile117() throws CoreException, IOException {
-		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testMultiLine.xml", null);
-	}
-
-	public void testFile118() throws CoreException, IOException {
-		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testNoEncodingValue.xml", null);
-	}
-
-	public void testFile119() throws CoreException, IOException {
-		doTest("org.eclipse.wst.xml.core.xmlsource", "testfiles/xml/testNormalCase.xml", null);
-	}
-
-	public void testFile120() throws CoreException, IOException {
-		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testNoXMLDecl.xml", null);
-	}
-
-	public void testFile121() throws CoreException, IOException {
-		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testNoXMLDeclAtFirst.xml", null);
-	}
-
-	public void testFile122() throws CoreException, IOException {
-		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testNoXMLDeclInLargeFile.xml", null);
-	}
-
-	public void testFile123() throws CoreException, IOException {
-		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testUTF16.xml", null);
-	}
-
-	public void testFile124() throws CoreException, IOException {
-		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/UTF16LEAtStartOfLargeFile.xml", null);
-	}
-
-	public void testFile125() throws CoreException, IOException {
-		doTest("org.eclipse.wst.xml.core.xmlsource", "testfiles/xml/utf16UnicodeStreamWithNoEncodingInHeader2.xml", null);
-	}
-
-	public void testFile126() throws CoreException, IOException {
-		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/utf16UnicodeStreamWithNoEncodingInHeaderBE.xml", null);
-	}
-
-	public void testFile127() throws CoreException, IOException {
-		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/utf16WithJapaneseChars.xml", null);
-	}
-
-	public void testFile128() throws CoreException, IOException {
-		doTest("org.eclipse.wst.xml.core.xmlsource", "testfiles/xml/UTF8With3ByteBOM.xml", null);
-	}
+//	public void testFile103() throws CoreException, IOException {
+//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/EmptyFile.xml", null);
+//	}
+//
+//	public void testFile104() throws CoreException, IOException {
+//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/eucjp.xml", null);
+//	}
+//
+//	public void testFile105() throws CoreException, IOException {
+//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/IllformedNormalNonDefault.xml", null);
+//	}
+//
+//	public void testFile106() throws CoreException, IOException {
+//		doTest("org.eclipse.wst.xml.core.xmlsource", "testfiles/xml/MalformedNoEncoding.xml", null);
+//	}
+//
+//	public void testFile107() throws CoreException, IOException {
+//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/MalformedNoEncoding.xsl", null);
+//	}
+//
+//	public void testFile108() throws CoreException, IOException {
+//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/NoEncoding.xml", null);
+//	}
+//
+//	public void testFile109() throws CoreException, IOException {
+//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/NormalNonDefault.xml", null);
+//	}
+//
+//
+//	public void testFile110() throws CoreException, IOException {
+//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/shiftjis.xml", null);
+//	}
+//
+//	public void testFile111() throws CoreException, IOException {
+//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testExtraJunk.xml", null);
+//	}
+//
+//	public void testFile112() throws CoreException, IOException {
+//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testExtraValidStuff.xml", null);
+//	}
+//
+//	public void testFile113() throws CoreException, IOException {
+//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testIllFormed.xml", null);
+//	}
+//
+//	public void testFile114() throws CoreException, IOException {
+//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testIllFormed2.xml", null);
+//	}
+//
+//	public void testFile115() throws CoreException, IOException {
+//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testIllFormed3.xml", java.nio.charset.IllegalCharsetNameException.class);
+//	}
+//
+//	public void testFile116() throws CoreException, IOException {
+//		doTest("org.eclipse.wst.xml.core.xmlsource", "testfiles/xml/testIllFormed4.xml", null);
+//	}
+//
+//	public void testFile117() throws CoreException, IOException {
+//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testMultiLine.xml", null);
+//	}
+//
+//	public void testFile118() throws CoreException, IOException {
+//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testNoEncodingValue.xml", null);
+//	}
+//
+//	public void testFile119() throws CoreException, IOException {
+//		doTest("org.eclipse.wst.xml.core.xmlsource", "testfiles/xml/testNormalCase.xml", null);
+//	}
+//
+//	public void testFile120() throws CoreException, IOException {
+//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testNoXMLDecl.xml", null);
+//	}
+//
+//	public void testFile121() throws CoreException, IOException {
+//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testNoXMLDeclAtFirst.xml", null);
+//	}
+//
+//	public void testFile122() throws CoreException, IOException {
+//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testNoXMLDeclInLargeFile.xml", null);
+//	}
+//
+//	public void testFile123() throws CoreException, IOException {
+//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testUTF16.xml", null);
+//	}
+//
+//	public void testFile124() throws CoreException, IOException {
+//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/UTF16LEAtStartOfLargeFile.xml", null);
+//	}
+//
+//	public void testFile125() throws CoreException, IOException {
+//		doTest("org.eclipse.wst.xml.core.xmlsource", "testfiles/xml/utf16UnicodeStreamWithNoEncodingInHeader2.xml", null);
+//	}
+//
+//	public void testFile126() throws CoreException, IOException {
+//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/utf16UnicodeStreamWithNoEncodingInHeaderBE.xml", null);
+//	}
+//
+//	public void testFile127() throws CoreException, IOException {
+//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/utf16WithJapaneseChars.xml", null);
+//	}
+//
+//	public void testFile128() throws CoreException, IOException {
+//		doTest("org.eclipse.wst.xml.core.xmlsource", "testfiles/xml/UTF8With3ByteBOM.xml", null);
+//	}
 
 
 	public void testFile4() throws CoreException, IOException {

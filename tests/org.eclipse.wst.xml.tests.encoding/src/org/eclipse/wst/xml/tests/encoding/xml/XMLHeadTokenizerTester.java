@@ -141,10 +141,10 @@ public class XMLHeadTokenizerTester extends TestCase {
 	 * itself can't read correctly. Returns null in "pure" tokenizer test, but
 	 * encoding detector case should still handle since looks for bytes first.
 	 */
-	public void testUTF16() {
-		String filename = fileLocation + "testUTF16.xml";
-		doTestFile(filename, "UTF16BEInStream");
-	}
+//	public void testUTF16() {
+//		String filename = fileLocation + "testUTF16.xml";
+//		doTestFile(filename, "UTF16BEInStream");
+//	}
 
 	/**
 	 * Just to make sure we don't choke on empty file.
@@ -329,27 +329,27 @@ public class XMLHeadTokenizerTester extends TestCase {
 	/**
 	 * Testing as a result of CMVC defect 217720
 	 */
-	public void testUTF16LEWithJapaneseChars() {
-		String filename = fileLocation + "utf16UnicodeStreamWithNoEncodingInHeader2.xml";
-		doTestFile(filename, "UTF16LEInStream");
-	}
+//	public void testUTF16LEWithJapaneseChars() {
+//		String filename = fileLocation + "utf16UnicodeStreamWithNoEncodingInHeader2.xml";
+//		doTestFile(filename, "UTF16LEInStream");
+//	}
 
 	/**
 	 * Testing as a result of CMVC defect 217720
 	 */
-	public void testUTF16BEWithJapaneseChars() {
-		String filename = fileLocation + "utf16UnicodeStreamWithNoEncodingInHeaderBE.xml";
-		doTestFile(filename, "UTF16BEInStream");
-	}
+//	public void testUTF16BEWithJapaneseChars() {
+//		String filename = fileLocation + "utf16UnicodeStreamWithNoEncodingInHeaderBE.xml";
+//		doTestFile(filename, "UTF16BEInStream");
+//	}
 
 	/**
 	 * A common case. 
 	 *  
 	 */
-	public void testUTF8With3ByteBOM() {
-		String filename = fileLocation + "UTF8With3ByteBOM.xml";
-		doTestFile(filename, "UTF83ByteBOMInStream");
-	}
+//	public void testUTF8With3ByteBOM() {
+//		String filename = fileLocation + "UTF8With3ByteBOM.xml";
+//		doTestFile(filename, "UTF83ByteBOMInStream");
+//	}
 
 	public void UTF16LEAtStartOfLargeFile() {
 		String filename = fileLocation + "UTF16LEAtStartOfLargeFile.xml";

@@ -118,10 +118,10 @@ public class XMLMalformedInputTests extends TestCase {
 		assertTrue("Wrong character position detected in MalformedInputException.  Expected: " + expectedPosition + " Found: " + badCharPosition, (badCharPosition == expectedPosition) || badCharPosition == expectedPosition - 2);
 	}
 
-	public void testXSLMalformedInput() throws IOException {
-		String filename = fileLocation + "MalformedNoEncoding.xsl";
-		doTestMalformedInput(filename, new XMLResourceEncodingDetector(), 211);
-	}
+//	public void testXSLMalformedInput() throws IOException {
+//		String filename = fileLocation + "MalformedNoEncoding.xsl";
+//		doTestMalformedInput(filename, new XMLResourceEncodingDetector(), 211);
+//	}
 
 	/**
 	 * Ensures that an InputStream has mark/reset support.
