@@ -1217,21 +1217,12 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	}
 
 	public void doSave(IProgressMonitor progressMonitor) {
-		FileModelProvider fileModelProvider = null;
 		try {
 			getModel().aboutToChangeModel();
 			updateEncodingMemento();
-			IDocumentProvider documentProvider = getDocumentProvider();
-			if (documentProvider instanceof FileModelProvider) {
-				fileModelProvider = (FileModelProvider) documentProvider;
-				fileModelProvider.setActiveShell(this.getDisplay().getActiveShell());
-			}
 			super.doSave(progressMonitor);
 		} finally {
 			getModel().changedModel();
-			if (fileModelProvider != null) {
-				fileModelProvider.setActiveShell(null);
-			}
 		}
 	}
 
@@ -1648,19 +1639,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			}
 		}
 		return fStructuredModel;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	protected IDocumentProvider getModelProviderFor(IEditorInput input) {
-		if (input instanceof IFileEditorInput) {
-			return FileModelProvider.getInstance();
-		} else if (input instanceof IStorageEditorInput) {
-			return StorageModelProvider.getInstance();
-		} else {
-			return NullModelProvider.getInstance();
-		}
 	}
 
 	/**
@@ -2291,8 +2269,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 				fStructuredModel.getStructuredDocument().removeDocumentListener(this);
 			}
 		}
-		if (getDocumentProvider() instanceof FileModelProvider)
-			((FileModelProvider) getDocumentProvider()).createModelInfo(input, newModel, false);
 		fStructuredModel = newModel;
 		// setInput in super will allow titles to be
 		// updated, etc.
@@ -2475,7 +2451,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		IDocumentCharsetDetector detector = getModel().getModelHandler().getEncodingDetector();
 		if (memento != null && detector != null)
 			detector.set(doc);
-//		String detectedEncoding = null;
 		try {
 			detector.getEncoding();
 		} catch (IOException e) {
