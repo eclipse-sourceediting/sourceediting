@@ -15,7 +15,6 @@ package org.eclipse.wst.xml.ui.contentassist;
 import java.util.HashMap;
 
 import org.eclipse.jface.text.contentassist.IContextInformation;
-import org.eclipse.jface.text.contentassist.IContextInformationExtension;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.ui.util.Assert;
 
@@ -88,7 +87,7 @@ public class AttributeContextInformation implements IContextInformation {
 	}
 
 	/**
-	 * @see IContextInformationExtension#getContextInformationPosition()
+	 * @see org.eclipse.jface.text.contentassist.IContextInformationExtension#getContextInformationPosition()
 	 */
 	public int getContextInformationPosition() {
 		return fPosition;

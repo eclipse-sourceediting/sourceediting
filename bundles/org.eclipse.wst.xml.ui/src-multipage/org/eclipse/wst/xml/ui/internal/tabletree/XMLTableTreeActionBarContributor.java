@@ -19,7 +19,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IWorkbenchActionConstants;
@@ -318,7 +317,7 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 	}
 
 	/**
-	 * @see IEditorActionBarContributor#dispose()
+	 * @see org.eclipse.ui.IEditorActionBarContributor#dispose()
 	 */
 	public void dispose() {
 	}
