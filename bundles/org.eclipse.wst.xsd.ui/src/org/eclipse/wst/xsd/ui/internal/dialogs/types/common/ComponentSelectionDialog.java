@@ -55,6 +55,7 @@ public class ComponentSelectionDialog extends Dialog {
     
     // widgets
     protected Composite topComposite;
+    protected Composite bottomComposite; 
     private String filterTextLabel = "";
     private String componentListLabel = "Components:";  // TODO: Externalize String
     private Text textFilter;
@@ -106,9 +107,9 @@ public class ComponentSelectionDialog extends Dialog {
         gData.widthHint = 400;
 
         // Subclasses may use this Composite to add desired widgets
-        topComposite = new Composite(mainComposite, SWT.NONE);
-        topComposite.setLayoutData(new GridData());
-        topComposite.setLayout(new GridLayout());
+        //topComposite = new Composite(mainComposite, SWT.NONE);
+        //topComposite.setLayoutData(new GridData());
+        //topComposite.setLayout(new GridLayout());
         
         // do we need to introduce a method here to contain this
         // so we can add different parent other than 'topComposite'
@@ -121,9 +122,10 @@ public class ComponentSelectionDialog extends Dialog {
 
         // Create Text textFilter
         Label filterLabel = new Label(filterLabelAndTree, SWT.NONE);
-        filterLabel.setText(filterTextLabel + "(? = any character, * = any string):"); // TODO: Externalize String
+        filterLabel.setText(filterTextLabel);// + "(? = any character, * = any string):"); // TODO: Externalize String
 
         textFilter = new Text(filterLabelAndTree, SWT.SINGLE | SWT.BORDER);
+        textFilter.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));        
         textFilter.addModifyListener(new TextFilterModifyAdapter());
         GridData textFilterData = new GridData();
         textFilterData.horizontalAlignment = GridData.FILL;
@@ -147,6 +149,10 @@ public class ComponentSelectionDialog extends Dialog {
         data.grabExcessHorizontalSpace = true;
         data.heightHint = 45;
         qualifierList.setLayoutData(data);
+                
+        bottomComposite = new Composite(mainComposite, SWT.NONE);
+        bottomComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        bottomComposite.setLayout(new GridLayout());
 
         // Populate the Component TreeViewer via the provider
         // TODO: Is this the right way to set/get the ContentProvider?

@@ -104,10 +104,10 @@ public class XSDComponentSelectionProvider extends XMLComponentSelectionProvider
         }
         
         List comps = new ArrayList();
-        if (scope.equals(XSDComponentSelectionDialog.enclosingProjectString)) {
+        if (scope.equals(XSDComponentSelectionDialog.SCOPE_ENCLOSING_PROJECT)) {
             comps = xsdComponentFinder.getWorkbenchResourceComponents(XMLComponentFinder.ENCLOSING_PROJECT_SCOPE);
         }
-        else if (scope.equals(XSDComponentSelectionDialog.entireWorkspaceString)) {
+        else if (scope.equals(XSDComponentSelectionDialog.SCOPE_WORKSPACE)) {
             comps = xsdComponentFinder.getWorkbenchResourceComponents(XMLComponentFinder.ENTIRE_WORKSPACE_SCOPE);            
         }
         
