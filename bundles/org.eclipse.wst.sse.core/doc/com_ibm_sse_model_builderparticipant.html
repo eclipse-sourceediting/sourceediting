@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HEAD><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<!-- default platform documentation stylesheets -->
+<style>@import url("book.css");</style>
+<!-- default schema documentation stylesheets -->
+<style>@import url("schema.css");</style>
+</HEAD>
+<HTML>
+<BODY>
+<H1><CENTER>Structured Builder Participant</CENTER></H1>
+<p></p>
+<h6 class=CaptionFigColumn id=header>Identifier: </h6>org.eclipse.wst.sse.core.builderparticipant<p></p>
+<h6 class=CaptionFigColumn id=header>Since: </h6>3.0
+<p></p>
+
+<p>
+<h6 class=CaptionFigColumn id=header>Description: </h6>Allows for the contribution of participants to the Structured building process.</p>
+<p><h6 class=CaptionFigColumn id=header>Configuration Markup:</h6></p>
+<p class=code id=dtd>&lt;!ELEMENT <a name="e.extension">extension</a> EMPTY&gt;</p>
+<p class=code id=dtd>&lt;!ATTLIST extension</p>
+<p class=code id=dtdAttlist>point&nbsp;CDATA #REQUIRED<p class=code id=dtdAttlist>id&nbsp;&nbsp;&nbsp;&nbsp;CDATA #IMPLIED<p class=code id=dtdAttlist>name&nbsp;&nbsp;CDATA #IMPLIED&gt;</p>
+<p></p>
+<ul class=ConfigMarkup id=attlistDesc>
+</ul>
+<br><p class=code id=dtd>&lt;!ELEMENT <a name="e.participant">participant</a> EMPTY&gt;</p>
+<p class=code id=dtd>&lt;!ATTLIST participant</p>
+<p class=code id=dtdAttlist>class&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CDATA #REQUIRED<p class=code id=dtdAttlist>contentType&nbsp;CDATA #REQUIRED&gt;</p>
+<p></p>
+<p class=ConfigMarkup id=elementDesc>
+A participant to be called during the build process.  Participants are notified before and after the Structured Builder runs on a project, given the resource deltas during incremental builds and told which resources to build during a full rebuild.</p>
+<br>
+<ul class=ConfigMarkup id=attlistDesc>
+<li><b>class</b> - Classname of the participant.  Must implement org.eclipse.wst.sse.core.builder.IBuilderParticipant.</li>
+<li><b>contentType</b> - A Content Type Identifier ID.  The participant will only be called for resources and deltas with this content type.  More than one may be specified per element, but there is no guarantee about the relationship between the number of instances and the content types.</li>
+</ul>
+<br><h6 class=CaptionFigColumn id=header>Examples: </h6><pre>
+<p class=code id=tag>&lt;extension point=<p class=code id=cstring>&quot;org.eclipse.wst.sse.core.builderparticipant&quot;</p><p class=code id=tag> id=<p class=code id=cstring>&quot;com.example.doctypeFinder&quot;</p><p class=code id=tag> name=<p class=code id=cstring>&quot;XML DOCTYPE reference tracker&quot;</p><p class=code id=tag> &gt;</p>
+ <p class=code id=tag>&lt;participant contentType=<p class=code id=cstring>&quot;contenttype.xml&quot;</p><p class=code id=tag> class=<p class=code id=cstring>&quot;com.example.builder.DoctypeParticipant&quot;</p><p class=code id=tag>/&gt;</p>
+<p class=code id=tag>&lt;/extension&gt;</p>
+</pre>
+<p></p>
+
+<br>
+<p class=note id=copyright>
+</p>
+</BODY>
+</HTML>

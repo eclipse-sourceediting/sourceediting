@@ -1,0 +1,457 @@
+<project name="processPIIReturns" default="ProcessPIIReturns" basedir=".">
+
+	<target name="init">
+		<property name="editor" value="org.eclipse.wst.sse.ui" />
+		<property name="editor_extensions" value="org.eclipse.wst.sse.ui.extensions" />
+		<property name="editor_css" value="org.eclipse.wst.sse.ui.css" />
+		<property name="editor_dtd" value="org.eclipse.wst.sse.ui.dtd" />
+		<property name="editor_html" value="org.eclipse.wst.sse.ui.html" />
+		<property name="editor_js" value="org.eclipse.wst.sse.ui.javascript" />
+		<property name="editor_jsp" value="org.eclipse.wst.sse.ui.jsp" />
+		<property name="editor_xml" value="org.eclipse.wst.sse.ui.xml" />
+		<property name="qev" value="com.ibm.etools.qev" />
+		<property name="snippets" value="org.eclipse.wst.sse.snippets" />
+		<property name="js_common_ui" value="org.eclipse.wst.sse.javascript.common.ui" />
+		<property name="model" value="org.eclipse.wst.sse.core" />
+		<property name="model_css" value="org.eclipse.wst.sse.core.css" />
+		<property name="model_dtd" value="org.eclipse.wst.sse.core.dtd" />
+		<property name="model_html" value="org.eclipse.wst.sse.core.html" />
+		<property name="model_js" value="org.eclipse.wst.sse.core.javascript" />
+		<property name="model_jsp" value="org.eclipse.wst.sse.core.jsp" />
+		<property name="model_xml" value="org.eclipse.wst.sse.core.xml" />
+		<property name="encoding_resource" value="org.eclipse.wst.common.encoding" />
+		<property name="content_properties" value="org.eclipse.wst.sse.ui.contentproperties" />
+		<property name="validation_html" value="org.eclipse.wst.validation.core.html" />
+		<property name="system_dtds" value="com.ibm.webtooling.system.dtds" />
+		<property name="xmleditor" value="com.ibm.xmleditor" />
+
+		<property name="returnsDir" value="E:/builds/piibuilds/returns" />
+		<property name="runtimesDir" value="C:/Program Files/IBM/RSDP/6.0/runtimes/base_v6_stub/java/bin" />
+	</target>
+
+	<target name="CleanDrive" depends="init">
+		<echo message="Deleting previous return files." />
+		<delete dir="${returnsDir}/all" />
+	</target>
+
+	<target name="mkdirs" depends="init">
+		<echo message="Making directories." />
+		<mkdir dir="${returnsDir}/all" />
+
+		<mkdir dir="${returnsDir}/all/${editor}.nl1" />
+		<mkdir dir="${returnsDir}/all/${editor}.nl1/src" />
+
+		<mkdir dir="${returnsDir}/all/${editor_extensions}.nl1" />
+		<!-- no src/*.properties for ${editor_extensions} -->
+
+		<mkdir dir="${returnsDir}/all/${editor_css}.nl1" />
+		<mkdir dir="${returnsDir}/all/${editor_css}.nl1/src" />
+
+		<mkdir dir="${returnsDir}/all/${editor_dtd}.nl1" />
+		<!-- no src/*.properties for ${editor_dtd} -->
+
+		<mkdir dir="${returnsDir}/all/${editor_html}.nl1" />
+		<mkdir dir="${returnsDir}/all/${editor_html}.nl1/src" />
+
+		<mkdir dir="${returnsDir}/all/${editor_js}.nl1" />
+		<mkdir dir="${returnsDir}/all/${editor_js}.nl1/src" />
+
+		<mkdir dir="${returnsDir}/all/${editor_jsp}.nl1" />
+		<mkdir dir="${returnsDir}/all/${editor_jsp}.nl1/src" />
+
+		<mkdir dir="${returnsDir}/all/${editor_xml}.nl1" />
+		<mkdir dir="${returnsDir}/all/${editor_xml}.nl1/src" />
+
+		<mkdir dir="${returnsDir}/all/${qev}.nl1" />
+		<mkdir dir="${returnsDir}/all/${qev}.nl1/src" />
+
+		<mkdir dir="${returnsDir}/all/${snippets}.nl1" />
+		<mkdir dir="${returnsDir}/all/${snippets}.nl1/src" />
+
+		<mkdir dir="${returnsDir}/all/${js_common_ui}.nl1" />
+		<mkdir dir="${returnsDir}/all/${js_common_ui}.nl1/src" />
+
+		<mkdir dir="${returnsDir}/all/${model}.nl1" />
+		<mkdir dir="${returnsDir}/all/${model}.nl1/src" />
+
+		<mkdir dir="${returnsDir}/all/${model_css}.nl1" />
+		<mkdir dir="${returnsDir}/all/${model_css}.nl1/src" />
+
+		<mkdir dir="${returnsDir}/all/${model_dtd}.nl1" />
+		<!-- no src/*.properties for ${model_dtd} -->
+
+		<mkdir dir="${returnsDir}/all/${model_html}.nl1" />
+		<mkdir dir="${returnsDir}/all/${model_html}.nl1/src" />
+
+		<mkdir dir="${returnsDir}/all/${model_js}.nl1" />
+		<mkdir dir="${returnsDir}/all/${model_js}.nl1/src" />
+
+		<mkdir dir="${returnsDir}/all/${model_jsp}.nl1" />
+		<mkdir dir="${returnsDir}/all/${model_jsp}.nl1/src" />
+
+		<mkdir dir="${returnsDir}/all/${model_xml}.nl1" />
+		<!-- no src/*.properties for ${model_xml} -->
+
+		<mkdir dir="${returnsDir}/all/${encoding_resource}.nl1" />
+		<mkdir dir="${returnsDir}/all/${encoding_resource}.nl1/src" />
+
+		<mkdir dir="${returnsDir}/all/${content_properties}.nl1" />
+		<!-- no src/*.properties for ${content_properties} -->
+
+		<mkdir dir="${returnsDir}/all/${validation_html}.nl1" />
+		<mkdir dir="${returnsDir}/all/${validation_html}.nl1/src" />
+
+		<mkdir dir="${returnsDir}/all/${system_dtds}.nl1" />
+		<!-- no src/*.properties for ${system_dtds} -->
+
+		<mkdir dir="${returnsDir}/all/${xmleditor}.nl1" />
+		<mkdir dir="${returnsDir}/all/${xmleditor}.nl1/src" />
+
+		<mkdir dir="${returnsDir}/all/${editor_html}" />
+		<mkdir dir="${returnsDir}/all/${editor_html}/templates" />
+
+		<mkdir dir="${returnsDir}/all/${editor_jsp}" />
+		<mkdir dir="${returnsDir}/all/${editor_jsp}/templates" />
+
+		<mkdir dir="${returnsDir}/all/${editor_xml}" />
+		<mkdir dir="${returnsDir}/all/${editor_xml}/templates" />
+
+		<mkdir dir="${returnsDir}/all/${model_html}" />
+		<mkdir dir="${returnsDir}/all/${model_html}/data" />
+
+		<mkdir dir="${returnsDir}/all/${js_common_ui}" />
+		<mkdir dir="${returnsDir}/all/${js_common_ui}/data" />
+
+		<mkdir dir="${returnsDir}/all/${encoding_resource}" />
+		<mkdir dir="${returnsDir}/all/${encoding_resource}/config" />
+	</target>
+
+	<target name="ProcessCountryReturns" depends="init">
+		<echo message="Processing returns from ${contryCode}." />
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${editor}.nl1" />
+		</antcall>
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${editor}.nl1/src" />
+		</antcall>
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${editor_extensions}.nl1" />
+		</antcall>
+		<!-- no src/*.properties for ${editor_extensions} -->
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${editor_css}.nl1" />
+		</antcall>
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${editor_css}.nl1/src" />
+		</antcall>
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${editor_dtd}.nl1" />
+		</antcall>
+		<!-- no src/*.properties for ${editor_dtd} -->
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${editor_html}.nl1" />
+		</antcall>
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${editor_html}.nl1/src" />
+		</antcall>
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${editor_js}.nl1" />
+		</antcall>
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${editor_js}.nl1/src" />
+		</antcall>
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${editor_jsp}.nl1" />
+		</antcall>
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${editor_jsp}.nl1/src" />
+		</antcall>
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${editor_xml}.nl1" />
+		</antcall>
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${editor_xml}.nl1/src" />
+		</antcall>
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${qev}.nl1" />
+		</antcall>
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${qev}.nl1/src" />
+		</antcall>
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${snippets}.nl1" />
+		</antcall>
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${snippets}.nl1/src" />
+		</antcall>
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${js_common_ui}.nl1" />
+		</antcall>
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${js_common_ui}.nl1/src" />
+		</antcall>
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${model}.nl1" />
+		</antcall>
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${model}.nl1/src" />
+		</antcall>
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${model_css}.nl1" />
+		</antcall>
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${model_css}.nl1/src" />
+		</antcall>
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${model_dtd}.nl1" />
+		</antcall>
+		<!-- no src/*.properties for ${model_dtd} -->
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${model_html}.nl1" />
+		</antcall>
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${model_html}.nl1/src" />
+		</antcall>
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${model_js}.nl1" />
+		</antcall>
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${model_js}.nl1/src" />
+		</antcall>
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${model_jsp}.nl1" />
+		</antcall>
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${model_jsp}.nl1/src" />
+		</antcall>
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${model_xml}.nl1" />
+		</antcall>
+		<!-- no src/*.properties for ${model_xml} -->
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${encoding_resource}.nl1" />
+		</antcall>
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${encoding_resource}.nl1/src" />
+		</antcall>
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${content_properties}.nl1" />
+		</antcall>
+		<!-- no src/*.properties for ${content_properties} -->
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${validation_html}.nl1" />
+		</antcall>
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${validation_html}.nl1/src" />
+		</antcall>
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${system_dtds}.nl1" />
+		</antcall>
+		<!-- no src/*.properties for ${system_dtds} -->
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${xmleditor}.nl1" />
+		</antcall>
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${xmleditor}.nl1/src" />
+		</antcall>
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${editor_html}/templates" />
+		</antcall>
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${editor_jsp}/templates" />
+		</antcall>
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${editor_xml}/templates" />
+		</antcall>
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${model_html}/data" />
+		</antcall>
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${js_common_ui}/data" />
+		</antcall>
+
+		<antcall target="native2ascii">
+			<param name="contryCode" value="${contryCode}" />
+			<param name="encoding" value="${encoding}" />
+			<param name="pluginDir" value="${encoding_resource}/config" />
+		</antcall>
+	</target>
+
+	<target name="native2ascii" depends="init">
+		<echo message="Processing returns in ${pluginDir}." />
+		<apply executable="${runtimesDir}/native2ascii.exe" dest="${returnsDir}/all/${pluginDir}">
+			<arg value="-encoding" />
+			<arg value="${encoding}" />
+			<srcfile />
+			<targetfile />
+			<fileset dir="${returnsDir}/${contryCode}/${pluginDir}" includes="**/*.properties" />
+			<mapper type="glob" from="*.properties" to="*_${contryCode}.properties" />
+		</apply>
+	</target>
+
+	<target name="CopyBack" depends="init">
+		<echo message="Copying files back to workspace." />
+		<copy toDir="../../..">
+			<fileset dir="${returnsDir}/all" includes="**/*.properties" />
+		</copy>
+	</target>
+
+	<target name="ProcessPIIReturns">
+		<antcall target="CleanDrive" />
+		<antcall target="mkdirs" />
+		<antcall target="ProcessCountryReturns">
+			<param name="contryCode" value="de" />
+			<param name="encoding" value="cp850" />
+		</antcall>
+		<antcall target="ProcessCountryReturns">
+			<param name="contryCode" value="es" />
+			<param name="encoding" value="cp850" />
+		</antcall>
+		<antcall target="ProcessCountryReturns">
+			<param name="contryCode" value="fr" />
+			<param name="encoding" value="cp850" />
+		</antcall>
+		<antcall target="ProcessCountryReturns">
+			<param name="contryCode" value="it" />
+			<param name="encoding" value="cp850" />
+		</antcall>
+		<antcall target="ProcessCountryReturns">
+			<param name="contryCode" value="ja" />
+			<param name="encoding" value="cp943c" />
+		</antcall>
+		<antcall target="ProcessCountryReturns">
+			<param name="contryCode" value="ko" />
+			<param name="encoding" value="ms949" />
+		</antcall>
+		<antcall target="ProcessCountryReturns">
+			<param name="contryCode" value="pt_BR" />
+			<param name="encoding" value="cp850" />
+		</antcall>
+		<antcall target="ProcessCountryReturns">
+			<param name="contryCode" value="zh_CN" />
+			<param name="encoding" value="ms936" />
+		</antcall>
+		<antcall target="ProcessCountryReturns">
+			<param name="contryCode" value="zh_TW" />
+			<param name="encoding" value="ms950" />
+		</antcall>
+	</target>
+
+</project>

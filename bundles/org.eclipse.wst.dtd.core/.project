@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>org.eclipse.wst.dtd.core</name>
+	<name>org.eclipse.wst.dtd.core.util</name>
 	<comment></comment>
 	<projects>
+		<project>org.eclipse.wst.common.encoding</project>
+		<project>org.eclipse.wst.common.encoding.contentspecific</project>
+		<project>org.eclipse.wst.sse.core</project>
+		<project>org.eclipse.wst.xml.core</project>
+		<project>org.eclipse.core.resources</project>
+		<project>org.eclipse.core.runtime</project>
+		<project>org.eclipse.core.runtime.compatibility</project>
+		<project>org.eclipse.jface.text</project>
+		<project>org.eclipse.ui</project>
+		<project>org.eclipse.ui.editors</project>
+		<project>org.eclipse.ui.ide</project>
+		<project>org.eclipse.ui.views</project>
+		<project>org.eclipse.ui.workbench.texteditor</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
@@ -22,7 +35,7 @@
 		</buildCommand>
 	</buildSpec>
 	<natures>
-		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.pde.PluginNature</nature>
+		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
 </projectDescription>
