@@ -16,7 +16,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.rules.IToken;
@@ -24,7 +23,6 @@ import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
-import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
@@ -69,17 +67,18 @@ public class LineStyleProviderForJava extends AbstractLineStyleProvider implemen
 		int selection = range.y;
 		IDocument doc = getDocument();
 		Color bg = attr.getBackground();
-		// if current line highlight on, use line highlight color for background
-		if(JavaColorProvider.EDITOR_CURRENT_LINE && selection == 1) {
-			try {
-				IRegion lineRegion = doc.getLineInformation(doc.getLineOfOffset(caret));
-				if(lineRegion.getOffset()<=offset && offset<=lineRegion.getOffset()+lineRegion.getLength())
-					bg = EditorUtility.getColor(JavaColorProvider.EDITOR_CURRENT_LINE_COLOR);
-						
-			} catch (BadLocationException e) {
-				Logger.logException(e);
-			}
-		}
+		// all editors use same background color
+//		// if current line highlight on, use line highlight color for background
+//		if(JavaColorProvider.EDITOR_CURRENT_LINE && selection == 1) {
+//			try {
+//				IRegion lineRegion = doc.getLineInformation(doc.getLineOfOffset(caret));
+//				if(lineRegion.getOffset()<=offset && offset<=lineRegion.getOffset()+lineRegion.getLength())
+//					bg = EditorUtility.getColor(JavaColorProvider.EDITOR_CURRENT_LINE_COLOR);
+//						
+//			} catch (BadLocationException e) {
+//				Logger.logException(e);
+//			}
+//		}
 		
 		presentation.add(new StyleRange(offset, length, attr.getForeground(), bg, attr.getStyle()));
 	}

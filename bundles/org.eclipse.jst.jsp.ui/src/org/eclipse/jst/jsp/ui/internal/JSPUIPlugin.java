@@ -25,7 +25,6 @@ import org.eclipse.jst.jsp.ui.templates.TemplateContextTypeJSPTag;
 import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
 import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistryImpl;
@@ -56,11 +55,6 @@ public class JSPUIPlugin extends AbstractUIPlugin {
 	public JSPUIPlugin() {
 		super();
 		instance = this;
-		
-		// Force a call to initializeDefaultJSPPreferences since
-		// initializeDefaultPreferences is only called if *this* plugin's
-		// preference store is accessed
-		initializeDefaultJSPPreferences(SSEUIPlugin.getDefault().getPreferenceStore());
 	}
 
 	public static JSPUIPlugin getDefault() {

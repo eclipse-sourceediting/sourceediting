@@ -18,9 +18,7 @@ import java.util.ResourceBundle;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -77,13 +75,6 @@ public class DTDUIPlugin extends AbstractUIPlugin {
 		} catch (MissingResourceException x) {
 			resourceBundle = null;
 		}
-
-		// Force a call to initialize default preferences since
-		// initializeDefaultPreferences is only called if *this* plugin's
-		// preference store is accessed
-		initializeDefaultDTDPreferences(SSEUIPlugin.getDefault()
-				.getPreferenceStore());
-
 	}
 
 	/**
@@ -91,49 +82,5 @@ public class DTDUIPlugin extends AbstractUIPlugin {
 	 */
 	public ResourceBundle getResourceBundle() {
 		return resourceBundle;
-	}
-
-	/**
-	 * @deprecated using DTDUIPreferenceInitializer instead
-	 */
-	private void initializeDefaultDTDPreferences(IPreferenceStore store) {
-//		String ctId = IContentTypeIdentifier.ContentTypeID_DTD;
-//
-//		// DTD Style Preferences
-//		String NOBACKGROUNDBOLD = " | null | false"; //$NON-NLS-1$
-//		String styleValue = ColorHelper.getColorString(0, 0, 0)
-//				+ NOBACKGROUNDBOLD;
-//		store.setDefault(PreferenceKeyGenerator.generateKey(
-//				IStyleConstantsDTD.DTD_DEFAULT, ctId), styleValue); //black
-//
-//		styleValue = ColorHelper.getColorString(63, 63, 191) + NOBACKGROUNDBOLD;
-//		store.setDefault(PreferenceKeyGenerator.generateKey(
-//				IStyleConstantsDTD.DTD_TAG, ctId), styleValue); // blue
-//		store.setDefault(PreferenceKeyGenerator.generateKey(
-//				IStyleConstantsDTD.DTD_TAGNAME, ctId), styleValue); // blue
-//
-//		styleValue = ColorHelper.getColorString(127, 127, 127)
-//				+ NOBACKGROUNDBOLD;
-//		store.setDefault(PreferenceKeyGenerator.generateKey(
-//				IStyleConstantsDTD.DTD_COMMENT, ctId), styleValue); // grey
-//
-//		styleValue = ColorHelper.getColorString(128, 0, 0) + NOBACKGROUNDBOLD;
-//		store.setDefault(PreferenceKeyGenerator.generateKey(
-//				IStyleConstantsDTD.DTD_KEYWORD, ctId), styleValue); // dark
-//		// red
-//
-//		styleValue = ColorHelper.getColorString(63, 159, 95) + NOBACKGROUNDBOLD;
-//		store.setDefault(PreferenceKeyGenerator.generateKey(
-//				IStyleConstantsDTD.DTD_STRING, ctId), styleValue); //green
-//
-//		styleValue = ColorHelper.getColorString(191, 95, 95) + NOBACKGROUNDBOLD;
-//		store.setDefault(PreferenceKeyGenerator.generateKey(
-//				IStyleConstantsDTD.DTD_DATA, ctId), styleValue); // light
-//		// red
-//
-//		styleValue = ColorHelper.getColorString(128, 0, 0) + NOBACKGROUNDBOLD;
-//		store.setDefault(PreferenceKeyGenerator.generateKey(
-//				IStyleConstantsDTD.DTD_SYMBOL, ctId), styleValue); // dark
-//		// red
 	}
 }

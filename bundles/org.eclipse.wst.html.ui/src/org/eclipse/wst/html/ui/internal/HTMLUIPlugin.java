@@ -25,7 +25,6 @@ import org.eclipse.wst.html.ui.templates.TemplateContextTypeHTML;
 import org.eclipse.wst.html.ui.templates.TemplateContextTypeHTMLAttribute;
 import org.eclipse.wst.html.ui.templates.TemplateContextTypeHTMLAttributeValue;
 import org.eclipse.wst.html.ui.templates.TemplateContextTypeHTMLTag;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistryImpl;
@@ -56,11 +55,6 @@ public class HTMLUIPlugin extends AbstractUIPlugin {
 	public HTMLUIPlugin() {
 		super();
 		instance = this;
-
-		// Force a call to initialize default preferences since
-		// initializeDefaultPreferences is only called if *this* plugin's
-		// preference store is accessed
-		initializeDefaultHTMLPreferences(SSEUIPlugin.getDefault().getPreferenceStore());
 	}
 
 	public static HTMLUIPlugin getDefault() {
