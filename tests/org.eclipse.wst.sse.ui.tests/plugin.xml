@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.eclipse.wst.sse.ui.tests"
+   name="Structured Source Editor Tests"
+   version="1.0.0"
+   provider-name="IBM"
+   class="org.eclipse.wst.sse.ui.tests.SSETestsPlugin">
+
+   <runtime>
+      <library name="ssetests.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.core.runtime.compatibility"/>
+      <import plugin="org.eclipse.wst.sse.ui"/>
+      <import plugin="org.eclipse.wst.sse.core"/>
+      <import plugin="org.junit"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.eclipse.ui.editors"/>
+   </requires>
+
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            default="true"
+            name="Source Page Editor"
+            extensions="project, classpath, websettings, serverPreference"
+            icon="icons/sourceEditor.gif"
+            class="org.eclipse.wst.sse.ui.StructuredTextEditor"
+            contributorClass="org.eclipse.wst.sse.ui.edit.util.ActionContributor"
+            id="org.eclipse.wst.sse.ui.StructuredTextEditor.test">
+      </editor>
+   </extension>
+<!-- Editor actionsets -->
+   <extension
+         point="org.eclipse.ui.actionSetPartAssociations">
+      <actionSetPartAssociation
+            targetID="org.eclipse.ui.edit.text.actionSet.annotationNavigation">
+         <part
+               id="org.eclipse.wst.sse.ui.StructuredTextEditor.test">
+         </part>
+      </actionSetPartAssociation>
+      <actionSetPartAssociation
+            targetID="org.eclipse.ui.NavigateActionSet">
+         <part
+               id="org.eclipse.wst.sse.ui.StructuredTextEditor.test">
+         </part>
+      </actionSetPartAssociation>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="Experimental"
+            id="org.eclipse.wst.sse.ui.tests">
+      </category>
+      <view
+            name="ExtendedStorageEditorInput Management Tester"
+            category="org.eclipse.wst.sse.ui.tests"
+            class="org.eclipse.wst.sse.ui.tests.ExtendedStorageEditorInputView"
+            id="org.eclipse.wst.sse.ui.tests.ExtendedStorageEditorInputView">
+      </view>
+      <view
+            name="Action Tester"
+            category="org.eclipse.wst.sse.ui.tests"
+            class="org.eclipse.wst.sse.ui.tests.ActionTestView"
+            id="org.eclipse.wst.sse.ui.tests.ActionTestView">
+      </view>
+   </extension>
+</plugin>
