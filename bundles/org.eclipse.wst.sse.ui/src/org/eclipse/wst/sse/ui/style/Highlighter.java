@@ -24,9 +24,11 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.ITextViewerExtension5;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextUtilities;
+import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.custom.LineStyleEvent;
@@ -103,11 +105,38 @@ public class Highlighter implements IHighlighter {
 		getTableOfProviders().put(partitionType, provider);
 	}
 
+	/**
+	 * Adjust the style ranges' start and length so that they refer to the
+	 * textviewer widget's range instead of the textviewer's document range.
+	 * 
+	 * @param ranges
+	 * @param adjustment
+	 */
 	protected void adjust(StyleRange[] ranges, int adjustment) {
+		ITextViewer viewer = getTextViewer();
+		ITextViewerExtension5 extension = null;
+		if (viewer instanceof ITextViewerExtension5) {
+			extension = (ITextViewerExtension5) viewer;
+		}
+
+		// convert document regions back to widget regions
 		for (int i = 0; i < ranges.length; i++) {
-			ranges[i].start += adjustment;
+			if (extension != null) {
+				// get document range, taking into account folding regions in
+				// viewer
+				IRegion region = extension.modelRange2WidgetRange(new Region(
+						ranges[i].start, ranges[i].length));
+				if (region != null) {
+					ranges[i].start = region.getOffset();
+					ranges[i].length = region.getLength();
+				} // else what happens if region is not found?!
+			} else {
+				// just adjust the range using the given adjustment
+				ranges[i].start += adjustment;
+			}
 		}
 	}
+
 
 	/**
 	 * @deprecated - Read Only areas have unchanged background colors
@@ -230,6 +259,43 @@ public class Highlighter implements IHighlighter {
 		return fStructuredDocument;
 	}
 
+	/**
+	 * Adjust the given widget offset and length so that they are the textviewer
+	 * document's offset and length, taking into account what is actually
+	 * visible in the document.
+	 * 
+	 * @param offset
+	 * @param length
+	 * @return a region containing the offset and length within the textviewer's
+	 *         document or null if the offset is not within the document
+	 */
+	private IRegion getDocumentRangeFromWidgetRange(int offset, int length) {
+		IRegion styleRegion = null;
+		ITextViewer viewer = getTextViewer();
+		if (viewer instanceof ITextViewerExtension5) {
+			// get document range, taking into account folding regions in viewer
+			ITextViewerExtension5 extension = (ITextViewerExtension5) viewer;
+			styleRegion = extension.widgetRange2ModelRange(new Region(offset,
+					length));
+		} else {
+			// get document range, taking into account viewer visible region
+			// get visible region in viewer
+			IRegion vr = null;
+			if (viewer != null)
+				vr = viewer.getVisibleRegion();
+			else
+				vr = new Region(0, getDocument().getLength());
+
+			// if offset is not within visible region, then we don't really care
+			if (offset <= vr.getLength()) {
+				// Adjust the offset to be within visible region
+				styleRegion = new Region(offset + vr.getOffset(), length);
+			}
+		}
+		return styleRegion;
+	}
+
+	
 	private Map getExtendedProviders() {
 		if (fExtendedProviders == null) {
 			fExtendedProviders = new HashMap(3);
@@ -317,56 +383,62 @@ public class Highlighter implements IHighlighter {
 	}
 
 	public StyleRange[] lineGetStyle(int eventLineOffset, int eventLineLength) {
-		StyleRange[] eventStyles = null;
+		StyleRange[] eventStyles = EMPTY_STYLE_RANGE;
 		try {
-			if (getDocument() == null) {
-				/**
-				 * During initialization, this is sometimes called before our
-				 * structure is set, in which case we set styles to be the
-				 * empty style range (event.styles can not be null)
-				 */
+			if (getDocument() == null || eventLineLength == 0) {
+				// getDocument() == null
+				// during initialization, this is sometimes called before our
+				// structured
+				// is set, in which case we set styles to be the empty style
+				// range
+				// (event.styles can not be null)
+
+				// eventLineLength == 0
+				// we sometimes get odd requests from the very last CRLF in the
+				// document
+				// it has no length, and there is no node for it!
 				eventStyles = EMPTY_STYLE_RANGE;
-				return eventStyles;
-			}
+			} else {
+				/*
+				 * LineStyleProviders work using absolute document
+				 * offsets. To support visible regions, adjust the
+				 * requested range up to the full document offsets.
+				 */
+				IRegion styleRegion = getDocumentRangeFromWidgetRange(
+						eventLineOffset, eventLineLength);
+				if (styleRegion != null) {
+					int start = styleRegion.getOffset();
+					int length = styleRegion.getLength();
 
-			int start = eventLineOffset;
-			int length = eventLineLength;
-			int end = start + length - 1;
-
-			/*
-			 * We sometimes get odd requests from the very last CRLF in the
-			 * document it has no length, and there is no document region for
-			 * it!
-			 */
-			if (length > 0) {
-				IRegion vr = null;
-				if (getTextViewer() != null) {
-					vr = getTextViewer().getVisibleRegion();
-				}
-				else {
-					vr = new Region(0, getDocument().getLength());
-				}
-				if (start > vr.getLength()) {
-					eventStyles = EMPTY_STYLE_RANGE;
-				}
-				else {
-					/*
-					 * LineStyleProviders work using absolute document
-					 * offsets. To support visible regions, adjust the
-					 * requested range up to the full document offsets.
-					 */
-					if (vr.getOffset() > 0) {
-						start += vr.getOffset();
-						end += vr.getOffset();
-					}
 					ITypedRegion[] partitions = TextUtilities.computePartitioning(getDocument(), fPartitioning, start, length, false);
 					eventStyles = prepareStyleRangesArray(partitions, start, length);
-					/*
-					 * For visible regions, adjust the returned StyleRanges
-					 * down to relative offsets
-					 */
-					if (vr.getOffset() > 0)
-						adjust(eventStyles, -vr.getOffset());
+					
+					// If there is a subtext offset, the style ranges must be
+					// adjusted to the expected
+					// offsets
+					// just check if eventLineOffset is different than start
+					// then adjust, otherwise u can leave it alone
+					// unless there is special handling for
+					// itextviewerextension5?
+					if (start != eventLineOffset) {
+						int offset = 0;
+						// figure out visible region to use for adjustment
+						// only adjust if need to
+						if (!(getTextViewer() instanceof ITextViewerExtension5)) {
+							IRegion vr = getTextViewer().getVisibleRegion();
+							if (vr != null) {
+								offset = vr.getOffset();
+								if (offset > 0)
+									adjust(eventStyles, -offset);
+							}
+						} else {
+							if (getTextViewer() instanceof ProjectionViewer) {
+								if (((ProjectionViewer)getTextViewer()).isProjectionMode())
+									adjust(eventStyles, -offset);
+							}
+						}
+						
+					}
 
 					// for debugging only
 					if (DEBUG) {
@@ -387,11 +459,7 @@ public class Highlighter implements IHighlighter {
 				System.out.println("Exception during highlighting!"); //$NON-NLS-1$
 			}
 		}
-		finally {
-			if (eventStyles == null) {
-				eventStyles = EMPTY_STYLE_RANGE;
-			}
-		}
+
 		return eventStyles;
 	}
 

@@ -20,6 +20,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
+import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 
 
@@ -62,7 +63,9 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
 		// set default read-only foreground color scale value
 		store.setDefault(CommonEditorPreferenceNames.READ_ONLY_FOREGROUND_SCALE, 30);
-	
+		
+		// set default enable folding value
+		store.setDefault(IStructuredTextFoldingProvider.FOLDING_ENABLED, false);
 	}
 
 	private void setMatchingBracketsPreferences(IPreferenceStore store) {

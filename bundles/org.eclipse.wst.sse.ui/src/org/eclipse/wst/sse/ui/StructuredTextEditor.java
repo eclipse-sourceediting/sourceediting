@@ -45,9 +45,12 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.jface.text.IInformationControl;
+import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextOperationTarget;
@@ -64,6 +67,8 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.LineChangeHover;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.jface.text.source.projection.ProjectionSupport;
+import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.dnd.DND;
@@ -159,6 +164,7 @@ import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.ui.internal.editor.StructuredModelDocumentProvider;
 import org.eclipse.wst.sse.ui.internal.extension.BreakpointProviderBuilder;
 import org.eclipse.wst.sse.ui.internal.hyperlink.OpenHyperlinkAction;
+import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 import org.eclipse.wst.sse.ui.internal.properties.ShowPropertiesAction;
 import org.eclipse.wst.sse.ui.internal.selection.SelectionHistory;
 import org.eclipse.wst.sse.ui.internal.selection.StructureSelectEnclosingAction;
@@ -489,6 +495,10 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	protected MouseTracker fMouseTracker;
 	private boolean forceReadOnly = false;
 	protected IContentOutlinePage fOutlinePage;
+	/** This editor's projection model updater */
+	private IStructuredTextFoldingProvider fProjectionModelUpdater;
+	/** This editor's projection support */
+	private ProjectionSupport fProjectionSupport;
 	protected IPropertySheetPage fPropertySheetPage;
 	private String fRememberTitle;
 	String[] fShowInTargetIds = new String[]{IPageLayout.ID_RES_NAV};
@@ -927,17 +937,15 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 
 		super.createPartControl(parent);
 
-		// reset the input now that the editor is
-		// initialized and can handle it
-		// properly
-		// TODO - urgent, WTP 1.0: THIS SHOULDN'T BE DONE HERE
-		// ANYMORE - but for now, have to to get 'configure' to work right?
-		// but causes two pass initialization! Does fixing this require base
-		// fix?
-		// setInput(getEditorInput());
 		// instead of calling setInput twice, use initializeSourceViewer() to
 		// handle source viewer initialization previously handled by setInput
 		initializeSourceViewer();
+
+		// do not even install projection support until folding is actually
+		// enabled
+		if (isFoldingEnabled()) {
+			installProjectionSupport();
+		}
 	}
 
 	protected PropertySheetConfiguration createPropertySheetConfiguration() {
@@ -1079,6 +1087,17 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		// TextEditorPlugin.getDefault().setLastEditPosition(new
 		// EditPosition(getEditorInput(), getEditorSite().getId(),
 		// TextSelection.emptySelection(), new Position(caretOffset)));
+
+		// dispose of document folding support
+		if (fProjectionModelUpdater != null) {
+			fProjectionModelUpdater.uninstall();
+			fProjectionModelUpdater = null;
+		}
+
+		if (fProjectionSupport != null) {
+			fProjectionSupport.dispose();
+			fProjectionSupport = null;
+		}
 
 		// subclass may not have mouse tracker created
 		// need to check for null before stopping
@@ -1287,6 +1306,9 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 				setModel(model);
 			}
 
+			if (fProjectionModelUpdater != null)
+				fProjectionModelUpdater.initialize();
+
 			// start editor with smart insert mode
 			setInsertMode(SMART_INSERT);
 		}
@@ -1476,8 +1498,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			return -1;
 		// nsd_TODO: are we being overly paranoid?
 		StructuredTextViewer stv = getTextViewer();
-		if (stv != null && stv.getControl() != null && !stv.getControl().isDisposed() && getSourceViewer().getVisibleRegion().getOffset() != 0) {
-			return vsm.getCaretPosition() + getSourceViewer().getVisibleRegion().getOffset();
+		if (stv != null && stv.getControl() != null && !stv.getControl().isDisposed()) {
+			return stv.widgetOffset2ModelOffset(vsm.getCaretPosition());
 		}
 		return vsm.getCaretPosition();
 	}
@@ -1850,6 +1872,22 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		if (CommonEditorPreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS.equals(property)) {
 			updateHoverBehavior();
 		}
+
+		if (IStructuredTextFoldingProvider.FOLDING_ENABLED.equals(property)) {
+			if (getSourceViewer() instanceof ProjectionViewer) {
+				// install projection support if it has not even been
+				// installed yet
+				if (isFoldingEnabled() && (fProjectionSupport == null) && (fProjectionModelUpdater == null)) {
+					installProjectionSupport();
+				}
+				ProjectionViewer pv = (ProjectionViewer) getSourceViewer();
+				if (pv.isProjectionMode() != isFoldingEnabled()) {
+					if (pv.canDoOperation(ProjectionViewer.TOGGLE))
+						pv.doOperation(ProjectionViewer.TOGGLE);
+				}
+			}
+			return;
+		}
 		super.handlePreferenceStoreChanged(event);
 	}
 
@@ -1999,6 +2037,38 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		// super.installEncodingSupport();
 	}
 
+	/**
+	 * Install everything necessary to get document folding working and enable
+	 * document folding
+	 */
+	private void installProjectionSupport() {
+		ProjectionViewer projectionViewer = (ProjectionViewer) getSourceViewer();
+
+		fProjectionSupport = new ProjectionSupport(projectionViewer, getAnnotationAccess(), getSharedColors());
+		fProjectionSupport.addSummarizableAnnotationType("org.eclipse.ui.workbench.texteditor.error"); //$NON-NLS-1$
+		fProjectionSupport.addSummarizableAnnotationType("org.eclipse.ui.workbench.texteditor.warning"); //$NON-NLS-1$
+		fProjectionSupport.setHoverControlCreator(new IInformationControlCreator() {
+			public IInformationControl createInformationControl(Shell parent) {
+				return new DefaultInformationControl(parent);
+			}
+		});
+		fProjectionSupport.install();
+
+		IStructuredTextFoldingProvider updater = null;
+		ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
+		String[] ids = getConfigurationPoints();
+		for (int i = 0; updater == null && i < ids.length; i++) {
+			updater = (IStructuredTextFoldingProvider) builder.getConfiguration(IStructuredTextFoldingProvider.ID, ids[i]);
+		}
+
+		fProjectionModelUpdater = updater;
+		if (fProjectionModelUpdater != null)
+			fProjectionModelUpdater.install(projectionViewer);
+
+		if (isFoldingEnabled())
+			projectionViewer.doOperation(ProjectionViewer.TOGGLE);
+	}
+
 	/*
 	 * @see IEditorPart#isDirty
 	 */
@@ -2054,6 +2124,19 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		return false;
 	}
 
+
+	/**
+	 * Return whether document folding should be enabled according to the
+	 * preference store settings.
+	 * 
+	 * @return <code>true</code> if document folding should be enabled
+	 */
+	private boolean isFoldingEnabled() {
+		IPreferenceStore store = getPreferenceStore();
+		// check both preference store and vm argument
+		return (store.getBoolean(IStructuredTextFoldingProvider.FOLDING_ENABLED) && (System.getProperty("org.eclipse.wst.sse.ui.foldingenabled") != null)); //$NON-NLS-1$
+	}
+
 	/**
 	 * Returns whether the given annotation type is configured as a target
 	 * type for the "Go to Next/Previous Annotation" actions. Copied from
@@ -2086,6 +2169,35 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		if (forceReadOnly || getModel() == null)
 			return false;
 		return getModel().isSaveNeeded();
+	}
+
+	/*
+	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#performRevert()
+	 */
+	protected void performRevert() {
+		ProjectionViewer projectionViewer = (ProjectionViewer) getSourceViewer();
+		projectionViewer.setRedraw(false);
+		try {
+
+			boolean projectionMode = projectionViewer.isProjectionMode();
+			if (projectionMode) {
+				projectionViewer.disableProjection();
+				if (fProjectionModelUpdater != null)
+					fProjectionModelUpdater.uninstall();
+			}
+
+			super.performRevert();
+
+			if (projectionMode) {
+				if (fProjectionModelUpdater != null)
+					fProjectionModelUpdater.install(projectionViewer);
+				projectionViewer.enableProjection();
+			}
+
+		}
+		finally {
+			projectionViewer.setRedraw(true);
+		}
 	}
 
 	/**
@@ -2735,8 +2847,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	}
 
 	/**
-	 * @deprecated - will be removed in M4
-	 * Use getDocumentProvider and IDocumentProviderExtension instead
+	 * @deprecated - will be removed in M4 Use getDocumentProvider and
+	 *             IDocumentProviderExtension instead
 	 */
 	public IStatus validateEdit(Shell context) {
 		IStatus status = STATUS_OK;

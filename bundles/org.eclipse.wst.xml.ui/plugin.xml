@@ -84,6 +84,10 @@
       		type="characterpairmatcher"
             class="org.eclipse.wst.xml.ui.text.XMLDocumentRegionEdgeMatcher"
             target="org.eclipse.core.runtime.xml"/>
+      <configuration
+      		type="structuredtextfoldingprovider"
+            class="org.eclipse.wst.xml.ui.internal.projection.StructuredTextFoldingProviderXML"
+            target="org.eclipse.core.runtime.xml"/>
       <definition
       		type="preferencepages"
             value="org.eclipse.wst.sse.ui.preferences.xml"

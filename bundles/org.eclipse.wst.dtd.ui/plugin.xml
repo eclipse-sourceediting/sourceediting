@@ -57,6 +57,10 @@
       		type="characterpairmatcher"
             class="org.eclipse.wst.dtd.ui.text.DTDDocumentRegionEdgeMatcher"
             target="org.eclipse.wst.dtd.core.dtdsource"/>
+      <configuration
+      		type="structuredtextfoldingprovider"
+            class="org.eclipse.wst.dtd.ui.internal.projection.StructuredTextFoldingProviderDTD"
+            target="org.eclipse.wst.dtd.core.dtdsource"/>
       <definition
       		type="preferencepages"
             value="org.eclipse.wst.sse.ui.preferences.dtd"

@@ -1014,7 +1014,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 	protected String getPartitionType(StructuredTextViewer viewer, int documentPosition) {
 		String partitionType = null;
 		try {
-			partitionType = TextUtilities.getContentType(viewer.getDocument(), IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING, documentPosition + viewer.getVisibleRegion().getOffset(), false);
+			partitionType = TextUtilities.getContentType(viewer.getDocument(), IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING, viewer.modelOffset2WidgetOffset(documentPosition), false);
 		}
 		catch (BadLocationException e) {
 			partitionType = IDocument.DEFAULT_CONTENT_TYPE;

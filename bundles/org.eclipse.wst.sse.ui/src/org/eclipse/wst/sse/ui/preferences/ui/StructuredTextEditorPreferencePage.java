@@ -47,6 +47,7 @@ import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.TabFolderLayout;
+import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 
 /**
@@ -55,6 +56,13 @@ import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
  * @author pavery
  */
 public class StructuredTextEditorPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
+	// vm argument to show folding preference
+	private static boolean showFoldingPreference = false;
+	static {
+		String foldingOn = System.getProperty("org.eclipse.wst.sse.ui.foldingenabled");		//$NON-NLS-1$
+		showFoldingPreference = foldingOn != null;
+	}
+	
 	private ColorEditor fAppearanceColorEditor;
 	private List fAppearanceColorList;
 
@@ -142,6 +150,11 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		label = SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.30"); //$NON-NLS-1$
 		addCheckBox(appearanceComposite, label, CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS, 0);
 
+		if (showFoldingPreference) {
+			label = "Enable folding (work in progress)"; 		//$NON-NLS-1$
+			addCheckBox(appearanceComposite, label, IStructuredTextFoldingProvider.FOLDING_ENABLED, 0);
+		}
+		
 		Label l = new Label(appearanceComposite, SWT.LEFT);
 		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		gd.horizontalSpan = 2;
@@ -221,7 +234,7 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 					e.result = buttonLabel;
 			}
 		});
-
+		
 		WorkbenchHelp.setHelp(appearanceComposite, IHelpContextIds.PREFSTE_APPEARANCE_HELPID);
 		return appearanceComposite;
 	}
@@ -274,6 +287,9 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS));
 
+		if (showFoldingPreference)
+			overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, IStructuredTextFoldingProvider.FOLDING_ENABLED));
+		
 		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys.size()];
 		overlayKeys.toArray(keys);
 		return keys;

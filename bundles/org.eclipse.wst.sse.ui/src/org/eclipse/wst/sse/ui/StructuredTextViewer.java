@@ -25,7 +25,6 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentAdapter;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewerExtension2;
-import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
@@ -35,15 +34,13 @@ import org.eclipse.jface.text.formatter.IContentFormatterExtension;
 import org.eclipse.jface.text.formatter.IFormattingContext;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.IInformationPresenter;
-import org.eclipse.jface.text.projection.ChildDocument;
 import org.eclipse.jface.text.projection.ProjectionDocument;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.IOverviewRuler;
-import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
-import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
+import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.jface.viewers.ContentViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -80,7 +77,7 @@ import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
 
-public class StructuredTextViewer extends SourceViewer implements INodeSelectionListener, IDoubleClickListener, IDocumentSelectionMediator {
+public class StructuredTextViewer extends ProjectionViewer implements INodeSelectionListener, IDoubleClickListener, IDocumentSelectionMediator {
 
 	/**
 	 * Internal verify listener.
@@ -116,13 +113,15 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 	}
 
 	/** Text operation codes */
-	public static final int CLEANUP_DOCUMENT = ISourceViewer.INFORMATION + 1;
-	public static final int FORMAT_ACTIVE_ELEMENTS = ISourceViewer.INFORMATION + 3;
-	private static final String FORMAT_ACTIVE_ELEMENTS_TEXT = SSEUIPlugin.getResourceString("%Format_Active_Elements_UI_"); //$NON-NLS-1$
-	public static final int FORMAT_DOCUMENT = ISourceViewer.INFORMATION + 2;
+	private static final int BASE = ProjectionViewer.EXPAND_ALL; // see
+	// ProjectionViewer.EXPAND_ALL
+	public static final int CLEANUP_DOCUMENT = BASE + 1;
+	public static final int FORMAT_ACTIVE_ELEMENTS = BASE + 3;
 
+	private static final String FORMAT_ACTIVE_ELEMENTS_TEXT = SSEUIPlugin.getResourceString("%Format_Active_Elements_UI_"); //$NON-NLS-1$
+	public static final int FORMAT_DOCUMENT = BASE + 2;
 	private static final String FORMAT_DOCUMENT_TEXT = SSEUIPlugin.getResourceString("%Format_Document_UI_"); //$NON-NLS-1$
-	public static final int QUICK_FIX = ISourceViewer.INFORMATION + 4;
+	public static final int QUICK_FIX = BASE + 4;
 	private static final String TEXT_CUT = SSEUIPlugin.getResourceString("%Text_Cut_UI_"); //$NON-NLS-1$
 	private static final String TEXT_PASTE = SSEUIPlugin.getResourceString("%Text_Paste_UI_"); //$NON-NLS-1$
 	private static final String TEXT_SHIFT_LEFT = SSEUIPlugin.getResourceString("%Text_Shift_Left_UI_"); //$NON-NLS-1$ = "Text Shift Left"
@@ -154,18 +153,11 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 	private ViewerSelectionManager fViewerSelectionManager;
 
 	/**
-	 * ModelViewer constructor comment.
-	 * 
-	 * @param parent
-	 *            org.eclipse.swt.widgets.Composite
-	 * @param ruler
-	 *            org.eclipse.jface.text.source.IVerticalRuler
-	 * @param styles
-	 *            int
+	 * @deprecated use 5-argument constructor instead - to be removed in M4
 	 */
 	public StructuredTextViewer(Composite parent, IVerticalRuler verticalRuler, int styles) {
 
-		super(parent, verticalRuler, styles);
+		super(parent, verticalRuler, null, false, styles);
 	}
 
 	/**
@@ -178,7 +170,7 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	private void beep() {
 
@@ -285,7 +277,8 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 		if (fContentAssistant != null) {
 			fContentAssistant.install(this);
 			fContentAssistantInstalled = true;
-		} else {
+		}
+		else {
 			// 248036
 			// disable the content assist operation if no content assistant
 			enableOperation(CONTENTASSIST_PROPOSALS, false);
@@ -299,7 +292,8 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 			if (fCorrectionAssistant != null) {
 				fCorrectionAssistant.install(this);
 				fCorrectionAssistantInstalled = true;
-			} else {
+			}
+			else {
 				// disable the correction assist operation if no correction
 				// assistant
 				enableOperation(QUICK_FIX, false);
@@ -325,7 +319,7 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 		setUndoManager(configuration.getUndoManager(this));
 
 		// TODO: compare with ?new? V2 configure re:
-		// 		getTextWidget().setTabs(configuration.getTabWidth(this));
+		// getTextWidget().setTabs(configuration.getTabWidth(this));
 		// see if it can replace following
 		// Set tab width to configuration setting first.
 		// Then override if model type is XML or HTML.
@@ -334,16 +328,16 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 		setOverviewRulerAnnotationHover(configuration.getOverviewRulerAnnotationHover(this));
 		// added for V2
 		setHoverControlCreator(configuration.getInformationControlCreator(this));
-		
+
 		// if hyperlink manager has already been created, uninstall it
 		if (fHyperlinkManager != null) {
 			setHyperlinkDetectors(null, SWT.NONE);
 		}
 		setHyperlinkPresenter(configuration.getHyperlinkPresenter(this));
-		IHyperlinkDetector[] hyperlinkDetectors= configuration.getHyperlinkDetectors(this);
-		int eventStateMask= configuration.getHyperlinkStateMask(this);
+		IHyperlinkDetector[] hyperlinkDetectors = configuration.getHyperlinkDetectors(this);
+		int eventStateMask = configuration.getHyperlinkStateMask(this);
 		setHyperlinkDetectors(hyperlinkDetectors, eventStateMask);
-		
+
 		// install content type specific plugins
 		String[] types = configuration.getConfiguredContentTypes(this);
 
@@ -360,7 +354,8 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 					int stateMask = stateMasks[j];
 					setTextHover(configuration.getTextHover(this, t, stateMask), t, stateMask);
 				}
-			} else {
+			}
+			else {
 				setTextHover(configuration.getTextHover(this, t), t, ITextViewerExtension2.DEFAULT_HOVER_STATE_MASK);
 			}
 
@@ -414,7 +409,8 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 		IStructuredDocument structuredDocument = null;
 		if (document instanceof IStructuredDocument) {
 			structuredDocument = (IStructuredDocument) document;
-		} else {
+		}
+		else {
 			if (document instanceof ProjectionDocument) {
 				IDocument doc = ((ProjectionDocument) document).getMasterDocument();
 				if (doc instanceof IStructuredDocument) {
@@ -427,7 +423,8 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 		}
 		if (structuredDocument == null) {
 			return false;
-		} else {
+		}
+		else {
 			int length = end - start;
 			return structuredDocument.containsReadOnly(start, length);
 		}
@@ -490,7 +487,8 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 					IStatus status = editor.validateEdit(getControl().getShell());
 					if (status != null && status.isOK())
 						undo();
-				} else
+				}
+				else
 					undo();
 				break;
 			}
@@ -500,7 +498,8 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 					IStatus status = editor.validateEdit(getControl().getShell());
 					if (status != null && status.isOK())
 						redo();
-				} else
+				}
+				else
 					redo();
 				break;
 			}
@@ -535,7 +534,8 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 							PlatformStatusLineUtil.displayErrorMessage(err);
 						}
 						PlatformStatusLineUtil.addOneTimeClearListener();
-					} else
+					}
+					else
 						beep();
 				}
 				break;
@@ -544,8 +544,8 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 					String err = fContentAssistant.showContextInformation();
 					PlatformStatusLineUtil.displayErrorMessage(err);
 					PlatformStatusLineUtil.addOneTimeClearListener();
-					//setErrorMessage(err);
-					//new OneTimeListener(getTextWidget(), new
+					// setErrorMessage(err);
+					// new OneTimeListener(getTextWidget(), new
 					// ClearErrorMessage());
 				}
 				break;
@@ -588,10 +588,12 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 						context.setProperty(FormattingContextProperties.CONTEXT_DOCUMENT, Boolean.TRUE);
 						context.setProperty(FormattingContextProperties.CONTEXT_REGION, region);
 						extension.format(getDocument(), context);
-					} else {
+					}
+					else {
 						fContentFormatter.format(getDocument(), region);
 					}
-				} finally {
+				}
+				finally {
 					// tell the model that we are done with the big model
 					// change
 					fModel.changedModel();
@@ -616,7 +618,8 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 					Point s = getSelectedRange();
 					IRegion region = new Region(s.x, s.y);
 					fContentFormatter.format(getDocument(), region);
-				} finally {
+				}
+				finally {
 					// tell the model that we are done with the big model
 					// change
 					fModel.changedModel();
@@ -753,7 +756,11 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 	 * @see VerifyListener#verifyText(VerifyEvent)
 	 */
 	protected void handleVerifyEvent(VerifyEvent e) {
-
+		IRegion modelRange = event2ModelRange(e);
+		 if (exposeModelRange(modelRange)) {
+			e.doit = false;
+			return;
+		}
 
 		if (fEventConsumer != null) {
 			fEventConsumer.processEvent(e);
@@ -772,7 +779,6 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 			return;
 		}
 
-		IRegion modelRange = event2ModelRange(e);
 		fDocumentCommand.setEventStructuredDocumentEvent(e, modelRange);
 		customizeDocumentCommand(fDocumentCommand);
 		int widgetCaret = 0;
@@ -791,10 +797,12 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 					try {
 						getSlaveDocumentManager().setAutoExpandMode(visible, true);
 						fDocumentCommand.executeStructuredDocumentCommand(getDocument());
-					} finally {
+					}
+					finally {
 						getSlaveDocumentManager().setAutoExpandMode(visible, false);
 					}
-				} else {
+				}
+				else {
 					fDocumentCommand.executeStructuredDocumentCommand(getDocument());
 				}
 
@@ -816,12 +824,14 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 					}
 
 				}
-			} catch (BadLocationException x) {
+			}
+			catch (BadLocationException x) {
 
 				if (TRACE_ERRORS)
 					System.out.println("TextViewer.error.bad_location.verifyText"); //$NON-NLS-1$
 
-			} finally {
+			}
+			finally {
 
 				if (compoundChange && fUndoManager != null)
 					fUndoManager.endCompoundChange();
@@ -837,6 +847,59 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 
 			}
 		}
+	}
+
+	public int modelLine2WidgetLine(int modelLine) {
+		// need to override this method as workaround for Bug85709
+		if (fInformationMapping == null) {
+			IDocument document = getDocument();
+			if (document != null) {
+				try {
+					IRegion modelLineRegion = getDocument().getLineInformation(modelLine);
+					IRegion region = getModelCoverage();
+					if (modelLineRegion != null && region != null) {
+						int modelEnd = modelLineRegion.getOffset() + modelLineRegion.getLength();
+						int regionEnd = region.getOffset() + region.getLength();
+						// returns -1 if modelLine is invalid
+						if ((modelLineRegion.getOffset() < region.getOffset()) || (modelEnd > regionEnd))
+							return -1;
+					}
+				}
+				catch (BadLocationException e) {
+					// returns -1 if modelLine is invalid
+					return -1;
+				}
+			}
+		}
+		return super.modelLine2WidgetLine(modelLine);
+	}
+
+	public int modelOffset2WidgetOffset(int modelOffset) {
+		// need to override this method as workaround for Bug85709
+		if (fInformationMapping == null) {
+			IRegion region = getModelCoverage();
+			if (region != null) {
+				// returns -1 if modelOffset is invalid
+				if (modelOffset < region.getOffset() || modelOffset > (region.getOffset() + region.getLength()))
+					return -1;
+			}
+		}
+		return super.modelOffset2WidgetOffset(modelOffset);
+	}
+
+	public IRegion modelRange2WidgetRange(IRegion modelRange) {
+		// need to override this method as workaround for Bug85709
+		if (fInformationMapping == null) {
+			IRegion region = getModelCoverage();
+			if (region != null && modelRange != null) {
+				int modelEnd = modelRange.getOffset() + modelRange.getLength();
+				int regionEnd = region.getOffset() + region.getLength();
+				// returns null if modelRange is invalid
+				if ((modelRange.getOffset() < region.getOffset()) || (modelEnd > regionEnd))
+					return null;
+			}
+		}
+		return super.modelRange2WidgetRange(modelRange);
 	}
 
 	/**
@@ -882,7 +945,8 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 		}
 		if (nothingToSelect(selectedNodes)) {
 			removeRangeIndication();
-		} else {
+		}
+		else {
 			IndexedRegion startNode = (IndexedRegion) selectedNodes.get(0);
 			IndexedRegion endNode = (IndexedRegion) selectedNodes.get(selectedNodes.size() - 1);
 			int startOffset = startNode.getStartOffset();
@@ -907,7 +971,7 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 			// child of the parent is deleted.
 			// We really only want to set the range indicator on the left to
 			// the range of the parent, but not move the cursor
-			//setRangeIndication(startOffset, length, false);
+			// setRangeIndication(startOffset, length, false);
 			// 20040714 (nsd) Chnaged back to tru given that selection
 			// problems
 			// caused by the Outline view appear fixed.
@@ -916,13 +980,13 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 				setSelectedRange(attrOrTextNodeStartOffset, 0);
 				revealRange(attrOrTextNodeStartOffset, 0);
 			}
-			//			if(moveCursor) {
-			//				System.out.print("moving");
-			//			}
-			//			else {
-			//				System.out.print("not moving");
-			//			}
-			//			System.out.println(" on NodeSelectionEvent: " +
+			// if(moveCursor) {
+			// System.out.print("moving");
+			// }
+			// else {
+			// System.out.print("not moving");
+			// }
+			// System.out.println(" on NodeSelectionEvent: " +
 			// event.getSource());
 		}
 	}
@@ -998,7 +1062,7 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 			// notify highlighter
 			if (fHighlighter != null) {
 				fHighlighter.setDocument(structuredDocument);
-				//fHighlighter.setModel(model);
+				// fHighlighter.setModel(model);
 			}
 
 			// set document in the viewer-based undo manager
@@ -1062,7 +1126,7 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 			// No need to removeSelectionChangedListener here. Done when
 			// editor
 			// calls "new ViewerSelectionManagerImpl(ITextViewer)".
-			//removeSelectionChangedListener(fViewerSelectionManager);
+			// removeSelectionChangedListener(fViewerSelectionManager);
 		}
 		fViewerSelectionManager = viewerSelectionManager;
 		// connect to new one
@@ -1071,7 +1135,7 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 			fViewerSelectionManager.addNodeSelectionListener(this);
 			// No need to addSelectionChangedListener here. Done when editor
 			// calls "new ViewerSelectionManagerImpl(ITextViewer)".
-			//addSelectionChangedListener(fViewerSelectionManager);
+			// addSelectionChangedListener(fViewerSelectionManager);
 		}
 	}
 
@@ -1102,7 +1166,7 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 		}
 		if (fInformationPresenter != null)
 			fInformationPresenter.uninstall();
-		
+
 		setHyperlinkDetectors(null, SWT.NONE);
 
 		// doesn't seem to be handled elsewhere, so we'll be sure error
@@ -1128,30 +1192,5 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 	public void undoOperationSelectionChanged(UndoDocumentEvent event) {
 		if (event.getRequester() != null && event.getRequester().equals(this) && event.getDocument().equals(getDocument()))
 			setSelectedRange(event.getOffset(), event.getLength());
-	}
-
-	/**
-	 * This method added to override super's implementation so that
-	 * setVisibleRegion will not force a start at beginning of line. This was
-	 * primarily needed when used as embedded editor. May need to make more
-	 * sophisiticated if we need it to act both ways, depending on a flag, or
-	 * something.
-	 */
-	protected boolean updateVisibleDocument(IDocument visibleDocument, int visibleRegionOffset, int visibleRegionLength) throws BadLocationException {
-		if (visibleDocument instanceof ChildDocument) {
-			ChildDocument childDocument = (ChildDocument) visibleDocument;
-			//IDocument document = childDocument.getParentDocument();
-			//int line= document.getLineOfOffset(visibleRegionOffset);
-			int offset = visibleRegionOffset; //document.getLineOffset(line);
-			int length = visibleRegionLength; //(visibleRegionOffset -
-			// offset)
-			// + visibleRegionLength;
-			Position parentRange = childDocument.getParentDocumentRange();
-			if (offset != parentRange.getOffset() || length != parentRange.getLength()) {
-				childDocument.setParentDocumentRange(offset, length);
-				return true;
-			}
-		}
-		return false;
 	}
 }

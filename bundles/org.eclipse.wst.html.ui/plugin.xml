@@ -76,6 +76,10 @@
       		type="characterpairmatcher"
             class="org.eclipse.wst.html.ui.text.HTMLDocumentRegionEdgeMatcher"
             target="org.eclipse.wst.html.core.htmlsource"/>
+      <configuration
+      		type="structuredtextfoldingprovider"
+            class="org.eclipse.wst.html.ui.internal.projection.StructuredTextFoldingProviderHTML"
+            target="org.eclipse.wst.html.core.htmlsource"/>
       <definition 
       		type="preferencepages"
             value="org.eclipse.wst.html.ui.preferences"

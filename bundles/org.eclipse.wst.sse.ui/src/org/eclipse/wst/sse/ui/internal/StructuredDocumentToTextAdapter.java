@@ -28,7 +28,9 @@ import org.eclipse.jface.text.IDocumentAdapter;
 import org.eclipse.jface.text.IDocumentAdapterExtension;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.IRepairableDocument;
 import org.eclipse.jface.text.ITextStore;
+import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.projection.ProjectionDocument;
 import org.eclipse.swt.custom.StyledText;
@@ -107,7 +109,8 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 			if (currentEvent != null && event == currentEvent) {
 				if (allTextChanged) {
 					StructuredDocumentToTextAdapter.this.relayTextSet();
-				} else {
+				}
+				else {
 					// temp work around for immediate thread
 					// problem.
 					// should have more general solution
@@ -187,7 +190,7 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 		public void newModel(NewDocumentEvent structuredDocumentEvent) {
 
 			if (isStoppedForwardingChanges()) {
-				//if
+				// if
 				// (StructuredDocumentToTextAdapter.this.fStopRelayingChanges)
 				// {
 				if (Debug.debugStructuredDocument) {
@@ -214,7 +217,8 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 						lastEventQueue = new ArrayList();
 					}
 					lastEventQueue.add(structuredDocumentEvent);
-				} else {
+				}
+				else {
 					StructuredDocumentToTextAdapter.this.lastEvent = structuredDocumentEvent;
 				}
 			}
@@ -223,7 +227,7 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 		public void nodesReplaced(StructuredDocumentRegionsReplacedEvent structuredDocumentEvent) {
 
 			if (isStoppedForwardingChanges()) {
-				//			if
+				// if
 				// (StructuredDocumentToTextAdapter.this.fStopRelayingChanges)
 				// {
 				if (Debug.debugStructuredDocument) {
@@ -240,7 +244,7 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 		public void regionChanged(RegionChangedEvent structuredDocumentEvent) {
 
 			if (isStoppedForwardingChanges()) {
-				//			if
+				// if
 				// (StructuredDocumentToTextAdapter.this.fStopRelayingChanges)
 				// {
 				if (Debug.debugStructuredDocument) {
@@ -257,7 +261,7 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 		public void regionsReplaced(RegionsReplacedEvent structuredDocumentEvent) {
 
 			if (isStoppedForwardingChanges()) {
-				//			if
+				// if
 				// (StructuredDocumentToTextAdapter.this.fStopRelayingChanges)
 				// {
 				if (Debug.debugStructuredDocument) {
@@ -319,7 +323,7 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 		internalStructuredDocumentListener = new StructuredDocumentListener();
 		internalDocumentListener = new DocumentListener();
 		// for testing only
-		//		setDocument(getModelManager().createStructuredDocumentFor(ContentTypeIdentifierForXML.ContentTypeID_XML));
+		// setDocument(getModelManager().createStructuredDocumentFor(ContentTypeIdentifierForXML.ContentTypeID_XML));
 	}
 
 	/**
@@ -336,14 +340,20 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 	}
 
 	private void _setDocument(IDocument newDoc) {
-		if ((fDocument != null) && (fDocument instanceof IStructuredDocument)) {
+		if (fDocument instanceof IStructuredDocument) {
 			((IStructuredDocument) fDocument).removeDocumentChangedListener(internalStructuredDocumentListener);
 		}
 		fDocument = newDoc;
+		if (!isStoppedForwardingChanges()) {
+			fDocumentClone = null;
+			fOriginalContent = getDocument() != null ? getDocument().get() : null;
+			fOriginalLineDelimiters = getDocument() != null ? getDocument().getLegalLineDelimiters() : null;
+		}
+
 		if (fDocument != null && !(fDocument instanceof ILockable)) {
 			System.out.println("warning: non-lockable document used");
 		}
-		if ((fDocument != null) && (fDocument instanceof IStructuredDocument)) {
+		if (fDocument instanceof IStructuredDocument) {
 			((IStructuredDocument) fDocument).addDocumentChangedListener(internalStructuredDocumentListener);
 		}
 	}
@@ -363,7 +373,8 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 			if (Debug.displayWarnings) {
 				System.out.println("StructuredDocumentToTextAdapter::addTextChangedListeners. listener " + listener + " was added more than once. "); //$NON-NLS-2$//$NON-NLS-1$
 			}
-		} else {
+		}
+		else {
 			if (Debug.debugStructuredDocument) {
 				System.out.println("StructuredDocumentToTextAdapter::addTextChangedListeners. Adding an instance of " + listener.getClass() + " as a listener on text adapter."); //$NON-NLS-2$//$NON-NLS-1$
 			}
@@ -436,20 +447,47 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 	}
 
 	/**
-	 * Returns offset visible region of current document
+	 * Returns region in master document of given region (should be region in
+	 * projection document)
 	 * 
-	 * @return 0 if no child document exists, offset of child document if
-	 *         possible, -1 otherwise
+	 * @return region if no projection document exists, region of master
+	 *         document if possible, null otherwise
 	 */
-	private int getDocumentModelAdjustment() {
-		if (fChildDocument == null)
-			return 0;
-		IRegion coverage = fChildDocument.getProjectionMapping().getCoverage();
-		if (coverage != null) {
-			return coverage.getOffset();
+	private IRegion getProjectionToMasterRegion(IRegion region) {
+		IRegion originalRegion = region;
+		if (fChildDocument != null) {
+			try {
+				originalRegion = fChildDocument.getProjectionMapping().toOriginRegion(region);
+			}
+			catch (BadLocationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
-		return -1;
+		return originalRegion;
+	}
+
+	/**
+	 * Returns offset in projection document of given offset (should be offset
+	 * in master document)
+	 * 
+	 * @return offset if no projection document exists, offset of projection
+	 *         document if possible, -1 otherwise
+	 */
+	private int getMasterToProjectionOffset(int offset) {
+		int originalOffset = offset;
+		if (fChildDocument != null) {
+			try {
+				originalOffset = fChildDocument.getProjectionMapping().toImageOffset(offset);
+			}
+			catch (BadLocationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return originalOffset;
 	}
 
 	/**
@@ -470,24 +508,43 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 				System.out.println("Development Debug: IStructuredDocument:getLine() error. lineNumber requested (" + lineNumber + ") was greater than number of lines(" + getLineCount() + "). EmptyString returned"); //$NON-NLS-1$//$NON-NLS-3$//$NON-NLS-2$
 			}
 			result = EMPTY_STRING;
-		} else {
+		}
+		else {
 			IDocument doc = getSafeDocument();
 			if (doc == null) {
 				result = EMPTY_STRING;
-			} else {
+			}
+			else {
 				try {
 					IRegion r = doc.getLineInformation(lineNumber);
 					if (r.getLength() > 0) {
 						result = doc.get(r.getOffset(), r.getLength());
-					} else {
+					}
+					else {
 						result = EMPTY_STRING;
 					}
-				} catch (BadLocationException e) {
+				}
+				catch (BadLocationException e) {
 					result = EMPTY_STRING;
 				}
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Tries to repair the line information.
+	 * 
+	 * @param document
+	 *            the document
+	 * @see IRepairableDocument#repairLineInformation()
+	 * @since 3.0
+	 */
+	private void repairLineInformation(IDocument document) {
+		if (document instanceof IRepairableDocument) {
+			IRepairableDocument repairable = (IRepairableDocument) document;
+			repairable.repairLineInformation();
+		}
 	}
 
 	/**
@@ -511,17 +568,18 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 		IDocument doc = getSafeDocument();
 		if (doc != null) {
 			try {
-				// TODO: not sure why we need this special check for
-				// child document, getDocument should return correct one?
-				if (fChildDocument != null) {
-					result = fChildDocument.getLineOfOffset(offset);
-				} else {
+				result = doc.getLineOfOffset(offset);
+			}
+			catch (BadLocationException x) {
+				repairLineInformation(doc);
+				try {
 					result = doc.getLineOfOffset(offset);
 				}
-			} catch (BadLocationException e) {
-				// should not occur, but seems to for child
-				// document from QEV, related to repainting overview ruler
-				result = 0;
+				catch (BadLocationException x2) {
+					// should not occur, but seems to for projection
+					// documents, related to repainting overview ruler
+					result = 0;
+				}
 			}
 		}
 		return result;
@@ -541,10 +599,11 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 	 */
 	public String getLineDelimiter() {
 		String result = null;
-		IDocument doc = getSafeDocument();
 		if (getParentDocument() instanceof IStructuredDocument) {
 			result = ((IStructuredDocument) getParentDocument()).getLineDelimiter();
-		} else {
+		}
+		else {
+			IDocument doc = getSafeDocument();
 			result = TextUtilities.getDefaultLineDelimiter(doc);
 		}
 		return result;
@@ -571,7 +630,8 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 		if (doc != null) {
 			try {
 				result = doc.getLineOffset(lineIndex);
-			} catch (BadLocationException e) {
+			}
+			catch (BadLocationException e) {
 				result = 0;
 			}
 		}
@@ -596,9 +656,10 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 		IDocument result = null;
 		if (isStoppedForwardingChanges()) {
 			result = getClonedDocument();
-		} else {
+		}
+		else {
 			// note, this document can be normal structured text document,
-			// or the projection/child document as used by QEV
+			// or the projection/child document
 			result = getDocument();
 		}
 		return result;
@@ -625,12 +686,10 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 	public String getTextRange(int start, int length) {
 		String result = null;
 		try {
-			if (isStoppedForwardingChanges()) {
-				result = getClonedDocument().get(start, length);
-			} else {
-				result = getParentDocument().get(getDocumentModelAdjustment() + start, length);
-			}
-		} catch (BadLocationException e) {
+			IDocument doc = getSafeDocument();
+			result = doc.get(start, length);
+		}
+		catch (BadLocationException e) {
 			result = EMPTY_STRING;
 		}
 		return result;
@@ -722,22 +781,30 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 			};
 			runOnDisplayThreadIfNeedede(runnable);
 
-		} else {
+		}
+		else {
 			int high = getDocument().getLength();
-			int adjustment = getDocumentModelAdjustment();
-			int startOffset = startModelOffset - adjustment;
-			int endOffset = endModelOffset - adjustment;
-			// not visible
-			if (endOffset < 0 || startOffset > high)
-				return;
+			int startOffset = getMasterToProjectionOffset(startModelOffset);
+
+			int endOffset = getMasterToProjectionOffset(endModelOffset);
+
+			// if offsets were not visible, just try to redraw everything in
+			// the child document
+			// // not visible
+			// if (endOffset < 0 || startOffset > high)
+			// return;
 			// restrict lower bound
 			if (startOffset < 0) {
 				startOffset = 0;
 			}
 			// restrict upper bound
-			if (endOffset > high) {
+			// if (endOffset > high) {
+			// endOffset = high;
+			// }
+			if (endOffset < 0) {
 				endOffset = high;
 			}
+
 			int length = endOffset - startOffset;
 			// redrawBackground with false would be faster
 			// but assumes background (or font) is not
@@ -745,14 +812,12 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 			final int finalStartOffset = startOffset;
 			final int finallength = length;
 
-			if (fChildDocument == null) {
-				Runnable runnable = new Runnable() {
-					public void run() {
-						getStyledTextWidget().redrawRange(finalStartOffset, finallength, redrawBackground);
-					}
-				};
-				runOnDisplayThreadIfNeedede(runnable);
-			}
+			Runnable runnable = new Runnable() {
+				public void run() {
+					getStyledTextWidget().redrawRange(finalStartOffset, finallength, redrawBackground);
+				}
+			};
+			runOnDisplayThreadIfNeedede(runnable);
 
 		}
 	}
@@ -779,18 +844,19 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 				}
 			};
 			runOnDisplayThreadIfNeedede(runnable);
-		} else {
+		}
+		else {
 			int high = getDocument().getLength();
-			int adjustment = getDocumentModelAdjustment();
-			int startOffset = startModelOffset - adjustment;
-			int endOffset = startOffset + length - 1;
+			// TODO need to take into account segmented visible regions
+			int startOffset = getMasterToProjectionOffset(startModelOffset);
 			// not visible
-			if (endOffset < 0 || startOffset > high)
+			if (startOffset > high || length < 1)
 				return;
 			// restrict lower bound
 			if (startOffset < 0) {
 				startOffset = 0;
 			}
+			int endOffset = startOffset + length - 1;
 			// restrict upper bound
 			if (endOffset > high) {
 				endOffset = high;
@@ -837,17 +903,17 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 
 		// (nsd) TODO: try to make this reliable somehow
 		// without being directly content dependent
-		//		if ((region instanceof ITextRegionContainer) ||
+		// if ((region instanceof ITextRegionContainer) ||
 		// (type == XMLJSPRegionContexts.BLOCK_TEXT) ||
 		// (type == XMLJSPRegionContexts.JSP_CONTENT)) {
-		//			IStructuredDocumentRegion flatNode =
+		// IStructuredDocumentRegion flatNode =
 		// structuredDocumentEvent.getStructuredDocumentRegion();
-		//			// redraw background of false is faster,
-		//			// but assumes background (or font) is not
+		// // redraw background of false is faster,
+		// // but assumes background (or font) is not
 		// changing
-		//			redrawRange(flatNode.getStartOffset(region),
+		// redrawRange(flatNode.getStartOffset(region),
 		// flatNode.getEndOffset(region));
-		//		}
+		// }
 		if (forceRedrawOnRegionChanged) {
 			// workaround for redrawing problems on Linux-GTK
 			int startOffset = structuredDocumentEvent.getOffset();
@@ -858,7 +924,8 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 				if (startLine != null && endLine != null) {
 					redrawRange(startLine.getOffset(), endLine.getOffset() + endLine.getLength());
 				}
-			} catch (BadLocationException e) {
+			}
+			catch (BadLocationException e) {
 				// nothing for now
 			}
 		}
@@ -901,7 +968,7 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 			// moved following line to 'document changed' so
 			// the "last event" can be
 			// re-drawn after pending re-draws
-			//lastEvent = null;
+			// lastEvent = null;
 		}
 	}
 
@@ -987,7 +1054,8 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 				}
 			};
 			runOnDisplayThreadIfNeedede(runnable);
-		} catch (BadLocationException e) {
+		}
+		catch (BadLocationException e) {
 			throw new SourceEditingRuntimeException(e);
 		}
 	}
@@ -1041,7 +1109,8 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 				if (Debug.displayWarnings) {
 					System.out.println("StructuredDocumentToTextAdapter::removeTextChangedListeners. listener " + listener + " was not present. "); //$NON-NLS-2$//$NON-NLS-1$
 				}
-			} else {
+			}
+			else {
 				if (Debug.debugStructuredDocument) {
 					System.out.println("StructuredDocumentToTextAdapter::addTextChangedListeners. Removing an instance of " + listener.getClass() + " as a listener on text adapter."); //$NON-NLS-2$//$NON-NLS-1$
 				}
@@ -1111,13 +1180,18 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 			// and "changed" events.
 			// they are both fired by the time this method
 			// returns.
-			((IStructuredDocument) getParentDocument()).replaceText(this, start + getDocumentModelAdjustment(), replaceLength, text);
-		} else {
-			try {
-				getDocument().replace(start, replaceLength, text);
-			} catch (BadLocationException x) {
-				throw new SourceEditingRuntimeException(x);
+			IRegion region = getProjectionToMasterRegion(new Region(start, replaceLength));
+			if (region != null) {
+				((IStructuredDocument) getParentDocument()).replaceText(this, region.getOffset(), region.getLength(), text);
+				return;
 			}
+		}
+		// default is to just try and replace text range in current document
+		try {
+			getDocument().replace(start, replaceLength, text);
+		}
+		catch (BadLocationException x) {
+			throw new SourceEditingRuntimeException(x);
 		}
 	}
 
@@ -1139,11 +1213,11 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 		// investigate change make use of the pair of APIs.
 		fStopRelayingChangesRequests--;
 		if (fStopRelayingChangesRequests == 0) {
-			//fIsForwarding= true;
+			// fIsForwarding= true;
 			fDocumentClone = null;
 			fOriginalContent = null;
 			fOriginalLineDelimiters = null;
-			//fireTextSet();
+			// fireTextSet();
 			relayTextSet();
 		}
 	}
@@ -1160,7 +1234,8 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 		// simply execute the runnable.
 		if (getDisplay() == null || (Thread.currentThread() == getDisplay().getThread())) {
 			r.run();
-		} else {
+		}
+		else {
 			// otherwise force the runnable to run on the display thread.
 			//
 			// Its unclear if we need this at all, once
@@ -1174,12 +1249,14 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 					lock = ((ILockable) doc).getLockObject();
 					lock.acquire();
 					getDisplay().syncExec(r);
-				} finally {
+				}
+				finally {
 					if (lock != null) {
 						lock.release();
 					}
 				}
-			} else {
+			}
+			else {
 				// else, ignore!, since risk of deadlock
 				throw new IllegalStateException("non lockable document used for structuredDocumentToTextAdapter");
 			}
@@ -1199,7 +1276,8 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 		if (document instanceof ProjectionDocument) {
 			fChildDocument = (ProjectionDocument) document;
 			_setDocument(fChildDocument.getMasterDocument());
-		} else {
+		}
+		else {
 			fChildDocument = null;
 			_setDocument(document);
 		}
@@ -1215,16 +1293,14 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 
 		if (isStoppedForwardingChanges()) {
 			fDocumentClone = null;
-			fOriginalContent = fDocument.get();
-			fOriginalLineDelimiters = fDocument.getLegalLineDelimiters();
-		} else if (fChildDocument == null) {
-			if (getParentDocument() instanceof IStructuredDocument) {
-				((IStructuredDocument) getParentDocument()).setText(this, string);
-			} else {
-				getParentDocument().set(string);
-			}
-		} else {
-			fChildDocument.set(string);
+			fOriginalContent = getDocument().get();
+			fOriginalLineDelimiters = getDocument().getLegalLineDelimiters();
+		}
+		else if (getParentDocument() instanceof IStructuredDocument) {
+			((IStructuredDocument) getDocument()).setText(this, string);
+		}
+		else {
+			getDocument().set(string);
 		}
 		relayTextSet();
 	}
