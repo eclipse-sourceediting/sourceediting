@@ -77,7 +77,7 @@ import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
 
-public class StructuredTextViewer extends ProjectionViewer implements INodeSelectionListener, IDoubleClickListener, IDocumentSelectionMediator {
+public class StructuredTextViewer extends ProjectionViewer implements IDocumentSelectionMediator {
 
 	/**
 	 * Internal verify listener.
@@ -111,6 +111,20 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 			}
 		}
 	}
+	
+	/**
+	 * A private delegate class to move INodeSelectionListener and
+	 * IDoubleClickListener off of the viewer's APIs
+	 */
+	private class InternalSelectionListener implements INodeSelectionListener, IDoubleClickListener {
+		public void doubleClick(DoubleClickEvent event) {
+			handleDoubleClick(event);
+		}
+
+		public void nodeSelectionChanged(NodeSelectionChangedEvent event) {
+			handleNodeSelectionChanged(event);
+		}		
+	}
 
 	/** Text operation codes */
 	private static final int BASE = ProjectionViewer.EXPAND_ALL; // see
@@ -131,6 +145,9 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 	protected IContentAssistant fCorrectionAssistant;
 	protected boolean fCorrectionAssistantInstalled;
 	private IDocumentAdapter fDocAdapter;
+	
+	private InternalSelectionListener fSelectionListener = null;
+	
 	/**
 	 * TODO Temporary workaround for BUG44665
 	 */
@@ -149,27 +166,18 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 	private ViewerSelectionManager fViewerSelectionManager;
 
 	/**
-	 * @deprecated use 5-argument constructor instead - to be removed in M4
-	 */
-	public StructuredTextViewer(Composite parent, IVerticalRuler verticalRuler, int styles) {
-
-		super(parent, verticalRuler, null, false, styles);
-	}
-
-	/**
 	 * @see org.eclipse.jface.text.source.SourceViewer#SourceViewer(Composite,
 	 *      IVerticalRuler, IOverviewRuler, boolean, int)
 	 */
 	public StructuredTextViewer(Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler, boolean showAnnotationsOverview, int styles) {
-
 		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles);
+		fSelectionListener = new InternalSelectionListener();
 	}
 
 	/**
 	 * 
 	 */
 	private void beep() {
-
 		getTextWidget().getDisplay().beep();
 	}
 
@@ -617,32 +625,6 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 		}
 	}
 
-	/**
-	 * Notifies of a double click.
-	 * 
-	 * @param event
-	 *            event object describing the double-click
-	 */
-	public void doubleClick(DoubleClickEvent event) {
-
-		IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-		int selectionSize = selection.size();
-		List selectedNodes = selection.toList();
-		IndexedRegion doubleClickedNode = null;
-		int selectionStart = 0;
-		int selectionEnd = 0;
-		if (selectionSize > 0) {
-			// something selected
-			// only one node can be double-clicked at a time
-			// so, we get node 0
-			doubleClickedNode = (IndexedRegion) selectedNodes.get(0);
-			selectionStart = doubleClickedNode.getStartOffset();
-			selectionEnd = doubleClickedNode.getEndOffset();
-			// set new selection
-			setSelectedRange(selectionStart, selectionEnd - selectionStart);
-		}
-	}
-
 	void endBackgroundUpdate() {
 		fBackgroundupdateInProgress = false;
 		enabledRedrawing();
@@ -685,8 +667,11 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 		return new ViewerSelectionManagerImpl(this);
 	}
 
+	/**
+	 * @deprecated
+	 * @return the current ViewerSelectionManager
+	 */
 	public ViewerSelectionManager getViewerSelectionManager() {
-
 		if (fViewerSelectionManager == null) {
 			ViewerSelectionManager viewerSelectionManager = getDefaultViewerSelectionManager();
 			// use setter instead of field directly, so it get initialized
@@ -697,7 +682,6 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 	}
 
 	protected void handleDispose() {
-
 		Logger.trace("Source Editor", "StructuredTextViewer::handleDispose entry"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		// before we dispose, we set a special "empty" selection, to prevent
@@ -709,8 +693,8 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 		setSelection(TextSelection.emptySelection());
 
 		if (fViewerSelectionManager != null) {
-			fViewerSelectionManager.removeNodeDoubleClickListener(this);
-			fViewerSelectionManager.removeNodeSelectionListener(this);
+			fViewerSelectionManager.removeNodeDoubleClickListener(fSelectionListener);
+			fViewerSelectionManager.removeNodeSelectionListener(fSelectionListener);
 			fViewerSelectionManager.release();
 		}
 
@@ -720,6 +704,97 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 		super.handleDispose();
 
 		Logger.trace("Source Editor", "StructuredTextViewer::handleDispose exit"); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+
+	void handleDoubleClick(DoubleClickEvent event) {
+
+		IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+		int selectionSize = selection.size();
+		List selectedNodes = selection.toList();
+		IndexedRegion doubleClickedNode = null;
+		int selectionStart = 0;
+		int selectionEnd = 0;
+		if (selectionSize > 0) {
+			// something selected
+			// only one node can be double-clicked at a time
+			// so, we get the first one
+			doubleClickedNode = (IndexedRegion) selectedNodes.get(0);
+			selectionStart = doubleClickedNode.getStartOffset();
+			selectionEnd = doubleClickedNode.getEndOffset();
+			// set new selection
+			setSelectedRange(selectionStart, selectionEnd - selectionStart);
+		}
+	}
+
+	void handleNodeSelectionChanged(NodeSelectionChangedEvent event) {
+
+		// Skip NodeSelectionChanged processing if this is the source of the
+		// event.
+		if (event.getSource().equals(this))
+			return;
+		List selectedNodes = new Vector(event.getSelectedNodes());
+		boolean attrOrTextNodeSelected = false;
+		int attrOrTextNodeStartOffset = 0;
+		for (int i = 0; i < selectedNodes.size(); i++) {
+			Object eachNode = selectedNodes.get(i);
+			// replace attribute node with its parent
+			if (eachNode instanceof Attr) {
+				attrOrTextNodeSelected = true;
+				attrOrTextNodeStartOffset = ((IndexedRegion) eachNode).getStartOffset();
+				selectedNodes.set(i, ((Attr) eachNode).getOwnerElement());
+			}
+			// replace TextNode with its parent
+			if ((eachNode instanceof Node) && (((Node) eachNode).getNodeType() == Node.TEXT_NODE)) {
+				attrOrTextNodeSelected = true;
+				attrOrTextNodeStartOffset = ((IndexedRegion) eachNode).getStartOffset();
+				selectedNodes.set(i, ((Node) eachNode).getParentNode());
+			}
+		}
+		if (nothingToSelect(selectedNodes)) {
+			removeRangeIndication();
+		} else {
+			IndexedRegion startNode = (IndexedRegion) selectedNodes.get(0);
+			IndexedRegion endNode = (IndexedRegion) selectedNodes.get(selectedNodes.size() - 1);
+			int startOffset = startNode.getStartOffset();
+			int endOffset = endNode.getEndOffset();
+			// if end node is a child node of start node
+			if (startNode.getEndOffset() > endNode.getEndOffset()) {
+				endOffset = startNode.getEndOffset();
+			}
+			int length = endOffset - startOffset;
+			// Move cursor only if the original source really came from
+			// a ContentViewer (for example, the SourceEditorTreeViewer or the
+			// XMLTableTreeViewer)
+			// or a ContentOutlinePage (for example, the XSDTreeViewer).
+			// Do not move the cursor if the source is a textWidget (which
+			// means the selection came from the text viewer) or
+			// if the source is the ViewerSelectionManager (which means the
+			// selection was set programmatically).
+			boolean moveCursor = (event.getSource() instanceof ContentViewer) || (event.getSource() instanceof IContentOutlinePage);
+			// 20031012 (pa)
+			// Changed moveCursor to "false" because it was causing the cursor
+			// to jump to the beginning of the parent node in the case that a
+			// child of the parent is deleted.
+			// We really only want to set the range indicator on the left to
+			// the range of the parent, but not move the cursor
+			// setRangeIndication(startOffset, length, false);
+			// 20040714 (nsd) Chnaged back to tru given that selection
+			// problems
+			// caused by the Outline view appear fixed.
+			setRangeIndication(startOffset, length, moveCursor);
+			if ((moveCursor) && (attrOrTextNodeSelected)) {
+				setSelectedRange(attrOrTextNodeStartOffset, 0);
+				revealRange(attrOrTextNodeStartOffset, 0);
+			}
+			// if(moveCursor) {
+			// System.out.print("moving");
+			// }
+			// else {
+			// System.out.print("not moving");
+			// }
+			// System.out.println(" on NodeSelectionEvent: " +
+			// event.getSource());
+		}
 	}
 
 	/**
@@ -819,7 +894,9 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 	}
 
 	public int modelLine2WidgetLine(int modelLine) {
-		// need to override this method as workaround for Bug85709
+		/**
+		 * need to override this method as a workaround for Bug 85709
+		 */
 		if (fInformationMapping == null) {
 			IDocument document = getDocument();
 			if (document != null) {
@@ -843,7 +920,9 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 	}
 
 	public int modelOffset2WidgetOffset(int modelOffset) {
-		// need to override this method as workaround for Bug85709
+		/**
+		 * need to override this method as a workaround for Bug 85709
+		 */
 		if (fInformationMapping == null) {
 			IRegion region = getModelCoverage();
 			if (region != null) {
@@ -883,80 +962,6 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 	 * super.handleVerifyEvent(e); if (containsReadOnly(getVisibleDocument(),
 	 * e.start, e.end)) { e.doit = false; beep(); } }
 	 */
-
-	/**
-	 * nodeSelectionChanged method comment.
-	 */
-	public void nodeSelectionChanged(NodeSelectionChangedEvent event) {
-
-		// Skip NodeSelectionChanged processing if this is the source of the
-		// event.
-		if (event.getSource().equals(this))
-			return;
-		List selectedNodes = new Vector(event.getSelectedNodes());
-		boolean attrOrTextNodeSelected = false;
-		int attrOrTextNodeStartOffset = 0;
-		for (int i = 0; i < selectedNodes.size(); i++) {
-			Object eachNode = selectedNodes.get(i);
-			// replace attribute node with its parent
-			if (eachNode instanceof Attr) {
-				attrOrTextNodeSelected = true;
-				attrOrTextNodeStartOffset = ((IndexedRegion) eachNode).getStartOffset();
-				selectedNodes.set(i, ((Attr) eachNode).getOwnerElement());
-			}
-			// replace TextNode with its parent
-			if ((eachNode instanceof Node) && (((Node) eachNode).getNodeType() == Node.TEXT_NODE)) {
-				attrOrTextNodeSelected = true;
-				attrOrTextNodeStartOffset = ((IndexedRegion) eachNode).getStartOffset();
-				selectedNodes.set(i, ((Node) eachNode).getParentNode());
-			}
-		}
-		if (nothingToSelect(selectedNodes)) {
-			removeRangeIndication();
-		} else {
-			IndexedRegion startNode = (IndexedRegion) selectedNodes.get(0);
-			IndexedRegion endNode = (IndexedRegion) selectedNodes.get(selectedNodes.size() - 1);
-			int startOffset = startNode.getStartOffset();
-			int endOffset = endNode.getEndOffset();
-			// if end node is a child node of start node
-			if (startNode.getEndOffset() > endNode.getEndOffset()) {
-				endOffset = startNode.getEndOffset();
-			}
-			int length = endOffset - startOffset;
-			// Move cursor only if the original source really came from
-			// a ContentViewer (for example, the SourceEditorTreeViewer or the
-			// XMLTableTreeViewer)
-			// or a ContentOutlinePage (for example, the XSDTreeViewer).
-			// Do not move the cursor if the source is a textWidget (which
-			// means the selection came from the text viewer) or
-			// if the source is the ViewerSelectionManager (which means the
-			// selection was set programmatically).
-			boolean moveCursor = (event.getSource() instanceof ContentViewer) || (event.getSource() instanceof IContentOutlinePage);
-			// 20031012 (pa)
-			// Changed moveCursor to "false" because it was causing the cursor
-			// to jump to the beginning of the parent node in the case that a
-			// child of the parent is deleted.
-			// We really only want to set the range indicator on the left to
-			// the range of the parent, but not move the cursor
-			// setRangeIndication(startOffset, length, false);
-			// 20040714 (nsd) Chnaged back to tru given that selection
-			// problems
-			// caused by the Outline view appear fixed.
-			setRangeIndication(startOffset, length, moveCursor);
-			if ((moveCursor) && (attrOrTextNodeSelected)) {
-				setSelectedRange(attrOrTextNodeStartOffset, 0);
-				revealRange(attrOrTextNodeStartOffset, 0);
-			}
-			// if(moveCursor) {
-			// System.out.print("moving");
-			// }
-			// else {
-			// System.out.print("not moving");
-			// }
-			// System.out.println(" on NodeSelectionEvent: " +
-			// event.getSource());
-		}
-	}
 
 	/**
 	 * @param selectedNodes
@@ -1007,8 +1012,6 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 	 *      org.eclipse.jface.text.source.IAnnotationModel, int, int)
 	 */
 	public void setDocument(IDocument document, IAnnotationModel annotationModel, int modelRangeOffset, int modelRangeLength) {
-
-
 		// partial fix for:
 		// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=1970
 		// when our document is set, especially to null during close,
@@ -1062,11 +1065,10 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 	}
 
 	public void setViewerSelectionManager(ViewerSelectionManager viewerSelectionManager) {
-
 		// disconnect from old one
 		if (fViewerSelectionManager != null) {
-			fViewerSelectionManager.removeNodeDoubleClickListener(this);
-			fViewerSelectionManager.removeNodeSelectionListener(this);
+			fViewerSelectionManager.removeNodeDoubleClickListener(fSelectionListener);
+			fViewerSelectionManager.removeNodeSelectionListener(fSelectionListener);
 			fViewerSelectionManager.release();
 			// No need to removeSelectionChangedListener here. Done when
 			// editor
@@ -1076,8 +1078,8 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 		fViewerSelectionManager = viewerSelectionManager;
 		// connect to new one
 		if (fViewerSelectionManager != null) {
-			fViewerSelectionManager.addNodeDoubleClickListener(this);
-			fViewerSelectionManager.addNodeSelectionListener(this);
+			fViewerSelectionManager.addNodeDoubleClickListener(fSelectionListener);
+			fViewerSelectionManager.addNodeSelectionListener(fSelectionListener);
 			// No need to addSelectionChangedListener here. Done when editor
 			// calls "new ViewerSelectionManagerImpl(ITextViewer)".
 			// addSelectionChangedListener(fViewerSelectionManager);
