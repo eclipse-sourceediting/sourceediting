@@ -28,6 +28,9 @@ public class JSP2ServletNameUtil {
 	 * back to the original character.
 	 */
 	public final static String unmangle(String qualifiedTypeName) {
+		if(qualifiedTypeName.charAt(0) != '_')
+			return qualifiedTypeName;
+		
 		StringBuffer buf = new StringBuffer();
 		
 		// remove the .java extension if there is one
