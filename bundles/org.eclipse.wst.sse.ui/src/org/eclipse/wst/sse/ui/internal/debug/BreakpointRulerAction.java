@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.model.IBreakpoint;
@@ -42,9 +43,8 @@ import org.eclipse.ui.texteditor.AbstractMarkerAnnotationModel;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.IUpdate;
-import org.eclipse.wst.sse.core.IModelManager;
+import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.ModelPlugin;
 import org.eclipse.wst.sse.ui.EditorPlugin;
 import org.eclipse.wst.sse.ui.Logger;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.IBreakpointProvider;
@@ -121,8 +121,8 @@ public abstract class BreakpointRulerAction extends Action implements IUpdate {
 									}
 									if (textEditor != null) {
 										IDocument textDocument = textEditor.getDocumentProvider().getDocument(input);
-										IModelManager mgr = ModelPlugin.getDefault().getModelManager();
-										model = mgr.getExistingModelForRead(textDocument);
+										IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
+										model = plugin.getModelManager().getExistingModelForRead(textDocument);
 										if (model != null) {
 											resource = BreakpointProviderBuilder.getInstance().getResource(input, model.getContentTypeIdentifier(), getFileExtension(input));
 										}

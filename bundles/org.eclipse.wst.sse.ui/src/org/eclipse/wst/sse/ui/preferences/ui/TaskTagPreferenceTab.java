@@ -26,6 +26,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
@@ -58,6 +60,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.ModelPlugin;
 import org.eclipse.wst.sse.core.participants.TaskTagSeeker;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
@@ -354,10 +357,11 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 	}
 
 	private void loadPreferenceValues() {
-		String tags = ModelPlugin.getDefault().getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_TAGS);
-		String priorities = ModelPlugin.getDefault().getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_PRIORITIES);
+		Plugin modelPlugin = Platform.getPlugin(IModelManagerPlugin.ID);
+		String tags = modelPlugin.getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_TAGS);
+		String priorities = modelPlugin.getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_PRIORITIES);
 		loadTagsAndPriorities(tags, priorities);
-		fEnableTaskTags = ModelPlugin.getDefault().getPluginPreferences().getBoolean(CommonModelPreferenceNames.TASK_TAG_ENABLE);
+		fEnableTaskTags = modelPlugin.getPluginPreferences().getBoolean(CommonModelPreferenceNames.TASK_TAG_ENABLE);
 	}
 
 	/**
@@ -411,13 +415,14 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 	}
 
 	public void performDefaults() {
-		String tags = ModelPlugin.getDefault().getPluginPreferences().getDefaultString(CommonModelPreferenceNames.TASK_TAG_TAGS);
-		String priorities = ModelPlugin.getDefault().getPluginPreferences().getDefaultString(CommonModelPreferenceNames.TASK_TAG_PRIORITIES);
+		Plugin modelPlugin = Platform.getPlugin(IModelManagerPlugin.ID);
+		String tags = modelPlugin.getPluginPreferences().getDefaultString(CommonModelPreferenceNames.TASK_TAG_TAGS);
+		String priorities = modelPlugin.getPluginPreferences().getDefaultString(CommonModelPreferenceNames.TASK_TAG_PRIORITIES);
 		loadTagsAndPriorities(tags, priorities);
 		if (valueTable != null && valueTable.getControl() != null && !valueTable.getControl().isDisposed()) {
 			valueTable.setInput(fTags);
 		}
-		fEnableTaskTags = ModelPlugin.getDefault().getPluginPreferences().getDefaultBoolean(CommonModelPreferenceNames.TASK_TAG_ENABLE);
+		fEnableTaskTags = modelPlugin.getPluginPreferences().getDefaultBoolean(CommonModelPreferenceNames.TASK_TAG_ENABLE);
 		fEnableCheckbox.setSelection(fEnableTaskTags);
 
 		isDirty = false;
@@ -496,7 +501,8 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 	 */
 	private void save() {
 		String tags = StringUtils.pack(fTags);
-		ModelPlugin.getDefault().getPluginPreferences().setValue(CommonModelPreferenceNames.TASK_TAG_TAGS, tags);
+		Plugin modelPlugin = Platform.getPlugin(IModelManagerPlugin.ID);
+		modelPlugin.getPluginPreferences().setValue(CommonModelPreferenceNames.TASK_TAG_TAGS, tags);
 
 		StringBuffer buf = new StringBuffer();
 		for (int i = 0; i < fPriorities.length; i++) {
@@ -504,7 +510,7 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 			if (i < fPriorities.length - 1)
 				buf.append(","); //$NON-NLS-1$
 		}
-		ModelPlugin.getDefault().getPluginPreferences().setValue(CommonModelPreferenceNames.TASK_TAG_PRIORITIES, buf.toString());
-		ModelPlugin.getDefault().getPluginPreferences().setValue(CommonModelPreferenceNames.TASK_TAG_ENABLE, fEnableTaskTags);
+		modelPlugin.getPluginPreferences().setValue(CommonModelPreferenceNames.TASK_TAG_PRIORITIES, buf.toString());
+		modelPlugin.getPluginPreferences().setValue(CommonModelPreferenceNames.TASK_TAG_ENABLE, fEnableTaskTags);
 	}
 }
