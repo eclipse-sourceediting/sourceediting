@@ -12,6 +12,10 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.contenttype;
 
+/**
+ * @deprecated
+ * Use the one from org.eclipse.wst.common.encoding
+ */
 
 public interface EncodingParserConstants {
 

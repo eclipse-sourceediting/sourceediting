@@ -12,7 +12,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.contenttype;
 
-import org.eclipse.wst.common.encoding.EncodingParserConstants;;
+import org.eclipse.wst.common.encoding.EncodingParserConstants;
+;
 
 public interface XMLHeadTokenizerConstants extends EncodingParserConstants {
 
