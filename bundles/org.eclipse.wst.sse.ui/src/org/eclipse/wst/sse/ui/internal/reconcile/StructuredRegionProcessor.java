@@ -192,6 +192,10 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
      * @see org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor#contains(org.eclipse.jface.text.reconciler.DirtyRegion, org.eclipse.jface.text.reconciler.DirtyRegion)
      */
     protected boolean contains(DirtyRegion root, DirtyRegion possible) {
+        
+        // this method is a performance hit
+        // look for alternatives
+        
         boolean contains = false;
         IStructuredModel sModel = getStructuredModelForRead(getDocument());
         try {

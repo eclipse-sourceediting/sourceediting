@@ -110,6 +110,9 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 	 * @param resource
 	 */
 	private synchronized void addRequest(DirtyRegion dr) {
+        
+        
+        
 		List drq = getDirtyRegionQueue();
 		// if we already have a request which contains the new request,
 		// discare the new request
@@ -382,7 +385,12 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 	public final void processDirtyRegion(DirtyRegion dr) {
 		if (dr == null)
 			return;
-
+        
+        // if no strategies, don't bother doing
+        // anything.
+	    if(getStrategyTypes().size() == 0)
+            return;
+        
 		cancel();
 		addRequest(dr);
 		schedule(getDelay());
