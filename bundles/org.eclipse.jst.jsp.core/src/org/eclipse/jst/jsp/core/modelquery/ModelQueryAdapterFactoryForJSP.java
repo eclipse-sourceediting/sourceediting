@@ -14,6 +14,7 @@ import java.io.File;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.common.contentmodel.util.CMDocumentCache;
@@ -76,7 +77,11 @@ public class ModelQueryAdapterFactoryForJSP extends AbstractAdapterFactory imple
 						baseLocation = file.getAbsolutePath();
 					}
 					else {
-						baseLocation = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(model.getBaseLocation()).toString();
+						IPath basePath = new Path(model.getBaseLocation());
+						if(basePath.segmentCount() > 1)
+							baseLocation = ResourcesPlugin.getWorkspace().getRoot().getFile(basePath).getLocation().toString();
+						else
+							baseLocation = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(basePath).toString();
 					}
 					IdResolver resolver = new XMLCatalogIdResolver(baseLocation, model.getResolver());
 	

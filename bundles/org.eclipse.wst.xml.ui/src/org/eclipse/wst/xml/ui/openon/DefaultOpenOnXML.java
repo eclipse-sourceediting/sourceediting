@@ -113,7 +113,11 @@ public class DefaultOpenOnXML extends AbstractOpenOn {
 					baseLoc = location.toString();
 				}
 				else {
-					baseLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(sModel.getBaseLocation()).toString();
+					IPath basePath = new Path(sModel.getBaseLocation());
+					if(basePath.segmentCount() > 1)
+						baseLoc = ResourcesPlugin.getWorkspace().getRoot().getFile(basePath).getLocation().toString();
+					else
+						baseLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(basePath).toString();
 				}
 			}
 		}
