@@ -177,8 +177,6 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 			// changed.
 			structuredModel = StructuredModelManager.getModelManager().getModelForEdit(file);
 
-			structuredModel.aboutToChangeModel();
-
 			// format
 			formatModel(structuredModel);
 
@@ -188,7 +186,6 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 		} finally {
 			//ensureClosed(outputStream, null);
 			// release from model manager
-			structuredModel.changedModel();
 			if (structuredModel != null) {
 				structuredModel.releaseFromEdit();
 			}
@@ -287,66 +284,73 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 
 	public void formatModel(IStructuredModel structuredModel, int start, int length) {
 		if (structuredModel != null) {
-			if (start == 0 && length == structuredModel.getStructuredDocument().getLength())
-				setFormatWithSiblingIndent(structuredModel, false);
-			else
-				setFormatWithSiblingIndent(structuredModel, true);
-
-			if (start >= 0 && length >= 0 && start + length <= structuredModel.getStructuredDocument().getLength()) {
-				Vector activeNodes = getActiveNodes(structuredModel, start, length);
-				if (activeNodes.size() > 0) {
-					Node firstNode = (Node) activeNodes.firstElement();
-					Node lastNode = (Node) activeNodes.lastElement();
-
-					boolean done = false;
-					Node eachNode = firstNode;
-					Node nextNode = null;
-					// TODO: we should be able to call something like
-					// sequentialRewrite, but
-					// doesn't work for
-					// our case, since we do "gets" during reparsing, so makes
-					// sequential rewrite
-					// store actually
-					// less efficient than gap store. Someday we need our own
-					// gap store, that
-					// handles
-					// structured text more efficiently. I thought I'd leave
-					// this commented out
-					// code here
-					// as a reminder.
-					//					try {
-					//						structuredModel.getStructuredDocument().startSequentialRewrite(false);
-					while (!done) {
-						// update "done"
-						done = (eachNode == lastNode);
-
-						// get next sibling before format because eachNode
-						// may
-						// be deleted,
-						// for example when it's an empty text node
-						nextNode = eachNode.getNextSibling();
-
-						// format each node
-						formatNode(eachNode);
-
-						// update each node
-						if (nextNode != null && nextNode.getParentNode() == null)
-							// nextNode is deleted during format
-							eachNode = eachNode.getNextSibling();
-						else
-							eachNode = nextNode;
-
-						// This should not be needed, but just in case
-						// something went wrong with with eachNode.
-						// We don't want an infinite loop here.
-						if (eachNode == null)
-							done = true;
+			try {
+				// whenever formatting model, fire abouttochange/modelchanged
+				structuredModel.aboutToChangeModel();
+				if (start == 0 && length == structuredModel.getStructuredDocument().getLength())
+					setFormatWithSiblingIndent(structuredModel, false);
+				else
+					setFormatWithSiblingIndent(structuredModel, true);
+	
+				if (start >= 0 && length >= 0 && start + length <= structuredModel.getStructuredDocument().getLength()) {
+					Vector activeNodes = getActiveNodes(structuredModel, start, length);
+					if (activeNodes.size() > 0) {
+						Node firstNode = (Node) activeNodes.firstElement();
+						Node lastNode = (Node) activeNodes.lastElement();
+	
+						boolean done = false;
+						Node eachNode = firstNode;
+						Node nextNode = null;
+						// TODO: we should be able to call something like
+						// sequentialRewrite, but
+						// doesn't work for
+						// our case, since we do "gets" during reparsing, so makes
+						// sequential rewrite
+						// store actually
+						// less efficient than gap store. Someday we need our own
+						// gap store, that
+						// handles
+						// structured text more efficiently. I thought I'd leave
+						// this commented out
+						// code here
+						// as a reminder.
+						//					try {
+						//						structuredModel.getStructuredDocument().startSequentialRewrite(false);
+						while (!done) {
+							// update "done"
+							done = (eachNode == lastNode);
+	
+							// get next sibling before format because eachNode
+							// may
+							// be deleted,
+							// for example when it's an empty text node
+							nextNode = eachNode.getNextSibling();
+	
+							// format each node
+							formatNode(eachNode);
+	
+							// update each node
+							if (nextNode != null && nextNode.getParentNode() == null)
+								// nextNode is deleted during format
+								eachNode = eachNode.getNextSibling();
+							else
+								eachNode = nextNode;
+	
+							// This should not be needed, but just in case
+							// something went wrong with with eachNode.
+							// We don't want an infinite loop here.
+							if (eachNode == null)
+								done = true;
+						}
+						//					}
+						//					finally {
+						//						structuredModel.getStructuredDocument().stopSequentialRewrite();
+						//					}
 					}
-					//					}
-					//					finally {
-					//						structuredModel.getStructuredDocument().stopSequentialRewrite();
-					//					}
 				}
+			} finally {
+				// always make sure to fire changedmodel when done
+				structuredModel.changedModel();
 			}
 		}
 	}

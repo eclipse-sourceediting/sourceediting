@@ -59,9 +59,6 @@ import org.eclipse.jface.text.ITextViewerExtension;
 import org.eclipse.jface.text.ITextViewerExtension2;
 import org.eclipse.jface.text.ITextViewerExtension5;
 import org.eclipse.jface.text.source.Annotation;
-import org.eclipse.jface.text.source.IAnnotationModel;
-import org.eclipse.jface.text.source.IAnnotationModelExtension;
-import org.eclipse.jface.text.source.IChangeRulerColumn;
 import org.eclipse.jface.text.source.ICharacterPairMatcher;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
@@ -121,12 +118,10 @@ import org.eclipse.ui.texteditor.TextOperationAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.wst.common.encoding.EncodingMemento;
-import org.eclipse.wst.sse.core.IModelLifecycleListener;
 import org.eclipse.wst.sse.core.IModelStateListenerExtended;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
-import org.eclipse.wst.sse.core.ModelLifecycleEvent;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.internal.text.IExecutionDelegatable;
@@ -393,31 +388,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 
 	}
 
-	private class ViewerModelLifecycleListener implements IModelLifecycleListener {
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.wst.sse.core.IModelLifecycleListener#processPostModelEvent(org.eclipse.wst.sse.core.ModelLifecycleEvent)
-		 */
-		public void processPostModelEvent(ModelLifecycleEvent event) {
-			// reconnect the textviewer on document instance change
-			if (event.getType() == ModelLifecycleEvent.MODEL_DOCUMENT_CHANGED) {
-				if (getTextViewer() != null && getTextViewer().getControl() != null && !getTextViewer().getControl().isDisposed() && event.getModel().equals(getModel())) {
-					getTextViewer().setModel(event.getModel(), getDocumentProvider().getAnnotationModel(getEditorInput()));
-				}
-			}
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.wst.sse.core.IModelLifecycleListener#processPreModelEvent(org.eclipse.wst.sse.core.ModelLifecycleEvent)
-		 */
-		public void processPreModelEvent(ModelLifecycleEvent event) {
-		}
-	}
-
 	protected final static char[] BRACKETS = {'{', '}', '(', ')', '[', ']'};
 	private static final long BUSY_STATE_DELAY = 1000;
 	public static final String CORE_SSE_ACTIVITY_ID = "com.ibm.wtp.xml.core"; //$NON-NLS-1$
@@ -477,7 +447,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	protected DropTarget fDropTarget;
 	protected boolean fEditorDisposed = false;
 	private IEditorPart fEditorPart;
-	private IModelLifecycleListener fInternalLifeCycleListener = new ViewerModelLifecycleListener();
 	private InternalModelStateListener fInternalModelStateListener;
 
 	protected MouseTracker fMouseTracker;
@@ -1104,7 +1073,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			if (fStructuredModel.getStructuredDocument() != null)
 				fStructuredModel.getStructuredDocument().removeDocumentListener(this);
 			fStructuredModel.removeModelStateListener(getInternalModelStateListener());
-			fStructuredModel.removeModelLifecycleListener(fInternalLifeCycleListener);
 		}
 
 		if (getDocument() != null) {
@@ -1994,17 +1962,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 * viewer-dependent.
 	 */
 	private void initializeSourceViewer() {
-		IAnnotationModel annotationModel = getDocumentProvider().getAnnotationModel(getEditorInput());
-		if (getTextViewer() != null)
-			getTextViewer().setModel(getModel(), annotationModel);
-
 		if (getViewerSelectionManager() != null)
 			getViewerSelectionManager().setModel(getModel());
-
-		// workaround for bugzilla#56801
-		// updates/reinstalls QuickDiff because some QuickDiff info is lost
-		// when SourceViewer.setModel/setDocument is called
-		updateDiffer();
 
 		computeAndSetDoubleClickAction(getModel());
 
@@ -2223,28 +2182,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	}
 
 	/**
-	 * Remove the QuickDiff annotation model from the SourceViewer's
-	 * Annotation model if it exists
-	 */
-	private void removeDiffer() {
-		// get annotation model extension
-		ISourceViewer viewer = getSourceViewer();
-		if (viewer == null)
-			return;
-
-		IAnnotationModel m = viewer.getAnnotationModel();
-		IAnnotationModelExtension model;
-		if (m instanceof IAnnotationModelExtension)
-			model = (IAnnotationModelExtension) m;
-		else
-			return;
-
-		// remove the quick differ if it already exists in the annotation
-		// model
-		model.removeAnnotationModel(IChangeRulerColumn.QUICK_DIFF_MODEL_ID);
-	}
-
-	/**
 	 * both starts and resets the busy state timer
 	 */
 	private void resetBusyState() {
@@ -2411,7 +2348,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	public void setModel(IStructuredModel newModel) {
 		Assert.isNotNull(getDocumentProvider());
 		if (fStructuredModel != null) {
-			fStructuredModel.removeModelLifecycleListener(fInternalLifeCycleListener);
 			if (fStructuredModel.getStructuredDocument() != null) {
 				fStructuredModel.getStructuredDocument().removeDocumentListener(this);
 			}
@@ -2423,7 +2359,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 				fStructuredModel.getStructuredDocument().addDocumentListener(this);
 			}
 			fStructuredModel.addModelStateListener(getInternalModelStateListener());
-			fStructuredModel.addModelLifecycleListener(fInternalLifeCycleListener);
 		}
 		// update() should be called whenever the model is
 		// set or changed
@@ -2441,7 +2376,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		// setModel(newModel);
 		Assert.isNotNull(getDocumentProvider());
 		if (fStructuredModel != null) {
-			fStructuredModel.removeModelLifecycleListener(fInternalLifeCycleListener);
 			fStructuredModel.removeModelStateListener(getInternalModelStateListener());
 			if (fStructuredModel.getStructuredDocument() != null) {
 				fStructuredModel.getStructuredDocument().removeDocumentListener(this);
@@ -2456,7 +2390,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 				fStructuredModel.getStructuredDocument().addDocumentListener(this);
 			}
 			fStructuredModel.addModelStateListener(getInternalModelStateListener());
-			fStructuredModel.addModelLifecycleListener(fInternalLifeCycleListener);
 		}
 		// update() should be called whenever the model is
 		// set or changed
@@ -2529,9 +2462,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 * swapped)
 	 */
 	public void update() {
-		IAnnotationModel annotationModel = getDocumentProvider().getAnnotationModel(getEditorInput());
-		if (getTextViewer() != null)
-			getTextViewer().setModel(getModel(), annotationModel);
 		if (fOutlinePage != null && fOutlinePage instanceof StructuredTextEditorContentOutlinePage) {
 			ContentOutlineConfiguration cfg = createContentOutlineConfiguration();
 			if (cfg instanceof StructuredContentOutlineConfiguration) {
@@ -2556,10 +2486,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 
 		fShowInTargetIds = createShowInTargetIds();
 
-		// workaround for bugzilla#56801
-		// updates/reinstalls QuickDiff because some QuickDiff info is lost
-		// when SourceViewer.setModel/setDocument is called
-		updateDiffer();
 		// setSourceViewerConfiguration() was called once
 		// in
 		// StructuredTextMultiPageEditorPart.createSourcePage()
@@ -2605,21 +2531,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		// They needed to be updated.
 		if (!fEditorDisposed)
 			updateMenuText();
-	}
-
-	/**
-	 * Updates/reinstalls QuickDiff
-	 */
-	private void updateDiffer() {
-		// workaround for bugzilla#56801
-		// updates/reinstalls QuickDiff because some QuickDiff info is lost
-		// when SourceViewer.setModel/setDocument is called
-
-		if (isChangeInformationShowing()) {
-			showChangeInformation(false);
-			removeDiffer();
-			showChangeInformation(true);
-		}
 	}
 
 	private void updateEncodingMemento() {

@@ -21,6 +21,7 @@ import org.eclipse.wst.html.core.htmlcss.StyleAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.xml.core.document.XMLNode;
@@ -44,14 +45,12 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int documentPosition) {
 
 		IndexedRegion indexedNode = ContentAssistUtils.getNodeAt((StructuredTextViewer) viewer, documentPosition + fDocumentOffset);
-		IndexedRegion keyIndexedNode = null;
 		XMLNode xNode = null;
 		XMLNode parent = null;
-		IStructuredModel cssModel = null;
 		CSSProposalArranger arranger = null;
 
 		// bail if we couldn't get an indexed node
-		//if(indexedNode == null) return new ICompletionProposal[0];
+		// if(indexedNode == null) return new ICompletionProposal[0];
 		if (indexedNode instanceof XMLNode) {
 			xNode = (XMLNode) indexedNode;
 			parent = (XMLNode) xNode.getParentNode();
@@ -60,82 +59,102 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 		// case
 		if (xNode != null && xNode.getNodeName().equalsIgnoreCase(HTML40Namespace.ElementName.STYLE)) {
 			// now we know the cursor is in a <style> tag w/out region
-			cssModel = getCSSModel(xNode);
-			if (cssModel == null)
-				return new ICompletionProposal[0];
-
-			// adjust offsets for embedded style
-			int offset = documentPosition;
-			int pos = 0;
-			keyIndexedNode = cssModel.getIndexedRegion(pos);
-			if (keyIndexedNode == null) {
-				keyIndexedNode = (IndexedRegion) ((ICSSModel) cssModel).getDocument();
+			IStructuredModel cssModel = getCSSModel(xNode);
+			if (cssModel != null) {
+				// adjust offsets for embedded style
+				int offset = documentPosition;
+				int pos = 0;
+				IndexedRegion keyIndexedNode = cssModel.getIndexedRegion(pos);
+				if (keyIndexedNode == null) {
+					keyIndexedNode = (IndexedRegion) ((ICSSModel) cssModel).getDocument();
+				}
+				arranger = new CSSProposalArranger(pos, (ICSSNode) keyIndexedNode, offset, (char) 0);
 			}
-			arranger = new CSSProposalArranger(pos, (ICSSNode) keyIndexedNode, offset, (char) 0);
-
-		} else if (parent != null && parent.getNodeName().equalsIgnoreCase(HTML40Namespace.ElementName.STYLE)) {
+		}
+		else if (parent != null && parent.getNodeName().equalsIgnoreCase(HTML40Namespace.ElementName.STYLE)) {
 			// now we know the cursor is in a <style> tag with a region
 			// use the parent because that will be the <style> tag
-			cssModel = getCSSModel(parent);
-			if (cssModel == null)
-				return new ICompletionProposal[0];
-
-			// adjust offsets for embedded style
-			int offset = indexedNode.getStartOffset();
-			int pos = documentPosition - offset;
-			keyIndexedNode = cssModel.getIndexedRegion(pos);
-			if (keyIndexedNode == null) {
-				keyIndexedNode = (IndexedRegion) ((ICSSModel) cssModel).getDocument();
+			IStructuredModel cssModel = getCSSModel(parent);
+			if (cssModel != null) {
+				// adjust offsets for embedded style
+				int offset = indexedNode.getStartOffset();
+				int pos = documentPosition - offset;
+				IndexedRegion keyIndexedNode = cssModel.getIndexedRegion(pos);
+				if (keyIndexedNode == null) {
+					keyIndexedNode = (IndexedRegion) ((ICSSModel) cssModel).getDocument();
+				}
+				arranger = new CSSProposalArranger(pos, (ICSSNode) keyIndexedNode, offset, (char) 0);
 			}
-			arranger = new CSSProposalArranger(pos, (ICSSNode) keyIndexedNode, offset, (char) 0);
-		} else if (indexedNode instanceof XMLNode) {
+		}
+		else if (indexedNode instanceof XMLNode) {
 			// get model for node w/ style attribute
-			cssModel = getCSSModel((XMLNode) indexedNode);
-		} else if (indexedNode instanceof ICSSNode) {
+			IStructuredModel cssModel = getCSSModel((XMLNode) indexedNode);
+			if (cssModel != null) {
+				IndexedRegion keyIndexedNode = cssModel.getIndexedRegion(documentPosition - fDocumentOffset);
+				if (keyIndexedNode == null) {
+					keyIndexedNode = (IndexedRegion) ((ICSSModel) cssModel).getDocument();
+				}
+				if (keyIndexedNode instanceof ICSSNode) {
+					// inline style for a tag, not embedded
+					arranger = new CSSProposalArranger(documentPosition, (ICSSNode) keyIndexedNode, fDocumentOffset, fQuote);
+				}
+			}
+		}
+		else if (indexedNode instanceof ICSSNode) {
 			// when editing external CSS using CSS Designer, ICSSNode is
 			// passed.
 			ICSSDocument cssdoc = ((ICSSNode) indexedNode).getOwnerDocument();
 			if (cssdoc != null) {
-				cssModel = cssdoc.getModel();
+				IStructuredModel cssModel = cssdoc.getModel();
+				if (cssModel != null) {
+					IndexedRegion keyIndexedNode = cssModel.getIndexedRegion(documentPosition - fDocumentOffset);
+					if (keyIndexedNode == null) {
+						keyIndexedNode = (IndexedRegion) ((ICSSModel) cssModel).getDocument();
+					}
+					if (keyIndexedNode instanceof ICSSNode) {
+						// inline style for a tag, not embedded
+						arranger = new CSSProposalArranger(documentPosition, (ICSSNode) keyIndexedNode, fDocumentOffset, fQuote);
+					}
+				}
 			}
-		} else if (indexedNode == null && isViewerEmpty(viewer) && viewer instanceof StructuredTextViewer) {
+		}
+		else if (indexedNode == null && isViewerEmpty(viewer)) {
 			// the top of empty CSS Document
-			IStructuredModel model = ((StructuredTextViewer) viewer).getModel();
-			if (model instanceof ICSSModel) {
-				cssModel = (ICSSModel) model;
+			IStructuredModel cssModel = null;
+			try {
+				cssModel = StructuredModelManager.getModelManager().getExistingModelForRead(viewer.getDocument());
+				if (cssModel instanceof ICSSModel) {
+					IndexedRegion keyIndexedNode = cssModel.getIndexedRegion(documentPosition - fDocumentOffset);
+					if (keyIndexedNode == null) {
+						keyIndexedNode = (IndexedRegion) ((ICSSModel) cssModel).getDocument();
+					}
+					if (keyIndexedNode instanceof ICSSNode) {
+						// inline style for a tag, not embedded
+						arranger = new CSSProposalArranger(documentPosition, (ICSSNode) keyIndexedNode, fDocumentOffset, fQuote);
+					}
+				}
+			}
+			finally {
+				if (cssModel != null)
+					cssModel.releaseFromRead();
 			}
 		}
 
-		if (cssModel == null)
-			return new ICompletionProposal[0];
+		ICompletionProposal[] proposals = new ICompletionProposal[0];
+		if (arranger != null) {
+			fDocumentOffset = 0;
+			proposals = arranger.getProposals();
 
-		keyIndexedNode = cssModel.getIndexedRegion(documentPosition - fDocumentOffset);
-		if (keyIndexedNode == null) {
-			keyIndexedNode = (IndexedRegion) ((ICSSModel) cssModel).getDocument();
+			// add end tag if parent is not closed
+			ICompletionProposal endTag = XMLContentAssistUtilities.computeXMLEndTagProposal(viewer, documentPosition, indexedNode, HTML40Namespace.ElementName.STYLE, SharedXMLEditorPluginImageHelper.IMG_OBJ_TAG_GENERIC); //$NON-NLS-1$
+			if (endTag != null) {
+				ICompletionProposal[] plusOne = new ICompletionProposal[proposals.length + 1];
+				System.arraycopy(proposals, 0, plusOne, 1, proposals.length);
+				plusOne[0] = endTag;
+				proposals = plusOne;
+			}
 		}
-
-		if (!(keyIndexedNode instanceof ICSSNode)) {
-			return new ICompletionProposal[0];
-		}
-
-		if (arranger == null) {
-			// if it's null at this point, it must be inline style for a tag,
-			// not embedded
-			arranger = new CSSProposalArranger(documentPosition, (ICSSNode) keyIndexedNode, fDocumentOffset, fQuote);
-		}
-		fDocumentOffset = 0;
-		ICompletionProposal[] temp = arranger.getProposals();
-
-		// add end tag if parent is not closed
-		ICompletionProposal endTag = XMLContentAssistUtilities.computeXMLEndTagProposal(viewer, documentPosition, indexedNode, HTML40Namespace.ElementName.STYLE, SharedXMLEditorPluginImageHelper.IMG_OBJ_TAG_GENERIC); //$NON-NLS-1$
-		if (endTag == null)
-			return temp;
-		else {
-			ICompletionProposal[] plusOne = new ICompletionProposal[temp.length + 1];
-			System.arraycopy(temp, 0, plusOne, 1, temp.length);
-			plusOne[0] = endTag;
-			return plusOne;
-		}
+		return proposals;
 	}
 
 	/**
@@ -160,18 +179,18 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 	 * @param indexedNode
 	 * @return IStructuredModel
 	 */
-	//	private IStructuredModel getCSSModel(IndexedRegion indexedNode) {
-	//		if (indexedNode == null) return null;
-	//		Node node = (Node)indexedNode;
-	//		INodeNotifier notifier = (INodeNotifier)node.getParentNode();
-	//		if (notifier == null) return null;
-	//		INodeAdapter adapter =
+	// private IStructuredModel getCSSModel(IndexedRegion indexedNode) {
+	// if (indexedNode == null) return null;
+	// Node node = (Node)indexedNode;
+	// INodeNotifier notifier = (INodeNotifier)node.getParentNode();
+	// if (notifier == null) return null;
+	// INodeAdapter adapter =
 	// StyleAdapterFactory.getInstance().adapt(notifier);
-	//		if (adapter == null || !(adapter instanceof CSSModelAdapter)) return
+	// if (adapter == null || !(adapter instanceof CSSModelAdapter)) return
 	// null;
-	//		CSSModelAdapter modelAdapter = (CSSModelAdapter)adapter;
-	//		return modelAdapter.getModel();
-	//	}
+	// CSSModelAdapter modelAdapter = (CSSModelAdapter)adapter;
+	// return modelAdapter.getModel();
+	// }
 	/**
 	 * Returns the CSSmodel for a given XML node.
 	 * 

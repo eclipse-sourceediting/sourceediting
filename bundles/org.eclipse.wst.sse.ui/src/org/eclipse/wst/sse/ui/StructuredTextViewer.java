@@ -58,7 +58,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.IEditorStatusLine;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.cleanup.StructuredContentCleanupHandler;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
@@ -138,10 +137,6 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 	/** The most recent widget modification as document command */
 	private StructuredDocumentCommand fDocumentCommand = new StructuredDocumentCommand();
 	private IHighlighter fHighlighter;
-	/**
-	 * @deprecated
-	 */
-	private IStructuredModel fModel;
 	// TODO: never read locally
 	boolean fRememberedStateContentAssistInstalled;
 
@@ -203,18 +198,8 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 				}
 				break;
 			}
-			case CONTENTASSIST_CONTEXT_INFORMATION : {
-				return true;
-			}
 			case QUICK_FIX : {
 				return isEditable();
-			}
-			case INFORMATION : {
-				// the fInformationPresenter may not be set yet but you DO
-				// want information
-				// (this needs to be set to TRUE so menu item can become
-				// active)
-				return true;
 			}
 			case CLEANUP_DOCUMENT : {
 				return (fContentCleanupHandler != null && isEditable());
@@ -569,10 +554,6 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 					// begin recording
 					beginRecording(FORMAT_DOCUMENT_TEXT, FORMAT_DOCUMENT_TEXT, cursorPosition, selectionLength);
 
-					// tell the model that we are about to make a big model
-					// change
-					aboutToChangeModel();
-
 					// format
 					IRegion region = getModelCoverage();
 					if (fContentFormatter instanceof IContentFormatterExtension) {
@@ -585,10 +566,6 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 						fContentFormatter.format(getDocument(), region);
 					}
 				} finally {
-					// tell the model that we are done with the big model
-					// change
-					changedModel();
-
 					// end recording
 					selection = getTextWidget().getSelection();
 					cursorPosition = selection.x;
@@ -600,16 +577,12 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 				try {
 					// begin recording
 					beginRecording(FORMAT_ACTIVE_ELEMENTS_TEXT, FORMAT_ACTIVE_ELEMENTS_TEXT, cursorPosition, selectionLength);
-
-					aboutToChangeModel();
-
+					
 					// format
 					Point s = getSelectedRange();
 					IRegion region = new Region(s.x, s.y);
 					fContentFormatter.format(getDocument(), region);
 				} finally {
-					changedModel();
-
 					// end recording
 					selection = getTextWidget().getSelection();
 					cursorPosition = selection.x;
@@ -619,18 +592,6 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 				break;
 			default :
 				super.doOperation(operation);
-		}
-	}
-
-	private void changedModel() {
-		if (getModel() != null) {
-			getModel().changedModel();
-		}
-	}
-
-	private void aboutToChangeModel() {
-		if (getModel() != null) {
-			getModel().aboutToChangeModel();
 		}
 	}
 
@@ -724,13 +685,6 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 		return new ViewerSelectionManagerImpl(this);
 	}
 
-	/**
-	 * @deprecated -- will be removed in future.
-	 */
-	public IStructuredModel getModel() {
-		return fModel;
-	}
-
 	public ViewerSelectionManager getViewerSelectionManager() {
 
 		if (fViewerSelectionManager == null) {
@@ -764,8 +718,7 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 			fHighlighter.uninstall();
 		}
 		super.handleDispose();
-		// todo: make this setModel(null)
-		fModel = null;
+
 		Logger.trace("Source Editor", "StructuredTextViewer::handleDispose exit"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
@@ -1076,14 +1029,15 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 			// notify highlighter
 			if (fHighlighter != null) {
 				fHighlighter.setDocument(structuredDocument);
-				// fHighlighter.setModel(model);
 			}
 
 			// set document in the viewer-based undo manager
 			if (fUndoManager instanceof StructuredTextViewerUndoManager) {
 				((StructuredTextViewerUndoManager) fUndoManager).setDocument(structuredDocument);
 			}
-
+			// CaretEvent is not sent to ViewerSelectionManager after Save As.
+			// Need to notify ViewerSelectionManager here.
+			notifyViewerSelectionManager(getSelectedRange().x, getSelectedRange().y);
 		}
 	}
 
@@ -1105,31 +1059,6 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 				}
 			}
 		}
-	}
-
-	public void setModel(IStructuredModel model) {
-
-		setModel(model, null);
-	}
-
-	public void setModel(IStructuredModel model, IAnnotationModel annotationModel) {
-		// due to various forms of init, sometimes
-		// the same variable is set more than once
-		// with the same data, causing unneccesary updates, so
-		// we do nothing if someones' trying to set the same
-		// model we already have
-		// 
-		if ((fModel != null) && (fModel == model) && (getDocument() == model.getStructuredDocument())) {
-			return;
-		}
-		fModel = model;
-		if (model != null) {
-			setDocument(model.getStructuredDocument(), annotationModel);
-		}
-
-		// CaretEvent is not sent to ViewerSelectionManager after Save As.
-		// Need to notify ViewerSelectionManager here.
-		notifyViewerSelectionManager(getSelectedRange().x, getSelectedRange().y);
 	}
 
 	public void setViewerSelectionManager(ViewerSelectionManager viewerSelectionManager) {
