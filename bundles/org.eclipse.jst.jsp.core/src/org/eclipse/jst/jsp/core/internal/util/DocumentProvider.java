@@ -52,21 +52,6 @@ import org.xml.sax.SAXParseException;
  */
 
 public class DocumentProvider {
-	/**
-	 * 
-	 * @param args
-	 *            java.lang.String[]
-	 */
-	public static void main(String[] args) {
-		if (args.length < 2)
-			return;
-		DocumentProvider p = new DocumentProvider();
-		p.setFileName(args[0]);
-		p.setRootElementName(args[1]);
-		p.getDocument();
-
-	}
-
 	protected Document document = null;
 	protected ErrorHandler errorHandler = null;
 	private String fBaseReference;
@@ -219,7 +204,7 @@ public class DocumentProvider {
 	 * 
 	 * @return java.lang.String
 	 */
-	public java.lang.String getFileName() {
+	public String getFileName() {
 		return fileName;
 	}
 
@@ -245,7 +230,7 @@ public class DocumentProvider {
 	 * 
 	 * @return java.lang.String
 	 */
-	public java.lang.String getJarFileName() {
+	public String getJarFileName() {
 		return jarFileName;
 	}
 
