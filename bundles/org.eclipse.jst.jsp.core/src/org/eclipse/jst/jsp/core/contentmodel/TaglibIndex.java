@@ -13,6 +13,7 @@ package org.eclipse.jst.jsp.core.contentmodel;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.filebuffers.FileBuffers;
@@ -24,8 +25,10 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jst.jsp.core.internal.Logger;
+import org.eclipse.wst.xml.uriresolver.util.URIHelper;
 
 /**
  * @author nsd
@@ -72,11 +75,16 @@ public class TaglibIndex {
 						}
 					}
 					for (int i = 0; i < projects.length; i++) {
-						ProjectDescription description = createDescription(projects[i]);
 						try {
-							// TODO: handle the lack of a delta
 							if (deltas[i] != null) {
+								ProjectDescription description = createDescription(projects[i]);
 								deltas[i].accept(description.getVisitor());
+							}
+							if (!projects[i].isAccessible()) {
+								ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(projects[i]);
+								if (description != null) {
+									description.clear();
+								}
 							}
 						}
 						catch (CoreException e) {
@@ -101,6 +109,18 @@ public class TaglibIndex {
 	}
 
 	public static void addTaglibIndexListener(ITaglibIndexListener listener) {
+	}
+
+	/**
+	 * Returns all of the visible ITaglibRecords for the given filepath in the
+	 * workspace.
+	 * 
+	 * @param workspacePath
+	 * @return
+	 */
+	public static ITaglibRecord[] getAvailableTaglibRecords(IPath workspacePath) {
+		ITaglibRecord[] records = _instance.internalGetAvailableTaglibRecords(workspacePath);
+		return records;
 	}
 
 	public static void removeTaglibIndexListener(ITaglibIndexListener listener) {
@@ -134,6 +154,21 @@ public class TaglibIndex {
 		return description;
 	}
 
+	ITaglibRecord[] internalGetAvailableTaglibRecords(IPath location) {
+		ITaglibRecord[] records = null;
+		IFile baseResource = ResourcesPlugin.getWorkspace().getRoot().getFile(location);
+		if (baseResource != null) {
+			IProject project = baseResource.getProject();
+			ProjectDescription description = createDescription(project);
+			List availableRecords = description.getAvailableTaglibRecords(location);
+			records = (ITaglibRecord[]) availableRecords.toArray(records);
+		}
+		else {
+			records = new ITaglibRecord[0];
+		}
+		return records;
+	}
+
 	private ITaglibRecord internalResolve(String baseLocation, String reference, boolean crossProjects) {
 		IProject project = null;
 		ITaglibRecord resolved = null;
@@ -144,9 +179,16 @@ public class TaglibIndex {
 			resolved = description.resolve(baseLocation, reference);
 		}
 		else {
-			// TODO: support outside of the workspace?
+			// try simple file support outside of the workspace
 			File baseFile = FileBuffers.getSystemFileAtLocation(new Path(baseLocation));
 			if (baseFile != null) {
+				String normalizedReference = URIHelper.normalize(reference, baseLocation, "/"); //$NON-NLS-1$
+				if (normalizedReference != null) {
+					TLDRecord record = new TLDRecord();
+					record.location = new Path(normalizedReference);
+					record.uri = reference;
+					resolved = record;
+				}
 			}
 		}
 		return resolved;
