@@ -19,6 +19,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -41,6 +42,7 @@ import org.eclipse.wst.xsd.ui.internal.actions.MakeAnonymousGlobal;
 import org.eclipse.wst.xsd.ui.internal.actions.OpenSchemaAction;
 import org.eclipse.wst.xsd.ui.internal.actions.SetBaseTypeAction;
 import org.eclipse.wst.xsd.ui.internal.actions.SetMultiplicityAction;
+import org.eclipse.wst.xsd.ui.internal.actions.SetTypeAction;
 import org.eclipse.wst.xsd.ui.internal.actions.XSDEditNamespacesAction;
 import org.eclipse.wst.xsd.ui.internal.graph.editparts.ComplexTypeDefinitionEditPart;
 import org.eclipse.wst.xsd.ui.internal.graph.editparts.ElementDeclarationEditPart;
@@ -524,6 +526,23 @@ public class XSDMenuListener implements IMenuListener
         attributes = null;
       }
       
+      manager.add(new Separator());
+      MenuManager setTypeCascadeMenu = new MenuManager("Set Type");
+      manager.add(setTypeCascadeMenu);
+
+      SetTypeAction setNewComplexTypeAction = new SetTypeAction("New Complex Type", ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDComplexType.gif"), concreteComponent);
+      setNewComplexTypeAction.setTypeKind(XSDConstants.COMPLEXTYPE_ELEMENT);
+      setTypeCascadeMenu.add(setNewComplexTypeAction);
+
+      SetTypeAction setNewSimpleTypeAction = new SetTypeAction("New Simple Type", ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDSimpleType.gif"), concreteComponent);
+      setNewSimpleTypeAction.setTypeKind(XSDConstants.SIMPLETYPE_ELEMENT);
+      setTypeCascadeMenu.add(setNewSimpleTypeAction);
+      
+      SetTypeAction setExistingTypeAction = new SetTypeAction("Set Existing Type...", concreteComponent);
+      setExistingTypeAction.setTypeKind(0);
+      setTypeCascadeMenu.add(setExistingTypeAction);
+      manager.add(new Separator());
+
       if (!isGlobalElement)
       {
         addMultiplicityMenu(concreteComponent, manager);
@@ -1277,7 +1296,11 @@ public class XSDMenuListener implements IMenuListener
     }
     else if (XSDDOMHelper.inputEquals(parent, XSDConstants.ANY_ELEMENT_TAG, false))
     {
+      XSDConcreteComponent concreteComponent = getXSDSchema().getCorrespondingComponent(parent);
       addCreateElementActionIfNotExist(manager, XSDConstants.ANNOTATION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANNOTATION"), attributes, parent, parent.getFirstChild());
+      // need to add adapters for the ANY element.  I'd rather not provide this menu
+      // and let users see that the graph view doesn't update
+//      addMultiplicityMenu(concreteComponent, manager);
     }
     else if (XSDDOMHelper.inputEquals(parent, XSDConstants.ANYATTRIBUTE_ELEMENT_TAG, false))
     {
@@ -2075,25 +2098,21 @@ public class XSDMenuListener implements IMenuListener
     SetMultiplicityAction oneMultiplicity = new SetMultiplicityAction(concreteComponent, "1");
     oneMultiplicity.setMaxOccurs(1);
     oneMultiplicity.setMinOccurs(1);
-    SetMultiplicityAction zeroMultiplicity = new SetMultiplicityAction(concreteComponent, "0");
-    zeroMultiplicity.setMaxOccurs(0);
-    zeroMultiplicity.setMinOccurs(0);
-    SetMultiplicityAction zeroOrMoreMultiplicity = new SetMultiplicityAction(concreteComponent, "Zero or More");
+    SetMultiplicityAction zeroOrMoreMultiplicity = new SetMultiplicityAction(concreteComponent, "0..* (Zero or More)");
     zeroOrMoreMultiplicity.setMaxOccurs(-1);
     zeroOrMoreMultiplicity.setMinOccurs(0);
-    SetMultiplicityAction zeroOrOneMultiplicity = new SetMultiplicityAction(concreteComponent, "Zero or One");
+    SetMultiplicityAction zeroOrOneMultiplicity = new SetMultiplicityAction(concreteComponent, "0..1 (Zero or One)");
     zeroOrOneMultiplicity.setMaxOccurs(1);
     zeroOrOneMultiplicity.setMinOccurs(0);
-    SetMultiplicityAction oneOrMoreMultiplicity = new SetMultiplicityAction(concreteComponent, "One or More");
+    SetMultiplicityAction oneOrMoreMultiplicity = new SetMultiplicityAction(concreteComponent, "1..* (One or More)");
     oneOrMoreMultiplicity.setMaxOccurs(-1);
     oneOrMoreMultiplicity.setMinOccurs(1);
     
     MenuManager multiplicityMenu = new MenuManager("Set Multiplicity");
     manager.add(multiplicityMenu);
     multiplicityMenu.add(oneMultiplicity);
-    multiplicityMenu.add(zeroMultiplicity);
-    multiplicityMenu.add(oneOrMoreMultiplicity);    
-    multiplicityMenu.add(zeroOrMoreMultiplicity);
     multiplicityMenu.add(zeroOrOneMultiplicity);
+    multiplicityMenu.add(zeroOrMoreMultiplicity);
+    multiplicityMenu.add(oneOrMoreMultiplicity);    
   }
 }
