@@ -79,7 +79,7 @@ public class CSSProfileFinder {
 			IContentSettings cs = ContentSettingsCreator.create();
 			IPath path = new Path(baseLocation);
 			IResource resource = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(path);
-			if (resource == null)
+			if (resource == null && path.segmentCount() > 1)
 				resource = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 			if (resource != null) {
 				IProject project = resource.getProject();

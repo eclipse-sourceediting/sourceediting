@@ -62,7 +62,7 @@ public class CSSPathService {
 	public static IFile location2File(String location) {
 		Path path = new Path(location);
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(path);
-		if (file == null)
+		if (file == null && path.segmentCount() > 1)
 			file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 		return file;
 	}
