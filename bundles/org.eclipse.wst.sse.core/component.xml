@@ -35,6 +35,11 @@
 
 <!--    dw-->
         <package name="org.eclipse.wst.sse.ui.style"/>
+        <type name="Highlighter" reference="false" implement="false" subclass="false" instantiate="false" />
+        <type name="IHighlighter" reference="false" implement="false" subclass="false" instantiate="false" />
+        <type name="LineStyleProviderForNoOp" reference="false" implement="false" subclass="false" instantiate="false" />
+        <type name="YUV_RGBConverter" reference="false" implement="false" subclass="false" instantiate="false" />
+
 
 <!--    nitin-->
         <package name="org.eclipse.wst.sse.ui.views.contentoutline"/>
