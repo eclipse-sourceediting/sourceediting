@@ -43,7 +43,7 @@ import org.eclipse.wst.sse.ui.extension.IExtendedConfiguration;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.HTMLTextPresenter;
 import org.eclipse.wst.sse.ui.internal.hyperlink.HighlighterHyperlinkPresenter;
-import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessorExtension;
+import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorBuilder;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorMetaData;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorStrategy;
@@ -69,7 +69,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	private String fDeclaringID;
 	protected IHighlighter fHighlighter;
 
-	protected StructuredRegionProcessorExtension fReconciler;
+	protected StructuredRegionProcessor fReconciler;
 	protected IResource fResource = null;
 	protected final String SSE_EDITOR_ID = "org.eclipse.wst.sse.ui"; //$NON-NLS-1$
 	protected final String SSE_MODEL_ID = "org.eclipse.wst.sse.core"; //$NON-NLS-1$

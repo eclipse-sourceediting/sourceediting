@@ -60,7 +60,7 @@ import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.format.StructuredFormattingStrategy;
-import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessorExtension;
+import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
 import org.eclipse.wst.sse.ui.style.LineStyleProvider;
@@ -248,7 +248,7 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 
         if (fReconciler == null) {
             // create one
-            fReconciler = new StructuredRegionProcessorExtension();
+            fReconciler = new StructuredRegionProcessor();
             fReconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
         }
 

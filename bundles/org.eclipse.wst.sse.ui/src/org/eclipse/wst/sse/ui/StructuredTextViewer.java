@@ -72,7 +72,7 @@ import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredDocumentToTextAdapter;
 import org.eclipse.wst.sse.ui.internal.ViewerSelectionManagerImpl;
-import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessorExtension;
+import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
 import org.eclipse.wst.sse.ui.util.PlatformStatusLineUtil;
 import org.eclipse.wst.sse.ui.view.events.INodeSelectionListener;
@@ -275,7 +275,7 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 				fReconciler.install(this);
 				// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3858
 				// still need set document on the reconciler (strategies)
-				((StructuredRegionProcessorExtension) fReconciler).setDocument(getDocument());
+				((StructuredRegionProcessor) fReconciler).setDocument(getDocument());
 			}
 		}
 
