@@ -4,7 +4,7 @@
 	id="org.eclipse.wst.dtd.core"
 	name="%Structured_Source_DTD_Model.name"
 	version="1.0.0"
-	provider-name="IBM"
+	provider-name="Eclipse.org"
 	class="org.eclipse.wst.dtd.core.DTDPlugin">
 
 	<runtime>
@@ -32,7 +32,7 @@
 		<modelHandler
 			class="org.eclipse.wst.dtd.core.modelhandler.ModelHandlerForDTD"
 			associatedContentTypeId="org.eclipse.wst.dtd.core.dtdsource"
-			id="org.eclipse.wst.sse.core.handler.dtd">
+			id="org.eclipse.wst.dtd.core.modelhandler">
 		</modelHandler>
 	</extension>
 	<extension
