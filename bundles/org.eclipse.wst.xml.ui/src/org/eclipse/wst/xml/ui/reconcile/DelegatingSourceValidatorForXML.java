@@ -11,9 +11,8 @@
 
 package org.eclipse.wst.xml.ui.reconcile;
 
-import org.eclipse.wst.validation.core.IValidationRegistry;
+import org.eclipse.wst.validation.ValidationFactory;
 import org.eclipse.wst.validation.core.IValidator;
-import org.eclipse.wst.validation.internal.ValidationRegistryReader;
 
 /**
  * @author Mark Hutchinson
@@ -28,8 +27,7 @@ public class DelegatingSourceValidatorForXML extends DelegatingSourceValidator {
 
 	protected IValidator getDelegateValidator() {
 		try {
-			IValidationRegistry registry = ValidationRegistryReader.getReader();
-			return registry.getValidator(VALIDATOR_CLASS);
+			return ValidationFactory.instance.getValidator(VALIDATOR_CLASS);
 		}
 		catch (Exception e) { //
 		}

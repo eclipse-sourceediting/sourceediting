@@ -3,9 +3,8 @@
  */
 package org.eclipse.wst.xsd.ui.reconcile;
 
-import org.eclipse.wst.validation.core.IValidationRegistry;
+import org.eclipse.wst.validation.ValidationFactory;
 import org.eclipse.wst.validation.core.IValidator;
-import org.eclipse.wst.validation.internal.ValidationRegistryReader;
 import org.eclipse.wst.xml.ui.reconcile.DelegatingSourceValidator;
 
 /**
@@ -25,8 +24,7 @@ public class DelegatingSourceValidatorForXSD extends DelegatingSourceValidator
   {
     try
     {
-		IValidationRegistry registry = ValidationRegistryReader.getReader();
-      return registry.getValidator(VALIDATOR_CLASS);
+		return ValidationFactory.instance.getValidator(VALIDATOR_CLASS);
     }
     catch (Exception e)
     { //
