@@ -33,6 +33,7 @@ public final class MakeLocalElementGlobalCommand extends AbstractCommand
     
    if(getModelObject() instanceof XSDElementDeclaration){
    
+	   XSDElementDeclaration element = (XSDElementDeclaration)getModelObject();
  	XSDConcreteComponent parent = getParent();
  	XSDConcreteComponent container = parent.getContainer();
  	
@@ -43,6 +44,7 @@ public final class MakeLocalElementGlobalCommand extends AbstractCommand
  	// create local element and set it's reference to the global one
  	XSDElementDeclaration elementRef = 
 	      XSDFactory.eINSTANCE.createXSDElementDeclaration();
+	elementRef.setValue(element.getValue());
     elementRef.setResolvedElementDeclaration((XSDElementDeclaration)elementDecl); 
     
     // now set content models
@@ -62,8 +64,8 @@ public final class MakeLocalElementGlobalCommand extends AbstractCommand
  		}
  	}
  	else if(parent instanceof XSDTypeDefinition){
- 		System.out.println("teste");
- 		
+		System.out.println("MakeLocalElementGlobalCommand.run: parent instanceof XSDTypeDefinition");
+		 		
  	}
  	
  	container.getSchema().updateElement(true);

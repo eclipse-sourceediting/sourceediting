@@ -22,10 +22,12 @@ import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.refactor.RefactoringMessages;
 import org.eclipse.wst.xsd.ui.internal.refactor.rename.RenameComponentProcessor;
 import org.eclipse.wst.xsd.ui.internal.refactor.rename.RenameRefactoringWizard;
+import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDSchema;
+import org.eclipse.xsd.XSDTypeDefinition;
 import org.w3c.dom.Node;
 
 public class RenameComponentAction extends SelectionDispatchAction {
@@ -49,6 +51,22 @@ public class RenameComponentAction extends SelectionDispatchAction {
 				XSDElementDeclaration element = (XSDElementDeclaration) fSelectedComponent;
 				if (element.isElementDeclarationReference()) {
 					fSelectedComponent = null;
+				}
+			}
+			if(fSelectedComponent instanceof XSDTypeDefinition){
+				XSDTypeDefinition type = (XSDTypeDefinition) fSelectedComponent;
+				XSDConcreteComponent parent = type.getContainer();
+				if (parent instanceof XSDElementDeclaration) {
+					XSDElementDeclaration element = (XSDElementDeclaration) parent;
+					if(element.getAnonymousTypeDefinition().equals(type)){
+						fSelectedComponent = null;
+					}
+				}
+				else if(parent instanceof XSDAttributeDeclaration) {
+					XSDAttributeDeclaration element = (XSDAttributeDeclaration) parent;
+					if(element.getAnonymousTypeDefinition().equals(type)){
+						fSelectedComponent = null;
+					}
 				}
 			}
 		}

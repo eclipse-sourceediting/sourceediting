@@ -49,6 +49,8 @@ public class RefactorActionGroup extends ActionGroup {
 	public static final String RENAME_ELEMENT = "org.eclipse.wst.xsd.ui.refactor.rename.element"; //$NON-NLS-1$
 
 	public static final String MAKE_ELEMENT_GLOBAL = "org.eclipse.wst.xsd.ui.refactor.makeElementGlobal"; //$NON-NLS-1$
+	
+	public static final String MAKE_TYPE_GLOBAL = "org.eclipse.wst.xsd.ui.refactor.makeTypeGlobal"; //$NON-NLS-1$
 
 	public static final String RENAME = "org.eclipse.wst.xsd.ui.refactoring.actions.Rename"; //$NON-NLS-1$
 
@@ -74,6 +76,8 @@ public class RefactorActionGroup extends ActionGroup {
 	private SelectionDispatchAction fRenameAction;
 
 	private SelectionDispatchAction fMakeLocalElementGlobal;
+	
+	private SelectionDispatchAction fMakeLocalTypeGlobal;
 
 	private List fEditorActions;
 
@@ -108,9 +112,15 @@ public class RefactorActionGroup extends ActionGroup {
 				selectionProvider, schema);
 		fMakeLocalElementGlobal.setActionDefinitionId(MAKE_ELEMENT_GLOBAL);
 		fEditorActions.add(fMakeLocalElementGlobal);
+		
+		fMakeLocalTypeGlobal = new MakeAnonymousTypeGlobalAction(
+				selectionProvider, schema);
+		fMakeLocalTypeGlobal.setActionDefinitionId(MAKE_TYPE_GLOBAL);
+		fEditorActions.add(fMakeLocalTypeGlobal);
 
 		initAction(fRenameAction, fSelectionProvider);
 		initAction(fMakeLocalElementGlobal, fSelectionProvider);
+		initAction(fMakeLocalTypeGlobal, fSelectionProvider);
 	}
 
 	private static void initAction(SelectionDispatchAction action,

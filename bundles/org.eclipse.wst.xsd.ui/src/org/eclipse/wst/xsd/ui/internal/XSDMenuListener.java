@@ -38,7 +38,6 @@ import org.eclipse.wst.xsd.ui.internal.actions.CreateSimpleContentAction;
 import org.eclipse.wst.xsd.ui.internal.actions.CreateSimpleTypeAction;
 import org.eclipse.wst.xsd.ui.internal.actions.DOMAttribute;
 import org.eclipse.wst.xsd.ui.internal.actions.DeleteAction;
-import org.eclipse.wst.xsd.ui.internal.actions.MakeAnonymousGlobal;
 import org.eclipse.wst.xsd.ui.internal.actions.OpenSchemaAction;
 import org.eclipse.wst.xsd.ui.internal.actions.SetBaseTypeAction;
 import org.eclipse.wst.xsd.ui.internal.actions.SetMultiplicityAction;
@@ -2049,15 +2048,15 @@ public class XSDMenuListener implements IMenuListener
 
   protected void addMoveAnonymousGlobal(IMenuManager manager, String elementTag, String label, List attributes, Element parent, Node relativeNode)
   {
-    MakeAnonymousGlobal action = new MakeAnonymousGlobal(label, parent, getXSDSchema());
-    action.setElementTag(elementTag);
-    action.setAttributes(attributes);
-    action.setParentNode(getXSDSchema().getElement());
-    action.setRelativeNode(relativeNode);
-    action.setEnabled(!isReadOnly);
-    //manager.add(action);
-    addRefactorMenuGroup(manager);
-    fRefactorMenuGroup.addAction(action);
+//    MakeAnonymousGlobal action = new MakeAnonymousGlobal(label, parent, getXSDSchema());
+//    action.setElementTag(elementTag);
+//    action.setAttributes(attributes);
+//    action.setParentNode(getXSDSchema().getElement());
+//    action.setRelativeNode(relativeNode);
+//    action.setEnabled(!isReadOnly);
+//    //manager.add(action);
+//    addRefactorMenuGroup(manager);
+//    fRefactorMenuGroup.addAction(action);
   }
   
   protected void addRefactorMenuGroup(IMenuManager manager){
