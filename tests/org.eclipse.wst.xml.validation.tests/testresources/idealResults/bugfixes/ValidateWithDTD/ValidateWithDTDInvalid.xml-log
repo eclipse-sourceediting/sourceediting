@@ -1,0 +1,8 @@
+number of errors      : 1
+number of warnings    : 0
+
+------------error list-------------------------------------------
+The content of element type "simple" must match "(simple1)". [6, 10]
+------------warning list-----------------------------------------
+(none)
+-----------------------------------------------------------------
