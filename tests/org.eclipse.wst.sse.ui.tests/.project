@@ -2,9 +2,7 @@
 <projectDescription>
 	<name>org.eclipse.wst.sse.ui.tests</name>
 	<comment></comment>
-	<projects>
-		<project>org.junit</project>
-	</projects>
+	<projects></projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>

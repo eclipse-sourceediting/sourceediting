@@ -2,16 +2,7 @@
 <projectDescription>
 	<name>org.eclipse.wst.xml.tests.encoding</name>
 	<comment></comment>
-	<projects>
-		<project>com.ibm.encoding.resource</project>
-		<project>org.eclipse.wst.common.encoding.contentspecific</project>
-		<project>org.eclipse.core.resources</project>
-		<project>org.eclipse.core.runtime.compatibility</project>
-		<project>org.eclipse.ui</project>
-		<project>org.eclipse.ui.ide</project>
-		<project>org.eclipse.ui.workbench</project>
-		<project>org.junit</project>
-	</projects>
+	<projects></projects>
 	<buildSpec>
 		<buildCommand>
 			<name>org.eclipse.jdt.core.javabuilder</name>
