@@ -20,6 +20,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TextUtilities;
@@ -49,8 +50,13 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			ISelection sel = fTextEditor.getSelectionProvider().getSelection();
 			ITextSelection textSelection = (ITextSelection) sel;
 			IDocument document = fTextEditor.getDocumentProvider().getDocument(fTextEditor.getEditorInput());
+			String title = "Partitioning : IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING";
 			try {
 				ITypedRegion[] partitions = TextUtilities.computePartitioning(document, IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING, textSelection.getOffset(), textSelection.getLength(), false);
+				if (partitions.length == 0) {
+					title = "Partitioning : IDocumentExtension3.DEFAULT_PARTITIONING";
+					partitions = TextUtilities.computePartitioning(document, IDocumentExtension3.DEFAULT_PARTITIONING, textSelection.getOffset(), textSelection.getLength(), false);
+				}
 				StringBuffer s = new StringBuffer();
 
 				NumberFormat formatter = NumberFormat.getIntegerInstance();
@@ -59,12 +65,12 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				for (int i = 0; i < partitions.length; i++) {
 					s.append(formatter.format(partitions[i].getOffset()) + "-" + formatter.format(partitions[i].getOffset() + partitions[i].getLength()) + " - " + partitions[i].getType() + "\n"); //$NON-NLS-3$ //$NON-NLS-2$ //$NON-NLS-1$
 				}
-				MessageDialog.openInformation(((Control) fTextEditor.getAdapter(Control.class)).getShell(), "Partitions", s.toString());
+				MessageDialog.openInformation(((Control) fTextEditor.getAdapter(Control.class)).getShell(), title, s.toString());
 			}
 			catch (BadLocationException e) {
 				StringWriter s = new StringWriter();
 				e.printStackTrace(new PrintWriter(s));
-				MessageDialog.openError(((Control) fTextEditor.getAdapter(Control.class)).getShell(), "Partition Type", s.toString());
+				MessageDialog.openError(((Control) fTextEditor.getAdapter(Control.class)).getShell(), title, s.toString());
 			}
 		}
 	}
