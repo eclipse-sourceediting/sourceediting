@@ -133,9 +133,9 @@ public class CSSTokenizer implements CSSRegionContexts {
 
 	/* error codes */
 	final private static int YY_UNKNOWN_ERROR = 0;
-	final private static int YY_ILLEGAL_STATE = 1;
+//trivial hand edit to remove "not used" warning	final private static int YY_ILLEGAL_STATE = 1;
 	final private static int YY_NO_MATCH = 2;
-	final private static int YY_PUSHBACK_2BIG = 3;
+//	trivial hand edit to remove "not used" warning	final private static int YY_PUSHBACK_2BIG = 3;
 
 	/* error messages for the codes above */
 	final private static String YY_ERROR_MSG[] = {"Unkown internal scanner error", "Internal error: unknown state", "Error: could not match input", "Error: pushback value was too large"};
@@ -190,13 +190,13 @@ public class CSSTokenizer implements CSSRegionContexts {
 	 * the number of characters from the last newline up to the start of the
 	 * matched text
 	 */
-	private int yycolumn;
+//	trivial hand edit to remove "not used" warning	private int yycolumn;
 
 	/**
 	 * yy_atBOL == true <=>the scanner is currently at the beginning of a
 	 * line
 	 */
-	private boolean yy_atBOL;
+//	trivial hand edit to remove "not used" warning	private boolean yy_atBOL;
 
 	/** yy_atEOF == true <=>the scanner has returned a value for EOF */
 	private boolean yy_atEOF;
@@ -396,13 +396,13 @@ public class CSSTokenizer implements CSSRegionContexts {
 		 * the number of characters from the last newline up to the start of
 		 * the matched text
 		 */
-		yycolumn = 0;
+//		trivial hand edit to remove "not used" warning		yycolumn = 0;
 
 		/**
 		 * yy_atBOL == true <=>the scanner is currently at the beginning of a
 		 * line
 		 */
-		yy_atBOL = false;
+//		trivial hand edit to remove "not used" warning		yy_atBOL = false;
 
 		/** yy_atEOF == true <=>the scanner has returned a value for EOF */
 		yy_atEOF = false;
@@ -608,12 +608,13 @@ public class CSSTokenizer implements CSSRegionContexts {
 	 *            the number of characters to be read again. This number must
 	 *            not be greater than yylength()!
 	 */
-	private void yypushback(int number) {
-		if (number > yylength())
-			yy_ScanError(YY_PUSHBACK_2BIG);
-
-		yy_markedPos -= number;
-	}
+//	trivial hand edit to remove "not used" warning
+//	private void yypushback(int number) {
+//		if (number > yylength())
+//			yy_ScanError(YY_PUSHBACK_2BIG);
+//
+//		yy_markedPos -= number;
+//	}
 
 
 	/**
