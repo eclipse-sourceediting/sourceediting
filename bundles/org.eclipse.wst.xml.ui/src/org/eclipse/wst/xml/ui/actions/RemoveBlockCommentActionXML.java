@@ -15,11 +15,11 @@ package org.eclipse.wst.xml.ui.actions;
 import java.util.ResourceBundle;
 
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.wst.xml.core.internal.document.CommentImpl;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.ui.edit.util.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.xml.core.internal.document.CommentImpl;
 
 public class RemoveBlockCommentActionXML extends AddBlockCommentActionXML {
 	public RemoveBlockCommentActionXML(ResourceBundle bundle, String prefix, ITextEditor editor) {

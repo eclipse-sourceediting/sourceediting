@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui;
 
-import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
+import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.ui.XMLSpellCheckTarget;
 
 /**

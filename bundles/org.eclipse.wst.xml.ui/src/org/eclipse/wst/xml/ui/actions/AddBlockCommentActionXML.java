@@ -56,7 +56,8 @@ public class AddBlockCommentActionXML extends CommentActionXML {
 			fDocument.replace(fOpenCommentOffset, 0, OPEN_COMMENT);
 			fDocument.replace(fCloseCommentOffset, 0, CLOSE_COMMENT);
 			removeOpenCloseComments(fOpenCommentOffset + OPEN_COMMENT.length(), fCloseCommentOffset - fOpenCommentOffset - CLOSE_COMMENT.length());
-		} catch (BadLocationException e) {
+		}
+		catch (BadLocationException e) {
 			throw new SourceEditingRuntimeException();
 		}
 
