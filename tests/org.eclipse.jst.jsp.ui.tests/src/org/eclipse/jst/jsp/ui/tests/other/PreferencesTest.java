@@ -15,18 +15,22 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.tests.Logger;
 import org.eclipse.wst.common.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
-import org.eclipse.wst.html.core.HTMLCorePlugin;
-import org.eclipse.wst.html.ui.HTMLEditorPlugin;
-import org.eclipse.wst.sse.core.ModelPlugin;
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
+import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
+import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
+import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
+import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
-import org.eclipse.wst.sse.ui.EditorPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
-import org.eclipse.wst.xml.core.XMLModelPlugin;
-import org.eclipse.wst.xml.ui.XMLEditorPlugin;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 
@@ -48,6 +52,10 @@ import org.osgi.framework.BundleException;
  * # of Preference Tests: 19
  */
 public class PreferencesTest extends TestCase {
+
+	public static void main(String[] args) {
+		junit.textui.TestRunner.run(PreferencesTest.class);
+	}
 	private String fakeContentType = "fake";
 	private String fakeContentType2 = "fake2";
 
@@ -58,6 +66,120 @@ public class PreferencesTest extends TestCase {
 	public PreferencesTest(String name) {
 		super(name);
 		initializeEditors();
+	}
+	
+	protected void checkPreferenceStoreDefault(String contentType, String pref, String value) {
+		IPreferenceStore store = getStoreForContentType(contentType);
+		assertEquals("Could not find existing preference in store! Content type=" + contentType + " preference=" + pref, store.getString(pref), value);
+	}
+
+	protected void existsInEditorPreferenceStore(String contentType, String pref) {
+		IPreferenceStore store = getStoreForContentType(contentType);			
+		assertTrue("Could not find existing preference in store! Content type=" + contentType + " preference=" + pref, (store.contains(pref)));
+	}
+
+	/**
+	 * Tests searching for an existing preferences
+	 */
+	protected void existsInModelPreference(String contentType, String pref) {
+		Preferences prefs = getPluginPreferencesForContentType(contentType);
+		assertTrue("Could not find existing preference! Content type=" + contentType + " preference=" + pref, (prefs.contains(pref)));
+	}
+
+	protected void getDefaultEditorPreferenceBoolean(String contentType, String pref, boolean expected) {
+		IPreferenceStore store = SSEUIPlugin.getDefault().getPreferenceStore();
+		boolean val = store.getDefaultBoolean(PreferenceKeyGenerator.generateKey(pref, contentType));
+		assertTrue("Get default pref failed! Content type=" + contentType + " preference=" + pref + " expected: " + expected + " found: " + val, (val == expected));
+	}
+
+	protected void getDefaultEditorPreferenceInt(String contentType, String pref, int expected) {
+		IPreferenceStore store = SSEUIPlugin.getDefault().getPreferenceStore();
+		int val = store.getDefaultInt(PreferenceKeyGenerator.generateKey(pref, contentType));
+		assertTrue("Get default pref failed! Content type=" + contentType + " preference=" + pref + " expected: " + expected + " found: " + val, (val == expected));
+	}
+
+	// editor prefs (use PreferenceStore)
+	protected void getDefaultEditorPreferenceString(String contentType, String pref, String expected) {
+		IPreferenceStore store = SSEUIPlugin.getDefault().getPreferenceStore();
+		String val = store.getDefaultString(PreferenceKeyGenerator.generateKey(pref, contentType));
+		assertEquals("Get default pref failed! Content type=" + contentType + " preference=" + pref, val, expected);
+	}
+
+	protected void getDefaultModelPreferenceBoolean(String contentType, Preferences prefs, String pref, boolean expected) {
+		boolean val = prefs.getDefaultBoolean(pref);
+		assertTrue("Get default pref failed! Content type=" + contentType + " preference=" + pref + " expected: " + expected + " found: " + val, (val == expected));
+	}
+
+	protected void getDefaultModelPreferenceInt(String contentType, Preferences prefs, String pref, int expected) {
+		int val = prefs.getDefaultInt(pref);
+		assertTrue("Get default pref failed! Content type=" + contentType + " preference=" + pref + " expected: " + expected + " found: " + val, (val == expected));
+	}
+
+	/**
+	 * Tests getting default preferences (String)
+	 */
+	// model prefs (use Preferences)
+	protected void getDefaultModelPreferenceString(String contentType, Preferences prefs, String pref, String expected) {
+		String val = prefs.getDefaultString(pref);
+		assertTrue("Get default pref failed! Content type=" + contentType + " preference=" + pref + " expected: " + expected + " found: " + val, (val.equals(expected)));
+	}
+
+	protected void getDefaultPreferenceStoreBoolean(String contentType, String pref, boolean expected) {
+		IPreferenceStore store = SSEUIPlugin.getDefault().getPreferenceStore();
+		String genKey = PreferenceKeyGenerator.generateKey(pref, contentType);
+		boolean val = store.getDefaultBoolean(genKey);
+		assertTrue("Get default pref failed! Content type=" + contentType + " preference=" + genKey + " expected: " + expected + " found: " + val, (val == expected));
+	}
+
+	protected void getDefaultPreferenceStoreInt(String contentType, String pref, int expected) {
+		IPreferenceStore store = SSEUIPlugin.getDefault().getPreferenceStore();
+		String genKey = PreferenceKeyGenerator.generateKey(pref, contentType);
+		int val = store.getDefaultInt(genKey);
+		assertTrue("Get default pref failed! Content type=" + contentType + " preference=" + genKey + " expected: " + expected + " found: " + val, (val == expected));
+	}
+
+	protected void getHtmlEditorPreferenceStoreString(String contentType, String pref, String expected) {
+		IPreferenceStore store = HTMLUIPlugin.getDefault().getPreferenceStore();
+		String genKey = PreferenceKeyGenerator.generateKey(pref, contentType);
+		String val = store.getDefaultString(genKey);
+		assertTrue("Get default pref failed! Content type=" + contentType + " preference=" + genKey + " expected: " + expected + " found: " + val, (val.equals(expected)));
+	}
+
+	private Preferences getPluginPreferencesForContentType(String contentTypeId) {
+		if(contentTypeId.equals(IContentTypeIdentifier.ContentTypeID_CSS))
+			return CSSCorePlugin.getDefault().getPluginPreferences();
+//		if(contentTypeId.equals(IContentTypeIdentifier.ContentTypeID_DTD))
+//			return DTDCorePlugin.getDefault().getPluginPreferences();
+		if(contentTypeId.equals(IContentTypeIdentifier.ContentTypeID_XML) || contentTypeId.equals(IContentTypeIdentifier.ContentTypeID_SSEXML))
+			return CSSCorePlugin.getDefault().getPluginPreferences();
+		if(contentTypeId.equals(IContentTypeIdentifier.ContentTypeID_JSP))
+			return JSPCorePlugin.getDefault().getPluginPreferences();
+		if(contentTypeId.equals(IContentTypeIdentifier.ContentTypeID_HTML))
+			return HTMLCorePlugin.getDefault().getPluginPreferences();
+		return SSECorePlugin.getDefault().getPluginPreferences();
+	}
+	
+	private IPreferenceStore getStoreForContentType(String contentTypeId) {
+		if(contentTypeId.equals(IContentTypeIdentifier.ContentTypeID_CSS))
+			return CSSUIPlugin.getDefault().getPreferenceStore();
+//		if(contentTypeId.equals(IContentTypeIdentifier.ContentTypeID_DTD))
+//			return DTDUIPlugin.getDefault().getPreferenceStore();
+		if(contentTypeId.equals(IContentTypeIdentifier.ContentTypeID_XML) || contentTypeId.equals(IContentTypeIdentifier.ContentTypeID_SSEXML))
+			return XMLUIPlugin.getDefault().getPreferenceStore();
+		if(contentTypeId.equals(IContentTypeIdentifier.ContentTypeID_JSP))
+			return JSPUIPlugin.getDefault().getPreferenceStore();
+		if(contentTypeId.equals(IContentTypeIdentifier.ContentTypeID_HTML))
+			return HTMLUIPlugin.getDefault().getPreferenceStore();
+		return SSEUIPlugin.getDefault().getPreferenceStore();
+	}
+
+
+	// editor prefs (use IPreferenceStore)
+	protected void getXmlEditorPreferenceStoreString(String contentType, String pref, String expected) {
+		IPreferenceStore store = XMLUIPlugin.getDefault().getPreferenceStore();
+		String genKey = PreferenceKeyGenerator.generateKey(pref, contentType);
+		String val = store.getDefaultString(genKey);
+		assertTrue("Get default pref failed! Content type=" + contentType + " preference=" + genKey + " expected: " + expected + " found: " + val, (val.equals(expected)));
 	}
 
 	/**
@@ -82,49 +204,12 @@ public class PreferencesTest extends TestCase {
 		}
 	}
 
-	public static void main(String[] args) {
-		junit.textui.TestRunner.run(PreferencesTest.class);
-	}
-
-	/**
-	 * Tests searching for an existing preferences
-	 */
-	protected void existsInModelPreference(String contentType, String pref) {
-		Preferences prefs = null;
-		if (contentType.equals(IContentTypeIdentifier.ContentTypeID_HTML)) {
-			prefs = HTMLCorePlugin.getDefault().getPluginPreferences();
-		}
-		else if (contentType.equals(IContentTypeIdentifier.ContentTypeID_SSEXML)) {
-			prefs = XMLModelPlugin.getDefault().getPluginPreferences();
-		}
-		else {
-			prefs = ModelPlugin.getDefault().getPluginPreferences();
-		}
-		assertTrue("Could not find existing preference! Content type=" + contentType + " preference=" + pref, (prefs.contains(pref)));
-	}
-
-	protected void existsInEditorPreferenceStore(String contentType, String pref) {
-		IPreferenceStore store = null;
-		//		if (contentType.equals(IContentTypeIdentifier.ContentTypeID_HTML)) {
-		//			store = HTMLEditorPlugin.getDefault().getPreferenceStore();
-		//		}
-		//		else if (contentType.equals(ContentDescriberForXML.ContentTypeID_XML)) {
-		//			store = XMLEditorPlugin.getDefault().getPreferenceStore();
-		//		}
-		//		else {
-		// for now we are still storing editor preferences
-		// in >> EditorPlugin.getPreferenceStore(), with a contentType key
-		store = EditorPlugin.getDefault().getPreferenceStore();
-		//		}
-		assertTrue("Could not find existing preference in store! Content type=" + contentType + " preference=" + pref, (store.contains(PreferenceKeyGenerator.generateKey(pref, contentType))));
-	}
-
 	/**
 	 * Tests searching for an nonexistant preference (int)
 	 */
 	protected void nonExistPreference(String contentType) {
 		String testPref = "unitTest.nonExist";
-		IPreferenceStore store = EditorPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore store = SSEUIPlugin.getDefault().getPreferenceStore();
 		assertTrue("Nonexistant preference already exists! Content type=" + contentType + " preference=" + testPref, !(store.contains(testPref)));
 		int val = store.getInt(PreferenceKeyGenerator.generateKey(testPref, contentType));
 		assertTrue("Get nonexistant preference failed! Content type=" + contentType + " preference=" + testPref + " expected: 0 found: " + val, (val == 0));
@@ -136,80 +221,11 @@ public class PreferencesTest extends TestCase {
 	protected void setGetDefaultPreference(String contentType) {
 		String defaultVal = "OK!";
 		String testPref = "unitTest.defaultPref";
-		IPreferenceStore store = EditorPlugin.getDefault().getPreferenceStore();
-		String genKey = PreferenceKeyGenerator.generateKey(testPref, contentType);
-		store.setDefault(genKey, defaultVal);
-		assertTrue("Set default pref failed! Content type=" + contentType + " preference=" + testPref, store.contains(genKey));
-		String val = store.getString(genKey);
+		IPreferenceStore store = getStoreForContentType(contentType);
+		store.setDefault(testPref, defaultVal);
+		assertTrue("Set default pref failed! Content type=" + contentType + " preference=" + testPref, store.contains(testPref));
+		String val = store.getString(testPref);
 		assertTrue("Set/get default pref for content type " + contentType + " preference " + testPref + " expected: " + defaultVal + " found: " + val, (val.equals(defaultVal)));
-	}
-
-	/**
-	 * Tests getting default preferences (String)
-	 */
-	// model prefs (use Preferences)
-	protected void getDefaultModelPreferenceString(String contentType, Preferences prefs, String pref, String expected) {
-		String val = prefs.getDefaultString(pref);
-		assertTrue("Get default pref failed! Content type=" + contentType + " preference=" + pref + " expected: " + expected + " found: " + val, (val.equals(expected)));
-	}
-
-	protected void getDefaultModelPreferenceBoolean(String contentType, Preferences prefs, String pref, boolean expected) {
-		boolean val = prefs.getDefaultBoolean(pref);
-		assertTrue("Get default pref failed! Content type=" + contentType + " preference=" + pref + " expected: " + expected + " found: " + val, (val == expected));
-	}
-
-	protected void getDefaultModelPreferenceInt(String contentType, Preferences prefs, String pref, int expected) {
-		int val = prefs.getDefaultInt(pref);
-		assertTrue("Get default pref failed! Content type=" + contentType + " preference=" + pref + " expected: " + expected + " found: " + val, (val == expected));
-	}
-
-	// editor prefs (use PreferenceStore)
-	protected void getDefaultEditorPreferenceString(String contentType, String pref, String expected) {
-		IPreferenceStore store = EditorPlugin.getDefault().getPreferenceStore();
-		String val = store.getDefaultString(PreferenceKeyGenerator.generateKey(pref, contentType));
-		assertTrue("Get default pref failed! Content type=" + contentType + " preference=" + pref + " expected: " + expected + " found: " + val, (val.equals(expected)));
-	}
-
-	protected void getDefaultEditorPreferenceBoolean(String contentType, String pref, boolean expected) {
-		IPreferenceStore store = EditorPlugin.getDefault().getPreferenceStore();
-		boolean val = store.getDefaultBoolean(PreferenceKeyGenerator.generateKey(pref, contentType));
-		assertTrue("Get default pref failed! Content type=" + contentType + " preference=" + pref + " expected: " + expected + " found: " + val, (val == expected));
-	}
-
-	protected void getDefaultEditorPreferenceInt(String contentType, String pref, int expected) {
-		IPreferenceStore store = EditorPlugin.getDefault().getPreferenceStore();
-		int val = store.getDefaultInt(PreferenceKeyGenerator.generateKey(pref, contentType));
-		assertTrue("Get default pref failed! Content type=" + contentType + " preference=" + pref + " expected: " + expected + " found: " + val, (val == expected));
-	}
-
-
-	// editor prefs (use IPreferenceStore)
-	protected void getXmlEditorPreferenceStoreString(String contentType, String pref, String expected) {
-		IPreferenceStore store = XMLEditorPlugin.getDefault().getPreferenceStore();
-		String genKey = PreferenceKeyGenerator.generateKey(pref, contentType);
-		String val = store.getDefaultString(genKey);
-		assertTrue("Get default pref failed! Content type=" + contentType + " preference=" + genKey + " expected: " + expected + " found: " + val, (val.equals(expected)));
-	}
-
-	protected void getHtmlEditorPreferenceStoreString(String contentType, String pref, String expected) {
-		IPreferenceStore store = HTMLEditorPlugin.getDefault().getPreferenceStore();
-		String genKey = PreferenceKeyGenerator.generateKey(pref, contentType);
-		String val = store.getDefaultString(genKey);
-		assertTrue("Get default pref failed! Content type=" + contentType + " preference=" + genKey + " expected: " + expected + " found: " + val, (val.equals(expected)));
-	}
-
-	protected void getDefaultPreferenceStoreBoolean(String contentType, String pref, boolean expected) {
-		IPreferenceStore store = EditorPlugin.getDefault().getPreferenceStore();
-		String genKey = PreferenceKeyGenerator.generateKey(pref, contentType);
-		boolean val = store.getDefaultBoolean(genKey);
-		assertTrue("Get default pref failed! Content type=" + contentType + " preference=" + genKey + " expected: " + expected + " found: " + val, (val == expected));
-	}
-
-	protected void getDefaultPreferenceStoreInt(String contentType, String pref, int expected) {
-		IPreferenceStore store = EditorPlugin.getDefault().getPreferenceStore();
-		String genKey = PreferenceKeyGenerator.generateKey(pref, contentType);
-		int val = store.getDefaultInt(genKey);
-		assertTrue("Get default pref failed! Content type=" + contentType + " preference=" + genKey + " expected: " + expected + " found: " + val, (val == expected));
 	}
 
 	/**
@@ -228,18 +244,104 @@ public class PreferencesTest extends TestCase {
 	//		int val = store.getDefaultInt(PreferenceKeyGenerator.generateKey(pref, contentType));
 	//		assertTrue("Get default pref failed! Content type="+contentType+ " preference="+pref +" expected: "+expected +" found: "+val, (val == expected));
 	//	}
+	
 	/**
 	 * Tests setting then getting a preference (boolean)
 	 */
 	protected void setGetPreference(String contentType) {
 		String testPref = "unitTest.setGetPref";
 		boolean expectedVal = true;
-		IPreferenceStore store = EditorPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore store = getStoreForContentType(contentType);
 		store.setValue(testPref, expectedVal);
 		assertTrue("Set pref failed! Content type=" + contentType + " preference=" + testPref, store.contains(testPref));
 		boolean val = store.getBoolean(testPref);
 		store.setToDefault(testPref); // remove this fake preference from store
 		assertTrue("Get pref failed! Content type=" + contentType + " preference=" + testPref + " expected: " + expectedVal + " found: " + val, (val == expectedVal));
+	}
+
+	public void testExistPreferenceHTML() {
+		existsInModelPreference(IContentTypeIdentifier.ContentTypeID_HTML, CommonModelPreferenceNames.TAG_NAME_CASE);
+		existsInModelPreference(IContentTypeIdentifier.ContentTypeID_HTML, CommonModelPreferenceNames.TAB_WIDTH);
+		existsInModelPreference(IContentTypeIdentifier.ContentTypeID_HTML, CommonEncodingPreferenceNames.OUTPUT_CODESET);
+		existsInEditorPreferenceStore(IContentTypeIdentifier.ContentTypeID_HTML, CommonEditorPreferenceNames.AUTO_PROPOSE_CODE);
+	}
+
+	// Test searching for an existing preference
+	public void testExistPreferenceXML() {
+		existsInModelPreference(IContentTypeIdentifier.ContentTypeID_SSEXML, CommonModelPreferenceNames.INDENT_USING_TABS);
+		existsInModelPreference(IContentTypeIdentifier.ContentTypeID_SSEXML, CommonEncodingPreferenceNames.END_OF_LINE_CODE);
+		existsInEditorPreferenceStore(IContentTypeIdentifier.ContentTypeID_SSEXML, CommonEditorPreferenceNames.AUTO_PROPOSE);
+	}
+
+	public void testGetDefaultPreferenceHTML() {
+		String contentTypeId = IContentTypeIdentifier.ContentTypeID_HTML;
+		Preferences prefs = HTMLCorePlugin.getDefault().getPluginPreferences();
+		getDefaultModelPreferenceInt(contentTypeId, prefs, CommonModelPreferenceNames.TAB_WIDTH, CommonModelPreferenceNames.DEFAULT_TAB_WIDTH);
+		checkPreferenceStoreDefault(contentTypeId, CommonEditorPreferenceNames.AUTO_PROPOSE_CODE, CommonEditorPreferenceNames.LT);
+		//getHtmlEditorPreferenceStoreString(contentTypeId, CommonEditorPreferenceNames.AUTO_PROPOSE_CODE, CommonEditorPreferenceNames.LT);
+		//		getDefaultPreference(ContentType.ContentTypeID_HTML, ICommonModelPreferenceNames.LINE_WIDTH, 72);
+		//		getDefaultPreference(ContentType.ContentTypeID_HTML, HTMLFilesPreferenceNames.GENERATE_DOCUMENT_TYPE, true);
+		//		getDefaultPreference(ContentType.ContentTypeID_HTML, ICommonModelPreferenceNames.INPUT_CODESET, ""); //$NON-NLS-1$
+	}
+
+	// Test getting default preferences
+	public void testGetDefaultPreferenceXML() {
+		String contentTypeId = IContentTypeIdentifier.ContentTypeID_XML;
+		Preferences prefs = XMLCorePlugin.getDefault().getPluginPreferences();
+		getDefaultModelPreferenceInt(contentTypeId, prefs, CommonModelPreferenceNames.TAB_WIDTH, CommonModelPreferenceNames.DEFAULT_TAB_WIDTH);
+		checkPreferenceStoreDefault(contentTypeId, CommonEditorPreferenceNames.AUTO_PROPOSE_CODE, CommonEditorPreferenceNames.LT);
+		//getXmlEditorPreferenceStoreString(contentTypeId, CommonEditorPreferenceNames.AUTO_PROPOSE_CODE, CommonEditorPreferenceNames.LT);
+		//		getDefaultPreference(ContentType.ContentTypeID_XML, ICommonModelPreferenceNames.TAB_WIDTH, 4);
+		//		getDefaultPreference(ContentType.ContentTypeID_XML, ICommonModelPreferenceNames.SPLIT_LINES, false);
+		//		getDefaultPreference(ContentType.ContentTypeID_XML, CommonEditorPreferenceNames.AUTO_PROPOSE_CODE, ICommonModelPreferenceNames.LT);
+	}
+
+	public void testNonExistPreferenceFake() {
+		nonExistPreference(fakeContentType);
+	}
+
+	// Test searching for a nonexisting preference
+	public void testNonExistPreferenceXML() {
+		nonExistPreference(IContentTypeIdentifier.ContentTypeID_SSEXML);
+	}
+
+	public void testSetGetDefaultPreferenceFake() {
+		setGetDefaultPreference(fakeContentType);
+	}
+
+	public void testSetGetDefaultPreferenceHTML() {
+		setGetDefaultPreference(IContentTypeIdentifier.ContentTypeID_HTML);
+	}
+
+	// Uncomment when the content-type specific preferences are implemented
+	//	public void testSetGetPreferenceXHTML() {
+	//		setGetPreference(ContentTypeIds.XHTML_ID);
+	//	}
+	//	public void testSetGetPreferenceCSS() {
+	//		setGetPreference(ContentTypeIds.CSS_ID);
+	//	}
+	//	public void testSetGetPreferenceDTD() {
+	//		setGetPreference(ContentTypeIds.DTD_ID);
+	//	}
+	// Test setting then getting default preference
+	public void testSetGetDefaultPreferenceSSEXML() {
+		setGetDefaultPreference(IContentTypeIdentifier.ContentTypeID_SSEXML);
+	}
+
+	public void testSetGetDefaultPreferenceXML() {
+		setGetDefaultPreference(IContentTypeIdentifier.ContentTypeID_XML);
+	}
+
+	public void testSetGetPreferenceFake() {
+		setGetPreference(fakeContentType);
+	}
+
+	public void testSetGetPreferenceHTML() {
+		setGetPreference(IContentTypeIdentifier.ContentTypeID_HTML);
+	}
+
+	public void testSetGetPreferenceJSP() {
+		setGetPreference(IContentTypeIdentifier.ContentTypeID_JSP);
 	}
 
 	// Tests that getting a non-existant preference store returns XML preference store
@@ -258,88 +360,11 @@ public class PreferencesTest extends TestCase {
 	//		assertTrue("Create new pref failed! Default XML pref store was retreived instead.", (XMLstore != fakeStore));
 	//	}
 	// Test setting then getting preference
-	public void testSetGetPreferenceXML() {
+	public void testSetGetPreferenceSSEXML() {
 		setGetPreference(IContentTypeIdentifier.ContentTypeID_SSEXML);
 	}
 
-	public void testSetGetPreferenceHTML() {
-		setGetPreference(IContentTypeIdentifier.ContentTypeID_HTML);
-	}
-
-	public void testSetGetPreferenceJSP() {
-		setGetPreference(IContentTypeIdentifier.ContentTypeID_JSP);
-	}
-
-	public void testSetGetPreferenceFake() {
-		setGetPreference(fakeContentType);
-	}
-
-	// Uncomment when the content-type specific preferences are implemented
-	//	public void testSetGetPreferenceXHTML() {
-	//		setGetPreference(ContentTypeIds.XHTML_ID);
-	//	}
-	//	public void testSetGetPreferenceCSS() {
-	//		setGetPreference(ContentTypeIds.CSS_ID);
-	//	}
-	//	public void testSetGetPreferenceDTD() {
-	//		setGetPreference(ContentTypeIds.DTD_ID);
-	//	}
-	// Test setting then getting default preference
-	public void testSetGetDefaultPreferenceXML() {
-		setGetDefaultPreference(IContentTypeIdentifier.ContentTypeID_SSEXML);
-	}
-
-	public void testSetGetDefaultPreferenceHTML() {
-		setGetDefaultPreference(IContentTypeIdentifier.ContentTypeID_HTML);
-	}
-
-	public void testSetGetDefaultPreferenceFake() {
-		setGetDefaultPreference(fakeContentType);
-	}
-
-	// Test getting default preferences
-	public void testGetDefaultPreferenceXML() {
-		String contentTypeId = IContentTypeIdentifier.ContentTypeID_SSEXML;
-		Preferences prefs = XMLModelPlugin.getDefault().getPluginPreferences();
-		getDefaultModelPreferenceInt(contentTypeId, prefs, CommonModelPreferenceNames.TAB_WIDTH, CommonModelPreferenceNames.DEFAULT_TAB_WIDTH);
-		getDefaultEditorPreferenceString(contentTypeId, CommonEditorPreferenceNames.AUTO_PROPOSE_CODE, CommonEditorPreferenceNames.LT);
-		//getXmlEditorPreferenceStoreString(contentTypeId, CommonEditorPreferenceNames.AUTO_PROPOSE_CODE, CommonEditorPreferenceNames.LT);
-		//		getDefaultPreference(ContentType.ContentTypeID_XML, ICommonModelPreferenceNames.TAB_WIDTH, 4);
-		//		getDefaultPreference(ContentType.ContentTypeID_XML, ICommonModelPreferenceNames.SPLIT_LINES, false);
-		//		getDefaultPreference(ContentType.ContentTypeID_XML, CommonEditorPreferenceNames.AUTO_PROPOSE_CODE, ICommonModelPreferenceNames.LT);
-	}
-
-	public void testGetDefaultPreferenceHTML() {
-		String contentTypeId = IContentTypeIdentifier.ContentTypeID_HTML;
-		Preferences prefs = HTMLCorePlugin.getDefault().getPluginPreferences();
-		getDefaultModelPreferenceInt(contentTypeId, prefs, CommonModelPreferenceNames.TAB_WIDTH, CommonModelPreferenceNames.DEFAULT_TAB_WIDTH);
-		getDefaultEditorPreferenceString(contentTypeId, CommonEditorPreferenceNames.AUTO_PROPOSE_CODE, CommonEditorPreferenceNames.LT);
-		//getHtmlEditorPreferenceStoreString(contentTypeId, CommonEditorPreferenceNames.AUTO_PROPOSE_CODE, CommonEditorPreferenceNames.LT);
-		//		getDefaultPreference(ContentType.ContentTypeID_HTML, ICommonModelPreferenceNames.LINE_WIDTH, 72);
-		//		getDefaultPreference(ContentType.ContentTypeID_HTML, HTMLFilesPreferenceNames.GENERATE_DOCUMENT_TYPE, true);
-		//		getDefaultPreference(ContentType.ContentTypeID_HTML, ICommonModelPreferenceNames.INPUT_CODESET, ""); //$NON-NLS-1$
-	}
-
-	// Test searching for an existing preference
-	public void testExistPreferenceXML() {
-		existsInModelPreference(IContentTypeIdentifier.ContentTypeID_SSEXML, CommonModelPreferenceNames.INDENT_USING_TABS);
-		existsInModelPreference(IContentTypeIdentifier.ContentTypeID_SSEXML, CommonEncodingPreferenceNames.END_OF_LINE_CODE);
-		existsInEditorPreferenceStore(IContentTypeIdentifier.ContentTypeID_SSEXML, CommonEditorPreferenceNames.AUTO_PROPOSE);
-	}
-
-	public void testExistPreferenceHTML() {
-		existsInModelPreference(IContentTypeIdentifier.ContentTypeID_HTML, CommonModelPreferenceNames.TAG_NAME_CASE);
-		existsInModelPreference(IContentTypeIdentifier.ContentTypeID_HTML, CommonModelPreferenceNames.TAB_WIDTH);
-		existsInModelPreference(IContentTypeIdentifier.ContentTypeID_HTML, CommonEncodingPreferenceNames.OUTPUT_CODESET);
-		existsInEditorPreferenceStore(IContentTypeIdentifier.ContentTypeID_HTML, CommonEditorPreferenceNames.AUTO_PROPOSE_CODE);
-	}
-
-	// Test searching for a nonexisting preference
-	public void testNonExistPreferenceXML() {
-		nonExistPreference(IContentTypeIdentifier.ContentTypeID_SSEXML);
-	}
-
-	public void testNonExistPreferenceFake() {
-		nonExistPreference(fakeContentType);
+	public void testSetGetPreferenceXML() {
+		setGetPreference(IContentTypeIdentifier.ContentTypeID_XML);
 	}
 }
