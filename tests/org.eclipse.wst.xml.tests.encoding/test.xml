@@ -3,16 +3,16 @@
 <project name="testsuite" default="run" basedir=".">
 	
 	<!-- Configurable Properties -->
-
-	<!-- sets the properties plugin-name, and library-file -->
-	<!-- <property name="plugin-name" value="org.eclipse.wst.xml.tests.encoding" />	-->
-		<echo message="basedir ${basedir}" />
-	    <echo message="eclipse place ${eclipse-home}" />
-	<!-- End Configurable Properties -->
-		
+	
 	<!-- The property ${eclipse-home} should be passed into this script -->
 	<!-- Set a meaningful default value for when it is not. -->
-	<property name="eclipse-home" value="${basedir}\..\.." />
+	<!-- <property name="eclipse-home" value="${basedir}\..\.." /> -->
+	
+		<echo message="basedir ${basedir}" />
+	    <echo message="eclipse place ${eclipse-home}" />
+	
+	<!-- sets the properties plugin-name, and library-file -->
+	<property name="plugin-name" value="org.eclipse.wst.xml.tests.encoding" />
 	<property name="library-file" value="${eclipse-home}/plugins/org.eclipse.test_3.1.0/library.xml" />
 	
 	<!-- This target holds all initialization code that needs to be done for -->
