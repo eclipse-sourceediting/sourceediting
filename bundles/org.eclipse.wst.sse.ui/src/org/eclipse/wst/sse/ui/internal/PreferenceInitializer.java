@@ -47,9 +47,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		// preference
 		store.setDefault(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS, true);
 
-		// matching brackets is not part of base text editor preference
-		store.setDefault(CommonEditorPreferenceNames.MATCHING_BRACKETS, true);
-		PreferenceConverter.setDefault(store, CommonEditorPreferenceNames.MATCHING_BRACKETS_COLOR, new RGB(192, 192, 192));
+		setMatchingBracketsPreferences(store);
 
 		// hover help preferences are not part of base text editor preference
 		String mod2Name = Action.findModifierString(SWT.MOD2); // SWT.COMMAND
@@ -65,5 +63,11 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		// set default read-only foreground color scale value
 		store.setDefault(CommonEditorPreferenceNames.READ_ONLY_FOREGROUND_SCALE, 30);
 	
+	}
+
+	private void setMatchingBracketsPreferences(IPreferenceStore store) {
+		// matching brackets is not part of base text editor preference
+		store.setDefault(CommonEditorPreferenceNames.MATCHING_BRACKETS, true);
+		PreferenceConverter.setDefault(store, CommonEditorPreferenceNames.MATCHING_BRACKETS_COLOR, new RGB(192, 192, 192));
 	}
 }
