@@ -16,7 +16,7 @@ import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
 
 public class StructuredTextPartitionerForDTD extends StructuredTextPartitioner {
 
-	public static final String ST_DTD_DEFAULT = "org.eclipse.wst.dtd.default"; //$NON-NLS-1$
+	public static final String ST_DTD_DEFAULT = "org.eclipse.wst.dtd.DEFAULT"; //$NON-NLS-1$
 
 	public StructuredTextPartitionerForDTD() {
 		super();
