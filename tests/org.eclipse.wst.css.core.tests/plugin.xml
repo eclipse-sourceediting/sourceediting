@@ -8,7 +8,7 @@
 	class="org.eclipse.wst.css.core.tests.CSSCoreTestsPlugin">
 
 	<runtime>
-		<library name="tests.jar">
+		<library name="csscoretests.jar">
 			<export name="*" />
 		</library>
 	</runtime>
@@ -17,29 +17,8 @@
 		<import plugin="org.eclipse.wst.css.core" />
 		<import plugin="org.junit" />
 		<import plugin="org.eclipse.wst.sse.core" />
-		<import plugin="org.eclipse.core.resources" />
-		<import plugin="org.eclipse.wst.common.encoding" />
+  <import plugin="org.eclipse.core.resources"/>
+  <import plugin="org.eclipse.wst.common.encoding"/>
 	</requires>
-
-	<extension
-		id="ssemodelcsstests"
-		point="org.eclipse.core.runtime.applications">
-		<application>
-			<run
-				class="org.eclipse.wst.css.core.tests.application.SSEModelCSSTests">
-			</run>
-		</application>
-	</extension>
-
-	<!-- TO GET PICKED UP BY com.ibm.etools.commontests.testcollector -->
-	<!--
-	<extension
-		point="com.ibm.etools.commontests.testcollector.suites">
-		<suite
-			suiteName="SSE Model CSS Tests"
-			suiteClass="org.eclipse.wst.css.core.tests.CSSModelTestSuite">
-		</suite>
-	</extension>
-	-->
 
 </plugin>

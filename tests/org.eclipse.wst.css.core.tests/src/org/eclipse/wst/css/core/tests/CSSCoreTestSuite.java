@@ -17,14 +17,14 @@ import junit.framework.TestSuite;
 /**
  * @author pavery
  */
-public class CSSModelTestSuite extends TestSuite {
+public class CSSCoreTestSuite extends TestSuite {
 
 	public static Test suite() {
-		return new CSSModelTestSuite();
+		return new CSSCoreTestSuite();
 	}
 
-	public CSSModelTestSuite() {
-		super("SSE Model CSS Tests");
+	public CSSCoreTestSuite() {
+		super("CSS Core Tests");
 
 		addTest(CSSAllTests.suite());
 	}
