@@ -1,0 +1,292 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.wst.sse.ui">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.wst.sse.ui" id="extendedconfiguration" name="Extended Editor Configuration"/>
+      </appInfo>
+      <documentation>
+         The SSE StructuredTextEditor is intended to be as flexible as possible.  Much of its design centers around the notion of defining and redefining its behavior and appearance based on the Content Type of its input.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <complexType>
+         <any>
+         <element name="textviewerconfiguration" />
+         <element name="contentoutlineconfiguration" />
+         <element name="propertysheetconfiguration" />
+         <element name="sourceeditingtexttools" />
+         <element name="spellchecktarget" />
+         <element name="preferencepages" />
+         </any>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="textviewerconfiguration">
+      <annotation>
+         <documentation>
+            The subclass of org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration to use.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A class with a null constructor fulfilling the requirements of the functionname.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="target" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A string defining when to use this extension, usually an Editor ID or SSE Content Type.  Multiple targets may be given as a comma delimited value.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="contentoutlineconfiguration">
+      <annotation>
+         <documentation>
+            The subclass of org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration to use.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A class with a null constructor fulfilling the requirements of the functionname.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="target" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A string defining when to use this extension, usually an Editor ID or SSE Content Type.  Multiple targets may be given as a comma delimited value.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="propertysheetconfiguration">
+      <annotation>
+         <documentation>
+            The subclass of org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration to use.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A class with a null constructor fulfilling the requirements of the functionname.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="target" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A string defining when to use this extension, usually an Editor ID or SSE Content Type.  Multiple targets may be given as a comma delimited value.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="sourceeditingtexttools">
+      <annotation>
+         <documentation>
+            The implementor of org.eclipse.wst.sse.ui.extensions.breakpoint.SourceEditingTextTools to provide.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A class with a null constructor fulfilling the requirements of the functionname.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="target" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A string defining when to use this extension, usually an Editor ID or SSE Content Type.  Multiple targets may be given as a comma delimited value.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="spellchecktarget">
+      <annotation>
+         <documentation>
+            The implementor of org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckTarget to use.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A class with a null constructor fulfilling the requirements of the functionname.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="target" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A string defining when to use this extension, usually an Editor ID or SSE Content Type.  Multiple targets may be given as a comma delimited value.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="characterpairmatcher">
+      <annotation>
+         <documentation>
+            The implementor of org.eclipse.jface.text.source.ICharacterPairMatcher to use in the source viewer decoration support.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A class with a null constructor that implements org.eclipse.jface.text.source.ICharacterPairMatcher.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="target" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A string defining when to use this extension, usually an Editor ID or SSE Content Type.  Multiple targets may be given as a comma delimited value.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="preferencepages">
+      <annotation>
+         <documentation>
+            The list of Preference page IDs to show for the editor's Preferences.
+         </documentation>
+      </annotation>
+      <complexType>
+         <attribute name="preferenceids" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A fully qualified preference page ID path.
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="target" type="string" use="required">
+            <annotation>
+               <documentation>
+                  A string defining when to use this extension, usually an Editor ID or SSE Content Type.  Multiple targets may be given as a comma delimited value.
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         3.0
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         &lt;pre&gt;
+&lt;extension point=&quot;org.eclipse.wst.sse.ui.extendedconfiguration&quot;&gt;
+
+&lt;!-- associating to an input&apos;s Content Type--&gt;
+    &lt;textviewerconfiguration
+     class=&quot;org.eclipse.wst.sse.ui.html.StructuredTextViewerConfigurationHTML&quot;
+     target=&quot;org.eclipse.wst.sse.contenttype.html&quot;/&gt;
+
+&lt;!-- associating to multiple editor IDs --&gt;
+    &lt;contentoutlineconfiguration
+     class=&quot;org.eclipse.wst.sse.ui.xml.views.contentoutline.XMLContentOutlineConfiguration&quot;
+     target=&quot;org.eclipse.wst.sse.ui.xml.StructuredTextEditorXML, org.eclipse.wst.xmleditor.internal.XMLMultiPageEditorPart&quot;/&gt;
+
+&lt;!-- associating to multiple Content Types --&gt;
+    &lt;propertysheetconfiguration
+     class=&quot;org.eclipse.wst.sse.ui.xml.views.properties.XMLPropertySheetConfiguration&quot;
+     target=&quot;org.eclipse.wst.sse.contenttype.xml, org.eclipse.wst.sse.contenttype.html, org.eclipse.wst.sse.contenttype.jsp&quot;/&gt;
+
+&lt;/extension&gt;
+&lt;/pre&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         &lt;br&gt;
+&lt;code&gt;org.eclipse.wst.sse.ui.extension.ExtendedConfigurationBuilder&lt;/code&gt; is responsible for creating the extension objects as requested.  New instances are returned for each request that succeeds.  Invalid function names and targets will return null.  The &lt;code&gt;StructuredTextEditor&lt;/code&gt; will automatically try targets generated by &lt;code&gt;org.eclipse.wst.sse.ui.extensions.ConfigurationPointCalculator&lt;/code&gt; according to where the &lt;code&gt;StructuredTextEditor&lt;/code&gt; finds itself at runtime.  &lt;code&gt;ConfigurationPointCalculator&lt;/code&gt; ensures that the targets are always searched in a specific and predictable order.  The following table lists the functionalities currenty in use:
+&lt;p&gt;
+&lt;table border=&quot;1&quot;&gt;
+&lt;tbody  valign=&quot;top&quot;&gt;
+&lt;tr&gt;&lt;td&gt;&lt;b&gt;Functionality names&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;b&gt;Implementation requirement&lt;/b&gt;&lt;/td&gt;&lt;td&gt;&lt;b&gt;Responsibilities&lt;/b&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;textviewerconfiguration&lt;/td&gt;&lt;td&gt;Must subclass &lt;code&gt;org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration&lt;/code&gt;&lt;/td&gt;&lt;td&gt;Defines the source viewer configuration to use, affecting Highlighting, Formatting, Content Assist, Hover help, and more.&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;contentoutlineconfiguration&lt;/td&gt;&lt;td&gt;Must subclass &lt;code&gt;org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration&lt;/code&gt;&lt;/td&gt;&lt;td&gt;Defines how the IStructuredModel for the editor&apos;s input maps to elements with a Tree control, as well as selection filtering, toolbar and menu contributions, etc.&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;propertysheetconfiguration&lt;/td&gt;&lt;td&gt;Must subclass &lt;code&gt;org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration&lt;/code&gt;&lt;/td&gt;&lt;td&gt;Defines the Property Source Provider, toolbar contributions, etc.&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;sourceeditingtexttools&lt;/td&gt;&lt;td&gt;Must implement &lt;code&gt;org.eclipse.wst.sse.ui.extensions.breakpoint.SourceEditingTextTools&lt;/code&gt;&lt;/td&gt;&lt;td&gt;Provides DOM to text and positional mapping information for use when setting and clearing breakpoints.&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;spellchecktarget&lt;/td&gt;&lt;td&gt;Must implement &lt;code&gt;org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckTarget&lt;/code&gt;&lt;/td&gt;&lt;td&gt;Provides targetting information for the IBM eTools Spell Checker&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;&lt;/p&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+</schema>

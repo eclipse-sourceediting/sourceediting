@@ -1,0 +1,57 @@
+/*
+* Copyright (c) 2002 IBM Corporation and others.
+* All rights reserved.   This program and the accompanying materials
+* are made available under the terms of the Common Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/cpl-v10.html
+* 
+* Contributors:
+*   IBM - Initial API and implementation
+*   Jens Lukowski/Innoopract - initial renaming/restructuring
+* 
+*/
+package org.eclipse.wst.dtd.core.util;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.wst.dtd.core.DTDFile;
+import org.eclipse.wst.dtd.core.DTDNode;
+
+
+public class DTDBatchNodeDelete {
+
+	protected List nodes = new ArrayList();
+	protected DTDFile dtdFile;
+
+	public DTDBatchNodeDelete(DTDFile dtdFile) {
+		this.dtdFile = dtdFile;
+	}
+
+	public void addNode(DTDNode node) {
+		// first check if the node is contained by anyone
+		for (int i = 0; i < nodes.size(); i++) {
+			DTDNode currentNode = (DTDNode) nodes.get(i);
+
+			if (currentNode.containsRange(node.getStartOffset(), node.getEndOffset())) {
+				// then no need to add the node to the list to be deleted
+				return;
+			}
+
+			if (node.getStartOffset() < currentNode.getStartOffset() && node.getEndOffset() <= currentNode.getStartOffset()) {
+				nodes.add(i, node);
+				return;
+			}
+		}
+		// if we get here, then add it to the end
+		nodes.add(node);
+	}
+
+	public void deleteNodes(Object requestor) {
+		for (int i = nodes.size() - 1; i >= 0; i--) {
+			DTDNode node = (DTDNode) nodes.get(i);
+			dtdFile.deleteNode(requestor, (DTDNode) nodes.get(i));
+		}
+		nodes.clear();
+	}
+}

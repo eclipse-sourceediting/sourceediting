@@ -1,0 +1,254 @@
+/*
+* Copyright (c) 2002 IBM Corporation and others.
+* All rights reserved.   This program and the accompanying materials
+* are made available under the terms of the Common Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/cpl-v10.html
+* 
+* Contributors:
+*   IBM - Initial API and implementation
+*   Jens Lukowski/Innoopract - initial renaming/restructuring
+* 
+*/
+package org.eclipse.wst.xml.ui.ui.dialogs;
+
+import java.util.List;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.wst.contentmodel.CMDocument;
+import org.eclipse.wst.contentmodel.CMPlugin;
+import org.eclipse.wst.contentmodel.util.NamespaceInfo;
+import org.eclipse.wst.xml.ui.nls.ResourceHandler;
+import org.eclipse.wst.xml.ui.ui.XMLCommonResources;
+import org.eclipse.wst.xml.uriresolver.util.IdResolver;
+import org.eclipse.wst.xml.uriresolver.util.IdResolverImpl;
+import org.eclipse.wst.xml.uriresolver.util.URIHelper;
+
+
+
+public class EditNamespaceInfoDialog extends Dialog {
+	protected Text uriField;
+	protected Text prefixField;
+	protected Text locationHintField;
+	protected NamespaceInfo info;
+	protected IPath resourceLocation;
+
+	protected Label errorMessageLabel;
+	protected String errorMessage;
+
+	protected Button okButton;
+	protected Button browseButton;
+
+	public EditNamespaceInfoDialog(Shell parentShell, NamespaceInfo info) {
+		super(parentShell);
+		setShellStyle(getShellStyle() | SWT.RESIZE);
+		this.info = info;
+	}
+
+	public void setResourceLocation(IPath path) {
+		resourceLocation = path;
+	}
+
+	public static EditNamespaceInfoDialog invokeDialog(Shell shell, String title, NamespaceInfo info, IPath resourceLocation) {
+		EditNamespaceInfoDialog dialog = new EditNamespaceInfoDialog(shell, info);
+		dialog.create();
+		dialog.getShell().setText(title);
+		dialog.setBlockOnOpen(true);
+		dialog.setResourceLocation(resourceLocation);
+		dialog.open();
+		return dialog;
+	}
+
+	protected void createButtonsForButtonBar(Composite parent) {
+		okButton = createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
+		okButton.setEnabled(false);
+		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
+		updateWidgets();
+	}
+
+	protected void updateWidgets() {
+		computeErrorMessage();
+		updateErrorMessageLabel();
+		updateOKButtonState();
+	}
+
+	protected void updateOKButtonState() {
+		if (okButton != null) {
+			if (uriField.getText().trim().length() == 0 && prefixField.getText().trim().length() == 0 && locationHintField.getText().trim().length() == 0)
+				okButton.setEnabled(false);
+			else
+				okButton.setEnabled(errorMessage == null);
+		}
+	}
+
+	protected void updateErrorMessageLabel() {
+		errorMessageLabel.setText(errorMessage != null ? errorMessage : ""); //$NON-NLS-1$
+	}
+
+	protected void computeErrorMessage() {
+		errorMessage = null;
+	}
+
+	protected Control createDialogArea(Composite parent) {
+		Composite dialogArea = (Composite) super.createDialogArea(parent);
+		//TODO... SSE port
+		//WorkbenchHelp.setHelp(dialogArea, XMLCommonUIContextIds.XCUI_NAMESPACE_DIALOG);
+
+		Composite composite = new Composite(dialogArea, SWT.NONE);
+		GridLayout layout = new GridLayout();
+		layout.numColumns = 3;
+		layout.marginWidth = 0;
+		composite.setLayout(layout);
+
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.widthHint = 350;
+		composite.setLayoutData(gd);
+
+		ModifyListener modifyListener = new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				updateWidgets();
+			}
+		};
+
+
+		// row 1
+		//
+		Label uriLabel = new Label(composite, SWT.NONE);
+		uriLabel.setText(XMLCommonResources.getInstance().getString("_UI_LABEL_NAMESPACE_NAME_COLON")); //$NON-NLS-1$
+
+		uriField = new Text(composite, SWT.SINGLE | SWT.BORDER);
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.grabExcessHorizontalSpace = true;
+		uriField.setLayoutData(gd);
+		uriField.setText(getDisplayValue(info.uri));
+		uriField.addModifyListener(modifyListener);
+		uriField.setEnabled(info.getProperty("uri-readOnly") == null); //$NON-NLS-1$
+
+		Label placeHolder1 = new Label(composite, SWT.NONE);
+
+		// row 2
+		//
+		Label prefixLabel = new Label(composite, SWT.NONE);
+		prefixLabel.setText(XMLCommonResources.getInstance().getString("_UI_LABEL_PREFIX_COLON")); //$NON-NLS-1$
+
+		prefixField = new Text(composite, SWT.SINGLE | SWT.BORDER);
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.grabExcessHorizontalSpace = true;
+		prefixField.setLayoutData(gd);
+		prefixField.setText(getDisplayValue(info.prefix));
+		prefixField.addModifyListener(modifyListener);
+		prefixField.setEnabled(info.getProperty("prefix-readOnly") == null); //$NON-NLS-1$
+		Label placeHolder2 = new Label(composite, SWT.NONE);
+
+		// row 3
+		//
+		Label locationHintLabel = new Label(composite, SWT.NONE);
+		locationHintLabel.setText(XMLCommonResources.getInstance().getString("_UI_LABEL_LOCATION_HINT_COLON")); //$NON-NLS-1$
+
+		locationHintField = new Text(composite, SWT.SINGLE | SWT.BORDER);
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.grabExcessHorizontalSpace = true;
+		locationHintField.setLayoutData(gd);
+		locationHintField.setText(getDisplayValue(info.locationHint));
+		locationHintField.addModifyListener(modifyListener);
+		locationHintField.setEnabled(info.getProperty("locationHint-readOnly") == null); //$NON-NLS-1$
+
+		SelectionListener selectionListener = new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				performBrowse();
+			}
+		};
+
+		browseButton = new Button(composite, SWT.NONE);
+		browseButton.setText(XMLCommonResources.getInstance().getString("_UI_LABEL_BROWSE")); //$NON-NLS-1$
+		browseButton.addSelectionListener(selectionListener);
+		browseButton.setEnabled(locationHintField.getEnabled());
+
+		// error message                               
+		errorMessageLabel = new Label(dialogArea, SWT.NONE);
+		errorMessageLabel.setText(ResourceHandler.getString("error_message_goes_here")); //$NON-NLS-1$
+		errorMessageLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		Color color = new Color(errorMessageLabel.getDisplay(), 200, 0, 0);
+		errorMessageLabel.setForeground(color);
+
+		return dialogArea;
+	}
+
+	protected String getDisplayValue(String string) {
+		return string != null ? string : ""; //$NON-NLS-1$
+	}
+
+	protected void buttonPressed(int buttonId) {
+		if (buttonId == IDialogConstants.OK_ID) {
+			info.uri = uriField.getText();
+			info.prefix = prefixField.getText();
+			info.locationHint = locationHintField.getText();
+		}
+		super.buttonPressed(buttonId);
+	}
+
+	protected void performBrowse() {
+		String[] extensions = {".xsd"}; //$NON-NLS-1$
+		SelectFileOrXMLCatalogIdDialog dialog = new SelectFileOrXMLCatalogIdDialog(getShell(), extensions);
+		dialog.create();
+		dialog.getShell().setText(XMLCommonResources.getInstance().getString("_UI_LABEL_SELECT_FILE")); //$NON-NLS-1$
+		dialog.setBlockOnOpen(true);
+		dialog.open();
+
+		if (dialog.getReturnCode() == Window.OK) {
+			String grammarURI = null;
+			IFile file = dialog.getFile();
+			String id = dialog.getId();
+			if (file != null) {
+				String uri = null;
+				if (resourceLocation != null) {
+					uri = URIHelper.getRelativeURI(file.getLocation(), resourceLocation);
+					grammarURI = file.getLocation().toOSString();
+				}
+				else {
+					uri = file.getLocation().toOSString();
+					grammarURI = uri;
+				}
+				locationHintField.setText(uri);
+			}
+			else if (id != null) {
+				locationHintField.setText(id);
+				IdResolver resolver = new IdResolverImpl(null);
+				grammarURI = resolver.resolveId(id, id);
+			}
+
+			try {
+				CMDocument document = CMPlugin.getInstance().createCMDocument(grammarURI, "xsd"); //$NON-NLS-1$
+				List namespaceInfoList = (List) document.getProperty("http://org.eclipse.wst/cm/properties/namespaceInfo"); //$NON-NLS-1$
+				NamespaceInfo info = (NamespaceInfo) namespaceInfoList.get(0);
+				if (uriField.getText().trim().length() == 0 && info.uri != null) {
+					uriField.setText(info.uri);
+				}
+				if (prefixField.getText().trim().length() == 0 && info.prefix != null) {
+					prefixField.setText(info.prefix);
+				}
+			}
+			catch (Exception e) {
+			}
+		}
+	}
+}
