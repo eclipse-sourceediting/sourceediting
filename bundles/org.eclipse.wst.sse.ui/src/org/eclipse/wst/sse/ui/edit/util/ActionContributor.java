@@ -25,9 +25,8 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.editors.text.TextEditorActionContributor;
 import org.eclipse.ui.ide.IDEActionFactory;
-import org.eclipse.ui.texteditor.BasicTextEditorActionContributor;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
@@ -51,7 +50,7 @@ import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
  * 
  * Note that this class is still valid for single page editor.
  */
-public class ActionContributor extends BasicTextEditorActionContributor implements ISourceViewerActionBarContributor, IExtendedContributor {
+public class ActionContributor extends TextEditorActionContributor implements ISourceViewerActionBarContributor, IExtendedContributor {
 	private static final String[] EDITOR_IDS = {"org.eclipse.wst.sse.ui.StructuredTextEditor"}; //$NON-NLS-1$
 	protected IExtendedContributor extendedContributor;
 	protected RetargetTextEditorAction fAddBlockComment = null;
@@ -119,10 +118,10 @@ public class ActionContributor extends BasicTextEditorActionContributor implemen
 
 		// goto prev/next error
 		// CMVC 249017 for JavaEditor consistancy
-		fPreviousAnnotation = new GotoAnnotationAction("Previous_error", false); //$NON-NLS-1$
+		fPreviousAnnotation = new GotoAnnotationAction("Previous_annotation", false); //$NON-NLS-1$
 		fPreviousAnnotation.setActionDefinitionId("org.eclipse.ui.navigate.previous"); //$NON-NLS-1$
 
-		fNextAnnotation = new GotoAnnotationAction("Next_error", true); //$NON-NLS-1$
+		fNextAnnotation = new GotoAnnotationAction("Next_annotation", true); //$NON-NLS-1$
 		fNextAnnotation.setActionDefinitionId("org.eclipse.ui.navigate.next"); //$NON-NLS-1$
 
 		// Read action extensions.
@@ -290,26 +289,9 @@ public class ActionContributor extends BasicTextEditorActionContributor implemen
 
 		IActionBars actionBars = getActionBars();
 		if (actionBars != null) {
-			// register actions that have a dynamic editor.
-			actionBars.setGlobalActionHandler(ActionFactory.NEXT.getId(), fNextAnnotation); // is
-			// this
-			// the
-			// corrent
-			// mapping?
-			actionBars.setGlobalActionHandler(ActionFactory.PREVIOUS.getId(), fPreviousAnnotation); // is
-			// this
-			// the
-			// corrent
-			// mapping?
-
 			actionBars.setGlobalActionHandler(ITextEditorActionDefinitionIds.GOTO_NEXT_ANNOTATION, fNextAnnotation);
 			actionBars.setGlobalActionHandler(ITextEditorActionDefinitionIds.GOTO_PREVIOUS_ANNOTATION, fPreviousAnnotation);
 
-			IStatusLineManager statusLineManager = actionBars.getStatusLineManager();
-			if (statusLineManager != null) {
-				statusLineManager.setMessage(null);
-				statusLineManager.setErrorMessage(null);
-			}
 			if (textEditor != null) {
 				actionBars.setGlobalActionHandler(IDEActionFactory.ADD_TASK.getId(), getAction(textEditor, IDEActionFactory.ADD_TASK.getId()));
 				actionBars.setGlobalActionHandler(IDEActionFactory.BOOKMARK.getId(), getAction(textEditor, IDEActionFactory.BOOKMARK.getId()));
