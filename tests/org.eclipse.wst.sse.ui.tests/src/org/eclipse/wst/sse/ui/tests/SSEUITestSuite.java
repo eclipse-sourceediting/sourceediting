@@ -8,9 +8,8 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.sse.ui.tests.application;
+package org.eclipse.wst.sse.ui.tests;
 
-import org.eclipse.wst.sse.ui.tests.VerifyEditorPlugin;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -18,14 +17,13 @@ import junit.framework.TestSuite;
 /**
  * @author pavery
  */
-public class SSETestSuite extends TestSuite {
+public class SSEUITestSuite extends TestSuite {
 	public static Test suite() {
-		return new SSETestSuite();
+		return new SSEUITestSuite();
 	}
 
-	public SSETestSuite() {
-		super("SSETestSuite");
+	public SSEUITestSuite() {
+		super("SSE UI Test Suite");
 		addTest(new TestSuite(VerifyEditorPlugin.class));
-		//addTest(new TestSuite(TestModelsFromFiles.class, "TestModelsFromFiles"));
 	}
 }

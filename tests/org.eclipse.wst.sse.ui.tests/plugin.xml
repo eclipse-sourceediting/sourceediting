@@ -8,7 +8,7 @@
    class="org.eclipse.wst.sse.ui.tests.SSETestsPlugin">
 
    <runtime>
-      <library name="ssetests.jar">
+      <library name="sseeditortests.jar">
          <export name="*"/>
       </library>
    </runtime>
