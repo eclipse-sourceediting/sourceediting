@@ -16,6 +16,7 @@ package org.eclipse.wst.sse.core.util;
 
 /**
  * Collection of text functions.
+ * @deprecated - the JFace class is public in 3.1
  */
 // This class was originally copied from org.eclipse.jface.text, and made
 // public
