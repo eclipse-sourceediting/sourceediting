@@ -98,7 +98,6 @@ import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.ui.ide.IDEActionFactory;
 import org.eclipse.ui.part.EditorActionBarContributor;
 import org.eclipse.ui.part.IShowInTargetList;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
 import org.eclipse.ui.texteditor.AnnotationPreference;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
@@ -118,12 +117,12 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.wst.common.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.IModelLifecycleListener;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IModelStateListenerExtended;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.ModelLifecycleEvent;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.internal.text.IExecutionDelegatable;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
@@ -145,6 +144,8 @@ import org.eclipse.wst.sse.ui.extensions.ConfigurationPointCalculator;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.NullSourceEditingTextTools;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.SourceEditingTextTools;
 import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckTarget;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction;
 import org.eclipse.wst.sse.ui.internal.debug.EditBreakpointAction;
 import org.eclipse.wst.sse.ui.internal.debug.ManageBreakpointAction;
@@ -422,12 +423,12 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 * Constant for representing an error status. This is considered a value
 	 * object.
 	 */
-	static final protected IStatus STATUS_ERROR = new Status(IStatus.ERROR, EditorPlugin.ID, IStatus.INFO, "ERROR", null); //$NON-NLS-1$
+	static final protected IStatus STATUS_ERROR = new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.INFO, "ERROR", null); //$NON-NLS-1$
 	/**
 	 * Constant for representing an ok status. This is considered a value
 	 * object.
 	 */
-	static final protected IStatus STATUS_OK = new Status(IStatus.OK, EditorPlugin.ID, IStatus.OK, "OK", null); //$NON-NLS-1$
+	static final protected IStatus STATUS_OK = new Status(IStatus.OK, SSEUIPlugin.ID, IStatus.OK, "OK", null); //$NON-NLS-1$
 
 	/** Translatable strings */
 	private static final String UNDO_ACTION_DESC = ResourceHandler.getString("Undo__{0}._UI_"); //$NON-NLS-1$ = "Undo: {0}."
@@ -844,7 +845,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 * @return IPreferenceStore
 	 */
 	private IPreferenceStore createCombinedPreferenceStore() {
-		IPreferenceStore sseEditorPrefs = ((AbstractUIPlugin) Platform.getPlugin(EditorPlugin.ID)).getPreferenceStore();
+		IPreferenceStore sseEditorPrefs = SSEUIPlugin.getDefault().getPreferenceStore();
 		IPreferenceStore baseEditorPrefs = EditorsUI.getPreferenceStore();
 		return new ChainedPreferenceStore(new IPreferenceStore[]{sseEditorPrefs, baseEditorPrefs});
 	}
@@ -1270,10 +1271,9 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			} else {
 				IDocument doc = getDocument();
 				Assert.isTrue(doc instanceof IStructuredDocument, "Editing document must be an IStructuredDocument");
-				IModelManagerPlugin modelPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-				model = modelPlugin.getModelManager().getExistingModelForEdit(doc);
+				model = StructuredModelManager.getInstance().getModelManager().getExistingModelForEdit(doc);
 				if (model == null) {
-					model = modelPlugin.getModelManager().getModelForEdit((IStructuredDocument) doc);
+					model = StructuredModelManager.getInstance().getModelManager().getModelForEdit((IStructuredDocument) doc);
 					EditorModelUtil.addFactoriesTo(model);
 				}
 			}
@@ -1615,10 +1615,9 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			} else { // nsd_TODO: FileBuffer cleanup
 				IDocument doc = getDocument();
 				Assert.isTrue(doc instanceof IStructuredDocument);
-				IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-				IStructuredModel model = plugin.getModelManager().getExistingModelForEdit(doc);
+				IStructuredModel model = StructuredModelManager.getInstance().getModelManager().getExistingModelForEdit(doc);
 				if (model == null) {
-					model = plugin.getModelManager().getModelForEdit((IStructuredDocument) doc);
+					model = StructuredModelManager.getInstance().getModelManager().getModelForEdit((IStructuredDocument) doc);
 					EditorModelUtil.addFactoriesTo(model);
 				}
 				fStructuredModel = model;
@@ -1759,8 +1758,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	}
 
 	private IStatusLineManager getStatusLineManager() {
-		AbstractUIPlugin plugin = (AbstractUIPlugin) Platform.getPlugin(PlatformUI.PLUGIN_ID);
-		IWorkbenchWindow window = plugin.getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window == null)
 			return null;
 		IWorkbenchPage page = window.getActivePage();
@@ -2021,7 +2019,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 * @since 3.0
 	 */
 	protected boolean isNavigationTargetType(Annotation annotation) {
-		Preferences preferences = Platform.getPlugin("org.eclipse.ui.editors").getPluginPreferences(); //$NON-NLS-1$
+		Preferences preferences = EditorsUI.getPluginPreferences();
 		AnnotationPreference preference = getAnnotationPreferenceLookup().getAnnotationPreference(annotation);
 		//		See bug 41689
 		//		String key= forward ?
@@ -2644,7 +2642,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		if (input instanceof IFileEditorInput) {
 			if (input == null) {
 				String msg = ResourceHandler.getString("Error_opening_file_UI_"); //$NON-NLS-1$
-				status = new Status(IStatus.ERROR, EditorPlugin.ID, IStatus.INFO, msg, null);
+				status = new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.INFO, msg, null);
 			} else {
 				validateState(input);
 				sanityCheckState(input);
@@ -2670,7 +2668,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 						}
 					}
 					String msg = ResourceHandler.getString("_UI_File_is_read_only", new Object[]{fname}); //$NON-NLS-1$ = "File {0}is read-only."
-					status = new Status(IStatus.ERROR, EditorPlugin.ID, IStatus.INFO, msg, null);
+					status = new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.INFO, msg, null);
 				}
 			}
 		}
@@ -2689,7 +2687,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 				if (wasReadOnly != isEditorInputReadOnly())
 					updateStateDependentActions();
 			} catch (CoreException x) {
-				ILog log = Platform.getPlugin(PlatformUI.PLUGIN_ID).getLog();
+				ILog log = Platform.getLog(Platform.getBundle(PlatformUI.PLUGIN_ID));
 				log.log(x.getStatus());
 				statusError(x.getStatus());
 			}
