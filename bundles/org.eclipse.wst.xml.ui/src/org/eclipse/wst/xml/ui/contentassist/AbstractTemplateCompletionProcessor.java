@@ -14,7 +14,6 @@ package org.eclipse.wst.xml.ui.contentassist;
 
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.Region;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.Template;
@@ -33,15 +32,11 @@ import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
  */
 abstract public class AbstractTemplateCompletionProcessor extends TemplateCompletionProcessor {
 	private String fContextTypeId = null;
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.text.templates.TemplateCompletionProcessor#createProposal(org.eclipse.jface.text.templates.Template,
-	 *      org.eclipse.jface.text.templates.TemplateContext,
-	 *      org.eclipse.jface.text.Region, int)
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.text.templates.TemplateCompletionProcessor#createProposal(org.eclipse.jface.text.templates.Template, org.eclipse.jface.text.templates.TemplateContext, org.eclipse.jface.text.IRegion, int)
 	 */
-	protected ICompletionProposal createProposal(Template template, TemplateContext context, Region region, int relevance) {
+	protected ICompletionProposal createProposal(Template template, TemplateContext context, IRegion region, int relevance) {
 		// CustomTemplateProposal turns the additional information to content
 		// fit for HTML
 		return new CustomTemplateProposal(template, context, region, getImage(template), relevance);
