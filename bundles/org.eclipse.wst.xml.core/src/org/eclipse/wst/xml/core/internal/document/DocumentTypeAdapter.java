@@ -10,16 +10,42 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.xml.core.document;
+package org.eclipse.wst.xml.core.internal.document;
 
+
+
+import org.eclipse.wst.sse.core.INodeAdapter;
+import org.w3c.dom.DocumentType;
 
 
 /**
- * XML Namespace constants
  */
-public interface XMLNamespace {
+public interface DocumentTypeAdapter extends INodeAdapter {
+	static final int LOWER_CASE = 2;
+	static final int STRICT_CASE = 0;
+	static final int UPPER_CASE = 1;
 
-	static final String XMLNS = "xmlns";//$NON-NLS-1$
-	static final String XMLNS_PREFIX = "xmlns:";//$NON-NLS-1$
-	static final String XMLNS_URI = "http://www.w3.org/2000/xmlns/";//$NON-NLS-1$
+	/**
+	 */
+	int getAttrNameCase();
+
+	/**
+	 */
+	DocumentType getDocumentType();
+
+	/**
+	 */
+	int getTagNameCase();
+
+	/**
+	 */
+	boolean hasFeature(String feature);
+
+	/**
+	 */
+	boolean isXMLType();
+
+	/**
+	 */
+	void release();
 }

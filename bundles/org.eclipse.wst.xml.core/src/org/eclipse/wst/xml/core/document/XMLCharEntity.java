@@ -16,6 +16,8 @@ package org.eclipse.wst.xml.core.document;
 
 /**
  * XML Namespace constants
+ * 
+ * @since 1.0
  */
 public interface XMLCharEntity {
 	static final String AMP_NAME = "amp";//$NON-NLS-1$

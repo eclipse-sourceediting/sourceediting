@@ -19,7 +19,6 @@ import org.eclipse.wst.sse.core.FactoryRegistry;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.xml.core.document.InvalidCharacterException;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.w3c.dom.DOMException;

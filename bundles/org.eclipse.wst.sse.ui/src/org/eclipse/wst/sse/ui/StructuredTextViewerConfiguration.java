@@ -109,19 +109,6 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 		editorPart = textEditor;
 	}
 
-	/**
-	 * @deprecated - to be removed in M4
-	 * 
-	 * Call setContentAssistProcessor instead.
-	 * 
-	 * @param ca
-	 * @param processor
-	 * @param partitionType
-	 */
-	public void addContentAssistProcessor(ContentAssistant ca, IContentAssistProcessor processor, String partitionType) {
-		setContentAssistProcessor(ca, processor, partitionType);
-	}
-
 	public void configureOn(IResource resource) {
 		fResource = resource;
 		updateForResource();

@@ -15,7 +15,6 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.xml.core.document.DocumentTypeAdapter;
 import org.eclipse.wst.xml.core.document.XMLDocument;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.w3c.dom.DocumentType;

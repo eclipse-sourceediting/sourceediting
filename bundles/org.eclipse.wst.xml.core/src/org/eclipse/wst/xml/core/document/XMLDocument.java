@@ -24,6 +24,8 @@ import org.w3c.dom.traversal.DocumentTraversal;
 /**
  * This interface enables creation of DOCTYPE declaration and some DOM Level 2
  * interfaces.
+ * 
+ * @since 1.0
  */
 public interface XMLDocument extends XMLNode, Document, DocumentRange, DocumentTraversal {
 

@@ -17,7 +17,13 @@ package org.eclipse.wst.xml.core.document;
 import org.w3c.dom.Element;
 
 /**
+ * This interface provides extensions to corresponding DOM interface to enable
+ * functions for source editing and incremental parsing.
+ * 
+ * @since 1.0
+ * 
  */
+
 public interface XMLElement extends XMLNode, Element {
 
 	/**

@@ -14,16 +14,20 @@ package org.eclipse.wst.xml.core.document;
 
 
 
+import org.eclipse.wst.sse.core.INodeNotifier;
+import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
+import org.eclipse.wst.xml.core.internal.document.InvalidCharacterException;
+import org.w3c.dom.Node;
 
 /**
  * A interface to make concept clearer, just to denote the combination of
  * three other interfaces.
  *  
  */
-public interface XMLNode extends org.eclipse.wst.sse.core.IndexedRegion, org.eclipse.wst.sse.core.INodeNotifier, org.w3c.dom.Node {
+public interface XMLNode extends IndexedRegion, INodeNotifier, Node {
 
 	/**
 	 * 

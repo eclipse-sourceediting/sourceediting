@@ -23,8 +23,6 @@ import java.util.Map;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 import org.eclipse.wst.xml.core.NameValidator;
 import org.eclipse.wst.xml.core.commentelement.impl.CommentElementRegistry;
-import org.eclipse.wst.xml.core.document.DocumentTypeAdapter;
-import org.eclipse.wst.xml.core.document.JSPTag;
 import org.eclipse.wst.xml.core.document.XMLCharEntity;
 import org.eclipse.wst.xml.core.document.XMLDocument;
 import org.eclipse.wst.xml.core.document.XMLElement;

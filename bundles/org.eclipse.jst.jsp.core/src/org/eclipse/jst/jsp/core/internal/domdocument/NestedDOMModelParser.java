@@ -15,7 +15,7 @@ package org.eclipse.jst.jsp.core.internal.domdocument;
 import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.xml.core.document.JSPTag;
+import org.eclipse.wst.xml.core.internal.document.JSPTag;
 import org.eclipse.wst.xml.core.internal.document.XMLModelImpl;
 import org.eclipse.wst.xml.core.internal.document.XMLModelParser;
 

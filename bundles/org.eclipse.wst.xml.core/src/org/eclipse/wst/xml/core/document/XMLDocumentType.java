@@ -19,6 +19,8 @@ import org.w3c.dom.DocumentType;
 /**
  * This interface enables setting of Public and System ID for DOCTYPE
  * declaration.
+ * 
+ * @since 1.0
  */
 public interface XMLDocumentType extends XMLNode, DocumentType {
 

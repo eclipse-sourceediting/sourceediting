@@ -18,6 +18,14 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+/**
+ * 
+ * XMLModelNotifier manages the notification process. Clients should not use
+ * extend or reference.
+ * 
+ * ISSUE: should be internalized.
+ */
+
 public interface XMLModelNotifier {
 
 	/**
@@ -33,10 +41,14 @@ public interface XMLModelNotifier {
 	void attrReplaced(Element element, Attr newAttr, Attr oldAttr);
 
 	/**
+	 * Signal that changing is starting.
+	 * 
 	 */
 	void beginChanging();
 
 	/**
+	 * Signal that changing is starting with a brand new model.
+	 * 
 	 */
 	void beginChanging(boolean newModel);
 
@@ -61,34 +73,58 @@ public interface XMLModelNotifier {
 	void childReplaced(Node parentNode, Node newChild, Node oldChild);
 
 	/**
+	 * Editable state changed for node.
+	 * 
 	 */
 	void editableChanged(Node node);
 
 	/**
+	 * Signal changing is finished.
+	 * 
 	 */
 	void endChanging();
 
 	/**
+	 * Signal end tag changed.
+	 * 
+	 * @param element
+	 * 
 	 */
 	void endTagChanged(Element element);
 
 	/**
+	 * Used to reflect state of model.
+	 * 
+	 * @return true if model had changed.
+	 * 
 	 */
 	boolean hasChanged();
 
 	/**
+	 * Used to reflect state of parsing process.
+	 * 
+	 * @return true if model is currently changing.
 	 */
 	boolean isChanging();
 
 	/**
+	 * signal property changed
+	 * 
+	 * @param node
 	 */
 	void propertyChanged(Node node);
 
 	/**
+	 * signal start tag changed
+	 * 
+	 * @param element
 	 */
 	void startTagChanged(Element element);
 
 	/**
+	 * signal structured changed.
+	 * 
+	 * @param node
 	 */
 	void structureChanged(Node node);
 

@@ -19,6 +19,11 @@ import org.w3c.dom.Attr;
 
 
 /**
+ * This interface provides extensions to corresponding DOM interface to enable
+ * functions for source editing and incremental parsing.
+ * 
+ * @since 1.0
+ * 
  */
 public interface XMLAttr extends XMLNode, Attr {
 

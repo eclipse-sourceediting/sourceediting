@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
-import org.eclipse.wst.xml.core.document.InvalidCharacterException;
-import org.eclipse.wst.xml.core.document.JSPTag;
 import org.eclipse.wst.xml.core.document.XMLCharEntity;
 import org.eclipse.wst.xml.core.document.XMLDocument;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;

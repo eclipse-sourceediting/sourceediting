@@ -14,23 +14,41 @@ package org.eclipse.wst.xml.core.document;
 
 import org.eclipse.wst.sse.core.IStructuredModel;
 
-
-
 /**
+ * Provides means to get the XMLModel form of IStrucutredModel. Not to be
+ * implemented or extended by clients.
+ * 
+ * @since 1.0
  */
 public interface XMLModel extends IStructuredModel {
 
+	/**
+	 * Returns the DOM Document.
+	 * 
+	 * @return the DOM Document.
+	 */
 	XMLDocument getDocument();
 
 	/**
+	 * Returns an XMLGenerator. Clients should not use.
+	 * 
+	 * ISSUE: should be "internalized".
+	 * 
 	 */
 	XMLGenerator getGenerator();
 
 	/**
+	 * Returns an XMLModelNotifier. Clients should not use.
+	 * 
+	 * ISSUE: should be "internalized".
+	 * 
 	 */
 	XMLModelNotifier getModelNotifier();
 
 	/**
+	 * Sets the model notifier Clients should not use.
+	 * 
+	 * ISSUE: need to review with legacy clients.
 	 */
 	void setModelNotifier(XMLModelNotifier notifier);
 }

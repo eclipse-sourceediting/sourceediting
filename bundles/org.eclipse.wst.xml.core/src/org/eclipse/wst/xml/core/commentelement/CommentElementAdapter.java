@@ -17,8 +17,8 @@ package org.eclipse.wst.xml.core.commentelement;
 import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.xml.core.commentelement.impl.CommentElementConfiguration;
-import org.eclipse.wst.xml.core.document.TagAdapter;
 import org.eclipse.wst.xml.core.document.XMLElement;
+import org.eclipse.wst.xml.core.internal.document.TagAdapter;
 
 
 /**

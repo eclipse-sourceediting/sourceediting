@@ -28,7 +28,7 @@ import org.eclipse.wst.sse.core.parser.BlockMarker;
 import org.eclipse.wst.sse.core.parser.BlockTagParser;
 import org.eclipse.wst.sse.core.parser.JSPCapableParser;
 import org.eclipse.wst.sse.core.util.Assert;
-import org.eclipse.wst.xml.core.document.DocumentTypeAdapter;
+import org.eclipse.wst.xml.core.internal.document.DocumentTypeAdapter;
 import org.eclipse.wst.xml.core.internal.document.ModelParserAdapter;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 

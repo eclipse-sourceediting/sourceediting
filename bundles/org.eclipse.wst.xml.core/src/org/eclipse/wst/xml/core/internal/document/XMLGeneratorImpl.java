@@ -15,9 +15,6 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 import org.eclipse.wst.xml.core.commentelement.impl.CommentElementRegistry;
-import org.eclipse.wst.xml.core.document.DocumentTypeAdapter;
-import org.eclipse.wst.xml.core.document.JSPTag;
-import org.eclipse.wst.xml.core.document.TagAdapter;
 import org.eclipse.wst.xml.core.document.XMLAttr;
 import org.eclipse.wst.xml.core.document.XMLCharEntity;
 import org.eclipse.wst.xml.core.document.XMLDocument;

@@ -13,8 +13,8 @@ package org.eclipse.wst.html.core.document;
 
 
 import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.xml.core.document.TagAdapter;
 import org.eclipse.wst.xml.core.document.XMLElement;
+import org.eclipse.wst.xml.core.internal.document.TagAdapter;
 
 /**
  */

@@ -19,9 +19,9 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.xml.core.document.TagAdapter;
 import org.eclipse.wst.xml.core.document.XMLElement;
 import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.internal.document.TagAdapter;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 
 /**

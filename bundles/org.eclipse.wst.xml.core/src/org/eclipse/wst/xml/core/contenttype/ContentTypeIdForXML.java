@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,8 @@ package org.eclipse.wst.xml.core.contenttype;
  * This class, with its one field, is a convience to provide compile-time
  * safety when refering to a contentType ID. The value of the contenttype id
  * field must match what is specified in plugin.xml file.
+ * 
+ * @since 1.0
  */
 
 public class ContentTypeIdForXML {
@@ -26,7 +28,7 @@ public class ContentTypeIdForXML {
 	 */
 	public final static String ContentTypeID_XML = getConstantString2();
 	/**
-	 * This value is public only for testing and special infrastructure The
+	 * This value is public only for testing and special infrastructure. The
 	 * constant nor is value should not be referenced by clients.
 	 * 
 	 * The value of the contenttype id field must match what is specified in

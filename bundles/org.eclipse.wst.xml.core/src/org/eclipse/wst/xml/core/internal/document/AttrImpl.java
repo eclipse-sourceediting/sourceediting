@@ -14,15 +14,16 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 
+
 import java.util.Iterator;
 
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
+import org.eclipse.wst.xml.core.XMLNamespace;
 import org.eclipse.wst.xml.core.document.XMLAttr;
 import org.eclipse.wst.xml.core.document.XMLCharEntity;
-import org.eclipse.wst.xml.core.document.XMLNamespace;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;

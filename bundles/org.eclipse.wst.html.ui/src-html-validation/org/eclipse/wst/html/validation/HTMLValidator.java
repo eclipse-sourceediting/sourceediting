@@ -26,9 +26,9 @@ import org.eclipse.wst.validation.core.IValidationContext;
 import org.eclipse.wst.validation.core.IValidator;
 import org.eclipse.wst.validation.internal.operations.IWorkbenchHelper;
 import org.eclipse.wst.validation.internal.operations.WorkbenchReporter;
-import org.eclipse.wst.xml.core.document.DocumentTypeAdapter;
 import org.eclipse.wst.xml.core.document.XMLDocument;
 import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.internal.document.DocumentTypeAdapter;
 import org.eclispe.wst.validation.internal.core.Message;
 
 public class HTMLValidator implements IValidator {
