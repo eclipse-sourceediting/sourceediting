@@ -17,13 +17,15 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.wst.sse.core.document.IEncodedDocument;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
+import org.eclipse.wst.sse.core.internal.text.JobSafeStructuredDocument;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 
 
 public class BasicStructuredDocumentFactory implements IDocumentFactory, IExecutableExtension {
 
+	// The content type ID used to declare this factory; it is used to find
+	// the corresponding ModelHandler
 	private String fContentTypeIdentifier = null;
 
 	public BasicStructuredDocumentFactory() {
@@ -31,8 +33,14 @@ public class BasicStructuredDocumentFactory implements IDocumentFactory, IExecut
 	}
 
 	public IDocument createDocument() {
+		IDocument document = null;
 		IModelHandler handler = ModelHandlerRegistry.getInstance().getHandlerForContentTypeId(getContentTypeIdentifier());
-		IEncodedDocument document = handler.getDocumentLoader().createNewStructuredDocument();
+		if (handler != null) {
+			document = handler.getDocumentLoader().createNewStructuredDocument();
+		}
+		else {
+			document = new JobSafeStructuredDocument();
+		}
 		return document;
 	}
 
@@ -41,6 +49,7 @@ public class BasicStructuredDocumentFactory implements IDocumentFactory, IExecut
 	}
 
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
+		fContentTypeIdentifier = config.getAttribute("contentTypeId");
 		if (data != null) {
 			if (data instanceof String && data.toString().length() > 0) {
 				fContentTypeIdentifier = (String) data;
