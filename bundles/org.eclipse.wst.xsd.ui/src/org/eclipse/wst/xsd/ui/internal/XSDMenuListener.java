@@ -326,6 +326,10 @@ public class XSDMenuListener implements IMenuListener
 //        manager.add(undoAction);
 //        manager.add(redoAction);
 //      }
+      
+      // insertion point for popupMenus extension
+      manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));    
+
       return;
     }
     if (selectedElement != null)
@@ -365,7 +369,7 @@ public class XSDMenuListener implements IMenuListener
     }
     
     // insertion point for popupMenus extension
-  manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));    
+    manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));    
   }
 
   protected String getBuiltInStringQName()
