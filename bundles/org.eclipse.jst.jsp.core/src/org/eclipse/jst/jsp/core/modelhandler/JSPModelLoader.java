@@ -23,12 +23,12 @@ import org.eclipse.jst.jsp.core.encoding.JSPDocumentHeadContentDetector;
 import org.eclipse.jst.jsp.core.encoding.JSPDocumentLoader;
 import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapterFactory;
 import org.eclipse.jst.jsp.core.internal.document.PageDirectiveWatcherFactory;
+import org.eclipse.jst.jsp.core.internal.domdocument.DOMModelForJSP;
 import org.eclipse.jst.jsp.core.internal.parser.JSPReParser;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
 import org.eclipse.jst.jsp.core.modelquery.ModelQueryAdapterFactoryForJSP;
 import org.eclipse.wst.html.core.contenttype.ContentTypeIdForHTML;
-import org.eclipse.wst.html.core.document.XMLStyleModelImpl;
 import org.eclipse.wst.html.core.internal.text.rules.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.sse.core.AbstractModelLoader;
 import org.eclipse.wst.sse.core.AdapterFactory;
@@ -85,10 +85,7 @@ public class JSPModelLoader extends AbstractModelLoader {
 	}
 
 	public IStructuredModel newModel() {
-		// future_TODO: this is similar to "hard coding"
-		// that HTML will be in JSP file ... should make more
-		// flexible in future.
-		XMLStyleModelImpl model = new XMLStyleModelImpl();
+		DOMModelForJSP model = new DOMModelForJSP();
 		return model;
 	}
 
