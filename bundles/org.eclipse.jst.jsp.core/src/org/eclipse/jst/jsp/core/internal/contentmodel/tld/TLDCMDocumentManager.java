@@ -43,7 +43,9 @@ import org.eclipse.jst.jsp.core.contentmodel.tld.TLDDocument;
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDElementDeclaration;
 import org.eclipse.jst.jsp.core.contentmodel.tld.URIResolverProvider;
 import org.eclipse.jst.jsp.core.internal.Logger;
+import org.eclipse.jst.jsp.core.internal.contentmodel.ITaglibIndexListener;
 import org.eclipse.jst.jsp.core.internal.contentmodel.ITaglibRecord;
+import org.eclipse.jst.jsp.core.internal.contentmodel.ITaglibRecordEvent;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibIndex;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
@@ -64,7 +66,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.eclipse.wst.xml.uriresolver.util.URIHelper;
 
-public class TLDCMDocumentManager {
+public class TLDCMDocumentManager implements ITaglibIndexListener {
 
 	protected class DirectiveStructuredDocumentRegionHandler implements StructuredDocumentRegionHandler, StructuredDocumentRegionHandlerExtension {
 
@@ -856,6 +858,9 @@ public class TLDCMDocumentManager {
 		if (fTaglibTrackers == null)
 			fTaglibTrackers = new ArrayList();
 		return fTaglibTrackers;
+	}
+	
+	public void indexChanged(ITaglibRecordEvent event) {
 	}
 
 	/**
