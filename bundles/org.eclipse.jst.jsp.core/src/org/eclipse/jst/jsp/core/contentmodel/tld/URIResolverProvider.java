@@ -10,7 +10,9 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.contentmodel.tld;
 
-
+/**
+ * @deprecated - will be removed in M4
+ */
 
 import org.eclipse.wst.sse.core.util.URIResolver;
 
