@@ -13,6 +13,7 @@
 package org.eclipse.wst.dtd.core;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
 import org.eclipse.wst.dtd.core.internal.text.RegionIterator;
 import org.eclipse.wst.dtd.core.parser.DTDRegionTypes;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -38,14 +39,14 @@ public class CMBasicNode extends CMRepeatableNode {
 		final String name = getName();
 		ITextRegion pcdata = getNextRegion(iterator(), DTDRegionTypes.CONTENT_PCDATA);
 		if (pcdata != null) {
-			return DTDPlugin.getInstance().getImage(DTDResource.PCDATAICON);
+			return DTDCorePlugin.getInstance().getImage(DTDResource.PCDATAICON);
 		}
 
 		if (isRootElementContent()) {
 			if (name.equals(EMPTY)) {
-				return DTDPlugin.getInstance().getImage(DTDResource.EMPTYICON);
+				return DTDCorePlugin.getInstance().getImage(DTDResource.EMPTYICON);
 			} else if (name.equals(ANY)) {
-				return DTDPlugin.getInstance().getImage(DTDResource.ANYICON);
+				return DTDCorePlugin.getInstance().getImage(DTDResource.ANYICON);
 			}
 		}
 

@@ -28,7 +28,7 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.eclipse.jst.jsp.core.Logger;
+import org.eclipse.jst.jsp.core.internal.Logger;
 import org.w3c.dom.Document;
 
 

@@ -12,7 +12,7 @@ package org.eclipse.wst.html.core.cleanup;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.wst.html.core.HTMLCorePlugin;
+import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.sse.core.cleanup.IStructuredCleanupHandler;
 import org.eclipse.wst.sse.core.cleanup.IStructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.cleanup.StructuredCleanupPreferences;

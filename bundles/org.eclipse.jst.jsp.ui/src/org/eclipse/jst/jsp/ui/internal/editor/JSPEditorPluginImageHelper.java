@@ -15,7 +15,7 @@ import java.util.HashMap;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.jst.jsp.ui.JSPEditorPlugin;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
@@ -29,7 +29,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  * @author amywu
  */
 public class JSPEditorPluginImageHelper {
-	private final String PLUGINID = JSPEditorPlugin.ID;
+	private final String PLUGINID = JSPUIPlugin.ID;
 	private static JSPEditorPluginImageHelper instance = null;
 
 	//	 save a descriptor for each image

@@ -33,6 +33,8 @@ import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.sse.ui.internal.contentassist.IRelevanceConstants;
 import org.eclipse.wst.xml.uriresolver.util.URIHelper;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleException;
 
 /**
  * @version 	5.0
@@ -97,12 +99,12 @@ public class JavaTypeFinder {
 		// The following code will initialize the Java UI plugin if it
 		// is not already initialized.
 		try {
-			Platform.getPluginRegistry().getPluginDescriptor("org.eclipse.jdt.ui") //$NON-NLS-1$
-						.getPlugin();
-			Platform.getPluginRegistry().getPluginDescriptor("org.eclipse.jdt.core") //$NON-NLS-1$
-						.getPlugin();
-		}
-		catch (CoreException e) {
+			Bundle jdtUI = Platform.getBundle("org.eclipse.jdt.ui"); //$NON-NLS-1$
+			Bundle jdtCore = Platform.getBundle("org.eclipse.jdt.core"); //$NON-NLS-1$
+			jdtUI.start();
+			jdtCore.start();
+		} catch (BundleException e1) {
+			// problems initializing plugins
 		}
 	}
 

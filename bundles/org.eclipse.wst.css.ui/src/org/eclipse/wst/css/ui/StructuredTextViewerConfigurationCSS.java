@@ -27,7 +27,6 @@ import org.eclipse.wst.css.ui.contentassist.CSSContentAssistProcessor;
 import org.eclipse.wst.css.ui.style.LineStyleProviderForCSS;
 import org.eclipse.wst.css.ui.taginfo.CSSBestMatchHoverProcessor;
 import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
-import org.eclipse.wst.sse.ui.EditorPlugin;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
@@ -106,7 +105,7 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {
 		// content type does not really matter since only combo, problem,
 		// annotation hover is available
-		TextHoverManager.TextHoverDescriptor[] hoverDescs = EditorPlugin.getDefault().getTextHoverManager().getTextHovers();
+		TextHoverManager.TextHoverDescriptor[] hoverDescs = getTextHovers();
 		int i = 0;
 		while (i < hoverDescs.length) {
 			if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {

@@ -16,9 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IPluginRegistry;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.sse.ui.Logger;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.extension.RegistryReader;
 
 
@@ -96,7 +96,7 @@ public class ValidatorBuilder extends RegistryReader {
 	protected void readContributions(String id, String tag, String extensionPoint) {
 		targetID = id;
 		targetContributionTag = tag;
-		IPluginRegistry registry = Platform.getPluginRegistry();
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		readRegistry(registry, PLUGIN_ID, extensionPoint);
 	}
 

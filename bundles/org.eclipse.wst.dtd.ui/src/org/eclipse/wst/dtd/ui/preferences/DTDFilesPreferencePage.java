@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.dtd.core.DTDPlugin;
-import org.eclipse.wst.dtd.ui.DTDEditorPlugin;
+import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.dtd.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.ui.preferences.ui.AbstractPreferencePage;
 
@@ -36,7 +36,7 @@ public class DTDFilesPreferencePage extends AbstractPreferencePage {
 	}
 
 	protected IPreferenceStore doGetPreferenceStore() {
-		return DTDEditorPlugin.getDefault().getPreferenceStore();
+		return DTDUIPlugin.getDefault().getPreferenceStore();
 	}
 
 	protected void doSavePreferenceStore() {

@@ -23,7 +23,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.wst.css.ui.CSSEditorPlugin;
+import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.css.ui.internal.editor.CSSEditorPluginImages;
 import org.eclipse.wst.css.ui.internal.nls.ResourceHandler;
 import org.eclipse.wst.sse.ui.views.contentoutline.PropertyChangeUpdateAction;
@@ -36,7 +36,7 @@ class SortAction extends PropertyChangeUpdateAction {
 
 	public SortAction(TreeViewer viewer, IPreferenceStore store, String preferenceKey) {
 		super(ResourceHandler.getString("SortAction.0"), store, preferenceKey, false); //$NON-NLS-1$
-		ImageDescriptor desc = AbstractUIPlugin.imageDescriptorFromPlugin(CSSEditorPlugin.ID, CSSEditorPluginImages.IMG_OBJ_SORT);
+		ImageDescriptor desc = AbstractUIPlugin.imageDescriptorFromPlugin(CSSUIPlugin.ID, CSSEditorPluginImages.IMG_OBJ_SORT);
 		setImageDescriptor(desc);
 		setToolTipText(getText());
 		treeViewer = viewer;

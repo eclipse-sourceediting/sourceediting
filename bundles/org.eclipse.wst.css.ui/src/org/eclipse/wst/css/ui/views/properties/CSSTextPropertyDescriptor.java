@@ -13,7 +13,6 @@ package org.eclipse.wst.css.ui.views.properties;
 
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
@@ -28,8 +27,8 @@ import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.eclipse.wst.css.core.document.ICSSModel;
 import org.eclipse.wst.css.core.document.ICSSNode;
 import org.eclipse.wst.css.core.util.CSSPathService;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.xml.core.document.XMLNode;
 
 /**
@@ -99,8 +98,7 @@ public class CSSTextPropertyDescriptor extends TextPropertyDescriptor {
 								//TODO Urgent needs to be fixed
 								// I think we need 'equals' (or 'equivalent'
 								// on model) for cases like this
-								IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-								if (plugin.getModelManager().calculateId(file).equals(model.getId())) {
+								if (StructuredModelManager.getInstance().getModelManager().calculateId(file).equals(model.getId())) {
 									return editPart;
 								}
 							}

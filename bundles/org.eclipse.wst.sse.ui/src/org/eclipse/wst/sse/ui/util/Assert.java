@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.util;
 
-import org.eclipse.wst.sse.ui.Logger;
+import org.eclipse.wst.sse.ui.internal.Logger;
 
 /**
  * <code>Assert</code> is useful for for embedding runtime sanity checks in

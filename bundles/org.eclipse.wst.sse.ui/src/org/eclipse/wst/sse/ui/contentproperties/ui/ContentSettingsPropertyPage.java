@@ -24,7 +24,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -35,21 +34,21 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.ui.EditorPlugin;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.contentproperties.ContentSettings;
 import org.eclipse.wst.sse.ui.contentproperties.ContentSettingsCreator;
 import org.eclipse.wst.sse.ui.contentproperties.IContentSettings;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 
 
 
 public abstract class ContentSettingsPropertyPage extends PropertyPage {
-	private static final IStatus STATUS_ERROR = new Status(IStatus.ERROR, EditorPlugin.ID, IStatus.INFO, "ERROR", null); //$NON-NLS-1$
+	private static final IStatus STATUS_ERROR = new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.INFO, "ERROR", null); //$NON-NLS-1$
 
 	// for validateEdit()
-	private static final IStatus STATUS_OK = new Status(IStatus.OK, EditorPlugin.ID, IStatus.OK, "OK", null); //$NON-NLS-1$
+	private static final IStatus STATUS_OK = new Status(IStatus.OK, SSEUIPlugin.ID, IStatus.OK, "OK", null); //$NON-NLS-1$
 
 	/**
 	 * Method validateEdit.
@@ -80,8 +79,7 @@ public abstract class ContentSettingsPropertyPage extends PropertyPage {
 		final long afterModifiedFromIFile = file.getModificationStamp();
 
 		if (beforeModifiedFromJavaIO != afterModifiedFromJavaIO) {
-			IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-			IModelManager manager = plugin.getModelManager();
+			IModelManager manager = StructuredModelManager.getInstance().getModelManager();
 			IStructuredModel model = manager.getExistingModelForRead(file);
 			if (model != null) {
 				if (!model.isDirty()) {

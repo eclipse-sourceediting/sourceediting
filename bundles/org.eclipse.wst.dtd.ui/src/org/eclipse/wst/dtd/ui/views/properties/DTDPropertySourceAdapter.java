@@ -19,7 +19,7 @@ import java.util.Stack;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.wst.dtd.core.DTDNode;
-import org.eclipse.wst.dtd.ui.DTDEditorPlugin;
+import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.ui.views.properties.CustomPropertyDescriptor;
@@ -33,8 +33,8 @@ import org.eclipse.wst.sse.ui.views.properties.CustomPropertyDescriptor;
 public class DTDPropertySourceAdapter implements INodeAdapter, IPropertySource {
 	protected final static String CATEGORY_ATTRIBUTES = "Attributes"; //$NON-NLS-1$
 
-	private static final String ID_NAME = DTDEditorPlugin.getResourceString("DTDPropertySourceAdapter.0"); //$NON-NLS-1$
-	private static final String ID_TEXT = DTDEditorPlugin.getResourceString("DTDPropertySourceAdapter.1"); //$NON-NLS-1$
+	private static final String ID_NAME = DTDUIPlugin.getResourceString("DTDPropertySourceAdapter.0"); //$NON-NLS-1$
+	private static final String ID_TEXT = DTDUIPlugin.getResourceString("DTDPropertySourceAdapter.1"); //$NON-NLS-1$
 
 	protected IPropertyDescriptor[] fDescriptors = null;
 	protected INodeNotifier fNode = null;
@@ -51,7 +51,7 @@ public class DTDPropertySourceAdapter implements INodeAdapter, IPropertySource {
 	 */
 	private IPropertyDescriptor[] createPropertyDescriptors() {
 		CustomPropertyDescriptor nameDescriptor = new CustomPropertyDescriptor(ID_NAME, ID_NAME, null);
-		nameDescriptor.setCategory(DTDEditorPlugin.getResourceString("DTDPropertySourceAdapter.2")); //$NON-NLS-1$
+		nameDescriptor.setCategory(DTDUIPlugin.getResourceString("DTDPropertySourceAdapter.2")); //$NON-NLS-1$
 		//		CustomPropertyDescriptor contentDescriptor = new
 		// CustomPropertyDescriptor(ID_TEXT, ID_TEXT, null);
 		//		contentDescriptor.setCategory("Attributes");

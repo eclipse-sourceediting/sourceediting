@@ -10,7 +10,6 @@ package org.eclipse.wst.xml.internal.ui;
 
 
 
-import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.graphics.RGB;
@@ -22,20 +21,20 @@ import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistryImpl;
 import org.eclipse.wst.sse.ui.registry.embedded.EmbeddedAdapterFactoryRegistryImpl;
 import org.eclipse.wst.xml.core.XMLPreferenceNames;
 
-
+/**
+ * @deprecated This plugin has combined with the org.eclipse.wst.xml.ui plugin.
+ *             Use XMLUIPlugin instead.
+ */
 public class XMLEditorPluginHOLD_OLD extends AbstractUIPlugin {
 
 	public final static String PLUGIN_ID = "org.eclipse.wst.xml.ui.internal.XMLEditorPluginHOLD_OLD"; //$NON-NLS-1$
 	protected static XMLEditorPluginHOLD_OLD instance = null;
 
 	/**
-	 * XMLEditorPlugin constructor comment.
-	 * 
-	 * @param descriptor
-	 *            com.ibm.itp.core.api.plugins.IPluginDescriptor
+	 * XMLUIPlugin constructor comment.
 	 */
-	public XMLEditorPluginHOLD_OLD(IPluginDescriptor descriptor) {
-		super(descriptor);
+	public XMLEditorPluginHOLD_OLD() {
+		super();
 		instance = this;
 
 		// reference the preference store so

@@ -19,7 +19,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.wst.css.core.document.ICSSNode;
 import org.eclipse.wst.css.core.document.ICSSStyleDeclItem;
 import org.eclipse.wst.css.core.document.ICSSValue;
-import org.eclipse.wst.css.ui.CSSEditorPlugin;
+import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.sse.core.AdapterFactory;
 import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
@@ -36,7 +36,7 @@ public class CSSContentOutlineConfiguration extends StructuredContentOutlineConf
 	public IContributionItem[] createToolbarContributions(TreeViewer viewer) {
 		IContributionItem[] items = super.createToolbarContributions(viewer);
 
-		SortAction sortAction = new SortAction(viewer, CSSEditorPlugin.getDefault().getPreferenceStore(), getSortPreferenceKey());
+		SortAction sortAction = new SortAction(viewer, CSSUIPlugin.getDefault().getPreferenceStore(), getSortPreferenceKey());
 		IContributionItem sortItem = new PropertyChangeUpdateActionContributionItem(sortAction);
 
 		if (items == null) {

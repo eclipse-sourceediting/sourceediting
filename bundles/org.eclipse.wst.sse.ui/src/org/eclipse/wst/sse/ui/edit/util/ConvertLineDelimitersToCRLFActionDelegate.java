@@ -35,8 +35,8 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
-import org.eclipse.wst.sse.ui.EditorPlugin;
-import org.eclipse.wst.sse.ui.Logger;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 
 
@@ -108,7 +108,7 @@ public class ConvertLineDelimitersToCRLFActionDelegate extends ResourceActionDel
 
 			if (fErrorStatus.getChildren().length > 0) {
 				status = fErrorStatus;
-				fErrorStatus = new MultiStatus(EditorPlugin.ID, IStatus.ERROR, ResourceHandler.getString("ConvertLineDelimitersToCRLFActionDelegate.errorStatusMessage"), null); //$NON-NLS-1$
+				fErrorStatus = new MultiStatus(SSEUIPlugin.ID, IStatus.ERROR, ResourceHandler.getString("ConvertLineDelimitersToCRLFActionDelegate.errorStatusMessage"), null); //$NON-NLS-1$
 			}
 
 			return status;
@@ -116,7 +116,7 @@ public class ConvertLineDelimitersToCRLFActionDelegate extends ResourceActionDel
 
 	}
 
-	private MultiStatus fErrorStatus = new MultiStatus(EditorPlugin.ID, IStatus.ERROR, ResourceHandler.getString("ConvertLineDelimitersToCRLFActionDelegate.errorStatusMessage"), null); //$NON-NLS-1$
+	private MultiStatus fErrorStatus = new MultiStatus(SSEUIPlugin.ID, IStatus.ERROR, ResourceHandler.getString("ConvertLineDelimitersToCRLFActionDelegate.errorStatusMessage"), null); //$NON-NLS-1$
 	protected String fLineDelimiter = "\r\n"; //$NON-NLS-1$
 
 	protected void convert(IProgressMonitor monitor, IFile file) {
@@ -154,10 +154,10 @@ public class ConvertLineDelimitersToCRLFActionDelegate extends ResourceActionDel
 			}
 		} catch (CoreException e) {
 			String message = MessageFormat.format(ResourceHandler.getString("ConvertLineDelimitersToCRLFActionDelegate.4"), new String[]{file.getName()}); //$NON-NLS-1$
-			fErrorStatus.add(new Status(IStatus.ERROR, EditorPlugin.ID, IStatus.ERROR, message, e));
+			fErrorStatus.add(new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.ERROR, message, e));
 		} catch (BadLocationException e) {
 			String message = MessageFormat.format(ResourceHandler.getString("ConvertLineDelimitersToCRLFActionDelegate.4"), new String[]{file.getName()}); //$NON-NLS-1$
-			fErrorStatus.add(new Status(IStatus.ERROR, EditorPlugin.ID, IStatus.ERROR, message, e));
+			fErrorStatus.add(new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.ERROR, message, e));
 		}
 	}
 
@@ -178,7 +178,7 @@ public class ConvertLineDelimitersToCRLFActionDelegate extends ResourceActionDel
 				}
 			} catch (CoreException e) {
 				String message = MessageFormat.format(ResourceHandler.getString("ConvertLineDelimitersToCRLFActionDelegate.4"), new String[]{resource.getFullPath().toString()}); //$NON-NLS-1$
-				fErrorStatus.add(new Status(IStatus.ERROR, EditorPlugin.ID, IStatus.ERROR, message, e));
+				fErrorStatus.add(new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.ERROR, message, e));
 			}
 		}
 	}
@@ -256,10 +256,10 @@ public class ConvertLineDelimitersToCRLFActionDelegate extends ResourceActionDel
 			outputStream.write(outputString.getBytes(file.getCharset()));
 		} catch (IOException e) {
 			String message = MessageFormat.format(ResourceHandler.getString("ConvertLineDelimitersToCRLFActionDelegate.4"), new String[]{file.getName()}); //$NON-NLS-1$
-			fErrorStatus.add(new Status(IStatus.ERROR, EditorPlugin.ID, IStatus.ERROR, message, e));
+			fErrorStatus.add(new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.ERROR, message, e));
 		} catch (CoreException e) {
 			String message = MessageFormat.format(ResourceHandler.getString("ConvertLineDelimitersToCRLFActionDelegate.4"), new String[]{file.getName()}); //$NON-NLS-1$
-			fErrorStatus.add(new Status(IStatus.ERROR, EditorPlugin.ID, IStatus.ERROR, message, e));
+			fErrorStatus.add(new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.ERROR, message, e));
 		} finally {
 			try {
 				if (outputStream != null)

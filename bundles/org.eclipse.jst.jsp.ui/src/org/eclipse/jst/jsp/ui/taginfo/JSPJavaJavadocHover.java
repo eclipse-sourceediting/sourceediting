@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.taginfo;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover;
 import org.eclipse.jface.text.IRegion;
@@ -18,7 +17,7 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.xml.core.document.XMLDocument;
 import org.eclipse.wst.xml.core.document.XMLModel;
 
@@ -30,7 +29,7 @@ public class JSPJavaJavadocHover extends JavadocHover {
 	
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		// get JSP translation object for this viewer's document
-		XMLModel xmlModel = (XMLModel) ((IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID)).getModelManager().getExistingModelForRead(textViewer.getDocument());
+		XMLModel xmlModel = (XMLModel) StructuredModelManager.getInstance().getModelManager().getExistingModelForRead(textViewer.getDocument());
 		try {
 			if(xmlModel != null) {
 				XMLDocument xmlDoc = xmlModel.getDocument();

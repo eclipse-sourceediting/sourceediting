@@ -14,20 +14,18 @@ import java.io.IOException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.search.SearchParticipant;
-import org.eclipse.jst.jsp.core.Logger;
+import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapterFactory;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationExtension;
 import org.eclipse.wst.common.encoding.exceptions.UnsupportedCharsetExceptionWithDetail;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.xml.core.document.XMLDocument;
 import org.eclipse.wst.xml.core.document.XMLModel;
-import org.osgi.framework.Bundle;
 
 /**
  * Created with a .jsp file, but should appear to be a .java file for indexing
@@ -76,34 +74,30 @@ public class JSPSearchDocument {
 	}
 	
 	private IModelManager getModelManager() {
-		IModelManager modelManager = null;
-		IModelManagerPlugin plugin = null;
-		Bundle mmBundle = Platform.getBundle(IModelManagerPlugin.ID);
-		int state = mmBundle.getState();
-		// I put in check to active bundle to avoid so many
-		// exceptions during unit tests ... apparently the search
-		// indexing continues, even when being shutdown. We should
-		// fix that "root" problem, but I'm not sure where right now.
-		// Note: the "active" state assume's we're never called early
-		// before already active once.
-		if (state == Bundle.ACTIVE) {
-			//System.out.println("state: " + state);
-			plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		}
-		// occassionally, during unit tests, I've seen this return null, I
-		// suspect because
-		// the workbench is shutting down. So, if we get 'null' back,
-		// we'll though relatively CoreException, just to get it logged.
-		// and cease processing.
-
-		if (plugin == null) {
-			Logger.log(Logger.INFO, "ModelManager not available, probably due to shutting down"); //$NON-NLS-1$
-			modelManager = new NullModelManager();
-		}
-		else {
-			modelManager = plugin.getModelManager();
-		}
-		return modelManager;
+//		IModelManager modelManager = null;
+//		Bundle mmBundle = Platform.getBundle("org.eclipse.wst.sse.core"); //$NON-NLS-1$
+//		int state = mmBundle.getState();
+//		// I put in check to active bundle to avoid so many
+//		// exceptions during unit tests ... apparently the search
+//		// indexing continues, even when being shutdown. We should
+//		// fix that "root" problem, but I'm not sure where right now.
+//		// Note: the "active" state assume's we're never called early
+//		// before already active once.
+//		if (state == Bundle.ACTIVE) {
+//			//System.out.println("state: " + state);
+//			modelManager = StructuredModelManager.getInstance().getModelManager();
+//		} else {
+//			// occassionally, during unit tests, I've seen this return null, I
+//			// suspect because
+//			// the workbench is shutting down. So, if we get 'null' back,
+//			// we'll though relatively CoreException, just to get it logged.
+//			// and cease processing.
+//			Logger.log(Logger.INFO, "ModelManager not available, probably due to shutting down"); //$NON-NLS-1$
+//			modelManager = new NullModelManager();
+//		}
+//		return modelManager;
+		// none of the above should be necessary since it is already done if you just call the below
+		return StructuredModelManager.getInstance().getModelManager();
 	}
 	
 	/**

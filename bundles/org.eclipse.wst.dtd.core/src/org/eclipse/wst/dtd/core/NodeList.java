@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
 import org.eclipse.wst.dtd.core.parser.DTDRegionTypes;
 
 
@@ -33,17 +34,17 @@ public class NodeList {
 
 	public Image getImage() {
 		if (listType == DTDRegionTypes.ELEMENT_TAG) {
-			return DTDPlugin.getInstance().getImage(DTDResource.FLDR_EL);
+			return DTDCorePlugin.getInstance().getImage(DTDResource.FLDR_EL);
 		} else if (listType == DTDRegionTypes.ENTITY_TAG) {
-			return DTDPlugin.getInstance().getImage(DTDResource.FLDR_ENT);
+			return DTDCorePlugin.getInstance().getImage(DTDResource.FLDR_ENT);
 		} else if (listType == DTDRegionTypes.NOTATION_TAG) {
-			return DTDPlugin.getInstance().getImage(DTDResource.FLDR_NOT);
+			return DTDCorePlugin.getInstance().getImage(DTDResource.FLDR_NOT);
 		} else if (listType == DTDRegionTypes.COMMENT_START) {
-			return DTDPlugin.getInstance().getImage(DTDResource.FLDR_COMM);
+			return DTDCorePlugin.getInstance().getImage(DTDResource.FLDR_COMM);
 		} else if (listType == DTDRegionTypes.ATTLIST_TAG) {
-			return DTDPlugin.getInstance().getImage(DTDResource.FLDR_ATTLIST);
+			return DTDCorePlugin.getInstance().getImage(DTDResource.FLDR_ATTLIST);
 		} else if (listType == DTDRegionTypes.UNKNOWN_CONTENT) {
-			return DTDPlugin.getInstance().getImage(DTDResource.FLDR_UNREC);
+			return DTDCorePlugin.getInstance().getImage(DTDResource.FLDR_UNREC);
 		} else
 			return null;
 	}
@@ -54,17 +55,17 @@ public class NodeList {
 
 	public String getName() {
 		if (listType == DTDRegionTypes.ELEMENT_TAG) {
-			return DTDPlugin.getDTDString("_UI_LABEL_NODE_LIST_ELEMENTS"); //$NON-NLS-1$
+			return DTDCorePlugin.getDTDString("_UI_LABEL_NODE_LIST_ELEMENTS"); //$NON-NLS-1$
 		} else if (listType == DTDRegionTypes.ENTITY_TAG) {
-			return DTDPlugin.getDTDString("_UI_LABEL_NODE_LIST_ENTITIES"); //$NON-NLS-1$
+			return DTDCorePlugin.getDTDString("_UI_LABEL_NODE_LIST_ENTITIES"); //$NON-NLS-1$
 		} else if (listType == DTDRegionTypes.NOTATION_TAG) {
-			return DTDPlugin.getDTDString("_UI_LABEL_NODE_LIST_NOTATIONS"); //$NON-NLS-1$
+			return DTDCorePlugin.getDTDString("_UI_LABEL_NODE_LIST_NOTATIONS"); //$NON-NLS-1$
 		} else if (listType == DTDRegionTypes.COMMENT_START) {
-			return DTDPlugin.getDTDString("_UI_LABEL_NODE_LIST_COMMENTS"); //$NON-NLS-1$
+			return DTDCorePlugin.getDTDString("_UI_LABEL_NODE_LIST_COMMENTS"); //$NON-NLS-1$
 		} else if (listType == DTDRegionTypes.ATTLIST_TAG) {
-			return DTDPlugin.getDTDString("_UI_LABEL_NODE_LIST_ATTRIBUTES"); //$NON-NLS-1$
+			return DTDCorePlugin.getDTDString("_UI_LABEL_NODE_LIST_ATTRIBUTES"); //$NON-NLS-1$
 		} else if (listType == DTDRegionTypes.UNKNOWN_CONTENT) {
-			return DTDPlugin.getDTDString("_UI_LABEL_NODE_LIST_OTHER"); //$NON-NLS-1$
+			return DTDCorePlugin.getDTDString("_UI_LABEL_NODE_LIST_OTHER"); //$NON-NLS-1$
 		}
 		return ""; //$NON-NLS-1$
 	}

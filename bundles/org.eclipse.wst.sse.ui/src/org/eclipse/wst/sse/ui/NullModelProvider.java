@@ -15,7 +15,6 @@ package org.eclipse.wst.sse.ui;
 import java.util.HashMap;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
@@ -23,8 +22,8 @@ import org.eclipse.jface.text.source.AnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.ui.texteditor.AbstractDocumentProvider;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 
 
 /**
@@ -53,8 +52,7 @@ public class NullModelProvider extends AbstractDocumentProvider implements IMode
 		// get the model manager from the plugin
 		// note: we can use the static "ID" variable, since we pre-req that
 		// plugin
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		return plugin.getModelManager();
+		return StructuredModelManager.getInstance().getModelManager();
 	}
 
 	private HashMap fModelMap = new HashMap(1);

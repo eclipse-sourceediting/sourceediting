@@ -29,6 +29,7 @@ import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckOptionDialog;
 import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckSelectionManager;
 import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckTarget;
 import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellChecker;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.util.Assert;
 
 
@@ -48,7 +49,7 @@ public class SpellCheckTargetImpl implements SpellCheckTarget {
 		}
 
 		public IStatus getStatus() {
-			return new Status(IStatus.ERROR, EditorPlugin.ID, 0, getMessage(), this);
+			return new Status(IStatus.ERROR, SSEUIPlugin.ID, 0, getMessage(), this);
 		}
 	}
 

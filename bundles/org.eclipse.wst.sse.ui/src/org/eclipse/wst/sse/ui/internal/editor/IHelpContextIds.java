@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.editor;
 
-import org.eclipse.wst.sse.ui.EditorPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 /**
  * Help context ids for the Source Editor.
@@ -25,7 +25,7 @@ import org.eclipse.wst.sse.ui.EditorPlugin;
 public interface IHelpContextIds {
 
 	// org.eclipse.wst.sse.ui.
-	public static final String PREFIX = EditorPlugin.ID + "."; //$NON-NLS-1$
+	public static final String PREFIX = SSEUIPlugin.ID + "."; //$NON-NLS-1$
 	// Abstract Source Editor Context Menu
 	// Content Assist
 	public static final String CONTMNU_CONTENTASSIST_HELPID = PREFIX + "xmlm1010"; //$NON-NLS-1$

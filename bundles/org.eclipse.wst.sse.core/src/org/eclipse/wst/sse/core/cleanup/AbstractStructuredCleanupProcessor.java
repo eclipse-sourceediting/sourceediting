@@ -21,15 +21,14 @@ import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.wst.common.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.format.IStructuredFormatProcessor;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
@@ -447,9 +446,7 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 	}
 
 	private IModelManager getModelManager() {
-
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		return plugin.getModelManager();
+		return StructuredModelManager.getInstance().getModelManager();
 	}
 
 	protected boolean isSiblingOf(Node node, Node endNode) {

@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
@@ -34,12 +33,12 @@ import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.ui.contentassist.IResourceDependentProcessor;
 import org.eclipse.wst.sse.ui.extension.IExtendedConfiguration;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.HTMLTextPresenter;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorBuilder;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorMetaData;
@@ -154,7 +153,7 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 	 */
 	public int[] getConfiguredTextHoverStateMasks(ISourceViewer sourceViewer, String contentType) {
 		// content type does not matter when getting hover state mask
-		TextHoverManager.TextHoverDescriptor[] hoverDescs = EditorPlugin.getDefault().getTextHoverManager().getTextHovers();
+		TextHoverManager.TextHoverDescriptor[] hoverDescs = SSEUIPlugin.getDefault().getTextHoverManager().getTextHovers();
 		int stateMasks[] = new int[hoverDescs.length];
 		int stateMasksLength = 0;
 		for (int i = 0; i < hoverDescs.length; i++) {
@@ -324,7 +323,7 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getTabWidth(org.eclipse.jface.text.source.ISourceViewer)
 	 */
 	public int getTabWidth(ISourceViewer sourceViewer) {
-		return ((AbstractUIPlugin) Platform.getPlugin(EditorPlugin.ID)).getPreferenceStore().getInt(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH);
+		return SSEUIPlugin.getDefault().getPreferenceStore().getInt(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH);
 	}
 
 	protected ITextEditor getTextEditor() {
@@ -419,5 +418,13 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 					((IResourceDependentProcessor) p).initialize(fResource);
 			}
 		}
+	}
+	
+	/**
+	 * Returns the text hovers available in StructuredTextEditors
+	 * @return TextHoverManager.TextHoverDescriptor[]
+	 */
+	protected TextHoverManager.TextHoverDescriptor[] getTextHovers() {
+		return SSEUIPlugin.getDefault().getTextHoverManager().getTextHovers();
 	}
 }

@@ -16,7 +16,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.wst.xml.ui.XMLEditorPlugin;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
 
 /**
@@ -30,7 +30,7 @@ public class SourceEditorImageHelper {
 	}
 
 	public Image createImage(String resource) {
-		ImageDescriptor desc = AbstractUIPlugin.imageDescriptorFromPlugin(XMLEditorPlugin.ID, resource);
+		ImageDescriptor desc = AbstractUIPlugin.imageDescriptorFromPlugin(XMLUIPlugin.ID, resource);
 		Image image = desc.createImage();
 		JFaceResources.getImageRegistry().put(resource, image);
 		return image;

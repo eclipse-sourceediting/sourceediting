@@ -24,7 +24,6 @@ import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchScope;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchSupport;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.search.ui.ISearchResult;
-import org.eclipse.wst.sse.ui.EditorPlugin;
 import org.eclipse.wst.sse.ui.internal.search.BasicSearchQuery;
 import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 
@@ -103,7 +102,7 @@ public class JSPSearchQuery extends BasicSearchQuery {
 			support.searchRunnable(getJavaElement(), singleFileScope, new JSPSingleFileSearchRequestor(getInstance()));
 		}
 		catch (Exception e){
-			status = new Status(IStatus.ERROR, EditorPlugin.ID, IStatus.OK, "", null); //$NON-NLS-1$
+			status = new Status(IStatus.ERROR, "org.eclipse.wst.sse.ui", IStatus.OK, "", null); //$NON-NLS-1$	//$NON-NLS-2$
 		}
 		return status;
 	}

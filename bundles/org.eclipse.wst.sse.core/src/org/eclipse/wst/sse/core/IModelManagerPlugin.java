@@ -10,12 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-/*
- * Created on Aug 6, 2003
- *
- * To change the template for this generated file go to
- * Window>Preferences>Java>Code Generation>Code and Comments
- */
+
 package org.eclipse.wst.sse.core;
 
 import org.eclipse.core.runtime.Preferences;
@@ -23,17 +18,20 @@ import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
 
 
 /**
- * @author davidw
- * 
- * To change the template for this generated type comment go to
- * Window>Preferences>Java>Code Generation>Code and Comments
+ * @deprecated use StructuredModelManager instead
  */
 public interface IModelManagerPlugin {
 	//  private static ModelManagerPlugin instance;
 	public final static String ID = "org.eclipse.wst.sse.core"; //$NON-NLS-1$
 
+	/**
+	 * @deprecated use ModelHandlerRegistry.getInstance() instead
+	 */
 	public abstract ModelHandlerRegistry getModelHandlerRegistry();
 
+	/**
+	 * @deprecated use StructuredModelManager.getInstance().getModelManager() instead
+	 */
 	public abstract IModelManager getModelManager();
 
 	public Preferences getPluginPreferences();

@@ -14,7 +14,6 @@ package org.eclipse.wst.sse.ui.internal.search;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.search.ui.text.AbstractTextSearchViewPage;
@@ -24,11 +23,10 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.IGotoMarker;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.wst.sse.ui.EditorPlugin;
-import org.eclipse.wst.sse.ui.Logger;
+import org.eclipse.wst.sse.ui.internal.Logger;
 
 
 /**
@@ -85,7 +83,7 @@ public class OccurrencesSearchViewPage extends AbstractTextSearchViewPage {
 
 	private IWorkbenchPage getActivePage() {
 
-		IWorkbench workbench = ((AbstractUIPlugin) Platform.getPlugin(EditorPlugin.ID)).getWorkbench();
+		IWorkbench workbench = PlatformUI.getWorkbench();
 		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
 		if (window == null)
 			return null;

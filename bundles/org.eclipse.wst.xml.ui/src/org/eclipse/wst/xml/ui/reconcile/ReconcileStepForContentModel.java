@@ -26,7 +26,6 @@ import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.PropagatingAdapter;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.sse.ui.Logger;
 import org.eclipse.wst.sse.ui.StructuredTextReconciler;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.reconcile.IReconcileAnnotationKey;
@@ -36,6 +35,7 @@ import org.eclipse.wst.xml.core.document.XMLDocument;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.ui.internal.Logger;
 
 
 /**

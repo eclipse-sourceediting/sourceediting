@@ -13,6 +13,7 @@
 package org.eclipse.wst.dtd.core;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
 import org.eclipse.wst.dtd.core.parser.DTDRegionTypes;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 
@@ -24,6 +25,6 @@ public class Notation extends ExternalNode {
 	}
 
 	public Image getImage() {
-		return DTDPlugin.getInstance().getImage(DTDResource.NOTATIONICON);
+		return DTDCorePlugin.getInstance().getImage(DTDResource.NOTATIONICON);
 	}
 }

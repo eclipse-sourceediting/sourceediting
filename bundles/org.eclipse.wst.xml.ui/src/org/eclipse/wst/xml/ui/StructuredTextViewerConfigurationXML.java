@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextHover;
@@ -31,12 +30,11 @@ import org.eclipse.jface.text.information.InformationPresenter;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.dtd.ui.style.LineStyleProviderForDTDSubSet;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
 import org.eclipse.wst.sse.ui.EditorPlugin;
 import org.eclipse.wst.sse.ui.StructuredTextReconciler;
@@ -181,9 +179,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 	}
 
 	private IModelManager getModelManager() {
-
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		return plugin.getModelManager();
+		return StructuredModelManager.getInstance().getModelManager();
 	}
 
 	public IReconciler getReconciler(ISourceViewer sourceViewer) {
@@ -206,7 +202,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 			//fReconciler.setEditor(editorPart);
 		}
 
-		IPreferenceStore store = ((AbstractUIPlugin) Platform.getPlugin(SSE_EDITOR_ID)).getPreferenceStore();
+		IPreferenceStore store = EditorPlugin.getDefault().getPreferenceStore();
 		boolean reconcilingEnabled = store.getBoolean(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
 
 		// the second time through, the strategies are set
@@ -263,7 +259,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		// content type and state mask
 		if ((contentType == StructuredTextPartitioner.ST_DEFAULT_PARTITION) || (contentType == StructuredTextPartitionerForXML.ST_DEFAULT_XML)) {
 			// check which of xml's text hover is handling stateMask
-			TextHoverManager.TextHoverDescriptor[] hoverDescs = EditorPlugin.getDefault().getTextHoverManager().getTextHovers();
+			TextHoverManager.TextHoverDescriptor[] hoverDescs = getTextHovers();
 			int i = 0;
 			while (i < hoverDescs.length) {
 				if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {

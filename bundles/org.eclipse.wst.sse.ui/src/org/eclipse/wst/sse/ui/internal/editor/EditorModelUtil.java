@@ -18,8 +18,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.wst.sse.core.IFactoryRegistry;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.ui.EditorPlugin;
-import org.eclipse.wst.sse.ui.Logger;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistryExtension;
@@ -34,7 +34,7 @@ import org.eclipse.wst.sse.ui.util.Assert;
 public class EditorModelUtil {
 
 	public static void addFactoriesTo(final IStructuredModel structuredModel) {
-		EditorPlugin plugin = ((EditorPlugin) Platform.getPlugin(EditorPlugin.ID));
+		SSEUIPlugin plugin = SSEUIPlugin.getDefault();
 		AdapterFactoryRegistry adapterRegistry = plugin.getAdapterFactoryRegistry();
 		String contentTypeId = structuredModel.getModelHandler().getAssociatedContentTypeId();
 

@@ -18,11 +18,10 @@ import java.util.Vector;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IPluginDescriptor;
-import org.eclipse.core.runtime.IPluginRegistry;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.sse.core.AdapterFactory;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
+import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.modelhandler.IDocumentTypeHandler;
 
 
@@ -79,23 +78,19 @@ public class PluginContributedFactoryReader {
 
 			// if className is null, then no one defined the extension point
 			// for adapter factories
-			IPluginDescriptor descriptor = null;
 			if (className != null) {
 				try {
 					factory = (AdapterFactory) element.createExecutableExtension(ATTR_CLASS);
-					//				Plugin plugin = null;
-					descriptor = element.getDeclaringExtension().getDeclaringPluginDescriptor();
-					//					plugin = descriptor.getPlugin();
 				} catch (CoreException e) {
 					// if an error occurs here, its probably that the plugin
 					// could not be found/loaded
-					org.eclipse.wst.sse.core.internal.Logger.logException("Could not find plugin: " + descriptor, e); //$NON-NLS-1$
+					org.eclipse.wst.sse.core.internal.Logger.logException("Could not find class: " + className, e); //$NON-NLS-1$
 				} catch (Exception e) {
 					// if an error occurs here, its probably that the plugin
 					// could not be found/loaded -- but in any case we just
 					// want
 					// to log the error and continue running and best we can.
-					org.eclipse.wst.sse.core.internal.Logger.logException("Could not find plugin: " + descriptor, e); //$NON-NLS-1$
+					org.eclipse.wst.sse.core.internal.Logger.logException("Could not find class: " + className, e); //$NON-NLS-1$
 				}
 				//				if (plugin != null) {
 				//					factory = oldAttributesCode(element, factory, className,
@@ -109,8 +104,8 @@ public class PluginContributedFactoryReader {
 
 	protected List loadRegistry(Object contentType) {
 		List factoryList = null; // new Vector();
-		IPluginRegistry pluginRegistry = Platform.getPluginRegistry();
-		IExtensionPoint point = pluginRegistry.getExtensionPoint(IModelManagerPlugin.ID, EXTENSION_POINT_ID);
+		IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
+		IExtensionPoint point = extensionRegistry.getExtensionPoint(SSECorePlugin.ID, EXTENSION_POINT_ID);
 		if (point != null) {
 			IConfigurationElement[] elements = point.getConfigurationElements();
 			if (elements.length > 0) {

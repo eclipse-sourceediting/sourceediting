@@ -19,7 +19,7 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.wst.xml.ui.XMLEditorPlugin;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
 
 /**
@@ -46,7 +46,7 @@ public class XMLEditorPluginImageHelper {
 
 	//	 save a descriptor for each image
 	private HashMap fImageDescRegistry = null;
-	private final String PLUGINID = XMLEditorPlugin.ID;
+	private final String PLUGINID = XMLUIPlugin.ID;
 
 	/**
 	 * Creates an image from the given resource and adds the image to the

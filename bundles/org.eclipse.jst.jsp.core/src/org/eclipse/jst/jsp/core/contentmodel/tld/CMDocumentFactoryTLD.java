@@ -17,11 +17,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jst.jsp.core.Logger;
 import org.eclipse.jst.jsp.core.contentmodel.ITaglibRecord;
 import org.eclipse.jst.jsp.core.contentmodel.JarRecord;
 import org.eclipse.jst.jsp.core.contentmodel.TLDRecord;
 import org.eclipse.jst.jsp.core.contentmodel.URLRecord;
+import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.CMAttributeDeclarationImpl;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.CMDocumentImpl;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.CMElementDeclarationImpl;

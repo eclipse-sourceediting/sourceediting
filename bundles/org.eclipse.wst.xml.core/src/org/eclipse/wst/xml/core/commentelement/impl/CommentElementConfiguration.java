@@ -19,10 +19,10 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPluginDescriptor;
-import org.eclipse.wst.xml.core.Logger;
 import org.eclipse.wst.xml.core.commentelement.CommentElementAdapter;
 import org.eclipse.wst.xml.core.commentelement.CommentElementHandler;
 import org.eclipse.wst.xml.core.document.XMLElement;
+import org.eclipse.wst.xml.core.internal.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -158,7 +158,7 @@ public class CommentElementConfiguration {
 					fID = getProperty("class"); //$NON-NLS-1$				
 				} else {
 					StringBuffer buf = new StringBuffer();
-					buf.append(getHandlerPluginDescriptor().getUniqueIdentifier());
+					buf.append(fElement.getDeclaringExtension().getNamespace());
 					buf.append('.');
 					buf.append(getProperty("elementname")); //$NON-NLS-1$
 					fID = buf.toString();
@@ -168,6 +168,9 @@ public class CommentElementConfiguration {
 		return fID;
 	}
 
+	/**
+	 * @deprecated this should not be needed by anyone
+	 */
 	public IPluginDescriptor getHandlerPluginDescriptor() {
 		return fElement.getDeclaringExtension().getDeclaringPluginDescriptor();
 	}

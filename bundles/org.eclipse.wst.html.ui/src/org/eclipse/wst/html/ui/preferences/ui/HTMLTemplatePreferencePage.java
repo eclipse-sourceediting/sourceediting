@@ -10,12 +10,11 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.preferences.ui;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.ui.texteditor.templates.TemplatePreferencePage;
-import org.eclipse.wst.html.ui.HTMLEditorPlugin;
+import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
 
 
@@ -25,7 +24,7 @@ import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
 public class HTMLTemplatePreferencePage extends TemplatePreferencePage {
 	
 	public HTMLTemplatePreferencePage() {
-		HTMLEditorPlugin htmlEditorPlugin = (HTMLEditorPlugin) Platform.getPlugin(HTMLEditorPlugin.ID);
+		HTMLUIPlugin htmlEditorPlugin = HTMLUIPlugin.getDefault();
 		
 		setPreferenceStore(htmlEditorPlugin.getPreferenceStore());
 		setTemplateStore(htmlEditorPlugin.getTemplateStore());
@@ -37,7 +36,7 @@ public class HTMLTemplatePreferencePage extends TemplatePreferencePage {
 	 */
 	public boolean performOk() {
   	  boolean ok = super.performOk();
-  	  Platform.getPlugin(HTMLEditorPlugin.ID).savePluginPreferences();
+  	  HTMLUIPlugin.getDefault().savePluginPreferences();
 	  return ok;
 	}
 	

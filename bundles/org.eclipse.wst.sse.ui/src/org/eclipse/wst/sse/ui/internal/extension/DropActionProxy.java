@@ -21,18 +21,17 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
-import org.eclipse.wst.sse.ui.Logger;
 import org.eclipse.wst.sse.ui.extension.IExtendedSimpleEditor;
 import org.eclipse.wst.sse.ui.extensions.ISelfValidateEditAction;
+import org.eclipse.wst.sse.ui.internal.Logger;
 
 
 /**
@@ -110,8 +109,7 @@ public class DropActionProxy implements InvocationHandler {
 	 *  
 	 */
 	private IModelManager getModelManager() {
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		return plugin.getModelManager();
+		return StructuredModelManager.getInstance().getModelManager();
 	}
 
 	/**

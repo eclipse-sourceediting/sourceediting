@@ -15,8 +15,6 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Iterator;
 
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.ui.internal.editor.IHelpContextIds;
 import org.eclipse.jst.jsp.ui.internal.nls.ResourceHandler;
 import org.eclipse.swt.widgets.Composite;
@@ -25,7 +23,7 @@ import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.html.ui.style.IStyleConstantsHTML;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore.OverlayKey;
 import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
@@ -101,14 +99,8 @@ public class JSPColorPage extends XMLColorPage {
 	}
 
 	protected void setupPicker(StyledTextColorPicker picker) {
-
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		if (plugin != null) {
-			IModelManager mmanager = plugin.getModelManager();
-			picker.setParser(mmanager.createStructuredDocumentFor(IContentTypeIdentifier.ContentTypeID_JSP).getParser());
-		}
-		else
-			picker.setParser(new JSPSourceParser());
+		IModelManager mmanager = StructuredModelManager.getInstance().getModelManager();
+		picker.setParser(mmanager.createStructuredDocumentFor(IContentTypeIdentifier.ContentTypeID_JSP).getParser());
 
 		// create descriptions for hilighting types
 		Dictionary descriptions = new Hashtable();

@@ -67,6 +67,9 @@ public class CommentElementAdapter implements TagAdapter {
 		return getConfiguration().getHandlerID();
 	}
 
+	/**
+	 * @deprecated this should not be needed by anyone
+	 */
 	public IPluginDescriptor getHandlerPluginDescriptor() {
 		return fConfiguration.getHandlerPluginDescriptor();
 	}

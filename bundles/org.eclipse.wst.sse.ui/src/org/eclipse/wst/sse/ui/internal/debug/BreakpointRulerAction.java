@@ -20,7 +20,6 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.model.IBreakpoint;
@@ -43,11 +42,11 @@ import org.eclipse.ui.texteditor.AbstractMarkerAnnotationModel;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.IUpdate;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.ui.EditorPlugin;
-import org.eclipse.wst.sse.ui.Logger;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.IBreakpointProvider;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.extension.BreakpointProviderBuilder;
 
 
@@ -100,7 +99,7 @@ public abstract class BreakpointRulerAction extends Action implements IUpdate {
 
 		IEditorPart editorPart = null;
 		if (resource == null) {
-			IWorkbench workbench = EditorPlugin.getDefault().getWorkbench();
+			IWorkbench workbench = SSEUIPlugin.getDefault().getWorkbench();
 			if (workbench != null) {
 				IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
 				if (window != null) {
@@ -121,8 +120,7 @@ public abstract class BreakpointRulerAction extends Action implements IUpdate {
 									}
 									if (textEditor != null) {
 										IDocument textDocument = textEditor.getDocumentProvider().getDocument(input);
-										IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-										model = plugin.getModelManager().getExistingModelForRead(textDocument);
+										model = StructuredModelManager.getInstance().getModelManager().getExistingModelForRead(textDocument);
 										if (model != null) {
 											resource = BreakpointProviderBuilder.getInstance().getResource(input, model.getContentTypeIdentifier(), getFileExtension(input));
 										}

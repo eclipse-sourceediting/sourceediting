@@ -43,6 +43,7 @@ import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
@@ -51,7 +52,6 @@ import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.common.contentmodel.util.DOMContentBuilder;
 import org.eclipse.wst.common.contentmodel.util.NamespaceInfo;
-import org.eclipse.wst.xml.ui.XMLEditorPlugin;
 import org.eclipse.wst.xml.ui.dialogs.NamespaceInfoErrorHelper;
 import org.eclipse.wst.xml.ui.dialogs.SelectFileOrXMLCatalogIdPanel;
 import org.eclipse.wst.xml.ui.dialogs.UpdateListener;
@@ -109,7 +109,7 @@ public class NewXMLWizard extends NewModelWizard
     if (errorInfo[0] == null)
     {
       NewXMLWizard wizard = new NewXMLWizard(file, cmDocument);
-      wizard.init(XMLEditorPlugin.getInstance().getWorkbench(), structuredSelection);
+      wizard.init(PlatformUI.getWorkbench(), structuredSelection);
       wizard.setNeedsProgressMonitor(true);
       WizardDialog dialog = new WizardDialog(shell, wizard);
       dialog.create();          
@@ -304,7 +304,7 @@ public class NewXMLWizard extends NewModelWizard
         
 		newFile.refreshLocal(1, null);
 		
-		IWorkbenchWindow workbenchWindow = XMLEditorPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		BasicNewResourceWizard.selectAndReveal(newFile, workbenchWindow); 
         openEditor(newFile);
       }
@@ -320,11 +320,11 @@ public class NewXMLWizard extends NewModelWizard
   {  
 	// Open editor on new file.
   	String editorId = null;
-  	IEditorDescriptor editor = XMLEditorPlugin.getInstance().getWorkbench().getEditorRegistry().getDefaultEditor(file.getLocation().toOSString());
+  	IEditorDescriptor editor = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(file.getLocation().toOSString());
   	if(editor != null){
   		editorId = editor.getId();
   	}
-  	IWorkbenchWindow dw = XMLEditorPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow();
+  	IWorkbenchWindow dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 	try {
 		if (dw != null) {
 			IWorkbenchPage page = dw.getActivePage();

@@ -37,6 +37,7 @@ import org.eclipse.wst.sse.core.events.StructuredDocumentRegionsReplacedEvent;
 import org.eclipse.wst.sse.core.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.Logger;
+import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.internal.nls.ResourceHandler1;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
@@ -242,16 +243,11 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	 */
 	private ModelManagerImpl _getModelManager() {
 		// TODO_future: redesign so we don't need this 'Impl' version
-		IModelManager modelManager = null;
-
-
 		if (fModelManager == null) {
-			IModelManagerPlugin plugin = null;
-			Bundle mmBundle = Platform.getBundle(IModelManagerPlugin.ID);
+			Bundle mmBundle = Platform.getBundle(SSECorePlugin.ID);
 			int state = mmBundle.getState();
 			if (!(state == Bundle.STOPPING || state == Bundle.UNINSTALLED)) {
-				plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-				fModelManager = plugin.getModelManager();
+				fModelManager = StructuredModelManager.getInstance().getModelManager();
 			} else {
 				fModelManager = new NullModelManager();
 			}

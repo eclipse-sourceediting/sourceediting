@@ -18,12 +18,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.custom.BusyIndicator;
-import org.eclipse.wst.sse.ui.EditorPlugin;
-import org.eclipse.wst.sse.ui.Logger;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.extension.RegistryReader;
+import org.osgi.framework.Bundle;
 
 
 /**
@@ -62,8 +62,9 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 		final Object[] result = new Object[1];
 		// If plugin has been loaded create extension.
 		// Otherwise, show busy cursor then create extension.
-		IPluginDescriptor plugin = element.getDeclaringExtension().getDeclaringPluginDescriptor();
-		if (plugin.isPluginActivated()) {
+		String pluginId = element.getDeclaringExtension().getNamespace();
+		Bundle bundle = Platform.getBundle(pluginId);
+		if (bundle.getState() == Bundle.ACTIVE) {
 			try {
 				result[0] = element.createExecutableExtension(classAttribute);
 			} catch (Exception e) {
@@ -141,7 +142,7 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 		if (configurationMap == null) {
 			configurationMap = new HashMap(0);
 			synchronized (configurationMap) {
-				readRegistry(Platform.getPluginRegistry(), EditorPlugin.ID, EP_EXTENDEDCONFIGURATION);
+				readRegistry(Platform.getExtensionRegistry(), SSEUIPlugin.ID, EP_EXTENDEDCONFIGURATION);
 				if (debugTime) {
 					System.out.println(getClass().getName() + "#readRegistry():  " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
 					time0 = System.currentTimeMillis();
@@ -168,7 +169,7 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 		if (configurationMap == null) {
 			configurationMap = new HashMap(0);
 			synchronized (configurationMap) {
-				readRegistry(Platform.getPluginRegistry(), EditorPlugin.ID, EP_EXTENDEDCONFIGURATION);
+				readRegistry(Platform.getExtensionRegistry(), SSEUIPlugin.ID, EP_EXTENDEDCONFIGURATION);
 				if (debugTime) {
 					System.out.println(getClass().getName() + "#readRegistry():  " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$
 					time0 = System.currentTimeMillis();

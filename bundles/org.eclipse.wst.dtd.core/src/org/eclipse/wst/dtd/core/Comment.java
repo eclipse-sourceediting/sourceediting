@@ -13,6 +13,7 @@
 package org.eclipse.wst.dtd.core;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
 import org.eclipse.wst.dtd.core.internal.text.RegionIterator;
 import org.eclipse.wst.dtd.core.parser.DTDRegionTypes;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -30,7 +31,7 @@ public class Comment extends NamedTopLevelNode {
 	}
 
 	public Image getImage() {
-		return DTDPlugin.getInstance().getImage(DTDResource.COMMENTICON);
+		return DTDCorePlugin.getInstance().getImage(DTDResource.COMMENTICON);
 	}
 
 	public String getName() {
@@ -64,7 +65,7 @@ public class Comment extends NamedTopLevelNode {
 	}
 
 	public void setText(String newText) {
-		beginRecording(this, DTDPlugin.getDTDString("_UI_LABEL_COMMENT_CHG")); //$NON-NLS-1$
+		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_COMMENT_CHG")); //$NON-NLS-1$
 		int flatNodeStart = getStructuredDTDDocumentRegion().getStartOffset();
 		StartEndPair pair = new StartEndPair();
 		getStartAndEndOffsetForText(pair);

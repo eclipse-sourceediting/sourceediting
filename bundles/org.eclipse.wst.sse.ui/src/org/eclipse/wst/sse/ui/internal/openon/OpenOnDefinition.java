@@ -18,10 +18,11 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IPluginDescriptor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.custom.BusyIndicator;
-import org.eclipse.wst.sse.ui.Logger;
 import org.eclipse.wst.sse.ui.extensions.openon.IOpenOn;
+import org.eclipse.wst.sse.ui.internal.Logger;
+import org.osgi.framework.Bundle;
 
 
 /**
@@ -82,8 +83,9 @@ public class OpenOnDefinition {
 		final String name = propertyName;
 
 		final Object[] result = new Object[1];
-		IPluginDescriptor plugin = element.getDeclaringExtension().getDeclaringPluginDescriptor();
-		if (plugin.isPluginActivated()) {
+		String pluginId = element.getDeclaringExtension().getNamespace();
+		Bundle bundle = Platform.getBundle(pluginId);
+		if (bundle.getState() == Bundle.ACTIVE) {
 			try {
 				return element.createExecutableExtension(name);
 			} catch (CoreException e) {

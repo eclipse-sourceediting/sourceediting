@@ -31,8 +31,8 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.util.DocumentInputStream;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.extension.ExtendedConfigurationBuilder;
@@ -172,8 +172,7 @@ public class EditStructuredTextEditorPreferencesAction extends Action implements
 	}
 
 	private IModelManager getModelManager() {
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		return plugin.getModelManager();
+		return StructuredModelManager.getInstance().getModelManager();
 	}
 
 	public boolean isVisible() {

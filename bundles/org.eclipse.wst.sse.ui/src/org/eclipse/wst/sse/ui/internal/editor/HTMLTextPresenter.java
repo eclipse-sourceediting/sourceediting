@@ -25,7 +25,7 @@ import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.wst.sse.ui.Logger;
+import org.eclipse.wst.sse.ui.internal.Logger;
 
 
 /**

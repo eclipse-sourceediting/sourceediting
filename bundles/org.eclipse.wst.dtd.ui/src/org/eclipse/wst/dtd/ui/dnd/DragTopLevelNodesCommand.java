@@ -21,12 +21,12 @@ import org.eclipse.wst.common.ui.dnd.DefaultDragAndDropCommand;
 import org.eclipse.wst.dtd.core.DTDFile;
 import org.eclipse.wst.dtd.core.DTDNode;
 import org.eclipse.wst.dtd.core.TopLevelNode;
-import org.eclipse.wst.dtd.ui.DTDEditorPlugin;
+import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 
 public class DragTopLevelNodesCommand extends DefaultDragAndDropCommand {
 
-	static private final String moveNode = DTDEditorPlugin.getResourceString("_UI_MOVE_NODE"); //$NON-NLS-1$
-	static private final String moveNodes = DTDEditorPlugin.getResourceString("_UI_MOVE_NODES"); //$NON-NLS-1$
+	static private final String moveNode = DTDUIPlugin.getResourceString("_UI_MOVE_NODE"); //$NON-NLS-1$
+	static private final String moveNodes = DTDUIPlugin.getResourceString("_UI_MOVE_NODES"); //$NON-NLS-1$
 
 	public DragTopLevelNodesCommand(Object target, float location, int operations, int operation, Collection sources) {
 		super(target, location, operations, operation, sources);

@@ -14,13 +14,12 @@ package org.eclipse.wst.sse.ui.openon;
 
 
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.extensions.openon.IOpenOn;
 import org.eclipse.wst.sse.ui.internal.openon.OpenOnBuilder;
 import org.eclipse.wst.sse.ui.internal.openon.OpenOnDefinition;
@@ -55,7 +54,7 @@ public class OpenOnProvider {
 	protected String getContentType(IDocument document) {
 		String type = null;
 
-		IModelManager mgr = ((IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID)).getModelManager();
+		IModelManager mgr = StructuredModelManager.getInstance().getModelManager();
 		IStructuredModel model = null;
 		try {
 			model = mgr.getExistingModelForRead(document);

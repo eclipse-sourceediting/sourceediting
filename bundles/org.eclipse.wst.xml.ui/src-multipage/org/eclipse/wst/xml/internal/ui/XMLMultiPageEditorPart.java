@@ -50,9 +50,9 @@ import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 import org.eclipse.wst.xml.core.XMLPreferenceNames;
-import org.eclipse.wst.xml.ui.Logger;
 import org.eclipse.wst.xml.ui.StructuredTextEditorXML;
-import org.eclipse.wst.xml.ui.XMLEditorPlugin;
+import org.eclipse.wst.xml.ui.internal.Logger;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.tabletree.XMLTableTreeHelpContextIds;
 import org.eclipse.wst.xml.ui.internal.tabletree.XMLTableTreeViewer;
 import org.w3c.dom.Document;
@@ -519,7 +519,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 	}
 
 	protected IPreferenceStore getPreferenceStore() {
-		return XMLEditorPlugin.getDefault().getPreferenceStore();
+		return XMLUIPlugin.getDefault().getPreferenceStore();
 	}
 
 	/**
@@ -764,7 +764,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 	 */
 	public IStatus validateEdit(Shell context) {
 		if (getTextEditor() == null)
-			return new Status(IStatus.ERROR, XMLEditorPlugin.ID, IStatus.INFO, "", null); //$NON-NLS-1$
+			return new Status(IStatus.ERROR, XMLUIPlugin.ID, IStatus.INFO, "", null); //$NON-NLS-1$
 
 		return getTextEditor().validateEdit(context);
 	}

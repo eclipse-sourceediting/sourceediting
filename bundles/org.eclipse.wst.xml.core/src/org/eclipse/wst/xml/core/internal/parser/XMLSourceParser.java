@@ -35,7 +35,7 @@ import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.Debug;
-import org.eclipse.wst.xml.core.Logger;
+import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 
 

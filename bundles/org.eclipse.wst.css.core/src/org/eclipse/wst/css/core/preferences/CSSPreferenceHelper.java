@@ -10,11 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.css.core.preferences;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.wst.css.core.CSSCorePlugin;
 import org.eclipse.wst.css.core.document.ICSSModel;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
+import org.eclipse.wst.sse.core.ModelPlugin;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 
 
@@ -76,7 +75,7 @@ public class CSSPreferenceHelper {
 			return "\t"; //$NON-NLS-1$
 		}
 		else {
-			int n = getModelManagerPlugin().getPluginPreferences().getInt(CommonModelPreferenceNames.TAB_WIDTH);
+			int n = ModelPlugin.getDefault().getPluginPreferences().getInt(CommonModelPreferenceNames.TAB_WIDTH);
 			StringBuffer buf = new StringBuffer();
 			while (0 < n--) {
 				buf.append(" "); //$NON-NLS-1$
@@ -260,7 +259,7 @@ public class CSSPreferenceHelper {
 	}
 
 	private Preferences getPreferences() {
-		CSSCorePlugin cssModelPlugin = (CSSCorePlugin) Platform.getPlugin("org.eclipse.wst.css.core"); //$NON-NLS-1$
+		CSSCorePlugin cssModelPlugin = CSSCorePlugin.getDefault();
 		return cssModelPlugin.getPluginPreferences();
 	}
 
@@ -269,10 +268,4 @@ public class CSSPreferenceHelper {
 	}
 
 	private static CSSPreferenceHelper fInstance = null;
-
-	private IModelManagerPlugin getModelManagerPlugin() {
-
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		return plugin;
-	}
 }

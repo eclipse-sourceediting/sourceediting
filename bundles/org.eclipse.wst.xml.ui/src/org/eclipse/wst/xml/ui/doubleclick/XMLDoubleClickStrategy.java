@@ -12,13 +12,12 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.doubleclick;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.DefaultTextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
@@ -71,8 +70,7 @@ public class XMLDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 	}
 
 	protected IModelManager getModelManager() {
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		return plugin.getModelManager();
+		return StructuredModelManager.getInstance().getModelManager();
 	}
 
 	protected Point getWord(String string, int cursor) {

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.jst.jsp.core.Logger;
+import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.wst.sse.core.parser.BlockMarker;
 import org.eclipse.wst.sse.core.parser.BlockTokenizer;
 import org.eclipse.wst.sse.core.parser.TagMarker;
@@ -863,7 +863,7 @@ public class JSPTokenizer implements BlockTokenizer, XMLJSPRegionContexts {
 
 	private JSPParserRegionFactory fRegionFactory = new JSPParserRegionFactory();
 
-	private static final String rcsver = "$Id: JSPTokenizer.java,v 1.1 2004/11/23 19:11:04 nitind Exp $";//$NON-NLS-1$
+	private static final String rcsver = "$Id: JSPTokenizer.java,v 1.2 2004/12/07 21:45:52 david_williams Exp $";//$NON-NLS-1$
 
 	/**
 	 * user method 

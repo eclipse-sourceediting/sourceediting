@@ -12,16 +12,15 @@ package org.eclipse.wst.html.core.document;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IPluginRegistry;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 
 /**
  */
 class HTMLDocumentTypeRegistryReader {
 
 	//
-	private final static String PLUGIN_ID = IModelManagerPlugin.ID; //$NON-NLS-1$
+	private final static String PLUGIN_ID = "org.eclipse.wst.sse.core"; //$NON-NLS-1$
 	private final static String EXTENSION_POINT_ID = "documentTypes"; //$NON-NLS-1$
 	private final static String TAG_NAME = "documentType"; //$NON-NLS-1$
 	private final static String ATT_PID = "publicID"; //$NON-NLS-1$
@@ -48,8 +47,8 @@ class HTMLDocumentTypeRegistryReader {
 	void readRegistry(HTMLDocumentTypeRegistry reg) {
 		if (reg == null)
 			return;
-		IPluginRegistry pluginRegistry = Platform.getPluginRegistry();
-		IExtensionPoint point = pluginRegistry.getExtensionPoint(PLUGIN_ID, EXTENSION_POINT_ID);
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IExtensionPoint point = registry.getExtensionPoint(PLUGIN_ID, EXTENSION_POINT_ID);
 		if (point != null) {
 			IConfigurationElement[] elements = point.getConfigurationElements();
 			for (int i = 0; i < elements.length; i++) {

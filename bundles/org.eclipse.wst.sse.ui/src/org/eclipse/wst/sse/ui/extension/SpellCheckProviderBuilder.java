@@ -19,13 +19,13 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IPluginDescriptor;
-import org.eclipse.core.runtime.IPluginRegistry;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.custom.BusyIndicator;
-import org.eclipse.wst.sse.ui.Logger;
 import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckProvider;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.extension.RegistryReader;
+import org.osgi.framework.Bundle;
 
 
 /**
@@ -66,10 +66,11 @@ public class SpellCheckProviderBuilder extends RegistryReader {
 	public static Object createExtension(final IConfigurationElement element, final String classAttribute) {
 		// If plugin has been loaded create extension.
 		// Otherwise, show busy cursor then create extension.
-		IPluginDescriptor plugin = element.getDeclaringExtension().getDeclaringPluginDescriptor();
 		final Object[] result = new Object[1];
-
-		if (plugin.isPluginActivated()) {
+		
+		String pluginId = element.getDeclaringExtension().getNamespace();
+		Bundle bundle = Platform.getBundle(pluginId);
+		if (bundle.getState() == Bundle.ACTIVE) {
 			try {
 				return createExecutableExtension(element, classAttribute);
 			} catch (Exception e) {
@@ -218,7 +219,7 @@ public class SpellCheckProviderBuilder extends RegistryReader {
 	protected void readContributions(String tag, String extensionPoint) {
 		cache = null;
 		targetContributionTag = tag;
-		IPluginRegistry registry = Platform.getPluginRegistry();
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		readRegistry(registry, PLUGIN_ID, extensionPoint);
 	}
 

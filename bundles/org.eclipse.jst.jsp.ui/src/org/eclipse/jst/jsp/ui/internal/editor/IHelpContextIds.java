@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.editor;
 
-import org.eclipse.jst.jsp.ui.JSPEditorPlugin;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 
 /**
  * Help context ids for the JSP Source Editor.
@@ -21,7 +21,7 @@ import org.eclipse.jst.jsp.ui.JSPEditorPlugin;
  */
 public interface IHelpContextIds {
 	// org.eclipse.jst.jsp.ui.
-	public static final String PREFIX = JSPEditorPlugin.ID + "."; //$NON-NLS-1$
+	public static final String PREFIX = JSPUIPlugin.ID + "."; //$NON-NLS-1$
 	
 	// JSP Source page editor
 	public static final String JSP_SOURCEVIEW_HELPID = PREFIX + "ejsp0000"; //$NON-NLS-1$

@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.internal.ui.text.java.JavaCompletionProposal;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
@@ -39,6 +38,7 @@ import org.eclipse.jst.jsp.core.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.document.PageDirectiveAdapterFactory;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.wst.common.contentmodel.CMDocument;
 import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
@@ -55,10 +55,10 @@ import org.eclipse.wst.html.core.internal.text.rules.StructuredTextPartitionerFo
 import org.eclipse.wst.html.ui.internal.contentassist.HTMLContentAssistProcessor;
 import org.eclipse.wst.javascript.common.ui.contentassist.JavaScriptContentAssistProcessor;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.contentmodel.CMDocType;
 import org.eclipse.wst.sse.core.contentmodel.CMDocumentTracker;
 import org.eclipse.wst.sse.core.contentmodel.CMNodeWrapper;
@@ -304,143 +304,139 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 				// will simulate
 				// a full Document and then adjust the offset numbers in the
 				// list of results.
-				IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
 				IStructuredModel internalModel = null;
-				if (plugin != null) {
-					IModelManager mmanager = plugin.getModelManager();
-					internalModel = mmanager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_JSP);
-					XMLNode xmlNode = null;
-					XMLModel xmlOuterModel = null;
-					if (contentAssistRequest.getNode() instanceof XMLNode) {
-						xmlNode = (XMLNode) contentAssistRequest.getNode();
-						xmlOuterModel = xmlNode.getModel();
-						internalModel.setResolver(xmlOuterModel.getResolver());
-						internalModel.setBaseLocation(xmlOuterModel.getBaseLocation());
+				IModelManager mmanager = StructuredModelManager.getInstance().getModelManager();
+				internalModel = mmanager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_JSP);
+				XMLNode xmlNode = null;
+				XMLModel xmlOuterModel = null;
+				if (contentAssistRequest.getNode() instanceof XMLNode) {
+					xmlNode = (XMLNode) contentAssistRequest.getNode();
+					xmlOuterModel = xmlNode.getModel();
+					internalModel.setResolver(xmlOuterModel.getResolver());
+					internalModel.setBaseLocation(xmlOuterModel.getBaseLocation());
+				}
+				String contents = StringUtils.strip(contentAssistRequest.getText());
+				if (xmlNode != null && contents != null) {
+					int additionalShifts = 0;
+					// Be sure that custom tags from taglibs also show up
+					// by
+					// adding taglib declarations to the internal model.
+					TLDCMDocumentManager mgr = TaglibController.getTLDCMDocumentManager(xmlOuterModel.getStructuredDocument());
+					if (mgr != null) {
+						List trackers = mgr.getCMDocumentTrackers(contentAssistRequest.getReplacementBeginPosition());
+						if (trackers != null) {
+							for (i = 0; i < trackers.size(); i++) {
+								CMDocumentTracker tracker = (CMDocumentTracker) trackers.get(i);
+								String declaration = tracker.getStructuredDocumentRegion().getText();
+								if (declaration != null) {
+									contents = declaration + contents;
+									additionalShifts += declaration.length();
+								}
+							}
+						}
 					}
-					String contents = StringUtils.strip(contentAssistRequest.getText());
-					if (xmlNode != null && contents != null) {
-						int additionalShifts = 0;
-						// Be sure that custom tags from taglibs also show up
-						// by
-						// adding taglib declarations to the internal model.
-						TLDCMDocumentManager mgr = TaglibController.getTLDCMDocumentManager(xmlOuterModel.getStructuredDocument());
-						if (mgr != null) {
-							List trackers = mgr.getCMDocumentTrackers(contentAssistRequest.getReplacementBeginPosition());
-							if (trackers != null) {
-								for (i = 0; i < trackers.size(); i++) {
-									CMDocumentTracker tracker = (CMDocumentTracker) trackers.get(i);
-									String declaration = tracker.getStructuredDocumentRegion().getText();
-									if (declaration != null) {
-										contents = declaration + contents;
-										additionalShifts += declaration.length();
-									}
-								}
+					// Also copy any jsp:useBean tags so that
+					// jsp:[gs]etProperty will function
+					Document doc = null;
+					if (contentAssistRequest.getNode().getNodeType() == Node.DOCUMENT_NODE)
+						doc = (Document) node;
+					else
+						doc = node.getOwnerDocument();
+					NodeList useBeans = doc.getElementsByTagName(JSP12Namespace.ElementName.USEBEAN);
+					for (int k = 0; k < useBeans.getLength(); k++) {
+						XMLNode useBean = (XMLNode) useBeans.item(k);
+						if (useBean.getStartOffset() < contentAssistRequest.getReplacementBeginPosition()) {
+							StringBuffer useBeanText = new StringBuffer("<jsp:useBean"); //$NON-NLS-1$
+							for (int j = 0; j < useBean.getAttributes().getLength(); j++) {
+								Attr attr = (Attr) useBean.getAttributes().item(j);
+								useBeanText.append(' ');
+								useBeanText.append(attr.getName());
+								useBeanText.append("=\""); //$NON-NLS-1$
+								useBeanText.append(attr.getValue());
+								useBeanText.append('"');
 							}
+							useBeanText.append("/>"); //$NON-NLS-1$
+							additionalShifts += useBeanText.length();
+							contents = useBeanText.toString() + contents;
 						}
-						// Also copy any jsp:useBean tags so that
-						// jsp:[gs]etProperty will function
-						Document doc = null;
-						if (contentAssistRequest.getNode().getNodeType() == Node.DOCUMENT_NODE)
-							doc = (Document) node;
-						else
-							doc = node.getOwnerDocument();
-						NodeList useBeans = doc.getElementsByTagName(JSP12Namespace.ElementName.USEBEAN);
-						for (int k = 0; k < useBeans.getLength(); k++) {
-							XMLNode useBean = (XMLNode) useBeans.item(k);
-							if (useBean.getStartOffset() < contentAssistRequest.getReplacementBeginPosition()) {
-								StringBuffer useBeanText = new StringBuffer("<jsp:useBean"); //$NON-NLS-1$
-								for (int j = 0; j < useBean.getAttributes().getLength(); j++) {
-									Attr attr = (Attr) useBean.getAttributes().item(j);
-									useBeanText.append(' ');
-									useBeanText.append(attr.getName());
-									useBeanText.append("=\""); //$NON-NLS-1$
-									useBeanText.append(attr.getValue());
-									useBeanText.append('"');
-								}
-								useBeanText.append("/>"); //$NON-NLS-1$
-								additionalShifts += useBeanText.length();
-								contents = useBeanText.toString() + contents;
-							}
-						}
-						internalModel.getStructuredDocument().set(contents);
-						int internalOffset = 0;
-						boolean quoted = false;
-						// if quoted, use position inside and shift by one
-						if (contentAssistRequest.getMatchString().length() > 0 && (contentAssistRequest.getMatchString().charAt(0) == '\'' || contentAssistRequest.getMatchString().charAt(0) == '"')) {
-							internalOffset = contentAssistRequest.getMatchString().length() - 1 + additionalShifts;
-							quoted = true;
-						}
-						// if unquoted, use position inside
-						else if (contentAssistRequest.getMatchString().length() > 0 && contentAssistRequest.getMatchString().charAt(0) == '<')
-							internalOffset = contentAssistRequest.getMatchString().length() + additionalShifts;
-						else
-							internalOffset = contentAssistRequest.getReplacementBeginPosition() - contentAssistRequest.getStartOffset() + additionalShifts;
-						depthCount++;
-						IndexedRegion internalNode = null;
-						int tmpOffset = internalOffset;
-						while (internalNode == null && tmpOffset >= 0)
-							internalNode = internalModel.getIndexedRegion(tmpOffset--);
+					}
+					internalModel.getStructuredDocument().set(contents);
+					int internalOffset = 0;
+					boolean quoted = false;
+					// if quoted, use position inside and shift by one
+					if (contentAssistRequest.getMatchString().length() > 0 && (contentAssistRequest.getMatchString().charAt(0) == '\'' || contentAssistRequest.getMatchString().charAt(0) == '"')) {
+						internalOffset = contentAssistRequest.getMatchString().length() - 1 + additionalShifts;
+						quoted = true;
+					}
+					// if unquoted, use position inside
+					else if (contentAssistRequest.getMatchString().length() > 0 && contentAssistRequest.getMatchString().charAt(0) == '<')
+						internalOffset = contentAssistRequest.getMatchString().length() + additionalShifts;
+					else
+						internalOffset = contentAssistRequest.getReplacementBeginPosition() - contentAssistRequest.getStartOffset() + additionalShifts;
+					depthCount++;
+					IndexedRegion internalNode = null;
+					int tmpOffset = internalOffset;
+					while (internalNode == null && tmpOffset >= 0)
+						internalNode = internalModel.getIndexedRegion(tmpOffset--);
 
-						if (internalModel.getFactoryRegistry() != null) {
-							// set up the internal model
-							if (internalModel.getFactoryRegistry().getFactoryFor(PageDirectiveAdapter.class) == null) {
-								internalModel.getFactoryRegistry().addFactory(new PageDirectiveAdapterFactory());
-							}
-							PageDirectiveAdapter outerEmbeddedTypeAdapter = (PageDirectiveAdapter) xmlOuterModel.getDocument().getAdapterFor(PageDirectiveAdapter.class);
-							PageDirectiveAdapter internalEmbeddedTypeAdapter = (PageDirectiveAdapter) ((INodeNotifier) ((Node) internalNode).getOwnerDocument()).getAdapterFor(PageDirectiveAdapter.class);
-							internalEmbeddedTypeAdapter.setEmbeddedType(outerEmbeddedTypeAdapter.getEmbeddedType());
+					if (internalModel.getFactoryRegistry() != null) {
+						// set up the internal model
+						if (internalModel.getFactoryRegistry().getFactoryFor(PageDirectiveAdapter.class) == null) {
+							internalModel.getFactoryRegistry().addFactory(new PageDirectiveAdapterFactory());
 						}
+						PageDirectiveAdapter outerEmbeddedTypeAdapter = (PageDirectiveAdapter) xmlOuterModel.getDocument().getAdapterFor(PageDirectiveAdapter.class);
+						PageDirectiveAdapter internalEmbeddedTypeAdapter = (PageDirectiveAdapter) ((INodeNotifier) ((Node) internalNode).getOwnerDocument()).getAdapterFor(PageDirectiveAdapter.class);
+						internalEmbeddedTypeAdapter.setEmbeddedType(outerEmbeddedTypeAdapter.getEmbeddedType());
+					}
 
-						EditorPlugin editorPlugin = ((EditorPlugin) Platform.getPlugin(EditorPlugin.ID));
-						AdapterFactoryRegistry adapterRegistry = editorPlugin.getAdapterFactoryRegistry();
-						Iterator adapterList = adapterRegistry.getAdapterFactories();
-						// And all those appropriate for this particular type
-						// of content
-						while (adapterList.hasNext()) {
-							try {
-								AdapterFactoryProvider provider = (AdapterFactoryProvider) adapterList.next();
-								if (provider.isFor(internalModel.getModelHandler())) {
-									provider.addAdapterFactories(internalModel);
-								}
-							}
-							catch (Exception e) {
-								Logger.logException(e);
+					AdapterFactoryRegistry adapterRegistry = JSPUIPlugin.getDefault().getAdapterFactoryRegistry();
+					Iterator adapterList = adapterRegistry.getAdapterFactories();
+					// And all those appropriate for this particular type
+					// of content
+					while (adapterList.hasNext()) {
+						try {
+							AdapterFactoryProvider provider = (AdapterFactoryProvider) adapterList.next();
+							if (provider.isFor(internalModel.getModelHandler())) {
+								provider.addAdapterFactories(internalModel);
 							}
 						}
+						catch (Exception e) {
+							Logger.logException(e);
+						}
+					}
 
-						// the internal adapter does all the real work of
-						// using the JSP content model to form proposals
-						// TODO : Nitin and Phil, please take a look
-						//// ContentAssistAdapter internalAdapter =
-						// (ContentAssistAdapter) ((INodeNotifier)
-						// internalNode).getAdapterFor(ContentAssistAdapter.class);
-						ICompletionProposal[] results = null;
-						//// if (internalAdapter != null) {
-						//// internalAdapter.initialize(resource);
-						//// if(internalAdapter instanceof
-						// JSPContentAssistProcessor)
-						////
-						// ((JSPContentAssistProcessor)internalAdapter).isInternalAdapter
-						// = true;
-						//// results =
-						// internalAdapter.computeCompletionProposals(fViewer,
-						// internalOffset, internalNode);
-						//// }
-						//// // results = computeCompletionProposals(null,
-						// internalOffset, internalNode);
-						depthCount--;
-						if (results != null) {
-							for (i = 0; i < results.length; i++) {
-								contentAssistRequest.addProposal(new CustomCompletionProposal(((CustomCompletionProposal) results[i]).getReplacementString(), ((CustomCompletionProposal) results[i]).getReplacementOffset() - additionalShifts + contentAssistRequest.getStartOffset() + (quoted ? 1 : 0), ((CustomCompletionProposal) results[i]).getReplacementLength(), ((CustomCompletionProposal) results[i]).getCursorPosition(), results[i].getImage(), results[i].getDisplayString(), ((CustomCompletionProposal) results[i]).getContextInformation(), ((CustomCompletionProposal) results[i]).getAdditionalProposalInfo(), (results[i] instanceof IRelevanceCompletionProposal) ? ((IRelevanceCompletionProposal) results[i]).getRelevance() : IRelevanceConstants.R_NONE));
-							}
+					// the internal adapter does all the real work of
+					// using the JSP content model to form proposals
+					// TODO : Nitin and Phil, please take a look
+					//// ContentAssistAdapter internalAdapter =
+					// (ContentAssistAdapter) ((INodeNotifier)
+					// internalNode).getAdapterFor(ContentAssistAdapter.class);
+					ICompletionProposal[] results = null;
+					//// if (internalAdapter != null) {
+					//// internalAdapter.initialize(resource);
+					//// if(internalAdapter instanceof
+					// JSPContentAssistProcessor)
+					////
+					// ((JSPContentAssistProcessor)internalAdapter).isInternalAdapter
+					// = true;
+					//// results =
+					// internalAdapter.computeCompletionProposals(fViewer,
+					// internalOffset, internalNode);
+					//// }
+					//// // results = computeCompletionProposals(null,
+					// internalOffset, internalNode);
+					depthCount--;
+					if (results != null) {
+						for (i = 0; i < results.length; i++) {
+							contentAssistRequest.addProposal(new CustomCompletionProposal(((CustomCompletionProposal) results[i]).getReplacementString(), ((CustomCompletionProposal) results[i]).getReplacementOffset() - additionalShifts + contentAssistRequest.getStartOffset() + (quoted ? 1 : 0), ((CustomCompletionProposal) results[i]).getReplacementLength(), ((CustomCompletionProposal) results[i]).getCursorPosition(), results[i].getImage(), results[i].getDisplayString(), ((CustomCompletionProposal) results[i]).getContextInformation(), ((CustomCompletionProposal) results[i]).getAdditionalProposalInfo(), (results[i] instanceof IRelevanceCompletionProposal) ? ((IRelevanceCompletionProposal) results[i]).getRelevance() : IRelevanceConstants.R_NONE));
 						}
 					}
 				}
-			}
-			catch (Exception e) {
-				Logger.logException("Error in embedded JSP Content Assist", e); //$NON-NLS-1$
-			}
 		}
+		catch (Exception e) {
+			Logger.logException("Error in embedded JSP Content Assist", e); //$NON-NLS-1$
+		}
+	}
 
 
 	}
@@ -610,9 +606,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 	}
 
 	private IModelManager getModelManager() {
-
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		return plugin.getModelManager();
+		return StructuredModelManager.getInstance().getModelManager();
 	}
 
 	/**

@@ -14,7 +14,6 @@ package org.eclipse.wst.xml.ui.actions;
 
 import java.util.ResourceBundle;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -28,8 +27,8 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.TextEditorAction;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.ui.edit.util.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.nls.ResourceHandler;
@@ -40,8 +39,7 @@ public class CommentActionXML extends TextEditorAction {
 	protected static final String OPEN_COMMENT = "<!--"; //$NON-NLS-1$
 
 	static IModelManager getModelManager() {
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		return plugin.getModelManager();
+		return StructuredModelManager.getInstance().getModelManager();
 	}
 
 	protected IDocument fDocument;

@@ -23,7 +23,8 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.ui.IStartup;
 
 /**
- * The main plugin class to be used in the desktop.
+ * @deprecated This plugin has combined with the org.eclipse.wst.sse.ui plugin.
+ *             Use SSEUIPlugin instead.
  */
 public class ContentPropertiesPlugin extends Plugin implements IStartup {
 	//The shared instance.

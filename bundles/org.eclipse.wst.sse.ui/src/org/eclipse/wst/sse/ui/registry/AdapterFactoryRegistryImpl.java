@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.wst.sse.ui.Logger;
+import org.eclipse.wst.sse.ui.internal.Logger;
 
 
 public class AdapterFactoryRegistryImpl implements AdapterFactoryRegistry, AdapterFactoryRegistryExtension {

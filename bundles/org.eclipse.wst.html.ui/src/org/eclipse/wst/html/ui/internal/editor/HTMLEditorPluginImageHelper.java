@@ -17,7 +17,7 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.wst.html.ui.HTMLEditorPlugin;
+import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 
 
 /**
@@ -29,7 +29,7 @@ import org.eclipse.wst.html.ui.HTMLEditorPlugin;
  * @author amywu
  */
 public class HTMLEditorPluginImageHelper {
-	private final String PLUGINID = HTMLEditorPlugin.ID;
+	private final String PLUGINID = HTMLUIPlugin.ID;
 	private static HTMLEditorPluginImageHelper instance = null;
 
 	//	 save a descriptor for each image

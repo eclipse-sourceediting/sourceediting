@@ -10,10 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.internal.contentassist;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
-import org.eclipse.wst.html.ui.HTMLEditorPlugin;
+import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.templates.TemplateContextTypeHTML;
 import org.eclipse.wst.xml.ui.contentassist.AbstractTemplateCompletionProcessor;
 
@@ -26,14 +25,14 @@ public class HTMLTemplateCompletionProcessor extends AbstractTemplateCompletionP
 	 * @see com.ibm.sse.editor.xml.contentassist.AbstractTemplateCompletionProcessor#getTemplateStore()
 	 */
 	protected TemplateStore getTemplateStore() {
-		return getHTMLEditorPlugin().getTemplateStore();
+		return HTMLUIPlugin.getDefault().getTemplateStore();
 	}
 
 	/* (non-Javadoc)
 	 * @see com.ibm.sse.editor.xml.contentassist.AbstractTemplateCompletionProcessor#getTemplateContextRegistry()
 	 */
 	protected ContextTypeRegistry getTemplateContextRegistry() {
-		return getHTMLEditorPlugin().getTemplateContextRegistry();
+		return HTMLUIPlugin.getDefault().getTemplateContextRegistry();
 	}
 	/* (non-Javadoc)
 	 * @see com.ibm.sse.editor.xml.contentassist.AbstractTemplateCompletionProcessor#getContextTypeId()
@@ -41,13 +40,5 @@ public class HTMLTemplateCompletionProcessor extends AbstractTemplateCompletionP
 	protected String getContextTypeId() {
 		// turn the context type id into content type specific
 		return TemplateContextTypeHTML.generateContextTypeId(super.getContextTypeId());
-	}
-	
-	/**
-	 * Returns the HTMLEditorPlugin
-	 * @return HTMLEditorPlugin
-	 */
-	private HTMLEditorPlugin getHTMLEditorPlugin() {
-		return (HTMLEditorPlugin) Platform.getPlugin(HTMLEditorPlugin.ID);
 	}
 }

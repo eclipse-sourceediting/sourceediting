@@ -17,7 +17,7 @@ package org.eclipse.wst.sse.ui.views.properties;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.wst.sse.ui.Logger;
+import org.eclipse.wst.sse.ui.internal.Logger;
 
 
 /**

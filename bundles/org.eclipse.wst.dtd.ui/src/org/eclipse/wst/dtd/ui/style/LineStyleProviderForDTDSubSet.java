@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITypedRegion;
@@ -26,8 +25,8 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.dtd.core.rules.StructuredTextPartitionerForDTD;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
@@ -91,9 +90,7 @@ public class LineStyleProviderForDTDSubSet extends AbstractLineStyleProvider imp
 	}
 
 	private IModelManager getModelManager() {
-
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		return plugin.getModelManager();
+		return StructuredModelManager.getInstance().getModelManager();
 	}
 
 	protected String getPreferenceKey(String key) {

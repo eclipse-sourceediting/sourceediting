@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.dtd.core.document.DTDModelImpl;
+import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
 import org.eclipse.wst.dtd.core.internal.text.RegionIterator;
 import org.eclipse.wst.dtd.core.parser.DTDRegionTypes;
 import org.eclipse.wst.sse.core.IFactoryRegistry;
@@ -79,7 +80,7 @@ public abstract class DTDNode extends NodeContainer implements IndexedRegion {
 	}
 
 	public void delete(DTDNode child) {
-		beginRecording(this, DTDPlugin.getDTDString("_UI_LABEL_DTD_NODE_DELETE")); //$NON-NLS-1$
+		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_DTD_NODE_DELETE")); //$NON-NLS-1$
 		delete(this, child);
 		endRecording(this);
 	}
@@ -299,7 +300,7 @@ public abstract class DTDNode extends NodeContainer implements IndexedRegion {
 	}
 
 	public void setName(String name) {
-		beginRecording(this, DTDPlugin.getDTDString("_UI_LABEL_DTD_NODE_NAME_CHG")); //$NON-NLS-1$
+		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_DTD_NODE_NAME_CHG")); //$NON-NLS-1$
 		setName(this, name);
 		endRecording(this);
 	}

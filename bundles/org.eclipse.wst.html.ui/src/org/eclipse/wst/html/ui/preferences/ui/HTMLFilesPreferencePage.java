@@ -23,7 +23,7 @@ import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.common.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.html.core.HTMLCorePlugin;
 import org.eclipse.wst.html.core.HTMLFilesPreferenceNames;
-import org.eclipse.wst.html.ui.HTMLEditorPlugin;
+import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.html.ui.internal.nls.ResourceHandler;
 import org.eclipse.wst.xml.ui.preferences.EncodingSettings;
@@ -48,7 +48,7 @@ public class HTMLFilesPreferencePage extends XMLFilesPreferencePage {
 	 * @see org.eclipse.jface.preference.PreferencePage#doGetPreferenceStore()
 	 */
 	protected IPreferenceStore doGetPreferenceStore() {
-		return HTMLEditorPlugin.getDefault().getPreferenceStore();
+		return HTMLUIPlugin.getDefault().getPreferenceStore();
 	}
 
 	/* (non-Javadoc)

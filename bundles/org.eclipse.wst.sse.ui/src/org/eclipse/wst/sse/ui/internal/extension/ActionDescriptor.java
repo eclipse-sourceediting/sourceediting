@@ -18,15 +18,16 @@ import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IPluginDescriptor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.sse.ui.Logger;
 import org.eclipse.wst.sse.ui.extension.IActionValidator;
+import org.eclipse.wst.sse.ui.internal.Logger;
+import org.osgi.framework.Bundle;
 
 
 /**
@@ -70,8 +71,9 @@ public class ActionDescriptor {
 		final Object[] result = new Object[1];
 		// If plugin has been loaded create extension.
 		// Otherwise, show busy cursor then create extension.
-		IPluginDescriptor plugin = element.getDeclaringExtension().getDeclaringPluginDescriptor();
-		if (plugin.isPluginActivated()) {
+		String pluginId = element.getDeclaringExtension().getNamespace();
+		Bundle bundle = Platform.getBundle(pluginId);
+		if (bundle.getState() == Bundle.ACTIVE) {
 			try {
 				result[0] = element.createExecutableExtension(classAttribute);
 			} catch (Exception e) {
@@ -190,7 +192,7 @@ public class ActionDescriptor {
 			if (helpContextId.indexOf(".") == -1) //$NON-NLS-1$
 				// For backward compatibility we auto qualify the id if it is
 				// not qualified)
-				fullID = actionElement.getDeclaringExtension().getDeclaringPluginDescriptor().getUniqueIdentifier() + "." + helpContextId; //$NON-NLS-1$
+				fullID = actionElement.getDeclaringExtension().getNamespace() + "." + helpContextId; //$NON-NLS-1$
 			WorkbenchHelp.setHelp(action, fullID);
 		}
 

@@ -15,6 +15,7 @@ package org.eclipse.wst.dtd.core;
 import java.util.List;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
 import org.eclipse.wst.dtd.core.internal.text.RegionIterator;
 import org.eclipse.wst.dtd.core.parser.DTDRegionTypes;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -58,7 +59,7 @@ public class ParameterEntityReference extends NamedTopLevelNode {
 	}
 
 	public Image getImage() {
-		return DTDPlugin.getInstance().getImage(DTDResource.ENTITYREFERENCEICON);
+		return DTDCorePlugin.getInstance().getImage(DTDResource.ENTITYREFERENCEICON);
 	}
 
 	public String getName() {
@@ -96,13 +97,13 @@ public class ParameterEntityReference extends NamedTopLevelNode {
 	}
 
 	public void setReferencedEntity(String name) {
-		beginRecording(this, DTDPlugin.getDTDString("_UI_LABEL_PARM_ENTITY_REF_CHG_ENTITY_REF")); //$NON-NLS-1$
+		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_PARM_ENTITY_REF_CHG_ENTITY_REF")); //$NON-NLS-1$
 		setReferencedEntity(this, name);
 		endRecording(this);
 	}
 
 	public void setText(String newText) {
-		beginRecording(this, DTDPlugin.getDTDString("_UI_LABEL_PARM_ENTITY_REF_COMMENT_CHG")); //$NON-NLS-1$
+		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_PARM_ENTITY_REF_COMMENT_CHG")); //$NON-NLS-1$
 		int flatNodeStart = getStructuredDTDDocumentRegion().getStartOffset();
 		StartEndPair pair = new StartEndPair();
 		getStartAndEndOffsetForText(pair);

@@ -14,72 +14,11 @@ package org.eclipse.wst.sse.ui;
 
 
 
-import org.eclipse.core.runtime.IPluginDescriptor;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
-import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistryImpl;
-import org.eclipse.wst.sse.ui.registry.embedded.EmbeddedAdapterFactoryRegistryImpl;
-import org.eclipse.wst.sse.ui.taginfo.TextHoverManager;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
-
-public class EditorPlugin extends AbstractUIPlugin {
-
-	public final static String ID = "org.eclipse.wst.sse.ui"; //$NON-NLS-1$
-
-	static EditorPlugin instance = null;
-
-	public static EditorPlugin getDefault() {
-		return instance;
-	}
-
-	public synchronized static EditorPlugin getInstance() {
-		return instance;
-	}
-
-	private TextHoverManager fTextHoverManager;
-
-	public EditorPlugin(IPluginDescriptor descriptor) {
-		super(descriptor);
-		instance = this;
-	}
-
-	public AdapterFactoryRegistry getAdapterFactoryRegistry() {
-		return AdapterFactoryRegistryImpl.getInstance();
-
-	}
-
-	public AdapterFactoryRegistry getEmbeddedAdapterFactoryRegistry() {
-		return EmbeddedAdapterFactoryRegistryImpl.getInstance();
-
-	}
-
-	/**
-	 * Return text hover manager
-	 * 
-	 * @return TextHoverManager
-	 */
-	public TextHoverManager getTextHoverManager() {
-		if (fTextHoverManager == null) {
-			fTextHoverManager = new TextHoverManager();
-		}
-		return fTextHoverManager;
-	}
-
-	/**
-	 * This method is here so that other editor plugins can set Editor
-	 * defaults in their initializeDefaultPreferences(...) methods.
-	 * 
-	 * @param store
-	 */
-	public void initializeDefaultEditorPreferences(IPreferenceStore store) {
-	}
-
-	/**
-	 * @see AbstractUIPlugin#initializeDefaultPreferences
-	 */
-	protected void initializeDefaultPreferences(IPreferenceStore store) {
-		super.initializeDefaultPreferences(store);
-		initializeDefaultEditorPreferences(store);
-	}
+/**
+ * @deprecated use internal SSEUIPlugin class instead if possible
+ */
+public class EditorPlugin extends SSEUIPlugin {
+	// see org.eclipse.wst.sse.ui.internal.SSEUIPlugin
 }

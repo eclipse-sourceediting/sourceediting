@@ -12,7 +12,6 @@ package org.eclipse.jst.jsp.ui;
 
 import java.util.ResourceBundle;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
@@ -30,7 +29,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.wst.html.ui.edit.ui.CleanupActionHTML;
 import org.eclipse.wst.html.ui.internal.search.HTMLFindOccurrencesAction;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.edit.util.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.edit.util.StructuredTextEditorActionConstants;
@@ -90,7 +89,7 @@ public class StructuredTextEditorJSP extends StructuredTextEditor {
 
 		IJavaElement[] elements = new IJavaElement[0];
 		// get JSP translation object for this viewer's document
-		XMLModel xmlModel = (XMLModel) ((IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID)).getModelManager().getExistingModelForRead(getDocument());
+		XMLModel xmlModel = (XMLModel) StructuredModelManager.getInstance().getModelManager().getExistingModelForRead(getDocument());
 		try {
 			if(xmlModel != null) {
 				XMLDocument xmlDoc = xmlModel.getDocument();

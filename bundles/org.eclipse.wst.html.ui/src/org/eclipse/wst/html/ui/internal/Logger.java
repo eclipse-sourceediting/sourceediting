@@ -18,9 +18,8 @@ import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.wst.html.ui.HTMLEditorPlugin;
+import org.osgi.framework.Bundle;
 
 
 /**
@@ -29,10 +28,10 @@ import org.eclipse.wst.html.ui.HTMLEditorPlugin;
  * plugin. Other plugins should make their own copy, with appropriate ID.
  */
 public class Logger {
+	private static final String PLUGIN_ID = "org.eclipse.wst.html.ui"; //$NON-NLS-1$
+	
 	public static final int ERROR = IStatus.ERROR; // 4
 	public static final int ERROR_DEBUG = 200 + ERROR;
-	private static final Plugin fPlugin = HTMLEditorPlugin.getDefault();
-	private static final String fPluginId = fPlugin.getDescriptor().getUniqueIdentifier();
 	public static final int INFO = IStatus.INFO; // 1
 	public static final int INFO_DEBUG = 200 + INFO;
 
@@ -76,8 +75,10 @@ public class Logger {
 				severity = IStatus.ERROR;
 		}
 		message = (message != null) ? message : "null"; //$NON-NLS-1$
-		Status statusObj = new Status(severity, fPluginId, severity, message, exception);
-		fPlugin.getLog().log(statusObj);
+		Status statusObj = new Status(severity, PLUGIN_ID, severity, message, exception);
+		Bundle bundle = Platform.getBundle(PLUGIN_ID);
+		if (bundle != null) 
+			Platform.getLog(bundle).log(statusObj);
 	}
 
 	/**
@@ -92,16 +93,18 @@ public class Logger {
 	protected static void _trace(String category, String message, Throwable exception) {
 		if (isTracing(category)) {
 			message = (message != null) ? message : "null"; //$NON-NLS-1$
-			Status statusObj = new Status(IStatus.OK, fPluginId, IStatus.OK, message, exception);
-			fPlugin.getLog().log(statusObj);
+			Status statusObj = new Status(IStatus.OK, PLUGIN_ID, IStatus.OK, message, exception);
+			Bundle bundle = Platform.getBundle(PLUGIN_ID);
+			if (bundle != null) 
+				Platform.getLog(bundle).log(statusObj);
 		}
 	}
 
 	/**
-	 * @return true if the plugin for this logger is debugging
+	 * @return true if the platform is debugging
 	 */
 	public static boolean isDebugging() {
-		return fPlugin.isDebugging();
+		return Platform.inDebugMode();
 	}
 
 	/**
@@ -114,7 +117,7 @@ public class Logger {
 		if (!isDebugging())
 			return false;
 
-		String traceFilter = Platform.getDebugOption(fPluginId + TRACEFILTER_LOCATION);
+		String traceFilter = Platform.getDebugOption(PLUGIN_ID + TRACEFILTER_LOCATION);
 		if (traceFilter != null) {
 			StringTokenizer tokenizer = new StringTokenizer(traceFilter, ","); //$NON-NLS-1$
 			while (tokenizer.hasMoreTokens()) {

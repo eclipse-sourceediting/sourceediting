@@ -34,8 +34,8 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jdt.internal.core.JavaModelManager;
 import org.eclipse.jdt.internal.core.index.Index;
 import org.eclipse.jdt.internal.core.search.indexing.IndexManager;
-import org.eclipse.jst.jsp.core.JSPCorePlugin;
-import org.eclipse.jst.jsp.core.Logger;
+import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
+import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.nls.ResourceHandler;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 

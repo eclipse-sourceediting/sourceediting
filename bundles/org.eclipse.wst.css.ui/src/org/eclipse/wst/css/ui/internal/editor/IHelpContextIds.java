@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.css.ui.internal.editor;
 
-import org.eclipse.wst.css.ui.CSSEditorPlugin;
+import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 
 /**
  * Help context ids for the CSS Source Editor.
@@ -22,7 +22,7 @@ import org.eclipse.wst.css.ui.CSSEditorPlugin;
  */
 public interface IHelpContextIds {
 	// org.eclipse.wst.css.ui.
-	public static final String PREFIX = CSSEditorPlugin.ID + "."; //$NON-NLS-1$
+	public static final String PREFIX = CSSUIPlugin.ID + "."; //$NON-NLS-1$
 
 	// CSS Source page editor
 	public static final String CSS_SOURCEVIEW_HELPID = PREFIX + "ecss0000"; //$NON-NLS-1$

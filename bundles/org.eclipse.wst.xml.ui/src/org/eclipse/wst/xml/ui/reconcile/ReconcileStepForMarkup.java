@@ -25,7 +25,6 @@ import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.sse.ui.Logger;
 import org.eclipse.wst.sse.ui.StructuredTextReconciler;
 import org.eclipse.wst.sse.ui.internal.reconcile.IReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
@@ -34,6 +33,7 @@ import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.correction.ProblemIDsXML;
 import org.w3c.dom.Node;
 

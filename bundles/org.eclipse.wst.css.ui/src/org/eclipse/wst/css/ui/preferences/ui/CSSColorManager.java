@@ -17,7 +17,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.wst.css.ui.internal.Logger;
 import org.eclipse.wst.css.ui.style.IStyleConstantsCSS;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.ui.preferences.PreferenceManager;
 import org.eclipse.wst.sse.ui.preferences.ui.ColorNames;
 import org.w3c.dom.Document;
@@ -137,7 +136,7 @@ public class CSSColorManager extends PreferenceManager {
 
 	public String getFilename() {
 		if (fileName == null) {
-			fileName = Platform.getPlugin(IModelManagerPlugin.ID).getStateLocation().toString() + "/csssourcecolors.xml";//$NON-NLS-1$
+			fileName = Platform.getStateLocation(Platform.getBundle("org.eclipse.sse.core")).toString() + "/csssourcecolors.xml";//$NON-NLS-1$ //$NON-NLS-2$  
 		}
 		return fileName;
 	}

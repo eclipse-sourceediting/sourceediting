@@ -21,10 +21,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.builder.IBuilderDelegate;
 import org.eclipse.wst.sse.core.builder.IBuilderParticipant;
 import org.eclipse.wst.sse.core.internal.Logger;
+import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.util.StringUtils;
 
 
@@ -36,7 +36,7 @@ class BuilderParticipantRegistryReader {
 	private String ATT_CLASS = "class"; //$NON-NLS-1$
 	private String ATT_CONTENT_TYPE = "contentType"; //$NON-NLS-1$
 
-	private String DELEGATE_EXTENSION_POINT_ID = IModelManagerPlugin.ID + ".builderdelegate"; //$NON-NLS-1$
+	private String DELEGATE_EXTENSION_POINT_ID = SSECorePlugin.ID + ".builderdelegate"; //$NON-NLS-1$
 	private IConfigurationElement[] fDelegateElements;
 	// a mapping of content types to IBuilderDelegate instances
 	private Map fDelegateMap = null;
@@ -47,7 +47,7 @@ class BuilderParticipantRegistryReader {
 	// a mapping of content types to IBuilderParticipant instances
 	private Map fParticipantMap = null;
 
-	private String PARTICIPANT_EXTENSION_POINT_ID = IModelManagerPlugin.ID + ".builderparticipant"; //$NON-NLS-1$
+	private String PARTICIPANT_EXTENSION_POINT_ID = SSECorePlugin.ID + ".builderparticipant"; //$NON-NLS-1$
 
 	BuilderParticipantRegistryReader() {
 		super();

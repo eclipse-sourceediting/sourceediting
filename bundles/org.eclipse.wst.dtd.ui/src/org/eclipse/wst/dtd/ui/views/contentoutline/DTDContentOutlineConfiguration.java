@@ -28,8 +28,8 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.wst.common.ui.dnd.ObjectTransfer;
 import org.eclipse.wst.common.ui.dnd.ViewerDragAdapter;
 import org.eclipse.wst.common.ui.dnd.ViewerDropAdapter;
-import org.eclipse.wst.dtd.ui.DTDEditorPlugin;
 import org.eclipse.wst.dtd.ui.dnd.DTDDragAndDropManager;
+import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.util.Assert;
@@ -61,8 +61,8 @@ public class DTDContentOutlineConfiguration extends StructuredContentOutlineConf
 		Assert.isTrue(getContentProvider(viewer) instanceof DTDTreeContentProvider);
 		IContributionItem[] items = super.createToolbarContributions(viewer);
 
-		SortAction sortAction = new SortAction(viewer, DTDEditorPlugin.getDefault().getPreferenceStore(), getSortPreferenceKey());
-		OrderAction orderAction = new OrderAction(viewer, (DTDTreeContentProvider) getContentProvider(viewer), DTDEditorPlugin.getDefault().getPreferenceStore(), getOrderPreferenceKey());
+		SortAction sortAction = new SortAction(viewer, DTDUIPlugin.getDefault().getPreferenceStore(), getSortPreferenceKey());
+		OrderAction orderAction = new OrderAction(viewer, (DTDTreeContentProvider) getContentProvider(viewer), DTDUIPlugin.getDefault().getPreferenceStore(), getOrderPreferenceKey());
 		IContributionItem sortItem = new PropertyChangeUpdateActionContributionItem(sortAction);
 		IContributionItem orderItem = new PropertyChangeUpdateActionContributionItem(orderAction);
 

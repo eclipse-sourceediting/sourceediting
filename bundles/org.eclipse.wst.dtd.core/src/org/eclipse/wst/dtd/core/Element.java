@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
 import org.eclipse.wst.dtd.core.internal.text.RegionIterator;
 import org.eclipse.wst.dtd.core.parser.DTDRegionTypes;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -37,7 +38,7 @@ public class Element extends NamedTopLevelNode {
 	}
 
 	public void addAttribute(String name) {
-		beginRecording(this, DTDPlugin.getDTDString("_UI_LABEL_ELEMENT_ADD_ATTR")); //$NON-NLS-1$
+		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_ELEMENT_ADD_ATTR")); //$NON-NLS-1$
 		List attLists = getAttributeLists();
 		if (attLists.size() == 0) {
 			getDTDFile().createAttributeList(this, getName(), true);
@@ -51,7 +52,7 @@ public class Element extends NamedTopLevelNode {
 	}
 
 	public void addChild() {
-		beginRecording(this, DTDPlugin.getDTDString("_UI_LABEL_ELEMENT_ADD_CHILD")); //$NON-NLS-1$
+		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_ELEMENT_ADD_CHILD")); //$NON-NLS-1$
 		addContent(this, " EMPTY"); //$NON-NLS-1$
 		endRecording(this);
 	}
@@ -76,7 +77,7 @@ public class Element extends NamedTopLevelNode {
 	}
 
 	public void addGroup() {
-		beginRecording(this, DTDPlugin.getDTDString("_UI_LABEL_ELEMENT_ADD_GRP")); //$NON-NLS-1$
+		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_ELEMENT_ADD_GRP")); //$NON-NLS-1$
 		addContent(this, " ()"); //$NON-NLS-1$
 		endRecording(this);
 	}
@@ -120,7 +121,7 @@ public class Element extends NamedTopLevelNode {
 	}
 
 	public Image getImage() {
-		return DTDPlugin.getInstance().getImage(DTDResource.ELEMENTICON);
+		return DTDCorePlugin.getInstance().getImage(DTDResource.ELEMENTICON);
 	}
 
 	public short getNodeType() {

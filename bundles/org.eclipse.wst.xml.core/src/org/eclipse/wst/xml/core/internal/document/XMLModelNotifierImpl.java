@@ -17,9 +17,9 @@ import java.util.Vector;
 
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.util.Debug;
-import org.eclipse.wst.xml.core.Logger;
 import org.eclipse.wst.xml.core.document.XMLModelNotifier;
 import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.internal.Logger;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

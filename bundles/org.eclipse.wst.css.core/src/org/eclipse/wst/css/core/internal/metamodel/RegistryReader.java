@@ -17,24 +17,21 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IPluginDescriptor;
-import org.eclipse.core.runtime.IPluginRegistry;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Plugin;
 import org.eclipse.wst.css.core.internal.Logger;
 import org.eclipse.wst.css.core.metamodel.CSSProfile;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
+import org.osgi.framework.Bundle;
 
 
 
 public class RegistryReader {
 
 	//
-	private String PLUGIN_ID = IModelManagerPlugin.ID; //$NON-NLS-1$
+	private String PLUGIN_ID = "org.eclipse.wst.sse.core"; //$NON-NLS-1$
 	private String EXTENSION_POINT_ID = "cssprofile"; //$NON-NLS-1$
 	private String TAG_NAME = "profile"; //$NON-NLS-1$
 	private String ATT_ID = "id"; //$NON-NLS-1$
@@ -61,20 +58,12 @@ public class RegistryReader {
 			String strURI = element.getAttribute(ATT_URI);
 
 			if (strID != null || strURI != null) {
-				Plugin plugin = null;
-				IPluginDescriptor descriptor = element.getDeclaringExtension().getDeclaringPluginDescriptor();
-				try {
-					plugin = descriptor.getPlugin();
-				}
-				catch (CoreException e) {
-					// if an error occurs here, its probably that the plugin
-					// could not be found/loaded
-					// Logger.log("could not find plugin: " + descriptor, e);
-					// //$NON-NLS-1$
-				}
-				if (plugin != null) {
+				Bundle bundle = null;
+				String pluginId = element.getDeclaringExtension().getNamespace();
+				bundle = Platform.getBundle(pluginId);
+				if (bundle != null) {
 					Path path = new Path(strURI);
-					URL url = plugin.find(path);
+					URL url = Platform.find(bundle, path);
 					if (url != null) {
 						try {
 							url = Platform.asLocalURL(url);
@@ -82,7 +71,7 @@ public class RegistryReader {
 							info.setProfileName(strNAME);
 							info.setDefault((element.getAttribute(ATT_DEFAULT) != null));
 							info.setLogging((element.getAttribute(ATT_LOGGING) != null));
-							info.setOwnerPluginID(descriptor.getUniqueIdentifier());
+							info.setOwnerPluginID(pluginId);
 						}
 						catch (java.io.IOException e) {
 							// through
@@ -104,8 +93,8 @@ public class RegistryReader {
 	 */
 	public Iterator enumProfiles() {
 		Set set = new HashSet();
-		IPluginRegistry pluginRegistry = Platform.getPluginRegistry();
-		IExtensionPoint point = pluginRegistry.getExtensionPoint(PLUGIN_ID, EXTENSION_POINT_ID);
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IExtensionPoint point = registry.getExtensionPoint(PLUGIN_ID, EXTENSION_POINT_ID);
 		if (point != null) {
 			IConfigurationElement[] elements = point.getConfigurationElements();
 			for (int i = 0; i < elements.length; i++) {

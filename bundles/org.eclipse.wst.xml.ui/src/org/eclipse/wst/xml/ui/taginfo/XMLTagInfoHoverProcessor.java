@@ -31,12 +31,12 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.Debug;
-import org.eclipse.wst.sse.ui.Logger;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.core.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.ui.internal.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 

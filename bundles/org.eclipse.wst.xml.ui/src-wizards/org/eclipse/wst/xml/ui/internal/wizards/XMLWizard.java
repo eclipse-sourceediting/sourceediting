@@ -15,8 +15,8 @@ import java.net.URL;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.wst.xml.ui.XMLEditorPlugin;
 
 public class XMLWizard
 {
@@ -57,7 +57,7 @@ public class XMLWizard
   public ImageDescriptor getImageDescriptor(String name)
   {
     try {
-      URL url= new URL(XMLEditorPlugin.getInstance().getBundle().getEntry("/"), name);
+      URL url= new URL(Platform.getBundle("org.eclipse.wst.xml.ui").getEntry("/"), name);
       return ImageDescriptor.createFromURL(url);
     }
     catch (MalformedURLException e) {

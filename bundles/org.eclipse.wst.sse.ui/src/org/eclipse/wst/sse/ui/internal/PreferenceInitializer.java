@@ -20,7 +20,6 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
-import org.eclipse.wst.sse.ui.EditorPlugin;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 
 
@@ -29,7 +28,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	 * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
 	 */
 	public void initializeDefaultPreferences() {
-		IPreferenceStore store = EditorPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore store = SSEUIPlugin.getDefault().getPreferenceStore();
 
 		// use the base annotation & quick diff preference page
 		EditorsUI.useAnnotationsPreferencePage(store);

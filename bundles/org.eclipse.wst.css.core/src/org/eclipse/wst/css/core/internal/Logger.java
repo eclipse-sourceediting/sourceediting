@@ -16,9 +16,8 @@ import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.wst.css.core.CSSCorePlugin;
+import org.osgi.framework.Bundle;
 
 /**
  * Small convenience class to log messages to plugin's log file and also, if
@@ -26,8 +25,7 @@ import org.eclipse.wst.css.core.CSSCorePlugin;
  * plugin. Other plugins should make their own copy, with appropriate ID.
  */
 public class Logger {
-	private static Plugin fPlugin = CSSCorePlugin.getDefault();
-	private static final String fPluginId = fPlugin.getDescriptor().getUniqueIdentifier();
+	private static final String PLUGIN_ID = "org.eclipse.wst.css.core"; //$NON-NLS-1$
 
 	private static final String TRACEFILTER_LOCATION = "/debug/tracefilter"; //$NON-NLS-1$
 
@@ -73,8 +71,10 @@ public class Logger {
 				severity = IStatus.ERROR;
 		}
 		message = (message != null) ? message : "null"; //$NON-NLS-1$
-		Status statusObj = new Status(severity, fPluginId, severity, message, exception);
-		fPlugin.getLog().log(statusObj);
+		Status statusObj = new Status(severity, PLUGIN_ID, severity, message, exception);
+		Bundle bundle = Platform.getBundle(PLUGIN_ID);
+		if (bundle != null) 
+			Platform.getLog(bundle).log(statusObj);
 	}
 
 	/**
@@ -89,18 +89,20 @@ public class Logger {
 	protected static void _trace(String category, String message, Throwable exception) {
 		if (isTracing(category)) {
 			message = (message != null) ? message : "null"; //$NON-NLS-1$
-			Status statusObj = new Status(IStatus.OK, fPluginId, IStatus.OK, message, exception);
-			fPlugin.getLog().log(statusObj);
+			Status statusObj = new Status(IStatus.OK, PLUGIN_ID, IStatus.OK, message, exception);
+			Bundle bundle = Platform.getBundle(PLUGIN_ID);
+			if (bundle != null) 
+				Platform.getLog(bundle).log(statusObj);
 		}
 	}
 
 	/**
-	 * @return true if the plugin for this logger is debugging
+	 * @return true if the platform is debugging
 	 */
 	public static boolean isDebugging() {
-		return fPlugin.isDebugging();
+		return Platform.inDebugMode();
 	}
-
+	
 	/**
 	 * Determines if currently tracing a category
 	 * 
@@ -111,7 +113,7 @@ public class Logger {
 		if (!isDebugging())
 			return false;
 
-		String traceFilter = Platform.getDebugOption(fPluginId + TRACEFILTER_LOCATION);
+		String traceFilter = Platform.getDebugOption(PLUGIN_ID + TRACEFILTER_LOCATION);
 		if (traceFilter != null) {
 			StringTokenizer tokenizer = new StringTokenizer(traceFilter, ","); //$NON-NLS-1$
 			while (tokenizer.hasMoreTokens()) {

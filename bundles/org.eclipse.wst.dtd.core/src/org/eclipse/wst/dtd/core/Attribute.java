@@ -15,6 +15,7 @@ package org.eclipse.wst.dtd.core;
 import java.util.Hashtable;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
 import org.eclipse.wst.dtd.core.internal.text.RegionIterator;
 import org.eclipse.wst.dtd.core.parser.DTDRegionTypes;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -24,19 +25,19 @@ import org.eclipse.wst.sse.core.text.ITextRegion;
 // base class for an Element's contentmodel
 public class Attribute extends DTDNode {
 
-	public static final String CDATA = DTDPlugin.getDTDString("_UI_CHARACTER_DATA_DESC"); //$NON-NLS-1$
-	public static final String ENTITIES = DTDPlugin.getDTDString("_UI_ENTITY_NAMES_DESC"); //$NON-NLS-1$
-	public static final String ENTITY = DTDPlugin.getDTDString("_UI_ENTITY_NAME_DESC"); //$NON-NLS-1$
-	public static final String ENUMERATED_NAME = DTDPlugin.getDTDString("_UI_ENUM_NAME_TOKENS_DESC"); //$NON-NLS-1$
-	public static final String ENUMERATED_NOTATION = DTDPlugin.getDTDString("_UI_ENUM_NOTATION_DESC"); //$NON-NLS-1$
+	public static final String CDATA = DTDCorePlugin.getDTDString("_UI_CHARACTER_DATA_DESC"); //$NON-NLS-1$
+	public static final String ENTITIES = DTDCorePlugin.getDTDString("_UI_ENTITY_NAMES_DESC"); //$NON-NLS-1$
+	public static final String ENTITY = DTDCorePlugin.getDTDString("_UI_ENTITY_NAME_DESC"); //$NON-NLS-1$
+	public static final String ENUMERATED_NAME = DTDCorePlugin.getDTDString("_UI_ENUM_NAME_TOKENS_DESC"); //$NON-NLS-1$
+	public static final String ENUMERATED_NOTATION = DTDCorePlugin.getDTDString("_UI_ENUM_NOTATION_DESC"); //$NON-NLS-1$
 	public static final String FIXED = "#FIXED"; //$NON-NLS-1$
-	public static final String ID = DTDPlugin.getDTDString("_UI_IDENTIFIER_DESC"); //$NON-NLS-1$
-	public static final String IDREF = DTDPlugin.getDTDString("_UI_ID_REFERENCE_DESC"); //$NON-NLS-1$
-	public static final String IDREFS = DTDPlugin.getDTDString("_UI_ID_REFERENCES_DESC"); //$NON-NLS-1$
+	public static final String ID = DTDCorePlugin.getDTDString("_UI_IDENTIFIER_DESC"); //$NON-NLS-1$
+	public static final String IDREF = DTDCorePlugin.getDTDString("_UI_ID_REFERENCE_DESC"); //$NON-NLS-1$
+	public static final String IDREFS = DTDCorePlugin.getDTDString("_UI_ID_REFERENCES_DESC"); //$NON-NLS-1$
 
 	public static final String IMPLIED = "#IMPLIED"; //$NON-NLS-1$
-	public static final String NMTOKEN = DTDPlugin.getDTDString("_UI_NAME_TOKEN_DESC"); //$NON-NLS-1$
-	public static final String NMTOKENS = DTDPlugin.getDTDString("_UI_NAME_TOKENS_DESC"); //$NON-NLS-1$
+	public static final String NMTOKEN = DTDCorePlugin.getDTDString("_UI_NAME_TOKEN_DESC"); //$NON-NLS-1$
+	public static final String NMTOKENS = DTDCorePlugin.getDTDString("_UI_NAME_TOKENS_DESC"); //$NON-NLS-1$
 	public static final String REQUIRED = "#REQUIRED"; //$NON-NLS-1$
 
 	protected static Hashtable typeHash = new Hashtable();
@@ -112,7 +113,7 @@ public class Attribute extends DTDNode {
 	}
 
 	public Image getImage() {
-		return DTDPlugin.getInstance().getImage(DTDResource.ATTRIBUTEICON);
+		return DTDCorePlugin.getInstance().getImage(DTDResource.ATTRIBUTEICON);
 	}
 
 	public ITextRegion getNameRegion() {
@@ -245,7 +246,7 @@ public class Attribute extends DTDNode {
 	}
 
 	public void setDefaultKind(String kind) {
-		beginRecording(this, DTDPlugin.getDTDString("_UI_LABEL_ATTR_DEFAULT_KIND")); //$NON-NLS-1$
+		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_ATTR_DEFAULT_KIND")); //$NON-NLS-1$
 		setDefaultKind(this, kind);
 		endRecording(this);
 	}
@@ -301,7 +302,7 @@ public class Attribute extends DTDNode {
 	}
 
 	public void setDefaultValue(String value, boolean fixed) {
-		beginRecording(this, DTDPlugin.getDTDString("_UI_LABEL_ATTR_DEFAULT_VAL")); //$NON-NLS-1$
+		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_ATTR_DEFAULT_VAL")); //$NON-NLS-1$
 		setDefaultValue(this, value, fixed);
 		endRecording(this);
 	}
@@ -362,7 +363,7 @@ public class Attribute extends DTDNode {
 	}
 
 	public void setType(String type) {
-		beginRecording(this, DTDPlugin.getDTDString("_UI_LABEL_ATTR_TYPE")); //$NON-NLS-1$
+		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_ATTR_TYPE")); //$NON-NLS-1$
 		setType(this, type);
 		endRecording(this);
 	}

@@ -14,15 +14,14 @@ package org.eclipse.wst.sse.core.internal.undo;
 
 import java.util.EventObject;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.command.BasicCommandStack;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.events.IStructuredDocumentListener;
 import org.eclipse.wst.sse.core.events.NewDocumentEvent;
 import org.eclipse.wst.sse.core.events.NoChangeEvent;
@@ -401,8 +400,7 @@ public class StructuredTextUndoManager implements IStructuredTextUndoManager {
 	 * Utility method to find model given document
 	 */
 	private IStructuredModel findStructuredModel(IDocument document) {
-		IModelManagerPlugin modelManagerPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IModelManager modelManager = modelManagerPlugin.getModelManager();
+		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
 		IStructuredModel structuredModel = modelManager.getExistingModelForRead(document);
 		return structuredModel;
 	}

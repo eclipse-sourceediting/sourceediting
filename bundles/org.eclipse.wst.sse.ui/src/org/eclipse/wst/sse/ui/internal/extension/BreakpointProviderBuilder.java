@@ -24,15 +24,15 @@ import java.util.StringTokenizer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IPluginDescriptor;
-import org.eclipse.core.runtime.IPluginRegistry;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.wst.sse.ui.Logger;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.IBreakpointProvider;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.SourceEditingTextTools;
+import org.eclipse.wst.sse.ui.internal.Logger;
+import org.osgi.framework.Bundle;
 
 
 /**
@@ -77,8 +77,9 @@ public class BreakpointProviderBuilder extends RegistryReader {
 		// If plugin has been loaded create extension.
 		// Otherwise, show busy cursor then create extension.
 		final Object[] result = new Object[1];
-		IPluginDescriptor plugin = element.getDeclaringExtension().getDeclaringPluginDescriptor();
-		if (plugin.isPluginActivated()) {
+		String pluginId = element.getDeclaringExtension().getNamespace();
+		Bundle bundle = Platform.getBundle(pluginId);
+		if (bundle.getState() == Bundle.ACTIVE) {
 			try {
 				result[0] = createExecutableExtension(element, classAttribute);
 			} catch (Exception e) {
@@ -372,7 +373,7 @@ public class BreakpointProviderBuilder extends RegistryReader {
 	protected void readContributions(String tag, String extensionPoint) {
 		cache = null;
 		targetContributionTag = tag;
-		IPluginRegistry registry = Platform.getPluginRegistry();
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		readRegistry(registry, PLUGIN_ID, extensionPoint);
 	}
 

@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.editor;
 
-import org.eclipse.wst.xml.ui.XMLEditorPlugin;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
 /**
  * Help context ids for the XML Source Editor.
@@ -24,7 +24,7 @@ import org.eclipse.wst.xml.ui.XMLEditorPlugin;
  */
 public interface IHelpContextIds {
 	// org.eclipse.wst.xml.ui.
-	public static final String PREFIX = XMLEditorPlugin.ID + "."; //$NON-NLS-1$
+	public static final String PREFIX = XMLUIPlugin.ID + "."; //$NON-NLS-1$
 
 	// XML Source page editor
 	public static final String XML_SOURCEVIEW_HELPID = PREFIX + "exml0000"; //$NON-NLS-1$

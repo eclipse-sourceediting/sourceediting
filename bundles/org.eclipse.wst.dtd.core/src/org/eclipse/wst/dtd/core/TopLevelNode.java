@@ -15,6 +15,7 @@ package org.eclipse.wst.dtd.core;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
 import org.eclipse.wst.dtd.core.internal.text.RegionIterator;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
@@ -39,7 +40,7 @@ public abstract class TopLevelNode extends DTDNode {
 	// specialize this so we delete the objects flat node range
 	// AND any whitespace
 	public void delete() {
-		beginRecording(getDTDFile(), DTDPlugin.getDTDString("_UI_LABEL_TOP_LEVEL_NODE_DELETE")); //$NON-NLS-1$
+		beginRecording(getDTDFile(), DTDCorePlugin.getDTDString("_UI_LABEL_TOP_LEVEL_NODE_DELETE")); //$NON-NLS-1$
 		IStructuredDocumentRegion first = (IStructuredDocumentRegion) flatNodes.get(0);
 		IStructuredDocumentRegion last = (IStructuredDocumentRegion) flatNodes.get(flatNodes.size() - 1);
 		int startOffset = first.getStartOffset();

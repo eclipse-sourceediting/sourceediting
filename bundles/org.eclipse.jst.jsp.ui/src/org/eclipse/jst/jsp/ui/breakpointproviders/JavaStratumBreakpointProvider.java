@@ -27,7 +27,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
-import org.eclipse.jst.jsp.ui.JSPEditorPlugin;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.nls.ResourceHandler;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
@@ -68,7 +68,7 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 			if (res != null) {
 				IBreakpoint point = JDIDebugModel.createStratumBreakpoint(res, "JSP", res.getName(), null, getClassPattern(), lineNumber, pos, pos, 0, true, null); //$NON-NLS-1$ //$NON-NLS-2$
 				if (point == null) {
-					status = new Status(IStatus.ERROR, JSPEditorPlugin.ID, IStatus.ERROR, "unsupported input type", null); //$NON-NLS-1$
+					status = new Status(IStatus.ERROR, JSPUIPlugin.ID, IStatus.ERROR, "unsupported input type", null); //$NON-NLS-1$
 				}
 			}
 			else if (input instanceof IStorageEditorInput) {
@@ -85,12 +85,12 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 				attributes.put(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, id);
 				IBreakpoint point = JDIDebugModel.createStratumBreakpoint(res, "JSP", input.getName(), null, getClassPattern(), lineNumber, pos, pos, 0, true, attributes); //$NON-NLS-1$ //$NON-NLS-2$
 				if (point == null) {
-					status = new Status(IStatus.ERROR, JSPEditorPlugin.ID, IStatus.ERROR, "unsupported input type", null); //$NON-NLS-1$
+					status = new Status(IStatus.ERROR, JSPUIPlugin.ID, IStatus.ERROR, "unsupported input type", null); //$NON-NLS-1$
 				}
 			}
 		}
 		if (status == null) {
-			status = new Status(IStatus.OK, JSPEditorPlugin.ID, IStatus.OK, ResourceHandler.getString("OK"), null); //$NON-NLS-1$
+			status = new Status(IStatus.OK, JSPUIPlugin.ID, IStatus.OK, ResourceHandler.getString("OK"), null); //$NON-NLS-1$
 		}
 		return status;
 	}

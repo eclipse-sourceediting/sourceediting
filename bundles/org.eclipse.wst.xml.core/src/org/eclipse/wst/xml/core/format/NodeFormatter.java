@@ -13,10 +13,9 @@
 package org.eclipse.wst.xml.core.format;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
+import org.eclipse.wst.sse.core.ModelPlugin;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.format.IStructuredFormatContraints;
 import org.eclipse.wst.sse.core.format.IStructuredFormatPreferences;
@@ -29,9 +28,9 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.xml.core.XMLModelPlugin;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.document.XMLNode;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.document.CDATASectionImpl;
 import org.eclipse.wst.xml.core.internal.parser.regions.TagNameRegion;
 import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
@@ -424,7 +423,7 @@ public class NodeFormatter implements IStructuredFormatter {
 				if (preferences.getBoolean(CommonModelPreferenceNames.INDENT_USING_TABS))
 					fFormatPreferences.setIndent("\t"); //$NON-NLS-1$
 				else {
-					int tabWidth = getModelManagerPlugin().getPluginPreferences().getInt(CommonModelPreferenceNames.TAB_WIDTH);
+					int tabWidth = ModelPlugin.getDefault().getPluginPreferences().getInt(CommonModelPreferenceNames.TAB_WIDTH);
 					String indent = ""; //$NON-NLS-1$
 					for (int i = 0; i < tabWidth; i++) {
 						indent += " "; //$NON-NLS-1$
@@ -499,14 +498,8 @@ public class NodeFormatter implements IStructuredFormatter {
 		return indentationLength;
 	}
 
-	private IModelManagerPlugin getModelManagerPlugin() {
-
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		return plugin;
-	}
-
 	protected Preferences getModelPreferences() {
-		return XMLModelPlugin.getDefault().getPluginPreferences();
+		return XMLCorePlugin.getDefault().getPluginPreferences();
 	}
 
 	/**

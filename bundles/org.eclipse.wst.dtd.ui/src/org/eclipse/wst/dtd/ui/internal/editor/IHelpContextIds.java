@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.ui.internal.editor;
 
-import org.eclipse.wst.dtd.ui.DTDEditorPlugin;
+import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 
 /**
  * Help context ids for the DTD Source Editor.
@@ -25,7 +25,7 @@ import org.eclipse.wst.dtd.ui.DTDEditorPlugin;
 public interface IHelpContextIds {
 
 	// org.eclipse.wst.dtd.ui.
-	public static final String PREFIX = DTDEditorPlugin.getDefault().getBundle().getSymbolicName() + "."; //$NON-NLS-1$
+	public static final String PREFIX = DTDUIPlugin.getDefault().getBundle().getSymbolicName() + "."; //$NON-NLS-1$
 	// DTD Files Preference page
 	public static final String DTD_PREFWEBX_FILES_HELPID = PREFIX + "webx0020"; //$NON-NLS-1$
 	// DTD Styles Preference page

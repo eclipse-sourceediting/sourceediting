@@ -22,14 +22,14 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IPluginDescriptor;
-import org.eclipse.core.runtime.IPluginRegistry;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.wst.sse.ui.Logger;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.extension.DropActionProxy;
 import org.eclipse.wst.sse.ui.internal.extension.RegistryReader;
+import org.osgi.framework.Bundle;
 
 
 /**
@@ -77,7 +77,8 @@ public class TransferBuilder extends RegistryReader {
 		if (TRUE.equalsIgnoreCase(singleton) && method != null) {
 			try {
 				String name = element.getAttribute(ATT_CLASS);
-				Class cls = element.getDeclaringExtension().getDeclaringPluginDescriptor().getPluginClassLoader().loadClass(name);
+				String pluginId = element.getDeclaringExtension().getNamespace();
+				Class cls = Platform.getBundle(pluginId).loadClass(name);
 				Method mtd = cls.getMethod(method, new Class[]{});
 
 				obj = mtd.invoke(null, null);
@@ -110,8 +111,9 @@ public class TransferBuilder extends RegistryReader {
 		// If plugin has been loaded create extension.
 		// Otherwise, show busy cursor then create extension.
 		final Object[] result = new Object[1];
-		IPluginDescriptor plugin = element.getDeclaringExtension().getDeclaringPluginDescriptor();
-		if (plugin.isPluginActivated()) {
+		String pluginId = element.getDeclaringExtension().getNamespace();
+		Bundle bundle = Platform.getBundle(pluginId);
+		if (bundle.getState() == Bundle.ACTIVE) {
 			try {
 				return createExecutableExtension(element, classAttribute);
 			} catch (CoreException e) {
@@ -382,7 +384,7 @@ public class TransferBuilder extends RegistryReader {
 		cache = null;
 		targetIDs = Arrays.asList(ids);
 		targetContributionTag = tag;
-		IPluginRegistry registry = Platform.getPluginRegistry();
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		readRegistry(registry, PLUGIN_ID, extensionPoint);
 	}
 

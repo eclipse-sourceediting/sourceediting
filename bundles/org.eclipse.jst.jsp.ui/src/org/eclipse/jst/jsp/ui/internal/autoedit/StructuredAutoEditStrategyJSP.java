@@ -10,14 +10,13 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.autoedit;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.StructuredDocumentCommand;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.ui.internal.autoedit.StructuredAutoEditStrategyXML;
@@ -56,8 +55,6 @@ public class StructuredAutoEditStrategyJSP extends StructuredAutoEditStrategyXML
 	}
 
 	private IModelManager getModelManager() {
-
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		return plugin.getModelManager();
+		return StructuredModelManager.getInstance().getModelManager();
 	}
 }

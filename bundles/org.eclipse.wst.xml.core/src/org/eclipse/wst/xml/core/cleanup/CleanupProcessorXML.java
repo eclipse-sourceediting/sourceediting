@@ -20,8 +20,8 @@ import org.eclipse.wst.sse.core.cleanup.IStructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.cleanup.StructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.format.IStructuredFormatProcessor;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
-import org.eclipse.wst.xml.core.XMLModelPlugin;
 import org.eclipse.wst.xml.core.format.FormatProcessorXML;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.w3c.dom.Node;
 
 
@@ -81,7 +81,7 @@ public class CleanupProcessorXML extends AbstractStructuredCleanupProcessor {
 	}
 
 	protected Preferences getModelPreferences() {
-		return XMLModelPlugin.getDefault().getPluginPreferences();
+		return XMLCorePlugin.getDefault().getPluginPreferences();
 	}
 
 	protected void refreshCleanupPreferences() {

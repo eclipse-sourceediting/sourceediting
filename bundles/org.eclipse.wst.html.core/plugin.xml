@@ -5,7 +5,7 @@
    name="%pluginName"
    version="1.0.0"
    provider-name="%providerName"
-   class="org.eclipse.wst.html.core.HTMLCorePlugin">
+   class="org.eclipse.wst.html.core.internal.HTMLCorePlugin">
 
    <runtime>
       <library name="htmlmodel.jar">
@@ -13,7 +13,6 @@
       </library>
    </runtime>
    <requires>
-      <import plugin="org.eclipse.core.runtime.compatibility"/>
       <import plugin="org.eclipse.wst.css.core"/>
       <import plugin="org.eclipse.wst.sse.ui"/>
       <import plugin="org.eclipse.wst.sse.core"/>

@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IPluginRegistry;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
@@ -41,7 +41,7 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.part.MultiPageEditorSite;
 import org.eclipse.ui.texteditor.IUpdate;
-import org.eclipse.wst.sse.ui.Logger;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.extension.ActionDescriptor;
 import org.eclipse.wst.sse.ui.internal.extension.RegistryReader;
 
@@ -648,7 +648,7 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 		readingCache = null;
 		targetIDs = Arrays.asList(ids);
 		targetContributionTag = tag;
-		IPluginRegistry registry = Platform.getPluginRegistry();
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		readRegistry(registry, PLUGIN_ID, extensionPoint);
 	}
 

@@ -56,13 +56,15 @@ import org.eclipse.wst.common.encoding.exceptions.UnsupportedCharsetExceptionWit
 import org.eclipse.wst.sse.core.IFactoryRegistry;
 import org.eclipse.wst.sse.core.IModelLifecycleListener;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IModelStateListenerExtended;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.ModelLifecycleEvent;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
@@ -218,8 +220,7 @@ public class FileModelProvider extends FileDocumentProvider implements IModelPro
 			// get the model manager from the plugin
 			// note: we can use the static "ID" variable, since we pre-req
 			// that plugin
-			IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-			fModelManager = plugin.getModelManager();
+			fModelManager = StructuredModelManager.getInstance().getModelManager();
 		}
 		return fModelManager;
 	}
@@ -272,7 +273,7 @@ public class FileModelProvider extends FileDocumentProvider implements IModelPro
 		if (structuredModel == null)
 			return;
 
-		EditorPlugin plugin = ((EditorPlugin) Platform.getPlugin(EditorPlugin.ID));
+		SSEUIPlugin plugin = ((SSEUIPlugin) Platform.getPlugin(SSEUIPlugin.ID));
 		AdapterFactoryRegistry adapterRegistry = plugin.getAdapterFactoryRegistry();
 		//Iterator adapterFactoryList =
 		// adapterRegistry.getAdapterFactories();
@@ -883,7 +884,7 @@ public class FileModelProvider extends FileDocumentProvider implements IModelPro
 			reloaded = true;
 		} catch (IOException e) {
 			String message = MessageFormat.format(ResourceHandler.getString("FileModelProvider.0"), new String[]{fileEditorInput.getName()}); //$NON-NLS-1$
-			info.fStatus = new Status(IStatus.ERROR, EditorPlugin.ID, IStatus.ERROR, message, e);
+			info.fStatus = new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.ERROR, message, e);
 		} catch (CoreException e) {
 			info.fStatus = e.getStatus();
 		} finally {
@@ -971,9 +972,9 @@ public class FileModelProvider extends FileDocumentProvider implements IModelPro
 		// if that is the case, display a different error message
 		IStatus status;
 		if ((e.getCharPosition() < 0) && (e.isExceededMax()))
-			status = new Status(IStatus.ERROR, EditorPlugin.ID, 0, ResourceHandler.getString("8concat_ERROR_", (new Object[]{Integer.toString(e.getMaxBuffer()), e.getAttemptedIANAEncoding()})), e); //$NON-NLS-1$
+			status = new Status(IStatus.ERROR, SSEUIPlugin.ID, 0, ResourceHandler.getString("8concat_ERROR_", (new Object[]{Integer.toString(e.getMaxBuffer()), e.getAttemptedIANAEncoding()})), e); //$NON-NLS-1$
 		else
-			status = new Status(IStatus.ERROR, EditorPlugin.ID, 0, ResourceHandler.getString("7concat_ERROR_", (new Object[]{(Integer.toString(e.getCharPosition())), e.getAttemptedIANAEncoding()})), e); //$NON-NLS-1$
+			status = new Status(IStatus.ERROR, SSEUIPlugin.ID, 0, ResourceHandler.getString("7concat_ERROR_", (new Object[]{(Integer.toString(e.getCharPosition())), e.getAttemptedIANAEncoding()})), e); //$NON-NLS-1$
 		//$NON-NLS-1$ = "Could not be decoded character (at position {0}) according to the encoding parameter {1}"
 		ErrorDialog.openError(getActiveShell(), title, msg, status);
 	}
@@ -1014,7 +1015,7 @@ public class FileModelProvider extends FileDocumentProvider implements IModelPro
 		// its an error to call with null argument
 		if (structuredModel == null)
 			return;
-		EditorPlugin plugin = ((EditorPlugin) Platform.getPlugin(EditorPlugin.ID));
+		SSEUIPlugin plugin = ((SSEUIPlugin) Platform.getPlugin(SSEUIPlugin.ID));
 		AdapterFactoryRegistry adapterRegistry = plugin.getAdapterFactoryRegistry();
 		Iterator adapterList = adapterRegistry.getAdapterFactories();
 		// And all those appropriate for this particular type of content

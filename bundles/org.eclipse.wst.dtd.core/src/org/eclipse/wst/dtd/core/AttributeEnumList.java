@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
 import org.eclipse.wst.dtd.core.internal.text.RegionIterator;
 import org.eclipse.wst.dtd.core.parser.DTDRegionTypes;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -64,7 +65,7 @@ public class AttributeEnumList extends DTDNode {
 	}
 
 	public void setItems(String[] items) {
-		beginRecording(this, DTDPlugin.getDTDString("_UI_LABEL_ATTR_ENUM_ITEMS")); //$NON-NLS-1$
+		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_ATTR_ENUM_ITEMS")); //$NON-NLS-1$
 		setItems(this, items);
 		endRecording(this);
 	}

@@ -20,7 +20,7 @@ import org.eclipse.wst.dtd.core.Attribute;
 import org.eclipse.wst.dtd.core.AttributeList;
 import org.eclipse.wst.dtd.core.DTDFile;
 import org.eclipse.wst.dtd.core.DTDNode;
-import org.eclipse.wst.dtd.ui.DTDEditorPlugin;
+import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 
 
 
@@ -45,7 +45,7 @@ public class DragAttributeCommand extends DefaultDragAndDropCommand {
 		DTDNode referenceNode = (DTDNode) target;
 		DTDFile dtdFile = referenceNode.getDTDFile();
 		if (referenceNode instanceof Attribute) {
-			dtdFile.getDTDModel().beginRecording(this, DTDEditorPlugin.getResourceString("_UI_MOVE_ATTRIBUTE")); //$NON-NLS-1$
+			dtdFile.getDTDModel().beginRecording(this, DTDUIPlugin.getResourceString("_UI_MOVE_ATTRIBUTE")); //$NON-NLS-1$
 			AttributeList attList = (AttributeList) referenceNode.getParentNode();
 			Iterator iter = sources.iterator();
 			while (iter.hasNext()) {

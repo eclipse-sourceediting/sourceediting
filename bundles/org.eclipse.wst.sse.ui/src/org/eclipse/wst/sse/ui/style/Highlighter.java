@@ -21,7 +21,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
@@ -36,11 +35,10 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.util.Debug;
-import org.eclipse.wst.sse.ui.EditorPlugin;
-import org.eclipse.wst.sse.ui.Logger;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.util.EditorUtility;
 
@@ -61,7 +59,7 @@ public class Highlighter implements IHighlighter {
 	private IPropertyChangeListener fForegroundScaleListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
 			if (CommonEditorPreferenceNames.READ_ONLY_FOREGROUND_SCALE.equals(event.getProperty())) {
-				IPreferenceStore editorStore = ((AbstractUIPlugin) Platform.getPlugin(EditorPlugin.ID)).getPreferenceStore();
+				IPreferenceStore editorStore = SSEUIPlugin.getDefault().getPreferenceStore();
 				readOnlyForegroundScaleFactor = editorStore.getInt(CommonEditorPreferenceNames.READ_ONLY_FOREGROUND_SCALE);
 				disposeColorTable();
 				refreshDisplay();
@@ -285,7 +283,7 @@ public class Highlighter implements IHighlighter {
 	public void install(ITextViewer newTextViewer) {
 		this.textViewer = newTextViewer;
 
-		IPreferenceStore editorStore = ((AbstractUIPlugin) Platform.getPlugin(EditorPlugin.ID)).getPreferenceStore();
+		IPreferenceStore editorStore = SSEUIPlugin.getDefault().getPreferenceStore();
 		editorStore.addPropertyChangeListener(fForegroundScaleListener);
 		readOnlyForegroundScaleFactor = editorStore.getInt(CommonEditorPreferenceNames.READ_ONLY_FOREGROUND_SCALE);
 
@@ -505,7 +503,7 @@ public class Highlighter implements IHighlighter {
 			iterator.remove();
 		}
 
-		IPreferenceStore editorStore = ((AbstractUIPlugin) Platform.getPlugin(EditorPlugin.ID)).getPreferenceStore();
+		IPreferenceStore editorStore = SSEUIPlugin.getDefault().getPreferenceStore();
 		editorStore.removePropertyChangeListener(fForegroundScaleListener);
 		disposeColorTable();
 

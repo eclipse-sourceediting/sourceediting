@@ -2,7 +2,7 @@
 <?eclipse version="3.0"?>
 <plugin id="org.eclipse.jst.jsp.ui" name="%pluginName" version="1.0.0"
 	provider-name="%providerName"
-	class="org.eclipse.jst.jsp.ui.JSPEditorPlugin">
+	class="org.eclipse.jst.jsp.ui.internal.JSPUIPlugin">
 
 	<runtime>
 		<library name="jspeditor.jar">
@@ -10,7 +10,6 @@
 		</library>
 	</runtime>
 	<requires>
-		<import plugin="org.eclipse.core.runtime.compatibility" />
 		<import plugin="org.eclipse.ui.ide" />
 		<import plugin="org.eclipse.ui.views" />
 		<import plugin="org.eclipse.jface.text" />

@@ -18,7 +18,6 @@ import java.util.Iterator;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPluginRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
@@ -32,7 +31,7 @@ import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.IReleasable;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
@@ -42,6 +41,8 @@ import org.eclipse.wst.xml.core.document.XMLDocument;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleException;
 
 /**
  * @author pavery
@@ -68,9 +69,7 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 	}
 
 	private IModelManager getModelManager() {
-
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		return plugin.getModelManager();
+		return StructuredModelManager.getInstance().getModelManager();
 	}
 
 	/**
@@ -284,11 +283,11 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 	 * Initialize the Java Plugins that the JSP processor requires.
 	 */
 	protected void initializeJavaPlugins() {
-		IPluginRegistry pluginReg = Platform.getPluginRegistry();
 		try {
-			pluginReg.getPluginDescriptor(JDT_CORE_PLUGIN_ID).getPlugin();//$NON-NLS-1$
+			Bundle bundle = Platform.getBundle(JDT_CORE_PLUGIN_ID);
+			bundle.start();
 		}
-		catch (CoreException exc) {
+		catch (BundleException exc) {
 			Logger.logException("Could not initialize the JDT Plugins", exc);//$NON-NLS-1$
 		}
 	}

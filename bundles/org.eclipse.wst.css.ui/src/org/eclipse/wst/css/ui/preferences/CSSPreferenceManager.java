@@ -11,7 +11,6 @@
 package org.eclipse.wst.css.ui.preferences;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.ui.preferences.PreferenceManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -94,7 +93,7 @@ public class CSSPreferenceManager extends PreferenceManager {
 	 */
 	protected String getFilename() {
 		if (fileName == null) {
-			fileName = Platform.getPlugin(IModelManagerPlugin.ID).getStateLocation().toString() + "/cssprefs.xml";//$NON-NLS-1$
+			fileName = Platform.getStateLocation(Platform.getBundle("org.eclipse.wst.sse.core")).toString() + "/cssprefs.xml";//$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return fileName;
 	}

@@ -14,7 +14,6 @@ package org.eclipse.wst.sse.ui.preferences.ui;
 
 
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -26,7 +25,7 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
+import org.eclipse.wst.sse.core.ModelPlugin;
 import org.eclipse.wst.sse.ui.internal.preferences.TabFolderLayout;
 import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 
@@ -130,7 +129,7 @@ public class FilePreferencePage extends PreferencePage implements IWorkbenchPref
 		for (int i = 0; i < fTabs.length; i++) {
 			fTabs[i].performOk();
 		}
-		Platform.getPlugin(IModelManagerPlugin.ID).savePluginPreferences();
+		ModelPlugin.getDefault().savePluginPreferences();
 		return ok;
 	}
 }

@@ -12,11 +12,10 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.contentassist;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
@@ -46,8 +45,7 @@ public class ContentAssistUtils {
 			return null;
 
 		IndexedRegion node = null;
-		IModelManagerPlugin mmp = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IModelManager mm = mmp.getModelManager();
+		IModelManager mm = StructuredModelManager.getInstance().getModelManager();
 		IStructuredModel model = null;
 		if (mm != null)
 			model = mm.getExistingModelForRead(viewer.getDocument());

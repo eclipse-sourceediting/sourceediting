@@ -22,10 +22,10 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Plugin;
 import org.eclipse.wst.css.core.internal.Logger;
 import org.eclipse.wst.css.core.metamodel.CSSMetaModel;
 import org.eclipse.wst.css.core.metamodel.CSSProfile;
+import org.osgi.framework.Bundle;
 
 
 
@@ -79,9 +79,9 @@ class CSSProfileImpl implements CSSProfile {
 		ClassLoader targetLoader = null;
 		String pluginID = getOwnerPluginID();
 		if (pluginID != null) {
-			Plugin plugin = Platform.getPlugin(pluginID);
-			if (plugin != null) {
-				targetLoader = plugin.getClass().getClassLoader();
+			Bundle bundle = Platform.getBundle(pluginID);
+			if (bundle != null) {
+				targetLoader = bundle.getClass().getClassLoader();
 			}
 		}
 		if (targetLoader == null) {

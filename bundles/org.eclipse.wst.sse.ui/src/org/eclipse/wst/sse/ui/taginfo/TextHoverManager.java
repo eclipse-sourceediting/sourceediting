@@ -15,10 +15,8 @@ package org.eclipse.wst.sse.ui.taginfo;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.wst.sse.ui.EditorPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 
@@ -187,7 +185,7 @@ public class TextHoverManager {
 	}
 
 	private IPreferenceStore getPreferenceStore() {
-		return ((AbstractUIPlugin) Platform.getPlugin(EditorPlugin.ID)).getPreferenceStore();
+		return SSEUIPlugin.getDefault().getPreferenceStore();
 	}
 
 

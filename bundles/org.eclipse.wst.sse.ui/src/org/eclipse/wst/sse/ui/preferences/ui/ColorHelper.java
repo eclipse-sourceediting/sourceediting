@@ -17,7 +17,7 @@ package org.eclipse.wst.sse.ui.preferences.ui;
 import java.util.StringTokenizer;
 
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.wst.sse.ui.Logger;
+import org.eclipse.wst.sse.ui.internal.Logger;
 
 
 public class ColorHelper {

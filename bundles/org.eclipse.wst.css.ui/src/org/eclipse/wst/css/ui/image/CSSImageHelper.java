@@ -18,7 +18,7 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.wst.css.ui.CSSEditorPlugin;
+import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.css.ui.internal.editor.CSSEditorPluginImages;
 
 
@@ -100,7 +100,7 @@ public class CSSImageHelper {
 	 *  
 	 */
 	private Image createImage(String resource) {
-		ImageDescriptor desc = AbstractUIPlugin.imageDescriptorFromPlugin(CSSEditorPlugin.ID, resource);
+		ImageDescriptor desc = AbstractUIPlugin.imageDescriptorFromPlugin(CSSUIPlugin.ID, resource);
 		Image image = null;
 
 		if (desc == null) {

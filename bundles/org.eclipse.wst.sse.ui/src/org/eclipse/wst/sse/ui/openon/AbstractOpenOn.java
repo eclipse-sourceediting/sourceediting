@@ -17,7 +17,6 @@ import java.io.File;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.swt.program.Program;
@@ -32,9 +31,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
-import org.eclipse.wst.sse.ui.Logger;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.extensions.openon.IOpenOn;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.openon.ExternalFileEditorInput;
 import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 import org.eclipse.wst.sse.ui.util.PlatformStatusLineUtil;
@@ -97,8 +96,7 @@ abstract public class AbstractOpenOn implements IOpenOn {
 	}
 
 	protected IModelManager getModelManager() {
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		return plugin.getModelManager();
+		return StructuredModelManager.getInstance().getModelManager();
 	}
 
 	/*

@@ -12,10 +12,9 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.contentassist;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
-import org.eclipse.wst.xml.ui.XMLEditorPlugin;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.templates.TemplateContextTypeXML;
 
 
@@ -53,11 +52,11 @@ public class XMLTemplateCompletionProcessor extends AbstractTemplateCompletionPr
 	}
 
 	/**
-	 * Returns the XMLEditorPlugin
+	 * Returns the XMLUIPlugin
 	 * 
-	 * @return XMLEditorPlugin
+	 * @return XMLUIPlugin
 	 */
-	private XMLEditorPlugin getXMLEditorPlugin() {
-		return (XMLEditorPlugin) Platform.getPlugin(XMLEditorPlugin.ID);
+	private XMLUIPlugin getXMLEditorPlugin() {
+		return XMLUIPlugin.getDefault();
 	}
 }

@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
@@ -34,9 +33,9 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.wst.sse.core.IModelLifecycleListener;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.ModelLifecycleEvent;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.events.IStructuredDocumentListener;
 import org.eclipse.wst.sse.core.events.NewDocumentEvent;
 import org.eclipse.wst.sse.core.events.NoChangeEvent;
@@ -46,6 +45,7 @@ import org.eclipse.wst.sse.core.events.StructuredDocumentRegionsReplacedEvent;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.reconcile.IStructuredReconcilingStrategy;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorStrategy;
 import org.eclipse.wst.sse.ui.util.Assert;
@@ -304,7 +304,7 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 	protected IModelManager getModelManager() {
 
 		if (this.fModelManager == null)
-			this.fModelManager = ((IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID)).getModelManager();
+			this.fModelManager = StructuredModelManager.getInstance().getModelManager();
 		return this.fModelManager;
 	}
 

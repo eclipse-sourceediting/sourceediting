@@ -20,9 +20,8 @@ import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 
 /**
- * Small convenience class to log messages to plugin's log file and also, if
- * desired, the console. This class should only be used by classes in this
- * plugin. Other plugins should make their own copy, with appropriate ID.
+ * @deprecated This plugin has combined with the org.eclipse.wst.sse.ui plugin.
+ *             Use SSEUIPlugin instead.
  */
 public class Logger {
 	public static final int ERROR = IStatus.ERROR; // 4

@@ -26,7 +26,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.sse.ui.EditorPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
@@ -96,7 +96,7 @@ public class TranslucencyPreferenceTab implements IPreferenceTab {
 	 * @return Returns the preference store used in this tab
 	 */
 	private IPreferenceStore getPreferenceStore() {
-		return EditorPlugin.getDefault().getPreferenceStore();
+		return SSEUIPlugin.getDefault().getPreferenceStore();
 	}
 
 	/*
@@ -115,7 +115,7 @@ public class TranslucencyPreferenceTab implements IPreferenceTab {
 	 */
 	public void performApply() {
 		fTranslucencyScale.store();
-		EditorPlugin.getDefault().savePluginPreferences();
+		SSEUIPlugin.getDefault().savePluginPreferences();
 	}
 
 	/*

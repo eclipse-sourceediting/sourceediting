@@ -21,7 +21,7 @@ package org.eclipse.wst.dtd.ui.views.contentoutline;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.wst.dtd.ui.DTDEditorPlugin;
+import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.dtd.ui.internal.editor.DTDEditorPluginImageHelper;
 import org.eclipse.wst.dtd.ui.internal.editor.DTDEditorPluginImages;
 import org.eclipse.wst.sse.ui.views.contentoutline.PropertyChangeUpdateAction;
@@ -35,7 +35,7 @@ class OrderAction extends PropertyChangeUpdateAction {
 	private TreeViewer treeViewer;
 
 	public OrderAction(TreeViewer viewer, DTDTreeContentProvider provider, IPreferenceStore store, String preferenceKey) {
-		super(DTDEditorPlugin.getResourceString("_UI_BUTTON_GROUP_ITEMS_LOGICALLY"), store, preferenceKey, false); //$NON-NLS-1$
+		super(DTDUIPlugin.getResourceString("_UI_BUTTON_GROUP_ITEMS_LOGICALLY"), store, preferenceKey, false); //$NON-NLS-1$
 		setImageDescriptor(DTDEditorPluginImageHelper.getInstance().getImageDescriptor(DTDEditorPluginImages.IMG_OBJ_ORGANIZE_DTD_LOGICALLY));
 		treeViewer = viewer;
 		contentProvider = provider;

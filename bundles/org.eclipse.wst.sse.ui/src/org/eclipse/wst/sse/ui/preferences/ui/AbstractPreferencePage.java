@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.preferences.ui;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
@@ -34,8 +33,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
-import org.eclipse.wst.sse.ui.EditorPlugin;
+import org.eclipse.wst.sse.core.ModelPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 
 
@@ -187,14 +186,8 @@ public abstract class AbstractPreferencePage extends PreferencePage implements M
 	protected void enableValues() {
 	}
 
-	private IModelManagerPlugin getModelManagerPlugin() {
-
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		return plugin;
-	}
-
 	protected Preferences getModelPreferences() {
-		return getModelManagerPlugin().getPluginPreferences();
+		return ModelPlugin.getDefault().getPluginPreferences();
 	}
 
 	public void init(IWorkbench workbench) {
@@ -264,7 +257,7 @@ public abstract class AbstractPreferencePage extends PreferencePage implements M
 	}
 
 	protected void storeValues() {
-		EditorPlugin.getDefault().savePluginPreferences();
+		SSEUIPlugin.getDefault().savePluginPreferences();
 	}
 
 	protected void validateValues() {

@@ -18,11 +18,10 @@ import java.io.UnsupportedEncodingException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.html.core.cleanup.HTMLCleanupProcessorImpl;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.cleanup.IStructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
@@ -139,7 +138,7 @@ public class HTMLConverter {
 	/**
 	 */
 	private static IModelManager getModelManager() {
-		return ((IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID)).getModelManager();
+		return StructuredModelManager.getInstance().getModelManager();
 	}
 
 	/**

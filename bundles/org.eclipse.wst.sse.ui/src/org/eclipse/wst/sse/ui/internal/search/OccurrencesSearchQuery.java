@@ -26,8 +26,8 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.sse.ui.EditorPlugin;
-import org.eclipse.wst.sse.ui.Logger;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 
 
@@ -143,7 +143,7 @@ public class OccurrencesSearchQuery extends BasicSearchQuery {
 		try {
 			ResourcesPlugin.getWorkspace().run(findRegions, null);
 		} catch (CoreException e) {
-			status = new Status(IStatus.ERROR, EditorPlugin.ID, IStatus.OK, "", null); //$NON-NLS-1$
+			status = new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.OK, "", null); //$NON-NLS-1$
 		}
 		return status;
 	}

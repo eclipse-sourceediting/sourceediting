@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.internal.ui.text.IJavaPartitions;
 import org.eclipse.jdt.internal.ui.text.java.SmartSemicolonAutoEditStrategy;
 import org.eclipse.jdt.ui.PreferenceConstants;
@@ -50,7 +49,6 @@ import org.eclipse.jst.jsp.ui.style.java.LineStyleProviderForJava;
 import org.eclipse.jst.jsp.ui.taginfo.JSPBestMatchHoverProcessor;
 import org.eclipse.jst.jsp.ui.taginfo.JSPJavaBestMatchHoverProcessor;
 import org.eclipse.jst.jsp.ui.taginfo.JSPTagInfoHoverProcessor;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.css.core.internal.text.rules.StructuredTextPartitionerForCSS;
 import org.eclipse.wst.css.ui.contentassist.CSSContentAssistProcessor;
@@ -68,8 +66,8 @@ import org.eclipse.wst.javascript.common.ui.taginfo.JavaScriptBestMatchHoverProc
 import org.eclipse.wst.javascript.common.ui.taginfo.JavaScriptInformationProvider;
 import org.eclipse.wst.javascript.common.ui.taginfo.JavaScriptTagInfoHoverProcessor;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
 import org.eclipse.wst.sse.ui.EditorPlugin;
 import org.eclipse.wst.sse.ui.StructuredTextReconciler;
@@ -300,7 +298,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {
 		// html
 		if (contentType == StructuredTextPartitionerForHTML.ST_DEFAULT_HTML) {
-			TextHoverManager.TextHoverDescriptor[] hoverDescs = EditorPlugin.getDefault().getTextHoverManager().getTextHovers();
+			TextHoverManager.TextHoverDescriptor[] hoverDescs = getTextHovers();
 			int i = 0;
 			while (i < hoverDescs.length) {
 				if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {
@@ -319,7 +317,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 		}
 		else if (contentType == StructuredTextPartitionerForHTML.ST_SCRIPT) {
 			// HTML JavaScript
-			TextHoverManager.TextHoverDescriptor[] hoverDescs = EditorPlugin.getDefault().getTextHoverManager().getTextHovers();
+			TextHoverManager.TextHoverDescriptor[] hoverDescs = getTextHovers();
 			int i = 0;
 			while (i < hoverDescs.length) {
 				if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {
@@ -338,7 +336,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 		}
 		else if ((contentType == StructuredTextPartitionerForJSP.ST_DEFAULT_JSP) || (contentType == StructuredTextPartitionerForJSP.ST_JSP_DIRECTIVE)) {
 			// JSP
-			TextHoverManager.TextHoverDescriptor[] hoverDescs = EditorPlugin.getDefault().getTextHoverManager().getTextHovers();
+			TextHoverManager.TextHoverDescriptor[] hoverDescs = getTextHovers();
 			int i = 0;
 			while (i < hoverDescs.length) {
 				if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {
@@ -357,7 +355,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 		}
 		else if (contentType == StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA) {
 			// JSP Java
-			TextHoverManager.TextHoverDescriptor[] hoverDescs = EditorPlugin.getDefault().getTextHoverManager().getTextHovers();
+			TextHoverManager.TextHoverDescriptor[] hoverDescs = getTextHovers();
 			int i = 0;
 			while (i < hoverDescs.length) {
 				if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {
@@ -390,9 +388,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 	}
 
 	private IModelManager getModelManager() {
-
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		return plugin.getModelManager();
+		return StructuredModelManager.getInstance().getModelManager();
 	}
 
 	public IReconciler getReconciler(ISourceViewer sourceViewer) {
@@ -414,7 +410,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 			//fReconciler.setEditor(editorPart);
 		}
 
-		IPreferenceStore store = ((AbstractUIPlugin) Platform.getPlugin(SSE_EDITOR_ID)).getPreferenceStore();
+		IPreferenceStore store = EditorPlugin.getDefault().getPreferenceStore();
 		boolean reconcilingEnabled = store.getBoolean(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
 
 		// the second time through, the strategies are set

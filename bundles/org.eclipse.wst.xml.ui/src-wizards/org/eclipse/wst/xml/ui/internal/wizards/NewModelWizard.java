@@ -33,8 +33,8 @@ import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
-import org.eclipse.wst.xml.ui.XMLEditorPlugin;
 
 public class NewModelWizard extends Wizard implements INewWizard
 {
@@ -276,7 +276,7 @@ public class NewModelWizard extends Wizard implements INewWizard
       String fileExtension = (new Path(fullFileName)).getFileExtension();
       if (fileExtension != null) 
       {                    
-        IEditorRegistry editorRegistry = XMLEditorPlugin.getInstance().getWorkbench().getEditorRegistry();
+        IEditorRegistry editorRegistry = PlatformUI.getWorkbench().getEditorRegistry();
         IEditorDescriptor defaultEditorDescriptor = editorRegistry.getDefaultEditor();   
         IEditorDescriptor[] descriptors =  editorRegistry.getEditors(getFileName());        
         if (descriptors.length == 0)

@@ -22,12 +22,10 @@ import java.util.Vector;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.util.Assert;
 import org.w3c.dom.Attr;
@@ -173,7 +171,6 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 			return;
 
 		IStructuredModel structuredModel = null;
-		ISchedulingRule rule = null;
 		//OutputStream outputStream = null;
 		try {
 			// setup structuredModel
@@ -457,9 +454,7 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 	// when it's set to false
 
 	private IModelManager getModelManager() {
-
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		return plugin.getModelManager();
+		return StructuredModelManager.getInstance().getModelManager();
 	}
 
 	protected boolean isSiblingOf(Node node, Node endNode) {

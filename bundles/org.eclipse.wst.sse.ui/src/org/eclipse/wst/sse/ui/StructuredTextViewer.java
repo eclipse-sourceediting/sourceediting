@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
@@ -58,7 +57,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.texteditor.IEditorStatusLine;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.core.IStructuredModel;
@@ -68,6 +66,7 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.undo.IDocumentSelectionMediator;
 import org.eclipse.wst.sse.core.undo.UndoDocumentEvent;
 import org.eclipse.wst.sse.ui.extension.IExtendedSimpleEditor;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
 import org.eclipse.wst.sse.ui.util.PlatformStatusLineUtil;
@@ -670,8 +669,7 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 	}
 
 	protected IExtendedSimpleEditor getActiveExtendedSimpleEditor() {
-		AbstractUIPlugin plugin = (AbstractUIPlugin) Platform.getPlugin(PlatformUI.PLUGIN_ID);
-		IWorkbenchWindow window = plugin.getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window != null) {
 			IWorkbenchPage page = window.getActivePage();
 			if (page != null) {
@@ -1020,8 +1018,7 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 	 * @param msg
 	 */
 	protected void setErrorMessage(String msg) {
-		AbstractUIPlugin plugin = (AbstractUIPlugin) Platform.getPlugin(PlatformUI.PLUGIN_ID);
-		IWorkbenchWindow window = plugin.getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window != null) {
 			IWorkbenchPage page = window.getActivePage();
 			if (page != null) {

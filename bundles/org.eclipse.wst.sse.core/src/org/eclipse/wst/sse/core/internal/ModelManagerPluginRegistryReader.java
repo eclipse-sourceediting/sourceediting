@@ -20,12 +20,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
-import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Plugin;
 import org.eclipse.wst.sse.core.AdapterFactory;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.modelhandler.IDocumentTypeHandler;
+import org.osgi.framework.Bundle;
 
 
 public class ModelManagerPluginRegistryReader {
@@ -74,17 +72,17 @@ public class ModelManagerPluginRegistryReader {
 			// if className is null, then no one defined the extension point
 			// for adapter factories
 			if (className != null) {
-				Plugin plugin = null;
-				IPluginDescriptor descriptor = element.getDeclaringExtension().getDeclaringPluginDescriptor();
+				String name = element.getDeclaringExtension().getNamespace();
+				Bundle bundle = null;
 				try {
-					plugin = descriptor.getPlugin();
-				} catch (CoreException e) {
+					bundle = Platform.getBundle(name);
+				} catch (Exception e) {
 					// if an error occurs here, its probably that the plugin
 					// could not be found/loaded
-					Logger.logException("Could not find plugin: " + descriptor, e); //$NON-NLS-1$
+					Logger.logException("Could not find bundle: " + name, e); //$NON-NLS-1$
 
 				}
-				if (plugin != null) {
+				if (bundle != null) {
 					boolean useExtendedConstructor = false;
 					boolean doRegisterAdapters = false;
 					Object adapterKey = null;
@@ -94,8 +92,13 @@ public class ModelManagerPluginRegistryReader {
 					}
 					if (adapterKeyClass != null) {
 						try {
-							ClassLoader classLoader = plugin.getClass().getClassLoader();
-							Class aClass = classLoader != null ? classLoader.loadClass(adapterKeyClass) : Class.forName(adapterKeyClass);
+							Class aClass = null;
+//							aClass = classLoader != null ? classLoader.loadClass(adapterKeyClass) : Class.forName(adapterKeyClass);
+							if (bundle.getState() != Bundle.UNINSTALLED) {
+								aClass = bundle.loadClass(adapterKeyClass);
+							} else {
+								aClass = Class.forName(adapterKeyClass);
+							}
 							if (aClass != null) {
 								useExtendedConstructor = true;
 								adapterKey = aClass;
@@ -108,8 +111,13 @@ public class ModelManagerPluginRegistryReader {
 					}
 
 					try {
-						ClassLoader classLoader = plugin.getClass().getClassLoader();
-						Class theClass = classLoader != null ? classLoader.loadClass(className) : Class.forName(className);
+						Class theClass = null;
+//						Class theClass = classLoader != null ? classLoader.loadClass(className) : Class.forName(className);
+						if (bundle.getState() != Bundle.UNINSTALLED) {
+							theClass = bundle.loadClass(className);
+						} else {
+							theClass = Class.forName(className);
+						}
 						if (useExtendedConstructor) {
 							java.lang.reflect.Constructor[] ctors = theClass.getConstructors();
 							for (int i = 0; i < ctors.length; i++) {
@@ -148,7 +156,7 @@ public class ModelManagerPluginRegistryReader {
 	protected List loadRegistry(Object contentType) {
 		List factoryList = new Vector();
 		IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
-		IExtensionPoint point = extensionRegistry.getExtensionPoint(IModelManagerPlugin.ID, EXTENSION_POINT_ID);
+		IExtensionPoint point = extensionRegistry.getExtensionPoint(SSECorePlugin.ID, EXTENSION_POINT_ID);
 		if (point != null) {
 			IConfigurationElement[] elements = point.getConfigurationElements();
 			for (int i = 0; i < elements.length; i++) {

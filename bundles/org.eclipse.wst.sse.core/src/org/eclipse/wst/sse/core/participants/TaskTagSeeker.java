@@ -43,11 +43,11 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.builder.IBuilderDelegate;
 import org.eclipse.wst.sse.core.document.DocumentReader;
 import org.eclipse.wst.sse.core.document.IEncodedDocument;
 import org.eclipse.wst.sse.core.internal.Logger;
+import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.parser.RegionParser;
@@ -81,7 +81,7 @@ public abstract class TaskTagSeeker implements IBuilderDelegate {
 	protected static final boolean _debugBuilderPerf = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/builder/time")); //$NON-NLS-1$ //$NON-NLS-2$
 
 	public static String getTaskMarkerType() {
-		return IModelManagerPlugin.ID + ".task"; //$NON-NLS-1$
+		return SSECorePlugin.ID + ".task"; //$NON-NLS-1$
 	}
 
 	// TODO: implement per-project enablement according to
@@ -349,7 +349,7 @@ public abstract class TaskTagSeeker implements IBuilderDelegate {
 	}
 
 	final protected String getMarkerType() {
-		return IModelManagerPlugin.ID + ".task"; //$NON-NLS-1$
+		return SSECorePlugin.ID + ".task"; //$NON-NLS-1$
 	}
 
 	/**
@@ -368,9 +368,9 @@ public abstract class TaskTagSeeker implements IBuilderDelegate {
 		if (_debug) {
 			System.out.println(this + " loadPreference()"); //$NON-NLS-1$
 		}
-		fEnabled = Platform.getPlugin(IModelManagerPlugin.ID).getPluginPreferences().getBoolean(CommonModelPreferenceNames.TASK_TAG_ENABLE);
-		String tagsString = Platform.getPlugin(IModelManagerPlugin.ID).getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_TAGS);
-		String prioritiesString = Platform.getPlugin(IModelManagerPlugin.ID).getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_PRIORITIES);
+		fEnabled = SSECorePlugin.getDefault().getPluginPreferences().getBoolean(CommonModelPreferenceNames.TASK_TAG_ENABLE);
+		String tagsString = SSECorePlugin.getDefault().getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_TAGS);
+		String prioritiesString = SSECorePlugin.getDefault().getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_PRIORITIES);
 
 		List list = new ArrayList();
 		StringTokenizer toker = null;

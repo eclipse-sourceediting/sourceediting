@@ -28,12 +28,11 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.common.encoding.EncodingRule;
 import org.eclipse.wst.html.core.document.HTMLDocumentTypeConstants;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.exceptions.ResourceAlreadyExists;
 import org.eclipse.wst.sse.core.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.util.PathHelper;
@@ -67,8 +66,7 @@ public class URLModelProvider {
 		super();
 
 		// obtain model manager
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		modelManager = plugin.getModelManager();
+		modelManager = StructuredModelManager.getInstance().getModelManager();
 	}
 
 	/**

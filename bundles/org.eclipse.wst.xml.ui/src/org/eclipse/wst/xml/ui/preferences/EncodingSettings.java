@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.common.encoding.CommonCharsetNames;
-import org.eclipse.wst.sse.ui.Logger;
+import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.nls.ResourceHandler;
 
 

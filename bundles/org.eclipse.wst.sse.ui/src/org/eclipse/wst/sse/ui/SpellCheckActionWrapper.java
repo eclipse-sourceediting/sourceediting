@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui;
 
-import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -34,6 +33,7 @@ import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckTarget;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
 import org.eclipse.wst.sse.ui.nls.ResourceHandler;
+import org.osgi.framework.Bundle;
 
 
 /**
@@ -65,10 +65,9 @@ public class SpellCheckActionWrapper extends Action implements IExtendedEditorAc
 		//     DBK thereby avoiding the load of the provider plug-in).
 		//		setId("com.ibm.etools.spellcheck");
 		//		setActionDefinitionId("com.ibm.etools.spellcheck");
-
-		IPluginDescriptor localDescriptor = Platform.getPluginRegistry().getPluginDescriptor(EditorPlugin.ID);
-		setText(localDescriptor.getResourceString("%Spell_Check_label")); //$NON-NLS-1$
-		setToolTipText(localDescriptor.getResourceString("%Spell_Check_tooltip")); //$NON-NLS-1$
+		Bundle bundle = Platform.getBundle("org.eclipse.wst.sse.ui");	//$NON-NLS-1$
+		setText(Platform.getResourceString(bundle, "%Spell_Check_label")); //$NON-NLS-1$
+		setToolTipText(Platform.getResourceString(bundle, "%Spell_Check_tooltip")); //$NON-NLS-1$
 
 		setImageDescriptor(EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_CTOOL16_SPELLCHECK));
 		setDisabledImageDescriptor(EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_DTOOL16_SPELLCHECK));

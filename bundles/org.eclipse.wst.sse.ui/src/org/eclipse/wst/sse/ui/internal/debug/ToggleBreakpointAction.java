@@ -18,7 +18,6 @@ import java.util.List;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.model.IBreakpoint;
@@ -29,14 +28,14 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.util.Debug;
-import org.eclipse.wst.sse.ui.EditorPlugin;
-import org.eclipse.wst.sse.ui.Logger;
 import org.eclipse.wst.sse.ui.extension.IExtendedMarkupEditor;
 import org.eclipse.wst.sse.ui.extension.IExtendedSimpleEditor;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.IBreakpointProvider;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.extension.BreakpointProviderBuilder;
 import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 import org.w3c.dom.Document;
@@ -103,7 +102,7 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 
 		if (errors.size() > 0) {
 			Shell shell = editor.getSite().getShell();
-			MultiStatus allStatus = new MultiStatus(EditorPlugin.ID, IStatus.INFO, (IStatus[]) errors.toArray(new IStatus[0]), ResourceHandler.getResourceBundle().getString("ManageBreakpoints.error.adding.message1"), null); //$NON-NLS-1$
+			MultiStatus allStatus = new MultiStatus(SSEUIPlugin.ID, IStatus.INFO, (IStatus[]) errors.toArray(new IStatus[0]), ResourceHandler.getResourceBundle().getString("ManageBreakpoints.error.adding.message1"), null); //$NON-NLS-1$
 			// show for conditions more severe than INFO or when no
 			// breakpoints were created
 			if (allStatus.getSeverity() > IStatus.INFO || getBreakpoints(getMarkers()).length < 1) {
@@ -115,7 +114,7 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 	}
 
 	protected String getContentType(IDocument document) {
-		IModelManager mgr = ((IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID)).getModelManager();
+		IModelManager mgr = StructuredModelManager.getInstance().getModelManager();
 		String contentType = null;
 		IStructuredModel model = null;
 		try {

@@ -13,6 +13,7 @@
 package org.eclipse.wst.dtd.core;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 
 
@@ -23,7 +24,7 @@ public class Unrecognized extends TopLevelNode {
 	}
 
 	public Image getImage() {
-		return DTDPlugin.getInstance().getImage(DTDResource.UNRECOGNIZEDICON);
+		return DTDCorePlugin.getInstance().getImage(DTDResource.UNRECOGNIZEDICON);
 	}
 
 	public String getName() {

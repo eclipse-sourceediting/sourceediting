@@ -10,8 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.preferences.ui;
 
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.jst.jsp.ui.JSPEditorPlugin;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.editor.IHelpContextIds;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -25,7 +24,7 @@ import org.eclipse.ui.texteditor.templates.TemplatePreferencePage;
 public class JSPTemplatePreferencePage extends TemplatePreferencePage {
 
 	public JSPTemplatePreferencePage() {
-		JSPEditorPlugin jspEditorPlugin = (JSPEditorPlugin) Platform.getPlugin(JSPEditorPlugin.ID);
+		JSPUIPlugin jspEditorPlugin = JSPUIPlugin.getDefault();
 		
 		setPreferenceStore(jspEditorPlugin.getPreferenceStore());
 		setTemplateStore(jspEditorPlugin.getTemplateStore());
@@ -37,7 +36,7 @@ public class JSPTemplatePreferencePage extends TemplatePreferencePage {
 	 */
 	public boolean performOk() {
   	  boolean ok = super.performOk();
-  	  Platform.getPlugin(JSPEditorPlugin.ID).savePluginPreferences();
+  	  JSPUIPlugin.getDefault().savePluginPreferences();
 	  return ok;
 	}
 	

@@ -10,11 +10,10 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.contentassist;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
-import org.eclipse.jst.jsp.ui.JSPEditorPlugin;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImageHelper;
 import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImages;
 import org.eclipse.jst.jsp.ui.templates.TemplateContextTypeJSP;
@@ -49,11 +48,11 @@ public class JSPTemplateCompletionProcessor extends AbstractTemplateCompletionPr
 	}
 	
 	/**
-	 * Returns the JSPEditorPlugin
-	 * @return JSPEditorPlugin
+	 * Returns the JSPUIPlugin
+	 * @return JSPUIPlugin
 	 */
-	private JSPEditorPlugin getJSPEditorPlugin() {
-		return (JSPEditorPlugin) Platform.getPlugin(JSPEditorPlugin.ID);
+	private JSPUIPlugin getJSPEditorPlugin() {
+		return JSPUIPlugin.getDefault();
 	}
 	
 	/* (non-Javadoc)

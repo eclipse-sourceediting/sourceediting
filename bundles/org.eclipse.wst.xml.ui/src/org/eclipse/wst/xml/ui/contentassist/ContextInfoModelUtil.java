@@ -12,10 +12,9 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.contentassist;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.document.XMLNode;
@@ -38,7 +37,7 @@ public class ContextInfoModelUtil {
 	}
 
 	public IModelManager getModelManager() {
-		return ((IModelManagerPlugin) Platform.getPlugin(SSE_MODEL_ID)).getModelManager();
+		return StructuredModelManager.getInstance().getModelManager();
 	}
 
 	public ModelQuery getModelQuery() {

@@ -38,6 +38,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.texteditor.MarkerAnnotation;
 import org.eclipse.wst.sse.core.util.StringUtils;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 
 

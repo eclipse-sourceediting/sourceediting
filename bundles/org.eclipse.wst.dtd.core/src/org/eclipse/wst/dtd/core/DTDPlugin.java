@@ -12,97 +12,11 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.core;
 
-import java.text.MessageFormat;
-import java.util.ResourceBundle;
+import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
 
-import org.eclipse.core.runtime.IPluginDescriptor;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
-
-public class DTDPlugin extends AbstractUIPlugin {
-	private static DTDPlugin instance;
-
-	public static Image getDTDImage(String iconName) {
-		return getInstance().getImage(iconName);
-	}
-
-	public static ImageDescriptor getDTDImageDescriptor(String iconName) {
-		String thisID = getInstance().getBundle().getSymbolicName();
-		return AbstractUIPlugin.imageDescriptorFromPlugin(thisID, iconName);
-	}
-
-	public static String getDTDString(String key) {
-		// In case it is invoked from a command line
-		if (getInstance() == null) {
-			return ""; //$NON-NLS-1$
-		}
-
-		return getInstance().getString(key);
-	}
-
-	public synchronized static DTDPlugin getInstance() {
-		return instance;
-	}
-
-	public static DTDPlugin getPlugin() {
-		return instance;
-	}
-
-	private ResourceBundle resourceBundle;
-
-	public DTDPlugin(IPluginDescriptor descriptor) {
-		super(descriptor);
-		instance = this;
-		try {
-			resourceBundle = descriptor.getResourceBundle();
-		} catch (java.util.MissingResourceException exception) {
-			//B2BUtilPlugin.getPlugin().getMsgLogger().write(B2BUtilPlugin.getGUIString("_WARN_PLUGIN_PROPERTIES_MISSING")
-			// + descriptor.getLabel());
-			resourceBundle = null;
-		}
-	}
-
-	public Image getImage(String iconName) {
-		ImageRegistry imageRegistry = getImageRegistry();
-		Image image = imageRegistry.get(iconName);
-
-		if (image == null) {
-			String thisID = getInstance().getBundle().getSymbolicName();
-			imageRegistry.put(iconName, imageDescriptorFromPlugin(thisID, iconName));
-			image = imageRegistry.get(iconName);
-		}
-
-		return image;
-	}
-
-	public ResourceBundle getResourceBundle() {
-		return resourceBundle;
-	}
-
-	/**
-	 * This gets the string resource.
-	 */
-	public String getString(String key) {
-		return getResourceBundle().getString(key);
-	}
-
-	/**
-	 * This gets the string resource and does one substitution.
-	 */
-	public String getString(String key, Object s1) {
-		return MessageFormat.format(getString(key), new Object[]{s1});
-	}
-
-	/**
-	 * This gets the string resource and does two substitutions.
-	 */
-	public String getString(String key, Object s1, Object s2) {
-		return MessageFormat.format(getString(key), new Object[]{s1, s2});
-	}
-
-	public void startup() {
-		instance = this;
-	}
+/**
+ * @deprecated use internal DTDCorePlugin class instead if possible
+ */
+public class DTDPlugin extends DTDCorePlugin {
+	// see org.eclipse.wst.dtd.core.internal.DTDCorePlugin
 }

@@ -12,9 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.registry;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.wst.common.contentmodel.modelquery.CMDocumentManager;
 import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
@@ -25,6 +23,7 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.PropagatingAdapter;
 import org.eclipse.wst.sse.core.modelhandler.IDocumentTypeHandler;
 import org.eclipse.wst.sse.core.util.Assert;
+import org.eclipse.wst.sse.ui.EditorPlugin;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
@@ -93,7 +92,7 @@ public class AdapterFactoryProviderForXML implements AdapterFactoryProvider {
 			if (modelQuery != null) {
 				CMDocumentManager documentManager = modelQuery.getCMDocumentManager();
 				if (documentManager != null) {
-					IPreferenceStore store = ((AbstractUIPlugin) Platform.getPlugin(EDITOR_PLUGIN_ID)).getPreferenceStore();
+					IPreferenceStore store = EditorPlugin.getDefault().getPreferenceStore();
 					boolean useInferredGrammar = (store != null) ? store.getBoolean(PreferenceKeyGenerator.generateKey(CommonEditorPreferenceNames.EDITOR_USE_INFERRED_GRAMMAR, IContentTypeIdentifier.ContentTypeID_SSEXML)) : true;
 
 					documentManager.setPropertyEnabled(CMDocumentManager.PROPERTY_ASYNC_LOAD, true);
@@ -118,7 +117,7 @@ public class AdapterFactoryProviderForXML implements AdapterFactoryProvider {
 			// creating this factory
 			// to improve performance...
 			String contentTypeId = IContentTypeIdentifier.ContentTypeID_SSEXML;
-			IPreferenceStore store = ((AbstractUIPlugin) Platform.getPlugin(EDITOR_PLUGIN_ID)).getPreferenceStore();
+			IPreferenceStore store =EditorPlugin.getDefault().getPreferenceStore();
 			if (store.getString(PreferenceKeyGenerator.generateKey(CommonEditorPreferenceNames.EDITOR_VALIDATION_METHOD, contentTypeId)).equals(CommonEditorPreferenceNames.EDITOR_VALIDATION_CONTENT_MODEL)) {
 				factory = new ReconcilerAdapterFactoryForXML();
 				propagatingAdapter.addAdaptOnCreateFactory(factory);

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.jst.jsp.core.Logger;
+import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.wst.common.contentmodel.CMDocument;
 import org.eclipse.wst.common.contentmodel.CMNode;

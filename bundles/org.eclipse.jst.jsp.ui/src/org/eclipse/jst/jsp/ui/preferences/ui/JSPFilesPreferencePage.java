@@ -13,7 +13,7 @@ package org.eclipse.jst.jsp.ui.preferences.ui;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jst.jsp.core.JSPCorePlugin;
-import org.eclipse.jst.jsp.ui.JSPEditorPlugin;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.editor.IHelpContextIds;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -33,7 +33,7 @@ public class JSPFilesPreferencePage extends HTMLFilesPreferencePage {
 	 * @see org.eclipse.jface.preference.PreferencePage#doGetPreferenceStore()
 	 */
 	protected IPreferenceStore doGetPreferenceStore() {
-		return JSPEditorPlugin.getDefault().getPreferenceStore();
+		return JSPUIPlugin.getDefault().getPreferenceStore();
 	}
 
 	/* (non-Javadoc)

@@ -17,20 +17,18 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Iterator;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
-import org.eclipse.wst.dtd.core.parser.DTDRegionParser;
 import org.eclipse.wst.dtd.core.parser.DTDRegionTypes;
-import org.eclipse.wst.dtd.ui.DTDEditorPlugin;
+import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.dtd.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.dtd.ui.style.IStyleConstantsDTD;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.EditorPlugin;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore.OverlayKey;
@@ -75,7 +73,7 @@ public class DTDColorPage extends AbstractColorPage {
 	}
 
 	public String getSampleText() {
-		return DTDEditorPlugin.getResourceString("DTDColorPage.0"); //$NON-NLS-1$
+		return DTDUIPlugin.getResourceString("DTDColorPage.0"); //$NON-NLS-1$
 	}
 
 	protected void initContextStyleMap(Dictionary contextStyleMap) {
@@ -123,14 +121,14 @@ public class DTDColorPage extends AbstractColorPage {
 	}
 
 	protected void initDescriptions(Dictionary descriptions) {
-		descriptions.put(IStyleConstantsDTD.DTD_COMMENT, DTDEditorPlugin.getResourceString("DTDColorPage.1")); //$NON-NLS-1$
-		descriptions.put(IStyleConstantsDTD.DTD_DATA, DTDEditorPlugin.getResourceString("DTDColorPage.2")); //$NON-NLS-1$
-		descriptions.put(IStyleConstantsDTD.DTD_DEFAULT, DTDEditorPlugin.getResourceString("DTDColorPage.3")); //$NON-NLS-1$
-		descriptions.put(IStyleConstantsDTD.DTD_KEYWORD, DTDEditorPlugin.getResourceString("DTDColorPage.4")); //$NON-NLS-1$
-		descriptions.put(IStyleConstantsDTD.DTD_STRING, DTDEditorPlugin.getResourceString("DTDColorPage.5")); //$NON-NLS-1$
-		descriptions.put(IStyleConstantsDTD.DTD_SYMBOL, DTDEditorPlugin.getResourceString("DTDColorPage.6")); //$NON-NLS-1$
-		descriptions.put(IStyleConstantsDTD.DTD_TAG, DTDEditorPlugin.getResourceString("DTDColorPage.7")); //$NON-NLS-1$
-		descriptions.put(IStyleConstantsDTD.DTD_TAGNAME, DTDEditorPlugin.getResourceString("DTDColorPage.8")); //$NON-NLS-1$
+		descriptions.put(IStyleConstantsDTD.DTD_COMMENT, DTDUIPlugin.getResourceString("DTDColorPage.1")); //$NON-NLS-1$
+		descriptions.put(IStyleConstantsDTD.DTD_DATA, DTDUIPlugin.getResourceString("DTDColorPage.2")); //$NON-NLS-1$
+		descriptions.put(IStyleConstantsDTD.DTD_DEFAULT, DTDUIPlugin.getResourceString("DTDColorPage.3")); //$NON-NLS-1$
+		descriptions.put(IStyleConstantsDTD.DTD_KEYWORD, DTDUIPlugin.getResourceString("DTDColorPage.4")); //$NON-NLS-1$
+		descriptions.put(IStyleConstantsDTD.DTD_STRING, DTDUIPlugin.getResourceString("DTDColorPage.5")); //$NON-NLS-1$
+		descriptions.put(IStyleConstantsDTD.DTD_SYMBOL, DTDUIPlugin.getResourceString("DTDColorPage.6")); //$NON-NLS-1$
+		descriptions.put(IStyleConstantsDTD.DTD_TAG, DTDUIPlugin.getResourceString("DTDColorPage.7")); //$NON-NLS-1$
+		descriptions.put(IStyleConstantsDTD.DTD_TAGNAME, DTDUIPlugin.getResourceString("DTDColorPage.8")); //$NON-NLS-1$
 	}
 
 	protected void initStyleList(ArrayList list) {
@@ -154,13 +152,8 @@ public class DTDColorPage extends AbstractColorPage {
 	}
 
 	protected void setupPicker(StyledTextColorPicker picker) {
-
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		if (plugin != null) {
-			IModelManager mmanager = plugin.getModelManager();
+			IModelManager mmanager = StructuredModelManager.getInstance().getModelManager();
 			picker.setParser(mmanager.createStructuredDocumentFor(IContentTypeIdentifier.ContentTypeID_DTD).getParser());
-		} else
-			picker.setParser(new DTDRegionParser());
 
 		Dictionary descriptions = new Hashtable();
 		initDescriptions(descriptions);

@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.TypedPosition;
@@ -24,7 +23,7 @@ import org.eclipse.jface.text.formatter.ContextBasedFormattingStrategy;
 import org.eclipse.jface.text.formatter.FormattingContextProperties;
 import org.eclipse.jface.text.formatter.IFormattingContext;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.format.IStructuredFormatProcessor;
 
@@ -32,7 +31,7 @@ import org.eclipse.wst.sse.core.format.IStructuredFormatProcessor;
 public class StructuredFormattingStrategy extends ContextBasedFormattingStrategy {
 
 	protected static IModelManager getModelManager() {
-		return ((IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID)).getModelManager();
+		return StructuredModelManager.getInstance().getModelManager();
 	}
 
 	/** Documents to be formatted by this strategy */

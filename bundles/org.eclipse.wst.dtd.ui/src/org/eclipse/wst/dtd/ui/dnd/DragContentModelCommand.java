@@ -25,7 +25,7 @@ import org.eclipse.wst.dtd.core.CMNode;
 import org.eclipse.wst.dtd.core.DTDFile;
 import org.eclipse.wst.dtd.core.DTDNode;
 import org.eclipse.wst.dtd.core.Element;
-import org.eclipse.wst.dtd.ui.DTDEditorPlugin;
+import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 
 
 public class DragContentModelCommand extends DefaultDragAndDropCommand {
@@ -56,7 +56,7 @@ public class DragContentModelCommand extends DefaultDragAndDropCommand {
 			DTDFile dtdFile = referenceNode.getDTDFile();
 
 			DTDNode parent = (DTDNode) referenceNode.getParentNode();
-			dtdFile.getDTDModel().beginRecording(this, DTDEditorPlugin.getResourceString("_UI_MOVE_CONTENT")); //$NON-NLS-1$
+			dtdFile.getDTDModel().beginRecording(this, DTDUIPlugin.getResourceString("_UI_MOVE_CONTENT")); //$NON-NLS-1$
 			boolean parentIsElement = false;
 			Element element = null;
 			CMGroupNode group = null;

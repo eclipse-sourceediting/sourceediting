@@ -13,7 +13,6 @@ package org.eclipse.wst.html.ui.internal.contentassist;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -30,10 +29,10 @@ import org.eclipse.wst.html.core.contentmodel.HTMLCMDocument;
 import org.eclipse.wst.javascript.common.ui.contentassist.JavaScriptContentAssistProcessor;
 import org.eclipse.wst.sse.core.AdapterFactory;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.modelquery.ModelQueryAdapter;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -267,8 +266,7 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 	 */
 	private ICompletionProposal getHTMLTagPropsosal(StructuredTextViewer viewer, int documentPosition) {
 
-		IModelManagerPlugin mmp = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IModelManager mm = mmp.getModelManager();
+		IModelManager mm = StructuredModelManager.getInstance().getModelManager();
 		IStructuredModel model = null;
 		try {
 			if (mm != null)

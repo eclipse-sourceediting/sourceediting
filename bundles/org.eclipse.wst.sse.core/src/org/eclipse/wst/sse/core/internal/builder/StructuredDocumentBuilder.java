@@ -46,10 +46,9 @@ import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
-import org.eclipse.wst.sse.core.ModelPlugin;
 import org.eclipse.wst.sse.core.builder.IBuilderDelegate;
 import org.eclipse.wst.sse.core.internal.Logger;
+import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.internal.nls.ResourceHandler;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 
@@ -61,7 +60,6 @@ public class StructuredDocumentBuilder extends IncrementalProjectBuilder impleme
 	protected static final boolean _debugBuilderPerf = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/builder/time")); //$NON-NLS-1$ //$NON-NLS-2$
 	private static final boolean performValidateEdit = false;
 
-	protected static IModelManagerPlugin fPlugin = null;
 	private static boolean isGloballyEnabled = true;
 	private static final String OFF = "off"; //$NON-NLS-1$
 	static final boolean _debugResourceChangeListener = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/resourcechangehandling")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -112,7 +110,7 @@ public class StructuredDocumentBuilder extends IncrementalProjectBuilder impleme
 	}
 
 	static {
-		String build = System.getProperty(ModelPlugin.STRUCTURED_BUILDER);
+		String build = System.getProperty(SSECorePlugin.STRUCTURED_BUILDER);
 		isGloballyEnabled = (build == null || !build.equalsIgnoreCase(OFF));
 	}
 
@@ -304,7 +302,7 @@ public class StructuredDocumentBuilder extends IncrementalProjectBuilder impleme
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor) throws CoreException {
 		IProject currentProject = getProject();
 		// Currently, just use the Task Tags preference
-		boolean locallyEnabled = isGloballyEnabled && Platform.getPlugin(IModelManagerPlugin.ID).getPluginPreferences().getBoolean(CommonModelPreferenceNames.TASK_TAG_ENABLE);
+		boolean locallyEnabled = isGloballyEnabled && SSECorePlugin.getDefault().getPluginPreferences().getBoolean(CommonModelPreferenceNames.TASK_TAG_ENABLE);
 		if (!locallyEnabled || currentProject == null || !currentProject.isAccessible()) {
 			if (_debugBuilderPerf || _debugBuilder) {
 				System.out.println(getClass().getName() + " skipping build of " + currentProject.getName()); //$NON-NLS-1$

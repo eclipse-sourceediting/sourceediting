@@ -13,6 +13,7 @@
 package org.eclipse.wst.dtd.core;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
 import org.eclipse.wst.dtd.core.parser.DTDRegionTypes;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
@@ -31,7 +32,7 @@ public abstract class CMRepeatableNode extends CMNode {
 	}
 
 	public Image getImage() {
-		DTDPlugin resourcePlugin = DTDPlugin.getInstance();
+		DTDCorePlugin resourcePlugin = DTDCorePlugin.getInstance();
 		return resourcePlugin.getImage(DTDResource.ELEMENTREFICON);
 	}
 
@@ -48,7 +49,7 @@ public abstract class CMRepeatableNode extends CMNode {
 	abstract public ITextRegion getOccurrenceRegion();
 
 	public void setOccurrence(char occurrence) {
-		beginRecording(this, DTDPlugin.getDTDString("_UI_LABEL_CM_REP_NODE_CHG_OCCUR")); //$NON-NLS-1$
+		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_CM_REP_NODE_CHG_OCCUR")); //$NON-NLS-1$
 		setOccurrence(this, occurrence);
 		endRecording(this);
 	}

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.internal.editor;
 
-import org.eclipse.wst.html.ui.HTMLEditorPlugin;
+import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 
 /**
  * Help context ids for the HTML Source Editor.
@@ -21,7 +21,7 @@ import org.eclipse.wst.html.ui.HTMLEditorPlugin;
  */
 public interface IHelpContextIds {
 	// org.eclipse.wst.html.ui.
-	public static final String PREFIX = HTMLEditorPlugin.ID + "."; //$NON-NLS-1$
+	public static final String PREFIX = HTMLUIPlugin.ID + "."; //$NON-NLS-1$
 
 	// HTML Source page editor
 	public static final String HTML_SOURCEVIEW_HELPID = PREFIX + "ehtm0000"; //$NON-NLS-1$

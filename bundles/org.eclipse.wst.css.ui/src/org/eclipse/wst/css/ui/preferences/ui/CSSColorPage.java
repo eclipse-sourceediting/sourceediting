@@ -15,20 +15,18 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Iterator;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
-import org.eclipse.wst.css.core.internal.parser.CSSSourceParser;
 import org.eclipse.wst.css.core.parser.CSSRegionContexts;
 import org.eclipse.wst.css.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.css.ui.internal.nls.ResourceHandler;
 import org.eclipse.wst.css.ui.style.IStyleConstantsCSS;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.EditorPlugin;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore.OverlayKey;
@@ -199,13 +197,8 @@ public class CSSColorPage extends AbstractColorPage {
 	 * setupPicker method comment.
 	 */
 	protected void setupPicker(StyledTextColorPicker picker) {
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		if (plugin != null) {
-			IModelManager mmanager = plugin.getModelManager();
-			picker.setParser(mmanager.createStructuredDocumentFor(IContentTypeIdentifier.ContentTypeID_CSS).getParser());
-		} else {
-			picker.setParser(new CSSSourceParser());
-		}
+		IModelManager mmanager = StructuredModelManager.getInstance().getModelManager();
+		picker.setParser(mmanager.createStructuredDocumentFor(IContentTypeIdentifier.ContentTypeID_CSS).getParser());
 
 		Dictionary descriptions = new Hashtable();
 		initDescriptions(descriptions);

@@ -15,6 +15,7 @@ package org.eclipse.wst.dtd.core;
 import java.util.ArrayList;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
 import org.eclipse.wst.dtd.core.internal.text.RegionIterator;
 import org.eclipse.wst.dtd.core.parser.DTDRegionTypes;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -27,7 +28,7 @@ public class AttributeList extends NamedTopLevelNode {
 	}
 
 	public void addAttribute(String name) {
-		beginRecording(this, DTDPlugin.getDTDString("_UI_LABEL_ATTR_LIST_ADD")); //$NON-NLS-1$
+		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_ATTR_LIST_ADD")); //$NON-NLS-1$
 
 		DTDNode lastAttribute = (DTDNode) getLastChild();
 		if (lastAttribute != null) {
@@ -44,7 +45,7 @@ public class AttributeList extends NamedTopLevelNode {
 	}
 
 	public Image getImage() {
-		return DTDPlugin.getInstance().getImage(DTDResource.ATTRIBUTELISTICON);
+		return DTDCorePlugin.getInstance().getImage(DTDResource.ATTRIBUTELISTICON);
 	}
 
 	public void insertIntoModel(Object requestor, Attribute reference, Attribute node, boolean isAfter) {

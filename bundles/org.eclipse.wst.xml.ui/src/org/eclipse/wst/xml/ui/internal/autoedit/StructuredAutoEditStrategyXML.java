@@ -12,20 +12,19 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.autoedit;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.texteditor.ITextEditorExtension3;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.StructuredDocumentCommand;
 import org.eclipse.wst.sse.ui.edit.util.BasicAutoEditStrategy;
 import org.eclipse.wst.xml.core.document.XMLElement;
 import org.eclipse.wst.xml.core.document.XMLNode;
-import org.eclipse.wst.xml.ui.Logger;
+import org.eclipse.wst.xml.ui.internal.Logger;
 import org.w3c.dom.Node;
 
 
@@ -52,9 +51,7 @@ public class StructuredAutoEditStrategyXML extends BasicAutoEditStrategy {
 	}
 
 	private IModelManager getModelManager() {
-
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		return plugin.getModelManager();
+		return StructuredModelManager.getInstance().getModelManager();
 	}
 
 	private boolean isCommentNode(XMLNode node) {

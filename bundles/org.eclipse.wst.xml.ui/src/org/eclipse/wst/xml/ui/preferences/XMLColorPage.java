@@ -19,7 +19,6 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Iterator;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -27,14 +26,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.EditorPlugin;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore.OverlayKey;
 import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.preferences.ui.AbstractColorPage;
 import org.eclipse.wst.sse.ui.preferences.ui.StyledTextColorPicker;
-import org.eclipse.wst.xml.core.internal.parser.XMLSourceParser;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.eclipse.wst.xml.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.xml.ui.nls.ResourceHandler;
@@ -204,13 +202,8 @@ public class XMLColorPage extends AbstractColorPage {
 	}
 
 	protected void setupPicker(StyledTextColorPicker picker) {
-
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		if (plugin != null) {
-			IModelManager mmanager = plugin.getModelManager();
-			picker.setParser(mmanager.createStructuredDocumentFor(IContentTypeIdentifier.ContentTypeID_SSEXML).getParser());
-		} else
-			picker.setParser(new XMLSourceParser());
+		IModelManager mmanager = StructuredModelManager.getInstance().getModelManager();
+		picker.setParser(mmanager.createStructuredDocumentFor(IContentTypeIdentifier.ContentTypeID_SSEXML).getParser());
 
 		Dictionary descriptions = new Hashtable();
 		initDescriptions(descriptions);

@@ -12,13 +12,11 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.edit.util;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 public abstract class BasicAutoEditStrategy implements IAutoEditStrategy {
@@ -30,8 +28,7 @@ public abstract class BasicAutoEditStrategy implements IAutoEditStrategy {
 	 * @todo Generated comment
 	 */
 	protected Object getActiveTextEditor() {
-		AbstractUIPlugin plugin = (AbstractUIPlugin) Platform.getPlugin(PlatformUI.PLUGIN_ID);
-		IWorkbenchWindow window = plugin.getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window != null) {
 			IWorkbenchPage page = window.getActivePage();
 			if (page != null) {

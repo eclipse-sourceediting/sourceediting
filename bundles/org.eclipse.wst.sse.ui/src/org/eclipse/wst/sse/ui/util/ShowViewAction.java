@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.wst.sse.ui.EditorPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 
 
@@ -88,7 +88,7 @@ public abstract class ShowViewAction extends Action {
 	 *  
 	 */
 	private void showView() {
-		IWorkbenchWindow window = EditorPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchWindow window = SSEUIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
 		IWorkbenchPage page = window.getActivePage();
 		if (page != null) {
 			try {

@@ -16,10 +16,9 @@ import org.eclipse.core.filebuffers.IDocumentFactory;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.document.IEncodedDocument;
+import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 
 
@@ -32,8 +31,7 @@ public class BasicStructuredDocumentFactory implements IDocumentFactory, IExecut
 	}
 
 	public IDocument createDocument() {
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IModelHandler handler = plugin.getModelHandlerRegistry().getHandlerForContentTypeId(getContentTypeIdentifier());
+		IModelHandler handler = ModelHandlerRegistry.getInstance().getHandlerForContentTypeId(getContentTypeIdentifier());
 		IEncodedDocument document = handler.getDocumentLoader().createNewStructuredDocument();
 		return document;
 	}

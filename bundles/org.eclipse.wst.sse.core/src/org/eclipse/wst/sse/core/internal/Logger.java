@@ -20,8 +20,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
-
+import org.osgi.framework.Bundle;
 
 /**
  * Small convenience class to log messages to plugin's log file and also, if
@@ -29,10 +28,9 @@ import org.eclipse.wst.sse.core.IModelManagerPlugin;
  * plugin. Other plugins should make their own copy, with appropriate ID.
  */
 public class Logger {
+	private static final String PLUGIN_ID = "org.eclipse.wst.sse.core"; //$NON-NLS-1$
 	public static final int ERROR = IStatus.ERROR; // 4
 	public static final int ERROR_DEBUG = 200 + ERROR;
-	private static Plugin fPlugin;
-	private static String fPluginId;
 	public static final int INFO = IStatus.INFO; // 1
 	public static final int INFO_DEBUG = 200 + INFO;
 
@@ -76,8 +74,10 @@ public class Logger {
 				severity = IStatus.ERROR;
 		}
 		message = (message != null) ? message : "null"; //$NON-NLS-1$
-		Status statusObj = new Status(severity, getPluginId(), severity, message, exception);
-		getPlugin().getLog().log(statusObj);
+		Status statusObj = new Status(severity, PLUGIN_ID, severity, message, exception);
+		Bundle bundle = Platform.getBundle(PLUGIN_ID);
+		if (bundle != null) 
+			Platform.getLog(bundle).log(statusObj);
 	}
 
 	/**
@@ -92,37 +92,33 @@ public class Logger {
 	protected static void _trace(String category, String message, Throwable exception) {
 		if (isTracing(category)) {
 			message = (message != null) ? message : "null"; //$NON-NLS-1$
-			Status statusObj = new Status(IStatus.OK, getPluginId(), IStatus.OK, message, exception);
-			getPlugin().getLog().log(statusObj);
+			Status statusObj = new Status(IStatus.OK, PLUGIN_ID, IStatus.OK, message, exception);
+			Bundle bundle = Platform.getBundle(PLUGIN_ID);
+			if (bundle != null) 
+				Platform.getLog(bundle).log(statusObj);
 		}
-	}
-
-	private static IModelManagerPlugin getModelManagerPlugin() {
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		return plugin;
-	}
-
-	public static Plugin getPlugin() {
-
-		if (fPlugin == null) {
-			fPlugin = (Plugin) getModelManagerPlugin();
-		}
-		return fPlugin;
-	}
-
-	public static String getPluginId() {
-
-		if (fPluginId == null) {
-			fPluginId = ((Plugin) getModelManagerPlugin()).getDescriptor().getUniqueIdentifier();
-		}
-		return fPluginId;
 	}
 
 	/**
-	 * @return true if the plugin for this logger is debugging
+	 * @deprecated Logger is not responsible for returning plugin
+	 */
+	public static Plugin getPlugin() {
+		return SSECorePlugin.getDefault();
+	}
+
+	/**
+	 * @deprecated Logger is not responsible for returning plugin id
+	 * @return
+	 */
+	public static String getPluginId() {
+		return PLUGIN_ID;
+	}
+
+	/**
+	 * @return true if the platform is debugging
 	 */
 	public static boolean isDebugging() {
-		return getPlugin().isDebugging();
+		return Platform.inDebugMode();
 	}
 
 	/**
@@ -135,7 +131,7 @@ public class Logger {
 		if (!isDebugging())
 			return false;
 
-		String traceFilter = Platform.getDebugOption(getPluginId() + TRACEFILTER_LOCATION);
+		String traceFilter = Platform.getDebugOption(PLUGIN_ID + TRACEFILTER_LOCATION);
 		if (traceFilter != null) {
 			StringTokenizer tokenizer = new StringTokenizer(traceFilter, ","); //$NON-NLS-1$
 			while (tokenizer.hasMoreTokens()) {

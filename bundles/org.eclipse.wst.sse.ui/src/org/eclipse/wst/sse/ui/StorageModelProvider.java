@@ -36,12 +36,14 @@ import org.eclipse.ui.texteditor.IElementStateListener;
 import org.eclipse.wst.common.encoding.CodedReaderCreator;
 import org.eclipse.wst.sse.core.IFactoryRegistry;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.util.Utilities;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.IExtendedStorageEditorInput;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction;
 import org.eclipse.wst.sse.ui.internal.extension.BreakpointProviderBuilder;
 import org.eclipse.wst.sse.ui.nls.ResourceHandler;
@@ -194,8 +196,7 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 			// get the model manager from the plugin
 			// note: we can use the static "ID" variable, since we pre-req
 			// that plugin
-			IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-			fModelManager = plugin.getModelManager();
+			fModelManager = StructuredModelManager.getInstance().getModelManager();
 		}
 		return fModelManager;
 	}
@@ -212,7 +213,7 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 
 	public void addProviderFactories(IStructuredModel structuredModel) {
 		// (mostly) COPIED FROM FileModelProvider
-		EditorPlugin plugin = ((EditorPlugin) Platform.getPlugin(EditorPlugin.ID));
+		SSEUIPlugin plugin = SSEUIPlugin.getDefault();
 		AdapterFactoryRegistry adapterRegistry = plugin.getAdapterFactoryRegistry();
 		Iterator adapterFactoryList = adapterRegistry.getAdapterFactories();
 

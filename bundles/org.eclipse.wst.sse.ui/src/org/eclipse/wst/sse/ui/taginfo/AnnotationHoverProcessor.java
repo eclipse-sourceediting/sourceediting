@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextHover;
@@ -29,11 +28,11 @@ import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.ui.editors.text.EditorsUI;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.texteditor.AnnotationPreference;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.sse.ui.ITemporaryAnnotation;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 
 
@@ -44,7 +43,6 @@ import org.eclipse.wst.sse.ui.nls.ResourceHandler;
  * @author amywu
  */
 public class AnnotationHoverProcessor implements ITextHover {
-	private static final String EDITOR_PLUGIN_ID = "org.eclipse.wst.sse.ui"; //$NON-NLS-1$
 	private final static String LIST_BEGIN = "<ul>"; //$NON-NLS-1$
 	private final static String LIST_ELEMENT = "<li>"; //$NON-NLS-1$
 	private final static String PARAGRAPH_END = "</p>"; //$NON-NLS-1$
@@ -194,7 +192,7 @@ public class AnnotationHoverProcessor implements ITextHover {
 	 */
 	protected IPreferenceStore getPreferenceStore() {
 		if (fPreferenceStore == null) {
-			IPreferenceStore sseEditorPrefs = ((AbstractUIPlugin) Platform.getPlugin(EDITOR_PLUGIN_ID)).getPreferenceStore();
+			IPreferenceStore sseEditorPrefs = SSEUIPlugin.getDefault().getPreferenceStore();
 			IPreferenceStore baseEditorPrefs = EditorsUI.getPreferenceStore();
 			fPreferenceStore = new ChainedPreferenceStore(new IPreferenceStore[]{sseEditorPrefs, baseEditorPrefs});
 		}

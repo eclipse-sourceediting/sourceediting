@@ -12,9 +12,8 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.cleanup;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
+import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 
 
 public class StructuredCleanupPreferences implements IStructuredCleanupPreferences {
@@ -66,16 +65,10 @@ public class StructuredCleanupPreferences implements IStructuredCleanupPreferenc
 		return fInsertRequiredAttrs;
 	}
 
-	private IModelManagerPlugin getModelManagerPlugin() {
-
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		return plugin;
-	}
-
 	public Preferences getPreferences() {
 
 		if (fPreferences == null) {
-			fPreferences = getModelManagerPlugin().getPluginPreferences();
+			fPreferences = SSECorePlugin.getDefault().getPluginPreferences();
 		}
 		return fPreferences;
 	}

@@ -26,7 +26,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
@@ -60,13 +59,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.ModelPlugin;
 import org.eclipse.wst.sse.core.participants.TaskTagSeeker;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.sse.ui.EditorPlugin;
-import org.eclipse.wst.sse.ui.Logger;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 
@@ -360,7 +358,7 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 	}
 
 	private void loadPreferenceValues() {
-		Plugin modelPlugin = Platform.getPlugin(IModelManagerPlugin.ID);
+		Plugin modelPlugin = ModelPlugin.getDefault();
 		String tags = modelPlugin.getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_TAGS);
 		String priorities = modelPlugin.getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_PRIORITIES);
 		loadTagsAndPriorities(tags, priorities);
@@ -453,13 +451,13 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 							}
 						}
 						if (monitor.isCanceled()) {
-							status = new Status(IStatus.CANCEL, EditorPlugin.ID, IStatus.OK, ResourceHandler.getString("TaskTagPreferenceTab.28"), null); //$NON-NLS-1$
+							status = new Status(IStatus.CANCEL, SSEUIPlugin.ID, IStatus.OK, ResourceHandler.getString("TaskTagPreferenceTab.28"), null); //$NON-NLS-1$
 						}
 						else if (errorCount == 0) {
-							status = new Status(IStatus.OK, EditorPlugin.ID, IStatus.OK, ResourceHandler.getString("TaskTagPreferenceTab.29"), null); //$NON-NLS-1$
+							status = new Status(IStatus.OK, SSEUIPlugin.ID, IStatus.OK, ResourceHandler.getString("TaskTagPreferenceTab.29"), null); //$NON-NLS-1$
 						}
 						else {
-							status = new Status(IStatus.ERROR, EditorPlugin.ID, IStatus.OK, ResourceHandler.getString("TaskTagPreferenceTab.30"), null); //$NON-NLS-1$
+							status = new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.OK, ResourceHandler.getString("TaskTagPreferenceTab.30"), null); //$NON-NLS-1$
 						}
 						return status;
 					}
@@ -472,7 +470,7 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 	}
 
 	public void performDefaults() {
-		Plugin modelPlugin = Platform.getPlugin(IModelManagerPlugin.ID);
+		Plugin modelPlugin = ModelPlugin.getDefault();
 		String tags = modelPlugin.getPluginPreferences().getDefaultString(CommonModelPreferenceNames.TASK_TAG_TAGS);
 		String priorities = modelPlugin.getPluginPreferences().getDefaultString(CommonModelPreferenceNames.TASK_TAG_PRIORITIES);
 		loadTagsAndPriorities(tags, priorities);
@@ -511,7 +509,7 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 	 */
 	private void save() {
 		String tags = StringUtils.pack(fTags);
-		Plugin modelPlugin = Platform.getPlugin(IModelManagerPlugin.ID);
+		Plugin modelPlugin = ModelPlugin.getDefault();
 		modelPlugin.getPluginPreferences().setValue(CommonModelPreferenceNames.TASK_TAG_TAGS, tags);
 
 		StringBuffer buf = new StringBuffer();

@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.views.properties;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
@@ -23,8 +22,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 
 
 /**
@@ -36,8 +35,7 @@ public class StructuredPropertySheetConfiguration extends PropertySheetConfigura
 	 * Utility method also used in subclasses
 	 */
 	protected static IModelManager getModelManager() {
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		return plugin.getModelManager();
+		return StructuredModelManager.getInstance().getModelManager();
 	}
 
 	protected IStructuredModel fModel;

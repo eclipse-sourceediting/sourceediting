@@ -17,12 +17,11 @@ package org.eclipse.wst.xml.ui.extensions;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.NodeLocation;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.SourceEditingTextTools;
@@ -80,8 +79,7 @@ public class XMLSourceEditingTextTools implements SourceEditingTextTools, INodeA
 		if (res == null || !(res instanceof IFile))
 			return null;
 
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IModelManager mm = plugin.getModelManager();
+		IModelManager mm = StructuredModelManager.getInstance().getModelManager();
 		IStructuredModel model = null;
 		try {
 			model = mm.getExistingModelForRead((IFile) res);

@@ -17,7 +17,7 @@ import java.text.Collator;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.wst.dtd.ui.DTDEditorPlugin;
+import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.dtd.ui.internal.editor.DTDEditorPluginImageHelper;
 import org.eclipse.wst.dtd.ui.internal.editor.DTDEditorPluginImages;
 import org.eclipse.wst.sse.ui.views.contentoutline.PropertyChangeUpdateAction;
@@ -30,7 +30,7 @@ class SortAction extends PropertyChangeUpdateAction {
 	private TreeViewer treeViewer;
 
 	public SortAction(TreeViewer viewer, IPreferenceStore store, String preferenceKey) {
-		super(DTDEditorPlugin.getResourceString("_UI_BUTTON_SORT_ITEMS"), store, preferenceKey, false); //$NON-NLS-1$
+		super(DTDUIPlugin.getResourceString("_UI_BUTTON_SORT_ITEMS"), store, preferenceKey, false); //$NON-NLS-1$
 		setImageDescriptor(DTDEditorPluginImageHelper.getInstance().getImageDescriptor(DTDEditorPluginImages.IMG_OBJ_SORT));
 		setToolTipText(getText());
 		treeViewer = viewer;

@@ -18,7 +18,6 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.IRegion;
@@ -32,16 +31,16 @@ import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.util.Assert;
 import org.eclipse.wst.sse.ui.IReleasable;
 import org.eclipse.wst.sse.ui.ITemporaryAnnotation;
-import org.eclipse.wst.sse.ui.Logger;
 import org.eclipse.wst.sse.ui.StructuredTextReconciler;
+import org.eclipse.wst.sse.ui.internal.Logger;
 
 
 /**
@@ -189,7 +188,7 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	 * @return the corresponding node for sdRegion
 	 */
 	protected IndexedRegion getCorrespondingNode(IStructuredDocumentRegion sdRegion) {
-		IStructuredModel sModel = ((IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID)).getModelManager().getExistingModelForRead(fDocument);
+		IStructuredModel sModel = StructuredModelManager.getInstance().getModelManager().getExistingModelForRead(fDocument);
 		IndexedRegion xmlNode = sModel.getIndexedRegion(sdRegion.getStart());
 		sModel.releaseFromRead();
 		return xmlNode;

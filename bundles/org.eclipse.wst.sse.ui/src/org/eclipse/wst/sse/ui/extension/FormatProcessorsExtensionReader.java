@@ -17,13 +17,13 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.IPluginRegistry;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
-import org.eclipse.wst.sse.core.ModelPlugin;
 import org.eclipse.wst.sse.core.format.IStructuredFormatProcessor;
 import org.eclipse.wst.sse.ui.internal.extension.RegistryReader;
+import org.osgi.framework.Bundle;
 
 public class FormatProcessorsExtensionReader extends RegistryReader {
 	private static FormatProcessorsExtensionReader instance;
@@ -32,8 +32,8 @@ public class FormatProcessorsExtensionReader extends RegistryReader {
 		if (instance == null) {
 			instance = new FormatProcessorsExtensionReader();
 
-			IPluginRegistry registry = Platform.getPluginRegistry();
-			instance.readRegistry(registry, ModelPlugin.getID(), "formatProcessors"); //$NON-NLS-1$ //$NON-NLS-2$
+			IExtensionRegistry registry = Platform.getExtensionRegistry();
+			instance.readRegistry(registry, "org.eclipse.wst.sse.core", "formatProcessors"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return instance;
 	}
@@ -81,9 +81,10 @@ public class FormatProcessorsExtensionReader extends RegistryReader {
 			String contentTypeId = element.getAttribute("contentTypeId"); //$NON-NLS-1$
 			String processorClassName = element.getAttribute("class"); //$NON-NLS-1$
 			String pluginID = element.getDeclaringExtension().getNamespace();
-			ClassLoader classLoader = Platform.getPlugin(pluginID).getClass().getClassLoader();
+			Bundle bundle = Platform.getBundle(pluginID);
+
 			try {
-				IStructuredFormatProcessor processor = (IStructuredFormatProcessor) Class.forName(processorClassName, false, classLoader).newInstance();
+				IStructuredFormatProcessor processor = (IStructuredFormatProcessor)bundle.loadClass(processorClassName).newInstance();
 				map.put(contentTypeId, processor);
 
 				return true;

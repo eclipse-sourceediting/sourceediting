@@ -21,6 +21,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.dtd.core.document.DTDModelImpl;
 import org.eclipse.wst.dtd.core.event.IDTDFileListener;
 import org.eclipse.wst.dtd.core.event.NodesEvent;
+import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
 import org.eclipse.wst.dtd.core.parser.DTDRegionTypes;
 import org.eclipse.wst.dtd.core.util.DTDExternalReferenceRemover;
 import org.eclipse.wst.dtd.core.util.DTDModelUpdater;
@@ -143,7 +144,7 @@ public class DTDFile implements IndexedRegion {
 	}
 
 	public void createAttributeList(DTDNode node, String name, boolean isAfter) {
-		getDTDModel().beginRecording(this, DTDPlugin.getDTDString("_UI_LABEL_DTD_FILE_ADD_ATTR_LIST")); //$NON-NLS-1$
+		getDTDModel().beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_DTD_FILE_ADD_ATTR_LIST")); //$NON-NLS-1$
 		DTDNode topLevelNode = null;
 		String newStream = "<!ATTLIST " + name + ">\n"; //$NON-NLS-1$ //$NON-NLS-2$
 		int offset = getInsertOffset(node, isAfter);
@@ -152,7 +153,7 @@ public class DTDFile implements IndexedRegion {
 	}
 
 	public void createComment(DTDNode node, String name, boolean isAfter) {
-		getDTDModel().beginRecording(this, DTDPlugin.getDTDString("_UI_LABEL_DTD_FILE_ADD_COMMENT")); //$NON-NLS-1$
+		getDTDModel().beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_DTD_FILE_ADD_COMMENT")); //$NON-NLS-1$
 		DTDNode topLevelNode = null;
 		String newStream = "<!-- " + name + " -->\n"; //$NON-NLS-1$ //$NON-NLS-2$
 		int offset = getInsertOffset(node, isAfter);
@@ -161,7 +162,7 @@ public class DTDFile implements IndexedRegion {
 	}
 
 	public void createElement(DTDNode node, String name, boolean isAfter) {
-		getDTDModel().beginRecording(this, DTDPlugin.getDTDString("_UI_LABEL_DTD_FILE_ADD_ELEMENT")); //$NON-NLS-1$
+		getDTDModel().beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_DTD_FILE_ADD_ELEMENT")); //$NON-NLS-1$
 		DTDNode topLevelNode = null;
 		String newStream = "<!ELEMENT " + name + " EMPTY>\n"; //$NON-NLS-1$ //$NON-NLS-2$
 		int offset = getInsertOffset(node, isAfter);
@@ -170,7 +171,7 @@ public class DTDFile implements IndexedRegion {
 	}
 
 	public void createEntity(DTDNode node, String name, boolean isAfter) {
-		getDTDModel().beginRecording(this, DTDPlugin.getDTDString("_UI_LABEL_DTD_FILE_ADD_ENTITY")); //$NON-NLS-1$
+		getDTDModel().beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_DTD_FILE_ADD_ENTITY")); //$NON-NLS-1$
 		DTDNode topLevelNode = null;
 		String newStream = "<!ENTITY " + name + " \"\">\n"; //$NON-NLS-1$//$NON-NLS-2$
 		int offset = getInsertOffset(node, isAfter);
@@ -179,7 +180,7 @@ public class DTDFile implements IndexedRegion {
 	}
 
 	public void createNotation(DTDNode node, String name, boolean isAfter) {
-		getDTDModel().beginRecording(this, DTDPlugin.getDTDString("_UI_LABEL_DTD_FILE_ADD_NOTATION")); //$NON-NLS-1$
+		getDTDModel().beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_DTD_FILE_ADD_NOTATION")); //$NON-NLS-1$
 		DTDNode topLevelNode = null;
 		String newStream = "<!NOTATION " + name + " SYSTEM \"\">\n"; //$NON-NLS-1$ //$NON-NLS-2$
 		int offset = getInsertOffset(node, isAfter);
@@ -188,7 +189,7 @@ public class DTDFile implements IndexedRegion {
 	}
 
 	public void createParameterEntityReference(DTDNode node, String name, boolean isAfter) {
-		getDTDModel().beginRecording(this, DTDPlugin.getDTDString("_UI_LABEL_DTD_FILE_ADD_PARM_ENTITY_REF")); //$NON-NLS-1$
+		getDTDModel().beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_DTD_FILE_ADD_PARM_ENTITY_REF")); //$NON-NLS-1$
 		DTDNode topLevelNode = null;
 		String newStream = name + "\n"; //$NON-NLS-1$
 		int offset = getInsertOffset(node, isAfter);
@@ -197,7 +198,7 @@ public class DTDFile implements IndexedRegion {
 	}
 
 	public void deleteNode(DTDNode node) {
-		getDTDModel().beginRecording(this, DTDPlugin.getDTDString("_UI_LABEL_DTD_FILE_DELETE")); //$NON-NLS-1$
+		getDTDModel().beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_DTD_FILE_DELETE")); //$NON-NLS-1$
 		deleteNode(this, node);
 		getDTDModel().endRecording(this);
 	}
@@ -261,7 +262,7 @@ public class DTDFile implements IndexedRegion {
 	}
 
 	public Image getImage() {
-		return DTDPlugin.getInstance().getImage(DTDResource.DTDFILEICON);
+		return DTDCorePlugin.getInstance().getImage(DTDResource.DTDFILEICON);
 	}
 
 

@@ -18,8 +18,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IPluginDescriptor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.osgi.framework.Bundle;
 
 public class ImageUtil {
 
@@ -45,12 +46,14 @@ public class ImageUtil {
 	 * directory below and relative to that plugins installation directory.
 	 */
 	public static ImageDescriptor getImageDescriptorFromExtension(IExtension extension, String subdirectoryAndFilename) {
-		return getImageDescriptorFromPlugin(extension.getDeclaringPluginDescriptor(), subdirectoryAndFilename);
+		String pluginId = extension.getNamespace();
+		Bundle bundle = Platform.getBundle(pluginId);
+		return getImageDescriptorFromBundle(bundle, subdirectoryAndFilename);
 	}
 
 	/**
 	 * Convenience Method. Return an ImageDescriptor whose path relative to
-	 * the plugin described by <code>pluginDescriptor</code> is
+	 * the plugin described by <code>bundle</code> is
 	 * <code>subdirectoryAndFilename</code>. Returns <code>null</code> if
 	 * no image could be found.
 	 * 
@@ -67,9 +70,9 @@ public class ImageUtil {
 	 * installation location. all requested images are assumed to be in a
 	 * directory below and relative to that plugins installation directory.
 	 */
-	public static ImageDescriptor getImageDescriptorFromPlugin(IPluginDescriptor pluginDescriptor, String subdirectoryAndFilename) {
+	public static ImageDescriptor getImageDescriptorFromBundle(Bundle bundle, String subdirectoryAndFilename) {
 
-		URL path = pluginDescriptor.getInstallURL();
+		URL path = bundle.getEntry("/");
 		URL fullPathString = null;
 		try {
 			fullPathString = new URL(path, subdirectoryAndFilename);

@@ -33,6 +33,7 @@ import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.core.util.Utilities;
 import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckSelectionListener;
 import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckSelectionManager;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.view.events.CaretEvent;
 import org.eclipse.wst.sse.ui.view.events.INodeSelectionListener;
 import org.eclipse.wst.sse.ui.view.events.ITextSelectionListener;

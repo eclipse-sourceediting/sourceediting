@@ -12,16 +12,17 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.core;
 
+import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 
 // base class for an Element's contentmodel
 public abstract class CMNode extends DTDNode {
-	public static final String ANY = DTDPlugin.getDTDString("_UI_LABEL_CM_NODE_ANY"); //$NON-NLS-1$
-	public static final String CHILDREN = DTDPlugin.getDTDString("_UI_LABEL_CM_NODE_CHILD_CONTENT"); //$NON-NLS-1$
+	public static final String ANY = DTDCorePlugin.getDTDString("_UI_LABEL_CM_NODE_ANY"); //$NON-NLS-1$
+	public static final String CHILDREN = DTDCorePlugin.getDTDString("_UI_LABEL_CM_NODE_CHILD_CONTENT"); //$NON-NLS-1$
 
-	public static final String EMPTY = DTDPlugin.getDTDString("_UI_LABEL_CM_NODE_EMPTY"); //$NON-NLS-1$
-	public static final String MIXED = DTDPlugin.getDTDString("_UI_LABEL_CM_NODE_MIX_CONTENT"); //$NON-NLS-1$
-	public static final String PCDATA = DTDPlugin.getDTDString("_UI_LABEL_CM_NODE_PCDATA"); //$NON-NLS-1$
+	public static final String EMPTY = DTDCorePlugin.getDTDString("_UI_LABEL_CM_NODE_EMPTY"); //$NON-NLS-1$
+	public static final String MIXED = DTDCorePlugin.getDTDString("_UI_LABEL_CM_NODE_MIX_CONTENT"); //$NON-NLS-1$
+	public static final String PCDATA = DTDCorePlugin.getDTDString("_UI_LABEL_CM_NODE_PCDATA"); //$NON-NLS-1$
 
 
 	boolean rootElementContent;
@@ -48,14 +49,14 @@ public abstract class CMNode extends DTDNode {
 	public void setChildrenContent(String newChild) {
 		if (isRootElementContent()) {
 			if (!newChild.equals("")) { //$NON-NLS-1$
-				beginRecording(this, DTDPlugin.getDTDString("_UI_LABEL_CM_NODE_SET_CHILD_CONTENT")); //$NON-NLS-1$
+				beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_CM_NODE_SET_CHILD_CONTENT")); //$NON-NLS-1$
 				replaceText(this, getStartOffset(), getNodeLength(), "(" + newChild + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 				endRecording(this);
 				return;
 			}
 
 			if (!getType().equals(CHILDREN)) {
-				beginRecording(this, DTDPlugin.getDTDString("_UI_LABEL_CM_NODE_SET_CHILD_CONTENT")); //$NON-NLS-1$
+				beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_CM_NODE_SET_CHILD_CONTENT")); //$NON-NLS-1$
 				if (this instanceof CMBasicNode) {
 					replaceText(this, getStartOffset(), getNodeLength(), "(newChild)"); //$NON-NLS-1$
 				} else {
@@ -75,7 +76,7 @@ public abstract class CMNode extends DTDNode {
 
 	public void setContent(String content) {
 		if (isRootElementContent()) {
-			beginRecording(this, DTDPlugin.getDTDString("_UI_LABEL_CM_NODE_SET") + " " + content + " " + DTDPlugin.getDTDString("_UI_LABEL_CM_NODE_CONTENT")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_CM_NODE_SET") + " " + content + " " + DTDCorePlugin.getDTDString("_UI_LABEL_CM_NODE_CONTENT")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			replaceText(this, getStartOffset(), getNodeLength(), content);
 			endRecording(this);
 		}
@@ -86,7 +87,7 @@ public abstract class CMNode extends DTDNode {
 	public void setMixedContent() {
 		if (isRootElementContent()) {
 			if (!getType().equals(MIXED)) {
-				beginRecording(this, DTDPlugin.getDTDString("_UI_LABEL_CM_NODE_SET_MIX_CONTENT")); //$NON-NLS-1$
+				beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_CM_NODE_SET_MIX_CONTENT")); //$NON-NLS-1$
 				if (this instanceof CMBasicNode) {
 					replaceText(this, getStartOffset(), getNodeLength(), "(#PCDATA | newChild)*"); //$NON-NLS-1$
 				} else {

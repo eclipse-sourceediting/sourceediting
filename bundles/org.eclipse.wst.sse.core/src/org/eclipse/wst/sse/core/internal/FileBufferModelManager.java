@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core;
+package org.eclipse.wst.sse.core.internal;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,8 +40,12 @@ import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IFactoryRegistry;
+import org.eclipse.wst.sse.core.IModelLoaderExtension;
+import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.ModelLoader;
 import org.eclipse.wst.sse.core.exceptions.ResourceInUse;
-import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
@@ -50,7 +54,7 @@ import org.eclipse.wst.sse.core.util.ProjectResolver;
 import org.eclipse.wst.sse.core.util.URIResolver;
 
 
-class FileBufferModelManager {
+public class FileBufferModelManager {
 
 	static class DocumentInfo {
 		ITextFileBuffer buffer = null;
@@ -212,7 +216,7 @@ class FileBufferModelManager {
 
 	private static FileBufferModelManager instance;
 
-	static FileBufferModelManager getInstance() {
+	public static FileBufferModelManager getInstance() {
 		if (instance == null) {
 			instance = new FileBufferModelManager();
 		}
@@ -274,7 +278,7 @@ class FileBufferModelManager {
 		}
 	}
 
-	String calculateId(IFile file) {
+	public String calculateId(IFile file) {
 		String id = null;
 		IPath path = file.getLocation();
 		if (path != null) {
@@ -292,7 +296,7 @@ class FileBufferModelManager {
 
 	}
 
-	String calculateId(IStructuredDocument document) {
+	public String calculateId(IStructuredDocument document) {
 		String id = null;
 		ITextFileBuffer buffer = getBuffer(document);
 		if (buffer != null) {
@@ -375,7 +379,7 @@ class FileBufferModelManager {
 		return type;
 	}
 
-	ITextFileBuffer getBuffer(IDocument document) {
+	public ITextFileBuffer getBuffer(IDocument document) {
 		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
 		if (info != null)
 			return info.buffer;
@@ -411,7 +415,7 @@ class FileBufferModelManager {
 		return model;
 	}
 
-	IStructuredModel getModel(IFile file) {
+	public IStructuredModel getModel(IFile file) {
 		IStructuredModel model = null;
 		ITextFileBufferManager bufferManager = FileBuffers.getTextFileBufferManager();
 		try {
@@ -432,7 +436,7 @@ class FileBufferModelManager {
 		return model;
 	}
 
-	IStructuredModel getModel(IStructuredDocument document) {
+	public IStructuredModel getModel(IStructuredDocument document) {
 		if (document == null)
 			return null;
 
@@ -486,7 +490,7 @@ class FileBufferModelManager {
 		return new NullProgressMonitor();
 	}
 
-	boolean isExistingBuffer(IDocument document) {
+	public boolean isExistingBuffer(IDocument document) {
 		if (document == null)
 			return false;
 
@@ -494,7 +498,7 @@ class FileBufferModelManager {
 		return info != null;
 	}
 
-	void releaseModel(IStructuredDocument document) {
+	public void releaseModel(IStructuredDocument document) {
 		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
 		if (info != null) {
 			if (debugFileBufferModelManagement) {

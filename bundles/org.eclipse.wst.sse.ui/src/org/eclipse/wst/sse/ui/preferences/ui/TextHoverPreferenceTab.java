@@ -48,7 +48,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.sse.ui.EditorPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.nls.ResourceHandler;
@@ -314,7 +314,7 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 	}
 
 	private TextHoverManager getTextHoverManager() {
-		return EditorPlugin.getDefault().getTextHoverManager();
+		return SSEUIPlugin.getDefault().getTextHoverManager();
 	}
 
 	/*

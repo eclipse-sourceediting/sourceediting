@@ -21,7 +21,8 @@ import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.core.runtime.Plugin;
 
 /**
- * The main plugin class to be used in the desktop.
+ * @deprecated This plugin has combined with the org.eclipse.wst.sse.ui plugin.
+ *             Use SSEUIPlugin instead.
  */
 public class ExtensionsPlugin extends Plugin {
 	//The shared instance.
@@ -39,7 +40,8 @@ public class ExtensionsPlugin extends Plugin {
 	 * found.
 	 */
 	public static String getResourceString(String key) {
-		ResourceBundle bundle = ExtensionsPlugin.getDefault().getResourceBundle();
+		ResourceBundle bundle = ExtensionsPlugin.getDefault()
+				.getResourceBundle();
 		try {
 			return bundle.getString(key);
 		} catch (MissingResourceException e) {
@@ -64,7 +66,8 @@ public class ExtensionsPlugin extends Plugin {
 		super(descriptor);
 		plugin = this;
 		try {
-			resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.sse.ui.extensions.ExtensionsPluginResources"); //$NON-NLS-1$
+			resourceBundle = ResourceBundle
+					.getBundle("org.eclipse.wst.sse.ui.extensions.ExtensionsPluginResources"); //$NON-NLS-1$
 		} catch (MissingResourceException x) {
 			resourceBundle = null;
 		}

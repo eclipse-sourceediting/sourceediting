@@ -39,8 +39,8 @@ import org.eclipse.jdt.core.search.SearchRequestor;
 import org.eclipse.jdt.internal.compiler.util.SimpleLookupTable;
 import org.eclipse.jdt.internal.core.JavaModelManager;
 import org.eclipse.jdt.internal.core.search.indexing.IndexManager;
-import org.eclipse.jst.jsp.core.JSPCorePlugin;
-import org.eclipse.jst.jsp.core.Logger;
+import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
+import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.java.JSP2ServletNameUtil;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 

@@ -12,12 +12,11 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.preferences;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.ui.texteditor.templates.TemplatePreferencePage;
-import org.eclipse.wst.xml.ui.XMLEditorPlugin;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.editor.IHelpContextIds;
 
 
@@ -27,7 +26,7 @@ import org.eclipse.wst.xml.ui.internal.editor.IHelpContextIds;
 public class XMLTemplatePreferencePage extends TemplatePreferencePage {
 
 	public XMLTemplatePreferencePage() {
-		XMLEditorPlugin xmlEditorPlugin = (XMLEditorPlugin) Platform.getPlugin(XMLEditorPlugin.ID);
+		XMLUIPlugin xmlEditorPlugin = XMLUIPlugin.getDefault();
 
 		setPreferenceStore(xmlEditorPlugin.getPreferenceStore());
 		setTemplateStore(xmlEditorPlugin.getTemplateStore());
@@ -62,7 +61,7 @@ public class XMLTemplatePreferencePage extends TemplatePreferencePage {
 	 */
 	public boolean performOk() {
 		boolean ok = super.performOk();
-		Platform.getPlugin(XMLEditorPlugin.ID).savePluginPreferences();
+		XMLUIPlugin.getDefault().savePluginPreferences();
 		return ok;
 	}
 }

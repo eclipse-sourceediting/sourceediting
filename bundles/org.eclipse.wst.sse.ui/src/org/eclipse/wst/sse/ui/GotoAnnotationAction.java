@@ -18,7 +18,6 @@ import java.util.Iterator;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.text.IDocument;
@@ -39,7 +38,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.part.EditorActionBarContributor;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.texteditor.AnnotationPreference;
 import org.eclipse.ui.texteditor.IEditorStatusLine;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -201,8 +199,7 @@ public class GotoAnnotationAction extends TextEditorAction {
 		// The original JavaEditor M7 implementation made use of an adapter,
 		// but that approach
 		// fails with a MultiPageEditorSite
-		AbstractUIPlugin plugin = (AbstractUIPlugin) Platform.getPlugin(PlatformUI.PLUGIN_ID);
-		IWorkbenchWindow window = plugin.getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window == null)
 			return null;
 		IWorkbenchPage page = window.getActivePage();
@@ -286,7 +283,7 @@ public class GotoAnnotationAction extends TextEditorAction {
 	 * @since 3.0
 	 */
 	protected boolean isNavigationTarget(Annotation annotation) {
-		Preferences preferences = Platform.getPlugin(EditorsUI.PLUGIN_ID).getPluginPreferences();
+		Preferences preferences = EditorsUI.getPluginPreferences();
 		AnnotationPreference preference = EditorsUI.getAnnotationPreferenceLookup().getAnnotationPreference(annotation);
 		//	See bug 41689
 		//	String key= forward ? preference.getIsGoToNextNavigationTargetKey()

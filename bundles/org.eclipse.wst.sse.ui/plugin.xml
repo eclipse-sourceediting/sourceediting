@@ -5,7 +5,7 @@
    name="%pluginName"
    version="1.0.0"
    provider-name="%providerName"
-   class="org.eclipse.wst.sse.ui.EditorPlugin">
+   class="org.eclipse.wst.sse.ui.internal.SSEUIPlugin">
 
    <runtime>
       <library name="editor.jar">
@@ -13,7 +13,6 @@
       </library>
    </runtime>
    <requires>
-      <import plugin="org.eclipse.core.runtime.compatibility"/>
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.jface.text"/>
 <!-- added for break point support -->

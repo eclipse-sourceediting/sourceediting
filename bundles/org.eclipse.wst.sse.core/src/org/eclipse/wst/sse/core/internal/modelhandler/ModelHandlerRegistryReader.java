@@ -17,7 +17,7 @@ import java.util.HashMap;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IPluginRegistry;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.sse.core.modelhandler.AbstractModelHandler;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
@@ -94,8 +94,8 @@ class ModelHandlerRegistryReader {
 	}
 
 	ModelHandlerRegistryReader readRegistry() {
-		IPluginRegistry pluginRegistry = Platform.getPluginRegistry();
-		IExtensionPoint point = pluginRegistry.getExtensionPoint(PLUGIN_ID, EXTENSION_POINT_ID);
+		IExtensionRegistry extensionRegistry = Platform.getExtensionRegistry();
+		IExtensionPoint point = extensionRegistry.getExtensionPoint(PLUGIN_ID, EXTENSION_POINT_ID);
 		if (point != null) {
 			// just remember the elements, so plugins don't have to
 			// be activated, unless extension matches those "of interest".

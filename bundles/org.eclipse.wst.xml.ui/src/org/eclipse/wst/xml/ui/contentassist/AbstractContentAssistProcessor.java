@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
@@ -41,9 +40,9 @@ import org.eclipse.wst.common.contentmodel.modelquery.ModelQueryAction;
 import org.eclipse.wst.common.contentmodel.util.DOMNamespaceHelper;
 import org.eclipse.wst.common.encoding.ContentTypeEncodingPreferences;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
@@ -51,7 +50,6 @@ import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.ui.IReleasable;
-import org.eclipse.wst.sse.ui.Logger;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
@@ -64,6 +62,7 @@ import org.eclipse.wst.xml.core.internal.document.AttrImpl;
 import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.core.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
 import org.eclipse.wst.xml.ui.taginfo.MarkupTagInfoProvider;
@@ -1178,7 +1177,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		// Handle empty Documents
 		if (completionRegion == null) {
 			if (((treeNode == null) || ((Node) treeNode).getNodeType() == Node.DOCUMENT_NODE) && completionRegion == null && (xmlnode == null || xmlnode.getChildNodes() == null || xmlnode.getChildNodes().getLength() == 0)) {
-				IStructuredModel sModel = ((IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID)).getModelManager().getExistingModelForRead(textViewer.getDocument());
+				IStructuredModel sModel = StructuredModelManager.getInstance().getModelManager().getExistingModelForRead(textViewer.getDocument());
 				try {
 					if (sModel != null) {
 						XMLDocument docNode = ((XMLModel) sModel).getDocument();
@@ -2132,7 +2131,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 */
 	private boolean needsEndTag(IStructuredDocumentRegion startTag) {
 		boolean result = false;
-		IStructuredModel sModel = ((IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID)).getModelManager().getExistingModelForRead(fTextViewer.getDocument());
+		IStructuredModel sModel = StructuredModelManager.getInstance().getModelManager().getExistingModelForRead(fTextViewer.getDocument());
 		try {
 			if (sModel != null) {
 				XMLNode xmlNode = (XMLNode) sModel.getIndexedRegion(startTag.getStart());

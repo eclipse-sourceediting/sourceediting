@@ -18,8 +18,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Plugin;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.dialogs.IMessageProvider;
@@ -47,11 +45,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
+import org.eclipse.wst.sse.core.ModelPlugin;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
-import org.eclipse.wst.sse.ui.EditorPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.TabFolderLayout;
@@ -109,7 +106,7 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 
 	public StructuredTextEditorPreferencePage() {
 		setDescription(ResourceHandler.getString("StructuredTextEditorPreferencePage.6")); //$NON-NLS-1$
-		setPreferenceStore(((AbstractUIPlugin) Platform.getPlugin(EditorPlugin.ID)).getPreferenceStore());
+		setPreferenceStore(SSEUIPlugin.getDefault().getPreferenceStore());
 
 		fOverlayStore = new OverlayPreferenceStore(getPreferenceStore(), createOverlayStoreKeys());
 	}
@@ -393,12 +390,6 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		super.dispose();
 	}
 
-	private IModelManagerPlugin getModelManagerPlugin() {
-
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		return plugin;
-	}
-
 	private void handleAppearanceColorListSelection() {
 		int i = fAppearanceColorList.getSelectionIndex();
 		String key = fAppearanceColorListModel[i][1];
@@ -501,12 +492,12 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		}
 
 		fOverlayStore.propagate();
-		EditorPlugin.getDefault().savePluginPreferences();
+		SSEUIPlugin.getDefault().savePluginPreferences();
 
 		// tab width is also a model-side preference so need to set it
 		int tabWidth = getPreferenceStore().getInt(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH);
-		getModelManagerPlugin().getPluginPreferences().setValue(CommonModelPreferenceNames.TAB_WIDTH, tabWidth);
-		((Plugin) getModelManagerPlugin()).savePluginPreferences();
+		ModelPlugin.getDefault().getPluginPreferences().setValue(CommonModelPreferenceNames.TAB_WIDTH, tabWidth);
+		ModelPlugin.getDefault().savePluginPreferences();
 
 		return true;
 	}

@@ -18,7 +18,7 @@ import org.eclipse.wst.sse.core.cleanup.IStructuredCleanupHandler;
 import org.eclipse.wst.sse.core.cleanup.IStructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.cleanup.StructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
-import org.eclipse.wst.xml.core.XMLModelPlugin;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.w3c.dom.Node;
 
 
@@ -60,7 +60,7 @@ public class NodeCleanupHandler implements IStructuredCleanupHandler {
 	}
 
 	protected Preferences getModelPreferences() {
-		return XMLModelPlugin.getDefault().getPluginPreferences();
+		return XMLCorePlugin.getDefault().getPluginPreferences();
 	}
 
 	public void setCleanupPreferences(IStructuredCleanupPreferences cleanupPreferences) {

@@ -31,7 +31,7 @@ import org.eclipse.wst.sse.core.AbstractAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.xml.core.modelquery.ModelQueryUtil;
-import org.eclipse.wst.xml.ui.Logger;
+import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.util.SharedXMLEditorPluginImageHelper;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;

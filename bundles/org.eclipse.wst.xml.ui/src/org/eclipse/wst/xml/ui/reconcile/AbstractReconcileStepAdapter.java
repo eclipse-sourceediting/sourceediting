@@ -25,12 +25,12 @@ import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
-import org.eclipse.wst.sse.ui.Logger;
 import org.eclipse.wst.sse.ui.StructuredTextReconciler;
 import org.eclipse.wst.sse.ui.internal.reconcile.IReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.IReconcileStepAdapter;
 import org.eclipse.wst.sse.ui.internal.reconcile.IStructuredReconcileStep;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
+import org.eclipse.wst.xml.ui.internal.Logger;
 
 
 /**

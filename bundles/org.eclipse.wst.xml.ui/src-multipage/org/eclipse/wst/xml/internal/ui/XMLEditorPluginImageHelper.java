@@ -17,7 +17,7 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.wst.xml.ui.XMLEditorPlugin;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
 /**
  * Helper class to handle images provided by this plug-in.
@@ -28,7 +28,7 @@ import org.eclipse.wst.xml.ui.XMLEditorPlugin;
  * @author amywu
  */
 public class XMLEditorPluginImageHelper {
-	private final String PLUGINID = XMLEditorPlugin.ID;
+	private final String PLUGINID = XMLUIPlugin.ID;
 	private static XMLEditorPluginImageHelper instance = null;
 
 	//	 save a descriptor for each image

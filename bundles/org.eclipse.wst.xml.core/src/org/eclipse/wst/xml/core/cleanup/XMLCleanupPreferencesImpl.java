@@ -12,9 +12,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.cleanup;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
+import org.eclipse.wst.sse.core.ModelPlugin;
 import org.eclipse.wst.xml.core.XMLPreferenceNames;
 
 
@@ -71,16 +70,10 @@ public class XMLCleanupPreferencesImpl implements XMLCleanupPreferences {
 		return fInsertMissingTags;
 	}
 
-	private IModelManagerPlugin getModelManagerPlugin() {
-
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		return plugin;
-	}
-
 	public Preferences getPreferences() {
 
 		if (fPreferences == null) {
-			fPreferences = getModelManagerPlugin().getPluginPreferences();
+			fPreferences = ModelPlugin.getDefault().getPluginPreferences();
 		}
 		return fPreferences;
 	}

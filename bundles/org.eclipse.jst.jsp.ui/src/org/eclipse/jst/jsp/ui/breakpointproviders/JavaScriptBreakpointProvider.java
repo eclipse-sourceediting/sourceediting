@@ -20,7 +20,7 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jst.jsp.ui.JSPEditorPlugin;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.nls.ResourceHandler;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.SourceEditingTextTools;
@@ -49,11 +49,11 @@ public class JavaScriptBreakpointProvider extends AbstractBreakpointProvider {
 				new JavascriptLineBreakpoint(res, lineNumber, pos, pos);
 //				}
 //				catch(CoreException e) {
-//					return new Status(IStatus.ERROR, JSPEditorPlugin.ID, IStatus.ERROR, "Problem adding Java breakpoint", e);
+//					return new Status(IStatus.ERROR, JSPUIPlugin.ID, IStatus.ERROR, "Problem adding Java breakpoint", e);
 //				}
 			}
 		}
-		return new Status(IStatus.OK, JSPEditorPlugin.ID, IStatus.OK, ResourceHandler.getString("OK"), null); //$NON-NLS-1$
+		return new Status(IStatus.OK, JSPUIPlugin.ID, IStatus.OK, ResourceHandler.getString("OK"), null); //$NON-NLS-1$
 	}
 
 	/*

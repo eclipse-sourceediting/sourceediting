@@ -12,11 +12,11 @@ package org.eclipse.jst.jsp.ui.registry;
 
 import java.util.Iterator;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapterFactory;
 import org.eclipse.jst.jsp.core.modelhandler.ModelHandlerForJSP;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.wst.html.ui.views.contentoutline.JFaceNodeAdapterFactoryForHTML;
 import org.eclipse.wst.sse.core.AdapterFactory;
@@ -24,7 +24,6 @@ import org.eclipse.wst.sse.core.IFactoryRegistry;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.PropagatingAdapter;
 import org.eclipse.wst.sse.core.modelhandler.IDocumentTypeHandler;
-import org.eclipse.wst.sse.ui.EditorPlugin;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
 import org.eclipse.wst.sse.ui.registry.embedded.EmbeddedAdapterFactoryProvider;
@@ -113,8 +112,7 @@ public class AdapterFactoryProviderForJSP implements AdapterFactoryProvider {
 			PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) document.getAdapterFor(PageDirectiveAdapter.class);
 			if (pageDirectiveAdapter != null) {
 				// made into registry mechanism
-				EditorPlugin plugin = ((EditorPlugin) Platform.getPlugin(EditorPlugin.ID));
-				AdapterFactoryRegistry adapterRegistry = plugin.getEmbeddedAdapterFactoryRegistry();
+				AdapterFactoryRegistry adapterRegistry = JSPUIPlugin.getDefault().getEmbeddedAdapterFactoryRegistry();
 				Iterator adapterList = adapterRegistry.getAdapterFactories();
 				// And all those appropriate for this particular type of content
 				while (adapterList.hasNext()) {

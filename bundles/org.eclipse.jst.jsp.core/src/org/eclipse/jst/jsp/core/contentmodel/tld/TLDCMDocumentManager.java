@@ -24,10 +24,10 @@ import java.util.Stack;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jst.jsp.core.JSP12Namespace;
-import org.eclipse.jst.jsp.core.Logger;
 import org.eclipse.jst.jsp.core.contentmodel.ITaglibRecord;
 import org.eclipse.jst.jsp.core.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.contentmodel.TaglibIndex;
+import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.wst.common.contentmodel.CMDocument;
 import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;

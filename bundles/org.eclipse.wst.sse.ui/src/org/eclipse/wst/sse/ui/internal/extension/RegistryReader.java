@@ -17,9 +17,9 @@ package org.eclipse.wst.sse.ui.internal.extension;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.IPluginDescriptor;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IPluginRegistry;
-import org.eclipse.wst.sse.ui.Logger;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.util.Sorter;
 
 
@@ -65,9 +65,8 @@ public abstract class RegistryReader {
 	 */
 	protected void logError(IConfigurationElement element, String text) {
 		IExtension extension = element.getDeclaringExtension();
-		IPluginDescriptor descriptor = extension.getDeclaringPluginDescriptor();
 		StringBuffer buf = new StringBuffer();
-		buf.append("Plugin " + descriptor.getUniqueIdentifier() + ", extension " + extension.getExtensionPointUniqueIdentifier()); //$NON-NLS-2$//$NON-NLS-1$
+		buf.append("Plugin " + extension.getNamespace() + ", extension " + extension.getExtensionPointUniqueIdentifier()); //$NON-NLS-2$//$NON-NLS-1$
 		buf.append("\n" + text); //$NON-NLS-1$
 		Logger.log(Logger.ERROR, buf.toString());
 	}
@@ -97,8 +96,8 @@ public abstract class RegistryReader {
 		// dependent in the order listed in the XML file.
 		Sorter sorter = new Sorter() {
 			public boolean compare(Object extension1, Object extension2) {
-				String s1 = ((IExtension) extension1).getDeclaringPluginDescriptor().getUniqueIdentifier().toUpperCase();
-				String s2 = ((IExtension) extension2).getDeclaringPluginDescriptor().getUniqueIdentifier().toUpperCase();
+				String s1 = ((IExtension) extension1).getNamespace().toUpperCase();
+				String s2 = ((IExtension) extension2).getNamespace().toUpperCase();
 				//Return true if elementTwo is 'greater than' elementOne
 				return s2.compareTo(s1) > 0;
 			}
@@ -149,10 +148,23 @@ public abstract class RegistryReader {
 	}
 
 	/**
+	 * @deprecated use readRegistry(IExtensionRegistry registry, String pluginId, String extensionPoint)
+	 */
+	protected void readRegistry(IPluginRegistry registry, String pluginId, String extensionPoint) {
+		IExtensionPoint point = registry.getExtensionPoint(pluginId, extensionPoint);
+		if (point != null) {
+			IExtension[] extensions = point.getExtensions();
+			extensions = orderExtensions(extensions);
+			for (int i = 0; i < extensions.length; i++)
+				readExtension(extensions[i]);
+		}
+	}
+	
+	/**
 	 * Start the registry reading process using the supplied plugin ID and
 	 * extension point.
 	 */
-	protected void readRegistry(IPluginRegistry registry, String pluginId, String extensionPoint) {
+	protected void readRegistry(IExtensionRegistry registry, String pluginId, String extensionPoint) {
 		IExtensionPoint point = registry.getExtensionPoint(pluginId, extensionPoint);
 		if (point != null) {
 			IExtension[] extensions = point.getExtensions();

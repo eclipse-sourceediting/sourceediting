@@ -11,10 +11,10 @@
 package org.eclipse.jst.jsp.core.modelhandler;
 
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.jst.jsp.core.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.document.DocumentLoaderForJSP;
 import org.eclipse.jst.jsp.core.encoding.JSPDocumentHeadContentDetector;
 import org.eclipse.jst.jsp.core.encoding.JSPDocumentLoader;
+import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.wst.sse.core.ModelLoader;
 import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;

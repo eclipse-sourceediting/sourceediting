@@ -12,10 +12,10 @@ package org.eclipse.wst.html.core.preferences;
 
 
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.wst.common.contentmodel.CMNode;
 import org.eclipse.wst.html.core.HTMLCMProperties;
+import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -31,7 +31,7 @@ public class HTMLContentBuilder extends org.eclipse.wst.common.contentmodel.util
 	 */
 	public HTMLContentBuilder(Document document) {
 		super(document);
-		Preferences prefs = Platform.getPlugin("org.eclipse.wst.html.core").getPluginPreferences();//$NON-NLS-1$
+		Preferences prefs = HTMLCorePlugin.getDefault().getPluginPreferences();
 		fTagCase = prefs.getInt(CommonModelPreferenceNames.TAG_NAME_CASE);
 		fAttrCase = prefs.getInt(CommonModelPreferenceNames.ATTR_NAME_CASE);
 		//	Element caseSettings = HTMLPreferenceManager.getHTMLInstance().getElement(PreferenceNames.PREFERRED_CASE);

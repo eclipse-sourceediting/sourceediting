@@ -56,6 +56,7 @@ import org.eclipse.wst.sse.core.document.IEncodedDocument;
 import org.eclipse.wst.sse.core.exceptions.ResourceAlreadyExists;
 import org.eclipse.wst.sse.core.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
+import org.eclipse.wst.sse.core.internal.FileBufferModelManager;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
 import org.eclipse.wst.sse.core.internal.nls.ResourceHandler1;

@@ -24,7 +24,7 @@ import org.eclipse.wst.sse.core.parser.BlockTokenizer;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.xml.core.Logger;
+import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.parser.regions.XMLParserRegionFactory;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 
@@ -229,7 +229,7 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 
 	private XMLParserRegionFactory fRegionFactory = new XMLParserRegionFactory();
 
-	 static final String rcsver = "$Id: XMLTokenizer.java,v 1.3 2004/11/11 09:05:07 david_williams Exp $";//$NON-NLS-1$
+	 static final String rcsver = "$Id: XMLTokenizer.java,v 1.4 2004/12/07 21:46:18 david_williams Exp $";//$NON-NLS-1$
 
 	/**
 	 * user method

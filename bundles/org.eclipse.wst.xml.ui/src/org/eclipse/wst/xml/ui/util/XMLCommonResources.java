@@ -22,7 +22,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.views.markers.internal.ImageFactory;
-import org.eclipse.wst.xml.ui.XMLEditorPlugin;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
 
 
@@ -35,16 +35,16 @@ public class XMLCommonResources {
 
 	public synchronized static XMLCommonResources getInstance() {
 		if (instance == null)
-			instance = new XMLCommonResources(XMLEditorPlugin.getDefault());
+			instance = new XMLCommonResources(XMLUIPlugin.getDefault());
 		return instance;
 	}
 
-	private XMLEditorPlugin editorPlugin;
+	private XMLUIPlugin editorPlugin;
 
 	protected ImageFactory imageFactory;
 	private ResourceBundle resourceBundle;
 
-	public XMLCommonResources(XMLEditorPlugin editorPlugin) {
+	public XMLCommonResources(XMLUIPlugin editorPlugin) {
 		instance = this;
 		this.editorPlugin = editorPlugin;
 		//imageFactory = new ImageFactory();
@@ -60,7 +60,7 @@ public class XMLCommonResources {
 	}
 
 	 ImageDescriptor _getImageDescriptor(String iconName) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin(XMLEditorPlugin.ID, iconName);
+		return AbstractUIPlugin.imageDescriptorFromPlugin(XMLUIPlugin.ID, iconName);
 	}
 
 

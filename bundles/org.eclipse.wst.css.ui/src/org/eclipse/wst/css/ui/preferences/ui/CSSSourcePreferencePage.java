@@ -205,7 +205,7 @@ public class CSSSourcePreferencePage extends XMLSourcePreferencePage {
 	 * @see org.eclipse.jface.preference.PreferencePage#doGetPreferenceStore()
 	 */
 	//	protected IPreferenceStore doGetPreferenceStore() {
-	//		return CSSEditorPlugin.getDefault().getPreferenceStore();
+	//		return CSSUIPlugin.getDefault().getPreferenceStore();
 	//	}
 	/*
 	 * (non-Javadoc)

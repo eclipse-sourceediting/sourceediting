@@ -46,8 +46,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.wst.sse.ui.Logger;
 import org.eclipse.wst.sse.ui.extensions.openon.IOpenOn;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.openon.OpenOnProvider;
 import org.eclipse.wst.sse.ui.util.EditorUtility;
 

@@ -28,9 +28,9 @@ import org.eclipse.ui.part.IShowInSource;
 import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.wst.sse.core.IFactoryRegistry;
-import org.eclipse.wst.sse.ui.EditorPlugin;
-import org.eclipse.wst.sse.ui.Logger;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
 import org.eclipse.wst.sse.ui.nls.ResourceHandler;
@@ -101,7 +101,7 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 	 */
 	protected IContributionItem[] createMenuContributions(TreeViewer viewer) {
 		IContributionItem[] items;
-		IContributionItem toggleLinkItem = new PropertyChangeUpdateActionContributionItem(new ToggleLinkAction(EditorPlugin.getInstance().getPreferenceStore(), getLinkPreferenceKey()));
+		IContributionItem toggleLinkItem = new PropertyChangeUpdateActionContributionItem(new ToggleLinkAction(SSEUIPlugin.getInstance().getPreferenceStore(), getLinkPreferenceKey()));
 		items = super.getMenuContributions(viewer);
 		if (items == null) {
 			items = new IContributionItem[]{toggleLinkItem};

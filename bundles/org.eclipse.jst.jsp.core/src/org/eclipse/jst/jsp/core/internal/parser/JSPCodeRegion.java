@@ -12,10 +12,9 @@ package org.eclipse.jst.jsp.core.internal.parser;
 
 
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
 import org.eclipse.wst.sse.core.parser.RegionParser;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
@@ -41,13 +40,8 @@ public class JSPCodeRegion extends ForeignRegion {
 	 */
 	protected RegionParser getBlockNodeChecker() {
 		if (fBlockNodeChecker == null) {
-			IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-			if (plugin != null) {
-				IModelManager mmanager = plugin.getModelManager();
-				fBlockNodeChecker = mmanager.createStructuredDocumentFor(IContentTypeIdentifier.ContentTypeID_JSP).getParser();
-			}
-			else
-				fBlockNodeChecker = new JSPSourceParser();
+			IModelManager mmanager = StructuredModelManager.getInstance().getModelManager();
+			fBlockNodeChecker = mmanager.createStructuredDocumentFor(IContentTypeIdentifier.ContentTypeID_JSP).getParser();
 		}
 		return fBlockNodeChecker;
 	}

@@ -23,7 +23,7 @@ import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.xml.core.Logger;
+import org.eclipse.wst.xml.core.internal.Logger;
 
 
 public class ContextRegionContainer implements ITextRegionContainer {
