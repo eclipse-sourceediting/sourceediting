@@ -499,20 +499,15 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 		if (fStrategies == null)
 			fStrategies = new HashMap();
 
-		if (strategy == null)
+		if (strategy == null) {
 			fStrategies.remove(contentType);
+		}
 		else {
 			fStrategies.put(contentType, strategy);
 			if (strategy instanceof IReconcilingStrategyExtension && getLocalProgressMonitor() != null) {
-				IReconcilingStrategyExtension extension = (IReconcilingStrategyExtension) strategy;
-				extension.setProgressMonitor(getLocalProgressMonitor());
-			}
-			if (strategy != null) {
-				strategy.setDocument(fDocument);
-				if (strategy instanceof IReconcilingStrategyExtension) {
-					((IReconcilingStrategyExtension) strategy).setProgressMonitor(getLocalProgressMonitor());
-				}
-			}
+				((IReconcilingStrategyExtension)strategy).setProgressMonitor(getLocalProgressMonitor());
+			}	
+			strategy.setDocument(fDocument);
 		}
 		getStrategyTypes().add(contentType);
 	}
