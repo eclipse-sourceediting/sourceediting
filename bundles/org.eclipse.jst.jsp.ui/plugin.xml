@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.eclipse.jst.jsp.ui"
+   name="%SSE_JSP_Source_Editor.name"
+   version="1.0.0"
+   provider-name="IBM"
+   class="org.eclipse.jst.jsp.ui.JSPEditorPlugin">
+
+   <runtime>
+      <library name="jspeditor.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.eclipse.core.runtime.compatibility"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.ui.views"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.wst.sse.ui"/>
+      <import plugin="org.eclipse.wst.html.ui"/>
+      <import plugin="org.eclipse.wst.css.ui"/>
+      <import plugin="org.eclipse.wst.xml.ui"/>
+      <import plugin="org.eclipse.jst.jsp.core"/>
+      <import plugin="org.eclipse.wst.html.core"/>
+      <import plugin="org.eclipse.wst.css.core"/>
+      <import plugin="org.eclipse.wst.xml.core"/>
+      <import plugin="org.eclipse.wst.xml.uriresolver" />
+      <import plugin="org.eclipse.wst.common.uriresolver"/>
+      <import plugin="org.eclipse.wst.sse.core"/>
+      <import plugin="org.eclipse.wst.common.contentmodel"/>
+      <import plugin="org.eclipse.jdt.ui"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.wst.javascript.common.ui"/>
+      <import plugin="org.eclipse.debug.core"/>
+      <import plugin="org.eclipse.jdt.debug"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.wst.common.encoding"/>
+      <import plugin="org.eclipse.search"/>
+      <import plugin="org.eclipse.ltk.core.refactoring"/>
+      <import plugin="org.eclipse.ltk.ui.refactoring"/>
+   </requires>
+
+
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            name="%JSP_Source_Page_Editor.name"
+            icon="icons/sourceEditor.gif"
+            extensions="jsp, jsf, jspf, jspx"
+            contributorClass="org.eclipse.jst.jsp.ui.ActionContributorJSP"
+            class="org.eclipse.jst.jsp.ui.StructuredTextEditorJSP"
+            symbolicFontName="org.eclipse.wst.sse.ui.textfont"
+            id="org.eclipse.jst.jsp.ui.StructuredTextEditorJSP">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.wst.sse.ui.extendedconfiguration">
+      <textviewerconfiguration
+            class="org.eclipse.jst.jsp.ui.StructuredTextViewerConfigurationJSP"
+            target="org.eclipse.jst.jsp.core.jspsource">
+      </textviewerconfiguration>
+      <contentoutlineconfiguration
+            class="org.eclipse.jst.jsp.ui.views.contentoutline.JSPContentOutlineConfiguration"
+            target="org.eclipse.jst.jsp.core.jspsource">
+      </contentoutlineconfiguration>
+      <propertysheetconfiguration
+            class="org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration"
+            target="org.eclipse.jst.jsp.core.jspsource">
+      </propertysheetconfiguration>
+      <spellchecktarget
+            class="org.eclipse.jst.jsp.ui.JSPSpellCheckTarget"
+            target="org.eclipse.jst.jsp.core.jspsource">
+      </spellchecktarget>
+      <sourceeditingtexttools
+            class="org.eclipse.jst.jsp.ui.extensions.JSPSourceEditingTextTools"
+            target="org.eclipse.jst.jsp.core.jspsource">
+      </sourceeditingtexttools>
+      <characterpairmatcher
+            class="org.eclipse.jst.jsp.ui.text.JSPDocumentRegionEdgeMatcher"
+            target="org.eclipse.jst.jsp.core.jspsource">
+      </characterpairmatcher>
+      <preferencepages
+            preferenceids="org.eclipse.wst.sse.ui.preferences/org.eclipse.wst.sse.ui.preferences.jsp"
+            target="org.eclipse.jst.jsp.core.jspsource">
+      </preferencepages>
+   </extension>
+   <extension
+         point="org.eclipse.wst.sse.ui.adapterFactoryDescription">
+      <adapterFactoryDescription
+            class="org.eclipse.jst.jsp.ui.registry.AdapterFactoryProviderForJSP">
+            <contentType id="org.eclipse.jst.jsp.core.jspsource"/>
+      </adapterFactoryDescription>
+   </extension>
+   <extension
+      point="org.eclipse.core.filebuffers.annotationModelCreation">
+      <factory
+            contentTypeId="org.eclipse.jst.jsp.core.jspsource"
+            class="org.eclipse.wst.sse.ui.StructuredResourceMarkerAnnotationModelFactory"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+         
+<!--======================================================================================-->         
+<!-- JSP PREFERENCE PAGES                                                                 -->
+<!--======================================================================================-->
+      <page
+            name="%JSP_Files.name"
+            category="org.eclipse.wst.sse.ui.preferences"
+            class="org.eclipse.jst.jsp.ui.preferences.ui.JSPFilesPreferencePage"
+            id="org.eclipse.wst.sse.ui.preferences.jsp">
+      </page>
+      <page
+            name="%JSP_Templates.name"
+            category="org.eclipse.wst.sse.ui.preferences.jsp"
+            class="org.eclipse.jst.jsp.ui.preferences.ui.JSPTemplatePreferencePage"
+            id="org.eclipse.wst.sse.ui.preferences.jsp.templates">
+      </page>
+      <page
+            name="%JSP_Styles.name"
+            category="org.eclipse.wst.sse.ui.preferences.jsp"
+            class="org.eclipse.jst.jsp.ui.preferences.ui.JSPColorPage"
+            id="org.eclipse.wst.sse.ui.preferences.jsp.styles">
+      </page>
+   </extension>
+   
+<!--======================================================================================-->
+<!-- FOR JSP/JAVA RENAME PARTICIPATION                                                    -->
+<!--======================================================================================-->
+   <extension
+         point="org.eclipse.ltk.core.refactoring.renameParticipants">
+      <renameParticipant
+            name="JSP Type Rename Participant"
+            class="org.eclipse.jst.jsp.ui.internal.java.refactoring.JSPTypeRenameParticipant"
+            id="org.eclipse.jst.jsp.ui.java.refactoring.JSPTypeRenameParticipant">
+         <enablement>
+            <with
+                  variable="affectedNatures">
+               <iterate
+                     operator="or">
+                  <equals
+                        value="org.eclipse.jdt.core.javanature">
+                  </equals>
+               </iterate>
+            </with>
+            <with
+                  variable="element">
+               <instanceof
+                     value="org.eclipse.jdt.core.IType">
+               </instanceof>
+            </with>
+         </enablement>
+      </renameParticipant>
+      
+      <renameParticipant
+            name="JSP Method Rename Participant"
+            class="org.eclipse.jst.jsp.ui.internal.java.refactoring.JSPMethodRenameParticipant"
+            id="org.eclipse.jst.jsp.ui.java.refactoring.JSPMethodRenameParticipant">
+         <enablement>
+            <with
+                  variable="affectedNatures">
+               <iterate
+                     operator="or">
+                  <equals
+                        value="org.eclipse.jdt.core.javanature">
+                  </equals>
+               </iterate>
+            </with>
+            <with
+                  variable="element">
+               <instanceof
+                     value="org.eclipse.jdt.core.IMethod">
+               </instanceof>
+            </with>
+         </enablement>
+      </renameParticipant>
+      
+      <renameParticipant
+            name="JSP Package Rename Participant"
+            class="org.eclipse.jst.jsp.ui.internal.java.refactoring.JSPPackageRenameParticipant"
+            id="org.eclipse.jst.jsp.ui.java.refactoring.JSPPackageRenameParticipant">
+         <enablement>
+            <with
+                  variable="affectedNatures">
+               <iterate
+                     operator="or">
+                  <equals
+                        value="org.eclipse.jdt.core.javanature">
+                  </equals>
+               </iterate>
+            </with>
+            <with
+                  variable="element">
+               <instanceof
+                     value="org.eclipse.jdt.core.IPackageFragment">
+               </instanceof>
+            </with>
+         </enablement>
+      </renameParticipant>
+   </extension>
+   
+<!--======================================================================================-->
+<!-- FOR JSP/JAVA MOVE PARTICIPATION                                                      -->
+<!--======================================================================================-->  
+   <extension
+         point="org.eclipse.ltk.core.refactoring.moveParticipants">
+               
+      <moveParticipant
+		    id="org.eclipse.jst.jsp.ui.java.refactoring.JSPTypeMoveParticipant"
+		    name="JSP Type Move Participant" 
+		    class="org.eclipse.jst.jsp.ui.internal.java.refactoring.JSPTypeMoveParticipant">
+		    <enablement>
+		      <with variable="affectedNatures">
+		        <iterate operator="or">
+		          <equals value="org.eclipse.jdt.core.javanature"/>
+		        </iterate>
+		      </with>
+		      <with
+                  variable="element">
+               <instanceof
+                     value="org.eclipse.jdt.core.IType">
+               </instanceof>
+            </with>
+		    </enablement>
+		</moveParticipant>
+   </extension>
+   
+<!--======================================================================================-->
+<!-- for breakpoint                                                                       -->
+<!--======================================================================================-->
+   <extension
+         point="org.eclipse.wst.sse.ui.breakpoint">
+      <breakpointContribution
+            id="org.eclipse.jst.jsp.ui.providers">
+<!-- 
+         <provider
+               extensions="jsp, jspf, jsf"
+               class="org.eclipse.jst.jsp.ui.breakpointproviders.JavaStratumBreakpointProvider"
+               id="org.eclipse.jst.jsp.ui.breakpointproviders.JavaStratumBreakpointProvider">
+         </provider>
+-->
+         <provider
+               contentTypes="org.eclipse.jst.jsp.core.jspsource"
+               class="org.eclipse.jst.jsp.ui.breakpointproviders.JavaStratumBreakpointProvider:*jsp"
+               id="org.eclipse.jst.jsp.ui.breakpointproviders.JavaStratumBreakpointProvider"/>
+      </breakpointContribution>
+   </extension>
+   
+<!--======================================================================================-->
+<!-- Snippet View contributions                                                           -->
+<!--======================================================================================-->
+   <extension
+         point="org.eclipse.wst.sse.snippets.SnippetContributions">
+      <category
+            label="JSP"
+            icon="icons/snippets/tag-jsp.gif"
+            id="org.eclipse.jst.jsp.ui.category0"
+            contenttypes="org.eclipse.jst.jsp.core.jspsource"/>
+      <item
+            label="%jsp_hidden_comment"
+            icon="icons/snippets/tag-generic.gif"
+            category="org.eclipse.jst.jsp.ui.category0"
+            class="org.eclipse.wst.sse.snippets.insertions.VariableInsertion"
+            id="org.eclipse.jst.jsp.ui.jsp_hidden_comment">
+         <content>
+            %jsp_hidden_comment_content
+         </content>
+      </item>
+      <item
+            label="%jsp_scriptlet"
+            icon="icons/snippets/jspscr.gif"
+            category="org.eclipse.jst.jsp.ui.category0"
+            class="org.eclipse.wst.sse.snippets.insertions.VariableInsertion"
+            id="org.eclipse.jst.jsp.ui.jsp_scriptlet">
+         <content>
+            %jsp_scr_content
+         </content>
+      </item>
+      <item
+            label="%jsp_expression"
+            icon="icons/snippets/jspexp.gif"
+            category="org.eclipse.jst.jsp.ui.category0"
+            class="org.eclipse.wst.sse.snippets.insertions.VariableInsertion"
+            id="org.eclipse.jst.jsp.ui.jsp_expression">
+         <content>
+            %jsp_expression_content
+         </content>
+      </item>
+      <item
+            label="%jsp_declaration"
+            icon="icons/snippets/jspdecl.gif"
+            category="org.eclipse.jst.jsp.ui.category0"
+            class="org.eclipse.wst.sse.snippets.insertions.VariableInsertion"
+            id="org.eclipse.jst.jsp.ui.jsp_declaration">
+         <content>
+            %jsp_declaration_content
+         </content>
+      </item>
+      <item
+            label="%jsp_include_directive"
+            icon="icons/snippets/jspincl.gif"
+            category="org.eclipse.jst.jsp.ui.category0"
+            class="org.eclipse.wst.sse.snippets.insertions.VariableInsertion"
+            id="org.eclipse.jst.jsp.ui.jsp_include_directive">
+         <content>
+            %jsp_include_directive_content
+         </content>
+      </item>
+      <item
+            label="%jsp_page_directive"
+            category="org.eclipse.jst.jsp.ui.category0"
+            class="org.eclipse.wst.sse.snippets.insertions.VariableInsertion"
+            id="org.eclipse.jst.jsp.ui.jsp_page_directive">
+         <content>
+            %jsp_page_directive_content
+         </content>
+      </item>
+      <item
+            label="%jsp_taglib_directive"
+            icon="icons/snippets/jsptaglib.gif"
+            category="org.eclipse.jst.jsp.ui.category0"
+            class="org.eclipse.wst.sse.snippets.insertions.PrependInsertion"
+            id="org.eclipse.jst.jsp.ui.jsp_taglib_directive">
+         <content>
+            %jsp_taglib_directive_content
+         </content>
+         <variable
+               description="%jsp_taglib_directive_uri"
+               id="uri">
+         </variable>
+         <variable
+               default="mylib"
+               description="%jsp_taglib_directive_prefix"
+               id="prefix">
+         </variable>
+      </item>
+   </extension>
+
+<!-- Editor actionsets -->
+   <extension
+         point="org.eclipse.ui.actionSetPartAssociations">
+      <actionSetPartAssociation
+            targetID="org.eclipse.ui.edit.text.actionSet.annotationNavigation">
+         <part
+               id="org.eclipse.jst.jsp.ui.StructuredTextEditorJSP">
+         </part>
+      </actionSetPartAssociation>
+      <actionSetPartAssociation
+            targetID="org.eclipse.ui.NavigateActionSet">
+         <part
+               id="org.eclipse.jst.jsp.ui.StructuredTextEditorJSP">
+         </part>
+      </actionSetPartAssociation>
+   </extension>
+   
+<!--======================================================================================-->
+<!-- JSP Editor specific actions                                                          -->
+<!--======================================================================================-->
+   <extension
+         point="org.eclipse.ui.commands">
+      <scope
+            name="%scope.structured.text.editor.jsp.name"
+            parent="org.eclipse.ui.textEditorScope"
+            description="%scope.structured.text.editor.jsp.description"
+            id="org.eclipse.jst.jsp.ui.structured.text.editor.jsp.scope">
+      </scope>
+      <!-- dmw 6/6 removed from 'scope'      parentId="org.eclipse.ui.textEditorScope" -->
+      <!-- rename refactor -->
+      <command
+            name="%command.jsp.refactor.rename.name"
+            description="%command.jsp.refactor.rename.description"
+            category="org.eclipse.ui.category.edit"
+            id="org.eclipse.jst.jsp.ui.refactor.rename">
+      </command>
+      <keyBinding
+            string="Alt+Shift+R"
+            scope="org.eclipse.jst.jsp.ui.structured.text.editor.jsp.scope"
+            command="org.eclipse.jst.jsp.ui.refactor.rename"
+            configuration="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </keyBinding>
+      <!-- move refactor -->
+      <command
+            name="%command.jsp.refactor.move.name"
+            description="%command.jsp.refactor.move.description"
+            category="org.eclipse.ui.category.edit"
+            id="org.eclipse.jst.jsp.ui.refactor.move">
+      </command>
+      <keyBinding
+            string="Alt+Shift+V"
+            scope="org.eclipse.jst.jsp.ui.structured.text.editor.jsp.scope"
+            command="org.eclipse.jst.jsp.ui.refactor.move"
+            configuration="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </keyBinding>
+   </extension>  
+   
+   <extension
+         point="org.eclipse.wst.sse.ui.extensions.openon">
+<!-- add a default open on action for jsp content type -->
+      <openon
+            class="org.eclipse.wst.html.ui.openon.DefaultOpenOnHTML"
+            id="org.eclipse.wst.html.ui.openon.DefaultOpenOnHTML">
+         <contenttypeidentifier
+               id="org.eclipse.jst.jsp.core.jspsource">
+         </contenttypeidentifier>
+      </openon>
+<!-- add an open on action for jsp java partitions -->
+      <openon
+            class="org.eclipse.jst.jsp.ui.openon.JSPJavaOpenOnJSP"
+            id="org.eclipse.jst.jsp.ui.openon.JSPJavaOpenOnJSP">
+         <contenttypeidentifier
+               id="org.eclipse.jst.jsp.core.jspsource">
+            <partitiontype
+                  id="org.eclipse.jst.jsp.JSP_CONTENT_JAVA">
+            </partitiontype>
+         </contenttypeidentifier>
+      </openon>
+<!-- add an open on action for jsp directive partitions -->
+      <openon
+            class="org.eclipse.jst.jsp.ui.openon.JSPDirectiveOpenOnJSP"
+            id="org.eclipse.jst.jsp.ui.openon.JSPDirectiveOpenOnJSP">
+         <contenttypeidentifier
+               id="org.eclipse.jst.jsp.core.jspsource">
+            <partitiontype
+                  id="org.eclipse.jst.jsp.JSP_DIRECTIVE">
+            </partitiontype>
+         </contenttypeidentifier>
+      </openon>
+   </extension>
+   
+<!--======================================================================================-->
+<!-- Templates                                                                            -->
+<!--======================================================================================-->
+   <extension
+         point="org.eclipse.ui.editors.templates">
+      <contextType
+            name="All JSP context type"
+            class="org.eclipse.jst.jsp.ui.templates.TemplateContextTypeJSP"
+            id="jsp_all">
+      </contextType>
+      <contextType
+            name="JSP Tag context type"
+            class="org.eclipse.jst.jsp.ui.templates.TemplateContextTypeJSPTag"
+            id="jsp_tag">
+      </contextType>
+      <contextType
+            name="JSP Attribute context type"
+            class="org.eclipse.jst.jsp.ui.templates.TemplateContextTypeJSPAttribute"
+            id="jsp_attribute">
+      </contextType>
+      <contextType
+            name="JSP Attribute value context type"
+            class="org.eclipse.jst.jsp.ui.templates.TemplateContextTypeJSPAttributeValue"
+            id="jsp_attribute_value">
+      </contextType>
+      <include
+      		file="templates/jspdefault-templates.xml"
+      		translations="templates/jspdefault-templates.properties">
+      </include>
+   </extension>
+   
+<!--======================================================================================-->
+<!-- queryParticipant to participate in java seraches                                     -->
+<!--======================================================================================-->
+   <extension
+         point="org.eclipse.jdt.ui.queryParticipants">
+      <queryParticipant
+            name="JSP Query Participant"
+            nature="org.eclipse.jdt.core.javanature"
+            class="org.eclipse.jst.jsp.ui.internal.java.search.ui.JSPQueryParticipant"
+            id="org.eclipse.jst.jsp.ui.java.search.ui.JSPQueryParticipant">
+      </queryParticipant>
+   </extension>
+</plugin>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+<template name="%Templates.jspscriptlet.name" description="%Templates.jspscriptlet.desc" id="com.ibm.sse.editor.jsp.templates.jspscriptlet" context="jsp_tag" enabled="true">%Templates.jspscriptlet.content</template>
+
+<template name="%Templates.jsphiddencomment.name" description="%Templates.jsphiddencomment.desc" id="com.ibm.sse.editor.jsp.templates.jsphiddencomment" context="jsp_tag" enabled="true">%Templates.jsphiddencomment.content</template>
+
+<template name="%Templates.jspdeclaration.name" description="%Templates.jspdeclaration.desc" id="com.ibm.sse.editor.jsp.templates.jspdeclaration" context="jsp_tag" enabled="true">%Templates.jspdeclaration.content</template>
+
+<template name="%Templates.jspexpression.name" description="%Templates.jspexpression.desc" id="com.ibm.sse.editor.jsp.templates.jspexpression" context="jsp_tag" enabled="true">%Templates.jspexpression.content</template>
+
+<template name="%Templates.jspincludedirective.name" description="%Templates.jspincludedirective.desc" id="com.ibm.sse.editor.jsp.templates.jspincludedirective" context="jsp_tag" enabled="true">%Templates.jspincludedirective.content</template>
+
+<template name="%Templates.jsppagedirective.name" description="%Templates.jsppagedirective.desc" id="com.ibm.sse.editor.jsp.templates.jsppagedirective" context="jsp_tag" enabled="true">%Templates.jsppagedirective.content</template>
+
+<template name="%Templates.jsptaglibdirective.name" description="%Templates.jsptaglibdirective.desc" id="com.ibm.sse.editor.jsp.templates.jsptaglibdirective" context="jsp_tag" enabled="true">%Templates.jsptaglibdirective.content</template>
+
+<template name="%Templates.jspcomment.name" description="%Templates.jspcomment.desc" id="com.ibm.sse.editor.jsp.templates.jspcomment" context="jsp_tag" enabled="true">%Templates.jspcomment.content</template>
+
+</templates>
