@@ -43,7 +43,7 @@
 
 	<extension point="org.eclipse.ui.editors">
 		<editor name="%JSP_Source_Page_Editor.name"
-			icon="icons/sourceEditor.gif" extensions="jsp, jsf, jspf, jspx"
+			icon="icons/sourceEditor.gif" extensions="jsp, jsf, jspf, jspx, tag, tagf"
 			contributorClass="org.eclipse.jst.jsp.ui.ActionContributorJSP"
 			class="org.eclipse.jst.jsp.ui.StructuredTextEditorJSP"
 			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
