@@ -16,6 +16,8 @@ import org.eclipse.wst.common.ui.wizards.ExampleProjectCreationWizard;
 /**
  * Wizard used for creating the XML samples.
  * Most functionality is inherited from ExampleProjectCreationWizard.
+ * 
+ * @deprecated - to be removed in WTP 1.0M4
  */
 public class XMLExampleProjectCreationWizard extends ExampleProjectCreationWizard {
 	
