@@ -25,23 +25,23 @@ public class WSTWebPreferences {
 	private Plugin owner = null;
 	private Preferences preferences = null;
 	private boolean persistOnChange = false;
-	
+
 	public WSTWebPreferences(Plugin owner) {
 		this.owner = owner;
 	}
 	protected void initializeDefaultPreferences() {
 		getPreferences().setDefault(Keys.STATIC_WEB_CONTENT, Defaults.STATIC_WEB_CONTENT);
 	}
-	
+
 	public String getStaticWebContentFolderName() {
 		return getPreferences().getString(Keys.STATIC_WEB_CONTENT);
 	}
-	
+
 	public void setStaticWebContentFolderName(String value) {
 		getPreferences().setValue(Keys.STATIC_WEB_CONTENT, value);
 		firePreferenceChanged();
 	}
-	
+
 	public void firePreferenceChanged() {
 		if (isPersistOnChange())
 			persist();

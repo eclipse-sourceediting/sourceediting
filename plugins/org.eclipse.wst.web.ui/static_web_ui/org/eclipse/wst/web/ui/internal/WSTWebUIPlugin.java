@@ -8,8 +8,6 @@
  **************************************************************************************************/
 package org.eclipse.wst.web.ui.internal;
 
-import java.util.ResourceBundle;
-
 import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -18,11 +16,9 @@ import org.osgi.framework.BundleContext;
  * The main plugin class to be used in the desktop.
  */
 public class WSTWebUIPlugin extends AbstractUIPlugin {
-	//The shared instance.
+	// The shared instance.
 	private static WSTWebUIPlugin plugin;
-	//Resource bundle.
-	private ResourceBundle resourceBundle;
-	
+
 	/**
 	 * The constructor.
 	 */
@@ -50,7 +46,6 @@ public class WSTWebUIPlugin extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		plugin = null;
-		resourceBundle = null;
 	}
 
 	/**

@@ -22,9 +22,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.web.internal.ResourceHandler;
 import org.eclipse.wst.web.internal.WebPropertiesUtil;
 
-
-public class SimpleContextRootComposite extends Composite
-{
+public class SimpleContextRootComposite extends Composite {
 	protected Text contextRootField;
 	private String errorMessage = null;
 
@@ -32,38 +30,33 @@ public class SimpleContextRootComposite extends Composite
 	// value is modified.
 	private java.util.List modifyListeners;
 
-	protected Listener contextRootModifyListener = new Listener()
-	{
-		public void handleEvent(Event e)
-		{
-			if( contextRootField != null ) contextRootModified();
+	protected Listener contextRootModifyListener = new Listener() {
+		public void handleEvent(Event e) {
+			if (contextRootField != null)
+				contextRootModified();
 		}
 	};
 
-	public SimpleContextRootComposite(Composite parent)
-	{
+	public SimpleContextRootComposite(Composite parent) {
 		super(parent, SWT.NONE);
 		createControls();
 		modifyListeners = new Vector(1);
 	}
 
-	protected void createControls()
-	{
+	protected void createControls() {
 		// container specification group
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
 		setLayout(layout);
-		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL
-				| GridData.GRAB_HORIZONTAL);
+		GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL);
 		data.horizontalSpan = 2;
 		setLayoutData(data);
 
 		// New Context Root Label
 		Label contextRootLabel = new Label(this, SWT.CHECK);
-		contextRootLabel.setText(ResourceHandler
-				.getString("StaticContextRootComposite.Context_Root_Label")); //$NON-NLS-1$
+		contextRootLabel.setText(ResourceHandler.getString("StaticContextRootComposite.Context_Root_Label")); //$NON-NLS-1$
 
 		// New Context Root Entryfield
 		contextRootField = new Text(this, SWT.BORDER);
@@ -75,31 +68,27 @@ public class SimpleContextRootComposite extends Composite
 
 	}
 
-	public String getContextRoot()
-	{
+	public String getContextRoot() {
 		return contextRootField.getText();
 	}
 
-	public void setEnabled(boolean enabled)
-	{
-		if( contextRootField != null ) contextRootField.setEnabled(enabled);
+	public void setEnabled(boolean enabled) {
+		if (contextRootField != null)
+			contextRootField.setEnabled(enabled);
 	}
 
-	protected void contextRootModified()
-	{
+	protected void contextRootModified() {
 		errorMessage = WebPropertiesUtil.validateContextRoot(getContextRoot());
 		// notify listeners
 		Event e = new Event();
 		e.type = SWT.Modify;
 		e.widget = contextRootField;
-		for( int i = 0; i < modifyListeners.size(); i++ )
-		{
+		for (int i = 0; i < modifyListeners.size(); i++) {
 			((Listener) modifyListeners.get(i)).handleEvent(e);
 		}
 	}
 
-	public void setContextRoot(String cr)
-	{
+	public void setContextRoot(String cr) {
 		contextRootField.setText(cr);
 	}
 
@@ -107,26 +96,22 @@ public class SimpleContextRootComposite extends Composite
 	 * There is a default context root validation listener provided by the
 	 * composite, adding external listeners will replace the default listener.
 	 */
-	public void addModifyListener(Listener l)
-	{
+	public void addModifyListener(Listener l) {
 		modifyListeners.add(l);
 	}
 
-	public void removeModifyListener(Listener l)
-	{
+	public void removeModifyListener(Listener l) {
 		modifyListeners.remove(l);
 	}
 
 	/**
 	 * validate the context root value and return the error message
 	 */
-	public String getErrorMessage()
-	{
+	public String getErrorMessage() {
 		return errorMessage;
 	}
 
-	public boolean setFocus()
-	{
+	public boolean setFocus() {
 		return contextRootField.setFocus();
 	}
 }

@@ -15,10 +15,9 @@ import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.common.frameworks.internal.operations.ProjectCreationDataModel;
 import org.eclipse.wst.common.frameworks.internal.ui.NewProjectGroup;
 import org.eclipse.wst.common.frameworks.internal.ui.WTPWizardPage;
@@ -26,12 +25,8 @@ import org.eclipse.wst.web.internal.ResourceHandler;
 import org.eclipse.wst.web.internal.WSTWebPlugin;
 import org.eclipse.wst.web.internal.operation.SimpleWebModuleCreationDataModel;
 
-
-class SimpleWebModuleWizardBasePage extends WTPWizardPage
-{
+class SimpleWebModuleWizardBasePage extends WTPWizardPage {
 	protected NewProjectGroup projectNameGroup;
-	private Text projectNameField;
-	private Button fAdvancedButton;
 
 	/**
 	 * WebProjectWizardBasePage constructor comment.
@@ -39,33 +34,23 @@ class SimpleWebModuleWizardBasePage extends WTPWizardPage
 	 * @param pageName
 	 *            java.lang.String
 	 */
-	public SimpleWebModuleWizardBasePage(
-			SimpleWebModuleCreationDataModel dataModel, String pageName)
-	{
+	public SimpleWebModuleWizardBasePage(SimpleWebModuleCreationDataModel dataModel, String pageName) {
 		super(dataModel, pageName);
-		setDescription(ResourceHandler
-				.getString("StaticWebProjectWizardBasePage.Page_Description")); //$NON-NLS-1$
-		setTitle(ResourceHandler
-				.getString("StaticWebProjectWizardBasePage.Page_Title")); //$NON-NLS-1$
-		ImageDescriptor desc = WSTWebPlugin
-				.imageDescriptorFromPlugin(WSTWebPlugin.PLUGIN_ID,
-						"icons/full/wizban/newwprj_wiz.gif"); //$NON-NLS-1$
+		setDescription(ResourceHandler.getString("StaticWebProjectWizardBasePage.Page_Description")); //$NON-NLS-1$
+		setTitle(ResourceHandler.getString("StaticWebProjectWizardBasePage.Page_Title")); //$NON-NLS-1$
+		ImageDescriptor desc = AbstractUIPlugin.imageDescriptorFromPlugin(WSTWebPlugin.PLUGIN_ID, "icons/full/wizban/newwprj_wiz.gif"); //$NON-NLS-1$
 		setImageDescriptor(desc);
 		setPageComplete(false);
 	}
 
-	protected void setSize(Composite composite)
-	{
-		if( composite != null )
-		{
+	protected void setSize(Composite composite) {
+		if (composite != null) {
 			Point minSize = composite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 			composite.setSize(minSize);
 			// set scrollbar composite's min size so page is expandable but has
 			// scrollbars when needed
-			if( composite.getParent() instanceof ScrolledComposite )
-			{
-				ScrolledComposite sc1 = (ScrolledComposite) composite
-						.getParent();
+			if (composite.getParent() instanceof ScrolledComposite) {
+				ScrolledComposite sc1 = (ScrolledComposite) composite.getParent();
 				sc1.setMinSize(minSize);
 				sc1.setExpandHorizontal(true);
 				sc1.setExpandVertical(true);
@@ -78,10 +63,8 @@ class SimpleWebModuleWizardBasePage extends WTPWizardPage
 	 * 
 	 * @see com.ibm.wtp.common.ui.wizard.WTPWizardPage#getValidationPropertyNames()
 	 */
-	protected String[] getValidationPropertyNames()
-	{
-		return new String[] { SimpleWebModuleCreationDataModel.PROJECT_NAME,
-				SimpleWebModuleCreationDataModel.PROJECT_LOCATION};
+	protected String[] getValidationPropertyNames() {
+		return new String[]{ProjectCreationDataModel.PROJECT_NAME, ProjectCreationDataModel.PROJECT_LOCATION};
 	}
 
 	/*
@@ -89,8 +72,7 @@ class SimpleWebModuleWizardBasePage extends WTPWizardPage
 	 * 
 	 * @see com.ibm.wtp.common.ui.wizard.WTPWizardPage#createTopLevelComposite(org.eclipse.swt.widgets.Composite)
 	 */
-	protected Composite createTopLevelComposite(Composite parent)
-	{
+	protected Composite createTopLevelComposite(Composite parent) {
 		Composite top = new Composite(parent, SWT.NONE);
 		top.setLayout(new GridLayout());
 		top.setData(new GridData(GridData.FILL_BOTH));
@@ -106,9 +88,7 @@ class SimpleWebModuleWizardBasePage extends WTPWizardPage
 		return top;
 	}
 
-	private final void createProjectNameGroup(Composite parent)
-	{
-		projectNameGroup = new NewProjectGroup(parent, SWT.NULL,
-				(ProjectCreationDataModel) model);
+	private final void createProjectNameGroup(Composite parent) {
+		projectNameGroup = new NewProjectGroup(parent, SWT.NULL, (ProjectCreationDataModel) model);
 	}
 }

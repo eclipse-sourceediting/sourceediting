@@ -21,6 +21,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.internal.registry.NewWizardsRegistryReader;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
+import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 import org.eclipse.wst.common.frameworks.internal.operation.extensionui.ExtendableWizard;
 import org.eclipse.wst.common.frameworks.internal.operations.WTPOperation;
 import org.eclipse.wst.common.frameworks.internal.operations.WTPOperationDataModel;
@@ -29,25 +30,17 @@ import org.eclipse.wst.web.internal.WSTWebPlugin;
 import org.eclipse.wst.web.internal.operation.SimpleWebModuleCreationDataModel;
 import org.eclipse.wst.web.internal.operation.SimpleWebModuleCreationOperation;
 
+public class SimpleWebModuleCreationWizard extends ExtendableWizard implements IExecutableExtension, INewWizard {
 
-public class SimpleWebModuleCreationWizard extends ExtendableWizard implements
-		IExecutableExtension, INewWizard
-{
-	private IConfigurationElement configData;
-
-	public SimpleWebModuleCreationWizard(
-			SimpleWebModuleCreationDataModel model)
-	{
+	public SimpleWebModuleCreationWizard(SimpleWebModuleCreationDataModel model) {
 		super(model);
 	}
 
-	public SimpleWebModuleCreationWizard()
-	{
+	public SimpleWebModuleCreationWizard() {
 		super();
 	}
 
-	public String getWizardID()
-	{
+	public String getWizardID() {
 		return "org.eclipse.wst.web.ui.internal.wizards.SimpleWebModuleCreation"; //$NON-NLS-1$
 	}
 
@@ -56,10 +49,8 @@ public class SimpleWebModuleCreationWizard extends ExtendableWizard implements
 	 * 
 	 * @see org.eclipse.jface.wizard.Wizard#addPages()
 	 */
-	public void doAddPages()
-	{
-		addPage(new SimpleWebModuleWizardBasePage(
-				(SimpleWebModuleCreationDataModel) model, "page1")); //$NON-NLS-1$
+	public void doAddPages() {
+		addPage(new SimpleWebModuleWizardBasePage((SimpleWebModuleCreationDataModel) model, "page1")); //$NON-NLS-1$
 	}
 
 	/*
@@ -67,8 +58,7 @@ public class SimpleWebModuleCreationWizard extends ExtendableWizard implements
 	 * 
 	 * @see com.ibm.wtp.common.ui.wizard.WTPWizard#createDefaultModel()
 	 */
-	protected WTPOperationDataModel createDefaultModel()
-	{
+	protected WTPOperationDataModel createDefaultModel() {
 		return new SimpleWebModuleCreationDataModel();
 	}
 
@@ -77,10 +67,8 @@ public class SimpleWebModuleCreationWizard extends ExtendableWizard implements
 	 * 
 	 * @see com.ibm.wtp.common.ui.wizard.WTPWizard#createOperation()
 	 */
-	protected WTPOperation createBaseOperation()
-	{
-		return new SimpleWebModuleCreationOperation(
-				(SimpleWebModuleCreationDataModel) model);
+	protected WTPOperation createBaseOperation() {
+		return new SimpleWebModuleCreationOperation((SimpleWebModuleCreationDataModel) model);
 	}
 
 	/*
@@ -89,10 +77,8 @@ public class SimpleWebModuleCreationWizard extends ExtendableWizard implements
 	 * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
 	 *      java.lang.String, java.lang.Object)
 	 */
-	public void setInitializationData(IConfigurationElement config,
-			String propertyName, Object data) throws CoreException
-	{
-		configData = config;
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
+		// Do nothing
 	}
 
 	/*
@@ -101,10 +87,8 @@ public class SimpleWebModuleCreationWizard extends ExtendableWizard implements
 	 * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
 	 *      org.eclipse.jface.viewers.IStructuredSelection)
 	 */
-	public void init(IWorkbench workbench, IStructuredSelection selection)
-	{
-		setWindowTitle(ResourceHandler
-				.getString("StaticWebProjectCreationWizard.Wizard_Title")); //$NON-NLS-1$
+	public void init(IWorkbench workbench, IStructuredSelection selection) {
+		setWindowTitle(ResourceHandler.getString("StaticWebProjectCreationWizard.Wizard_Title")); //$NON-NLS-1$
 
 		setDefaultPageImageDescriptor(WSTWebPlugin.getDefault().getImageDescriptor("newwprj_wiz")); //$NON-NLS-1$
 	}
@@ -114,17 +98,13 @@ public class SimpleWebModuleCreationWizard extends ExtendableWizard implements
 	 * 
 	 * @see com.ibm.wtp.common.ui.wizard.WTPWizard#postPerformFinish()
 	 */
-	protected void postPerformFinish() throws InvocationTargetException
-	{
+	protected void postPerformFinish() throws InvocationTargetException {
 		NewWizardsRegistryReader reader = new NewWizardsRegistryReader(true);
-		IConfigurationElement element = reader.findWizard(getWizardID())
-				.getConfigurationElement();
+		IConfigurationElement element = reader.findWizard(getWizardID()).getConfigurationElement();
 
 		BasicNewProjectResourceWizard.updatePerspective(element);
-		IWorkbenchWindow window = WSTWebPlugin.getDefault()
-				.getWorkbench().getActiveWorkbenchWindow();
-		IProject project = ((SimpleWebModuleCreationDataModel) model)
-				.getTargetProject();
-		BasicNewProjectResourceWizard.selectAndReveal(project, window);
+		IWorkbenchWindow window = WSTWebPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
+		IProject project = ((SimpleWebModuleCreationDataModel) model).getTargetProject();
+		BasicNewResourceWizard.selectAndReveal(project, window);
 	}
 }
