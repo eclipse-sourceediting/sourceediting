@@ -310,7 +310,7 @@ class ProjectDescription {
 	 */
 	private String getLocalRoot(String baseLocation) {
 		IResource file = FileBuffers.getWorkspaceFileAtLocation(new Path(baseLocation));
-		while (file != null && (file.getType() & IResource.ROOT) == 0) {
+		while (file != null) {
 			/**
 			 * Treat any parent folder with a WEB-INF subfolder as a web-app
 			 * root
@@ -322,9 +322,12 @@ class ProjectDescription {
 			else {
 				folder = file.getParent();
 			}
-			IFolder webinf = folder.getFolder(WEB_INF_PATH);
-			if (webinf != null && webinf.exists()) {
-				return file.getLocation().toString();
+			// getFolder on a workspace root must use a full path, skip
+			if (folder != null && (folder.getType() & IResource.ROOT) == 0) {
+				IFolder webinf = folder.getFolder(WEB_INF_PATH);
+				if (webinf != null && webinf.exists()) {
+					return file.getLocation().toString();
+				}
 			}
 			file = file.getParent();
 		}
