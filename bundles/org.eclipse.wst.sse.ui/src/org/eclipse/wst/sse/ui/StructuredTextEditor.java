@@ -142,7 +142,6 @@ import org.eclipse.wst.sse.ui.extension.ExtendedEditorActionBuilder;
 import org.eclipse.wst.sse.ui.extension.ExtendedEditorDropTargetAdapter;
 import org.eclipse.wst.sse.ui.extension.IExtendedContributor;
 import org.eclipse.wst.sse.ui.extension.IExtendedMarkupEditor;
-import org.eclipse.wst.sse.ui.extension.IExtendedMarkupEditorExtension;
 import org.eclipse.wst.sse.ui.extension.IPopupMenuContributor;
 import org.eclipse.wst.sse.ui.extensions.ConfigurationPointCalculator;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.NullSourceEditingTextTools;
@@ -183,7 +182,7 @@ import org.eclipse.wst.sse.ui.views.properties.StructuredPropertySheetConfigurat
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-public class StructuredTextEditor extends TextEditor implements IExtendedMarkupEditor, IExtendedMarkupEditorExtension, IDocumentListener {
+public class StructuredTextEditor extends TextEditor implements IExtendedMarkupEditor, IDocumentListener {
 
 	class InternalElementStateListener implements IElementStateListener {
 
@@ -265,13 +264,11 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 					}
 					getSourceViewer().configure(cfg);
 				}
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=1166
 				// investigate each error case post beta
 				Logger.logException("problem trying to configure after model change", e); //$NON-NLS-1$
-			}
-			finally {
+			} finally {
 				// so we don't freeze workbench (eg. during page language or
 				// content type change)
 				((ITextViewerExtension) getSourceViewer()).setRedraw(true);
@@ -301,8 +298,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			// simply execute the runnable.
 			if (getDisplay() == null || (Thread.currentThread() == getDisplay().getThread())) {
 				r.run();
-			}
-			else {
+			} else {
 				// otherwise force the runnable to run on the display thread.
 				getDisplay().asyncExec(r);
 			}
@@ -387,19 +383,12 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	class TimeOutExpired extends TimerTask {
 
 		public void run() {
-			// ILock lock = Platform.getJobManager().newLock();
-			// try {
-			// lock.acquire();
 			getDisplay().syncExec(new Runnable() {
 				public void run() {
 					if (getDisplay() != null && !getDisplay().isDisposed())
 						endBusyStateInternal();
 				}
 			});
-			// }
-			// finally {
-			// lock.release();
-			// }
 		}
 
 	}
@@ -471,8 +460,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		try {
 			editor = new StructuredTextEditor();
 			System.out.println("Created: " + editor); //$NON-NLS-1$
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -544,8 +532,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			addAction(menu, ITextEditorActionConstants.GROUP_COPY, ITextEditorActionConstants.COPY);
 			addAction(menu, ITextEditorActionConstants.GROUP_COPY, ITextEditorActionConstants.PASTE);
 			addAction(menu, ITextEditorActionConstants.GROUP_SAVE, ITextEditorActionConstants.SAVE);
-		}
-		else {
+		} else {
 			addAction(menu, ITextEditorActionConstants.GROUP_COPY, ITextEditorActionConstants.COPY);
 		}
 
@@ -582,8 +569,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		IEditorActionBarContributor c = getEditorSite().getActionBarContributor();
 		if (c instanceof IPopupMenuContributor) {
 			((IPopupMenuContributor) c).contributeToPopupMenu(menu);
-		}
-		else {
+		} else {
 			ExtendedEditorActionBuilder builder = new ExtendedEditorActionBuilder();
 			IExtendedContributor pmc = builder.readActionExtensions(getConfigurationPoints());
 			if (pmc != null) {
@@ -649,8 +635,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			// completely open
 			// so set a flag not to open
 			shouldClose = true;
-		}
-		else {
+		} else {
 			if (getEditorPart() != null) {
 				Display display = getSite().getShell().getDisplay();
 				display.asyncExec(new Runnable() {
@@ -659,8 +644,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 						getSite().getPage().closeEditor(getEditorPart(), save);
 					}
 				});
-			}
-			else {
+			} else {
 				super.close(save);
 			}
 		}
@@ -721,8 +705,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		String ext = BreakpointRulerAction.getFileExtension(getEditorInput());
 		if (BreakpointProviderBuilder.getInstance().isAvailable(model.getContentTypeIdentifier(), ext)) {
 			setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, getAction(ActionDefinitionIds.TOGGLE_BREAKPOINTS));
-		}
-		else {
+		} else {
 			// The Default Text Editor uses editorContribution to perform this
 			// mapping, but since it relies on the IEditorSite ID, it can't be
 			// relied on for MultiPageEditorParts. Instead, force the action
@@ -1196,8 +1179,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 						IStatus status = validateEdit(getSite().getShell());
 						if (status != null && status.isOK()) {
 							// nothing to do if 'ok'
-						}
-						else {
+						} else {
 							getModel().getUndoManager().undo();
 							getSourceViewer().setSelectedRange(offset, 0);
 							if (!fDirtyBeforeDocumentEvent) {
@@ -1246,12 +1228,23 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 
 	public void doSave(IProgressMonitor progressMonitor) {
 		try {
-			getModel().aboutToChangeModel();
+			aboutToSaveModel();
 			updateEncodingMemento();
 			super.doSave(progressMonitor);
+		} finally {
+			savedModel();
 		}
-		finally {
+	}
+
+	private void savedModel() {
+		if (getModel() != null) {
 			getModel().changedModel();
+		}
+	}
+
+	private void aboutToSaveModel() {
+		if (getModel() != null) {
+			getModel().aboutToChangeModel();
 		}
 	}
 
@@ -1289,16 +1282,23 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 				if (!model.isShared()) {
 					EditorModelUtil.addFactoriesTo(model);
 				}
-			}
-			else {
+			} else {
 				IDocument doc = getDocument();
-				Assert.isTrue(doc instanceof IStructuredDocument, "Editing document must be an IStructuredDocument");
-				// corresponding releaseFromEdit occurs in
-				// disposeDocumentProvider
-				model = StructuredModelManager.getModelManager().getExistingModelForEdit(doc);
-				if (model == null) {
-					model = StructuredModelManager.getModelManager().getModelForEdit((IStructuredDocument) doc);
-					EditorModelUtil.addFactoriesTo(model);
+				// IMPL: need to cleanup throughout to avoid any instanceof
+				// checks
+				if (doc instanceof IStructuredDocument) {
+					// corresponding releaseFromEdit occurs in
+					// disposeDocumentProvider
+					model = StructuredModelManager.getModelManager().getExistingModelForEdit(doc);
+					if (model == null) {
+						model = StructuredModelManager.getModelManager().getModelForEdit((IStructuredDocument) doc);
+						EditorModelUtil.addFactoriesTo(model);
+					}
+				} else {
+					System.out.println("Warning: StructuredTextEditor being used without StructuredDocument");
+					String name = input.getName();
+					System.out.println("         Input Name: " + name);
+					System.out.println("         Document implementation: " + getDocument().getClass());
 				}
 			}
 
@@ -1311,8 +1311,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 
 			// start editor with smart insert mode
 			setInsertMode(SMART_INSERT);
-		}
-		catch (CoreException exception) {
+		} catch (CoreException exception) {
 			// dispose editor
 			dispose();
 
@@ -1374,8 +1373,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 				((StructuredTextViewer) viewer).endBackgroundUpdate();
 			}
 			fBusyState = false;
-		}
-		else {
+		} else {
 			// we will only be in this branch for a back ground job that is
 			// taking
 			// longer than our normal time-out period (meaning we got notified
@@ -1400,8 +1398,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		// text editor
 		if (ITextEditor.class.equals(required)) {
 			result = this;
-		}
-		else if (IWorkbenchSiteProgressService.class.equals(required)) {
+		} else if (IWorkbenchSiteProgressService.class.equals(required)) {
 			return getEditorPart().getSite().getAdapter(IWorkbenchSiteProgressService.class);
 		}
 		// content outline page
@@ -1437,26 +1434,25 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 				}
 			}
 			result = fPropertySheetPage;
-		}
-		else if (ViewerSelectionManager.class.equals(required)) {
+		} else if (ViewerSelectionManager.class.equals(required)) {
 			result = getViewerSelectionManager();
-		}
-		else if (SourceEditingTextTools.class.equals(required)) {
+		} else if (SourceEditingTextTools.class.equals(required)) {
 			result = createSourceEditingTextTools();
-		}
-		else if (IToggleBreakpointsTarget.class.equals(required)) {
+		} else if (IToggleBreakpointsTarget.class.equals(required)) {
 			result = ToggleBreakpointsTarget.getInstance();
-		}
-		else if (IShowInTargetList.class.equals(required)) {
+		} else if (IShowInTargetList.class.equals(required)) {
 			return new ShowInTargetListAdapter();
-		}
-		else {
+		} else {
 			Document document = getDOMDocument();
 			if (document != null && document instanceof INodeNotifier) {
 				result = ((INodeNotifier) document).getAdapterFor(required);
 			}
 			if (result == null) {
-				result = getModel().getAdapter(required);
+				if (getModel() != null) {
+					result = getModel().getAdapter(required);
+				} else {
+					result = super.getAdapter(required);
+				}
 			}
 			// others
 			if (result == null)
@@ -1543,8 +1539,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		// perhaps there's a better way?
 		if (getSourceViewer() != null && getSourceViewer().getTextWidget() != null && !getSourceViewer().getTextWidget().isDisposed()) {
 			result = super.getCursorPosition();
-		}
-		else {
+		} else {
 			result = "0:0"; //$NON-NLS-1$
 		}
 		return result;
@@ -1643,16 +1638,19 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		if (fStructuredModel == null) {
 			if (getDocumentProvider() instanceof IModelProvider) {
 				fStructuredModel = ((IModelProvider) getDocumentProvider()).getModel(getEditorInput());
-			}
-			else { // nsd_TODO: FileBuffer cleanup
+			} else { // nsd_TODO: FileBuffer cleanup
 				IDocument doc = getDocument();
-				Assert.isTrue(doc instanceof IStructuredDocument, "StructuredTextEditor must be used with an IStructuredDocument");
-				IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForEdit(doc);
-				if (model == null) {
-					model = StructuredModelManager.getModelManager().getModelForEdit((IStructuredDocument) doc);
-					EditorModelUtil.addFactoriesTo(model);
+				if (doc instanceof IStructuredDocument) {
+					// Assert.isTrue(doc instanceof IStructuredDocument,
+					// "StructuredTextEditor must be used with an
+					// IStructuredDocument");
+					IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForEdit(doc);
+					if (model == null) {
+						model = StructuredModelManager.getModelManager().getModelForEdit((IStructuredDocument) doc);
+						EditorModelUtil.addFactoriesTo(model);
+					}
+					fStructuredModel = model;
 				}
-				fStructuredModel = model;
 			}
 			if (initialModelNull && fStructuredModel != null) {
 				/*
@@ -1699,8 +1697,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 					return extension.widgetOffset2ModelOffset(widgetOffset);
 				}
 				return widgetOffset + getSourceViewer().getVisibleRegion().getOffset();
-			}
-			catch (IllegalArgumentException e) {
+			} catch (IllegalArgumentException e) {
 				return getSourceViewer().getVisibleRegion().getLength();
 			}
 		}
@@ -1722,13 +1719,17 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		int start = p.x;
 		int end = p.x + p.y;
 
-		IStructuredDocumentRegion firstSdRegion = ((IStructuredDocument) getDocument()).getRegionAtCharacterOffset(start);
-		IStructuredDocumentRegion secondSdRegion = ((IStructuredDocument) getDocument()).getRegionAtCharacterOffset(end);
-		if (firstSdRegion != null && secondSdRegion != null) {
-			if (firstSdRegion.equals(secondSdRegion) || firstSdRegion.getEndOffset() == end) {
-				// the selection is on the same region or
-				// the selection ends right on the end of the first region
-				return firstSdRegion;
+		IDocument doc = getDocument();
+		if (doc instanceof IStructuredDocument) {
+			IStructuredDocument structuredDocument = (IStructuredDocument) doc;
+			IStructuredDocumentRegion firstSdRegion = structuredDocument.getRegionAtCharacterOffset(start);
+			IStructuredDocumentRegion secondSdRegion = structuredDocument.getRegionAtCharacterOffset(end);
+			if (firstSdRegion != null && secondSdRegion != null) {
+				if (firstSdRegion.equals(secondSdRegion) || firstSdRegion.getEndOffset() == end) {
+					// the selection is on the same region or
+					// the selection ends right on the end of the first region
+					return firstSdRegion;
+				}
 			}
 		}
 		return null;
@@ -1904,8 +1905,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		if (shouldClose) {
 			setSite(site);
 			close(false);
-		}
-		else {
+		} else {
 			super.init(site, input);
 		}
 	}
@@ -1957,8 +1957,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			// transition to org.eclipse
 			// WTPActivityBridge.getInstance().enableActivity(CORE_SSE_ACTIVITY_ID,
 			// true);
-		}
-		catch (Exception t) {
+		} catch (Exception t) {
 			// if something goes wrong with enabling activity, just log the
 			// error but dont
 			// have it break the editor
@@ -2094,8 +2093,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		boolean result = true;
 		if (forceReadOnly) {
 			result = false;
-		}
-		else {
+		} else {
 			result = super.isEditable();
 		}
 		return result;
@@ -2194,8 +2192,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 				projectionViewer.enableProjection();
 			}
 
-		}
-		finally {
+		} finally {
 			projectionViewer.setRedraw(true);
 		}
 	}
@@ -2301,11 +2298,9 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		if (input instanceof IStructuredModel) {
 			// largely untested
 			setDocumentProvider(StructuredModelDocumentProvider.getInstance());
-		}
-		else if (input instanceof IStorageEditorInput && !(input instanceof IFileEditorInput)) {
+		} else if (input instanceof IStorageEditorInput && !(input instanceof IFileEditorInput)) {
 			setDocumentProvider(StorageModelProvider.getInstance());
-		}
-		else {
+		} else {
 			super.setDocumentProvider(input);
 		}
 	}
@@ -2487,8 +2482,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			//
 			// temp solution, for testing, uses "busy"
 			setPartName("busy");
-		}
-		else {
+		} else {
 			// reset to what it was
 			setPartName(fRememberTitle);
 		}
@@ -2615,24 +2609,26 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 
 	private void updateEncodingMemento() {
 		boolean failed = false;
-		IStructuredDocument doc = getModel().getStructuredDocument();
-		EncodingMemento memento = doc.getEncodingMemento();
-		IDocumentCharsetDetector detector = getModel().getModelHandler().getEncodingDetector();
-		if (memento != null && detector != null)
-			detector.set(doc);
-		try {
-			detector.getEncoding();
-		}
-		catch (IOException e) {
-			failed = true;
-		}
-		// be sure to use the new instance
-		// but only if no exception occurred.
-		// (we may find cases we need to do more error recover there)
-		// should be near impossible to get IOException from processing the
-		// *document*
-		if (!failed) {
-			doc.setEncodingMemento(memento);
+		if (getModel() != null) {
+			IStructuredDocument doc = getModel().getStructuredDocument();
+			EncodingMemento memento = doc.getEncodingMemento();
+			IDocumentCharsetDetector detector = getModel().getModelHandler().getEncodingDetector();
+			if (memento != null && detector != null)
+				detector.set(doc);
+			try {
+				detector.getEncoding();
+			} catch (IOException e) {
+				failed = true;
+			}
+			// be sure to use the new instance
+			// but only if no exception occurred.
+			// (we may find cases we need to do more error recover there)
+			// should be near impossible to get IOException from processing
+			// the
+			// *document*
+			if (!failed) {
+				doc.setEncodingMemento(memento);
+			}
 		}
 	}
 
@@ -2660,13 +2656,11 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 						ITextHover textHover = configuration.getTextHover(sourceViewer, t, stateMask);
 						((ITextViewerExtension2) sourceViewer).setTextHover(textHover, t, stateMask);
 					}
-				}
-				else {
+				} else {
 					ITextHover textHover = configuration.getTextHover(sourceViewer, t);
 					((ITextViewerExtension2) sourceViewer).setTextHover(textHover, t, ITextViewerExtension2.DEFAULT_HOVER_STATE_MASK);
 				}
-			}
-			else
+			} else
 				sourceViewer.setTextHover(configuration.getTextHover(sourceViewer, t), t);
 		}
 	}
@@ -2740,8 +2734,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			if (updateActions) {
 				if (getEditorSite().getActionBars() != null) {
 					getEditorSite().getActionBars().updateActionBars();
-				}
-				else if (getEditorPart() != null && getEditorPart().getEditorSite().getActionBars() != null) {
+				} else if (getEditorPart() != null && getEditorPart().getEditorSite().getActionBars() != null) {
 					getEditorPart().getEditorSite().getActionBars().updateActionBars();
 				}
 			}
@@ -2761,8 +2754,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		if (!(configuration instanceof StructuredTextViewerConfiguration)) {
 			configuration = createSourceViewerConfiguration();
 			setSourceViewerConfiguration(configuration);
-		}
-		else {
+		} else {
 			StructuredTextViewerConfiguration newViewerConfiguration = createSourceViewerConfiguration();
 			if (!((StructuredTextViewerConfiguration) configuration).getDeclaringID().equals(newViewerConfiguration.getDeclaringID())) {
 				// d282894 use newViewerConfiguration
@@ -2857,8 +2849,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			if (input == null) {
 				String msg = SSEUIPlugin.getResourceString("%Error_opening_file_UI_"); //$NON-NLS-1$
 				status = new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.INFO, msg, null);
-			}
-			else {
+			} else {
 				validateState(input);
 				sanityCheckState(input);
 				if (isEditorInputReadOnly()) {
@@ -2870,13 +2861,11 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 								IPath path = s.getFullPath();
 								if (path != null) {
 									fname += path.toString();
-								}
-								else {
+								} else {
 									fname += s.getName();
 								}
 							}
-						}
-						catch (CoreException e) { // IStorage is just for
+						} catch (CoreException e) { // IStorage is just for
 							// file name,
 							// and it's an optional,
 							// therefore
@@ -2903,8 +2892,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 					getSourceViewer().setEditable(isEditable());
 				if (wasReadOnly != isEditorInputReadOnly())
 					updateStateDependentActions();
-			}
-			catch (CoreException x) {
+			} catch (CoreException x) {
 				ILog log = Platform.getLog(Platform.getBundle(PlatformUI.PLUGIN_ID));
 				log.log(x.getStatus());
 				statusError(x.getStatus());

@@ -38,7 +38,7 @@ public abstract class StructureSelectAction extends Action {
 		fViewer = editor.getTextViewer();
 		fModel = editor.getModel();
 		Assert.isNotNull(fViewer);
-		Assert.isNotNull(fModel);
+		//Assert.isNotNull(fModel);
 	}
 
 	abstract protected IndexedRegion getCursorIndexedRegion();

@@ -21,6 +21,7 @@ import java.util.Map;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.DefaultInformationControl;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IUndoManager;
@@ -271,8 +272,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 		 */
 		if (fHighlighter != null) {
 			fHighlighter.uninstall();
-		}
-		else {
+		} else {
 			Highlighter highlighter = new Highlighter();
 			highlighter.setDocumentPartitioning(getConfiguredDocumentPartitioning(viewer));
 			fHighlighter = highlighter;
@@ -280,8 +280,11 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 		// Allow viewer to be null for easier unit testing, but during normal
 		// use, would not be null
 		if (viewer != null) {
-			IStructuredDocument document = (IStructuredDocument) viewer.getDocument();
-			fHighlighter.setDocument(document);
+			IDocument doc = viewer.getDocument();
+			if (doc instanceof IStructuredDocument) {
+				IStructuredDocument structuredDocument = (IStructuredDocument) doc;
+				fHighlighter.setDocument(structuredDocument);
+			}
 		}
 		return fHighlighter;
 	}

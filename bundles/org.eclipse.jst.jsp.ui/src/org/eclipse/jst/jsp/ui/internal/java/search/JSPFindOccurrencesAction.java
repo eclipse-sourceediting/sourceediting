@@ -22,6 +22,7 @@ import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerFor
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.search.BasicFindOccurrencesAction;
 import org.eclipse.wst.xml.core.document.XMLDocument;
@@ -33,6 +34,7 @@ import org.eclipse.wst.xml.core.parser.XMLRegionContext;
  * <p>
  * Finds occurrences of Java elements in a JSP file using JSPSearchSupport.
  * </p>
+ * 
  * @author pavery
  */
 public class JSPFindOccurrencesAction extends BasicFindOccurrencesAction implements IJavaSearchConstants {
@@ -43,7 +45,7 @@ public class JSPFindOccurrencesAction extends BasicFindOccurrencesAction impleme
 
 		super(bundle, prefix, editor);
 	}
-	
+
 	/**
 	 * @see com.ibm.sse.editor.internal.search.BasicFindOccurrencesAction#getSearchQuery()
 	 */
@@ -69,6 +71,7 @@ public class JSPFindOccurrencesAction extends BasicFindOccurrencesAction impleme
 
 	/**
 	 * uses JSPTranslation to get currently selected Java elements.
+	 * 
 	 * @return currently selected IJavaElements
 	 */
 	public IJavaElement[] getJavaElementsForCurrentSelection() {
@@ -76,12 +79,15 @@ public class JSPFindOccurrencesAction extends BasicFindOccurrencesAction impleme
 		IJavaElement[] elements = new IJavaElement[0];
 		StructuredTextEditor editor = (StructuredTextEditor) getTextEditor();
 		// get JSP translation object for this viewer's document
-		XMLDocument xmlDoc = ((XMLModel) editor.getModel()).getDocument();
-		JSPTranslationAdapter adapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
-		if (adapter != null) {
-			JSPTranslation translation = adapter.getJSPTranslation();
-			Point selected = editor.getSelectionRange();
-			elements = translation.getElementsFromJspRange(selected.x, selected.x + selected.y);
+		IStructuredModel model = editor.getModel();
+		if (model != null && model instanceof XMLModel) {
+			XMLDocument xmlDoc = ((XMLModel) model).getDocument();
+			JSPTranslationAdapter adapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
+			if (adapter != null) {
+				JSPTranslation translation = adapter.getJSPTranslation();
+				Point selected = editor.getSelectionRange();
+				elements = translation.getElementsFromJspRange(selected.x, selected.x + selected.y);
+			}
 		}
 		return elements;
 	}

@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui;
 
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.IUndoManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
@@ -67,8 +68,11 @@ class StructuredTextViewerUndoManager implements IUndoManager {
 
 		// connect to new viewer/undo manager
 		fTextViewer = (StructuredTextViewer) viewer;
-		if (fTextViewer.getDocument() != null)
-			setDocument((IStructuredDocument) fTextViewer.getDocument());
+		IDocument doc = fTextViewer.getDocument();
+		if (doc instanceof IStructuredDocument) {
+			IStructuredDocument structuredDocument = (IStructuredDocument) doc;
+			setDocument(structuredDocument);
+		}
 	}
 
 	/*

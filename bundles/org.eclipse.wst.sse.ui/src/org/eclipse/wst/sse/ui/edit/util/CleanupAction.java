@@ -21,6 +21,7 @@ import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.TextEditorAction;
+import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.cleanup.IStructuredCleanupProcessor;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
@@ -51,25 +52,30 @@ public abstract class CleanupAction extends TextEditorAction {
 						}
 					};
 
-					try {
-						// begin recording
-						ITextSelection selection = (ITextSelection) editor.getSelectionProvider().getSelection();
-						editor.getModel().beginRecording(this, SSEUIPlugin.getResourceString("%Cleanup_Document_UI_"), SSEUIPlugin.getResourceString("%Cleanup_Document_UI_"), selection.getOffset(), selection.getLength()); //$NON-NLS-1$ //$NON-NLS-2$
+					// TODO: make independent of 'model'.
+					IStructuredModel model = editor.getModel();
+					if (model != null) {
+						try {
+							// begin recording
+							ITextSelection selection = (ITextSelection) editor.getSelectionProvider().getSelection();
+							model.beginRecording(this, SSEUIPlugin.getResourceString("%Cleanup_Document_UI_"), SSEUIPlugin.getResourceString("%Cleanup_Document_UI_"), selection.getOffset(), selection.getLength()); //$NON-NLS-1$ //$NON-NLS-2$
 
-						// tell the model that we are about to make a big
-						// model change
-						editor.getModel().aboutToChangeModel();
+							// tell the model that we are about to make a big
+							// model change
+							model.aboutToChangeModel();
 
-						// run
-						BusyIndicator.showWhile(editor.getTextViewer().getControl().getDisplay(), runnable);
-					} finally {
-						// tell the model that we are done with the big model
-						// change
-						editor.getModel().changedModel();
+							// run
+							BusyIndicator.showWhile(editor.getTextViewer().getControl().getDisplay(), runnable);
+						} finally {
+							// tell the model that we are done with the big
+							// model
+							// change
+							model.changedModel();
 
-						// end recording
-						ITextSelection selection = (ITextSelection) editor.getSelectionProvider().getSelection();
-						editor.getModel().endRecording(this, selection.getOffset(), selection.getLength());
+							// end recording
+							ITextSelection selection = (ITextSelection) editor.getSelectionProvider().getSelection();
+							model.endRecording(this, selection.getOffset(), selection.getLength());
+						}
 					}
 				}
 

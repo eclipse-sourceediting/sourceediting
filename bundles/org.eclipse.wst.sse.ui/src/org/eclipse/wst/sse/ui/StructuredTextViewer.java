@@ -63,6 +63,7 @@ import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.cleanup.StructuredContentCleanupHandler;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.undo.IDocumentSelectionMediator;
+import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.core.undo.UndoDocumentEvent;
 import org.eclipse.wst.sse.ui.extension.IExtendedSimpleEditor;
 import org.eclipse.wst.sse.ui.internal.Logger;
@@ -277,8 +278,7 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 		if (fContentAssistant != null) {
 			fContentAssistant.install(this);
 			fContentAssistantInstalled = true;
-		}
-		else {
+		} else {
 			// 248036
 			// disable the content assist operation if no content assistant
 			enableOperation(CONTENTASSIST_PROPOSALS, false);
@@ -292,8 +292,7 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 			if (fCorrectionAssistant != null) {
 				fCorrectionAssistant.install(this);
 				fCorrectionAssistantInstalled = true;
-			}
-			else {
+			} else {
 				// disable the correction assist operation if no correction
 				// assistant
 				enableOperation(QUICK_FIX, false);
@@ -354,8 +353,7 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 					int stateMask = stateMasks[j];
 					setTextHover(configuration.getTextHover(this, t, stateMask), t, stateMask);
 				}
-			}
-			else {
+			} else {
 				setTextHover(configuration.getTextHover(this, t), t, ITextViewerExtension2.DEFAULT_HOVER_STATE_MASK);
 			}
 
@@ -409,8 +407,7 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 		IStructuredDocument structuredDocument = null;
 		if (document instanceof IStructuredDocument) {
 			structuredDocument = (IStructuredDocument) document;
-		}
-		else {
+		} else {
 			if (document instanceof ProjectionDocument) {
 				IDocument doc = ((ProjectionDocument) document).getMasterDocument();
 				if (doc instanceof IStructuredDocument) {
@@ -423,8 +420,7 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 		}
 		if (structuredDocument == null) {
 			return false;
-		}
-		else {
+		} else {
 			int length = end - start;
 			return structuredDocument.containsReadOnly(start, length);
 		}
@@ -487,8 +483,7 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 					IStatus status = editor.validateEdit(getControl().getShell());
 					if (status != null && status.isOK())
 						undo();
-				}
-				else
+				} else
 					undo();
 				break;
 			}
@@ -498,26 +493,25 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 					IStatus status = editor.validateEdit(getControl().getShell());
 					if (status != null && status.isOK())
 						redo();
-				}
-				else
+				} else
 					redo();
 				break;
 			}
 			case CUT :
-				getModel().beginRecording(this, TEXT_CUT, TEXT_CUT, cursorPosition, selectionLength);
+				beginRecording(TEXT_CUT, TEXT_CUT, cursorPosition, selectionLength);
 				super.doOperation(operation);
 				selection = getTextWidget().getSelection();
 				cursorPosition = selection.x;
 				selectionLength = selection.y - selection.x;
-				getModel().endRecording(this, cursorPosition, selectionLength);
+				endRecording(cursorPosition, selectionLength);
 				break;
 			case PASTE :
-				getModel().beginRecording(this, TEXT_PASTE, TEXT_PASTE, cursorPosition, selectionLength);
+				beginRecording(TEXT_PASTE, TEXT_PASTE, cursorPosition, selectionLength);
 				super.doOperation(operation);
 				selection = getTextWidget().getSelection();
 				cursorPosition = selection.x;
 				selectionLength = selection.y - selection.x;
-				getModel().endRecording(this, cursorPosition, selectionLength);
+				endRecording(cursorPosition, selectionLength);
 				break;
 			case CONTENTASSIST_PROPOSALS :
 				// maybe not configured?
@@ -534,8 +528,7 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 							PlatformStatusLineUtil.displayErrorMessage(err);
 						}
 						PlatformStatusLineUtil.addOneTimeClearListener();
-					}
-					else
+					} else
 						beep();
 				}
 				break;
@@ -556,29 +549,29 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 				}
 				break;
 			case SHIFT_RIGHT :
-				getModel().beginRecording(this, TEXT_SHIFT_RIGHT, TEXT_SHIFT_RIGHT, cursorPosition, selectionLength);
+				beginRecording(TEXT_SHIFT_RIGHT, TEXT_SHIFT_RIGHT, cursorPosition, selectionLength);
 				super.doOperation(SHIFT_RIGHT);
 				selection = getTextWidget().getSelection();
 				cursorPosition = selection.x;
 				selectionLength = selection.y - selection.x;
-				getModel().endRecording(this, cursorPosition, selectionLength);
+				endRecording(cursorPosition, selectionLength);
 				break;
 			case SHIFT_LEFT :
-				getModel().beginRecording(this, TEXT_SHIFT_LEFT, TEXT_SHIFT_LEFT, cursorPosition, selectionLength);
+				beginRecording(TEXT_SHIFT_LEFT, TEXT_SHIFT_LEFT, cursorPosition, selectionLength);
 				super.doOperation(SHIFT_LEFT);
 				selection = getTextWidget().getSelection();
 				cursorPosition = selection.x;
 				selectionLength = selection.y - selection.x;
-				getModel().endRecording(this, cursorPosition, selectionLength);
+				endRecording(cursorPosition, selectionLength);
 				break;
 			case FORMAT_DOCUMENT :
 				try {
 					// begin recording
-					getModel().beginRecording(this, FORMAT_DOCUMENT_TEXT, FORMAT_DOCUMENT_TEXT, cursorPosition, selectionLength);
+					beginRecording(FORMAT_DOCUMENT_TEXT, FORMAT_DOCUMENT_TEXT, cursorPosition, selectionLength);
 
 					// tell the model that we are about to make a big model
 					// change
-					fModel.aboutToChangeModel();
+					aboutToChangeModel();
 
 					// format
 					IRegion region = getModelCoverage();
@@ -588,51 +581,78 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 						context.setProperty(FormattingContextProperties.CONTEXT_DOCUMENT, Boolean.TRUE);
 						context.setProperty(FormattingContextProperties.CONTEXT_REGION, region);
 						extension.format(getDocument(), context);
-					}
-					else {
+					} else {
 						fContentFormatter.format(getDocument(), region);
 					}
-				}
-				finally {
+				} finally {
 					// tell the model that we are done with the big model
 					// change
-					fModel.changedModel();
+					changedModel();
 
 					// end recording
 					selection = getTextWidget().getSelection();
 					cursorPosition = selection.x;
 					selectionLength = selection.y - selection.x;
-					getModel().endRecording(this, cursorPosition, selectionLength);
+					endRecording(cursorPosition, selectionLength);
 				}
 				break;
 			case FORMAT_ACTIVE_ELEMENTS :
 				try {
 					// begin recording
-					getModel().beginRecording(this, FORMAT_ACTIVE_ELEMENTS_TEXT, FORMAT_ACTIVE_ELEMENTS_TEXT, cursorPosition, selectionLength);
+					beginRecording(FORMAT_ACTIVE_ELEMENTS_TEXT, FORMAT_ACTIVE_ELEMENTS_TEXT, cursorPosition, selectionLength);
 
-					// tell the model that we are about to make a big model
-					// change
-					fModel.aboutToChangeModel();
+					aboutToChangeModel();
 
 					// format
 					Point s = getSelectedRange();
 					IRegion region = new Region(s.x, s.y);
 					fContentFormatter.format(getDocument(), region);
-				}
-				finally {
-					// tell the model that we are done with the big model
-					// change
-					fModel.changedModel();
+				} finally {
+					changedModel();
 
 					// end recording
 					selection = getTextWidget().getSelection();
 					cursorPosition = selection.x;
 					selectionLength = selection.y - selection.x;
-					getModel().endRecording(this, cursorPosition, selectionLength);
+					endRecording(cursorPosition, selectionLength);
 				}
 				break;
 			default :
 				super.doOperation(operation);
+		}
+	}
+
+	private void changedModel() {
+		if (getModel() != null) {
+			getModel().changedModel();
+		}
+	}
+
+	private void aboutToChangeModel() {
+		if (getModel() != null) {
+			getModel().aboutToChangeModel();
+		}
+	}
+
+	private void endRecording(int cursorPosition, int selectionLength) {
+		IDocument doc = getDocument();
+		if (doc instanceof IStructuredDocument) {
+			IStructuredDocument structuredDocument = (IStructuredDocument) doc;
+			IStructuredTextUndoManager undoManager = structuredDocument.getUndoManager();
+			undoManager.endRecording(this, cursorPosition, selectionLength);
+		} else {
+			// TODO: how to handle other document types?
+		}
+	}
+
+	private void beginRecording(String label, String description, int cursorPosition, int selectionLength) {
+		IDocument doc = getDocument();
+		if (doc instanceof IStructuredDocument) {
+			IStructuredDocument structuredDocument = (IStructuredDocument) doc;
+			IStructuredTextUndoManager undoManager = structuredDocument.getUndoManager();
+			undoManager.beginRecording(this, label, description, cursorPosition, selectionLength);
+		} else {
+			// TODO: how to handle other document types?
 		}
 	}
 
@@ -757,7 +777,7 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 	 */
 	protected void handleVerifyEvent(VerifyEvent e) {
 		IRegion modelRange = event2ModelRange(e);
-		 if (exposeModelRange(modelRange)) {
+		if (exposeModelRange(modelRange)) {
 			e.doit = false;
 			return;
 		}
@@ -797,12 +817,10 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 					try {
 						getSlaveDocumentManager().setAutoExpandMode(visible, true);
 						fDocumentCommand.executeStructuredDocumentCommand(getDocument());
-					}
-					finally {
+					} finally {
 						getSlaveDocumentManager().setAutoExpandMode(visible, false);
 					}
-				}
-				else {
+				} else {
 					fDocumentCommand.executeStructuredDocumentCommand(getDocument());
 				}
 
@@ -824,14 +842,12 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 					}
 
 				}
-			}
-			catch (BadLocationException x) {
+			} catch (BadLocationException x) {
 
 				if (TRACE_ERRORS)
 					System.out.println("TextViewer.error.bad_location.verifyText"); //$NON-NLS-1$
 
-			}
-			finally {
+			} finally {
 
 				if (compoundChange && fUndoManager != null)
 					fUndoManager.endCompoundChange();
@@ -864,8 +880,7 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 						if ((modelLineRegion.getOffset() < region.getOffset()) || (modelEnd > regionEnd))
 							return -1;
 					}
-				}
-				catch (BadLocationException e) {
+				} catch (BadLocationException e) {
 					// returns -1 if modelLine is invalid
 					return -1;
 				}
@@ -945,8 +960,7 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 		}
 		if (nothingToSelect(selectedNodes)) {
 			removeRangeIndication();
-		}
-		else {
+		} else {
 			IndexedRegion startNode = (IndexedRegion) selectedNodes.get(0);
 			IndexedRegion endNode = (IndexedRegion) selectedNodes.get(selectedNodes.size() - 1);
 			int startOffset = startNode.getStartOffset();
@@ -1109,7 +1123,9 @@ public class StructuredTextViewer extends ProjectionViewer implements INodeSelec
 			return;
 		}
 		fModel = model;
-		setDocument(model.getStructuredDocument(), annotationModel);
+		if (model != null) {
+			setDocument(model.getStructuredDocument(), annotationModel);
+		}
 
 		// CaretEvent is not sent to ViewerSelectionManager after Save As.
 		// Need to notify ViewerSelectionManager here.
