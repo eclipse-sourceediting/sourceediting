@@ -19,7 +19,6 @@ import org.eclipse.jst.jsp.ui.tests.contentassist.JSPTranslationTest;
 import org.eclipse.jst.jsp.ui.tests.document.FileBufferDocumentTester;
 import org.eclipse.jst.jsp.ui.tests.model.TestModelsFromFiles;
 import org.eclipse.jst.jsp.ui.tests.modelquery.ModelQueryTester;
-import org.eclipse.jst.jsp.ui.tests.other.PreferencesTest;
 import org.eclipse.jst.jsp.ui.tests.other.ScannerUnitTests;
 import org.eclipse.jst.jsp.ui.tests.other.UnitTests;
 import org.eclipse.jst.jsp.ui.tests.pagedirective.TestPageDirective;
@@ -37,7 +36,6 @@ public class JSPUITestSuite extends TestSuite {
 	public JSPUITestSuite() {
 		super("SSE JSP UI Test Suite");
 		
-		addTest(new TestSuite(PreferencesTest.class, "PreferencesTest"));
 		addTest(new TestSuite(ScannerUnitTests.class, "ScannerUnitTests"));
 		addTest(new TestSuite(UnitTests.class, "UnitTests"));
 		addTest(new TestSuite(TestStructuredPartitioner.class, "TestStructuredPartioner"));
@@ -47,6 +45,7 @@ public class JSPUITestSuite extends TestSuite {
 		addTest(new TestSuite(BeanInfoProviderTest.class, "BeanInfoProviderTest"));
 		addTest(new TestSuite(JSPTranslationTest.class, "JSPTranslationTest"));
 		addTest(new TestSuite(AdapterFactoryRegistryTest.class, "AdapterFactoryRegistryText"));
+		addTest(new TestSuite(JSPUIPreferencesTest.class));
 		
 		// moved from jsp core tests because they require UI
 		addTest(new TestSuite(TestPageDirective.class));

@@ -25,5 +25,6 @@ public class SSEUITestSuite extends TestSuite {
 	public SSEUITestSuite() {
 		super("SSE UI Test Suite");
 		addTest(new TestSuite(VerifyEditorPlugin.class));
+		addTest(new TestSuite(CommonEditorPreferencesTest.class));
 	}
 }
