@@ -18,19 +18,21 @@ import org.eclipse.wst.html.core.HTMLFilesPreferenceNames;
 
 
 
-
 public class TestPreferenceValues extends TestCase {
 	public static final boolean DEBUG = false;
 
 	public void testProductName() {
 		IProduct product = Platform.getProduct();
-		String productName = product.getName();
-
 		String generator = HTMLFilesPreferenceNames.GENERATOR;
-		if (DEBUG) {
-			System.out.println("GENERATOR " + productName);
+		if (product == null) {
+			assertTrue("WTP".equals(generator));
+		} else {
+			String productName = product.getName();
+			if (DEBUG) {
+				System.out.println("GENERATOR " + productName);
+			}
+			assertTrue(productName.equals(generator));
 		}
-		assertTrue(productName.equals(generator));
 	}
 
 }
