@@ -45,6 +45,7 @@ import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
 /**
  * This action displays the preferences relative to the current editor
  * 
+ * @deprecated base now provides an open preferences action, so this is no longer needed
  * @author amywu
  */
 public class EditStructuredTextEditorPreferencesAction extends Action implements IExtendedEditorAction {

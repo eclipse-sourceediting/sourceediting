@@ -73,7 +73,7 @@
             target="org.eclipse.wst.sse.ui.StructuredTextEditor"/>
       <definition 
       		type="preferencepages"
-            value="org.eclipse.ui.preferencePages.Workbench/org.eclipse.ui.preferencePages.Editors/org.eclipse.wst.sse.ui.preferences.editor"
+            value="org.eclipse.wst.sse.ui.preferences.editor"
             target="org.eclipse.wst.sse.ui.StructuredTextEditor"/>
    </extension>
 <!-- associate the NavigateActionSet with various parts of the XML perspective-->
@@ -453,11 +453,13 @@
             targetID="org.eclipse.wst.sse.ui.StructuredTextEditor"
             id="org.eclipse.wst.sse.ui.extendedActions">
 <!-- contribute the Edit Preferences action -->
+<!-- (base now provides an open preferences dialog in editor so this is no longer needed)
          <action
                popupmenuPath="group.add"
                class="org.eclipse.wst.sse.ui.preferences.ui.EditStructuredTextEditorPreferencesAction"
                id="org.eclipse.wst.sse.ui.preferences.ui.EditStructuredTextEditorPreferencesAction">
          </action>
+-->
 <!-- contribute the Spell Check action -->
 <!--
          <action

@@ -84,7 +84,7 @@
          <attribute name="type" type="string" use="required">
             <annotation>
                <documentation>
-                  The type of definition to find.  Currently used definitions include &quot;showintarget&quot;, a list of View IDs to show in the Navigate menu&apos;s Show In... submenu, and &quot;preferencepages&quot;, the list of fully qualified Preference page IDs to show for the editor&apos;s Preferences action.
+                  The type of definition to find.  Currently used definitions include &quot;showintarget&quot;, a list of View IDs to show in the Navigate menu&apos;s Show In... submenu, and &quot;preferencepages&quot;, the list of fully qualified Preference page IDs to show for the editor&apos;s Preferences action. (NOTE: preferencepages is an unsupported definition)
                </documentation>
             </annotation>
          </attribute>

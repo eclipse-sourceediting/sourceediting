@@ -77,7 +77,15 @@
 			target="org.eclipse.jst.jsp.core.jspsource"/>
 		<definition 
       		type="preferencepages"
-            value="org.eclipse.wst.sse.ui.preferences/org.eclipse.wst.sse.ui.preferences.jsp"
+            value="org.eclipse.wst.sse.ui.preferences.jsp"
+			target="org.eclipse.jst.jsp.core.jspsource"/>
+		<definition 
+      		type="preferencepages"
+            value="org.eclipse.wst.sse.ui.preferences.jsp.templates"
+			target="org.eclipse.jst.jsp.core.jspsource"/>
+		<definition 
+      		type="preferencepages"
+            value="org.eclipse.wst.sse.ui.preferences.jsp.styles"
 			target="org.eclipse.jst.jsp.core.jspsource"/>
 	</extension>
 	<extension

@@ -524,6 +524,11 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		else {
 			addAction(menu, ITextEditorActionConstants.GROUP_COPY, ITextEditorActionConstants.COPY);
 		}
+		
+		// from AbstractDecoratedTextEditor
+		IAction preferencesAction= getAction(ITextEditorActionConstants.CONTEXT_PREFERENCES);
+		menu.appendToGroup(IWorkbenchActionConstants.MB_ADDITIONS, new Separator(ITextEditorActionConstants.GROUP_SETTINGS));
+		menu.appendToGroup(ITextEditorActionConstants.GROUP_SETTINGS, preferencesAction);
 	}
 
 	protected void addContextMenuActions(IMenuManager menu) {
@@ -1342,8 +1347,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		// AbstractTextEditor's
 		// implementation directly. The easiest way is to
 		// copy the method here.
-
-		// super.editorContextMenuAboutToShow(menu);
+		
+//		 super.editorContextMenuAboutToShow(menu);
 		abstractTextEditorContextMenuAboutToShow(menu);
 
 		addContextMenuActions(menu);
@@ -2805,5 +2810,45 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 				statusError(x.getStatus());
 			}
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#collectContextMenuPreferencePages()
+	 */
+	protected String[] collectContextMenuPreferencePages() {
+		List allIds = new ArrayList(0);
+		
+		// get contributed preference pages
+		ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
+		String[] configurationIds = getConfigurationPoints();
+		for (int i = 0; i < configurationIds.length; i++) {
+			String[] definitions = builder.getDefinitions("preferencepages", configurationIds[i]); //$NON-NLS-1$
+			for (int j = 0; j < definitions.length; j++) {
+				String someIds = definitions[j];
+				if (someIds != null && someIds.length() > 0) {
+					// supports multiple comma-delimited page IDs in one element 
+					String[] ids = StringUtils.unpack(someIds);
+					for (int k = 0; k < ids.length; k++) {
+						// trim, just to keep things clean
+						String id = ids[k].trim();
+						if (!allIds.contains(id)) {
+							allIds.add(id);
+						}
+					}
+				}
+			}
+		}
+		
+		// add pages contributed by super
+		String[] superPages =  super.collectContextMenuPreferencePages();
+		for (int m = 0; m < superPages.length; m++) {
+			// trim, just to keep things clean
+			String id = superPages[m].trim();
+			if (!allIds.contains(id)) {
+				allIds.add(id);
+			}
+		}
+
+		return (String[]) allIds.toArray(new String[0]);		
 	}
 }

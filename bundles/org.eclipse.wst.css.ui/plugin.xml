@@ -64,7 +64,15 @@
             target="org.eclipse.wst.css.core.csssource"/>
       <definition 
       		type="preferencepages"
-            value="org.eclipse.wst.sse.ui.preferences/org.eclipse.wst.sse.ui.preferences.css"
+            value="org.eclipse.wst.sse.ui.preferences.css"
+            target="org.eclipse.wst.css.core.csssource"/>
+      <definition 
+      		type="preferencepages"
+            value="org.eclipse.wst.sse.ui.preferences.css.source"
+            target="org.eclipse.wst.css.core.csssource"/>
+      <definition 
+      		type="preferencepages"
+            value="org.eclipse.wst.sse.ui.preferences.css.styles"
             target="org.eclipse.wst.css.core.csssource"/>
    </extension>
    <extension

@@ -59,7 +59,11 @@
             target="org.eclipse.wst.dtd.core.dtdsource"/>
       <definition
       		type="preferencepages"
-            value="org.eclipse.wst.sse.ui.preferences/org.eclipse.wst.sse.ui.preferences.dtd"
+            value="org.eclipse.wst.sse.ui.preferences.dtd"
+            target="org.eclipse.wst.dtd.core.dtdsource"/>
+      <definition
+      		type="preferencepages"
+            value="org.eclipse.wst.sse.ui.preferences.dtd.styles"
             target="org.eclipse.wst.dtd.core.dtdsource"/>
    </extension>
    <extension

@@ -85,7 +85,19 @@
             target="org.eclipse.core.runtime.xml"/>
       <definition
       		type="preferencepages"
-            value="org.eclipse.wst.sse.ui.preferences/org.eclipse.wst.sse.ui.preferences.xml"
+            value="org.eclipse.wst.sse.ui.preferences.xml"
+            target="org.eclipse.core.runtime.xml"/>
+      <definition
+      		type="preferencepages"
+            value="org.eclipse.wst.sse.ui.preferences.xml.source"
+            target="org.eclipse.core.runtime.xml"/>
+      <definition
+      		type="preferencepages"
+            value="org.eclipse.wst.sse.ui.preferences.xml.templates"
+            target="org.eclipse.core.runtime.xml"/>
+      <definition
+      		type="preferencepages"
+            value="org.eclipse.wst.sse.ui.preferences.xml.colors"
             target="org.eclipse.core.runtime.xml"/>
    </extension>
    <extension

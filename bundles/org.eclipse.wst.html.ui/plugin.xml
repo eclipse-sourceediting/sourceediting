@@ -77,7 +77,19 @@
             target="org.eclipse.wst.html.core.htmlsource"/>
       <definition 
       		type="preferencepages"
-            value="org.eclipse.wst.sse.ui.preferences/org.eclipse.wst.html.ui.preferences"
+            value="org.eclipse.wst.html.ui.preferences"
+            target="org.eclipse.wst.html.core.htmlsource"/>
+      <definition 
+      		type="preferencepages"
+            value="org.eclipse.wst.html.ui.preferences.source"
+            target="org.eclipse.wst.html.core.htmlsource"/>
+      <definition 
+      		type="preferencepages"
+            value="org.eclipse.wst.html.ui.preferences.templates"
+            target="org.eclipse.wst.html.core.htmlsource"/>
+      <definition 
+      		type="preferencepages"
+            value="org.eclipse.wst.html.ui.preferences.styles"
             target="org.eclipse.wst.html.core.htmlsource"/>
    </extension>
    <extension
