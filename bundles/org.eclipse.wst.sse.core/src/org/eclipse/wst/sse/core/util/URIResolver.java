@@ -64,6 +64,7 @@ public interface URIResolver {
 	/**
 	 * Attempts to return a direct inputstream to the given URI which must be
 	 * relative to the default point of reference.
+     * @deprecated
 	 */
 	InputStream getURIStream(String uri);
 
