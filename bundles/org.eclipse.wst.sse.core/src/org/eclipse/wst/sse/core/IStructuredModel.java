@@ -135,7 +135,9 @@ public interface IStructuredModel extends IAdaptable {
 
 	/**
 	 * This is a client-defined value for what that client (and/or loader)
-	 * considers the "base" of the structure model
+	 * considers the "base" of the structured model. Frequently the location
+	 * is either a workspace root-relative path of a workspace resource or an
+	 * absolute path in the local file system.
 	 */
 	String getBaseLocation();
 
