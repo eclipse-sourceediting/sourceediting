@@ -20,10 +20,16 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.wst.sse.core.internal.Logger;
 
 
@@ -41,7 +47,7 @@ public class JarUtilities {
 	 */
 	public static final String JSP11_TAGLIB = "META-INF/taglib.tld"; //$NON-NLS-1$
 
-	public static void closeJarFile(JarFile file) {
+	public static void closeJarFile(ZipFile file) {
 		if (file == null)
 			return;
 		try {
@@ -50,9 +56,6 @@ public class JarUtilities {
 		catch (IOException ioe) {
 			// no cleanup can be done
 			Logger.log(Logger.ERROR, "Could not close file " + file.getName()); //$NON-NLS-1$
-		}
-		finally {
-			file = null;
 		}
 	}
 
@@ -64,70 +67,82 @@ public class JarUtilities {
 		if (!testFile.exists())
 			return null;
 
-		JarFile jarfile = null;
+		ISchedulingRule rule = null;
+		IFile[] jarIFiles = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(jarFilename));
+		ISchedulingRule[] rules = new ISchedulingRule[jarIFiles.length];
+		for (int i = 0; i < jarIFiles.length; i++) {
+			rules[i] = ResourcesPlugin.getWorkspace().getRuleFactory().deleteRule(jarIFiles[i]);
+		}
+		if (jarIFiles.length > 0) {
+			rule = new MultiRule(rules);
+			Platform.getJobManager().beginRule(rule, null);
+		}
+		ZipFile jarfile = null;
 		try {
-			jarfile = new JarFile(jarFilename);
+			jarfile = new ZipFile(jarFilename);
 		}
 		catch (IOException ioExc) {
 			Logger.logException(ioExc);
 			closeJarFile(jarfile);
-			return null;
 		}
 
-		ZipEntry zentry = jarfile.getEntry(entryName);
-		if (zentry == null) {
-			closeJarFile(jarfile);
-			return null;
-		}
-
-		InputStream entryInputStream = null;
-		try {
-			entryInputStream = jarfile.getInputStream(zentry);
-		}
-		catch (IOException ioExc) {
-			Logger.logException(ioExc);
-			return null;
-		}
-
-		byte bytes[] = null;
 		InputStream cache = null;
-		if (entryInputStream != null) {
-			int c;
-			ByteArrayOutputStream buffer = null;
-			if (zentry.getSize() > 0) {
-				buffer = new ByteArrayOutputStream((int) zentry.getSize());
-			}
-			else {
-				buffer = new ByteArrayOutputStream();
-			}
-			// array dim restriction?
-			bytes = new byte[2048];
+
+		if (jarfile != null) {
 			try {
-				while ((c = entryInputStream.read(bytes)) >= 0) {
-					buffer.write(bytes, 0, c);
+				ZipEntry zentry = jarfile.getEntry(entryName);
+				if (zentry != null) {
+					InputStream entryInputStream = null;
+					try {
+						entryInputStream = jarfile.getInputStream(zentry);
+					}
+					catch (IOException ioExc) {
+						Logger.logException(ioExc);
+					}
+
+					if (entryInputStream != null) {
+						int c;
+						ByteArrayOutputStream buffer = null;
+						if (zentry.getSize() > 0) {
+							buffer = new ByteArrayOutputStream((int) zentry.getSize());
+						}
+						else {
+							buffer = new ByteArrayOutputStream();
+						}
+						// array dim restriction?
+						byte bytes[] = new byte[2048];
+						try {
+							while ((c = entryInputStream.read(bytes)) >= 0) {
+								buffer.write(bytes, 0, c);
+							}
+							cache = new ByteArrayInputStream(buffer.toByteArray());
+							closeJarFile(jarfile);
+						}
+						catch (IOException ioe) {
+							// no cleanup can be done
+						}
+						finally {
+							try {
+								entryInputStream.close();
+							}
+							catch (IOException e) {
+							}
+						}
+					}
 				}
-				cache = new ByteArrayInputStream(buffer.toByteArray());
-			}
-			catch (IOException ioe) {
-				// no cleanup can be done
 			}
 			finally {
-				try {
-					entryInputStream.close();
-				}
-				catch (IOException e) {
-				}
+				closeJarFile(jarfile);
 			}
 		}
-		// }
-
-		closeJarFile(jarfile);
-
+		if (rule != null) {
+			Platform.getJobManager().endRule(rule);
+		}
 		return cache;
 	}
 
 	public static String[] getEntryNames(IResource jarResource) {
-		if (jarResource == null)
+		if (jarResource == null || jarResource.getLocation() == null)
 			return new String[0];
 		return getEntryNames(jarResource.getLocation().toString());
 	}
@@ -137,10 +152,21 @@ public class JarUtilities {
 	}
 
 	public static String[] getEntryNames(String jarFilename, boolean excludeDirectories) {
-		JarFile jarfile = null;
+		ISchedulingRule rule = null;
+		IFile[] jarIFiles = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(jarFilename));
+		ISchedulingRule[] rules = new ISchedulingRule[jarIFiles.length];
+		for (int i = 0; i < jarIFiles.length; i++) {
+			rules[i] = ResourcesPlugin.getWorkspace().getRuleFactory().deleteRule(jarIFiles[i]);
+		}
+		if (jarIFiles.length > 0) {
+			rule = new MultiRule(rules);
+			Platform.getJobManager().beginRule(rule, null);
+		}
+
+		ZipFile jarfile = null;
 		List entryNames = new ArrayList();
 		try {
-			jarfile = new JarFile(jarFilename);
+			jarfile = new ZipFile(jarFilename);
 			Enumeration entries = jarfile.entries();
 			while (entries.hasMoreElements()) {
 				ZipEntry z = (ZipEntry) entries.nextElement();
@@ -152,13 +178,9 @@ public class JarUtilities {
 			Logger.log(Logger.WARNING, "JarUtilities: " + ioExc.getMessage());
 		}
 		finally {
-			try {
-				if (jarfile != null) {
-					jarfile.close();
-				}
-			}
-			catch (IOException e) {
-				// nothing can be done
+			closeJarFile(jarfile);
+			if (rule != null) {
+				Platform.getJobManager().endRule(rule);
 			}
 		}
 		String[] names = (String[]) entryNames.toArray(new String[0]);
