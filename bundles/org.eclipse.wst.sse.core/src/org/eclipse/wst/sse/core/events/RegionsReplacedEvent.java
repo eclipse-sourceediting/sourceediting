@@ -21,6 +21,8 @@ import org.eclipse.wst.sse.core.text.ITextRegionList;
  * itself doesn't. This says nothing about the semantics of the document
  * region, that may still have changed. Also, its assumed/required that all
  * the regions are replaced (even those that may not have changed).
+ * 
+ * @since 1.0
  */
 public class RegionsReplacedEvent extends StructuredDocumentEvent {
 	private ITextRegionList fNewRegions;

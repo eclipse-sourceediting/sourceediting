@@ -46,7 +46,7 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.SequentialRewriteTextStore;
 import org.eclipse.jface.text.TypedRegion;
 import org.eclipse.wst.sse.core.document.StructuredDocumentFactory;
-import org.eclipse.wst.sse.core.events.AboutToBeChangeEvent;
+import org.eclipse.wst.sse.core.events.AboutToBeChangedEvent;
 import org.eclipse.wst.sse.core.events.IModelAboutToBeChangedListener;
 import org.eclipse.wst.sse.core.events.IStructuredDocumentListener;
 import org.eclipse.wst.sse.core.events.NewDocumentEvent;
@@ -640,7 +640,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 					if (fDocumentEvent == null) {
 						fDocumentEvent = new NullDocumentEvent();
 					}
-					AboutToBeChangeEvent aboutToBeChangedEvent = new AboutToBeChangeEvent(this, null, fDocumentEvent.getText(), fDocumentEvent.getOffset(), fDocumentEvent.getLength());
+					AboutToBeChangedEvent aboutToBeChangedEvent = new AboutToBeChangedEvent(this, null, fDocumentEvent.getText(), fDocumentEvent.getOffset(), fDocumentEvent.getLength());
 					// this is a safe cast, since addListners requires a
 					// IStructuredDocumentListener
 					((IModelAboutToBeChangedListener) holdListeners[i]).modelAboutToBeChanged(aboutToBeChangedEvent);

@@ -20,10 +20,20 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
  * 
  * ISSUE: not currently used, but believe there's still some efficiencies to
  * be had if we do.
+ * 
+ * @since 1.0
  */
 public class NewDocumentContentEvent extends NewDocumentEvent {
-	public NewDocumentContentEvent(IStructuredDocument source, Object originalSource) {
-		super(source, originalSource);
+	/**
+	 * Creates an instance of this event.
+	 * 
+	 * @param document
+	 *            the document being changed
+	 * @param the
+	 *            original requester of the change
+	 */
+	public NewDocumentContentEvent(IStructuredDocument document, Object originalRequester) {
+		super(document, originalRequester);
 	}
 
 

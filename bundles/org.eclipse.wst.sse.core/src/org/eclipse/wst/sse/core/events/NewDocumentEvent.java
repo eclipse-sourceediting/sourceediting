@@ -14,17 +14,26 @@ package org.eclipse.wst.sse.core.events;
 
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 
+/**
+ * The NewDocumentEvent is fired when an instance of a IStructuredDocument
+ * sets or replaces all of its text.
+ * 
+ * ISSUE: need to change so this is used for 'set' only.
+ * 
+ * @since 1.0
+ */
 
 public class NewDocumentEvent extends StructuredDocumentEvent {
 
+
 	/**
-	 * The NewDocumentEvent is fired when an instance of a IStructuredDocument
-	 * sets or replaces all of its text.
-	 * 
-	 * ISSUE: need to change so this is used for 'set' only.
+	 * @param document
+	 *            being changed
+	 * @param originalRequester
+	 *            source of request
 	 */
-	public NewDocumentEvent(IStructuredDocument source, Object originalSource) {
-		super(source, originalSource);
+	public NewDocumentEvent(IStructuredDocument document, Object originalRequester) {
+		super(document, originalRequester);
 	}
 
 	/**
@@ -40,39 +49,6 @@ public class NewDocumentEvent extends StructuredDocumentEvent {
 	 * Events in the super class. It always will return zero.
 	 */
 	public int getOffset() {
-		return 0;
-	}
-
-	/**
-	 * This doesn't mean quite the same thing as the IStructuredDocument
-	 * Events in the super class. All the text of the new model is returned.
-	 * 
-	 * @deprecated - use getText()
-	 */
-	public String getOriginalChanges() {
-		String results = null;
-		results = getStructuredDocument().getText();
-		return results;
-	}
-
-	/**
-	 * This doesn't mean quite the same thing as the IStructuredDocument
-	 * Events in the super class. Since we have, basically no knowledge of
-	 * what we are replacing ... so we'll return zero.
-	 * 
-	 * @deprecated
-	 */
-	public int getOriginalLength() {
-		return fLength;
-	}
-
-	/**
-	 * This doesn't mean quite the same thing as the IStructuredDocument
-	 * Events in the super class. It always will return zero.
-	 * 
-	 * @deprecated
-	 */
-	public int getOriginalStart() {
 		return 0;
 	}
 

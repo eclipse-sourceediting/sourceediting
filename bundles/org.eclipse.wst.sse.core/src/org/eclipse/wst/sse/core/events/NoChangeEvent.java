@@ -24,6 +24,8 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
  * "about the change" event. then if there is no change (i.e.no other event is
  * fired), those state variables could reset, or whatever, upon receiving this
  * event.
+ * 
+ * @since 1.0
  */
 public class NoChangeEvent extends StructuredDocumentEvent {
 	/**
@@ -51,9 +53,9 @@ public class NoChangeEvent extends StructuredDocumentEvent {
 	public int reason = 0;
 
 	/**
-	 * NoChangeEvent constructor. This event can occur if there was a
-	 * request to modify a document or its properties, but there as not really
-	 * is no change to a document's content.
+	 * NoChangeEvent constructor. This event can occur if there was a request
+	 * to modify a document or its properties, but there as not really is no
+	 * change to a document's content.
 	 * 
 	 * @param source
 	 *            com.ibm.sed.structuredDocument.IStructuredDocument

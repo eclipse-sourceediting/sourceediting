@@ -18,11 +18,15 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
  * This event is send to structured document listeners. It is perfectly
  * analagous to its corresponding jface DocumentEvent and is provided simply
  * to allow clients to distinguish the source of the event.
+ * 
+ * @since 1.0
  */
-public class AboutToBeChangeEvent extends StructuredDocumentEvent {
+public class AboutToBeChangedEvent extends StructuredDocumentEvent {
 
 
 	/**
+	 * Creates an instance of this event.
+	 * 
 	 * @param document
 	 *            document involved in the change
 	 * @param originalRequester
@@ -34,7 +38,7 @@ public class AboutToBeChangeEvent extends StructuredDocumentEvent {
 	 * @param lengthToReplace
 	 *            amount, if any, of replaced text
 	 */
-	public AboutToBeChangeEvent(IStructuredDocument document, Object originalRequester, String changes, int offset, int lengthToReplace) {
+	public AboutToBeChangedEvent(IStructuredDocument document, Object originalRequester, String changes, int offset, int lengthToReplace) {
 		super(document, originalRequester, changes, offset, lengthToReplace);
 	}
 }

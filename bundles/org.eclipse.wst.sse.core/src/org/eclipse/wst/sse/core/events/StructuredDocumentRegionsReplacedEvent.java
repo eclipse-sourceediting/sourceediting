@@ -21,6 +21,8 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
  * This event is used when a IStructuredDocumentRegion is deleted, or replaced
  * with more than one IStructuredDocumentRegion, or when simply more than one
  * IStructuredDocumentRegion changes.
+ * 
+ * @since 1.0
  */
 
 public class StructuredDocumentRegionsReplacedEvent extends StructuredDocumentEvent {

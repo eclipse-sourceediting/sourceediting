@@ -22,5 +22,5 @@ package org.eclipse.wst.sse.core.events;
  */
 public interface IModelAboutToBeChangedListener {
 
-	void modelAboutToBeChanged(AboutToBeChangeEvent structuredDocumentEvent);
+	void modelAboutToBeChanged(AboutToBeChangedEvent structuredDocumentEvent);
 }

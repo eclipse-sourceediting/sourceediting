@@ -27,6 +27,8 @@ import org.eclipse.wst.sse.core.text.ITextRegion;
  * literally the same instance or not -- it is currently a different instance
  * that is identical to the old except for the changed region, but this
  * implementation may change.
+ * 
+ * @since 1.0
  */
 public class RegionChangedEvent extends StructuredDocumentEvent {
 	private ITextRegion fChangedRegion;

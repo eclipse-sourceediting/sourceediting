@@ -17,7 +17,7 @@ import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.wst.sse.core.IModelStateListener;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.events.AboutToBeChangeEvent;
+import org.eclipse.wst.sse.core.events.AboutToBeChangedEvent;
 import org.eclipse.wst.sse.core.events.IModelAboutToBeChangedListener;
 import org.eclipse.wst.sse.core.events.IStructuredDocumentListener;
 import org.eclipse.wst.sse.core.events.NewDocumentEvent;
@@ -128,9 +128,9 @@ public class EveryNodeDebugAdapter implements IDebugAdapter {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see org.eclipse.wst.sse.core.events.IModelAboutToBeChangedListener#modelAboutToBeChanged(org.eclipse.wst.sse.core.events.AboutToBeChangeEvent)
+		 * @see org.eclipse.wst.sse.core.events.IModelAboutToBeChangedListener#modelAboutToBeChanged(org.eclipse.wst.sse.core.events.AboutToBeChangedEvent)
 		 */
-		public void modelAboutToBeChanged(AboutToBeChangeEvent structuredDocumentEvent) {
+		public void modelAboutToBeChanged(AboutToBeChangedEvent structuredDocumentEvent) {
 			Debug.println("structuredDocumentAboutToBeChanged: " + structuredDocumentEvent); //$NON-NLS-1$
 
 		}

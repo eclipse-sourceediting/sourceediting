@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.ILock;
-import org.eclipse.wst.sse.core.events.AboutToBeChangeEvent;
+import org.eclipse.wst.sse.core.events.AboutToBeChangedEvent;
 import org.eclipse.wst.sse.core.events.IModelAboutToBeChangedListener;
 import org.eclipse.wst.sse.core.events.IStructuredDocumentListener;
 import org.eclipse.wst.sse.core.events.NewDocumentEvent;
@@ -96,9 +96,9 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see org.eclipse.wst.sse.core.events.IModelAboutToBeChangedListener#modelAboutToBeChanged(org.eclipse.wst.sse.core.events.AboutToBeChangeEvent)
+		 * @see org.eclipse.wst.sse.core.events.IModelAboutToBeChangedListener#modelAboutToBeChanged(org.eclipse.wst.sse.core.events.AboutToBeChangedEvent)
 		 */
-		public void modelAboutToBeChanged(AboutToBeChangeEvent structuredDocumentEvent) {
+		public void modelAboutToBeChanged(AboutToBeChangedEvent structuredDocumentEvent) {
 			// If we didn't originate the change, take note we are about to
 			// change based on our underlying document changing.
 			// If we did originate the change, we, or client, should have
