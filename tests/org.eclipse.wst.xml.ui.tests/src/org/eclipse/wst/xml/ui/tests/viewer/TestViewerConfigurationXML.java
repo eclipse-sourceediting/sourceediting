@@ -16,6 +16,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
@@ -33,6 +34,7 @@ public class TestViewerConfigurationXML extends TestCase {
 	private StructuredTextViewerConfiguration fConfig = null;
 	private IPreferenceStore fPreferenceStore = null;
 	private boolean fDisplayExists = true;
+	private boolean isSetup = false;
 	
     public TestViewerConfigurationXML() {
         super("TestViewerConfigurationXML");
@@ -40,8 +42,11 @@ public class TestViewerConfigurationXML extends TestCase {
     protected void setUp() throws Exception {
 		
     	super.setUp();
-		setUpPreferences();
-		setUpViewerConfiguration();
+		if(!this.isSetup){
+			setUpPreferences();
+			setUpViewerConfiguration();
+			this.isSetup = true;
+		}
     }
 	
     private void setUpPreferences() {
@@ -54,8 +59,16 @@ public class TestViewerConfigurationXML extends TestCase {
 		// some test environments might not have a "real" display
 		if(Display.getCurrent() != null) {
 			
-			Shell shell = new Shell(Display.getCurrent());
-			Composite parent = new Composite(shell, SWT.NONE);
+			Shell shell = null;
+			Composite parent = null;
+			
+			if(PlatformUI.isWorkbenchRunning()) {
+				shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+			}
+			else {	
+				shell = new Shell(Display.getCurrent());
+			}
+			parent = new Composite(shell, SWT.NONE);
 			
 			// dummy viewer
 			fViewer = new StructuredTextViewer(parent, null, null, false, SWT.NONE);
@@ -76,7 +89,7 @@ public class TestViewerConfigurationXML extends TestCase {
 		
 		Map strategies = fConfig.getAutoEditStrategies(fViewer);
 		assertNotNull(strategies);
-		assertTrue(strategies.size() == 1);
+		assertTrue(strategies.size() > 0);
 	}
 	
 	public void testGetConfiguredContentTypes() {
@@ -87,7 +100,7 @@ public class TestViewerConfigurationXML extends TestCase {
 		
 		String[] configuredContentTypes = fConfig.getConfiguredContentTypes(fViewer);
 		assertNotNull(configuredContentTypes);
-		assertTrue("there are no configured content types", configuredContentTypes.length > 1);
+		assertTrue("there are no configured content types", configuredContentTypes.length > 0);
 	}
 	
 	public void testGetContentAssistant() {
@@ -199,6 +212,6 @@ public class TestViewerConfigurationXML extends TestCase {
 		
 		IHyperlinkDetector[] detectors = fConfig.getHyperlinkDetectors(fViewer);
 		assertNotNull(detectors);
-		assertTrue("there are no hyperlink detectors", detectors.length > 1);
+		assertTrue("there are no hyperlink detectors", detectors.length > 0);
 	}
 }

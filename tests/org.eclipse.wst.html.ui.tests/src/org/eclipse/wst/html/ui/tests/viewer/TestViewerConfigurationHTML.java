@@ -16,6 +16,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
@@ -33,6 +34,7 @@ public class TestViewerConfigurationHTML extends TestCase {
 	private StructuredTextViewerConfiguration fConfig = null;
 	private IPreferenceStore fPreferenceStore = null;
 	private boolean fDisplayExists = true;
+	private boolean isSetup = false;
 	
     public TestViewerConfigurationHTML() {
         super("TestViewerConfigurationHTML");
@@ -40,8 +42,11 @@ public class TestViewerConfigurationHTML extends TestCase {
     protected void setUp() throws Exception {
 		
     	super.setUp();
-		setUpPreferences();
-		setUpViewerConfiguration();
+		if(!this.isSetup){
+			setUpPreferences();
+			setUpViewerConfiguration();
+			this.isSetup = true;
+		}
     }
 	
     private void setUpPreferences() {
@@ -51,10 +56,18 @@ public class TestViewerConfigurationHTML extends TestCase {
 	
 	private void setUpViewerConfiguration() {
 
-		if(Display.getCurrent() == null) {
+		if(Display.getCurrent() != null) {
 			
-			Shell shell = new Shell(Display.getCurrent());
-			Composite parent = new Composite(shell, SWT.NONE);
+			Shell shell = null;
+			Composite parent = null;
+			
+			if(PlatformUI.isWorkbenchRunning()) {
+				shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+			}
+			else {	
+				shell = new Shell(Display.getCurrent());
+			}
+			parent = new Composite(shell, SWT.NONE);
 			
 			// dummy viewer
 			fViewer = new StructuredTextViewer(parent, null, null, false, SWT.NONE);
