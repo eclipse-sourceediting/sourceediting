@@ -39,6 +39,7 @@
 		<import plugin="org.eclipse.ltk.core.refactoring" />
 		<import plugin="org.eclipse.ltk.ui.refactoring" />
 		<import plugin="org.eclipse.wst.common.uriresolver"/>
+		<import plugin="org.eclipse.ui.ide" />
 	</requires>
 
 
@@ -401,4 +402,15 @@
 		</provider> 
 	</extension> 
 
+	<!-- New JSP wizard -->
+	<extension point="org.eclipse.ui.newWizards">
+		<wizard id="org.eclipse.jst.jsp.ui.internal.wizard.NewJSPWizard"
+			name="%_UI_WIZARD_NAME"
+			class="org.eclipse.jst.jsp.ui.internal.wizard.NewJSPWizard"
+			category="org.eclipse.wst.web.ui"
+			icon="icons/full/ctool16/newjsp_wiz.gif">
+			<description>%_UI_WIZARD_CREATE_NEW_FILE</description>
+			<selection class="org.eclipse.core.resources.IResource" />
+		</wizard>
+	</extension>
 </plugin>
