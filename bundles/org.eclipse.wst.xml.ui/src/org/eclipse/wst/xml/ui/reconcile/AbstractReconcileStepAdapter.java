@@ -37,6 +37,8 @@ import org.eclipse.wst.xml.ui.internal.Logger;
  * This reconcile step is an adapter on the IStructuredModel. Validation is
  * triggered from StructuredDocumentEvents
  * 
+ * @deprecated moving toward reconcileValidator extension point
+ *  
  * @author pavery
  */
 public class AbstractReconcileStepAdapter implements IReconcileStepAdapter {

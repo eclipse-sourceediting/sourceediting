@@ -52,6 +52,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
+/**
+ * @deprecated moving toward reconcileValidator extension point
+ */
 public class ReconcileStepAdapterForXML extends AbstractReconcileStepAdapter implements CMDocumentCacheListener, IReleasable {
 
 	/**

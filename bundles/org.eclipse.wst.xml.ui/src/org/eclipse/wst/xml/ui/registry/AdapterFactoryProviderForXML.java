@@ -43,11 +43,6 @@ public class AdapterFactoryProviderForXML implements AdapterFactoryProvider {
 
 		// add the normal content based factories to model's registry
 		addContentBasedFactories(structuredModel);
-		// Must update/add to propagating adapter here too
-
-//		if (structuredModel instanceof XMLModel) {
-//			addPropagatingAdapters(structuredModel);
-//		}
 	}
 
 	protected void addContentBasedFactories(IStructuredModel structuredModel) {
@@ -94,33 +89,6 @@ public class AdapterFactoryProviderForXML implements AdapterFactoryProvider {
 			}
 		}
 	}
-
-    // we won't need this anymore when we move to useing xerces validator
-    // via reconcileValidator extension point
-    
-//	protected void addPropagatingAdapters(IStructuredModel structuredModel) {
-        
-
-//		AdapterFactory factory;
-//		XMLModel xmlModel = (XMLModel) structuredModel;
-//		XMLDocument document = xmlModel.getDocument();
-//		PropagatingAdapter propagatingAdapter = (PropagatingAdapter) document.getAdapterFor(PropagatingAdapter.class);
-//		if (propagatingAdapter != null) {
-//			// checking if we should bother adding this factory
-//			// if the preference says not to check validity, we don't bother
-//			// creating this factory
-//			// to improve performance...
-//			String contentTypeId = IContentTypeIdentifier.ContentTypeID_SSEXML;
-//			IPreferenceStore store = XMLUIPlugin.getDefault().getPreferenceStore();
-//			if (store.getString(CommonEditorPreferenceNames.EDITOR_VALIDATION_METHOD).equals(CommonEditorPreferenceNames.EDITOR_VALIDATION_CONTENT_MODEL)) {
-//				factory = new ReconcilerAdapterFactoryForXML();
-//				propagatingAdapter.addAdaptOnCreateFactory(factory);
-//				// (pa) perf:
-//				//propagatingAdapter.initializeForFactory(factory,
-//				// xmlModel.getDocument());
-//			}
-//		}
-//	}
 
 	/*
 	 * @see AdapterFactoryProvider#isFor(ContentTypeDescription)

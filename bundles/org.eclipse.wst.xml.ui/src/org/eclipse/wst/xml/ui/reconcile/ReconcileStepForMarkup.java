@@ -26,14 +26,12 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.sse.ui.StructuredTextReconciler;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.reconcile.IReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
-import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.correction.ProblemIDsXML;
 import org.w3c.dom.Node;
 
@@ -480,19 +478,6 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 	protected IReconcileResult[] reconcile(IStructuredDocumentRegion structuredDocumentRegion) {
 		List results = new ArrayList();
 
-		// fix for https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=1939
-		// not sure why this was being done before
-		// if (structuredDocumentRegion.getType() ==
-		// XMLRegionContext.XML_CONTENT) {
-		// // rollback to an open tag
-		// // ** can this be bad? removal region must exactly match add region
-		// // or else we may get duplicates
-		// while ((structuredDocumentRegion =
-		// structuredDocumentRegion.getPrevious()) != null &&
-		// !isStartTag(structuredDocumentRegion)) {
-		// continue;
-		// }
-		// }
 		if (structuredDocumentRegion == null)
 			return EMPTY_RECONCILE_RESULT_SET;
 
@@ -529,13 +514,14 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 	protected IReconcileResult[] reconcileModel(DirtyRegion dirtyRegion, IRegion subRegion) {
 		if (dirtyRegion == null)
 			return EMPTY_RECONCILE_RESULT_SET;
-		Logger.trace(StructuredTextReconciler.TRACE_FILTER, "[trace reconciler] > reconcile model in MARKUP step w/ dirty region: [" + dirtyRegion.getOffset() + ":" + dirtyRegion.getLength() + "]" + (dirtyRegion == null ? "null" : dirtyRegion.getText())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+
+        if(DEBUG)
+            System.out.println("[trace reconciler] > reconcile model in MARKUP step w/ dirty region: [" + dirtyRegion.getOffset() + ":" + dirtyRegion.getLength() + "]" + (dirtyRegion == null ? "null" : dirtyRegion.getText())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
 		IReconcileResult[] results = EMPTY_RECONCILE_RESULT_SET;
 
 		// TODO: may need to add back some synch(doc) and/or synch(region[i])
-		// to
-		// be thread safe
+		// to be thread safe
 		IStructuredDocumentRegion[] regions = getStructuredDocumentRegions(dirtyRegion);
 		for (int i = 0; i < regions.length; i++) {
 			// the region may be irrelevant at this point
@@ -545,7 +531,8 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 			}
 		}
 
-		Logger.trace(StructuredTextReconciler.TRACE_FILTER, "[trace reconciler] > MARKUP step done"); //$NON-NLS-1$
+        if(DEBUG)
+            System.out.println("[trace reconciler] > MARKUP step done"); //$NON-NLS-1$
 		return results;
 	}
 }

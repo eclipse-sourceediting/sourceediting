@@ -20,7 +20,9 @@ import org.eclipse.wst.xml.core.document.XMLModel;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-
+/**
+ * @deprecated moving toward reconcileValidator extension point
+ */
 public class ReconcilerAdapterFactoryForXML extends AbstractAdapterFactory {
 
 	/**
