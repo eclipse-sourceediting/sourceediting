@@ -13,7 +13,7 @@
 package org.eclipse.wst.dtd.core.contenttype;
 
 /**
- * This class, with its one field, is a convience to provide compile-time
+ * This class, with its one field, is a convenience to provide compile-time
  * safety when referring to a contentType ID. The value of the
  * ContentTypeID_DTD field must match what is specified in the
  * org.eclipse.wst.dtd.core/plugin.xml file.
@@ -27,8 +27,8 @@ public class ContentTypeIdForDTD {
 	 * specified in org.eclipse.wst.dtd.core/plugin.xml for the DTD content
 	 * type
 	 * 
-	 * Note: this value is intentially set with default protected method so it
-	 * will not be inlined.
+	 * Note: this value is intentionally set with default protected method so
+	 * it will not be inlined.
 	 */
 	public final static String ContentTypeID_DTD = getConstantString();
 
