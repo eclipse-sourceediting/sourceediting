@@ -555,9 +555,13 @@ public class TypesHelper
         while (i.hasNext()) // just get the first one
         {
           XSDAttributeDeclaration attributeDeclaration = (XSDAttributeDeclaration) i.next();
-          if (attributeDeclaration.getQName(relativeComponent) != null)
+          // Filter out attributes from the schema namespace
+          if (!(attributeDeclaration.getTargetNamespace().equals(XSDConstants.SCHEMA_INSTANCE_URI_2001)))
           {
-            return attributeDeclaration.getQName(relativeComponent);
+            if (attributeDeclaration.getQName(relativeComponent) != null)
+            {
+              return attributeDeclaration.getQName(relativeComponent);
+            }
           }
         }
       }

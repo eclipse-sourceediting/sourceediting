@@ -20,6 +20,7 @@ import org.eclipse.xsd.XSDAttributeUse;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
+import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
@@ -102,7 +103,7 @@ public class GlobalSimpleOrComplexTypeCleanup extends BaseGlobalCleanup
       }
     }
     XSDTypeDefinition base = type.getBaseTypeDefinition();
-    if (base != null && base.equals(deletedItem))
+    if (base != null && base == deletedItem)
     {
       XSDDOMHelper helper = new XSDDOMHelper();
       Element derivedByNode = helper.getDerivedByElement(type.getElement());
@@ -120,15 +121,25 @@ public class GlobalSimpleOrComplexTypeCleanup extends BaseGlobalCleanup
       XSDTypeDefinition typeDefinition = null;
       if (listOfCT.size() > 0)
       {
-        typeDefinition = (XSDTypeDefinition)(listOfCT).get(0);
-        type.setBaseTypeDefinition(typeDefinition);
+        for (Iterator iter = listOfCT.iterator(); iter.hasNext(); )
+        {
+          typeDefinition = (XSDTypeDefinition)iter.next();
+          if (typeDefinition != deletedItem)
+          {
+            type.setBaseTypeDefinition(typeDefinition);
+          }
+        }
       }
-
-//      type.setBaseTypeDefinition(schema.getSchemaForSchema().resolveSimpleTypeDefinition("string"));
     }
   }
 
-
+  public void visitSimpleTypeDefinition(XSDSimpleTypeDefinition type)
+  {
+    if (type.getBaseTypeDefinition() == deletedItem)
+    {
+      type.setBaseTypeDefinition(schema.resolveSimpleTypeDefinition(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "string"));
+    }
+  }
 
   protected void resetTypeToString(Element element)
   {

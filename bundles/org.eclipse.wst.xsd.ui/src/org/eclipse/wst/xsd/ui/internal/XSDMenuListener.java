@@ -1828,11 +1828,7 @@ public class XSDMenuListener implements IMenuListener
     String ref = getFirstGlobalElementTagName(elementTag);
     attributes.add(new DOMAttribute(XSDConstants.REF_ATTRIBUTE, ref));
     Action action = addCreateElementAction(manager, elementTag, label, attributes, parent, relativeNode);
-    action.setEnabled(ref != null);
-    if (ref != null)
-    {
-      action.setEnabled(!isReadOnly);
-    }
+    action.setEnabled(ref != null && !isReadOnly);
   }
 
   protected void addCreateSimpleContentAction(IMenuManager manager, String elementTag, String label, List attributes, Element parent, Node relativeNode)
