@@ -458,6 +458,9 @@ class FileBufferModelManager {
 					model.setStructuredDocument(document);
 				}
 				addFactories(model, handler);
+				if(info.buffer.isDirty()) {
+					model.setDirtyState(true);
+				}
 			} catch (ResourceInUse e) {
 				Logger.log(Logger.ERROR, "attempted to create new model with existing ID", e);
 				model = null;
