@@ -64,6 +64,7 @@ public class CaretMediator implements Listener {
 		private int fDelay = 0;
 		RefreshDelayJob(int delay) {
 			super("caret update");
+			setSystem(true);
 			fDelay = delay;
 		}
 
