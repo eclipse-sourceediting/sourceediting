@@ -1210,12 +1210,16 @@ public class JSPTranslator {
 			while (it.hasNext()) {
 				tracker = (CMDocumentTracker) it.next();
 				sdRegion = tracker.getStructuredDocumentRegion();
-				taglibRegions = sdRegion.getRegions().iterator();
-				while (taglibRegions.hasNext()) {
-					r = (ITextRegion) taglibRegions.next();
-					if (r.getType().equals(DOMJSPRegionContexts.JSP_DIRECTIVE_NAME)) {
-						if (sdRegion.getText(r).equals(JSP12TLDNames.TAGLIB)) {
-							addBlockMarkers(tracker.getDocument());
+				// since may be call from another thread (like a background job)
+				// this check is to be safer
+				if(sdRegion != null && !sdRegion.isDeleted()) {
+					taglibRegions = sdRegion.getRegions().iterator();
+					while (sdRegion != null && !sdRegion.isDeleted() && taglibRegions.hasNext()) {
+						r = (ITextRegion) taglibRegions.next();
+						if (r.getType().equals(DOMJSPRegionContexts.JSP_DIRECTIVE_NAME)) {
+							if (sdRegion.getText(r).equals(JSP12TLDNames.TAGLIB)) {
+								addBlockMarkers(tracker.getDocument());
+							}
 						}
 					}
 				}
