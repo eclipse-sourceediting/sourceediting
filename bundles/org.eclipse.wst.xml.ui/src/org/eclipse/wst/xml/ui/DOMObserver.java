@@ -87,7 +87,7 @@ public class DOMObserver {
 			switch (eventType) {
 				case INodeNotifier.ADD : {
 					if (newValue instanceof Element) {
-						//System.out.println("ADD (to " +
+						// System.out.println("ADD (to " +
 						// ((Node)notifier).getNodeName() + ") " +
 						// ((Element)newValue).getNodeName() + " old " +
 						// oldValue);
@@ -95,7 +95,7 @@ public class DOMObserver {
 					}
 					break;
 				}
-				//case INodeNotifier.REMOVE:
+				// case INodeNotifier.REMOVE:
 				case INodeNotifier.CHANGE :
 				case INodeNotifier.STRUCTURE_CHANGED :
 				case INodeNotifier.CONTENT_CHANGED : {
@@ -117,7 +117,8 @@ public class DOMObserver {
 								break;
 							}
 						}
-					} else if (node.getNodeType() == Node.DOCUMENT_NODE) {
+					}
+					else if (node.getNodeType() == Node.DOCUMENT_NODE) {
 						invokeDelayedCMDocumentLoad();
 					}
 					break;
@@ -126,9 +127,7 @@ public class DOMObserver {
 		}
 	}
 
-	// 
-	//
-	protected class MyTimerTask extends TimerTask {
+	class MyTimerTask extends TimerTask {
 		public MyTimerTask() {
 			super();
 			timerTaskCount++;
@@ -167,7 +166,7 @@ public class DOMObserver {
 		// immediately
 		// very nasty... I need to revist this problem with Ed Merks
 		//
-		//invokeCMDocumentLoad();
+		// invokeCMDocumentLoad();
 		invokeDelayedCMDocumentLoad();
 	}
 
@@ -180,7 +179,7 @@ public class DOMObserver {
 	}
 
 	public void invokeDelayedCMDocumentLoad() {
-		//Display.getCurrent().timerExec(2000, new MyTimerTask());
+		// Display.getCurrent().timerExec(2000, new MyTimerTask());
 		timer.schedule(new MyTimerTask(), 2000);
 	}
 
