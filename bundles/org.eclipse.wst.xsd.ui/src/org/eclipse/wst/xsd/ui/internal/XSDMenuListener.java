@@ -544,14 +544,17 @@ public class XSDMenuListener implements IMenuListener
 
       SetTypeAction setNewComplexTypeAction = new SetTypeAction("New Complex Type", ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDComplexType.gif"), concreteComponent);
       setNewComplexTypeAction.setTypeKind(XSDConstants.COMPLEXTYPE_ELEMENT);
+      setNewComplexTypeAction.setEnabled(!isReadOnly);
       setTypeCascadeMenu.add(setNewComplexTypeAction);
 
       SetTypeAction setNewSimpleTypeAction = new SetTypeAction("New Simple Type", ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDSimpleType.gif"), concreteComponent);
       setNewSimpleTypeAction.setTypeKind(XSDConstants.SIMPLETYPE_ELEMENT);
+      setNewSimpleTypeAction.setEnabled(!isReadOnly);
       setTypeCascadeMenu.add(setNewSimpleTypeAction);
       
       SetTypeAction setExistingTypeAction = new SetTypeAction("Set Existing Type...", concreteComponent);
       setExistingTypeAction.setTypeKind(0);
+      setExistingTypeAction.setEnabled(!isReadOnly);
       setTypeCascadeMenu.add(setExistingTypeAction);
       manager.add(new Separator());
 
@@ -2123,15 +2126,19 @@ public class XSDMenuListener implements IMenuListener
     SetMultiplicityAction oneMultiplicity = new SetMultiplicityAction(concreteComponent, "1");
     oneMultiplicity.setMaxOccurs(1);
     oneMultiplicity.setMinOccurs(1);
+    oneMultiplicity.setEnabled(!isReadOnly);
     SetMultiplicityAction zeroOrMoreMultiplicity = new SetMultiplicityAction(concreteComponent, "0..* (Zero or More)");
     zeroOrMoreMultiplicity.setMaxOccurs(-1);
     zeroOrMoreMultiplicity.setMinOccurs(0);
+    zeroOrMoreMultiplicity.setEnabled(!isReadOnly);
     SetMultiplicityAction zeroOrOneMultiplicity = new SetMultiplicityAction(concreteComponent, "0..1 (Zero or One)");
     zeroOrOneMultiplicity.setMaxOccurs(1);
     zeroOrOneMultiplicity.setMinOccurs(0);
+    zeroOrOneMultiplicity.setEnabled(!isReadOnly);
     SetMultiplicityAction oneOrMoreMultiplicity = new SetMultiplicityAction(concreteComponent, "1..* (One or More)");
     oneOrMoreMultiplicity.setMaxOccurs(-1);
     oneOrMoreMultiplicity.setMinOccurs(1);
+    oneOrMoreMultiplicity.setEnabled(!isReadOnly);
     
     MenuManager multiplicityMenu = new MenuManager("Set Multiplicity");
     manager.add(multiplicityMenu);
