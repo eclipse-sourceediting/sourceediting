@@ -13,8 +13,10 @@ package org.eclipse.jst.jsp.core.internal.contentmodel.tld;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDDocument;
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDValidator;
@@ -31,10 +33,11 @@ public class CMDocumentImpl implements TLDDocument {
 	
 	/** Contains taginfo and/or any other misc properties*/
 	private AnnotationMap fAnnotationMap = null;
+	
+	private Map fProperties = new HashMap(0);
 
 	/**
 	 * Records from where this document was created
-	 *
 	 */
 	private String fBaseLocation;
 	/** 
@@ -255,7 +258,7 @@ public class CMDocumentImpl implements TLDDocument {
 		else if (propertyName.equals("annotationMap")) { //$NON-NLS-1$
 			return getAnnotationMap();
 		}
-		return null;
+		return fProperties.get(propertyName);
 	}
 
 	/**
@@ -360,6 +363,10 @@ public class CMDocumentImpl implements TLDDocument {
 	public void setParentURI(String parentURI) {
 		fParentURI = parentURI;
 	}
+	
+	public void setProperty(String property, Object value) {
+		fProperties.put(property, value);
+	}
 
 	/**
 	 * 
@@ -407,7 +414,7 @@ public class CMDocumentImpl implements TLDDocument {
 	public boolean supports(String propertyName) {
 		if (TLDDocument.CM_KIND.equals(propertyName) || "annotationMap".equals(propertyName)) //$NON-NLS-1$
 			return true;
-		return false;
+		return fProperties.containsKey(propertyName);
 	}
 
 	public String toString() {

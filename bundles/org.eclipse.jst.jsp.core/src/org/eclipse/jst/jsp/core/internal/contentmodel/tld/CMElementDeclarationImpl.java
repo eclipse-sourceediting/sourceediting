@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jst.jsp.core.contentmodel.tld.JSP11TLDNames;
+import org.eclipse.jst.jsp.core.contentmodel.tld.JSP12TLDNames;
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDDocument;
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDElementDeclaration;
 import org.eclipse.wst.common.contentmodel.CMContent;
@@ -276,6 +277,9 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 		}
 		else if (propertyName.equals(TLDDocument.CM_KIND)) {
 			return TLDDocument.JSP_TLD;
+		}
+		else if (propertyName.equals(JSP12TLDNames.SMALL_ICON) || propertyName.equals(JSP12TLDNames.LARGE_ICON)) {
+			return getOwnerDocument().getProperty(propertyName);
 		}
 		return null;
 	}
