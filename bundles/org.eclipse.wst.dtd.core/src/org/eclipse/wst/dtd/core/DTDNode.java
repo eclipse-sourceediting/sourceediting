@@ -25,6 +25,7 @@ import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.text.TextRegionListImpl;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
+import org.eclipse.wst.xml.core.internal.document.NodeContainer;
 
 
 public abstract class DTDNode extends NodeContainer implements IndexedRegion {

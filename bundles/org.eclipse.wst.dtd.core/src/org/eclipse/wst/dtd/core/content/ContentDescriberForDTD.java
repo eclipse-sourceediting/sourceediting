@@ -15,6 +15,7 @@ package org.eclipse.wst.dtd.core.content;
 import org.eclipse.core.runtime.content.ITextContentDescriber;
 import org.eclipse.wst.common.encoding.AbstractContentDescriber;
 import org.eclipse.wst.common.encoding.IResourceCharsetDetector;
+import org.eclipse.wst.xml.core.contenttype.XMLResourceEncodingDetector;
 
 
 
