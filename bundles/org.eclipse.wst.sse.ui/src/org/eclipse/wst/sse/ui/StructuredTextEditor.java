@@ -105,6 +105,7 @@ import org.eclipse.ui.texteditor.IAbstractTextEditorHelpContextIds;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.IDocumentProviderExtension;
 import org.eclipse.ui.texteditor.IElementStateListener;
+import org.eclipse.ui.texteditor.IStatusField;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
@@ -1606,7 +1607,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	/**
 	 * @deprecated
 	 * 
-	 * used only by Search and there are alternate means besides making this API
+	 * used only by Search and there are alternate means besides making this
+	 * API
 	 * @return the IFile from the currently active editor
 	 */
 	public IFile getFileInEditor() {
@@ -1721,7 +1723,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	/**
 	 * @deprecated
 	 * 
-	 * used only by Search and there are alternate means besides making this API
+	 * used only by Search and there are alternate means besides making this
+	 * API
 	 * 
 	 * @return the IStructuredDocumentRegion that the text selection in the
 	 *         editor resolves to, or <code>null</code> if the range covers
@@ -1755,7 +1758,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	/**
 	 * @deprecated
 	 * 
-	 * used only by Search and there are alternate means besides making this API
+	 * used only by Search and there are alternate means besides making this
+	 * API
 	 * 
 	 * @param sdRegion
 	 *            the IStructuredDocumentRegion that you want to check
@@ -1855,6 +1859,11 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		if (getTextViewer() != null)
 			return getTextViewer().getViewerSelectionManager();
 		return null;
+	}
+
+	protected void handleCursorPositionChanged() {
+		super.handleCursorPositionChanged();
+		updateStatusField(StructuredTextEditorActionConstants.STATUS_CATEGORY_OFFSET);
 	}
 
 	protected void handleElementContentAboutToBeReplaced(Object element) {
@@ -2711,6 +2720,28 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		// }
 		//
 		// }
+	}
+
+	protected void updateStatusField(String category) {
+		super.updateStatusField(category);
+
+		if (category == null)
+			return;
+
+		if (StructuredTextEditorActionConstants.STATUS_CATEGORY_OFFSET.equals(category)) {
+			IStatusField field = getStatusField(category);
+			if (field != null) {
+				Point selection = getTextViewer().getTextWidget().getSelection();
+				int offset1 = widgetOffset2ModelOffset(getSourceViewer(), selection.x);
+				int offset2 = widgetOffset2ModelOffset(getSourceViewer(), selection.y);
+				String text = null;
+				if (offset1 != offset2)
+					text = "[" + offset1 + "-" + offset2 + "]";
+				else
+					text = "[ " + offset1 + " ]";
+				field.setText(text == null ? fErrorLabel : text);
+			}
+		}
 	}
 
 	public IStatus validateEdit(Shell context) {

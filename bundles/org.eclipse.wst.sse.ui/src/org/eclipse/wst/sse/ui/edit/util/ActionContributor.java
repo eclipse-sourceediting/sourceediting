@@ -14,6 +14,7 @@ package org.eclipse.wst.sse.ui.edit.util;
 
 import java.util.ResourceBundle;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
@@ -31,12 +32,14 @@ import org.eclipse.ui.ide.IDEActionFactory;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
+import org.eclipse.ui.texteditor.ITextEditorExtension;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
 import org.eclipse.wst.sse.ui.GotoAnnotationAction;
 import org.eclipse.wst.sse.ui.ISourceViewerActionBarContributor;
 import org.eclipse.wst.sse.ui.extension.ExtendedEditorActionBuilder;
 import org.eclipse.wst.sse.ui.extension.IExtendedContributor;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.ui.OffsetStatusLineContributionItem;
 
 /**
  * XMLEditorActionContributor
@@ -52,11 +55,17 @@ import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
  * Note that this class is still valid for single page editor.
  */
 public class ActionContributor extends TextEditorActionContributor implements ISourceViewerActionBarContributor, IExtendedContributor {
+
+	public static final boolean _showDebugStatus = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.ui/actioncontributor/debugstatusfields"));
+
 	private static final String[] EDITOR_IDS = {"org.eclipse.wst.sse.ui.StructuredTextEditor"}; //$NON-NLS-1$
+
 	protected IExtendedContributor extendedContributor;
 	protected RetargetTextEditorAction fAddBlockComment = null;
 
 	protected Separator fCommandsSeparator = null;
+
+	private OffsetStatusLineContributionItem fDebugStatusOffset = null;
 	protected MenuManager fExpandSelectionToMenu = null;
 	protected GroupMarker fMenuAdditionsGroupMarker = null;
 	protected GotoAnnotationAction fNextAnnotation = null;
@@ -135,6 +144,10 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 
 		fToggleInsertModeAction = new RetargetTextEditorAction(resourceBundle, "Editor.ToggleInsertMode.", IAction.AS_CHECK_BOX); //$NON-NLS-1$
 		fToggleInsertModeAction.setActionDefinitionId(ITextEditorActionDefinitionIds.TOGGLE_INSERT_MODE);
+
+		if (_showDebugStatus) {
+			fDebugStatusOffset = new OffsetStatusLineContributionItem(StructuredTextEditorActionConstants.STATUS_CATEGORY_OFFSET, true, 20);
+		}
 	}
 
 	protected void addToMenu(IMenuManager menu) {
@@ -171,6 +184,9 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 	}
 
 	protected void addToStatusLine(IStatusLineManager manager) {
+		if (_showDebugStatus) {
+			manager.add(fDebugStatusOffset);
+		}
 	}
 
 	protected void addToToolBar(IToolBarManager toolBarManager) {
@@ -294,7 +310,7 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 			actionBars.setGlobalActionHandler(ITextEditorActionDefinitionIds.GOTO_PREVIOUS_ANNOTATION, fPreviousAnnotation);
 			actionBars.setGlobalActionHandler(ActionFactory.PREVIOUS.getId(), fPreviousAnnotation);
 			actionBars.setGlobalActionHandler(ActionFactory.NEXT.getId(), fNextAnnotation);
-			
+
 			if (textEditor != null) {
 				actionBars.setGlobalActionHandler(IDEActionFactory.ADD_TASK.getId(), getAction(textEditor, IDEActionFactory.ADD_TASK.getId()));
 				actionBars.setGlobalActionHandler(IDEActionFactory.BOOKMARK.getId(), getAction(textEditor, IDEActionFactory.BOOKMARK.getId()));
@@ -322,6 +338,11 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 
 		if (extendedContributor != null) {
 			extendedContributor.setActiveEditor(activeEditor);
+		}
+
+		if (_showDebugStatus && textEditor instanceof ITextEditorExtension) {
+			((ITextEditorExtension) textEditor).setStatusField(fDebugStatusOffset, StructuredTextEditorActionConstants.STATUS_CATEGORY_OFFSET);
+			fDebugStatusOffset.setActiveEditor(textEditor);
 		}
 	}
 

@@ -39,5 +39,6 @@ public interface StructuredTextEditorActionConstants {
 
 	public final static String GROUP_NAME_MENU_ADDITIONS = "MenuAdditions";//$NON-NLS-1$
 	public final static String GROUP_NAME_TOOLBAR_ADDITIONS = "ToolbarAdditions";//$NON-NLS-1$
-
+	
+	public final static String STATUS_CATEGORY_OFFSET = "Offset";//$NON-NLS-1$
 }
