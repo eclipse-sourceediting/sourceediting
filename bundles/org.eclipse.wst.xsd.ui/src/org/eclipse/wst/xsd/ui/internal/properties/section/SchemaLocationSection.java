@@ -171,6 +171,10 @@ public class SchemaLocationSection extends CommonDirectivesSection
         {
 					String location = ""; //$NON-NLS-1$
 					location = element.getAttribute("schemaLocation"); //$NON-NLS-1$
+          if (location == null)
+          {
+            location = "";
+          }
 					schemaLocationText.setText(location);
 				}
 
