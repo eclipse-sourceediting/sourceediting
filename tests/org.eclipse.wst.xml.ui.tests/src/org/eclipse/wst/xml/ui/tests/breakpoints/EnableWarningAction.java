@@ -14,14 +14,14 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.wst.sse.ui.extension.IExtendedEditorAction;
 import org.eclipse.wst.sse.ui.extension.IExtendedSimpleEditor;
-import org.eclipse.wst.xml.ui.tests.SSEForXMLTestsPlugin;
+import org.eclipse.wst.xml.ui.tests.XMLUITestsPlugin;
 
 
 public class EnableWarningAction extends Action implements IExtendedEditorAction {
 	public EnableWarningAction() {
 		super();
-		SSEForXMLTestsPlugin.getDefault().getPreferenceStore().setDefault("break-error", false);
-		boolean enabled = SSEForXMLTestsPlugin.getDefault().getPreferenceStore().getBoolean("break-error");
+		XMLUITestsPlugin.getDefault().getPreferenceStore().setDefault("break-error", false);
+		boolean enabled = XMLUITestsPlugin.getDefault().getPreferenceStore().getBoolean("break-error");
 		if(enabled)
 			setText("Disable Breakpoint Errors");
 		else
@@ -32,8 +32,8 @@ public class EnableWarningAction extends Action implements IExtendedEditorAction
 	 * @param text
 	 */
 	public EnableWarningAction(String text) {
-		SSEForXMLTestsPlugin.getDefault().getPreferenceStore().setDefault("break-error", false);
-		boolean enabled = SSEForXMLTestsPlugin.getDefault().getPreferenceStore().getBoolean("break-error");
+		XMLUITestsPlugin.getDefault().getPreferenceStore().setDefault("break-error", false);
+		boolean enabled = XMLUITestsPlugin.getDefault().getPreferenceStore().getBoolean("break-error");
 		if(enabled)
 			setText("Disable Breakpoint Errors");
 		else
@@ -45,8 +45,8 @@ public class EnableWarningAction extends Action implements IExtendedEditorAction
 	 * @param image
 	 */
 	public EnableWarningAction(String text, ImageDescriptor image) {
-		SSEForXMLTestsPlugin.getDefault().getPreferenceStore().setDefault("break-error", false);
-		boolean enabled = SSEForXMLTestsPlugin.getDefault().getPreferenceStore().getBoolean("break-error");
+		XMLUITestsPlugin.getDefault().getPreferenceStore().setDefault("break-error", false);
+		boolean enabled = XMLUITestsPlugin.getDefault().getPreferenceStore().getBoolean("break-error");
 		if(enabled)
 			setText("Disable Breakpoint Errors");
 		else
@@ -58,8 +58,8 @@ public class EnableWarningAction extends Action implements IExtendedEditorAction
 	 * @param style
 	 */
 	public EnableWarningAction(String text, int style) {
-		SSEForXMLTestsPlugin.getDefault().getPreferenceStore().setDefault("break-error", false);
-		boolean enabled = SSEForXMLTestsPlugin.getDefault().getPreferenceStore().getBoolean("break-error");
+		XMLUITestsPlugin.getDefault().getPreferenceStore().setDefault("break-error", false);
+		boolean enabled = XMLUITestsPlugin.getDefault().getPreferenceStore().getBoolean("break-error");
 		if(enabled)
 			setText("Disable Breakpoint Errors");
 		else
@@ -82,9 +82,9 @@ public class EnableWarningAction extends Action implements IExtendedEditorAction
 	 */
 	public void run() {
 		super.run();
-		SSEForXMLTestsPlugin.getDefault().getPreferenceStore().setDefault("break-error", false);
-		boolean value = SSEForXMLTestsPlugin.getDefault().getPreferenceStore().getBoolean("break-error");
-		SSEForXMLTestsPlugin.getDefault().getPreferenceStore().setValue("break-error", !value);
+		XMLUITestsPlugin.getDefault().getPreferenceStore().setDefault("break-error", false);
+		boolean value = XMLUITestsPlugin.getDefault().getPreferenceStore().getBoolean("break-error");
+		XMLUITestsPlugin.getDefault().getPreferenceStore().setValue("break-error", !value);
 	}
 
 	/*
@@ -101,8 +101,8 @@ public class EnableWarningAction extends Action implements IExtendedEditorAction
 	 * @see org.eclipse.ui.texteditor.IUpdate#update()
 	 */
 	public void update() {
-		SSEForXMLTestsPlugin.getDefault().getPreferenceStore().setDefault("break-error", false);
-		boolean enabled = SSEForXMLTestsPlugin.getDefault().getPreferenceStore().getBoolean("break-error");
+		XMLUITestsPlugin.getDefault().getPreferenceStore().setDefault("break-error", false);
+		boolean enabled = XMLUITestsPlugin.getDefault().getPreferenceStore().getBoolean("break-error");
 		if(enabled)
 			setText("Disable Breakpoint Errors");
 		else

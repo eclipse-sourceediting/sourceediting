@@ -15,13 +15,13 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 
-public class SSEXMLTestSuite extends TestSuite {
+public class XMLUITestSuite extends TestSuite {
 	public static Test suite() {
-		return new SSEXMLTestSuite();
+		return new XMLUITestSuite();
 	}
 
-	public SSEXMLTestSuite() {
-		super("SSE XML UI Test Suite");
+	public XMLUITestSuite() {
+		super("XML UI Test Suite");
 		addTest(new TestSuite(VerifyEditorPlugin.class));
 		//		addTest(new SSEModelTestSuite());
 		//		addTest(new EncodingTestSuite());

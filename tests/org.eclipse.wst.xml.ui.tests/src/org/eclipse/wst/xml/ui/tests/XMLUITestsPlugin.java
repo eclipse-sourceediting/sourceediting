@@ -18,14 +18,14 @@ import org.osgi.framework.BundleContext;
 /**
  * The main plugin class to be used in the desktop.
  */
-public class SSEForXMLTestsPlugin extends AbstractUIPlugin {
+public class XMLUITestsPlugin extends AbstractUIPlugin {
 	//The shared instance.
-	private static SSEForXMLTestsPlugin plugin;
+	private static XMLUITestsPlugin plugin;
 
 	/**
 	 * The constructor.
 	 */
-	public SSEForXMLTestsPlugin() {
+	public XMLUITestsPlugin() {
 		super();
 		plugin = this;
 	}
@@ -47,7 +47,7 @@ public class SSEForXMLTestsPlugin extends AbstractUIPlugin {
 	/**
 	 * Returns the shared instance.
 	 */
-	public static SSEForXMLTestsPlugin getDefault() {
+	public static XMLUITestsPlugin getDefault() {
 		return plugin;
 	}
 

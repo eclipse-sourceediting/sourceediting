@@ -2,13 +2,13 @@
 <?eclipse version="3.0"?>
 <plugin
    id="org.eclipse.wst.xml.ui.tests"
-   name="Structured Source Editor for XML Tests"
+   name="XML UI Tests"
    version="1.0.0"
    provider-name="Eclipse.org"
-   class="org.eclipse.wst.xml.ui.tests.SSEForXMLTestsPlugin">
+   class="org.eclipse.wst.xml.ui.tests.XMLUITestsPlugin">
 
    <runtime>
-      <library name="ssexmltests.jar">
+      <library name="xmluitests.jar">
          <export name="*"/>
       </library>
    </runtime>

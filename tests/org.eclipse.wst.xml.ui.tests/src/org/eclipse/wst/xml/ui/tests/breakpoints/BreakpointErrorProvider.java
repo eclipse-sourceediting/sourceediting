@@ -19,7 +19,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.IBreakpointProvider;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.SourceEditingTextTools;
-import org.eclipse.wst.xml.ui.tests.SSEForXMLTestsPlugin;
+import org.eclipse.wst.xml.ui.tests.XMLUITestsPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -34,11 +34,11 @@ public class BreakpointErrorProvider implements IBreakpointProvider {
 	 *      org.w3c.dom.Node, int, int)
 	 */
 	public IStatus addBreakpoint(Document doc, IDocument idoc, IEditorInput input, Node node, int lineNumber, int offset) throws CoreException {
-		SSEForXMLTestsPlugin.getDefault().getPreferenceStore().setDefault("break-error", false);
-		boolean enable = SSEForXMLTestsPlugin.getDefault().getPreferenceStore().getBoolean("break-error");
+		XMLUITestsPlugin.getDefault().getPreferenceStore().setDefault("break-error", false);
+		boolean enable = XMLUITestsPlugin.getDefault().getPreferenceStore().getBoolean("break-error");
 		if (enable)
-			return new Status(IStatus.INFO, SSEForXMLTestsPlugin.getDefault().getBundle().getSymbolicName(), IStatus.ERROR, getClass().getName() + ": Test Error", null);
-		return new Status(IStatus.OK, SSEForXMLTestsPlugin.getDefault().getBundle().getSymbolicName(), IStatus.OK, "", null);
+			return new Status(IStatus.INFO, XMLUITestsPlugin.getDefault().getBundle().getSymbolicName(), IStatus.ERROR, getClass().getName() + ": Test Error", null);
+		return new Status(IStatus.OK, XMLUITestsPlugin.getDefault().getBundle().getSymbolicName(), IStatus.OK, "", null);
 	}
 
 	/*

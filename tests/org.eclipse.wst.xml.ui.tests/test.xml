@@ -28,7 +28,7 @@
 		<ant target="core-test" antfile="${library-file}" dir="${eclipse-home}">
 			<property name="data-dir" value="${wst-folder}" />
 			<property name="plugin-name" value="${plugin-name}" />
-			<property name="classname" value="org.eclipse.wst.xml.ui.tests.SSEXMLTestSuite" />
+			<property name="classname" value="org.eclipse.wst.xml.ui.tests.XMLUITestSuite" />
 			<property name="plugin-path" value="${eclipse-home}/plugins/${plugin-name}"/>
 		</ant>
 	</target>
