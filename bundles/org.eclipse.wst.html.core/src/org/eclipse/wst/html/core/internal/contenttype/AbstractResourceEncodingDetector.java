@@ -66,7 +66,6 @@ public abstract class AbstractResourceEncodingDetector implements IResourceChars
 	 */
 	final protected void createEncodingMemento(String detectedCharsetName, String reason) {
 		createEncodingMemento(detectedCharsetName);
-		fEncodingMemento.addTrace(reason);
 	}
 
 	/**
@@ -185,7 +184,6 @@ public abstract class AbstractResourceEncodingDetector implements IResourceChars
 			fEncodingMemento = new EncodingMemento();
 			fEncodingMemento.setJavaCharsetName(encodingName);
 			fEncodingMemento.setAppropriateDefault(encodingName);
-			fEncodingMemento.addTrace(EncodingMemento.USED_CONTENT_TYPE_DEFAULT);
 		}
 	}
 

@@ -32,7 +32,6 @@ public class NullMemento extends EncodingMemento {
 		setJavaCharsetName(defaultCharset);
 		setAppropriateDefault(defaultCharset);
 		setDetectedCharsetName(null);
-		addTrace(DEFAULTS_ASSUMED_FOR_EMPTY_INPUT);
 	}
 
 }
