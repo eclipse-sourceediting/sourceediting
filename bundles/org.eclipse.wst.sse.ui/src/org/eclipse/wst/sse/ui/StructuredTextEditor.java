@@ -93,7 +93,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.ITextEditorHelpContextIds;
 import org.eclipse.ui.editors.text.TextEditor;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.EditorActionBarContributor;
 import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
@@ -476,7 +476,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	private String fRememberTitle;
 	String[] fShowInTargetIds = new String[]{IPageLayout.ID_RES_NAV};
 	private IAction fShowPropertiesAction = null;
-	private SpellCheckTarget fSpellCheckTarget = null;
 	private IStructuredModel fStructuredModel;
 
 	private boolean fUpdateMenuTextPending;
@@ -677,6 +676,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	protected void createActions() {
 		super.createActions();
 		ResourceBundle resourceBundle = SSEUIPlugin.getDefault().getResourceBundle();
+		IWorkbenchHelpSystem helpSystem = SSEUIPlugin.getDefault().getWorkbench().getHelpSystem();
 		// TextView Action - moving the selected text to
 		// the clipboard
 		// override the cut/paste/delete action to make
@@ -685,7 +685,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		Action action = new TextOperationAction(resourceBundle, "Editor.Cut.", this, ITextOperationTarget.CUT, true); //$NON-NLS-1$
 		action.setActionDefinitionId(IWorkbenchActionDefinitionIds.CUT);
 		setAction(ITextEditorActionConstants.CUT, action);
-		WorkbenchHelp.setHelp(action, IAbstractTextEditorHelpContextIds.CUT_ACTION);
+		helpSystem.setHelp(action, IAbstractTextEditorHelpContextIds.CUT_ACTION);
 		// TextView Action - inserting the clipboard
 		// content at the current
 		// position
@@ -695,7 +695,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		action = new TextOperationAction(resourceBundle, "Editor.Paste.", this, ITextOperationTarget.PASTE, true); //$NON-NLS-1$
 		action.setActionDefinitionId(IWorkbenchActionDefinitionIds.PASTE);
 		setAction(ITextEditorActionConstants.PASTE, action);
-		WorkbenchHelp.setHelp(action, IAbstractTextEditorHelpContextIds.PASTE_ACTION);
+		helpSystem.setHelp(action, IAbstractTextEditorHelpContextIds.PASTE_ACTION);
 		// TextView Action - deleting the selected text or
 		// if selection is
 		// empty the character at the right of the current
@@ -706,7 +706,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		action = new TextOperationAction(resourceBundle, "Editor.Delete.", this, ITextOperationTarget.DELETE, true); //$NON-NLS-1$
 		action.setActionDefinitionId(IWorkbenchActionDefinitionIds.DELETE);
 		setAction(ITextEditorActionConstants.DELETE, action);
-		WorkbenchHelp.setHelp(action, IAbstractTextEditorHelpContextIds.DELETE_ACTION);
+		helpSystem.setHelp(action, IAbstractTextEditorHelpContextIds.DELETE_ACTION);
 		// SourceView Action - requesting information at
 		// the current insertion
 		// position
@@ -718,7 +718,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		// show completetion
 		// proposals for the current insert position
 		action = new TextOperationAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_PROPOSALS + DOT, this, ISourceViewer.CONTENTASSIST_PROPOSALS, true);
-		WorkbenchHelp.setHelp(action, IHelpContextIds.CONTMNU_CONTENTASSIST_HELPID);
+		helpSystem.setHelp(action, IHelpContextIds.CONTMNU_CONTENTASSIST_HELPID);
 		action.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
 		setAction(StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_PROPOSALS, action);
 		markAsStateDependentAction(StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_PROPOSALS, true);
@@ -740,7 +740,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		// of the whole
 		// document
 		action = new TextOperationAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_DOCUMENT + DOT, this, StructuredTextViewer.FORMAT_DOCUMENT);
-		WorkbenchHelp.setHelp(action, IHelpContextIds.CONTMNU_FORMAT_DOC_HELPID);
+		helpSystem.setHelp(action, IHelpContextIds.CONTMNU_FORMAT_DOC_HELPID);
 		action.setActionDefinitionId(ActionDefinitionIds.FORMAT_DOCUMENT);
 		setAction(StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_DOCUMENT, action);
 		markAsStateDependentAction(StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_DOCUMENT, true);
@@ -749,7 +749,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		// of the active
 		// elements
 		action = new TextOperationAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_ACTIVE_ELEMENTS + DOT, this, StructuredTextViewer.FORMAT_ACTIVE_ELEMENTS);
-		WorkbenchHelp.setHelp(action, IHelpContextIds.CONTMNU_FORMAT_ELEMENTS_HELPID);
+		helpSystem.setHelp(action, IHelpContextIds.CONTMNU_FORMAT_ELEMENTS_HELPID);
 		action.setActionDefinitionId(ActionDefinitionIds.FORMAT_ACTIVE_ELEMENTS);
 		setAction(StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_ACTIVE_ELEMENTS, action);
 		markAsStateDependentAction(StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_ACTIVE_ELEMENTS, true);
@@ -997,6 +997,9 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		return cfg;
 	}
 
+	/**
+	 * @deprecated -  will be removed in M4
+	 */
 	protected SpellCheckTarget createSpellCheckTarget() {
 		SpellCheckTarget target = null;
 		ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
@@ -1367,8 +1370,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			}
 			result = fOutlinePage;
 		}
-		// property sheet page, but only if the input's
-		// editable
+		// property sheet page, but only if the input's editable
 		else if (IPropertySheetPage.class.equals(required) && !forceReadOnly && isEditable()) {
 			if (fPropertySheetPage == null || fPropertySheetPage.getControl() == null || fPropertySheetPage.getControl().isDisposed()) {
 				PropertySheetConfiguration cfg = createPropertySheetConfiguration();
@@ -1387,9 +1389,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		}
 		else if (ViewerSelectionManager.class.equals(required)) {
 			result = getViewerSelectionManager();
-		}
-		else if (SpellCheckTarget.class.equals(required)) {
-			result = getSpellCheckTarget();
 		}
 		else if (SourceEditingTextTools.class.equals(required)) {
 			result = createSourceEditingTextTools();
@@ -1742,14 +1741,10 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	}
 
 	/**
-	 * @deprecated - will be made protected
-	 * @return
+	 * @deprecated -  will be removed in M4
 	 */
 	public SpellCheckTarget getSpellCheckTarget() {
-		if (fSpellCheckTarget == null) {
-			fSpellCheckTarget = createSpellCheckTarget();
-		}
-		return fSpellCheckTarget;
+		return null;
 	}
 
 	private IStatusLineManager getStatusLineManager() {
@@ -2154,6 +2149,10 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	}
 
 	/**
+	 * @deprecated - Clients should use .getAdapter(Control) to get the text
+	 *             viewer control and set its help context. Will be removed in
+	 *             M4.
+	 * 
 	 * We expose this normally protected method so clients can provide their
 	 * own help.
 	 * 
@@ -2163,11 +2162,12 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	public void setHelpContextId(String helpContextId) {
 		// used by (requested by) WSED
 		super.setHelpContextId(helpContextId);
-		// allows help to be set at any time (not just on
-		// AbstractTextEditor's
+		// allows help to be set at any time (not just on AbstractTextEditor's
 		// creation)
-		if ((getHelpContextId() != null) && (getSourceViewer() != null) && (getSourceViewer().getTextWidget() != null))
-			WorkbenchHelp.setHelp(getSourceViewer().getTextWidget(), getHelpContextId());
+		if ((getHelpContextId() != null) && (getSourceViewer() != null) && (getSourceViewer().getTextWidget() != null)) {
+			IWorkbenchHelpSystem helpSystem = SSEUIPlugin.getDefault().getWorkbench().getHelpSystem();
+			helpSystem.setHelp(getSourceViewer().getTextWidget(), getHelpContextId());
+		}
 	}
 
 	/**
