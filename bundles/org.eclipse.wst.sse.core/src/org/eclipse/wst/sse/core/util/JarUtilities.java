@@ -145,10 +145,10 @@ public class JarUtilities {
 			}
 		}
 		catch (ZipException zExc) {
-			Logger.log(Logger.WARNING, "JarUtilities ZipException: " + jarFilename + zExc.getMessage());
+			Logger.log(Logger.WARNING, "JarUtilities ZipException: " + jarFilename + " " + zExc.getMessage());
 		}
 		catch (IOException ioExc) {
-			Logger.log(Logger.WARNING, "JarUtilities IOException: " + jarFilename + ioExc.getMessage());
+			Logger.log(Logger.WARNING, "JarUtilities IOException: " + jarFilename + " " + ioExc.getMessage());
 		}
 		finally {
 			closeJarFile(jarfile);
