@@ -16,12 +16,12 @@ javax.servlet.ServletContext application = null;
 javax.servlet.ServletConfig config = null;
 javax.servlet.jsp.JspWriter out = null;
 Object page = null; int include_include_int = 5; 
-javax.swing.JButton includesUseBean;
+javax.swing.JButton includesUseBean = new javax.swing.JButton();
 
  String localIncludedString = globalIncludedString;
 for(int i=0; i<5; i++) {
 }
-javax.swing.JButton BEAN_includedBean;
+javax.swing.JButton BEAN_includedBean = new javax.swing.JButton();
 
 out.print(""+
 i
