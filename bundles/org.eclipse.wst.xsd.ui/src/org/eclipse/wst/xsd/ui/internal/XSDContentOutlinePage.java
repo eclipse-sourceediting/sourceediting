@@ -99,6 +99,10 @@ public class XSDContentOutlinePage extends ContentOutlinePage
     menuListener = new XSDMenuListener(xsdTextEditor.getXSDEditor().getSelectionManager());
 //  menuListener.setSelectionProvider(getTreeViewer());
     menuManager.addMenuListener(menuListener);
+    
+    // enable popupMenus extension
+    getSite().registerContextMenu("org.eclipse.wst.xsd.ui.popup.outline", menuManager, xsdTextEditor.getXSDEditor().getSelectionManager());
+    
     setSelectionManager(xsdTextEditor.getXSDEditor().getSelectionManager());
     // cs... why are we doing this from the outline view?
     //

@@ -21,6 +21,7 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.wst.xsd.ui.internal.actions.AddEnumsAction;
 import org.eclipse.wst.xsd.ui.internal.actions.AddModelGroupAction;
 import org.eclipse.wst.xsd.ui.internal.actions.BackAction;
@@ -358,6 +359,9 @@ public class XSDMenuListener implements IMenuListener
     {
       manager.add(deleteAction);
     }
+    
+    // insertion point for popupMenus extension
+	manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));    
   }
 
   protected String getBuiltInStringQName()
