@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<component xmlns="http://eclipse.org/wtp/releng/tools/component-model"
-	name="wst.xsd">
-	<component-depends unrestricted="true"></component-depends>
-	<plugin	id="org.eclipse.wst.xsd.contentmodel" fragment="false" />
-	<plugin	id="org.eclipse.wst.xsd.ui" fragment="false" />
-	<plugin	id="org.eclipse.wst.xsd.validation" fragment="false" />
-</component>
