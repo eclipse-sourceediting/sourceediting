@@ -12,315 +12,185 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.views.contentoutline;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.progress.UIJob;
-import org.eclipse.wst.sse.ui.EditorPlugin;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.ui.nls.ResourceHandler;
+import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-
+/**
+ * This job holds a queue of updates (affected nodes) for the outline.
+ * When a new request comes in, the current run is canceled, the new 
+ * request is added to the queue, then the job is re-scheduled.
+ * 
+ * @author pavery
+ */
 public class RefreshOutlineJob extends Job {
 
-	/**
-	 * Tree refresh must be done on UI Thread so UIJob is used
-	 */
-	public class RefreshJob extends UIJob {
-		StructuredViewer viewer = null;
-
-		public RefreshJob(StructuredViewer structuredViewer) {
-			// might need a different label, like "Refreshing Outline"
-			super(ResourceHandler.getString("JFaceNodeAdapter.0"));
-			this.viewer = structuredViewer;
-		}
-
-		public IStatus runInUIThread(IProgressMonitor monitor) {
-
-			IStatus status = Status.OK_STATUS;
-			//monitor.beginTask("", IProgressMonitor.UNKNOWN);
-			try {
-				Control control = this.viewer.getControl();
-				// we should have check before even scheduling this, but even
-				// if
-				// ok then, need to check again, right before executing.
-				if (control != null && !control.isDisposed()) {
-					Node smallest = getSmallestParent();
-					if (smallest == null || smallest.getParentNode() == null) {
-						// refresh whole document
-						this.viewer.refresh();
-						if (DEBUG)
-							System.out.println("refreshing viewer (entire tree)");
-					} else {
-						// refresh only the node that's changed
-						this.viewer.refresh(smallest);
-						if (DEBUG)
-							System.out.println("refreshing viewer on (" + smallest + ")");
-					}
-				}
-			} catch (Exception e) {
-				status = errorStatus(e);
-			} finally {
-				monitor.done();
-			}
-			return status;
-		}
-	}
-
-	// for debugging
+	private static final long UPDATE_DELAY = 200;
+	/** List of refresh requests (Nodes)*/
+	private final List fRequests;
+	/** the tree viewer */
+	private final StructuredViewer fViewer;
+	/** debug flag */
 	private static final boolean DEBUG;
 	static {
 		String value = Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/outline"); //$NON-NLS-1$
 		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
-	private Node fPossibleParent = null;
-	private Set fPruned = null;
-	private Node fSmallestParent = null;
-
-	// end RefreshJob class
-
-	private StructuredViewer fStructuredViewer;
-
-	/**
-	 * name is the name of the Job (like which out line is being updated)
-	 * possibleParent cannot be null.
-	 * 
-	 * @param name
-	 * @param structuredViewer
-	 * @param currentParent
-	 * @param possibleParent
-	 */
-	public RefreshOutlineJob(String name, StructuredViewer structuredViewer, Node currentParent, Node possibleParent) {
-		super(name);
-
-		setPriority(Job.SHORT);
+	
+	public RefreshOutlineJob(StructuredViewer viewer) {
+		
+		// might need a different label, like "Refreshing Outline"
+		super(ResourceHandler.getString("JFaceNodeAdapter.0"));
+		setPriority(Job.LONG);
 		setSystem(true);
-
-		fPruned = new HashSet();
-		setPossibleParent(possibleParent);
-		if (currentParent == null)
-			setSmallestParent(fPossibleParent);
-		setStructuredViewer(structuredViewer);
+		fRequests = new ArrayList(1);
+		fViewer = viewer;
 	}
-
-	// each pruned node represents a subtree
-	private void addPruned(Node n) {
-		if (DEBUG)
-			System.out.println("(-) pruned node: " + n.getNodeName());
-		fPruned.add(n);
-	}
-
-
 	/**
-	 * Calculates minimal common parent between the previous parent (passed in
-	 * constructor) and the notifier (also passed in the constructor), and
-	 * calls setSmallsetParent(...) with the result.
+	 * Adds the given resource to the set of resources that need refreshing.
+	 * Synchronized in order to protect the collection during add.
+	 * @param resource
 	 */
-	private void calculateSmallestCommonParent() {
-		// quick checks
-		if (getPossibleParent() == null)
-			return;
-		// document root
-		if (getPossibleParent().getParentNode() == null) {
-			setSmallestParent(getPossibleParent());
-			if (DEBUG)
-				System.out.println("*** found smallest parent for refresh: " + getPossibleParent());
-			return;
+	private synchronized void addRequest(Node node) {
+		
+		// if we already have a request which contains the new request,
+		// discare the new request
+		int size = fRequests.size();
+		for (int i=0; i<size; i++) {
+			if(contains((Node)fRequests.get(i), node))
+				return;
 		}
-		// we already have document root
-		if (getSmallestParent() != null && getSmallestParent().getParentNode() == null) {
-			if (DEBUG)
-				System.out.println("*** already have smallest parent for refresh: " + getSmallestParent());
-			return;
+		// if new request is contains any existing requests,
+		// remove those
+		for (Iterator it = fRequests.iterator(); it.hasNext();) {
+			if(contains(node, (Node)it.next()))
+				it.remove();
 		}
-
-		// check one side
-		if (!contains(getPossibleParent(), getSmallestParent())) {
-
-			addPruned(getPossibleParent());
-			// check other side
-			if (!contains(getSmallestParent(), getPossibleParent())) {
-
-				addPruned(getSmallestParent());
-				// keep climbing up and searching now
-				Node parent = getSmallestParent();
-				while (parent != null) {
-					// check subtree
-					if (contains(parent, getPossibleParent())) {
-						// we found it, it's parent
-						setSmallestParent(parent);
-						if (DEBUG)
-							System.out.println("*** found smallest parent for refresh: " + parent);
-						break;
-					} else {
-						// not in this subtree
-						addPruned(parent);
-					}
-					parent = parent.getParentNode();
-				}
-			} else {
-				// its smaller parent (we already have it)
-			}
-		} else {
-			// it's the new possible one
-			if (DEBUG)
-				System.out.println("*** found smallest parent for refresh: " + getPossibleParent());
-			setSmallestParent(getPossibleParent());
-		}
+		fRequests.add(node);
 	}
-
+	/**
+	 * This method also synchronized because it accesses the fRequests queue
+	 * @return an array of the currently requested Nodes to refresh
+	 */
+	private synchronized Node[] getRequests() {
+		
+		Node[] toRefresh = (Node[]) fRequests.toArray(new Node[fRequests.size()]);
+		fRequests.clear();
+		return toRefresh;
+	}
+	
+	/**
+	 * Invoke a refresh on the viewer on the given node.
+	 * @param node
+	 */
+	public void refresh(Node node) {
+		
+		if (node == null)
+			return;
+		
+		cancel();
+		addRequest(node);	
+		schedule(UPDATE_DELAY);
+	}
+	
 	/**
 	 * @return if the root is parent of possible, return true, otherwise
 	 *         return false
 	 */
-	protected boolean contains(Node root, Node possible) {
+	private boolean contains(Node root, Node possible) {
 
 		if (DEBUG) {
 			System.out.println("==============================================================================================================");
-			System.out.println("recursive call w/ root: " + root.getNodeName() + " and possible " + possible);
+			System.out.println("recursive call w/ root: " + root.getNodeName() + " and possible: " + possible);
 			System.out.println("--------------------------------------------------------------------------------------------------------------");
 		}
-
+		
+		// the following checks are important
+		// #document node will break the algorithm otherwise
+		
 		// can't contain the parent if it's null
-		if (root == null)
+		if (root == null) {
+		    if (DEBUG) System.out.println("returning false: root is null");
 			return false;
-		// it's the root node
-		if (root.getParentNode() == null)
-			return true;
-		// no parent set yet
-		if (getSmallestParent() == null)
-			return true;
-
-
+		}
+		// nothing can be parent of Document node
+		if (possible instanceof Document) {
+		    if (DEBUG) System.out.println("returning false: possible is Document node");
+		    return false;
+		}
+		// document contains everything
+		if(root instanceof Document) {
+		    if (DEBUG) System.out.println("returning true: root is Document node");
+		    return true;
+		}
+		
 		// depth first
 		Node current = root;
 		// loop siblings
 		while (current != null) {
-
-			if (DEBUG)
-				System.out.println("   -> iterating sibling (" + current.getNodeName() + ")");
-
+			if (DEBUG) System.out.println("   -> iterating sibling (" + current.getNodeName() + ")");
 			// found it
-			if (possible.equals(current)) {
-				if (DEBUG)
-					System.out.println("   !!! found: " + possible.getNodeName() + " in subtree for: " + root.getNodeName());
+			if (possible.equals(current)) {		    
+				if (DEBUG) System.out.println("   !!! found: " + possible.getNodeName() + " in subtree for: " + root.getNodeName());
 				return true;
 			}
 			// drop one level deeper if necessary
-			if (current.getFirstChild() != null && !isPruned(current.getFirstChild())) {
+			if (current.getFirstChild() != null) {
 				return contains(current.getFirstChild(), possible);
 			}
-			// already checked subtree, eliminate
-			addPruned(current);
 			current = current.getNextSibling();
 		}
-
 		// never found it
 		return false;
 	}
-
-	private Node getPossibleParent() {
-		return fPossibleParent;
-	}
-
-	public Node getSmallestParent() {
-		return fSmallestParent;
-	}
-
-	private StructuredViewer getStructuredViewer() {
-		return fStructuredViewer;
-	}
-
-	/**
-	 * @return true if this job is the last RefreshOutlineJob running
-	 */
-	private boolean iAmLast() {
-
-		IJobManager jobManager = Platform.getJobManager();
-		Job[] jobs = jobManager.find(null);
-		Job job = null;
-		for (int i = 0; i < jobs.length; i++) {
-			job = jobs[i];
-			if (job instanceof RefreshOutlineJob || job instanceof RefreshOutlineJob.RefreshJob) {
-
-				int state = job.getState();
-				if (state == Job.RUNNING || state == Job.WAITING) {
-					if (jobs[i] != this) {
-						if (DEBUG)
-							System.out.println("... still waiting for another refresh job: " + jobs[i]);
-						return false;
-					}
-				}
-			}
-		}
-		return true;
-	}
-
-	private boolean isPruned(Node n) {
-		Iterator it = fPruned.iterator();
-		while (it.hasNext()) {
-			if (it.next().equals(n))
-				return true;
-		}
-		return false;
-	}
-
-	/**
-	 * perform on UI Thread
-	 */
-	public void refreshViewer() {
-
-		Job refresh = new RefreshJob(getStructuredViewer());
-		refresh.setPriority(Job.SHORT);
-		refresh.setSystem(true);
-		refresh.schedule();
-	}
-
-	/**
-	 * perform on worker thread
-	 */
-	public IStatus run(IProgressMonitor monitor) {
-
-		IStatus result = Status.OK_STATUS;
-		// monitor.beginTask("", IProgressMonitor.UNKNOWN);
+	
+	protected IStatus run(IProgressMonitor monitor) {
+		IStatus status = Status.OK_STATUS;
 		try {
-			calculateSmallestCommonParent();
-
-			// only the last one should update the outline
-			// in case many requests came in consecutively
-			if (iAmLast()) {
-				refreshViewer();
+			Node[] toRefresh = getRequests();
+			for (int i = 0; i < toRefresh.length; i++) {
+				if (monitor.isCanceled())
+					throw new OperationCanceledException();
+				doRefresh(toRefresh[i]);
 			}
-		} catch (Exception e) {
-			result = new Status(IStatus.ERROR, EditorPlugin.ID, IStatus.ERROR, "Error updating outline", e);
-		} finally {
+		}
+		finally {
 			monitor.done();
 		}
-		return result;
+		return status;
 	}
-
-	private void setPossibleParent(Node possibleParent) {
-		fPossibleParent = possibleParent;
-	}
-
-	private void setSmallestParent(Node newParent) {
-		fSmallestParent = newParent;
-	}
-
+	
 	/**
-	 * @param structuredViewer
+	 * Refresh must be on UI thread because it's on a SWT widget.
+	 * @param node
 	 */
-	private void setStructuredViewer(StructuredViewer structuredViewer) {
-		fStructuredViewer = structuredViewer;
-
+	private void doRefresh(final Node node) {
+		final Display display = PlatformUI.getWorkbench().getDisplay();
+		display.asyncExec(new Runnable() {
+			public void run() {
+			    
+			    if(DEBUG)
+			        System.out.println("refresh on: [" +node.getNodeName()+ "]");
+			        
+			    if(node instanceof Document)
+			        fViewer.refresh();
+			    else
+			        fViewer.refresh(node);
+			}
+		});
 	}
+
 }

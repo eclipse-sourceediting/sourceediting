@@ -12,16 +12,13 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.views.contentoutline;
 
-import org.eclipse.core.runtime.jobs.IJobChangeEvent;
-import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.viewers.StructuredViewer;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 import org.w3c.dom.Node;
 
 
 /**
  * Can handle multiple subsequent calls to processNode(..) by buffering them
- * w/ the JobManager. Only one refresh is performed (on the UI Thread) on the
+ * w/ a RefreshOutlineJob. Only one refresh is performed (on the UI Thread) on the
  * minimal affected area of the tree at the end of the batch of updates (after
  * the last update is processed).
  * 
@@ -29,47 +26,38 @@ import org.w3c.dom.Node;
  */
 public class BufferedOutlineUpdater {
 
-	private Node fSmallestParent = null;
-
-	private Node getSmallestParent() {
-		return fSmallestParent;
-	}
-
+	private RefreshOutlineJob fRefreshJob = null;
+	private StructuredViewer fViewer = null;
+	
 	/**
 	 * @param structuredViewer
-	 *            the viewer we are updating
-	 * @param the
-	 *            specific node that changed
+	 *       	the viewer we are updating
+	 * @param node
+	 * 			the specific node that changed
 	 */
 	public void processNode(final StructuredViewer structuredViewer, Node node) {
 
 		// refresh on structural and "unknown" changes
 		// it would be nice to not refresh the viewer if it's not visible
 		// but only refresh when it's brought back to the front
-		if (structuredViewer.getControl() != null /*
-												   * &&
-												   * !structuredViewer.getControl().isDisposed() &&
-												   * structuredViewer.getControl().isVisible()
-												   */) {
-			final RefreshOutlineJob refreshJob = new RefreshOutlineJob(ResourceHandler.getString("JFaceNodeAdapter.0"), structuredViewer, getSmallestParent(), node); //$NON-NLS-1$
-			refreshJob.addJobChangeListener(new JobChangeAdapter() {
-				public void done(IJobChangeEvent event) {
-					super.done(event);
-					// each job reports the newly calculated minimal affected
-					// node
-					setSmallestParent(refreshJob.getSmallestParent());
-					refreshJob.removeJobChangeListener(this);
-				}
-			});
-			refreshJob.schedule();
+		if (structuredViewer.getControl() != null) {
+			if(getViewer() == null)
+				setViewer(structuredViewer);
+			getRefreshJob().refresh(node);
 		}
 	}
 
-	/**
-	 * @param node
-	 */
-	private void setSmallestParent(Node node) {
-		fSmallestParent = node;
+	private RefreshOutlineJob getRefreshJob() {
+		if(fRefreshJob == null)
+			fRefreshJob = new RefreshOutlineJob(getViewer());
+		return fRefreshJob;
 	}
-
+	
+	private StructuredViewer getViewer() {
+		return fViewer;
+	}
+	
+	private void setViewer(StructuredViewer viewer) {
+		fViewer = viewer;
+	}
 }
