@@ -14,11 +14,15 @@ package org.eclipse.wst.sse.ui;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IFindReplaceTarget;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.ui.texteditor.ITextEditorExtension;
+import org.eclipse.ui.texteditor.ITextEditorExtension2;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
@@ -30,8 +34,6 @@ import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckSelectionManager;
 import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckTarget;
 import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellChecker;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.util.Assert;
-
 
 /**
  * SpellCheckTargetImpl
@@ -56,8 +58,9 @@ public class SpellCheckTargetImpl implements SpellCheckTarget {
 	public static final String ID = "spellchecktarget"; //$NON-NLS-1$
 
 	private SpellChecker checker;
-	private StructuredTextEditor editor;
+	private ITextEditor fTextEditor;
 	private IFindReplaceTarget target;
+	private IStructuredModel fUndoRecorder = null;
 
 	public SpellCheckTargetImpl() {
 		super();
@@ -67,26 +70,24 @@ public class SpellCheckTargetImpl implements SpellCheckTarget {
 	 * @see ISpellCheckTarget#beginRecording()
 	 */
 	public void beginRecording(Object requester, String label) {
-		if (editor == null)
+		if (fTextEditor == null)
 			return;
 
-		IStructuredModel model = editor.getModel();
-		if (model == null)
+		fUndoRecorder = StructuredModelManager.getModelManager().getExistingModelForEdit(getEditingDocument());
+		if (fUndoRecorder == null)
 			return;
 
-		model.beginRecording(requester, label);
+		fUndoRecorder.beginRecording(requester, label);
 	}
 
 	/**
 	 * @see ISpellCheckTarget#canPerformChange()
 	 */
 	public boolean canPerformChange() {
-		if (editor == null || checker == null || target == null)
+		if (fTextEditor == null || checker == null || target == null)
 			return false;
 
-		//return target.isEditable() && editor.isEditable() &&
-		// !editor.isEditorInputReadOnly();
-		return target.isEditable() && editor.isEditable();
+		return target.isEditable() && fTextEditor.isEditable();
 	}
 
 	/**
@@ -100,35 +101,32 @@ public class SpellCheckTargetImpl implements SpellCheckTarget {
 	 * @see ISpellCheckTarget#canPerformIgnore()
 	 */
 	public boolean canPerformIgnore() {
-		return (editor != null && checker != null ? true : false);
+		return fTextEditor != null && checker != null;
 	}
 
 	/**
 	 * @see ISpellCheckTarget#canPerformIgnoreAll()
 	 */
 	public boolean canPerformIgnoreAll() {
-		return (editor != null && checker != null ? true : false);
+		return canPerformIgnore();
 	}
 
 	/**
 	 * @see ISpellCheckTarget#canPerformSpellCheck()
 	 */
 	public boolean canPerformSpellCheck() {
-		return (editor != null && checker != null ? true : false);
+		return fTextEditor != null && checker != null;
 	}
 
 	/**
 	 * @see ISpellCheckTarget#endRecording()
 	 */
 	public void endRecording(Object requester) {
-		if (editor == null)
+		if (fUndoRecorder == null)
 			return;
 
-		IStructuredModel model = editor.getModel();
-		if (model == null)
-			return;
-
-		model.endRecording(requester);
+		fUndoRecorder.endRecording(requester);
+		fUndoRecorder = null;
 	}
 
 	/**
@@ -138,72 +136,81 @@ public class SpellCheckTargetImpl implements SpellCheckTarget {
 		return (target != null ? target.findAndSelect(pos, find, true, true, true) : -1);
 	}
 
+	IDocument getEditingDocument() {
+		return fTextEditor.getDocumentProvider().getDocument(fTextEditor.getEditorInput());
+	}
+
 	/**
 	 * @see ISpellCheckTarget#getAndSelectNextMisspelledElement(boolean)
 	 */
 	public SpellCheckElement getAndSelectNextMisspelledElement(boolean init) throws SpellCheckException {
-		if (checker == null || editor == null || target == null)
+		if (checker == null || fTextEditor == null || target == null)
 			return null;
 
-		IStructuredModel sm = editor.getModel();
-		IStructuredDocument fm = sm.getStructuredDocument();
+		IDocument document = getEditingDocument();
+		
+		if (document instanceof IStructuredDocument) {
+			IStructuredDocument structuredDocument = (IStructuredDocument) getEditingDocument();
 
-		int start;
-		if (init) {
-			start = 0;
-		} else {
-			Point pt = target.getSelection();
-			start = pt.x + pt.y;
-		}
+			int start;
+			if (init) {
+				start = 0;
+			}
+			else {
+				Point pt = target.getSelection();
+				start = pt.x + pt.y;
+			}
 
-		IStructuredDocumentRegion node = fm.getRegionAtCharacterOffset(start);
-		if (node == null) {
-			return null;
-		}
+			IStructuredDocumentRegion documentRegion = structuredDocument.getRegionAtCharacterOffset(start);
+			if (documentRegion == null) {
+				return null;
+			}
 
-		ITextRegion startRegion = node.getRegionAtCharacterOffset(start);
-		if (startRegion == null) {
-			return null;
-		}
+			ITextRegion startRegion = documentRegion.getRegionAtCharacterOffset(start);
+			if (startRegion == null) {
+				return null;
+			}
 
-		boolean skip = true;
-		while (node != null) {
-			ITextRegionList regions = node.getRegions();
-			int size = regions.size();
-			for (int i = 0; i < size; ++i) {
-				ITextRegion r = regions.get(i);
-				if (skip && startRegion.equals(r)) {
-					skip = false;
-				}
-				if (skip == false) {
-					if (isValidType(r.getType())) {
-						String text;
-						if (start > node.getStartOffset(r)) {
-							text = node.getText(r);
-							int offset = start - node.getStartOffset(r);
-							for (; offset < text.length(); ++offset) {
-								if (!Character.isLetterOrDigit(text.charAt(offset - 1))) {
-									break;
+			boolean skip = true;
+			while (documentRegion != null) {
+				ITextRegionList regions = documentRegion.getRegions();
+				int size = regions.size();
+				for (int i = 0; i < size; ++i) {
+					ITextRegion r = regions.get(i);
+					if (skip && startRegion.equals(r)) {
+						skip = false;
+					}
+					if (skip == false) {
+						if (isValidType(r.getType())) {
+							String text;
+							if (start > documentRegion.getStartOffset(r)) {
+								text = documentRegion.getText(r);
+								int offset = start - documentRegion.getStartOffset(r);
+								for (; offset < text.length(); ++offset) {
+									if (!Character.isLetterOrDigit(text.charAt(offset - 1))) {
+										break;
+									}
 								}
+								text = text.substring(offset);
 							}
-							text = text.substring(offset);
-						} else {
-							text = node.getText(r);
-						}
-						SpellCheckElement[] elms = checker.createSingleWords(text);
-						if (elms != null) {
-							for (int j = 0; j < elms.length; ++j) {
-								SpellCheckElement element = checker.verifySpell(elms[j]);
-								if (element.isSpellError()) {
-									target.findAndSelect(start, element.getString(), true, true, true);
-									return element;
+							else {
+								text = documentRegion.getText(r);
+							}
+							SpellCheckElement[] elms = checker.createSingleWords(text);
+							if (elms != null) {
+								for (int j = 0; j < elms.length; ++j) {
+									SpellCheckElement element = checker.verifySpell(elms[j]);
+									if (element.isSpellError()) {
+										target.findAndSelect(start, element.getString(), true, true, true);
+										return element;
+									}
 								}
 							}
 						}
 					}
 				}
+				documentRegion = documentRegion.getNext();
 			}
-			node = node.getNext();
 		}
 
 		return null;
@@ -220,9 +227,24 @@ public class SpellCheckTargetImpl implements SpellCheckTarget {
 	 * @see ISpellCheckTarget#getSpellCheckSelectionManager()
 	 */
 	public SpellCheckSelectionManager getSpellCheckSelectionManager() {
-		if ((editor == null) || !(editor.getViewerSelectionManager() instanceof SpellCheckSelectionManager))
+		if (fTextEditor == null)
 			return null;
-		return (SpellCheckSelectionManager) editor.getViewerSelectionManager();
+
+		ViewerSelectionManager manager = (ViewerSelectionManager) fTextEditor.getAdapter(ViewerSelectionManager.class);
+		if (!(manager instanceof SpellCheckSelectionManager))
+			return null;
+		return (SpellCheckSelectionManager) manager;
+	}
+
+	private boolean isModifyable() {
+		if (fTextEditor instanceof ITextEditorExtension2)
+			return ((ITextEditorExtension2) fTextEditor).validateEditorInputState();
+		else if (fTextEditor instanceof ITextEditorExtension)
+			return !((ITextEditorExtension) fTextEditor).isEditorInputReadOnly();
+		else if (fTextEditor != null)
+			return fTextEditor.isEditable();
+		else
+			return false;
 	}
 
 	/**
@@ -235,12 +257,8 @@ public class SpellCheckTargetImpl implements SpellCheckTarget {
 	 * @see ISpellCheckTarget#replaceSelection(String)
 	 */
 	public void replaceSelection(String text, Shell shell) throws SpellCheckException {
-		if (target == null)
+		if (target == null || !isModifyable())
 			return;
-		IStatus status = editor.validateEdit(shell);
-		if (!status.isOK()) {
-			throw new EditorSpellCheckException(status.getMessage());
-		}
 
 		target.replaceSelection(text);
 	}
@@ -248,8 +266,8 @@ public class SpellCheckTargetImpl implements SpellCheckTarget {
 	/**
 	 * @see ISpellCheckTarget#setSpellChecker(ISpellChecker)
 	 */
-	public void setSpellChecker(SpellChecker checker) {
-		this.checker = checker;
+	public void setSpellChecker(SpellChecker spellChecker) {
+		checker = spellChecker;
 	}
 
 	/*
@@ -258,8 +276,7 @@ public class SpellCheckTargetImpl implements SpellCheckTarget {
 	 * @see org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckTarget#setTextEditor(org.eclipse.ui.texteditor.ITextEditor)
 	 */
 	public void setTextEditor(ITextEditor editor) {
-		Assert.isTrue(editor instanceof StructuredTextEditor);
-		this.editor = (StructuredTextEditor) editor;
+		fTextEditor = editor;
 		target = (IFindReplaceTarget) editor.getAdapter(IFindReplaceTarget.class);
 	}
 }
