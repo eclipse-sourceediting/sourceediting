@@ -26,9 +26,6 @@
       <import plugin="org.eclipse.wst.validation"/>
       <import plugin="org.eclipse.wst.common.emfworkbench.integration"/>
       <import plugin="org.eclipse.wst.server.core"/>
-      <import plugin="org.eclipse.jst.j2ee.web"/>
-      <import plugin="org.eclipse.jst.j2ee"/>
-      <import plugin="org.eclipse.jst.server.core"/>
    </requires>
    
    <extension

@@ -1,7 +1,6 @@
 package org.eclipse.wst.web.internal.deployables;
 
 import org.eclipse.core.runtime.IAdapterFactory;
-import org.eclipse.jst.j2ee.internal.web.deployables.WebModuleArtifact;
 import org.eclipse.wst.server.core.IModuleArtifact;
 
 public class StaticWebDeployableObjectAdapter implements IAdapterFactory

@@ -14,9 +14,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jst.j2ee.internal.project.IWebNatureConstants;
+/*import org.eclipse.jst.j2ee.internal.project.IWebNatureConstants;
 import org.eclipse.jst.j2ee.internal.web.operations.WebNatureRuntimeUtilities;
-import org.eclipse.jst.server.core.WebResource;
+import org.eclipse.jst.server.core.WebResource;*/
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.ServerUtil;
@@ -29,7 +29,7 @@ public class StaticWebDeployableObjectAdapterUtil {
 
 
 	public static IModuleArtifact getModuleObject(Object obj) {
-		IResource resource = null;
+/*		IResource resource = null;
 		if (obj instanceof IResource)
 			resource = (IResource) obj;
 		else if (obj instanceof IAdaptable)
@@ -62,7 +62,8 @@ public class StaticWebDeployableObjectAdapterUtil {
 			return null;
 
 		// return Web resource type
-		return new WebResource(getModule(webNature), resourcePath);
+		return new WebResource(getModule(webNature), resourcePath);*/
+		return null;
 	}
 
 	/**
