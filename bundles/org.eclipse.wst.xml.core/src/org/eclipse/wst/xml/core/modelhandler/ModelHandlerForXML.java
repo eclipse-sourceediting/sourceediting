@@ -37,7 +37,7 @@ public class ModelHandlerForXML extends AbstractModelHandler implements IModelHa
 	 * Needs to match what's in plugin registry. In fact, can be overwritten
 	 * at run time with what's in registry! (so should never be 'final')
 	 */
-	private static String ModelHandlerID = "org.eclipse.wst.sse.core.handler.xml"; //$NON-NLS-1$
+	private static String ModelHandlerID = "org.eclipse.wst.xml.core.modelhandler"; //$NON-NLS-1$
 
 	public ModelHandlerForXML() {
 		super();

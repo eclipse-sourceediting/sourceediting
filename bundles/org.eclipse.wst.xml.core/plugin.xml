@@ -4,7 +4,7 @@
    id="org.eclipse.wst.xml.core"
    name="%Structured_Source_XML_Model.name"
    version="1.0.0"
-   provider-name="IBM"
+   provider-name="Eclipse.org"
    class="org.eclipse.wst.xml.core.XMLModelPlugin">
 
    <runtime>
@@ -31,7 +31,7 @@
             default="true"
             class="org.eclipse.wst.xml.core.modelhandler.ModelHandlerForXML"
             associatedContentTypeId="org.eclipse.core.runtime.xml"
-            id="org.eclipse.wst.sse.core.handler.xml">
+            id="org.eclipse.wst.xml.core.modelhandler">
       </modelHandler>
    </extension>
    <extension
