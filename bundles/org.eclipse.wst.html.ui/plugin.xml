@@ -51,34 +51,34 @@
    </extension>
    <extension
          point="org.eclipse.wst.sse.ui.extendedconfiguration">
-      <textviewerconfiguration
+      <configuration
+      		type="textviewerconfiguration"
             class="org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML"
-            target="org.eclipse.wst.html.core.htmlsource">
-      </textviewerconfiguration>
-      <contentoutlineconfiguration
+            target="org.eclipse.wst.html.core.htmlsource"/>
+      <configuration
+      		type="contentoutlineconfiguration"
             class="org.eclipse.wst.html.ui.views.contentoutline.HTMLContentOutlineConfiguration"
-            target="org.eclipse.wst.html.core.htmlsource">
-      </contentoutlineconfiguration>
-      <propertysheetconfiguration
+            target="org.eclipse.wst.html.core.htmlsource"/>
+      <configuration
+      		type="propertysheetconfiguration"
             class="org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration"
-            target="org.eclipse.wst.html.core.htmlsource">
-      </propertysheetconfiguration>
-      <spellchecktarget
+            target="org.eclipse.wst.html.core.htmlsource"/>
+      <configuration
+      		type="spellchecktarget"
             class="org.eclipse.wst.xml.ui.XMLSpellCheckTarget"
-            target="org.eclipse.wst.html.core.htmlsource">
-      </spellchecktarget>
-      <sourceeditingtexttools
+            target="org.eclipse.wst.html.core.htmlsource"/>
+      <configuration
+      		type="sourceeditingtexttools"
             class="org.eclipse.wst.xml.ui.extensions.XMLSourceEditingTextTools"
-            target="org.eclipse.wst.html.core.htmlsource">
-      </sourceeditingtexttools>
-      <characterpairmatcher
+            target="org.eclipse.wst.html.core.htmlsource"/>
+      <configuration
+      		type="characterpairmatcher"
             class="org.eclipse.wst.html.ui.text.HTMLDocumentRegionEdgeMatcher"
-            target="org.eclipse.wst.html.core.htmlsource">
-      </characterpairmatcher>
-      <preferencepages
-            preferenceids="org.eclipse.wst.sse.ui.preferences/org.eclipse.wst.html.ui.preferences"
-            target="org.eclipse.wst.html.core.htmlsource">
-      </preferencepages>
+            target="org.eclipse.wst.html.core.htmlsource"/>
+      <definition 
+      		type="preferencepages"
+            value="org.eclipse.wst.sse.ui.preferences/org.eclipse.wst.html.ui.preferences"
+            target="org.eclipse.wst.html.core.htmlsource"/>
    </extension>
    <extension
       point="org.eclipse.core.filebuffers.annotationModelCreation">

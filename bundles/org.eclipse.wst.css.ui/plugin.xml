@@ -46,26 +46,26 @@
    </extension>
    <extension
          point="org.eclipse.wst.sse.ui.extendedconfiguration">
-      <contentoutlineconfiguration
+      <configuration 
+      		type="contentoutlineconfiguration"
             class="org.eclipse.wst.css.ui.views.contentoutline.CSSContentOutlineConfiguration"
-            target="org.eclipse.wst.css.core.csssource">
-      </contentoutlineconfiguration>
-      <textviewerconfiguration
+            target="org.eclipse.wst.css.core.csssource"/>
+      <configuration 
+      		type="textviewerconfiguration"
             class="org.eclipse.wst.css.ui.StructuredTextViewerConfigurationCSS"
-            target="org.eclipse.wst.css.core.csssource">
-      </textviewerconfiguration>
-      <propertysheetconfiguration
+            target="org.eclipse.wst.css.core.csssource"/>
+      <configuration 
+      		type="propertysheetconfiguration"
             class="org.eclipse.wst.css.ui.views.properties.CSSPropertySheetConfiguration"
-            target="org.eclipse.wst.css.core.csssource">
-      </propertysheetconfiguration>
-      <characterpairmatcher
+            target="org.eclipse.wst.css.core.csssource"/>
+      <configuration 
+      		type="characterpairmatcher"
             class="org.eclipse.wst.css.ui.text.CSSDocumentRegionEdgeMatcher"
-            target="org.eclipse.wst.css.core.csssource">
-      </characterpairmatcher>
-      <preferencepages
-            preferenceids="org.eclipse.wst.sse.ui.preferences/org.eclipse.wst.sse.ui.preferences.css"
-            target="org.eclipse.wst.css.core.csssource">
-      </preferencepages>
+            target="org.eclipse.wst.css.core.csssource"/>
+      <definition 
+      		type="preferencepages"
+            value="org.eclipse.wst.sse.ui.preferences/org.eclipse.wst.sse.ui.preferences.css"
+            target="org.eclipse.wst.css.core.csssource"/>
    </extension>
    <extension
          point="org.eclipse.wst.sse.ui.adapterFactoryDescription">

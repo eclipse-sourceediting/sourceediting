@@ -15,9 +15,7 @@ package org.eclipse.wst.sse.ui.preferences.ui;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.action.Action;
@@ -34,6 +32,7 @@ import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.util.DocumentInputStream;
+import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.extension.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.extension.IExtendedEditorAction;
@@ -121,18 +120,13 @@ public class EditStructuredTextEditorPreferencesAction extends Action implements
 		// going through configuration points backwards so base fEditor
 		// preferences show up first
 		for (int i = pointIds.length - 1; i >= 0; --i) {
-			IConfigurationElement config = builder.getConfigurationElement(EXTENSION_TYPE_ID, pointIds[i]);
+			String[] definitions = builder.getDefinitions(EXTENSION_TYPE_ID, pointIds[i]);
 			// get the list of preference page ids from the preferenceids
 			// attribute
-			if (config != null) {
-				String preferenceIdsString = config.getAttribute(EXTENSION_ATTRIBUTE_PREFERENCE_IDS);
-				// separate out the list of preference ids
-				if (preferenceIdsString != null) {
-					StringTokenizer tokenizer = new StringTokenizer(preferenceIdsString, ","); //$NON-NLS-1$
-					while (tokenizer.hasMoreTokens()) {
-						String prefId = tokenizer.nextToken().trim();
-						prefIds.add(prefId);
-					}
+			for (int j = 0; j < definitions.length; j++) {
+				String[] preferenceIdsStrings = StringUtils.unpack(definitions[j]);
+				for (int k = 0; k < preferenceIdsStrings.length; k++) {
+					prefIds.add(preferenceIdsStrings[k].trim());
 				}
 			}
 		}

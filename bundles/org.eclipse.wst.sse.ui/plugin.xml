@@ -59,22 +59,22 @@
 <!-- reusable extensions -->
    <extension
          point="org.eclipse.wst.sse.ui.extendedconfiguration">
-      <contentoutlineconfiguration
+      <configuration 
+      		type="contentoutlineconfiguration"
             class="org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration"
-            target="org.eclipse.wst.sse.ui.StructuredTextEditor">
-      </contentoutlineconfiguration>
-      <propertysheetconfiguration
+            target="org.eclipse.wst.sse.ui.StructuredTextEditor"/>
+      <configuration 
+      		type="propertysheetconfiguration"
             class="org.eclipse.wst.sse.ui.views.properties.StructuredPropertySheetConfiguration"
-            target="org.eclipse.wst.sse.ui.StructuredTextEditor">
-      </propertysheetconfiguration>
-      <textviewerconfiguration
+            target="org.eclipse.wst.sse.ui.StructuredTextEditor"/>
+      <configuration 
+      		type="textviewerconfiguration"
             class="org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration"
-            target="org.eclipse.wst.sse.ui.StructuredTextEditor">
-      </textviewerconfiguration>
-      <preferencepages
-            preferenceids="org.eclipse.ui.preferencePages.Workbench/org.eclipse.ui.preferencePages.Editors/org.eclipse.wst.sse.ui.preferences.editor"
-            target="org.eclipse.wst.sse.ui.StructuredTextEditor">
-      </preferencepages>
+            target="org.eclipse.wst.sse.ui.StructuredTextEditor"/>
+      <definition 
+      		type="preferencepages"
+            value="org.eclipse.ui.preferencePages.Workbench/org.eclipse.ui.preferencePages.Editors/org.eclipse.wst.sse.ui.preferences.editor"
+            target="org.eclipse.wst.sse.ui.StructuredTextEditor"/>
    </extension>
 <!-- associate the NavigateActionSet with various parts of the XML perspective-->
    <extension

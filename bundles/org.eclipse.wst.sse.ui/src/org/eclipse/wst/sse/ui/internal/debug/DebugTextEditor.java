@@ -26,7 +26,6 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
@@ -209,14 +208,14 @@ public class DebugTextEditor extends TextEditor {
 		ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
 		String[] configurationIds = getConfigurationPoints();
 		for (int i = 0; i < configurationIds.length; i++) {
-			IConfigurationElement el = builder.getConfigurationElement("showintarget", configurationIds[i]); //$NON-NLS-1$
-			if (el != null) {
-				String someIds = el.getAttribute("ids"); //$NON-NLS-1$
+			String[] definitions = builder.getDefinitions("showintarget", configurationIds[i]); //$NON-NLS-1$
+			for (int j = 0; j < definitions.length; j++) {
+				String someIds = definitions[j];
 				if (someIds != null && someIds.length() > 0) {
 					String[] ids = StringUtils.unpack(someIds);
-					for (int j = 0; j < ids.length; j++) {
+					for (int k = 0; k < ids.length; k++) {
 						// trim, just to keep things clean
-						String id = ids[j].trim();
+						String id = ids[k].trim();
 						if (!allIds.contains(id)) {
 							allIds.add(id);
 						}

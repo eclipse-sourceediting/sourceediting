@@ -48,6 +48,7 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 	private static final String DEFINITION = "definition"; //$NON-NLS-1$
 	private static final String EP_EXTENDEDCONFIGURATION = "extendedconfiguration"; //$NON-NLS-1$
 	private static ExtendedConfigurationBuilder instance = null;
+	public static final String VALUE = "value"; //$NON-NLS-1$
 
 	/**
 	 * Creates an extension. If the extension plugin has not been loaded a
@@ -126,17 +127,17 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 		return result;
 	}
 
-	private IConfigurationElement findConfigurationElement(List configurations, String extensionType, String targetID) {
+	private IConfigurationElement[] findConfigurationElements(List configurations, String extensionType, String targetID) {
 		if (configurations == null)
-			return null;
-		IConfigurationElement result = null;
+			return new IConfigurationElement[0];
+		List result = new ArrayList(1);
 		for (int i = 0; i < configurations.size(); i++) {
 			IConfigurationElement element = (IConfigurationElement) configurations.get(i);
 			if ((element.getName().equals(extensionType) || (element.getName().equals(DEFINITION) && extensionType.equals(element.getAttribute(ATT_TYPE)))) && element.getAttribute(ATT_TARGET).equals(targetID)) {
-				result = element;
+				result.add(element);
 			}
 		}
-		return result;
+		return (IConfigurationElement[]) result.toArray(new IConfigurationElement[0]);
 	}
 
 	public Object getConfiguration(String extensionType, String targetID) {
@@ -166,9 +167,9 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 		return o;
 	}
 
-	public IConfigurationElement getConfigurationElement(String extensionType, String targetID) {
+	public String[] getDefinitions(String extensionType, String targetID) {
 		if (targetID == null || targetID.length() == 0)
-			return null;
+			return new String[0];
 		if (debugTime) {
 			time0 = System.currentTimeMillis();
 		}
@@ -183,14 +184,18 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 			}
 		}
 		List definitions = (List) configurationMap.get(extensionType);
-		IConfigurationElement element = findConfigurationElement(definitions, extensionType, targetID);
-		if (debugTime) {
-			if (element != null)
-				System.out.println(getClass().getName() + "#getConfigurationElement(" + extensionType + ", " + targetID + "): configuration loaded in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-			else
-				System.out.println(getClass().getName() + "#getConfigurationElement(" + extensionType + ", " + targetID + "): ran in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		IConfigurationElement[] elements = findConfigurationElements(definitions, extensionType, targetID);
+		String[] values = new String[elements.length];
+		for (int i = 0; i < values.length; i++) {
+			values[i] = elements[i].getAttribute(VALUE);
 		}
-		return element;
+		if (debugTime) {
+			if (values.length > 0)
+				System.out.println(getClass().getName() + "#getDefinitions(" + extensionType + ", " + targetID + "): definition loaded in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			else
+				System.out.println(getClass().getName() + "#getDefinitions(" + extensionType + ", " + targetID + "): ran in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		}
+		return values;
 	}
 
 	/*

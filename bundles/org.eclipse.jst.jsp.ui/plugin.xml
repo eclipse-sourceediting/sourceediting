@@ -51,34 +51,34 @@
 		</editor>
 	</extension>
 	<extension point="org.eclipse.wst.sse.ui.extendedconfiguration">
-		<textviewerconfiguration
+		<configuration 
+      		type="textviewerconfiguration"
 			class="org.eclipse.jst.jsp.ui.StructuredTextViewerConfigurationJSP"
-			target="org.eclipse.jst.jsp.core.jspsource">
-		</textviewerconfiguration>
-		<contentoutlineconfiguration
+			target="org.eclipse.jst.jsp.core.jspsource"/>
+		<configuration 
+      		type="contentoutlineconfiguration"
 			class="org.eclipse.jst.jsp.ui.views.contentoutline.JSPContentOutlineConfiguration"
-			target="org.eclipse.jst.jsp.core.jspsource">
-		</contentoutlineconfiguration>
-		<propertysheetconfiguration
+			target="org.eclipse.jst.jsp.core.jspsource"/>
+		<configuration 
+      		type="propertysheetconfiguration"
 			class="org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration"
-			target="org.eclipse.jst.jsp.core.jspsource">
-		</propertysheetconfiguration>
-		<spellchecktarget
+			target="org.eclipse.jst.jsp.core.jspsource"/>
+		<configuration 
+      		type="spellchecktarget"
 			class="org.eclipse.jst.jsp.ui.JSPSpellCheckTarget"
-			target="org.eclipse.jst.jsp.core.jspsource">
-		</spellchecktarget>
-		<sourceeditingtexttools
+			target="org.eclipse.jst.jsp.core.jspsource"/>
+		<configuration 
+      		type="sourceeditingtexttools"
 			class="org.eclipse.jst.jsp.ui.extensions.JSPSourceEditingTextTools"
-			target="org.eclipse.jst.jsp.core.jspsource">
-		</sourceeditingtexttools>
-		<characterpairmatcher
+			target="org.eclipse.jst.jsp.core.jspsource"/>
+		<configuration 
+      		type="characterpairmatcher"
 			class="org.eclipse.jst.jsp.ui.text.JSPDocumentRegionEdgeMatcher"
-			target="org.eclipse.jst.jsp.core.jspsource">
-		</characterpairmatcher>
-		<preferencepages
-			preferenceids="org.eclipse.wst.sse.ui.preferences/org.eclipse.wst.sse.ui.preferences.jsp"
-			target="org.eclipse.jst.jsp.core.jspsource">
-		</preferencepages>
+			target="org.eclipse.jst.jsp.core.jspsource"/>
+		<definition 
+      		type="preferencepages"
+            value="org.eclipse.wst.sse.ui.preferences/org.eclipse.wst.sse.ui.preferences.jsp"
+			target="org.eclipse.jst.jsp.core.jspsource"/>
 	</extension>
 	<extension
 		point="org.eclipse.wst.sse.ui.adapterFactoryDescription">
