@@ -219,7 +219,7 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 			IPath filePath = new Path(baseLocation);
 			IFile file = null;
 			IProject project = null;
-			if (filePath.segmentCount() > 2) {
+			if (filePath.segmentCount() > 1) {
 				file = root.getFile(filePath);
 			}
 			if (file != null) {
