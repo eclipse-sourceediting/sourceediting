@@ -329,4 +329,14 @@ public class XSDComponentSelectionProvider extends XMLComponentSelectionProvider
             return null;
         }
     }
+    
+    
+
+	public String getListTitle() {
+		return "Matching Types:";
+	}
+
+	public String getNameFieldTitle() {
+		return "Type Name:";
+	}
 }

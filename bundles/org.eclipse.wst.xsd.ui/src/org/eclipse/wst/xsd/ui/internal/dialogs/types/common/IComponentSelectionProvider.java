@@ -22,4 +22,6 @@ public interface IComponentSelectionProvider {
 	String getType(Object component);
 	ILabelProvider getLabelProvider();
 	List getQualifiers(Object component);
+	String getNameFieldTitle();
+	String getListTitle();
 }

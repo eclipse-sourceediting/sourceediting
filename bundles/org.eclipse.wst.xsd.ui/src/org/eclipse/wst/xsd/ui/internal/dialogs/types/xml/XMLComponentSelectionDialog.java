@@ -33,8 +33,8 @@ import org.eclipse.wst.xsd.ui.internal.dialogs.types.xml.XMLComponentSelectionPr
 
 public class XMLComponentSelectionDialog extends ComponentSelectionDialog {
 
-    protected String filterLabelText = "Component Name:";
-    protected String listLabelText = "Matching Components:";
+    protected final static String DEFAULT_NAME_FIELD_TITLE = "Component Name:";
+    protected final static String DEFAULT_LIST_TITLE = "Matching Components:";
 
 	public static final String SCOPE_SPECIFIED_FILE = "Specified File";
 
@@ -56,8 +56,8 @@ public class XMLComponentSelectionDialog extends ComponentSelectionDialog {
 
 public Control createDialogArea(Composite parent) {
 
-        setFilterLabel(filterLabelText);         
-        setComponentTreeLabel(listLabelText);
+        setFilterLabel(provider.getNameFieldTitle() != null ? provider.getNameFieldTitle() : DEFAULT_NAME_FIELD_TITLE);         
+        setComponentTreeLabel(provider.getListTitle() != null ? provider.getListTitle() : DEFAULT_LIST_TITLE);
         super.createDialogArea(parent);
         
         // We use the Composite topComposite to create additional widgets
