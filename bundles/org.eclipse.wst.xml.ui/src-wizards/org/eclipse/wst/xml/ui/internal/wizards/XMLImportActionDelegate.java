@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.wizards;
 
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Iterator;
@@ -66,14 +67,13 @@ public class XMLImportActionDelegate implements IActionDelegate
         
         Boolean isValid = null;
 
-        Class[] parameterTypes = new Class[] {String.class};
-        Object[] arguments = new Object[] {uri};
-        
         try
         {
-
           if (file.getName().endsWith(".xsd"))
           {
+            Class[] parameterTypes = new Class[] {String.class, InputStream.class};
+            Object[] arguments = new Object[] {uri, null};
+
 //          Here is the Reflection equivalent way of performing the following lines
 //          XSDValidator xsdValidator = XSDValidator.getInstance();
 //          ValidationReport valreport = xsdValidator.validate(uri);
@@ -102,6 +102,9 @@ public class XMLImportActionDelegate implements IActionDelegate
           }
           else
           {
+            Class[] parameterTypes = new Class[] {String.class};
+            Object[] arguments = new Object[] {uri};
+
 //          Here is the Reflection equivalent way of performing the following lines            
 //          DTDValidator dtdValidator = DTDValidator.getInstance();
 //          ValidationReport valreport = dtdValidator.validate(uri);
