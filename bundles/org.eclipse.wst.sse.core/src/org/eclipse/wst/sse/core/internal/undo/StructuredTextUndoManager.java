@@ -71,7 +71,8 @@ public class StructuredTextUndoManager implements IStructuredTextUndoManager {
 				fTextCommand.setTextDeleted(fTextCommand.getTextDeleted().concat(textDeleted));
 				fTextCommand.setTextInserted(fTextCommand.getTextInserted().concat(textInserted));
 				fTextCommand.setTextEnd(textEnd);
-			} else if (fTextCommand != null && textStart == fTextCommand.getTextStart() - (textEnd - textStart + 1) && textEnd <= fTextCommand.getTextEnd() - (textEnd - textStart + 1) && textDeleted.length() == 1 && textInserted.length() == 0) {
+			}
+			else if (fTextCommand != null && textStart == fTextCommand.getTextStart() - (textEnd - textStart + 1) && textEnd <= fTextCommand.getTextEnd() - (textEnd - textStart + 1) && textDeleted.length() == 1 && textInserted.length() == 0) {
 				// backspace pressed
 
 				// erase a character just inserted
@@ -84,7 +85,8 @@ public class StructuredTextUndoManager implements IStructuredTextUndoManager {
 					fTextCommand.setTextDeleted(textDeleted.concat(fTextCommand.getTextDeleted()));
 					fTextCommand.setTextStart(textStart);
 				}
-			} else {
+			}
+			else {
 				createNewTextCommand(textDeleted, textInserted, textStart, textEnd);
 			}
 
@@ -110,15 +112,15 @@ public class StructuredTextUndoManager implements IStructuredTextUndoManager {
 			// We should not process the flat model event when we are
 			// executing a
 			// command from the command stack.
-			if (fUndoManagementEnabled && !(structuredDocumentEvent.getOriginalSource() instanceof Command)) {
+			if (fUndoManagementEnabled && !(structuredDocumentEvent.getOriginalRequester() instanceof Command)) {
 				// check requester if not recording
 				if (!fRecording)
-					checkRequester(structuredDocumentEvent.getOriginalSource());
+					checkRequester(structuredDocumentEvent.getOriginalRequester());
 
 				// process the structuredDocumentEvent
 				String textDeleted = structuredDocumentEvent.getDeletedText();
 				String textInserted = structuredDocumentEvent.getText();
-				int textStart = structuredDocumentEvent.getOriginalStart();
+				int textStart = structuredDocumentEvent.getOffset();
 				int textEnd = textStart + textInserted.length();
 				processStructuredDocumentEvent(textDeleted, textInserted, textStart, textEnd);
 			}
@@ -140,10 +142,10 @@ public class StructuredTextUndoManager implements IStructuredTextUndoManager {
 	private String fCompoundCommandDescription = null;
 	private String fCompoundCommandLabel = null;
 	int fCursorPosition = 0;
-	//private IStructuredModel fStructuredModel = null;
+	// private IStructuredModel fStructuredModel = null;
 	private IDocument fDocument;
 	private InternalCommandStackListener fInternalCommandStackListener;
-	//private Map fTextViewerToListenerMap = new HashMap();
+	// private Map fTextViewerToListenerMap = new HashMap();
 	private IStructuredDocumentListener fInternalStructuredDocumentListener;
 	private IDocumentSelectionMediator[] fMediators = null;
 	private boolean fRecording = false;
@@ -183,7 +185,8 @@ public class StructuredTextUndoManager implements IStructuredTextUndoManager {
 
 			// now switch new for old
 			fMediators = newMediators;
-		} else {
+		}
+		else {
 			removeDocumentSelectionMediator(mediator);
 			addDocumentSelectionMediator(mediator);
 		}
@@ -280,10 +283,12 @@ public class StructuredTextUndoManager implements IStructuredTextUndoManager {
 			// if not right type
 			if (fDocument instanceof IStructuredDocument) {
 				((IStructuredDocument) fDocument).addDocumentChangedListener(getInternalStructuredDocumentListener());
-			} else {
+			}
+			else {
 				throw new IllegalArgumentException("only meditator with structured documents currently handled"); //$NON-NLS-1$
 			}
-		} else {
+		}
+		else {
 			// if we've already had our document set, we'll just do this fail
 			// fast integrity check
 			if (!fDocument.equals(mediator.getDocument()))
@@ -314,10 +319,12 @@ public class StructuredTextUndoManager implements IStructuredTextUndoManager {
 				fCommandStack.execute(compoundCommand);
 
 				fCompoundCommand = compoundCommand;
-			} else {
+			}
+			else {
 				fCompoundCommand.append(textCommand);
 			}
-		} else {
+		}
+		else {
 			fCommandStack.execute(textCommand);
 		}
 
@@ -342,7 +349,8 @@ public class StructuredTextUndoManager implements IStructuredTextUndoManager {
 			// if not right type
 			if (fDocument instanceof IStructuredDocument) {
 				((IStructuredDocument) fDocument).removeDocumentChangedListener(getInternalStructuredDocumentListener());
-			} else {
+			}
+			else {
 				throw new IllegalArgumentException("only meditator with structured documents currently handled"); //$NON-NLS-1$
 			}
 			// if no longer listening to document, then dont even track it
@@ -472,7 +480,8 @@ public class StructuredTextUndoManager implements IStructuredTextUndoManager {
 
 				// set document selection
 				setRedoDocumentSelection(requester, redoCommand);
-			} finally {
+			}
+			finally {
 				if (model != null) {
 					model.changedModel();
 					model.releaseFromRead();
@@ -495,7 +504,8 @@ public class StructuredTextUndoManager implements IStructuredTextUndoManager {
 				int index = 0;
 				for (int i = 0; i < oldSize; i++) {
 					if (fMediators[i] == mediator) { // ignore
-					} else {
+					}
+					else {
 						// copy old to new if its not the one we are removing
 						newMediators[index++] = fMediators[i];
 					}
@@ -536,7 +546,8 @@ public class StructuredTextUndoManager implements IStructuredTextUndoManager {
 			CommandCursorPosition commandCursorPosition = (CommandCursorPosition) command;
 			cursorPosition = commandCursorPosition.getRedoCursorPosition();
 			selectionLength = commandCursorPosition.getRedoSelectionLength();
-		} else if (command instanceof StructuredTextCommand) {
+		}
+		else if (command instanceof StructuredTextCommand) {
 			StructuredTextCommand structuredTextCommand = (StructuredTextCommand) command;
 			cursorPosition = structuredTextCommand.getTextStart();
 			selectionLength = structuredTextCommand.getTextInserted().length();
@@ -558,7 +569,8 @@ public class StructuredTextUndoManager implements IStructuredTextUndoManager {
 			CommandCursorPosition commandCursorPosition = (CommandCursorPosition) command;
 			cursorPosition = commandCursorPosition.getUndoCursorPosition();
 			selectionLength = commandCursorPosition.getUndoSelectionLength();
-		} else if (command instanceof StructuredTextCommand) {
+		}
+		else if (command instanceof StructuredTextCommand) {
 			StructuredTextCommand structuredTextCommand = (StructuredTextCommand) command;
 			cursorPosition = structuredTextCommand.getTextStart();
 			selectionLength = structuredTextCommand.getTextDeleted().length();
@@ -602,7 +614,8 @@ public class StructuredTextUndoManager implements IStructuredTextUndoManager {
 
 				// set document selection
 				setUndoDocumentSelection(requester, undoCommand);
-			} finally {
+			}
+			finally {
 				if (model != null) {
 					model.changedModel();
 					model.releaseFromRead();

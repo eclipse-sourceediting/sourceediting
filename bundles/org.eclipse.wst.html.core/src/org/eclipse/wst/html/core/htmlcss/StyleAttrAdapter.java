@@ -99,7 +99,7 @@ public class StyleAttrAdapter extends AbstractCSSModelAdapter implements IStruct
 	public void newModel(NewDocumentEvent event) {
 		if (event == null)
 			return;
-		if (event.getOriginalSource() == this)
+		if (event.getOriginalRequester() == this)
 			return;
 
 		setValue();
@@ -115,7 +115,7 @@ public class StyleAttrAdapter extends AbstractCSSModelAdapter implements IStruct
 	public void nodesReplaced(StructuredDocumentRegionsReplacedEvent event) {
 		if (event == null)
 			return;
-		if (event.getOriginalSource() == this)
+		if (event.getOriginalRequester() == this)
 			return;
 
 		setValue();
@@ -143,7 +143,7 @@ public class StyleAttrAdapter extends AbstractCSSModelAdapter implements IStruct
 	public void regionChanged(RegionChangedEvent event) {
 		if (event == null)
 			return;
-		if (event.getOriginalSource() == this)
+		if (event.getOriginalRequester() == this)
 			return;
 
 		setValue();
@@ -154,7 +154,7 @@ public class StyleAttrAdapter extends AbstractCSSModelAdapter implements IStruct
 	public void regionsReplaced(RegionsReplacedEvent event) {
 		if (event == null)
 			return;
-		if (event.getOriginalSource() == this)
+		if (event.getOriginalRequester() == this)
 			return;
 
 		setValue();

@@ -28,16 +28,37 @@ public class StructuredDocumentRegionsReplacedEvent extends StructuredDocumentEv
 	private IStructuredDocumentRegionList fNewStructuredDocumentRegions;
 	private IStructuredDocumentRegionList fOldStructuredDocumentRegions;
 
-	public StructuredDocumentRegionsReplacedEvent(IStructuredDocument source, Object originalSource, IStructuredDocumentRegionList oldStructuredDocumentRegions, IStructuredDocumentRegionList newStructuredDocumentRegions, String changes, int offset, int lengthToReplace) {
-		super(source, originalSource, changes, offset, lengthToReplace);
+	/**
+	 * Creates an instance of StructuredDocumentRegionsReplacedEvent
+	 * 
+	 * @param source
+	 * @param originalSource
+	 * @param oldStructuredDocumentRegions
+	 * @param newStructuredDocumentRegions
+	 * @param changes
+	 * @param offset
+	 * @param lengthToReplace
+	 */
+	public StructuredDocumentRegionsReplacedEvent(IStructuredDocument document, Object originalRequester, IStructuredDocumentRegionList oldStructuredDocumentRegions, IStructuredDocumentRegionList newStructuredDocumentRegions, String changes, int offset, int lengthToReplace) {
+		super(document, originalRequester, changes, offset, lengthToReplace);
 		fOldStructuredDocumentRegions = oldStructuredDocumentRegions;
 		fNewStructuredDocumentRegions = newStructuredDocumentRegions;
 	}
 
+	/**
+	 * Returns the new structured document regions.
+	 * 
+	 * @return the new structured document regions.
+	 */
 	public IStructuredDocumentRegionList getNewStructuredDocumentRegions() {
 		return fNewStructuredDocumentRegions;
 	}
 
+	/**
+	 * Returns the old structured document regions.
+	 * 
+	 * @return the old structured document regions.
+	 */
 	public IStructuredDocumentRegionList getOldStructuredDocumentRegions() {
 		return fOldStructuredDocumentRegions;
 	}

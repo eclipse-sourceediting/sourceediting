@@ -43,182 +43,186 @@ import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorStrategy;
 
 /**
- * Adds StructuredDocument and StructuredModel listeners.
- * Adds Text viewer (dispose, input changed) listeners.
+ * Adds StructuredDocument and StructuredModel listeners. Adds Text viewer
+ * (dispose, input changed) listeners.
  * 
  * Implements a smarter "contains" method.
  * 
- * Adds default and validator strategies.
- * Adds DirtyRegion processing logic.
+ * Adds default and validator strategies. Adds DirtyRegion processing logic.
  */
-public class StructuredRegionProcessor extends DirtyRegionProcessor implements IStructuredDocumentListener, IModelLifecycleListener{
-	
-    /**
-     * Reconclies the entire document when the document in the viewer is
-     * changed. This happens when the document is initially opened, as well as
-     * after a save-as.
-     * 
-     * Also see processPostModelEvent(...) for similar behavior when document
-     * for the model is changed.
-     */
-    private class SourceTextInputListener implements ITextInputListener {
+public class StructuredRegionProcessor extends DirtyRegionProcessor implements IStructuredDocumentListener, IModelLifecycleListener {
 
-        public void inputDocumentAboutToBeChanged(IDocument oldInput, IDocument newInput) {
-            // do nothing
-        }
-        
-        public void inputDocumentChanged(IDocument oldInput, IDocument newInput) {
-            handleInputDocumentChanged(oldInput, newInput);
-        }
-    }
-    
-    /**
-     * Cancels any running reconcile operations via progress monitor. Ensures
-     * that strategies are released on close of the editor.
-     */
-    private class SourceWidgetDisposeListener implements DisposeListener {
+	/**
+	 * Reconclies the entire document when the document in the viewer is
+	 * changed. This happens when the document is initially opened, as well as
+	 * after a save-as.
+	 * 
+	 * Also see processPostModelEvent(...) for similar behavior when document
+	 * for the model is changed.
+	 */
+	private class SourceTextInputListener implements ITextInputListener {
 
-        public void widgetDisposed(DisposeEvent e) {
-            handleWidgetDisposed();
-        }
-    }
-    
-    /** to cancel any long running reconciles if someone closes the editor */
-    private SourceWidgetDisposeListener fDisposeListener = null;
-    /** for initital reconcile when document is opened */
-    private SourceTextInputListener fTextInputListener = null;
+		public void inputDocumentAboutToBeChanged(IDocument oldInput, IDocument newInput) {
+			// do nothing
+		}
+
+		public void inputDocumentChanged(IDocument oldInput, IDocument newInput) {
+			handleInputDocumentChanged(oldInput, newInput);
+		}
+	}
+
+	/**
+	 * Cancels any running reconcile operations via progress monitor. Ensures
+	 * that strategies are released on close of the editor.
+	 */
+	private class SourceWidgetDisposeListener implements DisposeListener {
+
+		public void widgetDisposed(DisposeEvent e) {
+			handleWidgetDisposed();
+		}
+	}
+
+	/** to cancel any long running reconciles if someone closes the editor */
+	private SourceWidgetDisposeListener fDisposeListener = null;
+	/** for initital reconcile when document is opened */
+	private SourceTextInputListener fTextInputListener = null;
 
 
-    /** strategy called for unmapped partitions */
-    private IReconcilingStrategy fDefaultStrategy;
-    
-    /**
-     * The strategy that runs validators contributed via <code>org.eclipse.wst.sse.ui.extensions.sourcevalidation</code>
-     * extension point
-     */
-    private ValidatorStrategy fValidatorStrategy;
-    
-    /**
-     * @return Returns the fDefaultStrategy.
-     */
-    public IReconcilingStrategy getDefaultStrategy() {
-        return fDefaultStrategy;
-    }
-    
-    /**
-     * @see org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor#getAppropriateStrategy(org.eclipse.jface.text.reconciler.DirtyRegion)
-     */
-    protected IReconcilingStrategy getStrategy(DirtyRegion dirtyRegion) {
-        IReconcilingStrategy strategy = super.getStrategy(dirtyRegion);
-        if(strategy == null)
-            strategy = getDefaultStrategy();
-        return strategy;
-    }
-    
-    /**
-     * @return Returns the fValidatorStrategy.
-     */
-    public ValidatorStrategy getValidatorStrategy() {
-        return fValidatorStrategy;
-    }
-    
-    /**
-     * @param dirtyRegion
-     */
-    protected void process(DirtyRegion dirtyRegion) {        
-        if (!isInstalled())
-            return;
-       
-        ITypedRegion[] tr = computePartitioning(dirtyRegion);
-        IReconcilingStrategy s = null;
-        DirtyRegion dirty = null;
-        for (int i = 0; i < tr.length; i++) {
-            
-            dirty = createDirtyRegion(tr[i], DirtyRegion.INSERT);
-            s = getReconcilingStrategy(tr[i].getType());
-            if (s != null && dirty != null)
-                s.reconcile(dirty, dirty);
+	/** strategy called for unmapped partitions */
+	private IReconcilingStrategy fDefaultStrategy;
 
-            // validator for this partition
-            if (fValidatorStrategy != null)
-                fValidatorStrategy.reconcile(tr[i], dirty);
-        }
-    }
-    /**
-     * @param defaultStrategy The fDefaultStrategy to set.
-     */
-    public void setDefaultStrategy(IReconcilingStrategy defaultStrategy) {
-        fDefaultStrategy = defaultStrategy;
-        if(fDefaultStrategy != null) {
-            fDefaultStrategy.setDocument(getDocument());
-            if (fDefaultStrategy instanceof IReconcilingStrategyExtension)
-                ((IReconcilingStrategyExtension) fDefaultStrategy).setProgressMonitor(getLocalProgressMonitor());
-        }
-    }
-    
-    /**
-     * @see org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor#setDocumentOnAllStrategies(org.eclipse.jface.text.IDocument)
-     */
-    protected void setDocumentOnAllStrategies(IDocument document) {
-        
-        super.setDocumentOnAllStrategies(document);
-        
-        IReconcilingStrategy defaultStrategy = getDefaultStrategy();
-        IReconcilingStrategy validatorStrategy = getValidatorStrategy();
-        
-        // default strategies
-        if (defaultStrategy != null)
-            defaultStrategy.setDocument(document);
+	/**
+	 * The strategy that runs validators contributed via
+	 * <code>org.eclipse.wst.sse.ui.extensions.sourcevalidation</code>
+	 * extension point
+	 */
+	private ValidatorStrategy fValidatorStrategy;
 
-        // external validator strategy
-        if (validatorStrategy != null)
-            validatorStrategy.setDocument(document);
-    }
-    
-    /**
-     * @param validatorStrategy The fValidatorStrategy to set.
-     */
-    public void setValidatorStrategy(ValidatorStrategy validatorStrategy) {
-        fValidatorStrategy = validatorStrategy;
-        if (fValidatorStrategy != null) {
-            fValidatorStrategy.setDocument(getDocument());
-            fValidatorStrategy.setProgressMonitor(getLocalProgressMonitor());
-        }
-    }    
-    
-    /**
-     * @see org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor#contains(org.eclipse.jface.text.reconciler.DirtyRegion, org.eclipse.jface.text.reconciler.DirtyRegion)
-     */
-    protected boolean contains(DirtyRegion root, DirtyRegion possible) {
-        
-        // this method is a performance hit
-        // look for alternatives
-        
-        boolean contains = false;
-        IStructuredModel sModel = getStructuredModelForRead(getDocument());
-        try {
-            IndexedRegion rootRegion = sModel.getIndexedRegion(root.getOffset());
-            IndexedRegion possRegion = sModel.getIndexedRegion(possible.getOffset());
-            if(rootRegion != null && possRegion != null) {
-                int rootStart = rootRegion.getStartOffset();
-                int rootEnd = rootRegion.getEndOffset();
-                int possStart = possRegion.getStartOffset();
-                int possEnd = possRegion.getEndOffset();
+	/**
+	 * @return Returns the fDefaultStrategy.
+	 */
+	public IReconcilingStrategy getDefaultStrategy() {
+		return fDefaultStrategy;
+	}
 
-                if (rootStart <= possStart && rootEnd >= possEnd)
-                    contains = true;
+	/**
+	 * @see org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor#getAppropriateStrategy(org.eclipse.jface.text.reconciler.DirtyRegion)
+	 */
+	protected IReconcilingStrategy getStrategy(DirtyRegion dirtyRegion) {
+		IReconcilingStrategy strategy = super.getStrategy(dirtyRegion);
+		if (strategy == null)
+			strategy = getDefaultStrategy();
+		return strategy;
+	}
 
-                if (DEBUG)
-                    System.out.println("checking if ["+rootStart + ":" +rootEnd + "] contains [" +possStart + ":" + possEnd +"] ... " + contains);  
-            }     
-        }
-        finally {
-            if(sModel != null)
-                sModel.releaseFromRead();
-        }
-        return contains;
-    }
-    
+	/**
+	 * @return Returns the fValidatorStrategy.
+	 */
+	public ValidatorStrategy getValidatorStrategy() {
+		return fValidatorStrategy;
+	}
+
+	/**
+	 * @param dirtyRegion
+	 */
+	protected void process(DirtyRegion dirtyRegion) {
+		if (!isInstalled())
+			return;
+
+		ITypedRegion[] tr = computePartitioning(dirtyRegion);
+		IReconcilingStrategy s = null;
+		DirtyRegion dirty = null;
+		for (int i = 0; i < tr.length; i++) {
+
+			dirty = createDirtyRegion(tr[i], DirtyRegion.INSERT);
+			s = getReconcilingStrategy(tr[i].getType());
+			if (s != null && dirty != null)
+				s.reconcile(dirty, dirty);
+
+			// validator for this partition
+			if (fValidatorStrategy != null)
+				fValidatorStrategy.reconcile(tr[i], dirty);
+		}
+	}
+
+	/**
+	 * @param defaultStrategy
+	 *            The fDefaultStrategy to set.
+	 */
+	public void setDefaultStrategy(IReconcilingStrategy defaultStrategy) {
+		fDefaultStrategy = defaultStrategy;
+		if (fDefaultStrategy != null) {
+			fDefaultStrategy.setDocument(getDocument());
+			if (fDefaultStrategy instanceof IReconcilingStrategyExtension)
+				((IReconcilingStrategyExtension) fDefaultStrategy).setProgressMonitor(getLocalProgressMonitor());
+		}
+	}
+
+	/**
+	 * @see org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor#setDocumentOnAllStrategies(org.eclipse.jface.text.IDocument)
+	 */
+	protected void setDocumentOnAllStrategies(IDocument document) {
+
+		super.setDocumentOnAllStrategies(document);
+
+		IReconcilingStrategy defaultStrategy = getDefaultStrategy();
+		IReconcilingStrategy validatorStrategy = getValidatorStrategy();
+
+		// default strategies
+		if (defaultStrategy != null)
+			defaultStrategy.setDocument(document);
+
+		// external validator strategy
+		if (validatorStrategy != null)
+			validatorStrategy.setDocument(document);
+	}
+
+	/**
+	 * @param validatorStrategy
+	 *            The fValidatorStrategy to set.
+	 */
+	public void setValidatorStrategy(ValidatorStrategy validatorStrategy) {
+		fValidatorStrategy = validatorStrategy;
+		if (fValidatorStrategy != null) {
+			fValidatorStrategy.setDocument(getDocument());
+			fValidatorStrategy.setProgressMonitor(getLocalProgressMonitor());
+		}
+	}
+
+	/**
+	 * @see org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor#contains(org.eclipse.jface.text.reconciler.DirtyRegion,
+	 *      org.eclipse.jface.text.reconciler.DirtyRegion)
+	 */
+	protected boolean contains(DirtyRegion root, DirtyRegion possible) {
+
+		// this method is a performance hit
+		// look for alternatives
+
+		boolean contains = false;
+		IStructuredModel sModel = getStructuredModelForRead(getDocument());
+		try {
+			IndexedRegion rootRegion = sModel.getIndexedRegion(root.getOffset());
+			IndexedRegion possRegion = sModel.getIndexedRegion(possible.getOffset());
+			if (rootRegion != null && possRegion != null) {
+				int rootStart = rootRegion.getStartOffset();
+				int rootEnd = rootRegion.getEndOffset();
+				int possStart = possRegion.getStartOffset();
+				int possEnd = possRegion.getEndOffset();
+
+				if (rootStart <= possStart && rootEnd >= possEnd)
+					contains = true;
+
+				if (DEBUG)
+					System.out.println("checking if [" + rootStart + ":" + rootEnd + "] contains [" + possStart + ":" + possEnd + "] ... " + contains);
+			}
+		}
+		finally {
+			if (sModel != null)
+				sModel.releaseFromRead();
+		}
+		return contains;
+	}
+
 	/**
 	 * Remember to release model after use!!
 	 * 
@@ -231,71 +235,75 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
 		return sModel;
 	}
-    /**
-     * 
-     * @param oldInput
-     * @param newInput
-     */
-    public void handleInputDocumentChanged(IDocument oldInput, IDocument newInput) {
-        // don't bother if reconciler not installed
-        if (isInstalled()) {
-            
-            reconcilerDocumentChanged(newInput);
-            
-            setDocument(newInput);
-            setDocumentOnAllStrategies(newInput);
-            setEntireDocumentDirty(newInput);
-        }
-    }
-    
-    public void handleWidgetDisposed() {
-        
-        getLocalProgressMonitor().setCanceled(true);
-        
-        List strategyTypes = getStrategyTypes();
-        if (!strategyTypes.isEmpty()) {
-            Iterator it = strategyTypes.iterator();
-            IReconcilingStrategy strategy = null;
-            while (it.hasNext()) {
-                strategy = getReconcilingStrategy((String) it.next());
-                if (strategy instanceof IReleasable) {
-                    ((IReleasable) strategy).release();
-                    strategy = null;
-                }
-            }
-        }
-    }
 
-    /**
-     * @param document
-     */
-    private void hookUpModelLifecycleListener(IDocument document) {
-        IStructuredModel sModel = getStructuredModelForRead(document);
-        try {
-            if (sModel != null) {
-                sModel.addModelLifecycleListener(this);
-            }
-        } finally {
-            if (sModel != null)
-                sModel.releaseFromRead();
-        }
-    }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor#install(org.eclipse.jface.text.ITextViewer)
-     */
-    public void install(ITextViewer textViewer) {
-        
-        super.install(textViewer);
-        fDisposeListener = new SourceWidgetDisposeListener();
-        fTextInputListener = new SourceTextInputListener();         
-        textViewer.getTextWidget().addDisposeListener(fDisposeListener);
-        textViewer.addTextInputListener(fTextInputListener);
-    }
-	
+	/**
+	 * 
+	 * @param oldInput
+	 * @param newInput
+	 */
+	public void handleInputDocumentChanged(IDocument oldInput, IDocument newInput) {
+		// don't bother if reconciler not installed
+		if (isInstalled()) {
+
+			reconcilerDocumentChanged(newInput);
+
+			setDocument(newInput);
+			setDocumentOnAllStrategies(newInput);
+			setEntireDocumentDirty(newInput);
+		}
+	}
+
+	public void handleWidgetDisposed() {
+
+		getLocalProgressMonitor().setCanceled(true);
+
+		List strategyTypes = getStrategyTypes();
+		if (!strategyTypes.isEmpty()) {
+			Iterator it = strategyTypes.iterator();
+			IReconcilingStrategy strategy = null;
+			while (it.hasNext()) {
+				strategy = getReconcilingStrategy((String) it.next());
+				if (strategy instanceof IReleasable) {
+					((IReleasable) strategy).release();
+					strategy = null;
+				}
+			}
+		}
+	}
+
+	/**
+	 * @param document
+	 */
+	private void hookUpModelLifecycleListener(IDocument document) {
+		IStructuredModel sModel = getStructuredModelForRead(document);
+		try {
+			if (sModel != null) {
+				sModel.addModelLifecycleListener(this);
+			}
+		}
+		finally {
+			if (sModel != null)
+				sModel.releaseFromRead();
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor#install(org.eclipse.jface.text.ITextViewer)
+	 */
+	public void install(ITextViewer textViewer) {
+
+		super.install(textViewer);
+		fDisposeListener = new SourceWidgetDisposeListener();
+		fTextInputListener = new SourceTextInputListener();
+		textViewer.getTextWidget().addDisposeListener(fDisposeListener);
+		textViewer.addTextInputListener(fTextInputListener);
+	}
+
 	public void newModel(NewDocumentEvent structuredDocumentEvent) {
 		// happens on a revert
-        reconcilerDocumentChanged(structuredDocumentEvent.getDocument());
+		reconcilerDocumentChanged(structuredDocumentEvent.getDocument());
 	}
 
 	public void noChange(NoChangeEvent structuredDocumentEvent) {
@@ -303,12 +311,10 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 	}
 
 	public void nodesReplaced(StructuredDocumentRegionsReplacedEvent structuredDocumentEvent) {
-		if(DEBUG)
-            System.out.println("[trace reconciler] >StructuredRegionProcessor: *NODES REPLACED"); //$NON-NLS-1$
-        
-		DirtyRegion dr = partitionChanged(structuredDocumentEvent) 
-                                ? createDirtyRegion(0, getDocument().getLength(), DirtyRegion.INSERT) 
-                                : createDirtyRegion(structuredDocumentEvent.getOriginalStart(), structuredDocumentEvent.getLength(), DirtyRegion.INSERT);
+		if (DEBUG)
+			System.out.println("[trace reconciler] >StructuredRegionProcessor: *NODES REPLACED"); //$NON-NLS-1$
+
+		DirtyRegion dr = partitionChanged(structuredDocumentEvent) ? createDirtyRegion(0, getDocument().getLength(), DirtyRegion.INSERT) : createDirtyRegion(structuredDocumentEvent.getOffset(), structuredDocumentEvent.getLength(), DirtyRegion.INSERT);
 		processDirtyRegion(dr);
 	}
 
@@ -338,7 +344,7 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 		}
 		return changed;
 	}
-    
+
 	/**
 	 * @see org.eclipse.wst.sse.core.IModelLifecycleListener#processPostModelEvent(org.eclipse.wst.sse.core.ModelLifecycleEvent)
 	 */
@@ -368,13 +374,14 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 					// ensure that the document is re-reconciled
 					setEntireDocumentDirty(sDoc);
 				}
-			} finally {
+			}
+			finally {
 				if (thisModel != null)
 					thisModel.releaseFromRead();
 			}
 		}
 	}
-	
+
 	/**
 	 * @see org.eclipse.wst.sse.core.IModelLifecycleListener#processPreModelEvent(org.eclipse.wst.sse.core.ModelLifecycleEvent)
 	 */
@@ -382,52 +389,52 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 
 		if (event.getType() == ModelLifecycleEvent.MODEL_DOCUMENT_CHANGED) {
 
-            getDirtyRegionQueue().clear();
+			getDirtyRegionQueue().clear();
 			// note: old annotations are removed via the strategies on
 			// AbstractStructuredTextReconcilingStrategy#setDocument(...)
 		}
 	}
-	
-    /**
-     * Reinitializes listeners and sets new document onall strategies.
-     * 
-     * @see org.eclipse.jface.text.reconciler.AbstractReconciler#reconcilerDocumentChanged(IDocument)
-     */
-    protected void reconcilerDocumentChanged(IDocument newDocument) {
-        
-        IDocument currentDoc = getDocument();
-        
-        // unhook old lifecycle listner
-        unhookModelLifecycleListener(currentDoc);
-        // add new lifecycle listener
-        hookUpModelLifecycleListener(newDocument);
 
-        // unhook old document listener
-        if (currentDoc != null && currentDoc instanceof IStructuredDocument)
-            ((IStructuredDocument) currentDoc).removeDocumentChangedListener(this);
-        // hook up new document listener
-        if (newDocument != null && newDocument instanceof IStructuredDocument)
-            ((IStructuredDocument) newDocument).addDocumentChangedListener(this);
+	/**
+	 * Reinitializes listeners and sets new document onall strategies.
+	 * 
+	 * @see org.eclipse.jface.text.reconciler.AbstractReconciler#reconcilerDocumentChanged(IDocument)
+	 */
+	protected void reconcilerDocumentChanged(IDocument newDocument) {
 
-        // sets document on all strategies      
-        super.reconcilerDocumentChanged(newDocument);
-    }
-	
+		IDocument currentDoc = getDocument();
+
+		// unhook old lifecycle listner
+		unhookModelLifecycleListener(currentDoc);
+		// add new lifecycle listener
+		hookUpModelLifecycleListener(newDocument);
+
+		// unhook old document listener
+		if (currentDoc != null && currentDoc instanceof IStructuredDocument)
+			((IStructuredDocument) currentDoc).removeDocumentChangedListener(this);
+		// hook up new document listener
+		if (newDocument != null && newDocument instanceof IStructuredDocument)
+			((IStructuredDocument) newDocument).addDocumentChangedListener(this);
+
+		// sets document on all strategies
+		super.reconcilerDocumentChanged(newDocument);
+	}
+
 	public void regionChanged(RegionChangedEvent structuredDocumentEvent) {
-		if(DEBUG)
-            System.out.println("[trace reconciler] >StructuredRegionProcessor: *REGION CHANGED: \r\n\r\n created dirty region from flat model event >> :" + structuredDocumentEvent.getOriginalStart() + ":" + structuredDocumentEvent.getLength() + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		if (DEBUG)
+			System.out.println("[trace reconciler] >StructuredRegionProcessor: *REGION CHANGED: \r\n\r\n created dirty region from flat model event >> :" + structuredDocumentEvent.getOffset() + ":" + structuredDocumentEvent.getLength() + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		String dirtyRegionType = structuredDocumentEvent.getDeletedText().equals("") ? DirtyRegion.INSERT : DirtyRegion.REMOVE; //$NON-NLS-1$
-		DirtyRegion dr = createDirtyRegion(structuredDocumentEvent.getOriginalStart(), structuredDocumentEvent.getLength(), dirtyRegionType);
+		DirtyRegion dr = createDirtyRegion(structuredDocumentEvent.getOffset(), structuredDocumentEvent.getLength(), dirtyRegionType);
 		processDirtyRegion(dr);
 	}
 
 	public void regionsReplaced(RegionsReplacedEvent structuredDocumentEvent) {
-		if(DEBUG)
-		    System.out.println("[trace reconciler] >StructuredRegionProcessor: *REGIONS REPLACED: \r\n\r\n created dirty region from flat model event >> :" + structuredDocumentEvent.getOriginalStart() + ":" + structuredDocumentEvent.getLength() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		
-        DirtyRegion dr = createDirtyRegion(structuredDocumentEvent.getOriginalStart(), structuredDocumentEvent.getLength(), DirtyRegion.INSERT);
-        processDirtyRegion(dr);
+		if (DEBUG)
+			System.out.println("[trace reconciler] >StructuredRegionProcessor: *REGIONS REPLACED: \r\n\r\n created dirty region from flat model event >> :" + structuredDocumentEvent.getOffset() + ":" + structuredDocumentEvent.getLength() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+		DirtyRegion dr = createDirtyRegion(structuredDocumentEvent.getOffset(), structuredDocumentEvent.getLength(), DirtyRegion.INSERT);
+		processDirtyRegion(dr);
 	}
 
 	protected void setEntireDocumentDirty(IDocument document) {
@@ -437,35 +444,36 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 		if (document != null && isInstalled()) {
 
 			// since we're marking the entire doc dirty
-            getDirtyRegionQueue().clear();
+			getDirtyRegionQueue().clear();
 			DirtyRegion entireDocument = createDirtyRegion(0, document.getLength(), DirtyRegion.INSERT);
 			processDirtyRegion(entireDocument);
 		}
 	}
-    
-    /**
-     * @param document
-     */
-    private void unhookModelLifecycleListener(IDocument document) {
-        IStructuredModel sModel = getStructuredModelForRead(document);
-        try {
-            if (sModel != null) 
-                sModel.removeModelLifecycleListener(this);
-            
-        } finally {
-            if (sModel != null)
-                sModel.releaseFromRead();
-        }
-    }
-    
-    /**
-     * @see org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor#uninstall()
-     */
-    public void uninstall() {
-        if(isInstalled()) {
-            getTextViewer().removeTextInputListener(fTextInputListener);
-            getTextViewer().getTextWidget().removeDisposeListener(fDisposeListener);
-        }
-        super.uninstall();
-    }
+
+	/**
+	 * @param document
+	 */
+	private void unhookModelLifecycleListener(IDocument document) {
+		IStructuredModel sModel = getStructuredModelForRead(document);
+		try {
+			if (sModel != null)
+				sModel.removeModelLifecycleListener(this);
+
+		}
+		finally {
+			if (sModel != null)
+				sModel.releaseFromRead();
+		}
+	}
+
+	/**
+	 * @see org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor#uninstall()
+	 */
+	public void uninstall() {
+		if (isInstalled()) {
+			getTextViewer().removeTextInputListener(fTextInputListener);
+			getTextViewer().getTextWidget().removeDisposeListener(fDisposeListener);
+		}
+		super.uninstall();
+	}
 }

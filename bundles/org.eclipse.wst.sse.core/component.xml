@@ -13,8 +13,10 @@
         <type name="ModelLifecycleEvent" reference="false" implement="false" subclass="false" instantiate="false" />
         <type name="DocumentChanged" reference="false" implement="false" subclass="false" instantiate="false" />
 
-<!--    dw-->
+<!-- 	dw -->
         <package name="org.eclipse.wst.sse.core.events" />
+        <type name="IModelAboutToBeChangedListener" reference="false" implement="false" subclass="false" instantiate="false" />
+        <type name="IStructuredDocumentListener" reference="false" implement="false" subclass="false" instantiate="false" />
 
 <!--    nitin-->
         <package name="org.eclipse.wst.sse.core.text" />

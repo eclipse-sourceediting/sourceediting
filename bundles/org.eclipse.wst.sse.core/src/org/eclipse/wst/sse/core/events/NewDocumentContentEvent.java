@@ -15,10 +15,11 @@ package org.eclipse.wst.sse.core.events;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 
 /**
- * The NewModelEvent is fired when an instance of a IStructuredDocument sets
- * or replaces all of its text. So, in the case of replacement, its a new
- * model, conceptually and practically, even though it is technically the same
- * instance of the IStructuredDocument.
+ * The NewDocumentContentEvent is fired when an instance of a
+ * IStructuredDocument replaces all of its text.
+ * 
+ * ISSUE: not currently used, but believe there's still some efficiencies to
+ * be had if we do.
  */
 public class NewDocumentContentEvent extends NewDocumentEvent {
 	public NewDocumentContentEvent(IStructuredDocument source, Object originalSource) {

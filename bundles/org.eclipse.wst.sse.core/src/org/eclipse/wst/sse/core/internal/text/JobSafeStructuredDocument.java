@@ -14,7 +14,7 @@ package org.eclipse.wst.sse.core.internal.text;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.ILock;
-import org.eclipse.wst.sse.core.events.NewModelEvent;
+import org.eclipse.wst.sse.core.events.NewDocumentEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.internal.IExecutionDelegate;
 import org.eclipse.wst.sse.core.internal.ILockable;
@@ -128,8 +128,8 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 	}
 
 
-	public NewModelEvent setText(final Object requester, final String theString) {
-		NewModelEvent event = null;
+	public NewDocumentEvent setText(final Object requester, final String theString) {
+		NewDocumentEvent event = null;
 		Object threadResult = null;
 		if (getExecutionDelegate() == null) {
 			// if the delegate has not been set, we execute on current
@@ -170,7 +170,7 @@ public class JobSafeStructuredDocument extends BasicStructuredDocument implement
 			if (resultSlot[0] instanceof Throwable) {
 				throw new RuntimeException((Throwable) resultSlot[0]);
 			} else {
-				event = (NewModelEvent) resultSlot[0];
+				event = (NewDocumentEvent) resultSlot[0];
 			}
 		}
 		return event;

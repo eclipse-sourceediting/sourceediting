@@ -15,15 +15,26 @@ package org.eclipse.wst.sse.core.events;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 
 /**
- * This event is send to "StructuredDocumentAboutToChange listners". Its
- * perfectly analagous to the jface DocumentEvent and is provided simply to
- * allow clients to take a pure model point of view, instead of using the
- * document event.
+ * This event is send to structured document listeners. It is perfectly
+ * analagous to its corresponding jface DocumentEvent and is provided simply
+ * to allow clients to distinguish the source of the event.
  */
 public class AboutToBeChangeEvent extends StructuredDocumentEvent {
 
 
-	public AboutToBeChangeEvent(IStructuredDocument source, Object originalSource, String changes, int offset, int lengthToReplace) {
-		super(source, originalSource, changes, offset, lengthToReplace);
+	/**
+	 * @param document
+	 *            document involved in the change
+	 * @param originalRequester
+	 *            source of original request
+	 * @param changes
+	 *            the text changes
+	 * @param offset
+	 *            offset of request
+	 * @param lengthToReplace
+	 *            amount, if any, of replaced text
+	 */
+	public AboutToBeChangeEvent(IStructuredDocument document, Object originalRequester, String changes, int offset, int lengthToReplace) {
+		super(document, originalRequester, changes, offset, lengthToReplace);
 	}
 }

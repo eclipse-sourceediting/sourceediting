@@ -15,7 +15,7 @@ package org.eclipse.wst.sse.core.events;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 
 /**
- * this event is thrown if, after analysis, it is found there is no reason to
+ * This event is sent if, after analysis, it is found there is no reason to
  * change the structuredDocument. This might occur, for example, if someone
  * pastes in the exact same text that they are replacing, or if someone tries
  * to change a read-only region.
@@ -51,7 +51,7 @@ public class NoChangeEvent extends StructuredDocumentEvent {
 	public int reason = 0;
 
 	/**
-	 * NoChangeEvent constructor comment. This event can occur if there was a
+	 * NoChangeEvent constructor. This event can occur if there was a
 	 * request to modify a document or its properties, but there as not really
 	 * is no change to a document's content.
 	 * 

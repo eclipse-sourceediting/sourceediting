@@ -138,7 +138,7 @@ public class StructuredDocumentWalker {
 	public void initialize(StructuredDocumentEvent event) {
 		fStructuredDocument = event.getStructuredDocument();
 		fOriginalChanges = event.getText();
-		fOriginalOffset = event.getOriginalStart();
+		fOriginalOffset = event.getOffset();
 		fOriginalLengthToReplace = event.getLength();
 		fLengthDifference = Utilities.calculateLengthDifference(fOriginalChanges, fOriginalLengthToReplace);
 

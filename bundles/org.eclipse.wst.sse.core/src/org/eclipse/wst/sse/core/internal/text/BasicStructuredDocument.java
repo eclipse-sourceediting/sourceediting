@@ -50,7 +50,6 @@ import org.eclipse.wst.sse.core.events.AboutToBeChangeEvent;
 import org.eclipse.wst.sse.core.events.IModelAboutToBeChangedListener;
 import org.eclipse.wst.sse.core.events.IStructuredDocumentListener;
 import org.eclipse.wst.sse.core.events.NewDocumentEvent;
-import org.eclipse.wst.sse.core.events.NewModelEvent;
 import org.eclipse.wst.sse.core.events.NoChangeEvent;
 import org.eclipse.wst.sse.core.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.events.RegionsReplacedEvent;
@@ -104,7 +103,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			int pos = getThreadLocalPosition();
 			try {
 				region = (IStructuredDocumentRegion) cachedRegionPositionArray.get(pos);
-			} catch (IndexOutOfBoundsException e) {
+			}
+			catch (IndexOutOfBoundsException e) {
 				// even though the cachedRegionPosition is synchronized,
 				// that just means each access is syncronized, its
 				// still possible for another thread to cause it to
@@ -118,7 +118,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			}
 			if (region == null) {
 				region = resetToInitialState();
-			} else
+			}
+			else
 			// region not null
 			if (region.isDeleted()) {
 				region = resetToInitialState();
@@ -132,7 +133,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			if (threadLocalObject == null) {
 
 				pos = reinitThreadLocalPosition();
-			} else {
+			}
+			else {
 				pos = ((Integer) threadLocalObject).intValue();
 			}
 			return pos;
@@ -181,7 +183,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			try {
 				int pos = getThreadLocalPosition();
 				cachedRegionPositionArray.set(pos, region);
-			} catch (IndexOutOfBoundsException e) {
+			}
+			catch (IndexOutOfBoundsException e) {
 				// even though the cachedRegionPosition is synchronized,
 				// that just means each access is syncronized, its
 				// still possible for another thread to cause it to
@@ -369,7 +372,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 					// this is a safe cast, since addListners requires a
 					// IStructuredDocumentListener
 					((IDocumentListener) holdListeners[i]).documentAboutToBeChanged(fDocumentEvent);
-				} catch (Exception exception) {
+				}
+				catch (Exception exception) {
 					Logger.logException(exception);
 				}
 				if (Debug.perfTest || Debug.perfTestStructuredDocumentEventOnly) {
@@ -388,7 +392,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 				// safeguard from listeners that throw exceptions
 				try {
 					p.documentAboutToBeChanged(documentEvent);
-				} catch (Exception exception) {
+				}
+				catch (Exception exception) {
 					Logger.logException(exception);
 				}
 			}
@@ -435,10 +440,12 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 					// earlier.
 					if (fDocumentEvent == null) {
 						((IDocumentListener) holdListeners[i]).documentChanged(NULL_DOCUMENT_EVENT);
-					} else {
+					}
+					else {
 						((IDocumentListener) holdListeners[i]).documentChanged(fDocumentEvent);
 					}
-				} catch (Exception exception) {
+				}
+				catch (Exception exception) {
 					Logger.logException(exception);
 				}
 				if (Debug.perfTest || Debug.perfTestStructuredDocumentEventOnly) {
@@ -457,7 +464,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 				// safeguard from listeners that throw exceptions
 				try {
 					p.documentChanged(documentEvent);
-				} catch (Exception exception) {
+				}
+				catch (Exception exception) {
 					Logger.logException(exception);
 				}
 			}
@@ -481,7 +489,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 					// this is a safe cast, since addListners requires a
 					// IStructuredDocumentListener
 					((IStructuredDocumentListener) holdListeners[i]).newModel(event);
-				} catch (Exception exception) {
+				}
+				catch (Exception exception) {
 					Logger.logException(exception);
 				}
 				if (Debug.perfTest || Debug.perfTestStructuredDocumentEventOnly) {
@@ -509,7 +518,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 					// this is a safe cast, since addListners requires a
 					// IStructuredDocumentListener
 					((IStructuredDocumentListener) holdListeners[i]).noChange(event);
-				} catch (Exception exception) {
+				}
+				catch (Exception exception) {
 					Logger.logException(exception);
 				}
 				if (Debug.perfTest || Debug.perfTestStructuredDocumentEventOnly) {
@@ -537,7 +547,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 					// this is a safe cast, since addListners requires a
 					// IStructuredDocumentListener
 					((IStructuredDocumentListener) holdListeners[i]).regionChanged(event);
-				} catch (Exception exception) {
+				}
+				catch (Exception exception) {
 					Logger.logException(exception);
 				}
 				if (Debug.perfTest || Debug.perfTestStructuredDocumentEventOnly) {
@@ -565,7 +576,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 					// this is a safe cast, since addListners requires a
 					// IStructuredDocumentListener
 					((IStructuredDocumentListener) holdListeners[i]).regionsReplaced(event);
-				} catch (Exception exception) {
+				}
+				catch (Exception exception) {
 					Logger.logException(exception);
 				}
 				if (Debug.perfTest || Debug.perfTestStructuredDocumentEventOnly) {
@@ -593,7 +605,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 					// this is a safe cast, since addListners requires a
 					// IStructuredDocumentListener
 					((IStructuredDocumentListener) holdListeners[i]).nodesReplaced(event);
-				} catch (Exception exception) {
+				}
+				catch (Exception exception) {
 					Logger.logException(exception);
 				}
 				if (Debug.perfTest || Debug.perfTestStructuredDocumentEventOnly) {
@@ -631,7 +644,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 					// this is a safe cast, since addListners requires a
 					// IStructuredDocumentListener
 					((IModelAboutToBeChangedListener) holdListeners[i]).modelAboutToBeChanged(aboutToBeChangedEvent);
-				} catch (Exception exception) {
+				}
+				catch (Exception exception) {
 					Logger.logException(exception);
 				}
 				if (Debug.perfTest || Debug.perfTestStructuredDocumentEventOnly) {
@@ -701,7 +715,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 				if (Debug.displayWarnings) {
 					System.out.println("IStructuredDocument::addModelChangedListener. listener " + listener + " was addeded more than once. "); //$NON-NLS-2$//$NON-NLS-1$
 				}
-			} else {
+			}
+			else {
 				if (Debug.debugStructuredDocument) {
 					System.out.println("IStructuredDocument::addModelChangedListener. Adding an instance of " + listener.getClass() + " as a listener on structuredDocument."); //$NON-NLS-2$//$NON-NLS-1$
 				}
@@ -744,7 +759,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 				if (Debug.displayWarnings) {
 					System.out.println("IStructuredDocument::addStructuredDocumentListener. listener " + listener + " was addeded more than once. "); //$NON-NLS-2$//$NON-NLS-1$
 				}
-			} else {
+			}
+			else {
 				if (Debug.debugStructuredDocument) {
 					System.out.println("IStructuredDocument::addStructuredDocumentListener. Adding an instance of " + listener.getClass() + " as a listener on structuredDocument."); //$NON-NLS-2$//$NON-NLS-1$
 				}
@@ -899,7 +915,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 				System.arraycopy(fPrenotifiedDocumentListeners, 0, listeners, 0, previousSize);
 				listeners[previousSize] = documentAdapter;
 				fPrenotifiedDocumentListeners = listeners;
-			} else {
+			}
+			else {
 				fPrenotifiedDocumentListeners = new IDocumentListener[1];
 				fPrenotifiedDocumentListeners[0] = documentAdapter;
 			}
@@ -914,7 +931,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	public char charAt(int arg0) {
 		try {
 			return getChar(0);
-		} catch (BadLocationException e) {
+		}
+		catch (BadLocationException e) {
 			throw new IndexOutOfBoundsException();
 		}
 	}
@@ -929,7 +947,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		Position[] positions = null;
 		try {
 			positions = getPositions(READ_ONLY_REGIONS_CATEGORY);
-		} catch (BadPositionCategoryException e) {
+		}
+		catch (BadPositionCategoryException e) {
 			Logger.logException("program error: should never occur", e); //$NON-NLS-1$
 		}
 		for (int i = 0; i < positions.length; i++) {
@@ -966,7 +985,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 					fireReadOnlyStructuredDocumentEvent(noChangeEvent);
 				}
 			}
-		} catch (BadPositionCategoryException e) {
+		}
+		catch (BadPositionCategoryException e) {
 			// just means no readonly regions been defined yet
 			// so nothing to do.
 		}
@@ -1021,7 +1041,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		ITypedRegion[] typedRegions = null;
 		try {
 			typedRegions = computePartitioning(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING, offset, length, false);
-		} catch (BadPartitioningException e) {
+		}
+		catch (BadPartitioningException e) {
 			// impossible in this context
 			throw new Error(e);
 		}
@@ -1083,7 +1104,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 					break;
 				}
 			}
-		} catch (BadPositionCategoryException e) {
+		}
+		catch (BadPositionCategoryException e) {
 			// just means no readonly regions been defined yet
 			// so obviously false
 			result = false;
@@ -1112,7 +1134,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		if (fDocumentEvent == null) {
 			fDocumentEvent = new NullDocumentEvent();
 		}
-		
+
 		_fireStructuredDocumentAboutToChange(fStructuredDocumentAboutToChangeListeners);
 		// Note: the docEvent is created in replaceText API! (or set Text)
 		_fireDocumentAboutToChange(fPrenotifiedDocumentListeners);
@@ -1141,10 +1163,12 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			if (l instanceof IDocumentPartitioningListenerExtension2) {
 				IDocumentPartitioningListenerExtension2 extension2 = (IDocumentPartitioningListenerExtension2) l;
 				extension2.documentPartitioningChanged(event);
-			} else if (l instanceof IDocumentPartitioningListenerExtension) {
+			}
+			else if (l instanceof IDocumentPartitioningListenerExtension) {
 				IDocumentPartitioningListenerExtension extension = (IDocumentPartitioningListenerExtension) l;
 				extension.documentPartitioningChanged(this, event.getCoverage());
-			} else {
+			}
+			else {
 				l.documentPartitioningChanged(this);
 			}
 		}
@@ -1239,12 +1263,14 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			int lessLength = myLength - offset;
 			if ((lessLength >= 0) && (offset + lessLength == myLength)) {
 				length = lessLength;
-			} else {
+			}
+			else {
 				// second, try offset
 				int moreOffset = myLength - length;
 				if ((moreOffset >= 0) && (moreOffset + length == myLength)) {
 					offset = moreOffset;
-				} else {
+				}
+				else {
 					// should never happen
 					throw new Error();
 				}
@@ -1268,7 +1294,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		IStructuredDocumentRegion result = null;
 		if (USE_LOCAL_THREAD) {
 			result = fCurrentDocumnetRegionCache.get();
-		} else {
+		}
+		else {
 			result = cachedDocumentRegion;
 		}
 		return result;
@@ -1283,7 +1310,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		char result = 0x00;
 		try {
 			result = getStore().get(pos);
-		} catch (IndexOutOfBoundsException e) {
+		}
+		catch (IndexOutOfBoundsException e) {
 			throw new BadLocationException(e.getLocalizedMessage());
 		}
 		return result;
@@ -1373,7 +1401,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		String[] result = null;
 		try {
 			result = getLegalContentTypes(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING);
-		} catch (BadPartitioningException e) {
+		}
+		catch (BadPartitioningException e) {
 			// impossible in this context
 			throw new Error(e);
 		}
@@ -1479,7 +1508,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		int result = -1;
 		try {
 			result = getTracker().getLineNumberOfOffset(offset);
-		} catch (BadLocationException e) {
+		}
+		catch (BadLocationException e) {
 			Logger.traceException("IStructuredDocument", "Dev. Program Info Only: IStructuredDocument::getLineOfOffset: offset out of range, zero assumed. offset = " + offset, e); //$NON-NLS-1$ //$NON-NLS-2$
 			result = 0;
 		}
@@ -1533,7 +1563,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		ITypedRegion partition = null;
 		try {
 			partition = getPartition(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING, offset, false);
-		} catch (BadPartitioningException e) {
+		}
+		catch (BadPartitioningException e) {
 			throw new Error(e);
 		}
 		if (partition == null) {
@@ -1556,11 +1587,14 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 
 		if (partitioner instanceof IDocumentPartitionerExtension2) {
 			result = ((IDocumentPartitionerExtension2) partitioner).getPartition(offset, preferOpenPartitions);
-		} else if (partitioner != null) {
+		}
+		else if (partitioner != null) {
 			result = partitioner.getPartition(offset);
-		} else if (IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING.equals(partitioning)) {
+		}
+		else if (IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING.equals(partitioning)) {
 			result = new TypedRegion(0, getLength(), DEFAULT_CONTENT_TYPE);
-		} else
+		}
+		else
 			throw new BadPartitioningException();
 		return result;
 	}
@@ -1637,7 +1671,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			// if we already have the right node, return that.
 			if (potentialCachedRegion.containsOffset(offset)) {
 				result = potentialCachedRegion;
-			} else {
+			}
+			else {
 				// first, find out what direction to go, relative to
 				// cachedNode.
 				// negative means "towards the front" of the file,
@@ -1651,11 +1686,13 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 						IStructuredDocumentRegion tempNode = potentialCachedRegion.getPrevious();
 						if (tempNode == null) {
 							break;
-						} else {
+						}
+						else {
 							potentialCachedRegion = tempNode;
 						}
 					}
-				} else {
+				}
+				else {
 					// search towards end
 					// There is a legitamat condition where the
 					// offset will not be contained in any node,
@@ -1759,7 +1796,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			// firstnode is
 			// null, make sure last node is null too
 			lastDocumentRegion = null;
-		} else {
+		}
+		else {
 			while (aNode != null) {
 				lastDocumentRegion = aNode;
 				aNode = aNode.getNext();
@@ -1826,10 +1864,12 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 					NoChangeEvent noChangeEvent = new NoChangeEvent(this, requester, changes, start, replacementLength);
 					noChangeEvent.reason = NoChangeEvent.READ_ONLY_STATE_CHANGE;
 					result = noChangeEvent;
-				} else {
+				}
+				else {
 					result = updateModel(requester, start, replacementLength, changes);
 				}
-			} finally {
+			}
+			finally {
 				releaseLock();
 			}
 
@@ -1841,7 +1881,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			if (Debug.debugStructuredDocument) {
 				System.out.println("event type returned by replaceTextWithNoDebuggingThread: " + result); //$NON-NLS-1$
 			}
-		} finally {
+		}
+		finally {
 			// FUTURE_TO_DO: implement callback mechanism? to avoid instanceof
 			// and casting
 			// fireStructuredDocumentEvent must be called in order to end
@@ -1854,13 +1895,16 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 				noChangeEvent.reason = NoChangeEvent.NO_EVENT;
 				fireStructuredDocumentEvent(noChangeEvent);
 				Logger.log(Logger.ERROR, "Program Error: invalid structured document event"); //$NON-NLS-1$
-			} else {
+			}
+			else {
 				if (result instanceof RegionChangedEvent) {
 					fireStructuredDocumentEvent((RegionChangedEvent) result);
-				} else {
+				}
+				else {
 					if (result instanceof RegionsReplacedEvent) {
 						fireStructuredDocumentEvent((RegionsReplacedEvent) result);
-					} else {
+					}
+					else {
 						if (result instanceof StructuredDocumentRegionsReplacedEvent) {
 							// probably more efficient to mark old regions as
 							// 'deleted' at the time
@@ -1870,10 +1914,12 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 							// for programming ease.
 							updateDeletedFields((StructuredDocumentRegionsReplacedEvent) result);
 							fireStructuredDocumentEvent((StructuredDocumentRegionsReplacedEvent) result);
-						} else {
+						}
+						else {
 							if (result instanceof NoChangeEvent) {
 								fireStructuredDocumentEvent((NoChangeEvent) result);
-							} else {
+							}
+							else {
 								// if here, this means a new event was created
 								// and not handled here
 								// just send a no event until this issue is
@@ -1939,11 +1985,13 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			NoChangeEvent noChangeEvent = new NoChangeEvent(this, null, affectedText, startOffset, length);
 			noChangeEvent.reason = NoChangeEvent.READ_ONLY_STATE_CHANGE;
 			fireReadOnlyStructuredDocumentEvent(noChangeEvent);
-		} catch (BadLocationException e) {
+		}
+		catch (BadLocationException e) {
 			// for now, log and ignore. Perhaps later we
 			// could adjust to handle some cases?
 			Logger.logException(("could not create readonly region at " + startOffset + " to " + length), e); //$NON-NLS-1$ //$NON-NLS-2$
-		} catch (BadPositionCategoryException e) {
+		}
+		catch (BadPositionCategoryException e) {
 			// should never occur, since we add category
 			Logger.logException(e);
 		}
@@ -1977,7 +2025,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		ITextStore store = getStore();
 		if (store instanceof IRegionComparible) {
 			result = ((IRegionComparible) store).regionMatches(offset, length, stringToCompare);
-		} else {
+		}
+		else {
 			result = get(offset, length).equals(stringToCompare);
 		}
 		return result;
@@ -1988,7 +2037,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		ITextStore store = getStore();
 		if (store instanceof IRegionComparible) {
 			result = ((IRegionComparible) store).regionMatchesIgnoreCase(offset, length, stringToCompare);
-		} else {
+		}
+		else {
 			result = get(offset, length).equalsIgnoreCase(stringToCompare);
 		}
 		return result;
@@ -2024,7 +2074,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 					int index = 0;
 					for (int i = 0; i < oldSize; i++) {
 						if (fStructuredDocumentAboutToChangeListeners[i] == listener) { // ignore
-						} else {
+						}
+						else {
 							// copy old to new if its not the one we are
 							// removing
 							newListeners[index++] = fStructuredDocumentAboutToChangeListeners[i];
@@ -2054,7 +2105,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 					int index = 0;
 					for (int i = 0; i < oldSize; i++) {
 						if (fStructuredDocumentChangedListeners[i] == listener) { // ignore
-						} else {
+						}
+						else {
 							// copy old to new if its not the one we are
 							// removing
 							newListeners[index++] = fStructuredDocumentChangedListeners[i];
@@ -2081,7 +2133,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 					int index = 0;
 					for (int i = 0; i < oldSize; i++) {
 						if (fStructuredDocumentChangingListeners[i] == listener) { // ignore
-						} else {
+						}
+						else {
 							// copy old to new if its not the one we are
 							// removing
 							newListeners[index++] = fStructuredDocumentChangingListeners[i];
@@ -2108,7 +2161,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 					int index = 0;
 					for (int i = 0; i < oldSize; i++) {
 						if (fDocumentListeners[i] == listener) { // ignore
-						} else {
+						}
+						else {
 							// copy old to new if its not the one we are
 							// removing
 							newListeners[index++] = fDocumentListeners[i];
@@ -2200,7 +2254,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 						previousIndex++;
 					}
 					fPrenotifiedDocumentListeners = listeners;
-				} else {
+				}
+				else {
 					fPrenotifiedDocumentListeners = null;
 				}
 			}
@@ -2231,7 +2286,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			// so be sure to initialize the firstNode and lastNode
 			initializeFirstAndLastDocumentRegion();
 			StructuredDocumentRegionIterator.setParentDocument(getCachedDocumentRegion(), this);
-		} finally {
+		}
+		finally {
 			releaseLock();
 		}
 
@@ -2298,7 +2354,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		if (textStore instanceof CharSequence) {
 			CharSequenceReader subSetTextStoreReader = new CharSequenceReader((CharSequence) textStore, startOffset, endOffset - startOffset);
 			parser.reset(subSetTextStoreReader, startOffset);
-		} else {
+		}
+		else {
 			String newNodeText = get(startOffset, endOffset - startOffset);
 			parser.reset(newNodeText, startOffset);
 
@@ -2358,7 +2415,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	public void setCachedDocumentRegion(IStructuredDocumentRegion structuredRegion) {
 		if (USE_LOCAL_THREAD) {
 			fCurrentDocumnetRegionCache.set(structuredRegion);
-		} else {
+		}
+		else {
 			cachedDocumentRegion = structuredRegion;
 		}
 	}
@@ -2384,7 +2442,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 				if (fDocumentPartitioners.size() == 0)
 					fDocumentPartitioners = null;
 			}
-		} else {
+		}
+		else {
 			if (fDocumentPartitioners == null)
 				fDocumentPartitioners = new HashMap();
 			fDocumentPartitioners.put(partitioning, partitioner);
@@ -2419,7 +2478,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		// one of the legal ones
 		if (Utilities.containsString(getLegalLineDelimiters(), delimiter)) {
 			preferedDelimiter = delimiter;
-		} else {
+		}
+		else {
 			Logger.trace("IStructuredDocument", "Attempt to set linedelimiter to non-legal delimiter"); //$NON-NLS-1$ //$NON-NLS-2$
 			preferedDelimiter = PlatformLineDelimiter;
 		}
@@ -2462,14 +2522,14 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	/**
 	 * One of the APIs to manipulate the IStructuredDocument in terms of text.
 	 */
-	public NewModelEvent setText(Object requester, String theString) {
+	public NewDocumentEvent setText(Object requester, String theString) {
 
 		NewDocumentEvent result = null;
 		stopPostNotificationProcessing();
 		clearReadOnly();
 		// Note: event must be computed before 'fire' method called
 		// Note: judging from code in AbstractDocument, apparently the
-		// length in this event is the current length of 
+		// length in this event is the current length of
 		// the document.
 		fDocumentEvent = new DocumentEvent(this, 0, length(), theString);
 		fireDocumentAboutToChanged();
@@ -2488,7 +2548,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			// so be sure to initialize the firstNode and lastNode
 			initializeFirstAndLastDocumentRegion();
 			StructuredDocumentRegionIterator.setParentDocument(getCachedDocumentRegion(), this);
-		} finally {
+		}
+		finally {
 			releaseLock();
 		}
 
@@ -2516,7 +2577,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		// to unusual results (or at least loss of undo stack).
 		if (fUndoManager != null && fUndoManager != undoManager) {
 			throw new IllegalArgumentException("can not change undo manager once its been set"); //$NON-NLS-1$
-		} else {
+		}
+		else {
 			fUndoManager = undoManager;
 		}
 	}

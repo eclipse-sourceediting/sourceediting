@@ -24,7 +24,7 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.TypedRegion;
 import org.eclipse.wst.sse.core.events.IModelAboutToBeChangedListener;
 import org.eclipse.wst.sse.core.events.IStructuredDocumentListener;
-import org.eclipse.wst.sse.core.events.NewModelEvent;
+import org.eclipse.wst.sse.core.events.NewDocumentEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.NotImplementedException;
@@ -385,7 +385,7 @@ public class MinimalDocument implements IStructuredDocument {
 		throw new NotImplementedException("intentionally not implemented"); //$NON-NLS-1$
 	}
 
-	public NewModelEvent setText(Object requester, String allText) {
+	public NewDocumentEvent setText(Object requester, String allText) {
 		throw new NotImplementedException("intentionally not implemented"); //$NON-NLS-1$
 	}
 

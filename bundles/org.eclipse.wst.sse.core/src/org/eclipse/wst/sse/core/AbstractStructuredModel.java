@@ -103,7 +103,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 			// change based on our underlying document changing.
 			// If we did originate the change, we, or client, should have
 			// already called aboutToChangeModel.
-			if (structuredDocumentEvent.getOriginalSource() != this) {
+			if (structuredDocumentEvent.getOriginalRequester() != this) {
 				aboutToChangeModel();
 			}
 
@@ -116,7 +116,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		 */
 		public void newModel(NewDocumentEvent structuredDocumentEvent) {
 			// if we didn't originate the change, take note we have changed
-			if (structuredDocumentEvent.getOriginalSource() != this) {
+			if (structuredDocumentEvent.getOriginalRequester() != this) {
 				changedModel();
 			}
 		}
@@ -128,7 +128,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		 */
 		public void noChange(NoChangeEvent structuredDocumentEvent) {
 			// if we didn't originate the change, take note we have changed
-			if (structuredDocumentEvent.getOriginalSource() != this) {
+			if (structuredDocumentEvent.getOriginalRequester() != this) {
 				changedModel();
 			}
 		}
@@ -140,7 +140,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		 */
 		public void nodesReplaced(StructuredDocumentRegionsReplacedEvent structuredDocumentEvent) {
 			// if we didn't originate the change, take note we have changed
-			if (structuredDocumentEvent.getOriginalSource() != this) {
+			if (structuredDocumentEvent.getOriginalRequester() != this) {
 				changedModel();
 			}
 		}
@@ -152,7 +152,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		 */
 		public void regionChanged(RegionChangedEvent structuredDocumentEvent) {
 			// if we didn't originate the change, take note we have changed
-			if (structuredDocumentEvent.getOriginalSource() != this) {
+			if (structuredDocumentEvent.getOriginalRequester() != this) {
 				changedModel();
 			}
 		}
@@ -164,7 +164,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		 */
 		public void regionsReplaced(RegionsReplacedEvent structuredDocumentEvent) {
 			// if we didn't originate the change, take note we have changed
-			if (structuredDocumentEvent.getOriginalSource() != this) {
+			if (structuredDocumentEvent.getOriginalRequester() != this) {
 				changedModel();
 			}
 		}

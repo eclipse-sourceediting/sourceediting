@@ -230,7 +230,7 @@ public class StyleElementAdapter extends AbstractStyleSheetAdapter implements IS
 	public void newModel(NewDocumentEvent event) {
 		if (event == null)
 			return;
-		if (event.getOriginalSource() == getRequesterH2C())
+		if (event.getOriginalRequester() == getRequesterH2C())
 			return;
 		IStructuredDocument structuredDocument = event.getStructuredDocument();
 		if (structuredDocument == null)
@@ -256,7 +256,7 @@ public class StyleElementAdapter extends AbstractStyleSheetAdapter implements IS
 	public void nodesReplaced(StructuredDocumentRegionsReplacedEvent event) {
 		if (event == null)
 			return;
-		if (event.getOriginalSource() == getRequesterH2C())
+		if (event.getOriginalRequester() == getRequesterH2C())
 			return;
 		IStructuredDocumentRegionList oldStructuredDocumentRegions = event.getOldStructuredDocumentRegions();
 		IStructuredDocumentRegionList newStructuredDocumentRegions = event.getNewStructuredDocumentRegions();
@@ -308,7 +308,7 @@ public class StyleElementAdapter extends AbstractStyleSheetAdapter implements IS
 	public void regionChanged(RegionChangedEvent event) {
 		if (event == null)
 			return;
-		if (event.getOriginalSource() == getRequesterH2C())
+		if (event.getOriginalRequester() == getRequesterH2C())
 			return;
 		IStructuredDocumentRegion flatNode = event.getStructuredDocumentRegion();
 		if (flatNode == null)
@@ -324,7 +324,7 @@ public class StyleElementAdapter extends AbstractStyleSheetAdapter implements IS
 	public void regionsReplaced(RegionsReplacedEvent event) {
 		if (event == null)
 			return;
-		if (event.getOriginalSource() == getRequesterH2C())
+		if (event.getOriginalRequester() == getRequesterH2C())
 			return;
 		IStructuredDocumentRegion flatNode = event.getStructuredDocumentRegion();
 		if (flatNode == null)

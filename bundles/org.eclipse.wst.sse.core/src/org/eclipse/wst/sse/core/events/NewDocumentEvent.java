@@ -15,11 +15,13 @@ package org.eclipse.wst.sse.core.events;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 
 
-public class NewDocumentEvent extends NewModelEvent {
+public class NewDocumentEvent extends StructuredDocumentEvent {
 
 	/**
-	 * @param source
-	 * @param originalSource
+	 * The NewDocumentEvent is fired when an instance of a IStructuredDocument
+	 * sets or replaces all of its text.
+	 * 
+	 * ISSUE: need to change so this is used for 'set' only.
 	 */
 	public NewDocumentEvent(IStructuredDocument source, Object originalSource) {
 		super(source, originalSource);
