@@ -39,12 +39,17 @@ import org.eclipse.ui.part.PageBook;
 import org.eclipse.wst.xsd.ui.internal.XSDEditor;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.XSDSelectionManager;
+import org.eclipse.wst.xsd.ui.internal.graph.editparts.TopLevelComponentEditPart;
+import org.eclipse.wst.xsd.ui.internal.provider.CategoryAdapter;
 import org.eclipse.wst.xsd.ui.internal.util.ViewUtility;
+import org.eclipse.xsd.XSDAttributeGroupContent;
+import org.eclipse.xsd.XSDAttributeGroupDefinition;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDNotationDeclaration;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
+import org.eclipse.xsd.XSDWildcard;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -372,7 +377,7 @@ public class XSDGraphViewer implements ISelectionChangedListener
     // from a different view (not from the graph view)
     if (event.getSource() != getComponentViewer())
     { 
-      handleSelection(event.getSelection(), true);
+      handleSelection(event, true);
     }
   }
 
@@ -390,9 +395,9 @@ public class XSDGraphViewer implements ISelectionChangedListener
   
   // TODO.. we need to clean this method up and add comments to clarify what's going on
   //
-  protected void handleSelection(ISelection selection, boolean isSelectionRequired)
+  protected void handleSelection(SelectionChangedEvent event, boolean isSelectionRequired)
   {
-    StructuredSelection s = (StructuredSelection)selection;
+    StructuredSelection s = (StructuredSelection)event.getSelection();
     Object obj = s.getFirstElement();
     if (obj instanceof XSDConcreteComponent)
     {
@@ -408,11 +413,20 @@ public class XSDGraphViewer implements ISelectionChangedListener
             selectedComponent.getContainer() instanceof XSDSchema)
         {
           topLevelSchema = (XSDSchema)currentInput;
-        }                 
+        }
       }
-      else if (selectedComponent instanceof XSDSchemaDirective || selectedComponent instanceof XSDNotationDeclaration)          
+      if (selectedComponent instanceof XSDSchemaDirective || 
+          selectedComponent instanceof XSDNotationDeclaration)      
       {
         topLevelSchema = selectedComponent.getSchema();
+      }
+      else if (selectedComponent instanceof XSDAttributeGroupContent ||
+               selectedComponent instanceof XSDWildcard)
+      {
+        if (selectedComponent.getContainer() instanceof XSDAttributeGroupDefinition)
+        {
+          topLevelSchema = selectedComponent.getSchema();
+        }
       }
       else if (selectedComponent instanceof XSDSimpleTypeDefinition)
       {
@@ -445,7 +459,6 @@ public class XSDGraphViewer implements ISelectionChangedListener
           }
         }  
       }  
-      
       // now we handle the selection
       //
       if (isSelectionRequired)
@@ -454,10 +467,18 @@ public class XSDGraphViewer implements ISelectionChangedListener
         EditPart newSelectedEditPart = getComponentViewer().getEditPart(editPart, obj);
         if (newSelectedEditPart != null)
         {
+          if (newSelectedEditPart instanceof TopLevelComponentEditPart)
+          {
+            ((TopLevelComponentEditPart)newSelectedEditPart).setScroll(true);
+          }
           getComponentViewer().setSelection(new StructuredSelection(newSelectedEditPart));
         }
       }      
-    }   
+    }
+    else if (obj instanceof CategoryAdapter)
+    {
+      setInput(((CategoryAdapter)obj).getXSDSchema());  
+    }
   }
 
   protected Element getElementNode(Node node)

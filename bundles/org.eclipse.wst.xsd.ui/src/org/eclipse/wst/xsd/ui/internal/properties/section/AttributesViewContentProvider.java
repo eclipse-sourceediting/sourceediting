@@ -117,7 +117,7 @@ public class AttributesViewContentProvider implements ITreeContentProvider, ITab
       ctAdapter = (XSDAbstractAdapter)xsdModelAdapterFactory.adapt(ct, xsdModelAdapterFactory);
       ctAdapter.addListener((INotifyChangedListener)this);
       
-      XSDWildcard wildcard = ct.getAttributeWildcard();
+      XSDWildcard wildcard = ct.getAttributeWildcardContent();
       if (wildcard != null)
       {
         list.add(wildcard);

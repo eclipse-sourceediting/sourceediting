@@ -13,6 +13,7 @@ package org.eclipse.wst.xsd.ui.internal.graph.editpolicies;
 import org.eclipse.draw2d.Label;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.wst.xsd.ui.internal.graph.editparts.TopLevelComponentEditPart;
 import org.eclipse.wst.xsd.ui.internal.refactor.rename.GlobalElementRenamer;
 import org.eclipse.wst.xsd.ui.internal.refactor.rename.GlobalGroupRenamer;
 import org.eclipse.wst.xsd.ui.internal.refactor.rename.GlobalSimpleOrComplexTypeRenamer;
@@ -27,17 +28,22 @@ import org.eclipse.xsd.util.XSDSwitch;
 public class ComponentNameDirectEditManager extends TextCellEditorManager
 {
   protected XSDNamedComponent component;
+  protected static GraphicalEditPart mySource;
 
   public ComponentNameDirectEditManager(GraphicalEditPart source,	Label label, XSDNamedComponent component)
   {
     super(source, label);  
     this.component = component;
+    mySource = source;
   }
 
   public void performModify(final String value)
-  {                     
-    DelayedRenameRunnable runnable = new DelayedRenameRunnable(component, value);
-    Display.getCurrent().asyncExec(runnable);  
+  {
+    if (value.length() > 0)
+    {
+      DelayedRenameRunnable runnable = new DelayedRenameRunnable(component, value);
+      Display.getCurrent().asyncExec(runnable);
+    }
   }      
 
   protected static class DelayedRenameRunnable implements Runnable
@@ -78,6 +84,21 @@ public class ComponentNameDirectEditManager extends TextCellEditorManager
       };
       xsdSwitch.doSwitch(component); 
       component.setName(name);
+      if (mySource instanceof TopLevelComponentEditPart)
+      {
+        ((TopLevelComponentEditPart)mySource).setReselect(true);        
+      }
+    }
+  }
+  
+  protected void bringDown()
+  {
+    if (mySource != null)
+    {
+      if (mySource instanceof TopLevelComponentEditPart)
+      {
+        ((TopLevelComponentEditPart)mySource).setReselect(true);        
+      }
     }
   }
 }

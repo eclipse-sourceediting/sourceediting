@@ -415,5 +415,11 @@ public class ElementDeclarationEditPart extends ExpandableGraphNodeEditPart
     }
   }
 
+  public void doEditName()
+  {
+    ComponentNameDirectEditManager manager = new ComponentNameDirectEditManager(this, label, getXSDElementDeclaration());
+    simpleDirectEditPolicy.setDelegate(manager);
+    manager.show();
+  }
 
 }

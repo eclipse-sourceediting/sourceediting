@@ -11,6 +11,8 @@
 package org.eclipse.wst.xsd.ui.internal.actions;
 import java.util.List;
 
+import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.ui.parts.AbstractEditPartViewer;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -21,7 +23,19 @@ import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.core.format.FormatProcessorXML;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
+import org.eclipse.wst.xsd.ui.internal.graph.editparts.ComplexTypeDefinitionEditPart;
+import org.eclipse.wst.xsd.ui.internal.graph.editparts.ElementDeclarationEditPart;
+import org.eclipse.wst.xsd.ui.internal.graph.editparts.ModelGroupDefinitionEditPart;
+import org.eclipse.wst.xsd.ui.internal.graph.editparts.TopLevelComponentEditPart;
+import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
+import org.eclipse.xsd.XSDAttributeDeclaration;
+import org.eclipse.xsd.XSDAttributeGroupDefinition;
+import org.eclipse.xsd.XSDAttributeUse;
+import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDConcreteComponent;
+import org.eclipse.xsd.XSDElementDeclaration;
+import org.eclipse.xsd.XSDModelGroupDefinition;
+import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
@@ -35,7 +49,9 @@ public class CreateElementAction extends Action
 
   protected ISelectionProvider selectionProvider;
   protected XSDSchema xsdSchema;
-  
+
+  protected Object sourceContext;
+
   /**
    * Constructor for CreateElementAction.
    */
@@ -69,6 +85,11 @@ public class CreateElementAction extends Action
   public void setSelectionProvider(ISelectionProvider selectionProvider)
   {
     this.selectionProvider = selectionProvider;
+  }
+
+  public void setSourceContext(Object sourceContext)
+  {
+    this.sourceContext = sourceContext;
   }
   
   /**
@@ -190,7 +211,7 @@ public class CreateElementAction extends Action
   public void run()
   {
     beginRecording(getDescription());
-    Element child = createAndAddNewChildElement();
+    final Element child = createAndAddNewChildElement();
     endRecording();
 
     if (selectionProvider != null)
@@ -202,11 +223,84 @@ public class CreateElementAction extends Action
     {
       public void run()
       {
-        selectionProvider.setSelection(new StructuredSelection(comp));
+        if (comp instanceof XSDAttributeDeclaration)
+        {
+          if (((XSDAttributeDeclaration)comp).getContainer() instanceof XSDAttributeUse)
+          {
+            if (comp.getContainer().getContainer() instanceof XSDAttributeGroupDefinition)
+            {
+              selectionProvider.setSelection(new StructuredSelection(comp.getContainer()));
+            }
+            else if (comp.getContainer().getContainer() instanceof XSDComplexTypeDefinition)
+            {
+              if (XSDDOMHelper.inputEquals((Element)child, XSDConstants.ATTRIBUTE_ELEMENT_TAG, true))
+              {
+                selectionProvider.setSelection(new StructuredSelection(comp.getContainer()));
+              }
+              else
+              {
+                selectionProvider.setSelection(new StructuredSelection(comp));
+              }
+            }
+            else
+            {
+              selectionProvider.setSelection(new StructuredSelection(comp));
+            }
+          }
+          else
+          {
+            selectionProvider.setSelection(new StructuredSelection(comp));
+          }
+        }
+        else
+        {
+          selectionProvider.setSelection(new StructuredSelection(comp));
+        }
+        if (comp instanceof XSDNamedComponent)
+        {
+          if (sourceContext instanceof AbstractEditPartViewer)
+          {
+            AbstractEditPartViewer viewer = (AbstractEditPartViewer)sourceContext;
+          
+            Object obj = viewer.getSelectedEditParts().get(0);
+            
+            if (obj instanceof GraphicalEditPart)
+            {
+              if (obj instanceof ElementDeclarationEditPart)
+              {
+                XSDElementDeclaration elem = ((ElementDeclarationEditPart)obj).getXSDElementDeclaration();
+                if (!elem.isElementDeclarationReference())
+                {
+                  ((ElementDeclarationEditPart)obj).doEditName();
+                }
+              }
+              else if (obj instanceof ModelGroupDefinitionEditPart)
+              {
+                XSDModelGroupDefinition group = ((ModelGroupDefinitionEditPart)obj).getXSDModelGroupDefinition();
+                if (!group.isModelGroupDefinitionReference())
+                {
+                  ((ModelGroupDefinitionEditPart)obj).doEditName();
+                }
+              }
+              else if (obj instanceof ComplexTypeDefinitionEditPart)
+              {
+                XSDComplexTypeDefinition ct = ((ComplexTypeDefinitionEditPart)obj).getXSDComplexTypeDefinition();
+                if (ct.getName() != null)
+                {
+                  ((ComplexTypeDefinitionEditPart)obj).doEditName();
+                }
+              }
+              else if (obj instanceof TopLevelComponentEditPart)
+              {
+                ((TopLevelComponentEditPart)obj).doEditName();
+              }
+            }
+
+          }
+        }
       }
     };
     Display.getDefault().timerExec(50,runnable);
-
     }
   }
 

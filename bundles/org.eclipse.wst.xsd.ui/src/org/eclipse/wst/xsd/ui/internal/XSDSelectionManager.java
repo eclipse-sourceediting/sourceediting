@@ -72,7 +72,7 @@ public class XSDSelectionManager implements ISelectionProvider, ISelectionChange
 
   public void setSelection(ISelection selection, ISelectionProvider source)
   {  
-	//System.out.println("SelectionManager.setSelection() " + selection + ", " + source);
+//	  System.out.println("SelectionManager.setSelection() " + selection + ", " + source);
     if (enableNotify)
     {
       currentSelection = selection;

@@ -148,32 +148,34 @@ public class NamespaceSection extends AbstractSection
         setListenerEnabled(false);
 	    	 
 			  Element element = xsdSchema.getElement();
-	    	 
-		    // Handle prefixText
-			  TypesHelper helper = new TypesHelper(xsdSchema);
-  		  String aPrefix = helper.getPrefix(element.getAttribute(XSDConstants.TARGETNAMESPACE_ATTRIBUTE), false);
-      
-        if (aPrefix != null && aPrefix.length() > 0)
-	      {
-	  	  	prefixText.setText(aPrefix);
-	  	  }
-	  	  else
+	    	
+        if (element != null)
         {
-			  	prefixText.setText(""); //$NON-NLS-1$
-			  }
-	    	 
-				// Handle TargetNamespaceText
-				String tns = element.getAttribute(XSDConstants.TARGETNAMESPACE_ATTRIBUTE);
-			  if (tns != null && tns.length() > 0)
-        {
- 	        targetNamespaceText.setText(tns);
- 	      }
-			  else
-        {
-				  targetNamespaceText.setText(""); //$NON-NLS-1$
-			  }
-        errorText.setText("");
-
+  		    // Handle prefixText
+  			  TypesHelper helper = new TypesHelper(xsdSchema);
+    		  String aPrefix = helper.getPrefix(element.getAttribute(XSDConstants.TARGETNAMESPACE_ATTRIBUTE), false);
+        
+          if (aPrefix != null && aPrefix.length() > 0)
+  	      {
+  	  	  	prefixText.setText(aPrefix);
+  	  	  }
+  	  	  else
+          {
+  			  	prefixText.setText(""); //$NON-NLS-1$
+  			  }
+  	    	 
+  				// Handle TargetNamespaceText
+  				String tns = element.getAttribute(XSDConstants.TARGETNAMESPACE_ATTRIBUTE);
+  			  if (tns != null && tns.length() > 0)
+          {
+   	        targetNamespaceText.setText(tns);
+   	      }
+  			  else
+          {
+  				  targetNamespaceText.setText(""); //$NON-NLS-1$
+  			  }
+          errorText.setText("");
+        }
 				setListenerEnabled(true);
 			}
 		}

@@ -36,6 +36,7 @@ public class GraphContextMenuProvider extends ContextMenuProvider
     super(viewer);
     this.viewer = viewer;
     xsdMenuListener = new XSDMenuListener(selectionProvider);
+    xsdMenuListener.setSourceContext(viewer);
   }
 
   public XSDMenuListener getMenuListener()

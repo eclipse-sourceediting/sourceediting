@@ -36,7 +36,9 @@ import org.eclipse.wst.xsd.ui.internal.gef.util.figures.FillLayout;
 import org.eclipse.wst.xsd.ui.internal.graph.GraphicsConstants;
 import org.eclipse.wst.xsd.ui.internal.graph.XSDComponentViewer;
 import org.eclipse.wst.xsd.ui.internal.graph.XSDGraphUtil;
+import org.eclipse.wst.xsd.ui.internal.graph.editpolicies.ComponentNameDirectEditManager;
 import org.eclipse.wst.xsd.ui.internal.graph.editpolicies.SelectionHandlesEditPolicyImpl;
+import org.eclipse.wst.xsd.ui.internal.graph.editpolicies.SimpleDirectEditPolicy;
 import org.eclipse.wst.xsd.ui.internal.graph.figures.ContainerFigure;
 import org.eclipse.wst.xsd.ui.internal.graph.model.ModelAdapter;
 import org.eclipse.wst.xsd.ui.internal.graph.model.XSDModelAdapterFactory;
@@ -53,6 +55,7 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
   //protected Label arrowLabel;
   protected ContainerFigure labelHolder = new ContainerFigure();
   protected SelectionHandlesEditPolicyImpl selectionHandlesEditPolicy;
+  protected SimpleDirectEditPolicy simpleDirectEditPolicy = new SimpleDirectEditPolicy();
   protected boolean isReadOnly;
   protected boolean isSelected;
   
@@ -96,7 +99,7 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
             // fontData.data.lfUnderline = 1
             // so instead we use reflection
             Object data = fontData.getClass().getField("data").get(fontData);
-            System.out.println("data" + data.getClass());
+//            System.out.println("data" + data.getClass());
             data.getClass().getField("lfUnderline").setByte(data, (byte)1);
             Font font = new Font(Display.getCurrent(), fontData);
             label.setFont(font);        
@@ -137,6 +140,12 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
     {
       label.setText("unknown object" + getModel().getClass().getName());
       //arrowLabel.setVisible(false);
+    }
+
+    if (reselect)
+    {
+      getViewer().select(this);
+      setReselect(false);
     }
   }
 
@@ -180,7 +189,9 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
         }
       }
     };
-    installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, feedBackSelectionEditPolicy);  	
+    installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, feedBackSelectionEditPolicy);
+
+    installEditPolicy(EditPolicy.DIRECT_EDIT_ROLE, simpleDirectEditPolicy);
   }  
   
   public Color computeLabelColor()
@@ -201,10 +212,23 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
   public void addFeedback()
   {
     isSelected = true;
-    
+
     labelHolder.setBackgroundColor(ColorConstants.black);
     label.setForegroundColor(computeLabelColor());
     labelHolder.setFill(true);
+    
+    if (doScroll)
+    {
+      CategoryEditPart categoryEP = (CategoryEditPart)getParent();
+      categoryEP.scrollTo(this);
+      setScroll(false);
+    }
+  }
+  
+  private boolean doScroll = false;
+  public void setScroll(boolean doScroll)
+  {
+    this.doScroll = doScroll;
   }
 
   public void removeFeedback()
@@ -268,5 +292,25 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
       }
     };
     Display.getCurrent().asyncExec(runnable);
+  }
+  
+  public void doEditName()
+  {
+    removeFeedback();
+    Object object = getModel();
+    if (object instanceof XSDNamedComponent)
+    {
+      ComponentNameDirectEditManager manager = new ComponentNameDirectEditManager(this, label, (XSDNamedComponent)object);
+      simpleDirectEditPolicy.setDelegate(manager);
+      manager.show();
+    }
+  }
+
+  
+  static boolean reselect = false;
+  
+  public void setReselect(boolean state)
+  {
+    reselect = state;
   }
 }

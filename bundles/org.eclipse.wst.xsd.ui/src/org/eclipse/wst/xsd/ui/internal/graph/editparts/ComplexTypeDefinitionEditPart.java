@@ -206,5 +206,10 @@ public class ComplexTypeDefinitionEditPart extends GraphNodeEditPart
         }
       }
     }
-  } 
+  }
+  
+  public void doEditName()
+  {
+    performDirectEdit();
+  }
 } 

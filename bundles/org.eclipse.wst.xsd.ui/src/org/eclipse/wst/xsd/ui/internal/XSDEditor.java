@@ -27,6 +27,8 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+//import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -1113,7 +1115,14 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
         ISelection selection = getSelectionManager().getSelection();
         if (selection != null)
         {
-          getSelectionManager().setSelection(selection);
+          if (getCurrentPageType().equals(XSDEditorPlugin.GRAPH_PAGE))
+          {
+            getSelectionManager().selectionChanged(new SelectionChangedEvent(editor.getGraphViewer().getComponentViewer(), selection));
+          }
+          else if (getCurrentPageType().equals(XSDEditorPlugin.SOURCE_PAGE))
+          {
+            getSelectionManager().setSelection(selection);
+          }
         }
 			}
 		}

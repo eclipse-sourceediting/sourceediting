@@ -118,10 +118,15 @@ public class ComplexTypeInheritedContentEditPart extends BaseEditPart
   }
 
   protected void performDirectEdit()
-  {  
-    ComponentNameDirectEditManager manager = new ComponentNameDirectEditManager(this, label, (XSDComplexTypeDefinition)getModel());   
-    simpleDirectEditPolicy.setDelegate(manager);
-    manager.show();
+  {
+    // Why are we allowing direct editing when the label is null?
+    // Should remove the policy
+    if (label != null)
+    {
+      ComponentNameDirectEditManager manager = new ComponentNameDirectEditManager(this, label, (XSDComplexTypeDefinition)getModel());   
+      simpleDirectEditPolicy.setDelegate(manager);
+      manager.show();
+    }
   }    
             
 

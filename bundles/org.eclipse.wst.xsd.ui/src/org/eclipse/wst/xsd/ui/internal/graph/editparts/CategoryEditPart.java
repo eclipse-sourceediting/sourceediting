@@ -151,6 +151,11 @@ public class CategoryEditPart extends BaseEditPart
     label.setText("  " + category.getName() + "                                                    ");
   } 
   
+  public ScrollPane getScrollPane()
+  {
+    return scrollpane;
+  }
+  
   public IFigure getContentPane()
   {
     return scrollpane.getContents();

@@ -23,7 +23,6 @@ import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.xsd.XSDComponent;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDModelGroup;
@@ -133,9 +132,9 @@ public class XSDContentProvider implements ITreeContentProvider, INotifyChangedL
     {
       return ((Node)element).getParentNode();
     }
-    else if (element instanceof XSDComponent)
+    else if (element instanceof XSDConcreteComponent)
     {
-      return ((XSDComponent)element).getContainer();
+      return ((XSDConcreteComponent)element).getContainer();
     }
     return null;
   }

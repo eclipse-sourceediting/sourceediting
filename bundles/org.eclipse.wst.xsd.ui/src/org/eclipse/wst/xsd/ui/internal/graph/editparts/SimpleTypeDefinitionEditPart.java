@@ -14,6 +14,8 @@ import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.ImageFigure;
 import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.MouseEvent;
+import org.eclipse.draw2d.MouseMotionListener;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
@@ -21,7 +23,7 @@ import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.graph.editpolicies.SelectionHandlesEditPolicyImpl;
 import org.eclipse.wst.xsd.ui.internal.graph.figures.RoundedLineBorder;
 
-public class SimpleTypeDefinitionEditPart extends BaseEditPart //GraphNodeEditPart
+public class SimpleTypeDefinitionEditPart extends BaseEditPart implements MouseMotionListener
 {
   protected Label label;
   protected SelectionHandlesEditPolicyImpl selectionHandlesEditPolicy;
@@ -40,13 +42,14 @@ public class SimpleTypeDefinitionEditPart extends BaseEditPart //GraphNodeEditPa
     figure.setBorder(lb);
     figure.setBackgroundColor(ColorConstants.white);
     figure.setForegroundColor(elementBorderColor);
-    
+    figure.addMouseMotionListener(this);
     return figure;
   }
 
   protected void refreshVisuals()
   {
-    figure.setBorder(new RoundedLineBorder(isSelected ? ColorConstants.black : elementBorderColor, 1, 6));
+    // figure.setBorder(new RoundedLineBorder(isSelected ? ColorConstants.black : elementBackgroundColor, 1, 6));
+    ((RoundedLineBorder)figure.getBorder()).setColor(isSelected ? ColorConstants.black : elementBackgroundColor);
     figure.repaint();
   }
   
@@ -63,10 +66,38 @@ public class SimpleTypeDefinitionEditPart extends BaseEditPart //GraphNodeEditPa
 
   public void deactivate() 
   {
+    figure.removeMouseMotionListener(this);
     super.deactivate();
     if (color != null)
     {
       color.dispose();
     }
-  }   
+  }
+  
+  public void mouseDragged(MouseEvent me)
+  {
+  }
+
+  public void mouseEntered(MouseEvent me)
+  {
+//    ((RoundedLineBorder)figure.getBorder()).setColor(ColorConstants.blue);
+//    figure.setBackgroundColor(elementBorderColor);
+//    figure.repaint();
+  }
+
+  public void mouseExited(MouseEvent me)
+  {
+//    ((RoundedLineBorder)figure.getBorder()).setColor(elementBackgroundColor);
+//    figure.setBackgroundColor(elementBackgroundColor);
+//    figure.repaint();
+  }
+
+  public void mouseHover(MouseEvent me)
+  {
+  }
+
+  public void mouseMoved(MouseEvent me)
+  {
+  }
+
 }

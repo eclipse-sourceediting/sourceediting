@@ -193,4 +193,12 @@ public class ModelGroupDefinitionEditPart extends RepeatableGraphNodeEditPart
   //  super.modelChildrenChanged();                                              
   //  refreshVisuals(); 
   //} 
+
+  public void doEditName()
+  {
+    ComponentNameDirectEditManager manager = new ComponentNameDirectEditManager(this, label, getXSDModelGroupDefinition());           
+    simpleDirectEditPolicy.setDelegate(manager);
+    manager.show();
+  }
+
 }

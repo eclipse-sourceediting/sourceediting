@@ -11,15 +11,15 @@
 package org.eclipse.wst.xsd.ui.internal.provider;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+//import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
-import org.eclipse.xsd.XSDAttributeGroupContent;
+//import org.eclipse.xsd.XSDAttributeGroupContent;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
-import org.eclipse.xsd.XSDAttributeUse;
+//import org.eclipse.xsd.XSDAttributeUse;
 import org.eclipse.xsd.XSDWildcard;
 
 
@@ -63,22 +63,22 @@ public class XSDAttributeGroupDefinitionAdapter extends XSDAbstractAdapter
   {
     XSDAttributeGroupDefinition xsdAttributeGroup = (XSDAttributeGroupDefinition)parentElement;
     List list = new ArrayList();
-//  list.addAll(xsdAttributeGroup.getContents());   
-    Iterator i = xsdAttributeGroup.getContents().iterator();
-    while (i.hasNext())
-    {
-      XSDAttributeGroupContent attrGroupContent = (XSDAttributeGroupContent)i.next();
-      if (attrGroupContent instanceof XSDAttributeUse)
-      {
-        list.add(((XSDAttributeUse)attrGroupContent).getAttributeDeclaration());
-      }
-      else
-      {
-        list.add(attrGroupContent);
-      }
-    }
+    list.addAll(xsdAttributeGroup.getContents());   
+//    Iterator i = xsdAttributeGroup.getContents().iterator();
+//    while (i.hasNext())
+//    {
+//      XSDAttributeGroupContent attrGroupContent = (XSDAttributeGroupContent)i.next();
+//      if (attrGroupContent instanceof XSDAttributeUse)
+//      {
+//        list.add(((XSDAttributeUse)attrGroupContent).getAttributeDeclaration());
+//      }
+//      else
+//      {
+//        list.add(attrGroupContent);
+//      }
+//    }
     
-    XSDWildcard wildcard = xsdAttributeGroup.getAttributeWildcard();
+    XSDWildcard wildcard = xsdAttributeGroup.getAttributeWildcardContent();
     if (wildcard != null)
     {
       list.add(wildcard);

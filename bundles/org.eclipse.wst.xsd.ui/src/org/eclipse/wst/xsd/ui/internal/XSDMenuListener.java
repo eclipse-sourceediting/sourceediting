@@ -12,6 +12,8 @@ package org.eclipse.wst.xsd.ui.internal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.gef.GraphicalEditPart;
+import org.eclipse.gef.ui.parts.AbstractEditPartViewer;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -32,17 +34,25 @@ import org.eclipse.wst.xsd.ui.internal.actions.CreateSimpleContentAction;
 import org.eclipse.wst.xsd.ui.internal.actions.CreateSimpleTypeAction;
 import org.eclipse.wst.xsd.ui.internal.actions.DOMAttribute;
 import org.eclipse.wst.xsd.ui.internal.actions.DeleteAction;
+import org.eclipse.wst.xsd.ui.internal.actions.GraphRenameAction;
 import org.eclipse.wst.xsd.ui.internal.actions.MakeAnonymousGlobal;
 import org.eclipse.wst.xsd.ui.internal.actions.OpenSchemaAction;
 import org.eclipse.wst.xsd.ui.internal.actions.SetBaseTypeAction;
 import org.eclipse.wst.xsd.ui.internal.actions.XSDEditNamespacesAction;
+import org.eclipse.wst.xsd.ui.internal.graph.editparts.ComplexTypeDefinitionEditPart;
+import org.eclipse.wst.xsd.ui.internal.graph.editparts.ElementDeclarationEditPart;
+import org.eclipse.wst.xsd.ui.internal.graph.editparts.ModelGroupDefinitionEditPart;
+import org.eclipse.wst.xsd.ui.internal.graph.editparts.TopLevelComponentEditPart;
 import org.eclipse.wst.xsd.ui.internal.graph.model.Category;
 import org.eclipse.wst.xsd.ui.internal.provider.CategoryAdapter;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
+import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDCompositor;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
+import org.eclipse.xsd.XSDModelGroupDefinition;
+import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.util.XSDConstants;
@@ -60,7 +70,8 @@ public class XSDMenuListener implements IMenuListener
   protected CreateElementAction addComplexTypeAction;
   protected XSDSchema xsdSchema;
   protected boolean isReadOnly;
-  
+  protected Object sourceContext;
+
   /**
    * Constructor for XSDMenuListener.
    */
@@ -72,6 +83,11 @@ public class XSDMenuListener implements IMenuListener
     deleteAction = new DeleteAction(XSDEditorPlugin.getXSDString("_UI_ACTION_DELETE"), null, getXSDSchema());
     deleteAction.setSelectionProvider(selectionProvider);
     selectionProvider.addSelectionChangedListener(deleteAction);
+  }
+
+  public void setSourceContext(Object sourceContext)
+  {
+    this.sourceContext = sourceContext;
   }
 
   public void setSelectionProvider(ISelectionProvider selectionProvider)
@@ -203,6 +219,12 @@ public class XSDMenuListener implements IMenuListener
       }
       ArrayList attributes = null;
       Element parent = getXSDSchema().getElement();
+      
+      if (parent == null)
+      {
+        return;
+      }
+      
       Node relativeNode = null;
       switch (groupType)
       {
@@ -1414,6 +1436,62 @@ public class XSDMenuListener implements IMenuListener
      * (XSDDOMHelper.inputEquals(parent, XSDConstants.APPINFO_ELEMENT_TAG,
      * false)) { }
      */
+    
+    XSDConcreteComponent concreteComponent = getXSDSchema().getCorrespondingComponent(parent);
+    if (concreteComponent instanceof XSDNamedComponent)
+    {
+      if (selectionProvider instanceof XSDSelectionManager)
+      {
+        if (sourceContext instanceof AbstractEditPartViewer)
+        {
+          AbstractEditPartViewer viewer = (AbstractEditPartViewer)sourceContext;
+        
+          Object obj = viewer.getSelectedEditParts().get(0);
+          
+          if (obj instanceof GraphicalEditPart)
+          {
+            boolean canEdit = true;
+            if (obj instanceof ElementDeclarationEditPart)
+            {
+              XSDElementDeclaration elem = ((ElementDeclarationEditPart)obj).getXSDElementDeclaration();
+              if (elem.isElementDeclarationReference())
+              {
+                canEdit = false;
+              }
+            }
+            else if (obj instanceof ModelGroupDefinitionEditPart)
+            {
+              XSDModelGroupDefinition group = ((ModelGroupDefinitionEditPart)obj).getXSDModelGroupDefinition();
+              if (group.isModelGroupDefinitionReference())
+              {
+                canEdit = false;
+              }
+            }
+            else if (obj instanceof ComplexTypeDefinitionEditPart)
+            {
+              XSDComplexTypeDefinition ct = ((ComplexTypeDefinitionEditPart)obj).getXSDComplexTypeDefinition();
+              if (ct.getName() == null) // anonymous
+              {
+                canEdit = false;
+              }
+            }
+            else if (obj instanceof TopLevelComponentEditPart)
+            {
+              canEdit = true;
+            }
+            else
+            {
+              canEdit = false;
+            }
+            if (canEdit)
+            {
+              GraphRenameAction graphRenameAction = new GraphRenameAction((XSDNamedComponent)concreteComponent, (GraphicalEditPart)obj);
+              manager.add(graphRenameAction);
+            }
+          }
+        }
+      }
+    }
   }
 
   protected void addContextInsertItems(IMenuManager manager, Element parent, Element currentElement, Node relativeNode)
@@ -1733,6 +1811,7 @@ public class XSDMenuListener implements IMenuListener
     action.setXSDSchema(getXSDSchema());
     action.setSelectionProvider(selectionProvider);
     action.setEnabled(!isReadOnly);
+    action.setSourceContext(sourceContext);
     manager.add(action);
     return action;
   }
@@ -1783,6 +1862,7 @@ public class XSDMenuListener implements IMenuListener
     action.setXSDSchema(getXSDSchema());
     action.setSelectionProvider(selectionProvider);
     action.setEnabled(!isReadOnly);
+    action.setSourceContext(sourceContext);
     manager.add(action);
     return action;
   }
@@ -1822,6 +1902,7 @@ public class XSDMenuListener implements IMenuListener
     action.setXSDSchema(getXSDSchema());
     action.setSelectionProvider(selectionProvider);
     action.setEnabled(!isReadOnly);
+    action.setSourceContext(sourceContext);
     manager.add(action);
     return action;
   }

@@ -311,14 +311,14 @@ public class TypesDialog extends Dialog implements SelectionListener, Listener
 	    {
 	      if (typeSection.getUserSimpleType().getSelection())
 	      {
-	        if (!previousStringType.equals("**anonymous**"))
+//	        if (!previousStringType.equals("**anonymous**"))
 	        {
 	          updateElementToAnonymous(element, XSDConstants.SIMPLETYPE_ELEMENT_TAG);
 	        }
 	      }
 	      else
 	      {
-	        if (!previousStringType.equals("**anonymous**"))
+//	        if (!previousStringType.equals("**anonymous**"))
 	        {
 	          updateElementToAnonymous(element, XSDConstants.COMPLEXTYPE_ELEMENT_TAG);
 	        }

@@ -53,6 +53,7 @@ public class XSDContentOutlinePage extends ContentOutlinePage
   protected SelectionManagerSelectionChangeListener selectionManagerSelectionChangeListener = new SelectionManagerSelectionChangeListener();
   protected TreeSelectionChangeListener treeSelectionChangeListener = new TreeSelectionChangeListener();
   XSDTextEditor xsdTextEditor;
+  XSDMenuListener menuListener;
 
   /**
    *  
@@ -95,7 +96,8 @@ public class XSDContentOutlinePage extends ContentOutlinePage
     menuManager.setRemoveAllWhenShown(true);
     Menu menu = menuManager.createContextMenu(getTreeViewer().getControl());
     getTreeViewer().getControl().setMenu(menu);
-    XSDMenuListener menuListener = new XSDMenuListener(xsdTextEditor.getXSDEditor().getSelectionManager());
+    menuListener = new XSDMenuListener(xsdTextEditor.getXSDEditor().getSelectionManager());
+//  menuListener.setSelectionProvider(getTreeViewer());
     menuManager.addMenuListener(menuListener);
     setSelectionManager(xsdTextEditor.getXSDEditor().getSelectionManager());
     // cs... why are we doing this from the outline view?
@@ -255,6 +257,7 @@ public class XSDContentOutlinePage extends ContentOutlinePage
           if (o != null)
           {
             selectionManager.setSelection(new StructuredSelection(o), getTreeViewer());
+//          selectionManager.selectionChanged(new SelectionChangedEvent(getTreeViewer(),new StructuredSelection(o)));
           }
           else
           {
