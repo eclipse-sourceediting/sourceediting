@@ -62,24 +62,23 @@ public class StructuredRegionProcessorExtension extends StructuredRegionProcesso
     /**
      * @param dirtyRegion
      */
-    protected void process(DirtyRegion dirtyRegion) {
-       
+    protected void process(DirtyRegion dirtyRegion) {        
         if (!isInstalled())
             return;
        
         ITypedRegion[] tr = computePartitioning(dirtyRegion);
         IReconcilingStrategy s = null;
-        DirtyRegion durty = null;
+        DirtyRegion dirty = null;
         for (int i = 0; i < tr.length; i++) {
             
-            durty = createDirtyRegion(tr[i], DirtyRegion.INSERT);
+            dirty = createDirtyRegion(tr[i], DirtyRegion.INSERT);
             s = getReconcilingStrategy(tr[i].getType());
-            if (s != null)
-                s.reconcile(durty, durty);
+            if (s != null && dirty != null)
+                s.reconcile(dirty, dirty);
 
             // validator for this partition
             if (fValidatorStrategy != null)
-                fValidatorStrategy.reconcile(tr[i], durty, false);
+                fValidatorStrategy.reconcile(tr[i], dirty, false);
         }
     }
     /**

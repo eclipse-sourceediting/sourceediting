@@ -160,12 +160,12 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
     protected DirtyRegion createDirtyRegion(int offset, int length, String type) {
         DirtyRegion durty = null;
         IDocument doc = getDocument();
-        // safety for BLE
-        int docLen = doc.getLength();
-        if (offset + length > docLen)
-            length = docLen - offset;
 
         if (doc != null) {
+            // safety for BLE
+            int docLen = doc.getLength();
+            if (offset + length > docLen)
+                length = docLen - offset;
             try {
                 durty = new DirtyRegion(offset, length, type, doc.get(offset, length));
             } catch (BadLocationException e) {
