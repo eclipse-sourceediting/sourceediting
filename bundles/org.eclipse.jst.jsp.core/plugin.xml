@@ -72,16 +72,12 @@
             type="text"
             extension="jsp">
       </fileTypes>
-       <fileTypes
+      <fileTypes
             type="text"
-            extension="tag">
-      </fileTypes>      <fileTypes
+            extension="jspf"/>
+      <fileTypes
             type="text"
-            extension="tagf">
-      </fileTypes>     <fileTypes
-            type="text"
-            extension="jspf">
-      </fileTypes>
+            extension="jspx"/>
       <fileTypes
             type="text"
             extension="jsf">
@@ -97,6 +93,15 @@
       <fileTypes
             type="text"
             extension="tld"/>
+      <fileTypes
+            type="text"
+            extension="tag"/>
+      <fileTypes
+            type="text"
+            extension="tagx"/>
+      <fileTypes
+            type="text"
+            extension="tagf"/>
    </extension>
    <extension
          point="org.eclipse.wst.sse.core.formatProcessors">
@@ -110,14 +115,23 @@
          point="org.eclipse.core.runtime.contentTypes">
          <!-- associate JSP file types -->
          <content-type
-               file-extensions="jsp,jspf,jsf,jsv,jtpl,jspx,tag,tagf"
+               file-extensions="jsp,jspf,jsf,jsv,jtpl,jspx"
                priority="high"
                name="%JSP_Content_Type_Extension_Element.name"
                id="jspsource"
                base-type="org.eclipse.core.runtime.text"
 			   default-charset="ISO-8859-1">
 			<describer class="org.eclipse.jst.jsp.core.internal.contenttype.ContentDescriberForJSP"/>
-		</content-type>
+		 </content-type>
+         <!-- associate JSP 2.0 Tag file types -->
+         <content-type
+               file-extensions="tag,tagx,tagf"
+               priority="high"
+               name="%JSP_Tag_Content_Type_Extension_Element.name"
+               id="tagsource"
+               base-type="org.eclipse.jst.jsp.core.jspsource"
+			   default-charset="UTF-8">
+		 </content-type>
 		<!-- associate .tld files with the XML content type -->
 		<file-association
 			content-type="org.eclipse.core.runtime.xml"
