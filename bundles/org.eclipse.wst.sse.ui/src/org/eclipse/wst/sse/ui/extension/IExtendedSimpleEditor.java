@@ -26,10 +26,14 @@ public interface IExtendedSimpleEditor {
 
 	public IDocument getDocument();
 
-
 	public IEditorPart getEditorPart();
 
 	public Point getSelectionRange();
 
+	/**
+	 * @deprecated
+	 * @param context
+	 * @return
+	 */
 	public IStatus validateEdit(Shell context);
 }
