@@ -67,7 +67,6 @@ import org.eclipse.wst.xml.ui.internal.editor.CMImageUtil;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
 import org.eclipse.wst.xml.ui.taginfo.MarkupTagInfoProvider;
-import org.eclipse.wst.xml.ui.templates.TemplateContextTypeIds;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
@@ -90,8 +89,6 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	//protected IResource resource = null;
 	protected MarkupTagInfoProvider fInfoProvider = null;
 	protected ITextViewer fTextViewer = null;
-
-	protected List macroContexts = new ArrayList();
 
 	private final boolean showValues = true;
 
@@ -187,7 +184,6 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		} else {
 			setErrorMessage(SSEUIPlugin.getResourceString("%25concat", (new Object[]{node.getNodeName()}))); 
 		}
-		addTemplates(contentAssistRequest, TemplateContextTypeIds.ATTRIBUTE);
 	}
 
 	protected void addAttributeValueProposals(ContentAssistRequest contentAssistRequest) {
@@ -300,8 +296,6 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			}
 		} else
 			setErrorMessage(UNKNOWN_CONTEXT);
-
-		addTemplates(contentAssistRequest, TemplateContextTypeIds.ATTRIBUTEVALUE);
 	}
 
 	protected void addCommentProposal(ContentAssistRequest contentAssistRequest) {
@@ -360,7 +354,6 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 */
 	protected void addEmptyDocumentProposals(ContentAssistRequest contentAssistRequest) {
 		addXMLProposal(contentAssistRequest);
-		addTemplates(contentAssistRequest, TemplateContextTypeIds.TAG);
 	}
 
 	/**
@@ -732,9 +725,6 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		// (nsd) This is only valid at the document element level
 		// only valid if it's XML (check added 2/17/2004)
 		if (parent != null && parent.getNodeType() == Node.DOCUMENT_NODE && ((XMLDocument) parent).isXMLType() && !isCursorAfterXMLPI(contentAssistRequest)) {
-			// but we should always have macros
-			// need to be careful these are only added one time
-			addTemplates(contentAssistRequest, TemplateContextTypeIds.TAG);
 			return;
 		}
 		// only want proposals if cursor is after doctype...
@@ -872,7 +862,6 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				}
 			}
 		}
-		addTemplates(contentAssistRequest, TemplateContextTypeIds.TAG);
 	}
 
 	protected void addTagNameProposals(ContentAssistRequest contentAssistRequest, int childPosition) {
@@ -974,33 +963,6 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				}
 				CustomCompletionProposal proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), cursorAdjustment, image, getRequiredName(parent, ed), null, proposedInfo, XMLRelevanceConstants.R_TAG_NAME);
 				contentAssistRequest.addProposal(proposal);
-			}
-		}
-	}
-
-	/**
-	 * Adds templates to the list of proposals
-	 * 
-	 * @param contentAssistRequest
-	 * @param context
-	 */
-	protected void addTemplates(ContentAssistRequest contentAssistRequest, String context) {
-		if (macroContexts.contains(context))
-			return;
-		if (contentAssistRequest == null)
-			return;
-		macroContexts.add(context);
-
-		boolean useProposalList = !contentAssistRequest.shouldSeparate();
-
-		if (getTemplateCompletionProcessor() != null) {
-			getTemplateCompletionProcessor().setContextType(context);
-			ICompletionProposal[] proposals = getTemplateCompletionProcessor().computeCompletionProposals(fTextViewer, contentAssistRequest.getReplacementBeginPosition());
-			for (int i = 0; i < proposals.length; ++i) {
-				if (useProposalList)
-					contentAssistRequest.addProposal(proposals[i]);
-				else
-					contentAssistRequest.addMacro(proposals[i]);
 			}
 		}
 	}
@@ -1185,7 +1147,6 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer textViewer, int documentPosition) {
 
 		setErrorMessage(null);
-		macroContexts.clear();
 
 		fTextViewer = textViewer;
 
@@ -1212,8 +1173,6 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 						XMLDocument docNode = ((XMLModel) sModel).getDocument();
 						contentAssistRequest = newContentAssistRequest(docNode, docNode, sdRegion, completionRegion, documentPosition, 0, null);
 						addEmptyDocumentProposals(contentAssistRequest);
-						addTemplates(contentAssistRequest, TemplateContextTypeIds.ALL);
-						addTemplates(contentAssistRequest, TemplateContextTypeIds.TAG);
 					}
 				} finally {
 					if (sModel != null)
@@ -1225,7 +1184,6 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			Logger.logException(new IllegalStateException("completion region was null")); //$NON-NLS-1$
 			setErrorMessage(INTERNALERROR);
 			contentAssistRequest = newContentAssistRequest((Node) treeNode, node.getParentNode(), sdRegion, completionRegion, documentPosition, 0, ""); //$NON-NLS-1$
-			addTemplates(contentAssistRequest, TemplateContextTypeIds.ALL);
 			return contentAssistRequest.getCompletionProposals();
 		}
 
@@ -1244,8 +1202,6 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				System.out.println(UNKNOWN_CONTEXT + " " + completionRegion.getType() + "@" + documentPosition); //$NON-NLS-2$//$NON-NLS-1$
 			setErrorMessage(UNKNOWN_CONTEXT);
 		}
-		// #180541
-		addTemplates(contentAssistRequest, TemplateContextTypeIds.ALL);
 
 		if (contentAssistRequest.getProposals().size() == 0)
 			setErrorMessage(UNKNOWN_CONTEXT);
@@ -1397,8 +1353,6 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		ContentAssistRequest contentAssistRequest = null;
 		contentAssistRequest = newContentAssistRequest(nodeAtOffset, node, getStructuredDocumentRegion(documentPosition), completionRegion, documentPosition, 0, matchString);
 		addStartDocumentProposals(contentAssistRequest);
-		addTemplates(contentAssistRequest, TemplateContextTypeIds.TAG);
-		addTemplates(contentAssistRequest, TemplateContextTypeIds.ALL);
 		return contentAssistRequest;
 	}
 
@@ -1999,15 +1953,6 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			}
 		}
 		return name;
-	}
-
-	/**
-	 * Return the template completion processor to be used
-	 * 
- AbstractTemplateCompletionProcessor
-	 */
-	protected AbstractTemplateCompletionProcessor getTemplateCompletionProcessor() {
-		return null;
 	}
 
 	protected List getValidCMNodes(int childPosition, int kindOfAction, List modelQueryActions) {

@@ -12,21 +12,93 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.contentassist;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.wst.sse.core.text.ITextRegion;
+import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames;
+import org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeIdsXML;
 
 public class XMLContentAssistProcessor extends AbstractContentAssistProcessor implements IPropertyChangeListener {
 
 	protected IPreferenceStore fPreferenceStore = null;
 	protected IResource fResource = null;
-	protected AbstractTemplateCompletionProcessor fTemplateProcessor = null;
+	private XMLTemplateCompletionProcessor fTemplateProcessor = null;
+	private List fTemplateContexts = new ArrayList();
 
 	public XMLContentAssistProcessor() {
 		super();
+	}
+	
+	protected void addAttributeNameProposals(ContentAssistRequest contentAssistRequest) {
+		addTemplates(contentAssistRequest, TemplateContextTypeIdsXML.ATTRIBUTE);
+		super.addAttributeNameProposals(contentAssistRequest);
+	}
+	
+	protected void addAttributeValueProposals(ContentAssistRequest contentAssistRequest) {
+		addTemplates(contentAssistRequest, TemplateContextTypeIdsXML.ATTRIBUTE_VALUE);
+		super.addAttributeValueProposals(contentAssistRequest);
+	}
+	
+	protected void addEmptyDocumentProposals(ContentAssistRequest contentAssistRequest) {
+		addTemplates(contentAssistRequest, TemplateContextTypeIdsXML.NEW);
+		super.addEmptyDocumentProposals(contentAssistRequest);
+	}
+	
+	protected void addTagInsertionProposals(ContentAssistRequest contentAssistRequest, int childPosition) {
+		addTemplates(contentAssistRequest, TemplateContextTypeIdsXML.TAG);
+		super.addTagInsertionProposals(contentAssistRequest, childPosition);
+	}
+	
+	/**
+	 * Adds templates to the list of proposals
+	 * 
+	 * @param contentAssistRequest
+	 * @param context
+	 */
+	private void addTemplates(ContentAssistRequest contentAssistRequest, String context) {
+		if (contentAssistRequest == null)
+			return;
+
+		// if already adding template proposals for a certain context type, do
+		// not add again
+		if (!fTemplateContexts.contains(context)) {
+			fTemplateContexts.add(context);
+			boolean useProposalList = !contentAssistRequest.shouldSeparate();
+
+			if (getTemplateCompletionProcessor() != null) {
+				getTemplateCompletionProcessor().setContextType(context);
+				ICompletionProposal[] proposals = getTemplateCompletionProcessor().computeCompletionProposals(fTextViewer, contentAssistRequest.getReplacementBeginPosition());
+				for (int i = 0; i < proposals.length; ++i) {
+					if (useProposalList)
+						contentAssistRequest.addProposal(proposals[i]);
+					else
+						contentAssistRequest.addMacro(proposals[i]);
+				}
+			}
+		}
+	}
+	
+	protected ContentAssistRequest computeCompletionProposals(int documentPosition, String matchString, ITextRegion completionRegion, XMLNode treeNode, XMLNode xmlnode) {
+		ContentAssistRequest request = super.computeCompletionProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
+		addTemplates(request, TemplateContextTypeIdsXML.ALL);
+		return request;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractContentAssistProcessor#computeCompletionProposals(org.eclipse.jface.text.ITextViewer, int)
+	 */
+	public ICompletionProposal[] computeCompletionProposals(ITextViewer textViewer, int documentPosition) {
+		fTemplateContexts.clear();
+		return super.computeCompletionProposals(textViewer, documentPosition);
 	}
 
 	protected IPreferenceStore getPreferenceStore() {
@@ -35,12 +107,7 @@ public class XMLContentAssistProcessor extends AbstractContentAssistProcessor im
 		return fPreferenceStore;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.xml.ui.contentassist.AbstractContentAssistProcessor#getTemplateCompletionProcessor()
-	 */
-	protected AbstractTemplateCompletionProcessor getTemplateCompletionProcessor() {
+	private XMLTemplateCompletionProcessor getTemplateCompletionProcessor() {
 		if (fTemplateProcessor == null) {
 			fTemplateProcessor = new XMLTemplateCompletionProcessor();
 		}

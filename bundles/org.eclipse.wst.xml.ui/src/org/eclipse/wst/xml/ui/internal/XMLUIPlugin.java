@@ -27,10 +27,7 @@ import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistryImpl;
 import org.eclipse.wst.sse.ui.registry.embedded.EmbeddedAdapterFactoryRegistryImpl;
 import org.eclipse.wst.xml.ui.JobStatusLineHelper;
 import org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames;
-import org.eclipse.wst.xml.ui.templates.TemplateContextTypeXML;
-import org.eclipse.wst.xml.ui.templates.TemplateContextTypeXMLAttribute;
-import org.eclipse.wst.xml.ui.templates.TemplateContextTypeXMLAttributeValue;
-import org.eclipse.wst.xml.ui.templates.TemplateContextTypeXMLTag;
+import org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeIdsXML;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -83,24 +80,6 @@ public class XMLUIPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns the template context type registry for the xml plugin.
-	 * 
-	 * @return the template context type registry for the xml plugin
-	 */
-	public ContextTypeRegistry getTemplateContextRegistry() {
-		if (fContextTypeRegistry == null) {
-			fContextTypeRegistry = new ContributionContextTypeRegistry();
-
-			fContextTypeRegistry.addContextType(new TemplateContextTypeXML());
-			fContextTypeRegistry.addContextType(new TemplateContextTypeXMLTag());
-			fContextTypeRegistry.addContextType(new TemplateContextTypeXMLAttribute());
-			fContextTypeRegistry.addContextType(new TemplateContextTypeXMLAttributeValue());
-		}
-
-		return fContextTypeRegistry;
-	}
-
-	/**
 	 * Returns the template store for the xml editor templates.
 	 * 
 	 * @return the template store for the xml editor templates
@@ -116,6 +95,26 @@ public class XMLUIPlugin extends AbstractUIPlugin {
 			}
 		}
 		return fTemplateStore;
+	}
+
+	/**
+	 * Returns the template context type registry for the xml plugin.
+	 * 
+	 * @return the template context type registry for the xml plugin
+	 */
+	public ContextTypeRegistry getTemplateContextRegistry() {
+		if (fContextTypeRegistry == null) {
+			ContributionContextTypeRegistry registry = new ContributionContextTypeRegistry();
+			registry.addContextType(TemplateContextTypeIdsXML.ALL);
+			registry.addContextType(TemplateContextTypeIdsXML.NEW);
+			registry.addContextType(TemplateContextTypeIdsXML.TAG);
+			registry.addContextType(TemplateContextTypeIdsXML.ATTRIBUTE);
+			registry.addContextType(TemplateContextTypeIdsXML.ATTRIBUTE_VALUE);
+
+			fContextTypeRegistry = registry;
+		}
+
+		return fContextTypeRegistry;
 	}
 
 	/**

@@ -39,6 +39,7 @@ import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerFor
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.jst.jsp.ui.internal.preferences.JSPUIPreferenceNames;
+import org.eclipse.jst.jsp.ui.internal.templates.TemplateContextTypeIdsJSP;
 import org.eclipse.wst.common.contentmodel.CMDocument;
 import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;
@@ -86,14 +87,12 @@ import org.eclipse.wst.xml.core.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.eclipse.wst.xml.core.text.rules.StructuredTextPartitionerForXML;
 import org.eclipse.wst.xml.ui.contentassist.AbstractContentAssistProcessor;
-import org.eclipse.wst.xml.ui.contentassist.AbstractTemplateCompletionProcessor;
 import org.eclipse.wst.xml.ui.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.contentassist.NonValidatingModelQueryAction;
 import org.eclipse.wst.xml.ui.contentassist.ProposalComparator;
 import org.eclipse.wst.xml.ui.contentassist.XMLContentAssistProcessor;
 import org.eclipse.wst.xml.ui.contentassist.XMLContentAssistUtilities;
 import org.eclipse.wst.xml.ui.contentassist.XMLRelevanceConstants;
-import org.eclipse.wst.xml.ui.templates.TemplateContextTypeIds;
 import org.eclipse.wst.xml.ui.util.SharedXMLEditorPluginImageHelper;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -115,7 +114,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 	protected HashMap fPartitionToProcessorMap = null;
 	private final ICompletionProposal[] EMPTY_PROPOSAL_SET = new ICompletionProposal[0];
 	protected IResource fResource = null;
-	protected AbstractTemplateCompletionProcessor fTemplateProcessor = null;
+	private JSPTemplateCompletionProcessor fTemplateProcessor = null;
+	private List fTemplateContexts = new ArrayList();
 
 	public JSPContentAssistProcessor() {
 		super();
@@ -170,6 +170,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 	}
 
 	protected void addEmptyDocumentProposals(ContentAssistRequest contentAssistRequest) {
+		addTemplates(contentAssistRequest, TemplateContextTypeIdsJSP.NEW);
+
 		super.addEmptyDocumentProposals(contentAssistRequest);
 		addTagInsertionProposals(contentAssistRequest, 0);
 	}
@@ -199,9 +201,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 	}
 
 	protected void addAttributeNameProposals(ContentAssistRequest contentAssistRequest) {
-		// CMVC 261162 (248603)
-		// macros for JSP attribute values weren't showing up
-		addTemplates(contentAssistRequest, TemplateContextTypeIds.ATTRIBUTE);
+		addTemplates(contentAssistRequest, TemplateContextTypeIdsJSP.ATTRIBUTE);
 
 		// specific fix for CMVC 274033
 		// no attribute proposals for <jsp:useBean />
@@ -215,10 +215,9 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 	 * add proposals for tags in attribute values
 	 */
 	protected void addAttributeValueProposals(ContentAssistRequest contentAssistRequest) {
+		addTemplates(contentAssistRequest, TemplateContextTypeIdsJSP.ATTRIBUTE_VALUE);
+
 		XMLNode node = (XMLNode) contentAssistRequest.getNode();
-		// CMVC 248603
-		// macros for JSP attribute values weren't showing up
-		addTemplates(contentAssistRequest, TemplateContextTypeIds.ATTRIBUTEVALUE);
 
 		// add JSP extra proposals from JSPBeanInfoContentAssistProcessor
 		// JSPPropertyContentAssistProcessor
@@ -289,8 +288,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 				CustomCompletionProposal proposal = new CustomCompletionProposal(contents.toString(), contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), contents.length(), SharedEditorPluginImageHelper.getImage(SharedXMLEditorPluginImageHelper.IMG_OBJ_TAG_GENERIC), tagname, null, null, XMLRelevanceConstants.R_JSP_ATTRIBUTE_VALUE);
 				contentAssistRequest.addProposal(proposal);
 
-				addTemplates(contentAssistRequest, TemplateContextTypeIds.TAG);
-				addTemplates(contentAssistRequest, TemplateContextTypeIds.ALL);
+				addTemplates(contentAssistRequest, TemplateContextTypeIdsJSP.TAG);
+				addTemplates(contentAssistRequest, TemplateContextTypeIdsJSP.ALL);
 			}
 		}
 
@@ -395,8 +394,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 							if (provider.isFor(internalModel.getModelHandler())) {
 								provider.addAdapterFactories(internalModel);
 							}
-						}
-						catch (Exception e) {
+						} catch (Exception e) {
 							Logger.logException(e);
 						}
 					}
@@ -413,11 +411,10 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 						}
 					}
 				}
+			} catch (Exception e) {
+				Logger.logException("Error in embedded JSP Content Assist", e); //$NON-NLS-1$
+			}
 		}
-		catch (Exception e) {
-			Logger.logException("Error in embedded JSP Content Assist", e); //$NON-NLS-1$
-		}
-	}
 
 
 	}
@@ -434,8 +431,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 				Node nodeAlreadyAtIndex = children.item(childIndex);
 				if (nodeAlreadyAtIndex instanceof XMLNode)
 					textInsertionOffset = ((XMLNode) nodeAlreadyAtIndex).getEndOffset();
-			}
-			else {
+			} else {
 				textInsertionOffset = ((XMLNode) node).getStartOffset();
 			}
 			TLDCMDocumentManager mgr = TaglibController.getTLDCMDocumentManager(((XMLNode) node).getStructuredDocument());
@@ -596,6 +592,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 	 *      int)
 	 */
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int documentPosition) {
+		fTemplateContexts.clear();
+		
 		IStructuredDocumentRegion sdRegion = ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) viewer, documentPosition);
 		fViewer = viewer;
 		ICompletionProposal[] jspResults = EMPTY_PROPOSAL_SET;
@@ -609,7 +607,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 
 		IStructuredDocumentRegion fn = structuredDocument.getRegionAtCharacterOffset(documentPosition);
 
-		//////////////////////////////////////////////////////////////////////////////
+		// ////////////////////////////////////////////////////////////////////////////
 		// ANOTHER WORKAROUND UNTIL PARTITIONING TAKES CARE OF THIS
 		// check for xml-jsp tags...
 		// CMVC 243657
@@ -621,11 +619,9 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 				ITextRegion xmlOpenOrClose = regions.get(0);
 				if (xmlOpenOrClose.getType() == XMLRegionContext.XML_TAG_OPEN && documentPosition == possibleXMLJSP.getStartOffset()) {
 					// do regular jsp content assist
-				}
-				else if (xmlOpenOrClose.getType() == XMLRegionContext.XML_END_TAG_OPEN && documentPosition > possibleXMLJSP.getStartOffset()) {
+				} else if (xmlOpenOrClose.getType() == XMLRegionContext.XML_END_TAG_OPEN && documentPosition > possibleXMLJSP.getStartOffset()) {
 					// do regular jsp content assist
-				}
-				else {
+				} else {
 					// possible xml-jsp
 					ITextRegion nameRegion = regions.get(1);
 					String name = possibleXMLJSP.getText(nameRegion);
@@ -636,38 +632,35 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 			}
 		}
 
-		//////////////////////////////////////////////////////////////////////////////
+		// ////////////////////////////////////////////////////////////////////////////
 		// ** THIS IS A TEMP FIX UNTIL PARTITIONING TAKES CARE OF THIS...
 		// CMVC 241882
 		// check for XML-JSP in a <script> region
 		if (partitionType == StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVASCRIPT || partitionType == StructuredTextPartitionerForHTML.ST_SCRIPT) {
-			//fn should be block text
+			// fn should be block text
 			IStructuredDocumentRegion decodedSDRegion = decodeScriptBlock(fn.getFullText());
-			//System.out.println("decoded > " +
+			// System.out.println("decoded > " +
 			// blockOfText.substring(decodedSDRegion.getStartOffset(),
 			// decodedSDRegion.getEndOffset()));
 			if (decodedSDRegion != null) {
 				IStructuredDocumentRegion sdr = decodedSDRegion;
 				while (sdr != null) {
-					//System.out.println("sdr " + sdr.getType());
-					//System.out.println("sdr > " +
+					// System.out.println("sdr " + sdr.getType());
+					// System.out.println("sdr > " +
 					// blockOfText.substring(sdr.getStartOffset(),
 					// sdr.getEndOffset()));
 					if (sdr.getType() == XMLJSPRegionContexts.JSP_CONTENT) {
 						if (documentPosition >= fn.getStartOffset() + sdr.getStartOffset() && documentPosition <= fn.getStartOffset() + sdr.getEndOffset()) {
 							return getJSPJavaCompletionProposals(viewer, documentPosition);
 						}
-					}
-					else if (sdr.getType() == XMLRegionContext.XML_TAG_NAME) {
+					} else if (sdr.getType() == XMLRegionContext.XML_TAG_NAME) {
 						if (documentPosition > fn.getStartOffset() + sdr.getStartOffset() && documentPosition < fn.getStartOffset() + sdr.getEndOffset()) {
 							return EMPTY_PROPOSAL_SET;
-						}
-						else if (documentPosition == fn.getStartOffset() + sdr.getEndOffset() && sdr.getNext() != null && sdr.getNext().getType() == XMLJSPRegionContexts.JSP_CONTENT) {
+						} else if (documentPosition == fn.getStartOffset() + sdr.getEndOffset() && sdr.getNext() != null && sdr.getNext().getType() == XMLJSPRegionContexts.JSP_CONTENT) {
 							// the end of an open tag <script>
 							// <jsp:scriptlet>| blah </jsp:scriptlet>
 							return getJSPJavaCompletionProposals(viewer, documentPosition);
-						}
-						else if (documentPosition == fn.getStartOffset() + sdr.getStartOffset() && sdr.getPrevious() != null && sdr.getPrevious().getType() == XMLRegionContext.XML_TAG_NAME) {
+						} else if (documentPosition == fn.getStartOffset() + sdr.getStartOffset() && sdr.getPrevious() != null && sdr.getPrevious().getType() == XMLRegionContext.XML_TAG_NAME) {
 							return getJSPJavaCompletionProposals(viewer, documentPosition);
 						}
 					}
@@ -675,7 +668,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 				}
 			}
 		}
-		///////////////////////////////////////////////////////////////////////////
+		// /////////////////////////////////////////////////////////////////////////
 
 		// check special JSP delimiter cases
 		if (fn != null && partitionType == StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER) {
@@ -684,7 +677,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 			// if it's a nested JSP region, need to get the correct
 			// StructuredDocumentRegion
 			// not sure why this check was there...
-			//if (fnDelim.getType() == XMLRegionContext.BLOCK_TEXT) {
+			// if (fnDelim.getType() == XMLRegionContext.BLOCK_TEXT) {
 			Iterator blockRegions = fnDelim.getRegions().iterator();
 			ITextRegion temp = null;
 			ITextRegionContainer trc;
@@ -708,15 +701,14 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 									partitionType = getPartitionType((StructuredTextViewer) viewer, documentPosition - 1);
 									break;
 								}
-							}
-							else if (XMLContentAssistUtilities.isJSPCloseDelimiter(temp.getType()) && documentPosition == trc.getStartOffset(temp)) {
+							} else if (XMLContentAssistUtilities.isJSPCloseDelimiter(temp.getType()) && documentPosition == trc.getStartOffset(temp)) {
 								// JSP content assist
 								return getJSPJavaCompletionProposals(viewer, documentPosition);
 							}
 						}
 					}
 				}
-				//}
+				// }
 			}
 
 			// take care of XML-JSP delimter cases
@@ -727,10 +719,9 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 					// |<jsp:scriptlet> </jsp:scriptlet>
 					// (pa) commented out so that we get regular behavior JSP
 					// macros etc...
-					//return getHTMLCompletionProposals(viewer,
+					// return getHTMLCompletionProposals(viewer,
 					// documentPosition);
-				}
-				else if (fnDelim.getStartOffset() == documentPosition && (firstRegion.getType() == XMLRegionContext.XML_END_TAG_OPEN)) {
+				} else if (fnDelim.getStartOffset() == documentPosition && (firstRegion.getType() == XMLRegionContext.XML_END_TAG_OPEN)) {
 					// <jsp:scriptlet> |</jsp:scriptlet>
 					// check previous partition type to see if it's JAVASCRIPT
 					// if it is, we're just gonna let the embedded JAVASCRIPT
@@ -748,19 +739,16 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 							// not
 							// javascript...)
 							return getJSPJavaCompletionProposals(viewer, documentPosition);
-						}
-						else {
+						} else {
 							partitionType = StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVASCRIPT;
 						}
 					}
-				}
-				else if ((firstRegion.getType() == XMLRegionContext.XML_TAG_OPEN) && documentPosition >= fnDelim.getEndOffset()) {
+				} else if ((firstRegion.getType() == XMLRegionContext.XML_TAG_OPEN) && documentPosition >= fnDelim.getEndOffset()) {
 					// anything else inbetween
 					return getJSPJavaCompletionProposals(viewer, documentPosition);
 				}
-			}
-			else if (XMLContentAssistUtilities.isJSPDelimiter(fnDelim)) {
-				//	the delimiter <%, <%=, <%!, ...
+			} else if (XMLContentAssistUtilities.isJSPDelimiter(fnDelim)) {
+				// the delimiter <%, <%=, <%!, ...
 				if (XMLContentAssistUtilities.isJSPCloseDelimiter(fnDelim)) {
 					if (documentPosition == fnDelim.getStartOffset()) {
 						// check previous partition type to see if it's
@@ -771,20 +759,17 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 							String checkType = getPartitionType((StructuredTextViewer) viewer, documentPosition - 1);
 							if (checkType != StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVASCRIPT) {
 								return getJSPJavaCompletionProposals(viewer, documentPosition);
-							}
-							else {
+							} else {
 								partitionType = StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVASCRIPT;
 							}
 						}
 					}
-				}
-				else if (XMLContentAssistUtilities.isJSPOpenDelimiter(fnDelim)) {
+				} else if (XMLContentAssistUtilities.isJSPOpenDelimiter(fnDelim)) {
 					// if it's the first position of open delimiter
 					// use embedded HTML results
 					if (documentPosition == fnDelim.getStartOffset()) {
 						embeddedResults = getHTMLCompletionProposals(viewer, documentPosition);
-					}
-					else if (documentPosition == fnDelim.getEndOffset()) {
+					} else if (documentPosition == fnDelim.getEndOffset()) {
 						// it's at the EOF <%|
 						return getJSPJavaCompletionProposals(viewer, documentPosition);
 					}
@@ -835,8 +820,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 					if (XMLContentAssistUtilities.isJSPOpenDelimiter(testRegion.getType())) {
 						if (!(((ITextRegionContainer) attrContainer).getEndOffset(testRegion) <= documentPosition))
 							return EMPTY_PROPOSAL_SET;
-					}
-					else if (XMLContentAssistUtilities.isJSPCloseDelimiter(testRegion.getType())) {
+					} else if (XMLContentAssistUtilities.isJSPCloseDelimiter(testRegion.getType())) {
 						if (!(((ITextRegionContainer) attrContainer).getStartOffset(testRegion) >= documentPosition))
 							return EMPTY_PROPOSAL_SET;
 					}
@@ -862,14 +846,13 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 					embeddedResults = added;
 				}
 			}
-		}
-		else {
+		} else {
 			// the partition type is probably not mapped
 		}
 
 		// fix for CMVC 253000
 		if (!(p instanceof JavaScriptContentAssistProcessor || p instanceof CSSContentAssistProcessor)) {
-			super.macroContexts.clear();
+			fTemplateContexts.clear();
 			jspResults = super.computeCompletionProposals(viewer, documentPosition);
 		}
 		if (useEmbeddedResults) {
@@ -938,9 +921,9 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		for (int i = 0; i < regularJSPResults.length; i++) {
 			ICompletionProposal test = regularJSPResults[i];
 
-						System.out.println("proposal > " + test.getDisplayString());
-            System.out.println("relevance > " + ((CustomCompletionProposal) test).getRelevance());
-						
+			System.out.println("proposal > " + test.getDisplayString());
+			System.out.println("relevance > " + ((CustomCompletionProposal) test).getRelevance());
+
 			if (isRelevanceAllowed(((CustomCompletionProposal) test).getRelevance())) {
 				filteredProposals.add(test);
 			}
@@ -1001,8 +984,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		String partitionType = null;
 		try {
 			partitionType = TextUtilities.getContentType(viewer.getDocument(), IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING, viewer.modelOffset2WidgetOffset(documentPosition), false);
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 			partitionType = IDocument.DEFAULT_CONTENT_TYPE;
 		}
 		return partitionType;
@@ -1048,7 +1030,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		// return from HTML preference,
 		// since we know that we are inhereiting the preference for auto
 		// activation from HTML
-//		AbstractUIPlugin htmlPlugin = (AbstractUIPlugin) Platform.getPlugin(HTMLEditorPlugin.ID);
+		// AbstractUIPlugin htmlPlugin = (AbstractUIPlugin)
+		// Platform.getPlugin(HTMLEditorPlugin.ID);
 		IPreferenceStore store = JSPUIPlugin.getDefault().getPreferenceStore();
 		String key = JSPUIPreferenceNames.AUTO_PROPOSE_CODE;
 
@@ -1069,18 +1052,18 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 	public void initialize(IResource resourceToInit) {
 		fResource = resourceToInit;
 		if (fNameToProcessorMap != null) {
-			
-			if(fNameToProcessorMap.isEmpty())
+
+			if (fNameToProcessorMap.isEmpty())
 				initNameToProcessorMap();
-				
+
 			// init some embedded processors
 			JSPUseBeanContentAssistProcessor useBeanProcessor = (JSPUseBeanContentAssistProcessor) fNameToProcessorMap.get(JSP11Namespace.ElementName.USEBEAN);
 			JSPPropertyContentAssistProcessor propProcessor = (JSPPropertyContentAssistProcessor) fNameToProcessorMap.get(JSP11Namespace.ElementName.SETPROPERTY);
 			useBeanProcessor.initialize(resourceToInit);
 			propProcessor.initialize(resourceToInit);
 		}
-		if(fPartitionToProcessorMap != null) {
-			if(fPartitionToProcessorMap.isEmpty())
+		if (fPartitionToProcessorMap != null) {
+			if (fPartitionToProcessorMap.isEmpty())
 				initPartitionToProcessorMap();
 		}
 	}
@@ -1178,8 +1161,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 					if (directiveNames[i].startsWith(nameString) || documentPosition <= begin)
 						request.addProposal(new CustomCompletionProposal(directiveNames[i], begin, length, directiveNames[i].length(), SharedXMLEditorPluginImageHelper.getImage(SharedXMLEditorPluginImageHelper.IMG_OBJ_TAG_GENERIC), directiveNames[i], null, null, XMLRelevanceConstants.R_JSP));
 				}
-			}
-			else { // by default, JSP_DIRECTIVE_NAME
+			} else { // by default, JSP_DIRECTIVE_NAME
 				if (request == null)
 					request = newContentAssistRequest(xmlnode, xmlnode, sdRegion, completionRegion, sdRegion.getStartOffset(completionRegion), completionRegion.getTextLength(), matchString);
 				for (int i = 0; i < directiveNames.length; i++) {
@@ -1187,14 +1169,13 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 						request.addProposal(new CustomCompletionProposal(directiveNames[i], request.getReplacementBeginPosition(), request.getReplacementLength(), directiveNames[i].length(), SharedXMLEditorPluginImageHelper.getImage(SharedXMLEditorPluginImageHelper.IMG_OBJ_TAG_GENERIC), directiveNames[i], null, null, XMLRelevanceConstants.R_JSP));
 				}
 			}
-		}
-		else if ((completionRegion.getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_NAME && documentPosition > sdRegion.getTextEndOffset(completionRegion)) || (completionRegion.getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_CLOSE && documentPosition <= sdRegion.getStartOffset(completionRegion))) {
+		} else if ((completionRegion.getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_NAME && documentPosition > sdRegion.getTextEndOffset(completionRegion)) || (completionRegion.getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_CLOSE && documentPosition <= sdRegion.getStartOffset(completionRegion))) {
 			if (request == null)
 				request = computeAttributeProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
 			super.addTagCloseProposals(request);
-			//  CMVC 274033, this is being added for all <jsp:* tags
+			// CMVC 274033, this is being added for all <jsp:* tags
 			// in addAttributeNameProposals(contentAssistRequest)
-			//super.addAttributeNameProposals(request);
+			// super.addAttributeNameProposals(request);
 		}
 		// no name?: <%@ %>
 		else if (completionRegion.getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_CLOSE && documentPosition <= sdRegion.getStartOffset(completionRegion)) {
@@ -1215,20 +1196,45 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 				}
 			}
 		}
+		
+		addTemplates(request, TemplateContextTypeIdsJSP.ALL);
 		return request;
 	}
 
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.editor.xml.contentassist.AbstractContentAssistProcessor#getTemplateCompletionProcessor()
-	 */
-	protected AbstractTemplateCompletionProcessor getTemplateCompletionProcessor() {
+	private JSPTemplateCompletionProcessor getTemplateCompletionProcessor() {
 		if (fTemplateProcessor == null) {
 			fTemplateProcessor = new JSPTemplateCompletionProcessor();
 		}
 		return fTemplateProcessor;
+	}
+
+	/**
+	 * Adds templates to the list of proposals
+	 * 
+	 * @param contentAssistRequest
+	 * @param context
+	 */
+	private void addTemplates(ContentAssistRequest contentAssistRequest, String context) {
+		if (contentAssistRequest == null)
+			return;
+		
+		// if already adding template proposals for a certain context type, do
+		// not add again
+		if (!fTemplateContexts.contains(context)) {
+			fTemplateContexts.add(context);
+			boolean useProposalList = !contentAssistRequest.shouldSeparate();
+
+			if (getTemplateCompletionProcessor() != null) {
+				getTemplateCompletionProcessor().setContextType(context);
+				ICompletionProposal[] proposals = getTemplateCompletionProcessor().computeCompletionProposals(fTextViewer, contentAssistRequest.getReplacementBeginPosition());
+				for (int i = 0; i < proposals.length; ++i) {
+					if (useProposalList)
+						contentAssistRequest.addProposal(proposals[i]);
+					else
+						contentAssistRequest.addMacro(proposals[i]);
+				}
+			}
+		}
 	}
 
 	/**
@@ -1243,6 +1249,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 	 *      int)
 	 */
 	protected void addTagInsertionProposals(ContentAssistRequest contentAssistRequest, int childPosition) {
+		addTemplates(contentAssistRequest, TemplateContextTypeIdsJSP.TAG);
+
 		super.addTagInsertionProposals(contentAssistRequest, childPosition);
 		if (isInternalAdapter)
 			useEmbeddedResults = false;

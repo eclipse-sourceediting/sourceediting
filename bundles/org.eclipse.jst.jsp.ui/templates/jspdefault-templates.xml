@@ -15,6 +15,4 @@
 
 <template name="%Templates.jsptaglibdirective.name" description="%Templates.jsptaglibdirective.desc" id="com.ibm.sse.editor.jsp.templates.jsptaglibdirective" context="jsp_tag" enabled="true">%Templates.jsptaglibdirective.content</template>
 
-<template name="%Templates.jspcomment.name" description="%Templates.jspcomment.desc" id="com.ibm.sse.editor.jsp.templates.jspcomment" context="jsp_tag" enabled="true">%Templates.jspcomment.content</template>
-
 </templates>

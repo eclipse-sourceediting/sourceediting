@@ -10,7 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.internal.contentassist;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -26,7 +28,10 @@ import org.eclipse.wst.html.core.HTML40Namespace;
 import org.eclipse.wst.html.core.HTMLCMProperties;
 import org.eclipse.wst.html.core.contentmodel.HTMLCMDocument;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
+import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImageHelper;
+import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImages;
 import org.eclipse.wst.html.ui.internal.preferences.HTMLUIPreferenceNames;
+import org.eclipse.wst.html.ui.internal.templates.TemplateContextTypeIdsHTML;
 import org.eclipse.wst.javascript.common.ui.contentassist.JavaScriptContentAssistProcessor;
 import org.eclipse.wst.sse.core.AdapterFactory;
 import org.eclipse.wst.sse.core.IModelManager;
@@ -40,7 +45,6 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
-import org.eclipse.wst.sse.ui.edit.util.SharedEditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xml.core.document.XMLDocument;
@@ -49,11 +53,9 @@ import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.core.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.eclipse.wst.xml.ui.contentassist.AbstractContentAssistProcessor;
-import org.eclipse.wst.xml.ui.contentassist.AbstractTemplateCompletionProcessor;
 import org.eclipse.wst.xml.ui.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.contentassist.XMLContentModelGenerator;
 import org.eclipse.wst.xml.ui.contentassist.XMLRelevanceConstants;
-import org.eclipse.wst.xml.ui.util.SharedXMLEditorPluginImageHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
@@ -62,13 +64,24 @@ import org.w3c.dom.Node;
 public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor implements IPropertyChangeListener {
 	private AdapterFactory factoryForCSS = null;
 	protected IPreferenceStore fPreferenceStore = null;
-	protected AbstractTemplateCompletionProcessor fTemplateProcessor = null;
 	protected boolean isXHTML = false;
 	protected IResource fResource = null;
+	private HTMLTemplateCompletionProcessor fTemplateProcessor = null;
+	private List fTemplateContexts = new ArrayList();
 
 	public HTMLContentAssistProcessor() {
 
 		super();
+	}
+
+	protected void addAttributeNameProposals(ContentAssistRequest contentAssistRequest) {
+		addTemplates(contentAssistRequest, TemplateContextTypeIdsHTML.ATTRIBUTE);
+		super.addAttributeNameProposals(contentAssistRequest);
+	}
+
+	protected void addAttributeValueProposals(ContentAssistRequest contentAssistRequest) {
+		addTemplates(contentAssistRequest, TemplateContextTypeIdsHTML.ATTRIBUTE_VALUE);
+		super.addAttributeValueProposals(contentAssistRequest);
 	}
 
 	/**
@@ -83,7 +96,7 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 	 * Add the proposals for a completely empty document
 	 */
 	protected void addEmptyDocumentProposals(ContentAssistRequest contentAssistRequest) {
-		//		addMacros(contentAssistRequest, MacroHelper.TAG);
+		addTemplates(contentAssistRequest, TemplateContextTypeIdsHTML.NEW);
 	}
 
 	protected void addPCDATAProposal(String nodeName, ContentAssistRequest contentAssistRequest) {
@@ -96,6 +109,40 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 			addEmptyDocumentProposals(contentAssistRequest);
 	}
 
+	protected void addTagInsertionProposals(ContentAssistRequest contentAssistRequest, int childPosition) {
+		addTemplates(contentAssistRequest, TemplateContextTypeIdsHTML.TAG);
+		super.addTagInsertionProposals(contentAssistRequest, childPosition);
+	}
+
+	/**
+	 * Adds templates to the list of proposals
+	 * 
+	 * @param contentAssistRequest
+	 * @param context
+	 */
+	private void addTemplates(ContentAssistRequest contentAssistRequest, String context) {
+		if (contentAssistRequest == null)
+			return;
+
+		// if already adding template proposals for a certain context type, do
+		// not add again
+		if (!fTemplateContexts.contains(context)) {
+			fTemplateContexts.add(context);
+			boolean useProposalList = !contentAssistRequest.shouldSeparate();
+
+			if (getTemplateCompletionProcessor() != null) {
+				getTemplateCompletionProcessor().setContextType(context);
+				ICompletionProposal[] proposals = getTemplateCompletionProcessor().computeCompletionProposals(fTextViewer, contentAssistRequest.getReplacementBeginPosition());
+				for (int i = 0; i < proposals.length; ++i) {
+					if (useProposalList)
+						contentAssistRequest.addProposal(proposals[i]);
+					else
+						contentAssistRequest.addMacro(proposals[i]);
+				}
+			}
+		}
+	}
+
 	protected boolean beginsWith(String aString, String prefix) {
 		if (aString == null || prefix == null || prefix.length() == 0)
 			return true;
@@ -104,15 +151,23 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 		return beginning.equalsIgnoreCase(prefix);
 	}
 
+	protected ContentAssistRequest computeCompletionProposals(int documentPosition, String matchString, ITextRegion completionRegion, XMLNode treeNode, XMLNode xmlnode) {
+		ContentAssistRequest request = super.computeCompletionProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
+		addTemplates(request, TemplateContextTypeIdsHTML.ALL);
+		return request;
+	}
+
 	/**
-	 * Return a list of proposed code completions based on the
-	 * specified location within the document that corresponds
-	 * to the current cursor position within the text-editor control.
-	 *
-	 * @param documentPosition a location within the document
+	 * Return a list of proposed code completions based on the specified
+	 * location within the document that corresponds to the current cursor
+	 * position within the text-editor control.
+	 * 
+	 * @param documentPosition
+	 *            a location within the document
 	 * @return an array of code-assist items
 	 */
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer textViewer, int documentPosition) {
+		fTemplateContexts.clear();
 
 		IndexedRegion treeNode = ContentAssistUtils.getNodeAt((StructuredTextViewer) textViewer, documentPosition);
 		XMLNode node = (XMLNode) treeNode;
@@ -166,7 +221,8 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 
 		if (node != null && node.getNodeType() == Node.ELEMENT_NODE) {
 
-			// check embedded CSS proposals at the beginning of the STYLE end tag
+			// check embedded CSS proposals at the beginning of the STYLE end
+			// tag
 			Element element = (Element) node;
 			String tagName = element.getTagName();
 			if (tagName != null && tagName.equalsIgnoreCase(HTML40Namespace.ATTR_NAME_STYLE)) {//$NON-NLS-1$
@@ -218,8 +274,7 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 							if (documentPosition == offset) {
 								// before quote
 								askCSS = false;
-							}
-							else {
+							} else {
 								offset++;
 								quote = firstChar;
 							}
@@ -245,7 +300,8 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 	}
 
 	/**
-	 * Returns true if there is no text or it's all white space, otherwise returns false
+	 * Returns true if there is no text or it's all white space, otherwise
+	 * returns false
 	 * 
 	 * @param treeNode
 	 * @param textViewer
@@ -281,15 +337,16 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 				String proposedText = proposedTextBuffer.toString();
 				String requiredName = getContentGenerator().getRequiredName(doc, htmlDecl);
 
-				CustomCompletionProposal proposal = new CustomCompletionProposal(proposedText, documentPosition, // start pos
+				CustomCompletionProposal proposal = new CustomCompletionProposal(proposedText, documentPosition, // start
+							// pos
 							0, // replace length
-							requiredName.length() + 2, // cursor position after (relavtive to start)
-							SharedEditorPluginImageHelper.getImage(SharedXMLEditorPluginImageHelper.IMG_OBJ_TAG_GENERIC), 
-							requiredName, null, null, XMLRelevanceConstants.R_TAG_NAME);
+							requiredName.length() + 2, // cursor position
+							// after (relavtive to
+							// start)
+							HTMLEditorPluginImageHelper.getInstance().getImage(HTMLEditorPluginImages.IMG_OBJ_TAG_GENERIC), requiredName, null, null, XMLRelevanceConstants.R_TAG_NAME);
 				return proposal;
 			}
-		}
-		finally {
+		} finally {
 			if (model != null)
 				model.releaseFromRead();
 		}
@@ -323,11 +380,8 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 			return " />"; //$NON-NLS-1$
 		return ">"; //$NON-NLS-1$
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.xml.contentassist.AbstractContentAssistProcessor#getTemplateCompletionProcessor()
-	 */
-	protected AbstractTemplateCompletionProcessor getTemplateCompletionProcessor() {
+
+	private HTMLTemplateCompletionProcessor getTemplateCompletionProcessor() {
 		if (fTemplateProcessor == null) {
 			fTemplateProcessor = new HTMLTemplateCompletionProcessor();
 		}
@@ -335,8 +389,8 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 	}
 
 	/**
-	 * Determine if this Document is an XHTML Document.  Oprates solely
-	 * off of the Document Type declaration
+	 * Determine if this Document is an XHTML Document. Oprates solely off of
+	 * the Document Type declaration
 	 */
 	protected boolean getXHTML(Node node) {
 		if (node == null)
@@ -358,7 +412,8 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 			if (adapter != null && adapter.getModelQuery() != null)
 				cmdoc = adapter.getModelQuery().getCorrespondingCMDocument(doc);
 			if (cmdoc != null) {
-				// treat as XHTML unless we've got the in-code HTML content model
+				// treat as XHTML unless we've got the in-code HTML content
+				// model
 				if (cmdoc instanceof HTMLCMDocument)
 					return false;
 				if (cmdoc.supports(HTMLCMProperties.IS_XHTML))
@@ -381,8 +436,7 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 		if (doAuto) {
 			key = HTMLUIPreferenceNames.AUTO_PROPOSE_CODE;
 			completionProposalAutoActivationCharacters = getPreferenceStore().getString(key).toCharArray();
-		}
-		else {
+		} else {
 			completionProposalAutoActivationCharacters = null;
 		}
 	}
@@ -415,7 +469,8 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 	}
 
 	/**
-	 * @see com.ibm.sed.edit.adapters.ExtendedContentAssistAdapter#computeCompletionProposals(ITextViewer, int, IndexedRegion, ITextRegion)
+	 * @see com.ibm.sed.edit.adapters.ExtendedContentAssistAdapter#computeCompletionProposals(ITextViewer,
+	 *      int, IndexedRegion, ITextRegion)
 	 */
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int documentPosition, IndexedRegion indexedNode, ITextRegion region) {
 		return computeCompletionProposals(viewer, documentPosition);

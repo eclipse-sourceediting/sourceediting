@@ -259,22 +259,27 @@
          point="org.eclipse.ui.editors.templates">
       <contextType
             name="%All_HTML_context_type_Extension_Element.name"
-            class="org.eclipse.wst.html.ui.templates.TemplateContextTypeHTML"
+            class="org.eclipse.wst.html.ui.internal.templates.TemplateContextTypeHTML"
             id="html_all">
       </contextType>
       <contextType
+            name="%HTML_New_context_type_Extension_Element.name"
+            class="org.eclipse.wst.html.ui.internal.templates.TemplateContextTypeHTML"
+            id="html_new">
+      </contextType>
+      <contextType
             name="%HTML_Tag_context_type_Extension_Element.name"
-            class="org.eclipse.wst.html.ui.templates.TemplateContextTypeHTMLTag"
+            class="org.eclipse.wst.html.ui.internal.templates.TemplateContextTypeHTML"
             id="html_tag">
       </contextType>
       <contextType
             name="%HTML_Attribute_context_type_Extension_Element.name"
-            class="org.eclipse.wst.html.ui.templates.TemplateContextTypeHTMLAttribute"
+            class="org.eclipse.wst.html.ui.internal.templates.TemplateContextTypeHTML"
             id="html_attribute">
       </contextType>
       <contextType
             name="%HTML_Attribute_value_context_type_Extension_Element.name"
-            class="org.eclipse.wst.html.ui.templates.TemplateContextTypeHTMLAttributeValue"
+            class="org.eclipse.wst.html.ui.internal.templates.TemplateContextTypeHTML"
             id="html_attribute_value">
       </contextType>
       <include

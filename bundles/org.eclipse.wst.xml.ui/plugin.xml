@@ -180,22 +180,27 @@
          point="org.eclipse.ui.editors.templates">
       <contextType
             name="%All_XML_context_type_Extension_Element.name"
-            class="org.eclipse.wst.xml.ui.templates.TemplateContextTypeXML"
+            class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
             id="xml_all">
       </contextType>
       <contextType
+            name="%XML_New_context_type_Extension_Element.name"
+            class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
+            id="xml_new">
+      </contextType>
+      <contextType
             name="%XML_Tag_context_type_Extension_Element.name"
-            class="org.eclipse.wst.xml.ui.templates.TemplateContextTypeXMLTag"
+            class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
             id="xml_tag">
       </contextType>
       <contextType
             name="%XML_Attribute_context_type_Extension_Element.name"
-            class="org.eclipse.wst.xml.ui.templates.TemplateContextTypeXMLAttribute"
+            class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
             id="xml_attribute">
       </contextType>
       <contextType
             name="%XML_Attribute_value_context_type_Extension_Element.name"
-            class="org.eclipse.wst.xml.ui.templates.TemplateContextTypeXMLAttributeValue"
+            class="org.eclipse.wst.xml.ui.internal.templates.TemplateContextTypeXML"
             id="xml_attribute_value">
       </contextType>
       <include

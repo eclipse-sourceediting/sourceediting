@@ -116,12 +116,6 @@ public class JSPDummyContentAssistProcessor extends AbstractContentAssistProcess
 		super.addEntityProposals(proposals, map, key, nodeOffset, parent, completionRegion);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.xml.contentassist.AbstractContentAssistProcessor#addTemplates(com.ibm.sse.editor.xml.contentassist.ContentAssistRequest, java.lang.String)
-	 */
-	protected void addTemplates(ContentAssistRequest contentAssistRequest, String context) {
-		super.addTemplates(contentAssistRequest, context);
-	}
 	/**
 	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#addPCDATAProposal(java.lang.String, com.ibm.sed.structured.contentassist.xml.ContentAssistRequest)
 	 */

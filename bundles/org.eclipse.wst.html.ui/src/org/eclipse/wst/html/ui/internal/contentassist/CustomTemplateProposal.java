@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     
  *******************************************************************************/
-package org.eclipse.wst.xml.ui.contentassist;
+package org.eclipse.wst.html.ui.internal.contentassist;
 
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.templates.Template;

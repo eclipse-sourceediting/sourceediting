@@ -21,10 +21,7 @@ import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
 import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.html.ui.internal.preferences.HTMLUIPreferenceNames;
-import org.eclipse.wst.html.ui.templates.TemplateContextTypeHTML;
-import org.eclipse.wst.html.ui.templates.TemplateContextTypeHTMLAttribute;
-import org.eclipse.wst.html.ui.templates.TemplateContextTypeHTMLAttributeValue;
-import org.eclipse.wst.html.ui.templates.TemplateContextTypeHTMLTag;
+import org.eclipse.wst.html.ui.internal.templates.TemplateContextTypeIdsHTML;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistryImpl;
 import org.eclipse.wst.sse.ui.registry.embedded.EmbeddedAdapterFactoryRegistryImpl;
@@ -36,18 +33,18 @@ public class HTMLUIPlugin extends AbstractUIPlugin {
 	public final static String ID = "org.eclipse.wst.html.ui"; //$NON-NLS-1$
 
 	protected static HTMLUIPlugin instance = null;
-	//Resource bundle.
+	// Resource bundle.
 	private ResourceBundle resourceBundle;
 	private static final String KEY_PREFIX = "%"; //$NON-NLS-1$
 	private static final String KEY_DOUBLE_PREFIX = "%%"; //$NON-NLS-1$	
-	
+
 	/**
-	 * The template store for the html editor. 
+	 * The template store for the html editor.
 	 */
 	private TemplateStore fTemplateStore;
-	
-	/** 
-	 * The template context type registry for the html editor. 
+
+	/**
+	 * The template context type registry for the html editor.
 	 */
 	private ContextTypeRegistry fContextTypeRegistry;
 
@@ -81,17 +78,17 @@ public class HTMLUIPlugin extends AbstractUIPlugin {
 	 */
 	public TemplateStore getTemplateStore() {
 		if (fTemplateStore == null) {
-			fTemplateStore= new ContributionTemplateStore(getTemplateContextRegistry(), getPreferenceStore(), HTMLUIPreferenceNames.TEMPLATES_KEY);
+			fTemplateStore = new ContributionTemplateStore(getTemplateContextRegistry(), getPreferenceStore(), HTMLUIPreferenceNames.TEMPLATES_KEY);
 
 			try {
 				fTemplateStore.load();
 			} catch (IOException e) {
 				Logger.logException(e);
 			}
-		}		
+		}
 		return fTemplateStore;
 	}
-	
+
 	/**
 	 * Returns the template context type registry for the html plugin.
 	 * 
@@ -99,20 +96,22 @@ public class HTMLUIPlugin extends AbstractUIPlugin {
 	 */
 	public ContextTypeRegistry getTemplateContextRegistry() {
 		if (fContextTypeRegistry == null) {
-			fContextTypeRegistry= new ContributionContextTypeRegistry();
-			
-			fContextTypeRegistry.addContextType(new TemplateContextTypeHTML());
-			fContextTypeRegistry.addContextType(new TemplateContextTypeHTMLTag());
-			fContextTypeRegistry.addContextType(new TemplateContextTypeHTMLAttribute());
-			fContextTypeRegistry.addContextType(new TemplateContextTypeHTMLAttributeValue());
+			ContributionContextTypeRegistry registry = new ContributionContextTypeRegistry();
+			registry.addContextType(TemplateContextTypeIdsHTML.ALL);
+			registry.addContextType(TemplateContextTypeIdsHTML.NEW);
+			registry.addContextType(TemplateContextTypeIdsHTML.TAG);
+			registry.addContextType(TemplateContextTypeIdsHTML.ATTRIBUTE);
+			registry.addContextType(TemplateContextTypeIdsHTML.ATTRIBUTE_VALUE);
+
+			fContextTypeRegistry = registry;
 		}
 
 		return fContextTypeRegistry;
 	}
 
 	/**
-	 * Returns the string from the plugin's resource bundle,
-	 * or 'key' if not found.
+	 * Returns the string from the plugin's resource bundle, or 'key' if not
+	 * found.
 	 */
 	public static String getResourceString(String value) {
 		String s = value.trim();

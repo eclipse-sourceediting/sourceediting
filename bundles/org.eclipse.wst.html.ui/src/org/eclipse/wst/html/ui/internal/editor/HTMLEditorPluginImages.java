@@ -20,10 +20,12 @@ public class HTMLEditorPluginImages {
 	public static final String IMG_OBJ_TAG_BUTTON = "icons/full/obj16/tag-button.gif";			//$NON-NLS-1$
 	public static final String IMG_OBJ_TAG_FONT = "icons/full/obj16/tag-font.gif";			//$NON-NLS-1$
 	public static final String IMG_OBJ_TAG_FORM = "icons/full/obj16/tag-form.gif";			//$NON-NLS-1$
+	public static final String IMG_OBJ_TAG_GENERIC = "icons/full/obj16/tag-generic.gif";			//$NON-NLS-1$
 	public static final String IMG_OBJ_TAG_HTML = "icons/full/obj16/tag-html.gif";			//$NON-NLS-1$
 	public static final String IMG_OBJ_TAG_IMAGE_MAP = "icons/full/obj16/tag-image-map.gif";			//$NON-NLS-1$
 	public static final String IMG_OBJ_TAG_IMAGE = "icons/full/obj16/tag-image.gif";			//$NON-NLS-1$
 	public static final String IMG_OBJ_TAG_JSP = "icons/full/obj16/tag-jsp.gif";			//$NON-NLS-1$
+	public static final String IMG_OBJ_TAG_TEMPLATE = "icons/full/obj16/tag-template.gif";			//$NON-NLS-1$
 	public static final String IMG_OBJ_TAG_TITLE = "icons/full/obj16/tag-title.gif";			//$NON-NLS-1$
 	public static final String IMG_OBJ_TAG = "icons/full/obj16/tag.gif";			//$NON-NLS-1$
 }

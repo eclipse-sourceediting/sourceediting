@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-
-<template name="%Templates.comment.name" description="%Templates.comment.desc" id="org.eclipse.wst.xml.ui.templates.comment" context="xml_tag" enabled="true">&lt;!-- ${cursor} --&gt;</template>
+<template name="%Templates.xmldeclaration.name" description="%Templates.xmldeclaration.desc" id="org.eclipse.wst.xml.ui.internal.templates.xmldeclaration" context="xml_new" enabled="true">&lt;?xml version="1.0" encoding="${encoding}"?&gt;</template>
+<template name="%Templates.comment.name" description="%Templates.comment.desc" id="org.eclipse.wst.xml.ui.internal.templates.comment" context="xml_tag" enabled="true">&lt;!-- ${cursor} --&gt;</template>
 </templates>

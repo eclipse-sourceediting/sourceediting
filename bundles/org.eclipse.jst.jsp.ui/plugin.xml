@@ -353,21 +353,25 @@
 	<!--======================================================================================-->
 	<extension point="org.eclipse.ui.editors.templates">
 		<contextType name="%All_JSP_context_type_Extension_Element.name"
-			class="org.eclipse.jst.jsp.ui.templates.TemplateContextTypeJSP"
+			class="org.eclipse.jst.jsp.ui.internal.templates.TemplateContextTypeJSP"
 			id="jsp_all">
 		</contextType>
+		<contextType name="%JSP_New_context_type_Extension_Element.name"
+			class="org.eclipse.jst.jsp.ui.internal.templates.TemplateContextTypeJSP"
+			id="jsp_new">
+		</contextType>
 		<contextType name="%JSP_Tag_context_type_Extension_Element.name"
-			class="org.eclipse.jst.jsp.ui.templates.TemplateContextTypeJSPTag"
+			class="org.eclipse.jst.jsp.ui.internal.templates.TemplateContextTypeJSP"
 			id="jsp_tag">
 		</contextType>
 		<contextType
 			name="%JSP_Attribute_context_type_Extension_Element.name"
-			class="org.eclipse.jst.jsp.ui.templates.TemplateContextTypeJSPAttribute"
+			class="org.eclipse.jst.jsp.ui.internal.templates.TemplateContextTypeJSP"
 			id="jsp_attribute">
 		</contextType>
 		<contextType
 			name="%JSP_Attribute_value_context_type_Extension_Element.name"
-			class="org.eclipse.jst.jsp.ui.templates.TemplateContextTypeJSPAttributeValue"
+			class="org.eclipse.jst.jsp.ui.internal.templates.TemplateContextTypeJSP"
 			id="jsp_attribute_value">
 		</contextType>
 		<include file="templates/jspdefault-templates.xml"

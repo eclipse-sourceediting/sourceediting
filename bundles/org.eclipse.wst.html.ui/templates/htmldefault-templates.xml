@@ -13,9 +13,13 @@
 
 <template name="%Templates.ol.name" description="%Templates.ol.desc" id="com.ibm.sse.editor.html.templates.ol" context="html_tag" enabled="true">%Templates.ol.content</template>
 
-<template name="%Templates.html.name" description="%Templates.html.desc" id="com.ibm.sse.editor.html.templates.html" context="html_tag" enabled="true">%Templates.html.content</template>
+<template name="%Templates.html.name" description="%Templates.html.desc" id="com.ibm.sse.editor.html.templates.html" context="html_new" enabled="true">%Templates.html.content</template>
 
-<template name="%Templates.html.name" description="%Templates.html.desc" id="com.ibm.sse.editor.html.templates.html" context="html_tag" enabled="true">%Templates.html.content</template>
+<template name="%Templates.htmlframeset.name" description="%Templates.htmlframeset.desc" id="com.ibm.sse.editor.html.templates.htmlframeset" context="html_new" enabled="true">%Templates.htmlframeset.content</template>
+
+<template name="%Templates.xhtml.name" description="%Templates.xhtml.desc" id="com.ibm.sse.editor.html.templates.xhtml" context="html_new" enabled="true">%Templates.xhtml.content</template>
+
+<template name="%Templates.xhtmlframeset.name" description="%Templates.xhtmlframeset.desc" id="com.ibm.sse.editor.html.templates.xhtmlframeset" context="html_new" enabled="true">%Templates.xhtmlframeset.content</template>
 
 <template name="%Templates.script.name" description="%Templates.script.desc" id="com.ibm.sse.editor.html.templates.script" context="html_tag" enabled="true">%Templates.script.content</template>
 

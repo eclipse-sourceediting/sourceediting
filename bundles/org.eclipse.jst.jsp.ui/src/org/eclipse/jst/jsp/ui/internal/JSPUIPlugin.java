@@ -18,10 +18,7 @@ import java.util.ResourceBundle;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.jst.jsp.ui.internal.preferences.JSPUIPreferenceNames;
-import org.eclipse.jst.jsp.ui.templates.TemplateContextTypeJSP;
-import org.eclipse.jst.jsp.ui.templates.TemplateContextTypeJSPAttribute;
-import org.eclipse.jst.jsp.ui.templates.TemplateContextTypeJSPAttributeValue;
-import org.eclipse.jst.jsp.ui.templates.TemplateContextTypeJSPTag;
+import org.eclipse.jst.jsp.ui.internal.templates.TemplateContextTypeIdsJSP;
 import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
 import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -99,12 +96,14 @@ public class JSPUIPlugin extends AbstractUIPlugin {
 	 */
 	public ContextTypeRegistry getTemplateContextRegistry() {
 		if (fContextTypeRegistry == null) {
-			fContextTypeRegistry= new ContributionContextTypeRegistry();
+			ContributionContextTypeRegistry registry = new ContributionContextTypeRegistry();
+			registry.addContextType(TemplateContextTypeIdsJSP.ALL);
+			registry.addContextType(TemplateContextTypeIdsJSP.NEW);
+			registry.addContextType(TemplateContextTypeIdsJSP.TAG);
+			registry.addContextType(TemplateContextTypeIdsJSP.ATTRIBUTE);
+			registry.addContextType(TemplateContextTypeIdsJSP.ATTRIBUTE_VALUE);
 			
-			fContextTypeRegistry.addContextType(new TemplateContextTypeJSP());
-			fContextTypeRegistry.addContextType(new TemplateContextTypeJSPTag());
-			fContextTypeRegistry.addContextType(new TemplateContextTypeJSPAttribute());
-			fContextTypeRegistry.addContextType(new TemplateContextTypeJSPAttributeValue());
+			fContextTypeRegistry= registry;
 		}
 
 		return fContextTypeRegistry;
