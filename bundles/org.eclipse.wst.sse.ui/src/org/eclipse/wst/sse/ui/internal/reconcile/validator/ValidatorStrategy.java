@@ -28,7 +28,7 @@ import org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcili
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentAdapter;
 import org.eclipse.wst.sse.ui.internal.reconcile.IStructuredReconcileStep;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
-import org.eclipse.wst.validation.internal.core.IValidator;
+import org.eclipse.wst.validation.core.IValidator;
 
 
 /**

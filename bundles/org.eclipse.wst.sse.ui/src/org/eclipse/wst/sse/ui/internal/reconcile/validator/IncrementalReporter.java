@@ -17,10 +17,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.wst.validation.internal.core.IMessage;
-import org.eclipse.wst.validation.internal.core.IMessageAccess;
-import org.eclipse.wst.validation.internal.core.IReporter;
-import org.eclipse.wst.validation.internal.core.IValidator;
+import org.eclipse.wst.validation.core.IMessage;
+import org.eclipse.wst.validation.core.IMessageAccess;
+import org.eclipse.wst.validation.core.IReporter;
+import org.eclipse.wst.validation.core.IValidator;
 
 
 /**
