@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.core.document;
 
+import org.eclipse.wst.sse.core.IStructuredModel;
+
 /**
  * <p>
  * An interface implemented by the SSE-based DTD model.
@@ -21,5 +23,5 @@ package org.eclipse.wst.dtd.core.document;
  * This interface is not intended to be implemented by clients.
  * </p>
  */
-public interface DTDModel {
+public interface DTDModel extends IStructuredModel{
 }
