@@ -17,8 +17,8 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
+import org.eclipse.wst.css.core.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.html.core.contenttype.ContentTypeIdForHTML;
-import org.eclipse.wst.sse.core.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistryImpl;
 import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;

@@ -15,9 +15,9 @@ import java.io.IOException;
 import junit.framework.TestCase;
 
 import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
+import org.eclipse.wst.css.core.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.html.core.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.sse.core.ModelPlugin;
-import org.eclipse.wst.sse.core.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
