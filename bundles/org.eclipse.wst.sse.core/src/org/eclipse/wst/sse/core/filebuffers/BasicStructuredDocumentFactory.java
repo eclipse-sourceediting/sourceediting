@@ -28,9 +28,10 @@ import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 
 
 /**
- * Generic IDocumentFactory for IStructuredDocuments. This class is not meant
- * to be subclassed.
- *
+ * Generic IDocumentFactory for IStructuredDocuments to be used by the
+ * org.eclipse.core.filebuffers.documentCreation extension point. This class
+ * is not meant to be subclassed.
+ * 
  * @since 1.0
  */
 public class BasicStructuredDocumentFactory implements IDocumentFactory, IExecutableExtension {
@@ -82,7 +83,7 @@ public class BasicStructuredDocumentFactory implements IDocumentFactory, IExecut
 	}
 
 	/*
-	 * (non-Javadoc)
+	 * Loads the content type ID to be used when creating the Structured Document. 
 	 * 
 	 * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
 	 *      java.lang.String, java.lang.Object)
