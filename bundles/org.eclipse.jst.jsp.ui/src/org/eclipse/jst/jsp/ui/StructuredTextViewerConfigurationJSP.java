@@ -44,11 +44,11 @@ import org.eclipse.jst.jsp.ui.internal.contentassist.JSPJavaContentAssistProcess
 import org.eclipse.jst.jsp.ui.internal.contentassist.NoRegionContentAssistProcessorForJSP;
 import org.eclipse.jst.jsp.ui.internal.correction.CorrectionProcessorJSP;
 import org.eclipse.jst.jsp.ui.internal.reconcile.StructuredTextReconcilingStrategyForJSP;
+import org.eclipse.jst.jsp.ui.internal.taginfo.JSPJavaJavadocHoverProcessor;
 import org.eclipse.jst.jsp.ui.style.LineStyleProviderForJSP;
 import org.eclipse.jst.jsp.ui.style.java.LineStyleProviderForJava;
 import org.eclipse.jst.jsp.ui.taginfo.JSPBestMatchHoverProcessor;
 import org.eclipse.jst.jsp.ui.taginfo.JSPJavaBestMatchHoverProcessor;
-import org.eclipse.jst.jsp.ui.taginfo.JSPJavaJavadocHover;
 import org.eclipse.jst.jsp.ui.taginfo.JSPTagInfoHoverProcessor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -364,7 +364,6 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 					String hoverType = hoverDescs[i].getId();
 					if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType)) {
 						JSPJavaBestMatchHoverProcessor hover = new JSPJavaBestMatchHoverProcessor();
-						hover.setEditor(getEditorPart());
 						return hover;
 					}
 					else if (TextHoverManager.PROBLEM_HOVER.equalsIgnoreCase(hoverType))
@@ -372,8 +371,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 					else if (TextHoverManager.ANNOTATION_HOVER.equalsIgnoreCase(hoverType))
 						return new AnnotationHoverProcessor();
 					else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType)) {
-						JSPJavaJavadocHover hover = new JSPJavaJavadocHover();
-						hover.setEditor(getEditorPart());
+						JSPJavaJavadocHoverProcessor hover = new JSPJavaJavadocHoverProcessor();
 						return hover;
 					}
 				}

@@ -11,6 +11,7 @@
 package org.eclipse.jst.jsp.ui.taginfo;
 
 import org.eclipse.jface.text.ITextHover;
+import org.eclipse.jst.jsp.ui.internal.taginfo.JSPJavaJavadocHoverProcessor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.sse.ui.taginfo.AbstractBestMatchHoverProcessor;
 
@@ -20,20 +21,22 @@ import org.eclipse.wst.sse.ui.taginfo.AbstractBestMatchHoverProcessor;
  * AnnotationHoverProcessor, JSPJavaJavadocHover
  */
 public class JSPJavaBestMatchHoverProcessor extends AbstractBestMatchHoverProcessor {
-	JSPJavaJavadocHover fTagInfoHover;
+	private JSPJavaJavadocHoverProcessor fTagInfoHover;
 
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.structured.taginfo.AbstractBestMatchHoverProcessor#getTagInfoHover()
-	 */
 	protected ITextHover getTagInfoHover() {
 		if (fTagInfoHover == null) {
-			fTagInfoHover = new JSPJavaJavadocHover();
+			fTagInfoHover = new JSPJavaJavadocHoverProcessor();
 		}
 		return fTagInfoHover;
 	}
 
+	/**
+	 * @deprecated This method should no longer be needed since it was only added
+	 * for the now deprecated JSPJavaJavadocHover
+	 * @param editor
+	 */
 	public void setEditor(IEditorPart editor) {
-		// jspjavajavadoc hover requires an editor to be set
-		((JSPJavaJavadocHover) getTagInfoHover()).setEditor(editor);
+//		// jspjavajavadoc hover requires an editor to be set
+//		((JSPJavaJavadocHover) getTagInfoHover()).setEditor(editor);
 	}
 }

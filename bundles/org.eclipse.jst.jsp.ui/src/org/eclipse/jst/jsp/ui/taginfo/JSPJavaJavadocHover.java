@@ -24,12 +24,10 @@ import org.eclipse.wst.xml.core.document.XMLModel;
 
 /**
  * Provides javadoc hover help documentation for java code inside JSPs
+ * @deprecated use JSPJavaJavadocHoverProcessor instead
  */
 public class JSPJavaJavadocHover extends JavadocHover {
 	
-	/**
-	 * @see org.eclipse.jface.text.ITextHover#getHoverInfo(org.eclipse.jface.text.ITextViewer, org.eclipse.jface.text.IRegion)
-	 */
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		// get JSP translation object for this viewer's document
 		XMLModel xmlModel = (XMLModel) ((IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID)).getModelManager().getExistingModelForRead(textViewer.getDocument());
