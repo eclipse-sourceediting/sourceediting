@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
@@ -37,7 +38,6 @@ import org.eclipse.wst.xml.core.document.XMLElement;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.core.document.XMLText;
-import org.eclispe.wst.validation.internal.core.MessageLimitException;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -62,6 +62,10 @@ public class DelegatingReconcileValidator implements IValidator
   protected static final String FIRST_NON_WHITESPACE_TEXT = "FIRST_NON_WHITESPACE_TEXT";
   protected static final String TEXT_ENTITY_REFERENCE = "TEXT_ENTITY_REFERENCE"; 
   protected static final String NAME_OF_ATTRIBUTE_WITH_GIVEN_VALUE = "NAME_OF_ATTRIBUTE_WITH_GIVEN_VALUE";
+  
+  protected static final String COLUMN_NUMBER_ATTRIBUTE = "columnNumber";
+  protected static final String SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE = "squiggleSelectionStrategy";
+  protected static final String SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE = "squiggleNameOrValue";
   
   public DelegatingReconcileValidator()
   { super(); //constructor
@@ -106,7 +110,7 @@ public class DelegatingReconcileValidator implements IValidator
     { super();      
     }
     
-    public void addMessage(IValidator origin, IMessage message) throws MessageLimitException
+    public void addMessage(IValidator origin, IMessage message)
     { list.add(message);
     }
 
@@ -164,8 +168,7 @@ public class DelegatingReconcileValidator implements IValidator
 
         // store the text in a byte array; make a full copy to ease any threading problems
         byte[] byteArray = xmlModel.getStructuredDocument().get().getBytes();
-		
-        // get the Validator:
+        
         IValidator validator = getDelegateValidator();
         if (validator != null)
         {
@@ -179,9 +182,7 @@ public class DelegatingReconcileValidator implements IValidator
           updateValidationMessages(messages, document, reporter);
         }
       }
-      catch (Exception e)
-      { //e.printStackTrace();
-      }
+
       finally
       {
         if (xmlModel != null)
@@ -203,17 +204,16 @@ public class DelegatingReconcileValidator implements IValidator
     {
       IMessage message = (IMessage) messages.get(i);    
       try
-      { //get the extra information stored in the parameters:
-        String[] params = message.getParams();
-        int column = new Integer(params[0]).intValue();
-        String key = params[1];
-        String nameOrValue = params[2];//The name or value of what should be squiggled
-                                    
+      { 
+        int column = ((Integer)message.getAttribute(COLUMN_NUMBER_ATTRIBUTE)).intValue();
+        String selectionStrategy = (String)message.getAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE);
+        String nameOrValue = (String)message.getAttribute(SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE);
+        
         // convert the line and Column numbers to an offset:        
         int start = document.getStructuredDocument().getLineOffset(message.getLineNumber() - 1) + column - 1;
 
         // calculate the "better" start and end offset:
-        int[] result = computeStartEndLocation(start, message.getText(), key, nameOrValue, document);
+        int[] result = computeStartEndLocation(start, message.getText(), selectionStrategy, nameOrValue, document);
         if (result != null)
         {
           message.setOffset(result[0]);
@@ -221,9 +221,10 @@ public class DelegatingReconcileValidator implements IValidator
           reporter.addMessage(this, message);
         }
       }
-      catch (Exception e)
-      { //e.printStackTrace();
+      catch(BadLocationException e)
+      {  //this exception should not occur - it is thrown if trying to convert an invalid line number to and offset       
       }
+
     }
   }
  /**
@@ -262,7 +263,7 @@ public class DelegatingReconcileValidator implements IValidator
    *    
    * @param startOffset - the offset given by Xerces
    * @param errorMessage - the Xerces error Message
-   * @param key - the selectionStrategy
+   * @param selectionStrategy - the selectionStrategy
    * @param document - the document
    * @return int[] - position 0 has the start offset of the squiggle range, position 1 has the endOffset
    */
@@ -271,11 +272,12 @@ public class DelegatingReconcileValidator implements IValidator
    *   
    *    - find the indexed region (element) closest to the given offset
    *    - if we are between two elements, the one on the left is the one we want
-   *    - based on the key select a strategy to find the better offset
+   *    - based on the selectionStrategy choose the underlining strategy (eg START_TAG
+   *       means underline the start tag of that element)
    *    - use information from nameOrValue and the DOM to get better offsets
    *    
    */
-  protected int[] computeStartEndLocation(int startOffset, String errorMessage, String key, String nameOrValue, XMLDocument document)
+  protected int[] computeStartEndLocation(int startOffset, String errorMessage, String selectionStrategy, String nameOrValue, XMLDocument document)
   {
     try
     {
@@ -294,19 +296,19 @@ public class DelegatingReconcileValidator implements IValidator
       // the start of the region where the error was
       if (region != null)
       {
-      	startEndPositions[0] = region.getStartOffset();
-      	startEndPositions[1] = startEndPositions[0];
+        startEndPositions[0] = region.getStartOffset();
+        startEndPositions[1] = startEndPositions[0];
       }
       else
       { //this will message will not get added to the IReporter since the length is 0
-      	startEndPositions[0] = 0;
-      	startEndPositions[1] = 0;
+        startEndPositions[0] = 0;
+        startEndPositions[1] = 0;
       }
       if (region instanceof Node)
       {
         Node node = (Node) region;
         
-        if (key.equals(START_TAG))
+        if (selectionStrategy.equals(START_TAG))
         {// then we want to highlight the opening tag
           if (node.getNodeType() == Node.ELEMENT_NODE)
           {
@@ -315,7 +317,7 @@ public class DelegatingReconcileValidator implements IValidator
             startEndPositions[1] = startEndPositions[0] + element.getTagName().length();
           }
         }
-        else if (key.equals(ATTRIBUTE_NAME))
+        else if (selectionStrategy.equals(ATTRIBUTE_NAME))
         { // in this case we want to underline the offending attribute name
           if (node.getNodeType() == Node.ELEMENT_NODE)
           {
@@ -328,7 +330,7 @@ public class DelegatingReconcileValidator implements IValidator
             }
           }
         }
-        else if (key.equals(ATTRIBUTE_VALUE))
+        else if (selectionStrategy.equals(ATTRIBUTE_VALUE))
         {// in this case we want to underline the attribute's value
           if (node.getNodeType() == Node.ELEMENT_NODE)
           {
@@ -341,7 +343,7 @@ public class DelegatingReconcileValidator implements IValidator
             }
           }
         }
-        else if (key.equals(ALL_ATTRIBUTES))
+        else if (selectionStrategy.equals(ALL_ATTRIBUTES))
         {// then underline ALL attributes
           if (node.getNodeType() == Node.ELEMENT_NODE)
           {
@@ -359,7 +361,7 @@ public class DelegatingReconcileValidator implements IValidator
             }
           }
         }
-        else if (key.equals(TEXT))
+        else if (selectionStrategy.equals(TEXT))
         {// in this case we want to underline the text (but not any extra whitespace)
           if (node.getNodeType() == Node.TEXT_NODE)
           {
@@ -390,51 +392,51 @@ public class DelegatingReconcileValidator implements IValidator
             }
           }
         }
-        else if (key.equals(FIRST_NON_WHITESPACE_TEXT))
+        else if (selectionStrategy.equals(FIRST_NON_WHITESPACE_TEXT))
         {  //here we search through all the child nodes, and give the range
            // of the first non-whitespace node
-        	if (node.getNodeType() == Node.ELEMENT_NODE)
-        	{ NodeList nodes = node.getChildNodes();
-        	  for (int i = 0; i< nodes.getLength(); i++)
-        	  {
-        	  	Node currentNode = nodes.item(i);
-        	  	if (currentNode.getNodeType() == Node.TEXT_NODE)
-        	  	{
-        	  		XMLText textNode = (XMLText)currentNode;
-        	  		if (textNode.getNodeValue().trim().length() > 0)
-        	  		{
-        	  			String value = textNode.getNodeValue();
-        	            int index = 0;
-        	            int start = textNode.getStartOffset();
-        	            char curChar = value.charAt(index);
-        	            //here we are finding start offset by skipping over whitespace:
-        	            while (curChar == '\n' || curChar == '\t' || curChar == '\r' || curChar == ' ')
-        	            {
-        	              curChar = value.charAt(index);
-        	              index++;
-        	            }
-        	            if (index > 0)
-        	            { index--;
-        	            
-        	            }
-        	            start = start + index;
-        	            startEndPositions[0] = start;
-        	            startEndPositions[1] = start + value.trim().length(); 
-        	  			break;
-        	  		}
-        	  	}
-        	  	
-        	  }
-        	}
+            if (node.getNodeType() == Node.ELEMENT_NODE)
+            { NodeList nodes = node.getChildNodes();
+              for (int i = 0; i< nodes.getLength(); i++)
+              {
+                Node currentNode = nodes.item(i);
+                if (currentNode.getNodeType() == Node.TEXT_NODE)
+                {
+                    XMLText textNode = (XMLText)currentNode;
+                    if (textNode.getNodeValue().trim().length() > 0)
+                    {
+                        String value = textNode.getNodeValue();
+                        int index = 0;
+                        int start = textNode.getStartOffset();
+                        char curChar = value.charAt(index);
+                        //here we are finding start offset by skipping over whitespace:
+                        while (curChar == '\n' || curChar == '\t' || curChar == '\r' || curChar == ' ')
+                        {
+                          curChar = value.charAt(index);
+                          index++;
+                        }
+                        if (index > 0)
+                        { index--;
+                        
+                        }
+                        start = start + index;
+                        startEndPositions[0] = start;
+                        startEndPositions[1] = start + value.trim().length(); 
+                        break;
+                    }
+                }
+                
+              }
+            }
         }
-        	
-        else if (key.equals(TEXT_ENTITY_REFERENCE))
+            
+        else if (selectionStrategy.equals(TEXT_ENTITY_REFERENCE))
         { if (node.getNodeType() == Node.ENTITY_REFERENCE_NODE)
-        	{ startEndPositions[0] = region.getStartOffset();
-        	  startEndPositions[1] = region.getEndOffset();
-        	}
+            { startEndPositions[0] = region.getStartOffset();
+              startEndPositions[1] = region.getEndOffset();
+            }
         }
-        else if (key.equals(NAME_OF_ATTRIBUTE_WITH_GIVEN_VALUE))
+        else if (selectionStrategy.equals(NAME_OF_ATTRIBUTE_WITH_GIVEN_VALUE))
         {//underline the name of the attribute containing the given value
           if (node.getNodeType() == Node.ELEMENT_NODE)
           {

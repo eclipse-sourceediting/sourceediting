@@ -12,8 +12,7 @@
 package org.eclipse.wst.xml.ui.reconcile;
 
 import org.eclipse.wst.validation.core.IValidator;
-import org.eclipse.wst.validation.internal.ValidationRegistryReader;
-import org.eclipse.wst.validation.internal.ValidatorMetaData;
+import org.eclipse.wst.validation.plugin.ValidationPlugin;
 
 /**
  * @author Mark Hutchinson
@@ -31,9 +30,8 @@ public class DelegatingReconcileValidatorForXML extends DelegatingReconcileValid
   {
     try
     {
-      //Get the validator:
-      ValidatorMetaData validatorData = ValidationRegistryReader.getReader().getValidatorMetaData(VALIDATOR_CLASS);
-      return validatorData.getValidator();
+	  ValidationPlugin validationPlugin = new ValidationPlugin();
+	  return validationPlugin.getValidator(VALIDATOR_CLASS);	  
     }
     catch (Exception e)
     { //
