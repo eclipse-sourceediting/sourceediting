@@ -85,9 +85,22 @@ public class ProjectResolver implements URIResolver {
 		}
 		// defect 244817 end
 		
-		// which of the serveral are we suppose to use htere?
-		// 
-		return URIHelper.normalize(uri, baseReference, getRootLocationString());
+		// which of the serveral are we suppose to use here?
+		//
+        
+        // https://bugs.eclipse.org/bugs/show_bug.cgi?id=71223
+        // Workaround for problem in URIHelper; uris starting with '/' are
+        // returned as-is.
+        String location = uri;
+        if (uri.startsWith("/")) {
+            IProject p = getProject();
+            if(p != null && p.exists())
+                location = p.getLocation().toString() + uri;
+        }
+        else {
+            location = URIHelper.normalize(uri, baseReference, getRootLocationString());
+        }
+		return location;
 	}
 
 	/**
