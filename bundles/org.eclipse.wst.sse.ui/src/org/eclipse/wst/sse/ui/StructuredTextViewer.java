@@ -15,7 +15,6 @@ package org.eclipse.wst.sse.ui;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.IStatus;
@@ -337,7 +336,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		fAutoIndentStrategies = null;
 		for (int i = 0; i < types.length; i++) {
 			String t = types[i];
-			setAutoIndentStrategy(configuration.getAutoIndentStrategy(this, t), t);
+			setAutoEditStrategies(configuration.getAutoEditStrategies(this, t), t);
 			setTextDoubleClickStrategy(configuration.getDoubleClickStrategy(this, t), t);
 
 			int[] stateMasks = configuration.getConfiguredTextHoverStateMasks(this, t);
@@ -365,26 +364,6 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 				setDefaultPrefixes(prefixes, t);
 		}
 		activatePlugins();
-
-		// do any StructuredTextViewer-specific configuration
-		if (configuration instanceof StructuredTextViewerConfiguration) {
-			Map autoEditStrategies = ((StructuredTextViewerConfiguration) configuration).getAutoEditStrategies(this);
-			if (autoEditStrategies != null) {
-				Iterator partitionTypes = autoEditStrategies.keySet().iterator();
-				while (partitionTypes.hasNext()) {
-					String partitionType = partitionTypes.next().toString();
-					Object strategies = autoEditStrategies.get(partitionType);
-					if (strategies != null) {
-						if (strategies instanceof List) {
-							for (int i = 0; i < ((List) strategies).size(); i++) {
-								IAutoEditStrategy strategy = (IAutoEditStrategy) ((List) strategies).get(i);
-								prependAutoEditStrategy(strategy, partitionType);
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 
 	/**

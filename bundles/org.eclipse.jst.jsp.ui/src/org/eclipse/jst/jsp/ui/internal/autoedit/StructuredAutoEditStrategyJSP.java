@@ -14,6 +14,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jst.jsp.ui.internal.Logger;
+import org.eclipse.ui.texteditor.ITextEditorExtension3;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.StructuredDocumentCommand;
@@ -23,6 +24,10 @@ import org.eclipse.wst.xml.ui.internal.autoedit.StructuredAutoEditStrategyXML;
 public class StructuredAutoEditStrategyJSP extends StructuredAutoEditStrategyXML {
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
 		StructuredDocumentCommand structuredDocumentCommand = (StructuredDocumentCommand) command;
+		Object textEditor = getActiveTextEditor();
+		if (!(textEditor instanceof ITextEditorExtension3 && ((ITextEditorExtension3) textEditor).getInsertMode() == ITextEditorExtension3.SMART_INSERT))
+			return;
+		
 		IStructuredModel model = null;
 		try {
 			model = StructuredModelManager.getModelManager().getExistingModelForRead(document);

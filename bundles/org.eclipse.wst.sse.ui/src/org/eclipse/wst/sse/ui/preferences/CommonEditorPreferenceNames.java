@@ -21,6 +21,10 @@ import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
  * @since 1.0
  */
 public class CommonEditorPreferenceNames {
+	private CommonEditorPreferenceNames() {
+		// empty private constructor so users cannot instantiate class
+	}
+
 	/**
 	 * A named preference that controls as-you-type validation
 	 * <p>

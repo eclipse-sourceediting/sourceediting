@@ -12,7 +12,6 @@ package org.eclipse.wst.html.ui;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jdt.ui.text.JavaSourceViewerConfiguration;
@@ -87,26 +86,23 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 		super(store);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.editor.StructuredTextViewerConfiguration#getAutoEditStrategies(org.eclipse.jface.text.source.ISourceViewer)
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getAutoEditStrategies(org.eclipse.jface.text.source.ISourceViewer, java.lang.String)
 	 */
-	public Map getAutoEditStrategies(ISourceViewer sourceViewer) {
-		Map result = super.getAutoEditStrategies(sourceViewer);
+	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
+		List allStrategies = new ArrayList(0);
+		
+		IAutoEditStrategy[] superStrategies = super.getAutoEditStrategies(sourceViewer, contentType);
+		for (int i = 0; i < superStrategies.length; i++) {
+			allStrategies.add(superStrategies[i]);
+		}
+		
+		if (contentType == StructuredTextPartitionerForHTML.ST_DEFAULT_HTML || contentType == StructuredTextPartitionerForHTML.ST_HTML_DECLARATION) {
+			allStrategies.add(new StructuredAutoEditStrategyXML());
+		}
 
-		if (result.get(StructuredTextPartitionerForHTML.ST_DEFAULT_HTML) == null)
-			result.put(StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, new ArrayList(1));
-		if (result.get(StructuredTextPartitionerForHTML.ST_HTML_DECLARATION) == null)
-			result.put(StructuredTextPartitionerForHTML.ST_HTML_DECLARATION, new ArrayList(1));
-
-		IAutoEditStrategy autoEditStrategy = new StructuredAutoEditStrategyXML();
-		List strategies = (List) result.get(StructuredTextPartitionerForHTML.ST_DEFAULT_HTML);
-		strategies.add(autoEditStrategy);
-		strategies = (List) result.get(StructuredTextPartitionerForHTML.ST_HTML_DECLARATION);
-		strategies.add(autoEditStrategy);
-
-		return result;
+		return (IAutoEditStrategy[]) allStrategies.toArray(new IAutoEditStrategy[0]);
 	}
 
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {

@@ -12,7 +12,6 @@ package org.eclipse.jst.jsp.ui.internal.editor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jdt.ui.text.IJavaPartitions;
@@ -72,9 +71,9 @@ import org.eclipse.wst.javascript.common.ui.internal.taginfo.JavaScriptTagInfoHo
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
-import org.eclipse.wst.sse.ui.EditorPlugin;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.format.StructuredFormattingStrategy;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
@@ -94,180 +93,177 @@ import org.eclipse.wst.xml.ui.taginfo.XMLTagInfoHoverProcessor;
 
 public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerConfiguration {
 
-    InformationPresenter fInformationPresenter = null;
+	InformationPresenter fInformationPresenter = null;
 
-    private JavaSourceViewerConfiguration fJavaSourceViewerConfiguration;
-	
+	private JavaSourceViewerConfiguration fJavaSourceViewerConfiguration;
+
 	public StructuredTextViewerConfigurationJSP() {
 		super();
 	}
-	
+
 	public StructuredTextViewerConfigurationJSP(IPreferenceStore store) {
 		super(store);
 	}
-	
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.sse.editor.StructuredTextViewerConfiguration#getAutoEditStrategies(org.eclipse.jface.text.source.ISourceViewer)
-     */
-    public Map getAutoEditStrategies(ISourceViewer sourceViewer) {
-        Map result = super.getAutoEditStrategies(sourceViewer);
 
-        if (result.get(StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA) == null)
-            result.put(StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA, new ArrayList(1));
-        if (result.get(StructuredTextPartitionerForHTML.ST_DEFAULT_HTML) == null)
-            result.put(StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, new ArrayList(1));
-        if (result.get(StructuredTextPartitionerForHTML.ST_HTML_DECLARATION) == null)
-            result.put(StructuredTextPartitionerForHTML.ST_HTML_DECLARATION, new ArrayList(1));
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getAutoEditStrategies(org.eclipse.jface.text.source.ISourceViewer,
+	 *      java.lang.String)
+	 */
+	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
+		List allStrategies = new ArrayList(0);
 
-        List strategies = (List) result.get(StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA);
-        strategies.add(getJavaSourceViewerConfiguration().getAutoEditStrategies(sourceViewer, IJavaPartitions.JAVA_PARTITIONING)[0]);
+		IAutoEditStrategy[] superStrategies = super.getAutoEditStrategies(sourceViewer, contentType);
+		for (int i = 0; i < superStrategies.length; i++) {
+			allStrategies.add(superStrategies[i]);
+		}
 
-        IAutoEditStrategy autoEditStrategy = new StructuredAutoEditStrategyJSP();
-        strategies = (List) result.get(StructuredTextPartitionerForHTML.ST_DEFAULT_HTML);
-        strategies.add(autoEditStrategy);
-        strategies = (List) result.get(StructuredTextPartitionerForHTML.ST_HTML_DECLARATION);
-        strategies.add(autoEditStrategy);
+		if (contentType == StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA) {
+			allStrategies.add(getJavaSourceViewerConfiguration().getAutoEditStrategies(sourceViewer, IJavaPartitions.JAVA_PARTITIONING)[0]);
+		}
 
-        return result;
-    }
+		if (contentType == StructuredTextPartitionerForHTML.ST_DEFAULT_HTML || contentType == StructuredTextPartitionerForHTML.ST_HTML_DECLARATION) {
+			allStrategies.add(new StructuredAutoEditStrategyJSP());
+		}
 
-    public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
-        if (configuredContentTypes == null) {
-            String[] xmlTypes = StructuredTextPartitionerForXML.getConfiguredContentTypes();
-            String[] htmlTypes = StructuredTextPartitionerForHTML.getConfiguredContentTypes();
-            String[] jspTypes = StructuredTextPartitionerForJSP.getConfiguredContentTypes();
-            configuredContentTypes = new String[2 + xmlTypes.length + htmlTypes.length + jspTypes.length];
+		return (IAutoEditStrategy[]) allStrategies.toArray(new IAutoEditStrategy[0]);
+	}
 
-            configuredContentTypes[0] = StructuredTextPartitioner.ST_DEFAULT_PARTITION;
-            configuredContentTypes[1] = StructuredTextPartitioner.ST_UNKNOWN_PARTITION;
+	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
+		if (configuredContentTypes == null) {
+			String[] xmlTypes = StructuredTextPartitionerForXML.getConfiguredContentTypes();
+			String[] htmlTypes = StructuredTextPartitionerForHTML.getConfiguredContentTypes();
+			String[] jspTypes = StructuredTextPartitionerForJSP.getConfiguredContentTypes();
+			configuredContentTypes = new String[2 + xmlTypes.length + htmlTypes.length + jspTypes.length];
 
-            int index = 0;
-            System.arraycopy(xmlTypes, 0, configuredContentTypes, index += 2, xmlTypes.length);
-            System.arraycopy(htmlTypes, 0, configuredContentTypes, index += xmlTypes.length, htmlTypes.length);
-            System.arraycopy(jspTypes, 0, configuredContentTypes, index += htmlTypes.length, jspTypes.length);
-        }
+			configuredContentTypes[0] = StructuredTextPartitioner.ST_DEFAULT_PARTITION;
+			configuredContentTypes[1] = StructuredTextPartitioner.ST_UNKNOWN_PARTITION;
 
-        return configuredContentTypes;
-    }
+			int index = 0;
+			System.arraycopy(xmlTypes, 0, configuredContentTypes, index += 2, xmlTypes.length);
+			System.arraycopy(htmlTypes, 0, configuredContentTypes, index += xmlTypes.length, htmlTypes.length);
+			System.arraycopy(jspTypes, 0, configuredContentTypes, index += htmlTypes.length, jspTypes.length);
+		}
 
-    public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
-        IContentAssistant ca = super.getContentAssistant(sourceViewer);
+		return configuredContentTypes;
+	}
 
-        if (ca != null && ca instanceof ContentAssistant) {
-            ContentAssistant contentAssistant = (ContentAssistant) ca;
+	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
+		IContentAssistant ca = super.getContentAssistant(sourceViewer);
 
-            IContentAssistProcessor htmlContentAssistProcessor = new HTMLContentAssistProcessor();
-            IContentAssistProcessor jsContentAssistProcessor = new JavaScriptContentAssistProcessor();
-            IContentAssistProcessor cssContentAssistProcessor = new CSSContentAssistProcessor();
-            IContentAssistProcessor jspContentAssistProcessor = new JSPContentAssistProcessor();
-            IContentAssistProcessor jspJavaContentAssistProcessor = new JSPJavaContentAssistProcessor();
-            IContentAssistProcessor noRegionProcessorJsp = new NoRegionContentAssistProcessorForJSP();
+		if (ca != null && ca instanceof ContentAssistant) {
+			ContentAssistant contentAssistant = (ContentAssistant) ca;
 
-            // HTML
-            setContentAssistProcessor(contentAssistant, htmlContentAssistProcessor, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML);
-            setContentAssistProcessor(contentAssistant, htmlContentAssistProcessor, StructuredTextPartitionerForHTML.ST_HTML_COMMENT);
+			IContentAssistProcessor htmlContentAssistProcessor = new HTMLContentAssistProcessor();
+			IContentAssistProcessor jsContentAssistProcessor = new JavaScriptContentAssistProcessor();
+			IContentAssistProcessor cssContentAssistProcessor = new CSSContentAssistProcessor();
+			IContentAssistProcessor jspContentAssistProcessor = new JSPContentAssistProcessor();
+			IContentAssistProcessor jspJavaContentAssistProcessor = new JSPJavaContentAssistProcessor();
+			IContentAssistProcessor noRegionProcessorJsp = new NoRegionContentAssistProcessorForJSP();
 
-            // HTML JavaScript
-            setContentAssistProcessor(contentAssistant, jsContentAssistProcessor, StructuredTextPartitionerForHTML.ST_SCRIPT);
+			// HTML
+			setContentAssistProcessor(contentAssistant, htmlContentAssistProcessor, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML);
+			setContentAssistProcessor(contentAssistant, htmlContentAssistProcessor, StructuredTextPartitionerForHTML.ST_HTML_COMMENT);
 
-            // CSS
-            setContentAssistProcessor(contentAssistant, cssContentAssistProcessor, StructuredTextPartitionerForCSS.ST_STYLE);
-            setContentAssistProcessor(contentAssistant, cssContentAssistProcessor, StructuredTextPartitionerForCSS.ST_STYLE);
+			// HTML JavaScript
+			setContentAssistProcessor(contentAssistant, jsContentAssistProcessor, StructuredTextPartitionerForHTML.ST_SCRIPT);
 
-            // JSP
-            setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitioner.ST_DEFAULT_PARTITION);
-            setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForXML.ST_DEFAULT_XML);
-            setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML);
-            setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForHTML.ST_HTML_COMMENT);
-            setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForJSP.ST_DEFAULT_JSP);
+			// CSS
+			setContentAssistProcessor(contentAssistant, cssContentAssistProcessor, StructuredTextPartitionerForCSS.ST_STYLE);
+			setContentAssistProcessor(contentAssistant, cssContentAssistProcessor, StructuredTextPartitionerForCSS.ST_STYLE);
 
-            // JSP directives
-            setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForJSP.ST_JSP_DIRECTIVE);
-            // JSP delimiters
-            setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER);
-            // JSP JavaScript
-            setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVASCRIPT);
-            // JSP Java
-            setContentAssistProcessor(contentAssistant, jspJavaContentAssistProcessor, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA);
-            // unknown
-            setContentAssistProcessor(contentAssistant, noRegionProcessorJsp, StructuredTextPartitioner.ST_UNKNOWN_PARTITION);
-            // CMVC 269718
-            // JSP COMMENT
-            setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForJSP.ST_JSP_COMMENT);
-        }
+			// JSP
+			setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitioner.ST_DEFAULT_PARTITION);
+			setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForXML.ST_DEFAULT_XML);
+			setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML);
+			setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForHTML.ST_HTML_COMMENT);
+			setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForJSP.ST_DEFAULT_JSP);
 
-        return ca;
-    }
+			// JSP directives
+			setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForJSP.ST_JSP_DIRECTIVE);
+			// JSP delimiters
+			setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER);
+			// JSP JavaScript
+			setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVASCRIPT);
+			// JSP Java
+			setContentAssistProcessor(contentAssistant, jspJavaContentAssistProcessor, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA);
+			// unknown
+			setContentAssistProcessor(contentAssistant, noRegionProcessorJsp, StructuredTextPartitioner.ST_UNKNOWN_PARTITION);
+			// CMVC 269718
+			// JSP COMMENT
+			setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, StructuredTextPartitionerForJSP.ST_JSP_COMMENT);
+		}
 
-    public IContentAssistant getCorrectionAssistant(ISourceViewer sourceViewer) {
-        IContentAssistant ca = super.getCorrectionAssistant(sourceViewer);
+		return ca;
+	}
 
-        if (ca != null && ca instanceof ContentAssistant) {
-            ContentAssistant correctionAssistant = (ContentAssistant) ca;
-            ITextEditor editor = getTextEditor();
-            if (editor != null) {
-                IContentAssistProcessor correctionProcessor = new CorrectionProcessorXML(editor);
-                correctionAssistant.setContentAssistProcessor(correctionProcessor, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML);
+	public IContentAssistant getCorrectionAssistant(ISourceViewer sourceViewer) {
+		IContentAssistant ca = super.getCorrectionAssistant(sourceViewer);
 
-                correctionProcessor = new CorrectionProcessorJSP(editor);
-                correctionAssistant.setContentAssistProcessor(correctionProcessor, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA);
-            }
-        }
+		if (ca != null && ca instanceof ContentAssistant) {
+			ContentAssistant correctionAssistant = (ContentAssistant) ca;
+			ITextEditor editor = getTextEditor();
+			if (editor != null) {
+				IContentAssistProcessor correctionProcessor = new CorrectionProcessorXML(editor);
+				correctionAssistant.setContentAssistProcessor(correctionProcessor, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML);
 
-        return ca;
-    }
+				correctionProcessor = new CorrectionProcessorJSP(editor);
+				correctionAssistant.setContentAssistProcessor(correctionProcessor, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA);
+			}
+		}
 
-    public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
-        MultiPassContentFormatter formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), StructuredTextPartitionerForXML.ST_DEFAULT_XML);
+		return ca;
+	}
 
-        formatter.setMasterStrategy(new StructuredFormattingStrategy(new HTMLFormatProcessorImpl()));
-        formatter.setSlaveStrategy(new FormattingStrategyJSPJava(), StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA);
+	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
+		MultiPassContentFormatter formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), StructuredTextPartitionerForXML.ST_DEFAULT_XML);
 
-        return formatter;
-    }
+		formatter.setMasterStrategy(new StructuredFormattingStrategy(new HTMLFormatProcessorImpl()));
+		formatter.setSlaveStrategy(new FormattingStrategyJSPJava(), StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA);
 
-    public ITextDoubleClickStrategy getDoubleClickStrategy(ISourceViewer sourceViewer, String contentType) {
-        if (contentType.compareTo(StructuredTextPartitionerForHTML.ST_DEFAULT_HTML) == 0)
-            // HTML
-            return new XMLDoubleClickStrategy();
-        else if (contentType.compareTo(StructuredTextPartitionerForHTML.ST_SCRIPT) == 0 || contentType.compareTo(StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA) == 0
-                || contentType.compareTo(StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVASCRIPT) == 0)
-            // HTML JavaScript
-            // JSP Java or JSP JavaScript
-            return getJavaSourceViewerConfiguration().getDoubleClickStrategy(sourceViewer, contentType);
-        else if (contentType.compareTo(StructuredTextPartitionerForJSP.ST_DEFAULT_JSP) == 0)
-            // JSP
-            return new XMLDoubleClickStrategy();
-        else
-            return super.getDoubleClickStrategy(sourceViewer, contentType);
-    }
+		return formatter;
+	}
 
-    public IHighlighter getHighlighter(ISourceViewer sourceViewer) {
-        IHighlighter highlighter = super.getHighlighter(sourceViewer);
+	public ITextDoubleClickStrategy getDoubleClickStrategy(ISourceViewer sourceViewer, String contentType) {
+		if (contentType.compareTo(StructuredTextPartitionerForHTML.ST_DEFAULT_HTML) == 0)
+			// HTML
+			return new XMLDoubleClickStrategy();
+		else if (contentType.compareTo(StructuredTextPartitionerForHTML.ST_SCRIPT) == 0 || contentType.compareTo(StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA) == 0 || contentType.compareTo(StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVASCRIPT) == 0)
+			// HTML JavaScript
+			// JSP Java or JSP JavaScript
+			return getJavaSourceViewerConfiguration().getDoubleClickStrategy(sourceViewer, contentType);
+		else if (contentType.compareTo(StructuredTextPartitionerForJSP.ST_DEFAULT_JSP) == 0)
+			// JSP
+			return new XMLDoubleClickStrategy();
+		else
+			return super.getDoubleClickStrategy(sourceViewer, contentType);
+	}
 
-        if (highlighter != null) {
-            // HTML
-            LineStyleProvider htmlLineStyleProvider = new LineStyleProviderForHTML();
-            highlighter.addProvider(StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, htmlLineStyleProvider);
-            highlighter.addProvider(StructuredTextPartitionerForHTML.ST_HTML_COMMENT, htmlLineStyleProvider);
-            highlighter.addProvider(StructuredTextPartitionerForHTML.ST_HTML_DECLARATION, htmlLineStyleProvider);
+	public IHighlighter getHighlighter(ISourceViewer sourceViewer) {
+		IHighlighter highlighter = super.getHighlighter(sourceViewer);
 
-            // HTML JavaScript
-            LineStyleProvider jsLineStyleProvider = new LineStyleProviderForJavaScript();
-            highlighter.addProvider(StructuredTextPartitionerForHTML.ST_SCRIPT, jsLineStyleProvider);
+		if (highlighter != null) {
+			// HTML
+			LineStyleProvider htmlLineStyleProvider = new LineStyleProviderForHTML();
+			highlighter.addProvider(StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, htmlLineStyleProvider);
+			highlighter.addProvider(StructuredTextPartitionerForHTML.ST_HTML_COMMENT, htmlLineStyleProvider);
+			highlighter.addProvider(StructuredTextPartitionerForHTML.ST_HTML_DECLARATION, htmlLineStyleProvider);
 
-            // CSS
-            LineStyleProvider cssLineStyleProvider = new LineStyleProviderForEmbeddedCSS();
-            highlighter.addProvider(StructuredTextPartitionerForCSS.ST_STYLE, cssLineStyleProvider);
+			// HTML JavaScript
+			LineStyleProvider jsLineStyleProvider = new LineStyleProviderForJavaScript();
+			highlighter.addProvider(StructuredTextPartitionerForHTML.ST_SCRIPT, jsLineStyleProvider);
 
-            // JSP
-            LineStyleProvider jspLineStyleProvider = new LineStyleProviderForJSP();
-            highlighter.addProvider(StructuredTextPartitionerForJSP.ST_DEFAULT_JSP, jspLineStyleProvider);
-            highlighter.addProvider(StructuredTextPartitionerForJSP.ST_JSP_COMMENT, jspLineStyleProvider);
-            highlighter.addProvider(StructuredTextPartitionerForJSP.ST_JSP_DIRECTIVE, jspLineStyleProvider);
-            highlighter.addProvider(StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER, jspLineStyleProvider);
+			// CSS
+			LineStyleProvider cssLineStyleProvider = new LineStyleProviderForEmbeddedCSS();
+			highlighter.addProvider(StructuredTextPartitionerForCSS.ST_STYLE, cssLineStyleProvider);
+
+			// JSP
+			LineStyleProvider jspLineStyleProvider = new LineStyleProviderForJSP();
+			highlighter.addProvider(StructuredTextPartitionerForJSP.ST_DEFAULT_JSP, jspLineStyleProvider);
+			highlighter.addProvider(StructuredTextPartitionerForJSP.ST_JSP_COMMENT, jspLineStyleProvider);
+			highlighter.addProvider(StructuredTextPartitionerForJSP.ST_JSP_DIRECTIVE, jspLineStyleProvider);
+			highlighter.addProvider(StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER, jspLineStyleProvider);
 
 			// XML
 			LineStyleProviderForXML xmlLineStyleProvider = new LineStyleProviderForXML();
@@ -276,233 +272,231 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 			highlighter.addProvider(StructuredTextPartitionerForXML.ST_XML_CDATA, xmlLineStyleProvider);
 			highlighter.addProvider(StructuredTextPartitionerForXML.ST_XML_DECLARATION, xmlLineStyleProvider);
 			highlighter.addProvider(StructuredTextPartitionerForXML.ST_XML_PI, xmlLineStyleProvider);
-			
-			
-            // JSP Java or JSP JavaScript
-            highlighter.addProvider(StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA, new LineStyleProviderForJava());
-            highlighter.addProvider(StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVASCRIPT, new LineStyleProviderForJavaScript());
-        }
 
-        return highlighter;
-    }
 
-    public IInformationPresenter getInformationPresenter(ISourceViewer sourceViewer) {
-        if (fInformationPresenter == null) {
-            fInformationPresenter = new InformationPresenter(getInformationPresenterControlCreator(sourceViewer));
+			// JSP Java or JSP JavaScript
+			highlighter.addProvider(StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA, new LineStyleProviderForJava());
+			highlighter.addProvider(StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVASCRIPT, new LineStyleProviderForJavaScript());
+		}
 
-            // HTML
-            IInformationProvider htmlInformationProvider = new HTMLInformationProvider();
-            fInformationPresenter.setInformationProvider(htmlInformationProvider, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML);
+		return highlighter;
+	}
 
-            // HTML JavaScript
-            IInformationProvider javascriptInformationProvider = new JavaScriptInformationProvider();
-            fInformationPresenter.setInformationProvider(javascriptInformationProvider, StructuredTextPartitionerForHTML.ST_SCRIPT);
+	public IInformationPresenter getInformationPresenter(ISourceViewer sourceViewer) {
+		if (fInformationPresenter == null) {
+			fInformationPresenter = new InformationPresenter(getInformationPresenterControlCreator(sourceViewer));
+
+			// HTML
+			IInformationProvider htmlInformationProvider = new HTMLInformationProvider();
+			fInformationPresenter.setInformationProvider(htmlInformationProvider, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML);
+
+			// HTML JavaScript
+			IInformationProvider javascriptInformationProvider = new JavaScriptInformationProvider();
+			fInformationPresenter.setInformationProvider(javascriptInformationProvider, StructuredTextPartitionerForHTML.ST_SCRIPT);
 
 			// XML
 			IInformationProvider xmlInformationProvider = new XMLInformationProvider();
 			fInformationPresenter.setInformationProvider(xmlInformationProvider, StructuredTextPartitionerForXML.ST_DEFAULT_XML);
-			
-            fInformationPresenter.setSizeConstraints(60, 10, true, true);
-        }
-        return fInformationPresenter;
-    }
 
-    public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {
-        // html
-        if (contentType == StructuredTextPartitionerForHTML.ST_DEFAULT_HTML) {
-            TextHoverManager.TextHoverDescriptor[] hoverDescs = getTextHovers();
-            int i = 0;
-            while (i < hoverDescs.length) {
-                if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {
-                    String hoverType = hoverDescs[i].getId();
-                    if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType))
-                        return new HTMLBestMatchHoverProcessor();
-                    else if (TextHoverManager.PROBLEM_HOVER.equalsIgnoreCase(hoverType))
-                        return new ProblemAnnotationHoverProcessor();
-                    else if (TextHoverManager.ANNOTATION_HOVER.equalsIgnoreCase(hoverType))
-                        return new AnnotationHoverProcessor();
-                    else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType))
-                        return new HTMLTagInfoHoverProcessor();
-                }
-                i++;
-            }
-        } else if (contentType == StructuredTextPartitionerForHTML.ST_SCRIPT) {
-            // HTML JavaScript
-            TextHoverManager.TextHoverDescriptor[] hoverDescs = getTextHovers();
-            int i = 0;
-            while (i < hoverDescs.length) {
-                if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {
-                    String hoverType = hoverDescs[i].getId();
-                    if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType))
-                        return new JavaScriptBestMatchHoverProcessor();
-                    else if (TextHoverManager.PROBLEM_HOVER.equalsIgnoreCase(hoverType))
-                        return new ProblemAnnotationHoverProcessor();
-                    else if (TextHoverManager.ANNOTATION_HOVER.equalsIgnoreCase(hoverType))
-                        return new AnnotationHoverProcessor();
-                    else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType))
-                        return new JavaScriptTagInfoHoverProcessor();
-                }
-                i++;
-            }
-        } else if ((contentType == StructuredTextPartitionerForJSP.ST_DEFAULT_JSP) || (contentType == StructuredTextPartitionerForJSP.ST_JSP_DIRECTIVE)) {
-            // JSP
-            TextHoverManager.TextHoverDescriptor[] hoverDescs = getTextHovers();
-            int i = 0;
-            while (i < hoverDescs.length) {
-                if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {
-                    String hoverType = hoverDescs[i].getId();
-                    if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType))
-                        return new JSPBestMatchHoverProcessor();
-                    else if (TextHoverManager.PROBLEM_HOVER.equalsIgnoreCase(hoverType))
-                        return new ProblemAnnotationHoverProcessor();
-                    else if (TextHoverManager.ANNOTATION_HOVER.equalsIgnoreCase(hoverType))
-                        return new AnnotationHoverProcessor();
-                    else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType))
-                        return new JSPTagInfoHoverProcessor();
-                }
-                i++;
-            }
-        } else if (contentType == StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA) {
-            // JSP Java
-            TextHoverManager.TextHoverDescriptor[] hoverDescs = getTextHovers();
-            int i = 0;
-            while (i < hoverDescs.length) {
-                if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {
-                    String hoverType = hoverDescs[i].getId();
-                    if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType)) {
-                        JSPJavaBestMatchHoverProcessor hover = new JSPJavaBestMatchHoverProcessor();
-                        return hover;
-                    } else if (TextHoverManager.PROBLEM_HOVER.equalsIgnoreCase(hoverType))
-                        return new ProblemAnnotationHoverProcessor();
-                    else if (TextHoverManager.ANNOTATION_HOVER.equalsIgnoreCase(hoverType))
-                        return new AnnotationHoverProcessor();
-                    else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType)) {
-                        JSPJavaJavadocHoverProcessor hover = new JSPJavaJavadocHoverProcessor();
-                        return hover;
-                    }
-                }
-                i++;
-            }
-        }
-		else if (contentType == StructuredTextPartitionerForXML.ST_DEFAULT_XML) {
-			// XML
-			TextHoverManager.TextHoverDescriptor[] hoverDescs = EditorPlugin.getDefault().getTextHoverManager().getTextHovers();
+			fInformationPresenter.setSizeConstraints(60, 10, true, true);
+		}
+		return fInformationPresenter;
+	}
+
+	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {
+		// html
+		if (contentType == StructuredTextPartitionerForHTML.ST_DEFAULT_HTML) {
+			TextHoverManager.TextHoverDescriptor[] hoverDescs = getTextHovers();
+			int i = 0;
+			while (i < hoverDescs.length) {
+				if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {
+					String hoverType = hoverDescs[i].getId();
+					if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType))
+						return new HTMLBestMatchHoverProcessor();
+					else if (TextHoverManager.PROBLEM_HOVER.equalsIgnoreCase(hoverType))
+						return new ProblemAnnotationHoverProcessor();
+					else if (TextHoverManager.ANNOTATION_HOVER.equalsIgnoreCase(hoverType))
+						return new AnnotationHoverProcessor();
+					else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType))
+						return new HTMLTagInfoHoverProcessor();
+				}
+				i++;
+			}
+		} else if (contentType == StructuredTextPartitionerForHTML.ST_SCRIPT) {
+			// HTML JavaScript
+			TextHoverManager.TextHoverDescriptor[] hoverDescs = getTextHovers();
+			int i = 0;
+			while (i < hoverDescs.length) {
+				if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {
+					String hoverType = hoverDescs[i].getId();
+					if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType))
+						return new JavaScriptBestMatchHoverProcessor();
+					else if (TextHoverManager.PROBLEM_HOVER.equalsIgnoreCase(hoverType))
+						return new ProblemAnnotationHoverProcessor();
+					else if (TextHoverManager.ANNOTATION_HOVER.equalsIgnoreCase(hoverType))
+						return new AnnotationHoverProcessor();
+					else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType))
+						return new JavaScriptTagInfoHoverProcessor();
+				}
+				i++;
+			}
+		} else if ((contentType == StructuredTextPartitionerForJSP.ST_DEFAULT_JSP) || (contentType == StructuredTextPartitionerForJSP.ST_JSP_DIRECTIVE)) {
+			// JSP
+			TextHoverManager.TextHoverDescriptor[] hoverDescs = getTextHovers();
+			int i = 0;
+			while (i < hoverDescs.length) {
+				if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {
+					String hoverType = hoverDescs[i].getId();
+					if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType))
+						return new JSPBestMatchHoverProcessor();
+					else if (TextHoverManager.PROBLEM_HOVER.equalsIgnoreCase(hoverType))
+						return new ProblemAnnotationHoverProcessor();
+					else if (TextHoverManager.ANNOTATION_HOVER.equalsIgnoreCase(hoverType))
+						return new AnnotationHoverProcessor();
+					else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType))
+						return new JSPTagInfoHoverProcessor();
+				}
+				i++;
+			}
+		} else if (contentType == StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA) {
+			// JSP Java
+			TextHoverManager.TextHoverDescriptor[] hoverDescs = getTextHovers();
 			int i = 0;
 			while (i < hoverDescs.length) {
 				if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {
 					String hoverType = hoverDescs[i].getId();
 					if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType)) {
-					    XMLBestMatchHoverProcessor hover = new XMLBestMatchHoverProcessor();
-						//hover.setEditor(getEditorPart());
+						JSPJavaBestMatchHoverProcessor hover = new JSPJavaBestMatchHoverProcessor();
 						return hover;
-					}
-					else if (TextHoverManager.PROBLEM_HOVER.equalsIgnoreCase(hoverType))
+					} else if (TextHoverManager.PROBLEM_HOVER.equalsIgnoreCase(hoverType))
 						return new ProblemAnnotationHoverProcessor();
 					else if (TextHoverManager.ANNOTATION_HOVER.equalsIgnoreCase(hoverType))
 						return new AnnotationHoverProcessor();
 					else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType)) {
-					    XMLTagInfoHoverProcessor hover = new XMLTagInfoHoverProcessor();
-						//hover.setEditor(getEditorPart());
+						JSPJavaJavadocHoverProcessor hover = new JSPJavaJavadocHoverProcessor();
+						return hover;
+					}
+				}
+				i++;
+			}
+		} else if (contentType == StructuredTextPartitionerForXML.ST_DEFAULT_XML) {
+			// XML
+			TextHoverManager.TextHoverDescriptor[] hoverDescs = SSEUIPlugin.getDefault().getTextHoverManager().getTextHovers();
+			int i = 0;
+			while (i < hoverDescs.length) {
+				if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {
+					String hoverType = hoverDescs[i].getId();
+					if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType)) {
+						XMLBestMatchHoverProcessor hover = new XMLBestMatchHoverProcessor();
+						// hover.setEditor(getEditorPart());
+						return hover;
+					} else if (TextHoverManager.PROBLEM_HOVER.equalsIgnoreCase(hoverType))
+						return new ProblemAnnotationHoverProcessor();
+					else if (TextHoverManager.ANNOTATION_HOVER.equalsIgnoreCase(hoverType))
+						return new AnnotationHoverProcessor();
+					else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType)) {
+						XMLTagInfoHoverProcessor hover = new XMLTagInfoHoverProcessor();
+						// hover.setEditor(getEditorPart());
 						return hover;
 					}
 				}
 				i++;
 			}
 		}
-        return super.getTextHover(sourceViewer, contentType, stateMask);
-    }
+		return super.getTextHover(sourceViewer, contentType, stateMask);
+	}
 
-    public void unConfigure(ISourceViewer viewer) {
-        super.unConfigure(viewer);
+	public void unConfigure(ISourceViewer viewer) {
+		super.unConfigure(viewer);
 
-        // InformationPresenters
-        if (fInformationPresenter != null)
-            fInformationPresenter.uninstall();
-    }
+		// InformationPresenters
+		if (fInformationPresenter != null)
+			fInformationPresenter.uninstall();
+	}
 
-    public IReconciler getReconciler(ISourceViewer sourceViewer) {
-		
-		if(fPreferenceStore == null)
+	public IReconciler getReconciler(ISourceViewer sourceViewer) {
+
+		if (fPreferenceStore == null)
 			return null;
-		
-        if (fReconciler != null) {
-            // a reconciler should always be installed or disposed of
-            if (!fReconciler.isInstalled()) {
-                fReconciler = null;
-            }
-        }
 
-        // the first time running through, there's no model (so no pref store)
-        // but the reconciler still needs to be created so that its document
-        // gets set
-        if (fReconciler == null) {
-            // create one
-            fReconciler = new StructuredRegionProcessor();
-            fReconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
-        }
+		if (fReconciler != null) {
+			// a reconciler should always be installed or disposed of
+			if (!fReconciler.isInstalled()) {
+				fReconciler = null;
+			}
+		}
 
-        boolean reconcilingEnabled = fPreferenceStore.getBoolean(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
+		// the first time running through, there's no model (so no pref store)
+		// but the reconciler still needs to be created so that its document
+		// gets set
+		if (fReconciler == null) {
+			// create one
+			fReconciler = new StructuredRegionProcessor();
+			fReconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
+		}
 
-        if (!reconcilingEnabled) 
-            return fReconciler;
-        
-        if (fReconciler != null) {
-            IDocument doc = ((ITextEditor) editorPart).getDocumentProvider().getDocument(editorPart.getEditorInput());
-            IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
-            try {
-                if (sModel != null) {
+		boolean reconcilingEnabled = fPreferenceStore.getBoolean(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
 
-                    IReconcilingStrategy markupStrategy = new StructuredTextReconcilingStrategyForMarkup((ITextEditor) editorPart);
-                    IReconcilingStrategy jspStrategy = new StructuredTextReconcilingStrategyForJSP((ITextEditor) editorPart);
+		if (!reconcilingEnabled)
+			return fReconciler;
 
-                    fReconciler.setReconcilingStrategy(markupStrategy, StructuredTextPartitioner.ST_DEFAULT_PARTITION);
-                    fReconciler.setReconcilingStrategy(markupStrategy, StructuredTextPartitionerForXML.ST_DEFAULT_XML);
+		if (fReconciler != null) {
+			IDocument doc = ((ITextEditor) editorPart).getDocumentProvider().getDocument(editorPart.getEditorInput());
+			IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
+			try {
+				if (sModel != null) {
 
-                    fReconciler.setReconcilingStrategy(jspStrategy, StructuredTextPartitionerForJSP.ST_DEFAULT_JSP);
-                    fReconciler.setReconcilingStrategy(jspStrategy, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA);
-                    fReconciler.setReconcilingStrategy(jspStrategy, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER);
-                    fReconciler.setReconcilingStrategy(jspStrategy, StructuredTextPartitionerForJSP.ST_JSP_DIRECTIVE);
+					IReconcilingStrategy markupStrategy = new StructuredTextReconcilingStrategyForMarkup((ITextEditor) editorPart);
+					IReconcilingStrategy jspStrategy = new StructuredTextReconcilingStrategyForJSP((ITextEditor) editorPart);
 
-                    fReconciler.setDefaultStrategy(markupStrategy);
+					fReconciler.setReconcilingStrategy(markupStrategy, StructuredTextPartitioner.ST_DEFAULT_PARTITION);
+					fReconciler.setReconcilingStrategy(markupStrategy, StructuredTextPartitionerForXML.ST_DEFAULT_XML);
 
-                    String contentTypeId = sModel.getContentTypeIdentifier();
-                    if (contentTypeId != null)
-                        fReconciler.setValidatorStrategy(createValidatorStrategy(contentTypeId));
+					fReconciler.setReconcilingStrategy(jspStrategy, StructuredTextPartitionerForJSP.ST_DEFAULT_JSP);
+					fReconciler.setReconcilingStrategy(jspStrategy, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA);
+					fReconciler.setReconcilingStrategy(jspStrategy, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER);
+					fReconciler.setReconcilingStrategy(jspStrategy, StructuredTextPartitionerForJSP.ST_JSP_DIRECTIVE);
 
-                }
-            } finally {
-                if (sModel != null)
-                    sModel.releaseFromRead();
-            }
-        }
-        return fReconciler;
-    }
+					fReconciler.setDefaultStrategy(markupStrategy);
 
-    private JavaSourceViewerConfiguration getJavaSourceViewerConfiguration() {
-        if (fJavaSourceViewerConfiguration == null) {
-            IPreferenceStore store = PreferenceConstants.getPreferenceStore();
-            JavaTextTools javaTextTools = new JavaTextTools(store);
-            fJavaSourceViewerConfiguration = new JavaSourceViewerConfiguration(javaTextTools, getTextEditor());
-        }
-        return fJavaSourceViewerConfiguration;
-    }
-    
+					String contentTypeId = sModel.getContentTypeIdentifier();
+					if (contentTypeId != null)
+						fReconciler.setValidatorStrategy(createValidatorStrategy(contentTypeId));
+
+				}
+			} finally {
+				if (sModel != null)
+					sModel.releaseFromRead();
+			}
+		}
+		return fReconciler;
+	}
+
+	private JavaSourceViewerConfiguration getJavaSourceViewerConfiguration() {
+		if (fJavaSourceViewerConfiguration == null) {
+			IPreferenceStore store = PreferenceConstants.getPreferenceStore();
+			JavaTextTools javaTextTools = new JavaTextTools(store);
+			fJavaSourceViewerConfiguration = new JavaSourceViewerConfiguration(javaTextTools, getTextEditor());
+		}
+		return fJavaSourceViewerConfiguration;
+	}
+
 	/*
 	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getHyperlinkDetectors(org.eclipse.jface.text.source.ISourceViewer)
 	 * @since 3.1
 	 */
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
-		if(fPreferenceStore == null)
+		if (fPreferenceStore == null)
 			return null;
 		if (sourceViewer == null || !fPreferenceStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED))
 			return null;
-		
+
 		List allDetectors = new ArrayList(0);
 		allDetectors.add(new JSPJavaHyperlinkDetector());
 		allDetectors.add(new TaglibHyperlinkDetector());
 		allDetectors.add(new URIHyperlinkDetector());
-		
-		IHyperlinkDetector[] superDetectors =  super.getHyperlinkDetectors(sourceViewer);
+
+		IHyperlinkDetector[] superDetectors = super.getHyperlinkDetectors(sourceViewer);
 		for (int m = 0; m < superDetectors.length; m++) {
 			IHyperlinkDetector detector = superDetectors[m];
 			if (!allDetectors.contains(detector)) {

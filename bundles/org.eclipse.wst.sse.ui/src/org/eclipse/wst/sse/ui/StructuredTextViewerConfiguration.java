@@ -78,8 +78,8 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	/**
 	 * This is intended for unit testing only.
 	 * 
-	 * This preference store will be overwritten when configured with
-	 * a StructuredTextEditor
+	 * This preference store will be overwritten when configured with a
+	 * StructuredTextEditor
 	 * 
 	 * @param store
 	 */
@@ -149,15 +149,6 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 			fAnnotationHover = new StructuredTextAnnotationHover();
 		}
 		return fAnnotationHover;
-	}
-
-	/**
-	 * @param sourceViewer
-	 * @return a Map of partition content types to java.util.List of
-	 *         IAutoEditStrategy objects
-	 */
-	public Map getAutoEditStrategies(ISourceViewer sourceViewer) {
-		return new HashMap();
 	}
 
 	/*

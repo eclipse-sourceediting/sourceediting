@@ -14,9 +14,9 @@ package org.eclipse.wst.xml.ui;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextHover;
@@ -74,19 +74,22 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		super(store);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration#getAutoEditStrategies(org.eclipse.jface.text.source.ISourceViewer)
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getAutoEditStrategies(org.eclipse.jface.text.source.ISourceViewer, java.lang.String)
 	 */
-	public Map getAutoEditStrategies(ISourceViewer sourceViewer) {
-		Map result = super.getAutoEditStrategies(sourceViewer);
+	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
+		List allStrategies = new ArrayList(0);
+		
+		IAutoEditStrategy[] superStrategies = super.getAutoEditStrategies(sourceViewer, contentType);
+		for (int i = 0; i < superStrategies.length; i++) {
+			allStrategies.add(superStrategies[i]);
+		}
+		
+		if (contentType == StructuredTextPartitionerForXML.ST_DEFAULT_XML) {
+			allStrategies.add(new StructuredAutoEditStrategyXML());
+		}
 
-		if (result.get(StructuredTextPartitionerForXML.ST_DEFAULT_XML) == null)
-			result.put(StructuredTextPartitionerForXML.ST_DEFAULT_XML, new ArrayList(1));
-		List strategies = (List) result.get(StructuredTextPartitionerForXML.ST_DEFAULT_XML);
-		strategies.add(new StructuredAutoEditStrategyXML());
-		return result;
+		return (IAutoEditStrategy[]) allStrategies.toArray(new IAutoEditStrategy[0]);
 	}
 
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {

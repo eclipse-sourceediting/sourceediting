@@ -10,7 +10,6 @@ package org.eclipse.wst.css.ui;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.ITextHover;
@@ -36,23 +35,23 @@ import org.eclipse.wst.sse.ui.taginfo.TextHoverManager;
 import org.eclipse.wst.sse.ui.util.EditorUtility;
 
 public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerConfiguration {
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.editor.StructuredTextViewerConfiguration#getAutoEditStrategies(org.eclipse.jface.text.source.ISourceViewer)
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getAutoEditStrategies(org.eclipse.jface.text.source.ISourceViewer, java.lang.String)
 	 */
-	public Map getAutoEditStrategies(ISourceViewer sourceViewer) {
-		Map result = super.getAutoEditStrategies(sourceViewer);
+	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
+		List allStrategies = new ArrayList(0);
+		
+		IAutoEditStrategy[] superStrategies = super.getAutoEditStrategies(sourceViewer, contentType);
+		for (int i = 0; i < superStrategies.length; i++) {
+			allStrategies.add(superStrategies[i]);
+		}
+		
+		if (contentType == StructuredTextPartitionerForCSS.ST_STYLE) {
+			allStrategies.add(new StructuredAutoEditStrategyCSS());
+		}
 
-		if (result.get(StructuredTextPartitionerForCSS.ST_STYLE) == null)
-			result.put(StructuredTextPartitionerForCSS.ST_STYLE, new ArrayList(1));
-
-		IAutoEditStrategy autoEditStrategy = new StructuredAutoEditStrategyCSS();
-		List strategies = (List) result.get(StructuredTextPartitionerForCSS.ST_STYLE);
-		strategies.add(autoEditStrategy);
-
-		return result;
+		return (IAutoEditStrategy[]) allStrategies.toArray(new IAutoEditStrategy[0]);
 	}
 
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
