@@ -14,6 +14,8 @@ package org.eclipse.wst.xml.internal.ui;
 
 /**
  * Defines the definitions ids for the XML editor actions.
+ * 
+ * @deprecated Use org.eclipse.wst.sse.ui.edit.util.ActionDefinitionIds instead
  */
 public interface XMLEditorActionDefinitionIds {
 	public final static String CLEANUP_DOCUMENT = "org.eclipse.wst.sse.ui.edit.ui.cleanup.document";//$NON-NLS-1$
