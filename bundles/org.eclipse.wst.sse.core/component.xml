@@ -44,8 +44,6 @@
 	<package name="org.eclipse.wst.sse.ui.views.contentoutline"/>
 <!--	nitin-->
 	<package name="org.eclipse.wst.sse.ui.views.properties"/>
-<!--	nitin-->
-	<package name="org.eclipse.wst.sse.ui.extensions.breakpoint"/>
 
 <!--	dw-->
 	<package name="org.eclipse.wst.sse.ui.contentproperties" />
@@ -53,7 +51,6 @@
 	<!--  extension points -->
 	<!--  source page validation -->
 	<!--  ? break point providers -->
-	<!--  source page validation -->
-	<!--  source page validation -->
-	
+	<!--  extended editor configuration -->
+	<!--  ? model handler -->
 </component>
