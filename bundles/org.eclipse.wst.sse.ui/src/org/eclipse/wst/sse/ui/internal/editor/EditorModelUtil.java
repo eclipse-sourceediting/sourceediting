@@ -34,14 +34,14 @@ import org.eclipse.wst.sse.ui.util.Assert;
 public class EditorModelUtil {
 
 	public static void addFactoriesTo(final IStructuredModel structuredModel) {
-		SSEUIPlugin plugin = SSEUIPlugin.getDefault();
-		AdapterFactoryRegistry adapterRegistry = plugin.getAdapterFactoryRegistry();
+		AdapterFactoryRegistry adapterRegistry = SSEUIPlugin.getDefault().getAdapterFactoryRegistry();
 		String contentTypeId = structuredModel.getModelHandler().getAssociatedContentTypeId();
 
 		Iterator adapterFactoryProviders = null;
 		if (adapterRegistry instanceof AdapterFactoryRegistryExtension) {
 			adapterFactoryProviders = ((AdapterFactoryRegistryExtension) adapterRegistry).getAdapterFactories(contentTypeId);
-		} else {
+		}
+		else {
 			adapterFactoryProviders = adapterRegistry.getAdapterFactories();
 		}
 
@@ -63,7 +63,8 @@ public class EditorModelUtil {
 						}
 					});
 				}
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				Logger.logException(e);
 			}
 		}

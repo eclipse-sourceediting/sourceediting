@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.resources.IResource;
@@ -34,8 +33,6 @@ import org.eclipse.ui.editors.text.FileDocumentProvider;
 import org.eclipse.ui.editors.text.StorageDocumentProvider;
 import org.eclipse.ui.texteditor.IElementStateListener;
 import org.eclipse.wst.common.encoding.CodedReaderCreator;
-import org.eclipse.wst.sse.core.IFactoryRegistry;
-import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
@@ -45,10 +42,8 @@ import org.eclipse.wst.sse.ui.extensions.breakpoint.IExtendedStorageEditorInput;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction;
+import org.eclipse.wst.sse.ui.internal.editor.EditorModelUtil;
 import org.eclipse.wst.sse.ui.internal.extension.BreakpointProviderBuilder;
-import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
-import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
-import org.eclipse.wst.sse.ui.util.Assert;
 
 /**
  * A StorageDocumentProvider that is IStructuredModel aware
@@ -101,20 +96,25 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 					nRead = reader.read(buffer, 0, bufferSize);
 					if (nRead == -1) {
 						eof = true;
-					} else {
+					}
+					else {
 						stringBuffer.append(buffer, 0, nRead);
 					}
 				}
 				innerdocument.replaceText(this, 0, originalLengthToReplace, stringBuffer.toString(), true);
-			} catch (CoreException e) {
+			}
+			catch (CoreException e) {
 				Logger.logException(e);
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				Logger.logException(e);
-			} finally {
+			}
+			finally {
 				if (reader != null) {
 					try {
 						reader.close();
-					} catch (IOException e1) {
+					}
+					catch (IOException e1) {
 						// would be highly unusual
 						Logger.logException(e1);
 					}
@@ -178,22 +178,11 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 	static final boolean debugOperations = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.ui/storagemodelprovider/operations")); //$NON-NLS-1$ //$NON-NLS-2$
 
 	private static StorageModelProvider fInstance = null;
-	private static IModelManager fModelManager;
 
 	public synchronized static StorageModelProvider getInstance() {
 		if (fInstance == null)
 			fInstance = new StorageModelProvider();
 		return fInstance;
-	}
-
-	/**
-	 * Utility method also used in subclasses
-	 */
-	private static IModelManager getModelManager() {
-		if (fModelManager == null) {
-			fModelManager = StructuredModelManager.getModelManager();
-		}
-		return fModelManager;
 	}
 
 	protected IElementStateListener fInternalListener;
@@ -206,28 +195,6 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 		fInternalListener = new InternalElementStateListener();
 	}
 
-	public void addProviderFactories(IStructuredModel structuredModel) {
-		// (mostly) COPIED FROM FileModelProvider
-		SSEUIPlugin plugin = SSEUIPlugin.getDefault();
-		AdapterFactoryRegistry adapterRegistry = plugin.getAdapterFactoryRegistry();
-		Iterator adapterFactoryList = adapterRegistry.getAdapterFactories();
-
-		IFactoryRegistry factoryRegistry = structuredModel.getFactoryRegistry();
-		Assert.isNotNull(factoryRegistry, "model in invalid state");
-
-		while (adapterFactoryList.hasNext()) {
-			try {
-				AdapterFactoryProvider provider = (AdapterFactoryProvider) adapterFactoryList.next();
-				if (provider.isFor(structuredModel.getModelHandler())) {
-					provider.addAdapterFactories(structuredModel);
-				}
-			} catch (Exception e) {
-				Logger.logException(e);
-			}
-		}
-		// END COPY FileModelProvider
-	}
-
 	protected String computePath(IStorageEditorInput input) {
 		/**
 		 * Typically CVS will return a path of "filename.ext" and the input's
@@ -235,7 +202,7 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 		 * the model so that the suffix will be available to compute the
 		 * contentType properly. The editor input name can then be set as the
 		 * base location for display on the editor title bar.
-		 *  
+		 * 
 		 */
 		String path = null;
 		boolean addHash = false;
@@ -263,9 +230,11 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 				if (path == null)
 					path = name;
 			}
-		} catch (CoreException e) {
+		}
+		catch (CoreException e) {
 			Logger.logException(e);
-		} finally {
+		}
+		finally {
 			if (path == null)
 				path = ""; //$NON-NLS-1$
 		}
@@ -274,9 +243,9 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 		return path;
 	}
 
-	//	public boolean canSaveDocument(Object element) {
-	//		return false;
-	//	}
+	// public boolean canSaveDocument(Object element) {
+	// return false;
+	// }
 
 	protected IAnnotationModel createAnnotationModel(Object element) throws CoreException {
 		IAnnotationModel model = null;
@@ -312,7 +281,8 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 			if (element instanceof IStorageEditorInput)
 				try {
 					System.out.println("StorageModelProvider: createDocument for " + ((IStorageEditorInput) element).getStorage().getFullPath()); //$NON-NLS-1$
-				} catch (CoreException e) {
+				}
+				catch (CoreException e) {
 					System.out.println("StorageModelProvider: createDocument for " + element + "(exception caught)"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			else {
@@ -345,7 +315,7 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 
 						int originalLengthToReplace = innerdocument.getLength();
 
-						//TODO_future: we could implement with sequential
+						// TODO_future: we could implement with sequential
 						// rewrite, if we don't
 						// pickup automatically from FileBuffer support, so
 						// not so
@@ -355,8 +325,8 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 						// StructuredModel is not
 						// notified until done.
 
-						//innerdocument.startSequentialRewrite(true);
-						//innerdocument.replaceText(this, 0,
+						// innerdocument.startSequentialRewrite(true);
+						// innerdocument.replaceText(this, 0,
 						// innerdocument.getLength(), "");
 
 
@@ -369,9 +339,10 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 							nRead = reader.read(buffer, 0, bufferSize);
 							if (nRead == -1) {
 								eof = true;
-							} else {
+							}
+							else {
 								stringBuffer.append(buffer, 0, nRead);
-								//innerdocument.replaceText(this,
+								// innerdocument.replaceText(this,
 								// innerdocument.getLength(), 0, new
 								// String(buffer, 0, nRead));
 							}
@@ -381,22 +352,26 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 						innerdocument.replaceText(this, 0, originalLengthToReplace, stringBuffer.toString(), true);
 						model.setDirtyState(false);
 
-					} catch (CoreException e) {
+					}
+					catch (CoreException e) {
 						Logger.logException(e);
-					} catch (IOException e) {
+					}
+					catch (IOException e) {
 						Logger.logException(e);
-					} finally {
+					}
+					finally {
 						if (reader != null) {
 							try {
 								reader.close();
-							} catch (IOException e1) {
+							}
+							catch (IOException e1) {
 								// would be highly unusual
 								Logger.logException(e1);
 							}
 						}
-						//						if (innerdocument != null) {
-						//							innerdocument.stopSequentialRewrite();
-						//						}
+						// if (innerdocument != null) {
+						// innerdocument.stopSequentialRewrite();
+						// }
 					}
 
 				}
@@ -418,7 +393,8 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 			if (element instanceof IStorageEditorInput)
 				try {
 					System.out.println("StorageModelProvider: createElementInfo for " + ((IStorageEditorInput) element).getStorage().getFullPath()); //$NON-NLS-1$
-				} catch (CoreException e) {
+				}
+				catch (CoreException e) {
 					System.out.println("StorageModelProvider: createElementInfo for " + element + "(exception caught)"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			else
@@ -455,10 +431,12 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 
 					try {
 						System.out.println("StorageModelProvider: DUPLICATE createModelInfo for " + ((IStorageEditorInput) input).getStorage().getFullPath()); //$NON-NLS-1$
-					} catch (CoreException e) {
+					}
+					catch (CoreException e) {
 						System.out.println("StorageModelProvider: DUPLICATE createModelInfo for " + input + "(exception caught)"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
-				} else {
+				}
+				else {
 					System.out.println("storageModelProvider: DUPLICATE createModelInfo for " + input); //$NON-NLS-1$
 				}
 			}
@@ -469,10 +447,12 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 			if (input instanceof IStorageEditorInput) {
 				try {
 					System.out.println("StorageModelProvider: createModelInfo for " + ((IStorageEditorInput) input).getStorage().getFullPath()); //$NON-NLS-1$
-				} catch (CoreException e) {
+				}
+				catch (CoreException e) {
 					System.out.println("StorageModelProvider: createModelInfo for " + input + "(exception caught)"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
-			} else {
+			}
+			else {
 				System.out.println("StorageModelProvider: createModelInfo for " + input); //$NON-NLS-1$
 			}
 		}
@@ -482,7 +462,7 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 			((IExtendedStorageEditorInput) input).addElementStateListener(fInternalListener);
 		}
 
-		addProviderFactories(structuredModel);
+		EditorModelUtil.addFactoriesTo(structuredModel);
 
 		ModelInfo modelInfo = new ModelInfo(structuredModel, input, releaseModelOnDisconnect);
 		fModelInfoMap.put(input, modelInfo);
@@ -493,10 +473,12 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 			if (element instanceof IStorageEditorInput) {
 				try {
 					System.out.println("StorageModelProvider: disposeElementInfo for " + ((IStorageEditorInput) element).getStorage().getFullPath()); //$NON-NLS-1$
-				} catch (CoreException e) {
+				}
+				catch (CoreException e) {
 					System.out.println("StorageModelProvider: disposeElementInfo for " + element + "(exception caught)"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
-			} else {
+			}
+			else {
 				System.out.println("StorageModelProvider: disposeElementInfo for " + element); //$NON-NLS-1$
 			}
 		}
@@ -519,10 +501,12 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 			if (info.fElement instanceof IStorageEditorInput) {
 				try {
 					System.out.println("StorageModelProvider: disposeModelInfo for " + ((IStorageEditorInput) info.fElement).getStorage().getFullPath()); //$NON-NLS-1$
-				} catch (CoreException e) {
+				}
+				catch (CoreException e) {
 					System.out.println("StorageModelProvider: disposeModelInfo for " + info.fElement + "(exception caught)"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
-			} else {
+			}
+			else {
 				System.out.println("StorageModelProvider: disposeModelInfo for " + info.fElement); //$NON-NLS-1$
 			}
 		}
@@ -559,7 +543,7 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 	}
 
 	protected IEditorInput getInputFor(IDocument document) {
-		IStructuredModel model = getModelManager().getExistingModelForRead(document);
+		IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 		IEditorInput input = getInputFor(model);
 		model.releaseFromRead();
 		return input;
@@ -639,7 +623,8 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 		InputStream contents = null;
 		try {
 			contents = input.getStorage().getContents();
-		} catch (CoreException noStorageExc) {
+		}
+		catch (CoreException noStorageExc) {
 			if (logExceptions)
 				Logger.logException(SSEUIPlugin.getResourceString("%32concat_EXC_", new Object[]{input.getName()}), noStorageExc); //$NON-NLS-1$
 		}
@@ -647,18 +632,22 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 		IStructuredModel model = null;
 		try {
 			// first parameter must be unique
-			model = getModelManager().getModelForEdit(path, contents, null);
+			model = StructuredModelManager.getModelManager().getModelForEdit(path, contents, null);
 			model.setBaseLocation(input.getName());
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			if (logExceptions)
 				Logger.logException(SSEUIPlugin.getResourceString("%32concat_EXC_", new Object[]{input}), e); //$NON-NLS-1$
-		} finally {
+		}
+		finally {
 			if (contents != null) {
 				try {
 					contents.close();
-				} catch (IOException e) {
+				}
+				catch (IOException e) {
 					// nothing
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					Logger.logException(e);
 				}
 			}
