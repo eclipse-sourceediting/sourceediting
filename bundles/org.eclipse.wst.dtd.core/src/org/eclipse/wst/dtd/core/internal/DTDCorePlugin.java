@@ -55,14 +55,6 @@ public class DTDCorePlugin extends AbstractUIPlugin {
 	public DTDCorePlugin() {
 		super();
 		instance = this;
-		try {
-			resourceBundle = Platform.getResourceBundle(Platform
-					.getBundle("org.eclipse.wst.dtd.core")); //$NON-NLS-1$
-		} catch (java.util.MissingResourceException exception) {
-			//B2BUtilPlugin.getPlugin().getMsgLogger().write(B2BUtilPlugin.getGUIString("_WARN_PLUGIN_PROPERTIES_MISSING")
-			// + descriptor.getLabel());
-			resourceBundle = null;
-		}
 	}
 
 	public Image getImage(String iconName) {
@@ -71,8 +63,7 @@ public class DTDCorePlugin extends AbstractUIPlugin {
 
 		if (image == null) {
 			String thisID = getInstance().getBundle().getSymbolicName();
-			imageRegistry.put(iconName, imageDescriptorFromPlugin(thisID,
-					iconName));
+			imageRegistry.put(iconName, imageDescriptorFromPlugin(thisID, iconName));
 			image = imageRegistry.get(iconName);
 		}
 
@@ -80,6 +71,13 @@ public class DTDCorePlugin extends AbstractUIPlugin {
 	}
 
 	public ResourceBundle getResourceBundle() {
+		if (resourceBundle == null) {
+			try {
+				resourceBundle = Platform.getResourceBundle(getBundle());
+			}
+			catch (java.util.MissingResourceException exception) {
+			}
+		}
 		return resourceBundle;
 	}
 
@@ -94,17 +92,13 @@ public class DTDCorePlugin extends AbstractUIPlugin {
 	 * This gets the string resource and does one substitution.
 	 */
 	public String getString(String key, Object s1) {
-		return MessageFormat.format(getString(key), new Object[] { s1 });
+		return MessageFormat.format(getString(key), new Object[]{s1});
 	}
 
 	/**
 	 * This gets the string resource and does two substitutions.
 	 */
 	public String getString(String key, Object s1, Object s2) {
-		return MessageFormat.format(getString(key), new Object[] { s1, s2 });
-	}
-
-	public void startup() {
-		instance = this;
+		return MessageFormat.format(getString(key), new Object[]{s1, s2});
 	}
 }

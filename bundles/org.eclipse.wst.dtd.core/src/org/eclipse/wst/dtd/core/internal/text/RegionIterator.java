@@ -23,9 +23,9 @@ public class RegionIterator {
 
 	private int currentIndex;
 
-	//private IStructuredDocumentRegion flatNode;
+	// private IStructuredDocumentRegion flatNode;
 	private ITextRegionList regions;
-	//private int startOffset, endOffset;
+	// private int startOffset, endOffset;
 	private ITextRegion startRegion, endRegion;
 
 	public RegionIterator(IStructuredDocumentRegion node) {
@@ -51,7 +51,7 @@ public class RegionIterator {
 		startRegion = regions.get(0);
 		endRegion = regions.get(regions.size() - 1);
 		currentIndex = 0;
-		//    this(node, node.getStart(), node.getEnd());
+		// this(node, node.getStart(), node.getEnd());
 	}
 
 	public boolean hasNext() {

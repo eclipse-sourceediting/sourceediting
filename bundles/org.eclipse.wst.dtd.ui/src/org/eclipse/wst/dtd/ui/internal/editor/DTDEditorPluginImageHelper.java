@@ -44,7 +44,7 @@ public class DTDEditorPluginImageHelper {
 		return instance;
 	}
 
-	//	 save a descriptor for each image
+	// save a descriptor for each image
 	private HashMap fImageDescRegistry = null;
 	private final String PLUGINID = DTDUIPlugin.getDefault().getBundle().getSymbolicName();
 
@@ -83,7 +83,8 @@ public class DTDEditorPluginImageHelper {
 		ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(PLUGINID, imageFilePath);
 		if (imageDescriptor != null) {
 			getImageDescriptorRegistry().put(imageFilePath, imageDescriptor);
-		} else {
+		}
+		else {
 			imageDescriptor = ImageDescriptor.getMissingImageDescriptor();
 		}
 
@@ -125,9 +126,10 @@ public class DTDEditorPluginImageHelper {
 		ImageDescriptor imageDescriptor = null;
 		Object o = getImageDescriptorRegistry().get(resource);
 		if (o == null) {
-			//create a descriptor
+			// create a descriptor
 			imageDescriptor = createImageDescriptor(resource);
-		} else {
+		}
+		else {
 			imageDescriptor = (ImageDescriptor) o;
 		}
 		return imageDescriptor;

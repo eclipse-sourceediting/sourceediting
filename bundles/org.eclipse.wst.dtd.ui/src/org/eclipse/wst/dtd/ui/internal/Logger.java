@@ -26,7 +26,7 @@ import org.osgi.framework.Bundle;
  */
 public class Logger {
 	private static final String PLUGIN_ID = "org.eclipse.wst.dtd.ui"; //$NON-NLS-1$
-	
+
 	public static final int ERROR = IStatus.ERROR; // 4
 	public static final int ERROR_DEBUG = 200 + ERROR;
 	public static final int INFO = IStatus.INFO; // 1
@@ -73,7 +73,7 @@ public class Logger {
 		}
 		Status statusObj = new Status(severity, PLUGIN_ID, severity, message, exception);
 		Bundle bundle = Platform.getBundle(PLUGIN_ID);
-		if (bundle != null) 
+		if (bundle != null)
 			Platform.getLog(bundle).log(statusObj);
 	}
 
@@ -98,7 +98,7 @@ public class Logger {
 				if (category.equals(cat)) {
 					Status statusObj = new Status(IStatus.OK, PLUGIN_ID, IStatus.OK, message, exception);
 					Bundle bundle = Platform.getBundle(PLUGIN_ID);
-					if (bundle != null) 
+					if (bundle != null)
 						Platform.getLog(bundle).log(statusObj);
 					return;
 				}
@@ -112,7 +112,7 @@ public class Logger {
 	public static boolean isDebugging() {
 		return Platform.inDebugMode();
 	}
-	
+
 	public static void log(int level, String message) {
 		_log(level, message, null);
 	}

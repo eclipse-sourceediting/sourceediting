@@ -20,7 +20,7 @@ import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
  * This interface contains constants only; it is not intended to be
  * implemented.
  * </p>
- *  
+ * 
  */
 public interface IHelpContextIds {
 

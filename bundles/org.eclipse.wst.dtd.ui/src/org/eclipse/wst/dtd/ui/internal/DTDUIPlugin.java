@@ -24,7 +24,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  * The main plugin class to be used in the desktop.
  */
 public class DTDUIPlugin extends AbstractUIPlugin {
-	//The shared instance.
+	// The shared instance.
 	private static DTDUIPlugin plugin;
 
 	/**
@@ -63,7 +63,7 @@ public class DTDUIPlugin extends AbstractUIPlugin {
 		return ResourcesPlugin.getWorkspace();
 	}
 
-	//Resource bundle.
+	// Resource bundle.
 	private ResourceBundle resourceBundle;
 
 	/**
@@ -72,20 +72,20 @@ public class DTDUIPlugin extends AbstractUIPlugin {
 	public DTDUIPlugin() {
 		super();
 		plugin = this;
-		try {
-			//resourceBundle =
-			// ResourceBundle.getBundle("org.eclipse.wst.dtd.ui.DTDPluginResources");
-			resourceBundle = Platform.getResourceBundle(Platform
-					.getBundle("org.eclipse.wst.dtd.ui"));
-		} catch (MissingResourceException x) {
-			resourceBundle = null;
-		}
 	}
 
 	/**
 	 * Returns the plugin's resource bundle,
 	 */
 	public ResourceBundle getResourceBundle() {
+		if (resourceBundle == null) {
+			try {
+				resourceBundle = Platform.getResourceBundle(getBundle());
+			}
+			catch (MissingResourceException x) {
+				resourceBundle = null;
+			}
+		}
 		return resourceBundle;
 	}
 }

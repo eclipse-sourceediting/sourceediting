@@ -3,7 +3,7 @@ package org.eclipse.wst.dtd.ui.internal.preferences;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
-import org.eclipse.wst.dtd.ui.style.IStyleConstantsDTD;
+import org.eclipse.wst.dtd.ui.internal.style.IStyleConstantsDTD;
 import org.eclipse.wst.sse.ui.preferences.ui.ColorHelper;
 
 /**
@@ -21,16 +21,14 @@ public class DTDUIPreferenceInitializer extends AbstractPreferenceInitializer {
 
 		// DTD Style Preferences
 		String NOBACKGROUNDBOLD = " | null | false"; //$NON-NLS-1$
-		String styleValue = ColorHelper.getColorString(0, 0, 0)
-				+ NOBACKGROUNDBOLD;
+		String styleValue = ColorHelper.getColorString(0, 0, 0) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsDTD.DTD_DEFAULT, styleValue); // black
 
 		styleValue = ColorHelper.getColorString(63, 63, 191) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsDTD.DTD_TAG, styleValue); // blue
 		store.setDefault(IStyleConstantsDTD.DTD_TAGNAME, styleValue); // blue
 
-		styleValue = ColorHelper.getColorString(127, 127, 127)
-				+ NOBACKGROUNDBOLD;
+		styleValue = ColorHelper.getColorString(127, 127, 127) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsDTD.DTD_COMMENT, styleValue); // grey
 
 		styleValue = ColorHelper.getColorString(128, 0, 0) + NOBACKGROUNDBOLD;
