@@ -28,7 +28,7 @@
 		<type name="JobStatusLineHelper" reference="false" implement="false" subclass="false" instantiate="false" />
 		<type name="StructuredTextEditorXML" reference="false" implement="false" subclass="false" instantiate="false" />
 		<type name="XMLEditorPlugin" reference="false" implement="false" subclass="false" instantiate="false" />
-		<type name="XMLESpellCheckTarget" reference="false" implement="false" subclass="false" instantiate="false" />
+		<type name="XMLSpellCheckTarget" reference="false" implement="false" subclass="false" instantiate="false" />
 	</package>
 
 </component>
