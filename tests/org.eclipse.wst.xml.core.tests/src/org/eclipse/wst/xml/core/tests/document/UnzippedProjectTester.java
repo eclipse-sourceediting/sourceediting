@@ -38,7 +38,7 @@ public abstract class UnzippedProjectTester extends TestCase {
 	protected static IProject fTestProject;
 	private static boolean fTestProjectInitialized;
 	private static int nSetups = 0;
-	private static final String TEST_PROJECT_NAME = "org.eclipse.wst.common.encoding.newtests";
+	private static final String TEST_PROJECT_NAME = "org.eclipse.wst.sse.core.internal.encoding.newtests";
 
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -84,7 +84,7 @@ public abstract class UnzippedProjectTester extends TestCase {
 
 	private static void getAndCreateProject() throws CoreException {
 		//TestsPlugin testsPlugin = (TestsPlugin)
-		// Platform.getPlugin("org.eclipse.wst.common.encoding.tests");
+		// Platform.getPlugin("org.eclipse.wst.sse.core.internal.encoding.tests");
 		IWorkspace workspace = getWorkspace();
 		IWorkspaceRoot root = workspace.getRoot();
 		fTestProject = root.getProject(TEST_PROJECT_NAME);

@@ -12,7 +12,7 @@ package org.eclipse.wst.xml.tests.encoding.properties;
 
 import junit.framework.TestCase;
 
-import org.eclipse.wst.common.encoding.CommonCharsetNames;
+import org.eclipse.wst.sse.core.internal.encoding.CommonCharsetNames;
 
 public class TestCommonNames extends TestCase {
 

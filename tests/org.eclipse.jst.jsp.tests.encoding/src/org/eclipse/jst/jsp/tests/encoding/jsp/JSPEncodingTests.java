@@ -25,8 +25,8 @@ import junit.framework.TestCase;
 
 import org.eclipse.jst.jsp.core.internal.contenttype.JSPResourceEncodingDetector;
 import org.eclipse.jst.jsp.tests.encoding.JSPEncodingTestsPlugin;
-import org.eclipse.wst.common.encoding.EncodingMemento;
-import org.eclipse.wst.common.encoding.IResourceCharsetDetector;
+import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
+import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
 
 public class JSPEncodingTests extends TestCase {
 

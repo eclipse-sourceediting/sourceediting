@@ -23,8 +23,8 @@ import java.nio.charset.CodingErrorAction;
 
 import junit.framework.TestCase;
 
-import org.eclipse.wst.common.encoding.EncodingMemento;
-import org.eclipse.wst.common.encoding.IResourceCharsetDetector;
+import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
+import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
 import org.eclipse.wst.xml.core.internal.contenttype.XMLResourceEncodingDetector;
 import org.eclipse.wst.xml.tests.encoding.TestsPlugin;
 

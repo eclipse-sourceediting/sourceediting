@@ -17,7 +17,6 @@
 		<import plugin="org.junit" />
 		<import plugin="org.eclipse.wst.sse.core" />
   <import plugin="org.eclipse.core.resources"/>
-  <import plugin="org.eclipse.wst.common.encoding"/>
   <import plugin="org.eclipse.core.runtime"/>
 	</requires>
 

@@ -23,10 +23,10 @@ import java.nio.charset.CodingErrorAction;
 
 import junit.framework.TestCase;
 
-import org.eclipse.wst.common.encoding.EncodingMemento;
-import org.eclipse.wst.common.encoding.IResourceCharsetDetector;
 import org.eclipse.wst.html.core.internal.contenttype.HTMLResourceEncodingDetector;
 import org.eclipse.wst.html.tests.encoding.HTMLEncodingTestsPlugin;
+import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
+import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
 import org.eclipse.wst.xml.core.internal.contenttype.XMLResourceEncodingDetector;
 
 public class HTMLEncodingTests extends TestCase {

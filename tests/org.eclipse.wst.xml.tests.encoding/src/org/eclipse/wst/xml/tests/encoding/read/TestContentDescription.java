@@ -29,7 +29,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentDescription;
-import org.eclipse.wst.common.encoding.NonContentBasedEncodingRules;
+import org.eclipse.wst.sse.core.internal.encoding.NonContentBasedEncodingRules;
 import org.eclipse.wst.xml.tests.encoding.TestsPlugin;
 import org.eclipse.wst.xml.tests.encoding.util.ProjectUnzipUtility;
 
@@ -278,7 +278,7 @@ public class TestContentDescription extends TestCase {
 	}
 
 	public void testFile67() throws CoreException, IOException {
-		doTest("abc", "testfiles/jsp/inValidEncodingValue.jsp", org.eclipse.wst.common.encoding.exceptions.UnsupportedCharsetExceptionWithDetail.class);
+		doTest("abc", "testfiles/jsp/inValidEncodingValue.jsp", org.eclipse.wst.sse.core.internal.exceptions.UnsupportedCharsetExceptionWithDetail.class);
 	}
 
 	public void testFile68() throws CoreException, IOException {
@@ -338,11 +338,11 @@ public class TestContentDescription extends TestCase {
 	}
 
 	public void testFile82() throws CoreException, IOException {
-		doTest("testjunk", "testfiles/jsp/testDefaultEncoding.jsp", org.eclipse.wst.common.encoding.exceptions.UnsupportedCharsetExceptionWithDetail.class);
+		doTest("testjunk", "testfiles/jsp/testDefaultEncoding.jsp", org.eclipse.wst.sse.core.internal.exceptions.UnsupportedCharsetExceptionWithDetail.class);
 	}
 
 	public void testFile83() throws CoreException, IOException {
-		doTest("testjunk", "testfiles/jsp/testDefaultEncodingWithJunk.jsp", org.eclipse.wst.common.encoding.exceptions.UnsupportedCharsetExceptionWithDetail.class);
+		doTest("testjunk", "testfiles/jsp/testDefaultEncodingWithJunk.jsp", org.eclipse.wst.sse.core.internal.exceptions.UnsupportedCharsetExceptionWithDetail.class);
 	}
 
 	public void testFile84() throws CoreException, IOException {

@@ -17,8 +17,8 @@ import java.io.UnsupportedEncodingException;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.wst.common.encoding.CodedStreamCreator;
-import org.eclipse.wst.common.encoding.EncodingRule;
+import org.eclipse.wst.sse.core.internal.encoding.CodedStreamCreator;
+import org.eclipse.wst.sse.core.internal.encoding.EncodingRule;
 
 public class TestCodedWrite extends TestCase {
 	/** A table of hex digits */

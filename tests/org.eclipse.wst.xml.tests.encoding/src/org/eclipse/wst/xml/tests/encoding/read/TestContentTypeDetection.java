@@ -408,7 +408,7 @@ public class TestContentTypeDetection extends TestCase {
 	}
 
 	public void testFile67() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/inValidEncodingValue.jsp", org.eclipse.wst.common.encoding.exceptions.UnsupportedCharsetExceptionWithDetail.class);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/inValidEncodingValue.jsp", org.eclipse.wst.sse.core.internal.exceptions.UnsupportedCharsetExceptionWithDetail.class);
 	}
 
 	public void testFile68() throws CoreException, IOException {
@@ -476,11 +476,11 @@ public class TestContentTypeDetection extends TestCase {
 	}
 
 	public void testFile82() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/testDefaultEncoding.jsp", org.eclipse.wst.common.encoding.exceptions.UnsupportedCharsetExceptionWithDetail.class);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/testDefaultEncoding.jsp", org.eclipse.wst.sse.core.internal.exceptions.UnsupportedCharsetExceptionWithDetail.class);
 	}
 
 	public void testFile83() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/testDefaultEncodingWithJunk.jsp", org.eclipse.wst.common.encoding.exceptions.UnsupportedCharsetExceptionWithDetail.class);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/testDefaultEncodingWithJunk.jsp", org.eclipse.wst.sse.core.internal.exceptions.UnsupportedCharsetExceptionWithDetail.class);
 	}
 
 	public void testFile84() throws CoreException, IOException {

@@ -15,7 +15,7 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.wst.common.encoding.ContentBasedPreferenceGateway;
+import org.eclipse.wst.sse.core.internal.encoding.ContentBasedPreferenceGateway;
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 

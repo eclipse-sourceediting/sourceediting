@@ -35,9 +35,9 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.common.encoding.CodedReaderCreator;
-import org.eclipse.wst.common.encoding.NonContentBasedEncodingRules;
-import org.eclipse.wst.common.encoding.exceptions.UnsupportedCharsetExceptionWithDetail;
+import org.eclipse.wst.sse.core.internal.encoding.CodedReaderCreator;
+import org.eclipse.wst.sse.core.internal.encoding.NonContentBasedEncodingRules;
+import org.eclipse.wst.sse.core.internal.exceptions.UnsupportedCharsetExceptionWithDetail;
 import org.eclipse.wst.xml.tests.encoding.util.ProjectUnzipUtility;
 
 /**
