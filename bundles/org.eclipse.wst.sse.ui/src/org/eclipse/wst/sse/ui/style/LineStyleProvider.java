@@ -12,28 +12,41 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.style;
 
-
-
 import java.util.Collection;
 
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 
-
 public interface LineStyleProvider {
 
+	/**
+	 * Initializes this provider for the given Highlighter and document. This
+	 * method will be called at least once before prepareRegions is called.
+	 * 
+	 * @param document
+	 * @param highlighter
+	 */
 	void init(IStructuredDocument document, Highlighter highlighter);
 
 	/**
-	 * This method must add StyleRanges to the holdResults collection, for the
-	 * text starting with startStructuredDocumentRegion and ending with
-	 * endStructuredDocumentRegion.
+	 * Optionally appends StyleRanges to the styleRanges Collection, in order,
+	 * and only covering the given range within the document.
+	 * 
+	 * @param currentRegion -
+	 *            the current document partition
+	 * @param start
+	 * @param length
+	 * @param styleRanges
+	 * @return whether this LineStyleProvider handled the request; handling
+	 *         includes not adding StyleRanges if that is still the correct
+	 *         behavior
 	 */
-	boolean prepareRegions(ITypedRegion currentRegion, int start, int length, Collection holdResults);
+	boolean prepareRegions(ITypedRegion currentRegion, int start, int length, Collection styleRanges);
 
 	/**
-	 * This method allows the implementer to free up any "resources" they
-	 * might be holding on to (such as listening for preference changes)
+	 * Instructs this provider to free up any "resources" it might be holding
+	 * on to (such as listening for preference changes). It is only called
+	 * once in the lifetime of this provider.
 	 */
 	void release();
 }

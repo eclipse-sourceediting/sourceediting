@@ -53,7 +53,7 @@ import org.osgi.framework.BundleContext;
  * requests the model manager, the following code should be used to access the
  * model manager 
  * // get the model manager from the StructuredModelManager
- * StructuredModelManager.getInstance().getModelManager();
+ * StructuredModelManager.getModelManager();
  */
 public class SSECorePlugin extends Plugin implements IModelManagerPlugin {
 	static SSECorePlugin instance = null;
