@@ -27,13 +27,13 @@ import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 import org.eclipse.wst.common.frameworks.operations.WTPOperation;
 import org.eclipse.wst.common.frameworks.operations.WTPOperationDataModel;
-import org.eclipse.wst.common.frameworks.ui.ExtendableWizard;
+import org.eclipse.wst.common.frameworks.ui.WTPWizard;
 import org.eclipse.wst.web.internal.ResourceHandler;
 import org.eclipse.wst.web.internal.WSTWebPlugin;
 import org.eclipse.wst.web.internal.operation.SimpleWebModuleCreationDataModel;
 import org.eclipse.wst.web.internal.operation.SimpleWebModuleCreationOperation;
 
-public class SimpleWebModuleCreationWizard extends ExtendableWizard implements IExecutableExtension, INewWizard {
+public class SimpleWebModuleCreationWizard extends WTPWizard implements IExecutableExtension, INewWizard {
 
 	public SimpleWebModuleCreationWizard(SimpleWebModuleCreationDataModel model) {
 		super(model);
