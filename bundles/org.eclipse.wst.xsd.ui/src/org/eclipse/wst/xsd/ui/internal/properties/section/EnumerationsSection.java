@@ -38,7 +38,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.wst.common.ui.properties.TabbedPropertySheetWidgetFactory;
+import org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetWidgetFactory;
 import org.eclipse.wst.common.ui.viewers.NavigableTableViewer;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.actions.AddEnumsAction;
@@ -186,7 +186,7 @@ public class EnumerationsSection extends AbstractSection
   }
   
   /**
-   * @see org.eclipse.wst.common.ui.properties.ITabbedPropertySection#createControls(org.eclipse.swt.widgets.Composite, org.eclipse.wst.common.ui.properties.TabbedPropertySheetWidgetFactory)
+   * @see org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertySection#createControls(org.eclipse.swt.widgets.Composite, org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetWidgetFactory)
    */
   public void createControls(Composite parent, TabbedPropertySheetWidgetFactory factory)
   {
@@ -242,7 +242,7 @@ public class EnumerationsSection extends AbstractSection
   }
   
   /*
-   * @see org.eclipse.wst.common.ui.properties.view.ITabbedPropertySection#refresh()
+   * @see org.eclipse.wst.common.ui.properties.internal.provisional.view.ITabbedPropertySection#refresh()
    */
   public void refresh()
   {
@@ -301,7 +301,7 @@ public class EnumerationsSection extends AbstractSection
   }
 
   /* (non-Javadoc)
-   * @see org.eclipse.wst.common.ui.properties.ISection#shouldUseExtraSpace()
+   * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISection#shouldUseExtraSpace()
    */
   public boolean shouldUseExtraSpace()
   {

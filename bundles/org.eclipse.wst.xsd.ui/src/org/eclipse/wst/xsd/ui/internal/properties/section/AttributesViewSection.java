@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.PropertySheetPage;
-import org.eclipse.wst.common.ui.properties.TabbedPropertySheetWidgetFactory;
+import org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetWidgetFactory;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.XSDMenuListener;
 import org.eclipse.wst.xsd.ui.internal.actions.AddAttributeAction;
@@ -64,7 +64,7 @@ public class AttributesViewSection extends AbstractSection implements ISelection
   }
 
 	/**
-	 * @see org.eclipse.wst.common.ui.properties.ITabbedPropertySection#createControls(org.eclipse.swt.widgets.Composite, org.eclipse.wst.common.ui.properties.TabbedPropertySheetWidgetFactory)
+	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertySection#createControls(org.eclipse.swt.widgets.Composite, org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetWidgetFactory)
 	 */
 	public void createControls(Composite parent,	TabbedPropertySheetWidgetFactory factory) {
 		super.createControls(parent, factory);
@@ -122,7 +122,7 @@ public class AttributesViewSection extends AbstractSection implements ISelection
   }
 	
 	/*
-	 * @see org.eclipse.wst.common.ui.properties.view.ITabbedPropertySection#refresh()
+	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.view.ITabbedPropertySection#refresh()
 	 */
 	public void refresh()
 	{

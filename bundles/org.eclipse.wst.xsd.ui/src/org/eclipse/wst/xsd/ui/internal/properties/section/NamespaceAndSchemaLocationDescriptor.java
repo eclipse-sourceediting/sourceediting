@@ -16,7 +16,7 @@ import java.util.List;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.wst.common.ui.properties.ISection;
+import org.eclipse.wst.common.ui.properties.internal.provisional.ISection;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDImport;
 
@@ -33,7 +33,7 @@ public class NamespaceAndSchemaLocationDescriptor extends AbstractSectionDescrip
 	  }
 
 	  /* (non-Javadoc)
-	   * @see org.eclipse.wst.common.ui.properties.ISectionDescriptor#getId()
+	   * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISectionDescriptor#getId()
 	   */
 	  public String getId()
 	  {
@@ -41,7 +41,7 @@ public class NamespaceAndSchemaLocationDescriptor extends AbstractSectionDescrip
 	  }
 
 	  /* (non-Javadoc)
-	   * @see org.eclipse.wst.common.ui.properties.ISectionDescriptor#getInputTypes()
+	   * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISectionDescriptor#getInputTypes()
 	   */
 	  public List getInputTypes()
 	  {
@@ -51,7 +51,7 @@ public class NamespaceAndSchemaLocationDescriptor extends AbstractSectionDescrip
 	  }
 
 	  /* (non-Javadoc)
-	   * @see org.eclipse.wst.common.ui.properties.ISectionDescriptor#getSectionClass()
+	   * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISectionDescriptor#getSectionClass()
 	   */
 	  public ISection getSectionClass()
 	  {
@@ -59,7 +59,7 @@ public class NamespaceAndSchemaLocationDescriptor extends AbstractSectionDescrip
 	  }
 
 	  /* (non-Javadoc)
-	   * @see org.eclipse.wst.common.ui.properties.ISectionDescriptor#getTargetTab()
+	   * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISectionDescriptor#getTargetTab()
 	   */
 	  public String getTargetTab()
 	  {
@@ -67,7 +67,7 @@ public class NamespaceAndSchemaLocationDescriptor extends AbstractSectionDescrip
 	  }
 
 	  /* (non-Javadoc)
-	   * @see org.eclipse.wst.common.ui.properties.ISectionDescriptor#appliesTo(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
+	   * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISectionDescriptor#appliesTo(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
 	   */
 	  public boolean appliesTo(IWorkbenchPart part, ISelection selection)
 	  {

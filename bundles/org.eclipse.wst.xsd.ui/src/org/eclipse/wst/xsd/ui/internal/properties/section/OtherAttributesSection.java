@@ -16,7 +16,7 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.PropertySheetPage;
-import org.eclipse.wst.common.ui.properties.TabbedPropertySheetWidgetFactory;
+import org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetWidgetFactory;
 import org.eclipse.wst.xsd.ui.internal.properties.XSDPropertySourceProvider;
 import org.eclipse.xsd.XSDElementDeclaration;
 
@@ -34,7 +34,7 @@ public class OtherAttributesSection extends AbstractSection
   }
 
 	/**
-	 * @see org.eclipse.wst.common.ui.properties.ITabbedPropertySection#createControls(org.eclipse.swt.widgets.Composite, org.eclipse.wst.common.ui.properties.TabbedPropertySheetWidgetFactory)
+	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertySection#createControls(org.eclipse.swt.widgets.Composite, org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetWidgetFactory)
 	 */
 	public void createControls(Composite parent, TabbedPropertySheetWidgetFactory factory)
 	{
@@ -72,7 +72,7 @@ public class OtherAttributesSection extends AbstractSection
 	}
   
 	/*
-	 * @see org.eclipse.wst.common.ui.properties.view.ITabbedPropertySection#refresh()
+	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.view.ITabbedPropertySection#refresh()
 	 */
 	public void refresh()
 	{
@@ -100,7 +100,7 @@ public class OtherAttributesSection extends AbstractSection
   }
 
   /* (non-Javadoc)
-   * @see org.eclipse.wst.common.ui.properties.ISection#shouldUseExtraSpace()
+   * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISection#shouldUseExtraSpace()
    */
   public boolean shouldUseExtraSpace()
   {

@@ -18,8 +18,8 @@ import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.wst.common.ui.properties.ITabbedPropertyConstants;
-import org.eclipse.wst.common.ui.properties.TabbedPropertySheetWidgetFactory;
+import org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertyConstants;
+import org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetWidgetFactory;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDParticle;
@@ -155,7 +155,7 @@ public class MinMaxSection extends AbstractSection
   }
   
 	/**
-	 * @see org.eclipse.wst.common.ui.properties.ITabbedPropertySection#createControls(org.eclipse.swt.widgets.Composite, org.eclipse.wst.common.ui.properties.TabbedPropertySheetWidgetFactory)
+	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertySection#createControls(org.eclipse.swt.widgets.Composite, org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetWidgetFactory)
 	 */
 
 	public void createControls(Composite parent,TabbedPropertySheetWidgetFactory factory)
@@ -203,7 +203,7 @@ public class MinMaxSection extends AbstractSection
 	}
 
 	/*
-	 * @see org.eclipse.wst.common.ui.properties.view.ITabbedPropertySection#refresh()
+	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.view.ITabbedPropertySection#refresh()
 	 */
 	public void refresh()
 	{

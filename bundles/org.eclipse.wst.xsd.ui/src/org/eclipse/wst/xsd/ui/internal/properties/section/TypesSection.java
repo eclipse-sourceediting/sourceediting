@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.wst.common.ui.properties.TabbedPropertySheetWidgetFactory;
+import org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetWidgetFactory;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.dialogs.types.xsd.XSDComponentSelectionDialog;
 import org.eclipse.wst.xsd.ui.internal.dialogs.types.xsd.XSDComponentSelectionProvider;
@@ -65,7 +65,7 @@ public class TypesSection extends AbstractSection
   }
 
 	/**
-	 * @see org.eclipse.wst.common.ui.properties.ITabbedPropertySection#createControls(org.eclipse.swt.widgets.Composite, org.eclipse.wst.common.ui.properties.TabbedPropertySheetWidgetFactory)
+	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertySection#createControls(org.eclipse.swt.widgets.Composite, org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetWidgetFactory)
 	 */
 	public void createControls(Composite parent, TabbedPropertySheetWidgetFactory factory)
 	{
@@ -97,7 +97,7 @@ public class TypesSection extends AbstractSection
 	}
 
 	/*
-	 * @see org.eclipse.wst.common.ui.properties.view.ITabbedPropertySection#refresh()
+	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.view.ITabbedPropertySection#refresh()
 	 */
 	public void refresh()
 	{

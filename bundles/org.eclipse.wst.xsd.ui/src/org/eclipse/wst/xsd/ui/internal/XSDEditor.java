@@ -43,7 +43,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.editors.text.JavaFileEditorInput;
 import org.eclipse.ui.views.properties.PropertySheet;
-import org.eclipse.wst.common.ui.properties.ITabbedPropertySheetPageContributor;
+import org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertySheetPageContributor;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
@@ -152,7 +152,7 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
   }
 
 	/**
-	 * @see org.eclipse.wst.common.ui.properties.ITabbedPropertySheetPageContributor#getContributorId()
+	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertySheetPageContributor#getContributorId()
 	 */ 
   public String getContributorId()
 	{

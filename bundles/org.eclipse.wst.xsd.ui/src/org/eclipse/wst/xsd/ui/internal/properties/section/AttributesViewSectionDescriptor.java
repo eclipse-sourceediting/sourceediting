@@ -16,7 +16,7 @@ import java.util.List;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.wst.common.ui.properties.ISection;
+import org.eclipse.wst.common.ui.properties.internal.provisional.ISection;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDElementDeclaration;
 
@@ -31,7 +31,7 @@ public class AttributesViewSectionDescriptor extends AbstractSectionDescriptor
   }
 
   /* (non-Javadoc)
-   * @see org.eclipse.wst.common.ui.properties.ISectionDescriptor#getId()
+   * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISectionDescriptor#getId()
    */
   public String getId()
   {
@@ -39,7 +39,7 @@ public class AttributesViewSectionDescriptor extends AbstractSectionDescriptor
   }
 
   /* (non-Javadoc)
-   * @see org.eclipse.wst.common.ui.properties.ISectionDescriptor#getInputTypes()
+   * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISectionDescriptor#getInputTypes()
    */
   public List getInputTypes()
   {
@@ -49,7 +49,7 @@ public class AttributesViewSectionDescriptor extends AbstractSectionDescriptor
   }
 
   /* (non-Javadoc)
-   * @see org.eclipse.wst.common.ui.properties.ISectionDescriptor#getSectionClass()
+   * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISectionDescriptor#getSectionClass()
    */
   public ISection getSectionClass()
   {
@@ -83,7 +83,7 @@ public class AttributesViewSectionDescriptor extends AbstractSectionDescriptor
 
   
   /* (non-Javadoc)
-   * @see org.eclipse.wst.common.ui.properties.ISectionDescriptor#getTargetTab()
+   * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISectionDescriptor#getTargetTab()
    */
   public String getTargetTab()
   {
@@ -91,7 +91,7 @@ public class AttributesViewSectionDescriptor extends AbstractSectionDescriptor
   }
   
   /* (non-Javadoc)
-   * @see org.eclipse.wst.common.ui.properties.ISectionDescriptor#getAfterSection()
+   * @see org.eclipse.wst.common.ui.properties.internal.provisional.ISectionDescriptor#getAfterSection()
    */
   public String getAfterSection()
   {

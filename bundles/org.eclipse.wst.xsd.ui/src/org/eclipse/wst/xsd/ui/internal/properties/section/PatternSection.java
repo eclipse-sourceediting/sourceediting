@@ -23,8 +23,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.wst.common.ui.properties.ITabbedPropertyConstants;
-import org.eclipse.wst.common.ui.properties.TabbedPropertySheetWidgetFactory;
+import org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertyConstants;
+import org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetWidgetFactory;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.wizards.RegexWizard;
 import org.eclipse.xsd.XSDPatternFacet;
@@ -45,7 +45,7 @@ public class PatternSection extends AbstractSection
   Button button;
 
 	/**
-	 * @see org.eclipse.wst.common.ui.properties.ITabbedPropertySection#createControls(org.eclipse.swt.widgets.Composite, org.eclipse.wst.common.ui.properties.TabbedPropertySheetWidgetFactory)
+	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertySection#createControls(org.eclipse.swt.widgets.Composite, org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetWidgetFactory)
 	 */
 	public void createControls(Composite parent, TabbedPropertySheetWidgetFactory factory)
 	{
@@ -81,7 +81,7 @@ public class PatternSection extends AbstractSection
 	}
 
 	/*
-	 * @see org.eclipse.wst.common.ui.properties.view.ITabbedPropertySection#refresh()
+	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.view.ITabbedPropertySection#refresh()
 	 */
 	public void refresh()
 	{
