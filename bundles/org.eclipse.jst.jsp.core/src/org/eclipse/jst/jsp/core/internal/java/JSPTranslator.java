@@ -70,7 +70,7 @@ public class JSPTranslator {
 	
 	private String fServiceHeader = "public void _jspService(javax.servlet.http.HttpServletRequest request," + //$NON-NLS-1$
 				" javax.servlet.http.HttpServletResponse response)\n" + //$NON-NLS-1$
-				"\t\tthrows javax.servlet.ServletException {\n" + //$NON-NLS-1$
+				"\t\tthrows java.io.IOException, javax.servlet.ServletException {\n" + //$NON-NLS-1$
 				"javax.servlet.jsp.PageContext pageContext = null;\n" + //$NON-NLS-1$
 				"javax.servlet.http.HttpSession session = null;\n" + //$NON-NLS-1$
 				"javax.servlet.ServletContext application = null;\n" + //$NON-NLS-1$
