@@ -11,20 +11,20 @@
 package org.eclipse.wst.css.core.internal.text;
 
 import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.wst.css.core.text.ICSSPartitions;
+import org.eclipse.wst.css.core.text.ICSSPartitionTypes;
 import org.eclipse.wst.sse.core.internal.text.rules.StructuredTextPartitioner;
-import org.eclipse.wst.sse.core.text.IStructuredPartitions;
+import org.eclipse.wst.sse.core.text.IStructuredPartitionTypes;
 
 public class StructuredTextPartitionerForCSS extends StructuredTextPartitioner {
 	
-	public final static String[] legalTypes = new String[]{ICSSPartitions.STYLE, IStructuredPartitions.DEFAULT_PARTITION};
+	public final static String[] legalTypes = new String[]{ICSSPartitionTypes.STYLE, IStructuredPartitionTypes.DEFAULT_PARTITION};
 
 	public StructuredTextPartitionerForCSS() {
 		super();
 	}
 
-	public String getDefault() {
-		return ICSSPartitions.STYLE;
+	public String getDefaultPartitionType() {
+		return ICSSPartitionTypes.STYLE;
 	}
 
 	public String[] getLegalContentTypes() {

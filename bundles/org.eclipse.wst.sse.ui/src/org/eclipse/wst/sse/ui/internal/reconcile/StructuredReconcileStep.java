@@ -30,7 +30,8 @@ import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.IStructuredPartitions;
+import org.eclipse.wst.sse.core.text.IStructuredPartitionTypes;
+import org.eclipse.wst.sse.core.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.Logger;
 
@@ -89,7 +90,7 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 	public ReconcileAnnotationKey createKey(IStructuredDocumentRegion sdRegion, int scope) {
 
 		ITypedRegion tr = getPartition(sdRegion);
-		String partitionType = (tr != null) ? tr.getType() : IStructuredPartitions.UNKNOWN_PARTITION;
+		String partitionType = (tr != null) ? tr.getType() : IStructuredPartitionTypes.UNKNOWN_PARTITION;
 		return createKey(partitionType, scope);
 	}
 
@@ -111,7 +112,7 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=86069
 		if (doc != null) {
 			try {
-				tr = TextUtilities.getPartition(doc, IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING, offset, false);
+				tr = TextUtilities.getPartition(doc, IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, offset, false);
 			} catch (BadLocationException e) {
 				if (DEBUG)
 					Logger.logException("problem getting partition at: " + offset, e);
@@ -148,7 +149,7 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 
 	public String getPartitionType(IDocument doc, int offset) {
 		ITypedRegion tr = getPartition(doc, offset);
-		return (tr != null) ? tr.getType() : IStructuredPartitions.UNKNOWN_PARTITION;
+		return (tr != null) ? tr.getType() : IStructuredPartitionTypes.UNKNOWN_PARTITION;
 	}
 
 	public String[] getPartitionTypes() {

@@ -24,12 +24,13 @@ import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.wst.dtd.core.contenttype.ContentTypeIdForDTD;
-import org.eclipse.wst.dtd.core.text.IDTDPartitions;
+import org.eclipse.wst.dtd.core.text.IDTDPartitionTypes;
 import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.ui.preferences.ui.ColorHelper;
 import org.eclipse.wst.sse.ui.style.AbstractLineStyleProvider;
@@ -45,7 +46,7 @@ public class LineStyleProviderForDTDSubSet extends AbstractLineStyleProvider imp
 		super();
 		fInternalProvider = new LineStyleProviderForDTD();
 		fInternalRanges = new StyleRange[0];
-		fPartitioning = IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING;
+		fPartitioning = IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING;
 	}
 
 	/**
@@ -115,7 +116,7 @@ public class LineStyleProviderForDTDSubSet extends AbstractLineStyleProvider imp
 	 *      int, int, java.util.Collection)
 	 */
 	public boolean prepareRegions(ITypedRegion typedRegion, int lineRequestStart, int lineRequestLength, Collection holdResults) {
-		if (!IDTDPartitions.DTD_DEFAULT.equals(typedRegion.getType())) {
+		if (!IDTDPartitionTypes.DTD_DEFAULT.equals(typedRegion.getType())) {
 			// compute an internal DTD model and return linestyles for it
 			ITextRegion dtdContentRegion = null;
 			IStructuredDocumentRegion doctype = getDocument().getRegionAtCharacterOffset(typedRegion.getOffset());

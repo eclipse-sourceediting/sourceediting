@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.format;
+package org.eclipse.wst.sse.core.internal.format;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;

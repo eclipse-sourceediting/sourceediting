@@ -11,9 +11,9 @@
 package org.eclipse.wst.html.ui.internal.contentassist;
 
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
-import org.eclipse.wst.css.core.text.ICSSPartitions;
+import org.eclipse.wst.css.core.text.ICSSPartitionTypes;
 import org.eclipse.wst.css.ui.contentassist.CSSContentAssistProcessor;
-import org.eclipse.wst.html.core.text.IHTMLPartitions;
+import org.eclipse.wst.html.core.text.IHTMLPartitionTypes;
 import org.eclipse.wst.javascript.common.ui.internal.contentassist.JavaScriptContentAssistProcessor;
 import org.eclipse.wst.xml.ui.contentassist.NoRegionContentAssistProcessor;
 
@@ -28,13 +28,13 @@ public class NoRegionContentAssistProcessorForHTML extends NoRegionContentAssist
 	protected void initPartitionToProcessorMap() {
 		super.initPartitionToProcessorMap();
 		IContentAssistProcessor htmlProcessor = new HTMLContentAssistProcessor();
-		fPartitionToProcessorMap.put(IHTMLPartitions.HTML_DEFAULT, htmlProcessor);
-		fPartitionToProcessorMap.put(IHTMLPartitions.HTML_COMMENT, htmlProcessor);
+		fPartitionToProcessorMap.put(IHTMLPartitionTypes.HTML_DEFAULT, htmlProcessor);
+		fPartitionToProcessorMap.put(IHTMLPartitionTypes.HTML_COMMENT, htmlProcessor);
 
 		IContentAssistProcessor jsContentAssistProcessor = new JavaScriptContentAssistProcessor();
-		fPartitionToProcessorMap.put(IHTMLPartitions.SCRIPT, jsContentAssistProcessor);
+		fPartitionToProcessorMap.put(IHTMLPartitionTypes.SCRIPT, jsContentAssistProcessor);
 
 		IContentAssistProcessor cssContentAssistProcessor = new CSSContentAssistProcessor();
-		fPartitionToProcessorMap.put(ICSSPartitions.STYLE, cssContentAssistProcessor);
+		fPartitionToProcessorMap.put(ICSSPartitionTypes.STYLE, cssContentAssistProcessor);
 	}
 }

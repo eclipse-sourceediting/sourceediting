@@ -10,21 +10,26 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.format;
+package org.eclipse.wst.sse.core.internal.format;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.w3c.dom.Node;
+/**
+ * These are items that change from element to element.
+ * Passed from node to node in a recursive call.
+ * eg. current indent is 2 deep, but for the next node might be 3...
+ */
+public interface IStructuredFormatContraints {
+	boolean getClearAllBlankLines();
 
-public interface IStructuredFormatter {
-	void format(Node node);
+	String getCurrentIndent();
 
-	void format(Node node, IStructuredFormatContraints formatContraints);
+	boolean getFormatWithSiblingIndent();
 
-	IStructuredFormatContraints getFormatContraints();
+	/** 
+	 * some special elements can ignore clearing blank lines
+	 * */
+	void setClearAllBlankLines(boolean clearAllBlankLines);
 
-	IStructuredFormatPreferences getFormatPreferences();
+	void setCurrentIndent(String currentIndent);
 
-	void setFormatPreferences(IStructuredFormatPreferences formatPreferences);
-
-	void setProgressMonitor(IProgressMonitor monitor);
+	void setFormatWithSiblingIndent(boolean formatWithSiblingIndent);
 }

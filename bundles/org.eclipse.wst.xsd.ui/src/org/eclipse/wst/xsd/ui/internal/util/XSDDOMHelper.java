@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.util;
 
-import org.eclipse.wst.sse.core.format.IStructuredFormatProcessor;
+import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.core.format.FormatProcessorXML;

@@ -10,10 +10,15 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.format;
+package org.eclipse.wst.sse.core.text;
 
-import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.jface.text.ITypedRegion;
 
-public interface IStructuredContentFormatter {
-	void setModel(IStructuredModel model);
+/**
+ * Similar to extended interface, except it allows the length, offset, and
+ * type to be set. This is useful when iterating through a number of "small"
+ * regions, that all map to the the same partion regions.
+ */
+public interface IStructuredTypedRegion extends IStructuredRegion, ITypedRegion {
+	void setType(String partitionType);
 }

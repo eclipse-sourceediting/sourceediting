@@ -7,10 +7,8 @@ package org.eclipse.wst.sse.core.text;
  * 
  * @since 1.0
  */
-public interface IStructuredPartitions {
+public interface IStructuredPartitionTypes {
 
-	String STRUCTURED_PARTITIONING = "org.eclipse.wst.sse.PARTITIONING"; //$NON-NLS-1$
-	
 	String DEFAULT_PARTITION = "org.eclipse.wst.sse.ST_DEFAULT"; //$NON-NLS-1$
 	String UNKNOWN_PARTITION = "org.eclipse.wst.sse.UNKNOWN_PARTITION_TYPE"; //$NON-NLS-1$
 }

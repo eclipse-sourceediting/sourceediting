@@ -18,7 +18,7 @@ package org.eclipse.wst.sse.core.text;
  * Similar jace TypedRegion, but had to subclass our version which allowed
  * length to be set.
  */
-public class SimpleStructuredTypedRegion extends SimpleStructuredRegion implements StructuredTypedRegion {
+public class SimpleStructuredTypedRegion extends SimpleStructuredRegion implements IStructuredTypedRegion {
 
 	/** The region's type */
 	private String fType;

@@ -19,7 +19,7 @@ import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
-import org.eclipse.jst.jsp.core.text.IJSPPartitions;
+import org.eclipse.jst.jsp.core.text.IJSPPartitionTypes;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -96,7 +96,7 @@ public class JSPFindOccurrencesAction extends BasicFindOccurrencesAction impleme
 	 * @see com.ibm.sse.editor.internal.search.BasicFindOccurrencesAction#getPartitionTypes()
 	 */
 	public String[] getPartitionTypes() {
-		return new String[]{IJSPPartitions.JSP_DEFAULT, IJSPPartitions.JSP_CONTENT_JAVA};
+		return new String[]{IJSPPartitionTypes.JSP_DEFAULT, IJSPPartitionTypes.JSP_CONTENT_JAVA};
 	}
 
 	/**

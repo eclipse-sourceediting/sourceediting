@@ -10,18 +10,27 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.text;
+package org.eclipse.wst.sse.core.internal.format;
 
-import org.eclipse.jface.text.IRegion;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.w3c.dom.Node;
 
 /**
- * Like super class except allows length and offset to be modified. This is
- * convenient for some algorithms, and allows region objects to be reused.
- * Note: There MIGHT be some code that assumes regions are immutable. This
- * class would not be appropriate for those uses.
+ * Knows how to format a particular node.
+ * 
+ * eg. generic node, text node, document node, comment, etc...
  */
-public interface StructuredRegion extends IRegion {
-	void setLength(int length);
+public interface IStructuredFormatter {
+	
+	void format(Node node);
 
-	void setOffset(int offset);
+	void format(Node node, IStructuredFormatContraints formatContraints);
+
+	IStructuredFormatContraints getFormatContraints();
+
+	IStructuredFormatPreferences getFormatPreferences();
+
+	void setFormatPreferences(IStructuredFormatPreferences formatPreferences);
+
+	void setProgressMonitor(IProgressMonitor monitor);
 }

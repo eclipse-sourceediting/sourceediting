@@ -19,7 +19,7 @@ import org.eclipse.jface.text.IRegion;
 /**
  * Similar to jface region except we wanted a setting on length
  */
-public class SimpleStructuredRegion implements StructuredRegion {
+public class SimpleStructuredRegion implements IStructuredRegion {
 	/** The region length */
 	private int fLength;
 

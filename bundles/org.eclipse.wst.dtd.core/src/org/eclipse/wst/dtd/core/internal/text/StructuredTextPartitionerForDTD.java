@@ -12,9 +12,9 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.core.internal.text;
 
-import org.eclipse.wst.dtd.core.text.IDTDPartitions;
+import org.eclipse.wst.dtd.core.text.IDTDPartitionTypes;
 import org.eclipse.wst.sse.core.internal.text.rules.StructuredTextPartitioner;
-import org.eclipse.wst.sse.core.text.IStructuredPartitions;
+import org.eclipse.wst.sse.core.text.IStructuredPartitionTypes;
 
 public class StructuredTextPartitionerForDTD extends StructuredTextPartitioner {
 
@@ -27,8 +27,8 @@ public class StructuredTextPartitionerForDTD extends StructuredTextPartitioner {
 	 * 
 	 * @see org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner#getDefault()
 	 */
-	public String getDefault() {
-		return IDTDPartitions.DTD_DEFAULT;
+	public String getDefaultPartitionType() {
+		return IDTDPartitionTypes.DTD_DEFAULT;
 	}
 
 	/*
@@ -37,6 +37,6 @@ public class StructuredTextPartitionerForDTD extends StructuredTextPartitioner {
 	 * @see org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner#initLegalContentTypes()
 	 */
 	protected void initLegalContentTypes() {
-		fSupportedTypes = new String[]{IDTDPartitions.DTD_DEFAULT, IStructuredPartitions.UNKNOWN_PARTITION};
+		fSupportedTypes = new String[]{IDTDPartitionTypes.DTD_DEFAULT, IStructuredPartitionTypes.UNKNOWN_PARTITION};
 	}
 }

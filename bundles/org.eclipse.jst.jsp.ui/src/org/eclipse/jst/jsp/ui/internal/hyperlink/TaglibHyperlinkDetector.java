@@ -19,12 +19,12 @@ import org.eclipse.jst.jsp.core.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.contentmodel.ITaglibRecord;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TLDRecord;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibIndex;
-import org.eclipse.jst.jsp.core.text.IJSPPartitions;
+import org.eclipse.jst.jsp.core.text.IJSPPartitionTypes;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.xml.core.document.XMLAttr;
 import org.eclipse.wst.xml.core.document.XMLNode;
@@ -46,8 +46,8 @@ public class TaglibHyperlinkDetector implements IHyperlinkDetector {
 			if (doc != null) {
 				try {
 					// check if jsp tag/directive first
-					ITypedRegion partition = TextUtilities.getPartition(doc, IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING, region.getOffset(), false);
-					if (partition != null && partition.getType() == IJSPPartitions.JSP_DIRECTIVE) {
+					ITypedRegion partition = TextUtilities.getPartition(doc, IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, region.getOffset(), false);
+					if (partition != null && partition.getType() == IJSPPartitionTypes.JSP_DIRECTIVE) {
 						// check if jsp taglib directive
 						Node currentNode = getCurrentNode(doc, region.getOffset());
 						if (currentNode != null && currentNode.getNodeType() == Node.ELEMENT_NODE && JSP11Namespace.ElementName.DIRECTIVE_TAGLIB.equalsIgnoreCase(currentNode.getNodeName())) {

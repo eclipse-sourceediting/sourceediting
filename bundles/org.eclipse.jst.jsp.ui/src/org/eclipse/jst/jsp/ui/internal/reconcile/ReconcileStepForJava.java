@@ -24,7 +24,7 @@ import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationExtension;
-import org.eclipse.jst.jsp.core.text.IJSPPartitions;
+import org.eclipse.jst.jsp.core.text.IJSPPartitionTypes;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
@@ -162,7 +162,7 @@ public class ReconcileStepForJava extends StructuredReconcileStep {
 			key = createKey(fStructuredDocument.getRegionAtCharacterOffset(jspOffset), ReconcileAnnotationKey.TOTAL);
 		}
 		else {
-			key = createKey(IJSPPartitions.JSP_DEFAULT, ReconcileAnnotationKey.TOTAL);
+			key = createKey(IJSPPartitionTypes.JSP_DEFAULT, ReconcileAnnotationKey.TOTAL);
 		}
 		TemporaryAnnotation annotation = new TemporaryAnnotation(pos, type, problem.getMessage(), key, problem.getID());
 		annotation.setAdditionalFixInfo(problem);

@@ -36,7 +36,7 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.text.IStructuredPartitions;
+import org.eclipse.wst.sse.core.text.IStructuredPartitionTypes;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
@@ -102,8 +102,8 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		if (configuredContentTypes == null) {
 			String[] xmlTypes = StructuredTextPartitionerForXML.getConfiguredContentTypes();
 			configuredContentTypes = new String[xmlTypes.length + 2];
-			configuredContentTypes[0] = IStructuredPartitions.DEFAULT_PARTITION;
-			configuredContentTypes[1] = IStructuredPartitions.UNKNOWN_PARTITION;
+			configuredContentTypes[0] = IStructuredPartitionTypes.DEFAULT_PARTITION;
+			configuredContentTypes[1] = IStructuredPartitionTypes.UNKNOWN_PARTITION;
 			int index = 0;
 			System.arraycopy(xmlTypes, 0, configuredContentTypes, index += 2, xmlTypes.length);
 		}
@@ -117,9 +117,9 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 			ContentAssistant contentAssistant = (ContentAssistant) ca;
 			IContentAssistProcessor xmlContentAssistProcessor = new XMLContentAssistProcessor();
 			IContentAssistProcessor noRegionProcessor = new NoRegionContentAssistProcessor();
-			setContentAssistProcessor(contentAssistant, xmlContentAssistProcessor, IStructuredPartitions.DEFAULT_PARTITION);
+			setContentAssistProcessor(contentAssistant, xmlContentAssistProcessor, IStructuredPartitionTypes.DEFAULT_PARTITION);
 			setContentAssistProcessor(contentAssistant, xmlContentAssistProcessor, IXMLPartitions.XML_DEFAULT);
-			setContentAssistProcessor(contentAssistant, noRegionProcessor, IStructuredPartitions.UNKNOWN_PARTITION);
+			setContentAssistProcessor(contentAssistant, noRegionProcessor, IStructuredPartitionTypes.UNKNOWN_PARTITION);
 		}
 		return ca;
 	}
@@ -180,7 +180,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		if (fInformationPresenter == null) {
 			fInformationPresenter = new InformationPresenter(getInformationPresenterControlCreator(sourceViewer));
 			IInformationProvider xmlInformationProvider = new XMLInformationProvider();
-			fInformationPresenter.setInformationProvider(xmlInformationProvider, IStructuredPartitions.DEFAULT_PARTITION);
+			fInformationPresenter.setInformationProvider(xmlInformationProvider, IStructuredPartitionTypes.DEFAULT_PARTITION);
 			fInformationPresenter.setInformationProvider(xmlInformationProvider, IXMLPartitions.XML_DEFAULT);
 			fInformationPresenter.setSizeConstraints(60, 10, true, true);
 		}
@@ -241,7 +241,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {
 		// look for appropriate text hover processor to return based on
 		// content type and state mask
-		if ((contentType == IStructuredPartitions.DEFAULT_PARTITION) || (contentType == IXMLPartitions.XML_DEFAULT)) {
+		if ((contentType == IStructuredPartitionTypes.DEFAULT_PARTITION) || (contentType == IXMLPartitions.XML_DEFAULT)) {
 			// check which of xml's text hover is handling stateMask
 			TextHoverManager.TextHoverDescriptor[] hoverDescs = getTextHovers();
 			int i = 0;

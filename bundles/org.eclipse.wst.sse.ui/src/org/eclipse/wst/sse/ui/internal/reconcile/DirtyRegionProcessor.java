@@ -39,6 +39,7 @@ import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
 import org.eclipse.wst.sse.core.events.NewDocumentEvent;
 import org.eclipse.wst.sse.core.events.NoChangeEvent;
 import org.eclipse.wst.sse.ui.internal.Logger;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 /**
  * This job holds a queue of updates from the editor (DirtyRegions) to
@@ -91,8 +92,9 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 	 * Creates a new StructuredRegionProcessor
 	 */
 	public DirtyRegionProcessor() {
+		
 		// init job stuff
-		super("Processing Dirty Regions");
+		super(SSEUIPlugin.getResourceString("%proc_dirty_regions.0"));
 		setPriority(Job.LONG);
 		setSystem(true);
 		// init some fields

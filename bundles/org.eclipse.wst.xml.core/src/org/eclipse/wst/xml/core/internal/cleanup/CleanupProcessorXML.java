@@ -13,11 +13,11 @@
 package org.eclipse.wst.xml.core.internal.cleanup;
 
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.wst.sse.core.format.IStructuredFormatProcessor;
 import org.eclipse.wst.sse.core.internal.cleanup.AbstractStructuredCleanupProcessor;
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupHandler;
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.internal.cleanup.StructuredCleanupPreferences;
+import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.format.FormatProcessorXML;

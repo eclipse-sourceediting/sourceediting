@@ -38,6 +38,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.ui.extension.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.extension.IExtendedConfiguration;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
@@ -160,7 +161,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getConfiguredDocumentPartitioning(org.eclipse.jface.text.source.ISourceViewer)
 	 */
 	public String getConfiguredDocumentPartitioning(ISourceViewer sourceViewer) {
-		return IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING;
+		return IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING;
 	}
 
 	/*

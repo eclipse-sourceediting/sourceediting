@@ -1,6 +1,6 @@
 package org.eclipse.wst.css.core.text;
 
-import org.eclipse.wst.sse.core.text.IStructuredPartitions;
+import org.eclipse.wst.sse.core.text.IStructuredPartitionTypes;
 
 /**
  * This interface is not intended to be implemented.
@@ -9,9 +9,7 @@ import org.eclipse.wst.sse.core.text.IStructuredPartitions;
  * 
  * @since 1.0
  */
-public interface ICSSPartitions extends IStructuredPartitions {
+public interface ICSSPartitionTypes extends IStructuredPartitionTypes {
 
-	String CSS_PARTITIONING = IStructuredPartitions.STRUCTURED_PARTITIONING;
-	
 	String STYLE = "org.eclipse.wst.css.STYLE"; //$NON-NLS-1$
 }

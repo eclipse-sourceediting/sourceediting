@@ -15,7 +15,6 @@ package org.eclipse.wst.sse.core.document;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -37,8 +36,6 @@ public interface IDocumentLoader {
 	 * As always, the appropriate decoding should be used.
 	 */
 	IEncodedDocument createNewStructuredDocument(IFile iFile) throws java.io.IOException, CoreException;
-
-	IEncodedDocument createNewStructuredDocument(Reader reader) throws UnsupportedEncodingException, IOException;
 
 	/**
 	 * This method must return a new instance of IEncodedDocument, that has

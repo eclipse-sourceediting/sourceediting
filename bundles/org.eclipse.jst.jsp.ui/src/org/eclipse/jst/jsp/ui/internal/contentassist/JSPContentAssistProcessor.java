@@ -36,7 +36,7 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapterFactory;
 import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
-import org.eclipse.jst.jsp.core.text.IJSPPartitions;
+import org.eclipse.jst.jsp.core.text.IJSPPartitionTypes;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImageHelper;
@@ -48,7 +48,7 @@ import org.eclipse.wst.html.core.HTMLCMProperties;
 import org.eclipse.wst.html.core.contentmodel.HTMLCMDocumentFactory;
 import org.eclipse.wst.html.core.contentmodel.HTMLElementDeclaration;
 import org.eclipse.wst.html.core.contentmodel.JSPCMDocument;
-import org.eclipse.wst.html.core.text.IHTMLPartitions;
+import org.eclipse.wst.html.core.text.IHTMLPartitionTypes;
 import org.eclipse.wst.html.ui.internal.contentassist.HTMLContentAssistProcessor;
 import org.eclipse.wst.javascript.common.ui.internal.contentassist.JavaScriptContentAssistProcessor;
 import org.eclipse.wst.sse.core.IModelManager;
@@ -59,7 +59,8 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.parser.BlockMarker;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.IStructuredPartitions;
+import org.eclipse.wst.sse.core.text.IStructuredPartitionTypes;
+import org.eclipse.wst.sse.core.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
@@ -146,14 +147,14 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		XMLContentAssistProcessor xmlProcessor = new XMLContentAssistProcessor();
 		JavaScriptContentAssistProcessor javascriptProcessor = new JavaScriptContentAssistProcessor();
 
-		fPartitionToProcessorMap.put(IHTMLPartitions.HTML_DEFAULT, htmlProcessor);
+		fPartitionToProcessorMap.put(IHTMLPartitionTypes.HTML_DEFAULT, htmlProcessor);
 		fPartitionToProcessorMap.put(IXMLPartitions.XML_DEFAULT, xmlProcessor);
-		fPartitionToProcessorMap.put(IStructuredPartitions.DEFAULT_PARTITION, htmlProcessor);
-		fPartitionToProcessorMap.put(IJSPPartitions.JSP_DEFAULT, jspJavaProcessor);
-		fPartitionToProcessorMap.put(IJSPPartitions.JSP_DIRECTIVE, xmlProcessor);
-		fPartitionToProcessorMap.put(IHTMLPartitions.HTML_COMMENT, htmlProcessor);
-		fPartitionToProcessorMap.put(IJSPPartitions.JSP_CONTENT_JAVASCRIPT, javascriptProcessor);
-		fPartitionToProcessorMap.put(IHTMLPartitions.SCRIPT, javascriptProcessor); // default
+		fPartitionToProcessorMap.put(IStructuredPartitionTypes.DEFAULT_PARTITION, htmlProcessor);
+		fPartitionToProcessorMap.put(IJSPPartitionTypes.JSP_DEFAULT, jspJavaProcessor);
+		fPartitionToProcessorMap.put(IJSPPartitionTypes.JSP_DIRECTIVE, xmlProcessor);
+		fPartitionToProcessorMap.put(IHTMLPartitionTypes.HTML_COMMENT, htmlProcessor);
+		fPartitionToProcessorMap.put(IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT, javascriptProcessor);
+		fPartitionToProcessorMap.put(IHTMLPartitionTypes.SCRIPT, javascriptProcessor); // default
 		// to
 		// javascript
 		// for
@@ -611,7 +612,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		// ANOTHER WORKAROUND UNTIL PARTITIONING TAKES CARE OF THIS
 		// check for xml-jsp tags...
 		// CMVC 243657
-		if (partitionType == IJSPPartitions.JSP_DIRECTIVE && fn != null) {
+		if (partitionType == IJSPPartitionTypes.JSP_DIRECTIVE && fn != null) {
 			IStructuredDocumentRegion possibleXMLJSP = ((fn.getType() == XMLRegionContext.XML_CONTENT) && fn.getPrevious() != null) ? fn.getPrevious() : fn;
 			ITextRegionList regions = possibleXMLJSP.getRegions();
 			if (regions.size() > 1) {
@@ -636,7 +637,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		// ** THIS IS A TEMP FIX UNTIL PARTITIONING TAKES CARE OF THIS...
 		// CMVC 241882
 		// check for XML-JSP in a <script> region
-		if (partitionType == IJSPPartitions.JSP_CONTENT_JAVASCRIPT || partitionType == IHTMLPartitions.SCRIPT) {
+		if (partitionType == IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT || partitionType == IHTMLPartitionTypes.SCRIPT) {
 			// fn should be block text
 			IStructuredDocumentRegion decodedSDRegion = decodeScriptBlock(fn.getFullText());
 			// System.out.println("decoded > " +
@@ -671,7 +672,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		// /////////////////////////////////////////////////////////////////////////
 
 		// check special JSP delimiter cases
-		if (fn != null && partitionType == IJSPPartitions.JSP_CONTENT_DELIMITER) {
+		if (fn != null && partitionType == IJSPPartitionTypes.JSP_CONTENT_DELIMITER) {
 			IStructuredDocumentRegion fnDelim = fn;
 
 			// if it's a nested JSP region, need to get the correct
@@ -728,7 +729,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 					// adapter get the proposals
 					if (documentPosition > 0) {
 						String checkType = getPartitionType((StructuredTextViewer) viewer, documentPosition - 1);
-						if (checkType != IJSPPartitions.JSP_CONTENT_JAVASCRIPT) { // this
+						if (checkType != IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT) { // this
 							// check
 							// is
 							// failing
@@ -740,7 +741,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 							// javascript...)
 							return getJSPJavaCompletionProposals(viewer, documentPosition);
 						} else {
-							partitionType = IJSPPartitions.JSP_CONTENT_JAVASCRIPT;
+							partitionType = IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT;
 						}
 					}
 				} else if ((firstRegion.getType() == XMLRegionContext.XML_TAG_OPEN) && documentPosition >= fnDelim.getEndOffset()) {
@@ -757,10 +758,10 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 						// JAVASCRIPT adapter get the proposals
 						if (documentPosition > 0) {
 							String checkType = getPartitionType((StructuredTextViewer) viewer, documentPosition - 1);
-							if (checkType != IJSPPartitions.JSP_CONTENT_JAVASCRIPT) {
+							if (checkType != IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT) {
 								return getJSPJavaCompletionProposals(viewer, documentPosition);
 							} else {
-								partitionType = IJSPPartitions.JSP_CONTENT_JAVASCRIPT;
+								partitionType = IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT;
 							}
 						}
 					}
@@ -837,7 +838,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		if (p != null) {
 			embeddedResults = p.computeCompletionProposals(viewer, documentPosition);
 			// get bean methods, objects, and constants if there are any...
-			if (partitionType == IJSPPartitions.JSP_CONTENT_JAVASCRIPT || partitionType == IHTMLPartitions.SCRIPT) {
+			if (partitionType == IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT || partitionType == IHTMLPartitionTypes.SCRIPT) {
 				ICompletionProposal[] beanResults = getJSPJavaBeanProposals(viewer, documentPosition);
 				if (beanResults != null && beanResults.length > 0) {
 					ICompletionProposal[] added = new ICompletionProposal[beanResults.length + embeddedResults.length];
@@ -877,7 +878,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 
 		// CMVC 269718
 		// check for |<%-- --%> first position of jsp comment
-		if (partitionType == IJSPPartitions.JSP_COMMENT) {
+		if (partitionType == IJSPPartitionTypes.JSP_COMMENT) {
 			if (sdRegion.getStartOffset() == documentPosition) {
 				ICompletionProposal[] htmlResults = getHTMLCompletionProposals(viewer, documentPosition);
 				jspResults = merge(jspResults, htmlResults);
@@ -959,7 +960,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 	 */
 	private ICompletionProposal[] getHTMLCompletionProposals(ITextViewer viewer, int documentPosition) {
 
-		IContentAssistProcessor p = (IContentAssistProcessor) fPartitionToProcessorMap.get(IHTMLPartitions.HTML_DEFAULT);
+		IContentAssistProcessor p = (IContentAssistProcessor) fPartitionToProcessorMap.get(IHTMLPartitionTypes.HTML_DEFAULT);
 		return p.computeCompletionProposals(viewer, documentPosition);
 	}
 
@@ -970,7 +971,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 	 * @return ICompletionProposal[]
 	 */
 	protected ICompletionProposal[] getJSPJavaCompletionProposals(ITextViewer viewer, int documentPosition) {
-		JSPJavaContentAssistProcessor p = (JSPJavaContentAssistProcessor) fPartitionToProcessorMap.get(IJSPPartitions.JSP_DEFAULT);
+		JSPJavaContentAssistProcessor p = (JSPJavaContentAssistProcessor) fPartitionToProcessorMap.get(IJSPPartitionTypes.JSP_DEFAULT);
 		p.initialize(fResource);
 		return p.computeCompletionProposals(viewer, documentPosition);
 	}
@@ -983,7 +984,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 	protected String getPartitionType(StructuredTextViewer viewer, int documentPosition) {
 		String partitionType = null;
 		try {
-			partitionType = TextUtilities.getContentType(viewer.getDocument(), IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING, viewer.modelOffset2WidgetOffset(documentPosition), false);
+			partitionType = TextUtilities.getContentType(viewer.getDocument(), IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, viewer.modelOffset2WidgetOffset(documentPosition), false);
 		} catch (BadLocationException e) {
 			partitionType = IDocument.DEFAULT_CONTENT_TYPE;
 		}

@@ -12,8 +12,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.format;
 
-import org.eclipse.wst.sse.core.format.IStructuredFormatContraints;
-import org.eclipse.wst.sse.core.format.IStructuredFormatter;
+import org.eclipse.wst.sse.core.internal.format.IStructuredFormatContraints;
+import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
 import org.eclipse.wst.xml.core.document.XMLNode;
 
 

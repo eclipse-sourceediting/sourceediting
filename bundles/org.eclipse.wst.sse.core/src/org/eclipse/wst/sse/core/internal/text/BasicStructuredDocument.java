@@ -64,6 +64,7 @@ import org.eclipse.wst.sse.core.parser.RegionParser;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
+import org.eclipse.wst.sse.core.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.text.IStructuredTextReParser;
 import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.core.util.Assert;
@@ -1040,7 +1041,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	public ITypedRegion[] computePartitioning(int offset, int length) throws BadLocationException {
 		ITypedRegion[] typedRegions = null;
 		try {
-			typedRegions = computePartitioning(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING, offset, length, false);
+			typedRegions = computePartitioning(IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, offset, length, false);
 		}
 		catch (BadPartitioningException e) {
 			// impossible in this context
@@ -1067,7 +1068,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			return ((IDocumentPartitionerExtension2) partitioner).computePartitioning(offset, length, includeZeroLengthPartitions);
 		else if (partitioner != null)
 			return partitioner.computePartitioning(offset, length);
-		else if (IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING.equals(partitioning))
+		else if (IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING.equals(partitioning))
 			return new TypedRegion[]{new TypedRegion(offset, length, DEFAULT_CONTENT_TYPE)};
 		else
 			throw new BadPartitioningException();
@@ -1340,7 +1341,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			return ((IDocumentPartitionerExtension2) partitioner).getContentType(offset, preferOpenPartitions);
 		else if (partitioner != null)
 			return partitioner.getContentType(offset);
-		else if (IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING.equals(partitioning))
+		else if (IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING.equals(partitioning))
 			return DEFAULT_CONTENT_TYPE;
 		else
 			throw new BadPartitioningException();
@@ -1400,7 +1401,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	public String[] getLegalContentTypes() {
 		String[] result = null;
 		try {
-			result = getLegalContentTypes(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING);
+			result = getLegalContentTypes(IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING);
 		}
 		catch (BadPartitioningException e) {
 			// impossible in this context
@@ -1417,7 +1418,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		IDocumentPartitioner partitioner = getDocumentPartitioner(partitioning);
 		if (partitioner != null)
 			return partitioner.getLegalContentTypes();
-		if (IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING.equals(partitioning))
+		if (IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING.equals(partitioning))
 			return new String[]{DEFAULT_CONTENT_TYPE};
 		throw new BadPartitioningException();
 	}
@@ -1562,7 +1563,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	public ITypedRegion getPartition(int offset) throws BadLocationException {
 		ITypedRegion partition = null;
 		try {
-			partition = getPartition(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING, offset, false);
+			partition = getPartition(IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, offset, false);
 		}
 		catch (BadPartitioningException e) {
 			throw new Error(e);
@@ -1591,7 +1592,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		else if (partitioner != null) {
 			result = partitioner.getPartition(offset);
 		}
-		else if (IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING.equals(partitioning)) {
+		else if (IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING.equals(partitioning)) {
 			result = new TypedRegion(0, getLength(), DEFAULT_CONTENT_TYPE);
 		}
 		else

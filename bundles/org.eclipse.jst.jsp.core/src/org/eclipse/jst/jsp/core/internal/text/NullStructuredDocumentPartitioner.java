@@ -16,7 +16,7 @@ import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredTextPartitioner;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.sse.core.text.StructuredTypedRegion;
+import org.eclipse.wst.sse.core.text.IStructuredTypedRegion;
 
 /**
  * To be used when no known partitioner is available.
@@ -24,7 +24,7 @@ import org.eclipse.wst.sse.core.text.StructuredTypedRegion;
  */
 public class NullStructuredDocumentPartitioner implements IStructuredTextPartitioner {
 
-	public class NullStructuredTypedRegion implements StructuredTypedRegion {
+	public class NullStructuredTypedRegion implements IStructuredTypedRegion {
 
 		private int fOffset;
 
@@ -70,8 +70,8 @@ public class NullStructuredDocumentPartitioner implements IStructuredTextPartiti
 		// nothing to do
 	}
 
-	public StructuredTypedRegion createPartition(int offset, int length, String type) {
-		StructuredTypedRegion result = new NullStructuredTypedRegion();
+	public IStructuredTypedRegion createPartition(int offset, int length, String type) {
+		IStructuredTypedRegion result = new NullStructuredTypedRegion();
 		result.setOffset(offset);
 		result.setLength(length);
 		result.setType(type);
@@ -82,7 +82,7 @@ public class NullStructuredDocumentPartitioner implements IStructuredTextPartiti
 		// nothing to do
 	}
 
-	public String getDefault() {
+	public String getDefaultPartitionType() {
 		return ST_UNKNOWN_PARTITION;
 	}
 
@@ -94,7 +94,7 @@ public class NullStructuredDocumentPartitioner implements IStructuredTextPartiti
 		return ST_UNKNOWN_PARTITION;
 	}
 
-	public String getPartitionTypeBetween(IStructuredDocumentRegion previousNode, ITextRegion previousStartTagNameRegion, IStructuredDocumentRegion nextNode, ITextRegion nextEndTagNameRegion) {
+	public String getPartitionTypeBetween(IStructuredDocumentRegion previousNode, IStructuredDocumentRegion nextNode) {
 		return ST_UNKNOWN_PARTITION;
 	}
 
@@ -111,11 +111,11 @@ public class NullStructuredDocumentPartitioner implements IStructuredTextPartiti
 	}
 
 	public String getContentType(int offset) {
-		return getDefault();
+		return getDefaultPartitionType();
 	}
 
 	public ITypedRegion getPartition(int offset) {
-		return createPartition(offset, 1, getDefault());
+		return createPartition(offset, 1, getDefaultPartitionType());
 	}
 
 }

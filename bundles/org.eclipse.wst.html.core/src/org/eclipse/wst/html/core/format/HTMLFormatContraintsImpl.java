@@ -11,7 +11,7 @@
 package org.eclipse.wst.html.core.format;
 
 import org.eclipse.wst.html.core.HTMLFormatContraints;
-import org.eclipse.wst.sse.core.format.StructuredFormatContraints;
+import org.eclipse.wst.sse.core.internal.format.StructuredFormatContraints;
 
 /**
  * @deprecated

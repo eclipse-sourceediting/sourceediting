@@ -21,9 +21,9 @@ import org.eclipse.wst.css.core.internal.formatter.CSSSourceFormatterFactory;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
-import org.eclipse.wst.sse.core.format.AbstractStructuredFormatProcessor;
-import org.eclipse.wst.sse.core.format.IStructuredFormatPreferences;
-import org.eclipse.wst.sse.core.format.IStructuredFormatter;
+import org.eclipse.wst.sse.core.internal.format.AbstractStructuredFormatProcessor;
+import org.eclipse.wst.sse.core.internal.format.IStructuredFormatPreferences;
+import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.w3c.dom.Node;
 

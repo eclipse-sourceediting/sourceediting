@@ -10,34 +10,35 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.format;
+package org.eclipse.wst.sse.core.internal.format;
 
-public class StructuredFormatPreferences implements IStructuredFormatPreferences {
-	private boolean fClearAllBlankLines;
-	private String fIndent;
-	private int fLineWidth;
+public class StructuredFormatContraints implements IStructuredFormatContraints {
+	protected int fAvailableLineWidth;
+	protected boolean fClearAllBlankLines;
+	protected String fCurrentIndent = ""; //$NON-NLS-1$
+	protected boolean fFormatWithSiblingIndent = false;
 
 	public boolean getClearAllBlankLines() {
 		return fClearAllBlankLines;
 	}
 
-	public String getIndent() {
-		return fIndent;
+	public String getCurrentIndent() {
+		return fCurrentIndent;
 	}
 
-	public int getLineWidth() {
-		return fLineWidth;
+	public boolean getFormatWithSiblingIndent() {
+		return fFormatWithSiblingIndent;
 	}
 
 	public void setClearAllBlankLines(boolean clearAllBlankLines) {
 		fClearAllBlankLines = clearAllBlankLines;
 	}
 
-	public void setIndent(String indent) {
-		fIndent = indent;
+	public void setCurrentIndent(String currentIndent) {
+		fCurrentIndent = currentIndent;
 	}
 
-	public void setLineWidth(int lineWidth) {
-		fLineWidth = lineWidth;
+	public void setFormatWithSiblingIndent(boolean formatWithSiblingIndent) {
+		fFormatWithSiblingIndent = formatWithSiblingIndent;
 	}
 }

@@ -37,6 +37,7 @@ import org.eclipse.wst.sse.core.parser.StructuredDocumentRegionHandlerExtension;
 import org.eclipse.wst.sse.core.parser.StructuredDocumentRegionParser;
 import org.eclipse.wst.sse.core.parser.StructuredDocumentRegionParserExtension;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.util.Assert;
 
 
@@ -454,11 +455,11 @@ public abstract class AbstractModelLoader implements IModelLoader {
 		if (newInstance.getDocumentPartitioner() instanceof StructuredTextPartitioner) {
 			StructuredTextPartitioner partitioner = null;
 			if (oldInstance instanceof IDocumentExtension3 && newInstance instanceof IDocumentExtension3) {
-				partitioner = ((StructuredTextPartitioner) ((IDocumentExtension3) newInstance).getDocumentPartitioner(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING));
+				partitioner = ((StructuredTextPartitioner) ((IDocumentExtension3) newInstance).getDocumentPartitioner(IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING));
 				if (partitioner != null) {
 					partitioner = (StructuredTextPartitioner) partitioner.newInstance();
 				}
-				((IDocumentExtension3) oldInstance).setDocumentPartitioner(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING, partitioner);
+				((IDocumentExtension3) oldInstance).setDocumentPartitioner(IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, partitioner);
 			}
 			if (partitioner == null) {
 				partitioner = (StructuredTextPartitioner) ((StructuredTextPartitioner) newInstance.getDocumentPartitioner()).newInstance();

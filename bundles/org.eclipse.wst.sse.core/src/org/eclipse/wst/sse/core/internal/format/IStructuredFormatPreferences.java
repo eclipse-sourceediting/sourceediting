@@ -10,15 +10,24 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.text;
-
-import org.eclipse.jface.text.ITypedRegion;
+package org.eclipse.wst.sse.core.internal.format;
 
 /**
- * Similar to extended interface, except it allows the length, offset, and
- * type to be set. This is useful when iterating through a number of "small"
- * regions, that all map to the the same partion regions.
+ * These are items that do not change from element to element.
+ * Passed from node to node in a recursive call because sometimes
+ * child nodes don't have access to the preferences
  */
-public interface StructuredTypedRegion extends StructuredRegion, ITypedRegion {
-	void setType(String type);
+public interface IStructuredFormatPreferences {
+	
+	boolean getClearAllBlankLines();
+
+	String getIndent();
+
+	int getLineWidth();
+
+	void setClearAllBlankLines(boolean clearAllBlankLines);
+
+	void setIndent(String indent);
+
+	void setLineWidth(int lineWidth);
 }

@@ -34,7 +34,7 @@ import org.eclipse.wst.sse.core.internal.encoding.ContentTypeEncodingPreferences
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingRule;
 import org.eclipse.wst.sse.core.internal.exceptions.MalformedInputExceptionWithDetail;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.text.IStructuredPartitioning;
 
 
 
@@ -102,7 +102,7 @@ public abstract class AbstractDocumentLoader implements IDocumentLoader {
 
 		IDocumentPartitioner defaultPartitioner = getDefaultDocumentPartitioner();
 		if (structuredDocument instanceof IDocumentExtension3) {
-			((IDocumentExtension3) structuredDocument).setDocumentPartitioner(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING, defaultPartitioner);
+			((IDocumentExtension3) structuredDocument).setDocumentPartitioner(IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, defaultPartitioner);
 		}
 		else {
 			structuredDocument.setDocumentPartitioner(defaultPartitioner);
@@ -132,13 +132,6 @@ public abstract class AbstractDocumentLoader implements IDocumentLoader {
 				fFullPreparedReader.close();
 			}
 		}
-		return structuredDocument;
-	}
-
-	public IEncodedDocument createNewStructuredDocument(Reader reader) throws UnsupportedEncodingException, IOException {
-		IEncodedDocument structuredDocument = createNewStructuredDocument();
-		StringBuffer allText = readInputStream(fFullPreparedReader);
-		structuredDocument.set(allText.toString());
 		return structuredDocument;
 	}
 

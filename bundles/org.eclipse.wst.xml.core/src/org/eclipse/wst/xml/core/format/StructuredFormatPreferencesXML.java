@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.format;
 
-import org.eclipse.wst.sse.core.format.StructuredFormatPreferences;
+import org.eclipse.wst.sse.core.internal.format.StructuredFormatPreferences;
 
 public class StructuredFormatPreferencesXML extends StructuredFormatPreferences implements IStructuredFormatPreferencesXML {
 	private boolean fSplitMultiAttrs;

@@ -20,12 +20,12 @@ import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.css.core.format.FormatProcessorCSS;
-import org.eclipse.wst.css.core.text.ICSSPartitions;
+import org.eclipse.wst.css.core.text.ICSSPartitionTypes;
 import org.eclipse.wst.css.ui.autoedit.StructuredAutoEditStrategyCSS;
 import org.eclipse.wst.css.ui.contentassist.CSSContentAssistProcessor;
 import org.eclipse.wst.css.ui.style.LineStyleProviderForCSS;
 import org.eclipse.wst.css.ui.taginfo.CSSBestMatchHoverProcessor;
-import org.eclipse.wst.sse.core.text.IStructuredPartitions;
+import org.eclipse.wst.sse.core.text.IStructuredPartitionTypes;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
@@ -47,7 +47,7 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 			allStrategies.add(superStrategies[i]);
 		}
 		
-		if (contentType == ICSSPartitions.STYLE) {
+		if (contentType == ICSSPartitionTypes.STYLE) {
 			allStrategies.add(new StructuredAutoEditStrategyCSS());
 		}
 
@@ -56,7 +56,7 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 		if (configuredContentTypes == null) {
-			configuredContentTypes = new String[]{ICSSPartitions.STYLE, IStructuredPartitions.DEFAULT_PARTITION, IStructuredPartitions.UNKNOWN_PARTITION};
+			configuredContentTypes = new String[]{ICSSPartitionTypes.STYLE, IStructuredPartitionTypes.DEFAULT_PARTITION, IStructuredPartitionTypes.UNKNOWN_PARTITION};
 		}
 		return configuredContentTypes;
 	}
@@ -70,15 +70,15 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 			// CSSContentAssistProcessor(),
 			// ICSSPartitions.STYLE);
 			IContentAssistProcessor cssProcessor = new CSSContentAssistProcessor();
-			setContentAssistProcessor((ContentAssistant) contentAssistant, cssProcessor, ICSSPartitions.STYLE);
-			setContentAssistProcessor((ContentAssistant) contentAssistant, cssProcessor, IStructuredPartitions.UNKNOWN_PARTITION);
+			setContentAssistProcessor((ContentAssistant) contentAssistant, cssProcessor, ICSSPartitionTypes.STYLE);
+			setContentAssistProcessor((ContentAssistant) contentAssistant, cssProcessor, IStructuredPartitionTypes.UNKNOWN_PARTITION);
 		}
 
 		return contentAssistant;
 	}
 
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
-		final MultiPassContentFormatter formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), ICSSPartitions.STYLE);
+		final MultiPassContentFormatter formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), ICSSPartitionTypes.STYLE);
 
 		formatter.setMasterStrategy(new StructuredFormattingStrategy(new FormatProcessorCSS()));
 
@@ -89,7 +89,7 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 		IHighlighter highlighter = super.getHighlighter(sourceViewer);
 
 		if (highlighter != null) {
-			highlighter.addProvider(ICSSPartitions.STYLE, new LineStyleProviderForCSS());
+			highlighter.addProvider(ICSSPartitionTypes.STYLE, new LineStyleProviderForCSS());
 		}
 
 		return highlighter;

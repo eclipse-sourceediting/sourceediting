@@ -24,6 +24,7 @@ import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.ui.extensions.openon.IOpenOn;
 import org.eclipse.wst.sse.ui.internal.openon.OpenOnBuilder;
 import org.eclipse.wst.sse.ui.internal.openon.OpenOnDefinition;
@@ -122,7 +123,7 @@ public class OpenOnProvider {
 		try {
 			// TODO: provide partitioning information so we're not using a default like this
 			if (document instanceof IStructuredDocument) {
-				type = TextUtilities.getContentType(document, IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING, offset, false);
+				type = TextUtilities.getContentType(document, IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, offset, false);
 			}
 		}
 		catch (BadLocationException e1) {

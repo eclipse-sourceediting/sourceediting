@@ -63,6 +63,7 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.text.ITextRegionContainer;
@@ -238,10 +239,10 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			});
 			try {
 				String selectedPartitioning = partitioningCombo.getItem(0);
-				if (Utilities.contains(partitionings, IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING)) {
-					selectedPartitioning = IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING;
+				if (Utilities.contains(partitionings, IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING)) {
+					selectedPartitioning = IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING;
 					for (int i = 0; i < partitionings.length; i++) {
-						if (partitionings[i].equals(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING)) {
+						if (partitionings[i].equals(IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING)) {
 							partitioningCombo.select(i);
 						}
 					}

@@ -54,8 +54,6 @@ public interface IModelLoader {
 
 	void load(InputStream inputStream, IStructuredModel model, EncodingRule encodingRule) throws IOException;
 
-	void load(InputStream inputStream, IStructuredModel model, String encodingName, String lineDelimiter) throws IOException;
-
 	void load(String filename, InputStream inputStream, IStructuredModel model, String encodingName, String lineDelimiter) throws IOException;
 
 	IModelLoader newInstance();

@@ -26,9 +26,6 @@ public class StructuredTextPartitionerForXML extends StructuredTextPartitioner i
 
 	private final static String[] configuredContentTypes = new String[]{IXMLPartitions.XML_DEFAULT, IXMLPartitions.XML_CDATA, IXMLPartitions.XML_PI, IXMLPartitions.XML_DECLARATION, IXMLPartitions.XML_COMMENT, IXMLPartitions.DTD_SUBSET};
 
-	/**
-	 * Constructor for JSPDocumentPartioner.
-	 */
 	public StructuredTextPartitionerForXML() {
 		super();
 	}
@@ -66,11 +63,11 @@ public class StructuredTextPartitionerForXML extends StructuredTextPartitioner i
 		return super.getPartitionType(region, offset);
 	}
 
-	public String getPartitionTypeBetween(IStructuredDocumentRegion previousNode, ITextRegion previousStartTagNameRegion, IStructuredDocumentRegion nextNode, ITextRegion nextEndTagNameRegion) {
-		return super.getPartitionTypeBetween(previousNode, previousStartTagNameRegion, nextNode, nextEndTagNameRegion);
+	public String getPartitionTypeBetween(IStructuredDocumentRegion previousNode, IStructuredDocumentRegion nextNode) {
+		return super.getPartitionTypeBetween(previousNode, nextNode);
 	}
 
-	public String getDefault() {
+	public String getDefaultPartitionType() {
 		return IXMLPartitions.XML_DEFAULT;
 	}
 
@@ -115,7 +112,7 @@ public class StructuredTextPartitionerForXML extends StructuredTextPartitioner i
 			ITextRegion previousName = previousStructuredDocumentRegion.getRegionAtCharacterOffset(previousStructuredDocumentRegion.getEndOffset(previousStart));
 			ITextRegion nextName = sdRegion.getRegionAtCharacterOffset(sdRegion.getEndOffset(next));
 			if (previousName != null && nextName != null && previousName.getType() == XMLRegionContext.XML_TAG_NAME && nextName.getType() == XMLRegionContext.XML_TAG_NAME) {
-				setInternalPartition(offset, 0, getPartitionTypeBetween(previousStructuredDocumentRegion, previousName, sdRegion, nextName));
+				setInternalPartition(offset, 0, getPartitionTypeBetween(previousStructuredDocumentRegion, sdRegion));
 				partitionFound = true;
 			}
 		}

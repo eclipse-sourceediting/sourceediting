@@ -27,13 +27,13 @@ import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
 import org.eclipse.wst.sse.core.parser.IBlockedStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.IStructuredPartitions;
+import org.eclipse.wst.sse.core.text.IStructuredPartitionTypes;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.text.SimpleStructuredTypedRegion;
-import org.eclipse.wst.sse.core.text.StructuredRegion;
-import org.eclipse.wst.sse.core.text.StructuredTypedRegion;
+import org.eclipse.wst.sse.core.text.IStructuredRegion;
+import org.eclipse.wst.sse.core.text.IStructuredTypedRegion;
 
 
 /**
@@ -61,7 +61,7 @@ public class StructuredTextPartitioner implements IDocumentPartitioner {
 	//public final static String ST_UNKNOWN_PARTITION = IStructuredPartitions.ST_UNKNOWN_PARTITION; //$NON-NLS-1$
 	private CachedComputedPartitions cachedPartitions = new CachedComputedPartitions(-1, -1, null);
 	protected String[] fSupportedTypes = null;
-	protected StructuredTypedRegion internalReusedTempInstance = new SimpleStructuredTypedRegion(0, 0, IStructuredPartitions.DEFAULT_PARTITION);
+	protected IStructuredTypedRegion internalReusedTempInstance = new SimpleStructuredTypedRegion(0, 0, IStructuredPartitionTypes.DEFAULT_PARTITION);
 	protected IStructuredDocument structuredDocument;
 
 	/**
@@ -111,7 +111,7 @@ public class StructuredTextPartitioner implements IDocumentPartitioner {
 					return new ITypedRegion[]{createPartition(offset, length, getUnknown())};
 				}
 				int currentPos = offset;
-				StructuredTypedRegion previousPartition = null;
+				IStructuredTypedRegion previousPartition = null;
 				while (currentPos < endPos) {
 					internalGetPartition(currentPos, false);
 					currentPos += internalReusedTempInstance.getLength();
@@ -125,7 +125,7 @@ public class StructuredTextPartitioner implements IDocumentPartitioner {
 						previousPartition.setLength(previousPartition.getLength() + internalReusedTempInstance.getLength());
 					} else {
 						// not the same, so add to list
-						StructuredTypedRegion partition = createNewPartitionInstance();
+						IStructuredTypedRegion partition = createNewPartitionInstance();
 						list.add(partition);
 						// and make current, previous
 						previousPartition = partition;
@@ -136,12 +136,12 @@ public class StructuredTextPartitioner implements IDocumentPartitioner {
 			}
 			if (results.length > 0) {
 				// truncate returned results to requested range
-				if (results[0].getOffset() < offset && results[0] instanceof StructuredRegion) {
-					((StructuredRegion) results[0]).setOffset(offset);
+				if (results[0].getOffset() < offset && results[0] instanceof IStructuredRegion) {
+					((IStructuredRegion) results[0]).setOffset(offset);
 				}
 				int lastEnd = results[results.length - 1].getOffset() + results[results.length - 1].getLength();
-				if (lastEnd > offset + length && results[results.length - 1] instanceof StructuredRegion) {
-					((StructuredRegion) results[results.length - 1]).setLength(offset + length - results[results.length - 1].getOffset());
+				if (lastEnd > offset + length && results[results.length - 1] instanceof IStructuredRegion) {
+					((IStructuredRegion) results[results.length - 1]).setLength(offset + length - results[results.length - 1].getOffset());
 				}
 			}
 			cachedPartitions.fLength = length;
@@ -188,7 +188,7 @@ public class StructuredTextPartitioner implements IDocumentPartitioner {
 		return containsEmbeddedRegion;
 	}
 
-	private StructuredTypedRegion createNewPartitionInstance() {
+	private IStructuredTypedRegion createNewPartitionInstance() {
 		return new SimpleStructuredTypedRegion(internalReusedTempInstance.getOffset(), internalReusedTempInstance.getLength(), internalReusedTempInstance.getType());
 	}
 
@@ -205,7 +205,7 @@ public class StructuredTextPartitioner implements IDocumentPartitioner {
 	 * 
 	 * TODO: should be protected
 	 */
-	public StructuredTypedRegion createPartition(int offset, int length, String type) {
+	public IStructuredTypedRegion createPartition(int offset, int length, String type) {
 		return new SimpleStructuredTypedRegion(offset, length, type);
 	}
 
@@ -268,9 +268,9 @@ public class StructuredTextPartitioner implements IDocumentPartitioner {
 	/**
 	 * To be used by default!
 	 */
-	public String getDefault() {
+	public String getDefaultPartitionType() {
 
-		return IStructuredPartitions.DEFAULT_PARTITION;
+		return IStructuredPartitionTypes.DEFAULT_PARTITION;
 	}
 
 	/**
@@ -363,7 +363,7 @@ public class StructuredTextPartitioner implements IDocumentPartitioner {
 	private String getPartitionType(ITextRegion region) {
 		// if it get's to this "raw" level, then
 		// must be default.
-		return getDefault();
+		return getDefaultPartitionType();
 	}
 
 	/**
@@ -375,7 +375,7 @@ public class StructuredTextPartitioner implements IDocumentPartitioner {
 	 * @return String
 	 */
 	protected String getPartitionType(ITextRegion region, int offset) {
-		String result = getDefault();
+		String result = getDefaultPartitionType();
 		//		if (region instanceof ContextRegionContainer) {
 		//			result = getPartitionType((ITextRegionContainer) region, offset);
 		//		} else {
@@ -434,8 +434,8 @@ public class StructuredTextPartitioner implements IDocumentPartitioner {
 	 * @param nextEndTagNameRegion
 	 * @return String
 	 */
-	protected String getPartitionTypeBetween(IStructuredDocumentRegion previousNode, ITextRegion previousStartTagNameRegion, IStructuredDocumentRegion nextNode, ITextRegion nextEndTagNameRegion) {
-		return getDefault();
+	protected String getPartitionTypeBetween(IStructuredDocumentRegion previousNode, IStructuredDocumentRegion nextNode) {
+		return getDefaultPartitionType();
 	}
 
 	/**
@@ -480,14 +480,14 @@ public class StructuredTextPartitioner implements IDocumentPartitioner {
 	 * about are attempt to partition
 	 */
 	protected String getUnknown() {
-		return IStructuredPartitions.UNKNOWN_PARTITION;
+		return IStructuredPartitionTypes.UNKNOWN_PARTITION;
 	}
 
 	/**
 	 * to be abstract eventually
 	 */
 	protected void initLegalContentTypes() {
-		fSupportedTypes = new String[]{IStructuredPartitions.DEFAULT_PARTITION, IStructuredPartitions.UNKNOWN_PARTITION};
+		fSupportedTypes = new String[]{IStructuredPartitionTypes.DEFAULT_PARTITION, IStructuredPartitionTypes.UNKNOWN_PARTITION};
 	}
 
 	/**
@@ -514,7 +514,7 @@ public class StructuredTextPartitioner implements IDocumentPartitioner {
 			// In order to prevent infinite error loops, this partition must
 			// never have a zero length
 			// unless the document is also zero length
-			setInternalPartition(offset, 0, getDefault());
+			setInternalPartition(offset, 0, getDefaultPartitionType());
 			partitionFound = true;
 		} else if (structuredDocumentRegion == null && docLength != 0) {
 			// this case is "unusual". When would region be null, and document

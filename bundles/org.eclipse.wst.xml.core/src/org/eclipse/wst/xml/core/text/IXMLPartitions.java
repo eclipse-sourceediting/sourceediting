@@ -1,18 +1,15 @@
 package org.eclipse.wst.xml.core.text;
 
-import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 
 
 /**
  * This interface is not intended to be implemented.
- * It defines the partitioning for XML and all its partitions.
+ * It defines the partition types for XML.
  * Clients should reference the partition type Strings defined here directly.
  * 
  * @since 1.0
  */
 public interface IXMLPartitions {
-	
-	String XML_PARTITIONING = IStructuredPartitions.STRUCTURED_PARTITIONING;
 	
 	String XML_DEFAULT = "org.eclipse.wst.xml.XML_DEFAULT"; //$NON-NLS-1$
 	String XML_CDATA = "org.eclipse.wst.xml.XML_CDATA"; //$NON-NLS-1$

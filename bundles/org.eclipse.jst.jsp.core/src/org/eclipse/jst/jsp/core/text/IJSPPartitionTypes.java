@@ -1,18 +1,15 @@
 package org.eclipse.jst.jsp.core.text;
 
-import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 
 /**
  * This interface is not intended to be implemented.
- * It defines the partitioning for JSP and all its partitions.
+ * It defines the partition types for JSP.
  * Clients should reference the partition type Strings defined here directly.
  * 
  * @since 1.0
  */
-public interface IJSPPartitions {
+public interface IJSPPartitionTypes {
 
-	String JSP_PARTITIONING = IStructuredPartitions.STRUCTURED_PARTITIONING;
-	
 	String JSP_DEFAULT = "org.eclipse.jst.jsp.DEFAULT_JSP"; //$NON-NLS-1$
 	String JSP_COMMENT = "org.eclipse.jst.jsp.JSP_COMMENT"; //$NON-NLS-1$
 	

@@ -10,18 +10,18 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.format;
+package org.eclipse.wst.sse.core.text;
 
-public interface IStructuredFormatPreferences {
-	boolean getClearAllBlankLines();
+import org.eclipse.jface.text.IRegion;
 
-	String getIndent();
+/**
+ * Like super class except allows length and offset to be modified. This is
+ * convenient for some algorithms, and allows region objects to be reused.
+ * Note: There MIGHT be some code that assumes regions are immutable. This
+ * class would not be appropriate for those uses.
+ */
+public interface IStructuredRegion extends IRegion {
+	void setLength(int length);
 
-	int getLineWidth();
-
-	void setClearAllBlankLines(boolean clearAllBlankLines);
-
-	void setIndent(String indent);
-
-	void setLineWidth(int lineWidth);
+	void setOffset(int offset);
 }
