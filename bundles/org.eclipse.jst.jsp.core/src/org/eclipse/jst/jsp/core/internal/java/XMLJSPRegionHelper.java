@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
@@ -387,9 +388,11 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 		int count = 0;
 		InputStream is = null;
 		try {
-			// filename is now going to be project relative beacuse of
-			// our use of FileBuffers
-			IFile f = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(fileName));
+			IPath filePath = new Path(fileName);
+			IFile f = ResourcesPlugin.getWorkspace().getRoot().getFile(filePath);
+			if(!f.exists()) {
+				f = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(filePath);
+			}
 			is = f.getContents();
 			while ((c = is.read()) != -1) {
 				count++;
