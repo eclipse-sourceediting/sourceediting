@@ -14,10 +14,8 @@ import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
@@ -54,19 +52,11 @@ public class TestViewerConfigurationXML extends TestCase {
 	private void setUpViewerConfiguration() {
 		
 		// some test environments might not have a "real" display
-		if(Display.getDefault() != null) {
+		if(Display.getCurrent() != null) {
 			
-			Shell shell = Workbench.getInstance().getActiveWorkbenchWindow().getShell();
-			Composite parent = shell.getParent();
-			Control[] children = shell.getChildren();
-			// kind of a hack just to satisfy the Composite 
-			// parent requirement for viewer
-			for (int i = 0; i < children.length; i++) {
-				if(children[i] instanceof Composite) {
-					parent = (Composite)children[i];
-					break;
-				}
-			}
+			Shell shell = new Shell(Display.getCurrent());
+			Composite parent = new Composite(shell, SWT.NONE);
+			
 			// dummy viewer
 			fViewer = new StructuredTextViewer(parent, null, null, false, SWT.NONE);
 			fConfig = new StructuredTextViewerConfigurationXML(fPreferenceStore);
