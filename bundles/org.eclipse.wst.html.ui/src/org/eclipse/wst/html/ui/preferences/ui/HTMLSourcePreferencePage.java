@@ -17,9 +17,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
-import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
+import org.eclipse.wst.html.core.HTMLCorePlugin;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
+import org.eclipse.wst.sse.ui.EditorPlugin;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.xml.ui.preferences.XMLSourcePreferencePage;
@@ -120,6 +121,11 @@ public class HTMLSourcePreferencePage extends XMLSourcePreferencePage {
 	 */
 	protected Preferences getModelPreferences() {
 		return HTMLCorePlugin.getDefault().getPluginPreferences();
+	}
+	
+	protected void doSavePreferenceStore() {
+		EditorPlugin.getDefault().savePluginPreferences(); // UI
+		HTMLCorePlugin.getDefault().savePluginPreferences(); // model
 	}
 
 	/* (non-Javadoc)
