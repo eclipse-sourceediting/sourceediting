@@ -272,7 +272,7 @@ public class FileModelProvider extends FileDocumentProvider implements IModelPro
 		AdapterFactoryRegistry adapterRegistry = plugin.getAdapterFactoryRegistry();
 		//Iterator adapterFactoryList =
 		// adapterRegistry.getAdapterFactories();
-		String contentTypeId = structuredModel.getModelHandler().getAssociatedContentTypeId();
+		String contentTypeId = structuredModel.getContentTypeIdentifier();
 
 		Iterator adapterFactoryList = ((AdapterFactoryRegistryImpl) adapterRegistry).getAdapterFactories(contentTypeId);
 		IFactoryRegistry factoryRegistry = structuredModel.getFactoryRegistry();
