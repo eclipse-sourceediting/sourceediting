@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -26,7 +27,10 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.actions.ActionContext;
+import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
@@ -44,6 +48,7 @@ import org.eclipse.wst.xsd.ui.internal.provider.CategoryAdapter;
 import org.eclipse.wst.xsd.ui.internal.provider.XSDAdapterFactoryLabelProvider;
 import org.eclipse.wst.xsd.ui.internal.provider.XSDContentProvider;
 import org.eclipse.wst.xsd.ui.internal.provider.XSDModelAdapterFactoryImpl;
+import org.eclipse.wst.xsd.ui.internal.refactor.actions.RefactorActionGroup;
 import org.eclipse.wst.xsd.ui.internal.util.SelectionAdapter;
 import org.eclipse.xsd.XSDComponent;
 import org.eclipse.xsd.XSDSchema;
@@ -358,6 +363,7 @@ public class XSDTextEditor extends StructuredTextEditorXML implements INodeSelec
   
   protected WrappedOpenFileAction wrappedAction;
   private static final String DOT = "."; //$NON-NLS-1$
+  private ActionGroup fRefactorMenuGroup;
   
   /**
    * @see org.eclipse.ui.texteditor.AbstractTextEditor#createActions()
@@ -370,8 +376,20 @@ public class XSDTextEditor extends StructuredTextEditorXML implements INodeSelec
     
     wrappedAction = new WrappedOpenFileAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE + DOT, this);
     setAction(StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE, wrappedAction);
-   
+	fRefactorMenuGroup = new RefactorActionGroup(this, ITextEditorActionConstants.GROUP_EDIT);
+
   }
+  /* (non-Javadoc)
+	 * @see org.eclipse.wst.sse.ui.StructuredTextEditor#addContextMenuActions(org.eclipse.jface.action.IMenuManager)
+	 */
+	protected void addContextMenuActions(IMenuManager menu) {
+		
+		super.addContextMenuActions(menu);
+		ActionContext context= new ActionContext(getSelectionProvider().getSelection());
+		fRefactorMenuGroup.setContext(context);
+		fRefactorMenuGroup.fillContextMenu(menu);
+		fRefactorMenuGroup.setContext(null);
+	}
     
 
   class XSDModelQueryContributor extends AbstractXSDModelQueryContributor

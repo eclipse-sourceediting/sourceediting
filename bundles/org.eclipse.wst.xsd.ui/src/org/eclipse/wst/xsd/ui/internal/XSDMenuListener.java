@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.wst.xsd.ui.internal.actions.AddEnumsAction;
 import org.eclipse.wst.xsd.ui.internal.actions.AddModelGroupAction;
 import org.eclipse.wst.xsd.ui.internal.actions.BackAction;
@@ -37,7 +38,6 @@ import org.eclipse.wst.xsd.ui.internal.actions.CreateSimpleContentAction;
 import org.eclipse.wst.xsd.ui.internal.actions.CreateSimpleTypeAction;
 import org.eclipse.wst.xsd.ui.internal.actions.DOMAttribute;
 import org.eclipse.wst.xsd.ui.internal.actions.DeleteAction;
-import org.eclipse.wst.xsd.ui.internal.actions.GraphRenameAction;
 import org.eclipse.wst.xsd.ui.internal.actions.MakeAnonymousGlobal;
 import org.eclipse.wst.xsd.ui.internal.actions.OpenSchemaAction;
 import org.eclipse.wst.xsd.ui.internal.actions.SetBaseTypeAction;
@@ -50,6 +50,7 @@ import org.eclipse.wst.xsd.ui.internal.graph.editparts.ModelGroupDefinitionEditP
 import org.eclipse.wst.xsd.ui.internal.graph.editparts.TopLevelComponentEditPart;
 import org.eclipse.wst.xsd.ui.internal.graph.model.Category;
 import org.eclipse.wst.xsd.ui.internal.provider.CategoryAdapter;
+import org.eclipse.wst.xsd.ui.internal.refactor.actions.RefactorActionGroup;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
@@ -76,6 +77,7 @@ public class XSDMenuListener implements IMenuListener
   protected XSDSchema xsdSchema;
   protected boolean isReadOnly;
   protected Object sourceContext;
+  private RefactorActionGroup fRefactorMenuGroup;
 
   /**
    * Constructor for XSDMenuListener.
@@ -1487,6 +1489,7 @@ public class XSDMenuListener implements IMenuListener
     XSDConcreteComponent concreteComponent = getXSDSchema().getCorrespondingComponent(parent);
     if (concreteComponent instanceof XSDNamedComponent)
     {
+      addRefactorMenuGroup(manager);
       if (selectionProvider instanceof XSDSelectionManager)
       {
         if (sourceContext instanceof AbstractEditPartViewer)
@@ -1530,10 +1533,12 @@ public class XSDMenuListener implements IMenuListener
             {
               canEdit = false;
             }
-            if (canEdit)
+            //if (canEdit)
             {
-              GraphRenameAction graphRenameAction = new GraphRenameAction((XSDNamedComponent)concreteComponent, (GraphicalEditPart)obj);
-              manager.add(graphRenameAction);
+//              GraphRenameAction graphRenameAction = new GraphRenameAction((XSDNamedComponent)concreteComponent, (GraphicalEditPart)obj);
+ //             manager.add(graphRenameAction);
+            	
+            	
             }
           }
         }
@@ -2043,7 +2048,17 @@ public class XSDMenuListener implements IMenuListener
     action.setParentNode(getXSDSchema().getElement());
     action.setRelativeNode(relativeNode);
     action.setEnabled(!isReadOnly);
-    manager.add(action);
+    //manager.add(action);
+    addRefactorMenuGroup(manager);
+    fRefactorMenuGroup.addAction(action);
+  }
+  
+  protected void addRefactorMenuGroup(IMenuManager manager){
+    	fRefactorMenuGroup = new RefactorActionGroup();
+     	ActionContext context= new ActionContext(selectionProvider.getSelection());
+    	fRefactorMenuGroup.setContext(context);
+    	fRefactorMenuGroup.fillContextMenu(manager);
+    	fRefactorMenuGroup.setContext(null);
   }
 
   protected void addCreateAnnotationAction(IMenuManager manager, String elementTag, String label, List attributes, Element parent, Node relativeNode)

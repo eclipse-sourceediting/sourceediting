@@ -17,4 +17,6 @@ public interface ISchemaEditorActionConstants
   public static final String RETARGET_GENERATE_JAVA_ACTION_ID = "retargetGenerateJavaAction"; //$NON-NLS-1$
   public static final String RETARGET_GENERATE_DTD_ACTION_ID = "retargetGenerateDtdAction"; //$NON-NLS-1$
   public static final String RETARGET_GENERATE_XML_ACTION_ID = "retargetGenerateXMLAction"; //$NON-NLS-1$
+  public static final String RETARGET_RENAME_ELEMENT_ACTION_ID = "RenameElement"; //$NON-NLS-1$
+
 }
