@@ -12,6 +12,8 @@
 package org.eclipse.jst.jsp.core.contentmodel;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,10 +33,16 @@ import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.wst.xml.uriresolver.util.URIHelper;
 
 /**
- * @author nsd
+ * @author nitin
  * 
  * A non-extendable index manager for taglibs similar to the J2EE
  * ITaglibRegistry but lacking any ties to project natures.
+ * 
+ * Indexing is not persisted between sessions, so new ADD events will be sent
+ * to ITaglibIndexListeners during each workbench session. REMOVE events are
+ * not fired on workbench shutdown. Events for TAGDIR, JAR, and WEBXML type
+ * records are only fired for the .jar and web.xml file itself. The record's
+ * contents should be examined for any further information.
  */
 public class TaglibIndex {
 
@@ -109,6 +117,16 @@ public class TaglibIndex {
 	}
 
 	public static void addTaglibIndexListener(ITaglibIndexListener listener) {
+		_instance.internalAddTaglibIndexListener(listener);
+	}
+
+	static void fireTaglibRecordEvent(ITaglibRecordEvent event) {
+		ITaglibIndexListener[] listeners = _instance.fTaglibIndexListeners;
+		if (listeners != null) {
+			for (int i = 0; i < listeners.length; i++) {
+				listeners[i].indexChanged(event);
+			}
+		}
 	}
 
 	/**
@@ -128,6 +146,7 @@ public class TaglibIndex {
 	}
 
 	public static void removeTaglibIndexListener(ITaglibIndexListener listener) {
+		_instance.internalRemoveTaglibIndexListener(listener);
 	}
 
 	public static ITaglibRecord resolve(String baseLocation, String reference, boolean crossProjects) {
@@ -136,6 +155,8 @@ public class TaglibIndex {
 
 	Map fProjectDescriptions;
 	private ResourceChangeListener fResourceChangeListener;
+
+	private ITaglibIndexListener[] fTaglibIndexListeners = null;
 
 	private TaglibIndex() {
 		super();
@@ -156,6 +177,17 @@ public class TaglibIndex {
 			fProjectDescriptions.put(project, description);
 		}
 		return description;
+	}
+
+	private synchronized void internalAddTaglibIndexListener(ITaglibIndexListener listener) {
+		if (fTaglibIndexListeners == null) {
+			fTaglibIndexListeners = new ITaglibIndexListener[]{listener};
+		}
+		else {
+			List listeners = new ArrayList(Arrays.asList(fTaglibIndexListeners));
+			listeners.add(listener);
+			fTaglibIndexListeners = (ITaglibIndexListener[]) listeners.toArray(new ITaglibIndexListener[0]);
+		}
 	}
 
 	private ITaglibRecord[] internalGetAvailableTaglibRecords(IPath location) {
@@ -188,6 +220,14 @@ public class TaglibIndex {
 		if (root == null)
 			root = path;
 		return root;
+	}
+
+	private synchronized void internalRemoveTaglibIndexListener(ITaglibIndexListener listener) {
+		if (fTaglibIndexListeners != null) {
+			List listeners = new ArrayList(Arrays.asList(fTaglibIndexListeners));
+			listeners.remove(listener);
+			fTaglibIndexListeners = (ITaglibIndexListener[]) listeners.toArray(new ITaglibIndexListener[0]);
+		}
 	}
 
 	private ITaglibRecord internalResolve(String baseLocation, String reference, boolean crossProjects) {

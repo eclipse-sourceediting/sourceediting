@@ -107,6 +107,24 @@ class ProjectDescription {
 		}
 	}
 
+	class TaglibRecordEvent implements ITaglibRecordEvent {
+		ITaglibRecord fTaglibRecord = null;
+		short fType = -1;
+
+		TaglibRecordEvent(ITaglibRecord record, short type) {
+			fTaglibRecord = record;
+			fType = type;
+		}
+
+		public ITaglibRecord getTaglibRecord() {
+			return fTaglibRecord;
+		}
+
+		public short getType() {
+			return fType;
+		}
+	}
+
 	static boolean _debugIndexCreation = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/indexcreation"));
 	static boolean _debugIndexTime = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/indextime"));
 
@@ -175,6 +193,7 @@ class ProjectDescription {
 				}
 			}
 		}
+		TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(jarRecord, ITaglibRecordEvent.ADD));
 	}
 
 	void addServlets(IResource webxml) {
@@ -228,6 +247,7 @@ class ProjectDescription {
 			if (_debugIndexCreation)
 				System.out.println("created record for " + uri + "@" + record.location);
 		}
+		TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(servletRecord, ITaglibRecordEvent.ADD));
 	}
 
 	void addTagDir(IResource tagFile) {
@@ -253,6 +273,7 @@ class ProjectDescription {
 		if (record.uri != null) {
 			getImplicitReferences(tld.getLocation().toString()).put(record.uri, record);
 		}
+		TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.ADD));
 	}
 
 	void clear() {
@@ -389,14 +410,6 @@ class ProjectDescription {
 
 	/**
 	 * @param baseLocation
-	 * @return
-	 */
-	private String getLocalRoot(String baseLocation) {
-		return getLocalRoot(new Path(baseLocation)).toString();
-	}
-
-	/**
-	 * @param baseLocation
 	 * @return the applicable Web context root path, if one exists
 	 */
 	IPath getLocalRoot(IPath baseLocation) {
@@ -424,6 +437,14 @@ class ProjectDescription {
 		}
 
 		return fProject.getFullPath();
+	}
+
+	/**
+	 * @param baseLocation
+	 * @return
+	 */
+	private String getLocalRoot(String baseLocation) {
+		return getLocalRoot(new Path(baseLocation)).toString();
 	}
 
 	/**
@@ -477,6 +498,7 @@ class ProjectDescription {
 			for (int i = 0; i < records.length; i++) {
 				getImplicitReferences(jar.getLocation().toString()).remove(records[i].getURI());
 			}
+			TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.REMOVE));
 		}
 	}
 
@@ -491,6 +513,7 @@ class ProjectDescription {
 					System.out.println("removed record for " + records[i].uri + "@" + records[i].location);
 				getImplicitReferences(webxml.getLocation().toString()).remove(records[i].getURI());
 			}
+			TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.REMOVE));
 		}
 	}
 
@@ -504,8 +527,11 @@ class ProjectDescription {
 		if (_debugIndexCreation)
 			System.out.println("removing record for " + tld.getFullPath());
 		TLDRecord record = (TLDRecord) fTLDReferences.remove(tld.getFullPath());
-		if (record != null && record.uri != null) {
-			getImplicitReferences(tld.getLocation().toString()).remove(record.uri);
+		if (record != null) {
+			if (record.uri != null) {
+				getImplicitReferences(tld.getLocation().toString()).remove(record.uri);
+			}
+			TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.REMOVE));
 		}
 	}
 
