@@ -201,7 +201,7 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 				// Otherwise, you DO want content assist (return true)
 				IDocument doc = getDocument();
 				if (doc != null && doc instanceof IStructuredDocument) {
-					return (!((IStructuredDocument) doc).containsReadOnly(getSelectedRange().x, 0));
+					return isEditable() && (!((IStructuredDocument) doc).containsReadOnly(getSelectedRange().x, 0));
 				}
 				break;
 			}
@@ -209,7 +209,7 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 				return true;
 			}
 			case QUICK_FIX : {
-				return true;
+				return isEditable();
 			}
 			case INFORMATION : {
 				// the fInformationPresenter may not be set yet but you DO
@@ -509,7 +509,7 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 				break;
 			case CONTENTASSIST_PROPOSALS :
 				// maybe not configured?
-				if (fContentAssistant != null) {
+				if (fContentAssistant != null && isEditable()) {
 					// CMVC 263269
 					// need an explicit check here because the
 					// contentAssistAction is no longer being updated on
@@ -537,8 +537,10 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 				}
 				break;
 			case QUICK_FIX :
-				String msg = fCorrectionAssistant.showPossibleCompletions();
-				setErrorMessage(msg);
+				if (isEditable()) {
+					String msg = fCorrectionAssistant.showPossibleCompletions();
+					setErrorMessage(msg);
+				}
 				break;
 			case SHIFT_RIGHT :
 				getModel().beginRecording(this, TEXT_SHIFT_RIGHT, TEXT_SHIFT_RIGHT, cursorPosition, selectionLength);
