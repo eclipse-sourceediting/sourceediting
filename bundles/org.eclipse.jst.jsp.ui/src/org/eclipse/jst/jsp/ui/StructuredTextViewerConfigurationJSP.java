@@ -65,7 +65,6 @@ import org.eclipse.wst.javascript.common.ui.style.LineStyleProviderForJavaScript
 import org.eclipse.wst.javascript.common.ui.taginfo.JavaScriptBestMatchHoverProcessor;
 import org.eclipse.wst.javascript.common.ui.taginfo.JavaScriptInformationProvider;
 import org.eclipse.wst.javascript.common.ui.taginfo.JavaScriptTagInfoHoverProcessor;
-import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
@@ -387,10 +386,6 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 			fInformationPresenter.uninstall();
 	}
 
-	private IModelManager getModelManager() {
-		return StructuredModelManager.getInstance().getModelManager();
-	}
-
 	public IReconciler getReconciler(ISourceViewer sourceViewer) {
 		if (fReconciler != null) {
 			// a reconciler should always be installed or disposed of
@@ -420,7 +415,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 				viewer = ((StructuredTextViewer) sourceViewer);
 			}
 
-			IStructuredModel sModel = getModelManager().getExistingModelForRead(viewer.getDocument());
+			IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(viewer.getDocument());
 			try {
 				if (sModel != null) {
 					// check language (ContentTypeID)....

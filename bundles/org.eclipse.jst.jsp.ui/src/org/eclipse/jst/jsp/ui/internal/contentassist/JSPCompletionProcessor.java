@@ -28,7 +28,6 @@ import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.ui.internal.Logger;
-import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.IReleasable;
@@ -66,10 +65,6 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 		fResource = resource;
 	}
 
-	private IModelManager getModelManager() {
-		return StructuredModelManager.getInstance().getModelManager();
-	}
-
 	/**
 	 * Returns a list of completion proposals based on the
 	 * specified location within the document that corresponds
@@ -85,7 +80,7 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 			if (viewer instanceof StructuredTextViewer)
 				fViewer = (StructuredTextViewer) viewer;
 
-			XMLModel xmlModel = (XMLModel) getModelManager().getExistingModelForRead(fViewer.getDocument());
+			XMLModel xmlModel = (XMLModel) StructuredModelManager.getModelManager().getExistingModelForRead(fViewer.getDocument());
 			XMLDocument xmlDoc = xmlModel.getDocument();
 			xmlModel.releaseFromRead();
 			if (fTranslationAdapter == null)
@@ -162,7 +157,7 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 	private boolean cursorInExpression() {
 		boolean inExpression = false;
 		IStructuredDocumentRegion sdRegion = null;
-		XMLModel xmlModel = (XMLModel) getModelManager().getExistingModelForRead(fViewer.getDocument());
+		XMLModel xmlModel = (XMLModel) StructuredModelManager.getModelManager().getExistingModelForRead(fViewer.getDocument());
 		XMLNode xmlNode = null;
 		xmlModel.releaseFromRead();
 

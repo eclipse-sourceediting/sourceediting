@@ -90,7 +90,7 @@ public class StructuredTextEditorJSP extends StructuredTextEditor {
 
 		IJavaElement[] elements = new IJavaElement[0];
 		// get JSP translation object for this viewer's document
-		XMLModel xmlModel = (XMLModel) StructuredModelManager.getInstance().getModelManager().getExistingModelForRead(getDocument());
+		XMLModel xmlModel = (XMLModel) StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
 		try {
 			if(xmlModel != null) {
 				XMLDocument xmlDoc = xmlModel.getDocument();

@@ -31,7 +31,6 @@ import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
@@ -71,7 +70,7 @@ public class CorrectionProcessorJSP extends StructuredCorrectionProcessor {
 			if (documentOffset >= pos.offset && documentOffset <= pos.offset + pos.length) {
 				IQuickFixProcessor processor = getQuickFixProcessorJSP();
 
-				XMLModel xmlModel = (XMLModel) getModelManager().getExistingModelForRead(viewer.getDocument());
+				XMLModel xmlModel = (XMLModel) StructuredModelManager.getModelManager().getExistingModelForRead(viewer.getDocument());
 				XMLDocument xmlDoc = xmlModel.getDocument();
 				xmlModel.releaseFromRead();
 				JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
@@ -114,7 +113,7 @@ public class CorrectionProcessorJSP extends StructuredCorrectionProcessor {
 		try {
 			IQuickAssistProcessor processor = getQuickAssistProcessorJSP();
 
-			XMLModel xmlModel = (XMLModel) getModelManager().getExistingModelForRead(viewer.getDocument());
+			XMLModel xmlModel = (XMLModel) StructuredModelManager.getModelManager().getExistingModelForRead(viewer.getDocument());
 			XMLDocument xmlDoc = xmlModel.getDocument();
 			xmlModel.releaseFromRead();
 			JSPTranslationAdapter translationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
@@ -145,9 +144,5 @@ public class CorrectionProcessorJSP extends StructuredCorrectionProcessor {
 		catch (Exception e) {
 			throw new SourceEditingRuntimeException();
 		}
-	}
-
-	private IModelManager getModelManager() {
-		return StructuredModelManager.getInstance().getModelManager();
 	}
 }

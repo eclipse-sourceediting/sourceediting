@@ -99,7 +99,7 @@ public class JSPColorPage extends XMLColorPage {
 	}
 
 	protected void setupPicker(StyledTextColorPicker picker) {
-		IModelManager mmanager = StructuredModelManager.getInstance().getModelManager();
+		IModelManager mmanager = StructuredModelManager.getModelManager();
 		picker.setParser(mmanager.createStructuredDocumentFor(IContentTypeIdentifier.ContentTypeID_JSP).getParser());
 
 		// create descriptions for hilighting types

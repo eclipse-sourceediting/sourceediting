@@ -17,6 +17,7 @@ import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.wst.html.ui.openon.DefaultOpenOnHTML;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.xml.core.document.XMLDocument;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.w3c.dom.Attr;
@@ -57,7 +58,7 @@ public class JSPDirectiveOpenOnJSP extends DefaultOpenOnHTML {
 	 */
 	private JSPTranslation getJSPTranslation() {
 		// get JSP translation object for this action's editor's document
-		XMLModel xmlModel = (XMLModel) getModelManager().getExistingModelForRead(getDocument());
+		XMLModel xmlModel = (XMLModel) StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
 		if (xmlModel != null) {
 			XMLDocument xmlDoc = xmlModel.getDocument();
 			xmlModel.releaseFromRead();

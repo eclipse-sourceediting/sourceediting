@@ -29,7 +29,7 @@ public class JSPJavaJavadocHover extends JavadocHover {
 	
 	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
 		// get JSP translation object for this viewer's document
-		XMLModel xmlModel = (XMLModel) StructuredModelManager.getInstance().getModelManager().getExistingModelForRead(textViewer.getDocument());
+		XMLModel xmlModel = (XMLModel) StructuredModelManager.getModelManager().getExistingModelForRead(textViewer.getDocument());
 		try {
 			if(xmlModel != null) {
 				XMLDocument xmlDoc = xmlModel.getDocument();

@@ -303,7 +303,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 				// a full Document and then adjust the offset numbers in the
 				// list of results.
 				IStructuredModel internalModel = null;
-				IModelManager mmanager = StructuredModelManager.getInstance().getModelManager();
+				IModelManager mmanager = StructuredModelManager.getModelManager();
 				internalModel = mmanager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_JSP);
 				XMLNode xmlNode = null;
 				XMLModel xmlOuterModel = null;
@@ -602,10 +602,6 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 			fErrorMessage = errorMessage;
 	}
 
-	private IModelManager getModelManager() {
-		return StructuredModelManager.getInstance().getModelManager();
-	}
-
 	/**
 	 * This method is acting as a "catch all" for pulling together content
 	 * assist proposals from different Processors when document partitioning
@@ -623,7 +619,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 
 		// check the actual partition type
 		String partitionType = getPartitionType((StructuredTextViewer) viewer, documentPosition);
-		IStructuredModel sModel = getModelManager().getExistingModelForRead(viewer.getDocument());
+		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(viewer.getDocument());
 		IStructuredDocument structuredDocument = sModel.getStructuredDocument();
 		sModel.releaseFromRead();
 
@@ -1035,7 +1031,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		String partitionType = null;
 		IStructuredModel sModel = null;
 		try {
-			sModel = getModelManager().getExistingModelForRead(viewer.getDocument());
+			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(viewer.getDocument());
 			IDocument document = sModel.getStructuredDocument();
 
 			ITypedRegion regionType = document.getPartition(documentPosition);

@@ -32,6 +32,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.util.ResourceUtil;
 import org.eclipse.wst.sse.ui.openon.AbstractOpenOn;
 import org.eclipse.wst.xml.core.document.XMLDocument;
@@ -53,7 +54,7 @@ public class JSPJavaOpenOnJSP extends AbstractOpenOn {
 	 */
 	private JSPTranslation getJSPTranslation() {
 		// get JSP translation object for this action's editor's document
-		XMLModel xmlModel = (XMLModel) getModelManager().getExistingModelForRead(getDocument());
+		XMLModel xmlModel = (XMLModel) StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
 		if (xmlModel != null) {
 			XMLDocument xmlDoc = xmlModel.getDocument();
 			xmlModel.releaseFromRead();
@@ -251,7 +252,7 @@ public class JSPJavaOpenOnJSP extends AbstractOpenOn {
 		IStructuredModel model = null;
 		IFile file = null;
 		try {
-			model = getModelManager().getExistingModelForRead(getDocument());
+			model = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
 			IFile[] files = ResourceUtil.getFilesFor(model);
 			int i = 0;
 			while (i < files.length && file == null) {
