@@ -87,6 +87,10 @@
       		type="preferencepages"
             value="org.eclipse.wst.sse.ui.preferences.jsp.styles"
 			target="org.eclipse.jst.jsp.core.jspsource"/>
+		<definition 
+      		type="showintarget"
+            value="org.eclipse.jdt.ui.PackageExplorer"
+			target="org.eclipse.jst.jsp.core.jspsource"/>
 	</extension>
 	<extension
 		point="org.eclipse.wst.sse.ui.adapterFactoryDescription">
@@ -352,7 +356,7 @@
 			<contenttypeidentifier
 				id="org.eclipse.jst.jsp.core.jspsource">
 				<partitiontype
-					id="org.eclipse.jst.jsp.JSP_CONTENT_JAVA">
+					id="org.eclipse.jst.jsp.SCRIPT.JAVA">
 				</partitiontype>
 			</contenttypeidentifier>
 		</openon>
