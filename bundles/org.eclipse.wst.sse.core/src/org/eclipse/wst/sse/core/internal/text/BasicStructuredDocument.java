@@ -2182,6 +2182,36 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			}
 		}
 	}
+	
+	/**
+	 * This method is for INTERNAL USE ONLY and is NOT API.
+	 * 
+	 * Rebuilds the StructuredDocumentRegion chain from the existing text.
+	 * FileBuffer support does not allow clients to know the document's
+	 * location before the text contents are set.
+	 * 
+	 * @see set(String)
+	 */
+	public void reparse(Object requester) {
+		NewDocumentEvent result = null;
+		stopPostNotificationProcessing();
+		clearReadOnly();
+
+		acquireLock();
+
+		CharSequenceReader subSetTextStoreReader = new CharSequenceReader((CharSequence) getStore(), 0, getStore().getLength());
+		resetParser(subSetTextStoreReader, 0);
+		//
+		setCachedDocumentRegion(getParser().getDocumentRegions());
+		// when starting afresh, our cachedNode should be our firstNode,
+		// so be sure to initialize the firstNode and lastNode
+		initializeFirstAndLastDocumentRegion();
+		StructuredDocumentRegionIterator.setParentDocument(getCachedDocumentRegion(), this);
+
+		releaseLock();
+
+		resumePostNotificationProcessing();
+	}
 
 	/**
 	 * @see IDocument#replace
