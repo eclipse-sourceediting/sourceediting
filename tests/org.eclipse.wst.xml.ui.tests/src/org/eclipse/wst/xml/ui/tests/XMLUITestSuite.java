@@ -14,6 +14,8 @@ package org.eclipse.wst.xml.ui.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.wst.xml.ui.tests.viewer.TestViewerConfigurationXML;
+
 
 public class XMLUITestSuite extends TestSuite {
 	public static Test suite() {
@@ -24,5 +26,6 @@ public class XMLUITestSuite extends TestSuite {
 		super("XML UI Test Suite");
 		addTest(new TestSuite(VerifyEditorPlugin.class));
 		addTest(new TestSuite(XMLUIPreferencesTest.class));
+		addTest(new TestSuite(TestViewerConfigurationXML.class));
 	}
 }

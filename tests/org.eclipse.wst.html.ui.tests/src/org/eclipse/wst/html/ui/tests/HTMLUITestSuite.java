@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.tests;
 
+import org.eclipse.wst.html.ui.tests.viewer.TestViewerConfigurationHTML;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -24,6 +26,7 @@ public class HTMLUITestSuite extends junit.framework.TestSuite {
 		super("HTML UI TestSuite");
 		addTest(new TestSuite(VerifyEditorPlugin.class));
 		addTest(new TestSuite(HTMLUIPreferencesTest.class));
+		addTest(new TestSuite(TestViewerConfigurationHTML.class));
 		//		addTest(new SSEModelTestSuite());
 
 	}

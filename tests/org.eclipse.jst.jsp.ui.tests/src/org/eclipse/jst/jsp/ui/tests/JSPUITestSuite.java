@@ -24,6 +24,7 @@ import org.eclipse.jst.jsp.ui.tests.other.UnitTests;
 import org.eclipse.jst.jsp.ui.tests.pagedirective.TestPageDirective;
 import org.eclipse.jst.jsp.ui.tests.partitioning.TestStructuredPartitioner;
 import org.eclipse.jst.jsp.ui.tests.registry.AdapterFactoryRegistryTest;
+import org.eclipse.jst.jsp.ui.tests.viewer.TestViewerConfigurationJSP;
 
 
 
@@ -46,6 +47,7 @@ public class JSPUITestSuite extends TestSuite {
 		addTest(new TestSuite(JSPTranslationTest.class, "JSPTranslationTest"));
 		addTest(new TestSuite(AdapterFactoryRegistryTest.class, "AdapterFactoryRegistryText"));
 		addTest(new TestSuite(JSPUIPreferencesTest.class));
+		addTest(new TestSuite(TestViewerConfigurationJSP.class));
 		
 		// moved from jsp core tests because they require UI
 		addTest(new TestSuite(TestPageDirective.class));

@@ -14,6 +14,8 @@ package org.eclipse.wst.sse.ui.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.wst.sse.ui.tests.viewer.TestViewerConfiguration;
+
 /**
  * @author pavery
  */
@@ -26,5 +28,6 @@ public class SSEUITestSuite extends TestSuite {
 		super("SSE UI Test Suite");
 		addTest(new TestSuite(VerifyEditorPlugin.class));
 		addTest(new TestSuite(CommonEditorPreferencesTest.class));
+		addTest(new TestSuite(TestViewerConfiguration.class));
 	}
 }

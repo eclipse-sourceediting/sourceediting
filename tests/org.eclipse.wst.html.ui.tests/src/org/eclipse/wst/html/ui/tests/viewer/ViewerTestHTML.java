@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.html.ui.tests;
+package org.eclipse.wst.html.ui.tests.viewer;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionManager;

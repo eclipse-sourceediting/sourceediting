@@ -37,8 +37,8 @@
             name="Embedded XML Structured Text Viewer"
             icon="icons/sourceEditor.gif"
             category="org.eclipse.wst.sse.ui.tests"
-            class="org.eclipse.wst.xml.ui.tests.ViewerTestXML"
-            id="org.eclipse.wst.xml.ui.tests.ViewerTestXML">
+            class="org.eclipse.wst.xml.ui.tests.viewer.ViewerTestXML"
+            id="org.eclipse.wst.xml.ui.tests.viewer.ViewerTestXML">
       </view>
    </extension>
    
