@@ -1295,10 +1295,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 						EditorModelUtil.addFactoriesTo(model);
 					}
 				} else {
-					System.out.println("Warning: StructuredTextEditor being used without StructuredDocument");
-					String name = input.getName();
-					System.out.println("         Input Name: " + name);
-					System.out.println("         Document implementation: " + getDocument().getClass());
+					logUnexpectedDocumentKind(input);
 				}
 			}
 
@@ -1317,6 +1314,24 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 
 			throw new CoreException(exception.getStatus());
 		}
+	}
+
+	private void logUnexpectedDocumentKind(IEditorInput input) {
+		Logger.log(Logger.WARNING, "StructuredTextEditor being used without StructuredDocument");
+		String name = null;
+		if (input != null) {
+			name = input.getName();
+		} else {
+			name = "input was null";
+		}
+		Logger.log(Logger.WARNING, "         Input Name: " + name);
+		String implClass = null;
+		if (getDocument() != null) {
+			implClass = getDocument().getClass().toString();
+		} else {
+			implClass = "document was null";
+		}
+		Logger.log(Logger.WARNING, "         Document implementation: " + implClass);
 	}
 
 	/**
