@@ -11,6 +11,7 @@ package org.eclipse.wst.css.core.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.wst.css.core.tests.model.BUG73990SelectorFormatTest;
 import org.eclipse.wst.css.core.tests.model.CSSCharsetRuleTest;
 import org.eclipse.wst.css.core.tests.model.CSSFontFaceRuleTest;
 import org.eclipse.wst.css.core.tests.model.CSSImportRuleTest;
@@ -49,5 +50,6 @@ public class CSSAllTests extends TestSuite {
 		suite.addTestSuite(CSSMediaRuleTest.class);
 		suite.addTestSuite(CSSPageRuleTest.class);
 		suite.addTestSuite(CSSFontFaceRuleTest.class);
+		suite.addTestSuite(BUG73990SelectorFormatTest.class);
 	}
 }
