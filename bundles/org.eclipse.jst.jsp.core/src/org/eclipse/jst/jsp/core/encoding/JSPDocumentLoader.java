@@ -24,7 +24,7 @@ import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jst.jsp.core.JSP11Namespace;
 import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
 import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
-import org.eclipse.jst.jsp.core.document.PageDirectiveWatcherFactory;
+import org.eclipse.jst.jsp.core.internal.document.PageDirectiveWatcherFactory;
 import org.eclipse.jst.jsp.core.internal.parser.JSPReParser;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;

@@ -9,14 +9,30 @@
  *     IBM Corporation - initial API and implementation
  *     
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.contentmodel;
+package org.eclipse.jst.jsp.core.internal.contentmodel;
 
-public interface ITaglibRecordEvent {
-	ITaglibRecord getTaglibRecord();
+import org.eclipse.core.runtime.IPath;
 
-	short getType();
 
-	short ADD = 1;
-	short CHANGE = 1 << 1;
-	short REMOVE = 1 << 2;
+public class TLDRecord implements ITaglibRecord {
+	IPath location;
+	String uri;
+
+	public short getRecordType() {
+		return ITaglibRecord.TLD;
+	}
+
+	/**
+	 * @return Returns the filesystem location.
+	 */
+	public IPath getLocation() {
+		return location;
+	}
+
+	/**
+	 * @return Returns the uri.
+	 */
+	public String getURI() {
+		return uri;
+	}
 }

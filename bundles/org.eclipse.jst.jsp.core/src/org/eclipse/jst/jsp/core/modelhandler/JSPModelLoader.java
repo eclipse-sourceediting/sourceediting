@@ -18,11 +18,11 @@ import java.util.List;
 
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
-import org.eclipse.jst.jsp.core.document.PageDirectiveAdapterFactory;
-import org.eclipse.jst.jsp.core.document.PageDirectiveWatcherFactory;
 import org.eclipse.jst.jsp.core.encoding.IJSPHeadContentDetector;
 import org.eclipse.jst.jsp.core.encoding.JSPDocumentHeadContentDetector;
 import org.eclipse.jst.jsp.core.encoding.JSPDocumentLoader;
+import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapterFactory;
+import org.eclipse.jst.jsp.core.internal.document.PageDirectiveWatcherFactory;
 import org.eclipse.jst.jsp.core.internal.parser.JSPReParser;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;

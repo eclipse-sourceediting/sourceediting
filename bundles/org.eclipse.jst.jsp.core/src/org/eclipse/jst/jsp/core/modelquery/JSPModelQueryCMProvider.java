@@ -14,9 +14,9 @@ package org.eclipse.jst.jsp.core.modelquery;
 
 import java.util.List;
 
-import org.eclipse.jst.jsp.core.contentmodel.JSPCMDocumentFactory;
-import org.eclipse.jst.jsp.core.contentmodel.TaglibController;
-import org.eclipse.jst.jsp.core.contentmodel.tld.TLDCMDocumentManager;
+import org.eclipse.jst.jsp.core.internal.contentmodel.JSPCMDocumentFactory;
+import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.wst.common.contentmodel.CMDocument;
 import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.common.contentmodel.modelquery.ModelQueryCMProvider;

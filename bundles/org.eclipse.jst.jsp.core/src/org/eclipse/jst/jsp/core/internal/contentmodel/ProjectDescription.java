@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.contentmodel;
+package org.eclipse.jst.jsp.core.internal.contentmodel;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,9 +35,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jst.jsp.core.contentmodel.tld.DocumentProvider;
 import org.eclipse.jst.jsp.core.contentmodel.tld.JSP12TLDNames;
 import org.eclipse.jst.jsp.core.internal.Logger;
+import org.eclipse.jst.jsp.core.internal.util.DocumentProvider;
 import org.eclipse.wst.sse.core.util.JarUtilities;
 import org.eclipse.wst.xml.uriresolver.util.URIHelper;
 import org.w3c.dom.Document;

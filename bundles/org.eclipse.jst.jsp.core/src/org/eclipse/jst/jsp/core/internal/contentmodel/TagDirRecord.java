@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.contentmodel;
+package org.eclipse.jst.jsp.core.internal.contentmodel;
 
 import java.util.ArrayList;
 import java.util.List;

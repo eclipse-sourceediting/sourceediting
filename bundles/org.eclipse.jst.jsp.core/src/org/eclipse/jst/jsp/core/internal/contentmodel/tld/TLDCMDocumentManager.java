@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.contentmodel.tld;
+package org.eclipse.jst.jsp.core.internal.contentmodel.tld;
 
 
 
@@ -36,10 +36,16 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.jst.jsp.core.JSP12Namespace;
-import org.eclipse.jst.jsp.core.contentmodel.ITaglibRecord;
-import org.eclipse.jst.jsp.core.contentmodel.TaglibController;
-import org.eclipse.jst.jsp.core.contentmodel.TaglibIndex;
+import org.eclipse.jst.jsp.core.contentmodel.tld.JSP11TLDNames;
+import org.eclipse.jst.jsp.core.contentmodel.tld.JSP12TLDNames;
+import org.eclipse.jst.jsp.core.contentmodel.tld.JSP20TLDNames;
+import org.eclipse.jst.jsp.core.contentmodel.tld.TLDDocument;
+import org.eclipse.jst.jsp.core.contentmodel.tld.TLDElementDeclaration;
+import org.eclipse.jst.jsp.core.contentmodel.tld.URIResolverProvider;
 import org.eclipse.jst.jsp.core.internal.Logger;
+import org.eclipse.jst.jsp.core.internal.contentmodel.ITaglibRecord;
+import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
+import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibIndex;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.wst.common.contentmodel.CMDocument;
 import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;

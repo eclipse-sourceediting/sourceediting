@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.document;
+package org.eclipse.jst.jsp.core.internal.document;
 
 import java.util.ArrayList;
 import java.util.Iterator;

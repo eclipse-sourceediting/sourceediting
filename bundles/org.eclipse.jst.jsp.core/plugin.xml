@@ -41,7 +41,7 @@
          point="org.eclipse.wst.common.contentmodel.documentFactories">
       <factory
             type="tld"
-            class="org.eclipse.jst.jsp.core.contentmodel.tld.CMDocumentFactoryTLD">
+            class="org.eclipse.jst.jsp.core.internal.contentmodel.tld.CMDocumentFactoryTLD">
       </factory>
    </extension>
    <extension
@@ -64,7 +64,7 @@
          name="Structured JSP Document Setup participant">
       <participant
             contentTypeId="org.eclipse.jst.jsp.core.jspsource"
-            class="org.eclipse.jst.jsp.core.contentmodel.TaglibController"/>
+            class="org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController"/>
    </extension>
    <extension
          point="org.eclipse.team.core.fileTypes">

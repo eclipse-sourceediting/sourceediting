@@ -9,14 +9,33 @@
  *     IBM Corporation - initial API and implementation
  *     
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.contentmodel;
+package org.eclipse.jst.jsp.core.internal.contentmodel;
 
-public interface ITaglibRecord {
-	short JAR = 1 << 2;
-	short TAGDIR = 1 << 4;
-	short TLD = 1 << 1;
-	short URL = 1;
-	short WEB_XML = 1 << 3;
+import java.util.ArrayList;
+import java.util.List;
 
-	short getRecordType();
+import org.eclipse.core.runtime.IPath;
+
+
+public class ServletRecord implements ITaglibRecord {
+	IPath location;
+	List tldRecords = new ArrayList(0);
+
+	public short getRecordType() {
+		return ITaglibRecord.WEB_XML;
+	}
+
+	/**
+	 * @return Returns the webxml.
+	 */
+	public IPath getWebXML() {
+		return location;
+	}
+
+	/**
+	 * 
+	 */
+	public List getTLDRecords() {
+		return tldRecords;
+	}
 }

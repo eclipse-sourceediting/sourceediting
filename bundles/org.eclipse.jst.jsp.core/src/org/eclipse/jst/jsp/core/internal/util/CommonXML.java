@@ -8,9 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.contentmodel.tld;
-
-
+package org.eclipse.jst.jsp.core.internal.util;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -31,9 +29,6 @@ import javax.xml.transform.stream.StreamResult;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.w3c.dom.Document;
 
-
-/**
- */
 public class CommonXML {
 
 	public synchronized static DocumentBuilder getDocumentBuilder() {

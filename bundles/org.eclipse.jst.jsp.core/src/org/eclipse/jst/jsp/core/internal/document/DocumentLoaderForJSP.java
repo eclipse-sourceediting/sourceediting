@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.document;
+package org.eclipse.jst.jsp.core.internal.document;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,7 +30,6 @@ import org.eclipse.jst.jsp.core.encoding.IJSPHeadContentDetector;
 import org.eclipse.jst.jsp.core.encoding.JSPDocumentHeadContentDetector;
 import org.eclipse.jst.jsp.core.encoding.JSPDocumentLoader;
 import org.eclipse.jst.jsp.core.internal.contenttype.IContentDescriptionForJSP;
-import org.eclipse.jst.jsp.core.internal.document.DocumentFactoryForJSP;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
 import org.eclipse.wst.common.encoding.CodedReaderCreator;

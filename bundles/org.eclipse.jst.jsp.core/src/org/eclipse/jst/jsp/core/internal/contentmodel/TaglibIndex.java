@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.contentmodel;
+package org.eclipse.jst.jsp.core.internal.contentmodel;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -118,7 +118,7 @@ public class TaglibIndex {
 		_instance = new TaglibIndex();
 	}
 
-	public static void addTaglibIndexListener(ITaglibIndexListener listener) {
+	public void addTaglibIndexListener(ITaglibIndexListener listener) {
 		_instance.internalAddTaglibIndexListener(listener);
 	}
 

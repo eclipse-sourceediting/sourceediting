@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,10 +7,17 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.contentmodel;
+package org.eclipse.jst.jsp.core.internal.document;
 
-public interface ITaglibIndexListener {
-	void indexChanged(ITaglibRecordEvent event);
+import org.eclipse.wst.sse.core.INodeAdapter;
+
+interface PageDirectiveWatcher extends INodeAdapter {
+
+	String getContentType();
+
+	String getLanguage();
+
+	int getOffset();
+
 }

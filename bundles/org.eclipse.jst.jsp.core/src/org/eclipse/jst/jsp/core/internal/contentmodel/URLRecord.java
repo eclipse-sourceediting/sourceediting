@@ -9,32 +9,38 @@
  *     IBM Corporation - initial API and implementation
  *     
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.contentmodel;
+package org.eclipse.jst.jsp.core.internal.contentmodel;
 
-import java.util.List;
+import java.net.URL;
 
-import org.eclipse.core.runtime.IPath;
+public class URLRecord implements ITaglibRecord {
+	URL url;
+	String uri;
+	String baseLocation;
 
+	public String getBaseLocation() {
+		return baseLocation;
+	}
 
-public class JarRecord implements ITaglibRecord {
-	IPath location;
-	List urlRecords;
+	public URLRecord() {
+		super();
+	}
 
 	public short getRecordType() {
-		return ITaglibRecord.JAR;
+		return ITaglibRecord.URL;
 	}
 
 	/**
-	 * @return Returns the location.
+	 * @return Returns the uri.
 	 */
-	public IPath getLocation() {
-		return location;
+	public String getURI() {
+		return uri;
 	}
 
 	/**
-	 * 
+	 * @return Returns the URL.
 	 */
-	public List getURLRecords() {
-		return urlRecords;
+	public URL getURL() {
+		return url;
 	}
 }

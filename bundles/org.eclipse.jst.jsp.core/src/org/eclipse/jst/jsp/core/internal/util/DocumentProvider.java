@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.contentmodel.tld;
+package org.eclipse.jst.jsp.core.internal.util;
 
 
 

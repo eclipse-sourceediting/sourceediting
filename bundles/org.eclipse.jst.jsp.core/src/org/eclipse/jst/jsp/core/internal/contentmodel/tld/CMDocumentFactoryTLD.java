@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.contentmodel.tld;
+package org.eclipse.jst.jsp.core.internal.contentmodel.tld;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,19 +17,21 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jst.jsp.core.contentmodel.ITaglibRecord;
-import org.eclipse.jst.jsp.core.contentmodel.JarRecord;
-import org.eclipse.jst.jsp.core.contentmodel.TLDRecord;
-import org.eclipse.jst.jsp.core.contentmodel.URLRecord;
+import org.eclipse.jst.jsp.core.contentmodel.tld.JSP11TLDNames;
+import org.eclipse.jst.jsp.core.contentmodel.tld.JSP12TLDNames;
+import org.eclipse.jst.jsp.core.contentmodel.tld.JSP20TLDNames;
+import org.eclipse.jst.jsp.core.contentmodel.tld.TLDDocument;
+import org.eclipse.jst.jsp.core.contentmodel.tld.TLDFunction;
+import org.eclipse.jst.jsp.core.contentmodel.tld.TLDInitParam;
+import org.eclipse.jst.jsp.core.contentmodel.tld.TLDListener;
+import org.eclipse.jst.jsp.core.contentmodel.tld.TLDValidator;
+import org.eclipse.jst.jsp.core.contentmodel.tld.TLDVariable;
 import org.eclipse.jst.jsp.core.internal.Logger;
-import org.eclipse.jst.jsp.core.internal.contentmodel.tld.CMAttributeDeclarationImpl;
-import org.eclipse.jst.jsp.core.internal.contentmodel.tld.CMDocumentImpl;
-import org.eclipse.jst.jsp.core.internal.contentmodel.tld.CMElementDeclarationImpl;
-import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDFunctionImpl;
-import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDInitParamImpl;
-import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDListenerImpl;
-import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDValidatorImpl;
-import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDVariableImpl;
+import org.eclipse.jst.jsp.core.internal.contentmodel.ITaglibRecord;
+import org.eclipse.jst.jsp.core.internal.contentmodel.JarRecord;
+import org.eclipse.jst.jsp.core.internal.contentmodel.TLDRecord;
+import org.eclipse.jst.jsp.core.internal.contentmodel.URLRecord;
+import org.eclipse.jst.jsp.core.internal.util.DocumentProvider;
 import org.eclipse.wst.common.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.common.contentmodel.CMDocument;
 import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
