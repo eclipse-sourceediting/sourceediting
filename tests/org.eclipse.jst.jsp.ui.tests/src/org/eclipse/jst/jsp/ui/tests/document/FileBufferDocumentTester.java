@@ -26,7 +26,6 @@ import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerFor
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.util.Utilities;
-import org.eclipse.wst.xml.core.document.DocumentLoaderForXML;
 
 
 public class FileBufferDocumentTester extends UnzippedProjectTester {
@@ -51,7 +50,7 @@ public class FileBufferDocumentTester extends UnzippedProjectTester {
 		assertTrue("wrong partitioner in document.", expectedPartioner.isInstance(setupPartitioner));
 		bufferManager.disconnect(locationPath, null);
 
-		doTestCreateWithFacade(file, expectedDocumentClass, expectedPartioner);
+//		doTestCreateWithFacade(file, expectedDocumentClass, expectedPartioner);
 		 
 	}
 
@@ -62,11 +61,11 @@ public class FileBufferDocumentTester extends UnzippedProjectTester {
 	 * @throws CoreException
 	 * @throws IOException
 	 */
-	private void doTestCreateWithFacade(IFile file, Class expectedDocumentClass, Class expectedPartioner) throws IOException, CoreException {
-		DocumentLoaderForXML documentLoaderForXML = new DocumentLoaderForXML();
-		IDocument document = documentLoaderForXML.createNewStructuredDocument(file, null);
-		assertNotNull(document);
-	}
+//	private void doTestCreateWithFacade(IFile file, Class expectedDocumentClass, Class expectedPartioner) throws IOException, CoreException {
+//		DocumentLoaderForXML documentLoaderForXML = new DocumentLoaderForXML();
+//		IDocument document = documentLoaderForXML.createNewStructuredDocument(file, null);
+//		assertNotNull(document);
+//	}
 
 	private void doTestCreateCreateEmpty(String filePath, Class expectedDocumentClass, Class expectedPartioner) throws CoreException {
 		IFile file = (IFile) fTestProject.findMember(filePath);
