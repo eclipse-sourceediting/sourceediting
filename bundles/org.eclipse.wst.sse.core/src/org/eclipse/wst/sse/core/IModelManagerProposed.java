@@ -70,17 +70,29 @@ public interface IModelManagerProposed {
 	}
 
 	/**
-	 * Contant to provide compile time safe paramenter.
+	 * Constant to provide compile time safe paramenter. <code>EDIT</code>signifies
+	 * the client is intending to make changes and is responsible for saving
+	 * changes (or not) if they are the last one holding the model before its
+	 * released.
 	 */
-	final ReadEditType EDIT = new ReadEditType("edit"); //$NON-NLS-1$
+	final ReadEditType EDIT = new ReadEditType("EDIT"); //$NON-NLS-1$
 	/**
-	 * Contant to provide compile time safe paramenter.
+	 * Constant to provide compile time safe paramenter. <code>READ</code>signifies
+	 * the client is not intending to make changes and does not care about the
+	 * saved state of the model.
 	 */
-	final ReadEditType READ = new ReadEditType("read"); //$NON-NLS-1$
+	final ReadEditType READ = new ReadEditType("READ"); //$NON-NLS-1$
+	/**
+	 * Constant to provide compile time safe paramenter.
+	 * <code>NOTSHARED</code>signifies the client intentially wants a model
+	 * that is not shared with other clients. Note: NOTSHARED models can not
+	 * be saved.
+	 */
+	final ReadEditType NOTSHARED = new ReadEditType("NOTSHARED"); //$NON-NLS-1$
 
 	/**
 	 * createNewInstance is similar to clone, except the new instance has no
-	 * content. Note: this produces an unmanaged model, for temporary use,
+	 * text content. Note: this produces an UNSHARED model, for temporary use,
 	 * that has the same characteristics as original model. If a true shared
 	 * model is desired, use "copy".
 	 */
@@ -151,14 +163,18 @@ public interface IModelManagerProposed {
 	void changedModels();
 
 	/**
-	 * ISSUE: do we want to support this via model manager, or else where?
+	 * copyModel is similar to a deep clone. The resulting model is shared,
+	 * according to the value of ReadEditType. If a model already is being
+	 * managed for 'newLocation' then a ResourceInUse exception is thrown,
+	 * unless the ReadEditType is NOTSHARED, in which case the resulting model
+	 * can not be saved.
 	 * 
 	 * @param oldId
 	 * @param newId
 	 * @return
 	 * @throws ResourceInUse
 	 */
-	IStructuredModel copyModelForEdit(IPath oldLocation, IPath newLocation) throws ResourceInUse;
+	IStructuredModel copyModel(IPath oldLocation, IPath newLocation, ReadEditType type) throws ResourceInUse;
 
 	/**
 	 * Factory method, since a proper IStructuredDocument must have a proper
@@ -178,12 +194,6 @@ public interface IModelManagerProposed {
 	 * createNewStructuredDocument is the correct API to use.
 	 */
 	IStructuredDocument createStructuredDocumentFor(IPath location) throws IOException, CoreException;
-
-	/**
-	 * Conveience method. It depends on the loaders newModel method to return
-	 * an appropriate StrucuturedModel appropriately initialized.
-	 */
-	IStructuredModel createUnManagedStructuredModelFor(IPath location) throws IOException, CoreException;
 
 	/**
 	 * Note: users of this 'model' must still release it when finished.
@@ -226,6 +236,13 @@ public interface IModelManagerProposed {
 	 */
 	IStructuredModel reinitialize(IStructuredModel model) throws IOException;
 
+
+	/**
+	 * Removes listener. If the listener is is not currently in the list of
+	 * listeners, this call has no effect.
+	 * 
+	 * @param listener
+	 */
 	void removeModelManagerListener(IModelManagerListener listener);
 
 	/**
