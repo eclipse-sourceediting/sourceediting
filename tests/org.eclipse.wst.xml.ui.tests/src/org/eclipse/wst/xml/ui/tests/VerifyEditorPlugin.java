@@ -11,9 +11,6 @@ package org.eclipse.wst.xml.ui.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.Plugin;
-import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
-
 public class VerifyEditorPlugin extends TestCase {
 
 	public void testPluginExists() {

@@ -13,7 +13,6 @@ package org.eclipse.wst.xml.tests.encoding.read;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
-import java.nio.charset.CharacterCodingException;
 
 import junit.framework.TestCase;
 
@@ -33,7 +32,6 @@ import org.eclipse.wst.common.encoding.CodedReaderCreator;
 import org.eclipse.wst.common.encoding.EncodingMemento;
 import org.eclipse.wst.common.encoding.IContentDescriptionExtended;
 import org.eclipse.wst.common.encoding.NonContentBasedEncodingRules;
-import org.eclipse.wst.common.encoding.exceptions.UnsupportedCharsetExceptionWithDetail;
 import org.eclipse.wst.xml.tests.encoding.TestsPlugin;
 import org.eclipse.wst.xml.tests.encoding.util.ProjectUnzipUtility;
 

@@ -11,9 +11,6 @@ package org.eclipse.wst.html.ui.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.Plugin;
-import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
-
 
 public class VerifyEditorPlugin extends TestCase {
 
