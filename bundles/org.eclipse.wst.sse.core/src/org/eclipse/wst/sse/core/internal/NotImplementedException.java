@@ -14,6 +14,11 @@ package org.eclipse.wst.sse.core.internal;
 
 
 public class NotImplementedException extends RuntimeException {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public NotImplementedException() {
 		super();
 	}

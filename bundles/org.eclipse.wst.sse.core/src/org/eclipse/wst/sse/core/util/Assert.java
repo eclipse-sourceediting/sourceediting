@@ -38,9 +38,15 @@ public final class Assert {
 	 */
 	class AssertionFailedException extends RuntimeException {
 		/**
+		 * Comment for <code>serialVersionUID</code>
+		 */
+		private static final long serialVersionUID = 1L;
+
+		/**
 		 * Constructs a new exception.
 		 */
 		public AssertionFailedException() {
+			super();
 		}
 
 		/**
@@ -155,5 +161,6 @@ public final class Assert {
 
 	/* This class is not intended to be instantiated. */
 	private Assert() {
+		super();
 	}
 }

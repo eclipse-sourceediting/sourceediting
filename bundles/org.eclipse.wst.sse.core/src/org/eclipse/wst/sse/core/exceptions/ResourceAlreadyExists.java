@@ -17,6 +17,11 @@ package org.eclipse.wst.sse.core.exceptions;
 public class ResourceAlreadyExists extends Exception {
 
 	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * ResourceAlreadyExists constructor comment.
 	 */
 	public ResourceAlreadyExists() {

@@ -24,6 +24,10 @@ import org.eclipse.wst.sse.core.internal.nls.ResourceHandler;
  */
 public class SourceEditingRuntimeException extends RuntimeException {
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 1L;
 	private Throwable originalException;
 
 	public SourceEditingRuntimeException() {
