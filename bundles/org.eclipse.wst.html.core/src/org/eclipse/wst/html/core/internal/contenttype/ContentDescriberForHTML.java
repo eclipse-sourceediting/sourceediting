@@ -11,7 +11,6 @@
 package org.eclipse.wst.html.core.internal.contenttype;
 
 import org.eclipse.core.runtime.content.ITextContentDescriber;
-import org.eclipse.wst.common.encoding.AbstractContentDescriber;
 import org.eclipse.wst.common.encoding.IResourceCharsetDetector;
 
 

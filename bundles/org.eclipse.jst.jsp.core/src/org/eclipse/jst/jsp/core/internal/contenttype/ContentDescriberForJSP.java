@@ -15,7 +15,6 @@ import java.io.IOException;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.ITextContentDescriber;
-import org.eclipse.wst.common.encoding.AbstractContentDescriber;
 import org.eclipse.wst.common.encoding.IContentDescriptionExtended;
 import org.eclipse.wst.common.encoding.IResourceCharsetDetector;
 
