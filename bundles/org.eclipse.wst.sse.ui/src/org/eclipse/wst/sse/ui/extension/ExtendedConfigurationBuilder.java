@@ -20,6 +20,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.custom.BusyIndicator;
+import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.extension.RegistryReader;
@@ -29,14 +30,18 @@ import org.osgi.framework.Bundle;
 /**
  * Simple generic ID to class to mapping. Loads a specified class defined in a
  * configuration element with the matching type and target ID. Example
- * plugin.xml section: <extension
- * point="org.eclipse.wst.sse.ui.extendedconfiguration"> <configuration
- * type="contentoutlineconfiguration"
- * target="org.eclipse.wst.sse.ui.dtd.StructuredTextEditorDTD"
- * class="org.eclipse.wst.sse.ui.dtd.views.contentoutline.DTDContentOutlineConfiguration"/>
- * </extension> Used in code by
- * getConfiguration("contentoutlineconfiguration",
- * "org.eclipse.wst.sse.ui.dtd.StructuredTextEditorDTD");
+ * plugin.xml section:
+ * 
+ * &lt;extension
+ * point=&quot;org.eclipse.wst.sse.ui.extendedconfiguration&quot;&gt;configuration
+ * type=&quot;contentoutlineconfiguration&quot;
+ * target=&quot;org.eclipse.wst.sse.ui.dtd.StructuredTextEditorDTD&quot;
+ * class=&quot;org.eclipse.wst.sse.ui.dtd.views.contentoutline.DTDContentOutlineConfiguration&quot;/&gt;
+ * &lt;/extension&gt;
+ * 
+ * Used in code by getConfiguration(&quot;contentoutlineconfiguration&quot;,
+ * &quot;org.eclipse.wst.sse.ui.dtd.StructuredTextEditorDTD&quot;);
+ * 
  */
 public class ExtendedConfigurationBuilder extends RegistryReader {
 	private static final String ATT_CLASS = "class"; //$NON-NLS-1$
@@ -62,10 +67,8 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 	 *          createing executable extension, the exception is logged, and
 	 *          null returned.
 	 */
-	public static Object createExtension(final IConfigurationElement element, final String classAttribute, final String targetID) {
+	static Object createExtension(final IConfigurationElement element, final String classAttribute, final String targetID) {
 		final Object[] result = new Object[1];
-		// If plugin has been loaded create extension.
-		// Otherwise, show busy cursor then create extension.
 		String pluginId = element.getDeclaringExtension().getNamespace();
 		Bundle bundle = Platform.getBundle(pluginId);
 		if (bundle.getState() == Bundle.ACTIVE) {
@@ -73,7 +76,7 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 				result[0] = element.createExecutableExtension(classAttribute);
 			}
 			catch (Exception e) {
-				// catch and log ANY exception from extension point
+				// catch and log ANY exception while creating the extension
 				Logger.logException("error loading class " + classAttribute + " for " + targetID, e); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
@@ -96,9 +99,6 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 		return result[0];
 	}
 
-	/**
-	 * @return Returns the instance.
-	 */
 	public synchronized static ExtendedConfigurationBuilder getInstance() {
 		if (instance == null)
 			instance = new ExtendedConfigurationBuilder();
@@ -111,17 +111,22 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 		super();
 	}
 
-	private Object createConfiguration(List configurations, String extensionType, String targetID) {
+	private List createConfigurations(List configurations, String extensionType, String targetID) {
 		if (configurations == null)
-			return null;
-		Object result = null;
+			return new ArrayList(0);
+		List result = new ArrayList(1);
 		for (int i = 0; i < configurations.size(); i++) {
 			IConfigurationElement element = (IConfigurationElement) configurations.get(i);
-			if ((element.getName().equals(extensionType) || (element.getName().equals(CONFIGURATION) && extensionType.equals(element.getAttribute(ATT_TYPE)))) && element.getAttribute(ATT_TARGET).equals(targetID)) {
-				result = createExtension(element, ATT_CLASS, targetID);
-			}
-			if (result != null) {
-				return result;
+			if ((element.getName().equals(extensionType) || (element.getName().equals(CONFIGURATION) && extensionType.equals(element.getAttribute(ATT_TYPE))))) {
+				String[] targets = StringUtils.unpack(element.getAttribute(ATT_TARGET));
+				for (int j = 0; j < targets.length; j++) {
+					if (targetID.equals(targets[j])) {
+						Object o = createExtension(element, ATT_CLASS, targetID);
+						if (o != null) {
+							result.add(o);
+						}
+					}
+				}
 			}
 		}
 		return result;
@@ -140,12 +145,37 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 		return (IConfigurationElement[]) result.toArray(new IConfigurationElement[0]);
 	}
 
+	/**
+	 * Returns a configuration for the given extensionType matching the
+	 * targetID, if one is available.
+	 * 
+	 * @param extensionType
+	 * @param targetID
+	 * @return a configuration object, if one was defined
+	 */
 	public Object getConfiguration(String extensionType, String targetID) {
 		if (targetID == null || targetID.length() == 0)
 			return null;
 		if (debugTime) {
 			time0 = System.currentTimeMillis();
 		}
+		List configurations = getConfigurations(extensionType, targetID);
+		if (configurations.isEmpty())
+			return null;
+		return configurations.get(0);
+	}
+
+	/**
+	 * Returns all configurations for the given extensionType matching the
+	 * targetID, if any are available.
+	 * 
+	 * @param extensionType
+	 * @param targetID
+	 * @return a List of configuration objects, which may or may not be empty
+	 */
+	public List getConfigurations(String extensionType, String targetID) {
+		if (targetID == null || targetID.length() == 0)
+			return new ArrayList(0);
 		if (configurationMap == null) {
 			configurationMap = new HashMap(0);
 			synchronized (configurationMap) {
@@ -156,17 +186,26 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 				}
 			}
 		}
-		List configurations = (List) configurationMap.get(extensionType);
-		Object o = createConfiguration(configurations, extensionType, targetID);
+		List extensions = (List) configurationMap.get(extensionType);
+		List configurations = createConfigurations(extensions, extensionType, targetID);
 		if (debugTime) {
-			if (o != null)
-				System.out.println(getClass().getName() + "#getConfiguration(" + extensionType + ", " + targetID + "): configuration loaded in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+			if (!configurations.isEmpty())
+				System.out.println(getClass().getName() + "#getConfiguration(" + extensionType + ", " + targetID + "): configurations loaded in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			else
 				System.out.println(getClass().getName() + "#getConfiguration(" + extensionType + ", " + targetID + "): ran in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		}
-		return o;
+		return configurations;
 	}
 
+	/**
+	 * Returns all declared definitions for the given extensionType matching
+	 * the targetID, if any are available.
+	 * 
+	 * @param extensionType
+	 * @param targetID
+	 * @return An array containing the definitions, empty if none were
+	 *         declared
+	 */
 	public String[] getDefinitions(String extensionType, String targetID) {
 		if (targetID == null || targetID.length() == 0)
 			return new String[0];
@@ -198,11 +237,6 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 		return values;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.ui.internal.extension.RegistryReader#readElement(org.eclipse.core.runtime.IConfigurationElement)
-	 */
 	protected boolean readElement(IConfigurationElement element) {
 		String name = element.getName();
 		if (name.equals(CONFIGURATION) || name.equals(DEFINITION))
