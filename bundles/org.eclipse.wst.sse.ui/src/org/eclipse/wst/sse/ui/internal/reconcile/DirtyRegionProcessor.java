@@ -134,12 +134,26 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 	protected ITypedRegion[] computePartitioning(DirtyRegion dirtyRegion) {
 		IDocument doc = getDocument();
 		ITypedRegion tr[] = null;
+        
+        int drOffset = dirtyRegion.getOffset();
+        int drLength = dirtyRegion.getLength();
+        int docLength = doc.getLength();
+        
+        if(drOffset > docLength) {
+            drOffset = docLength;
+            drLength = 0;
+        }
+        else if(drOffset + drLength > docLength) {
+            drLength = docLength - drOffset;
+        }
+            
 		try {
 			// dirty region may span multiple partitions
-			tr = TextUtilities.computePartitioning(doc, getDocumentPartitioning(), dirtyRegion.getOffset(), dirtyRegion.getLength(), true);
+            tr = TextUtilities.computePartitioning(doc, getDocumentPartitioning(), drOffset, drLength, true);
 		}
 		catch (BadLocationException e) {
-			Logger.logException(e);
+            String info = "dr: ["+ drOffset+":"+ drLength + "] doc: [" + docLength + "] ";
+			Logger.logException(info, e);
 			tr = new ITypedRegion[0];
 		}
 		return tr;
@@ -167,13 +181,18 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 		if (doc != null) {
 			// safety for BLE
 			int docLen = doc.getLength();
-			if (offset + length > docLen)
+            if(offset > docLen) {
+                offset = docLen;
+                length = 0;
+            }
+            else if (offset + length >= docLen)
 				length = docLen - offset;
 			try {
 				durty = new DirtyRegion(offset, length, type, doc.get(offset, length));
 			}
 			catch (BadLocationException e) {
-				e.printStackTrace();
+                String info = "dr: ["+ offset+":"+ length + "] doc: [" + docLen + "] ";
+                Logger.logException(info, e);
 			}
 		}
 		return durty;
@@ -234,6 +253,19 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 	 */
 	protected String[] getPartitions(DirtyRegion dirtyRegion) {
 		ITypedRegion regions[] = null;
+        
+        int drOffset = dirtyRegion.getOffset();
+        int drLength = dirtyRegion.getLength();
+        int docLength = getDocument().getLength();
+        
+        if(drOffset > docLength) {
+            drOffset = docLength;
+            drLength = 0;
+        }
+        else if(drOffset + drLength > docLength) {
+            drLength = docLength - drOffset;
+        }
+            
 		try {
 			regions = TextUtilities.computePartitioning(getDocument(), getDocumentPartitioning(), dirtyRegion.getOffset(), dirtyRegion.getLength(), true);
 		}
