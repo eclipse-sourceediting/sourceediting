@@ -2,3 +2,4 @@ bin
 temp.folder
 build.xml
 xmleditor.jar
+org.eclipse.wst.xml.ui_1.0.0.jar
