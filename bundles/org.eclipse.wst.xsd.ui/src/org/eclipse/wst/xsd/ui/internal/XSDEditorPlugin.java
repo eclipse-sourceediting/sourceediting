@@ -36,7 +36,7 @@ public class XSDEditorPlugin extends AbstractUIPlugin
   public final static String PLUGIN_ID = "org.eclipse.wst.xsd.ui";
   public final static String XSD_EDITOR_ID = "org.eclipse.wst.xsd.ui.XSDEditor";
   
-  public final static String DEFAULT_TARGET_NAMESPACE = "http://tempuri.org";
+  public final static String DEFAULT_TARGET_NAMESPACE = "http://www.example.org";
   
   protected static XSDEditorPlugin plugin;
   //  protected XMLSchemaPackage xmlschemaPackage;
