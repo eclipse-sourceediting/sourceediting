@@ -22,7 +22,7 @@ import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
  */
 public class CommonEditorPreferenceNames {
 	/**
-	 * A named preference that controls on-the-fly validation
+	 * A named preference that controls as-you-type validation
 	 * <p>
 	 * Value is of type <code>Boolean</code>.
 	 * </p>

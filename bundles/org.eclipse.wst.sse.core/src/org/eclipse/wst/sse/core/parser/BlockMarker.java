@@ -16,6 +16,10 @@ package org.eclipse.wst.sse.core.parser;
 
 import org.eclipse.wst.sse.core.text.ITextRegion;
 
+
+/**
+ * ISSUE: need to provide functionality in improved API. 
+ */
 public class BlockMarker extends TagMarker {
 
 	// allow for JSP expressions within the block

@@ -19,6 +19,9 @@ import java.util.List;
 import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.internal.modelhandler.PluginContributedFactoryReader;
 
+/**
+ * ISSUE: need to provide this functionality in improved API.
+ */
 
 public abstract class AbstractModelHandler implements IModelHandler {
 	private String associatedContentTypeId;

@@ -14,6 +14,10 @@ package org.eclipse.wst.sse.core.parser;
 
 import org.eclipse.wst.sse.core.text.ITextRegion;
 
+/**
+ * ISSUE: need to provide functionality in improved API. 
+ */
+
 public class TagMarker {
 
 	// a ITextRegion (meant to be updated with the model) marking the position
