@@ -14,6 +14,7 @@ package org.eclipse.wst.xml.ui.actions;
 
 import java.util.ResourceBundle;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -26,9 +27,11 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.TextEditorAction;
+import org.eclipse.wst.sse.core.IModelManager;
+import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
-import org.eclipse.wst.sse.ui.IModelProvider;
+import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.ui.edit.util.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 
@@ -36,6 +39,12 @@ import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 public class CommentActionXML extends TextEditorAction {
 	protected static final String CLOSE_COMMENT = "-->"; //$NON-NLS-1$
 	protected static final String OPEN_COMMENT = "<!--"; //$NON-NLS-1$
+
+	static IModelManager getModelManager() {
+		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
+		return plugin.getModelManager();
+	}
+
 	protected IDocument fDocument;
 	protected IStructuredModel fModel;
 	protected ITextSelection fSelection;
@@ -48,6 +57,7 @@ public class CommentActionXML extends TextEditorAction {
 	protected int fSelectionStartOffset;
 	protected boolean fUpdateSelection;
 
+
 	public CommentActionXML(ResourceBundle bundle, String prefix, ITextEditor editor) {
 		super(bundle, prefix, editor);
 	}
@@ -57,8 +67,19 @@ public class CommentActionXML extends TextEditorAction {
 			fDocument.replace(openCommentOffset, 0, OPEN_COMMENT);
 			fDocument.replace(closeCommentOffset, 0, CLOSE_COMMENT);
 			removeOpenCloseComments(openCommentOffset + OPEN_COMMENT.length(), closeCommentOffset - openCommentOffset - CLOSE_COMMENT.length());
-		} catch (BadLocationException e) {
+		}
+		catch (BadLocationException e) {
 			throw new SourceEditingRuntimeException();
+		}
+	}
+
+	/**
+	 * Release the current model
+	 */
+	void done() {
+		if (fModel != null) {
+			fModel.releaseFromEdit();
+			fModel = null;
 		}
 	}
 
@@ -81,17 +102,15 @@ public class CommentActionXML extends TextEditorAction {
 			return;
 
 		IDocumentProvider docProvider = editor.getDocumentProvider();
-		if (docProvider == null || !(docProvider instanceof IModelProvider))
-			return;
-
-		IModelProvider modelProvider = (IModelProvider) docProvider;
 
 		IEditorInput input = editor.getEditorInput();
 		if (input == null)
 			return;
 
-		fDocument = modelProvider.getDocument(input);
-		fModel = modelProvider.getModel(input);
+		fDocument = docProvider.getDocument(input);
+
+		IModelManager modelManager = getModelManager();
+		fModel = modelManager.getModelForEdit((IStructuredDocument) fDocument);
 		if (fDocument == null || fModel == null)
 			return;
 
@@ -103,7 +122,8 @@ public class CommentActionXML extends TextEditorAction {
 		fSelectionPosition = new Position(fSelection.getOffset(), fSelection.getLength());
 		try {
 			fDocument.addPosition(fSelectionPosition);
-		} catch (BadLocationException e) {
+		}
+		catch (BadLocationException e) {
 			throw new SourceEditingRuntimeException();
 		}
 
@@ -112,7 +132,8 @@ public class CommentActionXML extends TextEditorAction {
 			fSelectionEndLine = fDocument.getLineOfOffset(fSelectionEndOffset);
 			fSelectionStartLineOffset = fDocument.getLineOffset(fSelectionStartLine);
 			fSelectionEndLineOffset = fDocument.getLineOffset(fSelectionEndLine);
-		} catch (BadLocationException e) {
+		}
+		catch (BadLocationException e) {
 			throw new SourceEditingRuntimeException();
 		}
 
@@ -126,7 +147,8 @@ public class CommentActionXML extends TextEditorAction {
 			IRegion region = fDocument.getLineInformation(line);
 			String string = fDocument.get(region.getOffset(), region.getLength()).trim();
 			return string.length() >= OPEN_COMMENT.length() + CLOSE_COMMENT.length() && string.startsWith(OPEN_COMMENT) && string.endsWith(CLOSE_COMMENT);
-		} catch (BadLocationException e) {
+		}
+		catch (BadLocationException e) {
 			throw new SourceEditingRuntimeException();
 		}
 	}
@@ -147,7 +169,8 @@ public class CommentActionXML extends TextEditorAction {
 					int closeCommentOffset = openCommentOffset + fDocument.getLineLength(i) - lineDelimiterLength + OPEN_COMMENT.length();
 					comment(openCommentOffset, closeCommentOffset);
 				}
-			} catch (BadLocationException e) {
+			}
+			catch (BadLocationException e) {
 				throw new SourceEditingRuntimeException();
 			}
 		}
@@ -176,7 +199,8 @@ public class CommentActionXML extends TextEditorAction {
 				fDocument.replace(offset + index, CLOSE_COMMENT.length(), ""); //$NON-NLS-1$
 				index = string.lastIndexOf(CLOSE_COMMENT, index - 1);
 			}
-		} catch (BadLocationException e) {
+		}
+		catch (BadLocationException e) {
 			throw new SourceEditingRuntimeException();
 		}
 	}
@@ -186,7 +210,9 @@ public class CommentActionXML extends TextEditorAction {
 		prepareSelection();
 		processAction();
 		updateSelection();
+		done();
 	}
+
 
 	protected void setCurrentSelection(ITextSelection selection) {
 		ITextEditor editor = getTextEditor();
