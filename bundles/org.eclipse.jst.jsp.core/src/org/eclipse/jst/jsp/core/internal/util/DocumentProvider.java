@@ -305,15 +305,15 @@ public class DocumentProvider {
 		if (errorHandler == null) {
 			errorHandler = new ErrorHandler() {
 				public void error(SAXParseException exception) throws SAXException {
-					Logger.log(Logger.WARNING, "SAXParseException while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$
+					Logger.log(Logger.WARNING, "SAXParseException with " + getJarFileName() + "/" + getFileName() + " (error) while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$
 				}
 
 				public void fatalError(SAXParseException exception) throws SAXException {
-					Logger.log(Logger.WARNING, "SAXParseException while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$
+					Logger.log(Logger.WARNING, "SAXParseException with " + getJarFileName() + "/" + getFileName() + " (fatalError) while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$
 				}
 
 				public void warning(SAXParseException exception) throws SAXException {
-					Logger.log(Logger.WARNING, "SAXParseException while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$
+					Logger.log(Logger.WARNING, "SAXParseException with " + getJarFileName() + "/" + getFileName() + " (warning) while reading descriptor: " + exception.getMessage()); //$NON-NLS-1$
 				}
 			};
 		}
