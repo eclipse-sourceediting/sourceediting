@@ -20,7 +20,6 @@ import org.eclipse.wst.dtd.ui.taginfo.DTDBestMatchHoverProcessor;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
-import org.eclipse.wst.sse.ui.style.Highlighter;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
 import org.eclipse.wst.sse.ui.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.style.LineStyleProviderForNoOp;
@@ -48,25 +47,22 @@ public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerCo
 	 * 
 	 * @see org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration#getHighlighter(org.eclipse.jface.text.source.ISourceViewer)
 	 */
-	public IHighlighter getHighlighter(ISourceViewer viewer) {
-		if (fHighlighter == null) {
-			fHighlighter = new Highlighter();
-		}
+	public IHighlighter getHighlighter(ISourceViewer sourceViewer) {
+		IHighlighter highlighter = super.getHighlighter(sourceViewer);
 
 		// We need to add the providers each time this method is called.
 		// See StructuredTextViewer.configure() method (defect#246727)
 		LineStyleProvider dtdProvider = new LineStyleProviderForDTD();
 		LineStyleProvider noopProvider = new LineStyleProviderForNoOp();
 
-		// com.ibm.sed.editor.ST_DEFAULT
-		fHighlighter.addProvider(StructuredTextPartitionerForDTD.ST_DTD_DEFAULT, dtdProvider);
-		fHighlighter.addProvider(StructuredTextPartitioner.ST_DEFAULT_PARTITION, dtdProvider);
-		fHighlighter.addProvider(StructuredTextPartitioner.ST_UNKNOWN_PARTITION, noopProvider);
+		highlighter.addProvider(StructuredTextPartitionerForDTD.ST_DTD_DEFAULT, dtdProvider);
+		highlighter.addProvider(StructuredTextPartitioner.ST_DEFAULT_PARTITION, dtdProvider);
+		highlighter.addProvider(StructuredTextPartitioner.ST_UNKNOWN_PARTITION, noopProvider);
 
-		//fHighlighter.setModel(((StructuredTextViewer) viewer).getModel());
-		fHighlighter.setDocument((IStructuredDocument) viewer.getDocument());
+		// fHighlighter.setModel(((StructuredTextViewer) viewer).getModel());
+		highlighter.setDocument((IStructuredDocument) sourceViewer.getDocument());
 
-		return fHighlighter;
+		return highlighter;
 	}
 
 	/*
