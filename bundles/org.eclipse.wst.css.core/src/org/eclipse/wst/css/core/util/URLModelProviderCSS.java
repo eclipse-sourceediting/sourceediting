@@ -12,11 +12,14 @@ package org.eclipse.wst.css.core.util;
 
 
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.UnsupportedCharsetException;
 
 import org.eclipse.core.resources.IContainer;
@@ -81,7 +84,7 @@ public class URLModelProviderCSS {
 		// need to remove file:// scheme if necessary
 		// see com.ibm.sed.util.ProjectResolver.getLocationByURI()
 		try {
-			final java.net.URL aURL = new java.net.URL(absURL);
+			final URL aURL = new URL(absURL);
 			// An actual URL was given, only file:/// is supported
 			// resolve it by finding the file it points to
 			if (!aURL.getProtocol().equals("platform")) { //$NON-NLS-1$
@@ -101,7 +104,7 @@ public class URLModelProviderCSS {
 				}
 			}
 		}
-		catch (java.net.MalformedURLException mfuExc) {
+		catch (MalformedURLException mfuExc) {
 		}
 
 		// next, decide project
@@ -163,7 +166,7 @@ public class URLModelProviderCSS {
 
 			// there is no project. we can't expect IProject help to create
 			// id/inputStream
-			java.io.File file = fullIPath.toFile();
+			File file = fullIPath.toFile();
 
 			// obatin id
 			id = calculateId(fullIPath);
