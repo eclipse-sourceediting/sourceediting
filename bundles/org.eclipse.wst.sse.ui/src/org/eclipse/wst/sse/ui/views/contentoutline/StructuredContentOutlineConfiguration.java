@@ -268,23 +268,27 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 
 	public void unconfigure(TreeViewer viewer) {
 		super.unconfigure(viewer);
-		IContributionItem[] items = (IContributionItem[]) fToolbarContributions.get(viewer);
-		if (items != null) {
-			for (int i = 0; i < items.length; i++) {
-				if (items[i] instanceof PropertyChangeUpdateActionContributionItem) {
-					((PropertyChangeUpdateActionContributionItem) items[i]).disconnect();
+		if (fToolbarContributions != null) {
+			IContributionItem[] items = (IContributionItem[]) fToolbarContributions.get(viewer);
+			if (items != null) {
+				for (int i = 0; i < items.length; i++) {
+					if (items[i] instanceof PropertyChangeUpdateActionContributionItem) {
+						((PropertyChangeUpdateActionContributionItem) items[i]).disconnect();
+					}
 				}
+				fToolbarContributions.remove(viewer);
 			}
-			fToolbarContributions.remove(viewer);
 		}
-		items = (IContributionItem[]) fMenuContributions.get(viewer);
-		if (items != null) {
-			for (int i = 0; i < items.length; i++) {
-				if (items[i] instanceof PropertyChangeUpdateActionContributionItem) {
-					((PropertyChangeUpdateActionContributionItem) items[i]).disconnect();
+		if (fMenuContributions != null) {
+			IContributionItem[] items = (IContributionItem[]) fMenuContributions.get(viewer);
+			if (items != null) {
+				for (int i = 0; i < items.length; i++) {
+					if (items[i] instanceof PropertyChangeUpdateActionContributionItem) {
+						((PropertyChangeUpdateActionContributionItem) items[i]).disconnect();
+					}
 				}
+				fMenuContributions.remove(viewer);
 			}
-			fMenuContributions.remove(viewer);
 		}
 		fLabelProvider = null;
 		fContentProvider = null;
