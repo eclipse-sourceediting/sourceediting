@@ -39,8 +39,8 @@ import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.ui.IReleasable;
-import org.eclipse.wst.sse.ui.ITemporaryAnnotation;
+import org.eclipse.wst.sse.ui.internal.IReleasable;
+import org.eclipse.wst.sse.ui.internal.ITemporaryAnnotation;
 
 
 /**

@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui;
+package org.eclipse.wst.sse.ui.internal;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
@@ -30,7 +30,6 @@ import org.eclipse.wst.sse.ui.extensions.ISelfValidateEditAction;
 import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckAction;
 import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckProvider;
 import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckTarget;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
 import org.osgi.framework.Bundle;

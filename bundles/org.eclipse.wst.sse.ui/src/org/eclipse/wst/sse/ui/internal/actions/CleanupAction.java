@@ -23,8 +23,8 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.TextEditorAction;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupProcessor;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 
 public abstract class CleanupAction extends TextEditorAction {
 	protected Dialog fCleanupDialog;

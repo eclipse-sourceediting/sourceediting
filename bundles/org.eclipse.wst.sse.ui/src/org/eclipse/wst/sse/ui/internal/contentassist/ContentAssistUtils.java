@@ -18,7 +18,7 @@ import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.ui.StructuredTextViewer;
+import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 
 
 /**

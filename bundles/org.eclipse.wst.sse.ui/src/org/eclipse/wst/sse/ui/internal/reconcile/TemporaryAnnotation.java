@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.texteditor.AnnotationPreference;
 import org.eclipse.ui.texteditor.AnnotationPreferenceLookup;
-import org.eclipse.wst.sse.ui.ITemporaryAnnotation;
+import org.eclipse.wst.sse.ui.internal.ITemporaryAnnotation;
 
 
 /**

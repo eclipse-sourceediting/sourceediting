@@ -31,8 +31,6 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.core.util.Utilities;
-import org.eclipse.wst.sse.ui.CaretMediator;
-import org.eclipse.wst.sse.ui.ViewerSelectionManager;
 import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckSelectionListener;
 import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckSelectionManager;
 import org.eclipse.wst.sse.ui.view.events.CaretEvent;

@@ -22,7 +22,7 @@ import org.eclipse.ui.texteditor.TextEditorAction;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 
 
 /**

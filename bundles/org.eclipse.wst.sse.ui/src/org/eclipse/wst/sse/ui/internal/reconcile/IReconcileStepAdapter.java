@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.IndexedRegion;
-import org.eclipse.wst.sse.ui.IReleasable;
+import org.eclipse.wst.sse.ui.internal.IReleasable;
 
 
 /**

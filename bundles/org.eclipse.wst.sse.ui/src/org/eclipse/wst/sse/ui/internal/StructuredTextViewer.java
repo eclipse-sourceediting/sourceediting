@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui;
+package org.eclipse.wst.sse.ui.internal;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -63,11 +63,8 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.undo.IDocumentSelectionMediator;
 import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.core.undo.UndoDocumentEvent;
+import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.extension.IExtendedSimpleEditor;
-import org.eclipse.wst.sse.ui.internal.Logger;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.internal.StructuredDocumentToTextAdapter;
-import org.eclipse.wst.sse.ui.internal.ViewerSelectionManagerImpl;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
 import org.eclipse.wst.sse.ui.util.PlatformStatusLineUtil;
@@ -1014,8 +1011,9 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			}
 
 			// set document in the viewer-based undo manager
-			if (fUndoManager instanceof StructuredTextViewerUndoManager) {
-				((StructuredTextViewerUndoManager) fUndoManager).setDocument(structuredDocument);
+			if (fUndoManager != null) {
+				fUndoManager.disconnect();
+				fUndoManager.connect(this);
 			}
 			// CaretEvent is not sent to ViewerSelectionManager after Save As.
 			// Need to notify ViewerSelectionManager here.

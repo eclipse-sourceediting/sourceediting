@@ -17,6 +17,7 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.IUndoManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
+import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.view.events.ITextSelectionListener;
 import org.eclipse.wst.sse.ui.view.events.TextSelectionChangedEvent;
 

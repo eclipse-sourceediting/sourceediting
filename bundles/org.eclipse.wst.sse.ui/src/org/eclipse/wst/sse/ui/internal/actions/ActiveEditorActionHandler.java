@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui.actions;
+package org.eclipse.wst.sse.ui.internal.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuCreator;

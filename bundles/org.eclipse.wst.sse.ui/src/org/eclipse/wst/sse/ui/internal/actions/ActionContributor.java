@@ -34,10 +34,10 @@ import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.ITextEditorExtension;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
-import org.eclipse.wst.sse.ui.GotoAnnotationAction;
-import org.eclipse.wst.sse.ui.ISourceViewerActionBarContributor;
 import org.eclipse.wst.sse.ui.extension.ExtendedEditorActionBuilder;
 import org.eclipse.wst.sse.ui.extension.IExtendedContributor;
+import org.eclipse.wst.sse.ui.internal.GotoAnnotationAction;
+import org.eclipse.wst.sse.ui.internal.ISourceViewerActionBarContributor;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.ui.OffsetStatusLineContributionItem;
 

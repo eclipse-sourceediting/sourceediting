@@ -28,7 +28,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
-import org.eclipse.wst.sse.ui.StructuredTextViewer;
+import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 
 
 public class StructuredCorrectionProcessor implements IContentAssistProcessor {

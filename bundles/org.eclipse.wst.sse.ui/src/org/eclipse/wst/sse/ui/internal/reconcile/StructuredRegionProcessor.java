@@ -39,7 +39,7 @@ import org.eclipse.wst.sse.core.events.StructuredDocumentRegionsReplacedEvent;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
-import org.eclipse.wst.sse.ui.IReleasable;
+import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorStrategy;
 
 /**

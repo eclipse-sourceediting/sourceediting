@@ -14,8 +14,8 @@ package org.eclipse.wst.sse.ui.internal.selection;
 
 import org.eclipse.jface.text.Region;
 import org.eclipse.wst.sse.core.IndexedRegion;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 import org.w3c.dom.Node;
 
 public class StructureSelectPreviousAction extends StructureSelectAction {

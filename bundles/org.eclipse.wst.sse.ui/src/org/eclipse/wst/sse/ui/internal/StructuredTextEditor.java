@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui;
+package org.eclipse.wst.sse.ui.internal;
 
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -130,6 +130,7 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.core.util.StringUtils;
+import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.extension.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.extension.ExtendedEditorActionBuilder;
 import org.eclipse.wst.sse.ui.extension.ExtendedEditorDropTargetAdapter;
@@ -140,11 +141,6 @@ import org.eclipse.wst.sse.ui.extensions.ConfigurationPointCalculator;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.NullSourceEditingTextTools;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.SourceEditingTextTools;
 import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckTarget;
-import org.eclipse.wst.sse.ui.internal.IModelProvider;
-import org.eclipse.wst.sse.ui.internal.Logger;
-import org.eclipse.wst.sse.ui.internal.ReadOnlyAwareDropTargetAdapter;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.internal.StorageModelProvider;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction;

@@ -40,7 +40,9 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.ui.extension.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.extension.IExtendedConfiguration;
+import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.StructuredTextAnnotationHover;
 import org.eclipse.wst.sse.ui.internal.contentassist.IResourceDependentProcessor;
 import org.eclipse.wst.sse.ui.internal.editor.HTMLTextPresenter;
 import org.eclipse.wst.sse.ui.internal.hyperlink.HighlighterHyperlinkPresenter;
@@ -480,7 +482,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 * 
 	 * @param store
 	 */
-	void setPreferenceStore(IPreferenceStore store) {
+	public void setPreferenceStore(IPreferenceStore store) {
 		fPreferenceStore = store;
 	}
 }

@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui;
+package org.eclipse.wst.sse.ui.internal;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -38,9 +38,6 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.texteditor.MarkerAnnotation;
 import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.sse.ui.internal.Logger;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.internal.StructuredTextLineBreakingReader;
 
 public class StructuredTextAnnotationHover implements IAnnotationHover, IReleasable {
 

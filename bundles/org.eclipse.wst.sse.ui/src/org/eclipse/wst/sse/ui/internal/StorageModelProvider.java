@@ -38,7 +38,6 @@ import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.encoding.CodedReaderCreator;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.util.Utilities;
-import org.eclipse.wst.sse.ui.StructuredResourceMarkerAnnotationModel;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.IExtendedStorageEditorInput;
 import org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction;
 import org.eclipse.wst.sse.ui.internal.editor.EditorModelUtil;

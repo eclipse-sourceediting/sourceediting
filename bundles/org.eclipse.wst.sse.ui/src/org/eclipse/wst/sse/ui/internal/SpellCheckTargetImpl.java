@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui;
+package org.eclipse.wst.sse.ui.internal;
 
 /**
  * @deprecated - to be removed in M4
@@ -37,7 +37,6 @@ import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckOptionDialog;
 import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckSelectionManager;
 import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckTarget;
 import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellChecker;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 /**
  * @deprecated - will be removed in M4

@@ -29,7 +29,7 @@ import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.texteditor.AnnotationPreference;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.sse.ui.ITemporaryAnnotation;
+import org.eclipse.wst.sse.ui.internal.ITemporaryAnnotation;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 /**

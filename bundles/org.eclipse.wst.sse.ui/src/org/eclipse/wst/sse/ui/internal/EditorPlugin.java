@@ -10,8 +10,14 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui;
+package org.eclipse.wst.sse.ui.internal;
 
-public interface ITemporaryAnnotation {
-	Object getKey();
+
+
+
+/**
+ * @deprecated use internal SSEUIPlugin class instead if possible
+ */
+public class EditorPlugin extends SSEUIPlugin {
+	// see org.eclipse.wst.sse.ui.internal.SSEUIPlugin
 }

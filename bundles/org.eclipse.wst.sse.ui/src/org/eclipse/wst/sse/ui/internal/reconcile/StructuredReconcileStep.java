@@ -31,7 +31,7 @@ import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredPartitions;
-import org.eclipse.wst.sse.ui.IReleasable;
+import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.Logger;
 
 

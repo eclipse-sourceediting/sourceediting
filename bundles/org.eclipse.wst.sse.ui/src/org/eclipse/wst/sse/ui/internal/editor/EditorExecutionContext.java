@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.core.internal.IExecutionDelegate;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 
 
 

@@ -54,7 +54,6 @@ import org.eclipse.ui.texteditor.IElementStateListener;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.MarkerRulerAction;
 import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.sse.ui.StructuredResourceMarkerAnnotationModel;
 import org.eclipse.wst.sse.ui.extension.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.extension.ExtendedEditorActionBuilder;
 import org.eclipse.wst.sse.ui.extension.IExtendedContributor;
@@ -63,6 +62,7 @@ import org.eclipse.wst.sse.ui.extensions.ConfigurationPointCalculator;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.IExtendedStorageEditorInput;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.extension.BreakpointProviderBuilder;
 
