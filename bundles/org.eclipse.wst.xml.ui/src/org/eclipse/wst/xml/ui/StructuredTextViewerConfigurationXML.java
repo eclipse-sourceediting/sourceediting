@@ -104,11 +104,11 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 			addContentAssistProcessor(contentAssistant, xmlContentAssistProcessor, StructuredTextPartitioner.ST_DEFAULT_PARTITION);
 			addContentAssistProcessor(contentAssistant, xmlContentAssistProcessor, StructuredTextPartitionerForXML.ST_DEFAULT_XML);
 			addContentAssistProcessor(contentAssistant, noRegionProcessor, StructuredTextPartitioner.ST_UNKNOWN_PARTITION);
-			//contentAssistant.setContentAssistProcessor(xmlContentAssistProcessor,
+			// contentAssistant.setContentAssistProcessor(xmlContentAssistProcessor,
 			// StructuredTextPartitioner.ST_DEFAULT_PARTITION);
-			//contentAssistant.setContentAssistProcessor(xmlContentAssistProcessor,
+			// contentAssistant.setContentAssistProcessor(xmlContentAssistProcessor,
 			// StructuredTextPartitionerForXML.ST_DEFAULT_XML);
-			//contentAssistant.setContentAssistProcessor(noRegionProcessor,
+			// contentAssistant.setContentAssistProcessor(noRegionProcessor,
 			// StructuredTextPartitioner.ST_UNKNOWN_PARTITION);
 		}
 		return ca;
@@ -143,10 +143,12 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 
 	public ITextDoubleClickStrategy getDoubleClickStrategy(ISourceViewer sourceViewer, String contentType) {
 
+		ITextDoubleClickStrategy doubleClickStrategy = null;
 		if (contentType.compareTo(StructuredTextPartitionerForXML.ST_DEFAULT_XML) == 0)
-			return new XMLDoubleClickStrategy();
+			doubleClickStrategy = new XMLDoubleClickStrategy();
 		else
-			return super.getDoubleClickStrategy(sourceViewer, contentType);
+			doubleClickStrategy = super.getDoubleClickStrategy(sourceViewer, contentType);
+		return doubleClickStrategy;
 	}
 
 	public IHighlighter getHighlighter(ISourceViewer sourceViewer) {
@@ -193,7 +195,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 			// create one
 			fReconciler = new StructuredTextReconciler();
 			// a null editorPart is valid
-			//fReconciler.setEditor(editorPart);
+			// fReconciler.setEditor(editorPart);
 		}
 
 		IPreferenceStore store = SSEUIPlugin.getDefault().getPreferenceStore();
