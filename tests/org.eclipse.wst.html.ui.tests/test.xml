@@ -2,7 +2,7 @@
 	<!-- The property ${eclipse-home} should be passed into this script -->
 	<!-- Set a meaningful default value for when it is not. -->
     <property name="eclipse-home" value="${basedir}\..\.."/>
-    
+
 	<!-- sets the properties plugin-name, and library-file -->
 	<property name="plugin-name" value="com.ibm.sse.tests" />
     <property name="library-file" value="${eclipse-home}/plugins/org.eclipse.test/library.xml"/>
@@ -24,7 +24,8 @@
 		<ant target="core-test" antfile="${library-file}" dir="${eclipse-home}">
 			<property name="data-dir" value="${workspace}" />
 			<property name="plugin-name" value="${plugin-name}" />
-			<property name="classname" value="com.ibm.sse.tests.application.SSEHTMLTestSuite" />
+			<property name="classname" value="${plugin-name}.application.SSEHTMLTestSuite" />
+			<property name="plugin-path" value="${eclipse-home}/plugins/${plugin-name}"/>
 		</ant>
 	</target>
 

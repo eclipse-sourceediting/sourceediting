@@ -11,6 +11,9 @@
 package org.eclipse.wst.html.ui.tests.application;
 
 import junit.framework.Test;
+import junit.framework.TestSuite;
+
+import org.eclipse.wst.html.ui.tests.VerifyEditorPlugin;
 
 
 public class SSEHTMLTestSuite extends junit.framework.TestSuite {
@@ -20,7 +23,7 @@ public class SSEHTMLTestSuite extends junit.framework.TestSuite {
 
 	public SSEHTMLTestSuite() {
 		super("SEDHTMLTestSuite");
-
+		addTest(new TestSuite(VerifyEditorPlugin.class));
 		//		addTest(new SSEModelTestSuite());
 
 	}
