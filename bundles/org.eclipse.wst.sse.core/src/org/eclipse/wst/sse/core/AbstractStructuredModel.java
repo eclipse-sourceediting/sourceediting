@@ -179,6 +179,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	boolean fDirtyState;
 	DirtyStateWatcher fDirtyStateWatcher;
 	DocumentToModelNotifier fDocumentToModelNotifier;
+	private String fExplicitContentTypeIdentifier;
 	private String fId;
 
 	private LifecycleNotificationManager fLifecycleNotificationManager;
@@ -670,8 +671,9 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	 * @see org.eclipse.wst.sse.core.IStructuredModel#getContentTypeIdentifier()
 	 */
 	public String getContentTypeIdentifier() {
-
-		return getModelHandler().getAssociatedContentTypeId();
+		if (fExplicitContentTypeIdentifier != null)
+			return fExplicitContentTypeIdentifier;
+		return fModelHandler.getAssociatedContentTypeId();
 	}
 
 	/**
@@ -1321,6 +1323,10 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	public void setBaseLocation(java.lang.String newBaseLocation) {
 
 		fBaseLocation = newBaseLocation;
+	}
+
+	public void setContentTypeIdentifier(String contentTypeIdentifier) {
+		fExplicitContentTypeIdentifier = contentTypeIdentifier;
 	}
 
 	/**

@@ -693,6 +693,9 @@ class ModelManagerImpl implements IModelManager {
 		ModelLoader loader = handler.getModelLoader();
 		IStructuredModel newModel = loader.createModel(oldModel);
 		newModel.setModelHandler(handler);
+		if (newModel instanceof AbstractStructuredModel) {
+			((AbstractStructuredModel) newModel).setContentTypeIdentifier(oldModel.getContentTypeIdentifier());
+		}
 		URIResolver oldResolver = oldModel.getResolver();
 		newModel.setResolver(oldResolver);
 		try {

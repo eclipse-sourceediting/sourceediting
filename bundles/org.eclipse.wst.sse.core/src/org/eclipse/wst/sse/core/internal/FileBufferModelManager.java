@@ -42,6 +42,7 @@ import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.wst.sse.core.AbstractStructuredModel;
 import org.eclipse.wst.sse.core.IModelLoaderExtension;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.ModelLoader;
@@ -450,6 +451,9 @@ public class FileBufferModelManager {
 				info.model = model;
 				model.setId(info.buffer.getLocation().toString());
 				model.setModelHandler(handler);
+				if (model instanceof AbstractStructuredModel) {
+					((AbstractStructuredModel) model).setContentTypeIdentifier(info.contentTypeID);
+				}
 				model.setResolver(createURIResolver(getBuffer(document)));
 				if (mustSetDocument) {
 					model.setStructuredDocument(document);

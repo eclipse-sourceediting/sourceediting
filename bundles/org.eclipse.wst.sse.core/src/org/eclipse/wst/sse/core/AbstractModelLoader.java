@@ -134,6 +134,9 @@ public abstract class AbstractModelLoader implements ModelLoader, IModelLoaderEx
 		// registry to the new model's registry .. if they do not already
 		// exist there.
 		duplicateFactoryRegistry(newModel, oldModel);
+		if (newModel instanceof AbstractStructuredModel) {
+			((AbstractStructuredModel) newModel).setContentTypeIdentifier(oldModel.getContentTypeIdentifier());
+		}
 		//addFactories(newModel, oldModel);
 		initEmbeddedType(oldModel, newModel);
 		// For types with propagating adapters, its important
