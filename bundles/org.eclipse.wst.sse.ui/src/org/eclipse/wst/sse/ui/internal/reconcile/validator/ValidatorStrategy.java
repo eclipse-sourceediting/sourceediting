@@ -56,7 +56,9 @@ public class ValidatorStrategy extends AbstractStructuredTextReconcilingStrategy
 	}
 
 	/**
-     * The content type passed in should be the most specific one.
+     * The content type passed in should be the most specific one.   
+     * TODO: This exact method is also in ValidatorMetaData. Should be in a common place.
+     * 
      * @param contentType
      * @return
      */

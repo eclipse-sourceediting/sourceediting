@@ -14,11 +14,15 @@ package org.eclipse.wst.sse.ui.internal.reconcile.validator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.validation.core.IValidator;
@@ -51,6 +55,32 @@ public class ValidatorMetaData {
 		fMatrix = new HashMap();
 	}
 
+    /**
+     * TODO: This exact method is also in ValidatorStrategy. Should be in a common place.
+     * 
+     * @param contentTypeId
+     * @return
+     */
+    private String[] calculateParentContentTypeIds(String contentTypeId) {
+
+        Set parentTypes = new HashSet();
+        
+        IContentTypeManager ctManager = Platform.getContentTypeManager();    
+        IContentType ct = ctManager.getContentType(contentTypeId);
+        String id = contentTypeId;
+
+        while(ct != null && id != null) {
+            
+            parentTypes.add(id);
+            ct = ctManager.getContentType(id);
+            if(ct != null) {
+                IContentType baseType = ct.getBaseType();
+                id = (baseType != null) ? baseType.getId() : null;
+            }
+        }
+        return (String[])parentTypes.toArray(new String[parentTypes.size()]);
+    }
+    
 	public void addContentTypeId(String contentTypeId) {
 		if (!fMatrix.containsKey(contentTypeId))
 			fMatrix.put(contentTypeId, new ArrayList());
@@ -65,7 +95,13 @@ public class ValidatorMetaData {
 	}
 
 	public boolean canHandleContentType(String contentType) {
-		return fMatrix.containsKey(contentType);
+        // need to iterate hierarchy
+        String[] contentHierarchy = calculateParentContentTypeIds(contentType);
+        for (int i = 0; i < contentHierarchy.length; i++) {
+            if(fMatrix.containsKey(contentHierarchy[i]))
+                return true;
+        }
+        return false;
 	}
 
 	public boolean canHandleParitionType(String contentTypeIds[], String paritionType) {
