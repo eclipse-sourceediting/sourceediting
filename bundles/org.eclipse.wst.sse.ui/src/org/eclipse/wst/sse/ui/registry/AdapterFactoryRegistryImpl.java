@@ -17,9 +17,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.wst.sse.ui.internal.Logger;
 
 
@@ -44,7 +48,7 @@ public class AdapterFactoryRegistryImpl implements AdapterFactoryRegistry, Adapt
 	/**
 	 * This HashMap contains: [contentTypeId -> element2providerMap] | V
 	 * [configurationElement -> AdapterFactoryProvider]
-	 *  
+	 * 
 	 */
 	private HashMap hashMap = null;
 
@@ -67,7 +71,6 @@ public class AdapterFactoryRegistryImpl implements AdapterFactoryRegistry, Adapt
 	}
 
 	public Iterator getAdapterFactories() {
-
 		if (DEBUG) {
 			System.out.println("====================================================================================");
 			System.out.println("GETTING ALL ADAPTER FACTORIES");
@@ -95,11 +98,10 @@ public class AdapterFactoryRegistryImpl implements AdapterFactoryRegistry, Adapt
 		return results.iterator();
 	}
 
-	public Iterator getAdapterFactories(String contentType) {
-
+	public Iterator getAdapterFactories(String contentTypeID) {
 		if (DEBUG) {
 			System.out.println("====================================================================================");
-			System.out.println("GETTING ADAPTER FACTORIES for: " + contentType);
+			System.out.println("GETTING ADAPTER FACTORIES for: " + contentTypeID);
 		}
 
 		List results = new ArrayList();
@@ -111,7 +113,8 @@ public class AdapterFactoryRegistryImpl implements AdapterFactoryRegistry, Adapt
 		results.addAll(getAdapterFactoriesAsList(AdapterFactoryRegistryReader.UNKNOWN_CONTENT_TYPE));
 
 		// add providers for specific content type
-		results.addAll(getAdapterFactoriesAsList(contentType));
+		results.addAll(getAdapterFactoriesAsList(Platform.getContentTypeManager().getContentType(contentTypeID)));
+
 
 		if (DEBUG) {
 			System.out.println("====================================================================================");
@@ -120,26 +123,36 @@ public class AdapterFactoryRegistryImpl implements AdapterFactoryRegistry, Adapt
 		return results.iterator();
 	}
 
+	public List getAdapterFactoriesAsList(IContentType contentType) {
+		IContentType type = contentType;
+		List results = new ArrayList();
+		while (type != null && !type.getId().equals(IContentTypeManager.CT_TEXT)) {
+			results.addAll(getAdapterFactoriesAsList(type.getId()));
+			type = type.getBaseType();
+		}
+		return results;
+	}
+
 	/**
 	 * Using this new API, only AdapterFactoryProviders for a certain content
 	 * type are instantiated. This will allow for the minimum number of
 	 * plugins to be loaded rather than all that implement the adapter factory
 	 * extension point.
 	 * 
-	 * @param contentType
+	 * @param contentTypeID
 	 * @return
 	 */
-	public List getAdapterFactoriesAsList(String contentType) {
+	public List getAdapterFactoriesAsList(String contentTypeID) {
 
 		List results = new ArrayList();
 
 		// get element2Provider map for specified content type
-		Object o = hashMap.get(contentType);
+		Object o = hashMap.get(contentTypeID);
 		if (o != null) {
-
-			// instantiate if necessary from element2adapterFactoryProvider
+			// instantiate if necessary from
+			// element2adapterFactoryProvider
 			// map
-			HashMap element2Provider = (HashMap) o;
+			Map element2Provider = (Map) o;
 			Iterator it = element2Provider.keySet().iterator();
 			IConfigurationElement element = null;
 			String classname = null;
@@ -154,7 +167,8 @@ public class AdapterFactoryRegistryImpl implements AdapterFactoryRegistry, Adapt
 						System.out.println("already created: " + element.getAttribute(ATT_CLASS));
 
 					results.add(o);
-				} else {
+				}
+				else {
 					// need to create the provider
 					try {
 						classname = element.getAttribute(ATT_CLASS);
@@ -165,11 +179,13 @@ public class AdapterFactoryRegistryImpl implements AdapterFactoryRegistry, Adapt
 						// check if we created one already
 						existing = this.adapterProviders.get(classname);
 						if (existing == null) {
-							// this is the only place AdapterFactoryProviders
+							// this is the only place
+							// AdapterFactoryProviders
 							// are created
 							p = (AdapterFactoryProvider) element.createExecutableExtension(ATT_CLASS); // $NON-NLS-1$
 							this.adapterProviders.put(classname, p);
-						} else {
+						}
+						else {
 							p = (AdapterFactoryProvider) existing;
 						}
 
@@ -178,14 +194,17 @@ public class AdapterFactoryRegistryImpl implements AdapterFactoryRegistry, Adapt
 						// add to results to return for this method
 						results.add(p);
 
-					} catch (CoreException e) {
-						// if the provider throws any exception, just log and
+					}
+					catch (CoreException e) {
+						// if the provider throws any exception, just log
+						// and
 						// continue
 						Logger.logException(e);
 					}
 				}
 			}
 		}
+
 		return results;
 	}
 }
