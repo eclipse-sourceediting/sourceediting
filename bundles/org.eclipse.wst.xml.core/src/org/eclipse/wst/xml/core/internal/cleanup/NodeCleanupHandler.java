@@ -10,47 +10,34 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.xml.core.cleanup;
+package org.eclipse.wst.xml.core.internal.cleanup;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.wst.sse.core.cleanup.AbstractStructuredCleanupProcessor;
-import org.eclipse.wst.sse.core.cleanup.IStructuredCleanupHandler;
-import org.eclipse.wst.sse.core.cleanup.IStructuredCleanupPreferences;
-import org.eclipse.wst.sse.core.cleanup.StructuredCleanupPreferences;
-import org.eclipse.wst.sse.core.format.IStructuredFormatProcessor;
+import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupHandler;
+import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupPreferences;
+import org.eclipse.wst.sse.core.internal.cleanup.StructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
-import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
-import org.eclipse.wst.xml.core.format.FormatProcessorXML;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.w3c.dom.Node;
 
 
-public class CleanupProcessorXML extends AbstractStructuredCleanupProcessor {
+public class NodeCleanupHandler implements IStructuredCleanupHandler {
+
 	protected IStructuredCleanupPreferences fCleanupPreferences = null;
+	protected IProgressMonitor fProgressMonitor = null;
 
-	protected IStructuredCleanupHandler getCleanupHandler(Node node) {
-		short nodeType = node.getNodeType();
-		IStructuredCleanupHandler cleanupHandler = null;
-		switch (nodeType) {
-			case Node.ELEMENT_NODE : {
-				cleanupHandler = new ElementNodeCleanupHandler();
-				break;
-			}
-			case Node.TEXT_NODE : {
-				cleanupHandler = new NodeCleanupHandler();
-				break;
-			}
-			default : {
-				cleanupHandler = new NodeCleanupHandler();
-			}
-		}
+	/**
+	 * @see com.ibm.sed.partitionCleanup.CleanupHandler#cleanup(com.ibm.sed.model.xml.XMLNode)
+	 */
+	public Node cleanup(Node node) {
 
-		// init CleanupPreferences
-		cleanupHandler.setCleanupPreferences(getCleanupPreferences());
-
-		return cleanupHandler;
+		return node;
 	}
 
+	/**
+	 * @see com.ibm.sed.partitionCleanup.CleanupHandler#getCleanupPreferences()
+	 */
 	public IStructuredCleanupPreferences getCleanupPreferences() {
 		if (fCleanupPreferences == null) {
 			fCleanupPreferences = new StructuredCleanupPreferences();
@@ -72,19 +59,12 @@ public class CleanupProcessorXML extends AbstractStructuredCleanupProcessor {
 		return fCleanupPreferences;
 	}
 
-	protected String getContentType() {
-		return ContentTypeIdForXML.ContentTypeID_XML;
-	}
-
-	protected IStructuredFormatProcessor getFormatProcessor() {
-		return new FormatProcessorXML();
-	}
-
 	protected Preferences getModelPreferences() {
 		return XMLCorePlugin.getDefault().getPluginPreferences();
 	}
 
-	protected void refreshCleanupPreferences() {
-		fCleanupPreferences = null;
+	public void setCleanupPreferences(IStructuredCleanupPreferences cleanupPreferences) {
+
+		fCleanupPreferences = cleanupPreferences;
 	}
 }

@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.css.core.cleanup;
+package org.eclipse.wst.css.core.internal.cleanup;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.wst.css.core.internal.CSSCorePlugin;
@@ -46,7 +46,7 @@ public class CSSCleanupStrategyImpl implements CSSCleanupStrategy {
 
 	/**
 	 * 
-	 * @return org.eclipse.wst.css.core.cleanup.CSSCleanupStrategy
+	 * @return org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy
 	 */
 	public synchronized static CSSCleanupStrategy getInstance() {
 		if (instance == null)

@@ -30,8 +30,8 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.xml.core.cleanup.XMLCleanupPreferencesImpl;
 import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
+import org.eclipse.wst.xml.core.internal.cleanup.XMLCleanupPreferencesImpl;
 
 public class CleanupDialogHTML extends Dialog implements SelectionListener {
 

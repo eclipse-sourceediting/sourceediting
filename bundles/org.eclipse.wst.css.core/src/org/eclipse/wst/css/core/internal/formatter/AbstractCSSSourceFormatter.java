@@ -16,8 +16,6 @@ import java.util.Iterator;
 import org.eclipse.jface.text.DefaultLineTracker;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.TextUtilities;
-import org.eclipse.wst.css.core.cleanup.CSSCleanupStrategy;
-import org.eclipse.wst.css.core.cleanup.CSSCleanupStrategyImpl;
 import org.eclipse.wst.css.core.document.ICSSAttr;
 import org.eclipse.wst.css.core.document.ICSSDocument;
 import org.eclipse.wst.css.core.document.ICSSModel;
@@ -25,6 +23,8 @@ import org.eclipse.wst.css.core.document.ICSSNode;
 import org.eclipse.wst.css.core.document.ICSSStyleDeclItem;
 import org.eclipse.wst.css.core.document.ICSSStyleDeclaration;
 import org.eclipse.wst.css.core.document.ICSSStyleSheet;
+import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
+import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategyImpl;
 import org.eclipse.wst.css.core.parser.CSSRegionContexts;
 import org.eclipse.wst.css.core.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.css.core.util.CSSLinkConverter;
@@ -629,7 +629,7 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 	/**
 	 * Insert the method's description here.
 	 * 
-	 * @return org.eclipse.wst.css.core.cleanup.CSSCleanupStrategy
+	 * @return org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy
 	 * @param node
 	 *            org.eclipse.wst.css.core.model.interfaces.ICSSNode
 	 */

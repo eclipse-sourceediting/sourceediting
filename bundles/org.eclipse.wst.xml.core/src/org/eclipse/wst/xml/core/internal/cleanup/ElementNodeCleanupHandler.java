@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.xml.core.cleanup;
+package org.eclipse.wst.xml.core.internal.cleanup;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,8 +23,8 @@ import org.eclipse.wst.common.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
-import org.eclipse.wst.sse.core.cleanup.IStructuredCleanupHandler;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
+import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupHandler;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;

@@ -59,7 +59,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.IEditorStatusLine;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.core.IndexedRegion;
-import org.eclipse.wst.sse.core.cleanup.StructuredContentCleanupHandler;
+import org.eclipse.wst.sse.core.internal.cleanup.StructuredContentCleanupHandler;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.undo.IDocumentSelectionMediator;
 import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;

@@ -17,8 +17,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.css.core.cleanup.CSSCleanupStrategy;
-import org.eclipse.wst.css.core.cleanup.CSSCleanupStrategyImpl;
+import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
+import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategyImpl;
 import org.eclipse.wst.css.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 

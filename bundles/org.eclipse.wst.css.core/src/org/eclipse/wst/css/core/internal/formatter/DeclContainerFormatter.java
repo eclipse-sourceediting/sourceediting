@@ -13,8 +13,8 @@ package org.eclipse.wst.css.core.internal.formatter;
 
 
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.wst.css.core.cleanup.CSSCleanupStrategy;
 import org.eclipse.wst.css.core.document.ICSSNode;
+import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
 import org.eclipse.wst.css.core.parser.CSSRegionContexts;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
@@ -49,10 +49,10 @@ public class DeclContainerFormatter extends DefaultCSSSourceFormatter {
 		String type = region.getType();
 		if (type == CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_NAME || type == CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_VALUE || type == CSSRegionContexts.CSS_SELECTOR_CLASS || type == CSSRegionContexts.CSS_SELECTOR_ELEMENT_NAME || type == CSSRegionContexts.CSS_SELECTOR_ID || type == CSSRegionContexts.CSS_SELECTOR_PSEUDO) {
 			short selCase = stgy.getSelectorTagCase();
-			if (selCase == org.eclipse.wst.css.core.cleanup.CSSCleanupStrategy.UPPER) {
+			if (selCase == org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy.UPPER) {
 				return text.toUpperCase();
 			}
-			else if (selCase == org.eclipse.wst.css.core.cleanup.CSSCleanupStrategy.LOWER) {
+			else if (selCase == org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy.LOWER) {
 				return text.toLowerCase();
 			}
 			return text;

@@ -18,11 +18,11 @@ import java.io.UnsupportedEncodingException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.wst.html.core.cleanup.HTMLCleanupProcessorImpl;
+import org.eclipse.wst.html.core.internal.cleanup.HTMLCleanupProcessorImpl;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.cleanup.IStructuredCleanupPreferences;
+import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.document.XMLDocument;

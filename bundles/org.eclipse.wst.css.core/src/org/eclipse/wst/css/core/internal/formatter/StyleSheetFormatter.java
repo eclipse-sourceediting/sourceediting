@@ -13,9 +13,9 @@ package org.eclipse.wst.css.core.internal.formatter;
 
 
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.wst.css.core.cleanup.CSSCleanupStrategy;
 import org.eclipse.wst.css.core.document.ICSSModel;
 import org.eclipse.wst.css.core.document.ICSSNode;
+import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
 import org.eclipse.wst.css.core.parser.CSSRegionContexts;
 import org.eclipse.wst.css.core.util.RegionIterator;
 import org.eclipse.wst.sse.core.IndexedRegion;

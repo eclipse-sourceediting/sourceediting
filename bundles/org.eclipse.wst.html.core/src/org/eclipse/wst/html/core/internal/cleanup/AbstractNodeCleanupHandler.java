@@ -8,15 +8,15 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.html.core.cleanup;
+package org.eclipse.wst.html.core.internal.cleanup;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
-import org.eclipse.wst.sse.core.cleanup.IStructuredCleanupHandler;
-import org.eclipse.wst.sse.core.cleanup.IStructuredCleanupPreferences;
-import org.eclipse.wst.sse.core.cleanup.StructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
+import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupHandler;
+import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupPreferences;
+import org.eclipse.wst.sse.core.internal.cleanup.StructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.document.XMLModel;

@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.css.core.cleanup;
+package org.eclipse.wst.css.core.internal.cleanup;
 
 
 

@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.html.core.cleanup;
+package org.eclipse.wst.html.core.internal.cleanup;
 
 
 
@@ -30,8 +30,8 @@ import org.eclipse.wst.css.core.document.ICSSNode;
 import org.eclipse.wst.css.core.format.CSSSourceFormatter;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.sse.core.cleanup.IStructuredCleanupHandler;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
+import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupHandler;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;

@@ -13,7 +13,6 @@ package org.eclipse.wst.css.core.internal.formatter;
 
 
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.wst.css.core.cleanup.CSSCleanupStrategy;
 import org.eclipse.wst.css.core.document.ICSSAttr;
 import org.eclipse.wst.css.core.document.ICSSCharsetRule;
 import org.eclipse.wst.css.core.document.ICSSImportRule;
@@ -21,6 +20,7 @@ import org.eclipse.wst.css.core.document.ICSSNode;
 import org.eclipse.wst.css.core.document.ICSSPageRule;
 import org.eclipse.wst.css.core.document.ICSSStyleDeclItem;
 import org.eclipse.wst.css.core.document.ICSSStyleRule;
+import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
 import org.eclipse.wst.css.core.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.css.core.util.CSSUtil;
 import org.eclipse.wst.sse.core.IndexedRegion;

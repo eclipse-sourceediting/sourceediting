@@ -8,15 +8,15 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.html.core.cleanup;
+package org.eclipse.wst.html.core.internal.cleanup;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.wst.html.core.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.core.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
-import org.eclipse.wst.sse.core.cleanup.IStructuredCleanupHandler;
 import org.eclipse.wst.sse.core.format.IStructuredFormatProcessor;
-import org.eclipse.wst.xml.core.cleanup.CleanupProcessorXML;
+import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupHandler;
+import org.eclipse.wst.xml.core.internal.cleanup.CleanupProcessorXML;
 import org.w3c.dom.Node;
 
 public class HTMLCleanupProcessorImpl extends CleanupProcessorXML {

@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.xml.core.cleanup;
+package org.eclipse.wst.xml.core.internal.cleanup;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
