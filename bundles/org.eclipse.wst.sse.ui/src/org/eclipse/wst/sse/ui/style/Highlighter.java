@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.ITypedRegion;
@@ -49,7 +50,7 @@ import org.eclipse.wst.sse.ui.util.EditorUtility;
  * model is interested in text events, and all other views will work from that
  * model. Changes to the text widgets input can cause changes in the model,
  * which in turn cause changes to the widget's display.
- *  
+ * 
  */
 public class Highlighter implements IHighlighter {
 
@@ -132,10 +133,10 @@ public class Highlighter implements IHighlighter {
 
 	private void adjustForground(StyleRange styleRange) {
 		RGB oldRGB = null;
-		//Color oldColor = styleRange.foreground;
+		// Color oldColor = styleRange.foreground;
 		Color oldColor = styleRange.background;
 		if (oldColor == null) {
-			//oldRGB = getTextWidget().getForeground().getRGB();
+			// oldRGB = getTextWidget().getForeground().getRGB();
 			oldColor = getTextWidget().getBackground();
 			oldRGB = oldColor.getRGB();
 		} else {
@@ -190,7 +191,7 @@ public class Highlighter implements IHighlighter {
 				StyleRange styleRange = result[i];
 				if (structuredDocument.containsReadOnly(styleRange.start, styleRange.length)) {
 					// should do background first. Its used by forground
-					//adjustBackground(styleRange);
+					// adjustBackground(styleRange);
 					adjustForground(styleRange);
 				}
 			}
@@ -224,7 +225,7 @@ public class Highlighter implements IHighlighter {
 	}
 
 	// TODO: never used
-	 Display getDisplay() {
+	Display getDisplay() {
 
 		return PlatformUI.getWorkbench().getDisplay();
 	}
@@ -339,34 +340,41 @@ public class Highlighter implements IHighlighter {
 						start += vr.getOffset();
 						end += vr.getOffset();
 					}
-					//					// ================
-					//					if (start == fSavedOffset && length == fSavedLength &&
+					// // ================
+					// if (start == fSavedOffset && length == fSavedLength &&
 					// fSavedRanges != null) {
-					//						eventStyles = (StyleRange[]) fSavedRanges;
-					//					} else {
+					// eventStyles = (StyleRange[]) fSavedRanges;
+					// } else {
 
-					ITypedRegion[] partitions = getDocument().getDocumentPartitioner().computePartitioning(start, length);
-					eventStyles = prepareStyleRangesArray(partitions, start, length);
+					IDocumentPartitioner documentPartitioner = getDocument().getDocumentPartitioner();
+					if (documentPartitioner != null) {
+						ITypedRegion[] partitions = documentPartitioner.computePartitioning(start, length);
+						eventStyles = prepareStyleRangesArray(partitions, start, length);
 
-					// If there is a subtext offset, the style ranges must be
-					// adjusted to the expected
-					// offsets
-					if (vr.getOffset() > 0)
-						adjust(eventStyles, -vr.getOffset());
+						// If there is a subtext offset, the style ranges must
+						// be
+						// adjusted to the expected
+						// offsets
+						if (vr.getOffset() > 0)
+							adjust(eventStyles, -vr.getOffset());
 
-					//						fSavedOffset = start;
-					//						fSavedLength = length;
-					//						fSavedRanges = (StyleRange[]) eventStyles;
+						// fSavedOffset = start;
+						// fSavedLength = length;
+						// fSavedRanges = (StyleRange[]) eventStyles;
 
-					// for debugging only
-					if (DEBUG) {
-						if (!valid(eventStyles, eventLineOffset, eventLineLength)) {
-							Logger.log(Logger.WARNING, "Highlighter::lineGetStyle found invalid styles at offset " + eventLineOffset); //$NON-NLS-1$
+						// for debugging only
+						if (DEBUG) {
+							if (!valid(eventStyles, eventLineOffset, eventLineLength)) {
+								Logger.log(Logger.WARNING, "Highlighter::lineGetStyle found invalid styles at offset " + eventLineOffset); //$NON-NLS-1$
+							}
 						}
+						// }
+					} else {
+						eventStyles = EMPTY_STYLE_RANGE;
 					}
-					//					}
 				}
 			}
+
 		} catch (Exception e) {
 			// if ANY exception occurs during highlighting,
 			// just return "no highlighting"
@@ -389,15 +397,15 @@ public class Highlighter implements IHighlighter {
 		int offset = event.lineOffset;
 		int length = event.lineText.length();
 
-		//		// for some reason, we are sometimes asked for the same style range
+		// // for some reason, we are sometimes asked for the same style range
 		// over and
-		//		// over again. This was found to happen during 'revert' of a file
+		// // over again. This was found to happen during 'revert' of a file
 		// with one
-		//		// line in it that is 40K long! So, while I don't know root cause,
+		// // line in it that is 40K long! So, while I don't know root cause,
 		// caching
-		//		// the styled ranges in case the exact same request is made
+		// // the styled ranges in case the exact same request is made
 		// multiple times
-		//		// seems like cheap insurance.
+		// // seems like cheap insurance.
 		if (offset == fSavedOffset && length == fSavedLength && fSavedRanges != null) {
 			event.styles = fSavedRanges;
 		} else {
@@ -437,10 +445,10 @@ public class Highlighter implements IHighlighter {
 
 			// //REMINDER: eventually need to remove this one, and use only
 			// structuredDocument
-			//attributeProvider.init(getModel(), this);
+			// attributeProvider.init(getModel(), this);
 			attributeProvider.init(getDocument(), this);
 
-			//				handled = attributeProvider.prepareRegions(typedRegion, start,
+			// handled = attributeProvider.prepareRegions(typedRegion, start,
 			// length, holdStyleResults);
 			handled = attributeProvider.prepareRegions(typedRegion, typedRegion.getOffset(), typedRegion.getLength(), holdStyleResults);
 			if (Debug.syntaxHighlighting && !handled) {

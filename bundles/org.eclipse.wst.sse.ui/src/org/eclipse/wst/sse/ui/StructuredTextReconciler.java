@@ -201,7 +201,7 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 		// we are always incremental
 		setIsIncrementalReconciler(true);
 		setDelay(500);
-		//setProgressMonitor(new NullProgressMonitor());
+		// setProgressMonitor(new NullProgressMonitor());
 		setLocalProgressMonitor(new NullProgressMonitor());
 		fDisposeListener = new SourceWidgetDisposeListener();
 		fTextInputListener = new SourceTextInputListener();
@@ -243,7 +243,7 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 			if (Logger.isTracing(TRACE_FILTER))
 				traceInfo.append("\r\n\r\n -> compacting dirty region (" + i + ")" + " start:" + dr.getOffset() + " length:" + dr.getLength()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
-			//possibly expand the dirty region start
+			// possibly expand the dirty region start
 			if (min == -1 || min > dr.getOffset())
 				min = dr.getOffset();
 			// possibly expand the dirty region end
@@ -457,16 +457,16 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 		boolean changed = false;
 
 		IDocumentPartitioner partitioner = structuredDocumentEvent.getStructuredDocument().getDocumentPartitioner();
+		if (partitioner != null) {
+			IStructuredDocumentRegionList oldNodes = structuredDocumentEvent.getOldStructuredDocumentRegions();
+			IStructuredDocumentRegionList newNodes = structuredDocumentEvent.getNewStructuredDocumentRegions();
 
-		IStructuredDocumentRegionList oldNodes = structuredDocumentEvent.getOldStructuredDocumentRegions();
-		IStructuredDocumentRegionList newNodes = structuredDocumentEvent.getNewStructuredDocumentRegions();
+			IStructuredDocumentRegion oldNode = (oldNodes.getLength() > 0) ? oldNode = oldNodes.item(0) : null;
+			IStructuredDocumentRegion newNode = (newNodes.getLength() > 0) ? newNodes.item(0) : null;
 
-		IStructuredDocumentRegion oldNode = (oldNodes.getLength() > 0) ? oldNode = oldNodes.item(0) : null;
-		IStructuredDocumentRegion newNode = (newNodes.getLength() > 0) ? newNodes.item(0) : null;
-
-		if (oldNode != null && newNode != null)
-			changed = partitioner.getContentType(oldNode.getStartOffset()).equals(partitioner.getContentType(newNode.getStartOffset()));
-
+			if (oldNode != null && newNode != null)
+				changed = partitioner.getContentType(oldNode.getStartOffset()).equals(partitioner.getContentType(newNode.getStartOffset()));
+		}
 		return changed;
 	}
 
@@ -494,23 +494,28 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 		Logger.trace(StructuredTextReconciler.TRACE_FILTER, "[trace reconciler] >StructuredTextReconciler: PROCESSING ALL"); //$NON-NLS-1$
 		IDocument doc = getDocument();
 		DirtyRegion durty = null;
-		ITypedRegion tr[] = doc.getDocumentPartitioner().computePartitioning(0, doc.getLength());
-		IReconcilingStrategy s = null;
-		for (int i = 0; i < tr.length; i++) {
-			durty = createDirtyRegion(tr[i], DirtyRegion.INSERT);
-			s = getReconcilingStrategy(tr[i].getType());
-			if (s != null) {
-				if (s instanceof IStructuredReconcilingStrategy)
-					((IStructuredReconcilingStrategy) s).reconcile(durty, durty, true);
-				else
-					s.reconcile(durty, durty);
+		IDocumentPartitioner documentPartitioner = doc.getDocumentPartitioner();
+		if (documentPartitioner != null) {
+			ITypedRegion tr[] = documentPartitioner.computePartitioning(0, doc.getLength());
+			IReconcilingStrategy s = null;
+			for (int i = 0; i < tr.length; i++) {
+				durty = createDirtyRegion(tr[i], DirtyRegion.INSERT);
+				s = getReconcilingStrategy(tr[i].getType());
+				if (s != null) {
+					if (s instanceof IStructuredReconcilingStrategy)
+						((IStructuredReconcilingStrategy) s).reconcile(durty, durty, true);
+					else
+						s.reconcile(durty, durty);
+				}
+				// run validator strategy every time, it figures out if it has
+				// a
+				// validator for this partition
+				// pass in true for "refreshAll" flag = true indicating that
+				// the
+				// entire document is being reconciled, only do it once
+				if (fValidatorStrategy != null)
+					fValidatorStrategy.reconcile(tr[i], durty, true);
 			}
-			// run validator strategy every time, it figures out if it has a
-			// validator for this partition
-			// pass in true for "refreshAll" flag = true indicating that the
-			// entire document is being reconciled, only do it once
-			if (fValidatorStrategy != null)
-				fValidatorStrategy.reconcile(tr[i], durty, true);
 		}
 		// we ran the whole doc already now we can reset the strategies
 		resetStrategies();
@@ -524,21 +529,27 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 			return;
 		IDocument doc = getDocument();
 		HashSet alreadyRan = new HashSet();
-		ITypedRegion tr[] = doc.getDocumentPartitioner().computePartitioning(durty.getOffset(), durty.getLength());
-		IReconcilingStrategy s = null;
-		for (int i = 0; i < tr.length; i++) {
-			durty = createDirtyRegion(tr[i], DirtyRegion.INSERT);
-			// keeping track of already ran might not be the way to do it...
-			if (!alreadyRan.contains(tr[i].getType())) {
-				alreadyRan.add(tr[i].getType());
-				s = getReconcilingStrategy(tr[i].getType());
-				if (s != null)
-					s.reconcile(durty, durty);
+
+		IDocumentPartitioner documentPartitioner = doc.getDocumentPartitioner();
+		if (documentPartitioner != null) {
+			ITypedRegion tr[] = documentPartitioner.computePartitioning(durty.getOffset(), durty.getLength());
+			IReconcilingStrategy s = null;
+			for (int i = 0; i < tr.length; i++) {
+				durty = createDirtyRegion(tr[i], DirtyRegion.INSERT);
+				// keeping track of already ran might not be the way to do
+				// it...
+				if (!alreadyRan.contains(tr[i].getType())) {
+					alreadyRan.add(tr[i].getType());
+					s = getReconcilingStrategy(tr[i].getType());
+					if (s != null)
+						s.reconcile(durty, durty);
+				}
+				// run validator strategy every time, it figures out if it has
+				// a
+				// validator for this parition
+				if (fValidatorStrategy != null)
+					fValidatorStrategy.reconcile(tr[i], durty, false);
 			}
-			// run validator strategy every time, it figures out if it has a
-			// validator for this parition
-			if (fValidatorStrategy != null)
-				fValidatorStrategy.reconcile(tr[i], durty, false);
 		}
 		resetStrategies();
 	}
@@ -663,7 +674,7 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 	 * <li>entire document change</li>
 	 * <li>the default strategy</li>
 	 * </ul>
-	 *  
+	 * 
 	 */
 	private void runStrategies() {
 		DirtyRegion dirtyRegion = null;
@@ -835,7 +846,7 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 		setValidationNeeded(false);
 		if (isInstalled()) {
 			setInstalled(false);
-			//getProgressMonitor().setCanceled(true);
+			// getProgressMonitor().setCanceled(true);
 			getLocalProgressMonitor().setCanceled(true);
 
 			getTextViewer().removeTextInputListener(fTextInputListener);
