@@ -19,18 +19,21 @@ import java.util.Collection;
 import org.eclipse.jface.text.ITypedRegion;
 
 /**
- * This class is used by default, if no attribute provider is found for a
- * certain node type. Its probably an error in a factory somewhere if an
+ * This class can be used by default, if no attribute provider is found for a
+ * certain region type. Its probably an error in a factory somewhere if an
  * adapter is not found, but this class allows the logic to proceed basically
  * simply providing default colored syntax highlighting.
+ * 
+ * Not to be subclassed.
  */
-public class LineStyleProviderForNoOp extends AbstractLineStyleProvider implements LineStyleProvider {
+final public class LineStyleProviderForNoOp extends AbstractLineStyleProvider implements LineStyleProvider {
+
 	/**
-	 * @see com.ibm.sed.structured.style.LineStyleProvider#prepareRegions(org.eclipse.jface.text.ITypedRegion,
+	 * @see org.eclipse.wst.sse.ui.style.AbstractLineStyleProvider#prepareRegions(org.eclipse.jface.text.ITypedRegion,
 	 *      int, int, java.util.Collection)
 	 */
 	public boolean prepareRegions(ITypedRegion currentRegion, int start, int length, Collection holdResults) {
-		// add nothing
+		// add nothing, but say handled.
 		return true;
 	}
 

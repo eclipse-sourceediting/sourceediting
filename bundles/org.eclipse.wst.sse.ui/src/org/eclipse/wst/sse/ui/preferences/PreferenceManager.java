@@ -53,7 +53,7 @@ import org.xml.sax.SAXException;
  */
 public abstract class PreferenceManager {
 
-	protected class EmptyNodeList implements NodeList {
+	class EmptyNodeList implements NodeList {
 		protected EmptyNodeList() {
 			super();
 		}
@@ -148,12 +148,15 @@ public abstract class PreferenceManager {
 			Reader inputReader = new FileReader(getFilename());
 			InputSource inputSource = new InputSource(inputReader);
 			result = builder.parse(inputSource);
-		} catch (FileNotFoundException e) {
+		}
+		catch (FileNotFoundException e) {
 			// file not found is "ok" ... it'll be created if we return null
 			result = null;
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			result = null;
-		} catch (SAXException e) {
+		}
+		catch (SAXException e) {
 			result = null;
 		}
 
@@ -200,7 +203,8 @@ public abstract class PreferenceManager {
 		DocumentBuilder result = null;
 		try {
 			result = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		} catch (ParserConfigurationException e) {
+		}
+		catch (ParserConfigurationException e) {
 			Logger.logException(e);
 		}
 		return result;
@@ -328,7 +332,8 @@ public abstract class PreferenceManager {
 			saveDocument(document, output);
 			output.flush();
 			output.close();
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			Logger.logException("Program Error: PreferenceManager::save. Exception saving preferences ", e); //$NON-NLS-1$
 			throw new PreferenceRuntimeException(e);
 		}
@@ -347,15 +352,19 @@ public abstract class PreferenceManager {
 			try {
 				serializer.setOutputProperty(OutputKeys.INDENT, "yes"); //$NON-NLS-1$
 				serializer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4"); //$NON-NLS-1$ //$NON-NLS-2$
-			} catch (IllegalArgumentException e) {
+			}
+			catch (IllegalArgumentException e) {
 				// unsupported properties
 			}
 			serializer.transform(domSource, new StreamResult(writer));
-		} catch (TransformerConfigurationException e) {
+		}
+		catch (TransformerConfigurationException e) {
 			throw new IOException(e.getMessage());
-		} catch (TransformerFactoryConfigurationError e) {
+		}
+		catch (TransformerFactoryConfigurationError e) {
 			throw new IOException(e.getMessage());
-		} catch (TransformerException e) {
+		}
+		catch (TransformerException e) {
 			throw new IOException(e.getMessage());
 		}
 	}

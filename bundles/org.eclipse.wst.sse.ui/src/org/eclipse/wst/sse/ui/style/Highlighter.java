@@ -54,6 +54,196 @@ import org.eclipse.wst.sse.ui.util.EditorUtility;
  */
 public class Highlighter implements IHighlighter {
 
+	/**
+	 * A utility class to do various color manipulations
+	 */
+	private class YUV_RGBConverter {
+		/**
+		 * This class "holds" the YUV values corresponding to RGB color
+		 */
+		private class YUV {
+
+			class NormalizedRGB {
+				double blue;
+				double green;
+				private final double maxRGB = 256.0;
+				double red;
+
+				public NormalizedRGB(RGB rgb) {
+					// first normalize to between 0 - 1
+					red = rgb.red / maxRGB;
+					green = rgb.green / maxRGB;
+					blue = rgb.blue / maxRGB;
+
+					red = gammaNormalized(red);
+					green = gammaNormalized(green);
+					blue = gammaNormalized(blue);
+
+				}
+			}
+
+			private NormalizedRGB normalizedRGB;
+
+			RGB originalRGB;
+			private double u = -1;
+			private double v = -1;
+			private double y = -1;
+
+			private YUV() {
+				super();
+			}
+
+			public YUV(double y, double u, double v) {
+				this();
+				this.y = y;
+				this.u = u;
+				this.v = v;
+			}
+
+			public YUV(RGB rgb) {
+				this();
+				originalRGB = rgb;
+				normalizedRGB = new NormalizedRGB(rgb);
+				// force calculations
+				getY();
+				getV();
+				getU();
+			}
+
+			/**
+			 * normalize to "average" gamma 2.2222 or 1/0.45
+			 */
+			double gammaNormalized(double colorComponent) {
+				if (colorComponent < 0.018) {
+					return colorComponent * 0.45;
+				}
+				else {
+					return 1.099 * Math.pow(colorComponent, 0.45) - 0.099;
+				}
+			}
+
+			/**
+			 * @return RGB based on original RGB and current YUV values;
+			 */
+			public RGB getRGB() {
+				RGB result = null;
+				double r = getY() + 1.14 * getV();
+				double g = getY() - 0.395 * getU() - 0.58 * getV();
+				double b = getY() + 2.032 * getU();
+
+				int red = (int) (inverseGammaNormalized(r) * 256);
+				int green = (int) (inverseGammaNormalized(g) * 256);
+				int blue = (int) (inverseGammaNormalized(b) * 256);
+				if (red < 0)
+					red = 0;
+				else if (red > 255)
+					red = 255;
+				if (green < 0)
+					green = 0;
+				else if (green > 255)
+					green = 255;
+				if (blue < 0)
+					blue = 0;
+				else if (blue > 255)
+					blue = 255;
+
+				result = new RGB(red, green, blue);
+				return result;
+			}
+
+			public double getU() {
+				if (u == -1) {
+					u = 0.4949 * (normalizedRGB.blue - getY());
+				}
+				return u;
+
+			}
+
+			public double getV() {
+				if (v == -1) {
+					v = 0.877 * (normalizedRGB.red - getY());
+				}
+				return v;
+			}
+
+			public double getY() {
+				if (y == -1) {
+					y = 0.299 * normalizedRGB.red + 0.587 * normalizedRGB.green + 0.114 * normalizedRGB.blue;
+				}
+				return y;
+			}
+
+			double inverseGammaNormalized(double colorComponent) {
+				if (colorComponent < 0.018) {
+					return colorComponent * .222;
+				}
+				else {
+					return Math.pow(((.9099 * colorComponent + 0.09)), 2.22);
+				}
+			}
+
+		}
+
+		public YUV_RGBConverter() {
+			super();
+		}
+
+		public double calculateYComponent(Color targetColor) {
+			return new YUV(targetColor.getRGB()).getY();
+		}
+
+		public RGB transformRGB(RGB originalRGB, double scaleFactor, double target) {
+			RGB transformedRGB = null;
+			// CCIR601 yuv = new CCIR601(originalRGB);
+			YUV yuv = new YUV(originalRGB);
+			double y = yuv.getY();
+			// zero is black, one is white
+			if (y < target) {
+				// is "dark" make lighter
+				y = y + ((target - y) * scaleFactor);
+			}
+			else {
+				// is "light" make darker
+				y = y - ((y - target) * scaleFactor);
+			}
+			// yuv.setY(y);
+			YUV newYUV = new YUV(y, yuv.getU(), yuv.getV());
+			// CCIR601 newYUV = new CCIR601(y, yuv.getCb601(),
+			// yuv.getCr601());
+			transformedRGB = newYUV.getRGB();
+			return transformedRGB;
+		}
+
+		public RGB transformRGBToGrey(RGB originalRGB, double scaleFactor, double target) {
+			RGB transformedRGB = null;
+			// we left the "full" API method signature, but this
+			// version does not take into account originalRGB, though
+			// it might someday.
+			// for now, we'll simply make the new RGB grey, either a little
+			// lighter, or a little darker than background.
+			double y = 0;
+			double mid = 0.5;
+			// zero is black, one is white
+			if (target < mid) {
+				// is "dark" make lighter
+				y = target + scaleFactor;
+			}
+			else {
+				// is "light" make darker
+				y = target - scaleFactor;
+			}
+			int c = (int) Math.round(y * 255);
+			// just to gaurd against mis-use, or scale's values greater
+			// than mid point (and possibly rounding error)
+			if (c > 255)
+				c = 255;
+			if (c < 0)
+				c = 0;
+			transformedRGB = new RGB(c, c, c);
+			return transformedRGB;
+		}
+	}
+
 	private final boolean DEBUG = false;
 	private final StyleRange[] EMPTY_STYLE_RANGE = new StyleRange[0];
 	private static final String LINE_STYLE_PROVIDER_EXTENDED_ID = "linestyleprovider";
@@ -124,13 +314,13 @@ public class Highlighter implements IHighlighter {
 			if (extension != null) {
 				// get document range, taking into account folding regions in
 				// viewer
-				IRegion region = extension.modelRange2WidgetRange(new Region(
-						ranges[i].start, ranges[i].length));
+				IRegion region = extension.modelRange2WidgetRange(new Region(ranges[i].start, ranges[i].length));
 				if (region != null) {
 					ranges[i].start = region.getOffset();
 					ranges[i].length = region.getLength();
 				} // else what happens if region is not found?!
-			} else {
+			}
+			else {
 				// just adjust the range using the given adjustment
 				ranges[i].start += adjustment;
 			}
@@ -260,24 +450,26 @@ public class Highlighter implements IHighlighter {
 	}
 
 	/**
-	 * Adjust the given widget offset and length so that they are the textviewer
-	 * document's offset and length, taking into account what is actually
-	 * visible in the document.
+	 * Adjust the given widget offset and length so that they are the
+	 * textviewer document's offset and length, taking into account what is
+	 * actually visible in the document.
 	 * 
 	 * @param offset
 	 * @param length
-	 * @return a region containing the offset and length within the textviewer's
-	 *         document or null if the offset is not within the document
+	 * @return a region containing the offset and length within the
+	 *         textviewer's document or null if the offset is not within the
+	 *         document
 	 */
 	private IRegion getDocumentRangeFromWidgetRange(int offset, int length) {
 		IRegion styleRegion = null;
 		ITextViewer viewer = getTextViewer();
 		if (viewer instanceof ITextViewerExtension5) {
-			// get document range, taking into account folding regions in viewer
+			// get document range, taking into account folding regions in
+			// viewer
 			ITextViewerExtension5 extension = (ITextViewerExtension5) viewer;
-			styleRegion = extension.widgetRange2ModelRange(new Region(offset,
-					length));
-		} else {
+			styleRegion = extension.widgetRange2ModelRange(new Region(offset, length));
+		}
+		else {
 			// get document range, taking into account viewer visible region
 			// get visible region in viewer
 			IRegion vr = null;
@@ -286,7 +478,8 @@ public class Highlighter implements IHighlighter {
 			else
 				vr = new Region(0, getDocument().getLength());
 
-			// if offset is not within visible region, then we don't really care
+			// if offset is not within visible region, then we don't really
+			// care
 			if (offset <= vr.getLength()) {
 				// Adjust the offset to be within visible region
 				styleRegion = new Region(offset + vr.getOffset(), length);
@@ -295,7 +488,7 @@ public class Highlighter implements IHighlighter {
 		return styleRegion;
 	}
 
-	
+
 	private Map getExtendedProviders() {
 		if (fExtendedProviders == null) {
 			fExtendedProviders = new HashMap(3);
@@ -394,25 +587,26 @@ public class Highlighter implements IHighlighter {
 				// (event.styles can not be null)
 
 				// eventLineLength == 0
-				// we sometimes get odd requests from the very last CRLF in the
+				// we sometimes get odd requests from the very last CRLF in
+				// the
 				// document
 				// it has no length, and there is no node for it!
 				eventStyles = EMPTY_STYLE_RANGE;
-			} else {
+			}
+			else {
 				/*
-				 * LineStyleProviders work using absolute document
-				 * offsets. To support visible regions, adjust the
-				 * requested range up to the full document offsets.
+				 * LineStyleProviders work using absolute document offsets. To
+				 * support visible regions, adjust the requested range up to
+				 * the full document offsets.
 				 */
-				IRegion styleRegion = getDocumentRangeFromWidgetRange(
-						eventLineOffset, eventLineLength);
+				IRegion styleRegion = getDocumentRangeFromWidgetRange(eventLineOffset, eventLineLength);
 				if (styleRegion != null) {
 					int start = styleRegion.getOffset();
 					int length = styleRegion.getLength();
 
 					ITypedRegion[] partitions = TextUtilities.computePartitioning(getDocument(), fPartitioning, start, length, false);
 					eventStyles = prepareStyleRangesArray(partitions, start, length);
-					
+
 					// If there is a subtext offset, the style ranges must be
 					// adjusted to the expected
 					// offsets
@@ -431,13 +625,14 @@ public class Highlighter implements IHighlighter {
 								if (offset > 0)
 									adjust(eventStyles, -offset);
 							}
-						} else {
+						}
+						else {
 							if (getTextViewer() instanceof ProjectionViewer) {
-								if (((ProjectionViewer)getTextViewer()).isProjectionMode())
+								if (((ProjectionViewer) getTextViewer()).isProjectionMode())
 									adjust(eventStyles, -offset);
 							}
 						}
-						
+
 					}
 
 					// for debugging only
