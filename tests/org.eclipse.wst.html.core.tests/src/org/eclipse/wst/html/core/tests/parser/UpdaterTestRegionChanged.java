@@ -37,7 +37,7 @@ public class UpdaterTestRegionChanged extends ModelTest {
 	}
 
 	public void testModel() {
-		XMLModel model = new XMLModelImpl();
+		XMLModel model = createXMLModel();
 		try {
 			Document document = model.getDocument();
 			IStructuredDocument structuredDocument = model.getStructuredDocument();
