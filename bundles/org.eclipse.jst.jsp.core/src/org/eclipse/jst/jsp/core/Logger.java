@@ -14,6 +14,8 @@ package org.eclipse.jst.jsp.core;
 /**
  * @deprecated moved to internal package because only this plugin should be
  * using this Logger class.
+ * 
+ * will be removed in M4
  */
 public class Logger extends org.eclipse.jst.jsp.core.internal.Logger {
 	// see org.eclipse.jst.jsp.core.internal.Logger
