@@ -39,8 +39,6 @@ import org.eclipse.ui.part.PageBook;
 import org.eclipse.wst.xsd.ui.internal.XSDEditor;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.XSDSelectionManager;
-import org.eclipse.wst.xsd.ui.internal.graph.editparts.CategoryEditPart;
-import org.eclipse.wst.xsd.ui.internal.graph.editparts.TopLevelComponentEditPart;
 import org.eclipse.wst.xsd.ui.internal.util.ViewUtility;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDNotationDeclaration;
