@@ -129,7 +129,7 @@ public interface IModelManagerProposed {
 
 	/**
 	 * This method can be called to determine if the model manager is within a
-	 * "aboutToChange" and "changed" sequence.
+	 * "aboutToChangeModels" and "changedModels" sequence.
 	 */
 	public boolean isStateChanging();
 
@@ -269,5 +269,21 @@ public interface IModelManagerProposed {
 	 * @throws CoreException
 	 */
 	void saveModelIfNecessary(IStructuredModel structuredModel, IPath location) throws UnsupportedEncodingException, IOException, CoreException;
+
+	/**
+	 * This is used by clients to signify that they are finished with a model
+	 * and will no longer access it or any of its underlying data (such as its
+	 * structured document). The ReadEditType must match what ever the client
+	 * used in the corresponding 'get' method.
+	 * 
+	 * This method must be called for every 'get'. Clients should use the
+	 * try/finally pattern to ensure the release is called even if there is an
+	 * unexpected exception.
+	 * 
+	 * @param structuredModel
+	 * @param type
+	 */
+
+	void releaseModel(IStructuredModel structuredModel, ReadEditType type);
 
 }
