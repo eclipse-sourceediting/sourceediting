@@ -159,9 +159,11 @@ public abstract class BreakpointRulerAction extends Action implements IUpdate {
 	public BreakpointRulerAction(ITextEditor editor, IVerticalRulerInfo rulerInfo) {
 		super();
 		fTextEditor = editor;
-		fRulerInfo = rulerInfo;
-		fMouseListener = new MouseUpdater();
-		rulerInfo.getControl().addMouseListener(fMouseListener);
+		if(rulerInfo != null) {
+			fRulerInfo = rulerInfo;
+			fMouseListener = new MouseUpdater();
+			rulerInfo.getControl().addMouseListener(fMouseListener);
+		}
 	}
 
 	/**
@@ -283,8 +285,7 @@ public abstract class BreakpointRulerAction extends Action implements IUpdate {
 	 *         position
 	 */
 	protected boolean includesRulerLine(Position position, IDocument document) {
-
-		if (position != null) {
+		if (position != null && fRulerInfo != null) {
 			try {
 				int markerLine = document.getLineOfOffset(position.getOffset());
 				int line = getRulerInfo().getLineOfLastMouseButtonActivity();
@@ -300,7 +301,6 @@ public abstract class BreakpointRulerAction extends Action implements IUpdate {
 				//
 			}
 		}
-
 		return false;
 	}
 }
