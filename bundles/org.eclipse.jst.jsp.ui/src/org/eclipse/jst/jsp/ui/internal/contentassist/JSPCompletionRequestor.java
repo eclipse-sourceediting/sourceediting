@@ -1,3 +1,15 @@
+/*******************************************************************************
+ * Copyright (c) 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Ted Carroll - https://bugs.eclipse.org/bugs/show_bug.cgi?id=88001
+ *                   supplied patch
+ *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.contentassist;
 
 import java.util.ArrayList;
@@ -24,8 +36,7 @@ import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 
 /**
  * Most "accept" methods copied from JDT ResultCollector.
- * 
- * @author pavery
+ * @since 1.0
  */
 public class JSPCompletionRequestor extends CompletionRequestor {
 
@@ -676,14 +687,17 @@ public class JSPCompletionRequestor extends CompletionRequestor {
      */
     public void setCompilationUnit(ICompilationUnit compilationUnit) {
         fCompilationUnit = compilationUnit;
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88001
+		if(null != fCompilationUnit)
+		{
+			// set some names for fixing up mangled name
+			// in proposals later
+			String cuName = getCompilationUnit().getPath().lastSegment();
+			setMangledName(cuName.substring(0, cuName.lastIndexOf('.')));
 
-        // set some names for fixing up mangled name
-        // in proposals later
-        String cuName = getCompilationUnit().getPath().lastSegment();
-        setMangledName(cuName.substring(0, cuName.lastIndexOf('.')));
-
-        String unmangled = JSP2ServletNameUtil.unmangle(cuName);
-        setJspName(unmangled.substring(unmangled.lastIndexOf('/') + 1));
+			String unmangled = JSP2ServletNameUtil.unmangle(cuName);
+			setJspName(unmangled.substring(unmangled.lastIndexOf('/') + 1));
+		}
     }
 
     /**
