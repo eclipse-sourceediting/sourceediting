@@ -13,7 +13,7 @@
   <!-- Set a meaningful default value for when it is not. -->
   <property name="eclipse-home" value="${basedir}\..\.."/>
   <property name="bvtworkspace" value="${basedir}"/>
-  <property name="library-file" value="${eclipse-home}/plugins/org.eclipse.test/library.xml"/>
+  <property name="library-file" value="${eclipse-home}/plugins/org.eclipse.test_3.1.0/library.xml"/>
   <property name="workspace-folder" value="${bvtworkspace}/${plugin-name}"/>
 
   <!-- This target holds all initialization code that needs to be done for -->
