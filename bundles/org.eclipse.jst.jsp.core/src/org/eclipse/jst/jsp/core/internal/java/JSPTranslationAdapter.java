@@ -14,6 +14,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -215,10 +216,14 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 			// because of FileBuffers, so this code had to be updated
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=79686
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+			IPath filePath = new Path(baseLocation);
+			IFile file = null;
 			IProject project = null;
-			IFile file = root.getFile(new Path(baseLocation));
-			if(file != null) {
-			    project = file.getProject(); 
+			if (filePath.segmentCount() > 2) {
+				file = root.getFile(filePath);
+			}
+			if (file != null) {
+				project = file.getProject();
 			}
 //			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(baseLocation));
 //			for (int i = 0; project == null && i < files.length; i++) {
