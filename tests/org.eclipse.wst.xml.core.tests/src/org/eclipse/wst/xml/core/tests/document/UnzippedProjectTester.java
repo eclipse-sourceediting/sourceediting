@@ -27,7 +27,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.xml.core.tests.SSEModelXMLTestsPlugin;
-import org.eclipse.wst.xml.core.tests.utils.ProjectUnzipUtility;
+import org.eclipse.wst.xml.core.tests.util.ProjectUnzipUtility;
 
 
 

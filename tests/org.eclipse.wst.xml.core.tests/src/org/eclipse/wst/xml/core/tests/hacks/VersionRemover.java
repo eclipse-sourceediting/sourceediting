@@ -14,7 +14,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import org.eclipse.wst.xml.core.tests.utils.CommonXML;
+import org.eclipse.wst.xml.core.tests.util.CommonXML;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
