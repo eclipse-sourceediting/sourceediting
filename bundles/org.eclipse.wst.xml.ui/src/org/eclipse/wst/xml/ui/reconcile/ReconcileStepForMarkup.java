@@ -336,6 +336,10 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
         
 		// check start/end tag pairs
 		XMLNode xmlNode = getXMLNode(sdRegion);
+        
+        if(xmlNode == null)
+            return;
+        
 		boolean selfClosed = false;
 		String tagName = null;
 		int length = 0;
@@ -427,19 +431,36 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 	 */
 	private IStructuredDocumentRegion[] getStructuredDocumentRegions(DirtyRegion dirtyRegion) {
 		List regions = new ArrayList();
+        
+        if(getStructuredDocument() == null)
+            return new IStructuredDocumentRegion[0];
+        
 		IStructuredDocumentRegion sdRegion = getStructuredDocument().getRegionAtCharacterOffset(dirtyRegion.getOffset());
 		if (sdRegion != null) {
+            
 			if (!sdRegion.isDeleted())
 				regions.add(sdRegion);
-			while (sdRegion != null && !sdRegion.isDeleted() && (sdRegion = sdRegion.getNext()) != null && sdRegion.getEndOffset() <= getXMLNode(sdRegion).getEndOffset()) {
+            
+            XMLNode xmlNode = getXMLNode(sdRegion);
+            
+			while (sdRegion != null 
+                    && !sdRegion.isDeleted() 
+                    && xmlNode != null
+                    && sdRegion.getEndOffset() <= xmlNode.getEndOffset()) {
 				if (!sdRegion.isDeleted())
 					regions.add(sdRegion);
+                sdRegion = sdRegion.getNext();
+                xmlNode = getXMLNode(sdRegion);
 			}
 		}
 		return (IStructuredDocumentRegion[]) regions.toArray(new IStructuredDocumentRegion[regions.size()]);
 	}
 
 	private XMLNode getXMLNode(IStructuredDocumentRegion sdRegion) {
+        
+        if(sdRegion == null)
+            return null;
+        
 		IStructuredModel xModel = null;
 		XMLNode xmlNode = null;
 		// get/release models should always be in a try/finally block

@@ -186,10 +186,16 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	 */
 	protected IndexedRegion getCorrespondingNode(IStructuredDocumentRegion sdRegion) {
 		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
-		IndexedRegion xmlNode = sModel.getIndexedRegion(sdRegion.getStart());
-		sModel.releaseFromRead();
-		return xmlNode;
-	}
+        IndexedRegion indexedRegion = null;
+        try {
+            if (sModel != null) 
+                indexedRegion = sModel.getIndexedRegion(sdRegion.getStart());    
+        } finally {
+            if (sModel != null)
+                sModel.releaseFromRead();
+        }
+        return indexedRegion;
+    }
 
 	/**
 	 * The IFile that this strategy is operating on (the file input for the
@@ -279,11 +285,15 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 		int start = -1;
 		int end = -1;
 		for (int i = 0; i < sdRegions.length; i++) {
-			IndexedRegion corresponding = getCorrespondingNode(sdRegions[i]);
-			if (start == -1 || start > corresponding.getStartOffset())
-				start = corresponding.getStartOffset();
-			if (end == -1 || end < corresponding.getEndOffset())
-				end = corresponding.getEndOffset();
+		    if(!sdRegions[i].isDeleted()) {
+    			IndexedRegion corresponding = getCorrespondingNode(sdRegions[i]);
+                if(corresponding != null) {
+        			if (start == -1 || start > corresponding.getStartOffset())
+        				start = corresponding.getStartOffset();
+        			if (end == -1 || end < corresponding.getEndOffset())
+        				end = corresponding.getEndOffset();
+                }
+            }
 		}
 		return pos.overlapsWith(start, end - start);
 	}
