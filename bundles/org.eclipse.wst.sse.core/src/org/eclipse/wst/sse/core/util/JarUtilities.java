@@ -143,7 +143,7 @@ public class JarUtilities {
 			}
 		}
 		catch (IOException ioExc) {
-			Logger.logException(ioExc);
+			Logger.log(Logger.WARNING, "JarUtilities: " + ioExc.getMessage());
 		}
 		finally {
 			try {
