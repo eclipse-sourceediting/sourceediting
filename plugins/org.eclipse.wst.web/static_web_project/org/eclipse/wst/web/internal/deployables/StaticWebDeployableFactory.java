@@ -37,11 +37,6 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 	 * @return boolean
 	 */
 	protected boolean isValidModule(IProject project) {
-		try {
-			return project.hasNature(ISimpleWebNatureConstants.STATIC_NATURE_ID);
-		} catch (Exception e) {
-			//Ignore
-		}
 		return false;
 	}
 
