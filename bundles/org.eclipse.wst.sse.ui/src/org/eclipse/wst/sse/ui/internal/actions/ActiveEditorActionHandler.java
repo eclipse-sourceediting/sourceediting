@@ -148,6 +148,14 @@ public class ActiveEditorActionHandler implements IAction {
 		updateTargetAction();
 		return (fTargetAction != null ? fTargetAction.isEnabled() : false);
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.action.IAction#isHandled()
+	 */
+	public boolean isHandled() {
+		updateTargetAction();
+		return (fTargetAction != null ? fTargetAction.isHandled() : false);
+	}
 
 	/**
 	 * @see org.eclipse.jface.action.IAction#removePropertyChangeListener(org.eclipse.jface.util.IPropertyChangeListener)
