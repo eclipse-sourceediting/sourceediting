@@ -53,8 +53,8 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 		protected Object prevObject;
 		protected XMLTableTreeViewer viewer;
 
-		public DelayedRefreshTimer(XMLTableTreeViewer viewer) {
-			this.viewer = viewer;
+		public DelayedRefreshTimer(XMLTableTreeViewer treeViewer) {
+			this.viewer = treeViewer;
 		}
 
 		public boolean isRefreshPending() {
