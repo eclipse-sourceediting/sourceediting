@@ -37,7 +37,7 @@ import org.eclipse.wst.xml.validation.internal.ui.eclipse.XMLValidator;
  */
 public class BaseTestCase extends TestCase
 {
-  protected String FILE_PROTOCOL = "file://"; 
+  protected String FILE_PROTOCOL = "file:///"; 
   protected String PLUGIN_ABSOLUTE_PATH;
   protected String SAMPLES_DIR = "testresources/samples/";
   protected String GENERATED_RESULTS_DIR = "testresources/generatedResults/";
