@@ -4,7 +4,7 @@
    id="org.eclipse.wst.web.ui"
    name="Simple Web UI Plug-in"
    version="1.0.0"
-   provider-name="IBM"
+   provider-name="Eclipse.org"
    description="This plugin contains the UI to create a simple non j2ee web project."
    class="org.eclipse.wst.web.ui.internal.WSTWebUIPlugin">
 
