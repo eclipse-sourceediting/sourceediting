@@ -36,7 +36,7 @@ public class TagNameRegion implements ITextRegion {
 		fLength = (short) length;
 	}
 
-	public void adjustLengthWith(int i) {
+	public void adjustLength(int i) {
 		fLength += i;
 
 	}

@@ -56,7 +56,7 @@ public class ContextRegion implements ITextRegion {
 	 * 
 	 * @see com.ibm.sed.structured.text.core.ITextRegionCore#adjustLengthWith(int)
 	 */
-	public void adjustLengthWith(int i) {
+	public void adjustLength(int i) {
 		fLength += i;
 	}
 

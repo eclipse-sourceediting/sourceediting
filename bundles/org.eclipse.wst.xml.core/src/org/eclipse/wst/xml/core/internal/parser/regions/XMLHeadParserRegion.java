@@ -45,7 +45,7 @@ public class XMLHeadParserRegion implements ITextRegion {
 		fText = text;
 	}
 
-	public void adjustLengthWith(int i) {
+	public void adjustLength(int i) {
 		fLength += i;
 
 	}

@@ -28,7 +28,7 @@ import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.core.util.Utilities;
 
 
-public class BasicStructuredDocumentRegion extends Object implements IStructuredDocumentRegion {
+public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion {
 	private static final String TEXT_STORE_NOT_ASSIGNED = "text store not assigned yet"; //$NON-NLS-1$
 	private static final String UNDEFINED = "org.eclipse.wst.sse.core.structuredDocument.UNDEFINED"; //$NON-NLS-1$
 
@@ -78,7 +78,7 @@ public class BasicStructuredDocumentRegion extends Object implements IStructured
 		start += i;
 	}
 
-	public void adjustLengthWith(int i) {
+	public void adjustLength(int i) {
 		length += i;
 	}
 

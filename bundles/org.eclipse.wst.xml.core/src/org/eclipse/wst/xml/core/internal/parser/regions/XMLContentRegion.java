@@ -41,7 +41,7 @@ public class XMLContentRegion implements ITextRegion {
 	}
 
 
-	public void adjustLengthWith(int i) {
+	public void adjustLength(int i) {
 		fLength += i;
 
 	}

@@ -13,6 +13,7 @@
 package org.eclipse.wst.sse.core.text;
 
 import org.eclipse.jface.text.IDocumentPartitioner;
+import org.eclipse.wst.sse.core.internal.text.rules.IStructuredTypedRegion;
 
 
 /**

@@ -35,7 +35,7 @@ public class TagCloseRegion implements ITextRegion {
 		fStart = start;
 	}
 
-	public void adjustLengthWith(int i) {
+	public void adjustLength(int i) {
 		throw new SourceEditingRuntimeException("invalid for this region type"); //$NON-NLS-1$
 
 	}

@@ -36,7 +36,7 @@ public class TagOpenRegion implements ITextRegion {
 		fLength = length;
 	}
 
-	public void adjustLengthWith(int i) {
+	public void adjustLength(int i) {
 		fLength += i;
 
 	}

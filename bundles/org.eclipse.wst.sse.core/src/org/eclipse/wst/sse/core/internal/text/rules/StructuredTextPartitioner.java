@@ -31,9 +31,6 @@ import org.eclipse.wst.sse.core.text.IStructuredPartitionTypes;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.sse.core.text.SimpleStructuredTypedRegion;
-import org.eclipse.wst.sse.core.text.IStructuredRegion;
-import org.eclipse.wst.sse.core.text.IStructuredTypedRegion;
 
 
 /**

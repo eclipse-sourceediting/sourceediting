@@ -13,10 +13,10 @@ package org.eclipse.jst.jsp.core.internal.text;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITypedRegion;
+import org.eclipse.wst.sse.core.internal.text.rules.IStructuredTypedRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredTextPartitioner;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.sse.core.text.IStructuredTypedRegion;
 
 /**
  * To be used when no known partitioner is available.

@@ -381,15 +381,15 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 					//region.setParent(container);
 					region.adjustStart(container.getLength() - region.getStart());
 				}
-				currentNode.getLastRegion().adjustLengthWith(region.getLength());
-				currentNode.adjustLengthWith(region.getLength());
+				currentNode.getLastRegion().adjustLength(region.getLength());
+				currentNode.adjustLength(region.getLength());
 			} else if (type == XMLRegionContext.UNDEFINED && currentNode != null) {
 				// skip on a very-first region situation as the default
 				// behavior is good enough
 				// combine with previous if also undefined
 				if (currentNode.getLastRegion() != null && currentNode.getLastRegion().getType() == XMLRegionContext.UNDEFINED) {
-					currentNode.getLastRegion().adjustLengthWith(region.getLength());
-					currentNode.adjustLengthWith(region.getLength());
+					currentNode.getLastRegion().adjustLength(region.getLength());
+					currentNode.adjustLength(region.getLength());
 				}
 				// previous wasn't undefined
 				else {

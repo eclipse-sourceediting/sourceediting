@@ -41,7 +41,7 @@ public class WhiteSpaceOnlyRegion implements ITextRegion {
 		fStart += i;
 	}
 
-	public void adjustLengthWith(int i) {
+	public void adjustLength(int i) {
 		fLength += i;
 	}
 

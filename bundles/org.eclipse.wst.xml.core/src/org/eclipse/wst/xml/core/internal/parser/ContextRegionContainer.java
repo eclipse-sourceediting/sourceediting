@@ -69,7 +69,7 @@ public class ContextRegionContainer implements ITextRegionContainer {
 
 	}
 
-	public void adjustLengthWith(int i) {
+	public void adjustLength(int i) {
 		length += i;
 	}
 

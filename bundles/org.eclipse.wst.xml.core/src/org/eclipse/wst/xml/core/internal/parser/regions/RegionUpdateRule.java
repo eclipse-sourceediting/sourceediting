@@ -190,7 +190,7 @@ public class RegionUpdateRule {
 			// that is in only the trailing whitespace region, we should not
 			// do a quick change,
 			// so 'canHandle' should have been false for those case.
-			region.adjustLengthWith(lengthDifference);
+			region.adjustLength(lengthDifference);
 			// TO_DO_FUTURE: cache value of canHandleAsWhiteSpace from above
 			// If we are handling as whitespace, there is no need to increase
 			// the text length, only

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,8 +13,6 @@
 package org.eclipse.wst.sse.core.text;
 
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
-
-
 
 /**
  * A simple description of a bit of text (technically, a bit of a text buffer)
@@ -52,7 +50,7 @@ public interface ITextRegion {
 	 * 
 	 * For use by parsers and reparsers only.
 	 */
-	void adjustLengthWith(int i);
+	void adjustLength(int i);
 
 	/**
 	 * Changes start offset of region. May be less than, equal to, or greater
@@ -84,7 +82,8 @@ public interface ITextRegion {
 	void equatePositions(ITextRegion region);
 
 	/**
-	 * Returns the end offset of this region.
+	 * Returns the end offset of this region. Whether is relative to the
+	 * document, or another region depends on the subtype.
 	 * 
 	 * Follows the Prime Directive: getEnd() == getStart() + getLength()
 	 * 
@@ -102,7 +101,8 @@ public interface ITextRegion {
 	int getLength();
 
 	/**
-	 * Returns the start of the region.
+	 * Returns the start of the region. Whether is relative to the document,
+	 * or another region depends on the subtype.
 	 * 
 	 * Follows the Prime Directive: getEnd() == getStart() + getLength()
 	 * 

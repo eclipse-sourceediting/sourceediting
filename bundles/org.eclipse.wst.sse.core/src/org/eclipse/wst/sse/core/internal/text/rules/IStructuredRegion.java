@@ -10,15 +10,18 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.text;
+package org.eclipse.wst.sse.core.internal.text.rules;
 
-import org.eclipse.jface.text.ITypedRegion;
+import org.eclipse.jface.text.IRegion;
 
 /**
- * Similar to extended interface, except it allows the length, offset, and
- * type to be set. This is useful when iterating through a number of "small"
- * regions, that all map to the the same partion regions.
+ * Like super class except allows length and offset to be modified. This is
+ * convenient for some algorithms, and allows region objects to be reused.
+ * Note: There MIGHT be some code that assumes regions are immutable. This
+ * class would not be appropriate for those uses.
  */
-public interface IStructuredTypedRegion extends IStructuredRegion, ITypedRegion {
-	void setType(String partitionType);
+public interface IStructuredRegion extends IRegion {
+	void setLength(int length);
+
+	void setOffset(int offset);
 }

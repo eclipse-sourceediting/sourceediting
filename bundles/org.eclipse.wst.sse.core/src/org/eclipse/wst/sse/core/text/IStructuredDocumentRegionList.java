@@ -12,20 +12,39 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.text;
 
-
-
 import java.util.Enumeration;
 
 /**
  * This is a class used to provide a list of StructuredDocumentRegions, so the
  * implementation of how the list is formed can be hidden (encapsulated by
  * this class).
+ * 
+ * ISSUE: should extend ITextRegionList instead?
+ * 
+ * @since 1.0
+ * 
  */
 public interface IStructuredDocumentRegionList {
 
+	/**
+	 * Returns enumeration.
+	 * 
+	 * @return enumeration.
+	 */
 	Enumeration elements();
 
+	/**
+	 * Returns size of list.
+	 * 
+	 * @return size of list.
+	 */
 	int getLength();
 
+	/**
+	 * Returns the structured document region at index i.
+	 * 
+	 * @param i
+	 * @return
+	 */
 	IStructuredDocumentRegion item(int i);
 }

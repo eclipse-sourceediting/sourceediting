@@ -59,7 +59,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * 
 	 * @see com.ibm.sed.structured.text.ITextRegion#adjustLengthWith(int)
 	 */
-	public void adjustLengthWith(int i) {
+	public void adjustLength(int i) {
 		// XXX Auto-generated method stub
 
 	}
