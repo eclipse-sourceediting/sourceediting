@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*nlsXXX*/
-package org.eclipse.wst.sse.core.jsp.parser.internal;
+package org.eclipse.jst.jsp.core.internal.parser.internal;
 
 import java.io.CharArrayReader;
 import java.io.IOException;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.wst.sse.core.jsp.Logger;
+import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.wst.sse.core.parser.BlockMarker;
 import org.eclipse.wst.sse.core.parser.BlockTokenizer;
 import org.eclipse.wst.sse.core.parser.TagMarker;
@@ -25,9 +25,9 @@ import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.sse.core.xml.internal.parser.ContextRegionContainer;
-import org.eclipse.wst.sse.core.xml.internal.parser.IntStack;
-import org.eclipse.wst.sse.core.xml.jsp.model.parser.temp.XMLJSPRegionContexts;
+import org.eclipse.wst.xml.core.internal.parser.ContextRegionContainer;
+import org.eclipse.wst.xml.core.internal.parser.IntStack;
+import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 
 %%
 

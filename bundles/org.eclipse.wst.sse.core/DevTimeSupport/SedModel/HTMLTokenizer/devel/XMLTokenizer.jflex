@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*nlsXXX*/
-package org.eclipse.wst.sse.core.xml.internal.parser;
+package org.eclipse.wst.xml.core.internal.parser;
 
 import java.io.CharArrayReader;
 import java.io.IOException;
@@ -22,9 +22,9 @@ import org.eclipse.wst.sse.core.parser.BlockTokenizer;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.sse.core.xml.Logger;
-import org.eclipse.wst.sse.core.xml.internal.parser.regions.XMLParserRegionFactory;
-import org.eclipse.wst.sse.core.xml.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.Logger;
+import org.eclipse.wst.xml.core.internal.parser.regions.XMLParserRegionFactory;
+import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 
 %%
 
@@ -36,19 +36,10 @@ import org.eclipse.wst.sse.core.xml.parser.XMLRegionContext;
 	private String fBufferedContext = null;
 	private int fBufferedStart = 1;
 	private int fBufferedLength = 0;
-	private ContextRegionContainer fBufferedEmbeddedContainer = null;
 	private String f_context = null;
 
 	// state stack for handling embedded regions
 	private IntStack fStateStack = new IntStack();
-	// a "hint" as to what an embedded region should be evaluated
-	private String fEmbeddedHint = UNDEFINED;
-	// a "hint" as to what state to enter once an embedded region has
-	//   been completed
-	private int fEmbeddedPostState = YYINITIAL;
-	// the container used to create embedded regions
-	private ContextRegionContainer fEmbeddedContainer = null;
-	private static final String PROXY_CONTEXT = "PROXY_CONTEXT";
 
 	private String context = null;
 	private int start = 0;
@@ -69,8 +60,6 @@ import org.eclipse.wst.sse.core.xml.parser.XMLRegionContext;
 	private boolean fIsCaseSensitiveBlocking = true;
 
 	private XMLParserRegionFactory fRegionFactory = new XMLParserRegionFactory();
-
-	private static final String rcsver = "$Id: XMLTokenizer.jflex,v 1.4.2.1 2004/10/20 15:21:33 kitlo Exp $";//$NON-NLS-1$
 /**
  * user method 
  */
@@ -302,15 +291,8 @@ private final String doBlockTagScan() throws IOException {
  * so that whitespace can be collapsed.
  */
 public final ITextRegion getNextToken() throws IOException {
-	fEmbeddedContainer = null;
 	// load the starting non-whitespace token (assume that it is so)
 	if (fShouldLoadBuffered) {
-		if (fBufferedEmbeddedContainer != null) {
-			ITextRegion container = fBufferedEmbeddedContainer;
-			fBufferedEmbeddedContainer = null;
-			fShouldLoadBuffered = false;
-			return container;
-		}
 		context = fBufferedContext;
 		start = fBufferedStart;
 		textLength = length = fBufferedLength;
@@ -318,10 +300,7 @@ public final ITextRegion getNextToken() throws IOException {
 	}
 	else {
 		context = primGetNextToken();
-		if (context == PROXY_CONTEXT) {
-			return fEmbeddedContainer;
-		}
-		else if (context == XML_TAG_NAME) {
+		if (context == XML_TAG_NAME) {
 			if(containsTagName(yy_buffer, yy_startRead, yy_markedPos-yy_startRead))
 				fCurrentTagName = yytext();
 			else
@@ -342,11 +321,7 @@ public final ITextRegion getNextToken() throws IOException {
 	}
 	// store the next token
 	f_context = primGetNextToken();
-	if (f_context == PROXY_CONTEXT) {
-		fBufferedEmbeddedContainer = fEmbeddedContainer;
-		fShouldLoadBuffered = true;
-	}
-	else if (f_context == XML_TAG_NAME) {
+	if (f_context == XML_TAG_NAME) {
 		if(containsTagName(yy_buffer, yy_startRead, yy_markedPos-yy_startRead))
 			fCurrentTagName = yytext();
 		else
@@ -477,8 +452,6 @@ public void reset(java.io.Reader in, int newOffset) {
 	start = 0;
 	textLength = 0;
 	length = 0;
-
-	fEmbeddedContainer = null;
 }
 
 	/**
@@ -951,8 +924,6 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 <YYINITIAL, ST_XML_TAG_NAME, ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_DECLARATION, ST_XML_ATTRIBUTE_VALUE> {genericTagOpen} {
 	if(Debug.debugTokenizer)
 		dump("\nstart tag open");//$NON-NLS-1$
-	fEmbeddedHint = XML_TAG_NAME;
-	fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
         yybegin(ST_XML_TAG_NAME);
         return XML_TAG_OPEN;
 }
@@ -962,8 +933,6 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 <YYINITIAL, ST_XML_TAG_NAME, ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE, ST_XML_DECLARATION> {genericEndTagOpen} {
 	if(Debug.debugTokenizer)
 		dump("\nend tag open");//$NON-NLS-1$
-	fEmbeddedHint = XML_TAG_NAME;
-	fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
         yybegin(ST_XML_TAG_NAME);
         return XML_END_TAG_OPEN;
 }
@@ -971,8 +940,6 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 <ST_XML_TAG_NAME> {Name} {
 	if(Debug.debugTokenizer)
 		dump("tag name");//$NON-NLS-1$
-	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
-	fEmbeddedPostState = ST_XML_EQUALS;
         yybegin(ST_XML_ATTRIBUTE_NAME);
         return XML_TAG_NAME;
 }
@@ -980,8 +947,6 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 <ST_XML_ATTRIBUTE_NAME, ST_XML_EQUALS> {Name} {
 	if(Debug.debugTokenizer)
 		dump("attr name");//$NON-NLS-1$
-	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
-	fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
         yybegin(ST_XML_EQUALS);
         return XML_TAG_ATTRIBUTE_NAME;
 }
@@ -989,8 +954,6 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 <ST_XML_EQUALS> {Eq} {
 	if(Debug.debugTokenizer)
 		dump("equals");//$NON-NLS-1$
-	fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
-	fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
         yybegin(ST_XML_ATTRIBUTE_VALUE);
         return XML_TAG_ATTRIBUTE_EQUALS;
 }
@@ -999,8 +962,6 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 <ST_XML_ATTRIBUTE_VALUE> {AttValue} | ([\'\"]([^\'\"\040\011\012\015<>/]|\/+[^\'\"\040\011\012\015<>/] )* ) {
 	if(Debug.debugTokenizer)
 		dump("attr value");//$NON-NLS-1$
-	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
-	fEmbeddedPostState = ST_XML_EQUALS;
         yybegin(ST_XML_ATTRIBUTE_NAME);
         return XML_TAG_ATTRIBUTE_VALUE;
 }
@@ -1010,10 +971,7 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 <ST_XML_TAG_NAME, ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE> {genericTagClose} {
 	if(Debug.debugTokenizer)
 		dump("tag close");//$NON-NLS-1$
-	fEmbeddedHint = UNDEFINED;
 	if(isBlockMarker()) {
-		fEmbeddedHint = getBlockMarkerContext();
-		fEmbeddedPostState = ST_BLOCK_TAG_SCAN;
         	yybegin(ST_BLOCK_TAG_SCAN);
 	}
 	else
@@ -1023,7 +981,6 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 /* the tag's close was found, but the tag doesn't need a matching end tag */
 <ST_XML_TAG_NAME, ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE> {genericEmptyTagClose} {
         yybegin(YYINITIAL);
-	fEmbeddedHint = UNDEFINED;
 	if(Debug.debugTokenizer)
 		dump("empty tag close");//$NON-NLS-1$
         return XML_EMPTY_TAG_CLOSE;
@@ -1044,8 +1001,6 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 <YYINITIAL, ST_XML_TAG_NAME, ST_XML_EQUALS, ST_XML_ATTRIBUTE_NAME, ST_XML_ATTRIBUTE_VALUE, ST_XML_DECLARATION> {CommentStart} {
 	if(Debug.debugTokenizer)
 		dump("\ncomment start");//$NON-NLS-1$
-	fEmbeddedHint = XML_COMMENT_TEXT;
-	fEmbeddedPostState = ST_XML_COMMENT;
 	yybegin(ST_XML_COMMENT);
 	return XML_COMMENT_OPEN;
 }
@@ -1058,7 +1013,6 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 <ST_XML_COMMENT_END> {CommentEnd} {
 	if(Debug.debugTokenizer)
 		dump("comment end");//$NON-NLS-1$
-	fEmbeddedHint = UNDEFINED;
 	yybegin(YYINITIAL);
 	return XML_COMMENT_CLOSE;
 }
@@ -1075,8 +1029,6 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 <ST_CDATA_TEXT> .|\r|\n {
 	if(Debug.debugTokenizer)
 		dump("CDATA text");//$NON-NLS-1$
-	fEmbeddedHint = XML_CDATA_TEXT;
-	fEmbeddedPostState = ST_CDATA_TEXT;
 	String blockContext = doBlockScan("]]>", XML_CDATA_TEXT, ST_CDATA_END);//$NON-NLS-1$
 	if(blockContext == XML_CDATA_TEXT)
 		yybegin(ST_CDATA_END);
@@ -1115,23 +1067,18 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 <ST_PI> ((X|x)(M|m)(L|l)) {
 	if(Debug.debugTokenizer)
 		dump("XML processing instruction target");//$NON-NLS-1$
-	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
-	fEmbeddedPostState = ST_XML_EQUALS;
         yybegin(ST_XML_PI_ATTRIBUTE_NAME);
         return XML_TAG_NAME;
 }
 <ST_PI> ([iI][mM][pP][oO][rR][tT]{S}*) {
 	if(Debug.debugTokenizer)
 		dump("DHTML processing instruction target");//$NON-NLS-1$
-	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
-	fEmbeddedPostState = ST_XML_EQUALS;
         yybegin(ST_DHTML_ATTRIBUTE_NAME);
         return XML_TAG_NAME;
 }
 <ST_PI> {Name} {
 	if(Debug.debugTokenizer)
 		dump("processing instruction target");//$NON-NLS-1$
-	fEmbeddedHint = XML_CONTENT;
         yybegin(ST_PI_WS);
         return XML_TAG_NAME;
 }
@@ -1142,7 +1089,6 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 <ST_PI, ST_PI_WS> \?> {
 	if(Debug.debugTokenizer)
 		dump("processing instruction end");//$NON-NLS-1$
-	fEmbeddedHint = UNDEFINED;
         yybegin(YYINITIAL);
         return XML_PI_CLOSE;
 }
@@ -1152,7 +1098,6 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 }
 <ST_PI_CONTENT,ST_XML_PI_TAG_CLOSE> \?> {
 		// ended with nothing inside
-		fEmbeddedHint = UNDEFINED;
         yybegin(YYINITIAL);
         return XML_PI_CLOSE;
 }
@@ -1165,8 +1110,6 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 <ST_XML_PI_EQUALS> {Eq} {
 	if(Debug.debugTokenizer)
 		dump("XML processing instruction '='");//$NON-NLS-1$
-	fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
-	fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
         yybegin(ST_XML_PI_ATTRIBUTE_VALUE);
         return XML_TAG_ATTRIBUTE_EQUALS;
 }
@@ -1174,8 +1117,6 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 <ST_XML_PI_ATTRIBUTE_VALUE> {AttValue} | ([\'\"]([^\'\"\040\011\012\015<>/]|\/+[^\'\"\040\011\012\015<>/] )* ) {
 	if(Debug.debugTokenizer)
 		dump("XML processing instruction attribute value");//$NON-NLS-1$
-	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
-	fEmbeddedPostState = ST_XML_EQUALS;
         yybegin(ST_XML_PI_ATTRIBUTE_NAME);
         return XML_TAG_ATTRIBUTE_VALUE;
 }
@@ -1183,7 +1124,6 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 <ST_XML_PI_EQUALS, ST_XML_PI_ATTRIBUTE_NAME, ST_XML_PI_ATTRIBUTE_VALUE> {PIend} {
 	if(Debug.debugTokenizer)
 		dump("XML processing instruction end");//$NON-NLS-1$
-	fEmbeddedHint = UNDEFINED;
         yybegin(YYINITIAL);
         return XML_PI_CLOSE;
 }
@@ -1197,8 +1137,6 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 <ST_DHTML_EQUALS> {Eq} {
 	if(Debug.debugTokenizer)
 		dump("DHTML processing instruction '='");//$NON-NLS-1$
-	fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
-	fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
         yybegin(ST_DHTML_ATTRIBUTE_VALUE);
         return XML_TAG_ATTRIBUTE_EQUALS;
 }
@@ -1206,8 +1144,6 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 <ST_DHTML_ATTRIBUTE_VALUE> {AttValue} | ([\'\"]([^\'\"\040\011\012\015<>/]|\/+[^\'\"\040\011\012\015<>/] )* ) {
 	if(Debug.debugTokenizer)
 		dump("DHTML processing instruction attribute value");//$NON-NLS-1$
-	fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
-	fEmbeddedPostState = ST_XML_EQUALS;
         yybegin(ST_DHTML_ATTRIBUTE_NAME);
         return XML_TAG_ATTRIBUTE_VALUE;
 }
@@ -1215,7 +1151,6 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 <ST_DHTML_EQUALS, ST_DHTML_ATTRIBUTE_NAME, ST_DHTML_ATTRIBUTE_VALUE> [/]*> {
 	if(Debug.debugTokenizer)
 		dump("DHTML processing instruction end");//$NON-NLS-1$
-	fEmbeddedHint = UNDEFINED;
         yybegin(YYINITIAL);
         return XML_PI_CLOSE;
 }
@@ -1262,30 +1197,24 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 <ST_XML_DOCTYPE_EXTERNAL_ID> [Pp][Uu][Bb][Ll][Ii][Cc] {
 	if(Debug.debugTokenizer)
 		dump("doctype external id");//$NON-NLS-1$
-	fEmbeddedHint = XML_DOCTYPE_EXTERNAL_ID_PUBREF;
 	yybegin(ST_XML_DOCTYPE_ID_PUBLIC);
 	return XML_DOCTYPE_EXTERNAL_ID_PUBLIC;
 }
 <ST_XML_DOCTYPE_EXTERNAL_ID> [Ss][Yy][Ss][Tt][Ee][Mm] {
 	if(Debug.debugTokenizer)
 		dump("doctype external id");//$NON-NLS-1$
-	fEmbeddedHint = XML_DOCTYPE_EXTERNAL_ID_SYSREF;
 	yybegin(ST_XML_DOCTYPE_ID_SYSTEM);
 	return XML_DOCTYPE_EXTERNAL_ID_SYSTEM;
 }
 <ST_XML_DOCTYPE_ID_PUBLIC> {AttValue}|{PubidLiteral}|([\'\"]([^\'\"\040\011\012\015<>/]|\/+[^\'\"\040\011\012\015<>/] )* ) {
 	if(Debug.debugTokenizer)
 		dump("doctype public reference");//$NON-NLS-1$
-	fEmbeddedHint = UNDEFINED;
-	fEmbeddedPostState = YYINITIAL;
 	yybegin(ST_XML_DOCTYPE_ID_SYSTEM);
 	return XML_DOCTYPE_EXTERNAL_ID_PUBREF;
 }
 <ST_XML_DOCTYPE_ID_SYSTEM> {AttValue}|{SystemLiteral}|([\'\"]([^\'\"\040\011\012\015<>/]|\/+[^\'\"\040\011\012\015<>/] )* ) {
 	if(Debug.debugTokenizer)
 		dump("doctype system reference");//$NON-NLS-1$
-	fEmbeddedHint = UNDEFINED;
-	fEmbeddedPostState = YYINITIAL;
 	yybegin(ST_XML_DECLARATION_CLOSE);
 	return XML_DOCTYPE_EXTERNAL_ID_SYSREF;
 }
@@ -1295,8 +1224,6 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 <ST_XML_ELEMENT_DECLARATION> {AttValue}|{PubidLiteral}|([\'\"]([^\'\"\040\011\012\015<>/]|\/+[^\'\"\040\011\012\015<>/] )* ) {
 	if(Debug.debugTokenizer)
 		dump("elementdecl name");//$NON-NLS-1$
-	fEmbeddedHint = UNDEFINED;
-	fEmbeddedPostState = YYINITIAL;
 	yybegin(ST_XML_ELEMENT_DECLARATION_CONTENT);
 	return XML_ELEMENT_DECL_NAME;
 }
@@ -1322,8 +1249,6 @@ Extender = [\u00B7\u02D0\u02D1\u0387\u0640\u0E46\u0EC6\u3005\u3031-\u3035\u309D-
 <ST_XML_ATTLIST_DECLARATION> {AttValue}|{PubidLiteral}|([\'\"]([^\'\"\040\011\012\015<>/]|\/+[^\'\"\040\011\012\015<>/] )* ) {
 	if(Debug.debugTokenizer)
 		dump("attlist name");//$NON-NLS-1$
-	fEmbeddedHint = UNDEFINED;
-	fEmbeddedPostState = YYINITIAL;
 	yybegin(ST_XML_ATTLIST_DECLARATION_CONTENT);
 	return XML_ATTLIST_DECL_NAME;
 }
