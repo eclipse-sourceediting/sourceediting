@@ -31,8 +31,6 @@ import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.sse.ui.IModelProvider;
 import org.eclipse.wst.sse.ui.edit.util.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 
@@ -79,10 +77,7 @@ public class CommentActionXML extends TextEditorAction {
 	 */
 	void done() {
 		if (fModel != null) {
-			ITextEditor editor = getTextEditor();
-			if (editor != null && !(editor.getDocumentProvider() instanceof IModelProvider)) {
-				fModel.releaseFromEdit();
-			}
+			fModel.releaseFromEdit();
 			fModel = null;
 		}
 	}
@@ -112,15 +107,12 @@ public class CommentActionXML extends TextEditorAction {
 			return;
 
 		fDocument = docProvider.getDocument(input);
+		if (fDocument == null)
+			return;
 
-		if (docProvider instanceof IModelProvider) {
-			fModel = ((IModelProvider) docProvider).getModel(input);
-		}
-		else {
-			IModelManager modelManager = getModelManager();
-			fModel = modelManager.getModelForEdit((IStructuredDocument) fDocument);
-		}
-		if (fDocument == null || fModel == null)
+		IModelManager modelManager = getModelManager();
+		fModel = modelManager.getExistingModelForEdit(fDocument);
+		if (fModel == null)
 			return;
 
 		fSelection = getCurrentSelection();
