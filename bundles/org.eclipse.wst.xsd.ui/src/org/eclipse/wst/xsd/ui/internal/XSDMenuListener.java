@@ -144,6 +144,11 @@ public class XSDMenuListener implements IMenuListener
           }
           else
           {
+            if (refSchema == xsdSchema)
+            {
+              // if it includes itself, then we should still be able to edit it
+              isReadOnly = false;
+            }
             flag = false;
           }
         }
