@@ -130,7 +130,10 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 				IStructuredModel model = null;
 				try {
 					model = getModelManager().getExistingModelForRead(doc);
-					file = project.getWorkspace().getRoot().getFileForLocation(new Path(model.getBaseLocation()));
+					// (pa) with FileBuffers, model base location is relative
+					// so we need to use the getFile(...) call
+					//file = project.getWorkspace().getRoot().getFileForLocation(new Path(model.getBaseLocation()));
+					file = project.getWorkspace().getRoot().getFile(new Path(model.getBaseLocation()));
 				} finally {
 					if (model != null)
 						model.releaseFromRead();
