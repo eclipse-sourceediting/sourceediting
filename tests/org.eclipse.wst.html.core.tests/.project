@@ -3,10 +3,6 @@
 	<name>org.eclipse.wst.html.core.tests</name>
 	<comment></comment>
 	<projects>
-		<project>com.ibm.encoding.resource</project>
-		<project>com.ibm.sse.model</project>
-		<project>com.ibm.sse.model.xml</project>
-		<project>org.junit</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
