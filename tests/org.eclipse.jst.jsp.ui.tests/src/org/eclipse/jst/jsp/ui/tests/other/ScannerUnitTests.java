@@ -19,7 +19,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
-import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
+import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.modelhandler.ModelHandlerForJSP;
 import org.eclipse.jst.jsp.ui.tests.JSPUITestsPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
@@ -358,8 +358,8 @@ public class ScannerUnitTests extends TestCase {
 		boolean typeCheck = checkSimpleRegionTypes(nodes.item(i++).getRegions(), new String[]{XMLRegionContext.XML_CONTENT})
 					&& checkSimpleRegionTypes(nodes.item(i++).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS,
 								XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, XMLRegionContext.XML_TAG_CLOSE})
-					&& checkComplexRegionTypes(nodes.item(i++).getRegions(), new String[]{XMLRegionContext.BLOCK_TEXT, XMLRegionContext.BLOCK_TEXT, XMLRegionContext.BLOCK_TEXT}, new String[][]{{XMLJSPRegionContexts.JSP_EXPRESSION_OPEN,
-								XMLJSPRegionContexts.JSP_CONTENT, XMLJSPRegionContexts.JSP_CLOSE}})
+					&& checkComplexRegionTypes(nodes.item(i++).getRegions(), new String[]{XMLRegionContext.BLOCK_TEXT, XMLRegionContext.BLOCK_TEXT, XMLRegionContext.BLOCK_TEXT}, new String[][]{{DOMJSPRegionContexts.JSP_EXPRESSION_OPEN,
+								DOMJSPRegionContexts.JSP_CONTENT, DOMJSPRegionContexts.JSP_CLOSE}})
 					&& checkSimpleRegionTypes(nodes.item(i++).getRegions(), new String[]{XMLRegionContext.XML_END_TAG_OPEN, XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_CLOSE})
 					&& checkSimpleRegionTypes(nodes.item(i++).getRegions(), new String[]{XMLRegionContext.XML_CONTENT})
 					&& checkSimpleRegionTypes(nodes.item(i++).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_CLOSE})
@@ -571,7 +571,7 @@ public class ScannerUnitTests extends TestCase {
 		boolean typeCheck = checkSimpleRegionTypes(nodes.item(0).getRegions(), new String[]{XMLRegionContext.XML_CONTENT})
 					&& checkSimpleRegionTypes(nodes.item(1).getRegions(), new String[]{XMLRegionContext.XML_COMMENT_OPEN, XMLRegionContext.XML_COMMENT_TEXT, XMLRegionContext.XML_COMMENT_CLOSE})
 					&& checkSimpleRegionTypes(nodes.item(2).getRegions(), new String[]{XMLRegionContext.XML_COMMENT_OPEN, XMLRegionContext.XML_COMMENT_CLOSE})
-					&& checkSimpleRegionTypes(nodes.item(3).getRegions(), new String[]{XMLJSPRegionContexts.JSP_COMMENT_OPEN, XMLJSPRegionContexts.JSP_COMMENT_TEXT, XMLJSPRegionContexts.JSP_COMMENT_CLOSE})
+					&& checkSimpleRegionTypes(nodes.item(3).getRegions(), new String[]{DOMJSPRegionContexts.JSP_COMMENT_OPEN, DOMJSPRegionContexts.JSP_COMMENT_TEXT, DOMJSPRegionContexts.JSP_COMMENT_CLOSE})
 					&& checkSimpleRegionTypes(nodes.item(4).getRegions(), new String[]{XMLRegionContext.XML_CONTENT});
 		assertTrue("region context type check", typeCheck);
 		verifyLengths(0, nodes.item(0), text);
@@ -654,7 +654,7 @@ public class ScannerUnitTests extends TestCase {
 		assertTrue("IStructuredDocumentRegion and ITextRegion count", sizeCheck);
 		boolean typeCheck = checkSimpleRegionTypes(nodes.item(0).getRegions(), new String[]{XMLRegionContext.XML_CONTENT});
 		assertTrue("region context type check", typeCheck);
-		typeCheck = checkSimpleRegionTypes(((ITextRegionContainer) nodes.item(0).getRegions().get(0)).getRegions(), new String[]{XMLJSPRegionContexts.JSP_EL_OPEN, XMLJSPRegionContexts.JSP_EL_CONTENT, XMLJSPRegionContexts.JSP_EL_CLOSE});
+		typeCheck = checkSimpleRegionTypes(((ITextRegionContainer) nodes.item(0).getRegions().get(0)).getRegions(), new String[]{DOMJSPRegionContexts.JSP_EL_OPEN, DOMJSPRegionContexts.JSP_EL_CONTENT, DOMJSPRegionContexts.JSP_EL_CLOSE});
 		assertTrue("region context type check", typeCheck);
 		verifyLengths(0, nodes.item(0), text);
 	}
@@ -667,8 +667,8 @@ public class ScannerUnitTests extends TestCase {
 		assertTrue("IStructuredDocumentRegion and ITextRegion count", sizeCheck);
 		boolean typeCheck = checkSimpleRegionTypes(nodes.item(0).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS,
 					XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, XMLRegionContext.XML_EMPTY_TAG_CLOSE});
-		typeCheck &= checkSimpleRegionTypes(((ITextRegionContainer) nodes.item(0).getRegions().get(4)).getRegions(), new String[]{XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, XMLJSPRegionContexts.JSP_EL_OPEN,
-					XMLJSPRegionContexts.JSP_EL_CONTENT, XMLJSPRegionContexts.JSP_EL_CLOSE, XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE});
+		typeCheck &= checkSimpleRegionTypes(((ITextRegionContainer) nodes.item(0).getRegions().get(4)).getRegions(), new String[]{DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, DOMJSPRegionContexts.JSP_EL_OPEN,
+					DOMJSPRegionContexts.JSP_EL_CONTENT, DOMJSPRegionContexts.JSP_EL_CLOSE, DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE});
 		assertTrue("region context type check", typeCheck);
 		verifyModelLength();
 	}
@@ -681,8 +681,8 @@ public class ScannerUnitTests extends TestCase {
 		assertTrue("IStructuredDocumentRegion and ITextRegion count", sizeCheck);
 		boolean typeCheck = checkSimpleRegionTypes(nodes.item(0).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS,
 					XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, XMLRegionContext.XML_EMPTY_TAG_CLOSE});
-		typeCheck &= checkSimpleRegionTypes(((ITextRegionContainer) nodes.item(0).getRegions().get(4)).getRegions(), new String[]{XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE,
-					XMLJSPRegionContexts.JSP_EL_OPEN, XMLJSPRegionContexts.JSP_EL_CONTENT, XMLJSPRegionContexts.JSP_EL_CLOSE, XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE});
+		typeCheck &= checkSimpleRegionTypes(((ITextRegionContainer) nodes.item(0).getRegions().get(4)).getRegions(), new String[]{DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE,
+					DOMJSPRegionContexts.JSP_EL_OPEN, DOMJSPRegionContexts.JSP_EL_CONTENT, DOMJSPRegionContexts.JSP_EL_CLOSE, XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE});
 		assertTrue("region context type check", typeCheck);
 		verifyModelLength();
 	}
@@ -694,8 +694,8 @@ public class ScannerUnitTests extends TestCase {
 		assertTrue("IStructuredDocumentRegion and ITextRegion count", sizeCheck);
 		boolean typeCheck = checkSimpleRegionTypes(nodes.item(0).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS,
 					XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, XMLRegionContext.XML_EMPTY_TAG_CLOSE});
-		typeCheck &= checkSimpleRegionTypes(((ITextRegionContainer) nodes.item(0).getRegions().get(4)).getRegions(), new String[]{XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_SQUOTE, XMLJSPRegionContexts.JSP_EL_OPEN,
-					XMLJSPRegionContexts.JSP_EL_CONTENT, XMLJSPRegionContexts.JSP_EL_CLOSE, XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_SQUOTE});
+		typeCheck &= checkSimpleRegionTypes(((ITextRegionContainer) nodes.item(0).getRegions().get(4)).getRegions(), new String[]{DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_SQUOTE, DOMJSPRegionContexts.JSP_EL_OPEN,
+					DOMJSPRegionContexts.JSP_EL_CONTENT, DOMJSPRegionContexts.JSP_EL_CLOSE, DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_SQUOTE});
 		assertTrue("region context type check", typeCheck);
 		verifyModelLength();
 	}
@@ -708,8 +708,8 @@ public class ScannerUnitTests extends TestCase {
 		boolean typeCheck = checkSimpleRegionTypes(nodes.item(0).getRegions(), new String[]{XMLRegionContext.XML_CONTENT})
 					&& checkComplexRegionTypes(nodes.item(1).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS,
 								XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS, XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, XMLRegionContext.XML_TAG_CLOSE,},
-								new String[][]{{XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, XMLJSPRegionContexts.JSP_DECLARATION_OPEN, XMLJSPRegionContexts.JSP_CONTENT, XMLJSPRegionContexts.JSP_CLOSE,
-											XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, XMLRegionContext.WHITE_SPACE}});
+								new String[][]{{DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, DOMJSPRegionContexts.JSP_DECLARATION_OPEN, DOMJSPRegionContexts.JSP_CONTENT, DOMJSPRegionContexts.JSP_CLOSE,
+											DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, XMLRegionContext.WHITE_SPACE}});
 		assertTrue("region context type check", typeCheck);
 		verifyModelLength();
 	}
@@ -719,7 +719,7 @@ public class ScannerUnitTests extends TestCase {
 		boolean sizeCheck = checkSimpleRegionCounts(nodes, new int[]{3});
 		assertTrue("IStructuredDocumentRegion and ITextRegion count", sizeCheck);
 		boolean typeCheck = checkComplexRegionTypes(nodes.item(0).getRegions(), new String[]{XMLRegionContext.XML_CDATA_OPEN, XMLRegionContext.XML_CDATA_TEXT, XMLRegionContext.XML_CDATA_CLOSE,}, new String[][]{{
-					XMLJSPRegionContexts.JSP_DECLARATION_OPEN, XMLJSPRegionContexts.JSP_CLOSE}});
+					DOMJSPRegionContexts.JSP_DECLARATION_OPEN, DOMJSPRegionContexts.JSP_CLOSE}});
 		assertTrue("region context type check", typeCheck);
 		verifyModelLength();
 	}
@@ -731,8 +731,8 @@ public class ScannerUnitTests extends TestCase {
 		boolean typeCheck = checkSimpleRegionTypes(nodes.item(0).getRegions(), new String[]{XMLRegionContext.XML_CONTENT})
 					&& checkComplexRegionTypes(nodes.item(1).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS,
 								XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS, XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, XMLRegionContext.XML_TAG_CLOSE,},
-								new String[][]{{XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, XMLJSPRegionContexts.JSP_EXPRESSION_OPEN, XMLJSPRegionContexts.JSP_CONTENT, XMLJSPRegionContexts.JSP_CLOSE,
-											XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, XMLRegionContext.WHITE_SPACE}});
+								new String[][]{{DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, DOMJSPRegionContexts.JSP_EXPRESSION_OPEN, DOMJSPRegionContexts.JSP_CONTENT, DOMJSPRegionContexts.JSP_CLOSE,
+											DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, XMLRegionContext.WHITE_SPACE}});
 		assertTrue("region context type check", typeCheck);
 		verifyModelLength();
 	}
@@ -742,7 +742,7 @@ public class ScannerUnitTests extends TestCase {
 		boolean sizeCheck = checkSimpleRegionCounts(nodes, new int[]{3});
 		assertTrue("IStructuredDocumentRegion and ITextRegion count", sizeCheck);
 		boolean typeCheck = checkComplexRegionTypes(nodes.item(0).getRegions(), new String[]{XMLRegionContext.XML_CDATA_OPEN, XMLRegionContext.XML_CDATA_TEXT, XMLRegionContext.XML_CDATA_CLOSE,}, new String[][]{{
-					XMLJSPRegionContexts.JSP_EXPRESSION_OPEN, XMLJSPRegionContexts.JSP_CLOSE}});
+					DOMJSPRegionContexts.JSP_EXPRESSION_OPEN, DOMJSPRegionContexts.JSP_CLOSE}});
 		assertTrue("region context type check", typeCheck);
 		verifyModelLength();
 	}
@@ -754,8 +754,8 @@ public class ScannerUnitTests extends TestCase {
 		boolean typeCheck = checkSimpleRegionTypes(nodes.item(0).getRegions(), new String[]{XMLRegionContext.XML_CONTENT})
 					&& checkComplexRegionTypes(nodes.item(1).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS,
 								XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS, XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, XMLRegionContext.XML_TAG_CLOSE,},
-								new String[][]{{XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, XMLJSPRegionContexts.JSP_SCRIPTLET_OPEN, XMLJSPRegionContexts.JSP_CONTENT, XMLJSPRegionContexts.JSP_CLOSE,
-											XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, XMLRegionContext.WHITE_SPACE}});
+								new String[][]{{DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN, DOMJSPRegionContexts.JSP_CONTENT, DOMJSPRegionContexts.JSP_CLOSE,
+											DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, XMLRegionContext.WHITE_SPACE}});
 		assertTrue("region context type check", typeCheck);
 		verifyModelLength();
 	}
@@ -766,7 +766,7 @@ public class ScannerUnitTests extends TestCase {
 		boolean sizeCheck = checkSimpleRegionCounts(nodes, new int[]{3});
 		assertTrue("IStructuredDocumentRegion and ITextRegion count", sizeCheck);
 		boolean typeCheck = checkComplexRegionTypes(nodes.item(0).getRegions(), new String[]{XMLRegionContext.XML_CDATA_OPEN, XMLRegionContext.XML_CDATA_TEXT, XMLRegionContext.XML_CDATA_CLOSE,}, new String[][]{{
-					XMLJSPRegionContexts.JSP_SCRIPTLET_OPEN, XMLJSPRegionContexts.JSP_CLOSE}});
+					DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN, DOMJSPRegionContexts.JSP_CLOSE}});
 		assertTrue("region context type check", typeCheck);
 		verifyModelLength();
 	}
@@ -777,8 +777,8 @@ public class ScannerUnitTests extends TestCase {
 		boolean sizeCheck = checkSimpleRegionCounts(nodes, new int[]{6});
 		assertTrue("IStructuredDocumentRegion and ITextRegion count", sizeCheck);
 		boolean typeCheck = checkComplexRegionTypes(nodes.item(0).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS,
-					XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, XMLRegionContext.XML_TAG_CLOSE}, new String[][]{{XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME,
-					XMLRegionContext.XML_EMPTY_TAG_CLOSE, XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE}});
+					XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, XMLRegionContext.XML_TAG_CLOSE}, new String[][]{{DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME,
+					XMLRegionContext.XML_EMPTY_TAG_CLOSE, DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE}});
 		assertTrue("region context type check", typeCheck);
 		verifyModelLength();
 	}
@@ -822,7 +822,7 @@ public class ScannerUnitTests extends TestCase {
 		boolean typeCheck = checkSimpleRegionTypes(nodes.item(0).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS,
 					XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_CLOSE});
 		assertTrue("region context type check (tag)", typeCheck);
-		typeCheck = checkSimpleRegionTypes(((ITextRegionContainer) nodes.item(0).getRegions().get(4)).getRegions(), new String[]{XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME,
+		typeCheck = checkSimpleRegionTypes(((ITextRegionContainer) nodes.item(0).getRegions().get(4)).getRegions(), new String[]{DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME,
 					XMLRegionContext.UNDEFINED});
 		assertTrue("region context type check (broken embedded tag)", typeCheck);
 		typeCheck = checkSimpleRegionTypes(nodes.item(1).getRegions(), new String[]{XMLRegionContext.XML_CONTENT});
@@ -838,14 +838,14 @@ public class ScannerUnitTests extends TestCase {
 		int item = 0;
 		boolean typeCheck = checkSimpleRegionTypes(nodes.item(item++).getRegions(), new String[]{XMLRegionContext.XML_CONTENT})
 					&& checkComplexRegionTypes(nodes.item(item++).getRegions(), new String[]{XMLRegionContext.XML_COMMENT_OPEN, XMLRegionContext.XML_COMMENT_TEXT, XMLRegionContext.XML_COMMENT_TEXT, XMLRegionContext.XML_COMMENT_TEXT,
-								XMLRegionContext.XML_COMMENT_CLOSE}, new String[][]{{XMLJSPRegionContexts.JSP_COMMENT_OPEN, XMLJSPRegionContexts.JSP_COMMENT_TEXT, XMLJSPRegionContexts.JSP_COMMENT_CLOSE}})
+								XMLRegionContext.XML_COMMENT_CLOSE}, new String[][]{{DOMJSPRegionContexts.JSP_COMMENT_OPEN, DOMJSPRegionContexts.JSP_COMMENT_TEXT, DOMJSPRegionContexts.JSP_COMMENT_CLOSE}})
 					&& checkSimpleRegionTypes(nodes.item(item++).getRegions(), new String[]{XMLRegionContext.XML_CONTENT})
 					&& checkSimpleRegionTypes(nodes.item(item++).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_CLOSE})
 					&& checkSimpleRegionTypes(nodes.item(item++).getRegions(), new String[]{XMLRegionContext.XML_CONTENT})
 					&& checkSimpleRegionTypes(nodes.item(item++).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_CLOSE})
 					&& checkSimpleRegionTypes(nodes.item(item++).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_CLOSE})
-					&& checkComplexRegionTypes(nodes.item(item++).getRegions(), new String[]{XMLRegionContext.BLOCK_TEXT, XMLRegionContext.BLOCK_TEXT, XMLRegionContext.BLOCK_TEXT}, new String[][]{{XMLJSPRegionContexts.JSP_COMMENT_OPEN,
-								XMLJSPRegionContexts.JSP_COMMENT_TEXT, XMLJSPRegionContexts.JSP_COMMENT_CLOSE}})
+					&& checkComplexRegionTypes(nodes.item(item++).getRegions(), new String[]{XMLRegionContext.BLOCK_TEXT, XMLRegionContext.BLOCK_TEXT, XMLRegionContext.BLOCK_TEXT}, new String[][]{{DOMJSPRegionContexts.JSP_COMMENT_OPEN,
+								DOMJSPRegionContexts.JSP_COMMENT_TEXT, DOMJSPRegionContexts.JSP_COMMENT_CLOSE}})
 					&& checkSimpleRegionTypes(nodes.item(item++).getRegions(), new String[]{XMLRegionContext.XML_END_TAG_OPEN, XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_CLOSE})
 					&& checkSimpleRegionTypes(nodes.item(9).getRegions(), new String[]{XMLRegionContext.XML_CONTENT});
 		assertTrue("region context type check", typeCheck);
@@ -862,11 +862,11 @@ public class ScannerUnitTests extends TestCase {
 		boolean sizeCheck = checkSimpleRegionCounts(nodes, new int[]{1, 3, 1, 4, 1, 5, 1, 6, 1});
 		assertTrue("IStructuredDocumentRegion and ITextRegion count", sizeCheck);
 		boolean typeCheck = checkSimpleRegionTypes(nodes.item(0).getRegions(), new String[]{XMLRegionContext.XML_CONTENT})
-					&& checkSimpleRegionTypes(nodes.item(1).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLJSPRegionContexts.JSP_DIRECTIVE_NAME, XMLRegionContext.XML_TAG_CLOSE})
+					&& checkSimpleRegionTypes(nodes.item(1).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, DOMJSPRegionContexts.JSP_DIRECTIVE_NAME, XMLRegionContext.XML_TAG_CLOSE})
 					&& checkSimpleRegionTypes(nodes.item(2).getRegions(), new String[]{XMLRegionContext.XML_CONTENT})
-					&& checkSimpleRegionTypes(nodes.item(3).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLJSPRegionContexts.JSP_DIRECTIVE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_CLOSE})
+					&& checkSimpleRegionTypes(nodes.item(3).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, DOMJSPRegionContexts.JSP_DIRECTIVE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_CLOSE})
 					&& checkSimpleRegionTypes(nodes.item(4).getRegions(), new String[]{XMLRegionContext.XML_CONTENT})
-					&& checkSimpleRegionTypes(nodes.item(5).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLJSPRegionContexts.JSP_DIRECTIVE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS,
+					&& checkSimpleRegionTypes(nodes.item(5).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, DOMJSPRegionContexts.JSP_DIRECTIVE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS,
 								XMLRegionContext.XML_TAG_CLOSE})
 					&& checkSimpleRegionTypes(nodes.item(6).getRegions(), new String[]{XMLRegionContext.XML_CONTENT})
 					&& checkSimpleRegionTypes(nodes.item(7).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS,
@@ -908,8 +908,8 @@ public class ScannerUnitTests extends TestCase {
 		IStructuredDocumentRegionList nodes = setUpJSP("begin <%= \"Hello,World\" %> end");
 		boolean sizeCheck = checkSimpleRegionCounts(nodes, new int[]{1, 1, 1, 1, 1});
 		assertTrue("IStructuredDocumentRegion and ITextRegion count", sizeCheck);
-		boolean typeCheck = checkSimpleRegionTypes(nodes.item(0).getRegions(), new String[]{XMLRegionContext.XML_CONTENT}) && checkSimpleRegionTypes(nodes.item(1).getRegions(), new String[]{XMLJSPRegionContexts.JSP_EXPRESSION_OPEN})
-					&& checkSimpleRegionTypes(nodes.item(2).getRegions(), new String[]{XMLJSPRegionContexts.JSP_CONTENT}) && checkSimpleRegionTypes(nodes.item(3).getRegions(), new String[]{XMLJSPRegionContexts.JSP_CLOSE})
+		boolean typeCheck = checkSimpleRegionTypes(nodes.item(0).getRegions(), new String[]{XMLRegionContext.XML_CONTENT}) && checkSimpleRegionTypes(nodes.item(1).getRegions(), new String[]{DOMJSPRegionContexts.JSP_EXPRESSION_OPEN})
+					&& checkSimpleRegionTypes(nodes.item(2).getRegions(), new String[]{DOMJSPRegionContexts.JSP_CONTENT}) && checkSimpleRegionTypes(nodes.item(3).getRegions(), new String[]{DOMJSPRegionContexts.JSP_CLOSE})
 					&& checkSimpleRegionTypes(nodes.item(4).getRegions(), new String[]{XMLRegionContext.XML_CONTENT});
 		assertTrue("region context type check", typeCheck);
 		verifyModelLength();
@@ -939,8 +939,8 @@ public class ScannerUnitTests extends TestCase {
 		typeCheck = checkSimpleRegionTypes(nodes.item(1).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS,
 					XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, XMLRegionContext.XML_EMPTY_TAG_CLOSE});
 		assertTrue("region context type check (tag)", typeCheck);
-		typeCheck = checkSimpleRegionTypes(((ITextRegionContainer) nodes.item(1).getRegions().get(4)).getRegions(), new String[]{XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE,
-					XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE});
+		typeCheck = checkSimpleRegionTypes(((ITextRegionContainer) nodes.item(1).getRegions().get(4)).getRegions(), new String[]{DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE,
+					XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE});
 		assertTrue("region context type check (att value)", typeCheck);
 		verifyLengths(0, nodes.item(0), text);
 	}
@@ -957,7 +957,7 @@ public class ScannerUnitTests extends TestCase {
 		boolean typeCheck = checkSimpleRegionTypes(nodes.item(0).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS,
 					XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, XMLRegionContext.XML_EMPTY_TAG_CLOSE});
 		assertTrue("region context type check", typeCheck);
-		typeCheck = checkSimpleRegionTypes(((ITextRegionContainer) nodes.item(0).getRegions().get(4)).getRegions(), new String[]{XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME,
+		typeCheck = checkSimpleRegionTypes(((ITextRegionContainer) nodes.item(0).getRegions().get(4)).getRegions(), new String[]{DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME,
 					XMLRegionContext.UNDEFINED});
 		assertTrue("region context type check (att value)", typeCheck);
 		verifyLengths(0, nodes.item(0), text);
@@ -1050,14 +1050,14 @@ public class ScannerUnitTests extends TestCase {
 		boolean sizeCheck = checkSimpleRegionCounts(nodes, new int[]{1, 3, 1, 4, 1, 5, 1, 6, 3, 1});
 		assertTrue("IStructuredDocumentRegion and ITextRegion count", sizeCheck);
 		boolean typeCheck = checkSimpleRegionTypes(nodes.item(0).getRegions(), new String[]{XMLRegionContext.XML_CONTENT})
-					&& checkSimpleRegionTypes(nodes.item(1).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLJSPRegionContexts.JSP_ROOT_TAG_NAME, XMLRegionContext.XML_TAG_CLOSE})
+					&& checkSimpleRegionTypes(nodes.item(1).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, DOMJSPRegionContexts.JSP_ROOT_TAG_NAME, XMLRegionContext.XML_TAG_CLOSE})
 					&& checkSimpleRegionTypes(nodes.item(2).getRegions(), new String[]{XMLRegionContext.XML_CONTENT})
 					&& checkSimpleRegionTypes(nodes.item(3).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_CLOSE})
 					&& checkSimpleRegionTypes(nodes.item(4).getRegions(), new String[]{XMLRegionContext.XML_CONTENT})
 					&& checkSimpleRegionTypes(nodes.item(5).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS,
 								XMLRegionContext.XML_TAG_CLOSE})
 					&& checkSimpleRegionTypes(nodes.item(6).getRegions(), new String[]{XMLRegionContext.XML_CONTENT})
-					&& checkSimpleRegionTypes(nodes.item(7).getRegions(), new String[]{XMLRegionContext.XML_END_TAG_OPEN, XMLJSPRegionContexts.JSP_ROOT_TAG_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS,
+					&& checkSimpleRegionTypes(nodes.item(7).getRegions(), new String[]{XMLRegionContext.XML_END_TAG_OPEN, DOMJSPRegionContexts.JSP_ROOT_TAG_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS,
 								XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, XMLRegionContext.XML_TAG_CLOSE})
 					&& checkSimpleRegionTypes(nodes.item(8).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_CLOSE})
 					&& checkSimpleRegionTypes(nodes.item(9).getRegions(), new String[]{XMLRegionContext.XML_CONTENT});
@@ -1075,8 +1075,8 @@ public class ScannerUnitTests extends TestCase {
 		boolean typeCheck = checkSimpleRegionTypes(nodes.item(0).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS,
 					XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, XMLRegionContext.XML_EMPTY_TAG_CLOSE});
 		assertTrue("region context type check (tag)", typeCheck);
-		typeCheck = checkSimpleRegionTypes(((ITextRegionContainer) nodes.item(0).getRegions().get(4)).getRegions(), new String[]{XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME,
-					XMLRegionContext.XML_EMPTY_TAG_CLOSE, XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE});
+		typeCheck = checkSimpleRegionTypes(((ITextRegionContainer) nodes.item(0).getRegions().get(4)).getRegions(), new String[]{DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME,
+					XMLRegionContext.XML_EMPTY_TAG_CLOSE, DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE});
 		assertTrue("region context type check (att value)", typeCheck);
 		verifyLengths(0, nodes, text);
 	}
@@ -1132,7 +1132,7 @@ public class ScannerUnitTests extends TestCase {
 		assertTrue("IStructuredDocumentRegion and ITextRegion count", sizeCheck);
 		boolean typeCheck = checkSimpleRegionTypes(nodes.item(0).getRegions(), new String[]{XMLRegionContext.XML_CONTENT});
 		assertTrue("region context type check", typeCheck);
-		typeCheck = checkSimpleRegionTypes(((ITextRegionContainer) nodes.item(0).getRegions().get(0)).getRegions(), new String[]{XMLJSPRegionContexts.JSP_VBL_OPEN, XMLJSPRegionContexts.JSP_VBL_CONTENT, XMLJSPRegionContexts.JSP_VBL_CLOSE});
+		typeCheck = checkSimpleRegionTypes(((ITextRegionContainer) nodes.item(0).getRegions().get(0)).getRegions(), new String[]{DOMJSPRegionContexts.JSP_VBL_OPEN, DOMJSPRegionContexts.JSP_VBL_CONTENT, DOMJSPRegionContexts.JSP_VBL_CLOSE});
 		assertTrue("region context type check", typeCheck);
 		verifyLengths(0, nodes.item(0), text);
 	}
@@ -1145,8 +1145,8 @@ public class ScannerUnitTests extends TestCase {
 		assertTrue("IStructuredDocumentRegion and ITextRegion count", sizeCheck);
 		boolean typeCheck = checkSimpleRegionTypes(nodes.item(0).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS,
 					XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, XMLRegionContext.XML_EMPTY_TAG_CLOSE});
-		typeCheck &= checkSimpleRegionTypes(((ITextRegionContainer) nodes.item(0).getRegions().get(4)).getRegions(), new String[]{XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, XMLJSPRegionContexts.JSP_VBL_OPEN,
-					XMLJSPRegionContexts.JSP_VBL_CONTENT, XMLJSPRegionContexts.JSP_VBL_CLOSE, XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE});
+		typeCheck &= checkSimpleRegionTypes(((ITextRegionContainer) nodes.item(0).getRegions().get(4)).getRegions(), new String[]{DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, DOMJSPRegionContexts.JSP_VBL_OPEN,
+					DOMJSPRegionContexts.JSP_VBL_CONTENT, DOMJSPRegionContexts.JSP_VBL_CLOSE, DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE});
 		assertTrue("region context type check", typeCheck);
 		verifyLengths(0, nodes.item(0), text);
 	}
@@ -1160,8 +1160,8 @@ public class ScannerUnitTests extends TestCase {
 		assertTrue("IStructuredDocumentRegion and ITextRegion count", sizeCheck);
 		boolean typeCheck = checkSimpleRegionTypes(nodes.item(0).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS,
 					XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, XMLRegionContext.XML_EMPTY_TAG_CLOSE});
-		typeCheck &= checkSimpleRegionTypes(((ITextRegionContainer) nodes.item(0).getRegions().get(4)).getRegions(), new String[]{XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE,
-					XMLJSPRegionContexts.JSP_VBL_OPEN, XMLJSPRegionContexts.JSP_VBL_CONTENT, XMLJSPRegionContexts.JSP_VBL_CLOSE, XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE});
+		typeCheck &= checkSimpleRegionTypes(((ITextRegionContainer) nodes.item(0).getRegions().get(4)).getRegions(), new String[]{DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE,
+					DOMJSPRegionContexts.JSP_VBL_OPEN, DOMJSPRegionContexts.JSP_VBL_CONTENT, DOMJSPRegionContexts.JSP_VBL_CLOSE, XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE});
 		assertTrue("region context type check", typeCheck);
 		verifyLengths(0, nodes.item(0), text);
 	}
@@ -1174,8 +1174,8 @@ public class ScannerUnitTests extends TestCase {
 		assertTrue("IStructuredDocumentRegion and ITextRegion count", sizeCheck);
 		boolean typeCheck = checkSimpleRegionTypes(nodes.item(0).getRegions(), new String[]{XMLRegionContext.XML_TAG_OPEN, XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS,
 					XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, XMLRegionContext.XML_EMPTY_TAG_CLOSE});
-		typeCheck &= checkSimpleRegionTypes(((ITextRegionContainer) nodes.item(0).getRegions().get(4)).getRegions(), new String[]{XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_SQUOTE, XMLJSPRegionContexts.JSP_VBL_OPEN,
-					XMLJSPRegionContexts.JSP_VBL_CONTENT, XMLJSPRegionContexts.JSP_VBL_CLOSE, XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_SQUOTE});
+		typeCheck &= checkSimpleRegionTypes(((ITextRegionContainer) nodes.item(0).getRegions().get(4)).getRegions(), new String[]{DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_SQUOTE, DOMJSPRegionContexts.JSP_VBL_OPEN,
+					DOMJSPRegionContexts.JSP_VBL_CONTENT, DOMJSPRegionContexts.JSP_VBL_CLOSE, DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_SQUOTE});
 		assertTrue("region context type check", typeCheck);
 		verifyLengths(0, nodes, text);
 	}
