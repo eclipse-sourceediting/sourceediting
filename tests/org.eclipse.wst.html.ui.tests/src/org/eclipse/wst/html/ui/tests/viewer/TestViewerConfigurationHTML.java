@@ -21,7 +21,6 @@ import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.tests.Logger;
-import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
 
@@ -31,7 +30,7 @@ import org.eclipse.wst.sse.ui.style.IHighlighter;
 public class TestViewerConfigurationHTML extends TestCase {
     
 	private StructuredTextViewer fViewer = null;
-	private StructuredTextViewerConfiguration fConfig = null;
+	private StructuredTextViewerConfigurationHTML fConfig = null;
 	private IPreferenceStore fPreferenceStore = null;
 	private boolean fDisplayExists = true;
 	private boolean isSetup = false;

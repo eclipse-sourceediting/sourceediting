@@ -17,7 +17,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
-import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
@@ -31,7 +30,7 @@ import org.eclipse.wst.xml.ui.tests.Logger;
 public class TestViewerConfigurationXML extends TestCase {
     
 	private StructuredTextViewer fViewer = null;
-	private StructuredTextViewerConfiguration fConfig = null;
+	private StructuredTextViewerConfigurationXML fConfig = null;
 	private IPreferenceStore fPreferenceStore = null;
 	private boolean fDisplayExists = true;
 	private boolean isSetup = false;
