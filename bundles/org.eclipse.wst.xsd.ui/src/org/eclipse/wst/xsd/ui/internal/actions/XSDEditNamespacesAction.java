@@ -27,7 +27,6 @@ import org.eclipse.wst.xml.ui.util.XMLCommonResources;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.refactor.rename.SchemaPrefixChangeHandler;
 import org.eclipse.wst.xsd.ui.internal.refactor.rename.TargetNamespaceChangeHandler;
-import org.eclipse.wst.xsd.ui.internal.util.XSDSchemaHelper;
 import org.eclipse.wst.xsd.ui.internal.widgets.XSDEditSchemaInfoDialog;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDConstants;
@@ -128,26 +127,33 @@ public class XSDEditNamespacesAction extends Action {
                 {
                   xsdSchema.setSchemaForSchemaQNamePrefix(xsdPrefix);
                 }
+
+                xsdSchema.setTargetNamespace(dialog.getTargetNamespace());
+                xsdSchema.update();
                 
                 SchemaPrefixChangeHandler spch = new SchemaPrefixChangeHandler(xsdSchema, xsdPrefix);
                 spch.resolve();
-
-                xsdSchema.setTargetNamespace(dialog.getTargetNamespace());
+                xsdSchema.update();
                 
+                xsdSchema.setIncrementalUpdate(false);
                 namespaceInfoManager.removeNamespaceInfo(element);
                 namespaceInfoManager.addNamespaceInfo(element, newInfoList, false);
-               
-//                manager.getModel().aboutToChangeModel();
+                xsdSchema.setIncrementalUpdate(true);
+
+                // don't need these any more?
 			          ReplacePrefixAction replacePrefixAction = new ReplacePrefixAction(null, element, prefixMapping);
 			          replacePrefixAction.run();
                 
                 TargetNamespaceChangeHandler targetNamespaceChangeHandler = new TargetNamespaceChangeHandler(xsdSchema, targetNamespace, dialog.getTargetNamespace());
                 targetNamespaceChangeHandler.resolve();
-
-				    	} catch (Exception e){ e.printStackTrace(); }finally {
-//				      manager.getModel().changedModel();
-
-                XSDSchemaHelper.updateElement(xsdSchema);
+				    	}
+              catch (Exception e)
+              { 
+//                e.printStackTrace();
+              }
+              finally
+              {
+                xsdSchema.update();
                 doc.getModel().endRecording(this);
 			     		}
 		        }
