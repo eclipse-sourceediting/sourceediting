@@ -89,7 +89,7 @@ public class CustomCompletionProposal implements ICompletionProposal, ICompletio
 
     public CustomCompletionProposal(String replacementString, int replacementOffset, int replacementLength, int cursorPosition, Image image, String displayString,
             IContextInformation contextInformation, String additionalProposalInfo, int relevance) {
-        this(replacementString, replacementOffset, replacementLength, cursorPosition, image, displayString, contextInformation, additionalProposalInfo, relevance, false);
+        this(replacementString, replacementOffset, replacementLength, cursorPosition, image, displayString, contextInformation, additionalProposalInfo, relevance, true);
     }
 
     public void apply(IDocument document) {
@@ -293,10 +293,23 @@ public class CustomCompletionProposal implements ICompletionProposal, ICompletio
         boolean validated = startsWith(document, offset, fDisplayString);
         // CMVC 269884
         if (fUpdateLengthOnValidate) {
-            int delta = offset - fReplacementOffset;
-            if (delta > 0)
-                fReplacementLength = delta + fOriginalReplacementLength;
+            int newLength = offset - getReplacementOffset();
+            int delta = newLength - fOriginalReplacementLength;
+            fReplacementLength = delta + fOriginalReplacementLength;
         }
         return validated;
+    }
+    
+    /**
+     * @param replacementOffset The fReplacementOffset to set.
+     */
+    public void setReplacementOffset(int replacementOffset) {
+        fReplacementOffset = replacementOffset;
+    }
+    /**
+     * @param replacementString The fReplacementString to set.
+     */
+    public void setReplacementString(String replacementString) {
+        fReplacementString = replacementString;
     }
 }

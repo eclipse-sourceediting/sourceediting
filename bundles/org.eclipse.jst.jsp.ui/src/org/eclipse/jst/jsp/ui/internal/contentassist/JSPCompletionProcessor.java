@@ -99,8 +99,7 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 					System.out.println(debug(translation));
 
 				try {
-                    // TODO:
-					//fCollector.reset(fJavaPosition, translation.getJavaProject(), null); // need to "reset" collector for proposalInfo to show up			
+                    			
 					ICompilationUnit cu = translation.getCompilationUnit();
 					fCollector.setCompilationUnit(cu);
                     

@@ -16,10 +16,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.swing.event.DocumentEvent;
-
-import org.eclipse.jdt.internal.ui.text.java.JavaCompletionProposal;
-import org.eclipse.jdt.internal.ui.text.java.ProposalInfo;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -33,6 +29,7 @@ import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.sse.ui.contentassist.IRelevanceCompletionProposal;
+import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 
@@ -40,27 +37,24 @@ import org.eclipse.wst.xml.core.parser.XMLRegionContext;
  * An implementation of ICompletionProposal whose values can be
  * read after creation.
  */
-public class JavaTypeCompletionProposal extends JavaCompletionProposal implements IRelevanceCompletionProposal {
+public class JavaTypeCompletionProposal extends CustomCompletionProposal implements IRelevanceCompletionProposal {
 
-	protected JavaCompletionProposal fProposal = null;
-	protected int fCursorPosition = 0;
-	protected Image fImage;
-	protected String fLocalDisplayString;
-	protected ProposalInfo fProposalInfo;
+	private int fCursorPosition = 0;
+	private String fLocalDisplayString;
+	private String fShortName;
+	private String fQualifiedName;
+	private String fContainerName;
 
-	protected String fShortName;
-	protected String fQualifiedName;
-	protected String fContainerName;
-
-	public JavaTypeCompletionProposal(String replacementString, int replacementOffset, int replacementLength, String qualifiedName, Image image, String typeName, String containerName, ProposalInfo proposalInfo, int relevence) {
-		super(replacementString, replacementOffset, replacementLength, image, (containerName != null && containerName.length() > 0) ? typeName + " - " + containerName : typeName, relevence); //$NON-NLS-1$
+	public JavaTypeCompletionProposal(String replacementString, int replacementOffset, int replacementLength, String qualifiedName, Image image, String typeName, String containerName,  int relevence,  boolean updateReplacementLengthOnValidate) {
+		super(replacementString, replacementOffset, replacementLength, qualifiedName.length() + 2, image, 
+                (containerName != null && containerName.length() > 0) ? typeName + " - " + containerName : typeName, null, null, relevence, true); //$NON-NLS-1$
 		// CMVC 243817, superclass was comparing incorrect display string in validate method...
 		//super(replacementString, replacementOffset, replacementLength, image, (containerName != null && containerName.length() > 0)? typeName + " - " + containerName:typeName/*qualifiedName*/, relevence);
 		fShortName = typeName;
 		fQualifiedName = qualifiedName;
 		fContainerName = containerName;
 		fCursorPosition = fQualifiedName.length() + 2;
-		fProposalInfo = proposalInfo;
+		//fProposalInfo = proposalInfo;
 		if (containerName != null && containerName.length() > 0)
 			fLocalDisplayString = typeName + " - " + containerName; //$NON-NLS-1$
 		else
@@ -269,12 +263,12 @@ public class JavaTypeCompletionProposal extends JavaCompletionProposal implement
 	 * borrowed from JavaCompletionProposal
 	 * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension2#validate(org.eclipse.jface.text.IDocument, int, org.eclipse.jface.text.DocumentEvent)
 	 */
-	public boolean validate(IDocument document, int offset, DocumentEvent event) {
-		if (offset < getReplacementOffset())
-			return false;
-		boolean validated = startsWith(document, offset, getDisplayString());
-		return validated;
-	}
+//	public boolean validate(IDocument document, int offset, DocumentEvent event) {
+//		if (offset < getReplacementOffset())
+//			return false;
+//		boolean validated = startsWith(document, offset, getDisplayString());
+//		return validated;
+//	}
 
 	// code is borrowed from JavaCompletionProposal
 	protected boolean startsWith(IDocument document, int offset, String word) {
@@ -309,7 +303,5 @@ public class JavaTypeCompletionProposal extends JavaCompletionProposal implement
 		// (pa) we currently don't use smart toggle...
 		super.selected(viewer, false);
 	}
-
-
 
 }

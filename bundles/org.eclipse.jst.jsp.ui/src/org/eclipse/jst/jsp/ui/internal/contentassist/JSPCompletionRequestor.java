@@ -484,7 +484,8 @@ public class JSPCompletionRequestor extends CompletionRequestor {
         // containername can be null
         String fullName = concatenateName(containerNameString, typeNameString);
 
-        StringBuffer buf = new StringBuffer(Signature.getSimpleName(fullName));
+        String simpleName = Signature.getSimpleName(fullName);
+        StringBuffer buf = new StringBuffer(simpleName);
         String typeQualifier = Signature.getQualifier(fullName);
         if (typeQualifier.length() > 0) {
             buf.append(" - "); //$NON-NLS-1$
@@ -499,7 +500,8 @@ public class JSPCompletionRequestor extends CompletionRequestor {
         // }
         // }
 
-        CustomCompletionProposal proposal = new CustomCompletionProposal(completionNameString, offset, length, completionNameString.length(), image, name, null, null, relevance);
+        //CustomCompletionProposal proposal = new CustomCompletionProposal(completionNameString, offset, length, completionNameString.length(), image, name, null, null, relevance);
+        JavaTypeCompletionProposal proposal = new JavaTypeCompletionProposal(completionNameString, offset, length, fullName, image, typeNameString, typeQualifier, relevance, true);
         proposal.setTriggerCharacters(TYPE_TRIGGERS);
         fTypes.add(proposal);
 
@@ -619,8 +621,8 @@ public class JSPCompletionRequestor extends CompletionRequestor {
         
         int offset = start + getJavaToJSPOffset();
         int length = end - start;
-        Image image = JSPEditorPluginImageHelper.getInstance().getImage(JSPEditorPluginImages.PACKAGE_OBJ);
         
+        Image image = JSPEditorPluginImageHelper.getInstance().getImage(JSPEditorPluginImages.PACKAGE_OBJ);
         CustomCompletionProposal proposal = new CustomCompletionProposal(packageNameString, offset, length, packageNameString.length(), image, completionNameString, null, null, relevance);
        
         fPackages.add(proposal);

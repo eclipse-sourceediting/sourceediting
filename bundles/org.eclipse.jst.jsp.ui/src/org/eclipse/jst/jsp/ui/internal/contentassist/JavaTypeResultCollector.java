@@ -10,12 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.contentassist;
 
-import org.eclipse.jdt.internal.ui.JavaPlugin;
-import org.eclipse.jdt.internal.ui.text.java.JavaCompletionProposal;
-import org.eclipse.jdt.internal.ui.text.java.ProposalInfo;
-import org.eclipse.jdt.internal.ui.text.java.ResultCollector;
-import org.eclipse.jdt.internal.ui.viewsupport.ImageDescriptorRegistry;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImageHelper;
 import org.eclipse.swt.graphics.Image;
 
 
@@ -28,7 +24,7 @@ public class JavaTypeResultCollector extends JSPCompletionRequestor {
 	protected int fReplacementStart = 0;
 	protected int fReplacementLength = 0;
 
-	protected ImageDescriptorRegistry fRegistry = JavaPlugin.getImageDescriptorRegistry();
+//	protected ImageDescriptorRegistry fRegistry = JavaPlugin.getImageDescriptorRegistry();
 
 	public JavaTypeResultCollector() {
 		super();
@@ -75,8 +71,11 @@ public class JavaTypeResultCollector extends JSPCompletionRequestor {
 	 *      char[], char[], int, int, int, int)
 	 */
 	public void acceptClass(char[] packageName, char[] className, char[] completionName, int modifiers, int completionStart, int completionEnd, int relevance) {
-		if (fShowClasses)
+		if (fShowClasses) {
+            completionStart = getReplacementStart();
+            completionEnd = completionStart + getReplacementLength();
 			super.acceptClass(packageName, className, completionName, modifiers, completionStart, completionEnd, relevance);
+        }
 	}
 
 	/**
@@ -84,15 +83,14 @@ public class JavaTypeResultCollector extends JSPCompletionRequestor {
 	 *      int, int, int)
 	 */
 	public void acceptInterface(char[] packageName, char[] interfaceName, char[] completionName, int modifiers, int completionStart, int completionEnd, int relevance) {
-		if (fShowInterfaces)
+		if (fShowInterfaces) {
+            completionStart = getReplacementStart();
+            completionEnd = completionStart + getReplacementLength();
 			super.acceptInterface(packageName, interfaceName, completionName, modifiers, completionStart, completionEnd, relevance);
+        }
 	}
 
-	/**
-	 * @see ResultCollector#createTypeCompletion(int, int, String,
-	 *      ImageDescriptor, String, String, ProposalInfo, int)
-	 */
-	protected JavaCompletionProposal createTypeCompletion(int start, int end, String completion, ImageDescriptor descriptor, String typeName, String containerName, ProposalInfo proposalInfo, int relevance) {
+	protected JavaTypeCompletionProposal createTypeCompletion(int start, int end, String completion, ImageDescriptor descriptor, String typeName, String containerName, int relevance) {
 		String qualifiedName = null;
 		if (containerName != null && containerName.length() > 0)
 			qualifiedName = containerName + "." + typeName; //$NON-NLS-1$
@@ -100,8 +98,8 @@ public class JavaTypeResultCollector extends JSPCompletionRequestor {
 			qualifiedName = typeName;
 		Image image = null;
 		if (descriptor != null)
-			image = fRegistry.get(descriptor);
-		return new JavaTypeCompletionProposal("\"" + qualifiedName + "\"", fReplacementStart, fReplacementLength, qualifiedName, image, typeName, containerName, null, relevance); //$NON-NLS-1$ //$NON-NLS-2$
+			image = JSPEditorPluginImageHelper.getInstance().getImage(descriptor);
+		return new JavaTypeCompletionProposal("\"" + qualifiedName + "\"", fReplacementStart, fReplacementLength, qualifiedName, image, typeName, containerName, relevance, true); //$NON-NLS-1$ //$NON-NLS-2$
 		//	return super.createTypeCompletion(start, end, completion,
 		// descriptor, typeName, containerName, proposalInfo, relevance);
 	}

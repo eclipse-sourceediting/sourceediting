@@ -58,8 +58,15 @@ public class JSPUseBeanContentAssistProcessor extends JSPDummyContentAssistProce
 			currentValue = ""; //$NON-NLS-1$
 		String matchString = null;
 		// fixups
-		if (currentValue.length() > StringUtils.strip(currentValue).length() && (currentValue.startsWith("\"") || currentValue.startsWith("'")) && contentAssistRequest.getMatchString().length() > 0) //$NON-NLS-1$ //$NON-NLS-2$
+        int start = contentAssistRequest.getReplacementBeginPosition();
+        int length = contentAssistRequest.getReplacementLength();
+		if (currentValue.length() > StringUtils.strip(currentValue).length() 
+                && (currentValue.startsWith("\"") || currentValue.startsWith("'")) //$NON-NLS-1$ //$NON-NLS-2$
+                && contentAssistRequest.getMatchString().length() > 0) {
 			matchString = currentValue.substring(1, contentAssistRequest.getMatchString().length());
+            start++;
+            length = matchString.length();            
+        }
 		else
 			matchString = currentValue.substring(0, contentAssistRequest.getMatchString().length());
 		boolean existingComplicatedValue = contentAssistRequest.getRegion() != null && contentAssistRequest.getRegion() instanceof ITextRegionContainer;
@@ -69,37 +76,37 @@ public class JSPUseBeanContentAssistProcessor extends JSPDummyContentAssistProce
 		}
 		else {
 			if (attributeName.equals(JSP11Namespace.ATTR_NAME_CLASS)) {
-				ICompletionProposal[] classProposals = JavaTypeFinder.getClassProposals(fResource, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength());
+				ICompletionProposal[] classProposals = JavaTypeFinder.getClassProposals(fResource, start, length);
 				if (classProposals != null) {
 					for (int j = 0; j < classProposals.length; j++) {
-                        CustomCompletionProposal proposal = (CustomCompletionProposal) classProposals[j];
-						//if (matchString.length() == 0 || proposal.getQualifiedName().toLowerCase().startsWith(matchString.toLowerCase()) || proposal.getShortName().toLowerCase().startsWith(matchString.toLowerCase()))
+                        JavaTypeCompletionProposal proposal = (JavaTypeCompletionProposal) classProposals[j];
+						if (matchString.length() == 0 || proposal.getQualifiedName().toLowerCase().startsWith(matchString.toLowerCase()) || proposal.getShortName().toLowerCase().startsWith(matchString.toLowerCase()))
 							contentAssistRequest.addProposal(proposal);
 					}
 				}
 			}
 			else if (attributeName.equals(JSP11Namespace.ATTR_NAME_TYPE)) {
-				ICompletionProposal[] typeProposals = JavaTypeFinder.getTypeProposals(fResource, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength());
+				ICompletionProposal[] typeProposals = JavaTypeFinder.getTypeProposals(fResource, start, length);
 				if (typeProposals != null) {
 					for (int j = 0; j < typeProposals.length; j++) {
-                        CustomCompletionProposal proposal = (CustomCompletionProposal) typeProposals[j];
-						//if (matchString.length() == 0 || proposal.getQualifiedName().toLowerCase().startsWith(matchString.toLowerCase()) || proposal.getShortName().toLowerCase().startsWith(matchString.toLowerCase()))
+                        JavaTypeCompletionProposal proposal = (JavaTypeCompletionProposal) typeProposals[j];
+						if (matchString.length() == 0 || proposal.getQualifiedName().toLowerCase().startsWith(matchString.toLowerCase()) || proposal.getShortName().toLowerCase().startsWith(matchString.toLowerCase()))
 							contentAssistRequest.addProposal(proposal);
 					}
 				}
 			}
 			else if (attributeName.equals(JSP11Namespace.ATTR_NAME_BEAN_NAME)) {
-				ICompletionProposal[] beanNameProposals = JavaTypeFinder.getBeanProposals(fResource, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength());
+				ICompletionProposal[] beanNameProposals = JavaTypeFinder.getBeanProposals(fResource, start, length);
 				if (beanNameProposals != null) {
 					for (int j = 0; j < beanNameProposals.length; j++) {
 						if (beanNameProposals[j] instanceof CustomCompletionProposal) {
-							CustomCompletionProposal proposal = (CustomCompletionProposal) beanNameProposals[j];
-							//if (matchString.length() == 0 || proposal.getDisplayString().toLowerCase().startsWith(matchString.toLowerCase()))
+                            JavaTypeCompletionProposal proposal = (JavaTypeCompletionProposal) beanNameProposals[j];
+							if (matchString.length() == 0 || proposal.getDisplayString().toLowerCase().startsWith(matchString.toLowerCase()))
 								contentAssistRequest.addProposal(proposal);
 						}
 						else if (beanNameProposals[j] instanceof JavaTypeCompletionProposal) {
-                            CustomCompletionProposal proposal = (CustomCompletionProposal) beanNameProposals[j];
-							//if (matchString.length() == 0 || proposal.getQualifiedName().toLowerCase().startsWith(matchString.toLowerCase()) || proposal.getShortName().toLowerCase().startsWith(matchString.toLowerCase()))
+                            JavaTypeCompletionProposal proposal = (JavaTypeCompletionProposal) beanNameProposals[j];
+							if (matchString.length() == 0 || proposal.getQualifiedName().toLowerCase().startsWith(matchString.toLowerCase()) || proposal.getShortName().toLowerCase().startsWith(matchString.toLowerCase()))
 								contentAssistRequest.addProposal(proposal);
 						}
 					}
