@@ -19,6 +19,7 @@ import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDSchema;
+import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDWildcard;
 
 
@@ -80,6 +81,10 @@ public class XSDEditPartFactory implements EditPartFactory
     else if (model instanceof XSDWildcard)
     {                                  
       editPart = new WildcardEditPart();
+    }
+    else if (model instanceof XSDSimpleTypeDefinition)
+    {
+      editPart = new SimpleTypeDefinitionEditPart();
     }
 
     if (editPart != null)   

@@ -615,6 +615,10 @@ public class TypesDialog extends Dialog implements SelectionListener, Listener
     else if (xsdType.equals(XSDConstants.SIMPLETYPE_ELEMENT_TAG))
     {
       childNode = element.getOwnerDocument().createElementNS(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, prefix + XSDConstants.SIMPLETYPE_ELEMENT_TAG);
+      
+      Element restrictionNode = element.getOwnerDocument().createElementNS(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, prefix + XSDConstants.RESTRICTION_ELEMENT_TAG);
+      restrictionNode.setAttribute(XSDConstants.BASE_ATTRIBUTE, prefix + "string");
+      childNode.appendChild(restrictionNode);      
     }
     if (childNode != null)
     {

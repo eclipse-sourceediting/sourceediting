@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.MarginBorder;
@@ -22,6 +23,7 @@ import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.requests.LocationRequest;
@@ -82,7 +84,7 @@ public class ElementDeclarationEditPart extends ExpandableGraphNodeEditPart
     }      
     return depth <= 3;
   }
-                      
+                     
   protected GraphNodeFigure createGraphNodeFigure()
   {
     ExpandableGraphNodeFigure figure = new ExpandableGraphNodeFigure();
@@ -137,7 +139,20 @@ public class ElementDeclarationEditPart extends ExpandableGraphNodeEditPart
   }                                            
                     
   protected List getModelChildren() 
-  {                                                                    
+  {
+    XSDTypeDefinition typeDef = getXSDElementDeclaration().getTypeDefinition();
+    
+    // Special case simple type.   Need to add it to the list as well
+    List list = new ArrayList();
+    if (typeDef instanceof XSDSimpleTypeDefinition)
+    {
+      list.add((XSDSimpleTypeDefinition)typeDef);
+      if (getExpandableGraphNodeFigure().isExpanded())
+      {
+        list.addAll(getModelChildrenHelper());
+      }
+      return list;
+    }
     return getExpandableGraphNodeFigure().isExpanded() ? getModelChildrenHelper() : Collections.EMPTY_LIST;
   }  
                        
@@ -157,13 +172,8 @@ public class ElementDeclarationEditPart extends ExpandableGraphNodeEditPart
   {
     String iconName = null;
     XSDTypeDefinition td = getXSDElementDeclaration().getResolvedElementDeclaration().getTypeDefinition();
-    if (td instanceof XSDSimpleTypeDefinition)
-    {      
-      // TODO... we should probably show the overlay form of this icon in the case that its a
-      // restriction, list or union
-      iconName = "icons/XSDSimpleType.gif";
-    }  
-    else if (td instanceof XSDComplexTypeDefinition)
+
+    if (td instanceof XSDComplexTypeDefinition)
     {
       XSDComplexTypeDefinition complexTypeDefinition = (XSDComplexTypeDefinition)td;
       if (complexTypeDefinition.getAttributeUses().size() > 0)
@@ -182,14 +192,14 @@ public class ElementDeclarationEditPart extends ExpandableGraphNodeEditPart
                   getXSDElementDeclaration().getName();
 
     label.setText(text);
-
-                                                            
+    
     ContainerFigure rectangle = graphNodeFigure.getOutlinedArea();
     if (XSDGraphUtil.isEditable(getXSDElementDeclaration()))
     {
       rectangle.setBorder(new LineBorder(isSelected ? ColorConstants.black : elementBorderColor, 2));
       rectangle.setBackgroundColor(elementBackgroundColor);
       rectangle.setForegroundColor(elementBorderColor);
+      
       graphNodeFigure.getInnerContentArea().setForegroundColor(ColorConstants.black);
       if (XSDGraphUtil.isEditable(getXSDElementDeclaration().getResolvedElementDeclaration()))
       { 
@@ -269,7 +279,7 @@ public class ElementDeclarationEditPart extends ExpandableGraphNodeEditPart
  
                                                                         
   public void performRequest(Request request)
-  {  
+  {
   	if (request.getType() == RequestConstants.REQ_DIRECT_EDIT ||
         request.getType() == RequestConstants.REQ_OPEN)
     {                                        
@@ -288,11 +298,11 @@ public class ElementDeclarationEditPart extends ExpandableGraphNodeEditPart
           else if (hitTest(typeValueLabel, p))
           {                             
    		      performDirectEditForTypeValueLabel();
-          } 
+          }
         }
       }
     }
-  }   
+  } 
          
   private void performDirectEditForTypeValueLabel()
   {
@@ -376,4 +386,34 @@ public class ElementDeclarationEditPart extends ExpandableGraphNodeEditPart
   {
     return isContentIconLabelSelected;
   }
+
+  protected void addChildVisual(EditPart childEditPart, int index)
+  {
+    IFigure child = ((GraphicalEditPart)childEditPart).getFigure();
+    if (childEditPart instanceof SimpleTypeDefinitionEditPart)
+    {
+      graphNodeFigure.getIconArea().add(child, index+ 1);
+      SpacingFigure spacingFigure = new SpacingFigure();
+      graphNodeFigure.getIconArea().add(spacingFigure, index+1);
+    }
+    else
+    {
+      getContentPane().add(child, index);
+    }
+  }
+  
+  protected void removeChildVisual(EditPart childEditPart)
+  {
+    IFigure child = ((GraphicalEditPart)childEditPart).getFigure();
+    if (childEditPart instanceof SimpleTypeDefinitionEditPart)
+    {
+      graphNodeFigure.getIconArea().remove(child);
+    }    
+    else
+    {
+      super.removeChildVisual(childEditPart);
+    }
+  }
+
+
 }

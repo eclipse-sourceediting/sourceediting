@@ -23,8 +23,10 @@ import org.eclipse.draw2d.ViewportLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.wst.xsd.ui.internal.graph.GraphicsConstants;
+import org.eclipse.wst.xsd.ui.internal.graph.editpolicies.SelectionHandlesEditPolicyImpl;
 import org.eclipse.wst.xsd.ui.internal.graph.figures.ContainerFigure;
 import org.eclipse.wst.xsd.ui.internal.graph.figures.ContainerLayout;
 import org.eclipse.wst.xsd.ui.internal.graph.figures.FillLayout;
@@ -36,7 +38,8 @@ public class CategoryEditPart extends BaseEditPart
 {
   protected ScrollPane scrollpane;
   protected Label label;
-
+  protected ContainerFigure outerPane, r;
+  protected SelectionHandlesEditPolicyImpl selectionHandlesEditPolicy;
 
   public int getType()
   {
@@ -45,11 +48,11 @@ public class CategoryEditPart extends BaseEditPart
 
   protected IFigure createFigure()
   {           
-    ContainerFigure outerPane = new ContainerFigure();    
+    outerPane = new ContainerFigure();    
     outerPane.setBorder(new RoundedLineBorder(1, 6));
     outerPane.setForegroundColor(categoryBorderColor);
 
-    ContainerFigure r = new ContainerFigure();  
+    r = new ContainerFigure();  
     r.setOutline(false);
     r.setMinimumSize(new Dimension(0, 0));
     r.setFill(true);
@@ -135,6 +138,14 @@ public class CategoryEditPart extends BaseEditPart
         
   public void refreshVisuals()
   {
+    outerPane.setBorder(new RoundedLineBorder(isSelected ? ColorConstants.black : categoryBorderColor, isSelected ? 1 : 1, 6));
+    outerPane.repaint();
+// Uncomment this for coloured titles
+//    r.setBackgroundColor(isSelected ? ColorConstants.blue : GraphicsConstants.elementBackgroundColor);
+//    label.setForegroundColor(isSelected ? ColorConstants.white : ColorConstants.black);
+//    r.repaint();
+//    outerPane.setForegroundColor(isSelected ? ColorConstants.black : elementBorderColor);
+    
     Category category = (Category)getModel();
     // temp hack --- added empty space to make the min width of groups bigger  
     label.setText("  " + category.getName() + "                                                    ");
@@ -161,4 +172,11 @@ public class CategoryEditPart extends BaseEditPart
     editPart.setParent(this);
     return editPart;
   }
+  
+  protected void createEditPolicies()
+  { 
+    selectionHandlesEditPolicy = new SelectionHandlesEditPolicyImpl();
+    installEditPolicy(EditPolicy.SELECTION_FEEDBACK_ROLE, selectionHandlesEditPolicy);   
+  }  
+
 }

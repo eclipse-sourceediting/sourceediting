@@ -11,6 +11,7 @@
 package org.eclipse.wst.xsd.ui.internal.actions;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.eclipse.wst.xsd.ui.internal.commands.AddModelGroupCommand;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.xsd.XSDCompositor;
@@ -20,6 +21,7 @@ import org.eclipse.xsd.XSDConcreteComponent;
 public class AddModelGroupAction extends Action
 {
    protected AddModelGroupCommand command;
+   protected XSDConcreteComponent parent;
   
    public static String getLabel(XSDCompositor compositor)
    {
@@ -41,11 +43,15 @@ public class AddModelGroupAction extends Action
    public AddModelGroupAction(XSDConcreteComponent parent, XSDCompositor compositor)
    {
      command = new AddModelGroupCommand(parent, compositor);
+     this.parent = parent;
      setText(getLabel(compositor));     
    }   
    
    public void run()
    {
+     DocumentImpl doc = (DocumentImpl) parent.getElement().getOwnerDocument();
+     doc.getModel().beginRecording(this, getText());
      command.run();
+     doc.getModel().endRecording(this);
    }
 }

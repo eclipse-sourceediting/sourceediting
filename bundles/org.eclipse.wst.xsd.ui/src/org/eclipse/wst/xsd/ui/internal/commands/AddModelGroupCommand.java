@@ -17,6 +17,7 @@ import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDFactory;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDParticle;
+import org.eclipse.xsd.XSDSimpleTypeDefinition;
 
 public class AddModelGroupCommand extends AbstractCommand
 {
@@ -42,8 +43,14 @@ public class AddModelGroupCommand extends AbstractCommand
           ed.setTypeDefinition(null);
           XSDComplexTypeDefinition td = XSDFactory.eINSTANCE.createXSDComplexTypeDefinition();
           ed.setAnonymousTypeDefinition(td);
+          owner = ed.getTypeDefinition();
         }
-        owner = ed.getTypeDefinition();
+        else
+        {
+          XSDComplexTypeDefinition td = XSDFactory.eINSTANCE.createXSDComplexTypeDefinition();
+          ed.setAnonymousTypeDefinition(td);
+          owner = td;        
+        }
       }        
       else if (ed.getAnonymousTypeDefinition() == null)
       {
@@ -54,7 +61,13 @@ public class AddModelGroupCommand extends AbstractCommand
       else if (ed.getAnonymousTypeDefinition() instanceof XSDComplexTypeDefinition)
       {
         owner = ed.getAnonymousTypeDefinition();
-      }  
+      }
+      else if (ed.getAnonymousTypeDefinition() instanceof XSDSimpleTypeDefinition)
+      {
+        XSDComplexTypeDefinition td = XSDFactory.eINSTANCE.createXSDComplexTypeDefinition();
+        ed.setAnonymousTypeDefinition(td);
+        owner = td;        
+      }
     }
     else if (parent instanceof XSDModelGroup)
     {
@@ -69,6 +82,7 @@ public class AddModelGroupCommand extends AbstractCommand
       XSDParticle particle = XSDFactory.eINSTANCE.createXSDParticle(); 
       XSDModelGroup modelGroup = createModelGroup();
       particle.setContent(modelGroup);
+
       XSDComplexTypeDefinition ctd = (XSDComplexTypeDefinition)owner;
       ctd.setContent(particle);
       formatChild(parent.getElement());

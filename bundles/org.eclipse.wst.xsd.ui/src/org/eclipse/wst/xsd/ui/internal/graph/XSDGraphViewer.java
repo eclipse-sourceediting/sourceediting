@@ -410,9 +410,21 @@ public class XSDGraphViewer implements ISelectionChangedListener
           topLevelSchema = (XSDSchema)currentInput;
         }                 
       }
-      else if (selectedComponent instanceof XSDSchemaDirective || selectedComponent instanceof XSDSimpleTypeDefinition || selectedComponent instanceof XSDNotationDeclaration)          
+      else if (selectedComponent instanceof XSDSchemaDirective || selectedComponent instanceof XSDNotationDeclaration)          
       {
         topLevelSchema = selectedComponent.getSchema();
+      }
+      else if (selectedComponent instanceof XSDSimpleTypeDefinition)
+      {
+        XSDSimpleTypeDefinition st = (XSDSimpleTypeDefinition)selectedComponent;
+        EditPart editPart = componentViewer.getEditPart(componentViewer.getRootEditPart(), st);
+        if (editPart == null)
+        {
+          if (st.getContainer() == editor.getXSDSchema())
+          {
+            topLevelSchema = selectedComponent.getSchema();
+          }
+        }
       }
       
       if (topLevelSchema != null)
