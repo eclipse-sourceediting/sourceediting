@@ -131,12 +131,18 @@ public class SSECorePlugin extends Plugin implements IModelManagerPlugin {
 		FileBufferModelManager.startup();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public ModelHandlerRegistry getModelHandlerRegistry() {
 		return ModelHandlerRegistry.getInstance();
 	}
 
+	/**
+	 * @deprecated - use StructuredModelManager.getModelManager();
+	 */
 	public IModelManager getModelManager() {
-		return StructuredModelManager.getInstance().getModelManager();
+		return StructuredModelManager.getModelManager();
 	}
 
 	/**

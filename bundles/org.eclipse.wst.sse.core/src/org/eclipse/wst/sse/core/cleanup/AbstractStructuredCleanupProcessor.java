@@ -26,7 +26,6 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.wst.common.encoding.CommonEncodingPreferenceNames;
-import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.format.IStructuredFormatProcessor;
@@ -50,7 +49,7 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 			// setup structuredModel
 			inputStream = new ByteArrayInputStream(input.getBytes("UTF8")); //$NON-NLS-1$
 			String id = inputStream.toString() + getContentType();
-			structuredModel = getModelManager().getModelForRead(id, inputStream, null);
+			structuredModel = StructuredModelManager.getModelManager().getModelForRead(id, inputStream, null);
 
 			// cleanup
 			cleanupModel(structuredModel, 0, structuredModel.getStructuredDocument().getLength());
@@ -72,7 +71,7 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 			// setup structuredModel
 			inputStream = new ByteArrayInputStream(input.getBytes("UTF8")); //$NON-NLS-1$
 			String id = inputStream.toString() + getContentType();
-			structuredModel = getModelManager().getModelForRead(id, inputStream, null);
+			structuredModel = StructuredModelManager.getModelManager().getModelForRead(id, inputStream, null);
 
 			// cleanup
 			cleanupModel(structuredModel, start, length);
@@ -97,7 +96,7 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 			// setup structuredModel
 			// Note: We are getting model for edit. Will save model if model
 			// changed.
-			structuredModel = getModelManager().getExistingModelForEdit(document);
+			structuredModel = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
 
 			// cleanup
 			cleanupModel(structuredModel);
@@ -124,7 +123,7 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 				// setup structuredModel
 				// Note: We are getting model for edit. Will save model if
 				// model changed.
-				structuredModel = getModelManager().getExistingModelForEdit(document);
+				structuredModel = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
 
 				// cleanup
 				cleanupModel(structuredModel, start, length);
@@ -146,7 +145,7 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 		//OutputStream outputStream = null;
 		try {
 			// setup structuredModel
-			structuredModel = getModelManager().getModelForRead(file);
+			structuredModel = StructuredModelManager.getModelManager().getModelForRead(file);
 
 			// cleanup
 			cleanupModel(structuredModel, 0, structuredModel.getStructuredDocument().getLength());
@@ -168,7 +167,7 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 		//OutputStream outputStream = null;
 		try {
 			// setup structuredModel
-			structuredModel = getModelManager().getModelForRead(file);
+			structuredModel = StructuredModelManager.getModelManager().getModelForRead(file);
 
 			// cleanup
 			cleanupModel(structuredModel, start, length);
@@ -192,7 +191,7 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 		try {
 			// setup structuredModel
 			inputStream = new FileInputStream(fileName);
-			structuredModel = getModelManager().getModelForRead(fileName, inputStream, null);
+			structuredModel = StructuredModelManager.getModelManager().getModelForRead(fileName, inputStream, null);
 
 			// cleanup
 			cleanupModel(structuredModel, 0, structuredModel.getStructuredDocument().getLength());
@@ -215,7 +214,7 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 		try {
 			// setup structuredModel
 			inputStream = new FileInputStream(fileName);
-			structuredModel = getModelManager().getModelForRead(fileName, inputStream, null);
+			structuredModel = StructuredModelManager.getModelManager().getModelForRead(fileName, inputStream, null);
 
 			// cleanup
 			cleanupModel(structuredModel, start, length);
@@ -443,10 +442,6 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 			formatSource = cleanupPreferences.getFormatSource();
 		}
 		return formatSource;
-	}
-
-	private IModelManager getModelManager() {
-		return StructuredModelManager.getInstance().getModelManager();
 	}
 
 	protected boolean isSiblingOf(Node node, Node endNode) {

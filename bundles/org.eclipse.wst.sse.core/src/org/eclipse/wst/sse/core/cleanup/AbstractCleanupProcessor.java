@@ -22,7 +22,6 @@ import java.io.UnsupportedEncodingException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
@@ -42,7 +41,7 @@ abstract public class AbstractCleanupProcessor implements CleanupProcessor {
 			// setup structuredModel
 			inputStream = new ByteArrayInputStream(input.getBytes("UTF8")); //$NON-NLS-1$
 			String id = inputStream.toString() + getContentType();
-			structuredModel = getModelManager().getModelForRead(id, inputStream, null);
+			structuredModel = StructuredModelManager.getModelManager().getModelForRead(id, inputStream, null);
 
 			// cleanup
 			cleanupModel(structuredModel, 0, structuredModel.getStructuredDocument().getLength());
@@ -68,7 +67,7 @@ abstract public class AbstractCleanupProcessor implements CleanupProcessor {
 			// setup structuredModel
 			inputStream = new ByteArrayInputStream(input.getBytes("UTF8")); //$NON-NLS-1$
 			String id = inputStream.toString() + getContentType();
-			structuredModel = getModelManager().getModelForRead(id, inputStream, null);
+			structuredModel = StructuredModelManager.getModelManager().getModelForRead(id, inputStream, null);
 
 			// cleanup
 			cleanupModel(structuredModel, start, length);
@@ -92,7 +91,7 @@ abstract public class AbstractCleanupProcessor implements CleanupProcessor {
 		//OutputStream outputStream = null;
 		try {
 			// setup structuredModel
-			structuredModel = getModelManager().getModelForRead(file);
+			structuredModel = StructuredModelManager.getModelManager().getModelForRead(file);
 
 			// cleanup
 			cleanupModel(structuredModel, 0, structuredModel.getStructuredDocument().getLength());
@@ -118,7 +117,7 @@ abstract public class AbstractCleanupProcessor implements CleanupProcessor {
 		//OutputStream outputStream = null;
 		try {
 			// setup structuredModel
-			structuredModel = getModelManager().getModelForRead(file);
+			structuredModel = StructuredModelManager.getModelManager().getModelForRead(file);
 
 			// cleanup
 			cleanupModel(structuredModel, start, length);
@@ -146,7 +145,7 @@ abstract public class AbstractCleanupProcessor implements CleanupProcessor {
 		try {
 			// setup structuredModel
 			inputStream = new FileInputStream(fileName);
-			structuredModel = getModelManager().getModelForRead(fileName, inputStream, null);
+			structuredModel = StructuredModelManager.getModelManager().getModelForRead(fileName, inputStream, null);
 
 			// cleanup
 			cleanupModel(structuredModel, 0, structuredModel.getStructuredDocument().getLength());
@@ -180,7 +179,7 @@ abstract public class AbstractCleanupProcessor implements CleanupProcessor {
 		try {
 			// setup structuredModel
 			inputStream = new FileInputStream(fileName);
-			structuredModel = getModelManager().getModelForRead(fileName, inputStream, null);
+			structuredModel = StructuredModelManager.getModelManager().getModelForRead(fileName, inputStream, null);
 
 			// cleanup
 			cleanupModel(structuredModel, start, length);
@@ -238,9 +237,5 @@ abstract public class AbstractCleanupProcessor implements CleanupProcessor {
 	 * cleanupContent(String input) form of CleanupProcessor is called.
 	 */
 	protected abstract String getContentType();
-
-	private IModelManager getModelManager() {
-		return StructuredModelManager.getInstance().getModelManager();
-	}
 
 }

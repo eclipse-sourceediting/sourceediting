@@ -43,7 +43,6 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.core.util.URIResolver;
 import org.eclipse.wst.sse.core.util.Utilities;
-import org.osgi.framework.Bundle;
 
 
 public abstract class AbstractStructuredModel implements IStructuredModel {
@@ -243,14 +242,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	private ModelManagerImpl _getModelManager() {
 		// TODO_future: redesign so we don't need this 'Impl' version
 		if (fModelManager == null) {
-			Bundle mmBundle = Platform.getBundle(SSECorePlugin.ID);
-			int state = mmBundle.getState();
-			if (!(state == Bundle.STOPPING || state == Bundle.UNINSTALLED)) {
-				fModelManager = StructuredModelManager.getInstance().getModelManager();
-			} else {
-				fModelManager = new NullModelManager();
-			}
-
+			fModelManager = StructuredModelManager.getModelManager();
 		}
 
 		return (ModelManagerImpl) fModelManager;

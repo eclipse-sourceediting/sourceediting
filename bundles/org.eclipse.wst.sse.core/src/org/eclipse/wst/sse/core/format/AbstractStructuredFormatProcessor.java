@@ -23,7 +23,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.Logger;
@@ -67,7 +66,7 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 			// string and NOT save model.
 			inputStream = new ByteArrayInputStream(input.getBytes("UTF8")); //$NON-NLS-1$
 			String id = inputStream.toString() + "." + getFileExtension(); //$NON-NLS-1$
-			structuredModel = getModelManager().getModelForRead(id, inputStream, null);
+			structuredModel = StructuredModelManager.getModelManager().getModelForRead(id, inputStream, null);
 
 			// format
 			formatModel(structuredModel);
@@ -95,7 +94,7 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 				// string and NOT save model.
 				inputStream = new ByteArrayInputStream(input.getBytes("UTF8")); //$NON-NLS-1$
 				String id = inputStream.toString() + "." + getFileExtension(); //$NON-NLS-1$
-				structuredModel = getModelManager().getModelForRead(id, inputStream, null);
+				structuredModel = StructuredModelManager.getModelManager().getModelForRead(id, inputStream, null);
 
 				// format
 				formatModel(structuredModel, start, length);
@@ -122,7 +121,7 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 			// setup structuredModel
 			// Note: We are getting model for edit. Will save model if model
 			// changed.
-			structuredModel = getModelManager().getExistingModelForEdit(document);
+			structuredModel = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
 
 			// format
 			formatModel(structuredModel);
@@ -149,7 +148,7 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 				// setup structuredModel
 				// Note: We are getting model for edit. Will save model if
 				// model changed.
-				structuredModel = getModelManager().getExistingModelForEdit(document);
+				structuredModel = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
 
 				// format
 				formatModel(structuredModel, start, length);
@@ -176,7 +175,7 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 			// setup structuredModel
 			// Note: We are getting model for edit. Will save model if model
 			// changed.
-			structuredModel = getModelManager().getModelForEdit(file);
+			structuredModel = StructuredModelManager.getModelManager().getModelForEdit(file);
 
 			structuredModel.aboutToChangeModel();
 
@@ -207,7 +206,7 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 			// setup structuredModel
 			// Note: We are getting model for edit. Will save model if model
 			// changed.
-			structuredModel = getModelManager().getModelForEdit(file);
+			structuredModel = StructuredModelManager.getModelManager().getModelForEdit(file);
 
 			// format
 			formatModel(structuredModel, start, length);
@@ -235,7 +234,7 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 			// Note: We are getting model for edit. Will save model if model
 			// changed.
 			inputStream = new FileInputStream(fileName);
-			structuredModel = getModelManager().getModelForEdit(fileName, inputStream, null);
+			structuredModel = StructuredModelManager.getModelManager().getModelForEdit(fileName, inputStream, null);
 
 			// format
 			formatModel(structuredModel);
@@ -263,7 +262,7 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 			// Note: We are getting model for edit. Will save model if model
 			// changed.
 			inputStream = new FileInputStream(fileName);
-			structuredModel = getModelManager().getModelForEdit(fileName, inputStream, null);
+			structuredModel = StructuredModelManager.getModelManager().getModelForEdit(fileName, inputStream, null);
 
 			// format
 			formatModel(structuredModel, start, length);
@@ -448,14 +447,6 @@ public abstract class AbstractStructuredFormatProcessor implements IStructuredFo
 	}
 
 	abstract protected IStructuredFormatter getFormatter(Node node);
-
-	// tests to skip refresh
-	// of format preferences
-	// when it's set to false
-
-	private IModelManager getModelManager() {
-		return StructuredModelManager.getInstance().getModelManager();
-	}
 
 	protected boolean isSiblingOf(Node node, Node endNode) {
 		if (endNode == null) {

@@ -399,7 +399,7 @@ public class StructuredTextUndoManager implements IStructuredTextUndoManager {
 	 * Utility method to find model given document
 	 */
 	private IStructuredModel findStructuredModel(IDocument document) {
-		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
+		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IStructuredModel structuredModel = modelManager.getExistingModelForRead(document);
 		return structuredModel;
 	}

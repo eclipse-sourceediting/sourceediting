@@ -15,17 +15,16 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.osgi.framework.Bundle;
 
-
 public class StructuredModelManager {
-	private static StructuredModelManager fInstance;
-	
+	/**
+	 * @deprecated - call getModelManager directly
+	 * @return
+	 */
 	public static StructuredModelManager getInstance() {
-		if (fInstance == null)
-			fInstance = new StructuredModelManager();
-		return fInstance;
+		return new StructuredModelManager();
 	}
 
-	public IModelManager getModelManager() {
+	public static IModelManager getModelManager() {
 		boolean isReady = false;
 		IModelManager modelManager = null;
 		while (!isReady) {
@@ -35,19 +34,20 @@ public class StructuredModelManager {
 				isReady = true;
 				// getInstance is a synchronized static method.
 				modelManager = ModelManagerImpl.getInstance();
-			} else if (state == Bundle.STARTING) {
+			}
+			else if (state == Bundle.STARTING) {
 				try {
 					Thread.sleep(100);
-				} catch (InterruptedException e) {
+				}
+				catch (InterruptedException e) {
 					// ignore, just loop again
 				}
-			} else if (state == Bundle.STOPPING) {
+			}
+			else if (state == Bundle.STOPPING || state == Bundle.UNINSTALLED) {
 				isReady = true;
 				modelManager = new NullModelManager();
-			} else if (state == Bundle.UNINSTALLED) {
-				isReady = true;
-				modelManager = new NullModelManager();
-			} else {
+			}
+			else {
 				// not sure about other states, 'resolved', 'installed'
 				isReady = true;
 			}
