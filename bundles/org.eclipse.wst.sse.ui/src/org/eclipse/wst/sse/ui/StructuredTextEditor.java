@@ -13,7 +13,6 @@
 package org.eclipse.wst.sse.ui;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -132,7 +131,6 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.sse.core.util.Utilities;
 import org.eclipse.wst.sse.ui.edit.util.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.edit.util.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.extension.ExtendedConfigurationBuilder;
@@ -256,7 +254,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 				if (getSourceViewer() != null) {
 					SourceViewerConfiguration cfg = getSourceViewerConfiguration();
 					if (cfg != null && cfg instanceof StructuredTextViewerConfiguration) {
-						((StructuredTextViewerConfiguration) cfg).setEditorPart(StructuredTextEditor.this);
+						initializeSourceViewerConfiguration(((StructuredTextViewerConfiguration) cfg));
 					}
 					getSourceViewer().configure(cfg);
 				}
@@ -998,16 +996,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			cfg = new StructuredTextViewerConfiguration();
 			cfg.setDeclaringID(getClass().getName() + "#default"); //$NON-NLS-1$
 		}
-		cfg.setEditorPart(this);
-
-		// set the resource for this configuration
-		IResource resource = null;
-		if (getEditorInput() instanceof IFileEditorInput) {
-			resource = ((IFileEditorInput) getEditorInput()).getFile();
-			if (resource.getType() != IResource.PROJECT)
-				resource = resource.getProject();
-			cfg.configureOn(resource);
-		}
+		initializeSourceViewerConfiguration(cfg);
 		return cfg;
 	}
 
@@ -1206,34 +1195,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 					display.asyncExec(fCurrentRunnable);
 				else
 					fCurrentRunnable.run();
-			}
-		}
-	}
-
-	/**
-	 * This method is marked as public temporarily for Page Designer to fix a
-	 * validateEdit problem. This method should not be used by anyone else as
-	 * it may be removed in a future release. Please let us know if you think
-	 * you really need this.
-	 * 
-	 * @deprecated
-	 */
-	public void doReload(IStructuredModel model, IEditorInput input) {
-		if (input instanceof IFileEditorInput)
-			doReload(model, input);
-		else if (input instanceof IStorageEditorInput) {
-			InputStream inStream = null;
-			try {
-				inStream = Utilities.getMarkSupportedStream(((IStorageEditorInput) input).getStorage().getContents());
-			}
-			catch (CoreException ce) {
-				// no op
-			}
-			try {
-				model.reload(inStream);
-			}
-			catch (IOException e) {
-				// shouldn't be possible for IStorage.
 			}
 		}
 	}
@@ -2004,6 +1965,23 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		fMouseTracker.start(sourceViewer.getTextWidget());
 		initializeDrop(sourceViewer);
 	}
+
+	/**
+	 * Performs any necessary setup for a new or unconfigured
+	 * StructuredTextViewerConfiguration
+	 * 
+	 * @param configuration
+	 */
+	void initializeSourceViewerConfiguration(StructuredTextViewerConfiguration configuration) {
+		configuration.setEditorPart(this);
+		IResource resource = null;
+		IFile file = (IFile) getEditorInput().getAdapter(IFile.class);
+		if (file != null) {
+			resource = file.getProject();
+		}
+		configuration.configureOn(resource);
+	}
+
 
 	protected void installEncodingSupport() {
 		// TODO: install our custom support that can
