@@ -761,10 +761,10 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 		}
 
 		IRegion modelRange = event2ModelRange(e);
-		fDocumentCommand.setEvent(e, modelRange);
+		fDocumentCommand.setEventStructuredDocumentEvent(e, modelRange);
 		customizeDocumentCommand(fDocumentCommand);
 		int widgetCaret = 0;
-		if (!fDocumentCommand.fillEvent(e, modelRange)) {
+		if (!fDocumentCommand.fillEventStructuredDocumentCommand(e, modelRange)) {
 
 			boolean compoundChange = fDocumentCommand.getCommandCount() > 1;
 			try {
@@ -778,12 +778,12 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 					IDocument visible = getVisibleDocument();
 					try {
 						getSlaveDocumentManager().setAutoExpandMode(visible, true);
-						fDocumentCommand.execute(getDocument());
+						fDocumentCommand.executeStructuredDocumentCommand(getDocument());
 					} finally {
 						getSlaveDocumentManager().setAutoExpandMode(visible, false);
 					}
 				} else {
-					fDocumentCommand.execute(getDocument());
+					fDocumentCommand.executeStructuredDocumentCommand(getDocument());
 				}
 
 				if (getTextWidget() != null) {

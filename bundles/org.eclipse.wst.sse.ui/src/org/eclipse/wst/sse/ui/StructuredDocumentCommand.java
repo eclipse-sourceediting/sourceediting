@@ -293,9 +293,17 @@ public class StructuredDocumentCommand extends DocumentCommand {
 	 *             if the added command intersects with an existing one
 	 * @since 2.1
 	 */
-	public void addCommand(int offset, int length, String text, IDocumentListener owner) throws BadLocationException {
-		final Command command = new Command(offset, length, text, owner);
+	public void addCommand(int offsetParameter, int lengthParameter, String textParameter, IDocumentListener ownerParameter) throws BadLocationException {
+		final Command command = new Command(offsetParameter, lengthParameter, textParameter, ownerParameter);
 
+		internalAddCommand(command);
+	}
+
+	/**
+	 * @param command
+	 * @throws BadLocationException
+	 */
+	private void internalAddCommand(final Command command) throws BadLocationException {
 		if (intersects(command))
 			throw new BadLocationException();
 
@@ -326,7 +334,7 @@ public class StructuredDocumentCommand extends DocumentCommand {
 	 *            the document on which to execute the commands
 	 * @since 2.1
 	 */
-	public void execute(IDocument document) throws BadLocationException {
+	void executeStructuredDocumentCommand(IDocument document) throws BadLocationException {
 
 		if (length == 0 && text == null && fCommands.size() == 0)
 			return;
@@ -374,7 +382,7 @@ public class StructuredDocumentCommand extends DocumentCommand {
 	 * @return <code>true</code> if this command and the event cover the
 	 *         same range
 	 */
-	public boolean fillEvent(VerifyEvent event, IRegion modelRange) {
+	public boolean fillEventStructuredDocumentCommand(VerifyEvent event, IRegion modelRange) {
 		event.text = text;
 		event.doit = (offset == modelRange.getOffset() && length == modelRange.getLength() && doit && caretOffset == -1);
 		return event.doit;
@@ -421,13 +429,15 @@ public class StructuredDocumentCommand extends DocumentCommand {
 	 * @since 2.1
 	 */
 	private boolean intersects(Command command) {
+		boolean result = false;
 		// diff middle points if not intersecting
 		if (offset + length <= command.fOffset || command.fOffset + command.fLength <= offset)
 			//			return (2 * offset + length) - (2 * command.fOffset +
 			// command.fLength) == 0;
-			return false;
+			result = false;
 		else
-			return true;
+			result = true;
+		return result;
 	}
 
 	/**
@@ -441,13 +451,15 @@ public class StructuredDocumentCommand extends DocumentCommand {
 	 * @since 2.1
 	 */
 	private boolean intersects(Command command0, Command command1) {
+		boolean result = false;
 		// diff middle points if not intersecting
 		if (command0.fOffset + command0.fLength <= command1.fOffset || command1.fOffset + command1.fLength <= command0.fOffset)
 			//			return (2 * command0.fOffset + command0.fLength) - (2 *
 			// command1.fOffset + command1.fLength) == 0;
-			return false;
+			result = false;
 		else
-			return true;
+			result = true;
+		return result;
 	}
 
 	/**
@@ -459,7 +471,7 @@ public class StructuredDocumentCommand extends DocumentCommand {
 	 * @param modelRange
 	 *            the event range as model range
 	 */
-	public void setEvent(VerifyEvent event, IRegion modelRange) {
+	public void setEventStructuredDocumentEvent(VerifyEvent event, IRegion modelRange) {
 
 		doit = true;
 		text = event.text;
