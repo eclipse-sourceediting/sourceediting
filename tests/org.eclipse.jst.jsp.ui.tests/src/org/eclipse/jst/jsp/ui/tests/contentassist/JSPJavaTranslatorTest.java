@@ -57,7 +57,7 @@ public class JSPJavaTranslatorTest extends TestCase {
 				//assertEquals("incorrect cursor position >" + translatedCursorPosition, 519, translatedCursorPosition);
 				//assertEquals("translation was incorrect", "testJspString", translation.substring(519, 532));
 				int cursorStart = translation.indexOf("out.print(\"\"+\n testJspString") + 14;
-				assertEquals("incorrect cursor position >" + cursorStart, 557, cursorStart);
+				assertEquals("incorrect cursor position >" + cursorStart, 578, cursorStart);
 			}
 			sm.releaseFromRead();
 		}
