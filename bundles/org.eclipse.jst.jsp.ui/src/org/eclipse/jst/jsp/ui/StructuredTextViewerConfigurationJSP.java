@@ -68,7 +68,6 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.StructuredTextReconciler;
-import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
