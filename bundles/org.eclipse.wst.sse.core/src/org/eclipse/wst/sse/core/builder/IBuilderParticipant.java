@@ -27,6 +27,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * sequence. Participant instances will be reused across projects but are not
  * shared per content type. Participants should not hold on to references to
  * models or resources after cleanup().
+ * 
+ * @deprecated
  */
 public interface IBuilderParticipant {
 
