@@ -250,8 +250,19 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 				// if either the name or storage path are null or they are
 				// identical, add a hash to it to guarantee uniqueness
 				addHash = storagePath == null || storagePath.toString().equals(name);
-				if (storagePath != null)
-					path = storagePath.makeAbsolute().toString();
+				if (storagePath != null) {
+					// If they are different, the IStorage contract is not
+					// being honored
+					// (https://bugs.eclipse.org/bugs/show_bug.cgi?id=73098).
+					// Favor the name.
+					if (!storagePath.lastSegment().equals(name)) {
+						IPath workingPath = storagePath.addTrailingSeparator();
+						path = workingPath.append(name).toString();
+					}
+					else {
+						path = storagePath.makeAbsolute().toString();
+					}
+				}
 				if (path == null)
 					path = name;
 			}
