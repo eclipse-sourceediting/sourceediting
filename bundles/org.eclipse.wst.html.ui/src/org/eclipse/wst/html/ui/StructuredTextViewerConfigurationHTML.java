@@ -252,6 +252,7 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 		if (fReconciler == null) {
 			// create one
 			fReconciler = new StructuredTextReconciler();
+			fReconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
 			// a null editorPart is valid
 			//fReconciler.setEditor(editorPart);
 		}
