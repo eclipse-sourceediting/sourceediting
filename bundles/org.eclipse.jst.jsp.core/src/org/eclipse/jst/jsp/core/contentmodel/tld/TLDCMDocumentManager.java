@@ -757,7 +757,8 @@ public class TLDCMDocumentManager {
 			IPath path = TaglibController.getFileBuffer(this).getLocation();
 			if (path.toFile().exists())
 				baseLocation = path;
-			baseLocation = ResourcesPlugin.getWorkspace().getRoot().getFile(path).getLocation();
+			else
+				baseLocation = ResourcesPlugin.getWorkspace().getRoot().getFile(path).getLocation();
 		}
 		return baseLocation;
 	}
@@ -879,9 +880,18 @@ public class TLDCMDocumentManager {
 	 */
 	protected CMDocument loadTaglib(String uri) {
 		CMDocument document = null;
-		ITaglibRecord reference = TaglibIndex.resolve(getCurrentBaseLocation().toString(), uri, false);
+		ITaglibRecord reference = TaglibIndex.resolve(TaglibController.getFileBuffer(this).getLocation().toString(), uri, false);
 		if (reference != null) {
 			document = getCMDocumentBuilder().createCMDocument(reference);
+		}
+		else {
+			String location = URIResolverPlugin.createResolver().resolve(getCurrentBaseLocation().toString(), null, uri);
+			if (location != null) {
+				if (_debug) {
+					System.out.println("Loading tags from " + uri + " at " + location); //$NON-NLS-2$//$NON-NLS-1$
+				}
+				document = getCMDocumentBuilder().createCMDocument(location);
+			}
 		}
 		return document;
 	}
