@@ -23,8 +23,6 @@ import java.nio.charset.CodingErrorAction;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.osgi.service.environment.Constants;
 import org.eclipse.wst.common.encoding.EncodingMemento;
 import org.eclipse.wst.common.encoding.IResourceCharsetDetector;
 import org.eclipse.wst.html.core.internal.contenttype.HTMLResourceEncodingDetector;
@@ -134,13 +132,8 @@ public class HTMLEncodingTests extends TestCase {
 
 	public void testEmptyFile() throws IOException {
 		String filename = fileLocation + "EmptyFile.html";
-
 		// HTML has no spec default encoding. Will use platform default encoding.
-		String encoding = "UTF-8"; // Linux default encoding
-		if (Platform.getOS().equals(Constants.OS_WIN32))
-			encoding = "Cp1252"; // English Windows default encoding
-
-		doTestFileStream(filename, encoding, new HTMLResourceEncodingDetector());
+		doTestFileStream(filename, System.getProperty("file.encoding"), new HTMLResourceEncodingDetector());
 	}
 
 	public void testIllformedNormalNonDefault() throws IOException {
@@ -156,13 +149,8 @@ public class HTMLEncodingTests extends TestCase {
 
 	public void testNoEncoding() throws IOException {
 		String filename = fileLocation + "NoEncoding.html";
-
 		// HTML has no spec default encoding. Will use platform default encoding.
-		String encoding = "UTF-8"; // Linux default encoding
-		if (Platform.getOS().equals(Constants.OS_WIN32))
-			encoding = "Cp1252"; // English Windows default encoding
-
-		doTestFileStream(filename, encoding, new HTMLResourceEncodingDetector());
+		doTestFileStream(filename, System.getProperty("file.encoding"), new HTMLResourceEncodingDetector());
 	}
 
 	public void testnoquotes() throws IOException {
