@@ -53,7 +53,12 @@ public class LineStyleProviderForEmbeddedCSS extends LineStyleProviderForCSS {
 				CSSTextToken token = (CSSTextToken) i.next();
 				if (regionStart <= start && start < regionEnd) {
 					TextAttribute attribute = getAttributeFor(token.kind);
-					holdResults.add(new StyleRange(start, token.length, attribute.getForeground(), attribute.getBackground()));
+					if (attribute != null) {
+						holdResults.add(new StyleRange(start, token.length, attribute.getForeground(), attribute.getBackground()));
+					}
+					else {
+						holdResults.add(new StyleRange(start, token.length, null, null));
+					}
 				}
 				start += token.length;
 			}
