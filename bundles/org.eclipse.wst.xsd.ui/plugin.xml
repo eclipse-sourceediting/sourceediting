@@ -194,10 +194,12 @@
       </propertyTabs>
    </extension>
    
+   <!--
     <extension point="org.eclipse.wst.xml.uriresolver.catalogContributor">
      <catalogContributor catalogId="default">
        <mappingInfo key="http://www.w3.org/2001/XMLSchema" uri="w3c/XMLSchema.xsd"/>
       </catalogContributor>
-  </extension>
+    </extension>
+    -->
  
 </plugin>
