@@ -44,13 +44,8 @@ public class JSPSearchParticipant extends SearchParticipant {
 	 */
 	public SearchDocument getDocument(String documentPath) {
 		
-		SearchDocument sDoc = null;
-		// ignore anything but .java matches (like .class binary matches)
-		if(documentPath.endsWith(".java")) { //$-NON-NLS-1$
-			sDoc =  JSPSearchSupport.getInstance().getSearchDocument(documentPath);
-		    // can be null if there was a bad index entry (the .jsp file referenced doesn't exist anymore)
-		}
-		
+		SearchDocument sDoc = JSPSearchSupport.getInstance().getSearchDocument(documentPath);
+
 		if(sDoc == null){
 			// return a dummy doc here so search participation doesn't break
 			return new NullSearchDocument(documentPath);

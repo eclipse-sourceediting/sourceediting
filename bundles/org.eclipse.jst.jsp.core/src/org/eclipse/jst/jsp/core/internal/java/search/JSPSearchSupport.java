@@ -439,7 +439,7 @@ public class JSPSearchSupport {
      * @return the JSPSearchDocument or null if one is not found
      */
     public SearchDocument getSearchDocument(String searchDocPath) {
-
+         
         SearchDocument delegate = null;
         IFile f = fileForCUPath(searchDocPath);
         if (f != null) {
@@ -456,16 +456,28 @@ public class JSPSearchSupport {
      * @param searchDocPath
      */
     private IFile fileForCUPath(String searchDocPath) {
-
+    
         String[] split = searchDocPath.split("/"); //$NON-NLS-1$
         String classname = split[split.length - 1];
 
-        String filePath = JSP2ServletNameUtil.unmangle(classname);
+        // ignore anything but .java matches (like .class binary matches)
+        if(!searchDocPath.endsWith(".java")) {
+            return null;
+        }
 
+        String filePath = JSP2ServletNameUtil.unmangle(classname);
+       
+        // try absolute path
         IFile f = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new Path(filePath));
         // workspace relative then
-        if(f == null)
-        	f = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(filePath));
+        if(f == null) {
+            // https://bugs.eclipse.org/bugs/show_bug.cgi?id=86009
+            // must have a project name as well
+            // which would mean >= 2 path segments
+            if(filePath.split("/").length >= 2) {
+                f = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(filePath));
+            }
+        }
         return f;
     }
 
