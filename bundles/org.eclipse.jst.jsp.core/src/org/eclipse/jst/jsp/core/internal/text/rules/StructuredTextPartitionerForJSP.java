@@ -13,6 +13,7 @@ package org.eclipse.jst.jsp.core.internal.text.rules;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
@@ -415,7 +416,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 			result = ST_JSP_CONTENT_JAVASCRIPT;
 		}
 		else {
-			result = ST_JSP_CONTENT + getLanguage();
+			result = ST_JSP_CONTENT + getLanguage().toUpperCase(Locale.ENGLISH);
 		}
 		return result;
 	}
