@@ -107,4 +107,12 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 		return modulesArray;
 
 	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.server.core.util.ProjectModuleFactoryDelegate#createModules(org.eclipse.core.resources.IProject)
+	 */
+	protected IModule[] createModules(IProject project) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
