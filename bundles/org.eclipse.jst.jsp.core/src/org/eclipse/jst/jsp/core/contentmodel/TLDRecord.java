@@ -23,7 +23,7 @@ public class TLDRecord implements ITaglibRecord {
 	}
 
 	/**
-	 * @return Returns the location.
+	 * @return Returns the filesystem location.
 	 */
 	public IPath getLocation() {
 		return location;
