@@ -14,6 +14,9 @@ package org.eclipse.wst.xml.core.modelquery;
 
 
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.common.contentmodel.modelquery.CMDocumentManager;
 import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.common.contentmodel.util.CMDocumentCache;
@@ -82,7 +85,14 @@ public class ModelQueryAdapterFactoryForXML extends AbstractAdapterFactory imple
 				XMLNode xmlNode = (XMLNode) target;
 				IStructuredModel model = stateNotifier = xmlNode.getModel();
 				stateNotifier.addModelStateListener(this);
-				String baseLocation = model.getBaseLocation();
+				String baseLocation = null;
+				IFile baseFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(model.getBaseLocation()));
+				if(baseFile != null) {
+					baseLocation = baseFile.getLocation().toString();
+				}
+				else {
+					baseLocation = model.getBaseLocation();
+				}
 				if (org.eclipse.wst.sse.core.util.Debug.displayInfo)
 					System.out.println("----------------ModelQueryAdapterFactoryForXML... baseLocation : " + baseLocation); //$NON-NLS-1$
 
@@ -156,6 +166,11 @@ public class ModelQueryAdapterFactoryForXML extends AbstractAdapterFactory imple
 	}
 
 	protected void updateResolver(IStructuredModel model) {
-		modelQueryAdapterImpl.setIdResolver(new XMLCatalogIdResolver(model.getBaseLocation(), model.getResolver()));
+		String baseLocation = model.getBaseLocation();
+		IFile baseFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(model.getBaseLocation()));
+		if(baseFile != null) {
+			baseLocation = baseFile.getLocation().toString();
+		}
+		modelQueryAdapterImpl.setIdResolver(new XMLCatalogIdResolver(baseLocation, model.getResolver()));
 	}
 }
