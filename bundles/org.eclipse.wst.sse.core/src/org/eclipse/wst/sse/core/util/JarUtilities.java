@@ -82,7 +82,7 @@ public class JarUtilities {
 			jarfile = new ZipFile(jarFilename);
 		}
 		catch (IOException ioExc) {
-			Logger.logException(ioExc);
+			Logger.logException(jarFilename, ioExc);
 			closeJarFile(jarfile);
 		}
 
@@ -97,7 +97,7 @@ public class JarUtilities {
 						entryInputStream = jarfile.getInputStream(zentry);
 					}
 					catch (IOException ioExc) {
-						Logger.logException(ioExc);
+						Logger.logException(jarFilename, ioExc);
 					}
 
 					if (entryInputStream != null) {
