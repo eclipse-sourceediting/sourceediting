@@ -40,79 +40,6 @@ import org.eclipse.wst.xml.core.text.rules.StructuredTextPartitionerForXML;
 
 public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 
-	public final static String ST_DEFAULT_JSP = "org.eclipse.jst.jsp.DEFAULT_JSP"; //$NON-NLS-1$
-	public final static String ST_JSP_DEFAULT_EL = "org.eclipse.jst.jsp.JSP_DEFAULT_EL"; //$NON-NLS-1$
-	public final static String ST_JSP_DIRECTIVE = "org.eclipse.jst.jsp.JSP_DIRECTIVE"; //$NON-NLS-1$
-	public final static String ST_JSP_CONTENT_DELIMITER = "org.eclipse.jst.jsp.JSP_CONTENT_DELIMITER"; //$NON-NLS-1$
-	public final static String ST_JSP_CONTENT_JAVA = "org.eclipse.jst.jsp.JSP_CONTENT_JAVA"; //$NON-NLS-1$
-	public final static String ST_JSP_CONTENT_JAVASCRIPT = "org.eclipse.jst.jsp.JSP_CONTENT_JAVASCRIPT"; //$NON-NLS-1$
-	public final static String ST_JSP_COMMENT = "org.eclipse.jst.jsp.JSP_COMMENT"; //$NON-NLS-1$
-
-	private final static String[] fConfiguredContentTypes = new String[]{ST_DEFAULT_JSP, ST_JSP_DEFAULT_EL, ST_JSP_DIRECTIVE, ST_JSP_CONTENT_DELIMITER, ST_JSP_CONTENT_JAVA, ST_JSP_CONTENT_JAVASCRIPT, ST_JSP_COMMENT};
-
-	static final boolean debugPrefixListener = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/partitioner/prefixlistener"));
-
-	
-	/**
-	 * Assume language=java by default ... client, such as
-	 * PageDirectiveAdapter, must set language of document partitioner,
-	 * if/when it changes.
-	 */
-	private String fLanguage = "java"; //$NON-NLS-1$
-
-	private IStructuredTextPartitioner fEmbeddedPartitioner = null;
-
-	// for compatibility with v5.1.0, we'll reuse ST_JSP_DIRECTIVE for action
-	// tags
-	private final static boolean fEnableJSPActionPartitions = true;
-	// list of valid JSP 1.2 tag and action names
-	private static List fJSPActionTagNames = null;
-	private PrefixListener fPrefixParseListener;
-	private static final String HTML_CONTENT_TYPE = "text/html"; //$NON-NLS-1$
-	private static final String XHTML_CONTENT_TYPE = "text/xhtml"; //$NON-NLS-1$
-	private static final String XML_CONTENT_TYPE = "text/xml"; //$NON-NLS-1$
-
-	/**
-	 * @param sdRegion
-	 * @param offset
-	 * @return
-	 */
-	private boolean isAction(IStructuredDocumentRegion sdRegion, int offset) {
-		if (!sdRegion.getType().equals(XMLRegionContext.XML_TAG_NAME))
-			return false;
-		// shouldn't get a tag name region type unless a tag name region
-		// exists
-		// at [1]
-		ITextRegion tagNameRegion = sdRegion.getRegions().get(1);
-		String tagName = sdRegion.getText(tagNameRegion);
-		// TODO: support custom JSP actions
-		// the jsp: prefix is already loaded in the prefix listener
-		//		if (fJSPActionTagNames.contains(tagName))
-		//			return true;
-		return fPrefixParseListener.startsWithCustomActionPrefix(tagName);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structuredDocument.partition.StructuredTextPartitioner#getOverrideDocumentPartitionType(com.ibm.sed.structured.text.IStructuredDocumentRegion,
-	 *      com.ibm.sed.structured.text.ITextRegion)
-	 */
-	protected boolean isDocumentRegionBasedPartition(IStructuredDocumentRegion sdRegion, ITextRegion containedChildRegion, int offset) {
-		String documentRegionContext = sdRegion.getType();
-		if (containedChildRegion != null) {
-			if (documentRegionContext.equals(XMLJSPRegionContexts.JSP_DIRECTIVE_NAME) || documentRegionContext.equals(XMLJSPRegionContexts.JSP_ROOT_TAG_NAME)) {
-				setInternalPartition(offset, containedChildRegion.getLength(), ST_JSP_DIRECTIVE);
-				return true;
-			}
-			if (fEnableJSPActionPartitions && isAction(sdRegion, offset)) {
-				setInternalPartition(offset, containedChildRegion.getLength(), ST_JSP_DIRECTIVE);
-				return true;
-			}
-		}
-		return super.isDocumentRegionBasedPartition(sdRegion, containedChildRegion, offset);
-	}
-
 	private class PrefixListener implements StructuredDocumentRegionHandler, StructuredDocumentRegionHandlerExtension {
 		// track the list of prefixes introduced by taglib directives
 		private List fCustomActionPrefixes = null;
@@ -126,17 +53,6 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 
 		private JSPSourceParser getTextSource() {
 			return (JSPSourceParser) structuredDocument.getParser();
-		}
-
-		public boolean startsWithCustomActionPrefix(String tagname) {
-			if (tagname.equals(fLastTrue))
-				return true;
-			for (int i = 0; i < fCustomActionPrefixes.size(); i++)
-				if (tagname.startsWith((String) fCustomActionPrefixes.get(i))) {
-					fLastTrue = tagname;
-					return true;
-				}
-			return false;
 		}
 
 		public void nodeParsed(IStructuredDocumentRegion sdRegion) {
@@ -230,7 +146,59 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 				((StructuredDocumentRegionParser) newDocument.getParser()).addStructuredDocumentRegionHandler(this);
 			}
 		}
+
+		public boolean startsWithCustomActionPrefix(String tagname) {
+			if (tagname.equals(fLastTrue))
+				return true;
+			for (int i = 0; i < fCustomActionPrefixes.size(); i++)
+				if (tagname.startsWith((String) fCustomActionPrefixes.get(i))) {
+					fLastTrue = tagname;
+					return true;
+				}
+			return false;
+		}
 	}
+
+	static final boolean debugPrefixListener = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/partitioner/prefixlistener"));
+
+
+	// for compatibility with v5.1.0, we'll reuse ST_JSP_DIRECTIVE for action
+	// tags
+	private final static boolean fEnableJSPActionPartitions = true;
+	// list of valid JSP 1.2 tag and action names
+	private static List fJSPActionTagNames = null;
+	private static final String HTML_CONTENT_TYPE = "text/html"; //$NON-NLS-1$
+
+	public final static String ST_DEFAULT_JSP = "org.eclipse.jst.jsp.DEFAULT_JSP"; //$NON-NLS-1$
+	public final static String ST_JSP_COMMENT = "org.eclipse.jst.jsp.JSP_COMMENT"; //$NON-NLS-1$
+	private final static String ST_JSP_CONTENT = "org.eclipse.jst.jsp.JSP_CONTENT."; //$NON-NLS-1$
+	public final static String ST_JSP_CONTENT_DELIMITER = ST_JSP_CONTENT + "DELIMITER"; //$NON-NLS-1$
+	public final static String ST_JSP_CONTENT_JAVA = ST_JSP_CONTENT + "JAVA"; //$NON-NLS-1$
+	public final static String ST_JSP_CONTENT_JAVASCRIPT = ST_JSP_CONTENT + "JAVASCRIPT"; //$NON-NLS-1$
+	public final static String ST_JSP_DEFAULT_EL = "org.eclipse.jst.jsp.JSP_DEFAULT_EL"; //$NON-NLS-1$
+	public final static String ST_JSP_DIRECTIVE = "org.eclipse.jst.jsp.JSP_DIRECTIVE"; //$NON-NLS-1$
+	private static final String XHTML_CONTENT_TYPE = "text/xhtml"; //$NON-NLS-1$
+	private static final String XML_CONTENT_TYPE = "text/xml"; //$NON-NLS-1$
+
+	private final static String[] fConfiguredContentTypes = new String[]{ST_DEFAULT_JSP, ST_JSP_DEFAULT_EL, ST_JSP_DIRECTIVE, ST_JSP_CONTENT_DELIMITER, ST_JSP_CONTENT_JAVA, ST_JSP_CONTENT_JAVASCRIPT, ST_JSP_COMMENT};
+
+	/**
+	 * @return
+	 */
+	public static String[] getConfiguredContentTypes() {
+		return fConfiguredContentTypes;
+	}
+
+	private IStructuredTextPartitioner fEmbeddedPartitioner = null;
+
+	
+	/**
+	 * Assume language=java by default ... client, such as
+	 * PageDirectiveAdapter, must set language of document partitioner,
+	 * if/when it changes.
+	 */
+	private String fLanguage = "java"; //$NON-NLS-1$
+	private PrefixListener fPrefixParseListener;
 
 	/**
 	 * Constructor for JSPDocumentPartioner.
@@ -260,15 +228,106 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 		}
 	}
 
-	protected void initLegalContentTypes() {
-		List combinedTypes = getLocalLegalContentTypes();
-		if (getEmbeddedPartitioner() != null) {
-			String[] moreTypes = getEmbeddedPartitioner().getLegalContentTypes();
-			for (int i = 0; i < moreTypes.length; i++)
-				combinedTypes.add(moreTypes[i]);
+	/**
+	 * @see org.eclipse.jface.text.IDocumentPartitioner#connect(org.eclipse.jface.text.IDocument)
+	 */
+	public void connect(IDocument document) {
+		super.connect(document);
+		fSupportedTypes = null;
+
+		// be extra paranoid
+		if (fEnableJSPActionPartitions && structuredDocument.getParser() instanceof JSPSourceParser) {
+			StructuredDocumentRegionParser parser = (StructuredDocumentRegionParser) structuredDocument.getParser();
+			parser.removeStructuredDocumentRegionHandler(fPrefixParseListener);
+			fPrefixParseListener = new PrefixListener();
+			parser.addStructuredDocumentRegionHandler(fPrefixParseListener);
 		}
-		fSupportedTypes = new String[0];
-		combinedTypes.toArray(fSupportedTypes);
+	}
+
+	private IStructuredTextPartitioner createStructuredTextPartitioner(IStructuredDocument structuredDocument) {
+		IStructuredTextPartitioner result = new NullStructuredDocumentPartitioner();
+		JSPDocumentHeadContentDetector jspHeadContentDetector = new JSPDocumentHeadContentDetector();
+		jspHeadContentDetector.set(structuredDocument);
+		String contentType;
+		try {
+			contentType = jspHeadContentDetector.getContentType();
+		}
+		catch (IOException e) {
+			// should be impossible in this context
+			throw new Error(e);
+		}
+		if (contentType == null) {
+			contentType = "text/html"; //$NON-NLS-1$
+		}
+		// we currently only have two ... eventually should
+		// make or tie-in to existing registry.
+		if (contentType.equalsIgnoreCase(HTML_CONTENT_TYPE)) {
+			result = new StructuredTextPartitionerForHTML();
+			result.connect(structuredDocument);
+		}
+		else if (contentType.equalsIgnoreCase(XHTML_CONTENT_TYPE)) {
+			result = new StructuredTextPartitionerForHTML();
+			result.connect(structuredDocument);
+		}
+		else if (contentType.equalsIgnoreCase(XML_CONTENT_TYPE)) {
+			result = new StructuredTextPartitionerForXML();
+			result.connect(structuredDocument);
+		}
+		return result;
+
+	}
+
+	/**
+	 * @see org.eclipse.jface.text.IDocumentPartitioner#disconnect()
+	 */
+	public void disconnect() {
+		// we'll check for null document, just for bullet proofing (incase
+		// disconnnect is called without corresponding connect.
+		if (structuredDocument != null) {
+			StructuredDocumentRegionParser parser = (StructuredDocumentRegionParser) structuredDocument.getParser();
+			if (fPrefixParseListener != null)
+				parser.removeStructuredDocumentRegionHandler(fPrefixParseListener);
+			fPrefixParseListener = null;
+		}
+
+		if (fEmbeddedPartitioner != null) {
+			fEmbeddedPartitioner.disconnect();
+			// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=4909
+			/**
+			 * force recreation when reconnected
+			 */
+			fEmbeddedPartitioner = null;
+		}
+		// super.disconnect should come at end, since it (may) set
+		// structuredDocument to null
+		super.disconnect();
+	}
+
+	public String getDefault() {
+		return getEmbeddedPartitioner().getDefault();
+	}
+
+	/**
+	 * Returns the embeddedPartitioner.
+	 * 
+	 * @return IStructuredTextPartitioner
+	 */
+	public IStructuredTextPartitioner getEmbeddedPartitioner() {
+		if (fEmbeddedPartitioner == null) {
+			fEmbeddedPartitioner = createStructuredTextPartitioner(structuredDocument);
+			fEmbeddedPartitioner.connect(structuredDocument);
+		}
+
+		return fEmbeddedPartitioner;
+	}
+
+	/**
+	 * Returns the language.
+	 * 
+	 * @return String
+	 */
+	public String getLanguage() {
+		return fLanguage;
 	}
 
 	private List getLocalLegalContentTypes() {
@@ -277,6 +336,28 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 		for (int i = 0; i < configuredTypes.length; i++)
 			types.add(configuredTypes[i]);
 		return types;
+	}
+
+	private String getParentName(IStructuredDocumentRegion sdRegion) {
+		String result = "UNKNOWN"; //$NON-NLS-1$
+		while (sdRegion != null && isValidJspActionRegionType(sdRegion.getType()))
+			sdRegion = sdRegion.getPrevious();
+
+		if (sdRegion != null) {
+			ITextRegionList regions = sdRegion.getRegions();
+			// only find parent names from a start tag
+			if (regions.size() > 1) {
+				ITextRegion r = regions.get(1);
+				if (regions.get(0).getType().equals(XMLRegionContext.XML_TAG_OPEN) && r.getType().equals(XMLRegionContext.XML_TAG_NAME)) {
+					result = sdRegion.getText(r);
+				}
+			}
+		}
+		return result;
+	}
+
+	protected String getPartitionType(ForeignRegion region, int offset) {
+		return getEmbeddedPartitioner().getPartitionType(region, offset);
 	}
 
 	/**
@@ -315,42 +396,80 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 	}
 
 	/**
+	 * @see com.ibm.sed.structuredDocument.partition.StructuredTextPartitioner#getPartitionType(com.ibm.sed.structuredDocument.ITextRegion,
+	 *      com.ibm.sed.structuredDocument.ITextRegion)
+	 */
+	public String getPartitionTypeBetween(IStructuredDocumentRegion previousNode, ITextRegion previousStartTagNameRegion, IStructuredDocumentRegion nextNode, ITextRegion nextEndTagNameRegion) {
+		return getEmbeddedPartitioner().getPartitionTypeBetween(previousNode, previousStartTagNameRegion, nextNode, nextEndTagNameRegion);
+	}
+
+	/**
 	 * @return
 	 */
 	private String getPartitionTypeForDocumentLanguage() {
 		String result;
-		// nsd_TODO: make more dynamic
-		if (fLanguage == null) {
+		if (fLanguage == null || fLanguage.equalsIgnoreCase("java")) { //$NON-NLS-1$
 			result = ST_JSP_CONTENT_JAVA;
 		}
 		else if (fLanguage.equalsIgnoreCase("javascript")) { //$NON-NLS-1$
 			result = ST_JSP_CONTENT_JAVASCRIPT;
 		}
-		else if (fLanguage.equalsIgnoreCase("java")) { //$NON-NLS-1$
-			result = ST_JSP_CONTENT_JAVA;
-		}
 		else {
-			result = getUnknown();
+			result = ST_JSP_CONTENT + getLanguage();
 		}
 		return result;
 	}
 
-	private String getParentName(IStructuredDocumentRegion sdRegion) {
-		String result = "UNKNOWN"; //$NON-NLS-1$
-		while (sdRegion != null && isValidJspActionRegionType(sdRegion.getType()))
-			sdRegion = sdRegion.getPrevious();
+	protected void initLegalContentTypes() {
+		List combinedTypes = getLocalLegalContentTypes();
+		if (getEmbeddedPartitioner() != null) {
+			String[] moreTypes = getEmbeddedPartitioner().getLegalContentTypes();
+			for (int i = 0; i < moreTypes.length; i++)
+				combinedTypes.add(moreTypes[i]);
+		}
+		fSupportedTypes = new String[0];
+		combinedTypes.toArray(fSupportedTypes);
+	}
 
-		if (sdRegion != null) {
-			ITextRegionList regions = sdRegion.getRegions();
-			// only find parent names from a start tag
-			if (regions.size() > 1) {
-				ITextRegion r = regions.get(1);
-				if (regions.get(0).getType().equals(XMLRegionContext.XML_TAG_OPEN) && r.getType().equals(XMLRegionContext.XML_TAG_NAME)) {
-					result = sdRegion.getText(r);
-				}
+	/**
+	 * @param sdRegion
+	 * @param offset
+	 * @return
+	 */
+	private boolean isAction(IStructuredDocumentRegion sdRegion, int offset) {
+		if (!sdRegion.getType().equals(XMLRegionContext.XML_TAG_NAME))
+			return false;
+		// shouldn't get a tag name region type unless a tag name region
+		// exists
+		// at [1]
+		ITextRegion tagNameRegion = sdRegion.getRegions().get(1);
+		String tagName = sdRegion.getText(tagNameRegion);
+		// TODO: support custom JSP actions
+		// the jsp: prefix is already loaded in the prefix listener
+		//		if (fJSPActionTagNames.contains(tagName))
+		//			return true;
+		return fPrefixParseListener.startsWithCustomActionPrefix(tagName);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.ibm.sed.structuredDocument.partition.StructuredTextPartitioner#getOverrideDocumentPartitionType(com.ibm.sed.structured.text.IStructuredDocumentRegion,
+	 *      com.ibm.sed.structured.text.ITextRegion)
+	 */
+	protected boolean isDocumentRegionBasedPartition(IStructuredDocumentRegion sdRegion, ITextRegion containedChildRegion, int offset) {
+		String documentRegionContext = sdRegion.getType();
+		if (containedChildRegion != null) {
+			if (documentRegionContext.equals(XMLJSPRegionContexts.JSP_DIRECTIVE_NAME) || documentRegionContext.equals(XMLJSPRegionContexts.JSP_ROOT_TAG_NAME)) {
+				setInternalPartition(offset, containedChildRegion.getLength(), ST_JSP_DIRECTIVE);
+				return true;
+			}
+			if (fEnableJSPActionPartitions && isAction(sdRegion, offset)) {
+				setInternalPartition(offset, containedChildRegion.getLength(), ST_JSP_DIRECTIVE);
+				return true;
 			}
 		}
-		return result;
+		return super.isDocumentRegionBasedPartition(sdRegion, containedChildRegion, offset);
 	}
 
 	/**
@@ -367,142 +486,11 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 		return type == XMLRegionContext.XML_CONTENT || type == XMLRegionContext.BLOCK_TEXT || type == XMLRegionContext.XML_CDATA_OPEN || type == XMLRegionContext.XML_CDATA_TEXT || type == XMLRegionContext.XML_CDATA_CLOSE;
 	}
 
-	/**
-	 * @see com.ibm.sed.structuredDocument.partition.StructuredTextPartitioner#getPartitionType(com.ibm.sed.structuredDocument.ITextRegion,
-	 *      com.ibm.sed.structuredDocument.ITextRegion)
-	 */
-	public String getPartitionTypeBetween(IStructuredDocumentRegion previousNode, ITextRegion previousStartTagNameRegion, IStructuredDocumentRegion nextNode, ITextRegion nextEndTagNameRegion) {
-		return getEmbeddedPartitioner().getPartitionTypeBetween(previousNode, previousStartTagNameRegion, nextNode, nextEndTagNameRegion);
-	}
-
-	public String getDefault() {
-		return getEmbeddedPartitioner().getDefault();
-	}
-
-	private IStructuredTextPartitioner createStructuredTextPartitioner(IStructuredDocument structuredDocument) {
-		IStructuredTextPartitioner result = new NullStructuredDocumentPartitioner();
-		JSPDocumentHeadContentDetector jspHeadContentDetector = new JSPDocumentHeadContentDetector();
-		jspHeadContentDetector.set(structuredDocument);
-		String contentType;
-		try {
-			contentType = jspHeadContentDetector.getContentType();
-		}
-		catch (IOException e) {
-			// should be impossible in this context
-			throw new Error(e);
-		}
-		if (contentType == null) {
-			contentType = "text/html"; //$NON-NLS-1$
-		}
-		// we currently only have two ... eventually should
-		// make or tie-in to existing registry.
-		if (contentType.equalsIgnoreCase(HTML_CONTENT_TYPE)) {
-			result = new StructuredTextPartitionerForHTML();
-			result.connect(structuredDocument);
-		}
-		else if (contentType.equalsIgnoreCase(XHTML_CONTENT_TYPE)) {
-			result = new StructuredTextPartitionerForHTML();
-			result.connect(structuredDocument);
-		}
-		else if (contentType.equalsIgnoreCase(XML_CONTENT_TYPE)) {
-			result = new StructuredTextPartitionerForXML();
-			result.connect(structuredDocument);
-		}
-		return result;
-
-	}
-
-	/**
-	 * Returns the language.
-	 * 
-	 * @return String
-	 */
-	public String getLanguage() {
-		return fLanguage;
-	}
-
-	/**
-	 * Sets the language.
-	 * 
-	 * @param language
-	 *            The language to set
-	 */
-	public void setLanguage(String language) {
-		this.fLanguage = language;
-	}
-
-	/**
-	 * @see org.eclipse.jface.text.IDocumentPartitioner#connect(org.eclipse.jface.text.IDocument)
-	 */
-	public void connect(IDocument document) {
-		super.connect(document);
-		fSupportedTypes = null;
-
-		// be extra paranoid
-		if (fEnableJSPActionPartitions && structuredDocument.getParser() instanceof JSPSourceParser) {
-			StructuredDocumentRegionParser parser = (StructuredDocumentRegionParser) structuredDocument.getParser();
-			parser.removeStructuredDocumentRegionHandler(fPrefixParseListener);
-			fPrefixParseListener = new PrefixListener();
-			parser.addStructuredDocumentRegionHandler(fPrefixParseListener);
-		}
-	}
-
-	/**
-	 * @see com.ibm.sed.structuredDocument.partition.StructuredTextPartitioner#createPartition(int,
-	 *      int, java.lang.String)
-	 */
-	protected void setInternalPartition(int offset, int length, String type) {
-		//TODO: need to carry this single instance idea further to be
-		// complete,
-		// but hopefully this will be less garbage than before (especially for
-		// HTML, XML,
-		// naturally!)
-		internalReusedTempInstance = getEmbeddedPartitioner().createPartition(offset, length, type);
-
-	}
-
-	/**
-	 * @see org.eclipse.jface.text.IDocumentPartitioner#disconnect()
-	 */
-	public void disconnect() {
-		// we'll check for null document, just for bullet proofing (incase
-		// disconnnect is called without corresponding connect.
-		if (structuredDocument != null) {
-			StructuredDocumentRegionParser parser = (StructuredDocumentRegionParser) structuredDocument.getParser();
-			if (fPrefixParseListener != null)
-				parser.removeStructuredDocumentRegionHandler(fPrefixParseListener);
-			fPrefixParseListener = null;
-		}
-
-		if (fEmbeddedPartitioner != null) {
-			fEmbeddedPartitioner.disconnect();
-			// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=4909
-			/**
-			 * force recreation when reconnected
-			 */
-			fEmbeddedPartitioner = null;
-		}
-		// super.disconnect should come at end, since it (may) set
-		// structuredDocument to null
-		super.disconnect();
-	}
-
-	/**
-	 * Returns the embeddedPartitioner.
-	 * 
-	 * @return IStructuredTextPartitioner
-	 */
-	public IStructuredTextPartitioner getEmbeddedPartitioner() {
-		if (fEmbeddedPartitioner == null) {
-			fEmbeddedPartitioner = createStructuredTextPartitioner(structuredDocument);
-			fEmbeddedPartitioner.connect(structuredDocument);
-		}
-
-		return fEmbeddedPartitioner;
-	}
-
-	protected String getPartitionType(ForeignRegion region, int offset) {
-		return getEmbeddedPartitioner().getPartitionType(region, offset);
+	public IDocumentPartitioner newInstance() {
+		StructuredTextPartitionerForJSP instance = new StructuredTextPartitionerForJSP();
+		instance.setEmbeddedPartitioner(createStructuredTextPartitioner(structuredDocument));
+		instance.setLanguage(fLanguage);
+		return instance;
 	}
 
 	/**
@@ -527,18 +515,28 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 		}
 	}
 
-	public IDocumentPartitioner newInstance() {
-		StructuredTextPartitionerForJSP instance = new StructuredTextPartitionerForJSP();
-		instance.setEmbeddedPartitioner(createStructuredTextPartitioner(structuredDocument));
-		instance.setLanguage(fLanguage);
-		return instance;
+	/**
+	 * @see com.ibm.sed.structuredDocument.partition.StructuredTextPartitioner#createPartition(int,
+	 *      int, java.lang.String)
+	 */
+	protected void setInternalPartition(int offset, int length, String type) {
+		//TODO: need to carry this single instance idea further to be
+		// complete,
+		// but hopefully this will be less garbage than before (especially for
+		// HTML, XML,
+		// naturally!)
+		internalReusedTempInstance = getEmbeddedPartitioner().createPartition(offset, length, type);
+
 	}
 
 	/**
-	 * @return
+	 * Sets the language.
+	 * 
+	 * @param language
+	 *            The language to set
 	 */
-	public static String[] getConfiguredContentTypes() {
-		return fConfiguredContentTypes;
+	public void setLanguage(String language) {
+		this.fLanguage = language;
 	}
 
 }
