@@ -1189,10 +1189,7 @@ class ModelManagerImpl implements IModelManager {
 
 	public synchronized IStructuredModel getModelForEdit(String id, InputStream inputStream, URIResolver resolver) throws IOException {
 		if (id == null) {
-			throw new IllegalArgumentException("Program Error: filename may not be null"); //$NON-NLS-1$
-		}
-		if (inputStream == null) {
-			throw new IllegalArgumentException("Program Error: model input stream may not be null"); //$NON-NLS-1$
+			throw new IllegalArgumentException("Program Error: id may not be null"); //$NON-NLS-1$
 		}
 
 		InputStream istream = Utilities.getMarkSupportedStream(inputStream);
