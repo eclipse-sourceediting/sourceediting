@@ -251,7 +251,6 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 			int state = mmBundle.getState();
 			if (!(state == Bundle.STOPPING || state == Bundle.UNINSTALLED)) {
 				plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-				plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
 				fModelManager = plugin.getModelManager();
 			} else {
 				fModelManager = new NullModelManager();
