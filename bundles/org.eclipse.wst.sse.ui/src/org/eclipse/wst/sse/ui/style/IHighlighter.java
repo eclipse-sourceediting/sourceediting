@@ -22,7 +22,6 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
  * 
  */
 public interface IHighlighter extends LineStyleListener {
-
 	void addProvider(String partitionType, LineStyleProvider provider);
 
 	void install(ITextViewer viewer);
@@ -31,10 +30,5 @@ public interface IHighlighter extends LineStyleListener {
 
 	void setDocument(IStructuredDocument structuredDocument);
 	
-	void setDocumentPartitioning(String partitioning);
-
 	void uninstall();
-
-
-
 }
