@@ -103,9 +103,16 @@
    <extension
          point="org.eclipse.ui.preferencePages">
 <!-- ROOT PREFERENCE PAGE FOR WEB AND XML FILES -->
+<!--  Comment out for now since this preference page is not used
       <page
             name="%WEB_AND_XML_Files.name"
             class="org.eclipse.wst.sse.ui.preferences.ui.FilePreferencePage"
+            id="org.eclipse.wst.sse.ui.preferences">
+      </page>
+-->
+      <page
+            name="%WEB_AND_XML_Files.name"
+            class="org.eclipse.wst.sse.ui.internal.preferences.ui.EmptyFilePreferencePage"
             id="org.eclipse.wst.sse.ui.preferences">
       </page>
 <!-- Source Editor Preference page under Workbench->Editors -->
