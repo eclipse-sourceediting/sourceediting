@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component xmlns="http://eclipse.org/wtp/releng/tools/component-model"
+	name="wst.css">
+	<component-depends unrestricted="true"></component-depends>
+	<plugin id="org.eclipse.wst.css.core" />
+	<plugin id="org.eclipse.wst.css.ui" />
+	<package name="org.eclipse.wst.css.core.contenttype" />
+	<package name="org.eclipse.wst.css.core.parser" />
+	<package name="org.w3c.dom.css" />
+	<package name="org.w3c.dom.stylesheets" />
+	<package name="org.w3c.dom.views" />
+</component>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component xmlns="http://eclipse.org/wtp/releng/tools/component-model"
+	name="wst.sse">
+	<component-depends unrestricted="true"></component-depends>
+	<plugin id="org.eclipse.wst.sse.core" />
+	<plugin id="org.eclipse.wst.sse.ui" />
+	<package name="org.eclipse.wst.sse.core" />
+	<package name="org.eclipse.wst.sse.core.events" />
+	<package name="org.eclipse.wst.sse.core.text" />
+</component>
