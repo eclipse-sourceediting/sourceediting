@@ -21,7 +21,6 @@
       <import plugin="org.eclipse.wst.xml.uriresolver"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.wst.common.encoding"/>
    </requires>
 
 

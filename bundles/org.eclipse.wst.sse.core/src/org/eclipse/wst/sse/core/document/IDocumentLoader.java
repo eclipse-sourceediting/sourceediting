@@ -20,7 +20,7 @@ import java.io.UnsupportedEncodingException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.wst.common.encoding.EncodingRule;
+import org.eclipse.wst.sse.core.internal.encoding.EncodingRule;
 
 
 public interface IDocumentLoader {

@@ -14,8 +14,8 @@ package org.eclipse.wst.xml.core.internal.contenttype;
 
 import java.io.IOException;
 
-import org.eclipse.wst.common.encoding.EncodingMemento;
-import org.eclipse.wst.common.encoding.IResourceCharsetDetector;
+import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
+import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
 
 
 public class XMLResourceEncodingDetector extends AbstractResourceEncodingDetector implements IResourceCharsetDetector {

@@ -26,14 +26,14 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.wst.common.encoding.CodedIO;
-import org.eclipse.wst.common.encoding.CodedReaderCreator;
-import org.eclipse.wst.common.encoding.ContentTypeEncodingPreferences;
-import org.eclipse.wst.common.encoding.EncodingMemento;
-import org.eclipse.wst.common.encoding.EncodingRule;
-import org.eclipse.wst.common.encoding.exceptions.MalformedInputExceptionWithDetail;
 import org.eclipse.wst.sse.core.internal.document.NullStructuredDocumentPartitioner;
 import org.eclipse.wst.sse.core.internal.document.TextUtilities;
+import org.eclipse.wst.sse.core.internal.encoding.CodedIO;
+import org.eclipse.wst.sse.core.internal.encoding.CodedReaderCreator;
+import org.eclipse.wst.sse.core.internal.encoding.ContentTypeEncodingPreferences;
+import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
+import org.eclipse.wst.sse.core.internal.encoding.EncodingRule;
+import org.eclipse.wst.sse.core.internal.exceptions.MalformedInputExceptionWithDetail;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 
 

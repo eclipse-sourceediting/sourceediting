@@ -11,7 +11,7 @@
 package org.eclipse.jst.jsp.core.internal.contenttype;
 
 import org.eclipse.core.runtime.QualifiedName;
-import org.eclipse.wst.common.encoding.ICodedResourcePlugin;
+import org.eclipse.wst.sse.core.internal.encoding.ICodedResourcePlugin;
 
 
 public interface IContentDescriptionForJSP {

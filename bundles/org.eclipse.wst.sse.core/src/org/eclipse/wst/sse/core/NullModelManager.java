@@ -20,9 +20,9 @@ import java.util.Enumeration;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.wst.common.encoding.EncodingRule;
 import org.eclipse.wst.sse.core.exceptions.ResourceAlreadyExists;
 import org.eclipse.wst.sse.core.exceptions.ResourceInUse;
+import org.eclipse.wst.sse.core.internal.encoding.EncodingRule;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.util.URIResolver;
 
@@ -284,7 +284,7 @@ public class NullModelManager extends ModelManagerImpl implements IModelManager 
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.wst.sse.core.IModelManager#getModelForEdit(org.eclipse.core.resources.IFile,
-	 *      org.eclipse.wst.common.encoding.EncodingRule)
+	 *      org.eclipse.wst.sse.core.internal.encoding.EncodingRule)
 	 */
 	public IStructuredModel getModelForEdit(IFile iFile, EncodingRule encodingRule) throws UnsupportedEncodingException, IOException, CoreException {
 
@@ -327,7 +327,7 @@ public class NullModelManager extends ModelManagerImpl implements IModelManager 
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.wst.sse.core.IModelManager#getModelForRead(org.eclipse.core.resources.IFile,
-	 *      org.eclipse.wst.common.encoding.EncodingRule)
+	 *      org.eclipse.wst.sse.core.internal.encoding.EncodingRule)
 	 */
 	public IStructuredModel getModelForRead(IFile iFile, EncodingRule encodingRule) throws UnsupportedEncodingException, IOException, CoreException {
 

@@ -11,7 +11,7 @@
 package org.eclipse.wst.css.core.internal.content;
 
 import org.eclipse.core.runtime.content.ITextContentDescriber;
-import org.eclipse.wst.common.encoding.IResourceCharsetDetector;
+import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
 
 
 public class ContentDescriberForCSS extends AbstractContentDescriber implements ITextContentDescriber {

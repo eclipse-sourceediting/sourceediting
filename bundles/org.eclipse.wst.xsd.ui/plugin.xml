@@ -41,8 +41,7 @@
       
       <import plugin="org.eclipse.ltk.core.refactoring" />
 	  <import plugin="org.eclipse.ltk.ui.refactoring" />
-      <import plugin="org.eclipse.wst.common.encoding"/>
-   </requires>
+    </requires>
 
 
    <extension

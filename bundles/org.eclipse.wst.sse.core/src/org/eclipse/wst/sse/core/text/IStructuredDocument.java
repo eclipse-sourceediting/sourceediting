@@ -14,12 +14,12 @@ package org.eclipse.wst.sse.core.text;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.text.IDocumentExtension;
-import org.eclipse.wst.common.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.document.IEncodedDocument;
 import org.eclipse.wst.sse.core.events.IModelAboutToBeChangedListener;
 import org.eclipse.wst.sse.core.events.IStructuredDocumentListener;
 import org.eclipse.wst.sse.core.events.NewModelEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
+import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.parser.RegionParser;
 import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
 

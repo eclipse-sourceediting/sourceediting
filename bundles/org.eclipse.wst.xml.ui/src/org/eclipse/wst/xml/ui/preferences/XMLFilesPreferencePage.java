@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.common.encoding.CommonEncodingPreferenceNames;
+import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.ui.AbstractPreferencePage;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;

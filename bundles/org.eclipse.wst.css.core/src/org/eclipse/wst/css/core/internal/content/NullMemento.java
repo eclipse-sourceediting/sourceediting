@@ -12,8 +12,8 @@
  *******************************************************************************/
 package org.eclipse.wst.css.core.internal.content;
 
-import org.eclipse.wst.common.encoding.EncodingMemento;
-import org.eclipse.wst.common.encoding.NonContentBasedEncodingRules;
+import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
+import org.eclipse.wst.sse.core.internal.encoding.NonContentBasedEncodingRules;
 
 
 

@@ -15,8 +15,8 @@ import java.io.IOException;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.ITextContentDescriber;
-import org.eclipse.wst.common.encoding.IContentDescriptionExtended;
-import org.eclipse.wst.common.encoding.IResourceCharsetDetector;
+import org.eclipse.wst.sse.core.internal.encoding.IContentDescriptionExtended;
+import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
 
 public class ContentDescriberForJSP extends AbstractContentDescriber implements ITextContentDescriber {
 	private final static QualifiedName[] SUPPORTED_OPTIONS = {

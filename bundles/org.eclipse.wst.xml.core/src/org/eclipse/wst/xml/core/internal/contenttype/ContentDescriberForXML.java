@@ -20,9 +20,9 @@ import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.content.IContentDescriber;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.ITextContentDescriber;
-import org.eclipse.wst.common.encoding.EncodingMemento;
-import org.eclipse.wst.common.encoding.IContentDescriptionExtended;
-import org.eclipse.wst.common.encoding.IResourceCharsetDetector;
+import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
+import org.eclipse.wst.sse.core.internal.encoding.IContentDescriptionExtended;
+import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
 
 
 public class ContentDescriberForXML implements ITextContentDescriber {

@@ -13,7 +13,7 @@ package org.eclipse.wst.xml.ui.internal.templates;
 
 import org.eclipse.jface.text.templates.SimpleTemplateVariableResolver;
 import org.eclipse.jface.text.templates.TemplateContext;
-import org.eclipse.wst.common.encoding.CommonEncodingPreferenceNames;
+import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 
 

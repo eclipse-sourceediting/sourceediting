@@ -19,14 +19,14 @@ import java.io.UnsupportedEncodingException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.wst.common.encoding.CodedReaderCreator;
-import org.eclipse.wst.common.encoding.EncodingMemento;
-import org.eclipse.wst.common.encoding.EncodingRule;
 import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.document.IDocumentLoaderForFileBuffers;
 import org.eclipse.wst.sse.core.document.IEncodedDocument;
 import org.eclipse.wst.sse.core.document.StructuredDocumentLoader;
+import org.eclipse.wst.sse.core.internal.encoding.CodedReaderCreator;
+import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
+import org.eclipse.wst.sse.core.internal.encoding.EncodingRule;
 import org.eclipse.wst.xml.core.encoding.XMLDocumentCharsetDetector;
 import org.eclipse.wst.xml.core.internal.filebuffers.DocumentFactoryForXML;
 import org.eclipse.wst.xml.core.text.rules.StructuredTextPartitionerForXML;

@@ -22,8 +22,8 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPIndexManager;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchSupport;
-import org.eclipse.wst.common.encoding.CommonCharsetNames;
-import org.eclipse.wst.common.encoding.CommonEncodingPreferenceNames;
+import org.eclipse.wst.sse.core.internal.encoding.CommonCharsetNames;
+import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.osgi.framework.BundleContext;
 

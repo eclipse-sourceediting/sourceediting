@@ -17,8 +17,8 @@ package org.eclipse.wst.sse.core.util;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 
-import org.eclipse.wst.common.encoding.CodedIO;
-import org.eclipse.wst.common.encoding.internal.BufferedLimitedStream;
+import org.eclipse.wst.sse.core.internal.encoding.CodedIO;
+import org.eclipse.wst.sse.core.internal.encoding.util.BufferedLimitedStream;
 
 
 

@@ -18,9 +18,9 @@ import java.io.UnsupportedEncodingException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.wst.common.encoding.EncodingRule;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.ModelDumper;
+import org.eclipse.wst.sse.core.internal.encoding.EncodingRule;
 
 
 public final class DTDModelDumper implements ModelDumper {
@@ -30,7 +30,7 @@ public final class DTDModelDumper implements ModelDumper {
 	 * 
 	 * @see org.eclipse.wst.sse.core.ModelDumper#dump(org.eclipse.wst.sse.core.IStructuredModel,
 	 *      java.io.OutputStream,
-	 *      org.eclipse.wst.common.encoding.EncodingRule,
+	 *      org.eclipse.wst.sse.core.internal.encoding.EncodingRule,
 	 *      org.eclipse.core.resources.IFile)
 	 */
 	public void dump(IStructuredModel model, OutputStream outputStream, EncodingRule encodingRule, IFile iFile) throws UnsupportedEncodingException, IOException, CoreException {

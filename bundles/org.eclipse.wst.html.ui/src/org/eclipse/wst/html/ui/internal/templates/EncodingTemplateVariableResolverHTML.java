@@ -13,8 +13,8 @@ package org.eclipse.wst.html.ui.internal.templates;
 
 import org.eclipse.jface.text.templates.SimpleTemplateVariableResolver;
 import org.eclipse.jface.text.templates.TemplateContext;
-import org.eclipse.wst.common.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
+import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 
 
 public class EncodingTemplateVariableResolverHTML extends SimpleTemplateVariableResolver {

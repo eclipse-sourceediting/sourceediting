@@ -19,7 +19,6 @@
 		<import plugin="org.eclipse.jface.text" />
 		<import plugin="org.eclipse.ui" />
 		<import plugin="org.eclipse.wst.common.contentmodel"/>
-		<import plugin="org.eclipse.wst.common.encoding"/>
 		<import plugin="org.eclipse.wst.common.uriresolver"/>
 		<import plugin="org.eclipse.wst.sse.core" />
 		<import plugin="org.eclipse.wst.validation"/>

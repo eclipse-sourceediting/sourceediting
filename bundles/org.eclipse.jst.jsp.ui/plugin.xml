@@ -34,7 +34,6 @@
 		<import plugin="org.eclipse.jdt.debug" />
 		<import plugin="org.eclipse.core.resources" />
 		<import plugin="org.eclipse.core.runtime" />
-		<import plugin="org.eclipse.wst.common.encoding" />
 		<import plugin="org.eclipse.search" />
 		<import plugin="org.eclipse.ltk.core.refactoring" />
 		<import plugin="org.eclipse.ltk.ui.refactoring" />

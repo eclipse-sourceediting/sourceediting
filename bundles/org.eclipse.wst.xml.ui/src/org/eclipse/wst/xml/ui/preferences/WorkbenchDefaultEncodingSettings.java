@@ -21,7 +21,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.wst.common.encoding.CommonCharsetNames;
+import org.eclipse.wst.sse.core.internal.encoding.CommonCharsetNames;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
 /**

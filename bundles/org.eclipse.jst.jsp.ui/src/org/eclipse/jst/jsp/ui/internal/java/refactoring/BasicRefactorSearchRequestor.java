@@ -49,8 +49,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.common.encoding.CodedStreamCreator;
 import org.eclipse.wst.sse.core.document.DocumentReader;
+import org.eclipse.wst.sse.core.internal.encoding.CodedStreamCreator;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
 /**

@@ -28,7 +28,6 @@
       <import plugin="org.eclipse.wst.xml.core"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.core.runtime"/>
-	  <import plugin="org.eclipse.wst.common.encoding"/>
       <import plugin="org.eclipse.ui.ide"/>
    </requires>
 

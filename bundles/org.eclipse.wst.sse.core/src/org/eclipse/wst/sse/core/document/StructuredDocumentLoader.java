@@ -29,9 +29,9 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.wst.common.encoding.CodedIO;
-import org.eclipse.wst.common.encoding.IContentDescriptionExtended;
-import org.eclipse.wst.common.encoding.exceptions.MalformedInputExceptionWithDetail;
+import org.eclipse.wst.sse.core.internal.encoding.CodedIO;
+import org.eclipse.wst.sse.core.internal.encoding.IContentDescriptionExtended;
+import org.eclipse.wst.sse.core.internal.exceptions.MalformedInputExceptionWithDetail;
 
 
 public class StructuredDocumentLoader {

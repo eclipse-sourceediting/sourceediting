@@ -13,7 +13,7 @@
 package org.eclipse.wst.sse.core.document;
 
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.wst.common.encoding.IResourceCharsetDetector;
+import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
 
 
 

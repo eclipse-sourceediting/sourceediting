@@ -14,7 +14,7 @@ package org.eclipse.jst.jsp.ui.internal.templates;
 import org.eclipse.jface.text.templates.SimpleTemplateVariableResolver;
 import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
-import org.eclipse.wst.common.encoding.CommonEncodingPreferenceNames;
+import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 
 
 public class EncodingTemplateVariableResolverJSP extends SimpleTemplateVariableResolver {

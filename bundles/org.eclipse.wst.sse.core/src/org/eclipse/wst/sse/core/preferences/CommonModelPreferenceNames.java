@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.preferences;
 
-import org.eclipse.wst.common.encoding.CommonEncodingPreferenceNames;
+import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 
 /**
  * Here is a description of how each common model file preference is used.

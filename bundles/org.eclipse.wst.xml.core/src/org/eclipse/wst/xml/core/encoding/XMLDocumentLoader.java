@@ -13,12 +13,12 @@
 package org.eclipse.wst.xml.core.encoding;
 
 import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.wst.common.encoding.ContentTypeEncodingPreferences;
 import org.eclipse.wst.sse.core.document.AbstractDocumentLoader;
 import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.document.IEncodedDocument;
 import org.eclipse.wst.sse.core.document.StructuredDocumentFactory;
+import org.eclipse.wst.sse.core.internal.encoding.ContentTypeEncodingPreferences;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 import org.eclipse.wst.sse.core.parser.RegionParser;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;

@@ -13,11 +13,11 @@ package org.eclipse.wst.html.ui.contentproperties.ui;
 import java.util.Enumeration;
 import java.util.Iterator;
 
-import org.eclipse.wst.common.encoding.CommonCharsetNames;
 import org.eclipse.wst.css.core.metamodel.CSSProfile;
 import org.eclipse.wst.css.core.metamodel.CSSProfileRegistry;
 import org.eclipse.wst.html.core.document.HTMLDocumentTypeEntry;
 import org.eclipse.wst.html.core.document.HTMLDocumentTypeRegistry;
+import org.eclipse.wst.sse.core.internal.encoding.CommonCharsetNames;
 import org.eclipse.wst.sse.ui.contentproperties.ui.ComboList;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 

@@ -14,7 +14,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 import org.eclipse.wst.common.contentmodel.CMDocument;
-import org.eclipse.wst.common.encoding.EncodingHelper;
+import org.eclipse.wst.sse.core.internal.encoding.EncodingHelper;
 
 public class CMDocumentEncodingHelper {
 	protected static void setEncodingInfo(CMDocument cmDocument, String uri) {

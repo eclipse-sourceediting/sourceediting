@@ -13,9 +13,9 @@ package org.eclipse.wst.html.core.internal.contenttype;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-import org.eclipse.wst.common.encoding.CodedIO;
-import org.eclipse.wst.common.encoding.EncodingMemento;
-import org.eclipse.wst.common.encoding.IResourceCharsetDetector;
+import org.eclipse.wst.sse.core.internal.encoding.CodedIO;
+import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
+import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
 import org.eclipse.wst.xml.core.internal.contenttype.EncodingParserConstants;
 
 public class HTMLResourceEncodingDetector extends AbstractResourceEncodingDetector implements IResourceCharsetDetector {

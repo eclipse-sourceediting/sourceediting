@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.wst.common.encoding.ContentTypeEncodingPreferences;
 import org.eclipse.wst.html.core.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.core.document.HTMLDocumentTypeAdapterFactory;
 import org.eclipse.wst.html.core.document.HTMLModelParserAdapterFactory;
@@ -32,6 +31,7 @@ import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.document.IEncodedDocument;
 import org.eclipse.wst.sse.core.document.StructuredDocumentFactory;
+import org.eclipse.wst.sse.core.internal.encoding.ContentTypeEncodingPreferences;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 import org.eclipse.wst.sse.core.parser.BlockMarker;
 import org.eclipse.wst.sse.core.parser.RegionParser;
