@@ -11,7 +11,7 @@
 package org.eclipse.wst.html.core.cleanup;
 
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
+import org.eclipse.wst.html.core.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.core.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.sse.core.cleanup.IStructuredCleanupHandler;
@@ -25,7 +25,7 @@ public class HTMLCleanupProcessorImpl extends CleanupProcessorXML {
 	 * @see com.ibm.sed.partitionCleanup.AbstractCleanupProcessorImpl#getContentType()
 	 */
 	protected String getContentType() {
-		return IContentTypeIdentifier.ContentTypeID_HTML;
+		return ContentTypeIdForHTML.ContentTypeID_HTML;
 	}
 
 	/**

@@ -206,11 +206,15 @@ public class TaglibController implements IDocumentSetupParticipant {
 	}
 
 	public static TLDCMDocumentManager getTLDCMDocumentManager(IDocument document) {
+		// if _instance is null, we are already shutting donw
+		if (_instance == null)
+			return null;
 		synchronized (_instance.fDocumentMap) {
 			DocumentInfo info = (DocumentInfo) _instance.fDocumentMap.get(document);
 			if (info != null)
 				return info.tldDocumentManager;
 			return null;
+
 		}
 	}
 

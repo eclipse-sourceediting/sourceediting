@@ -13,13 +13,13 @@
 package org.eclipse.wst.xml.core.cleanup;
 
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.sse.core.cleanup.AbstractStructuredCleanupProcessor;
 import org.eclipse.wst.sse.core.cleanup.IStructuredCleanupHandler;
 import org.eclipse.wst.sse.core.cleanup.IStructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.cleanup.StructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.format.IStructuredFormatProcessor;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
+import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.format.FormatProcessorXML;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.w3c.dom.Node;
@@ -73,7 +73,7 @@ public class CleanupProcessorXML extends AbstractStructuredCleanupProcessor {
 	}
 
 	protected String getContentType() {
-		return IContentTypeIdentifier.ContentTypeID_SSEXML;
+		return ContentTypeIdForXML.ContentTypeID_XML;
 	}
 
 	protected IStructuredFormatProcessor getFormatProcessor() {

@@ -13,20 +13,20 @@ package org.eclipse.wst.html.core.htmlcss;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.css.core.adapters.ICSSModelAdapter;
 import org.eclipse.wst.css.core.document.ICSSModel;
 import org.eclipse.wst.css.core.internal.document.CSSModelImpl;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.w3c.dom.Element;
 
 /**
  */
 public abstract class AbstractCSSModelAdapter implements ICSSModelAdapter {
-	private final static String CSS_ID = IContentTypeIdentifier.ContentTypeID_CSS;
+	private final static String CSS_ID = ContentTypeIdForCSS.ContentTypeID_CSS;
 
 	private Element element = null;
 	private ICSSModel model = null;

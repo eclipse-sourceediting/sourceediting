@@ -14,12 +14,12 @@ import java.io.UnsupportedEncodingException;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.css.core.adapters.IModelProvideAdapter;
 import org.eclipse.wst.css.core.adapters.IStyleSheetListAdapter;
 import org.eclipse.wst.css.core.document.ICSSModel;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.sse.core.util.URIResolver;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.document.XMLNode;
@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  */
 public class LinkElementAdapter extends AbstractStyleSheetAdapter {
 
-	private final static String CSS_ID = IContentTypeIdentifier.ContentTypeID_CSS;
+	private final static String CSS_ID = ContentTypeIdForCSS.ContentTypeID_CSS;
 	private boolean replaceModel = true;
 	// this variable to hold the class is just a VAJava trick.
 	// it improves performance in VAJava by minimizing class loading.

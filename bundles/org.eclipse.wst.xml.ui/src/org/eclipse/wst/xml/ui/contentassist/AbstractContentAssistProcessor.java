@@ -39,7 +39,6 @@ import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.common.contentmodel.modelquery.ModelQueryAction;
 import org.eclipse.wst.common.contentmodel.util.DOMNamespaceHelper;
 import org.eclipse.wst.common.encoding.ContentTypeEncodingPreferences;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -54,6 +53,7 @@ import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
+import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.document.XMLDocument;
 import org.eclipse.wst.xml.core.document.XMLElement;
 import org.eclipse.wst.xml.core.document.XMLModel;
@@ -1006,7 +1006,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	}
 
 	protected void addXMLProposal(ContentAssistRequest contentAssistRequest) {
-		String proposedText = "<?xml version=\"1.0\" encoding=\"" + ContentTypeEncodingPreferences.getUserPreferredCharsetName(IContentTypeIdentifier.ContentTypeID_SSEXML) + "\"?>"; //$NON-NLS-2$//$NON-NLS-1$
+		String proposedText = "<?xml version=\"1.0\" encoding=\"" + ContentTypeEncodingPreferences.getUserPreferredCharsetName(ContentTypeIdForXML.ContentTypeID_XML) + "\"?>"; //$NON-NLS-2$//$NON-NLS-1$
 		ICompletionProposal proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), proposedText.length(), XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_PROCESSINGINSTRUCTION), proposedText, null, null, XMLRelevanceConstants.R_XML_DECLARATION); // TODO
 		// add
 		// special

@@ -12,7 +12,7 @@ package org.eclipse.jst.jsp.core.internal.parser;
 
 
 
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
+import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
@@ -41,7 +41,7 @@ public class JSPCodeRegion extends ForeignRegion {
 	protected RegionParser getBlockNodeChecker() {
 		if (fBlockNodeChecker == null) {
 			IModelManager mmanager = StructuredModelManager.getModelManager();
-			fBlockNodeChecker = mmanager.createStructuredDocumentFor(IContentTypeIdentifier.ContentTypeID_JSP).getParser();
+			fBlockNodeChecker = mmanager.createStructuredDocumentFor(ContentTypeIdForJSP.ContentTypeID_JSP).getParser();
 		}
 		return fBlockNodeChecker;
 	}

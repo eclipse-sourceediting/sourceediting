@@ -19,7 +19,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
+import org.eclipse.wst.html.core.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.core.IModelManager;
@@ -89,7 +89,7 @@ public class HTMLColorPage extends XMLColorPage {
 
 	protected void setupPicker(StyledTextColorPicker picker) {
 		IModelManager mmanager = StructuredModelManager.getModelManager();
-		picker.setParser(mmanager.createStructuredDocumentFor(IContentTypeIdentifier.ContentTypeID_HTML).getParser());
+		picker.setParser(mmanager.createStructuredDocumentFor(ContentTypeIdForHTML.ContentTypeID_HTML).getParser());
 
 		// create descriptions for hilighting types
 		Dictionary descriptions = new Hashtable();

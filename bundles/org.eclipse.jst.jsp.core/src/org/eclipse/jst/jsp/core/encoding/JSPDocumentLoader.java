@@ -23,13 +23,13 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jst.jsp.core.JSP11Namespace;
 import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
+import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.document.PageDirectiveWatcherFactory;
 import org.eclipse.jst.jsp.core.internal.parser.JSPReParser;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
 import org.eclipse.wst.common.encoding.CodedReaderCreator;
 import org.eclipse.wst.common.encoding.ContentTypeEncodingPreferences;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.PropagatingAdapter;
@@ -291,7 +291,7 @@ public class JSPDocumentLoader extends AbstractDocumentLoader {
 	}
 
 	protected String getPreferredNewLineDelimiter() {
-		return ContentTypeEncodingPreferences.getPreferredNewLineDelimiter(IContentTypeIdentifier.ContentTypeID_JSP);
+		return ContentTypeEncodingPreferences.getPreferredNewLineDelimiter(ContentTypeIdForJSP.ContentTypeID_JSP);
 	}
 
 	/**

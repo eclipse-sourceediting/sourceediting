@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 import org.eclipse.wst.common.encoding.CodedIO;
 import org.eclipse.wst.common.encoding.EncodingMemento;
 import org.eclipse.wst.common.encoding.IResourceCharsetDetector;
-import org.eclipse.wst.xml.core.contenttype.EncodingParserConstants;
+import org.eclipse.wst.xml.core.internal.contenttype.EncodingParserConstants;
 
 public class HTMLResourceEncodingDetector extends AbstractResourceEncodingDetector implements IResourceCharsetDetector {
 

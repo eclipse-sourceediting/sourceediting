@@ -167,8 +167,9 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 			// this updates cursor position
 			checkCursorInRegion(sdRegion);
 		}
-		catch (Exception e) {
+		catch (NullPointerException e) {
 			// logging this exception that I've seen a couple of times...
+			System.out.println(e);
 			Logger.logException("XMLJSPRegionHelper: exception in node parsing", e); //$NON-NLS-1$
 		}
 	}

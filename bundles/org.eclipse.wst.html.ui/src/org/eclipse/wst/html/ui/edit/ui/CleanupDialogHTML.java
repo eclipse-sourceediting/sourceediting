@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.common.encoding.CommonEncodingPreferenceNames;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
+import org.eclipse.wst.html.core.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.core.IStructuredModel;
@@ -31,6 +31,7 @@ import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.xml.core.cleanup.XMLCleanupPreferencesImpl;
+import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
 
 public class CleanupDialogHTML extends Dialog implements SelectionListener {
 
@@ -277,7 +278,7 @@ public class CleanupDialogHTML extends Dialog implements SelectionListener {
 
 		if (fModel != null) {
 			IModelHandler modelHandler = fModel.getModelHandler();
-			if (modelHandler.getAssociatedContentTypeId().equals(IContentTypeIdentifier.ContentTypeID_SSEXML))
+			if (modelHandler.getAssociatedContentTypeId().equals(ContentTypeIdForXML.ContentTypeID_XML))
 				result = true;
 		}
 
@@ -289,7 +290,7 @@ public class CleanupDialogHTML extends Dialog implements SelectionListener {
 
 		if (fModel != null) {
 			IModelHandler modelHandler = fModel.getModelHandler();
-			if (modelHandler.getAssociatedContentTypeId().equals(IContentTypeIdentifier.ContentTypeID_HTML))
+			if (modelHandler.getAssociatedContentTypeId().equals(ContentTypeIdForHTML.ContentTypeID_HTML))
 				result = true;
 		}
 

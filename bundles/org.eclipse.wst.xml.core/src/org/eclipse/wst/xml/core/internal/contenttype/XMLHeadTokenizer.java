@@ -18,7 +18,6 @@ package org.eclipse.wst.xml.core.internal.contenttype;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.eclipse.wst.xml.core.contenttype.EncodingParserConstants;
 
 
 
@@ -51,7 +50,7 @@ public class XMLHeadTokenizer {
 	/**
 	 * Translates characters to character classes
 	 */
-	final private static String yycmap_packed = "\11\0\1\6\1\7\2\0\1\11\22\0\1\6\1\0\1\27\2\0" + "\1\31\1\0\1\30\24\0\1\12\1\10\1\26\1\13\3\0\1\21" + "\1\23\1\17\1\0\1\25\1\0\1\24\2\0\1\16\1\15\1\20" + "\1\22\10\0\1\14\12\0\1\21\1\23\1\17\1\0\1\25\1\0" + "\1\24\2\0\1\16\1\15\1\20\1\22\10\0\1\14\102\0\1\4" + "\3\0\1\5\17\0\1\3\16\0\1\1\20\0\1\3\16\0\1\1" + "\1\2\170\0\1\2\ufe87\0";
+	final private static String yycmap_packed = "\11\0\1\6\1\7\2\0\1\11\22\0\1\6\1\0\1\27\2\0" + "\1\31\1\0\1\30\24\0\1\12\1\10\1\26\1\13\3\0\1\21" + "\1\23\1\17\1\0\1\25\1\0\1\24\2\0\1\16\1\15\1\20" + "\1\22\10\0\1\14\12\0\1\21\1\23\1\17\1\0\1\25\1\0" + "\1\24\2\0\1\16\1\15\1\20\1\22\10\0\1\14\102\0\1\4" + "\3\0\1\5\17\0\1\3\16\0\1\1\20\0\1\3\16\0\1\1" + "\1\2\170\0\1\2\ufe87\0"; //$NON-NLS-2$//$NON-NLS-3$
 
 	/**
 	 * Translates characters to character classes
@@ -102,8 +101,8 @@ public class XMLHeadTokenizer {
 	private int yy_endRead;
 
 	/** number of newlines encountered up to the start of the matched text */
-	 int yyline;
-
+	// future_TODO: remove from skeleton
+	// private int yyline;
 	/** the number of characters up to the start of the matched text */
 	private int yychar;
 
@@ -111,8 +110,8 @@ public class XMLHeadTokenizer {
 	 * the number of characters from the last newline up to the start of the
 	 * matched text
 	 */
-	 int yycolumn;
-
+	// future_TODO: remove from skeleton
+	//private int yycolumn;
 	/**
 	 * yy_atBOL == true <=>the scanner is currently at the beginning of a line
 	 */
@@ -174,8 +173,8 @@ public class XMLHeadTokenizer {
 		yy_endRead = 0;
 
 		/* number of newlines encountered up to the start of the matched text */
-		yyline = 0;
-
+		// future_TODO: remove from skeleton
+		//yyline = 0;
 		/* the number of characters up to the start of the matched text */
 		yychar = 0;
 
@@ -183,8 +182,8 @@ public class XMLHeadTokenizer {
 		 * the number of characters from the last newline up to the start of
 		 * the matched text
 		 */
-		yycolumn = 0;
-
+		// future_TODO: remove from skeleton
+		//yycolumn = 0;
 		/**
 		 * yy_atBOL == true <=>the scanner is currently at the beginning of a
 		 * line

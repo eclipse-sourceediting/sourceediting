@@ -30,7 +30,6 @@ import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.common.encoding.CodedIO;
-import org.eclipse.wst.common.encoding.EncodingMemento;
 import org.eclipse.wst.common.encoding.IContentDescriptionExtended;
 import org.eclipse.wst.common.encoding.exceptions.MalformedInputExceptionWithDetail;
 
@@ -92,15 +91,10 @@ public class StructuredDocumentLoader {
 		IContentDescription description = Platform.getContentTypeManager().getDescriptionFor(reader, null, new QualifiedName[]{IContentDescription.CHARSET, IContentDescriptionExtended.DETECTED_CHARSET});
 		String javaCharset = (String) description.getProperty(IContentDescription.CHARSET);
 		String detectedCharset = (String) description.getProperty(IContentDescriptionExtended.DETECTED_CHARSET);
-		EncodingMemento encodingMemento = (EncodingMemento) description.getProperty(IContentDescriptionExtended.ENCODING_MEMENTO);
 		if (javaCharset != null) {
 			result = javaCharset;
 		} else {
-			if (encodingMemento != null) {
-				result = encodingMemento.getDetectedCharsetName();
-			} else {
-				result = detectedCharset;
-			}
+			result = detectedCharset;
 		}
 		return result;
 	}

@@ -14,7 +14,7 @@ import java.io.IOException;
 
 import org.eclipse.wst.common.encoding.EncodingMemento;
 import org.eclipse.wst.common.encoding.IResourceCharsetDetector;
-import org.eclipse.wst.xml.core.contenttype.EncodingParserConstants;
+import org.eclipse.wst.xml.core.internal.contenttype.EncodingParserConstants;
 
 
 

@@ -107,7 +107,7 @@
 			   default-charset="UTF-8"
 			   alias-for="org.eclipse.core.runtime.xml"
 			   >
-			<describer class="org.eclipse.wst.xml.core.contenttype.ContentDescriberForXML"/>
+			<describer class="org.eclipse.wst.xml.core.internal.contenttype.ContentDescriberForXML"/>
 		</content-type>
    </extension>
    

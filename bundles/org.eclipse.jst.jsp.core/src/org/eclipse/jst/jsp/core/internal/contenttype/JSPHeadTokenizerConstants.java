@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.contenttype;
 
-import org.eclipse.wst.xml.core.contenttype.XMLHeadTokenizerConstants;
+import org.eclipse.wst.xml.core.internal.contenttype.XMLHeadTokenizerConstants;
 
 public interface JSPHeadTokenizerConstants extends XMLHeadTokenizerConstants {
 	String PageDirectiveStart = "PageDirectiveStart"; //$NON-NLS-1$

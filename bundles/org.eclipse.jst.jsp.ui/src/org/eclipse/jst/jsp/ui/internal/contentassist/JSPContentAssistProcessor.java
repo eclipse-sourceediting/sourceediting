@@ -33,6 +33,7 @@ import org.eclipse.jst.jsp.core.JSP12Namespace;
 import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
 import org.eclipse.jst.jsp.core.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDCMDocumentManager;
+import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.document.PageDirectiveAdapterFactory;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
@@ -42,7 +43,6 @@ import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.common.contentmodel.modelquery.ModelQueryAction;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.css.ui.contentassist.CSSContentAssistProcessor;
 import org.eclipse.wst.html.core.HTMLCMProperties;
 import org.eclipse.wst.html.core.contentmodel.HTMLCMDocumentFactory;
@@ -302,7 +302,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 				// list of results.
 				IStructuredModel internalModel = null;
 				IModelManager mmanager = StructuredModelManager.getModelManager();
-				internalModel = mmanager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_JSP);
+				internalModel = mmanager.createUnManagedStructuredModelFor(ContentTypeIdForJSP.ContentTypeID_JSP);
 				XMLNode xmlNode = null;
 				XMLModel xmlOuterModel = null;
 				if (contentAssistRequest.getNode() instanceof XMLNode) {

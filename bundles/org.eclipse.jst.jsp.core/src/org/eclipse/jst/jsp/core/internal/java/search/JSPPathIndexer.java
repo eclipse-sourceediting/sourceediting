@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.core.search.SearchPattern;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
+import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
 
 /**
  * pa_TODO Still need to take into consideration:
@@ -61,7 +61,7 @@ public class JSPPathIndexer {
 			
 			if (proxy.getType() == IResource.FILE) {
 
-				IContentType contentTypeJSP = Platform.getContentTypeManager().getContentType(IContentTypeIdentifier.ContentTypeID_JSP);
+				IContentType contentTypeJSP = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
 				// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3553
 				// check this before description
 				// check name before actually getting the file (less work)
@@ -73,7 +73,7 @@ public class JSPPathIndexer {
 					if (contentDescription != null) {
 						ctId = contentDescription.getContentType().getId();
 					}
-					if (IContentTypeIdentifier.ContentTypeID_JSP.equals(ctId)) {
+					if (ContentTypeIdForJSP.ContentTypeID_JSP.equals(ctId)) {
 						if (this.fScope.encloses(proxy.requestFullPath().toString())) {
 	
 							if (DEBUG)

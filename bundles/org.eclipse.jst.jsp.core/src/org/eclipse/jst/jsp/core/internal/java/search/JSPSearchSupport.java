@@ -39,10 +39,10 @@ import org.eclipse.jdt.core.search.SearchRequestor;
 import org.eclipse.jdt.internal.compiler.util.SimpleLookupTable;
 import org.eclipse.jdt.internal.core.JavaModelManager;
 import org.eclipse.jdt.internal.core.search.indexing.IndexManager;
+import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.java.JSP2ServletNameUtil;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 
 /**
  * Central access to java indexing and search. All contact between JDT indexing
@@ -268,7 +268,7 @@ public class JSPSearchSupport {
         try {
             if (file != null && file.exists()) {
 
-                IContentType contentTypeJSP = Platform.getContentTypeManager().getContentType(IContentTypeIdentifier.ContentTypeID_JSP);
+                IContentType contentTypeJSP = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
                 // check this before description, it's less expensive
                 if (contentTypeJSP.isAssociatedWith(file.getName())) {
 
@@ -280,7 +280,7 @@ public class JSPSearchSupport {
                     }
                     if (contentDescription != null) {
                         String fileCtId = contentDescription.getContentType().getId();
-                        isJsp = (fileCtId != null && IContentTypeIdentifier.ContentTypeID_JSP.equals(fileCtId));
+                        isJsp = (fileCtId != null && ContentTypeIdForJSP.ContentTypeID_JSP.equals(fileCtId));
                     }
                 }
             }

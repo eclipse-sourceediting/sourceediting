@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.xml.core.contenttype;
+package org.eclipse.wst.xml.core.internal.contenttype;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.common.encoding.CodedIO;
 import org.eclipse.wst.common.encoding.EncodingMemento;
 import org.eclipse.wst.common.encoding.IResourceCharsetDetector;
-import org.eclipse.wst.common.encoding.NullMemento;
 import org.eclipse.wst.common.encoding.internal.ByteReader;
 
 

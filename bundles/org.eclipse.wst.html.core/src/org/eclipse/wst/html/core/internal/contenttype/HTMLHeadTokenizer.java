@@ -16,8 +16,8 @@ package org.eclipse.wst.html.core.internal.contenttype;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.eclipse.wst.xml.core.contenttype.EncodingParserConstants;
-import org.eclipse.wst.xml.core.contenttype.XMLHeadTokenizerConstants;
+import org.eclipse.wst.xml.core.internal.contenttype.EncodingParserConstants;
+import org.eclipse.wst.xml.core.internal.contenttype.XMLHeadTokenizerConstants;
 
 
 

@@ -24,7 +24,6 @@ import org.eclipse.wst.common.contentmodel.CMDocument;
 import org.eclipse.wst.common.contentmodel.CMEntityDeclaration;
 import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 import org.eclipse.wst.xml.core.NameValidator;
 import org.eclipse.wst.xml.core.commentelement.impl.CommentElementRegistry;
@@ -960,8 +959,8 @@ public class DocumentImpl extends NodeContainer implements XMLDocument {
 		String id = handler.getAssociatedContentTypeId();
 		if (id == null)
 			return false;
-		// TODO: -- avoid this semi hardcoded string
-		return id.equals(IContentTypeIdentifier.ContentTypeID_JSP);
+		// ISSUE: -- avoid this hardcoded string
+		return id.equals("org.eclipse.jst.jsp.core.jspsource");
 	}
 
 	/**

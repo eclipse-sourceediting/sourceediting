@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.xml.core.contenttype;
+package org.eclipse.wst.xml.core.internal.contenttype;
 
 
 public interface EncodingParserConstants {

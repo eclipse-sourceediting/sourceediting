@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.xml.core.contenttype;
+package org.eclipse.wst.xml.core.internal.contenttype;
 
 import java.io.IOException;
 import java.io.InputStream;

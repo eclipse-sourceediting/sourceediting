@@ -16,12 +16,12 @@ import java.util.Hashtable;
 import java.util.Iterator;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.editor.IHelpContextIds;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.html.ui.style.IStyleConstantsHTML;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -100,7 +100,7 @@ public class JSPColorPage extends XMLColorPage {
 
 	protected void setupPicker(StyledTextColorPicker picker) {
 		IModelManager mmanager = StructuredModelManager.getModelManager();
-		picker.setParser(mmanager.createStructuredDocumentFor(IContentTypeIdentifier.ContentTypeID_JSP).getParser());
+		picker.setParser(mmanager.createStructuredDocumentFor(ContentTypeIdForJSP.ContentTypeID_JSP).getParser());
 
 		// create descriptions for hilighting types
 		Dictionary descriptions = new Hashtable();

@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.wst.common.encoding.ContentTypeEncodingPreferences;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
+import org.eclipse.wst.html.core.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.core.document.HTMLDocumentTypeAdapterFactory;
 import org.eclipse.wst.html.core.document.HTMLModelParserAdapterFactory;
 import org.eclipse.wst.html.core.htmlcss.HTMLStyleSelectorAdapterFactory;
@@ -128,7 +128,7 @@ public class HTMLDocumentLoader extends AbstractDocumentLoader {
 	}
 
 	protected String getPreferredNewLineDelimiter() {
-		return ContentTypeEncodingPreferences.getPreferredNewLineDelimiter(IContentTypeIdentifier.ContentTypeID_HTML);
+		return ContentTypeEncodingPreferences.getPreferredNewLineDelimiter(ContentTypeIdForHTML.ContentTypeID_HTML);
 	}
 
 	public IDocumentCharsetDetector getDocumentEncodingDetector() {

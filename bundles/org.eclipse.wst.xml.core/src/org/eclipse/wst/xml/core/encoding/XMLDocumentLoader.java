@@ -14,7 +14,6 @@ package org.eclipse.wst.xml.core.encoding;
 
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.wst.common.encoding.ContentTypeEncodingPreferences;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.sse.core.document.AbstractDocumentLoader;
 import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.document.IDocumentLoader;
@@ -23,6 +22,7 @@ import org.eclipse.wst.sse.core.document.StructuredDocumentFactory;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 import org.eclipse.wst.sse.core.parser.RegionParser;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
+import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.internal.parser.XMLSourceParser;
 import org.eclipse.wst.xml.core.internal.parser.XMLStructuredDocumentReParser;
 import org.eclipse.wst.xml.core.text.rules.StructuredTextPartitionerForXML;
@@ -30,7 +30,7 @@ import org.eclipse.wst.xml.core.text.rules.StructuredTextPartitionerForXML;
 
 /**
  * This class reads an XML file and creates an XML Structured Model.
- *  
+ * 
  */
 public class XMLDocumentLoader extends AbstractDocumentLoader {
 
@@ -54,7 +54,7 @@ public class XMLDocumentLoader extends AbstractDocumentLoader {
 	}
 
 	protected String getPreferredNewLineDelimiter() {
-		return ContentTypeEncodingPreferences.getPreferredNewLineDelimiter(IContentTypeIdentifier.ContentTypeID_SSEXML);
+		return ContentTypeEncodingPreferences.getPreferredNewLineDelimiter(ContentTypeIdForXML.ContentTypeID_XML);
 	}
 
 	protected String getSpecDefaultEncoding() {

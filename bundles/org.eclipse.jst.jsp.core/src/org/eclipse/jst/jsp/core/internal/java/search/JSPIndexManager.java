@@ -33,9 +33,9 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jdt.internal.core.JavaModelManager;
 import org.eclipse.jdt.internal.core.index.Index;
 import org.eclipse.jdt.internal.core.search.indexing.IndexManager;
+import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.Logger;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.osgi.framework.Bundle;
 
 /**
@@ -480,7 +480,7 @@ public class JSPIndexManager implements IResourceChangeListener {
 	
 	IContentType getJspContentType() {
 		if(this.fContentTypeJSP == null)
-			this.fContentTypeJSP = Platform.getContentTypeManager().getContentType(IContentTypeIdentifier.ContentTypeID_JSP);
+			this.fContentTypeJSP = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
 		return this.fContentTypeJSP;
 	}
 	

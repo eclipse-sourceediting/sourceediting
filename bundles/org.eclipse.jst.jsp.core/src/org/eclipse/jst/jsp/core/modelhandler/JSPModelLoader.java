@@ -27,7 +27,7 @@ import org.eclipse.jst.jsp.core.internal.parser.JSPReParser;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
 import org.eclipse.jst.jsp.core.modelquery.ModelQueryAdapterFactoryForJSP;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
+import org.eclipse.wst.html.core.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.core.document.XMLStyleModelImpl;
 import org.eclipse.wst.html.core.internal.text.rules.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.sse.core.AbstractModelLoader;
@@ -48,6 +48,7 @@ import org.eclipse.wst.sse.core.parser.RegionParser;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.util.Assert;
 import org.eclipse.wst.sse.core.util.Debug;
+import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.document.XMLDocument;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.internal.DebugAdapterFactory;
@@ -397,9 +398,9 @@ public class JSPModelLoader extends AbstractModelLoader {
 			// ISSUE: this logic is flawed, not sure of original intent, but
 			// added null/type checks for safety.
 			if (documentPartitioner != null && documentPartitioner instanceof StructuredTextPartitionerForJSP) {
-				if (newEmbeddedContentType.getFamilyId().equals(IContentTypeIdentifier.ContentTypeID_SSEXML)) {
+				if (newEmbeddedContentType.getFamilyId().equals(ContentTypeIdForXML.ContentTypeID_XML)) {
 					((StructuredTextPartitionerForJSP) documentPartitioner).setEmbeddedPartitioner(new StructuredTextPartitionerForXML());
-				} else if (newEmbeddedContentType.getFamilyId().equals(IContentTypeIdentifier.ContentTypeID_HTML)) {
+				} else if (newEmbeddedContentType.getFamilyId().equals(ContentTypeIdForHTML.ContentTypeID_HTML)) {
 					((StructuredTextPartitionerForJSP) documentPartitioner).setEmbeddedPartitioner(new StructuredTextPartitionerForHTML());
 				}
 			}

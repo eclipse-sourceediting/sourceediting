@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.common.encoding.CodedIO;
 import org.eclipse.wst.common.encoding.EncodingMemento;
 import org.eclipse.wst.common.encoding.IResourceCharsetDetector;
-import org.eclipse.wst.common.encoding.NullMemento;
 import org.eclipse.wst.common.encoding.internal.ByteReader;
 
 

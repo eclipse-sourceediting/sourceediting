@@ -23,7 +23,7 @@ import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
+import org.eclipse.wst.dtd.core.contenttype.ContentTypeIdForDTD;
 import org.eclipse.wst.dtd.core.rules.StructuredTextPartitionerForDTD;
 import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
@@ -103,7 +103,7 @@ public class LineStyleProviderForDTDSubSet extends AbstractLineStyleProvider imp
 	 */
 	private IStructuredDocument getInternalDocument() {
 		if (fInternalModel == null) {
-			fInternalModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_DTD);
+			fInternalModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(ContentTypeIdForDTD.ContentTypeID_DTD);
 		}
 		return fInternalModel.getStructuredDocument();
 	}

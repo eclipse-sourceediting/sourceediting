@@ -14,8 +14,8 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.wst.common.contentmodel.CMNode;
 import org.eclipse.wst.common.contentmodel.util.DOMContentBuilder;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.html.core.HTMLCMProperties;
+import org.eclipse.wst.html.core.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.core.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.preferences.HTMLContentBuilder;
@@ -44,7 +44,7 @@ public class HTMLNodeActionManager extends XMLNodeActionManager {
 	 */
 	public DOMContentBuilder createDOMContentBuilder(Document document) {
 		DOMContentBuilder builder = null;
-		if (model.getModelHandler().getAssociatedContentTypeId().equals(IContentTypeIdentifier.ContentTypeID_HTML))
+		if (model.getModelHandler().getAssociatedContentTypeId().equals(ContentTypeIdForHTML.ContentTypeID_HTML))
 			builder = new HTMLContentBuilder(document);
 		else
 			builder = super.createDOMContentBuilder(document);
@@ -95,7 +95,7 @@ public class HTMLNodeActionManager extends XMLNodeActionManager {
 	 * Another HTML specific detail. 
 	 */
 	protected void updateCase() {
-		if (model.getModelHandler().getAssociatedContentTypeId().equals(IContentTypeIdentifier.ContentTypeID_HTML)) {
+		if (model.getModelHandler().getAssociatedContentTypeId().equals(ContentTypeIdForHTML.ContentTypeID_HTML)) {
 			Preferences prefs = HTMLCorePlugin.getDefault().getPluginPreferences(); //$NON-NLS-1$
 			fTagCase = prefs.getInt(CommonModelPreferenceNames.TAG_NAME_CASE);
 			fAttrCase = prefs.getInt(CommonModelPreferenceNames.ATTR_NAME_CASE);

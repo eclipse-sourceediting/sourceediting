@@ -20,7 +20,6 @@ import java.io.Reader;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.wst.xml.core.contenttype.EncodingParserConstants;
 
 public class XMLDeclDetector {
 	private static final int MAX_BUF_SIZE = 1024 * 2;

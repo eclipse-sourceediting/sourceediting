@@ -22,7 +22,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
+import org.eclipse.wst.dtd.core.contenttype.ContentTypeIdForDTD;
 import org.eclipse.wst.dtd.core.parser.DTDRegionTypes;
 import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.dtd.ui.internal.editor.IHelpContextIds;
@@ -140,7 +140,7 @@ public class DTDColorPage extends AbstractColorPage {
 
 	protected void setupPicker(StyledTextColorPicker picker) {
 		IModelManager mmanager = StructuredModelManager.getModelManager();
-		picker.setParser(mmanager.createStructuredDocumentFor(IContentTypeIdentifier.ContentTypeID_DTD).getParser());
+		picker.setParser(mmanager.createStructuredDocumentFor(ContentTypeIdForDTD.ContentTypeID_DTD).getParser());
 
 		Dictionary descriptions = new Hashtable();
 		initDescriptions(descriptions);

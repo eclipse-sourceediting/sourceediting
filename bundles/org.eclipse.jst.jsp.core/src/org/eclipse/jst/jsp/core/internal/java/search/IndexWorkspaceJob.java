@@ -25,8 +25,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 
 /**
  * Re-indexes the entire workspace.
@@ -112,7 +112,7 @@ public class IndexWorkspaceJob extends Job {
 
 	IContentType getJspContentType() {
 		if(this.fContentTypeJSP == null)
-			this.fContentTypeJSP = Platform.getContentTypeManager().getContentType(IContentTypeIdentifier.ContentTypeID_JSP);
+			this.fContentTypeJSP = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
 		return this.fContentTypeJSP;
 	}
 	
