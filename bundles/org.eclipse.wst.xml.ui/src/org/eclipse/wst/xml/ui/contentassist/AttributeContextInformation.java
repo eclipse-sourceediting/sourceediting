@@ -72,7 +72,7 @@ public class AttributeContextInformation implements IContextInformation {
 	/**
 	 * Maps (String -> Position). The attribute name to the Text position.
 	 * 
-	 * @return
+	 * 
 	 */
 	public HashMap getAttr2RangeMap() {
 		return fAttr2RangeMap;

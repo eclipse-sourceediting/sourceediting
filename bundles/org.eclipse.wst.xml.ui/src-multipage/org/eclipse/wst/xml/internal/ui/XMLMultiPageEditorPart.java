@@ -203,7 +203,6 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 	/**
 	 * Create and Add the Design Page using a registered factory
 	 * 
-	 * @throws PartInitException
 	 */
 	protected void createAndAddDesignPage() {
 		XMLTableTreeViewer tableTreeViewer = new XMLTableTreeViewer(getContainer());

@@ -176,8 +176,6 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 	/**
 	 * Select the line delimiter in the eol combobox
 	 * 
-	 * @param eol
-	 *            a line delimiter constant from CommonEncodingPreferenceNames
 	 */
 	private void setCurrentEOLCode(String eolCode) {
 		// Clear the current selection.

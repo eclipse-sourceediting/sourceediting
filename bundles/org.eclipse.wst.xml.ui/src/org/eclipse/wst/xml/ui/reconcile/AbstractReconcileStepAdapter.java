@@ -80,9 +80,7 @@ public class AbstractReconcileStepAdapter implements IReconcileStepAdapter {
 		return results;
 	}
 
-	/**
-	 * @see com.ibm.sed.model.INodeAdapter#isAdapterForType(java.lang.Object)
-	 */
+
 	public boolean isAdapterForType(Object type) {
 		return type == IReconcileStepAdapter.class;
 	}

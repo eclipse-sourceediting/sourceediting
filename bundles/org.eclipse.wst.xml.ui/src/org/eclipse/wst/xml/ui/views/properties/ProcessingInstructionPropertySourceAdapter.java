@@ -87,10 +87,6 @@ public class ProcessingInstructionPropertySourceAdapter implements INodeAdapter,
 
 	/**
 	 * Returns the current value for the named property.
-	 * 
-	 * @param name
-	 *            the name of the property as named by its property descriptor
-	 * @return the current value of the property
 	 */
 	public Object getPropertyValue(Object nameObject) {
 		XMLNode node = (XMLNode) fNode;
@@ -147,9 +143,6 @@ public class ProcessingInstructionPropertySourceAdapter implements INodeAdapter,
 
 	/**
 	 * Resets the specified property's value to its default value.
-	 * 
-	 * @param property
-	 *            the property to reset
 	 */
 	public void resetPropertyValue(Object propertyObject) {
 	}
@@ -157,10 +150,6 @@ public class ProcessingInstructionPropertySourceAdapter implements INodeAdapter,
 	/**
 	 * Sets the named property to the given value.
 	 * 
-	 * @param name
-	 *            the name of the property being set
-	 * @param value
-	 *            the new value for the property
 	 */
 	public void setPropertyValue(Object nameObject, Object value) {
 	}

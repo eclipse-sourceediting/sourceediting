@@ -238,9 +238,7 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 		}
 	}
 
-	/**
-	 * @return
-	 */
+
 	public INodeSelectionListener getNodeSelectionListener() {
 		if (fNodeSelectionListener == null)
 			fNodeSelectionListener = new DelayingNodeSelectionListener();

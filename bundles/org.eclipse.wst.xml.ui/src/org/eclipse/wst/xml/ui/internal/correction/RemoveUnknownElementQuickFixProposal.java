@@ -34,11 +34,6 @@ public class RemoveUnknownElementQuickFixProposal implements ICompletionProposal
 	private Image fImage;
 	private Point fSelection; // initialized by apply()
 
-	/**
-	 * @param additionalFixInfo
-	 * @param image
-	 * @param string
-	 */
 	public RemoveUnknownElementQuickFixProposal(Object additionalFixInfo, Image image, String displayString) {
 		fAdditionalFixInfo = additionalFixInfo;
 		fImage = image;

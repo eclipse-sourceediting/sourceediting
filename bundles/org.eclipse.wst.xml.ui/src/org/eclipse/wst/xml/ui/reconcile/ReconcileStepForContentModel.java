@@ -64,7 +64,6 @@ public class ReconcileStepForContentModel extends StructuredReconcileStep {
 	/**
 	 * Need to add partition types for ReconcileStepAdapterForXML here...
 	 * 
-	 * @see org.eclipse.wst.xml.ui.reconcile.StructuredReconcileStep#getPartitionTypes()
 	 */
 	public String[] getPartitionTypes() {
 		String[] superPartitionTypes = super.getPartitionTypes();

@@ -93,7 +93,6 @@ public class DefaultOpenOnXML extends AbstractOpenOn {
 	/**
 	 * Get the base location from the current model
 	 * 
-	 * @return
 	 */
 	protected String getBaseLocation() {
 		String baseLoc = null;
@@ -244,7 +243,6 @@ public class DefaultOpenOnXML extends AbstractOpenOn {
 	 * Returns the URI string
 	 * 
 	 * @param offset
-	 * @return
 	 */
 	protected String getURIString(int offset) {
 		Node currNode = getCurrentNode(offset);

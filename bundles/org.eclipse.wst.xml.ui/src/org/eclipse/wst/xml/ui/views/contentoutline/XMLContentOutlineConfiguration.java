@@ -71,9 +71,6 @@ public class XMLContentOutlineConfiguration extends StructuredContentOutlineConf
 		return new XMLNodeActionManager(getEditor().getModel(), treeViewer);
 	}
 
-	/**
-	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getTreeContentProvider(org.eclipse.jface.viewers.TreeViewer)
-	 */
 	public IContentProvider getContentProvider(TreeViewer viewer) {
 		if (fContentProvider == null) {
 			if (getFactory() != null) {
@@ -215,9 +212,6 @@ public class XMLContentOutlineConfiguration extends StructuredContentOutlineConf
 		return fTransferDropTargetListeners;
 	}
 
-	/**
-	 * @see org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration#unconfigure()
-	 */
 	public void unconfigure(TreeViewer viewer) {
 		super.unconfigure(viewer);
 		fTransferDragSourceListeners = null;

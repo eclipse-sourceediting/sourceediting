@@ -166,9 +166,7 @@ public class XMLTreeExtension extends TreeExtension {
 		}
 	}
 
-	/**
-	 * @return
-	 */
+
 	public ModelQuery getModelQuery() {
 		return fModelQuery;
 	}

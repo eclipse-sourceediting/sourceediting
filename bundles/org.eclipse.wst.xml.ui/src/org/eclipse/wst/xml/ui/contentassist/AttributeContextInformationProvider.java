@@ -57,7 +57,7 @@ class AttributeContextInformationProvider {
 
 	/**
 	 * @param sdRegion
-	 * @return
+	 
 	 */
 	private boolean canProposeInfo(IStructuredDocumentRegion sdRegion) {
 		if (sdRegion != null && isEndTag(sdRegion))
@@ -95,7 +95,7 @@ class AttributeContextInformationProvider {
 	/**
 	 * Returns a comparator that compares CMAttributeDeclaration names.
 	 * 
-	 * @return the comparator
+	  the comparator
 	 */
 	private Comparator getCMAttributeComparator() {
 		if (fComparator == null)
@@ -109,7 +109,7 @@ class AttributeContextInformationProvider {
 
 	/**
 	 * @param node
-	 * @return
+	 
 	 */
 	private IContextInformation[] getInfoForElement(XMLNode node) {
 		IContextInformation[] results = EMPTY_CONTEXT_INFO;
@@ -153,7 +153,7 @@ class AttributeContextInformationProvider {
 
 	/**
 	 * @param node
-	 * @return
+	 
 	 */
 	 IContextInformation[] getInfoForText(XMLNode node) {
 		Node parent = node.getParentNode();
@@ -187,7 +187,7 @@ class AttributeContextInformationProvider {
 	 * Returns sorted array of CMAttributeDeclarations.
 	 * 
 	 * @param attributes
-	 * @return
+	 
 	 */
 	private CMAttributeDeclaration[] getSortedAttributes(CMNamedNodeMap attributes) {
 		List sorted = new ArrayList();
@@ -199,7 +199,7 @@ class AttributeContextInformationProvider {
 
 	/**
 	 * @param sdRegion
-	 * @return
+	 
 	 */
 	private boolean isEndTag(IStructuredDocumentRegion sdRegion) {
 		ITextRegionList regions = sdRegion.getRegions();

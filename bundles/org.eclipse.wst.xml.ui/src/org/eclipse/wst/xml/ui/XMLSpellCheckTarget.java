@@ -18,9 +18,6 @@ import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 
 public class XMLSpellCheckTarget extends SpellCheckTargetImpl {
 
-	/**
-	 * @param editor
-	 */
 	public XMLSpellCheckTarget() {
 		super();
 	}

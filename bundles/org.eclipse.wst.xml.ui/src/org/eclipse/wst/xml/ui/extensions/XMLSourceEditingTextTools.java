@@ -71,9 +71,7 @@ public class XMLSourceEditingTextTools implements SourceEditingTextTools, INodeA
 		}
 	}
 
-	/**
-	 * @see org.eclipse.wst.sse.ui.extensions.SourceEditingTextTools#getDOMDocument(org.eclipse.core.resources.IMarker)
-	 */
+
 	public Document getDOMDocument(IMarker marker) {
 		if (marker == null)
 			return null;
@@ -112,9 +110,6 @@ public class XMLSourceEditingTextTools implements SourceEditingTextTools, INodeA
 		return ""; //$NON-NLS-1$
 	}
 
-	/**
-	 * @see org.eclipse.wst.sse.ui.extensions.SourceEditingTextTools#getStartOffset(org.w3c.dom.Node)
-	 */
 	public int getStartOffset(Node node) {
 		if (node == null || !(node instanceof XMLText))
 			return -1;

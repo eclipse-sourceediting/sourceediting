@@ -234,11 +234,7 @@ public class ContentAssistRequest {
 		replacementBeginPosition = newReplacementBeginPosition;
 	}
 
-	/**
-	 * 
-	 * @param newReplacementEndPosition
-	 *            int
-	 */
+
 	public void setReplacementLength(int newReplacementLength) {
 		replacementLength = newReplacementLength;
 	}

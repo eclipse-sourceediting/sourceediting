@@ -999,7 +999,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 * @param cmnode
 	 *            possible element at this point in the document (depending on
 	 *            what 'node' is)
-	 * @return true if any attributes of 'node' match any possible attributes
+ true if any attributes of 'node' match any possible attributes
 	 *         from 'cmnodes' list.
 	 */
 	protected boolean attributeInList(XMLNode node, Node parent, CMNode cmnode) {
@@ -1151,10 +1151,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 * @param textViewer
 	 * @param documentPosition -
 	 *            the cursor location within the document
-	 * @param treeNode -
-	 *            the Node at the documentPosition
 	 * 
-	 * @return an array of ICompletionProposals
+ an array of ICompletionProposals
 	 */
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer textViewer, int documentPosition) {
 
@@ -1252,10 +1250,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 * @param viewer
 	 *            the viewer whose document is used to compute the possible
 	 *            contexts
-	 * @param documentPosition
-	 *            an offset within the document for which context information
-	 *            should be computed
-	 * @return an array of context information objects or <code>null</code>
+ an array of context information objects or <code>null</code>
 	 *         if no context could be found
 	 */
 	public IContextInformation[] computeContextInformation(ITextViewer viewer, int documentOffset) {
@@ -1522,7 +1517,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 * proposal's additional info. If no documentation exists for cmnode, try
 	 * displaying parentOrOwner's documentation
 	 * 
-	 * @return String any documentation information to display for cmnode.
+ String any documentation information to display for cmnode.
 	 *         <code>null</code> if there is nothing to display.
 	 */
 	protected String getAdditionalInfo(CMNode parentOrOwner, CMNode cmnode) {
@@ -1641,7 +1636,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 * Returns the characters which when entered by the user should
 	 * automatically trigger the presentation of possible completions.
 	 * 
-	 * @return the auto activation characters for completion proposal or
+ the auto activation characters for completion proposal or
 	 *         <code>null</code> if no auto activation is desired
 	 */
 	public char[] getCompletionProposalAutoActivationCharacters() {
@@ -1781,7 +1776,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 * Returns the characters which when entered by the user should
 	 * automatically trigger the presentation of context information.
 	 * 
-	 * @return the auto activation characters for presenting context
+ the auto activation characters for presenting context
 	 *         information or <code>null</code> if no auto activation is
 	 *         desired
 	 */
@@ -1794,7 +1789,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 * information should be dismissed. May only return <code>null</code> if
 	 * the processor is incapable of computing context information.
 	 * 
-	 * @return a context information validator, or <code>null</code> if the
+ a context information validator, or <code>null</code> if the
 	 *         processor is incapable of computing context information
 	 */
 	public IContextInformationValidator getContextInformationValidator() {
@@ -1832,7 +1827,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 * Return the reason why computeProposals was not able to find any
 	 * completions.
 	 * 
-	 * @return an error message or null if no error occurred
+ an error message or null if no error occurred
 	 */
 	public String getErrorMessage() {
 		return fErrorMessage;
@@ -1847,7 +1842,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	/**
 	 * Gets the infoProvider.
 	 * 
-	 * @return fInfoProvider and if fInfoProvider was <code>null</code>
+ fInfoProvider and if fInfoProvider was <code>null</code>
 	 *         create a new instance
 	 */
 	public MarkupTagInfoProvider getInfoProvider() {
@@ -1964,10 +1959,6 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		return ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) fTextViewer, pos);
 	}
 
-	/**
-	 * @param xmlEndTagOpen
-	 * @return
-	 */
 	private String getTagName(IStructuredDocumentRegion sdRegion) {
 		ITextRegionList regions = sdRegion.getRegions();
 		ITextRegion region = null;
@@ -1985,7 +1976,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	/**
 	 * Return the template completion processor to be used
 	 * 
-	 * @return AbstractTemplateCompletionProcessor
+ AbstractTemplateCompletionProcessor
 	 */
 	protected AbstractTemplateCompletionProcessor getTemplateCompletionProcessor() {
 		return null;
@@ -2010,7 +2001,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 * tells you if the document is XML type.
 	 * 
 	 * @param node
-	 * @return
+
 	 */
 	protected boolean getXML(Node node) {
 		if (node == null)
@@ -2044,7 +2035,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 * Checks if cursor position is after doctype tag...
 	 * 
 	 * @param car
-	 * @return
+
 	 */
 	protected boolean isCursorAfterDoctype(ContentAssistRequest car) {
 		Node aNode = car.getNode();
@@ -2071,7 +2062,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 * This method can check if the cursor is after the XMLPI
 	 * 
 	 * @param car
-	 * @return
+
 	 */
 	protected boolean isCursorAfterXMLPI(ContentAssistRequest car) {
 		Node aNode = car.getNode();
@@ -2110,19 +2101,11 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		return false;
 	}
 
-	/**
-	 * @param xmlEndTagOpen
-	 * @return
-	 */
 	private boolean isSelfClosed(IStructuredDocumentRegion startTag) {
 		ITextRegionList regions = startTag.getRegions();
 		return regions.get(regions.size() - 1).getType() == XMLRegionContext.XML_EMPTY_TAG_CLOSE;
 	}
 
-	/**
-	 * @param xmlEndTagOpen
-	 * @return
-	 */
 	private boolean isStartTag(IStructuredDocumentRegion sdRegion) {
 		boolean result = false;
 		if (sdRegion.getRegions().size() > 0) {
@@ -2145,7 +2128,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 * Gets the corresponding XMLNode, and checks if it's closed.
 	 * 
 	 * @param startTag
-	 * @return
+
 	 */
 	private boolean needsEndTag(IStructuredDocumentRegion startTag) {
 		boolean result = false;

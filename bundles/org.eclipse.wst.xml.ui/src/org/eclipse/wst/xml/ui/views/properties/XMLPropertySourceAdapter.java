@@ -353,9 +353,6 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 	/**
 	 * Returns the current value for the named property.
 	 * 
-	 * @param name
-	 *            the name of the property as named by its property descriptor
-	 * @return the current value of the property
 	 */
 	public Object getPropertyValue(Object nameObject) {
 		String name = nameObject.toString();
@@ -453,8 +450,6 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 	/**
 	 * Resets the specified property's value to its default value.
 	 * 
-	 * @param property
-	 *            the property to reset
 	 */
 	public void resetPropertyValue(Object propertyObject) {
 		String property = propertyObject.toString();
@@ -489,10 +484,6 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 	/**
 	 * Sets the named property to the given value.
 	 * 
-	 * @param name
-	 *            the name of the property being set
-	 * @param value
-	 *            the new value for the property
 	 */
 	public void setPropertyValue(Object nameObject, Object value) {
 		// Avoid cycling - can happen if a closing cell editor causes a

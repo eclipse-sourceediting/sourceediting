@@ -38,17 +38,11 @@ public class XMLFindOccurrencesAction extends BasicFindOccurrencesAction {
 		super(bundle, prefix, editor);
 	}
 
-	/**
-	 * @see org.eclipse.wst.sse.ui.internal.search.BasicFindOccurrencesAction#getPartitionType()
-	 */
 	public String[] getPartitionTypes() {
 
 		return new String[]{StructuredTextPartitionerForXML.ST_DEFAULT_XML};
 	}
 
-	/**
-	 * @see org.eclipse.wst.sse.ui.internal.search.IFindOccurrencesAction#getRegionTypes()
-	 */
 	public String[] getRegionTypes() {
 
 		return new String[]{XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE};

@@ -316,7 +316,6 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 	 * unknown type/language is returned
 	 * 
 	 * @param scriptNode
-	 * @return
 	 */
 	public static String getScriptLanguage(Node scriptNode) {
 		Node attr = null;
@@ -443,7 +442,6 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 	 * returns type.
 	 * 
 	 * @param language
-	 * @return
 	 */
 	public static String lookupScriptLanguage(String language) {
 		for (int i = 0; i < ScriptLanguageKeys.JAVASCRIPT_LANGUAGE_KEYS.length; i++) {
@@ -462,7 +460,6 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 	 * javascript type. Otherwise, just returns type
 	 * 
 	 * @param type
-	 * @return
 	 */
 	public static String lookupScriptType(String type) {
 		for (int i = 0; i < ScriptLanguageKeys.JAVASCRIPT_MIME_TYPE_KEYS.length; i++)

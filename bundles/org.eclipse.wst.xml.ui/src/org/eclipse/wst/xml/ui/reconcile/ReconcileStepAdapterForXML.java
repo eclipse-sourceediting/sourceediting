@@ -140,18 +140,10 @@ public class ReconcileStepAdapterForXML extends AbstractReconcileStepAdapter imp
 		super();
 	}
 
-	/**
-	 * @see org.eclipse.wst.common.contentmodel.util.CMDocumentCacheListener#cacheCleared(org.eclipse.wst.common.contentmodel.utilbase.CMDocumentCache)
-	 */
 	public void cacheCleared(CMDocumentCache arg0) {
 		// do nothing
 	}
 
-	/**
-	 * @see org.eclipse.wst.common.contentmodel.util.CMDocumentCacheListener#cacheUpdated(org.eclipse.wst.common.contentmodel.utilbase.CMDocumentCache,
-	 *      java.lang.String, int, int,
-	 *      org.eclipse.wst.common.contentmodel.CMDocument)
-	 */
 	public void cacheUpdated(CMDocumentCache arg0, String arg1, int arg2, int arg3, CMDocument arg4) {
 
 		// revalidate all
@@ -186,7 +178,7 @@ public class ReconcileStepAdapterForXML extends AbstractReconcileStepAdapter imp
 	 * element.
 	 * 
 	 * @param elementDecl
-	 * @return
+	 * 
 	 */
 	protected List getRequiredAttributes(CMElementDeclaration elementDecl) {
 
@@ -280,10 +272,7 @@ public class ReconcileStepAdapterForXML extends AbstractReconcileStepAdapter imp
 		}
 	}
 
-	/**
-	 * @see com.ibm.sed.model.INodeAdapter#notifyChanged(com.ibm.sed.model.Notifier,
-	 *      int, java.lang.Object, java.lang.Object, java.lang.Object, int)
-	 */
+
 	public void processNotification(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos, IProgressMonitor monitor) {
 
 		if (isCanceled(monitor))
@@ -293,7 +282,7 @@ public class ReconcileStepAdapterForXML extends AbstractReconcileStepAdapter imp
 		// the next reconcile() call
 		// TODO: Handle multi-Node changes from Doctype Declarations, Taglib
 		// directives,
-		//       and schema and namespace related attributes (DOCTYPE, taglib,
+		// and schema and namespace related attributes (DOCTYPE, taglib,
 		// xmlns,
 		// xsi...)
 		// ** we currently don't get a notify on changed taglib...
@@ -315,12 +304,12 @@ public class ReconcileStepAdapterForXML extends AbstractReconcileStepAdapter imp
 				fNeedsRefreshAll = true;
 			} else {
 				// pa_TODO need to handle taglib definition changes...
-				//if(mayAffectContentModel(((Node)changedFeature).getNodeName()))
+				// if(mayAffectContentModel(((Node)changedFeature).getNodeName()))
 				// {
-				//System.out.println("dunno what changed > " +
+				// System.out.println("dunno what changed > " +
 				// changedFeature);
-				//fNeedsRefreshAll = true;
-				//}
+				// fNeedsRefreshAll = true;
+				// }
 			}
 			if (isCanceled(monitor))
 				return;
@@ -356,10 +345,7 @@ public class ReconcileStepAdapterForXML extends AbstractReconcileStepAdapter imp
 		}
 	}
 
-	/**
-	 * @see com.ibm.sed.internal.ui.text.ReconcilerAdapter#reconcile(org.eclipse.jface.text.source.IAnnotationModel,
-	 *      org.eclipse.core.runtime.IProgressMonitor)
-	 */
+
 	public IReconcileResult[] reconcile(IProgressMonitor monitor, XMLNode xmlNode) {
 
 		processNotifications(monitor);
@@ -376,8 +362,6 @@ public class ReconcileStepAdapterForXML extends AbstractReconcileStepAdapter imp
 	/**
 	 * Called by super.reconcile(IAnnotationModel) on each Notifier
 	 * 
-	 * @see com.ibm.sed.internal.ui.text.AbstractReconcilerAdapter#reconcile(org.eclipse.jface.text.source.IAnnotationModel,
-	 *      java.lang.Object)
 	 */
 	protected IReconcileResult[] reconcile(Object o, IProgressMonitor monitor) {
 
@@ -403,7 +387,6 @@ public class ReconcileStepAdapterForXML extends AbstractReconcileStepAdapter imp
 	 * Reconcile the Node and all children of the Notifier passed in.
 	 * 
 	 * @param notifier
-	 * @param annotationModel
 	 * @param monitor
 	 */
 	protected IReconcileResult[] reconcileSubtree(INodeNotifier notifier, IProgressMonitor monitor) {
@@ -439,7 +422,6 @@ public class ReconcileStepAdapterForXML extends AbstractReconcileStepAdapter imp
 	/**
 	 * Called from the ReconcileAdapterFactory
 	 * 
-	 * @see com.ibm.sed.internal.ui.text.AbstractReconcilerAdapter#release()
 	 */
 	public void release() {
 
@@ -454,7 +436,6 @@ public class ReconcileStepAdapterForXML extends AbstractReconcileStepAdapter imp
 	 * the ignoreAttributeNamesStartingWith array
 	 * 
 	 * @param attr
-	 * @return
 	 */
 	protected boolean shouldIgnore(Attr attr) {
 
@@ -503,8 +484,6 @@ public class ReconcileStepAdapterForXML extends AbstractReconcileStepAdapter imp
 	 * Called by reconcile(IAnnotationModel, Object) when the Object is a
 	 * Notifier
 	 * 
-	 * @see com.ibm.sed.internal.editor.StructuredTextReconcilingStrategy#reconcile(org.eclipse.jface.text.source.IAnnotationModel,
-	 *      com.ibm.sed.model.IndexedRegion)
 	 */
 	protected IReconcileResult[] validate(ModelQuery mq, XMLNode xmlNode) {
 
@@ -522,8 +501,8 @@ public class ReconcileStepAdapterForXML extends AbstractReconcileStepAdapter imp
 		CMDocument doc = mq.getCorrespondingCMDocument(xmlNode.getOwnerDocument());
 		// looks like this is a bad check to do... I thought we took it out
 		// before
-		//		if(doc == null)
-		//			return EMPTY_RECONCILE_RESULT_SET;
+		// if(doc == null)
+		// return EMPTY_RECONCILE_RESULT_SET;
 		if (doc != null && doc.getElements().getLength() == 0) {
 			// an empty document
 			return EMPTY_RECONCILE_RESULT_SET;
@@ -549,12 +528,12 @@ public class ReconcileStepAdapterForXML extends AbstractReconcileStepAdapter imp
 				return EMPTY_RECONCILE_RESULT_SET;
 		}
 		XMLElement element = (XMLElement) elementNode;
-		//boolean needsEndTag = true;
+		// boolean needsEndTag = true;
 
 		// test for a known element, if it's known, continue validating it
 		CMElementDeclaration elementDecl = mq.getCMElementDeclaration(element);
 		if (elementDecl != null) {
-			//needsEndTag = needsEndTag(elementNode, elementDecl);
+			// needsEndTag = needsEndTag(elementNode, elementDecl);
 			NamedNodeMap attrs = element.getAttributes();
 			List reqAttrList = getRequiredAttributes(elementDecl);
 			for (int i = 0; i < attrs.getLength(); i++) {
@@ -565,7 +544,7 @@ public class ReconcileStepAdapterForXML extends AbstractReconcileStepAdapter imp
 					// CMVC 272647, attributes with namespace prefix get
 					// marked
 					// as error (even though they aren't)
-					//CMNode attrDecl =
+					// CMNode attrDecl =
 					// elementDecl.getAttributes().getNamedItem(attr.getNodeName());
 					CMNode attrDecl = elementDecl.getAttributes().getNamedItem(attr.getLocalName());
 
@@ -689,7 +668,6 @@ public class ReconcileStepAdapterForXML extends AbstractReconcileStepAdapter imp
 	 * 
 	 * @param values
 	 * @param value
-	 * @return
 	 */
 	protected boolean valueMatch(String[] values, String value) {
 

@@ -18,7 +18,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -151,7 +150,7 @@ public class ActionContributorXML extends ActionContributor {
 	}
 
 	/**
-	 * @see IEditorActionBarContributor#setActiveEditor(IEditorPart)
+	 * @see org.eclipse.ui.IEditorActionBarContributor#setActiveEditor(IEditorPart)
 	 */
 	public void setActiveEditor(IEditorPart activeEditor) {
 		if (getActiveEditorPart() == activeEditor)

@@ -41,12 +41,6 @@ public class WorkbenchDefaultEncodingSettings extends Composite {
 	private String fNonDefaultIANA = null;
 	private Button fUseDefaultButton;
 
-	/**
-	 * Constructor for WorkbenchDefaultEncodingSettings.
-	 * 
-	 * @param parent
-	 * @param style
-	 */
 	public WorkbenchDefaultEncodingSettings(Composite parent) {
 		super(parent, SWT.NONE);
 		createControls();
@@ -129,9 +123,6 @@ public class WorkbenchDefaultEncodingSettings extends Composite {
 	 * descriptive encoding name. Selects use workbench encoding if ianaTag is
 	 * null or empty string.
 	 * 
-	 * @param enc
-	 *            a <code>string</code> value. Note this is not the IANA
-	 *            tag.
 	 */
 	public void setIANATag(String ianaTag) {
 		if (ianaTag == null || ianaTag.equals(WORKBENCH_DEFAULT)) {

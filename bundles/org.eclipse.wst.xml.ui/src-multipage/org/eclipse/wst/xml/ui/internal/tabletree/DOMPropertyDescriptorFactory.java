@@ -128,9 +128,7 @@ public class DOMPropertyDescriptorFactory {
 		return createDefaultPropertyDescriptor(HACK);
 	}
 
-	/**
-	 * @return
-	 */
+
 	public ModelQuery getModelQuery() {
 		return fModelQuery;
 	}

@@ -71,8 +71,6 @@ public class JFaceNodeLabelProvider implements ILabelProvider {
 	 * Returns the image for the label of the given element, for use in the
 	 * given viewer.
 	 * 
-	 * @param viewer
-	 *            The viewer that displays the element.
 	 * @param element
 	 *            The element for which to provide the label image. Element
 	 *            can be <code>null</code> indicating no input object is set
@@ -86,8 +84,6 @@ public class JFaceNodeLabelProvider implements ILabelProvider {
 	 * Returns the text for the label of the given element, for use in the
 	 * given viewer.
 	 * 
-	 * @param viewer
-	 *            The viewer that displays the element.
 	 * @param element
 	 *            The element for which to provide the label text. Element can
 	 *            be <code>null</code> indicating no input object is set to

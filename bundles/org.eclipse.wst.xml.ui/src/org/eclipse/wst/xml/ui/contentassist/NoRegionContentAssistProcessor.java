@@ -156,7 +156,6 @@ public class NoRegionContentAssistProcessor implements IContentAssistProcessor, 
 	 * 
 	 * @param viewer
 	 * @param documentOffset
-	 * @return
 	 */
 	protected IContentAssistProcessor guessContentAssistProcessor(ITextViewer viewer, int documentOffset) {
 		//  mapping logic here...

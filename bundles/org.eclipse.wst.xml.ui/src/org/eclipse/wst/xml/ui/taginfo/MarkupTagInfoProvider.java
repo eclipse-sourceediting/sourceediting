@@ -42,10 +42,7 @@ public class MarkupTagInfoProvider {
 
 	/**
 	 * Returns basic tag information for display given a CMNode
-	 * 
-	 * @param CMNode
-	 *            node - node to display information for
-	 * 
+	 *  
 	 * @return String
 	 */
 	public String getInfo(CMNode node) {
@@ -72,11 +69,6 @@ public class MarkupTagInfoProvider {
 	 * Adds dataType's data type information, including enumerated type values
 	 * to string buffer, sb
 	 * 
-	 * @param StringBuffer
-	 *            sb - string to place data type info into
-	 * @param CMDataType
-	 *            dataType - data type object to get info from (should not be
-	 *            null)
 	 */
 	protected void printDataTypeInfo(StringBuffer sb, CMDataType dataType) {
 		String dataTypeName = dataType.getNodeName();
@@ -100,10 +92,6 @@ public class MarkupTagInfoProvider {
 	 * Adds the default info (element name, content model, data type) of
 	 * CMNode to the string buffer, sb
 	 * 
-	 * @param StringBuffer
-	 *            sb - string to place display info into
-	 * @param CMNode
-	 *            node - node to get tag info from
 	 */
 	protected void printDefaultInfo(CMNode node, StringBuffer sb) {
 		{
@@ -149,10 +137,6 @@ public class MarkupTagInfoProvider {
 	/**
 	 * Adds the description property of the CMNode to the string buffer, sb
 	 * 
-	 * @param StringBuffer
-	 *            sb - string to place display info into
-	 * @param CMNode
-	 *            node - node to get tag description from
 	 */
 	protected void printDescription(StringBuffer sb, CMNode node) {
 		String tagInfo = (String) node.getProperty("description"); //$NON-NLS-1$
@@ -165,10 +149,6 @@ public class MarkupTagInfoProvider {
 	 * Adds the tag documentation property of the CMNode to the string buffer,
 	 * sb
 	 * 
-	 * @param StringBuffer
-	 *            sb - string to place display info into
-	 * @param CMNode
-	 *            node - node to get tag documentation from
 	 */
 	protected void printDocumentation(StringBuffer sb, CMNode node) {
 		CMNodeList nodeList = (CMNodeList) node.getProperty("documentation"); //$NON-NLS-1$
@@ -187,10 +167,6 @@ public class MarkupTagInfoProvider {
 	/**
 	 * Adds the tag info property of the CMNode to the string buffer, sb
 	 * 
-	 * @param StringBuffer
-	 *            sb - string to place display info into
-	 * @param CMNode
-	 *            node - node to get tag info from
 	 */
 	protected void printTagInfo(StringBuffer sb, CMNode node) {
 		String tagInfo = (String) node.getProperty("tagInfo"); //$NON-NLS-1$

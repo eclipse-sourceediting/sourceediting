@@ -122,10 +122,6 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 		}
 	}
 
-	/**
-	 * @param annotationModel
-	 * @param structuredDocumentRegion
-	 */
 	private void checkEmptyTag(IStructuredDocumentRegion structuredDocumentRegion, List results) {
 		// navigate to name
 		ITextRegionList regions = structuredDocumentRegion.getRegions();
@@ -205,10 +201,6 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 
 	}
 
-	/**
-	 * @param annotationModel
-	 * @param structuredDocumentRegion
-	 */
 	private void checkForSpaceBeforeName(IStructuredDocumentRegion structuredDocumentRegion, List results) {
 		String sdRegionText = structuredDocumentRegion.getFullText();
 		if (sdRegionText.startsWith(" ")) { //$NON-NLS-1$
@@ -232,10 +224,6 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 		}
 	}
 
-	/**
-	 * @param annotationModel
-	 * @param structuredDocumentRegion
-	 */
 	private void checkNoNamespaceInPI(IStructuredDocumentRegion structuredDocumentRegion, List results) {
 		// navigate to name
 		ITextRegionList regions = structuredDocumentRegion.getRegions();
@@ -378,10 +366,6 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 		}
 	}
 
-	/**
-	 * @param annotationModel
-	 * @param structuredDocumentRegion
-	 */
 	private void checkStartingSpaceForPI(IStructuredDocumentRegion structuredDocumentRegion, List results) {
 		IStructuredDocumentRegion prev = structuredDocumentRegion.getPrevious();
 		if (prev != null) {
@@ -446,7 +430,6 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 	 * since they're not allowed to have attribute ITextRegions
 	 * 
 	 * @param structuredDocumentRegion
-	 * @return
 	 */
 	private boolean isEndTag(IStructuredDocumentRegion structuredDocumentRegion) {
 		if (structuredDocumentRegion == null)
@@ -459,7 +442,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 	 * Instruction
 	 * 
 	 * @param structuredDocumentRegion
-	 * @return
+	 * 
 	 */
 	private boolean isPI(IStructuredDocumentRegion structuredDocumentRegion) {
 		return structuredDocumentRegion.getFirstRegion().getType() == XMLRegionContext.XML_PI_OPEN;
@@ -470,7 +453,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 	 * since they need to be checked for proper XML attribute region sequences
 	 * 
 	 * @param structuredDocumentRegion
-	 * @return
+	 * 
 	 */
 	private boolean isStartTag(IStructuredDocumentRegion structuredDocumentRegion) {
 		if (structuredDocumentRegion == null)
@@ -489,7 +472,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 	 * Determines if the IStructuredDocumentRegion is XML Content
 	 * 
 	 * @param structuredDocumentRegion
-	 * @return
+	 * 
 	 */
 	private boolean isXMLContent(IStructuredDocumentRegion structuredDocumentRegion) {
 		return structuredDocumentRegion.getFirstRegion().getType() == XMLRegionContext.XML_CONTENT;
@@ -503,17 +486,17 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 
 		// fix for https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=1939
 		// not sure why this was being done before
-		//		if (structuredDocumentRegion.getType() ==
+		// if (structuredDocumentRegion.getType() ==
 		// XMLRegionContext.XML_CONTENT) {
-		//			// rollback to an open tag
-		//			// ** can this be bad? removal region must exactly match add region
-		//			// or else we may get duplicates
-		//			while ((structuredDocumentRegion =
+		// // rollback to an open tag
+		// // ** can this be bad? removal region must exactly match add region
+		// // or else we may get duplicates
+		// while ((structuredDocumentRegion =
 		// structuredDocumentRegion.getPrevious()) != null &&
 		// !isStartTag(structuredDocumentRegion)) {
-		//				continue;
-		//			}
-		//		}
+		// continue;
+		// }
+		// }
 		if (structuredDocumentRegion == null)
 			return EMPTY_RECONCILE_RESULT_SET;
 

@@ -165,12 +165,6 @@ public class XMLTagInfoHoverProcessor implements ITextHover {
 	 * Find the region of the attribute name for the given attribute value
 	 * region
 	 * 
-	 * @param XMLNode
-	 *            node - parent node
-	 * @param ITextRegion
-	 *            region - region of attribute value
-	 * 
-	 * @return region - attribute name region for given region
 	 */
 	protected ITextRegion getAttrNameRegion(XMLNode node, ITextRegion region) {
 		// Find the attribute name for which this position should have a value
@@ -210,9 +204,6 @@ public class XMLTagInfoHoverProcessor implements ITextHover {
 
 	/**
 	 * Retreives CMElementDeclaration for given node
-	 * 
-	 * @param Node
-	 *            node
 	 * 
 	 * @return CMElementDeclaration - CMElementDeclaration of node or
 	 *         <code>null</code> if not possible
