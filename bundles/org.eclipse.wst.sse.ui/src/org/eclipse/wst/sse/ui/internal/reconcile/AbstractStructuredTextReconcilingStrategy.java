@@ -22,12 +22,9 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Position;
-import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.reconciler.IReconcileStep;
@@ -42,7 +39,6 @@ import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
 import org.eclipse.wst.sse.ui.IReleasable;
 import org.eclipse.wst.sse.ui.ITemporaryAnnotation;
 
@@ -66,6 +62,7 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	protected IReconcileStep fFirstStep = null;
 	protected IProgressMonitor fProgressMonitor = null;
 	protected ITextEditor fTextEditor = null;
+    private Comparator fComparator;
 
 	/**
 	 * Creates a new strategy. The editor parameter is for access to the
@@ -166,16 +163,7 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 
 				TemporaryAnnotation annotation = (TemporaryAnnotation) obj;
 				IReconcileAnnotationKey key = (IReconcileAnnotationKey) annotation.getKey();
-
-				// first check if this annotation is still relevant for the
-				// current partition
-				if (sdRegions.length > 0) {
-					if (!partitionsMatch(key, annotation.getPosition().offset, sdRegions[0])) {
-						remove.add(annotation);
-						continue;
-					}
-				}
-
+				
 				// then if this strategy knows how to add/remove this
 				// partition type
 				if (canHandlePartition(key.getPartitionType()) && containsStep(key.getStep())) {
@@ -298,32 +286,6 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 				end = corresponding.getEndOffset();
 		}
 		return pos.overlapsWith(start, end - start);
-	}
-
-	/**
-	 * Checks to make sure that the annotation key (partition type for which
-	 * it was originally added) matches the current document partition at that
-	 * offset. This can occur when the character you just typed caused the
-	 * previous (or subsequent) partition type to change.
-	 * 
-	 * @param key
-	 * @param sdRegion
-	 * @return the partition type for this annotation matches the current
-	 *         document partition type
-	 */
-	private boolean partitionsMatch(IReconcileAnnotationKey key, int annotationPos, IStructuredDocumentRegion sdRegion) {
-		String keyPartitionType = key.getPartitionType();
-        ITypedRegion tr = null;
-        if(!sdRegion.isDeleted()) {
-            try {
-                tr = TextUtilities.getPartition(sdRegion.getParentDocument(), IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING, 
-                                                    sdRegion.getStartOffset(), false);
-            } catch (BadLocationException e) {
-                e.printStackTrace();
-            }
-        }
-        String partitionType = tr != null ?  tr.getType() : StructuredTextPartitioner.ST_DEFAULT_PARTITION;
-		return keyPartitionType.equals(partitionType);
 	}
 
 	/**
@@ -463,13 +425,7 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
         // TODO: investigate a better algorithm, 
         // also see if this is a bad performance hit.
         
-        Comparator comp = new Comparator( ) {
-            public int compare(Object arg0, Object arg1) {
-                TemporaryAnnotation ta1 = (TemporaryAnnotation)arg0;
-                TemporaryAnnotation ta2 = (TemporaryAnnotation)arg1;
-                return ta1.getPosition().getOffset() - ta2.getPosition().getOffset();
-            }
-        };
+        Comparator comp = getAnnotationComparator();
         List sortedRemovals = Arrays.asList(annotationsToRemove);
 	    Collections.sort(sortedRemovals, comp);
         
@@ -506,4 +462,17 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
         removeAnnotations((TemporaryAnnotation[])filteredRemovals.toArray(new TemporaryAnnotation[filteredRemovals.size()]));
         process((IReconcileResult[])filteredAdditions.toArray(new IReconcileResult[filteredAdditions.size()]));
 	}
+    
+    private Comparator getAnnotationComparator() {
+        if(fComparator == null) {
+            fComparator = new Comparator( ) {
+                public int compare(Object arg0, Object arg1) {
+                    TemporaryAnnotation ta1 = (TemporaryAnnotation)arg0;
+                    TemporaryAnnotation ta2 = (TemporaryAnnotation)arg1;
+                    return ta1.getPosition().getOffset() - ta2.getPosition().getOffset();
+                }
+            };
+        }
+        return fComparator;
+    }
 }
