@@ -102,6 +102,6 @@ public class SimpleWebModuleCreationDataModel extends ProjectCreationDataModel
 	 */
 	public IProject getTargetProject()
 	{
-		return getProjectHandle(PROJECT_NAME);
+		return ProjectCreationDataModel.getProjectHandleFromName(getStringProperty(PROJECT_NAME));
 	}
 }
