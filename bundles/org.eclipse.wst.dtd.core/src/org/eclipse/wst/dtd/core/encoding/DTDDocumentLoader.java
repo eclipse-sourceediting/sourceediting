@@ -52,7 +52,6 @@ public final class DTDDocumentLoader extends AbstractDocumentLoader {
 	}
 
 	protected IEncodedDocument newEncodedDocument() {
-		// Copied from com.ibm.etools.dtd.sed.model.DTDLoader
 		IStructuredDocument document = StructuredDocumentFactory.getNewStructuredDocumentInstance(getParser());
 		DTDStructuredDocumentReParser reParser = new DTDStructuredDocumentReParser();
 		reParser.setStructuredDocument(document);

@@ -252,7 +252,7 @@ public final class DTDModelImpl extends AbstractStructuredModel implements IStru
 
 	/**
 	 * @param newStructuredDocument
-	 *            com.ibm.sed.structured.text.IStructuredDocument
+	 *            org.eclipse.wst.sse.core.text.IStructuredDocument
 	 */
 	public void setStructuredDocument(IStructuredDocument newStructuredDocument) {
 		IStructuredDocument oldStructuredDocument = super.getStructuredDocument();

@@ -29,7 +29,7 @@ public final class DTDModelDumper implements ModelDumper {
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.wst.sse.core.ModelDumper#dump(org.eclipse.wst.sse.core.IStructuredModel,
-	 *      java.io.OutputStream, com.ibm.encoding.resource.EncodingRule,
+	 *      java.io.OutputStream, org.eclipse.wst.common.encoding.EncodingRule,
 	 *      org.eclipse.core.resources.IFile)
 	 */
 	public void dump(IStructuredModel model, OutputStream outputStream, EncodingRule encodingRule, IFile iFile) throws UnsupportedEncodingException, IOException, CoreException {

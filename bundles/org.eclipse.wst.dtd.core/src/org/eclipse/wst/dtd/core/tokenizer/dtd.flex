@@ -1,7 +1,7 @@
 /* this is a scanner for DTD files */
-package com.ibm.etools.dtd.sed.parser.tokenizer;
+package org.eclipse.wst.dtd.core.tokenizer;
 
-import com.ibm.etools.dtd.sed.parser.DTDRegionTypes;
+import org.eclipse.wst.dtd.core.parser.DTDRegionTypes;
 
 %%
 
