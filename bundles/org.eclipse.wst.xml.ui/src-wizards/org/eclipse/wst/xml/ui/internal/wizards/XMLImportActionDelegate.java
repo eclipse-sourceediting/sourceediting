@@ -30,14 +30,13 @@ import org.osgi.framework.Bundle;
 
 public class XMLImportActionDelegate implements IActionDelegate
 {
-// TODO verify these  
   private static final String validateXSDPluginID = "org.eclipse.wst.xsd.validation";
   private static final String xsdValidatorClassName = "org.eclipse.wst.xsd.validation.internal.ui.eclipse.XSDValidator";
   
   private static final String validateDTDPluginID = "org.eclipse.wst.dtd.validation";
   private static final String dtdValidatorClassName = "org.eclipse.wst.dtd.validation.internal.ui.eclipse.DTDValidator";
 
-  private static final String validationReportClassName = "org.eclipse.wst.validation.xmltools.ValidationReport";
+  private static final String validationReportClassName = "org.eclipse.wst.xml.validation.internal.core.ValidationReport";
 
   
   /**
