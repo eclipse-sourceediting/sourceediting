@@ -29,6 +29,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
+import org.eclipse.jst.jsp.core.contentmodel.tld.JSP12TLDNames;
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDElementDeclaration;
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDVariable;
 import org.eclipse.jst.jsp.core.internal.Logger;
@@ -1213,7 +1214,7 @@ public class JSPTranslator {
 				while (taglibRegions.hasNext()) {
 					r = (ITextRegion) taglibRegions.next();
 					if (r.getType().equals(DOMJSPRegionContexts.JSP_DIRECTIVE_NAME)) {
-						if (sdRegion.getText(r).equals("taglib")) { //$NON-NLS-1$
+						if (sdRegion.getText(r).equals(JSP12TLDNames.TAGLIB)) {
 							addBlockMarkers(tracker.getDocument());
 						}
 					}
