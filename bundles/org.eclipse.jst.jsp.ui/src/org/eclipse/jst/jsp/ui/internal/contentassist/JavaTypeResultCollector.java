@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.contentassist;
 
-import org.eclipse.jdt.core.ICompletionRequestor;
 import org.eclipse.jdt.internal.ui.JavaPlugin;
 import org.eclipse.jdt.internal.ui.text.java.JavaCompletionProposal;
 import org.eclipse.jdt.internal.ui.text.java.ProposalInfo;
@@ -81,7 +80,7 @@ public class JavaTypeResultCollector extends ResultCollector {
 	}
 
 	/**
-	 * @see ICompletionRequestor#acceptInterface(char[], char[], char[], int,
+	 * @see org.eclipse.jdt.core.ICompletionRequestor#acceptInterface(char[], char[], char[], int,
 	 *      int, int, int)
 	 */
 	public void acceptInterface(char[] packageName, char[] interfaceName, char[] completionName, int modifiers, int completionStart, int completionEnd, int relevance) {
