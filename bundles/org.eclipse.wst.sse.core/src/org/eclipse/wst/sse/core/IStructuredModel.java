@@ -320,6 +320,8 @@ public interface IStructuredModel extends IAdaptable {
 	 * any possible changes. It is used when one editor may be closing, and
 	 * specifially says not to save the model, but another "display" of the
 	 * model still needs to hang on to some model, so needs a fresh copy.
+	 * 
+	 * Only valid for use with managed models.
 	 */
 	IStructuredModel reload(InputStream inputStream) throws IOException;
 
