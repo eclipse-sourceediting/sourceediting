@@ -56,8 +56,8 @@ public class XMLComponentSelectionDialog extends ComponentSelectionDialog {
 
 public Control createDialogArea(Composite parent) {
 
-        setFilterLabel("Type name:");          // TODO: Externalize String
-        setComponentTreeLabel("Matching types:");    // TODO: Externalize String
+        setFilterLabel(filterLabelText);         
+        setComponentTreeLabel(listLabelText);
         super.createDialogArea(parent);
         
         // We use the Composite topComposite to create additional widgets
