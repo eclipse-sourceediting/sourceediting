@@ -36,6 +36,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -144,6 +145,8 @@ class ProjectDescription {
 	 */
 	Hashtable fClasspathJars;
 
+	Stack fClasspathProjects = null;
+
 	// holds references by URI to TLDs
 	Hashtable fClasspathReferences;
 
@@ -152,8 +155,6 @@ class ProjectDescription {
 	Hashtable fImplicitReferences;
 	Hashtable fJARReferences;
 	IProject fProject;
-
-	Stack fProjectStack = null;
 	Hashtable fServletReferences;
 	Hashtable fTagDirReferences;
 
@@ -285,9 +286,9 @@ class ProjectDescription {
 		fServletReferences.put(servletRecord.getWebXML().toString(), servletRecord);
 		NodeList taglibs = document.getElementsByTagName(JSP12TLDNames.TAGLIB);
 		for (int i = 0; i < taglibs.getLength(); i++) {
-			String uri = readTextofChild(taglibs.item(i), "taglib-uri");
+			String uri = readTextofChild(taglibs.item(i), "taglib-uri").trim();
 			// specified location is relative to root of the webapp
-			String location = readTextofChild(taglibs.item(i), "taglib-location");
+			String location = readTextofChild(taglibs.item(i), "taglib-location").trim();
 			TLDRecord record = new TLDRecord();
 			record.uri = uri;
 			if (location.startsWith("/")) {
@@ -534,8 +535,9 @@ class ProjectDescription {
 
 	void indexClasspath() {
 		time0 = System.currentTimeMillis();
-		fProjectStack = new Stack();
+		fClasspathProjects = new Stack();
 		fClasspathReferences.clear();
+		fClasspathJars.clear();
 		IJavaProject javaProject = JavaCore.create(fProject);
 		indexClasspath(javaProject);
 		if (_debugIndexTime)
@@ -543,61 +545,74 @@ class ProjectDescription {
 	}
 
 	/**
+	 * @param entry
+	 */
+	private void indexClasspath(IClasspathEntry entry) {
+		switch (entry.getEntryKind()) {
+			case IClasspathEntry.CPE_CONTAINER : {
+				IClasspathContainer container = (IClasspathContainer) entry;
+				IClasspathEntry[] containedEntries = container.getClasspathEntries();
+				for (int i = 0; i < containedEntries.length; i++) {
+					indexClasspath(containedEntries[i]);
+				}
+			}
+				break;
+			case IClasspathEntry.CPE_LIBRARY : {
+				/*
+				 * Ignore libs in required projects that are not exported
+				 */
+				if (fClasspathProjects.size() < 2 || entry.isExported()) {
+					IPath libPath = entry.getPath();
+					if (!fClasspathJars.containsKey(libPath.toString())) {
+						if (libPath.toFile().exists()) {
+							addClasspathLibrary(libPath.toString());
+						}
+						else {
+							IFile libFile = ResourcesPlugin.getWorkspace().getRoot().getFile(libPath);
+							if (libFile != null && libFile.exists()) {
+								addClasspathLibrary(libFile.getLocation().toString());
+							}
+						}
+					}
+				}
+			}
+				break;
+			case IClasspathEntry.CPE_PROJECT : {
+				/*
+				 * Ignore required projects of required projects that are not
+				 * exported
+				 */
+				if (fClasspathProjects.size() < 2 || entry.isExported()) {
+					IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(entry.getPath().lastSegment());
+					if (project != null && !fClasspathProjects.contains(project.getName())) {
+						indexClasspath(JavaCore.create(project));
+					}
+				}
+			}
+				break;
+			case IClasspathEntry.CPE_SOURCE :
+				break;
+			case IClasspathEntry.CPE_VARIABLE :
+				break;
+		}
+	}
+
+	/**
 	 * @param javaProject
 	 */
 	private void indexClasspath(IJavaProject javaProject) {
 		if (javaProject != null && javaProject.exists()) {
-			fProjectStack.push(javaProject.getElementName());
+			fClasspathProjects.push(javaProject.getElementName());
 			try {
 				IClasspathEntry[] entries = javaProject.getResolvedClasspath(true);
 				for (int i = 0; i < entries.length; i++) {
-					IClasspathEntry entry = entries[i];
-					switch (entry.getEntryKind()) {
-						case IClasspathEntry.CPE_CONTAINER :
-							break;
-						case IClasspathEntry.CPE_LIBRARY : {
-							/*
-							 * Ignore libs in required projects that are not
-							 * exported
-							 */
-							if (fProjectStack.size() < 2 || entry.isExported()) {
-								IPath libPath = entry.getPath();
-								if (libPath.toFile().exists()) {
-									addClasspathLibrary(libPath.toString());
-								}
-								else {
-									IFile libFile = ResourcesPlugin.getWorkspace().getRoot().getFile(libPath);
-									if (libFile != null && libFile.exists()) {
-										addClasspathLibrary(libFile.getLocation().toString());
-									}
-								}
-							}
-						}
-							break;
-						case IClasspathEntry.CPE_PROJECT : {
-							/*
-							 * Ignore required projects of required projects
-							 * that are not exported
-							 */
-							if (fProjectStack.size() < 2 || entry.isExported()) {
-								IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(entry.getPath().lastSegment());
-								if (project != null && !fProjectStack.contains(project.getName())) {
-									indexClasspath(JavaCore.create(project));
-								}
-							}
-						}
-							break;
-						case IClasspathEntry.CPE_SOURCE :
-							break;
-						case IClasspathEntry.CPE_VARIABLE :
-							break;
-					}
+					indexClasspath(entries[i]);
 				}
 			}
 			catch (JavaModelException e) {
 				Logger.logException("Error searching Java Build Path + (" + fProject.getName() + ") for tag libraries", e);
 			}
-			fProjectStack.pop();
+			fClasspathProjects.pop();
 		}
 	}
 
