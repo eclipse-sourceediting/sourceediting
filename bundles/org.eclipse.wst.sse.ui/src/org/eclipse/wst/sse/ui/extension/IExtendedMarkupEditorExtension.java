@@ -15,7 +15,7 @@ package org.eclipse.wst.sse.ui.extension;
 import org.w3c.dom.Node;
 
 /**
- * @deprecated - no longer used
+ * @deprecated - will be removed in M4
  * 
  * @author nsd
  */

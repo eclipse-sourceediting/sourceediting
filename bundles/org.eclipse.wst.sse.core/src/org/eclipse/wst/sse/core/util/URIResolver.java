@@ -18,6 +18,13 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 
 
+/**
+ * @deprecated
+ * 
+ * @author nsd
+ *
+ * Will be removed in M4 and replaced with Flexible Project support
+ */
 
 public interface URIResolver {
 

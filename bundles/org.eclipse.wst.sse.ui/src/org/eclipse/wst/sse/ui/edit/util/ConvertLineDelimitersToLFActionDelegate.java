@@ -13,7 +13,7 @@
 package org.eclipse.wst.sse.ui.edit.util;
 
 /**
- *  @deprecated Eclipse now provides a file conversion action. This will be deleted.
+ *  @deprecated Eclipse now provides a file conversion action. This will be deleted in M4.
  */
 public class ConvertLineDelimitersToLFActionDelegate extends ConvertLineDelimitersToCRLFActionDelegate {
 	public ConvertLineDelimitersToLFActionDelegate() {

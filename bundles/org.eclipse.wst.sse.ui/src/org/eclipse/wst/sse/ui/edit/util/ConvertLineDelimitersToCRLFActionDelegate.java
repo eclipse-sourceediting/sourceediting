@@ -39,7 +39,7 @@ import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 /**
- *  @deprecated Eclipse now provides a file conversion action. This will be deleted.
+ *  @deprecated Eclipse now provides a file conversion action. This will be deleted in M4.
  */
 public class ConvertLineDelimitersToCRLFActionDelegate extends ResourceActionDelegate {
 
