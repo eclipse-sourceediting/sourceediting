@@ -76,6 +76,10 @@ public abstract class PreferenceManager {
 	 * treat as a runtime exception.
 	 */
 	class PreferenceRuntimeException extends RuntimeException {
+		/**
+		 * Comment for <code>serialVersionUID</code>
+		 */
+		private static final long serialVersionUID = 1L;
 		private Throwable originalException;
 
 		public PreferenceRuntimeException() {

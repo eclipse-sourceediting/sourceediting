@@ -48,6 +48,11 @@ import org.xml.sax.SAXException;
 class SimpleNodeOperator {
 
 	class CreateContentSettingsFailureException extends Exception {
+		/**
+		 * Comment for <code>serialVersionUID</code>
+		 */
+		private static final long serialVersionUID = 1L;
+
 		public CreateContentSettingsFailureException(String reason) {
 			super(reason);
 		}
@@ -55,12 +60,22 @@ class SimpleNodeOperator {
 
 
 	class ReadContentSettingsFailureException extends Exception {
+		/**
+		 * Comment for <code>serialVersionUID</code>
+		 */
+		private static final long serialVersionUID = 1L;
+
 		public ReadContentSettingsFailureException(String reason) {
 			super(reason);
 		}
 	}
 
 	static class WriteContentSettingsFailureException extends Exception {
+		/**
+		 * Comment for <code>serialVersionUID</code>
+		 */
+		private static final long serialVersionUID = 1L;
+
 		public WriteContentSettingsFailureException(String reason) {
 			super(reason);
 		}

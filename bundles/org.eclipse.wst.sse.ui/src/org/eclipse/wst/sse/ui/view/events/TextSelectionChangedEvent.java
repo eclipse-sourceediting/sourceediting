@@ -15,6 +15,11 @@ package org.eclipse.wst.sse.ui.view.events;
 
 
 public class TextSelectionChangedEvent extends java.util.EventObject {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 1L;
+
 	int fTextSelectionEnd;
 
 	int fTextSelectionStart;

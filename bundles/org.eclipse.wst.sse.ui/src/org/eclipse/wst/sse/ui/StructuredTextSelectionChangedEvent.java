@@ -24,6 +24,11 @@ import org.eclipse.jface.viewers.ISelectionProvider;
  */
 public class StructuredTextSelectionChangedEvent extends org.eclipse.jface.viewers.SelectionChangedEvent {
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public StructuredTextSelectionChangedEvent(ISelectionProvider source, ISelection selection) {
 		super(source, selection);
 	}

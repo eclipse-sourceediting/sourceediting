@@ -17,6 +17,11 @@ package org.eclipse.wst.sse.ui.view.events;
 import java.util.List;
 
 public class NodeSelectionChangedEvent extends java.util.EventObject {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 1L;
+
 	int fCaretPosition;
 
 	List fSelectedNodes;

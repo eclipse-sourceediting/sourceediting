@@ -38,6 +38,11 @@ import org.eclipse.wst.sse.ui.util.Assert;
 public class SpellCheckTargetImpl implements SpellCheckTarget {
 
 	public static class EditorSpellCheckException extends SpellCheckException {
+		/**
+		 * Comment for <code>serialVersionUID</code>
+		 */
+		private static final long serialVersionUID = 1L;
+
 		EditorSpellCheckException(String msg) {
 			super(msg);
 		}

@@ -19,6 +19,10 @@ package org.eclipse.wst.sse.ui.view.events;
  */
 public class CaretEvent extends java.util.EventObject {
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 1L;
 	// initialize to impossible location
 	int fPosition = -1;
 
