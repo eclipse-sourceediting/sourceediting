@@ -27,7 +27,7 @@ public class StructuredTextAnnotationImageProvider implements IAnnotationImagePr
 	 * The descriptor currently has no associated image so that temporary
 	 * annotations do not show up in the vertical ruler.
 	 */
-	private final String IMAGE_DESCRIPTOR_ID = "org.eclipse.wst.sse.temp.imageDescriptor"; //$NON-NLS-1$
+	private final String IMAGE_DESCRIPTOR_ID = null; //"org.eclipse.wst.sse.temp.imageDescriptor"; //$NON-NLS-1$
 
 	/*
 	 * (non-Javadoc)
