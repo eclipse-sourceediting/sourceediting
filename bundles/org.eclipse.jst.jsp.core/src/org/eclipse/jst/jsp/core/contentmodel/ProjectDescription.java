@@ -268,7 +268,11 @@ class ProjectDescription {
 	void addTLD(IResource tld) {
 		if (_debugIndexCreation)
 			System.out.println("creating record for " + tld.getFullPath());
-		fTLDReferences.put(tld.getFullPath().toString(), createTLDRecord(tld));
+		TLDRecord record = createTLDRecord(tld);
+		fTLDReferences.put(tld.getFullPath().toString(), record);
+		if (record.uri != null) {
+			getImplicitReferences(tld.getLocation().toString()).put(record.uri, record);
+		}
 	}
 
 	/**
@@ -286,7 +290,7 @@ class ProjectDescription {
 	 * @param resource
 	 * @return
 	 */
-	private ITaglibRecord createTLDRecord(IResource tld) {
+	private TLDRecord createTLDRecord(IResource tld) {
 		TLDRecord record = new TLDRecord();
 		record.location = tld.getLocation();
 		InputStream contents = null;
@@ -460,7 +464,10 @@ class ProjectDescription {
 	}
 
 	void removeTLD(IResource tld) {
-		fTLDReferences.remove(tld.getFullPath());
+		TLDRecord record = (TLDRecord) fTLDReferences.remove(tld.getFullPath());
+		if (record != null && record.uri != null) {
+			getImplicitReferences(tld.getLocation().toString()).put(record.uri, record);
+		}
 	}
 
 	/**
