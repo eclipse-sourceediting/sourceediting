@@ -64,25 +64,39 @@ public class RenameComponentAction extends SelectionDispatchAction {
 
 	}
 
-	protected boolean canEnable(Object selectedObject) {
-
+	protected boolean canEnable(XSDConcreteComponent selectedObject) {
+		
+		fSelectedComponent = null;
 		if (selectedObject instanceof XSDNamedComponent) {
 			fSelectedComponent = (XSDNamedComponent) selectedObject;
-		} else if (selectedObject instanceof Node) {
+			
+			// if it's element reference, then this action is not appropriate
+			if (fSelectedComponent instanceof XSDElementDeclaration) {
+				XSDElementDeclaration element = (XSDElementDeclaration) fSelectedComponent;
+				if (element.isElementDeclarationReference()) {
+					fSelectedComponent = null;
+				}
+			} 
+		} 
+		
+		return canRun();
+	}
+	
+	
+	protected boolean canEnable(Object selectedObject) {
+		
+		if(fEditor == null) return false;
+		if (selectedObject instanceof XSDConcreteComponent) {
+			return canEnable((XSDConcreteComponent)selectedObject);
+		}
+		else if (selectedObject instanceof Node) {
 			Node node = (Node) selectedObject;
 			XSDConcreteComponent concreteComponent = fEditor.getXSDSchema()
 					.getCorrespondingComponent(node);
-			if (concreteComponent instanceof XSDNamedComponent) {
-				fSelectedComponent = (XSDNamedComponent) concreteComponent;
-			}
+			return canEnable(concreteComponent);
 		}
-		if (fSelectedComponent instanceof XSDElementDeclaration) {
-			XSDElementDeclaration element = (XSDElementDeclaration) fSelectedComponent;
-			if (element.isElementDeclarationReference()) {
-				fSelectedComponent = null;
-			}
-		} 
-		return canRun();
+		return false;
+		
 	}
 	
 	public boolean canRun() {

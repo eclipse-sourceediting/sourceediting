@@ -67,32 +67,24 @@ public class MakeLocalElementGlobalAction extends SelectionDispatchAction {
 		}
 
 	}
+	
+	public boolean canRun() {
+
+		return fSelectedComponent != null;
+	}
 
 	protected boolean canEnable(XSDConcreteComponent selectedObject) {
 
-		if(fEditor == null) return false;
+		fSelectedComponent = null;
 		if (selectedObject instanceof XSDElementDeclaration) {
 			XSDElementDeclaration element = (XSDElementDeclaration) selectedObject;
 			if (!element.isElementDeclarationReference() && !element.isGlobal()) {
 				fSelectedComponent = element;
-				return true;
 			}
-		} else if (selectedObject instanceof Node) {
-			Node node = (Node) selectedObject;
-			
-			XSDConcreteComponent concreteComponent = fEditor.getXSDSchema()
-					.getCorrespondingComponent(node);
-			if (selectedObject instanceof XSDElementDeclaration) {
-				XSDElementDeclaration element = (XSDElementDeclaration) concreteComponent;
-				if (!element.isElementDeclarationReference()
-						&& !element.isGlobal()) {
-					fSelectedComponent = element;
-					return true;
-				}
-			}
-		}
-		return false;
+		} 
+		return canRun();
 	}
+	
 	
 	protected boolean canEnable(Object selectedObject) {
 		
@@ -104,7 +96,7 @@ public class MakeLocalElementGlobalAction extends SelectionDispatchAction {
 			Node node = (Node) selectedObject;
 			XSDConcreteComponent concreteComponent = fEditor.getXSDSchema()
 					.getCorrespondingComponent(node);
-			return canEnable((XSDConcreteComponent)selectedObject);
+			return canEnable(concreteComponent);
 		}
 		return false;
 		
