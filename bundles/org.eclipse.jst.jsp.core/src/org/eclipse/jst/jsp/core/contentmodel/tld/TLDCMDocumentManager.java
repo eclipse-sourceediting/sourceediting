@@ -435,9 +435,6 @@ public class TLDCMDocumentManager {
 			resetBlockTags();
 			resetTaglibTrackers();
 		}
-		/* (non-Javadoc)
-		 * @see com.ibm.sse.model.parser.StructuredDocumentRegionHandlerExtension#setStructuredDocument(com.ibm.sse.model.text.IStructuredDocument)
-		 */
 		public void setStructuredDocument(IStructuredDocument newDocument) {
 			Assert.isTrue(newDocument != null, "null document");
 			Assert.isTrue(newDocument.getParser() != null, "null document parser");
@@ -675,7 +672,7 @@ public class TLDCMDocumentManager {
 	}
 
 	public List getCMDocumentTrackers(int offset) {
-		List validDocs = new java.util.ArrayList();
+		List validDocs = new ArrayList();
 		Iterator alldocs = getTaglibTrackers().iterator();
 		while (alldocs.hasNext()) {
 			TaglibTracker aTracker = (TaglibTracker) alldocs.next();
@@ -687,7 +684,7 @@ public class TLDCMDocumentManager {
 	}
 
 	public List getCMDocumentTrackers(String prefix, int offset) {
-		List validDocs = new java.util.ArrayList();
+		List validDocs = new ArrayList();
 		Iterator alldocs = getTaglibTrackers().iterator();
 		while (alldocs.hasNext()) {
 			TaglibTracker aTracker = (TaglibTracker) alldocs.next();
@@ -756,10 +753,6 @@ public class TLDCMDocumentManager {
 		return fResolverProvider;
 	}
 
-	/**
-	 * 
-	 * @return com.ibm.sed.parser.JSPSourceParser
-	 */
 	public JSPSourceParser getSourceParser() {
 		return fParser;
 	}
