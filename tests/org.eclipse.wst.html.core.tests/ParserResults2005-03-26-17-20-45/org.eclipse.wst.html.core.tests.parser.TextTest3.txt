@@ -1,0 +1,78 @@
+org.eclipse.wst.html.core.tests.parser.TextTest3
+Invalid character ('<') found
+Source :
+<a>text</a>
+
+
+StructuredDocument Regions :
+[0, 3] (<a>)
+[3, 7] (text)
+[7, 11] (</a>)
+
+Tree :
+#document
+--a/a@[0, 3] (<a>)@[7, 11] (</a>)
+----#text(text)@[3, 7] (text)
+
+Source :
+<a>hello &lt;</a>
+
+
+StructuredDocument Regions :
+[0, 3] (<a>)
+[3, 9] (hello )
+[9, 13] (&lt;)
+[13, 17] (</a>)
+
+Tree :
+#document
+--a/a@[0, 3] (<a>)@[13, 17] (</a>)
+----#text(hello <)@{[3, 9] (hello ),[9, 13] (&lt;)}
+
+Invalid character ('&') found
+Source :
+<a>hello &lt;</a>
+
+
+StructuredDocument Regions :
+[0, 3] (<a>)
+[3, 9] (hello )
+[9, 13] (&lt;)
+[13, 17] (</a>)
+
+Tree :
+#document
+--a/a@[0, 3] (<a>)@[13, 17] (</a>)
+----#text(hello <)@{[3, 9] (hello ),[9, 13] (&lt;)}
+
+Source :
+<a>hello &#65;</a>
+
+
+StructuredDocument Regions :
+[0, 3] (<a>)
+[3, 9] (hello )
+[9, 14] (&#65;)
+[14, 18] (</a>)
+
+Tree :
+#document
+--a/a@[0, 3] (<a>)@[14, 18] (</a>)
+----#text(hello A)@{[3, 9] (hello ),[9, 14] (&#65;)}
+
+Invalid character ('&') found
+Source :
+<a>hello &#65;</a>
+
+
+StructuredDocument Regions :
+[0, 3] (<a>)
+[3, 9] (hello )
+[9, 14] (&#65;)
+[14, 18] (</a>)
+
+Tree :
+#document
+--a/a@[0, 3] (<a>)@[14, 18] (</a>)
+----#text(hello A)@{[3, 9] (hello ),[9, 14] (&#65;)}
+

@@ -1,0 +1,28 @@
+org.eclipse.wst.html.core.tests.parser.EntityTest
+Source :
+<p></p>
+
+
+StructuredDocument Regions :
+[0, 3] (<p>)
+[3, 7] (</p>)
+
+Tree :
+#document
+--p/p@[0, 3] (<p>)@[3, 7] (</p>)
+
+Source :
+<p>&amp;gt;</p>
+
+
+StructuredDocument Regions :
+[0, 3] (<p>)
+[3, 8] (&amp;)
+[8, 11] (gt;)
+[11, 15] (</p>)
+
+Tree :
+#document
+--p/p@[0, 3] (<p>)@[11, 15] (</p>)
+----#text(&gt;)@{[3, 8] (&amp;),[8, 11] (gt;)}
+

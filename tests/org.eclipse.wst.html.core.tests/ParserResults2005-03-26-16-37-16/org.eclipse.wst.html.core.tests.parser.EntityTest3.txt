@@ -1,0 +1,92 @@
+org.eclipse.wst.html.core.tests.parser.EntityTest3
+Source :
+<p>a</p>
+
+
+StructuredDocument Regions :
+[0, 3] (<p>)
+[3, 4] (a)
+[4, 8] (</p>)
+
+Tree :
+#document
+--p/p@[0, 3] (<p>)@[4, 8] (</p>)
+----#text(a)@[3, 4] (a)
+
+Source :
+<p>ab</p>
+
+
+StructuredDocument Regions :
+[0, 3] (<p>)
+[3, 5] (ab)
+[5, 9] (</p>)
+
+Tree :
+#document
+--p/p@[0, 3] (<p>)@[5, 9] (</p>)
+----#text(ab)@[3, 5] (ab)
+
+Source :
+<p>ab&amp;</p>
+
+
+StructuredDocument Regions :
+[0, 3] (<p>)
+[3, 5] (ab)
+[5, 10] (&amp;)
+[10, 14] (</p>)
+
+Tree :
+#document
+--p/p@[0, 3] (<p>)@[10, 14] (</p>)
+----#text(ab&)@{[3, 5] (ab),[5, 10] (&amp;)}
+
+Source :
+<p>ab&amp;c</p>
+
+
+StructuredDocument Regions :
+[0, 3] (<p>)
+[3, 5] (ab)
+[5, 10] (&amp;)
+[10, 11] (c)
+[11, 15] (</p>)
+
+Tree :
+#document
+--p/p@[0, 3] (<p>)@[11, 15] (</p>)
+----#text(ab&c)@{[3, 5] (ab),[5, 10] (&amp;),[10, 11] (c)}
+
+Source :
+<p>dab&amp;c</p>
+
+
+StructuredDocument Regions :
+[0, 3] (<p>)
+[3, 6] (dab)
+[6, 11] (&amp;)
+[11, 12] (c)
+[12, 16] (</p>)
+
+Tree :
+#document
+--p/p@[0, 3] (<p>)@[12, 16] (</p>)
+----#text(dab&c)@{[3, 6] (dab),[6, 11] (&amp;),[11, 12] (c)}
+
+Source :
+<p>dab&amp;ce</p>
+
+
+StructuredDocument Regions :
+[0, 3] (<p>)
+[3, 6] (dab)
+[6, 11] (&amp;)
+[11, 13] (ce)
+[13, 17] (</p>)
+
+Tree :
+#document
+--p/p@[0, 3] (<p>)@[13, 17] (</p>)
+----#text(dab&ce)@{[3, 6] (dab),[6, 11] (&amp;),[11, 13] (ce)}
+
