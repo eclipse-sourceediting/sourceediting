@@ -384,6 +384,7 @@ class ModelManagerImpl implements IModelManager {
 	public IStructuredModel _getModelFor(IStructuredDocument document, ReadEditType accessType) {
 		IStructuredModel model = null;
 		String id = FileBufferModelManager.getInstance().calculateId(document);
+		Assert.isNotNull(id, "unknown IStructuredDocument " + document);
 		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
 		if (sharedObject != null) {
 			sharedObject = (SharedObject) fManagedObjects.get(id);
