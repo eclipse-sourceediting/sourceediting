@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+	id="org.eclipse.wst.css.core.tests"
+	name="CSS Model Tests Plug-in"
+	version="1.0.0"
+	provider-name="IBM"
+	class="org.eclipse.wst.css.core.tests.CSSCoreTestsPlugin">
+
+	<runtime>
+		<library name="tests.jar">
+			<export name="*" />
+		</library>
+	</runtime>
+	<requires>
+		<import plugin="org.eclipse.core.runtime.compatibility" />
+		<import plugin="org.eclipse.wst.css.core" />
+		<import plugin="org.junit" />
+		<import plugin="org.eclipse.wst.sse.core" />
+		<import plugin="org.eclipse.core.resources" />
+		<import plugin="org.eclipse.wst.common.encoding" />
+	</requires>
+
+	<extension
+		id="ssemodelcsstests"
+		point="org.eclipse.core.runtime.applications">
+		<application>
+			<run
+				class="org.eclipse.wst.css.core.tests.application.SSEModelCSSTests">
+			</run>
+		</application>
+	</extension>
+
+	<!-- TO GET PICKED UP BY com.ibm.etools.commontests.testcollector -->
+	<!--
+	<extension
+		point="com.ibm.etools.commontests.testcollector.suites">
+		<suite
+			suiteName="SSE Model CSS Tests"
+			suiteClass="org.eclipse.wst.css.core.tests.CSSModelTestSuite">
+		</suite>
+	</extension>
+	-->
+
+</plugin>

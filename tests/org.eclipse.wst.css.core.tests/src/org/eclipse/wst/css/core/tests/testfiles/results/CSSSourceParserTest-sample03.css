@@ -1,0 +1,102 @@
+[0, 29] (@import url("../sample2.css"))
+    CSSContextRegion--> IMPORT: 0-7/8, CSSContextRegion--> URI: 8-29, 
+[29, 30] (;)
+    CSSContextRegion--> DELIMITER: 0-1, 
+[30, 57] (
+
+/* Sample Styles */
+
+)
+    CSSContextRegion--> S: 0-4, CSSContextRegion--> COMMENT: 4-23/27, 
+[57, 62] (BODY )
+    CSSContextRegion--> SELECTOR_ELEMENT_NAME: 0-4/5, 
+[62, 66] ({
+	)
+    CSSContextRegion--> LBRACE: 0-1/4, 
+[66, 79] (color : black)
+    CSSContextRegion--> DECLARATION_PROPERTY: 0-5/6, CSSContextRegion--> DECLARATION_SEPARATOR: 6-7/8, CSSContextRegion--> DECLARATION_VALUE_IDENT: 8-13, 
+[79, 80] (;)
+    CSSContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[80, 83] (
+	)
+    CSSContextRegion--> S: 0-3, 
+[83, 120] (background-color : rgb(181, 253, 211))
+    CSSContextRegion--> DECLARATION_PROPERTY: 0-16/17, CSSContextRegion--> DECLARATION_SEPARATOR: 17-18/19, CSSContextRegion--> DECLARATION_VALUE_FUNCTION: 19-23, CSSContextRegion--> DECLARATION_VALUE_NUMBER: 23-26, CSSContextRegion--> DECLARATION_VALUE_OPERATOR: 26-27/28, CSSContextRegion--> DECLARATION_VALUE_NUMBER: 28-31, CSSContextRegion--> DECLARATION_VALUE_OPERATOR: 31-32/33, CSSContextRegion--> DECLARATION_VALUE_NUMBER: 33-36, CSSContextRegion--> DECLARATION_VALUE_PARENTHESIS_CLOSE: 36-37, 
+[120, 121] (;)
+    CSSContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[121, 124] (
+	)
+    CSSContextRegion--> S: 0-3, 
+[124, 143] (text-align : center)
+    CSSContextRegion--> DECLARATION_PROPERTY: 0-10/11, CSSContextRegion--> DECLARATION_SEPARATOR: 11-12/13, CSSContextRegion--> DECLARATION_VALUE_IDENT: 13-19, 
+[143, 144] (;)
+    CSSContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[144, 147] (
+	)
+    CSSContextRegion--> S: 0-3, 
+[147, 186] (font-family : "Heisei Mincho W3", serif)
+    CSSContextRegion--> DECLARATION_PROPERTY: 0-11/12, CSSContextRegion--> DECLARATION_SEPARATOR: 12-13/14, CSSContextRegion--> DECLARATION_VALUE_STRING: 14-32, CSSContextRegion--> DECLARATION_VALUE_OPERATOR: 32-33/34, CSSContextRegion--> DECLARATION_VALUE_IDENT: 34-39, 
+[186, 188] (
+)
+    CSSContextRegion--> S: 0-2, 
+[188, 189] (})
+    CSSContextRegion--> RBRACE: 0-1, 
+[189, 193] (
+
+)
+    CSSContextRegion--> S: 0-4, 
+[193, 205] (@page :left )
+    CSSContextRegion--> PAGE: 0-5/6, CSSContextRegion--> CSS_PAGE_SELECTOR: 6-11/12, 
+[205, 207] ({ )
+    CSSContextRegion--> LBRACE: 0-1/2, 
+[207, 224] (margin-left : 4cm)
+    CSSContextRegion--> DECLARATION_PROPERTY: 0-11/12, CSSContextRegion--> DECLARATION_SEPARATOR: 12-13/14, CSSContextRegion--> DECLARATION_VALUE_DIMENSION: 14-17, 
+[224, 225] ( )
+    CSSContextRegion--> S: 0-1, 
+[225, 226] (})
+    CSSContextRegion--> RBRACE: 0-1, 
+[226, 230] (
+
+)
+    CSSContextRegion--> S: 0-4, 
+[230, 243] (@media aural )
+    CSSContextRegion--> MEDIA: 0-6/7, CSSContextRegion--> MEDIUM: 7-12/13, 
+[243, 247] ({
+	)
+    CSSContextRegion--> LBRACE: 0-1/4, 
+[247, 255] (P.heidi )
+    CSSContextRegion--> SELECTOR_ELEMENT_NAME: 0-1, CSSContextRegion--> SELECTOR_CLASS: 1-7/8, 
+[255, 260] ({
+		)
+    CSSContextRegion--> LBRACE: 0-1/5, 
+[260, 281] (azimuth : center-left)
+    CSSContextRegion--> DECLARATION_PROPERTY: 0-7/8, CSSContextRegion--> DECLARATION_SEPARATOR: 8-9/10, CSSContextRegion--> DECLARATION_VALUE_IDENT: 10-21, 
+[281, 282] (;)
+    CSSContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[282, 286] (
+		)
+    CSSContextRegion--> S: 0-4, 
+[286, 305] (elevation : 12.3deg)
+    CSSContextRegion--> DECLARATION_PROPERTY: 0-9/10, CSSContextRegion--> DECLARATION_SEPARATOR: 10-11/12, CSSContextRegion--> DECLARATION_VALUE_DIMENSION: 12-19, 
+[305, 306] (;)
+    CSSContextRegion--> DECLARATION_DELIMITER: 0-1, 
+[306, 310] (
+		)
+    CSSContextRegion--> S: 0-4, 
+[310, 327] (pause : 30ms 1.6s)
+    CSSContextRegion--> DECLARATION_PROPERTY: 0-5/6, CSSContextRegion--> DECLARATION_SEPARATOR: 6-7/8, CSSContextRegion--> DECLARATION_VALUE_DIMENSION: 8-12/13, CSSContextRegion--> DECLARATION_VALUE_DIMENSION: 13-17, 
+[327, 330] (
+	)
+    CSSContextRegion--> S: 0-3, 
+[330, 331] (})
+    CSSContextRegion--> RBRACE: 0-1, 
+[331, 333] (
+)
+    CSSContextRegion--> S: 0-2, 
+[333, 334] (})
+    CSSContextRegion--> RBRACE: 0-1, 
+[334, 336] (
+)
+    CSSContextRegion--> S: 0-2, 
+
+-------

@@ -1,0 +1,29 @@
+@font-face {
+	font-family: "Swiss 721";
+	src: url("swiss721blk.pfr"); /* Swiss 721 black */
+	font-style: normal, italic;
+	font-weight: 800,900; /* note the interesting problem that
+	the 900 weight italic doesnÅft exist */
+}
+
+@font-face {
+	src: local("Palatino"),
+		local("Times New Roman"),
+		local("New York"),
+		local("Utopia"),
+		url("http://somewhere/free/font");
+	font-family: serif;
+	font-weight: 100, 200, 300, 400, 500;
+	font-style: normal;
+	font-variant: normal;
+	font-size: all
+}
+
+@font-face {
+	src: local("Alabama Italic"),
+	url(http://www.fonts.org/A/alabama-italic) format("truetype");
+	panose-1: 2 4 5 2 5 4 5 9 3 3;
+	font-family: Alabama, serif;
+	font-weight: 300, 400, 500;
+	font-style: italic, oblique;
+}
