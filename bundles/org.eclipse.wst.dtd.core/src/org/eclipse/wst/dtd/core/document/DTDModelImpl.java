@@ -267,7 +267,5 @@ public final class DTDModelImpl extends AbstractStructuredModel implements IStru
 		}
 		if (newStructuredDocument != null)
 			newStructuredDocument.addDocumentChangingListener(this);
-		document.setStructuredDocument(newStructuredDocument);
 	}
-
 }

@@ -48,22 +48,20 @@ public class DTDFile implements IndexedRegion {
 	protected NodeList elementList = new NodeList(this, DTDRegionTypes.ELEMENT_TAG);
 	protected NodeList entityList = new NodeList(this, DTDRegionTypes.ENTITY_TAG);
 
-	protected ArrayList folderList = null;
-	protected IStructuredDocument fStructuredDocument;
+	protected List folderList = null;
 
 	private boolean isMovingNode = false;
 
-	protected ArrayList lists = new ArrayList();
+	protected List lists = new ArrayList();
 
-	protected ArrayList modelListeners = new ArrayList();
+	protected List modelListeners = new ArrayList();
 
-	protected ArrayList nodeList = new ArrayList();
+	protected List nodeList = new ArrayList();
 	protected NodeList notationList = new NodeList(this, DTDRegionTypes.NOTATION_TAG);
 	protected NodeList unrecognizedList = new NodeList(this, DTDRegionTypes.UNKNOWN_CONTENT);
 
 	public DTDFile(DTDModelImpl dtdModel) {
 		this.dtdModel = dtdModel;
-		this.fStructuredDocument = dtdModel.getStructuredDocument();
 	}
 
 	public void addDTDFileListener(IDTDFileListener listener) {
@@ -111,10 +109,9 @@ public class DTDFile implements IndexedRegion {
 	public void buildNodes(IStructuredDocumentRegionList list) {
 		NodesEvent addedDTDNodes = new NodesEvent();
 
-		Enumeration flatNodes = list.elements();
 		TopLevelNode previousNode = null;
-		while (flatNodes.hasMoreElements()) {
-			IStructuredDocumentRegion flatNode = (IStructuredDocumentRegion) flatNodes.nextElement();
+		for (int i = 0; i < list.getLength(); i++) {
+			IStructuredDocumentRegion flatNode = list.item(i);
 			TopLevelNode node = (TopLevelNode) buildNode(flatNode);
 			// if we don't create a node, then we assume that the flat
 			// node was whitespace. Tack it on to a previous toplevel
@@ -122,13 +119,14 @@ public class DTDFile implements IndexedRegion {
 			if (node != null) {
 				previousNode = node;
 				addedDTDNodes.add(node);
-			} else {
+			}
+			else {
 				if (previousNode != null) {
 					previousNode.addWhitespaceStructuredDocumentRegion(flatNode);
 				}
 			}
-
 		}
+
 		if (addedDTDNodes.getNodes().size() > 0)// &&
 		//        creatingNewModel == false)
 		{
@@ -329,7 +327,7 @@ public class DTDFile implements IndexedRegion {
 		return null;
 	}
 
-	public ArrayList getNodeLists() {
+	public List getNodeLists() {
 		if (folderList == null) {
 			folderList = new ArrayList();
 			folderList.add(notationList);
@@ -343,7 +341,7 @@ public class DTDFile implements IndexedRegion {
 		return folderList;
 	}
 
-	public ArrayList getNodes() {
+	public List getNodes() {
 		return nodeList;
 	}
 
@@ -360,7 +358,7 @@ public class DTDFile implements IndexedRegion {
 	}
 
 	public IStructuredDocument getStructuredDocument() {
-		return fStructuredDocument;
+		return dtdModel.getStructuredDocument();
 	}
 
 	public DTDNode getTopLevelNodeAt(int offset) {
@@ -530,8 +528,8 @@ public class DTDFile implements IndexedRegion {
 		notifyNodesRemoved(removeEvent);
 		/* removeChildNodes(); */
 
-		if (fStructuredDocument != null && fStructuredDocument.getRegionList() != null) {
-			buildNodes(fStructuredDocument.getRegionList());
+		if (event.getStructuredDocument() != null && event.getStructuredDocument().getRegionList() != null) {
+			buildNodes(event.getStructuredDocument().getRegionList());
 		}
 		creatingNewModel = false;
 	}
@@ -654,15 +652,5 @@ public class DTDFile implements IndexedRegion {
 		 * for (int i = 0; i < nodes.size(); i++) {
 		 * removeChild((DTDNode)nodes.get(i)); } // end of for ()
 		 */
-	}
-
-	/**
-	 * Sets the flatModel.
-	 * 
-	 * @param flatModel
-	 *            The flatModel to set
-	 */
-	public void setStructuredDocument(IStructuredDocument flatModel) {
-		this.fStructuredDocument = flatModel;
 	}
 }

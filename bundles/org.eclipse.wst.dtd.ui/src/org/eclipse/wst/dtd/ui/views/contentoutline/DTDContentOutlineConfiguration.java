@@ -58,7 +58,7 @@ public class DTDContentOutlineConfiguration extends StructuredContentOutlineConf
 	}
 
 	public IContributionItem[] createToolbarContributions(TreeViewer viewer) {
-		Assert.isTrue(getContentProvider(viewer) instanceof DTDTreeContentProvider);
+		Assert.isTrue(getContentProvider(viewer) instanceof DTDTreeContentProvider, "invalid content provider on viewer"); //$NON-NLS-1$
 		IContributionItem[] items = super.createToolbarContributions(viewer);
 
 		SortAction sortAction = new SortAction(viewer, DTDUIPlugin.getDefault().getPreferenceStore(), getSortPreferenceKey());
