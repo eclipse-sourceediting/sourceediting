@@ -1,0 +1,82 @@
+org.eclipse.wst.html.core.tests.parser.SplitTextTest2
+Source :
+<P>aabbbbccc</P>
+
+
+StructuredDocument Regions :
+[0, 3] (<P>)
+[3, 12] (aabbbbccc)
+[12, 16] (</P>)
+
+Tree :
+#document
+--P/P@[0, 3] (<P>)@[12, 16] (</P>)
+----#text(aabbbbccc)@[3, 12] (aabbbbccc)
+
+Source :
+<P>aabbbbccc</P>
+
+
+StructuredDocument Regions :
+[0, 3] (<P>)
+[3, 12] (aabbbbccc)
+[12, 16] (</P>)
+
+Tree :
+#document
+--P/P@[0, 3] (<P>)@[12, 16] (</P>)
+----#text(aa)@[3,5]([3, 12] (aabbbbccc))
+----#text(bbbbccc)@[5,12]([3, 12] (aabbbbccc))
+
+Source :
+<P>aabbbbccc</P>
+
+
+StructuredDocument Regions :
+[0, 3] (<P>)
+[3, 12] (aabbbbccc)
+[12, 16] (</P>)
+
+Tree :
+#document
+--P/P@[0, 3] (<P>)@[12, 16] (</P>)
+----#text(aa)@[3,5]([3, 12] (aabbbbccc))
+----#text(bbbb)@[5,9]([3, 12] (aabbbbccc))
+----#text(ccc)@[9,12]([3, 12] (aabbbbccc))
+
+Source :
+<P>aaccc</P>
+
+
+StructuredDocument Regions :
+[0, 3] (<P>)
+[3, 8] (aaccc)
+[8, 12] (</P>)
+
+Tree :
+#document
+--P/P@[0, 3] (<P>)@[8, 12] (</P>)
+----#text(aa)@[3,5]([3, 8] (aaccc))
+----#text(ccc)@[5,8]([3, 8] (aaccc))
+
+Source :
+<P>aa<B>bbbb</B>ccc</P>
+
+
+StructuredDocument Regions :
+[0, 3] (<P>)
+[3, 5] (aa)
+[5, 8] (<B>)
+[8, 12] (bbbb)
+[12, 16] (</B>)
+[16, 19] (ccc)
+[19, 23] (</P>)
+
+Tree :
+#document
+--P/P@[0, 3] (<P>)@[19, 23] (</P>)
+----#text(aa)@[3, 5] (aa)
+----B/B@[5, 8] (<B>)@[12, 16] (</B>)
+------#text(bbbb)@[8, 12] (bbbb)
+----#text(ccc)@[16, 19] (ccc)
+

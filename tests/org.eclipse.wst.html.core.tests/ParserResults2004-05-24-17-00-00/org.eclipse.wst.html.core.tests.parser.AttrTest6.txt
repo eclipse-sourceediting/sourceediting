@@ -1,0 +1,17 @@
+org.eclipse.wst.html.core.tests.parser.AttrTest6
+Source :
+<a href="<b>test</b>">a</a>
+
+
+StructuredDocument Regions :
+[0, 22] (<a href="<b>test</b>">)
+[22, 23] (a)
+[23, 27] (</a>)
+
+Tree :
+#document
+--HTML
+----BODY
+------a/a@[0, 22] (<a href&#61;"<b>test</b>">)@[23, 27] (</a>)
+--------#text(a)@[22, 23] (a)
+

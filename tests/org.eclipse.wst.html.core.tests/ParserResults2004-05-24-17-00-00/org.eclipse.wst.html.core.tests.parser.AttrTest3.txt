@@ -1,0 +1,19 @@
+org.eclipse.wst.html.core.tests.parser.AttrTest3
+Source :
+<a xmlns='default-uri' xmlns:b='b-uri'><c d='d-value' b:e='e-value'/></a>
+
+
+StructuredDocument Regions :
+[0, 39] (<a xmlns='default-uri' xmlns:b='b-uri'>)
+[39, 69] (<c d='d-value' b:e='e-value'/>)
+[69, 73] (</a>)
+
+Tree :
+#document
+--a/a@[0, 39] (<a xmlns&#61;'default-uri' xmlns:b&#61;'b-uri'>)@[69, 73] (</a>)
+----c/@[39, 69] (<c d&#61;'d-value' b:e&#61;'e-value'/>)
+
+xmlns [http://www.w3.org/2000/xmlns/]
+xmlns:b [http://www.w3.org/2000/xmlns/]
+d [null]
+b:e [b-uri]

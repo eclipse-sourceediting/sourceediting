@@ -1,0 +1,33 @@
+org.eclipse.wst.html.core.tests.parser.SplitTextTest6
+Source :
+<P>aabbbbccc</P>
+
+
+StructuredDocument Regions :
+[0, 3] (<P>)
+[3, 12] (aabbbbccc)
+[12, 16] (</P>)
+
+Tree :
+#document
+--P/P@[0, 3] (<P>)@[12, 16] (</P>)
+----#text(aa)@[3,5]([3, 12] (aabbbbccc))
+----#text(bbbb)@[5,9]([3, 12] (aabbbbccc))
+----#text(ccc)@[9,12]([3, 12] (aabbbbccc))
+
+Source :
+<P>aabbbbdccc</P>
+
+
+StructuredDocument Regions :
+[0, 3] (<P>)
+[3, 13] (aabbbbdccc)
+[13, 17] (</P>)
+
+Tree :
+#document
+--P/P@[0, 3] (<P>)@[13, 17] (</P>)
+----#text(aa)@[3,5]([3, 13] (aabbbbdccc))
+----#text(bbbbd)@[5,10]([3, 13] (aabbbbdccc))
+----#text(ccc)@[10,13]([3, 13] (aabbbbdccc))
+

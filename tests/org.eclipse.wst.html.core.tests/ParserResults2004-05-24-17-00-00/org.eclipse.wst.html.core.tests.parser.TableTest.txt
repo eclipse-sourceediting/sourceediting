@@ -1,0 +1,105 @@
+org.eclipse.wst.html.core.tests.parser.TableTest
+Source :
+<HTML></HTML>
+
+
+StructuredDocument Regions :
+[0, 6] (<HTML>)
+[6, 13] (</HTML>)
+
+Tree :
+#document
+--HTML/HTML@[0, 6] (<HTML>)@[6, 13] (</HTML>)
+
+Source :
+<HTML><BODY></BODY></HTML>
+
+
+StructuredDocument Regions :
+[0, 6] (<HTML>)
+[6, 12] (<BODY>)
+[12, 19] (</BODY>)
+[19, 26] (</HTML>)
+
+Tree :
+#document
+--HTML/HTML@[0, 6] (<HTML>)@[19, 26] (</HTML>)
+----BODY/BODY@[6, 12] (<BODY>)@[12, 19] (</BODY>)
+
+Source :
+<HTML><BODY><TABLE border="1"><TR><TD></TD><TD></TD></TR><TR><TD></TD><TD></TD></TR></TABLE></BODY></HTML>
+
+
+StructuredDocument Regions :
+[0, 6] (<HTML>)
+[6, 12] (<BODY>)
+[12, 30] (<TABLE border="1">)
+[30, 34] (<TR>)
+[34, 38] (<TD>)
+[38, 43] (</TD>)
+[43, 47] (<TD>)
+[47, 52] (</TD>)
+[52, 57] (</TR>)
+[57, 61] (<TR>)
+[61, 65] (<TD>)
+[65, 70] (</TD>)
+[70, 74] (<TD>)
+[74, 79] (</TD>)
+[79, 84] (</TR>)
+[84, 92] (</TABLE>)
+[92, 99] (</BODY>)
+[99, 106] (</HTML>)
+
+Tree :
+#document
+--HTML/HTML@[0, 6] (<HTML>)@[99, 106] (</HTML>)
+----BODY/BODY@[6, 12] (<BODY>)@[92, 99] (</BODY>)
+------TABLE/TABLE@[12, 30] (<TABLE border&#61;"1">)@[84, 92] (</TABLE>)
+--------TR/TR@[30, 34] (<TR>)@[52, 57] (</TR>)
+----------TD/TD@[34, 38] (<TD>)@[38, 43] (</TD>)
+----------TD/TD@[43, 47] (<TD>)@[47, 52] (</TD>)
+--------TR/TR@[57, 61] (<TR>)@[79, 84] (</TR>)
+----------TD/TD@[61, 65] (<TD>)@[65, 70] (</TD>)
+----------TD/TD@[70, 74] (<TD>)@[74, 79] (</TD>)
+
+Source :
+<HTML><BODY><TABLE border="1"><TR><TD></TD><TD></TD></TR><TR><TD></TD><TD><FONT color="red">text</FONT></TD></TR></TABLE></BODY></HTML>
+
+
+StructuredDocument Regions :
+[0, 6] (<HTML>)
+[6, 12] (<BODY>)
+[12, 30] (<TABLE border="1">)
+[30, 34] (<TR>)
+[34, 38] (<TD>)
+[38, 43] (</TD>)
+[43, 47] (<TD>)
+[47, 52] (</TD>)
+[52, 57] (</TR>)
+[57, 61] (<TR>)
+[61, 65] (<TD>)
+[65, 70] (</TD>)
+[70, 74] (<TD>)
+[74, 92] (<FONT color="red">)
+[92, 96] (text)
+[96, 103] (</FONT>)
+[103, 108] (</TD>)
+[108, 113] (</TR>)
+[113, 121] (</TABLE>)
+[121, 128] (</BODY>)
+[128, 135] (</HTML>)
+
+Tree :
+#document
+--HTML/HTML@[0, 6] (<HTML>)@[128, 135] (</HTML>)
+----BODY/BODY@[6, 12] (<BODY>)@[121, 128] (</BODY>)
+------TABLE/TABLE@[12, 30] (<TABLE border&#61;"1">)@[113, 121] (</TABLE>)
+--------TR/TR@[30, 34] (<TR>)@[52, 57] (</TR>)
+----------TD/TD@[34, 38] (<TD>)@[38, 43] (</TD>)
+----------TD/TD@[43, 47] (<TD>)@[47, 52] (</TD>)
+--------TR/TR@[57, 61] (<TR>)@[108, 113] (</TR>)
+----------TD/TD@[61, 65] (<TD>)@[65, 70] (</TD>)
+----------TD/TD@[70, 74] (<TD>)@[103, 108] (</TD>)
+------------FONT/FONT@[74, 92] (<FONT color&#61;"red">)@[96, 103] (</FONT>)
+--------------#text(text)@[92, 96] (text)
+
