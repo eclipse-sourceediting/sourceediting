@@ -16,21 +16,46 @@ import junit.framework.TestCase;
 
 import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
 import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
+import org.eclipse.wst.sse.core.AdapterFactory;
 import org.eclipse.wst.sse.core.IModelManager;
+import org.eclipse.wst.sse.core.INodeAdapter;
+import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.xml.core.document.XMLModel;
+import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
+import org.eclipse.wst.xml.core.modelhandler.EmbeddedXML;
+import org.w3c.dom.Node;
 
 /**
  * @author davidw
- *
- * To change this generated comment edit the template variable "typecomment":
- * Window>Preferences>Java>Templates.
- * To enable and disable the creation of type comments go to
- * Window>Preferences>Java>Code Generation.
  */
 public class TestPageDirective extends TestCase {
 
+	class MyEmbeddedFactory implements AdapterFactory {
+
+		public INodeAdapter adapt(INodeNotifier object) {
+			return null;
+		}
+
+		public AdapterFactory copy() {
+			return null;
+		}
+
+		public boolean isFactoryForType(Object type) {
+			return type instanceof MyAdaptedClass;
+		}
+
+		public void release() {
+			// noop
+		}
+	}
+	
+	class MyAdaptedClass {
+		// dummy class is key
+	}
+	
 	/**
 	 * Constructor for TestPageDirective.
 	 * @param name
@@ -117,5 +142,60 @@ public class TestPageDirective extends TestCase {
 
 		assertTrue("contentType should be html", "text/html".equals(contentType));
 		assertTrue("language should be java", "java".equals(language));
+	}
+	
+	public void testSetEmbeddedType(){
+		IStructuredModel model = createUnmanagedHTMLModel();
+		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) ((XMLModel) model).getDocument().getAdapterFor(PageDirectiveAdapter.class);
+		EmbeddedTypeHandler embeddedXMLHandler = new EmbeddedXML();
+		pageDirectiveAdapter.setEmbeddedType(embeddedXMLHandler);
+		
+		EmbeddedTypeHandler handler = pageDirectiveAdapter.getEmbeddedType();
+		assertTrue("incorrect embedded handler", handler == embeddedXMLHandler);
+	}
+	
+	public void testAdapt() {
+		XMLModel model = createUnmanagedHTMLModel();
+		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) model.getDocument().getAdapterFor(PageDirectiveAdapter.class);
+		Node ownerNode = model.getDocument().getOwnerDocument();
+		ModelQueryAdapter embeddedAdapter = (ModelQueryAdapter) pageDirectiveAdapter.adapt((INodeNotifier) ownerNode, ModelQueryAdapter.class);
+		assertNotNull("could not adapt embedded adapter", embeddedAdapter);
+	}
+	
+	public void testAddEmbeddedFactory() {
+		XMLModel model = createUnmanagedHTMLModel();
+		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) model.getDocument().getAdapterFor(PageDirectiveAdapter.class);
+		pageDirectiveAdapter.addEmbeddedFactory(new MyEmbeddedFactory());
+	}
+	
+	public void testSetLanguage() {
+		XMLModel model = createUnmanagedHTMLModel();
+		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) model.getDocument().getAdapterFor(PageDirectiveAdapter.class);
+		pageDirectiveAdapter.setLanguage("text/xml");
+		assertTrue("set language failed", pageDirectiveAdapter.getLanguage().equals("text/xml"));
+	}
+	
+	public void testGetTarget() {
+		XMLModel model = createUnmanagedHTMLModel();
+		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) model.getDocument().getAdapterFor(PageDirectiveAdapter.class);
+		INodeNotifier notifier = pageDirectiveAdapter.getTarget();
+		assertNotNull("target is null", notifier);
+	}
+	
+	public void testRelease() {
+		XMLModel model = createUnmanagedHTMLModel();
+		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) model.getDocument().getAdapterFor(PageDirectiveAdapter.class);
+		pageDirectiveAdapter.release(MyAdaptedClass.class);
+	}
+	
+	private XMLModel createUnmanagedHTMLModel() {
+		// First make (empty) structuredDocument
+		IModelManager modelManager = StructuredModelManager.getModelManager();
+		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(ContentTypeIdForJSP.ContentTypeID_JSP);
+		assertTrue("model could not be created!", model != null);
+
+		// Now, assigning use a page directive, but leaving embedded type the same as default
+		model.getStructuredDocument().setText(this, "<%@ page contentType=\"text/html\" language=\"java\" %>");
+		return (XMLModel)model;
 	}
 }
