@@ -42,7 +42,20 @@ public class DefaultCSSSourceFormatter extends AbstractCSSSourceFormatter {
 		String prevType = prev.getType();
 		String nextType = next.getType();
 		if (CSSRegionUtil.isSelectorBegginingType(prevType) && CSSRegionUtil.isSelectorBegginingType(nextType)) {
-			appendSpaceBefore(node, next, source);
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=73990
+			// Formatting CSS file splits element.class into element . class
+			if ((prevType == CSSRegionContexts.CSS_SELECTOR_ELEMENT_NAME && (nextType == CSSRegionContexts.CSS_SELECTOR_CLASS || nextType == CSSRegionContexts.CSS_SELECTOR_ID)) || ((prevType == CSSRegionContexts.CSS_SELECTOR_ELEMENT_NAME || prevType == CSSRegionContexts.CSS_SELECTOR_CLASS) && nextType == CSSRegionContexts.CSS_SELECTOR_PSEUDO)) {
+				// Individually, SELECTOR_ELEMENT_NAME, SELECTOR_CLASS, and SELECTOR_ID can all be beginning types.
+				// But, we should not insert a space in between when SELECTOR_ELEMENT_NAME is followed by SELECTOR_CLASS, or when
+				// SELECTOR_ELEMENT_NAME is followed by SELECTOR_ID.
+				// For example: H1.pastoral and H1#z98y
+				//
+				// Also, space is now not inserted in between when SELECTOR_ELEMENT_NAME is followed by SELECTOR_PSEUDO, or when
+				// SELECTOR_CLASS is followed by SELECTOR_PSEUDO.
+				// For example: P:first-letter and A.external:visited
+			}
+			else
+				appendSpaceBefore(node, next, source);
 			return;
 		}
 
