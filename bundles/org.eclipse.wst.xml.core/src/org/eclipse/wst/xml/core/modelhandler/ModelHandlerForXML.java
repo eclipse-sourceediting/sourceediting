@@ -17,7 +17,6 @@ import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.modelhandler.AbstractModelHandler;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
-import org.eclipse.wst.xml.core.document.DocumentLoaderForXML;
 import org.eclipse.wst.xml.core.encoding.XMLDocumentCharsetDetector;
 import org.eclipse.wst.xml.core.encoding.XMLDocumentLoader;
 
@@ -46,10 +45,7 @@ public class ModelHandlerForXML extends AbstractModelHandler implements IModelHa
 	}
 
 	public IDocumentLoader getDocumentLoader() {
-		if (USE_FILE_BUFFERS)
-			return new DocumentLoaderForXML();
-		else
-			return new XMLDocumentLoader();
+		return new XMLDocumentLoader();
 	}
 
 	public IDocumentCharsetDetector getEncodingDetector() {
