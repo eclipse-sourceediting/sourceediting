@@ -1490,8 +1490,11 @@ public class JSPTranslator {
 		Position javaTypeRange = new Position(fOffsetInUserCode, type.length());
 		Position javaIdRange = new Position(fOffsetInUserCode + type.length() + 1, id.length());
 		Position javaClassRange = new Position(fOffsetInUserCode + type.length() + 1 + id.length() + 7, 0);
-		if(className.length() >= 4)
-			javaClassRange = new Position(fOffsetInUserCode + type.length() + 1 + id.length() + 7, className.length()-4);
+		if(className.length() >= 4) {
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=86132
+            int classNameLength = className.substring(0,className.indexOf('(')).length();
+			javaClassRange = new Position(fOffsetInUserCode + type.length() + 1 + id.length() + 7, classNameLength);
+        }
 
 		//---------------------
 		// calculate jsp ranges
