@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.extension;
 
-import org.eclipse.wst.sse.ui.ViewerSelectionManager;
+import org.eclipse.wst.sse.ui.internal.ViewerSelectionManager;
 import org.w3c.dom.Node;
 import org.w3c.dom.ranges.Range;
 

@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.ui.internal.editor;
 
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 
 
 public class StructuredTextEditorDTD extends StructuredTextEditor {

@@ -11,8 +11,8 @@ package org.eclipse.wst.css.ui.internal.selection;
 import org.eclipse.jface.text.Region;
 import org.eclipse.wst.css.core.document.ICSSNode;
 import org.eclipse.wst.sse.core.IndexedRegion;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.selection.SelectionHistory;
 import org.w3c.dom.Node;
 

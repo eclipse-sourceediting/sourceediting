@@ -29,7 +29,6 @@
 		<import plugin="org.eclipse.wst.xml.core"/>
    </requires>
 
-
    <extension
          point="org.eclipse.ui.editors">
       <editor
@@ -79,7 +78,7 @@
       point="org.eclipse.core.filebuffers.annotationModelCreation">
       <factory
             contentTypeId="org.eclipse.wst.dtd.core.dtdsource"
-            class="org.eclipse.wst.sse.ui.StructuredResourceMarkerAnnotationModelFactory"/>
+            class="org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModelFactory"/>
    </extension>
 
 	<!-- Register the UI adapter factory provider -->

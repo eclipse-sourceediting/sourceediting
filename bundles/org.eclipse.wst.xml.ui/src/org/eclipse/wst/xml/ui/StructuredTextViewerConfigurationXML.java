@@ -37,9 +37,9 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredPartitions;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.format.StructuredFormattingStrategy;
+import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
@@ -63,6 +63,10 @@ import org.eclipse.wst.xml.ui.taginfo.XMLBestMatchHoverProcessor;
 import org.eclipse.wst.xml.ui.taginfo.XMLInformationProvider;
 import org.eclipse.wst.xml.ui.taginfo.XMLTagInfoHoverProcessor;
 
+/**
+ * This class provides
+ * @since 1.0
+ */
 public class StructuredTextViewerConfigurationXML extends StructuredTextViewerConfiguration {
     
 	InformationPresenter fInformationPresenter = null;

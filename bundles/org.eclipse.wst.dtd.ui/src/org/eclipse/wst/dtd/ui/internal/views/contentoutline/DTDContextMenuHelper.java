@@ -47,7 +47,7 @@ import org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions.AddGroupToCo
 import org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions.AddNotationAction;
 import org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions.AddParameterEntityReferenceAction;
 import org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions.DeleteAction;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 
 
 public class DTDContextMenuHelper // extends FocusAdapter

@@ -15,10 +15,10 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.MultiPageEditorActionBarContributor;
-import org.eclipse.wst.sse.ui.ISourceViewerActionBarContributor;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.extension.ExtendedEditorActionBuilder;
 import org.eclipse.wst.sse.ui.extension.IExtendedContributor;
+import org.eclipse.wst.sse.ui.internal.ISourceViewerActionBarContributor;
+import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 
 
 public class SourceEditorActionBarContributor extends MultiPageEditorActionBarContributor implements IExtendedContributor {

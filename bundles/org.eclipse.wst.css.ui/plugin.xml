@@ -30,7 +30,6 @@
       <import plugin="org.eclipse.ui.ide"/>
    </requires>
 
-
    <extension
          point="org.eclipse.ui.editors">
       <editor
@@ -89,7 +88,7 @@
       point="org.eclipse.core.filebuffers.annotationModelCreation">
       <factory
             contentTypeId="org.eclipse.wst.css.core.csssource"
-            class="org.eclipse.wst.sse.ui.StructuredResourceMarkerAnnotationModelFactory"/>
+            class="org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModelFactoryelFactory"/>
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">

@@ -52,7 +52,7 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.document.DocumentReader;
 import org.eclipse.wst.sse.core.internal.encoding.CodedStreamCreator;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 
 /**
  * Creates document change(s) for an IJavaElement rename.

@@ -20,7 +20,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.wst.common.ui.properties.ITabbedPropertySheetPageContributor;
 import org.eclipse.wst.common.ui.properties.TabbedPropertySheetPage;
-import org.eclipse.wst.sse.ui.ViewerSelectionManager;
+import org.eclipse.wst.sse.ui.internal.ViewerSelectionManager;
 import org.eclipse.wst.xsd.ui.internal.XSDSelectionManager;
 import org.eclipse.wst.xsd.ui.internal.graph.model.Category;
 import org.eclipse.wst.xsd.ui.internal.provider.CategoryAdapter;

@@ -12,7 +12,7 @@ package org.eclipse.wst.xml.internal.ui;
 
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.ui.ViewerSelectionManager;
+import org.eclipse.wst.sse.ui.internal.ViewerSelectionManager;
 
 
 public interface IDesignViewer {

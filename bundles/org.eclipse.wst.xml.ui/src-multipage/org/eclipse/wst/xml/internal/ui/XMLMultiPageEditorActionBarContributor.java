@@ -12,7 +12,7 @@ package org.eclipse.wst.xml.internal.ui;
 
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.wst.sse.ui.ISourceViewerActionBarContributor;
+import org.eclipse.wst.sse.ui.internal.ISourceViewerActionBarContributor;
 import org.eclipse.wst.xml.ui.internal.tabletree.XMLTableTreeActionBarContributor;
 
 

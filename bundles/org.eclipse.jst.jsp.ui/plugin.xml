@@ -37,9 +37,8 @@
 		<import plugin="org.eclipse.ltk.ui.refactoring" />
 		<import plugin="org.eclipse.wst.common.uriresolver"/>
 		<import plugin="org.eclipse.ui.ide" />
-  <import plugin="org.eclipse.wst.javascript.ui"/>
+  		<import plugin="org.eclipse.wst.javascript.ui"/>
 	</requires>
-
 
 	<extension point="org.eclipse.ui.editors">
 		<editor name="%JSP_Source_Page_Editor.name"
@@ -108,7 +107,7 @@
 	<extension
 		point="org.eclipse.core.filebuffers.annotationModelCreation">
 		<factory contentTypeId="org.eclipse.jst.jsp.core.jspsource"
-			class="org.eclipse.wst.sse.ui.StructuredResourceMarkerAnnotationModelFactory" />
+			class="org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModelFactoryelFactory" />
 	</extension>
 	<extension point="org.eclipse.ui.preferencePages">
 

@@ -22,7 +22,7 @@ import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.actions.SelectionListenerAction;
 import org.eclipse.wst.dtd.core.internal.DTDNode;
 import org.eclipse.wst.dtd.core.internal.document.DTDModelImpl;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 
 
 abstract public class BaseAction extends SelectionListenerAction {

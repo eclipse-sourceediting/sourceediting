@@ -32,7 +32,6 @@
 
    </requires>
 
-
    <extension
          point="org.eclipse.ui.editors">
       <editor
@@ -107,7 +106,7 @@
       point="org.eclipse.core.filebuffers.annotationModelCreation">
       <factory
             contentTypeId="org.eclipse.core.runtime.xml"
-            class="org.eclipse.wst.sse.ui.StructuredResourceMarkerAnnotationModelFactory"/>
+            class="org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModelFactoryelFactory"/>
    </extension>
    <extension
          point="org.eclipse.wst.sse.ui.adapterFactoryDescription">

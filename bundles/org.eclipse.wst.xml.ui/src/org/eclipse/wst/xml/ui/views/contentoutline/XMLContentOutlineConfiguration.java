@@ -30,7 +30,7 @@ import org.eclipse.wst.common.ui.dnd.ObjectTransfer;
 import org.eclipse.wst.common.ui.dnd.ViewerDragAdapter;
 import org.eclipse.wst.common.ui.dnd.ViewerDropAdapter;
 import org.eclipse.wst.sse.core.IAdapterFactory;
-import org.eclipse.wst.sse.ui.IReleasable;
+import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
 import org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration;
 import org.eclipse.wst.xml.ui.dnd.XMLDragAndDropManager;

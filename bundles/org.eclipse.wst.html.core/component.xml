@@ -7,4 +7,8 @@
 	<package name="org.eclipse.wst.html.core" />
 	<package name="org.eclipse.wst.html.core.contenttype" />
 	<package name="org.eclipse.wst.html.core.text" />
+	
+	<!-- ui -->
+	<package name="org.eclipse.wst.html.ui" />
+	
 </component>

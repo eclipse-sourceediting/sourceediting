@@ -15,7 +15,7 @@ package org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions;
 import org.eclipse.wst.dtd.core.internal.DTDFile;
 import org.eclipse.wst.dtd.core.internal.DTDNode;
 import org.eclipse.wst.dtd.core.internal.util.DTDUniqueNameHelper;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 
 
 public class AddElementAction extends BaseAction {

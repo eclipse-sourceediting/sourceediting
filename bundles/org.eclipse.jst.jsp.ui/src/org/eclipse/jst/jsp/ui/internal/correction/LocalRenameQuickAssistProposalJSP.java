@@ -38,7 +38,7 @@ import org.eclipse.jst.jsp.core.internal.java.JSPTranslationUtil;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.texteditor.link.EditorLinkedModeUI;
-import org.eclipse.wst.sse.ui.StructuredTextViewer;
+import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 
 /**
  * This is a copy of

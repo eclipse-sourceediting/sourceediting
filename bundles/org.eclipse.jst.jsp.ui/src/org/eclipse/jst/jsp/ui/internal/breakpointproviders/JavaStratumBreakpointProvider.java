@@ -31,9 +31,9 @@ import org.eclipse.jst.jsp.core.text.IJSPPartitions;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
-import org.eclipse.wst.sse.ui.StructuredResourceMarkerAnnotationModel;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.IBreakpointProvider;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.SourceEditingTextTools;
+import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 

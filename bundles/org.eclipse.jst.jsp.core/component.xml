@@ -10,4 +10,7 @@
 	<package name="org.eclipse.jst.jsp.core.contenttype" />
 	<package name="org.eclipse.jst.jsp.core.text" />
 	
+	<!-- ui -->
+	<package name="org.eclipse.jst.jsp.ui" />
+	
 </component>

@@ -17,7 +17,7 @@ import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.ui.texteditor.ITextEditorExtension3;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.ui.StructuredDocumentCommand;
+import org.eclipse.wst.sse.ui.internal.StructuredDocumentCommand;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.ui.internal.autoedit.StructuredAutoEditStrategyXML;
 
