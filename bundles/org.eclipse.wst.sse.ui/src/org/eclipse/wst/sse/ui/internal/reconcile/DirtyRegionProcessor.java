@@ -47,10 +47,10 @@ import org.eclipse.wst.sse.ui.internal.Logger;
  * @author pavery
  */
 public class DirtyRegionProcessor extends Job implements IReconciler {
-
-    private static final long UPDATE_DELAY = 750;
     /** debug flag */
     protected static final boolean DEBUG;
+
+    private static final long UPDATE_DELAY = 750;
     static {
         String value = Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/reconcilerjob"); //$NON-NLS-1$
         DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
@@ -63,9 +63,6 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 
     /** document that this reconciler works on */
     private IDocument fDocument = null;
-
-    /** Are there incremental reconciling strategies? */
-    private boolean fIsIncrementalReconciler = true;
 
     /**
      * set true after first install to prevent duplicate work done in the
@@ -102,7 +99,6 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
         setLocalProgressMonitor(new NullProgressMonitor());
         fDirtyRegionQueue = Collections.synchronizedList(new ArrayList());
         // init reconciler stuff
-        setIsIncrementalReconciler(true);
         setDelay(UPDATE_DELAY);
     }
 
@@ -130,8 +126,20 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
         drq.add(dr);
     }
 
-    protected List getDirtyRegionQueue() {
-       return fDirtyRegionQueue;
+    /**
+     * @param dirtyRegion
+     * @return
+     */
+    protected ITypedRegion[] computePartitioning(DirtyRegion dirtyRegion) {
+        IDocument doc = getDocument();
+        ITypedRegion tr[] = new ITypedRegion[0];
+        try {
+            // dirty region may span multiple partitions
+            tr = TextUtilities.computePartitioning(doc, getDocumentPartitioning(), dirtyRegion.getOffset(), dirtyRegion.getLength(), true);
+        } catch (BadLocationException e) {
+            Logger.logException(e);
+        }
+        return tr;
     }
 
     /**
@@ -139,7 +147,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
      *         false
      */
     protected boolean contains(DirtyRegion root, DirtyRegion possible) {
-        // possibly get the corresponding nodes?
+
         int rootStart = root.getOffset();
         int rootEnd = rootStart + root.getLength();
         int possStart = possible.getOffset();
@@ -147,11 +155,6 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
         if(rootStart <= possStart && rootEnd >= possEnd)
             return true;
         return false;
-    }
-
-
-    protected DirtyRegion createDirtyRegion(ITypedRegion tr, String type) {
-        return createDirtyRegion(tr.getOffset(), tr.getLength(), type);
     }
     
     protected DirtyRegion createDirtyRegion(int offset, int length, String type) {
@@ -172,20 +175,8 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
         return durty;
     }
 
-    /**
-     * Gets a strategy that is made to handle the given dirtyRegion.
-     * 
-     * @param dirtyRegion
-     * @return a strategy that is made to handle the given dirtyRegion, or the
-     *         default strategy for this reconciler if there isn't one
-     */
-    protected IReconcilingStrategy getStrategy(DirtyRegion dirtyRegion) {
-        String[] partitions = getPartitions(dirtyRegion);
-        // for now just grab first partition type in dirty region
-        IReconcilingStrategy rs = null;
-        if (partitions.length > 0)
-            rs = getReconcilingStrategy(partitions[0]);
-        return rs;
+    protected DirtyRegion createDirtyRegion(ITypedRegion tr, String type) {
+        return createDirtyRegion(tr.getOffset(), tr.getLength(), type);
     }
     /**
      * Delay between processing of DirtyRegions.
@@ -193,6 +184,10 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
      */
     protected long getDelay() {
         return fDelay;
+    }
+
+    protected List getDirtyRegionQueue() {
+       return fDirtyRegionQueue;
     }
     /**
      * The IDocument on which this reconciler operates
@@ -208,10 +203,6 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
      */
     public String getDocumentPartitioning() {
         return fPartitioning;
-    }
-
-    protected boolean getIsIncrementalRecocniler() {
-        return fIsIncrementalReconciler;
     }
 
     /**
@@ -267,6 +258,31 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
     }
 
     /**
+     * Gets a strategy that is made to handle the given dirtyRegion.
+     * 
+     * @param dirtyRegion
+     * @return a strategy that is made to handle the given dirtyRegion, or the
+     *         default strategy for this reconciler if there isn't one
+     */
+    protected IReconcilingStrategy getStrategy(DirtyRegion dirtyRegion) {
+        String[] partitions = getPartitions(dirtyRegion);
+        // for now just grab first partition type in dirty region
+        IReconcilingStrategy rs = null;
+        if (partitions.length > 0)
+            rs = getReconcilingStrategy(partitions[0]);
+        return rs;
+    }
+    
+    /**
+     * A list of strategy types (keys) for this reconciler.
+     * Each strategy should have a unique key.
+     * @return
+     */
+    public List getStrategyTypes() {
+        return fStrategyTypes;
+    }
+
+    /**
      * Returns the text viewer this reconciler is installed on.
      * 
      * @return the text viewer this reconciler is installed on
@@ -306,6 +322,14 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
     public void noChange(NoChangeEvent structuredDocumentEvent) {
         // do nothing
     }
+    
+    /**
+     * Subclasses should implement for specific handling of dirty regions.
+     * @param dr
+     */
+    protected void process(DirtyRegion dr) {
+        // subclasses should implement
+    }
 
     /**
      * Invoke a refresh on the viewer on the given node.
@@ -325,14 +349,6 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
             System.out.println("added request for: [" + dr.getText() + "]");
             System.out.println("queue size is now: " + getDirtyRegionQueue().size());
         }
-    }
-    
-    /**
-     * Subclasses should implement for specific handling of dirty regions.
-     * @param dr
-     */
-    protected void process(DirtyRegion dr) {
-        // subclasses should implement
     }
     
     /**
@@ -407,10 +423,6 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
         fIsInstalled = isInstalled;
     }
 
-    public void setIsIncrementalReconciler(boolean incremental) {
-        fIsIncrementalReconciler = incremental;
-    }
-
     private void setLocalProgressMonitor(IProgressMonitor pm) {
         fLocalProgressMonitor = pm;
         List strategyTypes = getStrategyTypes();
@@ -454,26 +466,8 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
         }
         getStrategyTypes().add(contentType);
     }
-
-    /**
-     * @param dirtyRegion
-     * @return
-     */
-    protected ITypedRegion[] computePartitioning(DirtyRegion dirtyRegion) {
-        IDocument doc = getDocument();
-        ITypedRegion tr[] = new ITypedRegion[0];
-        try {
-            // dirty region may span multiple partitions
-            tr = TextUtilities.computePartitioning(doc, getDocumentPartitioning(), dirtyRegion.getOffset(), dirtyRegion.getLength(), true);
-        } catch (BadLocationException e) {
-            Logger.logException(e);
-        }
-        return tr;
-    }
     
     /**
-     * Cleanup listeners.
-     * 
      * @see org.eclipse.jface.text.reconciler.IReconciler#uninstall()
      */
     public void uninstall() {
@@ -482,14 +476,5 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
             getLocalProgressMonitor().setCanceled(true);
         }
         setDocument(null);
-    }
-    
-    /**
-     * A list of strategy types (keys) for this reconciler.
-     * Each strategy should have a unique key.
-     * @return
-     */
-    public List getStrategyTypes() {
-        return fStrategyTypes;
     }
 }

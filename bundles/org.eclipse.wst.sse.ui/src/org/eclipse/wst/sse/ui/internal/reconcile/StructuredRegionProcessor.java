@@ -82,28 +82,47 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
     /** for initital reconcile when document is opened */
     private SourceTextInputListener fTextInputListener = null;
     
-    /* (non-Javadoc)
-     * @see org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor#install(org.eclipse.jface.text.ITextViewer)
+    /**
+     * @see org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor#contains(org.eclipse.jface.text.reconciler.DirtyRegion, org.eclipse.jface.text.reconciler.DirtyRegion)
      */
-    public void install(ITextViewer textViewer) {
-        
-        super.install(textViewer);
-        fDisposeListener = new SourceWidgetDisposeListener();
-        fTextInputListener = new SourceTextInputListener();         
-        textViewer.getTextWidget().addDisposeListener(fDisposeListener);
-        textViewer.addTextInputListener(fTextInputListener);
+    protected boolean contains(DirtyRegion root, DirtyRegion possible) {
+        boolean contains = false;
+        IStructuredModel sModel = getStructuredModelForRead(getDocument());
+        try {
+            IndexedRegion rootRegion = sModel.getIndexedRegion(root.getOffset());
+            IndexedRegion possRegion = sModel.getIndexedRegion(possible.getOffset());
+            if(rootRegion != null && possRegion != null) {
+                int rootStart = rootRegion.getStartOffset();
+                int rootEnd = rootRegion.getEndOffset();
+                int possStart = possRegion.getStartOffset();
+                int possEnd = possRegion.getEndOffset();
+
+                if (rootStart <= possStart && rootEnd >= possEnd)
+                    contains = true;
+
+                if (DEBUG)
+                    System.out.println("checking if ["+rootStart + ":" +rootEnd + "] contains [" +possStart + ":" + possEnd +"] ... " + contains);  
+            }     
+        }
+        finally {
+            if(sModel != null)
+                sModel.releaseFromRead();
+        }
+        return contains;
     }
     
-    /**
-     * @see org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor#uninstall()
-     */
-    public void uninstall() {
-        if(isInstalled()) {
-            getTextViewer().removeTextInputListener(fTextInputListener);
-            getTextViewer().getTextWidget().removeDisposeListener(fDisposeListener);
-        }
-        super.uninstall();
-    }
+	/**
+	 * Remember to release model after use!!
+	 * 
+	 * @return
+	 */
+	public IStructuredModel getStructuredModelForRead(IDocument doc) {
+
+		IStructuredModel sModel = null;
+		if (doc != null)
+			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
+		return sModel;
+	}
     /**
      * 
      * @param oldInput
@@ -138,19 +157,6 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
             }
         }
     }
-    
-	/**
-	 * Remember to release model after use!!
-	 * 
-	 * @return
-	 */
-	public IStructuredModel getStructuredModelForRead(IDocument doc) {
-
-		IStructuredModel sModel = null;
-		if (doc != null)
-			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
-		return sModel;
-	}
 
     /**
      * @param document
@@ -165,6 +171,18 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
             if (sModel != null)
                 sModel.releaseFromRead();
         }
+    }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor#install(org.eclipse.jface.text.ITextViewer)
+     */
+    public void install(ITextViewer textViewer) {
+        
+        super.install(textViewer);
+        fDisposeListener = new SourceWidgetDisposeListener();
+        fTextInputListener = new SourceTextInputListener();         
+        textViewer.getTextWidget().addDisposeListener(fDisposeListener);
+        textViewer.addTextInputListener(fTextInputListener);
     }
 	
 	public void newModel(NewDocumentEvent structuredDocumentEvent) {
@@ -248,7 +266,6 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 			}
 		}
 	}
-
 	
 	/**
 	 * @see org.eclipse.wst.sse.core.IModelLifecycleListener#processPreModelEvent(org.eclipse.wst.sse.core.ModelLifecycleEvent)
@@ -288,7 +305,6 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
         super.reconcilerDocumentChanged(newDocument);
     }
 	
-
 	public void regionChanged(RegionChangedEvent structuredDocumentEvent) {
 		if(DEBUG)
             System.out.println("[trace reconciler] >StructuredRegionProcessor: *REGION CHANGED: \r\n\r\n created dirty region from flat model event >> :" + structuredDocumentEvent.getOriginalStart() + ":" + structuredDocumentEvent.getLength() + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -318,6 +334,7 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 			processDirtyRegion(entireDocument);
 		}
 	}
+    
     /**
      * @param document
      */
@@ -334,31 +351,13 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
     }
     
     /**
-     * @see org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor#contains(org.eclipse.jface.text.reconciler.DirtyRegion, org.eclipse.jface.text.reconciler.DirtyRegion)
+     * @see org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor#uninstall()
      */
-    protected boolean contains(DirtyRegion root, DirtyRegion possible) {
-        boolean contains = false;
-        IStructuredModel sModel = getStructuredModelForRead(getDocument());
-        try {
-            IndexedRegion rootRegion = sModel.getIndexedRegion(root.getOffset());
-            IndexedRegion possRegion = sModel.getIndexedRegion(possible.getOffset());
-            if(rootRegion != null && possRegion != null) {
-                int rootStart = rootRegion.getStartOffset();
-                int rootEnd = rootRegion.getEndOffset();
-                int possStart = possRegion.getStartOffset();
-                int possEnd = possRegion.getEndOffset();
-
-                if (rootStart <= possStart && rootEnd >= possEnd)
-                    contains = true;
-
-                if (DEBUG)
-                    System.out.println("checking if ["+rootStart + ":" +rootEnd + "] contains [" +possStart + ":" + possEnd +"] ... " + contains);  
-            }     
+    public void uninstall() {
+        if(isInstalled()) {
+            getTextViewer().removeTextInputListener(fTextInputListener);
+            getTextViewer().getTextWidget().removeDisposeListener(fDisposeListener);
         }
-        finally {
-            if(sModel != null)
-                sModel.releaseFromRead();
-        }
-        return contains;
+        super.uninstall();
     }
 }

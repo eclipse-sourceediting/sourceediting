@@ -26,67 +26,21 @@ import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorStrategy;
  * @author pavery
  */
 public class StructuredRegionProcessorExtension extends StructuredRegionProcessor {
+
+    /** strategy called for unmapped partitions */
+    private IReconcilingStrategy fDefaultStrategy;
     
     /**
      * the strategy that runs validators contributed via reconcileValidator
      * extension point
      */
     private ValidatorStrategy fValidatorStrategy;
-
-    /** strategy called for unmapped partitions */
-    private IReconcilingStrategy fDefaultStrategy;
     
     /**
      * @return Returns the fDefaultStrategy.
      */
     public IReconcilingStrategy getDefaultStrategy() {
         return fDefaultStrategy;
-    }
-    /**
-     * @param defaultStrategy The fDefaultStrategy to set.
-     */
-    public void setDefaultStrategy(IReconcilingStrategy defaultStrategy) {
-        fDefaultStrategy = defaultStrategy;
-        if(fDefaultStrategy != null) {
-            fDefaultStrategy.setDocument(getDocument());
-            if (fDefaultStrategy instanceof IReconcilingStrategyExtension)
-                ((IReconcilingStrategyExtension) fDefaultStrategy).setProgressMonitor(getLocalProgressMonitor());
-        }
-    }
-    /**
-     * @return Returns the fValidatorStrategy.
-     */
-    public ValidatorStrategy getValidatorStrategy() {
-        return fValidatorStrategy;
-    }
-    /**
-     * @param validatorStrategy The fValidatorStrategy to set.
-     */
-    public void setValidatorStrategy(ValidatorStrategy validatorStrategy) {
-        fValidatorStrategy = validatorStrategy;
-        if (fValidatorStrategy != null) {
-            fValidatorStrategy.setDocument(getDocument());
-            fValidatorStrategy.setProgressMonitor(getLocalProgressMonitor());
-        }
-    }
-    
-    /**
-     * @see org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor#setDocumentOnAllStrategies(org.eclipse.jface.text.IDocument)
-     */
-    protected void setDocumentOnAllStrategies(IDocument document) {
-        
-        super.setDocumentOnAllStrategies(document);
-        
-        IReconcilingStrategy defaultStrategy = getDefaultStrategy();
-        IReconcilingStrategy validatorStrategy = getValidatorStrategy();
-        
-        // default strategies
-        if (defaultStrategy != null)
-            defaultStrategy.setDocument(document);
-
-        // external validator strategy
-        if (validatorStrategy != null)
-            validatorStrategy.setDocument(document);
     }
     
     /**
@@ -97,6 +51,12 @@ public class StructuredRegionProcessorExtension extends StructuredRegionProcesso
         if(strategy == null)
             strategy = getDefaultStrategy();
         return strategy;
+    }
+    /**
+     * @return Returns the fValidatorStrategy.
+     */
+    public ValidatorStrategy getValidatorStrategy() {
+        return fValidatorStrategy;
     }
     
     /**
@@ -120,6 +80,46 @@ public class StructuredRegionProcessorExtension extends StructuredRegionProcesso
             // validator for this partition
             if (fValidatorStrategy != null)
                 fValidatorStrategy.reconcile(tr[i], durty, false);
+        }
+    }
+    /**
+     * @param defaultStrategy The fDefaultStrategy to set.
+     */
+    public void setDefaultStrategy(IReconcilingStrategy defaultStrategy) {
+        fDefaultStrategy = defaultStrategy;
+        if(fDefaultStrategy != null) {
+            fDefaultStrategy.setDocument(getDocument());
+            if (fDefaultStrategy instanceof IReconcilingStrategyExtension)
+                ((IReconcilingStrategyExtension) fDefaultStrategy).setProgressMonitor(getLocalProgressMonitor());
+        }
+    }
+    
+    /**
+     * @see org.eclipse.wst.sse.ui.internal.reconcile.DirtyRegionProcessor#setDocumentOnAllStrategies(org.eclipse.jface.text.IDocument)
+     */
+    protected void setDocumentOnAllStrategies(IDocument document) {
+        
+        super.setDocumentOnAllStrategies(document);
+        
+        IReconcilingStrategy defaultStrategy = getDefaultStrategy();
+        IReconcilingStrategy validatorStrategy = getValidatorStrategy();
+        
+        // default strategies
+        if (defaultStrategy != null)
+            defaultStrategy.setDocument(document);
+
+        // external validator strategy
+        if (validatorStrategy != null)
+            validatorStrategy.setDocument(document);
+    }
+    /**
+     * @param validatorStrategy The fValidatorStrategy to set.
+     */
+    public void setValidatorStrategy(ValidatorStrategy validatorStrategy) {
+        fValidatorStrategy = validatorStrategy;
+        if (fValidatorStrategy != null) {
+            fValidatorStrategy.setDocument(getDocument());
+            fValidatorStrategy.setProgressMonitor(getLocalProgressMonitor());
         }
     }
 
