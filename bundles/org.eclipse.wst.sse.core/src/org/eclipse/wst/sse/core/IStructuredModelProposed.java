@@ -12,15 +12,12 @@
 package org.eclipse.wst.sse.core;
 
 import java.io.IOException;
-import java.io.InputStream;
 
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.wst.sse.core.exceptions.ResourceInUse;
-import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
-import org.eclipse.wst.sse.core.util.URIResolver;
 
 
 /**
@@ -30,7 +27,6 @@ import org.eclipse.wst.sse.core.util.URIResolver;
  * 
  * @since 1.0
  * 
- * ISSUE: this interface needs ton of cleanup!
  */
 public interface IStructuredModelProposed extends IAdaptable {
 
@@ -57,39 +53,7 @@ public interface IStructuredModelProposed extends IAdaptable {
 	 */
 	void aboutToChangeModel();
 
-	void addModelLifecycleListener(IModelLifecycleListener listener);
-
 	void addModelStateListener(IModelStateListener listener);
-
-	/**
-	 * Begin recording undo transactions.
-	 */
-	void beginRecording(Object requester);
-
-	/**
-	 * Begin recording undo transactions.
-	 */
-	void beginRecording(Object requester, int cursorPosition, int selectionLength);
-
-	/**
-	 * Begin recording undo transactions.
-	 */
-	void beginRecording(Object requester, String label);
-
-	/**
-	 * Begin recording undo transactions.
-	 */
-	void beginRecording(Object requester, String label, int cursorPosition, int selectionLength);
-
-	/**
-	 * Begin recording undo transactions.
-	 */
-	void beginRecording(Object requester, String label, String description);
-
-	/**
-	 * Begin recording undo transactions.
-	 */
-	void beginRecording(Object requester, String label, String description, int cursorPosition, int selectionLength);
 
 	/**
 	 * This API allows a client controlled way of notifying all ModelEvent
@@ -105,40 +69,18 @@ public interface IStructuredModelProposed extends IAdaptable {
 	 */
 	void changedModel();
 
-	long computeModificationStamp(IResource resource);
-
-	/**
-	 * Disable undo management.
-	 */
-	void disableUndoManagement();
-
-	/**
-	 * Enable undo management.
-	 */
-	void enableUndoManagement();
-
-	/**
-	 * End recording undo transactions.
-	 */
-	void endRecording(Object requester);
-
-	/**
-	 * End recording undo transactions.
-	 */
-	void endRecording(Object requester, int cursorPosition, int selectionLength);
-
 	/**
 	 * This is a client-defined value for what that client (and/or loader)
 	 * considers the "base" of the structured model. Frequently the location
 	 * is either a workspace root-relative path of a workspace resource or an
 	 * absolute path in the local file system.
 	 */
-	String getBaseLocation();
+	IPath getLocation();
 
 	/**
 	 * @return The associated content type identifier (String) for this model.
 	 */
-	String getContentTypeIdentifier();
+	IContentType getContentType() throws CoreException;
 
 	/**
 	 * 
@@ -147,77 +89,24 @@ public interface IStructuredModelProposed extends IAdaptable {
 	FactoryRegistry getFactoryRegistry();
 
 	/**
-	 * The id is the id that the model manager uses to identify this model
-	 */
-	String getId();
-
-	/**
-	 * 
+	 * Return the index region at offset. Returns null if there is no
+	 * IndexedRegion that contains offset.
 	 */
 	IndexedRegion getIndexedRegion(int offset);
 
 	/**
-	 * ContentTypeDescription provides an object that describes what the
-	 * content of the file is, e.g. HTML, XML, etc. Compare with
-	 * getExternalFileTypeDescription. Though they both return objects of type
-	 * ContentTypeDescription, the external file type is intended to denote
-	 * JSP, regardless of what the content of that JSP file is. Even for a JSP
-	 * file, the ContentTypeDescription will be set according to that file's
-	 * "internal" contents.
+	 * ISSUE: do we want to provide this? How to ensure job/thread safety
 	 * 
-	 * @return ContentTypeDescription
+	 * @return
 	 */
-	IModelHandler getModelHandler();
-
-	IModelManager getModelManager();
+	IndexedRegion[] getIndexedRegions();
 
 	/**
-	 * This function returns the reference count of underlying model.
+	 * Rreturns the IStructuredDocument that underlies this model
 	 * 
-	 * @param id
-	 *            Object The id of the model TODO: try to refine the design
-	 *            not to use this function
+	 * @return
 	 */
-	int getReferenceCount();
-
-	/**
-	 * This function returns the reference count of underlying model.
-	 * 
-	 * @param id
-	 *            Object The id of the model TODO: try to refine the design
-	 *            not to use this function
-	 */
-	int getReferenceCountForEdit();
-
-	/**
-	 * This function returns the reference count of underlying model.
-	 * 
-	 * @param id
-	 *            Object The id of the model TODO: try to refine the design
-	 *            not to use this function
-	 */
-	int getReferenceCountForRead();
-
-	Object getReinitializeStateData();
-
-	/**
-	 * Get URI resolution helper
-	 */
-	URIResolver getResolver();
-
 	IStructuredDocument getStructuredDocument();
-
-	/**
-	 * modification date of underlying resource, when this model was open, or
-	 * last saved. (Note: for this version, the client must manage the
-	 * accuracy of this data)
-	 */
-	long getSynchronizationStamp();
-
-	/**
-	 * Get undo manager.
-	 */
-	IStructuredTextUndoManager getUndoManager();
 
 	/**
 	 * 
@@ -245,24 +134,6 @@ public interface IStructuredModelProposed extends IAdaptable {
 	public boolean isSaveNeeded();
 
 	/**
-	 * This function returns true if either isSharedForRead or isSharedForEdit
-	 * is true.
-	 */
-	boolean isShared();
-
-	/**
-	 * This function returns true if there are other references to the
-	 * underlying model.
-	 */
-	boolean isSharedForEdit();
-
-	/**
-	 * This function returns true if there are other references to the
-	 * underlying model.
-	 */
-	boolean isSharedForRead();
-
-	/**
 	 * newInstance is similar to clone, except that the newInstance contains
 	 * no content. Its purpose is so clients can get a temporary, unmanaged,
 	 * model of the same "type" as the original. Note: the client may still
@@ -274,92 +145,5 @@ public interface IStructuredModelProposed extends IAdaptable {
 	 */
 	IStructuredModelProposed newInstance() throws IOException;
 
-	/**
-	 * Performs a reinit procedure. For this model. Note for future: there may
-	 * be a day where the model returned from this method is a different
-	 * instance than the instance it was called on. This will occur when there
-	 * is full support for "save as" type functions, where the model could
-	 * theoretically change completely.
-	 */
-	IStructuredModelProposed reinit() throws IOException;
-
-	/**
-	 * This function allows the model to free up any resources it might be
-	 * using. In particular, itself, as stored in the IModelManager.
-	 * 
-	 */
-	void releaseFromEdit();
-
-	/**
-	 * This function allows the model to free up any resources it might be
-	 * using. In particular, itself, as stored in the IModelManager.
-	 * 
-	 */
-	void releaseFromRead();
-
-	/**
-	 * This function replenishes the model with the resource without saving
-	 * any possible changes. It is used when one editor may be closing, and
-	 * specifially says not to save the model, but another "display" of the
-	 * model still needs to hang on to some model, so needs a fresh copy.
-	 * 
-	 * Only valid for use with managed models.
-	 */
-	IStructuredModelProposed reload(InputStream inputStream) throws IOException;
-
-	void removeModelLifecycleListener(IModelLifecycleListener listener);
-
 	void removeModelStateListener(IModelStateListener listener);
-
-	/**
-	 * A method that modififies the model's synchonization stamp to match the
-	 * resource. Turns out there's several ways of doing it, so this ensures a
-	 * common algorithm.
-	 */
-	void resetSynchronizationStamp(IResource resource);
-
-	void resourceDeleted();
-
-	void resourceMoved(IStructuredModelProposed newModel);
-
-	public void setDirtyState(boolean dirtyState);
-
-	void setFactoryRegistry(FactoryRegistry registry);
-
-	/**
-	 * The id is the id that the model manager uses to identify this model
-	 */
-	void setId(String id) throws ResourceInUse;
-
-	void setModelHandler(IModelHandler modelHandler);
-
-	void setModelManager(IModelManager modelManager);
-
-	public void setNewState(boolean newState);
-
-	/**
-	 * Sets a "flag" that reinitialization is needed.
-	 */
-	void setReinitializeNeeded(boolean b);
-
-	/**
-	 * Holds any data that the reinit procedure might find useful in
-	 * reinitializing the model. This is handy, since the reinitialization may
-	 * not take place at once, and some "old" data may be needed to properly
-	 * undo previous settings. Note: the parameter was intentially made to be
-	 * of type 'Object' so different models can use in different ways.
-	 */
-	void setReinitializeStateData(Object object);
-
-	/**
-	 * Set the URI resolution helper
-	 */
-	void setResolver(URIResolver uriResolver);
-
-	void setStructuredDocument(IStructuredDocument structuredDocument);
-
-	/**
-	 * Set undo manager.
-	 */
-	void setUndoManager(IStructuredTextUndoManager undoManager);
 }

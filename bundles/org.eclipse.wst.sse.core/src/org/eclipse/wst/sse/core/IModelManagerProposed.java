@@ -16,6 +16,7 @@ import java.io.UnsupportedEncodingException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.sse.core.exceptions.ResourceAlreadyExists;
 import org.eclipse.wst.sse.core.exceptions.ResourceInUse;
@@ -75,13 +76,13 @@ public interface IModelManagerProposed {
 	 * changes (or not) if they are the last one holding the model before its
 	 * released.
 	 */
-	final ReadEditType EDIT = new ReadEditType("EDIT"); //$NON-NLS-1$
+	final ReadEditType WRITE = new ReadEditType("WRITE"); //$NON-NLS-1$
 	/**
 	 * Constant to provide compile time safe paramenter. <code>READ</code>signifies
 	 * the client is not intending to make changes and does not care about the
 	 * saved state of the model.
 	 */
-	final ReadEditType READ = new ReadEditType("READ"); //$NON-NLS-1$
+	final ReadEditType SHARED = new ReadEditType("SHARED"); //$NON-NLS-1$
 	/**
 	 * Constant to provide compile time safe paramenter.
 	 * <code>NOTSHARED</code>signifies the client intentially wants a model
@@ -95,8 +96,10 @@ public interface IModelManagerProposed {
 	 * text content. Note: this produces an UNSHARED model, for temporary use,
 	 * that has the same characteristics as original model. If a true shared
 	 * model is desired, use "copy".
+	 * 
+	 * ISSUE: still needed?
 	 */
-	public IStructuredModel createNewInstance(IStructuredModel model) throws IOException;
+	public IStructuredModel createNewInstance(Object requester, IStructuredModel model) throws IOException;
 
 	/**
 	 * Returns the model, if it already exists and is being shared. Returns
@@ -106,7 +109,7 @@ public interface IModelManagerProposed {
 	 * @param type
 	 * @return
 	 */
-	public IStructuredModel getExistingModel(IPath location, ReadEditType type);
+	public IStructuredModel getExistingModel(Object requester, ReadEditType type, IPath location);
 
 	/**
 	 * Returns the model that has the specified document as its core text
@@ -116,7 +119,7 @@ public interface IModelManagerProposed {
 	 * @param type
 	 * @return
 	 */
-	public IStructuredModel getModel(IDocument document, ReadEditType type);
+	public IStructuredModel getModel(Object requester, ReadEditType type, IProgressMonitor progressMonitor, IDocument document);
 
 	/**
 	 * Returns the model based on the content at the specified location.
@@ -125,42 +128,7 @@ public interface IModelManagerProposed {
 	 * @param type
 	 * @return
 	 */
-	public IStructuredModel getModel(IPath location, ReadEditType type) throws IOException, CoreException;
-
-	/**
-	 * This method can be called to determine if the model manager is within a
-	 * "aboutToChangeModels" and "changedModels" sequence.
-	 */
-	public boolean isStateChanging();
-
-	/**
-	 * This API allows clients to declare that they are about to make a
-	 * "large" change to many models.
-	 * 
-	 * In the case of embedded calls, the notification is just sent once.
-	 */
-	void aboutToChangeModels();
-
-	/**
-	 * Adds a model manager listener.
-	 * 
-	 * @param listener
-	 */
-	void addModelManagerListener(IModelManagerListener listener);
-
-	/**
-	 * This API allows a client controlled way of notifying all ModelEvent
-	 * listners that the model has been changed. This method is a matched pair
-	 * to aboutToChangeModel, and must be called after aboutToChangeModel ...
-	 * or some listeners could be left waiting indefinitely for the changed
-	 * event. So, its suggested that changedModel always be in a finally
-	 * clause. Likewise, a client should never call changedModel without
-	 * calling aboutToChangeModel first.
-	 * 
-	 * In the case of embedded calls, the notification is just sent once.
-	 * 
-	 */
-	void changedModels();
+	public IStructuredModel getModel(Object requester, ReadEditType type, IProgressMonitor progressMonitor, IPath location) throws IOException, CoreException;
 
 	/**
 	 * copyModel is similar to a deep clone. The resulting model is shared,
@@ -173,6 +141,10 @@ public interface IModelManagerProposed {
 	 * @param newId
 	 * @return
 	 * @throws ResourceInUse
+	 * 
+	 * 
+	 * ISSUE: is this important enough to be API, or can clients solve
+	 * themselves
 	 */
 	IStructuredModel copyModel(IPath oldLocation, IPath newLocation, ReadEditType type) throws ResourceInUse;
 
@@ -184,16 +156,20 @@ public interface IModelManagerProposed {
 	 * the right API to use.
 	 * 
 	 * ISSUE: do we want to support this via model manager, or else where?
+	 * ISSUE: do we need two of these? What's legacy use case?
 	 */
-	IStructuredDocument createNewStructuredDocumentFor(IPath location) throws ResourceAlreadyExists, IOException, CoreException;
+	IStructuredDocument createNewStructuredDocumentFor(IPath location, IProgressMonitor progressMonitor) throws ResourceAlreadyExists, IOException, CoreException;
 
 	/**
 	 * Factory method, since a proper IStructuredDocument must have a proper
 	 * parser assigned. Note: clients should verify IFile exists before using
 	 * this method. If this IFile does not exist, then
 	 * createNewStructuredDocument is the correct API to use.
+	 * 
+	 * ISSUE: do we want to support this via model manager, or else where?
+	 * ISSUE: do we need two of these? What's legacy use case?
 	 */
-	IStructuredDocument createStructuredDocumentFor(IPath location) throws IOException, CoreException;
+	IStructuredDocument createStructuredDocumentFor(IPath location, IProgressMonitor progressMonitor) throws IOException, CoreException;
 
 	/**
 	 * Note: users of this 'model' must still release it when finished.
@@ -202,7 +178,7 @@ public interface IModelManagerProposed {
 	 * ISSUE: should we accept IDocument on parameter for future evolution,
 	 * and constrain to StructuredDocuments at runtime?
 	 */
-	IStructuredModel getExistingModel(IDocument document, ReadEditType type);
+	IStructuredModel getExistingModel(Object requester, ReadEditType type, IDocument document);
 
 	/**
 	 * This method will not create a new model if it already exists ... if
@@ -210,7 +186,7 @@ public interface IModelManagerProposed {
 	 * with force set to false. If the exception is thrown, then prompt client
 	 * if they want to overwrite.
 	 */
-	IStructuredModel getNewModel(IPath location, boolean force, ReadEditType type) throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException;
+	IStructuredModel getNewModel(Object requester, IPath location, boolean force, ReadEditType type, IProgressMonitor progressMonitor) throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException;
 
 	/**
 	 * This function returns true if there are other references to the
@@ -238,23 +214,33 @@ public interface IModelManagerProposed {
 
 
 	/**
-	 * Removes listener. If the listener is is not currently in the list of
-	 * listeners, this call has no effect.
-	 * 
-	 * @param listener
-	 */
-	void removeModelManagerListener(IModelManagerListener listener);
-
-	/**
 	 * Writes the underlying document to the IPath.
+	 * 
+	 * ISSUE: we want to just "dump" contents to location, but need to spec.
+	 * all the different cases of shared, etc.
+	 * 
+	 * ?If to same location as 'get', then same instance of model, If to
+	 * different location (esp. if shared) then need to leave old instance of
+	 * model, create new model, and save to new location. ?
+	 * 
+	 * Cases: IPath is null, write to IPath created with IPath specificed and
+	 * equals IPath created with, write to IPath IPath specified and not
+	 * equals IPath created with, dumps to new IPath, no change in current
+	 * model state.
+	 * 
+	 * ISSUE: think through 'normalization' cases
+	 * 
 	 * 
 	 * @param structuredModel
 	 * @param location
+	 *            normalized?
 	 * @throws UnsupportedEncodingException
 	 * @throws IOException
 	 * @throws CoreException
+	 * 
+	 * ISSUE: resource aleady exists? veto override
 	 */
-	void saveModel(IStructuredModel structuredModel, IPath location) throws UnsupportedEncodingException, IOException, CoreException;
+	void saveModel(IStructuredModel structuredModel, IPath location, IProgressMonitor progressMonitor) throws UnsupportedEncodingException, IOException, CoreException;
 
 	/**
 	 * Writes the underlying document to the IPath if the model is only shared
@@ -267,8 +253,11 @@ public interface IModelManagerProposed {
 	 * @throws UnsupportedEncodingException
 	 * @throws IOException
 	 * @throws CoreException
+	 * 
+	 * ISSUE: is locaiton needed in this case, or just use the one it was
+	 * created with
 	 */
-	void saveModelIfNecessary(IStructuredModel structuredModel, IPath location) throws UnsupportedEncodingException, IOException, CoreException;
+	void saveModelIfNotShared(IStructuredModel structuredModel, IPath location, IProgressMonitor progressMonitor) throws UnsupportedEncodingException, IOException, CoreException;
 
 	/**
 	 * This is used by clients to signify that they are finished with a model
@@ -283,7 +272,6 @@ public interface IModelManagerProposed {
 	 * @param structuredModel
 	 * @param type
 	 */
-
-	void releaseModel(IStructuredModel structuredModel, ReadEditType type);
+	void releaseModel(Object requester, IStructuredModel structuredModel, ReadEditType type);
 
 }
