@@ -315,7 +315,7 @@ public class TypesSection extends AbstractSection
             helper.setType(element, "type", dialog.getSelection());
         }        
 
-      refresh();
+//      refresh();
     }
   }
 

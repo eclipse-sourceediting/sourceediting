@@ -108,7 +108,7 @@ public class XSDSetTypeHelper {
                 // Check if the type is defined in the 'current' file itself.
                 String currentFile = getNormalizedLocation(xsdSchema.getSchemaLocation());
                 IPath currentFilePath = new Path(currentFile);
-                if (currentFilePath.equals(spec.getFileLocation())) {
+                if (currentFilePath.equals(new Path(spec.getFileLocation()))) {
                     exists = true;
                 }
 

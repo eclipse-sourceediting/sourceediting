@@ -217,7 +217,7 @@ public class ComplexTypeSection extends AbstractSection
 
 	    }
 
-      refresh();
+//      refresh();
     }
     else if (e.widget == derivedByCombo)
     {
