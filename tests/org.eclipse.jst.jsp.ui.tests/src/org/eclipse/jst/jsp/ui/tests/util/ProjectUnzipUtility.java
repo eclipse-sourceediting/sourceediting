@@ -34,6 +34,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.wizards.datatransfer.FileSystemStructureProvider;
@@ -144,12 +145,13 @@ public class ProjectUnzipUtility {
 		try {
 			// Specify file to decompress
 			// (nsd) redundant?
-//			String inFileName = inFile.getAbsolutePath(); //"c:/example.zip";
-//			File sourceZipFile = new File(inFileName);
+			// String inFileName = inFile.getAbsolutePath();
+			// //"c:/example.zip";
+			// File sourceZipFile = new File(inFileName);
 			File sourceZipFile = inFile;
 
 			// Specify destination where file will be unzipped
-			//String destinationDirectory =
+			// String destinationDirectory =
 			// "d:/eclipsedev/M5_SSE_TESTS_WORKSPACE/"; //"c:/temp/";
 			File unzipDestinationDirectory = new File(destinationDirectory);
 			// Open Zip file for reading
@@ -159,13 +161,13 @@ public class ProjectUnzipUtility {
 				// Create an enumeration of the entries in the zip file
 				Enumeration zipFileEntries = zipFile.entries();
 				String projectFolderName = null;
-				
+
 				// Process each entry
 				while (zipFileEntries.hasMoreElements()) {
 					// grab a zip file entry
 					ZipEntry entry = (ZipEntry) zipFileEntries.nextElement();
 					String currentEntry = entry.getName();
-					//System.out.println("Extracting: " + entry);
+					// System.out.println("Extracting: " + entry);
 					File destFile = new File(unzipDestinationDirectory, currentEntry);
 					// grab file's parent directory structure
 					File destinationParent = destFile.getParentFile();
@@ -196,11 +198,12 @@ public class ProjectUnzipUtility {
 							importFile(destFile, projectFolderName);
 					}
 					else {
-						// need handle to the main project folder to create containerPath 
+						// need handle to the main project folder to create
+						// containerPath
 						if (projectFolderName == null) {
 							projectFolderName = destFile.getName();
 							fCreatedProjects.add(projectFolderName);
-	
+
 							currentProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectFolderName);
 						}
 					}
@@ -209,7 +212,7 @@ public class ProjectUnzipUtility {
 			finally {
 				zipFile.close();
 			}
-			
+
 			// fixes workspace metadata for the project
 			// for clean startup next run
 			if (currentProject != null) {
@@ -228,10 +231,10 @@ public class ProjectUnzipUtility {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	public void refreshWorkspace() throws CoreException {
-		IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();	
+		IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();
 		IProject[] projects = wsRoot.getProjects();
 		for (int i = 0; i < projects.length; i++) {
 			projects[i].refreshLocal(IResource.DEPTH_INFINITE, null);
@@ -268,12 +271,12 @@ public class ProjectUnzipUtility {
 		final IProject proj = wsRoot.getProject(name);
 		WorkspaceModifyOperation deleteOp = new WorkspaceModifyOperation(proj) {
 			protected void execute(IProgressMonitor monitor) throws CoreException {
-				//				IWorkspaceRoot wsRoot =
+				// IWorkspaceRoot wsRoot =
 				// ResourcesPlugin.getWorkspace().getRoot();
-				//				IProject proj = wsRoot.getProject(name);
+				// IProject proj = wsRoot.getProject(name);
 				if (proj != null && proj.exists()) {
 					proj.clearHistory(null);
-					//proj.close(null);
+					// proj.close(null);
 					proj.refreshLocal(IResource.DEPTH_INFINITE, null);
 					try {
 						proj.delete(true, true, null);
@@ -284,7 +287,7 @@ public class ProjectUnzipUtility {
 						proj.refreshLocal(IResource.DEPTH_INFINITE, null);
 						proj.delete(true, true, null);
 					}
-					//proj = null;
+					// proj = null;
 				}
 				refreshWorkspace();
 			}
@@ -310,22 +313,29 @@ public class ProjectUnzipUtility {
 	}
 
 	public void initJavaProject(String projName) throws CoreException {
+		Platform.getJobManager().beginRule(ResourcesPlugin.getWorkspace().getRoot(), new NullProgressMonitor());
 		// resynch
 		refreshWorkspace();
-		//change prereqs to get this functionality back in
+		// change prereqs to get this functionality back in
 		IProject proj = ResourcesPlugin.getWorkspace().getRoot().getProject(projName);
-		if(!proj.exists())
+		boolean setNatures = false;
+		if (!proj.exists()) {
+			setNatures = true;
 			proj.create(new NullProgressMonitor());
+		}
 		if (!proj.isOpen()) {
 			proj.open(null);
 		}
 		// need to add java nature, or else project won't "exist()" in the
 		// java
 		// element sense
-		String[] natureIds = {"org.eclipse.jdt.core.javanature"};
 		IProjectDescription desc = proj.getDescription();
-		desc.setNatureIds(natureIds);
+		List natures = new ArrayList(Arrays.asList(desc.getNatureIds()));
+		if (!natures.contains(JavaCore.NATURE_ID))
+			natures.add(JavaCore.NATURE_ID);
+		desc.setNatureIds((String[]) natures.toArray(new String[0]));
 		proj.setDescription(desc, new NullProgressMonitor());
+		Platform.getJobManager().endRule(ResourcesPlugin.getWorkspace().getRoot());
 	}
 
 	private void createProject(IProject project, IPath locationPath, IProgressMonitor monitor) throws CoreException {
@@ -360,22 +370,22 @@ public class ProjectUnzipUtility {
 		final IProject proj = fProject;
 		WorkspaceModifyOperation deleteOp = new WorkspaceModifyOperation(proj) {
 			protected void execute(IProgressMonitor monitor) throws CoreException {
-				//				IWorkspaceRoot wsRoot =
+				// IWorkspaceRoot wsRoot =
 				// ResourcesPlugin.getWorkspace().getRoot();
-				//				IProject proj = wsRoot.getProject(name);
+				// IProject proj = wsRoot.getProject(name);
 				if (proj != null && proj.exists()) {
 					proj.clearHistory(null);
-					//proj.close(null);
+					// proj.close(null);
 					proj.refreshLocal(IResource.DEPTH_INFINITE, null);
 					proj.delete(true, true, null);
-					//proj = null;
+					// proj = null;
 				}
 				refreshWorkspace();
 			}
 		};
-		//WorkspaceProgressMonitor progress = new WorkspaceProgressMonitor();
+		// WorkspaceProgressMonitor progress = new WorkspaceProgressMonitor();
 		deleteOp.run(null);
 		// saves the new workspace metadata
-		//ResourcesPlugin.getWorkspace().save(true, null);
+		// ResourcesPlugin.getWorkspace().save(true, null);
 	}
 }
