@@ -21,8 +21,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
-import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
+import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
 
 /**

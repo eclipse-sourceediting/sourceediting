@@ -21,8 +21,8 @@ import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.tests.Logger;
-import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
+import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
 
 /**
