@@ -1314,7 +1314,12 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 * @since 3.0
 	 */
 	public IDocumentPartitioner getDocumentPartitioner(String partitioning) {
-		return fDocumentPartitioners != null ? (IDocumentPartitioner) fDocumentPartitioners.get(partitioning) : null;
+
+		IDocumentPartitioner documentPartitioner = null;
+		if (fDocumentPartitioners != null) {
+			documentPartitioner = (IDocumentPartitioner) fDocumentPartitioners.get(partitioning);
+		}
+		return documentPartitioner;
 	}
 
 	/**
@@ -2182,7 +2187,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			}
 		}
 	}
-	
+
 	/**
 	 * This method is for INTERNAL USE ONLY and is NOT API.
 	 * 
@@ -2198,17 +2203,18 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		clearReadOnly();
 
 		acquireLock();
-
-		CharSequenceReader subSetTextStoreReader = new CharSequenceReader((CharSequence) getStore(), 0, getStore().getLength());
-		resetParser(subSetTextStoreReader, 0);
-		//
-		setCachedDocumentRegion(getParser().getDocumentRegions());
-		// when starting afresh, our cachedNode should be our firstNode,
-		// so be sure to initialize the firstNode and lastNode
-		initializeFirstAndLastDocumentRegion();
-		StructuredDocumentRegionIterator.setParentDocument(getCachedDocumentRegion(), this);
-
-		releaseLock();
+		try {
+			CharSequenceReader subSetTextStoreReader = new CharSequenceReader((CharSequence) getStore(), 0, getStore().getLength());
+			resetParser(subSetTextStoreReader, 0);
+			//
+			setCachedDocumentRegion(getParser().getDocumentRegions());
+			// when starting afresh, our cachedNode should be our firstNode,
+			// so be sure to initialize the firstNode and lastNode
+			initializeFirstAndLastDocumentRegion();
+			StructuredDocumentRegionIterator.setParentDocument(getCachedDocumentRegion(), this);
+		} finally {
+			releaseLock();
+		}
 
 		resumePostNotificationProcessing();
 	}
@@ -2367,13 +2373,29 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	public void setDocumentPartitioner(String partitioning, IDocumentPartitioner partitioner) {
 		if (partitioner == null) {
 			if (fDocumentPartitioners != null) {
-				fDocumentPartitioners.remove(partitioning);
+				IDocumentPartitioner documentPartitioner = (IDocumentPartitioner) fDocumentPartitioners.get(partitioning);
+				// a partioner of null means: if already had a partioner for partioning, remove it
+				if (documentPartitioner != null) {
+					fDocumentPartitioners.remove(partitioning);
+					// assuming a diconnect if never connected is harmless
+					documentPartitioner.disconnect();
+				}
 				if (fDocumentPartitioners.size() == 0)
 					fDocumentPartitioners = null;
 			}
 		} else {
-			if (fDocumentPartitioners == null)
+			if (fDocumentPartitioners == null) {
 				fDocumentPartitioners = new HashMap();
+			}
+			// if some clients accidently add a partitioner twice, but we
+			// want to be sure we have only one per partioning, so
+			// if one already exists, remove it.
+			if (fDocumentPartitioners.containsKey(partitioning)) {
+				IDocumentPartitioner documentPartitioner = (IDocumentPartitioner) fDocumentPartitioners.get(partitioning);
+				fDocumentPartitioners.remove(partitioning);
+				// assuming a diconnect if never connected is harmless
+				documentPartitioner.disconnect();
+			}
 			fDocumentPartitioners.put(partitioning, partitioner);
 		}
 		DocumentPartitioningChangedEvent event = new DocumentPartitioningChangedEvent(this);
@@ -2460,19 +2482,21 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 
 		acquireLock();
 
-		getStore().set(theString);
-		getTracker().set(theString);
-		//
-		CharSequenceReader subSetTextStoreReader = new CharSequenceReader((CharSequence) getStore(), 0, getStore().getLength());
-		resetParser(subSetTextStoreReader, 0);
-		//
-		setCachedDocumentRegion(getParser().getDocumentRegions());
-		// when starting afresh, our cachedNode should be our firstNode,
-		// so be sure to initialize the firstNode and lastNode
-		initializeFirstAndLastDocumentRegion();
-		StructuredDocumentRegionIterator.setParentDocument(getCachedDocumentRegion(), this);
-
-		releaseLock();
+		try {
+			getStore().set(theString);
+			getTracker().set(theString);
+			//
+			CharSequenceReader subSetTextStoreReader = new CharSequenceReader((CharSequence) getStore(), 0, getStore().getLength());
+			resetParser(subSetTextStoreReader, 0);
+			//
+			setCachedDocumentRegion(getParser().getDocumentRegions());
+			// when starting afresh, our cachedNode should be our firstNode,
+			// so be sure to initialize the firstNode and lastNode
+			initializeFirstAndLastDocumentRegion();
+			StructuredDocumentRegionIterator.setParentDocument(getCachedDocumentRegion(), this);
+		} finally {
+			releaseLock();
+		}
 
 		result = new NewDocumentEvent(this, requester);
 		fireStructuredDocumentEvent(result);
