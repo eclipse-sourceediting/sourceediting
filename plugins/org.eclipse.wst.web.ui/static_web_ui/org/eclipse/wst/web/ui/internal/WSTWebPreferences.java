@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.Preferences;
 
 public class WSTWebPreferences {
 	public interface Keys {
-		final static String STATIC_WEB_CONTENT = "com.ibm.wtp.j2ee.preference.staticWebContentName"; //$NON-NLS-1$
+		final static String STATIC_WEB_CONTENT = "org.eclipse.jst.j2ee.preference.staticWebContentName"; //$NON-NLS-1$
 	}
 	public interface Values {
 		final static String STATIC_WEB_CONTENT = "WebContent"; //$NON-NLS-1$
