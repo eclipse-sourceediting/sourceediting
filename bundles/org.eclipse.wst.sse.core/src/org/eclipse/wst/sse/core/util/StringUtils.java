@@ -293,6 +293,11 @@ public class StringUtils {
 		return escapedBuffer.toString();
 	}
 
+	/**
+	 * Returns the first line of the given text without a trailing delimiter
+	 * @param text
+	 * @return
+	 */
 	public static String firstLineOf(String text) {
 		if (text == null || text.length() < 1) {
 			return text;
