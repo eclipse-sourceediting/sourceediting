@@ -229,6 +229,8 @@ public class TaglibController implements IDocumentSetupParticipant {
 
 	List fJSPdocuments;
 
+	// This constructor is only to be called as part of the FileBuffer
+	// framework
 	public TaglibController() {
 		super();
 		fBufferListener = new FileBufferListener();
