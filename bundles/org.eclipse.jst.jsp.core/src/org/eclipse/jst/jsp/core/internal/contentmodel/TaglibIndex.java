@@ -57,10 +57,12 @@ import org.eclipse.wst.xml.uriresolver.util.URIHelper;
 public class TaglibIndex {
 
 	class ClasspathChangeListener implements IElementChangedListener {
-		Stack projectStack = new Stack();
+		Stack classpathStack = new Stack();
+		List projectsIndexed = new ArrayList(1);
 
 		public void elementChanged(ElementChangedEvent event) {
-			projectStack.clear();
+			classpathStack.clear();
+			projectsIndexed.clear();
 			elementChanged(event.getDelta());
 		}
 
@@ -80,11 +82,12 @@ public class TaglibIndex {
 		}
 
 		private void handleClasspathChange(IJavaProject project) {
-			projectStack.push(project.getElementName());
+			classpathStack.push(project.getElementName());
 			try {
 				/* Handle changes to this project's build path */
 				IResource resource = project.getCorrespondingResource();
-				if (resource.getType() == IResource.PROJECT) {
+				if (resource.getType() == IResource.PROJECT && !projectsIndexed.contains(resource)) {
+					projectsIndexed.add(resource);
 					boolean classpathIndexIsOld = fProjectDescriptions.containsKey(resource);
 					ProjectDescription description = createDescription((IProject) resource);
 					if (classpathIndexIsOld) {
@@ -100,14 +103,14 @@ public class TaglibIndex {
 				IJavaProject[] projects = project.getJavaModel().getJavaProjects();
 				for (int i = 0; i < projects.length; i++) {
 					IJavaProject otherProject = projects[i];
-					if (StringUtils.contains(otherProject.getRequiredProjectNames(), project.getElementName(), false) && !projectStack.contains(otherProject.getElementName())) {
+					if (StringUtils.contains(otherProject.getRequiredProjectNames(), project.getElementName(), false) && !classpathStack.contains(otherProject.getElementName())) {
 						handleClasspathChange(otherProject);
 					}
 				}
 			}
 			catch (JavaModelException e) {
 			}
-			projectStack.pop();
+			classpathStack.pop();
 		}
 	}
 
