@@ -7,4 +7,6 @@
 	<plugin id="org.eclipse.wst.dtd.validation" />
 	<package name="org.eclipse.wst.dtd.core.contenttype" />
 	<package name="org.eclipse.wst.dtd.core.document" />
+	<package name="org.eclipse.wst.dtd.ui" />
+	<package name="org.eclipse.wst.dtd.ui.views.contentoutline"/>
 </component>
