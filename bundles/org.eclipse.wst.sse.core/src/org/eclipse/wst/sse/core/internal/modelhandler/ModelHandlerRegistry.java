@@ -168,12 +168,9 @@ public class ModelHandlerRegistry {
 		IModelHandler modelHandler = null;
 		IContentType contentType = null;
 		if (inputStream != null) {
-			// XXX: NPE check is temporary for pre-M9 base
 			try {
 				iStream.mark(CodedIO.MAX_MARK_SIZE);
 				contentType = getContentTypeRegistry().findContentTypeFor(Utilities.getLimitedStream(iStream), filename);
-			} catch (NullPointerException e) {
-				System.out.println(contentType);
 			}
 			// XXX: Remove when we build with the fix for Eclipse bug #63625
 			catch (FileNotFoundException fnfe) {
@@ -187,6 +184,10 @@ public class ModelHandlerRegistry {
 		}
 		if (contentType == null) {
 			contentType = getContentTypeRegistry().findContentTypeFor(filename);
+		}
+		// if all else failed, try to detect solely on contents; done last for performance reasons
+		if (contentType == null) {
+			contentType = getContentTypeRegistry().findContentTypeFor(Utilities.getLimitedStream(iStream), null);
 		}
 		modelHandler = getHandlerForContentType(contentType);
 		return modelHandler;
