@@ -13,10 +13,17 @@ org.eclipse.jst.jsp.core/debug/tldcmdocument/manager=false
 # org.eclipse.jst.jsp.core.contentmodel.tld.CMDocumentFactoryTLD._debug
 org.eclipse.jst.jsp.core/debug/tldcmdocument/factory=false
 
-#org.eclipse.jst.jsp.core.internal.contentmodel/index.ProjectDescription._debugIndexCreation
+#org.eclipse.jst.jsp.core.internal.contentmodel.ProjectDescription._debugIndexCreation
 org.eclipse.jst.jsp.core/taglib/indexcreation=false
-#org.eclipse.jst.jsp.core.internal.contentmodel/index.ProjectDescription._debugIndexTime
+#org.eclipse.jst.jsp.core.internal.contentmodel.ProjectDescription._debugIndexTime
 org.eclipse.jst.jsp.core/taglib/indextime=false
+
+#org.eclipse.jst.jsp.core.internal.contentmodel.TaglibIndex._debugEvents
+org.eclipse.jst.jsp.core/taglib/events=false
+#org.eclipse.jst.jsp.core.internal.contentmodel.TaglibIndex._debugIndexCreation
+org.eclipse.jst.jsp.core/taglib/indexcreation=false
+#org.eclipse.jst.jsp.core.internal.contentmodel.TaglibIndex._debugResolution
+org.eclipse.jst.jsp.core/taglib/resolve=false
 
 #org.eclipse.jst.jsp.core.text.rules.StructuredTextPartitioner.debugPrefixListener
 org.eclipse.jst.jsp.core/partitioner/prefixlistener=false
