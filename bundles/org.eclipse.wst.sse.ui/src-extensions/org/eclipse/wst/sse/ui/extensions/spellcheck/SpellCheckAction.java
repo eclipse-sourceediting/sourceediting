@@ -12,7 +12,9 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.extensions.spellcheck;
 
-
+/**
+ * @deprecated - to be removed in M4
+ */
 
 import org.eclipse.ui.texteditor.IUpdate;
 

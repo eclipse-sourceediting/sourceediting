@@ -36,7 +36,7 @@ import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
 import org.osgi.framework.Bundle;
 
 /**
- * Spell Check action
+ * @deprecated - to be removed in M4
  */
 public class SpellCheckActionWrapper extends Action implements IExtendedEditorAction, ISelfValidateEditAction, IPartListener {
 	protected SpellCheckAction action = null;

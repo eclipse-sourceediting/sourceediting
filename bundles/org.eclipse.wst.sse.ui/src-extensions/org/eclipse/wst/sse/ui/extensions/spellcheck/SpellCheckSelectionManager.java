@@ -11,11 +11,8 @@
  *     
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.extensions.spellcheck;
-
-
-
 /**
- * SpellCheckSelectionManager
+ * @deprecated - to be removed in M4
  */
 public interface SpellCheckSelectionManager {
 	void addSpellCheckSelectionListener(SpellCheckSelectionListener listener);

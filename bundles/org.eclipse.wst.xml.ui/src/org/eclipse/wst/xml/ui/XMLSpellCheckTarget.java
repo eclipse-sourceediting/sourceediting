@@ -15,6 +15,9 @@ package org.eclipse.wst.xml.ui;
 import org.eclipse.wst.sse.ui.SpellCheckTargetImpl;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 
+/**
+ * @deprecated - to be removed in M4
+ */
 
 public class XMLSpellCheckTarget extends SpellCheckTargetImpl {
 

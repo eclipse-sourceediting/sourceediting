@@ -13,6 +13,9 @@ package org.eclipse.jst.jsp.ui;
 import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.ui.XMLSpellCheckTarget;
 
+/**
+ * @deprecated - to be removed in M4
+ */
 
 public class JSPSpellCheckTarget extends XMLSpellCheckTarget {
 

@@ -14,11 +14,8 @@ package org.eclipse.wst.sse.ui.extensions.spellcheck;
 
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.ITextEditor;
-
-
-
 /**
- * ISpellCheckTarget
+ * @deprecated - to be removed in M4
  */
 public interface SpellCheckTarget {
 

@@ -27,11 +27,10 @@ import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.extension.RegistryReader;
 import org.osgi.framework.Bundle;
 
-
 /**
- * Reads breakpoint extension registory and returns breakpoint provider
- * instances
+ * @deprecated - to be removed in M4
  */
+
 public class SpellCheckProviderBuilder extends RegistryReader {
 
 	private static final String ATT_CLASS = "class"; //$NON-NLS-1$

@@ -12,11 +12,10 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.extensions.spellcheck;
 
-
-
 /**
- * ISpellCheckSelectinListener
+ * @deprecated - to be removed in M4
  */
+
 public interface SpellCheckSelectionListener {
 	void selectionChanged();
 }

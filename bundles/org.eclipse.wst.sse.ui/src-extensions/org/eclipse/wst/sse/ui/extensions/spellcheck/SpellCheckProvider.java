@@ -14,10 +14,10 @@
 
 package org.eclipse.wst.sse.ui.extensions.spellcheck;
 
-
 /**
- * Interface to provide spellcheck
+ * @deprecated - to be removed in M4
  */
+
 public interface SpellCheckProvider {
 	SpellCheckAction createSpellCheckAction();
 }

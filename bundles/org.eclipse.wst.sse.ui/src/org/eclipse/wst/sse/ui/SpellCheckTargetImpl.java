@@ -12,6 +12,10 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui;
 
+/**
+ * @deprecated - to be removed in M4
+ */
+
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.IDocument;
