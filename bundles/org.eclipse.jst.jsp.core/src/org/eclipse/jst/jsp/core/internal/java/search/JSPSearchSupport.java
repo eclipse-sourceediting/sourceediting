@@ -474,8 +474,9 @@ public class JSPSearchSupport {
             // https://bugs.eclipse.org/bugs/show_bug.cgi?id=86009
             // must have a project name as well
             // which would mean >= 2 path segments
-            if(filePath.split("/").length >= 2) {
-                f = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(filePath));
+            IPath path = new Path(filePath);
+            if(path.segmentCount() >= 2) {
+                f = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
             }
         }
         return f;
