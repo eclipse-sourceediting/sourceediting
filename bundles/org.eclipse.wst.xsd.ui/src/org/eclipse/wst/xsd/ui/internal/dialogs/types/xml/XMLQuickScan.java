@@ -51,6 +51,7 @@ public class XMLQuickScan {
 //      XMLReader reader = sparser.getXMLReader();
         
         // Line below is a hack to get XMLReader working
+        Thread.currentThread().setContextClassLoader(XMLQuickScan.class.getClassLoader());
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         
     	XMLReader reader = org.xml.sax.helpers.XMLReaderFactory.createXMLReader();
