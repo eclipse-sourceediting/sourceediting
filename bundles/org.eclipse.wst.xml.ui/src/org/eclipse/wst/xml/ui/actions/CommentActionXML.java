@@ -32,6 +32,7 @@ import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
+import org.eclipse.wst.sse.ui.IModelProvider;
 import org.eclipse.wst.sse.ui.edit.util.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 
@@ -78,7 +79,10 @@ public class CommentActionXML extends TextEditorAction {
 	 */
 	void done() {
 		if (fModel != null) {
-			fModel.releaseFromEdit();
+			ITextEditor editor = getTextEditor();
+			if (editor != null && !(editor.getDocumentProvider() instanceof IModelProvider)) {
+				fModel.releaseFromEdit();
+			}
 			fModel = null;
 		}
 	}
@@ -93,7 +97,7 @@ public class CommentActionXML extends TextEditorAction {
 					return (ITextSelection) selection;
 			}
 		}
-		return null;
+		return TextSelection.emptySelection();
 	}
 
 	protected void init() {
@@ -109,12 +113,20 @@ public class CommentActionXML extends TextEditorAction {
 
 		fDocument = docProvider.getDocument(input);
 
-		IModelManager modelManager = getModelManager();
-		fModel = modelManager.getModelForEdit((IStructuredDocument) fDocument);
+		if (docProvider instanceof IModelProvider) {
+			fModel = ((IModelProvider) docProvider).getModel(input);
+		}
+		else {
+			IModelManager modelManager = getModelManager();
+			fModel = modelManager.getModelForEdit((IStructuredDocument) fDocument);
+		}
 		if (fDocument == null || fModel == null)
 			return;
 
 		fSelection = getCurrentSelection();
+		if (fSelection.isEmpty())
+			return;
+
 		fSelectionStartOffset = fSelection.getOffset();
 		fSelectionEndOffset = fSelectionStartOffset + fSelection.getLength();
 
