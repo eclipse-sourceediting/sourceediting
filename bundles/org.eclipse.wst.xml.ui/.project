@@ -3,7 +3,6 @@
 	<name>org.eclipse.wst.xml.ui</name>
 	<comment></comment>
 	<projects>
-		<project>com.ibm.base.extensions.ui</project>
 		<project>org.eclipse.wst.common.encoding</project>
 		<project>org.eclipse.wst.common.contentmodel</project>
 		<project>org.eclipse.wst.xml.uriresolver</project>
