@@ -19,8 +19,8 @@
 
 	<!-- <package name="org.w3c.dom" /> -->
 
-	<package name="org.eclipse.wst.xml.uriresolver" />
-	<package name="org.eclipse.wst.xml.uriresolver.ui" />
+<!--	<package name="org.eclipse.wst.xml.uriresolver" /> -->
+<!--	<package name="org.eclipse.wst.xml.uriresolver.ui" /> -->
 
 	<!--  add in viewer config for xml, phil -->
 	<package name="org.eclipse.wst.xml.ui">
