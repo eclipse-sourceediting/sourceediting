@@ -347,5 +347,10 @@
 		    </projectsetup>
 		</wizard>
 	</extension>
-   
+	
+	<!-- initialize xml ui preferences -->
+	<extension point="org.eclipse.core.runtime.preferences">
+	   <initializer class="org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceInitializer"/>
+	</extension>
+
 </plugin>

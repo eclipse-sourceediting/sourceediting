@@ -16,10 +16,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
-import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 
 public class XMLContentAssistProcessor extends AbstractContentAssistProcessor implements IPropertyChangeListener {
 
@@ -66,10 +64,10 @@ public class XMLContentAssistProcessor extends AbstractContentAssistProcessor im
 	}
 
 	protected void reinit() {
-		String key = PreferenceKeyGenerator.generateKey(CommonEditorPreferenceNames.AUTO_PROPOSE, IContentTypeIdentifier.ContentTypeID_SSEXML);
+		String key = CommonEditorPreferenceNames.AUTO_PROPOSE;
 		boolean doAuto = getPreferenceStore().getBoolean(key);
 		if (doAuto) {
-			key = PreferenceKeyGenerator.generateKey(CommonEditorPreferenceNames.AUTO_PROPOSE_CODE, IContentTypeIdentifier.ContentTypeID_SSEXML);
+			key = CommonEditorPreferenceNames.AUTO_PROPOSE_CODE;
 			completionProposalAutoActivationCharacters = getPreferenceStore().getString(key).toCharArray();
 		} else {
 			completionProposalAutoActivationCharacters = null;

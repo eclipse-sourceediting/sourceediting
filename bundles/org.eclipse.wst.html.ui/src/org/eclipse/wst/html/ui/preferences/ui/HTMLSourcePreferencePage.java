@@ -11,18 +11,17 @@
 package org.eclipse.wst.html.ui.preferences.ui;
 
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.html.core.HTMLCorePlugin;
+import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
-import org.eclipse.wst.sse.ui.EditorPlugin;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.xml.ui.preferences.XMLSourcePreferencePage;
 
 public class HTMLSourcePreferencePage extends XMLSourcePreferencePage {
@@ -123,17 +122,13 @@ public class HTMLSourcePreferencePage extends XMLSourcePreferencePage {
 		return HTMLCorePlugin.getDefault().getPluginPreferences();
 	}
 	
-	protected void doSavePreferenceStore() {
-		EditorPlugin.getDefault().savePluginPreferences(); // UI
-		HTMLCorePlugin.getDefault().savePluginPreferences(); // model
+	protected IPreferenceStore doGetPreferenceStore() {
+		return HTMLUIPlugin.getDefault().getPreferenceStore();
 	}
-
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.xml.preferences.ui.XMLSourcePreferencePage#getKey(java.lang.String)
-	 */
-	protected String getKey(String key) {
-		String contentTypeId = IContentTypeIdentifier.ContentTypeID_HTML;
-		return PreferenceKeyGenerator.generateKey(key, contentTypeId);
+	
+	protected void doSavePreferenceStore() {
+		HTMLUIPlugin.getDefault().savePluginPreferences(); // UI
+		HTMLCorePlugin.getDefault().savePluginPreferences(); // model
 	}
 
 	/* (non-Javadoc)

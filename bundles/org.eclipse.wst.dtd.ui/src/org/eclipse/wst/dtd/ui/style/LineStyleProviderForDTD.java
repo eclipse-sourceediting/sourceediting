@@ -15,11 +15,9 @@ package org.eclipse.wst.dtd.ui.style;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.dtd.core.parser.DTDRegionTypes;
+import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.style.AbstractLineStyleProvider;
 import org.eclipse.wst.sse.ui.style.LineStyleProvider;
 
@@ -77,12 +75,7 @@ public class LineStyleProviderForDTD extends AbstractLineStyleProvider implement
 	}
 
 	protected IPreferenceStore getColorPreferences() {
-		return SSEUIPlugin.getDefault().getPreferenceStore();
-	}
-
-	protected String getPreferenceKey(String key) {
-		String contentTypeId = IContentTypeIdentifier.ContentTypeID_DTD;
-		return PreferenceKeyGenerator.generateKey(key, contentTypeId);
+		return DTDUIPlugin.getDefault().getPreferenceStore();
 	}
 
 	protected void handlePropertyChange(PropertyChangeEvent event) {
@@ -91,21 +84,21 @@ public class LineStyleProviderForDTD extends AbstractLineStyleProvider implement
 		if (event != null) {
 			String prefKey = event.getProperty();
 			// check if preference changed is a style preference
-			if (getPreferenceKey(IStyleConstantsDTD.DTD_DEFAULT).equals(prefKey)) {
+			if (IStyleConstantsDTD.DTD_DEFAULT.equals(prefKey)) {
 				styleKey = IStyleConstantsDTD.DTD_DEFAULT;
-			} else if (getPreferenceKey(IStyleConstantsDTD.DTD_TAG).equals(prefKey)) {
+			} else if (IStyleConstantsDTD.DTD_TAG.equals(prefKey)) {
 				styleKey = IStyleConstantsDTD.DTD_TAG;
-			} else if (getPreferenceKey(IStyleConstantsDTD.DTD_TAGNAME).equals(prefKey)) {
+			} else if (IStyleConstantsDTD.DTD_TAGNAME.equals(prefKey)) {
 				styleKey = IStyleConstantsDTD.DTD_TAGNAME;
-			} else if (getPreferenceKey(IStyleConstantsDTD.DTD_COMMENT).equals(prefKey)) {
+			} else if (IStyleConstantsDTD.DTD_COMMENT.equals(prefKey)) {
 				styleKey = IStyleConstantsDTD.DTD_COMMENT;
-			} else if (getPreferenceKey(IStyleConstantsDTD.DTD_KEYWORD).equals(prefKey)) {
+			} else if (IStyleConstantsDTD.DTD_KEYWORD.equals(prefKey)) {
 				styleKey = IStyleConstantsDTD.DTD_KEYWORD;
-			} else if (getPreferenceKey(IStyleConstantsDTD.DTD_STRING).equals(prefKey)) {
+			} else if (IStyleConstantsDTD.DTD_STRING.equals(prefKey)) {
 				styleKey = IStyleConstantsDTD.DTD_STRING;
-			} else if (getPreferenceKey(IStyleConstantsDTD.DTD_DATA).equals(prefKey)) {
+			} else if (IStyleConstantsDTD.DTD_DATA.equals(prefKey)) {
 				styleKey = IStyleConstantsDTD.DTD_DATA;
-			} else if (getPreferenceKey(IStyleConstantsDTD.DTD_SYMBOL).equals(prefKey)) {
+			} else if (IStyleConstantsDTD.DTD_SYMBOL.equals(prefKey)) {
 				styleKey = IStyleConstantsDTD.DTD_SYMBOL;
 			}
 		}

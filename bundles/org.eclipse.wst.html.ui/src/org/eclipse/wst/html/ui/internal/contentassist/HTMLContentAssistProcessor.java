@@ -21,11 +21,11 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.wst.common.contentmodel.CMDocument;
 import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.css.ui.contentassist.CSSContentAssistProcessor;
 import org.eclipse.wst.html.core.HTML40Namespace;
 import org.eclipse.wst.html.core.HTMLCMProperties;
 import org.eclipse.wst.html.core.contentmodel.HTMLCMDocument;
+import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.javascript.common.ui.contentassist.JavaScriptContentAssistProcessor;
 import org.eclipse.wst.sse.core.AdapterFactory;
 import org.eclipse.wst.sse.core.IModelManager;
@@ -40,11 +40,9 @@ import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.edit.util.SharedEditorPluginImageHelper;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
-import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.xml.core.document.XMLDocument;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.document.XMLNode;
@@ -378,10 +376,10 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 	}
 
 	protected void reinit() {
-		String key = PreferenceKeyGenerator.generateKey(CommonEditorPreferenceNames.AUTO_PROPOSE, IContentTypeIdentifier.ContentTypeID_HTML);
+		String key = CommonEditorPreferenceNames.AUTO_PROPOSE;
 		boolean doAuto = getPreferenceStore().getBoolean(key);
 		if (doAuto) {
-			key = PreferenceKeyGenerator.generateKey(CommonEditorPreferenceNames.AUTO_PROPOSE_CODE, IContentTypeIdentifier.ContentTypeID_HTML);
+			key = CommonEditorPreferenceNames.AUTO_PROPOSE_CODE;
 			completionProposalAutoActivationCharacters = getPreferenceStore().getString(key).toCharArray();
 		}
 		else {
@@ -411,7 +409,7 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 
 	protected IPreferenceStore getPreferenceStore() {
 		if (fPreferenceStore == null)
-			fPreferenceStore = SSEUIPlugin.getDefault().getPreferenceStore();
+			fPreferenceStore = HTMLUIPlugin.getDefault().getPreferenceStore();
 
 		return fPreferenceStore;
 	}

@@ -98,6 +98,7 @@ import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.ui.part.EditorActionBarContributor;
 import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
+import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.ui.texteditor.AnnotationPreference;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.DefaultRangeIndicator;
@@ -1355,7 +1356,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	private void enableBrowserLikeLinks() {
 		if (fHyperlinkTracker == null && (getSourceViewer() != null)) {
 			fHyperlinkTracker = new OpenFileHyperlinkTracker(getSourceViewer());
-			fHyperlinkTracker.setHyperlinkPreferenceKeys(CommonEditorPreferenceNames.LINK_COLOR, CommonEditorPreferenceNames.BROWSER_LIKE_LINKS_KEY_MODIFIER);
+			fHyperlinkTracker.setHyperlinkPreferenceKeys(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINK_COLOR, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINK_KEY_MODIFIER);
 			fHyperlinkTracker.install(getPreferenceStore());
 		}
 	}
@@ -1899,7 +1900,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		if (CommonEditorPreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS.equals(property)) {
 			updateHoverBehavior();
 		}
-		if (CommonEditorPreferenceNames.BROWSER_LIKE_LINKS.equals(property)) {
+		if (AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED.equals(property)) {
 			if (isBrowserLikeLinks())
 				enableBrowserLikeLinks();
 			else
@@ -2015,7 +2016,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 */
 	private boolean isBrowserLikeLinks() {
 		IPreferenceStore store = getPreferenceStore();
-		return store.getBoolean(CommonEditorPreferenceNames.BROWSER_LIKE_LINKS);
+		return store.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED);
 	}
 
 	/*

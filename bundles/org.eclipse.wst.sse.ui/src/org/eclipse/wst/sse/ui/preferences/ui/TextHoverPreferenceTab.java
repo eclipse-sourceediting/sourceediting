@@ -285,8 +285,6 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 	private OverlayPreferenceStore.OverlayKey[] createOverlayStoreKeys() {
 		ArrayList overlayKeys = new ArrayList();
 
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, CommonEditorPreferenceNames.EDITOR_ANNOTATION_ROLL_OVER));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, CommonEditorPreferenceNames.EDITOR_SHOW_TEXT_HOVER_AFFORDANCE));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, CommonEditorPreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS));
 
 		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys.size()];

@@ -273,4 +273,8 @@
       		translations="templates/htmldefault-templates.properties">
       </include>
    </extension>
+	<!-- initialize html ui preferences -->
+	<extension point="org.eclipse.core.runtime.preferences">
+	   <initializer class="org.eclipse.wst.html.ui.internal.preferences.HTMLUIPreferenceInitializer"/>
+	</extension>
 </plugin>

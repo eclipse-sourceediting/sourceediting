@@ -40,6 +40,7 @@ import org.eclipse.wst.css.ui.contentassist.CSSContentAssistProcessor;
 import org.eclipse.wst.css.ui.style.LineStyleProviderForEmbeddedCSS;
 import org.eclipse.wst.html.core.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.html.core.internal.text.rules.StructuredTextPartitionerForHTML;
+import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.contentassist.HTMLContentAssistProcessor;
 import org.eclipse.wst.html.ui.internal.contentassist.NoRegionContentAssistProcessorForHTML;
 import org.eclipse.wst.html.ui.style.LineStyleProviderForHTML;
@@ -60,7 +61,6 @@ import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
-import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
 import org.eclipse.wst.sse.ui.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.taginfo.AnnotationHoverProcessor;
@@ -272,8 +272,7 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 				if (sModel != null) {
 					// check language (ContentTypeID)....
 					String contentTypeId = sModel.getContentTypeIdentifier(); //sModel.getModelHandler().getAssociatedContentTypeId();
-					String generatedKey = PreferenceKeyGenerator.generateKey(CommonEditorPreferenceNames.EDITOR_VALIDATION_METHOD, contentTypeId);
-					String validationMethodPref = SSEUIPlugin.getInstance().getPreferenceStore().getString(generatedKey);
+					String validationMethodPref = HTMLUIPlugin.getInstance().getPreferenceStore().getString(CommonEditorPreferenceNames.EDITOR_VALIDATION_METHOD);
 	
 					IReconcilingStrategy defaultStrategy = null;
 	

@@ -23,9 +23,7 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.PropagatingAdapter;
 import org.eclipse.wst.sse.core.modelhandler.IDocumentTypeHandler;
 import org.eclipse.wst.sse.core.util.Assert;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
-import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
 import org.eclipse.wst.sse.ui.views.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.xml.core.document.XMLDocument;
@@ -33,6 +31,7 @@ import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.modelhandler.ModelHandlerForXML;
 import org.eclipse.wst.xml.core.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.ui.DOMObserver;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.reconcile.ReconcilerAdapterFactoryForXML;
 import org.eclipse.wst.xml.ui.views.contentoutline.JFaceNodeAdapterFactory;
 import org.eclipse.wst.xml.ui.views.properties.XMLPropertySourceAdapterFactory;
@@ -87,8 +86,8 @@ public class AdapterFactoryProviderForXML implements AdapterFactoryProvider {
 			if (modelQuery != null) {
 				CMDocumentManager documentManager = modelQuery.getCMDocumentManager();
 				if (documentManager != null) {
-					IPreferenceStore store = SSEUIPlugin.getDefault().getPreferenceStore();
-					boolean useInferredGrammar = (store != null) ? store.getBoolean(PreferenceKeyGenerator.generateKey(CommonEditorPreferenceNames.EDITOR_USE_INFERRED_GRAMMAR, IContentTypeIdentifier.ContentTypeID_SSEXML)) : true;
+					IPreferenceStore store = XMLUIPlugin.getDefault().getPreferenceStore();
+					boolean useInferredGrammar = (store != null) ? store.getBoolean(CommonEditorPreferenceNames.EDITOR_USE_INFERRED_GRAMMAR) : true;
 
 					documentManager.setPropertyEnabled(CMDocumentManager.PROPERTY_ASYNC_LOAD, true);
 					documentManager.setPropertyEnabled(CMDocumentManager.PROPERTY_AUTO_LOAD, false);
@@ -112,8 +111,8 @@ public class AdapterFactoryProviderForXML implements AdapterFactoryProvider {
 			// creating this factory
 			// to improve performance...
 			String contentTypeId = IContentTypeIdentifier.ContentTypeID_SSEXML;
-			IPreferenceStore store = SSEUIPlugin.getDefault().getPreferenceStore();
-			if (store.getString(PreferenceKeyGenerator.generateKey(CommonEditorPreferenceNames.EDITOR_VALIDATION_METHOD, contentTypeId)).equals(CommonEditorPreferenceNames.EDITOR_VALIDATION_CONTENT_MODEL)) {
+			IPreferenceStore store = XMLUIPlugin.getDefault().getPreferenceStore();
+			if (store.getString(CommonEditorPreferenceNames.EDITOR_VALIDATION_METHOD).equals(CommonEditorPreferenceNames.EDITOR_VALIDATION_CONTENT_MODEL)) {
 				factory = new ReconcilerAdapterFactoryForXML();
 				propagatingAdapter.addAdaptOnCreateFactory(factory);
 				// (pa) perf:

@@ -11,6 +11,7 @@
 package org.eclipse.wst.css.ui.preferences.ui;
 
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
@@ -19,14 +20,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.preferences.CSSModelPreferenceNames;
 import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.css.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.xml.ui.preferences.XMLSourcePreferencePage;
 
 /**
@@ -212,7 +211,7 @@ public class CSSSourcePreferencePage extends XMLSourcePreferencePage {
 	 * @see com.ibm.sse.editor.xml.preferences.ui.XMLFilesPreferencePage#doSavePreferenceStore()
 	 */
 	protected void doSavePreferenceStore() {
-		SSEUIPlugin.getDefault().savePluginPreferences();
+		CSSUIPlugin.getDefault().savePluginPreferences();
 		CSSCorePlugin.getDefault().savePluginPreferences(); // model
 	}
 
@@ -226,14 +225,6 @@ public class CSSSourcePreferencePage extends XMLSourcePreferencePage {
 	}
 
 	/*
-	 * helper method to generate content type id specific preference keys
-	 */
-	protected String getKey(String key) {
-		String contentTypeId = IContentTypeIdentifier.ContentTypeID_CSS;
-		return PreferenceKeyGenerator.generateKey(key, contentTypeId);
-	}
-
-	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
@@ -242,5 +233,11 @@ public class CSSSourcePreferencePage extends XMLSourcePreferencePage {
 		Control c = super.createContents(parent);
 		WorkbenchHelp.setHelp(c, IHelpContextIds.CSS_PREFWEBX_SOURCE_HELPID);
 		return c;
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.preference.PreferencePage#doGetPreferenceStore()
+	 */
+	protected IPreferenceStore doGetPreferenceStore() {
+		return CSSUIPlugin.getDefault().getPreferenceStore();
 	}
 }

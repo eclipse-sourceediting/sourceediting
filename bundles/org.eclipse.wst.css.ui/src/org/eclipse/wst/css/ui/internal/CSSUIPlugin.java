@@ -18,11 +18,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
-import org.eclipse.wst.css.ui.style.IStyleConstantsCSS;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
-import org.eclipse.wst.sse.ui.preferences.ui.ColorHelper;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -63,47 +59,42 @@ public class CSSUIPlugin extends AbstractUIPlugin {
 		return ResourcesPlugin.getWorkspace();
 	}
 
-	protected void initializeDefaultPreferences(IPreferenceStore store) {
-
-		// ignore this preference store
-		// use EditorPlugin preference store
-		IPreferenceStore editorStore = SSEUIPlugin.getDefault().getPreferenceStore();
-		initializeDefaultCSSPreferences(editorStore);
-	}
-
+	/**
+	 * @deprecated using CSSUIPreferenceInitializer instead
+	 */
 	private void initializeDefaultCSSPreferences(IPreferenceStore store) {
-		String ctId = IContentTypeIdentifier.ContentTypeID_CSS;
-
-		// CSS Style Preferences
-		String NOBACKGROUNDBOLD = " | null | false"; //$NON-NLS-1$
-		String styleValue = "null" + NOBACKGROUNDBOLD; //$NON-NLS-1$
-		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.NORMAL, ctId), styleValue);
-
-		styleValue = ColorHelper.getColorString(63, 127, 127) + NOBACKGROUNDBOLD;
-		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.ATMARK_RULE, ctId), styleValue);
-		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.SELECTOR, ctId), styleValue);
-
-		styleValue = ColorHelper.getColorString(42, 0, 225) + NOBACKGROUNDBOLD;
-		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.MEDIA, ctId), styleValue);
-
-		styleValue = ColorHelper.getColorString(63, 95, 191) + NOBACKGROUNDBOLD;
-		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.COMMENT, ctId), styleValue);
-
-		styleValue = ColorHelper.getColorString(127, 0, 127) + NOBACKGROUNDBOLD;
-		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.PROPERTY_NAME, ctId), styleValue);
-
-		styleValue = ColorHelper.getColorString(42, 0, 225) + NOBACKGROUNDBOLD;
-		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.PROPERTY_VALUE, ctId), styleValue);
-		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.URI, ctId), styleValue);
-		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.STRING, ctId), styleValue);
-
-		styleValue = "null" + NOBACKGROUNDBOLD; //$NON-NLS-1$
-		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.COLON, ctId), styleValue);
-		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.SEMI_COLON, ctId), styleValue);
-		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.CURLY_BRACE, ctId), styleValue);
-
-		styleValue = ColorHelper.getColorString(191, 63, 63) + NOBACKGROUNDBOLD;
-		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.ERROR, ctId), styleValue);
+//		String ctId = IContentTypeIdentifier.ContentTypeID_CSS;
+//
+//		// CSS Style Preferences
+//		String NOBACKGROUNDBOLD = " | null | false"; //$NON-NLS-1$
+//		String styleValue = "null" + NOBACKGROUNDBOLD; //$NON-NLS-1$
+//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.NORMAL, ctId), styleValue);
+//
+//		styleValue = ColorHelper.getColorString(63, 127, 127) + NOBACKGROUNDBOLD;
+//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.ATMARK_RULE, ctId), styleValue);
+//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.SELECTOR, ctId), styleValue);
+//
+//		styleValue = ColorHelper.getColorString(42, 0, 225) + NOBACKGROUNDBOLD;
+//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.MEDIA, ctId), styleValue);
+//
+//		styleValue = ColorHelper.getColorString(63, 95, 191) + NOBACKGROUNDBOLD;
+//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.COMMENT, ctId), styleValue);
+//
+//		styleValue = ColorHelper.getColorString(127, 0, 127) + NOBACKGROUNDBOLD;
+//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.PROPERTY_NAME, ctId), styleValue);
+//
+//		styleValue = ColorHelper.getColorString(42, 0, 225) + NOBACKGROUNDBOLD;
+//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.PROPERTY_VALUE, ctId), styleValue);
+//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.URI, ctId), styleValue);
+//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.STRING, ctId), styleValue);
+//
+//		styleValue = "null" + NOBACKGROUNDBOLD; //$NON-NLS-1$
+//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.COLON, ctId), styleValue);
+//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.SEMI_COLON, ctId), styleValue);
+//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.CURLY_BRACE, ctId), styleValue);
+//
+//		styleValue = ColorHelper.getColorString(191, 63, 63) + NOBACKGROUNDBOLD;
+//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.ERROR, ctId), styleValue);
 	}
 
 	/**

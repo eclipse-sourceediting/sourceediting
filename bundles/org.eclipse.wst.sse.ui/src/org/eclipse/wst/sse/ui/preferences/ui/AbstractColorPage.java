@@ -214,8 +214,12 @@ public abstract class AbstractColorPage extends org.eclipse.jface.preference.Pre
 
 	public boolean performOk() {
 		fOverlayStore.propagate();
-		// savePluginPreferences
+		 savePreferences();
 		return true;
+	}
+	
+	protected void savePreferences() {
+		// save plugin preferences here
 	}
 
 	/**

@@ -398,4 +398,8 @@
 			id="org.eclipse.jst.jsp.ui.java.search.ui.JSPQueryParticipant">
 		</queryParticipant>
 	</extension>
+	<!-- initialize xml ui preferences -->
+	<extension point="org.eclipse.core.runtime.preferences">
+	   <initializer class="org.eclipse.jst.jsp.ui.internal.preferences.JSPUIPreferenceInitializer"/>
+	</extension>
 </plugin>

@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -21,7 +22,6 @@ import org.eclipse.wst.css.core.document.ICSSStyleDeclItem;
 import org.eclipse.wst.css.core.document.ICSSValue;
 import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.sse.core.AdapterFactory;
-import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
 import org.eclipse.wst.sse.ui.views.contentoutline.PropertyChangeUpdateActionContributionItem;
 import org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration;
@@ -36,7 +36,7 @@ public class CSSContentOutlineConfiguration extends StructuredContentOutlineConf
 	public IContributionItem[] createToolbarContributions(TreeViewer viewer) {
 		IContributionItem[] items = super.createToolbarContributions(viewer);
 
-		SortAction sortAction = new SortAction(viewer, CSSUIPlugin.getDefault().getPreferenceStore(), getSortPreferenceKey());
+		SortAction sortAction = new SortAction(viewer, CSSUIPlugin.getDefault().getPreferenceStore(), OUTLINE_SORT_PREF);
 		IContributionItem sortItem = new PropertyChangeUpdateActionContributionItem(sortAction);
 
 		if (items == null) {
@@ -112,7 +112,17 @@ public class CSSContentOutlineConfiguration extends StructuredContentOutlineConf
 		return getNodes(event.getSelectedNodes());
 	}
 
+	/**
+	 * @deprecated use key directly (no need for generator)
+	 */
 	public String getSortPreferenceKey() {
-		return PreferenceKeyGenerator.generateKey(OUTLINE_SORT_PREF, getDeclaringID());
+//		return PreferenceKeyGenerator.generateKey(OUTLINE_SORT_PREF, getDeclaringID());
+		return OUTLINE_SORT_PREF;
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration#getPreferenceStore()
+	 */
+	protected IPreferenceStore getPreferenceStore() {
+		return CSSUIPlugin.getDefault().getPreferenceStore();
 	}
 }

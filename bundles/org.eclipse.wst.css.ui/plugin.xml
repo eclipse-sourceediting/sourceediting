@@ -128,5 +128,8 @@
          </part>
       </actionSetPartAssociation>
    </extension>
-
+	<!-- initialize css ui preferences -->
+	<extension point="org.eclipse.core.runtime.preferences">
+	   <initializer class="org.eclipse.wst.css.ui.internal.preferences.CSSUIPreferenceInitializer"/>
+	</extension>
 </plugin>

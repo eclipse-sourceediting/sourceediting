@@ -42,7 +42,6 @@ import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
-import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
 import org.eclipse.wst.sse.ui.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.taginfo.AnnotationHoverProcessor;
@@ -54,6 +53,7 @@ import org.eclipse.wst.xml.core.text.rules.StructuredTextPartitionerForXML;
 import org.eclipse.wst.xml.ui.contentassist.NoRegionContentAssistProcessor;
 import org.eclipse.wst.xml.ui.contentassist.XMLContentAssistProcessor;
 import org.eclipse.wst.xml.ui.doubleclick.XMLDoubleClickStrategy;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.autoedit.StructuredAutoEditStrategyXML;
 import org.eclipse.wst.xml.ui.internal.correction.CorrectionProcessorXML;
 import org.eclipse.wst.xml.ui.reconcile.StructuredTextReconcilingStrategyForContentModel;
@@ -214,10 +214,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 			try {
 
 				if (sModel != null) {
-					// check language (ContentTypeID)....
-					String contentTypeId = sModel.getModelHandler().getAssociatedContentTypeId();
-					String generatedKey = PreferenceKeyGenerator.generateKey(CommonEditorPreferenceNames.EDITOR_VALIDATION_METHOD, contentTypeId);
-					String validationMethodPref = SSEUIPlugin.getInstance().getPreferenceStore().getString(generatedKey);
+					String validationMethodPref = XMLUIPlugin.getDefault().getPreferenceStore().getString(CommonEditorPreferenceNames.EDITOR_VALIDATION_METHOD);
 					IReconcilingStrategy defaultStrategy = null;
 
 					// pref set to no validation, so return

@@ -13,11 +13,9 @@ package org.eclipse.jst.jsp.ui.style;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.wst.html.ui.style.IStyleConstantsHTML;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.style.AbstractLineStyleProvider;
 import org.eclipse.wst.sse.ui.style.LineStyleProvider;
 import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
@@ -117,12 +115,7 @@ public class LineStyleProviderForJSP extends AbstractLineStyleProvider implement
 
 
 	protected IPreferenceStore getColorPreferences() {
-		return SSEUIPlugin.getDefault().getPreferenceStore();
-	}
-
-	protected String getPreferenceKey(String key) {
-		String contentTypeId = IContentTypeIdentifier.ContentTypeID_JSP;
-		return PreferenceKeyGenerator.generateKey(key, contentTypeId);
+		return JSPUIPlugin.getDefault().getPreferenceStore();
 	}
 
 	protected void loadColorsForJSPTags() {
@@ -154,58 +147,58 @@ public class LineStyleProviderForJSP extends AbstractLineStyleProvider implement
 		if (event != null) {
 			String prefKey = event.getProperty();
 			// check if preference changed is a style preference
-			if (getPreferenceKey(IStyleConstantsXML.TAG_NAME).equals(prefKey)) {
+			if (IStyleConstantsXML.TAG_NAME.equals(prefKey)) {
 				styleKey = IStyleConstantsXML.TAG_NAME;
 			}
-			else if (getPreferenceKey(IStyleConstantsXML.TAG_BORDER).equals(prefKey)) {
+			else if (IStyleConstantsXML.TAG_BORDER.equals(prefKey)) {
 				styleKey = IStyleConstantsXML.TAG_BORDER;
 			}
-			else if (getPreferenceKey(IStyleConstantsXML.TAG_ATTRIBUTE_NAME).equals(prefKey)) {
+			else if (IStyleConstantsXML.TAG_ATTRIBUTE_NAME.equals(prefKey)) {
 				styleKey = IStyleConstantsXML.TAG_ATTRIBUTE_NAME;
 			}
-			else if (getPreferenceKey(IStyleConstantsXML.TAG_ATTRIBUTE_VALUE).equals(prefKey)) {
+			else if (IStyleConstantsXML.TAG_ATTRIBUTE_VALUE.equals(prefKey)) {
 				styleKey = IStyleConstantsXML.TAG_ATTRIBUTE_VALUE;
 			}
-			else if (getPreferenceKey(IStyleConstantsXML.TAG_ATTRIBUTE_EQUALS).equals(prefKey)) {
+			else if (IStyleConstantsXML.TAG_ATTRIBUTE_EQUALS.equals(prefKey)) {
 				styleKey = IStyleConstantsXML.TAG_ATTRIBUTE_EQUALS;
 			}
-			else if (getPreferenceKey(IStyleConstantsXML.COMMENT_BORDER).equals(prefKey)) {
+			else if (IStyleConstantsXML.COMMENT_BORDER.equals(prefKey)) {
 				styleKey = IStyleConstantsXML.COMMENT_BORDER;
 			}
-			else if (getPreferenceKey(IStyleConstantsXML.COMMENT_TEXT).equals(prefKey)) {
+			else if (IStyleConstantsXML.COMMENT_TEXT.equals(prefKey)) {
 				styleKey = IStyleConstantsXML.COMMENT_TEXT;
 			}
-			else if (getPreferenceKey(IStyleConstantsXML.CDATA_BORDER).equals(prefKey)) {
+			else if (IStyleConstantsXML.CDATA_BORDER.equals(prefKey)) {
 				styleKey = IStyleConstantsXML.CDATA_BORDER;
 			}
-			else if (getPreferenceKey(IStyleConstantsXML.CDATA_TEXT).equals(prefKey)) {
+			else if (IStyleConstantsXML.CDATA_TEXT.equals(prefKey)) {
 				styleKey = IStyleConstantsXML.CDATA_TEXT;
 			}
-			else if (getPreferenceKey(IStyleConstantsXML.DECL_BORDER).equals(prefKey)) {
+			else if (IStyleConstantsXML.DECL_BORDER.equals(prefKey)) {
 				styleKey = IStyleConstantsXML.DECL_BORDER;
 			}
-			else if (getPreferenceKey(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID).equals(prefKey)) {
+			else if (IStyleConstantsXML.DOCTYPE_EXTERNAL_ID.equals(prefKey)) {
 				styleKey = IStyleConstantsXML.DOCTYPE_EXTERNAL_ID;
 			}
-			else if (getPreferenceKey(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_PUBREF).equals(prefKey)) {
+			else if (IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_PUBREF.equals(prefKey)) {
 				styleKey = IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_PUBREF;
 			}
-			else if (getPreferenceKey(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_SYSREF).equals(prefKey)) {
+			else if (IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_SYSREF.equals(prefKey)) {
 				styleKey = IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_SYSREF;
 			}
-			else if (getPreferenceKey(IStyleConstantsXML.DOCTYPE_NAME).equals(prefKey)) {
+			else if (IStyleConstantsXML.DOCTYPE_NAME.equals(prefKey)) {
 				styleKey = IStyleConstantsXML.DOCTYPE_NAME;
 			}
-			else if (getPreferenceKey(IStyleConstantsXML.PI_CONTENT).equals(prefKey)) {
+			else if (IStyleConstantsXML.PI_CONTENT.equals(prefKey)) {
 				styleKey = IStyleConstantsXML.PI_CONTENT;
 			}
-			else if (getPreferenceKey(IStyleConstantsXML.PI_BORDER).equals(prefKey)) {
+			else if (IStyleConstantsXML.PI_BORDER.equals(prefKey)) {
 				styleKey = IStyleConstantsXML.PI_BORDER;
 			}
-			else if (getPreferenceKey(IStyleConstantsXML.XML_CONTENT).equals(prefKey)) {
+			else if (IStyleConstantsXML.XML_CONTENT.equals(prefKey)) {
 				styleKey = IStyleConstantsXML.XML_CONTENT;
 			}
-			else if (getPreferenceKey(IStyleConstantsHTML.SCRIPT_AREA_BORDER).equals(prefKey)) {
+			else if (IStyleConstantsHTML.SCRIPT_AREA_BORDER.equals(prefKey)) {
 				styleKey = IStyleConstantsHTML.SCRIPT_AREA_BORDER;
 			}
 		}

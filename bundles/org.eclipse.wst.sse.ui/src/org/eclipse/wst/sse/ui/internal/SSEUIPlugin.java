@@ -77,16 +77,11 @@ public class SSEUIPlugin extends AbstractUIPlugin {
 	 * This method is here so that other editor plugins can set Editor
 	 * defaults in their initializeDefaultPreferences(...) methods.
 	 * 
+	 * @deprecated other editor plugins should not need this plugin to initialize anything
+	 * (should use EditorsUI)
 	 * @param store
 	 */
 	public void initializeDefaultEditorPreferences(IPreferenceStore store) {
-	}
-
-	/**
-	 * @see AbstractUIPlugin#initializeDefaultPreferences
-	 */
-	protected void initializeDefaultPreferences(IPreferenceStore store) {
-		initializeDefaultEditorPreferences(store);
 	}
 
 	/**

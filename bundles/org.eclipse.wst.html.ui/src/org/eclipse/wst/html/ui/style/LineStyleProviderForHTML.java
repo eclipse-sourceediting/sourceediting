@@ -10,11 +10,11 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.style;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
+import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.style.LineStyleProvider;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.eclipse.wst.xml.ui.style.IStyleConstantsXML;
@@ -64,11 +64,6 @@ public class LineStyleProviderForHTML extends LineStyleProviderForXML implements
 		return result;
 	}
 
-	protected String getPreferenceKey(String key) {
-		String contentTypeId = IContentTypeIdentifier.ContentTypeID_HTML;
-		return PreferenceKeyGenerator.generateKey(key, contentTypeId);
-	}
-
 	protected void loadColors() {
 		super.loadColors();
 
@@ -80,7 +75,7 @@ public class LineStyleProviderForHTML extends LineStyleProviderForXML implements
 		if (event != null) {
 			String prefKey = event.getProperty();
 			// check if preference changed is a style preference
-			if (getPreferenceKey(IStyleConstantsHTML.SCRIPT_AREA_BORDER).equals(prefKey)) {
+			if (IStyleConstantsHTML.SCRIPT_AREA_BORDER.equals(prefKey)) {
 				addTextAttribute(IStyleConstantsHTML.SCRIPT_AREA_BORDER);
 
 				// this is what AbstractLineStyleProvider.propertyChange() does
@@ -91,5 +86,11 @@ public class LineStyleProviderForHTML extends LineStyleProviderForXML implements
 		} else {
 			super.handlePropertyChange(event);
 		}
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.sse.ui.style.AbstractLineStyleProvider#getColorPreferences()
+	 */
+	protected IPreferenceStore getColorPreferences() {
+		return HTMLUIPlugin.getDefault().getPreferenceStore();
 	}
 }

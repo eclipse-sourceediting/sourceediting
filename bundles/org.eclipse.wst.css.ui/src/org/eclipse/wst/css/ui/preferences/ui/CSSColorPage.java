@@ -25,10 +25,8 @@ import org.eclipse.wst.css.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.css.ui.style.IStyleConstantsCSS;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore.OverlayKey;
-import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.preferences.ui.AbstractColorPage;
 import org.eclipse.wst.sse.ui.preferences.ui.StyledTextColorPicker;
 
@@ -44,7 +42,7 @@ public class CSSColorPage extends AbstractColorPage {
 		initStyleList(styleList);
 		Iterator i = styleList.iterator();
 		while (i.hasNext()) {
-			overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, PreferenceKeyGenerator.generateKey((String) i.next(), IContentTypeIdentifier.ContentTypeID_CSS)));
+			overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, (String) i.next()));
 		}
 
 		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys.size()];
@@ -210,18 +208,15 @@ public class CSSColorPage extends AbstractColorPage {
 		picker.setContextStyleMap(contextStyleMap);
 		picker.setDescriptions(descriptions);
 		picker.setStyleList(styleList);
-
-		picker.setGeneratorKey(IContentTypeIdentifier.ContentTypeID_CSS);
 	}
 
 	protected IPreferenceStore doGetPreferenceStore() {
-		return SSEUIPlugin.getDefault().getPreferenceStore();
+		return CSSUIPlugin.getDefault().getPreferenceStore();
 	}
-
-	public boolean performOk() {
-		super.performOk();
-
-		SSEUIPlugin.getDefault().savePluginPreferences();
-		return true;
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.sse.ui.preferences.ui.AbstractColorPage#savePreferences()
+	 */
+	protected void savePreferences() {
+		CSSUIPlugin.getDefault().savePluginPreferences();
 	}
 }

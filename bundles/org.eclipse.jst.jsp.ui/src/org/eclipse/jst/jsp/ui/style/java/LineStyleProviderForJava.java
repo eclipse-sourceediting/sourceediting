@@ -23,14 +23,12 @@ import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.html.ui.style.IStyleConstantsHTML;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.style.AbstractLineStyleProvider;
 import org.eclipse.wst.sse.ui.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.util.EditorUtility;
@@ -120,13 +118,13 @@ public class LineStyleProviderForJava extends AbstractLineStyleProvider implemen
 		if (event != null) {
 			String prefKey = event.getProperty();
 			// check if preference changed is a style preference
-			if (getPreferenceKey(IStyleConstantsHTML.SCRIPT_AREA_BORDER).equals(prefKey)) {
+			if (IStyleConstantsHTML.SCRIPT_AREA_BORDER.equals(prefKey)) {
 				styleKey = IStyleConstantsHTML.SCRIPT_AREA_BORDER;
 			}
-			else if (getPreferenceKey(IStyleConstantsXML.TAG_ATTRIBUTE_NAME).equals(prefKey)) {
+			else if (IStyleConstantsXML.TAG_ATTRIBUTE_NAME.equals(prefKey)) {
 				styleKey = IStyleConstantsXML.TAG_ATTRIBUTE_NAME;
 			}
-			else if (getPreferenceKey(IStyleConstantsXML.TAG_ATTRIBUTE_VALUE).equals(prefKey)) {
+			else if (IStyleConstantsXML.TAG_ATTRIBUTE_VALUE.equals(prefKey)) {
 				styleKey = IStyleConstantsXML.TAG_ATTRIBUTE_VALUE;
 			}
 		}
@@ -194,14 +192,9 @@ public class LineStyleProviderForJava extends AbstractLineStyleProvider implemen
 		}
 		return result;
 	}
-
-	protected String getPreferenceKey(String key) {
-		String contentTypeId = IContentTypeIdentifier.ContentTypeID_HTML;
-		return PreferenceKeyGenerator.generateKey(key, contentTypeId);
-	}
 	
 	protected IPreferenceStore getColorPreferences() {
-		return SSEUIPlugin.getDefault().getPreferenceStore();
+		return JSPUIPlugin.getDefault().getPreferenceStore();
 	}
 	
 	protected void setDocument(IDocument document) {

@@ -25,13 +25,12 @@ import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.dtd.core.rules.StructuredTextPartitionerForDTD;
+import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.preferences.ui.ColorHelper;
 import org.eclipse.wst.sse.ui.style.AbstractLineStyleProvider;
 import org.eclipse.wst.sse.ui.style.LineStyleProvider;
@@ -79,7 +78,7 @@ public class LineStyleProviderForDTDSubSet extends AbstractLineStyleProvider imp
 	protected TextAttribute getAttributeFor(ITextRegion region) {
 		TextAttribute ta = null;
 
-		String prefString = getColorPreferences().getString(getPreferenceKey(IStyleConstantsDTD.DTD_DEFAULT));
+		String prefString = getColorPreferences().getString(IStyleConstantsDTD.DTD_DEFAULT);
 		String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
 		if (stylePrefs != null) {
 			RGB foreground = ColorHelper.toRGB(stylePrefs[0]);
@@ -91,7 +90,7 @@ public class LineStyleProviderForDTDSubSet extends AbstractLineStyleProvider imp
 	}
 
 	protected IPreferenceStore getColorPreferences() {
-		return SSEUIPlugin.getDefault().getPreferenceStore();
+		return DTDUIPlugin.getDefault().getPreferenceStore();
 	}
 
 	/**
@@ -102,11 +101,6 @@ public class LineStyleProviderForDTDSubSet extends AbstractLineStyleProvider imp
 			fInternalModel = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_DTD);
 		}
 		return fInternalModel.getStructuredDocument();
-	}
-
-	protected String getPreferenceKey(String key) {
-		String contentTypeId = IContentTypeIdentifier.ContentTypeID_DTD;
-		return PreferenceKeyGenerator.generateKey(key, contentTypeId);
 	}
 
 	/*

@@ -10,7 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.views.contentoutline;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.xml.ui.views.contentoutline.XMLContentOutlineConfiguration;
 import org.eclipse.wst.xml.ui.views.contentoutline.XMLNodeActionManager;
 
@@ -28,5 +30,11 @@ public class HTMLContentOutlineConfiguration extends XMLContentOutlineConfigurat
 	 */
 	protected XMLNodeActionManager createNodeActionManager(TreeViewer treeViewer) {
 		return new HTMLNodeActionManager(getEditor().getModel(), treeViewer);
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration#getPreferenceStore()
+	 */
+	protected IPreferenceStore getPreferenceStore() {
+		return HTMLUIPlugin.getDefault().getPreferenceStore();
 	}
 }

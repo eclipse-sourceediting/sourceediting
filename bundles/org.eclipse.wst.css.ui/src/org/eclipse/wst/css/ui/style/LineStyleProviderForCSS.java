@@ -16,11 +16,9 @@ import java.util.Map;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.css.core.parser.CSSRegionContexts;
+import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.style.AbstractLineStyleProvider;
 import org.eclipse.wst.sse.ui.style.LineStyleProvider;
 
@@ -129,31 +127,31 @@ public class LineStyleProviderForCSS extends AbstractLineStyleProvider implement
 		if (event != null) {
 			String prefKey = event.getProperty();
 			// check if preference changed is a style preference
-			if (getPreferenceKey(IStyleConstantsCSS.ATMARK_RULE).equals(prefKey)) {
+			if (IStyleConstantsCSS.ATMARK_RULE.equals(prefKey)) {
 				styleKey = IStyleConstantsCSS.ATMARK_RULE;
-			} else if (getPreferenceKey(IStyleConstantsCSS.COLON).equals(prefKey)) {
+			} else if (IStyleConstantsCSS.COLON.equals(prefKey)) {
 				styleKey = IStyleConstantsCSS.COLON;
-			} else if (getPreferenceKey(IStyleConstantsCSS.COMMENT).equals(prefKey)) {
+			} else if (IStyleConstantsCSS.COMMENT.equals(prefKey)) {
 				styleKey = IStyleConstantsCSS.COMMENT;
-			} else if (getPreferenceKey(IStyleConstantsCSS.CURLY_BRACE).equals(prefKey)) {
+			} else if (IStyleConstantsCSS.CURLY_BRACE.equals(prefKey)) {
 				styleKey = IStyleConstantsCSS.CURLY_BRACE;
-			} else if (getPreferenceKey(IStyleConstantsCSS.ERROR).equals(prefKey)) {
+			} else if (IStyleConstantsCSS.ERROR.equals(prefKey)) {
 				styleKey = IStyleConstantsCSS.ERROR;
-			} else if (getPreferenceKey(IStyleConstantsCSS.MEDIA).equals(prefKey)) {
+			} else if (IStyleConstantsCSS.MEDIA.equals(prefKey)) {
 				styleKey = IStyleConstantsCSS.MEDIA;
-			} else if (getPreferenceKey(IStyleConstantsCSS.NORMAL).equals(prefKey)) {
+			} else if (IStyleConstantsCSS.NORMAL.equals(prefKey)) {
 				styleKey = IStyleConstantsCSS.NORMAL;
-			} else if (getPreferenceKey(IStyleConstantsCSS.PROPERTY_NAME).equals(prefKey)) {
+			} else if (IStyleConstantsCSS.PROPERTY_NAME.equals(prefKey)) {
 				styleKey = IStyleConstantsCSS.PROPERTY_NAME;
-			} else if (getPreferenceKey(IStyleConstantsCSS.PROPERTY_VALUE).equals(prefKey)) {
+			} else if (IStyleConstantsCSS.PROPERTY_VALUE.equals(prefKey)) {
 				styleKey = IStyleConstantsCSS.PROPERTY_VALUE;
-			} else if (getPreferenceKey(IStyleConstantsCSS.SELECTOR).equals(prefKey)) {
+			} else if (IStyleConstantsCSS.SELECTOR.equals(prefKey)) {
 				styleKey = IStyleConstantsCSS.SELECTOR;
-			} else if (getPreferenceKey(IStyleConstantsCSS.SEMI_COLON).equals(prefKey)) {
+			} else if (IStyleConstantsCSS.SEMI_COLON.equals(prefKey)) {
 				styleKey = IStyleConstantsCSS.SEMI_COLON;
-			} else if (getPreferenceKey(IStyleConstantsCSS.STRING).equals(prefKey)) {
+			} else if (IStyleConstantsCSS.STRING.equals(prefKey)) {
 				styleKey = IStyleConstantsCSS.STRING;
-			} else if (getPreferenceKey(IStyleConstantsCSS.URI).equals(prefKey)) {
+			} else if (IStyleConstantsCSS.URI.equals(prefKey)) {
 				styleKey = IStyleConstantsCSS.URI;
 			}
 		} else {
@@ -198,12 +196,7 @@ public class LineStyleProviderForCSS extends AbstractLineStyleProvider implement
 		getTextAttributes().clear();
 	}
 
-	protected String getPreferenceKey(String key) {
-		String contentTypeId = IContentTypeIdentifier.ContentTypeID_CSS;
-		return PreferenceKeyGenerator.generateKey(key, contentTypeId);
-	}
-
 	protected IPreferenceStore getColorPreferences() {
-		return SSEUIPlugin.getDefault().getPreferenceStore();
+		return CSSUIPlugin.getDefault().getPreferenceStore();
 	}
 }

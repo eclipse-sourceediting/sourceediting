@@ -90,7 +90,9 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 		 * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
 		 */
 		protected Control createDialogArea(Composite parent) {
-			parent.getShell().setText("Selection Information");
+			ISelection sel = fTextEditor.getSelectionProvider().getSelection();
+			ITextSelection textSelection = (ITextSelection) sel;
+			parent.getShell().setText("Selection Information: " + textSelection.getOffset() + "-" + (textSelection.getOffset() + textSelection.getLength()));
 			Composite composite = (Composite) super.createDialogArea(parent);
 
 			TabFolder tabfolder = new TabFolder(composite, SWT.NONE);
@@ -121,44 +123,49 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 		private void createPartitionContents(Composite area) {
 			area.setLayout(new GridLayout());
 			area.setLayoutData(new GridData());
+
+			Composite partioningComposite = new Composite(area, SWT.NONE);
+			partioningComposite.setLayout(new GridLayout(2, false));
+			partioningComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
 			IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
 			if (model != null) {
-				Text modelContentTypeLabel = new Text(area, SWT.SINGLE | SWT.READ_ONLY);
+				Text modelContentTypeLabel = new Text(partioningComposite, SWT.SINGLE | SWT.READ_ONLY);
 				GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+				gd.horizontalSpan = 2;
 				modelContentTypeLabel.setLayoutData(gd);
 				modelContentTypeLabel.setText("Content-Type: " + model.getContentTypeIdentifier());
 
-				Text modelHandlerContentTypeLabel = new Text(area, SWT.SINGLE | SWT.READ_ONLY);
+				Text modelHandlerContentTypeLabel = new Text(partioningComposite, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
 				gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+				gd.horizontalSpan = 2;
 				modelHandlerContentTypeLabel.setLayoutData(gd);
 				modelHandlerContentTypeLabel.setText("Model Handler: " + model.getModelHandler() + " (" + model.getModelHandler().getAssociatedContentTypeId() + ")");
 
-				Label blankRow = new Label(area, SWT.NONE);
+				Label blankRow = new Label(partioningComposite, SWT.NONE);
 				gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+				gd.horizontalSpan = 2;
 				blankRow.setLayoutData(gd);
 			}
 			if (model != null) {
 				model.releaseFromRead();
 			}
 
-			Composite partioningComposite = new Composite(area, SWT.NONE);
-			partioningComposite.setLayout(new GridLayout(2, false));
-			partioningComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-
-
 			Text label = new Text(partioningComposite, SWT.SINGLE | SWT.READ_ONLY);
 			label.setText("Partitioning: ");
-			label.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true));
+			label.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
 			final Combo partitioningCombo = new Combo(partioningComposite, SWT.READ_ONLY);
 			partitioningCombo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
-			final Text partitionerInstanceLabel = new Text(area, SWT.SINGLE | SWT.READ_ONLY);
+			final Text partitionerInstanceLabel = new Text(partioningComposite, SWT.SINGLE | SWT.READ_ONLY);
 			GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 			gd.horizontalSpan = 2;
 			partitionerInstanceLabel.setLayoutData(gd);
 
-			final TableViewer fPartitionTable = new TableViewer(area, SWT.FULL_SELECTION);
-			fPartitionTable.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
+			final TableViewer fPartitionTable = new TableViewer(partioningComposite, SWT.FULL_SELECTION);
+			gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+			gd.horizontalSpan = 2;
+			fPartitionTable.getControl().setLayoutData(gd);
 			fPartitionTable.setContentProvider(new ArrayContentProvider());
 			fPartitionTable.getTable().setHeaderVisible(true);
 			fPartitionTable.getTable().setLinesVisible(true);
@@ -258,9 +265,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 		 * @param composite
 		 * @return
 		 */
-		private Composite createRegionsContents(SashForm area) {
-			area.setLayoutData(new GridData());
-
+		private Composite createRegionsContents(SashForm sashForm) {
 			ISelection sel = fTextEditor.getSelectionProvider().getSelection();
 			final ITextSelection textSelection = (ITextSelection) sel;
 			final List documentRegions = new ArrayList();
@@ -279,7 +284,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				documentRegions.add(docRegion);
 			}
 
-			final TreeViewer tree = new TreeViewer(area, SWT.V_SCROLL | SWT.H_SCROLL);
+			final TreeViewer tree = new TreeViewer(sashForm, SWT.V_SCROLL | SWT.H_SCROLL);
 			final String START = "Start";
 			final String LENGTH = "Length";
 			final String TEXTLENGTH = "Text Length";
@@ -290,6 +295,9 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 
 				public Object[] getChildren(Object parentElement) {
 					List children = new ArrayList(0);
+					if (parentElement instanceof ITextSelection) {
+						children.addAll(documentRegions);
+					}
 					if (parentElement instanceof ITextRegionCollection) {
 						children.add(((ITextRegionCollection) parentElement).getRegions().toArray());
 					}
@@ -312,7 +320,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				}
 
 				public Object[] getElements(Object inputElement) {
-					return documentRegions.toArray();
+					return new Object[]{textSelection};
 				}
 
 				public Object getParent(Object element) {
@@ -356,23 +364,31 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 					return super.getText(element);
 				}
 			});
-			tree.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
 			tree.setInput(fDocument);
-			final Text displayText = new Text(area, SWT.V_SCROLL | SWT.H_SCROLL | SWT.READ_ONLY | SWT.BORDER);
-			displayText.setBackground(area.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+			final Text displayText = new Text(sashForm, SWT.V_SCROLL | SWT.H_SCROLL | SWT.READ_ONLY | SWT.BORDER);
+			displayText.setBackground(sashForm.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
 			tree.addSelectionChangedListener(new ISelectionChangedListener() {
 				public void selectionChanged(SelectionChangedEvent event) {
 					if (event.getSelection() instanceof IStructuredSelection) {
 						Object o = ((IStructuredSelection) event.getSelection()).getFirstElement();
 						if (o instanceof Pair)
 							displayText.setText(((Pair) o).fValue.toString());
+						else if (o instanceof ITextSelection) {
+							ITextSelection text = (ITextSelection) o;
+							try {
+								displayText.setText(fDocument.get(text.getOffset(), text.getLength()));
+							}
+							catch (BadLocationException e) {
+								displayText.setText("");
+							}
+						}
 						else
 							displayText.setText("" + o);
 					}
 				}
 			});
-			area.setWeights(new int[]{3, 2});
-			return area;
+			sashForm.setWeights(new int[]{3, 2});
+			return sashForm;
 		}
 	}
 

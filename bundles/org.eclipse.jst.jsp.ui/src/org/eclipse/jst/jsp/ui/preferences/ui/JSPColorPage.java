@@ -15,6 +15,7 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.editor.IHelpContextIds;
 import org.eclipse.swt.widgets.Composite;
@@ -26,7 +27,6 @@ import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore.OverlayKey;
-import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.preferences.ui.StyledTextColorPicker;
 import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
@@ -45,7 +45,7 @@ public class JSPColorPage extends XMLColorPage {
 		initStyleList(styleList);
 		Iterator i = styleList.iterator();
 		while (i.hasNext()) {
-			overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, PreferenceKeyGenerator.generateKey((String)i.next(), IContentTypeIdentifier.ContentTypeID_JSP)));	
+			overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, (String)i.next()));	
 		}
 
 		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys.size()];
@@ -117,7 +117,6 @@ public class JSPColorPage extends XMLColorPage {
 		picker.setDescriptions(descriptions);
 		picker.setStyleList(styleList);
 
-		picker.setGeneratorKey(IContentTypeIdentifier.ContentTypeID_JSP);
 		//	updatePickerFont(picker);
 	}
 	/* (non-Javadoc)
@@ -127,5 +126,17 @@ public class JSPColorPage extends XMLColorPage {
 		Control c = super.createContents(parent);
 		WorkbenchHelp.setHelp(c, IHelpContextIds.JSP_PREFWEBX_STYLES_HELPID);
 		return c;
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.jface.preference.PreferencePage#doGetPreferenceStore()
+	 */
+	protected IPreferenceStore doGetPreferenceStore() {
+		return JSPUIPlugin.getDefault().getPreferenceStore();
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.sse.ui.preferences.ui.AbstractColorPage#savePreferences()
+	 */
+	protected void savePreferences() {
+		JSPUIPlugin.getDefault().savePluginPreferences();
 	}
 }

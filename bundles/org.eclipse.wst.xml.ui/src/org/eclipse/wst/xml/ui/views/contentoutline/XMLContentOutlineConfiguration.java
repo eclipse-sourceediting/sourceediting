@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.TransferDragSourceListener;
 import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.IContentProvider;
@@ -33,6 +34,7 @@ import org.eclipse.wst.sse.ui.IReleasable;
 import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
 import org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration;
 import org.eclipse.wst.xml.ui.dnd.XMLDragAndDropManager;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
 
@@ -222,5 +224,11 @@ public class XMLContentOutlineConfiguration extends StructuredContentOutlineConf
 		}
 		// TODO: Add DnD support
 		// XMLDragAndDropManager.addDragAndDropSupport(fTreeViewer);
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration#getPreferenceStore()
+	 */
+	protected IPreferenceStore getPreferenceStore() {
+		return XMLUIPlugin.getDefault().getPreferenceStore();
 	}
 }

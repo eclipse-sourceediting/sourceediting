@@ -22,7 +22,8 @@ package org.eclipse.wst.sse.ui.preferences;
  * This class is not intended to be used for non content type sensitive
  * prefrences (eg. font style).
  * 
- *  
+ * @deprecated This utility is not long required because content type specific
+ *             preferences should be in their own preference store
  */
 public class PreferenceKeyGenerator {
 	public static String generateKey(String key, String contentTypeId) {

@@ -40,7 +40,7 @@ import org.eclipse.wst.sse.ui.util.EditorUtility;
 
 /**
  * Preference page tab that contains Navigation preferences
- * 
+ * @deprecated Users will use the Navigation preferences on All Text Editors preference page instead
  * @author amywu
  */
 public class NavigationPreferenceTab extends AbstractPreferenceTab {

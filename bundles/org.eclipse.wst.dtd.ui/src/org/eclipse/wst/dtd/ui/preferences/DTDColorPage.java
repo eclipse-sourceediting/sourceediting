@@ -29,10 +29,8 @@ import org.eclipse.wst.dtd.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.dtd.ui.style.IStyleConstantsDTD;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore.OverlayKey;
-import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.preferences.ui.AbstractColorPage;
 import org.eclipse.wst.sse.ui.preferences.ui.StyledTextColorPicker;
 
@@ -58,7 +56,7 @@ public class DTDColorPage extends AbstractColorPage {
 		initStyleList(styleList);
 		Iterator i = styleList.iterator();
 		while (i.hasNext()) {
-			overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, PreferenceKeyGenerator.generateKey((String) i.next(), IContentTypeIdentifier.ContentTypeID_DTD)));
+			overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, (String) i.next()));
 		}
 
 		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys.size()];
@@ -67,7 +65,7 @@ public class DTDColorPage extends AbstractColorPage {
 	}
 
 	protected IPreferenceStore doGetPreferenceStore() {
-		return SSEUIPlugin.getDefault().getPreferenceStore();
+		return DTDUIPlugin.getDefault().getPreferenceStore();
 	}
 
 	public String getSampleText() {
@@ -140,15 +138,6 @@ public class DTDColorPage extends AbstractColorPage {
 		list.add(IStyleConstantsDTD.DTD_TAGNAME);
 	}
 
-	public boolean performOk() {
-		// required since the superclass *removes* existing preferences before
-		// saving its own
-		super.performOk();
-
-		SSEUIPlugin.getDefault().savePluginPreferences();
-		return true;
-	}
-
 	protected void setupPicker(StyledTextColorPicker picker) {
 		IModelManager mmanager = StructuredModelManager.getModelManager();
 		picker.setParser(mmanager.createStructuredDocumentFor(IContentTypeIdentifier.ContentTypeID_DTD).getParser());
@@ -165,7 +154,11 @@ public class DTDColorPage extends AbstractColorPage {
 		picker.setContextStyleMap(contextStyleMap);
 		picker.setDescriptions(descriptions);
 		picker.setStyleList(styleList);
-
-		picker.setGeneratorKey(IContentTypeIdentifier.ContentTypeID_DTD);
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.sse.ui.preferences.ui.AbstractColorPage#savePreferences()
+	 */
+	protected void savePreferences() {
+		DTDUIPlugin.getDefault().savePluginPreferences();
 	}
 }

@@ -20,11 +20,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
-import org.eclipse.wst.dtd.ui.style.IStyleConstantsDTD;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
-import org.eclipse.wst.sse.ui.preferences.ui.ColorHelper;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -97,56 +93,47 @@ public class DTDUIPlugin extends AbstractUIPlugin {
 		return resourceBundle;
 	}
 
-	private void initializeDefaultDTDPreferences(IPreferenceStore store) {
-		String ctId = IContentTypeIdentifier.ContentTypeID_DTD;
-
-		// DTD Style Preferences
-		String NOBACKGROUNDBOLD = " | null | false"; //$NON-NLS-1$
-		String styleValue = ColorHelper.getColorString(0, 0, 0)
-				+ NOBACKGROUNDBOLD;
-		store.setDefault(PreferenceKeyGenerator.generateKey(
-				IStyleConstantsDTD.DTD_DEFAULT, ctId), styleValue); //black
-
-		styleValue = ColorHelper.getColorString(63, 63, 191) + NOBACKGROUNDBOLD;
-		store.setDefault(PreferenceKeyGenerator.generateKey(
-				IStyleConstantsDTD.DTD_TAG, ctId), styleValue); // blue
-		store.setDefault(PreferenceKeyGenerator.generateKey(
-				IStyleConstantsDTD.DTD_TAGNAME, ctId), styleValue); // blue
-
-		styleValue = ColorHelper.getColorString(127, 127, 127)
-				+ NOBACKGROUNDBOLD;
-		store.setDefault(PreferenceKeyGenerator.generateKey(
-				IStyleConstantsDTD.DTD_COMMENT, ctId), styleValue); // grey
-
-		styleValue = ColorHelper.getColorString(128, 0, 0) + NOBACKGROUNDBOLD;
-		store.setDefault(PreferenceKeyGenerator.generateKey(
-				IStyleConstantsDTD.DTD_KEYWORD, ctId), styleValue); // dark
-		// red
-
-		styleValue = ColorHelper.getColorString(63, 159, 95) + NOBACKGROUNDBOLD;
-		store.setDefault(PreferenceKeyGenerator.generateKey(
-				IStyleConstantsDTD.DTD_STRING, ctId), styleValue); //green
-
-		styleValue = ColorHelper.getColorString(191, 95, 95) + NOBACKGROUNDBOLD;
-		store.setDefault(PreferenceKeyGenerator.generateKey(
-				IStyleConstantsDTD.DTD_DATA, ctId), styleValue); // light
-		// red
-
-		styleValue = ColorHelper.getColorString(128, 0, 0) + NOBACKGROUNDBOLD;
-		store.setDefault(PreferenceKeyGenerator.generateKey(
-				IStyleConstantsDTD.DTD_SYMBOL, ctId), styleValue); // dark
-		// red
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#initializeDefaultPluginPreferences()
+	/**
+	 * @deprecated using DTDUIPreferenceInitializer instead
 	 */
-	protected void initializeDefaultPreferences(IPreferenceStore store) {
-		// ignore this preference store
-		// use EditorPlugin preference store
-		IPreferenceStore editorStore = SSEUIPlugin.getDefault().getPreferenceStore();
-		initializeDefaultDTDPreferences(editorStore);
+	private void initializeDefaultDTDPreferences(IPreferenceStore store) {
+//		String ctId = IContentTypeIdentifier.ContentTypeID_DTD;
+//
+//		// DTD Style Preferences
+//		String NOBACKGROUNDBOLD = " | null | false"; //$NON-NLS-1$
+//		String styleValue = ColorHelper.getColorString(0, 0, 0)
+//				+ NOBACKGROUNDBOLD;
+//		store.setDefault(PreferenceKeyGenerator.generateKey(
+//				IStyleConstantsDTD.DTD_DEFAULT, ctId), styleValue); //black
+//
+//		styleValue = ColorHelper.getColorString(63, 63, 191) + NOBACKGROUNDBOLD;
+//		store.setDefault(PreferenceKeyGenerator.generateKey(
+//				IStyleConstantsDTD.DTD_TAG, ctId), styleValue); // blue
+//		store.setDefault(PreferenceKeyGenerator.generateKey(
+//				IStyleConstantsDTD.DTD_TAGNAME, ctId), styleValue); // blue
+//
+//		styleValue = ColorHelper.getColorString(127, 127, 127)
+//				+ NOBACKGROUNDBOLD;
+//		store.setDefault(PreferenceKeyGenerator.generateKey(
+//				IStyleConstantsDTD.DTD_COMMENT, ctId), styleValue); // grey
+//
+//		styleValue = ColorHelper.getColorString(128, 0, 0) + NOBACKGROUNDBOLD;
+//		store.setDefault(PreferenceKeyGenerator.generateKey(
+//				IStyleConstantsDTD.DTD_KEYWORD, ctId), styleValue); // dark
+//		// red
+//
+//		styleValue = ColorHelper.getColorString(63, 159, 95) + NOBACKGROUNDBOLD;
+//		store.setDefault(PreferenceKeyGenerator.generateKey(
+//				IStyleConstantsDTD.DTD_STRING, ctId), styleValue); //green
+//
+//		styleValue = ColorHelper.getColorString(191, 95, 95) + NOBACKGROUNDBOLD;
+//		store.setDefault(PreferenceKeyGenerator.generateKey(
+//				IStyleConstantsDTD.DTD_DATA, ctId), styleValue); // light
+//		// red
+//
+//		styleValue = ColorHelper.getColorString(128, 0, 0) + NOBACKGROUNDBOLD;
+//		store.setDefault(PreferenceKeyGenerator.generateKey(
+//				IStyleConstantsDTD.DTD_SYMBOL, ctId), styleValue); // dark
+//		// red
 	}
 }

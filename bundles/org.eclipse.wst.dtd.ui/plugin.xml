@@ -106,5 +106,8 @@
             id="org.eclipse.wst.sse.ui.preferences.dtd.styles">
       </page>
    </extension>
-
+	<!-- initialize dtd ui preferences -->
+	<extension point="org.eclipse.core.runtime.preferences">
+	   <initializer class="org.eclipse.wst.dtd.ui.internal.preferences.DTDUIPreferenceInitializer"/>
+	</extension>
 </plugin>

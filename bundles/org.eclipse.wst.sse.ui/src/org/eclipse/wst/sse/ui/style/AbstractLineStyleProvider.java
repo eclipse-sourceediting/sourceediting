@@ -167,6 +167,7 @@ public abstract class AbstractLineStyleProvider {
 	 * Transforms the key in any way to use in preference store (ex:
 	 * PreferenceKeyGenerator)
 	 * 
+	 * @deprecated PrefernceKeyGenerator should no longer be needed
 	 * @param key
 	 * @return
 	 */

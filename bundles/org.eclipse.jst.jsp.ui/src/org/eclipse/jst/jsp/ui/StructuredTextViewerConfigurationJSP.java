@@ -35,6 +35,7 @@ import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
 import org.eclipse.jst.jsp.ui.format.FormattingStrategyJSPJava;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.autoedit.StructuredAutoEditStrategyJSP;
 import org.eclipse.jst.jsp.ui.internal.contentassist.JSPContentAssistProcessor;
 import org.eclipse.jst.jsp.ui.internal.contentassist.JSPJavaContentAssistProcessor;
@@ -72,7 +73,6 @@ import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
-import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
 import org.eclipse.wst.sse.ui.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.taginfo.AnnotationHoverProcessor;
@@ -410,8 +410,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 				if (sModel != null) {
 					// check language (ContentTypeID)....
 					String contentTypeId = sModel.getContentTypeIdentifier();
-					String generatedKey = PreferenceKeyGenerator.generateKey(CommonEditorPreferenceNames.EDITOR_VALIDATION_METHOD, contentTypeId);
-					String validationMethodPref = SSEUIPlugin.getInstance().getPreferenceStore().getString(generatedKey);
+					String validationMethodPref = JSPUIPlugin.getInstance().getPreferenceStore().getString(CommonEditorPreferenceNames.EDITOR_VALIDATION_METHOD);
 
 					IReconcilingStrategy defaultStrategy = null;
 

@@ -27,8 +27,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.ACC;
 import org.eclipse.swt.accessibility.AccessibleAdapter;
 import org.eclipse.swt.accessibility.AccessibleEvent;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.RGB;
@@ -45,9 +43,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
-import org.eclipse.wst.sse.core.ModelPlugin;
-import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
@@ -60,15 +55,10 @@ import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
  * @author pavery
  */
 public class StructuredTextEditorPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
-
-	private static Text getTextControl(Control[] labelledTextField) {
-		return (Text) labelledTextField[1];
-	}
-
 	private ColorEditor fAppearanceColorEditor;
 	private List fAppearanceColorList;
 
-	private final String[][] fAppearanceColorListModel = new String[][]{{SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.1"), AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER_COLOR}, {SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.2"), CommonEditorPreferenceNames.MATCHING_BRACKETS_COLOR}, {SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.3"), AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE_COLOR}, {SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.4"), AbstractDecoratedTextEditorPreferenceConstants.EDITOR_PRINT_MARGIN_COLOR}, {SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.5"), CommonEditorPreferenceNames.LINK_COLOR},}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+	private final String[][] fAppearanceColorListModel = new String[][]{{SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.2"), CommonEditorPreferenceNames.MATCHING_BRACKETS_COLOR}}; //$NON-NLS-1$
 	private Map fCheckBoxes = new HashMap();
 	private SelectionListener fCheckBoxListener = new SelectionListener() {
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -81,11 +71,6 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 	};
 
 	private Map fColorButtons = new HashMap();
-	private ModifyListener fNumberFieldListener = new ModifyListener() {
-		public void modifyText(ModifyEvent e) {
-			numberFieldChanged((Text) e.widget);
-		}
-	};
 
 	private ArrayList fNumberFields = new ArrayList();
 	private OverlayPreferenceStore fOverlayStore;
@@ -93,13 +78,6 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 //	 TODO: private field never read locally
 	Button fSetDefaultButton;
 	private IPreferenceTab[] fTabs = null;
-	private ModifyListener fTextFieldListener = new ModifyListener() {
-		public void modifyText(ModifyEvent e) {
-			Text text = (Text) e.widget;
-			fOverlayStore.setValue((String) fTextFields.get(text), text.getText());
-		}
-	};
-
 	private Map fTextFields = new HashMap();
 
 	public StructuredTextEditorPreferencePage() {
@@ -122,39 +100,6 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		fCheckBoxes.put(checkBox, key);
 
 		return checkBox;
-	}
-
-	/**
-	 * Returns an array of size 2: - first element is of type
-	 * <code>Label</code>- second element is of type <code>Text</code>
-	 * Use <code>getLabelControl</code> and <code>getTextControl</code> to
-	 * get the 2 controls.
-	 */
-	private Control[] addLabelledTextField(Composite composite, String label, String key, int textLimit, int indentation, boolean isNumber) {
-		Label labelControl = new Label(composite, SWT.NONE);
-		labelControl.setText(label);
-		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		gd.horizontalIndent = indentation;
-		labelControl.setLayoutData(gd);
-
-		Text textControl = new Text(composite, SWT.BORDER | SWT.SINGLE);
-		gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
-		gd.widthHint = convertWidthInCharsToPixels(textLimit + 1);
-		textControl.setLayoutData(gd);
-		textControl.setTextLimit(textLimit);
-		fTextFields.put(textControl, key);
-		if (isNumber) {
-			fNumberFields.add(textControl);
-			textControl.addModifyListener(fNumberFieldListener);
-		} else {
-			textControl.addModifyListener(fTextFieldListener);
-		}
-
-		return new Control[]{labelControl, textControl};
-	}
-
-	private Text addTextField(Composite composite, String label, String key, int textLimit, int indentation, boolean isNumber) {
-		return getTextControl(addLabelledTextField(composite, label, key, textLimit, indentation, isNumber));
 	}
 
 	/**
@@ -186,35 +131,13 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 	}
 
 	private Control createAppearancePage(Composite parent) {
-
 		Composite appearanceComposite = new Composite(parent, SWT.NONE);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		appearanceComposite.setLayout(layout);
 
-		String label = SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.16"); //$NON-NLS-1$
-		addTextField(appearanceComposite, label, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH, 3, 0, true);
-
-		label = SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.17"); //$NON-NLS-1$
-		addTextField(appearanceComposite, label, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_PRINT_MARGIN_COLUMN, 3, 0, true);
-
-		label = SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.18"); //$NON-NLS-1$
-		addCheckBox(appearanceComposite, label, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_OVERVIEW_RULER, 0);
-
-		label = SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.19"); //$NON-NLS-1$
-		addCheckBox(appearanceComposite, label, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER, 0);
-
-		label = SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.20"); //$NON-NLS-1$
+		String label = SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.20"); //$NON-NLS-1$
 		addCheckBox(appearanceComposite, label, CommonEditorPreferenceNames.MATCHING_BRACKETS, 0);
-
-		label = SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.21"); //$NON-NLS-1$
-		addCheckBox(appearanceComposite, label, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE, 0);
-
-		label = SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.22"); //$NON-NLS-1$
-		addCheckBox(appearanceComposite, label, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_PRINT_MARGIN, 0);
-
-		label = SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.31"); //$NON-NLS-1$
-		addCheckBox(appearanceComposite, label, CommonEditorPreferenceNames.SHOW_QUICK_FIXABLES, 0);
 
 		label = SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.30"); //$NON-NLS-1$
 		addCheckBox(appearanceComposite, label, CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS, 0);
@@ -309,7 +232,6 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 	protected Control createContents(Composite parent) {
 		// need to create tabs before loading/starting overlaystore in case
 		// tabs also add values
-		IPreferenceTab navigationTab = new NavigationPreferenceTab(this, fOverlayStore);
 		IPreferenceTab hoversTab = new TextHoverPreferenceTab(this, fOverlayStore);
 
 		fOverlayStore.load();
@@ -324,14 +246,10 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		item.setControl(createAppearancePage(folder));
 
 		item = new TabItem(folder, SWT.NONE);
-		item.setText(navigationTab.getTitle());
-		item.setControl(navigationTab.createContents(folder));
-
-		item = new TabItem(folder, SWT.NONE);
 		item.setText(hoversTab.getTitle());
 		item.setControl(hoversTab.createContents(folder));
 
-		fTabs = new IPreferenceTab[]{navigationTab, hoversTab};
+		fTabs = new IPreferenceTab[]{hoversTab};
 
 		initialize();
 
@@ -351,25 +269,10 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 	private OverlayPreferenceStore.OverlayKey[] createOverlayStoreKeys() {
 		ArrayList overlayKeys = new ArrayList();
 
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, CommonEditorPreferenceNames.SHOW_QUICK_FIXABLES));
-
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, CommonEditorPreferenceNames.MATCHING_BRACKETS_COLOR));
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, CommonEditorPreferenceNames.MATCHING_BRACKETS));
-
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE_COLOR));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE));
-
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.INT, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH));
-
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_PRINT_MARGIN_COLOR));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.INT, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_PRINT_MARGIN_COLUMN));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_PRINT_MARGIN));
-
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_OVERVIEW_RULER));
-
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER_COLOR));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER));
+		
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS));
 
 		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys.size()];
 		overlayKeys.toArray(keys);
@@ -441,14 +344,6 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		}
 	}
 
-	private void numberFieldChanged(Text textControl) {
-		String number = textControl.getText();
-		IStatus status = validatePositiveNumber(number);
-		if (!status.matches(IStatus.ERROR))
-			fOverlayStore.setValue((String) fTextFields.get(textControl), number);
-		updateStatus(status);
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -493,9 +388,10 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		SSEUIPlugin.getDefault().savePluginPreferences();
 
 		// tab width is also a model-side preference so need to set it
-		int tabWidth = getPreferenceStore().getInt(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH);
-		ModelPlugin.getDefault().getPluginPreferences().setValue(CommonModelPreferenceNames.TAB_WIDTH, tabWidth);
-		ModelPlugin.getDefault().savePluginPreferences();
+		// TODO need to handle tab width for formatter somehow
+//		int tabWidth = getPreferenceStore().getInt(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH);
+//		ModelPlugin.getDefault().getPluginPreferences().setValue(CommonModelPreferenceNames.TAB_WIDTH, tabWidth);
+//		ModelPlugin.getDefault().savePluginPreferences();
 
 		return true;
 	}

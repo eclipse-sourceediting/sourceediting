@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.views.contentoutline;
 
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.wst.html.ui.views.contentoutline.HTMLContentOutlineConfiguration;
 
 //public class JSPContentOutlineConfiguration extends StructuredContentOutlineConfiguration {
@@ -27,5 +29,11 @@ public class JSPContentOutlineConfiguration extends HTMLContentOutlineConfigurat
 	 */
 	public JSPContentOutlineConfiguration() {
 		super();
+	}
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration#getPreferenceStore()
+	 */
+	protected IPreferenceStore getPreferenceStore() {
+		return JSPUIPlugin.getDefault().getPreferenceStore();
 	}
 }

@@ -59,7 +59,6 @@ import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.util.EditorUtility;
 import org.w3c.dom.Node;
 
@@ -212,7 +211,7 @@ public class StyledTextColorPicker extends Composite {
 	protected Dictionary fDescriptions = null;
 	protected Button fForeground;
 	protected Label fForegroundLabel;
-	private String fGeneratorKey;
+//	private String fGeneratorKey;
 	protected String fInput = ""; //$NON-NLS-1$
 	protected Button fItalic;
 
@@ -635,11 +634,14 @@ public class StyledTextColorPicker extends Composite {
 		return fParser;
 	}
 
+	/**
+	 * @deprecated just key key (no need for generator)
+	 */
 	private String getPreferenceKey(String key) {
 		String newKey = key;
-		if (fGeneratorKey != null) {
-			newKey = PreferenceKeyGenerator.generateKey(key, fGeneratorKey);
-		}
+//		if (fGeneratorKey != null) {
+//			newKey = PreferenceKeyGenerator.generateKey(key, fGeneratorKey);
+//		}
 		return newKey;
 	}
 
@@ -857,8 +859,11 @@ public class StyledTextColorPicker extends Composite {
 		fText.redraw();
 	}
 
+	/**
+	 * @deprecated generator key should no longer be needed
+	 */
 	public void setGeneratorKey(String key) {
-		fGeneratorKey = key;
+//		fGeneratorKey = key;
 	}
 
 	/**

@@ -33,7 +33,6 @@ import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
-import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
 
 public class StructuredContentOutlineConfiguration extends ContentOutlineConfiguration {
@@ -99,7 +98,7 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 	 */
 	protected IContributionItem[] createMenuContributions(TreeViewer viewer) {
 		IContributionItem[] items;
-		IContributionItem toggleLinkItem = new PropertyChangeUpdateActionContributionItem(new ToggleLinkAction(SSEUIPlugin.getInstance().getPreferenceStore(), getLinkPreferenceKey()));
+		IContributionItem toggleLinkItem = new PropertyChangeUpdateActionContributionItem(new ToggleLinkAction(getPreferenceStore(), OUTLINE_LINK_PREF));
 		items = super.getMenuContributions(viewer);
 		if (items == null) {
 			items = new IContributionItem[]{toggleLinkItem};
@@ -171,8 +170,13 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 		return adapterFactory;
 	}
 
+	/**
+	 * @deprecated just use the preference key directly
+	 * @return
+	 */
 	protected String getLinkPreferenceKey() {
-		return PreferenceKeyGenerator.generateKey(OUTLINE_LINK_PREF, getDeclaringID());
+//		return PreferenceKeyGenerator.generateKey(OUTLINE_LINK_PREF, getDeclaringID());
+		return OUTLINE_LINK_PREF;
 	}
 
 	/*
@@ -280,5 +284,9 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 		}
 		fLabelProvider = null;
 		fContentProvider = null;
+	}
+	
+	protected IPreferenceStore getPreferenceStore() {
+		return SSEUIPlugin.getInstance().getPreferenceStore();
 	}
 }
