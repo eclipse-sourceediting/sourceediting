@@ -56,7 +56,7 @@ public class StructuredTextPartitioner implements IDocumentPartitioner {
 		}
 	}
 
-	public final static String ST_DEFAULT_PARTITION = "org.eclipse.wst.sse.editor.ST_DEFAULT"; //$NON-NLS-1$
+	public final static String ST_DEFAULT_PARTITION = "org.eclipse.wst.sse.ST_DEFAULT"; //$NON-NLS-1$
 	public final static String ST_UNKNOWN_PARTITION = "org.eclipse.wst.sse.UNKNOWN_PARTITION_TYPE"; //$NON-NLS-1$
 	private CachedComputedPartitions cachedPartitions = new CachedComputedPartitions(-1, -1, null);
 	protected String[] fSupportedTypes = null;
