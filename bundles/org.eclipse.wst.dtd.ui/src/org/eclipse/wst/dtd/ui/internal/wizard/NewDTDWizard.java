@@ -28,15 +28,15 @@ public class NewDTDWizard extends Wizard implements INewWizard {
 				IPath handlePath = new Path(getFileName());
 				String extension = handlePath.getFileExtension();
 				if (extension == null || !extension.equalsIgnoreCase("dtd")) {
-					setErrorMessage(DTDUIPlugin.getResourceString("_ERROR_FILENAME_MUST_END_DTD"));
+					setErrorMessage(DTDUIPlugin.getResourceString("%_ERROR_FILENAME_MUST_END_DTD"));
 					return false;
 				}
 				setErrorMessage(null);
 				return super.validatePage();
 			}
 		};
-		fNewFilePage.setTitle(DTDUIPlugin.getResourceString("%_UI_WIZARD_NEW_HEADING"));
-		fNewFilePage.setDescription(DTDUIPlugin.getResourceString("%_UI_WIZARD_NEW_DESCRIPTION"));
+		fNewFilePage.setTitle(DTDUIPlugin.getResourceString("%_UI_CREATE_NEW_DTD_FILE"));
+		fNewFilePage.setDescription(DTDUIPlugin.getResourceString("%_UI_WIZARD_NEW_DTD_EXPL"));
 
 		addPage(fNewFilePage);
 	}

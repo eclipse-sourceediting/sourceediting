@@ -39,16 +39,21 @@ public class DTDUIPlugin extends AbstractUIPlugin {
 	 * found.
 	 */
 	public static String getResourceString(String key) {
-		ResourceBundle bundle = DTDUIPlugin.getDefault()
-				.getResourceBundle();
+		ResourceBundle bundle = DTDUIPlugin.getDefault().getResourceBundle();
+		String bundleKey = null;
+		if (key.startsWith("%")) {
+			bundleKey = key.substring(1);
+		}
+		else {
+			bundleKey = key;
+		}
 		try {
 			if (bundle != null)
-				return bundle.getString(key);
-			else
-				return key;
-		} catch (MissingResourceException e) {
-			return key;
+				return bundle.getString(bundleKey);
 		}
+		catch (MissingResourceException e) {
+		}
+		return key;
 	}
 
 	/**
