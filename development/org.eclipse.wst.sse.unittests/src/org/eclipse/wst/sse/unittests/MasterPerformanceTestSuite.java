@@ -12,7 +12,6 @@
 
 package org.eclipse.wst.sse.unittests;
 
-import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
 import org.eclipse.jst.jsp.ui.tests.performance.JSPUIPerformanceTests;
