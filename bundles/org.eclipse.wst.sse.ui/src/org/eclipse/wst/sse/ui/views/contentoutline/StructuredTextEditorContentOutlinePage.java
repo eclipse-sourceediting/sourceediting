@@ -16,9 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IContributionManager;
 import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.util.DelegatingDragAdapter;
 import org.eclipse.jface.util.DelegatingDropAdapter;
@@ -43,6 +45,8 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.IShowInTarget;
@@ -61,6 +65,9 @@ import org.eclipse.wst.sse.ui.view.events.TextSelectionChangedEvent;
 
 
 public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage implements INodeSelectionListener, ITextSelectionListener, IUpdate, IAdaptable {
+	/**
+	 * @deprecated
+	 */
 	// Disables Tree redraw during large model changes
 	protected class ControlRedrawEnabler implements IModelStateListener {
 		public void modelAboutToBeChanged(IStructuredModel model) {
@@ -92,9 +99,11 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 						setRedraw(redrawOrNot);
 					}
 				};
-				// This may not result in the enablement change happening
-				// "soon
-				// enough", but better to do it later than to cause a deadlock
+				/*
+				 * This may not result in the enablement change happening
+				 * "soon enough", but better to do it later than to cause a
+				 * deadlock
+				 */
 				Display.getDefault().asyncExec(modifyRedraw);
 			}
 		}
@@ -122,12 +131,29 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 		}
 	}
 
+	/*
+	 * Menu listener to create the additions group; required since the context
+	 * menu is cleared every time it is shown
+	 */
+	class AdditionGroupAdder implements IMenuListener {
+		public void menuAboutToShow(IMenuManager manager) {
+			IContributionItem[] items = manager.getItems();
+			if (items.length > 0 && items[items.length - 1].getId() != null) {
+				manager.insertAfter(items[items.length - 1].getId(), new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+			}
+			else {
+				manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+			}
+		}
+	}
+
 	protected static ContentOutlineConfiguration NULL_CONFIGURATION = new ContentOutlineConfiguration();
 	private TransferDragSourceListener[] fActiveDragListeners;
 	private TransferDropTargetListener[] fActiveDropListeners;
 	private ContentOutlineConfiguration fConfiguration;
 
 	private MenuManager fContextMenuManager;
+	private boolean fContextMenuRegistered = false;
 	private DelegatingDragAdapter fDragAdapter;
 	private DragSource fDragSource;
 	private DelegatingDropAdapter fDropAdapter;
@@ -138,13 +164,12 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 	ISelection fSelection;
 	protected SourceEditorTreeViewer fTreeViewer;
 	protected ViewerSelectionManager fViewerSelectionManager;
-
-	// private IModelStateListener fInternalModelStateListener;
+	private IMenuListener fGroupAdder = null;
 
 	public StructuredTextEditorContentOutlinePage() {
 		super();
-		// fInternalModelStateListener = new ControlRedrawEnabler();
 		fSelection = StructuredSelection.EMPTY;
+		fGroupAdder = new AdditionGroupAdder();
 	}
 
 	/**
@@ -174,19 +199,10 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 			}
 		});
 		fTreeViewer.addPostSelectionChangedListener(this);
-
-		IEditorPart ownerEditor = getSite().getWorkbenchWindow().getActivePage().getActiveEditor();
-		if (ownerEditor != null) {
-			getSite().registerContextMenu(ownerEditor.getEditorSite().getId() + "#outlinecontext", fContextMenuManager, this);
-		}
 	}
 
 	public void dispose() {
 		super.dispose();
-		// remove this text viewer from the old model's list of model state
-		// listeners
-		// if (fModel != null)
-		// fModel.removeModelStateListener(fInternalModelStateListener);
 		// disconnect from the ViewerSelectionManager
 		if (fViewerSelectionManager != null) {
 			fViewerSelectionManager.removeNodeSelectionListener(this);
@@ -286,6 +302,19 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 		}
 	}
 
+	void registerContextMenu() {
+		if (!fContextMenuRegistered && getTreeViewer() != null && getTreeViewer().getControl() != null) {
+			IWorkbenchPage page = getSite().getWorkbenchWindow().getActivePage();
+			if (page != null) {
+				IEditorPart ownerEditor = page.getActiveEditor();
+				if (ownerEditor != null) {
+					fContextMenuRegistered = true;
+					getSite().registerContextMenu(ownerEditor.getEditorSite().getId() + "#outlinecontext", fContextMenuManager, this);
+				}
+			}
+		}
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -322,6 +351,7 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 				IMenuListener listener = getConfiguration().getMenuListener(fTreeViewer);
 				if (listener != null)
 					fContextMenuManager.removeMenuListener(listener);
+				fContextMenuManager.removeMenuListener(fGroupAdder);
 			}
 			// clear the selection changed and double click listeners from the
 			// configuration
@@ -343,6 +373,7 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 				for (int i = 0; i < menuItems.length; i++) {
 					menubar.remove(menuItems[i]);
 				}
+				menubar.remove(IWorkbenchActionConstants.MB_ADDITIONS);
 				menubar.update(false);
 			}
 			// clear the DnD listeners and transfer types
@@ -380,6 +411,7 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 			IMenuListener listener = getConfiguration().getMenuListener(fTreeViewer);
 			if (listener != null)
 				fContextMenuManager.addMenuListener(listener);
+			fContextMenuManager.addMenuListener(fGroupAdder);
 			// (re)set the providers
 			fTreeViewer.setLabelProvider(getConfiguration().getLabelProvider(fTreeViewer));
 			fTreeViewer.setContentProvider(getConfiguration().getContentProvider(fTreeViewer));
@@ -387,6 +419,8 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 				addSelectionChangedListener(getConfiguration().getSelectionChangedListener(fTreeViewer));
 			if (getConfiguration().getDoubleClickListener(fTreeViewer) != null)
 				fTreeViewer.addDoubleClickListener(getConfiguration().getDoubleClickListener(fTreeViewer));
+
+			// view toolbar
 			IContributionItem[] toolbarItems = getConfiguration().getToolbarContributions(fTreeViewer);
 			if (toolbarItems.length > 0 && getSite() != null && getSite().getActionBars() != null && getSite().getActionBars().getToolBarManager() != null) {
 				IContributionManager toolbar = getSite().getActionBars().getToolBarManager();
@@ -395,15 +429,18 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 				}
 				toolbar.update(true);
 			}
-			IContributionItem[] menuItems = getConfiguration().getMenuContributions(fTreeViewer);
-			if (menuItems.length > 0 && getSite().getActionBars().getMenuManager() != null) {
-				IContributionManager menu = getSite().getActionBars().getMenuManager();
-				for (int i = 0; i < menuItems.length; i++) {
-					menuItems[i].setVisible(true);
-					menu.add(menuItems[i]);
-					menuItems[i].update();
+			// view menu
+			IContributionManager menu = getSite().getActionBars().getMenuManager();
+			if (menu != null) {
+				IContributionItem[] menuItems = getConfiguration().getMenuContributions(fTreeViewer);
+				if (menuItems.length > 0) {
+					for (int i = 0; i < menuItems.length; i++) {
+						menuItems[i].setVisible(true);
+						menu.add(menuItems[i]);
+						menuItems[i].update();
+					}
+					menu.update(true);
 				}
-				menu.update(true);
 			}
 			// add the allowed DnD listeners and types
 			TransferDragSourceListener[] dragListeners = fConfiguration.getTransferDragSourceListeners(fTreeViewer);
@@ -430,6 +467,7 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 				fTreeViewer.getControl().addKeyListener(listeners[i]);
 			}
 		}
+		registerContextMenu();
 	}
 
 	/**
