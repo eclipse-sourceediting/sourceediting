@@ -76,6 +76,20 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	protected final String SSE_MODEL_ID = "org.eclipse.wst.sse.core"; //$NON-NLS-1$
 
 	/**
+	 * This is intended for unit testing only.
+	 * 
+	 * This preference store will be overwritten when configured with
+	 * a StructuredTextEditor
+	 * 
+	 * @param store
+	 */
+	public StructuredTextViewerConfiguration(IPreferenceStore store) {
+		super(store);
+		fPreferenceStore = store;
+		fContentAssistProcessors = new ArrayList();
+	}
+	
+	/**
 	 * Default constructor.
 	 */
 	public StructuredTextViewerConfiguration() {

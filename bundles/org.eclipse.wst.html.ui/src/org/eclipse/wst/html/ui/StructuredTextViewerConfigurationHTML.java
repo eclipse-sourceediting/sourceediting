@@ -78,7 +78,15 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 	InformationPresenter fInformationPresenter = null;
 
 	private JavaSourceViewerConfiguration fJavaSourceViewerConfiguration;
-
+	
+	public StructuredTextViewerConfigurationHTML() {
+		super();
+	}
+	
+	public StructuredTextViewerConfigurationHTML(IPreferenceStore store) {
+		super(store);
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 

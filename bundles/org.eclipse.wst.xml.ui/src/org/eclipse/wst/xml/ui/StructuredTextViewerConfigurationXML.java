@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextHover;
@@ -65,6 +66,14 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
     
 	InformationPresenter fInformationPresenter = null;
 
+	public StructuredTextViewerConfigurationXML() {
+		super();
+	}
+	
+	public StructuredTextViewerConfigurationXML(IPreferenceStore store) {
+		super(store);
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
