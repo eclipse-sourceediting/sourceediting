@@ -78,8 +78,10 @@ public class TaglibController implements IDocumentSetupParticipant {
 			if (buffer instanceof ITextFileBuffer) {
 				IDocument document = ((ITextFileBuffer) buffer).getDocument();
 				// ignore non-JSP documents
-				if (!fJSPdocuments.contains(document))
-					return;
+				synchronized (fJSPdocuments) {
+					if (!fJSPdocuments.contains(document))
+						return;
+				}
 				Assert.isTrue(document instanceof IStructuredDocument);
 				DocumentInfo info = new DocumentInfo();
 				info.document = (IStructuredDocument) document;
@@ -103,8 +105,10 @@ public class TaglibController implements IDocumentSetupParticipant {
 		public void bufferDisposed(IFileBuffer buffer) {
 			if (buffer instanceof ITextFileBuffer) {
 				IDocument document = ((ITextFileBuffer) buffer).getDocument();
-				if (!fJSPdocuments.remove(document))
-					return;
+				synchronized (fJSPdocuments) {
+					if (!fJSPdocuments.remove(document))
+						return;
+				}
 			}
 			synchronized (fDocumentMap) {
 				Object[] mapEntrys = fDocumentMap.entrySet().toArray();
@@ -238,7 +242,9 @@ public class TaglibController implements IDocumentSetupParticipant {
 	 * @see org.eclipse.core.filebuffers.IDocumentSetupParticipant#setup(org.eclipse.jface.text.IDocument)
 	 */
 	public void setup(IDocument document) {
-		_instance.fJSPdocuments.add(document);
+		synchronized (_instance.fJSPdocuments) {
+			_instance.fJSPdocuments.add(document);
+		}
 	}
 
 }
