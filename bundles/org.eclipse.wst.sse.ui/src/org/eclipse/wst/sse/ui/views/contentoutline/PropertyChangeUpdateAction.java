@@ -33,6 +33,7 @@ public class PropertyChangeUpdateAction extends Action implements IUpdate {
 		fPreferenceKey = preferenceKey;
 		fStore = store;
 		fStore.setDefault(getPreferenceKey(), defaultValue);
+		setId(getPreferenceKey());
 		setChecked(getPreferenceStore().getBoolean(getPreferenceKey()));
 	}
 
