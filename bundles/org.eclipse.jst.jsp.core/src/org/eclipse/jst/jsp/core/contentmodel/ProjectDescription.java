@@ -163,7 +163,7 @@ class ProjectDescription {
 		String jarLocationString = jar.getLocation().toString();
 		String[] entries = JarUtilities.getEntryNames(jar);
 		JarRecord jarRecord = (JarRecord) createJARRecord(jar);
-		fTLDReferences.put(jar.getFullPath().toString(), jarRecord);
+		fJARReferences.put(jar.getFullPath().toString(), jarRecord);
 		for (int i = 0; i < entries.length; i++) {
 			if (entries[i].endsWith(".tld")) {
 				InputStream contents = JarUtilities.getInputStream(jar, entries[i]);
@@ -536,11 +536,11 @@ class ProjectDescription {
 	}
 
 	/**
-	 * @param baseLocation
+	 * @param path
 	 * @param reference
 	 * @return
 	 */
-	ITaglibRecord resolve(String baseLocation, String reference) {
+	ITaglibRecord resolve(String path, String reference) {
 		ITaglibRecord record = null;
 		String location = null;
 
@@ -549,10 +549,10 @@ class ProjectDescription {
 		 * returned as-is.
 		 */
 		if (reference.startsWith("/")) {
-			location = getLocalRoot(baseLocation) + reference;
+			location = getLocalRoot(path) + reference;
 		}
 		else {
-			location = URIHelper.normalize(reference, baseLocation, getLocalRoot(baseLocation));
+			location = URIHelper.normalize(reference, path, getLocalRoot(path));
 		}
 		// order dictated by JSP spec 2.0 section 7.2.3
 		if (record == null) {
@@ -565,7 +565,7 @@ class ProjectDescription {
 			record = (ITaglibRecord) fTLDReferences.get(location);
 		}
 		if (record == null) {
-			record = (ITaglibRecord) getImplicitReferences(baseLocation).get(reference);
+			record = (ITaglibRecord) getImplicitReferences(path).get(reference);
 		}
 		if (record == null) {
 			record = (ITaglibRecord) fTagDirReferences.get(location);
