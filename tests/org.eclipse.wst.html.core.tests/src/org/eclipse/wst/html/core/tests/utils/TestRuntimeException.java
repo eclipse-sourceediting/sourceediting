@@ -20,6 +20,10 @@ import org.eclipse.wst.sse.core.internal.nls.ResourceHandler1;
  * as a runtime exception. (Such as BadLocationException is a common example).
  */
 public class TestRuntimeException extends RuntimeException {
+	/**
+	 * Default <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 1L;
 	private Throwable originalException;
 
 	public TestRuntimeException() {
