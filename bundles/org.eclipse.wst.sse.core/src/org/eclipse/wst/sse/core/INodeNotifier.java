@@ -16,28 +16,58 @@ package org.eclipse.wst.sse.core;
 
 import java.util.Collection;
 
+/**
+ * INodeNotifiers and INodeAdapters form a collaboration that allows clients
+ * to use the typical adapter pattern but with notification added, that is,
+ * client's adapters will be notified when the nodeNotifier changes.
+ * 
+ * @since 1.0
+ */
+
 public interface INodeNotifier {
+
+	/**
+	 * The change represents a non-structural change, sent to node notifier's
+	 * parent.
+	 */
+	static final int CHANGE = 1;
+	/**
+	 * The change represents an add event.
+	 */
 	static final int ADD = 2;
 
-	// Possible values for eventType
-	static final int CHANGE = 1; // update - non structural
-	// removed
-	// when large changes are made to a sub-tree
-	static final int CONTENT_CHANGED = 5; // sent to the parent notifier
-	// these strings are for printing, such as during debuging
-	static final String[] EVENT_TYPE_STRINGS = new String[]{"undefined", "CHANGE", "ADD", "REMOVE", "STRUCUTRED_CHANGED", "CONTENT_CHANGED"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+	/**
+	 * The change represents a remove event.
+	 */
 	static final int REMOVE = 3;
-	static final int STRUCTURE_CHANGED = 4; // sent in addition to adds and
 
-	// when the child value changed
+	/**
+	 * The change represents a structural change, sent to least-common parent
+	 * of node notifiers involved in the structural change
+	 */
+	static final int STRUCTURE_CHANGED = 4;
+
+	/**
+	 * The change represents a notification to parent notifier than its
+	 * contents have changed.
+	 */
+	static final int CONTENT_CHANGED = 5;
+
+
+	/**
+	 * NOT API: these strings are for printing, such as during debuging
+	 */
+	static final String[] EVENT_TYPE_STRINGS = new String[]{"undefined", "CHANGE", "ADD", "REMOVE", "STRUCUTRED_CHANGED", "CONTENT_CHANGED"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+
 
 	/**
 	 * Add an adapter of this notifier.
 	 * 
-	 * @param o
-	 *            com.ibm.etools.emf.notify.INodeAdapter
+	 * @param adapter
+	 *            the adapter to be added
+	 * 
 	 */
-	void addAdapter(INodeAdapter o);
+	void addAdapter(INodeAdapter adapter);
 
 	/**
 	 * Return an exisiting adapter of type "type" or if none found create a
@@ -48,7 +78,7 @@ public interface INodeNotifier {
 	/**
 	 * Return a read-only Collection of the Adapters to this notifier.
 	 * 
-	 * @return com.ibm.etools.emf.notify.INodeAdapter
+	 * @return collection of adapters.
 	 */
 	Collection getAdapters();
 
@@ -58,14 +88,16 @@ public interface INodeNotifier {
 	INodeAdapter getExistingAdapter(Object type);
 
 	/**
+	 * sent to adapter when its nodeNotifier changes.
 	 */
 	void notify(int eventType, Object changedFeature, Object oldValue, Object newValue, int pos);
 
 	/**
-	 * Remove an adapter of this notifier.
+	 * Remove an adapter of this notifier. If the adapter does not exist for
+	 * this node notifier, this request is ignored.
 	 * 
-	 * @param o
-	 *            com.ibm.etools.emf.notify.INodeAdapter
+	 * @param adapter
+	 *            the adapter to remove
 	 */
-	void removeAdapter(INodeAdapter o);
+	void removeAdapter(INodeAdapter adapter);
 }

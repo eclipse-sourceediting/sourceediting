@@ -22,8 +22,11 @@ import org.eclipse.wst.sse.core.internal.Logger;
 
 
 /**
- * AbstractNotifier is similar to (and based on) the EMF NotifierImpl class.
- * This class is simpler (that is, not as many functions).
+ * AbstractNotifier is similar to (and based on) the EMF NotifierImpl class,
+ * but is not related to EMF per se. This class is simpler (that is, not as
+ * many functions).
+ * 
+ * Implementers of this INodeNotifier must subclass this class.
  */
 public abstract class AbstractNotifier implements INodeNotifier {
 	private final static boolean debugAdapterNotificationTime = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/dom/adapter/notification/time")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -66,8 +69,7 @@ public abstract class AbstractNotifier implements INodeNotifier {
 	}
 
 	/**
-	 * Returns the adapterCount. Equivilent to, but faster than,
-	 * getAdapters().size();
+	 * NOT API: used only for testing.
 	 * 
 	 * @return int
 	 */
@@ -111,7 +113,8 @@ public abstract class AbstractNotifier implements INodeNotifier {
 			if (adapterCount == 0) {
 				fAdapters = null;
 				return Collections.EMPTY_LIST;
-			} else {
+			}
+			else {
 				// we need to make a new array, to be sure
 				// it doesn't contain nulls at end, which may be
 				// present there for "growth".
@@ -123,9 +126,10 @@ public abstract class AbstractNotifier implements INodeNotifier {
 				// it would "fail fast" if someone was trying to modify the
 				// list.
 				return Collections.unmodifiableCollection(Arrays.asList(tempAdapters));
-				//return Arrays.asList(newAdapters);
+				// return Arrays.asList(newAdapters);
 			}
-		} else
+		}
+		else
 			return Collections.EMPTY_LIST;
 	}
 
@@ -140,7 +144,8 @@ public abstract class AbstractNotifier implements INodeNotifier {
 		if (criteriaStr != null) {
 			try {
 				criteria = Long.parseLong(criteriaStr);
-			} catch (NumberFormatException e) {
+			}
+			catch (NumberFormatException e) {
 				// catch to be sure we don't burb in notification loop,
 				// but ignore, since just a debug aid
 			}
@@ -189,11 +194,13 @@ public abstract class AbstractNotifier implements INodeNotifier {
 					if (getAdapterTimeCriteria >= 0 && notifyDuration > getAdapterTimeCriteria) {
 						System.out.println("adapter notifyDuration: " + notifyDuration + "  class: " + a.getClass()); //$NON-NLS-1$ //$NON-NLS-2$
 					}
-				} else {
+				}
+				else {
 					try {
 						// ** keep this line identical with debug version!!
 						a.notifyChanged(this, eventType, changedFeature, oldValue, newValue, pos);
-					} catch (Exception e) {
+					}
+					catch (Exception e) {
 						// Its important to "keep going", since notifications
 						// occur between an
 						// aboutToChange event and a changed event -- the
@@ -222,7 +229,8 @@ public abstract class AbstractNotifier implements INodeNotifier {
 			if (a == candidate) {
 				adapterCount--;
 				found = true;
-			} else
+			}
+			else
 				newAdapters[newIndex++] = fAdapters[oldIndex];
 		}
 		if (found)

@@ -31,6 +31,13 @@ import org.eclipse.wst.sse.core.util.URIResolver;
 
 
 /**
+ * IStructuredModel's are mainly interesting by their extensions and
+ * implementers. The main purposed of this abstraction it to provide a common
+ * way to manage models that have an associated structured documnet.
+ * 
+ * @since 1.0
+ * 
+ * ISSUE: this interface needs ton of cleanup!
  */
 public interface IStructuredModel extends IAdaptable {
 
@@ -101,7 +108,7 @@ public interface IStructuredModel extends IAdaptable {
 	 * calling aboutToChangeModel first.
 	 * 
 	 * In the case of embedded calls, the notification is just sent once.
-	 *  
+	 * 
 	 */
 	void changedModel();
 
@@ -158,7 +165,7 @@ public interface IStructuredModel extends IAdaptable {
 	String getId();
 
 	/**
-	 *  
+	 * 
 	 */
 	IndexedRegion getIndexedRegion(int offset);
 
@@ -226,7 +233,7 @@ public interface IStructuredModel extends IAdaptable {
 	IStructuredTextUndoManager getUndoManager();
 
 	/**
-	 *  
+	 * 
 	 */
 	boolean isDirty();
 
@@ -237,7 +244,7 @@ public interface IStructuredModel extends IAdaptable {
 	public boolean isModelStateChanging();
 
 	/**
-	 *  
+	 * 
 	 */
 	boolean isNew();
 
@@ -292,14 +299,14 @@ public interface IStructuredModel extends IAdaptable {
 	/**
 	 * This function allows the model to free up any resources it might be
 	 * using. In particular, itself, as stored in the IModelManager.
-	 *  
+	 * 
 	 */
 	void releaseFromEdit();
 
 	/**
 	 * This function allows the model to free up any resources it might be
 	 * using. In particular, itself, as stored in the IModelManager.
-	 *  
+	 * 
 	 */
 	void releaseFromRead();
 

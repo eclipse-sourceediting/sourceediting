@@ -70,7 +70,7 @@ import org.eclipse.wst.sse.core.util.URIResolver;
 import org.eclipse.wst.sse.core.util.Utilities;
 
 /**
- * Not intended to be subclassed.
+ * Not intended to be subclassed, referenced or instantiated by clients.
  * 
  * This class is responsible for creating, retriving, and caching
  * StructuredModels It retrieves the cached objects by an id which is

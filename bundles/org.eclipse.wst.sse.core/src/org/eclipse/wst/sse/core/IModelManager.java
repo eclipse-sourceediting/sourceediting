@@ -32,7 +32,9 @@ import org.eclipse.wst.sse.core.util.URIResolver;
  * for managing (add or remove) model loaders and model dumpers, and for
  * managing (get, release, save, and save as) models.
  * 
- * Clients should not implement.
+ * Clients can reference, but should not implement.
+ * 
+ * @see StructuredModelManger
  */
 public interface IModelManager {
 
@@ -71,7 +73,7 @@ public interface IModelManager {
 	 * calling aboutToChangeModel first.
 	 * 
 	 * In the case of embedded calls, the notification is just sent once.
-	 *  
+	 * 
 	 */
 	void changedModels();
 
@@ -90,7 +92,7 @@ public interface IModelManager {
 	 * a resource yet. If it does, ResourceAlreadyExists exception is thrown.
 	 * If the resource does already exist, then createStructuredDocumentFor is
 	 * the right API to use.
-	 *  
+	 * 
 	 */
 	IStructuredDocument createNewStructuredDocumentFor(IFile iFile) throws ResourceAlreadyExists, IOException, CoreException;
 

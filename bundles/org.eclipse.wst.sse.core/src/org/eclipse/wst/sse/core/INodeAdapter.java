@@ -15,20 +15,29 @@ package org.eclipse.wst.sse.core;
 /**
  * This interface allows nodes to be adapted.
  * 
- * The main difference between this type of adapter and base adapter is that
- * these adapters are notified of changes.
+ * The main difference between this type of adapter (IAdaptable) and base
+ * adapter is that these adapters are notified of changes.
+ * 
+ * @since 1.0
  */
 
 public interface INodeAdapter {
 
 	/**
-	 * Allowing the INodeAdapter to compare itself against the type allows it
-	 * to return true in more than one case.
+	 * The infrastructure calls this method to determine if the adapter is
+	 * appropriate for 'type'. Typically, adapters return true based on
+	 * identity comparison to 'type', but this is not required, that is, the
+	 * decision can be based on complex logic.
+	 * 
 	 */
 	boolean isAdapterForType(Object type);
 
 	/**
-	 * sent to adapter when notifier changes
+	 * Sent to adapter when notifier changes. Each notifier is responsible for
+	 * defining specific eventTypes, feature changed, etc.
+	 * 
+	 * ISSUE: may be more evolvable if the argument was one big 'notifier
+	 * event' instance.
 	 */
 	void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos);
 }

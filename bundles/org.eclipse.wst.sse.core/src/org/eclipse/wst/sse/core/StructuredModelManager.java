@@ -16,7 +16,9 @@ import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.osgi.framework.Bundle;
 
 /**
- * Class to allow access to ModelManager. Not to be subclassed.
+ * Class to allow access to ModelManager. Not intended to be subclassed.
+ * 
+ * @since 1.0
  */
 
 public class StructuredModelManager {
