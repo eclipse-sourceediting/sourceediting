@@ -4,7 +4,7 @@
 	id="org.eclipse.wst.css.core.tests"
 	name="CSS Model Tests Plug-in"
 	version="1.0.0"
-	provider-name="IBM"
+	provider-name="Eclipse.org"
 	class="org.eclipse.wst.css.core.tests.CSSCoreTestsPlugin">
 
 	<runtime>

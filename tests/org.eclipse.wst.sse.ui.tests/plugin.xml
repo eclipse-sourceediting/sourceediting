@@ -4,7 +4,7 @@
    id="org.eclipse.wst.sse.ui.tests"
    name="Structured Source Editor Tests"
    version="1.0.0"
-   provider-name="IBM"
+   provider-name="Eclipse.org"
    class="org.eclipse.wst.sse.ui.tests.SSETestsPlugin">
 
    <runtime>

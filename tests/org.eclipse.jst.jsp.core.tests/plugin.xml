@@ -4,7 +4,7 @@
 	id="org.eclipse.jst.jsp.core.tests"
 	name="SSE Model JSP Tests"
 	version="1.0.0"
-	provider-name="IBM"
+	provider-name="Eclipse.org"
 	class="org.eclipse.jst.jsp.core.tests.SSEModelJSPTestsPlugin">
 
 	<runtime>
