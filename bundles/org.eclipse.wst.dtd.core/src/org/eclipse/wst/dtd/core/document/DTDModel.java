@@ -12,5 +12,14 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.core.document;
 
+/**
+ * <p>
+ * An interface implemented by the SSE-based DTD model.
+ * </p>
+ * 
+ * <p>
+ * This interface is not intended to be implemented by clients.
+ * </p>
+ */
 public interface DTDModel {
 }
