@@ -4,7 +4,7 @@
    id="org.eclipse.wst.html.ui"
    name="%SSE_HTML_Source_Editor.name"
    version="1.0.0"
-   provider-name="IBM"
+   provider-name="Eclipse.org"
    class="org.eclipse.wst.html.ui.HTMLEditorPlugin">
 
    <runtime>

@@ -4,7 +4,7 @@
    id="org.eclipse.wst.dtd.ui"
    name="%SSE_DTD_Source_Editor.name"
    version="1.0.0"
-   provider-name="IBM"
+   provider-name="Eclipse.org"
    class="org.eclipse.wst.dtd.ui.DTDEditorPlugin">
 
    <runtime>
