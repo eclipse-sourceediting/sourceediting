@@ -22,6 +22,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -95,7 +96,6 @@ import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.ITextEditorHelpContextIds;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.ui.ide.IDEActionFactory;
 import org.eclipse.ui.part.EditorActionBarContributor;
 import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
@@ -111,6 +111,7 @@ import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
+import org.eclipse.ui.texteditor.MarkerRulerAction;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 import org.eclipse.ui.texteditor.TextOperationAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -545,7 +546,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		}
 
 		// Some Design editors (DTD) rely on this view for their own uses
-		menu.appendToGroup(IWorkbenchActionConstants.VIEW_EXT, fShowPropertiesAction);
+		menu.appendToGroup(IWorkbenchActionConstants.GROUP_ADD, fShowPropertiesAction);
 	}
 
 	protected void addExtendedContextMenuActions(IMenuManager menu) {
@@ -635,37 +636,23 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 
 	/**
 	 * Compute and set double-click action for the source editor, depending on
-	 * the model being used.
+	 * the input.
 	 */
 	protected void computeAndSetDoubleClickAction(IStructuredModel model) {
 		if (model == null)
 			return;
-		// If we're editing a JSP file, make
-		// double-clicking on the ruler set
-		// a breakpoint instead of setting a bookmark.
+		// If we're editing a breakpoint-supported input, make double-clicking
+		// on the ruler toggle a breakpoint instead of toggling a bookmark.
 		String ext = BreakpointRulerAction.getFileExtension(getEditorInput());
 		if (BreakpointProviderBuilder.getInstance().isAvailable(model.getContentTypeIdentifier(), ext)) {
-			setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, getAction(ActionDefinitionIds.ADD_BREAKPOINTS));
-		} else {
-			// note: the following set action to bookmarks
-			// (normally the
-			// default)
-			// is normally set in super 'createActions'
-			// method,
-			// [which is just called once, during init],
-			// but we'll put it
-			// here in this else clause too. The only time
-			// it would really be
-			// needed is if
-			// the same instance of the editor
-			// was used first to edit an JSP model, then
-			// used for non-JSP model
-			// (e.g. XHTML) ...
-			// which should be rare, but it is technically
-			// possible when using
-			// frames
-			// and may be more common in future versions
-			setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, getAction(IDEActionFactory.BOOKMARK.getId()));
+			setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, getAction(ActionDefinitionIds.TOGGLE_BREAKPOINTS));
+		}
+		else {
+			// The Default Text Editor uses editorContribution to perform this
+			// mapping, but since it relies on the IEditorSite ID, it can't be
+			// relied on for MultiPageEditorParts. Instead, force the action
+			// registration manually.
+			setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, new MarkerRulerAction(SSEUIPlugin.getDefault().getResourceBundle(), "Editor.ManageBookmarks.", this, getVerticalRuler(), IMarker.BOOKMARK, true));
 		}
 	}
 
@@ -763,7 +750,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		markAsSelectionDependentAction(StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_ACTIVE_ELEMENTS, true);
 		// StructuredTextEditor Action - add breakpoints
 		action = new ToggleBreakpointAction(this, getVerticalRuler());
-		setAction(ActionDefinitionIds.ADD_BREAKPOINTS, action);
+		setAction(ActionDefinitionIds.TOGGLE_BREAKPOINTS, action);
 		// StructuredTextEditor Action - manage breakpoints
 		action = new ManageBreakpointAction(this, getVerticalRuler());
 		setAction(ActionDefinitionIds.MANAGE_BREAKPOINTS, action);
@@ -877,7 +864,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		// reset the input now that the editor is
 		// initialized and can handle it
 		// properly
-		// TODO - urgent, SSE v6: THIS SHOULDN'T BE DONE HERE
+		// TODO - urgent, WTP 1.0: THIS SHOULDN'T BE DONE HERE
 		// ANYMORE - but for now, have to to get 'configure' to work right?
 		// but causes two pass initialization! Does fixing this require base
 		// fix?
@@ -1076,7 +1063,9 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		// us in read mode, then we need to force a reload
 		// of model.
 		IStructuredModel model = fStructuredModel;
-		model.releaseFromEdit();
+		if(model != null) {
+			model.releaseFromEdit();
+		}
 
 		// disabled==the IDocument form may still be in use by others
 		//		boolean needReload = isDirty() && (model.getReferenceCountForEdit()
@@ -1417,6 +1406,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 				}
 			}
 			result = fPropertySheetPage;
+		} else if (ViewerSelectionManager.class.equals(required)) {
+			result = getViewerSelectionManager();
 		} else if (SpellCheckTarget.class.equals(required)) {
 			result = getSpellCheckTarget();
 		} else if (SourceEditingTextTools.class.equals(required)) {
@@ -2099,7 +2090,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	protected void rulerContextMenuAboutToShow(IMenuManager menu) {
 		boolean debuggingAvailable = BreakpointProviderBuilder.getInstance().isAvailable(getModel().getContentTypeIdentifier(), BreakpointRulerAction.getFileExtension(getEditorInput()));
 		if (debuggingAvailable) {
-			menu.add(getAction(ActionDefinitionIds.ADD_BREAKPOINTS));
+			menu.add(getAction(ActionDefinitionIds.TOGGLE_BREAKPOINTS));
 			menu.add(getAction(ActionDefinitionIds.MANAGE_BREAKPOINTS));
 			menu.add(getAction(ActionDefinitionIds.EDIT_BREAKPOINTS));
 			menu.add(new Separator());

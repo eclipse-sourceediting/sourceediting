@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -47,11 +48,12 @@ import org.eclipse.ui.editors.text.FileDocumentProvider;
 import org.eclipse.ui.editors.text.ILocationProvider;
 import org.eclipse.ui.editors.text.StorageDocumentProvider;
 import org.eclipse.ui.editors.text.TextEditor;
-import org.eclipse.ui.ide.IDEActionFactory;
 import org.eclipse.ui.part.IShowInTargetList;
+import org.eclipse.ui.texteditor.AbstractDocumentProvider;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.IElementStateListener;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
+import org.eclipse.ui.texteditor.MarkerRulerAction;
 import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.sse.ui.StructuredResourceMarkerAnnotationModel;
 import org.eclipse.wst.sse.ui.edit.util.ActionDefinitionIds;
@@ -62,6 +64,7 @@ import org.eclipse.wst.sse.ui.extension.IPopupMenuContributor;
 import org.eclipse.wst.sse.ui.extensions.ConfigurationPointCalculator;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.IExtendedStorageEditorInput;
 import org.eclipse.wst.sse.ui.internal.Logger;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.extension.BreakpointProviderBuilder;
 
 
@@ -109,7 +112,7 @@ public class DebugTextEditor extends TextEditor {
 			return model;
 		}
 
-		protected ElementInfo createElementInfo(Object element) throws CoreException {
+		protected AbstractDocumentProvider.ElementInfo createElementInfo(Object element) throws CoreException {
 			if (element instanceof IExtendedStorageEditorInput) {
 				((IExtendedStorageEditorInput) element).addElementStateListener(this);
 			}
@@ -172,7 +175,7 @@ public class DebugTextEditor extends TextEditor {
 	protected void createActions() {
 		super.createActions();
 
-		// StructuredTextEditor Action - add breakpoints
+		// StructuredTextEditor Action - toggle breakpoints
 		IAction action = new ToggleBreakpointAction(this, getVerticalRuler()) {
 			protected String getContentType(IDocument document) {
 				ILocationProvider provider = (ILocationProvider) getEditorInput().getAdapter(ILocationProvider.class);
@@ -186,7 +189,7 @@ public class DebugTextEditor extends TextEditor {
 				return IContentTypeManager.CT_TEXT;
 			}
 		};
-		setAction(ActionDefinitionIds.ADD_BREAKPOINTS, action);
+		setAction(ActionDefinitionIds.TOGGLE_BREAKPOINTS, action);
 		// StructuredTextEditor Action - manage breakpoints
 		action = new ManageBreakpointAction(this, getVerticalRuler());
 		setAction(ActionDefinitionIds.MANAGE_BREAKPOINTS, action);
@@ -368,7 +371,7 @@ public class DebugTextEditor extends TextEditor {
 
 	protected void rulerContextMenuAboutToShow(IMenuManager menu) {
 		if (isDebuggingAvailable()) {
-			menu.add(getAction(ActionDefinitionIds.ADD_BREAKPOINTS));
+			menu.add(getAction(ActionDefinitionIds.TOGGLE_BREAKPOINTS));
 			menu.add(getAction(ActionDefinitionIds.MANAGE_BREAKPOINTS));
 			menu.add(getAction(ActionDefinitionIds.EDIT_BREAKPOINTS));
 			menu.add(new Separator());
@@ -405,9 +408,14 @@ public class DebugTextEditor extends TextEditor {
 	protected void updateContentDependentActions() {
 		super.updateContentDependentActions();
 		if (isDebuggingAvailable()) {
-			setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, getAction(ActionDefinitionIds.ADD_BREAKPOINTS));
-		} else {
-			setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, getAction(IDEActionFactory.BOOKMARK.getId()));
+			setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, getAction(ActionDefinitionIds.TOGGLE_BREAKPOINTS));
+		}
+		else {
+			// The Default Text Editor uses editorContribution to perform this
+			// mapping, but since it relies on the IEditorSite ID, it can't be
+			// relied on for MultiPageEditorParts. Instead, force the action
+			// registration manually.
+			setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, new MarkerRulerAction(SSEUIPlugin.getDefault().getResourceBundle(), "Editor.ManageBookmarks.", this, getVerticalRuler(), IMarker.BOOKMARK, true));
 		}
 		fShowInTargetIds = createShowInTargetIds();
 	}
