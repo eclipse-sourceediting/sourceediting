@@ -50,7 +50,7 @@ public class MasterListTestSuite extends TestSuite {
 		addTest(HTMLCoreTestSuite.suite());
 		addTest(JSPCoreTestSuite.suite());
 
-		//addTest(AllXMLTests.suite());
+		addTest(AllXMLTests.suite());
 		
 		addTest(EncodingTestSuite.suite());
 		addTest(CSSEncodingTestSuite.suite());
