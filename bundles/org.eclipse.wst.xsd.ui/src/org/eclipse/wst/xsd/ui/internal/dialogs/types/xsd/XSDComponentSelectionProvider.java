@@ -23,6 +23,7 @@ import org.eclipse.wst.xsd.ui.internal.dialogs.types.xml.XMLComponentFinder;
 import org.eclipse.wst.xsd.ui.internal.dialogs.types.xml.XMLComponentSelectionProvider;
 import org.eclipse.wst.xsd.ui.internal.dialogs.types.xml.XMLComponentSpecification;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
+import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDImport;
 import org.eclipse.xsd.XSDInclude;
@@ -146,9 +147,12 @@ public class XSDComponentSelectionProvider extends XMLComponentSelectionProvider
     }
     
 ////////////////////////////////////////////////////////////////////////////////    
-    private List getBuiltInTypes() {
-        TypesHelper helper = new TypesHelper(schema);
-        Iterator it = helper.getBuiltInTypeNamesList().iterator();
+    private List getBuiltInTypes() {        
+        List items = new ArrayList();
+        for (int i = 0; i < XSDDOMHelper.dataType.length; i++) {
+          items.add(XSDDOMHelper.dataType[i][0]);
+        }
+        Iterator it = items.iterator();
         
         List builtInComponentSpecs = new ArrayList();
         while (it.hasNext()) {

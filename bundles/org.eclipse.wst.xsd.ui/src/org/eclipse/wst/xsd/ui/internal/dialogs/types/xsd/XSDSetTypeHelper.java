@@ -161,15 +161,13 @@ public class XSDSetTypeHelper {
     public String getPrefixedTypeName(XMLComponentSpecification spec) {
         String typeObject = (String) spec.getAttributeInfo("name");
         
-        if (!spec.getTagPath().equals("BUILT_IN_SIMPLE_TYPE")) {
-            TypesHelper typesHelper = new TypesHelper(xsdSchema); // ???? Is this correct?
-            List prefixedNames = typesHelper.getPrefixedNames(spec.getTargetNamespace(), typeObject);
-            if (prefixedNames.size() > 0) {
-                // Grab the first prefixed name
-                typeObject = (String) prefixedNames.get(0);
-            }
+        TypesHelper typesHelper = new TypesHelper(xsdSchema); // ???? Is this correct?
+        List prefixedNames = typesHelper.getPrefixedNames(spec.getTargetNamespace(), typeObject);
+        if (prefixedNames.size() > 0) {
+            // Grab the first prefixed name
+            typeObject = (String) prefixedNames.get(0);
         }
-        
+
         return typeObject;
     }
     

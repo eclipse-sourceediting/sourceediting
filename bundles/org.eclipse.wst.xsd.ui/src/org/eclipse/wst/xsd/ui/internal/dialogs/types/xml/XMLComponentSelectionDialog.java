@@ -90,7 +90,7 @@ public Control createDialogArea(Composite parent) {
         
         for (int i = 0; i < radioButton.length; i++)
         {          	
-          if (radioButton[i].getText() == currentSearchScope)
+          if (radioButton[i].getText().equals(currentSearchScope))
           {
           	radioButton[i].setSelection(true);
           }	
