@@ -232,7 +232,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 				fValidator.validate(helper, reporter, new IFileDelta[]{fullDelta});
 
 				results = createAnnotations(reporter.getMessages());
-				reporter.getMessages().clear();
+				reporter.removeAllMessages(fValidator);
 
 			} catch (Exception e) {
 				Logger.logException(e);

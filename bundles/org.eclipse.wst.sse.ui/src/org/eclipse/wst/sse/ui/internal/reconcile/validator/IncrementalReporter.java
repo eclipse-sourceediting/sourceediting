@@ -56,7 +56,14 @@ public class IncrementalReporter implements IReporter {
 	}
 
 	public List getMessages() {
-		return new ArrayList(messages.values());
+		List result = new ArrayList();
+		// messages is a list of lists
+		// (one list per validator...)
+		Object[] lists = messages.values().toArray();
+		for (int i = 0; i < lists.length; i++) {
+			result.addAll((List)lists[i]);
+		}
+		return result;
 	}
 
 	public boolean isCancelled() {
