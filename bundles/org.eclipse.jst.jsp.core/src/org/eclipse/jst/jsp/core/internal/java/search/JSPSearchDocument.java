@@ -109,6 +109,9 @@ public class JSPSearchDocument {
 		if(!JSPSearchSupport.isJsp(file))
 			return;
 		
+		if(JSPSearchSupport.getInstance().isCanceled())
+			return;
+		
 		XMLModel xmlModel = null;
 		try {
 			// get existing model for read, then get document from it

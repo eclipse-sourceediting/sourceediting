@@ -102,6 +102,10 @@ public class JSPCorePlugin extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		
+		// JSPIndexManager depends on TaglibController, so TaglibController
+		// should be started first
+		TaglibController.startup();
+		
 		// add JSPIndexManager to keep JSP Index up to date
 		// listening for IResourceChangeEvent.PRE_DELETE and IResourceChangeEvent.POST_CHANGE
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(JSPIndexManager.getInstance(), IResourceChangeEvent.POST_CHANGE);
@@ -109,21 +113,20 @@ public class JSPCorePlugin extends Plugin {
 		// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=5091
 		// makes sure IndexManager is aware of our indexes
 		JSPIndexManager.getInstance().saveIndexes();
-		
-		TaglibController.startup();
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
-		TaglibController.shutdown();
+		// stop listening
+		ResourcesPlugin.getWorkspace().removeResourceChangeListener(JSPIndexManager.getInstance());
 		// stop any searching/indexing
 		JSPSearchSupport.getInstance().setCanceled(true);
-		// remove JSPIndexManager
-		ResourcesPlugin.getWorkspace().removeResourceChangeListener(JSPIndexManager.getInstance());
-		super.stop(context);
+		 
+		TaglibController.shutdown();
 		
+		super.stop(context);
 	}
 
 	/**

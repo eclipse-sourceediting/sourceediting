@@ -36,6 +36,7 @@ import org.eclipse.jdt.internal.core.search.indexing.IndexManager;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
+import org.osgi.framework.Bundle;
 
 /**
  * Responsible for keeping the JSP index up to date.
@@ -71,6 +72,9 @@ public class JSPIndexManager implements IResourceChangeListener {
 	/** indexing job was canceled in the middle of it, index needs to be rebuilt */
 	public static final int S_CANCELED = 4;
 	
+	/** symbolic name for OSGI framework */
+	private final String OSGI_FRAMEWORK_ID = "org.eclipse.osgi";
+	
 	/**
 	 * Collects JSP files from a resource delta.
 	 */
@@ -86,7 +90,7 @@ public class JSPIndexManager implements IResourceChangeListener {
 		public boolean visit(IResourceDelta delta) throws CoreException {
 			
 			// in case JSP search was canceled (eg. when closing the editor)
-			if(JSPSearchSupport.getInstance().isCanceled()) {
+			if(JSPSearchSupport.getInstance().isCanceled() || frameworkIsShuttingDown()) {
 				setCanceledState();
 				return false;
 			}
@@ -176,7 +180,7 @@ public class JSPIndexManager implements IResourceChangeListener {
 		
 		protected IStatus run(IProgressMonitor monitor) {
 			
-			if(isCanceled(monitor)) {
+			if(isCanceled(monitor) || frameworkIsShuttingDown()) {
 				setCanceledState();
 				return Status.CANCEL_STATUS;
 			}
@@ -200,7 +204,7 @@ public class JSPIndexManager implements IResourceChangeListener {
 				    if(indexManager.awaitingJobsCount() == 0) {
 				        // process a batch of JSP files
 						for(; i<nextEnd; i++) {
-							if(isCanceled(monitor)) {
+							if(isCanceled(monitor) || frameworkIsShuttingDown()) {
 								setCanceledState();
 								return Status.CANCEL_STATUS;
 							}
@@ -216,8 +220,10 @@ public class JSPIndexManager implements IResourceChangeListener {
 								}
 							}
 							catch (CoreException e) {
-							    String filename = this.jspFiles[i] != null ? this.jspFiles[i].getFullPath().toString() : ""; //$NON-NLS-1$
-								Logger.logException("JSPIndexer problem indexing:" + filename,  e); //$NON-NLS-1$
+								if(!frameworkIsShuttingDown()) {
+								    String filename = this.jspFiles[i] != null ? this.jspFiles[i].getFullPath().toString() : ""; //$NON-NLS-1$
+									Logger.logException("JSPIndexer problem indexing:" + filename,  e); //$NON-NLS-1$
+								}
 							}
 							catch (Exception e){
 							    // RATLC00284776
@@ -228,8 +234,10 @@ public class JSPIndexManager implements IResourceChangeListener {
 							    // 
 							    // a possible solution is to keep track of the exceptions logged
 							    // and only log a certain amt of the same one, otherwise skip it.
-							    String filename = this.jspFiles[i] != null ? this.jspFiles[i].getFullPath().toString() : ""; //$NON-NLS-1$
-							    Logger.logException("JSPIndexer problem indexing:" + filename,  e); //$NON-NLS-1$
+								if(!frameworkIsShuttingDown()) {
+								    String filename = this.jspFiles[i] != null ? this.jspFiles[i].getFullPath().toString() : ""; //$NON-NLS-1$
+								    Logger.logException("JSPIndexer problem indexing:" + filename,  e); //$NON-NLS-1$
+								}
 							}
 						}// end inner for
 						remaining = this.jspFiles.length - nextEnd;
@@ -505,5 +513,20 @@ public class JSPIndexManager implements IResourceChangeListener {
 		if(this.fContentTypeJSP == null)
 			this.fContentTypeJSP = Platform.getContentTypeManager().getContentType(IContentTypeIdentifier.ContentTypeID_JSP);
 		return this.fContentTypeJSP;
+	}
+	
+	/**
+	 * A check to see if the OSGI framework is shutting down.
+	 * @return true if the System Bundle is stopped (ie. the framework is shutting down)
+	 */
+	boolean frameworkIsShuttingDown() {
+		// in the Framework class there's a note:
+		// set the state of the System Bundle to STOPPING.
+		// this must be done first according to section 4.19.2 from the OSGi R3 spec.  
+		boolean shuttingDown = Platform.getBundle(OSGI_FRAMEWORK_ID).getState() == Bundle.STOPPING;
+		if (DEBUG && shuttingDown) {
+			System.out.println("JSPIndexManager: system is shutting down!");
+		}
+		return shuttingDown;
 	}
 }
