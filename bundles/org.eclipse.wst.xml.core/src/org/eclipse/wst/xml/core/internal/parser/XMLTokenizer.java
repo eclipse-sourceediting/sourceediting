@@ -195,20 +195,10 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 	private String fBufferedContext = null;
 	private int fBufferedStart = 1;
 	private int fBufferedLength = 0;
-	private ContextRegionContainer fBufferedEmbeddedContainer = null;
 	private String f_context = null;
 
 	// state stack for handling embedded regions
 	private IntStack fStateStack = new IntStack();
-	// a "hint" as to what an embedded region should be evaluated
-	 String fEmbeddedHint = UNDEFINED;
-	// a "hint" as to what state to enter once an embedded region has
-	//   been completed
-	 int fEmbeddedPostState = YYINITIAL;
-	// the container used to create embedded regions
-	private ContextRegionContainer fEmbeddedContainer = null;
-	private static final String PROXY_CONTEXT = "PROXY_CONTEXT";
-
 	private String context = null;
 	private int start = 0;
 	private int textLength = 0;
@@ -229,7 +219,7 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 
 	private XMLParserRegionFactory fRegionFactory = new XMLParserRegionFactory();
 
-	 static final String rcsver = "$Id: XMLTokenizer.java,v 1.4 2004/12/07 21:46:18 david_williams Exp $";//$NON-NLS-1$
+	 static final String rcsver = "$Id: XMLTokenizer.java,v 1.5 2005/01/27 20:52:24 nitind Exp $";//$NON-NLS-1$
 
 	/**
 	 * user method
@@ -487,24 +477,15 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 	 * returned so that whitespace can be collapsed.
 	 */
 	public final ITextRegion getNextToken() throws IOException {
-		fEmbeddedContainer = null;
 		// load the starting non-whitespace token (assume that it is so)
 		if (fShouldLoadBuffered) {
-			if (fBufferedEmbeddedContainer != null) {
-				ITextRegion container = fBufferedEmbeddedContainer;
-				fBufferedEmbeddedContainer = null;
-				fShouldLoadBuffered = false;
-				return container;
-			}
 			context = fBufferedContext;
 			start = fBufferedStart;
 			textLength = length = fBufferedLength;
 			fShouldLoadBuffered = false;
 		} else {
 			context = primGetNextToken();
-			if (context == PROXY_CONTEXT) {
-				return fEmbeddedContainer;
-			} else if (context == XML_TAG_NAME) {
+			if (context == XML_TAG_NAME) {
 				if (containsTagName(yy_buffer, yy_startRead, yy_markedPos - yy_startRead))
 					fCurrentTagName = yytext();
 				else
@@ -523,10 +504,7 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 		}
 		// store the next token
 		f_context = primGetNextToken();
-		if (f_context == PROXY_CONTEXT) {
-			fBufferedEmbeddedContainer = fEmbeddedContainer;
-			fShouldLoadBuffered = true;
-		} else if (f_context == XML_TAG_NAME) {
+		if (f_context == XML_TAG_NAME) {
 			if (containsTagName(yy_buffer, yy_startRead, yy_markedPos - yy_startRead))
 				fCurrentTagName = yytext();
 			else
@@ -666,8 +644,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 		start = 0;
 		textLength = 0;
 		length = 0;
-
-		fEmbeddedContainer = null;
 	}
 
 	/**
@@ -1104,7 +1080,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 				case 262 : {
 					if (Debug.debugTokenizer)
 						dump("doctype external id");//$NON-NLS-1$
-					fEmbeddedHint = XML_DOCTYPE_EXTERNAL_ID_PUBREF;
 					yybegin(ST_XML_DOCTYPE_ID_PUBLIC);
 					return XML_DOCTYPE_EXTERNAL_ID_PUBLIC;
 				}
@@ -1113,7 +1088,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 				case 261 : {
 					if (Debug.debugTokenizer)
 						dump("doctype external id");//$NON-NLS-1$
-					fEmbeddedHint = XML_DOCTYPE_EXTERNAL_ID_SYSREF;
 					yybegin(ST_XML_DOCTYPE_ID_SYSTEM);
 					return XML_DOCTYPE_EXTERNAL_ID_SYSTEM;
 				}
@@ -1122,8 +1096,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 				case 257 : {
 					if (Debug.debugTokenizer)
 						dump("DHTML processing instruction target");//$NON-NLS-1$
-					fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
-					fEmbeddedPostState = ST_XML_EQUALS;
 					yybegin(ST_DHTML_ATTRIBUTE_NAME);
 					return XML_TAG_NAME;
 				}
@@ -1139,8 +1111,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 				case 231 : {
 					if (Debug.debugTokenizer)
 						dump("\ncomment start");//$NON-NLS-1$
-					fEmbeddedHint = XML_COMMENT_TEXT;
-					fEmbeddedPostState = ST_XML_COMMENT;
 					yybegin(ST_XML_COMMENT);
 					return XML_COMMENT_OPEN;
 				}
@@ -1149,8 +1119,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 				case 213 : {
 					if (Debug.debugTokenizer)
 						dump("XML processing instruction target");//$NON-NLS-1$
-					fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
-					fEmbeddedPostState = ST_XML_EQUALS;
 					yybegin(ST_XML_PI_ATTRIBUTE_NAME);
 					return XML_TAG_NAME;
 				}
@@ -1159,7 +1127,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 				case 212 : {
 					if (Debug.debugTokenizer)
 						dump("comment end");//$NON-NLS-1$
-					fEmbeddedHint = UNDEFINED;
 					yybegin(YYINITIAL);
 					return XML_COMMENT_CLOSE;
 				}
@@ -1196,7 +1163,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 					break;
 				case 146 : {
 					yybegin(YYINITIAL);
-					fEmbeddedHint = UNDEFINED;
 					if (Debug.debugTokenizer)
 						dump("empty tag close");//$NON-NLS-1$
 					return XML_EMPTY_TAG_CLOSE;
@@ -1206,7 +1172,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 				case 131 : {
 					if (Debug.debugTokenizer)
 						dump("XML processing instruction end");//$NON-NLS-1$
-					fEmbeddedHint = UNDEFINED;
 					yybegin(YYINITIAL);
 					return XML_PI_CLOSE;
 				}
@@ -1214,7 +1179,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 					break;
 				case 130 : {
 					// ended with nothing inside
-					fEmbeddedHint = UNDEFINED;
 					yybegin(YYINITIAL);
 					return XML_PI_CLOSE;
 				}
@@ -1223,7 +1187,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 				case 127 : {
 					if (Debug.debugTokenizer)
 						dump("processing instruction end");//$NON-NLS-1$
-					fEmbeddedHint = UNDEFINED;
 					yybegin(YYINITIAL);
 					return XML_PI_CLOSE;
 				}
@@ -1249,7 +1212,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 				case 62 : {
 					if (Debug.debugTokenizer)
 						dump("DHTML processing instruction end");//$NON-NLS-1$
-					fEmbeddedHint = UNDEFINED;
 					yybegin(YYINITIAL);
 					return XML_PI_CLOSE;
 				}
@@ -1262,8 +1224,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 				case 135 : {
 					if (Debug.debugTokenizer)
 						dump("XML processing instruction attribute value");//$NON-NLS-1$
-					fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
-					fEmbeddedPostState = ST_XML_EQUALS;
 					yybegin(ST_XML_PI_ATTRIBUTE_NAME);
 					return XML_TAG_ATTRIBUTE_VALUE;
 				}
@@ -1272,8 +1232,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 				case 55 : {
 					if (Debug.debugTokenizer)
 						dump("XML processing instruction '='");//$NON-NLS-1$
-					fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
-					fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
 					yybegin(ST_XML_PI_ATTRIBUTE_VALUE);
 					return XML_TAG_ATTRIBUTE_EQUALS;
 				}
@@ -1311,7 +1269,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 				case 248 : {
 					if (Debug.debugTokenizer)
 						dump("processing instruction target");//$NON-NLS-1$
-					fEmbeddedHint = XML_CONTENT;
 					yybegin(ST_PI_WS);
 					return XML_TAG_NAME;
 				}
@@ -1417,8 +1374,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 				case 82 : {
 					if (Debug.debugTokenizer)
 						dump("\nstart tag open");//$NON-NLS-1$
-					fEmbeddedHint = XML_TAG_NAME;
-					fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
 					yybegin(ST_XML_TAG_NAME);
 					return XML_TAG_OPEN;
 				}
@@ -1459,8 +1414,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 				case 36 : {
 					if (Debug.debugTokenizer)
 						dump("CDATA text");//$NON-NLS-1$
-					fEmbeddedHint = XML_CDATA_TEXT;
-					fEmbeddedPostState = ST_CDATA_TEXT;
 					String blockContext = doBlockScan("]]>", XML_CDATA_TEXT, ST_CDATA_END);//$NON-NLS-1$
 					if (blockContext == XML_CDATA_TEXT)
 						yybegin(ST_CDATA_END);
@@ -1479,8 +1432,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 				case 65 : {
 					if (Debug.debugTokenizer)
 						dump("DHTML processing instruction '='");//$NON-NLS-1$
-					fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
-					fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
 					yybegin(ST_DHTML_ATTRIBUTE_VALUE);
 					return XML_TAG_ATTRIBUTE_EQUALS;
 				}
@@ -1492,8 +1443,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 				case 143 : {
 					if (Debug.debugTokenizer)
 						dump("DHTML processing instruction attribute value");//$NON-NLS-1$
-					fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
-					fEmbeddedPostState = ST_XML_EQUALS;
 					yybegin(ST_DHTML_ATTRIBUTE_NAME);
 					return XML_TAG_ATTRIBUTE_VALUE;
 				}
@@ -1502,10 +1451,7 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 				case 72 : {
 					if (Debug.debugTokenizer)
 						dump("tag close");//$NON-NLS-1$
-					fEmbeddedHint = UNDEFINED;
 					if (isBlockMarker()) {
-						fEmbeddedHint = getBlockMarkerContext();
-						fEmbeddedPostState = ST_BLOCK_TAG_SCAN;
 						yybegin(ST_BLOCK_TAG_SCAN);
 					} else
 						yybegin(YYINITIAL);
@@ -1517,8 +1463,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 				case 75 : {
 					if (Debug.debugTokenizer)
 						dump("tag name");//$NON-NLS-1$
-					fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
-					fEmbeddedPostState = ST_XML_EQUALS;
 					yybegin(ST_XML_ATTRIBUTE_NAME);
 					return XML_TAG_NAME;
 				}
@@ -1527,8 +1471,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 				case 76 : {
 					if (Debug.debugTokenizer)
 						dump("attr name");//$NON-NLS-1$
-					fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
-					fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
 					yybegin(ST_XML_EQUALS);
 					return XML_TAG_ATTRIBUTE_NAME;
 				}
@@ -1537,8 +1479,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 				case 77 : {
 					if (Debug.debugTokenizer)
 						dump("equals");//$NON-NLS-1$
-					fEmbeddedHint = XML_TAG_ATTRIBUTE_VALUE;
-					fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
 					yybegin(ST_XML_ATTRIBUTE_VALUE);
 					return XML_TAG_ATTRIBUTE_EQUALS;
 				}
@@ -1550,8 +1490,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 				case 150 : {
 					if (Debug.debugTokenizer)
 						dump("attr value");//$NON-NLS-1$
-					fEmbeddedHint = XML_TAG_ATTRIBUTE_NAME;
-					fEmbeddedPostState = ST_XML_EQUALS;
 					yybegin(ST_XML_ATTRIBUTE_NAME);
 					return XML_TAG_ATTRIBUTE_VALUE;
 				}
@@ -1588,8 +1526,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 				case 221 : {
 					if (Debug.debugTokenizer)
 						dump("doctype public reference");//$NON-NLS-1$
-					fEmbeddedHint = UNDEFINED;
-					fEmbeddedPostState = YYINITIAL;
 					yybegin(ST_XML_DOCTYPE_ID_SYSTEM);
 					return XML_DOCTYPE_EXTERNAL_ID_PUBREF;
 				}
@@ -1602,8 +1538,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 				case 176 : {
 					if (Debug.debugTokenizer)
 						dump("doctype system reference");//$NON-NLS-1$
-					fEmbeddedHint = UNDEFINED;
-					fEmbeddedPostState = YYINITIAL;
 					yybegin(ST_XML_DECLARATION_CLOSE);
 					return XML_DOCTYPE_EXTERNAL_ID_SYSREF;
 				}
@@ -1619,8 +1553,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 				case 224 : {
 					if (Debug.debugTokenizer)
 						dump("elementdecl name");//$NON-NLS-1$
-					fEmbeddedHint = UNDEFINED;
-					fEmbeddedPostState = YYINITIAL;
 					yybegin(ST_XML_ELEMENT_DECLARATION_CONTENT);
 					return XML_ELEMENT_DECL_NAME;
 				}
@@ -1648,8 +1580,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 				case 228 : {
 					if (Debug.debugTokenizer)
 						dump("attlist name");//$NON-NLS-1$
-					fEmbeddedHint = UNDEFINED;
-					fEmbeddedPostState = YYINITIAL;
 					yybegin(ST_XML_ATTLIST_DECLARATION_CONTENT);
 					return XML_ATTLIST_DECL_NAME;
 				}
@@ -1670,8 +1600,6 @@ public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
 				case 117 : {
 					if (Debug.debugTokenizer)
 						dump("\nend tag open");//$NON-NLS-1$
-					fEmbeddedHint = XML_TAG_NAME;
-					fEmbeddedPostState = ST_XML_ATTRIBUTE_NAME;
 					yybegin(ST_XML_TAG_NAME);
 					return XML_END_TAG_OPEN;
 				}
