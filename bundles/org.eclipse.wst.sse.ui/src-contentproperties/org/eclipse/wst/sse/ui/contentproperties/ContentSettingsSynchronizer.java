@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.wst.sse.ui.internal.Logger;
 
 public class ContentSettingsSynchronizer implements IResourceChangeListener {
 	class ContentSettingsVisitor implements IResourceDeltaVisitor {
