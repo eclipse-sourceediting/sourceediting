@@ -60,8 +60,7 @@ public abstract class ContentSettingsPropertyPage extends PropertyPage {
 		if (!(file.isReadOnly()))
 			return STATUS_OK;
 
-		IPath fullIPath = file.getProject().getLocation();
-		fullIPath = fullIPath.append(file.getName());
+		IPath fullIPath = file.getLocation();
 
 		final long beforeModifiedFromJavaIO = fullIPath.toFile().lastModified();
 		final long beforeModifiedFromIFile = file.getModificationStamp();
