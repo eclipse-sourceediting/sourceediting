@@ -58,10 +58,28 @@ import org.eclipse.wst.xml.uriresolver.util.URIHelper;
 public class FileBufferModelManager {
 
 	static class DocumentInfo {
+		/**
+		 * The ITextFileBuffer
+		 */
 		ITextFileBuffer buffer = null;
+
+		/**
+		 * The platform content-type ID of this document
+		 */
 		String contentTypeID = null;
+
+		/**
+		 * The IStructureModel containing this document; might be null at
+		 * points in the ITextFileBuffer's lifecycle
+		 */
 		IStructuredModel model = null;
+
+		/**
+		 * Whether FileBufferModelManager called connect() for this
+		 * DocumentInfo's text filebuffer
+		 */
 		boolean selfConnected = false;
+
 		int bufferReferenceCount = 0;
 		int modelReferenceCount = 0;
 	}
@@ -284,7 +302,7 @@ public class FileBufferModelManager {
 
 	}
 
-	public String calculateId(IStructuredDocument document) {
+	public String calculateId(IDocument document) {
 		String id = null;
 		ITextFileBuffer buffer = getBuffer(document);
 		if (buffer != null) {
@@ -415,6 +433,14 @@ public class FileBufferModelManager {
 			if (buffer != null) {
 				DocumentInfo info = (DocumentInfo) fDocumentMap.get(buffer.getDocument());
 				if (info != null) {
+					/*
+					 * Note: "info" being null at this point is a slight error.
+					 * 
+					 * The connect call from above (or at some time earlier in the
+					 * session) would have notified the FileBufferMapper of the
+					 * creation of the corresponding text buffer and created the
+					 * DocumentInfo object for IStructuredDocuments.
+					 */
 					info.selfConnected = true;
 				}
 				model = getModel((IStructuredDocument) buffer.getDocument());
@@ -490,7 +516,7 @@ public class FileBufferModelManager {
 		return info != null;
 	}
 
-	public void releaseModel(IStructuredDocument document) {
+	public void releaseModel(IDocument document) {
 		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
 		if (info != null) {
 			if (debugFileBufferModelManagement) {
