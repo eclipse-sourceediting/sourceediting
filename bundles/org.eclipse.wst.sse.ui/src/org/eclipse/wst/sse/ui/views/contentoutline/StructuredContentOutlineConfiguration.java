@@ -28,7 +28,6 @@ import org.eclipse.ui.part.IShowInSource;
 import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.wst.sse.core.IFactoryRegistry;
-import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.ViewerSelectionManager;
 import org.eclipse.wst.sse.ui.internal.Logger;
@@ -167,10 +166,6 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 		return fEditor;
 	}
 
-	/**
-	 * @deprecated - will be removed in M4
-	 * @return
-	 */
 	protected IJFaceNodeAdapterFactory getFactory() {
 		IFactoryRegistry factoryRegistry = getEditor().getModel().getFactoryRegistry();
 		IJFaceNodeAdapterFactory adapterFactory = (IJFaceNodeAdapterFactory) factoryRegistry.getFactoryFor(IJFaceNodeAdapter.class);
@@ -178,23 +173,6 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 			Logger.log(Logger.ERROR, "model has no JFace adapter factory"); //$NON-NLS-1$
 		}
 		return adapterFactory;
-	}
-
-	protected IJFaceNodeAdapterFactory getFactory(TreeViewer viewer) {
-		IFactoryRegistry factoryRegistry = getModel(viewer).getFactoryRegistry();
-		IJFaceNodeAdapterFactory adapterFactory = (IJFaceNodeAdapterFactory) factoryRegistry.getFactoryFor(IJFaceNodeAdapter.class);
-		if (adapterFactory == null) {
-			Logger.log(Logger.ERROR, "model has no JFace adapter factory"); //$NON-NLS-1$
-		}
-		return adapterFactory;
-	}
-
-	/**
-	 * @param viewer
-	 * @return
-	 */
-	protected IStructuredModel getModel(TreeViewer viewer) {
-		return ((IStructuredModel) viewer.getInput());
 	}
 
 	/**

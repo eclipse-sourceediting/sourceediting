@@ -75,8 +75,8 @@ public class XMLContentOutlineConfiguration extends StructuredContentOutlineConf
 
 	public IContentProvider getContentProvider(TreeViewer viewer) {
 		if (fContentProvider == null) {
-			if (getFactory(viewer) != null) {
-				fContentProvider = new JFaceNodeContentProvider((AdapterFactory) getFactory(viewer));
+			if (getFactory() != null) {
+				fContentProvider = new JFaceNodeContentProvider((AdapterFactory) getFactory());
 			} else {
 				fContentProvider = super.getContentProvider(viewer);
 			}
@@ -89,8 +89,8 @@ public class XMLContentOutlineConfiguration extends StructuredContentOutlineConf
 	 */
 	public ILabelProvider getLabelProvider(TreeViewer viewer) {
 		if (fLabelProvider == null) {
-			if (getFactory(viewer) != null) {
-				fLabelProvider = new JFaceNodeLabelProvider((AdapterFactory) getFactory(viewer));
+			if (getFactory() != null) {
+				fLabelProvider = new JFaceNodeLabelProvider((AdapterFactory) getFactory());
 			} else {
 				fLabelProvider = super.getLabelProvider(viewer);
 			}

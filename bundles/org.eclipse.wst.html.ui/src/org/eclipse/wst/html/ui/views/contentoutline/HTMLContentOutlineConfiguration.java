@@ -29,7 +29,7 @@ public class HTMLContentOutlineConfiguration extends XMLContentOutlineConfigurat
 	 * @see com.ibm.sse.editor.xml.views.contentoutline.XMLContentOutlineConfiguration#createNodeActionManager(org.eclipse.jface.viewers.TreeViewer)
 	 */
 	protected XMLNodeActionManager createNodeActionManager(TreeViewer treeViewer) {
-		return new HTMLNodeActionManager(getModel(treeViewer), treeViewer);
+		return new HTMLNodeActionManager(getEditor().getModel(), treeViewer);
 	}
 	/* (non-Javadoc)
 	 * @see org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration#getPreferenceStore()

@@ -55,7 +55,7 @@ public class CSSContentOutlineConfiguration extends StructuredContentOutlineConf
 	 * @see com.ibm.sse.editor.views.contentoutline.ContentOutlineConfiguration#getContentProvider(org.eclipse.jface.viewers.TreeViewer)
 	 */
 	public IContentProvider getContentProvider(TreeViewer viewer) {
-		if (fContentProvider == null && getFactory(viewer) != null)
+		if (fContentProvider == null && getFactory() != null)
 			fContentProvider = new JFaceNodeContentProviderCSS((AdapterFactory) getFactory());
 		return fContentProvider;
 	}
@@ -64,7 +64,7 @@ public class CSSContentOutlineConfiguration extends StructuredContentOutlineConf
 	 * @see com.ibm.sse.editor.views.contentoutline.ContentOutlineConfiguration#getLabelProvider(org.eclipse.jface.viewers.TreeViewer)
 	 */
 	public ILabelProvider getLabelProvider(TreeViewer viewer) {
-		if (fLabelProvider == null && getFactory(viewer) != null)
+		if (fLabelProvider == null && getFactory() != null)
 			fLabelProvider = new JFaceNodeLabelProviderCSS((AdapterFactory) getFactory());
 		return fLabelProvider;
 	}
