@@ -34,7 +34,7 @@ public class OpenOnBuilder extends RegistryReader {
 	// extension point ID
 	public static final String PL_OPENON = "openon"; //$NON-NLS-1$
 
-	public static final String PLUGIN_ID = "org.eclipse.wst.sse.ui.extensions"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "org.eclipse.wst.sse.ui"; //$NON-NLS-1$
 	public static final String TAG_CONTENT_TYPE_IDENTIFIER = "contenttypeidentifier"; //$NON-NLS-1$
 
 	public static final String TAG_OPENON = "openon"; //$NON-NLS-1$

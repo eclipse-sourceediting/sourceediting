@@ -48,7 +48,7 @@ public class BreakpointProviderBuilder extends RegistryReader {
 	private static BreakpointProviderBuilder instance;
 	private static final String PL_BREAKPOINT = "breakpoint"; //$NON-NLS-1$
 
-	private static final String PLUGIN_ID = "org.eclipse.wst.sse.ui.extensions"; //$NON-NLS-1$
+	private static final String PLUGIN_ID = "org.eclipse.wst.sse.ui"; //$NON-NLS-1$
 
 	private static final String TAG_BREAKPOINT_CONTRIBUTION = "breakpointContribution"; //$NON-NLS-1$
 	private static final String TAG_PROVIDER = "provider"; //$NON-NLS-1$

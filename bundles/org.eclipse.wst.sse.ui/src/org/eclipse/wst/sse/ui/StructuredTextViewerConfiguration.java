@@ -113,7 +113,7 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 
 		ValidatorStrategy validatorStrategy = new ValidatorStrategy((ITextEditor) editorPart, contentTypeId);
 		ValidatorBuilder vBuilder = new ValidatorBuilder();
-		ValidatorMetaData[] vmds = vBuilder.getValidatorMetaData("org.eclipse.wst.sse.ui.extensions"); //$NON-NLS-1$
+		ValidatorMetaData[] vmds = vBuilder.getValidatorMetaData("org.eclipse.wst.sse.ui"); //$NON-NLS-1$
 		for (int i = 0; i < vmds.length; i++) {
 			if (vmds[i].canHandleContentType(contentTypeId))
 				validatorStrategy.addValidatorMetaData(vmds[i]);

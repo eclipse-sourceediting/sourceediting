@@ -38,7 +38,7 @@ public class SpellCheckProviderBuilder extends RegistryReader {
 	private static SpellCheckProviderBuilder instance;
 	private static final String PL_SPELLCHECK = "spellcheck"; //$NON-NLS-1$
 
-	private static final String PLUGIN_ID = "org.eclipse.wst.sse.ui.extensions"; //$NON-NLS-1$
+	private static final String PLUGIN_ID = "org.eclipse.wst.sse.ui"; //$NON-NLS-1$
 	private static final String TAG_PROVIDER = "provider"; //$NON-NLS-1$
 
 	private static final String TAG_SPELLCHECK_CONTRIBUTION = "spellcheckContribution"; //$NON-NLS-1$

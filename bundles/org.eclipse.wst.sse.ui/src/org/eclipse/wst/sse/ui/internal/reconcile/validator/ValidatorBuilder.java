@@ -39,7 +39,7 @@ public class ValidatorBuilder extends RegistryReader {
 	// extension point ID
 	public static final String PL_RECONCILE_VALIDATOR = "reconcileValidator"; //$NON-NLS-1$
 
-	public static final String PLUGIN_ID = "org.eclipse.wst.sse.ui.extensions"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "org.eclipse.wst.sse.ui"; //$NON-NLS-1$
 	public static final String TAG_CONTENT_TYPE_IDENTIFIER = "contentTypeIdentifier"; //$NON-NLS-1$
 	public static final String TAG_PARTITION_TYPE = "partitionType"; //$NON-NLS-1$
 
