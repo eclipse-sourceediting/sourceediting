@@ -19,7 +19,10 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.internal.registry.NewWizardsRegistryReader;
+import org.eclipse.ui.internal.WorkbenchPlugin;
+import org.eclipse.ui.internal.dialogs.WorkbenchWizardElement;
+import org.eclipse.ui.wizards.IWizardDescriptor;
+import org.eclipse.ui.wizards.IWizardRegistry;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 import org.eclipse.wst.common.frameworks.internal.operation.extensionui.ExtendableWizard;
@@ -99,10 +102,12 @@ public class SimpleWebModuleCreationWizard extends ExtendableWizard implements I
 	 * @see com.ibm.wtp.common.ui.wizard.WTPWizard#postPerformFinish()
 	 */
 	protected void postPerformFinish() throws InvocationTargetException {
-		NewWizardsRegistryReader reader = new NewWizardsRegistryReader(true);
-		IConfigurationElement element = reader.findWizard(getWizardID()).getConfigurationElement();
+		IWizardRegistry newWizardRegistry = WorkbenchPlugin.getDefault().getNewWizardRegistry();		
+		
+		IWizardDescriptor descriptor = newWizardRegistry.findWizard(getWizardID());
 
-		BasicNewProjectResourceWizard.updatePerspective(element);
+		if(descriptor instanceof WorkbenchWizardElement)
+			BasicNewProjectResourceWizard.updatePerspective(((WorkbenchWizardElement)descriptor).getConfigurationElement());
 		IWorkbenchWindow window = WSTWebPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
 		IProject project = ((SimpleWebModuleCreationDataModel) model).getTargetProject();
 		BasicNewResourceWizard.selectAndReveal(project, window);
