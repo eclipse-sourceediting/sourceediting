@@ -36,6 +36,7 @@ import org.eclipse.wst.sse.ui.views.contentoutline.BufferedOutlineUpdater;
 import org.eclipse.wst.sse.ui.views.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.sse.ui.views.contentoutline.IJFaceNodeAdapterFactory;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+import org.eclipse.wst.xml.ui.internal.editor.CMImageUtil;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
 import org.w3c.dom.Node;
@@ -233,8 +234,8 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 	 */
 	public Image getLabelImage(Object node) {
 
-		Image image = null;
-		if (JFaceResources.getImageRegistry() != null) {
+		Image image = CMImageUtil.getImage(CMImageUtil.getDeclaration((Node) node));
+		if (image == null && JFaceResources.getImageRegistry() != null) {
 			ImageRegistry imageRegistry = JFaceResources.getImageRegistry();
 			String nodeName = getNodeName(node);
 			image = imageRegistry.get(nodeName);

@@ -36,6 +36,7 @@ import org.eclipse.wst.common.contentmodel.util.DOMContentBuilderImpl;
 import org.eclipse.wst.common.contentmodel.util.DOMNamespaceHelper;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+import org.eclipse.wst.xml.ui.internal.editor.CMImageUtil;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
 import org.w3c.dom.Attr;
@@ -70,7 +71,11 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 			setText(text);
 			description = text;
 			undoDescription = XMLUIPlugin.getResourceString("%_UI_MENU_ADD") + " " + text; //$NON-NLS-1$ //$NON-NLS-2$
-			setImageDescriptor(imageDescriptorCache.getImageDescriptor(cmnode));
+			ImageDescriptor descriptor = CMImageUtil.getImageDescriptor(cmnode);
+			if (descriptor == null) {
+				descriptor = imageDescriptorCache.getImageDescriptor(cmnode);
+			}
+			setImageDescriptor(descriptor);
 		}
 
 

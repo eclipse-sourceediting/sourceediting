@@ -63,6 +63,7 @@ import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.core.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.eclipse.wst.xml.ui.internal.Logger;
+import org.eclipse.wst.xml.ui.internal.editor.CMImageUtil;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
 import org.eclipse.wst.xml.ui.taginfo.MarkupTagInfoProvider;
@@ -125,19 +126,13 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			// only add proposals for the attributes whose names begin with
 			// the matchstring
 			if (attributes != null) {
-				// CMVC 246618
-				int isRequired = 0;
-				Image attrImage = null;
 				for (int i = 0; i < attributes.getLength(); i++) {
 					CMAttributeDeclaration attrDecl = (CMAttributeDeclaration) attributes.item(i);
+					// CMVC 246618
+					int isRequired = 0;
 					if (attrDecl.getUsage() == CMAttributeDeclaration.REQUIRED) {
 						isRequired = XMLRelevanceConstants.R_REQUIRED;
-						attrImage = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_ATT_REQ_OBJ);
-					} else {
-						isRequired = 0;
-						attrImage = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_ATTRIBUTE);
 					}
-
 
 					boolean showAttribute = true;
 					showAttribute = showAttribute && beginsWith(getRequiredName(node, attrDecl), matchString.trim());
@@ -147,6 +142,16 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					// matches against the full name of an existing Attr
 					showAttribute = showAttribute && ((attr == null) || (nameRegion != null && sdRegion.getStartOffset(nameRegion) <= contentAssistRequest.getReplacementBeginPosition() && sdRegion.getStartOffset(nameRegion) + nameRegion.getLength() >= contentAssistRequest.getReplacementBeginPosition() + contentAssistRequest.getReplacementLength()));
 					if (showAttribute) {
+						Image attrImage = CMImageUtil.getImage(attrDecl);
+						if (attrImage == null) {
+							if (isRequired > 0) {
+								attrImage = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_ATT_REQ_OBJ);
+							}
+							else {
+								attrImage = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_ATTRIBUTE);
+							}
+						}
+
 						String proposedText = null;
 						String proposedInfo = getAdditionalInfo(elementDecl, attrDecl);
 						CustomCompletionProposal proposal = null;
@@ -241,6 +246,16 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 
 			String currentValue = node.getAttributes().getNamedItem(attributeName).getNodeValue();
 			String proposedInfo = null;
+			Image image = CMImageUtil.getImage(attrDecl);
+			if (image == null) {
+				if (attrDecl != null && attrDecl.getUsage() == CMAttributeDeclaration.REQUIRED) {
+					image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_ATT_REQ_OBJ);
+				}
+				else {
+					image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_ATTRIBUTE);
+				}
+			}
+
 			if (attrDecl != null && attrDecl.getAttrType() != null) {
 				// attribute is known, prompt with values from the declaration
 				proposedInfo = getAdditionalInfo(elementDecl, attrDecl);
@@ -263,7 +278,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 							currentValid = currentValid || possibleValue.equals(currentValue);
 							if (matchString.length() == 0 || possibleValue.startsWith(matchString)) {
 								CustomCompletionProposal proposal = new CustomCompletionProposal("\"" + possibleValue + "\"", //$NON-NLS-2$//$NON-NLS-1$
-											contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), possibleValue.length() + 1, XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_ATTRIBUTE), possibleValue, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
+									contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), possibleValue.length() + 1, image, possibleValue, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
 								contentAssistRequest.addProposal(proposal);
 							}
 						}
@@ -273,11 +288,11 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					String value = attrDecl.getAttrType().getImpliedValue();
 					if (value != null && value.length() > 0) {
 						CustomCompletionProposal proposal = new CustomCompletionProposal("\"" + value + "\"", //$NON-NLS-2$//$NON-NLS-1$
-									contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), value.length() + 1, XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_ATTRIBUTE), value, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
+									contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), value.length() + 1, image, value, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
 						contentAssistRequest.addProposal(proposal);
 						if (currentValue.length() > 0 && !value.equals(currentValue)) {
 							proposal = new CustomCompletionProposal("\"" + currentValue + "\"", //$NON-NLS-2$//$NON-NLS-1$
-										contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), currentValue.length() + 1, XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_ATTRIBUTE), currentValue, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
+										contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), currentValue.length() + 1, image, currentValue, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
 							contentAssistRequest.addProposal(proposal);
 						}
 					}
@@ -288,7 +303,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				CustomCompletionProposal proposal = null;
 				if (currentValue != null && currentValue.length() > 0) {
 					proposal = new CustomCompletionProposal("\"" + currentValue + "\"", //$NON-NLS-2$//$NON-NLS-1$
-								contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), 1, XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_ATTRIBUTE), "\"" + currentValue + "\"", //$NON-NLS-2$//$NON-NLS-1$
+								contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), 1, image, "\"" + currentValue + "\"", //$NON-NLS-2$//$NON-NLS-1$
 								null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
 					contentAssistRequest.addProposal(proposal);
 				}
@@ -388,10 +403,14 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 							CustomCompletionProposal proposal = null;
 							// double check to see if the region acted upon is
 							// a tag name; replace it if so
+							Image image = CMImageUtil.getImage(ed);
+							if(image == null) {
+								image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC);							
+							}
 							if (contentAssistRequest.getRegion().getType() == XMLRegionContext.XML_TAG_NAME) {
-								proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getStartOffset(), contentAssistRequest.getRegion().getTextLength(), proposedText.length(), XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC), proposedText, null, proposedInfo, XMLRelevanceConstants.R_END_TAG_NAME);
+								proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getStartOffset(), contentAssistRequest.getRegion().getTextLength(), proposedText.length(), image, proposedText, null, proposedInfo, XMLRelevanceConstants.R_END_TAG_NAME);
 							} else {
-								proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), proposedText.length(), XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC), SSEUIPlugin.getResourceString("%9concat", (new Object[]{"'" + proposedText + "'"})), //$NON-NLS-1$ = "Close with {0}"//$NON-NLS-2$ //$NON-NLS-3$
+								proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), proposedText.length(), image, SSEUIPlugin.getResourceString("%9concat", (new Object[]{"'" + proposedText + "'"})), //$NON-NLS-1$ = "Close with {0}"//$NON-NLS-2$ //$NON-NLS-3$
 											null, proposedInfo, XMLRelevanceConstants.R_END_TAG_NAME);
 							}
 							contentAssistRequest.addProposal(proposal);
@@ -628,6 +647,11 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			// proposal.
 			boolean endWithSlashBracket = (getXML(node) && contentType != CMElementDeclaration.ELEMENT);
 
+			Image image = CMImageUtil.getImage(elementDecl);
+			if(image == null){
+				image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC);
+			}
+
 			// is the start tag ended properly?
 			if (contentAssistRequest.getDocumentRegion() == node.getFirstStructuredDocumentRegion() && !(node.getFirstStructuredDocumentRegion()).isEnded()) {
 				setErrorMessage(null);
@@ -639,7 +663,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					// this is one of the few times to ignore the length --
 								// always insert
 								// contentAssistRequest.getReplacementLength(),
-								0, getContentGenerator().getStartTagClose(node, elementDecl).length(), XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC), SSEUIPlugin.getResourceString("%3concat", (new Object[]{getContentGenerator().getStartTagClose(node, elementDecl)})), //$NON-NLS-1$ = "Close with '{0}'"
+								0, getContentGenerator().getStartTagClose(node, elementDecl).length(), image, SSEUIPlugin.getResourceString("%3concat", (new Object[]{getContentGenerator().getStartTagClose(node, elementDecl)})), //$NON-NLS-1$ = "Close with '{0}'"
 								null, proposedInfo, XMLRelevanceConstants.R_CLOSE_TAG);
 					contentAssistRequest.addProposal(proposal);
 				} else {
@@ -649,7 +673,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 								// this is one of the few times to ignore the
 								// length -- always insert
 								// contentAssistRequest.getReplacementLength(),
-								0, 1, XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC), SSEUIPlugin.getResourceString("%9concat", (new Object[]{" '>'"})), //$NON-NLS-1$ = "Close with {0}"//$NON-NLS-2$
+								0, 1, image, SSEUIPlugin.getResourceString("%9concat", (new Object[]{" '>'"})), //$NON-NLS-1$ = "Close with {0}"//$NON-NLS-2$
 								null, proposedInfo, XMLRelevanceConstants.R_CLOSE_TAG);
 					contentAssistRequest.addProposal(proposal);
 
@@ -667,7 +691,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 										// this is one of the few times to
 										// ignore the length -- always insert
 										// contentAssistRequest.getReplacementLength(),
-										0, 1, XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC), SSEUIPlugin.getResourceString("%5concat", (new Object[]{node.getNodeName()})), //$NON-NLS-1$ = "Close with '></{0}>'"
+										0, 1, image, SSEUIPlugin.getResourceString("%5concat", (new Object[]{node.getNodeName()})), //$NON-NLS-1$ = "Close with '></{0}>'"
 										null, proposedInfo, XMLRelevanceConstants.R_CLOSE_TAG);
 							contentAssistRequest.addProposal(proposal);
 						}
@@ -680,7 +704,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 									// this is one of the few times to ignore
 									// the length -- always insert
 									// contentAssistRequest.getReplacementLength(),
-									0, 2, XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC), SSEUIPlugin.getResourceString("%9concat", (new Object[]{" \"/>\""})), //$NON-NLS-1$ = "Close with {0}"//$NON-NLS-2$
+									0, 2, image, SSEUIPlugin.getResourceString("%9concat", (new Object[]{" \"/>\""})), //$NON-NLS-1$ = "Close with {0}"//$NON-NLS-2$
 									null, proposedInfo, XMLRelevanceConstants.R_CLOSE_TAG + 1); // +1
 						// to
 						// bring
@@ -699,7 +723,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 							// this is one of the few times to ignore the
 							// length -- always insert
 							// contentAssistRequest.getReplacementLength(),
-							0, 1, XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC), SSEUIPlugin.getResourceString("%9concat", (new Object[]{" '>'"})), //$NON-NLS-1$ = "Close with {0}"//$NON-NLS-2$
+							0, 1, image, SSEUIPlugin.getResourceString("%9concat", (new Object[]{" '>'"})), //$NON-NLS-1$ = "Close with {0}"//$NON-NLS-2$
 							null, proposedInfo, XMLRelevanceConstants.R_CLOSE_TAG);
 				contentAssistRequest.addProposal(proposal);
 			}
@@ -790,6 +814,10 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 						// only add proposals for the child element's that
 						// begin with the matchstring
 						String tagname = getRequiredName(parent, elementDecl);
+						Image image = CMImageUtil.getImage(elementDecl);
+						if(image == null){
+							image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC);
+						}
 						// Account for the &lt; and &gt;. If attributes were
 						// added, the cursor will be placed
 						// at the offset before of the first character of the
@@ -798,7 +826,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 						if (beginsWith(tagname, matchString)) {
 							String proposedText = getRequiredText(parent, elementDecl);
 							String proposedInfo = getAdditionalInfo(parentDecl, elementDecl);
-							CustomCompletionProposal proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), markupAdjustment, XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC), tagname, null, proposedInfo, XMLRelevanceConstants.R_TAG_INSERTION);
+							CustomCompletionProposal proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), markupAdjustment, image, tagname, null, proposedInfo, XMLRelevanceConstants.R_TAG_INSERTION);
 							contentAssistRequest.addProposal(proposal);
 						}
 					}
@@ -839,12 +867,16 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				for (int i = 0; i < childDecls.size(); i++) {
 					CMElementDeclaration ed = (CMElementDeclaration) childDecls.get(i);
 					if (ed != null) {
+						Image image = CMImageUtil.getImage(ed);
+						if(image == null){
+							image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC);
+						}
 						String proposedText = getRequiredText(parent, ed);
 						String tagname = getRequiredName(parent, ed);
 						// account for the &lt; and &gt;
 						int markupAdjustment = getContentGenerator().getMinimalStartTagLength(parent, ed);
 						String proposedInfo = getAdditionalInfo(null, ed);
-						CustomCompletionProposal proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), markupAdjustment, XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC), tagname, null, proposedInfo, XMLRelevanceConstants.R_TAG_INSERTION);
+						CustomCompletionProposal proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), markupAdjustment, image, tagname, null, proposedInfo, XMLRelevanceConstants.R_TAG_INSERTION);
 						contentAssistRequest.addProposal(proposal);
 					}
 				}
@@ -900,8 +932,12 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 						}
 					}
 					if (beginsWith(proposedText, matchString)) {
+						Image image = CMImageUtil.getImage(elementDecl);
+						if(image == null){
+							image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC);
+						}
 						String proposedInfo = getAdditionalInfo(getCMElementDeclaration(parent), elementDecl);
-						CustomCompletionProposal proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), cursorAdjustment, XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC), getRequiredName(parent, elementDecl), null, proposedInfo, XMLRelevanceConstants.R_TAG_NAME);
+						CustomCompletionProposal proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), cursorAdjustment, image, getRequiredName(parent, elementDecl), null, proposedInfo, XMLRelevanceConstants.R_TAG_NAME);
 						contentAssistRequest.addProposal(proposal);
 					}
 				}
@@ -942,7 +978,11 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					}
 				}
 				String proposedInfo = getAdditionalInfo(null, ed);
-				CustomCompletionProposal proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), cursorAdjustment, XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC), getRequiredName(parent, ed), null, proposedInfo, XMLRelevanceConstants.R_TAG_NAME);
+				Image image = CMImageUtil.getImage(ed);
+				if(image == null){
+					image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC);
+				}
+				CustomCompletionProposal proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), cursorAdjustment, image, getRequiredName(parent, ed), null, proposedInfo, XMLRelevanceConstants.R_TAG_NAME);
 				contentAssistRequest.addProposal(proposal);
 			}
 		}
@@ -1921,7 +1961,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		}
 		return getContentGenerator().getRequiredName(parentOrOwner, cmnode);
 	}
-
+	
 	protected String getRequiredText(Node parentOrOwner, CMAttributeDeclaration attrDecl) {
 		if (attrDecl == null) {
 			if (Debug.displayWarnings) {
