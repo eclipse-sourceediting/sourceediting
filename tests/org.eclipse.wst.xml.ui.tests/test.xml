@@ -17,18 +17,18 @@
 	<!-- should be done within the body of the suite target. -->
 	<target name="init">
 		<delete>
-			<fileset dir="${eclipse-home}" includes="org.eclipse.wst.xml.ui.tests.xml" />
+			<fileset dir="${eclipse-home}" includes="org.eclipse.wst.xml.ui.tests.*xml" />
 		</delete>
 	</target>
 
 	<!-- This target defines the tests that need to be run. -->
 	<target name="suite">
-		<property name="wst-folder" value="${eclipse-home}/wst-folder"/>
+		<property name="wst-folder" value="${eclipse-home}/wst_folder"/>
 		<delete dir="${wst-folder}" quiet="true" />
 		<ant target="core-test" antfile="${library-file}" dir="${eclipse-home}">
 			<property name="data-dir" value="${wst-folder}" />
 			<property name="plugin-name" value="${plugin-name}" />
-			<property name="classname" value="${plugin-name}.application.SSEXMLTestSuite" />
+			<property name="classname" value="org.eclipse.wst.xml.ui.tests.SSEXMLTestSuite" />
 			<property name="plugin-path" value="${eclipse-home}/plugins/${plugin-name}"/>
 		</ant>
 	</target>
@@ -44,7 +44,7 @@
 	<!-- after all the tests have been run should go here. -->
 	<target name="run" depends="init,suite,cleanup">
 		<ant target="collect" antfile="${library-file}" dir="${eclipse-home}">
-			<property name="includes" value="org.eclipse.wst.xml.ui.tests.xml" />
+			<property name="includes" value="org.eclipse.wst.xml.ui.tests.*xml" />
 			<property name="output-file" value="${plugin-name}.xml" />
 		</ant>
 		<!--		<emailResults resultsFile="${wsad-home}/${plugin-name}.xml" addresslist="david_williams@us.ibm.com,kitlo@us.ibm.com" /> -->

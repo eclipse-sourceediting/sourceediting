@@ -8,9 +8,8 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xml.ui.tests.application;
+package org.eclipse.wst.xml.ui.tests;
 
-import org.eclipse.wst.xml.ui.tests.VerifyEditorPlugin;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -22,7 +21,7 @@ public class SSEXMLTestSuite extends TestSuite {
 	}
 
 	public SSEXMLTestSuite() {
-		super("SSEXMLTestSuite");
+		super("SSE XML UI Test Suite");
 		addTest(new TestSuite(VerifyEditorPlugin.class));
 		//		addTest(new SSEModelTestSuite());
 		//		addTest(new EncodingTestSuite());

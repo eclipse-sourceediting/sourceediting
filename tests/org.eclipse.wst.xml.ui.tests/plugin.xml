@@ -29,15 +29,6 @@
    </requires>
 
 
-   <extension
-         id="ssexmltests"
-         point="org.eclipse.core.runtime.applications">
-      <application>
-         <run
-               class="org.eclipse.wst.xml.ui.tests.application.SSEXMLTests">
-         </run>
-      </application>
-   </extension>
 
    <extension
          point="org.eclipse.ui.views">
