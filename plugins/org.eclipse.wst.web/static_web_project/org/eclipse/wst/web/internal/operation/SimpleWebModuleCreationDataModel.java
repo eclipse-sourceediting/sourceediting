@@ -12,7 +12,7 @@ package org.eclipse.wst.web.internal.operation;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.wst.common.frameworks.internal.operations.ProjectCreationDataModel;
-import org.eclipse.wst.common.frameworks.operations.WTPOperation;
+import org.eclipse.wst.common.frameworks.internal.operations.WTPOperation;
 import org.eclipse.wst.web.internal.ISimpleWebNatureConstants;
 
 public class SimpleWebModuleCreationDataModel extends ProjectCreationDataModel

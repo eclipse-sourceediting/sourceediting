@@ -20,7 +20,7 @@ import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.common.frameworks.internal.operations.ProjectCreationDataModel;
 import org.eclipse.wst.common.frameworks.internal.ui.NewProjectGroup;
-import org.eclipse.wst.common.frameworks.ui.WTPWizardPage;
+import org.eclipse.wst.common.frameworks.internal.ui.WTPWizardPage;
 import org.eclipse.wst.web.internal.ResourceHandler;
 import org.eclipse.wst.web.internal.WSTWebPlugin;
 import org.eclipse.wst.web.internal.operation.SimpleWebModuleCreationDataModel;

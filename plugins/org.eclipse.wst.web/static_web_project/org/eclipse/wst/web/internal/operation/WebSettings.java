@@ -35,6 +35,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jem.util.logger.proxy.Logger;
 import org.eclipse.wst.web.internal.ISimpleWebNatureConstants;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -43,8 +44,6 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import org.eclipse.jem.util.logger.proxy.Logger;
 
 
 public class WebSettings{
