@@ -51,21 +51,22 @@ public class SimpleWebModuleCreationOperation extends ProjectCreationOperation
 
 		if( !cssFolder.exists() ) cssFolder.create(true, true, null);
 
-		createWebSettings(project);
+		//createWebSettings(project);
 
 		if( monitor.isCanceled() ) throw new OperationCanceledException();
 	}
 
-	private void createWebSettings(IProject project) throws CoreException
-	{
-		WebSettings webSettings = new WebSettings(project);
-		webSettings.setContextRoot(project.getName());
-		webSettings.setWebContentName(getWebContentFolderPreference());
-		//		webSettings
-		//				.setProjectType(IStaticWebProjectConstants.STATIC_PROJECT_TYPE);
-
-		webSettings.write();
-	}
+	//To do: WebSettings do not exist now
+//	private void createWebSettings(IProject project) throws CoreException
+//	{
+//		WebSettings webSettings = new WebSettings(project);
+//		webSettings.setContextRoot(project.getName());
+//		webSettings.setWebContentName(getWebContentFolderPreference());
+//		//		webSettings
+//		//				.setProjectType(IStaticWebProjectConstants.STATIC_PROJECT_TYPE);
+//
+//		webSettings.write();
+//	}
 
 	private String getWebContentFolderPreference()
 	{

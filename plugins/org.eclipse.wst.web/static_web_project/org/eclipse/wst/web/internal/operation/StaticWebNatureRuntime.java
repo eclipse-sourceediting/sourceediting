@@ -49,7 +49,7 @@ public class StaticWebNatureRuntime implements IStaticWebNature {
 	protected String[] featureIds = null;
 	protected int fVersion = -1;
 
-	protected WebSettings fWebSettings;
+	//protected WebSettings fWebSettings;
 
 
 	protected IModule module;
@@ -209,22 +209,22 @@ public class StaticWebNatureRuntime implements IStaticWebNature {
 	 * included as the first segment of a doc relative path specification within an html file.
 	 */
 	public String getContextRoot() {
+//		To do : Needs rework  for flexibile project ModuleCore.getFirstArtifactEditForRead		
 		if (contextRoot == null) {
-			WebSettings settings = getWebSettings();
-			contextRoot = settings.getContextRoot();
-			if (contextRoot == null)
-				contextRoot = getProject().getName();
-		}
-
+//			WebSettings settings = getWebSettings();
+//			contextRoot = settings.getContextRoot();
+//			if (contextRoot == null)
+//				contextRoot = getProject().getName();
+		}	
 		return contextRoot;
 	}
 
-	protected WebSettings getWebSettings() {
-		if (fWebSettings == null) {
-			fWebSettings = new WebSettings(getProject());
-		}
-		return fWebSettings;
-	}
+//	protected WebSettings getWebSettings() {
+//		if (fWebSettings == null) {
+//			fWebSettings = new WebSettings(getProject());
+//		}
+//		return fWebSettings;
+//	}
 
 	/*
 	 * Returns the root that the server runs off of. For projects created in v4, this is
@@ -242,9 +242,10 @@ public class StaticWebNatureRuntime implements IStaticWebNature {
 	 * v5.0.1 and later, this is configurable per project by the user.
 	 */
 	public String getModuleServerRootName() {
-		String name = getWebSettings().getWebContentName();
-		if (name != null)
-			return name;
+//		To do : Needs rework  for flexibile project ModuleCore.getFirstArtifactEditForRead		
+//		String name = getWebSettings().getWebContentName();
+//		if (name != null)
+//			return name;
 
 		int version = getVersion();
 		// If created in V5 or beyond
@@ -256,8 +257,9 @@ public class StaticWebNatureRuntime implements IStaticWebNature {
 
 
 	public void setModuleServerRootName(String name) throws CoreException {
-		getWebSettings().setWebContentName(name);
-		getWebSettings().write();
+//		To do : Needs rework  for flexibile project ModuleCore.getFirstArtifactEditForRead		
+//		getWebSettings().setWebContentName(name);
+//		getWebSettings().write();
 	}
 
 	/**
@@ -308,8 +310,10 @@ public class StaticWebNatureRuntime implements IStaticWebNature {
 
 
 	public IPath getBasicWebModulePath() {
-		WebSettings webSettings = getWebSettings();
-		String name = webSettings.getWebContentName();
+//		To do : Needs rework  for flexibile project ModuleCore.getFirstArtifactEditForRead		
+//		WebSettings webSettings = getWebSettings();
+//		String name = webSettings.getWebContentName();
+		String name = null;
 		if (name == null) {
 			int version = getVersion();
 			// If created in V5 or beyond
@@ -357,7 +361,9 @@ public class StaticWebNatureRuntime implements IStaticWebNature {
 
 		if (fVersion == -1) {
 			try {
-				String versionString = getWebSettings().getVersion();
+//				To do : Needs rework  for flexibile project ModuleCore.getFirstArtifactEditForRead				
+//				String versionString = getWebSettings().getVersion();
+				String versionString = null;
 				if (versionString != null)
 					fVersion = Integer.parseInt(versionString);
 			} catch (NumberFormatException e) {
@@ -439,7 +445,7 @@ public class StaticWebNatureRuntime implements IStaticWebNature {
 	}
 
 	protected void resetWebSettings() {
-		fWebSettings = null;
+//		fWebSettings = null;
 		contextRoot = null;
 
 	}
@@ -469,15 +475,17 @@ public class StaticWebNatureRuntime implements IStaticWebNature {
 	 * @deprecated
 	 */
 	public void setWebNatureType(int natureType) throws CoreException {
-		getWebSettings().setProjectType(convertNatureTypeToString(natureType));
-		getWebSettings().write();
+//		To do : Needs rework  for flexibile project ModuleCore.getFirstArtifactEditForRead		
+//		getWebSettings().setProjectType(convertNatureTypeToString(natureType));
+//		getWebSettings().write();
 
 	}
 
 
 	public String[] getFeatureIds() {
-		WebSettings settings = getWebSettings();
-		featureIds = settings.getFeatureIds();
+//		To do : Needs rework  for flexibile project ModuleCore.getFirstArtifactEditForRead		
+//		WebSettings settings = getWebSettings();
+//		featureIds = settings.getFeatureIds();
 		if (featureIds == null)
 			featureIds = new String[0];
 
@@ -485,9 +493,10 @@ public class StaticWebNatureRuntime implements IStaticWebNature {
 	}
 
 	public void setFeatureIds(String[] featureIds) throws CoreException {
-		WebSettings webSettings = getWebSettings();
-		webSettings.setFeatureIds(featureIds);
-		webSettings.write();
+//		To do : Needs rework  for flexibile project ModuleCore.getFirstArtifactEditForRead		
+//		WebSettings webSettings = getWebSettings();
+//		webSettings.setFeatureIds(featureIds);
+//		webSettings.write();
 	}
 
 	/**
@@ -504,15 +513,17 @@ public class StaticWebNatureRuntime implements IStaticWebNature {
 	}
 
 	public void setContextRoot(String newContextRoot) throws CoreException {
-		getWebSettings().setContextRoot(newContextRoot);
-		getWebSettings().write();
+//		To do : Needs rework  for flexibile project ModuleCore.getFirstArtifactEditForRead		
+//		getWebSettings().setContextRoot(newContextRoot);
+//		getWebSettings().write();
 		contextRoot = newContextRoot;
 	}
 
 	public void removeFeatureId(String featureId) throws CoreException {
-		WebSettings webSettings = getWebSettings();
-		webSettings.removeFeatureId(featureId);
-		webSettings.write();
+//		To do : Needs rework  for flexibile project ModuleCore.getFirstArtifactEditForRead		
+//		WebSettings webSettings = getWebSettings();
+//		webSettings.removeFeatureId(featureId);
+//		webSettings.write();
 	}
 
 
