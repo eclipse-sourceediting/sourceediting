@@ -16,8 +16,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
 public class XMLContentAssistProcessor extends AbstractContentAssistProcessor implements IPropertyChangeListener {
 
@@ -31,10 +31,7 @@ public class XMLContentAssistProcessor extends AbstractContentAssistProcessor im
 
 	protected IPreferenceStore getPreferenceStore() {
 		if (fPreferenceStore == null)
-			fPreferenceStore = SSEUIPlugin.getDefault().getPreferenceStore();
-		//fPreferenceStore =
-		// CommonPreferencesPlugin.getDefault().getPreferenceStore(ContentType.ContentTypeID_XML);
-
+			fPreferenceStore = XMLUIPlugin.getDefault().getPreferenceStore();
 		return fPreferenceStore;
 	}
 
