@@ -108,9 +108,7 @@ public interface IStructuredModel extends IAdaptable {
 	long computeModificationStamp(IResource resource);
 
 	/**
-	 * Insert the method's description here. Creation date: (6/24/2001 7:52:24
-	 * PM)
-	 * 
+	 * @deprecated
 	 * @return com.ibm.sed.model.IStructuredModel
 	 */
 	IStructuredModel copy(String id) throws ResourceInUse, ResourceAlreadyExists;
