@@ -668,13 +668,15 @@ public class DocumentImpl extends NodeContainer implements XMLDocument {
 	/**
 	 */
 	protected DocumentTypeAdapter getDocumentTypeAdapter() {
+	    // be sure to release since possibly changing
+	    if(this.documentTypeAdapter != null) {
+	        this.documentTypeAdapter.release();
+	    }
+	    this.documentTypeAdapter = (DocumentTypeAdapter) getAdapterFor(DocumentTypeAdapter.class);
 		if (this.documentTypeAdapter == null) {
-			this.documentTypeAdapter = (DocumentTypeAdapter) getAdapterFor(DocumentTypeAdapter.class);
-			if (this.documentTypeAdapter == null) {
-				// add default adapter
-				this.documentTypeAdapter = new DocumentTypeAdapterImpl(this);
-				addAdapter(this.documentTypeAdapter);
-			}
+			// add default adapter
+		    this.documentTypeAdapter = new DocumentTypeAdapterImpl(this);
+			addAdapter(this.documentTypeAdapter);
 		}
 		return this.documentTypeAdapter;
 	}

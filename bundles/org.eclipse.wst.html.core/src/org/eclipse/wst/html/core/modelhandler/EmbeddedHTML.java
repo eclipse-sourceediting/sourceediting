@@ -11,8 +11,11 @@
 package org.eclipse.wst.html.core.modelhandler;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.wst.css.core.adapters.IStyleSelectorAdapter;
 import org.eclipse.wst.html.core.document.HTMLDocumentTypeAdapterFactory;
 import org.eclipse.wst.html.core.document.HTMLModelParserAdapterFactory;
 import org.eclipse.wst.html.core.htmlcss.HTMLStyleSelectorAdapterFactory;
@@ -25,10 +28,15 @@ import org.eclipse.wst.sse.core.parser.BlockMarker;
 import org.eclipse.wst.sse.core.parser.BlockTagParser;
 import org.eclipse.wst.sse.core.parser.JSPCapableParser;
 import org.eclipse.wst.sse.core.util.Assert;
+import org.eclipse.wst.xml.core.document.DocumentTypeAdapter;
+import org.eclipse.wst.xml.core.internal.document.ModelParserAdapter;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 
 public class EmbeddedHTML implements EmbeddedTypeHandler {
 	public String ContentTypeID_EmbeddedHTML = "org.eclipse.wst.html.core.internal.contenttype.EmbeddedHTML"; //$NON-NLS-1$
+
+	// saved for removal later
+	private HashSet fLocalFactories = new HashSet();
 
 	private List supportedMimeTypes;
 
@@ -60,7 +68,7 @@ public class EmbeddedHTML implements EmbeddedTypeHandler {
 	public List getAdapterFactories() {
 		List factories = new ArrayList();
 		factories.add(new ModelQueryAdapterFactoryForEmbeddedHTML());
-		//		factories.addAll(PluginContributedFactoryReader.getInstance().getFactories(this));
+		// factories.addAll(PluginContributedFactoryReader.getInstance().getFactories(this));
 		return factories;
 	}
 
@@ -86,37 +94,56 @@ public class EmbeddedHTML implements EmbeddedTypeHandler {
 
 	public void initializeFactoryRegistry(IFactoryRegistry registry) {
 		Assert.isNotNull(registry);
-		AdapterFactory factory = HTMLDocumentTypeAdapterFactory.getInstance();
-		registry.addFactory(factory);
-		factory = HTMLModelParserAdapterFactory.getInstance();
-		registry.addFactory(factory);
-		factory = StyleAdapterFactory.getInstance();
-		registry.addFactory(factory);
-		factory = HTMLStyleSelectorAdapterFactory.getInstance();
-		registry.addFactory(factory);
+
+		AdapterFactory factory = null;
+		if (!registry.contains(DocumentTypeAdapter.class)) {
+			factory = new HTMLDocumentTypeAdapterFactory();
+			registry.addFactory(factory);
+			fLocalFactories.add(factory);
+		}
+		if (!registry.contains(ModelParserAdapter.class)) {
+			factory = HTMLModelParserAdapterFactory.getInstance();
+			registry.addFactory(factory);
+			factory = StyleAdapterFactory.getInstance();
+		}
+		if (!registry.contains(IStyleSelectorAdapter.class)) {
+			registry.addFactory(factory);
+			factory = HTMLStyleSelectorAdapterFactory.getInstance();
+			registry.addFactory(factory);
+		}
 	}
 
 	public void uninitializeFactoryRegistry(IFactoryRegistry registry) {
 		Assert.isNotNull(registry);
-		// note this BIG assumption about factory singletons!
-		// for this particular list, they are, but may not 
-		// be in future.
-
-		AdapterFactory factory = HTMLDocumentTypeAdapterFactory.getInstance();
-		factory.release();
-		registry.removeFactory(factory);
-
-		factory = HTMLModelParserAdapterFactory.getInstance();
-		factory.release();
-		registry.removeFactory(factory);
-
-		factory = StyleAdapterFactory.getInstance();
-		factory.release();
-		registry.removeFactory(factory);
-
-		factory = HTMLStyleSelectorAdapterFactory.getInstance();
-		factory.release();
-		registry.removeFactory(factory);
+		
+        if (!fLocalFactories.isEmpty()) {
+            Iterator it = fLocalFactories.iterator();
+            while (it.hasNext()) {
+                AdapterFactory af = (AdapterFactory) it.next();
+                af.release();
+                registry.removeFactory(af);
+            }
+        }
+		fLocalFactories.clear();
+//		// note this BIG assumption about factory singletons!
+//		// for this particular list, they are, but may not
+//		// be in future.
+//
+//		AdapterFactory factory = new HTMLDocumentTypeAdapterFactory();
+//		factory.release();
+//		registry.removeFactory(factory);
+//
+//		factory = HTMLModelParserAdapterFactory.getInstance();
+//		factory.release();
+//		registry.removeFactory(factory);
+//
+//		factory = StyleAdapterFactory.getInstance();
+//		factory.release();
+//		registry.removeFactory(factory);
+//
+//		factory = HTMLStyleSelectorAdapterFactory.getInstance();
+//		factory.release();
+//		registry.removeFactory(factory);
 	}
 
 	public void uninitializeParser(JSPCapableParser parser) {

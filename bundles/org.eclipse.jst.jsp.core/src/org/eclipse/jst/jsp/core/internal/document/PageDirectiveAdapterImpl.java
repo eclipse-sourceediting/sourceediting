@@ -401,8 +401,13 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 			// changing this embedded handler here may 
 			// be in the middle of anotify loop, not sure
 			// if that'll cause problems.
+			
+			// be sure to hold oldHandler in temp var
+			// or else setEmbeddedType will "reset" it
+			// before modelReinitNeeded(oldHandler, handler) is called
+		    EmbeddedTypeHandler oldHandler = embeddedTypeHandler;
 			setEmbeddedType(handler);
-			modelReinitNeeded(embeddedTypeHandler, handler);
+			modelReinitNeeded(oldHandler, handler);
 		}
 		//		}
 

@@ -72,6 +72,7 @@ import org.eclipse.wst.javascript.common.ui.internal.taginfo.JavaScriptTagInfoHo
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
+import org.eclipse.wst.sse.ui.EditorPlugin;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
@@ -86,13 +87,25 @@ import org.eclipse.wst.xml.core.text.rules.StructuredTextPartitionerForXML;
 import org.eclipse.wst.xml.ui.doubleclick.XMLDoubleClickStrategy;
 import org.eclipse.wst.xml.ui.internal.correction.CorrectionProcessorXML;
 import org.eclipse.wst.xml.ui.reconcile.StructuredTextReconcilingStrategyForMarkup;
+import org.eclipse.wst.xml.ui.style.LineStyleProviderForXML;
+import org.eclipse.wst.xml.ui.taginfo.XMLBestMatchHoverProcessor;
+import org.eclipse.wst.xml.ui.taginfo.XMLInformationProvider;
+import org.eclipse.wst.xml.ui.taginfo.XMLTagInfoHoverProcessor;
 
 public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerConfiguration {
 
     InformationPresenter fInformationPresenter = null;
 
     private JavaSourceViewerConfiguration fJavaSourceViewerConfiguration;
-
+	
+	public StructuredTextViewerConfigurationJSP() {
+		super();
+	}
+	
+	public StructuredTextViewerConfigurationJSP(IPreferenceStore store) {
+		super(store);
+	}
+	
     /*
      * (non-Javadoc)
      * 
@@ -256,6 +269,15 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
             highlighter.addProvider(StructuredTextPartitionerForJSP.ST_JSP_DIRECTIVE, jspLineStyleProvider);
             highlighter.addProvider(StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER, jspLineStyleProvider);
 
+			// XML
+			LineStyleProviderForXML xmlLineStyleProvider = new LineStyleProviderForXML();
+			highlighter.addProvider(StructuredTextPartitionerForXML.ST_DEFAULT_XML, xmlLineStyleProvider);
+			highlighter.addProvider(StructuredTextPartitionerForXML.ST_XML_COMMENT, xmlLineStyleProvider);
+			highlighter.addProvider(StructuredTextPartitionerForXML.ST_XML_CDATA, xmlLineStyleProvider);
+			highlighter.addProvider(StructuredTextPartitionerForXML.ST_XML_DECLARATION, xmlLineStyleProvider);
+			highlighter.addProvider(StructuredTextPartitionerForXML.ST_XML_PI, xmlLineStyleProvider);
+			
+			
             // JSP Java or JSP JavaScript
             highlighter.addProvider(StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA, new LineStyleProviderForJava());
             highlighter.addProvider(StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVASCRIPT, new LineStyleProviderForJavaScript());
@@ -276,6 +298,10 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
             IInformationProvider javascriptInformationProvider = new JavaScriptInformationProvider();
             fInformationPresenter.setInformationProvider(javascriptInformationProvider, StructuredTextPartitionerForHTML.ST_SCRIPT);
 
+			// XML
+			IInformationProvider xmlInformationProvider = new XMLInformationProvider();
+			fInformationPresenter.setInformationProvider(xmlInformationProvider, StructuredTextPartitionerForXML.ST_DEFAULT_XML);
+			
             fInformationPresenter.setSizeConstraints(60, 10, true, true);
         }
         return fInformationPresenter;
@@ -358,6 +384,31 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
                 i++;
             }
         }
+		else if (contentType == StructuredTextPartitionerForXML.ST_DEFAULT_XML) {
+			// XML
+			TextHoverManager.TextHoverDescriptor[] hoverDescs = EditorPlugin.getDefault().getTextHoverManager().getTextHovers();
+			int i = 0;
+			while (i < hoverDescs.length) {
+				if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {
+					String hoverType = hoverDescs[i].getId();
+					if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType)) {
+					    XMLBestMatchHoverProcessor hover = new XMLBestMatchHoverProcessor();
+						//hover.setEditor(getEditorPart());
+						return hover;
+					}
+					else if (TextHoverManager.PROBLEM_HOVER.equalsIgnoreCase(hoverType))
+						return new ProblemAnnotationHoverProcessor();
+					else if (TextHoverManager.ANNOTATION_HOVER.equalsIgnoreCase(hoverType))
+						return new AnnotationHoverProcessor();
+					else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType)) {
+					    XMLTagInfoHoverProcessor hover = new XMLTagInfoHoverProcessor();
+						//hover.setEditor(getEditorPart());
+						return hover;
+					}
+				}
+				i++;
+			}
+		}
         return super.getTextHover(sourceViewer, contentType, stateMask);
     }
 
@@ -370,6 +421,10 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
     }
 
     public IReconciler getReconciler(ISourceViewer sourceViewer) {
+		
+		if(fPreferenceStore == null)
+			return null;
+		
         if (fReconciler != null) {
             // a reconciler should always be installed or disposed of
             if (!fReconciler.isInstalled()) {
@@ -437,6 +492,8 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 	 * @since 3.1
 	 */
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
+		if(fPreferenceStore == null)
+			return null;
 		if (sourceViewer == null || !fPreferenceStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED))
 			return null;
 		

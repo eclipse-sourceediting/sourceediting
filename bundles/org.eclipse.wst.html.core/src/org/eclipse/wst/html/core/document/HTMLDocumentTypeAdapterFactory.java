@@ -25,15 +25,17 @@ import org.eclipse.wst.xml.core.document.XMLDocument;
  */
 public class HTMLDocumentTypeAdapterFactory implements AdapterFactory, Preferences.IPropertyChangeListener, CommonModelPreferenceNames {
 
-	private static HTMLDocumentTypeAdapterFactory instance = null;
 	private int tagNameCase = DocumentTypeAdapter.UPPER_CASE;
 	private int attrNameCase = DocumentTypeAdapter.LOWER_CASE;
-	//private IPreferenceStore store = null;
 	private Preferences preferences = null;
 
+	// for removal later on release()
+	private DocumentTypeAdapter fAdapter = null;
+	private INodeNotifier fNotifier = null;
+	
 	/**
 	 */
-	private HTMLDocumentTypeAdapterFactory() {
+	public HTMLDocumentTypeAdapterFactory() {
 		super();
 		this.preferences = HTMLCorePlugin.getDefault().getPluginPreferences();
 		//this.store = CommonPreferencesPlugin.getDefault().getPreferenceStore(ContentTypeRegistry.HTML_ID);
@@ -53,13 +55,17 @@ public class HTMLDocumentTypeAdapterFactory implements AdapterFactory, Preferenc
 	 * object with the correct instance of the adapter.
 	 */
 	public INodeAdapter adapt(INodeNotifier notifier) {
-		INodeAdapter adapter = notifier.getExistingAdapter(DocumentTypeAdapter.class);
+		DocumentTypeAdapter adapter = (DocumentTypeAdapter)notifier.getExistingAdapter(DocumentTypeAdapter.class);
 		if (adapter != null)
 			return adapter;
 		if (!(notifier instanceof XMLDocument))
 			return null;
 		adapter = new HTMLDocumentTypeAdapter((XMLDocument) notifier, this);
 		notifier.addAdapter(adapter);
+		
+		fAdapter = adapter;
+		fNotifier = notifier;
+		
 		return adapter;
 	}
 
@@ -67,16 +73,6 @@ public class HTMLDocumentTypeAdapterFactory implements AdapterFactory, Preferenc
 	 */
 	public int getAttrNameCase() {
 		return this.attrNameCase;
-	}
-
-	/**
-	 * Insert the method's description here.
-	 * @return com.ibm.iwt.css.adapters.HTMLStyleSelectorAdapterFactory
-	 */
-	public synchronized static HTMLDocumentTypeAdapterFactory getInstance() {
-		if (instance == null)
-			instance = new HTMLDocumentTypeAdapterFactory();
-		return instance;
 	}
 
 	/**
@@ -125,12 +121,16 @@ public class HTMLDocumentTypeAdapterFactory implements AdapterFactory, Preferenc
 	/**
 	 */
 	public void release() {
+	    if(fAdapter != null && fNotifier != null) {
+	        fAdapter.release();
+	        fNotifier.removeAdapter(fAdapter);
+	    }	
 	}
 
 	/**
 	 * Overriding copy method
 	 */
 	public AdapterFactory copy() {
-		return getInstance();
+		return new HTMLDocumentTypeAdapterFactory();
 	}
 }

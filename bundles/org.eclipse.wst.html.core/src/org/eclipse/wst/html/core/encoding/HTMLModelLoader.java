@@ -65,7 +65,7 @@ public class HTMLModelLoader extends AbstractModelLoader {
 		result.add(factory);
 		factory = HTMLStyleSelectorAdapterFactory.getInstance();
 		result.add(factory);
-		factory = HTMLDocumentTypeAdapterFactory.getInstance();
+		factory = new HTMLDocumentTypeAdapterFactory();
 		result.add(factory);
 		factory = HTMLModelParserAdapterFactory.getInstance();
 		result.add(factory);

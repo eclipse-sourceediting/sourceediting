@@ -51,6 +51,7 @@ import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.document.XMLDocument;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.internal.DebugAdapterFactory;
+import org.eclipse.wst.xml.core.internal.document.XMLModelImpl;
 import org.eclipse.wst.xml.core.internal.propagate.PropagatingAdapterFactoryImpl;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
 import org.eclipse.wst.xml.core.text.rules.StructuredTextPartitionerForXML;
@@ -387,6 +388,11 @@ public class JSPModelLoader extends AbstractModelLoader {
 		// them be rediscovered (with new, accurate node as target)
 		// pageDirectiveAdapter.clearPageWatchers();
 		if (newEmbeddedContentType != null) {
+		
+			// need to null out or else ModelParserAdapter
+			// won't get reinitialized
+			((XMLModelImpl)model).setModelParser(null);
+			
 			newEmbeddedContentType.initializeFactoryRegistry(model.getFactoryRegistry());
 			newEmbeddedContentType.initializeParser((JSPCapableParser) structuredDocument.getParser());
 

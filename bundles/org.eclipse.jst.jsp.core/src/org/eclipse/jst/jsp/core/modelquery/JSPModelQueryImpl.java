@@ -11,6 +11,7 @@
 package org.eclipse.jst.jsp.core.modelquery;
 
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
@@ -31,7 +32,7 @@ import org.w3c.dom.Node;
 public class JSPModelQueryImpl extends ModelQueryImpl {
 
 	protected IStructuredModel jspModel = null;
-	protected ModelQuery embeddedModelQuery = null;
+	private HashMap embeddedModelQueries = new HashMap();
 	public JSPModelQueryImpl(IStructuredModel model, IdResolver resolver) {
 		super(new JSPModelQueryAssociationProvider());
 		jspModel = model;
@@ -88,20 +89,33 @@ public class JSPModelQueryImpl extends ModelQueryImpl {
 	}
 
 	protected ModelQuery getEmbeddedModelQuery(Node node) {
-		if (this.embeddedModelQuery == null && node instanceof INodeNotifier) {
-			Node ownerNode = node.getOwnerDocument();
-			if (ownerNode == null) {
-				// then must be the document itself
-				ownerNode = node;
+	    ModelQuery emq = null;
+		   
+			if (node instanceof INodeNotifier) {
+				Node ownerNode = node.getOwnerDocument();
+				if (ownerNode == null) {
+					// then must be the document itself
+					ownerNode = node;
+				}
+				PageDirectiveAdapter typeadapter = (PageDirectiveAdapter) ((INodeNotifier) ownerNode).getAdapterFor(PageDirectiveAdapter.class);
+				if (typeadapter != null) {
+				    
+				    String contentType = typeadapter.getContentType();
+				    Object o = embeddedModelQueries.get(contentType);
+				    if(o == null) {
+						ModelQueryAdapter embeddedAdapter = (ModelQueryAdapter) typeadapter.adapt((INodeNotifier) node, ModelQueryAdapter.class);
+						if (embeddedAdapter != null) {
+						    // we will cache one model query per content type
+						    emq = embeddedAdapter.getModelQuery();
+						    embeddedModelQueries.put(contentType, emq);
+						}
+				    }
+					else {
+					    emq = (ModelQuery)o;
+					}
+				}
 			}
-			PageDirectiveAdapter typeadapter = (PageDirectiveAdapter) ((INodeNotifier) ownerNode).getAdapterFor(PageDirectiveAdapter.class);
-			if (typeadapter != null) {
-				ModelQueryAdapter embeddedAdapter = (ModelQueryAdapter) typeadapter.adapt((INodeNotifier) node, ModelQueryAdapter.class);
-				if (embeddedAdapter != null)
-					this.embeddedModelQuery = embeddedAdapter.getModelQuery();
-			}
-		}
-		return this.embeddedModelQuery;
+			return emq;
 	}
 
 	/* (non-Javadoc)
