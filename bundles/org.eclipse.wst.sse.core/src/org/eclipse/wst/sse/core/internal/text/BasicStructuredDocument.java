@@ -101,8 +101,22 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		private ThreadLocal threadLocalCachePosition = new ThreadLocal();
 
 		IStructuredDocumentRegion get() {
+			IStructuredDocumentRegion region = null;
 			int pos = getThreadLocalPosition();
-			IStructuredDocumentRegion region = (IStructuredDocumentRegion) cachedRegionPositionArray.get(pos);
+			try {
+				region = (IStructuredDocumentRegion) cachedRegionPositionArray.get(pos);
+			} catch (IndexOutOfBoundsException e) {
+				// even though the cachedRegionPosition is synchronized,
+				// that just means each access is syncronized, its
+				// still possible for another thread to cause it to
+				// be cleared, after this thread gets it position.
+				// So, if that happens, all we can do is reset to beginning.
+				// This should be extremely rare (in other words, probably
+				// not worth using synchronized blocks
+				// to access cachedRegionPositionArray.
+				reinitThreadLocalPosition();
+				resetToInitialState();
+			}
 			if (region == null) {
 				region = resetToInitialState();
 			} else
@@ -115,31 +129,40 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 
 		private int getThreadLocalPosition() {
 			Object threadLocalObject = threadLocalCachePosition.get();
-			Integer position = null;
 			int pos = -1;
 			if (threadLocalObject == null) {
 
-				// TODO_future: think of a better solution that doesn't
-				// require this kludge. This is especially required because
-				// some infrasture, such as reconciler, actually null out
-				// their thread object and recreate it, 500 msecs later
-				// (approximately).
-				// Note: the likely solution in future is to clear after every
-				// heavy use of getCachedRegion, such as in creating node
-				// lists, or reparsing or partioning.
-				if (cachedRegionPositionArray.size() > MAX_SIZE) {
-					cachedRegionPositionArray.clear();
-					if (DEBUG) {
-						System.out.println("cachedRegionPositionArray cleared at size " + MAX_SIZE);
-					}
-				}
-				position = new Integer(cachedRegionPositionArray.size());
-				threadLocalCachePosition.set(position);
-				cachedRegionPositionArray.add(position.intValue(), null);
-				pos = position.intValue();
+				pos = reinitThreadLocalPosition();
 			} else {
 				pos = ((Integer) threadLocalObject).intValue();
 			}
+			return pos;
+		}
+
+		/**
+		 * @return
+		 */
+		private int reinitThreadLocalPosition() {
+			Integer position;
+			int pos;
+			// TODO_future: think of a better solution that doesn't
+			// require this kludge. This is especially required because
+			// some infrasture, such as reconciler, actually null out
+			// their thread object and recreate it, 500 msecs later
+			// (approximately).
+			// Note: the likely solution in future is to clear after every
+			// heavy use of getCachedRegion, such as in creating node
+			// lists, or reparsing or partioning.
+			if (cachedRegionPositionArray.size() > MAX_SIZE) {
+				cachedRegionPositionArray.clear();
+				if (DEBUG) {
+					System.out.println("cachedRegionPositionArray cleared at size " + MAX_SIZE);
+				}
+			}
+			position = new Integer(cachedRegionPositionArray.size());
+			threadLocalCachePosition.set(position);
+			cachedRegionPositionArray.add(position.intValue(), null);
+			pos = position.intValue();
 			return pos;
 		}
 
@@ -168,6 +191,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 				// This should be extremely rare (in other words, probably
 				// not worth using synchronized blocks
 				// to access cachedRegionPositionArray.
+				reinitThreadLocalPosition();
 				resetToInitialState();
 			}
 		}
@@ -698,7 +722,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 				// send the new model event to that one particular listener,
 				// so it
 				// can initialize itself with the current state of the model
-				//listener.newModel(new NewModelEvent(this, listener));
+				// listener.newModel(new NewModelEvent(this, listener));
 			}
 		}
 	}
@@ -741,7 +765,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 				// send the new model event to that one particular listener,
 				// so it
 				// can initialize itself with the current state of the model
-				//listener.newModel(new NewModelEvent(this, listener));
+				// listener.newModel(new NewModelEvent(this, listener));
 			}
 		}
 	}
@@ -750,7 +774,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 * We manage our own document listners, instead of delegating to our
 	 * parentDocument, so we can fire at very end (and not when the
 	 * parentDocument changes).
-	 *  
+	 * 
 	 */
 	public void addDocumentListener(IDocumentListener listener) {
 		synchronized (listenerLock) {
@@ -928,7 +952,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 				Position position = positions[i];
 				if (position.overlapsWith(startOffset, length)) {
 					String effectedText = this.get(startOffset, length);
-					//fDocumentEvent = new DocumentEvent(this, startOffset,
+					// fDocumentEvent = new DocumentEvent(this, startOffset,
 					// length, effectedText);
 					fireReadOnlyAboutToBeChanged();
 					position.delete();
@@ -1117,16 +1141,16 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	private void fireReadOnlyAboutToBeChanged() {
 		_fireStructuredDocumentAboutToChange(fStructuredDocumentAboutToChangeListeners);
 		// Note: the docEvent is created in replaceText API! (or set Text)
-		//		_fireDocumentAboutToChange(fPrenotifiedDocumentListeners);
-		//		_fireDocumentAboutToChange(fDocumentListeners);
+		// _fireDocumentAboutToChange(fPrenotifiedDocumentListeners);
+		// _fireDocumentAboutToChange(fDocumentListeners);
 	}
 
 	private void fireReadOnlyStructuredDocumentEvent(NoChangeEvent event) {
 		_fireEvent(fStructuredDocumentChangingListeners, event);
 		_fireEvent(fStructuredDocumentChangedListeners, event);
-		//		_fireDocumentChanged(fPrenotifiedDocumentListeners, event);
-		//	_fireDocumentChanged(fDocumentListeners, event);
-		//	_clearDocumentEvent();
+		// _fireDocumentChanged(fPrenotifiedDocumentListeners, event);
+		// _fireDocumentChanged(fDocumentListeners, event);
+		// _clearDocumentEvent();
 	}
 
 	private void fireStructuredDocumentEvent(NewDocumentEvent event) {
@@ -1209,8 +1233,8 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			}
 
 		}
-		//		if ((0 > offset) || (0 > length) || (offset + length > myLength))
-		//			throw new BadLocationException();
+		// if ((0 > offset) || (0 > length) || (offset + length > myLength))
+		// throw new BadLocationException();
 		result = getStore().get(offset, length);
 		return result;
 	}
@@ -1469,11 +1493,11 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	public RegionParser getParser() {
 		if (fParser == null) {
 			throw new SourceEditingRuntimeException("IStructuredDocument::getParser. Parser needs to be set before use"); //$NON-NLS-1$
-			//fParser = getParserFactory().createParser(fType);
-			//System.out.println("Information:
+			// fParser = getParserFactory().createParser(fType);
+			// System.out.println("Information:
 			// IStructuredDocument::getParser.
 			// XML Parser assumed.");
-			//fParser = new XMLSourceParser();
+			// fParser = new XMLSourceParser();
 		}
 		return fParser;
 	}
@@ -1573,7 +1597,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	public IStructuredDocumentRegion getRegionAtCharacterOffset(int offset) {
 		IStructuredDocumentRegion result = null;
 
-		//FIXME: need to synch on 'cachedRegion' (but since that's a
+		// FIXME: need to synch on 'cachedRegion' (but since that's a
 		// constantly changing object, we
 		// can't, so need to add a "region_lock" object, and use it here, and
 		// in re-parser.
@@ -1739,11 +1763,11 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		fParser = newParser;
 	}
 
-	 String internalGet(int offset, int length) {
+	String internalGet(int offset, int length) {
 		String result = null;
 		int myLength = getLength();
-		//		if ((0 > offset) || (0 > length) || (offset + length > myLength))
-		//			throw new BadLocationException();
+		// if ((0 > offset) || (0 > length) || (offset + length > myLength))
+		// throw new BadLocationException();
 		result = getStore().get(offset, length);
 		return result;
 	}
@@ -1874,12 +1898,12 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		String affectedText = this.get(startOffset, length);
 		// a document event for "read only" change ... must
 		// be followed by "no change" structuredDocument event
-		//	fDocumentEvent = new DocumentEvent(this, startOffset, length,
+		// fDocumentEvent = new DocumentEvent(this, startOffset, length,
 		// affectedText);
 		fireReadOnlyAboutToBeChanged();
-		//		if (containsReadOnly(startOffset, length)) {
-		//			adjustReadOnlyRegions(startOffset, length);
-		//		} else {
+		// if (containsReadOnly(startOffset, length)) {
+		// adjustReadOnlyRegions(startOffset, length);
+		// } else {
 		// we can blindly add category, since no harm done if already
 		// exists.
 		addPositionCategory(READ_ONLY_REGIONS_CATEGORY);
@@ -2383,7 +2407,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	public void setReParser(IStructuredTextReParser newReParser) {
 		fReParser = newReParser;
