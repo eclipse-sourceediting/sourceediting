@@ -20,6 +20,8 @@
             <element ref="sourceeditingtexttools"/>
             <element ref="spellchecktarget"/>
             <element ref="textviewerconfiguration"/>
+            <element ref="configuration"/>
+            <element ref="definition"/>
          </all>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -40,9 +42,6 @@
                <documentation>
                   
                </documentation>
-               <appInfo>
-                  <meta.attribute translatable="true"/>
-               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -238,6 +237,67 @@
             </annotation>
          </attribute>
       </complexType>
+   </element>
+
+   <element name="configuration">
+      <complexType>
+         <attribute name="target" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="type" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="definition">
+      <complexType>
+         <all>
+            <element ref="value"/>
+         </all>
+         <attribute name="type" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="value" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="target" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="value" type="string">
    </element>
 
    <annotation>
