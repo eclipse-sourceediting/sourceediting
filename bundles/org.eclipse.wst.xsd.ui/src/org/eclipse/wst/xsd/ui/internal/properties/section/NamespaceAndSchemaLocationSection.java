@@ -19,10 +19,10 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -45,11 +45,9 @@ import org.eclipse.xsd.impl.XSDImportImpl;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Element;
 
-public class NamespaceAndSchemaLocationSection extends AbstractSection
+public class NamespaceAndSchemaLocationSection extends CommonDirectivesSection
 {
-  Text schemaLocationText;
 	Text namespaceText, prefixText;
-	Button wizardButton;
   protected String oldPrefixValue;
 	  
 	public NamespaceAndSchemaLocationSection()
@@ -80,7 +78,6 @@ public class NamespaceAndSchemaLocationSection extends AbstractSection
     data.right = new FormAttachment(100, -rightMarginSpace - ITabbedPropertyConstants.HSPACE);
     data.top = new FormAttachment(0, 0);
     namespaceText.setLayoutData(data);
-
     
 		CLabel prefixLabel = getWidgetFactory().createCLabel(composite, XSDEditorPlugin.getXSDString("_UI_LABEL_PREFIX")); //$NON-NLS-1$				
 		prefixText = getWidgetFactory().createText(composite, "", SWT.NONE); //$NON-NLS-1$
@@ -98,7 +95,7 @@ public class NamespaceAndSchemaLocationSection extends AbstractSection
 		data.right = new FormAttachment(100, -rightMarginSpace - ITabbedPropertyConstants.HSPACE);
 		data.top = new FormAttachment(namespaceText, +ITabbedPropertyConstants.VSPACE);
 		prefixText.setLayoutData(data);
-
+   
 		// Create Schema Location Label
 		CLabel schemaLocationLabel = getWidgetFactory().createCLabel(composite, XSDEditorPlugin.getXSDString("_UI_LABEL_SCHEMA_LOCATION")); //$NON-NLS-1$
     schemaLocationText = getWidgetFactory().createText(composite, "", SWT.NONE); //$NON-NLS-1$
@@ -114,7 +111,7 @@ public class NamespaceAndSchemaLocationSection extends AbstractSection
 		wizardButton.addSelectionListener(this);
 		
 		// Create Schema Location Text
-		schemaLocationText.setEditable(false);
+		schemaLocationText.setEditable(true);
 		FormData schemaLocationData = new FormData();
 		schemaLocationData.left = new FormAttachment(0, 110);
 		schemaLocationData.right = new FormAttachment(wizardButton, 0);
@@ -127,7 +124,18 @@ public class NamespaceAndSchemaLocationSection extends AbstractSection
     data.right = new FormAttachment(schemaLocationText, 0);
     data.top = new FormAttachment(schemaLocationText, 0, SWT.CENTER);
     schemaLocationLabel.setLayoutData(data);
-   
+    
+    // error text
+    errorText = new StyledText(composite, SWT.FLAT);
+    errorText.setEditable(false);
+    errorText.setEnabled(false);
+    errorText.setText("");
+    
+    data = new FormData();
+    data.left = new FormAttachment(schemaLocationText, 0, SWT.LEFT);
+    data.right = new FormAttachment(100, 0);
+    data.top = new FormAttachment(schemaLocationText, 0);
+    errorText.setLayoutData(data);
   }
 	
 	public void widgetSelected(SelectionEvent event)
@@ -159,107 +167,112 @@ public class NamespaceAndSchemaLocationSection extends AbstractSection
       prefixText.removeListener(SWT.Modify, this);
 		  if (result == Window.OK)
 		  {
-		    IFile selectedIFile = fileSelectWizard.getResultFile();
-		    String schemaFileString = value;
-		    if (selectedIFile != null) 
-		    {
-		      schemaFileString = URIHelper.getRelativeURI(selectedIFile.getLocation(), currentIFile.getLocation());
-		    }
-		    else
-		    {
-		      schemaFileString = fileSelectWizard.getURL();
-		    }
-        
-        XSDConcreteComponent comp = (XSDConcreteComponent)getInput();
-        if (comp instanceof XSDImport)
+        IFile selectedIFile = fileSelectWizard.getResultFile();
+        String schemaFileString = value;
+        if (selectedIFile != null) 
         {
-          XSDImport xsdImport = (XSDImport)comp;
-          Element importElement = comp.getElement();
-          
-          beginRecording(XSDEditorPlugin.getXSDString("_UI_IMPORT_CHANGE"), importElement);
-          
-          String namespace = fileSelectWizard.getNamespace();
-          if (namespace == null) namespace = "";
-          XSDSchema externalSchema = fileSelectWizard.getExternalSchema();
+          schemaFileString = URIHelper.getRelativeURI(selectedIFile.getLocation(), currentIFile.getLocation());
+        }
+        else
+        {
+          schemaFileString = fileSelectWizard.getURL();
+        }
 
-          xsdImport.setNamespace(namespace);
-          xsdImport.setSchemaLocation(schemaFileString);
-          xsdImport.setResolvedSchema(externalSchema);
-          
-          java.util.Map map = xsdSchema.getQNamePrefixToNamespaceMap();
-          
-//          System.out.println("changed Import Map is " + map.values());
-//          System.out.println("changed import Map keys are " + map.keySet());
+        String namespace = fileSelectWizard.getNamespace();
+        if (namespace == null) namespace = "";
 
-          // Referential integrity on old import
-          // How can we be sure that if the newlocation is the same as the oldlocation
-          // the file hasn't changed
-          
-          XSDSchema referencedSchema = xsdImport.getResolvedSchema();
-          if (referencedSchema != null)
-          {
-            XSDExternalFileCleanup cleanHelper = new XSDExternalFileCleanup(referencedSchema);
-            cleanHelper.visitSchema(xsdSchema);
-          }
-
-          Element schemaElement = getSchema().getElement();
-
-          // update the xmlns in the schema element first, and then update the import element next
-          // so that the last change will be in the import element.  This keeps the selection
-          // on the import element
-          TypesHelper helper = new TypesHelper(externalSchema);
-          String prefix = helper.getPrefix(namespace, false);
-          
-          if (map.containsKey(prefix))
-          {
-            prefix = null;
-          }
-
-          if (prefix == null || (prefix !=null && prefix.length() == 0))
-          {
-            StringBuffer newPrefix = new StringBuffer("pref");  //$NON-NLS-1$
-            int prefixExtension = 1;
-            while (map.containsKey(newPrefix.toString()) && prefixExtension < 100)
-            {
-              newPrefix = new StringBuffer("pref" + String.valueOf(prefixExtension));
-              prefixExtension++;
-            }
-            prefix = newPrefix.toString();
-          }
-
-          if (namespace.length() > 0)
-          {
-            // if ns already in map, use its corresponding prefix
-            if (map.containsValue(namespace))
-            {
-              TypesHelper typesHelper = new TypesHelper(xsdSchema);
-              prefix = typesHelper.getPrefix(namespace, false);
-            }
-            else // otherwise add to the map
-            {
-              schemaElement.setAttribute("xmlns:"+prefix, namespace);
-            }
-            prefixText.setText(prefix);
-          }
-          else
-          {
-            prefixText.setText("");
-            namespaceText.setText("");
-          }
-            
-          endRecording(importElement);
-          
-//          System.out.println("changed Import Map is " + map.values());
-//          System.out.println("changed import Map keys are " + map.keySet());
-
-        }        
-				refresh();
+        XSDSchema externalSchema = fileSelectWizard.getExternalSchema();
+        handleSchemaLocationChange(schemaFileString, namespace, externalSchema);
 		  }
       setListenerEnabled(true);
       prefixText.addListener(SWT.Modify, this);
 		}
 	}
 
+  protected void handleSchemaLocationChange(String schemaFileString, String namespace, XSDSchema externalSchema)
+  {
+    XSDConcreteComponent comp = (XSDConcreteComponent)getInput();
+    if (comp instanceof XSDImport)
+    {
+      XSDImport xsdImport = (XSDImport)comp;
+      Element importElement = comp.getElement();
+      
+      beginRecording(XSDEditorPlugin.getXSDString("_UI_IMPORT_CHANGE"), importElement);
+
+      xsdImport.setNamespace(namespace);
+      xsdImport.setSchemaLocation(schemaFileString);
+      xsdImport.setResolvedSchema(externalSchema);
+      
+      java.util.Map map = xsdSchema.getQNamePrefixToNamespaceMap();
+      
+//      System.out.println("changed Import Map is " + map.values());
+//      System.out.println("changed import Map keys are " + map.keySet());
+
+      // Referential integrity on old import
+      // How can we be sure that if the newlocation is the same as the oldlocation
+      // the file hasn't changed
+      
+      XSDSchema referencedSchema = xsdImport.getResolvedSchema();
+      if (referencedSchema != null)
+      {
+        XSDExternalFileCleanup cleanHelper = new XSDExternalFileCleanup(referencedSchema);
+        cleanHelper.visitSchema(xsdSchema);
+      }
+
+      Element schemaElement = getSchema().getElement();
+
+      // update the xmlns in the schema element first, and then update the import element next
+      // so that the last change will be in the import element.  This keeps the selection
+      // on the import element
+      TypesHelper helper = new TypesHelper(externalSchema);
+      String prefix = helper.getPrefix(namespace, false);
+      
+      if (map.containsKey(prefix))
+      {
+        prefix = null;
+      }
+
+      if (prefix == null || (prefix !=null && prefix.length() == 0))
+      {
+        StringBuffer newPrefix = new StringBuffer("pref");  //$NON-NLS-1$
+        int prefixExtension = 1;
+        while (map.containsKey(newPrefix.toString()) && prefixExtension < 100)
+        {
+          newPrefix = new StringBuffer("pref" + String.valueOf(prefixExtension));
+          prefixExtension++;
+        }
+        prefix = newPrefix.toString();
+      }
+
+      if (namespace.length() > 0)
+      {
+        // if ns already in map, use its corresponding prefix
+        if (map.containsValue(namespace))
+        {
+          TypesHelper typesHelper = new TypesHelper(xsdSchema);
+          prefix = typesHelper.getPrefix(namespace, false);
+        }
+        else // otherwise add to the map
+        {
+          schemaElement.setAttribute("xmlns:"+prefix, namespace);
+        }
+        prefixText.setText(prefix);
+      }
+      else
+      {
+        prefixText.setText("");
+        namespaceText.setText("");
+      }
+        
+      endRecording(importElement);
+      
+//      System.out.println("changed Import Map is " + map.values());
+//      System.out.println("changed import Map keys are " + map.keySet());
+
+    }        
+    refresh();
+  }
+  
 	/*
 	 * @see org.eclipse.wst.common.ui.properties.view.ITabbedPropertySection#refresh()
 	 */
@@ -267,6 +280,7 @@ public class NamespaceAndSchemaLocationSection extends AbstractSection
 	{
 		if (doRefresh)
 		{
+      errorText.setText("");
 			setListenerEnabled(false);
 
 			Element element = null;
@@ -309,6 +323,7 @@ public class NamespaceAndSchemaLocationSection extends AbstractSection
 
   public void doHandleEvent(Event event)
   {
+    super.doHandleEvent(event);
     if (event.type == SWT.Modify)
     {
       if (event.widget == prefixText)
