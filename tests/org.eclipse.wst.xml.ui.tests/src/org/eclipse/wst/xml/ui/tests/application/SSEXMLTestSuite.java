@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.tests.application;
 
+import org.eclipse.wst.xml.ui.tests.VerifyEditorPlugin;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -21,7 +23,7 @@ public class SSEXMLTestSuite extends TestSuite {
 
 	public SSEXMLTestSuite() {
 		super("SSEXMLTestSuite");
-
+		addTest(new TestSuite(VerifyEditorPlugin.class));
 		//		addTest(new SSEModelTestSuite());
 		//		addTest(new EncodingTestSuite());
 		//		addTest(CleanupFormatTests.suite());
