@@ -230,7 +230,7 @@ class ProjectDescription {
 						try {
 							record.url = new URL("jar:file:" + jarLocationString + "!/" + entries[i]);
 							jarRecord.urlRecords.add(record);
-							getImplicitReferences(jar.getLocation().toString()).put(uri, record);
+							getImplicitReferences(jarLocationString).put(uri, record);
 							if (_debugIndexCreation)
 								System.out.println("created record for " + uri + "@" + record.getURL());
 						}
