@@ -71,7 +71,7 @@ public class JSPJavaTranslatorTest extends TestCase {
 	protected IStructuredModel getStructuredModelForRead(String filename) {
 		try {
 			// create model
-			IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
+			IModelManager modelManager = StructuredModelManager.getModelManager();
 			InputStream inStream = getClass().getResourceAsStream(filename);
 			IStructuredModel sModel = modelManager.getModelForRead(filename, inStream, null);
 			return sModel;

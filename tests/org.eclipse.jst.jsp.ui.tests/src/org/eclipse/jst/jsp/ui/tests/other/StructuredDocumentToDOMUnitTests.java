@@ -184,7 +184,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 		// always start with fresh model
 		IStructuredDocument f = null; //new com.ibm.sed.structuredDocument.impl.IStructuredDocument(com.ibm.sed.model.IStructuredModel.XML);
 
-		IModelManager mm = StructuredModelManager.getInstance().getModelManager();
+		IModelManager mm = StructuredModelManager.getModelManager();
 		try {
 			f = mm.createStructuredDocumentFor("dummy.xml", (InputStream) null, null);
 		}
@@ -242,7 +242,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 		// always start with fresh model
 		IStructuredDocument f = null; //new com.ibm.sed.structuredDocument.impl.IStructuredDocument(com.ibm.sed.model.IStructuredModel.XML);
 
-		IModelManager mm = StructuredModelManager.getInstance().getModelManager();
+		IModelManager mm = StructuredModelManager.getModelManager();
 		try {
 			f = mm.createStructuredDocumentFor("dummy.xml", (InputStream) null, null);
 		}
@@ -298,7 +298,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 		// always start with fresh model
 		IStructuredDocument f = null; //new com.ibm.sed.structuredDocument.impl.IStructuredDocument(com.ibm.sed.model.IStructuredModel.XML);
 
-		IModelManager mm = StructuredModelManager.getInstance().getModelManager();
+		IModelManager mm = StructuredModelManager.getModelManager();
 		try {
 			f = mm.createStructuredDocumentFor("dummy.xml", (InputStream) null, null);
 		}

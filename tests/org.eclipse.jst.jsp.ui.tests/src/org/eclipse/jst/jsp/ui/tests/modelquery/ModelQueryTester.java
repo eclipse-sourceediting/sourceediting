@@ -334,7 +334,7 @@ public class ModelQueryTester extends TestCase {
 
 	public static IStructuredModel createModel(String contentTypeID) {
 		// create an empty model with its default factories
-		IStructuredModel model = StructuredModelManager.getInstance().getModelManager().createUnManagedStructuredModelFor(contentTypeID);
+		IStructuredModel model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(contentTypeID);
 
 		// add editor adapter factories
 		AdapterFactoryRegistry adapterRegistry = JSPUIPlugin.getDefault().getAdapterFactoryRegistry();

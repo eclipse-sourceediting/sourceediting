@@ -21,7 +21,6 @@ import junit.framework.TestSuite;
 import org.eclipse.jst.jsp.core.modelhandler.ModelHandlerForJSP;
 import org.eclipse.jst.jsp.ui.tests.JSPUITestsPlugin;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
-import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.text.CoreNodeList;
@@ -231,10 +230,6 @@ public class ScannerUnitTests extends TestCase {
 		buffer.append('>');
 	}
 
-	private IModelManager getModelManager() {
-		return StructuredModelManager.getInstance().getModelManager();
-	}
-
 	protected void setUp() {
 
 		setUpXML(null);
@@ -294,7 +289,7 @@ public class ScannerUnitTests extends TestCase {
 		// for (int i = 17000; i > 15000; i--) {
 		for (int i = 16384 + 25; i > 16364 - 25; i--) {
 			StringBuffer text = new StringBuffer();
-			document = getModelManager().createStructuredDocumentFor(contentTypeID);
+			document = StructuredModelManager.getModelManager().createStructuredDocumentFor(contentTypeID);
 			appendTagBlock(text, "script", i);
 			String string = text.toString();
 			try {
@@ -388,7 +383,7 @@ public class ScannerUnitTests extends TestCase {
 
 	public void testBufferOverrun_2_JSP() {
 
-		IStructuredModel model = getModelManager().createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_JSP);
+		IStructuredModel model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_JSP);
 		InputStream testInput = JSPUITestsPlugin.class.getResourceAsStream("parsing/testfiles/DefaultSubPerson0ResultsForm.jsp");
 		assertTrue("no input loaded", testInput != null);
 		String text = loadChars(testInput);
@@ -405,7 +400,7 @@ public class ScannerUnitTests extends TestCase {
 
 	public void testBufferOverrun_JSP() {
 
-		IStructuredModel model = getModelManager().createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_JSP);
+		IStructuredModel model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_JSP);
 		InputStream input = JSPUITestsPlugin.class.getResourceAsStream("parsing/testfiles/ChecksApprover.jsp");
 		assertTrue("no input loaded", input != null);
 		String text = loadChars(input);

@@ -32,9 +32,6 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 	public void testSimpleCase() throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
 		doTestCreate("testfiles/xml/testNormalCase.xml", BasicStructuredDocument.class, StructuredTextPartitionerForXML.class);
 	}
-	private IModelManager getModelManager() {
-		return StructuredModelManager.getInstance().getModelManager();
-	}
 	/**
 	 * @param string
 	 * @param class1
@@ -45,7 +42,7 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 	 * @throws ResourceAlreadyExists
 	 */
 	private void doTestCreate(String filePath, Class class1, Class class2) throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
-		IModelManager modelManager = getModelManager();
+		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IFile file = (IFile) fTestProject.findMember(filePath);
 		if (file == null) {
 			file = fTestProject.getFile(filePath);

@@ -63,7 +63,7 @@ public class TestModelEmbeddedContentType extends TestCase {
 
 	public void testStructuredModelEmbeddedXML() throws IOException {
 		// First make (empty) structuredDocument
-		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
+		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_SSEXML);
 		assertTrue("model could not be created!", model != null);
 
@@ -76,7 +76,7 @@ public class TestModelEmbeddedContentType extends TestCase {
 
 	public void testStructuredModelEmbeddedHTML() throws IOException {
 		// First make (empty) structuredDocument
-		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
+		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_HTML);
 		assertTrue("model could not be created!", model != null);
 
@@ -89,7 +89,7 @@ public class TestModelEmbeddedContentType extends TestCase {
 
 	protected IStructuredModel doStructuredModelEmbeddedJSP() throws IOException {
 		// First make (empty) structuredDocument
-		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
+		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_JSP);
 		assertTrue("model could not be created!", model != null);
 

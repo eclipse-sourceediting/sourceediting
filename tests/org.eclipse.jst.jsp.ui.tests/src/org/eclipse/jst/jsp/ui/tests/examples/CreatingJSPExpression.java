@@ -43,7 +43,7 @@ public class CreatingJSPExpression extends TestCase {
 
 	public void testCreateJSPExpression() throws IOException {
 		// First make (empty) structuredDocument
-		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
+		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_JSP);
 		assertTrue("model could not be created!", model != null);
 

@@ -358,8 +358,7 @@ public class ViewerTestHTML extends ViewPart {
 	private void setupViewerForNew() {
 		stopFollowSelection(); // if was following selection, stop
 
-		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
-
+		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IDocument doc = modelManager.createStructuredDocumentFor(IContentTypeIdentifier.ContentTypeID_HTML);
 		doc.set(DEFAULT_VIEWER_CONTENTS);
 

@@ -79,10 +79,6 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 		doTestNotEmpty("testfiles/html/nearEmpty.html", BasicStructuredDocument.class, StructuredTextPartitionerForHTML.class);
 	}
 
-	private IModelManager getModelManager() {
-		return StructuredModelManager.getInstance().getModelManager();
-	}
-
 	private void doTestNotEmpty(String filePath, Class expectedDocumentClass, Class expectedPartioner) throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
 		String contents = doTestCreate(filePath, expectedDocumentClass, expectedPartioner);
 		assertNotNull("contents were null", contents);
@@ -101,7 +97,7 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 	 */
 	private void doTestNotEmptyDocument(String filePath, Class expectedDocumentClass, Class expectedPartioner) throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
 		String contents = null;
-		IModelManager modelManager = getModelManager();
+		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IFile file = (IFile) fTestProject.findMember(filePath);
 		if (file == null) {
 			file = fTestProject.getFile(filePath);
@@ -120,7 +116,7 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 	private void doTestNonExistentDocument(String filePath, Class expectedDocumentClass, Class expectedPartioner) throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
 		String contents = null;
 		boolean expectedExceptionCaught = false;
-		IModelManager modelManager = getModelManager();
+		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IFile file = (IFile) fTestProject.findMember(filePath);
 		if (file == null) {
 			file = fTestProject.getFile(filePath);
@@ -157,7 +153,7 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 	 * @throws ResourceAlreadyExists
 	 */
 	private void doTestReload(String filePath, Class expectedDocumentClass, Class expectedPartioner) throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
-		IModelManager modelManager = getModelManager();
+		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IFile file = (IFile) fTestProject.findMember(filePath);
 		if (file == null) {
 			file = fTestProject.getFile(filePath);
@@ -205,7 +201,7 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 	 */
 	private String doTestCreate(String filePath, Class expectedDocumentClass, Class expectedPartioner) throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
 		String contents = null;
-		IModelManager modelManager = getModelManager();
+		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IFile file = (IFile) fTestProject.findMember(filePath);
 		// file will be null if the resource does not exist
 		if (file == null) {

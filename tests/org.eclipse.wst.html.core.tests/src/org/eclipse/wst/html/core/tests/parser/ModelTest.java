@@ -74,9 +74,7 @@ public abstract class ModelTest extends TestCase {
 
 		IStructuredModel model = null;
 		try {
-			IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
-			//assertTrue("modelManager must not be null", modelManager !=
-			// null);
+			IModelManager modelManager = StructuredModelManager.getModelManager();
 
 			model = modelManager.getModelForEdit("test.html", null, null);
 
@@ -84,8 +82,6 @@ public abstract class ModelTest extends TestCase {
 			// of
 			// plaform or preference settings
 			model.getStructuredDocument().setLineDelimiter(TestWriter.commonEOL);
-
-
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -102,7 +98,7 @@ public abstract class ModelTest extends TestCase {
 
 		IStructuredModel model = null;
 		try {
-			IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
+			IModelManager modelManager = StructuredModelManager.getModelManager();
 			//assertTrue("modelManager must not be null", modelManager !=
 			// null);
 

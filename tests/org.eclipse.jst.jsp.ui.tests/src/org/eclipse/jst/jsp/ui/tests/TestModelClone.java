@@ -50,7 +50,7 @@ public class TestModelClone extends TestCase {
 
 	public void testCloneStructuredModelXML() throws IOException {
 		// First make (empty) structuredDocument
-		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
+		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_SSEXML);
 		assertTrue("model could not be created!", model != null);
 
@@ -68,7 +68,7 @@ public class TestModelClone extends TestCase {
 
 	public void testCloneStructuredModelHTML() throws IOException {
 		// First make (empty) structuredDocument
-		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
+		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_HTML);
 		assertTrue("model could not be created!", model != null);
 
@@ -86,7 +86,7 @@ public class TestModelClone extends TestCase {
 
 	public void testCloneStructuredModelJSP() throws IOException {
 		// First make (empty) structuredDocument
-		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
+		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_JSP);
 		assertTrue("model could not be created!", model != null);
 
@@ -110,7 +110,7 @@ public class TestModelClone extends TestCase {
 
 	public void testCloneStructuredModelJSPXML() throws IOException {
 		// First make (empty) structuredDocument
-		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
+		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_JSP);
 		assertTrue("model could not be created!", model != null);
 		// note, we initialy expect HTML, since there is not content
@@ -152,7 +152,7 @@ public class TestModelClone extends TestCase {
 
 	public void testCreateStructuredModelJSP() throws IOException {
 		// First make (empty) structuredDocument
-		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
+		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_JSP);
 		assertTrue("model could not be created!", model != null);
 
@@ -282,7 +282,7 @@ public class TestModelClone extends TestCase {
 
 	public void testCreateStructuredModelHTML() throws IOException {
 		// First make (empty) structuredDocument
-		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
+		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_HTML);
 		assertTrue("model could not be created!", model != null);
 

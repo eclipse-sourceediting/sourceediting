@@ -222,7 +222,7 @@ public class JSPTranslationTest extends TestCase {
 	 */
 	private IStructuredModel getStructuredModelForRead(IFile file) {
 		try {
-			IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
+			IModelManager modelManager = StructuredModelManager.getModelManager();
 			return modelManager.getModelForRead(file);
 		}
 		catch (IOException ioex) {

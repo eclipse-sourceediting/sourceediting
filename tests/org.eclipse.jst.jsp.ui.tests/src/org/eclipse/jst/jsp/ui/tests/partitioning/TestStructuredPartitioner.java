@@ -189,7 +189,7 @@ public class TestStructuredPartitioner extends TestCase {
 	 */
 	protected int doComputePartitioningTest(String filename) throws IOException, BadLocationException {
 
-		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
+		IModelManager modelManager = StructuredModelManager.getModelManager();
 		InputStream inStream = getClass().getResourceAsStream(filename);
 		if (inStream == null)
 			inStream = new StringBufferInputStream("");
@@ -240,7 +240,7 @@ public class TestStructuredPartitioner extends TestCase {
 	 */
 	protected int doTimedComputePartitioningTest(String filename) throws IOException, BadLocationException {
 	
-		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
+		IModelManager modelManager = StructuredModelManager.getModelManager();
 		InputStream inStream = getClass().getResourceAsStream(filename);
 		if (inStream == null)
 			inStream = new StringBufferInputStream("");
@@ -295,7 +295,7 @@ public class TestStructuredPartitioner extends TestCase {
 	 * @throws BadLocationException
 	 */
 	protected ITypedRegion getPartitionTest(String filename, int offset) throws IOException, BadLocationException {
-		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
+		IModelManager modelManager = StructuredModelManager.getModelManager();
 		InputStream inStream = getClass().getResourceAsStream(filename);
 		IStructuredModel model = modelManager.getModelForEdit(filename, inStream, null);
 

@@ -79,7 +79,7 @@ public class FileUtil {
 			// assertTrue("modelManagerPlugin must not be null",
 			// modelManagerPlugin != null);
 
-			IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
+			IModelManager modelManager = StructuredModelManager.getModelManager();
 			// assertTrue("modelManager must not be null", modelManager !=
 			// null);
 

@@ -511,7 +511,7 @@ public class UnitTests extends TestCase {
 	protected void setUpXML() {
 
 		//  type = com.ibm.sed.model.IStructuredModel.XML;
-		IModelManager mm = StructuredModelManager.getInstance().getModelManager();
+		IModelManager mm = StructuredModelManager.getModelManager();
 		try {
 			fModel = mm.createStructuredDocumentFor("dummy.xml", (InputStream) null, null);
 		}
@@ -537,7 +537,7 @@ public class UnitTests extends TestCase {
 	protected void setUpJSP() {
 
 		//type = com.ibm.sed.model.IStructuredModel.HTML;
-		IModelManager mm = StructuredModelManager.getInstance().getModelManager();
+		IModelManager mm = StructuredModelManager.getModelManager();
 		try {
 			fModel = mm.createStructuredDocumentFor("dummy.jsp", (InputStream) null, null);
 		}

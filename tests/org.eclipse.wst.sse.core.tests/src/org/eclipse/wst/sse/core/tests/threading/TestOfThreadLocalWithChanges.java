@@ -65,7 +65,7 @@ public class TestOfThreadLocalWithChanges extends TestCase {
 
 	private IStructuredDocument getDocument(String content) throws IOException {
 		if (fDocument == null) {
-			IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
+			IModelManager modelManager = StructuredModelManager.getModelManager();
 			fDocument = modelManager.createStructuredDocumentFor("testPerf.xml", content, null);
 		}
 		return fDocument;
