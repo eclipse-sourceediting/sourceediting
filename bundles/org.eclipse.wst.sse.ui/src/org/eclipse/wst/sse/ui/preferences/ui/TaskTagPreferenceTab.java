@@ -89,9 +89,11 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 				if (fTags[i].equals(element)) {
 					if (fPriorities[i].intValue() == IMarker.PRIORITY_HIGH) {
 						return ResourceHandler.getString("TaskTagPreferenceTab.0"); //$NON-NLS-1$
-					} else if (fPriorities[i].intValue() == IMarker.PRIORITY_LOW) {
+					}
+					else if (fPriorities[i].intValue() == IMarker.PRIORITY_LOW) {
 						return ResourceHandler.getString("TaskTagPreferenceTab.1"); //$NON-NLS-1$
-					} else {
+					}
+					else {
 						return ResourceHandler.getString("TaskTagPreferenceTab.2"); //$NON-NLS-1$
 					}
 				}
@@ -180,14 +182,14 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 	TableViewer valueTable = null;
 
 	/**
-	 *  
+	 * 
 	 */
 	public TaskTagPreferenceTab() {
 		super();
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	protected void addTag() {
 		TaskTagDialog dlg = new TaskTagDialog(fControl.getShell());
@@ -276,7 +278,8 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 				if (valueTable.getTable() != null && !valueTable.getTable().isDisposed()) {
 					upButton.setEnabled(enabledForSelection && valueTable.getTable().getSelectionIndex() > 0);
 					downButton.setEnabled(enabledForSelection && valueTable.getTable().getSelectionIndex() < fTags.length - 1);
-				} else {
+				}
+				else {
 					upButton.setEnabled(false);
 					downButton.setEnabled(false);
 				}
@@ -379,7 +382,8 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 			Integer number = null;
 			try {
 				number = Integer.valueOf(toker.nextToken());
-			} catch (NumberFormatException e) {
+			}
+			catch (NumberFormatException e) {
 				number = new Integer(IMarker.PRIORITY_NORMAL);
 			}
 			list.add(number);
@@ -388,6 +392,7 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 	}
 
 	protected void moveTagDown(int i) {
+		isDirty = true;
 		String tag = fTags[i];
 		Integer priority = fPriorities[i];
 		fTags[i] = fTags[i + 1];
@@ -399,6 +404,7 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 	}
 
 	protected void moveTagUp(int i) {
+		isDirty = true;
 		String tag = fTags[i];
 		Integer priority = fPriorities[i];
 		fTags[i] = fTags[i - 1];
@@ -411,6 +417,57 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 
 	public void performApply() {
 		save();
+
+		// To optimize builder performance when the tags are all removed,
+		// the markers MUST be removed NOW
+		if (fTags.length == 0) {
+			try {
+				// When the tags are all removed, remove all the related
+				// markers so the builder can skip the marker deletion step
+				ResourcesPlugin.getWorkspace().getRoot().deleteMarkers(TaskTagSeeker.getTaskMarkerType(), true, IResource.DEPTH_INFINITE);
+			}
+			catch (CoreException e) {
+				Logger.logException(e);
+			}
+		}
+		else if (isDirty) {
+			MessageDialog dialog = new MessageDialog(fControl.getShell(), ResourceHandler.getString("TaskTagPreferenceTab.22"), fControl.getShell().getImage(), ResourceHandler.getString("TaskTagPreferenceTab.23"), MessageDialog.QUESTION, new String[]{ResourceHandler.getString("TaskTagPreferenceTab.24"), ResourceHandler.getString("TaskTagPreferenceTab.25"), ResourceHandler.getString("TaskTagPreferenceTab.26")}, 2); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+			int button = dialog.open();
+			if (button == 0) {
+				Job buildJob = new Job(ResourceHandler.getString("TaskTagPreferenceTab.27")) { //$NON-NLS-1$
+					public Object getAdapter(Class adapter) {
+						return null;
+					}
+
+					protected IStatus run(IProgressMonitor monitor) {
+						IStatus status = null;
+						IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+						int errorCount = 0;
+						for (int i = 0; i < projects.length && !monitor.isCanceled(); i++) {
+							try {
+								projects[i].build(IncrementalProjectBuilder.FULL_BUILD, ModelPlugin.STRUCTURED_BUILDER, new HashMap(), new SubProgressMonitor(monitor, projects.length));
+							}
+							catch (CoreException e) {
+								Logger.logException(e);
+								errorCount++;
+							}
+						}
+						if (monitor.isCanceled()) {
+							status = new Status(IStatus.CANCEL, EditorPlugin.ID, IStatus.OK, ResourceHandler.getString("TaskTagPreferenceTab.28"), null); //$NON-NLS-1$
+						}
+						else if (errorCount == 0) {
+							status = new Status(IStatus.OK, EditorPlugin.ID, IStatus.OK, ResourceHandler.getString("TaskTagPreferenceTab.29"), null); //$NON-NLS-1$
+						}
+						else {
+							status = new Status(IStatus.ERROR, EditorPlugin.ID, IStatus.OK, ResourceHandler.getString("TaskTagPreferenceTab.30"), null); //$NON-NLS-1$
+						}
+						return status;
+					}
+				};
+				buildJob.schedule(500);
+			}
+
+		}
 		isDirty = false;
 	}
 
@@ -429,54 +486,7 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 	}
 
 	public void performOk() {
-		save();
-
-		// To optimize builder performance when the tags are all removed,
-		// the markers MUST be removed NOW
-		if (fTags.length == 0) {
-			try {
-				// When the tags are all removed, remove all the related
-				// markers so the builder can skip the marker deletion step
-				ResourcesPlugin.getWorkspace().getRoot().deleteMarkers(TaskTagSeeker.getTaskMarkerType(), true, IResource.DEPTH_INFINITE);
-			} catch (CoreException e) {
-				Logger.logException(e);
-			}
-		} else if (isDirty) {
-			MessageDialog dialog = new MessageDialog(fControl.getShell(), ResourceHandler.getString("TaskTagPreferenceTab.22"), fControl.getShell().getImage(), ResourceHandler.getString("TaskTagPreferenceTab.23"), MessageDialog.QUESTION, new String[]{ResourceHandler.getString("TaskTagPreferenceTab.24"), ResourceHandler.getString("TaskTagPreferenceTab.25"), ResourceHandler.getString("TaskTagPreferenceTab.26")}, 2); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-			int button = dialog.open();
-			if (button == 0) {
-				Job buildJob = new Job(ResourceHandler.getString("TaskTagPreferenceTab.27")) { //$NON-NLS-1$
-					public Object getAdapter(Class adapter) {
-						return null;
-					}
-
-					protected IStatus run(IProgressMonitor monitor) {
-						IStatus status = null;
-						IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-						int errorCount = 0;
-						for (int i = 0; i < projects.length && !monitor.isCanceled(); i++) {
-							try {
-								projects[i].build(IncrementalProjectBuilder.FULL_BUILD, ModelPlugin.STRUCTURED_BUILDER, new HashMap(), new SubProgressMonitor(monitor, projects.length));
-							} catch (CoreException e) {
-								Logger.logException(e);
-								errorCount++;
-							}
-						}
-						if (monitor.isCanceled()) {
-							status = new Status(IStatus.CANCEL, EditorPlugin.ID, IStatus.OK, ResourceHandler.getString("TaskTagPreferenceTab.28"), null); //$NON-NLS-1$
-						} else if (errorCount == 0) {
-							status = new Status(IStatus.OK, EditorPlugin.ID, IStatus.OK, ResourceHandler.getString("TaskTagPreferenceTab.29"), null); //$NON-NLS-1$
-						} else {
-							status = new Status(IStatus.ERROR, EditorPlugin.ID, IStatus.OK, ResourceHandler.getString("TaskTagPreferenceTab.30"), null); //$NON-NLS-1$
-						}
-						return status;
-					}
-				};
-				buildJob.schedule(500);
-			}
-
-		}
-		isDirty = false;
+		performApply();
 	}
 
 	/**
@@ -497,7 +507,7 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	private void save() {
 		String tags = StringUtils.pack(fTags);
