@@ -10,13 +10,13 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.tests.application;
 
-import org.eclipse.wst.sse.core.tests.TestDocumentReader;
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
+import org.eclipse.wst.sse.core.tests.ExistenceTest;
 import org.eclipse.wst.sse.core.tests.document.TestCharSequenceReader;
 import org.eclipse.wst.sse.core.tests.document.TestRegionMatches;
 import org.eclipse.wst.sse.core.tests.life.TestCreation;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
 
 
 public class SSEModelTestSuite extends TestSuite {
@@ -33,7 +33,10 @@ public class SSEModelTestSuite extends TestSuite {
 //	private static Class[] classes = new Class[]{TestOfThreadLocalImprovement.class, TestOfThreadLocalWithChanges.class, TestCreation.class};
 
 //	private static Class[] classes = new Class[]{TestCreation.class, TestDocumentReader.class};
-	private static Class[] classes = new Class[]{TestCreation.class, TestDocumentReader.class, TestCharSequenceReader.class, TestRegionMatches.class};
+//	private static Class[] classes = new Class[]{TestCreation.class, TestDocumentReader.class, TestCharSequenceReader.class, TestRegionMatches.class};
+	
+	private static Class[] classes = new Class[]{ExistenceTest.class};
+	
 	public SSEModelTestSuite() {
 		super("SSE Model Basic Test Suite");
 		for (int i = 0; i < classes.length; i++) {
