@@ -169,7 +169,7 @@ public class ProjectResolver implements URIResolver {
 	}
 
 	protected String getRootLocationString() {
-		return null;
+		return fProject.getLocation().toString();
 	}
 
 	public InputStream getURIStream(String uri) {
