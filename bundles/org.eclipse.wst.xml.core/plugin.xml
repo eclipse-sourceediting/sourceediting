@@ -99,16 +99,16 @@
    <extension
          point="org.eclipse.core.runtime.contentTypes">
          <content-type
-               priority="high"
+               file-extensions="xml,xsl,xslt,dadx,wsdl,nst,xmi,xsd,exsd"
+               priority="low"
                name="%XML_Content_Type_Extension_Element.name"
                id="xmlsource"
                base-type="org.eclipse.core.runtime.xml"
-			   default-charset="UTF-8">
+			   default-charset="UTF-8"
+			   alias-for="org.eclipse.core.runtime.xml"
+			   >
 			<describer class="org.eclipse.wst.xml.core.contenttype.ContentDescriberForXML"/>
 		</content-type>
-        <file-association 
-			content-type="org.eclipse.core.runtime.xml"
-			file-extensions="xsl,xslt,dadx,wsdl,nst,xmi,xsd,exsd"/>
    </extension>
    
 </plugin>

@@ -263,9 +263,11 @@ public class XMLModelImpl extends AbstractStructuredModel implements IStructured
 		// unlike 'resfresh', 'reinitialize' finishes loop
 		// and flushes remaining notification que before
 		// actually reinitializing.
-		// FUTURE: perhaps all "handleRefresh" should be changed
-		// to "reinit needede"?
-		this.setReinitializeNeeded(true);
+		// ISSUE: should reinit be used instead of handlerefresh?
+		// this.setReinitializeNeeded(true);
+		if (this.active != null || getModelNotifier().isChanging())
+			return; // defer
+		handleRefresh();
 	}
 
 	protected void editableChanged(Node node) {

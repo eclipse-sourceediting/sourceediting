@@ -21,11 +21,13 @@ import org.eclipse.jface.text.IPositionUpdater;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.TypedRegion;
 import org.eclipse.wst.common.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.events.IModelAboutToBeChangedListener;
 import org.eclipse.wst.sse.core.events.IStructuredDocumentListener;
 import org.eclipse.wst.sse.core.events.NewModelEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
+import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.NotImplementedException;
 import org.eclipse.wst.sse.core.internal.document.NullStructuredDocumentPartitioner;
 import org.eclipse.wst.sse.core.parser.RegionParser;
@@ -229,7 +231,9 @@ public class MinimalDocument implements IStructuredDocument {
 	}
 
 	public ITypedRegion getPartition(int offset) throws BadLocationException {
-		throw new NotImplementedException("intentionally not implemented"); //$NON-NLS-1$
+		Logger.log(Logger.WARNING, "An instance of MinimalDocument was asked for its partition, sometime indicating a deleted region was being accessed.");
+		return new TypedRegion(0,0, "undefined");
+		//throw new NotImplementedException("intentionally not implemented"); //$NON-NLS-1$
 	}
 
 	public String[] getPositionCategories() {

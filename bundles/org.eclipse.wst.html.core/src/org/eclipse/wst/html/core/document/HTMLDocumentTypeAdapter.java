@@ -96,13 +96,7 @@ public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements 
 		XMLModel model = document.getModel();
 		if (model == null)
 			return; // error
-		if (model.isReinitializationNeeded()) {
-			// we're may be looping. Even if not,
-			// if we're going to be reinitialized,
-			// no need to worry about document type
-			// this pass.
-			return;
-		}
+
 		IFile file = getFile(model);
 
 		// find DOCTYPE delcaration and Public ID
@@ -241,14 +235,17 @@ public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements 
 		}
 		return publicId;
 	}
-	
+
 	private IFile getFile(IStructuredModel model) {
+		IFile result = null;
 		String location = model.getBaseLocation();
-		IPath path = new Path(location);
-		if (!path.toFile().exists() && path.segmentCount() > 1) {
-			return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+		if (location != null) {
+			IPath path = new Path(location);
+			if (!path.toFile().exists() && path.segmentCount() > 1) {
+				result = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+			}
 		}
-		return null;
+		return result;
 	}
 
 	/**

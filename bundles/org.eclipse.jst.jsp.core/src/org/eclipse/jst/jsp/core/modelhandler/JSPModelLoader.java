@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
 import org.eclipse.jst.jsp.core.document.PageDirectiveAdapterFactory;
 import org.eclipse.jst.jsp.core.document.PageDirectiveWatcherFactory;
@@ -123,12 +124,12 @@ public class JSPModelLoader extends AbstractModelLoader {
 	 * ever the loader is prepared to do). If the resource can not be found
 	 * (and therefore a model can not be created), then it should return null.
 	 */
-	//	public void load(Reader reader, IStructuredModel model, EncodingRule
+	// public void load(Reader reader, IStructuredModel model, EncodingRule
 	// encodingRule) throws java.io.IOException {
-	//		initializeEmbeddedTypeFromStream(reader, model);
-	//		setLanguageInPageDirective(model);
-	//		super.load(reader, model, encodingRule);
-	//	}
+	// initializeEmbeddedTypeFromStream(reader, model);
+	// setLanguageInPageDirective(model);
+	// super.load(reader, model, encodingRule);
+	// }
 	/**
 	 * This method must return a new instance of IStructuredDocument, that has
 	 * been initialized with appropriate parser. For many loaders, the
@@ -144,7 +145,7 @@ public class JSPModelLoader extends AbstractModelLoader {
 	public IStructuredDocument newStructuredDocument() {
 		IStructuredDocument structuredDocument = StructuredDocumentFactory.getNewStructuredDocumentInstance(getParser());
 		((BasicStructuredDocument) structuredDocument).setReParser(new JSPReParser());
-		//		structuredDocument.setDocumentPartitioner(new
+		// structuredDocument.setDocumentPartitioner(new
 		// JSPJavaDocumentPartioner());
 		// even though this is an "empty model" ... we want it to have at
 		// least the
@@ -221,27 +222,27 @@ public class JSPModelLoader extends AbstractModelLoader {
 	 * This init method is for the case where we are getting the embedded type
 	 * from the input stream specifically.
 	 */
-	//	private void initializeEmbeddedTypeFromStream(Reader reader,
+	// private void initializeEmbeddedTypeFromStream(Reader reader,
 	// IStructuredModel model) throws IOException {
-	//		IFile file = ResourceUtil.getFileFor(model);
-	//		JSPDocumentLoader jspDocumentLoader =(JSPDocumentLoader)
+	// IFile file = ResourceUtil.getFileFor(model);
+	// JSPDocumentLoader jspDocumentLoader =(JSPDocumentLoader)
 	// getDocumentLoader();
-	//		EmbeddedTypeHandler inputEmbeddedContentType =
+	// EmbeddedTypeHandler inputEmbeddedContentType =
 	// jspDocumentLoader.getEmbeddedType(file);
-	//		EmbeddedTypeHandler existingEmbeddedType = getEmbeddedType(model);
-	//		// we don't expect the existing type to be null, but if it is, then
-	//		// this is a simply init case, not re-init
-	//		if (existingEmbeddedType == null) {
-	//			initializeEmbeddedType(model, inputEmbeddedContentType);
-	//		}
-	//		else {
-	//			if (existingEmbeddedType != inputEmbeddedContentType) {
-	//				// only need to reinitialize if truely different
-	//				reInitializeEmbeddedType(model, existingEmbeddedType,
+	// EmbeddedTypeHandler existingEmbeddedType = getEmbeddedType(model);
+	// // we don't expect the existing type to be null, but if it is, then
+	// // this is a simply init case, not re-init
+	// if (existingEmbeddedType == null) {
+	// initializeEmbeddedType(model, inputEmbeddedContentType);
+	// }
+	// else {
+	// if (existingEmbeddedType != inputEmbeddedContentType) {
+	// // only need to reinitialize if truely different
+	// reInitializeEmbeddedType(model, existingEmbeddedType,
 	// inputEmbeddedContentType);
-	//			}
-	//		}
-	//	}
+	// }
+	// }
+	// }
 	/**
 	 * This init method is for the case where we are creating an empty model,
 	 * which we always do.
@@ -279,8 +280,8 @@ public class JSPModelLoader extends AbstractModelLoader {
 		// being initialized, and doesn't even have content
 		// or an ID yet. I thought I'd leave, since it wouldn't
 		// hurt, in case its called in other circumstances.
-		//		String language = getLanguage(model);
-		//		pageDirectiveAdapter.setLanguage(language);
+		// String language = getLanguage(model);
+		// pageDirectiveAdapter.setLanguage(language);
 	}
 
 	/**
@@ -323,9 +324,8 @@ public class JSPModelLoader extends AbstractModelLoader {
 		localHeadParser.set(structuredDocument);
 		try {
 			result = localHeadParser.getLanguage();
-		}
-		catch (IOException e) {
-			//impossible
+		} catch (IOException e) {
+			// impossible
 			// TODO need to reconsider design to avoid
 			throw new Error(e);
 		}
@@ -363,41 +363,45 @@ public class JSPModelLoader extends AbstractModelLoader {
 		// to accomplish this, we'll just remove all, then
 		// add back with a call to pre-load adapt.
 		// let clients decide to unload adapters from document
-		//		Collection oldAdapters = document.getAdapters();
-		//		Iterator oldAdaptersIterator = oldAdapters.iterator();
-		//		while (oldAdaptersIterator.hasNext()) {
-		//			INodeAdapter oldAdapter = (INodeAdapter)
+		// Collection oldAdapters = document.getAdapters();
+		// Iterator oldAdaptersIterator = oldAdapters.iterator();
+		// while (oldAdaptersIterator.hasNext()) {
+		// INodeAdapter oldAdapter = (INodeAdapter)
 		// oldAdaptersIterator.next();
-		//			if (oldAdapter != pageDirectiveAdapter && oldAdapter !=
+		// if (oldAdapter != pageDirectiveAdapter && oldAdapter !=
 		// propagatingAdapter && oldAdapter != modelQueryAdapter) {
-		//				// DO NOT remove directly!
-		//				// can change contents while in notifity loop!
-		//				//oldAdaptersIterator.remove();
-		//				document.removeAdapter(oldAdapter);
-		//			}
-		//		}
+		// // DO NOT remove directly!
+		// // can change contents while in notifity loop!
+		// //oldAdaptersIterator.remove();
+		// document.removeAdapter(oldAdapter);
+		// }
+		// }
 		// DMW: I believe something like the following is needed,
 		// since releases cached adapters
-		//				if (document instanceof DocumentImpl) {
-		//					((DocumentImpl) document).releaseDocumentType();
-		//					((DocumentImpl) document).releaseStyleSheets();
-		//				}
+		// if (document instanceof DocumentImpl) {
+		// ((DocumentImpl) document).releaseDocumentType();
+		// ((DocumentImpl) document).releaseStyleSheets();
+		// }
 		// remember, embedded type factories are automatically cleared when
 		// embededType changed
 		pageDirectiveAdapter.setEmbeddedType(newEmbeddedContentType);
-		//		// but still need to clear the page directive watchers, and let
+		// // but still need to clear the page directive watchers, and let
 		// them be rediscovered (with new, accurate node as target)
-		//		pageDirectiveAdapter.clearPageWatchers();
+		// pageDirectiveAdapter.clearPageWatchers();
 		if (newEmbeddedContentType != null) {
 			newEmbeddedContentType.initializeFactoryRegistry(model.getFactoryRegistry());
 			newEmbeddedContentType.initializeParser((JSPCapableParser) structuredDocument.getParser());
 
 			// partitioner setup is the responsibility of this loader
-			if (newEmbeddedContentType.getFamilyId().equals(IContentTypeIdentifier.ContentTypeID_SSEXML)) {
-				((StructuredTextPartitionerForJSP) structuredDocument.getDocumentPartitioner()).setEmbeddedPartitioner(new StructuredTextPartitionerForXML());
-			}
-			else if (newEmbeddedContentType.getFamilyId().equals(IContentTypeIdentifier.ContentTypeID_HTML)) {
-				((StructuredTextPartitionerForJSP) structuredDocument.getDocumentPartitioner()).setEmbeddedPartitioner(new StructuredTextPartitionerForHTML());
+			IDocumentPartitioner documentPartitioner = structuredDocument.getDocumentPartitioner();
+			// ISSUE: this logic is flawed, not sure of original intent, but
+			// added null/type checks for safety.
+			if (documentPartitioner != null && documentPartitioner instanceof StructuredTextPartitionerForJSP) {
+				if (newEmbeddedContentType.getFamilyId().equals(IContentTypeIdentifier.ContentTypeID_SSEXML)) {
+					((StructuredTextPartitionerForJSP) documentPartitioner).setEmbeddedPartitioner(new StructuredTextPartitionerForXML());
+				} else if (newEmbeddedContentType.getFamilyId().equals(IContentTypeIdentifier.ContentTypeID_HTML)) {
+					((StructuredTextPartitionerForJSP) documentPartitioner).setEmbeddedPartitioner(new StructuredTextPartitionerForHTML());
+				}
 			}
 		}
 		// adding language here, in this convienent central
@@ -479,9 +483,8 @@ public class JSPModelLoader extends AbstractModelLoader {
 		EmbeddedTypeHandler newEmbeddedContentType = existingEmbeddedType.newInstance();
 		if (existingEmbeddedType == null) {
 			initEmbeddedType(newModel);
-		}
-		else {
-			//initEmbeddedType(newModel);
+		} else {
+			// initEmbeddedType(newModel);
 			initCloneOfEmbeddedType(newModel, existingEmbeddedType, newEmbeddedContentType);
 		}
 		setLanguageInPageDirective(newModel);
@@ -508,8 +511,7 @@ public class JSPModelLoader extends AbstractModelLoader {
 			// (documents) adapters,
 			// so need need to use the old one to undo the old state data
 			reInitializeEmbeddedType(model, oldHandler, newHandler);
-		}
-		else {
+		} else {
 			// for language ... we someday MIGHT have to do something
 			// here, but for now, we don't have any model-side language
 			// sensitive adapters.
@@ -550,8 +552,7 @@ public class JSPModelLoader extends AbstractModelLoader {
 			byte[] smallerBuffer = new byte[nRead];
 			System.arraycopy(smallBuffer, 0, smallerBuffer, 0, nRead);
 			returnBuffer = smallerBuffer;
-		}
-		else {
+		} else {
 			returnBuffer = smallBuffer;
 		}
 		return returnBuffer;

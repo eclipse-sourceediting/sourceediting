@@ -49,8 +49,11 @@ public class ModelQueryAdapterFactoryForHTML extends AbstractAdapterFactory impl
 
 	/**
 	 * ModelQueryAdapterFactoryForHTML constructor comment.
-	 * @param adapterKey java.lang.Object
-	 * @param registerAdapters boolean
+	 * 
+	 * @param adapterKey
+	 *            java.lang.Object
+	 * @param registerAdapters
+	 *            boolean
 	 */
 	public ModelQueryAdapterFactoryForHTML(Object adapterKey, boolean registerAdapters) {
 		super(adapterKey, registerAdapters);
@@ -69,12 +72,14 @@ public class ModelQueryAdapterFactoryForHTML extends AbstractAdapterFactory impl
 				IStructuredModel model = stateNotifier = xmlNode.getModel();
 				stateNotifier.addModelStateListener(this);
 				String baseLocation = null;
-				File file = new Path(model.getBaseLocation()).toFile();
-				if(file.exists()) {
-					baseLocation = file.getAbsolutePath();
-				}
-				else {
-					baseLocation = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(model.getBaseLocation()).toString();
+				String modelsBaseLocation = model.getBaseLocation();
+				if (modelsBaseLocation != null) {
+					File file = new Path(modelsBaseLocation).toFile();
+					if (file.exists()) {
+						baseLocation = file.getAbsolutePath();
+					} else {
+						baseLocation = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(modelsBaseLocation).toString();
+					}
 				}
 				if (Debug.displayInfo)
 					System.out.println("----------------ModelQueryAdapterFactoryForHTML... baseLocation : " + baseLocation); //$NON-NLS-1$
@@ -92,7 +97,7 @@ public class ModelQueryAdapterFactoryForHTML extends AbstractAdapterFactory impl
 	protected void updateResolver(IStructuredModel model) {
 		String baseLocation = model.getBaseLocation();
 		IFile baseFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(model.getBaseLocation()));
-		if(baseFile != null) {
+		if (baseFile != null) {
 			baseLocation = baseFile.getLocation().toString();
 		}
 		modelQueryAdapterImpl.setIdResolver(new XMLCatalogIdResolver(baseLocation, model.getResolver()));
@@ -111,7 +116,8 @@ public class ModelQueryAdapterFactoryForHTML extends AbstractAdapterFactory impl
 	}
 
 	/**
-	 * @see IModelStateListener#modelDirtyStateChanged(IStructuredModel, boolean)
+	 * @see IModelStateListener#modelDirtyStateChanged(IStructuredModel,
+	 *      boolean)
 	 */
 	public void modelDirtyStateChanged(IStructuredModel model, boolean isDirty) {
 	}
@@ -123,7 +129,8 @@ public class ModelQueryAdapterFactoryForHTML extends AbstractAdapterFactory impl
 	}
 
 	/**
-	 * @see IModelStateListener#modelResourceMoved(IStructuredModel, IStructuredModel)
+	 * @see IModelStateListener#modelResourceMoved(IStructuredModel,
+	 *      IStructuredModel)
 	 */
 	public void modelResourceMoved(IStructuredModel oldModel, IStructuredModel newModel) {
 		stateNotifier.removeModelStateListener(this);
