@@ -35,12 +35,17 @@ import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
 import org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration;
 import org.eclipse.wst.xml.ui.dnd.XMLDragAndDropManager;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
+import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
+import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
 
 public class XMLContentOutlineConfiguration extends StructuredContentOutlineConfiguration {
+	private IContentProvider fContentProvider = null;
+	private ILabelProvider fLabelProvider = null;
 
-	protected class ActionManagerMenuListener implements IMenuListener, IReleasable {
+	private class ActionManagerMenuListener implements IMenuListener, IReleasable {
 		private XMLNodeActionManager fActionManager;
 		private TreeViewer fTreeViewer;
 

@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui.views.contentoutline;
+package org.eclipse.wst.sse.ui.internal.contentoutline;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +62,7 @@ import org.eclipse.wst.sse.ui.view.events.INodeSelectionListener;
 import org.eclipse.wst.sse.ui.view.events.ITextSelectionListener;
 import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
 import org.eclipse.wst.sse.ui.view.events.TextSelectionChangedEvent;
+import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
 
 
 public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage implements INodeSelectionListener, ITextSelectionListener, IUpdate, IAdaptable {

@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.xml.ui.views.properties;
+package org.eclipse.wst.xml.ui.internal.properties;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +37,6 @@ import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
-import org.eclipse.wst.xml.ui.internal.properties.EnumeratedStringPropertyDescriptor;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -60,11 +59,11 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 	private final static boolean fShouldDeriveCategories = false;
 
 	private final static boolean fSortEnumeratedValues = true;
-	protected boolean fCaseSensitive = true;
-	protected IPropertyDescriptor[] fDescriptors = null;
-	protected Node fNode = null;
+	private boolean fCaseSensitive = true;
+	private IPropertyDescriptor[] fDescriptors = null;
+	private Node fNode = null;
 
-	protected Stack fValuesBeingSet = new Stack();
+	private Stack fValuesBeingSet = new Stack();
 
 	public XMLPropertySourceAdapter(INodeNotifier target) {
 		super();
@@ -144,15 +143,11 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 		return validStrings;
 	}
 
-	protected void clearDescriptors() {
-		fDescriptors = null;
-	}
-
-	protected IPropertyDescriptor createDefaultPropertyDescriptor(String attributeName) {
+	private IPropertyDescriptor createDefaultPropertyDescriptor(String attributeName) {
 		return createDefaultPropertyDescriptor(attributeName, false);
 	}
 
-	protected IPropertyDescriptor createDefaultPropertyDescriptor(String attributeName, boolean hideOnFilter) {
+	private IPropertyDescriptor createDefaultPropertyDescriptor(String attributeName, boolean hideOnFilter) {
 		// The descriptor class used here is also used in
 		// updatePropertyDescriptors()
 		TextPropertyDescriptor descriptor = new TextPropertyDescriptor(attributeName, attributeName);
@@ -226,7 +221,7 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 	 * 
 	 * @return all valid descriptors.
 	 */
-	protected IPropertyDescriptor[] createPropertyDescriptors() {
+	private IPropertyDescriptor[] createPropertyDescriptors() {
 		CMNamedNodeMap attrMap = null;
 		CMElementDeclaration ed = getDeclaration();
 		if (ed != null) {
@@ -304,7 +299,7 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 		return descriptor;
 	}
 
-	protected String getCategory(CMAttributeDeclaration attrDecl) {
+	private String getCategory(CMAttributeDeclaration attrDecl) {
 		if (attrDecl != null) {
 			if (attrDecl.supports("category")) { //$NON-NLS-1$
 				return (String) attrDecl.getProperty("category"); //$NON-NLS-1$
@@ -316,7 +311,7 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 		return CATEGORY_ATTRIBUTES;
 	}
 
-	protected CMElementDeclaration getDeclaration() {
+	private CMElementDeclaration getDeclaration() {
 		if (fNode == null || fNode.getNodeType() != Node.ELEMENT_NODE)
 			return null;
 		ModelQuery modelQuery = ModelQueryUtil.getModelQuery(fNode.getOwnerDocument());
@@ -377,7 +372,7 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 		return returnedValue;
 	}
 
-	protected String[] getValidValues(CMAttributeDeclaration attrDecl) {
+	private String[] getValidValues(CMAttributeDeclaration attrDecl) {
 		if (attrDecl == null)
 			return new String[0];
 
@@ -401,15 +396,8 @@ public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, 
 		return type == IPropertySource.class;
 	}
 
-	protected boolean isFixedValue(CMAttributeDeclaration attrDecl) {
-		if (attrDecl == null)
-			return true;
-
-		CMDataType attrType = attrDecl.getAttrType();
-		if (attrType != null) {
-			return attrType.getImpliedValueKind() == CMDataType.IMPLIED_VALUE_FIXED || attrDecl.getUsage() == CMAttributeDeclaration.FIXED;
-		}
-		return false;
+	public boolean isPropertyRemovable(Object id) {
+		return true;
 	}
 
 	public boolean isPropertyResettable(Object id) {

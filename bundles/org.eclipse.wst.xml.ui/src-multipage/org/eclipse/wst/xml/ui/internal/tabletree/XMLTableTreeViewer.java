@@ -37,7 +37,7 @@ import org.eclipse.wst.xml.internal.ui.IDesignViewer;
 import org.eclipse.wst.xml.internal.ui.XMLEditorResourceHandler;
 import org.eclipse.wst.xml.ui.actions.NodeAction;
 import org.eclipse.wst.xml.ui.dnd.XMLDragAndDropManager;
-import org.eclipse.wst.xml.ui.views.contentoutline.XMLNodeActionManager;
+import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
 import org.w3c.dom.Document;
 
 public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {

@@ -31,22 +31,21 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.wst.sse.ui.extension.IExtendedConfiguration;
 import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
 
-
 /**
- * Configuration class for Outline Pages. Not finalized.
+ * Configuration class for Outline Pages.  Not finalized.
  * 
- * @author Nitin Dahyabhai
+ * @since 1.0
  *  
  */
 public class ContentOutlineConfiguration implements IExtendedConfiguration, IAdaptable {
 
 	public final static String ID = "contentoutlineconfiguration"; //$NON-NLS-1$
 
-	protected IContentProvider fContentProvider;
+	private IContentProvider fContentProvider;
 	private String fDeclaringID = null;
 	protected IDoubleClickListener fDoubleClickListener;
 	private KeyListener[] fKeyListeners;
-	protected ILabelProvider fLabelProvider;
+	private ILabelProvider fLabelProvider;
 
 	public ContentOutlineConfiguration() {
 		super();

@@ -26,7 +26,7 @@ import org.eclipse.wst.css.ui.image.CSSImageHelper;
 import org.eclipse.wst.css.ui.image.CSSImageType;
 import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.sse.ui.views.contentoutline.IJFaceNodeAdapter;
+import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.w3c.dom.css.CSSImportRule;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.stylesheets.MediaList;

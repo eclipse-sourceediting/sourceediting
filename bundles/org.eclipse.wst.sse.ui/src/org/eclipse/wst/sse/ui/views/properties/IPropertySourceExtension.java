@@ -12,8 +12,27 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.views.properties;
 
-import org.eclipse.ui.views.properties.IPropertySource;
+/**
+ * Declares that this IPropertySource might support outright removal of a
+ * property
+ * 
+ * @since 1.0
+ */
+public interface IPropertySourceExtension {
 
-public interface IPropertySourceExtension extends IPropertySource {
-	void removeProperty(Object propertyObject);
+	/**
+	 * @param id
+	 *            the ID of the property
+	 * @return whether the property matching this ID can be removed
+	 */
+	boolean isPropertyRemovable(Object id);
+
+	/**
+	 * Removes the property with the given ID. If no such property exists,
+	 * nothing is done.
+	 * 
+	 * @param id
+	 *            the ID of the property
+	 */
+	void removeProperty(Object id);
 }

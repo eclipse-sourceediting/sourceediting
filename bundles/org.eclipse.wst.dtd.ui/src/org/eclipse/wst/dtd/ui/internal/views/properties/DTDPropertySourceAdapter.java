@@ -20,7 +20,7 @@ import org.eclipse.wst.dtd.core.internal.DTDNode;
 import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.sse.ui.views.properties.CustomPropertyDescriptor;
+import org.eclipse.wst.sse.ui.internal.properties.CustomPropertyDescriptor;
 
 
 /**

@@ -24,7 +24,7 @@ import org.eclipse.wst.css.core.document.ICSSStyleDeclItem;
 import org.eclipse.wst.css.core.document.ICSSStyleDeclaration;
 import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.xml.ui.views.contentoutline.JFaceNodeContentProvider;
+import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.stylesheets.MediaList;
 

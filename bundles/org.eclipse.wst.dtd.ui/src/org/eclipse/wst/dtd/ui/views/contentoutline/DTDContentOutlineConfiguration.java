@@ -37,8 +37,8 @@ import org.eclipse.wst.dtd.ui.internal.views.contentoutline.DTDTreeContentProvid
 import org.eclipse.wst.dtd.ui.internal.views.contentoutline.OrderAction;
 import org.eclipse.wst.dtd.ui.internal.views.contentoutline.SortAction;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateActionContributionItem;
 import org.eclipse.wst.sse.ui.util.Assert;
-import org.eclipse.wst.sse.ui.views.contentoutline.PropertyChangeUpdateActionContributionItem;
 import org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration;
 
 /**
@@ -48,6 +48,8 @@ import org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfi
  * 
  */
 public class DTDContentOutlineConfiguration extends StructuredContentOutlineConfiguration {
+	private IContentProvider fContentProvider = null;
+	private ILabelProvider fLabelProvider = null;
 
 	private DTDContextMenuHelper fMenuHelper;
 	private TransferDragSourceListener[] fTransferDragSourceListeners;

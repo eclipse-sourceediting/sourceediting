@@ -29,12 +29,14 @@ import org.eclipse.wst.sse.ui.internal.properties.AdapterPropertySourceProvider;
 /**
  * A PropertySheetConfiguration appropriate for StructuredTextEditors and
  * StructuredModels
+ * 
+ * @since 1.0
  */
 public class StructuredPropertySheetConfiguration extends PropertySheetConfiguration {
 	protected IStructuredModel fModel;
 
 	/**
-	 *  
+	 * 
 	 */
 	public StructuredPropertySheetConfiguration() {
 		super();
@@ -71,7 +73,8 @@ public class StructuredPropertySheetConfiguration extends PropertySheetConfigura
 			if (inode != null) {
 				preferredSelection = new StructuredSelection(inode);
 			}
-		} else if (selection instanceof IStructuredSelection) {
+		}
+		else if (selection instanceof IStructuredSelection) {
 			// don't support more than one selected node
 			if (((IStructuredSelection) selection).size() > 1)
 				preferredSelection = StructuredSelection.EMPTY;

@@ -16,9 +16,9 @@ import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.FactoryRegistry;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.modelhandler.IDocumentTypeHandler;
+import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
 import org.eclipse.wst.sse.ui.util.Assert;
-import org.eclipse.wst.sse.ui.views.contentoutline.IJFaceNodeAdapter;
 
 public class AdapterFactoryProviderCSS implements AdapterFactoryProvider {
 	public boolean isFor(IDocumentTypeHandler contentTypeDescription) {

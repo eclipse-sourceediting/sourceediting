@@ -10,38 +10,33 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.xml.ui.views.contentoutline;
+package org.eclipse.wst.xml.ui.internal.contentoutline;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.progress.UIJob;
-import org.eclipse.wst.sse.core.INodeNotifier;
-import org.w3c.dom.Node;
+import org.eclipse.ui.views.properties.PropertySheetPage;
 
-/**
- * @deprecated should be using org.eclipse.wst.sse.ui.views.contentoutline.RefreshOutlineJob
- */
-public class RefreshOutlineJob extends UIJob {
 
-	private INodeNotifier fNodeNotifier;
-	private StructuredViewer fStructuredViewer;
+public class RefreshPropertySheetJob extends UIJob {
+
+
+	private PropertySheetPage fPropertySheetPage;
 
 	/**
 	 * @param jobDisplay
 	 * @param name
 	 */
-	public RefreshOutlineJob(Display jobDisplay, String name, StructuredViewer structuredViewer, INodeNotifier nodeNotifier) {
+	public RefreshPropertySheetJob(Display jobDisplay, String name, PropertySheetPage propertySheetPage) {
 		super(jobDisplay, name);
 		setPriority(Job.SHORT);
-
-		setStructuredViewer(structuredViewer);
-		setNodeNotifier(nodeNotifier);
+		fPropertySheetPage = propertySheetPage;
 	}
+
 
 	/*
 	 * (non-Javadoc)
@@ -51,18 +46,11 @@ public class RefreshOutlineJob extends UIJob {
 	public IStatus runInUIThread(IProgressMonitor monitor) {
 		IStatus result = Status.OK_STATUS;
 		try {
-			Control control = fStructuredViewer.getControl();
+			Control control = fPropertySheetPage.getControl();
 			// we should have check before even scheduling this, but even if
 			// ok then, need to check again, right before executing.
 			if (control != null && !control.isDisposed()) {
-
-				if ((fNodeNotifier instanceof Node) && (((Node) fNodeNotifier).getParentNode() == null)) {
-					// refresh whole document
-					fStructuredViewer.refresh();
-				} else {
-					// refresh only the node that's changed
-					fStructuredViewer.refresh(fNodeNotifier);
-				}
+				fPropertySheetPage.refresh();
 			}
 		} catch (Exception e) {
 			result = errorStatus(e);
@@ -70,21 +58,5 @@ public class RefreshOutlineJob extends UIJob {
 			monitor.done();
 		}
 		return result;
-	}
-
-	/**
-	 * @param nodeNotifier
-	 */
-	private void setNodeNotifier(INodeNotifier nodeNotifier) {
-		fNodeNotifier = nodeNotifier;
-
-	}
-
-	/**
-	 * @param structuredViewer
-	 */
-	private void setStructuredViewer(StructuredViewer structuredViewer) {
-		fStructuredViewer = structuredViewer;
-
 	}
 }

@@ -10,15 +10,13 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.xml.ui.views.properties;
+package org.eclipse.wst.xml.ui.internal.properties;
 
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.wst.sse.core.AbstractAdapterFactory;
 import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
-import org.w3c.dom.Node;
-
 
 public class XMLPropertySourceAdapterFactory extends AbstractAdapterFactory {
 
@@ -26,8 +24,8 @@ public class XMLPropertySourceAdapterFactory extends AbstractAdapterFactory {
 		super(IPropertySource.class, true);
 	}
 
-	public XMLPropertySourceAdapterFactory(Object adapterKey, boolean registerAdapters) {
-		super(adapterKey, registerAdapters);
+	public XMLPropertySourceAdapterFactory(Object adapterType, boolean registerAdapters) {
+		super(adapterType, registerAdapters);
 	}
 
 	public IAdapterFactory copy() {
@@ -36,8 +34,6 @@ public class XMLPropertySourceAdapterFactory extends AbstractAdapterFactory {
 
 	protected INodeAdapter createAdapter(INodeNotifier target) {
 		// at the moment, only one implementation exists
-		if (target != null && target instanceof Node && ((Node) target).getNodeType() == Node.PROCESSING_INSTRUCTION_NODE)
-			return new ProcessingInstructionPropertySourceAdapter(target);
 		return new XMLPropertySourceAdapter(target);
 	}
 }

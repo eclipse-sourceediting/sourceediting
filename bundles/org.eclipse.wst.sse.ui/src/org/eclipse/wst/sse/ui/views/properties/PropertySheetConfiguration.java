@@ -26,8 +26,7 @@ import org.eclipse.wst.sse.ui.extension.IExtendedConfiguration;
 
 /**
  * Configuration class for Property Sheet Pages. Not finalized.
- * 
- * @author Nitin Dahyabhai
+ * @since 1.0
  */
 
 public class PropertySheetConfiguration implements IExtendedConfiguration {

@@ -25,7 +25,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.css.ui.internal.editor.CSSEditorPluginImages;
-import org.eclipse.wst.sse.ui.views.contentoutline.PropertyChangeUpdateAction;
+import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateAction;
 
 /**
  * Based on com.ibm.etools.dtd.editor.DTDContentOutlinePage#SortAction

@@ -24,7 +24,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.dtd.ui.internal.editor.DTDEditorPluginImageHelper;
 import org.eclipse.wst.dtd.ui.internal.editor.DTDEditorPluginImages;
-import org.eclipse.wst.sse.ui.views.contentoutline.PropertyChangeUpdateAction;
+import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateAction;
 
 
 /**

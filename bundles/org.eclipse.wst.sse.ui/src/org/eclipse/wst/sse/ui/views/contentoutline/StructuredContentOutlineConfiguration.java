@@ -32,6 +32,10 @@ import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.ViewerSelectionManager;
+import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
+import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapterFactory;
+import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateAction;
+import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateActionContributionItem;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
 import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
@@ -175,14 +179,6 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 		return adapterFactory;
 	}
 
-	/**
-	 * @deprecated just use the preference key directly
-	 * @return
-	 */
-	protected String getLinkPreferenceKey() {
-		return OUTLINE_LINK_PREF;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -290,8 +286,6 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 				fMenuContributions.remove(viewer);
 			}
 		}
-		fLabelProvider = null;
-		fContentProvider = null;
 	}
 
 	protected IPreferenceStore getPreferenceStore() {

@@ -28,8 +28,8 @@ import org.eclipse.wst.css.core.document.ICSSStyleSheet;
 import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.sse.ui.views.contentoutline.IJFaceNodeAdapter;
-import org.eclipse.wst.sse.ui.views.contentoutline.IJFaceNodeAdapterFactory;
+import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
+import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapterFactory;
 
 /**
  * Adapts a DOM node to a JFace viewer.
