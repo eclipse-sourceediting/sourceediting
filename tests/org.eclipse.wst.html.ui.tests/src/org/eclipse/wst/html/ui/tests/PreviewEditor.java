@@ -343,6 +343,7 @@ public class PreviewEditor extends MultiPageEditorPart implements ITextEditor, I
 			interruptPreview();
 			updatePreviewContent();
 		}
+		setPartName(input.getName());
 	}
 
 	/*
