@@ -13,12 +13,13 @@
 
 package org.eclipse.wst.dtd.core.internal.tokenizer;
 
-import java.io.IOException;
-
 import org.eclipse.wst.dtd.core.internal.parser.DTDRegionTypes;
 
-/* Generate with "dtdskeleton"; it removes some unused fields and avoids
-   some compiler warnings */
+/** 
+ * Generate with "dtdskeleton".
+ *
+ * It removes some unused fields and avoids some compiler warnings 
+ */
 
 %%
 

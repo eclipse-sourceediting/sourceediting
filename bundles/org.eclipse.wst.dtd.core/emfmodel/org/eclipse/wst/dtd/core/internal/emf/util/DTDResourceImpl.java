@@ -19,8 +19,6 @@ import java.util.zip.ZipOutputStream;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
 import org.eclipse.wst.dtd.core.internal.emf.DTDFile;
@@ -55,8 +53,8 @@ public class DTDResourceImpl extends ResourceImpl {
 	 *            the fragment to resolve.
 	 * @return the resolved object for the given fragment.
 	 * @see #getURIFragment(EObject)
-	 * @see ResourceSet#getEObject(URI, boolean)
-	 * @see org.eclipse.emf.ecore.util.EcoreUtil#resolve(EObject, ResourceSet)
+	 * @see org.eclipse.emf.ecore.resource.ResourceSet#getEObject(URI, boolean)
+	 * @see org.eclipse.emf.ecore.util.EcoreUtil#resolve(EObject, org.eclipse.emf.ecore.resource.ResourceSet)
 	 * @see org.eclipse.emf.ecore.InternalEObject#eObjectForURIFragmentSegment(String)
 	 * @throws org.eclipse.emf.common.util.WrappedException
 	 *             if a problem occurs navigating the fragment.
@@ -101,7 +99,7 @@ public class DTDResourceImpl extends ResourceImpl {
 	 *            the object to identify.
 	 * @return the URI {@link URI#fragment fragment} for the object.
 	 * @see #getEObject(String)
-	 * @see org.eclipse.emf.ecore.InternalEObject#eURIFragmentSegment(EStructuralFeature,
+	 * @see org.eclipse.emf.ecore.InternalEObject#eURIFragmentSegment(org.eclipse.emf.core.EStructuralFeature,
 	 *      EObject)
 	 */
 	public java.lang.String getURIFragment(EObject eObject) {
