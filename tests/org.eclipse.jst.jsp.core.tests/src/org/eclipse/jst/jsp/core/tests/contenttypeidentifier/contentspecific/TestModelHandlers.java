@@ -91,17 +91,17 @@ public class TestModelHandlers extends TestCase {
 	}
 
 	public void testXMLExists() {
-		String id = IContentTypeIdentifier.ContentTypeID_SSEXML;
+		String id = IContentTypeIdentifier.ContentTypeID_XML;
 		ModelHandlerRegistry registry = getModelHandlerRegistry();
 		IModelHandler handler = registry.getHandlerForContentTypeId(id);
-		assertTrue("model handler registry does not have XML type ", handler != null && handler.getAssociatedContentTypeId().equals(id));
+		assertEquals("model handler registry does not have XML type ", id, handler.getAssociatedContentTypeId());
 	}
 
 	public void testXMLExistsFromFilename() throws IOException {
 		String filename = "test.xml";
 		ModelHandlerRegistry registry = getModelHandlerRegistry();
 		IModelHandler handler = registry.getHandlerFor(filename, null);
-		assertTrue("model handler registry does not have XML type ", handler != null && handler.getAssociatedContentTypeId().equals(IContentTypeIdentifier.ContentTypeID_SSEXML));
+		assertEquals("model handler registry does not have XML type ", IContentTypeIdentifier.ContentTypeID_XML, handler.getAssociatedContentTypeId());
 	}
 
 
