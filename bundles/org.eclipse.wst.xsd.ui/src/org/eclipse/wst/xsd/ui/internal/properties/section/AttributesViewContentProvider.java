@@ -43,7 +43,7 @@ public class AttributesViewContentProvider implements ITreeContentProvider, ITab
 {
   IEditorPart editorPart;
 
-  static XSDModelAdapterFactoryImpl xsdModelAdapterFactory = new XSDModelAdapterFactoryImpl(); // XSDTextEditor.getXSDModelAdapterFactory();
+  static XSDModelAdapterFactoryImpl xsdModelAdapterFactory = XSDModelAdapterFactoryImpl.getInstance();
   static XSDAdapterFactoryLabelProvider adapterFactoryLabelProvider = new XSDAdapterFactoryLabelProvider(xsdModelAdapterFactory);  // XSDTextEditor.getLabelProvider();
   
   XSDAbstractAdapter elementAdapter;

@@ -27,10 +27,14 @@ import org.eclipse.wst.xsd.ui.internal.provider.XSDAbstractAdapter;
 import org.eclipse.wst.xsd.ui.internal.provider.XSDModelAdapterFactoryImpl;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDElementDeclaration;
+import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDNamedComponent;
+import org.eclipse.xsd.XSDParticle;
+import org.eclipse.xsd.XSDParticleContent;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.XSDTypeDefinition;
+import org.eclipse.xsd.XSDWildcard;
 import org.eclipse.xsd.util.XSDSwitch;
 
 
@@ -98,6 +102,11 @@ public class XSDModelAdapterFactory
         public Object caseXSDElementDeclaration(XSDElementDeclaration object)
         {
           return new XSDElementDeclarationAdapter(object);
+        }
+        
+        public Object caseXSDParticle(XSDParticle object)
+        {
+          return new XSDParticleAdapter(object);
         }
 
         public Object caseXSDSchema(XSDSchema object) 
@@ -187,7 +196,7 @@ public class XSDModelAdapterFactory
       else if (ModelAdapter.IMAGE_PROPERTY.equals(propertyName))
       {
       	// result = XSDEditorPlugin.getDefault().getImage("icons/XSDElement.gif");
-        XSDModelAdapterFactoryImpl factory = new XSDModelAdapterFactoryImpl();
+        XSDModelAdapterFactoryImpl factory = XSDModelAdapterFactoryImpl.getInstance();
         Adapter adapter = factory.createAdapter((Notifier)modelObject);
         result = ((XSDAbstractAdapter)adapter).getImage(modelObject);
       }	
@@ -217,7 +226,46 @@ public class XSDModelAdapterFactory
     }     
   }
        
+  protected static class XSDParticleAdapter extends XSDObjectAdapter implements ModelAdapterListener
+  {
+    protected XSDParticle particle;
 
+    public XSDParticleAdapter(XSDParticle particle)
+    {
+      this.particle = particle;
+    } 
+
+    public void notifyChanged(Notification msg)
+    {
+      XSDParticle xsdParticle = (XSDParticle)msg.getNotifier();
+      XSDParticleContent xsdParticleContent = xsdParticle.getContent();
+      XSDModelAdapterFactoryImpl factory = XSDModelAdapterFactoryImpl.getInstance();
+      if (xsdParticleContent != null)
+      {
+        if (xsdParticleContent instanceof XSDElementDeclaration)
+        {
+          firePropertyChanged((XSDElementDeclaration)xsdParticleContent, null);
+          factory.fireNotifyChanged(msg);
+        }
+        else if (xsdParticleContent instanceof XSDModelGroup)
+        {
+          firePropertyChanged((XSDModelGroup)xsdParticleContent, null);
+          factory.fireNotifyChanged(msg);
+        }
+        else if (xsdParticleContent instanceof XSDWildcard)
+        {
+          firePropertyChanged((XSDWildcard)xsdParticleContent, null);
+          factory.fireNotifyChanged(msg);
+        }
+      }
+    } 
+
+
+    public void propertyChanged(Object object, String property)
+    {
+      firePropertyChanged(object, property);
+    }
+  }                         
      
   //
   //

@@ -46,6 +46,16 @@ import org.eclipse.xsd.util.XSDSwitch;
 public class XSDModelAdapterFactoryImpl extends XSDAdapterFactory
   implements IChangeNotifier, IDisposable
 {
+  static XSDModelAdapterFactoryImpl instance;
+  
+  public static XSDModelAdapterFactoryImpl getInstance()
+  {
+    if (instance == null)
+    {
+      instance = new XSDModelAdapterFactoryImpl();
+    }                                         
+    return instance;
+  }
   
   protected IChangeNotifier changeNotifier = new ChangeNotifier();
   

@@ -72,7 +72,7 @@ public class XSDTextEditor extends StructuredTextEditorXML implements INodeSelec
 
     setHelpContextId(XSDEditorContextIds.XSDE_SOURCE_VIEW);
     
-    xsdModelAdapterFactory = new XSDModelAdapterFactoryImpl();
+    xsdModelAdapterFactory = XSDModelAdapterFactoryImpl.getInstance();
     adapterFactoryLabelProvider = new XSDAdapterFactoryLabelProvider(xsdModelAdapterFactory);
   }
   
