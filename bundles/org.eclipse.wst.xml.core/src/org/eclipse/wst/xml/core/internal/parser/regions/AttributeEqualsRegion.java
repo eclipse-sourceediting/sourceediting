@@ -85,7 +85,7 @@ public class AttributeEqualsRegion implements ITextRegion {
 		return RegionToStringUtil.toString(this);
 	}
 
-	public StructuredDocumentEvent updateModel(Object requester, IStructuredDocumentRegion parent, String changes, int requestStart, int lengthToReplace) {
+	public StructuredDocumentEvent updateRegion(Object requester, IStructuredDocumentRegion parent, String changes, int requestStart, int lengthToReplace) {
 		// can never be updated
 		return null;
 	}

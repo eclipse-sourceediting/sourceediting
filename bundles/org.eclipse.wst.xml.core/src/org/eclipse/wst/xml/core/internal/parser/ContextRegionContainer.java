@@ -375,7 +375,7 @@ public class ContextRegionContainer implements ITextRegionContainer {
 		return result;
 	}
 
-	public StructuredDocumentEvent updateModel(Object requester, IStructuredDocumentRegion parent, String changes, int requestStart, int lengthToReplace) {
+	public StructuredDocumentEvent updateRegion(Object requester, IStructuredDocumentRegion parent, String changes, int requestStart, int lengthToReplace) {
 		org.eclipse.wst.sse.core.events.RegionChangedEvent result = null;
 		// FUTURE_TO_DO: need to implement region level parsing in
 		// ITextRegionContainer::updateModel

@@ -76,7 +76,7 @@ public class ForeignRegion extends ContextRegion {
 		return "FOREIGN: " + super.toString();//$NON-NLS-1$
 	}
 
-	public StructuredDocumentEvent updateModel(Object requester, IStructuredDocumentRegion flatnode, String changes, int requestStart, int lengthToReplace) {
+	public StructuredDocumentEvent updateRegion(Object requester, IStructuredDocumentRegion flatnode, String changes, int requestStart, int lengthToReplace) {
 		org.eclipse.wst.sse.core.events.RegionChangedEvent result = null;
 		int lengthDifference = org.eclipse.wst.sse.core.util.Utilities.calculateLengthDifference(changes, lengthToReplace);
 		fLength += lengthDifference;

@@ -541,7 +541,7 @@ class StructuredDocumentRegionProxy implements IStructuredDocumentRegion {
 	 *      com.ibm.sed.structured.text.IStructuredDocumentRegion,
 	 *      java.lang.String, int, int)
 	 */
-	public StructuredDocumentEvent updateModel(Object requester, IStructuredDocumentRegion flatnode, String changes, int start, int end) {
+	public StructuredDocumentEvent updateRegion(Object requester, IStructuredDocumentRegion flatnode, String changes, int start, int end) {
 		// XXX Auto-generated method stub
 		return null;
 	}

@@ -629,7 +629,7 @@ public class BasicStructuredDocumentRegion extends Object implements IStructured
 	 */
 	//	public StructuredDocumentEvent updateModel(Object requester, String
 	// changes, int start, int end, IStructuredDocumentRegion flatnode) {
-	public StructuredDocumentEvent updateModel(Object requester, IStructuredDocumentRegion structuredDocumentRegion, String changes, int requestStart, int lengthToReplace) {
+	public StructuredDocumentEvent updateRegion(Object requester, IStructuredDocumentRegion structuredDocumentRegion, String changes, int requestStart, int lengthToReplace) {
 		StructuredDocumentEvent result = null;
 		int lengthDifference = Utilities.calculateLengthDifference(changes, lengthToReplace);
 		// Get the region pointed to by the requestStart postion, and give
@@ -655,7 +655,7 @@ public class BasicStructuredDocumentRegion extends Object implements IStructured
 			region = _getRegions().get(_getRegions().size() - 1);
 			// make sure the region is contiguous
 			if (getEndOffset(region) == requestStart) {
-				result = region.updateModel(requester, this, changes, requestStart, lengthToReplace);
+				result = region.updateRegion(requester, this, changes, requestStart, lengthToReplace);
 			}
 		} else {
 			if (region != null) {
@@ -663,7 +663,7 @@ public class BasicStructuredDocumentRegion extends Object implements IStructured
 				// If the requested change spans more than one region, then
 				// we don't give the region a chance to update.
 				if ((containsOffset(region, requestStart)) && (containsOffset(region, requestStart + lengthToReplace))) {
-					result = region.updateModel(requester, this, changes, requestStart, lengthToReplace);
+					result = region.updateRegion(requester, this, changes, requestStart, lengthToReplace);
 				}
 			}
 		}

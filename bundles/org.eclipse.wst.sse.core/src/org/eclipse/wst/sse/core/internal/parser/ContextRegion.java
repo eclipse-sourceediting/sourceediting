@@ -229,7 +229,7 @@ public class ContextRegion implements ITextRegion {
 		return result;
 	}
 
-	public StructuredDocumentEvent updateModel(Object requester, IStructuredDocumentRegion parent, String changes, int requestStart, int lengthToReplace) {
+	public StructuredDocumentEvent updateRegion(Object requester, IStructuredDocumentRegion parent, String changes, int requestStart, int lengthToReplace) {
 		// the four types we used to handle here, have all been moved to
 		// specific region classes.
 		// XML_TAG_ATTRIBUTE_VALUE

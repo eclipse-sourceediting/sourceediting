@@ -12,13 +12,14 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.text;
 
+/**
+	* ITextRegionCollection
+ */
 public interface ITextRegionCollection extends ITextRegion {
 
 	boolean containsOffset(int i);
 
 	boolean containsOffset(ITextRegion region, int i);
-
-	void equatePositions(ITextRegion region);
 
 	int getEndOffset();
 
@@ -31,8 +32,6 @@ public interface ITextRegionCollection extends ITextRegion {
 	String getFullText(ITextRegion containedRegion);
 
 	ITextRegion getLastRegion();
-
-	int getLength();
 
 	int getNumberOfRegions();
 

@@ -95,7 +95,7 @@ public class XMLContentRegion implements ITextRegion {
 	}
 
 
-	public StructuredDocumentEvent updateModel(Object requester, IStructuredDocumentRegion parent, String changes, int requestStart, int lengthToReplace) {
+	public StructuredDocumentEvent updateRegion(Object requester, IStructuredDocumentRegion parent, String changes, int requestStart, int lengthToReplace) {
 		// TODO: this is a pretty lame method, since XML Content can have a
 		// much
 		// better rule for region update, but this is what previous

@@ -1077,7 +1077,7 @@ public class StructuredDocumentReParser implements IStructuredTextReParser {
 		// to handle, but only if there is one flatnode involved.
 		if (dirtyStart != null && dirtyStart == dirtyEnd) {
 			IStructuredDocumentRegion targetNode = dirtyStart;
-			result = dirtyStart.updateModel(fRequester, targetNode, fChanges, fStart, fLengthToReplace);
+			result = dirtyStart.updateRegion(fRequester, targetNode, fChanges, fStart, fLengthToReplace);
 			if (result != null) {
 				// at this point only, we need to update the text store and
 				// and downstream nodes.

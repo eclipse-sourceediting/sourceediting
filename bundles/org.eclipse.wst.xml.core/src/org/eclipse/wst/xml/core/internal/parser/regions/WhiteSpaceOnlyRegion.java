@@ -118,7 +118,7 @@ public class WhiteSpaceOnlyRegion implements ITextRegion {
 	 * expects ... that is, its not document offset, but start relative to
 	 * what ever contains it.
 	 */
-	public StructuredDocumentEvent updateModel(Object requester, IStructuredDocumentRegion parent, String changes, int requestStart, int lengthToReplace) {
+	public StructuredDocumentEvent updateRegion(Object requester, IStructuredDocumentRegion parent, String changes, int requestStart, int lengthToReplace) {
 		// if the region is an easy type (e.g. attribute value),
 		// and the requested changes are all
 		// alphanumeric, then make the change here locally.

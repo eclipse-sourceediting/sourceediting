@@ -19,7 +19,7 @@ import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
 /**
  * A ITextRegionCollection is a collection of ITextRegions. It is a structural
  * unit, but a minimal one. For example, in might consist of a "start tag" but
- * not a whole XML node.
+ * not a whole XML element.
  */
 public interface IStructuredDocumentRegion extends ITextRegionCollection {
 
@@ -89,7 +89,7 @@ public interface IStructuredDocumentRegion extends ITextRegionCollection {
 	/**
 	 * For use by parsers and reparsers only.
 	 */
-	StructuredDocumentEvent updateModel(Object requester, IStructuredDocumentRegion flatnode, String changes, int start, int end);
+	StructuredDocumentEvent updateRegion(Object requester, IStructuredDocumentRegion flatnode, String changes, int start, int end);
 
 
 

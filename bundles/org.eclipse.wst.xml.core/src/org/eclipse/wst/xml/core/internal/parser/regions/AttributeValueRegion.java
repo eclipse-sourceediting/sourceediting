@@ -90,7 +90,7 @@ public class AttributeValueRegion implements ITextRegion {
 		return RegionToStringUtil.toString(this);
 	}
 
-	public StructuredDocumentEvent updateModel(Object requester, IStructuredDocumentRegion parent, String changes, int requestStart, int lengthToReplace) {
+	public StructuredDocumentEvent updateRegion(Object requester, IStructuredDocumentRegion parent, String changes, int requestStart, int lengthToReplace) {
 		RegionChangedEvent result = null;
 		// if the region is an easy type (e.g. attribute value),
 		// and the requested changes are all

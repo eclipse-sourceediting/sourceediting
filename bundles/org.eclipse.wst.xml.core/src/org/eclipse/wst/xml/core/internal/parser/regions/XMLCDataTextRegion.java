@@ -97,7 +97,7 @@ public class XMLCDataTextRegion implements ITextRegion {
 	}
 
 
-	public StructuredDocumentEvent updateModel(Object requester, IStructuredDocumentRegion parent, String changes, int requestStart, int lengthToReplace) {
+	public StructuredDocumentEvent updateRegion(Object requester, IStructuredDocumentRegion parent, String changes, int requestStart, int lengthToReplace) {
 		// TODO: this is a pretty lame method, since XML CData region can have
 		// a much
 		// better rule for region update, but this is what previous

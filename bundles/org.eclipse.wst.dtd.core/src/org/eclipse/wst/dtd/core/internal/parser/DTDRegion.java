@@ -26,7 +26,7 @@ public class DTDRegion extends ContextRegion {
 	}
 
 
-	public StructuredDocumentEvent updateModel(Object requester, IStructuredDocumentRegion flatnode, String changes, int requestStart, int requestLength) {
+	public StructuredDocumentEvent updateRegion(Object requester, IStructuredDocumentRegion flatnode, String changes, int requestStart, int requestLength) {
 		return null;
 	}
 }
