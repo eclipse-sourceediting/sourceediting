@@ -234,6 +234,14 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 					fReconciler.setReconcilingStrategy(xmlStrategy, StructuredTextPartitionerForXML.ST_DEFAULT_XML);
 					fReconciler.setDefaultStrategy(defaultStrategy);
 
+					//----------------------------------------------------------------------------------
+					// valdator extension point
+					//----------------------------------------------------------------------------------
+					String contentTypeId = sModel.getContentTypeIdentifier();
+					if(contentTypeId != null)
+						fReconciler.setValidatorStrategy(createValidatorStrategy(contentTypeId));
+					//----------------------------------------------------------------------------------
+					
 					reconcilerStrategiesAreSet = true;
 				}
 			} finally {
