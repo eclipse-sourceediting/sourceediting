@@ -3,7 +3,8 @@
 <plugin
    id="org.eclipse.wst.sse.unittests"
    name="Unittests"
-   version="1.0.0">
+   version="1.0.0"
+   provider-name="Eclipse.org">
    <runtime>
       <library name="ssejunit.jar">
          <export name="*"/>
