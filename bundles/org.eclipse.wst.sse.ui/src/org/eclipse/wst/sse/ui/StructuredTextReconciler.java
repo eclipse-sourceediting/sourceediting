@@ -25,6 +25,7 @@ import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.ITextInputListener;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.ITypedRegion;
+import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
@@ -494,28 +495,34 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 		Logger.trace(StructuredTextReconciler.TRACE_FILTER, "[trace reconciler] >StructuredTextReconciler: PROCESSING ALL"); //$NON-NLS-1$
 		IDocument doc = getDocument();
 		DirtyRegion durty = null;
-		IDocumentPartitioner documentPartitioner = doc.getDocumentPartitioner();
-		if (documentPartitioner != null) {
-			ITypedRegion tr[] = documentPartitioner.computePartitioning(0, doc.getLength());
-			IReconcilingStrategy s = null;
-			for (int i = 0; i < tr.length; i++) {
-				durty = createDirtyRegion(tr[i], DirtyRegion.INSERT);
-				s = getReconcilingStrategy(tr[i].getType());
-				if (s != null) {
-					if (s instanceof IStructuredReconcilingStrategy)
-						((IStructuredReconcilingStrategy) s).reconcile(durty, durty, true);
-					else
-						s.reconcile(durty, durty);
-				}
-				// run validator strategy every time, it figures out if it has
-				// a
-				// validator for this partition
-				// pass in true for "refreshAll" flag = true indicating that
-				// the
-				// entire document is being reconciled, only do it once
-				if (fValidatorStrategy != null)
-					fValidatorStrategy.reconcile(tr[i], durty, true);
+
+		ITypedRegion tr[] = new ITypedRegion[0];
+		try {
+			tr = TextUtilities.computePartitioning(doc, getDocumentPartitioning(), 0, doc.getLength(), true);
+		} catch (BadLocationException e) {
+			Logger.logException(e);
+		}
+
+		IReconcilingStrategy s = null;
+		for (int i = 0; i < tr.length; i++) {
+			durty = createDirtyRegion(tr[i], DirtyRegion.INSERT);
+			s = getReconcilingStrategy(tr[i].getType());
+			if (s != null) {
+				if (s instanceof IStructuredReconcilingStrategy)
+					((IStructuredReconcilingStrategy) s).reconcile(durty,
+							durty, true);
+				else
+					s.reconcile(durty, durty);
 			}
+			// run validator strategy every time, it figures out if it has
+			// a
+			// validator for this partition
+			// pass in true for "refreshAll" flag = true indicating that
+			// the
+			// entire document is being reconciled, only do it once
+			if (fValidatorStrategy != null)
+				fValidatorStrategy.reconcile(tr[i], durty, true);
+
 		}
 		// we ran the whole doc already now we can reset the strategies
 		resetStrategies();
@@ -530,27 +537,31 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 		IDocument doc = getDocument();
 		HashSet alreadyRan = new HashSet();
 
-		IDocumentPartitioner documentPartitioner = doc.getDocumentPartitioner();
-		if (documentPartitioner != null) {
-			ITypedRegion tr[] = documentPartitioner.computePartitioning(durty.getOffset(), durty.getLength());
-			IReconcilingStrategy s = null;
-			for (int i = 0; i < tr.length; i++) {
-				durty = createDirtyRegion(tr[i], DirtyRegion.INSERT);
-				// keeping track of already ran might not be the way to do
-				// it...
-				if (!alreadyRan.contains(tr[i].getType())) {
-					alreadyRan.add(tr[i].getType());
-					s = getReconcilingStrategy(tr[i].getType());
-					if (s != null)
-						s.reconcile(durty, durty);
-				}
-				// run validator strategy every time, it figures out if it has
-				// a
-				// validator for this parition
-				if (fValidatorStrategy != null)
-					fValidatorStrategy.reconcile(tr[i], durty, false);
-			}
+		ITypedRegion tr[] = new ITypedRegion[0];
+		try {
+			tr = TextUtilities.computePartitioning(doc, getDocumentPartitioning(), 0, doc.getLength(), true);
+		} catch (BadLocationException e) {
+			Logger.logException(e);
 		}
+
+		IReconcilingStrategy s = null;
+		for (int i = 0; i < tr.length; i++) {
+			durty = createDirtyRegion(tr[i], DirtyRegion.INSERT);
+			// keeping track of already ran might not be the way to do
+			// it...
+			if (!alreadyRan.contains(tr[i].getType())) {
+				alreadyRan.add(tr[i].getType());
+				s = getReconcilingStrategy(tr[i].getType());
+				if (s != null)
+					s.reconcile(durty, durty);
+			}
+			// run validator strategy every time, it figures out if it has
+			// a
+			// validator for this parition
+			if (fValidatorStrategy != null)
+				fValidatorStrategy.reconcile(tr[i], durty, false);
+		}
+		
 		resetStrategies();
 	}
 
