@@ -21,15 +21,10 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.core.runtime.jobs.MultiRule;
 import org.eclipse.wst.sse.core.internal.Logger;
 
 
@@ -55,7 +50,7 @@ public class JarUtilities {
 		}
 		catch (IOException ioe) {
 			// no cleanup can be done
-			Logger.log(Logger.ERROR, "Could not close file " + file.getName()); //$NON-NLS-1$
+			Logger.log(Logger.ERROR, "JarUtilities: Could not close file " + file.getName()); //$NON-NLS-1$
 		}
 	}
 
@@ -67,26 +62,15 @@ public class JarUtilities {
 		if (!testFile.exists())
 			return null;
 
-		ISchedulingRule rule = null;
-		IFile[] jarIFiles = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(jarFilename));
-		ISchedulingRule[] rules = new ISchedulingRule[jarIFiles.length];
-		for (int i = 0; i < jarIFiles.length; i++) {
-			rules[i] = ResourcesPlugin.getWorkspace().getRuleFactory().deleteRule(jarIFiles[i]);
-		}
-		if (jarIFiles.length > 0) {
-			rule = new MultiRule(rules);
-			Platform.getJobManager().beginRule(rule, null);
-		}
+		InputStream cache = null;
 		ZipFile jarfile = null;
 		try {
 			jarfile = new ZipFile(jarFilename);
 		}
 		catch (IOException ioExc) {
-			Logger.logException(jarFilename, ioExc);
+			Logger.logException("JarUtilities: " + jarFilename, ioExc);
 			closeJarFile(jarfile);
 		}
-
-		InputStream cache = null;
 
 		if (jarfile != null) {
 			try {
@@ -97,7 +81,7 @@ public class JarUtilities {
 						entryInputStream = jarfile.getInputStream(zentry);
 					}
 					catch (IOException ioExc) {
-						Logger.logException(jarFilename, ioExc);
+						Logger.logException("JarUtilities: " + jarFilename, ioExc);
 					}
 
 					if (entryInputStream != null) {
@@ -135,9 +119,6 @@ public class JarUtilities {
 				closeJarFile(jarfile);
 			}
 		}
-		if (rule != null) {
-			Platform.getJobManager().endRule(rule);
-		}
 		return cache;
 	}
 
@@ -152,17 +133,6 @@ public class JarUtilities {
 	}
 
 	public static String[] getEntryNames(String jarFilename, boolean excludeDirectories) {
-		ISchedulingRule rule = null;
-		IFile[] jarIFiles = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(jarFilename));
-		ISchedulingRule[] rules = new ISchedulingRule[jarIFiles.length];
-		for (int i = 0; i < jarIFiles.length; i++) {
-			rules[i] = ResourcesPlugin.getWorkspace().getRuleFactory().deleteRule(jarIFiles[i]);
-		}
-		if (jarIFiles.length > 0) {
-			rule = new MultiRule(rules);
-			Platform.getJobManager().beginRule(rule, null);
-		}
-
 		ZipFile jarfile = null;
 		List entryNames = new ArrayList();
 		try {
@@ -174,14 +144,14 @@ public class JarUtilities {
 					entryNames.add(z.getName());
 			}
 		}
+		catch (ZipException zExc) {
+			Logger.log(Logger.WARNING, "JarUtilities ZipException: " + jarFilename + zExc.getMessage());
+		}
 		catch (IOException ioExc) {
-			Logger.log(Logger.WARNING, "JarUtilities: " + ioExc.getMessage());
+			Logger.log(Logger.WARNING, "JarUtilities IOException: " + jarFilename + ioExc.getMessage());
 		}
 		finally {
 			closeJarFile(jarfile);
-			if (rule != null) {
-				Platform.getJobManager().endRule(rule);
-			}
 		}
 		String[] names = (String[]) entryNames.toArray(new String[0]);
 		return names;
