@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.core.tokenizer;
 
-import java.io.IOException;
-
 import org.eclipse.wst.dtd.core.parser.DTDRegionTypes;
 
 
@@ -260,7 +258,7 @@ public class DTDTokenizer {
 	 * 
 	 * @return <code>false</code>, iff there was new input.
 	 * 
-	 * @exception IOException
+	 * @exception java.io.IOException
 	 *                if any I/O-Error occurs
 	 */
 	private boolean yy_refill() throws java.io.IOException {
