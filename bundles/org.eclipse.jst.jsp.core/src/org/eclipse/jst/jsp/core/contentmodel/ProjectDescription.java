@@ -28,6 +28,7 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.IResourceProxy;
 import org.eclipse.core.resources.IResourceProxyVisitor;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -161,7 +162,7 @@ class ProjectDescription {
 						}
 						catch (MalformedURLException e) {
 							// don't record this URI
-							e.printStackTrace();
+							Logger.logException(e);
 						}
 					}
 				}
@@ -183,7 +184,7 @@ class ProjectDescription {
 			document = provider.getDocument();
 		}
 		catch (CoreException e) {
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 		finally {
 			if (webxmlContents != null)
@@ -208,16 +209,60 @@ class ProjectDescription {
 			String location = readTextofChild(taglibs.item(i), "taglib-location");
 			TLDRecord record = new TLDRecord();
 			record.uri = uri;
-			// use the local web-app root
-			record.location = new Path(getLocalRoot(webxml.getLocation().toString()) + location);
+			if (location.startsWith("/")) {
+				record.location = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(getLocalRoot(webxml.getLocation().toString()) + location);
+			}
+			else {
+				record.location = new Path(URIHelper.normalize(location, webxml.getLocation().toString(), getLocalRoot(webxml.getLocation().toString())));
+			}
 			servletRecord.urlRecords.add(record);
 			getImplicitReferences(webxml.getLocation().toString()).put(uri, record);
 			if (_debugIndexCreation)
-				System.out.println("created record for " + uri + "@" + location);
+				System.out.println("created record for " + uri + "@" + record.location);
 		}
 	}
 
-	void addTagDir(IResource tagDir) {
+	void addTagDir(IResource tagFile) {
+		return;
+		/**
+		 * Make sure the tag file is n a WEB-INF/tags folder because of the
+		 * shortname computation requirements
+		 */
+		// if ((tagFile.getType() & IResource.FOLDER) > 0 ||
+		// tagFile.getFullPath().toString().indexOf("WEB-INF/tags") < 0)
+		// return;
+		// TagDirRecord record = createTagdirRecord(tagFile);
+		// if (record != null) {
+		// record.tags.add(tagFile.getName());
+		// }
+	}
+
+	/**
+	 * @return
+	 */
+	private TagDirRecord createTagdirRecord(IResource tagFile) {
+		IContainer tagdir = tagFile.getParent();
+		String tagdirLocation = tagdir.getFullPath().toString();
+		TagDirRecord record = (TagDirRecord) fTagDirReferences.get(tagdirLocation);
+		if (record == null) {
+			record = new TagDirRecord();
+			record.location = tagdir.getFullPath();
+			// JSP 2.0 section 8.4.3
+			if (tagdir.getName().equals("tags"))
+				record.shortName = "tags";
+			else {
+				IPath tagdirPath = tagdir.getFullPath();
+				String[] segments = tagdirPath.segments();
+				for (int i = 1; record.shortName == null && i < segments.length; i++) {
+					if (segments[i - 1].equals("WEB-INF") && segments[i].equals("tags")) {
+						IPath tagdirLocalPath = tagdirPath.removeFirstSegments(i + 1);
+						record.shortName = tagdirLocalPath.toString().replace('/', '-');
+					}
+				}
+			}
+
+		}
+		return record;
 	}
 
 	void addTLD(IResource tld) {
@@ -366,8 +411,7 @@ class ProjectDescription {
 			fProject.accept(new Indexer(), 0);
 		}
 		catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 		if (_debugIndexTime)
 			System.out.println("indexed " + fProject.getName() + " in " + (System.currentTimeMillis() - time0) + "ms");
@@ -409,7 +453,10 @@ class ProjectDescription {
 		}
 	}
 
-	void removeTagDir(IResource tagDir) {
+	void removeTagDir(IResource tagFile) {
+		// IContainer tagdir = tagFile.getParent();
+		// String tagdirLocation = tagdir.getFullPath().toString();
+		// fTagDirReferences.remove(tagdirLocation);
 	}
 
 	void removeTLD(IResource tld) {
