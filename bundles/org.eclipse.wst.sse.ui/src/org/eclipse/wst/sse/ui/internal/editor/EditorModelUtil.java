@@ -35,7 +35,7 @@ public class EditorModelUtil {
 
 	public static void addFactoriesTo(final IStructuredModel structuredModel) {
 		AdapterFactoryRegistry adapterRegistry = SSEUIPlugin.getDefault().getAdapterFactoryRegistry();
-		String contentTypeId = structuredModel.getModelHandler().getAssociatedContentTypeId();
+		String contentTypeId = structuredModel.getContentTypeIdentifier();
 
 		Iterator adapterFactoryProviders = null;
 		if (adapterRegistry instanceof AdapterFactoryRegistryExtension) {
