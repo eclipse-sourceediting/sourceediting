@@ -27,6 +27,7 @@ import org.eclipse.jst.jsp.core.internal.java.JSPTranslationExtension;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.ui.StructuredTextReconciler;
 import org.eclipse.wst.sse.ui.internal.reconcile.IReconcileAnnotationKey;
@@ -89,7 +90,7 @@ public class ReconcileStepForJava extends StructuredReconcileStep {
 	private void initStructuredDocument(IFile jspFile) {
 		IStructuredModel sModel = null;
 		try {
-			sModel = getModelManager().getExistingModelForRead(jspFile);
+			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(jspFile);
 			if (sModel != null)
 				fStructuredDocument = sModel.getStructuredDocument();
 		}

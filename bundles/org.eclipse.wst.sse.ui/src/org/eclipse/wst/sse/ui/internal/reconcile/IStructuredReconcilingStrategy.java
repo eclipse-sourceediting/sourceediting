@@ -20,6 +20,8 @@ import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 /**
  * Interface for structured reconciling strategies.
  * 
+ * @deprecated doesn't need to be API and might go away
+ * 
  * @author pavery
  */
 public interface IStructuredReconcilingStrategy extends IReconcilingStrategy {

@@ -20,6 +20,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Position;
@@ -27,8 +28,8 @@ import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.util.URIResolver;
-import org.eclipse.wst.sse.ui.StructuredTextReconciler;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.reconcile.IReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
@@ -49,6 +50,13 @@ import org.eclipse.wst.validation.core.SeverityEnum;
  */
 public class ReconcileStepForValidator extends StructuredReconcileStep {
 
+    /** debug flag */
+    protected static final boolean DEBUG;
+    static {
+        String value = Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/reconcilerjob"); //$NON-NLS-1$
+        DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+    }
+    
 	private final IReconcileResult[] EMPTY_RECONCILE_RESULT_SET = new IReconcileResult[0];
 	private IHelper fHelper = null;
 	private IncrementalReporter fReporter = null;
@@ -91,7 +99,6 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 
 				String messageText = null;
 				try {
-					messageText = validationMessage.getText(validator.getClass().getClassLoader());
 				} catch (Exception t) {
 					Logger.logException("exception reporting message from validator", t); //$NON-NLS-1$
 					continue;
@@ -112,7 +119,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 						break;
 				}
 				Position p = new Position(offset, validationMessage.getLength());
-				IReconcileAnnotationKey key = createKey(getPartitionType(offset), IReconcileAnnotationKey.TOTAL);
+				IReconcileAnnotationKey key = createKey(getPartitionType(getDocument(), offset), IReconcileAnnotationKey.TOTAL);
 				annotations.add(new TemporaryAnnotation(p, type, messageText, key));
 			}
 		}
@@ -129,7 +136,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 			if (doc != null) {
 				IStructuredModel model = null;
 				try {
-					model = getModelManager().getExistingModelForRead(doc);
+					model = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
 					// (pa) with FileBuffers, model base location is relative
 					// so we need to use the getFile(...) call
 					//file = project.getWorkspace().getRoot().getFileForLocation(new Path(model.getBaseLocation()));
@@ -155,7 +162,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 		IDocument doc = getDocument();
 
 		if (doc != null) {
-			IStructuredModel model = getModelManager().getExistingModelForRead(doc);
+			IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
 			try {
 				if (model != null)
 					resolver = model.getResolver();
@@ -182,7 +189,8 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 	}
 
 	protected IReconcileResult[] reconcileModel(DirtyRegion dirtyRegion, IRegion subRegion) {
-		Logger.trace(StructuredTextReconciler.TRACE_FILTER, "[trace reconciler] > reconciling model in VALIDATOR step w/ dirty region: " + dirtyRegion.getText()); //$NON-NLS-1$
+		if(DEBUG)
+            System.out.println("[trace reconciler] > reconciling model in VALIDATOR step w/ dirty region: " + dirtyRegion.getText()); //$NON-NLS-1$
 
 		// pa_TODO need to use dirty region if Validators can ever handle
 		// partial file validation
@@ -195,16 +203,12 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 			}
 		}
 
-		Logger.trace(StructuredTextReconciler.TRACE_FILTER, "[trace reconciler] > VALIDATOR step done"); //$NON-NLS-1$
+		if(DEBUG)
+		    System.out.println("[trace reconciler] > VALIDATOR step done"); //$NON-NLS-1$
 
 		return results;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	public String toString() {
 		StringBuffer debugString = new StringBuffer("ValidatorStep: "); //$NON-NLS-1$
 		if (this.fValidator != null)

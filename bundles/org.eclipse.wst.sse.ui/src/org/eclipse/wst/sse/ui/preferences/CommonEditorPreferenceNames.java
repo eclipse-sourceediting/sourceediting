@@ -71,13 +71,6 @@ public class CommonEditorPreferenceNames {
 	 */ 
 	public static final String EDITOR_USE_INFERRED_GRAMMAR = "useInferredGrammar"; //$NON-NLS-1$
 	
-	public static final String EDITOR_VALIDATION_CONTENT_MODEL = "validation_content_model"; //$NON-NLS-1$
-	
-	// currently can take on 3 different values
-	public static final String EDITOR_VALIDATION_METHOD = "editorValidationMethod"; //$NON-NLS-1$
-	public static final String EDITOR_VALIDATION_NONE = "validation_none"; //$NON-NLS-1$
-	public static final String EDITOR_VALIDATION_WORKBENCH_DEFAULT = "validation_workbench_default"; //$NON-NLS-1$
-	
 	/**
 	 * A named preference that controls on-the-fly validation
 	 * <p>

@@ -21,6 +21,7 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.reconciler.IReconcileStep;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
@@ -394,7 +395,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 		if (sdRegion != null) {
 			if (!sdRegion.isDeleted())
 				regions.add(sdRegion);
-			while ((sdRegion = sdRegion.getNext()) != null && sdRegion.getEndOffset() <= getXMLNode(sdRegion).getEndOffset()) {
+			while (sdRegion != null && (sdRegion = sdRegion.getNext()) != null && sdRegion.getEndOffset() <= getXMLNode(sdRegion).getEndOffset()) {
 				if (!sdRegion.isDeleted())
 					regions.add(sdRegion);
 			}
@@ -407,7 +408,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 		XMLNode xmlNode = null;
 		// get/release models should always be in a try/finally block
 		try {
-			xModel = (XMLModel) getModelManager().getExistingModelForRead(getDocument());
+			xModel = (XMLModel) StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
 			// xModel is sometime null, when closing editor, for example
 			if (xModel != null) {
 				xmlNode = (XMLNode) xModel.getIndexedRegion(sdRegion.getStart());

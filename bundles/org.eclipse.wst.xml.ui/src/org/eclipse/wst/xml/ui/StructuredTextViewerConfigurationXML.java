@@ -37,10 +37,10 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
-import org.eclipse.wst.sse.ui.StructuredTextReconciler;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessorExtension;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
 import org.eclipse.wst.sse.ui.style.LineStyleProvider;
@@ -53,10 +53,8 @@ import org.eclipse.wst.xml.core.text.rules.StructuredTextPartitionerForXML;
 import org.eclipse.wst.xml.ui.contentassist.NoRegionContentAssistProcessor;
 import org.eclipse.wst.xml.ui.contentassist.XMLContentAssistProcessor;
 import org.eclipse.wst.xml.ui.doubleclick.XMLDoubleClickStrategy;
-import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.autoedit.StructuredAutoEditStrategyXML;
 import org.eclipse.wst.xml.ui.internal.correction.CorrectionProcessorXML;
-import org.eclipse.wst.xml.ui.reconcile.StructuredTextReconcilingStrategyForContentModel;
 import org.eclipse.wst.xml.ui.reconcile.StructuredTextReconcilingStrategyForMarkup;
 import org.eclipse.wst.xml.ui.style.LineStyleProviderForXML;
 import org.eclipse.wst.xml.ui.taginfo.XMLBestMatchHoverProcessor;
@@ -64,8 +62,8 @@ import org.eclipse.wst.xml.ui.taginfo.XMLInformationProvider;
 import org.eclipse.wst.xml.ui.taginfo.XMLTagInfoHoverProcessor;
 
 public class StructuredTextViewerConfigurationXML extends StructuredTextViewerConfiguration {
+    
 	InformationPresenter fInformationPresenter = null;
-	private boolean reconcilerStrategiesAreSet;
 
 	/*
 	 * (non-Javadoc)
@@ -185,64 +183,37 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 			// a reconciler should always be installed or disposed of
 			if (!fReconciler.isInstalled()) {
 				fReconciler = null;
-				reconcilerStrategiesAreSet = false;
 			}
 		}
 
-		// the first time running through, there's no model (so no pref store)
-		// but the reconciler still needs to be created so that its document
-		// gets set
 		if (fReconciler == null) {
-			// create one
-			fReconciler = new StructuredTextReconciler();
+            fReconciler = new StructuredRegionProcessorExtension();
 			fReconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
-			// a null editorPart is valid
-			// fReconciler.setEditor(editorPart);
 		}
 
 		IPreferenceStore store = SSEUIPlugin.getDefault().getPreferenceStore();
 		boolean reconcilingEnabled = store.getBoolean(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
-
+		
+        if(!reconcilingEnabled)
+            return fReconciler;
+        
 		// the second time through, the strategies are set
-		if (fReconciler != null && !reconcilerStrategiesAreSet && reconcilingEnabled) {
-//			StructuredTextViewer viewer = null;
-//			if (sourceViewer instanceof StructuredTextViewer) {
-//				viewer = ((StructuredTextViewer) sourceViewer);
-//			}
+		if (fReconciler != null) {
+
 			IDocument doc = ((StructuredTextEditor)editorPart).getDocumentProvider().getDocument(editorPart.getEditorInput());
 			IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
-			//IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(viewer.getDocument());
+			
 			try {
 
 				if (sModel != null) {
-					String validationMethodPref = XMLUIPlugin.getDefault().getPreferenceStore().getString(CommonEditorPreferenceNames.EDITOR_VALIDATION_METHOD);
-					IReconcilingStrategy defaultStrategy = null;
-
-					// pref set to no validation, so return
-					if (validationMethodPref.equals(CommonEditorPreferenceNames.EDITOR_VALIDATION_NONE))
-						return fReconciler;
-
-					// content model is the default for xml..
-					// "Content Model" strategies (requires propagating
-					// adapter
-					// from AdapterFactoryProviderFor*)
-
+					
 					IReconcilingStrategy markupStrategy = new StructuredTextReconcilingStrategyForMarkup((ITextEditor) editorPart);
-					IReconcilingStrategy xmlStrategy = new StructuredTextReconcilingStrategyForContentModel((ITextEditor) editorPart);
-					defaultStrategy = xmlStrategy;
-					fReconciler.setReconcilingStrategy(markupStrategy, StructuredTextPartitioner.ST_DEFAULT_PARTITION);
-					fReconciler.setReconcilingStrategy(xmlStrategy, StructuredTextPartitionerForXML.ST_DEFAULT_XML);
-					fReconciler.setDefaultStrategy(defaultStrategy);
+                    fReconciler.setReconcilingStrategy(markupStrategy, StructuredTextPartitionerForXML.ST_DEFAULT_XML);
+					fReconciler.setDefaultStrategy(markupStrategy);
 
-					//----------------------------------------------------------------------------------
-					// valdator extension point
-					//----------------------------------------------------------------------------------
 					String contentTypeId = sModel.getContentTypeIdentifier();
 					if(contentTypeId != null)
 						fReconciler.setValidatorStrategy(createValidatorStrategy(contentTypeId));
-					//----------------------------------------------------------------------------------
-					
-					reconcilerStrategiesAreSet = true;
 				}
 			} finally {
 				if (sModel != null)

@@ -61,6 +61,8 @@ import org.eclipse.wst.sse.ui.util.Assert;
  * be done or not. On partition change events in the document, all strategies
  * are called.
  * 
+ * @deprecated
+ * 
  * @author pavery
  */
 public class StructuredTextReconciler extends Reconciler implements IStructuredDocumentListener, IModelLifecycleListener {
@@ -164,7 +166,7 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 	private ValidatorStrategy fValidatorStrategy;
 
 	/**
-	 * Creates a new StructuredTextReconciler
+	 * Creates a new StructuredRegionProcessor
 	 */
 	public StructuredTextReconciler() {
 		super();
@@ -434,7 +436,7 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 	}
 
 	public void nodesReplaced(StructuredDocumentRegionsReplacedEvent structuredDocumentEvent) {
-		Logger.trace(StructuredTextReconciler.TRACE_FILTER, "[trace reconciler] >StructuredTextReconciler: *NODES REPLACED"); //$NON-NLS-1$
+		Logger.trace(StructuredTextReconciler.TRACE_FILTER, "[trace reconciler] >StructuredRegionProcessor: *NODES REPLACED"); //$NON-NLS-1$
 
 		// if partition changed, create a full document dirty region
 		// (causes processAll)
@@ -492,7 +494,7 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 	protected void processAll() {
 		if (!isInstalled())
 			return;
-		Logger.trace(StructuredTextReconciler.TRACE_FILTER, "[trace reconciler] >StructuredTextReconciler: PROCESSING ALL"); //$NON-NLS-1$
+		Logger.trace(StructuredTextReconciler.TRACE_FILTER, "[trace reconciler] >StructuredRegionProcessor: PROCESSING ALL"); //$NON-NLS-1$
 		IDocument doc = getDocument();
 		DirtyRegion durty = null;
 
@@ -584,7 +586,7 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 
 					if (Logger.isTracing(TRACE_FILTER)) {
 						System.out.println("======================================================"); //$NON-NLS-1$
-						System.out.println("StructuredTextReconciler: DOCUMENT MODEL CHANGED TO: "); //$NON-NLS-1$
+						System.out.println("StructuredRegionProcessor: DOCUMENT MODEL CHANGED TO: "); //$NON-NLS-1$
 						System.out.println(sDoc.get());
 						System.out.println("======================================================"); //$NON-NLS-1$
 					}
@@ -643,7 +645,7 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 	}
 
 	public void regionChanged(RegionChangedEvent structuredDocumentEvent) {
-		Logger.trace(StructuredTextReconciler.TRACE_FILTER, "[trace reconciler] >StructuredTextReconciler: *REGION CHANGED: \r\n\r\n created dirty region from flat model event >> :" + structuredDocumentEvent.getOriginalStart() + ":" + structuredDocumentEvent.getLength() + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		Logger.trace(StructuredTextReconciler.TRACE_FILTER, "[trace reconciler] >StructuredRegionProcessor: *REGION CHANGED: \r\n\r\n created dirty region from flat model event >> :" + structuredDocumentEvent.getOriginalStart() + ":" + structuredDocumentEvent.getLength() + "\r\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		String dirtyRegionType = structuredDocumentEvent.getDeletedText().equals("") ? DirtyRegion.INSERT : DirtyRegion.REMOVE; //$NON-NLS-1$
 		DirtyRegion dr = createDirtyRegion(structuredDocumentEvent.getOriginalStart(), structuredDocumentEvent.getLength(), dirtyRegionType);
@@ -654,7 +656,7 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 	}
 
 	public void regionsReplaced(RegionsReplacedEvent structuredDocumentEvent) {
-		Logger.trace(StructuredTextReconciler.TRACE_FILTER, "[trace reconciler] >StructuredTextReconciler: *REGIONS REPLACED: \r\n\r\n created dirty region from flat model event >> :" + structuredDocumentEvent.getOriginalStart() + ":" + structuredDocumentEvent.getLength() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		Logger.trace(StructuredTextReconciler.TRACE_FILTER, "[trace reconciler] >StructuredRegionProcessor: *REGIONS REPLACED: \r\n\r\n created dirty region from flat model event >> :" + structuredDocumentEvent.getOriginalStart() + ":" + structuredDocumentEvent.getLength() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		DirtyRegion dr = createDirtyRegion(structuredDocumentEvent.getOriginalStart(), structuredDocumentEvent.getLength(), DirtyRegion.INSERT);
 		fLocalDirtyRegionQueue.add(dr);

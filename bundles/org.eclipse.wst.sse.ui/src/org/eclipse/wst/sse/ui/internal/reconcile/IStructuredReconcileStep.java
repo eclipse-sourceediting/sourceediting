@@ -19,8 +19,9 @@ import org.eclipse.jface.text.reconciler.IReconcileStep;
 
 /**
  * @author pavery
+ * @deprecated still working out API (or if anything here should be API)
  * 
- * Interface for a step in StructuredTextReconciler framework.
+ * Interface for a step in StructuredRegionProcessor framework.
  */
 public interface IStructuredReconcileStep extends IReconcileStep {
 	/**
@@ -36,7 +37,7 @@ public interface IStructuredReconcileStep extends IReconcileStep {
 	 * 
 	 * @return the scope for which this step adds annotations
 	 */
-	int getScope();
+	//int getScope();
 
 	/**
 	 * Tells you if the step is equal to this step or any of the sibling

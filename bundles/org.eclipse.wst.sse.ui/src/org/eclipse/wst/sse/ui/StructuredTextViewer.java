@@ -68,6 +68,7 @@ import org.eclipse.wst.sse.core.undo.UndoDocumentEvent;
 import org.eclipse.wst.sse.ui.extension.IExtendedSimpleEditor;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessorExtension;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
 import org.eclipse.wst.sse.ui.util.PlatformStatusLineUtil;
 import org.eclipse.wst.sse.ui.view.events.INodeSelectionListener;
@@ -267,12 +268,10 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 			fReconciler = newReconciler;
 
 			if (fReconciler != null) {
-				((StructuredTextReconciler) fReconciler).setIsIncrementalReconciler(false);
 				fReconciler.install(this);
 				// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3858
 				// still need set document on the reconciler (strategies)
-				((StructuredTextReconciler) fReconciler).setDocument(getDocument());
-				((StructuredTextReconciler) fReconciler).setIsIncrementalReconciler(true);
+				((StructuredRegionProcessorExtension) fReconciler).setDocument(getDocument());
 			}
 		}
 
@@ -977,24 +976,7 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 			}
 		}
 
-		// by setting not incremental before setting document
-		// we can ensure that the AbstractReconciler will not add to its
-		// dirty region queue which the UI thread will wait for to empty
-		// before the editor comes up
-		if (fReconciler != null && document != null) {
-			((StructuredTextReconciler) fReconciler).setIsIncrementalReconciler(false);
-			fReconciler.install(this);
-		}
-
 		super.setDocument(document, annotationModel, modelRangeOffset, modelRangeLength);
-
-		if (fReconciler != null && document != null) {
-			// set back to incremental after the editor is up
-			// after "bypassing"
-			// AbstractReconciler.BackgroundThread#suspendCallerWhileDirty(...)
-			// and all other listeners are hooked up
-			((StructuredTextReconciler) fReconciler).setIsIncrementalReconciler(true);
-		}
 
 		if (document instanceof IStructuredDocument) {
 			IStructuredDocument structuredDocument = (IStructuredDocument) document;

@@ -16,23 +16,18 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.wst.common.contentmodel.modelquery.CMDocumentManager;
 import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
-import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.sse.core.AdapterFactory;
 import org.eclipse.wst.sse.core.IFactoryRegistry;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.PropagatingAdapter;
 import org.eclipse.wst.sse.core.modelhandler.IDocumentTypeHandler;
 import org.eclipse.wst.sse.core.util.Assert;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
 import org.eclipse.wst.sse.ui.views.contentoutline.IJFaceNodeAdapter;
-import org.eclipse.wst.xml.core.document.XMLDocument;
-import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.modelhandler.ModelHandlerForXML;
 import org.eclipse.wst.xml.core.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.ui.DOMObserver;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
-import org.eclipse.wst.xml.ui.reconcile.ReconcilerAdapterFactoryForXML;
 import org.eclipse.wst.xml.ui.views.contentoutline.JFaceNodeAdapterFactory;
 import org.eclipse.wst.xml.ui.views.properties.XMLPropertySourceAdapterFactory;
 
@@ -50,9 +45,9 @@ public class AdapterFactoryProviderForXML implements AdapterFactoryProvider {
 		addContentBasedFactories(structuredModel);
 		// Must update/add to propagating adapter here too
 
-		if (structuredModel instanceof XMLModel) {
-			addPropagatingAdapters(structuredModel);
-		}
+//		if (structuredModel instanceof XMLModel) {
+//			addPropagatingAdapters(structuredModel);
+//		}
 	}
 
 	protected void addContentBasedFactories(IStructuredModel structuredModel) {
@@ -100,28 +95,32 @@ public class AdapterFactoryProviderForXML implements AdapterFactoryProvider {
 		}
 	}
 
-	protected void addPropagatingAdapters(IStructuredModel structuredModel) {
-		AdapterFactory factory;
-		XMLModel xmlModel = (XMLModel) structuredModel;
-		XMLDocument document = xmlModel.getDocument();
-		PropagatingAdapter propagatingAdapter = (PropagatingAdapter) document.getAdapterFor(PropagatingAdapter.class);
-		if (propagatingAdapter != null) {
-			// checking if we should bother adding this factory
-			// if the preference says not to check validity, we don't bother
-			// creating this factory
-			// to improve performance...
-			String contentTypeId = IContentTypeIdentifier.ContentTypeID_SSEXML;
-			IPreferenceStore store = XMLUIPlugin.getDefault().getPreferenceStore();
-			if (store.getString(CommonEditorPreferenceNames.EDITOR_VALIDATION_METHOD).equals(CommonEditorPreferenceNames.EDITOR_VALIDATION_CONTENT_MODEL)) {
-				factory = new ReconcilerAdapterFactoryForXML();
-				propagatingAdapter.addAdaptOnCreateFactory(factory);
-				// (pa) perf:
-				//propagatingAdapter.initializeForFactory(factory,
-				// xmlModel.getDocument());
-			}
-		}
-	}
+    // we won't need this anymore when we move to useing xerces validator
+    // via reconcileValidator extension point
+    
+//	protected void addPropagatingAdapters(IStructuredModel structuredModel) {
+        
 
+//		AdapterFactory factory;
+//		XMLModel xmlModel = (XMLModel) structuredModel;
+//		XMLDocument document = xmlModel.getDocument();
+//		PropagatingAdapter propagatingAdapter = (PropagatingAdapter) document.getAdapterFor(PropagatingAdapter.class);
+//		if (propagatingAdapter != null) {
+//			// checking if we should bother adding this factory
+//			// if the preference says not to check validity, we don't bother
+//			// creating this factory
+//			// to improve performance...
+//			String contentTypeId = IContentTypeIdentifier.ContentTypeID_SSEXML;
+//			IPreferenceStore store = XMLUIPlugin.getDefault().getPreferenceStore();
+//			if (store.getString(CommonEditorPreferenceNames.EDITOR_VALIDATION_METHOD).equals(CommonEditorPreferenceNames.EDITOR_VALIDATION_CONTENT_MODEL)) {
+//				factory = new ReconcilerAdapterFactoryForXML();
+//				propagatingAdapter.addAdaptOnCreateFactory(factory);
+//				// (pa) perf:
+//				//propagatingAdapter.initializeForFactory(factory,
+//				// xmlModel.getDocument());
+//			}
+//		}
+//	}
 
 	/*
 	 * @see AdapterFactoryProvider#isFor(ContentTypeDescription)

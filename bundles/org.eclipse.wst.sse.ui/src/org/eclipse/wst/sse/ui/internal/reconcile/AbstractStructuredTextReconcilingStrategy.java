@@ -18,10 +18,13 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.reconciler.IReconcileStep;
@@ -36,11 +39,9 @@ import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.util.Assert;
+import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
 import org.eclipse.wst.sse.ui.IReleasable;
 import org.eclipse.wst.sse.ui.ITemporaryAnnotation;
-import org.eclipse.wst.sse.ui.StructuredTextReconciler;
-import org.eclipse.wst.sse.ui.internal.Logger;
 
 
 /**
@@ -49,11 +50,16 @@ import org.eclipse.wst.sse.ui.internal.Logger;
  * 
  * @author pavery
  */
-public abstract class AbstractStructuredTextReconcilingStrategy implements IReconcilingStrategy, IReconcilingStrategyExtension, IReleasable, IStructuredReconcilingStrategy {
+public abstract class AbstractStructuredTextReconcilingStrategy implements IReconcilingStrategy, IReconcilingStrategyExtension, IReleasable /*, IStructuredReconcilingStrategy*/ {
 
-	protected boolean fAlreadyRemovedAllThisRun = false;
+    /** debug flag */
+    protected static final boolean DEBUG;
+    static {
+        String value = Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/reconcilerjob"); //$NON-NLS-1$
+        DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+    }
+    
 	protected IDocument fDocument = null;
-
 	protected IReconcileStep fFirstStep = null;
 	protected IProgressMonitor fProgressMonitor = null;
 	protected ITextEditor fTextEditor = null;
@@ -101,8 +107,8 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	 * @return
 	 */
 	protected boolean containsStep(IReconcileStep step) {
-		if (fFirstStep instanceof IStructuredReconcileStep)
-			return ((IStructuredReconcileStep) fFirstStep).isSiblingStep(step);
+		if (fFirstStep instanceof StructuredReconcileStep)
+			return ((StructuredReconcileStep) fFirstStep).isSiblingStep(step);
 		return false;
 	}
 
@@ -210,25 +216,13 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	}
 
 	/**
-	 * pa_TODO - should be temporary until we figure out a way to send in
-	 * partition with "reconcile()" call
-	 * 
-	 * @param sdRegion
-	 */
-	protected IDocumentPartitioner getPartitioner(IStructuredDocumentRegion sdRegion) {
-		Assert.isNotNull(fDocument, "document was null when partitioning information was sought"); //$NON-NLS-1$
-		IDocumentPartitioner partitioner = fDocument.getDocumentPartitioner();
-		return partitioner;
-	}
-
-	/**
 	 * Gets partition types from all steps in this strategy.
 	 * 
 	 * @return parition types from all steps
 	 */
 	public String[] getPartitionTypes() {
-		if (fFirstStep instanceof IStructuredReconcileStep)
-			return ((IStructuredReconcileStep) fFirstStep).getPartitionTypes();
+		if (fFirstStep instanceof StructuredReconcileStep)
+			return ((StructuredReconcileStep) fFirstStep).getPartitionTypes();
 		return new String[0];
 	}
 
@@ -276,8 +270,8 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	 * @return
 	 */
 	protected boolean isCanceled() {
-		if (Logger.isTracing(StructuredTextReconciler.TRACE_FILTER) && (fProgressMonitor != null && fProgressMonitor.isCanceled()))
-			Logger.trace(StructuredTextReconciler.TRACE_FILTER, "** STRATEGY CANCELED **:" + this.getClass().getName()); //$NON-NLS-1$
+		if (DEBUG && (fProgressMonitor != null && fProgressMonitor.isCanceled()))
+			System.out.println("** STRATEGY CANCELED **:" + this.getClass().getName()); //$NON-NLS-1$
 		return fProgressMonitor != null && fProgressMonitor.isCanceled();
 	}
 
@@ -300,9 +294,6 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 			if (end == -1 || end < corresponding.getEndOffset())
 				end = corresponding.getEndOffset();
 		}
-		//System.out.println("checking overlap: [node:" + start + ":" + end +
-		// " pos:" + pos.getOffset() + ":" + pos.getLength() + "> " +
-		// pos.overlapsWith(start, end - start));
 		return pos.overlapsWith(start, end - start);
 	}
 
@@ -319,8 +310,16 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	 */
 	private boolean partitionsMatch(IReconcileAnnotationKey key, int annotationPos, IStructuredDocumentRegion sdRegion) {
 		String keyPartitionType = key.getPartitionType();
-		IDocumentPartitioner p = getPartitioner(sdRegion);
-		String partitionType = p.getPartition(annotationPos).getType();
+        ITypedRegion tr = null;
+        if(!sdRegion.isDeleted()) {
+            try {
+                tr = TextUtilities.getPartition(sdRegion.getParentDocument(), IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING, 
+                                                    sdRegion.getStartOffset(), false);
+            } catch (BadLocationException e) {
+                e.printStackTrace();
+            }
+        }
+        String partitionType = tr != null ?  tr.getType() : StructuredTextPartitioner.ST_DEFAULT_PARTITION;
 		return keyPartitionType.equals(partitionType);
 	}
 
@@ -330,28 +329,27 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	 * @param results
 	 */
 	private void process(final IReconcileResult[] results) {
-		if (Logger.isTracing(StructuredTextReconciler.TRACE_FILTER))
-			Logger.trace(StructuredTextReconciler.TRACE_FILTER, "[trace reconciler] > STARTING PROCESS METHOD with (" + results.length + ") results"); //$NON-NLS-1$ //$NON-NLS-2$
+		if (DEBUG)
+			System.out.println("[trace reconciler] > STARTING PROCESS METHOD with (" + results.length + ") results"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		if (results == null)
 			return;
 
 		for (int i = 0; i < results.length; i++) {
 			if (isCanceled()) {
-				Logger.trace(StructuredTextReconciler.TRACE_FILTER, "[trace reconciler] >** PROCESS (adding) WAS CANCELLED **"); //$NON-NLS-1$
+                if(DEBUG)
+				    System.out.println("[trace reconciler] >** PROCESS (adding) WAS CANCELLED **"); //$NON-NLS-1$
 				return;
 			}
 			addResultToAnnotationModel(results[i]);
 		}
-		// tracing
-		// --------------------------------------------------------------------
-		if (Logger.isTracing(StructuredTextReconciler.TRACE_FILTER)) {
+        
+		if (DEBUG) {
 			StringBuffer traceString = new StringBuffer();
 			for (int j = 0; j < results.length; j++)
 				traceString.append("\n (+) :" + results[j] + ":\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			Logger.trace(StructuredTextReconciler.TRACE_FILTER, "[trace reconciler] > PROCESSING (" + results.length + ") results in AbstractStructuredTextReconcilingStrategy " + traceString); //$NON-NLS-1$ //$NON-NLS-2$
+			System.out.println("[trace reconciler] > PROCESSING (" + results.length + ") results in AbstractStructuredTextReconcilingStrategy " + traceString); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		//------------------------------------------------------------------------------
 	}
 
 	/**
@@ -364,63 +362,28 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 		if (isCanceled() || fFirstStep == null)
 			return;
 
-		reconcile(dirtyRegion, subRegion, false);
+        TemporaryAnnotation[] annotationsToRemove = new TemporaryAnnotation[0];
+        IReconcileResult[] annotationsToAdd = new IReconcileResult[0];
+        StructuredReconcileStep structuredStep = (StructuredReconcileStep) fFirstStep;
+        
+        annotationsToRemove = getAnnotationsToRemove(dirtyRegion);
+        annotationsToAdd = structuredStep.reconcile(dirtyRegion, subRegion);
+        
+        smartProcess(annotationsToRemove, annotationsToAdd);
 	}
-
-	/**
-	 * Like IReconcileStep.reconcile(DirtyRegion dirtyRegion, IRegion
-	 * subRegion) but also aware of the fact that the reconciler is running a
-	 * processAll() operation, and short circuits removal and reconcile calls
-	 * accordingly.
-	 * 
-	 * @param dirtyRegion
-	 * @param refreshAll
-	 * @param subRegion
-	 * @see IStructuredReconcilingStrategy#reconcile(DirtyRegion, IRegion,
-	 *      boolean)
-	 */
-	public void reconcile(DirtyRegion dirtyRegion, IRegion subRegion, boolean refreshAll) {
-
-		// external files may be null
-		if (isCanceled() || fFirstStep == null)
-			return;
-
-		IStructuredDocumentRegion sdRegion = getStructuredDocumentRegion(dirtyRegion.getOffset());
-		if (sdRegion == null)
-			return;
-
-		TemporaryAnnotation[] annotationsToRemove = new TemporaryAnnotation[0];
-		IReconcileResult[] annotationsToAdd = new IReconcileResult[0];
-		IStructuredReconcileStep structuredStep = (IStructuredReconcileStep) fFirstStep;
-		if (!refreshAll) {
-			// regular reconcile
-			annotationsToRemove = getAnnotationsToRemove(dirtyRegion);
-			annotationsToAdd = structuredStep.reconcile(dirtyRegion, subRegion);
-			fAlreadyRemovedAllThisRun = false;
-		} else {
-			// the entire document is being reconciled (strategies may be
-			// called multiple times)
-			if (!fAlreadyRemovedAllThisRun) {
-				annotationsToRemove = getAllAnnotationsToRemove();
-				fAlreadyRemovedAllThisRun = true;
-			}
-			annotationsToAdd = structuredStep.reconcile(dirtyRegion, subRegion, true);
-		}
-		smartProcess(annotationsToRemove, annotationsToAdd);
-	}
-
+    
 	/**
 	 * @param partition
 	 * @see org.eclipse.jface.text.reconciler.IReconcilingStrategy#reconcile(org.eclipse.jface.text.IRegion)
 	 */
 	public void reconcile(IRegion partition) {
-		// not used, we use - reconcile(DirtyRegion dirtyRegion, IRegion
-		// subRegion)
+		// not used, we use:
+        // reconcile(DirtyRegion dirtyRegion, IRegion subRegion)
 	}
 
 	/**
 	 * Calls release() on all the steps in this strategy. Currently done in
-	 * StructuredTextReconciler.SourceWidgetDisposeListener#widgetDisposed(...)
+	 * StructuredRegionProcessor.SourceWidgetDisposeListener#widgetDisposed(...)
 	 */
 	public void release() {
 		// release steps (each step calls release on the next)
@@ -428,7 +391,6 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 			((IReleasable) fFirstStep).release();
 		// we don't to null out the steps, in case
 		// it's reconfigured later
-		//fFirstStep = null;
 	}
 
 	private void removeAnnotations(TemporaryAnnotation[] annotationsToRemove) {
@@ -437,32 +399,25 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 		if (annotationModel != null) {
 			for (int i = 0; i < annotationsToRemove.length; i++) {
 				if (isCanceled()) {
-					Logger.trace(StructuredTextReconciler.TRACE_FILTER, "[trace reconciler] >** REMOVAL WAS CANCELLED **"); //$NON-NLS-1$
+                    if(DEBUG)
+					    System.out.println("[trace reconciler] >** REMOVAL WAS CANCELLED **"); //$NON-NLS-1$
 					return;
 				}
 				annotationModel.removeAnnotation(annotationsToRemove[i]);
 			}
 		}
-		// tracing
-		// --------------------------------------------------------------------
-		if (Logger.isTracing(StructuredTextReconciler.TRACE_FILTER)) {
+        
+		if (DEBUG) {
 			StringBuffer traceString = new StringBuffer();
 			for (int i = 0; i < annotationsToRemove.length; i++)
 				traceString.append("\n (-) :" + annotationsToRemove[i] + ":\n"); //$NON-NLS-1$ //$NON-NLS-2$
-			Logger.trace(StructuredTextReconciler.TRACE_FILTER, "[trace reconciler] > REMOVED (" + annotationsToRemove.length + ") annotations in AbstractStructuredTextReconcilingStrategy :" + traceString); //$NON-NLS-1$ //$NON-NLS-2$
+			System.out.println("[trace reconciler] > REMOVED (" + annotationsToRemove.length + ") annotations in AbstractStructuredTextReconcilingStrategy :" + traceString); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		//------------------------------------------------------------------------------
 	}
 
-	/**
-	 * Resets any specially set for an operation such as processAll() from the
-	 * reconciler.
-	 */
-	public void reset() {
-		fAlreadyRemovedAllThisRun = false;
-		if (fFirstStep instanceof IStructuredReconcileStep)
-			((IStructuredReconcileStep) fFirstStep).reset();
-	}
+    private void removeAllAnnotations() {
+        removeAnnotations(getAllAnnotationsToRemove());
+    }
 
 	/**
 	 * Set the document for this strategy.
@@ -473,7 +428,7 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	public void setDocument(IDocument document) {
 
 		// remove all old annotations since it's a new document
-		removeAnnotations(getAllAnnotationsToRemove());
+	    removeAllAnnotations();
 
 		if (document == null)
 			release();
@@ -501,7 +456,6 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	 * @param annotationsToRemove
 	 * @param annotationsToAdd
 	 */
-
 	protected void smartProcess(TemporaryAnnotation[] annotationsToRemove, IReconcileResult[] annotationsToAdd) {
 		removeAnnotations(annotationsToRemove);
 		process(annotationsToAdd);

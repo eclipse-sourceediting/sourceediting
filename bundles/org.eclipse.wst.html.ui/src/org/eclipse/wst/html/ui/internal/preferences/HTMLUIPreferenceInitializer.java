@@ -22,7 +22,6 @@ public class HTMLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(CommonEditorPreferenceNames.AUTO_PROPOSE, true);
 		store.setDefault(CommonEditorPreferenceNames.AUTO_PROPOSE_CODE, "<");//$NON-NLS-1$
 
-		store.setDefault(CommonEditorPreferenceNames.EDITOR_VALIDATION_METHOD, CommonEditorPreferenceNames.EDITOR_VALIDATION_WORKBENCH_DEFAULT); //$NON-NLS-1$
 		store.setDefault(CommonEditorPreferenceNames.EDITOR_USE_INFERRED_GRAMMAR, true);
 		
 		// HTML Style Preferences

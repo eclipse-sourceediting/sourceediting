@@ -24,6 +24,7 @@ import org.eclipse.wst.sse.core.AdapterFactory;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.PropagatingAdapter;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.ui.StructuredTextReconciler;
@@ -40,6 +41,7 @@ import org.eclipse.wst.xml.ui.internal.Logger;
 
 /**
  * A reconcile step for ContentModel based documents.
+ * @deprecated using reconcileValidator extension point
  */
 public class ReconcileStepForContentModel extends StructuredReconcileStep {
 	private HashSet fLocalPartitionTypes = null;
@@ -80,7 +82,7 @@ public class ReconcileStepForContentModel extends StructuredReconcileStep {
 	public void initialValidate() {
 
 		// (pa) perf: add the adapter for every node here
-		XMLModel xModel = (XMLModel) getModelManager().getExistingModelForRead(getDocument());
+		XMLModel xModel = (XMLModel) StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
 		XMLDocument doc = xModel.getDocument();
 		xModel.releaseFromRead();
 		PropagatingAdapter propagatingAdapter = (PropagatingAdapter) doc.getAdapterFor(PropagatingAdapter.class);
@@ -124,10 +126,10 @@ public class ReconcileStepForContentModel extends StructuredReconcileStep {
 				// adapt this notifier
 				adapter = (IReconcileStepAdapter) rAdapterFactoryForXML.adapt(current);
 				if (adapter != null) {
-					((AbstractReconcileStepAdapter) adapter).setParentStep(this);
-					adapter.markForReconciling(current);
-					current.addAdapter(adapter);
-					adapter.reconcile(getProgressMonitor(), current);
+//					((AbstractReconcileStepAdapter) adapter).setParentStep(this);
+//					adapter.markForReconciling(current);
+//					current.addAdapter(adapter);
+//					adapter.reconcile(getProgressMonitor(), current);
 				}
 				if (current.getFirstChild() != null) {
 					initialValidateTree((XMLNode) current.getFirstChild(), rAdapterFactoryForXML);
@@ -199,7 +201,7 @@ public class ReconcileStepForContentModel extends StructuredReconcileStep {
 			initialValidate();
 			fRanInitialValidate = true;
 		} else {
-			XMLModel model = (XMLModel) getModelManager().getExistingModelForRead(getDocument());
+			XMLModel model = (XMLModel) StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
 			int endOffset = startOffset + length;
 
 			IndexedRegion indexedNode = model.getIndexedRegion(startOffset);

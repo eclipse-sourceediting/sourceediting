@@ -24,7 +24,6 @@ public class JSPUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(CommonEditorPreferenceNames.AUTO_PROPOSE, true);
 		store.setDefault(CommonEditorPreferenceNames.AUTO_PROPOSE_CODE, CommonEditorPreferenceNames.LT);
 
-		store.setDefault(CommonEditorPreferenceNames.EDITOR_VALIDATION_METHOD, CommonEditorPreferenceNames.EDITOR_VALIDATION_WORKBENCH_DEFAULT); //$NON-NLS-1$
 		store.setDefault(CommonEditorPreferenceNames.EDITOR_USE_INFERRED_GRAMMAR, true);
 		
 		// JSP Style Preferences

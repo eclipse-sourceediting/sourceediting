@@ -18,7 +18,7 @@ import org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcili
 
 
 /**
- * 
+ * @deprecated using reconcileValidator extension point
  * @author pavery
  */
 public class StructuredTextReconcilingStrategyForContentModel extends AbstractStructuredTextReconcilingStrategy {

@@ -22,6 +22,8 @@ import org.eclipse.wst.sse.ui.IReleasable;
 /**
  * This interface is for reconcile steps that need to "work" off of
  * StructuredDocument events, as well as the ReconcilerThread.
+ * 
+ * @deprecated don't need this now that content model strategy will go away
  */
 public interface IReconcileStepAdapter extends INodeAdapter, IReleasable {
 

@@ -15,27 +15,23 @@ package org.eclipse.wst.sse.ui.internal.reconcile;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITypedRegion;
-import org.eclipse.jface.text.Position;
+import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.reconciler.AbstractReconcileStep;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilableModel;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.reconciler.IReconcileStep;
-import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.IndexedRegion;
-import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
 import org.eclipse.wst.sse.ui.IReleasable;
+import org.eclipse.wst.sse.ui.internal.Logger;
 
 
 /**
@@ -49,7 +45,8 @@ import org.eclipse.wst.sse.ui.IReleasable;
  * 
  * @author pavery
  */
-public abstract class StructuredReconcileStep extends AbstractReconcileStep implements IStructuredReconcileStep, IReleasable {
+public abstract class StructuredReconcileStep extends AbstractReconcileStep implements IReleasable {
+    
 	public static final int ANNOTATION_LENGTH_LIMIT = 100;
 
 	// these limits are safetys for "runaway" validation cases
@@ -61,43 +58,55 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 
 	protected final IReconcileResult[] EMPTY_RECONCILE_RESULT_SET = new IReconcileResult[0];
 
-	/**
-	 * Flag so that TOTAL scope steps are only called once during a batch
-	 * reconcile. reset() should be called after the batch reconcile.
-	 */
-	private boolean fAlreadyRanGlobalReconcile = false;
-	private IModelManager fModelManager = null;
-	private IStructuredReconcileStep fNextStructuredStep = null;
+	private StructuredReconcileStep fNextStructuredStep = null;
 	/**
 	 * It's possible for a partial step to get called on the same area twice
 	 * (as w/ a full document reconcile) this list keeps track of area already
 	 * covered. Should be reset() after the "batch" of reconciling is
 	 * finished.
 	 */
-	private List fPartialRangesCovered = null;
 	private HashSet fPartitionTypes = null;
 
 	public StructuredReconcileStep() {
 		super();
 		fPartitionTypes = new HashSet();
-		fPartialRangesCovered = new ArrayList();
 	}
 
 	public StructuredReconcileStep(IReconcileStep step) {
 		super(step);
-		if (step instanceof IStructuredReconcileStep)
-			fNextStructuredStep = (IStructuredReconcileStep) step;
-
+		if (step instanceof StructuredReconcileStep)
+			fNextStructuredStep = (StructuredReconcileStep) step;
 		fPartitionTypes = new HashSet();
-		fPartialRangesCovered = new ArrayList();
 	}
 
 	public IReconcileAnnotationKey createKey(IStructuredDocumentRegion sdRegion, int scope) {
-		ITypedRegion tr = sdRegion.getParentDocument().getDocumentPartitioner().getPartition(sdRegion.getStartOffset());
+		
+        ITypedRegion tr = getPartition(sdRegion);
 		String partitionType = (tr != null) ? tr.getType() : StructuredTextPartitioner.ST_UNKNOWN_PARTITION;
 		return createKey(partitionType, scope);
 	}
 
+    /**
+     * @param sdRegion
+     * @return
+     */
+    private ITypedRegion getPartition(IStructuredDocumentRegion sdRegion) {
+        ITypedRegion tr = null;
+        if(!sdRegion.isDeleted())
+            tr = getPartition(sdRegion.getParentDocument(), sdRegion.getStartOffset());
+        return tr;
+    }
+    
+    private ITypedRegion getPartition(IDocument doc, int offset) {
+        ITypedRegion tr = null;
+        try {
+            tr = TextUtilities.getPartition(doc,IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING , offset, false);
+        } catch (BadLocationException e) {
+            Logger.logException("problem getting partition at: " + offset, e);
+        }
+        return tr;
+    }
+    
 	/**
 	 * Clients should use this method to create annotation keys as it
 	 * registers the key for removal later.
@@ -120,30 +129,12 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 		return doc;
 	}
 
-	/*
-	 * @see org.eclipse.text.reconcilerpipe.AbstractReconcilePipeParticipant#getModel()
-	 */
 	public IReconcilableModel getModel() {
 		return getInputModel();
 	}
 
-	/**
-	 * Avoid excessive calls to Platform.getPlugin(ModelPlugin.ID)
-	 * 
-	 * @return sse model manager
-	 */
-	protected IModelManager getModelManager() {
-		if (fModelManager == null)
-			fModelManager = StructuredModelManager.getModelManager();
-		return fModelManager;
-	}
-
-	protected IDocumentPartitioner getPartitioner() {
-		return getDocument().getDocumentPartitioner();
-	}
-
-	public String getPartitionType(int offset) {
-		ITypedRegion tr = getPartitioner().getPartition(offset);
+	public String getPartitionType(IDocument doc, int offset) {
+        ITypedRegion tr = getPartition(doc, offset);
 		return (tr != null) ? tr.getType() : StructuredTextPartitioner.ST_UNKNOWN_PARTITION;
 	}
 
@@ -161,37 +152,12 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 		return (String[]) tempResults.toArray(new String[tempResults.size()]);
 	}
 
-	public abstract int getScope();
-
 	protected IStructuredDocument getStructuredDocument() {
 		IStructuredDocument sDoc = null;
 		IDocument doc = getDocument();
 		if (doc instanceof IStructuredDocument)
 			sDoc = (IStructuredDocument) getDocument();
 		return sDoc;
-	}
-
-	/**
-	 * @param dirtyRegion
-	 * @return
-	 */
-	private boolean isInPartiallyCheckedRanges(DirtyRegion dirtyRegion) {
-		// pa_TODO reconciler performance, this can be bad
-		Iterator it = fPartialRangesCovered.iterator();
-		Position p = null;
-		while (it.hasNext()) {
-			p = (Position) it.next();
-			if (p.overlapsWith(dirtyRegion.getOffset(), dirtyRegion.getLength()))
-				return true;
-		}
-
-		// add new range that has been covered
-		IStructuredModel sm = getModelManager().getExistingModelForRead(getDocument());
-		IndexedRegion indexed = sm.getIndexedRegion(dirtyRegion.getOffset());
-		sm.releaseFromRead();
-		if (indexed != null)
-			fPartialRangesCovered.add(new Position(indexed.getStartOffset(), indexed.getEndOffset() - indexed.getStartOffset()));
-		return false;
 	}
 
 	/**
@@ -228,39 +194,10 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 		results.addAll(Arrays.asList(results1));
 		for (int i = 0; i < results2.length; i++) {
 			// pa_TODO: could be bad for performance
-			if (!results.contains(results2[i]))
-				results.add(results2[i]);
+			//if (!results.contains(results2[i]))
+			results.add(results2[i]);
 		}
-
 		return (IReconcileResult[]) results.toArray(new IReconcileResult[results.size()]);
-	}
-
-	/**
-	 * Like IReconcileStep.reconcile() except takes into consideration if the
-	 * strategy may be called multiple times in this same "run" (ie. a
-	 * processAll() call from the StructuredTextReconciler)
-	 */
-	public final IReconcileResult[] reconcile(DirtyRegion dirtyRegion, IRegion subRegion, boolean refreshAll) {
-		IReconcileResult[] result = EMPTY_RECONCILE_RESULT_SET;
-
-		if (!refreshAll) {
-			result = reconcileModel(dirtyRegion, subRegion);
-			fAlreadyRanGlobalReconcile = false;
-		} else if (getScope() == IReconcileAnnotationKey.TOTAL && !fAlreadyRanGlobalReconcile) {
-			result = reconcileModel(dirtyRegion, subRegion);
-			fAlreadyRanGlobalReconcile = true;
-		} else if (getScope() == IReconcileAnnotationKey.PARTIAL) {
-			if (!isInPartiallyCheckedRanges(dirtyRegion)) {
-				result = reconcileModel(dirtyRegion, subRegion);
-			}
-		}
-
-		if (!isLastStep()) {
-			((IReconcileStep) fNextStructuredStep).setInputModel(getModel());
-			IReconcileResult[] nextResult = fNextStructuredStep.reconcile(dirtyRegion, subRegion, refreshAll);
-			return merge(result, convertToInputModel(nextResult));
-		}
-		return result;
 	}
 
 	/*
@@ -279,19 +216,10 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 	 * release through all steps.
 	 */
 	public void release() {
-		if (fNextStructuredStep != null && fNextStructuredStep instanceof IReleasable)
-			((IReleasable) fNextStructuredStep).release();
+		if (fNextStructuredStep != null)
+			fNextStructuredStep.release();
 		// we don't to null out the steps, in case
 		// it's reconfigured later
 		//fNextStructuredStep = null;
-		fModelManager = null;
-	}
-
-	public void reset() {
-		fAlreadyRanGlobalReconcile = false;
-		fPartialRangesCovered.clear();
-
-		if (!isLastStep())
-			fNextStructuredStep.reset();
 	}
 }

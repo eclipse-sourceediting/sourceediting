@@ -25,6 +25,7 @@ import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationExtension;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
@@ -101,7 +102,7 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 			if (doc != null) {
 				IStructuredModel model = null;
 				try {
-					model = getModelManager().getExistingModelForRead(doc);
+					model = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
 					if (model != null) {
 						XMLDocument xmlDoc = ((XMLModel) model).getDocument();
 						fTranslationAdapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
@@ -321,7 +322,7 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 		if (doc != null) {
 			IStructuredModel model = null;
 			try {
-				model = getModelManager().getExistingModelForRead(doc);
+				model = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
 				if(getJSPTranslationAdapter() != null)
 					getJSPTranslationAdapter().setXMLModel((XMLModel) model);
 			}

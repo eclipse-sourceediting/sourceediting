@@ -26,7 +26,7 @@ import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcilingStrategy;
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentAdapter;
-import org.eclipse.wst.sse.ui.internal.reconcile.IStructuredReconcileStep;
+import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 import org.eclipse.wst.validation.core.IValidator;
 
@@ -95,7 +95,7 @@ public class ValidatorStrategy extends AbstractStructuredTextReconcilingStrategy
 		String key = null;
 		while (keys.hasNext()) {
 			key = (String) keys.next();
-			IStructuredReconcileStep step = (IStructuredReconcileStep) fIdToStepMap.get(key);
+			StructuredReconcileStep step = (StructuredReconcileStep) fIdToStepMap.get(key);
 			partitionTypes.addAll(Arrays.asList(step.getPartitionTypes()));
 		}
 		return (String[]) partitionTypes.toArray(new String[partitionTypes.size()]);
@@ -134,20 +134,21 @@ public class ValidatorStrategy extends AbstractStructuredTextReconcilingStrategy
 						// this logic copied from
 						// AbstractStructuredTextReconcilingStrategy
 
-						if (!refreshAll) {
+//						if (!refreshAll) {
 							// regular reconcile
 							annotationsToRemove.addAll(Arrays.asList(getAnnotationsToRemove(dr)));
-							annotationsToAdd.addAll(Arrays.asList(validatorStep.reconcile(dr, dr, refreshAll)));
-							fAlreadyRemovedAllThisRun = false;
-						} else {
-							// the entire document is being reconciled
-							// (strategies may be called multiple times)
-							if (!fAlreadyRemovedAllThisRun) {
-								annotationsToRemove.addAll(Arrays.asList(getAllAnnotationsToRemove()));
-								fAlreadyRemovedAllThisRun = true;
-							}
-							annotationsToAdd.addAll(Arrays.asList(validatorStep.reconcile(dr, dr, true)));
-						}
+							//annotationsToAdd.addAll(Arrays.asList(validatorStep.reconcile(dr, dr, refreshAll)));
+                            annotationsToAdd.addAll(Arrays.asList(validatorStep.reconcile(dr, dr)));
+//							fAlreadyRemovedAllThisRun = false;
+//						} else {
+//							// the entire document is being reconciled
+//							// (strategies may be called multiple times)
+//							if (!fAlreadyRemovedAllThisRun) {
+//								annotationsToRemove.addAll(Arrays.asList(getAllAnnotationsToRemove()));
+//								fAlreadyRemovedAllThisRun = true;
+//							}
+//							annotationsToAdd.addAll(Arrays.asList(validatorStep.reconcile(dr, dr, true)));
+//						}
 						//smartProcess(annotationsToRemove,
 						// annotationsToAdd);
 						/////////////////////////////////////////////////////////////////////////////
