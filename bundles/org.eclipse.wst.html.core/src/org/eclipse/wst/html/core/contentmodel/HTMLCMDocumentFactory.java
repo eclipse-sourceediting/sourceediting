@@ -14,10 +14,10 @@ package org.eclipse.wst.html.core.contentmodel;
 
 import java.util.Hashtable;
 
-import org.eclipse.wst.common.contentmodel.CMDocument;
 import org.eclipse.wst.html.core.HTML40Namespace;
 import org.eclipse.wst.html.core.contentmodel.chtml.CHCMDocImpl;
 import org.eclipse.wst.sse.core.contentmodel.CMDocType;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMDocument;
 
 /**
  * INodeAdapter factory for HTML and JSP documents.
@@ -47,7 +47,7 @@ public final class HTMLCMDocumentFactory {
 	}
 
 	/**
-	 * @return org.eclipse.wst.common.contentmodel.CMDocument
+	 * @return org.eclipse.wst.sse.core.internal.contentmodel.CMDocument
 	 * @param cmtype java.lang.String
 	 */
 	public static CMDocument getCMDocument(String cmtype) {

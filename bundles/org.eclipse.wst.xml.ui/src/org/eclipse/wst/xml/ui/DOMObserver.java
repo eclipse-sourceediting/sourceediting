@@ -16,13 +16,13 @@ package org.eclipse.wst.xml.ui;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.eclipse.wst.common.contentmodel.modelquery.CMDocumentManager;
-import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
-import org.eclipse.wst.common.contentmodel.modelqueryimpl.CMDocumentLoader;
-import org.eclipse.wst.common.contentmodel.modelqueryimpl.InferredGrammarBuildingCMDocumentLoader;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.contentmodel.modelquery.CMDocumentManager;
+import org.eclipse.wst.sse.core.internal.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.sse.core.internal.contentmodel.modelqueryimpl.CMDocumentLoader;
+import org.eclipse.wst.sse.core.internal.contentmodel.modelqueryimpl.InferredGrammarBuildingCMDocumentLoader;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.modelquery.ModelQueryUtil;
 import org.w3c.dom.Document;

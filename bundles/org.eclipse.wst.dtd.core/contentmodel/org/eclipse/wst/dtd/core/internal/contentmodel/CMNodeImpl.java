@@ -11,7 +11,7 @@
 package org.eclipse.wst.dtd.core.internal.contentmodel;
 
 import org.eclipse.emf.common.notify.impl.AdapterImpl;
-import org.eclipse.wst.common.contentmodel.CMNode;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
 
 public abstract class CMNodeImpl extends AdapterImpl implements CMNode {
 	protected static final String PROPERTY_DOCUMENTATION = "documentation";

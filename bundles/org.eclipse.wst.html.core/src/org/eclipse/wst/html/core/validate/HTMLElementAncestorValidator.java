@@ -12,11 +12,11 @@ package org.eclipse.wst.html.core.validate;
 
 
 
-import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
-import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;
-import org.eclipse.wst.common.contentmodel.CMNode;
 import org.eclipse.wst.html.core.HTMLCMProperties;
 import org.eclipse.wst.sse.core.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.w3c.dom.Element;
 

@@ -12,9 +12,9 @@ package org.eclipse.wst.html.core.contentmodel.chtml;
 
 
 
-import org.eclipse.wst.common.contentmodel.CMGroup;
-import org.eclipse.wst.common.contentmodel.CMNode;
-import org.eclipse.wst.common.contentmodel.CMNodeList;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMGroup;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNodeList;
 
 /**
  */
@@ -41,8 +41,8 @@ class CMGroupImpl extends CMContentImpl implements CMGroup {
 	}
 
 	/**
-	 * @return org.eclipse.wst.common.contentmodel.CMNode
-	 * @param org.eclipse.wst.common.contentmodel.CMNode
+	 * @return org.eclipse.wst.sse.core.internal.contentmodel.CMNode
+	 * @param org.eclipse.wst.sse.core.internal.contentmodel.CMNode
 	 */
 	protected CMNode appendChild(CMNode child) {
 		if (child == null)
@@ -53,7 +53,7 @@ class CMGroupImpl extends CMContentImpl implements CMGroup {
 	}
 
 	/**
-	 * @return org.eclipse.wst.common.contentmodel.CMNodeList
+	 * @return org.eclipse.wst.sse.core.internal.contentmodel.CMNodeList
 	 */
 	public CMNodeList getChildNodes() {
 		return children;

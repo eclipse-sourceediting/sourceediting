@@ -17,8 +17,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.wst.common.contentmodel.CMNode;
-import org.eclipse.wst.common.contentmodel.CMNodeList;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNodeList;
 
 public class CMNodeListImpl implements CMNodeList {
 	static CMNodeListImpl EMPTY_NODE_LIST = new CMNodeListImpl(Collections.EMPTY_LIST);

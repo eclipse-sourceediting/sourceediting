@@ -17,12 +17,12 @@ package org.eclipse.wst.xml.ui.views.contentoutline;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.eclipse.wst.common.contentmodel.modelquery.CMDocumentManager;
-import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.sse.core.AbstractAdapterFactory;
 import org.eclipse.wst.sse.core.AdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.contentmodel.modelquery.CMDocumentManager;
+import org.eclipse.wst.sse.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.sse.core.modelquery.ModelQueryAdapter;
 import org.eclipse.wst.sse.ui.views.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.sse.ui.views.contentoutline.IJFaceNodeAdapterFactory;

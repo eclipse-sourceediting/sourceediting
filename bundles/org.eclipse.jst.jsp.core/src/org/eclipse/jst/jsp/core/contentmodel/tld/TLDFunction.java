@@ -12,7 +12,7 @@ package org.eclipse.jst.jsp.core.contentmodel.tld;
 
 import java.util.List;
 
-import org.eclipse.wst.common.contentmodel.CMDocument;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMDocument;
 
 public interface TLDFunction {
 

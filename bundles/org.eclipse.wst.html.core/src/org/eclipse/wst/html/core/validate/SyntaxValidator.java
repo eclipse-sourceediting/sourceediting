@@ -12,10 +12,10 @@ package org.eclipse.wst.html.core.validate;
 
 import java.util.Iterator;
 
-import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.html.core.document.HTMLDocumentTypeEntry;
 import org.eclipse.wst.html.core.document.HTMLDocumentTypeRegistry;
 import org.eclipse.wst.sse.core.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;

@@ -34,9 +34,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.wst.common.contentmodel.CMDocument;
-import org.eclipse.wst.common.contentmodel.CMPlugin;
-import org.eclipse.wst.common.contentmodel.util.NamespaceInfo;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMDocument;
+import org.eclipse.wst.sse.core.internal.contentmodel.ContentModelManager;
+import org.eclipse.wst.sse.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.uriresolver.util.IdResolver;
 import org.eclipse.wst.xml.uriresolver.util.IdResolverImpl;
@@ -211,7 +211,7 @@ public class EditNamespaceInfoDialog extends Dialog {
 			}
 
 			try {
-				CMDocument document = CMPlugin.getInstance().createCMDocument(grammarURI, "xsd"); //$NON-NLS-1$
+				CMDocument document = ContentModelManager.getInstance().createCMDocument(grammarURI, "xsd"); //$NON-NLS-1$
 				List namespaceInfoList = (List) document.getProperty("http://org.eclipse.wst/cm/properties/namespaceInfo"); //$NON-NLS-1$
 				NamespaceInfo info = (NamespaceInfo) namespaceInfoList.get(0);
 				if (uriField.getText().trim().length() == 0 && info.uri != null) {

@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.PageBook;
-import org.eclipse.wst.common.contentmodel.util.NamespaceInfo;
+import org.eclipse.wst.sse.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.ui.dialogs.SelectFileOrXMLCatalogIdDialog;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.uriresolver.util.IdResolver;

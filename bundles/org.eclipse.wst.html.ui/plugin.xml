@@ -27,7 +27,6 @@
       <import plugin="org.eclipse.wst.html.core"/>
       <import plugin="org.eclipse.wst.javascript.common.ui"/>
       <import plugin="org.eclipse.wst.xml.core"/>
-      <import plugin="org.eclipse.wst.common.contentmodel"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.jdt.ui"/>

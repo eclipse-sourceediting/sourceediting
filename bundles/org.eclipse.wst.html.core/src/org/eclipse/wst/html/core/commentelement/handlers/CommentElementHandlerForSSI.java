@@ -12,9 +12,9 @@ package org.eclipse.wst.html.core.commentelement.handlers;
 
 
 
-import org.eclipse.wst.common.contentmodel.CMDocument;
-import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;
-import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMDocument;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.sse.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.commentelement.CommentElementHandler;
 import org.eclipse.wst.xml.core.commentelement.util.CommentElementFactory;
 import org.eclipse.wst.xml.core.commentelement.util.TagScanner;

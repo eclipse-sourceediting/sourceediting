@@ -12,7 +12,7 @@ package org.eclipse.wst.html.core.contentmodel.chtml;
 
 
 
-import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap;
 
 /**
  * DL.

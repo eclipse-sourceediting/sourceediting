@@ -13,10 +13,10 @@
 package org.eclipse.wst.xml.core.format;
 
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.wst.common.contentmodel.CMAttributeDeclaration;
-import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.format.IStructuredFormatContraints;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMAttributeDeclaration;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.sse.core.modelquery.ModelQueryAdapter;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;

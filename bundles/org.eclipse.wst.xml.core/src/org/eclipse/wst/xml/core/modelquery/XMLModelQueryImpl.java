@@ -14,8 +14,8 @@ package org.eclipse.wst.xml.core.modelquery;
 
 
 
-import org.eclipse.wst.common.contentmodel.modelqueryimpl.ModelQueryImpl;
-import org.eclipse.wst.common.contentmodel.util.CMDocumentCache;
+import org.eclipse.wst.sse.core.internal.contentmodel.modelqueryimpl.ModelQueryImpl;
+import org.eclipse.wst.sse.core.internal.contentmodel.util.CMDocumentCache;
 import org.eclipse.wst.sse.core.modelquery.MovableModelQuery;
 import org.eclipse.wst.xml.uriresolver.util.IdResolver;
 

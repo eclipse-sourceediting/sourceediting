@@ -12,9 +12,9 @@ package org.eclipse.wst.html.core.format;
 
 
 
-import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.html.core.HTMLCMProperties;
 import org.eclipse.wst.html.core.HTMLFormatContraints;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.xml.core.document.XMLElement;
 import org.eclipse.wst.xml.core.document.XMLNode;

@@ -14,8 +14,8 @@ package org.eclipse.wst.html.core.contentmodel.chtml;
 
 import java.util.Arrays;
 
-import org.eclipse.wst.common.contentmodel.CMContent;
-import org.eclipse.wst.common.contentmodel.CMGroup;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMContent;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMGroup;
 
 /**
  * TITLE.

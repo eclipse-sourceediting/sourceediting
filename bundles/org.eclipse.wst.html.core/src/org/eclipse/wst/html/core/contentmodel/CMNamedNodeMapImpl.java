@@ -15,8 +15,8 @@ package org.eclipse.wst.html.core.contentmodel;
 import java.util.Hashtable;
 import java.util.Iterator;
 
-import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;
-import org.eclipse.wst.common.contentmodel.CMNode;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
 
 /**
  * An implementation of the CMNamedNodeMap interface.

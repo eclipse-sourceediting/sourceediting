@@ -17,6 +17,6 @@ package org.eclipse.wst.html.core.contentmodel;
  * interfaces defined in both of {@link <code>CMEntityDeclaration</code>}
  * and {@link <code>HTMLCMNode</code>}.<br>
  */
-public interface HTMLEntityDeclaration extends org.eclipse.wst.common.contentmodel.CMEntityDeclaration {
+public interface HTMLEntityDeclaration extends org.eclipse.wst.sse.core.internal.contentmodel.CMEntityDeclaration {
 
 }

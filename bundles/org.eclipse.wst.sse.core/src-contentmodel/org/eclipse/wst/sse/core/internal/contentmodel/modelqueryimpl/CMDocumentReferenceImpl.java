@@ -1,0 +1,42 @@
+/*
+* Copyright (c) 2002 IBM Corporation and others.
+* All rights reserved.   This program and the accompanying materials
+* are made available under the terms of the Common Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/cpl-v10.html
+* 
+* Contributors:
+*   IBM - Initial API and implementation
+*   Jens Lukowski/Innoopract - initial renaming/restructuring
+* 
+*/
+package org.eclipse.wst.sse.core.internal.contentmodel.modelqueryimpl;
+
+import org.eclipse.wst.sse.core.internal.contentmodel.modelquery.CMDocumentReference;
+
+public class CMDocumentReferenceImpl implements CMDocumentReference
+{              
+  protected String systemId;
+  protected String publicId;
+
+  public CMDocumentReferenceImpl(String publicId, String systemId)
+  {
+    this.publicId = publicId;                                    
+    this.systemId = systemId;
+  }
+
+  public String getPublicId()
+  {                          
+    return publicId;
+  }
+
+  public String getSystemId()
+  {                          
+    return systemId;
+  }      
+  
+  public String toString()
+  {
+    return "[" + publicId + ", " + systemId + "]";
+  }
+}

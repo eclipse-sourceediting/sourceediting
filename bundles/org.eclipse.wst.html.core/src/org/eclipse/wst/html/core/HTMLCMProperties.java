@@ -39,7 +39,7 @@ public interface HTMLCMProperties {
 	 */
 	public static final String CONTENT_HINT = "contentHint";//$NON-NLS-1$
 	/**
-	 * "prohibitedAncestors" returns org.eclipse.wst.common.contentmodel.CMNamedNodeMap.
+	 * "prohibitedAncestors" returns org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap.
 	 */
 	public static final String PROHIBITED_ANCESTORS = "prohibitedAncestors";//$NON-NLS-1$
 	/**
@@ -71,7 +71,7 @@ public interface HTMLCMProperties {
 	 */
 	public static final String OMIT_TYPE = "omitType";//$NON-NLS-1$
 	/**
-	 * "inclusion" returns org.eclipse.wst.common.contentmodel.CMContent.
+	 * "inclusion" returns org.eclipse.wst.sse.core.internal.contentmodel.CMContent.
 	 */
 	public static final String INCLUSION = "inclusion";//$NON-NLS-1$
 	/**

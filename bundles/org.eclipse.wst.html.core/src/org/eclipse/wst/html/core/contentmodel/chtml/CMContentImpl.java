@@ -15,7 +15,7 @@ package org.eclipse.wst.html.core.contentmodel.chtml;
 /**
  * Implementation of CMContent for HTML CM.
  */
-abstract class CMContentImpl extends CMNodeImpl implements org.eclipse.wst.common.contentmodel.CMContent {
+abstract class CMContentImpl extends CMNodeImpl implements org.eclipse.wst.sse.core.internal.contentmodel.CMContent {
 
 	public static final int UNBOUNDED = -1;
 	/**  -1: it's UNBOUNDED. */

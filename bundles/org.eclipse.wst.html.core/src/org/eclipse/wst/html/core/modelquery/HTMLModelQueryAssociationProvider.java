@@ -12,8 +12,8 @@ package org.eclipse.wst.html.core.modelquery;
 
 
 
-import org.eclipse.wst.common.contentmodel.modelqueryimpl.SimpleAssociationProvider;
-import org.eclipse.wst.common.contentmodel.util.CMDocumentCache;
+import org.eclipse.wst.sse.core.internal.contentmodel.modelqueryimpl.SimpleAssociationProvider;
+import org.eclipse.wst.sse.core.internal.contentmodel.util.CMDocumentCache;
 import org.eclipse.wst.xml.uriresolver.util.IdResolver;
 
 /**
@@ -21,7 +21,7 @@ import org.eclipse.wst.xml.uriresolver.util.IdResolver;
 public class HTMLModelQueryAssociationProvider extends SimpleAssociationProvider {
 
 	/**
-	 * @param modelQueryCMProvider org.eclipse.wst.common.contentmodel.modelquery.ModelQueryCMProvider
+	 * @param modelQueryCMProvider org.eclipse.wst.sse.core.internal.contentmodel.modelquery.ModelQueryCMProvider
 	 */
 	public HTMLModelQueryAssociationProvider(CMDocumentCache cache, IdResolver idResolver) {
 		super(new HTMLModelQueryCMProvider(cache, idResolver));

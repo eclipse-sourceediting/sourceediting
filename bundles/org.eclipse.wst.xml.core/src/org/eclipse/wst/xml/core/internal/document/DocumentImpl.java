@@ -20,10 +20,10 @@ package org.eclipse.wst.xml.core.internal.document;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.wst.common.contentmodel.CMDocument;
-import org.eclipse.wst.common.contentmodel.CMEntityDeclaration;
-import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;
-import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMDocument;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMEntityDeclaration;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.sse.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 import org.eclipse.wst.xml.core.NameValidator;
 import org.eclipse.wst.xml.core.commentelement.impl.CommentElementRegistry;

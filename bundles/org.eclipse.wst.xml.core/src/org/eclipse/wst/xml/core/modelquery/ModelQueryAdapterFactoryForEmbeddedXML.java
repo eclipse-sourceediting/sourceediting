@@ -14,9 +14,9 @@ package org.eclipse.wst.xml.core.modelquery;
 
 
 
-import org.eclipse.wst.common.contentmodel.modelquery.CMDocumentManager;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.contentmodel.modelquery.CMDocumentManager;
 import org.eclipse.wst.sse.core.modelquery.ModelQueryAdapter;
 
 

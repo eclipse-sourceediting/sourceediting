@@ -16,9 +16,9 @@ package org.eclipse.wst.xml.core.internal.document;
 
 import java.util.Iterator;
 
-import org.eclipse.wst.common.contentmodel.CMAttributeDeclaration;
-import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
-import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMAttributeDeclaration;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionContainer;

@@ -14,8 +14,8 @@ package org.eclipse.wst.sse.core.contentmodel;
 
 
 
-import org.eclipse.wst.common.contentmodel.CMDocument;
-import org.eclipse.wst.common.contentmodel.CMNode;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMDocument;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
 
 /**
  * ContentModelAdapter interface

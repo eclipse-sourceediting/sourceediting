@@ -12,13 +12,13 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.taginfo;
 
-import org.eclipse.wst.common.contentmodel.CMAttributeDeclaration;
-import org.eclipse.wst.common.contentmodel.CMDataType;
-import org.eclipse.wst.common.contentmodel.CMDocumentation;
-import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
-import org.eclipse.wst.common.contentmodel.CMNode;
-import org.eclipse.wst.common.contentmodel.CMNodeList;
-import org.eclipse.wst.common.contentmodel.util.CMDescriptionBuilder;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMAttributeDeclaration;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMDataType;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMDocumentation;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNodeList;
+import org.eclipse.wst.sse.core.internal.contentmodel.util.CMDescriptionBuilder;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 /**

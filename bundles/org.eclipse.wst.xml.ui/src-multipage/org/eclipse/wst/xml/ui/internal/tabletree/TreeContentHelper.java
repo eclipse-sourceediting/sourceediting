@@ -19,7 +19,7 @@ import java.util.Vector;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.common.contentmodel.util.DOMWriter;
+import org.eclipse.wst.sse.core.internal.contentmodel.util.DOMWriter;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.w3c.dom.Attr;

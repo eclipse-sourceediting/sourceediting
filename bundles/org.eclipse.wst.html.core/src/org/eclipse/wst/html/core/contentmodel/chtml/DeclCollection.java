@@ -15,8 +15,8 @@ package org.eclipse.wst.html.core.contentmodel.chtml;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;
-import org.eclipse.wst.common.contentmodel.CMNode;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
 
 /**
  */
@@ -136,7 +136,7 @@ abstract class DeclCollection implements CMNamedNodeMap {
 	}
 
 	/**
-	 * @return org.eclipse.wst.common.contentmodel.CMNode
+	 * @return org.eclipse.wst.sse.core.internal.contentmodel.CMNode
 	 * @param id int
 	 */
 	protected abstract CMNode create(String name);

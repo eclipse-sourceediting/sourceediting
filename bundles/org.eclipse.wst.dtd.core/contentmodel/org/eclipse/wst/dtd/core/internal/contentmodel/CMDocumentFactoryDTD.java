@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.core.internal.contentmodel;
 
-import org.eclipse.wst.common.contentmodel.CMDocument;
-import org.eclipse.wst.common.contentmodel.factory.CMDocumentFactory;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMDocument;
+import org.eclipse.wst.sse.core.internal.contentmodel.factory.CMDocumentFactory;
 
 /**
  * This builder handles building .dtd grammar files

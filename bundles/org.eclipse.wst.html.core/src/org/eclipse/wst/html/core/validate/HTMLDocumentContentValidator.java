@@ -15,9 +15,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.html.core.HTML40Namespace;
 import org.eclipse.wst.sse.core.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.document.DocumentTypeAdapter;
 import org.eclipse.wst.xml.core.document.XMLDocument;
 import org.eclipse.wst.xml.core.document.XMLNode;

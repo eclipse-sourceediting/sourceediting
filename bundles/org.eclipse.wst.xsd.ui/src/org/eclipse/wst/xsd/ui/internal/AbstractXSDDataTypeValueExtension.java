@@ -11,9 +11,9 @@
 package org.eclipse.wst.xsd.ui.internal;
 import java.util.Vector;
 
-import org.eclipse.wst.common.contentmodel.CMNode;
-import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
-import org.eclipse.wst.common.contentmodel.modelquery.extension.DataTypeValueExtension;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.sse.core.internal.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.sse.core.internal.contentmodel.modelquery.extension.DataTypeValueExtension;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.xsd.XSDSchema;
 import org.w3c.dom.Element;

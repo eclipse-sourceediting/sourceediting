@@ -18,7 +18,6 @@
 		<import plugin="org.eclipse.emf.ecore"/>
 		<import plugin="org.eclipse.jface.text" />
 		<import plugin="org.eclipse.ui" />
-		<import plugin="org.eclipse.wst.common.contentmodel"/>
 		<import plugin="org.eclipse.wst.common.uriresolver"/>
 		<import plugin="org.eclipse.wst.sse.core" />
 		<import plugin="org.eclipse.wst.validation"/>
@@ -99,7 +98,7 @@
    </extension>
 
    <extension
-         point="org.eclipse.wst.common.contentmodel.documentFactories">
+         point="org.eclipse.wst.sse.core.documentFactories">
       <factory
             type="dtd, ent, mod, xml"
             class="org.eclipse.wst.dtd.core.internal.contentmodel.CMDocumentFactoryDTD">

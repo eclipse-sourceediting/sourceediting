@@ -12,8 +12,8 @@ package org.eclipse.jst.jsp.core.modelquery;
 
 
 
-import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
-import org.eclipse.wst.common.contentmodel.util.CMDocumentCache;
+import org.eclipse.wst.sse.core.internal.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.sse.core.internal.contentmodel.util.CMDocumentCache;
 import org.eclipse.wst.sse.core.modelquery.ModelQueryAdapterImpl;
 import org.eclipse.wst.xml.uriresolver.util.IdResolver;
 

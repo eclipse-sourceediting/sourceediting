@@ -14,10 +14,10 @@ import java.util.List;
 
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
-import org.eclipse.wst.common.contentmodel.CMAttributeDeclaration;
-import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
-import org.eclipse.wst.common.contentmodel.CMNode;
-import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMAttributeDeclaration;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.sse.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.ui.internal.properties.EnumeratedStringPropertyDescriptor;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;

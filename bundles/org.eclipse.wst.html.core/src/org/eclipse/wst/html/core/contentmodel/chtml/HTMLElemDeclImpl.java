@@ -14,15 +14,15 @@ package org.eclipse.wst.html.core.contentmodel.chtml;
 
 import java.util.Iterator;
 
-import org.eclipse.wst.common.contentmodel.CMContent;
-import org.eclipse.wst.common.contentmodel.CMDataType;
-import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
-import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;
-import org.eclipse.wst.common.contentmodel.CMNode;
 import org.eclipse.wst.html.core.HTMLCMProperties;
 import org.eclipse.wst.html.core.contentmodel.HTMLAttributeDeclaration;
 import org.eclipse.wst.html.core.contentmodel.HTMLElementDeclaration;
 import org.eclipse.wst.html.core.contentmodel.HTMLPropertyDeclaration;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMContent;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMDataType;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
 
 /**
  * Base class for all Hed???? classes.
@@ -134,7 +134,7 @@ abstract class HTMLElemDeclImpl extends CMContentImpl implements HTMLElementDecl
 	}
 
 	/**
-	 * @see org.eclipse.wst.common.contentmodel.CMElementDeclaration
+	 * @see org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration
 	 */
 	public CMNamedNodeMap getAttributes() {
 		if (attributes == null)
@@ -159,7 +159,7 @@ abstract class HTMLElemDeclImpl extends CMContentImpl implements HTMLElementDecl
 	 * This default implementation always tries to create a complex type definition
 	 * instance and access to it.
 	 * <br>
-	 * @see org.eclipse.wst.common.contentmodel.CMElementDeclaration
+	 * @see org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration
 	 */
 	public CMContent getContent() {
 		ComplexTypeDefinition def = getComplexTypeDefinition(); // lazy eval.
@@ -173,7 +173,7 @@ abstract class HTMLElemDeclImpl extends CMContentImpl implements HTMLElementDecl
 	 * This default implementation always tries to create a complex type definition
 	 * instance and access to it.
 	 * <br>
-	 * @see org.eclipse.wst.common.contentmodel.CMElementDeclaration
+	 * @see org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration
 	 */
 	public int getContentType() {
 		ComplexTypeDefinition def = getComplexTypeDefinition(); // lazy eval.
@@ -190,14 +190,14 @@ abstract class HTMLElemDeclImpl extends CMContentImpl implements HTMLElementDecl
 	/**
 	 * HTML element doesn't have any data type.  So, this method always
 	 * returns <code>null</code>.<br>
-	 * @see org.eclipse.wst.common.contentmodel.CMElementDeclaration
+	 * @see org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration
 	 */
 	public CMDataType getDataType() {
 		return null;
 	}
 
 	/**
-	 * @see org.eclipse.wst.common.contentmodel.CMElementDeclaration
+	 * @see org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration
 	 */
 	public String getElementName() {
 		return getNodeName();
@@ -261,14 +261,14 @@ abstract class HTMLElemDeclImpl extends CMContentImpl implements HTMLElementDecl
 	/**
 	 * No HTML element has local elements.  So, this method always
 	 * returns an empty map.
-	 * @see org.eclipse.wst.common.contentmodel.CMElementDeclaration
+	 * @see org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration
 	 */
 	public CMNamedNodeMap getLocalElements() {
 		return EMPTY_MAP;
 	}
 
 	/**
-	 * @see org.eclipse.wst.common.contentmodel.CMNode
+	 * @see org.eclipse.wst.sse.core.internal.contentmodel.CMNode
 	 */
 	public int getNodeType() {
 		return CMNode.ELEMENT_DECLARATION;

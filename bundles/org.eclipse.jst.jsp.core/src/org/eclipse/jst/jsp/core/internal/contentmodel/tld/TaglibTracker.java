@@ -13,8 +13,8 @@ package org.eclipse.jst.jsp.core.internal.contentmodel.tld;
 
 
 import org.eclipse.jst.jsp.core.internal.contentmodel.CMDocumentWrapperImpl;
-import org.eclipse.wst.common.contentmodel.CMDocument;
 import org.eclipse.wst.sse.core.contentmodel.CMDocumentTracker;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 
 /**

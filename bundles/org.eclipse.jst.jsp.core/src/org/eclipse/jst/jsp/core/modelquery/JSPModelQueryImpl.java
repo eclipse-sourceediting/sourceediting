@@ -14,14 +14,14 @@ package org.eclipse.jst.jsp.core.modelquery;
 import java.util.List;
 
 import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
-import org.eclipse.wst.common.contentmodel.CMAttributeDeclaration;
-import org.eclipse.wst.common.contentmodel.CMDocument;
-import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
-import org.eclipse.wst.common.contentmodel.CMNode;
-import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
-import org.eclipse.wst.common.contentmodel.modelqueryimpl.ModelQueryImpl;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMAttributeDeclaration;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMDocument;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.sse.core.internal.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.sse.core.internal.contentmodel.modelqueryimpl.ModelQueryImpl;
 import org.eclipse.wst.sse.core.modelquery.ModelQueryAdapter;
 import org.eclipse.wst.xml.uriresolver.util.IdResolver;
 import org.w3c.dom.Attr;
@@ -105,7 +105,7 @@ public class JSPModelQueryImpl extends ModelQueryImpl {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.eclipse.wst.common.contentmodel.modelquery.ModelQuery#getCMAttributeDeclaration(org.w3c.dom.Attr)
+	 * @see org.eclipse.wst.sse.core.internal.contentmodel.modelquery.ModelQuery#getCMAttributeDeclaration(org.w3c.dom.Attr)
 	 */
 	public CMAttributeDeclaration getCMAttributeDeclaration(Attr attr) {
 		CMAttributeDeclaration result = super.getCMAttributeDeclaration(attr);

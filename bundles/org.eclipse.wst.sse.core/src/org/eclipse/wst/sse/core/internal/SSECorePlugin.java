@@ -44,7 +44,7 @@ import org.osgi.framework.BundleContext;
  * to DOM2 APIs, instead of the DOM1 (used by others, such as the desktop
  * ("com.ibm.eclipse.*")) --> <requires><import
  * plugin="com.ibm.etools.b2bxmlrt" export="true"/> <import
- * plugin="org.eclipse.wst.common.contentmodel" export="true"/> </requires>
+ * plugin="org.eclipse.wst.sse.core.internal.contentmodel" export="true"/> </requires>
  * <runtime><library name="runtime/sedmodel.jar"> <export name="*"/>
  * </library> </runtime> </plugin> to tell the workbench the model manager
  * plugin ID and where to find this model manager plugin class. Then in the

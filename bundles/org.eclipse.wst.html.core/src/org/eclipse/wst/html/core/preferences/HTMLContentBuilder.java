@@ -13,14 +13,14 @@ package org.eclipse.wst.html.core.preferences;
 
 
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.wst.common.contentmodel.CMNode;
 import org.eclipse.wst.html.core.HTMLCMProperties;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-public class HTMLContentBuilder extends org.eclipse.wst.common.contentmodel.util.DOMContentBuilderImpl {
+public class HTMLContentBuilder extends org.eclipse.wst.sse.core.internal.contentmodel.util.DOMContentBuilderImpl {
 
 	private int fTagCase;
 	private int fAttrCase;

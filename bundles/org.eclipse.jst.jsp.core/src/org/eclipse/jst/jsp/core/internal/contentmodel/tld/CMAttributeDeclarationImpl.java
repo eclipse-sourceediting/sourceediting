@@ -16,9 +16,9 @@ import java.util.Enumeration;
 
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDAttributeDeclaration;
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDDocument;
-import org.eclipse.wst.common.contentmodel.CMDataType;
-import org.eclipse.wst.common.contentmodel.CMDocument;
-import org.eclipse.wst.common.contentmodel.CMNode;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMDataType;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMDocument;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.sse.core.util.StringUtils;
 
 public class CMAttributeDeclarationImpl implements TLDAttributeDeclaration {

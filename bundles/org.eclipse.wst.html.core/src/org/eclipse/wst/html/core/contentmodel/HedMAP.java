@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.contentmodel;
 
-import org.eclipse.wst.common.contentmodel.CMAttributeDeclaration;
-import org.eclipse.wst.common.contentmodel.CMDataType;
 import org.eclipse.wst.html.core.HTML40Namespace;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMAttributeDeclaration;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMDataType;
 
 
 

@@ -14,7 +14,7 @@ package org.eclipse.wst.sse.core.contentmodel;
 
 
 
-import org.eclipse.wst.common.contentmodel.CMDocument;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 
 

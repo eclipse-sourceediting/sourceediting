@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.validate;
 
-import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.sse.core.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.core.document.XMLText;
 import org.w3c.dom.Element;

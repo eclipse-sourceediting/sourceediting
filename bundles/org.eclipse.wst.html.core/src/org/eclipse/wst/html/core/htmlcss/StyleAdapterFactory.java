@@ -12,11 +12,6 @@ package org.eclipse.wst.html.core.htmlcss;
 
 
 
-import org.eclipse.wst.common.contentmodel.CMAttributeDeclaration;
-import org.eclipse.wst.common.contentmodel.CMDocument;
-import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
-import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;
-import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.css.core.adapters.IStyleDeclarationAdapter;
 import org.eclipse.wst.css.core.adapters.IStyleSheetAdapter;
 import org.eclipse.wst.css.core.adapters.IStyleSheetListAdapter;
@@ -24,6 +19,11 @@ import org.eclipse.wst.html.core.HTML40Namespace;
 import org.eclipse.wst.sse.core.AdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMAttributeDeclaration;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMDocument;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.sse.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.modelquery.ModelQueryUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

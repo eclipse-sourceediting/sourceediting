@@ -14,7 +14,7 @@ package org.eclipse.wst.html.core.contentmodel;
 
 import java.lang.reflect.Field;
 
-import org.eclipse.wst.common.contentmodel.CMNode;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
 
 /**
  * Factory for entity declarations.
@@ -821,7 +821,7 @@ final class EntityCollection extends DeclCollection implements org.eclipse.wst.h
 
 	/**
 	 * Create an entity declaration.
-	 * @return org.eclipse.wst.common.contentmodel.CMNode
+	 * @return org.eclipse.wst.sse.core.internal.contentmodel.CMNode
 	 * @param attrName java.lang.String
 	 */
 	protected CMNode create(String entityName) {

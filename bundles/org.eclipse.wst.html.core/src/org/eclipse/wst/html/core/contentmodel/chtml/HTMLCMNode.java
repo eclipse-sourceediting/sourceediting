@@ -21,7 +21,7 @@ package org.eclipse.wst.html.core.contentmodel.chtml;
  * This intermediate interface is intended to provide whether ignore cases
  * or not.<br>
  */
-interface HTMLCMNode extends org.eclipse.wst.common.contentmodel.CMNode {
+interface HTMLCMNode extends org.eclipse.wst.sse.core.internal.contentmodel.CMNode {
 
 	/**
 	 * Returns <code>true</code>, if declaration is for HTML attribute/element/entity.

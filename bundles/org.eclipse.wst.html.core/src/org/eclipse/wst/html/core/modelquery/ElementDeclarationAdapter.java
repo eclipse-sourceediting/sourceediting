@@ -12,8 +12,8 @@ package org.eclipse.wst.html.core.modelquery;
 
 
 
-import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.sse.core.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration;
 
 /**
  */

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.modelquery;
 
-import org.eclipse.wst.common.contentmodel.modelqueryimpl.SimpleAssociationProvider;
+import org.eclipse.wst.sse.core.internal.contentmodel.modelqueryimpl.SimpleAssociationProvider;
 
 /**
  */
@@ -18,7 +18,7 @@ public class JSPModelQueryAssociationProvider extends SimpleAssociationProvider 
 
 	/**
 	 * @param modelQueryCMProvider
-	 *            org.eclipse.wst.common.contentmodel.modelquery.ModelQueryCMProvider
+	 *            org.eclipse.wst.sse.core.internal.contentmodel.modelquery.ModelQueryCMProvider
 	 */
 	public JSPModelQueryAssociationProvider() {
 		super(new JSPModelQueryCMProvider());

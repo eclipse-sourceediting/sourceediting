@@ -12,8 +12,8 @@ package org.eclipse.jst.jsp.core.internal.contentmodel;
 
 
 
-import org.eclipse.wst.common.contentmodel.CMNode;
 import org.eclipse.wst.sse.core.contentmodel.CMNodeWrapper;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
 
 public class CMNodeWrapperImpl implements CMNode, CMNodeWrapper {
 	private CMNode fNode = null;

@@ -13,13 +13,13 @@ package org.eclipse.wst.html.core.modelquery;
 
 import java.util.Hashtable;
 
-import org.eclipse.wst.common.contentmodel.CMDocument;
-import org.eclipse.wst.common.contentmodel.modelquery.ModelQueryCMProvider;
-import org.eclipse.wst.common.contentmodel.util.CMDocumentCache;
 import org.eclipse.wst.html.core.contentmodel.HTMLCMDocumentFactory;
 import org.eclipse.wst.html.core.document.HTMLDocumentTypeEntry;
 import org.eclipse.wst.html.core.document.HTMLDocumentTypeRegistry;
 import org.eclipse.wst.sse.core.contentmodel.CMDocType;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMDocument;
+import org.eclipse.wst.sse.core.internal.contentmodel.modelquery.ModelQueryCMProvider;
+import org.eclipse.wst.sse.core.internal.contentmodel.util.CMDocumentCache;
 import org.eclipse.wst.xml.core.document.XMLDocument;
 import org.eclipse.wst.xml.uriresolver.util.IdResolver;
 import org.w3c.dom.Document;

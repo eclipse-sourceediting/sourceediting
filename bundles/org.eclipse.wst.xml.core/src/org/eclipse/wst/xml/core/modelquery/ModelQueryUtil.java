@@ -14,10 +14,10 @@ package org.eclipse.wst.xml.core.modelquery;
 
 
 
-import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
-import org.eclipse.wst.common.contentmodel.util.CMDocumentCache;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.sse.core.internal.contentmodel.util.CMDocumentCache;
 import org.eclipse.wst.sse.core.modelquery.ModelQueryAdapter;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.uriresolver.util.IdResolver;

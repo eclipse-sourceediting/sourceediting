@@ -13,9 +13,9 @@
 package org.eclipse.wst.xml.ui.views.contentoutline;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.format.IStructuredFormatProcessor;
+import org.eclipse.wst.sse.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.format.FormatProcessorXML;
 import org.eclipse.wst.xml.core.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.ui.actions.AbstractNodeActionManager;

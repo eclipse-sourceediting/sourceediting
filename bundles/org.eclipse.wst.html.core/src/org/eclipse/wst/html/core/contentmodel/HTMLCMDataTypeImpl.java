@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.contentmodel;
 
-import org.eclipse.wst.common.contentmodel.CMNode;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
 
 
 
@@ -53,7 +53,7 @@ class HTMLCMDataTypeImpl extends CMNodeImpl implements HTMLCMDataType {
 	}
 
 	/**
-	 * @see org.eclipse.wst.common.contentmodel.CMDataType
+	 * @see org.eclipse.wst.sse.core.internal.contentmodel.CMDataType
 	 */
 	public String getDataTypeName() {
 		return getNodeName();
@@ -90,7 +90,7 @@ class HTMLCMDataTypeImpl extends CMNodeImpl implements HTMLCMDataType {
 	}
 
 	/**
-	 * @see org.eclipse.wst.common.contentmodel.CMNode
+	 * @see org.eclipse.wst.sse.core.internal.contentmodel.CMNode
 	 */
 	public int getNodeType() {
 		return CMNode.DATA_TYPE;

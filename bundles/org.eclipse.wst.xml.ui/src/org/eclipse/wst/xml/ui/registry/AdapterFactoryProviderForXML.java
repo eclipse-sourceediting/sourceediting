@@ -14,11 +14,11 @@ package org.eclipse.wst.xml.ui.registry;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.views.properties.IPropertySource;
-import org.eclipse.wst.common.contentmodel.modelquery.CMDocumentManager;
-import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.sse.core.AdapterFactory;
 import org.eclipse.wst.sse.core.IFactoryRegistry;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.contentmodel.modelquery.CMDocumentManager;
+import org.eclipse.wst.sse.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.sse.core.modelhandler.IDocumentTypeHandler;
 import org.eclipse.wst.sse.core.util.Assert;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;

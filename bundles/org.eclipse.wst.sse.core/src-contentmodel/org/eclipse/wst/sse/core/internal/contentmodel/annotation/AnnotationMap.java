@@ -1,0 +1,116 @@
+/*
+* Copyright (c) 2002 IBM Corporation and others.
+* All rights reserved.   This program and the accompanying materials
+* are made available under the terms of the Common Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/cpl-v10.html
+* 
+* Contributors:
+*   IBM - Initial API and implementation
+*   Jens Lukowski/Innoopract - initial renaming/restructuring
+* 
+*/
+package org.eclipse.wst.sse.core.internal.contentmodel.annotation;
+      
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.Vector;
+
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.sse.core.internal.contentmodel.internal.annotation.*;
+
+
+/**
+ * AnnotationMap
+ */
+public class AnnotationMap
+{                  
+  protected List list = new Vector();
+  protected Hashtable hashtable = new Hashtable();     
+  protected boolean isCaseSensitive = true;
+
+  public AnnotationMap()
+  {
+  } 
+
+  public void setCaseSensitive(boolean isCaseSensitive)
+  {
+    this.isCaseSensitive = isCaseSensitive;
+  }
+
+  public void addAnnotation(Annotation annotation)
+  {                  
+    String spec = annotation.getSpec();
+    if (spec != null)
+    {                
+      list.add(annotation);
+      StringTokenizer st = new StringTokenizer(spec, "[]|\t\n\r\f ");                   
+      while (st.hasMoreTokens())
+      {
+        String cmNodeSpec = st.nextToken();
+        addAnnotationForCMNodeSpec(cmNodeSpec, annotation);
+      }
+    }
+  }                
+
+  protected void addAnnotationForCMNodeSpec(String cmNodeSpec, Annotation annotation)
+  {    
+    String key = isCaseSensitive ? cmNodeSpec : cmNodeSpec.toLowerCase();
+    List list = (List)hashtable.get(key);
+    if (list == null)
+    {       
+      list = new Vector();
+
+      hashtable.put(key, list);
+    }
+    list.add(annotation);
+  }
+                                         
+  public String getProperty(String cmNodeSpec, String propertyName)
+  {  
+    String result = null;  
+    String key = isCaseSensitive ? cmNodeSpec : cmNodeSpec.toLowerCase();
+    List annotationList = (List)hashtable.get(key);
+    if (annotationList != null)
+    {
+      for (Iterator i = annotationList.iterator(); i.hasNext(); )
+      {
+        Annotation annotation = (Annotation)i.next();
+        result = annotation.getProperty(propertyName);
+        if (result != null)
+        {
+          break;
+        }
+      }
+    }                               
+    return result;
+  }
+
+  public String getProperty(CMNode cmNode, String propertyName)
+  {                                          
+    String result = null;
+    String cmNodeSpec = (String)cmNode.getProperty("spec");
+    if (cmNodeSpec == null)
+    {
+      cmNodeSpec = cmNode.getNodeName();
+    }                                    
+    if (cmNodeSpec != null)
+    {                      
+      result = getProperty(cmNodeSpec, propertyName);
+    }                                                     
+    return result;
+  }  
+
+  public List getAnnotations()
+  {
+    return list;
+  }
+
+  public void load(String uri) throws Exception
+  {                                   
+    AnnotationFileParser parser = new AnnotationFileParser();
+    parser.parse(this, uri);
+  }
+}

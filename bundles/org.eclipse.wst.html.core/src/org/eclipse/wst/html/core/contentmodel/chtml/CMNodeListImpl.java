@@ -12,14 +12,14 @@ package org.eclipse.wst.html.core.contentmodel.chtml;
 
 
 
-import org.eclipse.wst.common.contentmodel.CMNode;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
 
 /**
  * Analog of dom.NodeList for CM.
  * So, the implementation is very similar to
  * {@link com.ibm.sed.model.xml.NodeListImpl}.<br>
  */
-class CMNodeListImpl implements org.eclipse.wst.common.contentmodel.CMNodeList {
+class CMNodeListImpl implements org.eclipse.wst.sse.core.internal.contentmodel.CMNodeList {
 
 	private java.util.Vector nodes = null;
 
@@ -32,8 +32,8 @@ class CMNodeListImpl implements org.eclipse.wst.common.contentmodel.CMNodeList {
 	}
 
 	/**
-	 * @return org.eclipse.wst.common.contentmodel.CMNode
-	 * @param node org.eclipse.wst.common.contentmodel.CMNode
+	 * @return org.eclipse.wst.sse.core.internal.contentmodel.CMNode
+	 * @param node org.eclipse.wst.sse.core.internal.contentmodel.CMNode
 	 */
 	protected CMNode appendNode(CMNode node) {
 		nodes.addElement(node);

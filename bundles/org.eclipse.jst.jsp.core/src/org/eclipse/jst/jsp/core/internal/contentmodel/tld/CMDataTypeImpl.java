@@ -12,8 +12,8 @@ package org.eclipse.jst.jsp.core.internal.contentmodel.tld;
 
 
 
-import org.eclipse.wst.common.contentmodel.CMDataType;
-import org.eclipse.wst.common.contentmodel.CMNode;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMDataType;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
 
 public class CMDataTypeImpl implements CMDataType {
 

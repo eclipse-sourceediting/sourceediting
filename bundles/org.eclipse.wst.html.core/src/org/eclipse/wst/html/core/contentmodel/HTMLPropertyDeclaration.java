@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.contentmodel;
 
-import org.eclipse.wst.common.contentmodel.CMContent;
-import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMContent;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap;
 
 /**
  * This interface is commonly used in declaration implementation, and internal use.
@@ -31,7 +31,7 @@ public interface HTMLPropertyDeclaration {
 	int getCorrectionType();
 	/**
 	 * Get the list of declarations those should be excluded from the content.<br>
-	 * @return org.eclipse.wst.common.contentmodel.CMContent
+	 * @return org.eclipse.wst.sse.core.internal.contentmodel.CMContent
 	 */
 	CMContent getExclusion();
 	/**
@@ -43,7 +43,7 @@ public interface HTMLPropertyDeclaration {
 	int getFormatType();
 	/**
 	 * Get the list of declarations those should be included into the content.<br>
-	 * @return org.eclipse.wst.common.contentmodel.CMContent
+	 * @return org.eclipse.wst.sse.core.internal.contentmodel.CMContent
 	 */
 	CMContent getInclusion();
 	/**
@@ -72,7 +72,7 @@ public interface HTMLPropertyDeclaration {
 	 */
 	int getOmitType();
 	/**
-	 * @return org.eclipse.wst.common.contentmodel.CMNamedNodeMap
+	 * @return org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap
 	 */
 	CMNamedNodeMap getProhibitedAncestors();
 	/**

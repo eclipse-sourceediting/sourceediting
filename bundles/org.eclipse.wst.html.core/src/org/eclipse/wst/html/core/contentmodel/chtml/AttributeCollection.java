@@ -14,11 +14,11 @@ package org.eclipse.wst.html.core.contentmodel.chtml;
 
 import java.util.Iterator;
 
-import org.eclipse.wst.common.contentmodel.CMAttributeDeclaration;
-import org.eclipse.wst.common.contentmodel.CMDataType;
-import org.eclipse.wst.common.contentmodel.CMNode;
 import org.eclipse.wst.html.core.contentmodel.HTMLAttributeDeclaration;
 import org.eclipse.wst.html.core.contentmodel.HTMLCMDataType;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMAttributeDeclaration;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMDataType;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
 
 /**
  * Factory for attribute declarations.

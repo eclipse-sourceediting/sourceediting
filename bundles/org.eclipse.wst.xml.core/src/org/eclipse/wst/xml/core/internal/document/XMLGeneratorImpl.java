@@ -14,8 +14,8 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 
-import org.eclipse.wst.common.contentmodel.CMAttributeDeclaration;
-import org.eclipse.wst.common.contentmodel.CMDataType;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMAttributeDeclaration;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.commentelement.impl.CommentElementRegistry;
 import org.eclipse.wst.xml.core.document.DocumentTypeAdapter;
 import org.eclipse.wst.xml.core.document.JSPTag;

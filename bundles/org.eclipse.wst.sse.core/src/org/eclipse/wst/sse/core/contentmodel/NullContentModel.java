@@ -15,10 +15,10 @@ package org.eclipse.wst.sse.core.contentmodel;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import org.eclipse.wst.common.contentmodel.CMDocument;
-import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;
-import org.eclipse.wst.common.contentmodel.CMNamespace;
-import org.eclipse.wst.common.contentmodel.CMNode;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMDocument;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNamespace;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
 
 
 /**

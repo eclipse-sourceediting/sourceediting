@@ -12,8 +12,8 @@ package org.eclipse.jst.jsp.core.internal.contentmodel;
 
 
 
-import org.eclipse.wst.common.contentmodel.CMContent;
-import org.eclipse.wst.common.contentmodel.CMNode;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMContent;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
 
 public class CMContentWrapperImpl extends CMNodeWrapperImpl implements CMContent {
 
@@ -22,9 +22,9 @@ public class CMContentWrapperImpl extends CMNodeWrapperImpl implements CMContent
 	/**
 	 * CMContentWrapper constructor comment.
 	 * @param prefix java.lang.String
-	 * @param node org.eclipse.wst.common.contentmodel.CMNode
+	 * @param node org.eclipse.wst.sse.core.internal.contentmodel.CMNode
 	 */
-	public CMContentWrapperImpl(String prefix, org.eclipse.wst.common.contentmodel.CMContent node) {
+	public CMContentWrapperImpl(String prefix, org.eclipse.wst.sse.core.internal.contentmodel.CMContent node) {
 		super(prefix, node);
 		fCMContent = node;
 	}

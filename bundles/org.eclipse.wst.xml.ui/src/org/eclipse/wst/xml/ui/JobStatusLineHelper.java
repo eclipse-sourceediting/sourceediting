@@ -23,7 +23,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.common.contentmodel.modelquery.CMDocumentManager;
+import org.eclipse.wst.sse.core.internal.contentmodel.modelquery.CMDocumentManager;
 
 
 /**

@@ -19,12 +19,12 @@ import org.eclipse.jst.jsp.core.contentmodel.tld.JSP11TLDNames;
 import org.eclipse.jst.jsp.core.contentmodel.tld.JSP12TLDNames;
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDDocument;
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDElementDeclaration;
-import org.eclipse.wst.common.contentmodel.CMContent;
-import org.eclipse.wst.common.contentmodel.CMDataType;
-import org.eclipse.wst.common.contentmodel.CMDocument;
-import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;
-import org.eclipse.wst.common.contentmodel.CMNode;
-import org.eclipse.wst.common.contentmodel.annotation.AnnotationMap;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMContent;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMDataType;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMDocument;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.sse.core.internal.contentmodel.annotation.AnnotationMap;
 import org.eclipse.wst.sse.core.util.StringUtils;
 
 public class CMElementDeclarationImpl implements TLDElementDeclaration {

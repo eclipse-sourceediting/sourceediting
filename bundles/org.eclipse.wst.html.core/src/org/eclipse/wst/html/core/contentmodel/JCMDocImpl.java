@@ -12,8 +12,8 @@ package org.eclipse.wst.html.core.contentmodel;
 
 
 
-import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;
-import org.eclipse.wst.common.contentmodel.CMNode;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNode;
 
 /**
  * Implementation of CMDocument for the JSP 1.1.
@@ -43,14 +43,14 @@ class JCMDocImpl extends CMNodeImpl implements JSPCMDocument {
 	}
 
 	/**
-	 * @see org.eclipse.wst.common.contentmodel.CMDocument
+	 * @see org.eclipse.wst.sse.core.internal.contentmodel.CMDocument
 	 */
 	public CMNamedNodeMap getElements() {
 		return elements;
 	}
 
 	/**
-	 * @see org.eclipse.wst.common.contentmodel.CMDocument
+	 * @see org.eclipse.wst.sse.core.internal.contentmodel.CMDocument
 	 */
 	public CMNamedNodeMap getEntities() {
 		return null;
@@ -64,14 +64,14 @@ class JCMDocImpl extends CMNodeImpl implements JSPCMDocument {
 	}
 
 	/**
-	 * @see org.eclipse.wst.common.contentmodel.CMDocument
+	 * @see org.eclipse.wst.sse.core.internal.contentmodel.CMDocument
 	 */
-	public org.eclipse.wst.common.contentmodel.CMNamespace getNamespace() {
+	public org.eclipse.wst.sse.core.internal.contentmodel.CMNamespace getNamespace() {
 		return namespace;
 	}
 
 	/**
-	 * @see org.eclipse.wst.common.contentmodel.CMNode
+	 * @see org.eclipse.wst.sse.core.internal.contentmodel.CMNode
 	 */
 	public int getNodeType() {
 		return CMNode.DOCUMENT;

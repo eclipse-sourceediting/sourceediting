@@ -20,7 +20,6 @@
       <import plugin="org.eclipse.wst.sse.core"/>
       <import plugin="org.eclipse.wst.xml.core"/>
       <import plugin="org.eclipse.wst.xml.ui"/>
-      <import plugin="org.eclipse.wst.common.contentmodel"/>
       <import plugin="org.eclipse.wst.common.ui"/>
       
       <import plugin="org.eclipse.jface.text"/>
@@ -119,7 +118,7 @@
 <!-- Support help on the tags                             -->
 <!-- ==================================================== -->
 <!--   <extension
-         point="org.eclipse.wst.common.contentmodel.annotationFiles">
+         point="org.eclipse.wst.sse.core.internal.contentmodel.annotationFiles">
       <annotationFile
             location="/w3c/schemaForCodeAssist-annotations.xml"
             publicId="http://www.w3.org/2001/XMLSchema">

@@ -12,8 +12,8 @@ package org.eclipse.wst.html.core.contentmodel;
 
 
 
-import org.eclipse.wst.common.contentmodel.CMContent;
-import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMContent;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration;
 
 /**
  * Base class for EMPTY type element declarations.
@@ -33,7 +33,7 @@ abstract class HedEmpty extends HTMLElemDeclImpl {
 	 * Content.<br>
 	 * EMPTY type always returns <code>null</code>.
 	 * <br>
-	 * @return org.eclipse.wst.common.contentmodel.CMContent
+	 * @return org.eclipse.wst.sse.core.internal.contentmodel.CMContent
 	 */
 	public CMContent getContent() {
 		return null;
@@ -41,7 +41,7 @@ abstract class HedEmpty extends HTMLElemDeclImpl {
 
 	/**
 	 * Content type.<br>
-	 * @see org.eclipse.wst.common.contentmodel.CMElementDeclaration
+	 * @see org.eclipse.wst.sse.core.internal.contentmodel.CMElementDeclaration
 	 */
 	public int getContentType() {
 		return CMElementDeclaration.EMPTY;

@@ -10,11 +10,11 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.contentmodel;
 
-import org.eclipse.wst.common.contentmodel.CMDocument;
-import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;
-import org.eclipse.wst.common.contentmodel.CMNamespace;
 import org.eclipse.wst.html.core.contentmodel.HTMLCMDocumentFactory;
 import org.eclipse.wst.sse.core.contentmodel.CMDocType;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMDocument;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNamedNodeMap;
+import org.eclipse.wst.sse.core.internal.contentmodel.CMNamespace;
 
 /**
  * CMDocument factory for JSP documents.
