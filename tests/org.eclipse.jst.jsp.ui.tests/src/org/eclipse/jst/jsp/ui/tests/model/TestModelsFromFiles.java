@@ -128,8 +128,7 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 		IStructuredDocument document = null;
 		try {
 			document = modelManager.createStructuredDocumentFor(file);
-		}
-		catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			expectedExceptionCaught = true;
 		}
 
@@ -142,8 +141,7 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 			contents = document.get();
 			assertNotNull("contents were null", contents);
 			assertTrue("contents were *not* empty as expected", contents.length() == 0);
-		}
-		else {
+		} else {
 			assertTrue("FileNotFound exception was *not* thrown as expected", false);
 		}
 
@@ -173,17 +171,24 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 			IDocumentPartitioner setupPartitioner = document.getDocumentPartitioner();
 			assertTrue("wrong partitioner in document.", expectedPartioner.isInstance(setupPartitioner));
 
-			InputStream inStream = file.getContents();
-			model.reload(inStream);
-			assertNotNull(model);
-			IStructuredDocument documentReloaded = model.getStructuredDocument();
-			// note: NOT same instance of document
-			// FIXME: this test has to be changed back, once the reload API is 
-			// fixed to work with different document.
-			//assertFalse(document == documentReloaded);
-			assertTrue(document == documentReloaded);
-		}
-		finally {
+			InputStream inStream = null;
+			try {
+				inStream = file.getContents();
+				model.reload(inStream);
+				assertNotNull(model);
+				IStructuredDocument documentReloaded = model.getStructuredDocument();
+				// note: NOT same instance of document
+				// FIXME: this test has to be changed back, once the reload
+				// API is
+				// fixed to work with different document.
+				// assertFalse(document == documentReloaded);
+				assertTrue(document == documentReloaded);
+			} finally {
+				if (inStream != null) {
+					inStream.close();
+				}
+			}
+		} finally {
 			if (model != null)
 				model.releaseFromEdit();
 		}
@@ -215,8 +220,7 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 			assertTrue("wrong class of document", expectedDocumentClass.isInstance(document));
 			IDocumentPartitioner setupPartitioner = document.getDocumentPartitioner();
 			assertTrue("wrong partitioner in document.", expectedPartioner.isInstance(setupPartitioner));
-		}
-		finally {
+		} finally {
 			if (model != null)
 				model.releaseFromEdit();
 		}

@@ -12,6 +12,7 @@ package org.eclipse.wst.xml.tests.encoding.read;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import junit.framework.TestCase;
 
@@ -33,12 +34,12 @@ import org.eclipse.wst.xml.tests.encoding.util.ProjectUnzipUtility;
 
 
 public class TestContentTypeDetection extends TestCase {
-	//	private final String fileDir = "html/";
-	//	private final String fileRoot =
+	// private final String fileDir = "html/";
+	// private final String fileRoot =
 	// "/builds/Workspaces/HeadWorkspace/org.eclipse.wst.xml.tests.encoding/";
-	//	private final String fileLocation = fileRoot + fileDir;
+	// private final String fileLocation = fileRoot + fileDir;
 	private static final boolean DEBUG = false;
-	//private static final boolean DEBUG_TEST_DETAIL = false;
+	// private static final boolean DEBUG_TEST_DETAIL = false;
 	static IProject fTestProject;
 	// needs to be static, since JUnit creates difference instances for each
 	// test
@@ -66,8 +67,7 @@ public class TestContentTypeDetection extends TestCase {
 				project.open(monitor);
 				monitor = null;
 			}
-		}
-		finally {
+		} finally {
 			if (monitor != null) {
 				monitor.done();
 			}
@@ -75,46 +75,55 @@ public class TestContentTypeDetection extends TestCase {
 	}
 
 	private static void getAndCreateProject() throws CoreException {
-		//TestsPlugin testsPlugin = (TestsPlugin)
+		// TestsPlugin testsPlugin = (TestsPlugin)
 		// Platform.getPlugin("org.eclipse.wst.xml.tests.encoding");
 		IWorkspace workspace = TestsPlugin.getWorkspace();
 		IWorkspaceRoot root = workspace.getRoot();
 		fTestProject = root.getProject(TEST_PROJECT_NAME);
 		// this form creates project as "linked" back to 'fileRoot'
-		//createProject(testProject, new Path(fileRoot), null);
+		// createProject(testProject, new Path(fileRoot), null);
 		createProject(fTestProject, null, null);
 		fTestProject.refreshLocal(IResource.DEPTH_INFINITE, null);
 		assertTrue(fTestProject.exists());
-		//		IContainer dotestFiles = testProject.getFolder("dotestFiles");
-		//		assertTrue(dotestFiles.exists());
-		//		IResource[] allFolders = dotestFiles.members();
-		//		assertNotNull(allFolders);
+		// IContainer dotestFiles = testProject.getFolder("dotestFiles");
+		// assertTrue(dotestFiles.exists());
+		// IResource[] allFolders = dotestFiles.members();
+		// assertNotNull(allFolders);
 	}
 
 	public static void main(String[] args) {
-		//		try {
-		//			new TestCodedReader().doAllFiles();
-		//		} catch (CoreException e) {
-		//			e.printStackTrace();
-		//		} catch (IOException e) {
-		//			e.printStackTrace();
-		//		}
+		// try {
+		// new TestCodedReader().doAllFiles();
+		// } catch (CoreException e) {
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// }
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	public TestContentTypeDetection() {
 		super();
-		//System.out.println(currentPlatformCharset);
+		// System.out.println(currentPlatformCharset);
 	}
 
 	protected void doTest(String expectedContentType, String filePath, Class expectedException) throws CoreException, IOException {
 		IFile file = (IFile) fTestProject.findMember(filePath);
 		assertNotNull("Error in test case: file not found: " + filePath, file);
+
 		IContentDescription contentDescription = file.getContentDescription();
 		if (contentDescription == null) {
-			contentDescription = Platform.getContentTypeManager().getDescriptionFor(file.getContents(), file.getName(), IContentDescription.ALL);
+			InputStream inputStream = null;
+			try {
+				inputStream = file.getContents();
+				contentDescription = Platform.getContentTypeManager().getDescriptionFor(inputStream, file.getName(), IContentDescription.ALL);
+			} finally {
+				if (inputStream != null) {
+					inputStream.close();
+				}
+			}
 		}
 		assertNotNull("content description was null", contentDescription);
 		IContentType contentType = contentDescription.getContentType();
@@ -146,19 +155,19 @@ public class TestContentTypeDetection extends TestCase {
 		nSetups--;
 		if (nSetups == 0) {
 			if (!DEBUG) {
-				//				Display display = PlatformUI.getWorkbench().getDisplay();
-				//				display.asyncExec(new Runnable() {
-				//					public void run() {
-				//						ProjectUnzipUtility projUtil = new ProjectUnzipUtility();
-				//						IProject proj = fTestProject;
-				//						fTestProject = null;
-				//						try {
-				//							projUtil.deleteProject(proj);
-				//						} catch (Exception e) {
-				//							e.printStackTrace();
-				//						}
-				//					}
-				//				});
+				// Display display = PlatformUI.getWorkbench().getDisplay();
+				// display.asyncExec(new Runnable() {
+				// public void run() {
+				// ProjectUnzipUtility projUtil = new ProjectUnzipUtility();
+				// IProject proj = fTestProject;
+				// fTestProject = null;
+				// try {
+				// projUtil.deleteProject(proj);
+				// } catch (Exception e) {
+				// e.printStackTrace();
+				// }
+				// }
+				// });
 			}
 		}
 	}
@@ -178,247 +187,274 @@ public class TestContentTypeDetection extends TestCase {
 	}
 
 	public void testFile1003() throws CoreException, IOException {
-		doTest("org.eclipse.wst.css.core.csssource",  "testfiles/css/encoding_test_jis.css", null);
+		doTest("org.eclipse.wst.css.core.csssource", "testfiles/css/encoding_test_jis.css", null);
 	}
 
 	public void testFile101() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/regressionTestFiles/defect224293/testshiftjisXmlSyntax.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/regressionTestFiles/defect224293/testshiftjisXmlSyntax.jsp", null);
 	}
 
 	public void testFile102() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/regressionTestFiles/defect229667/audi.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/regressionTestFiles/defect229667/audi.jsp", null);
 	}
 
-//	public void testFile103() throws CoreException, IOException {
-//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/EmptyFile.xml", null);
-//	}
-//
-//	public void testFile104() throws CoreException, IOException {
-//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/eucjp.xml", null);
-//	}
-//
-//	public void testFile105() throws CoreException, IOException {
-//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/IllformedNormalNonDefault.xml", null);
-//	}
-//
-//	public void testFile106() throws CoreException, IOException {
-//		doTest("org.eclipse.wst.xml.core.xmlsource", "testfiles/xml/MalformedNoEncoding.xml", null);
-//	}
-//
-//	public void testFile107() throws CoreException, IOException {
-//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/MalformedNoEncoding.xsl", null);
-//	}
-//
-//	public void testFile108() throws CoreException, IOException {
-//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/NoEncoding.xml", null);
-//	}
-//
-//	public void testFile109() throws CoreException, IOException {
-//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/NormalNonDefault.xml", null);
-//	}
-//
-//
-//	public void testFile110() throws CoreException, IOException {
-//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/shiftjis.xml", null);
-//	}
-//
-//	public void testFile111() throws CoreException, IOException {
-//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testExtraJunk.xml", null);
-//	}
-//
-//	public void testFile112() throws CoreException, IOException {
-//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testExtraValidStuff.xml", null);
-//	}
-//
-//	public void testFile113() throws CoreException, IOException {
-//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testIllFormed.xml", null);
-//	}
-//
-//	public void testFile114() throws CoreException, IOException {
-//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testIllFormed2.xml", null);
-//	}
-//
-//	public void testFile115() throws CoreException, IOException {
-//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testIllFormed3.xml", java.nio.charset.IllegalCharsetNameException.class);
-//	}
-//
-//	public void testFile116() throws CoreException, IOException {
-//		doTest("org.eclipse.wst.xml.core.xmlsource", "testfiles/xml/testIllFormed4.xml", null);
-//	}
-//
-//	public void testFile117() throws CoreException, IOException {
-//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testMultiLine.xml", null);
-//	}
-//
-//	public void testFile118() throws CoreException, IOException {
-//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testNoEncodingValue.xml", null);
-//	}
-//
-//	public void testFile119() throws CoreException, IOException {
-//		doTest("org.eclipse.wst.xml.core.xmlsource", "testfiles/xml/testNormalCase.xml", null);
-//	}
-//
-//	public void testFile120() throws CoreException, IOException {
-//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testNoXMLDecl.xml", null);
-//	}
-//
-//	public void testFile121() throws CoreException, IOException {
-//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testNoXMLDeclAtFirst.xml", null);
-//	}
-//
-//	public void testFile122() throws CoreException, IOException {
-//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testNoXMLDeclInLargeFile.xml", null);
-//	}
-//
-//	public void testFile123() throws CoreException, IOException {
-//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/testUTF16.xml", null);
-//	}
-//
-//	public void testFile124() throws CoreException, IOException {
-//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/UTF16LEAtStartOfLargeFile.xml", null);
-//	}
-//
-//	public void testFile125() throws CoreException, IOException {
-//		doTest("org.eclipse.wst.xml.core.xmlsource", "testfiles/xml/utf16UnicodeStreamWithNoEncodingInHeader2.xml", null);
-//	}
-//
-//	public void testFile126() throws CoreException, IOException {
-//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/utf16UnicodeStreamWithNoEncodingInHeaderBE.xml", null);
-//	}
-//
-//	public void testFile127() throws CoreException, IOException {
-//		doTest("org.eclipse.wst.xml.core.xmlsource",  "testfiles/xml/utf16WithJapaneseChars.xml", null);
-//	}
-//
-//	public void testFile128() throws CoreException, IOException {
-//		doTest("org.eclipse.wst.xml.core.xmlsource", "testfiles/xml/UTF8With3ByteBOM.xml", null);
-//	}
+	// public void testFile103() throws CoreException, IOException {
+	// doTest("org.eclipse.wst.xml.core.xmlsource",
+	// "testfiles/xml/EmptyFile.xml", null);
+	// }
+	//
+	// public void testFile104() throws CoreException, IOException {
+	// doTest("org.eclipse.wst.xml.core.xmlsource", "testfiles/xml/eucjp.xml",
+	// null);
+	// }
+	//
+	// public void testFile105() throws CoreException, IOException {
+	// doTest("org.eclipse.wst.xml.core.xmlsource",
+	// "testfiles/xml/IllformedNormalNonDefault.xml", null);
+	// }
+	//
+	// public void testFile106() throws CoreException, IOException {
+	// doTest("org.eclipse.wst.xml.core.xmlsource",
+	// "testfiles/xml/MalformedNoEncoding.xml", null);
+	// }
+	//
+	// public void testFile107() throws CoreException, IOException {
+	// doTest("org.eclipse.wst.xml.core.xmlsource",
+	// "testfiles/xml/MalformedNoEncoding.xsl", null);
+	// }
+	//
+	// public void testFile108() throws CoreException, IOException {
+	// doTest("org.eclipse.wst.xml.core.xmlsource",
+	// "testfiles/xml/NoEncoding.xml", null);
+	// }
+	//
+	// public void testFile109() throws CoreException, IOException {
+	// doTest("org.eclipse.wst.xml.core.xmlsource",
+	// "testfiles/xml/NormalNonDefault.xml", null);
+	// }
+	//
+	//
+	// public void testFile110() throws CoreException, IOException {
+	// doTest("org.eclipse.wst.xml.core.xmlsource",
+	// "testfiles/xml/shiftjis.xml", null);
+	// }
+	//
+	// public void testFile111() throws CoreException, IOException {
+	// doTest("org.eclipse.wst.xml.core.xmlsource",
+	// "testfiles/xml/testExtraJunk.xml", null);
+	// }
+	//
+	// public void testFile112() throws CoreException, IOException {
+	// doTest("org.eclipse.wst.xml.core.xmlsource",
+	// "testfiles/xml/testExtraValidStuff.xml", null);
+	// }
+	//
+	// public void testFile113() throws CoreException, IOException {
+	// doTest("org.eclipse.wst.xml.core.xmlsource",
+	// "testfiles/xml/testIllFormed.xml", null);
+	// }
+	//
+	// public void testFile114() throws CoreException, IOException {
+	// doTest("org.eclipse.wst.xml.core.xmlsource",
+	// "testfiles/xml/testIllFormed2.xml", null);
+	// }
+	//
+	// public void testFile115() throws CoreException, IOException {
+	// doTest("org.eclipse.wst.xml.core.xmlsource",
+	// "testfiles/xml/testIllFormed3.xml",
+	// java.nio.charset.IllegalCharsetNameException.class);
+	// }
+	//
+	// public void testFile116() throws CoreException, IOException {
+	// doTest("org.eclipse.wst.xml.core.xmlsource",
+	// "testfiles/xml/testIllFormed4.xml", null);
+	// }
+	//
+	// public void testFile117() throws CoreException, IOException {
+	// doTest("org.eclipse.wst.xml.core.xmlsource",
+	// "testfiles/xml/testMultiLine.xml", null);
+	// }
+	//
+	// public void testFile118() throws CoreException, IOException {
+	// doTest("org.eclipse.wst.xml.core.xmlsource",
+	// "testfiles/xml/testNoEncodingValue.xml", null);
+	// }
+	//
+	// public void testFile119() throws CoreException, IOException {
+	// doTest("org.eclipse.wst.xml.core.xmlsource",
+	// "testfiles/xml/testNormalCase.xml", null);
+	// }
+	//
+	// public void testFile120() throws CoreException, IOException {
+	// doTest("org.eclipse.wst.xml.core.xmlsource",
+	// "testfiles/xml/testNoXMLDecl.xml", null);
+	// }
+	//
+	// public void testFile121() throws CoreException, IOException {
+	// doTest("org.eclipse.wst.xml.core.xmlsource",
+	// "testfiles/xml/testNoXMLDeclAtFirst.xml", null);
+	// }
+	//
+	// public void testFile122() throws CoreException, IOException {
+	// doTest("org.eclipse.wst.xml.core.xmlsource",
+	// "testfiles/xml/testNoXMLDeclInLargeFile.xml", null);
+	// }
+	//
+	// public void testFile123() throws CoreException, IOException {
+	// doTest("org.eclipse.wst.xml.core.xmlsource",
+	// "testfiles/xml/testUTF16.xml", null);
+	// }
+	//
+	// public void testFile124() throws CoreException, IOException {
+	// doTest("org.eclipse.wst.xml.core.xmlsource",
+	// "testfiles/xml/UTF16LEAtStartOfLargeFile.xml", null);
+	// }
+	//
+	// public void testFile125() throws CoreException, IOException {
+	// doTest("org.eclipse.wst.xml.core.xmlsource",
+	// "testfiles/xml/utf16UnicodeStreamWithNoEncodingInHeader2.xml", null);
+	// }
+	//
+	// public void testFile126() throws CoreException, IOException {
+	// doTest("org.eclipse.wst.xml.core.xmlsource",
+	// "testfiles/xml/utf16UnicodeStreamWithNoEncodingInHeaderBE.xml", null);
+	// }
+	//
+	// public void testFile127() throws CoreException, IOException {
+	// doTest("org.eclipse.wst.xml.core.xmlsource",
+	// "testfiles/xml/utf16WithJapaneseChars.xml", null);
+	// }
+	//
+	// public void testFile128() throws CoreException, IOException {
+	// doTest("org.eclipse.wst.xml.core.xmlsource",
+	// "testfiles/xml/UTF8With3ByteBOM.xml", null);
+	// }
 
 
 	public void testFile4() throws CoreException, IOException {
-		doTest("org.eclipse.wst.css.core.csssource",  "testfiles/css/encoding_test_sjis.css", null);
+		doTest("org.eclipse.wst.css.core.csssource", "testfiles/css/encoding_test_sjis.css", null);
 	}
 
 
 	public void testFile5() throws CoreException, IOException {
-		doTest("org.eclipse.wst.css.core.csssource",  "testfiles/css/noEncoding.css", null);
+		doTest("org.eclipse.wst.css.core.csssource", "testfiles/css/noEncoding.css", null);
 	}
 
 
 	public void testFile57() throws CoreException, IOException {
-		doTest("org.eclipse.wst.html.core.htmlsource",  "testfiles/html/EmptyFile.html", null);
+		doTest("org.eclipse.wst.html.core.htmlsource", "testfiles/html/EmptyFile.html", null);
 	}
 
 	public void testFile58() throws CoreException, IOException {
-		doTest("org.eclipse.wst.html.core.htmlsource",  "testfiles/html/IllformedNormalNonDefault.html", null);
+		doTest("org.eclipse.wst.html.core.htmlsource", "testfiles/html/IllformedNormalNonDefault.html", null);
 	}
 
 	public void testFile59() throws CoreException, IOException {
-		doTest("org.eclipse.wst.html.core.htmlsource",  "testfiles/html/LargeNoEncoding.html", null);
+		doTest("org.eclipse.wst.html.core.htmlsource", "testfiles/html/LargeNoEncoding.html", null);
 	}
 
 	public void testFile6() throws CoreException, IOException {
-		doTest("org.eclipse.wst.css.core.csssource",  "testfiles/css/nonStandard.css", null);
+		doTest("org.eclipse.wst.css.core.csssource", "testfiles/css/nonStandard.css", null);
 	}
 
 	public void testFile60() throws CoreException, IOException {
-		doTest("org.eclipse.wst.html.core.htmlsource",  "testfiles/html/LargeNonDefault.html", null);
+		doTest("org.eclipse.wst.html.core.htmlsource", "testfiles/html/LargeNonDefault.html", null);
 	}
 
 	public void testFile61() throws CoreException, IOException {
-		doTest("org.eclipse.wst.html.core.htmlsource",  "testfiles/html/MultiNonDefault.html", null);
+		doTest("org.eclipse.wst.html.core.htmlsource", "testfiles/html/MultiNonDefault.html", null);
 	}
 
 	public void testFile62() throws CoreException, IOException {
-		doTest("org.eclipse.wst.html.core.htmlsource",  "testfiles/html/NoEncoding.html", null);
+		doTest("org.eclipse.wst.html.core.htmlsource", "testfiles/html/NoEncoding.html", null);
 	}
 
 	public void testFile63() throws CoreException, IOException {
-		doTest("org.eclipse.wst.html.core.htmlsource",  "testfiles/html/noquotes.html", null);
+		doTest("org.eclipse.wst.html.core.htmlsource", "testfiles/html/noquotes.html", null);
 	}
 
 	public void testFile64() throws CoreException, IOException {
-		doTest("org.eclipse.wst.html.core.htmlsource",  "testfiles/html/NormalNonDefault.html", null);
+		doTest("org.eclipse.wst.html.core.htmlsource", "testfiles/html/NormalNonDefault.html", null);
 	}
 
 	public void testFile65() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/EmptyFile.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/EmptyFile.jsp", null);
 	}
 
 	public void testFile66() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/IllformedNormalNonDefault.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/IllformedNormalNonDefault.jsp", null);
 	}
 
 	public void testFile67() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/inValidEncodingValue.jsp", org.eclipse.wst.common.encoding.exceptions.UnsupportedCharsetExceptionWithDetail.class);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/inValidEncodingValue.jsp", org.eclipse.wst.common.encoding.exceptions.UnsupportedCharsetExceptionWithDetail.class);
 	}
 
 	public void testFile68() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/javaEncodingValue.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/javaEncodingValue.jsp", null);
 	}
 
 	public void testFile69() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/MalformedNoEncoding.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/MalformedNoEncoding.jsp", null);
 	}
 
 	public void testFile7() throws CoreException, IOException {
-		doTest("org.eclipse.wst.css.core.csssource",  "testfiles/css/nonStandardIllFormed.css", null);
+		doTest("org.eclipse.wst.css.core.csssource", "testfiles/css/nonStandardIllFormed.css", null);
 	}
 
 	public void testFile70() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/MalformedNoEncodingXSL.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/MalformedNoEncodingXSL.jsp", null);
 	}
 
 	public void testFile71() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/noEncoding.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/noEncoding.jsp", null);
 	}
 
 	public void testFile72() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/NoEncodinginXMLDecl.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/NoEncodinginXMLDecl.jsp", null);
 	}
 
 	public void testFile73() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/nomalDirectiveCase.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/nomalDirectiveCase.jsp", null);
 	}
 
 	public void testFile74() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/nomalDirectiveCaseNoEncoding.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/nomalDirectiveCaseNoEncoding.jsp", null);
 	}
 
 	public void testFile75() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/nomalDirectiveCaseUsingCharset.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/nomalDirectiveCaseUsingCharset.jsp", null);
 	}
 
 	public void testFile76() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/nomalDirectiveCaseUsingXMLSyntax.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/nomalDirectiveCaseUsingXMLSyntax.jsp", null);
 	}
 
 	public void testFile77() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/NormalNonDefault.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/NormalNonDefault.jsp", null);
 	}
 
 	public void testFile78() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/NormalNonDefaultWithXMLDecl.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/NormalNonDefaultWithXMLDecl.jsp", null);
 	}
 
 	public void testFile79() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/NormalPageCaseNonDefault.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/NormalPageCaseNonDefault.jsp", null);
 	}
 
 	public void testFile8() throws CoreException, IOException {
-		doTest("org.eclipse.wst.css.core.csssource",  "testfiles/css/nonStandardIllFormed2.css", null);
+		doTest("org.eclipse.wst.css.core.csssource", "testfiles/css/nonStandardIllFormed2.css", null);
 	}
 
 	public void testFile80() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/SelColBeanRow12ResultsForm.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/SelColBeanRow12ResultsForm.jsp", null);
 	}
 
 	public void testFile81() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/testBrokenLine.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/testBrokenLine.jsp", null);
 	}
 
 	public void testFile82() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/testDefaultEncoding.jsp", org.eclipse.wst.common.encoding.exceptions.UnsupportedCharsetExceptionWithDetail.class);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/testDefaultEncoding.jsp", org.eclipse.wst.common.encoding.exceptions.UnsupportedCharsetExceptionWithDetail.class);
 	}
 
 	public void testFile83() throws CoreException, IOException {
@@ -426,7 +462,7 @@ public class TestContentTypeDetection extends TestCase {
 	}
 
 	public void testFile84() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/testExtraJunk.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/testExtraJunk.jsp", null);
 	}
 
 	public void testFile85() throws CoreException, IOException {
@@ -434,11 +470,11 @@ public class TestContentTypeDetection extends TestCase {
 	}
 
 	public void testFile86() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/testIllFormed.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/testIllFormed.jsp", null);
 	}
 
 	public void testFile87() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/testIllFormed2.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/testIllFormed2.jsp", null);
 	}
 
 	public void testFile88() throws CoreException, IOException {
@@ -446,20 +482,20 @@ public class TestContentTypeDetection extends TestCase {
 	}
 
 	public void testFile89() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/testNoPageDirective.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/testNoPageDirective.jsp", null);
 	}
 
 
 	public void testFile90() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/testNoPageDirectiveAtFirst.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/testNoPageDirectiveAtFirst.jsp", null);
 	}
 
 	public void testFile91() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/testNoPageDirectiveInLargeFile.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/testNoPageDirectiveInLargeFile.jsp", null);
 	}
 
 	public void testFile92() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/testNormalCase.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/testNormalCase.jsp", null);
 	}
 
 	public void testFile93() throws CoreException, IOException {
@@ -471,23 +507,23 @@ public class TestContentTypeDetection extends TestCase {
 	}
 
 	public void testFile95() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/utf16UnicodeStreamWithNoEncodingInHeaderBE.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/utf16UnicodeStreamWithNoEncodingInHeaderBE.jsp", null);
 	}
 
 	public void testFile96() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/utf16WithJapaneseChars.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/utf16WithJapaneseChars.jsp", null);
 	}
 
 	public void testFile97() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/UTF8With3ByteBOM.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/UTF8With3ByteBOM.jsp", null);
 	}
 
 	public void testFile98() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/jsp/WellFormedNormalNonDefault.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/jsp/WellFormedNormalNonDefault.jsp", null);
 	}
 
 	public void testFile99() throws CoreException, IOException {
-		doTest("org.eclipse.jst.jsp.core.jspsource",  "testfiles/regressionTestFiles/defect223365/SelColBeanRow12ResultsForm.jsp", null);
+		doTest("org.eclipse.jst.jsp.core.jspsource", "testfiles/regressionTestFiles/defect223365/SelColBeanRow12ResultsForm.jsp", null);
 	}
 
 }
