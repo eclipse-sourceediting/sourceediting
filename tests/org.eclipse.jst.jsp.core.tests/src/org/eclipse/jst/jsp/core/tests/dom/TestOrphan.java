@@ -66,7 +66,7 @@ public class TestOrphan extends TestCase {
 		String attrValue = attr.getValue();
 		Logger.trace(fCategory, "attrValue: " + attrValue);
 		doc.appendChild(element);
-		boolean isJspValue = attr.hasJSPValue();
+		boolean isJspValue = attr.hasNestedValue();
 		Logger.trace(fCategory, "isJspValue: " + isJspValue);
 		assertFalse(isJspValue);
 	}
@@ -80,7 +80,7 @@ public class TestOrphan extends TestCase {
 		String attrValue = attr.getValue();
 		Logger.trace(fCategory, "attrValue: " + attrValue);
 		doc.appendChild(element);
-		boolean isJspValue = attr.hasJSPValue();
+		boolean isJspValue = attr.hasNestedValue();
 		Logger.trace(fCategory, "isJspValue: " + isJspValue);
 		assertTrue(isJspValue);
 	}
@@ -94,7 +94,7 @@ public class TestOrphan extends TestCase {
 		String attrValue = attr.getValue();
 		Logger.trace(fCategory, "attrValue: " + attrValue);
 		jspDoc.appendChild(commonElement);
-		boolean isJspValue = attr.hasJSPValue();
+		boolean isJspValue = attr.hasNestedValue();
 		Logger.trace(fCategory, "isJspValue: " + isJspValue);
 		assertTrue(isJspValue);
 		Document htmlDoc = getHTMLDoc();
@@ -104,7 +104,7 @@ public class TestOrphan extends TestCase {
 		// element to an html document. This error/exception is not
 		// normally printed out, but is if 'debug' is turned on.
 		htmlDoc.appendChild(commonElement);
-		isJspValue = attr.hasJSPValue();
+		isJspValue = attr.hasNestedValue();
 		Logger.trace(fCategory, "isJspValue: " + isJspValue);
 		assertFalse(isJspValue);
 	}
@@ -118,7 +118,7 @@ public class TestOrphan extends TestCase {
 		String attrValue = attr.getValue();
 		Logger.trace(fCategory, "attrValue: " + attrValue);
 		htmlDoc.appendChild(commonElement);
-		boolean isJspValue = attr.hasJSPValue();
+		boolean isJspValue = attr.hasNestedValue();
 		Logger.trace(fCategory, "isJspValue: " + isJspValue);
 		assertFalse(isJspValue);
 		Document jspDoc = getJSPDoc();
@@ -134,7 +134,7 @@ public class TestOrphan extends TestCase {
 		attr = (AttrImpl) commonElement.getAttributeNode("src");
 		attrValue = attr.getValue();
 		Logger.trace(fCategory, "attrValue: " + attrValue);
-		isJspValue = attr.hasJSPValue();
+		isJspValue = attr.hasNestedValue();
 		Logger.trace(fCategory, "isJspValue: " + isJspValue);
 		assertTrue(isJspValue);
 	}

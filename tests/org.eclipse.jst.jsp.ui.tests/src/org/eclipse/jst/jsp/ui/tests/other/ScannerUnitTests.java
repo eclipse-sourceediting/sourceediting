@@ -19,6 +19,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
+import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
 import org.eclipse.jst.jsp.core.modelhandler.ModelHandlerForJSP;
 import org.eclipse.jst.jsp.ui.tests.JSPUITestsPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
@@ -33,7 +34,6 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.core.modelhandler.ModelHandlerForXML;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 
