@@ -107,10 +107,16 @@ public class JarUtilities {
 					buffer.write(bytes, 0, c);
 				}
 				cache = new ByteArrayInputStream(buffer.toByteArray());
-				entryInputStream.close();
 			}
 			catch (IOException ioe) {
 				// no cleanup can be done
+			}
+			finally {
+				try {
+					entryInputStream.close();
+				}
+				catch (IOException e) {
+				}
 			}
 		}
 		// }
