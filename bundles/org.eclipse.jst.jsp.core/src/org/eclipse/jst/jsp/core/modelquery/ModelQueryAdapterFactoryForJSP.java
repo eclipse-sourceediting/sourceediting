@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.modelquery;
 
+import java.io.File;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
@@ -69,9 +71,12 @@ public class ModelQueryAdapterFactoryForJSP extends AbstractAdapterFactory imple
 				if(baseLocation != null) {
 					stateNotifier.addModelStateListener(this);
 					CMDocumentCache cmDocumentCache = new CMDocumentCache();
-					IFile baseFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(model.getBaseLocation()));
-					if (baseFile != null) {
-						baseLocation = baseFile.getLocation().toString();
+					File file = new Path(model.getBaseLocation()).toFile();
+					if(file.exists()) {
+						baseLocation = file.getAbsolutePath();
+					}
+					else {
+						baseLocation = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(model.getBaseLocation()).toString();
 					}
 					IdResolver resolver = new XMLCatalogIdResolver(baseLocation, model.getResolver());
 	

@@ -14,6 +14,8 @@ package org.eclipse.wst.xml.core.modelquery;
 
 
 
+import java.io.File;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
@@ -86,12 +88,12 @@ public class ModelQueryAdapterFactoryForXML extends AbstractAdapterFactory imple
 				IStructuredModel model = stateNotifier = xmlNode.getModel();
 				stateNotifier.addModelStateListener(this);
 				String baseLocation = null;
-				IFile baseFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(model.getBaseLocation()));
-				if(baseFile != null) {
-					baseLocation = baseFile.getLocation().toString();
+				File file = new Path(model.getBaseLocation()).toFile();
+				if(file.exists()) {
+					baseLocation = file.getAbsolutePath();
 				}
 				else {
-					baseLocation = model.getBaseLocation();
+					baseLocation = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(model.getBaseLocation()).toString();
 				}
 				if (org.eclipse.wst.sse.core.util.Debug.displayInfo)
 					System.out.println("----------------ModelQueryAdapterFactoryForXML... baseLocation : " + baseLocation); //$NON-NLS-1$
