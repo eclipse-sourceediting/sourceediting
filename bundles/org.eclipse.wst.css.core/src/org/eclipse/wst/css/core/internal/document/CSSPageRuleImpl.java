@@ -15,7 +15,6 @@ package org.eclipse.wst.css.core.internal.document;
 import org.eclipse.wst.css.core.document.ICSSNode;
 import org.eclipse.wst.css.core.document.ICSSPageRule;
 import org.eclipse.wst.css.core.document.ICSSSelectorList;
-import org.w3c.dom.DOMException;
 
 
 /**
@@ -81,7 +80,7 @@ class CSSPageRuleImpl extends CSSRuleDeclContainer implements ICSSPageRule {
 	/**
 	 * The parsable textual representation of the page selector for the rule.
 	 * 
-	 * @exception DOMException
+	 * @exception org.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the specified CSS string value has
 	 *                a syntax error and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this rule is

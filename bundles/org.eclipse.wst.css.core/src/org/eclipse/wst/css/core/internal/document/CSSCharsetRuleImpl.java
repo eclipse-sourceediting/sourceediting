@@ -16,7 +16,6 @@ import org.eclipse.wst.css.core.document.ICSSCharsetRule;
 import org.eclipse.wst.css.core.document.ICSSNode;
 import org.eclipse.wst.css.core.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.css.core.util.CSSUtil;
-import org.w3c.dom.DOMException;
 
 
 /**
@@ -52,7 +51,7 @@ class CSSCharsetRuleImpl extends CSSRuleImpl implements ICSSCharsetRule {
 
 	/**
 	 * The encoding information used in this <code>@charset</code> rule.
-	 * @exception DOMException
+	 * @exception org.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the specified encoding value has a
 	 *                syntax error and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this encoding

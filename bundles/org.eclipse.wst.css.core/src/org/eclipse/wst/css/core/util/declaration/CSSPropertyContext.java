@@ -22,7 +22,6 @@ import org.eclipse.wst.css.core.document.ICSSStyleDeclaration;
 import org.eclipse.wst.css.core.document.ICSSValue;
 import org.eclipse.wst.css.core.internal.contentmodel.PropCMProperty;
 import org.eclipse.wst.css.core.internal.contentmodel.PropCMSubProperty;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.css.CSSValue;
 
 
@@ -199,7 +198,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the azimuth property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exception org.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -212,7 +211,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the background property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exception org.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -225,7 +224,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the background-attachment property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exception org.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -238,7 +237,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the background-color property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -251,7 +250,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the background-image property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -264,7 +263,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the background-position property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -330,7 +329,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the background-repeat property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exception org.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -343,7 +342,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the border property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -356,7 +355,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the border-bottom property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -369,7 +368,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the border-bottom-color property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -382,7 +381,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the border-bottom-style property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -395,7 +394,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the border-bottom-width property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -408,7 +407,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the border-collapse property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -421,7 +420,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the border-color property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -434,7 +433,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the border-left property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -447,7 +446,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the border-left-color property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -460,7 +459,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the border-left-style property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -473,7 +472,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the border-left-width property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -486,7 +485,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the border-right property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -499,7 +498,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the border-right-color property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -512,7 +511,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the border-right-style property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -525,7 +524,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the border-right-width property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -538,7 +537,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the border-spacing property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -551,7 +550,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the border-style property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -564,7 +563,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the border-top property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -577,7 +576,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the border-top-color property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -590,7 +589,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the border-top-style property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -603,7 +602,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the border-top-width property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -616,7 +615,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the border-width property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -629,7 +628,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the bottom property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -642,7 +641,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the caption-side property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -655,7 +654,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the clear property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -668,7 +667,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the clip property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -709,7 +708,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the color property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -722,7 +721,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the content property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -735,7 +734,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the counter-increment property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -748,7 +747,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the counter-reset property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -761,7 +760,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the float property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -774,7 +773,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the cue property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -787,7 +786,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the cue-after property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -800,7 +799,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the cue-before property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -813,7 +812,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the cursor property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -826,7 +825,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the direction property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -839,7 +838,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the display property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -852,7 +851,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the elevation property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -865,7 +864,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the empty-cells property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -878,7 +877,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the font property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -891,7 +890,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the font-family property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -904,7 +903,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the font-size property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -917,7 +916,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the font-size-adjust property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -930,7 +929,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the font-stretch property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -943,7 +942,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the font-style property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -956,7 +955,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the font-variant property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -969,7 +968,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the font-weight property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -982,7 +981,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the height property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -995,7 +994,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the left property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1008,7 +1007,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the letter-spacing property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1021,7 +1020,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the line-height property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1034,7 +1033,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the list-style property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1047,7 +1046,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the list-style-image property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1060,7 +1059,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the list-style-position property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1073,7 +1072,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the list-style-type property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1086,7 +1085,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the margin property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1099,7 +1098,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the margin-bottom property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1112,7 +1111,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the margin-left property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1125,7 +1124,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the margin-right property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1138,7 +1137,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the margin-top property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1151,7 +1150,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the marker-offset property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1164,7 +1163,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the marks property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1177,7 +1176,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the max-height property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1190,7 +1189,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the max-width property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1203,7 +1202,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the min-height property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1216,7 +1215,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the min-width property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1229,7 +1228,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the orphans property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1242,7 +1241,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the outline property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1255,7 +1254,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the outline-color property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1268,7 +1267,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the outline-style property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1281,7 +1280,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the outline-width property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1294,7 +1293,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the overflow property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1307,7 +1306,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the padding property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1320,7 +1319,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the padding-bottom property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1333,7 +1332,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the padding-left property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1346,7 +1345,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the padding-right property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1359,7 +1358,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the padding-top property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1372,7 +1371,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the page property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1385,7 +1384,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the page-break-after property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1398,7 +1397,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the page-break-before property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1411,7 +1410,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the page-break-inside property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1424,7 +1423,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the pause property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1437,7 +1436,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the pause-after property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1450,7 +1449,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the pause-before property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1463,7 +1462,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the pitch property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1476,7 +1475,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the pitch-range property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1489,7 +1488,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the play-during property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1502,7 +1501,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the position property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1515,7 +1514,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the quotes property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1528,7 +1527,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the richness property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1541,7 +1540,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the right property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1562,7 +1561,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the size property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1575,7 +1574,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the speak property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1588,7 +1587,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the speak-header property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1601,7 +1600,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the speak-numeral property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1614,7 +1613,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the speak-punctuation property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1627,7 +1626,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the speech-rate property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1640,7 +1639,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the stress property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1653,7 +1652,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the table-layout property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1666,7 +1665,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the text-align property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1679,7 +1678,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the text-decoration property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1692,7 +1691,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the text-indent property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1705,7 +1704,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the text-shadow property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1718,7 +1717,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the text-transform property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1731,7 +1730,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the top property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1744,7 +1743,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the unicode-bidi property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1757,7 +1756,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the vertical-align property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1770,7 +1769,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the visibility property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1783,7 +1782,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the voice-family property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1796,7 +1795,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the volume property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1809,7 +1808,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the white-space property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1822,7 +1821,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the widows property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1835,7 +1834,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the width property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1848,7 +1847,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the word-spacing property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
@@ -1861,7 +1860,7 @@ public class CSSPropertyContext implements ICSS2Properties {
 	/**
 	 * See the z-index property definition in CSS2.
 	 * 
-	 * @exception DOMException
+	 * @exceptionorg.w3c.dom.DOMException
 	 *                SYNTAX_ERR: Raised if the new value has a syntax error
 	 *                and is unparsable. <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this property is
