@@ -45,7 +45,7 @@
          id="org.eclipse.wst.sse.html.core.builderdelegate.todo"
          point="org.eclipse.wst.sse.core.builderdelegate">
       <participant
-            class="org.eclipse.wst.sse.core.xml.builder.delegates.XMLTaskTagSeeker"
+            class="org.eclipse.wst.xml.core.builder.delegates.XMLTaskTagSeeker"
             contentType="org.eclipse.wst.html.core.htmlsource">
       </participant>
    </extension>
