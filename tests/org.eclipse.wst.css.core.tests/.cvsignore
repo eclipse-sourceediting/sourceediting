@@ -1,0 +1,5 @@
+bin
+build.xml
+dev.properties
+temp.folder
+tests.jar

@@ -1,0 +1,41 @@
+[0, 23] (@import url("hoge.css"))
+    CSSContextRegion--> IMPORT: 0-7/8, CSSContextRegion--> URI: 8-23, 
+[23, 24] (;)
+    CSSContextRegion--> DELIMITER: 0-1, 
+[24, 26] (
+)
+    CSSContextRegion--> S: 0-2, 
+[26, 61] (@import /* comment */ url(hoge.css))
+    CSSContextRegion--> IMPORT: 0-7/8, CSSContextRegion--> COMMENT: 8-21/22, CSSContextRegion--> URI: 22-35, 
+[61, 62] (;)
+    CSSContextRegion--> DELIMITER: 0-1, 
+[62, 64] (
+)
+    CSSContextRegion--> S: 0-2, 
+[64, 96] (@import "hoge.css" /* comment */)
+    CSSContextRegion--> IMPORT: 0-7/8, CSSContextRegion--> STRING: 8-18/19, CSSContextRegion--> COMMENT: 19-32, 
+[96, 97] (;)
+    CSSContextRegion--> DELIMITER: 0-1, 
+[97, 99] (
+)
+    CSSContextRegion--> S: 0-2, 
+[99, 155] (@IMPORT 'hoge.css' ,media1,media2,,media3 media4,media5 )
+    CSSContextRegion--> IMPORT: 0-7/8, CSSContextRegion--> STRING: 8-18/19, CSSContextRegion--> UNKNOWN: 19-20, CSSContextRegion--> MEDIUM: 20-26, CSSContextRegion--> MEDIA_SEPARATOR: 26-27, CSSContextRegion--> MEDIUM: 27-33, CSSContextRegion--> MEDIA_SEPARATOR: 33-34, CSSContextRegion--> UNKNOWN: 34-35, CSSContextRegion--> MEDIUM: 35-41/42, CSSContextRegion--> UNKNOWN: 42-48, CSSContextRegion--> MEDIA_SEPARATOR: 48-49, CSSContextRegion--> MEDIUM: 49-55/56, 
+[155, 169] (@import media6)
+    CSSContextRegion--> IMPORT: 0-7/8, CSSContextRegion--> UNKNOWN: 8-14, 
+[169, 170] (;)
+    CSSContextRegion--> DELIMITER: 0-1, 
+[170, 221] (
+
+<!-- /* hogehoge */
+
+-->
+
+/* comment 2 */
+)
+    CSSContextRegion--> S: 0-4, CSSContextRegion--> CDO: 4-8/9, CSSContextRegion--> COMMENT: 9-23/27, CSSContextRegion--> CDC: 27-30/34, CSSContextRegion--> COMMENT: 34-49/51, 
+[221, 227] (kuso
+)
+    CSSContextRegion--> SELECTOR_ELEMENT_NAME: 0-4/6, 
+
+-------
