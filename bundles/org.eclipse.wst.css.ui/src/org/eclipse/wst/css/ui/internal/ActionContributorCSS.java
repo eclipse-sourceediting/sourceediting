@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.css.ui;
+package org.eclipse.wst.css.ui.internal;
 
 import java.util.ResourceBundle;
 

@@ -6,7 +6,7 @@
  * 
  * Contributors: IBM Corporation - initial API and implementation
  ****************************************************************************/
-package org.eclipse.wst.css.ui;
+package org.eclipse.wst.css.ui.internal;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.wst.css.ui.edit.ui.CleanupActionCSS;
