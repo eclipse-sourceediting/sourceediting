@@ -5,6 +5,7 @@
         <plugin id="org.eclipse.wst.xml.core" />
         <plugin id="org.eclipse.wst.xml.ui" />
 
+        <plugin id="org.eclipse.wst.xml.uriresolver" />
         <plugin id="org.eclipse.wst.xml.uriresolver.ui" />
         <plugin id="org.eclipse.wst.xml.validation" />
 
@@ -14,6 +15,7 @@
         <package name="org.eclipse.wst.xml.core.document" />
         <package name="org.eclipse.wst.xml.core.parser" />
         <package name="org.w3c.dom" />
+
         <package name="org.eclipse.wst.xml.uriresolver" />
 
         <package name="org.eclipse.wst.xml.uriresolver.ui" />
