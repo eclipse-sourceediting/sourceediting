@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.tests.application;
 
+import org.eclipse.wst.sse.ui.tests.VerifyEditorPlugin;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -23,7 +25,7 @@ public class SSETestSuite extends TestSuite {
 
 	public SSETestSuite() {
 		super("SSETestSuite");
-		// no tests yet
+		addTest(new TestSuite(VerifyEditorPlugin.class));
 		//addTest(new TestSuite(TestModelsFromFiles.class, "TestModelsFromFiles"));
 	}
 }
