@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -26,6 +25,9 @@ import java.util.Stack;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jst.jsp.core.JSP12Namespace;
 import org.eclipse.jst.jsp.core.Logger;
+import org.eclipse.jst.jsp.core.contentmodel.ITaglibRecord;
+import org.eclipse.jst.jsp.core.contentmodel.TaglibController;
+import org.eclipse.jst.jsp.core.contentmodel.TaglibIndex;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.wst.common.contentmodel.CMDocument;
 import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;
@@ -40,14 +42,10 @@ import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.Assert;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.sse.core.util.URIResolver;
 import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 
 public class TLDCMDocumentManager {
-	static final boolean _debug = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/tldcmdocument/manager")); //$NON-NLS-1$ //$NON-NLS-2$
-	static final String XMLNS = "xmlns:"; //$NON-NLS-1$ 
-	static final int XMLNS_LENGTH = XMLNS.length();
 
 	protected class DirectiveStructuredDocumentRegionHandler implements StructuredDocumentRegionHandler, StructuredDocumentRegionHandlerExtension {
 
@@ -126,6 +124,63 @@ public class TLDCMDocumentManager {
 			getTaglibTrackers().add(new TaglibTracker(uri, prefix, tld, anchorStructuredDocumentRegion));
 		}
 
+		/**
+		 * Enables a TLD owning the given prefix loaded from the given URI at
+		 * the anchorStructuredDocumentRegion. The list of
+		 * additionalCMDocuments will claim to not know any of its tags at
+		 * positions earlier than that IStructuredDocumentRegion's position.
+		 * 
+		 * For taglib directives, the taglib is the anchor while taglibs
+		 * registered through include directives use the parent document's
+		 * include directive as their anchor.
+		 * 
+		 * @param prefix
+		 * @param uri
+		 * @param taglibStructuredDocumentRegion
+		 */
+		protected void enableTagsInDir(String prefix, String tagdir, IStructuredDocumentRegion taglibStructuredDocumentRegion) {
+			if (prefix == null || tagdir == null || bannedPrefixes.contains(prefix))
+				return;
+			if (_debug) {
+				System.out.println("TLDCMDocumentManager enabling tags from directory" + tagdir + " for prefix " + prefix); //$NON-NLS-2$//$NON-NLS-1$
+			}
+			// Try to load the CMDocument for this URI
+			CMDocument tld = getImplicitCMDocument(tagdir);
+			if (tld == null || !(tld instanceof TLDDocument))
+				return;
+			CMNamedNodeMap elements = tld.getElements();
+			// Go through the CMDocument for any tags that must be marked as
+			// block tags
+			// starting at the anchoring IStructuredDocumentRegion. As the
+			// document is edited and the
+			// IStructuredDocumentRegion moved around, the block tag
+			// enablement will automatically follow
+			// it.
+			for (int i = 0; i < elements.getLength(); i++) {
+				TLDElementDeclaration ed = (TLDElementDeclaration) elements.item(i);
+				if (ed.getBodycontent() == JSP12TLDNames.CONTENT_TAGDEPENDENT)
+					addBlockTag(prefix + ":" + ed.getNodeName(), taglibStructuredDocumentRegion); //$NON-NLS-1$
+			}
+			// Since modifications to StructuredDocumentRegions adjacent to a
+			// taglib directive can cause
+			// that IStructuredDocumentRegion to be reported, filter out any
+			// duplicated URIs. When the
+			// taglib is actually modified, a full rebuild will occur and no
+			// duplicates
+			// will/should be found.
+			List trackers = getTaglibTrackers();
+			for (int i = 0; i < trackers.size(); i++) {
+				TaglibTracker tracker = (TaglibTracker) trackers.get(i);
+				if (tracker.getPrefix().equals(prefix) && tracker.getURI().equals(tagdir)) {
+					return;
+				}
+			}
+			if (_debug) {
+				System.out.println("TLDCMDocumentManager registered a tracker for directory" + tagdir + " with prefix " + prefix); //$NON-NLS-2$//$NON-NLS-1$
+			}
+			getTaglibTrackers().add(new TaglibTracker(tagdir, prefix, tld, taglibStructuredDocumentRegion));
+		}
+
 		public void nodeParsed(IStructuredDocumentRegion aCoreStructuredDocumentRegion) {
 			// could test > 1, but since we only care if there are 8 (<%@,
 			// taglib, uri, =, where, prefix, =, what) [or 4 for includes]
@@ -166,7 +221,7 @@ public class TLDCMDocumentManager {
 					}
 				}
 				catch (StringIndexOutOfBoundsException sioobExc) {
-					//do nothing
+					// do nothing
 				}
 			}
 			// could test > 1, but since we only care if there are 5 (<,
@@ -216,16 +271,7 @@ public class TLDCMDocumentManager {
 				file = null;
 			}
 			if (file != null) {
-				String fileLocation = null;
-				if (getResolver() != null) {
-					if (getIncludes().empty())
-						fileLocation = getResolver().getLocationByURI(StringUtils.strip(file));
-					else
-						fileLocation = getResolver().getLocationByURI(StringUtils.strip(file), (String) getIncludes().peek());
-				}
-				else {
-					fileLocation = StringUtils.strip(file);
-				}
+				String fileLocation = getBaseLocation();
 				// hopefully, a resolver is present and has returned a
 				// canonical file path
 				if (!getIncludes().contains(fileLocation) && getBaseLocation() != null && !fileLocation.equals(getBaseLocation())) {
@@ -311,7 +357,7 @@ public class TLDCMDocumentManager {
 					int startOffset = taglibStructuredDocumentRegion.getStartOffset(region);
 					int textLength = region.getTextLength();
 					if (region.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
-						//String name = textSource.getText(startOffset,
+						// String name = textSource.getText(startOffset,
 						// textLength);
 						if (textSource.regionMatches(startOffset, textLength, JSP11TLDNames.PREFIX)) {
 							attrName = JSP11TLDNames.PREFIX;
@@ -356,63 +402,6 @@ public class TLDCMDocumentManager {
 			}
 		}
 
-		/**
-		 * Enables a TLD owning the given prefix loaded from the given URI at
-		 * the anchorStructuredDocumentRegion. The list of
-		 * additionalCMDocuments will claim to not know any of its tags at
-		 * positions earlier than that IStructuredDocumentRegion's position.
-		 * 
-		 * For taglib directives, the taglib is the anchor while taglibs
-		 * registered through include directives use the parent document's
-		 * include directive as their anchor.
-		 * 
-		 * @param prefix
-		 * @param uri
-		 * @param taglibStructuredDocumentRegion
-		 */
-		protected void enableTagsInDir(String prefix, String tagdir, IStructuredDocumentRegion taglibStructuredDocumentRegion) {
-			if (prefix == null || tagdir == null || bannedPrefixes.contains(prefix))
-				return;
-			if (_debug) {
-				System.out.println("TLDCMDocumentManager enabling tags from directory" + tagdir + " for prefix " + prefix); //$NON-NLS-2$//$NON-NLS-1$
-			}
-			// Try to load the CMDocument for this URI
-			CMDocument tld = getImplicitCMDocument(tagdir);
-			if (tld == null || !(tld instanceof TLDDocument))
-				return;
-			CMNamedNodeMap elements = tld.getElements();
-			// Go through the CMDocument for any tags that must be marked as
-			// block tags
-			// starting at the anchoring IStructuredDocumentRegion. As the
-			// document is edited and the
-			// IStructuredDocumentRegion moved around, the block tag
-			// enablement will automatically follow
-			// it.
-			for (int i = 0; i < elements.getLength(); i++) {
-				TLDElementDeclaration ed = (TLDElementDeclaration) elements.item(i);
-				if (ed.getBodycontent() == JSP12TLDNames.CONTENT_TAGDEPENDENT)
-					addBlockTag(prefix + ":" + ed.getNodeName(), taglibStructuredDocumentRegion); //$NON-NLS-1$
-			}
-			// Since modifications to StructuredDocumentRegions adjacent to a
-			// taglib directive can cause
-			// that IStructuredDocumentRegion to be reported, filter out any
-			// duplicated URIs. When the
-			// taglib is actually modified, a full rebuild will occur and no
-			// duplicates
-			// will/should be found.
-			List trackers = getTaglibTrackers();
-			for (int i = 0; i < trackers.size(); i++) {
-				TaglibTracker tracker = (TaglibTracker) trackers.get(i);
-				if (tracker.getPrefix().equals(prefix) && tracker.getURI().equals(tagdir)) {
-					return;
-				}
-			}
-			if (_debug) {
-				System.out.println("TLDCMDocumentManager registered a tracker for directory" + tagdir + " with prefix " + prefix); //$NON-NLS-2$//$NON-NLS-1$
-			}
-			getTaglibTrackers().add(new TaglibTracker(tagdir, prefix, tld, taglibStructuredDocumentRegion));
-		}
-
 		private void resetBlockTags() {
 			if (getParser() == null)
 				return;
@@ -435,6 +424,7 @@ public class TLDCMDocumentManager {
 			resetBlockTags();
 			resetTaglibTrackers();
 		}
+
 		public void setStructuredDocument(IStructuredDocument newDocument) {
 			Assert.isTrue(newDocument != null, "null document");
 			Assert.isTrue(newDocument.getParser() != null, "null document parser");
@@ -518,7 +508,7 @@ public class TLDCMDocumentManager {
 					}
 				}
 				catch (StringIndexOutOfBoundsException sioobExc) {
-					//do nothing
+					// do nothing
 				}
 			}
 			// could test > 1, but since we only care if there are 5 (<,
@@ -548,9 +538,13 @@ public class TLDCMDocumentManager {
 		}
 	}
 
+	static final boolean _debug = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/tldcmdocument/manager")); //$NON-NLS-1$ //$NON-NLS-2$
+
 	// will hold the prefixes banned by the specification; taglibs may not use
 	// them
 	protected static List bannedPrefixes = null;
+	static final String XMLNS = "xmlns:"; //$NON-NLS-1$ 
+	static final int XMLNS_LENGTH = XMLNS.length();
 
 	static {
 		bannedPrefixes = new ArrayList(7);
@@ -590,9 +584,7 @@ public class TLDCMDocumentManager {
 	 * @return java.lang.String
 	 */
 	public String getBaseLocation() {
-		if (getResolver() == null)
-			return null;
-		return getResolver().getFileBaseLocation();
+		return TaglibController.getFileBuffer(this).getLocation().toString();
 	}
 
 	/**
@@ -621,38 +613,6 @@ public class TLDCMDocumentManager {
 		CMDocument doc = (CMDocument) getDocuments().get(reference);
 		if (doc == null) {
 			doc = loadTaglib(reference);
-			if (doc != null)
-				getDocuments().put(reference, doc);
-		}
-		return doc;
-	}
-
-	/**
-	 * Return the CMDocument at the tagdir (cached)
-	 */
-	protected CMDocument getImplicitCMDocument(String tagdir) {
-		if (tagdir == null || tagdir.length() == 0)
-			return null;
-		String reference = tagdir;
-		/**
-		 * JSP 1.2 Specification, section 5.2.2 jsp-1_2-fcs-spec.pdf, page 87
-		 */
-		String URNprefix = "urn:jsptld:"; //$NON-NLS-1$
-		if (reference.startsWith(URNprefix)) {
-			/**
-			 * @see section 7.3.2
-			 */
-			if (reference.length() > URNprefix.length())
-				reference = reference.substring(11);
-		}
-		else {
-			/**
-			 * @see section 7.3.6
-			 */
-		}
-		CMDocument doc = (CMDocument) getDocuments().get(reference);
-		if (doc == null) {
-			doc = loadTagDir(reference);
 			if (doc != null)
 				getDocuments().put(reference, doc);
 		}
@@ -712,8 +672,36 @@ public class TLDCMDocumentManager {
 		return fDocuments;
 	}
 
-	public StructuredDocumentRegionHandler getStructuredDocumentRegionHandler() {
-		return getDirectiveStructuredDocumentRegionHandler();
+	/**
+	 * Return the CMDocument at the tagdir (cached)
+	 */
+	protected CMDocument getImplicitCMDocument(String tagdir) {
+		if (tagdir == null || tagdir.length() == 0)
+			return null;
+		String reference = tagdir;
+		/**
+		 * JSP 1.2 Specification, section 5.2.2 jsp-1_2-fcs-spec.pdf, page 87
+		 */
+		String URNprefix = "urn:jsptld:"; //$NON-NLS-1$
+		if (reference.startsWith(URNprefix)) {
+			/**
+			 * @see section 7.3.2
+			 */
+			if (reference.length() > URNprefix.length())
+				reference = reference.substring(11);
+		}
+		else {
+			/**
+			 * @see section 7.3.6
+			 */
+		}
+		CMDocument doc = (CMDocument) getDocuments().get(reference);
+		if (doc == null) {
+			doc = loadTagDir(reference);
+			if (doc != null)
+				getDocuments().put(reference, doc);
+		}
+		return doc;
 	}
 
 	/**
@@ -732,29 +720,18 @@ public class TLDCMDocumentManager {
 	}
 
 	/**
-	 * Gets the resolver
-	 * 
-	 * @return Returns a URIResolver
-	 */
-	protected URIResolver getResolver() {
-		if (getResolverProvider() == null) {
-			Logger.log(Logger.WARNING, "Warning: a URIResolver was requested by " + getClass().getName() + " but none was available; taglib support disabled"); //$NON-NLS-1$ //$NON-NLS-2$
-			return null;
-		}
-		return getResolverProvider().getResolver();
-	}
-
-	/**
-	 * Gets the resolverProvider.
-	 * 
-	 * @return Returns a URIResolverProvider
+	 * @deprecated
 	 */
 	public URIResolverProvider getResolverProvider() {
-		return fResolverProvider;
+		return null;
 	}
 
 	public JSPSourceParser getSourceParser() {
 		return fParser;
+	}
+
+	public StructuredDocumentRegionHandler getStructuredDocumentRegionHandler() {
+		return getDirectiveStructuredDocumentRegionHandler();
 	}
 
 	/**
@@ -768,45 +745,17 @@ public class TLDCMDocumentManager {
 	}
 
 	/**
-	 * Loads the taglib from the specified URI. It must point to a valid
-	 * taglib descriptor or valid JAR file to work.
-	 */
-	protected CMDocument loadTaglib(String uri) {
-		String location = null;
-		InputStream directStream = null;
-		// see if the resolver knows of some special way to get from URI to
-		// InputStream
-		// (automatic discovery of URIs, web.xml mappings, etc.
-		if (getResolver() != null && uri != null)
-			directStream = getResolver().getURIStream(uri);
-		if (directStream != null) {
-			if (_debug) {
-				System.out.println("TLDCMDocumentManager loading taglib " + uri + " directly"); //$NON-NLS-2$//$NON-NLS-1$
-			}
-			return getCMDocumentBuilder().buildCMDocument(uri, directStream);
-		}
-
-		if (getResolver() != null && uri != null)
-			location = getResolver().getLocationByURI(uri);
-
-		//		String location =
-		// URIResolverPlugin.createResolver().resolve(getBaseLocation(), null,
-		// uri);
-
-		// Couldn't be located
-		if (location == null)
-			return null;
-		if (_debug) {
-			System.out.println("TLDCMDocumentManager loading taglib " + uri + " at " + location); //$NON-NLS-2$//$NON-NLS-1$
-		}
-		return getCMDocumentBuilder().createCMDocument(location);
-	}
-
-	/**
 	 * Loads the tags from the specified URI. It must point to a URL of valid
 	 * tag files to work.
 	 */
 	protected CMDocument loadTagDir(String uri) {
+		ITaglibRecord reference = TaglibIndex.resolve(getBaseLocation(), uri, false);
+		if (reference != null) {
+			CMDocument document = getCMDocumentBuilder().createCMDocument(reference);
+			if (document != null) {
+				return document;
+			}
+		}
 		// JSP2_TODO: implement for JSP 2.0
 		String location = URIResolverPlugin.createResolver().resolve(getBaseLocation(), null, uri);
 		if (location == null)
@@ -817,6 +766,19 @@ public class TLDCMDocumentManager {
 		return getCMDocumentBuilder().createCMDocument(location);
 	}
 
+	/**
+	 * Loads the taglib from the specified URI. It must point to a valid
+	 * taglib descriptor or valid JAR file to work.
+	 */
+	protected CMDocument loadTaglib(String uri) {
+		CMDocument document = null;
+		ITaglibRecord reference = TaglibIndex.resolve(getBaseLocation(), uri, false);
+		if (reference != null) {
+			document = getCMDocumentBuilder().createCMDocument(reference);
+		}
+		return document;
+	}
+
 	protected void resetTaglibTrackers() {
 		if (_debug) {
 			System.out.println("TLDCMDocumentManager cleared its taglib trackers\n"); //$NON-NLS-1$
@@ -824,18 +786,11 @@ public class TLDCMDocumentManager {
 		getTaglibTrackers().clear();
 	}
 
-	/**
-	 * Sets the resolverProvider.
-	 * 
-	 * @param resolverProvider
-	 *            The resolverProvider to set
-	 */
-	public void setResolverProvider(URIResolverProvider resolverProvider) {
-		fResolverProvider = resolverProvider;
-	}
-
 	public void setSourceParser(JSPSourceParser parser) {
+		if (fParser != null)
+			fParser.removeStructuredDocumentRegionHandler(getStructuredDocumentRegionHandler());
 		fParser = parser;
+		if (fParser != null)
+			fParser.addStructuredDocumentRegionHandler(getStructuredDocumentRegionHandler());
 	}
-
 }

@@ -258,7 +258,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 		else if (isTaglibDirective(fTagname)) {
 			// also add the ones created here to the parent document
 			String prefix = getAttributeValue("prefix", sdRegion); //$NON-NLS-1$
-			List docs = this.fTranslator.getTaglibSupport().getCMDocuments(prefix, this.fTranslator.getCurrentNode().getEnd());
+			List docs = this.fTranslator.getTLDCMDocumentManager().getCMDocumentTrackers(prefix, this.fTranslator.getCurrentNode().getEnd());
 			Iterator it = docs.iterator();
 			Iterator elements = null;
 			CMNode node = null;

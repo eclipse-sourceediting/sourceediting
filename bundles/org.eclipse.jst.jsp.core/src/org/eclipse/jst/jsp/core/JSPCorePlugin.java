@@ -19,6 +19,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.jst.jsp.core.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPIndexManager;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchSupport;
 import org.eclipse.wst.common.encoding.CommonCharsetNames;
@@ -134,12 +135,15 @@ public class JSPCorePlugin extends Plugin {
 		// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=5091
 		// makes sure IndexManager is aware of our indexes
 		JSPIndexManager.getInstance().saveIndexes();
+		
+		TaglibController.startup();
 	}
 	
 	/* (non-Javadoc)
 	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
+		TaglibController.shutdown();
 		// stop any searching/indexing
 		JSPSearchSupport.getInstance().setCanceled(true);
 		// remove JSPIndexManager

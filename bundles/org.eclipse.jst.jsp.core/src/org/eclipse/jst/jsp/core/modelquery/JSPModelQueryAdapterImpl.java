@@ -12,7 +12,6 @@ package org.eclipse.jst.jsp.core.modelquery;
 
 
 
-import org.eclipse.jst.jsp.core.contentmodel.tld.TaglibSupport;
 import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.common.contentmodel.util.CMDocumentCache;
 import org.eclipse.wst.sse.core.modelquery.ModelQueryAdapterImpl;
@@ -20,27 +19,7 @@ import org.eclipse.wst.xml.uriresolver.util.IdResolver;
 
 
 public class JSPModelQueryAdapterImpl extends ModelQueryAdapterImpl {
-
-	TaglibSupport support = null;
-
-	public JSPModelQueryAdapterImpl(CMDocumentCache cmDocumentCache, ModelQuery modelQuery, TaglibSupport support, IdResolver idResolver) {
+	public JSPModelQueryAdapterImpl(CMDocumentCache cmDocumentCache, ModelQuery modelQuery, IdResolver idResolver) {
 		super(cmDocumentCache, modelQuery, idResolver);
-		this.support = support;
 	}
-
-	public void release() {
-		super.release();
-		if (support != null)
-			support.setStructuredDocument(null);
-	}
-
-	/**
-	 * @see com.ibm.sse.model.modelquery.ModelQueryAdapter#setIdResolver(IdResolver)
-	 */
-	public void setIdResolver(IdResolver newIdResolver) {
-		super.setIdResolver(newIdResolver);
-		// new location, everything's stale unless the model's been rebuilt
-		support.clearCMDocumentCache();
-	}
-
 }

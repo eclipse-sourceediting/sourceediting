@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,20 +7,16 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
+ *     
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.modelquery;
+package org.eclipse.jst.jsp.core.contentmodel;
 
-import org.eclipse.wst.common.contentmodel.modelqueryimpl.SimpleAssociationProvider;
+public interface ITaglibRecordEvent {
+	ITaglibRecord getTaglibRecord();
 
-/**
- */
-public class JSPModelQueryAssociationProvider extends SimpleAssociationProvider {
+	short getType();
 
-	/**
-	 * @param modelQueryCMProvider
-	 *            org.eclipse.wst.common.contentmodel.modelquery.ModelQueryCMProvider
-	 */
-	public JSPModelQueryAssociationProvider() {
-		super(new JSPModelQueryCMProvider());
-	}
+	short ADD = 1;
+	short CHANGE = 1 << 1;
+	short REMOVE = 1 << 2;
 }

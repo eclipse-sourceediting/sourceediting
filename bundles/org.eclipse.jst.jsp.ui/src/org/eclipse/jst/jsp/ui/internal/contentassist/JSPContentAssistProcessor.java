@@ -35,9 +35,10 @@ import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.jst.jsp.core.JSP11Namespace;
 import org.eclipse.jst.jsp.core.JSP12Namespace;
 import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
+import org.eclipse.jst.jsp.core.contentmodel.TaglibController;
+import org.eclipse.jst.jsp.core.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.document.PageDirectiveAdapterFactory;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
-import org.eclipse.jst.jsp.core.modelquery.TaglibModelQuery;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.wst.common.contentmodel.CMDocument;
 import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
@@ -322,8 +323,9 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 						// Be sure that custom tags from taglibs also show up
 						// by
 						// adding taglib declarations to the internal model.
-						if (mq instanceof TaglibModelQuery) {
-							List trackers = ((TaglibModelQuery) mq).getTaglibSupport().getCMDocumentTrackers(contentAssistRequest.getReplacementBeginPosition());
+						TLDCMDocumentManager mgr = TaglibController.getTLDCMDocumentManager(xmlOuterModel.getStructuredDocument());
+						if (mgr != null) {
+							List trackers = mgr.getCMDocumentTrackers(contentAssistRequest.getReplacementBeginPosition());
 							if (trackers != null) {
 								for (i = 0; i < trackers.size(); i++) {
 									CMDocumentTracker tracker = (CMDocumentTracker) trackers.get(i);
@@ -467,9 +469,9 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 			else
 				mqAdapter = (ModelQueryAdapter) ((XMLNode) node.getOwnerDocument()).getAdapterFor(ModelQueryAdapter.class);
 			if (mqAdapter != null) {
-				ModelQuery query = mqAdapter.getModelQuery();
-				if (query instanceof TaglibModelQuery) {
-					List moreCMDocuments = ((TaglibModelQuery) query).getTaglibSupport().getCMDocuments(textInsertionOffset);
+				TLDCMDocumentManager mgr = TaglibController.getTLDCMDocumentManager(((XMLNode) node).getStructuredDocument());
+				if (mgr != null) {
+					List moreCMDocuments = mgr.getCMDocumentTrackers(textInsertionOffset);
 					if (moreCMDocuments != null) {
 						for (int i = 0; i < moreCMDocuments.size(); i++) {
 							CMDocument doc = (CMDocument) moreCMDocuments.get(i);

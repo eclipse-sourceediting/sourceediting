@@ -60,16 +60,13 @@
             contentTypeId="org.eclipse.jst.jsp.core.jspsource"
             class="org.eclipse.wst.sse.core.filebuffers.BasicStructuredDocumentFactory:org.eclipse.jst.jsp.core.jspsource"/>
    </extension>
-<!--
    <extension point="org.eclipse.core.filebuffers.documentSetup"
          id="org.eclipse.jst.jsp.core.documentsetup"
          name="Structured JSP Document Setup participant">
-      <factory
-      		id="org.eclipse.jst.jsp.core.taglibs"
+      <participant
             contentTypeId="org.eclipse.jst.jsp.core.jspsource"
-            class="org.eclipse.jst.jsp.core.contentmodel.tld.TaglibController"/>
+            class="org.eclipse.jst.jsp.core.contentmodel.TaglibController"/>
    </extension>
--->
    <extension
          point="org.eclipse.team.core.fileTypes">
       <fileTypes

@@ -11,9 +11,11 @@ org.eclipse.jst.jsp.core/debug/tldcmdocument/manager=false
 # org.eclipse.jst.jsp.core.contentmodel.tld.CMDocumentFactoryTLD._debug
 org.eclipse.jst.jsp.core/debug/tldcmdocument/factory=false
 
-# BOTH org.eclipse.jst.jsp.core.internal.contentmodel.tld.AbstractTaglibSupport._debug
-# AND org.eclipse.jst.jsp.core.modelquery.ModelQueryAdapterFactoryForJSP._debug
-org.eclipse.jst.jsp.core/debug/taglibsupport=false
+#org.eclipse.jst.jsp.core.internal.contentmodel/index.ProjectDescription._debugIndexCreation
+org.eclipse.jst.jsp.core/taglib/indexcreation=true
+#org.eclipse.jst.jsp.core.internal.contentmodel/index.ProjectDescription._debugIndexTime
+org.eclipse.jst.jsp.core/taglib/indextime=false
 
 #org.eclipse.jst.jsp.core.text.rules.StructuredTextPartitioner.debugPrefixListener
 org.eclipse.jst.jsp.core/partitioner/prefixlistener=false
+

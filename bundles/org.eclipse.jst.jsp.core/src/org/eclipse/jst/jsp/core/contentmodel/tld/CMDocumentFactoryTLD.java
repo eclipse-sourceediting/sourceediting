@@ -17,6 +17,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jst.jsp.core.Logger;
+import org.eclipse.jst.jsp.core.contentmodel.ITaglibRecord;
+import org.eclipse.jst.jsp.core.contentmodel.JarRecord;
+import org.eclipse.jst.jsp.core.contentmodel.TLDRecord;
+import org.eclipse.jst.jsp.core.contentmodel.URLRecord;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.CMAttributeDeclarationImpl;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.CMDocumentImpl;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.CMElementDeclarationImpl;
@@ -65,7 +70,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 		provider.setValidating(false);
 		provider.setRootElementName(JSP11TLDNames.TAGLIB);
 		provider.setInputStream(input);
-		if(baselocation != null)
+		if (baselocation != null)
 			provider.setBaseReference(baselocation);
 		return loadDocument(baselocation, provider.getRootElement());
 	}
@@ -75,15 +80,16 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 	 * @return
 	 */
 	private CMDocument buildCMDocumentFromDirectory(File directory) {
-		if(_debug) {
+		if (_debug) {
 			System.out.println("not implemented: tagdir loading for " + directory.getAbsolutePath());
 		}
-//		File[] tagfiles = directory.listFiles();
+		// File[] tagfiles = directory.listFiles();
 		return null;
 	}
 
 	/**
 	 * NOT API
+	 * 
 	 * @param fileName
 	 * @return
 	 */
@@ -94,7 +100,8 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 		provider.setBaseReference(fileName);
 		provider.setRootElementName(JSP11TLDNames.TAGLIB);
 		provider.setFileName(fileName);
-		return loadDocument(fileName, provider.getRootElement());
+		Node rootElement = provider.getRootElement();
+		return loadDocument(fileName, rootElement);
 	}
 
 	/**
@@ -184,7 +191,9 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 					result = buildCMDocument(url.toExternalForm(), istream);
 				}
 				catch (Exception t) {
-					// Logger.log(Logger.INFO, "Exception creating content model: could not load TLD contents from URI " + uri + " :" + t);
+					// Logger.log(Logger.INFO, "Exception creating content
+					// model: could not load TLD contents from URI " + uri + "
+					// :" + t);
 				}
 			}
 			try {
@@ -300,7 +309,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 				}
 				// info (1.1 only) or description (1.2 only)
 				else if ((nodeName.equals(JSP11TLDNames.INFO) || nodeName.equals(JSP12TLDNames.DESCRIPTION)) && child.hasChildNodes()) {
-					//					ed.setDescription(getContainedText(child));
+					// ed.setDescription(getContainedText(child));
 					ed.setDescription(getContainedText(child));
 				}
 				// attributes
@@ -481,7 +490,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 		document.setBaseLocation(baseLocation);
 
 		if (root == null) {
-			if(_debug) {
+			if (_debug) {
 				System.out.println("null \"taglib\" element for TLD " + baseLocation);
 			}
 			return document;
@@ -569,6 +578,58 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 			}
 
 			child = child.getNextSibling();
+		}
+		return document;
+	}
+
+	/**
+	 * @param reference
+	 * @return
+	 */
+	public CMDocument createCMDocument(ITaglibRecord reference) {
+		CMDocument document = null;
+		switch (reference.getRecordType()) {
+			case (ITaglibRecord.TLD) : {
+				TLDRecord record = (TLDRecord) reference;
+				document = buildCMDocumentFromFile(record.getLocation().toString());
+				if (_debug && document != null && document.getElements().getLength() == 0) {
+					System.out.println("failure parsing " + record.getLocation());
+				}
+			}
+				break;
+			case (ITaglibRecord.JAR) : {
+				JarRecord record = (JarRecord) reference;
+				document = buildCMDocumentFromJar(record.getLocation().toString());
+				if (document != null && document.getElements().getLength() == 0) {
+					System.out.println("failure parsing " + record.getLocation());
+				}
+			}
+				break;
+			case (ITaglibRecord.TAGDIR) : {
+				// TODO: implement TAGDIR support
+			}
+				break;
+			case (ITaglibRecord.URL) : {
+				URLRecord record = (URLRecord) reference;
+				InputStream urlContents = null;
+				try {
+					urlContents = record.getURL().openStream();
+					document = buildCMDocument(record.getBaseLocation(), urlContents);
+				}
+				catch (IOException e) {
+					Logger.logException(e);
+				}
+				finally {
+					if (urlContents != null) {
+						try {
+							urlContents.close();
+						}
+						catch (IOException e) {
+						}
+					}
+				}
+			}
+				break;
 		}
 		return document;
 	}

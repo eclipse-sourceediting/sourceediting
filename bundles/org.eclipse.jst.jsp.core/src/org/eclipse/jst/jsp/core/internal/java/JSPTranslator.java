@@ -35,10 +35,10 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jst.jsp.core.Logger;
+import org.eclipse.jst.jsp.core.contentmodel.TaglibController;
+import org.eclipse.jst.jsp.core.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDElementDeclaration;
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDVariable;
-import org.eclipse.jst.jsp.core.contentmodel.tld.TaglibSupport;
-import org.eclipse.jst.jsp.core.modelquery.TaglibModelQuery;
 import org.eclipse.wst.common.contentmodel.CMDocument;
 import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.common.contentmodel.CMNode;
@@ -534,9 +534,12 @@ public class JSPTranslator {
 	 * @param tagToAdd is the name of the tag whose variables we want to add
 	 */
 	protected void addTaglibVariables(String tagToAdd) {
-		if (fModelQuery != null && fModelQuery instanceof TaglibModelQuery) {
+		if (fModelQuery != null) {
 			// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=5159
-			Iterator taglibs = ((TaglibModelQuery) fModelQuery).getTaglibSupport().getCMDocuments(fCurrentNode.getStartOffset()).iterator();
+			TLDCMDocumentManager docMgr = TaglibController.getTLDCMDocumentManager(fStructuredDocument);
+			if (docMgr == null)
+				return;
+			Iterator taglibs = docMgr.getCMDocumentTrackers(fCurrentNode.getStartOffset()).iterator();
 			CMDocument doc = null;
 			CMNamedNodeMap elements = null;
 			while (taglibs.hasNext()) {
@@ -1257,9 +1260,9 @@ public class JSPTranslator {
 	 */
 	protected void handleTaglib() {
 		// get/create TLDCMDocument
-		TaglibSupport tls = getTaglibSupport();
-		if (tls != null) {
-			List trackers = tls.getCMDocumentTrackers(getCurrentNode().getEnd());
+		TLDCMDocumentManager mgr = TaglibController.getTLDCMDocumentManager(fStructuredDocument);
+		if (mgr != null) {
+			List trackers = mgr.getCMDocumentTrackers(getCurrentNode().getEnd());
 			Iterator it = trackers.iterator();
 			CMDocumentTracker tracker = null;
 			Iterator taglibRegions = null;
@@ -1889,10 +1892,6 @@ public class JSPTranslator {
 		}
 	}
 
-	protected TaglibSupport getTaglibSupport() {
-		return (fModelQuery != null && fModelQuery instanceof TaglibModelQuery) ? ((TaglibModelQuery) fModelQuery).getTaglibSupport() : null;
-	}
-
 	final public int getCursorPosition() {
 		return fCursorPosition;
 	}
@@ -1911,6 +1910,10 @@ public class JSPTranslator {
 
 	final public int getSourcePosition() {
 		return fSourcePosition;
+	}
+	
+	final public TLDCMDocumentManager getTLDCMDocumentManager() {
+		return TaglibController.getTLDCMDocumentManager(fStructuredDocument);
 	}
 
 	final public void setRelativeOffset(int fRelativeOffset) {

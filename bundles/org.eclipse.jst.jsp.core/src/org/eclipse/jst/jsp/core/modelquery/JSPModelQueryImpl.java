@@ -14,7 +14,6 @@ package org.eclipse.jst.jsp.core.modelquery;
 import java.util.List;
 
 import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
-import org.eclipse.jst.jsp.core.contentmodel.tld.TaglibSupport;
 import org.eclipse.wst.common.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.common.contentmodel.CMDocument;
 import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
@@ -24,21 +23,17 @@ import org.eclipse.wst.common.contentmodel.modelqueryimpl.ModelQueryImpl;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.modelquery.ModelQueryAdapter;
-import org.eclipse.wst.sse.core.modelquery.MovableModelQuery;
 import org.eclipse.wst.xml.uriresolver.util.IdResolver;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-public class JSPModelQueryImpl extends ModelQueryImpl implements MovableModelQuery, TaglibModelQuery {
+public class JSPModelQueryImpl extends ModelQueryImpl {
 
 	protected IStructuredModel jspModel = null;
 	protected ModelQuery embeddedModelQuery = null;
-	protected TaglibSupport fTaglibSupport = null;
-
-	public JSPModelQueryImpl(IStructuredModel model, TaglibSupport support, IdResolver resolver) {
-		super(new JSPModelQueryAssociationProvider(support));
-		fTaglibSupport = support;
+	public JSPModelQueryImpl(IStructuredModel model, IdResolver resolver) {
+		super(new JSPModelQueryAssociationProvider());
 		jspModel = model;
 	}
 
@@ -107,17 +102,6 @@ public class JSPModelQueryImpl extends ModelQueryImpl implements MovableModelQue
 			}
 		}
 		return this.embeddedModelQuery;
-	}
-
-	public TaglibSupport getTaglibSupport() {
-		return fTaglibSupport;
-	}
-
-	/**
-	 * @see MovableModelQuery#setIdResolver(IdResolver)
-	 */
-	public void setIdResolver(IdResolver newIdResolver) {
-		getTaglibSupport().clearCMDocumentCache();
 	}
 
 	/* (non-Javadoc)
