@@ -32,38 +32,6 @@
    </requires>
 
    <extension
-         point="org.eclipse.ui.editors">
-      <!-- sync-on-page-switch editor -->
-      <editor
-            name="Preview Editor"
-            default="false"
-            icon="icons/browser_editor.gif"
-            extensions="html, htm, xhtml, jhtml, shtml, shtm, html-ss, wml, wsdl, xml, nst, xmi, dadx"
-            contributorClass="org.eclipse.wst.html.ui.edit.ui.ActionContributorHTML"
-            class="org.eclipse.wst.html.ui.tests.PreviewEditor"
-            symbolicFontName="com.ibm.sse.editor.textfont"
-            id="org.eclipse.wst.html.ui.PreviewEditor">
-      </editor>
-   </extension>
-   <!-- editor actionsets -->
-   <extension
-         point="org.eclipse.ui.actionSetPartAssociations">
-      <actionSetPartAssociation
-            targetID="org.eclipse.ui.edit.text.actionSet.annotationNavigation">
-         <part
-               id="org.eclipse.wst.html.ui.PreviewEditor">
-         </part>
-      </actionSetPartAssociation>
-      <actionSetPartAssociation
-            targetID="org.eclipse.ui.NavigateActionSet">
-         <part
-               id="org.eclipse.wst.html.ui.PreviewEditor">
-         </part>
-      </actionSetPartAssociation>
-   </extension>
-
-
-   <extension
          point="org.eclipse.ui.views">
       <view
             name="Embedded HTML Structured Text Viewer"
