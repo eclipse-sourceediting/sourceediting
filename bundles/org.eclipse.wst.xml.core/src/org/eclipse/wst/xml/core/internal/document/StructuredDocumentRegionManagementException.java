@@ -21,6 +21,11 @@ import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 public class StructuredDocumentRegionManagementException extends SourceEditingRuntimeException {
 
 	/**
+	 * Default <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * StructuredDocumentRegionManagementException constructor
 	 */
 	public StructuredDocumentRegionManagementException() {

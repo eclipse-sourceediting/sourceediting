@@ -24,6 +24,10 @@ package org.w3c.dom.ranges;
  * @since DOM Level 2
  */
 public class RangeException extends RuntimeException {
+	/**
+	 * Default <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 1L;
 	// RangeExceptionCode
 	/**
 	 * If the boundary-points of a Range do not meet specific requirements.

@@ -19,6 +19,10 @@ package org.eclipse.wst.xml.core.document;
  */
 public class InvalidCharacterException extends Exception {
 
+	/**
+	 * Default <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 1L;
 	private char invalidChar = 0;
 	private int offset = -1;
 
