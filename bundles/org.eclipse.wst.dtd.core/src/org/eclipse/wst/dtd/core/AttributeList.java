@@ -52,7 +52,6 @@ public class AttributeList extends NamedTopLevelNode {
 		int offset = 0;
 		String newText = ""; //$NON-NLS-1$
 		String nodeText = node.getFullNodeText();
-		boolean isLastChild = false;
 		if (!isAfter) {
 			offset = reference.getStartOffset();
 		} else {

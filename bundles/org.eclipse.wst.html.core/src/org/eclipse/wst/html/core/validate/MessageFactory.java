@@ -98,7 +98,7 @@ class MessageFactory implements ErrorState {
 	private static final String MSG_UNKNOWN_ERROR = HTMLCorePlugin.getResourceString("%Unknown_error._ERROR_"); //$NON-NLS-1$ = "Unknown error."
 	private static final String MSG_UNCLOSED_START_TAG_ERROR = HTMLCorePlugin.getResourceString("%Start_tag_(<{0}>)_not_clos_ERROR_"); //$NON-NLS-1$ = "Start tag (<{0}>) not closed."
 	private static final String MSG_UNCLOSED_END_TAG_ERROR = HTMLCorePlugin.getResourceString("%End_tag_(</{0}>)_not_close_ERROR_"); //$NON-NLS-1$ = "End tag (</{0}>) not closed."
-	private static final String MSG_UNCLOSED_TAG_ERROR = HTMLCorePlugin.getResourceString("%Tag_({0})_not_closed._ERROR_"); //$NON-NLS-1$ = "Tag ({0}) not closed."
+	//private static final String MSG_UNCLOSED_TAG_ERROR = HTMLCorePlugin.getResourceString("%Tag_({0})_not_closed._ERROR_"); //$NON-NLS-1$ = "Tag ({0}) not closed."
 	private static final String MSG_MISMATCHED_ATTR_VALUE_ERROR = HTMLCorePlugin.getResourceString("%Attribute_value_({0})_uses_ERROR_"); //$NON-NLS-1$ = "Attribute value ({0}) uses wrong case character."
 	private static final String MSG_UNCLOSED_COMMENT_ERROR = HTMLCorePlugin.getResourceString("%Comment_not_closed._ERROR_"); //$NON-NLS-1$ = "Comment not closed."
 	private static final String MSG_UNCLOSED_DOCTYPE_ERROR = HTMLCorePlugin.getResourceString("%DOCTYPE_declaration_not_cl_ERROR_"); //$NON-NLS-1$ = "DOCTYPE declaration not closed."

@@ -98,16 +98,6 @@ public class JSPSearchScope implements IJavaSearchScope {
 		return false;
 	}
 
-	private boolean enclosesElement(IJavaElement possible) {
-
-		IJavaElement[] elements = (IJavaElement[]) fJavaElements.toArray(new IJavaElement[fJavaElements.size()]);
-		for (int i = 0; i < elements.length; i++) {
-			// pa_TODO need logic here to check if element here encloses possible...
-			return true;
-		}
-		return false;
-	}
-
 	public String getDescription() {
 
 		return "JSPSearchScope"; //$NON-NLS-1$

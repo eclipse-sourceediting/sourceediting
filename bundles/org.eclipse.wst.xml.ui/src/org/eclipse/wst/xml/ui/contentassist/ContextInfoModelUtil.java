@@ -25,7 +25,6 @@ import org.eclipse.wst.xml.core.modelquery.ModelQueryUtil;
  */
 public class ContextInfoModelUtil {
 	IStructuredDocument fDocument = null;
-	private final String SSE_MODEL_ID = "org.eclipse.wst.sse.core"; //$NON-NLS-1$
 
 	ContextInfoModelUtil(IStructuredDocument doc) {
 		fDocument = doc;

@@ -42,10 +42,6 @@ import org.eclipse.wst.xml.ui.views.properties.XMLPropertySourceAdapterFactory;
  */
 public class AdapterFactoryProviderForXML implements AdapterFactoryProvider {
 
-	private final String EDITOR_PLUGIN_ID = "org.eclipse.wst.sse.ui"; // $NON-NLS-1$
-
-	// //$NON-NLS-1$
-
 	/*
 	 * @see AdapterFactoryProvider#addAdapterFactories(IStructuredModel)
 	 */

@@ -8,11 +8,8 @@
  ****************************************************************************/
 package org.eclipse.wst.css.ui;
 
-import java.util.ResourceBundle;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.wst.css.ui.edit.ui.CleanupActionCSS;
-import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.css.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.css.ui.internal.selection.StructureSelectEnclosingCSSAction;
 import org.eclipse.wst.css.ui.internal.selection.StructureSelectNextCSSAction;
@@ -27,8 +24,6 @@ import org.eclipse.wst.sse.ui.internal.selection.StructureSelectHistoryAction;
 public class StructuredTextEditorCSS extends StructuredTextEditor {
 	protected void createActions() {
 		super.createActions();
-
-		ResourceBundle resourceBundle = CSSUIPlugin.getDefault().getResourceBundle();
 
 		Action action = new CleanupActionCSS(SSEUIPlugin.getDefault().getResourceBundle(), StructuredTextEditorActionConstants.ACTION_NAME_CLEANUP_DOCUMENT + DOT, this);
 		action.setActionDefinitionId(ActionDefinitionIds.CLEANUP_DOCUMENT);

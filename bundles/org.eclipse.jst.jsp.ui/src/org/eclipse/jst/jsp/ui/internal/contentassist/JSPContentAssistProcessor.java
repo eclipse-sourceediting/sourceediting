@@ -985,18 +985,6 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		return (relevance == 485 || relevance == 486 || relevance == 326);
 	}
 
-	/**
-	 * @param fn
-	 * @return boolean
-	 */
-	private boolean isXMLContentRegion(IStructuredDocumentRegion fn) {
-		if (fn instanceof ITextRegionContainer) {
-			ITextRegion r = fn.getRegions().get(0);
-			if (r != null && r.getType() == XMLRegionContext.XML_CONTENT)
-				return true;
-		}
-		return false;
-	}
 
 	/**
 	 * 

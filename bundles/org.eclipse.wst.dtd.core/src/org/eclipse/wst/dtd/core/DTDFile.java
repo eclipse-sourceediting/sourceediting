@@ -142,7 +142,6 @@ public class DTDFile implements IndexedRegion {
 
 	public void createAttributeList(DTDNode node, String name, boolean isAfter) {
 		getDTDModel().beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_DTD_FILE_ADD_ATTR_LIST")); //$NON-NLS-1$
-		DTDNode topLevelNode = null;
 		String newStream = "<!ATTLIST " + name + ">\n"; //$NON-NLS-1$ //$NON-NLS-2$
 		int offset = getInsertOffset(node, isAfter);
 		getStructuredDocument().replaceText(this, offset, 0, newStream);
@@ -151,7 +150,6 @@ public class DTDFile implements IndexedRegion {
 
 	public void createComment(DTDNode node, String name, boolean isAfter) {
 		getDTDModel().beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_DTD_FILE_ADD_COMMENT")); //$NON-NLS-1$
-		DTDNode topLevelNode = null;
 		String newStream = "<!-- " + name + " -->\n"; //$NON-NLS-1$ //$NON-NLS-2$
 		int offset = getInsertOffset(node, isAfter);
 		getStructuredDocument().replaceText(this, offset, 0, newStream);
@@ -160,7 +158,6 @@ public class DTDFile implements IndexedRegion {
 
 	public void createElement(DTDNode node, String name, boolean isAfter) {
 		getDTDModel().beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_DTD_FILE_ADD_ELEMENT")); //$NON-NLS-1$
-		DTDNode topLevelNode = null;
 		String newStream = "<!ELEMENT " + name + " EMPTY>\n"; //$NON-NLS-1$ //$NON-NLS-2$
 		int offset = getInsertOffset(node, isAfter);
 		getStructuredDocument().replaceText(this, offset, 0, newStream);
@@ -169,7 +166,6 @@ public class DTDFile implements IndexedRegion {
 
 	public void createEntity(DTDNode node, String name, boolean isAfter) {
 		getDTDModel().beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_DTD_FILE_ADD_ENTITY")); //$NON-NLS-1$
-		DTDNode topLevelNode = null;
 		String newStream = "<!ENTITY " + name + " \"\">\n"; //$NON-NLS-1$//$NON-NLS-2$
 		int offset = getInsertOffset(node, isAfter);
 		getStructuredDocument().replaceText(this, offset, 0, newStream);
@@ -178,7 +174,6 @@ public class DTDFile implements IndexedRegion {
 
 	public void createNotation(DTDNode node, String name, boolean isAfter) {
 		getDTDModel().beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_DTD_FILE_ADD_NOTATION")); //$NON-NLS-1$
-		DTDNode topLevelNode = null;
 		String newStream = "<!NOTATION " + name + " SYSTEM \"\">\n"; //$NON-NLS-1$ //$NON-NLS-2$
 		int offset = getInsertOffset(node, isAfter);
 		getStructuredDocument().replaceText(this, offset, 0, newStream);
@@ -187,7 +182,6 @@ public class DTDFile implements IndexedRegion {
 
 	public void createParameterEntityReference(DTDNode node, String name, boolean isAfter) {
 		getDTDModel().beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_DTD_FILE_ADD_PARM_ENTITY_REF")); //$NON-NLS-1$
-		DTDNode topLevelNode = null;
 		String newStream = name + "\n"; //$NON-NLS-1$
 		int offset = getInsertOffset(node, isAfter);
 		getStructuredDocument().replaceText(this, offset, 0, newStream);

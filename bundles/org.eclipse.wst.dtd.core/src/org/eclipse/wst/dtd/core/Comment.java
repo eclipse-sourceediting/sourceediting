@@ -66,7 +66,6 @@ public class Comment extends NamedTopLevelNode {
 
 	public void setText(String newText) {
 		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_COMMENT_CHG")); //$NON-NLS-1$
-		int flatNodeStart = getStructuredDTDDocumentRegion().getStartOffset();
 		StartEndPair pair = new StartEndPair();
 		getStartAndEndOffsetForText(pair);
 		replaceText(this, pair.startOffset, pair.endOffset - pair.startOffset, newText);

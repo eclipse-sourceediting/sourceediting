@@ -120,7 +120,7 @@ public class JSPHeadTokenizer {
   private int yy_endRead;
 
   /** number of newlines encountered up to the start of the matched text */
-  private int yyline;
+// trivial hand edit to remove unused variable  private int yyline;
 
   /** the number of characters up to the start of the matched text */
   private int yychar;
@@ -129,7 +129,7 @@ public class JSPHeadTokenizer {
    * the number of characters from the last newline up to the start of the 
    * matched text
    */
-  private int yycolumn; 
+//trivial hand edit to remove unused variable  private int yycolumn; 
 
   /** 
    * yy_atBOL == true <=> the scanner is currently at the beginning of a line
@@ -191,7 +191,7 @@ public class JSPHeadTokenizer {
   		yy_endRead = 0;
 
   		/* number of newlines encountered up to the start of the matched text */
-  		yyline = 0;
+//  	 trivial hand edit to remove unused variable  yyline = 0;
 
   		/* the number of characters up to the start of the matched text */
   		yychar = 0;
@@ -200,7 +200,7 @@ public class JSPHeadTokenizer {
   		 * the number of characters from the last newline up to the start
   		 * of the matched text
   		 */
-  		yycolumn = 0;
+//  	 trivial hand edit to remove unused variable    		yycolumn = 0;
 
   		/**
   		 * yy_atBOL == true <=> the scanner is currently at the beginning

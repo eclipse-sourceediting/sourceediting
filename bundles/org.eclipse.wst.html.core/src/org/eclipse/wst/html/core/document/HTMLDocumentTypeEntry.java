@@ -29,7 +29,6 @@ public class HTMLDocumentTypeEntry {
 	private boolean isDefaultWML;
 	private static String XHTML_NAME = "html"; //$NON-NLS-1$
 	private static String HTML_NAME = "HTML"; //$NON-NLS-1$
-	private static String WML_NAME = "wml"; //$NON-NLS-1$
 
 	/**
 	 */

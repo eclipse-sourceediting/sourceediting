@@ -132,9 +132,7 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 	private INodeNotifier notifierAtCreation;
 
 	private int firstLanguagePosition = -1;
-	private String firstLanguageValue;
 	private int firstContentTypePosition = -1;
-	private String firstContentTypeValue;
 
 	private boolean reinitializing;
 
@@ -268,7 +266,6 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 			// no need to change current value, if we're told some 
 			// earlier value is null or blank (sounds like an error, anyway)
 			if (hasValue(newValue)) {
-				firstContentTypeValue = newValue;
 				firstContentTypePosition = elementOffset;
 				String potentialContentType = getMimeTypeFromContentTypeValue(newValue);
 				// only do the set processing if different
@@ -294,7 +291,6 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 			// no need to change current value, if we're told some 
 			// earlier value is null or blank (sounds like an error, anyway)
 			if (hasValue(newValue)) {
-				firstLanguageValue = newValue;
 				firstLanguagePosition = elementOffset;
 				// only do the set processing if different
 				// from what it already is

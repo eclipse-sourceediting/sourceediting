@@ -863,7 +863,7 @@ public class JSPTokenizer implements BlockTokenizer, XMLJSPRegionContexts {
 
 	private JSPParserRegionFactory fRegionFactory = new JSPParserRegionFactory();
 
-	private static final String rcsver = "$Id: JSPTokenizer.java,v 1.2 2004/12/07 21:45:52 david_williams Exp $";//$NON-NLS-1$
+//	 trivial hand edit to remove unused variable  	private static final String rcsver = "$Id: JSPTokenizer.java,v 1.3 2005/01/12 21:18:02 david_williams Exp $";//$NON-NLS-1$
 
 	/**
 	 * user method 

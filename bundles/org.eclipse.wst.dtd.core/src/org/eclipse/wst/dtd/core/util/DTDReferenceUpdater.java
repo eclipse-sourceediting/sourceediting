@@ -77,7 +77,6 @@ public class DTDReferenceUpdater extends DTDVisitor {
 		isNotation = referencedNode instanceof Notation;
 
 		if (referencedNode instanceof Entity) {
-			Entity entity = (Entity) referencedNode;
 			isParmEntity = true;
 			oldRefName = "%" + oldRefName + ";"; //$NON-NLS-1$ //$NON-NLS-2$
 			newRefName = "%" + newRefName + ";"; //$NON-NLS-1$ //$NON-NLS-2$

@@ -22,12 +22,8 @@ import org.eclipse.jdt.internal.ui.javaeditor.JavaMarkerAnnotation;
 import org.eclipse.jdt.internal.ui.text.correction.JavaCorrectionProcessor;
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.text.source.Annotation;
-import org.eclipse.jface.text.source.IAnnotationAccessExtension;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.editors.text.EditorsUI;
-import org.eclipse.ui.texteditor.AnnotationPreference;
-import org.eclipse.ui.texteditor.AnnotationPreferenceLookup;
 
 public class ProblemAnnotation extends Annotation implements IJavaAnnotation {
 	private static Image fgQuickFixImage;
@@ -39,74 +35,29 @@ public class ProblemAnnotation extends Annotation implements IJavaAnnotation {
 	private IProblem fProblem;
 	private Image fImage;
 	private boolean fQuickFixImagesInitialized = false;
-	private int fLayer = IAnnotationAccessExtension.DEFAULT_LAYER;
-
-	private static final String SPELLING_ANNOTATION_TYPE = "org.eclipse.ui.workbench.texteditor.spelling"; //$NON-NLS-1$
-
-	//XXX: To be fully correct these constants should be non-static
-	/** 
-	 * The layer in which task problem annotations are located.
-	 */
-	private static final int TASK_LAYER;
-	/** 
-	 * The layer in which info problem annotations are located.
-	 */
-	private static final int INFO_LAYER;
-	/** 
-	 * The layer in which warning problem annotations representing are located.
-	 */
-	private static final int WARNING_LAYER;
-	/** 
-	 * The layer in which error problem annotations representing are located.
-	 */
-	private static final int ERROR_LAYER;
-
-	static {
-		AnnotationPreferenceLookup lookup = EditorsUI.getAnnotationPreferenceLookup();
-		TASK_LAYER = computeLayer("org.eclipse.ui.workbench.texteditor.task", lookup); //$NON-NLS-1$
-		INFO_LAYER = computeLayer("org.eclipse.jdt.ui.info", lookup); //$NON-NLS-1$
-		WARNING_LAYER = computeLayer("org.eclipse.jdt.ui.warning", lookup); //$NON-NLS-1$
-		ERROR_LAYER = computeLayer("org.eclipse.jdt.ui.error", lookup); //$NON-NLS-1$
-	}
-
-	private static int computeLayer(String annotationType, AnnotationPreferenceLookup lookup) {
-		Annotation annotation = new Annotation(annotationType, false, null);
-		AnnotationPreference preference = lookup.getAnnotationPreference(annotation);
-		if (preference != null)
-			return preference.getPresentationLayer() + 1;
-		else
-			return IAnnotationAccessExtension.DEFAULT_LAYER + 1;
-	}
 
 	public ProblemAnnotation(IProblem problem, ICompilationUnit cu) {
 
 		fProblem = problem;
 		fCompilationUnit = cu;
 
-		// TODO: commented out for M3 to M4 compatibility
-		// Not sure what longer term solution is, or if we 
-		// can just drop this as spell checking done in text level?. 
-//		if (SpellProblem.Spelling == fProblem.getID()) {
-//			setType(SPELLING_ANNOTATION_TYPE);
-//			fLayer = WARNING_LAYER;
-//		}
-//		else 
+
 		
 		if (IProblem.Task == fProblem.getID()) {
 			setType(JavaMarkerAnnotation.TASK_ANNOTATION_TYPE);
-			fLayer = TASK_LAYER;
+			//fLayer = TASK_LAYER;
 		}
 		else if (fProblem.isWarning()) {
 			setType(JavaMarkerAnnotation.WARNING_ANNOTATION_TYPE);
-			fLayer = WARNING_LAYER;
+			//fLayer = WARNING_LAYER;
 		}
 		else if (fProblem.isError()) {
 			setType(JavaMarkerAnnotation.ERROR_ANNOTATION_TYPE);
-			fLayer = ERROR_LAYER;
+			//fLayer = ERROR_LAYER;
 		}
 		else {
 			setType(JavaMarkerAnnotation.INFO_ANNOTATION_TYPE);
-			fLayer = INFO_LAYER;
+			//fLayer = INFO_LAYER;
 		}
 	}
 

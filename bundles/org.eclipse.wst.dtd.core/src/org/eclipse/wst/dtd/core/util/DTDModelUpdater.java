@@ -67,7 +67,6 @@ public class DTDModelUpdater extends DTDVisitor {
 		nodesToDelete.clear();
 
 		if (node instanceof Entity) {
-			Entity entity = (Entity) node;
 			isParmEntity = true;
 			oldRefName = "%" + oldRefName + ";"; //$NON-NLS-1$ //$NON-NLS-2$
 		}

@@ -137,12 +137,4 @@ public class HTMLModelQueryImpl extends ModelQueryImpl implements MovableModelQu
 		return null;
 	}
 
-	/* check the target is implicit elemnt or not */
-	private static boolean isImplicitElement(Node node) {
-		if (node.getNodeType() != Node.ELEMENT_NODE)
-			return false;
-		if (!(node instanceof XMLElement))
-			return false;
-		return ((XMLElement) node).isImplicitTag();
-	}
 }

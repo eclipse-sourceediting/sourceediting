@@ -289,7 +289,7 @@ public class Entity extends ExternalNode {
 				if (valueRegion != null) {
 					replaceText(requestor, getStructuredDTDDocumentRegion().getStartOffset(valueRegion), valueRegion.getLength(), quoteChar + v + quoteChar);
 				} else {
-					int startOffset = 0, length = 0;
+					int startOffset = 0;
 					RegionIterator iter = iterator();
 					ITextRegion region = getNextRegion(iter, DTDRegionTypes.NAME);
 					if (region == null) {

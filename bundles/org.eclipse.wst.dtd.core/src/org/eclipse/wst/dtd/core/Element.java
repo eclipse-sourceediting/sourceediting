@@ -154,15 +154,14 @@ public class Element extends NamedTopLevelNode {
 			skipPastName(iter);
 		}
 
-		CMBasicNode basicNode = null;
 		while (iter.hasNext()) {
 			ITextRegion currentRegion = iter.next();
 
 			if (contentModel == null) {
 				if (currentRegion.getType().equals(DTDRegionTypes.NAME)) {
-					contentModel = basicNode = new CMBasicNode(getDTDFile(), getStructuredDTDDocumentRegion());
+					contentModel = new CMBasicNode(getDTDFile(), getStructuredDTDDocumentRegion());
 				} else if (currentRegion.getType().equals(DTDRegionTypes.CONTENT_PCDATA)) {
-					contentModel = basicNode = new CMBasicNode(getDTDFile(), getStructuredDTDDocumentRegion());
+					contentModel = new CMBasicNode(getDTDFile(), getStructuredDTDDocumentRegion());
 				} else if (currentRegion.getType().equals(DTDRegionTypes.LEFT_PAREN)) {
 					contentModel = new CMGroupNode(getDTDFile(), getStructuredDTDDocumentRegion());
 				}

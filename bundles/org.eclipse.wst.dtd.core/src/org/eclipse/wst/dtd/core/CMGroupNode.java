@@ -208,7 +208,6 @@ public class CMGroupNode extends CMRepeatableNode {
 		Object[] children = getChildren();
 
 		int startOffset = 0;
-		boolean isLastChild = position == children.length;
 		String newText = ""; //$NON-NLS-1$
 		if (position < children.length) {
 			DTDNode reference = (DTDNode) children[position];
@@ -248,9 +247,6 @@ public class CMGroupNode extends CMRepeatableNode {
 		int nesting = 0;
 		//    children.clear();
 		removeChildNodes();
-		// we skip past the first left paren we see since that is the
-		// beginning of our own node
-		boolean isConnectorSet = false;
 		DTDNode currentGroupNode = null;
 		CMBasicNode currentReferenceNode = null;
 		RegionIterator iter = iterator();

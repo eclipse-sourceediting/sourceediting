@@ -439,7 +439,7 @@ public class DTDTokenizer {
 
 		// cached fields:
 		int yy_currentPos_l;
-		int yy_startRead_l;
+// trivial had edit to remove unused code		int yy_startRead_l;
 		int yy_markedPos_l;
 		int yy_endRead_l = yy_endRead;
 		char[] yy_buffer_l = yy_buffer;
@@ -503,7 +503,8 @@ public class DTDTokenizer {
 			}
 			yy_action = -1;
 
-			yy_startRead_l = yy_currentPos_l = yy_currentPos = yy_startRead = yy_markedPos_l;
+// trivial hand edit to remove unused code yy_startRead_l = 
+				yy_currentPos_l = yy_currentPos = yy_startRead = yy_markedPos_l;
 
 			yy_state = yy_lexical_state;
 

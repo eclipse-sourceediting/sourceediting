@@ -574,7 +574,7 @@ public class TLDCMDocumentManager {
 
 	private JSPSourceParser fParser = null;
 
-	private URIResolverProvider fResolverProvider = null;
+//	 trivial hand edit to remove unused variable  	private URIResolverProvider fResolverProvider = null;
 
 	private List fTaglibTrackers = null;
 

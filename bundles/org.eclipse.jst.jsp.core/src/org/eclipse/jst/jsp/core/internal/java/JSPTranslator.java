@@ -91,7 +91,7 @@ public class JSPTranslator {
 	/** fCursorPosition = offset in the translated java document */
 	private int fCursorPosition = -1;
 	/** some page directive attributes */
-	private boolean fSession, fThreadSafe, fIsErrorPage, fCursorInExpression = false;
+	private boolean fIsErrorPage, fCursorInExpression = false;
 
 	/** user java code in body of the service method */
 	private StringBuffer fUserCode = new StringBuffer();
@@ -304,7 +304,7 @@ public class JSPTranslator {
 		fRelativeOffset = -1;
 		fCursorPosition = -1;
 
-		fSession = fThreadSafe = fIsErrorPage = fCursorInExpression = false;
+		fIsErrorPage = fCursorInExpression = false;
 
 		fUserCode = new StringBuffer();
 		fUserDeclarations = new StringBuffer();
@@ -1189,7 +1189,7 @@ public class JSPTranslator {
 		}
 		else if (attrName.equals("session")) //$NON-NLS-1$
 		{
-			fSession = ("true".equalsIgnoreCase(attrValue)); //$NON-NLS-1$
+			//fSession = ("true".equalsIgnoreCase(attrValue)); //$NON-NLS-1$
 		}
 		else if (attrName.equals("buffer")) //$NON-NLS-1$
 		{
@@ -1201,7 +1201,7 @@ public class JSPTranslator {
 		}
 		else if (attrName.equals("isThreadSafe")) //$NON-NLS-1$
 		{
-			fThreadSafe = "true".equalsIgnoreCase(attrValue); //$NON-NLS-1$
+			//fThreadSafe = "true".equalsIgnoreCase(attrValue); //$NON-NLS-1$
 		}
 		else if (attrName.equals("isErrorPage")) //$NON-NLS-1$
 		{
