@@ -37,11 +37,11 @@ public class ProjectResolver implements URIResolver {
 		fProject = project;
 	}
 
-	public java.lang.String getFileBaseLocation() {
+	public String getFileBaseLocation() {
 		return fFileBaseLocation;
 	}
 
-	public java.lang.String getLocationByURI(String uri) {
+	public String getLocationByURI(String uri) {
 		return getLocationByURI(uri, getFileBaseLocation());
 	}
 
@@ -54,11 +54,11 @@ public class ProjectResolver implements URIResolver {
 	 * Note: currently resolveCrossProjectLinks is ignored in this
 	 * implementation.
 	 */
-	public java.lang.String getLocationByURI(String uri, boolean resolveCrossProjectLinks) {
+	public String getLocationByURI(String uri, boolean resolveCrossProjectLinks) {
 		return getLocationByURI(uri, getFileBaseLocation(), resolveCrossProjectLinks);
 	}
 
-	public java.lang.String getLocationByURI(String uri, String baseReference) {
+	public String getLocationByURI(String uri, String baseReference) {
 		if (uri == null)
 			return null;
 		/*
@@ -97,7 +97,7 @@ public class ProjectResolver implements URIResolver {
 	 * Note: currently resolveCrossProjectLinks is ignored in this
 	 * implementation.
 	 */
-	public java.lang.String getLocationByURI(String uri, String baseReference, boolean resolveCrossProjectLinks) {
+	public String getLocationByURI(String uri, String baseReference, boolean resolveCrossProjectLinks) {
 		return getLocationByURI(uri, baseReference);
 	}
 
@@ -205,11 +205,11 @@ public class ProjectResolver implements URIResolver {
 		return (newProtocol != null && newProtocol.compareToIgnoreCase("file") == 0); //$NON-NLS-1$
 	}
 
-	public void setFileBaseLocation(java.lang.String newFileBaseLocation) {
+	public void setFileBaseLocation(String newFileBaseLocation) {
 		fFileBaseLocation = newFileBaseLocation;
 	}
 
-	public void setProject(org.eclipse.core.resources.IProject newProject) {
+	public void setProject(IProject newProject) {
 		fProject = newProject;
 	}
 }

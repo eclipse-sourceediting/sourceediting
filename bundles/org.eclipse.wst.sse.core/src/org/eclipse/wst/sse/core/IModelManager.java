@@ -179,7 +179,7 @@ public interface IModelManager {
 	 */
 	public IStructuredModel getModelForEdit(IFile iFile, EncodingRule encodingRule) throws UnsupportedEncodingException, IOException, CoreException;
 
-	public IStructuredModel getModelForEdit(IFile iFile, String encoding, String lineDelimiter) throws java.io.UnsupportedEncodingException, IOException, CoreException;
+	public IStructuredModel getModelForEdit(IFile iFile, String encoding, String lineDelimiter) throws UnsupportedEncodingException, IOException, CoreException;
 
 	public IStructuredModel getModelForEdit(IStructuredDocument textFileBufferDocument);
 
@@ -187,7 +187,7 @@ public interface IModelManager {
 	 * @deprecated - a URI resolver should be automatically created when
 	 *             needed
 	 */
-	public IStructuredModel getModelForEdit(String filename, InputStream inStream, URIResolver resolver) throws java.io.UnsupportedEncodingException, IOException;
+	public IStructuredModel getModelForEdit(String id, InputStream inStream, URIResolver resolver) throws UnsupportedEncodingException, IOException;
 
 	public IStructuredModel getModelForRead(IFile iFile) throws IOException, CoreException;
 
@@ -199,7 +199,7 @@ public interface IModelManager {
 	/*
 	 * @deprecated - encoding and line delimiters are handled automatically
 	 */
-	public IStructuredModel getModelForRead(IFile iFile, String encoding, String lineDelimiter) throws java.io.UnsupportedEncodingException, IOException, CoreException;
+	public IStructuredModel getModelForRead(IFile iFile, String encoding, String lineDelimiter) throws UnsupportedEncodingException, IOException, CoreException;
 
 	public IStructuredModel getModelForRead(IStructuredDocument textFileBufferDocument);
 
@@ -207,7 +207,7 @@ public interface IModelManager {
 	 * @deprecated - a URI resolver should be automatically created when
 	 *             needed
 	 */
-	public IStructuredModel getModelForRead(String filename, InputStream inStream, URIResolver resolver) throws java.io.UnsupportedEncodingException, IOException;
+	public IStructuredModel getModelForRead(String filename, InputStream inStream, URIResolver resolver) throws UnsupportedEncodingException, IOException;
 
 	/**
 	 * This method will not create a new model if it already exists ... if
