@@ -21,7 +21,13 @@ public class ServletRecord implements ITaglibRecord {
 	IPath location;
 	List tldRecords = new ArrayList(0);
 
-	public short getRecordType() {
+	public boolean equals(Object obj) {
+		if (!(obj instanceof ServletRecord))
+			return false;
+		return ((ServletRecord) obj).location.equals(location);
+	}
+
+	public int getRecordType() {
 		return ITaglibRecord.WEB_XML;
 	}
 
@@ -37,5 +43,9 @@ public class ServletRecord implements ITaglibRecord {
 	 */
 	public List getTLDRecords() {
 		return tldRecords;
+	}
+
+	public String toString() {
+		return "ServletRecord: " + location + tldRecords;
 	}
 }

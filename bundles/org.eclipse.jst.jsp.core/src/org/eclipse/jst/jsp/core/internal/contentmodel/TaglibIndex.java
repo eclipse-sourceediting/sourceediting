@@ -241,6 +241,7 @@ public class TaglibIndex {
 
 	static final boolean _debugChangeListener = false;
 	static boolean _debugIndexCreation = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/indexcreation"));
+	static boolean _debugEvents = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/events"));
 	static final boolean _debugResolution = "true".equals(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/resolve"));
 
 	static TaglibIndex _instance;
@@ -250,6 +251,9 @@ public class TaglibIndex {
 	}
 
 	static void fireTaglibRecordEvent(ITaglibRecordEvent event) {
+		if(_debugEvents) {
+			System.out.println("TaglibIndex fired event:" + event);
+		}
 		ITaglibIndexListener[] listeners = _instance.fTaglibIndexListeners;
 		if (listeners != null) {
 			for (int i = 0; i < listeners.length; i++) {
@@ -341,7 +345,7 @@ public class TaglibIndex {
 		fProjectDescriptions = new HashMap();
 	}
 
-	public void addTaglibIndexListener(ITaglibIndexListener listener) {
+	public static void addTaglibIndexListener(ITaglibIndexListener listener) {
 		_instance.internalAddTaglibIndexListener(listener);
 	}
 

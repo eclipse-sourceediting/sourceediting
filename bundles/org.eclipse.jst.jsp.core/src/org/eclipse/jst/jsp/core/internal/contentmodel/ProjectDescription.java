@@ -61,7 +61,7 @@ class ProjectDescription {
 						removeTLD(delta.getResource());
 					}
 					else {
-						addTLD(delta.getResource());
+						updateTLD(delta.getResource(), delta.getKind());
 					}
 				}
 				else if (delta.getResource().getName().endsWith(".jar")) {
@@ -69,7 +69,7 @@ class ProjectDescription {
 						removeJAR(delta.getResource());
 					}
 					else {
-						addJAR(delta.getResource());
+						updateJAR(delta.getResource(), delta.getKind());
 					}
 				}
 				else if (delta.getResource().getName().endsWith(".tag") || delta.getResource().getName().endsWith(".tagx")) {
@@ -77,7 +77,7 @@ class ProjectDescription {
 						removeTagDir(delta.getResource());
 					}
 					else {
-						addTagDir(delta.getResource());
+						updateTagDir(delta.getResource(), delta.getKind());
 					}
 				}
 				else if (delta.getResource().getName().equals(WEB_XML) && delta.getResource().getParent().getName().equals(WEB_INF)) {
@@ -85,7 +85,7 @@ class ProjectDescription {
 						removeServlets(delta.getResource());
 					}
 					else {
-						addServlets(delta.getResource());
+						updateServlets(delta.getResource(), delta.getKind());
 					}
 				}
 			}
@@ -97,16 +97,16 @@ class ProjectDescription {
 		public boolean visit(IResourceProxy proxy) throws CoreException {
 			if (proxy.getType() == IResource.FILE) {
 				if (proxy.getName().endsWith(".tld")) {
-					addTLD(proxy.requestResource());
+					updateTLD(proxy.requestResource(), ITaglibRecordEvent.ADDED);
 				}
 				else if (proxy.getName().endsWith(".jar")) {
-					addJAR(proxy.requestResource());
+					updateJAR(proxy.requestResource(), ITaglibRecordEvent.ADDED);
 				}
 				else if (proxy.getName().endsWith(".tag") || proxy.getName().endsWith(".tagx")) {
-					addTagDir(proxy.requestResource());
+					updateTagDir(proxy.requestResource(), ITaglibRecordEvent.ADDED);
 				}
 				else if (proxy.getName().equals(WEB_XML) && proxy.requestResource().getParent().getName().equals(WEB_INF)) {
-					addServlets(proxy.requestResource());
+					updateServlets(proxy.requestResource(), ITaglibRecordEvent.ADDED);
 				}
 			}
 			return true;
@@ -115,9 +115,9 @@ class ProjectDescription {
 
 	class TaglibRecordEvent implements ITaglibRecordEvent {
 		ITaglibRecord fTaglibRecord = null;
-		short fType = -1;
+		int fType = -1;
 
-		TaglibRecordEvent(ITaglibRecord record, short type) {
+		TaglibRecordEvent(ITaglibRecord record, int type) {
 			fTaglibRecord = record;
 			fType = type;
 		}
@@ -126,8 +126,27 @@ class ProjectDescription {
 			return fTaglibRecord;
 		}
 
-		public short getType() {
+		public int getType() {
 			return fType;
+		}
+
+		public String toString() {
+			String string = fTaglibRecord.toString();
+			switch (fType) {
+				case ITaglibRecordEvent.ADDED :
+					string += " ADDED (" + TaglibRecordEvent.class.getName() + ")";
+					break;
+				case ITaglibRecordEvent.CHANGED :
+					string += " CHANGED (" + TaglibRecordEvent.class.getName() + ")";
+					break;
+				case ITaglibRecordEvent.REMOVED :
+					string += " REMOVED (" + TaglibRecordEvent.class.getName() + ")";
+					break;
+				default :
+					string += " other:" + fType + " (" + TaglibRecordEvent.class.getName() + ")";
+					break;
+			}
+			return string;
 		}
 	}
 
@@ -176,7 +195,7 @@ class ProjectDescription {
 		fImplicitReferences = new Hashtable(0);
 	}
 
-	void addClasspathLibrary(String libraryLocation) {
+	void updateClasspathLibrary(String libraryLocation, int deltaKind) {
 		String[] entries = JarUtilities.getEntryNames(libraryLocation);
 		JarRecord libraryRecord = (JarRecord) createJARRecord(libraryLocation);
 		fClasspathJars.put(libraryLocation, libraryRecord);
@@ -209,10 +228,10 @@ class ProjectDescription {
 				}
 			}
 		}
-		TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(libraryRecord, ITaglibRecordEvent.ADD));
+		TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(libraryRecord, deltaKind));
 	}
 
-	void addJAR(IResource jar) {
+	void updateJAR(IResource jar, int deltaKind) {
 		if (_debugIndexCreation)
 			System.out.println("creating records for JAR " + jar.getFullPath());
 		String jarLocationString = jar.getLocation().toString();
@@ -248,10 +267,10 @@ class ProjectDescription {
 				}
 			}
 		}
-		TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(jarRecord, ITaglibRecordEvent.ADD));
+		TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(jarRecord, deltaKind));
 	}
 
-	void addServlets(IResource webxml) {
+	void updateServlets(IResource webxml, int deltaKind) {
 		if (webxml.getType() != IResource.FILE)
 			return;
 		InputStream webxmlContents = null;
@@ -302,10 +321,10 @@ class ProjectDescription {
 			if (_debugIndexCreation)
 				System.out.println("created record for " + uri + "@" + record.location);
 		}
-		TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(servletRecord, ITaglibRecordEvent.ADD));
+		TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(servletRecord, deltaKind));
 	}
 
-	void addTagDir(IResource tagFile) {
+	void updateTagDir(IResource tagFile, int deltaKind) {
 		return;
 		/**
 		 * Make sure the tag file is n a WEB-INF/tags folder because of the
@@ -320,7 +339,7 @@ class ProjectDescription {
 		// }
 	}
 
-	void addTLD(IResource tld) {
+	void updateTLD(IResource tld, int deltaKind) {
 		if (_debugIndexCreation)
 			System.out.println("creating record for " + tld.getFullPath());
 		TLDRecord record = createTLDRecord(tld);
@@ -328,7 +347,7 @@ class ProjectDescription {
 		if (record.uri != null) {
 			getImplicitReferences(tld.getLocation().toString()).put(record.uri, record);
 		}
-		TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.ADD));
+		TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, deltaKind));
 	}
 
 	void clear() {
@@ -565,12 +584,12 @@ class ProjectDescription {
 					IPath libPath = entry.getPath();
 					if (!fClasspathJars.containsKey(libPath.toString())) {
 						if (libPath.toFile().exists()) {
-							addClasspathLibrary(libPath.toString());
+							updateClasspathLibrary(libPath.toString(), ITaglibRecordEvent.CHANGED);
 						}
 						else {
 							IFile libFile = ResourcesPlugin.getWorkspace().getRoot().getFile(libPath);
 							if (libFile != null && libFile.exists()) {
-								addClasspathLibrary(libFile.getLocation().toString());
+								updateClasspathLibrary(libFile.getLocation().toString(), ITaglibRecordEvent.CHANGED);
 							}
 						}
 					}
@@ -639,7 +658,7 @@ class ProjectDescription {
 			for (int i = 0; i < records.length; i++) {
 				fClasspathReferences.remove(records[i].getURI());
 			}
-			TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.REMOVE));
+			TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.REMOVED));
 		}
 	}
 
@@ -652,7 +671,7 @@ class ProjectDescription {
 			for (int i = 0; i < records.length; i++) {
 				getImplicitReferences(jar.getLocation().toString()).remove(records[i].getURI());
 			}
-			TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.REMOVE));
+			TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.REMOVED));
 		}
 	}
 
@@ -667,7 +686,7 @@ class ProjectDescription {
 					System.out.println("removed record for " + records[i].uri + "@" + records[i].location);
 				getImplicitReferences(webxml.getLocation().toString()).remove(records[i].getURI());
 			}
-			TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.REMOVE));
+			TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.REMOVED));
 		}
 	}
 
@@ -685,7 +704,7 @@ class ProjectDescription {
 			if (record.uri != null) {
 				getImplicitReferences(tld.getLocation().toString()).remove(record.uri);
 			}
-			TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.REMOVE));
+			TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.REMOVED));
 		}
 	}
 

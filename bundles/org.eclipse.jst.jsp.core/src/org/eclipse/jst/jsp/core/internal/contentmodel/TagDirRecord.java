@@ -24,6 +24,12 @@ public class TagDirRecord implements ITaglibRecord {
 	// tagdir's location
 	List tags = new ArrayList(0);
 
+	public boolean equals(Object obj) {
+		if (!(obj instanceof TagDirRecord))
+			return false;
+		return ((TagDirRecord) obj).location.equals(location);
+	}
+
 	/**
 	 * @return Returns the location.
 	 */
@@ -31,7 +37,7 @@ public class TagDirRecord implements ITaglibRecord {
 		return location;
 	}
 
-	public short getRecordType() {
+	public int getRecordType() {
 		return ITaglibRecord.TAGDIR;
 	}
 
@@ -47,5 +53,9 @@ public class TagDirRecord implements ITaglibRecord {
 	 */
 	public String[] getTags() {
 		return (String[]) tags.toArray(new String[tags.size()]);
+	}
+
+	public String toString() {
+		return "TagdirRecord: " + location + " <-> " + shortName;
 	}
 }

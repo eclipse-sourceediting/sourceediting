@@ -18,7 +18,13 @@ public class TLDRecord implements ITaglibRecord {
 	IPath location;
 	String uri;
 
-	public short getRecordType() {
+	public boolean equals(Object obj) {
+		if (!(obj instanceof TLDRecord))
+			return false;
+		return ((TLDRecord) obj).location.equals(location);
+	}
+
+	public int getRecordType() {
 		return ITaglibRecord.TLD;
 	}
 
@@ -34,5 +40,9 @@ public class TLDRecord implements ITaglibRecord {
 	 */
 	public String getURI() {
 		return uri;
+	}
+
+	public String toString() {
+		return "TLDRecord: " + location + " <-> " + uri;
 	}
 }

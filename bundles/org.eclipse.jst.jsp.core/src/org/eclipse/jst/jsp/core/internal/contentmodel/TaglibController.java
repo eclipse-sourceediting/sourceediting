@@ -45,10 +45,14 @@ import org.eclipse.wst.sse.core.util.Assert;
  */
 public class TaglibController implements IDocumentSetupParticipant {
 
-	class DocumentInfo {
+	class DocumentInfo implements ITaglibIndexListener {
 		IStructuredDocument document;
 		ITextFileBuffer textFileBuffer;
 		TLDCMDocumentManager tldDocumentManager;
+
+		public void indexChanged(ITaglibRecordEvent event) {
+			tldDocumentManager.indexChanged(event);
+		}
 	}
 
 	class FileBufferListener implements IFileBufferListener {
@@ -90,10 +94,12 @@ public class TaglibController implements IDocumentSetupParticipant {
 				info.tldDocumentManager.setSourceParser((JSPSourceParser) info.document.getParser());
 				synchronized (fDocumentMap) {
 					fDocumentMap.put(document, info);
+					TaglibIndex.addTaglibIndexListener(info);
 				}
 				if (document instanceof BasicStructuredDocument) {
 					((BasicStructuredDocument) document).reparse(this);
 				}
+				// info.tldDocumentManager.doRebuild();
 			}
 		}
 
@@ -116,6 +122,7 @@ public class TaglibController implements IDocumentSetupParticipant {
 				for (int i = 0; i < keys.length && !removed; i++) {
 					DocumentInfo info = (DocumentInfo) fDocumentMap.get(keys[i]);
 					if (info != null && info.textFileBuffer.equals(buffer)) {
+						TaglibIndex.removeTaglibIndexListener(info);
 						fDocumentMap.remove(keys[i]);
 						removed = true;
 					}
@@ -197,9 +204,9 @@ public class TaglibController implements IDocumentSetupParticipant {
 		ITextFileBuffer buffer = null;
 		synchronized (_instance.fDocumentMap) {
 			Iterator docInfos = _instance.fDocumentMap.values().iterator();
-			while (docInfos.hasNext()) {
+			while (docInfos.hasNext() && buffer == null) {
 				DocumentInfo info = (DocumentInfo) docInfos.next();
-				if (info.tldDocumentManager == manager)
+				if (info.tldDocumentManager.equals(manager))
 					buffer = info.textFileBuffer;
 			}
 		}
@@ -252,7 +259,8 @@ public class TaglibController implements IDocumentSetupParticipant {
 	 */
 	public void setup(IDocument document) {
 		// if we've already shutdown, just ignore
-		if (isShutdown()) return;
+		if (isShutdown())
+			return;
 		synchronized (_instance.fJSPdocuments) {
 			_instance.fJSPdocuments.add(document);
 		}
@@ -261,12 +269,12 @@ public class TaglibController implements IDocumentSetupParticipant {
 	private static synchronized boolean isShutdown() {
 		return fIsShutdown;
 	}
-	
+
 
 	private static synchronized void setShutdown(boolean isShutdown) {
 		fIsShutdown = isShutdown;
 	}
-	
+
 
 
 }

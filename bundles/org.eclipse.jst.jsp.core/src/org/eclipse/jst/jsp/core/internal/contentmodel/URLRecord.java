@@ -18,6 +18,12 @@ public class URLRecord implements ITaglibRecord {
 	String uri;
 	String baseLocation;
 
+	public boolean equals(Object obj) {
+		if (!(obj instanceof URLRecord))
+			return false;
+		return ((URLRecord) obj).baseLocation.equals(baseLocation) || ((URLRecord) obj).uri.equals(uri) || ((URLRecord) obj).url.equals(url);
+	}
+
 	public String getBaseLocation() {
 		return baseLocation;
 	}
@@ -26,7 +32,7 @@ public class URLRecord implements ITaglibRecord {
 		super();
 	}
 
-	public short getRecordType() {
+	public int getRecordType() {
 		return ITaglibRecord.URL;
 	}
 
@@ -42,5 +48,9 @@ public class URLRecord implements ITaglibRecord {
 	 */
 	public URL getURL() {
 		return url;
+	}
+
+	public String toString() {
+		return "URLRecord: " + baseLocation + " <-> " + uri;
 	}
 }

@@ -11,12 +11,14 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.contentmodel;
 
+import org.eclipse.core.resources.IResourceDelta;
+
 public interface ITaglibRecordEvent {
 	ITaglibRecord getTaglibRecord();
 
-	short getType();
+	int getType();
 
-	short ADD = 1;
-	short CHANGE = 1 << 1;
-	short REMOVE = 1 << 2;
+	int ADDED = IResourceDelta.ADDED;
+	int CHANGED = IResourceDelta.CHANGED;
+	int REMOVED = IResourceDelta.REMOVED;
 }

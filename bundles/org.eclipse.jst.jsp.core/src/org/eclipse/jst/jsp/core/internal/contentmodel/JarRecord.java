@@ -20,7 +20,13 @@ public class JarRecord implements ITaglibRecord {
 	IPath location;
 	List urlRecords;
 
-	public short getRecordType() {
+	public boolean equals(Object obj) {
+		if (!(obj instanceof JarRecord))
+			return false;
+		return ((JarRecord) obj).location.equals(location);
+	}
+
+	public int getRecordType() {
 		return ITaglibRecord.JAR;
 	}
 
@@ -36,5 +42,9 @@ public class JarRecord implements ITaglibRecord {
 	 */
 	public List getURLRecords() {
 		return urlRecords;
+	}
+
+	public String toString() {
+		return "JarRecord: " + location + " <-> " + urlRecords;
 	}
 }

@@ -12,11 +12,11 @@
 package org.eclipse.jst.jsp.core.internal.contentmodel;
 
 public interface ITaglibRecord {
-	short JAR = 1 << 2;
-	short TAGDIR = 1 << 4;
-	short TLD = 1 << 1;
-	short URL = 1;
-	short WEB_XML = 1 << 3;
+	int JAR = 1 << 2;
+	int TAGDIR = 1 << 4;
+	int TLD = 1 << 1;
+	int URL = 1;
+	int WEB_XML = 1 << 3;
 
-	short getRecordType();
+	int getRecordType();
 }
