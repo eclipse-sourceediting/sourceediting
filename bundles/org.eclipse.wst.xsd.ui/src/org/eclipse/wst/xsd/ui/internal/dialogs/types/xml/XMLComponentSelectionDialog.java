@@ -118,6 +118,7 @@ public Control createDialogArea(Composite parent) {
         GridData gd = new GridData();
         gd.horizontalSpan = 3;
         check.setLayoutData(gd);
+        check.setEnabled(false);
 
         return parent;
     }	/*
