@@ -1187,13 +1187,19 @@ class ModelManagerImpl implements IModelManager {
 		return getModelForEdit(stringId, Utilities.getMarkSupportedStream(inputStream), resolver);
 	}
 
-	public synchronized IStructuredModel getModelForEdit(String filename, InputStream inputStream, URIResolver resolver) throws IOException {
+	public synchronized IStructuredModel getModelForEdit(String id, InputStream inputStream, URIResolver resolver) throws IOException {
+		if (id == null) {
+			throw new IllegalArgumentException("Program Error: filename may not be null"); //$NON-NLS-1$
+		}
+		if (inputStream == null) {
+			throw new IllegalArgumentException("Program Error: model input stream may not be null"); //$NON-NLS-1$
+		}
 
 		InputStream istream = Utilities.getMarkSupportedStream(inputStream);
-		IModelHandler handler = calculateType(filename, istream);
+		IModelHandler handler = calculateType(id, istream);
 		Assert.isNotNull(handler, "model handler can not be null"); //$NON-NLS-1$
 		IStructuredModel result = null;
-		result = _commonCreateModel(istream, filename, handler, resolver, EDIT, null, null);
+		result = _commonCreateModel(istream, id, handler, resolver, EDIT, null, null);
 		return result;
 	}
 
