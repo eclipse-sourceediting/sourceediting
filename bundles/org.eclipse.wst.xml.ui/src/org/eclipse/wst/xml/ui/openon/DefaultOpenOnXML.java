@@ -16,6 +16,9 @@ package org.eclipse.wst.xml.ui.openon;
 
 import java.util.StringTokenizer;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.wst.common.contentmodel.CMAttributeDeclaration;
@@ -59,7 +62,7 @@ public class DefaultOpenOnXML extends AbstractOpenOn {
 			// handle doc type node
 			if (currNode.getNodeType() == Node.DOCUMENT_TYPE_NODE) {
 				XMLNode docNode = (XMLNode) currNode;
-				return new Region(docNode.getStartOffset(), docNode.getEndOffset());
+				return new Region(docNode.getStartOffset(), docNode.getEndOffset() - docNode.getStartOffset());
 			}
 
 			Attr linkableAtt = getLinkableAttrFromNode(currNode, offset);
@@ -103,8 +106,15 @@ public class DefaultOpenOnXML extends AbstractOpenOn {
 			sModel = getModelManager().getExistingModelForRead(getDocument());
 			if (sModel != null) {
 				baseLoc = sModel.getBaseLocation();
+				if (baseLoc != null) {
+					IFile modelFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(baseLoc));
+					if (modelFile != null) {
+						baseLoc = modelFile.getLocation().toString();
+					}
+				}
 			}
-		} finally {
+		}
+		finally {
 			if (sModel != null) {
 				sModel.releaseFromRead();
 			}
@@ -197,7 +207,8 @@ public class DefaultOpenOnXML extends AbstractOpenOn {
 		Attr currentAtt = null;
 		if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
 			currentAtt = (Attr) node;
-		} else {
+		}
+		else {
 			Node attN = getCurrentAttrNode(node, offset);
 			if (attN != null)
 				currentAtt = (Attr) attN;
@@ -257,7 +268,8 @@ public class DefaultOpenOnXML extends AbstractOpenOn {
 				baseLoc = getBaseLocation();
 				publicId = ((DocumentType) currNode).getPublicId();
 				systemId = ((DocumentType) currNode).getSystemId();
-			} else { // handle all other types of nodes
+			}
+			else { // handle all other types of nodes
 				Attr linkableAtt = getLinkableAttrFromNode(currNode, offset);
 				// found attribute to open on
 				if (linkableAtt != null) {
@@ -272,14 +284,16 @@ public class DefaultOpenOnXML extends AbstractOpenOn {
 					if ((XMLNS.equals(prefix)) || (XMLNS.equals(unprefixedName))) {
 						publicId = attrValue;
 						systemId = getLocationHint(linkableAtt.getOwnerElement(), publicId);
-					} else if ((XSI_NAMESPACE_URI.equals(DOMNamespaceHelper.getNamespaceURI(linkableAtt))) && (unprefixedName.equals("schemaLocation"))) { //$NON-NLS-1$
+					}
+					else if ((XSI_NAMESPACE_URI.equals(DOMNamespaceHelper.getNamespaceURI(linkableAtt))) && (unprefixedName.equals("schemaLocation"))) { //$NON-NLS-1$
 						// for now just use the first pair
 						// need to look into being more precise
 						StringTokenizer st = new StringTokenizer(attrValue);
 						publicId = st.hasMoreTokens() ? st.nextToken() : null;
 						systemId = st.hasMoreTokens() ? st.nextToken() : null;
 						// else check if xmlns publicId = value
-					} else {
+					}
+					else {
 						systemId = attrValue;
 					}
 				}
