@@ -20,9 +20,9 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.swt.custom.TableTree;
-import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.ActionFactory;
@@ -181,8 +181,8 @@ public class ConfigurablePropertySheetPage extends PropertySheetPage implements 
 	}
 
 	public void remove() {
-		if (getControl() instanceof TableTree) {
-			TableTreeItem[] items = ((TableTree) getControl()).getSelection();
+		if (getControl() instanceof Tree) {
+			TreeItem[] items = ((Tree) getControl()).getSelection();
 			List selectedNodes = getViewerSelectionManager().getSelectedNodes();
 			if (items != null && items.length == 1 && selectedNodes != null) {
 				Object data = items[0].getData();
