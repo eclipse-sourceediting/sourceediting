@@ -1275,7 +1275,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 				}
 			} else {
 				IDocument doc = getDocument();
-				Assert.isTrue(doc instanceof IStructuredDocument);
+				Assert.isTrue(doc instanceof IStructuredDocument, "Editing document must be an IStructuredDocument");
 				model = ModelPlugin.getDefault().getModelManager().getExistingModelForEdit(doc);
 				if (model == null) {
 					model = ModelPlugin.getDefault().getModelManager().getModelForEdit((IStructuredDocument) doc);
@@ -1944,7 +1944,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 * @see org.eclipse.ui.editors.text.TextEditor#initializeKeyBindingScopes()
 	 */
 	protected void initializeKeyBindingScopes() {
-		setKeyBindingScopes(new String[]{"org.eclipse.wst.sse.edit.ui.structuredTextEditorScope"}); //$NON-NLS-1$
+		setKeyBindingScopes(new String[]{"org.eclipse.wst.sse.ui.structuredTextEditorScope"}); //$NON-NLS-1$
 	}
 
 	protected void initSourceViewer(StructuredTextViewer sourceViewer) {
