@@ -1,3 +1,6 @@
+These notes pertain to the v20041210_2300 version 
+in CVS repository. 
+
 Note, the "05-24" directory *should* match
 the parser results from parser of same date, 
 *but* after transition to org.eclipse, it seems 
