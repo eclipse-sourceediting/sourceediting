@@ -214,6 +214,9 @@ class ModelManagerImpl implements IModelManager {
 			try {
 				model = _commonCreateModel(id, handler, resolver);
 				ModelLoader loader = handler.getModelLoader();
+				if(inputStream == null) {
+					Logger.log(Logger.WARNING, "model was requested for id " + id + " without a content InputStream");
+				}
 				loader.load(id, Utilities.getMarkSupportedStream(inputStream), model, encoding, lineDelimiter);
 			} catch (ResourceInUse e) {
 				// impossible, since we've already found
@@ -756,6 +759,8 @@ class ModelManagerImpl implements IModelManager {
 		IDocumentLoader loader = null;
 		ModelHandlerRegistry cr = getModelHandlerRegistry();
 		IModelHandler handler = cr.getHandlerForContentTypeId(contentTypeId);
+		if(handler == null)
+			Logger.log(Logger.ERROR, "Program error: no model handler found for " + contentTypeId);
 		loader = handler.getDocumentLoader();
 		IStructuredDocument result = (IStructuredDocument) loader.createNewStructuredDocument();
 		return result;
