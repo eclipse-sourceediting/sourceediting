@@ -12,6 +12,8 @@ package org.eclipse.wst.xml.core.tests.document;
 
 import java.io.IOException;
 
+import junit.framework.Assert;
+
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.filebuffers.ITextFileBufferManager;
@@ -55,7 +57,7 @@ public class FileBufferDocumentTester extends UnzippedProjectTester {
 	private void doTestCreateWithFacade(IFile file, Class expectedDocumentClass, Class expectedPartioner) throws IOException, CoreException {
 		DocumentLoaderForXML documentLoaderForXML = new DocumentLoaderForXML();
 		IDocument document = documentLoaderForXML.createNewStructuredDocument(file, null);
-		
+		Assert.assertNotNull(document);
 	}
 
 	private void doTestCreateCreateEmpty(String filePath, Class expectedDocumentClass, Class expectedPartioner) throws CoreException {
