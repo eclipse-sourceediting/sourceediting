@@ -66,26 +66,15 @@ public class XMLEditorPlugin extends AbstractUIPlugin {
 	 */
 	private TemplateStore fTemplateStore;
 
-	/**
-	 * true if editor preference store has been initialized with default
-	 * values false otherwise
-	 */
-	private boolean preferencesInitd = false;
-
 	public XMLEditorPlugin(IPluginDescriptor descriptor) {
 		super(descriptor);
 		instance = this;
 
-		// reference the preference store so
-		// initializeDefaultPreferences(IPreferenceStore preferenceStore) is
-		// called
-		IPreferenceStore store = getPreferenceStore();
-		// for some reason initializeDefaultPreferences is not always called,
-		// so
-		// just add an extra check to see if not initialized, then call init
-		if (!preferencesInitd) {
-			initializeDefaultPreferences(store);
-		}
+		// Force a call to initialize default preferences since
+		// initializeDefaultPreferences is only called if *this* plugin's
+		// preference store is accessed
+		initializeDefaultXMLPreferences(((AbstractUIPlugin)Platform.getPlugin(EditorPlugin.ID)).getPreferenceStore());
+
 		JobStatusLineHelper.init();
 	}
 
@@ -145,9 +134,7 @@ public class XMLEditorPlugin extends AbstractUIPlugin {
 		// ignore this preference store
 		// use EditorPlugin preference store
 		IPreferenceStore editorStore = ((AbstractUIPlugin) Platform.getPlugin(EditorPlugin.ID)).getPreferenceStore();
-		EditorPlugin.initializeDefaultEditorPreferences(editorStore);
 		initializeDefaultXMLPreferences(editorStore);
-		preferencesInitd = true;
 	}
 
 	protected void initializeDefaultXMLPreferences(IPreferenceStore store) {

@@ -47,10 +47,11 @@ public class CSSEditorPlugin extends AbstractUIPlugin {
 		} catch (MissingResourceException x) {
 			resourceBundle = null;
 		}
-		// reference the preference store so
-		// initializeDefaultPreferences(IPreferenceStore preferenceStore) is
-		// called
-		getPreferenceStore();
+
+		// Force a call to initialize default preferences since
+		// initializeDefaultPreferences is only called if *this* plugin's
+		// preference store is accessed
+		initializeDefaultCSSPreferences(((AbstractUIPlugin)Platform.getPlugin(EditorPlugin.ID)).getPreferenceStore());
 	}
 
 	/**
@@ -92,8 +93,6 @@ public class CSSEditorPlugin extends AbstractUIPlugin {
 		// ignore this preference store
 		// use EditorPlugin preference store
 		IPreferenceStore editorStore = ((AbstractUIPlugin) Platform.getPlugin(EditorPlugin.ID)).getPreferenceStore();
-		EditorPlugin.initializeDefaultEditorPreferences(editorStore);
-
 		initializeDefaultCSSPreferences(editorStore);
 	}
 

@@ -57,10 +57,11 @@ public class JSPEditorPlugin extends AbstractUIPlugin {
 	public JSPEditorPlugin(IPluginDescriptor descriptor) {
 		super(descriptor);
 		instance = this;
-
-		// reference the preference store so
-		// initializeDefaultPreferences(IPreferenceStore preferenceStore) is called
-		getPreferenceStore();
+		
+		// Force a call to initializeDefaultJSPPreferences since
+		// initializeDefaultPreferences is only called if *this* plugin's
+		// preference store is accessed
+		initializeDefaultJSPPreferences(((AbstractUIPlugin)Platform.getPlugin(EditorPlugin.ID)).getPreferenceStore());
 	}
 
 	public static JSPEditorPlugin getDefault() {
@@ -89,7 +90,6 @@ public class JSPEditorPlugin extends AbstractUIPlugin {
 		// ignore this preference store
 		// use EditorPlugin preference store
 		IPreferenceStore editorStore = ((AbstractUIPlugin)Platform.getPlugin(EditorPlugin.ID)).getPreferenceStore();
-		EditorPlugin.initializeDefaultEditorPreferences(editorStore);
 		initializeDefaultJSPPreferences(editorStore);
 	}
 

@@ -59,9 +59,10 @@ public class HTMLEditorPlugin extends AbstractUIPlugin {
 		super(descriptor);
 		instance = this;
 
-		// reference the preference store so
-		// initializeDefaultPreferences(IPreferenceStore preferenceStore) is called
-		getPreferenceStore();
+		// Force a call to initialize default preferences since
+		// initializeDefaultPreferences is only called if *this* plugin's
+		// preference store is accessed
+		initializeDefaultHTMLPreferences(((AbstractUIPlugin)Platform.getPlugin(EditorPlugin.ID)).getPreferenceStore());
 	}
 
 	public static HTMLEditorPlugin getDefault() {
@@ -90,7 +91,6 @@ public class HTMLEditorPlugin extends AbstractUIPlugin {
 		// ignore this preference store
 		// use EditorPlugin preference store
 		IPreferenceStore editorStore = ((AbstractUIPlugin)Platform.getPlugin(EditorPlugin.ID)).getPreferenceStore();
-		EditorPlugin.initializeDefaultEditorPreferences(editorStore);
 		initializeDefaultHTMLPreferences(editorStore);
 	}
 

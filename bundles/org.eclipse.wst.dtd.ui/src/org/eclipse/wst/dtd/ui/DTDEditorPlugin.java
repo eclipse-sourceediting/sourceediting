@@ -65,12 +65,6 @@ public class DTDEditorPlugin extends AbstractUIPlugin {
 		return ResourcesPlugin.getWorkspace();
 	}
 
-	/**
-	 * true if editor preference store has been initialized with default
-	 * values false otherwise
-	 */
-	private boolean preferencesInitd = false;
-
 	//Resource bundle.
 	private ResourceBundle resourceBundle;
 
@@ -88,16 +82,11 @@ public class DTDEditorPlugin extends AbstractUIPlugin {
 			resourceBundle = null;
 		}
 
-		// reference the preference store so
-		// initializeDefaultPreferences(IPreferenceStore preferenceStore) is
-		// called
-		IPreferenceStore store = getPreferenceStore();
-		// for some reason initializeDefaultPreferences is not always called,
-		// so
-		// just add an extra check to see if not initialized, then call init
-		if (!preferencesInitd) {
-			initializeDefaultPreferences(store);
-		}
+		// Force a call to initialize default preferences since
+		// initializeDefaultPreferences is only called if *this* plugin's
+		// preference store is accessed
+		initializeDefaultDTDPreferences(((AbstractUIPlugin)Platform.getPlugin(EditorPlugin.ID)).getPreferenceStore());
+
 	}
 
 	/**
@@ -144,12 +133,9 @@ public class DTDEditorPlugin extends AbstractUIPlugin {
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#initializeDefaultPluginPreferences()
 	 */
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
-
 		// ignore this preference store
 		// use EditorPlugin preference store
 		IPreferenceStore editorStore = ((AbstractUIPlugin) Platform.getPlugin(EditorPlugin.ID)).getPreferenceStore();
-		EditorPlugin.initializeDefaultEditorPreferences(editorStore);
 		initializeDefaultDTDPreferences(editorStore);
-		preferencesInitd = true;
 	}
 }
