@@ -86,7 +86,9 @@ public class TaglibController implements IDocumentSetupParticipant {
 				info.textFileBuffer = (ITextFileBuffer) buffer;
 				info.tldDocumentManager = new TLDCMDocumentManager();
 				info.tldDocumentManager.setSourceParser((JSPSourceParser) info.document.getParser());
-				fDocumentMap.put(document, info);
+				synchronized (fDocumentMap) {
+					fDocumentMap.put(document, info);
+				}
 				if (document instanceof BasicStructuredDocument) {
 					((BasicStructuredDocument) document).reparse(this);
 				}
@@ -174,10 +176,12 @@ public class TaglibController implements IDocumentSetupParticipant {
 	static TaglibController _instance = null;
 
 	public static ITextFileBuffer getFileBuffer(IDocument document) {
-		DocumentInfo info = (DocumentInfo) _instance.fDocumentMap.get(document);
-		if (info != null)
-			return info.textFileBuffer;
-		return null;
+		synchronized (_instance.fDocumentMap) {
+			DocumentInfo info = (DocumentInfo) _instance.fDocumentMap.get(document);
+			if (info != null)
+				return info.textFileBuffer;
+			return null;
+		}
 	}
 
 	/**
@@ -198,10 +202,12 @@ public class TaglibController implements IDocumentSetupParticipant {
 	}
 
 	public static TLDCMDocumentManager getTLDCMDocumentManager(IDocument document) {
-		DocumentInfo info = (DocumentInfo) _instance.fDocumentMap.get(document);
-		if (info != null)
-			return info.tldDocumentManager;
-		return null;
+		synchronized (_instance.fDocumentMap) {
+			DocumentInfo info = (DocumentInfo) _instance.fDocumentMap.get(document);
+			if (info != null)
+				return info.tldDocumentManager;
+			return null;
+		}
 	}
 
 	public static void shutdown() {
