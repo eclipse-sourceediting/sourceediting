@@ -42,7 +42,7 @@ import org.osgi.framework.Bundle;
 public class BreakpointProviderBuilder extends RegistryReader {
 
 	private static final String ATT_CLASS = "class"; //$NON-NLS-1$
-	//private static final String ATT_ID = "id"; //$NON-NLS-1$
+	// private static final String ATT_ID = "id"; //$NON-NLS-1$
 	private static final String ATT_CONTENT_TYPES = "contentTypes"; //$NON-NLS-1$
 	private static final String ATT_EXTENSIONS = "extensions"; //$NON-NLS-1$
 	private static BreakpointProviderBuilder instance;
@@ -82,15 +82,18 @@ public class BreakpointProviderBuilder extends RegistryReader {
 		if (bundle.getState() == Bundle.ACTIVE) {
 			try {
 				result[0] = createExecutableExtension(element, classAttribute);
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				handleCreateExecutableException(result, e);
 			}
-		} else {
+		}
+		else {
 			BusyIndicator.showWhile(null, new Runnable() {
 				public void run() {
 					try {
 						result[0] = createExecutableExtension(element, classAttribute);
-					} catch (CoreException e) {
+					}
+					catch (CoreException e) {
 						handleCreateExecutableException(result, e);
 					}
 				}
@@ -342,6 +345,7 @@ public class BreakpointProviderBuilder extends RegistryReader {
 
 	private void initCache() {
 		if (cache == null) {
+			cache = new ArrayList();
 			readContributions(TAG_BREAKPOINT_CONTRIBUTION, PL_BREAKPOINT);
 		}
 	}
@@ -371,7 +375,6 @@ public class BreakpointProviderBuilder extends RegistryReader {
 	 * @param extensionPoint
 	 */
 	protected void readContributions(String tag, String extensionPoint) {
-		cache = null;
 		targetContributionTag = tag;
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		readRegistry(registry, PLUGIN_ID, extensionPoint);
@@ -385,9 +388,8 @@ public class BreakpointProviderBuilder extends RegistryReader {
 		if (tag.equals(targetContributionTag)) {
 			readElementChildren(element);
 			return true;
-		} else if (tag.equals(TAG_PROVIDER)) {
-			if (cache == null)
-				cache = new ArrayList();
+		}
+		else if (tag.equals(TAG_PROVIDER)) {
 			cache.add(element);
 			return true; // just cache the element - don't go into it
 		}
