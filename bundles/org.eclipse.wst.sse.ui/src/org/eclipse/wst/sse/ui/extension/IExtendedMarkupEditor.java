@@ -21,9 +21,9 @@ import org.w3c.dom.Node;
 
 /**
  * IExtendedMarkupEditor
+ * @deprecated
  */
 public interface IExtendedMarkupEditor extends IExtendedSimpleEditor {
-
 
 	public Node getCaretNode();
 
