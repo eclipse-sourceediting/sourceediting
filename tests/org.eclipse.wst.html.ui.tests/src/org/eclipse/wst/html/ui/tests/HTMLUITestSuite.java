@@ -8,20 +8,19 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.html.ui.tests.application;
+package org.eclipse.wst.html.ui.tests;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.wst.html.ui.tests.VerifyEditorPlugin;
 
 
-public class SSEHTMLTestSuite extends junit.framework.TestSuite {
+public class HTMLUITestSuite extends junit.framework.TestSuite {
 	public static Test suite() {
-		return new SSEHTMLTestSuite();
+		return new HTMLUITestSuite();
 	}
 
-	public SSEHTMLTestSuite() {
+	public HTMLUITestSuite() {
 		super("SEDHTMLTestSuite");
 		addTest(new TestSuite(VerifyEditorPlugin.class));
 		//		addTest(new SSEModelTestSuite());

@@ -19,16 +19,16 @@ import org.eclipse.core.runtime.Plugin;
 /**
  * The main plugin class to be used in the desktop.
  */
-public class SSEForHTMLTestsPlugin extends Plugin {
+public class HTMLUITestsPlugin extends Plugin {
 	//The shared instance.
-	private static SSEForHTMLTestsPlugin plugin;
+	private static HTMLUITestsPlugin plugin;
 	//Resource bundle.
 	private ResourceBundle resourceBundle;
 
 	/**
 	 * The constructor.
 	 */
-	public SSEForHTMLTestsPlugin(IPluginDescriptor descriptor) {
+	public HTMLUITestsPlugin(IPluginDescriptor descriptor) {
 		super(descriptor);
 		plugin = this;
 		try {
@@ -42,7 +42,7 @@ public class SSEForHTMLTestsPlugin extends Plugin {
 	/**
 	 * Returns the shared instance.
 	 */
-	public static SSEForHTMLTestsPlugin getDefault() {
+	public static HTMLUITestsPlugin getDefault() {
 		return plugin;
 	}
 
@@ -51,7 +51,7 @@ public class SSEForHTMLTestsPlugin extends Plugin {
 	 * or 'key' if not found.
 	 */
 	public static String getResourceString(String key) {
-		ResourceBundle bundle = SSEForHTMLTestsPlugin.getDefault().getResourceBundle();
+		ResourceBundle bundle = HTMLUITestsPlugin.getDefault().getResourceBundle();
 		try {
 			return (bundle != null) ? bundle.getString(key) : key;
 		}

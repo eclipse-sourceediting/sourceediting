@@ -8,7 +8,7 @@
    class="org.eclipse.wst.html.ui.tests.SSEForHTMLTestsPlugin">
 
    <runtime>
-      <library name="ssehtmltests.jar">
+      <library name="htmluitests.jar">
          <export name="*"/>
       </library>
    </runtime>
@@ -31,26 +31,6 @@
       <import plugin="org.eclipse.ui.views"/>
    </requires>
 
-
-   <extension
-         id="ssehtmltests"
-         point="org.eclipse.core.runtime.applications">
-      <application>
-         <run
-               class="org.eclipse.wst.html.ui.tests.application.SSEHTMLTests">
-         </run>
-      </application>
-   </extension>
-<!-- TO GET PICKED UP BY com.ibm.etools.commontests.testcollector -->
-<!--
-   <extension
-         point="com.ibm.etools.commontests.testcollector.suites">
-      <suite
-            suiteName="SSE HTML Tests"
-            suiteClass="org.eclipse.wst.html.ui.tests.application.SSEHTMLTestSuite">
-      </suite>
-   </extension>
--->
    <extension
          point="org.eclipse.ui.editors">
       <!-- sync-on-page-switch editor -->

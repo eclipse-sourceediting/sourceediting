@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.Status;
  * plugins should make their own copy, with appropriate ID.
  */
 public class Logger {
-	private static Plugin fPlugin = SSEForHTMLTestsPlugin.getDefault();
+	private static Plugin fPlugin = HTMLUITestsPlugin.getDefault();
 	private static final String fPluginId = fPlugin.getDescriptor().getUniqueIdentifier();
 
 	private static final String TRACEFILTER_LOCATION = "/debug/tracefilter"; //$NON-NLS-1$
