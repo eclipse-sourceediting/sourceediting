@@ -57,7 +57,7 @@
          name="%Structured_JSP_Document_Factory_Extension.name">
       <factory
             contentTypeId="org.eclipse.jst.jsp.core.jspsource"
-            class="org.eclipse.wst.sse.core.filebuffers.BasicStructuredDocumentFactory:org.eclipse.jst.jsp.core.jspsource"/>
+            class="org.eclipse.wst.sse.core.filebuffers.BasicStructuredDocumentFactory"/>
    </extension>
    <extension point="org.eclipse.core.filebuffers.documentSetup"
          id="org.eclipse.jst.jsp.core.documentsetup"

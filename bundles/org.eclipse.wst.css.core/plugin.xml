@@ -66,7 +66,7 @@
          name="%Structured_CSS_Document_Factory_Extension.name">
       <factory
             contentTypeId="org.eclipse.wst.css.core.csssource"
-            class="org.eclipse.wst.sse.core.filebuffers.BasicStructuredDocumentFactory:org.eclipse.wst.css.core.csssource"/>
+            class="org.eclipse.wst.sse.core.filebuffers.BasicStructuredDocumentFactory"/>
    </extension>
    <extension
          point="org.eclipse.team.core.fileTypes">

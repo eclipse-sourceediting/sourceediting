@@ -54,7 +54,7 @@
          name="%Structured_XML_Document_Factory_Extension.name">
       <factory
             contentTypeId="org.eclipse.core.runtime.xml"
-            class="org.eclipse.wst.sse.core.filebuffers.BasicStructuredDocumentFactory:org.eclipse.core.runtime.xml"/>
+            class="org.eclipse.wst.sse.core.filebuffers.BasicStructuredDocumentFactory"/>
    </extension>
 	
    <extension
