@@ -17,10 +17,9 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.document.StructuredDocumentFactory;
 import org.eclipse.wst.sse.core.events.IStructuredDocumentListener;
 import org.eclipse.wst.sse.core.events.NewDocumentEvent;
@@ -512,8 +511,7 @@ public class UnitTests extends TestCase {
 	protected void setUpXML() {
 
 		//  type = com.ibm.sed.model.IStructuredModel.XML;
-		IModelManagerPlugin mmPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IModelManager mm = mmPlugin.getModelManager();
+		IModelManager mm = StructuredModelManager.getInstance().getModelManager();
 		try {
 			fModel = mm.createStructuredDocumentFor("dummy.xml", (InputStream) null, null);
 		}
@@ -539,8 +537,7 @@ public class UnitTests extends TestCase {
 	protected void setUpJSP() {
 
 		//type = com.ibm.sed.model.IStructuredModel.HTML;
-		IModelManagerPlugin mmPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IModelManager mm = mmPlugin.getModelManager();
+		IModelManager mm = StructuredModelManager.getInstance().getModelManager();
 		try {
 			fModel = mm.createStructuredDocumentFor("dummy.jsp", (InputStream) null, null);
 		}

@@ -16,7 +16,6 @@ import java.net.URL;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 
@@ -33,8 +32,8 @@ public class JSPUITestsPlugin extends Plugin {
 	/**
 	 * The constructor.
 	 */
-	public JSPUITestsPlugin(IPluginDescriptor descriptor) {
-		super(descriptor);
+	public JSPUITestsPlugin() {
+		super();
 		plugin = this;
 		try {
 			resourceBundle = ResourceBundle.getBundle("org.eclipse.jst.jsp.ui.tests.SSEForJSPTestsPluginResources");
@@ -73,7 +72,7 @@ public class JSPUITestsPlugin extends Plugin {
 	}
 	
 	public static URL getInstallLocation() {
-		URL installLocation = getDefault().getDescriptor().getInstallURL();
+		URL installLocation = Platform.getBundle("org.eclipse.jst.jsp.ui.tests").getEntry("/");
 		URL resolvedLocation = null;
 		try {
 			resolvedLocation = Platform.resolve(installLocation);

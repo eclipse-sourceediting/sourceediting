@@ -23,7 +23,6 @@ import java.util.ResourceBundle;
 
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 
@@ -74,7 +73,7 @@ public class CSSEncodingTestsPlugin extends Plugin {
 	}
 
 	public static URL getInstallLocation() {
-		URL installLocation = getDefault().getDescriptor().getInstallURL();
+		URL installLocation = Platform.getBundle("org.eclipse.wst.css.tests.encoding").getEntry("/");
 		URL resolvedLocation = null;
 		try {
 			resolvedLocation = Platform.resolve(installLocation);
@@ -128,8 +127,8 @@ public class CSSEncodingTestsPlugin extends Plugin {
 	/**
 	 * The constructor.
 	 */
-	public CSSEncodingTestsPlugin(IPluginDescriptor descriptor) {
-		super(descriptor);
+	public CSSEncodingTestsPlugin() {
+		super();
 		plugin = this;
 	}
 

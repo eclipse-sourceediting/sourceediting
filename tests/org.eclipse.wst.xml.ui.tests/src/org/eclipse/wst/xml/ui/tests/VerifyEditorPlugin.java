@@ -9,10 +9,10 @@
  ****************************************************************************/
 package org.eclipse.wst.xml.ui.tests;
 
+import junit.framework.TestCase;
+
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.wst.xml.ui.XMLEditorPlugin;
-
-import junit.framework.TestCase;
 
 
 public class VerifyEditorPlugin extends TestCase {

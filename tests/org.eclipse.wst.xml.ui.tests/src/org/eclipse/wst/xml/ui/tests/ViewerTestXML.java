@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.tests;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionManager;
 import org.eclipse.jface.action.Separator;
@@ -37,8 +36,8 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IndexedRegion;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.view.events.INodeSelectionListener;
@@ -360,8 +359,7 @@ public class ViewerTestXML extends ViewPart {
 	private void setupViewerForNew() {
 		stopFollowSelection(); // if was following selection, stop
 
-		IModelManagerPlugin modelManagerPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IModelManager modelManager = modelManagerPlugin.getModelManager();
+		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
 
 		IDocument doc = modelManager.createStructuredDocumentFor(IContentTypeIdentifier.ContentTypeID_SSEXML);
 		doc.set(DEFAULT_VIEWER_CONTENTS);

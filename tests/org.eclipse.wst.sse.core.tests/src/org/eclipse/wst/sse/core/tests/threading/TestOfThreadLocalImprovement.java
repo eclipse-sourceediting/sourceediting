@@ -14,9 +14,8 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -65,8 +64,7 @@ public class TestOfThreadLocalImprovement extends TestCase {
 
 	private IStructuredDocument getDocument(String content) throws IOException {
 		if (fDocument == null) {
-			IModelManagerPlugin modelManagerPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-			IModelManager modelManager = modelManagerPlugin.getModelManager();
+			IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
 			fDocument = modelManager.createStructuredDocumentFor("testPerf.xml", content, null);
 		}
 		return fDocument;

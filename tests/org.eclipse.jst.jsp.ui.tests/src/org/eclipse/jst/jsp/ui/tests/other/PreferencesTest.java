@@ -15,17 +15,20 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jst.jsp.ui.tests.Logger;
 import org.eclipse.wst.common.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.html.core.HTMLCorePlugin;
 import org.eclipse.wst.html.ui.HTMLEditorPlugin;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
+import org.eclipse.wst.sse.core.ModelPlugin;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.ui.EditorPlugin;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.xml.core.XMLModelPlugin;
 import org.eclipse.wst.xml.ui.XMLEditorPlugin;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleException;
 
 /**
  * @author amywu
@@ -61,22 +64,26 @@ public class PreferencesTest extends TestCase {
 	 * Need to be initialized or else default preferences won't be there
 	 */
 	private void initializeEditors() {
-		Platform.getPlugin("org.eclipse.wst.sse.ui");
-		Platform.getPlugin("org.eclipse.wst.xml.ui");
-		Platform.getPlugin("org.eclipse.wst.dtd.ui");
-		Platform.getPlugin("org.eclipse.wst.css.ui");
-		Platform.getPlugin("org.eclipse.wst.html.ui");
-		Platform.getPlugin("org.eclipse.wst.jsp.ui");
+		Bundle sseUI = Platform.getBundle("org.eclipse.wst.sse.ui");
+		Bundle xmlUI = Platform.getBundle("org.eclipse.wst.xml.ui");
+		Bundle dtdUI = Platform.getBundle("org.eclipse.wst.dtd.ui");
+		Bundle cssUI = Platform.getBundle("org.eclipse.wst.css.ui");
+		Bundle htmlUI = Platform.getBundle("org.eclipse.wst.html.ui");
+		Bundle jspUI = Platform.getBundle("org.eclipse.jst.jsp.ui");
+		try {
+			sseUI.start();
+			xmlUI.start();
+			dtdUI.start();
+			cssUI.start();
+			htmlUI.start();
+			jspUI.start();
+		} catch (BundleException e) {
+			Logger.logException(e);
+		}
 	}
 
 	public static void main(String[] args) {
 		junit.textui.TestRunner.run(PreferencesTest.class);
-	}
-
-	private IModelManagerPlugin getModelManagerPlugin() {
-
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		return plugin;
 	}
 
 	/**
@@ -91,7 +98,7 @@ public class PreferencesTest extends TestCase {
 			prefs = XMLModelPlugin.getDefault().getPluginPreferences();
 		}
 		else {
-			prefs = getModelManagerPlugin().getPluginPreferences();
+			prefs = ModelPlugin.getDefault().getPluginPreferences();
 		}
 		assertTrue("Could not find existing preference! Content type=" + contentType + " preference=" + pref, (prefs.contains(pref)));
 	}
@@ -158,19 +165,19 @@ public class PreferencesTest extends TestCase {
 
 	// editor prefs (use PreferenceStore)
 	protected void getDefaultEditorPreferenceString(String contentType, String pref, String expected) {
-		IPreferenceStore store = ((EditorPlugin) Platform.getPlugin("org.eclipse.wst.sse.ui")).getPreferenceStore();
+		IPreferenceStore store = EditorPlugin.getDefault().getPreferenceStore();
 		String val = store.getDefaultString(PreferenceKeyGenerator.generateKey(pref, contentType));
 		assertTrue("Get default pref failed! Content type=" + contentType + " preference=" + pref + " expected: " + expected + " found: " + val, (val.equals(expected)));
 	}
 
 	protected void getDefaultEditorPreferenceBoolean(String contentType, String pref, boolean expected) {
-		IPreferenceStore store = ((EditorPlugin) Platform.getPlugin("org.eclipse.wst.sse.ui")).getPreferenceStore();
+		IPreferenceStore store = EditorPlugin.getDefault().getPreferenceStore();
 		boolean val = store.getDefaultBoolean(PreferenceKeyGenerator.generateKey(pref, contentType));
 		assertTrue("Get default pref failed! Content type=" + contentType + " preference=" + pref + " expected: " + expected + " found: " + val, (val == expected));
 	}
 
 	protected void getDefaultEditorPreferenceInt(String contentType, String pref, int expected) {
-		IPreferenceStore store = ((EditorPlugin) Platform.getPlugin("org.eclipse.wst.sse.ui")).getPreferenceStore();
+		IPreferenceStore store = EditorPlugin.getDefault().getPreferenceStore();
 		int val = store.getDefaultInt(PreferenceKeyGenerator.generateKey(pref, contentType));
 		assertTrue("Get default pref failed! Content type=" + contentType + " preference=" + pref + " expected: " + expected + " found: " + val, (val == expected));
 	}

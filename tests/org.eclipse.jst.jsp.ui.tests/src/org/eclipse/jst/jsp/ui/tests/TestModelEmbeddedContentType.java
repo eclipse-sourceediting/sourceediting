@@ -15,13 +15,12 @@ import java.io.IOException;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerUtility;
 import org.eclipse.wst.sse.core.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.xml.core.document.XMLModel;
@@ -64,8 +63,7 @@ public class TestModelEmbeddedContentType extends TestCase {
 
 	public void testStructuredModelEmbeddedXML() throws IOException {
 		// First make (empty) structuredDocument
-		IModelManagerPlugin modelManagerPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IModelManager modelManager = modelManagerPlugin.getModelManager();
+		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
 		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_SSEXML);
 		assertTrue("model could not be created!", model != null);
 
@@ -78,8 +76,7 @@ public class TestModelEmbeddedContentType extends TestCase {
 
 	public void testStructuredModelEmbeddedHTML() throws IOException {
 		// First make (empty) structuredDocument
-		IModelManagerPlugin modelManagerPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IModelManager modelManager = modelManagerPlugin.getModelManager();
+		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
 		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_HTML);
 		assertTrue("model could not be created!", model != null);
 
@@ -92,8 +89,7 @@ public class TestModelEmbeddedContentType extends TestCase {
 
 	protected IStructuredModel doStructuredModelEmbeddedJSP() throws IOException {
 		// First make (empty) structuredDocument
-		IModelManagerPlugin modelManagerPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IModelManager modelManager = modelManagerPlugin.getModelManager();
+		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
 		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_JSP);
 		assertTrue("model could not be created!", model != null);
 

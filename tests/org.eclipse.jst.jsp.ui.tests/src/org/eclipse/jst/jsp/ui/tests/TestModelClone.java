@@ -17,14 +17,13 @@ import java.util.List;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.html.core.modelhandler.EmbeddedHTML;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.modelhandler.EmbeddedXML;
@@ -51,8 +50,7 @@ public class TestModelClone extends TestCase {
 
 	public void testCloneStructuredModelXML() throws IOException {
 		// First make (empty) structuredDocument
-		IModelManagerPlugin modelManagerPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IModelManager modelManager = modelManagerPlugin.getModelManager();
+		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
 		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_SSEXML);
 		assertTrue("model could not be created!", model != null);
 
@@ -70,8 +68,7 @@ public class TestModelClone extends TestCase {
 
 	public void testCloneStructuredModelHTML() throws IOException {
 		// First make (empty) structuredDocument
-		IModelManagerPlugin modelManagerPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IModelManager modelManager = modelManagerPlugin.getModelManager();
+		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
 		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_HTML);
 		assertTrue("model could not be created!", model != null);
 
@@ -89,8 +86,7 @@ public class TestModelClone extends TestCase {
 
 	public void testCloneStructuredModelJSP() throws IOException {
 		// First make (empty) structuredDocument
-		IModelManagerPlugin modelManagerPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IModelManager modelManager = modelManagerPlugin.getModelManager();
+		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
 		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_JSP);
 		assertTrue("model could not be created!", model != null);
 
@@ -114,8 +110,7 @@ public class TestModelClone extends TestCase {
 
 	public void testCloneStructuredModelJSPXML() throws IOException {
 		// First make (empty) structuredDocument
-		IModelManagerPlugin modelManagerPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IModelManager modelManager = modelManagerPlugin.getModelManager();
+		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
 		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_JSP);
 		assertTrue("model could not be created!", model != null);
 		// note, we initialy expect HTML, since there is not content
@@ -157,8 +152,7 @@ public class TestModelClone extends TestCase {
 
 	public void testCreateStructuredModelJSP() throws IOException {
 		// First make (empty) structuredDocument
-		IModelManagerPlugin modelManagerPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IModelManager modelManager = modelManagerPlugin.getModelManager();
+		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
 		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_JSP);
 		assertTrue("model could not be created!", model != null);
 
@@ -288,8 +282,7 @@ public class TestModelClone extends TestCase {
 
 	public void testCreateStructuredModelHTML() throws IOException {
 		// First make (empty) structuredDocument
-		IModelManagerPlugin modelManagerPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IModelManager modelManager = modelManagerPlugin.getModelManager();
+		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
 		IStructuredModel model = modelManager.createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_HTML);
 		assertTrue("model could not be created!", model != null);
 

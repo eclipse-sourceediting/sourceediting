@@ -1,9 +1,9 @@
 package org.eclipse.wst.sse.ui.tests;
 
+import junit.framework.TestCase;
+
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.wst.sse.ui.EditorPlugin;
-
-import junit.framework.TestCase;
 
 /*****************************************************************************
  * Copyright (c) 2004 IBM Corporation and others. All rights reserved. This

@@ -12,7 +12,7 @@ package org.eclipse.wst.html.ui.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.wst.html.ui.HTMLEditorPlugin;
+import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 
 
 public class VerifyEditorPlugin extends TestCase {
@@ -20,7 +20,7 @@ public class VerifyEditorPlugin extends TestCase {
 	public void testPluginExists() {
 		Plugin plugin = null;
 		try {
-			plugin = HTMLEditorPlugin.getDefault();
+			plugin = HTMLUIPlugin.getDefault();
 
 		} catch (Exception e) {
 			plugin = null;

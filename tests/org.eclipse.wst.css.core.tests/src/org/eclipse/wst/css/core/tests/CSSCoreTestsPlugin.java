@@ -13,7 +13,6 @@ package org.eclipse.wst.css.core.tests;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.core.runtime.Plugin;
 
 /**
@@ -28,8 +27,8 @@ public class CSSCoreTestsPlugin extends Plugin {
 	/**
 	 * The constructor.
 	 */
-	public CSSCoreTestsPlugin(IPluginDescriptor descriptor) {
-		super(descriptor);
+	public CSSCoreTestsPlugin() {
+		super();
 		plugin = this;
 		try {
 			resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.css.core.tests.CSSModelTestsPluginResources");

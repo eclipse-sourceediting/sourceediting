@@ -17,15 +17,14 @@ import java.text.DecimalFormat;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
 import org.eclipse.wst.css.core.internal.text.rules.StructuredTextPartitionerForCSS;
 import org.eclipse.wst.html.core.internal.text.rules.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.xml.core.text.rules.StructuredTextPartitionerForXML;
@@ -190,8 +189,7 @@ public class TestStructuredPartitioner extends TestCase {
 	 */
 	protected int doComputePartitioningTest(String filename) throws IOException, BadLocationException {
 
-		IModelManagerPlugin modelManagerPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IModelManager modelManager = modelManagerPlugin.getModelManager();
+		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
 		InputStream inStream = getClass().getResourceAsStream(filename);
 		if (inStream == null)
 			inStream = new StringBufferInputStream("");
@@ -242,8 +240,7 @@ public class TestStructuredPartitioner extends TestCase {
 	 */
 	protected int doTimedComputePartitioningTest(String filename) throws IOException, BadLocationException {
 	
-		IModelManagerPlugin modelManagerPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IModelManager modelManager = modelManagerPlugin.getModelManager();
+		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
 		InputStream inStream = getClass().getResourceAsStream(filename);
 		if (inStream == null)
 			inStream = new StringBufferInputStream("");
@@ -298,8 +295,7 @@ public class TestStructuredPartitioner extends TestCase {
 	 * @throws BadLocationException
 	 */
 	protected ITypedRegion getPartitionTest(String filename, int offset) throws IOException, BadLocationException {
-		IModelManagerPlugin modelManagerPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IModelManager modelManager = modelManagerPlugin.getModelManager();
+		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
 		InputStream inStream = getClass().getResourceAsStream(filename);
 		IStructuredModel model = modelManager.getModelForEdit(filename, inStream, null);
 

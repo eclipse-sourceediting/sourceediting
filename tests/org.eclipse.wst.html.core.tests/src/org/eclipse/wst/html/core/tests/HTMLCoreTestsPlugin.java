@@ -13,7 +13,6 @@ package org.eclipse.wst.html.core.tests;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.core.runtime.Plugin;
 
 /**
@@ -28,8 +27,8 @@ public class HTMLCoreTestsPlugin extends Plugin {
 	/**
 	 * The constructor.
 	 */
-	public HTMLCoreTestsPlugin(IPluginDescriptor descriptor) {
-		super(descriptor);
+	public HTMLCoreTestsPlugin() {
+		super();
 		plugin = this;
 		try {
 			resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.html.core.tests.SSEModelHTMLTestsPluginResources");

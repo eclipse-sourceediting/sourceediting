@@ -14,10 +14,9 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 
 /**
  * This class tests basic creation of IModelManager
@@ -36,10 +35,7 @@ public class TestModelManager extends TestCase {
 	}
 
 	public void testModelManager() throws IOException {
-		IModelManagerPlugin modelManagerPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		assertTrue("modelManagerPlugin must not be null", modelManagerPlugin != null);
-
-		IModelManager modelManager = modelManagerPlugin.getModelManager();
+		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
 		assertTrue("modelManager must not be null", modelManager != null);
 
 		IStructuredModel model = modelManager.getModelForEdit("test.xml", null, null);

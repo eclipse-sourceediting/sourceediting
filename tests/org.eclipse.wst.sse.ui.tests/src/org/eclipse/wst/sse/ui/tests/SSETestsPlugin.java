@@ -13,7 +13,6 @@ package org.eclipse.wst.sse.ui.tests;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.core.runtime.Plugin;
 
 /**
@@ -28,8 +27,8 @@ public class SSETestsPlugin extends Plugin {
 	/**
 	 * The constructor.
 	 */
-	public SSETestsPlugin(IPluginDescriptor descriptor) {
-		super(descriptor);
+	public SSETestsPlugin() {
+		super();
 		plugin = this;
 		try {
 			resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.sse.ui.tests.TestsPluginResources");

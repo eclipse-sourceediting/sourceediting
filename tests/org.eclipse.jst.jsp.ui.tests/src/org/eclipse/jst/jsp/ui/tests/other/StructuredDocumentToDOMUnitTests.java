@@ -13,9 +13,8 @@ package org.eclipse.jst.jsp.ui.tests.other;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.events.IStructuredDocumentListener;
 import org.eclipse.wst.sse.core.events.NewDocumentEvent;
 import org.eclipse.wst.sse.core.events.NoChangeEvent;
@@ -185,8 +184,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 		// always start with fresh model
 		IStructuredDocument f = null; //new com.ibm.sed.structuredDocument.impl.IStructuredDocument(com.ibm.sed.model.IStructuredModel.XML);
 
-		IModelManagerPlugin mmPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IModelManager mm = mmPlugin.getModelManager();
+		IModelManager mm = StructuredModelManager.getInstance().getModelManager();
 		try {
 			f = mm.createStructuredDocumentFor("dummy.xml", (InputStream) null, null);
 		}
@@ -244,8 +242,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 		// always start with fresh model
 		IStructuredDocument f = null; //new com.ibm.sed.structuredDocument.impl.IStructuredDocument(com.ibm.sed.model.IStructuredModel.XML);
 
-		IModelManagerPlugin mmPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IModelManager mm = mmPlugin.getModelManager();
+		IModelManager mm = StructuredModelManager.getInstance().getModelManager();
 		try {
 			f = mm.createStructuredDocumentFor("dummy.xml", (InputStream) null, null);
 		}
@@ -301,8 +298,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 		// always start with fresh model
 		IStructuredDocument f = null; //new com.ibm.sed.structuredDocument.impl.IStructuredDocument(com.ibm.sed.model.IStructuredModel.XML);
 
-		IModelManagerPlugin mmPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IModelManager mm = mmPlugin.getModelManager();
+		IModelManager mm = StructuredModelManager.getInstance().getModelManager();
 		try {
 			f = mm.createStructuredDocumentFor("dummy.xml", (InputStream) null, null);
 		}

@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Plugin;
+import org.osgi.framework.Bundle;
 
 /**
  * @author davidw
@@ -52,8 +52,8 @@ public class FileUtil {
 
 	public static File getPreviousResultsDirectory(String directoryRootName) throws IOException {
 		if (previousResultsDirectory == null && notTriedYet) {
-			Plugin plugin = Platform.getPlugin(PLUGIN_ID);
-			URL url = plugin.getDescriptor().getInstallURL();
+			Bundle bundle = Platform.getBundle(PLUGIN_ID);
+			URL url = bundle.getEntry("/"); //$NON-NLS-1$
 			//String installPath = url.getPath();
 			// add known file so URL method below can be used
 			// (doesn't seem to work for directory?)
@@ -87,8 +87,8 @@ public class FileUtil {
 	}
 
 	public static File makeFileFor(String directory, String filename, String testResultsDirectoryPrefix) throws IOException {
-		Plugin plugin = Platform.getPlugin(PLUGIN_ID);
-		URL url = plugin.getDescriptor().getInstallURL();
+		Bundle bundle = Platform.getBundle(PLUGIN_ID);
+		URL url = bundle.getEntry("/");  //$NON-NLS-1$
 		URL localURL = Platform.asLocalURL(url);
 		String installPath = localURL.getPath();
 		String totalDirectory = installPath + directory;

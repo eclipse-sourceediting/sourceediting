@@ -13,7 +13,6 @@ package org.eclipse.wst.xml.ui.tests;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -26,13 +25,6 @@ public class SSEForXMLTestsPlugin extends AbstractUIPlugin {
 	//Resource bundle.
 	private ResourceBundle resourceBundle;
 
-	/**
-	 * @param descriptor
-	 */
-	public SSEForXMLTestsPlugin(IPluginDescriptor descriptor) {
-		super(descriptor);
-		plugin = this;
-	}
 	/**
 	 * The constructor.
 	 */

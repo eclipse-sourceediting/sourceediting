@@ -382,7 +382,7 @@ public class PreviewEditor extends MultiPageEditorPart implements ITextEditor, I
 		if (getSourcePage() instanceof IExtendedSimpleEditor) {
 			return ((IExtendedSimpleEditor) getSourcePage()).validateEdit(context);
 		}
-		return new Status(IStatus.OK, HTMLUITestsPlugin.getDefault().getDescriptor().getUniqueIdentifier(), IStatus.OK, "", null);
+		return new Status(IStatus.OK, "org.eclipse.wst.html.ui.tests", IStatus.OK, "", null);
 	}
 
 	/*

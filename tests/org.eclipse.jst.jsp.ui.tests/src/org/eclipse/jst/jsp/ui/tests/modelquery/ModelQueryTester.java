@@ -22,6 +22,7 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jst.jsp.ui.JSPEditorPlugin;
 import org.eclipse.jst.jsp.ui.tests.Logger;
 import org.eclipse.jst.jsp.ui.tests.JSPUITestsPlugin;
 import org.eclipse.wst.common.contentmodel.CMAttributeDeclaration;
@@ -36,9 +37,8 @@ import org.eclipse.wst.common.contentmodel.modelquery.CMDocumentManager;
 import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.html.core.HTML40Namespace;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.ui.EditorPlugin;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
 import org.eclipse.wst.xml.core.document.XMLModel;
@@ -211,7 +211,7 @@ public class ModelQueryTester extends TestCase {
 	 */
 	public void testDTDLoadFromSystemID_1() {
 		setUpXML();
-		URL installationPath = Platform.getPlugin(JSPUITestsPlugin.ID).getDescriptor().getInstallURL();
+		URL installationPath = Platform.getBundle(JSPUITestsPlugin.ID).getEntry("/");
 		String diskLocation = null;
 		try {
 			diskLocation = Platform.resolve(installationPath).toExternalForm();
@@ -241,7 +241,7 @@ public class ModelQueryTester extends TestCase {
 	 *       be resolved properly.
 	 */
 	public void testDTDLoadFromSystemID_2() {
-		URL installationPath = Platform.getPlugin(JSPUITestsPlugin.ID).getDescriptor().getInstallURL();
+		URL installationPath = Platform.getBundle(JSPUITestsPlugin.ID).getEntry("/");
 		String diskLocation = null;
 		try {
 			diskLocation = Platform.resolve(installationPath).toExternalForm();
@@ -316,12 +316,10 @@ public class ModelQueryTester extends TestCase {
 
 	public static IStructuredModel createModel(String contentTypeID) {
 		// create an empty model with its default factories
-		IModelManagerPlugin mmp = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IStructuredModel model = mmp.getModelManager().createUnManagedStructuredModelFor(contentTypeID);
+		IStructuredModel model = StructuredModelManager.getInstance().getModelManager().createUnManagedStructuredModelFor(contentTypeID);
 
 		// add editor adapter factories
-		EditorPlugin plugin = (EditorPlugin) Platform.getPlugin(EditorPlugin.ID);
-		AdapterFactoryRegistry adapterRegistry = plugin.getAdapterFactoryRegistry();
+		AdapterFactoryRegistry adapterRegistry = JSPEditorPlugin.getDefault().getAdapterFactoryRegistry();
 		Iterator adapterList = adapterRegistry.getAdapterFactories();
 		// And all those appropriate for this particular type of content
 		while (adapterList.hasNext()) {

@@ -16,9 +16,8 @@ import java.io.InputStream;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 
 /**
@@ -47,8 +46,7 @@ public class TestStructuredDocumentClone extends TestCase {
 
 	public void testCloneStructuredDocumentXML() throws IOException {
 		// First make (empty) structuredDocument
-		IModelManagerPlugin modelManagerPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IModelManager modelManager = modelManagerPlugin.getModelManager();
+		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
 		IStructuredDocument structuredDocument = modelManager.createStructuredDocumentFor("dummy.xml", (InputStream) null, null);
 		assertTrue("structuredDocument could not be created!", structuredDocument != null);
 
@@ -72,8 +70,7 @@ public class TestStructuredDocumentClone extends TestCase {
 	 */
 	public void testCloneStructuredDocumentJSP() throws IOException {
 		// First make (empty) structuredDocument
-		IModelManagerPlugin modelManagerPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IModelManager modelManager = modelManagerPlugin.getModelManager();
+		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
 		IStructuredDocument structuredDocument = modelManager.createStructuredDocumentFor("dummy.jsp", (InputStream) null, null);
 		assertTrue("structuredDocument could not be created!", structuredDocument != null);
 
@@ -97,8 +94,7 @@ public class TestStructuredDocumentClone extends TestCase {
 	 */
 	public void testCloneStructuredDocumentJSPXML() throws IOException {
 		// First make (empty) structuredDocument
-		IModelManagerPlugin modelManagerPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		IModelManager modelManager = modelManagerPlugin.getModelManager();
+		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
 		String testContent = "<@! page contentType=\"text/xml\" @>";
 		IStructuredDocument structuredDocument = modelManager.createStructuredDocumentFor("dummy.jsp", testContent, null);
 		assertTrue("structuredDocument could not be created!", structuredDocument != null);

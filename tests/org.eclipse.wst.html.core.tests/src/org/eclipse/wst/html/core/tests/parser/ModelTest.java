@@ -19,14 +19,13 @@ import java.io.Writer;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.html.core.tests.utils.DateUtil;
 import org.eclipse.wst.html.core.tests.utils.FileUtil;
 import org.eclipse.wst.html.core.tests.utils.StringCompareUtil;
 import org.eclipse.wst.html.core.tests.utils.TestWriter;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.util.StringUtils;
@@ -75,12 +74,7 @@ public abstract class ModelTest extends TestCase {
 
 		IStructuredModel model = null;
 		try {
-
-			IModelManagerPlugin modelManagerPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-			//assertTrue("modelManagerPlugin must not be null",
-			// modelManagerPlugin != null);
-
-			IModelManager modelManager = modelManagerPlugin.getModelManager();
+			IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
 			//assertTrue("modelManager must not be null", modelManager !=
 			// null);
 
@@ -108,12 +102,7 @@ public abstract class ModelTest extends TestCase {
 
 		IStructuredModel model = null;
 		try {
-
-			IModelManagerPlugin modelManagerPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-			//assertTrue("modelManagerPlugin must not be null",
-			// modelManagerPlugin != null);
-
-			IModelManager modelManager = modelManagerPlugin.getModelManager();
+			IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
 			//assertTrue("modelManager must not be null", modelManager !=
 			// null);
 

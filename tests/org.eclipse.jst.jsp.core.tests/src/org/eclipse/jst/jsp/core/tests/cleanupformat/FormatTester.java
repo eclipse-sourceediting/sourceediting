@@ -16,11 +16,10 @@ import java.io.InputStream;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.html.core.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.format.AbstractStructuredFormatProcessor;
 import org.eclipse.wst.sse.core.format.IStructuredFormatPreferences;
 import org.eclipse.wst.sse.core.util.Debug;
@@ -37,8 +36,7 @@ public class FormatTester extends TestCase {
 		super(name);
 
 		// get model manager
-		IModelManagerPlugin modelManagerPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		fModelManager = modelManagerPlugin.getModelManager();
+		fModelManager = StructuredModelManager.getInstance().getModelManager();
 
 		// get format processor
 		fFormatProcessor = new FormatProcessorXML();

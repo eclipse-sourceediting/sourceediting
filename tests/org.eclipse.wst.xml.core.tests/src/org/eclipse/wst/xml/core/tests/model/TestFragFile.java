@@ -17,10 +17,9 @@ import java.io.UnsupportedEncodingException;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 
 
 
@@ -28,9 +27,8 @@ public class TestFragFile extends TestCase {
 
 	public void test() throws UnsupportedEncodingException, IOException {
 		IStructuredModel model = null;
-		IModelManagerPlugin modelManagerPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
 
-		IModelManager modelManager = modelManagerPlugin.getModelManager();
+		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
 
 //		String testString1 = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" + "<!--This is an internally generated file - manual changes to it will be ignored and overwritten.-->\r\n" + "<Fragment parent=\"/ejb-jar/enterprise-beans&lt;description,display-name,small-icon,large-icon\" destination=\"ejb-jar.xml\" type=\"xml\" xmlid=\"id,xmi:id\" tagSet=\"ejb\">\r\n" + "<session id=\"ejbs.TestBean\">\r\n" + "<ejb-name>Test</ejb-name>\r\n" + "<home>ejbs.TestHome</home>\r\n" + "<remote>ejbs.Test</remote>\r\n" + "<ejb-class>ejbs.TestBean</ejb-class>\r\n" + "<session-type>Stateless</session-type>\r\n" + "<transaction-type>Container</transaction-type>\r\n" + "</session>\r\n" + "</Fragment>";
 		String testString2 = "<!--This is an internally generated file - manual changes to it will be ignored and overwritten.-->\r\n" + "<Fragment parent=\"/ejb-jar/enterprise-beans&lt;description,display-name,small-icon,large-icon\" destination=\"ejb-jar.xml\" type=\"xml\" xmlid=\"id,xmi:id\" tagSet=\"ejb\">\r\n" + "<session id=\"ejbs.TestBean\">\r\n" + "<ejb-name>Test</ejb-name>\r\n" + "<home>ejbs.TestHome</home>\r\n" + "<remote>ejbs.Test</remote>\r\n" + "<ejb-class>ejbs.TestBean</ejb-class>\r\n" + "<session-type>Stateless</session-type>\r\n" + "<transaction-type>Container</transaction-type>\r\n" + "</session>\r\n" + "</Fragment>";

@@ -16,7 +16,6 @@ import java.net.URL;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 
@@ -32,8 +31,8 @@ public class SSEModelXMLTestsPlugin extends Plugin {
 	/**
 	 * The constructor.
 	 */
-	public SSEModelXMLTestsPlugin(IPluginDescriptor descriptor) {
-		super(descriptor);
+	public SSEModelXMLTestsPlugin() {
+		super();
 		plugin = this;
 		try {
 			resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.xml.core.tests.SSEModelXMLTestsPluginResources");
@@ -72,7 +71,7 @@ public class SSEModelXMLTestsPlugin extends Plugin {
 	}
 
 	public static URL getInstallLocation() {
-		URL installLocation = getDefault().getDescriptor().getInstallURL();
+		URL installLocation = Platform.getBundle("org.eclipse.wst.xml.core.tests").getEntry("/");
 		URL resolvedLocation = null;
 		try {
 			resolvedLocation = Platform.resolve(installLocation);

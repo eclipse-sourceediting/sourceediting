@@ -1,9 +1,9 @@
 package org.eclipse.wst.sse.core.tests;
 
 
-import org.eclipse.wst.sse.core.ModelPlugin;
-
 import junit.framework.TestCase;
+
+import org.eclipse.wst.sse.core.ModelPlugin;
 
 
 public class ExistenceTest extends TestCase {

@@ -21,11 +21,11 @@ import java.io.Writer;
 import java.net.URL;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Plugin;
 import org.eclipse.wst.css.core.document.ICSSModel;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.osgi.framework.Bundle;
 
 /**
  * 
@@ -34,8 +34,8 @@ public class FileUtil {
 	public static final String commonEOL = "\r\n";
 
 	public static File createFile(String directory, String filename) throws IOException {
-		Plugin plugin = Platform.getPlugin("org.eclipse.wst.css.core.tests"); //$NON-NLS-1$
-		URL url = plugin.getDescriptor().getInstallURL();
+		Bundle bundle = Platform.getBundle("org.eclipse.wst.css.core.tests"); //$NON-NLS-1$
+		URL url = bundle.getEntry("/"); //$NON-NLS-1$
 		URL localURL = Platform.asLocalURL(url);
 		String installPath = localURL.getPath();
 		String totalDirectory = installPath + directory;
@@ -76,12 +76,10 @@ public class FileUtil {
 	public static ICSSModel createModel() {
 		IStructuredModel model = null;
 		try {
-
-			IModelManagerPlugin modelManagerPlugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
 			// assertTrue("modelManagerPlugin must not be null",
 			// modelManagerPlugin != null);
 
-			IModelManager modelManager = modelManagerPlugin.getModelManager();
+			IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
 			// assertTrue("modelManager must not be null", modelManager !=
 			// null);
 

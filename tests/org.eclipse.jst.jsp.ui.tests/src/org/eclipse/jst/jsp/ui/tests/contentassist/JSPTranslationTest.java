@@ -33,8 +33,8 @@ import org.eclipse.jst.jsp.ui.tests.util.FileUtil;
 import org.eclipse.jst.jsp.ui.tests.util.ProjectUnzipUtility;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.xml.core.document.XMLDocument;
 import org.eclipse.wst.xml.core.document.XMLModel;
 
@@ -222,8 +222,7 @@ public class JSPTranslationTest extends TestCase {
 	 */
 	private IStructuredModel getStructuredModelForRead(IFile file) {
 		try {
-			IModelManagerPlugin modelManagerPlugin = (IModelManagerPlugin) org.eclipse.core.runtime.Platform.getPlugin(IModelManagerPlugin.ID);
-			IModelManager modelManager = modelManagerPlugin.getModelManager();
+			IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
 			return modelManager.getModelForRead(file);
 		}
 		catch (IOException ioex) {

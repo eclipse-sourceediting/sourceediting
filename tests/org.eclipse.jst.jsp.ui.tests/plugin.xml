@@ -13,7 +13,6 @@
       </library>
    </runtime>
    <requires>
-      <import plugin="org.eclipse.core.runtime.compatibility"/>
       <import plugin="org.eclipse.jface.text"/>
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.core.resources"/>
@@ -34,6 +33,9 @@
       <import plugin="org.eclipse.wst.html.ui"/>
       <import plugin="org.eclipse.wst.xml.ui"/>
       <import plugin="org.eclipse.ui.views"/>
+      <import plugin="org.eclipse.wst.css.ui"/>
+      <import plugin="org.eclipse.wst.javascript.common.ui"/>
+      <import plugin="org.eclipse.core.runtime"/>
    </requires>
 
 

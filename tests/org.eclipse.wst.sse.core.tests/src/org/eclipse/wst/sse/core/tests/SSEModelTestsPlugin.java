@@ -15,7 +15,6 @@ import java.util.ResourceBundle;
 
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.core.runtime.Plugin;
 
 /**
@@ -30,8 +29,8 @@ public class SSEModelTestsPlugin extends Plugin {
 	/**
 	 * The constructor.
 	 */
-	public SSEModelTestsPlugin(IPluginDescriptor descriptor) {
-		super(descriptor);
+	public SSEModelTestsPlugin() {
+		super();
 		plugin = this;
 		try {
 			resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.sse.core.tests.TestsPluginResources");

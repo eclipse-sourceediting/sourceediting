@@ -17,8 +17,8 @@ import junit.framework.TestCase;
 
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslator;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.document.XMLNode;
 
@@ -71,8 +71,7 @@ public class JSPJavaTranslatorTest extends TestCase {
 	protected IStructuredModel getStructuredModelForRead(String filename) {
 		try {
 			// create model
-			IModelManagerPlugin modelManagerPlugin = (IModelManagerPlugin) org.eclipse.core.runtime.Platform.getPlugin(IModelManagerPlugin.ID);
-			IModelManager modelManager = modelManagerPlugin.getModelManager();
+			IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
 			InputStream inStream = getClass().getResourceAsStream(filename);
 			IStructuredModel sModel = modelManager.getModelForRead(filename, inStream, null);
 			return sModel;

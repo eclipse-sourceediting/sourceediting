@@ -14,16 +14,14 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
+import org.eclipse.wst.sse.core.ModelPlugin;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 
 public class TestModelHandlers extends TestCase {
 	private static ModelHandlerRegistry getModelHandlerRegistry() {
-		IModelManagerPlugin plugin = (IModelManagerPlugin) Platform.getPlugin(IModelManagerPlugin.ID);
-		ModelHandlerRegistry registry = plugin.getModelHandlerRegistry();
+		ModelHandlerRegistry registry = ModelPlugin.getDefault().getModelHandlerRegistry();
 		return registry;
 	}
 
