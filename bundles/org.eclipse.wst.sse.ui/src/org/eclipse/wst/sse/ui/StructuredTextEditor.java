@@ -254,7 +254,11 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		public void modelReinitialized(IStructuredModel structuredModel) {
 			try {
 				if (getSourceViewer() != null) {
-					getSourceViewer().configure(getSourceViewerConfiguration());
+					SourceViewerConfiguration cfg = getSourceViewerConfiguration();
+					if (cfg != null && cfg instanceof StructuredTextViewerConfiguration) {
+						((StructuredTextViewerConfiguration) cfg).setEditorPart(StructuredTextEditor.this);
+					}
+					getSourceViewer().configure(cfg);
 				}
 			}
 			catch (Exception e) {
@@ -1101,24 +1105,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 				((IExecutionDelegatable) doc).setExecutionDelegate(null);
 			}
 		}
-		// check if we've been canceled ... that is,
-		// changes to model
-		// have not been saved. If so, and if someone else
-		// is sharing
-		// us in read mode, then we need to force a reload
-		// of model.
-		IStructuredModel model = fStructuredModel;
-		if (model != null) {
-			model.releaseFromEdit();
-		}
 
-		// disabled==the IDocument form may still be in use by others
-		// boolean needReload = isDirty() && (model.getReferenceCountForEdit()
-		// == 0) && (model.getReferenceCountForRead() > 0);
-		// IEditorInput input = getEditorInput();
-		// if (needReload) {
-		// doReload(model, input);
-		// }
 		fEditorDisposed = true;
 		disposeModelDependentFields();
 		// some things in the configuration need to clean
@@ -1143,6 +1130,16 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 
 		super.dispose();
 		Logger.trace("Source Editor", "StructuredTextEditor::dispose exit"); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#disposeDocumentProvider()
+	 */
+	protected void disposeDocumentProvider() {
+		if (fStructuredModel != null && !(getDocumentProvider() instanceof IModelProvider)) {
+			fStructuredModel.releaseFromEdit();
+		}
+		super.disposeDocumentProvider();
 	}
 
 	/**
@@ -1308,6 +1305,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			else {
 				IDocument doc = getDocument();
 				Assert.isTrue(doc instanceof IStructuredDocument, "Editing document must be an IStructuredDocument");
+				// corresponding releaseFromEdit occurs in disposeDocumentProvider
 				model = StructuredModelManager.getModelManager().getExistingModelForEdit(doc);
 				if (model == null) {
 					model = StructuredModelManager.getModelManager().getModelForEdit((IStructuredDocument) doc);
