@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.eclipse.wst.html.tests.encoding"
+   name="HTML Encoding Tests Plug-in"
+   version="1.0.0"
+   provider-name="Eclipse.org"
+   class="org.eclipse.wst.html.tests.encoding.HTMLEncodingTestsPlugin">
+
+   <runtime>
+      <library name="htmlencodingtests.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+
+   <requires>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="org.eclipse.core.runtime.compatibility"/>
+      <import plugin="org.eclipse.wst.common.encoding"/>
+      <import plugin="org.eclipse.wst.html.core"/>
+      <import plugin="org.eclipse.wst.xml.core"/>
+      <import plugin="org.junit"/>
+   </requires>
+
+</plugin>
