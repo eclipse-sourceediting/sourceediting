@@ -83,7 +83,6 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 		if (_debug) {
 			System.out.println("not implemented: tagdir loading for " + directory.getAbsolutePath());
 		}
-		// File[] tagfiles = directory.listFiles();
 		return null;
 	}
 
@@ -131,7 +130,10 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 		provider.setRootElementName(JSP11TLDNames.TAGLIB);
 		provider.setJarFileName(jarFileName);
 		provider.setFileName(contentFileName);
-		return loadDocument("jar:file://" + jarFileName + "!" + contentFileName, provider.getRootElement()); //$NON-NLS-1$ //$NON-NLS-2$
+		CMDocument document = loadDocument("jar:file://" + jarFileName + "!" + contentFileName, provider.getRootElement()); //$NON-NLS-1$ //$NON-NLS-2$
+		// TODO: Add the tags declared in META-INF/tags, see JSP 2.0 section
+		// 8.4.1
+		return document;
 	}
 
 	protected CMAttributeDeclaration createAttributeDeclaration(CMDocument document, Node attrNode) {
@@ -511,7 +513,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 					document.fElements.setNamedItem(ed.getNodeName(), ed);
 				}
 			}
-			// tag file
+			// tag-file
 			else if (nodeName.equals(JSP20TLDNames.TAG_FILE) && child.getNodeType() == Node.ELEMENT_NODE && child.hasChildNodes()) {
 				Element tagFileElement = (Element) child;
 				String path = tagFileElement.getAttribute(JSP20TLDNames.PATH);
@@ -606,7 +608,8 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 			}
 				break;
 			case (ITaglibRecord.TAGDIR) : {
-				// TODO: implement TAGDIR support
+//				TagDirRecord record = (TagDirRecord) reference;
+//				document = buildCMDocumentFromDirectory(record.getLocation().toFile());
 			}
 				break;
 			case (ITaglibRecord.URL) : {
