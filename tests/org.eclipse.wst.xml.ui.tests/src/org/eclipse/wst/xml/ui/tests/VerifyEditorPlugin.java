@@ -19,9 +19,9 @@ public class VerifyEditorPlugin extends TestCase {
 	public void testPluginExists() {
 		Plugin plugin = null;
 		try {
-			plugin = XMLUIPlugin.getDefault();
-
-		} catch (Exception e) {
+			plugin = XMLUIPlugin.getInstance();
+		}
+		catch (Exception e) {
 			plugin = null;
 		}
 		assertNotNull("xml editor plugin could not be instantiated", plugin);

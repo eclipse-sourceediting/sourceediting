@@ -20,12 +20,11 @@ public class VerifyEditorPlugin extends TestCase {
 	public void testPluginExists() {
 		Plugin plugin = null;
 		try {
-			plugin = HTMLUIPlugin.getDefault();
-
-		} catch (Exception e) {
+			plugin = HTMLUIPlugin.getInstance();
+		}
+		catch (Exception e) {
 			plugin = null;
 		}
 		assertNotNull("editor plugin could not be instantiated", plugin);
-
 	}
 }
