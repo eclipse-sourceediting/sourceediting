@@ -9,7 +9,7 @@
         <plugin id="org.eclipse.wst.xml.uriresolver.ui" />
         <plugin id="org.eclipse.wst.xml.validation" />
 
-
+		<!--  dw -->
         <package name="org.eclipse.wst.xml.core" />
         <package name="org.eclipse.wst.xml.core.contenttype" />
         <package name="org.eclipse.wst.xml.core.document" />
@@ -20,5 +20,7 @@
         <package name="org.eclipse.wst.xml.uriresolver" />
 
         <package name="org.eclipse.wst.xml.uriresolver.ui" />
+
+		<!--  add in viewer config for xml, phil -->
 
 </component>
