@@ -21,7 +21,7 @@ public class HTMLUITestSuite extends junit.framework.TestSuite {
 	}
 
 	public HTMLUITestSuite() {
-		super("SEDHTMLTestSuite");
+		super("HTML UI TestSuite");
 		addTest(new TestSuite(VerifyEditorPlugin.class));
 		//		addTest(new SSEModelTestSuite());
 
