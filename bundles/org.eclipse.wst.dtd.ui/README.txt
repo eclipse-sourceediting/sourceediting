@@ -1,1 +1,0 @@
-The dtd implementation of the sse editor.
