@@ -47,7 +47,7 @@ public class AnnotationHoverProcessor implements ITextHover {
 	protected IPreferenceStore fPreferenceStore = null;
 
 	/**
-	 *  
+	 * 
 	 */
 	public AnnotationHoverProcessor() {
 		super();
@@ -139,7 +139,8 @@ public class AnnotationHoverProcessor implements ITextHover {
 							if (!duplicated) {
 								messages.add(msg);
 							}
-						} else {
+						}
+						else {
 							messages.add(msg);
 						}
 					}
@@ -147,7 +148,8 @@ public class AnnotationHoverProcessor implements ITextHover {
 			}
 			if (messages.size() > 1) {
 				return formatMessages(messages);
-			} else if (messages.size() > 0) {
+			}
+			else if (messages.size() > 0) {
 				return formatMessage(messages.get(0).toString());
 			}
 		}
@@ -197,9 +199,11 @@ public class AnnotationHoverProcessor implements ITextHover {
 
 	protected boolean isAnnotationValid(Annotation a) {
 		AnnotationPreference preference = getAnnotationPreference(a);
+		if (preference == null)
+			return false;
 		String textPreferenceKey = preference.getTextPreferenceKey();
 		String highlightPreferenceKey = preference.getHighlightPreferenceKey();
-		if (preference == null || textPreferenceKey == null || !(getPreferenceStore().getBoolean(textPreferenceKey)) || highlightPreferenceKey == null || getPreferenceStore().getBoolean(highlightPreferenceKey))
+		if (textPreferenceKey == null || !(getPreferenceStore().getBoolean(textPreferenceKey)) || highlightPreferenceKey == null || getPreferenceStore().getBoolean(highlightPreferenceKey))
 			return false;
 		return true;
 	}
