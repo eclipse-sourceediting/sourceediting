@@ -23,7 +23,7 @@
 		<ant target="core-test" antfile="${library-file}" dir="${eclipse-home}">
 			<property name="data-dir" value="${workspace}" />
 			<property name="plugin-name" value="${plugin-name}" />
-			<property name="classname" value="org.eclipse.jst.jsp.ui.tests.SSEJSPTestSuite" />
+			<property name="classname" value="org.eclipse.jst.jsp.ui.tests.JSPUITestSuite" />
 		</ant>
 	</target>
 

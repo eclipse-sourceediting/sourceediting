@@ -19,12 +19,12 @@ import org.eclipse.jst.jsp.core.tests.contenttypeidentifier.contentspecific.Test
 
 
 
-public class SSEModelJSPTestSuite extends TestSuite {
+public class JSPCoreTestSuite extends TestSuite {
 	public static Test suite() {
-		return new SSEModelJSPTestSuite();
+		return new JSPCoreTestSuite();
 	}
 
-	public SSEModelJSPTestSuite() {
+	public JSPCoreTestSuite() {
 		super("SSEModelTestSuiteForJSP");
 
 		addTest(CleanupFormatTests.suite());

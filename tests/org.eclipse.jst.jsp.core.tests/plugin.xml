@@ -2,13 +2,13 @@
 <?eclipse version="3.0"?>
 <plugin
 	id="org.eclipse.jst.jsp.core.tests"
-	name="SSE Model JSP Tests"
+	name="JSP Core Tests"
 	version="1.0.0"
 	provider-name="Eclipse.org"
-	class="org.eclipse.jst.jsp.core.tests.SSEModelJSPTestsPlugin">
+	class="org.eclipse.jst.jsp.core.tests.JSPCoreTestsPlugin">
 
 	<runtime>
-		<library name="ssemodeljsptests.jar">
+		<library name="jspcoretests.jar">
 			<export name="*" />
 		</library>
 	</runtime>
@@ -19,18 +19,6 @@
 		<import plugin="org.eclipse.wst.xml.core" />
 		<import plugin="org.eclipse.wst.sse.core" />
 		<import plugin="org.eclipse.wst.common.encoding" />
-  <import plugin="org.eclipse.core.resources"/>
+  		<import plugin="org.eclipse.core.resources"/>
 	</requires>
-
-
-	<!-- TO GET PICKED UP BY com.ibm.etools.commontests.testcollector -->
-	<!--
-	<extension
-		point="com.ibm.etools.commontests.testcollector.suites">
-		<suite
-			suiteClass="org.eclipse.jst.jsp.core.tests.application.SSEModelJSPTestSuite"
-			suiteName="SSE Model JSP Tests">
-		</suite>
-	</extension>
-	-->
 </plugin>

@@ -2,5 +2,5 @@ bin
 bin.project
 build.xml
 org.eclipse.jst.jsp.core.tests_1.0.0.jar
-ssemodeljsptests.jar
+jspcoretests.jar
 temp.folder

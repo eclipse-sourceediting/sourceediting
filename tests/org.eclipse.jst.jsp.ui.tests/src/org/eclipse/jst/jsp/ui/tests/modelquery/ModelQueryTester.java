@@ -23,7 +23,7 @@ import junit.textui.TestRunner;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jst.jsp.ui.tests.Logger;
-import org.eclipse.jst.jsp.ui.tests.SSEJSPTestsPlugin;
+import org.eclipse.jst.jsp.ui.tests.JSPUITestsPlugin;
 import org.eclipse.wst.common.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.common.contentmodel.CMContent;
 import org.eclipse.wst.common.contentmodel.CMDataType;
@@ -211,7 +211,7 @@ public class ModelQueryTester extends TestCase {
 	 */
 	public void testDTDLoadFromSystemID_1() {
 		setUpXML();
-		URL installationPath = Platform.getPlugin(SSEJSPTestsPlugin.ID).getDescriptor().getInstallURL();
+		URL installationPath = Platform.getPlugin(JSPUITestsPlugin.ID).getDescriptor().getInstallURL();
 		String diskLocation = null;
 		try {
 			diskLocation = Platform.resolve(installationPath).toExternalForm();
@@ -241,7 +241,7 @@ public class ModelQueryTester extends TestCase {
 	 *       be resolved properly.
 	 */
 	public void testDTDLoadFromSystemID_2() {
-		URL installationPath = Platform.getPlugin(SSEJSPTestsPlugin.ID).getDescriptor().getInstallURL();
+		URL installationPath = Platform.getPlugin(JSPUITestsPlugin.ID).getDescriptor().getInstallURL();
 		String diskLocation = null;
 		try {
 			diskLocation = Platform.resolve(installationPath).toExternalForm();

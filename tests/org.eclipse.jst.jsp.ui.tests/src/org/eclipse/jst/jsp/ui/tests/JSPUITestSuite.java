@@ -28,12 +28,12 @@ import org.eclipse.jst.jsp.ui.tests.registry.AdapterFactoryRegistryTest;
 
 
 
-public class SSEJSPTestSuite extends TestSuite {
+public class JSPUITestSuite extends TestSuite {
 	public static Test suite() {
-		return new SSEJSPTestSuite();
+		return new JSPUITestSuite();
 	}
 
-	public SSEJSPTestSuite() {
+	public JSPUITestSuite() {
 		super("SSE JSP UI Test Suite");
 
 		//addTest(OtherTests.suite());

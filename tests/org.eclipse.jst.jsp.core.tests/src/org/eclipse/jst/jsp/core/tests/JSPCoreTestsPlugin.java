@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jst.jsp.ui.tests;
+package org.eclipse.jst.jsp.core.tests;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,21 +23,20 @@ import org.eclipse.core.runtime.Plugin;
 /**
  * The main plugin class to be used in the desktop.
  */
-public class SSEJSPTestsPlugin extends Plugin {
+public class JSPCoreTestsPlugin extends Plugin {
 	//The shared instance.
-	private static SSEJSPTestsPlugin plugin;
+	private static JSPCoreTestsPlugin plugin;
 	//Resource bundle.
 	private ResourceBundle resourceBundle;
-	public static final String ID = "org.eclipse.jst.jsp.ui.tests";
 
 	/**
 	 * The constructor.
 	 */
-	public SSEJSPTestsPlugin(IPluginDescriptor descriptor) {
+	public JSPCoreTestsPlugin(IPluginDescriptor descriptor) {
 		super(descriptor);
 		plugin = this;
 		try {
-			resourceBundle = ResourceBundle.getBundle("org.eclipse.jst.jsp.ui.tests.SSEForJSPTestsPluginResources");
+			resourceBundle = ResourceBundle.getBundle("org.eclipse.jst.jsp.core.tests.TestsPluginResources");
 		}
 		catch (MissingResourceException x) {
 			resourceBundle = null;
@@ -47,7 +46,7 @@ public class SSEJSPTestsPlugin extends Plugin {
 	/**
 	 * Returns the shared instance.
 	 */
-	public static SSEJSPTestsPlugin getDefault() {
+	public static JSPCoreTestsPlugin getDefault() {
 		return plugin;
 	}
 
@@ -56,7 +55,7 @@ public class SSEJSPTestsPlugin extends Plugin {
 	 * or 'key' if not found.
 	 */
 	public static String getResourceString(String key) {
-		ResourceBundle bundle = SSEJSPTestsPlugin.getDefault().getResourceBundle();
+		ResourceBundle bundle = JSPCoreTestsPlugin.getDefault().getResourceBundle();
 		try {
 			return (bundle != null) ? bundle.getString(key) : key;
 		}
@@ -71,7 +70,7 @@ public class SSEJSPTestsPlugin extends Plugin {
 	public ResourceBundle getResourceBundle() {
 		return resourceBundle;
 	}
-	
+
 	public static URL getInstallLocation() {
 		URL installLocation = getDefault().getDescriptor().getInstallURL();
 		URL resolvedLocation = null;
@@ -93,4 +92,5 @@ public class SSEJSPTestsPlugin extends Plugin {
 		File result = new File(location);
 		return result;
 	}
+
 }

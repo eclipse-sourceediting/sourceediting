@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jst.jsp.ui.tests.SSEJSPTestsPlugin;
+import org.eclipse.jst.jsp.ui.tests.JSPUITestsPlugin;
 import org.eclipse.jst.jsp.ui.tests.util.ProjectUnzipUtility;
 
 /**
@@ -37,7 +37,7 @@ public class UnzippedProjectTester extends TestCase {
 			String destinationProjectString = fTestProject.getLocation().toOSString();
 			String destinationFolder = destinationProjectString + "/";
 			// this zip file is sitting in the "root" of test plugin
-			File zipFile = SSEJSPTestsPlugin.getTestFile("testfiles.zip");
+			File zipFile = JSPUITestsPlugin.getTestFile("testfiles.zip");
 			ProjectUnzipUtility projUtil = new ProjectUnzipUtility();
 			projUtil.unzipAndImport(zipFile, destinationFolder);
 			projUtil.initJavaProject(TEST_PROJECT_NAME);
