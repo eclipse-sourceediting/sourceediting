@@ -143,8 +143,11 @@ import org.eclipse.wst.sse.ui.extensions.ConfigurationPointCalculator;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.NullSourceEditingTextTools;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.SourceEditingTextTools;
 import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckTarget;
+import org.eclipse.wst.sse.ui.internal.IModelProvider;
 import org.eclipse.wst.sse.ui.internal.Logger;
+import org.eclipse.wst.sse.ui.internal.ReadOnlyAwareDropTargetAdapter;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.StorageModelProvider;
 import org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction;
 import org.eclipse.wst.sse.ui.internal.debug.EditBreakpointAction;
 import org.eclipse.wst.sse.ui.internal.debug.ManageBreakpointAction;
@@ -156,6 +159,7 @@ import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.ui.internal.editor.StructuredModelDocumentProvider;
 import org.eclipse.wst.sse.ui.internal.extension.BreakpointProviderBuilder;
 import org.eclipse.wst.sse.ui.internal.hyperlink.OpenHyperlinkAction;
+import org.eclipse.wst.sse.ui.internal.properties.ShowPropertiesAction;
 import org.eclipse.wst.sse.ui.internal.selection.SelectionHistory;
 import org.eclipse.wst.sse.ui.internal.selection.StructureSelectEnclosingAction;
 import org.eclipse.wst.sse.ui.internal.selection.StructureSelectHistoryAction;
@@ -169,12 +173,11 @@ import org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfi
 import org.eclipse.wst.sse.ui.views.contentoutline.StructuredTextEditorContentOutlinePage;
 import org.eclipse.wst.sse.ui.views.properties.ConfigurablePropertySheetPage;
 import org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration;
-import org.eclipse.wst.sse.ui.views.properties.ShowPropertiesAction;
 import org.eclipse.wst.sse.ui.views.properties.StructuredPropertySheetConfiguration;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-public class StructuredTextEditor extends TextEditor implements IExtendedMarkupEditor, IExtendedMarkupEditorExtension, IDocumentListener, IShowInTargetList {
+public class StructuredTextEditor extends TextEditor implements IExtendedMarkupEditor, IExtendedMarkupEditorExtension, IDocumentListener {
 
 	class InternalElementStateListener implements IElementStateListener {
 
@@ -361,6 +364,20 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		}
 	}
 
+	class ShowInTargetListAdapter implements IShowInTargetList {
+		/**
+		 * Array of ID Strings that define the default show in targets for
+		 * this editor.
+		 * 
+		 * @see org.eclipse.ui.part.IShowInTargetList#getShowInTargetIds()
+		 * @return the array of ID Strings that define the default show in
+		 *         targets for this editor.
+		 */
+		public String[] getShowInTargetIds() {
+			return fShowInTargetIds;
+		}
+	}
+
 	class TimeOutExpired extends TimerTask {
 
 		public void run() {
@@ -405,15 +422,15 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		public void processPreModelEvent(ModelLifecycleEvent event) {
 		}
 	}
-	
+
 	protected final static char[] BRACKETS = {'{', '}', '(', ')', '[', ']'};
 	private static final long BUSY_STATE_DELAY = 1000;
 	public static final String CORE_SSE_ACTIVITY_ID = "com.ibm.wtp.xml.core"; //$NON-NLS-1$
 	protected static final String DOT = "."; //$NON-NLS-1$
+	private static final String EDITOR_CONTEXT_MENU_ID = "org.eclipse.wst.sse.ui.StructuredTextEditor.context"; //$NON-NLS-1$
 
 	/** Non-NLS strings */
 	private static final String EDITOR_KEYBINDING_SCOPE_ID = "org.eclipse.wst.sse.ui.structuredTextEditorScope"; //$NON-NLS-1$
-	private static final String EDITOR_CONTEXT_MENU_ID = "org.eclipse.wst.sse.ui.StructuredTextEditor.context"; //$NON-NLS-1$
 	public static final String GROUP_NAME_ADDITIONS = "additions"; //$NON-NLS-1$
 	public static final String GROUP_NAME_FORMAT = "Format"; //$NON-NLS-1$
 	public static final String GROUP_NAME_FORMAT_EXT = "Format.ext"; //$NON-NLS-1$
@@ -521,9 +538,9 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		else {
 			addAction(menu, ITextEditorActionConstants.GROUP_COPY, ITextEditorActionConstants.COPY);
 		}
-		
+
 		// from AbstractDecoratedTextEditor
-		IAction preferencesAction= getAction(ITextEditorActionConstants.CONTEXT_PREFERENCES);
+		IAction preferencesAction = getAction(ITextEditorActionConstants.CONTEXT_PREFERENCES);
 		menu.appendToGroup(IWorkbenchActionConstants.MB_ADDITIONS, new Separator(ITextEditorActionConstants.GROUP_SETTINGS));
 		menu.appendToGroup(ITextEditorActionConstants.GROUP_SETTINGS, preferencesAction);
 	}
@@ -637,6 +654,49 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 				super.close(save);
 			}
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#collectContextMenuPreferencePages()
+	 */
+	protected String[] collectContextMenuPreferencePages() {
+		List allIds = new ArrayList(0);
+
+		// get contributed preference pages
+		ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
+		String[] configurationIds = getConfigurationPoints();
+		for (int i = 0; i < configurationIds.length; i++) {
+			String[] definitions = builder.getDefinitions("preferencepages", configurationIds[i]); //$NON-NLS-1$
+			for (int j = 0; j < definitions.length; j++) {
+				String someIds = definitions[j];
+				if (someIds != null && someIds.length() > 0) {
+					// supports multiple comma-delimited page IDs in one
+					// element
+					String[] ids = StringUtils.unpack(someIds);
+					for (int k = 0; k < ids.length; k++) {
+						// trim, just to keep things clean
+						String id = ids[k].trim();
+						if (!allIds.contains(id)) {
+							allIds.add(id);
+						}
+					}
+				}
+			}
+		}
+
+		// add pages contributed by super
+		String[] superPages = super.collectContextMenuPreferencePages();
+		for (int m = 0; m < superPages.length; m++) {
+			// trim, just to keep things clean
+			String id = superPages[m].trim();
+			if (!allIds.contains(id)) {
+				allIds.add(id);
+			}
+		}
+
+		return (String[]) allIds.toArray(new String[0]);
 	}
 
 	/**
@@ -880,35 +940,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		initializeSourceViewer();
 	}
 
-	/**
-	 * Initializes the editor's source viewer and other items that were source
-	 * viewer-dependent.
-	 */
-	private void initializeSourceViewer() {
-		IAnnotationModel annotationModel = getDocumentProvider().getAnnotationModel(getEditorInput());
-		if (getTextViewer() != null)
-			getTextViewer().setModel(getModel(), annotationModel);
-
-		if (getViewerSelectionManager() != null)
-			getViewerSelectionManager().setModel(getModel());
-
-		// workaround for bugzilla#56801
-		// updates/reinstalls QuickDiff because some QuickDiff info is lost
-		// when SourceViewer.setModel/setDocument is called
-		updateDiffer();
-
-		computeAndSetDoubleClickAction(getModel());
-
-		IAction contentAssistAction = getAction(StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_PROPOSALS);
-		if (contentAssistAction instanceof IUpdate) {
-			((IUpdate) contentAssistAction).update();
-		}
-		IAction openHyperlinkAction = getAction(StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE);
-		if (openHyperlinkAction instanceof OpenHyperlinkAction) {
-			((OpenHyperlinkAction)openHyperlinkAction).setHyperlinkDetectors(getSourceViewerConfiguration().getHyperlinkDetectors(getSourceViewer()));
-		}
-	}
-
 	protected PropertySheetConfiguration createPropertySheetConfiguration() {
 		PropertySheetConfiguration cfg = null;
 		ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
@@ -925,7 +956,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 * 
 	 * @return
 	 */
-	protected String[] createShowInTargetIds() {
+	private String[] createShowInTargetIds() {
 		List allIds = new ArrayList(0);
 		ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
 		String[] configurationIds = getConfigurationPoints();
@@ -998,7 +1029,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	}
 
 	/**
-	 * @deprecated -  will be removed in M4
+	 * @deprecated - will be removed in M4
 	 */
 	protected SpellCheckTarget createSpellCheckTarget() {
 		SpellCheckTarget target = null;
@@ -1107,8 +1138,10 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		super.dispose();
 		Logger.trace("Source Editor", "StructuredTextEditor::dispose exit"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#disposeDocumentProvider()
 	 */
 	protected void disposeDocumentProvider() {
@@ -1124,7 +1157,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 * here.
 	 */
 	protected void disposeModelDependentFields() {
-
 		// none at this level
 	}
 
@@ -1160,20 +1192,16 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 					fCurrentRunnable = null;
 				}
 			};
-			// We need to ensure that this is run via
-			// 'asyncExec' since these
-			// notifications can come from a non-ui thread.
-			//
-			// The non-ui thread call would occur when
-			// creating a new file
-			// under
-			// ClearCase (or other library) control. The
-			// creation of the new
-			// file
-			// would trigger a validateEdit call, on
-			// another thread, that would
-			// prompt the user to add the new file to
-			// version control.
+			/*
+			 * We need to ensure that this is run via 'asyncExec' since these
+			 * notifications can come from a non-ui thread.
+			 * 
+			 * The non-ui thread call would occur when creating a new file
+			 * under ClearCase (or other library) control. The creation of the
+			 * new file would trigger a validateEdit call, on another thread,
+			 * that would prompt the user to add the new file to version
+			 * control.
+			 */
 			Display display = getDisplay();
 			if (display != null) {
 				if (Thread.currentThread() != display.getThread())
@@ -1236,7 +1264,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			}
 
 			IStructuredModel model = null;
-			// if we have a Model provider, get the model
+			// if we have a Model provider, get the model from it
 			if (getDocumentProvider() instanceof IModelProvider) {
 				model = ((IModelProvider) getDocumentProvider()).getModel(getEditorInput());
 				if (!model.isShared()) {
@@ -1246,7 +1274,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			else {
 				IDocument doc = getDocument();
 				Assert.isTrue(doc instanceof IStructuredDocument, "Editing document must be an IStructuredDocument");
-				// corresponding releaseFromEdit occurs in disposeDocumentProvider
+				// corresponding releaseFromEdit occurs in
+				// disposeDocumentProvider
 				model = StructuredModelManager.getModelManager().getExistingModelForEdit(doc);
 				if (model == null) {
 					model = StructuredModelManager.getModelManager().getModelForEdit((IStructuredDocument) doc);
@@ -1286,8 +1315,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		// AbstractTextEditor's
 		// implementation directly. The easiest way is to
 		// copy the method here.
-		
-//		 super.editorContextMenuAboutToShow(menu);
+
+		// super.editorContextMenuAboutToShow(menu);
 		abstractTextEditorContextMenuAboutToShow(menu);
 
 		addContextMenuActions(menu);
@@ -1351,7 +1380,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			result = this;
 		}
 		else if (IWorkbenchSiteProgressService.class.equals(required)) {
-			return getSite().getAdapter(IWorkbenchSiteProgressService.class);
+			return getEditorPart().getSite().getAdapter(IWorkbenchSiteProgressService.class);
 		}
 		// content outline page
 		else if (IContentOutlinePage.class.equals(required)) {
@@ -1395,6 +1424,9 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		}
 		else if (IToggleBreakpointsTarget.class.equals(required)) {
 			result = ToggleBreakpointsTarget.getInstance();
+		}
+		else if (IShowInTargetList.class.equals(required)) {
+			return new ShowInTargetListAdapter();
 		}
 		else {
 			Document document = getDOMDocument();
@@ -1458,7 +1490,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	}
 
 	/**
-	 * IExtendedMarkupEditorExtension method
+	 * @deprecated - will be removed in M4
 	 */
 	public Node getCursorNode() {
 		if (getModel() != null)
@@ -1468,7 +1500,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	}
 
 	/**
-	 * IExtendedMarkupEditorExtension method
+	 * @deprecated - will be removed in M4
 	 */
 	public int getCursorOffset() {
 		if (hoverX >= 0 && hoverY >= 0)
@@ -1535,7 +1567,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated - will be removed in M4
 	 * 
 	 * used only by Search and there are alternate means besides making this
 	 * API
@@ -1552,9 +1584,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	}
 
 	/**
-	 * Subclasses should override to allow find occurrences for different
-	 * region types.
-	 * 
+	 * @deprecated - will be removed in M4
 	 * @return
 	 */
 	protected String[] getFindOccurrencesRegionTypes() {
@@ -1569,7 +1599,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	}
 
 	/**
-	 * This value is set in initialize from input
+	 * @deprecated - may be made protected in M4 This value is set in
+	 *             initialize from input
 	 */
 	public IStructuredModel getModel() {
 		// was causing an exception when several editors
@@ -1626,6 +1657,10 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 * Computes the document offset underlying the given text widget graphics
 	 * coordinates.
 	 * 
+	 * @deprecated - only used by methods meant to be removed in M4
+	 * 
+	 * this method will be removed in M4
+	 * 
 	 * @param x
 	 *            the x coordinate inside the text widget
 	 * @param y
@@ -1651,7 +1686,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	}
 
 	/**
-	 * @deprecated
+	 * @deprecated - will be removed in M4
 	 * 
 	 * used only by Search and there are alternate means besides making this
 	 * API
@@ -1691,6 +1726,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 * used only by Search and there are alternate means besides making this
 	 * API
 	 * 
+	 * will be removed in M4
+	 * 
 	 * @param sdRegion
 	 *            the IStructuredDocumentRegion that you want to check
 	 *            selection on
@@ -1729,19 +1766,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	}
 
 	/**
-	 * Array of ID Strings that define the default show in targets for this
-	 * editor.
-	 * 
-	 * @see org.eclipse.ui.part.IShowInTargetList#getShowInTargetIds()
-	 * @return the array of ID Strings that define the default show in targets
-	 *         for this editor.
-	 */
-	public String[] getShowInTargetIds() {
-		return fShowInTargetIds;
-	}
-
-	/**
-	 * @deprecated -  will be removed in M4
+	 * @deprecated - will be removed in M4
 	 */
 	public SpellCheckTarget getSpellCheckTarget() {
 		return null;
@@ -1777,7 +1802,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	/**
 	 * @deprecated
 	 * 
-	 * will be made protected
+	 * will be made protected or removed in M4
 	 * 
 	 * @return
 	 */
@@ -1912,12 +1937,33 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		setKeyBindingScopes(new String[]{EDITOR_KEYBINDING_SCOPE_ID});
 	}
 
-	protected void initSourceViewer(StructuredTextViewer sourceViewer) {
-		// ensure decoration support is configured
-		getSourceViewerDecorationSupport(sourceViewer);
-		fMouseTracker = new MouseTracker();
-		fMouseTracker.start(sourceViewer.getTextWidget());
-		initializeDrop(sourceViewer);
+	/**
+	 * Initializes the editor's source viewer and other items that were source
+	 * viewer-dependent.
+	 */
+	private void initializeSourceViewer() {
+		IAnnotationModel annotationModel = getDocumentProvider().getAnnotationModel(getEditorInput());
+		if (getTextViewer() != null)
+			getTextViewer().setModel(getModel(), annotationModel);
+
+		if (getViewerSelectionManager() != null)
+			getViewerSelectionManager().setModel(getModel());
+
+		// workaround for bugzilla#56801
+		// updates/reinstalls QuickDiff because some QuickDiff info is lost
+		// when SourceViewer.setModel/setDocument is called
+		updateDiffer();
+
+		computeAndSetDoubleClickAction(getModel());
+
+		IAction contentAssistAction = getAction(StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_PROPOSALS);
+		if (contentAssistAction instanceof IUpdate) {
+			((IUpdate) contentAssistAction).update();
+		}
+		IAction openHyperlinkAction = getAction(StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE);
+		if (openHyperlinkAction instanceof OpenHyperlinkAction) {
+			((OpenHyperlinkAction) openHyperlinkAction).setHyperlinkDetectors(getSourceViewerConfiguration().getHyperlinkDetectors(getSourceViewer()));
+		}
 	}
 
 	/**
@@ -1936,6 +1982,14 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			resource = file.getProject();
 		}
 		configuration.configureOn(resource);
+	}
+
+	protected void initSourceViewer(StructuredTextViewer sourceViewer) {
+		// ensure decoration support is configured
+		getSourceViewerDecorationSupport(sourceViewer);
+		fMouseTracker = new MouseTracker();
+		fMouseTracker.start(sourceViewer.getTextWidget());
+		initializeDrop(sourceViewer);
 	}
 
 
@@ -1987,7 +2041,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	}
 
 	/**
-	 * @deprecated - no longer used
+	 * @deprecated - will be removed in M4
 	 * @param type
 	 * @return
 	 */
@@ -2447,7 +2501,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		}
 	}
 
-	protected void updateEncodingMemento() {
+	private void updateEncodingMemento() {
 		boolean failed = false;
 		IStructuredDocument doc = getModel().getStructuredDocument();
 		EncodingMemento memento = doc.getEncodingMemento();
@@ -2680,6 +2734,10 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		}
 	}
 
+	/**
+	 * @deprecated - will be removed in M4
+	 * Use getDocumentProvider and IDocumentProviderExtension instead
+	 */
 	public IStatus validateEdit(Shell context) {
 		IStatus status = STATUS_OK;
 		IEditorInput input = getEditorInput();
@@ -2740,45 +2798,5 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 				statusError(x.getStatus());
 			}
 		}
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#collectContextMenuPreferencePages()
-	 */
-	protected String[] collectContextMenuPreferencePages() {
-		List allIds = new ArrayList(0);
-		
-		// get contributed preference pages
-		ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
-		String[] configurationIds = getConfigurationPoints();
-		for (int i = 0; i < configurationIds.length; i++) {
-			String[] definitions = builder.getDefinitions("preferencepages", configurationIds[i]); //$NON-NLS-1$
-			for (int j = 0; j < definitions.length; j++) {
-				String someIds = definitions[j];
-				if (someIds != null && someIds.length() > 0) {
-					// supports multiple comma-delimited page IDs in one element 
-					String[] ids = StringUtils.unpack(someIds);
-					for (int k = 0; k < ids.length; k++) {
-						// trim, just to keep things clean
-						String id = ids[k].trim();
-						if (!allIds.contains(id)) {
-							allIds.add(id);
-						}
-					}
-				}
-			}
-		}
-		
-		// add pages contributed by super
-		String[] superPages =  super.collectContextMenuPreferencePages();
-		for (int m = 0; m < superPages.length; m++) {
-			// trim, just to keep things clean
-			String id = superPages[m].trim();
-			if (!allIds.contains(id)) {
-				allIds.add(id);
-			}
-		}
-
-		return (String[]) allIds.toArray(new String[0]);		
 	}
 }
