@@ -53,6 +53,7 @@ import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorStrategy;
 import org.eclipse.wst.sse.ui.style.Highlighter;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
 import org.eclipse.wst.sse.ui.taginfo.TextHoverManager;
+import org.eclipse.wst.sse.ui.util.Assert;
 import org.eclipse.wst.sse.ui.util.EditorUtility;
 
 
@@ -90,7 +91,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 		fPreferenceStore = store;
 		fContentAssistProcessors = new ArrayList();
 	}
-	
+
 	/**
 	 * Default constructor.
 	 */
@@ -279,7 +280,8 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 		 */
 		if (fHighlighter != null) {
 			fHighlighter.uninstall();
-		} else {
+		}
+		else {
 			Highlighter highlighter = new Highlighter();
 			highlighter.setDocumentPartitioning(getConfiguredDocumentPartitioning(viewer));
 			fHighlighter = highlighter;
@@ -478,11 +480,16 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	}
 
 	/**
-	 * Set the preference store used to initialize this configuration.
+	 * Set the preference store used to initialize this configuration. This
+	 * method should only be called once or always with the same value. If a
+	 * preference store was passed in via a constructor, it is an error to
+	 * call this method with a different preference store.
 	 * 
 	 * @param store
+	 *            the preference store to use
 	 */
 	public void setPreferenceStore(IPreferenceStore store) {
+		Assert.isLegal(fPreferenceStore == null || fPreferenceStore == store, "TextSourceViewerConfiguration's preference store may only be set once");
 		fPreferenceStore = store;
 	}
 }
