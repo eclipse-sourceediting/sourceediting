@@ -352,18 +352,6 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		if (fDocumentEvent == null) {
 			fDocumentEvent = new NullDocumentEvent();
 		}
-		if (fDocumentPartitioners != null) {
-			Iterator e = fDocumentPartitioners.values().iterator();
-			while (e.hasNext()) {
-				IDocumentPartitioner p = (IDocumentPartitioner) e.next();
-				// safeguard from listeners that throw exceptions
-				try {
-					p.documentAboutToBeChanged(fDocumentEvent);
-				} catch (Exception exception) {
-					Logger.logException(exception);
-				}
-			}
-		}
 		// we must assign listeners to local variable, since the add and
 		// remove
 		// listner
@@ -393,19 +381,22 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		}
 	}
 
-	private void _fireDocumentChanged(Object[] listeners, StructuredDocumentEvent event) {
+	private void notifyDocumentPartitionersAboutToChange(DocumentEvent documentEvent) {
 		if (fDocumentPartitioners != null) {
 			Iterator e = fDocumentPartitioners.values().iterator();
 			while (e.hasNext()) {
 				IDocumentPartitioner p = (IDocumentPartitioner) e.next();
 				// safeguard from listeners that throw exceptions
 				try {
-					p.documentChanged(fDocumentEvent);
+					p.documentAboutToBeChanged(documentEvent);
 				} catch (Exception exception) {
 					Logger.logException(exception);
 				}
 			}
 		}
+	}
+
+	private void _fireDocumentChanged(Object[] listeners, StructuredDocumentEvent event) {
 
 		// we must assign listeners to local variable, since the add and
 		// remove
@@ -454,6 +445,21 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 				if (Debug.perfTest || Debug.perfTestStructuredDocumentEventOnly) {
 					long stopTime = System.currentTimeMillis();
 					System.out.println("\n\t\t\t\t IStructuredDocument::fireStructuredDocumentEvent. Time was " + (stopTime - startTime) + " msecs to fire NewModelEvent to instance of " + holdListeners[i].getClass()); //$NON-NLS-2$//$NON-NLS-1$
+				}
+			}
+		}
+	}
+
+	private void notifyDocumentPartitionersDocumentChanged(DocumentEvent documentEvent) {
+		if (fDocumentPartitioners != null) {
+			Iterator e = fDocumentPartitioners.values().iterator();
+			while (e.hasNext()) {
+				IDocumentPartitioner p = (IDocumentPartitioner) e.next();
+				// safeguard from listeners that throw exceptions
+				try {
+					p.documentChanged(documentEvent);
+				} catch (Exception exception) {
+					Logger.logException(exception);
 				}
 			}
 		}
@@ -1101,9 +1107,17 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	}
 
 	private void fireDocumentAboutToChanged() {
+		// most DocumentAboutToBeChanged listeners do not anticipate
+		// DocumentEvent == null. So make sure documentEvent is not
+		// null. (this should never happen, yet it does sometimes)
+		if (fDocumentEvent == null) {
+			fDocumentEvent = new NullDocumentEvent();
+		}
+		
 		_fireStructuredDocumentAboutToChange(fStructuredDocumentAboutToChangeListeners);
 		// Note: the docEvent is created in replaceText API! (or set Text)
 		_fireDocumentAboutToChange(fPrenotifiedDocumentListeners);
+		notifyDocumentPartitionersAboutToChange(fDocumentEvent);
 		_fireDocumentAboutToChange(fDocumentListeners);
 	}
 
@@ -1157,6 +1171,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		_fireEvent(fStructuredDocumentChangingListeners, event);
 		_fireEvent(fStructuredDocumentChangedListeners, event);
 		_fireDocumentChanged(fPrenotifiedDocumentListeners, event);
+		notifyDocumentPartitionersDocumentChanged(event);
 		_fireDocumentChanged(fDocumentListeners, event);
 		_clearDocumentEvent();
 	}
@@ -1165,6 +1180,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		_fireEvent(fStructuredDocumentChangingListeners, event);
 		_fireEvent(fStructuredDocumentChangedListeners, event);
 		_fireDocumentChanged(fPrenotifiedDocumentListeners, event);
+		notifyDocumentPartitionersDocumentChanged(event);
 		_fireDocumentChanged(fDocumentListeners, event);
 		_clearDocumentEvent();
 	}
@@ -1173,6 +1189,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		_fireEvent(fStructuredDocumentChangingListeners, event);
 		_fireEvent(fStructuredDocumentChangedListeners, event);
 		_fireDocumentChanged(fPrenotifiedDocumentListeners, event);
+		notifyDocumentPartitionersDocumentChanged(event);
 		_fireDocumentChanged(fDocumentListeners, event);
 		_clearDocumentEvent();
 	}
@@ -1181,6 +1198,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		_fireEvent(fStructuredDocumentChangingListeners, event);
 		_fireEvent(fStructuredDocumentChangedListeners, event);
 		_fireDocumentChanged(fPrenotifiedDocumentListeners, event);
+		notifyDocumentPartitionersDocumentChanged(event);
 		_fireDocumentChanged(fDocumentListeners, event);
 		_clearDocumentEvent();
 	}
@@ -1189,6 +1207,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		_fireEvent(fStructuredDocumentChangingListeners, event);
 		_fireEvent(fStructuredDocumentChangedListeners, event);
 		_fireDocumentChanged(fPrenotifiedDocumentListeners, event);
+		notifyDocumentPartitionersDocumentChanged(event);
 		_fireDocumentChanged(fDocumentListeners, event);
 		_clearDocumentEvent();
 	}
@@ -2461,7 +2480,10 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		stopPostNotificationProcessing();
 		clearReadOnly();
 		// Note: event must be computed before 'fire' method called
-		fDocumentEvent = new DocumentEvent(this, 0, getLength(), theString);
+		// Note: judging from code in AbstractDocument, apparently the
+		// length in this event is the current length of 
+		// the document.
+		fDocumentEvent = new DocumentEvent(this, 0, length(), theString);
 		fireDocumentAboutToChanged();
 
 		acquireLock();
