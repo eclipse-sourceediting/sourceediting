@@ -38,6 +38,9 @@ public final class ContentTypeIdForDTD {
 		super();
 	}
 
+	/**
+	 * @return the DTD Content Type Identifier ID as a String
+	 */
 	static String getConstantString() {
 		return "org.eclipse.wst.dtd.core.dtdsource"; //$NON-NLS-1$
 	}
