@@ -50,37 +50,37 @@ public class SourceTest3 extends ModelTest {
 			String result = null;
 
 			source = "<% aaa %><%= bbb %>/<%! ccc %>ddd";
-			outputWriter.writeln("source: " + source);
+			fOutputWriter.writeln("source: " + source);
 			try {
 				validator.validateSource(source);
 			}
 			catch (InvalidCharacterException ex) {
-				outputWriter.writeln(ex.getMessage());
+				fOutputWriter.writeln(ex.getMessage());
 			}
 			result = validator.convertSource(source);
-			outputWriter.writeln("result: " + result);
+			fOutputWriter.writeln("result: " + result);
 
 			source = "<% aaa";
-			outputWriter.writeln("source: " + source);
+			fOutputWriter.writeln("source: " + source);
 			try {
 				validator.validateSource(source);
 			}
 			catch (InvalidCharacterException ex) {
-				outputWriter.writeln(ex.getMessage());
+				fOutputWriter.writeln(ex.getMessage());
 			}
 			result = validator.convertSource(source);
-			outputWriter.writeln("result: " + result);
+			fOutputWriter.writeln("result: " + result);
 
 			source = ">< % aaa %>";
-			outputWriter.writeln("source: " + source);
+			fOutputWriter.writeln("source: " + source);
 			try {
 				validator.validateSource(source);
 			}
 			catch (InvalidCharacterException ex) {
-				outputWriter.writeln(ex.getMessage());
+				fOutputWriter.writeln(ex.getMessage());
 			}
 			result = validator.convertSource(source);
-			outputWriter.writeln("result: " + result);
+			fOutputWriter.writeln("result: " + result);
 
 			saveAndCompareTestResults();
 

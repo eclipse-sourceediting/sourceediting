@@ -50,7 +50,7 @@ public class ElementTest2 extends ModelTest {
 
 			a.setPrefix("x");
 
-			outputWriter.writeln("a.tagName=" + a.getTagName());
+			fOutputWriter.writeln("a.tagName=" + a.getTagName());
 
 			printSource(model);
 			printTree(model);

@@ -48,7 +48,7 @@ public class TextTest2 extends ModelTest {
 			printSource(model);
 			printTree(model);
 
-			outputWriter.writeln(text.getNodeValue());
+			fOutputWriter.writeln(text.getNodeValue());
 
 			saveAndCompareTestResults();
 		}

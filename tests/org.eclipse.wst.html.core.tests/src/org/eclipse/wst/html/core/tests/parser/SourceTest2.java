@@ -50,59 +50,59 @@ public class SourceTest2 extends ModelTest {
 			String result = null;
 
 			source = "aaa<bbb>ccc";
-			outputWriter.writeln("source: " + source);
+			fOutputWriter.writeln("source: " + source);
 			try {
 				validator.validateSource(source);
 			}
 			catch (InvalidCharacterException ex) {
-				outputWriter.writeln(ex.getMessage());
+				fOutputWriter.writeln(ex.getMessage());
 			}
 			result = validator.convertSource(source);
-			outputWriter.writeln("result: " + result);
+			fOutputWriter.writeln("result: " + result);
 
 			source = "aaa&amp;bbb&gt;&lt;ccc&quot;&#64;";
-			outputWriter.writeln("source: " + source);
+			fOutputWriter.writeln("source: " + source);
 			try {
 				validator.validateSource(source);
 			}
 			catch (InvalidCharacterException ex) {
-				outputWriter.writeln(ex.getMessage());
+				fOutputWriter.writeln(ex.getMessage());
 			}
 			result = validator.convertSource(source);
-			outputWriter.writeln("result: " + result);
+			fOutputWriter.writeln("result: " + result);
 
 			source = "&amp;&&";
-			outputWriter.writeln("source: " + source);
+			fOutputWriter.writeln("source: " + source);
 			try {
 				validator.validateSource(source);
 			}
 			catch (InvalidCharacterException ex) {
-				outputWriter.writeln(ex.getMessage());
+				fOutputWriter.writeln(ex.getMessage());
 			}
 			result = validator.convertSource(source);
-			outputWriter.writeln("result: " + result);
+			fOutputWriter.writeln("result: " + result);
 
 			source = "\"aaa\"";
-			outputWriter.writeln("source: " + source);
+			fOutputWriter.writeln("source: " + source);
 			try {
 				validator.validateSource(source);
 			}
 			catch (InvalidCharacterException ex) {
-				outputWriter.writeln(ex.getMessage());
+				fOutputWriter.writeln(ex.getMessage());
 			}
 			result = validator.convertSource(source);
-			outputWriter.writeln("result: " + result);
+			fOutputWriter.writeln("result: " + result);
 
 			source = "\"a'a\"";
-			outputWriter.writeln("source: " + source);
+			fOutputWriter.writeln("source: " + source);
 			try {
 				validator.validateSource(source);
 			}
 			catch (InvalidCharacterException ex) {
-				outputWriter.writeln(ex.getMessage());
+				fOutputWriter.writeln(ex.getMessage());
 			}
 			result = validator.convertSource(source);
-			outputWriter.writeln("result: " + result);
+			fOutputWriter.writeln("result: " + result);
 
 			saveAndCompareTestResults();
 		}

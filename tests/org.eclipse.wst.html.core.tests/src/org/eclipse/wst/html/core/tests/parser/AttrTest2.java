@@ -52,12 +52,12 @@ public class AttrTest2 extends ModelTest {
 			Attr b = a.getAttributeNode("b");
 			b.setPrefix("x");
 
-			outputWriter.writeln("b.name=" + b.getName());
-			outputWriter.writeln("b.value=" + b.getValue());
+			fOutputWriter.writeln("b.name=" + b.getName());
+			fOutputWriter.writeln("b.value=" + b.getValue());
 			String ab = a.getAttribute("b");
-			outputWriter.writeln("a b=" + ab);
+			fOutputWriter.writeln("a b=" + ab);
 			String axb = a.getAttribute("x:b");
-			outputWriter.writeln("a x:b=" + axb);
+			fOutputWriter.writeln("a x:b=" + axb);
 
 			printSource(model);
 			printTree(model);

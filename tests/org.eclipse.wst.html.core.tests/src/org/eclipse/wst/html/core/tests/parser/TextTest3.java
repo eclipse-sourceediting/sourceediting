@@ -48,7 +48,7 @@ public class TextTest3 extends ModelTest {
 				text.setSource("hello <");
 			}
 			catch (InvalidCharacterException ex) {
-				outputWriter.writeln(ex.getMessage());
+				fOutputWriter.writeln(ex.getMessage());
 			}
 
 			printSource(model);
@@ -58,7 +58,7 @@ public class TextTest3 extends ModelTest {
 				text.setSource("hello &lt;");
 			}
 			catch (InvalidCharacterException ex) {
-				outputWriter.writeln(ex.getMessage());
+				fOutputWriter.writeln(ex.getMessage());
 			}
 
 			printSource(model);
@@ -68,7 +68,7 @@ public class TextTest3 extends ModelTest {
 				text.setSource("hello &unk;");
 			}
 			catch (InvalidCharacterException ex) {
-				outputWriter.writeln(ex.getMessage());
+				fOutputWriter.writeln(ex.getMessage());
 			}
 
 			printSource(model);
@@ -78,7 +78,7 @@ public class TextTest3 extends ModelTest {
 				text.setSource("hello &#65;");
 			}
 			catch (InvalidCharacterException ex) {
-				outputWriter.writeln(ex.getMessage());
+				fOutputWriter.writeln(ex.getMessage());
 			}
 
 			printSource(model);
@@ -88,7 +88,7 @@ public class TextTest3 extends ModelTest {
 				text.setSource("hello & good-bye");
 			}
 			catch (InvalidCharacterException ex) {
-				outputWriter.writeln(ex.getMessage());
+				fOutputWriter.writeln(ex.getMessage());
 			}
 
 			printSource(model);

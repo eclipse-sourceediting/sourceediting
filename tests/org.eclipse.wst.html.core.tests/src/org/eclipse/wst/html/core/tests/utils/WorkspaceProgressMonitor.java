@@ -16,6 +16,7 @@ class WorkspaceProgressMonitor implements IProgressMonitor {
 	private boolean finished = false;
 
 	public void beginTask(String name, int totalWork) {
+		// we dont' care
 	}
 
 	public void done() {
@@ -27,6 +28,7 @@ class WorkspaceProgressMonitor implements IProgressMonitor {
 	}
 
 	public void internalWorked(double work) {
+		// we dont' care
 	}
 
 	public boolean isCanceled() {
@@ -39,11 +41,14 @@ class WorkspaceProgressMonitor implements IProgressMonitor {
 	}
 
 	public void setTaskName(String name) {
+		// we don't care
 	}
 
 	public void subTask(String name) {
+		// we don't care
 	}
 
 	public void worked(int work) {
+		// we don't care
 	}
 }

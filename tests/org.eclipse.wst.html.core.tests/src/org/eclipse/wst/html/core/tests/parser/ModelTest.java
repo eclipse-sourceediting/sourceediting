@@ -37,7 +37,7 @@ public abstract class ModelTest extends TestCase {
 
 	public final static String testResultsDirectoryPrefix = "ParserResults";
 	private final static String fileExtension = ".txt";
-	protected TestWriter outputWriter = new TestWriter();
+	protected TestWriter fOutputWriter = new TestWriter();
 	private int READ_BUFFER_SIZE = 4096;
 
 	private boolean echoToSystemOut = false;
@@ -127,7 +127,7 @@ public abstract class ModelTest extends TestCase {
 	/**
 	 */
 	private void printClass() throws IOException {
-		outputWriter.writeln(getClass().getName());
+		fOutputWriter.writeln(getClass().getName());
 	}
 
 	public static void printException(Exception ex) {
@@ -140,7 +140,7 @@ public abstract class ModelTest extends TestCase {
 			for (int i = 0; i < indent; i++)
 				buffer.append("--");
 			buffer.append(StringUtils.escape(node.toString()));
-			outputWriter.writeln(buffer.toString());
+			fOutputWriter.writeln(buffer.toString());
 			indent++;
 			Node child = node.getFirstChild();
 			while (child != null) {
@@ -155,9 +155,9 @@ public abstract class ModelTest extends TestCase {
 
 	public void printSource(XMLModel model) {
 		try {
-			outputWriter.writeln("Source :");
-			outputWriter.writeln(model.getStructuredDocument().getText());
-			outputWriter.writeln("");
+			fOutputWriter.writeln("Source :");
+			fOutputWriter.writeln(model.getStructuredDocument().getText());
+			fOutputWriter.writeln("");
 		}
 		catch (Exception ex) {
 			printException(ex);
@@ -167,10 +167,10 @@ public abstract class ModelTest extends TestCase {
 	public void printTree(XMLModel model) {
 		try {
 			printFlatModel(model.getStructuredDocument());
-			new StructuredDocumentRegionChecker(outputWriter).checkModel(model);
-			outputWriter.writeln("Tree :");
+			new StructuredDocumentRegionChecker(fOutputWriter).checkModel(model);
+			fOutputWriter.writeln("Tree :");
 			printNode(model.getDocument(), 0);
-			outputWriter.writeln("");
+			fOutputWriter.writeln("");
 
 		}
 		catch (Exception ex) {
@@ -185,15 +185,15 @@ public abstract class ModelTest extends TestCase {
 			String currentFilename = getClass().getName() + fileExtension;
 			File fileout = FileUtil.makeFileFor(testOutputDirectory, currentFilename, testResultsDirectoryPrefix);
 			Writer fileWriter = new FileWriter(fileout);
-			fileWriter.write(outputWriter.toString());
+			fileWriter.write(fOutputWriter.toString());
 			fileWriter.close();
-			compareWithPreviousResults(outputWriter, currentFilename);
+			compareWithPreviousResults(fOutputWriter, currentFilename);
 
 			if (echoToSystemOut) {
-				System.out.println(outputWriter.toString());
+				System.out.println(fOutputWriter.toString());
 			}
 
-			outputWriter.close();
+			fOutputWriter.close();
 		}
 		catch (IOException e) {
 			e.printStackTrace();
@@ -280,16 +280,16 @@ public abstract class ModelTest extends TestCase {
 	public abstract void testModel();
 
 	protected void printFlatModel(IStructuredDocument flatModel) {
-		outputWriter.writeln("");
-		outputWriter.writeln("StructuredDocument Regions :");
+		fOutputWriter.writeln("");
+		fOutputWriter.writeln("StructuredDocument Regions :");
 		IStructuredDocumentRegion flatnode = flatModel.getFirstStructuredDocumentRegion();
 		while (flatnode != null) {
 
-			outputWriter.writeln(flatnode.toString());
+			fOutputWriter.writeln(flatnode.toString());
 			flatnode = flatnode.getNext();
 
 		}
-		outputWriter.writeln("");
+		fOutputWriter.writeln("");
 
 	}
 }

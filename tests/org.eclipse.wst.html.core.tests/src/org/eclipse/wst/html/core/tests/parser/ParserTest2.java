@@ -52,7 +52,7 @@ public class ParserTest2 extends ModelTest {
 				Node attr = attributes.item(i);
 				String name = attr.getNodeName();
 				String value = attr.getNodeValue();
-				outputWriter.writeln(name + "=[" + value + "]");
+				fOutputWriter.writeln(name + "=[" + value + "]");
 			}
 
 			structuredDocument.replaceText(null, 8, 0, "d");
@@ -66,7 +66,7 @@ public class ParserTest2 extends ModelTest {
 				Node attr = attributes.item(i);
 				String name = attr.getNodeName();
 				String value = attr.getNodeValue();
-				outputWriter.writeln(name + "=[" + value + "]");
+				fOutputWriter.writeln(name + "=[" + value + "]");
 			}
 
 			structuredDocument.replaceText(null, 8, 1, "");
@@ -80,7 +80,7 @@ public class ParserTest2 extends ModelTest {
 				Node attr = attributes.item(i);
 				String name = attr.getNodeName();
 				String value = attr.getNodeValue();
-				outputWriter.writeln(name + "=[" + value + "]");
+				fOutputWriter.writeln(name + "=[" + value + "]");
 			}
 
 			saveAndCompareTestResults();

@@ -56,7 +56,7 @@ public class PITest extends ModelTest {
 				String data = pi.getData();
 				if (data == null)
 					data = "null";
-				outputWriter.writeln("target(" + target + ") data (" + data + ")");
+				fOutputWriter.writeln("target(" + target + ") data (" + data + ")");
 			}
 
 			saveAndCompareTestResults();

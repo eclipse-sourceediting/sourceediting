@@ -49,13 +49,13 @@ public class AttrTest3 extends ModelTest {
 			Element c = (Element) a.getFirstChild();
 
 			Attr xmlns = a.getAttributeNode("xmlns");
-			outputWriter.writeln("xmlns [" + xmlns.getNamespaceURI() + "]");
+			fOutputWriter.writeln("xmlns [" + xmlns.getNamespaceURI() + "]");
 			Attr xmlns_b = a.getAttributeNode("xmlns:b");
-			outputWriter.writeln("xmlns:b [" + xmlns_b.getNamespaceURI() + "]");
+			fOutputWriter.writeln("xmlns:b [" + xmlns_b.getNamespaceURI() + "]");
 			Attr d = c.getAttributeNode("d");
-			outputWriter.writeln("d [" + d.getNamespaceURI() + "]");
+			fOutputWriter.writeln("d [" + d.getNamespaceURI() + "]");
 			Attr b_e = c.getAttributeNode("b:e");
-			outputWriter.writeln("b:e [" + b_e.getNamespaceURI() + "]");
+			fOutputWriter.writeln("b:e [" + b_e.getNamespaceURI() + "]");
 
 			saveAndCompareTestResults();
 		}

@@ -46,7 +46,7 @@ public class CDATASectionTest2 extends ModelTest {
 			printSource(model);
 			printTree(model);
 
-			outputWriter.writeln(cdata.getData());
+			fOutputWriter.writeln(cdata.getData());
 
 			cdata.setData("new content");
 
@@ -54,14 +54,14 @@ public class CDATASectionTest2 extends ModelTest {
 			printSource(model);
 			printTree(model);
 
-			outputWriter.writeln(cdata.getData());
+			fOutputWriter.writeln(cdata.getData());
 
 			cdata.setData("new content");
 
 			printSource(model);
 			printTree(model);
 
-			outputWriter.writeln(cdata.getData());
+			fOutputWriter.writeln(cdata.getData());
 
 			saveAndCompareTestResults();
 		}

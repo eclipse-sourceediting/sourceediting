@@ -47,19 +47,19 @@ public class UpdaterTestRegionChanged extends ModelTest {
 
 			StructuredDocumentEvent fmEvent = structuredDocument.replaceText(null, 5, 1, "");
 			if (fmEvent instanceof RegionChangedEvent) {
-				outputWriter.writeln("ok: RegionChangedEvent");
+				fOutputWriter.writeln("ok: RegionChangedEvent");
 			}
 			else {
-				outputWriter.writeln("not ok: " + fmEvent.getClass().getName());
+				fOutputWriter.writeln("not ok: " + fmEvent.getClass().getName());
 			}
 
 			Node after = document.getFirstChild();
 
 			if (before != after) {
-				outputWriter.writeln("not ok: Node replaced");
+				fOutputWriter.writeln("not ok: Node replaced");
 			}
 			else {
-				outputWriter.writeln("ok: Node not replaced");
+				fOutputWriter.writeln("ok: Node not replaced");
 			}
 
 			saveAndCompareTestResults();

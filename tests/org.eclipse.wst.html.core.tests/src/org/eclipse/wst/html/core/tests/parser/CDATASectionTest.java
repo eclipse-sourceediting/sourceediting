@@ -50,7 +50,7 @@ public class CDATASectionTest extends ModelTest {
 				if (child.getNodeType() != Node.CDATA_SECTION_NODE)
 					continue;
 				CDATASection cdata = (CDATASection) child;
-				outputWriter.writeln(cdata.getData());
+				fOutputWriter.writeln(cdata.getData());
 			}
 
 			saveAndCompareTestResults();

@@ -51,56 +51,56 @@ public class UpdaterTest10 extends ModelTest {
 			printSource(model);
 			printTree(model);
 
-			outputWriter.writeln("IStructuredDocumentRegion:");
+			fOutputWriter.writeln("IStructuredDocumentRegion:");
 			XMLNode node = (XMLNode) b;
 			IStructuredDocumentRegion flatNode = node.getStartStructuredDocumentRegion();
-			outputWriter.writeln(flatNode.getText());
+			fOutputWriter.writeln(flatNode.getText());
 			Iterator e = flatNode.getRegions().iterator();
 			int i = 0;
 			while (e.hasNext()) {
 				ITextRegion region = (ITextRegion) e.next();
 				boolean ok = true; // no longer has parent.
 								   // //(region.getParent() == flatNode);
-				outputWriter.writeln(i + "(" + flatNode.getText(region) + ")" + ok);
+				fOutputWriter.writeln(i + "(" + flatNode.getText(region) + ")" + ok);
 			}
-			outputWriter.writeln("");
+			fOutputWriter.writeln("");
 
 			b.setAttribute("c", "d");
 
 			printSource(model);
 			printTree(model);
 
-			outputWriter.writeln("IStructuredDocumentRegion:");
+			fOutputWriter.writeln("IStructuredDocumentRegion:");
 			node = (XMLNode) b;
 			flatNode = node.getStartStructuredDocumentRegion();
-			outputWriter.writeln(flatNode.getText());
+			fOutputWriter.writeln(flatNode.getText());
 			e = flatNode.getRegions().iterator();
 			i = 0;
 			while (e.hasNext()) {
 				ITextRegion region = (ITextRegion) e.next();
 				boolean ok = true; // no longer has parent.
 								   // (region.getParent() == flatNode);
-				outputWriter.writeln(i + "(" + flatNode.getText(region) + ")" + ok);
+				fOutputWriter.writeln(i + "(" + flatNode.getText(region) + ")" + ok);
 			}
-			outputWriter.writeln("");
+			fOutputWriter.writeln("");
 
 			a.setAttribute("b", "cd");
 
 			printSource(model);
 			printTree(model);
 
-			outputWriter.writeln("IStructuredDocumentRegion:");
+			fOutputWriter.writeln("IStructuredDocumentRegion:");
 			node = (XMLNode) b;
 			flatNode = node.getStartStructuredDocumentRegion();
-			outputWriter.writeln(flatNode.getText());
+			fOutputWriter.writeln(flatNode.getText());
 			e = flatNode.getRegions().iterator();
 			i = 0;
 			while (e.hasNext()) {
 				ITextRegion region = (ITextRegion) e.next();
 				boolean ok = true; // (region.getParent() == flatNode);
-				outputWriter.writeln(i + "(" + flatNode.getText(region) + ")" + ok);
+				fOutputWriter.writeln(i + "(" + flatNode.getText(region) + ")" + ok);
 			}
-			outputWriter.writeln("");
+			fOutputWriter.writeln("");
 
 			saveAndCompareTestResults();
 		}

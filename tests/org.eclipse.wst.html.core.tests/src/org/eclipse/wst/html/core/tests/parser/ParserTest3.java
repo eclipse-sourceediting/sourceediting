@@ -47,7 +47,7 @@ public class ParserTest3 extends ModelTest {
 			// dont's print instance of event, or many tests will fail when
 			// event class is changed (exactly what is not needed for unit
 			// tests!)
-			// outputWriter.writeln(event.toString());
+			// fOutputWriter.writeln(event.toString());
 
 			printSource(model);
 			printTree(model);
@@ -58,13 +58,13 @@ public class ParserTest3 extends ModelTest {
 				Node attr = attributes.item(i);
 				String name = attr.getNodeName();
 				String value = attr.getNodeValue();
-				outputWriter.writeln(name + "=[" + value + "]");
+				fOutputWriter.writeln(name + "=[" + value + "]");
 			}
 
 			StructuredDocumentEvent event2 = structuredDocument.replaceText(null, 4, 1, "");
 			// I removed this part of output, since renaming class or package
 			// will cause test to fail!
-			outputWriter.writeln(event2.toString());
+			fOutputWriter.writeln(event2.toString());
 
 			printSource(model);
 			printTree(model);
@@ -75,7 +75,7 @@ public class ParserTest3 extends ModelTest {
 				Node attr = attributes.item(i);
 				String name = attr.getNodeName();
 				String value = attr.getNodeValue();
-				outputWriter.writeln(name + "=[" + value + "]");
+				fOutputWriter.writeln(name + "=[" + value + "]");
 			}
 
 			saveAndCompareTestResults();
