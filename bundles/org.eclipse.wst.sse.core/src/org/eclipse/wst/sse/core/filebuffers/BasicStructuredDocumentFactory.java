@@ -27,16 +27,33 @@ import org.eclipse.wst.sse.core.internal.text.JobSafeStructuredDocument;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 
 
+/**
+ * Generic IDocumentFactory for IStructuredDocuments. This class is not meant
+ * to be subclassed.
+ *
+ * @since 1.0
+ */
 public class BasicStructuredDocumentFactory implements IDocumentFactory, IExecutableExtension {
 
-	// The content type ID used to declare this factory; it is used to find
-	// the corresponding ModelHandler
+	/*
+	 * The content type ID used to declare this factory; it is used to find
+	 * the corresponding support for creating the document
+	 */
 	private String fContentTypeIdentifier = null;
 
+	/**
+	 * Constructor, only to be used by the
+	 * org.eclipse.core.filebuffers.documentCreation extension point.
+	 */
 	public BasicStructuredDocumentFactory() {
 		super();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.core.filebuffers.IDocumentFactory#createDocument()
+	 */
 	public IDocument createDocument() {
 		IDocument document = null;
 		IContentType contentType = Platform.getContentTypeManager().getContentType(getContentTypeIdentifier());
@@ -64,6 +81,12 @@ public class BasicStructuredDocumentFactory implements IDocumentFactory, IExecut
 		return fContentTypeIdentifier;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
+	 *      java.lang.String, java.lang.Object)
+	 */
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
 		fContentTypeIdentifier = config.getAttribute("contentTypeId");
 		if (data != null) {
