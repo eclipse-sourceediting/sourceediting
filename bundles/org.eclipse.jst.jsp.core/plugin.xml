@@ -134,7 +134,7 @@
 		 </content-type>
 		<!-- associate .tld files with the XML content type -->
 		<file-association
-			content-type="org.eclipse.wst.xml.core.xmlsource"
+			content-type="org.eclipse.core.runtime.xml"
 			file-extensions="tld"/>
 	</extension>		 
 </plugin>
