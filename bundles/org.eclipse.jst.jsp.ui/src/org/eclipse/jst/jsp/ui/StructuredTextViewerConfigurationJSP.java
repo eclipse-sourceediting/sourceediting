@@ -66,7 +66,6 @@ import org.eclipse.wst.javascript.common.ui.taginfo.JavaScriptTagInfoHoverProces
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
@@ -394,7 +393,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
             return fReconciler;
         
         if (fReconciler != null) {
-            IDocument doc = ((StructuredTextEditor) editorPart).getDocumentProvider().getDocument(editorPart.getEditorInput());
+            IDocument doc = ((ITextEditor) editorPart).getDocumentProvider().getDocument(editorPart.getEditorInput());
             IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
             try {
                 if (sModel != null) {

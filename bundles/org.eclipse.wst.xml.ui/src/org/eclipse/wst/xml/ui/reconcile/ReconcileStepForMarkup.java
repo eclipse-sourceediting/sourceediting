@@ -21,6 +21,7 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.reconciler.IReconcileStep;
+import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
@@ -30,7 +31,6 @@ import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.reconcile.IReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
-import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.eclipse.wst.xml.ui.internal.Logger;
@@ -404,11 +404,11 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 	}
 
 	private XMLNode getXMLNode(IStructuredDocumentRegion sdRegion) {
-		XMLModel xModel = null;
+		IStructuredModel xModel = null;
 		XMLNode xmlNode = null;
 		// get/release models should always be in a try/finally block
 		try {
-			xModel = (XMLModel) StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
+			xModel = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
 			// xModel is sometime null, when closing editor, for example
 			if (xModel != null) {
 				xmlNode = (XMLNode) xModel.getIndexedRegion(sdRegion.getStart());
