@@ -14,14 +14,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.draw2d.FigureCanvas;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
-import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
+import org.eclipse.gef.ui.parts.ScrollingGraphicalViewer;
 import org.eclipse.wst.xsd.ui.internal.actions.MoveAction;
 import org.eclipse.wst.xsd.ui.internal.gef.util.figures.IConnectionRenderingViewer;
 import org.eclipse.wst.xsd.ui.internal.graph.editparts.ComplexTypeDefinitionEditPart;
@@ -48,7 +49,13 @@ public class DragAndDropCommand extends Command //AbstractCommand
 
     location = request.getLocation();   
     EditPart target = viewer.findObjectAt(location); 
-  	((GraphicalEditPart)viewer.getRootEditPart()).getFigure().translateToRelative(location);
+    if (viewer instanceof ScrollingGraphicalViewer)
+    {  
+      ScrollingGraphicalViewer sgv = (ScrollingGraphicalViewer)viewer;
+      Point p = ((FigureCanvas)sgv.getControl()).getViewport().getViewLocation();
+      location.y += p.y;
+      location.x += p.x;
+    }
      
     List list = request.getEditParts();
     if (list.size() > 0)
