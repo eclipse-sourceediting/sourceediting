@@ -20,6 +20,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
@@ -27,16 +28,12 @@ import org.eclipse.swt.events.MenuAdapter;
 import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionGroup;
-import org.eclipse.wst.xsd.ui.internal.XSDEditor;
-import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
-import org.eclipse.wst.xsd.ui.internal.XSDTextEditor;
 import org.eclipse.wst.xsd.ui.internal.refactor.RefactoringMessages;
+import org.eclipse.xsd.XSDSchema;
 
 /**
  * Action group that adds refactor actions (for example 'Rename', 'Move') to a
@@ -61,9 +58,16 @@ public class RefactorActionGroup extends ActionGroup {
 	 */
 	public static final String GROUP_REORGANIZE = IWorkbenchActionConstants.GROUP_REORGANIZE;
 
+	/**
+	 * 
+	 * @deprecated
+	 * 
+	 */
 	private IWorkbenchSite fSite;
 
-	private XSDEditor fEditor;
+	private ISelectionProvider fSelectionProvider;
+
+	private XSDSchema fSchema;
 
 	private String fGroupName = GROUP_REORGANIZE;
 
@@ -84,51 +88,38 @@ public class RefactorActionGroup extends ActionGroup {
 	}
 
 	private Action fNoActionAvailable = new NoActionAvailable();
-
-	public RefactorActionGroup() {
-		
-		IWorkbenchPart part = XSDEditorPlugin.getPlugin().getWorkbench()
-				.getActiveWorkbenchWindow().getPartService().getActivePart();
-		if(part != null){
-			fSite = part.getSite();
-			IEditorPart editorPart = fSite.getPage().getActiveEditor();
-			if (editorPart instanceof XSDEditor) {
-				fEditor = (XSDEditor) editorPart;
-			}
-			initActions(fSite);
-			
-		}
-
-	}
-
-	public RefactorActionGroup(XSDTextEditor textEditor, String groupName) {
-		fEditor = textEditor.getXSDEditor();
-		fSite = fEditor.getEditorSite();
+	
+	public RefactorActionGroup(ISelectionProvider selectionProvider,
+			XSDSchema schema, String groupName) {
+		this(selectionProvider, schema);
 		fGroupName = groupName;
-		initActions(fSite);
-	}
-
-	private static void initAction(SelectionDispatchAction action,
-			ISelectionProvider provider, ISelection selection) {
-		
-		action.update(selection);
-		provider.addSelectionChangedListener(action);
 	}
 	
-	private void initActions(IWorkbenchSite site) {
+	public RefactorActionGroup(ISelectionProvider selectionProvider,
+			XSDSchema schema) {
+		fSelectionProvider = selectionProvider;
+		fSchema = schema;
 		fEditorActions = new ArrayList();
-		fRenameAction = new RenameAction(site);
+		fRenameAction = new RenameAction(selectionProvider, schema);
 		fRenameAction.setActionDefinitionId(RENAME_ELEMENT);
 		fEditorActions.add(fRenameAction);
 
-		fMakeLocalElementGlobal = new MakeLocalElementGlobalAction(site);
+		fMakeLocalElementGlobal = new MakeLocalElementGlobalAction(
+				selectionProvider, schema);
 		fMakeLocalElementGlobal.setActionDefinitionId(MAKE_ELEMENT_GLOBAL);
 		fEditorActions.add(fMakeLocalElementGlobal);
 
-		ISelectionProvider provider = site.getSelectionProvider();
-		ISelection selection = provider.getSelection();
-		initAction(fRenameAction, provider, selection);
-		initAction(fMakeLocalElementGlobal, provider, selection);
+		initAction(fRenameAction, fSelectionProvider);
+		initAction(fMakeLocalElementGlobal, fSelectionProvider);
+	}
+
+	private static void initAction(SelectionDispatchAction action,
+			ISelectionProvider provider) {
+
+		Assert.isNotNull(provider);
+		Assert.isNotNull(action);
+		action.update(provider.getSelection());
+		provider.addSelectionChangedListener(action);
 	}
 
 	/*
@@ -163,9 +154,9 @@ public class RefactorActionGroup extends ActionGroup {
 	 * @see ActionGroup#dispose()
 	 */
 	public void dispose() {
-		ISelectionProvider provider = fSite.getSelectionProvider();
-		disposeAction(fRenameAction, provider);
-		disposeAction(fMakeLocalElementGlobal, provider);
+		//ISelectionProvider provider = fSite.getSelectionProvider();
+		disposeAction(fRenameAction, fSelectionProvider);
+		disposeAction(fMakeLocalElementGlobal, fSelectionProvider);
 		super.dispose();
 	}
 
@@ -176,11 +167,11 @@ public class RefactorActionGroup extends ActionGroup {
 	}
 
 	private void addRefactorSubmenu(IMenuManager menu) {
-		
+
 		String menuText = RefactoringMessages.getString("RefactorMenu.label"); //$NON-NLS-1$
 
 		fRefactorSubmenu = new MenuManager(menuText, MENU_ID);
-		if (fEditor != null) {
+		//if (fEditor != null) {
 			fRefactorSubmenu.addMenuListener(new IMenuListener() {
 				public void menuAboutToShow(IMenuManager manager) {
 					refactorMenuShown(manager);
@@ -188,17 +179,16 @@ public class RefactorActionGroup extends ActionGroup {
 			});
 			fRefactorSubmenu.add(fNoActionAvailable);
 			if (menu.find(fRefactorSubmenu.getId()) == null) {
-				if(menu.find(fGroupName) == null){
+				if (menu.find(fGroupName) == null) {
 					menu.add(fRefactorSubmenu);
-				}
-				else{
+				} else {
 					menu.appendToGroup(fGroupName, fRefactorSubmenu);
 				}
 			}
-		} else {
-			if (fillRefactorMenu(fRefactorSubmenu) > 0)
-				menu.appendToGroup(fGroupName, fRefactorSubmenu);
-		}
+//		} else {
+//			if (fillRefactorMenu(fRefactorSubmenu) > 0)
+//				menu.appendToGroup(fGroupName, fRefactorSubmenu);
+//		}
 	}
 
 	private int fillRefactorMenu(IMenuManager refactorSubmenu) {
@@ -236,8 +226,9 @@ public class RefactorActionGroup extends ActionGroup {
 				refactorMenuHidden(refactorSubmenu);
 			}
 		});
-		ISelection selection = (ISelection) fEditor.getSelectionManager()
-				.getSelection();
+//		ISelection selection = (ISelection) fEditor.getSelectionManager()
+//				.getSelection();
+		ISelection selection = fSelectionProvider.getSelection();
 		for (Iterator iter = fEditorActions.iterator(); iter.hasNext();) {
 			Action action = (Action) iter.next();
 			if (action instanceof SelectionDispatchAction) {
@@ -251,8 +242,9 @@ public class RefactorActionGroup extends ActionGroup {
 	}
 
 	private void refactorMenuHidden(IMenuManager manager) {
-		ISelection selection = (ISelection) fEditor.getSelectionManager()
-				.getSelection();
+//		ISelection selection = (ISelection) fEditor.getSelectionManager()
+//				.getSelection();
+		ISelection selection = fSelectionProvider.getSelection();
 		for (Iterator iter = fEditorActions.iterator(); iter.hasNext();) {
 			Action action = (Action) iter.next();
 			if (action instanceof SelectionDispatchAction) {

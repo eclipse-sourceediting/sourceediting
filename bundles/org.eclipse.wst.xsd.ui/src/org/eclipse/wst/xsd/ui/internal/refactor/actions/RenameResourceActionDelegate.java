@@ -16,7 +16,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchSite;
 
 /**
  * @author ebelisar@ca.ibm.com
@@ -24,14 +23,14 @@ import org.eclipse.ui.IWorkbenchSite;
 public class RenameResourceActionDelegate implements IObjectActionDelegate {
 	
 	private ISelection fCurrentSelection;
-	private IWorkbenchSite fSite;
+
+	private IWorkbenchPart fPart;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
 	 */
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		fSite= targetPart.getSite();
-
+		fPart = targetPart;
 	}
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
@@ -41,7 +40,7 @@ public class RenameResourceActionDelegate implements IObjectActionDelegate {
 			IStructuredSelection structuredSelection= (IStructuredSelection) fCurrentSelection;
 			Object first= structuredSelection.getFirstElement();
 			if (first instanceof IFile) {
-				RenameResourceAction renameAction = new RenameResourceAction(fSite);
+				RenameResourceAction renameAction = new RenameResourceAction(fPart.getSite().getSelectionProvider());
 				renameAction.run(structuredSelection);
 			}
 		}

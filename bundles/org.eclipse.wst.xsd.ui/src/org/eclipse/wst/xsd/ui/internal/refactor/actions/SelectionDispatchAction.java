@@ -18,8 +18,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchSite;
+import org.eclipse.xsd.XSDSchema;
 
 
 
@@ -47,28 +46,13 @@ import org.eclipse.ui.IWorkbenchSite;
  */
 public abstract class SelectionDispatchAction extends Action implements ISelectionChangedListener {
 	
-	private IWorkbenchSite fSite;
+	private ISelectionProvider fSelectionProvider;
 	
-	/**
-	 * Creates a new action with no text and no image.
-	 * <p>
-	 * Configure the action later using the set methods.
-	 * </p>
-	 * 
-	 * @param site the site this action is working on
-	 */
-	protected SelectionDispatchAction(IWorkbenchSite site) {
-		Assert.isNotNull(site);
-		fSite= site;
-	}
-
-	/**
-	 * Returns the site owning this action.
-	 * 
-	 * @return the site owning this action
-	 */
-	public IWorkbenchSite getSite() {
-		return fSite;
+	private XSDSchema fSchema;
+	
+	protected SelectionDispatchAction(ISelectionProvider selectionProvider) {
+		Assert.isNotNull(selectionProvider);
+		fSelectionProvider = selectionProvider;
 	}
 
 	/**
@@ -84,21 +68,12 @@ public abstract class SelectionDispatchAction extends Action implements ISelecti
 	}
 
 	/**
-	 * Returns the shell provided by the site owning this action.
-	 * 
-	 * @return the site's shell	
-	 */
-	public  Shell getShell() {
-		return fSite.getShell();
-	}
-	
-	/**
 	 * Returns the selection provider managed by the site owning this action.
 	 * 
 	 * @return the site's selection provider	
 	 */
 	public ISelectionProvider getSelectionProvider() {
-		return fSite.getSelectionProvider();
+		return fSelectionProvider;
 	}
 
 	/**
@@ -211,4 +186,14 @@ public abstract class SelectionDispatchAction extends Action implements ISelecti
 			run(selection);
 		}
 	}
+
+	public XSDSchema getSchema() {
+		return fSchema;
+	}
+
+	public void setSchema(XSDSchema schema) {
+		fSchema = schema;
+	}
+	
+	
 }

@@ -376,7 +376,8 @@ public class XSDTextEditor extends StructuredTextEditorXML implements INodeSelec
     
     wrappedAction = new WrappedOpenFileAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE + DOT, this);
     setAction(StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE, wrappedAction);
-	fRefactorMenuGroup = new RefactorActionGroup(this, ITextEditorActionConstants.GROUP_EDIT);
+	fRefactorMenuGroup = new RefactorActionGroup(this.getXSDEditor().getSelectionManager(), getXSDSchema(), ITextEditorActionConstants.GROUP_EDIT
+);
 
   }
   /* (non-Javadoc)

@@ -10,62 +10,23 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.refactor.actions;
 
-import java.util.List;
-
-import org.eclipse.jface.text.ITextSelection;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchSite;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
-import org.eclipse.wst.xsd.ui.internal.XSDEditor;
 import org.eclipse.wst.xsd.ui.internal.commands.MakeLocalElementGlobalCommand;
 import org.eclipse.wst.xsd.ui.internal.refactor.RefactoringMessages;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
+import org.eclipse.xsd.XSDSchema;
 import org.w3c.dom.Node;
 
 public class MakeLocalElementGlobalAction extends SelectionDispatchAction {
 
-	private XSDEditor fEditor;
-
 	XSDElementDeclaration fSelectedComponent;
 
-	public MakeLocalElementGlobalAction(IWorkbenchSite site) {
-		super(site);
-		setText(RefactoringMessages
-				.getString("MakeLocalElementGlobalAction.text")); //$NON-NLS-1$
-
-		IEditorPart editorPart = site.getPage().getActiveEditor();
-		if (editorPart instanceof XSDEditor) {
-			fEditor = (XSDEditor) editorPart;
-		}
-		setEnabled(canOperateOn(fEditor));
-	}
-
-	public MakeLocalElementGlobalAction(XSDEditor editor) {
-		this(editor.getEditorSite());
-		fEditor = editor;
-		setEnabled(canOperateOn(fEditor));
-	}
-
-	public static boolean canOperateOn(XSDEditor editor) {
-		if (editor == null)
-			return false;
-		return editor.getEditorInput() != null;
-
-	}
-
-	public void selectionChanged(ITextSelection selection) {
-
-		if(fEditor == null){
-			setEnabled(false);
-			return;
-		}
-		List elements = fEditor.getSelectedNodes();
-		if (elements.size() == 1) {
-			Object object = elements.get(0);
-			setEnabled(canEnable(object));
-		}
-
+	public MakeLocalElementGlobalAction(ISelectionProvider selectionProvider, XSDSchema schema) {
+		super(selectionProvider);
+		setText(RefactoringMessages.getString("MakeLocalElementGlobalAction.text")); //$NON-NLS-1$
+		setSchema(schema);
 	}
 	
 	public boolean canRun() {
@@ -88,13 +49,12 @@ public class MakeLocalElementGlobalAction extends SelectionDispatchAction {
 	
 	protected boolean canEnable(Object selectedObject) {
 		
-		if(fEditor == null) return false;
 		if (selectedObject instanceof XSDConcreteComponent) {
 			return canEnable((XSDConcreteComponent)selectedObject);
 		}
 		else if (selectedObject instanceof Node) {
 			Node node = (Node) selectedObject;
-			XSDConcreteComponent concreteComponent = fEditor.getXSDSchema()
+			XSDConcreteComponent concreteComponent = getSchema()
 					.getCorrespondingComponent(node);
 			return canEnable(concreteComponent);
 		}

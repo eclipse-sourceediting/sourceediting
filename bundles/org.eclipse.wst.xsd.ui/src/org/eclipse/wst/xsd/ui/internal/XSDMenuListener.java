@@ -2061,7 +2061,7 @@ public class XSDMenuListener implements IMenuListener
   }
   
   protected void addRefactorMenuGroup(IMenuManager manager){
-    	fRefactorMenuGroup = new RefactorActionGroup();
+	  	fRefactorMenuGroup = new RefactorActionGroup(selectionProvider, getXSDSchema());
      	ActionContext context= new ActionContext(selectionProvider.getSelection());
     	fRefactorMenuGroup.setContext(context);
     	fRefactorMenuGroup.fillContextMenu(manager);

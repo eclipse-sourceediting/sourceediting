@@ -5,12 +5,12 @@ package org.eclipse.wst.xsd.ui.internal.refactor.actions;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchSite;
-import org.eclipse.wst.xsd.ui.internal.XSDEditor;
+import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.refactor.RefactoringMessages;
+import org.eclipse.xsd.XSDSchema;
 
 
 /**
@@ -28,27 +28,16 @@ public class RenameAction extends SelectionDispatchAction  {
 
 	private RenameComponentAction fRenameXSDElement;
 	private RenameResourceAction fRenameResource;
-	private XSDEditor fEditor;
-		
-	/**
-	 * Creates a new <code>RenameAction</code>. The action requires
-	 * that the selection provided by the site's selection provider is of type <code>
-	 * org.eclipse.jface.viewers.IStructuredSelection</code>.
-	 * 
-	 * @param site the site providing context information for this action
-	 */
-	public RenameAction(IWorkbenchSite site) {
-		super(site);
+	
+	
+	public RenameAction(ISelectionProvider selectionProvider, XSDSchema schema) {
+		super(selectionProvider);
 		setText(RefactoringMessages.getString("RenameAction.text")); //$NON-NLS-1$
-		fRenameXSDElement= new RenameComponentAction(site);
+		fRenameXSDElement= new RenameComponentAction(selectionProvider, schema);
 		fRenameXSDElement.setText(getText());
-		fRenameResource= new RenameResourceAction(site);
+		fRenameResource= new RenameResourceAction(selectionProvider);
 		fRenameResource.setText(getText());
-		IEditorPart editorPart = site.getPage().getActiveEditor();
-		if(editorPart instanceof XSDEditor){
-			fEditor = (XSDEditor)editorPart;
-		}
-		//TODO set help context ids
+		
 	}
 	
 	/*
@@ -92,12 +81,11 @@ public class RenameAction extends SelectionDispatchAction  {
 		if (fRenameXSDElement.canRun())
 			fRenameXSDElement.run(selection);
 		else
-			MessageDialog.openInformation(fEditor.getEditorSite().getShell(), RefactoringMessages.getString("RenameAction.rename"), RefactoringMessages.getString("RenameAction.unavailable"));  //$NON-NLS-1$ //$NON-NLS-2$
+			MessageDialog.openInformation(XSDEditorPlugin.getShell(), RefactoringMessages.getString("RenameAction.rename"), RefactoringMessages.getString("RenameAction.unavailable"));  //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	public void run(ISelection selection) {
 	    if(selection == null){
-	    	ISelection editorSelection = fEditor.getSelectionManager().getSelection();
-	    	super.dispatchRun(editorSelection);
+	    	super.run();
 	    }
 	    else{
 	    	super.run(selection);

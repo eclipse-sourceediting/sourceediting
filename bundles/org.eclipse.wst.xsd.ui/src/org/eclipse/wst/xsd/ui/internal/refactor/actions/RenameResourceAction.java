@@ -11,11 +11,12 @@
 package org.eclipse.wst.xsd.ui.internal.refactor.actions;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ltk.core.refactoring.participants.RenameRefactoring;
 import org.eclipse.ltk.ui.refactoring.RefactoringWizard;
 import org.eclipse.ltk.ui.refactoring.RefactoringWizardOpenOperation;
-import org.eclipse.ui.IWorkbenchSite;
+import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.refactor.RefactoringMessages;
 import org.eclipse.wst.xsd.ui.internal.refactor.rename.RenameRefactoringWizard;
 import org.eclipse.wst.xsd.ui.internal.refactor.rename.RenameResourceProcessor;
@@ -24,8 +25,9 @@ import org.eclipse.wst.xsd.ui.internal.refactor.rename.RenameResourceProcessor;
 
 public class RenameResourceAction extends SelectionDispatchAction {
 
-	public RenameResourceAction(IWorkbenchSite site) {
-		super(site);
+
+	public RenameResourceAction(ISelectionProvider selectionProvider) {
+		super(selectionProvider);
 	}
 	
 	public void selectionChanged(IStructuredSelection selection) {
@@ -53,7 +55,7 @@ public class RenameResourceAction extends SelectionDispatchAction {
 						RefactoringMessages.getString("RenameComponentWizard.inputPage.description"), //$NON-NLS-1$
 						null);
 				RefactoringWizardOpenOperation op= new RefactoringWizardOpenOperation(wizard);
-				int result= op.run(getShell(), wizard.getDefaultPageTitle());
+				int result= op.run(XSDEditorPlugin.getShell(), wizard.getDefaultPageTitle());
 				op.getInitialConditionCheckingStatus();
 			} catch (InterruptedException e) {
 				// do nothing. User action got cancelled
