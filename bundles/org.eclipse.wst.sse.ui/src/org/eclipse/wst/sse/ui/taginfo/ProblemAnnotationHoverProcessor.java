@@ -25,8 +25,8 @@ public class ProblemAnnotationHoverProcessor extends AnnotationHoverProcessor {
 	// these strings are derived from the annotationTypes extension in
 	// org.eclipse.ui.editors plugin
 	// if those strings change, then these strings need to change as well
-	final private String ANNOTATION_ERROR = "org.eclipse.ui.workbench.texteditor.error"; //$NON-NLS-1$
-	final private String ANNOTATION_WARNING = "org.eclipse.ui.workbench.texteditor.warning"; //$NON-NLS-1$
+	final private String ANNOTATION_ERROR = "org.eclipse.wst.sse.ui.temp.error"; //$NON-NLS-1$
+	final private String ANNOTATION_WARNING = "org.eclipse.wst.sse.ui.temp.warning"; //$NON-NLS-1$
 	private DefaultMarkerAnnotationAccess fAnnotationAccess = new DefaultMarkerAnnotationAccess();
 
 	/**
