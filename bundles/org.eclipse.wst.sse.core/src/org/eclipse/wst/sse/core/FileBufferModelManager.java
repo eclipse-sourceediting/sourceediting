@@ -136,10 +136,12 @@ class FileBufferModelManager {
 
 		public void bufferDisposed(IFileBuffer buffer) {
 			if (buffer instanceof ITextFileBuffer) {
+				ITextFileBuffer textBuffer = (ITextFileBuffer) buffer;
+				if (!(textBuffer.getDocument() instanceof IStructuredDocument))
+					return;
 				if (debugTextBufferLifeCycle) {
 					System.out.println("Discarded buffer: " + buffer.getLocation().toString() + " " + buffer + " " + ((ITextFileBuffer)buffer).getDocument());
 				}
-				ITextFileBuffer textBuffer = (ITextFileBuffer) buffer;
 				DocumentInfo info = (DocumentInfo) fDocumentMap.get(textBuffer.getDocument());
 				if (info != null) {
 					info.bufferReferenceCount--;
