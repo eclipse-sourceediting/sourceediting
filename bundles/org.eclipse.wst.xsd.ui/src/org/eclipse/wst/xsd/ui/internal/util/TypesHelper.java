@@ -426,6 +426,32 @@ public class TypesHelper
     }
     return items;
   }
+  
+  public java.util.List getUserSimpleTypes()
+  {
+    Vector items = new Vector();
+    if (xsdSchema != null)
+    {
+      updateExternalImportGlobals();
+      Iterator i = xsdSchema.getTypeDefinitions().iterator();
+      while (i.hasNext())
+      {
+        XSDTypeDefinition typeDefinition = (XSDTypeDefinition) i.next();
+        if (typeDefinition instanceof XSDSimpleTypeDefinition)
+        {
+          items.add(typeDefinition);
+          //System.out.println(typeDefinition.getQName(xsdSchema));
+          //items.add(typeDefinition.getQName(xsdSchema));
+        }
+      }
+      // We need to add the anyType
+//      items.add(getPrefix(xsdSchema.getSchemaForSchemaNamespace(), true) + "anyType");
+      
+      //      items = addExternalImportedUserSimpleTypes(items);
+      //items = (Vector) sortList(items);
+    }
+    return items;
+  }
 
   public String getPrefix(String ns, boolean withColon)
   {
@@ -463,6 +489,29 @@ public class TypesHelper
     return key;
   }
 
+  public java.util.List getUserComplexTypes()
+  {
+    Vector items = new Vector();
+    if (xsdSchema != null)
+    {
+      updateExternalImportGlobals();
+      Iterator i = xsdSchema.getTypeDefinitions().iterator();
+      while (i.hasNext())
+      {
+        XSDTypeDefinition typeDefinition = (XSDTypeDefinition) i.next();
+        if (typeDefinition instanceof XSDComplexTypeDefinition)
+        {
+			    items.add(typeDefinition);         
+        }
+      }
+      // remove anyType since it's not user-defined
+      // items.add(getPrefix(xsdSchema.getSchemaForSchemaNamespace(), true) + "anyType");
+      //      items = addExternalImportedUserComplexTypes(items);
+     // items = (Vector) sortList(items);
+    }
+    return items;
+  }
+  
   public java.util.List getGlobalElements()
   {
     Vector items = new Vector();
