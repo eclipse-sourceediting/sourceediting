@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.CoreException;
 
 /**
  * @author davidw
- *
+ * 
  * To change the template for this generated type comment go to
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
@@ -35,7 +35,7 @@ public class JavascriptLineBreakpoint {
 	 */
 	public JavascriptLineBreakpoint(IResource res, int lineNumber, int pos, int pos1) {
 
-		// TODO Auto-generated constructor stub
+		// TODO Should be deleted? Along with calling class?
 	}
 
 	/**
@@ -43,7 +43,6 @@ public class JavascriptLineBreakpoint {
 	 */
 	public JavascriptLineBreakpoint() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

@@ -464,8 +464,7 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 				originalRegion = fChildDocument.getProjectionMapping().toOriginRegion(region);
 			}
 			catch (BadLocationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Logger.logException(e);
 			}
 		}
 
@@ -486,8 +485,7 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 				originalOffset = fChildDocument.getProjectionMapping().toImageOffset(offset);
 			}
 			catch (BadLocationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Logger.logException(e);
 			}
 		}
 

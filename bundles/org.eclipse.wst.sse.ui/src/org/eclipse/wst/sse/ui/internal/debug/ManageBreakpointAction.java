@@ -44,8 +44,7 @@ public class ManageBreakpointAction extends BreakpointRulerAction {
 			try {
 				breakpoints[i].setEnabled(false);
 			} catch (CoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Logger.logException(e);
 			}
 		}
 	}
@@ -55,8 +54,7 @@ public class ManageBreakpointAction extends BreakpointRulerAction {
 			try {
 				breakpoints[i].setEnabled(true);
 			} catch (CoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Logger.logException(e);
 			}
 		}
 	}

@@ -30,33 +30,7 @@ import org.w3c.dom.NodeList;
 public class CSSColorManager extends PreferenceManager {
 
 	private static CSSColorManager fInstance = null;
-	// highlighting types
-	/** @deprecated use IStyleConstantsCSS instead TODO remove in C5 or earlier */
-	public static final String NORMAL = "NORMAL";//$NON-NLS-1$
-	/** @deprecated use IStyleConstantsCSS instead TODO remove in C5 or earlier */
-	public static final String ATMARK_RULE = "ATMARK_RULE";//$NON-NLS-1$
-	/** @deprecated use IStyleConstantsCSS instead TODO remove in C5 or earlier */
-	public static final String SELECTOR = "SELECTOR";//$NON-NLS-1$
-	/** @deprecated use IStyleConstantsCSS instead TODO remove in C5 or earlier */
-	public static final String MEDIA = "MEDIA"; //$NON-NLS-1$
-	/** @deprecated use IStyleConstantsCSS instead TODO remove in C5 or earlier */
-	public static final String COMMENT = "COMMENT";//$NON-NLS-1$
-	/** @deprecated use IStyleConstantsCSS instead TODO remove in C5 or earlier */
-	public static final String PROPERTY_NAME = "PROPERTY_NAME";//$NON-NLS-1$
-	/** @deprecated use IStyleConstantsCSS instead TODO remove in C5 or earlier */
-	public static final String PROPERTY_VALUE = "PROPERTY_VALUE";//$NON-NLS-1$
-	/** @deprecated use IStyleConstantsCSS instead TODO remove in C5 or earlier */
-	public static final String URI = "URI";//$NON-NLS-1$
-	/** @deprecated use IStyleConstantsCSS instead TODO remove in C5 or earlier */
-	public static final String STRING = "STRING";//$NON-NLS-1$
-	/** @deprecated use IStyleConstantsCSS instead TODO remove in C5 or earlier */
-	public static final String COLON = "COLON";//$NON-NLS-1$
-	/** @deprecated use IStyleConstantsCSS instead TODO remove in C5 or earlier */
-	public static final String SEMI_COLON = "SEMI_COLON";//$NON-NLS-1$
-	/** @deprecated use IStyleConstantsCSS instead TODO remove in C5 or earlier */
-	public static final String CURLY_BRACE = "CURLY_BRACE";//$NON-NLS-1$
-	/** @deprecated use IStyleConstantsCSS instead TODO remove in C5 or earlier */
-	public static final String ERROR = "ERROR";//$NON-NLS-1$
+
 	// names for preference elements ... non-NLS
 	public static final String FOREGROUND = "foreground";//$NON-NLS-1$
 	public static final String BACKGROUND = "background";//$NON-NLS-1$
@@ -79,7 +53,7 @@ public class CSSColorManager extends PreferenceManager {
 	 * <!ELEMENT colors (color) > <!ELEMENT color EMPTY > <!ATTLIST color name
 	 * CDATA #REQUIRED foreground CDATA #IMPLIED background CDATA #IMPLIED
 	 * bold CDATA #REQUIRED >
-	 *  
+	 * 
 	 */
 	public Document createDefaultPreferences() {
 		Document prefDocument = super.createDefaultPreferences();
@@ -113,7 +87,8 @@ public class CSSColorManager extends PreferenceManager {
 		Element element = getColorElement(name);
 		if (element != null) {
 			return getRGB(element.getAttribute(BACKGROUND));
-		} else {
+		}
+		else {
 			return new RGB(255, 255, 255);
 		}
 	}
@@ -145,7 +120,8 @@ public class CSSColorManager extends PreferenceManager {
 		Element element = getColorElement(name);
 		if (element != null) {
 			return getRGB(element.getAttribute(FOREGROUND));
-		} else {
+		}
+		else {
 			return new RGB(0, 0, 0);
 		}
 	}
@@ -173,7 +149,8 @@ public class CSSColorManager extends PreferenceManager {
 				int g = Integer.valueOf(rgbStr.substring(3, 5), 16).intValue();
 				int b = Integer.valueOf(rgbStr.substring(5, 7), 16).intValue();
 				result = new RGB(r, g, b);
-			} catch (NumberFormatException e) {
+			}
+			catch (NumberFormatException e) {
 				Logger.logException("Invalid color string " + rgbStr, e); //$NON-NLS-1$
 			}
 		}

@@ -156,10 +156,7 @@ public class ActiveEditorActionHandler implements IAction {
 	 */
 	public boolean isHandled() {
 		updateTargetAction();
-		// FIXME
-		System.out.println("M6 Migration temp disable function");
-		return false;
-		// return (fTargetAction != null ? fTargetAction.isHandled() : false);
+		return (fTargetAction != null ? fTargetAction.isHandled() : false);
 	}
 
 	/**

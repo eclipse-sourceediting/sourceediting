@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.preferences;
 
-import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 
 /**
  * Here is a description of how each common model file preference is used.
@@ -75,10 +74,6 @@ public interface CommonModelPreferenceNames {
 	String TASK_TAG_PRIORITIES = "task-tag-priorities"; //$NON-NLS-1$
 	String TASK_TAG_ENABLE = "task-tags"; //$NON-NLS-1$
 
-	/*
-	 * @deprecated - use from CommonEncodingPreferenceNames
-	 */
-	String OUTPUT_CODESET = CommonEncodingPreferenceNames.OUTPUT_CODESET;
 
 	/**
 	 * these are preferences that should be inherited from the "embedded
@@ -116,46 +111,4 @@ public interface CommonModelPreferenceNames {
 	// this way, editor does not need to query model's default tab width
 	// preference
 	int DEFAULT_TAB_WIDTH = 4;
-	/**
-	 * @deprecated use CommonEncodingPreferenceNames.END_OF_LINE_CODE instead
-	 *             TODO remove
-	 */
-	String END_OF_LINE_CODE = CommonEncodingPreferenceNames.END_OF_LINE_CODE;
-	/**
-	 * @deprecated use CommonEncodingPreferenceNames.NO_TRANSLATION instead
-	 *             TODO remove
-	 */
-	String NO_TRANSLATION = CommonEncodingPreferenceNames.NO_TRANSLATION;
-	/**
-	 * @deprecated use CommonEncodingPreferenceNames.INPUT_CODESET instead
-	 *             TODO remove
-	 */
-	String INPUT_CODESET = CommonEncodingPreferenceNames.INPUT_CODESET;
-	/**
-	 * @deprecated use CommonEncodingPreferenceNames.STRING_CRLF instead TODO
-	 *             remove
-	 */
-	String STRING_CRLF = CommonEncodingPreferenceNames.STRING_CRLF;
-	/**
-	 * @deprecated use CommonEncodingPreferenceNames.STRING_CR instead TODO
-	 *             remove
-	 */
-	String STRING_CR = CommonEncodingPreferenceNames.STRING_CR;
-	/**
-	 * @deprecated use CommonEncodingPreferenceNames.STRING_LF instead TODO
-	 *             remove
-	 */
-	String STRING_LF = CommonEncodingPreferenceNames.STRING_LF;
-	/**
-	 * @deprecated use CommonEncodingPreferenceNames.CRLF instead TODO remove
-	 */
-	String CRLF = CommonEncodingPreferenceNames.CRLF;
-	/**
-	 * @deprecated use CommonEncodingPreferenceNames.LF instead TODO remove
-	 */
-	String LF = CommonEncodingPreferenceNames.LF;
-	/**
-	 * @deprecated use CommonEncodingPreferenceNames.CR instead TODO remove
-	 */
-	String CR = CommonEncodingPreferenceNames.CR;
 }

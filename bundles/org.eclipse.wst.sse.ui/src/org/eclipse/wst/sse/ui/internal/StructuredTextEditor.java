@@ -985,11 +985,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			System.out.println("Average time per call: " + (adapterTime / adapterRequests)); //$NON-NLS-1$
 		}
 
-		// just for work around for document memory leak
-		// related to last position (stored in plugin!)
-		// holding on to 'selection' which holds instance
-		// of document
-		// caution, this is making use of internal classes
 
 		int caretOffset = getCaretPosition();
 		// safeguard values used in the Position below
@@ -997,13 +992,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			caretOffset = 0;
 		}
 
-		// TODO: remove the code for now, need to track down the leak
-		// FIXME: this was put in, to overcome memory leak (via the document
-		// in the selection).
-		// we need to fix the leak and/or find a better way.
-		// TextEditorPlugin.getDefault().setLastEditPosition(new
-		// EditPosition(getEditorInput(), getEditorSite().getId(),
-		// TextSelection.emptySelection(), new Position(caretOffset)));
 
 		// dispose of document folding support
 		if (fProjectionModelUpdater != null) {

@@ -75,10 +75,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 abstract public class AbstractContentAssistProcessor implements IContentAssistProcessor, IReleasable {
-    /**
-     * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
-     * way for expedency. Should be evolved in future to depend on "nestedContext".
-     */
+	/**
+	 * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
+	 * way for expedency. Should be evolved in future to depend on
+	 * "nestedContext".
+	 */
 	private class DOMJSPRegionContextsPrivateCopy {
 		private static final String JSP_CLOSE = "JSP_CLOSE"; //$NON-NLS-1$
 		private static final String JSP_COMMENT_CLOSE = "JSP_COMMENT_CLOSE"; //$NON-NLS-1$
@@ -94,7 +95,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		private static final String JSP_ROOT_TAG_NAME = "JSP_ROOT_TAG_NAME"; //$NON-NLS-1$
 
 		private static final String JSP_SCRIPTLET_OPEN = "JSP_SCRIPTLET_OPEN"; //$NON-NLS-1$
-	
+
 	}
 
 	protected static final String INTERNALERROR = SSEUIPlugin.getResourceString("%SEVERE_internal_error_occu_UI_"); //$NON-NLS-1$ = "SEVERE internal error occurred "
@@ -107,7 +108,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 
 	protected String fErrorMessage = null;
 	protected XMLContentModelGenerator fGenerator;
-	//protected IResource resource = null;
+	// protected IResource resource = null;
 	protected MarkupTagInfoProvider fInfoProvider = null;
 	protected ITextViewer fTextViewer = null;
 
@@ -127,7 +128,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			CMNamedNodeMap attributes = elementDecl.getAttributes();
 			String matchString = contentAssistRequest.getMatchString();
 
-			//check whether an attribute really exists for the replacement
+			// check whether an attribute really exists for the replacement
 			// offsets AND if it possesses a value
 			boolean attrAtLocationHasValue = false;
 			NamedNodeMap attrs = node.getAttributes();
@@ -177,7 +178,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 						if (attrAtLocationHasValue) {
 							// only propose the name
 							proposedText = getRequiredName(node, attrDecl);
-							proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), proposedText.length(), attrImage, proposedText, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_NAME + isRequired, true); //CMVC
+							proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), proposedText.length(), attrImage, proposedText, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_NAME + isRequired, true); // CMVC
 							// 269884
 						}
 						// no attribute exists or is elsewhere, generate
@@ -202,8 +203,9 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					}
 				}
 			}
-		} else {
-			setErrorMessage(SSEUIPlugin.getResourceString("%25concat", (new Object[]{node.getNodeName()}))); 
+		}
+		else {
+			setErrorMessage(SSEUIPlugin.getResourceString("%25concat", (new Object[]{node.getNodeName()})));
 		}
 	}
 
@@ -229,7 +231,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			// Retrieve the declaration
 			CMElementDeclaration elementDecl = getCMElementDeclaration(node);
 
-			//String attributeName = nameRegion.getText();
+			// String attributeName = nameRegion.getText();
 			String attributeName = open.getText(nameRegion);
 
 			CMAttributeDeclaration attrDecl = null;
@@ -285,12 +287,13 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 							currentValid = currentValid || possibleValue.equals(currentValue);
 							if (matchString.length() == 0 || possibleValue.startsWith(matchString)) {
 								CustomCompletionProposal proposal = new CustomCompletionProposal("\"" + possibleValue + "\"", //$NON-NLS-2$//$NON-NLS-1$
-									contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), possibleValue.length() + 1, image, possibleValue, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
+											contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), possibleValue.length() + 1, image, possibleValue, null, proposedInfo, XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
 								contentAssistRequest.addProposal(proposal);
 							}
 						}
 					}
-				} else if ((attrDecl.getUsage() == CMAttributeDeclaration.FIXED || attrDecl.getAttrType().getImpliedValueKind() == CMDataType.IMPLIED_VALUE_FIXED) && attrDecl.getAttrType().getImpliedValue() != null) {
+				}
+				else if ((attrDecl.getUsage() == CMAttributeDeclaration.FIXED || attrDecl.getAttrType().getImpliedValueKind() == CMDataType.IMPLIED_VALUE_FIXED) && attrDecl.getAttrType().getImpliedValue() != null) {
 					// FIXED values
 					String value = attrDecl.getAttrType().getImpliedValue();
 					if (value != null && value.length() > 0) {
@@ -304,7 +307,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 						}
 					}
 				}
-			} else {
+			}
+			else {
 				// unknown attribute, so supply nice empty values
 				proposedInfo = getAdditionalInfo(null, elementDecl);
 				CustomCompletionProposal proposal = null;
@@ -315,7 +319,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					contentAssistRequest.addProposal(proposal);
 				}
 			}
-		} else
+		}
+		else
 			setErrorMessage(UNKNOWN_CONTEXT);
 	}
 
@@ -340,15 +345,18 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				CMNode child = children.item(i);
 				if (child.getNodeType() == CMNode.ELEMENT_DECLARATION) {
 					contentList.add(child);
-				} else {
+				}
+				else {
 					if (child.getNodeType() == CMNode.GROUP) {
 						addContent(contentList, (CMContent) child);
-					} else {
+					}
+					else {
 						throw new IllegalArgumentException("Unknown content child: " + child); //$NON-NLS-1$
 					}
 				}
 			}
-		} else {
+		}
+		else {
 			contentList.add(content);
 		}
 	}
@@ -361,12 +369,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 
 		String proposedText = "<!DOCTYPE " + rootname + " PUBLIC \"//UNKNOWN/\" \"unknown.dtd\">"; //$NON-NLS-1$ //$NON-NLS-2$
 		ICompletionProposal proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), 10, XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_DOCTYPE), "<!DOCTYPE ... >", //$NON-NLS-1$
-					null, null, XMLRelevanceConstants.R_DOCTYPE); // TODO
-		// provide
-		// special
-		// documentation
-		// on doc
-		// type
+					null, null, XMLRelevanceConstants.R_DOCTYPE);
+		// TODO provide special documentation on doc type
 		contentAssistRequest.addProposal(proposal);
 	}
 
@@ -387,7 +391,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 						contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), 1, XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC), SSEUIPlugin.getResourceString("%9concat", (new Object[]{" '>'"})), //$NON-NLS-1$ = "Close with {0}"//$NON-NLS-2$
 						null, null, XMLRelevanceConstants.R_END_TAG_NAME);
 			contentAssistRequest.addProposal(proposal);
-		} else {
+		}
+		else {
 			XMLNode node = (XMLNode) contentAssistRequest.getNode();
 			ModelQuery modelQuery = ModelQueryUtil.getModelQuery(node.getOwnerDocument());
 			Node aNode = contentAssistRequest.getNode();
@@ -408,12 +413,13 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 							// double check to see if the region acted upon is
 							// a tag name; replace it if so
 							Image image = CMImageUtil.getImage(ed);
-							if(image == null) {
-								image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC);							
+							if (image == null) {
+								image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC);
 							}
 							if (contentAssistRequest.getRegion().getType() == XMLRegionContext.XML_TAG_NAME) {
 								proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getStartOffset(), contentAssistRequest.getRegion().getTextLength(), proposedText.length(), image, proposedText, null, proposedInfo, XMLRelevanceConstants.R_END_TAG_NAME);
-							} else {
+							}
+							else {
 								proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), proposedText.length(), image, SSEUIPlugin.getResourceString("%9concat", (new Object[]{"'" + proposedText + "'"})), //$NON-NLS-1$ = "Close with {0}"//$NON-NLS-2$ //$NON-NLS-3$
 											null, proposedInfo, XMLRelevanceConstants.R_END_TAG_NAME);
 							}
@@ -480,20 +486,21 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				// this is the case for a start tag w/out end tag
 				// eg:
 				// <p>
-				// 	  <% String test = "test"; %>
+				// <% String test = "test"; %>
 				// |
 				if (needsEndTag(xmlEndTagOpen)) {
 					String tagName = getTagName(xmlEndTagOpen);
 					xmlEndTagOpen.getTextEndOffset();
 					replaceLength = 0;
 					replaceText = "</" + tagName + ">"; //$NON-NLS-1$ //$NON-NLS-2$ $NON-NLS-2$
-					//replaceText = "</" + node.getNodeName() + ">";
+					// replaceText = "</" + node.getNodeName() + ">";
 					// //$NON-NLS-1$ $NON-NLS-2$
 					cursorOffset = tagName.length() + 3;
 					displayString = SSEUIPlugin.getResourceString("%17concat", (new Object[]{tagName})); //$NON-NLS-1$
 					addProposal = true;
 				}
-			} else if (type == XMLRegionContext.XML_END_TAG_OPEN) {
+			}
+			else if (type == XMLRegionContext.XML_END_TAG_OPEN) {
 				// this is the case for: <tag> </ |
 				// possibly <tag> </ |<anotherTag>
 				// should only be replacing white space...
@@ -503,11 +510,12 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				replaceBegin = xmlEndTagOpen.getTextEndOffset();
 				displayString = SSEUIPlugin.getResourceString("%15concat", (new Object[]{node.getNodeName()})); //$NON-NLS-1$
 				addProposal = true;
-			} else if (type == XMLRegionContext.XML_TAG_OPEN) {
+			}
+			else if (type == XMLRegionContext.XML_TAG_OPEN) {
 				// this is the case for: <tag> < |
 				replaceText = "/" + node.getNodeName() + ">"; //$NON-NLS-1$ //$NON-NLS-2$ $NON-NLS-2$
 				cursorOffset = replaceText.length();
-				//replaceText = "/" + node.getNodeName() + ">"; //$NON-NLS-1$
+				// replaceText = "/" + node.getNodeName() + ">"; //$NON-NLS-1$
 				// $NON-NLS-2$
 				// should only be replacing white space...
 				replaceLength = (replaceBegin > xmlEndTagOpen.getTextEndOffset()) ? replaceBegin - xmlEndTagOpen.getTextEndOffset() : 0;
@@ -632,7 +640,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 
 		if (!xmlpiFound) {
 			addXMLProposal(contentAssistRequest);
-		} else if (owningDocument.getDoctype() == null && isCursorAfterXMLPI(contentAssistRequest) && insertDoctype) {
+		}
+		else if (owningDocument.getDoctype() == null && isCursorAfterXMLPI(contentAssistRequest) && insertDoctype) {
 			addDocTypeProposal(contentAssistRequest);
 		}
 	}
@@ -652,7 +661,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			boolean endWithSlashBracket = (getXML(node) && contentType != CMElementDeclaration.ELEMENT);
 
 			Image image = CMImageUtil.getImage(elementDecl);
-			if(image == null){
+			if (image == null) {
 				image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC);
 			}
 
@@ -670,7 +679,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 								0, getContentGenerator().getStartTagClose(node, elementDecl).length(), image, SSEUIPlugin.getResourceString("%3concat", (new Object[]{getContentGenerator().getStartTagClose(node, elementDecl)})), //$NON-NLS-1$ = "Close with '{0}'"
 								null, proposedInfo, XMLRelevanceConstants.R_CLOSE_TAG);
 					contentAssistRequest.addProposal(proposal);
-				} else {
+				}
+				else {
 					// prompt with a close for the start tag
 					CustomCompletionProposal proposal = new CustomCompletionProposal(">", //$NON-NLS-1$
 								contentAssistRequest.getReplacementBeginPosition(),
@@ -719,7 +729,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 						contentAssistRequest.addProposal(proposal);
 					}
 				}
-			} else if (contentAssistRequest.getDocumentRegion() == node.getLastStructuredDocumentRegion() && !node.getLastStructuredDocumentRegion().isEnded()) {
+			}
+			else if (contentAssistRequest.getDocumentRegion() == node.getLastStructuredDocumentRegion() && !node.getLastStructuredDocumentRegion().isEnded()) {
 				setErrorMessage(null);
 				// prompt with a closing end character for the end tag
 				CustomCompletionProposal proposal = new CustomCompletionProposal(">", //$NON-NLS-1$
@@ -731,7 +742,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 							null, proposedInfo, XMLRelevanceConstants.R_CLOSE_TAG);
 				contentAssistRequest.addProposal(proposal);
 			}
-		} else if (node.getNodeType() == Node.DOCUMENT_NODE) {
+		}
+		else if (node.getNodeType() == Node.DOCUMENT_NODE) {
 			setErrorMessage(UNKNOWN_CONTEXT);
 		}
 	}
@@ -791,7 +803,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			}
 			if (parentDecl != null && parentDecl.getContentType() == CMElementDeclaration.PCDATA) {
 				addPCDATAProposal(parentDecl.getNodeName(), contentAssistRequest);
-			} else {
+			}
+			else {
 				// retrieve the list of children
 				validActions = getAvailableChildrenAtIndex((Element) parent, childPosition);
 				cmnodes = getValidCMNodes(childPosition, ModelQueryAction.INSERT, validActions);
@@ -816,7 +829,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 						// begin with the matchstring
 						String tagname = getRequiredName(parent, elementDecl);
 						Image image = CMImageUtil.getImage(elementDecl);
-						if(image == null){
+						if (image == null) {
 							image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC);
 						}
 						// Account for the &lt; and &gt;. If attributes were
@@ -842,7 +855,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 						setErrorMessage(SSEUIPlugin.getResourceString("%14concat", (new Object[]{parent.getNodeName()}))); //$NON-NLS-1$
 				}
 			}
-		} else if (parent.getNodeType() == Node.DOCUMENT_NODE) {
+		}
+		else if (parent.getNodeType() == Node.DOCUMENT_NODE) {
 			// Can only prompt with elements if the cursor position is past
 			// the XML processing
 			// instruction and DOCTYPE declaration
@@ -869,7 +883,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					CMElementDeclaration ed = (CMElementDeclaration) childDecls.get(i);
 					if (ed != null) {
 						Image image = CMImageUtil.getImage(ed);
-						if(image == null){
+						if (image == null) {
 							image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC);
 						}
 						String proposedText = getRequiredText(parent, ed);
@@ -917,7 +931,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 
 						proposedText = getRequiredName(parent, elementDecl);
 						cursorAdjustment = proposedText.length();
-					} else {
+					}
+					else {
 						proposedText = getRequiredName(parent, elementDecl);
 						cursorAdjustment = proposedText.length();
 						if (elementDecl instanceof CMElementDeclaration) {
@@ -925,7 +940,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 							if (ed.getContentType() == CMElementDeclaration.EMPTY) {
 								proposedText += getContentGenerator().getStartTagClose(parent, ed);
 								cursorAdjustment = proposedText.length();
-							} else {
+							}
+							else {
 								cursorAdjustment = proposedText.length() + 1;
 								proposedText += "></" + getRequiredName(parent, elementDecl) + ">"; //$NON-NLS-2$//$NON-NLS-1$
 							}
@@ -933,7 +949,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					}
 					if (beginsWith(proposedText, matchString)) {
 						Image image = CMImageUtil.getImage(elementDecl);
-						if(image == null){
+						if (image == null) {
 							image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC);
 						}
 						String proposedInfo = getAdditionalInfo(getCMElementDeclaration(parent), elementDecl);
@@ -951,7 +967,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				else
 					setErrorMessage(SSEUIPlugin.getResourceString("%28concat", (new Object[]{parent.getNodeName()}))); //$NON-NLS-1$
 			}
-		} else if (parent.getNodeType() == Node.DOCUMENT_NODE) {
+		}
+		else if (parent.getNodeType() == Node.DOCUMENT_NODE) {
 			List childElements = getAvailableRootChildren((Document) parent, childPosition);
 			for (int i = 0; i < childElements.size(); i++) {
 				CMNode ed = (CMNode) childElements.get(i);
@@ -964,14 +981,16 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					continue;
 				if ((node != null && node.getAttributes() != null && node.getAttributes().getLength() > 0) || ((node.getNodeType() != Node.TEXT_NODE) && node.getFirstStructuredDocumentRegion().isEnded())) {
 					cursorAdjustment = proposedText.length();
-				} else {
+				}
+				else {
 					cursorAdjustment = proposedText.length();
 					if (ed instanceof CMElementDeclaration) {
 						CMElementDeclaration elementDecl = (CMElementDeclaration) ed;
 						if (elementDecl.getContentType() == CMElementDeclaration.EMPTY) {
 							proposedText += getContentGenerator().getStartTagClose(parent, elementDecl);
 							cursorAdjustment = proposedText.length();
-						} else {
+						}
+						else {
 							cursorAdjustment = proposedText.length() + 1;
 							proposedText += "></" + getRequiredName(parent, elementDecl) + ">"; //$NON-NLS-2$//$NON-NLS-1$
 						}
@@ -979,7 +998,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				}
 				String proposedInfo = getAdditionalInfo(null, ed);
 				Image image = CMImageUtil.getImage(ed);
-				if(image == null){
+				if (image == null) {
 					image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC);
 				}
 				CustomCompletionProposal proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), cursorAdjustment, image, getRequiredName(parent, ed), null, proposedInfo, XMLRelevanceConstants.R_TAG_NAME);
@@ -990,12 +1009,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 
 	protected void addXMLProposal(ContentAssistRequest contentAssistRequest) {
 		String proposedText = "<?xml version=\"1.0\" encoding=\"" + ContentTypeEncodingPreferences.getUserPreferredCharsetName(ContentTypeIdForXML.ContentTypeID_XML) + "\"?>"; //$NON-NLS-2$//$NON-NLS-1$
-		ICompletionProposal proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), proposedText.length(), XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_PROCESSINGINSTRUCTION), proposedText, null, null, XMLRelevanceConstants.R_XML_DECLARATION); // TODO
-		// add
-		// special
-		// XML
-		// proposal
-		// info
+		ICompletionProposal proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), proposedText.length(), XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_PROCESSINGINSTRUCTION), proposedText, null, null, XMLRelevanceConstants.R_XML_DECLARATION);
+		// TODO add special XML proposal info
 		contentAssistRequest.addProposal(proposal);
 	}
 
@@ -1009,15 +1024,14 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 *            are possible for possible Elements at this point
 	 * @param cmnode
 	 *            possible element at this point in the document (depending on
-	 *            what 'node' is)
- true if any attributes of 'node' match any possible attributes
-	 *         from 'cmnodes' list.
+	 *            what 'node' is) true if any attributes of 'node' match any
+	 *            possible attributes from 'cmnodes' list.
 	 */
 	protected boolean attributeInList(XMLNode node, Node parent, CMNode cmnode) {
 		if (node == null || parent == null || cmnode == null)
 			return false;
 		String elementMatchString = node.getNodeName();
-		String cmnodeName = getRequiredName(parent, cmnode);//cmnode.getNodeName();
+		String cmnodeName = getRequiredName(parent, cmnode);// cmnode.getNodeName();
 		if (node instanceof Element) {
 			NamedNodeMap map = ((Element) node).getAttributes();
 			String attrMatchString = ""; //$NON-NLS-1$
@@ -1058,7 +1072,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		if (documentPosition < sdRegion.getStartOffset(completionRegion)) {
 			// setup to insert new attributes
 			contentAssistRequest = newContentAssistRequest(nodeAtOffset, node, sdRegion, completionRegion, documentPosition, 0, matchString);
-		} else {
+		}
+		else {
 			// Setup to replace an existing attribute name
 			contentAssistRequest = newContentAssistRequest(nodeAtOffset, node, sdRegion, completionRegion, sdRegion.getStartOffset(completionRegion), completionRegion.getTextLength(), matchString);
 		}
@@ -1082,14 +1097,16 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			if (actualNode.getFirstStructuredDocumentRegion() != null && !actualNode.getFirstStructuredDocumentRegion().isEnded()) {
 				addTagCloseProposals(contentAssistRequest);
 			}
-		} else {
+		}
+		else {
 			// setup to replace the existing value
 			if (!nodeAtOffset.getFirstStructuredDocumentRegion().isEnded() && documentPosition < sdRegion.getStartOffset(completionRegion)) {
 				// if the IStructuredDocumentRegion isn't closed and the
 				// cursor is in front of the value, add
 				contentAssistRequest = newContentAssistRequest(nodeAtOffset, node, sdRegion, completionRegion, documentPosition, 0, matchString);
 				addAttributeNameProposals(contentAssistRequest);
-			} else {
+			}
+			else {
 				contentAssistRequest = newContentAssistRequest(nodeAtOffset, node, sdRegion, completionRegion, sdRegion.getStartOffset(completionRegion), completionRegion.getTextLength(), matchString);
 				addAttributeValueProposals(contentAssistRequest);
 			}
@@ -1106,26 +1123,34 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		if (xmlnode.getNodeType() == Node.ELEMENT_NODE || xmlnode.getNodeType() == Node.DOCUMENT_NODE) {
 			if (regionType == XMLRegionContext.XML_TAG_OPEN) {
 				contentAssistRequest = computeTagOpenProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
-			} else if (regionType == XMLRegionContext.XML_TAG_NAME) {
+			}
+			else if (regionType == XMLRegionContext.XML_TAG_NAME) {
 				contentAssistRequest = computeTagNameProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
-			} else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+			}
+			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 				contentAssistRequest = computeAttributeProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
-			} else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+			}
+			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
 				contentAssistRequest = computeEqualsProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
-			} else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE && documentPosition == sdRegion.getTextEndOffset() && (sdRegion.getText(completionRegion).endsWith("\"") || sdRegion.getText(completionRegion).endsWith("\'"))) //$NON-NLS-1$ //$NON-NLS-2$
+			}
+			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE && documentPosition == sdRegion.getTextEndOffset() && (sdRegion.getText(completionRegion).endsWith("\"") || sdRegion.getText(completionRegion).endsWith("\'"))) //$NON-NLS-1$ //$NON-NLS-2$
 			{
 				// this is for when the cursor is at the end of the closing
 				// quote for an attribute..
 				XMLNode actualNode = (XMLNode) xmlnode.getModel().getIndexedRegion(sdRegion.getStartOffset(completionRegion));
 				contentAssistRequest = newContentAssistRequest(actualNode, actualNode, sdRegion, completionRegion, documentPosition, 0, matchString);
 				addTagCloseProposals(contentAssistRequest);
-			} else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+			}
+			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 				contentAssistRequest = computeAttributeValueProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
-			} else if ((regionType == XMLRegionContext.XML_TAG_CLOSE) || (regionType == XMLRegionContext.XML_EMPTY_TAG_CLOSE) || (regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_DIRECTIVE_CLOSE))) {
+			}
+			else if ((regionType == XMLRegionContext.XML_TAG_CLOSE) || (regionType == XMLRegionContext.XML_EMPTY_TAG_CLOSE) || (regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_DIRECTIVE_CLOSE))) {
 				contentAssistRequest = computeTagCloseProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
-			} else if (regionType == XMLRegionContext.XML_END_TAG_OPEN) {
+			}
+			else if (regionType == XMLRegionContext.XML_END_TAG_OPEN) {
 				contentAssistRequest = computeEndTagOpenProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
-			} else if (regionType == XMLRegionContext.XML_CONTENT || regionType == XMLRegionContext.XML_CHAR_REFERENCE || regionType == XMLRegionContext.XML_ENTITY_REFERENCE || regionType == XMLRegionContext.XML_PE_REFERENCE) {
+			}
+			else if (regionType == XMLRegionContext.XML_CONTENT || regionType == XMLRegionContext.XML_CHAR_REFERENCE || regionType == XMLRegionContext.XML_ENTITY_REFERENCE || regionType == XMLRegionContext.XML_PE_REFERENCE) {
 				contentAssistRequest = computeContentProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
 			}
 
@@ -1144,7 +1169,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			addStartDocumentProposals(contentAssistRequest);
 			if (documentPosition >= sdRegion.getTextEndOffset(completionRegion))
 				addTagInsertionProposals(contentAssistRequest, getElementPositionForModelQuery(treeNode) + 1);
-		} else if (documentPosition == sdRegion.getStartOffset(completionRegion) && (regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_COMMENT_OPEN) || regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_DECLARATION_OPEN) || regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_DIRECTIVE_OPEN) || regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_EXPRESSION_OPEN) || regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_SCRIPTLET_OPEN) || regionType == XMLRegionContext.XML_DECLARATION_OPEN || regionType == XMLRegionContext.XML_PI_OPEN || regionType == XMLRegionContext.XML_COMMENT_OPEN || regionType == XMLRegionContext.XML_CDATA_OPEN)) {
+		}
+		else if (documentPosition == sdRegion.getStartOffset(completionRegion) && (regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_COMMENT_OPEN) || regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_DECLARATION_OPEN) || regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_DIRECTIVE_OPEN) || regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_EXPRESSION_OPEN) || regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_SCRIPTLET_OPEN) || regionType == XMLRegionContext.XML_DECLARATION_OPEN || regionType == XMLRegionContext.XML_PI_OPEN || regionType == XMLRegionContext.XML_COMMENT_OPEN || regionType == XMLRegionContext.XML_CDATA_OPEN)) {
 			contentAssistRequest = newContentAssistRequest(treeNode, xmlnode.getParentNode(), sdRegion, completionRegion, documentPosition, 0, matchString);
 			addTagInsertionProposals(contentAssistRequest, getElementPositionForModelQuery(treeNode));
 			addStartDocumentProposals(contentAssistRequest);
@@ -1163,7 +1189,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 * @param documentPosition -
 	 *            the cursor location within the document
 	 * 
- an array of ICompletionProposals
+	 * an array of ICompletionProposals
 	 */
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer textViewer, int documentPosition) {
 
@@ -1195,7 +1221,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 						contentAssistRequest = newContentAssistRequest(docNode, docNode, sdRegion, completionRegion, documentPosition, 0, null);
 						addEmptyDocumentProposals(contentAssistRequest);
 					}
-				} finally {
+				}
+				finally {
 					if (sModel != null)
 						sModel.releaseFromRead();
 				}
@@ -1243,7 +1270,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		}
 		// entities?
 		addEntityProposals(contentAssistRequest, documentPosition, completionRegion, node);
-		//addEntityProposals(contentAssistRequest);
+		// addEntityProposals(contentAssistRequest);
 		return contentAssistRequest;
 	}
 
@@ -1254,9 +1281,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 * 
 	 * @param viewer
 	 *            the viewer whose document is used to compute the possible
-	 *            contexts
- an array of context information objects or <code>null</code>
-	 *         if no context could be found
+	 *            contexts an array of context information objects or
+	 *            <code>null</code> if no context could be found
 	 */
 	public IContextInformation[] computeContextInformation(ITextViewer viewer, int documentOffset) {
 		if (fAttributeInfoProvider == null)
@@ -1275,19 +1301,21 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		if (documentPosition != completionRegionStart && regionAtEndOfCompletion != null && regionAtEndOfCompletion.getType() == XMLRegionContext.XML_TAG_NAME) {
 			ITextRegion nameRegion = regionAtEndOfCompletion;
 			contentAssistRequest = newContentAssistRequest(nodeAtOffset, nodeAtOffset.getParentNode(), sdRegion, completionRegion, sdRegion.getStartOffset(nameRegion), nameRegion.getTextLength(), matchString);
-		} else {
+		}
+		else {
 			if (nodeAtOffset.getFirstStructuredDocumentRegion() == sdRegion) {
 				// abnormal case, this unmatched end tag will be a sibling
 				contentAssistRequest = newContentAssistRequest(nodeAtOffset, nodeAtOffset.getParentNode(), sdRegion, completionRegion, documentPosition, 0, matchString);
-			} else {
+			}
+			else {
 				// normal case, this end tag is the parent
 				contentAssistRequest = newContentAssistRequest(nodeAtOffset, nodeAtOffset, sdRegion, completionRegion, documentPosition, 0, matchString);
 			}
 		}
-		//if (documentPosition >= sdRegion.getStartOffset(completionRegion) +
+		// if (documentPosition >= sdRegion.getStartOffset(completionRegion) +
 		// completionRegion.getTextLength())
 		addEndTagProposals(contentAssistRequest);
-		//else
+		// else
 		if (completionRegionStart == documentPosition) {
 			// positioned at start of end tag
 			addTagInsertionProposals(contentAssistRequest, node.getChildNodes().getLength());
@@ -1307,7 +1335,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			int nodeOffset = documentPosition - sdRegion.getStartOffset(completionRegion);
 			String regionText = sdRegion.getFullText(completionRegion);
 
-			//if directly to the right of a &, region will be null, need to
+			// if directly to the right of a &, region will be null, need to
 			// move to
 			// the previous region...there might be a better way to do this
 			if (regionText != null && regionText.trim().equals("") && documentPosition > 0) { //$NON-NLS-1$
@@ -1335,7 +1363,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					}
 					if (cmmap != null) {
 						entities = mapToProperties(cmmap);
-					} else // 224787 in absence of content model, just use
+					}
+					else // 224787 in absence of content model, just use
 					// minimal 5 entities
 					{
 						entities = new Properties();
@@ -1360,7 +1389,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		if (valueRegion != null && valueRegion.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE && sdRegion.getStartOffset(valueRegion) <= documentPosition) {
 			// replace the adjacent attribute value
 			contentAssistRequest = newContentAssistRequest(nodeAtOffset, node, sdRegion, valueRegion, sdRegion.getStartOffset(valueRegion), valueRegion.getTextLength(), matchString);
-		} else {
+		}
+		else {
 			// append an attribute value after the '='
 			contentAssistRequest = newContentAssistRequest(nodeAtOffset, node, sdRegion, completionRegion, documentPosition, 0, matchString);
 		}
@@ -1391,7 +1421,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			if (node.getNodeType() != Node.DOCUMENT_NODE && node.getEndStructuredDocumentRegion() == null) {
 				addEndTagProposals(contentAssistRequest);
 			}
-		} else {
+		}
+		else {
 			// at the start of the tag's close or within it
 			ITextRegion closeRegion = sdRegion.getLastRegion();
 			boolean insideTag = !sdRegion.isEnded() || documentPosition <= sdRegion.getStartOffset(closeRegion);
@@ -1416,7 +1447,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		IStructuredDocumentRegion sdRegion = getStructuredDocumentRegion(documentPosition);
 
 		if (sdRegion != nodeAtOffset.getFirstStructuredDocumentRegion()) {
-			//completing the *first* tag in "<tagname1 |<tagname2"
+			// completing the *first* tag in "<tagname1 |<tagname2"
 			XMLNode actualNode = (XMLNode) node.getModel().getIndexedRegion(sdRegion.getStartOffset(completionRegion));
 			if (actualNode != null) {
 				if (actualNode.getFirstStructuredDocumentRegion() == sdRegion) {
@@ -1427,39 +1458,46 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 						if (node.getStructuredDocument().getRegionAtCharacterOffset(sdRegion.getStartOffset(completionRegion) - 1).getRegionAtCharacterOffset(sdRegion.getStartOffset(completionRegion) - 1).getType() == XMLRegionContext.XML_TAG_OPEN)
 							addAttributeNameProposals(contentAssistRequest);
 						addTagCloseProposals(contentAssistRequest);
-					} else {
+					}
+					else {
 						// it's name
 						contentAssistRequest = newContentAssistRequest(actualNode, actualNode.getParentNode(), sdRegion, completionRegion, documentPosition - matchString.length(), matchString.length(), matchString);
 						addTagNameProposals(contentAssistRequest, getElementPositionForModelQuery(actualNode));
 					}
-				} else {
+				}
+				else {
 					if (documentPosition >= sdRegion.getStartOffset(completionRegion) + completionRegion.getLength()) {
 						// insert name
 						contentAssistRequest = newContentAssistRequest(actualNode, actualNode.getParentNode(), sdRegion, completionRegion, documentPosition, 0, matchString);
-					} else {
-						//replace name
+					}
+					else {
+						// replace name
 						contentAssistRequest = newContentAssistRequest(actualNode, actualNode.getParentNode(), sdRegion, completionRegion, sdRegion.getStartOffset(completionRegion), completionRegion.getTextLength(), matchString);
 					}
 					addEndTagNameProposals(contentAssistRequest);
 				}
 			}
-		} else {
+		}
+		else {
 			if (documentPosition > sdRegion.getStartOffset(completionRegion) + completionRegion.getTextLength()) {
 				// unclosed tag with only a name; should prompt for attributes
 				// and a close instead
 				contentAssistRequest = newContentAssistRequest(nodeAtOffset, node, sdRegion, completionRegion, documentPosition - matchString.length(), matchString.length(), matchString);
 				addAttributeNameProposals(contentAssistRequest);
 				addTagCloseProposals(contentAssistRequest);
-			} else {
+			}
+			else {
 				if (sdRegion.getRegions().get(0).getType() != XMLRegionContext.XML_END_TAG_OPEN) {
 					contentAssistRequest = newContentAssistRequest(node, node.getParentNode(), sdRegion, completionRegion, sdRegion.getStartOffset(completionRegion), completionRegion.getTextLength(), matchString);
 					addTagNameProposals(contentAssistRequest, getElementPositionForModelQuery(nodeAtOffset));
-				} else {
+				}
+				else {
 					XMLNode actualNode = (XMLNode) node.getModel().getIndexedRegion(documentPosition);
 					if (actualNode != null) {
 						if (documentPosition >= sdRegion.getStartOffset(completionRegion) + completionRegion.getTextLength()) {
 							contentAssistRequest = newContentAssistRequest(actualNode, actualNode.getParentNode(), sdRegion, completionRegion, documentPosition, 0, matchString);
-						} else {
+						}
+						else {
 							contentAssistRequest = newContentAssistRequest(actualNode, actualNode.getParentNode(), sdRegion, completionRegion, sdRegion.getStartOffset(completionRegion), completionRegion.getTextLength(), matchString);
 						}
 						addEndTagNameProposals(contentAssistRequest);
@@ -1474,35 +1512,39 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		ContentAssistRequest contentAssistRequest = null;
 		IStructuredDocumentRegion sdRegion = getStructuredDocumentRegion(documentPosition);
 		if (sdRegion != nodeAtOffset.getFirstStructuredDocumentRegion()) {
-			//completing the *first* XML_TAG_OPEN in "<<tagname"
+			// completing the *first* XML_TAG_OPEN in "<<tagname"
 			XMLNode actualNode = (XMLNode) node.getModel().getIndexedRegion(sdRegion.getStartOffset(completionRegion));
 			if (actualNode != null) {
 				contentAssistRequest = newContentAssistRequest(actualNode, actualNode.getParentNode(), sdRegion, completionRegion, documentPosition, 0, matchString);
 				addTagNameProposals(contentAssistRequest, getElementPositionForModelQuery(actualNode));
 				addEndTagProposals(contentAssistRequest); // (pa) 220850
 			}
-		} else {
+		}
+		else {
 			if (documentPosition == sdRegion.getStartOffset(completionRegion)) {
 				if (node.getNodeType() == Node.ELEMENT_NODE) {
 					// at the start of an existing tag, right before the '<'
 					contentAssistRequest = newContentAssistRequest(nodeAtOffset, node.getParentNode(), sdRegion, completionRegion, documentPosition, 0, matchString);
 					addTagInsertionProposals(contentAssistRequest, getElementPositionForModelQuery(nodeAtOffset));
 					addEndTagProposals(contentAssistRequest);
-				} else if (node.getNodeType() == Node.DOCUMENT_NODE) {
+				}
+				else if (node.getNodeType() == Node.DOCUMENT_NODE) {
 					// at the opening of the VERY first tag with a '<'
 					contentAssistRequest = newContentAssistRequest(nodeAtOffset, node.getParentNode(), sdRegion, completionRegion, sdRegion.getStartOffset(completionRegion), completionRegion.getTextLength(), matchString);
 					addStartDocumentProposals(contentAssistRequest);
 				}
-			} else {
+			}
+			else {
 				// within the white space
 				ITextRegion name = getNameRegion(node.getStartStructuredDocumentRegion());
 				// (pa) ITextRegion refactor
-				//if (name != null && name.containsOffset(documentPosition))
+				// if (name != null && name.containsOffset(documentPosition))
 				// {
 				if (name != null && (sdRegion.getStartOffset(name) <= documentPosition && sdRegion.getEndOffset(name) >= documentPosition)) {
 					// replace the existing name
 					contentAssistRequest = newContentAssistRequest(node, node.getParentNode(), sdRegion, completionRegion, sdRegion.getStartOffset(name), name.getTextLength(), matchString);
-				} else {
+				}
+				else {
 					// insert a valid new name, or possibly an end tag
 					contentAssistRequest = newContentAssistRequest(nodeAtOffset, ((Node) nodeAtOffset).getParentNode(), sdRegion, completionRegion, documentPosition, 0, matchString);
 					addEndTagProposals(contentAssistRequest);
@@ -1520,8 +1562,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 * proposal's additional info. If no documentation exists for cmnode, try
 	 * displaying parentOrOwner's documentation
 	 * 
- String any documentation information to display for cmnode.
-	 *         <code>null</code> if there is nothing to display.
+	 * String any documentation information to display for cmnode.
+	 * <code>null</code> if there is nothing to display.
 	 */
 	protected String getAdditionalInfo(CMNode parentOrOwner, CMNode cmnode) {
 		String addlInfo = null;
@@ -1569,7 +1611,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			return new ArrayList(0);
 
 		for (Node child = document.getFirstChild(); child != null; child = child.getNextSibling()) {
-			//make sure the "root" Element isn't already present
+			// make sure the "root" Element isn't already present
 			// is it required to be an Element?
 			if (child.getNodeType() == Node.ELEMENT_NODE && stringsEqual(child.getNodeName(), rootName)) {
 				// if the node is missing either the start or end tag, don't
@@ -1592,7 +1634,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					CMElementDeclaration rootDecl = (CMElementDeclaration) cmdoc.getElements().getNamedItem(rootName);
 					if (rootDecl != null) {
 						list.add(rootDecl);
-					} else {
+					}
+					else {
 						// supply the given document name anyway, even if it
 						// is an error
 						list.add(new SimpleCMElementDeclaration(rootName));
@@ -1607,7 +1650,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 							setErrorMessage(SSEUIPlugin.getResourceString("%20concat", (new Object[]{rootName}))); //$NON-NLS-1$ = "No definition was found for element <{0}>"
 					}
 				}
-			} else {
+			}
+			else {
 				if (Debug.displayInfo || Debug.displayWarnings)
 					System.out.println("No content model found."); //$NON-NLS-1$
 				//$NON-NLS-1$
@@ -1639,8 +1683,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 * Returns the characters which when entered by the user should
 	 * automatically trigger the presentation of possible completions.
 	 * 
- the auto activation characters for completion proposal or
-	 *         <code>null</code> if no auto activation is desired
+	 * the auto activation characters for completion proposal or
+	 * <code>null</code> if no auto activation is desired
 	 */
 	public char[] getCompletionProposalAutoActivationCharacters() {
 		return completionProposalAutoActivationCharacters;
@@ -1658,7 +1702,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				// previous IStructuredDocumentRegion is
 				// where to look for a useful region.
 				region = sdRegion.getPrevious().getRegionAtCharacterOffset(offset - 1);
-			} else {
+			}
+			else {
 				// Is there no separating whitespace from the previous region?
 				// If not,
 				// then that region is the important one
@@ -1667,7 +1712,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					region = previousRegion;
 				}
 			}
-		} else {
+		}
+		else {
 			// The offset is NOT at the beginning of the region
 			if (offset > sdRegion.getStartOffset(region) + region.getTextLength()) {
 				// Is the offset within the whitespace after the text in this
@@ -1676,7 +1722,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				ITextRegion nextRegion = sdRegion.getRegionAtCharacterOffset(sdRegion.getStartOffset(region) + region.getLength());
 				if (nextRegion != null)
 					region = nextRegion;
-			} else {
+			}
+			else {
 				// Is the offset within the important text for this region?
 				// If so, then we've already got the right one.
 			}
@@ -1733,12 +1780,13 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			// the offset is definitely within the start or end tag, continue
 			// on and find the region
 			region = getCompletionRegion(offset, flatNode);
-		} else {
+		}
+		else {
 			// the docPosition is neither within the start nor the end, so it
 			// must be content
 			flatNode = node.getStructuredDocument().getRegionAtCharacterOffset(offset);
 			// (pa) ITextRegion refactor
-			//if (flatNode.contains(documentPosition)) {
+			// if (flatNode.contains(documentPosition)) {
 			if (flatNode.getStartOffset() <= documentPosition && flatNode.getEndOffset() >= documentPosition) {
 				// we're interesting in completing/extending the previous
 				// IStructuredDocumentRegion if the current
@@ -1749,11 +1797,14 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					// previous IStructuredDocumentRegion is
 					// where to look for a useful region.
 					region = flatNode.getPrevious().getLastRegion();
-				} else if (flatNode.getEndOffset() == documentPosition) {
+				}
+				else if (flatNode.getEndOffset() == documentPosition) {
 					region = flatNode.getLastRegion();
-				} else
+				}
+				else
 					region = flatNode.getFirstRegion();
-			} else {
+			}
+			else {
 				// catch end of document positions where the docPosition isn't
 				// in a IStructuredDocumentRegion
 				region = flatNode.getLastRegion();
@@ -1779,9 +1830,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 * Returns the characters which when entered by the user should
 	 * automatically trigger the presentation of context information.
 	 * 
- the auto activation characters for presenting context
-	 *         information or <code>null</code> if no auto activation is
-	 *         desired
+	 * the auto activation characters for presenting context information or
+	 * <code>null</code> if no auto activation is desired
 	 */
 	public char[] getContextInformationAutoActivationCharacters() {
 		return contextInformationAutoActivationCharacters;
@@ -1792,8 +1842,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 * information should be dismissed. May only return <code>null</code> if
 	 * the processor is incapable of computing context information.
 	 * 
- a context information validator, or <code>null</code> if the
-	 *         processor is incapable of computing context information
+	 * a context information validator, or <code>null</code> if the
+	 * processor is incapable of computing context information
 	 */
 	public IContextInformationValidator getContextInformationValidator() {
 		if (fContextInformationPresenter == null)
@@ -1823,14 +1873,14 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 
 	private int getElementPositionForModelQuery(Node child) {
 		return getElementPosition(child);
-		//	return -1;
+		// return -1;
 	}
 
 	/**
 	 * Return the reason why computeProposals was not able to find any
 	 * completions.
 	 * 
- an error message or null if no error occurred
+	 * an error message or null if no error occurred
 	 */
 	public String getErrorMessage() {
 		return fErrorMessage;
@@ -1839,14 +1889,14 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	/**
 	 * @param iResource
 	 */
-	//	public void initialize(IResource iResource) {
-	//		this.resource = iResource;
-	//	}
+	// public void initialize(IResource iResource) {
+	// this.resource = iResource;
+	// }
 	/**
 	 * Gets the infoProvider.
 	 * 
- fInfoProvider and if fInfoProvider was <code>null</code>
-	 *         create a new instance
+	 * fInfoProvider and if fInfoProvider was <code>null</code> create a new
+	 * instance
 	 */
 	public MarkupTagInfoProvider getInfoProvider() {
 		if (fInfoProvider == null) {
@@ -1862,9 +1912,11 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		String regionType = aRegion.getType();
 		if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS || regionType == XMLRegionContext.XML_TAG_OPEN || (offset > parent.getStartOffset(aRegion) + aRegion.getTextLength())) {
 			matchString = ""; //$NON-NLS-1$
-		} else if (regionType == XMLRegionContext.XML_CONTENT) {
+		}
+		else if (regionType == XMLRegionContext.XML_CONTENT) {
 			matchString = ""; //$NON-NLS-1$
-		} else {
+		}
+		else {
 			if (parent.getText(aRegion).length() > 0 && parent.getStartOffset(aRegion) < offset)
 				matchString = parent.getText(aRegion).substring(0, offset - parent.getStartOffset(aRegion));
 			else
@@ -1900,7 +1952,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			ModelQuery modelQuery = ModelQueryUtil.getModelQuery(element.getOwnerDocument());
 			if (modelQuery != null) {
 				dataTypeValues = modelQuery.getPossibleDataTypeValues(element, ad);
-			} else {
+			}
+			else {
 				if (ad.getAttrType() != null)
 					dataTypeValues = ad.getAttrType().getEnumeratedValues();
 			}
@@ -1926,7 +1979,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		}
 		return getContentGenerator().getRequiredName(parentOrOwner, cmnode);
 	}
-	
+
 	protected String getRequiredText(Node parentOrOwner, CMAttributeDeclaration attrDecl) {
 		if (attrDecl == null) {
 			if (Debug.displayWarnings) {
@@ -1956,7 +2009,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 */
 	public IStructuredDocumentRegion getStructuredDocumentRegion(int pos) {
 		// (pa) ITextRegion refactor defect 245190
-		//return
+		// return
 		// (IStructuredDocumentRegion)ContentAssistUtils.getNodeAt((StructuredTextViewer)fTextViewer,
 		// pos);
 		return ContentAssistUtils.getStructuredDocumentRegion((StructuredTextViewer) fTextViewer, pos);
@@ -1995,7 +2048,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 * tells you if the document is XML type.
 	 * 
 	 * @param node
-
+	 * 
 	 */
 	protected boolean getXML(Node node) {
 		if (node == null)
@@ -2029,7 +2082,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 * Checks if cursor position is after doctype tag...
 	 * 
 	 * @param car
-
+	 * 
 	 */
 	protected boolean isCursorAfterDoctype(ContentAssistRequest car) {
 		Node aNode = car.getNode();
@@ -2056,7 +2109,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 * This method can check if the cursor is after the XMLPI
 	 * 
 	 * @param car
-
+	 * 
 	 */
 	protected boolean isCursorAfterXMLPI(ContentAssistRequest car) {
 		Node aNode = car.getNode();
@@ -2122,7 +2175,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	 * Gets the corresponding XMLNode, and checks if it's closed.
 	 * 
 	 * @param startTag
-
+	 * 
 	 */
 	private boolean needsEndTag(IStructuredDocumentRegion startTag) {
 		boolean result = false;
@@ -2139,7 +2192,8 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				else
 					result = xmlNode.getEndStructuredDocumentRegion() == null;
 			}
-		} finally {
+		}
+		finally {
 			if (sModel != null)
 				sModel.releaseFromRead();
 		}

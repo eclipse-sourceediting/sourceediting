@@ -101,7 +101,8 @@ public class DTDContentOutlineConfiguration extends StructuredContentOutlineConf
 		if (fContentProvider == null) {
 			fContentProvider = new DTDTreeContentProvider();
 		}
-		return super.getContentProvider(viewer);
+		//return super.getContentProvider(viewer);
+		return fContentProvider;
 	}
 
 	/*
@@ -113,7 +114,8 @@ public class DTDContentOutlineConfiguration extends StructuredContentOutlineConf
 		if (fLabelProvider == null) {
 			fLabelProvider = new DTDLabelProvider();
 		}
-		return super.getLabelProvider(viewer);
+		//return super.getLabelProvider(viewer);
+		return fLabelProvider;
 	}
 
 	/*

@@ -84,7 +84,7 @@ public class CleanupProcessorCSS extends AbstractStructuredCleanupProcessor {
 	 * @see com.ibm.sse.model.cleanup.IStructuredCleanupProcessor#cleanupDocument(org.eclipse.jface.text.IDocument)
 	 */
 	public void cleanupDocument(IDocument document) throws IOException, CoreException {
-		// TODO Auto-generated method stub
+		// TODO should implement, or delete?
 
 	}
 
@@ -95,7 +95,7 @@ public class CleanupProcessorCSS extends AbstractStructuredCleanupProcessor {
 	 *      int, int)
 	 */
 	public void cleanupDocument(IDocument document, int start, int length) throws IOException, CoreException {
-		// TODO Auto-generated method stub
+		// TODO should implement, or delete?
 
 	}
 
@@ -105,7 +105,6 @@ public class CleanupProcessorCSS extends AbstractStructuredCleanupProcessor {
 	 * @see com.ibm.sse.model.cleanup.AbstractStructuredCleanupProcessor#getCleanupHandler(org.w3c.dom.Node)
 	 */
 	protected IStructuredCleanupHandler getCleanupHandler(Node node) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -115,7 +114,6 @@ public class CleanupProcessorCSS extends AbstractStructuredCleanupProcessor {
 	 * @see com.ibm.sse.model.cleanup.AbstractStructuredCleanupProcessor#getFormatProcessor()
 	 */
 	protected IStructuredFormatProcessor getFormatProcessor() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -125,7 +123,5 @@ public class CleanupProcessorCSS extends AbstractStructuredCleanupProcessor {
 	 * @see com.ibm.sse.model.cleanup.AbstractStructuredCleanupProcessor#refreshCleanupPreferences()
 	 */
 	protected void refreshCleanupPreferences() {
-		// TODO Auto-generated method stub
-
 	}
 }

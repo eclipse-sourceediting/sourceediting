@@ -40,7 +40,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.IStructuredDocumentRegion#addRegion(com.ibm.sed.structured.text.ITextRegion)
 	 */
 	public void addRegion(ITextRegion aRegion) {
-		// XXX Auto-generated method stub
+		throw new Error("intentionally not implemented since should never be called");
 
 	}
 
@@ -50,7 +50,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.ITextRegion#adjust(int)
 	 */
 	public void adjust(int i) {
-		// XXX Auto-generated method stub
+		throw new Error("intentionally not implemented since should never be called");
 
 	}
 
@@ -60,7 +60,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.ITextRegion#adjustLengthWith(int)
 	 */
 	public void adjustLength(int i) {
-		// XXX Auto-generated method stub
+		throw new Error("intentionally not implemented since should never be called");
 
 	}
 
@@ -70,7 +70,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.ITextRegion#adjustStart(int)
 	 */
 	public void adjustStart(int i) {
-		// XXX Auto-generated method stub
+		throw new Error("intentionally not implemented since should never be called");
 
 	}
 
@@ -80,7 +80,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.ITextRegion#adjustTextLength(int)
 	 */
 	public void adjustTextLength(int i) {
-		// XXX Auto-generated method stub
+		throw new Error("intentionally not implemented since should never be called");
 
 	}
 
@@ -94,7 +94,8 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 			if (container.getStructuredDocumentRegionCount() > 0) {
 				this.flatNodes.addAll(container.flatNodes);
 			}
-		} else {
+		}
+		else {
 			this.flatNodes.addElement(flatNode);
 		}
 	}
@@ -105,8 +106,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.ITextRegionCollection#containsOffset(int)
 	 */
 	public boolean containsOffset(int i) {
-		// XXX Auto-generated method stub
-		return false;
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/*
@@ -116,8 +116,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 *      int)
 	 */
 	public boolean containsOffset(ITextRegion region, int i) {
-		// XXX Auto-generated method stub
-		return false;
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/*
@@ -126,7 +125,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.ITextRegion#equatePositions(com.ibm.sed.structured.text.ITextRegion)
 	 */
 	public void equatePositions(ITextRegion region) {
-		// XXX Auto-generated method stub
+		throw new Error("intentionally not implemented since should never be called");
 
 	}
 
@@ -136,8 +135,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.ITextRegionCollection#getDeepestRegionAtCharacterOffset(int)
 	 */
 	public ITextRegion getDeepestRegionAtCharacterOffset(int offset) {
-		// XXX Auto-generated method stub
-		return null;
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/**
@@ -161,8 +159,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.ITextRegionCollection#getEndOffset(com.ibm.sed.structured.text.ITextRegion)
 	 */
 	public int getEndOffset(ITextRegion containedRegion) {
-		// XXX Auto-generated method stub
-		return 0;
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/*
@@ -171,8 +168,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.ITextRegionCollection#getFirstRegion()
 	 */
 	public ITextRegion getFirstRegion() {
-		// XXX Auto-generated method stub
-		return null;
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/**
@@ -192,15 +188,13 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	/**
 	 */
 	public String getFullText(ITextRegion aRegion) {
-		// not supported
-		return null;
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/**
 	 */
 	public String getFullText(String context) {
-		// not supported
-		return null;
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/*
@@ -209,8 +203,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.ITextRegionCollection#getLastRegion()
 	 */
 	public ITextRegion getLastRegion() {
-		// XXX Auto-generated method stub
-		return null;
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/**
@@ -234,15 +227,13 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.IStructuredDocumentRegion#getNext()
 	 */
 	public IStructuredDocumentRegion getNext() {
-		// XXX Auto-generated method stub
-		return null;
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/** 
 	 */
 	public int getNumberOfRegions() {
-		// not supported
-		return 0;
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/**
@@ -257,8 +248,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.IStructuredDocumentRegion#getParentDocument()
 	 */
 	public IStructuredDocument getParentDocument() {
-		// XXX Auto-generated method stub
-		return null;
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/*
@@ -267,22 +257,19 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.IStructuredDocumentRegion#getPrevious()
 	 */
 	public IStructuredDocumentRegion getPrevious() {
-		// XXX Auto-generated method stub
-		return null;
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/**
 	 */
 	public ITextRegion getRegionAtCharacterOffset(int offset) {
-		// not supported
-		return null;
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/**
 	 */
 	public ITextRegionList getRegions() {
-		// not supported
-		return null;
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/**
@@ -306,8 +293,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.ITextRegionCollection#getStartOffset(com.ibm.sed.structured.text.ITextRegion)
 	 */
 	public int getStartOffset(ITextRegion containedRegion) {
-		// XXX Auto-generated method stub
-		return 0;
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/**
@@ -352,15 +338,13 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	/**
 	 */
 	public String getText(ITextRegion aRegion) {
-		// not supported
-		return null;
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/**
 	 */
 	public String getText(String context) {
-		// not supported
-		return null;
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/**
@@ -381,8 +365,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.ITextRegionCollection#getTextEndOffset(com.ibm.sed.structured.text.ITextRegion)
 	 */
 	public int getTextEndOffset(ITextRegion containedRegion) {
-		// XXX Auto-generated method stub
-		return 0;
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/**
@@ -427,8 +410,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.IStructuredDocumentRegion#isEnded()
 	 */
 	public boolean isEnded() {
-		// XXX Auto-generated method stub
-		return false;
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/**
@@ -476,15 +458,13 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 *      int)
 	 */
 	public boolean sameAs(IStructuredDocumentRegion region, int shift) {
-		// XXX Auto-generated method stub
-		return false;
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/**
 	 */
 	public boolean sameAs(ITextRegion region, int shift) {
-		// not support
-		return false;
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/*
@@ -495,8 +475,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 *      com.ibm.sed.structured.text.ITextRegion, int)
 	 */
 	public boolean sameAs(ITextRegion oldRegion, IStructuredDocumentRegion documentRegion, ITextRegion newRegion, int shift) {
-		// XXX Auto-generated method stub
-		return false;
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	public void setDeleted(boolean deleted) {
@@ -509,8 +488,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.IStructuredDocumentRegion#setEnded(boolean)
 	 */
 	public void setEnded(boolean hasEnd) {
-		// XXX Auto-generated method stub
-
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/*
@@ -519,8 +497,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.IStructuredDocumentRegion#setLength(int)
 	 */
 	public void setLength(int newLength) {
-		// XXX Auto-generated method stub
-
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/*
@@ -529,8 +506,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.IStructuredDocumentRegion#setNext(com.ibm.sed.structured.text.IStructuredDocumentRegion)
 	 */
 	public void setNext(IStructuredDocumentRegion newNext) {
-		// XXX Auto-generated method stub
-
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/*
@@ -539,8 +515,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.IStructuredDocumentRegion#setParentDocument(com.ibm.sed.structured.text.IStructuredDocument)
 	 */
 	public void setParentDocument(IStructuredDocument document) {
-		// XXX Auto-generated method stub
-
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/*
@@ -549,14 +524,13 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.IStructuredDocumentRegion#setPrevious(com.ibm.sed.structured.text.IStructuredDocumentRegion)
 	 */
 	public void setPrevious(IStructuredDocumentRegion newPrevious) {
-		// XXX Auto-generated method stub
-
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/**
 	 */
 	public void setRegions(ITextRegionList embeddedRegions) {
-		// not supported
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/*
@@ -565,8 +539,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.IStructuredDocumentRegion#setStart(int)
 	 */
 	public void setStart(int newStart) {
-		// XXX Auto-generated method stub
-
+		throw new Error("intentionally not implemented since should never be called");
 	}
 
 	/**
@@ -599,7 +572,6 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 *      java.lang.String, int, int)
 	 */
 	public StructuredDocumentEvent updateRegion(Object requester, IStructuredDocumentRegion flatnode, String changes, int start, int end) {
-		// XXX Auto-generated method stub
-		return null;
+		throw new Error("intentionally not implemented since should never be called");
 	}
 }

@@ -29,12 +29,7 @@ import org.w3c.dom.Node;
 
 
 public class FormatProcessorCSS extends AbstractStructuredFormatProcessor {
-	/**
-	 * @deprecated renamed to getFileExtension() TODO will delete in C5
-	 */
-	protected String getContentType() {
-		return "css"; //$NON-NLS-1$
-	}
+
 
 	protected String getFileExtension() {
 		return "css"; //$NON-NLS-1$

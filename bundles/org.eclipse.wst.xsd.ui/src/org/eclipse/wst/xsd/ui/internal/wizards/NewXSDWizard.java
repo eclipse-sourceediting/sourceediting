@@ -29,140 +29,118 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.ISetSelectionTarget;
-import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
+import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 
 
-public class NewXSDWizard extends Wizard implements INewWizard
-{
-  private XSDNewFilePage newFilePage;
-  private IStructuredSelection selection;
-  private IWorkbench workbench;
+public class NewXSDWizard extends Wizard implements INewWizard {
+	private XSDNewFilePage newFilePage;
+	private IStructuredSelection selection;
+	private IWorkbench workbench;
 
-  public NewXSDWizard()
-  {   
-  }
+	public NewXSDWizard() {
+	}
 
-  public void init(IWorkbench aWorkbench, IStructuredSelection aSelection)
-  {
-    this.selection = aSelection;
-    this.workbench = aWorkbench;
+	public void init(IWorkbench aWorkbench, IStructuredSelection aSelection) {
+		this.selection = aSelection;
+		this.workbench = aWorkbench;
 
-    this.setDefaultPageImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/NewXSD.gif"));
-    this.setWindowTitle(XSDEditorPlugin.getXSDString("_UI_WIZARD_CREATE_XSD_MODEL_TITLE"));
-  }
+		this.setDefaultPageImageDescriptor(ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/NewXSD.gif"));
+		this.setWindowTitle(XSDEditorPlugin.getXSDString("_UI_WIZARD_CREATE_XSD_MODEL_TITLE"));
+	}
 
-  public void addPages()
-  {
-    newFilePage = new XSDNewFilePage(selection);
-    addPage(newFilePage);
-  }
+	public void addPages() {
+		newFilePage = new XSDNewFilePage(selection);
+		addPage(newFilePage);
+	}
 
-  public boolean performFinish()
-  {
-    IFile file = newFilePage.createNewFile();
-    
-    //
-    // Get the xsd schema name from the full path name
-    //   e.g. f:/b2b/po.xsd => schema name = po
-    //
-    IPath iPath = file.getFullPath().removeFileExtension();
-    // String schemaName = iPath.lastSegment();
-    String schemaName = iPath.lastSegment();
-    String schemaPrefix = "tns";
-    String prefixForSchemaNamespace = "";
-    String schemaNamespaceAttribute = "xmlns";
-    if (XSDEditorPlugin.getPlugin().isQualifyXMLSchemaLanguage())
-    {
-      // Added this if check before disallowing blank prefixes in the preferences...
-      // Can take this out.  See also XSDEditor
-      if (XSDEditorPlugin.getPlugin().getXMLSchemaPrefix().trim().length() > 0)
-      {
-        prefixForSchemaNamespace = XSDEditorPlugin.getPlugin().getXMLSchemaPrefix() + ":";
-        schemaNamespaceAttribute += ":" + XSDEditorPlugin.getPlugin().getXMLSchemaPrefix();
-      }
-    }
-    
-    Preferences preference = XMLCorePlugin.getDefault().getPluginPreferences();
-	String charSet = preference.getString(CommonModelPreferenceNames.OUTPUT_CODESET);
-     if (charSet == null || charSet.trim().equals(""))
-    {
-    	charSet = "UTF-8";
-    }
+	public boolean performFinish() {
+		IFile file = newFilePage.createNewFile();
 
-    String newContents = "<?xml version=\"1.0\" encoding=\"" + charSet + "\"?>\n";
-     
-    String defaultTargetURI = XSDEditorPlugin.getPlugin().getXMLSchemaTargetNamespace();
-    newContents += "<" + prefixForSchemaNamespace + "schema " + schemaNamespaceAttribute + "=\"http://www.w3.org/2001/XMLSchema\" targetNamespace=\"" + defaultTargetURI + schemaName + "\" xmlns:" + schemaPrefix + "=\""+ defaultTargetURI + schemaName + "\">\n</"+prefixForSchemaNamespace+"schema>";
+		//
+		// Get the xsd schema name from the full path name
+		// e.g. f:/b2b/po.xsd => schema name = po
+		//
+		IPath iPath = file.getFullPath().removeFileExtension();
+		// String schemaName = iPath.lastSegment();
+		String schemaName = iPath.lastSegment();
+		String schemaPrefix = "tns";
+		String prefixForSchemaNamespace = "";
+		String schemaNamespaceAttribute = "xmlns";
+		if (XSDEditorPlugin.getPlugin().isQualifyXMLSchemaLanguage()) {
+			// Added this if check before disallowing blank prefixes in the
+			// preferences...
+			// Can take this out. See also XSDEditor
+			if (XSDEditorPlugin.getPlugin().getXMLSchemaPrefix().trim().length() > 0) {
+				prefixForSchemaNamespace = XSDEditorPlugin.getPlugin().getXMLSchemaPrefix() + ":";
+				schemaNamespaceAttribute += ":" + XSDEditorPlugin.getPlugin().getXMLSchemaPrefix();
+			}
+		}
 
-    try
-    {
-      byte[] bytes = newContents.getBytes(charSet);
-      ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
-      
-      file.setContents(inputStream,true,false,null);
-      inputStream.close();
-    }
-    catch (Exception e)
-    {
-//      XSDEditorPlugin.getPlugin().getMsgLogger().write("Error writing default content:\n" + newContents);      
-//      XSDEditorPlugin.getPlugin().getMsgLogger().write(e);
-    }
+		Preferences preference = XMLCorePlugin.getDefault().getPluginPreferences();
+		String charSet = preference.getString(CommonEncodingPreferenceNames.OUTPUT_CODESET);
+		if (charSet == null || charSet.trim().equals("")) {
+			charSet = "UTF-8";
+		}
 
-    if (file != null)
-    {
-      revealSelection(new StructuredSelection(file));
-    }
-    
-    openEditor(file);
+		String newContents = "<?xml version=\"1.0\" encoding=\"" + charSet + "\"?>\n";
 
-    return true;
-  }
+		String defaultTargetURI = XSDEditorPlugin.getPlugin().getXMLSchemaTargetNamespace();
+		newContents += "<" + prefixForSchemaNamespace + "schema " + schemaNamespaceAttribute + "=\"http://www.w3.org/2001/XMLSchema\" targetNamespace=\"" + defaultTargetURI + schemaName + "\" xmlns:" + schemaPrefix + "=\"" + defaultTargetURI + schemaName + "\">\n</" + prefixForSchemaNamespace + "schema>";
 
-  private void revealSelection(final ISelection selection)
-  {
-    if (selection != null)
-    {
-      IWorkbench workbench = XSDEditorPlugin.getPlugin().getWorkbench();
-      final IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
-      final IWorkbenchPart focusPart = workbenchWindow.getActivePage().getActivePart();
-      if (focusPart instanceof ISetSelectionTarget)
-      {
-        Display.getCurrent().asyncExec
-        (new Runnable()
-            {
-          public void run()
-          {
-            ((ISetSelectionTarget)focusPart).selectReveal(selection);
-          }
-        });
-      }
-    }
-  }
+		try {
+			byte[] bytes = newContents.getBytes(charSet);
+			ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
 
-  public void openEditor(final IFile iFile)
-  {
-    if (iFile != null)
-    {
-      IWorkbench workbench = XSDEditorPlugin.getPlugin().getWorkbench();
-      final IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+			file.setContents(inputStream, true, false, null);
+			inputStream.close();
+		}
+		catch (Exception e) {
+			// XSDEditorPlugin.getPlugin().getMsgLogger().write("Error writing
+			// default content:\n" + newContents);
+			// XSDEditorPlugin.getPlugin().getMsgLogger().write(e);
+		}
 
-      Display.getDefault().asyncExec
-      (new Runnable()
-          {
-        public void run()
-        {
-          try
-          {
-            IEditorPart editorPart = workbenchWindow.getActivePage().openEditor(new FileEditorInput(iFile), XSDEditorPlugin.XSD_EDITOR_ID);
-          }
-          catch (PartInitException ex)
-          {
-          }
-        }
-      });
-    }
-  }
-  
+		if (file != null) {
+			revealSelection(new StructuredSelection(file));
+		}
+
+		openEditor(file);
+
+		return true;
+	}
+
+	private void revealSelection(final ISelection selection) {
+		if (selection != null) {
+			IWorkbench workbench = XSDEditorPlugin.getPlugin().getWorkbench();
+			final IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+			final IWorkbenchPart focusPart = workbenchWindow.getActivePage().getActivePart();
+			if (focusPart instanceof ISetSelectionTarget) {
+				Display.getCurrent().asyncExec(new Runnable() {
+					public void run() {
+						((ISetSelectionTarget) focusPart).selectReveal(selection);
+					}
+				});
+			}
+		}
+	}
+
+	public void openEditor(final IFile iFile) {
+		if (iFile != null) {
+			IWorkbench workbench = XSDEditorPlugin.getPlugin().getWorkbench();
+			final IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
+
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					try {
+						IEditorPart editorPart = workbenchWindow.getActivePage().openEditor(new FileEditorInput(iFile), XSDEditorPlugin.XSD_EDITOR_ID);
+					}
+					catch (PartInitException ex) {
+					}
+				}
+			});
+		}
+	}
+
 }

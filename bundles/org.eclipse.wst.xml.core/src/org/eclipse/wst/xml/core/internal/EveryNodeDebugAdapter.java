@@ -112,13 +112,13 @@ public class EveryNodeDebugAdapter implements IDebugAdapter {
 		}
 
 		public void modelAboutToBeReinitialized(IStructuredModel structuredModel) {
-			// TODO Auto-generated method stub
-			
+			Debug.println("modelAboutToBeReinitialized: " + "structuredModel: " + structuredModel);
+
 		}
 
 		public void modelReinitialized(IStructuredModel structuredModel) {
-			// TODO Auto-generated method stub
-			
+			Debug.println("modelReinitialized: " + "structuredModel: " + structuredModel);
+
 		}
 
 	}
@@ -207,7 +207,7 @@ public class EveryNodeDebugAdapter implements IDebugAdapter {
 	IStructuredModel fModel;
 
 	/**
-	 *  
+	 * 
 	 */
 	public EveryNodeDebugAdapter() {
 		super();

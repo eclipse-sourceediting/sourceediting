@@ -265,7 +265,7 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 	}
 
 	public String getErrorMessage() {
-		// TODO:
+		// TODO: get appropriate error message
 		// if (fCollector.getErrorMessage() != null &&
 		// fCollector.getErrorMessage().length() > 0)
 		// return fCollector.getErrorMessage();

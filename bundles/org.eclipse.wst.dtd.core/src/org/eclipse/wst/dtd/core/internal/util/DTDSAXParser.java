@@ -49,7 +49,6 @@ public class DTDSAXParser extends SAXParser {
 	 * @see javax.xml.parsers.SAXParser#getParser()
 	 */
 	public Parser getParser() throws SAXException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -59,7 +58,6 @@ public class DTDSAXParser extends SAXParser {
 	 * @see javax.xml.parsers.SAXParser#getProperty(java.lang.String)
 	 */
 	public Object getProperty(String name) throws SAXNotRecognizedException, SAXNotSupportedException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -69,50 +67,9 @@ public class DTDSAXParser extends SAXParser {
 	 * @see javax.xml.parsers.SAXParser#getXMLReader()
 	 */
 	public XMLReader getXMLReader() throws SAXException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-	//
-	// public XMLLocator getLocator()
-	// {
-	// return locator;
-	// }
-	//
-	// public void startDocument
-	// (XMLLocator locator,
-	// String encoding,
-	// Augmentations augs)
-	// {
-	// this.locator = locator;
-	// super.startDocument(locator,encoding,augs);
-	// }
-	//
-	// public void ignoredCharacters(XMLString text, Augmentations augs)
-	// throws XNIException
-	// {
-	// String s =
-	// text.length > 0 ? new String(text.ch,text.offset,text.length) : "";
-	// //System.out.println("ignoredCharacters: " + s);
-	//
-	// StringTokenizer tokenizer = new StringTokenizer(s,";");
-	// try
-	// {
-	// String token = null;
-	// while (tokenizer.hasMoreTokens())
-	// {
-	// token = tokenizer.nextToken();
-	// if (isEntityRef(token))
-	// registerEntityRef(token);
-	// }
-	// }
-	// catch (NoSuchElementException e)
-	// {
-	// e.printStackTrace();
-	// }
-	// }
-	//
-	// TODO: never used
 	boolean isEntityRef(String token) {
 		// Looking for the pattern "nnnn%nnnnn".
 		if (token.indexOf('%') != -1)
@@ -127,7 +84,6 @@ public class DTDSAXParser extends SAXParser {
 	 * @see javax.xml.parsers.SAXParser#isNamespaceAware()
 	 */
 	public boolean isNamespaceAware() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -137,7 +93,6 @@ public class DTDSAXParser extends SAXParser {
 	 * @see javax.xml.parsers.SAXParser#isValidating()
 	 */
 	public boolean isValidating() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -163,7 +118,7 @@ public class DTDSAXParser extends SAXParser {
 	 *      java.lang.Object)
 	 */
 	public void setProperty(String name, Object value) throws SAXNotRecognizedException, SAXNotSupportedException {
-		// TODO Auto-generated method stub
+		// TODO maybe needs implementing?
 
 	}
 

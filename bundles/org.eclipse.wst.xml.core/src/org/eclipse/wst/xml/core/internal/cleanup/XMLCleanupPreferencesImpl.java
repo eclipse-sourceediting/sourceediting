@@ -21,7 +21,7 @@ import org.eclipse.wst.xml.core.XMLPreferenceNames;
  * 
  * TODO will delete in C5
  */
-public class XMLCleanupPreferencesImpl implements XMLCleanupPreferences {
+public class XMLCleanupPreferencesImpl {
 
 	private static XMLCleanupPreferencesImpl fInstance;
 
@@ -39,7 +39,7 @@ public class XMLCleanupPreferencesImpl implements XMLCleanupPreferences {
 	private String fEOLCode;
 	private boolean fFormatSource;
 	private boolean fInsertMissingTags;
-	//private IPreferenceStore fPreferenceStore = null;
+	// private IPreferenceStore fPreferenceStore = null;
 	private Preferences fPreferences = null;
 	private boolean fQuoteAttrValues;
 	private int fTagNameCase;
