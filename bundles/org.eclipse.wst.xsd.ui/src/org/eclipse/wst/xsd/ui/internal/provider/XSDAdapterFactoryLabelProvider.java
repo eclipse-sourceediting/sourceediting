@@ -146,7 +146,7 @@ public class XSDAdapterFactoryLabelProvider implements ILabelProvider, INotifyCh
    */
   public Image getColumnImage(Object element, int columnIndex)
   {
-    return null;
+    return getImage(element);
   }
 
   /* (non-Javadoc)
@@ -154,7 +154,7 @@ public class XSDAdapterFactoryLabelProvider implements ILabelProvider, INotifyCh
    */
   public String getColumnText(Object element, int columnIndex)
   {
-    return null;
+    return getText(element);
   }
 
 }
