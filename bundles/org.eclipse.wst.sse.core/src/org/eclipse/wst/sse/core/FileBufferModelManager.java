@@ -228,9 +228,9 @@ class FileBufferModelManager {
 				for (int i = 0; i < danglingDocuments.length; i++) {
 					DocumentInfo info = (DocumentInfo) instance.fDocumentMap.get(danglingDocuments[i]);
 					if (info.modelReferenceCount > 0)
-						System.err.println("LEAKED MODEL: " + info.buffer.getLocation() + " " + ((ITextFileBuffer) info.buffer).getDocument());
+						System.err.println("LEAKED MODEL: " + info.buffer.getLocation() + " " + info.buffer.getDocument());
 					if (info.bufferReferenceCount > 0)
-						System.err.println("LEAKED BUFFER: " + info.buffer.getLocation() + " " + ((ITextFileBuffer) info.buffer).getDocument());
+						System.err.println("LEAKED BUFFER: " + info.buffer.getLocation() + " " + info.buffer.getDocument());
 				}
 			}
 			FileBuffers.getTextFileBufferManager().removeFileBufferListener(instance.fFileBufferListener);
@@ -434,7 +434,7 @@ class FileBufferModelManager {
 		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
 		if (info != null && info.model == null) {
 			if (debugFileBufferModelManagement) {
-				System.out.println("FileBufferModelManager creating model for " + info.buffer.getLocation() + " " + ((ITextFileBuffer) info.buffer).getDocument());
+				System.out.println("FileBufferModelManager creating model for " + info.buffer.getLocation() + " " + info.buffer.getDocument());
 			}
 			info.modelReferenceCount++;
 
@@ -488,13 +488,13 @@ class FileBufferModelManager {
 		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
 		if (info != null) {
 			if (debugFileBufferModelManagement) {
-				System.out.println("FileBufferModelManager noticed full release of model for " + info.buffer.getLocation()  + " " + ((ITextFileBuffer)info.buffer).getDocument());
+				System.out.println("FileBufferModelManager noticed full release of model for " + info.buffer.getLocation()  + " " + info.buffer.getDocument());
 			}
 			info.model = null;
 			info.modelReferenceCount--;
 			if (info.selfConnected) {
 				if (debugFileBufferModelManagement) {
-					System.out.println("FileBufferModelManager disconnecting from " + info.buffer.getLocation() + " " + ((ITextFileBuffer) info.buffer).getDocument());
+					System.out.println("FileBufferModelManager disconnecting from " + info.buffer.getLocation() + " " + info.buffer.getDocument());
 				}
 				try {
 					FileBuffers.getTextFileBufferManager().disconnect(info.buffer.getLocation(), getProgressMonitor());
