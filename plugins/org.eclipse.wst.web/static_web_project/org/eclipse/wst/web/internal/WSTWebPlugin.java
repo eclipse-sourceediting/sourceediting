@@ -1,0 +1,127 @@
+/***************************************************************************************************
+ * Copyright (c) 2003, 2004 IBM Corporation and others. All rights reserved. This program and the
+ * accompanying materials are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: IBM Corporation - initial API and implementation
+ **************************************************************************************************/
+
+package org.eclipse.wst.web.internal;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IPluginDescriptor;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.wst.validation.internal.plugin.ValidationPlugin;
+
+/**
+ * The main plugin class to be used in the desktop.
+ */
+public class WSTWebPlugin extends AbstractUIPlugin
+{
+	//The shared instance.
+	private static WSTWebPlugin plugin;
+	//Resource bundle.
+	private ResourceBundle resourceBundle;
+	
+	public static final String PLUGIN_ID = "com.ibm.etools.webtools.staticwebproject"; //$NON-NLS-1$
+	public static final String VALIDATION_BUILDER_ID = ValidationPlugin.VALIDATION_BUILDER_ID; // plugin
+	
+	public static final String[] ICON_DIRS = new String[]{"icons/full/obj16", //$NON-NLS-1$
+				"icons/full/ctool16", //$NON-NLS-1$
+				"icons/full/wizban", //$NON-NLS-1$
+				"icons", //$NON-NLS-1$
+				""}; //$NON-NLS-1$
+	/**
+	 * The constructor.
+	 */
+	public WSTWebPlugin(IPluginDescriptor descriptor)
+	{
+		super(descriptor);
+		plugin = this;
+		try
+		{
+			resourceBundle = ResourceBundle
+					.getBundle("com.ibm.etools.webtools.staticwebproject.StaticwebprojectPluginResources"); //$NON-NLS-1$
+		}
+		catch( MissingResourceException x )
+		{
+			resourceBundle = null;
+		}
+	}
+
+	/**
+	 * Returns the shared instance.
+	 */
+	public static WSTWebPlugin getDefault()
+	{
+		return plugin;
+	}
+	/**
+	 * This gets a .gif from the icons folder.
+	 */
+	public ImageDescriptor getImageDescriptor(String key) {
+		ImageDescriptor imageDescriptor = null;
+		URL gifImageURL = getImageURL(key, getDescriptor());
+		if (gifImageURL != null)
+			imageDescriptor = ImageDescriptor.createFromURL(gifImageURL);
+		return imageDescriptor;
+	}
+	/**
+	 * This gets a .gif from the icons folder.
+	 */
+	public static URL getImageURL(String key, IPluginDescriptor descriptor) {
+		String gif = "/" + key + ".gif"; //$NON-NLS-1$ //$NON-NLS-2$
+		IPath path = null;
+		for (int i = 0; i < ICON_DIRS.length; i++) {
+			path = new Path(ICON_DIRS[i]).append(gif);
+			if (descriptor.find(path) == null)
+				continue;
+			try {
+				return new URL(descriptor.getInstallURL(), path.toString());
+			} catch (MalformedURLException exception) {
+				com.ibm.wtp.common.logger.proxy.Logger.getLogger().logWarning("Load_Image_Error_"); //$NON-NLS-1$
+				exception.printStackTrace();
+				continue;
+			}
+		}
+		return null;
+	}
+	/**
+	 * Returns the string from the plugin's resource bundle, or 'key' if not
+	 * found.
+	 */
+	public static String getResourceString(String key)
+	{
+		ResourceBundle bundle = WSTWebPlugin.getDefault()
+				.getResourceBundle();
+		try
+		{
+			return (bundle != null) ? bundle.getString(key) : key;
+		}
+		catch( MissingResourceException e )
+		{
+			return key;
+		}
+	}
+
+	/**
+	 * Returns the plugin's resource bundle,
+	 */
+	public ResourceBundle getResourceBundle()
+	{
+		return resourceBundle;
+	}
+	public static IWorkspace getWorkspace() {
+		return ResourcesPlugin.getWorkspace();
+	}
+}
