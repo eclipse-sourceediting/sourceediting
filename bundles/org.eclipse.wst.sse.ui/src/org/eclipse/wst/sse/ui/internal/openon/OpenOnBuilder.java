@@ -193,6 +193,8 @@ public class OpenOnBuilder extends RegistryReader {
 	 */
 	public OpenOnDefinition[] getOpenOnDefinitions() {
 		initCache();
+		if( fOpenOnDefs == null )
+			fOpenOnDefs = new ArrayList();
 		return (OpenOnDefinition[]) fOpenOnDefs.toArray(new OpenOnDefinition[fOpenOnDefs.size()]);
 	}
 
