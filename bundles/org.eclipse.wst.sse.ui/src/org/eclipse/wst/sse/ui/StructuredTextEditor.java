@@ -1344,7 +1344,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 * Enables browser like links.
 	 */
 	private void enableBrowserLikeLinks() {
-		if (fHyperlinkTracker == null) {
+		if (fHyperlinkTracker == null && (getSourceViewer() != null)) {
 			fHyperlinkTracker = new OpenFileHyperlinkTracker(getSourceViewer());
 			fHyperlinkTracker.setHyperlinkPreferenceKeys(CommonEditorPreferenceNames.LINK_COLOR, CommonEditorPreferenceNames.BROWSER_LIKE_LINKS_KEY_MODIFIER);
 			fHyperlinkTracker.install(getPreferenceStore());
