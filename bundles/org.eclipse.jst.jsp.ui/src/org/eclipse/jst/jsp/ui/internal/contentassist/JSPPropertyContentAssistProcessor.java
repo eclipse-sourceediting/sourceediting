@@ -14,9 +14,6 @@ package org.eclipse.jst.jsp.ui.internal.contentassist;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jst.jsp.core.JSP11Namespace;
-import org.eclipse.jst.jsp.ui.contentassist.BeanInfoProvider;
-import org.eclipse.jst.jsp.ui.contentassist.IBeanInfoProvider;
-import org.eclipse.jst.jsp.ui.contentassist.IJavaPropertyDescriptor;
 import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImageHelper;
 import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImages;
 import org.eclipse.wst.sse.core.IndexedRegion;

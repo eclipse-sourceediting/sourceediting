@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Display;
  * Provides a set of convenience methods for creating HTML pages.
  * Copied from org.eclipse.jdt.internal.ui.text.HTMLPrinter
  */
-public class HTMLPrinter {
+class HTMLPrinter {
 	
 	private static RGB BG_COLOR_RGB= null;
 	

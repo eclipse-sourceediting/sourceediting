@@ -46,36 +46,38 @@
 	<extension point="org.eclipse.ui.editors">
 		<editor name="%JSP_Source_Page_Editor.name"
 			icon="icons/sourceEditor.gif" extensions="jsp, jsf, jspf, jspx, tag, tagf"
-			contributorClass="org.eclipse.jst.jsp.ui.ActionContributorJSP"
-			class="org.eclipse.jst.jsp.ui.StructuredTextEditorJSP"
+			contributorClass="org.eclipse.jst.jsp.ui.internal.editor.ActionContributorJSP"
+			class="org.eclipse.jst.jsp.ui.internal.editor.StructuredTextEditorJSP"
 			symbolicFontName="org.eclipse.wst.sse.ui.textfont"
-			id="org.eclipse.jst.jsp.ui.StructuredTextEditorJSP">
+			id="org.eclipse.jst.jsp.ui.internal.editor.StructuredTextEditorJSP">
 		</editor>
 	</extension>
 	<extension point="org.eclipse.wst.sse.ui.extendedconfiguration">
 		<configuration 
       		type="textviewerconfiguration"
-			class="org.eclipse.jst.jsp.ui.StructuredTextViewerConfigurationJSP"
+			class="org.eclipse.jst.jsp.ui.internal.editor.StructuredTextViewerConfigurationJSP"
 			target="org.eclipse.jst.jsp.core.jspsource"/>
 		<configuration 
       		type="contentoutlineconfiguration"
-			class="org.eclipse.jst.jsp.ui.views.contentoutline.JSPContentOutlineConfiguration"
+			class="org.eclipse.jst.jsp.ui.internal.views.contentoutline.JSPContentOutlineConfiguration"
 			target="org.eclipse.jst.jsp.core.jspsource"/>
 		<configuration 
       		type="propertysheetconfiguration"
 			class="org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration"
 			target="org.eclipse.jst.jsp.core.jspsource"/>
+			<!--
 		<configuration 
       		type="spellchecktarget"
 			class="org.eclipse.jst.jsp.ui.JSPSpellCheckTarget"
 			target="org.eclipse.jst.jsp.core.jspsource"/>
+			-->
 		<configuration 
       		type="sourceeditingtexttools"
-			class="org.eclipse.jst.jsp.ui.extensions.JSPSourceEditingTextTools"
+			class="org.eclipse.jst.jsp.ui.internal.editor.JSPSourceEditingTextTools"
 			target="org.eclipse.jst.jsp.core.jspsource"/>
 		<configuration 
       		type="characterpairmatcher"
-			class="org.eclipse.jst.jsp.ui.text.JSPDocumentRegionEdgeMatcher"
+			class="org.eclipse.jst.jsp.ui.internal.text.JSPDocumentRegionEdgeMatcher"
 			target="org.eclipse.jst.jsp.core.jspsource"/>
       <configuration
       		type="structuredtextfoldingprovider"
@@ -101,7 +103,7 @@
 	<extension
 		point="org.eclipse.wst.sse.ui.adapterFactoryDescription">
 		<adapterFactoryDescription
-			class="org.eclipse.jst.jsp.ui.registry.AdapterFactoryProviderForJSP">
+			class="org.eclipse.jst.jsp.ui.internal.registry.AdapterFactoryProviderForJSP">
 			<contentType id="org.eclipse.jst.jsp.core.jspsource" />
 		</adapterFactoryDescription>
 	</extension>
@@ -117,17 +119,17 @@
 		<!--======================================================================================-->
 		<page name="%JSP_Files.name"
 			category="org.eclipse.wst.sse.ui.preferences"
-			class="org.eclipse.jst.jsp.ui.preferences.ui.JSPFilesPreferencePage"
+			class="org.eclipse.jst.jsp.ui.internal.preferences.ui.JSPFilesPreferencePage"
 			id="org.eclipse.wst.sse.ui.preferences.jsp">
 		</page>
 		<page name="%JSP_Templates.name"
 			category="org.eclipse.wst.sse.ui.preferences.jsp"
-			class="org.eclipse.jst.jsp.ui.preferences.ui.JSPTemplatePreferencePage"
+			class="org.eclipse.jst.jsp.ui.internal.preferences.ui.JSPTemplatePreferencePage"
 			id="org.eclipse.wst.sse.ui.preferences.jsp.templates">
 		</page>
 		<page name="%JSP_Styles.name"
 			category="org.eclipse.wst.sse.ui.preferences.jsp"
-			class="org.eclipse.jst.jsp.ui.preferences.ui.JSPColorPage"
+			class="org.eclipse.jst.jsp.ui.internal.preferences.ui.JSPColorPage"
 			id="org.eclipse.wst.sse.ui.preferences.jsp.styles">
 		</page>
 	</extension>
@@ -228,13 +230,13 @@
 			<!-- 
 				<provider
 				extensions="jsp, jspf, jsf"
-				class="org.eclipse.jst.jsp.ui.breakpointproviders.JavaStratumBreakpointProvider"
-				id="org.eclipse.jst.jsp.ui.breakpointproviders.JavaStratumBreakpointProvider">
+				class="org.eclipse.jst.jsp.ui.internal.breakpointproviders.JavaStratumBreakpointProvider"
+				id="org.eclipse.jst.jsp.ui.internal.breakpointproviders.JavaStratumBreakpointProvider">
 				</provider>
 			-->
 			<provider contentTypes="org.eclipse.jst.jsp.core.jspsource"
-				class="org.eclipse.jst.jsp.ui.breakpointproviders.JavaStratumBreakpointProvider:*jsp"
-				id="org.eclipse.jst.jsp.ui.breakpointproviders.JavaStratumBreakpointProvider" />
+				class="org.eclipse.jst.jsp.ui.internal.breakpointproviders.JavaStratumBreakpointProvider:*jsp"
+				id="org.eclipse.jst.jsp.ui.internal.breakpointproviders.JavaStratumBreakpointProvider" />
 		</breakpointContribution>
 	</extension>
 
@@ -304,12 +306,12 @@
 	<extension point="org.eclipse.ui.actionSetPartAssociations">
 		<actionSetPartAssociation
 			targetID="org.eclipse.ui.edit.text.actionSet.annotationNavigation">
-			<part id="org.eclipse.jst.jsp.ui.StructuredTextEditorJSP">
+			<part id="org.eclipse.jst.jsp.ui.internal.editor.StructuredTextEditorJSP">
 			</part>
 		</actionSetPartAssociation>
 		<actionSetPartAssociation
 			targetID="org.eclipse.ui.NavigateActionSet">
-			<part id="org.eclipse.jst.jsp.ui.StructuredTextEditorJSP">
+			<part id="org.eclipse.jst.jsp.ui.internal.editor.StructuredTextEditorJSP">
 			</part>
 		</actionSetPartAssociation>
 	</extension>
