@@ -2373,29 +2373,13 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	public void setDocumentPartitioner(String partitioning, IDocumentPartitioner partitioner) {
 		if (partitioner == null) {
 			if (fDocumentPartitioners != null) {
-				IDocumentPartitioner documentPartitioner = (IDocumentPartitioner) fDocumentPartitioners.get(partitioning);
-				// a partioner of null means: if already had a partioner for partioning, remove it
-				if (documentPartitioner != null) {
-					fDocumentPartitioners.remove(partitioning);
-					// assuming a diconnect if never connected is harmless
-					documentPartitioner.disconnect();
-				}
+				fDocumentPartitioners.remove(partitioning);
 				if (fDocumentPartitioners.size() == 0)
 					fDocumentPartitioners = null;
 			}
 		} else {
-			if (fDocumentPartitioners == null) {
+			if (fDocumentPartitioners == null)
 				fDocumentPartitioners = new HashMap();
-			}
-			// if some clients accidently add a partitioner twice, but we
-			// want to be sure we have only one per partioning, so
-			// if one already exists, remove it.
-			if (fDocumentPartitioners.containsKey(partitioning)) {
-				IDocumentPartitioner documentPartitioner = (IDocumentPartitioner) fDocumentPartitioners.get(partitioning);
-				fDocumentPartitioners.remove(partitioning);
-				// assuming a diconnect if never connected is harmless
-				documentPartitioner.disconnect();
-			}
 			fDocumentPartitioners.put(partitioning, partitioner);
 		}
 		DocumentPartitioningChangedEvent event = new DocumentPartitioningChangedEvent(this);
