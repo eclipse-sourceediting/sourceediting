@@ -23,7 +23,7 @@ import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 
 public final class ModelHandlerForDTD extends AbstractModelHandler implements IModelHandler {
 	private static String AssociatedContentTypeId = "org.eclipse.wst.dtd.core.dtdsource"; //$NON-NLS-1$
-	private static String ModelHandlerID = "org.eclipse.wst.sse.core.handler.dtd"; //$NON-NLS-1$
+	private static String ModelHandlerID = "org.eclipse.wst.dtd.core.modelhandler"; //$NON-NLS-1$
 
 	public ModelHandlerForDTD() {
 		super();
