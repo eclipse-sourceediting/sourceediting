@@ -17,16 +17,16 @@ import java.io.UnsupportedEncodingException;
 
 import junit.framework.TestCase;
 
-import org.eclipse.wst.html.core.cleanup.HTMLCleanupProcessorImpl;
+import org.eclipse.wst.html.core.internal.cleanup.HTMLCleanupProcessorImpl;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.cleanup.AbstractStructuredCleanupProcessor;
-import org.eclipse.wst.sse.core.cleanup.IStructuredCleanupPreferences;
+import org.eclipse.wst.sse.core.internal.cleanup.AbstractStructuredCleanupProcessor;
+import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.xml.core.cleanup.CleanupProcessorXML;
+import org.eclipse.wst.xml.core.internal.cleanup.CleanupProcessorXML;
 
 public class CleanupTester extends TestCase {
 	protected IModelManager fModelManager = null;
