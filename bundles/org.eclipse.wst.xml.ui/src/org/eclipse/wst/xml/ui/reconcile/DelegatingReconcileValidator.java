@@ -12,7 +12,6 @@
 package org.eclipse.wst.xml.ui.reconcile;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -163,12 +162,10 @@ public class DelegatingReconcileValidator implements IValidator
       {
         XMLDocument document = xmlModel.getDocument();
 
-        // store the file to a byte array:
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024);
-        xmlModel.save(outputStream);
-        byte[] byteArray = outputStream.toByteArray();
-
-        //Get the Validator:
+        // store the text in a byte array; make a full copy to ease any threading problems
+        byte[] byteArray = xmlModel.getStructuredDocument().get().getBytes();
+		
+        // get the Validator:
         IValidator validator = getDelegateValidator();
         if (validator != null)
         {
