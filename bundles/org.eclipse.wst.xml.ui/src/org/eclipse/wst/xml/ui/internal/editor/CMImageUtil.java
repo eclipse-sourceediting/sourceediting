@@ -11,11 +11,14 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.editor;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.wst.common.contentmodel.CMNode;
 import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.modelquery.ModelQueryUtil;
@@ -33,14 +36,14 @@ public class CMImageUtil {
 		CMNode decl = null;
 		ModelQuery mq = null;
 		switch (node.getNodeType()) {
-			case Node.ATTRIBUTE_NODE : {
-				mq = ModelQueryUtil.getModelQuery(((Attr) node).getOwnerDocument());
-				decl = mq.getCMAttributeDeclaration((Attr) node);
-			}
-			case Node.ELEMENT_NODE : {
-				mq = ModelQueryUtil.getModelQuery(node.getOwnerDocument());
-				decl = mq.getCMElementDeclaration((Element) node);
-			}
+		case Node.ATTRIBUTE_NODE: {
+			mq = ModelQueryUtil.getModelQuery(((Attr) node).getOwnerDocument());
+			decl = mq.getCMAttributeDeclaration((Attr) node);
+		}
+		case Node.ELEMENT_NODE: {
+			mq = ModelQueryUtil.getModelQuery(node.getOwnerDocument());
+			decl = mq.getCMElementDeclaration((Element) node);
+		}
 		}
 		return decl;
 	}
@@ -60,16 +63,23 @@ public class CMImageUtil {
 		if (cmnode == null)
 			return null;
 		// cache CM-specified images with the XML UI plugin
-		String imageURL = (String) cmnode.getProperty("small-icon");
+		String imageURLString = (String) cmnode.getProperty("small-icon");
 		ImageDescriptor descriptor = null;
-		if (imageURL != null && imageURL.length() > 0) {
-			descriptor = XMLUIPlugin.getInstance().getImageRegistry().getDescriptor(imageURL);
+		if (imageURLString != null && imageURLString.length() > 0) {
+			descriptor = XMLUIPlugin.getInstance().getImageRegistry()
+					.getDescriptor(imageURLString);
 			if (descriptor == null) {
 				try {
-					descriptor = ImageDescriptor.createFromURL(new URL(imageURL));
-					XMLUIPlugin.getInstance().getImageRegistry().put(imageURL, descriptor);
-				}
-				catch (MalformedURLException e) {
+					URL imageURL = new URL(imageURLString);
+					URLConnection connection = imageURL.openConnection();
+					connection.setUseCaches(false);
+					ImageData data = new ImageData(connection.getInputStream());
+					descriptor = ImageDescriptor.createFromImageData(data);
+					XMLUIPlugin.getInstance().getImageRegistry().put(
+							imageURLString, descriptor);
+				} catch (MalformedURLException e) {
+					descriptor = null;
+				} catch (IOException e) {
 					descriptor = null;
 				}
 			}
