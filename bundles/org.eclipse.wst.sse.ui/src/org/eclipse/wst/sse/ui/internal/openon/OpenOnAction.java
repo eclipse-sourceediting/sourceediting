@@ -21,7 +21,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.TextEditorAction;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.extension.IExtendedSimpleEditor;
 import org.eclipse.wst.sse.ui.extensions.openon.IOpenOn;
 import org.eclipse.wst.sse.ui.openon.OpenOnProvider;
 
@@ -47,8 +47,8 @@ public class OpenOnAction extends TextEditorAction {
 
 				// figure out current offset
 				int offset = -1;
-				if (editor instanceof StructuredTextEditor) {
-					offset = ((StructuredTextEditor) editor).getCaretPosition();
+				if (editor instanceof IExtendedSimpleEditor) {
+					offset = ((IExtendedSimpleEditor) editor).getCaretPosition();
 				} else {
 					if (editor.getSelectionProvider() != null) {
 						ISelection sel = editor.getSelectionProvider().getSelection();
