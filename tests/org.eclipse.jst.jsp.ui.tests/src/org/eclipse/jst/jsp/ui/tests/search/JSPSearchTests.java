@@ -137,7 +137,7 @@ public class JSPSearchTests extends TestCase implements IJavaSearchConstants {
 		Location platformLocation = Platform.getInstanceLocation();
 
 		File zipFile = FileUtil.makeFileFor(ProjectUnzipUtility.PROJECT_ZIPS_FOLDER, "jspsearch_tests.zip", ProjectUnzipUtility.PROJECT_ZIPS_FOLDER);
-		this.projUtil.unzipAndImport(zipFile, platformLocation.getURL().toString());
+		this.projUtil.unzipAndImport(zipFile, platformLocation.getURL().getFile());
 		this.projUtil.initJavaProject("judo");
 
 		//JSPSearchSupport.getInstance().indexWorkspaceAndWait();
