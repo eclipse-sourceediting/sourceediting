@@ -17,7 +17,6 @@ package org.eclipse.wst.xml.core.internal.document;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 
 
@@ -25,7 +24,7 @@ import org.eclipse.wst.xml.core.parser.XMLRegionContext;
  * Provides convenient functions to handle IStructuredDocumentRegion and
  * ITextRegion.
  */
-class StructuredDocumentRegionUtil implements XMLJSPRegionContexts {
+class StructuredDocumentRegionUtil {
 
 	/**
 	 * Extracts contents enclosed with quotes. Quotes may be double or single.

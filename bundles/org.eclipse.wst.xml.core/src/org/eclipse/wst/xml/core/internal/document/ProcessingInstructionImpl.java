@@ -19,7 +19,6 @@ import java.util.Iterator;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
@@ -29,7 +28,7 @@ import org.w3c.dom.ProcessingInstruction;
 /**
  * ProcessingInstructionImpl class
  */
-public class ProcessingInstructionImpl extends NodeImpl implements XMLJSPRegionContexts, ProcessingInstruction {
+public class ProcessingInstructionImpl extends NodeImpl implements ProcessingInstruction {
 	private String data = null;
 
 	private String target = null;
@@ -95,7 +94,8 @@ public class ProcessingInstructionImpl extends NodeImpl implements XMLJSPRegionC
 				continue;
 			if (regionType == XMLRegionContext.XML_PI_CLOSE) {
 				closeRegion = region;
-			} else {
+			}
+			else {
 				if (targetRegion == null)
 					targetRegion = region;
 				else if (dataRegion == null)

@@ -30,7 +30,6 @@ import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.document.XMLNamespace;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.core.internal.parser.XMLSourceParser;
-import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.core.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.w3c.dom.Attr;
@@ -275,7 +274,8 @@ public class ElementImpl extends NodeContainer implements XMLElement {
 			if (uri == null) {
 				if (nsURI != null)
 					continue;
-			} else {
+			}
+			else {
 				if (nsURI == null || !nsURI.equals(uri))
 					continue;
 			}
@@ -439,12 +439,17 @@ public class ElementImpl extends NodeContainer implements XMLElement {
 		while (e.hasNext()) {
 			ITextRegion region = (ITextRegion) e.next();
 			String regionType = region.getType();
-			if (regionType == XMLRegionContext.XML_TAG_NAME || regionType == XMLJSPRegionContexts.JSP_ROOT_TAG_NAME || regionType == XMLJSPRegionContexts.JSP_DIRECTIVE_NAME) {
+			if (regionType == XMLRegionContext.XML_TAG_NAME || isNestedEndTag(regionType)) {
 				return this.endStructuredDocumentRegion.getText(region);
 			}
 		}
 
 		return null;
+	}
+
+	protected boolean isNestedEndTag(String regionType) {
+		boolean result = false;
+		return result;
 	}
 
 	/**
@@ -488,7 +493,8 @@ public class ElementImpl extends NodeContainer implements XMLElement {
 		String prefix = getPrefix();
 		if (prefix != null && prefix.length() > 0) {
 			nsAttrName = XMLNamespace.XMLNS_PREFIX + prefix;
-		} else {
+		}
+		else {
 			nsAttrName = XMLNamespace.XMLNS;
 		}
 
@@ -676,7 +682,8 @@ public class ElementImpl extends NodeContainer implements XMLElement {
 			throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, new String());
 		}
 		if (newChild.getNodeType() != TEXT_NODE) {
-			if (isJSPContainer() || isCDATAContainer()) { // accepts only Text
+			if (isJSPContainer() || isCDATAContainer()) { // accepts only
+				// Text
 				// child
 				throw new DOMException(DOMException.HIERARCHY_REQUEST_ERR, new String());
 			}
@@ -721,19 +728,30 @@ public class ElementImpl extends NodeContainer implements XMLElement {
 			flatNode = getStructuredDocumentRegion();
 			if (flatNode == null)
 				return true; // will be generated
-		} else {
+		}
+		else {
 			flatNode = getEndStructuredDocumentRegion();
 			if (flatNode == null)
 				return false; // must be generated
 		}
 		String regionType = StructuredDocumentRegionUtil.getLastRegionType(flatNode);
 		if (isCommentTag()) {
-			return (regionType == XMLJSPRegionContexts.JSP_COMMENT_CLOSE || regionType == XMLRegionContext.XML_COMMENT_CLOSE);
+			return (isNestedClosedComment(regionType) || regionType == XMLRegionContext.XML_COMMENT_CLOSE);
 		}
 		if (isJSPTag()) {
-			return (regionType == XMLJSPRegionContexts.JSP_CLOSE || regionType == XMLJSPRegionContexts.JSP_DIRECTIVE_CLOSE);
+			return isNestedClosed(regionType);
 		}
 		return (regionType == XMLRegionContext.XML_TAG_CLOSE || regionType == XMLRegionContext.XML_EMPTY_TAG_CLOSE || regionType == XMLRegionContext.XML_DECLARATION_CLOSE);
+	}
+
+	protected boolean isNestedClosed(String regionType) {
+		boolean result = false;
+		return result;
+	}
+
+	protected boolean isNestedClosedComment(String regionType) {
+		boolean result = false;
+		return result;
 	}
 
 	/**
@@ -828,14 +846,19 @@ public class ElementImpl extends NodeContainer implements XMLElement {
 			return true; // will be generated
 		String regionType = StructuredDocumentRegionUtil.getLastRegionType(flatNode);
 		if (isCommentTag()) {
-			return (regionType == XMLJSPRegionContexts.JSP_COMMENT_CLOSE || regionType == XMLRegionContext.XML_COMMENT_CLOSE);
+			return (isNestedClosedComment(regionType) || regionType == XMLRegionContext.XML_COMMENT_CLOSE);
 		}
 		if (isJSPTag()) {
 			if (isContainer())
 				return true; // start tag always has a single region
-			return (regionType == XMLJSPRegionContexts.JSP_DIRECTIVE_CLOSE);
+			return isClosedNestedDirective(regionType);
 		}
 		return (regionType == XMLRegionContext.XML_TAG_CLOSE || regionType == XMLRegionContext.XML_EMPTY_TAG_CLOSE || regionType == XMLRegionContext.XML_DECLARATION_CLOSE);
+	}
+
+	protected boolean isClosedNestedDirective(String regionType) {
+		boolean result = false;
+		return result;
 	}
 
 	/**
@@ -1049,7 +1072,8 @@ public class ElementImpl extends NodeContainer implements XMLElement {
 			if (uri == null) {
 				if (nsURI != null)
 					continue;
-			} else {
+			}
+			else {
 				if (nsURI == null || !nsURI.equals(uri))
 					continue;
 			}
@@ -1351,7 +1375,8 @@ public class ElementImpl extends NodeContainer implements XMLElement {
 				return;
 			}
 			setTagName(localName);
-		} else {
+		}
+		else {
 			int localLength = (localName != null ? localName.length() : 0);
 			StringBuffer buffer = new StringBuffer(prefixLength + 1 + localLength);
 			buffer.append(prefix);

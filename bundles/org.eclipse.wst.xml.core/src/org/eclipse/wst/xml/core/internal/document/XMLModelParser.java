@@ -24,7 +24,6 @@ import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.xml.core.commentelement.impl.CommentElementConfiguration;
 import org.eclipse.wst.xml.core.commentelement.impl.CommentElementRegistry;
-import org.eclipse.wst.xml.core.document.JSPTag;
 import org.eclipse.wst.xml.core.document.XMLDocument;
 import org.eclipse.wst.xml.core.document.XMLElement;
 import org.eclipse.wst.xml.core.document.XMLModel;
@@ -40,7 +39,7 @@ import org.w3c.dom.Text;
 /**
  * XMLModelParser
  */
-public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts {
+public class XMLModelParser {
 	private ModelParserAdapter adapter = null;
 	private XMLModelContext context = null;
 	private DocumentImpl document = null;
@@ -327,20 +326,27 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 
 		// optimize typical cases
 		String regionType = region.getType();
-		if (regionType == XMLRegionContext.XML_CONTENT || regionType == XMLRegionContext.XML_COMMENT_TEXT || regionType == XMLRegionContext.XML_CDATA_TEXT || regionType == XMLRegionContext.BLOCK_TEXT || regionType == JSP_CONTENT) {
+		if (regionType == XMLRegionContext.XML_CONTENT || regionType == XMLRegionContext.XML_COMMENT_TEXT || regionType == XMLRegionContext.XML_CDATA_TEXT || regionType == XMLRegionContext.BLOCK_TEXT || isNestedContent(regionType)) {
 			changeData(flatNode, region);
-		} else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+		}
+		else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 			changeAttrName(flatNode, region);
-		} else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+		}
+		else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 			changeAttrValue(flatNode, region);
-		} else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+		}
+		else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
 			changeAttrEqual(flatNode, region);
-		} else if (regionType == XMLRegionContext.XML_TAG_NAME || regionType == JSP_ROOT_TAG_NAME || regionType == JSP_DIRECTIVE_NAME) {
+		}
+		else if (regionType == XMLRegionContext.XML_TAG_NAME || isNestedTagName(regionType)) {
 			changeTagName(flatNode, region);
-		} else {
+		}
+		else {
 			changeStructuredDocumentRegion(flatNode);
 		}
 	}
+
+
 
 	/**
 	 */
@@ -374,7 +380,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 					// change from empty tag may have impact on structure
 					if (!element.isEmptyTag())
 						continue;
-				} else if (regionType == XMLRegionContext.XML_TAG_NAME || regionType == JSP_ROOT_TAG_NAME || regionType == JSP_DIRECTIVE_NAME) {
+				}
+				else if (regionType == XMLRegionContext.XML_TAG_NAME || isNestedTagName(regionType)) {
 					String oldTagName = element.getTagName();
 					String newTagName = flatNode.getText(region);
 					if (oldTagName != null && newTagName != null && oldTagName.equals(newTagName)) {
@@ -400,7 +407,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 					// change from empty tag may have impact on structure
 					if (!element.isEmptyTag())
 						continue;
-				} else if (regionType == XMLRegionContext.XML_TAG_NAME || regionType == JSP_ROOT_TAG_NAME) {
+				}
+				else if (regionType == XMLRegionContext.XML_TAG_NAME || isNestedTagName(regionType)) {
 					// if new tag name is unchanged, it's OK
 					if (tagNameUnchanged)
 						continue;
@@ -446,7 +454,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 			}
 			if (found) {
 				attrIndex++;
-			} else {
+			}
+			else {
 				element.removeAttributeNode(attr);
 			}
 		}
@@ -464,7 +473,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 					// insert deferred new attribute
 					element.insertAttributeNode(newAttr, attrIndex++);
 					newAttr = null;
-				} else if (attr != null && oldValueRegion != null) {
+				}
+				else if (attr != null && oldValueRegion != null) {
 					// notify existing attribute value removal
 					attr.notifyValueChanged();
 				}
@@ -478,7 +488,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 					oldValueRegion = attr.getValueRegion();
 					attr.setEqualRegion(null);
 					attr.setValueRegion(null);
-				} else {
+				}
+				else {
 					String name = flatNode.getText(region);
 					attr = (AttrImpl) this.document.createAttribute(name);
 					if (attr != null)
@@ -486,11 +497,13 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 					// defer insertion of new attribute
 					newAttr = attr;
 				}
-			} else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+			}
+			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
 				if (attr != null) {
 					attr.setEqualRegion(region);
 				}
-			} else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+			}
+			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 				if (attr != null) {
 					attr.setValueRegion(region);
 					if (attr != newAttr && oldValueRegion != region) {
@@ -506,7 +519,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 		if (newAttr != null) {
 			// insert deferred new attribute
 			element.appendAttributeNode(newAttr);
-		} else if (attr != null && oldValueRegion != null) {
+		}
+		else if (attr != null && oldValueRegion != null) {
 			// notify existing attribute value removal
 			attr.notifyValueChanged();
 		}
@@ -609,7 +623,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 					parent = next;
 					next = first;
 					this.context.setNextNode(next);
-				} else {
+				}
+				else {
 					next = next.getNextSibling();
 					this.context.setNextNode(next);
 				}
@@ -634,7 +649,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 			parent = parent.getParentNode();
 			if (next != null) {
 				this.context.setNextNode(next);
-			} else {
+			}
+			else {
 				this.context.setParentNode(parent);
 			}
 		}
@@ -686,9 +702,11 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 							newParent.insertBefore(childText, newNext);
 							if (childText == next) {
 								this.context.setNextNode(childText);
-							} else if (newNext != null) {
+							}
+							else if (newNext != null) {
 								this.context.setNextNode(newNext);
-							} else {
+							}
+							else {
 								this.context.setParentNode(newParent);
 							}
 							// try again
@@ -785,7 +803,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 							newElement = (ElementImpl) p;
 							done = true;
 						}
-					} else {
+					}
+					else {
 						// remove implicit element
 						next = nextElement.getNextSibling();
 						oldParent.removeChild(nextElement);
@@ -876,7 +895,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 		CDATASectionImpl cdata = null;
 		try {
 			cdata = (CDATASectionImpl) this.document.createCDATASection(null);
-		} catch (DOMException ex) {
+		}
+		catch (DOMException ex) {
 		}
 		if (cdata == null) { // CDATA section might not be supported
 			insertInvalidDecl(flatNode); // regard as invalid decl
@@ -904,9 +924,10 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 		while (e.hasNext()) {
 			ITextRegion region = (ITextRegion) e.next();
 			String regionType = region.getType();
-			if (regionType == JSP_COMMENT_OPEN) {
+			if (isNestedCommentOpen(regionType)) {
 				isJSPTag = true;
-			} else if (regionType == XMLRegionContext.XML_COMMENT_TEXT || regionType == JSP_COMMENT_TEXT) {
+			}
+			else if (regionType == XMLRegionContext.XML_COMMENT_TEXT || isNestedCommentText(regionType)) {
 				if (data == null) {
 					data = flatNode.getText(region);
 				}
@@ -970,13 +991,16 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 			String regionType = region.getType();
 			if (regionType == XMLRegionContext.XML_DOCTYPE_DECLARATION) {
 				isDocType = true;
-			} else if (regionType == XMLRegionContext.XML_DOCTYPE_NAME) {
+			}
+			else if (regionType == XMLRegionContext.XML_DOCTYPE_NAME) {
 				if (name == null)
 					name = flatNode.getText(region);
-			} else if (regionType == XMLRegionContext.XML_DOCTYPE_EXTERNAL_ID_PUBREF) {
+			}
+			else if (regionType == XMLRegionContext.XML_DOCTYPE_EXTERNAL_ID_PUBREF) {
 				if (publicId == null)
 					publicId = StructuredDocumentRegionUtil.getAttrValue(flatNode, region);
-			} else if (regionType == XMLRegionContext.XML_DOCTYPE_EXTERNAL_ID_SYSREF) {
+			}
+			else if (regionType == XMLRegionContext.XML_DOCTYPE_EXTERNAL_ID_SYSREF) {
 				if (systemId == null)
 					systemId = StructuredDocumentRegionUtil.getAttrValue(flatNode, region);
 			}
@@ -1000,12 +1024,12 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 	}
 
 	/**
-	 * insertEndTag method
+	 * insertEndTag method can be used by subclasses, but not overrided.
 	 * 
 	 * @param element
 	 *            org.w3c.dom.Element
 	 */
-	private void insertEndTag(Element element) {
+	protected void insertEndTag(Element element) {
 		if (element == null)
 			return;
 
@@ -1055,7 +1079,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 		Iterator e = regions.iterator();
 		while (e.hasNext()) {
 			ITextRegion region = (ITextRegion) e.next();
-			if (region.getType() == XMLRegionContext.XML_TAG_NAME || region.getType() == JSP_ROOT_TAG_NAME || region.getType() == JSP_DIRECTIVE_NAME) {
+			String regionType = region.getType();
+			if (regionType == XMLRegionContext.XML_TAG_NAME || isNestedTagName(regionType)) {
 				if (tagName == null)
 					tagName = flatNode.getText(region);
 			}
@@ -1078,7 +1103,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 		ElementImpl end = null;
 		try {
 			end = (ElementImpl) this.document.createElement(tagName);
-		} catch (DOMException ex) {
+		}
+		catch (DOMException ex) {
 		}
 		if (end == null) { // invalid end tag
 			insertText(flatNode); // regard as invalid text
@@ -1139,7 +1165,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 		EntityReferenceImpl ref = null;
 		try {
 			ref = (EntityReferenceImpl) this.document.createEntityReference(name);
-		} catch (DOMException ex) {
+		}
+		catch (DOMException ex) {
 		}
 		if (ref == null) { // entity reference might not be supported
 			insertText(flatNode); // regard as invalid text
@@ -1164,7 +1191,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 		ElementImpl element = null;
 		try {
 			element = (ElementImpl) this.document.createElement("!");//$NON-NLS-1$
-		} catch (DOMException ex) {
+		}
+		catch (DOMException ex) {
 		}
 		if (element == null) { // invalid tag
 			insertText(flatNode); // regard as invalid text
@@ -1181,7 +1209,7 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 	 * @param flatNode
 	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
-	private void insertJSPTag(IStructuredDocumentRegion flatNode) {
+	private void insertNestedTag(IStructuredDocumentRegion flatNode) {
 		ITextRegionList regions = flatNode.getRegions();
 		if (regions == null)
 			return;
@@ -1194,20 +1222,13 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 		while (e.hasNext()) {
 			ITextRegion region = (ITextRegion) e.next();
 			String regionType = region.getType();
-			if (regionType == JSP_SCRIPTLET_OPEN) {
-				tagName = JSPTag.JSP_SCRIPTLET;
-			} else if (regionType == JSP_EXPRESSION_OPEN) {
-				tagName = JSPTag.JSP_EXPRESSION;
-			} else if (regionType == JSP_DECLARATION_OPEN) {
-				tagName = JSPTag.JSP_DECLARATION;
-			} else if (regionType == JSP_DIRECTIVE_OPEN) {
-				tagName = JSPTag.JSP_DIRECTIVE;
-			} else if (regionType == JSP_DIRECTIVE_NAME) {
-				tagName += '.';
-				tagName += flatNode.getText(region);
-			} else if (regionType == JSP_CLOSE) {
+			if (isNestedTagOpen(regionType)) {
+				tagName = computeNestedTag(regionType, tagName, flatNode, region);
+			}
+			else if (isNestedTagClose(regionType)) {
 				isCloseTag = true;
-			} else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+			}
+			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 				String name = flatNode.getText(region);
 				attr = (AttrImpl) this.document.createAttribute(name);
 				if (attr != null) {
@@ -1216,11 +1237,13 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 						attrNodes = new Vector();
 					attrNodes.addElement(attr);
 				}
-			} else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+			}
+			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
 				if (attr != null) {
 					attr.setEqualRegion(region);
 				}
-			} else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+			}
+			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 				if (attr != null) {
 					attr.setValueRegion(region);
 					attr = null;
@@ -1249,7 +1272,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 		ElementImpl element = null;
 		try {
 			element = (ElementImpl) this.document.createElement(tagName);
-		} catch (DOMException ex) {
+		}
+		catch (DOMException ex) {
 		}
 		if (element == null) { // invalid tag
 			insertText(flatNode); // regard as invalid text
@@ -1267,6 +1291,20 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 		element.setJSPTag(true);
 		element.setStartStructuredDocumentRegion(flatNode);
 		insertStartTag(element);
+	}
+
+	protected boolean isNestedTagClose(String regionType) {
+		boolean result = false;
+		return result;
+	}
+
+	protected boolean isNestedTagOpen(String regionType) {
+		boolean result = false;
+		return result;
+	}
+
+	protected String computeNestedTag(String regionType, String tagName, IStructuredDocumentRegion structuredDocumentRegion, ITextRegion region) {
+		return tagName;
 	}
 
 	/**
@@ -1395,12 +1433,12 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 	}
 
 	/**
-	 * insertStartTag method
+	 * insertStartTag method can be used by subclasses, but not overridden.
 	 * 
 	 * @param element
 	 *            org.w3c.dom.Element
 	 */
-	private void insertStartTag(Element element) {
+	protected void insertStartTag(Element element) {
 		if (element == null)
 			return;
 		if (this.context == null)
@@ -1446,12 +1484,14 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 		while (e.hasNext()) {
 			ITextRegion region = (ITextRegion) e.next();
 			String regionType = region.getType();
-			if (regionType == XMLRegionContext.XML_TAG_NAME || regionType == JSP_ROOT_TAG_NAME || regionType == JSP_DIRECTIVE_NAME) {
+			if (regionType == XMLRegionContext.XML_TAG_NAME || isNestedTagName(regionType)) {
 				if (tagName == null)
 					tagName = flatNode.getText(region);
-			} else if (regionType == XMLRegionContext.XML_EMPTY_TAG_CLOSE) {
+			}
+			else if (regionType == XMLRegionContext.XML_EMPTY_TAG_CLOSE) {
 				isEmptyTag = true;
-			} else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+			}
+			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 				String name = flatNode.getText(region);
 				attr = (AttrImpl) this.document.createAttribute(name);
 				if (attr != null) {
@@ -1460,11 +1500,13 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 						attrNodes = new Vector();
 					attrNodes.addElement(attr);
 				}
-			} else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+			}
+			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
 				if (attr != null) {
 					attr.setEqualRegion(region);
 				}
-			} else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+			}
+			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 				if (attr != null) {
 					attr.setValueRegion(region);
 					attr = null;
@@ -1480,7 +1522,9 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 		ElementImpl element = null;
 		try {
 			element = (ElementImpl) this.document.createElement(tagName);
-		} catch (DOMException ex) {
+		}
+		catch (DOMException ex) {
+			// typically invalid name
 		}
 		if (element == null) { // invalid tag
 			insertText(flatNode); // regard as invalid text
@@ -1507,36 +1551,71 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 	 * @param flatNode
 	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
-	private void insertStructuredDocumentRegion(IStructuredDocumentRegion flatNode) {
+	protected void insertStructuredDocumentRegion(IStructuredDocumentRegion flatNode) {
 		String regionType = StructuredDocumentRegionUtil.getFirstRegionType(flatNode);
 		if (regionType == XMLRegionContext.XML_TAG_OPEN) {
 			insertStartTag(flatNode);
-		} else if (regionType == XMLRegionContext.XML_END_TAG_OPEN) {
+		}
+		else if (regionType == XMLRegionContext.XML_END_TAG_OPEN) {
 			insertEndTag(flatNode);
-		} else if (regionType == XMLRegionContext.XML_COMMENT_OPEN || regionType == JSP_COMMENT_OPEN) {
+		}
+		else if (regionType == XMLRegionContext.XML_COMMENT_OPEN || isNestedCommentOpen(regionType)) {
 			insertComment(flatNode);
-		} else if (regionType == XMLRegionContext.XML_ENTITY_REFERENCE || regionType == XMLRegionContext.XML_CHAR_REFERENCE) {
+		}
+		else if (regionType == XMLRegionContext.XML_ENTITY_REFERENCE || regionType == XMLRegionContext.XML_CHAR_REFERENCE) {
 			insertEntityRef(flatNode);
-		} else if (regionType == XMLRegionContext.XML_DECLARATION_OPEN) {
+		}
+		else if (regionType == XMLRegionContext.XML_DECLARATION_OPEN) {
 			insertDecl(flatNode);
-		} else if (regionType == XMLRegionContext.XML_PI_OPEN) {
+		}
+		else if (regionType == XMLRegionContext.XML_PI_OPEN) {
 			insertPI(flatNode);
-		} else if (regionType == XMLRegionContext.XML_CDATA_OPEN) {
+		}
+		else if (regionType == XMLRegionContext.XML_CDATA_OPEN) {
 			insertCDATASection(flatNode);
-		} else if (regionType == JSP_SCRIPTLET_OPEN || regionType == JSP_EXPRESSION_OPEN || regionType == JSP_DECLARATION_OPEN || regionType == JSP_DIRECTIVE_OPEN || regionType == JSP_CLOSE) {
-			insertJSPTag(flatNode);
-		} else {
+		}
+		else if (isNestedTag(regionType)) {
+			insertNestedTag(flatNode);
+		}
+		else {
 			insertText(flatNode);
 		}
 	}
 
+	protected boolean isNestedTag(String regionType) {
+		boolean result = false;
+		return result;
+	}
+
+	protected boolean isNestedCommentText(String regionType) {
+		boolean result = false;
+		return result;
+	}
+
+
+	protected boolean isNestedCommentOpen(String regionType) {
+		boolean result = false;
+		return result;
+	}
+
+	protected boolean isNestedTagName(String regionType) {
+		boolean result = false;
+		return result;
+	}
+
+	protected boolean isNestedContent(String regionType) {
+		boolean result = false;
+		return result;
+	}
+
 	/**
-	 * insertText method
+	 * insertText method Can be called from subclasses, not to be overrided or
+	 * re-implemented.
 	 * 
 	 * @param flatNode
 	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
-	private void insertText(IStructuredDocumentRegion flatNode) {
+	protected void insertText(IStructuredDocumentRegion flatNode) {
 		TextImpl text = (TextImpl) this.context.findPreviousText();
 		if (text != null) { // existing text found
 			text.appendStructuredDocumentRegion(flatNode);
@@ -1590,7 +1669,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 							if (nextElement.matchEndTag(newElement)) {
 								endTag = true;
 							}
-						} else {
+						}
+						else {
 							// remove implicit element
 							next = nextElement.getNextSibling();
 							oldParent.removeChild(nextElement);
@@ -1610,7 +1690,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 						newNext = newElement.getNextSibling();
 						if (newParent.getNodeType() == Node.ELEMENT_NODE) {
 							newElement = (ElementImpl) newParent;
-						} else {
+						}
+						else {
 							newElement = null;
 						}
 						continue;
@@ -1642,7 +1723,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 				if (!oldElement.hasChildNodes() && !oldElement.hasStartTag()) {
 					oldParent.removeChild(oldElement);
 					end = oldElement;
-				} else {
+				}
+				else {
 					end = oldElement.removeEndTag();
 				}
 				if (end != null) {
@@ -1744,20 +1826,25 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 			Node oldNext = this.context.getNextNode();
 			if (oldNext != null) {
 				this.context.setNextNode(oldNext);
-			} else {
+			}
+			else {
 				if (elementNext != null) {
 					this.context.setNextNode(elementNext);
-				} else {
+				}
+				else {
 					this.context.setParentNode(elementParent);
 				}
 			}
-		} else if (this.context.getNextNode() == element) {
+		}
+		else if (this.context.getNextNode() == element) {
 			if (firstChild != null) {
 				this.context.setNextNode(firstChild);
-			} else {
+			}
+			else {
 				if (elementNext != null) {
 					this.context.setNextNode(elementNext);
-				} else {
+				}
+				else {
 					this.context.setParentNode(elementParent);
 				}
 			}
@@ -1792,7 +1879,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 				this.context.setNextNode(next);
 			else
 				this.context.setParentNode(parent);
-		} else {
+		}
+		else {
 			Node oldNext = this.context.getNextNode();
 			if (node == oldNext) {
 				this.context.setNextNode(next);
@@ -1868,7 +1956,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 				Node child = oldElement.getFirstChild();
 				if (child != null) {
 					this.context.setNextNode(child);
-				} else if (oldElement.hasEndTag()) {
+				}
+				else if (oldElement.hasEndTag()) {
 					this.context.setParentNode(oldElement);
 				}
 				return;
@@ -1884,7 +1973,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 		if (parent == null)
 			return;
 		Node first = element.getFirstChild();
-		Node firstElement = null; // for the case first is removed as end tag
+		Node firstElement = null; // for the case first is removed as end
+		// tag
 		if (first != null) {
 			// find new parent for children
 			ElementImpl newElement = null;
@@ -1984,7 +2074,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 
 				if (parent.getNodeType() == Node.ELEMENT_NODE) {
 					newElement = (ElementImpl) parent;
-				} else {
+				}
+				else {
 					newElement = null;
 				}
 			}
@@ -2059,7 +2150,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 					}
 					newElement.appendChild(child);
 				}
-			} else {
+			}
+			else {
 				if (!oldElement.isCommentTag()) {
 					// clone (re-create) end tag
 					Element end = oldElement.removeEndTag();
@@ -2070,7 +2162,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 					}
 				}
 			}
-		} else {
+		}
+		else {
 			newNext = oldElement.getNextSibling();
 			parent.removeChild(oldElement);
 		}
@@ -2081,19 +2174,25 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 		if (element == oldParent) {
 			if (oldNext != null) {
 				this.context.setNextNode(oldNext); // reset for new parent
-			} else if (newNext != null) {
+			}
+			else if (newNext != null) {
 				this.context.setNextNode(newNext);
-			} else {
+			}
+			else {
 				this.context.setParentNode(parent);
 			}
-		} else if (element == oldNext) {
+		}
+		else if (element == oldNext) {
 			if (firstElement != null) {
 				this.context.setParentNode(firstElement);
-			} else if (first != null) {
+			}
+			else if (first != null) {
 				this.context.setNextNode(first);
-			} else if (startElement != null) {
+			}
+			else if (startElement != null) {
 				this.context.setParentNode(startElement);
-			} else {
+			}
+			else {
 				this.context.setNextNode(newNext);
 			}
 		}
@@ -2144,7 +2243,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 					// this is the case partial IStructuredDocumentRegion is
 					// removed
 					removeNode(text);
-				} else {
+				}
+				else {
 					// notify the change
 					text.notifyValueChanged();
 				}
@@ -2164,10 +2264,12 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 				if (element.hasEndTag() || element.hasChildNodes()) {
 					element.setStartStructuredDocumentRegion(null);
 					removeStartTag(element);
-				} else {
+				}
+				else {
 					removeNode(element);
 				}
-			} else {
+			}
+			else {
 				Node child = element.getFirstChild();
 				if (child != null) {
 					this.context.setNextNode(child);
@@ -2205,7 +2307,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 			if (!end.hasStartTag() && !end.hasChildNodes()) {
 				this.context.setNextNode(end);
 				removeNode(end);
-			} else {
+			}
+			else {
 				end.setEndStructuredDocumentRegion(null);
 				removeEndTag(end);
 			}
@@ -2248,9 +2351,11 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 		String regionType = StructuredDocumentRegionUtil.getFirstRegionType(flatNode);
 		if (regionType == XMLRegionContext.XML_TAG_OPEN) {
 			changeStartTag(flatNode, newRegions, oldRegions);
-		} else if (regionType == XMLRegionContext.XML_END_TAG_OPEN) {
+		}
+		else if (regionType == XMLRegionContext.XML_END_TAG_OPEN) {
 			changeEndTag(flatNode, newRegions, oldRegions);
-		} else {
+		}
+		else {
 			changeStructuredDocumentRegion(flatNode);
 		}
 	}
@@ -2282,7 +2387,8 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 					continue;
 				removeStructuredDocumentRegion(flatNode);
 			}
-		} else {
+		}
+		else {
 			if (newCount == 0)
 				return;
 			setupContext(newStructuredDocumentRegions.item(0));
@@ -2362,4 +2468,9 @@ public class XMLModelParser implements org.eclipse.wst.xml.core.jsp.model.parser
 		this.context.setParentNode(node);
 		this.context.setLast();
 	}
+
+	protected XMLModelContext getContext() {
+		return context;
+	}
+
 }

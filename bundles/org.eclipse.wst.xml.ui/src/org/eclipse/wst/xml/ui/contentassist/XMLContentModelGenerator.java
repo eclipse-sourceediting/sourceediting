@@ -19,11 +19,19 @@ import org.eclipse.wst.common.contentmodel.CMDataType;
 import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.xml.core.document.XMLNode;
-import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.w3c.dom.Node;
 
 
 public class XMLContentModelGenerator extends AbstractContentModelGenerator {
+
+	/**
+	 * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
+	 * way for expedency. Should be evolved in future to depend on
+	 * "nestedContext".
+	 */
+	private class XMLJSPRegionContexts {
+		private static final String JSP_DIRECTIVE_OPEN = "JSP_DIRECTIVE_OPEN"; //$NON-NLS-1$
+	}
 
 	/**
 	 * XMLContentModelGenerator constructor comment.
@@ -38,7 +46,7 @@ public class XMLContentModelGenerator extends AbstractContentModelGenerator {
 		int usage = attrDecl.getUsage();
 		if (usage == CMAttributeDeclaration.REQUIRED) {
 			buffer.append(" "); //$NON-NLS-1$
-			generateRequiredAttribute(null, attrDecl, buffer); //todo pass
+			generateRequiredAttribute(null, attrDecl, buffer); // todo pass
 			// ownerNode as
 			// 1st param
 		}
@@ -94,7 +102,8 @@ public class XMLContentModelGenerator extends AbstractContentModelGenerator {
 			return getRequiredName(node, elementDecl).length() + 2; // < +
 			// name +
 			// space
-		} else {
+		}
+		else {
 			return 1 + getRequiredName(node, elementDecl).length() + getStartTagClose(node, elementDecl).length(); // < +
 			// name
 			// +
@@ -106,7 +115,7 @@ public class XMLContentModelGenerator extends AbstractContentModelGenerator {
 	protected String getOtherClose(Node notATagNode) {
 		if (notATagNode instanceof XMLNode) {
 			IStructuredDocumentRegion node = ((XMLNode) notATagNode).getStartStructuredDocumentRegion();
-			if (node != null && node.getNumberOfRegions() > 1 && node.getRegions().get(0).getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_OPEN) {
+			if (node != null && node.getNumberOfRegions() > 1 && node.getRegions().get(0).getType().equals(XMLJSPRegionContexts.JSP_DIRECTIVE_OPEN)) {
 				return "%>"; //$NON-NLS-1$
 			}
 		}

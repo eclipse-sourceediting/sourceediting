@@ -19,7 +19,6 @@ import java.util.Iterator;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.w3c.dom.Comment;
 import org.w3c.dom.DOMException;
@@ -96,12 +95,13 @@ public class CommentImpl extends CharacterDataImpl implements Comment {
 		while (e.hasNext()) {
 			ITextRegion region = (ITextRegion) e.next();
 			String regionType = region.getType();
-			if (regionType == XMLRegionContext.XML_COMMENT_OPEN || regionType == JSP_COMMENT_OPEN || regionType == XMLRegionContext.XML_COMMENT_CLOSE || regionType == JSP_COMMENT_CLOSE) {
+			if (regionType == XMLRegionContext.XML_COMMENT_OPEN || regionType == XMLRegionContext.XML_COMMENT_CLOSE || isNestedCommentOpenClose(regionType)) {
 				continue;
 			}
 			if (contentRegion == null) { // first content
 				contentRegion = region;
-			} else { // multiple contents
+			}
+			else { // multiple contents
 				if (buffer == null) {
 					buffer = new StringBuffer(flatNode.getText(contentRegion));
 				}
@@ -141,14 +141,28 @@ public class CommentImpl extends CharacterDataImpl implements Comment {
 		if (flatNode == null)
 			return true; // will be generated
 		String regionType = StructuredDocumentRegionUtil.getLastRegionType(flatNode);
-		return (regionType == XMLRegionContext.XML_COMMENT_CLOSE || regionType == XMLJSPRegionContexts.JSP_COMMENT_CLOSE);
+		return (regionType == XMLRegionContext.XML_COMMENT_CLOSE || isNestedCommentClose(regionType));
 	}
 
 	/**
-	 * isJSP method
-	 * 
-	 * @return boolean
+	 * Subclasses must override
+	 * @param regionType
+	 * @return
 	 */
+	protected boolean isNestedCommentClose(String regionType) {
+		boolean result = false;
+		return result; 
+	}
+	/**
+	 * Subclasses must override
+	 * @param regionType
+	 * @return
+	 */
+	protected boolean isNestedCommentOpenClose(String regionType) {
+		boolean result = false;
+		return result; 
+	}
+																											
 	public boolean isJSPTag() {
 		return this.isJSPTag;
 	}
