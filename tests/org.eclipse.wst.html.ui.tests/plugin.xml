@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.eclipse.wst.html.ui.tests"
+   name="Structured Source Editor for HTML Tests"
+   version="1.0.0"
+   provider-name="IBM"
+   class="org.eclipse.wst.html.ui.tests.SSEForHTMLTestsPlugin">
+
+   <runtime>
+      <library name="ssehtmltests.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.core.runtime.compatibility"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.wst.html.ui"/>
+      <import plugin="org.eclipse.wst.sse.ui"/>
+      <import plugin="org.eclipse.wst.xml.ui"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.wst.sse.core"/>
+      <import plugin="org.eclipse.wst.xml.core"/>
+      <import plugin="org.eclipse.wst.common.encoding"/>
+      <import plugin="org.junit"/>
+      <import plugin="org.eclipse.wst.html.core"/>
+      <import plugin="org.eclipse.ui.views"/>
+   </requires>
+
+
+   <extension
+         id="ssehtmltests"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="org.eclipse.wst.html.ui.tests.application.SSEHTMLTests">
+         </run>
+      </application>
+   </extension>
+<!-- TO GET PICKED UP BY com.ibm.etools.commontests.testcollector -->
+<!--
+   <extension
+         point="com.ibm.etools.commontests.testcollector.suites">
+      <suite
+            suiteName="SSE HTML Tests"
+            suiteClass="org.eclipse.wst.html.ui.tests.application.SSEHTMLTestSuite">
+      </suite>
+   </extension>
+-->
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            name="HTML Preview Editor"
+            default="false"
+            icon="icons/browser_editor.gif"
+            extensions="html, htm, xhtml, jhtml, shtml, shtm, html-ss, wml, wsdl"
+            contributorClass="org.eclipse.wst.html.ui.edit.ui.ActionContributorHTML"
+            class="org.eclipse.wst.html.ui.tests.PreviewEditor"
+            symbolicFontName="com.ibm.sse.editor.textfont"
+            id="org.eclipse.wst.html.ui.PreviewEditor">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            name="Embedded HTML Structured Text Viewer"
+            icon="icons/sourceEditor.gif"
+            category="org.eclipse.wst.sse.ui.tests"
+            class="org.eclipse.wst.html.ui.tests.ViewerTestHTML"
+            id="org.eclipse.wst.html.ui.tests.ViewerTestHTML">
+      </view>
+   </extension>
+
+</plugin>
