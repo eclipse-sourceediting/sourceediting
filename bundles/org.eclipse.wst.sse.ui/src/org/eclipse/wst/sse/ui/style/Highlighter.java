@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.style;
 
-
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,15 +34,13 @@ import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.util.Debug;
+import org.eclipse.wst.sse.ui.extension.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.util.EditorUtility;
-
 
 /**
  * This class is to directly mediate between the Structured Document data
@@ -58,6 +54,7 @@ public class Highlighter implements IHighlighter {
 
 	private final boolean DEBUG = false;
 	private final StyleRange[] EMPTY_STYLE_RANGE = new StyleRange[0];
+	private static final String LINE_STYLE_PROVIDER_EXTENDED_ID = "linestyleprovider";
 
 	private IPropertyChangeListener fForegroundScaleListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
@@ -78,6 +75,8 @@ public class Highlighter implements IHighlighter {
 
 	private IStructuredDocument fStructuredDocument;
 	private Map fTableOfProviders;
+
+	private Map fExtendedProviders;
 
 	protected final LineStyleProvider NOOP_PROVIDER = new LineStyleProviderForNoOp();
 
@@ -227,14 +226,15 @@ public class Highlighter implements IHighlighter {
 		return result;
 	}
 
-	// TODO: never used
-	Display getDisplay() {
-
-		return PlatformUI.getWorkbench().getDisplay();
-	}
-
 	protected IStructuredDocument getDocument() {
 		return fStructuredDocument;
+	}
+
+	private Map getExtendedProviders() {
+		if (fExtendedProviders == null) {
+			fExtendedProviders = new HashMap(3);
+		}
+		return fExtendedProviders;
 	}
 
 	/**
@@ -247,9 +247,24 @@ public class Highlighter implements IHighlighter {
 		String type = typedRegion.getType();
 		LineStyleProvider result = (LineStyleProvider) fTableOfProviders.get(type);
 		if (result == null) {
+			// NOT YET FINALIZED - DO NOT CONSIDER AS API
+			synchronized (getExtendedProviders()) {
+				if (!getExtendedProviders().containsKey(type)) {
+					LineStyleProvider provider = (LineStyleProvider) ExtendedConfigurationBuilder.getInstance().getConfiguration(LINE_STYLE_PROVIDER_EXTENDED_ID, type);
+					getExtendedProviders().put(type, provider);
+					if (provider != null) {
+						provider.init(getDocument(), this);
+					}
+					result = provider;
+				}
+				else {
+					result = (LineStyleProvider) getExtendedProviders().get(type);
+				}
+			}
+		}
+		if (result == null) {
 			result = NOOP_PROVIDER;
 		}
-
 		return result;
 	}
 
@@ -504,6 +519,19 @@ public class Highlighter implements IHighlighter {
 			// away ... but in case that ever changes, this seems like
 			// a better style.
 			iterator.remove();
+		}
+
+		synchronized (getExtendedProviders()) {
+			providers = new ArrayList(getExtendedProviders().values());
+			getExtendedProviders().clear();
+		}
+		iterator = providers.iterator();
+		while (iterator.hasNext()) {
+			LineStyleProvider lineStyleProvider = (LineStyleProvider) iterator.next();
+			if (lineStyleProvider != null) {
+				lineStyleProvider.release();
+				iterator.remove();
+			}
 		}
 
 		IPreferenceStore editorStore = SSEUIPlugin.getDefault().getPreferenceStore();
