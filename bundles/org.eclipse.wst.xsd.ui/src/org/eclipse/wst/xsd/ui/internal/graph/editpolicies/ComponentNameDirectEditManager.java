@@ -93,6 +93,7 @@ public class ComponentNameDirectEditManager extends TextCellEditorManager
   
   protected void bringDown()
   {
+    super.bringDown();
     if (mySource != null)
     {
       if (mySource instanceof TopLevelComponentEditPart)
