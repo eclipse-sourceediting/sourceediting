@@ -15,18 +15,18 @@
    <requires>
       <import plugin="org.eclipse.core.runtime.compatibility"/>
       <import plugin="org.eclipse.core.resources"/>
-<!-- need to re-export org.eclipse.text since our API depends on it, 
+      
+		<!-- need to re-export org.eclipse.text since our API depends on it, 
 			such as IStructuredDocument extends IDocument 
 		-->
       <import plugin="org.eclipse.text" export="true"/>
-    <!-- currently need jface.text for org.eclipse.jface.text.formatter package. 
-         need to study to see how to best have model-only formatting -->  
-<!-- need to re-export emf.common since our API depends on it, 
+
+		<!-- need to re-export emf.common since our API depends on it, 
 			such as StructuredTextUndoManager's getCommmand method returns an 
 			emf.common.Command
 		-->
-		
       <import plugin="org.eclipse.emf.common" export="true"/>
+      
       <import plugin="org.eclipse.wst.common.contentmodel"/>
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.wst.common.encoding"/>
