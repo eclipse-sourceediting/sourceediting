@@ -24,7 +24,7 @@ public class RenameRefactoringWizard extends RefactoringWizard {
 	
 	public RenameRefactoringWizard(Refactoring refactoring, String defaultPageTitle, String inputPageDescription, 
 			ImageDescriptor inputPageImageDescriptor) {
-		super(refactoring, DIALOG_BASED_UESR_INTERFACE);
+		super(refactoring, DIALOG_BASED_USER_INTERFACE);
 		setDefaultPageTitle(defaultPageTitle);
     	fInputPageDescription= inputPageDescription;
 		fInputPageImageDescriptor= inputPageImageDescriptor;
