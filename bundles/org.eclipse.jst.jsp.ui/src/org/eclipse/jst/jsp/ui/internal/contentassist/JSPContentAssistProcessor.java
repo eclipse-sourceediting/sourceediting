@@ -153,6 +153,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		fPartitionToProcessorMap.put(StructuredTextPartitionerForXML.ST_DEFAULT_XML, xmlProcessor);
 		fPartitionToProcessorMap.put(StructuredTextPartitioner.ST_DEFAULT_PARTITION, htmlProcessor);
 		fPartitionToProcessorMap.put(StructuredTextPartitionerForJSP.ST_DEFAULT_JSP, jspJavaProcessor);
+		fPartitionToProcessorMap.put(StructuredTextPartitionerForJSP.ST_JSP_DIRECTIVE, xmlProcessor);
 		fPartitionToProcessorMap.put(StructuredTextPartitionerForHTML.ST_HTML_COMMENT, htmlProcessor);
 		fPartitionToProcessorMap.put(StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVASCRIPT, javascriptProcessor);
 		fPartitionToProcessorMap.put(StructuredTextPartitionerForHTML.ST_SCRIPT, javascriptProcessor); // default
