@@ -38,6 +38,9 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
+/**
+ *  @deprecated Eclipse now provides a file conversion action. This will be deleted.
+ */
 public class ConvertLineDelimitersToCRLFActionDelegate extends ResourceActionDelegate {
 
 	class ConvertLineDelimitersJob extends Job {

@@ -418,12 +418,6 @@
             <groupMarker
                   name="sourceGroup">
             </groupMarker>
-            <separator
-                  name="separator">
-            </separator>
-            <groupMarker
-                  name="convertGroup">
-            </groupMarker>
          </menu>
          <action
                label="%FormatDocument"
@@ -431,27 +425,6 @@
                menubarPath="source/sourceGroup"
                enablesFor="+"
                id="org.eclipse.wst.sse.ui.actions.ContainerSourceActions.Format">
-         </action>
-         <action
-               label="%ConvertLineDelimitersToCR"
-               class="org.eclipse.wst.sse.ui.edit.util.ConvertLineDelimitersToCRActionDelegate"
-               menubarPath="source/convertGroup"
-               enablesFor="+"
-               id="org.eclipse.wst.sse.ui.actions.ContainerSourceActions.EOLCR">
-         </action>
-         <action
-               label="%ConvertLineDelimitersToLF"
-               class="org.eclipse.wst.sse.ui.edit.util.ConvertLineDelimitersToLFActionDelegate"
-               menubarPath="source/convertGroup"
-               enablesFor="+"
-               id="org.eclipse.wst.sse.ui.actions.ContainerSourceActions.EOLLF">
-         </action>
-         <action
-               label="%ConvertLineDelimitersToCRLF"
-               class="org.eclipse.wst.sse.ui.edit.util.ConvertLineDelimitersToCRLFActionDelegate"
-               menubarPath="source/convertGroup"
-               enablesFor="+"
-               id="org.eclipse.wst.sse.ui.actions.ContainerSourceActions.EOLCRLF">
          </action>
       </objectContribution>
       <objectContribution
@@ -464,12 +437,6 @@
             <groupMarker
                   name="sourceGroup">
             </groupMarker>
-            <separator
-                  name="separator">
-            </separator>
-            <groupMarker
-                  name="convertGroup">
-            </groupMarker>
          </menu>
          <action
                label="%FormatDocument"
@@ -477,27 +444,6 @@
                menubarPath="source/sourceGroup"
                enablesFor="+"
                id="org.eclipse.wst.sse.ui.actions.FileSourceActions.Format">
-         </action>
-         <action
-               label="%ConvertLineDelimitersToCR"
-               class="org.eclipse.wst.sse.ui.edit.util.ConvertLineDelimitersToCRActionDelegate"
-               menubarPath="source/convertGroup"
-               enablesFor="+"
-               id="org.eclipse.wst.sse.ui.actions.FileSourceActions.EOLCR">
-         </action>
-         <action
-               label="%ConvertLineDelimitersToLF"
-               class="org.eclipse.wst.sse.ui.edit.util.ConvertLineDelimitersToLFActionDelegate"
-               menubarPath="source/convertGroup"
-               enablesFor="+"
-               id="org.eclipse.wst.sse.ui.actions.FileSourceActions.EOLLF">
-         </action>
-         <action
-               label="%ConvertLineDelimitersToCRLF"
-               class="org.eclipse.wst.sse.ui.edit.util.ConvertLineDelimitersToCRLFActionDelegate"
-               menubarPath="source/convertGroup"
-               enablesFor="+"
-               id="org.eclipse.wst.sse.ui.actions.FileSourceActions.EOLCRLF">
          </action>
       </objectContribution>
    </extension>
