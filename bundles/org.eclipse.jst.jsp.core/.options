@@ -21,3 +21,5 @@ org.eclipse.jst.jsp.core/taglib/indextime=false
 #org.eclipse.jst.jsp.core.text.rules.StructuredTextPartitioner.debugPrefixListener
 org.eclipse.jst.jsp.core/partitioner/prefixlistener=false
 
+org.eclipse.jst.jsp.core/debug/jspjavamapping=false
+

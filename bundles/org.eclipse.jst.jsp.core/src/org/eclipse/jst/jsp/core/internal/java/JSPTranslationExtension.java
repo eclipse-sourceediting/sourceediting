@@ -100,6 +100,9 @@ public class JSPTranslationExtension extends JSPTranslation {
 	 */
 	public TextEdit getJspEdit(TextEdit javaEdit) {
 
+		if(javaEdit == null)
+			return null;
+		
 		List jspEdits = new ArrayList();
 
 		int offset = javaEdit.getOffset();
@@ -126,14 +129,14 @@ public class JSPTranslationExtension extends JSPTranslation {
 				jspPositions[i] = (Position)getJava2JspMap().get(javaPositions[i]);
 		}
 
-		if(DEBUG) {
+		//if(DEBUG) {
 			System.out.println("================================================");
 			System.out.println("deltas:");
 			String javaText = getJavaText();
 			for(int i=0; i<deltas.length; i++) 
 				System.out.println("pos[" + deltas[i].preOffset + ":" + deltas[i].preLength + "]" + javaText.substring(deltas[i].preOffset, deltas[i].preOffset + deltas[i].preLength) );
 			System.out.println("===============================================");
-		}
+		//}
 		
 		// apply the edit to the java document
 		try {
