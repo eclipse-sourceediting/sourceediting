@@ -24,7 +24,7 @@ public interface EmbeddedTypeHandler {
 
 	/**
 	 * These AdapterFactories are NOT added to IStructuredModel's
-	 * AdapterFactory Registry ... they are for use by "JSP Aware
+	 * IAdapterFactory Registry ... they are for use by "JSP Aware
 	 * AdapterFactories" The are added to the "registry" in the
 	 * PageDirectiveAdapter.
 	 */
@@ -44,7 +44,7 @@ public interface EmbeddedTypeHandler {
 
 	/**
 	 * This method is to give the EmbeddedContentType an opportunity to add
-	 * factories directly to the IStructuredModel's AdapterFactory registry.
+	 * factories directly to the IStructuredModel's IAdapterFactory registry.
 	 */
 	void initializeFactoryRegistry(FactoryRegistry registry);
 

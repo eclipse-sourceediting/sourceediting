@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.modelhandler.IDocumentTypeHandler;
 import org.osgi.framework.Bundle;
 
@@ -59,8 +59,8 @@ public class ModelManagerPluginRegistryReader {
 		return loadRegistry(type);
 	}
 
-	protected AdapterFactory loadFactoryFromConfigurationElement(IConfigurationElement element, Object requesterType) {
-		AdapterFactory factory = null;
+	protected IAdapterFactory loadFactoryFromConfigurationElement(IConfigurationElement element, Object requesterType) {
+		IAdapterFactory factory = null;
 		if (element.getName().equals(TAG_NAME)) {
 			String contentType = element.getAttribute(ATTR_CONTENTTYPE);
 			if (!contentType.equals(requesterType))
@@ -124,7 +124,7 @@ public class ModelManagerPluginRegistryReader {
 								Class[] paramTypes = ctors[i].getParameterTypes();
 								if (ctors[i].isAccessible() && paramTypes.length == 2 && paramTypes[0].equals(Object.class) && paramTypes[1].equals(boolean.class)) {
 									try {
-										factory = (AdapterFactory) ctors[i].newInstance(new Object[]{adapterKey, new Boolean(doRegisterAdapters)});
+										factory = (IAdapterFactory) ctors[i].newInstance(new Object[]{adapterKey, new Boolean(doRegisterAdapters)});
 									} catch (IllegalAccessException e) {
 										throw new org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException(e);
 									} catch (IllegalArgumentException e) {
@@ -140,7 +140,7 @@ public class ModelManagerPluginRegistryReader {
 							}
 						}
 						if (factory == null) {
-							factory = (AdapterFactory) element.createExecutableExtension(ATTR_CLASS);
+							factory = (IAdapterFactory) element.createExecutableExtension(ATTR_CLASS);
 						}
 					} catch (ClassNotFoundException e) {
 						throw new org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException(e);
@@ -160,7 +160,7 @@ public class ModelManagerPluginRegistryReader {
 		if (point != null) {
 			IConfigurationElement[] elements = point.getConfigurationElements();
 			for (int i = 0; i < elements.length; i++) {
-				AdapterFactory factory = loadFactoryFromConfigurationElement(elements[i], contentType);
+				IAdapterFactory factory = loadFactoryFromConfigurationElement(elements[i], contentType);
 				if (factory != null)
 					factoryList.add(factory);
 			}

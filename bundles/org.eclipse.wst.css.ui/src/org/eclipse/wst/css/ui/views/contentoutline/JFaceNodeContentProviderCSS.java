@@ -22,7 +22,7 @@ import org.eclipse.wst.css.core.document.ICSSNode;
 import org.eclipse.wst.css.core.document.ICSSPrimitiveValue;
 import org.eclipse.wst.css.core.document.ICSSStyleDeclItem;
 import org.eclipse.wst.css.core.document.ICSSStyleDeclaration;
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.xml.ui.views.contentoutline.JFaceNodeContentProvider;
 import org.w3c.dom.css.CSSRule;
@@ -35,12 +35,12 @@ import org.w3c.dom.stylesheets.MediaList;
  * nodes in the tree.
  */
 public class JFaceNodeContentProviderCSS extends JFaceNodeContentProvider {
-	protected AdapterFactory adapterFactory;
+	protected IAdapterFactory adapterFactory;
 
 	//protected DomainNotifier domainNotifier;
 	/**
 	 */
-	public JFaceNodeContentProviderCSS(AdapterFactory adapterFactory) {
+	public JFaceNodeContentProviderCSS(IAdapterFactory adapterFactory) {
 		super(adapterFactory);
 		this.adapterFactory = adapterFactory;
 	}

@@ -21,7 +21,7 @@ import org.eclipse.wst.css.core.document.ICSSNode;
 import org.eclipse.wst.css.core.document.ICSSStyleDeclItem;
 import org.eclipse.wst.css.core.document.ICSSValue;
 import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
 import org.eclipse.wst.sse.ui.views.contentoutline.PropertyChangeUpdateActionContributionItem;
 import org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration;
@@ -56,7 +56,7 @@ public class CSSContentOutlineConfiguration extends StructuredContentOutlineConf
 	 */
 	public IContentProvider getContentProvider(TreeViewer viewer) {
 		if (fContentProvider == null && getFactory() != null)
-			fContentProvider = new JFaceNodeContentProviderCSS((AdapterFactory) getFactory());
+			fContentProvider = new JFaceNodeContentProviderCSS((IAdapterFactory) getFactory());
 		return fContentProvider;
 	}
 
@@ -65,7 +65,7 @@ public class CSSContentOutlineConfiguration extends StructuredContentOutlineConf
 	 */
 	public ILabelProvider getLabelProvider(TreeViewer viewer) {
 		if (fLabelProvider == null && getFactory() != null)
-			fLabelProvider = new JFaceNodeLabelProviderCSS((AdapterFactory) getFactory());
+			fLabelProvider = new JFaceNodeLabelProviderCSS((IAdapterFactory) getFactory());
 		return fLabelProvider;
 	}
 

@@ -16,13 +16,13 @@ package org.eclipse.wst.sse.core.internal;
 
 import java.util.ArrayList;
 
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 
 
 
-public interface PropagatingAdapterFactory extends AdapterFactory {
+public interface PropagatingAdapterFactory extends IAdapterFactory {
 
-	void addContributedFactories(AdapterFactory factory);
+	void addContributedFactories(IAdapterFactory factory);
 
 	void setContributedFactories(ArrayList list);
 

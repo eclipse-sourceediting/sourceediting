@@ -43,7 +43,7 @@ public class HTMLModelQueryAssociationProvider extends SimpleAssociationProvider
 	//
 	//		// cache HTML element declaration only
 	//		if (decl != null && decl instanceof HTMLElementDeclaration) {
-	//			AdapterFactory factory = ElementDeclarationAdapterFactory.getInstance();
+	//			IAdapterFactory factory = ElementDeclarationAdapterFactory.getInstance();
 	//			adapter = (ElementDeclarationAdapter) factory.adapt(notifier);
 	//			if (adapter != null)
 	//				adapter.setDeclaration(decl);

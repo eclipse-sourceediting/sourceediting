@@ -21,7 +21,7 @@ import org.eclipse.wst.html.core.document.HTMLModelParserAdapterFactory;
 import org.eclipse.wst.html.core.htmlcss.HTMLStyleSelectorAdapterFactory;
 import org.eclipse.wst.html.core.htmlcss.StyleAdapterFactory;
 import org.eclipse.wst.html.core.modelquery.ModelQueryAdapterFactoryForEmbeddedHTML;
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.FactoryRegistry;
 import org.eclipse.wst.sse.core.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.sse.core.parser.BlockMarker;
@@ -95,7 +95,7 @@ public class EmbeddedHTML implements EmbeddedTypeHandler {
 	public void initializeFactoryRegistry(FactoryRegistry registry) {
 		Assert.isNotNull(registry);
 
-		AdapterFactory factory = null;
+		IAdapterFactory factory = null;
 		if (!registry.contains(DocumentTypeAdapter.class)) {
 			factory = new HTMLDocumentTypeAdapterFactory();
 			registry.addFactory(factory);
@@ -119,7 +119,7 @@ public class EmbeddedHTML implements EmbeddedTypeHandler {
         if (!fLocalFactories.isEmpty()) {
             Iterator it = fLocalFactories.iterator();
             while (it.hasNext()) {
-                AdapterFactory af = (AdapterFactory) it.next();
+                IAdapterFactory af = (IAdapterFactory) it.next();
                 af.release();
                 registry.removeFactory(af);
             }
@@ -129,7 +129,7 @@ public class EmbeddedHTML implements EmbeddedTypeHandler {
 //		// for this particular list, they are, but may not
 //		// be in future.
 //
-//		AdapterFactory factory = new HTMLDocumentTypeAdapterFactory();
+//		IAdapterFactory factory = new HTMLDocumentTypeAdapterFactory();
 //		factory.release();
 //		registry.removeFactory(factory);
 //

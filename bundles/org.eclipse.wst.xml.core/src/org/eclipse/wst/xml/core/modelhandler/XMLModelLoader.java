@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.wst.sse.core.AbstractModelLoader;
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IModelLoader;
@@ -48,7 +48,7 @@ public class XMLModelLoader extends AbstractModelLoader {
 
 	public List getAdapterFactories() {
 		List result = new ArrayList();
-		AdapterFactory factory = null;
+		IAdapterFactory factory = null;
 		factory = new ModelQueryAdapterFactoryForXML();
 		result.add(factory);
 		// Does XML need propagating adapter? Or just JSP?

@@ -31,7 +31,7 @@ import org.eclipse.jst.jsp.core.modelquery.ModelQueryAdapterFactoryForJSP;
 import org.eclipse.wst.html.core.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.core.internal.text.rules.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.sse.core.AbstractModelLoader;
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IModelLoader;
@@ -196,7 +196,7 @@ public class JSPModelLoader extends AbstractModelLoader {
 	 */
 	public List getAdapterFactories() {
 		List result = new ArrayList();
-		AdapterFactory factory = null;
+		IAdapterFactory factory = null;
 		//
 		factory = new ModelQueryAdapterFactoryForJSP();
 		result.add(factory);

@@ -15,7 +15,7 @@ package org.eclipse.wst.xml.core.internal;
 import java.util.ArrayList;
 
 import org.eclipse.wst.sse.core.AbstractAdapterFactory;
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.PropagatingAdapterFactory;
@@ -43,13 +43,13 @@ public class DebugAdapterFactory extends AbstractAdapterFactory implements Propa
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.wst.sse.core.PropagatingAdapterFactory#addContributedFactories(org.eclipse.wst.sse.core.AdapterFactory)
+	 * @see org.eclipse.wst.sse.core.PropagatingAdapterFactory#addContributedFactories(org.eclipse.wst.sse.core.IAdapterFactory)
 	 */
-	public void addContributedFactories(AdapterFactory factory) {
+	public void addContributedFactories(IAdapterFactory factory) {
 		//none expected
 	}
 
-	public AdapterFactory copy() {
+	public IAdapterFactory copy() {
 		return new DebugAdapterFactory(this.adapterKey, this.shouldRegisterAdapter);
 	}
 
@@ -63,7 +63,7 @@ public class DebugAdapterFactory extends AbstractAdapterFactory implements Propa
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.wst.sse.core.AdapterFactory#isFactoryForType(java.lang.Object)
+	 * @see org.eclipse.wst.sse.core.IAdapterFactory#isFactoryForType(java.lang.Object)
 	 */
 	public boolean isFactoryForType(Object type) {
 

@@ -18,7 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.wst.sse.core.AbstractAdapterFactory;
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
@@ -53,21 +53,21 @@ public class PropagatingAdapterFactoryImpl extends AbstractAdapterFactory implem
 		super(adapterKey, registerAdapters);
 	}
 
-	public void addContributedFactories(AdapterFactory factory) {
+	public void addContributedFactories(IAdapterFactory factory) {
 		if (contributedFactories != null) {
 			contributedFactories.add(factory);
 		}
 
 	}
 
-	public AdapterFactory copy() {
+	public IAdapterFactory copy() {
 		PropagatingAdapterFactory clonedInstance = new PropagatingAdapterFactoryImpl(this.adapterKey, this.shouldRegisterAdapter);
 		// clone this adapters specific list of adapter factories too
 		if (contributedFactories != null) {
 			Iterator iterator = contributedFactories.iterator();
 			clonedInstance.setContributedFactories(new ArrayList());
 			while (iterator.hasNext()) {
-				AdapterFactory existingFactory = (AdapterFactory) iterator.next();
+				IAdapterFactory existingFactory = (IAdapterFactory) iterator.next();
 				clonedInstance.addContributedFactories(existingFactory.copy());
 			}
 		}

@@ -53,7 +53,7 @@ public final class FactoryRegistry {
 
 	}
 
-	public void addFactory(AdapterFactory factory) {
+	public void addFactory(IAdapterFactory factory) {
 		_getFactories().add(factory);
 	}
 
@@ -70,7 +70,7 @@ public final class FactoryRegistry {
 		// is not thread safe.
 		List internalList = _getFactories();
 		for (int i = 0; i < internalList.size(); i++) {
-			AdapterFactory factory = (AdapterFactory) internalList.get(i);
+			IAdapterFactory factory = (IAdapterFactory) internalList.get(i);
 			if (factory.isFactoryForType(type)) {
 				result = true;
 				break;
@@ -99,9 +99,9 @@ public final class FactoryRegistry {
 	 * than one factory that can answer 'true' that the most recently added
 	 * factory is used.
 	 */
-	public AdapterFactory getFactoryFor(Object type) {
+	public IAdapterFactory getFactoryFor(Object type) {
 
-		AdapterFactory result = null;
+		IAdapterFactory result = null;
 		if (factories == null)
 			return null;
 		int listSize = factories.size();
@@ -110,7 +110,7 @@ public final class FactoryRegistry {
 			// isFactoryForType so it gets choosen.
 			// Notice we are going through the list backwards to get the
 			// factory added last.
-			AdapterFactory a = (AdapterFactory) factories.get(i);
+			IAdapterFactory a = (IAdapterFactory) factories.get(i);
 			if (a.isFactoryForType(type)) {
 				result = a;
 				break;
@@ -131,7 +131,7 @@ public final class FactoryRegistry {
 		// themselves from the registry.
 		List localList = getFactories();
 		for (int i = 0; i < localList.size(); i++) {
-			AdapterFactory a = (AdapterFactory) localList.get(i);
+			IAdapterFactory a = (IAdapterFactory) localList.get(i);
 			// To help bullet proof code, we'll catch and log
 			// any messages thrown by factories during release,
 			// but we'll attempt to keep going.
@@ -162,7 +162,7 @@ public final class FactoryRegistry {
 			for (int i = listSize - 1; i >= 0; i--) {
 				// It is the adapter factories responsibility to answer
 				// isFactoryForType so it gets choosen.
-				AdapterFactory a = (AdapterFactory) factories.get(i);
+				IAdapterFactory a = (IAdapterFactory) factories.get(i);
 				if (a.isFactoryForType(type)) {
 					factories.remove(a);
 				}
@@ -170,7 +170,7 @@ public final class FactoryRegistry {
 		}
 	}
 
-	public void removeFactory(AdapterFactory factory) {
+	public void removeFactory(IAdapterFactory factory) {
 		_getFactories().remove(factory);
 
 	}

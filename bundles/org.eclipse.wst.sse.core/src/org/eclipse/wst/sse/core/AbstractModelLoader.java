@@ -71,7 +71,7 @@ public abstract class AbstractModelLoader implements IModelLoader {
 		if (factoryList != null) {
 			Iterator iterator = factoryList.iterator();
 			while (iterator.hasNext()) {
-				AdapterFactory factory = (AdapterFactory) iterator.next();
+				IAdapterFactory factory = (IAdapterFactory) iterator.next();
 				registry.addFactory(factory);
 			}
 		}
@@ -151,7 +151,7 @@ public abstract class AbstractModelLoader implements IModelLoader {
 		List newAdapterFactories = new ArrayList();
 		Iterator oldListIterator = oldAdapterFactories.iterator();
 		while (oldListIterator.hasNext()) {
-			AdapterFactory oldAdapterFactory = (AdapterFactory) oldListIterator.next();
+			IAdapterFactory oldAdapterFactory = (IAdapterFactory) oldListIterator.next();
 			// now "clone" the adapterfactory
 			newAdapterFactories.add(oldAdapterFactory.copy());
 		}

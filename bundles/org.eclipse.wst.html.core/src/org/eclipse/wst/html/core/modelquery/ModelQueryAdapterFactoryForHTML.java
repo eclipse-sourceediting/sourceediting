@@ -19,7 +19,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.sse.core.AbstractAdapterFactory;
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.IModelStateListener;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
@@ -158,7 +158,7 @@ public class ModelQueryAdapterFactoryForHTML extends AbstractAdapterFactory impl
 			modelQueryAdapterImpl.release();
 	}
 
-	public AdapterFactory copy() {
+	public IAdapterFactory copy() {
 
 		return new ModelQueryAdapterFactoryForHTML(this.adapterKey, this.shouldRegisterAdapter);
 	}

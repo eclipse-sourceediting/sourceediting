@@ -14,13 +14,13 @@ package org.eclipse.wst.sse.core.internal;
 
 import java.util.List;
 
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 
 public interface PropagatingAdapter extends INodeAdapter {
 
-	void addAdaptOnCreateFactory(AdapterFactory factory);
+	void addAdaptOnCreateFactory(IAdapterFactory factory);
 
 	List getAdaptOnCreateFactories();
 
@@ -31,7 +31,7 @@ public interface PropagatingAdapter extends INodeAdapter {
 	 * is addeded after some nodes may have already been created at the time
 	 * the factory is added.
 	 */
-	void initializeForFactory(AdapterFactory factory, INodeNotifier node);
+	void initializeForFactory(IAdapterFactory factory, INodeNotifier node);
 
 	// dmw: should have getFactoryFor?
 	void release();

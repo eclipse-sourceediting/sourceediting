@@ -13,10 +13,10 @@
 package org.eclipse.wst.sse.core;
 
 /**
- * An abstract implementation of AdapterFactory that uses itself as the key.
+ * An abstract implementation of IAdapterFactory that uses itself as the key.
  * Subclass to override behavior.
  */
-abstract public class AbstractAdapterFactory implements AdapterFactory {
+abstract public class AbstractAdapterFactory implements IAdapterFactory {
 
 	protected Object adapterKey;
 	protected boolean shouldRegisterAdapter = true;
@@ -54,7 +54,7 @@ abstract public class AbstractAdapterFactory implements AdapterFactory {
 	 * default, we'll return the same instance, for convenience of those using
 	 * singleton factories.
 	 */
-	public AdapterFactory copy() {
+	public IAdapterFactory copy() {
 		return this;
 	}
 

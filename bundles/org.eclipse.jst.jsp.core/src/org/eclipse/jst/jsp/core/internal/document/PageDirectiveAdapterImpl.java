@@ -26,7 +26,7 @@ import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
 import org.eclipse.jst.jsp.core.modelhandler.EmbeddedTypeStateData;
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
@@ -163,7 +163,7 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 		if (embeddedTypeHandler != null) {
 			Iterator list = embeddedFactoryRegistry.iterator();
 			while (list.hasNext()) {
-				AdapterFactory factory = (AdapterFactory) list.next();
+				IAdapterFactory factory = (IAdapterFactory) list.next();
 				factory.release();
 			}
 
@@ -177,7 +177,7 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 		if (embeddedTypeHandler != null) {
 			Iterator iterator = embeddedTypeHandler.getAdapterFactories().iterator();
 			while (iterator.hasNext()) {
-				AdapterFactory factory = (AdapterFactory) iterator.next();
+				IAdapterFactory factory = (IAdapterFactory) iterator.next();
 				embeddedFactoryRegistry.add(factory);
 			}
 		}
@@ -193,9 +193,9 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 		if (embeddedTypeHandler != null) {
 			if (embeddedFactoryRegistry != null) {
 				Iterator iterator = embeddedFactoryRegistry.iterator();
-				AdapterFactory factory = null;
+				IAdapterFactory factory = null;
 				while (iterator.hasNext()) {
-					factory = (AdapterFactory) iterator.next();
+					factory = (IAdapterFactory) iterator.next();
 					if (factory.isFactoryForType(type)) {
 						result = factory.adapt(notifier);
 						break;
@@ -217,7 +217,7 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 		return embeddedTypeHandler;
 	}
 
-	public void addEmbeddedFactory(AdapterFactory factory) {
+	public void addEmbeddedFactory(IAdapterFactory factory) {
 		// should we check if already exists in list?
 		embeddedFactoryRegistry.add(factory);
 	}
@@ -599,9 +599,9 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 		if (embeddedTypeHandler != null) {
 			if (embeddedFactoryRegistry != null) {
 				Iterator iterator = embeddedFactoryRegistry.iterator();
-				AdapterFactory factory = null;
+				IAdapterFactory factory = null;
 				while (iterator.hasNext()) {
-					factory = (AdapterFactory) iterator.next();
+					factory = (IAdapterFactory) iterator.next();
 					if (factory.isFactoryForType(type)) {
 						factory.release();
 					}

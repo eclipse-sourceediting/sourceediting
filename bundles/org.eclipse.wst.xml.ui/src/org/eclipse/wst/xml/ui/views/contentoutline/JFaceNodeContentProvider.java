@@ -14,7 +14,7 @@ package org.eclipse.wst.xml.ui.views.contentoutline;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.ui.views.contentoutline.IJFaceNodeAdapter;
@@ -27,9 +27,9 @@ import org.eclipse.wst.xml.core.document.XMLModel;
  * nodes in the tree.
  */
 public class JFaceNodeContentProvider implements ITreeContentProvider {
-	protected AdapterFactory adapterFactory;
+	protected IAdapterFactory adapterFactory;
 
-	public JFaceNodeContentProvider(AdapterFactory jfaceAdapterFactory) {
+	public JFaceNodeContentProvider(IAdapterFactory jfaceAdapterFactory) {
 		super();
 		this.adapterFactory = jfaceAdapterFactory;
 	}

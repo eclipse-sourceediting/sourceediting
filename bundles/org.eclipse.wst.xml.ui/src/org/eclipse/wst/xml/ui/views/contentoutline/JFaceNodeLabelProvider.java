@@ -17,7 +17,7 @@ package org.eclipse.wst.xml.ui.views.contentoutline;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.ui.views.contentoutline.IJFaceNodeAdapter;
 
@@ -28,12 +28,12 @@ import org.eclipse.wst.sse.ui.views.contentoutline.IJFaceNodeAdapter;
  */
 public class JFaceNodeLabelProvider implements ILabelProvider {
 
-	protected AdapterFactory adapterFactory;
+	protected IAdapterFactory adapterFactory;
 
 	/**
 	 * JFaceNodeLabelProvider constructor comment.
 	 */
-	public JFaceNodeLabelProvider(AdapterFactory adapterFactory) {
+	public JFaceNodeLabelProvider(IAdapterFactory adapterFactory) {
 		super();
 		this.adapterFactory = adapterFactory;
 	}

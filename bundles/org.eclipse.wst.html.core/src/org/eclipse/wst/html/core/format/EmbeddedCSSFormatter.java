@@ -26,7 +26,7 @@ import org.eclipse.wst.xml.core.document.XMLText;
 
 public class EmbeddedCSSFormatter extends HTMLFormatter {
 
-	//private AdapterFactory factory = new CSSSourceFormatterFactory(CSSSourceFormatter.class, true);
+	//private IAdapterFactory factory = new CSSSourceFormatterFactory(CSSSourceFormatter.class, true);
 	/**
 	 */
 	protected EmbeddedCSSFormatter() {

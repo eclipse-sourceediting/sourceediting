@@ -16,7 +16,7 @@ import org.eclipse.wst.css.core.adapters.IStyleDeclarationAdapter;
 import org.eclipse.wst.css.core.adapters.IStyleSheetAdapter;
 import org.eclipse.wst.css.core.adapters.IStyleSheetListAdapter;
 import org.eclipse.wst.html.core.HTML40Namespace;
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
@@ -31,7 +31,7 @@ import org.w3c.dom.Node;
 
 /**
  */
-public class StyleAdapterFactory implements AdapterFactory {
+public class StyleAdapterFactory implements IAdapterFactory {
 
 	private static StyleAdapterFactory instance = null;
 
@@ -155,7 +155,7 @@ public class StyleAdapterFactory implements AdapterFactory {
 	/**
 	 * Overriding Object's clone() method
 	 */
-	public AdapterFactory copy() {
+	public IAdapterFactory copy() {
 		return getInstance();
 	}
 

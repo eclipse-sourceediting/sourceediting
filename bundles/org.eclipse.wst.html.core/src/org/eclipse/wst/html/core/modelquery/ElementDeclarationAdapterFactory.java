@@ -12,13 +12,13 @@ package org.eclipse.wst.html.core.modelquery;
 
 
 
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 
 /**
  */
-public class ElementDeclarationAdapterFactory implements AdapterFactory {
+public class ElementDeclarationAdapterFactory implements IAdapterFactory {
 
 	private static ElementDeclarationAdapterFactory instance = null;
 
@@ -62,7 +62,7 @@ public class ElementDeclarationAdapterFactory implements AdapterFactory {
 	/**
 	 * Overriding copy method
 	 */
-	public AdapterFactory copy() {
+	public IAdapterFactory copy() {
 		return getInstance();
 	}
 }

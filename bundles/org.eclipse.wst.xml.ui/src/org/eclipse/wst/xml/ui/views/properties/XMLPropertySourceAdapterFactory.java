@@ -14,7 +14,7 @@ package org.eclipse.wst.xml.ui.views.properties;
 
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.wst.sse.core.AbstractAdapterFactory;
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.w3c.dom.Node;
@@ -30,7 +30,7 @@ public class XMLPropertySourceAdapterFactory extends AbstractAdapterFactory {
 		super(adapterKey, registerAdapters);
 	}
 
-	public AdapterFactory copy() {
+	public IAdapterFactory copy() {
 		return new XMLPropertySourceAdapterFactory(this.adapterKey, this.shouldRegisterAdapter);
 	}
 

@@ -12,14 +12,14 @@ package org.eclipse.wst.html.core.document;
 
 
 
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.xml.core.internal.document.ModelParserAdapter;
 
 /**
  */
-public class HTMLModelParserAdapterFactory implements AdapterFactory {
+public class HTMLModelParserAdapterFactory implements IAdapterFactory {
 
 	private static HTMLModelParserAdapterFactory instance = null;
 
@@ -64,7 +64,7 @@ public class HTMLModelParserAdapterFactory implements AdapterFactory {
 	/**
 	 * Overriding copy method
 	 */
-	public AdapterFactory copy() {
+	public IAdapterFactory copy() {
 		return getInstance();
 	}
 }

@@ -20,7 +20,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.reconciler.IReconcileStep;
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -89,10 +89,10 @@ public class ReconcileStepForContentModel extends StructuredReconcileStep {
 
 		List factories = propagatingAdapter.getAdaptOnCreateFactories();
 		ReconcilerAdapterFactoryForXML rAdapterFactoryForXML = null;
-		AdapterFactory temp = null;
+		IAdapterFactory temp = null;
 		// find the ReconcileStepAdapterFactory
 		for (int i = 0; i < factories.size(); i++) {
-			temp = (AdapterFactory) factories.get(i);
+			temp = (IAdapterFactory) factories.get(i);
 			if (temp.isFactoryForType(IReconcileStepAdapter.class)) {
 				rAdapterFactoryForXML = (ReconcilerAdapterFactoryForXML) temp;
 				break;
@@ -112,7 +112,7 @@ public class ReconcileStepForContentModel extends StructuredReconcileStep {
 	 * 
 	 * @param notifier
 	 */
-	protected void initialValidateTree(INodeNotifier notifier, AdapterFactory rAdapterFactoryForXML) {
+	protected void initialValidateTree(INodeNotifier notifier, IAdapterFactory rAdapterFactoryForXML) {
 		if (isCanceled())
 			return;
 

@@ -12,11 +12,11 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal;
 
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.modelhandler.EmbeddedTypeHandler;
 
 
-public interface JSPAwareAdapterFactory extends AdapterFactory {
+public interface JSPAwareAdapterFactory extends IAdapterFactory {
 
 	void initializeWith(EmbeddedTypeHandler embeddedContentType);
 }

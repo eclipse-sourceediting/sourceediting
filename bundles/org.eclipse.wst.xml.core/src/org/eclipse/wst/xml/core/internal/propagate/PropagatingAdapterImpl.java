@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
 import org.eclipse.wst.xml.core.document.XMLNode;
@@ -49,7 +49,7 @@ public class PropagatingAdapterImpl implements PropagatingAdapter {
 		if (adaptOnCreateFactories != null) {
 			Iterator iterator = adaptOnCreateFactories.iterator();
 			while (iterator.hasNext()) {
-				AdapterFactory factory = (AdapterFactory) iterator.next();
+				IAdapterFactory factory = (IAdapterFactory) iterator.next();
 				factory.adapt(node);
 			}
 		}
@@ -59,7 +59,7 @@ public class PropagatingAdapterImpl implements PropagatingAdapter {
 	/**
 	 * This mechanism can be made "easier to use" later.
 	 */
-	public void addAdaptOnCreateFactory(AdapterFactory factory) {
+	public void addAdaptOnCreateFactory(IAdapterFactory factory) {
 		//adaptOnCreateFactories.add(factory);
 		getAdaptOnCreateFactories().add(factory);
 	}
@@ -83,7 +83,7 @@ public class PropagatingAdapterImpl implements PropagatingAdapter {
 	//		//
 	//		Iterator iterator = adaptOnCreateFactories.iterator();
 	//		while (iterator.hasNext()) {
-	//			AdapterFactory factory = (AdapterFactory) iterator.next();
+	//			IAdapterFactory factory = (IAdapterFactory) iterator.next();
 	//			if (factory instanceof PropagatingAdapterFactory) {
 	//				((PropagatingAdapterFactory)factory).unadapt(node);
 	//			}
@@ -92,10 +92,10 @@ public class PropagatingAdapterImpl implements PropagatingAdapter {
 	//	}
 
 	/**
-	 * @see PropagatingAdapter#initializeForFactory(AdapterFactory,
+	 * @see PropagatingAdapter#initializeForFactory(IAdapterFactory,
 	 *      INodeNotifier)
 	 */
-	public void initializeForFactory(AdapterFactory factory, INodeNotifier node) {
+	public void initializeForFactory(IAdapterFactory factory, INodeNotifier node) {
 		// we're DOM specific implimentation
 		if (node instanceof XMLNode) {
 			XMLNode xmlNode = (XMLNode) node;
@@ -159,7 +159,7 @@ public class PropagatingAdapterImpl implements PropagatingAdapter {
 		if (adaptOnCreateFactories != null) {
 			Iterator iterator = adaptOnCreateFactories.iterator();
 			while (iterator.hasNext()) {
-				AdapterFactory factory = (AdapterFactory) iterator.next();
+				IAdapterFactory factory = (IAdapterFactory) iterator.next();
 				factory.release();
 			}
 		}

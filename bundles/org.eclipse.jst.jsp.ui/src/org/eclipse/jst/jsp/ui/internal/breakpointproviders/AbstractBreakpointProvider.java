@@ -136,7 +136,7 @@ public abstract class AbstractBreakpointProvider implements IBreakpointProvider 
 						// nsd_TODO: verify this!!!
 
 						//						INodeNotifier notifier = (INodeNotifier)model.getNode(region.getStartOffset());
-						//						AdapterFactory factory = model.getFactoryRegistry().getFactoryFor(ContentAssistAdapter.class);
+						//						IAdapterFactory factory = model.getFactoryRegistry().getFactoryFor(ContentAssistAdapter.class);
 						//						if(factory instanceof HTMLContentAssistAdapterFactory) {
 						//							INodeAdapter adapter = ((HTMLContentAssistAdapterFactory)factory).createAdapter(notifier, region);
 						//							if(adapter != null && adapter instanceof JSPJavaContentAssistAdapter)

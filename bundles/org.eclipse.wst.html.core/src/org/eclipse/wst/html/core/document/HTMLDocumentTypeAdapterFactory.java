@@ -14,7 +14,7 @@ package org.eclipse.wst.html.core.document;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
@@ -23,7 +23,7 @@ import org.eclipse.wst.xml.core.document.XMLDocument;
 
 /**
  */
-public class HTMLDocumentTypeAdapterFactory implements AdapterFactory, Preferences.IPropertyChangeListener, CommonModelPreferenceNames {
+public class HTMLDocumentTypeAdapterFactory implements IAdapterFactory, Preferences.IPropertyChangeListener, CommonModelPreferenceNames {
 
 	private int tagNameCase = DocumentTypeAdapter.UPPER_CASE;
 	private int attrNameCase = DocumentTypeAdapter.LOWER_CASE;
@@ -130,7 +130,7 @@ public class HTMLDocumentTypeAdapterFactory implements AdapterFactory, Preferenc
 	/**
 	 * Overriding copy method
 	 */
-	public AdapterFactory copy() {
+	public IAdapterFactory copy() {
 		return new HTMLDocumentTypeAdapterFactory();
 	}
 }

@@ -20,7 +20,7 @@ import org.eclipse.wst.html.core.htmlcss.HTMLStyleSelectorAdapterFactory;
 import org.eclipse.wst.html.core.htmlcss.StyleAdapterFactory;
 import org.eclipse.wst.html.core.modelquery.ModelQueryAdapterFactoryForHTML;
 import org.eclipse.wst.sse.core.AbstractModelLoader;
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IModelLoader;
@@ -60,7 +60,7 @@ public class HTMLModelLoader extends AbstractModelLoader {
 	 */
 	public List getAdapterFactories() {
 		List result = new ArrayList();
-		AdapterFactory factory = null;
+		IAdapterFactory factory = null;
 		factory = StyleAdapterFactory.getInstance();
 		result.add(factory);
 		factory = HTMLStyleSelectorAdapterFactory.getInstance();

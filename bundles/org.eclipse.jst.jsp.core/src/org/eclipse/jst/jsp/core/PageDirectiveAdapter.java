@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core;
 
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.modelhandler.EmbeddedTypeHandler;
@@ -46,7 +46,7 @@ public interface PageDirectiveAdapter extends INodeAdapter, IContentSettingsList
 	 */
 	INodeAdapter adapt(INodeNotifier notifier, Object type);
 
-	void addEmbeddedFactory(AdapterFactory factory);
+	void addEmbeddedFactory(IAdapterFactory factory);
 
 	/**
 	 * Method setLanguage.

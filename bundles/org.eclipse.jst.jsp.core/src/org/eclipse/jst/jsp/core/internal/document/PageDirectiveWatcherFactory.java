@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.document;
 
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.PropagatingAdapterFactory;
@@ -53,7 +53,7 @@ public class PageDirectiveWatcherFactory extends PropagatingAdapterFactoryImpl i
 
 	}
 
-	public AdapterFactory copy() {
+	public IAdapterFactory copy() {
 		return new PageDirectiveWatcherFactory(this.adapterKey, this.shouldRegisterAdapter);
 	}
 }

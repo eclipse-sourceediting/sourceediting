@@ -24,7 +24,7 @@ import org.eclipse.wst.css.core.document.ICSSStyleDeclItem;
 import org.eclipse.wst.css.core.document.ICSSStyleRule;
 import org.eclipse.wst.css.ui.image.CSSImageHelper;
 import org.eclipse.wst.css.ui.image.CSSImageType;
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.ui.views.contentoutline.IJFaceNodeAdapter;
 import org.w3c.dom.css.CSSImportRule;
@@ -37,12 +37,12 @@ import org.w3c.dom.stylesheets.MediaList;
  * the labels and images for DOM nodes.
  */
 public class JFaceNodeLabelProviderCSS implements ILabelProvider {
-	protected AdapterFactory fAdapterFactory;
+	protected IAdapterFactory fAdapterFactory;
 
 	/**
 	 * JFaceNodeLabelProvider constructor comment.
 	 */
-	public JFaceNodeLabelProviderCSS(AdapterFactory adapterFactory) {
+	public JFaceNodeLabelProviderCSS(IAdapterFactory adapterFactory) {
 		super();
 		this.fAdapterFactory = adapterFactory;
 	}

@@ -36,7 +36,7 @@ public class ModelQueryAdapterFactoryForEmbeddedHTML extends ModelQueryAdapterFa
 	}
 
 	/**
-	 * @see org.eclipse.wst.sse.core.AdapterFactory#adapt(INodeNotifier)
+	 * @see org.eclipse.wst.sse.core.IAdapterFactory#adapt(INodeNotifier)
 	 */
 	public INodeAdapter adapt(INodeNotifier object) {
 		if (object == null)

@@ -21,7 +21,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.sse.core.AbstractAdapterFactory;
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.IModelStateListener;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
@@ -71,7 +71,7 @@ public class ModelQueryAdapterFactoryForXML extends AbstractAdapterFactory imple
 		mgr.setPropertyEnabled(CMDocumentManager.PROPERTY_AUTO_LOAD, autoLoadCM());
 	}
 
-	public AdapterFactory copy() {
+	public IAdapterFactory copy() {
 
 		return new ModelQueryAdapterFactoryForXML(this.adapterKey, this.shouldRegisterAdapter);
 	}

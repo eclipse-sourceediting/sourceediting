@@ -468,7 +468,7 @@ class ModelManagerImpl implements IModelManager {
 		if (factoryList != null) {
 			Iterator iterator = factoryList.iterator();
 			while (iterator.hasNext()) {
-				AdapterFactory factory = (AdapterFactory) iterator.next();
+				IAdapterFactory factory = (IAdapterFactory) iterator.next();
 				registry.addFactory(factory);
 			}
 		}

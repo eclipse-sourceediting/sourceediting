@@ -13,7 +13,7 @@ package org.eclipse.wst.html.ui.registry;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.wst.html.core.modelhandler.ModelHandlerForHTML;
 import org.eclipse.wst.html.ui.views.contentoutline.JFaceNodeAdapterFactoryForHTML;
-import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.FactoryRegistry;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.modelhandler.IDocumentTypeHandler;
@@ -47,7 +47,7 @@ public class AdapterFactoryProviderForHTML implements AdapterFactoryProvider {
 
 		FactoryRegistry factoryRegistry = structuredModel.getFactoryRegistry();
 		Assert.isNotNull(factoryRegistry, "Program Error: client caller must ensure model has factory registry"); //$NON-NLS-1$
-		AdapterFactory factory = null;
+		IAdapterFactory factory = null;
 		// == this list came from the previous "HTML only" list
 		//		factory = factoryRegistry.getFactoryFor(ContentAssistAdapter.class);
 
