@@ -27,7 +27,6 @@ import org.eclipse.jst.jsp.core.contentmodel.tld.TLDInitParam;
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDListener;
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDValidator;
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDVariable;
-import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.ITaglibRecord;
 import org.eclipse.jst.jsp.core.internal.contentmodel.JarRecord;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TLDRecord;
@@ -656,7 +655,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 					connection.setUseCaches(doCache);
 				}
 				catch (IOException e) {
-					Logger.logException(e);
+					// not uncommon given invalid URLs
 				}
 				finally {
 					if (urlContents != null) {
