@@ -132,15 +132,19 @@ public class XMLImportActionDelegate implements IActionDelegate
         }
         catch (ClassNotFoundException e)
         {
+          // Plugins Not Found
         }
         catch (NoSuchMethodException e)
         {
+          // Plugins Not Found
         }
         catch (IllegalAccessException e)
         {
+          // Plugins Not Found          
         }
         catch (InvocationTargetException e)
         {
+          // Plugins Not Found
         }
 
         if (validationPluginsFound)
@@ -173,6 +177,7 @@ public class XMLImportActionDelegate implements IActionDelegate
    */
   public void selectionChanged(IAction action, ISelection selection)
   {
+    // unused
   }
 
   // scammed from WindowUtility
