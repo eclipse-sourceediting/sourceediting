@@ -29,6 +29,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.wst.xml.uriresolver.util.URIHelper;
 
@@ -108,7 +109,8 @@ public class TaglibIndex {
 
 	}
 
-	static final boolean _debugChangeListener = true;
+	static final boolean _debugChangeListener = false;
+	static final boolean _debugResolution = "true".equals(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/resolve"));
 
 	static TaglibIndex _instance;
 
@@ -160,7 +162,35 @@ public class TaglibIndex {
 	 * @return
 	 */
 	public static ITaglibRecord resolve(String fullPath, String reference, boolean crossProjects) {
-		return _instance.internalResolve(fullPath, reference, crossProjects);
+		ITaglibRecord result = _instance.internalResolve(fullPath, reference, crossProjects);
+		if (_debugResolution) {
+			if (result == null) {
+				System.out.println("TaglibIndex could not resolve \"" + reference + "\" from " + fullPath);
+			}
+			else {
+				switch (result.getRecordType()) {
+					case (ITaglibRecord.TLD) : {
+						TLDRecord record = (TLDRecord) result;
+						System.out.println("TaglibIndex resolved " + fullPath + ":" + reference + " = " + record.getLocation());
+					}
+						break;
+					case (ITaglibRecord.JAR) : {
+						JarRecord record = (JarRecord) result;
+						System.out.println("TaglibIndex resolved " + fullPath + ":" + reference + " = " + record.getLocation());
+					}
+						break;
+					case (ITaglibRecord.TAGDIR) : {
+					}
+						break;
+					case (ITaglibRecord.URL) : {
+						URLRecord record = (URLRecord) result;
+						System.out.println("TaglibIndex resolved " + fullPath + ":" + reference + " = " + record.getURL());
+					}
+						break;
+				}
+			}
+		}
+		return result;
 	}
 
 	Map fProjectDescriptions;
