@@ -182,7 +182,11 @@ public class XSDEditorPlugin extends AbstractUIPlugin
    */
   public String getXMLSchemaTargetNamespace()
   {
-    return getPreferenceStore().getString(CONST_DEFAULT_TARGET_NAMESPACE);
+  	String targetNamespace = getPreferenceStore().getString(CONST_DEFAULT_TARGET_NAMESPACE);
+    if(!targetNamespace.endsWith("/")){
+    	targetNamespace = targetNamespace + "/";
+    }
+    return targetNamespace;
   }
 
   /**

@@ -232,9 +232,6 @@ public class XSDPreferencePage extends PreferencePage implements IWorkbenchPrefe
     {
       return XSDEditorPlugin.DEFAULT_TARGET_NAMESPACE;
     }
-    else if(!targetNamespace.endsWith("/")){
-    	targetNamespace = targetNamespace + "/";
-    }
     return targetNamespace;
   }
   
