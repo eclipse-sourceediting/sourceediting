@@ -1590,17 +1590,9 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 *             initialize from input
 	 */
 	public IStructuredModel getModel() {
-		// was causing an exception when several editors
-		// open
-		// and then "close all"
-		// com.ibm.sed.util.Assert.isNotNull(getDocumentProvider());
-		// while we did put in protection in 'isDirty'
-		// for the null document provider assert failure,
-		// we'll
-		// just log this error.
 		if (getDocumentProvider() == null) {
 			// this indicated an error in startup sequence
-			Logger.trace("Model Centric Editor", "Program Info Only: document provider was null when model requested"); //$NON-NLS-1$ //$NON-NLS-2$
+			Logger.trace(getClass().getName(), "Program Info Only: document provider was null when model requested"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		boolean initialModelNull = false;
 		if (fStructuredModel == null)
@@ -1608,17 +1600,15 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		if (fStructuredModel == null) {
 			if (getDocumentProvider() instanceof IModelProvider) {
 				fStructuredModel = ((IModelProvider) getDocumentProvider()).getModel(getEditorInput());
-			} else { // nsd_TODO: FileBuffer cleanup
+			}
+			else {
 				IDocument doc = getDocument();
 				if (doc instanceof IStructuredDocument) {
-					// Assert.isTrue(doc instanceof IStructuredDocument,
-					// "StructuredTextEditor must be used with an
-					// IStructuredDocument");
 					IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForEdit(doc);
 					if (model == null) {
 						model = StructuredModelManager.getModelManager().getModelForEdit((IStructuredDocument) doc);
-						EditorModelUtil.addFactoriesTo(model);
 					}
+					EditorModelUtil.addFactoriesTo(model);
 					fStructuredModel = model;
 				}
 			}
