@@ -8,12 +8,11 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.sse.core.tests.application;
+package org.eclipse.wst.sse.core.tests;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.wst.sse.core.tests.ExistenceTest;
 import org.eclipse.wst.sse.core.tests.document.TestCharSequenceReader;
 import org.eclipse.wst.sse.core.tests.document.TestRegionMatches;
 import org.eclipse.wst.sse.core.tests.life.TestCreation;
