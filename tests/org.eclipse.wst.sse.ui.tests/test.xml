@@ -18,7 +18,7 @@
 	<target name="init">
 		<tstamp/>
 		<delete>
-			<fileset dir="${eclipse-home}" includes="org.eclipse.wst.sse.*.tests.*.xml"/>
+			<fileset dir="${eclipse-home}" includes="org.eclipse.wst.sse.ui.tests.xml"/>
 		</delete>
 	</target>
 
@@ -45,7 +45,7 @@
 	<!-- after all the tests have been run should go here. -->
 	<target name="run" depends="init,suite,cleanup">
 		<ant target="collect" antfile="${library-file}" dir="${eclipse-home}">
-			<property name="includes" value="org.eclipse.wst.sse.*.tests.*.xml" />
+			<property name="includes" value="org.eclipse.wst.sse.ui.tests.xml" />
 			<property name="output-file" value="${plugin-name}.xml" />
 		</ant>
 <!--		<emailResults resultsFile="${wsad-home}/${plugin-name}.xml" addresslist="david_williams@us.ibm.com,kitlo@us.ibm.com" /> -->
