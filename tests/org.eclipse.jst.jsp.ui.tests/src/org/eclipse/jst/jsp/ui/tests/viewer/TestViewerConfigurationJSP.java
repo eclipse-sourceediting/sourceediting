@@ -1,10 +1,9 @@
 package org.eclipse.jst.jsp.ui.tests.viewer;
 
-import java.util.Map;
-
 import junit.framework.TestCase;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
@@ -12,6 +11,7 @@ import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.IAnnotationHover;
+import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.editor.StructuredTextViewerConfigurationJSP;
 import org.eclipse.jst.jsp.ui.tests.Logger;
@@ -85,9 +85,9 @@ public class TestViewerConfigurationJSP extends TestCase {
 		if(!fDisplayExists)
 			return;
 		
-		Map strategies = fConfig.getAutoEditStrategies(fViewer);
+		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, StructuredTextPartitionerForJSP.ST_DEFAULT_JSP);
 		assertNotNull(strategies);
-		assertTrue("there are no auto edit strategies", strategies.size()>1);
+		assertTrue("there are no auto edit strategies", strategies.length > 1);
 	}
 	
 	public void testGetConfiguredContentTypes() {

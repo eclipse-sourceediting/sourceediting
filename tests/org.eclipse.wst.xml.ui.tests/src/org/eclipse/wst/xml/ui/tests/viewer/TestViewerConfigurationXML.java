@@ -1,10 +1,9 @@
 	package org.eclipse.wst.xml.ui.tests.viewer;
 
-import java.util.Map;
-
 import junit.framework.TestCase;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
@@ -21,6 +20,7 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
+import org.eclipse.wst.xml.core.text.rules.StructuredTextPartitionerForXML;
 import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.tests.Logger;
@@ -87,9 +87,9 @@ public class TestViewerConfigurationXML extends TestCase {
 			return;
 		
 		
-		Map strategies = fConfig.getAutoEditStrategies(fViewer);
+		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, StructuredTextPartitionerForXML.ST_DEFAULT_XML);
 		assertNotNull(strategies);
-		assertTrue(strategies.size() > 0);
+		assertTrue(strategies.length > 0);
 	}
 	
 	public void testGetConfiguredContentTypes() {

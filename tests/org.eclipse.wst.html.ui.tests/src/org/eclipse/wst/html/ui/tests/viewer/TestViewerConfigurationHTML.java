@@ -1,10 +1,9 @@
 package org.eclipse.wst.html.ui.tests.viewer;
 
-import java.util.Map;
-
 import junit.framework.TestCase;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
@@ -18,6 +17,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
+import org.eclipse.wst.html.core.internal.text.rules.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.tests.Logger;
@@ -85,9 +85,9 @@ public class TestViewerConfigurationHTML extends TestCase {
 		if(!fDisplayExists)
 			return;
 		
-		Map strategies = fConfig.getAutoEditStrategies(fViewer);
+		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML);
 		assertNotNull(strategies);
-		assertTrue("there are no auto edit strategies", strategies.size()>1);
+		assertTrue("there are no auto edit strategies", strategies.length==0);
 	}
 	
 	public void testGetConfiguredContentTypes() {
