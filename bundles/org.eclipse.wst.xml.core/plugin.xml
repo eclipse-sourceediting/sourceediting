@@ -98,6 +98,14 @@
    
    <extension
          point="org.eclipse.core.runtime.contentTypes">
+     <!-- 
+         The "xmlsource" content-type should be considered "internal" as it is
+         used primarily to provide a more comprehensive describer for
+         org.eclipse.core.runtime.xml.  When associating model handlers,
+         document factories, or UI elements, org.eclipse.core.runtime.xml
+         should be used instead.  For example, the model handler lookup walks
+         up the content-type hierarchy and to find the ModelHandlerForXML.
+     -->
          <content-type
                priority="high"
                name="%XML_Content_Type_Extension_Element.name"
