@@ -21,9 +21,9 @@ import org.eclipse.core.runtime.IPluginRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
+import org.eclipse.wst.sse.core.ModelPlugin;
 import org.eclipse.wst.sse.core.format.IStructuredFormatProcessor;
 import org.eclipse.wst.sse.ui.internal.extension.RegistryReader;
-
 
 public class FormatProcessorsExtensionReader extends RegistryReader {
 	private static FormatProcessorsExtensionReader instance;
@@ -33,7 +33,7 @@ public class FormatProcessorsExtensionReader extends RegistryReader {
 			instance = new FormatProcessorsExtensionReader();
 
 			IPluginRegistry registry = Platform.getPluginRegistry();
-			instance.readRegistry(registry, "org.eclipse.wst.sse.core", "formatProcessors"); //$NON-NLS-1$ //$NON-NLS-2$
+			instance.readRegistry(registry, ModelPlugin.getID(), "formatProcessors"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return instance;
 	}
