@@ -62,7 +62,11 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 	}
 
 	private void addAttributeError(String message, String attributeValueText, int start, int length, int problemId, IStructuredDocumentRegion sdRegion, List results) {
-		Position p = new Position(start, length);
+        
+        if (sdRegion.isDeleted())
+            return;
+        
+        Position p = new Position(start, length);
 		IReconcileAnnotationKey key = createKey(sdRegion, getScope());
 		TemporaryAnnotation annotation = new TemporaryAnnotation(p, SEVERITY_SYNTAX_ERROR, message, key, problemId);
 		annotation.setAdditionalFixInfo(attributeValueText);
@@ -70,11 +74,15 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 	}
 
 	private void checkAttributesInEndTag(IStructuredDocumentRegion structuredDocumentRegion, List results) {
+        
+        if(structuredDocumentRegion.isDeleted())
+            return;
+        
 		ITextRegionList textRegions = structuredDocumentRegion.getRegions();
 		int errorCount = 0;
 		int start = structuredDocumentRegion.getEndOffset();
 		int end = structuredDocumentRegion.getEndOffset();
-		for (int i = 0; i < textRegions.size() && errorCount < ELEMENT_ERROR_LIMIT; i++) {
+		for (int i = 0; i < textRegions.size() && errorCount < ELEMENT_ERROR_LIMIT && !structuredDocumentRegion.isDeleted(); i++) {
 			ITextRegion textRegion = textRegions.get(i);
 			if (textRegion.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME || textRegion.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS || textRegion.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 				if (start > structuredDocumentRegion.getStartOffset(textRegion))
@@ -97,10 +105,14 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 	 * @param results
 	 */
 	private void checkClosingBracket(IStructuredDocumentRegion structuredDocumentRegion, List results) {
+        
+        if(structuredDocumentRegion.isDeleted())
+            return;
+        
 		ITextRegionList regions = structuredDocumentRegion.getRegions();
 		ITextRegion r = null;
 		boolean closed = false;
-		for (int i = 0; i < regions.size(); i++) {
+		for (int i = 0; i < regions.size()  && !structuredDocumentRegion.isDeleted(); i++) {
 			r = regions.get(i);
 			if (r.getType() == XMLRegionContext.XML_TAG_CLOSE || r.getType() == XMLRegionContext.XML_EMPTY_TAG_CLOSE)
 				closed = true;
@@ -120,6 +132,10 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 	}
 
 	private void checkEmptyTag(IStructuredDocumentRegion structuredDocumentRegion, List results) {
+        
+        if(structuredDocumentRegion.isDeleted())
+            return;
+        
 		// navigate to name
 		ITextRegionList regions = structuredDocumentRegion.getRegions();
 		if (regions.size() == 2) {
@@ -138,8 +154,11 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 	}
 
 	private void checkForAttributeValue(IStructuredDocumentRegion structuredDocumentRegion, List results) {
+        
+        if(structuredDocumentRegion.isDeleted())
+            return;
+        
 		// check for attributes without a value
-
 		// track the attribute/equals/value sequence using a state of 0, 1 ,2
 		// representing the name, =, and value, respectively
 		int attrState = 0;
@@ -197,6 +216,10 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 	}
 
 	private void checkForSpaceBeforeName(IStructuredDocumentRegion structuredDocumentRegion, List results) {
+        
+        if(structuredDocumentRegion.isDeleted())
+            return;
+        
 		String sdRegionText = structuredDocumentRegion.getFullText();
 		if (sdRegionText.startsWith(" ")) { //$NON-NLS-1$
 			IStructuredDocumentRegion prev = structuredDocumentRegion.getPrevious();
@@ -220,11 +243,15 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 	}
 
 	private void checkNoNamespaceInPI(IStructuredDocumentRegion structuredDocumentRegion, List results) {
+        
+        if(structuredDocumentRegion.isDeleted())
+            return;
+        
 		// navigate to name
 		ITextRegionList regions = structuredDocumentRegion.getRegions();
 		ITextRegion r = null;
 		int errorCount = 0;
-		for (int i = 0; i < regions.size() && errorCount < ELEMENT_ERROR_LIMIT; i++) {
+		for (int i = 0; i < regions.size() && errorCount < ELEMENT_ERROR_LIMIT && !structuredDocumentRegion.isDeleted(); i++) {
 			r = regions.get(i);
 			if (r.getType() == XMLRegionContext.XML_TAG_NAME) {
 				String piText = structuredDocumentRegion.getText(r);
@@ -303,6 +330,10 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 	}
 
 	private void checkStartEndTagPairs(IStructuredDocumentRegion sdRegion, List results) {
+        
+        if(sdRegion.isDeleted())
+            return;
+        
 		// check start/end tag pairs
 		XMLNode xmlNode = getXMLNode(sdRegion);
 		boolean selfClosed = false;
@@ -310,59 +341,66 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 		int length = 0;
 
 		if (xmlNode.isContainer()) {
-			IStructuredDocumentRegion endNode = xmlNode.getEndStructuredDocumentRegion();
-			if (endNode == null) {
-				// analyze the tag (check self closing)
-				ITextRegionList regions = xmlNode.getStartStructuredDocumentRegion().getRegions();
-				ITextRegion r = null;
-				for (int i = 0; i < regions.size(); i++) {
-					r = regions.get(i);
-					if (r.getType() == XMLRegionContext.XML_TAG_OPEN || r.getType() == XMLRegionContext.XML_TAG_CLOSE) {
-						length++;
-					} else if (r.getType() == XMLRegionContext.XML_TAG_NAME) {
-						tagName = sdRegion.getText(r);
-						length += tagName.length();
-					} else if (r.getType() == XMLRegionContext.XML_EMPTY_TAG_CLOSE) {
-						selfClosed = true;
-					}
-				}
-
-				if (!selfClosed && tagName != null) {
-					Object[] args = {tagName};
-					String message = SSEUIPlugin.getResourceString("%Missing_end_tag_{0}", args);
-
-					int start = sdRegion.getStart();
-					Position p = new Position(start, length);
-					TemporaryAnnotation annotation = new TemporaryAnnotation(p, SEVERITY_STRUCTURE, message, createKey(sdRegion, getScope()), ProblemIDsXML.MissingEndTag);
-
-					// quick fix info
-					String tagClose = "/>"; //$NON-NLS-1$
-					int tagCloseOffset = xmlNode.getFirstStructuredDocumentRegion().getEndOffset();
-					if (r != null && r.getType() == XMLRegionContext.XML_TAG_CLOSE) {
-						tagClose = "/"; //$NON-NLS-1$
-						tagCloseOffset--;
-					}
-					XMLNode firstChild = (XMLNode) xmlNode.getFirstChild();
-					while (firstChild != null && firstChild.getNodeType() == Node.TEXT_NODE) {
-						firstChild = (XMLNode) firstChild.getNextSibling();
-					}
-					int endOffset = xmlNode.getEndOffset();
-					int firstChildStartOffset = firstChild == null ? endOffset : firstChild.getStartOffset();
-					Object[] additionalFixInfo = {tagName, tagClose, new Integer(tagCloseOffset), new Integer(xmlNode.getFirstStructuredDocumentRegion().getEndOffset()), // startTagEndOffset
-								new Integer(firstChildStartOffset), // firstChildStartOffset
-								new Integer(endOffset)}; // endOffset
-					annotation.setAdditionalFixInfo(additionalFixInfo);
-
-					results.add(annotation);
-				}
-			}
+			IStructuredDocumentRegion endRegion = xmlNode.getEndStructuredDocumentRegion();
+			if (endRegion == null) {
+                IStructuredDocumentRegion startRegion = xmlNode.getStartStructuredDocumentRegion();
+                if(!startRegion.isDeleted()) {
+    				// analyze the tag (check self closing)
+    				ITextRegionList regions = startRegion.getRegions();
+    				ITextRegion r = null;
+    				for (int i = 0; i < regions.size(); i++) {
+    					r = regions.get(i);
+    					if (r.getType() == XMLRegionContext.XML_TAG_OPEN || r.getType() == XMLRegionContext.XML_TAG_CLOSE) {
+    						length++;
+    					} else if (r.getType() == XMLRegionContext.XML_TAG_NAME) {
+    						tagName = sdRegion.getText(r);
+    						length += tagName.length();
+    					} else if (r.getType() == XMLRegionContext.XML_EMPTY_TAG_CLOSE) {
+    						selfClosed = true;
+    					}
+    				}
+    
+    				if (!selfClosed && tagName != null) {
+    					Object[] args = {tagName};
+    					String message = SSEUIPlugin.getResourceString("%Missing_end_tag_{0}", args);
+    
+    					int start = sdRegion.getStart();
+    					Position p = new Position(start, length);
+    					TemporaryAnnotation annotation = new TemporaryAnnotation(p, SEVERITY_STRUCTURE, message, createKey(sdRegion, getScope()), ProblemIDsXML.MissingEndTag);
+    
+    					// quick fix info
+    					String tagClose = "/>"; //$NON-NLS-1$
+    					int tagCloseOffset = xmlNode.getFirstStructuredDocumentRegion().getEndOffset();
+    					if (r != null && r.getType() == XMLRegionContext.XML_TAG_CLOSE) {
+    						tagClose = "/"; //$NON-NLS-1$
+    						tagCloseOffset--;
+    					}
+    					XMLNode firstChild = (XMLNode) xmlNode.getFirstChild();
+    					while (firstChild != null && firstChild.getNodeType() == Node.TEXT_NODE) {
+    						firstChild = (XMLNode) firstChild.getNextSibling();
+    					}
+    					int endOffset = xmlNode.getEndOffset();
+    					int firstChildStartOffset = firstChild == null ? endOffset : firstChild.getStartOffset();
+    					Object[] additionalFixInfo = {tagName, tagClose, new Integer(tagCloseOffset), new Integer(xmlNode.getFirstStructuredDocumentRegion().getEndOffset()), // startTagEndOffset
+    								new Integer(firstChildStartOffset), // firstChildStartOffset
+    								new Integer(endOffset)}; // endOffset
+    					annotation.setAdditionalFixInfo(additionalFixInfo);
+    
+    					results.add(annotation);
+    				}
+    			}
+            }
 
 		}
 	}
 
 	private void checkStartingSpaceForPI(IStructuredDocumentRegion structuredDocumentRegion, List results) {
+        
+        if(structuredDocumentRegion.isDeleted())
+            return;
+        
 		IStructuredDocumentRegion prev = structuredDocumentRegion.getPrevious();
-		if (prev != null) {
+		if (prev != null && !prev.isDeleted()) {
 			String prevText = prev.getFullText();
 			if (prev.getType() == XMLRegionContext.XML_CONTENT && prevText.endsWith(" ")) { //$NON-NLS-1$
 				String message = SSEUIPlugin.getResourceString("%ReconcileStepForMarkup.5"); //$NON-NLS-1$
@@ -393,7 +431,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 		if (sdRegion != null) {
 			if (!sdRegion.isDeleted())
 				regions.add(sdRegion);
-			while (sdRegion != null && (sdRegion = sdRegion.getNext()) != null && sdRegion.getEndOffset() <= getXMLNode(sdRegion).getEndOffset()) {
+			while (sdRegion != null && !sdRegion.isDeleted() && (sdRegion = sdRegion.getNext()) != null && sdRegion.getEndOffset() <= getXMLNode(sdRegion).getEndOffset()) {
 				if (!sdRegion.isDeleted())
 					regions.add(sdRegion);
 			}
@@ -426,7 +464,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 	 * @param structuredDocumentRegion
 	 */
 	private boolean isEndTag(IStructuredDocumentRegion structuredDocumentRegion) {
-		if (structuredDocumentRegion == null)
+		if (structuredDocumentRegion == null || structuredDocumentRegion.isDeleted())
 			return false;
 		return structuredDocumentRegion.getFirstRegion().getType() == XMLRegionContext.XML_END_TAG_OPEN;
 	}
@@ -439,6 +477,8 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 	 * 
 	 */
 	private boolean isPI(IStructuredDocumentRegion structuredDocumentRegion) {
+        if (structuredDocumentRegion == null || structuredDocumentRegion.isDeleted())
+            return false;
 		return structuredDocumentRegion.getFirstRegion().getType() == XMLRegionContext.XML_PI_OPEN;
 	}
 
@@ -450,7 +490,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 	 * 
 	 */
 	private boolean isStartTag(IStructuredDocumentRegion structuredDocumentRegion) {
-		if (structuredDocumentRegion == null)
+		if (structuredDocumentRegion == null || structuredDocumentRegion.isDeleted())
 			return false;
 		return structuredDocumentRegion.getFirstRegion().getType() == XMLRegionContext.XML_TAG_OPEN;
 	}
@@ -469,6 +509,8 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 	 * 
 	 */
 	private boolean isXMLContent(IStructuredDocumentRegion structuredDocumentRegion) {
+        if(structuredDocumentRegion == null || structuredDocumentRegion.isDeleted())
+            return false;
 		return structuredDocumentRegion.getFirstRegion().getType() == XMLRegionContext.XML_CONTENT;
 	}
 
