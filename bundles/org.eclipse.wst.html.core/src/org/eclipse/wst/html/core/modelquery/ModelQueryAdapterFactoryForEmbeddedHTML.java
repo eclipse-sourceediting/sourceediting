@@ -12,7 +12,6 @@ package org.eclipse.wst.html.core.modelquery;
 
 
 
-import org.eclipse.wst.sse.core.AdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.modelquery.ModelQueryAdapter;
@@ -37,7 +36,7 @@ public class ModelQueryAdapterFactoryForEmbeddedHTML extends ModelQueryAdapterFa
 	}
 
 	/**
-	 * @see AdapterFactory#adapt(INodeNotifier)
+	 * @see org.eclipse.wst.sse.core.AdapterFactory#adapt(INodeNotifier)
 	 */
 	public INodeAdapter adapt(INodeNotifier object) {
 		if (object == null)

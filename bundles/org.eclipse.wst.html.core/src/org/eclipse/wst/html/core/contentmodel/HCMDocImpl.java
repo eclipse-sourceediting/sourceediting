@@ -12,7 +12,6 @@ package org.eclipse.wst.html.core.contentmodel;
 
 
 
-import org.eclipse.wst.common.contentmodel.CMDocument;
 import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.common.contentmodel.CMNamespace;
 import org.eclipse.wst.common.contentmodel.CMNode;
@@ -55,14 +54,14 @@ class HCMDocImpl extends CMNodeImpl implements HTMLCMDocument {
 	}
 
 	/**
-	 * @see CMDocument
+	 * @see org.eclipse.wst.common.contentmodel.CMDocument
 	 */
 	public CMNamedNodeMap getElements() {
 		return elements;
 	}
 
 	/**
-	 * @see CMDocument
+	 * @see org.eclipse.wst.common.contentmodel.CMDocument
 	 */
 	public CMNamedNodeMap getEntities() {
 		return entities;
@@ -78,7 +77,7 @@ class HCMDocImpl extends CMNodeImpl implements HTMLCMDocument {
 	}
 
 	/**
-	 * @see CMDocument
+	 * @see org.eclipse.wst.common.contentmodel.CMDocument
 	 */
 	public CMNamespace getNamespace() {
 		return namespace;
