@@ -19,6 +19,13 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.ui.texteditor.ResourceMarkerAnnotationModelFactory;
 
+/**
+ * 
+ * @author nsd
+ * 
+ * Used by the org.eclipse.core.filebuffers.annotationModelCreation extension
+ * point
+ */
 public class StructuredResourceMarkerAnnotationModelFactory extends ResourceMarkerAnnotationModelFactory {
 
 	public StructuredResourceMarkerAnnotationModelFactory() {
@@ -33,7 +40,8 @@ public class StructuredResourceMarkerAnnotationModelFactory extends ResourceMark
 		IFile file = FileBuffers.getWorkspaceFileAtLocation(location);
 		if (file != null) {
 			model = new StructuredResourceMarkerAnnotationModel(file);
-		} else {
+		}
+		else {
 			model = new StructuredResourceMarkerAnnotationModel(ResourcesPlugin.getWorkspace().getRoot(), location.toString());
 		}
 		return model;
