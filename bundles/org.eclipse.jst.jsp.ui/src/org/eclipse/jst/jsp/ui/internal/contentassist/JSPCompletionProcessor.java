@@ -48,15 +48,15 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 	// for debugging
 	private static final boolean DEBUG;
 	static {
-		String value= Platform.getDebugOption("com.ibm.sse.model.jsp/debug/jsptranslation"); //$NON-NLS-1$
+		String value= Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jsptranslation"); //$NON-NLS-1$
 		DEBUG= value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
 	
 	private static final String JDT_CORE_PLUGIN_ID = "org.eclipse.jdt.core"; //$NON-NLS-1$
-//	private static final String SSE_MODEL_ID = IModelManagerPlugin.ID; //$NON-NLS-1$
+    
 	protected int fJspSourcePosition, fJavaPosition;
 	protected IResource fResource;
-	protected JSPResultCollector fCollector;
+	protected JSPCompletionRequestor fCollector;
 	protected String fErrorMessage = null;
 	protected StructuredTextViewer fViewer = null;
 	private JSPTranslationAdapter fTranslationAdapter = null;
@@ -89,16 +89,21 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 				
 				JSPTranslation translation = fTranslationAdapter.getJSPTranslation();
 				fJavaPosition = translation.getJavaOffset(getDocumentPosition());
-				fCollector.setJavaToJSPOffset(fJspSourcePosition - fJavaPosition);
-				fCollector.doFilter = cursorInExpression();
+				
+                fCollector.setCodeAssistOffset(fJavaPosition);
+                fCollector.setJavaToJSPOffset(fJspSourcePosition - fJavaPosition);
+                fCollector.setCursorInExpression(cursorInExpression());
+                
 
 				if (DEBUG)
 					System.out.println(debug(translation));
 
 				try {
-					fCollector.reset(fJavaPosition, translation.getJavaProject(), null); // need to "reset" collector for proposalInfo to show up			
+                    // TODO:
+					//fCollector.reset(fJavaPosition, translation.getJavaProject(), null); // need to "reset" collector for proposalInfo to show up			
 					ICompilationUnit cu = translation.getCompilationUnit();
-
+					fCollector.setCompilationUnit(cu);
+                    
 					// can't get java proposals w/out a compilation unit
 					if (cu == null)
 						return new ICompletionProposal[0];
@@ -117,6 +122,7 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 			exc.printStackTrace();
 			// throw out exceptions on code assist.
 		}
+        
 		ICompletionProposal[] results = fCollector.getResults();
 		if (results == null || results.length < 1)
 			fErrorMessage = SSEUIPlugin.getResourceString("%Java_Content_Assist_is_not_UI_"); //$NON-NLS-1$ = "Java Content Assist is not available for the current cursor location"
@@ -160,15 +166,14 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 		XMLModel xmlModel = (XMLModel) StructuredModelManager.getModelManager().getExistingModelForRead(fViewer.getDocument());
 		XMLNode xmlNode = null;
 		xmlModel.releaseFromRead();
-
 		xmlNode = (XMLNode) xmlModel.getIndexedRegion(fJspSourcePosition);
-		// possible end of document (if there's no XMLNode)
-		if (xmlNode == null && fJspSourcePosition > 0)
-			xmlNode = (XMLNode) xmlModel.getIndexedRegion(fJspSourcePosition - 1);
-		if (xmlNode != null) {
-			sdRegion = xmlNode.getFirstStructuredDocumentRegion();
-			inExpression = sdRegion != null && (sdRegion.getType() == XMLJSPRegionContexts.JSP_EXPRESSION_OPEN || sdRegion.getType() == XMLJSPRegionContexts.JSP_SCRIPTLET_OPEN);
-		}
+        if(xmlNode != null) {
+            XMLNode parent = (XMLNode)xmlNode.getParentNode();
+            if(parent != null) {
+                sdRegion = parent.getFirstStructuredDocumentRegion();
+                inExpression = sdRegion != null && (sdRegion.getType() == XMLJSPRegionContexts.JSP_EXPRESSION_OPEN || sdRegion.getType() == XMLJSPRegionContexts.JSP_SCRIPTLET_OPEN);
+            }
+        }
 		return inExpression;
 	}
 
@@ -182,7 +187,6 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 	 * @return an array of context information objects or <code>null</code> if no context could be found
 	 */
 	public org.eclipse.jface.text.contentassist.IContextInformation[] computeContextInformation(org.eclipse.jface.text.ITextViewer viewer, int documentOffset) {
-		//System.out.println("requested context information at " + documentOffset); //$NON-NLS-1$
 		return null;
 	}
 
@@ -245,8 +249,9 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 	}
 
 	public String getErrorMessage() {
-		if (fCollector.getErrorMessage() != null && fCollector.getErrorMessage().length() > 0)
-			return fCollector.getErrorMessage();
+        // TODO:
+//		if (fCollector.getErrorMessage() != null && fCollector.getErrorMessage().length() > 0)
+//			return fCollector.getErrorMessage();
 		return fErrorMessage;
 	}
 
@@ -267,7 +272,8 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 	protected void initialize(int pos) {
 		initializeJavaPlugins();
 
-		fCollector = new JSPResultCollector();
+		// fCollector = new JSPResultCollector();
+        fCollector = new JSPCompletionRequestor();
 		fJspSourcePosition = pos;
 		fErrorMessage = null;
 	}

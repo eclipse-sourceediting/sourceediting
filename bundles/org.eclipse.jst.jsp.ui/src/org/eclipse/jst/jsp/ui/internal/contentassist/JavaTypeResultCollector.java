@@ -20,7 +20,7 @@ import org.eclipse.swt.graphics.Image;
 
 
 
-public class JavaTypeResultCollector extends ResultCollector {
+public class JavaTypeResultCollector extends JSPCompletionRequestor {
 
 	protected final boolean fShowClasses = true;
 	protected boolean fShowInterfaces = true;

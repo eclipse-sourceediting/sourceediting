@@ -15,9 +15,8 @@ import java.io.Reader;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMember;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.internal.corext.javadoc.JavaDocAccess;
-import org.eclipse.jdt.internal.ui.text.javadoc.JavaDoc2HTMLTextReader;
-import org.eclipse.jdt.internal.ui.viewsupport.JavaElementLabels;
+import org.eclipse.jdt.ui.JavaElementLabels;
+import org.eclipse.jdt.ui.JavadocContentAccess;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextViewer;
@@ -32,9 +31,6 @@ import org.eclipse.wst.xml.core.document.XMLModel;
  * Provides javadoc hover help documentation for java code inside JSPs
  */
 public class JSPJavaJavadocHoverProcessor implements ITextHover {
-	// NOTE: https://bugs.eclipse.org/bugs/show_bug.cgi?id=77888  
-	// was opened to request referenced jdt internal classes be made public
-	
 	private final long LABEL_FLAGS=  JavaElementLabels.ALL_FULLY_QUALIFIED
 	| JavaElementLabels.M_PRE_RETURNTYPE | JavaElementLabels.M_PARAMETER_TYPES | JavaElementLabels.M_PARAMETER_NAMES | JavaElementLabels.M_EXCEPTIONS 
 	| JavaElementLabels.F_PRE_TYPE_SIGNATURE;
@@ -79,12 +75,12 @@ public class JSPJavaJavadocHoverProcessor implements ITextHover {
 				HTMLPrinter.addSmallHeader(buffer, getInfoText(member));
 				Reader reader;
 				try {
-					reader= JavaDocAccess.getJavaDoc(member, true);
+					reader= JavadocContentAccess.getHTMLContentReader(member, true);
 				} catch (JavaModelException ex) {
 					return null;
 				}
 				if (reader != null) {
-					HTMLPrinter.addParagraph(buffer, new JavaDoc2HTMLTextReader(reader));
+					HTMLPrinter.addParagraph(buffer, reader);
 				}
 			} else if (curr.getElementType() == IJavaElement.LOCAL_VARIABLE)
 				HTMLPrinter.addSmallHeader(buffer, getInfoText(curr));

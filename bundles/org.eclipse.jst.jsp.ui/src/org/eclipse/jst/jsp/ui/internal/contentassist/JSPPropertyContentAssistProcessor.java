@@ -196,7 +196,14 @@ public class JSPPropertyContentAssistProcessor extends JSPDummyContentAssistProc
 					    // filter
 						if (matchString.length() == 0 || id.startsWith(matchString)) {
 							CustomCompletionProposal proposal = new CustomCompletionProposal("\"" + id + "\"", //$NON-NLS-1$ //$NON-NLS-2$
-										contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), id.length() + 2, JSPEditorPluginImageHelper.getInstance().getImage(imageName), displayString, null, null, XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
+										contentAssistRequest.getReplacementBeginPosition(), 
+                                        contentAssistRequest.getReplacementLength(), 
+                                        id.length() + 2, 
+                                        JSPEditorPluginImageHelper.getInstance().getImage(imageName), 
+                                        displayString, 
+                                        null, 
+                                        null, 
+                                        XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE);
 							contentAssistRequest.addProposal(proposal);
 						}
 					}

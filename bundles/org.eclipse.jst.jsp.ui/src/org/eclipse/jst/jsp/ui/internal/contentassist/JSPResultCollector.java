@@ -10,13 +10,16 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.contentassist;
 
-
-
 import java.util.Arrays;
 
 import org.eclipse.jdt.internal.ui.text.java.JavaCompletionProposal;
 import org.eclipse.jdt.internal.ui.text.java.ResultCollector;
 
+/**
+ * 
+ * @author pavery
+ * @deprecated getting rid of JDT internal. Use JSPCompletionRequestor
+ */
 public class JSPResultCollector extends ResultCollector {
 
 	int fJavaToJSPOffset;
@@ -50,7 +53,7 @@ public class JSPResultCollector extends ResultCollector {
 	public void acceptMethod(char[] declaringTypePackageName, char[] declaringTypeName, char[] selector, char[][] parameterPackageNames, char[][] parameterTypeNames, char[][] parameterNames, char[] returnTypePackageName, char[] returnTypeName, char[] completionName, int modifiers, int completionStart, int completionEnd, int relevance) {
 		// if this method is the exact package and type name and starts with the same method name, don't suggest it
 		if (!doFilter || !(Arrays.equals(translatorInternalIgnorePackage, declaringTypePackageName) && Arrays.equals(translatorInternalIgnoreClass, declaringTypeName) && selector != null && new String(selector).startsWith(translatorInternalIgnoreMethodstarter))) {
-			super.acceptMethod(declaringTypePackageName, declaringTypeName, selector, parameterPackageNames, parameterTypeNames, parameterNames, returnTypePackageName, returnTypeName, completionName, modifiers, completionStart, completionEnd, relevance);
+			//super.acceptMethod(declaringTypePackageName, declaringTypeName, selector, parameterPackageNames, parameterTypeNames, parameterNames, returnTypePackageName, returnTypeName, completionName, modifiers, completionStart, completionEnd, relevance);
 		}
 	}
 

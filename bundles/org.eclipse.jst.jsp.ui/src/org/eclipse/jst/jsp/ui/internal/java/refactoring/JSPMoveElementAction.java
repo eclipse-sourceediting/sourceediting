@@ -97,7 +97,7 @@ public class JSPMoveElementAction extends TextEditorAction {
 			
 			// need to check if it's movable
 			try {
-				JavaMoveProcessor processor= JavaMoveProcessor.create(getResources(elements), elements, getCodeGenerationSettings());
+				JavaMoveProcessor processor= JavaMoveProcessor.create(getResources(elements), elements/*, getCodeGenerationSettings()*/);
 				Shell parent = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 				
 				MoveRefactoring refactoring= new MoveRefactoring(processor);
