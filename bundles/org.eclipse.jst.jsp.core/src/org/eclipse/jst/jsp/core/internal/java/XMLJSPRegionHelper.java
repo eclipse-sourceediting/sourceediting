@@ -108,6 +108,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	 */
 	public void writeToBuffers() {
 		IStructuredDocumentRegion currentNode = fTranslator.getCurrentNode();
+		// currentNode should be the <%@page include="xxx"%> StructuredDocumentRegion
 		for (int i = 0; i < fScriptlets.size(); i++) {
 			this.fTranslator.translateScriptletString((String) fScriptlets.get(i), currentNode, currentNode.getStartOffset(), currentNode.getLength());
 		}
@@ -291,10 +292,14 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 				sdRegion = sdRegion.getPrevious();
 			}
 			String importValue = getAttributeValue("import", sdRegion); //$NON-NLS-1$
-			if (importValue != "") //$NON-NLS-1$
-				this.fTranslator.addImports(importValue);
+			if (importValue != "") { //$NON-NLS-1$
+				// had to add "false" parameter to ensure these 
+				// imports don't get added to jsp <-> java map (since they are from an included file)
+				// https://bugs.eclipse.org/bugs/show_bug.cgi?id=81687
+				this.fTranslator.addImports(importValue, false);
+			}
 		}
-	}
+	}	
 
 	/*
 	 * convenience method to get an attribute value from attribute name

@@ -487,18 +487,29 @@ public class JSPTranslator {
 	}
 	
 	/**
-	 /* Pass in a comma delimited list of import values,
-	 /* appends each to the final result buffer
+	 * Adds to the jsp<->java map by default
 	 * @param value a comma delimited list of imports
 	 */
 	protected void addImports(String value) {
+		addImports(value, true);
+	}
+	
+	/**
+	 * Pass in a comma delimited list of import values,
+	 * appends each to the final result buffer
+	 * @param value a comma delimited list of imports
+	 */
+	protected void addImports(String value, boolean addToMap) {
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=81687
+		// added the "addToMap" parameter to exclude imports originating
+		// from included JSP files to be added to the jsp<->java mapping	
 		StringTokenizer st = new StringTokenizer(value, ",", false); //$NON-NLS-1$
 		String tok = ""; //$NON-NLS-1$
 		String appendage = ""; //$NON-NLS-1$
 		while (st.hasMoreTokens()) {
 			tok = st.nextToken();
 			appendage = "import " + tok + ";" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$
-			appendToBuffer(appendage, fUserImports, true, fCurrentNode);
+			appendToBuffer(appendage, fUserImports, addToMap, fCurrentNode);
 		}
 	}
 
@@ -1436,9 +1447,6 @@ public class JSPTranslator {
 		return fIncludes;
 	}
 
-	/*
-	 * ** for workaround only
-	 */
 	protected void translateExpressionString(String newText, ITextRegionCollection embeddedContainer, int jspPositionStart, int jspPositionLength) {
 		appendToBuffer(EXPRESSION_PREFIX, fUserCode, false, embeddedContainer);
 		appendToBuffer(newText, fUserCode, true, embeddedContainer, jspPositionStart, jspPositionLength);
@@ -1450,6 +1458,14 @@ public class JSPTranslator {
 		appendToBuffer(ENDL, fUserDeclarations, false, embeddedContainer);
 	}
 
+	/**
+	 * used by XMLJSPRegionHelper for included JSP files
+	 * 
+	 * @param newText
+	 * @param embeddedContainer
+	 * @param jspPositionStart
+	 * @param jspPositionLength
+	 */
 	protected void translateScriptletString(String newText, ITextRegionCollection embeddedContainer, int jspPositionStart, int jspPositionLength) {
 		appendToBuffer(newText, fUserCode, true, embeddedContainer, jspPositionStart, jspPositionLength);
 	}
@@ -1510,10 +1526,13 @@ public class JSPTranslator {
 	 * @param addToMap
 	 */
 	private void appendToBuffer(String newText, StringBuffer buffer, boolean addToMap, ITextRegionCollection jspReferenceRegion, int jspPositionStart, int jspPositionLength, boolean isIndirect) {
-
+		
 		// nothing to append
 		if (jspReferenceRegion == null)
 			return;
+		
+		// add a newline so translation looks cleaner
+		newText += ENDL;
 		
 		if (buffer == fUserCode) {
 			buffer.append(newText);

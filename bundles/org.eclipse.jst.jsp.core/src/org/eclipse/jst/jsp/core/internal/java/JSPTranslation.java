@@ -284,16 +284,29 @@ public class JSPTranslation implements IJSPTranslation {
 	 * @return
 	 */
 	protected boolean isIndirect(int javaOffset) {
-		return isInRanges(javaOffset, fJava2JspIndirectMap);
+		return isInRanges(javaOffset, fJava2JspIndirectMap, false);
 	}
 	
 	private boolean isInRanges(int javaOffset, HashMap ranges) {
+		return isInRanges(javaOffset, ranges, true);
+	}
+	/**
+	 * Tells you if the given offset is included in any of the ranges (Positions) passed in.
+	 * includeEndOffset tells whether or not to include the end offset of each range in the test.
+	 * 
+	 * @param javaOffset
+	 * @param ranges
+	 * @param includeEndOffset
+	 * @return
+	 */
+	private boolean isInRanges(int javaOffset, HashMap ranges, boolean includeEndOffset) {
 		
 		Iterator it = ranges.keySet().iterator();
 		while(it.hasNext()) {
 			Position javaPos = (Position)it.next();
-			// also include the start and end offset
-			if(javaPos.includes(javaOffset) || javaPos.offset+javaPos.length == javaOffset) 
+			// also include the start and end offset (only if requested)
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=81687
+			if(javaPos.includes(javaOffset) || (includeEndOffset && javaPos.offset+javaPos.length == javaOffset)) 
 				return true;
 		}
 		return false;

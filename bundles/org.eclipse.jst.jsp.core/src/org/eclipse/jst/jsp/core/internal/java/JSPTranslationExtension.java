@@ -120,6 +120,8 @@ public class JSPTranslationExtension extends JSPTranslation {
 		PositionDelta[] deltas = new PositionDelta[javaPositions.length];
 		for(int i=0; i<javaPositions.length; i++) {
 			deltas[i] = new PositionDelta(javaPositions[i].offset, javaPositions[i].length);
+			// isIndirect means the position doesn't actually exist as exact text 
+			// mapping from java <-> jsp (eg. an import statement)
 			if(!isIndirect(javaPositions[i].offset))
 				jspPositions[i] = (Position)getJava2JspMap().get(javaPositions[i]);
 		}
