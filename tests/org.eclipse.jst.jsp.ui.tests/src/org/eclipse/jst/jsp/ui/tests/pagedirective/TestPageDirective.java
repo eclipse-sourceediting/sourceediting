@@ -157,7 +157,8 @@ public class TestPageDirective extends TestCase {
 	public void testAdapt() {
 		XMLModel model = createUnmanagedHTMLModel();
 		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) model.getDocument().getAdapterFor(PageDirectiveAdapter.class);
-		Node ownerNode = model.getDocument().getOwnerDocument();
+		Node ownerNode = model.getDocument();
+		
 		ModelQueryAdapter embeddedAdapter = (ModelQueryAdapter) pageDirectiveAdapter.adapt((INodeNotifier) ownerNode, ModelQueryAdapter.class);
 		assertNotNull("could not adapt embedded adapter", embeddedAdapter);
 	}
