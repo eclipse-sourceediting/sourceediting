@@ -12,7 +12,11 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core;
 
-
+/**
+ * Keys to use for preference settings.
+ * 
+ * @since 1.0
+ */
 
 public interface XMLPreferenceNames {
 	String CLEANUP_ATTR_NAME_CASE = "cleanupAttrNameCase";//$NON-NLS-1$
