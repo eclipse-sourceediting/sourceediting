@@ -215,6 +215,7 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 
 	class ImageDescriptorCache {
 		protected ImageDescriptor attributeImage = XMLEditorPluginImageHelper.getInstance().getImageDescriptor(XMLEditorPluginImages.IMG_OBJ_ATTRIBUTE);
+		protected ImageDescriptor attributeReqImage = XMLEditorPluginImageHelper.getInstance().getImageDescriptor(XMLEditorPluginImages.IMG_OBJ_ATT_REQ_OBJ);
 		protected ImageDescriptor cdataSectionImage = XMLEditorPluginImageHelper.getInstance().getImageDescriptor(XMLEditorPluginImages.IMG_OBJ_CDATASECTION);
 		protected ImageDescriptor commentImage = XMLEditorPluginImageHelper.getInstance().getImageDescriptor(XMLEditorPluginImages.IMG_OBJ_COMMENT);
 		protected ImageDescriptor elementImage = XMLEditorPluginImageHelper.getInstance().getImageDescriptor(XMLEditorPluginImages.IMG_OBJ_ELEMENT);
@@ -227,7 +228,12 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 				CMNode cmnode = (CMNode) object;
 				switch (cmnode.getNodeType()) {
 					case CMNode.ATTRIBUTE_DECLARATION : {
-						result = attributeImage;
+						result = CMImageUtil.getImageDescriptor(cmnode);
+						if (result == null)
+							if (((CMAttributeDeclaration) cmnode).getUsage() == CMAttributeDeclaration.REQUIRED)
+								result = attributeReqImage;
+							else
+								result = attributeImage;
 						break;
 					}
 					case CMNode.DATA_TYPE : {
@@ -235,7 +241,9 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 						break;
 					}
 					case CMNode.ELEMENT_DECLARATION : {
-						result = elementImage;
+						result = CMImageUtil.getImageDescriptor(cmnode);
+						if (result == null)
+							result = elementImage;
 						break;
 					}
 					case CMNode.GROUP : {
