@@ -38,7 +38,6 @@ import org.eclipse.wst.validation.core.IFileDelta;
 import org.eclipse.wst.validation.core.IHelper;
 import org.eclipse.wst.validation.core.IMessage;
 import org.eclipse.wst.validation.core.IValidator;
-import org.eclipse.wst.validation.core.SeverityEnum;
 import org.eclispe.wst.validation.internal.core.FileDelta;
 
 
@@ -106,16 +105,16 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 				}
 				String type = TemporaryAnnotation.ANNOT_INFO;
 				switch (validationMessage.getSeverity()) {
-					case SeverityEnum.HIGH_SEVERITY :
+					case IMessage.HIGH_SEVERITY :
 						type = TemporaryAnnotation.ANNOT_ERROR;
 						break;
-					case SeverityEnum.NORMAL_SEVERITY :
+					case IMessage.NORMAL_SEVERITY :
 						type = TemporaryAnnotation.ANNOT_WARNING;
 						break;
-					case SeverityEnum.LOW_SEVERITY :
+					case IMessage.LOW_SEVERITY :
 						type = TemporaryAnnotation.ANNOT_WARNING;
 						break;
-					case SeverityEnum.ERROR_AND_WARNING :
+					case IMessage.ERROR_AND_WARNING :
 						type = TemporaryAnnotation.ANNOT_WARNING;
 						break;
 				}
