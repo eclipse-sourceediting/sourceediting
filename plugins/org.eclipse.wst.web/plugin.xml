@@ -51,9 +51,10 @@
       </moduleFactory> -->
     
     <extension
-         point="org.eclipse.wst.server.ui.moduleArtifactAdapters">
+         point="org.eclipse.wst.server.core.moduleArtifactAdapters">
        <moduleArtifactAdapter
-            id="org.eclipse.jst.web.server.webstatic1">
+            id="org.eclipse.jst.web.server.webstatic1"
+            class="org.eclipse.wst.web.internal.deployables.StaticWebDeployableObjectAdapter">
          <enablement>
            <with variable="selection">
              <adapt type="org.eclipse.core.resources.IProject"/>
