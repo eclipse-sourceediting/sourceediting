@@ -15,15 +15,23 @@ package org.eclipse.wst.sse.ui.internal.reconcile.validator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcilingStrategy;
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentAdapter;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
@@ -38,27 +46,86 @@ import org.eclipse.wst.validation.core.IValidator;
  * @author pavery
  */
 public class ValidatorStrategy extends AbstractStructuredTextReconcilingStrategy {
-	private String fContentType = null;
+	
+    private String[] fContentTypeIds = null;
 	private HashMap fIdToStepMap = null;
-
 	private List fMetaData = null;
 
 	public ValidatorStrategy(ITextEditor editor, String contentType) {
 		super(editor);
 		fMetaData = new ArrayList();
-		fContentType = contentType;
+		fContentTypeIds = calculateParentContentTypeIds(contentType);
 		fIdToStepMap = new HashMap();
 	}
 
-	public void addValidatorMetaData(ValidatorMetaData vmd) {
+	/**
+     * The content type passed in should be the most specific one.
+     * @param contentType
+     * @return
+     */
+    private String[] calculateParentContentTypeIds(String contentTypeId) {
+        // place to collect parent types
+        Set parentTypes = new HashSet();
+        
+        String handlerContentTypeId = getHandlerContentTypeId();
+        if(handlerContentTypeId != null) {
+            IContentTypeManager ctManager = Platform.getContentTypeManager();    
+            IContentType ct = ctManager.getContentType(contentTypeId);
+            String id = contentTypeId;
+            // add the original
+            parentTypes.add(id);
+            while(ct != null && id != null && !id.equals(handlerContentTypeId)) {  
+                ct = ctManager.getContentType(id);
+                if(ct != null) {
+                    IContentType baseType = ct.getBaseType();
+                    id = (baseType != null) ? baseType.getId() : null;
+                    // add any parent ids, the loop stops 
+                    // once id is the same as the modelhandler
+                    // content type id
+                    if(id != null)
+                        parentTypes.add(id);
+                }
+            }
+        }
+        
+        return (String[])parentTypes.toArray(new String[parentTypes.size()]);
+    }
+
+    /**
+     * @return
+     */
+    private String getHandlerContentTypeId() {
+        IStructuredModel sModel =  StructuredModelManager.getModelManager().getExistingModelForRead(getFile());
+        IModelHandler handler = null;
+        String handlerContentTypeId = null;
+        try {
+            if(sModel != null) {
+                handler = sModel.getModelHandler();
+                handlerContentTypeId = handler.getAssociatedContentTypeId();
+            } 
+        }
+        finally {
+            if(sModel != null)
+                sModel.releaseFromRead();
+        }
+        return handlerContentTypeId;
+    }
+
+    public void addValidatorMetaData(ValidatorMetaData vmd) {
 		fMetaData.add(vmd);
 	}
 
+    /**
+     * 
+     * @param partitionType
+     * @return true if the strategy contains at least one ValidatorMetaData
+     *          that says it can handle the partition type (for a given content type) 
+     */
 	public boolean canValidatePartition(String partitionType) {
 		ValidatorMetaData vmd = null;
 		for (int i = 0; i < fMetaData.size(); i++) {
 			vmd = (ValidatorMetaData) fMetaData.get(i);
-			if (vmd.canHandleParitionType(getContentType(), partitionType))
+			if (vmd.canHandleParitionType(getContentTypeIds(), partitionType))
 				return true;
 		}
 		return false;
@@ -80,8 +147,8 @@ public class ValidatorStrategy extends AbstractStructuredTextReconcilingStrategy
 		// do nothing, steps are created
 	}
 
-	public String getContentType() {
-		return fContentType;
+	public String[] getContentTypeIds() {
+		return fContentTypeIds;
 	}
 
 	/*
@@ -101,7 +168,7 @@ public class ValidatorStrategy extends AbstractStructuredTextReconcilingStrategy
 		return (String[]) partitionTypes.toArray(new String[partitionTypes.size()]);
 	}
 
-	public void reconcile(ITypedRegion tr, DirtyRegion dr, boolean refreshAll) {
+	public void reconcile(ITypedRegion tr, DirtyRegion dr) {
 
 		// for external files, this can be null
 		if (getFile() != null) {
@@ -116,7 +183,7 @@ public class ValidatorStrategy extends AbstractStructuredTextReconcilingStrategy
 				List annotationsToAdd = new ArrayList();
 				for (int i = 0; i < fMetaData.size(); i++) {
 					vmd = (ValidatorMetaData) fMetaData.get(i);
-					if (vmd.canHandleParitionType(getContentType(), partitionType)) {
+					if (vmd.canHandleParitionType(getContentTypeIds(), partitionType)) {
 						// get step for partition type
 						Object o = fIdToStepMap.get(vmd.getValidatorId());
 						ReconcileStepForValidator validatorStep = null;
@@ -125,33 +192,13 @@ public class ValidatorStrategy extends AbstractStructuredTextReconcilingStrategy
 						} else {
 							// if doesn't exist, create one
 							IValidator validator = vmd.createValidator();
-							validatorStep = new ReconcileStepForValidator(validator, vmd.getValidatorScope());
+							validatorStep = new ReconcileStepForValidator(validator);
 							validatorStep.setInputModel(new DocumentAdapter(fDocument));
 
 							fIdToStepMap.put(vmd.getValidatorId(), validatorStep);
 						}
-						////////////////////////////////////////////////////////////////////////////
-						// this logic copied from
-						// AbstractStructuredTextReconcilingStrategy
-
-//						if (!refreshAll) {
-							// regular reconcile
-							annotationsToRemove.addAll(Arrays.asList(getAnnotationsToRemove(dr)));
-							//annotationsToAdd.addAll(Arrays.asList(validatorStep.reconcile(dr, dr, refreshAll)));
-                            annotationsToAdd.addAll(Arrays.asList(validatorStep.reconcile(dr, dr)));
-//							fAlreadyRemovedAllThisRun = false;
-//						} else {
-//							// the entire document is being reconciled
-//							// (strategies may be called multiple times)
-//							if (!fAlreadyRemovedAllThisRun) {
-//								annotationsToRemove.addAll(Arrays.asList(getAllAnnotationsToRemove()));
-//								fAlreadyRemovedAllThisRun = true;
-//							}
-//							annotationsToAdd.addAll(Arrays.asList(validatorStep.reconcile(dr, dr, true)));
-//						}
-						//smartProcess(annotationsToRemove,
-						// annotationsToAdd);
-						/////////////////////////////////////////////////////////////////////////////
+						annotationsToRemove.addAll(Arrays.asList(getAnnotationsToRemove(dr)));
+                        annotationsToAdd.addAll(Arrays.asList(validatorStep.reconcile(dr, dr)));
 					}
 					// remove/add if there is anything to remove/add
 					if (annotationsToRemove.size() + annotationsToAdd.size() > 0)

@@ -532,7 +532,7 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 			// the
 			// entire document is being reconciled, only do it once
 			if (fValidatorStrategy != null)
-				fValidatorStrategy.reconcile(tr[i], durty, true);
+				fValidatorStrategy.reconcile(tr[i], durty);
 
 		}
 		// we ran the whole doc already now we can reset the strategies
@@ -571,7 +571,7 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 			// a
 			// validator for this parition
 			if (fValidatorStrategy != null)
-				fValidatorStrategy.reconcile(tr[i], durty, false);
+				fValidatorStrategy.reconcile(tr[i], durty);
 		}
 
 		resetStrategies();

@@ -53,7 +53,7 @@ import org.eclipse.wst.sse.ui.ITemporaryAnnotation;
  * 
  * @author pavery
  */
-public abstract class AbstractStructuredTextReconcilingStrategy implements IReconcilingStrategy, IReconcilingStrategyExtension, IReleasable /*, IStructuredReconcilingStrategy*/ {
+public abstract class AbstractStructuredTextReconcilingStrategy implements IReconcilingStrategy, IReconcilingStrategyExtension, IReleasable {
 
     /** debug flag */
     protected static final boolean DEBUG;

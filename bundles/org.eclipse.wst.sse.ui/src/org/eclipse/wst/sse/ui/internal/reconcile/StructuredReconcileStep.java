@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -47,13 +48,19 @@ import org.eclipse.wst.sse.ui.internal.Logger;
  */
 public abstract class StructuredReconcileStep extends AbstractReconcileStep implements IReleasable {
     
-	public static final int ANNOTATION_LENGTH_LIMIT = 100;
+    /** debug flag */
+    protected static final boolean DEBUG;
+    static {
+        String value = Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/reconcilerjob"); //$NON-NLS-1$
+        DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+    }
 
-	// these limits are safetys for "runaway" validation cases
-	// should be used to safeguard potentially dangerous loops or potentially
-	// long annotations
-	// (since the painter seems to affect performance when painting long
-	// annotations)
+    // these limits are safetys for "runaway" validation cases
+    // should be used to safeguard potentially dangerous loops or potentially
+    // long annotations
+    // (since the painter seems to affect performance when painting long
+    // annotations)
+	public static final int ANNOTATION_LENGTH_LIMIT = 100;
 	public static final int ELEMENT_ERROR_LIMIT = 100;
 
 	protected final IReconcileResult[] EMPTY_RECONCILE_RESULT_SET = new IReconcileResult[0];
@@ -102,7 +109,8 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
         try {
             tr = TextUtilities.getPartition(doc,IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING , offset, false);
         } catch (BadLocationException e) {
-            Logger.logException("problem getting partition at: " + offset, e);
+            if(DEBUG)
+                Logger.logException("problem getting partition at: " + offset, e);
         }
         return tr;
     }
@@ -193,8 +201,6 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 		List results = new ArrayList();
 		results.addAll(Arrays.asList(results1));
 		for (int i = 0; i < results2.length; i++) {
-			// pa_TODO: could be bad for performance
-			//if (!results.contains(results2[i]))
 			results.add(results2[i]);
 		}
 		return (IReconcileResult[]) results.toArray(new IReconcileResult[results.size()]);

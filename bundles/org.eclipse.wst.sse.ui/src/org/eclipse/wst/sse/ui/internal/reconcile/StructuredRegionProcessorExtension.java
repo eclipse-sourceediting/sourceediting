@@ -78,7 +78,7 @@ public class StructuredRegionProcessorExtension extends StructuredRegionProcesso
 
             // validator for this partition
             if (fValidatorStrategy != null)
-                fValidatorStrategy.reconcile(tr[i], dirty, false);
+                fValidatorStrategy.reconcile(tr[i], dirty);
         }
     }
     /**

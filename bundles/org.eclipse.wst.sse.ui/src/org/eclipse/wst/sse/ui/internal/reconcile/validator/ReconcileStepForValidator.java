@@ -64,16 +64,14 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 	private IValidator fValidator = null;
 
 
-	public ReconcileStepForValidator(IValidator v, int scope) {
+	public ReconcileStepForValidator(IValidator v) {
 		super();
 		this.fValidator = v;
-		this.fScope = scope;
 	}
 
-	public ReconcileStepForValidator(IValidator v, IReconcileStep step, int scope) {
+	public ReconcileStepForValidator(IValidator v, IReconcileStep step) {
 		super(step);
 		this.fValidator = v;
-		this.fScope = scope;
 	}
 
 	/**
@@ -99,6 +97,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 
 				String messageText = null;
 				try {
+                    messageText = validationMessage.getText(validator.getClass().getClassLoader());
 				} catch (Exception t) {
 					Logger.logException("exception reporting message from validator", t); //$NON-NLS-1$
 					continue;
@@ -180,6 +179,10 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 		return this.fReporter;
 	}
 
+    /**
+     * remove from extension point
+     * @return
+     */
 	public int getScope() {
 		return this.fScope;
 	}
@@ -228,7 +231,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 				IncrementalReporter reporter = getReporter();
 
 				IFileDelta fullDelta = new FileDelta(file.getFullPath().toString(), IFileDelta.CHANGED);
-				this.fValidator.validate(helper, reporter, new IFileDelta[]{fullDelta});
+				fValidator.validate(helper, reporter, new IFileDelta[]{fullDelta});
 
 				results = createAnnotations(reporter.getMessages());
 				reporter.getMessages().clear();

@@ -54,6 +54,8 @@ public class ValidatorBuilder extends RegistryReader {
 	protected String targetContributionTag;
 	protected String targetID;
 
+    private final String UNKNOWN = "???";
+    
 	/**
 	 * Returns the name of the part ID attribute that is expected in the
 	 * target extension.
@@ -63,12 +65,12 @@ public class ValidatorBuilder extends RegistryReader {
 	 */
 	protected String getID(IConfigurationElement element) {
 		String value = element.getAttribute(ATT_ID);
-		return value != null ? value : "???"; //$NON-NLS-1$
+		return value != null ? value : UNKNOWN; //$NON-NLS-1$
 	}
 
 	protected String getValidatorClass(IConfigurationElement element) {
 		String value = element.getAttribute(ATT_CLASS);
-		return value != null ? value : "???"; //$NON-NLS-1$
+		return value != null ? value : UNKNOWN; //$NON-NLS-1$
 	}
 
 	/**
@@ -82,7 +84,7 @@ public class ValidatorBuilder extends RegistryReader {
 
 	protected String getValidatorScope(IConfigurationElement element) {
 		String value = element.getAttribute(ATT_SCOPE);
-		return value != null ? value : "???"; //$NON-NLS-1$
+		return value != null ? value : UNKNOWN; //$NON-NLS-1$
 	}
 
 	/**

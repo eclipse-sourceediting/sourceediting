@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.wst.sse.ui.internal.Logger;
-import org.eclipse.wst.sse.ui.internal.reconcile.IReconcileAnnotationKey;
 import org.eclipse.wst.validation.core.IValidator;
 import org.osgi.framework.Bundle;
 
@@ -38,17 +37,15 @@ public class ValidatorMetaData {
 	private String fId = null;
 
 	// a hash map of content type Ids (String) that points to lists of
-	// parition types (List of Strings)
+	// partition types (List of Strings)
 	// contentTypeId -> List(paritionType, paritionType, partitionType, ...)
 	// contentTypeId2 -> List(partitionType, partitionType, ...)
 	// ...
 	private HashMap fMatrix = null;
-	private String fScope = null;
 
 	public ValidatorMetaData(IConfigurationElement element, String vId, String vClass, String vScope) {
 		fId = vId;
 		fClass = vClass;
-		fScope = vScope;
 		fConfigurationElement = element;
 
 		fMatrix = new HashMap();
@@ -71,14 +68,16 @@ public class ValidatorMetaData {
 		return fMatrix.containsKey(contentType);
 	}
 
-	public boolean canHandleParitionType(String contentType, String paritionType) {
-		if (fMatrix.containsKey(contentType)) {
-			List partitions = (List) fMatrix.get(contentType);
-			for (int i = 0; i < partitions.size(); i++) {
-				if (paritionType.equals(partitions.get(i)))
-					return true;
-			}
-		}
+	public boolean canHandleParitionType(String contentTypeIds[], String paritionType) {
+        for(int i=0; i<contentTypeIds.length; i++) {
+    		if (fMatrix.containsKey(contentTypeIds[i])) {
+    			List partitions = (List) fMatrix.get(contentTypeIds[i]);
+    			for (int j = 0; j < partitions.size(); j++) {
+    				if (paritionType.equals(partitions.get(j)))
+    					return true;
+    			}
+    		}
+        }
 		return false;
 	}
 
@@ -156,9 +155,9 @@ public class ValidatorMetaData {
 		return fId;
 	}
 
-	public int getValidatorScope() {
-		return fScope.equalsIgnoreCase("total") ? IReconcileAnnotationKey.TOTAL : IReconcileAnnotationKey.PARTIAL; //$NON-NLS-1$
-	}
+//	public int getValidatorScope() {
+//		return fScope.equalsIgnoreCase("total") ? IReconcileAnnotationKey.TOTAL : IReconcileAnnotationKey.PARTIAL; //$NON-NLS-1$
+//	}
 
 	/**
 	 * @param result
