@@ -2,9 +2,9 @@
 <?eclipse version="3.0"?>
 <plugin
    id="org.eclipse.wst.xml.ui"
-   name="%SSE_XML_Source_Editor.name"
+   name="%pluginName"
    version="1.0.0"
-   provider-name="Eclipse.org"
+   provider-name="%providerName"
    class="org.eclipse.wst.xml.ui.XMLEditorPlugin">
 
    <runtime>
@@ -174,22 +174,22 @@
    <extension
          point="org.eclipse.ui.editors.templates">
       <contextType
-            name="All XML context type"
+            name="%All_XML_context_type_Extension_Element.name"
             class="org.eclipse.wst.xml.ui.templates.TemplateContextTypeXML"
             id="xml_all">
       </contextType>
       <contextType
-            name="XML Tag context type"
+            name="%XML_Tag_context_type_Extension_Element.name"
             class="org.eclipse.wst.xml.ui.templates.TemplateContextTypeXMLTag"
             id="xml_tag">
       </contextType>
       <contextType
-            name="XML Attribute context type"
+            name="%XML_Attribute_context_type_Extension_Element.name"
             class="org.eclipse.wst.xml.ui.templates.TemplateContextTypeXMLAttribute"
             id="xml_attribute">
       </contextType>
       <contextType
-            name="XML Attribute value context type"
+            name="%XML_Attribute_value_context_type_Extension_Element.name"
             class="org.eclipse.wst.xml.ui.templates.TemplateContextTypeXMLAttributeValue"
             id="xml_attribute_value">
       </contextType>

@@ -2,9 +2,9 @@
 <?eclipse version="3.0"?>
 <plugin
 	id="org.eclipse.wst.dtd.core"
-	name="%Structured_Source_DTD_Model.name"
+	name="%pluginName"
 	version="1.0.0"
-	provider-name="Eclipse.org"
+	provider-name="%providerName"
 	class="org.eclipse.wst.dtd.core.DTDPlugin">
 
 	<runtime>
@@ -46,7 +46,7 @@
 
    <extension point="org.eclipse.core.filebuffers.documentCreation"
          id="org.eclipse.wst.dtd.core.documentfactories"
-         name="Structured DTD Document Factory">
+         name="%Structured_DTD_Document_Factory_Extension.name">
       <factory
             contentTypeId="org.eclipse.wst.dtd.core.dtdsource"
             class="org.eclipse.wst.sse.core.filebuffers.BasicStructuredDocumentFactory:org.eclipse.wst.dtd.core.dtdsource"/>
@@ -69,7 +69,7 @@
          <content-type
                file-extensions="dtd,mod,ent"
                priority="normal"
-               name="DTD Content Type"
+               name="%DTD_Content_Type_Extension_Element.name"
                id="dtdsource"
                base-type="org.eclipse.core.runtime.text"
 			   default-charset="UTF-8">

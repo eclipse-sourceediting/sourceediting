@@ -2,9 +2,9 @@
 <?eclipse version="3.0"?>
 <plugin
    id="org.eclipse.wst.dtd.ui"
-   name="%SSE_DTD_Source_Editor.name"
+   name="%pluginName"
    version="1.0.0"
-   provider-name="Eclipse.org"
+   provider-name="%providerName"
    class="org.eclipse.wst.dtd.ui.DTDEditorPlugin">
 
    <runtime>

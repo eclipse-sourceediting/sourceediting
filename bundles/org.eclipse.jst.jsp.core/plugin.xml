@@ -2,9 +2,9 @@
 <?eclipse version="3.0"?>
 <plugin
    id="org.eclipse.jst.jsp.core"
-   name="%Structured_Source_JSP_Model.name"
+   name="%pluginName"
    version="1.0.0"
-   provider-name="Eclipse.org"
+   provider-name="%providerName"
    class="org.eclipse.jst.jsp.core.JSPCorePlugin">
 
    <runtime>
@@ -55,10 +55,18 @@
    </extension>
    <extension point="org.eclipse.core.filebuffers.documentCreation"
          id="org.eclipse.jst.jsp.core.documentfactories"
-         name="Structured JSP Document Factory">
+         name="%Structured_JSP_Document_Factory_Extension.name">
       <factory
             contentTypeId="org.eclipse.jst.jsp.core.jspsource"
             class="org.eclipse.wst.sse.core.filebuffers.BasicStructuredDocumentFactory:org.eclipse.jst.jsp.core.jspsource"/>
+   </extension>
+   <extension point="org.eclipse.core.filebuffers.documentSetup"
+         id="org.eclipse.jst.jsp.core.documentsetup"
+         name="Structured JSP Document Setup participant">
+      <factory
+      		id="org.eclipse.jst.jsp.core.taglibs"
+            contentTypeId="org.eclipse.jst.jsp.core.jspsource"
+            class="org.eclipse.jst.jsp.core.contentmodel.tld.TaglibController"/>
    </extension>
    <extension
          point="org.eclipse.team.core.fileTypes">
@@ -100,7 +108,7 @@
          <content-type
                file-extensions="jsp,jspf,jsf,jsv,jtpl,jspx"
                priority="high"
-               name="JSP Content Type"
+               name="%JSP_Content_Type_Extension_Element.name"
                id="jspsource"
                base-type="org.eclipse.core.runtime.text"
 			   default-charset="ISO-8859-1">

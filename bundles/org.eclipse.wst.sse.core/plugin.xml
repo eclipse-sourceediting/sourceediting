@@ -2,9 +2,9 @@
 <?eclipse version="3.0"?>
 <plugin
    id="org.eclipse.wst.sse.core"
-   name="%Structured_Text_Model.name"
+   name="%pluginName"
    version="1.0.0"
-   provider-name="Eclipse.org"
+   provider-name="%providerName"
    class="org.eclipse.wst.sse.core.ModelPlugin">
 
    <runtime>
@@ -38,7 +38,7 @@
 <!-- deprecated -->
    <extension-point id="adaptOnCreateFactory" name="%Adapt_On_Create_Factory_Extension.name"/>
    <extension-point id="documentTypes" name="%Document_Types_Extension.name"/>
-   <extension-point id="embeddedTypeHandler" name="JSP Embedded Content Type Handler"/>
+   <extension-point id="embeddedTypeHandler" name="%JSP_Embedded_Content_Type_Handler_Extension.name"/>
    <extension-point id="contentTypeFactoryContribution" name="%Content_Type_Factory_Contribution_Extension.name"/>
 <!-- I commented out ... clients should just use the normal platform way of registering these 
 		adapterFactories. At worst, they'd need a small plugin with 'startup' specified ... but that's 
@@ -49,10 +49,10 @@
    <extension-point id="commentElementHandler" name="%Comment_Element_Handler_Extension.name"/>
 <!-- this plug-in provides support for this extension point -->
    <extension-point id="modelHandler" name="%Model_Handler_Extension.name"/>
-   <extension-point id="formatProcessors" name="%Format_Processors_Extension.name" schema="schema/formatProcessors.exsd"/>
+   <extension-point id="formatProcessors" name="%Format_Processors_Extension_Point.name" schema="schema/formatProcessors.exsd"/>
 
 <!-- not for use by clients -->
-   <extension-point id="builderdelegate" name="Structured Builder Delegate"/>
+   <extension-point id="builderdelegate" name="%Structured_Builder_Delegate_Extension_Point.name"/>
 
    <extension point="org.eclipse.core.resources.builders"
        id="structuredbuilder"
@@ -66,7 +66,7 @@
       </builder>
    </extension>
 <!-- define our task marker type -->
-	<extension id="task" name="Structured Sources Task" point="org.eclipse.core.resources.markers">
+	<extension id="task" name="%Structured_Sources_Task_Extension.name" point="org.eclipse.core.resources.markers">
     	<super type="org.eclipse.core.resources.taskmarker"/> 
     	<persistent value="true"/>
 	</extension>

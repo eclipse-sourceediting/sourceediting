@@ -2,9 +2,9 @@
 <?eclipse version="3.0"?>
 <plugin
    id="org.eclipse.wst.html.ui"
-   name="%SSE_HTML_Source_Editor.name"
+   name="%pluginName"
    version="1.0.0"
-   provider-name="Eclipse.org"
+   provider-name="%providerName"
    class="org.eclipse.wst.html.ui.HTMLEditorPlugin">
 
    <runtime>
@@ -36,7 +36,7 @@
    </requires>
 
 
-   <extension-point id="deviceProfileEntryProvider" name="DeviceProfileEntryProviderExtension"/>
+   <extension-point id="deviceProfileEntryProvider" name="%Device_Profile_Entry_Provider_Extension.name"/>
 
    <extension
          point="org.eclipse.ui.editors">
@@ -250,22 +250,22 @@
    <extension
          point="org.eclipse.ui.editors.templates">
       <contextType
-            name="All HTML context type"
+            name="%All_HTML_context_type_Extension_Element.name"
             class="org.eclipse.wst.html.ui.templates.TemplateContextTypeHTML"
             id="html_all">
       </contextType>
       <contextType
-            name="HTML Tag context type"
+            name="%HTML_Tag_context_type_Extension_Element.name"
             class="org.eclipse.wst.html.ui.templates.TemplateContextTypeHTMLTag"
             id="html_tag">
       </contextType>
       <contextType
-            name="HTML Attribute context type"
+            name="%HTML_Attribute_context_type_Extension_Element.name"
             class="org.eclipse.wst.html.ui.templates.TemplateContextTypeHTMLAttribute"
             id="html_attribute">
       </contextType>
       <contextType
-            name="HTML Attribute value context type"
+            name="%HTML_Attribute_value_context_type_Extension_Element.name"
             class="org.eclipse.wst.html.ui.templates.TemplateContextTypeHTMLAttributeValue"
             id="html_attribute_value">
       </contextType>

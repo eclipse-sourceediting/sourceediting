@@ -2,9 +2,9 @@
 <?eclipse version="3.0"?>
 <plugin
    id="org.eclipse.wst.xml.core"
-   name="%Structured_Source_XML_Model.name"
+   name="%pluginName"
    version="1.0.0"
-   provider-name="Eclipse.org"
+   provider-name="%providerName"
    class="org.eclipse.wst.xml.core.XMLModelPlugin">
 
    <runtime>
@@ -52,7 +52,7 @@
    
    <extension point="org.eclipse.core.filebuffers.documentCreation"
          id="org.eclipse.wst.xml.core.documentfactories"
-         name="Structured XML Document Factory">
+         name="%Structured_XML_Document_Factory_Extension.name">
       <factory
             contentTypeId="org.eclipse.core.runtime.xml"
             class="org.eclipse.wst.sse.core.filebuffers.BasicStructuredDocumentFactory:org.eclipse.core.runtime.xml"/>
@@ -101,7 +101,7 @@
          point="org.eclipse.core.runtime.contentTypes">
          <content-type
                priority="high"
-               name="XML Content Type"
+               name="%XML_Content_Type_Extension_Element.name"
                id="xmlsource"
                base-type="org.eclipse.core.runtime.xml"
 			   default-charset="UTF-8">

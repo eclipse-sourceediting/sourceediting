@@ -2,9 +2,9 @@
 <?eclipse version="3.0"?>
 <plugin
    id="org.eclipse.jst.jsp.ui"
-   name="%SSE_JSP_Source_Editor.name"
+   name="%pluginName"
    version="1.0.0"
-   provider-name="Eclipse.org"
+   provider-name="%providerName"
    class="org.eclipse.jst.jsp.ui.JSPEditorPlugin">
 
    <runtime>
@@ -134,7 +134,7 @@
    <extension
          point="org.eclipse.ltk.core.refactoring.renameParticipants">
       <renameParticipant
-            name="JSP Type Rename Participant"
+            name="%JSP_Type_Rename_Participant_Extension_Element.name"
             class="org.eclipse.jst.jsp.ui.internal.java.refactoring.JSPTypeRenameParticipant"
             id="org.eclipse.jst.jsp.ui.java.refactoring.JSPTypeRenameParticipant">
          <enablement>
@@ -157,7 +157,7 @@
       </renameParticipant>
       
       <renameParticipant
-            name="JSP Method Rename Participant"
+            name="%JSP_Method_Rename_Participant_Extension_Element.name"
             class="org.eclipse.jst.jsp.ui.internal.java.refactoring.JSPMethodRenameParticipant"
             id="org.eclipse.jst.jsp.ui.java.refactoring.JSPMethodRenameParticipant">
          <enablement>
@@ -180,7 +180,7 @@
       </renameParticipant>
       
       <renameParticipant
-            name="JSP Package Rename Participant"
+            name="%JSP_Package_Rename_Participant_Extension_Element.name"
             class="org.eclipse.jst.jsp.ui.internal.java.refactoring.JSPPackageRenameParticipant"
             id="org.eclipse.jst.jsp.ui.java.refactoring.JSPPackageRenameParticipant">
          <enablement>
@@ -211,7 +211,7 @@
                
       <moveParticipant
 		    id="org.eclipse.jst.jsp.ui.java.refactoring.JSPTypeMoveParticipant"
-		    name="JSP Type Move Participant" 
+		    name="%JSP_Type_Move_Participant_Extension_Element.name" 
 		    class="org.eclipse.jst.jsp.ui.internal.java.refactoring.JSPTypeMoveParticipant">
 		    <enablement>
 		      <with variable="affectedNatures">
@@ -256,7 +256,7 @@
    <extension
          point="org.eclipse.wst.sse.snippets.SnippetContributions">
       <category
-            label="JSP"
+            label="%JSP_Extension_Element.label"
             icon="icons/snippets/tag-jsp.gif"
             id="org.eclipse.jst.jsp.ui.category0"
             contenttypes="org.eclipse.jst.jsp.core.jspsource"/>
@@ -437,22 +437,22 @@
    <extension
          point="org.eclipse.ui.editors.templates">
       <contextType
-            name="All JSP context type"
+            name="%All_JSP_context_type_Extension_Element.name"
             class="org.eclipse.jst.jsp.ui.templates.TemplateContextTypeJSP"
             id="jsp_all">
       </contextType>
       <contextType
-            name="JSP Tag context type"
+            name="%JSP_Tag_context_type_Extension_Element.name"
             class="org.eclipse.jst.jsp.ui.templates.TemplateContextTypeJSPTag"
             id="jsp_tag">
       </contextType>
       <contextType
-            name="JSP Attribute context type"
+            name="%JSP_Attribute_context_type_Extension_Element.name"
             class="org.eclipse.jst.jsp.ui.templates.TemplateContextTypeJSPAttribute"
             id="jsp_attribute">
       </contextType>
       <contextType
-            name="JSP Attribute value context type"
+            name="%JSP_Attribute_value_context_type_Extension_Element.name"
             class="org.eclipse.jst.jsp.ui.templates.TemplateContextTypeJSPAttributeValue"
             id="jsp_attribute_value">
       </contextType>
@@ -468,7 +468,7 @@
    <extension
          point="org.eclipse.jdt.ui.queryParticipants">
       <queryParticipant
-            name="JSP Query Participant"
+            name="%JSP_Query_Participant_Extension_Element.name"
             nature="org.eclipse.jdt.core.javanature"
             class="org.eclipse.jst.jsp.ui.internal.java.search.ui.JSPQueryParticipant"
             id="org.eclipse.jst.jsp.ui.java.search.ui.JSPQueryParticipant">

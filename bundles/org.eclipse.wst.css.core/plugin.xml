@@ -2,9 +2,9 @@
 <?eclipse version="3.0"?>
 <plugin
    id="org.eclipse.wst.css.core"
-   name="%Structured_Source_CSS_Model.name"
+   name="%pluginName"
    version="1.0.0"
-   provider-name="Eclipse.org"
+   provider-name="%providerName"
    class="org.eclipse.wst.css.core.CSSCorePlugin">
 
    <runtime>
@@ -64,7 +64,7 @@
    </extension>
    <extension point="org.eclipse.core.filebuffers.documentCreation"
          id="org.eclipse.wst.css.core.documentfactories"
-         name="Structured CSS Document Factory">
+         name="%Structured_CSS_Document_Factory_Extension.name">
       <factory
             contentTypeId="org.eclipse.wst.css.core.csssource"
             class="org.eclipse.wst.sse.core.filebuffers.BasicStructuredDocumentFactory:org.eclipse.wst.css.core.csssource"/>
@@ -88,7 +88,7 @@
          <content-type
                file-extensions="css"
                priority="high"
-               name="CSS Content Type"
+               name="%CSS_Content_Type_Extension_Element.name"
                id="csssource"
                base-type="org.eclipse.core.runtime.text">
 			<describer class="org.eclipse.wst.css.core.internal.content.ContentDescriberForCSS"/>

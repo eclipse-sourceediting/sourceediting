@@ -13,13 +13,13 @@
    <element name="extension">
       <complexType>
          <all>
-			<element ref="characterpairmatcher"/>
-			<element ref="contentoutlineconfiguration"/>
-			<element ref="preferencepages"/>
-			<element ref="propertysheetconfiguration"/>
-			<element ref="sourceeditingtexttools"/>
-			<element ref="spellchecktarget"/>
-			<element ref="textviewerconfiguration"/>
+            <element ref="characterpairmatcher"/>
+            <element ref="contentoutlineconfiguration"/>
+            <element ref="preferencepages"/>
+            <element ref="propertysheetconfiguration"/>
+            <element ref="sourceeditingtexttools"/>
+            <element ref="spellchecktarget"/>
+            <element ref="textviewerconfiguration"/>
          </all>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -40,6 +40,9 @@
                <documentation>
                   
                </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
