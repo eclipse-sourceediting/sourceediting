@@ -402,14 +402,16 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 		try {
 			IPath filePath = new Path(fileName);
 			IFile f = ResourcesPlugin.getWorkspace().getRoot().getFile(filePath);
-			if(!f.exists()) {
+			if(f != null && !f.exists()) {
 				f = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(filePath);
 			}
-			is = f.getContents();
-			while ((c = is.read()) != -1) {
-				count++;
-				s.append((char) c);
-			}
+            if (f != null && f.exists()) {
+    			is = f.getContents();
+    			while ((c = is.read()) != -1) {
+    				count++;
+    				s.append((char) c);
+    			}
+            }
 		}
 		catch (Exception e) {
 			if (Debug.debugStructuredDocument)
