@@ -8,12 +8,10 @@
  **************************************************************************************************/
 package org.eclipse.wst.web.ui.internal;
 
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.wst.web.internal.WSTWebPreferences;
 import org.osgi.framework.BundleContext;
 
 /**

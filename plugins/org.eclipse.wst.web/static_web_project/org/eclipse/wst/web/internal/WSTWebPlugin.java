@@ -11,8 +11,6 @@ package org.eclipse.wst.web.internal;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
