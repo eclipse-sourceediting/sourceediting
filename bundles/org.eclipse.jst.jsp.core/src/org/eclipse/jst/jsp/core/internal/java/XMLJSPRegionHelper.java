@@ -10,13 +10,14 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.java;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.wst.common.contentmodel.CMDocument;
@@ -383,16 +384,14 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	protected String getContents(String fileName) {
 		StringBuffer s = new StringBuffer();
 		int c = 0;
-		int length = 0;
 		int count = 0;
-		File file = null;
 		InputStream is = null;
 		try {
-			file = new File(fileName);
-			length = (int) file.length();
-			//is = WorkspaceFileHelper.getFileInputStream(fileName);
-			is = new FileInputStream(fileName);
-			while (((c = is.read()) >= 0) && (count < length)) {
+			// filename is now going to be project relative beacuse of
+			// our use of FileBuffers
+			IFile f = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(fileName));
+			is = f.getContents();
+			while ((c = is.read()) != -1) {
 				count++;
 				s.append((char) c);
 			}
