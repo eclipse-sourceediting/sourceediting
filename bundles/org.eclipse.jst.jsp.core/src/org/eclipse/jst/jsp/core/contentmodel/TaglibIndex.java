@@ -123,6 +123,10 @@ public class TaglibIndex {
 		return records;
 	}
 
+	public static IPath getContextRoot(IPath path) {
+		return _instance.internalGetContextRoot(path);
+	}
+
 	public static void removeTaglibIndexListener(ITaglibIndexListener listener) {
 	}
 
@@ -154,7 +158,7 @@ public class TaglibIndex {
 		return description;
 	}
 
-	ITaglibRecord[] internalGetAvailableTaglibRecords(IPath location) {
+	private ITaglibRecord[] internalGetAvailableTaglibRecords(IPath location) {
 		ITaglibRecord[] records = null;
 		IFile baseResource = ResourcesPlugin.getWorkspace().getRoot().getFile(location);
 		if (baseResource != null) {
@@ -167,6 +171,23 @@ public class TaglibIndex {
 			records = new ITaglibRecord[0];
 		}
 		return records;
+	}
+
+	private IPath internalGetContextRoot(IPath path) {
+		IFile baseResource = FileBuffers.getWorkspaceFileAtLocation(path);
+		if (baseResource != null) {
+			IProject project = baseResource.getProject();
+			ProjectDescription description = _instance.createDescription(project);
+			IPath rootPath = description.getLocalRoot(baseResource.getFullPath());
+			return ResourcesPlugin.getWorkspace().getRoot().getLocation().append(rootPath);
+		}
+		// try to handle out-of-workspace paths
+		IPath root = path;
+		while (root != null && !root.isRoot())
+			root = root.removeLastSegments(1);
+		if (root == null)
+			root = path;
+		return root;
 	}
 
 	private ITaglibRecord internalResolve(String baseLocation, String reference, boolean crossProjects) {

@@ -392,7 +392,15 @@ class ProjectDescription {
 	 * @return
 	 */
 	private String getLocalRoot(String baseLocation) {
-		IResource file = FileBuffers.getWorkspaceFileAtLocation(new Path(baseLocation));
+		return getLocalRoot(new Path(baseLocation)).toString();
+	}
+
+	/**
+	 * @param baseLocation
+	 * @return the applicable Web context root path, if one exists
+	 */
+	IPath getLocalRoot(IPath baseLocation) {
+		IResource file = FileBuffers.getWorkspaceFileAtLocation(baseLocation);
 		while (file != null) {
 			/**
 			 * Treat any parent folder with a WEB-INF subfolder as a web-app
@@ -409,13 +417,13 @@ class ProjectDescription {
 			if (folder != null && (folder.getType() & IResource.ROOT) == 0) {
 				IFolder webinf = folder.getFolder(WEB_INF_PATH);
 				if (webinf != null && webinf.exists()) {
-					return folder.getFullPath().toString();
+					return folder.getFullPath();
 				}
 			}
 			file = file.getParent();
 		}
 
-		return fProject.getFullPath().toString();
+		return fProject.getFullPath();
 	}
 
 	/**
