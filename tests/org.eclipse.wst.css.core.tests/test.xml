@@ -6,7 +6,7 @@
 	<!-- <property name="eclipse-home" value="${basedir}\..\.." /> -->
 
 	<!-- sets the properties plugin-name, and library-file -->
-	<property name="plugin-name" value="org.eclipse.jst.jsp.core.tests" />
+	<property name="plugin-name" value="org.eclipse.wst.css.core.tests" />
 	<property name="library-file" value="${eclipse-home}/plugins/org.eclipse.test_3.1.0/library.xml" />
 
 		<echo message="basedir ${basedir}" />
