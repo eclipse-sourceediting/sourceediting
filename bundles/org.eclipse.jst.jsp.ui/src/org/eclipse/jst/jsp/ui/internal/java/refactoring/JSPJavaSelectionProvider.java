@@ -40,7 +40,7 @@ class JSPJavaSelectionProvider {
 					JSPTranslationAdapter adapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
 					if (adapter != null) {
 						JSPTranslation translation = adapter.getJSPTranslation();
-						elements = translation.getElementsFromJspRange(textSelection.getOffset(), textSelection.getLength());
+						elements = translation.getElementsFromJspRange(textSelection.getOffset(), textSelection.getOffset() + textSelection.getLength());
 					}
 				}
 			}
