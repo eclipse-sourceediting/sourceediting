@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.wst.sse.ui.Logger;
 import org.eclipse.wst.sse.ui.internal.reconcile.IReconcileAnnotationKey;
-import org.eclipse.wst.validation.core.IValidator;
+import org.eclipse.wst.validation.internal.core.IValidator;
 
 
 /**
