@@ -1,2 +1,5 @@
 bin
 
+build.xml
+dtdeditor.jar
+temp.folder
