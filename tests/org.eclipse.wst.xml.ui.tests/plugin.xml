@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="org.eclipse.wst.xml.ui.tests"
+   name="Structured Source Editor for XML Tests"
+   version="1.0.0"
+   provider-name="IBM"
+   class="org.eclipse.wst.xml.ui.tests.SSEForXMLTestsPlugin">
+
+   <runtime>
+      <library name="ssexmltests.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.eclipse.core.runtime.compatibility"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.eclipse.wst.xml.ui"/>
+      <import plugin="org.eclipse.wst.sse.ui"/>
+      <import plugin="org.eclipse.ui.editors"/>
+      <import plugin="org.eclipse.ui.workbench.texteditor"/>
+      <import plugin="org.eclipse.ui.ide"/>
+      <import plugin="org.junit"/>
+      <import plugin="org.eclipse.wst.sse.core"/>
+      <import plugin="org.eclipse.ui.views"/>
+      <import plugin="org.eclipse.wst.common.encoding"/>
+      <import plugin="org.eclipse.core.resources"/>
+   </requires>
+
+
+   <extension
+         id="ssexmltests"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="org.eclipse.wst.xml.ui.tests.application.SSEXMLTests">
+         </run>
+      </application>
+   </extension>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="Experimental"
+            id="org.eclipse.wst.xml.ui.tests">
+      </category>
+      <view
+            name="Embedded XML Structured Text Viewer"
+            icon="icons/sourceEditor.gif"
+            category="org.eclipse.wst.xml.ui.tests"
+            class="org.eclipse.wst.xml.ui.tests.ViewerTestXML"
+            id="org.eclipse.wst.xml.ui.tests.ViewerTestXML">
+      </view>
+   </extension>
+   
+<!-- test for breakpoint error handling - ->
+   <extension
+         point="org.eclipse.wst.sse.ui.extensions.breakpoint">
+      <breakpointContribution
+            id="org.eclipse.wst.xml.ui.providers.test">
+         <provider
+               contentTypes="org.eclipse.wst.xml.core.xmlsource,org.eclipse.core.runtime.xml"
+               class="org.eclipse.wst.xml.ui.tests.breakpoints.BreakpointErrorProvider"
+               id="org.eclipse.wst.xml.ui.tests.breakpoints.BreakpointErrorProvider">
+         </provider>
+      </breakpointContribution>
+   </extension>
+   -->
+   <extension
+         point="org.eclipse.wst.sse.ui.extendedEditorActions">
+      <editorContribution
+            targetID="org.eclipse.wst.sse.ui.StructuredTextEditor"
+            id="org.eclipse.wst.xml.ui.tests.actions">
+         <action
+               popupmenuPath="group.add"
+               class="org.eclipse.wst.xml.ui.tests.breakpoints.EnableWarningAction"
+               menubarPath="edit/MenuAdditions"
+               id="org.eclipse.wst.xml.ui.tests.breakpoints.EnableWarningAction">
+         </action>
+      </editorContribution>
+   </extension>
+</plugin>

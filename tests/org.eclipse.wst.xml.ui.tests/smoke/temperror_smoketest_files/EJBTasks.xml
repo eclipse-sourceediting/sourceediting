@@ -1,0 +1,20 @@
+<project name="AntTasks" default="compile">
+
+       <target name="compile">
+              <echo message="COMPILE STARTED"/>
+
+              <accessBeanRegeneration EJBProjectName="EJB20Project"/>
+              <accessBeanRegeneration EJBProjectName="EJB20Project" suspendProjectValidation="true"/>
+              <accessBeanRegeneration EJBProjectName="EJB20Project" suspendProjectValidation="true"/>              
+              
+              <echo message="Testing ejbDeploy"/>
+              <echo message="ejbDeploy noValidate, ignoreErrors, quiet"/>
+              <ejbDeploy EJBProject="EJB20Project" quiet="true" noValidate="true" ignoreErrors="true"/>
+
+              <echo message="ejbDeploy"/>
+              <ejbDeploy EJBProject="EJB20Project"/>
+              
+              <echo message="COMPILE COMPLETED"/>
+       </target>
+
+</project>

@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<!DOCTYPE TestSuite SYSTEM "ATS.dtd">
+<TestSuite suiteGenerator = "GOTCHA Release 2.5" matser = "gef4.field.set">
+<Statistic> 
+  modelname="gef3data gef3funcs gef3rules gef3CC gef3TC" 
+</Statistic>
+<Model>
+  <StateVar name="redoPointer" range="0..2" coverage="true" cname="redoPointer"/>
+  <StateVar name="commandStack[1].opcode" range="InvalidOpCode, CreateAction, DeleteAction" coverage="false" cname="commandStack[1].opcode"/>
+  <StateVar name="commandStack[1].containerData[0].layout" range="InvalidLayout, ValidLayout" coverage="false" cname="commandStack[1].containerData[0].layout"/>
+  <StateVar name="commandStack[1].containerData[0].nummembers" range="0..2" coverage="false" cname="commandStack[1].containerData[0].nummembers"/>
+  <StateVar name="commandStack[1].containerData[1].layout" range="InvalidLayout, ValidLayout" coverage="false" cname="commandStack[1].containerData[1].layout"/>
+  <StateVar name="commandStack[1].containerData[1].nummembers" range="0..2" coverage="false" cname="commandStack[1].containerData[1].nummembers"/>
+  <StateVar name="commandStack[1].memberData[0][0]" range="false, true" coverage="false" cname="commandStack[1].memberData[0][0]"/>
+  <StateVar name="commandStack[1].memberData[0][1]" range="false, true" coverage="false" cname="commandStack[1].memberData[0][1]"/>
+  <StateVar name="commandStack[1].memberData[1][0]" range="false, true" coverage="false" cname="commandStack[1].memberData[1][0]"/>
+  <StateVar name="commandStack[1].memberData[1][1]" range="false, true" coverage="false" cname="commandStack[1].memberData[1][1]"/>
+  <StateVar name="commandStack[2].opcode" range="InvalidOpCode, CreateAction, DeleteAction" coverage="false" cname="commandStack[2].opcode"/>
+  <StateVar name="commandStack[2].containerData[0].layout" range="InvalidLayout, ValidLayout" coverage="false" cname="commandStack[2].containerData[0].layout"/>
+  <StateVar name="commandStack[2].containerData[0].nummembers" range="0..2" coverage="false" cname="commandStack[2].containerData[0].nummembers"/>
+  <StateVar name="commandStack[2].containerData[1].layout" range="InvalidLayout, ValidLayout" coverage="false" cname="commandStack[2].containerData[1].layout"/>
+  <StateVar name="commandStack[2].containerData[1].nummembers" range="0..2" coverage="false" cname="commandStack[2].containerData[1].nummembers"/>
+  <StateVar name="commandStack[2].memberData[0][0]" range="false, true" coverage="false" cname="commandStack[2].memberData[0][0]"/>
+  <StateVar name="commandStack[2].memberData[0][1]" range="false, true" coverage="false" cname="commandStack[2].memberData[0][1]"/>
+  <StateVar name="commandStack[2].memberData[1][0]" range="false, true" coverage="false" cname="commandStack[2].memberData[1][0]"/>
+  <StateVar name="commandStack[2].memberData[1][1]" range="false, true" coverage="false" cname="commandStack[2].memberData[1][1]"/>
+  <StateVar name="container[0].layout" range="InvalidLayout, ValidLayout" coverage="false" cname="container[0].layout"/>
+  <StateVar name="container[0].selected[GraphView]" range="false, true" coverage="false" cname="container[0].selected[0]"/>
+  <StateVar name="container[0].selected[TreeView]" range="false, true" coverage="false" cname="container[0].selected[1]"/>
+  <StateVar name="container[0].member[0].created" range="false, true" coverage="false" cname="container[0].member[0].created"/>
+  <StateVar name="container[0].member[0].selected[GraphView]" range="false, true" coverage="false" cname="container[0].member[0].selected[0]"/>
+  <StateVar name="container[0].member[0].selected[TreeView]" range="false, true" coverage="false" cname="container[0].member[0].selected[1]"/>
+  <StateVar name="container[0].member[1].created" range="false, true" coverage="false" cname="container[0].member[1].created"/>
+  <StateVar name="container[0].member[1].selected[GraphView]" range="false, true" coverage="false" cname="container[0].member[1].selected[0]"/>
+  <StateVar name="container[0].member[1].selected[TreeView]" range="false, true" coverage="false" cname="container[0].member[1].selected[1]"/>
+  <StateVar name="container[1].layout" range="InvalidLayout, ValidLayout" coverage="false" cname="container[1].layout"/>
+  <StateVar name="container[1].selected[GraphView]" range="false, true" coverage="false" cname="container[1].selected[0]"/>
+  <StateVar name="container[1].selected[TreeView]" range="false, true" coverage="false" cname="container[1].selected[1]"/>
+  <StateVar name="container[1].member[0].created" range="false, true" coverage="false" cname="container[1].member[0].created"/>
+  <StateVar name="container[1].member[0].selected[GraphView]" range="false, true" coverage="false" cname="container[1].member[0].selected[0]"/>
+  <StateVar name="container[1].member[0].selected[TreeView]" range="false, true" coverage="false" cname="container[1].member[0].selected[1]"/>
+  <StateVar name="container[1].member[1].created" range="false, true" coverage="false" cname="container[1].member[1].created"/>
+  <StateVar name="container[1].member[1].selected[GraphView]" range="false, true" coverage="false" cname="container[1].member[1].selected[0]"/>
+  <StateVar name="container[1].member[1].selected[TreeView]" range="false, true" coverage="false" cname="container[1].member[1].selected[1]"/>
+  <RuleDesc name="initialize()"/>
+  <RuleDesc name="redoAction()"/>
+  <RuleDesc name="undoAction()"/>
+  <RuleDesc name="createMembersAction(Object WindowInFocus)"/>
+  <RuleDesc name="createContainerAction(int lay, Object WindowInFocus)"/>
+  <RuleDesc name="deleteAction(Object WindowInFocus)"/>
+  <RuleDesc name="deselectMember(int memnum, Object WindowInFocus)"/>
+  <RuleDesc name="selectMember(int contnum, int memnum, Object WindowInFocus)"/>
+  <RuleDesc name="deselectContainer(int contnum, Object WindowInFocus)"/>
+  <RuleDesc name="selectContainer(int contnum, Object WindowInFocus)"/>
+  <RuleDesc name="testDone()"/>
+</Model>
+<Coverage cid="0" type="CC_All_Transition" name="InterestingHistory()" params="op1 = 6  op2 = 6"/>
+<Coverage cid="1" type="CC_All_Transition" name="InterestingHistory()" params="op1 = 6  op2 = 7"/>
+<Coverage cid="2" type="CC_All_Transition" name="InterestingHistory()" params="op1 = 6  op2 = 8"/>
+<Coverage cid="3" type="CC_All_Transition" name="InterestingHistory()" params="op1 = 7  op2 = 6"/>
+<Coverage cid="4" type="CC_All_Transition" name="InterestingHistory()" params="op1 = 7  op2 = 7"/>
+<Coverage cid="5" type="CC_All_Transition" name="InterestingHistory()" params="op1 = 7  op2 = 8"/>
+<Coverage cid="6" type="CC_All_Transition" name="InterestingHistory()" params="op1 = 8  op2 = 6"/>
+<Coverage cid="7" type="CC_All_Transition" name="InterestingHistory()" params="op1 = 8  op2 = 7"/>
+<Coverage cid="8" type="CC_All_Transition" name="InterestingHistory()" params="op1 = 8  op2 = 8"/>
+<Directive> 
+  commandLine = "gotcha gef3.cpp -c gef3data.g gef3funcs.g gef3rules.g gef3CC.g gef3TC.g -m75 -p4 -o gef4 -gotfp5 -st20" 
+  Seed = "498568455"
+</Directive>
+<TestSuiteFiles>
+  <File path="gef4.field_0.set" firstTestCase="TestCase0" lastTestCase="TestCase22"/>
+</TestSuiteFiles>
+<LogEvent source="9.27.232.104" lid ="gef4.ats" timestamp ="976541293400" type ="START">
+</LogEvent>
+<Result source="9.27.232.104" status="Failure">
+<![CDATA[
+on Post-Condition in Test Suite
+]]>
+</Result>
+<LogEvent source="9.27.232.104" lid ="gef4.ats" timestamp ="976541384681" type ="COMPLETE">
+</LogEvent>
+<Result status="Failure">
+</Result>
+</TestSuite>

@@ -1,0 +1,76 @@
+
+    <JobPosting> 
+        <HiringOrg>
+            <OrgName>IBM</OrgName> 
+	        <Website>http://www.ibm.com</Website> 
+		<BusType>Application and Middleware Software</BusType> 
+		<Contact> 
+		    <Name>
+                        <First>Mary</First>
+                        <Last>Roberts</Last>
+                    </Name> 
+		    <JobTitle>Development Manager</JobTitle> 
+		    <Address> 
+		        <AddressLine>1150 Eglinton Ave</AddressLine> 
+			<AddressLine>Station 2T</AddressLine> 
+			<City>Toronto</City> 
+			<State>Ontario</State> 
+			<PostalCode>M1C3HP</PostalCode> 
+		    </Address> 
+		    <PhoneNumbers> 
+		        <Voice> 
+			    <AreaCode>416</AreaCode> 
+			    <TelNumber>448-4415</TelNumber> 
+			</Voice> 
+		    </PhoneNumbers> 
+		</Contact> 
+	</HiringOrg> 
+         
+    <JobInformation> 
+	<JobTitle>Software Developer</JobTitle> 
+	<Location>Toronto</Location> 
+	<Description> 
+	    <JobPurpose> 
+	        <p>Architect, design and implement WebSphere tooling</p>
+            </JobPurpose> 
+	    <EssentialFunctions> 
+                <ul> 
+		    <li>Architect and implement tooling for building XML</li>
+                    <li>Research latest Web development technologies</li>
+                    <li>Lead customer engagement projects</li> 
+		</ul> 
+	    </EssentialFunctions> 
+	    <QualifRequired> 
+	        <SoftwareRequired>Java</SoftwareRequired>
+		<SoftwareRequired>XML</SoftwareRequired> 
+                <EducationRequired> 
+		    <Degree>BS and higher</Degree>
+	            <Major>Computing Science or engineering</Major> 
+		</EducationRequired> 
+	    </QualifRequired> 
+                  
+	    <Preferences> 
+	        <p>Prefer candidate must have 5 - 10 years experience in a related job</p>
+            </Preferences> 
+	    <Compensation>
+                <p>6 digits</p>
+            </Compensation> 
+	</Description> 
+                
+        <HowToApply distribute="internal"> 
+	    <p>Qualified candidates are encouraged to apply at IBM's office.</p> 
+        </HowToApply> 
+        
+	<HowToApply distribute="external"> 
+            <p>Qualified candidates should submit their resumes via e-mail 
+               (in MSWord format) to Mary Roberts at 
+	        <Link mailTo="mroberts@ibm.com">mroberts@ibm.com</Link>. 
+            </p> 
+        </HowToApply> 
+        
+	<EEOStatement> 
+	  <p>IBM is an equal opportunity employer</p> 
+	</EEOStatement> 
+    </JobInformation> 
+</JobPosting>
+

@@ -1,0 +1,7 @@
+bin
+bin.project
+.project
+build.xml
+org.eclipse.wst.xml.core.tests_1.0.0.jar
+ssemodelxmltests.jar
+temp.folder

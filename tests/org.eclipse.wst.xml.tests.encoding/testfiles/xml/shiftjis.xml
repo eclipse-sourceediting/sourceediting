@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<Person>
+	<Address>
+		<City>大和</City>
+		<State>神奈川</State>
+		<Zip>M1C 5C2</Zip>
+		<Country>日本</Country>
+	</Address>
+	<Name>
+		<First>一郎</First>
+		<Last>鈴木</Last>
+	</Name>
+</Person>

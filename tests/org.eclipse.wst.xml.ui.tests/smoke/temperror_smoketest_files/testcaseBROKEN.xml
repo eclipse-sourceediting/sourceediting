@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE testcase SYSTEM "testcase.dtd" >
+<testcase>
+  <header category="webtool" number="idvalue0" state="UnderConstruction" subCategory="Accessability" subSubCategory="">   
+    <subject>subject</subject>
+    <author>author</author>
+    <coauthor>coauthor</coauthor>
+    <creation_date>creation_date</creation_date>
+    <!--=========================================|errors| 
+    	- Element type "chicken" must be declared
+    	- Unknown element "chicken"
+    ==================================================-->
+    <!-- delete the <chicken></chicken> element -->
+    <chicken></chicken>
+    <!--=========================================|errors|
+		- Ill-formed syntax: <startedButNotEnded
+		- Missing end tag "startedButNotEnded"
+		- Unknown element "startedButNotEnded"
+    ==================================================-->
+    <!-- delete <startedButNotEnded -->
+    <startedButNotEnded
+  </header>
+  <summary>
+    <!--=========================================|errors| 
+  		- Missing required attribute "type"
+    ==================================================-->
+  	<!-- add this attribute to testBucket>> type="ComponentTest"> -->
+    <testBucket/>
+    <!--=========================================|errors| 
+    	- Attribute "type" is missing a value
+    ==================================================-->	    
+    <!-- add quotes, then content assist value for attr "type" -->
+    <platform type=/>
+    <part>part</part>
+    <release>release</release>
+  </summary>
+  <definition>
+    <!--=========================================|errors| 
+    	- Unknown element "Purpose"
+    	- Missing start tag "Purpose"
+    	- Missing end tag "purpose"
+    ==================================================-->
+    <!-- change </Purpose> to </purpose> -->
+    <purpose>purpose</Purpose>
+    <prerequisite number="idvalue0"/>
+    <!--=========================================|errors| 
+    	- Attribute "cedure" has no value
+    	- Unknown element "pro"
+    	- Missing end tag "pro"
+    	- Missing start tag "procedure"
+    ==================================================-->    
+    <pro cedure>procedure</procedure>
+    <expected_results>expected_results</expected_results>
+  </definition>
+  <execution/>
+</testcase>

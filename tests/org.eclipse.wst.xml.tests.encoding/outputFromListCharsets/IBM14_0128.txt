@@ -1,0 +1,857 @@
+
+Current Locale: en_US
+
+JRE version: J2RE 1.4.2 IBM Windows 32 build cndev-20040128 (JIT enabled: jitc)
+-- listing properties --
+java.assistive=ON
+java.runtime.name=Java(TM) 2 Runtime Environment, Stand...
+sun.boot.library.path=D:\builds\Daily\wswb-SDK-I20040226-wi...
+java.vm.version=1.4.2
+java.vm.vendor=IBM Corporation
+java.vendor.url=http://www.ibm.com/
+path.separator=;
+java.vm.name=Classic VM
+file.encoding.pkg=sun.io
+user.country=US
+sun.os.patch.level=Service Pack 1
+java.vm.specification.name=Java Virtual Machine Specification
+user.dir=D:\builds\Daily\eclipse-SDK-I20040304...
+java.runtime.version=1.4.2
+java.fullversion=J2RE 1.4.2 IBM Windows 32 build cndev...
+java.awt.graphicsenv=sun.awt.Win32GraphicsEnvironment
+java.endorsed.dirs=D:\builds\Daily\wswb-SDK-I20040226-wi...
+os.arch=x86
+java.io.tmpdir=C:\DOCUME~1\DAVIDW~1.DMW\LOCALS~1\Temp\
+line.separator=
+
+java.vm.specification.vendor=Sun Microsystems Inc.
+user.variant=
+java.awt.fonts=
+os.name=Windows XP
+sun.java2d.fontpath=
+java.library.path=D:\builds\Daily\wswb-SDK-I20040226-wi...
+java.specification.name=Java Platform API Specification
+java.class.version=48.0
+ibm.system.encoding=Cp1252
+java.util.prefs.PreferencesFactory=java.util.prefs.WindowsPreferencesFac...
+invokedviajava=
+os.version=5.1
+user.home=C:\Documents and Settings\davidw.DMW2T23
+user.timezone=
+java.awt.printerjob=sun.awt.windows.WPrinterJob
+java.specification.version=1.4
+file.encoding=Cp1252
+user.name=davidw
+java.class.path=D:\builds\Daily\eclipse-SDK-I20040304...
+java.vm.specification.version=1.0
+sun.arch.data.model=32
+java.home=D:\builds\Daily\wswb-SDK-I20040226-wi...
+java.specification.vendor=Sun Microsystems Inc.
+user.language=en
+awt.toolkit=sun.awt.windows.WToolkit
+java.vm.info=J2RE 1.4.2 IBM Windows 32 build cndev...
+java.version=1.4.2
+java.ext.dirs=D:\builds\Daily\wswb-SDK-I20040226-wi...
+sun.boot.class.path=D:\builds\Daily\wswb-SDK-I20040226-wi...
+java.vendor=IBM Corporation
+file.separator=\
+java.vendor.url.bug=
+java.compiler=jitc
+sun.io.unicode.encoding=UnicodeLittle
+Available Locales
+ar
+ar_AE
+ar_BH
+ar_DZ
+ar_EG
+ar_IQ
+ar_JO
+ar_KW
+ar_LB
+ar_LY
+ar_MA
+ar_OM
+ar_QA
+ar_SA
+ar_SD
+ar_SY
+ar_TN
+ar_YE
+be
+be_BY
+bg
+bg_BG
+bn_IN
+ca
+ca_ES
+ca_ES_PREEURO
+cs
+cs_CZ
+da
+da_DK
+da_DK_EURO
+de
+de_AT
+de_AT_PREEURO
+de_CH
+de_DE
+de_DE_PREEURO
+de_LU
+de_LU_PREEURO
+el
+el_GR
+el_GR_PREEURO
+en
+en_AU
+en_BE
+en_BE_PREEURO
+en_CA
+en_GB
+en_GB_EURO
+en_HK
+en_IE
+en_IE_PREEURO
+en_IN
+en_NZ
+en_PH
+en_SG
+en_US
+en_ZA
+es
+es_AR
+es_BO
+es_CL
+es_CO
+es_CR
+es_DO
+es_EC
+es_ES
+es_ES_PREEURO
+es_GT
+es_HN
+es_MX
+es_NI
+es_PA
+es_PE
+es_PR
+es_PY
+es_SV
+es_US
+es_UY
+es_VE
+et
+et_EE
+fi
+fi_FI
+fi_FI_PREEURO
+fr
+fr_BE
+fr_BE_PREEURO
+fr_CA
+fr_CH
+fr_FR
+fr_FR_PREEURO
+fr_LU
+fr_LU_PREEURO
+gu
+gu_IN
+hi
+hi_IN
+hr
+hr_HR
+hu
+hu_HU
+in
+in_ID
+is
+is_IS
+it
+it_CH
+it_IT
+it_IT_PREEURO
+iw
+iw_IL
+ja
+ja_JP
+kk
+kk_KZ
+kn
+kn_IN
+ko
+kok_IN
+ko_KR
+lt
+lt_LT
+lv
+lv_LV
+mk
+mk_MK
+ml_IN
+mr
+mr_IN
+ms
+ms_MY
+nb_NO
+nl
+nl_BE
+nl_BE_PREEURO
+nl_NL
+nl_NL_PREEURO
+no
+no_NO
+no_NO_NY
+or_IN
+pa
+pa_IN
+pl
+pl_PL
+pt
+pt_BR
+pt_PT
+pt_PT_PREEURO
+ro
+ro_RO
+ru
+ru_RU
+sa
+sa_IN
+sh
+sh_YU
+sk
+sk_SK
+sl
+sl_SI
+sq
+sq_AL
+sr
+sr_YU
+sv
+sv_SE
+sv_SE_EURO
+ta
+ta_IN
+te
+te_IN
+th
+th_TH
+th_TH_TH
+tr
+tr_TR
+uk
+uk_UA
+vi
+vi_VN
+zh
+zh_CN
+zh_CN_HK
+zh_HK
+zh_SG
+zh_TW
+file.encoding.pkg: sun.io
+file.encoding: Cp1252
+
+
+Available Charsets
+1.  Charsetname: Big5
+	displayName: Big5: PC Taiwan Big 5
+	aliases: [big5, Big5-HKSCS]
+2.  Charsetname: CESU-8
+	displayName: CESU-8: Unicode UTF-8 (without surrogates)
+	aliases: [CESU8]
+3.  Charsetname: COMPOUND_TEXT
+	displayName: COMPOUND_TEXT: X11 Compound Text
+	aliases: [x-compound-text, x11-compound-text]
+4.  Charsetname: EUC-CN
+	displayName: EUC-CN: EUC China
+	aliases: [euc_cn, euccn, ibm-euccn]
+5.  Charsetname: EUC-JP
+	displayName: EUC-JP: EUC Japan
+	aliases: [euc-jp-linux, x-euc-jp, x-eucjp, euc_jp_linux, eucjp, euc_jp]
+6.  Charsetname: EUC-KR
+	displayName: EUC-KR: EUC Korea
+	aliases: [5601, ksc5601_1987, ksc_5601, ibm-euckr, ksc5601-1987, ibm-970, euc_kr, Cp970, ks_c_5601-1987, euckr]
+7.  Charsetname: EUC-TW
+	displayName: EUC-TW: EUC Taiwan
+	aliases: [euc_tw, cns11643, euctw]
+8.  Charsetname: GB18030
+	displayName: GB18030: PC China GB18030
+	aliases: [windows-54936, ibm-1392, gb18030-2000]
+9.  Charsetname: GB2312
+	displayName: GB2312
+	aliases: [gb2312-80, gb2312-1980]
+10.  Charsetname: GBK
+	displayName: GBK: PC China GBK
+	aliases: [GBK]
+11.  Charsetname: hp-roman8
+	displayName: hp-roman8: HP Roman 8
+	aliases: [Cp1051, ibm-1051, roman8, r8]
+12.  Charsetname: IBM-037
+	displayName: IBM-037: EBCDIC United States
+	aliases: [ibm-37]
+13.  Charsetname: IBM-1006
+	displayName: IBM-1006: ISO Urdu
+	aliases: [ibm1006, Cp1006]
+14.  Charsetname: IBM-1025
+	displayName: IBM-1025: EBCDIC Cyrillic
+	aliases: [ibm1025, Cp1025]
+15.  Charsetname: IBM-1026
+	displayName: IBM-1026: EBCDIC Latin 5 (Turkey)
+	aliases: [Cp1026, ibm1026]
+16.  Charsetname: IBM-1027
+	displayName: IBM-1027: EBCDIC SBCS Japan
+	aliases: [ibm1027, Cp1027]
+17.  Charsetname: IBM-1041
+	displayName: IBM-1041: PC SBCS-only Japan
+	aliases: [Cp1041, ibm1041]
+18.  Charsetname: IBM-1043
+	displayName: IBM-1043: PC SBCS-only Taiwan
+	aliases: [Cp1043, ibm1043]
+19.  Charsetname: IBM-1046
+	displayName: IBM-1046: EBCDIC Arabic
+	aliases: [ibm1046, Cp1046]
+20.  Charsetname: IBM-1046S
+	displayName: IBM-1046S: EBCDIC Arabic (shaped)
+	aliases: [Cp1046S, ibm1046S]
+21.  Charsetname: IBM-1047
+	displayName: IBM-1047: EBCDIC Open Edition
+	aliases: [Cp1047, ibm1047]
+22.  Charsetname: IBM-1088
+	displayName: IBM-1088: PC SBCS-only Korean KS
+	aliases: [Cp1088, ibm1088]
+23.  Charsetname: IBM-1097
+	displayName: IBM-1097: EBCDIC Farsi
+	aliases: [Cp1097, ibm1097]
+24.  Charsetname: IBM-1098
+	displayName: IBM-1098: ISO Farsi
+	aliases: [Cp1098, ibm1098]
+25.  Charsetname: IBM-1112
+	displayName: IBM-1112: EBCDIC Baltic
+	aliases: [Cp1112, ibm1112]
+26.  Charsetname: IBM-1114
+	displayName: IBM-1114: PC SBCS-only Taiwan
+	aliases: [Cp1114, ibm1114]
+27.  Charsetname: IBM-1115
+	displayName: IBM-1115: PC SBCS-only China
+	aliases: [Cp1115, ibm1115]
+28.  Charsetname: IBM-1122
+	displayName: IBM-1122: EBCDIC Estonia
+	aliases: [Cp1122, ibm1122]
+29.  Charsetname: IBM-1123
+	displayName: IBM-1123: EBCDIC Ukraine
+	aliases: [Cp1123, ibm1123]
+30.  Charsetname: IBM-1124
+	displayName: IBM-1124: PC Ukraine
+	aliases: [Cp1124, ibm1124]
+31.  Charsetname: IBM-1140
+	displayName: IBM-1140: EBCDIC United States (euro)
+	aliases: [Cp1140, ibm1140]
+32.  Charsetname: IBM-1141
+	displayName: IBM-1141: EBCDIC Germany (euro)
+	aliases: [Cp1141, ibm1141]
+33.  Charsetname: IBM-1142
+	displayName: IBM-1142: EBCDIC Denmark, Norway (euro)
+	aliases: [Cp1142, ibm1142]
+34.  Charsetname: IBM-1143
+	displayName: IBM-1143: EBCDIC Finland, Sweden (euro)
+	aliases: [ibm1143, Cp1143]
+35.  Charsetname: IBM-1144
+	displayName: IBM-1144: EBCDIC Italy (euro)
+	aliases: [Cp1144, ibm1144]
+36.  Charsetname: IBM-1145
+	displayName: IBM-1145: EBCDIC Spain (euro)
+	aliases: [ibm1145, Cp1145]
+37.  Charsetname: IBM-1146
+	displayName: IBM-1146: EBCDIC UK, Ireland (euro)
+	aliases: [Cp1146, ibm1146]
+38.  Charsetname: IBM-1147
+	displayName: IBM-1147: EBCDIC France (euro)
+	aliases: [Cp1147, ibm1147]
+39.  Charsetname: IBM-1148
+	displayName: IBM-1148: EBCDIC Multilingual (euro)
+	aliases: [Cp1148, ibm1148]
+40.  Charsetname: IBM-1149
+	displayName: IBM-1149: EBCDIC Iceland
+	aliases: [Cp1149, ibm1149]
+41.  Charsetname: IBM-1351
+	displayName: IBM-1351: PC DBCS-only Japan
+	aliases: [Cp1351, ibm1351]
+42.  Charsetname: IBM-1362
+	displayName: IBM-1362: PC DBCS-only Korea KS extended
+	aliases: [Cp1362, ibm1362]
+43.  Charsetname: IBM-1363
+	displayName: IBM-1363: PC Korea KS extended
+	aliases: [Cp1363, ibm1363]
+44.  Charsetname: IBM-1363C
+	displayName: IBM-1363C: PC Korea KS extended (syntax)
+	aliases: [ibm1363C, Cp1363C]
+45.  Charsetname: IBM-1364
+	displayName: IBM-1364: EBCDIC Korea KS extended
+	aliases: [ibm1364, Cp1364]
+46.  Charsetname: IBM-1370
+	displayName: IBM-1370: PC Taiwan (euro)
+	aliases: [Cp1370, ibm1370]
+47.  Charsetname: IBM-1371
+	displayName: IBM-1371: EBCDIC Taiwan (euro)
+	aliases: [Cp1371, ibm1371]
+48.  Charsetname: IBM-1380
+	displayName: IBM-1380: PC DBCS-only China GB
+	aliases: [ibm1380, Cp1380]
+49.  Charsetname: IBM-1381
+	displayName: IBM-1381: PC China GB
+	aliases: [Cp1381, ibm1381]
+50.  Charsetname: IBM-1382
+	displayName: IBM-1382: EUC DBCS-only China GB
+	aliases: [ibm1382, Cp1382]
+51.  Charsetname: IBM-1383
+	displayName: IBM-1383: EUC China
+	aliases: [Cp1383, ibm1383]
+52.  Charsetname: IBM-1385
+	displayName: IBM-1385: PC DBCS-only China GBK
+	aliases: [Cp1385, ibm1385]
+53.  Charsetname: IBM-1386
+	displayName: IBM-1386: PC China GBK
+	aliases: [Cp1386, ibm1386]
+54.  Charsetname: IBM-1388
+	displayName: IBM-1388: EBCDIC China GBK
+	aliases: [ibm1388, Cp1388]
+55.  Charsetname: IBM-1390
+	displayName: IBM-1390: EBCDIC Japan Katakana (euro)
+	aliases: [Cp1390, ibm1390]
+56.  Charsetname: IBM-1399
+	displayName: IBM-1399: EBCDIC Japan Latin (euro)
+	aliases: [Cp1399, ibm1399]
+57.  Charsetname: IBM-273
+	displayName: IBM-273: EBCDIC Germany
+	aliases: [ibm273, Cp273]
+58.  Charsetname: IBM-277
+	displayName: IBM-277: EBCDIC Denmark, Norway
+	aliases: [Cp277, ibm277]
+59.  Charsetname: IBM-278
+	displayName: IBM-278: EBCDIC Finland, Sweden
+	aliases: [ibm278, Cp278]
+60.  Charsetname: IBM-280
+	displayName: IBM-280: EBCDIC Italy 
+	aliases: [ibm280, Cp280]
+61.  Charsetname: IBM-284
+	displayName: IBM-284: EBCDIC Spain, Latin America
+	aliases: [Cp284, ibm284]
+62.  Charsetname: IBM-285
+	displayName: IBM-285: EBCDIC UK, Ireland
+	aliases: [Cp285, ibm285]
+63.  Charsetname: IBM-290
+	displayName: IBM-290: EBCDIC SBCS Japan Katakana
+	aliases: [Cp290, ibm290]
+64.  Charsetname: IBM-297
+	displayName: IBM-297: EBCDIC France
+	aliases: [Cp297, ibm297]
+65.  Charsetname: IBM-300
+	displayName: IBM-300: EBCDIC DBCS-only Japan
+	aliases: [Cp300, ibm300]
+66.  Charsetname: IBM-301
+	displayName: IBM-301: PC DBCS-only Japan
+	aliases: [ibm301, Cp301]
+67.  Charsetname: IBM-33722
+	displayName: IBM-33722: EUC Japan
+	aliases: [Cp33722, ibm33722]
+68.  Charsetname: IBM-33722C
+	displayName: IBM-33722C: EUC Japan syntax
+	aliases: [ibm33722C, Cp33722C]
+69.  Charsetname: IBM-420
+	displayName: IBM-420: EBCDIC Arabic
+	aliases: [Cp420, ibm420]
+70.  Charsetname: IBM-420S
+	displayName: IBM-420S: EBCDIC Arabic shaped
+	aliases: [Cp420S, ibm420S]
+71.  Charsetname: IBM-424
+	displayName: IBM-424: EBCDIC Hebrew
+	aliases: [ibm424, Cp424]
+72.  Charsetname: IBM-437
+	displayName: IBM-437: PC United States
+	aliases: [Cp437, cspc8codepage437, ibm437]
+73.  Charsetname: IBM-500
+	displayName: IBM-500: EBCDIC Latin 1
+	aliases: [ibm500, Cp500]
+74.  Charsetname: IBM-737
+	displayName: IBM-737: MS-DOS Greek
+	aliases: [ibm737, Cp737]
+75.  Charsetname: IBM-775
+	displayName: IBM-775: MS-DOS Baltic Rim
+	aliases: [ibm775, Cp775]
+76.  Charsetname: IBM-808
+	displayName: IBM-808: PC Russian (euro)
+	aliases: [ibm808, Cp808]
+77.  Charsetname: IBM-833
+	displayName: IBM-833: EBCDIC SBCS Korean
+	aliases: [ibm833, Cp833]
+78.  Charsetname: IBM-834
+	displayName: IBM-834: EBCDIC DBCS-only Korean
+	aliases: [Cp834, ibm834]
+79.  Charsetname: IBM-835
+	displayName: IBM-835: EBCDIC DBCS-only Taiwan
+	aliases: [Cp835, ibm835]
+80.  Charsetname: IBM-836
+	displayName: IBM-836: EBCDIC SBCS China
+	aliases: [Cp836, ibm836]
+81.  Charsetname: IBM-837
+	displayName: IBM-837: EBCDIC DBCS-only China
+	aliases: [Cp837, ibm837]
+82.  Charsetname: IBM-838
+	displayName: IBM-838: EBCDIC Thai
+	aliases: [Cp838, ibm838]
+83.  Charsetname: IBM-850
+	displayName: IBM-850: PC Latin 1
+	aliases: [cspc850multilingual, Cp850, ibm850]
+84.  Charsetname: IBM-852
+	displayName: IBM-852: PC Latin 2
+	aliases: [Cp852, cspcp852, ibm852]
+85.  Charsetname: IBM-855
+	displayName: IBM-855: PC Cyrillic
+	aliases: [Cp855, ibm855]
+86.  Charsetname: IBM-856
+	displayName: IBM-856: PC Hebrew (old)
+	aliases: [Cp856, ibm856]
+87.  Charsetname: IBM-857
+	displayName: IBM-857: PC Latin 5
+	aliases: [csibm857, ibm857, Cp857]
+88.  Charsetname: IBM-858
+	displayName: IBM-858: PC Latin 1 (euro)
+	aliases: [Cp858, ibm858]
+89.  Charsetname: IBM-859
+	displayName: IBM-859: PC Latin 9
+	aliases: [Cp859, ibm859]
+90.  Charsetname: IBM-860
+	displayName: IBM-860: PC Portugal
+	aliases: [ibm860, Cp860]
+91.  Charsetname: IBM-861
+	displayName: IBM-861: PC Iceland
+	aliases: [Cp861, ibm861]
+92.  Charsetname: IBM-862
+	displayName: IBM-862: PC Israel
+	aliases: [Cp862, ibm862]
+93.  Charsetname: IBM-863
+	displayName: IBM-863: PC Canadian French 
+	aliases: [ibm863, Cp863]
+94.  Charsetname: IBM-864
+	displayName: IBM-864: PC Arabic
+	aliases: [ibm864, Cp864]
+95.  Charsetname: IBM-864S
+	displayName: IBM-864S: PC Arabic (shaped)
+	aliases: [ibm864S, Cp864S]
+96.  Charsetname: IBM-865
+	displayName: IBM-865: PC Nordic
+	aliases: [Cp865, ibm865]
+97.  Charsetname: IBM-866
+	displayName: IBM-866: PC Russia
+	aliases: [Cp866, ibm866]
+98.  Charsetname: IBM-867
+	displayName: IBM-867: PC Israel
+	aliases: [Cp867, ibm867]
+99.  Charsetname: IBM-868
+	displayName: IBM-868: PC Urdu
+	aliases: [Cp868, ibm868]
+100.  Charsetname: IBM-869
+	displayName: IBM-869: PC Greece
+	aliases: [Cp869, ibm869]
+101.  Charsetname: IBM-870
+	displayName: IBM-870: EBCDIC Latin 2
+	aliases: [Cp870, ibm870]
+102.  Charsetname: IBM-871
+	displayName: IBM-871: EBCDIC Iceland
+	aliases: [Cp871, ibm871]
+103.  Charsetname: IBM-874
+	displayName: IBM-874: PC Thai
+	aliases: [ibm874, Cp874]
+104.  Charsetname: IBM-875
+	displayName: IBM-875: EBCDIC Greek
+	aliases: [Cp875, ibm875]
+105.  Charsetname: IBM-897
+	displayName: IBM-897: PC SBCS-only Japan
+	aliases: [Cp897, ibm897]
+106.  Charsetname: IBM-918
+	displayName: IBM-918: EBCDIC Urdu
+	aliases: [ibm918, Cp918]
+107.  Charsetname: IBM-921
+	displayName: IBM-921: PC Baltic
+	aliases: [ibm921, Cp921]
+108.  Charsetname: IBM-922
+	displayName: IBM-922: PC Estonian
+	aliases: [Cp922, ibm922]
+109.  Charsetname: IBM-924
+	displayName: IBM-924: EBCDIC Latin 9
+	aliases: [ibm924, Cp924]
+110.  Charsetname: IBM-927
+	displayName: IBM-927: PC DBCS-only Taiwan
+	aliases: [ibm927, Cp927]
+111.  Charsetname: IBM-930
+	displayName: IBM-930: EBCDIC Japan DBCS
+	aliases: [Cp930, ibm930]
+112.  Charsetname: IBM-932
+	displayName: IBM-932: PC Japan SJIS-78 syntax
+	aliases: [Cp932, ibm932]
+113.  Charsetname: IBM-933
+	displayName: IBM-933: EBCDIC Korea DBCS
+	aliases: [Cp933, ibm933]
+114.  Charsetname: IBM-935
+	displayName: IBM-935: EBCDIC China DBCS
+	aliases: [Cp935, ibm935]
+115.  Charsetname: IBM-937
+	displayName: IBM-937: EBCDIC Taiwan DBCS
+	aliases: [Cp937, ibm937]
+116.  Charsetname: IBM-939
+	displayName: IBM-939: EBCDIC Japan Extended DBCS
+	aliases: [Cp939, ibm939]
+117.  Charsetname: IBM-942
+	displayName: IBM-942: PC Japan SJIS-78
+	aliases: [ibm942, Cp942]
+118.  Charsetname: IBM-942C
+	displayName: IBM-942C: PC Japan SJIS-78 syntax
+	aliases: [ibm942C, Cp942C]
+119.  Charsetname: IBM-943
+	displayName: IBM-943: PC Japan SJIS-90
+	aliases: [ibm943, Cp943]
+120.  Charsetname: IBM-943C
+	displayName: IBM-943C: PC Japan SJIS-90 syntax
+	aliases: [Cp943C, ibm943C]
+121.  Charsetname: IBM-947
+	displayName: IBM-947: PC DBCS-only Taiwan
+	aliases: [ibm947, Cp947]
+122.  Charsetname: IBM-948
+	displayName: IBM-948: PC Taiwan SAA
+	aliases: [ibm948, Cp948]
+123.  Charsetname: IBM-949
+	displayName: IBM-949: PC Korea (KS)
+	aliases: [Cp949, ibm949]
+124.  Charsetname: IBM-949C
+	displayName: IBM-949C: PC Korea (KS)
+	aliases: [Cp949C, ibm949C]
+125.  Charsetname: IBM-950
+	displayName: IBM-950: PC Taiwan
+	aliases: [ibm950, Cp950]
+126.  Charsetname: IBM-951
+	displayName: IBM-951: PC DBCS-only Korean
+	aliases: [Cp951, ibm951]
+127.  Charsetname: IBM-954
+	displayName: IBM-954: EUC Japan (full)
+	aliases: [Cp954, ibm954]
+128.  Charsetname: IBM-954C
+	displayName: IBM-954C: EUC Japan (full) with syntax
+	aliases: [Cp954c, ibm-eucjp]
+129.  Charsetname: IBM-964
+	displayName: IBM-964: EUC Taiwan
+	aliases: [Cp964, ibm-euctw]
+130.  Charsetname: IBM-971
+	displayName: IBM-971: EUC DBCS-only Korean
+	aliases: [Cp971, ibm971]
+131.  Charsetname: ISCII91
+	displayName: ISCII91: ISCII Devenagari 91
+	aliases: [iscii]
+132.  Charsetname: ISO-2022-CN
+	displayName: ISO-2022-CN: ISO 2022 Traditional Chinese
+	aliases: [iso2022-cn-cns, iso-2022-cn-cns, iso2022cn-cns, iso2022cn, iso2022-cn]
+133.  Charsetname: ISO-2022-CN-GB
+	displayName: ISO-2022-CN-GB: ISO 2022 Simplified Chinese
+	aliases: [iso2022cn-gb, iso2022-cn-gb]
+134.  Charsetname: ISO-2022-JP
+	displayName: ISO-2022-JP: ISO 2022 Japan
+	aliases: [jis, csiso2022jp2, iso2022-jp, csjisencoding, jis-encoding, iso-2022-jp2, iso2022jp]
+135.  Charsetname: ISO-2022-KR
+	displayName: ISO-2022-KR: ISO 2022 Korea
+	aliases: [iso2022-kr, csiso2022kr, iso2022kr]
+136.  Charsetname: ISO-8859-1
+	displayName: ISO-8859-1: ISO Latin 1 - Western Europe
+	aliases: [csisolatin1, iso-ir-100, iso8859-1, ibm-819, iso8859_1, latin1, 8859-1, ibm819, iso-8859-1:1987, Cp819, l1]
+137.  Charsetname: ISO-8859-10
+	displayName: ISO-8859-10: ISO Latin 6 - Nordic
+	aliases: [iso8859-10, ISO_8859-10:1992, latin6, ibm-919, 8859-10, iso-ir-157, l6, iso8859_10, csisolatin6]
+138.  Charsetname: ISO-8859-13
+	displayName: ISO-8859-13: ISO Latin 7 - Baltic Rim
+	aliases: [iso8859-13, iso8859_13, 8859-13]
+139.  Charsetname: ISO-8859-14
+	displayName: ISO-8859-14: ISO Latin 8 - Celtic
+	aliases: [8859-14, iso8859_14, iso-ir-199, ISO_8859-14:1998, latin8, iso8859-14, isoceltic, l8]
+140.  Charsetname: ISO-8859-15
+	displayName: ISO-8859-15: ISO Latin 9 - Euro
+	aliases: [l9, ibm923, csisolatin9, 8859-9, iso8859-15, ibm-923, latin9, iso8859_15, Cp923, iso8859_15_fdis, latin0]
+141.  Charsetname: ISO-8859-16
+	displayName: ISO-8859-16: ISO Romanian
+	aliases: [iso8859_16, iso8859-16, 8859-16]
+142.  Charsetname: ISO-8859-2
+	displayName: ISO-8859-2: ISO Latin 2 - Central Europe
+	aliases: [ibm912, l2, ibm-912, iso-ir-101, csisolatin2, iso-8859-2:1987, latin2, iso8859_2, Cp912, iso8859-2, 8859-2]
+143.  Charsetname: ISO-8859-3
+	displayName: ISO-8859-3: ISO Latin 3 - Latin/Esperanto
+	aliases: [iso-8859-3:1988, csisolatin3, iso8859_3, 8859-3, iso8859-3, Cp913, iso-ir-109, ibm-913, l3, latin3]
+144.  Charsetname: ISO-8859-4
+	displayName: ISO-8859-4: ISO Latin 4 - Baltic
+	aliases: [iso-ir-110, Cp914, l4, ibm-914, latin4, iso8859_4, iso-8859-4:1988, iso8859-4, 8859-4, csisolatin4]
+145.  Charsetname: ISO-8859-5
+	displayName: ISO-8859-5: ISO Cyrillic
+	aliases: [iso8859_5, 8859-5, ibm915, iso-8859-5:1988, csisolatincyrillic, cyrillic, Cp915, iso-ir-144, iso8859-5, ibm-915]
+146.  Charsetname: ISO-8859-6
+	displayName: ISO-8859-6: ISO Arabic
+	aliases: [iso-ir-127, csisolatinarabic, iso8859-6, ibm1089, ecma-114, asmo-708, arabic, ibm-1089, iso8859_6, 8859-6, Cp1089, iso-8859-6:1987]
+147.  Charsetname: ISO-8859-6S
+	displayName: ISO-8859-6S: ISO Arabic (shaped)
+	aliases: [iso8859-6S, iso8859_6S]
+148.  Charsetname: ISO-8859-7
+	displayName: ISO-8859-7: ISO Greek
+	aliases: [iso-8859-7:1987, Cp813, 8859-7, iso-ir-126, ibm-813, iso8859_7, ecma-118, greek8, ibm813, elot-928, csisolatingreek, iso8859-7, greek]
+149.  Charsetname: ISO-8859-8
+	displayName: ISO-8859-8: ISO Hebrew
+	aliases: [iso-ir-138, iso8859-8, ibm-916, iso8859_8, csisolatinhebrew, hebrew, iso-8859-8:1988, ibm916, Cp916, 8859-8]
+150.  Charsetname: ISO-8859-9
+	displayName: ISO-8859-9: ISO Latin 5 - Turkey
+	aliases: [Cp920, latin5, iso-ir-148, 8859-9, l5, csisolatin5, ibm-920, ibm920, iso8859_9, iso8859-9]
+151.  Charsetname: JIS0201
+	displayName: JIS0201: Japan JIS 0201 (katakana)
+	aliases: []
+152.  Charsetname: JIS0208
+	displayName: JIS0208: Japan JIS 0208
+	aliases: []
+153.  Charsetname: JIS0212
+	displayName: JIS0212: Japan JIS 0212 (extended)
+	aliases: []
+154.  Charsetname: Johab
+	displayName: Johab: PC Korean Johab
+	aliases: []
+155.  Charsetname: KOI8-R
+	displayName: KOI8-R: Internet Russia
+	aliases: [ibm-878, cskoi8r, koi8, koi8_r]
+156.  Charsetname: KOI8-RU
+	displayName: KOI8-RU: Internet Belarus
+	aliases: [ibm-1168, koi8_ru]
+157.  Charsetname: KOI8-U
+	displayName: KOI8-U: Internet Ukraine
+	aliases: [ibm-1167, koi8_u]
+158.  Charsetname: KSC5601
+	displayName: KSC5601: Korea KSC
+	aliases: []
+159.  Charsetname: MacArabic
+	displayName: MacArabic: Apple Arabic
+	aliases: []
+160.  Charsetname: MacCentralEurope
+	displayName: MacCentralEurope: Apple Central Europe
+	aliases: [ibm-1282]
+161.  Charsetname: MacCroatian
+	displayName: MacCroatian: Apple Croatian 
+	aliases: [ibm-1284]
+162.  Charsetname: MacCyrillic
+	displayName: MacCyrillic: Apple Cyrillic
+	aliases: [ibm-1283]
+163.  Charsetname: MacDingbat
+	displayName: MacDingbat: Apple Dingbat
+	aliases: []
+164.  Charsetname: MacGreek
+	displayName: MacGreek: Apple Greek
+	aliases: [ibm-1280]
+165.  Charsetname: MacHebrew
+	displayName: MacHebrew: Apple Hebrew 
+	aliases: []
+166.  Charsetname: MacIceland
+	displayName: MacIceland: Apple Iceland
+	aliases: [ibm-1286]
+167.  Charsetname: MacRoman
+	displayName: MacRoman: Apple Roman
+	aliases: [ibm-1275]
+168.  Charsetname: MacRomania
+	displayName: MacRomania: Apple Romania
+	aliases: [ibm-1285]
+169.  Charsetname: MacSymbol
+	displayName: MacSymbol: Apple PostScript Symbol
+	aliases: [Adobe-Symbol-Encoding, ibm-1038]
+170.  Charsetname: MacThai
+	displayName: MacThai: Apple Thai
+	aliases: []
+171.  Charsetname: MacTurkish
+	displayName: MacTurkish: Apple Turkish
+	aliases: [ibm-1281]
+172.  Charsetname: MacUkraine
+	displayName: MacUkraine: Apple Ukraine
+	aliases: []
+173.  Charsetname: PTCP154
+	displayName: PTCP154: Windows Cyrillic Asian
+	aliases: [IBM-1169, csPTCP154, Cyrillic-Asian, PT154]
+174.  Charsetname: Shift_JIS
+	displayName: Shift_JIS: Shift JIS Japan
+	aliases: []
+175.  Charsetname: TIS-620
+	displayName: TIS-620: PC Thailand
+	aliases: [tis620.2533, tis620]
+176.  Charsetname: US-ASCII
+	displayName: US-ASCII: ASCII 7 bit
+	aliases: [iso-646.irv:1983, ISO646-US, ASCII, default, ISO-646.irv:1991, direct, ascii7, ANSI_X3.4-1986, iso-ir-6, us, ibm-367, 646, csASCII, ANSI_X3.4-1968, Cp367]
+177.  Charsetname: UTF-16
+	displayName: UTF-16
+	aliases: [Unicode, UTF16, UTF_16, UCS-2]
+178.  Charsetname: UTF-16BE
+	displayName: UTF-16BE: Unicode UTF-16 Big-endian
+	aliases: [X-UTF-16BE, UnicodeBigUnmarked, UTF16BE, UTF_16BE, ISO-10646-UCS-2]
+179.  Charsetname: UTF-16LE
+	displayName: UTF-16LE: Unicode UTF-16 Little-endian
+	aliases: [UTF_16LE, UTF16LE, UnicodeLittleUnmarked, X-UTF-16LE]
+180.  Charsetname: UTF-32
+	displayName: UTF-32: Unicode UTF-32
+	aliases: [ISO-10646-UCS-4, UTF32, UCS-4, UTF_32BE]
+181.  Charsetname: UTF-32BE
+	displayName: UTF-32BE: Unicode UTF-32 Big-endian
+	aliases: [UTF32BE, X-UTF-32BE, UTF_32BE]
+182.  Charsetname: UTF-32LE
+	displayName: UTF-32LE: Unicode UTF-32 Little-endian
+	aliases: [UTF_32LE, UTF32LE, X-UTF-32LE]
+183.  Charsetname: UTF-8
+	displayName: UTF-8: Unicode UTF-8
+	aliases: [UTF_8, UTF8]
+184.  Charsetname: UTF-8J
+	displayName: UTF-8J: Unicode UTF-8 (Java)
+	aliases: [UTF8J]
+185.  Charsetname: windows-1250
+	displayName: windows-1250: Windows Latin 2
+	aliases: [ibm-1250, Cp1250]
+186.  Charsetname: windows-1251
+	displayName: windows-1251: Windows Cyrillic
+	aliases: [ibm-1251, Cp1251]
+187.  Charsetname: windows-1252
+	displayName: windows-1252: Windows Latin 1 
+	aliases: [Cp1252, ibm-1252]
+188.  Charsetname: windows-1253
+	displayName: windows-1253: Windows Greek
+	aliases: [Cp1253, ibm-1253]
+189.  Charsetname: windows-1254
+	displayName: windows-1254: Windows Latin 5 (Turkey)
+	aliases: [Cp1254, ibm-1254]
+190.  Charsetname: windows-1255
+	displayName: windows-1255: Windows Hebrew
+	aliases: [Cp1255, ibm-1255]
+191.  Charsetname: windows-1256
+	displayName: windows-1256: Windows Arabic
+	aliases: [Cp1256, ibm-1256]
+192.  Charsetname: windows-1256S
+	displayName: windows-1256S: Windows Arabic (shaped)
+	aliases: [ibm-1256s, Cp1256s]
+193.  Charsetname: windows-1257
+	displayName: windows-1257: Windows Latin 4 (Balttic)
+	aliases: [Cp1257, ibm-1257]
+194.  Charsetname: windows-1258
+	displayName: windows-1258: Windows Vietnamese
+	aliases: [ibm-1129, ibm-1258, Cp1258]
+195.  Charsetname: windows-874
+	displayName: windows-874: Windows Thai
+	aliases: [MS874]
+196.  Charsetname: windows-932
+	displayName: windows-932: Windows Japan
+	aliases: [ms_kanji, cswindows31j, MS932, windows-31j]
+197.  Charsetname: windows-936
+	displayName: windows-936: Windows China
+	aliases: [MS936, 936]
+198.  Charsetname: windows-949
+	displayName: windows-949: Windows Korea
+	aliases: [ibm-1361, Cp1361, ibm1361, MS949, ms1361, ksc5601-1992]
+199.  Charsetname: windows-950
+	displayName: windows-950: Windows Taiwan
+	aliases: [MS950]
+200.  Charsetname: X-UnicodeBig
+	displayName: X-UnicodeBig: Unicode UTF-16 Big-endian with mark
+	aliases: [UnicodeBig]
+201.  Charsetname: X-UnicodeLittle
+	displayName: X-UnicodeLittle: Unicode UTF-16 Little-endian with mark
+	aliases: [UnicodeLittle]

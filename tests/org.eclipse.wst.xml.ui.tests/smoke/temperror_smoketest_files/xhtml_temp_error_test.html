@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<meta name="GENERATOR" content="IBM WebSphere Studio" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link href="theme/Master.css" rel="stylesheet" type="text/css" />
+<title>xhtml_temp_error_test.html</title>
+</head>
+<body>
+<!--====================================================================
+	Type some text below this comment, verify that you get the warning:
+		- [ IWAK0058E Invalid text string (whatever text) ]
+	Then wrap the text w/ <p> tags, verify that the warning goes away
+======================================================================-->
+
+
+
+<!--====================================================================
+	Below this comment, type "<INPUT>"
+	Verify that these warnings appear:
+		- [ IWAK0049E Invalid location of tag (INPUT). ]
+		- [ IWAK0055E Tag name (INPUT) uses wrong case character. ]
+		- [ IWAK0069E Tag (INPUT) should be an empty-element tag.	 ]
+	Change the tag to "<p><input /></p>"
+	Verify that the warnings go away
+======================================================================-->
+
+
+
+<!--====================================================================
+	Below this comment, type "<p"
+	Verify that the following error and warning (in overview) show up:
+		- [ IWAK0061E Start tag (<p>) not closed. ] (error)
+		- [ IWAK0052E No end tag (</p>). ] 			(warning)
+	Place the cursor after p, "<p|", and invoke content assist
+	Select "p" from the list, resulting in "<p>|</p>"
+	Verify that the temporary annotations go away
+======================================================================-->
+
+
+</body>
+</html>
