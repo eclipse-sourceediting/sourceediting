@@ -22,8 +22,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.wst.common.encoding.CommonCharsetNames;
-import org.eclipse.wst.xml.ui.nls.ResourceHandler;
-
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
 /**
  * WorkbenchDefaultEncodingSettings is an extension of EncodingSettings. This
@@ -66,7 +65,7 @@ public class WorkbenchDefaultEncodingSettings extends Composite {
 		defaultEncodingComposite.setLayoutData(data);
 
 		fUseDefaultButton = new Button(defaultEncodingComposite, SWT.CHECK);
-		fUseDefaultButton.setText(ResourceHandler.getString("WorkbenchDefaultEncodingSettings.0")); //$NON-NLS-1$
+		fUseDefaultButton.setText(XMLUIPlugin.getResourceString("%WorkbenchDefaultEncodingSettings.0")); //$NON-NLS-1$
 
 		fUseDefaultButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {

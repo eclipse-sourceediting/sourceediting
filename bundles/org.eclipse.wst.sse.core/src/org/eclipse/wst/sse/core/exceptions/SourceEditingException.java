@@ -12,9 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.exceptions;
 
-
-
-import org.eclipse.wst.sse.core.internal.nls.ResourceHandler;
+import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 
 /**
  * The SourceEditingException is often thrown by Source Editor methods in
@@ -77,7 +75,7 @@ public class SourceEditingException extends Exception {
 		// we don't put super.toString to "hide" that it was a
 		// sourceEditing exception
 		String s = null; //super.toString();
-		String originalError = ResourceHandler.getString("Original_Error__UI_"); //$NON-NLS-1$ = "Original Error:"
+		String originalError = SSECorePlugin.getResourceString("%Original_Error__UI_"); //$NON-NLS-1$ = "Original Error:"
 
 		if (originalException != null) {
 			s = originalError + " " + originalException.toString(); //$NON-NLS-1$ 

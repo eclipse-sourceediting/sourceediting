@@ -13,10 +13,10 @@ import java.util.Iterator;
 import org.eclipse.wst.css.core.metamodel.CSSProfile;
 import org.eclipse.wst.css.core.metamodel.CSSProfileRegistry;
 import org.eclipse.wst.sse.ui.contentproperties.ui.ComboList;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 public final class ContentSettingsRegistry {
-	private static final String NONE = ResourceHandler.getString("UI_none"); //$NON-NLS-1$
+	private static final String NONE = SSEUIPlugin.getResourceString("%UI_none"); //$NON-NLS-1$
 
 	public static void setCSSMetaModelRegistryInto(ComboList combo) {
 		combo.add(NONE, ""); //$NON-NLS-1$

@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.css.core.internal.document;
 
-
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -26,8 +24,8 @@ import org.eclipse.wst.css.core.document.ICSSPageRule;
 import org.eclipse.wst.css.core.document.ICSSStyleDeclaration;
 import org.eclipse.wst.css.core.document.ICSSStyleRule;
 import org.eclipse.wst.css.core.document.ICSSStyleSheet;
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.encoding.CSSDocumentLoader;
-import org.eclipse.wst.css.core.internal.nls.ResourceHandler;
 import org.eclipse.wst.css.core.util.ImportRuleCollector;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.util.Assert;
@@ -43,7 +41,6 @@ import org.w3c.dom.css.CSSUnknownRule;
 import org.w3c.dom.stylesheets.MediaList;
 import org.w3c.dom.stylesheets.StyleSheet;
 import org.w3c.dom.stylesheets.StyleSheetList;
-
 
 /**
  * 
@@ -436,7 +433,7 @@ class CSSStyleSheetImpl extends CSSDocumentImpl implements ICSSStyleSheet {
 	 *         will contain the <code>Node</code>.
 	 */
 	public CSSRule getOwnerRule() {
-		Assert.isTrue(false, ResourceHandler.getString("You_cannot_use_CSSStyleShe_UI_")); //$NON-NLS-1$ = "You cannot use CSSStyleSheet.getOwnerRule() because of many referencers of this rule\nPlease use getOnwerRules()"
+		Assert.isTrue(false, CSSCorePlugin.getResourceString("%You_cannot_use_CSSStyleShe_UI_")); //$NON-NLS-1$ = "You cannot use CSSStyleSheet.getOwnerRule() because of many referencers of this rule\nPlease use getOnwerRules()"
 		// for @import
 		return null;
 	}

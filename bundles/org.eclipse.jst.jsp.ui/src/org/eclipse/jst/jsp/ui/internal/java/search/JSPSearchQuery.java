@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.java.search;
 
-import java.text.MessageFormat;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
@@ -24,8 +22,8 @@ import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchScope;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchSupport;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.search.ui.ISearchResult;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.search.BasicSearchQuery;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 
 /**
  * Implementation of <code>ISearchQuery</code> for <code>IJavaElement</code>s in JSP files.
@@ -111,13 +109,12 @@ public class JSPSearchQuery extends BasicSearchQuery {
 	 * @see org.eclipse.search.ui.ISearchQuery#getLabel()
 	 */
 	public String getLabel() {
-		String label = ResourceHandler.getString("OccurrencesSearchQuery.0"); //$NON-NLS-1$
 		String[] args = {getSearchText(), getOccurrencesCountText(), getFilename()};
-		return MessageFormat.format(label, args);
+		return SSEUIPlugin.getResourceString("%OccurrencesSearchQuery.0", args);
 	}
 
 	private String getFilename() {
-		String filename = ResourceHandler.getString("OccurrencesSearchQuery.2"); //$NON-NLS-1$
+		String filename = SSEUIPlugin.getResourceString("%OccurrencesSearchQuery.2"); //$NON-NLS-1$
 		if(getFile() != null)
 			filename = getFile().getName();
 		return filename;

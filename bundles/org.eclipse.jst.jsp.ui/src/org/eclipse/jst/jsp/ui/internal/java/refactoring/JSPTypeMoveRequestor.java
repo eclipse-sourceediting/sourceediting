@@ -16,7 +16,7 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.search.SearchMatch;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.search.JavaSearchDocumentDelegate;
-import org.eclipse.jst.jsp.ui.internal.nls.ResourceHandler;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 
 /**
  * @author pavery
@@ -54,7 +54,7 @@ public class JSPTypeMoveRequestor extends BasicRefactorSearchRequestor {
 		
 		String typeName = getElement().getElementName();
 		String newName = getNewName();
-		String description = MessageFormat.format(ResourceHandler.getString("BasicRefactorSearchRequestor.2"), new String[]{typeName, newName}); //$NON-NLS-1$
+		String description = MessageFormat.format(JSPUIPlugin.getResourceString("%BasicRefactorSearchRequestor.2"), new String[]{typeName, newName}); //$NON-NLS-1$
 		return description;
 	}
 }

@@ -35,10 +35,8 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.Logger;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
-
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 public class ConvertLineDelimitersToCRLFActionDelegate extends ResourceActionDelegate {
 
@@ -108,7 +106,7 @@ public class ConvertLineDelimitersToCRLFActionDelegate extends ResourceActionDel
 
 			if (fErrorStatus.getChildren().length > 0) {
 				status = fErrorStatus;
-				fErrorStatus = new MultiStatus(SSEUIPlugin.ID, IStatus.ERROR, ResourceHandler.getString("ConvertLineDelimitersToCRLFActionDelegate.errorStatusMessage"), null); //$NON-NLS-1$
+				fErrorStatus = new MultiStatus(SSEUIPlugin.ID, IStatus.ERROR, SSEUIPlugin.getResourceString("%ConvertLineDelimitersToCRLFActionDelegate.errorStatusMessage"), null); //$NON-NLS-1$
 			}
 
 			return status;
@@ -116,7 +114,7 @@ public class ConvertLineDelimitersToCRLFActionDelegate extends ResourceActionDel
 
 	}
 
-	private MultiStatus fErrorStatus = new MultiStatus(SSEUIPlugin.ID, IStatus.ERROR, ResourceHandler.getString("ConvertLineDelimitersToCRLFActionDelegate.errorStatusMessage"), null); //$NON-NLS-1$
+	private MultiStatus fErrorStatus = new MultiStatus(SSEUIPlugin.ID, IStatus.ERROR, SSEUIPlugin.getResourceString("%ConvertLineDelimitersToCRLFActionDelegate.errorStatusMessage"), null); //$NON-NLS-1$
 	protected String fLineDelimiter = "\r\n"; //$NON-NLS-1$
 
 	protected void convert(IProgressMonitor monitor, IFile file) {
@@ -129,7 +127,7 @@ public class ConvertLineDelimitersToCRLFActionDelegate extends ResourceActionDel
 			IContentType contentType = contentDescription.getContentType();
 			if (contentType.isKindOf(Platform.getContentTypeManager().getContentType("org.eclipse.core.runtime.text"))) { //$NON-NLS-1$
 				if (monitor == null || !monitor.isCanceled()) {
-					String message = MessageFormat.format(ResourceHandler.getString("ConvertLineDelimitersToCRLFActionDelegate.3"), new String[]{file.getFullPath().toString()}); //$NON-NLS-1$
+					String message = MessageFormat.format(SSEUIPlugin.getResourceString("%ConvertLineDelimitersToCRLFActionDelegate.3"), new String[]{file.getFullPath().toString()}); //$NON-NLS-1$
 					monitor.subTask(message);
 
 					IFileEditorInput input = new FileEditorInput(file);
@@ -153,10 +151,10 @@ public class ConvertLineDelimitersToCRLFActionDelegate extends ResourceActionDel
 				}
 			}
 		} catch (CoreException e) {
-			String message = MessageFormat.format(ResourceHandler.getString("ConvertLineDelimitersToCRLFActionDelegate.4"), new String[]{file.getName()}); //$NON-NLS-1$
+			String message = MessageFormat.format(SSEUIPlugin.getResourceString("%ConvertLineDelimitersToCRLFActionDelegate.4"), new String[]{file.getName()}); //$NON-NLS-1$
 			fErrorStatus.add(new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.ERROR, message, e));
 		} catch (BadLocationException e) {
-			String message = MessageFormat.format(ResourceHandler.getString("ConvertLineDelimitersToCRLFActionDelegate.4"), new String[]{file.getName()}); //$NON-NLS-1$
+			String message = MessageFormat.format(SSEUIPlugin.getResourceString("%ConvertLineDelimitersToCRLFActionDelegate.4"), new String[]{file.getName()}); //$NON-NLS-1$
 			fErrorStatus.add(new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.ERROR, message, e));
 		}
 	}
@@ -177,14 +175,14 @@ public class ConvertLineDelimitersToCRLFActionDelegate extends ResourceActionDel
 						convert(monitor, members[i]);
 				}
 			} catch (CoreException e) {
-				String message = MessageFormat.format(ResourceHandler.getString("ConvertLineDelimitersToCRLFActionDelegate.4"), new String[]{resource.getFullPath().toString()}); //$NON-NLS-1$
+				String message = MessageFormat.format(SSEUIPlugin.getResourceString("%ConvertLineDelimitersToCRLFActionDelegate.4"), new String[]{resource.getFullPath().toString()}); //$NON-NLS-1$
 				fErrorStatus.add(new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.ERROR, message, e));
 			}
 		}
 	}
 
 	protected Job getJob() {
-		return new ConvertLineDelimitersJob(ResourceHandler.getString("ConvertLineDelimitersToCRLFActionDelegate.jobName")); //$NON-NLS-1$
+		return new ConvertLineDelimitersJob(SSEUIPlugin.getResourceString("%ConvertLineDelimitersToCRLFActionDelegate.jobName")); //$NON-NLS-1$
 	}
 
 	/*
@@ -199,7 +197,7 @@ public class ConvertLineDelimitersToCRLFActionDelegate extends ResourceActionDel
 		try {
 			resource.refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (CoreException e) {
-			monitor.setTaskName(ResourceHandler.getString("ActionDelegate.0") + resource.getName()); //$NON-NLS-1$
+			monitor.setTaskName(SSEUIPlugin.getResourceString("%ActionDelegate.0") + resource.getName()); //$NON-NLS-1$
 		}
 	}
 
@@ -255,10 +253,10 @@ public class ConvertLineDelimitersToCRLFActionDelegate extends ResourceActionDel
 			outputStream = new FileOutputStream(file.getLocation().toString());
 			outputStream.write(outputString.getBytes(file.getCharset()));
 		} catch (IOException e) {
-			String message = MessageFormat.format(ResourceHandler.getString("ConvertLineDelimitersToCRLFActionDelegate.4"), new String[]{file.getName()}); //$NON-NLS-1$
+			String message = MessageFormat.format(SSEUIPlugin.getResourceString("%ConvertLineDelimitersToCRLFActionDelegate.4"), new String[]{file.getName()}); //$NON-NLS-1$
 			fErrorStatus.add(new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.ERROR, message, e));
 		} catch (CoreException e) {
-			String message = MessageFormat.format(ResourceHandler.getString("ConvertLineDelimitersToCRLFActionDelegate.4"), new String[]{file.getName()}); //$NON-NLS-1$
+			String message = MessageFormat.format(SSEUIPlugin.getResourceString("%ConvertLineDelimitersToCRLFActionDelegate.4"), new String[]{file.getName()}); //$NON-NLS-1$
 			fErrorStatus.add(new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.ERROR, message, e));
 		} finally {
 			try {

@@ -43,8 +43,7 @@ import org.eclipse.ui.texteditor.IEditorStatusLine;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.MarkerAnnotation;
 import org.eclipse.ui.texteditor.TextEditorAction;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
-
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 /**
  * Based on org.eclipse.jdt.internal.ui.javaeditor.GotoAnnotationAction and
@@ -86,10 +85,10 @@ public class GotoAnnotationAction extends TextEditorAction {
 	 * @param editor
 	 */
 	public GotoAnnotationAction(String prefix, boolean forward) {
-		super(ResourceHandler.getResourceBundle(), prefix, null);
+		super(SSEUIPlugin.getDefault().getResourceBundle(), prefix, null);
 		fForward = forward;
 		fPrefix = prefix;
-		fLabel = ResourceHandler.getResourceBundle().getString(fPrefix);
+		fLabel = SSEUIPlugin.getResourceString("%" + fPrefix);
 	}
 
 	/*

@@ -24,10 +24,8 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
-
-
 
 public abstract class AbstractColorPage extends org.eclipse.jface.preference.PreferencePage implements org.eclipse.ui.IWorkbenchPreferencePage {
 	private OverlayPreferenceStore fOverlayStore;
@@ -70,7 +68,7 @@ public abstract class AbstractColorPage extends org.eclipse.jface.preference.Pre
 		Composite pageComponent = createComposite(sc1, 1);
 		sc1.setContent(pageComponent);
 
-		Label descLabel = createDescriptionLabel(pageComponent, ResourceHandler.getString("AbstractColorPageDescription")); //$NON-NLS-1$
+		Label descLabel = createDescriptionLabel(pageComponent, SSEUIPlugin.getResourceString("%AbstractColorPageDescription")); //$NON-NLS-1$
 		Composite coloringComposite = createColoringComposite(pageComponent);
 		createContentsForPicker(coloringComposite);
 

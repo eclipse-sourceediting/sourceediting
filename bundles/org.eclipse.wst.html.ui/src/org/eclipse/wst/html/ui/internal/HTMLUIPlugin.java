@@ -11,6 +11,9 @@
 package org.eclipse.wst.html.ui.internal;
 
 import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
@@ -24,7 +27,7 @@ import org.eclipse.wst.html.ui.templates.TemplateContextTypeHTML;
 import org.eclipse.wst.html.ui.templates.TemplateContextTypeHTMLAttribute;
 import org.eclipse.wst.html.ui.templates.TemplateContextTypeHTMLAttributeValue;
 import org.eclipse.wst.html.ui.templates.TemplateContextTypeHTMLTag;
-import org.eclipse.wst.sse.ui.EditorPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.preferences.ui.ColorHelper;
@@ -33,7 +36,6 @@ import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistryImpl;
 import org.eclipse.wst.sse.ui.registry.embedded.EmbeddedAdapterFactoryRegistryImpl;
 import org.eclipse.wst.xml.ui.style.IStyleConstantsXML;
 
-
 /**
  * The main plugin class to be used in the desktop.
  */
@@ -41,6 +43,10 @@ public class HTMLUIPlugin extends AbstractUIPlugin {
 	public final static String ID = "org.eclipse.wst.html.ui"; //$NON-NLS-1$
 
 	protected static HTMLUIPlugin instance = null;
+	//Resource bundle.
+	private ResourceBundle resourceBundle;
+	private static final String KEY_PREFIX = "%"; //$NON-NLS-1$
+	private static final String KEY_DOUBLE_PREFIX = "%%"; //$NON-NLS-1$	
 	
 	/**
 	 * The template store for the html editor. 
@@ -59,7 +65,7 @@ public class HTMLUIPlugin extends AbstractUIPlugin {
 		// Force a call to initialize default preferences since
 		// initializeDefaultPreferences is only called if *this* plugin's
 		// preference store is accessed
-		initializeDefaultHTMLPreferences(EditorPlugin.getDefault().getPreferenceStore());
+		initializeDefaultHTMLPreferences(SSEUIPlugin.getDefault().getPreferenceStore());
 	}
 
 	public static HTMLUIPlugin getDefault() {
@@ -87,7 +93,7 @@ public class HTMLUIPlugin extends AbstractUIPlugin {
 		
 		// ignore this preference store
 		// use EditorPlugin preference store
-		IPreferenceStore editorStore = EditorPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore editorStore = SSEUIPlugin.getDefault().getPreferenceStore();
 		initializeDefaultHTMLPreferences(editorStore);
 	}
 
@@ -188,5 +194,50 @@ public class HTMLUIPlugin extends AbstractUIPlugin {
 		}
 
 		return fContextTypeRegistry;
+	}
+
+	/**
+	 * Returns the string from the plugin's resource bundle,
+	 * or 'key' if not found.
+	 */
+	public static String getResourceString(String value) {
+		String s = value.trim();
+		if (!s.startsWith(KEY_PREFIX, 0))
+			return s;
+		if (s.startsWith(KEY_DOUBLE_PREFIX, 0))
+			return s.substring(1);
+
+		int ix = s.indexOf(' ');
+		String key = ix == -1 ? s : s.substring(0, ix);
+
+		ResourceBundle bundle = getDefault().getResourceBundle();
+		try {
+			return (bundle != null) ? bundle.getString(key.substring(1)) : key;
+		} catch (MissingResourceException e) {
+			return key;
+		}
+	}
+
+	public static String getResourceString(String key, Object[] args) {
+
+		try {
+			return MessageFormat.format(getResourceString(key), args);
+		} catch (IllegalArgumentException e) {
+			return getResourceString(key);
+		}
+
+	}
+
+	/**
+	 * Returns the plugin's resource bundle,
+	 */
+	public ResourceBundle getResourceBundle() {
+		try {
+			if (resourceBundle == null)
+				resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.html.ui.internal.HTMLUIPluginResources");
+		} catch (MissingResourceException x) {
+			resourceBundle = null;
+		}
+		return resourceBundle;
 	}
 }

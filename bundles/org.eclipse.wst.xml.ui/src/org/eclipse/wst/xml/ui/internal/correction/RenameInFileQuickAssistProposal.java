@@ -34,10 +34,9 @@ import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
-import org.eclipse.wst.xml.ui.nls.ResourceHandler;
-
 
 public class RenameInFileQuickAssistProposal implements ICompletionProposal, ICompletionProposalExtension2 {
 	protected IRegion fSelectedRegion; // initialized by apply()
@@ -113,7 +112,7 @@ public class RenameInFileQuickAssistProposal implements ICompletionProposal, ICo
 	 * @see org.eclipse.jface.text.contentassist.ICompletionProposal#getAdditionalProposalInfo()
 	 */
 	public String getAdditionalProposalInfo() {
-		return ResourceHandler.getString("RenameInFileQuickAssistProposal.0"); //$NON-NLS-1$
+		return XMLUIPlugin.getResourceString("%RenameInFileQuickAssistProposal.0"); //$NON-NLS-1$
 	}
 
 	/*
@@ -131,7 +130,7 @@ public class RenameInFileQuickAssistProposal implements ICompletionProposal, ICo
 	 * @see org.eclipse.jface.text.contentassist.ICompletionProposal#getDisplayString()
 	 */
 	public String getDisplayString() {
-		return ResourceHandler.getString("RenameInFileQuickAssistProposal.1"); //$NON-NLS-1$
+		return XMLUIPlugin.getResourceString("%RenameInFileQuickAssistProposal.1"); //$NON-NLS-1$
 	}
 
 	/*

@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.reconcile;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -36,9 +35,9 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.ui.IReleasable;
 import org.eclipse.wst.sse.ui.StructuredTextReconciler;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.reconcile.IReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 import org.eclipse.wst.xml.core.document.XMLAttr;
 import org.eclipse.wst.xml.core.document.XMLElement;
 import org.eclipse.wst.xml.core.document.XMLNode;
@@ -52,7 +51,6 @@ import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-
 
 public class ReconcileStepAdapterForXML extends AbstractReconcileStepAdapter implements CMDocumentCacheListener, IReleasable {
 
@@ -558,9 +556,8 @@ public class ReconcileStepAdapterForXML extends AbstractReconcileStepAdapter imp
 						if (!found) {
 							int start = attr.getValueRegionStartOffset();
 							int length = attr.getValueRegion().getTextLength();
-							MessageFormat messageFormat = new MessageFormat(ResourceHandler.getString("Invalid_value_{0}")); //$NON-NLS-1$
 							Object[] args = {currentValue.trim()};
-							String message = messageFormat.format(args);
+							String message = SSEUIPlugin.getResourceString("%Invalid_value_{0}", args);
 							Position p = new Position(start, length);
 							IReconcileAnnotationKey key = createKey(elementNode.getFirstStructuredDocumentRegion(), IReconcileAnnotationKey.PARTIAL);
 							results.add(new TemporaryAnnotation(p, SEVERITY_UNKNOWN_ATTR, message, key));
@@ -568,9 +565,8 @@ public class ReconcileStepAdapterForXML extends AbstractReconcileStepAdapter imp
 						// remove from known required attribute list
 						reqAttrList.remove(attrDecl);
 					} else {
-						MessageFormat messageFormat = new MessageFormat(ResourceHandler.getString("Unknown_attribute_{0}")); //$NON-NLS-1$
 						Object[] args = {attr.getName()};
-						String message = messageFormat.format(args);
+						String message = SSEUIPlugin.getResourceString("%Unknown_attribute_{0}", args);
 						int start = attr.getNameRegionStartOffset();
 						int length = attr.getNameRegion().getTextLength();
 						Position p = new Position(start, length);
@@ -597,9 +593,8 @@ public class ReconcileStepAdapterForXML extends AbstractReconcileStepAdapter imp
 					start = (element.getFirstStructuredDocumentRegion() != null) ? element.getFirstStructuredDocumentRegion().getStartOffset() : element.getStartOffset();
 					length = (element.getFirstStructuredDocumentRegion() != null) ? element.getFirstStructuredDocumentRegion().getLength() : 1;
 
-					MessageFormat messageFormat = new MessageFormat(ResourceHandler.getString("Missing_required_attribute_{0}")); //$NON-NLS-1$
 					Object[] args = {attr.getAttrName()};
-					String message = messageFormat.format(args);
+					String message = SSEUIPlugin.getResourceString("%Missing_required_attribute_{0}", args);
 
 					Position p = new Position(start, length);
 					IReconcileAnnotationKey key = createKey(elementNode.getFirstStructuredDocumentRegion(), IReconcileAnnotationKey.PARTIAL);
@@ -635,9 +630,8 @@ public class ReconcileStepAdapterForXML extends AbstractReconcileStepAdapter imp
 				start = element.getStartStructuredDocumentRegion().getStartOffset(name);
 				length = name.getTextLength();
 			}
-			MessageFormat messageFormat = new MessageFormat(ResourceHandler.getString("Unknown_element_{0}")); //$NON-NLS-1$
 			Object[] args = {element.getNodeName()};
-			String message = messageFormat.format(args);
+			String message = SSEUIPlugin.getResourceString("%Unknown_element_{0}", args);
 			Position p = new Position(start, length);
 			IReconcileAnnotationKey key = createKey(elementNode.getFirstStructuredDocumentRegion(), IReconcileAnnotationKey.PARTIAL);
 			TemporaryAnnotation annotation = new TemporaryAnnotation(p, SEVERITY_UNKNOWN_ELEMENT, message, key, ProblemIDsXML.UnknownElement);

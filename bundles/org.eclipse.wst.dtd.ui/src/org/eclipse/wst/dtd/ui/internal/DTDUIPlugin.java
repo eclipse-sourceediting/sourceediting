@@ -22,7 +22,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.dtd.ui.style.IStyleConstantsDTD;
-import org.eclipse.wst.sse.ui.EditorPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.preferences.ui.ColorHelper;
 
@@ -85,7 +85,7 @@ public class DTDUIPlugin extends AbstractUIPlugin {
 		// Force a call to initialize default preferences since
 		// initializeDefaultPreferences is only called if *this* plugin's
 		// preference store is accessed
-		initializeDefaultDTDPreferences(EditorPlugin.getDefault()
+		initializeDefaultDTDPreferences(SSEUIPlugin.getDefault()
 				.getPreferenceStore());
 
 	}
@@ -146,7 +146,7 @@ public class DTDUIPlugin extends AbstractUIPlugin {
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
 		// ignore this preference store
 		// use EditorPlugin preference store
-		IPreferenceStore editorStore = EditorPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore editorStore = SSEUIPlugin.getDefault().getPreferenceStore();
 		initializeDefaultDTDPreferences(editorStore);
 	}
 }

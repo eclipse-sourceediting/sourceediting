@@ -48,8 +48,8 @@ import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.part.MultiPageEditorSite;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
+import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 import org.eclipse.wst.xml.core.XMLPreferenceNames;
 import org.eclipse.wst.xml.ui.StructuredTextEditorXML;
 import org.w3c.dom.Document;
@@ -175,7 +175,7 @@ public class XSDMultiPageEditorPart extends MultiPageEditorPart implements IProp
       // dispose editor
       dispose();
 
-      throw new SourceEditingRuntimeException(ResourceHandler.getString("An_error_has_occurred_when1_ERROR_")); //$NON-NLS-1$
+      throw new SourceEditingRuntimeException(SSECorePlugin.getResourceString("An_error_has_occurred_when1_ERROR_")); //$NON-NLS-1$
     }
   }
 
@@ -322,11 +322,11 @@ public class XSDMultiPageEditorPart extends MultiPageEditorPart implements IProp
             // very unlikely
 //            Logger.logException(ce);
           }
-          throw new PartInitException(ResourceHandler.getString("23concat_EXC_", (new Object[]{input.getName()}))); //$NON-NLS-1$
+          throw new PartInitException(SSECorePlugin.getResourceString("23concat_EXC_", (new Object[]{input.getName()}))); //$NON-NLS-1$
           //$NON-NLS-1$ = "Resource {0} does not exist."
         }
         else {
-          throw new PartInitException(ResourceHandler.getString("32concat_EXC_", (new Object[]{input.getName()}))); //$NON-NLS-1$
+          throw new PartInitException(SSECorePlugin.getResourceString("32concat_EXC_", (new Object[]{input.getName()}))); //$NON-NLS-1$
           //$NON-NLS-1$ = "Editor could not be open on {0}"
         }
       }
@@ -339,7 +339,7 @@ public class XSDMultiPageEditorPart extends MultiPageEditorPart implements IProp
       catch (CoreException noStorageExc) {
       }
       if (contents == null) {
-        throw new PartInitException(ResourceHandler.getString("32concat_EXC_", (new Object[]{input.getName()}))); //$NON-NLS-1$
+        throw new PartInitException(SSECorePlugin.getResourceString("32concat_EXC_", (new Object[]{input.getName()}))); //$NON-NLS-1$
       }
       else {
         try {

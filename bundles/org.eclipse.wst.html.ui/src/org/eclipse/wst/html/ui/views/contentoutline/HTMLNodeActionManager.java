@@ -10,17 +10,14 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.views.contentoutline;
 
-
-
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.wst.common.contentmodel.CMNode;
 import org.eclipse.wst.common.contentmodel.util.DOMContentBuilder;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.html.core.HTMLCMProperties;
-import org.eclipse.wst.html.core.HTMLCorePlugin;
-import org.eclipse.wst.html.core.PreferenceNames;
 import org.eclipse.wst.html.core.format.HTMLFormatProcessorImpl;
+import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.preferences.HTMLContentBuilder;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.format.IStructuredFormatProcessor;

@@ -10,10 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.templates;
 
-import org.eclipse.wst.html.ui.internal.nls.ResourceHandler;
+import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.xml.ui.templates.TemplateContextTypeIds;
 import org.eclipse.wst.xml.ui.templates.TemplateContextTypeXML;
-
 
 /**
  * Base class for HTML template context types.  Templates of this context
@@ -23,7 +22,7 @@ public class TemplateContextTypeHTML extends TemplateContextTypeXML {
 	public static final String HTML_PREFIX = "html_"; //$NON-NLS-1$
 	
 	public TemplateContextTypeHTML() {
-		this(generateContextTypeId(TemplateContextTypeIds.ALL), ResourceHandler.getString("TemplateContextTypeHTML.0")); //$NON-NLS-1$
+		this(generateContextTypeId(TemplateContextTypeIds.ALL), HTMLUIPlugin.getResourceString("%TemplateContextTypeHTML.0")); //$NON-NLS-1$
 	}
 	
 	/**

@@ -36,11 +36,11 @@ import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
-import org.eclipse.wst.sse.ui.EditorPlugin;
 import org.eclipse.wst.sse.ui.StructuredTextReconciler;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.format.StructuredFormattingStrategy;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
@@ -62,7 +62,6 @@ import org.eclipse.wst.xml.ui.style.LineStyleProviderForXML;
 import org.eclipse.wst.xml.ui.taginfo.XMLBestMatchHoverProcessor;
 import org.eclipse.wst.xml.ui.taginfo.XMLInformationProvider;
 import org.eclipse.wst.xml.ui.taginfo.XMLTagInfoHoverProcessor;
-
 
 public class StructuredTextViewerConfigurationXML extends StructuredTextViewerConfiguration {
 	InformationPresenter fInformationPresenter = null;
@@ -202,7 +201,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 			//fReconciler.setEditor(editorPart);
 		}
 
-		IPreferenceStore store = EditorPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore store = SSEUIPlugin.getDefault().getPreferenceStore();
 		boolean reconcilingEnabled = store.getBoolean(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
 
 		// the second time through, the strategies are set
@@ -219,7 +218,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 					// check language (ContentTypeID)....
 					String contentTypeId = sModel.getModelHandler().getAssociatedContentTypeId();
 					String generatedKey = PreferenceKeyGenerator.generateKey(CommonEditorPreferenceNames.EDITOR_VALIDATION_METHOD, contentTypeId);
-					String validationMethodPref = EditorPlugin.getInstance().getPreferenceStore().getString(generatedKey);
+					String validationMethodPref = SSEUIPlugin.getInstance().getPreferenceStore().getString(generatedKey);
 					IReconcilingStrategy defaultStrategy = null;
 
 					// pref set to no validation, so return

@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.preferences.ui;
 
-
-
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -19,10 +17,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
-import org.eclipse.wst.html.core.HTMLCorePlugin;
+import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.xml.ui.preferences.XMLSourcePreferencePage;
 
@@ -60,19 +58,19 @@ public class HTMLSourcePreferencePage extends XMLSourcePreferencePage {
 
 	protected Composite createContentsForPreferredCaseGroup(Composite parent, int columnSpan) {
 		Group caseGroup = createGroup(parent, columnSpan);
-		caseGroup.setText(ResourceHandler.getString("Preferred_markup_case_UI_")); //$NON-NLS-1$ = "Preferred markup case"
+		caseGroup.setText(SSEUIPlugin.getResourceString("%Preferred_markup_case_UI_")); //$NON-NLS-1$ = "Preferred markup case"
 
 		// d257064 need to associate group w/ radio buttons so radio buttons header can be read
 		Group tagNameGroup = createGroup(caseGroup, 1);
-		tagNameGroup.setText(ResourceHandler.getString("Tag_names__UI_")); //$NON-NLS-1$ = "Tag names:"
-		fTagNameUpper = createRadioButton(tagNameGroup, ResourceHandler.getString("Tag_names_Upper_case_UI_")); //$NON-NLS-1$ = "&Upper case"
-		fTagNameLower = createRadioButton(tagNameGroup, ResourceHandler.getString("Tag_names_Lower_case_UI_")); //$NON-NLS-1$ = "&Lower case"
+		tagNameGroup.setText(SSEUIPlugin.getResourceString("%Tag_names__UI_")); //$NON-NLS-1$ = "Tag names:"
+		fTagNameUpper = createRadioButton(tagNameGroup, SSEUIPlugin.getResourceString("%Tag_names_Upper_case_UI_")); //$NON-NLS-1$ = "&Upper case"
+		fTagNameLower = createRadioButton(tagNameGroup, SSEUIPlugin.getResourceString("%Tag_names_Lower_case_UI_")); //$NON-NLS-1$ = "&Lower case"
 
 		// d257064 need to associate group w/ radio buttons so radio buttons header can be read
 		Group attrNameGroup = createGroup(caseGroup, 1);
-		attrNameGroup.setText(ResourceHandler.getString("Attribute_names__UI_")); //$NON-NLS-1$ = "Attribute names:"
-		fAttrNameUpper = createRadioButton(attrNameGroup, ResourceHandler.getString("Attribute_names_Upper_case_UI_")); //$NON-NLS-1$ = "U&pper case"
-		fAttrNameLower = createRadioButton(attrNameGroup, ResourceHandler.getString("Attribute_names_Lower_case_UI_")); //$NON-NLS-1$ = "L&ower case"
+		attrNameGroup.setText(SSEUIPlugin.getResourceString("%Attribute_names__UI_")); //$NON-NLS-1$ = "Attribute names:"
+		fAttrNameUpper = createRadioButton(attrNameGroup, SSEUIPlugin.getResourceString("%Attribute_names_Upper_case_UI_")); //$NON-NLS-1$ = "U&pper case"
+		fAttrNameLower = createRadioButton(attrNameGroup, SSEUIPlugin.getResourceString("%Attribute_names_Lower_case_UI_")); //$NON-NLS-1$ = "L&ower case"
 
 		return parent;
 

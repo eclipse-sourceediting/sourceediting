@@ -23,8 +23,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.TextEditorAction;
 import org.eclipse.wst.sse.core.cleanup.IStructuredCleanupProcessor;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
-
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 public abstract class CleanupAction extends TextEditorAction {
 	protected Dialog fCleanupDialog;
@@ -55,7 +54,7 @@ public abstract class CleanupAction extends TextEditorAction {
 					try {
 						// begin recording
 						ITextSelection selection = (ITextSelection) editor.getSelectionProvider().getSelection();
-						editor.getModel().beginRecording(this, ResourceHandler.getString("Cleanup_Document_UI_"), ResourceHandler.getString("Cleanup_Document_UI_"), selection.getOffset(), selection.getLength()); //$NON-NLS-1$ //$NON-NLS-2$
+						editor.getModel().beginRecording(this, SSEUIPlugin.getResourceString("%Cleanup_Document_UI_"), SSEUIPlugin.getResourceString("%Cleanup_Document_UI_"), selection.getOffset(), selection.getLength()); //$NON-NLS-1$ //$NON-NLS-2$
 
 						// tell the model that we are about to make a big
 						// model change

@@ -13,9 +13,8 @@ package org.eclipse.wst.css.core.preferences;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.wst.css.core.document.ICSSModel;
 import org.eclipse.wst.css.core.internal.CSSCorePlugin;
-import org.eclipse.wst.sse.core.ModelPlugin;
+import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
-
 
 /**
  * this a temp dummy class to map to ModelPreferences
@@ -75,7 +74,7 @@ public class CSSPreferenceHelper {
 			return "\t"; //$NON-NLS-1$
 		}
 		else {
-			int n = ModelPlugin.getDefault().getPluginPreferences().getInt(CommonModelPreferenceNames.TAB_WIDTH);
+			int n = SSECorePlugin.getDefault().getPluginPreferences().getInt(CommonModelPreferenceNames.TAB_WIDTH);
 			StringBuffer buf = new StringBuffer();
 			while (0 < n--) {
 				buf.append(" "); //$NON-NLS-1$

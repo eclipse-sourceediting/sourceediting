@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.contentproperties.ui;
 
-
-
 import java.util.Map;
 
 import org.eclipse.core.resources.IResource;
@@ -21,13 +19,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.Logger;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
-import org.eclipse.wst.html.ui.internal.nls.ResourceHandler;
 import org.eclipse.wst.sse.ui.contentproperties.IContentSettings;
 import org.eclipse.wst.sse.ui.contentproperties.ui.ComboListOnPropertyPage;
 import org.eclipse.wst.sse.ui.contentproperties.ui.ContentSettingsPropertyPage;
-
 
 public final class ProjectContentSettingsPropertyPage extends ContentSettingsPropertyPage implements org.eclipse.swt.events.SelectionListener {
 
@@ -54,7 +51,7 @@ public final class ProjectContentSettingsPropertyPage extends ContentSettingsPro
 
 		// create description of implecit DOCTYPE	
 		Label label = new Label(propertyPage, SWT.LEFT);
-		label.setText(ResourceHandler.getString("UI_Description_of_role_of_following_DOCTYPE"));//$NON-NLS-1$
+		label.setText(HTMLUIPlugin.getResourceString("%UI_Description_of_role_of_following_DOCTYPE"));//$NON-NLS-1$
 		GridData data = new GridData();
 		data.horizontalAlignment = GridData.FILL;
 		data.horizontalSpan = numCols;
@@ -205,7 +202,7 @@ public final class ProjectContentSettingsPropertyPage extends ContentSettingsPro
 		GridData data = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
 		data.horizontalIndent = 10;
 		publicLabel.setLayoutData(data);
-		publicLabel.setText(ResourceHandler.getString("UI_Public_ID"));//$NON-NLS-1$
+		publicLabel.setText(HTMLUIPlugin.getResourceString("%UI_Public_ID"));//$NON-NLS-1$
 		publicIdText = new Text(super.propertyPage, SWT.BORDER | SWT.READ_ONLY);
 		data = new GridData();
 
@@ -215,7 +212,7 @@ public final class ProjectContentSettingsPropertyPage extends ContentSettingsPro
 		data = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
 		data.horizontalIndent = 10;
 		systemLabel.setLayoutData(data);
-		systemLabel.setText(ResourceHandler.getString("UI_System_ID"));//$NON-NLS-1$
+		systemLabel.setText(HTMLUIPlugin.getResourceString("%UI_System_ID"));//$NON-NLS-1$
 		systemIdText = new Text(super.propertyPage, SWT.BORDER | SWT.READ_ONLY);
 		data = new GridData();
 

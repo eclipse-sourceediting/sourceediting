@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.templates;
 
-import org.eclipse.jst.jsp.ui.internal.nls.ResourceHandler;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.wst.xml.ui.templates.TemplateContextTypeIds;
 
 /**
@@ -20,6 +20,6 @@ import org.eclipse.wst.xml.ui.templates.TemplateContextTypeIds;
 public class TemplateContextTypeJSPAttributeValue extends TemplateContextTypeJSP {
 
 	public TemplateContextTypeJSPAttributeValue() {
-		super(generateContextTypeId(TemplateContextTypeIds.ATTRIBUTEVALUE), ResourceHandler.getString("TemplateContextTypeJSPAttributeValue.0")); //$NON-NLS-1$
+		super(generateContextTypeId(TemplateContextTypeIds.ATTRIBUTEVALUE), JSPUIPlugin.getResourceString("%TemplateContextTypeJSPAttributeValue.0")); //$NON-NLS-1$
 	}
 }

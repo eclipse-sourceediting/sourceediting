@@ -12,16 +12,13 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
-
-
-import org.eclipse.wst.sse.core.internal.nls.ResourceHandler1;
 import org.eclipse.wst.xml.core.document.InvalidCharacterException;
 import org.eclipse.wst.xml.core.document.JSPTag;
 import org.eclipse.wst.xml.core.document.XMLCharEntity;
 import org.eclipse.wst.xml.core.document.XMLDocument;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
-
 
 /**
  */
@@ -273,7 +270,7 @@ public class SourceValidator {
 				int index = source.indexOf(JSPTag.TAG_CLOSE);
 				if (index < 0)
 					return true;
-				message = ResourceHandler1.getString("Invalid_character_('>')_fo_ERROR_"); //$NON-NLS-1$ = "Invalid character ('>') found"
+				message = XMLCorePlugin.getResourceString("%Invalid_character_('>')_fo_ERROR_"); //$NON-NLS-1$ = "Invalid character ('>') found"
 				throw new InvalidCharacterException(message, '>', index + 1);
 			} else if (text.isCDATAContent()) {
 				endTagName = text.getParentNode().getNodeName();
@@ -312,12 +309,12 @@ public class SourceValidator {
 						}
 						// invalid tag
 					}
-					message = ResourceHandler1.getString("Invalid_character_('<')_fo_ERROR_"); //$NON-NLS-1$ = "Invalid character ('<') found"
+					message = XMLCorePlugin.getResourceString("%Invalid_character_('<')_fo_ERROR_"); //$NON-NLS-1$ = "Invalid character ('<') found"
 					break;
 				case '>' :
 					if (acceptClose)
 						continue;
-					message = ResourceHandler1.getString("Invalid_character_('>')_fo_ERROR_"); //$NON-NLS-1$ = "Invalid character ('>') found"
+					message = XMLCorePlugin.getResourceString("%Invalid_character_('>')_fo_ERROR_"); //$NON-NLS-1$ = "Invalid character ('>') found"
 					break;
 				case '&' :
 					if (acceptEntityRef) {
@@ -330,12 +327,12 @@ public class SourceValidator {
 						}
 						// invalid entity reference
 					}
-					message = ResourceHandler1.getString("Invalid_character_('&')_fo_ERROR_"); //$NON-NLS-1$ = "Invalid character ('&') found"
+					message = XMLCorePlugin.getResourceString("%Invalid_character_('&')_fo_ERROR_"); //$NON-NLS-1$ = "Invalid character ('&') found"
 					break;
 				case '"' :
 					if (acceptQuote)
 						continue;
-					message = ResourceHandler1.getString("Invalid_character_('__')_f_EXC_"); //$NON-NLS-1$ = "Invalid character ('\"') found"
+					message = XMLCorePlugin.getResourceString("%Invalid_character_('__')_f_EXC_"); //$NON-NLS-1$ = "Invalid character ('\"') found"
 					break;
 				default :
 					continue;

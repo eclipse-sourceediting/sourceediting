@@ -38,7 +38,6 @@ import org.eclipse.wst.sse.core.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
-import org.eclipse.wst.sse.core.internal.nls.ResourceHandler1;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
@@ -1390,7 +1389,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		// since it uses hashtables, and you can't have a null id for a
 		// hashtable.
 		if (newId == null)
-			throw new IllegalArgumentException(ResourceHandler1.getString("A_model's_id_can_not_be_nu_EXC_")); //$NON-NLS-1$ = "A model's id can not be null"
+			throw new IllegalArgumentException(SSECorePlugin.getResourceString("%A_model's_id_can_not_be_nu_EXC_")); //$NON-NLS-1$ = "A model's id can not be null"
 		// To gaurd againt throwing a spurious ResourceInUse exception,
 		// which can occur when two pieces of code both want to change the id,
 		// so the second request is spurious, we'll ignore any requests that

@@ -14,6 +14,10 @@ package org.eclipse.wst.sse.ui.internal;
 
 
 
+import java.text.MessageFormat;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
@@ -27,6 +31,10 @@ public class SSEUIPlugin extends AbstractUIPlugin {
 	public final static String ID = "org.eclipse.wst.sse.ui"; //$NON-NLS-1$
 
 	static SSEUIPlugin instance = null;
+	//Resource bundle.
+	private ResourceBundle resourceBundle;
+	private static final String KEY_PREFIX = "%"; //$NON-NLS-1$
+	private static final String KEY_DOUBLE_PREFIX = "%%"; //$NON-NLS-1$	
 
 	public static SSEUIPlugin getDefault() {
 		return instance;
@@ -79,5 +87,50 @@ public class SSEUIPlugin extends AbstractUIPlugin {
 	 */
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
 		initializeDefaultEditorPreferences(store);
+	}
+
+	/**
+	 * Returns the string from the plugin's resource bundle,
+	 * or 'key' if not found.
+	 */
+	public static String getResourceString(String value) {
+		String s = value.trim();
+		if (!s.startsWith(KEY_PREFIX, 0))
+			return s;
+		if (s.startsWith(KEY_DOUBLE_PREFIX, 0))
+			return s.substring(1);
+
+		int ix = s.indexOf(' ');
+		String key = ix == -1 ? s : s.substring(0, ix);
+
+		ResourceBundle bundle = getDefault().getResourceBundle();
+		try {
+			return (bundle != null) ? bundle.getString(key.substring(1)) : key;
+		} catch (MissingResourceException e) {
+			return key;
+		}
+	}
+
+	public static String getResourceString(String key, Object[] args) {
+
+		try {
+			return MessageFormat.format(getResourceString(key), args);
+		} catch (IllegalArgumentException e) {
+			return getResourceString(key);
+		}
+
+	}
+
+	/**
+	 * Returns the plugin's resource bundle,
+	 */
+	public ResourceBundle getResourceBundle() {
+		try {
+			if (resourceBundle == null)
+				resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.sse.ui.internal.SSEUIPluginResources");
+		} catch (MissingResourceException x) {
+			resourceBundle = null;
+		}
+		return resourceBundle;
 	}
 }

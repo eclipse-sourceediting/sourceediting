@@ -49,9 +49,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.wst.sse.core.builder.IBuilderDelegate;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
-import org.eclipse.wst.sse.core.internal.nls.ResourceHandler;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
-
 
 public class StructuredDocumentBuilder extends IncrementalProjectBuilder implements IExecutableExtension {
 
@@ -241,7 +239,7 @@ public class StructuredDocumentBuilder extends IncrementalProjectBuilder impleme
 		}
 		IProject[] allProjects = root.getProjects();
 		IProgressMonitor localMonitor = subMonitorFor(monitor, allProjects.length);
-		localMonitor.beginTask(ResourceHandler.getString("StructuredDocumentBuilder.0"), 1); //$NON-NLS-1$
+		localMonitor.beginTask(SSECorePlugin.getResourceString("%StructuredDocumentBuilder.0"), 1); //$NON-NLS-1$
 		for (int i = 0; i < allProjects.length && !monitor.isCanceled(); i++) {
 			add(localMonitor, allProjects[i], validateEditContext);
 			localMonitor.worked(1);
@@ -539,7 +537,7 @@ public class StructuredDocumentBuilder extends IncrementalProjectBuilder impleme
 	void doTaskTagProcessing() {
 		// Must make sure the builder is registered for projects which may
 		// have been created before this plugin was activated.
-		Job adder = new WorkspaceJob(ResourceHandler.getString("ModelPlugin.0")) { //$NON-NLS-1$
+		Job adder = new WorkspaceJob(SSECorePlugin.getResourceString("%ModelPlugin.0")) { //$NON-NLS-1$
 			public IStatus runInWorkspace(IProgressMonitor monitor) {
 				add(monitor, ResourcesPlugin.getWorkspace().getRoot(), null);
 				return Status.OK_STATUS;

@@ -10,10 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.templates;
 
-import org.eclipse.wst.html.ui.internal.nls.ResourceHandler;
+import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.xml.ui.templates.TemplateContextTypeIds;
-
-
 
 /**
  * Templates of this context type apply to any attributes within HTML content type.
@@ -21,6 +19,6 @@ import org.eclipse.wst.xml.ui.templates.TemplateContextTypeIds;
 public class TemplateContextTypeHTMLAttribute extends TemplateContextTypeHTML {
 
 	public TemplateContextTypeHTMLAttribute() {
-		super(generateContextTypeId(TemplateContextTypeIds.ATTRIBUTE), ResourceHandler.getString("TemplateContextTypeHTMLAttribute.0")); //$NON-NLS-1$
+		super(generateContextTypeId(TemplateContextTypeIds.ATTRIBUTE), HTMLUIPlugin.getResourceString("%TemplateContextTypeHTMLAttribute.0")); //$NON-NLS-1$
 	}
 }

@@ -58,11 +58,10 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.Debug;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.util.EditorUtility;
 import org.w3c.dom.Node;
-
 
 /**
  * This class is configurable by setting 3 properties: 1) an array of Strings
@@ -420,10 +419,10 @@ public class StyledTextColorPicker extends Composite {
 	protected void createControls(Composite parent) {
 		Composite styleRow = createComposite(parent, 3);
 		// row 1 - content type label, combo box, restore defaults
-		createLabel(styleRow, ResourceHandler.getString("Content_type__UI_")); //$NON-NLS-1$ = "Content type:"
+		createLabel(styleRow, SSEUIPlugin.getResourceString("%Content_type__UI_")); //$NON-NLS-1$ = "Content type:"
 		// Contexts combo box
 		fStyleCombo = createCombo(styleRow, new String[0], -1);
-		fClearStyle = createPushButton(styleRow, ResourceHandler.getString("Restore_Default_UI_")); //$NON-NLS-1$ = "Restore Default"
+		fClearStyle = createPushButton(styleRow, SSEUIPlugin.getResourceString("%Restore_Default_UI_")); //$NON-NLS-1$ = "Restore Default"
 		Composite styleRow2;
 		if (showItalic)
 			styleRow2 = createComposite(parent, 7);
@@ -431,7 +430,7 @@ public class StyledTextColorPicker extends Composite {
 			styleRow2 = createComposite(parent, 6);
 		// row 2 - foreground label, button, background label, button, bold,
 		// italics?
-		fForegroundLabel = createLabel(styleRow2, ResourceHandler.getString("Foreground_UI_")); //$NON-NLS-1$ = "Foreground"
+		fForegroundLabel = createLabel(styleRow2, SSEUIPlugin.getResourceString("%Foreground_UI_")); //$NON-NLS-1$ = "Foreground"
 		fForeground = createPushButton(styleRow2, ""); //$NON-NLS-1$
 		setAccessible(fForeground, fForegroundLabel.getText());
 		fForeground.getAccessible().addAccessibleControlListener(foregroundAccListener); // defect
@@ -445,7 +444,7 @@ public class StyledTextColorPicker extends Composite {
 		Point buttonSize = computeImageSize(parent);
 		((GridData) fForeground.getLayoutData()).widthHint = buttonSize.x;
 		((GridData) fForeground.getLayoutData()).heightHint = buttonSize.y;
-		fBackgroundLabel = createLabel(styleRow2, ResourceHandler.getString("Background_UI_")); //$NON-NLS-1$ = "Background"
+		fBackgroundLabel = createLabel(styleRow2, SSEUIPlugin.getResourceString("%Background_UI_")); //$NON-NLS-1$ = "Background"
 		fBackground = createPushButton(styleRow2, ""); //$NON-NLS-1$
 		setAccessible(fBackground, fBackgroundLabel.getText());
 		fBackground.getAccessible().addAccessibleControlListener(backgroundAccListener); // defect
@@ -459,9 +458,9 @@ public class StyledTextColorPicker extends Composite {
 		((GridData) fBackground.getLayoutData()).widthHint = buttonSize.x;
 		((GridData) fBackground.getLayoutData()).heightHint = buttonSize.y;
 		createLabel(styleRow2, ""); //$NON-NLS-1$
-		fBold = createCheckBox(styleRow2, ResourceHandler.getString("Bold_UI_")); //$NON-NLS-1$ = "Bold"
+		fBold = createCheckBox(styleRow2, SSEUIPlugin.getResourceString("%Bold_UI_")); //$NON-NLS-1$ = "Bold"
 		if (showItalic)
-			fItalic = createCheckBox(styleRow2, ResourceHandler.getString("Italic")); //$NON-NLS-1$
+			fItalic = createCheckBox(styleRow2, SSEUIPlugin.getResourceString("%Italic")); //$NON-NLS-1$
 		//		// Defaults checkbox
 		fForeground.setEnabled(false);
 		fBackground.setEnabled(false);
@@ -472,7 +471,7 @@ public class StyledTextColorPicker extends Composite {
 		fForegroundLabel.setEnabled(false);
 		fBackgroundLabel.setEnabled(false);
 		Composite sample = createComposite(parent, 1);
-		createLabel(sample, ResourceHandler.getString("Sample_text__UI_")); //$NON-NLS-1$ = "&Sample text:"
+		createLabel(sample, SSEUIPlugin.getResourceString("%Sample_text__UI_")); //$NON-NLS-1$ = "&Sample text:"
 		fText = new StyledText(sample, SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER | SWT.READ_ONLY);
 		GridData data = new GridData(GridData.FILL_BOTH);
 		fText.setLayoutData(data);
@@ -486,7 +485,7 @@ public class StyledTextColorPicker extends Composite {
 		// Provide tab
 		// traversal for
 		// fText widget
-		setAccessible(fText, ResourceHandler.getString("Sample_text__UI_")); //$NON-NLS-1$ = "&Sample text:"
+		setAccessible(fText, SSEUIPlugin.getResourceString("%Sample_text__UI_")); //$NON-NLS-1$ = "&Sample text:"
 		fForeground.addSelectionListener(buttonListener);
 		fBackground.addSelectionListener(buttonListener);
 		fClearStyle.addSelectionListener(buttonListener);

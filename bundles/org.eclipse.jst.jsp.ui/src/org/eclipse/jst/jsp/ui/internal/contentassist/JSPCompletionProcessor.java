@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.contentassist;
 
-
-
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -36,7 +34,7 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.IReleasable;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.contentassist.IResourceDependentProcessor;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.xml.core.document.XMLDocument;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.document.XMLNode;
@@ -126,7 +124,7 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 		}
 		ICompletionProposal[] results = fCollector.getResults();
 		if (results == null || results.length < 1)
-			fErrorMessage = ResourceHandler.getString("Java_Content_Assist_is_not_UI_"); //$NON-NLS-1$ = "Java Content Assist is not available for the current cursor location"
+			fErrorMessage = SSEUIPlugin.getResourceString("%Java_Content_Assist_is_not_UI_"); //$NON-NLS-1$ = "Java Content Assist is not available for the current cursor location"
 
 		return results;
 	}

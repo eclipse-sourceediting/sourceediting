@@ -25,8 +25,7 @@ import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
-import org.eclipse.wst.xml.ui.nls.ResourceHandler;
-
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
 public class RemoveUnknownElementQuickFixProposal implements ICompletionProposal, ICompletionProposalExtension2 {
 	private Object fAdditionalFixInfo = null;
@@ -104,7 +103,7 @@ public class RemoveUnknownElementQuickFixProposal implements ICompletionProposal
 	 */
 	public String getDisplayString() {
 		if (fDisplayString == null)
-			fDisplayString = ResourceHandler.getString("QuickFixProcessorXML.11"); //$NON-NLS-1$
+			fDisplayString = XMLUIPlugin.getResourceString("%QuickFixProcessorXML.11"); //$NON-NLS-1$
 
 		return fDisplayString;
 	}

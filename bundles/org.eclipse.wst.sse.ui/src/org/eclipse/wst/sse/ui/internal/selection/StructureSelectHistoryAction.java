@@ -17,16 +17,15 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.w3c.dom.Node;
-
 
 public class StructureSelectHistoryAction extends StructureSelectAction implements IUpdate {
 	public StructureSelectHistoryAction(StructuredTextEditor editor, SelectionHistory history) {
 		super(editor, history);
-		setText(ResourceHandler.getString("StructureSelectHistory.label")); //$NON-NLS-1$
-		setToolTipText(ResourceHandler.getString("StructureSelectHistory.tooltip")); //$NON-NLS-1$
-		setDescription(ResourceHandler.getString("StructureSelectHistory.description")); //$NON-NLS-1$
+		setText(SSEUIPlugin.getResourceString("%StructureSelectHistory.label")); //$NON-NLS-1$
+		setToolTipText(SSEUIPlugin.getResourceString("%StructureSelectHistory.tooltip")); //$NON-NLS-1$
+		setDescription(SSEUIPlugin.getResourceString("%StructureSelectHistory.description")); //$NON-NLS-1$
 
 		update();
 	}

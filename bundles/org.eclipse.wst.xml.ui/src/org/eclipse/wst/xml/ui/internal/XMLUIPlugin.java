@@ -13,6 +13,9 @@
 package org.eclipse.wst.xml.ui.internal;
 
 import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
@@ -21,7 +24,7 @@ import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
 import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
-import org.eclipse.wst.sse.ui.EditorPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.preferences.ui.ColorHelper;
@@ -35,13 +38,16 @@ import org.eclipse.wst.xml.ui.templates.TemplateContextTypeXMLAttribute;
 import org.eclipse.wst.xml.ui.templates.TemplateContextTypeXMLAttributeValue;
 import org.eclipse.wst.xml.ui.templates.TemplateContextTypeXMLTag;
 
-
 /**
  * The main plugin class to be used in the desktop.
  */
 public class XMLUIPlugin extends AbstractUIPlugin {
 	public final static String ID = "org.eclipse.wst.xml.ui"; //$NON-NLS-1$
 	protected static XMLUIPlugin instance = null;
+	//Resource bundle.
+	private ResourceBundle resourceBundle;
+	private static final String KEY_PREFIX = "%"; //$NON-NLS-1$
+	private static final String KEY_DOUBLE_PREFIX = "%%"; //$NON-NLS-1$	
 
 	public static XMLUIPlugin getDefault() {
 		return instance;
@@ -72,7 +78,7 @@ public class XMLUIPlugin extends AbstractUIPlugin {
 		// Force a call to initialize default preferences since
 		// initializeDefaultPreferences is only called if *this* plugin's
 		// preference store is accessed
-		initializeDefaultXMLPreferences(EditorPlugin.getDefault().getPreferenceStore());
+		initializeDefaultXMLPreferences(SSEUIPlugin.getDefault().getPreferenceStore());
 
 		JobStatusLineHelper.init();
 	}
@@ -132,7 +138,7 @@ public class XMLUIPlugin extends AbstractUIPlugin {
 
 		// ignore this preference store
 		// use EditorPlugin preference store
-		IPreferenceStore editorStore = EditorPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore editorStore = SSEUIPlugin.getDefault().getPreferenceStore();
 		initializeDefaultXMLPreferences(editorStore);
 	}
 
@@ -218,5 +224,50 @@ public class XMLUIPlugin extends AbstractUIPlugin {
 
 		styleValue = ColorHelper.getColorString(0, 0, 0) + NOBACKGROUNDBOLD;
 		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsXML.CDATA_TEXT, ctId), styleValue);
+	}
+
+	/**
+	 * Returns the string from the plugin's resource bundle,
+	 * or 'key' if not found.
+	 */
+	public static String getResourceString(String value) {
+		String s = value.trim();
+		if (!s.startsWith(KEY_PREFIX, 0))
+			return s;
+		if (s.startsWith(KEY_DOUBLE_PREFIX, 0))
+			return s.substring(1);
+
+		int ix = s.indexOf(' ');
+		String key = ix == -1 ? s : s.substring(0, ix);
+
+		ResourceBundle bundle = getDefault().getResourceBundle();
+		try {
+			return (bundle != null) ? bundle.getString(key.substring(1)) : key;
+		} catch (MissingResourceException e) {
+			return key;
+		}
+	}
+
+	public static String getResourceString(String key, Object[] args) {
+
+		try {
+			return MessageFormat.format(getResourceString(key), args);
+		} catch (IllegalArgumentException e) {
+			return getResourceString(key);
+		}
+
+	}
+
+	/**
+	 * Returns the plugin's resource bundle,
+	 */
+	public ResourceBundle getResourceBundle() {
+		try {
+			if (resourceBundle == null)
+				resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.xml.ui.internal.XMLUIPluginResources");
+		} catch (MissingResourceException x) {
+			resourceBundle = null;
+		}
+		return resourceBundle;
 	}
 }

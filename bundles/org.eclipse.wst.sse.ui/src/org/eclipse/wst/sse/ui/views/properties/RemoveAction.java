@@ -13,10 +13,9 @@
 package org.eclipse.wst.sse.ui.views.properties;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
-
 
 public class RemoveAction extends Action {
 	private ConfigurablePropertySheetPage fPage;
@@ -34,7 +33,7 @@ public class RemoveAction extends Action {
 	 * @see org.eclipse.jface.action.Action#getText()
 	 */
 	public String getText() {
-		return ResourceHandler.getString("RemoveAction.0"); //$NON-NLS-1$
+		return SSEUIPlugin.getResourceString("%RemoveAction.0"); //$NON-NLS-1$
 	}
 
 	/**

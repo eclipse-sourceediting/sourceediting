@@ -21,6 +21,7 @@ import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.ui.internal.IActionConstantsJSP;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.editor.IHelpContextIds;
 import org.eclipse.jst.jsp.ui.internal.java.refactoring.JSPMoveElementAction;
 import org.eclipse.jst.jsp.ui.internal.java.refactoring.JSPRenameElementAction;
@@ -33,8 +34,8 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.edit.util.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.edit.util.StructuredTextEditorActionConstants;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.search.FindOccurrencesActionProvider;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 import org.eclipse.wst.xml.core.document.XMLDocument;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.ui.actions.AddBlockCommentActionXML;
@@ -46,7 +47,7 @@ public class StructuredTextEditorJSP extends StructuredTextEditor {
 	protected void createActions() {
 		super.createActions();
 
-		ResourceBundle resourceBundle = ResourceHandler.getResourceBundle();
+		ResourceBundle resourceBundle = SSEUIPlugin.getDefault().getResourceBundle();
 
 		Action action = new CleanupActionHTML(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_CLEANUP_DOCUMENT + DOT, this);
 		action.setActionDefinitionId(ActionDefinitionIds.CLEANUP_DOCUMENT);
@@ -71,11 +72,11 @@ public class StructuredTextEditorJSP extends StructuredTextEditor {
 		setAction(StructuredTextEditorActionConstants.ACTION_NAME_FIND_OCCURRENCES, foAction);
 		markAsSelectionDependentAction(StructuredTextEditorActionConstants.ACTION_NAME_FIND_OCCURRENCES, true);
 
-		JSPRenameElementAction renameAction = new JSPRenameElementAction(org.eclipse.jst.jsp.ui.internal.nls.ResourceHandler.getResourceBundle(), IActionConstantsJSP.ACTION_NAME_RENAME_ELEMENT + DOT, this);
+		JSPRenameElementAction renameAction = new JSPRenameElementAction(JSPUIPlugin.getDefault().getResourceBundle(), IActionConstantsJSP.ACTION_NAME_RENAME_ELEMENT + DOT, this);
 		setAction(IActionConstantsJSP.ACTION_NAME_RENAME_ELEMENT, renameAction);
 		markAsSelectionDependentAction(IActionConstantsJSP.ACTION_NAME_RENAME_ELEMENT, true);
 
-		JSPMoveElementAction moveAction = new JSPMoveElementAction(org.eclipse.jst.jsp.ui.internal.nls.ResourceHandler.getResourceBundle(), IActionConstantsJSP.ACTION_NAME_MOVE_ELEMENT + DOT, this);
+		JSPMoveElementAction moveAction = new JSPMoveElementAction(JSPUIPlugin.getDefault().getResourceBundle(), IActionConstantsJSP.ACTION_NAME_MOVE_ELEMENT + DOT, this);
 		setAction(IActionConstantsJSP.ACTION_NAME_MOVE_ELEMENT, moveAction);
 		markAsSelectionDependentAction(IActionConstantsJSP.ACTION_NAME_MOVE_ELEMENT, true);
 	}
@@ -119,7 +120,7 @@ public class StructuredTextEditorJSP extends StructuredTextEditor {
 		super.addContextMenuActions(menu);
 
 		if (getSourceViewer().isEditable()) {
-			String label = org.eclipse.jst.jsp.ui.internal.nls.ResourceHandler.getString("Refactor.label"); //$NON-NLS-1$ = "Format"
+			String label = JSPUIPlugin.getResourceString("%Refactor.label"); //$NON-NLS-1$ = "Format"
 			MenuManager subMenu = new MenuManager(label, "Refactor"); // menu id //$NON-NLS-1$
 			addAction(subMenu, IActionConstantsJSP.ACTION_NAME_RENAME_ELEMENT);
 			addAction(subMenu, IActionConstantsJSP.ACTION_NAME_MOVE_ELEMENT);

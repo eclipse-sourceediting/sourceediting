@@ -21,15 +21,14 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.common.encoding.CommonEncodingPreferenceNames;
-import org.eclipse.wst.html.core.HTMLCorePlugin;
 import org.eclipse.wst.html.core.HTMLFilesPreferenceNames;
+import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
-import org.eclipse.wst.html.ui.internal.nls.ResourceHandler;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.xml.ui.preferences.EncodingSettings;
 import org.eclipse.wst.xml.ui.preferences.WorkbenchDefaultEncodingSettings;
 import org.eclipse.wst.xml.ui.preferences.XMLFilesPreferencePage;
-
 
 public class HTMLFilesPreferencePage extends XMLFilesPreferencePage {
 	private WorkbenchDefaultEncodingSettings fInputEncodingSettings = null;
@@ -77,7 +76,7 @@ public class HTMLFilesPreferencePage extends XMLFilesPreferencePage {
 
 	protected void createContentsForLoadingGroup(Composite parent) {
 		Group group = createGroup(parent, 1);
-		group.setText(ResourceHandler.getString("HTMLFilesPreferencePage.0")); //$NON-NLS-1$
+		group.setText(HTMLUIPlugin.getResourceString("%HTMLFilesPreferencePage.0")); //$NON-NLS-1$
 
 		fInputEncodingSettings = new WorkbenchDefaultEncodingSettings(group);
 	}
@@ -126,24 +125,24 @@ public class HTMLFilesPreferencePage extends XMLFilesPreferencePage {
 	 */
 	protected void createContentsForCreatingGroup(Composite parent) {
 		Group creatingGroup = createGroup(parent, 2);
-		creatingGroup.setText(org.eclipse.wst.sse.ui.nls.ResourceHandler.getString("Creating_files")); //$NON-NLS-1$
+		creatingGroup.setText(SSEUIPlugin.getResourceString("%Creating_files")); //$NON-NLS-1$
 
 		// Add this suffix..
-		createLabel(creatingGroup, ResourceHandler.getString("HTMLFilesPreferencePage.1"));	//$NON-NLS-1$
+		createLabel(creatingGroup, HTMLUIPlugin.getResourceString("%HTMLFilesPreferencePage.1"));	//$NON-NLS-1$
 		fHtmlext_Field = createTextField(creatingGroup);
 		
 		// Encoding..
-		Label label = createLabel(creatingGroup, org.eclipse.wst.sse.ui.nls.ResourceHandler.getString("Encoding_desc")); //$NON-NLS-1$
+		Label label = createLabel(creatingGroup, SSEUIPlugin.getResourceString("%Encoding_desc")); //$NON-NLS-1$
 		((GridData)label.getLayoutData()).horizontalSpan = 2;
 		fEncodingSettings = new EncodingSettings(creatingGroup);
 		((GridData)fEncodingSettings.getLayoutData()).horizontalSpan = 2;
 		
 		// Insert DOCTYPE declaration
-		fDoctype_Button = createCheckBox(creatingGroup, ResourceHandler.getString("HTMLFilesPreferencePage.2"));	//$NON-NLS-1$
+		fDoctype_Button = createCheckBox(creatingGroup, HTMLUIPlugin.getResourceString("%HTMLFilesPreferencePage.2"));	//$NON-NLS-1$
 		((GridData)fDoctype_Button.getLayoutData()).horizontalSpan = 2;
 		
 		// Insert GENERATOR with META tag
-		fGenerator_Button = createCheckBox(creatingGroup, ResourceHandler.getString("HTMLFilesPreferencePage.3"));	//$NON-NLS-1$
+		fGenerator_Button = createCheckBox(creatingGroup, HTMLUIPlugin.getResourceString("%HTMLFilesPreferencePage.3"));	//$NON-NLS-1$
 		((GridData)fGenerator_Button.getLayoutData()).horizontalSpan = 2;
 	}
 	/* (non-Javadoc)

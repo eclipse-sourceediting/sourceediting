@@ -14,8 +14,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.Logger;
-import org.eclipse.jst.jsp.ui.internal.nls.ResourceHandler;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.CompositeChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
@@ -72,7 +72,7 @@ public class JSPTypeRenameParticipant extends RenameParticipant {
 		Change[] changes =  JSPTypeRenameChange.createChangesFor(fType, getArguments().getNewName());
 		CompositeChange multiChange = null;
 		if(changes.length > 0)
-			multiChange = new CompositeChange(ResourceHandler.getString("JSP_changes"), changes); //$NON-NLS-1$
+			multiChange = new CompositeChange(JSPUIPlugin.getResourceString("%JSP_changes"), changes); //$NON-NLS-1$
 		return multiChange;
 	}
 	

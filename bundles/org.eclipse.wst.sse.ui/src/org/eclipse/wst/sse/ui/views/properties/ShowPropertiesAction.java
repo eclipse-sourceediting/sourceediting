@@ -13,12 +13,11 @@
 package org.eclipse.wst.sse.ui.views.properties;
 
 import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 import org.eclipse.wst.sse.ui.util.ShowViewAction;
-
 
 /**
  * Surfaces the Properties view
@@ -29,7 +28,7 @@ public class ShowPropertiesAction extends ShowViewAction {
 	private final static String VIEW_ID = "org.eclipse.ui.views.PropertySheet"; //$NON-NLS-1$
 
 	public ShowPropertiesAction() {
-		super(ResourceHandler.getString("ShowPropertiesAction.0"), EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_OBJ_PROP_PS)); //$NON-NLS-1$
+		super(SSEUIPlugin.getResourceString("%ShowPropertiesAction.0"), EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_OBJ_PROP_PS)); //$NON-NLS-1$
 		WorkbenchHelp.setHelp(this, IHelpContextIds.CONTMNU_PROPERTIES_HELPID);
 	}
 

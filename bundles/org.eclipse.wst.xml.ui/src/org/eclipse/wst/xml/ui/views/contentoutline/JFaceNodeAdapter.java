@@ -35,11 +35,10 @@ import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.ui.views.contentoutline.BufferedOutlineUpdater;
 import org.eclipse.wst.sse.ui.views.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.sse.ui.views.contentoutline.IJFaceNodeAdapterFactory;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
-import org.eclipse.wst.xml.ui.nls.ResourceHandler;
 import org.w3c.dom.Node;
-
 
 /**
  * Adapts a DOM node to a JFace viewer.
@@ -336,7 +335,7 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 														    * &&
 														    * !propertySheetPage.getControl().isDisposed()
 														    */) {
-					RefreshPropertySheetJob refreshPropertySheetJob = new RefreshPropertySheetJob(getDisplay(), ResourceHandler.getString("JFaceNodeAdapter.1"), propertySheetPage); //$NON-NLS-1$
+					RefreshPropertySheetJob refreshPropertySheetJob = new RefreshPropertySheetJob(getDisplay(), XMLUIPlugin.getResourceString("%JFaceNodeAdapter.1"), propertySheetPage); //$NON-NLS-1$
 					refreshPropertySheetJob.schedule();
 				}
 			}

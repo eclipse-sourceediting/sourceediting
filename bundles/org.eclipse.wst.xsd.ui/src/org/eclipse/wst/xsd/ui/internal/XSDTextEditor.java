@@ -30,10 +30,10 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.edit.util.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.openon.OpenOnAction;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 import org.eclipse.wst.sse.ui.view.events.INodeSelectionListener;
 import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
 import org.eclipse.wst.xml.core.document.XMLModel;
@@ -366,7 +366,7 @@ public class XSDTextEditor extends StructuredTextEditorXML implements INodeSelec
   {
     super.createActions();
     addOpenOnSelectionListener();
-    ResourceBundle resourceBundle = ResourceHandler.getResourceBundle(); //ResourceBundle.getBundle(RESOURCE_BUNDLE_NAME);
+    ResourceBundle resourceBundle = SSECorePlugin.getDefault().getResourceBundle(); //ResourceBundle.getBundle(RESOURCE_BUNDLE_NAME);
     
     wrappedAction = new WrappedOpenFileAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE + DOT, this);
     setAction(StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE, wrappedAction);

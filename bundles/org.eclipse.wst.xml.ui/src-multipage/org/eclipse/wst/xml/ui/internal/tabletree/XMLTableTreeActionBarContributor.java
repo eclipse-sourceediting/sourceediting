@@ -35,11 +35,10 @@ import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.internal.ui.IDesignViewer;
 import org.eclipse.wst.xml.internal.ui.IDesignViewerActionBarContributor;
+import org.eclipse.wst.xml.internal.ui.XMLEditorResourceHandler;
 import org.eclipse.wst.xml.internal.ui.XMLMultiPageEditorPart;
-import org.eclipse.wst.xml.ui.nls2.ResourceHandler;
 import org.eclipse.wst.xml.ui.util.SharedXMLEditorPluginImageHelper;
 import org.w3c.dom.Document;
-
 
 /**
  *  
@@ -98,7 +97,7 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 		IMenuManager xmlMenu = bars.getMenuManager().findMenuUsingPath("com.ibm.etools.sed.editor.xmlmenu"); //$NON-NLS-1$
 
 		if (xmlMenu == null) {
-			xmlMenu = new MenuManager(ResourceHandler.getString("XMLTableTreeActionBarContributor.0"), "com.ibm.etools.sed.editor.xmlmenu"); //$NON-NLS-1$ //$NON-NLS-2$
+			xmlMenu = new MenuManager(XMLEditorResourceHandler.getResourceString("%XMLTableTreeActionBarContributor.0"), "com.ibm.etools.sed.editor.xmlmenu"); //$NON-NLS-1$ //$NON-NLS-2$
 			bars.getMenuManager().insertBefore(IWorkbenchActionConstants.M_WINDOW, xmlMenu);
 		} else {
 			removeContributions(xmlMenu);
@@ -139,13 +138,13 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 		//
 		xmlMenuExpandAction = new ViewerExpandCollapseAction(true);
 		xmlMenuExpandAction.setId(EXPAND_ALL_ID);
-		xmlMenuExpandAction.setText(ResourceHandler.getString("XMLTableTreeActionBarContributor.1")); //$NON-NLS-1$
+		xmlMenuExpandAction.setText(XMLEditorResourceHandler.getResourceString("%XMLTableTreeActionBarContributor.1")); //$NON-NLS-1$
 		xmlMenu.add(xmlMenuExpandAction);
 
 		xmlMenuCollapseAction = new ViewerExpandCollapseAction(false);
 		xmlMenuCollapseAction.setId(COLLAPSE_ALL_ID);
 		xmlMenuCollapseAction.setId(EXPAND_ALL_ID);
-		xmlMenuCollapseAction.setText(ResourceHandler.getString("XMLTableTreeActionBarContributor.2")); //$NON-NLS-1$
+		xmlMenuCollapseAction.setText(XMLEditorResourceHandler.getResourceString("%XMLTableTreeActionBarContributor.2")); //$NON-NLS-1$
 		xmlMenu.add(xmlMenuCollapseAction);
 	}
 
@@ -262,12 +261,12 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 
 		public void setAppearanceForEditMode(int editMode) {
 			if (editMode == ModelQuery.EDIT_MODE_CONSTRAINED_STRICT) {
-				setToolTipText(ResourceHandler.getString("XMLTableTreeActionBarContributor.3")); //$NON-NLS-1$
-				setText(ResourceHandler.getString("XMLTableTreeActionBarContributor.4")); //$NON-NLS-1$
+				setToolTipText(XMLEditorResourceHandler.getResourceString("%XMLTableTreeActionBarContributor.3")); //$NON-NLS-1$
+				setText(XMLEditorResourceHandler.getResourceString("%XMLTableTreeActionBarContributor.4")); //$NON-NLS-1$
 				setImageDescriptor(onImage);
 			} else {
-				setToolTipText(ResourceHandler.getString("XMLTableTreeActionBarContributor.5")); //$NON-NLS-1$
-				setText(ResourceHandler.getString("XMLTableTreeActionBarContributor.6")); //$NON-NLS-1$
+				setToolTipText(XMLEditorResourceHandler.getResourceString("%XMLTableTreeActionBarContributor.5")); //$NON-NLS-1$
+				setText(XMLEditorResourceHandler.getResourceString("%XMLTableTreeActionBarContributor.6")); //$NON-NLS-1$
 				setImageDescriptor(offImage);
 			}
 		}
@@ -292,8 +291,8 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 		public ReloadGrammarAction() {
 			setDisabledImageDescriptor(SharedXMLEditorPluginImageHelper.getImageDescriptor(SharedXMLEditorPluginImageHelper.IMG_DTOOL_RLDGRMR));
 			setImageDescriptor(SharedXMLEditorPluginImageHelper.getImageDescriptor(SharedXMLEditorPluginImageHelper.IMG_ETOOL_RLDGRMR));
-			setToolTipText(ResourceHandler.getString("XMLTableTreeActionBarContributor.7")); //$NON-NLS-1$
-			setText(ResourceHandler.getString("XMLTableTreeActionBarContributor.8")); //$NON-NLS-1$
+			setToolTipText(XMLEditorResourceHandler.getResourceString("%XMLTableTreeActionBarContributor.7")); //$NON-NLS-1$
+			setText(XMLEditorResourceHandler.getResourceString("%XMLTableTreeActionBarContributor.8")); //$NON-NLS-1$
 		}
 
 		public void setModel(IStructuredModel newModel) {

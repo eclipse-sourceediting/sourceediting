@@ -14,8 +14,7 @@ package org.eclipse.wst.xml.ui.templates;
 
 import org.eclipse.jface.text.templates.GlobalTemplateVariables;
 import org.eclipse.jface.text.templates.TemplateContextType;
-import org.eclipse.wst.xml.ui.nls.ResourceHandler;
-
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
 /**
  * Base class for XML template context types. Templates of this context type
@@ -35,7 +34,7 @@ public class TemplateContextTypeXML extends TemplateContextType {
 	}
 
 	public TemplateContextTypeXML() {
-		this(generateContextTypeId(TemplateContextTypeIds.ALL), ResourceHandler.getString("TemplateContextTypeXML.0")); //$NON-NLS-1$
+		this(generateContextTypeId(TemplateContextTypeIds.ALL), XMLUIPlugin.getResourceString("%TemplateContextTypeXML.0")); //$NON-NLS-1$
 	}
 
 	/**

@@ -15,12 +15,10 @@ package org.eclipse.wst.xml.ui.actions;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.xml.ui.dialogs.EditProcessingInstructionDialog;
-import org.eclipse.wst.xml.ui.util.XMLCommonResources;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.ProcessingInstruction;
-
-
 
 /**
  * EditProcessingInstructionAction
@@ -60,13 +58,13 @@ public class EditProcessingInstructionAction extends NodeAction {
 
 	public void run() {
 		manager.beginNodeAction(this);
-		Shell shell = XMLCommonResources.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
+		Shell shell = XMLUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
 
 		EditProcessingInstructionDialog dialog = null;
 		if (pi != null) {
 			dialog = new EditProcessingInstructionDialog(shell, pi);
 		} else {
-			dialog = new EditProcessingInstructionDialog(shell, XMLCommonResources.getInstance().getString("_UI_PI_TARGET_VALUE"), XMLCommonResources.getInstance().getString("_UI_PI_DATA_VALUE")); //$NON-NLS-1$ //$NON-NLS-2$
+			dialog = new EditProcessingInstructionDialog(shell, XMLUIPlugin.getResourceString("%_UI_PI_TARGET_VALUE"), XMLUIPlugin.getResourceString("%_UI_PI_DATA_VALUE")); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		dialog.create();

@@ -22,7 +22,7 @@ import org.eclipse.ui.texteditor.RetargetTextEditorAction;
 import org.eclipse.wst.sse.ui.edit.util.ActionContributor;
 import org.eclipse.wst.sse.ui.edit.util.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.edit.util.StructuredTextEditorActionConstants;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 /**
  * ActionContributorCSS
@@ -49,7 +49,7 @@ public class ActionContributorCSS extends ActionContributor {
 	public ActionContributorCSS() {
 		super();
 
-		ResourceBundle resourceBundle = ResourceHandler.getResourceBundle();
+		ResourceBundle resourceBundle = SSEUIPlugin.getDefault().getResourceBundle();
 
 		// edit commands
 		fContentAssist = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
@@ -65,7 +65,7 @@ public class ActionContributorCSS extends ActionContributor {
 		fFormatActiveElements = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
 		fFormatActiveElements.setActionDefinitionId(ActionDefinitionIds.FORMAT_ACTIVE_ELEMENTS);
 
-		fFormatMenu = new MenuManager(ResourceHandler.getString("FormatMenu.label")); //$NON-NLS-1$
+		fFormatMenu = new MenuManager(SSEUIPlugin.getResourceString("%FormatMenu.label")); //$NON-NLS-1$
 		fFormatMenu.add(fFormatDocument);
 		fFormatMenu.add(fFormatActiveElements);
 	}
@@ -88,7 +88,7 @@ public class ActionContributorCSS extends ActionContributor {
 		}
 
 		// source commands
-		String sourceMenuLabel = ResourceHandler.getString("SourceMenu.label"); //$NON-NLS-1$
+		String sourceMenuLabel = SSEUIPlugin.getResourceString("%SourceMenu.label"); //$NON-NLS-1$
 		String sourceMenuId = "sourceMenuId"; // This is just a menu id. No
 											  // need to translate.
 											  // //$NON-NLS-1$

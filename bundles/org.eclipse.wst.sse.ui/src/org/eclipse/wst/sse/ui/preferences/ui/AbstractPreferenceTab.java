@@ -35,9 +35,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
-
 
 /**
  * Generic preference tab page that contains helpful methods
@@ -252,14 +251,14 @@ abstract public class AbstractPreferenceTab implements IPreferenceTab {
 	private IStatus validatePositiveNumber(String number) {
 		StatusInfo status = new StatusInfo();
 		if (number.length() == 0) {
-			status.setError(ResourceHandler.getString("StructuredTextEditorPreferencePage.37")); //$NON-NLS-1$
+			status.setError(SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.37")); //$NON-NLS-1$
 		} else {
 			try {
 				int value = Integer.parseInt(number);
 				if (value < 0)
-					status.setError(number + ResourceHandler.getString("StructuredTextEditorPreferencePage.38")); //$NON-NLS-1$
+					status.setError(number + SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.38")); //$NON-NLS-1$
 			} catch (NumberFormatException e) {
-				status.setError(number + ResourceHandler.getString("StructuredTextEditorPreferencePage.39")); //$NON-NLS-1$
+				status.setError(number + SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.39")); //$NON-NLS-1$
 			}
 		}
 		return status;

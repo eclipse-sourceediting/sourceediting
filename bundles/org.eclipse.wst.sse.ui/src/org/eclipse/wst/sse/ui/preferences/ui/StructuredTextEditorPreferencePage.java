@@ -52,9 +52,7 @@ import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.TabFolderLayout;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
-
 
 /**
  * Gutted version of JavaEditorPreferencePage
@@ -70,7 +68,7 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 	private ColorEditor fAppearanceColorEditor;
 	private List fAppearanceColorList;
 
-	private final String[][] fAppearanceColorListModel = new String[][]{{ResourceHandler.getString("StructuredTextEditorPreferencePage.1"), AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER_COLOR}, {ResourceHandler.getString("StructuredTextEditorPreferencePage.2"), CommonEditorPreferenceNames.MATCHING_BRACKETS_COLOR}, {ResourceHandler.getString("StructuredTextEditorPreferencePage.3"), AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE_COLOR}, {ResourceHandler.getString("StructuredTextEditorPreferencePage.4"), AbstractDecoratedTextEditorPreferenceConstants.EDITOR_PRINT_MARGIN_COLOR}, {ResourceHandler.getString("StructuredTextEditorPreferencePage.5"), CommonEditorPreferenceNames.LINK_COLOR},}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+	private final String[][] fAppearanceColorListModel = new String[][]{{SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.1"), AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER_COLOR}, {SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.2"), CommonEditorPreferenceNames.MATCHING_BRACKETS_COLOR}, {SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.3"), AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE_COLOR}, {SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.4"), AbstractDecoratedTextEditorPreferenceConstants.EDITOR_PRINT_MARGIN_COLOR}, {SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.5"), CommonEditorPreferenceNames.LINK_COLOR},}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 	private Map fCheckBoxes = new HashMap();
 	private SelectionListener fCheckBoxListener = new SelectionListener() {
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -105,7 +103,7 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 	private Map fTextFields = new HashMap();
 
 	public StructuredTextEditorPreferencePage() {
-		setDescription(ResourceHandler.getString("StructuredTextEditorPreferencePage.6")); //$NON-NLS-1$
+		setDescription(SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.6")); //$NON-NLS-1$
 		setPreferenceStore(SSEUIPlugin.getDefault().getPreferenceStore());
 
 		fOverlayStore = new OverlayPreferenceStore(getPreferenceStore(), createOverlayStoreKeys());
@@ -194,31 +192,31 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		layout.numColumns = 2;
 		appearanceComposite.setLayout(layout);
 
-		String label = ResourceHandler.getString("StructuredTextEditorPreferencePage.16"); //$NON-NLS-1$
+		String label = SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.16"); //$NON-NLS-1$
 		addTextField(appearanceComposite, label, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH, 3, 0, true);
 
-		label = ResourceHandler.getString("StructuredTextEditorPreferencePage.17"); //$NON-NLS-1$
+		label = SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.17"); //$NON-NLS-1$
 		addTextField(appearanceComposite, label, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_PRINT_MARGIN_COLUMN, 3, 0, true);
 
-		label = ResourceHandler.getString("StructuredTextEditorPreferencePage.18"); //$NON-NLS-1$
+		label = SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.18"); //$NON-NLS-1$
 		addCheckBox(appearanceComposite, label, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_OVERVIEW_RULER, 0);
 
-		label = ResourceHandler.getString("StructuredTextEditorPreferencePage.19"); //$NON-NLS-1$
+		label = SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.19"); //$NON-NLS-1$
 		addCheckBox(appearanceComposite, label, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_LINE_NUMBER_RULER, 0);
 
-		label = ResourceHandler.getString("StructuredTextEditorPreferencePage.20"); //$NON-NLS-1$
+		label = SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.20"); //$NON-NLS-1$
 		addCheckBox(appearanceComposite, label, CommonEditorPreferenceNames.MATCHING_BRACKETS, 0);
 
-		label = ResourceHandler.getString("StructuredTextEditorPreferencePage.21"); //$NON-NLS-1$
+		label = SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.21"); //$NON-NLS-1$
 		addCheckBox(appearanceComposite, label, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE, 0);
 
-		label = ResourceHandler.getString("StructuredTextEditorPreferencePage.22"); //$NON-NLS-1$
+		label = SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.22"); //$NON-NLS-1$
 		addCheckBox(appearanceComposite, label, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_PRINT_MARGIN, 0);
 
-		label = ResourceHandler.getString("StructuredTextEditorPreferencePage.31"); //$NON-NLS-1$
+		label = SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.31"); //$NON-NLS-1$
 		addCheckBox(appearanceComposite, label, CommonEditorPreferenceNames.SHOW_QUICK_FIXABLES, 0);
 
-		label = ResourceHandler.getString("StructuredTextEditorPreferencePage.30"); //$NON-NLS-1$
+		label = SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.30"); //$NON-NLS-1$
 		addCheckBox(appearanceComposite, label, CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS, 0);
 
 		Label l = new Label(appearanceComposite, SWT.LEFT);
@@ -228,7 +226,7 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		l.setLayoutData(gd);
 
 		l = new Label(appearanceComposite, SWT.LEFT);
-		l.setText(ResourceHandler.getString("StructuredTextEditorPreferencePage.23")); //$NON-NLS-1$
+		l.setText(SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.23")); //$NON-NLS-1$
 		gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		gd.horizontalSpan = 2;
 		l.setLayoutData(gd);
@@ -259,7 +257,7 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		l = new Label(stylesComposite, SWT.LEFT);
 		// needs to be made final so label can be set in
 		// foregroundcolorbutton's acc listener
-		final String buttonLabel = ResourceHandler.getString("StructuredTextEditorPreferencePage.24"); //$NON-NLS-1$ 
+		final String buttonLabel = SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.24"); //$NON-NLS-1$ 
 		l.setText(buttonLabel);
 		gd = new GridData();
 		gd.horizontalAlignment = GridData.BEGINNING;
@@ -322,7 +320,7 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		folder.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		TabItem item = new TabItem(folder, SWT.NONE);
-		item.setText(ResourceHandler.getString("StructuredTextEditorPreferencePage.0")); //$NON-NLS-1$
+		item.setText(SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.0")); //$NON-NLS-1$
 		item.setControl(createAppearancePage(folder));
 
 		item = new TabItem(folder, SWT.NONE);
@@ -518,14 +516,14 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 	private IStatus validatePositiveNumber(String number) {
 		StatusInfo status = new StatusInfo();
 		if (number.length() == 0) {
-			status.setError(ResourceHandler.getString("StructuredTextEditorPreferencePage.37")); //$NON-NLS-1$
+			status.setError(SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.37")); //$NON-NLS-1$
 		} else {
 			try {
 				int value = Integer.parseInt(number);
 				if (value < 0)
-					status.setError(number + ResourceHandler.getString("StructuredTextEditorPreferencePage.38")); //$NON-NLS-1$
+					status.setError(number + SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.38")); //$NON-NLS-1$
 			} catch (NumberFormatException e) {
-				status.setError(number + ResourceHandler.getString("StructuredTextEditorPreferencePage.39")); //$NON-NLS-1$
+				status.setError(number + SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.39")); //$NON-NLS-1$
 			}
 		}
 		return status;

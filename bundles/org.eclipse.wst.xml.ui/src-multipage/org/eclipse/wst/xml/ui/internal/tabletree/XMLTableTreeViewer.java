@@ -34,12 +34,11 @@ import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.internal.ui.IDesignViewer;
+import org.eclipse.wst.xml.internal.ui.XMLEditorResourceHandler;
 import org.eclipse.wst.xml.ui.actions.NodeAction;
 import org.eclipse.wst.xml.ui.dnd.XMLDragAndDropManager;
-import org.eclipse.wst.xml.ui.nls2.ResourceHandler;
 import org.eclipse.wst.xml.ui.views.contentoutline.XMLNodeActionManager;
 import org.w3c.dom.Document;
-
 
 public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 
@@ -246,7 +245,7 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 	}
 
 	public String getTitle() {
-		return ResourceHandler.getString("XMLTableTreeViewer.0"); //$NON-NLS-1$
+		return XMLEditorResourceHandler.getResourceString("%XMLTableTreeViewer.0"); //$NON-NLS-1$
 	}
 
 	protected void handleDispose(DisposeEvent event) {

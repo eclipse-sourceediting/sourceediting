@@ -8,8 +8,6 @@
  ****************************************************************************/
 package org.eclipse.wst.css.ui.preferences.ui;
 
-
-
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
@@ -22,12 +20,12 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.css.core.parser.CSSRegionContexts;
+import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.css.ui.internal.editor.IHelpContextIds;
-import org.eclipse.wst.css.ui.internal.nls.ResourceHandler;
 import org.eclipse.wst.css.ui.style.IStyleConstantsCSS;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.ui.EditorPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore.OverlayKey;
 import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
@@ -82,7 +80,7 @@ public class CSSColorPage extends AbstractColorPage {
 	 * getSampleText method comment.
 	 */
 	public String getSampleText() {
-		return ResourceHandler.getString("PrefsLabel.ColorSample"); //$NON-NLS-1$
+		return CSSUIPlugin.getResourceString("%PrefsLabel.ColorSample"); //$NON-NLS-1$
 	}
 
 	/**
@@ -157,19 +155,19 @@ public class CSSColorPage extends AbstractColorPage {
 	 */
 	protected void initDescriptions(Dictionary descriptions) {
 		// create descriptions for hilighting types
-		descriptions.put(IStyleConstantsCSS.NORMAL, ResourceHandler.getString("PrefsLabel.ColorNormal"));//$NON-NLS-1$
-		descriptions.put(IStyleConstantsCSS.ATMARK_RULE, ResourceHandler.getString("PrefsLabel.ColorAtmarkRule"));//$NON-NLS-1$
-		descriptions.put(IStyleConstantsCSS.SELECTOR, ResourceHandler.getString("PrefsLabel.ColorSelector"));//$NON-NLS-1$
-		descriptions.put(IStyleConstantsCSS.MEDIA, ResourceHandler.getString("PrefsLabel.ColorMedia"));//$NON-NLS-1$
-		descriptions.put(IStyleConstantsCSS.COMMENT, ResourceHandler.getString("PrefsLabel.ColorComment"));//$NON-NLS-1$
-		descriptions.put(IStyleConstantsCSS.PROPERTY_NAME, ResourceHandler.getString("PrefsLabel.ColorPropertyName"));//$NON-NLS-1$
-		descriptions.put(IStyleConstantsCSS.PROPERTY_VALUE, ResourceHandler.getString("PrefsLabel.ColorPropertyValue"));//$NON-NLS-1$
-		descriptions.put(IStyleConstantsCSS.URI, ResourceHandler.getString("PrefsLabel.ColorUri"));//$NON-NLS-1$
-		descriptions.put(IStyleConstantsCSS.STRING, ResourceHandler.getString("PrefsLabel.ColorString"));//$NON-NLS-1$
-		descriptions.put(IStyleConstantsCSS.COLON, ResourceHandler.getString("PrefsLabel.ColorColon"));//$NON-NLS-1$
-		descriptions.put(IStyleConstantsCSS.SEMI_COLON, ResourceHandler.getString("PrefsLabel.ColorSemiColon"));//$NON-NLS-1$
-		descriptions.put(IStyleConstantsCSS.CURLY_BRACE, ResourceHandler.getString("PrefsLabel.ColorCurlyBrace"));//$NON-NLS-1$
-		descriptions.put(IStyleConstantsCSS.ERROR, ResourceHandler.getString("PrefsLabel.ColorError"));//$NON-NLS-1$
+		descriptions.put(IStyleConstantsCSS.NORMAL, CSSUIPlugin.getResourceString("%PrefsLabel.ColorNormal"));//$NON-NLS-1$
+		descriptions.put(IStyleConstantsCSS.ATMARK_RULE, CSSUIPlugin.getResourceString("%PrefsLabel.ColorAtmarkRule"));//$NON-NLS-1$
+		descriptions.put(IStyleConstantsCSS.SELECTOR, CSSUIPlugin.getResourceString("%PrefsLabel.ColorSelector"));//$NON-NLS-1$
+		descriptions.put(IStyleConstantsCSS.MEDIA, CSSUIPlugin.getResourceString("%PrefsLabel.ColorMedia"));//$NON-NLS-1$
+		descriptions.put(IStyleConstantsCSS.COMMENT, CSSUIPlugin.getResourceString("%PrefsLabel.ColorComment"));//$NON-NLS-1$
+		descriptions.put(IStyleConstantsCSS.PROPERTY_NAME, CSSUIPlugin.getResourceString("%PrefsLabel.ColorPropertyName"));//$NON-NLS-1$
+		descriptions.put(IStyleConstantsCSS.PROPERTY_VALUE, CSSUIPlugin.getResourceString("%PrefsLabel.ColorPropertyValue"));//$NON-NLS-1$
+		descriptions.put(IStyleConstantsCSS.URI, CSSUIPlugin.getResourceString("%PrefsLabel.ColorUri"));//$NON-NLS-1$
+		descriptions.put(IStyleConstantsCSS.STRING, CSSUIPlugin.getResourceString("%PrefsLabel.ColorString"));//$NON-NLS-1$
+		descriptions.put(IStyleConstantsCSS.COLON, CSSUIPlugin.getResourceString("%PrefsLabel.ColorColon"));//$NON-NLS-1$
+		descriptions.put(IStyleConstantsCSS.SEMI_COLON, CSSUIPlugin.getResourceString("%PrefsLabel.ColorSemiColon"));//$NON-NLS-1$
+		descriptions.put(IStyleConstantsCSS.CURLY_BRACE, CSSUIPlugin.getResourceString("%PrefsLabel.ColorCurlyBrace"));//$NON-NLS-1$
+		descriptions.put(IStyleConstantsCSS.ERROR, CSSUIPlugin.getResourceString("%PrefsLabel.ColorError"));//$NON-NLS-1$
 	}
 
 	/**
@@ -217,13 +215,13 @@ public class CSSColorPage extends AbstractColorPage {
 	}
 
 	protected IPreferenceStore doGetPreferenceStore() {
-		return EditorPlugin.getDefault().getPreferenceStore();
+		return SSEUIPlugin.getDefault().getPreferenceStore();
 	}
 
 	public boolean performOk() {
 		super.performOk();
 
-		EditorPlugin.getDefault().savePluginPreferences();
+		SSEUIPlugin.getDefault().savePluginPreferences();
 		return true;
 	}
 }

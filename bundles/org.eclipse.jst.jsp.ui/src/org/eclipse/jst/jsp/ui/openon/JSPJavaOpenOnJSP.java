@@ -26,8 +26,8 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.Logger;
-import org.eclipse.jst.jsp.ui.internal.nls.ResourceHandler;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -43,8 +43,8 @@ import org.eclipse.wst.xml.core.document.XMLModel;
 public class JSPJavaOpenOnJSP extends AbstractOpenOn {
 
 	//private final String SSE_MODEL_ID = IModelManagerPlugin.ID; //$NON-NLS-1$
-	private final String SELECT_JAVA_TITLE = ResourceHandler.getString("JSPJavaOpenOnJSP.0"); //$NON-NLS-1$
-	private final String SELECT_JAVA_MESSAGE = ResourceHandler.getString("JSPJavaOpenOnJSP.1"); //$NON-NLS-1$
+	private final String SELECT_JAVA_TITLE = JSPUIPlugin.getResourceString("%JSPJavaOpenOnJSP.0"); //$NON-NLS-1$
+	private final String SELECT_JAVA_MESSAGE = JSPUIPlugin.getResourceString("%JSPJavaOpenOnJSP.1"); //$NON-NLS-1$
 
 	/**
 	 * Get JSP translation object

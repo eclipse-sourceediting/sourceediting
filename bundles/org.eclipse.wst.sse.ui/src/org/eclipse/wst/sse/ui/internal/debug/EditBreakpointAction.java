@@ -20,8 +20,7 @@ import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.dialogs.PropertyDialogAction;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
-
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 public class EditBreakpointAction extends BreakpointRulerAction {
 	protected IBreakpoint[] breakpoints = null;
@@ -32,7 +31,7 @@ public class EditBreakpointAction extends BreakpointRulerAction {
 	 */
 	public EditBreakpointAction(ITextEditor editor, IVerticalRuler rulerInfo) {
 		super(editor, rulerInfo);
-		setText(ResourceHandler.getString("EditBreakpointAction.0")); //$NON-NLS-1$
+		setText(SSEUIPlugin.getResourceString("%EditBreakpointAction.0")); //$NON-NLS-1$
 	}
 
 	public void run() {

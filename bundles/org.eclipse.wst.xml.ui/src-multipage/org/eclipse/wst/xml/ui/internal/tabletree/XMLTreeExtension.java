@@ -6,8 +6,6 @@
  * 
  * Contributors: IBM Corporation - initial API and implementation
  ****************************************************************************/
-
-
 package org.eclipse.wst.xml.ui.internal.tabletree;
 
 import org.eclipse.jface.viewers.CellEditor;
@@ -24,15 +22,14 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.common.contentmodel.util.CMDescriptionBuilder;
-import org.eclipse.wst.xml.ui.nls2.ResourceHandler;
+import org.eclipse.wst.xml.internal.ui.XMLEditorResourceHandler;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-
 public class XMLTreeExtension extends TreeExtension {
 
-	public final static String STRUCTURE_PROPERTY = ResourceHandler.getString("XMLTreeExtension.0"); //$NON-NLS-1$
-	public final static String VALUE_PROPERTY = ResourceHandler.getString("XMLTreeExtension.1"); //$NON-NLS-1$
+	public final static String STRUCTURE_PROPERTY = XMLEditorResourceHandler.getResourceString("%XMLTreeExtension.0"); //$NON-NLS-1$
+	public final static String VALUE_PROPERTY = XMLEditorResourceHandler.getResourceString("%XMLTreeExtension.1"); //$NON-NLS-1$
 
 	protected Composite control;
 	protected MyCellModifier modifier;
@@ -112,8 +109,8 @@ public class XMLTreeExtension extends TreeExtension {
 		// so that they know how to proceed to edit the blank view
 		gc.setForeground(tree.getDisplay().getSystemColor(SWT.COLOR_BLACK));
 		gc.setBackground(tree.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
-		gc.drawString(ResourceHandler.getString("XMLTreeExtension.3"), 10, 10); //$NON-NLS-1$
-		gc.drawString(ResourceHandler.getString("XMLTreeExtension.4"), 10, 10 + gc.getFontMetrics().getHeight()); //$NON-NLS-1$
+		gc.drawString(XMLEditorResourceHandler.getResourceString("%XMLTreeExtension.3"), 10, 10); //$NON-NLS-1$
+		gc.drawString(XMLEditorResourceHandler.getResourceString("%XMLTreeExtension.4"), 10, 10 + gc.getFontMetrics().getHeight()); //$NON-NLS-1$
 	}
 
 	public String getElementValueHelper(Element element) {

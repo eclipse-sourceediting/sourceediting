@@ -22,9 +22,9 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.util.ScriptLanguageKeys;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 import org.eclipse.wst.xml.core.document.XMLElement;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
@@ -33,7 +33,6 @@ import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-
 
 /**
  * @author pavery
@@ -111,7 +110,7 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 			// create proposal
 			p = new CustomCompletionProposal(proposedText + ">", //$NON-NLS-1$
 						documentPosition, 0, proposedText.length() + 1, XMLEditorPluginImageHelper.getInstance().getImage(imagePath), //$NON-NLS-1$
-						ResourceHandler.getString("15concat", (new Object[]{proposedText})), //$NON-NLS-1$ = "End with '{0}>'"
+						SSEUIPlugin.getResourceString("%15concat", (new Object[]{proposedText})), //$NON-NLS-1$ = "End with '{0}>'"
 						null, null, XMLRelevanceConstants.R_END_TAG);
 		} else if (!hasEndTag && isJSPTag) {
 
@@ -138,7 +137,7 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 			// create proposal
 			p = new CustomCompletionProposal(proposedText + ">", //$NON-NLS-1$
 						documentPosition, 0, proposedText.length() + 1, XMLEditorPluginImageHelper.getInstance().getImage(imagePath), //$NON-NLS-1$
-						ResourceHandler.getString("15concat", (new Object[]{proposedText})), //$NON-NLS-1$ = "End with '{0}>'"
+						SSEUIPlugin.getResourceString("%15concat", (new Object[]{proposedText})), //$NON-NLS-1$ = "End with '{0}>'"
 						null, null, XMLRelevanceConstants.R_END_TAG);
 		}
 
@@ -207,7 +206,7 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 			// create proposal
 			p = new CustomCompletionProposal(proposedText + ">", //$NON-NLS-1$
 						documentPosition, 0, proposedText.length() + 1, XMLEditorPluginImageHelper.getInstance().getImage(imagePath), //$NON-NLS-1$
-						ResourceHandler.getString("15concat", (new Object[]{proposedText})), //$NON-NLS-1$ = "End with '{0}>'"
+						SSEUIPlugin.getResourceString("%15concat", (new Object[]{proposedText})), //$NON-NLS-1$ = "End with '{0}>'"
 						null, null, XMLRelevanceConstants.R_END_TAG);
 		}
 		return p;

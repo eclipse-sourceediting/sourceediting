@@ -17,8 +17,7 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
-
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 public class NoModificationCompletionProposal implements ICompletionProposal {
 
@@ -54,7 +53,7 @@ public class NoModificationCompletionProposal implements ICompletionProposal {
 	 * @see org.eclipse.jface.text.contentassist.ICompletionProposal#getDisplayString()
 	 */
 	public String getDisplayString() {
-		return ResourceHandler.getString("NoModificationCompletionProposal.0"); //$NON-NLS-1$
+		return SSEUIPlugin.getResourceString("%NoModificationCompletionProposal.0"); //$NON-NLS-1$
 	}
 
 	/*

@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.contentassist;
 
-
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -71,11 +69,11 @@ import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
 import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.sse.ui.EditorPlugin;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.contentassist.IRelevanceCompletionProposal;
 import org.eclipse.wst.sse.ui.contentassist.IResourceDependentProcessor;
 import org.eclipse.wst.sse.ui.edit.util.SharedEditorPluginImageHelper;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.sse.ui.internal.contentassist.IRelevanceConstants;
@@ -1096,7 +1094,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		// since we know that we are inhereiting the preference for auto
 		// activation from HTML
 //		AbstractUIPlugin htmlPlugin = (AbstractUIPlugin) Platform.getPlugin(HTMLEditorPlugin.ID);
-		IPreferenceStore store = EditorPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore store = SSEUIPlugin.getDefault().getPreferenceStore();
 		String key = PreferenceKeyGenerator.generateKey(CommonEditorPreferenceNames.AUTO_PROPOSE_CODE, IContentTypeIdentifier.ContentTypeID_HTML);
 
 		String chars = store.getString(key);

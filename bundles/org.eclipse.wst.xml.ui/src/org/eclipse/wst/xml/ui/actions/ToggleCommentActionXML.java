@@ -19,8 +19,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.ui.edit.util.StructuredTextEditorActionConstants;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
-
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 public class ToggleCommentActionXML extends UncommentActionXML {
 	public ToggleCommentActionXML(ResourceBundle bundle, String prefix, ITextEditor editor) {
@@ -28,7 +27,7 @@ public class ToggleCommentActionXML extends UncommentActionXML {
 	}
 
 	protected void processAction() {
-		fModel.beginRecording(this, ResourceHandler.getString(StructuredTextEditorActionConstants.ACTION_NAME_COMMENT + ".tooltip")); //$NON-NLS-1$
+		fModel.beginRecording(this, SSEUIPlugin.getResourceString(StructuredTextEditorActionConstants.ACTION_NAME_COMMENT + ".tooltip")); //$NON-NLS-1$
 		fModel.aboutToChangeModel();
 
 		for (int i = fSelectionStartLine; i <= fSelectionEndLine; i++) {

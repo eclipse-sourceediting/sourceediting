@@ -34,8 +34,8 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchSupport;
 import org.eclipse.jst.jsp.core.internal.java.search.JavaSearchDocumentDelegate;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.Logger;
-import org.eclipse.jst.jsp.ui.internal.nls.ResourceHandler;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 import org.eclipse.text.edits.MalformedTreeException;
@@ -121,7 +121,7 @@ public class BasicRefactorSearchRequestor extends SearchRequestor {
 		private TextEdit fEdit = null;
 		private IFile fJSPFile = null;
 		private IDocument fJSPDoc = null;
-		private String fDescription = ResourceHandler.getString("BasicRefactorSearchRequestor.0"); //$NON-NLS-1$
+		private String fDescription = JSPUIPlugin.getResourceString("%BasicRefactorSearchRequestor.0"); //$NON-NLS-1$
 		
 		public RenameChange(IFile jspFile, IDocument jspDoc, TextEdit edit, String description) {
 			this.fEdit = edit;
@@ -332,7 +332,7 @@ public class BasicRefactorSearchRequestor extends SearchRequestor {
 		try {
 			// document lines are 0 based
 			String lineNumber = Integer.toString(doc.getLineOfOffset(edit.getOffset()) + 1);
-			description += " " + MessageFormat.format(ResourceHandler.getString("BasicRefactorSearchRequestor.1"), new String[]{file, lineNumber}); //$NON-NLS-1$
+			description += " " + MessageFormat.format(JSPUIPlugin.getResourceString("%BasicRefactorSearchRequestor.1"), new String[]{file, lineNumber}); //$NON-NLS-1$
 		} 
 		catch (BadLocationException e) {
 			Logger.logException(e);

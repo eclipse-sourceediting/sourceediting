@@ -10,15 +10,13 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.style.java;
 
-
-
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
-import org.eclipse.wst.sse.ui.EditorPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 /**
  * Colors used in the Java editor
@@ -90,7 +88,7 @@ public class JavaColorProvider {
 		
 		EDITOR_BACKGROUND = new RGB(255, 255, 255);
 		
-		IPreferenceStore sseStore = EditorPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore sseStore = SSEUIPlugin.getDefault().getPreferenceStore();
 		EDITOR_CURRENT_LINE = sseStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE);
 		EDITOR_CURRENT_LINE_COLOR = PreferenceConverter.getColor(sseStore, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE_COLOR);
 	}

@@ -10,8 +10,6 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-
-
 package org.eclipse.wst.xml.ui.actions;
 
 import org.eclipse.core.runtime.Path;
@@ -25,14 +23,12 @@ import org.eclipse.wst.xml.core.document.XMLDocument;
 import org.eclipse.wst.xml.core.document.XMLDocumentType;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.eclipse.wst.xml.ui.dialogs.EditDoctypeDialog;
-import org.eclipse.wst.xml.ui.util.XMLCommonResources;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-
 
 /**
  * EditDoctypeAction
@@ -96,7 +92,7 @@ public class EditDoctypeAction extends Action {
 				break;
 			}
 		}
-		return rootElement != null ? rootElement.getNodeName() : XMLCommonResources.getInstance().getString("_UI_LABEL_ROOT_ELEMENT_VALUE"); //$NON-NLS-1$
+		return rootElement != null ? rootElement.getNodeName() : XMLUIPlugin.getResourceString("%_UI_LABEL_ROOT_ELEMENT_VALUE"); //$NON-NLS-1$
 	}
 
 	public String getUndoDescription() {
@@ -148,13 +144,13 @@ public class EditDoctypeAction extends Action {
 		if (doctype != null) {
 			dialog = new EditDoctypeDialog(shell, doctype);
 			if (title == null) {
-				title = XMLCommonResources.getInstance().getString("_UI_LABEL_EDIT_DOCTYPE"); //$NON-NLS-1$
+				title = XMLUIPlugin.getResourceString("%_UI_LABEL_EDIT_DOCTYPE"); //$NON-NLS-1$
 			}
 		} else if (document != null) {
 			String rootElementName = getRootElementName(document);
 			dialog = new EditDoctypeDialog(shell, rootElementName, "", rootElementName + ".dtd"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (title == null) {
-				title = XMLCommonResources.getInstance().getString("_UI_MENU_ADD_DTD_INFORMATION_TITLE"); //$NON-NLS-1$
+				title = XMLUIPlugin.getResourceString("%_UI_MENU_ADD_DTD_INFORMATION_TITLE"); //$NON-NLS-1$
 			}
 		}
 

@@ -65,12 +65,6 @@ public class ExtensionsPlugin extends Plugin {
 	public ExtensionsPlugin(IPluginDescriptor descriptor) {
 		super(descriptor);
 		plugin = this;
-		try {
-			resourceBundle = ResourceBundle
-					.getBundle("org.eclipse.wst.sse.ui.extensions.ExtensionsPluginResources"); //$NON-NLS-1$
-		} catch (MissingResourceException x) {
-			resourceBundle = null;
-		}
 	}
 
 	/**

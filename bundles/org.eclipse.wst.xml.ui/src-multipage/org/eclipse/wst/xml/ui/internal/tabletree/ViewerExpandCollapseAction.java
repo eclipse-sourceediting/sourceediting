@@ -6,8 +6,6 @@
  * 
  * Contributors: IBM Corporation - initial API and implementation
  ****************************************************************************/
-
-
 package org.eclipse.wst.xml.ui.internal.tabletree;
 
 import org.eclipse.jface.action.Action;
@@ -15,9 +13,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.wst.xml.internal.ui.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.internal.ui.XMLEditorPluginImages;
-import org.eclipse.wst.xml.ui.util.XMLCommonResources;
-
-
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
 public class ViewerExpandCollapseAction extends Action {
 
@@ -32,14 +28,14 @@ public class ViewerExpandCollapseAction extends Action {
 
 			setImageDescriptor(e_imageDescriptor);
 			setDisabledImageDescriptor(d_imageDescriptor);
-			setToolTipText(XMLCommonResources.getInstance().getString("_UI_INFO_EXPAND_ALL")); //$NON-NLS-1$
+			setToolTipText(XMLUIPlugin.getResourceString("%_UI_INFO_EXPAND_ALL")); //$NON-NLS-1$
 		} else {
 			ImageDescriptor e_imageDescriptor = XMLEditorPluginImageHelper.getInstance().getImageDescriptor(XMLEditorPluginImages.IMG_ETOOL_COLLAPSEALL);
 			ImageDescriptor d_imageDescriptor = XMLEditorPluginImageHelper.getInstance().getImageDescriptor(XMLEditorPluginImages.IMG_DTOOL_COLLAPSEALL);
 
 			setImageDescriptor(e_imageDescriptor);
 			setDisabledImageDescriptor(d_imageDescriptor);
-			setToolTipText(XMLCommonResources.getInstance().getString("_UI_INFO_COLLAPSE_ALL")); //$NON-NLS-1$
+			setToolTipText(XMLUIPlugin.getResourceString("%_UI_INFO_COLLAPSE_ALL")); //$NON-NLS-1$
 		}
 	}
 

@@ -30,11 +30,10 @@ import org.eclipse.wst.sse.ui.extensions.ISelfValidateEditAction;
 import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckAction;
 import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckProvider;
 import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckTarget;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 import org.osgi.framework.Bundle;
-
 
 /**
  * Spell Check action
@@ -165,8 +164,8 @@ public class SpellCheckActionWrapper extends Action implements IExtendedEditorAc
 		if (action == null)
 			initializeSpellCheckProviderAction();
 		if (action == null || !isEnabled()) {
-			MessageDialog.openInformation(getDisplay().getActiveShell(), ResourceHandler.getString("Information"), //$NON-NLS-1$
-						ResourceHandler.getString("PluginAction.operationNotAvailableMessage")); //$NON-NLS-1$
+			MessageDialog.openInformation(getDisplay().getActiveShell(), SSEUIPlugin.getResourceString("%Information"), //$NON-NLS-1$
+						SSEUIPlugin.getResourceString("%PluginAction.operationNotAvailableMessage")); //$NON-NLS-1$
 			setEnabled(false);
 			return;
 		}

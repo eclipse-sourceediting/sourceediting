@@ -10,8 +10,6 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-
-
 package org.eclipse.wst.xml.ui.dialogs;
 
 import java.util.List;
@@ -39,13 +37,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.common.contentmodel.CMDocument;
 import org.eclipse.wst.common.contentmodel.CMPlugin;
 import org.eclipse.wst.common.contentmodel.util.NamespaceInfo;
-import org.eclipse.wst.xml.ui.nls.ResourceHandler;
-import org.eclipse.wst.xml.ui.util.XMLCommonResources;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.uriresolver.util.IdResolver;
 import org.eclipse.wst.xml.uriresolver.util.IdResolverImpl;
 import org.eclipse.wst.xml.uriresolver.util.URIHelper;
-
-
 
 public class EditNamespaceInfoDialog extends Dialog {
 
@@ -123,7 +118,7 @@ public class EditNamespaceInfoDialog extends Dialog {
 		// row 1
 		//
 		Label uriLabel = new Label(composite, SWT.NONE);
-		uriLabel.setText(XMLCommonResources.getInstance().getString("_UI_LABEL_NAMESPACE_NAME_COLON")); //$NON-NLS-1$
+		uriLabel.setText(XMLUIPlugin.getResourceString("%_UI_LABEL_NAMESPACE_NAME_COLON")); //$NON-NLS-1$
 
 		uriField = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -138,7 +133,7 @@ public class EditNamespaceInfoDialog extends Dialog {
 		// row 2
 		//
 		Label prefixLabel = new Label(composite, SWT.NONE);
-		prefixLabel.setText(XMLCommonResources.getInstance().getString("_UI_LABEL_PREFIX_COLON")); //$NON-NLS-1$
+		prefixLabel.setText(XMLUIPlugin.getResourceString("%_UI_LABEL_PREFIX_COLON")); //$NON-NLS-1$
 
 		prefixField = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -152,7 +147,7 @@ public class EditNamespaceInfoDialog extends Dialog {
 		// row 3
 		//
 		Label locationHintLabel = new Label(composite, SWT.NONE);
-		locationHintLabel.setText(XMLCommonResources.getInstance().getString("_UI_LABEL_LOCATION_HINT_COLON")); //$NON-NLS-1$
+		locationHintLabel.setText(XMLUIPlugin.getResourceString("%_UI_LABEL_LOCATION_HINT_COLON")); //$NON-NLS-1$
 
 		locationHintField = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -169,13 +164,13 @@ public class EditNamespaceInfoDialog extends Dialog {
 		};
 
 		browseButton = new Button(composite, SWT.NONE);
-		browseButton.setText(XMLCommonResources.getInstance().getString("_UI_LABEL_BROWSE")); //$NON-NLS-1$
+		browseButton.setText(XMLUIPlugin.getResourceString("%_UI_LABEL_BROWSE")); //$NON-NLS-1$
 		browseButton.addSelectionListener(selectionListener);
 		browseButton.setEnabled(locationHintField.getEnabled());
 
 		// error message
 		errorMessageLabel = new Label(dialogArea, SWT.NONE);
-		errorMessageLabel.setText(ResourceHandler.getString("error_message_goes_here")); //$NON-NLS-1$
+		errorMessageLabel.setText(XMLUIPlugin.getResourceString("%error_message_goes_here")); //$NON-NLS-1$
 		errorMessageLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		Color color = new Color(errorMessageLabel.getDisplay(), 200, 0, 0);
 		errorMessageLabel.setForeground(color);
@@ -191,7 +186,7 @@ public class EditNamespaceInfoDialog extends Dialog {
 		String[] extensions = {".xsd"}; //$NON-NLS-1$
 		SelectFileOrXMLCatalogIdDialog dialog = new SelectFileOrXMLCatalogIdDialog(getShell(), extensions);
 		dialog.create();
-		dialog.getShell().setText(XMLCommonResources.getInstance().getString("_UI_LABEL_SELECT_FILE")); //$NON-NLS-1$
+		dialog.getShell().setText(XMLUIPlugin.getResourceString("%_UI_LABEL_SELECT_FILE")); //$NON-NLS-1$
 		dialog.setBlockOnOpen(true);
 		dialog.open();
 

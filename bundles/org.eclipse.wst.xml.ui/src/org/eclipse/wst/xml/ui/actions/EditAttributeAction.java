@@ -10,22 +10,18 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-
-
 package org.eclipse.wst.xml.ui.actions;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.xml.ui.dialogs.EditAttributeDialog;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
-import org.eclipse.wst.xml.ui.util.XMLCommonResources;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-
 
 public class EditAttributeAction extends NodeAction {
 	protected static ImageDescriptor imageDescriptor;
@@ -61,7 +57,7 @@ public class EditAttributeAction extends NodeAction {
 
 	public void run() {
 		manager.beginNodeAction(this);
-		Shell shell = XMLCommonResources.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
+		Shell shell = XMLUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
 		EditAttributeDialog dialog = new EditAttributeDialog(shell, ownerElement, attr);
 		dialog.create();
 		dialog.getShell().setText(title);

@@ -33,10 +33,9 @@ import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
-import org.eclipse.wst.xml.ui.nls.ResourceHandler;
-
 
 public class InsertRequiredAttrsQuickAssistProposal implements ICompletionProposal, ICompletionProposalExtension2 {
 	private final List fRequiredAttrs;
@@ -106,7 +105,7 @@ public class InsertRequiredAttrsQuickAssistProposal implements ICompletionPropos
 	 * @see org.eclipse.jface.text.contentassist.ICompletionProposal#getAdditionalProposalInfo()
 	 */
 	public String getAdditionalProposalInfo() {
-		return ResourceHandler.getString("InsertRequiredAttrsQuickAssistProposal.0"); //$NON-NLS-1$
+		return XMLUIPlugin.getResourceString("%InsertRequiredAttrsQuickAssistProposal.0"); //$NON-NLS-1$
 	}
 
 	/*
@@ -124,7 +123,7 @@ public class InsertRequiredAttrsQuickAssistProposal implements ICompletionPropos
 	 * @see org.eclipse.jface.text.contentassist.ICompletionProposal#getDisplayString()
 	 */
 	public String getDisplayString() {
-		return ResourceHandler.getString("InsertRequiredAttrsQuickAssistProposal.1"); //$NON-NLS-1$
+		return XMLUIPlugin.getResourceString("%InsertRequiredAttrsQuickAssistProposal.1"); //$NON-NLS-1$
 	}
 
 	/*

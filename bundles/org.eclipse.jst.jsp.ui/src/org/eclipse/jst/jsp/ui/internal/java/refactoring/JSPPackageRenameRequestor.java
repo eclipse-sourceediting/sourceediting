@@ -10,11 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.java.refactoring;
 
-import java.text.MessageFormat;
-
 import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jst.jsp.ui.internal.nls.ResourceHandler;
-
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 
 /**
  * Overrides get description
@@ -37,7 +34,7 @@ public class JSPPackageRenameRequestor extends BasicRefactorSearchRequestor {
 	protected String getDescription() {
 		String packageName = getElement().getElementName();
 		String newName = getNewName();
-		String description = MessageFormat.format(ResourceHandler.getString("BasicRefactorSearchRequestor.5"), new String[]{packageName, newName}); //$NON-NLS-1$
+		String description = JSPUIPlugin.getResourceString("%BasicRefactorSearchRequestor.5", new String[]{packageName, newName}); //$NON-NLS-1$
 		return description;
 	}
 }

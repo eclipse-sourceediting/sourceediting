@@ -66,11 +66,6 @@ public class ContentPropertiesPlugin extends Plugin implements IStartup {
 	public ContentPropertiesPlugin(IPluginDescriptor descriptor) {
 		super(descriptor);
 		plugin = this;
-		try {
-			resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.sse.ui.contentproperties.ContentPropertiesPluginResources"); //$NON-NLS-1$
-		} catch (MissingResourceException x) {
-			resourceBundle = null;
-		}
 	}
 
 	private void disableSynchronizer() {

@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -53,7 +53,7 @@ public class RefreshOutlineJob extends Job {
 	public RefreshOutlineJob(StructuredViewer viewer) {
 		
 		// might need a different label, like "Refreshing Outline"
-		super(ResourceHandler.getString("JFaceNodeAdapter.0"));
+		super(SSEUIPlugin.getResourceString("%JFaceNodeAdapter.0"));
 		setPriority(Job.LONG);
 		setSystem(true);
 		fRequests = new ArrayList(1);

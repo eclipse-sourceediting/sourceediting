@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.css.ui.internal;
 
+import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -19,10 +20,9 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.css.ui.style.IStyleConstantsCSS;
-import org.eclipse.wst.sse.ui.EditorPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.preferences.ui.ColorHelper;
-
 
 /**
  * The main plugin class to be used in the desktop.
@@ -33,6 +33,8 @@ public class CSSUIPlugin extends AbstractUIPlugin {
 	private static CSSUIPlugin plugin;
 	//Resource bundle.
 	private ResourceBundle resourceBundle;
+	private static final String KEY_PREFIX = "%"; //$NON-NLS-1$
+	private static final String KEY_DOUBLE_PREFIX = "%%"; //$NON-NLS-1$	
 
 	/**
 	 * The constructor.
@@ -40,16 +42,11 @@ public class CSSUIPlugin extends AbstractUIPlugin {
 	public CSSUIPlugin() {
 		super();
 		plugin = this;
-		try {
-			resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.css.ui.CSSEditorPluginResources"); //$NON-NLS-1$
-		} catch (MissingResourceException x) {
-			resourceBundle = null;
-		}
 
 		// Force a call to initialize default preferences since
 		// initializeDefaultPreferences is only called if *this* plugin's
 		// preference store is accessed
-		initializeDefaultCSSPreferences(EditorPlugin.getDefault().getPreferenceStore());
+		initializeDefaultCSSPreferences(SSEUIPlugin.getDefault().getPreferenceStore());
 	}
 
 	/**
@@ -66,31 +63,11 @@ public class CSSUIPlugin extends AbstractUIPlugin {
 		return ResourcesPlugin.getWorkspace();
 	}
 
-	/**
-	 * Returns the string from the plugin's resource bundle, or 'key' if not
-	 * found.
-	 */
-	public static String getResourceString(String key) {
-		ResourceBundle bundle = CSSUIPlugin.getDefault().getResourceBundle();
-		try {
-			return bundle.getString(key);
-		} catch (MissingResourceException e) {
-			return key;
-		}
-	}
-
-	/**
-	 * Returns the plugin's resource bundle,
-	 */
-	public ResourceBundle getResourceBundle() {
-		return resourceBundle;
-	}
-
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
 
 		// ignore this preference store
 		// use EditorPlugin preference store
-		IPreferenceStore editorStore = EditorPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore editorStore = SSEUIPlugin.getDefault().getPreferenceStore();
 		initializeDefaultCSSPreferences(editorStore);
 	}
 
@@ -127,5 +104,50 @@ public class CSSUIPlugin extends AbstractUIPlugin {
 
 		styleValue = ColorHelper.getColorString(191, 63, 63) + NOBACKGROUNDBOLD;
 		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsCSS.ERROR, ctId), styleValue);
+	}
+
+	/**
+	 * Returns the string from the plugin's resource bundle,
+	 * or 'key' if not found.
+	 */
+	public static String getResourceString(String value) {
+		String s = value.trim();
+		if (!s.startsWith(KEY_PREFIX, 0))
+			return s;
+		if (s.startsWith(KEY_DOUBLE_PREFIX, 0))
+			return s.substring(1);
+
+		int ix = s.indexOf(' ');
+		String key = ix == -1 ? s : s.substring(0, ix);
+
+		ResourceBundle bundle = getDefault().getResourceBundle();
+		try {
+			return (bundle != null) ? bundle.getString(key.substring(1)) : key;
+		} catch (MissingResourceException e) {
+			return key;
+		}
+	}
+
+	public static String getResourceString(String key, Object[] args) {
+
+		try {
+			return MessageFormat.format(getResourceString(key), args);
+		} catch (IllegalArgumentException e) {
+			return getResourceString(key);
+		}
+
+	}
+
+	/**
+	 * Returns the plugin's resource bundle,
+	 */
+	public ResourceBundle getResourceBundle() {
+		try {
+			if (resourceBundle == null)
+				resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.css.ui.internal.CSSUIPluginResources");
+		} catch (MissingResourceException x) {
+			resourceBundle = null;
+		}
+		return resourceBundle;
 	}
 }

@@ -19,18 +19,17 @@ import org.eclipse.wst.html.ui.internal.search.HTMLFindOccurrencesAction;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.edit.util.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.edit.util.StructuredTextEditorActionConstants;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.search.FindOccurrencesActionProvider;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 import org.eclipse.wst.xml.ui.actions.AddBlockCommentActionXML;
 import org.eclipse.wst.xml.ui.actions.RemoveBlockCommentActionXML;
 import org.eclipse.wst.xml.ui.actions.ToggleCommentActionXML;
-
 
 public class StructuredTextEditorHTML extends StructuredTextEditor {
 	protected void createActions() {
 		super.createActions();
 
-		ResourceBundle resourceBundle = ResourceHandler.getResourceBundle();
+		ResourceBundle resourceBundle = SSEUIPlugin.getDefault().getResourceBundle();
 
 		Action action = new CleanupActionHTML(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_CLEANUP_DOCUMENT + DOT, this);
 		action.setActionDefinitionId(ActionDefinitionIds.CLEANUP_DOCUMENT);

@@ -19,15 +19,13 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.xml.core.document.XMLElement;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.ui.dialogs.EditElementDialog;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
-import org.eclipse.wst.xml.ui.util.XMLCommonResources;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-
 
 public class EditElementAction extends NodeAction {
 
@@ -72,7 +70,7 @@ public class EditElementAction extends NodeAction {
 
 	public void run() {
 		manager.beginNodeAction(this);
-		Shell shell = XMLCommonResources.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
+		Shell shell = XMLUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
 		EditElementDialog dialog = new EditElementDialog(shell, element);
 		dialog.create();
 		dialog.getShell().setText(title);

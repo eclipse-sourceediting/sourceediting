@@ -36,8 +36,7 @@ import org.eclipse.wst.sse.ui.GotoAnnotationAction;
 import org.eclipse.wst.sse.ui.ISourceViewerActionBarContributor;
 import org.eclipse.wst.sse.ui.extension.ExtendedEditorActionBuilder;
 import org.eclipse.wst.sse.ui.extension.IExtendedContributor;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
-
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 /**
  * XMLEditorActionContributor
@@ -79,7 +78,7 @@ public class ActionContributor extends BasicTextEditorActionContributor implemen
 	public ActionContributor() {
 		super();
 
-		ResourceBundle resourceBundle = ResourceHandler.getResourceBundle();
+		ResourceBundle resourceBundle = SSEUIPlugin.getDefault().getResourceBundle();
 
 		fCommandsSeparator = new Separator();
 
@@ -96,7 +95,7 @@ public class ActionContributor extends BasicTextEditorActionContributor implemen
 		fStructureSelectHistoryAction = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_STRUCTURE_SELECT_HISTORY + StructuredTextEditorActionConstants.DOT);
 		fStructureSelectHistoryAction.setActionDefinitionId(ActionDefinitionIds.STRUCTURE_SELECT_HISTORY);
 
-		fExpandSelectionToMenu = new MenuManager(ResourceHandler.getString("ExpandSelectionToMenu.label")); //$NON-NLS-1$
+		fExpandSelectionToMenu = new MenuManager(SSEUIPlugin.getResourceString("%ExpandSelectionToMenu.label")); //$NON-NLS-1$
 		fExpandSelectionToMenu.add(fStructureSelectEnclosingAction);
 		fExpandSelectionToMenu.add(fStructureSelectNextAction);
 		fExpandSelectionToMenu.add(fStructureSelectPreviousAction);
@@ -151,7 +150,7 @@ public class ActionContributor extends BasicTextEditorActionContributor implemen
 		}
 
 		// source commands
-		String sourceMenuLabel = ResourceHandler.getString("SourceMenu.label"); //$NON-NLS-1$
+		String sourceMenuLabel = SSEUIPlugin.getResourceString("%SourceMenu.label"); //$NON-NLS-1$
 		String sourceMenuId = "sourceMenuId"; // This is just a menu id. No
 		// need to translate.
 		// //$NON-NLS-1$

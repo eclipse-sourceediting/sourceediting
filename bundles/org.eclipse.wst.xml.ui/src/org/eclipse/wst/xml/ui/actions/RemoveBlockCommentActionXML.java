@@ -18,9 +18,8 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.ui.edit.util.StructuredTextEditorActionConstants;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.xml.core.internal.document.CommentImpl;
-
 
 public class RemoveBlockCommentActionXML extends AddBlockCommentActionXML {
 	public RemoveBlockCommentActionXML(ResourceBundle bundle, String prefix, ITextEditor editor) {
@@ -34,7 +33,7 @@ public class RemoveBlockCommentActionXML extends AddBlockCommentActionXML {
 	}
 
 	protected void processAction() {
-		fModel.beginRecording(this, ResourceHandler.getString(StructuredTextEditorActionConstants.ACTION_NAME_REMOVE_BLOCK_COMMENT + ".tooltip")); //$NON-NLS-1$
+		fModel.beginRecording(this, SSEUIPlugin.getResourceString(StructuredTextEditorActionConstants.ACTION_NAME_REMOVE_BLOCK_COMMENT + ".tooltip")); //$NON-NLS-1$
 		fModel.aboutToChangeModel();
 
 		if (fSelection.getLength() == 0) {

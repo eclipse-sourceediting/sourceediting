@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.dnd;
 
-
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -23,7 +22,7 @@ import org.eclipse.swt.dnd.DND;
 import org.eclipse.wst.common.ui.dnd.DefaultDragAndDropCommand;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.xml.core.document.XMLNode;
-import org.eclipse.wst.xml.ui.nls.ResourceHandler;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -36,7 +35,7 @@ public class DragNodeCommand extends DefaultDragAndDropCommand {
 	protected void beginModelChange(Node node, boolean batchUpdate) {
 		IStructuredModel structuredModel = getStructedModel(node);
 		if (structuredModel != null) {
-			structuredModel.beginRecording(this, ResourceHandler.getString("DragNodeCommand.0")); //$NON-NLS-1$
+			structuredModel.beginRecording(this, XMLUIPlugin.getResourceString("%DragNodeCommand.0")); //$NON-NLS-1$
 			if (batchUpdate) {
 				//  structuredModel.aboutToChangeModel();
 			}

@@ -15,7 +15,7 @@ import java.text.MessageFormat;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.search.SearchMatch;
 import org.eclipse.jst.jsp.core.internal.java.search.JavaSearchDocumentDelegate;
-import org.eclipse.jst.jsp.ui.internal.nls.ResourceHandler;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 
 /**
  * @author pavery
@@ -41,7 +41,7 @@ public class JSPMethodRenameRequestor extends BasicRefactorSearchRequestor {
 		
 		String methodName = getElement().getElementName();
 		String newName = getNewName();
-		String description = MessageFormat.format(ResourceHandler.getString("BasicRefactorSearchRequestor.3"), new String[]{methodName, newName}); //$NON-NLS-1$
+		String description = MessageFormat.format(JSPUIPlugin.getResourceString("%BasicRefactorSearchRequestor.3"), new String[]{methodName, newName}); //$NON-NLS-1$
 		return description;
 	}
 }

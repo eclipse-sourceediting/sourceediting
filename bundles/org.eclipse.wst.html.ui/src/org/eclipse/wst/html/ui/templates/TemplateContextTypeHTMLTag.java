@@ -10,9 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.templates;
 
-import org.eclipse.wst.html.ui.internal.nls.ResourceHandler;
+import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.xml.ui.templates.TemplateContextTypeIds;
-
 
 /**
  * Templates of this context type apply to any tags within HTML content type.
@@ -20,6 +19,6 @@ import org.eclipse.wst.xml.ui.templates.TemplateContextTypeIds;
 public class TemplateContextTypeHTMLTag extends TemplateContextTypeHTML {
 
 	public TemplateContextTypeHTMLTag() {
-		super(generateContextTypeId(TemplateContextTypeIds.TAG), ResourceHandler.getString("TemplateContextTypeHTMLTag.0")); //$NON-NLS-1$
+		super(generateContextTypeId(TemplateContextTypeIds.TAG), HTMLUIPlugin.getResourceString("%TemplateContextTypeHTMLTag.0")); //$NON-NLS-1$
 	}
 }

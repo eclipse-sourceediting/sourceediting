@@ -28,7 +28,6 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
-import org.eclipse.jst.jsp.ui.internal.nls.ResourceHandler;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.wst.sse.ui.StructuredResourceMarkerAnnotationModel;
@@ -90,7 +89,7 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 			}
 		}
 		if (status == null) {
-			status = new Status(IStatus.OK, JSPUIPlugin.ID, IStatus.OK, ResourceHandler.getString("OK"), null); //$NON-NLS-1$
+			status = new Status(IStatus.OK, JSPUIPlugin.ID, IStatus.OK, JSPUIPlugin.getResourceString("%OK"), null); //$NON-NLS-1$
 		}
 		return status;
 	}

@@ -10,10 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-
-
 package org.eclipse.wst.xml.ui.util;
-
 
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
@@ -24,8 +21,9 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.views.markers.internal.ImageFactory;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
-
-
+/**
+ * @deprecated use XMLUIPlugin.getResourceString() instead
+ */
 /**
  * This class exists temporarily until the properties files can be
  * re-organized and the various resource references can be updated

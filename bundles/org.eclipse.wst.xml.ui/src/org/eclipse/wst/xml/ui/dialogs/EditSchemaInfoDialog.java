@@ -23,9 +23,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.nsedit.CommonEditNamespacesDialog;
-import org.eclipse.wst.xml.ui.util.XMLCommonResources;
-
 
 public class EditSchemaInfoDialog extends Dialog implements UpdateListener {
 	//  protected NamespaceInfoTable namespaceInfoTable;
@@ -46,7 +45,7 @@ public class EditSchemaInfoDialog extends Dialog implements UpdateListener {
 
 	protected Control createDialogArea(Composite parent) {
 		Composite dialogArea = (Composite) super.createDialogArea(parent);
-		CommonEditNamespacesDialog editNamespacesControl = new CommonEditNamespacesDialog(dialogArea, resourceLocation, XMLCommonResources.getInstance().getString("_UI_NAMESPACE_DECLARATIONS"), false, true); //$NON-NLS-1$
+		CommonEditNamespacesDialog editNamespacesControl = new CommonEditNamespacesDialog(dialogArea, resourceLocation, XMLUIPlugin.getResourceString("%_UI_NAMESPACE_DECLARATIONS"), false, true); //$NON-NLS-1$
 		editNamespacesControl.setNamespaceInfoList(namespaceInfoList);
 
 		editNamespacesControl.updateErrorMessage(namespaceInfoList);

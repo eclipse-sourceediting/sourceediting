@@ -26,10 +26,9 @@ import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.common.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
-import org.eclipse.wst.xml.core.XMLModelPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.ui.internal.editor.IHelpContextIds;
-
 
 public class CleanupDialogXML extends Dialog implements SelectionListener {
 	protected Button fCheckBoxCompressEmptyElementTags;
@@ -58,7 +57,7 @@ public class CleanupDialogXML extends Dialog implements SelectionListener {
 
 	public Control createDialogArea(Composite parent) {
 
-		getShell().setText(ResourceHandler.getString("Cleanup_UI_")); //$NON-NLS-1$ = "Cleanup"
+		getShell().setText(SSEUIPlugin.getResourceString("%Cleanup_UI_")); //$NON-NLS-1$ = "Cleanup"
 		Composite composite = new Composite(parent, SWT.NULL);
 		createDialogAreaInComposite(composite);
 		initializeOptions();
@@ -79,45 +78,45 @@ public class CleanupDialogXML extends Dialog implements SelectionListener {
 
 		// Compress empty element tags
 		fCheckBoxCompressEmptyElementTags = new Button(composite, SWT.CHECK);
-		fCheckBoxCompressEmptyElementTags.setText(ResourceHandler.getString("Compress_empty_element_tags_UI_")); //$NON-NLS-1$
+		fCheckBoxCompressEmptyElementTags.setText(SSEUIPlugin.getResourceString("%Compress_empty_element_tags_UI_")); //$NON-NLS-1$
 		fCheckBoxCompressEmptyElementTags.addSelectionListener(this);
 
 		// Insert missing required attrs
 		fCheckBoxInsertRequiredAttrs = new Button(composite, SWT.CHECK);
-		fCheckBoxInsertRequiredAttrs.setText(ResourceHandler.getString("Insert_required_attributes_UI_")); //$NON-NLS-1$
+		fCheckBoxInsertRequiredAttrs.setText(SSEUIPlugin.getResourceString("%Insert_required_attributes_UI_")); //$NON-NLS-1$
 		fCheckBoxInsertRequiredAttrs.addSelectionListener(this);
 
 		// Insert missing begin/end tags
 		fCheckBoxInsertMissingTags = new Button(composite, SWT.CHECK);
-		fCheckBoxInsertMissingTags.setText(ResourceHandler.getString("Insert_missing_tags_UI_")); //$NON-NLS-1$ = "Insert missing tags"
+		fCheckBoxInsertMissingTags.setText(SSEUIPlugin.getResourceString("%Insert_missing_tags_UI_")); //$NON-NLS-1$ = "Insert missing tags"
 		fCheckBoxInsertMissingTags.addSelectionListener(this);
 
 		// Quote attribute values
 		fCheckBoxQuoteAttrValues = new Button(composite, SWT.CHECK);
-		fCheckBoxQuoteAttrValues.setText(ResourceHandler.getString("Quote_attribute_values_UI_")); //$NON-NLS-1$ = "Quote attribute values"
+		fCheckBoxQuoteAttrValues.setText(SSEUIPlugin.getResourceString("%Quote_attribute_values_UI_")); //$NON-NLS-1$ = "Quote attribute values"
 		fCheckBoxQuoteAttrValues.addSelectionListener(this);
 
 		// Format source
 		fCheckBoxFormatSource = new Button(composite, SWT.CHECK);
-		fCheckBoxFormatSource.setText(ResourceHandler.getString("Format_source_UI_")); //$NON-NLS-1$ = "Format source"
+		fCheckBoxFormatSource.setText(SSEUIPlugin.getResourceString("%Format_source_UI_")); //$NON-NLS-1$ = "Format source"
 		fCheckBoxFormatSource.addSelectionListener(this);
 
 		// Convert EOL code
 		fCheckBoxConvertEOLCodes = new Button(composite, SWT.CHECK);
-		fCheckBoxConvertEOLCodes.setText(ResourceHandler.getString("Convert_EOL_codes_UI_")); //$NON-NLS-1$ = "Convert end-of-line codes"
+		fCheckBoxConvertEOLCodes.setText(SSEUIPlugin.getResourceString("%Convert_EOL_codes_UI_")); //$NON-NLS-1$ = "Convert end-of-line codes"
 		fCheckBoxConvertEOLCodes.addSelectionListener(this);
 		Composite EOLCodes = new Composite(composite, SWT.NULL);
 		GridLayout hLayout = new GridLayout();
 		hLayout.numColumns = 3;
 		EOLCodes.setLayout(hLayout);
 		fRadioButtonConvertEOLWindows = new Button(EOLCodes, SWT.RADIO);
-		fRadioButtonConvertEOLWindows.setText(ResourceHandler.getString("EOL_Windows_UI")); //$NON-NLS-1$ = "Windows"
+		fRadioButtonConvertEOLWindows.setText(SSEUIPlugin.getResourceString("%EOL_Windows_UI")); //$NON-NLS-1$ = "Windows"
 		fRadioButtonConvertEOLWindows.addSelectionListener(this);
 		fRadioButtonConvertEOLUnix = new Button(EOLCodes, SWT.RADIO);
-		fRadioButtonConvertEOLUnix.setText(ResourceHandler.getString("EOL_Unix_UI")); //$NON-NLS-1$ = "Unix"
+		fRadioButtonConvertEOLUnix.setText(SSEUIPlugin.getResourceString("%EOL_Unix_UI")); //$NON-NLS-1$ = "Unix"
 		fRadioButtonConvertEOLUnix.addSelectionListener(this);
 		fRadioButtonConvertEOLMac = new Button(EOLCodes, SWT.RADIO);
-		fRadioButtonConvertEOLMac.setText(ResourceHandler.getString("EOL_Mac_UI")); //$NON-NLS-1$ = "Mac"
+		fRadioButtonConvertEOLMac.setText(SSEUIPlugin.getResourceString("%EOL_Mac_UI")); //$NON-NLS-1$ = "Mac"
 		fRadioButtonConvertEOLMac.addSelectionListener(this);
 	}
 
@@ -133,7 +132,7 @@ public class CleanupDialogXML extends Dialog implements SelectionListener {
 	}
 
 	protected Preferences getModelPreferences() {
-		return XMLModelPlugin.getDefault().getPluginPreferences();
+		return XMLCorePlugin.getDefault().getPluginPreferences();
 	}
 
 	protected void initializeOptions() {
@@ -181,7 +180,7 @@ public class CleanupDialogXML extends Dialog implements SelectionListener {
 			getModelPreferences().setValue(CommonModelPreferenceNames.CLEANUP_EOL_CODE, CommonEncodingPreferenceNames.CRLF);
 		}
 		// explicitly save plugin preferences so values are stored
-		XMLModelPlugin.getDefault().savePluginPreferences();
+		XMLCorePlugin.getDefault().savePluginPreferences();
 	}
 
 	public void widgetDefaultSelected(SelectionEvent e) {

@@ -35,8 +35,6 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.wst.sse.core.ModelPlugin;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
-
 
 /**
  * (pa) why is this class abstract if there are no abstract methods?
@@ -237,7 +235,7 @@ public abstract class AbstractPreferencePage extends PreferencePage implements M
 	}
 
 	protected void setInvalidInputMessage(String widthText) {
-		String msg = ResourceHandler.getString("4concat", (new Object[]{widthText})); //$NON-NLS-1$ = "''{0}'' is not a valid input"
+		String msg = SSEUIPlugin.getResourceString("%4concat", (new Object[]{widthText})); //$NON-NLS-1$ = "''{0}'' is not a valid input"
 		setErrorMessage(msg);
 	}
 

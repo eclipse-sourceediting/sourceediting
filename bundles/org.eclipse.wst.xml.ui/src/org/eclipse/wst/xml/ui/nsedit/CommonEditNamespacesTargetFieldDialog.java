@@ -22,8 +22,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.common.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.ui.dialogs.EditNamespaceInfoDialog;
-import org.eclipse.wst.xml.ui.util.XMLCommonResources;
-
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
 /*
  * This class is an extension of CommonEditNamespacesDialog. This class adds
@@ -43,7 +42,7 @@ public class CommonEditNamespacesTargetFieldDialog extends CommonEditNamespacesD
 	protected Text targetNamespaceField;
 
 	public CommonEditNamespacesTargetFieldDialog(Composite parent, IPath resourceLocation) {
-		super(parent, resourceLocation, XMLCommonResources.getInstance().getString("_UI_NAMESPACE_DECLARATIONS")); //$NON-NLS-1$
+		super(parent, resourceLocation, XMLUIPlugin.getResourceString("%_UI_NAMESPACE_DECLARATIONS")); //$NON-NLS-1$
 
 		Composite targetComp = getTopComposite();
 		targetComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -51,7 +50,7 @@ public class CommonEditNamespacesTargetFieldDialog extends CommonEditNamespacesD
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		Label targetNamespaceLabel = new Label(targetComp, SWT.NONE);
 		targetNamespaceLabel.setLayoutData(gd);
-		targetNamespaceLabel.setText(XMLCommonResources.getInstance().getString("_UI_TARGET_NAMESPACE")); //$NON-NLS-1$
+		targetNamespaceLabel.setText(XMLUIPlugin.getResourceString("%_UI_TARGET_NAMESPACE")); //$NON-NLS-1$
 
 		targetNamespaceField = new Text(targetComp, SWT.BORDER);
 		targetNamespaceField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -73,7 +72,7 @@ public class CommonEditNamespacesTargetFieldDialog extends CommonEditNamespacesD
 				editTargetNamespace = true;
 			}
 
-			EditNamespaceInfoDialog dialog = invokeDialog(XMLCommonResources.getInstance().getString("_UI_LABEL_NEW_NAMESPACE_INFORMATION"), nsInfo); //$NON-NLS-1$
+			EditNamespaceInfoDialog dialog = invokeDialog(XMLUIPlugin.getResourceString("%_UI_LABEL_NEW_NAMESPACE_INFORMATION"), nsInfo); //$NON-NLS-1$
 			updateErrorMessage(namespaceInfoList);
 			performDelayedUpdate();
 

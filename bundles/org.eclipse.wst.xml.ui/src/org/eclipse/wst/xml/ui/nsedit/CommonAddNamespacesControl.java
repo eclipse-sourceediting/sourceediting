@@ -32,12 +32,10 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.wst.common.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.ui.dialogs.SelectFileOrXMLCatalogIdDialog;
-import org.eclipse.wst.xml.ui.util.XMLCommonResources;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.uriresolver.util.IdResolver;
 import org.eclipse.wst.xml.uriresolver.util.IdResolverImpl;
 import org.eclipse.wst.xml.uriresolver.util.URIHelper;
-
-
 
 public class CommonAddNamespacesControl extends Composite implements SelectionListener {
 
@@ -55,7 +53,7 @@ public class CommonAddNamespacesControl extends Composite implements SelectionLi
 			setLayoutData(new GridData(GridData.FILL_BOTH));
 
 			Label label = new Label(this, SWT.NONE);
-			label.setText(XMLCommonResources.getInstance().getString("_UI_ENTER_REQ_PREFIX_AND_NAMESPACE")); //$NON-NLS-1$
+			label.setText(XMLUIPlugin.getResourceString("%_UI_ENTER_REQ_PREFIX_AND_NAMESPACE")); //$NON-NLS-1$
 
 			Composite composite = new Composite(this, SWT.NONE);
 			GridLayout layout = new GridLayout();
@@ -71,7 +69,7 @@ public class CommonAddNamespacesControl extends Composite implements SelectionLi
 			// row 1
 			//
 			Label prefixLabel = new Label(composite, SWT.NONE);
-			prefixLabel.setText(XMLCommonResources.getInstance().getString("_UI_LABEL_PREFIX_COLON")); //$NON-NLS-1$
+			prefixLabel.setText(XMLUIPlugin.getResourceString("%_UI_LABEL_PREFIX_COLON")); //$NON-NLS-1$
 
 			prefixField = new Text(composite, SWT.SINGLE | SWT.BORDER);
 			prefixField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -84,7 +82,7 @@ public class CommonAddNamespacesControl extends Composite implements SelectionLi
 			// row 2
 			//
 			Label uriLabel = new Label(composite, SWT.NONE);
-			uriLabel.setText(XMLCommonResources.getInstance().getString("_UI_LABEL_NAMESPACE_NAME_COLON")); //$NON-NLS-1$
+			uriLabel.setText(XMLUIPlugin.getResourceString("%_UI_LABEL_NAMESPACE_NAME_COLON")); //$NON-NLS-1$
 
 			uriField = new Text(composite, SWT.SINGLE | SWT.BORDER);
 			uriField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -97,7 +95,7 @@ public class CommonAddNamespacesControl extends Composite implements SelectionLi
 			// row 3
 			//
 			Label locationHintLabel = new Label(composite, SWT.NONE);
-			locationHintLabel.setText(XMLCommonResources.getInstance().getString("_UI_LABEL_LOCATION_HINT_COLON")); //$NON-NLS-1$
+			locationHintLabel.setText(XMLUIPlugin.getResourceString("%_UI_LABEL_LOCATION_HINT_COLON")); //$NON-NLS-1$
 
 			locationHintField = new Text(composite, SWT.SINGLE | SWT.BORDER);
 			locationHintField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -113,7 +111,7 @@ public class CommonAddNamespacesControl extends Composite implements SelectionLi
 			};
 
 			browseButton = new Button(composite, SWT.NONE);
-			browseButton.setText(XMLCommonResources.getInstance().getString("_UI_LABEL_BROWSE")); //$NON-NLS-1$
+			browseButton.setText(XMLUIPlugin.getResourceString("%_UI_LABEL_BROWSE")); //$NON-NLS-1$
 			browseButton.addSelectionListener(selectionListener);
 			browseButton.setEnabled(locationHintField.getEnabled());
 		}
@@ -122,7 +120,7 @@ public class CommonAddNamespacesControl extends Composite implements SelectionLi
 			String[] extensions = {".xsd"}; //$NON-NLS-1$
 			SelectFileOrXMLCatalogIdDialog dialog = new SelectFileOrXMLCatalogIdDialog(getShell(), extensions);
 			dialog.create();
-			dialog.getShell().setText(XMLCommonResources.getInstance().getString("_UI_LABEL_SELECT_FILE")); //$NON-NLS-1$
+			dialog.getShell().setText(XMLUIPlugin.getResourceString("%_UI_LABEL_SELECT_FILE")); //$NON-NLS-1$
 			dialog.setBlockOnOpen(true);
 			dialog.open();
 
@@ -198,11 +196,11 @@ public class CommonAddNamespacesControl extends Composite implements SelectionLi
 		setLayout(new GridLayout());
 
 		radio1 = new Button(this, SWT.RADIO);
-		radio1.setText(XMLCommonResources.getInstance().getString("_UI_SELECT_REGISTERED_NAMESPACES")); //$NON-NLS-1$
+		radio1.setText(XMLUIPlugin.getResourceString("%_UI_SELECT_REGISTERED_NAMESPACES")); //$NON-NLS-1$
 		radio1.addSelectionListener(this);
 
 		radio2 = new Button(this, SWT.RADIO);
-		radio2.setText(XMLCommonResources.getInstance().getString("_UI_SPECIFY_NEW_NAMESPACE")); //$NON-NLS-1$
+		radio2.setText(XMLUIPlugin.getResourceString("%_UI_SPECIFY_NEW_NAMESPACE")); //$NON-NLS-1$
 		radio2.addSelectionListener(this);
 
 		Label separator = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
@@ -218,7 +216,7 @@ public class CommonAddNamespacesControl extends Composite implements SelectionLi
 		tableSection = new Composite(pageBook, SWT.NONE);
 		tableSection.setLayout(new GridLayout());
 		Label label = new Label(tableSection, SWT.NONE);
-		label.setText(XMLCommonResources.getInstance().getString("_UI_SELECT_NAMESPACE_TO_ADD")); //$NON-NLS-1$
+		label.setText(XMLUIPlugin.getResourceString("%_UI_SELECT_NAMESPACE_TO_ADD")); //$NON-NLS-1$
 
 		tableViewer = new CommonNamespaceInfoTable(tableSection, SWT.CHECK, 6);
 		editNamespaceControl = new EditNamespaceControl(pageBook);

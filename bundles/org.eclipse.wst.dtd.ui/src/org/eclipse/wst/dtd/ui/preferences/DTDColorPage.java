@@ -29,14 +29,12 @@ import org.eclipse.wst.dtd.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.dtd.ui.style.IStyleConstantsDTD;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.ui.EditorPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore.OverlayKey;
 import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.preferences.ui.AbstractColorPage;
 import org.eclipse.wst.sse.ui.preferences.ui.StyledTextColorPicker;
-
-
 
 public class DTDColorPage extends AbstractColorPage {
 
@@ -69,7 +67,7 @@ public class DTDColorPage extends AbstractColorPage {
 	}
 
 	protected IPreferenceStore doGetPreferenceStore() {
-		return EditorPlugin.getDefault().getPreferenceStore();
+		return SSEUIPlugin.getDefault().getPreferenceStore();
 	}
 
 	public String getSampleText() {
@@ -147,7 +145,7 @@ public class DTDColorPage extends AbstractColorPage {
 		// saving its own
 		super.performOk();
 
-		EditorPlugin.getDefault().savePluginPreferences();
+		SSEUIPlugin.getDefault().savePluginPreferences();
 		return true;
 	}
 

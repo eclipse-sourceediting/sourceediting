@@ -30,12 +30,11 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.sse.ui.EditorPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.preferences.ui.ColorHelper;
 import org.eclipse.wst.sse.ui.style.AbstractLineStyleProvider;
 import org.eclipse.wst.sse.ui.style.LineStyleProvider;
-
 
 public class LineStyleProviderForDTDSubSet extends AbstractLineStyleProvider implements LineStyleProvider {
 	private int fInternalAdjustment;
@@ -76,7 +75,7 @@ public class LineStyleProviderForDTDSubSet extends AbstractLineStyleProvider imp
 	}
 
 	protected IPreferenceStore getColorPreferences() {
-		return EditorPlugin.getDefault().getPreferenceStore();
+		return SSEUIPlugin.getDefault().getPreferenceStore();
 	}
 
 	/**

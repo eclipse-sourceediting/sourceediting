@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.preferences;
 
-
-
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
@@ -30,14 +28,12 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
-import org.eclipse.wst.sse.ui.EditorPlugin;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.preferences.ui.AbstractPreferencePage;
-import org.eclipse.wst.xml.core.XMLModelPlugin;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.ui.internal.editor.IHelpContextIds;
-
 
 public class XMLSourcePreferencePage extends AbstractPreferencePage implements ModifyListener, SelectionListener, IWorkbenchPreferencePage {
 	// Content Assist
@@ -68,52 +64,52 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 
 	protected void createContentsForContentAssistGroup(Composite parent) {
 		Group contentAssistGroup = createGroup(parent, 2);
-		contentAssistGroup.setText(ResourceHandler.getString("Content_assist_UI_")); //$NON-NLS-1$ = "Content assist"
+		contentAssistGroup.setText(SSEUIPlugin.getResourceString("%Content_assist_UI_")); //$NON-NLS-1$ = "Content assist"
 
-		fAutoPropose = createCheckBox(contentAssistGroup, ResourceHandler.getString("Automatically_make_suggest_UI_")); //$NON-NLS-1$ = "Automatically make suggestions"
+		fAutoPropose = createCheckBox(contentAssistGroup, SSEUIPlugin.getResourceString("%Automatically_make_suggest_UI_")); //$NON-NLS-1$ = "Automatically make suggestions"
 		((GridData) fAutoPropose.getLayoutData()).horizontalSpan = 2;
 		fAutoPropose.addSelectionListener(this);
 
-		fAutoProposeLabel = createLabel(contentAssistGroup, ResourceHandler.getString("Prompt_when_these_characte_UI_")); //$NON-NLS-1$ = "Prompt when these characters are inserted:"
+		fAutoProposeLabel = createLabel(contentAssistGroup, SSEUIPlugin.getResourceString("%Prompt_when_these_characte_UI_")); //$NON-NLS-1$ = "Prompt when these characters are inserted:"
 		fAutoProposeText = createTextField(contentAssistGroup);
 	}
 
 	protected void createContentsForFormattingGroup(Composite parent) {
 		Group formattingGroup = createGroup(parent, 2);
-		formattingGroup.setText(ResourceHandler.getString("Formatting_UI_")); //$NON-NLS-1$ = "Formatting"
+		formattingGroup.setText(SSEUIPlugin.getResourceString("%Formatting_UI_")); //$NON-NLS-1$ = "Formatting"
 
-		fLineWidthLabel = createLabel(formattingGroup, ResourceHandler.getString("Line_width__UI_")); //$NON-NLS-1$ = "Line width:"
+		fLineWidthLabel = createLabel(formattingGroup, SSEUIPlugin.getResourceString("%Line_width__UI_")); //$NON-NLS-1$ = "Line width:"
 		fLineWidthText = new Text(formattingGroup, SWT.SINGLE | SWT.BORDER);
 		GridData gData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.BEGINNING);
 		gData.widthHint = 25;
 		fLineWidthText.setLayoutData(gData);
 		fLineWidthText.addModifyListener(this);
 
-		fSplitMultiAttrs = createCheckBox(formattingGroup, ResourceHandler.getString("Split_&multiple_attributes_2")); //$NON-NLS-1$
+		fSplitMultiAttrs = createCheckBox(formattingGroup, SSEUIPlugin.getResourceString("%Split_&multiple_attributes_2")); //$NON-NLS-1$
 		((GridData) fSplitMultiAttrs.getLayoutData()).horizontalSpan = 2;
 
-		fIndentUsingTabs = createCheckBox(formattingGroup, ResourceHandler.getString("&Indent_using_tabs_3")); //$NON-NLS-1$
+		fIndentUsingTabs = createCheckBox(formattingGroup, SSEUIPlugin.getResourceString("%&Indent_using_tabs_3")); //$NON-NLS-1$
 		((GridData) fIndentUsingTabs.getLayoutData()).horizontalSpan = 2;
 
-		fClearAllBlankLines = createCheckBox(formattingGroup, ResourceHandler.getString("Clear_all_blank_lines_UI_")); //$NON-NLS-1$ = "Clear all blank lines"
+		fClearAllBlankLines = createCheckBox(formattingGroup, SSEUIPlugin.getResourceString("%Clear_all_blank_lines_UI_")); //$NON-NLS-1$ = "Clear all blank lines"
 		((GridData) fClearAllBlankLines.getLayoutData()).horizontalSpan = 2;
 	}
 
 	protected void createContentsForGrammarConstraintsGroup(Composite parent) {
 		Group grammarConstraintsGroup = createGroup(parent, 1);
-		grammarConstraintsGroup.setText(ResourceHandler.getString("Grammar_Constraints")); //$NON-NLS-1$
+		grammarConstraintsGroup.setText(SSEUIPlugin.getResourceString("%Grammar_Constraints")); //$NON-NLS-1$
 		grammarConstraintsGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
 
-		fUseInferredGrammar = createCheckBox(grammarConstraintsGroup, ResourceHandler.getString("Use_inferred_grammar_in_absence_of_DTD/Schema")); //$NON-NLS-1$
+		fUseInferredGrammar = createCheckBox(grammarConstraintsGroup, SSEUIPlugin.getResourceString("%Use_inferred_grammar_in_absence_of_DTD/Schema")); //$NON-NLS-1$
 	}
 
 	protected IPreferenceStore doGetPreferenceStore() {
-		return EditorPlugin.getDefault().getPreferenceStore();
+		return SSEUIPlugin.getDefault().getPreferenceStore();
 	}
 
 	protected void doSavePreferenceStore() {
-		EditorPlugin.getDefault().savePluginPreferences(); // editor
-		XMLModelPlugin.getDefault().savePluginPreferences(); // model
+		SSEUIPlugin.getDefault().savePluginPreferences(); // editor
+		XMLCorePlugin.getDefault().savePluginPreferences(); // model
 	}
 
 	protected void enableValues() {
@@ -137,7 +133,7 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 	}
 
 	protected Preferences getModelPreferences() {
-		return XMLModelPlugin.getDefault().getPluginPreferences();
+		return XMLCorePlugin.getDefault().getPluginPreferences();
 	}
 
 	protected void initializeValues() {

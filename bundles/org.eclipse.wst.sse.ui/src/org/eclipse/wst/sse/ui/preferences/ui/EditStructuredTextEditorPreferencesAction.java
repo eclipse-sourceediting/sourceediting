@@ -39,11 +39,10 @@ import org.eclipse.wst.sse.ui.extension.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.extension.IExtendedEditorAction;
 import org.eclipse.wst.sse.ui.extension.IExtendedSimpleEditor;
 import org.eclipse.wst.sse.ui.extensions.ConfigurationPointCalculator;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
-
 
 /**
  * This action displays the preferences relative to the current editor
@@ -56,7 +55,7 @@ public class EditStructuredTextEditorPreferencesAction extends Action implements
 	private IExtendedSimpleEditor fEditor;
 
 	public EditStructuredTextEditorPreferencesAction() {
-		super(ResourceHandler.getString("EditPreferences.label"), EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_OBJ_PREFERENCES)); //$NON-NLS-1$
+		super(SSEUIPlugin.getResourceString("%EditPreferences.label"), EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_OBJ_PREFERENCES)); //$NON-NLS-1$
 		WorkbenchHelp.setHelp(this, IHelpContextIds.CONTMNU_PREFERENCES_HELPID);
 	}
 
@@ -212,7 +211,7 @@ public class EditStructuredTextEditorPreferencesAction extends Action implements
 		BusyIndicator.showWhile(shell.getDisplay(), new Runnable() {
 			public void run() {
 				dialog.create();
-				dialog.setMessage(ResourceHandler.getString("EditStructuredTextEditorPreferencesAction.0")); //$NON-NLS-1$
+				dialog.setMessage(SSEUIPlugin.getResourceString("%EditStructuredTextEditorPreferencesAction.0")); //$NON-NLS-1$
 				result[0] = (dialog.open() == Window.OK);
 			}
 		});

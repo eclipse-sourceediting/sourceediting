@@ -15,10 +15,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchScope;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchSupport;
-import org.eclipse.jst.jsp.ui.internal.nls.ResourceHandler;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
-
 
 /**
  * @author pavery
@@ -39,7 +38,7 @@ public class JSPPackageRenameChange extends Change {
 	}
 
 	public String getName() {
-		return ResourceHandler.getString("JSP_changes"); //$NON-NLS-1$
+		return JSPUIPlugin.getResourceString("%JSP_changes"); //$NON-NLS-1$
 	}
 
 	public void initializeValidationData(IProgressMonitor pm) {

@@ -26,8 +26,7 @@ import org.eclipse.ui.texteditor.RetargetTextEditorAction;
 import org.eclipse.wst.sse.ui.edit.util.ActionContributor;
 import org.eclipse.wst.sse.ui.edit.util.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.edit.util.StructuredTextEditorActionConstants;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
-
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 /**
  * XMLEditorActionContributor
@@ -63,7 +62,7 @@ public class ActionContributorXML extends ActionContributor {
 	public ActionContributorXML() {
 		super();
 
-		ResourceBundle resourceBundle = ResourceHandler.getResourceBundle();
+		ResourceBundle resourceBundle = SSEUIPlugin.getDefault().getResourceBundle();
 
 		// edit commands
 		fShowTooltipAction = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_INFORMATION + StructuredTextEditorActionConstants.DOT);
@@ -85,7 +84,7 @@ public class ActionContributorXML extends ActionContributor {
 		fFormatActiveElements = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_ACTIVE_ELEMENTS + StructuredTextEditorActionConstants.DOT);
 		fFormatActiveElements.setActionDefinitionId(ActionDefinitionIds.FORMAT_ACTIVE_ELEMENTS);
 
-		fFormatMenu = new MenuManager(ResourceHandler.getString("FormatMenu.label")); //$NON-NLS-1$
+		fFormatMenu = new MenuManager(SSEUIPlugin.getResourceString("%FormatMenu.label")); //$NON-NLS-1$
 		fFormatMenu.add(fFormatDocument);
 		fFormatMenu.add(fFormatActiveElements);
 
@@ -113,7 +112,7 @@ public class ActionContributorXML extends ActionContributor {
 		}
 
 		// source commands
-		String sourceMenuLabel = ResourceHandler.getString("SourceMenu.label"); //$NON-NLS-1$
+		String sourceMenuLabel = SSEUIPlugin.getResourceString("%SourceMenu.label"); //$NON-NLS-1$
 		String sourceMenuId = "sourceMenuId"; // This is just a menu id. No
 		// need to translate.
 		// //$NON-NLS-1$

@@ -15,12 +15,12 @@ package org.eclipse.wst.xml.core.format;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.wst.sse.core.ModelPlugin;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.format.IStructuredFormatContraints;
 import org.eclipse.wst.sse.core.format.IStructuredFormatPreferences;
 import org.eclipse.wst.sse.core.format.IStructuredFormatter;
 import org.eclipse.wst.sse.core.format.StructuredFormatContraints;
+import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
@@ -36,7 +36,6 @@ import org.eclipse.wst.xml.core.internal.parser.regions.TagNameRegion;
 import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.w3c.dom.Node;
-
 
 public class NodeFormatter implements IStructuredFormatter {
 	static protected final String CR = "\r"; //$NON-NLS-1$
@@ -423,7 +422,7 @@ public class NodeFormatter implements IStructuredFormatter {
 				if (preferences.getBoolean(CommonModelPreferenceNames.INDENT_USING_TABS))
 					fFormatPreferences.setIndent("\t"); //$NON-NLS-1$
 				else {
-					int tabWidth = ModelPlugin.getDefault().getPluginPreferences().getInt(CommonModelPreferenceNames.TAB_WIDTH);
+					int tabWidth = SSECorePlugin.getDefault().getPluginPreferences().getInt(CommonModelPreferenceNames.TAB_WIDTH);
 					String indent = ""; //$NON-NLS-1$
 					for (int i = 0; i < tabWidth; i++) {
 						indent += " "; //$NON-NLS-1$

@@ -10,14 +10,12 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.internal.contentassist;
 
-
-
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.common.contentmodel.CMNode;
 import org.eclipse.wst.html.core.HTMLCMProperties;
-import org.eclipse.wst.html.core.HTMLCorePlugin;
 import org.eclipse.wst.html.core.contentmodel.HTMLElementDeclaration;
+import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.xml.ui.contentassist.XMLContentModelGenerator;
 import org.w3c.dom.Node;

@@ -34,7 +34,7 @@ import org.eclipse.wst.common.contentmodel.util.DOMContentBuilderImpl;
 import org.eclipse.wst.common.contentmodel.util.DOMWriter;
 import org.eclipse.wst.common.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
-import org.eclipse.wst.xml.core.XMLModelPlugin;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.uriresolver.XMLCatalog;
 import org.eclipse.wst.xml.uriresolver.XMLCatalogEntry;
 import org.eclipse.wst.xml.uriresolver.XMLCatalogPlugin;
@@ -131,7 +131,7 @@ public class NewXMLGenerator
   public void createEmptyXMLDocument(IFile newFile) throws Exception
   {                                                                                       
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    Preferences preference = XMLModelPlugin.getDefault().getPluginPreferences();
+    Preferences preference = XMLCorePlugin.getDefault().getPluginPreferences();
 	String charSet = preference.getString(CommonModelPreferenceNames.OUTPUT_CODESET);	
 	
     PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, charSet));

@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.templates;
 
-import org.eclipse.wst.xml.ui.nls.ResourceHandler;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
 /**
  * Templates of this context type apply to any attributes within XML content
@@ -21,6 +21,6 @@ import org.eclipse.wst.xml.ui.nls.ResourceHandler;
 public class TemplateContextTypeXMLAttribute extends TemplateContextTypeXML {
 
 	public TemplateContextTypeXMLAttribute() {
-		super(generateContextTypeId(TemplateContextTypeIds.ATTRIBUTE), ResourceHandler.getString("TemplateContextTypeXMLAttribute.0")); //$NON-NLS-1$
+		super(generateContextTypeId(TemplateContextTypeIds.ATTRIBUTE), XMLUIPlugin.getResourceString("%TemplateContextTypeXMLAttribute.0")); //$NON-NLS-1$
 	}
 }

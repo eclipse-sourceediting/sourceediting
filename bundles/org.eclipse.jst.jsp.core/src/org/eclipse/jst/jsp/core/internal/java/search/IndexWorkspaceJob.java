@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jst.jsp.core.internal.nls.ResourceHandler;
+import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 
 /**
@@ -95,7 +95,7 @@ public class IndexWorkspaceJob extends Job {
 	public IndexWorkspaceJob() {
 		// pa_TODO may want to say something like "Rebuilding JSP Index" to be more
 		// descriptive instead of "Updating JSP Index" since they are 2 different things
-		super(ResourceHandler.getString("JSPIndexManager.0"));
+		super(JSPCorePlugin.getResourceString("%JSPIndexManager.0"));
 		setPriority(Job.LONG);
 		setSystem(true);
 	}

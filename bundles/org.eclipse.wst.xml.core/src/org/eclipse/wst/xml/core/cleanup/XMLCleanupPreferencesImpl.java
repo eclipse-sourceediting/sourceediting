@@ -13,9 +13,8 @@
 package org.eclipse.wst.xml.core.cleanup;
 
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.wst.sse.core.ModelPlugin;
+import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.xml.core.XMLPreferenceNames;
-
 
 /**
  * @deprecated renamed to StructuredCleanupPreferences
@@ -73,7 +72,7 @@ public class XMLCleanupPreferencesImpl implements XMLCleanupPreferences {
 	public Preferences getPreferences() {
 
 		if (fPreferences == null) {
-			fPreferences = ModelPlugin.getDefault().getPluginPreferences();
+			fPreferences = SSECorePlugin.getDefault().getPluginPreferences();
 		}
 		return fPreferences;
 	}

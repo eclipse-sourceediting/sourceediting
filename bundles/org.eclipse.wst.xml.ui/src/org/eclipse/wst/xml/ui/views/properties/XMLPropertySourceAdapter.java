@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.views.properties;
 
-
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -38,7 +36,7 @@ import org.eclipse.wst.xml.core.document.DocumentTypeAdapter;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.core.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.ui.internal.Logger;
-import org.eclipse.wst.xml.ui.nls.ResourceHandler;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -46,14 +44,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-
 /**
  * An IPropertySource implementation for a JFace viewer used to display
  * properties of DOM nodes. Requires an adapter factory to create JFace
  * adapters for the nodes in the tree.
  */
 public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, IPropertySourceExtension {
-	protected final static String CATEGORY_ATTRIBUTES = ResourceHandler.getString("XMLPropertySourceAdapter.0"); //$NON-NLS-1$
+	protected final static String CATEGORY_ATTRIBUTES = XMLUIPlugin.getResourceString("%XMLPropertySourceAdapter.0"); //$NON-NLS-1$
 
 	private static final boolean fSetExpertFilter = false;
 

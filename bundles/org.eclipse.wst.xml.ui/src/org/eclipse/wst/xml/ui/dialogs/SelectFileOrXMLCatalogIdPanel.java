@@ -10,8 +10,6 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-
-
 package org.eclipse.wst.xml.ui.dialogs;
 
 import org.eclipse.core.resources.IFile;
@@ -27,11 +25,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.wst.common.ui.viewers.SelectSingleFileView;
-import org.eclipse.wst.xml.ui.util.XMLCommonResources;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.uriresolver.XMLCatalog;
 import org.eclipse.wst.xml.uriresolver.XMLCatalogEntry;
 import org.eclipse.wst.xml.uriresolver.XMLCatalogPlugin;
-
 
 public class SelectFileOrXMLCatalogIdPanel extends Composite implements SelectionListener {
 
@@ -86,13 +83,13 @@ public class SelectFileOrXMLCatalogIdPanel extends Composite implements Selectio
 
 		radioButton = new Button[2];
 		radioButton[0] = new Button(this, SWT.RADIO);
-		radioButton[0].setText(XMLCommonResources.getInstance().getString("_UI_RADIO_BUTTON_SELECT_FROM_WORKSPACE")); //$NON-NLS-1$
+		radioButton[0].setText(XMLUIPlugin.getResourceString("%_UI_RADIO_BUTTON_SELECT_FROM_WORKSPACE")); //$NON-NLS-1$
 		radioButton[0].setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		radioButton[0].setSelection(true);
 		radioButton[0].addSelectionListener(this);
 
 		radioButton[1] = new Button(this, SWT.RADIO);
-		radioButton[1].setText(XMLCommonResources.getInstance().getString("_UI_RADIO_BUTTON_SELECT_FROM_CATALOG")); //$NON-NLS-1$
+		radioButton[1].setText(XMLUIPlugin.getResourceString("%_UI_RADIO_BUTTON_SELECT_FROM_CATALOG")); //$NON-NLS-1$
 		radioButton[1].setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		radioButton[1].addSelectionListener(this);
 

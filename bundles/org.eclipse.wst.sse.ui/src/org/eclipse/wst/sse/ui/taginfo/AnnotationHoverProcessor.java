@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.taginfo;
 
-
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -33,8 +31,6 @@ import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.sse.ui.ITemporaryAnnotation;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
-
 
 /**
  * Hover help that displays annotations shown in text of editor. Currently,
@@ -81,7 +77,7 @@ public class AnnotationHoverProcessor implements ITextHover {
 	protected String formatMessages(List messages) {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(PARAGRAPH_START);
-		buffer.append(ResourceHandler.getString("Multiple_errors")); //$NON-NLS-1$
+		buffer.append(SSEUIPlugin.getResourceString("%Multiple_errors")); //$NON-NLS-1$
 		buffer.append(LIST_BEGIN);
 
 		Iterator e = messages.iterator();

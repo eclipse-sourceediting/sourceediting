@@ -23,15 +23,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.common.contentmodel.util.DOMNamespaceInfoManager;
 import org.eclipse.wst.common.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.ui.dialogs.EditSchemaInfoDialog;
-import org.eclipse.wst.xml.ui.util.XMLCommonResources;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-
-//import com.ibm.etools.xml.common.ui.dialogs.EditSchemaInfoDialog;
-
 
 /**
  * EditDoctypeAction
@@ -121,7 +117,7 @@ public class EditSchemaInfoAction extends NodeAction {
 		// todo... change constructor to take an element
 		Element element = getElement(node);
 		if (element != null) {
-			Shell shell = XMLCommonResources.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
+			Shell shell = XMLUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
 			EditSchemaInfoDialog dialog = new EditSchemaInfoDialog(shell, new Path(resourceLocation));
 
 			List namespaceInfoList = namespaceInfoManager.getNamespaceInfoList(element);
@@ -140,7 +136,7 @@ public class EditSchemaInfoAction extends NodeAction {
 			dialog.setNamespaceInfoList(namespaceInfoList);
 			dialog.create();
 			//dialog.getShell().setSize(500, 300);
-			dialog.getShell().setText(XMLCommonResources.getInstance().getString("_UI_MENU_EDIT_SCHEMA_INFORMATION_TITLE")); //$NON-NLS-1$
+			dialog.getShell().setText(XMLUIPlugin.getResourceString("%_UI_MENU_EDIT_SCHEMA_INFORMATION_TITLE")); //$NON-NLS-1$
 			dialog.setBlockOnOpen(true);
 			dialog.open();
 

@@ -10,8 +10,6 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-
-
 package org.eclipse.wst.dtd.ui.style;
 
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -20,11 +18,10 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.dtd.core.parser.DTDRegionTypes;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.sse.ui.EditorPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.style.AbstractLineStyleProvider;
 import org.eclipse.wst.sse.ui.style.LineStyleProvider;
-
 
 public class LineStyleProviderForDTD extends AbstractLineStyleProvider implements LineStyleProvider {
 	public LineStyleProviderForDTD() {
@@ -80,7 +77,7 @@ public class LineStyleProviderForDTD extends AbstractLineStyleProvider implement
 	}
 
 	protected IPreferenceStore getColorPreferences() {
-		return EditorPlugin.getDefault().getPreferenceStore();
+		return SSEUIPlugin.getDefault().getPreferenceStore();
 	}
 
 	protected String getPreferenceKey(String key) {

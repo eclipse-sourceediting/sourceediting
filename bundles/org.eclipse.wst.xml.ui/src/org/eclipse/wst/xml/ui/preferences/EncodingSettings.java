@@ -25,8 +25,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.common.encoding.CommonCharsetNames;
 import org.eclipse.wst.xml.ui.internal.Logger;
-import org.eclipse.wst.xml.ui.nls.ResourceHandler;
-
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
 /**
  * EncodingSettings is a composite that can be used to display the set of
@@ -49,9 +48,9 @@ public class EncodingSettings extends Composite {
 		}
 	}
 
-	private static String ENCODING_LABEL = ResourceHandler.getString("EncodingSettings.1"); //$NON-NLS-1$
+	private static String ENCODING_LABEL = XMLUIPlugin.getResourceString("%EncodingSettings.1"); //$NON-NLS-1$
 
-	private static String IANA_LABEL = ResourceHandler.getString("EncodingSettings.0"); //$NON-NLS-1$
+	private static String IANA_LABEL = XMLUIPlugin.getResourceString("%EncodingSettings.0"); //$NON-NLS-1$
 
 	private ModifyListener comboListener = new ComboListener();
 	protected Combo encodingCombo;

@@ -17,7 +17,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jst.jsp.ui.internal.IActionConstantsJSP;
 import org.eclipse.jst.jsp.ui.internal.IActionDefinitionIdsJSP;
-import org.eclipse.jst.jsp.ui.internal.nls.ResourceHandler;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
@@ -47,7 +47,7 @@ public class ActionContributorJSP extends ActionContributorHTML {
 	public ActionContributorJSP() {
 		super();
 
-		ResourceBundle bundle = ResourceHandler.getResourceBundle();
+		ResourceBundle bundle = JSPUIPlugin.getDefault().getResourceBundle();
 		this.renameElementAction = new RetargetTextEditorAction(bundle, IActionConstantsJSP.ACTION_NAME_RENAME_ELEMENT + StructuredTextEditorActionConstants.DOT);
 		this.renameElementAction.setActionDefinitionId(IActionDefinitionIdsJSP.RENAME_ELEMENT);
 		
@@ -55,7 +55,7 @@ public class ActionContributorJSP extends ActionContributorHTML {
 		this.moveElementAction.setActionDefinitionId(IActionDefinitionIdsJSP.MOVE_ELEMENT);
 		
 		// the refactor menu, add the menu itself to add all refactor actions
-		this.refactorMenu = new MenuManager(ResourceHandler.getString("ActionContributorJSP.0"), RefactorActionGroup.MENU_ID); //$NON-NLS-1$
+		this.refactorMenu = new MenuManager(JSPUIPlugin.getResourceString("%ActionContributorJSP.0"), RefactorActionGroup.MENU_ID); //$NON-NLS-1$
 		refactorMenu.add(this.renameElementAction);
 		refactorMenu.add(this.moveElementAction);
 	}

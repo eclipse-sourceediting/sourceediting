@@ -12,9 +12,9 @@ package org.eclipse.wst.html.core.format;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
-import org.eclipse.wst.sse.core.ModelPlugin;
 import org.eclipse.wst.sse.core.format.IStructuredFormatPreferences;
 import org.eclipse.wst.sse.core.format.IStructuredFormatter;
+import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.xml.core.format.FormatProcessorXML;
 import org.eclipse.wst.xml.core.format.IStructuredFormatPreferencesXML;
@@ -45,7 +45,7 @@ public class HTMLFormatProcessorImpl extends FormatProcessorXML {
 				if (preferences.getBoolean(CommonModelPreferenceNames.INDENT_USING_TABS))
 					fFormatPreferences.setIndent("\t"); //$NON-NLS-1$
 				else {
-					int tabWidth = ModelPlugin.getDefault().getPluginPreferences().getInt(CommonModelPreferenceNames.TAB_WIDTH);
+					int tabWidth = SSECorePlugin.getDefault().getPluginPreferences().getInt(CommonModelPreferenceNames.TAB_WIDTH);
 					String indent = ""; //$NON-NLS-1$
 					for (int i = 0; i < tabWidth; i++) {
 						indent += " "; //$NON-NLS-1$

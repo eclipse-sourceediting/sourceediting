@@ -48,7 +48,7 @@ import org.eclipse.ui.part.MultiPageEditorSite;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.xml.core.XMLPreferenceNames;
 import org.eclipse.wst.xml.ui.StructuredTextEditorXML;
 import org.eclipse.wst.xml.ui.internal.Logger;
@@ -57,7 +57,6 @@ import org.eclipse.wst.xml.ui.internal.tabletree.XMLTableTreeHelpContextIds;
 import org.eclipse.wst.xml.ui.internal.tabletree.XMLTableTreeViewer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-
 
 public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IPropertyListener {
 
@@ -168,7 +167,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 	protected void addSourcePage() throws PartInitException {
 		try {
 			fSourcePageIndex = addPage(fTextEditor, getEditorInput());
-			setPageText(fSourcePageIndex, org.eclipse.wst.xml.ui.nls2.ResourceHandler.getString("XMLMultiPageEditorPart.0")); //$NON-NLS-1$
+			setPageText(fSourcePageIndex, XMLEditorResourceHandler.getResourceString("%XMLMultiPageEditorPart.0")); //$NON-NLS-1$
 			// the update's critical, to get viewer selection manager and
 			// highlighting to work
 			fTextEditor.update();
@@ -183,7 +182,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 			// dispose editor
 			dispose();
 			Logger.logException(exception);
-			throw new SourceEditingRuntimeException(exception, ResourceHandler.getString("An_error_has_occurred_when1_ERROR_")); //$NON-NLS-1$
+			throw new SourceEditingRuntimeException(exception, SSEUIPlugin.getResourceString("%An_error_has_occurred_when1_ERROR_")); //$NON-NLS-1$
 		}
 	}
 
@@ -375,10 +374,10 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 						// very unlikely
 						Logger.logException(ce);
 					}
-					throw new PartInitException(ResourceHandler.getString("23concat_EXC_", (new Object[]{input.getName()}))); //$NON-NLS-1$
+					throw new PartInitException(SSEUIPlugin.getResourceString("%23concat_EXC_", (new Object[]{input.getName()}))); //$NON-NLS-1$
 					//$NON-NLS-1$ = "Resource {0} does not exist."
 				} else {
-					throw new PartInitException(ResourceHandler.getString("32concat_EXC_", (new Object[]{input.getName()}))); //$NON-NLS-1$
+					throw new PartInitException(SSEUIPlugin.getResourceString("%32concat_EXC_", (new Object[]{input.getName()}))); //$NON-NLS-1$
 					//$NON-NLS-1$ = "Editor could not be open on {0}"
 				}
 			}
@@ -389,7 +388,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 			} catch (CoreException noStorageExc) {
 			}
 			if (contents == null) {
-				throw new PartInitException(ResourceHandler.getString("32concat_EXC_", (new Object[]{input.getName()}))); //$NON-NLS-1$
+				throw new PartInitException(SSEUIPlugin.getResourceString("%32concat_EXC_", (new Object[]{input.getName()}))); //$NON-NLS-1$
 			} else {
 				try {
 					contents.close();

@@ -58,16 +58,14 @@ import org.eclipse.wst.sse.core.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.FileBufferModelManager;
 import org.eclipse.wst.sse.core.internal.Logger;
+import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
-import org.eclipse.wst.sse.core.internal.nls.ResourceHandler1;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.util.Assert;
 import org.eclipse.wst.sse.core.util.ProjectResolver;
 import org.eclipse.wst.sse.core.util.URIResolver;
 import org.eclipse.wst.sse.core.util.Utilities;
-
-
 
 /**
  * Not intended to be subclassed.
@@ -1610,7 +1608,7 @@ class ModelManagerImpl implements IModelManager {
 		// let's see if we already have it in our cache
 		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
 		if (sharedObject == null || sharedObject.theSharedObject == null) {
-			throw new SourceEditingRuntimeException(ResourceHandler1.getString("Program_Error__ModelManage_EXC_")); //$NON-NLS-1$ = "Program Error: ModelManagerImpl::saveModel. Model should be in the cache"
+			throw new SourceEditingRuntimeException(SSECorePlugin.getResourceString("%Program_Error__ModelManage_EXC_")); //$NON-NLS-1$ = "Program Error: ModelManagerImpl::saveModel. Model should be in the cache"
 		} else {
 			boolean saved = false;
 			// if this model was based on a File Buffer and we're writing back
@@ -1646,7 +1644,7 @@ class ModelManagerImpl implements IModelManager {
 		// let's see if we already have it in our cache
 		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
 		if (sharedObject == null) {
-			throw new SourceEditingRuntimeException(ResourceHandler1.getString("Program_Error__ModelManage_EXC_")); //$NON-NLS-1$ = "Program Error: ModelManagerImpl::saveModel. Model should be in the cache"
+			throw new SourceEditingRuntimeException(SSECorePlugin.getResourceString("%Program_Error__ModelManage_EXC_")); //$NON-NLS-1$ = "Program Error: ModelManagerImpl::saveModel. Model should be in the cache"
 		} else {
 			// if this model was based on a File Buffer and we're writing back
 			// to the same location, use the buffer to do the writing
@@ -1675,7 +1673,7 @@ class ModelManagerImpl implements IModelManager {
 		// let's see if we already have it in our cache
 		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
 		if (sharedObject == null) {
-			throw new SourceEditingRuntimeException(ResourceHandler1.getString("Program_Error__ModelManage_EXC_")); //$NON-NLS-1$ = "Program Error: ModelManagerImpl::saveModel. Model should be in the cache"
+			throw new SourceEditingRuntimeException(SSECorePlugin.getResourceString("%Program_Error__ModelManage_EXC_")); //$NON-NLS-1$ = "Program Error: ModelManagerImpl::saveModel. Model should be in the cache"
 		} else {
 			CodedStreamCreator codedStreamCreator = new CodedStreamCreator();
 			codedStreamCreator.set(sharedObject.theSharedObject.getId(), new DocumentReader(sharedObject.theSharedObject.getStructuredDocument()));

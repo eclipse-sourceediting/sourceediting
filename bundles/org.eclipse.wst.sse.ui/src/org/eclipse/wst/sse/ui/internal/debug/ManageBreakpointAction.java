@@ -17,8 +17,7 @@ import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.ui.internal.Logger;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
-
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 /**
  * ManageBreakpointAction - Enables and Disables
@@ -85,9 +84,9 @@ public class ManageBreakpointAction extends BreakpointRulerAction {
 		}
 		setEnabled(breakpoints != null && breakpoints.length > 0);
 		if (doEnable)
-			setText(ResourceHandler.getString("ManageBreakpointAction.0")); //$NON-NLS-1$
+			setText(SSEUIPlugin.getResourceString("%ManageBreakpointAction.0")); //$NON-NLS-1$
 		else
-			setText(ResourceHandler.getString("ManageBreakpointAction.1")); //$NON-NLS-1$
+			setText(SSEUIPlugin.getResourceString("%ManageBreakpointAction.1")); //$NON-NLS-1$
 	}
 
 }

@@ -10,8 +10,6 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-
-
 package org.eclipse.wst.xml.ui.actions;
 
 import java.util.ArrayList;
@@ -32,7 +30,7 @@ import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.common.contentmodel.modelquery.ModelQueryAction;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.xml.core.document.XMLModel;
-import org.eclipse.wst.xml.ui.util.XMLCommonResources;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
@@ -40,8 +38,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.ProcessingInstruction;
-
-
 
 public abstract class BaseNodeActionManager {
 
@@ -163,8 +159,8 @@ public abstract class BaseNodeActionManager {
 			//
 			Element element = (Element) node;
 
-			IMenuManager addAttributeMenu = new MyMenuManager(XMLCommonResources.getInstance().getString("_UI_MENU_ADD_ATTRIBUTE")); //$NON-NLS-1$
-			IMenuManager addChildMenu = new MyMenuManager(XMLCommonResources.getInstance().getString("_UI_MENU_ADD_CHILD")); //$NON-NLS-1$
+			IMenuManager addAttributeMenu = new MyMenuManager(XMLUIPlugin.getResourceString("%_UI_MENU_ADD_ATTRIBUTE")); //$NON-NLS-1$
+			IMenuManager addChildMenu = new MyMenuManager(XMLUIPlugin.getResourceString("%_UI_MENU_ADD_CHILD")); //$NON-NLS-1$
 			menu.add(addAttributeMenu);
 			menu.add(addChildMenu);
 
@@ -199,7 +195,7 @@ public abstract class BaseNodeActionManager {
 
 
 	protected void contributeAddDocumentChildActions(IMenuManager menu, Document document, int ic, int vc) {
-		IMenuManager addChildMenu = new MyMenuManager(XMLCommonResources.getInstance().getString("_UI_MENU_ADD_CHILD")); //$NON-NLS-1$
+		IMenuManager addChildMenu = new MyMenuManager(XMLUIPlugin.getResourceString("%_UI_MENU_ADD_CHILD")); //$NON-NLS-1$
 		menu.add(addChildMenu);
 
 		// add PI and COMMENT
@@ -211,8 +207,8 @@ public abstract class BaseNodeActionManager {
 
 
 	protected void contributeAddSiblingActions(IMenuManager menu, Node node, int ic, int vc) {
-		IMenuManager addBeforeMenu = new MyMenuManager(XMLCommonResources.getInstance().getString("_UI_MENU_ADD_BEFORE")); //$NON-NLS-1$
-		IMenuManager addAfterMenu = new MyMenuManager(XMLCommonResources.getInstance().getString("_UI_MENU_ADD_AFTER")); //$NON-NLS-1$
+		IMenuManager addBeforeMenu = new MyMenuManager(XMLUIPlugin.getResourceString("%_UI_MENU_ADD_BEFORE")); //$NON-NLS-1$
+		IMenuManager addAfterMenu = new MyMenuManager(XMLUIPlugin.getResourceString("%_UI_MENU_ADD_AFTER")); //$NON-NLS-1$
 		menu.add(addBeforeMenu);
 		menu.add(addAfterMenu);
 
@@ -330,7 +326,7 @@ public abstract class BaseNodeActionManager {
 	protected void contributeReplaceActions(IMenuManager menu, List selectedNodeList, int ic, int vc) {
 		// 'Replace With...' actions
 		//                                                                                                                   
-		IMenuManager replaceWithMenu = new MyMenuManager(XMLCommonResources.getInstance().getString("_UI_MENU_REPLACE_WITH")); //$NON-NLS-1$
+		IMenuManager replaceWithMenu = new MyMenuManager(XMLUIPlugin.getResourceString("%_UI_MENU_REPLACE_WITH")); //$NON-NLS-1$
 		menu.add(replaceWithMenu);
 
 		if (modelQuery.getEditMode() == ModelQuery.EDIT_MODE_CONSTRAINED_STRICT && selectedNodeList.size() > 0) {

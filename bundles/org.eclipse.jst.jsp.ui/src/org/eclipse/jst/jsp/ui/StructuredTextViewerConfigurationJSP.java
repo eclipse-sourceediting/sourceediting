@@ -69,11 +69,11 @@ import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
-import org.eclipse.wst.sse.ui.EditorPlugin;
 import org.eclipse.wst.sse.ui.StructuredTextReconciler;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.format.StructuredFormattingStrategy;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
@@ -410,7 +410,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 			//fReconciler.setEditor(editorPart);
 		}
 
-		IPreferenceStore store = EditorPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore store = SSEUIPlugin.getDefault().getPreferenceStore();
 		boolean reconcilingEnabled = store.getBoolean(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
 
 		// the second time through, the strategies are set
@@ -426,7 +426,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 					// check language (ContentTypeID)....
 					String contentTypeId = sModel.getContentTypeIdentifier();
 					String generatedKey = PreferenceKeyGenerator.generateKey(CommonEditorPreferenceNames.EDITOR_VALIDATION_METHOD, contentTypeId);
-					String validationMethodPref = EditorPlugin.getInstance().getPreferenceStore().getString(generatedKey);
+					String validationMethodPref = SSEUIPlugin.getInstance().getPreferenceStore().getString(generatedKey);
 
 					IReconcilingStrategy defaultStrategy = null;
 

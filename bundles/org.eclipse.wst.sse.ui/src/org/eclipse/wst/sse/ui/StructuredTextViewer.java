@@ -67,14 +67,13 @@ import org.eclipse.wst.sse.core.undo.IDocumentSelectionMediator;
 import org.eclipse.wst.sse.core.undo.UndoDocumentEvent;
 import org.eclipse.wst.sse.ui.extension.IExtendedSimpleEditor;
 import org.eclipse.wst.sse.ui.internal.Logger;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
 import org.eclipse.wst.sse.ui.util.PlatformStatusLineUtil;
 import org.eclipse.wst.sse.ui.view.events.INodeSelectionListener;
 import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
-
 
 public class StructuredTextViewer extends SourceViewer implements INodeSelectionListener, IDoubleClickListener, IDocumentSelectionMediator {
 
@@ -114,15 +113,15 @@ public class StructuredTextViewer extends SourceViewer implements INodeSelection
 	/** Text operation codes */
 	public static final int CLEANUP_DOCUMENT = ISourceViewer.INFORMATION + 1;
 	public static final int FORMAT_ACTIVE_ELEMENTS = ISourceViewer.INFORMATION + 3;
-	private static final String FORMAT_ACTIVE_ELEMENTS_TEXT = ResourceHandler.getString("Format_Active_Elements_UI_"); //$NON-NLS-1$
+	private static final String FORMAT_ACTIVE_ELEMENTS_TEXT = SSEUIPlugin.getResourceString("%Format_Active_Elements_UI_"); //$NON-NLS-1$
 	public static final int FORMAT_DOCUMENT = ISourceViewer.INFORMATION + 2;
 
-	private static final String FORMAT_DOCUMENT_TEXT = ResourceHandler.getString("Format_Document_UI_"); //$NON-NLS-1$
+	private static final String FORMAT_DOCUMENT_TEXT = SSEUIPlugin.getResourceString("%Format_Document_UI_"); //$NON-NLS-1$
 	public static final int QUICK_FIX = ISourceViewer.INFORMATION + 4;
-	private static final String TEXT_CUT = ResourceHandler.getString("Text_Cut_UI_"); //$NON-NLS-1$
-	private static final String TEXT_PASTE = ResourceHandler.getString("Text_Paste_UI_"); //$NON-NLS-1$
-	private static final String TEXT_SHIFT_LEFT = ResourceHandler.getString("Text_Shift_Left_UI_"); //$NON-NLS-1$ = "Text Shift Left"
-	private static final String TEXT_SHIFT_RIGHT = ResourceHandler.getString("Text_Shift_Right_UI_"); //$NON-NLS-1$ = "Text Shift Right"
+	private static final String TEXT_CUT = SSEUIPlugin.getResourceString("%Text_Cut_UI_"); //$NON-NLS-1$
+	private static final String TEXT_PASTE = SSEUIPlugin.getResourceString("%Text_Paste_UI_"); //$NON-NLS-1$
+	private static final String TEXT_SHIFT_LEFT = SSEUIPlugin.getResourceString("%Text_Shift_Left_UI_"); //$NON-NLS-1$ = "Text Shift Left"
+	private static final String TEXT_SHIFT_RIGHT = SSEUIPlugin.getResourceString("%Text_Shift_Right_UI_"); //$NON-NLS-1$ = "Text Shift Right"
 	private boolean fBackgroundupdateInProgress;
 	protected StructuredContentCleanupHandler fContentCleanupHandler = null;
 	protected IContentAssistant fCorrectionAssistant;

@@ -17,12 +17,11 @@ import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.sse.ui.EditorPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.style.AbstractLineStyleProvider;
 import org.eclipse.wst.sse.ui.style.LineStyleProvider;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
-
 
 public class LineStyleProviderForXML extends AbstractLineStyleProvider implements LineStyleProvider {
 	public LineStyleProviderForXML() {
@@ -99,7 +98,7 @@ public class LineStyleProviderForXML extends AbstractLineStyleProvider implement
 	}
 
 	protected IPreferenceStore getColorPreferences() {
-		return EditorPlugin.getDefault().getPreferenceStore();
+		return SSEUIPlugin.getDefault().getPreferenceStore();
 	}
 
 	protected String getPreferenceKey(String key) {

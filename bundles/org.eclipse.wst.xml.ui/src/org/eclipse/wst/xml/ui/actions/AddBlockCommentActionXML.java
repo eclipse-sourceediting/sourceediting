@@ -19,9 +19,8 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.ui.edit.util.StructuredTextEditorActionConstants;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.xml.core.internal.document.CommentImpl;
-
 
 public class AddBlockCommentActionXML extends CommentActionXML {
 	protected int fCloseCommentOffset;
@@ -50,7 +49,7 @@ public class AddBlockCommentActionXML extends CommentActionXML {
 		if (fSelection.getLength() == 0 && fSelectionStartIndexedRegion instanceof CommentImpl)
 			return;
 
-		fModel.beginRecording(this, ResourceHandler.getString(StructuredTextEditorActionConstants.ACTION_NAME_ADD_BLOCK_COMMENT + ".tooltip")); //$NON-NLS-1$
+		fModel.beginRecording(this, SSEUIPlugin.getResourceString(StructuredTextEditorActionConstants.ACTION_NAME_ADD_BLOCK_COMMENT + ".tooltip")); //$NON-NLS-1$
 		fModel.aboutToChangeModel();
 
 		try {

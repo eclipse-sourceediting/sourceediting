@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.css.ui.preferences.ui;
 
-
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -21,12 +20,12 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
-import org.eclipse.wst.css.core.CSSCorePlugin;
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.preferences.CSSModelPreferenceNames;
+import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.css.ui.internal.editor.IHelpContextIds;
-import org.eclipse.wst.css.ui.internal.nls.ResourceHandler;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
-import org.eclipse.wst.sse.ui.EditorPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.xml.ui.preferences.XMLSourcePreferencePage;
 
@@ -34,24 +33,24 @@ import org.eclipse.wst.xml.ui.preferences.XMLSourcePreferencePage;
  */
 public class CSSSourcePreferencePage extends XMLSourcePreferencePage {
 	// Formatting
-	private final static String FORMATTING_GROUP = ResourceHandler.getString("Formatting_UI_"); //$NON-NLS-1$
-	//	private final static String FORMATTING_SPLIT_LINES = "Split lines";
-	private final static String FORMATTING_LINE_WIDTH = ResourceHandler.getString("Line_width__UI_"); //$NON-NLS-1$; 
-	private final static String FORMATTING_INSERT_LINE_BREAK = ResourceHandler.getString("PrefsLabel.WrappingInsertLineBreak"); //$NON-NLS-1$
-	private final static String FORMATTING_WRAPPING_WITHOUT_ATTR = ResourceHandler.getString("PrefsLabel.WrappingWithoutAttr");//$NON-NLS-1$
-	private final static String FORMATTING_INDENT_USING_TABS = ResourceHandler.getString("&Indent_using_tabs_3"); //$NON-NLS-1$
+	private final static String FORMATTING_GROUP = SSEUIPlugin.getResourceString("%Formatting_UI_"); //$NON-NLS-1$
+	private final static String FORMATTING_LINE_WIDTH = SSEUIPlugin.getResourceString("%Line_width__UI_"); //$NON-NLS-1$; 
+	private final static String FORMATTING_INDENT_USING_TABS = SSEUIPlugin.getResourceString("%&Indent_using_tabs_3"); //$NON-NLS-1$
+	// CSS Formatting
+	private final static String FORMATTING_INSERT_LINE_BREAK = CSSUIPlugin.getResourceString("%PrefsLabel.WrappingInsertLineBreak"); //$NON-NLS-1$
+	private final static String FORMATTING_WRAPPING_WITHOUT_ATTR = CSSUIPlugin.getResourceString("%PrefsLabel.WrappingWithoutAttr");//$NON-NLS-1$
 
 	// Case
-	private final static String CASE_GROUP = ResourceHandler.getString("PrefsLabel.CaseGroup"); //$NON-NLS-1$
-	private final static String CASE_IDENT = ResourceHandler.getString("PrefsLabel.CaseIdent"); //$NON-NLS-1$
-	private final static String CASE_PROP_NAME = ResourceHandler.getString("PrefsLabel.CasePropName"); //$NON-NLS-1$
-	private final static String CASE_PROP_VALUE = ResourceHandler.getString("PrefsLabel.CasePropValue"); //$NON-NLS-1$
-	private final static String CASE_IDENT_UPPER = ResourceHandler.getString("PrefsLabel.CaseIdentUpper"); //$NON-NLS-1$
-	private final static String CASE_IDENT_LOWER = ResourceHandler.getString("PrefsLabel.CaseIdentLower"); //$NON-NLS-1$
-	private final static String CASE_PROP_NAME_UPPER = ResourceHandler.getString("PrefsLabel.CasePropNameUpper"); //$NON-NLS-1$
-	private final static String CASE_PROP_NAME_LOWER = ResourceHandler.getString("PrefsLabel.CasePropNameLower"); //$NON-NLS-1$
-	private final static String CASE_PROP_VALUE_UPPER = ResourceHandler.getString("PrefsLabel.CasePropValueUpper"); //$NON-NLS-1$
-	private final static String CASE_PROP_VALUE_LOWER = ResourceHandler.getString("PrefsLabel.CasePropValueLower"); //$NON-NLS-1$
+	private final static String CASE_GROUP = CSSUIPlugin.getResourceString("%PrefsLabel.CaseGroup"); //$NON-NLS-1$
+	private final static String CASE_IDENT = CSSUIPlugin.getResourceString("%PrefsLabel.CaseIdent"); //$NON-NLS-1$
+	private final static String CASE_PROP_NAME = CSSUIPlugin.getResourceString("%PrefsLabel.CasePropName"); //$NON-NLS-1$
+	private final static String CASE_PROP_VALUE = CSSUIPlugin.getResourceString("%PrefsLabel.CasePropValue"); //$NON-NLS-1$
+	private final static String CASE_IDENT_UPPER = CSSUIPlugin.getResourceString("%PrefsLabel.CaseIdentUpper"); //$NON-NLS-1$
+	private final static String CASE_IDENT_LOWER = CSSUIPlugin.getResourceString("%PrefsLabel.CaseIdentLower"); //$NON-NLS-1$
+	private final static String CASE_PROP_NAME_UPPER = CSSUIPlugin.getResourceString("%PrefsLabel.CasePropNameUpper"); //$NON-NLS-1$
+	private final static String CASE_PROP_NAME_LOWER = CSSUIPlugin.getResourceString("%PrefsLabel.CasePropNameLower"); //$NON-NLS-1$
+	private final static String CASE_PROP_VALUE_UPPER = CSSUIPlugin.getResourceString("%PrefsLabel.CasePropValueUpper"); //$NON-NLS-1$
+	private final static String CASE_PROP_VALUE_LOWER = CSSUIPlugin.getResourceString("%PrefsLabel.CasePropValueLower"); //$NON-NLS-1$
 
 	// one property per one line
 	protected Button fPropertyPerLine;
@@ -213,7 +212,7 @@ public class CSSSourcePreferencePage extends XMLSourcePreferencePage {
 	 * @see com.ibm.sse.editor.xml.preferences.ui.XMLFilesPreferencePage#doSavePreferenceStore()
 	 */
 	protected void doSavePreferenceStore() {
-		EditorPlugin.getDefault().savePluginPreferences();
+		SSEUIPlugin.getDefault().savePluginPreferences();
 		CSSCorePlugin.getDefault().savePluginPreferences(); // model
 	}
 

@@ -11,6 +11,9 @@
 package org.eclipse.jst.jsp.ui.internal;
 
 import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
@@ -24,7 +27,7 @@ import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 import org.eclipse.wst.html.ui.style.IStyleConstantsHTML;
-import org.eclipse.wst.sse.ui.EditorPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.preferences.ui.ColorHelper;
@@ -40,6 +43,10 @@ public class JSPUIPlugin extends AbstractUIPlugin {
 	public final static String ID = "org.eclipse.jst.jsp.ui"; //$NON-NLS-1$
 
 	protected static JSPUIPlugin instance = null;
+	//Resource bundle.
+	private ResourceBundle resourceBundle;
+	private static final String KEY_PREFIX = "%"; //$NON-NLS-1$
+	private static final String KEY_DOUBLE_PREFIX = "%%"; //$NON-NLS-1$	
 	
 	/**
 	 * The template store for the jsp editor. 
@@ -58,7 +65,7 @@ public class JSPUIPlugin extends AbstractUIPlugin {
 		// Force a call to initializeDefaultJSPPreferences since
 		// initializeDefaultPreferences is only called if *this* plugin's
 		// preference store is accessed
-		initializeDefaultJSPPreferences(EditorPlugin.getDefault().getPreferenceStore());
+		initializeDefaultJSPPreferences(SSEUIPlugin.getDefault().getPreferenceStore());
 	}
 
 	public static JSPUIPlugin getDefault() {
@@ -86,7 +93,7 @@ public class JSPUIPlugin extends AbstractUIPlugin {
 		
 		// ignore this preference store
 		// use EditorPlugin preference store
-		IPreferenceStore editorStore = EditorPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore editorStore = SSEUIPlugin.getDefault().getPreferenceStore();
 		initializeDefaultJSPPreferences(editorStore);
 	}
 
@@ -160,5 +167,50 @@ public class JSPUIPlugin extends AbstractUIPlugin {
 		}
 
 		return fContextTypeRegistry;
+	}
+
+	/**
+	 * Returns the string from the plugin's resource bundle,
+	 * or 'key' if not found.
+	 */
+	public static String getResourceString(String value) {
+		String s = value.trim();
+		if (!s.startsWith(KEY_PREFIX, 0))
+			return s;
+		if (s.startsWith(KEY_DOUBLE_PREFIX, 0))
+			return s.substring(1);
+
+		int ix = s.indexOf(' ');
+		String key = ix == -1 ? s : s.substring(0, ix);
+
+		ResourceBundle bundle = getDefault().getResourceBundle();
+		try {
+			return (bundle != null) ? bundle.getString(key.substring(1)) : key;
+		} catch (MissingResourceException e) {
+			return key;
+		}
+	}
+
+	public static String getResourceString(String key, Object[] args) {
+
+		try {
+			return MessageFormat.format(getResourceString(key), args);
+		} catch (IllegalArgumentException e) {
+			return getResourceString(key);
+		}
+
+	}
+
+	/**
+	 * Returns the plugin's resource bundle,
+	 */
+	public ResourceBundle getResourceBundle() {
+		try {
+			if (resourceBundle == null)
+				resourceBundle = ResourceBundle.getBundle("org.eclipse.jst.jsp.ui.internal.JSPUIPluginResources");
+		} catch (MissingResourceException x) {
+			resourceBundle = null;
+		}
+		return resourceBundle;
 	}
 }

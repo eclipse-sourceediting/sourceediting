@@ -11,7 +11,6 @@
 package org.eclipse.jst.jsp.core.internal.java.search;
 
 import java.io.File;
-import java.text.MessageFormat;
 import java.util.HashMap;
 
 import org.eclipse.core.resources.IFile;
@@ -36,7 +35,6 @@ import org.eclipse.jdt.internal.core.index.Index;
 import org.eclipse.jdt.internal.core.search.indexing.IndexManager;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.Logger;
-import org.eclipse.jst.jsp.core.internal.nls.ResourceHandler;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
 
 /**
@@ -209,7 +207,7 @@ public class JSPIndexManager implements IResourceChangeListener {
 							try {
 								ss.addJspFile(this.jspFiles [i]);
 								// JSP Indexer processing n files
-								processingNFiles = MessageFormat.format(ResourceHandler.getString("JSPIndexManager.2"), new String[]{Integer.toString((this.jspFiles .length -i))});
+								processingNFiles = JSPCorePlugin.getResourceString("%JSPIndexManager.2", new String[]{Integer.toString((this.jspFiles .length -i))});
 								monitor.subTask(processingNFiles + " - " + this.jspFiles [i].getName());
 								monitor.worked(1);
 								
@@ -443,7 +441,7 @@ public class JSPIndexManager implements IResourceChangeListener {
 	 */
 	private void processFiles(IFile[] files) {
 		// updating JSP Index
-		String taskName = ResourceHandler.getString("JSPIndexManager.0");
+		String taskName = JSPCorePlugin.getResourceString("%JSPIndexManager.0");
 		
 		// Processing resource delta
 		final Job processFiles = new ProcessFilesJob(taskName, files);

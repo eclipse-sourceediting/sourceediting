@@ -12,25 +12,25 @@ import java.util.ResourceBundle;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.wst.css.ui.edit.ui.CleanupActionCSS;
+import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.css.ui.internal.editor.IHelpContextIds;
-import org.eclipse.wst.css.ui.internal.nls.ResourceHandler;
 import org.eclipse.wst.css.ui.internal.selection.StructureSelectEnclosingCSSAction;
 import org.eclipse.wst.css.ui.internal.selection.StructureSelectNextCSSAction;
 import org.eclipse.wst.css.ui.internal.selection.StructureSelectPreviousCSSAction;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.edit.util.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.edit.util.StructuredTextEditorActionConstants;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.selection.SelectionHistory;
 import org.eclipse.wst.sse.ui.internal.selection.StructureSelectHistoryAction;
-
 
 public class StructuredTextEditorCSS extends StructuredTextEditor {
 	protected void createActions() {
 		super.createActions();
 
-		ResourceBundle resourceBundle = ResourceHandler.getResourceBundle();
+		ResourceBundle resourceBundle = CSSUIPlugin.getDefault().getResourceBundle();
 
-		Action action = new CleanupActionCSS(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_CLEANUP_DOCUMENT + DOT, this);
+		Action action = new CleanupActionCSS(SSEUIPlugin.getDefault().getResourceBundle(), StructuredTextEditorActionConstants.ACTION_NAME_CLEANUP_DOCUMENT + DOT, this);
 		action.setActionDefinitionId(ActionDefinitionIds.CLEANUP_DOCUMENT);
 		setAction(StructuredTextEditorActionConstants.ACTION_NAME_CLEANUP_DOCUMENT, action);
 

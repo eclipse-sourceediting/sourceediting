@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.preferences;
 
-
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -40,14 +38,13 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.wst.sse.core.preferences.PreferenceChangeListener;
 import org.eclipse.wst.sse.ui.internal.Logger;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
 
 /**
  * @deprecated no longer need a special PreferenceManager for our component.
@@ -103,7 +100,7 @@ public abstract class PreferenceManager {
 				embeddedMessage = originalException.getClass().getName() + ": " + originalException.getMessage(); //$NON-NLS-1$
 				// not all exceptions have messages (e.g. many
 				// NullPointerException)
-				String originalError = ResourceHandler.getString("PreferenceManager.0"); //$NON-NLS-1$
+				String originalError = SSEUIPlugin.getResourceString("%PreferenceManager.0"); //$NON-NLS-1$
 				if (result == null)
 					result = ""; //$NON-NLS-1$
 				if (embeddedMessage != null)

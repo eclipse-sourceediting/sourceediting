@@ -42,15 +42,13 @@ import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.util.Utilities;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.IExtendedStorageEditorInput;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.Logger;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction;
 import org.eclipse.wst.sse.ui.internal.extension.BreakpointProviderBuilder;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
 import org.eclipse.wst.sse.ui.util.Assert;
-
 
 /**
  * A StorageDocumentProvider that is IStructuredModel aware
@@ -635,7 +633,7 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 			contents = input.getStorage().getContents();
 		} catch (CoreException noStorageExc) {
 			if (logExceptions)
-				Logger.logException(ResourceHandler.getString("32concat_EXC_", new Object[]{input.getName()}), noStorageExc); //$NON-NLS-1$
+				Logger.logException(SSEUIPlugin.getResourceString("%32concat_EXC_", new Object[]{input.getName()}), noStorageExc); //$NON-NLS-1$
 		}
 
 		IStructuredModel model = null;
@@ -645,7 +643,7 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 			model.setBaseLocation(input.getName());
 		} catch (IOException e) {
 			if (logExceptions)
-				Logger.logException(ResourceHandler.getString("32concat_EXC_", new Object[]{input}), e); //$NON-NLS-1$
+				Logger.logException(SSEUIPlugin.getResourceString("%32concat_EXC_", new Object[]{input}), e); //$NON-NLS-1$
 		} finally {
 			if (contents != null) {
 				try {

@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.preferences.ui;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 
 import org.eclipse.core.runtime.IStatus;
@@ -33,12 +32,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.util.EditorUtility;
-
 
 /**
  * Preference page tab that contains Navigation preferences
@@ -70,7 +68,7 @@ public class NavigationPreferenceTab extends AbstractPreferenceTab {
 		layout.numColumns = 2;
 		composite.setLayout(layout);
 
-		String text = ResourceHandler.getString("StructuredTextEditorPreferencePage.7"); //$NON-NLS-1$
+		String text = SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.7"); //$NON-NLS-1$
 		fBrowserLikeLinksCheckBox = addCheckBox(composite, text, CommonEditorPreferenceNames.BROWSER_LIKE_LINKS, 0);
 		fBrowserLikeLinksCheckBox.addSelectionListener(new SelectionListener() {
 
@@ -85,7 +83,7 @@ public class NavigationPreferenceTab extends AbstractPreferenceTab {
 		});
 
 		// Text field for modifier string
-		text = ResourceHandler.getString("StructuredTextEditorPreferencePage.8"); //$NON-NLS-1$
+		text = SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.8"); //$NON-NLS-1$
 		fBrowserLikeLinksKeyModifierText = addTextField(composite, text, CommonEditorPreferenceNames.BROWSER_LIKE_LINKS_KEY_MODIFIER, 20, 0, false);
 		fBrowserLikeLinksKeyModifierText.setTextLimit(Text.LIMIT);
 
@@ -167,7 +165,7 @@ public class NavigationPreferenceTab extends AbstractPreferenceTab {
 	 * @see org.eclipse.wst.sse.ui.preferences.ui.IPreferenceTab#getTitle()
 	 */
 	public String getTitle() {
-		return ResourceHandler.getString("StructuredTextEditorPreferencePage.34"); //$NON-NLS-1$;
+		return SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.34"); //$NON-NLS-1$;
 	}
 
 	void handleBrowserLikeLinksKeyModifierModified() {
@@ -178,12 +176,11 @@ public class NavigationPreferenceTab extends AbstractPreferenceTab {
 
 		if (fBrowserLikeLinksCheckBox.getSelection() && (stateMask == -1 || (stateMask & SWT.SHIFT) != 0)) {
 			if (stateMask == -1) {
-				MessageFormat messageFormat = new MessageFormat(ResourceHandler.getString("NavigationPreferenceTab.0")); //$NON-NLS-1$
 				Object[] args = {modifiers};
-				String message = messageFormat.format(args);
+				String message = SSEUIPlugin.getResourceString("%NavigationPreferenceTab.0", args);
 				status = new StatusInfo(IStatus.ERROR, message);
 			} else
-				status = new StatusInfo(IStatus.ERROR, ResourceHandler.getString("StructuredTextEditorPreferencePage.15")); //$NON-NLS-1$
+				status = new StatusInfo(IStatus.ERROR, SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.15")); //$NON-NLS-1$
 		}
 		updateStatus(status);
 	}

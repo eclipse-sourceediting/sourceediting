@@ -29,14 +29,12 @@ import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.wst.sse.core.IFactoryRegistry;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.Logger;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 import org.eclipse.wst.sse.ui.preferences.PreferenceKeyGenerator;
 import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
-
 
 public class StructuredContentOutlineConfiguration extends ContentOutlineConfiguration {
 	/**
@@ -47,7 +45,7 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 		private TreeViewer fTreeViewer = null;
 
 		public CollapseTreeAction(TreeViewer viewer) {
-			super(ResourceHandler.getString("StructuredContentOutlineConfiguration.0"), AS_PUSH_BUTTON); //$NON-NLS-1$
+			super(SSEUIPlugin.getResourceString("%StructuredContentOutlineConfiguration.0"), AS_PUSH_BUTTON); //$NON-NLS-1$
 			setImageDescriptor(COLLAPSE_E);
 			setDisabledImageDescriptor(COLLAPSE_D);
 			setToolTipText(getText());
@@ -63,7 +61,7 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 	protected class ToggleLinkAction extends PropertyChangeUpdateAction {
 
 		public ToggleLinkAction(IPreferenceStore store, String preference) {
-			super(ResourceHandler.getString("StructuredContentOutlineConfiguration.1"), store, preference, true); //$NON-NLS-1$
+			super(SSEUIPlugin.getResourceString("%StructuredContentOutlineConfiguration.1"), store, preference, true); //$NON-NLS-1$
 			setToolTipText(getText());
 			setDisabledImageDescriptor(SYNCED_D);
 			setImageDescriptor(SYNCED_E);

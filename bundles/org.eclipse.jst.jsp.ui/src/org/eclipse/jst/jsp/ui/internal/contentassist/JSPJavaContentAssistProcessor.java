@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.contentassist;
 
-
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,9 +30,9 @@ import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.ui.IReleasable;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.contentassist.IResourceDependentProcessor;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
@@ -45,7 +43,7 @@ public class JSPJavaContentAssistProcessor implements IContentAssistProcessor, I
 	protected IResource fResource;
 	protected char completionProposalAutoActivationCharacters[] = new char[]{'.'};
 	protected char contextInformationAutoActivationCharacters[] = null;
-	protected static final String UNKNOWN_CONTEXT = ResourceHandler.getString("Content_Assist_not_availab_UI_"); //$NON-NLS-1$ = "Content Assist not available at the current location "
+	protected static final String UNKNOWN_CONTEXT = SSEUIPlugin.getResourceString("%Content_Assist_not_availab_UI_"); //$NON-NLS-1$ = "Content Assist not available at the current location "
 	protected String fErrorMessage = null;
 	private JSPCompletionProcessor fJspCompletionProcessor = null;
 

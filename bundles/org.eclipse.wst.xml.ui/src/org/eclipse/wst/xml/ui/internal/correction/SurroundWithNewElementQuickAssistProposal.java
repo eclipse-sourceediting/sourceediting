@@ -24,11 +24,10 @@ import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.core.format.FormatProcessorXML;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
-import org.eclipse.wst.xml.ui.nls.ResourceHandler;
 import org.w3c.dom.Node;
-
 
 public class SurroundWithNewElementQuickAssistProposal extends RenameInFileQuickAssistProposal {
 
@@ -84,7 +83,7 @@ public class SurroundWithNewElementQuickAssistProposal extends RenameInFileQuick
 	 * @see org.eclipse.jface.text.contentassist.ICompletionProposal#getAdditionalProposalInfo()
 	 */
 	public String getAdditionalProposalInfo() {
-		return ResourceHandler.getString("SurroundWithNewElementQuickAssistProposal.0"); //$NON-NLS-1$
+		return XMLUIPlugin.getResourceString("%SurroundWithNewElementQuickAssistProposal.0"); //$NON-NLS-1$
 	}
 
 	/*
@@ -93,7 +92,7 @@ public class SurroundWithNewElementQuickAssistProposal extends RenameInFileQuick
 	 * @see org.eclipse.jface.text.contentassist.ICompletionProposal#getDisplayString()
 	 */
 	public String getDisplayString() {
-		return ResourceHandler.getString("SurroundWithNewElementQuickAssistProposal.1"); //$NON-NLS-1$
+		return XMLUIPlugin.getResourceString("%SurroundWithNewElementQuickAssistProposal.1"); //$NON-NLS-1$
 	}
 
 	/*

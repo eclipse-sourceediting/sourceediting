@@ -144,8 +144,8 @@ import org.eclipse.wst.sse.ui.extensions.ConfigurationPointCalculator;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.NullSourceEditingTextTools;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.SourceEditingTextTools;
 import org.eclipse.wst.sse.ui.extensions.spellcheck.SpellCheckTarget;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.Logger;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction;
 import org.eclipse.wst.sse.ui.internal.debug.EditBreakpointAction;
 import org.eclipse.wst.sse.ui.internal.debug.ManageBreakpointAction;
@@ -163,7 +163,6 @@ import org.eclipse.wst.sse.ui.internal.selection.StructureSelectEnclosingAction;
 import org.eclipse.wst.sse.ui.internal.selection.StructureSelectHistoryAction;
 import org.eclipse.wst.sse.ui.internal.selection.StructureSelectNextAction;
 import org.eclipse.wst.sse.ui.internal.selection.StructureSelectPreviousAction;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.text.DocumentRegionEdgeMatcher;
 import org.eclipse.wst.sse.ui.util.Assert;
@@ -176,7 +175,6 @@ import org.eclipse.wst.sse.ui.views.properties.ShowPropertiesAction;
 import org.eclipse.wst.sse.ui.views.properties.StructuredPropertySheetConfiguration;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-
 
 public class StructuredTextEditor extends TextEditor implements IExtendedMarkupEditor, IExtendedMarkupEditorExtension, IDocumentListener, IShowInTargetList {
 
@@ -414,10 +412,10 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	public static final String GROUP_NAME_ADDITIONS = "additions"; //$NON-NLS-1$
 	public static final String GROUP_NAME_FORMAT = "Format"; //$NON-NLS-1$
 	public static final String GROUP_NAME_FORMAT_EXT = "Format.ext"; //$NON-NLS-1$
-	private static final String REDO_ACTION_DESC = ResourceHandler.getString("Redo__{0}._UI_"); //$NON-NLS-1$ = "Redo: {0}."
-	private static final String REDO_ACTION_DESC_DEFAULT = ResourceHandler.getString("Redo_Text_Change._UI_"); //$NON-NLS-1$ = "Redo Text Change."
-	private static final String REDO_ACTION_TEXT = ResourceHandler.getString("&Redo_{0}_@Ctrl+Y_UI_"); //$NON-NLS-1$ = "&Redo {0} @Ctrl+Y"
-	private static final String REDO_ACTION_TEXT_DEFAULT = ResourceHandler.getString("&Redo_Text_Change_@Ctrl+Y_UI_"); //$NON-NLS-1$ = "&Redo Text Change @Ctrl+Y"
+	private static final String REDO_ACTION_DESC = SSEUIPlugin.getResourceString("%Redo__{0}._UI_"); //$NON-NLS-1$ = "Redo: {0}."
+	private static final String REDO_ACTION_DESC_DEFAULT = SSEUIPlugin.getResourceString("%Redo_Text_Change._UI_"); //$NON-NLS-1$ = "Redo Text Change."
+	private static final String REDO_ACTION_TEXT = SSEUIPlugin.getResourceString("%&Redo_{0}_@Ctrl+Y_UI_"); //$NON-NLS-1$ = "&Redo {0} @Ctrl+Y"
+	private static final String REDO_ACTION_TEXT_DEFAULT = SSEUIPlugin.getResourceString("%&Redo_Text_Change_@Ctrl+Y_UI_"); //$NON-NLS-1$ = "&Redo Text Change @Ctrl+Y"
 	protected static final String SSE_MODEL_ID = "org.eclipse.wst.sse.core"; //$NON-NLS-1$
 	/**
 	 * Constant for representing an error status. This is considered a value
@@ -431,10 +429,10 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	static final protected IStatus STATUS_OK = new Status(IStatus.OK, SSEUIPlugin.ID, IStatus.OK, "OK", null); //$NON-NLS-1$
 
 	/** Translatable strings */
-	private static final String UNDO_ACTION_DESC = ResourceHandler.getString("Undo__{0}._UI_"); //$NON-NLS-1$ = "Undo: {0}."
-	private static final String UNDO_ACTION_DESC_DEFAULT = ResourceHandler.getString("Undo_Text_Change._UI_"); //$NON-NLS-1$ = "Undo Text Change."
-	private static final String UNDO_ACTION_TEXT = ResourceHandler.getString("&Undo_{0}_@Ctrl+Z_UI_"); //$NON-NLS-1$ = "&Undo {0} @Ctrl+Z"
-	private static final String UNDO_ACTION_TEXT_DEFAULT = ResourceHandler.getString("&Undo_Text_Change_@Ctrl+Z_UI_"); //$NON-NLS-1$ = "&Undo Text Change @Ctrl+Z"
+	private static final String UNDO_ACTION_DESC = SSEUIPlugin.getResourceString("%Undo__{0}._UI_"); //$NON-NLS-1$ = "Undo: {0}."
+	private static final String UNDO_ACTION_DESC_DEFAULT = SSEUIPlugin.getResourceString("%Undo_Text_Change._UI_"); //$NON-NLS-1$ = "Undo Text Change."
+	private static final String UNDO_ACTION_TEXT = SSEUIPlugin.getResourceString("%&Undo_{0}_@Ctrl+Z_UI_"); //$NON-NLS-1$ = "&Undo {0} @Ctrl+Z"
+	private static final String UNDO_ACTION_TEXT_DEFAULT = SSEUIPlugin.getResourceString("%&Undo_Text_Change_@Ctrl+Z_UI_"); //$NON-NLS-1$ = "&Undo Text Change @Ctrl+Z"
 
 	/**
 	 * @param args
@@ -536,7 +534,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		boolean enableFormatMenu = (formatAll != null && formatAll.isEnabled()) || (formatSelection != null && formatSelection.isEnabled()) || (cleanupAll != null && cleanupAll.isEnabled());
 
 		if (getSourceViewer().isEditable() && enableFormatMenu) {
-			String label = ResourceHandler.getString("FormatMenu.label"); //$NON-NLS-1$ = "Format"
+			String label = SSEUIPlugin.getResourceString("%FormatMenu.label"); //$NON-NLS-1$ = "Format"
 			MenuManager subMenu = new MenuManager(label, GROUP_NAME_FORMAT);
 			subMenu.add(new GroupMarker(GROUP_NAME_FORMAT_EXT));
 			addAction(subMenu, StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_DOCUMENT);
@@ -685,7 +683,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 
 	protected void createActions() {
 		super.createActions();
-		ResourceBundle resourceBundle = ResourceHandler.getResourceBundle();
+		ResourceBundle resourceBundle = SSEUIPlugin.getDefault().getResourceBundle();
 		// TextView Action - moving the selected text to
 		// the clipboard
 		// override the cut/paste/delete action to make
@@ -719,7 +717,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		// SourceView Action - requesting information at
 		// the current insertion
 		// position
-		action = new TextOperationAction(ResourceHandler.getResourceBundle(), StructuredTextEditorActionConstants.ACTION_NAME_INFORMATION + DOT, this, ISourceViewer.INFORMATION, true);
+		action = new TextOperationAction(SSEUIPlugin.getDefault().getResourceBundle(), StructuredTextEditorActionConstants.ACTION_NAME_INFORMATION + DOT, this, ISourceViewer.INFORMATION, true);
 		action.setActionDefinitionId(ActionDefinitionIds.INFORMATION);
 		setAction(StructuredTextEditorActionConstants.ACTION_NAME_INFORMATION, action);
 		markAsStateDependentAction(StructuredTextEditorActionConstants.ACTION_NAME_INFORMATION, true);
@@ -734,7 +732,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		// SourceView Action - requesting content assist to
 		// show the content
 		// information for the current insert position
-		action = new TextOperationAction(ResourceHandler.getResourceBundle(), StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_CONTEXT_INFORMATION + DOT, this, ISourceViewer.CONTENTASSIST_CONTEXT_INFORMATION);
+		action = new TextOperationAction(SSEUIPlugin.getDefault().getResourceBundle(), StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_CONTEXT_INFORMATION + DOT, this, ISourceViewer.CONTENTASSIST_CONTEXT_INFORMATION);
 		action.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_CONTEXT_INFORMATION);
 		setAction(StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_CONTEXT_INFORMATION, action);
 		markAsStateDependentAction(StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_CONTEXT_INFORMATION, true);
@@ -2641,7 +2639,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		IEditorInput input = getEditorInput();
 		if (input instanceof IFileEditorInput) {
 			if (input == null) {
-				String msg = ResourceHandler.getString("Error_opening_file_UI_"); //$NON-NLS-1$
+				String msg = SSEUIPlugin.getResourceString("%Error_opening_file_UI_"); //$NON-NLS-1$
 				status = new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.INFO, msg, null);
 			} else {
 				validateState(input);
@@ -2667,7 +2665,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 							// exception.
 						}
 					}
-					String msg = ResourceHandler.getString("_UI_File_is_read_only", new Object[]{fname}); //$NON-NLS-1$ = "File {0}is read-only."
+					String msg = SSEUIPlugin.getResourceString("%_UI_File_is_read_only", new Object[]{fname}); //$NON-NLS-1$ = "File {0}is read-only."
 					status = new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.INFO, msg, null);
 				}
 			}

@@ -38,9 +38,9 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.sse.ui.EditorPlugin;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.edit.util.SharedEditorPluginImageHelper;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
@@ -412,7 +412,7 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 
 	protected IPreferenceStore getPreferenceStore() {
 		if (fPreferenceStore == null)
-			fPreferenceStore = EditorPlugin.getDefault().getPreferenceStore();
+			fPreferenceStore = SSEUIPlugin.getDefault().getPreferenceStore();
 
 		return fPreferenceStore;
 	}

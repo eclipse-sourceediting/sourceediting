@@ -26,10 +26,8 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.Logger;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
-
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 /**
  * Basic ISearchQuery that finds matches of region type and region text.
@@ -149,14 +147,14 @@ public class OccurrencesSearchQuery extends BasicSearchQuery {
 	}
 
 	private String getFilename() {
-		String filename = ResourceHandler.getString("OccurrencesSearchQuery.2"); //$NON-NLS-1$ "file"
+		String filename = SSEUIPlugin.getResourceString("%OccurrencesSearchQuery.2"); //$NON-NLS-1$ "file"
 		if (getFile() != null)
 			filename = getFile().getName().toString();
 		return filename;
 	}
 
 	public String getLabel() {
-		String label = ResourceHandler.getString("OccurrencesSearchQuery.0"); //$NON-NLS-1$
+		String label = SSEUIPlugin.getResourceString("%OccurrencesSearchQuery.0"); //$NON-NLS-1$
 		String[] args = {getSearchText(), getOccurrencesCountText(), getFilename()};
 		return MessageFormat.format(label, args);
 	}

@@ -17,10 +17,7 @@ import java.util.StringTokenizer;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
-
-
 
 /**
  * Manages text hovers for Structured Text editors
@@ -165,7 +162,7 @@ public class TextHoverManager {
 				if (modifierString.equals(NO_MODIFIER))
 					modifierString = ""; //$NON-NLS-1$
 
-				TextHoverDescriptor descriptor = new TextHoverDescriptor(id, ResourceHandler.getString(id + LABEL_KEY), ResourceHandler.getString(id + DESCRIPTION_KEY), enabled, modifierString);
+				TextHoverDescriptor descriptor = new TextHoverDescriptor(id, SSEUIPlugin.getResourceString("%" + id + LABEL_KEY), SSEUIPlugin.getResourceString("%" + id + DESCRIPTION_KEY), enabled, modifierString);
 				// should check to see if ids appear more than once
 				idToModifier.put(id, descriptor);
 			}
@@ -178,7 +175,7 @@ public class TextHoverManager {
 			if (desc != null) {
 				descriptors[i] = desc;
 			} else {
-				descriptors[i] = new TextHoverDescriptor(TEXT_HOVER_IDS[i], ResourceHandler.getString(TEXT_HOVER_IDS[i] + LABEL_KEY), ResourceHandler.getString(TEXT_HOVER_IDS + DESCRIPTION_KEY));
+				descriptors[i] = new TextHoverDescriptor(TEXT_HOVER_IDS[i], SSEUIPlugin.getResourceString("%" + TEXT_HOVER_IDS[i] + LABEL_KEY), SSEUIPlugin.getResourceString("%" + TEXT_HOVER_IDS + DESCRIPTION_KEY));
 			}
 		}
 		return descriptors;

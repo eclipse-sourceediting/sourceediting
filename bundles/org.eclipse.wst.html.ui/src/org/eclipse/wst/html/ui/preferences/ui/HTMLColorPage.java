@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.preferences.ui;
 
-
-
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
@@ -21,8 +19,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
+import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
-import org.eclipse.wst.html.ui.internal.nls.ResourceHandler;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
@@ -54,7 +52,7 @@ public class HTMLColorPage extends XMLColorPage {
 	}
 
 	public String getSampleText() {
-		return ResourceHandler.getString("Sample_HTML_doc"); //$NON-NLS-1$ = "<!DOCTYPE HTML\n\tPUBLIC \"-//W3C/DTD/ HTML 4.01 Transitional//EN\"\n\t\"http://www.w3.org/TR/html4/loose.dtd\">\n<HTML>\n\t<HEAD>\n\t\t<META content=\"text/html\">\n\t\t<TITLE>HTML Highlighting Preferences</TITLE>\n\t</HEAD>\n<BODY>\n\t<!--\n\t\twe need a flaming logo!\n\t-->\n\t<%\t%>\n</BODY>\n</HTML>"
+		return HTMLUIPlugin.getResourceString("%Sample_HTML_doc"); //$NON-NLS-1$ = "<!DOCTYPE HTML\n\tPUBLIC \"-//W3C/DTD/ HTML 4.01 Transitional//EN\"\n\t\"http://www.w3.org/TR/html4/loose.dtd\">\n<HTML>\n\t<HEAD>\n\t\t<META content=\"text/html\">\n\t\t<TITLE>HTML Highlighting Preferences</TITLE>\n\t</HEAD>\n<BODY>\n\t<!--\n\t\twe need a flaming logo!\n\t-->\n\t<%\t%>\n</BODY>\n</HTML>"
 
 	}
 

@@ -31,8 +31,7 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.ui.edit.util.StructuredTextEditorActionConstants;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
-
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 public class CommentActionXML extends TextEditorAction {
 	protected static final String CLOSE_COMMENT = "-->"; //$NON-NLS-1$
@@ -160,7 +159,7 @@ public class CommentActionXML extends TextEditorAction {
 	}
 
 	protected void processAction() {
-		fModel.beginRecording(this, ResourceHandler.getString(StructuredTextEditorActionConstants.ACTION_NAME_COMMENT + ".tooltip")); //$NON-NLS-1$
+		fModel.beginRecording(this, SSEUIPlugin.getResourceString(StructuredTextEditorActionConstants.ACTION_NAME_COMMENT + ".tooltip")); //$NON-NLS-1$
 		fModel.aboutToChangeModel();
 
 		for (int i = fSelectionStartLine; i <= fSelectionEndLine; i++) {

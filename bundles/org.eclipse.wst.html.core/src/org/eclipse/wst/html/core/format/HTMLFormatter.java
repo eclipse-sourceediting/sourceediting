@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.format;
 
-
-
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.BadLocationException;
@@ -20,10 +18,10 @@ import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.html.core.HTMLCMProperties;
 import org.eclipse.wst.html.core.HTMLFormatContraints;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
-import org.eclipse.wst.sse.core.ModelPlugin;
 import org.eclipse.wst.sse.core.format.IStructuredFormatContraints;
 import org.eclipse.wst.sse.core.format.IStructuredFormatPreferences;
 import org.eclipse.wst.sse.core.format.IStructuredFormatter;
+import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -622,7 +620,7 @@ public class HTMLFormatter implements IStructuredFormatter {
 				if (preferences.getBoolean(CommonModelPreferenceNames.INDENT_USING_TABS))
 					fFormatPreferences.setIndent("\t"); //$NON-NLS-1$
 				else {
-					int tabWidth = ModelPlugin.getDefault().getPluginPreferences().getInt(CommonModelPreferenceNames.TAB_WIDTH);
+					int tabWidth = SSECorePlugin.getDefault().getPluginPreferences().getInt(CommonModelPreferenceNames.TAB_WIDTH);
 					String indent = ""; //$NON-NLS-1$
 					for (int i = 0; i < tabWidth; i++) {
 						indent += " "; //$NON-NLS-1$

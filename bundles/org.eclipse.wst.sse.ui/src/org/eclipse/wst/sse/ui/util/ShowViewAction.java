@@ -20,8 +20,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
-
 
 /**
  * Surfaces a View.
@@ -94,7 +92,7 @@ public abstract class ShowViewAction extends Action {
 			try {
 				page.showView(getViewID());
 			} catch (PartInitException e) {
-				ErrorDialog.openError(window.getShell(), ResourceHandler.getString("ShowView.errorTitle"), //$NON-NLS-1$
+				ErrorDialog.openError(window.getShell(), SSEUIPlugin.getResourceString("%ShowView.errorTitle"), //$NON-NLS-1$
 							e.getMessage(), e.getStatus());
 			}
 		}

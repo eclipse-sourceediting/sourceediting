@@ -63,14 +63,12 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.Logger;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistryImpl;
 import org.eclipse.wst.sse.ui.util.Assert;
-
 
 /**
  * This version of an IDocumentProvider is the editor side counter part to
@@ -204,7 +202,7 @@ public class FileModelProvider extends FileDocumentProvider implements IModelPro
 	// //$NON-NLS-1$
 	//$NON-NLS-1$ = "This encoding({0}) is not supported. The default encoding will be used instead."
 	// CSSFileModelProvider will use this.
-	protected static final String UNSUPPORTED_ENCODING_WARNING_TITLE = ResourceHandler.getString("Encoding_warning_UI_"); //$NON-NLS-1$ = "Encoding warning"
+	protected static final String UNSUPPORTED_ENCODING_WARNING_TITLE = SSEUIPlugin.getResourceString("%Encoding_warning_UI_"); //$NON-NLS-1$ = "Encoding warning"
 
 	public synchronized static FileModelProvider getInstance() {
 		if (fInstance == null)
@@ -628,7 +626,7 @@ public class FileModelProvider extends FileDocumentProvider implements IModelPro
 				}
 			}
 			if (!resource.exists()) {
-				progressMonitor.beginTask(ResourceHandler.getString("FileDocumentProvider.task.saving"), 2000); //$NON-NLS-1$ 
+				progressMonitor.beginTask(SSEUIPlugin.getResourceString("%FileDocumentProvider.task.saving"), 2000); //$NON-NLS-1$ 
 				ContainerGenerator generator = new ContainerGenerator(resource.getParent().getFullPath());
 				generator.generateContainer(new SubProgressMonitor(progressMonitor, 1000));
 			}
@@ -674,17 +672,17 @@ public class FileModelProvider extends FileDocumentProvider implements IModelPro
 			progressMonitor.setCanceled(true);
 			// inform about failure
 			fireElementStateChangeFailed(element);
-			throw new SourceEditingRuntimeException(ResourceHandler.getString("Unable_to_save_the_documen_ERROR_")); //$NON-NLS-1$ = "Unable to save the document. Output file not found."
+			throw new SourceEditingRuntimeException(SSEUIPlugin.getResourceString("%Unable_to_save_the_documen_ERROR_")); //$NON-NLS-1$ = "Unable to save the document. Output file not found."
 		} catch (UnsupportedEncodingException exception) {
 			progressMonitor.setCanceled(true);
 			// inform about failure
 			fireElementStateChangeFailed(element);
-			throw new SourceEditingRuntimeException(ResourceHandler.getString("Unable_to_save_the_documen1_ERROR_")); //$NON-NLS-1$ = "Unable to save the document. Unsupported encoding."
+			throw new SourceEditingRuntimeException(SSEUIPlugin.getResourceString("%Unable_to_save_the_documen1_ERROR_")); //$NON-NLS-1$ = "Unable to save the document. Unsupported encoding."
 		} catch (java.io.IOException exception) {
 			progressMonitor.setCanceled(true);
 			// inform about failure
 			fireElementStateChangeFailed(element);
-			throw new SourceEditingRuntimeException(ResourceHandler.getString("Unable_to_save_the_documen2_ERROR_")); //$NON-NLS-1$
+			throw new SourceEditingRuntimeException(SSEUIPlugin.getResourceString("%Unable_to_save_the_documen2_ERROR_")); //$NON-NLS-1$
 			//$NON-NLS-1$ = "Unable to save the document. An I/O error occurred while saving the document."
 		} catch (OperationCanceledException exception) {
 			Logger.log(Logger.INFO, "Save Operation Canceled at user's request"); //$NON-NLS-1$
@@ -883,7 +881,7 @@ public class FileModelProvider extends FileDocumentProvider implements IModelPro
 			getModel(fileEditorInput).reload(inStream);
 			reloaded = true;
 		} catch (IOException e) {
-			String message = MessageFormat.format(ResourceHandler.getString("FileModelProvider.0"), new String[]{fileEditorInput.getName()}); //$NON-NLS-1$
+			String message = MessageFormat.format(SSEUIPlugin.getResourceString("%FileModelProvider.0"), new String[]{fileEditorInput.getName()}); //$NON-NLS-1$
 			info.fStatus = new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.ERROR, message, e);
 		} catch (CoreException e) {
 			info.fStatus = e.getStatus();
@@ -938,7 +936,7 @@ public class FileModelProvider extends FileDocumentProvider implements IModelPro
 	private boolean openUnconvertableCharactersWarningForSave(CharConversionErrorWithDetail outputException, Shell topshell) {
 		// open message dialog
 		final String title = UNSUPPORTED_ENCODING_WARNING_TITLE;
-		String userMessage = ResourceHandler.getString("cannot_convert_some_characters2"); //$NON-NLS-1$
+		String userMessage = SSEUIPlugin.getResourceString("%cannot_convert_some_characters2"); //$NON-NLS-1$
 		MessageFormat form = new MessageFormat(userMessage);
 		Object[] args = {outputException.getCharsetName()};
 		final String msg = form.format(args);
@@ -952,7 +950,7 @@ public class FileModelProvider extends FileDocumentProvider implements IModelPro
 	protected boolean openUnconvertableCharactersWarningForSave(MalformedOutputExceptionWithDetail outputException, Shell topshell) {
 		// open message dialog
 		final String title = UNSUPPORTED_ENCODING_WARNING_TITLE;
-		String userMessage = ResourceHandler.getString("cannot_convert_some_characters"); //$NON-NLS-1$
+		String userMessage = SSEUIPlugin.getResourceString("%cannot_convert_some_characters"); //$NON-NLS-1$
 		MessageFormat form = new MessageFormat(userMessage);
 		Object[] args = {outputException.getAttemptedIANAEncoding(), Integer.toString(outputException.getCharPosition())};
 		final String msg = form.format(args);
@@ -965,16 +963,16 @@ public class FileModelProvider extends FileDocumentProvider implements IModelPro
 
 	protected void openUndecodableCharacterError(MalformedInputExceptionWithDetail e) {
 		// checked and coordinated among all editors.
-		String title = ResourceHandler.getString("Error_opening_file_UI_"); //$NON-NLS-1$ = "Error opening file"
+		String title = SSEUIPlugin.getResourceString("%Error_opening_file_UI_"); //$NON-NLS-1$ = "Error opening file"
 		String msg = e.toString();
 		// if the exception char position < 0, perhaps we exceeded the max
 		// buffer when detecting pos of error
 		// if that is the case, display a different error message
 		IStatus status;
 		if ((e.getCharPosition() < 0) && (e.isExceededMax()))
-			status = new Status(IStatus.ERROR, SSEUIPlugin.ID, 0, ResourceHandler.getString("8concat_ERROR_", (new Object[]{Integer.toString(e.getMaxBuffer()), e.getAttemptedIANAEncoding()})), e); //$NON-NLS-1$
+			status = new Status(IStatus.ERROR, SSEUIPlugin.ID, 0, SSEUIPlugin.getResourceString("%8concat_ERROR_", (new Object[]{Integer.toString(e.getMaxBuffer()), e.getAttemptedIANAEncoding()})), e); //$NON-NLS-1$
 		else
-			status = new Status(IStatus.ERROR, SSEUIPlugin.ID, 0, ResourceHandler.getString("7concat_ERROR_", (new Object[]{(Integer.toString(e.getCharPosition())), e.getAttemptedIANAEncoding()})), e); //$NON-NLS-1$
+			status = new Status(IStatus.ERROR, SSEUIPlugin.ID, 0, SSEUIPlugin.getResourceString("%7concat_ERROR_", (new Object[]{(Integer.toString(e.getCharPosition())), e.getAttemptedIANAEncoding()})), e); //$NON-NLS-1$
 		//$NON-NLS-1$ = "Could not be decoded character (at position {0}) according to the encoding parameter {1}"
 		ErrorDialog.openError(getActiveShell(), title, msg, status);
 	}
@@ -982,7 +980,7 @@ public class FileModelProvider extends FileDocumentProvider implements IModelPro
 	protected void openUnsupportedEncodingWarningForLoad(String encoding, String defaultToUse) {
 		// open message dialog
 		final String title = UNSUPPORTED_ENCODING_WARNING_TITLE;
-		MessageFormat form = new MessageFormat(ResourceHandler.getString("This_encoding_({0})_is_not_supported._The_default_encoding_({1})_will_be_used_instead._1")); //$NON-NLS-1$
+		MessageFormat form = new MessageFormat(SSEUIPlugin.getResourceString("%This_encoding_({0})_is_not_supported._The_default_encoding_({1})_will_be_used_instead._1")); //$NON-NLS-1$
 		Object[] args = {encoding, defaultToUse};
 		final String msg = form.format(args);
 		Shell shell = getActiveShell();
@@ -997,7 +995,7 @@ public class FileModelProvider extends FileDocumentProvider implements IModelPro
 		//  MessageFormat form = new
 		// MessageFormat(ResourceHandler.getString("This_encoding({0})_is_not__WARN_"));
 		// //$NON-NLS-1$ = "This encoding({0}) is not supported. Continue ?"
-		MessageFormat form = new MessageFormat(ResourceHandler.getString("This_encoding_({0})_is_not_supported._Continue_the_save_using_the_default_({1})__2")); //$NON-NLS-1$
+		MessageFormat form = new MessageFormat(SSEUIPlugin.getResourceString("%This_encoding_({0})_is_not_supported._Continue_the_save_using_the_default_({1})__2")); //$NON-NLS-1$
 		Object[] args = {foundEncoding, defaultEncodingToUse};
 		final String msg = form.format(args);
 		MessageDialog warning = new MessageDialog(topshell, dialogTitle, null, msg, MessageDialog.QUESTION, new String[]{IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL}, 0);

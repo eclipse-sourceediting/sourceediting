@@ -34,17 +34,16 @@ import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.extensions.openon.IOpenOn;
 import org.eclipse.wst.sse.ui.internal.Logger;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.openon.ExternalFileEditorInput;
-import org.eclipse.wst.sse.ui.nls.ResourceHandler;
 import org.eclipse.wst.sse.ui.util.PlatformStatusLineUtil;
-
 
 /**
  * This action class retrieves the link/file selected by the cursor and
  * attempts to open the link/file in the default editor or web browser
  */
 abstract public class AbstractOpenOn implements IOpenOn {
-	protected final String CANNOT_OPEN = ResourceHandler.getString("AbstractOpenOn.0"); //$NON-NLS-1$
+	protected final String CANNOT_OPEN = SSEUIPlugin.getResourceString("%AbstractOpenOn.0"); //$NON-NLS-1$
 	private IDocument fDocument; // document currention associated with open
 	protected final String FILE_PROTOCOL = "file:/";//$NON-NLS-1$
 	private final String HTTP_PROTOCOL = "http://";//$NON-NLS-1$
