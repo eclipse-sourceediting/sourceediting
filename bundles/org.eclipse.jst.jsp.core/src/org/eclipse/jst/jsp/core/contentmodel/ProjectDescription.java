@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jst.jsp.core.Logger;
 import org.eclipse.jst.jsp.core.contentmodel.tld.DocumentProvider;
 import org.eclipse.jst.jsp.core.contentmodel.tld.JSP20TLDNames;
 import org.eclipse.wst.sse.core.util.JarUtilities;
@@ -117,7 +118,9 @@ class ProjectDescription {
 
 	Hashtable fTLDReferences;
 
-	Hashtable fURLReferences;
+	// TODO: there should be a separate list of implicit references kept per
+	// local root
+	Hashtable fImplicitReferences;
 
 	IResourceDeltaVisitor fVisitor;
 
@@ -130,7 +133,7 @@ class ProjectDescription {
 		fTagDirReferences = new Hashtable(0);
 		fTLDReferences = new Hashtable(0);
 		fServletReferences = new Hashtable(0);
-		fURLReferences = new Hashtable(0);
+		fImplicitReferences = new Hashtable(0);
 	}
 
 	void addJAR(IResource jar) {
@@ -152,7 +155,7 @@ class ProjectDescription {
 						try {
 							record.url = new URL("jar:file:" + jarLocationString + "!/" + entries[i]);
 							jarRecord.urlRecords.add(record);
-							fURLReferences.put(uri, record);
+							getImplicitReferences(jar.getLocation().toString()).put(uri, record);
 							if (_debugIndexCreation)
 								System.out.println("created record for " + uri + "@" + record.getURL());
 						}
@@ -208,7 +211,7 @@ class ProjectDescription {
 			// use the local web-app root
 			record.location = new Path(getLocalRoot(webxml.getLocation().toString()) + location);
 			servletRecord.urlRecords.add(record);
-			fURLReferences.put(uri, record);
+			getImplicitReferences(webxml.getLocation().toString()).put(uri, record);
 			if (_debugIndexCreation)
 				System.out.println("created record for " + uri + "@" + location);
 		}
@@ -244,19 +247,14 @@ class ProjectDescription {
 		InputStream contents = null;
 		try {
 			contents = ((IFile) tld).getContents(true);
-			String baseLocation = null;
-			if (tld.getLocation() != null) {
-				baseLocation = tld.getLocation().toString();
-			}
-			else {
-				baseLocation = getLocalRoot(fProject.getLocation().toString());
-			}
+			String baseLocation = record.location.toString();
 			String defaultURI = extractURI(baseLocation, contents);
 			if (defaultURI != null && defaultURI.length() > 0) {
 				record.uri = defaultURI;
 			}
 		}
 		catch (CoreException e) {
+			Logger.logException(e);
 		}
 		finally {
 			try {
@@ -305,6 +303,19 @@ class ProjectDescription {
 	}
 
 	/**
+	 * @return Returns the implicitReferences for the given path
+	 */
+	Hashtable getImplicitReferences(String location) {
+		String localRoot = getLocalRoot(location);
+		Hashtable implicitReferences = (Hashtable) fImplicitReferences.get(localRoot);
+		if (implicitReferences == null) {
+			implicitReferences = new Hashtable(1);
+			fImplicitReferences.put(localRoot, implicitReferences);
+		}
+		return implicitReferences;
+	}
+
+	/**
 	 * @param baseLocation
 	 * @return
 	 */
@@ -326,7 +337,7 @@ class ProjectDescription {
 			if (folder != null && (folder.getType() & IResource.ROOT) == 0) {
 				IFolder webinf = folder.getFolder(WEB_INF_PATH);
 				if (webinf != null && webinf.exists()) {
-					return file.getLocation().toString();
+					return folder.getFullPath().toString();
 				}
 			}
 			file = file.getParent();
@@ -383,7 +394,7 @@ class ProjectDescription {
 		if (record != null) {
 			URLRecord[] records = (URLRecord[]) record.getURLRecords().toArray(new URLRecord[0]);
 			for (int i = 0; i < records.length; i++) {
-				fURLReferences.remove(records[i].getURI());
+				getImplicitReferences(jar.getLocation().toString()).remove(records[i].getURI());
 			}
 		}
 	}
@@ -393,7 +404,7 @@ class ProjectDescription {
 		if (record != null) {
 			URLRecord[] records = (URLRecord[]) record.getURLRecords().toArray(new URLRecord[0]);
 			for (int i = 0; i < records.length; i++) {
-				fURLReferences.remove(records[i].getURI());
+				getImplicitReferences(webxml.getLocation().toString()).remove(records[i].getURI());
 			}
 		}
 	}
@@ -435,7 +446,7 @@ class ProjectDescription {
 			record = (ITaglibRecord) fTLDReferences.get(location);
 		}
 		if (record == null) {
-			record = (ITaglibRecord) fURLReferences.get(reference);
+			record = (ITaglibRecord) getImplicitReferences(baseLocation).get(reference);
 		}
 		if (record == null) {
 			record = (ITaglibRecord) fTagDirReferences.get(location);
