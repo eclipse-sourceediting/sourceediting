@@ -30,7 +30,7 @@ import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertySheetPage;
-import org.eclipse.wst.sse.core.IFactoryRegistry;
+import org.eclipse.wst.sse.core.FactoryRegistry;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.ui.ViewerSelectionManager;
 import org.eclipse.wst.sse.ui.edit.util.ActiveEditorActionHandler;
@@ -104,7 +104,7 @@ public class ConfigurablePropertySheetPage extends PropertySheetPage implements 
 	protected IJFaceNodeAdapterFactory getViewerRefreshFactory() {
 		if (getModel() == null)
 			return null;
-		IFactoryRegistry factoryRegistry = getModel().getFactoryRegistry();
+		FactoryRegistry factoryRegistry = getModel().getFactoryRegistry();
 		IJFaceNodeAdapterFactory adapterFactory = (IJFaceNodeAdapterFactory) factoryRegistry.getFactoryFor(IJFaceNodeAdapter.class);
 		return adapterFactory;
 	}

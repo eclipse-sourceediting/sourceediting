@@ -22,7 +22,7 @@ import org.eclipse.wst.html.core.htmlcss.HTMLStyleSelectorAdapterFactory;
 import org.eclipse.wst.html.core.htmlcss.StyleAdapterFactory;
 import org.eclipse.wst.html.core.modelquery.ModelQueryAdapterFactoryForEmbeddedHTML;
 import org.eclipse.wst.sse.core.AdapterFactory;
-import org.eclipse.wst.sse.core.IFactoryRegistry;
+import org.eclipse.wst.sse.core.FactoryRegistry;
 import org.eclipse.wst.sse.core.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.sse.core.parser.BlockMarker;
 import org.eclipse.wst.sse.core.parser.BlockTagParser;
@@ -92,7 +92,7 @@ public class EmbeddedHTML implements EmbeddedTypeHandler {
 		return supportedMimeTypes;
 	}
 
-	public void initializeFactoryRegistry(IFactoryRegistry registry) {
+	public void initializeFactoryRegistry(FactoryRegistry registry) {
 		Assert.isNotNull(registry);
 
 		AdapterFactory factory = null;
@@ -113,7 +113,7 @@ public class EmbeddedHTML implements EmbeddedTypeHandler {
 		}
 	}
 
-	public void uninitializeFactoryRegistry(IFactoryRegistry registry) {
+	public void uninitializeFactoryRegistry(FactoryRegistry registry) {
 		Assert.isNotNull(registry);
 		
         if (!fLocalFactories.isEmpty()) {

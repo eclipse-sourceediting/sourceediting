@@ -14,10 +14,10 @@ package org.eclipse.wst.sse.core.internal.text;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.ILock;
-import org.eclipse.wst.sse.core.document.IExecutionDelegate;
-import org.eclipse.wst.sse.core.document.ILockable;
 import org.eclipse.wst.sse.core.events.NewModelEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
+import org.eclipse.wst.sse.core.internal.IExecutionDelegate;
+import org.eclipse.wst.sse.core.internal.ILockable;
 import org.eclipse.wst.sse.core.parser.RegionParser;
 
 

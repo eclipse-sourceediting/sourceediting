@@ -15,14 +15,23 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.osgi.framework.Bundle;
 
+/**
+ * Class to allow access to ModelManager. Not to be subclassed.
+ */
+
 public class StructuredModelManager {
 	/**
-	 * @deprecated - call getModelManager directly
-	 * @return
+	 * Do not allow instances to be created.
 	 */
-	public static StructuredModelManager getInstance() {
-		return new StructuredModelManager();
+	private StructuredModelManager() {
+		super();
 	}
+
+	/**
+	 * Provides access to the instance of IModelManager. Returns null if model
+	 * manager can not be created or is not valid (e.g. when workbench is
+	 * shutting down).
+	 */
 
 	public static IModelManager getModelManager() {
 		boolean isReady = false;
@@ -45,11 +54,12 @@ public class StructuredModelManager {
 			}
 			else if (state == Bundle.STOPPING || state == Bundle.UNINSTALLED) {
 				isReady = true;
-				modelManager = new NullModelManager();
+				modelManager = null;
 			}
 			else {
 				// not sure about other states, 'resolved', 'installed'
 				isReady = true;
+				modelManager = null;
 			}
 		}
 		return modelManager;

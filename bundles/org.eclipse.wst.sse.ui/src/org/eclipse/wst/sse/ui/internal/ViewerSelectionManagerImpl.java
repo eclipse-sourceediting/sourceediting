@@ -63,6 +63,12 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager, Spell
 		public void modelResourceMoved(IStructuredModel originalmodel, IStructuredModel movedmodel) {
 		}
 
+		public void modelAboutToBeReinitialized(IStructuredModel structuredModel) {
+		}
+
+		public void modelReinitialized(IStructuredModel structuredModel) {
+		}
+
 	}
 
 	private CaretMediator fCaretMeditator;
@@ -78,14 +84,14 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager, Spell
 	protected SpellCheckSelectionListener[] fSpellCheckSelectionListeners;
 	private int fTextSelectionEnd;
 	// TODO: private field never read locally
-	 IndexedRegion fTextSelectionEndNode;
+	IndexedRegion fTextSelectionEndNode;
 	private ITextSelectionListener[] fTextSelectionListeners;
 	private int fTextSelectionStart;
-//	 TODO: private field never read locally
+	// TODO: private field never read locally
 	IndexedRegion fTextSelectionStartNode;
 	private ITextViewer fTextViewer;
 	private InternalModelStateListener internalModelStateListener;
-//	 TODO: private field never read locally
+	// TODO: private field never read locally
 	boolean isFiringNodeDoubleClick = false;
 	private boolean isFiringNodeSelectionChanged = false;
 
@@ -113,7 +119,8 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager, Spell
 			if (Debug.displayWarnings) {
 				System.out.println("ViewerSelectionManager::addNodeDoubleClickListener. listener " + listener + " was added more than once. "); //$NON-NLS-2$//$NON-NLS-1$
 			}
-		} else {
+		}
+		else {
 			if (Debug.debugStructuredDocument) {
 				System.out.println("ViewerSelectionManager::addNodeDoubleClickListener. Adding an instance of " + listener.getClass() + " as a listener on ViewerSelectionManager."); //$NON-NLS-2$//$NON-NLS-1$
 			}
@@ -151,7 +158,8 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager, Spell
 			if (Debug.displayWarnings) {
 				System.out.println("ViewerSelectionManager::addNodeSelectionListener. listener " + listener + " was added more than once. "); //$NON-NLS-2$//$NON-NLS-1$
 			}
-		} else {
+		}
+		else {
 			if (Debug.debugStructuredDocument) {
 				System.out.println("ViewerSelectionManager::addNodeSelectionListener. Adding an instance of " + listener.getClass() + " as a listener on ViewerSelectionManager."); //$NON-NLS-2$//$NON-NLS-1$
 			}
@@ -193,7 +201,8 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager, Spell
 			if (Debug.displayWarnings) {
 				System.out.println("ViewerSelectionManager::addSpellCheckSelectionListener. listener " + listener + " was added more than once. "); //$NON-NLS-2$//$NON-NLS-1$
 			}
-		} else {
+		}
+		else {
 			if (Debug.debugStructuredDocument) {
 				System.out.println("ViewerSelectionManager::addSpellCheckSelectionListener. Adding an instance of " + listener.getClass() + " as a listener on ViewerSelectionManager."); //$NON-NLS-2$//$NON-NLS-1$
 			}
@@ -230,7 +239,8 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager, Spell
 			if (Debug.displayWarnings) {
 				System.out.println("ViewerSelectionManager::addTextSelectionListener. listener " + listener + " was added more than once. "); //$NON-NLS-2$//$NON-NLS-1$
 			}
-		} else {
+		}
+		else {
 			if (Debug.debugStructuredDocument) {
 				System.out.println("ViewerSelectionManager::addTextSelectionListener. Adding an instance of " + listener.getClass() + " as a listener on ViewerSelectionManager."); //$NON-NLS-2$//$NON-NLS-1$
 			}
@@ -305,7 +315,8 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager, Spell
 				for (int i = 0; i < holdListeners.length; i++) {
 					holdListeners[i].doubleClick(event);
 				}
-			} finally {
+			}
+			finally {
 				isFiringNodeDoubleClick = false;
 			}
 		}
@@ -326,7 +337,8 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager, Spell
 				for (int i = 0; i < holdListeners.length; i++) {
 					holdListeners[i].nodeSelectionChanged(event);
 				}
-			} finally {
+			}
+			finally {
 				isFiringNodeSelectionChanged = false;
 			}
 		}
@@ -389,7 +401,8 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager, Spell
 		if (firstSelectedNode != null) {
 			selectedNodes = new ArrayList(1);
 			selectedNodes.add(firstSelectedNode);
-		} else {
+		}
+		else {
 			selectedNodes = new ArrayList(0);
 		}
 		return selectedNodes;
@@ -418,7 +431,8 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager, Spell
 			// Not clear why the source was null, but probably only related to
 			// initialization, or 'startup' with file open.
 			Logger.log(Logger.ERROR, "ViewerSelectionManager::processSelectionChanged. Unexpected null source"); //$NON-NLS-1$
-		} else {
+		}
+		else {
 			if (isTextSelectionChanged(selectionStart, selectionEnd))
 				textSelectionChanged(source, selectionStart, selectionEnd);
 
@@ -449,7 +463,8 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager, Spell
 				int index = 0;
 				for (int i = 0; i < oldSize; i++) {
 					if (fNodeDoubleClickListeners[i] == listener) { // ignore
-					} else {
+					}
+					else {
 						// copy old to new if its not the one we are removing
 						newListeners[index++] = fNodeDoubleClickListeners[i];
 					}
@@ -471,7 +486,8 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager, Spell
 				int index = 0;
 				for (int i = 0; i < oldSize; i++) {
 					if (fNodeSelectionListeners[i] == listener) { // ignore
-					} else {
+					}
+					else {
 						// copy old to new if its not the one we are removing
 						newListeners[index++] = fNodeSelectionListeners[i];
 					}
@@ -496,7 +512,8 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager, Spell
 				int index = 0;
 				for (int i = 0; i < oldSize; i++) {
 					if (fSpellCheckSelectionListeners[i] == listener) { // ignore
-					} else {
+					}
+					else {
 						// copy old to new if its not the one we are removing
 						newListeners[index++] = fSpellCheckSelectionListeners[i];
 					}
@@ -518,7 +535,8 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager, Spell
 				int index = 0;
 				for (int i = 0; i < oldSize; i++) {
 					if (fTextSelectionListeners[i] == listener) { // ignore
-					} else {
+					}
+					else {
 						// copy old to new if its not the one we are removing
 						newListeners[index++] = fTextSelectionListeners[i];
 					}
@@ -540,7 +558,7 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager, Spell
 		// handle Structured selections
 		if (eventSelection instanceof IStructuredSelection) {
 			IStructuredSelection selection = (IStructuredSelection) eventSelection;
-			//			System.out.println("selection: " + event.getSource() + " [" +
+			// System.out.println("selection: " + event.getSource() + " [" +
 			// selection.toArray().length + "] " +
 			// selection.getFirstElement());
 			List selectedNodes = selection.toList();
@@ -563,7 +581,7 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager, Spell
 		// handle text selection changes
 		else if (eventSelection instanceof ITextSelection) {
 			ITextSelection selection = (ITextSelection) eventSelection;
-			//			System.out.println("selection: " + event.getSource() + " (" +
+			// System.out.println("selection: " + event.getSource() + " (" +
 			// selection.getOffset() + "+=" + selection.getLength() + ")");
 			int selectionStart = selection.getOffset();
 			setCaretPosition(selectionStart);
@@ -573,7 +591,8 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager, Spell
 				// and XSL Editors
 				List selectedNodes = getTextWidgetSelectedNodes(selection.getOffset());
 				processSelectionChanged(event.getSource(), selectedNodes, selectionStart, selectionEnd);
-			} else {
+			}
+			else {
 				// option 2: works with all of the above plus Page Designer,
 				// but not as clean nor perfectly
 				// TODO: switch to option 1
@@ -624,7 +643,7 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager, Spell
 			fCaretMeditator.setTextWidget(null);
 		}
 		if (fTextViewer != null) {
-			//			fTextViewer.getSelectionProvider().removeSelectionChangedListener(this);
+			// fTextViewer.getSelectionProvider().removeSelectionChangedListener(this);
 			StyledText textWidget = fTextViewer.getTextWidget();
 			if (textWidget != null) {
 				// listen to text selections
@@ -635,13 +654,14 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager, Spell
 		fTextViewer = newTextViewer;
 
 		if (fTextViewer != null) {
-			//			fTextViewer.getSelectionProvider().addSelectionChangedListener(this);
+			// fTextViewer.getSelectionProvider().addSelectionChangedListener(this);
 			StyledText textWidget = fTextViewer.getTextWidget();
 			if (textWidget != null) {
 				// create new caret mediator, if it doesn't exist yet
 				if (fCaretMeditator == null) {
 					fCaretMeditator = new CaretMediator(textWidget);
-				} else {
+				}
+				else {
 					fCaretMeditator.setTextWidget(textWidget);
 				}
 				// and register as a listener

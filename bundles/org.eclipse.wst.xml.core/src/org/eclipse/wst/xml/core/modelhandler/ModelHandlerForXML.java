@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.modelhandler;
 
-import org.eclipse.wst.sse.core.ModelLoader;
+import org.eclipse.wst.sse.core.IModelLoader;
 import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.modelhandler.AbstractModelHandler;
@@ -52,7 +52,7 @@ public class ModelHandlerForXML extends AbstractModelHandler implements IModelHa
 		return new XMLDocumentCharsetDetector();
 	}
 
-	public ModelLoader getModelLoader() {
+	public IModelLoader getModelLoader() {
 		return new XMLModelLoader();
 	}
 

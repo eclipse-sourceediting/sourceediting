@@ -13,7 +13,7 @@ package org.eclipse.jst.jsp.core.internal.document;
 import org.eclipse.wst.sse.core.AdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.sse.core.PropagatingAdapterFactory;
+import org.eclipse.wst.sse.core.internal.PropagatingAdapterFactory;
 import org.eclipse.wst.xml.core.document.XMLElement;
 import org.eclipse.wst.xml.core.internal.propagate.PropagatingAdapterFactoryImpl;
 import org.w3c.dom.Node;

@@ -19,7 +19,6 @@ import java.util.ResourceBundle;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.builder.StructuredDocumentBuilder;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
@@ -29,35 +28,10 @@ import org.osgi.framework.BundleContext;
 
 
 /**
- * This model manager plugin helper is used to return the model manager
- * desired to be used for creating a new model manager, for managing (add or
- * remove) model loaders and model dumpers, and for managing (get, release,
- * save, and save as) models. Here is an example on on how to use it. Under
- * the subdirectory named after your package which contains your
- * implementation of the model manager (e.g. "org.eclipse.wst.sse.core") in
- * the "project_resources\plugins" directory, create a "plugin.xml" file. In
- * this file ("projectproject_resources\plugins\com.ibm.sed.model\plugin.xml")
- * enter: <?xml version="1.0"?> <plugin name="IBM Web Tooling Model Manager
- * Plugin" id="org.eclipse.wst.sse.core" version="1.0" vendor-name="RTP"
- * class="org.eclipse.wst.sse.core.ModelManagerPlugin"> <!-- The XML package:
- * com.ibm.etools.b2bxmlrt, is required before the others to give precedence
- * to DOM2 APIs, instead of the DOM1 (used by others, such as the desktop
- * ("com.ibm.eclipse.*")) --> <requires><import
- * plugin="com.ibm.etools.b2bxmlrt" export="true"/> <import
- * plugin="org.eclipse.wst.sse.core.internal.contentmodel" export="true"/> </requires>
- * <runtime><library name="runtime/sedmodel.jar"> <export name="*"/>
- * </library> </runtime> </plugin> to tell the workbench the model manager
- * plugin ID and where to find this model manager plugin class. Then in the
- * getModelManager method of this model manager plugin class, create and
- * return the model manager desired to be used. In the client code that
- * requests the model manager, the following code should be used to access the
- * model manager 
- * // get the model manager from the StructuredModelManager
- * StructuredModelManager.getModelManager();
+ * SSE Core Plugin.
  */
-public class SSECorePlugin extends Plugin implements IModelManagerPlugin {
+public class SSECorePlugin extends Plugin {
 	static SSECorePlugin instance = null;
-	//Resource bundle.
 	private ResourceBundle resourceBundle;
 	private static final String KEY_PREFIX = "%"; //$NON-NLS-1$
 	private static final String KEY_DOUBLE_PREFIX = "%%"; //$NON-NLS-1$	
@@ -65,7 +39,7 @@ public class SSECorePlugin extends Plugin implements IModelManagerPlugin {
 	private static final String OFF = "off"; //$NON-NLS-1$
 	public static final String STRUCTURED_BUILDER = "org.eclipse.wst.sse.core.structuredbuilder"; //$NON-NLS-1$
 	public static final String ID = "org.eclipse.wst.sse.core"; //$NON-NLS-1$
-	
+
 	public static SSECorePlugin getDefault() {
 		return instance;
 	}
@@ -104,31 +78,36 @@ public class SSECorePlugin extends Plugin implements IModelManagerPlugin {
 		prefs.setDefault(CommonModelPreferenceNames.TASK_TAG_ENABLE, false);
 		prefs.setDefault(CommonModelPreferenceNames.TASK_TAG_TAGS, "TODO,FIXME,XXX"); //$NON-NLS-1$
 		prefs.setDefault(CommonModelPreferenceNames.TASK_TAG_PRIORITIES, "1,2,1"); //$NON-NLS-1$
-		
+
 		initializeDefaultPluginPreferencesForEncoding(prefs);
-		
+
 	}
+
 	private void initializeDefaultPluginPreferencesForEncoding(Preferences prefs) {
 		prefs.setDefault(CommonEncodingPreferenceNames.USE_3BYTE_BOM_WITH_UTF8, false);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
 	 */
 	public void stop(BundleContext context) throws Exception {
 		savePluginPreferences();
 		StructuredDocumentBuilder.shutdown();
 		FileBufferModelManager.shutdown();
-		
+
 		super.stop(context);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.core.runtime.Plugin#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		
+
 		String build = System.getProperty(STRUCTURED_BUILDER);
 		if (build == null || !build.equalsIgnoreCase(OFF)) {
 			StructuredDocumentBuilder.startup();
@@ -152,8 +131,8 @@ public class SSECorePlugin extends Plugin implements IModelManagerPlugin {
 	}
 
 	/**
-	 * Returns the string from the plugin's resource bundle,
-	 * or 'key' if not found.
+	 * Returns the string from the plugin's resource bundle, or 'key' if not
+	 * found.
 	 */
 	public static String getResourceString(String value) {
 		String s = value.trim();
@@ -168,7 +147,8 @@ public class SSECorePlugin extends Plugin implements IModelManagerPlugin {
 		ResourceBundle bundle = getDefault().getResourceBundle();
 		try {
 			return (bundle != null) ? bundle.getString(key.substring(1)) : key;
-		} catch (MissingResourceException e) {
+		}
+		catch (MissingResourceException e) {
 			return key;
 		}
 	}
@@ -177,7 +157,8 @@ public class SSECorePlugin extends Plugin implements IModelManagerPlugin {
 
 		try {
 			return MessageFormat.format(getResourceString(key), args);
-		} catch (IllegalArgumentException e) {
+		}
+		catch (IllegalArgumentException e) {
 			return getResourceString(key);
 		}
 
@@ -190,7 +171,8 @@ public class SSECorePlugin extends Plugin implements IModelManagerPlugin {
 		try {
 			if (resourceBundle == null)
 				resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.sse.core.internal.SSECorePluginResources");
-		} catch (MissingResourceException x) {
+		}
+		catch (MissingResourceException x) {
 			resourceBundle = null;
 		}
 		return resourceBundle;

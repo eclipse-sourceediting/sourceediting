@@ -15,7 +15,7 @@ import org.eclipse.wst.css.core.internal.document.CSSModelImpl;
 import org.eclipse.wst.css.core.internal.encoding.CSSDocumentLoader;
 import org.eclipse.wst.sse.core.AbstractModelLoader;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.ModelLoader;
+import org.eclipse.wst.sse.core.IModelLoader;
 import org.eclipse.wst.sse.core.document.IDocumentLoader;
 
 
@@ -31,7 +31,7 @@ public class CSSModelLoader extends AbstractModelLoader {
 	}
 
 	/*
-	 * @see ModelLoader#newModel()
+	 * @see IModelLoader#newModel()
 	 */
 	public IStructuredModel newModel() {
 		IStructuredModel model = new CSSModelImpl();
@@ -41,7 +41,7 @@ public class CSSModelLoader extends AbstractModelLoader {
 		return model;
 	}
 
-	public ModelLoader newInstance() {
+	public IModelLoader newInstance() {
 		return new CSSModelLoader();
 	}
 

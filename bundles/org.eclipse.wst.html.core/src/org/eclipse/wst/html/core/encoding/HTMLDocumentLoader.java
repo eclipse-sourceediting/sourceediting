@@ -25,12 +25,12 @@ import org.eclipse.wst.html.core.modelquery.ModelQueryAdapterFactoryForHTML;
 import org.eclipse.wst.sse.core.AdapterFactory;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.PropagatingAdapter;
 import org.eclipse.wst.sse.core.document.AbstractDocumentLoader;
 import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.document.IEncodedDocument;
 import org.eclipse.wst.sse.core.document.StructuredDocumentFactory;
+import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
 import org.eclipse.wst.sse.core.internal.encoding.ContentTypeEncodingPreferences;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 import org.eclipse.wst.sse.core.parser.BlockMarker;
@@ -88,7 +88,7 @@ public class HTMLDocumentLoader extends AbstractDocumentLoader {
 	}
 
 	/*
-	 * @see ModelLoader#getParser()
+	 * @see IModelLoader#getParser()
 	 */
 	public RegionParser getParser() {
 		XMLSourceParser parser = new XMLSourceParser();

@@ -34,10 +34,10 @@ import org.eclipse.wst.sse.core.AbstractModelLoader;
 import org.eclipse.wst.sse.core.AdapterFactory;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.ModelLoader;
-import org.eclipse.wst.sse.core.PropagatingAdapter;
+import org.eclipse.wst.sse.core.IModelLoader;
 import org.eclipse.wst.sse.core.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.document.StructuredDocumentFactory;
+import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
 import org.eclipse.wst.sse.core.internal.modelhandler.EmbeddedTypeRegistry;
 import org.eclipse.wst.sse.core.internal.modelhandler.EmbeddedTypeRegistryImpl;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
@@ -523,7 +523,7 @@ public class JSPModelLoader extends AbstractModelLoader {
 		return super.reinitialize(model);
 	}
 
-	public ModelLoader newInstance() {
+	public IModelLoader newInstance() {
 		return new JSPModelLoader();
 	}
 

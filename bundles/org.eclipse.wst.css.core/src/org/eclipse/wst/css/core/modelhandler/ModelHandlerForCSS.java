@@ -12,7 +12,7 @@ package org.eclipse.wst.css.core.modelhandler;
 
 import org.eclipse.wst.css.core.internal.encoding.CSSDocumentCharsetDetector;
 import org.eclipse.wst.css.core.internal.encoding.CSSDocumentLoader;
-import org.eclipse.wst.sse.core.ModelLoader;
+import org.eclipse.wst.sse.core.IModelLoader;
 import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.modelhandler.AbstractModelHandler;
@@ -49,7 +49,7 @@ public class ModelHandlerForCSS extends AbstractModelHandler implements IModelHa
 	/*
 	 * @see ContentTypeDescription#getModelLoader()
 	 */
-	public ModelLoader getModelLoader() {
+	public IModelLoader getModelLoader() {
 		return new CSSModelLoader();
 	}
 

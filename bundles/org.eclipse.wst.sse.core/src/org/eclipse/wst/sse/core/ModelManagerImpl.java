@@ -135,6 +135,7 @@ class ModelManagerImpl implements IModelManager {
 	}
 
 	private static final String IMODELMANAGER_TRACE_CATEGORY = "IModelManager"; //$NON-NLS-1$
+	private Exception debugException = null;
 
 	/**
 	 * Our singleton instance
@@ -161,6 +162,10 @@ class ModelManagerImpl implements IModelManager {
 	private int modelManagerStateChanging;
 	private final ReadEditType READ = new ReadEditType("read"); //$NON-NLS-1$
 
+	/**
+	 * Intentially default access only.
+	 * 
+	 */
 	ModelManagerImpl() {
 
 		super();
@@ -174,7 +179,7 @@ class ModelManagerImpl implements IModelManager {
 		if (sharedObject == null) {
 			try {
 				model = _commonCreateModel(id, handler, resolver);
-				ModelLoader loader = handler.getModelLoader();
+				IModelLoader loader = handler.getModelLoader();
 				loader.load(Utilities.getMarkSupportedStream(inputStream), model, encodingRule);
 			}
 			catch (ResourceInUse e) {
@@ -195,7 +200,12 @@ class ModelManagerImpl implements IModelManager {
 			_incrCount(sharedObject, rwType);
 		}
 		// we expect to always return something
-		Assert.isNotNull(sharedObject, "Program Error: no model recorded for id " + id); //$NON-NLS-1$
+		if (sharedObject == null) {
+			debugException = new Exception("instance only for stack trace");
+			Logger.logException("Program Error: no model recorded for id " + id, debugException);
+		}
+
+
 		// note: clients must call release for each time they call get.
 		return sharedObject.theSharedModel;
 	}
@@ -210,7 +220,7 @@ class ModelManagerImpl implements IModelManager {
 		if (sharedObject == null) {
 			try {
 				model = _commonCreateModel(id, handler, resolver);
-				ModelLoader loader = handler.getModelLoader();
+				IModelLoader loader = handler.getModelLoader();
 				if (inputStream == null) {
 					Logger.log(Logger.WARNING, "model was requested for id " + id + " without a content InputStream");
 				}
@@ -242,7 +252,7 @@ class ModelManagerImpl implements IModelManager {
 	private IStructuredModel _commonCreateModel(String id, IModelHandler handler, URIResolver resolver) throws ResourceInUse {
 
 		Assert.isNotNull(handler, "model handler can not be null"); //$NON-NLS-1$
-		ModelLoader loader = handler.getModelLoader();
+		IModelLoader loader = handler.getModelLoader();
 		IStructuredModel result = loader.createModel();
 		// in the past, id was null for "unmanaged" case, so we won't
 		// try and set it
@@ -443,7 +453,7 @@ class ModelManagerImpl implements IModelManager {
 	protected void addFactories(IStructuredModel model, IModelHandler handler) {
 		Assert.isNotNull(model, "model can not be null"); //$NON-NLS-1$
 		Assert.isNotNull(handler, "model handler can not be null"); //$NON-NLS-1$
-		IFactoryRegistry registry = model.getFactoryRegistry();
+		FactoryRegistry registry = model.getFactoryRegistry();
 		Assert.isNotNull(registry, "Factory Registry can not be null"); //$NON-NLS-1$
 		List factoryList = handler.getAdapterFactories();
 		addFactories(model, factoryList);
@@ -451,7 +461,7 @@ class ModelManagerImpl implements IModelManager {
 
 	protected void addFactories(IStructuredModel model, List factoryList) {
 		Assert.isNotNull(model, "model can not be null"); //$NON-NLS-1$
-		IFactoryRegistry registry = model.getFactoryRegistry();
+		FactoryRegistry registry = model.getFactoryRegistry();
 		Assert.isNotNull(registry, "Factory Registry can not be null"); //$NON-NLS-1$
 		// Note: we add all of them from handler, even if
 		// already exists. May need to reconsider this.
@@ -614,7 +624,7 @@ class ModelManagerImpl implements IModelManager {
 		IStructuredModel newModel = null;
 		IStructuredModel oldModel = model;
 		IModelHandler modelHandler = oldModel.getModelHandler();
-		ModelLoader loader = modelHandler.getModelLoader();
+		IModelLoader loader = modelHandler.getModelLoader();
 		// newModel = loader.newModel();
 		newModel = loader.createModel(oldModel);
 		// newId, oldModel.getResolver(), oldModel.getModelManager());
@@ -652,8 +662,8 @@ class ModelManagerImpl implements IModelManager {
 		// get loader based on existing type (note the type assumption)
 		// Object type = ((IStructuredModel) model).getType();
 		// IModelHandler type = model.getModelHandler();
-		// ModelLoader loader = (ModelLoader) getModelLoaders().get(type);
-		// ModelLoader loader = (ModelLoader) getModelLoaders().get(type);
+		// IModelLoader loader = (IModelLoader) getModelLoaders().get(type);
+		// IModelLoader loader = (IModelLoader) getModelLoaders().get(type);
 		// ask the loader to copy
 		newModel = copy(model, newId);
 		if (newModel != null) {
@@ -673,7 +683,7 @@ class ModelManagerImpl implements IModelManager {
 	 */
 	public synchronized IStructuredModel createNewInstance(IStructuredModel oldModel) throws IOException {
 		IModelHandler handler = oldModel.getModelHandler();
-		ModelLoader loader = handler.getModelLoader();
+		IModelLoader loader = handler.getModelLoader();
 		IStructuredModel newModel = loader.createModel(oldModel);
 		newModel.setModelHandler(handler);
 		if (newModel instanceof AbstractStructuredModel) {
@@ -1492,7 +1502,7 @@ class ModelManagerImpl implements IModelManager {
 		// getHandler (assume its the "new one")
 		IModelHandler handler = model.getModelHandler();
 		// getLoader for that new one
-		ModelLoader loader = handler.getModelLoader();
+		IModelLoader loader = handler.getModelLoader();
 		// ask it to reinitialize
 		model = loader.reinitialize(model);
 		// the loader should check to see if the one it received
@@ -1567,7 +1577,7 @@ class ModelManagerImpl implements IModelManager {
 			// dmwTODO evaluate when reload should occur
 			// with potentially new type (e.g. html 'save as' jsp).
 			IModelHandler handler = structuredModel.getModelHandler();
-			ModelLoader loader = handler.getModelLoader();
+			IModelLoader loader = handler.getModelLoader();
 			// ask the loader to re-load
 			loader.reload(Utilities.getMarkSupportedStream(inputStream), structuredModel);
 			trace("re-loading model", id); //$NON-NLS-1$

@@ -14,7 +14,7 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.wst.html.core.modelhandler.ModelHandlerForHTML;
 import org.eclipse.wst.html.ui.views.contentoutline.JFaceNodeAdapterFactoryForHTML;
 import org.eclipse.wst.sse.core.AdapterFactory;
-import org.eclipse.wst.sse.core.IFactoryRegistry;
+import org.eclipse.wst.sse.core.FactoryRegistry;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.modelhandler.IDocumentTypeHandler;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
@@ -45,7 +45,7 @@ public class AdapterFactoryProviderForHTML implements AdapterFactoryProvider {
 
 	protected void addContentBasedFactories(IStructuredModel structuredModel) {
 
-		IFactoryRegistry factoryRegistry = structuredModel.getFactoryRegistry();
+		FactoryRegistry factoryRegistry = structuredModel.getFactoryRegistry();
 		Assert.isNotNull(factoryRegistry, "Program Error: client caller must ensure model has factory registry"); //$NON-NLS-1$
 		AdapterFactory factory = null;
 		// == this list came from the previous "HTML only" list

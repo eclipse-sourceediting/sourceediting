@@ -12,7 +12,12 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core;
 
-
+/**
+ * This interface allows nodes to be adapted.
+ * 
+ * The main difference between this type of adapter and base adapter is that
+ * these adapters are notified of changes.
+ */
 
 public interface INodeAdapter {
 
@@ -23,6 +28,7 @@ public interface INodeAdapter {
 	boolean isAdapterForType(Object type);
 
 	/**
+	 * sent to adapter when notifier changes
 	 */
 	void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos);
 }

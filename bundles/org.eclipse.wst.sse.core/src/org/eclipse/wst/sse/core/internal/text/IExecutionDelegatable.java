@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.text;
 
-import org.eclipse.wst.sse.core.document.IExecutionDelegate;
+import org.eclipse.wst.sse.core.internal.IExecutionDelegate;
 
 public interface IExecutionDelegatable {
 

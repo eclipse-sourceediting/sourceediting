@@ -16,7 +16,7 @@ import org.eclipse.jst.jsp.core.encoding.JSPDocumentLoader;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
-import org.eclipse.wst.sse.core.ModelLoader;
+import org.eclipse.wst.sse.core.IModelLoader;
 import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.modelhandler.AbstractModelHandler;
@@ -52,7 +52,7 @@ public class ModelHandlerForJSP extends AbstractModelHandler {
 		parser.addBlockMarker(bm);
 	}
 
-	public ModelLoader getModelLoader() {
+	public IModelLoader getModelLoader() {
 		return new JSPModelLoader();
 	}
 

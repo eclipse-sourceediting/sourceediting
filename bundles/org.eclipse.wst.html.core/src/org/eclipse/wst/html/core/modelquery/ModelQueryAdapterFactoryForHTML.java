@@ -162,4 +162,14 @@ public class ModelQueryAdapterFactoryForHTML extends AbstractAdapterFactory impl
 
 		return new ModelQueryAdapterFactoryForHTML(this.adapterKey, this.shouldRegisterAdapter);
 	}
+
+	public void modelAboutToBeReinitialized(IStructuredModel structuredModel) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void modelReinitialized(IStructuredModel structuredModel) {
+		// TODO Auto-generated method stub
+		
+	}
 }

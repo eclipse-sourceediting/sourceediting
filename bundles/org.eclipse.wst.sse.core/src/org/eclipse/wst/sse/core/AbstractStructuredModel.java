@@ -24,7 +24,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.ILock;
-import org.eclipse.wst.sse.core.document.ILockable;
 import org.eclipse.wst.sse.core.events.AboutToBeChangeEvent;
 import org.eclipse.wst.sse.core.events.IModelAboutToBeChangedListener;
 import org.eclipse.wst.sse.core.events.IStructuredDocumentListener;
@@ -35,6 +34,7 @@ import org.eclipse.wst.sse.core.events.RegionsReplacedEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentRegionsReplacedEvent;
 import org.eclipse.wst.sse.core.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
+import org.eclipse.wst.sse.core.internal.ILockable;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingRule;
@@ -174,7 +174,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	static final String DEBUG_STATE_TRACE_CATEGORY = "org.eclipse.wst.sse.core/structuredmodel/state";
 	static final boolean DEBUG_STATE = "true".equalsIgnoreCase(Platform.getDebugOption(DEBUG_STATE_TRACE_CATEGORY));
 
-	private IFactoryRegistry factoryRegistry;
+	private FactoryRegistry factoryRegistry;
 	private String fBaseLocation;
 	boolean fDirtyState;
 	DirtyStateWatcher fDirtyStateWatcher;
@@ -186,8 +186,8 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 
 	private final Object fListenerLock = new byte[0];
 	private ILock fLockObject;
-	//	private String fLineDelimiter;
-	//	private Object fType;
+	// private String fLineDelimiter;
+	// private Object fType;
 	private IModelHandler fModelHandler;
 	private IModelManager fModelManager;
 	private int fModelStateChanging;
@@ -315,7 +315,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	private void beginLock() {
 		fLockObject = getLockObject();
@@ -463,7 +463,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	 * endLock is protected only for a very special purpose. So subclasses can
 	 * call it to end the lock after updates have been made, but before
 	 * notifications are sent
-	 *  
+	 * 
 	 */
 	protected final void endLock() {
 		if (fLockObject != null) {
@@ -526,10 +526,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 				// as modelState, but only send this to those that have
 				// implemented ModelStateExtended.
 				IModelStateListener listener = (IModelStateListener) holdListeners[i];
-				if (listener instanceof IModelStateListenerExtended) {
-					IModelStateListenerExtended extendedListner = (IModelStateListenerExtended) listener;
-					extendedListner.modelAboutToBeReinitialized(this);
-				}
+				listener.modelAboutToBeReinitialized(this);
 			}
 		}
 	}
@@ -596,15 +593,8 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 			}
 			Object[] holdListeners = fModelStateListeners;
 			for (int i = 0; i < holdListeners.length; i++) {
-				// NOTE: trick for transition. We actual use the same
-				// listeners
-				// as modelState, but only send this to those that have
-				// implemented ModelStateExtended.
 				IModelStateListener listener = (IModelStateListener) holdListeners[i];
-				if (listener instanceof IModelStateListenerExtended) {
-					IModelStateListenerExtended extendedListner = (IModelStateListenerExtended) listener;
-					extendedListner.modelReinitialized(this);
-				}
+				listener.modelReinitialized(this);
 			}
 		}
 	}
@@ -677,9 +667,9 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
-	public IFactoryRegistry getFactoryRegistry() {
+	public FactoryRegistry getFactoryRegistry() {
 		if (factoryRegistry == null) {
 			factoryRegistry = new FactoryRegistry();
 		}
@@ -715,25 +705,6 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		return result;
 	}
 
-
-	/**
-	 * This method returns a mememto that can later be used to restore the
-	 * state at this point. A model's state, in this sense, does not relate to
-	 * its content, or Ids, etc., just its dirty state, and its
-	 * synchronization state with its underlying resource. The 'resource'
-	 * argument must be the resource that underlies the instance of the model
-	 * this method is sent to. Note: this parameter will not be required in
-	 * future versions of 'strucutured model'.
-	 */
-	public IStateMemento getMemento(IResource resource) {
-
-		ModelStateMemento memento = new ModelStateMemento();
-		memento.setUnderlyingResource(resource);
-		memento.setDirtyState(isDirty());
-		long modDate = computeModificationStamp(resource);
-		memento.setDatesInSync(fSynchronizationStamp == modDate);
-		return memento;
-	}
 
 	/**
 	 * Gets the contentTypeDescription.
@@ -832,7 +803,8 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		IStructuredDocument structuredDocument = getStructuredDocument();
 		if (structuredDocument == null) {
 			structuredTextUndoManager = null;
-		} else {
+		}
+		else {
 			structuredTextUndoManager = structuredDocument.getUndoManager();
 		}
 		return structuredTextUndoManager;
@@ -1010,13 +982,15 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 				aboutToChangeModel();
 				aboutToReinitializeModel();
 				result = _getModelManager().reinitialize(this);
-			} finally {
+			}
+			finally {
 				setReinitializeNeeded(false);
 				setReinitializeStateData(null);
 				modelReinitialized();
 				changedModel();
 			}
-		} else {
+		}
+		else {
 			System.out.println("indeed!!!"); //$NON-NLS-1$
 		}
 		return result;
@@ -1032,7 +1006,8 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 
 		if (getModelManager() == null) {
 			throw new SourceEditingRuntimeException("Warning: AbstractStructuredModel::close:  model manager was null during a close of a model (which should be impossible)"); //$NON-NLS-1$
-		} else {
+		}
+		else {
 			// be sure to check the shared state before releasing. (Since
 			// isShared assumes a count
 			// of 1 means not shared ... and we want our '1' to be that
@@ -1062,7 +1037,8 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 
 		if (getModelManager() == null) {
 			throw new SourceEditingRuntimeException("Warning: AbstractStructuredModel::close:  model manager was null during a close of a model (which should be impossible)"); //$NON-NLS-1$
-		} else {
+		}
+		else {
 			// be sure to check the shared state before
 			// releasing. (Since isShared assumes a count
 			// of 1 means not shared ... and we want
@@ -1096,14 +1072,16 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		try {
 			aboutToChangeModel();
 			result = _getModelManager().reloadModel(getId(), inputStream);
-		} catch (UnsupportedEncodingException e) {
+		}
+		catch (UnsupportedEncodingException e) {
 			// its a very serious error to get an unsupported encoding
 			// exception,
 			// since we've presumable loaded it once already, so won't
 			// bother
 			// with a checked exception.
 			throw new SourceEditingRuntimeException(e);
-		} finally {
+		}
+		finally {
 			changedModel();
 		}
 		return result;
@@ -1136,7 +1114,8 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 				int index = 0;
 				for (int i = 0; i < oldSize; i++) {
 					if (fModelStateListeners[i] == listener) { // ignore
-					} else {
+					}
+					else {
 						// copy old to new if its not the one we are
 						// removing
 						newListeners[index++] = fModelStateListeners[i];
@@ -1192,19 +1171,6 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	}
 
 
-	public void restoreState(IStateMemento memento) {
-
-
-		ModelStateMemento mMemento = (ModelStateMemento) memento;
-		// be sure to use setter, so side effects take place.
-		setDirtyState(mMemento.isDirtyState());
-		if (mMemento.isDatesInSync()) {
-			IResource resource = mMemento.getUnderlyingResource();
-			setSynchronizationStamp(computeModificationStamp(resource));
-		}
-	}
-
-
 	public void save() throws UnsupportedEncodingException, IOException, CoreException {
 
 		int type = ModelLifecycleEvent.MODEL_SAVED | ModelLifecycleEvent.PRE_EVENT;
@@ -1237,7 +1203,8 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		try {
 			String stringId = getId();
 			_getModelManager().saveModel(stringId, encodingRule);
-		} finally {
+		}
+		finally {
 			// we put end notificatin in finally block, so even if
 			// error occurs during save, listeners are still notified,
 			// since their code could depend on receiving, to clean up
@@ -1281,7 +1248,8 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		try {
 			String stringId = getId();
 			_getModelManager().saveModel(iFile, stringId, encodingRule);
-		} finally {
+		}
+		finally {
 			// we put end notificatin in finally block, so even if
 			// error occurs during save, listeners are still notified,
 			// since their code could depend on receiving, to clean up
@@ -1330,7 +1298,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	public void setDirtyState(boolean dirtyState) {
 
@@ -1367,7 +1335,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	 * @deprecated - will likely be deprecated soon, in favor of direct 'adds'
 	 *             ... but takes some redesign.
 	 */
-	public void setFactoryRegistry(IFactoryRegistry factoryRegistry) {
+	public void setFactoryRegistry(FactoryRegistry factoryRegistry) {
 		this.factoryRegistry = factoryRegistry;
 	}
 
@@ -1427,7 +1395,8 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 					getModelManager().moveModel(oldId, newId);
 				}
 			}
-		} finally {
+		}
+		finally {
 			// make sure this finally is only executed if 'about to Change
 			// model' has
 			// ben executed.
@@ -1471,7 +1440,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	public void setNewState(boolean newState) {
 

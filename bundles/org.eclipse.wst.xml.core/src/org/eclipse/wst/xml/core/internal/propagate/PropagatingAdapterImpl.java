@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.eclipse.wst.sse.core.AdapterFactory;
 import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.sse.core.PropagatingAdapter;
+import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;

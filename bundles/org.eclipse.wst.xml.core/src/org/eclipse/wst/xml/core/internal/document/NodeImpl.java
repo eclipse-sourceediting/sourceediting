@@ -15,7 +15,7 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 import org.eclipse.wst.sse.core.AbstractNotifier;
-import org.eclipse.wst.sse.core.IFactoryRegistry;
+import org.eclipse.wst.sse.core.FactoryRegistry;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
@@ -226,10 +226,10 @@ public abstract class NodeImpl extends AbstractNotifier implements XMLNode {
 
 	/**
 	 */
-	public IFactoryRegistry getFactoryRegistry() {
+	public FactoryRegistry getFactoryRegistry() {
 		XMLModel model = getModel();
 		if (model != null) {
-			IFactoryRegistry reg = model.getFactoryRegistry();
+			FactoryRegistry reg = model.getFactoryRegistry();
 			if (reg != null)
 				return reg;
 		}

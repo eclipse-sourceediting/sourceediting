@@ -142,6 +142,12 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 
 		public void modelResourceMoved(IStructuredModel originalmodel, IStructuredModel movedmodel) {
 		}
+
+		public void modelAboutToBeReinitialized(IStructuredModel structuredModel) {
+		}
+
+		public void modelReinitialized(IStructuredModel structuredModel) {
+		}
 	}
 
 	class NodeActionMenuListener implements IMenuListener {

@@ -10,17 +10,11 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core;
 
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
+package org.eclipse.wst.sse.core.internal;
 
-/**
- * @author nsd
- */
-public interface IModelLoaderExtension {
-	/**
-	 * Create a Structured Model with the given StructuredDocument instance as
-	 * its document (instead of a new document instance as well)
-	 */
-	IStructuredModel createModel(IStructuredDocument document, String baseLocation);
+
+public interface IExecutionDelegate {
+
+	void execute(Runnable runnable);
 }

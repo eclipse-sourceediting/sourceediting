@@ -19,9 +19,9 @@ import org.eclipse.wst.sse.core.AbstractModelLoader;
 import org.eclipse.wst.sse.core.AdapterFactory;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.ModelLoader;
-import org.eclipse.wst.sse.core.PropagatingAdapter;
+import org.eclipse.wst.sse.core.IModelLoader;
 import org.eclipse.wst.sse.core.document.IDocumentLoader;
+import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.encoding.XMLDocumentLoader;
@@ -64,7 +64,7 @@ public class XMLModelLoader extends AbstractModelLoader {
 		return documentLoaderInstance;
 	}
 
-	public ModelLoader newInstance() {
+	public IModelLoader newInstance() {
 		return new XMLModelLoader();
 	}
 

@@ -20,7 +20,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.dtd.core.internal.document.DTDModelImpl;
 import org.eclipse.wst.dtd.core.internal.parser.DTDRegionTypes;
 import org.eclipse.wst.dtd.core.internal.text.RegionIterator;
-import org.eclipse.wst.sse.core.IFactoryRegistry;
+import org.eclipse.wst.sse.core.FactoryRegistry;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.text.TextRegionListImpl;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -152,10 +152,10 @@ public abstract class DTDNode extends NodeContainer implements IndexedRegion {
 
 	/**
 	 */
-	public IFactoryRegistry getFactoryRegistry() {
+	public FactoryRegistry getFactoryRegistry() {
 		DTDModelImpl model = dtdFile.getDTDModel();
 		if (model != null) {
-			IFactoryRegistry reg = model.getFactoryRegistry();
+			FactoryRegistry reg = model.getFactoryRegistry();
 			if (reg != null)
 				return reg;
 		}

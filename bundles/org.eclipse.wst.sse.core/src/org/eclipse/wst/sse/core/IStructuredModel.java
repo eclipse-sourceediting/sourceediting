@@ -148,9 +148,9 @@ public interface IStructuredModel extends IAdaptable {
 
 	/**
 	 * 
-	 * @return The model's IFactoryRegistry. A model is not valid without one.
+	 * @return The model's FactoryRegistry. A model is not valid without one.
 	 */
-	IFactoryRegistry getFactoryRegistry();
+	FactoryRegistry getFactoryRegistry();
 
 	/**
 	 * The id is the id that the model manager uses to identify this model
@@ -161,18 +161,6 @@ public interface IStructuredModel extends IAdaptable {
 	 *  
 	 */
 	IndexedRegion getIndexedRegion(int offset);
-
-	/**
-	 * This method returns a mememto that can later be used to restore the
-	 * state at this point. A model's state, in this sense, does not relate to
-	 * its content, or Ids, etc., just its dirty state, and its
-	 * synchronization state with its underlying resource.
-	 * 
-	 * The 'resource' argument must be the resource that underlies the
-	 * instance of the model this method is sent to. Note: this parameter will
-	 * not be required in future versions of 'strucutured model'.
-	 */
-	IStateMemento getMemento(IResource resource);
 
 	/**
 	 * ContentTypeDescription provides an object that describes what the
@@ -340,8 +328,6 @@ public interface IStructuredModel extends IAdaptable {
 
 	void resourceMoved(IStructuredModel newModel);
 
-	void restoreState(IStateMemento memento);
-
 	void save() throws UnsupportedEncodingException, IOException, CoreException;
 
 	void save(EncodingRule encodingRule) throws UnsupportedEncodingException, IOException, CoreException;
@@ -356,7 +342,7 @@ public interface IStructuredModel extends IAdaptable {
 
 	public void setDirtyState(boolean dirtyState);
 
-	void setFactoryRegistry(IFactoryRegistry registry);
+	void setFactoryRegistry(FactoryRegistry registry);
 
 	/**
 	 * The id is the id that the model manager uses to identify this model

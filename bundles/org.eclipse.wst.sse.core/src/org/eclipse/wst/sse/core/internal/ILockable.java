@@ -11,7 +11,7 @@
  *     
  *******************************************************************************/
 
-package org.eclipse.wst.sse.core.document;
+package org.eclipse.wst.sse.core.internal;
 
 import org.eclipse.core.runtime.jobs.ILock;
 

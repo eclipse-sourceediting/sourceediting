@@ -6,7 +6,7 @@ import org.eclipse.jface.text.source.projection.IProjectionListener;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.wst.css.core.document.ICSSDocument;
 import org.eclipse.wst.css.core.document.ICSSModel;
-import org.eclipse.wst.sse.core.IFactoryRegistry;
+import org.eclipse.wst.sse.core.FactoryRegistry;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -70,7 +70,7 @@ public class StructuredTextFoldingProviderCSS implements IStructuredTextFoldingP
 		try {
 			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
 			if (sModel != null) {
-				IFactoryRegistry factoryRegistry = sModel.getFactoryRegistry();
+				FactoryRegistry factoryRegistry = sModel.getFactoryRegistry();
 
 				// getting the projectionmodelnodeadapter for the first time
 				// so do some initializing

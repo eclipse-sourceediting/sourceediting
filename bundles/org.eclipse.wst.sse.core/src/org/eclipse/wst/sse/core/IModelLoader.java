@@ -19,14 +19,15 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingRule;
+import org.eclipse.wst.sse.core.text.IStructuredDocument;
 
 
 /**
  * Responsible for creating a new Model from a resource, or as a new, empty
  * instance.
- *  
+ * 
  */
-public interface ModelLoader {
+public interface IModelLoader {
 	/**
 	 * This method should perform all the model initialization required before
 	 * it contains content, namely, it should call newModel, the
@@ -57,7 +58,7 @@ public interface ModelLoader {
 
 	void load(String filename, InputStream inputStream, IStructuredModel model, String encodingName, String lineDelimiter) throws IOException;
 
-	ModelLoader newInstance();
+	IModelLoader newInstance();
 
 	/**
 	 * This method should always return an new, empty Structured Model
@@ -77,5 +78,11 @@ public interface ModelLoader {
 	 * should revert to the original unsaved version.
 	 */
 	void reload(InputStream inputStream, IStructuredModel model);
+
+	/**
+	 * Create a Structured Model with the given StructuredDocument instance as
+	 * its document (instead of a new document instance as well)
+	 */
+	IStructuredModel createModel(IStructuredDocument document, String baseLocation);
 
 }

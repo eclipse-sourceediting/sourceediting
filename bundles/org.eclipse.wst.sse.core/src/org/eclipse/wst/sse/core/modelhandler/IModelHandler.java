@@ -14,7 +14,7 @@ package org.eclipse.wst.sse.core.modelhandler;
 
 import java.util.List;
 
-import org.eclipse.wst.sse.core.ModelLoader;
+import org.eclipse.wst.sse.core.IModelLoader;
 
 
 public interface IModelHandler extends IDocumentTypeHandler {
@@ -37,7 +37,7 @@ public interface IModelHandler extends IDocumentTypeHandler {
 	/**
 	 * The Loader is reponsible for decoding the Resource,
 	 */
-	ModelLoader getModelLoader();
+	IModelLoader getModelLoader();
 
 	boolean isDefault();
 }

@@ -156,4 +156,14 @@ public class ModelQueryAdapterFactoryForJSP extends AbstractAdapterFactory imple
 		modelQueryAdapterImpl.setIdResolver(new XMLCatalogIdResolver(baseLocation, model.getResolver()));
 	}
 
+	public void modelAboutToBeReinitialized(IStructuredModel structuredModel) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void modelReinitialized(IStructuredModel structuredModel) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -111,6 +111,16 @@ public class EveryNodeDebugAdapter implements IDebugAdapter {
 			Debug.println("modelResourceMoved: " + "oldModel: " + oldModel + "newModel: " + newModel); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 
+		public void modelAboutToBeReinitialized(IStructuredModel structuredModel) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		public void modelReinitialized(IStructuredModel structuredModel) {
+			// TODO Auto-generated method stub
+			
+		}
+
 	}
 
 	static class InternalStructuredDocumentAboutToChange implements IModelAboutToBeChangedListener {

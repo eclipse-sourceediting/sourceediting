@@ -84,7 +84,7 @@ public abstract class AbstractNotifier implements INodeNotifier {
 		// if we didn't find one in our list already,
 		// let's create it
 		if (result == null) {
-			IFactoryRegistry reg = getFactoryRegistry();
+			FactoryRegistry reg = getFactoryRegistry();
 			if (reg != null) {
 				AdapterFactory factory = reg.getFactoryFor(type);
 				if (factory != null) {
@@ -162,7 +162,7 @@ public abstract class AbstractNotifier implements INodeNotifier {
 		return result;
 	}
 
-	abstract public IFactoryRegistry getFactoryRegistry();
+	abstract public FactoryRegistry getFactoryRegistry();
 
 	public void notify(int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
 

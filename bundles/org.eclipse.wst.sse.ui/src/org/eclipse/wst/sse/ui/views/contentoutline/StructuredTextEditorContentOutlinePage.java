@@ -53,7 +53,7 @@ import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
-import org.eclipse.wst.sse.core.IFactoryRegistry;
+import org.eclipse.wst.sse.core.FactoryRegistry;
 import org.eclipse.wst.sse.core.IModelStateListener;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.ui.ViewerSelectionManager;
@@ -106,6 +106,12 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 				 */
 				Display.getDefault().asyncExec(modifyRedraw);
 			}
+		}
+
+		public void modelAboutToBeReinitialized(IStructuredModel structuredModel) {
+		}
+
+		public void modelReinitialized(IStructuredModel structuredModel) {
 		}
 	}
 
@@ -274,7 +280,7 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 	protected IJFaceNodeAdapterFactory getViewerRefreshFactory() {
 		if (getModel() == null)
 			return null;
-		IFactoryRegistry factoryRegistry = getModel().getFactoryRegistry();
+		FactoryRegistry factoryRegistry = getModel().getFactoryRegistry();
 		IJFaceNodeAdapterFactory adapterFactory = (IJFaceNodeAdapterFactory) factoryRegistry.getFactoryFor(IJFaceNodeAdapter.class);
 		return adapterFactory;
 	}

@@ -18,7 +18,7 @@ import org.eclipse.wst.sse.core.AbstractAdapterFactory;
 import org.eclipse.wst.sse.core.AdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.sse.core.PropagatingAdapterFactory;
+import org.eclipse.wst.sse.core.internal.PropagatingAdapterFactory;
 
 
 public class DebugAdapterFactory extends AbstractAdapterFactory implements PropagatingAdapterFactory {

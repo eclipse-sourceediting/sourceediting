@@ -14,7 +14,7 @@ package org.eclipse.wst.sse.core.modelhandler;
 
 import java.util.List;
 
-import org.eclipse.wst.sse.core.IFactoryRegistry;
+import org.eclipse.wst.sse.core.FactoryRegistry;
 import org.eclipse.wst.sse.core.parser.JSPCapableParser;
 
 
@@ -46,7 +46,7 @@ public interface EmbeddedTypeHandler {
 	 * This method is to give the EmbeddedContentType an opportunity to add
 	 * factories directly to the IStructuredModel's AdapterFactory registry.
 	 */
-	void initializeFactoryRegistry(IFactoryRegistry registry);
+	void initializeFactoryRegistry(FactoryRegistry registry);
 
 	/**
 	 * initializeParser Its purpose is to setBlockTags
@@ -57,7 +57,7 @@ public interface EmbeddedTypeHandler {
 
 	public EmbeddedTypeHandler newInstance();
 
-	void uninitializeFactoryRegistry(IFactoryRegistry registry);
+	void uninitializeFactoryRegistry(FactoryRegistry registry);
 
 	void uninitializeParser(JSPCapableParser parser);
 }

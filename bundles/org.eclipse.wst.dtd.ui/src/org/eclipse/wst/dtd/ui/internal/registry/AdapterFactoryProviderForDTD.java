@@ -13,7 +13,7 @@
 package org.eclipse.wst.dtd.ui.internal.registry;
 
 import org.eclipse.wst.dtd.core.internal.modelhandler.ModelHandlerForDTD;
-import org.eclipse.wst.sse.core.IFactoryRegistry;
+import org.eclipse.wst.sse.core.FactoryRegistry;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.modelhandler.IDocumentTypeHandler;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
@@ -39,7 +39,7 @@ public class AdapterFactoryProviderForDTD implements AdapterFactoryProvider {
 	 * @see AdapterFactoryProvider#addAdapterFactories(IStructuredModel)
 	 */
 	public void addAdapterFactories(IStructuredModel structuredModel) {
-		IFactoryRegistry factoryRegistry = structuredModel.getFactoryRegistry();
+		FactoryRegistry factoryRegistry = structuredModel.getFactoryRegistry();
 		Assert.isNotNull(factoryRegistry, "Program Error: client caller must ensure model has factory registry"); //$NON-NLS-1$
 		// AdapterFactory factory = null;
 

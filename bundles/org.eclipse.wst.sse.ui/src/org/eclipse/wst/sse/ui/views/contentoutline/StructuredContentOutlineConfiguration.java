@@ -27,7 +27,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.ui.part.IShowInSource;
 import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.part.ShowInContext;
-import org.eclipse.wst.sse.core.IFactoryRegistry;
+import org.eclipse.wst.sse.core.FactoryRegistry;
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.ViewerSelectionManager;
 import org.eclipse.wst.sse.ui.internal.Logger;
@@ -167,7 +167,7 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 	}
 
 	protected IJFaceNodeAdapterFactory getFactory() {
-		IFactoryRegistry factoryRegistry = getEditor().getModel().getFactoryRegistry();
+		FactoryRegistry factoryRegistry = getEditor().getModel().getFactoryRegistry();
 		IJFaceNodeAdapterFactory adapterFactory = (IJFaceNodeAdapterFactory) factoryRegistry.getFactoryFor(IJFaceNodeAdapter.class);
 		if (adapterFactory == null) {
 			Logger.log(Logger.ERROR, "model has no JFace adapter factory"); //$NON-NLS-1$

@@ -25,21 +25,23 @@ import org.eclipse.wst.sse.core.internal.Logger;
  * instances of them. Some "built in" types are automatically created form
  * FactoryConfig, if not found registerd, but normally clients can/should
  * register their own factories.
- *  
+ * 
+ * Not intended for clients to subclass or instantiate.
+ * 
  */
-public class FactoryRegistry implements IFactoryRegistry {
+public final class FactoryRegistry {
 
 	private List factories;
 
 	/**
-	 *  
+	 * intentionally default access
 	 */
-	public FactoryRegistry() {
+	FactoryRegistry() {
 		super();
 
 	}
 
-	protected List _getFactories() {
+	private List _getFactories() {
 
 		if (factories == null) {
 			// may need to use java.util.Collections.synchronizedList() if
@@ -60,7 +62,7 @@ public class FactoryRegistry implements IFactoryRegistry {
 	}
 
 	/*
-	 * @see IFactoryRegistry#contains(Object)
+	 * @see FactoryRegistry#contains(Object)
 	 */
 	public boolean contains(Object type) {
 		boolean result = false;
@@ -119,7 +121,7 @@ public class FactoryRegistry implements IFactoryRegistry {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	public void release() {
 		// modified to work on copy of list, for V5PTF1
@@ -137,7 +139,8 @@ public class FactoryRegistry implements IFactoryRegistry {
 			// severe for product/client, and need to be fixed.
 			try {
 				a.release();
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				Logger.logException("Program problem releasing factory" + a, e); //$NON-NLS-1$
 			}
 		}

@@ -16,7 +16,7 @@ import java.util.Iterator;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.util.SafeRunnable;
-import org.eclipse.wst.sse.core.IFactoryRegistry;
+import org.eclipse.wst.sse.core.FactoryRegistry;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.Logger;
@@ -45,7 +45,7 @@ public class EditorModelUtil {
 			adapterFactoryProviders = adapterRegistry.getAdapterFactories();
 		}
 
-		IFactoryRegistry factoryRegistry = structuredModel.getFactoryRegistry();
+		FactoryRegistry factoryRegistry = structuredModel.getFactoryRegistry();
 		Assert.isNotNull(factoryRegistry, "model in invalid state");
 		// Add all those appropriate for this particular type of content
 		while (adapterFactoryProviders.hasNext()) {

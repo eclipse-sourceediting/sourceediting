@@ -23,7 +23,7 @@ import org.eclipse.wst.css.core.internal.formatter.CSSSourceFormatterFactory;
 import org.eclipse.wst.css.core.internal.formatter.CSSSourceGenerator;
 import org.eclipse.wst.css.core.util.ImportRuleCollector;
 import org.eclipse.wst.sse.core.AbstractNotifier;
-import org.eclipse.wst.sse.core.IFactoryRegistry;
+import org.eclipse.wst.sse.core.FactoryRegistry;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.w3c.dom.DOMException;
 
@@ -216,10 +216,10 @@ abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, Indexed
 
 	/**
 	 */
-	public IFactoryRegistry getFactoryRegistry() {
+	public FactoryRegistry getFactoryRegistry() {
 		ICSSModel model = getOwnerDocument().getModel();
 		if (model != null) {
-			IFactoryRegistry reg = model.getFactoryRegistry();
+			FactoryRegistry reg = model.getFactoryRegistry();
 			if (reg != null)
 				return reg;
 		}

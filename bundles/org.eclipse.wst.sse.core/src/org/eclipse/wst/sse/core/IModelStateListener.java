@@ -55,4 +55,10 @@ public interface IModelStateListener {
 	 * new info for id and base location.
 	 */
 	void modelResourceMoved(IStructuredModel oldModel, IStructuredModel newModel);
+
+	void modelAboutToBeReinitialized(IStructuredModel structuredModel);
+
+	void modelReinitialized(IStructuredModel structuredModel);
+
+
 }

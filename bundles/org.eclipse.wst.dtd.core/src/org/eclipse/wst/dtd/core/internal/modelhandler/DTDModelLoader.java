@@ -16,7 +16,7 @@ import org.eclipse.wst.dtd.core.internal.document.DTDModelImpl;
 import org.eclipse.wst.dtd.core.internal.encoding.DTDDocumentLoader;
 import org.eclipse.wst.sse.core.AbstractModelLoader;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.ModelLoader;
+import org.eclipse.wst.sse.core.IModelLoader;
 import org.eclipse.wst.sse.core.document.IDocumentLoader;
 
 
@@ -33,7 +33,7 @@ public final class DTDModelLoader extends AbstractModelLoader {
 		return documentLoaderInstance;
 	}
 
-	public ModelLoader newInstance() {
+	public IModelLoader newInstance() {
 		return new DTDModelLoader();
 	}
 

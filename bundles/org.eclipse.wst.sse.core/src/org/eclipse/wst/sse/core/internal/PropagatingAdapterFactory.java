@@ -10,21 +10,20 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core;
+package org.eclipse.wst.sse.core.internal;
 
 
 
-/**
- * This interface defines two new model level events. In order to avoid
- * unnecessary last minute changes from clients, this interface was created as
- * a "stop gap" measure. Eventually, it will become part of the normal
- * ModelStateListener interface.
- */
-public interface IModelStateListenerExtended extends IModelStateListener {
+import java.util.ArrayList;
+
+import org.eclipse.wst.sse.core.AdapterFactory;
 
 
-	void modelAboutToBeReinitialized(IStructuredModel structuredModel);
 
-	void modelReinitialized(IStructuredModel structuredModel);
+public interface PropagatingAdapterFactory extends AdapterFactory {
+
+	void addContributedFactories(AdapterFactory factory);
+
+	void setContributedFactories(ArrayList list);
 
 }

@@ -4,12 +4,12 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.projection.IProjectionListener;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
-import org.eclipse.wst.sse.core.IFactoryRegistry;
+import org.eclipse.wst.sse.core.FactoryRegistry;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
-import org.eclipse.wst.sse.core.PropagatingAdapter;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.w3c.dom.Document;
@@ -106,7 +106,7 @@ public class StructuredTextFoldingProviderHTML implements IStructuredTextFolding
 		try {
 			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
 			if (sModel != null) {
-				IFactoryRegistry factoryRegistry = sModel.getFactoryRegistry();
+				FactoryRegistry factoryRegistry = sModel.getFactoryRegistry();
 
 				// getting the projectionmodelnodeadapter for the first time
 				// so do some initializing

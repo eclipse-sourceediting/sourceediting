@@ -43,7 +43,7 @@ import org.eclipse.wst.sse.core.util.Assert;
 /**
  * This class reads a file and creates an Structured Model.
  */
-public abstract class AbstractModelLoader implements ModelLoader, IModelLoaderExtension {
+public abstract class AbstractModelLoader implements IModelLoader {
 	protected static final int encodingNameSearchLimit = 1000;
 
 	private static long computeMem() {
@@ -66,8 +66,8 @@ public abstract class AbstractModelLoader implements ModelLoader, IModelLoaderEx
 
 	protected void addFactories(IStructuredModel model, List factoryList) {
 		Assert.isNotNull(model);
-		IFactoryRegistry registry = model.getFactoryRegistry();
-		Assert.isNotNull(registry, "IStructuredModel " + model.getId() + " has a null IFactoryRegistry");
+		FactoryRegistry registry = model.getFactoryRegistry();
+		Assert.isNotNull(registry, "IStructuredModel " + model.getId() + " has a null FactoryRegistry");
 		if (factoryList != null) {
 			Iterator iterator = factoryList.iterator();
 			while (iterator.hasNext()) {

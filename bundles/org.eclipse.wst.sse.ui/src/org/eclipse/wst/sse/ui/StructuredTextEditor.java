@@ -117,7 +117,7 @@ import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 import org.eclipse.ui.texteditor.TextOperationAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
-import org.eclipse.wst.sse.core.IModelStateListenerExtended;
+import org.eclipse.wst.sse.core.IModelStateListener;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
@@ -207,7 +207,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		}
 	}
 
-	class InternalModelStateListener implements IModelStateListenerExtended {
+	class InternalModelStateListener implements IModelStateListener {
 		public void modelAboutToBeChanged(IStructuredModel model) {
 			if (getTextViewer() != null) {
 				// getTextViewer().setRedraw(false);

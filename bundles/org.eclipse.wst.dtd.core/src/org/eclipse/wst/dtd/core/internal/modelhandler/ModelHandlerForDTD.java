@@ -14,7 +14,7 @@ package org.eclipse.wst.dtd.core.internal.modelhandler;
 
 import org.eclipse.wst.dtd.core.internal.encoding.DTDDocumentCharsetDetector;
 import org.eclipse.wst.dtd.core.internal.encoding.DTDDocumentLoader;
-import org.eclipse.wst.sse.core.ModelLoader;
+import org.eclipse.wst.sse.core.IModelLoader;
 import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.modelhandler.AbstractModelHandler;
@@ -39,7 +39,7 @@ public final class ModelHandlerForDTD extends AbstractModelHandler implements IM
 		return new DTDDocumentCharsetDetector();
 	}
 
-	public ModelLoader getModelLoader() {
+	public IModelLoader getModelLoader() {
 		return new DTDModelLoader();
 	}
 

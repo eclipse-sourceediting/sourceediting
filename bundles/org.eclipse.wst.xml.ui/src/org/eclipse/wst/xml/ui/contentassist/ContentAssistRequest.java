@@ -129,10 +129,6 @@ public class ContentAssistRequest {
 		return parent;
 	}
 
-	public PreferenceManager getPreferenceManager() {
-		return fPreferenceManager;
-	}
-
 	/**
 	 * 
 	 * @return java.util.List

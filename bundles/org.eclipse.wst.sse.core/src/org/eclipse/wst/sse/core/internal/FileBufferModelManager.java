@@ -43,9 +43,8 @@ import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.sse.core.AbstractStructuredModel;
-import org.eclipse.wst.sse.core.IModelLoaderExtension;
+import org.eclipse.wst.sse.core.IModelLoader;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.ModelLoader;
 import org.eclipse.wst.sse.core.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
@@ -434,12 +433,14 @@ public class FileBufferModelManager {
 				DocumentInfo info = (DocumentInfo) fDocumentMap.get(buffer.getDocument());
 				if (info != null) {
 					/*
-					 * Note: "info" being null at this point is a slight error.
+					 * Note: "info" being null at this point is a slight
+					 * error.
 					 * 
-					 * The connect call from above (or at some time earlier in the
-					 * session) would have notified the FileBufferMapper of the
-					 * creation of the corresponding text buffer and created the
-					 * DocumentInfo object for IStructuredDocuments.
+					 * The connect call from above (or at some time earlier in
+					 * the session) would have notified the FileBufferMapper
+					 * of the creation of the corresponding text buffer and
+					 * created the DocumentInfo object for
+					 * IStructuredDocuments.
 					 */
 					info.selfConnected = true;
 				}
@@ -465,16 +466,8 @@ public class FileBufferModelManager {
 
 			IStructuredModel model = null;
 			IModelHandler handler = ModelHandlerRegistry.getInstance().getHandlerForContentTypeId(info.contentTypeID);
-			ModelLoader loader = handler.getModelLoader();
-			boolean mustSetDocument = true;
-			if (loader instanceof IModelLoaderExtension) {
-				mustSetDocument = false;
-				model = ((IModelLoaderExtension) loader).createModel(document, info.buffer.getLocation().toString());
-			}
-			else {
-				model = loader.createModel();
-				model.setBaseLocation(info.buffer.getLocation().toString());
-			}
+			IModelLoader loader = handler.getModelLoader();
+			model = loader.createModel(document, info.buffer.getLocation().toString());
 			try {
 				info.model = model;
 				model.setId(info.buffer.getLocation().toString());
@@ -483,9 +476,6 @@ public class FileBufferModelManager {
 					((AbstractStructuredModel) model).setContentTypeIdentifier(info.contentTypeID);
 				}
 				model.setResolver(createURIResolver(getBuffer(document)));
-				if (mustSetDocument) {
-					model.setStructuredDocument(document);
-				}
 				if (info.buffer.isDirty()) {
 					model.setDirtyState(true);
 				}

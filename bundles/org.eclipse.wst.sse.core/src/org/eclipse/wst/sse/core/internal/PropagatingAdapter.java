@@ -10,9 +10,13 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core;
+package org.eclipse.wst.sse.core.internal;
 
 import java.util.List;
+
+import org.eclipse.wst.sse.core.AdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapter;
+import org.eclipse.wst.sse.core.INodeNotifier;
 
 public interface PropagatingAdapter extends INodeAdapter {
 

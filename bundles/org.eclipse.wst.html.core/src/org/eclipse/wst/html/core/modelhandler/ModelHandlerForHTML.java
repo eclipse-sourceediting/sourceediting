@@ -13,7 +13,7 @@ package org.eclipse.wst.html.core.modelhandler;
 import org.eclipse.wst.html.core.encoding.HTMLDocumentCharsetDetector;
 import org.eclipse.wst.html.core.encoding.HTMLDocumentLoader;
 import org.eclipse.wst.html.core.encoding.HTMLModelLoader;
-import org.eclipse.wst.sse.core.ModelLoader;
+import org.eclipse.wst.sse.core.IModelLoader;
 import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.modelhandler.AbstractModelHandler;
@@ -40,7 +40,7 @@ public class ModelHandlerForHTML extends AbstractModelHandler implements IModelH
 		setAssociatedContentTypeId(AssociatedContentTypeID);
 	}
 
-	public ModelLoader getModelLoader() {
+	public IModelLoader getModelLoader() {
 		return new HTMLModelLoader();
 	}
 
