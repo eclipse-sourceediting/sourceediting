@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.jdt.internal.ui.text.java.JavaCompletionProposal;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -953,11 +952,10 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		for (int i = 0; i < regularJSPResults.length; i++) {
 			ICompletionProposal test = regularJSPResults[i];
 
-			//			System.out.println("proposal > " + test.getDisplayString());
-			//			System.out.println("relevance > " + ((JavaCompletionProposal)
-			// test).getRelevance());
-			//			
-			if (isRelevanceAllowed(((JavaCompletionProposal) test).getRelevance())) {
+						System.out.println("proposal > " + test.getDisplayString());
+            System.out.println("relevance > " + ((CustomCompletionProposal) test).getRelevance());
+						
+			if (isRelevanceAllowed(((CustomCompletionProposal) test).getRelevance())) {
 				filteredProposals.add(test);
 			}
 		}

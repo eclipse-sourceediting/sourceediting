@@ -20,7 +20,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Platform;
+import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -33,17 +33,12 @@ import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.sse.ui.internal.contentassist.IRelevanceConstants;
 import org.eclipse.wst.xml.uriresolver.util.URIHelper;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleException;
 
 /**
- * @version 	5.0
+ *
  */
-
 public class JavaTypeFinder {
 	// COPIED TO REMOVE INTERNAL DEPENDENCY FOR NOW...
-	// org.eclipse.jdt.internal.compiler.env.AccPublic
-	static int AccPublic = 0x0001;
 	// org.eclipse.jdt.internal.codeassist.R_DEFAULT
 	static int R_DEFAULT = 0;
 
@@ -81,30 +76,17 @@ public class JavaTypeFinder {
 		public void acceptClass(char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path) {
 			// forbid inner classes as they don't work [yet]
 			if (enclosingTypeNames == null || enclosingTypeNames.length == 0)
-				collector.acceptClass(packageName, simpleTypeName, getCompletionName(packageName, enclosingTypeNames, simpleTypeName), AccPublic, 0, 0, R_DEFAULT);
+				collector.acceptClass(packageName, simpleTypeName, getCompletionName(packageName, enclosingTypeNames, simpleTypeName), Flags.AccPublic, 0, 0, R_DEFAULT);
 		}
 
 		public void acceptInterface(char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path) {
 			// forbid inner classes as they don't work [yet]
 			if (this.allowInterfaces && (enclosingTypeNames == null || enclosingTypeNames.length == 0))
-				collector.acceptInterface(packageName, simpleTypeName, getCompletionName(packageName, enclosingTypeNames, simpleTypeName), AccPublic, 0, 0, R_DEFAULT);
+				collector.acceptInterface(packageName, simpleTypeName, getCompletionName(packageName, enclosingTypeNames, simpleTypeName), Flags.AccPublic, 0, 0, R_DEFAULT);
 		}
 
 		public JavaTypeResultCollector getCollector() {
 			return collector;
-		}
-	}
-
-	public static void initJDT() {
-		// The following code will initialize the Java UI plugin if it
-		// is not already initialized.
-		try {
-			Bundle jdtUI = Platform.getBundle("org.eclipse.jdt.ui"); //$NON-NLS-1$
-			Bundle jdtCore = Platform.getBundle("org.eclipse.jdt.core"); //$NON-NLS-1$
-			jdtUI.start();
-			jdtCore.start();
-		} catch (BundleException e1) {
-			// problems initializing plugins
 		}
 	}
 
@@ -159,7 +141,7 @@ public class JavaTypeFinder {
 	}
 
 	protected static ICompletionProposal[] findTypeProposals(IResource resource, int replacementStart, int replacementLength, boolean allowInterfaces) {
-		initJDT();
+
 		JavaTypeNameRequestor requestor = new JavaTypeNameRequestor(allowInterfaces);
 		requestor.getCollector().setReplacementStart(replacementStart);
 		requestor.getCollector().setReplacementLength(replacementLength);
@@ -189,8 +171,6 @@ public class JavaTypeFinder {
 	public static IJavaProject getJavaProject(IResource resource) {
 		IProject proj = resource.getProject();
 		IJavaProject javaProject = JavaCore.create(proj);
-		//		IJavaModel javaModel = JavaModelManager.getJavaModelManager().getJavaModel();
-		//		IJavaProject javaProject = javaModel.getJavaProject(proj.getName());
 		return javaProject;
 	}
 }
