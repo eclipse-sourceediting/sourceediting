@@ -20,9 +20,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
+import org.eclipse.wst.sse.core.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.util.Utilities;
 import org.eclipse.wst.xml.core.document.DocumentLoaderForXML;
 
 
@@ -38,7 +41,13 @@ public class FileBufferDocumentTester extends UnzippedProjectTester {
 		IDocument document = buffer.getDocument();
 		assertNotNull(document);
 		assertTrue("wrong class of document", expectedDocumentClass.isInstance(document));
-		IDocumentPartitioner setupPartitioner = document.getDocumentPartitioner();
+		IDocumentPartitioner setupPartitioner = null;
+		if (Utilities.contains(expectedDocumentClass.getInterfaces(), IDocumentExtension3.class)) {
+			setupPartitioner = ((IDocumentExtension3) document).getDocumentPartitioner(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING);
+		}
+		else {
+			setupPartitioner = document.getDocumentPartitioner();
+		}
 		assertTrue("wrong partitioner in document.", expectedPartioner.isInstance(setupPartitioner));
 		bufferManager.disconnect(locationPath, null);
 

@@ -16,6 +16,7 @@ import java.io.InputStream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
 import org.eclipse.jst.jsp.ui.tests.document.UnzippedProjectTester;
@@ -27,6 +28,7 @@ import org.eclipse.wst.sse.core.exceptions.ResourceAlreadyExists;
 import org.eclipse.wst.sse.core.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.util.Utilities;
 import org.eclipse.wst.xml.core.text.rules.StructuredTextPartitionerForXML;
 
 
@@ -105,7 +107,13 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 		IStructuredDocument document = modelManager.createStructuredDocumentFor(file);
 		assertNotNull(document);
 		assertTrue("wrong class of document", expectedDocumentClass.isInstance(document));
-		IDocumentPartitioner setupPartitioner = document.getDocumentPartitioner();
+		IDocumentPartitioner setupPartitioner = null;
+		if (Utilities.contains(expectedDocumentClass.getInterfaces(), IDocumentExtension3.class)) {
+			setupPartitioner = ((IDocumentExtension3) document).getDocumentPartitioner(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING);
+		}
+		else {
+			setupPartitioner = document.getDocumentPartitioner();
+		}
 		assertTrue("wrong partitioner in document.", expectedPartioner.isInstance(setupPartitioner));
 		contents = document.get();
 		assertNotNull("contents were null", contents);
@@ -132,7 +140,13 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 			document = modelManager.createNewStructuredDocumentFor(file);
 			assertNotNull(document);
 			assertTrue("wrong class of document", expectedDocumentClass.isInstance(document));
-			IDocumentPartitioner setupPartitioner = document.getDocumentPartitioner();
+			IDocumentPartitioner setupPartitioner = null;
+			if (Utilities.contains(expectedDocumentClass.getInterfaces(), IDocumentExtension3.class)) {
+				setupPartitioner = ((IDocumentExtension3) document).getDocumentPartitioner(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING);
+			}
+			else {
+				setupPartitioner = document.getDocumentPartitioner();
+			}
 			assertTrue("wrong partitioner in document.", expectedPartioner.isInstance(setupPartitioner));
 			contents = document.get();
 			assertNotNull("contents were null", contents);
@@ -164,7 +178,13 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 			IStructuredDocument document = model.getStructuredDocument();
 			assertNotNull(document);
 			assertTrue("wrong class of document", expectedDocumentClass.isInstance(document));
-			IDocumentPartitioner setupPartitioner = document.getDocumentPartitioner();
+			IDocumentPartitioner setupPartitioner = null;
+			if (Utilities.contains(expectedDocumentClass.getInterfaces(), IDocumentExtension3.class)) {
+				setupPartitioner = ((IDocumentExtension3) document).getDocumentPartitioner(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING);
+			}
+			else {
+				setupPartitioner = document.getDocumentPartitioner();
+			}
 			assertTrue("wrong partitioner in document.", expectedPartioner.isInstance(setupPartitioner));
 
 			InputStream inStream = null;
@@ -214,7 +234,13 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 			assertNotNull(document);
 			contents = document.get();
 			assertTrue("wrong class of document", expectedDocumentClass.isInstance(document));
-			IDocumentPartitioner setupPartitioner = document.getDocumentPartitioner();
+			IDocumentPartitioner setupPartitioner = null;
+			if (Utilities.contains(expectedDocumentClass.getInterfaces(), IDocumentExtension3.class)) {
+				setupPartitioner = ((IDocumentExtension3) document).getDocumentPartitioner(IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING);
+			}
+			else {
+				setupPartitioner = document.getDocumentPartitioner();
+			}
 			assertTrue("wrong partitioner in document.", expectedPartioner.isInstance(setupPartitioner));
 		} finally {
 			if (model != null)
