@@ -169,8 +169,14 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 		}
 		catch (NullPointerException e) {
 			// logging this exception that I've seen a couple of times...
-			System.out.println(e);
+			// seems to happen during shutdown of unit tests, at which 
+			// point Logger has already been unloaded
+			try {
 			Logger.logException("XMLJSPRegionHelper: exception in node parsing", e); //$NON-NLS-1$
+			}
+			catch (NoClassDefFoundError ex) {
+				// do nothing, since we're just ending
+			}
 		}
 	}
 

@@ -178,6 +178,7 @@ public class TaglibController implements IDocumentSetupParticipant {
 	}
 
 	static TaglibController _instance = null;
+	static private boolean fIsShutdown = false;
 
 	public static ITextFileBuffer getFileBuffer(IDocument document) {
 		synchronized (_instance.fDocumentMap) {
@@ -218,14 +219,16 @@ public class TaglibController implements IDocumentSetupParticipant {
 		}
 	}
 
-	public static void shutdown() {
+	public synchronized static void shutdown() {
+		setShutdown(true);
 		FileBuffers.getTextFileBufferManager().removeFileBufferListener(_instance.fBufferListener);
 		_instance = null;
 	}
 
-	public static void startup() {
+	public synchronized static void startup() {
 		_instance = new TaglibController();
 		FileBuffers.getTextFileBufferManager().addFileBufferListener(_instance.fBufferListener);
+		setShutdown(false);
 	}
 
 	IFileBufferListener fBufferListener;
@@ -248,9 +251,22 @@ public class TaglibController implements IDocumentSetupParticipant {
 	 * @see org.eclipse.core.filebuffers.IDocumentSetupParticipant#setup(org.eclipse.jface.text.IDocument)
 	 */
 	public void setup(IDocument document) {
+		// if we've already shutdown, just ignore
+		if (isShutdown()) return;
 		synchronized (_instance.fJSPdocuments) {
 			_instance.fJSPdocuments.add(document);
 		}
 	}
+
+	private static synchronized boolean isShutdown() {
+		return fIsShutdown;
+	}
+	
+
+	private static synchronized void setShutdown(boolean isShutdown) {
+		fIsShutdown = isShutdown;
+	}
+	
+
 
 }
