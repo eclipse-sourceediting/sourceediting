@@ -101,17 +101,18 @@ public class TaglibController implements IDocumentSetupParticipant {
 		public void bufferDisposed(IFileBuffer buffer) {
 			if (buffer instanceof ITextFileBuffer) {
 				IDocument document = ((ITextFileBuffer) buffer).getDocument();
-				if (!fJSPdocuments.contains(document))
+				if (!fJSPdocuments.remove(document))
 					return;
-				fJSPdocuments.remove(document);
 			}
-			Object[] mapEntrys = fDocumentMap.entrySet().toArray();
-			boolean removed = false;
-			for (int i = 0; i < mapEntrys.length && !removed; i++) {
-				DocumentInfo info = (DocumentInfo) ((Map.Entry) mapEntrys[i]).getValue();
-				if (info != null && info.textFileBuffer == buffer) {
-					fDocumentMap.remove(mapEntrys[i]);
-					removed = true;
+			synchronized (fDocumentMap) {
+				Object[] mapEntrys = fDocumentMap.entrySet().toArray();
+				boolean removed = false;
+				for (int i = 0; i < mapEntrys.length && !removed; i++) {
+					DocumentInfo info = (DocumentInfo) ((Map.Entry) mapEntrys[i]).getValue();
+					if (info != null && info.textFileBuffer.equals(buffer)) {
+						fDocumentMap.remove(mapEntrys[i]);
+						removed = true;
+					}
 				}
 			}
 		}
@@ -184,13 +185,16 @@ public class TaglibController implements IDocumentSetupParticipant {
 	 * @return
 	 */
 	public static ITextFileBuffer getFileBuffer(TLDCMDocumentManager manager) {
-		Iterator docInfos = _instance.fDocumentMap.values().iterator();
-		while (docInfos.hasNext()) {
-			DocumentInfo info = (DocumentInfo) docInfos.next();
-			if (info.tldDocumentManager == manager)
-				return info.textFileBuffer;
+		ITextFileBuffer buffer = null;
+		synchronized (_instance.fDocumentMap) {
+			Iterator docInfos = _instance.fDocumentMap.values().iterator();
+			while (docInfos.hasNext()) {
+				DocumentInfo info = (DocumentInfo) docInfos.next();
+				if (info.tldDocumentManager == manager)
+					buffer = info.textFileBuffer;
+			}
 		}
-		return null;
+		return buffer;
 	}
 
 	public static TLDCMDocumentManager getTLDCMDocumentManager(IDocument document) {
