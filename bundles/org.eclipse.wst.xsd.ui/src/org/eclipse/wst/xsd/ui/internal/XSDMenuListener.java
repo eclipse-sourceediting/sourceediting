@@ -136,7 +136,9 @@ public class XSDMenuListener implements IMenuListener
         {
           isReadOnly = true;
           XSDSchemaDirective xsdSchemaDirective = (XSDSchemaDirective)list.get(0);
-          if (xsdSchemaDirective.getSchema() != null)
+          XSDSchema refSchema = xsdSchemaDirective.getSchema(); 
+          // check if included schema is the same as the current - don't want cycle
+          if (refSchema != null && refSchema != xsdSchema)
           {
             xsdSchema = xsdSchemaDirective.getSchema();
           }
