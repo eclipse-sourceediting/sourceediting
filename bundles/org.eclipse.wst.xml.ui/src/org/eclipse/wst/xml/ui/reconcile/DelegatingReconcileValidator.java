@@ -41,24 +41,28 @@ import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.core.document.XMLText;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * A DelegatingReconcileValidator calls its delegate validator
  * to get a list of validation error IMessages.  Using information
- * in this IMessage the DelegatingReconcileValidator sets
- * an offset and a length that should be "squiggled"
+ * in this IMessage the DelegatingReconcileValidator updates the IMessage with
+ * an offset and length to give a good range to be "squiggled"
+ * and adds the messages to the IReporter
  * 
  * @author Mark Hutchinson
  * 
  */
 public class DelegatingReconcileValidator implements IValidator
 { //these are the selection Strategies:
-  public static final String ATTRIBUTE = "ATTRIBUTE";
-  public static final String ATTRIBUTE_NAME ="ATTRIBUTE_NAME";
-  public static final String ATTRIBUTE_VALUE = "ATTRIBUTE_VALUE";
-  public static final String START_TAG = "START_TAG";
-  public static final String TEXT = "TEXT";
-  public static final String NAME_OF_ATTRIBUTE_WITH_GIVEN_VALUE = "NAME_OF_ATTRIBUTE_WITH_GIVEN_VALUE";
+  protected static final String ALL_ATTRIBUTES = "ALL_ATTRIBUTES";
+  protected static final String ATTRIBUTE_NAME ="ATTRIBUTE_NAME";
+  protected static final String ATTRIBUTE_VALUE = "ATTRIBUTE_VALUE";
+  protected static final String START_TAG = "START_TAG";
+  protected static final String TEXT = "TEXT";
+  protected static final String FIRST_NON_WHITESPACE_TEXT = "FIRST_NON_WHITESPACE_TEXT";
+  protected static final String TEXT_ENTITY_REFERENCE = "TEXT_ENTITY_REFERENCE"; 
+  protected static final String NAME_OF_ATTRIBUTE_WITH_GIVEN_VALUE = "NAME_OF_ATTRIBUTE_WITH_GIVEN_VALUE";
   
   public DelegatingReconcileValidator()
   { super(); //constructor
@@ -250,7 +254,7 @@ public class DelegatingReconcileValidator implements IValidator
     }
     catch (Exception e)
     {
-      e.printStackTrace();
+      //e.printStackTrace();
     }
 
     return model instanceof XMLModel ? (XMLModel) model : null;
@@ -291,9 +295,16 @@ public class DelegatingReconcileValidator implements IValidator
       // initialize start and end positions to be the start positions this means if the
       // special case is not taken care of below the start and end offset are set to be
       // the start of the region where the error was
-      startEndPositions[0] = region.getStartOffset();
-      startEndPositions[1] = startEndPositions[0];
-
+      if (region != null)
+      {
+      	startEndPositions[0] = region.getStartOffset();
+      	startEndPositions[1] = startEndPositions[0];
+      }
+      else
+      { //this will message will not get added to the IReporter since the length is 0
+      	startEndPositions[0] = 0;
+      	startEndPositions[1] = 0;
+      }
       if (region instanceof Node)
       {
         Node node = (Node) region;
@@ -333,6 +344,24 @@ public class DelegatingReconcileValidator implements IValidator
             }
           }
         }
+        else if (key.equals(ALL_ATTRIBUTES))
+        {// then underline ALL attributes
+          if (node.getNodeType() == Node.ELEMENT_NODE)
+          {
+            XMLElement element = (XMLElement) node;
+            NamedNodeMap attributes = element.getAttributes();
+            if (attributes != null)
+            {
+              XMLNode first = (XMLNode) attributes.item(0);
+              XMLNode last = (XMLNode) attributes.item(attributes.getLength() - 1);
+              if (first != null && last != null)
+              {
+                startEndPositions[0] = first.getStartOffset();
+                startEndPositions[1] = last.getEndOffset();
+              }
+            }
+          }
+        }
         else if (key.equals(TEXT))
         {// in this case we want to underline the text (but not any extra whitespace)
           if (node.getNodeType() == Node.TEXT_NODE)
@@ -350,7 +379,7 @@ public class DelegatingReconcileValidator implements IValidator
               start++;
             }
             startEndPositions[0] = start - 1;
-            startEndPositions[1] = start + value.trim().length();
+            startEndPositions[1] = start + value.trim().length() - 1;
           }
           else if (node.getNodeType() == Node.ELEMENT_NODE)
           {
@@ -364,11 +393,54 @@ public class DelegatingReconcileValidator implements IValidator
             }
           }
         }
-
+        else if (key.equals(FIRST_NON_WHITESPACE_TEXT))
+        {  //here we search through all the child nodes, and give the range
+           // of the first non-whitespace node
+        	if (node.getNodeType() == Node.ELEMENT_NODE)
+        	{ NodeList nodes = node.getChildNodes();
+        	  for (int i = 0; i< nodes.getLength(); i++)
+        	  {
+        	  	Node currentNode = nodes.item(i);
+        	  	if (currentNode.getNodeType() == Node.TEXT_NODE)
+        	  	{
+        	  		XMLText textNode = (XMLText)currentNode;
+        	  		if (textNode.getNodeValue().trim().length() > 0)
+        	  		{
+        	  			String value = textNode.getNodeValue();
+        	            int index = 0;
+        	            int start = textNode.getStartOffset();
+        	            char curChar = value.charAt(index);
+        	            //here we are finding start offset by skipping over whitespace:
+        	            while (curChar == '\n' || curChar == '\t' || curChar == '\r' || curChar == ' ')
+        	            {
+        	              curChar = value.charAt(index);
+        	              index++;
+        	            }
+        	            if (index > 0)
+        	            { index--;
+        	            
+        	            }
+        	            start = start + index;
+        	            startEndPositions[0] = start;
+        	            startEndPositions[1] = start + value.trim().length(); 
+        	  			break;
+        	  		}
+        	  	}
+        	  	
+        	  }
+        	}
+        }
+        	
+        else if (key.equals(TEXT_ENTITY_REFERENCE))
+        { if (node.getNodeType() == Node.ENTITY_REFERENCE_NODE)
+        	{ startEndPositions[0] = region.getStartOffset();
+        	  startEndPositions[1] = region.getEndOffset();
+        	}
+        }
         else if (key.equals(NAME_OF_ATTRIBUTE_WITH_GIVEN_VALUE))
         {//underline the name of the attribute containing the given value
           if (node.getNodeType() == Node.ELEMENT_NODE)
-          {          
+          {
             //here we will search through all attributes for the one with the
             //with the value we want:            
             NamedNodeMap attributes = node.getAttributes();
