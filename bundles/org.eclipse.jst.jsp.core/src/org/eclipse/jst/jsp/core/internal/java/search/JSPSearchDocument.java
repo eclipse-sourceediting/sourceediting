@@ -24,6 +24,7 @@ import org.eclipse.jdt.core.search.SearchParticipant;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
+import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapterFactory;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationExtension;
@@ -70,7 +71,8 @@ public class JSPSearchDocument {
 	 * @see org.eclipse.jdt.core.search.SearchDocument#getCharContents()
 	 */
 	public char[] getCharContents() {
-		return getJSPTranslation().getJavaText().toCharArray();
+        JSPTranslation trans = getJSPTranslation();
+		return trans != null ? trans.getJavaText().toCharArray() : new char[0];
 	}
 
 	public String getJavaText() {
@@ -86,7 +88,7 @@ public class JSPSearchDocument {
 	 * since it's kind of large.  If possible, hold on to the JSPSearchDocument,
 	 * which is more of a lightweight proxy.
 	 * 
-	 * @return
+	 * @return the JSPTranslation for the jsp file, or null if it's an unsupported file.
 	 */
 	public final JSPTranslationExtension getJSPTranslation() {
 		JSPTranslationExtension translation = null;
@@ -140,9 +142,12 @@ public class JSPSearchDocument {
 	 * @see org.eclipse.jdt.core.search.SearchDocument#getPath()
 	 */
 	public String getPath() {
+        JSPTranslation trans = getJSPTranslation();
 	    // caching the path since it's expensive to get translation
-	    if(this.fCUPath == null || this.fCUPath == UNKNOWN_PATH)
-	        this.fCUPath = getJSPTranslation().getJavaPath();
+	    if(this.fCUPath == null || this.fCUPath == UNKNOWN_PATH) {  
+            if(trans != null)
+                this.fCUPath = trans.getJavaPath();
+        }
 		return fCUPath != null ? fCUPath : UNKNOWN_PATH;
 	}
 	
@@ -151,27 +156,29 @@ public class JSPSearchDocument {
 		int result = -1;
 		int offsetInRange = 0;
 		Position jspPos, javaPos = null;
-
-		HashMap java2jspMap = getJSPTranslation().getJava2JspMap();
-		
-		// iterate all mapped java ranges
-		Iterator it = java2jspMap.keySet().iterator();
-		while (it.hasNext()) {
-			javaPos = (Position) it.next();
-			// need to count the last position as included
-			if (!javaPos.includes(javaOffset) && !(javaPos.offset+javaPos.length == javaOffset))
-				continue;
-
-			offsetInRange = javaOffset - javaPos.offset;
-			jspPos = (Position) java2jspMap.get(javaPos);
-			
-			if(jspPos != null)
-				result = jspPos.offset + offsetInRange;
-			else  {
-				Logger.log(Logger.ERROR, "jspPosition was null!" + javaOffset); //$NON-NLS-1$
-			}
-			break;
-		}
+		JSPTranslation trans = getJSPTranslation();
+        if(trans != null) {
+    		HashMap java2jspMap = trans.getJava2JspMap();
+    		
+    		// iterate all mapped java ranges
+    		Iterator it = java2jspMap.keySet().iterator();
+    		while (it.hasNext()) {
+    			javaPos = (Position) it.next();
+    			// need to count the last position as included
+    			if (!javaPos.includes(javaOffset) && !(javaPos.offset+javaPos.length == javaOffset))
+    				continue;
+    
+    			offsetInRange = javaOffset - javaPos.offset;
+    			jspPos = (Position) java2jspMap.get(javaPos);
+    			
+    			if(jspPos != null)
+    				result = jspPos.offset + offsetInRange;
+    			else  {
+    				Logger.log(Logger.ERROR, "jspPosition was null!" + javaOffset); //$NON-NLS-1$
+    			}
+    			break;
+    		}
+        }
 		return result;
 	}
 
