@@ -9,7 +9,6 @@ import org.eclipse.wst.sse.core.validate.ValidationReporter;
 import org.eclipse.wst.validation.core.IMessage;
 import org.eclipse.wst.validation.core.IReporter;
 import org.eclipse.wst.validation.core.IValidator;
-import org.eclipse.wst.validation.core.SeverityEnum;
 
 public class HTMLValidationReporter implements ValidationReporter {
 
@@ -76,7 +75,7 @@ public class HTMLValidationReporter implements ValidationReporter {
 		} else {
 			// add by myself?
 			String id = HTMLValidator.class.getName();
-			String location = Integer.toString(mes.getLineNo());
+			String location = Integer.toString(mes.getLineNumber());
 			String name = this.file.getFullPath().toString();
 			try {
 				TaskListHelper.getTaskList().addTask(id, this.file, location,
@@ -92,15 +91,15 @@ public class HTMLValidationReporter implements ValidationReporter {
 	 * Translate ValidationMessage to IMessage and generate result log
 	 */
 	private IMessage translateMessage(ValidationMessage message) {
-		int severity = SeverityEnum.LOW_SEVERITY;
+		int severity = IMessage.LOW_SEVERITY;
 		HTMLValidationResult result = getResult();
 		switch (message.getSeverity()) {
 			case ValidationMessage.ERROR :
-				severity = SeverityEnum.HIGH_SEVERITY;
+				severity = IMessage.HIGH_SEVERITY;
 				result.addError();
 				break;
 			case ValidationMessage.WARNING :
-				severity = SeverityEnum.NORMAL_SEVERITY;
+				severity = IMessage.NORMAL_SEVERITY;
 				result.addWarning();
 				break;
 			default :

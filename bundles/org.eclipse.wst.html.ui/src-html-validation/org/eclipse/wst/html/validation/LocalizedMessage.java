@@ -13,14 +13,14 @@ package org.eclipse.wst.html.validation;
 import java.util.Locale;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.wst.validation.core.Message;
+import org.eclispe.wst.validation.internal.core.Message;
 
 /**
  * copied from org.eclipse.wst.validation.internal.operations.LocalizedMessage
  * 
- * This class is provided for validators which run only in WSAD and whose messages, because they
+ * This class is provided for validators which run only in Eclipse and whose messages, because they
  * come from another tool, are already localized. LocalizedMessage cannot be used by any validator
- * which needs to run in both WebSphere and WSAD.
+ * which needs to run in both WebSphere and Eclipse.
  */
 public class LocalizedMessage extends Message {
 	private String _message = null;

@@ -13,7 +13,6 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.validation.core.IMessage;
-import org.eclipse.wst.validation.core.SeverityEnum;
 
 /**
  * This class must be called only by the validation framework.
@@ -31,7 +30,7 @@ public class TaskListUtility {
 	private static final String PLUGIN_ID = "com.ibm.etools.validation";//$NON-NLS-1$
 	private static final String VALIDATION_MARKER = PLUGIN_ID + ".problemmarker"; //$NON-NLS-1$ // The extension which is used to add validation markers to the task list
 	private static final String VALIDATION_MARKER_OWNER = "owner"; //$NON-NLS-1$ // The IValidator who owns the IMarker on the task list
-	private static final String VALIDATION_MARKER_SEVERITY = "validationSeverity"; //$NON-NLS-1$ // one of the SeverityEnum values
+	private static final String VALIDATION_MARKER_SEVERITY = "validationSeverity"; //$NON-NLS-1$ // one of the IMessage values
 	private static final String VALIDATION_MARKER_TARGETOBJECT = "targetObject"; //$NON-NLS-1$ // When more than one target object resolves to the same IResource, this field identifies which targetObject owns a particular message.
 	private static final String VALIDATION_MARKER_GROUP = "groupName"; //$NON-NLS-1$ // For incremental validation, this field associates a message with a group, so that a subset of messages may be removed from a file.
 	private static final String VALIDATION_MARKER_MESSAGEID = "messageId"; //$NON-NLS-1$ // Persist the message id of the message, not just the translated text.
@@ -114,21 +113,21 @@ public class TaskListUtility {
 	 * that is its equivalent.
 	 */
 	private static int getSeverity(int severityEnumValue) {
-		switch (severityEnumValue) {
-			case (SeverityEnum.HIGH_SEVERITY) :	{
+		switch(severityEnumValue) {
+			case (IMessage.HIGH_SEVERITY) :	{
 				return IMarker.SEVERITY_ERROR;
 			}
 
-			case (SeverityEnum.LOW_SEVERITY) : {
+			case (IMessage.LOW_SEVERITY) : {
 				return IMarker.SEVERITY_INFO;
 			}
 
-			case (SeverityEnum.NORMAL_SEVERITY) :	{
+			case (IMessage.NORMAL_SEVERITY) :	{
 				return IMarker.SEVERITY_WARNING;
 			}
 			
-			case (SeverityEnum.ALL_MESSAGES) :
-			case (SeverityEnum.ERROR_AND_WARNING) :
+			case (IMessage.ALL_MESSAGES) :
+			case (IMessage.ERROR_AND_WARNING) :
 			default: {
 				// assume it's a warning.
 				return IMarker.SEVERITY_WARNING;
@@ -227,7 +226,7 @@ public class TaskListUtility {
 	}
 
 	private static IMarker[] getValidationTasks(IResource resource, String[] messageOwners, int depth) {
-		IMarker[] markers = getValidationTasks(resource, SeverityEnum.ALL_MESSAGES, depth);
+		IMarker[] markers = getValidationTasks(resource, IMessage.ALL_MESSAGES, depth);
 		if (markers.length == 0) {
 			return NO_MARKERS;
 		}
