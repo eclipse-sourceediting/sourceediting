@@ -16,6 +16,9 @@ import org.eclipse.core.filebuffers.IDocumentFactory;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.wst.sse.core.internal.document.NullStructuredDocumentPartitioner;
@@ -36,7 +39,12 @@ public class BasicStructuredDocumentFactory implements IDocumentFactory, IExecut
 
 	public IDocument createDocument() {
 		IDocument document = null;
-		IModelHandler handler = ModelHandlerRegistry.getInstance().getHandlerForContentTypeId(getContentTypeIdentifier());
+		IContentType contentType = Platform.getContentTypeManager().getContentType(getContentTypeIdentifier());
+		IModelHandler handler = null;
+		while (handler == null && !IContentTypeManager.CT_TEXT.equals(contentType.getId())) {
+			handler = ModelHandlerRegistry.getInstance().getHandlerForContentTypeId(contentType.getId());
+			contentType = contentType.getBaseType();
+		}
 		if (handler != null) {
 			document = handler.getDocumentLoader().createNewStructuredDocument();
 		}
