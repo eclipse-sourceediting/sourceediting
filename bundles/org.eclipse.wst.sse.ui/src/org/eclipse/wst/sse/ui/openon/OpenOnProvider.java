@@ -14,12 +14,16 @@ package org.eclipse.wst.sse.ui.openon;
 
 
 
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITypedRegion;
+import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.ui.extensions.openon.IOpenOn;
 import org.eclipse.wst.sse.ui.internal.openon.OpenOnBuilder;
 import org.eclipse.wst.sse.ui.internal.openon.OpenOnDefinition;
@@ -61,7 +65,8 @@ public class OpenOnProvider {
 			if (model != null) {
 				type = model.getContentTypeIdentifier();
 			}
-		} finally {
+		}
+		finally {
 			if (model != null) {
 				model.releaseFromRead();
 			}
@@ -79,18 +84,23 @@ public class OpenOnProvider {
 
 		// determine the current partition
 		if (document != null) {
-			String contentType = getContentType(document);
+			String contentTypeID = getContentType(document);
 			String partitionType = getPartitionType(document, offset);
 
-			// query OpenOnBuilder and get the list of open ons for the
-			// current partition
-			OpenOnDefinition[] defs = OpenOnBuilder.getInstance().getOpenOnDefinitions(contentType, partitionType);
+			IContentType contentType = Platform.getContentTypeManager().getContentType(contentTypeID);
 
-			// if more than 1 openon is returned, need to further check
-			// which open on is the appropriate one to return
-			// for now just returning the first one
-			if (defs != null && defs.length > 0) {
-				openOn = defs[0].createOpenOn();
+			while (openOn != null && contentType != null) {
+				// Query OpenOnBuilder and get the list of OpenOns for the
+				// current partition
+				OpenOnDefinition[] defs = OpenOnBuilder.getInstance().getOpenOnDefinitions(contentType.getId(), partitionType);
+				contentType = contentType.getBaseType();
+
+				// If more than 1 openon is returned, need to further check
+				// which OpenOn is the appropriate one to return
+				// for now just returning the first one
+				if (defs != null && defs.length > 0) {
+					openOn = defs[0].createOpenOn();
+				}
 			}
 		}
 
@@ -108,12 +118,25 @@ public class OpenOnProvider {
 	protected String getPartitionType(IDocument document, int offset) {
 		String type = null;
 		try {
-			ITypedRegion region = document.getPartition(offset);
-			if (region != null) {
-				type = region.getType();
+			// TODO: provide partitioning information so we're not using a default like this
+			if (document instanceof IStructuredDocument) {
+				type = TextUtilities.getContentType(document, IStructuredDocument.DEFAULT_STRUCTURED_PARTITIONING, offset, false);
 			}
-		} catch (BadLocationException e) {
-			type = null;
+		}
+		catch (BadLocationException e1) {
+		}
+		finally {
+			if (type == null) {
+				try {
+					ITypedRegion region = document.getPartition(offset);
+					if (region != null) {
+						type = region.getType();
+					}
+				}
+				catch (BadLocationException e) {
+					type = null;
+				}
+			}
 		}
 		return type;
 	}
