@@ -1,13 +1,11 @@
-/*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+/***************************************************************************************************
+ * Copyright (c) 2003, 2004 IBM Corporation and others. All rights reserved. This program and the
+ * accompanying materials are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors:
- * IBM Corporation - initial API and implementation
- *******************************************************************************/
+ * Contributors: IBM Corporation - initial API and implementation
+ **************************************************************************************************/
 
 package org.eclipse.wst.web.ui.internal.wizards;
 
@@ -50,7 +48,7 @@ public class StaticWebProjectCreationWizard extends ExtendableWizard implements
 
 	public String getWizardID()
 	{
-		return "com.ibm.etools.webtools.StaticWebProjectCreation"; //$NON-NLS-1$
+		return "org.eclipse.wst.web.ui.internal.wizards.StaticWebProjectCreation"; //$NON-NLS-1$
 	}
 
 	/*

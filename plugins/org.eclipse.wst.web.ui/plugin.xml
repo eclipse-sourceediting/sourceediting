@@ -2,7 +2,7 @@
 <?eclipse version="3.0"?>
 <plugin
    id="org.eclipse.wst.web.ui"
-   name="Ui Plug-in"
+   name="Simple Web UI Plug-in"
    version="1.0.0"
    provider-name=""
    class="org.eclipse.wst.web.ui.internal.WSTWebUIPlugin">
@@ -32,18 +32,18 @@
       </extendableWizard>
    </extension>
    <extension
-         point="org.eclipse.ui.newWizards">
-               <category
+       point="org.eclipse.ui.newWizards">
+      <category
             name="%web.category_ui_"
-            id="org.eclipse.jst.servlet.ui.internal">
+            id="org.eclipse.jst.servlet.ui">
       </category>
       <wizard
             name="%StaticWebProject.name"
             icon="icons/full/ctool16/newwebprj_wiz.gif"
-            category="com.ibm.wtp.web.ui"
+            category="org.eclipse.jst.servlet.ui"
             class="org.eclipse.wst.web.ui.internal.wizards.StaticWebProjectCreationWizard"
             project="true"
-            id="com.ibm.etools.webtools.StaticWebProjectCreation">
+            id="org.eclipse.wst.web.ui.internal.wizards.StaticWebProjectCreation">
          <description>
             %StaticWebProject.description
          </description>
@@ -76,7 +76,7 @@
             id="StaticWebSettingsPropertiesPage">
          <filter
                name="nature"
-               value="com.ibm.wtp.web.StaticWebNature">
+               value="org.eclipse.jst.j2ee.web.StaticWebNature">
          </filter>
       </page>
       
@@ -88,7 +88,7 @@
             id="WebFeaturesPropertiesPage">
          <filter
                name="nature"
-               value="com.ibm.wtp.web.StaticWebNature">
+               value="org.eclipse.jst.j2ee.web.StaticWebNature">
          </filter>
       </page>
    </extension>
@@ -124,7 +124,7 @@
 			<mapping
 				position="first"
 				name="Nature Mapping"
-				newValue="com.ibm.wtp.web.StaticWebNature">
+				newValue="org.eclipse.jst.j2ee.web.StaticWebNature">
 				<alias
 					value="com.ibm.etools.j2ee.StaticWebNature">
 				</alias>

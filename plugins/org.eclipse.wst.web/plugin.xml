@@ -2,7 +2,7 @@
 <?eclipse version="3.0"?>
 <plugin
    id="org.eclipse.wst.web"
-   name="Staticweb Plug-in"
+   name="Simple Web Plug-in"
    version="1.0.0"
    provider-name=""
    class="org.eclipse.wst.web.internal.WSTWebPlugin">
