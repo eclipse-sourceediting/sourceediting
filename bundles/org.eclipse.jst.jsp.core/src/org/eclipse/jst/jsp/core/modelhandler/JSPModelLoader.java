@@ -198,8 +198,6 @@ public class JSPModelLoader extends AbstractModelLoader {
 		List result = new ArrayList();
 		AdapterFactory factory = null;
 		//
-		factory = new ModelQueryAdapterFactoryForJSP();
-		result.add(factory);
 		factory = new PropagatingAdapterFactoryImpl();
 		result.add(factory);
 		factory = new PageDirectiveAdapterFactory();
