@@ -24,14 +24,8 @@ import java.util.Stack;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.QualifiedName;
-import org.eclipse.core.runtime.content.IContentDescription;
-import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jst.jsp.core.contentmodel.TaglibController;
@@ -45,14 +39,7 @@ import org.eclipse.wst.common.contentmodel.CMNode;
 import org.eclipse.wst.common.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.sse.core.contentmodel.CMDocumentTracker;
 import org.eclipse.wst.sse.core.contentmodel.CMNodeWrapper;
-import org.eclipse.wst.sse.core.document.DocumentReader;
-import org.eclipse.wst.sse.core.document.IEncodedDocument;
-import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
-import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.parser.BlockMarker;
-import org.eclipse.wst.sse.core.parser.RegionParser;
-import org.eclipse.wst.sse.core.parser.StructuredDocumentRegionHandler;
-import org.eclipse.wst.sse.core.parser.StructuredDocumentRegionParser;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
@@ -178,26 +165,12 @@ public class JSPTranslator {
 	/** no state */
 	public static final int S_NONE = 0;
 	
-	/** parse type*/
-	public static final int S_MODEL_BASED_PARSE = 2>>1;
-	public static final int S_FILE_BASED_PARSE = 2>>2;
-	
-	/** last XML tag encountered was... **/
-	public static final int S_XML_USEBEAN = 2>>3;
-	public static final int S_XML_SCRIPTLET = 2>>4;
-	public static final int S_XML_EXPRESSION = 2>>5;
-	public static final int S_XML_DECLARATION = 2>>6;
-	
-	private int stateMask = S_NONE;
-	
 	/**
 	 * configure using an XMLNode
 	 * @param node
 	 * @param monitor
 	 */
 	private void configure(XMLNode node, IProgressMonitor monitor) {
-		
-		setState(S_MODEL_BASED_PARSE);
 		
 		fProgressMonitor = monitor;
 		fStructuredModel = node.getModel();
@@ -223,8 +196,6 @@ public class JSPTranslator {
 	private void configure(IFile jspFile, IProgressMonitor monitor) {
 		// when configured on a file
 		// fStructuredModel, fPositionNode, fModelQuery, fStructuredDocument are all null
-		
-		setState(S_FILE_BASED_PARSE);
 		
 		fProgressMonitor = monitor;
 		
@@ -630,115 +601,8 @@ public class JSPTranslator {
 				advanceNextNode();
 		}
 		buildResult();
-		setState(S_NONE);
 	}
-	/**
-	 * Saves memory if a model isn't already available.
-	 * @param file
-	 * @param monitor
-	 */
-	public void translateFromFile(IFile file, IProgressMonitor monitor) {
-		
-		try {
-			IModelHandler handler = ModelHandlerRegistry.getInstance().getHandlerFor(file);
 
-			final IProgressMonitor progressMonitor = monitor;
-			final IEncodedDocument defaultDocument = handler.getDocumentLoader().createNewStructuredDocument();
-			if (defaultDocument instanceof IStructuredDocument) {
-				RegionParser parser = ((IStructuredDocument) defaultDocument).getParser();
-				if (parser instanceof StructuredDocumentRegionParser) {
-					
-					String charset = detectCharset(file);
-					StructuredDocumentRegionParser documentParser = (StructuredDocumentRegionParser) parser;
-					final IDocument textDocument = new Document();
-					setDocumentContent(textDocument, file.getContents(true), charset);
-					documentParser.reset(new DocumentReader(textDocument));
-					documentParser.addStructuredDocumentRegionHandler(new StructuredDocumentRegionHandler() {
-						/**
-						 * @see com.ibm.sse.model.parser.StructuredDocumentRegionHandler#nodeParsed(com.ibm.sse.model.text.IStructuredDocumentRegion)
-						 */
-						public void nodeParsed(IStructuredDocumentRegion documentRegion) {
-							
-							// handle the document region (as with regular translation)
-							translateDocumentRegion(documentRegion);
-							
-							// this is the memory saver
-							// disconnect the document regions
-							if (documentRegion.getPrevious() != null) {
-								documentRegion.getPrevious().setPrevious(null);
-								// some parts of code in translator call advanceNextNode()
-								//documentRegion.getPrevious().setNext(null);
-							}
-							if (progressMonitor.isCanceled()) {
-								textDocument.set(""); //$NON-NLS-1$
-							}
-						}
-
-						/**
-						 * @see com.ibm.sse.model.parser.StructuredDocumentRegionHandler#resetNodes()
-						 */
-						public void resetNodes() {
-							// 
-						}
-					});
-					// kicks off the parsing
-					documentParser.getDocumentRegions();
-					// build the translation
-					buildResult();
-				}
-			}
-			setState(S_NONE);
-		}
-		catch (CoreException e) {
-			Logger.logException(e);
-		}
-	}
-	
-	/**
-	 * called from file based translation (no StructuredModel or StructuredDocument)
-	 * @param sdRegion
-	 */
-	void translateDocumentRegion(IStructuredDocumentRegion sdRegion) {
-		if(!isCanceled()) {
-			
-			setCurrentNode(sdRegion);
-			if(sdRegion != null)
-				setSourceReferencePoint();
-			
-			// check the last state here
-			if(hasState(S_XML_USEBEAN)) {
-				translateUseBean(sdRegion);
-				unsetState(S_XML_USEBEAN);
-			}
-			else if(hasState(S_XML_SCRIPTLET)) {
-				translateScriptletString(sdRegion.getText(), sdRegion, sdRegion.getStartOffset(), sdRegion.getEndOffset());
-				unsetState(S_XML_SCRIPTLET);
-			}
-			else if(hasState(S_XML_EXPRESSION)) {
-				translateExpressionString(sdRegion.getText(), sdRegion, sdRegion.getStartOffset(), sdRegion.getEndOffset());
-				unsetState(S_XML_EXPRESSION);
-			}
-			else if(hasState(S_XML_DECLARATION)) {
-				translateDeclarationString(sdRegion.getText(), sdRegion, sdRegion.getStartOffset(), sdRegion.getEndOffset());
-				unsetState(S_XML_DECLARATION);
-			}
-			else {
-				// normal case
-				
-				// intercept HTML comment flat node
-				// also handles UNDEFINED (which is what CDATA comes in as)
-				// basically this part will handle any "embedded" JSP containers
-				if (getCurrentNode().getType() == XMLRegionContext.XML_COMMENT_TEXT || getCurrentNode().getType() == XMLRegionContext.XML_CDATA_TEXT || getCurrentNode().getType() == XMLRegionContext.UNDEFINED) {
-					translateXMLCommentNode(getCurrentNode());
-				}
-				else {
-					// iterate through each region in the structured document region
-					translateRegionContainer(getCurrentNode(), STANDARD_JSP);
-				}
-			}
-		}
-	}
-	
 	protected void setDocumentContent(IDocument document, InputStream contentStream, String charset) {
 		Reader in = null;
 		try {
@@ -765,48 +629,6 @@ public class JSPTranslator {
 				}
 			}
 		}
-	}
-	/*
-	 * from TaskTagSeeker
-	 */
-	private String detectCharset(IFile file) {
-		if (file.getType() == IResource.FILE && file.isAccessible()) {
-			IContentDescription d = null;
-			try {
-				// optimized description lookup, might not succeed
-				d = file.getContentDescription();
-				if (d != null)
-					return d.getCharset();
-			}
-			catch (CoreException e) {
-				// should not be possible given the accessible and file type
-				// check above
-			}
-			InputStream contents = null;
-			try {
-				contents = file.getContents();
-				IContentDescription description = Platform.getContentTypeManager().getDescriptionFor(contents, file.getName(), new QualifiedName[]{IContentDescription.CHARSET});
-				if (description != null) {
-					return description.getCharset();
-				}
-			}
-			catch (IOException e) {
-				// don't care
-			}
-			catch (CoreException e) {
-				Logger.logException(e);
-			}
-			finally {
-				if(contents != null) {
-					try {
-						contents.close();
-					} catch (IOException e1) {
-						// not sure how to recover at this point
-					}
-				}
-			}
-		}
-		return ResourcesPlugin.getEncoding();
 	}
 
 	/**
@@ -962,7 +784,6 @@ public class JSPTranslator {
 							if (getCurrentNode() != null) {
 								translateUseBean(container); // 'regions' should be all the useBean attributes
 							}
-							setState(S_XML_USEBEAN);
 						}
 						else if (jspTagName.equals("scriptlet")) //$NON-NLS-1$
 						{	
@@ -971,7 +792,6 @@ public class JSPTranslator {
 							if(sdr != null) {
 								translateScriptletString(sdr.getText(), sdr, sdr.getStartOffset(), sdr.getEndOffset());
 							}
-							setState(S_XML_SCRIPTLET);
 							advanceNextNode();
 						}
 						else if (jspTagName.equals("expression")) //$NON-NLS-1$
@@ -981,7 +801,6 @@ public class JSPTranslator {
 							if(sdr != null) {
 								translateExpressionString(sdr.getText(), sdr, sdr.getStartOffset(), sdr.getEndOffset());
 							}
-							setState(S_XML_EXPRESSION);
 							advanceNextNode();
 						}
 						else if (jspTagName.equals("declaration")) //$NON-NLS-1$
@@ -992,7 +811,6 @@ public class JSPTranslator {
 								translateDeclarationString(sdr.getText(), sdr, sdr.getStartOffset(), sdr.getEndOffset());
 								
 							}
-							setState(S_XML_DECLARATION);
 							advanceNextNode();
 						}
 						else if (jspTagName.equals("directive")) //$NON-NLS-1$
@@ -1245,6 +1063,7 @@ public class JSPTranslator {
 				return;
 			}
 			else if (regionText.equals("include")) { //$NON-NLS-1$
+				String fileLocation = ""; //$NON-NLS-1$
 				// CMVC 258311
 				// PMR 18368, B663
 				// skip to required "file" attribute, should be safe because
@@ -1252,9 +1071,9 @@ public class JSPTranslator {
 				while (r != null && regions.hasNext() && !r.getType().equals(XMLRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
 					r = (ITextRegion) regions.next();
 				}
-				attrValue = getAttributeValue(r, regions);
+				fileLocation = getAttributeValue(r, regions);
 				if (attrValue != null)
-					handleIncludeFile(attrValue);
+					handleIncludeFile(fileLocation);
 			}
 			else if (regionText.indexOf("page") > -1) { //$NON-NLS-1$
 				translatePageDirectiveAttributes(regions);
@@ -1935,38 +1754,27 @@ public class JSPTranslator {
 		return TaglibController.getTLDCMDocumentManager(fStructuredDocument);
 	}
 
-	final public void setRelativeOffset(int fRelativeOffset) {
-		this.fRelativeOffset = fRelativeOffset;
+	final public void setRelativeOffset(int relativeOffset) {
+		this.fRelativeOffset = relativeOffset;
 	}
 
 	final public int getRelativeOffset() {
 		return fRelativeOffset;
 	}
 
-	private void setCursorOwner(StringBuffer fCursorOwner) {
-		this.fCursorOwner = fCursorOwner;
+	private void setCursorOwner(StringBuffer cursorOwner) {
+		this.fCursorOwner = cursorOwner;
 	}
 
 	final public StringBuffer getCursorOwner() {
 		return fCursorOwner;
 	}
 
-	private IStructuredDocumentRegion setCurrentNode(IStructuredDocumentRegion fCurrentNode) {
-		return this.fCurrentNode = fCurrentNode;
+	private IStructuredDocumentRegion setCurrentNode(IStructuredDocumentRegion currentNode) {
+		return this.fCurrentNode = currentNode;
 	}
 
 	final public IStructuredDocumentRegion getCurrentNode() {
 		return fCurrentNode;
-	}
-	
-	private void setState(int state) {
-		this.stateMask = this.stateMask | state;
-	}
-	private void unsetState(int state) {
-		if(hasState(state))
-			this.stateMask = this.stateMask -= state;
-	}
-	public final boolean hasState(int state) {
-		return (this.stateMask & state) == state;
 	}
 }

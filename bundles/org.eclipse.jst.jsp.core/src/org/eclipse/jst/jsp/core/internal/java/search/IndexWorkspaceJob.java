@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.java.search;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceProxy;
@@ -46,6 +49,8 @@ public class IndexWorkspaceJob extends Job {
 	 * and adds the files to be indexed as they are encountered
 	 */
 	private class JSPFileVisitor implements IResourceProxyVisitor {
+	    private List files = new ArrayList(); 
+		
 		// monitor from the Job
 		IProgressMonitor fInnerMonitor = null;
 		public JSPFileVisitor(IProgressMonitor monitor) {
@@ -78,7 +83,8 @@ public class IndexWorkspaceJob extends Job {
 						if(DEBUG)
 							System.out.println("(+) IndexWorkspaceJob adding file: " + file.getName());
 						// this call will check the ContentTypeDescription, so don't need to do it here.
-						JSPSearchSupport.getInstance().addJspFile(file);
+						//JSPSearchSupport.getInstance().addJspFile(file);
+						this.files.add(file);
 						this.fInnerMonitor.subTask(proxy.getName());
 						
 						// don't search deeper for files
@@ -87,6 +93,10 @@ public class IndexWorkspaceJob extends Job {
 				}
 			}
 			return true;
+		}
+		
+		public final IFile[] getFiles() {
+		    return (IFile[])this.files.toArray(new IFile[this.files.size()]);
 		}
 	}
 	
@@ -124,7 +134,12 @@ public class IndexWorkspaceJob extends Job {
 		long start = System.currentTimeMillis();
 		
 		try {
-			ResourcesPlugin.getWorkspace().getRoot().accept(new JSPFileVisitor(monitor), IResource.DEPTH_INFINITE);
+		    JSPFileVisitor visitor = new JSPFileVisitor(monitor);
+		    // collect all jsp files
+			ResourcesPlugin.getWorkspace().getRoot().accept(visitor, IResource.DEPTH_INFINITE);
+			// request indexing
+			// this is pretty much like faking an entire workspace resource delta
+			JSPIndexManager.getInstance().indexFiles(visitor.getFiles());
 		}
 		catch (CoreException e) {
 			if(DEBUG)

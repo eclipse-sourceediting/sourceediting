@@ -20,7 +20,6 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.search.SearchDocument;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchScope;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchSupport;
-import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.search.ui.ISearchResult;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.search.BasicSearchQuery;
@@ -36,22 +35,17 @@ public class JSPSearchQuery extends BasicSearchQuery {
 
 		public void run(IProgressMonitor monitor) throws CoreException {
 
-			try {
-				if (getFile() != null && getJavaElement() != null) {
-					
-					JSPSearchSupport support = JSPSearchSupport.getInstance();
-					// index the file
-					SearchDocument delegate =  support.addJspFile(getFile());
-					String scopePath = delegate.getPath();
-					JSPSearchScope singleFileScope = new JSPSearchScope(new String[]{getFile().getFullPath().toString(), scopePath});
-					
-					// perform a search
-					// by passing in this jsp search query, requstor can add matches
-					support.searchRunnable(getJavaElement(), singleFileScope, new JSPSingleFileSearchRequestor(getInstance()));
-				}
-			}
-			catch(CoreException e) {
-				Logger.logException(e);
+			if (getFile() != null && getJavaElement() != null) {
+				
+				JSPSearchSupport support = JSPSearchSupport.getInstance();
+				// index the file
+				SearchDocument delegate =  support.addJspFile(getFile());
+				String scopePath = delegate.getPath();
+				JSPSearchScope singleFileScope = new JSPSearchScope(new String[]{getFile().getFullPath().toString(), scopePath});
+				
+				// perform a search
+				// by passing in this jsp search query, requstor can add matches
+				support.searchRunnable(getJavaElement(), singleFileScope, new JSPSingleFileSearchRequestor(getInstance()));
 			}
 		}
 	}

@@ -232,10 +232,17 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 			beanClass = getAttributeValue("class", sdRegion); //$NON-NLS-1$
 			beanType = getAttributeValue("type", sdRegion); //$NON-NLS-1$
 			beanId = getAttributeValue("id", sdRegion); //$NON-NLS-1$
-			if (beanClass != "") //$NON-NLS-1$
-				beanDecl = beanClass + " " + beanId + ";\n"; //$NON-NLS-1$ //$NON-NLS-2$
-			else
-				beanDecl = beanType + " " + beanId + ";\n"; //$NON-NLS-1$ //$NON-NLS-2$
+			
+			if (beanId != null && (beanType != null || beanClass != null)) {
+				if (beanType.equals(""))
+				    beanType = beanClass;
+				String prefix = beanType + " " + beanId + " = "; //$NON-NLS-1$ //$NON-NLS-2$
+				String suffix = "null;\n"; //$NON-NLS-1$
+				if (beanClass != null)
+					suffix = "new " + beanClass + "();\n"; //$NON-NLS-1$ //$NON-NLS-2$
+				beanDecl = prefix + suffix;
+			}	
+			
 			fScriptlets.add(beanDecl);
 			fPossibleOwner = JSPTranslator.SCRIPTLET;
 		}

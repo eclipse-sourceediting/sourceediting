@@ -24,10 +24,8 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.core.IProblemRequestor;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.WorkingCopyOwner;
-import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jst.jsp.core.internal.Logger;
 
@@ -73,10 +71,12 @@ public class JSPTranslation implements IJSPTranslation {
 	private HashMap fJava2JspUseBeanMap = null;
 	private HashMap fJava2JspIndirectMap = null;
 	
-	private JSPTranslator fTranslator = null;
+	// don't want to hold onto model (via translator)
+	// all relevant info is extracted in the constructor.
+	//private JSPTranslator fTranslator = null;
+	private String fJavaText = "";
+	private String fJspText = "";
 	
-	private WorkingCopyOwner fTemporaryWorkingCopyOwner = null;
-	private IProblemRequestor fProblemRequestor = null;
 	private ICompilationUnit fCompilationUnit = null;
 	private IProgressMonitor fProgressMonitor = null;
 	/** lock to synchronize access to the compilation unit **/
@@ -86,10 +86,12 @@ public class JSPTranslation implements IJSPTranslation {
 
 		fLock = new byte[0];
 		fJavaProject = javaProj;
-		fTranslator = translator;
+		//fTranslator = translator;
 		
 		// can be null if it's an empty document (w/ NullJSPTranslation)
 		if(translator != null) {
+		    fJavaText = translator.getTranslation().toString();
+		    fJspText = translator.getJspText();
 			fClassname = translator.getClassname();
 			fJava2JspMap = translator.getJava2JspRanges();
 			fJsp2JavaMap = translator.getJsp2JavaRanges();
@@ -107,11 +109,13 @@ public class JSPTranslation implements IJSPTranslation {
 	 * @see org.eclipse.jst.jsp.core.internal.java.IJSPTranslation#getJavaText()
 	 */
 	public String getJavaText() {
-		return (fTranslator != null) ? fTranslator.getTranslation().toString() : "";  //$NON-NLS-1$ 
+		//return (fTranslator != null) ? fTranslator.getTranslation().toString() : "";  //$NON-NLS-1$ 
+		return fJavaText;
 	}
 	
 	public String getJspText() {
-		return (fTranslator != null) ? fTranslator.getJspText() : "";  //$NON-NLS-1$
+		//return (fTranslator != null) ? fTranslator.getJspText() : "";  //$NON-NLS-1$
+		return fJspText;
 	}
 	
 	public String getJavaPath() {
@@ -242,7 +246,7 @@ public class JSPTranslation implements IJSPTranslation {
 	}
 	
 	/**
-	 * Returns the Java positions for the give range in the Java document.
+	 * Returns the Java positions for the given range in the Java document.
 	 * 
 	 * @param offset
 	 * @param length
@@ -311,76 +315,6 @@ public class JSPTranslation implements IJSPTranslation {
 		}
 		return false;
 	}
-	
-	/**
-	 * Handles problem collection (during reconcile of the CompilationUnit)
-	 */
-	private class ProblemRequestor implements IProblemRequestor {
-
-		private List fCollectedProblems;
-		private boolean fIsActive = false;
-		private boolean fIsRunning = false;
-
-		public void beginReporting() {
-			fIsRunning = true;
-			fCollectedProblems = new ArrayList();
-		}
-
-		public void acceptProblem(IProblem problem) {
-			if (isActive())
-				fCollectedProblems.add(problem);
-		}
-
-		public void endReporting() {
-			fIsRunning = false;
-		}
-
-		public boolean isActive() {
-			return fIsActive && fCollectedProblems != null;
-		}
-
-		/**
-		 * Sets the active state of this problem requestor.
-		 * 
-		 * @param isActive the state of this problem requestor
-		 */
-		public void setIsActive(boolean isActive) {
-			if (fIsActive != isActive) {
-				fIsActive = isActive;
-				if (fIsActive)
-					startCollectingProblems();
-				else
-					stopCollectingProblems();
-			}
-		}
-
-		/**
-		 * Tells this annotation model to collect temporary problems from now on.
-		 */
-		private void startCollectingProblems() {
-			fCollectedProblems = new ArrayList();
-		}
-
-		/**
-		 * Tells this annotation model to no longer collect temporary problems.
-		 */
-		private void stopCollectingProblems() {
-			// do nothing
-		}
-
-		/**
-		 * @return the list of collected problems
-		 */
-		public List getCollectedProblems() {
-			return fCollectedProblems;
-		}
-
-		public boolean isRunning() {
-			return fIsRunning;
-		}
-	}
-
-	// end of ProblemRequestor class
 
 	/**
 	 * Return the Java CompilationUnit associated with this JSPTranslation (this particular model)
@@ -482,10 +416,8 @@ public class JSPTranslation implements IJSPTranslation {
 	 * 
 	 * @return the problem requestor for the CompilationUnit in this JSPTranslation
 	 */
-	private IProblemRequestor getProblemRequestor() {
-		if (fProblemRequestor == null)
-			fProblemRequestor = new ProblemRequestor();
-		return fProblemRequestor;
+	private JSPProblemRequestor getProblemRequestor() {
+	    return CompilationUnitHelper.getInstance().getProblemRequestor();
 	}
 
 	/**
@@ -493,15 +425,7 @@ public class JSPTranslation implements IJSPTranslation {
 	 * @return the IWorkingCopyOwner for this CompilationUnit in this JSPTranslation
 	 */
 	public WorkingCopyOwner getWorkingCopyOwner() {
-
-		if (fTemporaryWorkingCopyOwner == null) {
-			fTemporaryWorkingCopyOwner = new WorkingCopyOwner() {
-				public String toString() {
-					return "JSP Temporary WorkingCopy owner"; //$NON-NLS-1$
-				}
-			};
-		}
-		return fTemporaryWorkingCopyOwner;
+	    return CompilationUnitHelper.getInstance().getWorkingCopyOwner();
 	}
 
 	/**
@@ -519,7 +443,7 @@ public class JSPTranslation implements IJSPTranslation {
 	 * @return the List of problems collected during reconcile of the compilation unit
 	 */
 	public List getProblems() {
-		List problems = ((ProblemRequestor) getProblemRequestor()).getCollectedProblems();
+		List problems = getProblemRequestor().getCollectedProblems();
 		return problems != null ? problems : new ArrayList();
 	}
 
@@ -531,7 +455,7 @@ public class JSPTranslation implements IJSPTranslation {
 	public void setProblemCollectingActive(boolean collect) {
 		ICompilationUnit cu = getCompilationUnit();
 		if(cu != null) {	
-			((ProblemRequestor) getProblemRequestor()).setIsActive(collect);
+			getProblemRequestor().setIsActive(collect);
 		}
 	}
 

@@ -50,8 +50,8 @@ public class JSPSearchParticipant extends SearchParticipant {
 			sDoc =  JSPSearchSupport.getInstance().getSearchDocument(documentPath);
 		    // can be null if there was a bad index entry (the .jsp file referenced doesn't exist anymore)
 		}
-		else {
-			// we only care about .java
+		
+		if(sDoc == null){
 			// return a dummy doc here so search participation doesn't break
 			return new NullSearchDocument(documentPath);
 		}

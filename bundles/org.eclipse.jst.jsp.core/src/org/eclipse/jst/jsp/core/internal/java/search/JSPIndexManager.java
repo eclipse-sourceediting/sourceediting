@@ -167,12 +167,6 @@ public class JSPIndexManager implements IResourceChangeListener {
 	 */
 	private class ProcessFilesJob extends Job { 
 		IFile[] jspFiles =  null;
-		
-		// how many files to feed indexmanager at a time
-		int BATCH_SIZE = 15;
-		// ms delay before checking if it's ok to schedule more docs for indexing
-		long DELAY = 200;
-		
 		ProcessFilesJob(String taskName, IFile[] files) {
 			super(taskName);
 			this.jspFiles = files;
@@ -192,68 +186,40 @@ public class JSPIndexManager implements IResourceChangeListener {
 				monitor.beginTask("", this.jspFiles .length); //$NON-NLS-1$
 				JSPSearchSupport ss = JSPSearchSupport.getInstance();
 				String processingNFiles = ""; //$NON-NLS-1$
-				IndexManager indexManager = JavaModelManager.getJavaModelManager().getIndexManager();
+
 				
-				// either 10 or however many files ther are
-				int nextEnd = this.jspFiles.length < BATCH_SIZE ? this.jspFiles.length : BATCH_SIZE;
-				int remaining = this.jspFiles.length;
-				int i = 0;
-				
-				while(i<this.jspFiles.length) {
-				    // if IndexManager can handle more files
-				    if(indexManager.awaitingJobsCount() == 0) {
-				        // process a batch of JSP files
-						for(; i<nextEnd; i++) {
-							if(isCanceled(monitor) || frameworkIsShuttingDown()) {
-								setCanceledState();
-								return Status.CANCEL_STATUS;
-							}
-							try {
-								ss.addJspFile(this.jspFiles [i]);
-								// JSP Indexer processing n files
-								processingNFiles = JSPCorePlugin.getResourceString("%JSPIndexManager.2", new String[]{Integer.toString((this.jspFiles .length -i))});
-								monitor.subTask(processingNFiles + " - " + this.jspFiles [i].getName());
-								monitor.worked(1);
-								
-								if(DEBUG) {
-									System.out.println("JSPIndexManager Job added file: " + this.jspFiles [i].getName()); //$NON-NLS-1$
-								}
-							}
-							catch (CoreException e) {
-								if(!frameworkIsShuttingDown()) {
-								    String filename = this.jspFiles[i] != null ? this.jspFiles[i].getFullPath().toString() : ""; //$NON-NLS-1$
-									Logger.logException("JSPIndexer problem indexing:" + filename,  e); //$NON-NLS-1$
-								}
-							}
-							catch (Exception e){
-							    // RATLC00284776
-							    // ISSUE: we probably shouldn't be catching EVERY exception, but
-							    // the framework only allows to return IStatus in order to communicate
-							    // that something went wrong, which means the loop
-							    // won't complete, and we would hit the same problem the next time.
-							    // 
-							    // a possible solution is to keep track of the exceptions logged
-							    // and only log a certain amt of the same one, otherwise skip it.
-								if(!frameworkIsShuttingDown()) {
-								    String filename = this.jspFiles[i] != null ? this.jspFiles[i].getFullPath().toString() : ""; //$NON-NLS-1$
-								    Logger.logException("JSPIndexer problem indexing:" + filename,  e); //$NON-NLS-1$
-								}
-							}
-						}// end inner for
-						remaining = this.jspFiles.length - nextEnd;
-						// either add 10 or whatever # of files left
-						nextEnd += (remaining < BATCH_SIZE) ? remaining : BATCH_SIZE;
-				    }
-				    else {
-				        try {
-				            // wait for indexmanager to process the last batch...
-                            Thread.sleep(DELAY);
-                        } catch (InterruptedException e) {
-                            if(DEBUG)
-                                e.printStackTrace();
-                        }
-				    }
-				}// end outer while
+				for(int i = 0; i<this.jspFiles.length; i++) {
+
+					if(isCanceled(monitor) || frameworkIsShuttingDown()) {
+						setCanceledState();
+						return Status.CANCEL_STATUS;
+					}
+					try {
+						ss.addJspFile(this.jspFiles [i]);
+						// JSP Indexer processing n files
+						processingNFiles = JSPCorePlugin.getResourceString("%JSPIndexManager.2", new String[]{Integer.toString((this.jspFiles .length -i))});
+						monitor.subTask(processingNFiles + " - " + this.jspFiles [i].getName());
+						monitor.worked(1);
+						
+						if(DEBUG) {
+							System.out.println("JSPIndexManager Job added file: " + this.jspFiles [i].getName()); //$NON-NLS-1$
+						}
+					}
+					catch (Exception e){
+					    // RATLC00284776
+					    // ISSUE: we probably shouldn't be catching EVERY exception, but
+					    // the framework only allows to return IStatus in order to communicate
+					    // that something went wrong, which means the loop
+					    // won't complete, and we would hit the same problem the next time.
+					    // 
+					    // a possible solution is to keep track of the exceptions logged
+					    // and only log a certain amt of the same one, otherwise skip it.
+						if(!frameworkIsShuttingDown()) {
+						    String filename = this.jspFiles[i] != null ? this.jspFiles[i].getFullPath().toString() : ""; //$NON-NLS-1$
+						    Logger.logException("JSPIndexer problem indexing:" + filename,  e); //$NON-NLS-1$
+						}
+					}
+				} // end for
 			}
 			finally {
 				// just in case something didn't follow API (monitor is null)
@@ -343,7 +309,8 @@ public class JSPIndexManager implements IResourceChangeListener {
 						// process files from this delta
 						IFile[] files = v.getFiles();
 						if(files.length > 0) {	
-							processFiles(files);
+							//processFiles(files);
+							indexFiles(files);
 							beganProcess = true;
 						}
 					}
@@ -445,9 +412,10 @@ public class JSPIndexManager implements IResourceChangeListener {
 	
 	/**
 	 * Creates and schedules a Job to process collected files.
+	 * All JSP indexing should be done through this method or processFiles(IFile file)
 	 * @param files
 	 */
-	private void processFiles(IFile[] files) {
+	public final void indexFiles(IFile[] files) {
 		// updating JSP Index
 		String taskName = JSPCorePlugin.getResourceString("%JSPIndexManager.0");
 		
@@ -470,6 +438,7 @@ public class JSPIndexManager implements IResourceChangeListener {
 		});
 		processFiles.schedule();
 	}
+	
 	
 	/**
 	 * Package protected for access by inner Job class in resourceChanged(...)

@@ -209,7 +209,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		// specific fix for CMVC 274033
 		// no attribute proposals for <jsp:useBean />
 		String nodeName = contentAssistRequest.getNode().getNodeName();
-		if (nodeName.startsWith("jsp:")) { //$NON-NLS-1$
+		if (nodeName.indexOf(':') != -1) { //$NON-NLS-1$
 			super.addAttributeNameProposals(contentAssistRequest);
 		}
 	}
@@ -630,7 +630,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		// ANOTHER WORKAROUND UNTIL PARTITIONING TAKES CARE OF THIS
 		// check for xml-jsp tags...
 		// CMVC 243657
-		if (partitionType == StructuredTextPartitionerForHTML.ST_DEFAULT_HTML && fn != null) {
+		if (partitionType == StructuredTextPartitionerForJSP.ST_JSP_DIRECTIVE && fn != null) {
 			IStructuredDocumentRegion possibleXMLJSP = ((fn.getType() == XMLRegionContext.XML_CONTENT) && fn.getPrevious() != null) ? fn.getPrevious() : fn;
 			ITextRegionList regions = possibleXMLJSP.getRegions();
 			if (regions.size() > 1) {

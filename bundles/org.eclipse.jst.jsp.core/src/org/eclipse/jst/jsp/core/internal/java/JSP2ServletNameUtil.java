@@ -32,7 +32,8 @@ public class JSP2ServletNameUtil {
 			return qualifiedTypeName;
 		
 		StringBuffer buf = new StringBuffer();
-		
+		String possible = "";
+	
 		// remove the .java extension if there is one
 		if(qualifiedTypeName.endsWith(".java"))//$NON-NLS-1$
 			qualifiedTypeName = qualifiedTypeName.substring(0, qualifiedTypeName.length() - 5);
@@ -46,8 +47,14 @@ public class JSP2ServletNameUtil {
 				else {
 					char unmangled;
 					try {
-						unmangled = (char)Integer.decode("0x" + qualifiedTypeName.substring(i+1, endIndex)).intValue();//$NON-NLS-1$
-						i = endIndex;
+						possible = qualifiedTypeName.substring(i+1, endIndex); 
+					    if(isValid(possible)) {
+							unmangled = (char)Integer.decode("0x" + possible).intValue();//$NON-NLS-1$
+							i = endIndex;
+					    }
+					    else { 
+					        unmangled = c;
+					    }
 						
 					} catch(NumberFormatException e) {
 						unmangled = c;
@@ -61,6 +68,30 @@ public class JSP2ServletNameUtil {
 		return buf.toString();
 	}
 
+	/**
+	 * Determine if given string is a valid Hex representation of an ASCII character (eg. 2F -> /)
+	 * @param possible
+	 * @return
+	 */
+	private static boolean isValid(String possible) {
+	    boolean result = false;
+	    if(possible.length() == 2){	    
+	        char c1 = possible.charAt(0);
+	        char c2 = possible.charAt(1);
+	        // 1st character must be a digit
+	        if(Character.isDigit(c1)) {
+	            // 2nd character must be digit or upper case letter A-F
+	            if(Character.isDigit(c2)) {
+	                result = true;
+	            }
+	            else if(Character.isUpperCase(c2) && (c2 == 'A' || c2 == 'B' || c2 ==  'C'|| c2 ==  'D'|| c2 ==  'E'|| c2 == 'F')) {
+	                result = true;
+	            }
+	        }
+	    }
+        return result;
+	}
+	
 	/**
 	 * Mangle string to WAS-like specifications
 	 *
