@@ -14,7 +14,6 @@ import junit.framework.TestCase;
 
 import org.eclipse.jst.jsp.core.tests.Logger;
 import org.eclipse.wst.common.encoding.content.IContentTypeIdentifier;
-import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.internal.document.AttrImpl;
@@ -37,20 +36,15 @@ public class TestOrphan extends TestCase {
 		super(name);
 	}
 
-	private IModelManager getModelManager() {
-		return StructuredModelManager.getInstance().getModelManager();
-	}
-
 	private Document getJSPDoc() {
-
-		XMLModel structuredModel = (XMLModel) getModelManager().createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_JSP);
+		XMLModel structuredModel = (XMLModel) StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_JSP);
 		Document doc = structuredModel.getDocument();
 		return doc;
 	}
 
 	private Document getHTMLDoc() {
 
-		XMLModel structuredModel = (XMLModel) getModelManager().createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_HTML);
+		XMLModel structuredModel = (XMLModel) StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(IContentTypeIdentifier.ContentTypeID_HTML);
 		Document doc = structuredModel.getDocument();
 		return doc;
 	}

@@ -46,7 +46,7 @@ public class TestStructuredDocumentClone extends TestCase {
 
 	public void testCloneStructuredDocumentXML() throws IOException {
 		// First make (empty) structuredDocument
-		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
+		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IStructuredDocument structuredDocument = modelManager.createStructuredDocumentFor("dummy.xml", (InputStream) null, null);
 		assertTrue("structuredDocument could not be created!", structuredDocument != null);
 
@@ -70,7 +70,7 @@ public class TestStructuredDocumentClone extends TestCase {
 	 */
 	public void testCloneStructuredDocumentJSP() throws IOException {
 		// First make (empty) structuredDocument
-		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
+		IModelManager modelManager = StructuredModelManager.getModelManager();
 		IStructuredDocument structuredDocument = modelManager.createStructuredDocumentFor("dummy.jsp", (InputStream) null, null);
 		assertTrue("structuredDocument could not be created!", structuredDocument != null);
 
@@ -94,7 +94,7 @@ public class TestStructuredDocumentClone extends TestCase {
 	 */
 	public void testCloneStructuredDocumentJSPXML() throws IOException {
 		// First make (empty) structuredDocument
-		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
+		IModelManager modelManager = StructuredModelManager.getModelManager();
 		String testContent = "<@! page contentType=\"text/xml\" @>";
 		IStructuredDocument structuredDocument = modelManager.createStructuredDocumentFor("dummy.jsp", testContent, null);
 		assertTrue("structuredDocument could not be created!", structuredDocument != null);

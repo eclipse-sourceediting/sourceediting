@@ -36,7 +36,7 @@ public class CleanupTester extends TestCase {
 	public CleanupTester(String name) {
 		super(name);
 		// get model manager
-		fModelManager = StructuredModelManager.getInstance().getModelManager();
+		fModelManager = StructuredModelManager.getModelManager();
 
 		// get cleanup processor
 		fCleanupProcessor = new CleanupProcessorXML();

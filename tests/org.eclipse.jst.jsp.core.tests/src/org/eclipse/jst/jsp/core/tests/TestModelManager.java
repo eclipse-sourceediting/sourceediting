@@ -35,7 +35,7 @@ public class TestModelManager extends TestCase {
 	}
 
 	public void testModelManager() throws IOException {
-		IModelManager modelManager = StructuredModelManager.getInstance().getModelManager();
+		IModelManager modelManager = StructuredModelManager.getModelManager();
 		assertTrue("modelManager must not be null", modelManager != null);
 
 		IStructuredModel model = modelManager.getModelForEdit("test.xml", null, null);

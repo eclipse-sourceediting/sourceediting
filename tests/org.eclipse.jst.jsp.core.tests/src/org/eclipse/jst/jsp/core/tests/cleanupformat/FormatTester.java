@@ -36,7 +36,7 @@ public class FormatTester extends TestCase {
 		super(name);
 
 		// get model manager
-		fModelManager = StructuredModelManager.getInstance().getModelManager();
+		fModelManager = StructuredModelManager.getModelManager();
 
 		// get format processor
 		fFormatProcessor = new FormatProcessorXML();
