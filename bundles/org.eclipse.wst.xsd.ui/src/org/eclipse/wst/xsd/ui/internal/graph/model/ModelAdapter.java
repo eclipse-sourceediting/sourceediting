@@ -1,0 +1,27 @@
+/*******************************************************************************
+ * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+package org.eclipse.wst.xsd.ui.internal.graph.model;
+
+
+
+public interface ModelAdapter
+{               
+  public static final String CHILDREN_PROPERTY = "CHILDREN_PROPERTY";
+  public static final String LABEL_PROPERTY = "LABEL_PROPERTY";
+  public static final String IMAGE_PROPERTY = "IMAGE_PROPERTY";
+  public static final String DETAIL_PROPERTY = "DETAIL_PROPERTY";
+                                       
+  public void addListener(ModelAdapterListener l);
+  public void removeListener(ModelAdapterListener l);
+  public Object getProperty(Object modelObject, String propertyName); 
+  public void firePropertyChanged(Object modelObject, String propertyName);
+}
+
