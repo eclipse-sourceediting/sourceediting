@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.wst.sse.core.ModelPlugin;
+import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 /**
@@ -185,7 +185,7 @@ public abstract class AbstractPreferencePage extends PreferencePage implements M
 	}
 
 	protected Preferences getModelPreferences() {
-		return ModelPlugin.getDefault().getPluginPreferences();
+		return SSECorePlugin.getDefault().getPluginPreferences();
 	}
 
 	public void init(IWorkbench workbench) {

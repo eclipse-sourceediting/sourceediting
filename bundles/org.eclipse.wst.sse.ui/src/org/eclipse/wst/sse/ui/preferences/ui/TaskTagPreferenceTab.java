@@ -59,7 +59,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.sse.core.ModelPlugin;
+import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.participants.TaskTagSeeker;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.util.StringUtils;
@@ -356,7 +356,7 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 	}
 
 	private void loadPreferenceValues() {
-		Plugin modelPlugin = ModelPlugin.getDefault();
+		Plugin modelPlugin = SSECorePlugin.getDefault();
 		String tags = modelPlugin.getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_TAGS);
 		String priorities = modelPlugin.getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_PRIORITIES);
 		loadTagsAndPriorities(tags, priorities);
@@ -441,7 +441,7 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 						int errorCount = 0;
 						for (int i = 0; i < projects.length && !monitor.isCanceled(); i++) {
 							try {
-								projects[i].build(IncrementalProjectBuilder.FULL_BUILD, ModelPlugin.STRUCTURED_BUILDER, new HashMap(), new SubProgressMonitor(monitor, projects.length));
+								projects[i].build(IncrementalProjectBuilder.FULL_BUILD, SSECorePlugin.STRUCTURED_BUILDER, new HashMap(), new SubProgressMonitor(monitor, projects.length));
 							}
 							catch (CoreException e) {
 								Logger.logException(e);
@@ -468,7 +468,7 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 	}
 
 	public void performDefaults() {
-		Plugin modelPlugin = ModelPlugin.getDefault();
+		Plugin modelPlugin = SSECorePlugin.getDefault();
 		String tags = modelPlugin.getPluginPreferences().getDefaultString(CommonModelPreferenceNames.TASK_TAG_TAGS);
 		String priorities = modelPlugin.getPluginPreferences().getDefaultString(CommonModelPreferenceNames.TASK_TAG_PRIORITIES);
 		loadTagsAndPriorities(tags, priorities);
@@ -507,7 +507,7 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 	 */
 	private void save() {
 		String tags = StringUtils.pack(fTags);
-		Plugin modelPlugin = ModelPlugin.getDefault();
+		Plugin modelPlugin = SSECorePlugin.getDefault();
 		modelPlugin.getPluginPreferences().setValue(CommonModelPreferenceNames.TASK_TAG_TAGS, tags);
 
 		StringBuffer buf = new StringBuffer();

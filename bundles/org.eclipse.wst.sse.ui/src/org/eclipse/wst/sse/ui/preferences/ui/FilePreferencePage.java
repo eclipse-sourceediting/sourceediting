@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.wst.sse.core.ModelPlugin;
+import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.preferences.TabFolderLayout;
 
@@ -126,7 +126,7 @@ public class FilePreferencePage extends PreferencePage implements IWorkbenchPref
 		for (int i = 0; i < fTabs.length; i++) {
 			fTabs[i].performOk();
 		}
-		ModelPlugin.getDefault().savePluginPreferences();
+		SSECorePlugin.getDefault().savePluginPreferences();
 		return ok;
 	}
 }
