@@ -156,9 +156,6 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 	public Object getConfiguration(String extensionType, String targetID) {
 		if (targetID == null || targetID.length() == 0)
 			return null;
-		if (debugTime) {
-			time0 = System.currentTimeMillis();
-		}
 		List configurations = getConfigurations(extensionType, targetID);
 		if (configurations.isEmpty())
 			return null;
