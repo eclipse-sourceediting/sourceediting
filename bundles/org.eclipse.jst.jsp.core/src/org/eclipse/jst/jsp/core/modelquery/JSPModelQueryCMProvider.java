@@ -52,7 +52,9 @@ public class JSPModelQueryCMProvider implements ModelQueryCMProvider {
 				}
 			}
 
-			if (result == null && node instanceof XMLNode) {
+			String prefix = node.getPrefix();
+
+			if (result == null && prefix != null && prefix.length() > 0 && node instanceof XMLNode) {
 				// check position dependent
 				XMLNode xmlNode = (XMLNode) node;
 				TLDCMDocumentManager tldmgr = TaglibController.getTLDCMDocumentManager(xmlNode.getStructuredDocument());
