@@ -19,7 +19,6 @@ import java.io.Writer;
 
 import junit.framework.TestCase;
 
-import org.eclipse.wst.common.encoding.NullInputStream;
 import org.eclipse.wst.html.core.tests.utils.DateUtil;
 import org.eclipse.wst.html.core.tests.utils.FileUtil;
 import org.eclipse.wst.html.core.tests.utils.StringCompareUtil;

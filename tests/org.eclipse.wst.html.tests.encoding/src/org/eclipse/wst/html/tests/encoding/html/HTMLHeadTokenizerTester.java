@@ -16,11 +16,11 @@ import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
-import org.eclipse.wst.common.encoding.EncodingParserConstants;
-import org.eclipse.wst.common.encoding.HeadParserToken;
 import org.eclipse.wst.html.core.internal.contenttype.HTMLHeadTokenizer;
 import org.eclipse.wst.html.core.internal.contenttype.HTMLHeadTokenizerConstants;
+import org.eclipse.wst.html.core.internal.contenttype.HeadParserToken;
 import org.eclipse.wst.html.tests.encoding.HTMLEncodingTestsPlugin;
+import org.eclipse.wst.xml.core.contenttype.EncodingParserConstants;
 
 public class HTMLHeadTokenizerTester extends TestCase {
 	private boolean DEBUG = false;

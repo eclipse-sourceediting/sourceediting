@@ -15,7 +15,6 @@ import java.io.UnsupportedEncodingException;
 
 import junit.framework.TestCase;
 
-import org.eclipse.wst.common.encoding.NullInputStream;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
