@@ -28,7 +28,6 @@
       <import plugin="org.eclipse.jst.jsp.core"/>
       <import plugin="org.eclipse.wst.html.core"/>
       <import plugin="org.eclipse.wst.css.core"/>
-      <import plugin="org.eclipse.wst.common.contentmodel"/>
       <import plugin="org.eclipse.wst.html.ui"/>
       <import plugin="org.eclipse.wst.xml.ui"/>
       <import plugin="org.eclipse.ui.views"/>
