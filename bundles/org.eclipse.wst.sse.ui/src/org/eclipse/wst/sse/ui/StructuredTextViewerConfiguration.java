@@ -253,6 +253,7 @@ public class StructuredTextViewerConfiguration extends SourceViewerConfiguration
 			fHighlighter.uninstall();
 		} else {
 			fHighlighter = new Highlighter();
+			fHighlighter.setDocumentPartitioning(getConfiguredDocumentPartitioning(viewer));
 		}
 		// allowed viewer to be null for easier unit testing,
 		// but during normal use, would not be null

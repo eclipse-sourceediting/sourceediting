@@ -19,14 +19,16 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.IDocumentPartitioner;
+import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.custom.LineStyleEvent;
@@ -38,8 +40,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.util.Debug;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.Logger;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.util.EditorUtility;
 
@@ -67,16 +69,18 @@ public class Highlighter implements IHighlighter {
 			}
 		}
 	};
-	private int fSavedLength = -1;
+	private List fHoldStyleResults;
+	private String fPartitioning = IDocumentExtension3.DEFAULT_PARTITIONING;
 
+	private int fSavedLength = -1;
 	private int fSavedOffset = -1;
 	private StyleRange[] fSavedRanges = null;
 
 	private IStructuredDocument fStructuredDocument;
-	private HashMap fTableOfProviders;
-	private ArrayList holdStyleResults;
+	private Map fTableOfProviders;
 
 	protected final LineStyleProvider NOOP_PROVIDER = new LineStyleProviderForNoOp();
+
 	private double readOnlyBackgroundScaleFactor = 10;
 	private Hashtable readOnlyColorTable;
 	double readOnlyForegroundScaleFactor = 30;
@@ -106,9 +110,10 @@ public class Highlighter implements IHighlighter {
 		}
 	}
 
-	// never used
+	/**
+	 * @deprecated - Read Only areas have unchanged background colors
+	 */
 	void adjustBackground(StyleRange styleRange) {
-
 		RGB oldRGB = null;
 		Color oldColor = styleRange.background;
 		if (oldColor == null) {
@@ -131,7 +136,7 @@ public class Highlighter implements IHighlighter {
 		styleRange.background = newColor;
 	}
 
-	private void adjustForground(StyleRange styleRange) {
+	private void adjustForeground(StyleRange styleRange) {
 		RGB oldRGB = null;
 		// Color oldColor = styleRange.foreground;
 		Color oldColor = styleRange.background;
@@ -139,7 +144,8 @@ public class Highlighter implements IHighlighter {
 			// oldRGB = getTextWidget().getForeground().getRGB();
 			oldColor = getTextWidget().getBackground();
 			oldRGB = oldColor.getRGB();
-		} else {
+		}
+		else {
 			oldRGB = oldColor.getRGB();
 		}
 		Color newColor = getCachedColorFor(oldRGB);
@@ -175,28 +181,25 @@ public class Highlighter implements IHighlighter {
 	private StyleRange[] convertReadOnlyRegions(StyleRange[] result, int start, int length) {
 		IStructuredDocument structuredDocument = getDocument();
 
-		// for client/provider simplicity (and consisten look and feel)
-		// we'll handle readonly regions in one spot, here in highlighter.
-		// though I suspect may have to be more sophisticated later.
-		// For example, it a fair assumption that each readonly region
-		// be on an ITextRegion boundry, but we do combine consequtive
-		// styles, when found to be equivilent.
-		// Plus, for now, we'll just adjust background. Eventually
-		// will us a "dimming" algrorightm. to adjust color's
-		// satuation/brightness
+		/**
+		 * (dmw) For client/provider simplicity (and consistent look and feel)
+		 * we'll handle readonly regions in one spot, here in the Highlighter.
+		 * Currently it is a fair assumption that each readonly region will be
+		 * on an ITextRegion boundary, so we combine consecutive styles when
+		 * found to be equivalent. Plus, for now, we'll just adjust
+		 * foreground. Eventually will use a "dimming" algrorithm to adjust
+		 * color's satuation/brightness.
+		 */
 		if (structuredDocument.containsReadOnly(start, length)) {
 			// something is read-only in the line, so go through each style,
 			// and adjust
 			for (int i = 0; i < result.length; i++) {
 				StyleRange styleRange = result[i];
 				if (structuredDocument.containsReadOnly(styleRange.start, styleRange.length)) {
-					// should do background first. Its used by forground
-					// adjustBackground(styleRange);
-					adjustForground(styleRange);
+					adjustForeground(styleRange);
 				}
 			}
 		}
-
 		return result;
 	}
 
@@ -231,7 +234,6 @@ public class Highlighter implements IHighlighter {
 	}
 
 	protected IStructuredDocument getDocument() {
-
 		return fStructuredDocument;
 	}
 
@@ -300,87 +302,79 @@ public class Highlighter implements IHighlighter {
 	}
 
 	public StyleRange[] lineGetStyle(int eventLineOffset, int eventLineLength) {
-		StyleRange[] eventStyles = EMPTY_STYLE_RANGE;
+		StyleRange[] eventStyles = null;
 		try {
 			if (getDocument() == null) {
-
-				// during initialization, this is sometimes called before our
-				// structured
-				// is set, in which case we set styles to be the empty style
-				// range
-				// (event.styles can not be null)
+				/**
+				 * During initialization, this is sometimes called before our
+				 * structure is set, in which case we set styles to be the
+				 * empty style range (event.styles can not be null)
+				 */
 				eventStyles = EMPTY_STYLE_RANGE;
 				return eventStyles;
 			}
+
 			int start = eventLineOffset;
 			int length = eventLineLength;
 			int end = start + length - 1;
 
-			// we sometimes get odd requests from the very last CRLF in the
-			// document
-			// it has no length, and there is no node for it!
-			if (length == 0) {
-				eventStyles = EMPTY_STYLE_RANGE;
-			} else {
+			/*
+			 * We sometimes get odd requests from the very last CRLF in the
+			 * document it has no length, and there is no document region for
+			 * it!
+			 */
+			if (length > 0) {
 				IRegion vr = null;
 				if (getTextViewer() != null) {
 					vr = getTextViewer().getVisibleRegion();
-				} else {
+				}
+				else {
 					vr = new Region(0, getDocument().getLength());
 				}
 				if (start > vr.getLength()) {
 					eventStyles = EMPTY_STYLE_RANGE;
-				} else {
-					// Determine if we're highlighting a visual portion of the
-					// model not
-					// starting at zero. If so, adjust the location from which
-					// we retrieve
-					// the style information
+				}
+				else {
+					/*
+					 * LineStyleProviders work using absolute document
+					 * offsets. To support visible regions, adjust the
+					 * requested range up to the full document offsets.
+					 */
 					if (vr.getOffset() > 0) {
 						start += vr.getOffset();
 						end += vr.getOffset();
 					}
-					// // ================
-					// if (start == fSavedOffset && length == fSavedLength &&
-					// fSavedRanges != null) {
-					// eventStyles = (StyleRange[]) fSavedRanges;
-					// } else {
+					ITypedRegion[] partitions = TextUtilities.computePartitioning(getDocument(), fPartitioning, start, length, false);
+					eventStyles = prepareStyleRangesArray(partitions, start, length);
+					/*
+					 * For visible regions, adjust the returned StyleRanges
+					 * down to relative offsets
+					 */
+					if (vr.getOffset() > 0)
+						adjust(eventStyles, -vr.getOffset());
 
-					IDocumentPartitioner documentPartitioner = getDocument().getDocumentPartitioner();
-					if (documentPartitioner != null) {
-						ITypedRegion[] partitions = documentPartitioner.computePartitioning(start, length);
-						eventStyles = prepareStyleRangesArray(partitions, start, length);
-
-						// If there is a subtext offset, the style ranges must
-						// be
-						// adjusted to the expected
-						// offsets
-						if (vr.getOffset() > 0)
-							adjust(eventStyles, -vr.getOffset());
-
-						// fSavedOffset = start;
-						// fSavedLength = length;
-						// fSavedRanges = (StyleRange[]) eventStyles;
-
-						// for debugging only
-						if (DEBUG) {
-							if (!valid(eventStyles, eventLineOffset, eventLineLength)) {
-								Logger.log(Logger.WARNING, "Highlighter::lineGetStyle found invalid styles at offset " + eventLineOffset); //$NON-NLS-1$
-							}
+					// for debugging only
+					if (DEBUG) {
+						if (!valid(eventStyles, eventLineOffset, eventLineLength)) {
+							Logger.log(Logger.WARNING, "Highlighter::lineGetStyle found invalid styles at offset " + eventLineOffset); //$NON-NLS-1$
 						}
-						// }
-					} else {
-						eventStyles = EMPTY_STYLE_RANGE;
 					}
 				}
+
 			}
 
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			// if ANY exception occurs during highlighting,
 			// just return "no highlighting"
 			eventStyles = EMPTY_STYLE_RANGE;
 			if (Debug.syntaxHighlighting) {
 				System.out.println("Exception during highlighting!"); //$NON-NLS-1$
+			}
+		}
+		finally {
+			if (eventStyles == null) {
+				eventStyles = EMPTY_STYLE_RANGE;
 			}
 		}
 		return eventStyles;
@@ -397,18 +391,17 @@ public class Highlighter implements IHighlighter {
 		int offset = event.lineOffset;
 		int length = event.lineText.length();
 
-		// // for some reason, we are sometimes asked for the same style range
-		// over and
-		// // over again. This was found to happen during 'revert' of a file
-		// with one
-		// // line in it that is 40K long! So, while I don't know root cause,
-		// caching
-		// // the styled ranges in case the exact same request is made
-		// multiple times
-		// // seems like cheap insurance.
+		/*
+		 * For some reason, we are sometimes asked for the same style range
+		 * over and over again. This was found to happen during 'revert' of a
+		 * file with one line in it that is 40K long! So, while we don't know
+		 * root cause, caching the styled ranges in case the exact same
+		 * request is made multiple times seems like cheap insurance.
+		 */
 		if (offset == fSavedOffset && length == fSavedLength && fSavedRanges != null) {
 			event.styles = fSavedRanges;
-		} else {
+		}
+		else {
 			// need to assign this array here, or else the field won't get
 			// updated
 			event.styles = lineGetStyle(offset, length);
@@ -429,40 +422,33 @@ public class Highlighter implements IHighlighter {
 
 		StyleRange[] result = EMPTY_STYLE_RANGE;
 
-		if (holdStyleResults == null) {
-			holdStyleResults = new ArrayList(20);
-		} else {
-			holdStyleResults.clear();
+		if (fHoldStyleResults == null) {
+			fHoldStyleResults = new ArrayList(partitions.length);
+		}
+		else {
+			fHoldStyleResults.clear();
 		}
 
-		// to do: make some of these instance variables to prevent creation on
+		// TODO: make some of these instance variables to prevent creation on
 		// stack
-		LineStyleProvider attributeProvider = null;
+		LineStyleProvider currentLineStyleProvider = null;
 		boolean handled = false;
 		for (int i = 0; i < partitions.length; i++) {
-			ITypedRegion typedRegion = partitions[i];
-			attributeProvider = getProviderFor(typedRegion);
-
-			// //REMINDER: eventually need to remove this one, and use only
-			// structuredDocument
-			// attributeProvider.init(getModel(), this);
-			attributeProvider.init(getDocument(), this);
-
-			// handled = attributeProvider.prepareRegions(typedRegion, start,
-			// length, holdStyleResults);
-			handled = attributeProvider.prepareRegions(typedRegion, typedRegion.getOffset(), typedRegion.getLength(), holdStyleResults);
+			ITypedRegion currentPartition = partitions[i];
+			currentLineStyleProvider = getProviderFor(currentPartition);
+			currentLineStyleProvider.init(getDocument(), this);
+			handled = currentLineStyleProvider.prepareRegions(currentPartition, currentPartition.getOffset(), currentPartition.getLength(), fHoldStyleResults);
 			if (Debug.syntaxHighlighting && !handled) {
 				System.out.println("Did not handle highlighting in Highlighter inner while"); //$NON-NLS-1$
 			}
 		}
 
-		int resultSize = holdStyleResults.size();
-		if (resultSize == 0) {
+		int resultSize = fHoldStyleResults.size();
+		if (resultSize > 0) {
+			result = (StyleRange[]) fHoldStyleResults.toArray(new StyleRange[fHoldStyleResults.size()]);
+		}
+		else {
 			result = EMPTY_STYLE_RANGE;
-		} else {
-			result = new StyleRange[resultSize];
-			holdStyleResults.trimToSize();
-			System.arraycopy(holdStyleResults.toArray(), 0, result, 0, resultSize);
 		}
 		result = convertReadOnlyRegions(result, start, length);
 		return result;
@@ -486,6 +472,15 @@ public class Highlighter implements IHighlighter {
 
 	public void setDocument(IStructuredDocument structuredDocument) {
 		fStructuredDocument = structuredDocument;
+	}
+
+	public void setDocumentPartitioning(String partitioning) {
+		if (partitioning != null) {
+			fPartitioning = partitioning;
+		}
+		else {
+			fPartitioning = IDocumentExtension3.DEFAULT_PARTITIONING;
+		}
 	}
 
 	/*
@@ -532,16 +527,19 @@ public class Highlighter implements IHighlighter {
 				StyleRange last = eventStyles[eventStyles.length - 1];
 				if (startOffset > first.start) {
 					result = false;
-				} else {
+				}
+				else {
 					int lineEndOffset = startOffset + lineLength;
 					int lastOffset = last.start + last.length;
 					if (lastOffset > lineEndOffset) {
 						result = false;
-					} else {
+					}
+					else {
 						result = true;
 					}
 				}
-			} else {
+			}
+			else {
 				// a zero length array is ok
 				result = true;
 			}
