@@ -30,7 +30,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.ISetSelectionTarget;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
-import org.eclipse.wst.xml.core.XMLModelPlugin;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 
 
@@ -84,7 +84,7 @@ public class NewXSDWizard extends Wizard implements INewWizard
       }
     }
     
-    Preferences preference = XMLModelPlugin.getDefault().getPluginPreferences();
+    Preferences preference = XMLCorePlugin.getDefault().getPluginPreferences();
 	String charSet = preference.getString(CommonModelPreferenceNames.OUTPUT_CODESET);
      if (charSet == null || charSet.trim().equals(""))
     {
