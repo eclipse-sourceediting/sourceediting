@@ -30,7 +30,7 @@ public class AdapterFactoryRegistryTest extends TestCase {
 
 	private final String CLASSNAME_HTML_FACTORY = "org.eclipse.wst.html.ui.registry.AdapterFactoryProviderForHTML";
 	private final String CLASSNAME_DTD_FACTORY = "org.eclipse.wst.dtd.ui.internal.registry.AdapterFactoryProviderForDTD";
-	private final String CLASSNAME_JSP_FACTORY = "org.eclipse.jst.jsp.ui.registry.AdapterFactoryProviderForJSP";
+	private final String CLASSNAME_JSP_FACTORY = "org.eclipse.jst.jsp.ui.internal.registry.AdapterFactoryProviderForJSP";
 	private final String CLASSNAME_CSS_FACTORY = "org.eclipse.wst.css.ui.registry.AdapterFactoryProviderCSS";
 	private final String CLASSNAME_XML_FACTORY = "org.eclipse.wst.xml.ui.registry.AdapterFactoryProviderForXML";
 
