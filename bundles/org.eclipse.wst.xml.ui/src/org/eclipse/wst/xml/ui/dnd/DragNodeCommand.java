@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.swt.dnd.DND;
+import org.eclipse.wst.common.ui.dnd.DefaultDragAndDropCommand;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.ui.dnd.DefaultDragAndDropCommand;
 import org.eclipse.wst.xml.core.document.XMLNode;
 import org.eclipse.wst.xml.ui.nls.ResourceHandler;
 import org.w3c.dom.Attr;
