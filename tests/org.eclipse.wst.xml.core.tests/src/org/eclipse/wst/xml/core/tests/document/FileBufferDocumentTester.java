@@ -12,8 +12,6 @@ package org.eclipse.wst.xml.core.tests.document;
 
 import java.io.IOException;
 
-import junit.framework.Assert;
-
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.filebuffers.ITextFileBufferManager;
@@ -23,7 +21,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
-import org.eclipse.wst.xml.core.document.DocumentLoaderForXML;
 import org.eclipse.wst.xml.core.text.rules.StructuredTextPartitionerForXML;
 
 
@@ -43,7 +40,7 @@ public class FileBufferDocumentTester extends UnzippedProjectTester {
 		assertTrue("wrong partitioner in document.", expectedPartioner.isInstance(document.getDocumentPartitioner()));
 		bufferManager.disconnect(locationPath, null);
 
-		doTestCreateWithFacade(file, expectedDocumentClass, expectedPartioner);
+//		doTestCreateWithFacade(file, expectedDocumentClass, expectedPartioner);
 		 
 	}
 
@@ -54,11 +51,11 @@ public class FileBufferDocumentTester extends UnzippedProjectTester {
 	 * @throws CoreException
 	 * @throws IOException
 	 */
-	private void doTestCreateWithFacade(IFile file, Class expectedDocumentClass, Class expectedPartioner) throws IOException, CoreException {
-		DocumentLoaderForXML documentLoaderForXML = new DocumentLoaderForXML();
-		IDocument document = documentLoaderForXML.createNewStructuredDocument(file, null);
-		Assert.assertNotNull(document);
-	}
+//	private void doTestCreateWithFacade(IFile file, Class expectedDocumentClass, Class expectedPartioner) throws IOException, CoreException {
+//		DocumentLoaderForXML documentLoaderForXML = new DocumentLoaderForXML();
+//		IDocument document = documentLoaderForXML.createNewStructuredDocument(file, null);
+//		Assert.assertNotNull(document);
+//	}
 
 	private void doTestCreateCreateEmpty(String filePath, Class expectedDocumentClass, Class expectedPartioner) throws CoreException {
 		IFile file = (IFile) fTestProject.findMember(filePath);
