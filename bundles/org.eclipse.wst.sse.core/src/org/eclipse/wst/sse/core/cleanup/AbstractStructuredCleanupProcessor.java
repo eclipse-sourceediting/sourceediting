@@ -17,14 +17,15 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.wst.common.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -332,13 +333,8 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 	}
 
 	protected void convertLineDelimiters(IDocument document, String newDelimiter) {
-
 		final int lineCount = document.getNumberOfLines();
-		IDocumentPartitioner partitioner = document.getDocumentPartitioner();
-		if (partitioner != null) {
-			partitioner.disconnect();
-			document.setDocumentPartitioner(null);
-		}
+		Map partitioners = TextUtilities.removeDocumentPartitioners(document);		
 		try {
 			for (int i = 0; i < lineCount; i++) {
 				final String delimiter = document.getLineDelimiter(i);
@@ -350,10 +346,7 @@ public abstract class AbstractStructuredCleanupProcessor implements IStructuredC
 		} catch (BadLocationException e) {
 			Logger.logException(e);
 		} finally {
-			if (partitioner != null) {
-				partitioner.connect(document);
-				document.setDocumentPartitioner(partitioner);
-			}
+			TextUtilities.addDocumentPartitioners(document, partitioners);
 		}
 	}
 
