@@ -132,7 +132,7 @@ public class TestContentTypeDetection extends TestCase {
 			String destinationProjectString = fTestProject.getLocation().toOSString();
 			String destinationFolder = destinationProjectString + "/";
 			// this zip file is sitting in the "root" of test plugin
-			File zipFile = TestsPlugin.getTestFile("testFiles.zip");
+			File zipFile = TestsPlugin.getTestFile("testfiles.zip");
 			ProjectUnzipUtility projUtil = new ProjectUnzipUtility();
 			projUtil.unzipAndImport(zipFile, destinationFolder);
 			projUtil.initJavaProject(TEST_PROJECT_NAME);
