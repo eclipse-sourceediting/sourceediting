@@ -148,13 +148,18 @@ public class ActiveEditorActionHandler implements IAction {
 		updateTargetAction();
 		return (fTargetAction != null ? fTargetAction.isEnabled() : false);
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.jface.action.IAction#isHandled()
 	 */
 	public boolean isHandled() {
 		updateTargetAction();
-		return (fTargetAction != null ? fTargetAction.isHandled() : false);
+		// FIXME
+		System.out.println("M6 Migration temp disable function");
+		return false;
+		// return (fTargetAction != null ? fTargetAction.isHandled() : false);
 	}
 
 	/**
@@ -271,10 +276,12 @@ public class ActiveEditorActionHandler implements IAction {
 				editor = (ITextEditor) (part != null ? part.getAdapter(ITextEditor.class) : null);
 			if (editor != null) {
 				fTargetAction = editor.getAction(fActionId);
-			} else {
+			}
+			else {
 				fTargetAction = null;
 			}
-		} else
+		}
+		else
 			fTargetAction = null;
 	}
 }
