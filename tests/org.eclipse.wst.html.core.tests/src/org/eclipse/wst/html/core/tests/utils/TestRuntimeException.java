@@ -10,9 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.tests.utils;
 
+import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 
-
-import org.eclipse.wst.sse.core.internal.nls.ResourceHandler1;
 
 /**
  * The SourceEditingRuntimeException is often thrown by Source Editor methods when
@@ -58,7 +57,7 @@ public class TestRuntimeException extends RuntimeException {
 		if (originalException != null) {
 			String embeddedMessage = originalException.getMessage();
 			// not all exceptions (e.g. many NullPointer exception) have messages
-			String originalError = ResourceHandler1.getString("Original_Error__UI_"); //$NON-NLS-1$ = "Original Error:"
+			String originalError = HTMLCorePlugin.getResourceString("Original_Error__UI_"); //$NON-NLS-1$ = "Original Error:"
 			if (embeddedMessage != null)
 				result = result + "  " + originalError + " " + embeddedMessage;//$NON-NLS-2$//$NON-NLS-1$
 			else

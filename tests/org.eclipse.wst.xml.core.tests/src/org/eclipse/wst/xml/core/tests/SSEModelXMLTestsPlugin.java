@@ -13,7 +13,6 @@ package org.eclipse.wst.xml.core.tests;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.eclipse.core.runtime.Platform;
@@ -25,8 +24,6 @@ import org.eclipse.core.runtime.Plugin;
 public class SSEModelXMLTestsPlugin extends Plugin {
 	//The shared instance.
 	private static SSEModelXMLTestsPlugin plugin;
-	//Resource bundle.
-	private ResourceBundle resourceBundle;
 
 	/**
 	 * The constructor.
@@ -34,12 +31,6 @@ public class SSEModelXMLTestsPlugin extends Plugin {
 	public SSEModelXMLTestsPlugin() {
 		super();
 		plugin = this;
-		try {
-			resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.xml.core.tests.SSEModelXMLTestsPluginResources");
-		}
-		catch (MissingResourceException x) {
-			resourceBundle = null;
-		}
 	}
 
 	/**
@@ -54,20 +45,14 @@ public class SSEModelXMLTestsPlugin extends Plugin {
 	 * or 'key' if not found.
 	 */
 	public static String getResourceString(String key) {
-		ResourceBundle bundle = SSEModelXMLTestsPlugin.getDefault().getResourceBundle();
-		try {
-			return (bundle != null) ? bundle.getString(key) : key;
-		}
-		catch (MissingResourceException e) {
-			return key;
-		}
+		return key;
 	}
 
 	/**
 	 * Returns the plugin's resource bundle,
 	 */
 	public ResourceBundle getResourceBundle() {
-		return resourceBundle;
+		return null;
 	}
 
 	public static URL getInstallLocation() {

@@ -12,15 +12,14 @@ package org.eclipse.wst.xml.ui.tests;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.wst.xml.ui.XMLEditorPlugin;
-
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
 public class VerifyEditorPlugin extends TestCase {
 
 	public void testPluginExists() {
 		Plugin plugin = null;
 		try {
-			plugin = XMLEditorPlugin.getDefault();
+			plugin = XMLUIPlugin.getDefault();
 
 		} catch (Exception e) {
 			plugin = null;

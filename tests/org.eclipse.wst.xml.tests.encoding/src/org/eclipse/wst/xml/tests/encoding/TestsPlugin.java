@@ -18,7 +18,6 @@ import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.eclipse.core.resources.IWorkspace;
@@ -32,8 +31,6 @@ import org.eclipse.core.runtime.Plugin;
 public class TestsPlugin extends Plugin {
 	//The shared instance.
 	private static TestsPlugin plugin;
-	//Resource bundle.
-	private ResourceBundle resourceBundle;
 
 	/**
 	 * The constructor.
@@ -41,12 +38,6 @@ public class TestsPlugin extends Plugin {
 	public TestsPlugin() {
 		super();
 		plugin = this;
-		try {
-			resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.xml.tests.encoding.TestsPluginResources");
-		}
-		catch (MissingResourceException x) {
-			resourceBundle = null;
-		}
 	}
 
 	/**
@@ -68,20 +59,14 @@ public class TestsPlugin extends Plugin {
 	 * or 'key' if not found.
 	 */
 	public static String getResourceString(String key) {
-		ResourceBundle bundle = TestsPlugin.getDefault().getResourceBundle();
-		try {
-			return (bundle != null ? bundle.getString(key) : key);
-		}
-		catch (MissingResourceException e) {
-			return key;
-		}
+		return key;
 	}
 
 	/**
 	 * Returns the plugin's resource bundle,
 	 */
 	public ResourceBundle getResourceBundle() {
-		return resourceBundle;
+		return null;
 	}
 
 	public static URL getInstallLocation() {

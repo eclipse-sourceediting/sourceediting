@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.tests;
 
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -22,8 +21,6 @@ import org.osgi.framework.BundleContext;
 public class SSEForXMLTestsPlugin extends AbstractUIPlugin {
 	//The shared instance.
 	private static SSEForXMLTestsPlugin plugin;
-	//Resource bundle.
-	private ResourceBundle resourceBundle;
 
 	/**
 	 * The constructor.
@@ -31,12 +28,6 @@ public class SSEForXMLTestsPlugin extends AbstractUIPlugin {
 	public SSEForXMLTestsPlugin() {
 		super();
 		plugin = this;
-		try {
-			resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.xml.ui.tests.SSEForTestsPluginResources");
-		}
-		catch (MissingResourceException x) {
-			resourceBundle = null;
-		}
 	}
 
 	/**
@@ -65,19 +56,13 @@ public class SSEForXMLTestsPlugin extends AbstractUIPlugin {
 	 * or 'key' if not found.
 	 */
 	public static String getResourceString(String key) {
-		ResourceBundle bundle = SSEForXMLTestsPlugin.getDefault().getResourceBundle();
-		try {
-			return (bundle != null) ? bundle.getString(key) : key;
-		}
-		catch (MissingResourceException e) {
-			return key;
-		}
+		return key;
 	}
 
 	/**
 	 * Returns the plugin's resource bundle,
 	 */
 	public ResourceBundle getResourceBundle() {
-		return resourceBundle;
+		return null;
 	}
 }

@@ -22,9 +22,9 @@ import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jst.jsp.ui.JSPEditorPlugin;
-import org.eclipse.jst.jsp.ui.tests.Logger;
+import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.tests.JSPUITestsPlugin;
+import org.eclipse.jst.jsp.ui.tests.Logger;
 import org.eclipse.wst.common.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.common.contentmodel.CMContent;
 import org.eclipse.wst.common.contentmodel.CMDataType;
@@ -319,7 +319,7 @@ public class ModelQueryTester extends TestCase {
 		IStructuredModel model = StructuredModelManager.getInstance().getModelManager().createUnManagedStructuredModelFor(contentTypeID);
 
 		// add editor adapter factories
-		AdapterFactoryRegistry adapterRegistry = JSPEditorPlugin.getDefault().getAdapterFactoryRegistry();
+		AdapterFactoryRegistry adapterRegistry = JSPUIPlugin.getDefault().getAdapterFactoryRegistry();
 		Iterator adapterList = adapterRegistry.getAdapterFactories();
 		// And all those appropriate for this particular type of content
 		while (adapterList.hasNext()) {
