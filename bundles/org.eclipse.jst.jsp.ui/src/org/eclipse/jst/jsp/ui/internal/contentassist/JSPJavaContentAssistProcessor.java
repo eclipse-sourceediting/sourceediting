@@ -273,8 +273,10 @@ public class JSPJavaContentAssistProcessor implements IContentAssistProcessor, I
 	 * @see ContentAssistAdapter#release()
 	 */
 	public void release() {
-		fJspCompletionProcessor.release();
-		fJspCompletionProcessor = null;
+		if (fJspCompletionProcessor != null) {
+			fJspCompletionProcessor.release();
+			fJspCompletionProcessor = null;
+		}
 		fResource = null;
 	}
 
