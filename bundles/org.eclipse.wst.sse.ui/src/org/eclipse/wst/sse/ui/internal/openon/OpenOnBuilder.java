@@ -151,6 +151,7 @@ public class OpenOnBuilder extends RegistryReader {
 
 	private void initCache() {
 		if (fOpenOnDefs == null) {
+			fOpenOnDefs = new ArrayList(0);
 			readContributions(TAG_OPENON, PL_OPENON);
 		}
 	}
@@ -190,12 +191,6 @@ public class OpenOnBuilder extends RegistryReader {
 		if (theId != null && theClass != null) {
 			// start building new OpenOnDefinition
 			fCurrentOpenOnDefinition = new OpenOnDefinition(theId, theClass, element);
-
-			// create a new list of open on definitions if it hasnt been
-			// created yet
-			if (fOpenOnDefs == null) {
-				fOpenOnDefs = new ArrayList();
-			}
 			fOpenOnDefs.add(fCurrentOpenOnDefinition);
 		} else {
 			fCurrentOpenOnDefinition = null;
