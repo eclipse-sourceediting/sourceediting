@@ -222,7 +222,8 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 		if (doc != null) {
 			try {
 				durty = new DirtyRegion(offset, length, type, doc.get(offset, length));
-			} catch (BadLocationException e) {
+			}
+			catch (BadLocationException e) {
 				e.printStackTrace();
 			}
 		}
@@ -305,14 +306,14 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 	 * @return sse model manager
 	 */
 	protected IModelManager getModelManager() {
-
 		if (this.fModelManager == null)
 			this.fModelManager = StructuredModelManager.getModelManager();
 		return this.fModelManager;
 	}
 
 	/**
-	 * assumes isInstalled() == true
+	 * @deprecated - does not use correct partitioning assumes isInstalled() ==
+	 *             true
 	 * 
 	 * @return the document partitioner for the document this reconciler is
 	 *         working on.
@@ -322,26 +323,33 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 	}
 
 	/**
-	 * Utility method to get partitions of a dirty region
+	 * Utility method to get partitions types in a dirty region
 	 * 
 	 * @param dirtyRegion
 	 * @return
 	 */
 	protected String[] getPartitions(DirtyRegion dirtyRegion) {
-		ITypedRegion[] regions = getPartitioner().computePartitioning(dirtyRegion.getOffset(), dirtyRegion.getLength());
-		String[] partitions = new String[regions.length];
-		for (int i = 0; i < regions.length; i++)
-			partitions[i] = regions[i].getType();
-		return partitions;
+		ITypedRegion[] partitions = null;
+		try {
+			partitions = TextUtilities.computePartitioning(getDocument(), getDocumentPartitioning(), dirtyRegion.getOffset(), dirtyRegion.getLength(), false);
+		}
+		catch (BadLocationException e) {
+			partitions = getPartitioner().computePartitioning(dirtyRegion.getOffset(), dirtyRegion.getLength());
+		}
+		String[] partitionTypes = new String[partitions.length];
+		for (int i = 0; i < partitions.length; i++)
+			partitionTypes[i] = partitions[i].getType();
+		return partitionTypes;
 	}
 
 	/**
+	 * @deprecated - promotes model leakage
+	 * 
 	 * Remember to release model after use!!
 	 * 
 	 * @return
 	 */
 	public IStructuredModel getStructuredModelForRead(IDocument doc) {
-
 		IStructuredModel sModel = null;
 		if (doc != null)
 			sModel = getModelManager().getExistingModelForRead(doc);
@@ -365,12 +373,13 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 	 * @param document
 	 */
 	private void hookUpModelLifecycleListener(IDocument document) {
-		IStructuredModel sModel = getStructuredModelForRead(document);
+		IStructuredModel sModel = getModelManager().getExistingModelForRead(document);
 		try {
 			if (sModel != null) {
 				sModel.addModelLifecycleListener(this);
 			}
-		} finally {
+		}
+		finally {
 			if (sModel != null)
 				sModel.releaseFromRead();
 		}
@@ -501,7 +510,8 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 		ITypedRegion tr[] = new ITypedRegion[0];
 		try {
 			tr = TextUtilities.computePartitioning(doc, getDocumentPartitioning(), 0, doc.getLength(), true);
-		} catch (BadLocationException e) {
+		}
+		catch (BadLocationException e) {
 			Logger.logException(e);
 		}
 
@@ -511,8 +521,7 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 			s = getReconcilingStrategy(tr[i].getType());
 			if (s != null) {
 				if (s instanceof IStructuredReconcilingStrategy)
-					((IStructuredReconcilingStrategy) s).reconcile(durty,
-							durty, true);
+					((IStructuredReconcilingStrategy) s).reconcile(durty, durty, true);
 				else
 					s.reconcile(durty, durty);
 			}
@@ -542,7 +551,8 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 		ITypedRegion tr[] = new ITypedRegion[0];
 		try {
 			tr = TextUtilities.computePartitioning(doc, getDocumentPartitioning(), 0, doc.getLength(), true);
-		} catch (BadLocationException e) {
+		}
+		catch (BadLocationException e) {
 			Logger.logException(e);
 		}
 
@@ -563,7 +573,7 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 			if (fValidatorStrategy != null)
 				fValidatorStrategy.reconcile(tr[i], durty, false);
 		}
-		
+
 		resetStrategies();
 	}
 
@@ -578,7 +588,7 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 		if (event.getType() == ModelLifecycleEvent.MODEL_DOCUMENT_CHANGED) {
 
 			// check that it's this model that changed
-			IStructuredModel thisModel = getStructuredModelForRead(getDocument());
+			IStructuredModel thisModel = getModelManager().getExistingModelForRead(getDocument());
 			try {
 				if (thisModel != null && event.getModel().equals(thisModel)) {
 
@@ -598,7 +608,8 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 					// ensure that the document is re-reconciled
 					setEntireDocumentDirty(sDoc);
 				}
-			} finally {
+			}
+			finally {
 				if (thisModel != null)
 					thisModel.releaseFromRead();
 			}
@@ -705,7 +716,8 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 						processAll();
 					else
 						processPartial(dirtyRegion);
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -839,12 +851,13 @@ public class StructuredTextReconciler extends Reconciler implements IStructuredD
 	 * @param document
 	 */
 	private void unhookModelLifecycleListener(IDocument document) {
-		IStructuredModel sModel = getStructuredModelForRead(document);
+		IStructuredModel sModel = getModelManager().getExistingModelForRead(document);
 		try {
 			if (sModel != null) {
 				sModel.removeModelLifecycleListener(this);
 			}
-		} finally {
+		}
+		finally {
 			if (sModel != null)
 				sModel.releaseFromRead();
 		}
