@@ -41,7 +41,6 @@ import org.eclipse.jst.jsp.core.contentmodel.tld.JSP12TLDNames;
 import org.eclipse.jst.jsp.core.contentmodel.tld.JSP20TLDNames;
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDDocument;
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDElementDeclaration;
-import org.eclipse.jst.jsp.core.contentmodel.tld.URIResolverProvider;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.ITaglibIndexListener;
 import org.eclipse.jst.jsp.core.internal.contentmodel.ITaglibRecord;
@@ -833,13 +832,6 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 
 	JSPSourceParser getParser() {
 		return fParser;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public URIResolverProvider getResolverProvider() {
-		return null;
 	}
 
 	public JSPSourceParser getSourceParser() {
