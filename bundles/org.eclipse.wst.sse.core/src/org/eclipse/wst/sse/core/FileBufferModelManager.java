@@ -124,7 +124,7 @@ class FileBufferModelManager {
 				if (!(textBuffer.getDocument() instanceof IStructuredDocument))
 					return;
 				if (debugTextBufferLifeCycle) {
-					System.out.println("Learned new buffer: " + buffer.getLocation().toString() + " " + buffer);
+					System.out.println("Learned new buffer: " + buffer.getLocation().toString() + " " + buffer + " " + ((ITextFileBuffer)buffer).getDocument());
 				}
 				DocumentInfo info = new DocumentInfo();
 				info.buffer = textBuffer;
@@ -137,22 +137,11 @@ class FileBufferModelManager {
 		public void bufferDisposed(IFileBuffer buffer) {
 			if (buffer instanceof ITextFileBuffer) {
 				if (debugTextBufferLifeCycle) {
-					System.out.println("Discarded buffer: " + buffer.getLocation().toString() + " " + buffer);
+					System.out.println("Discarded buffer: " + buffer.getLocation().toString() + " " + buffer + " " + ((ITextFileBuffer)buffer).getDocument());
 				}
 				ITextFileBuffer textBuffer = (ITextFileBuffer) buffer;
 				DocumentInfo info = (DocumentInfo) fDocumentMap.get(textBuffer.getDocument());
 				if (info != null) {
-					// if (info.model != null) {
-					// String msg = "Leftover model instance for " +
-					// info.buffer.getLocation();
-					// if (debugFileBufferModelManagement ||
-					// debugTextBufferLifeCycle) {
-					// System.err.println(msg);
-					// }
-					// else {
-					// Logger.log(Logger.WARNING, msg);
-					// }
-					// }
 					info.bufferReferenceCount--;
 					if (info.bufferReferenceCount == 0 && info.modelReferenceCount == 0)
 						fDocumentMap.remove(textBuffer.getDocument());
@@ -163,7 +152,7 @@ class FileBufferModelManager {
 		public void dirtyStateChanged(IFileBuffer buffer, boolean isDirty) {
 			if (buffer instanceof ITextFileBuffer) {
 				if (debugTextBufferLifeCycle) {
-					System.out.println("Buffer dirty state changed: (" + isDirty + ") " + buffer.getLocation().toString() + " " + buffer);
+					System.out.println("Buffer dirty state changed: (" + isDirty + ") " + buffer.getLocation().toString() + " " + buffer + " " + ((ITextFileBuffer)buffer).getDocument());
 				}
 				ITextFileBuffer textBuffer = (ITextFileBuffer) buffer;
 				if (!(textBuffer.getDocument() instanceof IStructuredDocument))
@@ -207,14 +196,14 @@ class FileBufferModelManager {
 					System.out.println("Moved buffer from: " + buffer.getLocation().toOSString() + " " + buffer);
 					System.out.println("Moved buffer to: " + path.toOSString() + " " + buffer);
 				}
-				ITextFileBuffer textBuffer = (ITextFileBuffer) buffer;
-				DocumentInfo info = (DocumentInfo) fDocumentMap.get(textBuffer.getDocument());
-				if (info != null) {
-					info.contentTypeID = detectContentType(path).getId();
-					if (info.model != null) {
-						info.model.setBaseLocation(path.toString());
-					}
-				}
+//				ITextFileBuffer textBuffer = (ITextFileBuffer) buffer;
+//				DocumentInfo info = (DocumentInfo) fDocumentMap.get(textBuffer.getDocument());
+//				if (info != null) {
+//					info.contentTypeID = detectContentType(path).getId();
+//					if (info.model != null) {
+//						info.model.setBaseLocation(path.toString());
+//					}
+//				}
 			}
 		}
 	}
@@ -239,9 +228,9 @@ class FileBufferModelManager {
 				for (int i = 0; i < danglingDocuments.length; i++) {
 					DocumentInfo info = (DocumentInfo) instance.fDocumentMap.get(danglingDocuments[i]);
 					if (info.modelReferenceCount > 0)
-						System.err.println("LEAKED MODEL: " + info.buffer.getLocation());
+						System.err.println("LEAKED MODEL: " + info.buffer.getLocation() + " " + ((ITextFileBuffer) info.buffer).getDocument());
 					if (info.bufferReferenceCount > 0)
-						System.err.println("LEAKED BUFFER: " + info.buffer.getLocation());
+						System.err.println("LEAKED BUFFER: " + info.buffer.getLocation() + " " + ((ITextFileBuffer) info.buffer).getDocument());
 				}
 			}
 			FileBuffers.getTextFileBufferManager().removeFileBufferListener(instance.fFileBufferListener);
@@ -401,7 +390,7 @@ class FileBufferModelManager {
 		try {
 			IPath location = new Path(file.getAbsolutePath());
 			if (debugFileBufferModelManagement) {
-				System.out.println("FileBufferModelManager primary connecting to " + location);
+				System.out.println("FileBufferModelManager connecting to File " + location);
 			}
 			bufferManager.connect(location, getProgressMonitor());
 			ITextFileBuffer buffer = bufferManager.getTextFileBuffer(location);
@@ -422,7 +411,7 @@ class FileBufferModelManager {
 		ITextFileBufferManager bufferManager = FileBuffers.getTextFileBufferManager();
 		try {
 			if (debugFileBufferModelManagement) {
-				System.out.println("FileBufferModelManager primary connecting to " + file.getLocation());
+				System.out.println("FileBufferModelManager connecting to IFile " + file.getLocation());
 			}
 			bufferManager.connect(file.getLocation(), getProgressMonitor());
 			ITextFileBuffer buffer = bufferManager.getTextFileBuffer(file.getLocation());
@@ -445,7 +434,7 @@ class FileBufferModelManager {
 		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
 		if (info != null && info.model == null) {
 			if (debugFileBufferModelManagement) {
-				System.out.println("FileBufferModelManager creating model for " + info.buffer.getLocation());
+				System.out.println("FileBufferModelManager creating model for " + info.buffer.getLocation() + " " + ((ITextFileBuffer) info.buffer).getDocument());
 			}
 			info.modelReferenceCount++;
 
@@ -498,9 +487,14 @@ class FileBufferModelManager {
 	void releaseModel(IStructuredDocument document) {
 		DocumentInfo info = (DocumentInfo) fDocumentMap.get(document);
 		if (info != null) {
+			if (debugFileBufferModelManagement) {
+				System.out.println("FileBufferModelManager noticed full release of model for " + info.buffer.getLocation()  + " " + ((ITextFileBuffer)info.buffer).getDocument());
+			}
+			info.model = null;
+			info.modelReferenceCount--;
 			if (info.selfConnected) {
 				if (debugFileBufferModelManagement) {
-					System.out.println("FileBufferModelManager primary disconnecting from " + info.buffer.getLocation());
+					System.out.println("FileBufferModelManager disconnecting from " + info.buffer.getLocation() + " " + ((ITextFileBuffer) info.buffer).getDocument());
 				}
 				try {
 					FileBuffers.getTextFileBufferManager().disconnect(info.buffer.getLocation(), getProgressMonitor());
@@ -509,13 +503,6 @@ class FileBufferModelManager {
 					e.printStackTrace();
 				}
 			}
-			info.model = null;
-			if (debugFileBufferModelManagement) {
-				System.out.println("FileBufferModelManager noticed full release of model for " + info.buffer.getLocation());
-			}
-			info.modelReferenceCount--;
-			if (info.bufferReferenceCount == 0 && info.modelReferenceCount == 0)
-				fDocumentMap.remove(document);
 		}
 	}
 }
