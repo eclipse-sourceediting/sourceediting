@@ -106,10 +106,14 @@ public class EditStructuredTextEditorPreferencesAction extends Action implements
 
 		// figure out all preference page ids contributed
 		String[] pointIds = null;
+		Object editor = getEditor();
+		Class rootclass = getEditor().getClass();
+		if(editor instanceof StructuredTextEditor)
+			rootclass = StructuredTextEditor.class;
 		if (getEditor() instanceof IEditorPart) {
-			pointIds = ConfigurationPointCalculator.getConfigurationPoints((IEditorPart) getEditor(), getContentType(), ConfigurationPointCalculator.SOURCE, StructuredTextEditor.class);
+			pointIds = ConfigurationPointCalculator.getConfigurationPoints((IEditorPart) getEditor(), getContentType(), ConfigurationPointCalculator.SOURCE, rootclass);
 		} else {
-			pointIds = ConfigurationPointCalculator.getConfigurationPoints(getEditor().getEditorPart(), getContentType(), ConfigurationPointCalculator.SOURCE, StructuredTextEditor.class);
+			pointIds = ConfigurationPointCalculator.getConfigurationPoints(getEditor().getEditorPart(), getContentType(), ConfigurationPointCalculator.SOURCE, getEditor().getEditorPart().getClass());
 		}
 		ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
 
