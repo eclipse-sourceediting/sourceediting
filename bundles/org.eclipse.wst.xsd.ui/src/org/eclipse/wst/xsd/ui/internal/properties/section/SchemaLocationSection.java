@@ -131,6 +131,7 @@ public class SchemaLocationSection extends CommonDirectivesSection
 	      String value = schemaLocationText.getText();
 	      if (result == Window.OK)
 	      {
+          errorText.setText("");
 	        IFile selectedIFile = fileSelectWizard.getResultFile();
 	        String schemaFileString = value;
 	        if (selectedIFile != null) 

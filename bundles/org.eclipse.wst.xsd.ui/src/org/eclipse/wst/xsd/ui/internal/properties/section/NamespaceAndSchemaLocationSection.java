@@ -167,6 +167,7 @@ public class NamespaceAndSchemaLocationSection extends CommonDirectivesSection
       prefixText.removeListener(SWT.Modify, this);
 		  if (result == Window.OK)
 		  {
+        errorText.setText("");
         IFile selectedIFile = fileSelectWizard.getResultFile();
         String schemaFileString = value;
         if (selectedIFile != null) 
