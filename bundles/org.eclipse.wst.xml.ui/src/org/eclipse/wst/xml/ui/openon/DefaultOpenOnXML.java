@@ -16,8 +16,8 @@ package org.eclipse.wst.xml.ui.openon;
 
 import java.util.StringTokenizer;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
@@ -105,12 +105,12 @@ public class DefaultOpenOnXML extends AbstractOpenOn {
 		try {
 			sModel = getModelManager().getExistingModelForRead(getDocument());
 			if (sModel != null) {
-				baseLoc = sModel.getBaseLocation();
-				if (baseLoc != null) {
-					IFile modelFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(baseLoc));
-					if (modelFile != null) {
-						baseLoc = modelFile.getLocation().toString();
-					}
+				IPath location = new Path(sModel.getBaseLocation());
+				if (location.toFile().exists()) {
+					baseLoc = location.toString();
+				}
+				else {
+					baseLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(sModel.getBaseLocation()).toString();
 				}
 			}
 		}
