@@ -15,7 +15,10 @@ javax.servlet.http.HttpSession session = null;
 javax.servlet.ServletContext application = null;
 javax.servlet.ServletConfig config = null;
 javax.servlet.jsp.JspWriter out = null;
-Object page = null; int include_include_int = 5; 
+Object page = null;
+
+try {
+ int include_include_int = 5; 
 javax.swing.JButton includesUseBean = new javax.swing.JButton();
 
  String localIncludedString = globalIncludedString;
@@ -29,4 +32,5 @@ i
 out.print(""+
    
 );
+ } catch (java.lang.Exception e) {} 
 }}
