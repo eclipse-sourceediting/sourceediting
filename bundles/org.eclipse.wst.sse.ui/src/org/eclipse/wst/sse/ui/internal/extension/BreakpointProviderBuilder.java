@@ -13,6 +13,7 @@
 package org.eclipse.wst.sse.ui.internal.extension;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -26,6 +27,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -233,11 +235,13 @@ public class BreakpointProviderBuilder extends RegistryReader {
 				add = true;
 			}
 
-			if (!add && types != null) {
+			if (!add && types != null && types.length() > 0) {
+				IContentType testType = Platform.getContentTypeManager().getContentType(key);
 				StringTokenizer tokenizer = new StringTokenizer(types, ","); //$NON-NLS-1$
 				while (tokenizer.hasMoreTokens()) {
 					String type = tokenizer.nextToken();
-					if (type.trim().equals(key.trim())) {
+					IContentType contentType = Platform.getContentTypeManager().getContentType(type);
+					if (contentType != null && testType != null && contentType.isKindOf(testType)) {
 						add = true;
 						break;
 					}
@@ -272,41 +276,42 @@ public class BreakpointProviderBuilder extends RegistryReader {
 	 *            file extension
 	 * @return IBreakpointProvider[]
 	 */
-	public IBreakpointProvider[] getBreakpointProviders(IEditorPart editorpart, String contentType, String ext) {
+	public IBreakpointProvider[] getBreakpointProviders(IEditorPart editorpart, String contentTypeID, String ext) {
 		initCache();
 
 		// Get breakpoint providers for this content type handler
-		IBreakpointProvider[] ps1 = new IBreakpointProvider[0];
-		if (contentType != null) {
-			ps1 = (IBreakpointProvider[]) map.get(contentType);
-			if (ps1 == null) {
-				ps1 = createBreakpointProviders(ATT_CONTENT_TYPES, contentType);
-				if (ps1 != null) {
-					map.put(contentType, ps1);
+		IBreakpointProvider[] providers1 = new IBreakpointProvider[0];
+		IContentType contentType = Platform.getContentTypeManager().getContentType(contentTypeID);
+		List holdProviders = new ArrayList(2);
+		while (contentType != null) {
+			IBreakpointProvider[] providers = (IBreakpointProvider[]) map.get(contentType.getId());
+			if (providers == null) {
+				providers = createBreakpointProviders(ATT_CONTENT_TYPES, contentType.getId());
+				if (providers != null) {
+					map.put(contentTypeID, providers);
+					holdProviders.addAll(Arrays.asList(providers));
 				}
 			}
+			contentType = contentType.getBaseType();
 		}
+		providers1 = (IBreakpointProvider[]) holdProviders.toArray(new IBreakpointProvider[holdProviders.size()]);
 
 		// Get breakpoint providers for this extension
-		IBreakpointProvider[] ps2 = new IBreakpointProvider[0];
+		IBreakpointProvider[] providers2 = new IBreakpointProvider[0];
 		if (ext != null) {
-			ps2 = (IBreakpointProvider[]) map.get(ext);
-			if (ps2 == null) {
-				ps2 = createBreakpointProviders(ATT_EXTENSIONS, ext);
-				if (ps2 != null) {
-					map.put(ext, ps2);
+			providers2 = (IBreakpointProvider[]) map.get(ext);
+			if (providers2 == null) {
+				providers2 = createBreakpointProviders(ATT_EXTENSIONS, ext);
+				if (providers2 != null) {
+					map.put(ext, providers2);
 				}
 			}
 		}
 
 		// create single hash set to remove duplication
 		Set s = new HashSet();
-		for (int i = 0; i < ps1.length; i++) {
-			s.add(ps1[i]);
-		}
-		for (int i = 0; i < ps2.length; i++) {
-			s.add(ps2[i]);
-		}
+		s.addAll(Arrays.asList(providers1));
+		s.addAll(Arrays.asList(providers2));
 
 		// create IBreakpointProvider[] to return
 		IBreakpointProvider[] providers = new IBreakpointProvider[s.size()];
