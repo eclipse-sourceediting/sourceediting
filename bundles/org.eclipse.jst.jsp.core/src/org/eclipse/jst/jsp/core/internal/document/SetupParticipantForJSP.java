@@ -15,7 +15,9 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
 
-
+/**
+ * @deprecated - not used and will be removed in WTP 1.0M4
+ */
 
 public class SetupParticipantForJSP implements IDocumentSetupParticipant {
 
