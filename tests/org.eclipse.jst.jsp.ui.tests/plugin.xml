@@ -8,7 +8,7 @@
    class="org.eclipse.jst.jsp.ui.tests.SSEJSPTestsPlugin">
 
    <runtime>
-      <library name="ssejsptests.jar">
+      <library name="jspuitests.jar">
          <export name="*"/>
       </library>
    </runtime>

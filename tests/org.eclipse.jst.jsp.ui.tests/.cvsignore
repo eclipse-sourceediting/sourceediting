@@ -3,5 +3,5 @@ bin.project
 build.xml
 dev.properties
 org.eclipse.jst.jsp.ui.tests_1.0.0.jar
-ssejsptests.jar
+jspuitests.jar
 temp.folder
