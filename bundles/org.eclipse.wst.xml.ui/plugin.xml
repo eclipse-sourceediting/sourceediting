@@ -39,7 +39,7 @@
       <editor
             name="%XML_Source_Page_Editor.name"
             icon="icons/sourceEditor.gif"
-            extensions="tld, nst, xmi, dadx, wsdl"
+            extensions="tld, nst, xmi, dadx, wsdl, xsl"
             contributorClass="org.eclipse.wst.xml.ui.actions.ActionContributorXML"
             class="org.eclipse.wst.xml.ui.StructuredTextEditorXML"
             symbolicFontName="org.eclipse.wst.sse.ui.textfont"
