@@ -423,13 +423,14 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 
 	/**
 	 * supports method
+	 * 
 	 * @return boolean
-	 *
+	 * 
 	 * Returns true if the CMNode supports a specified property
-	 *
+	 * 
 	 */
 	public boolean supports(String propertyName) {
-		return false;
+		return propertyName == null || propertyName.equals("tagInfo") || propertyName.equals(JSP12TLDNames.DESCRIPTION) || propertyName.equals(TLDDocument.CM_KIND) || propertyName.equals(JSP12TLDNames.SMALL_ICON) || propertyName.equals(JSP12TLDNames.LARGE_ICON);//$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public String toString() {
