@@ -72,7 +72,13 @@
             type="text"
             extension="jsp">
       </fileTypes>
-      <fileTypes
+       <fileTypes
+            type="text"
+            extension="tag">
+      </fileTypes>      <fileTypes
+            type="text"
+            extension="tagf">
+      </fileTypes>     <fileTypes
             type="text"
             extension="jspf">
       </fileTypes>
@@ -104,7 +110,7 @@
          point="org.eclipse.core.runtime.contentTypes">
          <!-- associate JSP file types -->
          <content-type
-               file-extensions="jsp,jspf,jsf,jsv,jtpl,jspx"
+               file-extensions="jsp,jspf,jsf,jsv,jtpl,jspx,tag,tagf"
                priority="high"
                name="%JSP_Content_Type_Extension_Element.name"
                id="jspsource"
