@@ -29,9 +29,6 @@ import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcilingStrategy;
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentAdapter;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
@@ -64,51 +61,23 @@ public class ValidatorStrategy extends AbstractStructuredTextReconcilingStrategy
      * @return
      */
     private String[] calculateParentContentTypeIds(String contentTypeId) {
-        // place to collect parent types
+
         Set parentTypes = new HashSet();
         
-        String handlerContentTypeId = getHandlerContentTypeId();
-        if(handlerContentTypeId != null) {
-            IContentTypeManager ctManager = Platform.getContentTypeManager();    
-            IContentType ct = ctManager.getContentType(contentTypeId);
-            String id = contentTypeId;
-            // add the original
+        IContentTypeManager ctManager = Platform.getContentTypeManager();    
+        IContentType ct = ctManager.getContentType(contentTypeId);
+        String id = contentTypeId;
+
+        while(ct != null && id != null) {
+            
             parentTypes.add(id);
-            while(ct != null && id != null && !id.equals(handlerContentTypeId)) {  
-                ct = ctManager.getContentType(id);
-                if(ct != null) {
-                    IContentType baseType = ct.getBaseType();
-                    id = (baseType != null) ? baseType.getId() : null;
-                    // add any parent ids, the loop stops 
-                    // once id is the same as the modelhandler
-                    // content type id
-                    if(id != null)
-                        parentTypes.add(id);
-                }
+            ct = ctManager.getContentType(id);
+            if(ct != null) {
+                IContentType baseType = ct.getBaseType();
+                id = (baseType != null) ? baseType.getId() : null;
             }
         }
-        
         return (String[])parentTypes.toArray(new String[parentTypes.size()]);
-    }
-
-    /**
-     * @return
-     */
-    private String getHandlerContentTypeId() {
-        IStructuredModel sModel =  StructuredModelManager.getModelManager().getExistingModelForRead(getFile());
-        IModelHandler handler = null;
-        String handlerContentTypeId = null;
-        try {
-            if(sModel != null) {
-                handler = sModel.getModelHandler();
-                handlerContentTypeId = handler.getAssociatedContentTypeId();
-            } 
-        }
-        finally {
-            if(sModel != null)
-                sModel.releaseFromRead();
-        }
-        return handlerContentTypeId;
     }
 
     public void addValidatorMetaData(ValidatorMetaData vmd) {

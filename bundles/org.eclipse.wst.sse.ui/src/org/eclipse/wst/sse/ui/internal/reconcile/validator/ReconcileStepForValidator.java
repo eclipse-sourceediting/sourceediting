@@ -66,12 +66,12 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 
 	public ReconcileStepForValidator(IValidator v) {
 		super();
-		this.fValidator = v;
+		fValidator = v;
 	}
 
 	public ReconcileStepForValidator(IValidator v, IReconcileStep step) {
 		super(step);
-		this.fValidator = v;
+		fValidator = v;
 	}
 
 	/**
@@ -150,9 +150,9 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 	}
 
 	private IHelper getHelper(IProject project) {
-		if (this.fHelper == null)
-			this.fHelper = new IncrementalHelper(getStructuredDocument(), project);
-		return this.fHelper;
+		if (fHelper == null)
+			fHelper = new IncrementalHelper(getStructuredDocument(), project);
+		return fHelper;
 	}
 
 	private IProject getProject() {
@@ -174,9 +174,9 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 	}
 
 	private IncrementalReporter getReporter() {
-		if (this.fReporter == null)
-			this.fReporter = new IncrementalReporter(getProgressMonitor());
-		return this.fReporter;
+		if (fReporter == null)
+			fReporter = new IncrementalReporter(getProgressMonitor());
+		return fReporter;
 	}
 
     /**
@@ -197,7 +197,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 
 		// pa_TODO need to use dirty region if Validators can ever handle
 		// partial file validation
-		IReconcileResult[] results = this.EMPTY_RECONCILE_RESULT_SET;
+		IReconcileResult[] results = EMPTY_RECONCILE_RESULT_SET;
 		if (dirtyRegion != null) {
 			try {
 				results = validate();
@@ -214,13 +214,13 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 
 	public String toString() {
 		StringBuffer debugString = new StringBuffer("ValidatorStep: "); //$NON-NLS-1$
-		if (this.fValidator != null)
-			debugString.append(this.fValidator.getClass().toString());
+		if (fValidator != null)
+			debugString.append(fValidator.getClass().toString());
 		return debugString.toString();
 	}
 
 	protected IReconcileResult[] validate() {
-		IReconcileResult[] results = this.EMPTY_RECONCILE_RESULT_SET;
+		IReconcileResult[] results = EMPTY_RECONCILE_RESULT_SET;
 
 		IProject project = getProject();
 		IFile file = getFile(project);

@@ -106,14 +106,12 @@ public class ValidatorMetaData {
 		// If plugin has been loaded create extension.
 		// Otherwise, show busy cursor then create extension.
 		final IConfigurationElement element = getConfigurationElement();
-		//final String classAttribute = getValidatorClass();
-
 		final Object[] result = new Object[1];
 		String pluginId = element.getDeclaringExtension().getNamespace();
 		Bundle bundle = Platform.getBundle(pluginId);
 		if (bundle.getState() == Bundle.ACTIVE) {
 			try {
-				return createExecutableExtension(element, "class"/* classAttribute */); //$NON-NLS-1$
+				return createExecutableExtension(element, "class"); //$NON-NLS-1$
 			} catch (CoreException e) {
 				handleCreateExecutableException(result, e);
 			}
@@ -121,7 +119,7 @@ public class ValidatorMetaData {
 			BusyIndicator.showWhile(null, new Runnable() {
 				public void run() {
 					try {
-						result[0] = createExecutableExtension(element, "class"/* classAttribute */); //$NON-NLS-1$
+						result[0] = createExecutableExtension(element, "class"); //$NON-NLS-1$
 					} catch (Exception e) {
 						handleCreateExecutableException(result, e);
 					}
@@ -154,10 +152,6 @@ public class ValidatorMetaData {
 	public String getValidatorId() {
 		return fId;
 	}
-
-//	public int getValidatorScope() {
-//		return fScope.equalsIgnoreCase("total") ? IReconcileAnnotationKey.TOTAL : IReconcileAnnotationKey.PARTIAL; //$NON-NLS-1$
-//	}
 
 	/**
 	 * @param result

@@ -29,8 +29,8 @@ import org.eclipse.wst.sse.ui.internal.extension.RegistryReader;
  * @author pavery
  */
 public class ValidatorBuilder extends RegistryReader {
+    
 	public static final String ATT_CLASS = "class"; //$NON-NLS-1$
-
 	public static final String ATT_ID = "id"; //$NON-NLS-1$
 	public static final String ATT_SCOPE = "scope"; //$NON-NLS-1$
 

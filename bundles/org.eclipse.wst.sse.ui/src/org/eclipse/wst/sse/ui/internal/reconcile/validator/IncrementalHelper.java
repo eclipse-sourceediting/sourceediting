@@ -29,10 +29,8 @@ public class IncrementalHelper implements IHelper {
 	}
 
 	public IFile getFileFromFilename(String filename) {
-		IResource res = getProject().findMember(filename, true); // true means
-		// include
-		// phantom
-		// resources
+        // true means include phantom resources
+		IResource res = getProject().findMember(filename, true); 
 		if (res instanceof IFile) {
 			return (IFile) res;
 		}
