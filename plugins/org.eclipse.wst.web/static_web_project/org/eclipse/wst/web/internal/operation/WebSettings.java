@@ -35,7 +35,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.wst.web.internal.IStaticWebNatureConstants;
+import org.eclipse.wst.web.internal.ISimpleWebNatureConstants;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -96,7 +96,7 @@ public class WebSettings{
 
 	protected IFile getSettingsFile() {
 		if (fSettingsFile == null) {
-			fSettingsFile = fProject.getFile(IStaticWebNatureConstants.WEBSETTINGS_FILE_NAME);
+			fSettingsFile = fProject.getFile(ISimpleWebNatureConstants.WEBSETTINGS_FILE_NAME);
 		}
 		return fSettingsFile;
 	}
@@ -183,8 +183,8 @@ public class WebSettings{
 		// The following change is needed when the websettings file is
 		// deleted from a version 4 workspace Checking for webapplication
 		// folder - Otherwise, new projects will not work.
-		IContainer webmoduleFolder = fProject.getFolder(IStaticWebNatureConstants.WEB_MODULE_DIRECTORY_V4);
-		IFolder webinfFolder = ((IFolder) webmoduleFolder).getFolder(IStaticWebNatureConstants.INFO_DIRECTORY);
+		IContainer webmoduleFolder = fProject.getFolder(ISimpleWebNatureConstants.WEB_MODULE_DIRECTORY_V4);
+		IFolder webinfFolder = ((IFolder) webmoduleFolder).getFolder(ISimpleWebNatureConstants.INFO_DIRECTORY);
 		if (webinfFolder.exists()) {
 			return VERSION_V4;
 		}

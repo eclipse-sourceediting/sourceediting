@@ -4,7 +4,8 @@
    id="org.eclipse.wst.web.ui"
    name="Simple Web UI Plug-in"
    version="1.0.0"
-   provider-name=""
+   provider-name="IBM"
+   description="This plugin contains the UI to create a simple non j2ee web project."
    class="org.eclipse.wst.web.ui.internal.WSTWebUIPlugin">
 
    <runtime>
@@ -27,7 +28,7 @@
    <extension
          point="org.eclipse.wst.common.frameworks.ui.extendableWizard">
       <extendableWizard
-            id="org.eclipse.wst.web.ui.internal.wizards.StaticWebProjectCreationWizard">
+            id="org.eclipse.wst.web.ui.internal.wizards.SimpleWebModuleCreationWizard">
       </extendableWizard>
    </extension>
    <extension
@@ -40,9 +41,9 @@
             name="%StaticWebProject.name"
             icon="icons/full/ctool16/newwebprj_wiz.gif"
             category="org.eclipse.jst.servlet.ui"
-            class="org.eclipse.wst.web.ui.internal.wizards.StaticWebProjectCreationWizard"
+            class="org.eclipse.wst.web.ui.internal.wizards.SimpleWebModuleCreationWizard"
             project="true"
-            id="org.eclipse.wst.web.ui.internal.wizards.StaticWebProjectCreation">
+            id="org.eclipse.wst.web.ui.internal.wizards.SimpleWebModuleCreation">
          <description>
             %StaticWebProject.description
          </description>
@@ -51,50 +52,50 @@
          </selection>
       </wizard>
    </extension>
-   <!-- add in the features page -->
+   <!-- add in the features page 
    	<extension
-   		id="com.ibm.etools.webtools.webproject.features.wizardpage.WebProjectFeaturesWizardPage"
+   		id="corg.eclipse.wst.web.ui.internal.wizards.WebProjectFeaturesWizardPage"
         name="%WebProjectFeatures.name"
         point="org.eclipse.wst.common.frameworks.ui.wizardPageGroup">
       	<wizardPageGroup
-        	pageGroupID="com.ibm.etools.webtools.webproject.features.wizardpage.WebProjectFeaturesWizardPage"
+        	pageGroupID="org.eclipse.wst.web.ui.internal.wizards.WebProjectFeaturesWizardPage"
             wizardID="com.ibm.etools.webtools.StaticWebProjectCreation">
         	<factory
-            	className="com.ibm.etools.webtools.webproject.features.wizardpage.WebProjectFeaturesWizardPageFactory">
+            	className="org.eclipse.wst.web.ui.internal.wizards.WebProjectFeaturesWizardPageFactory">
          	</factory>
       	</wizardPageGroup>
    	</extension>
-   
+   -->
    <extension
          point="org.eclipse.ui.propertyPages">
       <page
             objectClass="org.eclipse.core.resources.IProject"
             adaptable="true"
             name="%StaticWebSettings"
-            class="org.eclipse.wst.web.ui.internal.wizards.StaticWebSettingsPropertiesPage"
+            class="org.eclipse.wst.web.ui.internal.wizards.SimpleWebSettingsPropertiesPage"
             id="StaticWebSettingsPropertiesPage">
          <filter
                name="nature"
-               value="org.eclipse.jst.j2ee.web.StaticWebNature">
+               value="org.eclipse.wst.web.StaticWebNature">
          </filter>
       </page>
       
-      <page
+ <!--     <page
             objectClass="org.eclipse.core.resources.IProject"
             adaptable="true"
             name="%WebProjectFeatures.name"
-            class="org.eclipse.wst.web.ui.internal.wizards.StaticWebSettingsPropertiesPage"
-            id="StaticWebSettingsPropertiesPage">
+            class="com.ibm.itp.wt.ui.WebFeaturesPropertiesPage"
+            id="WebFeaturesPropertiesPage">
          <filter
                name="nature"
-               value="org.eclipse.jst.j2ee.web.StaticWebNature">
+               value="org.eclipse.wst.web.StaticWebNature">
          </filter>
-      </page>
+      </page> -->
    </extension>
    
    <!-- the following 2 are needed to add an image for SWPs into the "Add/Remove Project" dialog -->
-	<extension point="org.eclipse.wst.server.core.moduleKinds">
-		<moduleKind
+	<extension point="org.eclipse.wst.server.core.moduleTypes">
+		<moduleType
 			id="web.static"
 			name="%StaticWebModule.name"/>
 	</extension>
@@ -109,21 +110,21 @@
 	<extension point="org.eclipse.wst.common.frameworks.ExtendableOperation"
 			   id="extendableOperation">
 		<extendableOperation
-			class="org.eclipse.wst.staticwebproject.internal.operations.StaticWebProjectCreationOperation"
-			id="org.eclipse.wst.staticwebproject.internal.operations.StaticWebProjectCreationOperation">
+			class="org.eclipse.wst.staticwebproject.internal.operations.SimpleWebModuleCreationOperation"
+			id="org.eclipse.wst.staticwebproject.internal.operations.SimpleWebModuleCreationOperation">
 		</extendableOperation>
 	</extension>
 	
 	<!-- this extension is needed to migrate the 5.1.2 StaticWebNature ID to the new 6.0 ID -->
 	<extension
-		id="RAD6NatureMappings"
+		id="NatureMappings"
 		name="Static Nature Mappings"
 		point="org.eclipse.wst.common.migration.natureMapping">
 		<natureMapping>
 			<mapping
 				position="first"
 				name="Nature Mapping"
-				newValue="org.eclipse.jst.j2ee.web.StaticWebNature">
+				newValue="org.eclipse.wst.web.StaticWebNature">
 				<alias
 					value="com.ibm.etools.j2ee.StaticWebNature">
 				</alias>

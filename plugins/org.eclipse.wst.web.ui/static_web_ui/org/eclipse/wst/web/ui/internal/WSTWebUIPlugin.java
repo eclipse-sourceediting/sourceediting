@@ -13,6 +13,7 @@ import java.util.ResourceBundle;
 
 import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.wst.web.internal.WSTWebPreferences;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -23,7 +24,6 @@ public class WSTWebUIPlugin extends AbstractUIPlugin {
 	private static WSTWebUIPlugin plugin;
 	//Resource bundle.
 	private ResourceBundle resourceBundle;
-	private WSTWebPreferences preferences;
 	
 	/**
 	 * The constructor.
@@ -86,16 +86,5 @@ public class WSTWebUIPlugin extends AbstractUIPlugin {
 			resourceBundle = null;
 		}
 		return resourceBundle;
-	}
-	protected void initializeDefaultPluginPreferences() {
-		getWSTWebPreferences().initializeDefaultPreferences();
-	}
-	/**
-	 * @return Returns the preferences.
-	 */
-	public WSTWebPreferences getWSTWebPreferences() {
-		if (this.preferences == null)
-			this.preferences = new WSTWebPreferences(this);
-		return this.preferences;
 	}
 }

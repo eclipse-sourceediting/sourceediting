@@ -11,12 +11,12 @@ package org.eclipse.wst.web.internal.operation;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.wst.web.internal.IStaticWebNatureConstants;
+import org.eclipse.wst.web.internal.ISimpleWebNatureConstants;
 import org.eclipse.wst.web.internal.WSTWebPlugin;
 
 
 public class LibModule implements ILibModule {
-	protected static final IPath LIB_PATH = new Path(IStaticWebNatureConstants.INFO_DIRECTORY).append(IStaticWebNatureConstants.LIBRARY_DIRECTORY);
+	protected static final IPath LIB_PATH = new Path(ISimpleWebNatureConstants.INFO_DIRECTORY).append(ISimpleWebNatureConstants.LIBRARY_DIRECTORY);
 
 	private String jarName;
 	private String projectName;

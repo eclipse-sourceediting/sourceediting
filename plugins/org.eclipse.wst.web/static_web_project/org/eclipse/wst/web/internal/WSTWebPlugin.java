@@ -32,6 +32,7 @@ public class WSTWebPlugin extends AbstractUIPlugin
 	private static WSTWebPlugin plugin;
 	//Resource bundle.
 	private ResourceBundle resourceBundle;
+	private WSTWebPreferences preferences;
 	
 	public static final String PLUGIN_ID = "com.ibm.etools.webtools.staticwebproject"; //$NON-NLS-1$
 	public static final String VALIDATION_BUILDER_ID = ValidationPlugin.VALIDATION_BUILDER_ID; // plugin
@@ -123,5 +124,16 @@ public class WSTWebPlugin extends AbstractUIPlugin
 	}
 	public static IWorkspace getWorkspace() {
 		return ResourcesPlugin.getWorkspace();
+	}
+	protected void initializeDefaultPluginPreferences() {
+		getWSTWebPreferences().initializeDefaultPreferences();
+	}
+	/**
+	 * @return Returns the preferences.
+	 */
+	public WSTWebPreferences getWSTWebPreferences() {
+		if (this.preferences == null)
+			this.preferences = new WSTWebPreferences(this);
+		return this.preferences;
 	}
 }
