@@ -18,12 +18,10 @@ public class StaticWebDeployableObjectAdapter extends ModuleArtifactAdapterDeleg
 		if (adapterType == IStaticWebModuleArtifact.class) {
 			getModuleArtifact(adaptableObject);
 		}
-
 		return moduleArtifact;
 	}
 
 	public Class[] getAdapterList() {
-
 		return new Class[]{IStaticWebModuleArtifact.class};
 	}
 
