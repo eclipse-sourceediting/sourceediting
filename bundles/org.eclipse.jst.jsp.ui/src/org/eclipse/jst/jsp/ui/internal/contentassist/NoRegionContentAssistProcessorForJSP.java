@@ -14,7 +14,7 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jst.jsp.core.JSP11Namespace;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
-import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
+import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.wst.html.core.internal.text.rules.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.html.ui.internal.contentassist.NoRegionContentAssistProcessorForHTML;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
@@ -71,7 +71,7 @@ public class NoRegionContentAssistProcessorForJSP extends NoRegionContentAssistP
 	}
 
 	private void initJSPContexts() {
-		fJSPContexts = new String[]{XMLJSPRegionContexts.JSP_CLOSE, XMLJSPRegionContexts.JSP_CONTENT, XMLJSPRegionContexts.JSP_DECLARATION_OPEN, XMLJSPRegionContexts.JSP_EXPRESSION_OPEN, XMLJSPRegionContexts.JSP_SCRIPTLET_OPEN};
+		fJSPContexts = new String[]{DOMJSPRegionContexts.JSP_CLOSE, DOMJSPRegionContexts.JSP_CONTENT, DOMJSPRegionContexts.JSP_DECLARATION_OPEN, DOMJSPRegionContexts.JSP_EXPRESSION_OPEN, DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN};
 	}
 
 	/**

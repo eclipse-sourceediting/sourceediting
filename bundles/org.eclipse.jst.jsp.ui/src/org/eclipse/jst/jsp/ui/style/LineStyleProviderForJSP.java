@@ -13,7 +13,7 @@ package org.eclipse.jst.jsp.ui.style;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
+import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.wst.html.ui.style.IStyleConstantsHTML;
 import org.eclipse.wst.sse.core.text.ITextRegion;
@@ -56,16 +56,16 @@ public class LineStyleProviderForJSP extends AbstractLineStyleProvider implement
 
 			if (result == null) {
 				String type = region.getType();
-				if ((type == XMLJSPRegionContexts.JSP_SCRIPTLET_OPEN) || (type == XMLJSPRegionContexts.JSP_DECLARATION_OPEN) || (type == XMLJSPRegionContexts.JSP_EXPRESSION_OPEN) || (type == XMLJSPRegionContexts.JSP_DIRECTIVE_OPEN) || (type == XMLJSPRegionContexts.JSP_DIRECTIVE_CLOSE) || (type == XMLJSPRegionContexts.JSP_CLOSE)) {
+				if ((type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN) || (type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN) || (type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN) || (type == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN) || (type == DOMJSPRegionContexts.JSP_DIRECTIVE_CLOSE) || (type == DOMJSPRegionContexts.JSP_CLOSE)) {
 					result = (TextAttribute) getTextAttributes().get(IStyleConstantsHTML.SCRIPT_AREA_BORDER);
 				}
-				else if (type == XMLJSPRegionContexts.JSP_DIRECTIVE_NAME || type == XMLJSPRegionContexts.JSP_ROOT_TAG_NAME) {
+				else if (type == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME || type == DOMJSPRegionContexts.JSP_ROOT_TAG_NAME) {
 					result = (TextAttribute) getTextAttributes().get(IStyleConstantsXML.TAG_NAME);
 				}
-				else if ((type == XMLJSPRegionContexts.JSP_COMMENT_OPEN) || (type == XMLJSPRegionContexts.JSP_COMMENT_CLOSE)) {
+				else if ((type == DOMJSPRegionContexts.JSP_COMMENT_OPEN) || (type == DOMJSPRegionContexts.JSP_COMMENT_CLOSE)) {
 					result = (TextAttribute) getTextAttributes().get(IStyleConstantsXML.COMMENT_BORDER);
 				}
-				else if (type == XMLJSPRegionContexts.JSP_COMMENT_TEXT) {
+				else if (type == DOMJSPRegionContexts.JSP_COMMENT_TEXT) {
 					result = (TextAttribute) getTextAttributes().get(IStyleConstantsXML.COMMENT_TEXT);
 				}
 				// ============ These are in common with XML --- (for XML form
@@ -86,7 +86,7 @@ public class LineStyleProviderForJSP extends AbstractLineStyleProvider implement
 				else if (type == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 					result = (TextAttribute) getTextAttributes().get(IStyleConstantsXML.TAG_ATTRIBUTE_NAME);
 				}
-				else if ((type == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) || (type == XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE) || (type == XMLJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_SQUOTE)) {
+				else if ((type == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) || (type == DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE) || (type == DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_SQUOTE)) {
 					result = (TextAttribute) getTextAttributes().get(IStyleConstantsXML.TAG_ATTRIBUTE_VALUE);
 				}
 				else if (type == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {

@@ -16,7 +16,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jst.jsp.core.JSP12Namespace;
 import org.eclipse.jst.jsp.core.contentmodel.tld.TLDElementDeclaration;
-import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
+import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.common.contentmodel.CMNode;
@@ -128,7 +128,7 @@ public abstract class AbstractBreakpointProvider implements IBreakpointProvider 
 
 					// If region is JSP content, make sure the language is Java not Javascript by
 					// checking the content assist adapter's type.
-					if (region.getType().equals(XMLJSPRegionContexts.JSP_CONTENT)) {
+					if (region.getType().equals(DOMJSPRegionContexts.JSP_CONTENT)) {
 						// DWM: this logic is not incorrect ... given changes to adapters, etc.
 						// but probably don't need anything here, since both Java and JavaScript
 						// are supported in V5.

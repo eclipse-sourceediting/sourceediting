@@ -23,7 +23,7 @@ import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationExtension;
-import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
+import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
@@ -204,7 +204,7 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 		regions = sdRegion.getRegions();
 		for (int i = 0; i < regions.size(); i++) {
 			r = regions.get(i);
-			if (r.getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_NAME || r.getType() == XMLRegionContext.XML_TAG_NAME) {
+			if (r.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME || r.getType() == XMLRegionContext.XML_TAG_NAME) {
 				tagName = sdRegion.getText(r).trim();
 				if (tagName.equals("include")) { //$NON-NLS-1$
 					adjustForInclude(annotation, pos, sdRegion, regions, i);

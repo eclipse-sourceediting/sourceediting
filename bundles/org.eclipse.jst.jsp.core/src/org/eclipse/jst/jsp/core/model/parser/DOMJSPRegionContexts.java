@@ -19,7 +19,7 @@ import org.eclipse.wst.xml.core.parser.XMLRegionContext;
  *
  */
 
-public interface XMLJSPRegionContexts extends XMLRegionContext {
+public interface DOMJSPRegionContexts extends XMLRegionContext {
 	public static final String JSP_CLOSE = "JSP_CLOSE"; //$NON-NLS-1$
 	public static final String JSP_COMMENT_CLOSE = "JSP_COMMENT_CLOSE"; //$NON-NLS-1$
 

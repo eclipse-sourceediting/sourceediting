@@ -36,7 +36,7 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapterFactory;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
-import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
+import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.jst.jsp.ui.internal.preferences.JSPUIPreferenceNames;
@@ -649,14 +649,14 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 					// System.out.println("sdr > " +
 					// blockOfText.substring(sdr.getStartOffset(),
 					// sdr.getEndOffset()));
-					if (sdr.getType() == XMLJSPRegionContexts.JSP_CONTENT) {
+					if (sdr.getType() == DOMJSPRegionContexts.JSP_CONTENT) {
 						if (documentPosition >= fn.getStartOffset() + sdr.getStartOffset() && documentPosition <= fn.getStartOffset() + sdr.getEndOffset()) {
 							return getJSPJavaCompletionProposals(viewer, documentPosition);
 						}
 					} else if (sdr.getType() == XMLRegionContext.XML_TAG_NAME) {
 						if (documentPosition > fn.getStartOffset() + sdr.getStartOffset() && documentPosition < fn.getStartOffset() + sdr.getEndOffset()) {
 							return EMPTY_PROPOSAL_SET;
-						} else if (documentPosition == fn.getStartOffset() + sdr.getEndOffset() && sdr.getNext() != null && sdr.getNext().getType() == XMLJSPRegionContexts.JSP_CONTENT) {
+						} else if (documentPosition == fn.getStartOffset() + sdr.getEndOffset() && sdr.getNext() != null && sdr.getNext().getType() == DOMJSPRegionContexts.JSP_CONTENT) {
 							// the end of an open tag <script>
 							// <jsp:scriptlet>| blah </jsp:scriptlet>
 							return getJSPJavaCompletionProposals(viewer, documentPosition);
@@ -793,7 +793,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 						Object[] jspRegions = ((ITextRegionContainer) r).getRegions().toArray();
 						for (int j = 0; j < jspRegions.length; j++) {
 							jspRegion = (ITextRegion) jspRegions[j];
-							if (jspRegion.getType() == XMLJSPRegionContexts.JSP_CLOSE) {
+							if (jspRegion.getType() == DOMJSPRegionContexts.JSP_CLOSE) {
 								if (sdRegion.getStartOffset(jspRegion) == documentPosition)
 									return getJSPJavaCompletionProposals(viewer, documentPosition);
 							}
@@ -826,7 +826,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 					}
 				}
 				// TODO: handle non-Java code such as nested tags
-				if (testRegion.getType().equals(XMLJSPRegionContexts.JSP_CONTENT))
+				if (testRegion.getType().equals(DOMJSPRegionContexts.JSP_CONTENT))
 					return getJSPJavaCompletionProposals(viewer, documentPosition);
 				else
 					return EMPTY_PROPOSAL_SET;
@@ -998,9 +998,9 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 	private IStructuredDocumentRegion decodeScriptBlock(String blockText) {
 		XMLSourceParser parser = new XMLSourceParser();
 		// use JSP_CONTENT for region type
-		parser.addBlockMarker(new BlockMarker("jsp:scriptlet", null, XMLJSPRegionContexts.JSP_CONTENT, false, false)); //$NON-NLS-1$
-		parser.addBlockMarker(new BlockMarker("jsp:expression", null, XMLJSPRegionContexts.JSP_CONTENT, false, false)); //$NON-NLS-1$
-		parser.addBlockMarker(new BlockMarker("jsp:declaration", null, XMLJSPRegionContexts.JSP_CONTENT, false, false)); //$NON-NLS-1$
+		parser.addBlockMarker(new BlockMarker("jsp:scriptlet", null, DOMJSPRegionContexts.JSP_CONTENT, false, false)); //$NON-NLS-1$
+		parser.addBlockMarker(new BlockMarker("jsp:expression", null, DOMJSPRegionContexts.JSP_CONTENT, false, false)); //$NON-NLS-1$
+		parser.addBlockMarker(new BlockMarker("jsp:declaration", null, DOMJSPRegionContexts.JSP_CONTENT, false, false)); //$NON-NLS-1$
 		parser.reset(blockText);
 		return parser.getDocumentRegions();
 	}
@@ -1138,8 +1138,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		}
 		// handle proposals in and around JSP_DIRECTIVE_OPEN and
 		// JSP_DIRECTIVE_NAME
-		else if ((completionRegion.getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_OPEN && documentPosition >= sdRegion.getTextEndOffset(completionRegion)) || (completionRegion.getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_NAME && documentPosition <= sdRegion.getTextEndOffset(completionRegion))) {
-			if (completionRegion.getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_OPEN) {
+		else if ((completionRegion.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN && documentPosition >= sdRegion.getTextEndOffset(completionRegion)) || (completionRegion.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME && documentPosition <= sdRegion.getTextEndOffset(completionRegion))) {
+			if (completionRegion.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN) {
 				if (request == null)
 					request = newContentAssistRequest(xmlnode, xmlnode, sdRegion, completionRegion, documentPosition, 0, matchString);
 				Iterator regions = sdRegion.getRegions().iterator();
@@ -1148,7 +1148,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 				int length = request.getReplacementLength();
 				while (regions.hasNext()) {
 					ITextRegion region = (ITextRegion) regions.next();
-					if (region.getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_NAME) {
+					if (region.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
 						nameString = sdRegion.getText(region);
 						begin = sdRegion.getStartOffset(region);
 						length = region.getTextLength();
@@ -1169,7 +1169,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 						request.addProposal(new CustomCompletionProposal(directiveNames[i], request.getReplacementBeginPosition(), request.getReplacementLength(), directiveNames[i].length(), SharedXMLEditorPluginImageHelper.getImage(SharedXMLEditorPluginImageHelper.IMG_OBJ_TAG_GENERIC), directiveNames[i], null, null, XMLRelevanceConstants.R_JSP));
 				}
 			}
-		} else if ((completionRegion.getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_NAME && documentPosition > sdRegion.getTextEndOffset(completionRegion)) || (completionRegion.getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_CLOSE && documentPosition <= sdRegion.getStartOffset(completionRegion))) {
+		} else if ((completionRegion.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME && documentPosition > sdRegion.getTextEndOffset(completionRegion)) || (completionRegion.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_CLOSE && documentPosition <= sdRegion.getStartOffset(completionRegion))) {
 			if (request == null)
 				request = computeAttributeProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
 			super.addTagCloseProposals(request);
@@ -1178,14 +1178,14 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 			// super.addAttributeNameProposals(request);
 		}
 		// no name?: <%@ %>
-		else if (completionRegion.getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_CLOSE && documentPosition <= sdRegion.getStartOffset(completionRegion)) {
+		else if (completionRegion.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_CLOSE && documentPosition <= sdRegion.getStartOffset(completionRegion)) {
 			if (request != null)
 				request = computeAttributeProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
 			Iterator regions = sdRegion.getRegions().iterator();
 			String nameString = null;
 			while (regions.hasNext()) {
 				ITextRegion region = (ITextRegion) regions.next();
-				if (region.getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_NAME) {
+				if (region.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
 					nameString = sdRegion.getText(region);
 					break;
 				}

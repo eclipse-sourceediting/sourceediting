@@ -12,13 +12,13 @@
 
 package org.eclipse.jst.jsp.core.internal.domdocument;
 
-import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
+import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.wst.xml.core.internal.document.TextImpl;
 import org.w3c.dom.Document;
 
 public class TextImplForJSP extends TextImpl {
 	protected boolean isNotNestedContent(String regionType) {
-		boolean result = regionType != XMLJSPRegionContexts.JSP_CONTENT;
+		boolean result = regionType != DOMJSPRegionContexts.JSP_CONTENT;
 		return result;
 	}
 	protected void setOwnerDocument(Document ownerDocument) {

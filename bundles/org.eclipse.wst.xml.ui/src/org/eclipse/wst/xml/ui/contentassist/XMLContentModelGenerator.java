@@ -29,7 +29,7 @@ public class XMLContentModelGenerator extends AbstractContentModelGenerator {
 	 * way for expedency. Should be evolved in future to depend on
 	 * "nestedContext".
 	 */
-	private class XMLJSPRegionContexts {
+	private class DOMJSPRegionContextsPrivateCopy {
 		private static final String JSP_DIRECTIVE_OPEN = "JSP_DIRECTIVE_OPEN"; //$NON-NLS-1$
 	}
 
@@ -115,7 +115,7 @@ public class XMLContentModelGenerator extends AbstractContentModelGenerator {
 	protected String getOtherClose(Node notATagNode) {
 		if (notATagNode instanceof XMLNode) {
 			IStructuredDocumentRegion node = ((XMLNode) notATagNode).getStartStructuredDocumentRegion();
-			if (node != null && node.getNumberOfRegions() > 1 && node.getRegions().get(0).getType().equals(XMLJSPRegionContexts.JSP_DIRECTIVE_OPEN)) {
+			if (node != null && node.getNumberOfRegions() > 1 && node.getRegions().get(0).getType().equals(DOMJSPRegionContextsPrivateCopy.JSP_DIRECTIVE_OPEN)) {
 				return "%>"; //$NON-NLS-1$
 			}
 		}

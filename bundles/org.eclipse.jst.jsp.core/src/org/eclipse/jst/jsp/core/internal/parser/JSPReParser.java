@@ -15,7 +15,7 @@ import java.util.Iterator;
 
 import org.eclipse.jst.jsp.core.JSP12Namespace;
 import org.eclipse.jst.jsp.core.contentmodel.tld.JSP11TLDNames;
-import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
+import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.text.CoreNodeList;
@@ -216,7 +216,7 @@ public class JSPReParser extends XMLStructuredDocumentReParser {
 	 * IStructuredDocumentRegion, includes a jsp:root tag
 	 */
 	private boolean isJspRoot(ITextRegionList regions) {
-		return regions.size() > 1 && regions.get(0).getType() == XMLRegionContext.XML_TAG_OPEN && regions.get(1).getType() == XMLJSPRegionContexts.JSP_ROOT_TAG_NAME;
+		return regions.size() > 1 && regions.get(0).getType() == XMLRegionContext.XML_TAG_OPEN && regions.get(1).getType() == DOMJSPRegionContexts.JSP_ROOT_TAG_NAME;
 	}
 
 	/**
@@ -225,8 +225,8 @@ public class JSPReParser extends XMLStructuredDocumentReParser {
 	 * directive
 	 */
 	private boolean isTaglibOrInclude(IStructuredDocumentRegion node, ITextRegionList regions) {
-		boolean sizeAndTypesMatch = (regions.size() > 1) && (regions.get(1).getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_NAME)
-					&& (regions.get(0).getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_OPEN || regions.get(0).getType() == XMLRegionContext.XML_TAG_OPEN);
+		boolean sizeAndTypesMatch = (regions.size() > 1) && (regions.get(1).getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME)
+					&& (regions.get(0).getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN || regions.get(0).getType() == XMLRegionContext.XML_TAG_OPEN);
 		if (!sizeAndTypesMatch)
 			return false;
 		ITextRegion region = regions.get(1);
@@ -346,7 +346,7 @@ public class JSPReParser extends XMLStructuredDocumentReParser {
 	private boolean isJSPEmbeddedStartOrEnd(IStructuredDocumentRegion flatNode) {
 		boolean result = false;
 		String type = flatNode.getType();
-		result = ((type == XMLJSPRegionContexts.JSP_SCRIPTLET_OPEN) || (type == XMLJSPRegionContexts.JSP_EXPRESSION_OPEN) || (type == XMLJSPRegionContexts.JSP_DECLARATION_OPEN));
+		result = ((type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN) || (type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN) || (type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN));
 		return result;
 	}
 
@@ -356,7 +356,7 @@ public class JSPReParser extends XMLStructuredDocumentReParser {
 	protected boolean isPartOfBlockRegion(IStructuredDocumentRegion flatNode) {
 		boolean result = false;
 		String type = flatNode.getType();
-		result = ((type == XMLJSPRegionContexts.JSP_CLOSE) || (type == XMLJSPRegionContexts.JSP_CONTENT) || super.isPartOfBlockRegion(flatNode));
+		result = ((type == DOMJSPRegionContexts.JSP_CLOSE) || (type == DOMJSPRegionContexts.JSP_CONTENT) || super.isPartOfBlockRegion(flatNode));
 		return result;
 	}
 

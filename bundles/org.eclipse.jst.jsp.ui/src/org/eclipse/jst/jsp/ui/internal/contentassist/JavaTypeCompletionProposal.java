@@ -22,7 +22,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jst.jsp.core.JSP11Namespace;
 import org.eclipse.jst.jsp.core.JSP12Namespace;
-import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
+import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -135,7 +135,7 @@ public class JavaTypeCompletionProposal extends CustomCompletionProposal impleme
 			if (regions.size() > 1) {
 				ITextRegion name = regions.get(1);
 				// verify that this is a JSP directive
-				if (name.getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_NAME) {
+				if (name.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
 					// verify that this is a *page* directive
 					if (node.getText(name).equals(JSP11Namespace.ATTR_NAME_PAGE) || node.getText(name).equals(JSP12Namespace.ElementName.DIRECTIVE_PAGE)) {
 						if (node.getEndOffset() < getReplacementOffset())
@@ -148,7 +148,7 @@ public class JavaTypeCompletionProposal extends CustomCompletionProposal impleme
 				}
 				else {
 					// if this is a jsp:root tag, use the XML form
-					useXML = useXML || name.getType() == XMLJSPRegionContexts.JSP_ROOT_TAG_NAME;
+					useXML = useXML || name.getType() == DOMJSPRegionContexts.JSP_ROOT_TAG_NAME;
 				}
 			}
 			node = node.getNext();

@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
-import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
+import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.wst.common.contentmodel.CMDocument;
 import org.eclipse.wst.common.contentmodel.CMNode;
 import org.eclipse.wst.sse.core.parser.BlockMarker;
@@ -138,7 +138,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 				else
 					fTagname = null;
 			}
-			else if (sdRegion.getFirstRegion().getType() == XMLJSPRegionContexts.JSP_CONTENT) {
+			else if (sdRegion.getFirstRegion().getType() == DOMJSPRegionContexts.JSP_CONTENT) {
 				if (fTagname != null) {
 					// assign contents to one of the tables
 					if (isScriptlet(fTagname)) {
@@ -286,7 +286,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 				elements = doc.getElements().iterator();
 				while (elements.hasNext()) {
 					node = (CMNode) elements.next();
-					marker = new BlockMarker(node.getNodeName(), null, XMLJSPRegionContexts.JSP_CONTENT, true);
+					marker = new BlockMarker(node.getNodeName(), null, DOMJSPRegionContexts.JSP_CONTENT, true);
 					// global scope is OK because we have encountered this <@taglib> directive
 					// so it all markers from it should will be in scope
 					// add to this local parser
@@ -301,7 +301,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	protected void processPageDirective(IStructuredDocumentRegion sdRegion) {
 		if (isPageDirective(fTagname)) {
 			while (sdRegion != null) {
-				if (sdRegion.getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_NAME)
+				if (sdRegion.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME)
 					break;
 				sdRegion = sdRegion.getPrevious();
 			}
@@ -347,7 +347,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	 * return true for elements whose contents we might want to add to the java file we are building
 	 */
 	protected boolean isJSPStartRegion(IStructuredDocumentRegion sdRegion) {
-		return (sdRegion.getFirstRegion().getType() == XMLRegionContext.XML_TAG_OPEN || sdRegion.getFirstRegion().getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_OPEN);
+		return (sdRegion.getFirstRegion().getType() == XMLRegionContext.XML_TAG_OPEN || sdRegion.getFirstRegion().getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN);
 	}
 
 	protected boolean isJSPRegion(String tagName) {

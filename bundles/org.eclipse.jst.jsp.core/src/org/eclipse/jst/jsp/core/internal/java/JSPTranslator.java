@@ -34,7 +34,7 @@ import org.eclipse.jst.jsp.core.contentmodel.tld.TLDVariable;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
-import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
+import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.wst.common.contentmodel.CMDocument;
 import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.common.contentmodel.CMNode;
@@ -710,9 +710,9 @@ public class JSPTranslator {
 			ITextRegion r = null;
 			while (it.hasNext()) {
 				r = (ITextRegion) it.next();
-				if (r.getType() == XMLJSPRegionContexts.JSP_CONTENT || r.getType() == XMLRegionContext.XML_CONTENT)
+				if (r.getType() == DOMJSPRegionContexts.JSP_CONTENT || r.getType() == XMLRegionContext.XML_CONTENT)
 					break;
-				else if (r.getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_NAME)
+				else if (r.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME)
 					break;
 				else if (r.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE && getCurrentNode().getFullText(r).trim().equals("import")) //$NON-NLS-1$
 					break;
@@ -770,11 +770,11 @@ public class JSPTranslator {
 	 */
 	private void decodeScriptBlock(String blockText, int startOfBlock) {
 		XMLJSPRegionHelper helper = new XMLJSPRegionHelper(this);
-		helper.addBlockMarker(new BlockMarker("jsp:scriptlet", null, XMLJSPRegionContexts.JSP_CONTENT, false)); //$NON-NLS-1$
-		helper.addBlockMarker(new BlockMarker("jsp:expression", null, XMLJSPRegionContexts.JSP_CONTENT, false)); //$NON-NLS-1$
-		helper.addBlockMarker(new BlockMarker("jsp:declaration", null, XMLJSPRegionContexts.JSP_CONTENT, false)); //$NON-NLS-1$
-		helper.addBlockMarker(new BlockMarker("jsp:directive.include", null, XMLJSPRegionContexts.JSP_CONTENT, false)); //$NON-NLS-1$
-		helper.addBlockMarker(new BlockMarker("jsp:directive.taglib", null, XMLJSPRegionContexts.JSP_CONTENT, false)); //$NON-NLS-1$
+		helper.addBlockMarker(new BlockMarker("jsp:scriptlet", null, DOMJSPRegionContexts.JSP_CONTENT, false)); //$NON-NLS-1$
+		helper.addBlockMarker(new BlockMarker("jsp:expression", null, DOMJSPRegionContexts.JSP_CONTENT, false)); //$NON-NLS-1$
+		helper.addBlockMarker(new BlockMarker("jsp:declaration", null, DOMJSPRegionContexts.JSP_CONTENT, false)); //$NON-NLS-1$
+		helper.addBlockMarker(new BlockMarker("jsp:directive.include", null, DOMJSPRegionContexts.JSP_CONTENT, false)); //$NON-NLS-1$
+		helper.addBlockMarker(new BlockMarker("jsp:directive.taglib", null, DOMJSPRegionContexts.JSP_CONTENT, false)); //$NON-NLS-1$
 		helper.reset(blockText, startOfBlock);
 		// force parse
 		helper.forceParse();
@@ -816,7 +816,7 @@ public class JSPTranslator {
 	 * determines if the type is a pure JSP type (not XML)
 	 */
 	protected boolean isJSP(String type) {
-		return ((type == XMLJSPRegionContexts.JSP_DIRECTIVE_OPEN || type == XMLJSPRegionContexts.JSP_EXPRESSION_OPEN || type == XMLJSPRegionContexts.JSP_DECLARATION_OPEN || type == XMLJSPRegionContexts.JSP_SCRIPTLET_OPEN || type == XMLJSPRegionContexts.JSP_CONTENT) && type != XMLRegionContext.XML_TAG_OPEN);
+		return ((type == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN || type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN || type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN || type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN || type == DOMJSPRegionContexts.JSP_CONTENT) && type != XMLRegionContext.XML_TAG_OPEN);
 		// checking XML_TAG_OPEN so <jsp:directive.xxx/> gets treated like
 		// other XML jsp tags
 	}
@@ -833,7 +833,7 @@ public class JSPTranslator {
 		ITextRegion r = null;
 		if (regions.hasNext()) {
 			r = (ITextRegion) regions.next();
-			if (r.getType() == XMLRegionContext.XML_TAG_NAME || r.getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_NAME) // <jsp:directive.xxx
+			if (r.getType() == XMLRegionContext.XML_TAG_NAME || r.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) // <jsp:directive.xxx
 			// comes
 			// in
 			// as
@@ -968,7 +968,7 @@ public class JSPTranslator {
 								// embedded region
 								// so we only translate on the JSP open tags
 								// (not content)
-								if (type == XMLJSPRegionContexts.JSP_EXPRESSION_OPEN || type == XMLJSPRegionContexts.JSP_SCRIPTLET_OPEN || type == XMLJSPRegionContexts.JSP_DECLARATION_OPEN || type == XMLJSPRegionContexts.JSP_DIRECTIVE_OPEN) {
+								if (type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN || type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN || type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN || type == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN) {
 									// now call jsptranslate
 									// System.out.println("embedded jsp OPEN
 									// >>>> " +
@@ -1006,7 +1006,7 @@ public class JSPTranslator {
 	 * determines which type of JSP node to translate
 	 */
 	protected void translateJSPNode(ITextRegion region, Iterator regions, String type, int JSPType) {
-		if (type == XMLJSPRegionContexts.JSP_DIRECTIVE_OPEN && regions != null) {
+		if (type == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN && regions != null) {
 			translateDirective(regions);
 		}
 		else {
@@ -1021,13 +1021,13 @@ public class JSPTranslator {
 				contentRegion = null;
 			}
 			if (contentRegion != null) {
-				if (type == XMLJSPRegionContexts.JSP_EXPRESSION_OPEN) {
+				if (type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN) {
 					translateExpression(contentRegion);
 				}
-				else if (type == XMLJSPRegionContexts.JSP_DECLARATION_OPEN) {
+				else if (type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN) {
 					translateDeclaration(contentRegion);
 				}
-				else if (type == XMLJSPRegionContexts.JSP_CONTENT || type == XMLJSPRegionContexts.JSP_SCRIPTLET_OPEN) {
+				else if (type == DOMJSPRegionContexts.JSP_CONTENT || type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN) {
 					translateScriptlet(contentRegion);
 				}
 			}
@@ -1078,7 +1078,7 @@ public class JSPTranslator {
 
 			// check next region to see if it's content
 			if (i + 1 < embeddedRegions.size()) {
-				if (embeddedRegions.get(i + 1).getType() == XMLJSPRegionContexts.JSP_CONTENT)
+				if (embeddedRegions.get(i + 1).getType() == DOMJSPRegionContexts.JSP_CONTENT)
 					content = embeddedRegions.get(i + 1);
 			}
 
@@ -1091,15 +1091,15 @@ public class JSPTranslator {
 				// int jspPositionStart = fCurrentNode.getStartOffset() +
 				// contentStart;
 
-				if (type == XMLJSPRegionContexts.JSP_EXPRESSION_OPEN) {
+				if (type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN) {
 					fLastJSPType = EXPRESSION;
 					translateExpressionString(embeddedContainer.getText(content), fCurrentNode, contentStart, content.getLength());
 				}
-				else if (type == XMLJSPRegionContexts.JSP_SCRIPTLET_OPEN) {
+				else if (type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN) {
 					fLastJSPType = SCRIPTLET;
 					translateScriptletString(embeddedContainer.getText(content), fCurrentNode, contentStart, content.getLength());
 				}
-				else if (type == XMLJSPRegionContexts.JSP_DECLARATION_OPEN) {
+				else if (type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN) {
 					fLastJSPType = DECLARATION;
 					translateDeclarationString(embeddedContainer.getText(content), fCurrentNode, contentStart, content.getLength());
 				}
@@ -1136,13 +1136,13 @@ public class JSPTranslator {
 	private int getJSPTypeForRegion(ITextRegion region) {
 		String regionType = region.getType();
 		int type = SCRIPTLET;
-		if (regionType == XMLJSPRegionContexts.JSP_SCRIPTLET_OPEN)
+		if (regionType == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN)
 			type = SCRIPTLET;
-		else if (regionType == XMLJSPRegionContexts.JSP_EXPRESSION_OPEN)
+		else if (regionType == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN)
 			type = EXPRESSION;
-		else if (regionType == XMLJSPRegionContexts.JSP_DECLARATION_OPEN)
+		else if (regionType == DOMJSPRegionContexts.JSP_DECLARATION_OPEN)
 			type = DECLARATION;
-		else if (regionType == XMLJSPRegionContexts.JSP_CONTENT)
+		else if (regionType == DOMJSPRegionContexts.JSP_CONTENT)
 			type = fLastJSPType;
 		// remember the last type, in case the next type that comes in is
 		// JSP_CONTENT
@@ -1156,7 +1156,7 @@ public class JSPTranslator {
 	protected void translateDirective(Iterator regions) {
 		ITextRegion r = null;
 		String regionText, attrValue = ""; //$NON-NLS-1$
-		while (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_NAME) { // could
+		while (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) { // could
 			// be
 			// XML_CONTENT
 			// =
@@ -1212,7 +1212,7 @@ public class JSPTranslator {
 				taglibRegions = sdRegion.getRegions().iterator();
 				while (taglibRegions.hasNext()) {
 					r = (ITextRegion) taglibRegions.next();
-					if (r.getType().equals(XMLJSPRegionContexts.JSP_DIRECTIVE_NAME)) {
+					if (r.getType().equals(DOMJSPRegionContexts.JSP_DIRECTIVE_NAME)) {
 						if (sdRegion.getText(r).equals("taglib")) { //$NON-NLS-1$
 							addBlockMarkers(tracker.getDocument());
 						}
@@ -1232,7 +1232,7 @@ public class JSPTranslator {
 			CMNode node = null;
 			while (elements.hasNext()) {
 				node = (CMNode) elements.next();
-				getBlockMarkers().add(new BlockMarker(node.getNodeName(), null, XMLJSPRegionContexts.JSP_CONTENT, true));
+				getBlockMarkers().add(new BlockMarker(node.getNodeName(), null, DOMJSPRegionContexts.JSP_CONTENT, true));
 			}
 		}
 	}
@@ -1264,7 +1264,7 @@ public class JSPTranslator {
 		ITextRegion r = null;
 		String attrName, attrValue;
 		// iterate all attributes
-		while (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() != XMLJSPRegionContexts.JSP_CLOSE) {
+		while (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() != DOMJSPRegionContexts.JSP_CLOSE) {
 			attrName = attrValue = null;
 			if (r.getType().equals(XMLRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
 
@@ -1762,7 +1762,7 @@ public class JSPTranslator {
 		}
 		int CDATAOffset = 0; // number of characters lost in conversion
 		int bufferSize = 0;
-		if (stRegion.getType() == XMLJSPRegionContexts.JSP_CONTENT || stRegion.getType() == XMLRegionContext.BLOCK_TEXT // need
+		if (stRegion.getType() == DOMJSPRegionContexts.JSP_CONTENT || stRegion.getType() == XMLRegionContext.BLOCK_TEXT // need
 					// this
 					// for
 					// embedded
@@ -1799,7 +1799,7 @@ public class JSPTranslator {
 			// XMLJSP
 			// tag
 		}
-		else if (stRegion.getType() == XMLJSPRegionContexts.JSP_CLOSE) {
+		else if (stRegion.getType() == DOMJSPRegionContexts.JSP_CLOSE) {
 			// need to determine cursor owner so that the fCurosorPosition
 			// will be
 			// correct even if there is no region after the cursor in the JSP

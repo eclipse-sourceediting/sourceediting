@@ -19,7 +19,7 @@ import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
-import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
+import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -103,7 +103,7 @@ public class JSPFindOccurrencesAction extends BasicFindOccurrencesAction impleme
 	 * @see com.ibm.sse.editor.internal.search.BasicFindOccurrencesAction#getRegionTypes()
 	 */
 	public String[] getRegionTypes() {
-		return new String[]{XMLRegionContext.BLOCK_TEXT, XMLJSPRegionContexts.JSP_CONTENT};
+		return new String[]{XMLRegionContext.BLOCK_TEXT, DOMJSPRegionContexts.JSP_CONTENT};
 	}
 
 	private IFile getJspFile() {

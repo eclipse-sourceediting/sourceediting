@@ -12,18 +12,18 @@
 
 package org.eclipse.jst.jsp.core.internal.domdocument;
 
-import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
+import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.wst.xml.core.internal.document.CommentImpl;
 import org.w3c.dom.Document;
 
 public class CommentImplForJSP extends CommentImpl {
 	protected boolean isNestedCommentClose(String regionType) {
-		boolean result = regionType == XMLJSPRegionContexts.JSP_COMMENT_CLOSE;
+		boolean result = regionType == DOMJSPRegionContexts.JSP_COMMENT_CLOSE;
 		return result;
 	}
 
 	protected boolean isNestedCommentOpenClose(String regionType) {
-		boolean result = regionType == XMLJSPRegionContexts.JSP_COMMENT_OPEN || regionType == XMLJSPRegionContexts.JSP_COMMENT_CLOSE;
+		boolean result = regionType == DOMJSPRegionContexts.JSP_COMMENT_OPEN || regionType == DOMJSPRegionContexts.JSP_COMMENT_CLOSE;
 		return result;
 	}
 

@@ -47,7 +47,7 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.ITaglibRecord;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibIndex;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
-import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
+import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.wst.common.contentmodel.CMDocument;
 import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.common.uriresolver.URIResolverPlugin;
@@ -203,7 +203,7 @@ public class TLDCMDocumentManager {
 		public void nodeParsed(IStructuredDocumentRegion aCoreStructuredDocumentRegion) {
 			// could test > 1, but since we only care if there are 8 (<%@,
 			// taglib, uri, =, where, prefix, =, what) [or 4 for includes]
-			if (aCoreStructuredDocumentRegion.getNumberOfRegions() > 4 && aCoreStructuredDocumentRegion.getRegions().get(1).getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_NAME) {
+			if (aCoreStructuredDocumentRegion.getNumberOfRegions() > 4 && aCoreStructuredDocumentRegion.getRegions().get(1).getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
 				ITextRegion name = aCoreStructuredDocumentRegion.getRegions().get(1);
 				try {
 					if (getParser() == null) {
@@ -245,7 +245,7 @@ public class TLDCMDocumentManager {
 			}
 			// could test > 1, but since we only care if there are 5 (<,
 			// jsp:root, xmlns:prefix, =, where)
-			else if (aCoreStructuredDocumentRegion.getNumberOfRegions() > 4 && aCoreStructuredDocumentRegion.getRegions().get(1).getType() == XMLJSPRegionContexts.JSP_ROOT_TAG_NAME) {
+			else if (aCoreStructuredDocumentRegion.getNumberOfRegions() > 4 && aCoreStructuredDocumentRegion.getRegions().get(1).getType() == DOMJSPRegionContexts.JSP_ROOT_TAG_NAME) {
 				if (getParser() == null) {
 					Logger.log(Logger.WARNING, "Warning: parser text was requested by " + getClass().getName() + " but none was available; taglib support disabled"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
@@ -589,7 +589,7 @@ public class TLDCMDocumentManager {
 		public void nodeParsed(IStructuredDocumentRegion aCoreStructuredDocumentRegion) {
 			// could test > 1, but since we only care if there are 8 (<%@,
 			// taglib, uri, =, where, prefix, =, what)
-			if (aCoreStructuredDocumentRegion.getNumberOfRegions() > 1 && aCoreStructuredDocumentRegion.getRegions().get(1).getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_NAME) {
+			if (aCoreStructuredDocumentRegion.getNumberOfRegions() > 1 && aCoreStructuredDocumentRegion.getRegions().get(1).getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
 				ITextRegion name = aCoreStructuredDocumentRegion.getRegions().get(1);
 				try {
 					String directiveName = fLocalParser.getText(aCoreStructuredDocumentRegion.getStartOffset(name), name.getTextLength());
@@ -606,7 +606,7 @@ public class TLDCMDocumentManager {
 			}
 			// could test > 1, but since we only care if there are 5 (<,
 			// jsp:root, xmlns:prefix, =, where)
-			else if (aCoreStructuredDocumentRegion.getNumberOfRegions() > 4 && aCoreStructuredDocumentRegion.getRegions().get(1).getType() == XMLJSPRegionContexts.JSP_ROOT_TAG_NAME) {
+			else if (aCoreStructuredDocumentRegion.getNumberOfRegions() > 4 && aCoreStructuredDocumentRegion.getRegions().get(1).getType() == DOMJSPRegionContexts.JSP_ROOT_TAG_NAME) {
 				processJSPRoot(aCoreStructuredDocumentRegion, fAnchor, fLocalParser);
 			}
 		}

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui;
 
-import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
+import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.wst.xml.ui.XMLSpellCheckTarget;
 
 /**
@@ -39,7 +39,7 @@ public class JSPSpellCheckTarget extends XMLSpellCheckTarget {
 		//XMLRegionContext.XML_ATTLIST_DECL_CONTENT.equals(type) ||
 		//XMLJSPRegionContexts.JSP_CONTENT.equals(type) ||
 		//XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE.equals(type) ||
-		XMLJSPRegionContexts.JSP_COMMENT_TEXT.equals(type)) {
+		DOMJSPRegionContexts.JSP_COMMENT_TEXT.equals(type)) {
 			valid = true;
 		}
 		return valid || super.isValidType(type);

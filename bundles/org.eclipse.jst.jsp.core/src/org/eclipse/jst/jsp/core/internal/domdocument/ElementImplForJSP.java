@@ -12,7 +12,7 @@
 
 package org.eclipse.jst.jsp.core.internal.domdocument;
 
-import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
+import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.wst.html.core.document.ElementStyleImpl;
 import org.eclipse.wst.xml.core.internal.document.ElementImpl;
 import org.w3c.dom.Document;
@@ -34,22 +34,22 @@ public class ElementImplForJSP extends ElementStyleImpl {
 	}
 
 	protected boolean isNestedEndTag(String regionType) {
-		boolean result = regionType == XMLJSPRegionContexts.JSP_ROOT_TAG_NAME || regionType == XMLJSPRegionContexts.JSP_DIRECTIVE_NAME;
+		boolean result = regionType == DOMJSPRegionContexts.JSP_ROOT_TAG_NAME || regionType == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME;
 		return result;
 	}
 
 	protected boolean isNestedClosed(String regionType) {
-		boolean result = (regionType == XMLJSPRegionContexts.JSP_CLOSE || regionType == XMLJSPRegionContexts.JSP_DIRECTIVE_CLOSE);
+		boolean result = (regionType == DOMJSPRegionContexts.JSP_CLOSE || regionType == DOMJSPRegionContexts.JSP_DIRECTIVE_CLOSE);
 		return result;
 	}
 
 	protected boolean isNestedClosedComment(String regionType) {
-		boolean result = regionType == XMLJSPRegionContexts.JSP_COMMENT_CLOSE;
+		boolean result = regionType == DOMJSPRegionContexts.JSP_COMMENT_CLOSE;
 		return result;
 	}
 
 	protected boolean isClosedNestedDirective(String regionType) {
-		boolean result = regionType == XMLJSPRegionContexts.JSP_DIRECTIVE_CLOSE;
+		boolean result = regionType == DOMJSPRegionContexts.JSP_DIRECTIVE_CLOSE;
 		return result;
 	}
 

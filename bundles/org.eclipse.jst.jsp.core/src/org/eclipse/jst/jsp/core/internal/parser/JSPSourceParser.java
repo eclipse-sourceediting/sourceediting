@@ -16,7 +16,7 @@ import java.util.List;
 import org.eclipse.jst.jsp.core.JSP12Namespace;
 import org.eclipse.jst.jsp.core.contentmodel.tld.JSP12TLDNames;
 import org.eclipse.jst.jsp.core.internal.parser.internal.JSPTokenizer;
-import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
+import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.internal.text.IRegionComparible;
 import org.eclipse.wst.sse.core.parser.BlockTokenizer;
 import org.eclipse.wst.sse.core.parser.JSPCapableParser;
@@ -68,7 +68,7 @@ public class JSPSourceParser extends XMLSourceParser implements JSPCapableParser
 		public void nodeParsed(IStructuredDocumentRegion aCoreFlatNode) {
 			// could test > 1, but since we only care if there are 8 (<%@,
 			// taglib, uri, =, where, prefix, =, what) [or 4 for includes]
-			if (aCoreFlatNode.getNumberOfRegions() > 4 && aCoreFlatNode.getRegions().get(1).getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_NAME) {
+			if (aCoreFlatNode.getNumberOfRegions() > 4 && aCoreFlatNode.getRegions().get(1).getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
 				ITextRegion name = aCoreFlatNode.getRegions().get(1);
 				try {
 					int offset = aCoreFlatNode.getStartOffset(name);
@@ -96,7 +96,7 @@ public class JSPSourceParser extends XMLSourceParser implements JSPCapableParser
 			}
 			// could test > 1, but since we only care if there are 5 (<,
 			// jsp:root, xmlns:prefix, =, where)
-			else if (aCoreFlatNode.getNumberOfRegions() > 4 && (aCoreFlatNode.getRegions().get(1)).getType() == XMLJSPRegionContexts.JSP_ROOT_TAG_NAME) {
+			else if (aCoreFlatNode.getNumberOfRegions() > 4 && (aCoreFlatNode.getRegions().get(1)).getType() == DOMJSPRegionContexts.JSP_ROOT_TAG_NAME) {
 				processJSPRoot(aCoreFlatNode);
 			}
 		}
@@ -292,8 +292,8 @@ public class JSPSourceParser extends XMLSourceParser implements JSPCapableParser
 			// the following contexts OPEN new StructuredDocumentRegions
 			else if ((currentNode != null && currentNode.isEnded()) || (type == XMLRegionContext.XML_CONTENT) || (type == XMLRegionContext.XML_CHAR_REFERENCE) || (type == XMLRegionContext.XML_ENTITY_REFERENCE)
 						|| (type == XMLRegionContext.XML_PI_OPEN) || (type == XMLRegionContext.XML_TAG_OPEN) || (type == XMLRegionContext.XML_END_TAG_OPEN) || (type == XMLRegionContext.XML_COMMENT_OPEN) || (type == XMLRegionContext.XML_CDATA_OPEN)
-						|| (type == XMLRegionContext.XML_DECLARATION_OPEN) || (type == XMLJSPRegionContexts.JSP_COMMENT_OPEN) || (type == XMLJSPRegionContexts.JSP_DECLARATION_OPEN) || (type == XMLJSPRegionContexts.JSP_DIRECTIVE_OPEN)
-						|| (type == XMLJSPRegionContexts.JSP_EXPRESSION_OPEN) || (type == XMLJSPRegionContexts.JSP_SCRIPTLET_OPEN) || (type == XMLJSPRegionContexts.JSP_CLOSE) || type == XMLJSPRegionContexts.JSP_EL_OPEN) {
+						|| (type == XMLRegionContext.XML_DECLARATION_OPEN) || (type == DOMJSPRegionContexts.JSP_COMMENT_OPEN) || (type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN) || (type == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN)
+						|| (type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN) || (type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN) || (type == DOMJSPRegionContexts.JSP_CLOSE) || type == DOMJSPRegionContexts.JSP_EL_OPEN) {
 				if (currentNode != null) {
 					// ensure that any existing node is at least terminated
 					if (!currentNode.isEnded()) {
@@ -323,8 +323,8 @@ public class JSPSourceParser extends XMLSourceParser implements JSPCapableParser
 			// the following contexts NEITHER open nor close
 			// StructuredDocumentRegions; just add to them
 			else if ((type == XMLRegionContext.XML_TAG_NAME) || (type == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) || (type == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) || (type == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE)
-						|| (type == XMLRegionContext.XML_COMMENT_TEXT) || (type == XMLRegionContext.XML_PI_CONTENT) || (type == XMLRegionContext.XML_DOCTYPE_INTERNAL_SUBSET) || (type == XMLJSPRegionContexts.JSP_COMMENT_TEXT)
-						|| (type == XMLJSPRegionContexts.JSP_ROOT_TAG_NAME) || (type == XMLJSPRegionContexts.JSP_DIRECTIVE_NAME) || type == XMLJSPRegionContexts.JSP_EL_CONTENT) {
+						|| (type == XMLRegionContext.XML_COMMENT_TEXT) || (type == XMLRegionContext.XML_PI_CONTENT) || (type == XMLRegionContext.XML_DOCTYPE_INTERNAL_SUBSET) || (type == DOMJSPRegionContexts.JSP_COMMENT_TEXT)
+						|| (type == DOMJSPRegionContexts.JSP_ROOT_TAG_NAME) || (type == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) || type == DOMJSPRegionContexts.JSP_EL_CONTENT) {
 				currentNode.addRegion(region);
 				currentNode.setLength(region.getStart() + region.getLength() - currentNode.getStart());
 				region.adjustStart(-currentNode.getStart());
@@ -337,8 +337,8 @@ public class JSPSourceParser extends XMLSourceParser implements JSPCapableParser
 			// the following contexts close off StructuredDocumentRegions
 			// cleanly
 			else if ((type == XMLRegionContext.XML_PI_CLOSE) || (type == XMLRegionContext.XML_TAG_CLOSE) || (type == XMLRegionContext.XML_EMPTY_TAG_CLOSE) || (type == XMLRegionContext.XML_COMMENT_CLOSE) || (type == XMLRegionContext.XML_CDATA_CLOSE)
-						|| (type == XMLJSPRegionContexts.JSP_CLOSE) || (type == XMLJSPRegionContexts.JSP_COMMENT_CLOSE) || (type == XMLJSPRegionContexts.JSP_DIRECTIVE_CLOSE) || (type == XMLRegionContext.XML_DECLARATION_CLOSE)
-						|| type == XMLJSPRegionContexts.JSP_EL_CLOSE) {
+						|| (type == DOMJSPRegionContexts.JSP_CLOSE) || (type == DOMJSPRegionContexts.JSP_COMMENT_CLOSE) || (type == DOMJSPRegionContexts.JSP_DIRECTIVE_CLOSE) || (type == XMLRegionContext.XML_DECLARATION_CLOSE)
+						|| type == DOMJSPRegionContexts.JSP_EL_CLOSE) {
 				currentNode.setEnded(true);
 				currentNode.setLength(region.getStart() + region.getLength() - currentNode.getStart());
 				currentNode.addRegion(region);
@@ -412,8 +412,8 @@ public class JSPSourceParser extends XMLSourceParser implements JSPCapableParser
 			// be more readable if that is handled here as well, but the
 			// current layout
 			// ensures that they open StructuredDocumentRegions the same way
-			if ((type == XMLRegionContext.XML_CONTENT) || (type == XMLRegionContext.XML_CHAR_REFERENCE) || (type == XMLRegionContext.XML_ENTITY_REFERENCE) || (type == XMLJSPRegionContexts.JSP_DECLARATION_OPEN)
-						|| (type == XMLJSPRegionContexts.JSP_EXPRESSION_OPEN) || (type == XMLJSPRegionContexts.JSP_SCRIPTLET_OPEN) || (type == XMLJSPRegionContexts.JSP_CONTENT) || (type == XMLJSPRegionContexts.JSP_CLOSE)) {
+			if ((type == XMLRegionContext.XML_CONTENT) || (type == XMLRegionContext.XML_CHAR_REFERENCE) || (type == XMLRegionContext.XML_ENTITY_REFERENCE) || (type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN)
+						|| (type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN) || (type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN) || (type == DOMJSPRegionContexts.JSP_CONTENT) || (type == DOMJSPRegionContexts.JSP_CLOSE)) {
 				currentNode.setEnded(true);
 			}
 			if (headNode == null && currentNode != null) {

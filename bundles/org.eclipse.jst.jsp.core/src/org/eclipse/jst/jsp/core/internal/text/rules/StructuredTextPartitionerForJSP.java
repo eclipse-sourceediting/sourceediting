@@ -23,7 +23,7 @@ import org.eclipse.jst.jsp.core.JSP12Namespace;
 import org.eclipse.jst.jsp.core.contentmodel.tld.JSP12TLDNames;
 import org.eclipse.jst.jsp.core.encoding.JSPDocumentHeadContentDetector;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
-import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
+import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.wst.html.core.internal.text.rules.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
 import org.eclipse.wst.sse.core.parser.StructuredDocumentRegionHandler;
@@ -60,7 +60,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 			// Largely taken from the TLDCMDocumentManager
 			// could test > 1, but since we only care if there are 8 (<%@,
 			// taglib, uri, =, where, prefix, =, what) [or 4 for includes]
-			if (sdRegion.getNumberOfRegions() > 4 && sdRegion.getRegions().get(1).getType() == XMLJSPRegionContexts.JSP_DIRECTIVE_NAME) {
+			if (sdRegion.getNumberOfRegions() > 4 && sdRegion.getRegions().get(1).getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
 				ITextRegion nameRegion = sdRegion.getRegions().get(1);
 				try {
 					boolean tablibdetected = false;
@@ -367,19 +367,19 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 	public String getPartitionType(ITextRegion region, int offset) {
 		String result = null;
 		final String region_type = region.getType();
-		if (region_type == XMLJSPRegionContexts.JSP_CONTENT) {
+		if (region_type == DOMJSPRegionContexts.JSP_CONTENT) {
 			result = getPartitionTypeForDocumentLanguage();
 		}
-		else if (region_type == XMLJSPRegionContexts.JSP_COMMENT_TEXT || region_type == XMLJSPRegionContexts.JSP_COMMENT_OPEN || region_type == XMLJSPRegionContexts.JSP_COMMENT_CLOSE)
+		else if (region_type == DOMJSPRegionContexts.JSP_COMMENT_TEXT || region_type == DOMJSPRegionContexts.JSP_COMMENT_OPEN || region_type == DOMJSPRegionContexts.JSP_COMMENT_CLOSE)
 			result = ST_JSP_COMMENT;
-		else if (region_type == XMLJSPRegionContexts.JSP_DIRECTIVE_NAME || region_type == XMLJSPRegionContexts.JSP_DIRECTIVE_OPEN || region_type == XMLJSPRegionContexts.JSP_DIRECTIVE_CLOSE)
+		else if (region_type == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME || region_type == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN || region_type == DOMJSPRegionContexts.JSP_DIRECTIVE_CLOSE)
 			result = ST_JSP_DIRECTIVE;
-		else if (region_type == XMLJSPRegionContexts.JSP_CLOSE || region_type == XMLJSPRegionContexts.JSP_SCRIPTLET_OPEN || region_type == XMLJSPRegionContexts.JSP_EXPRESSION_OPEN || region_type == XMLJSPRegionContexts.JSP_DECLARATION_OPEN)
+		else if (region_type == DOMJSPRegionContexts.JSP_CLOSE || region_type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN || region_type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN || region_type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN)
 			result = ST_JSP_CONTENT_DELIMITER;
-		else if (region_type == XMLJSPRegionContexts.JSP_ROOT_TAG_NAME)
+		else if (region_type == DOMJSPRegionContexts.JSP_ROOT_TAG_NAME)
 			result = ST_DEFAULT_JSP;
-		else if (region_type == XMLJSPRegionContexts.JSP_EL_OPEN || region_type == XMLJSPRegionContexts.JSP_EL_CONTENT || region_type == XMLJSPRegionContexts.JSP_EL_CLOSE || region_type == XMLJSPRegionContexts.JSP_EL_DQUOTE
-					|| region_type == XMLJSPRegionContexts.JSP_EL_SQUOTE || region_type == XMLJSPRegionContexts.JSP_EL_QUOTED_CONTENT)
+		else if (region_type == DOMJSPRegionContexts.JSP_EL_OPEN || region_type == DOMJSPRegionContexts.JSP_EL_CONTENT || region_type == DOMJSPRegionContexts.JSP_EL_CLOSE || region_type == DOMJSPRegionContexts.JSP_EL_DQUOTE
+					|| region_type == DOMJSPRegionContexts.JSP_EL_SQUOTE || region_type == DOMJSPRegionContexts.JSP_EL_QUOTED_CONTENT)
 			result = ST_JSP_DEFAULT_EL;
 		else if (region_type == XMLRegionContext.XML_CONTENT) {
 			// possibly between <jsp:scriptlet>, <jsp:expression>,
@@ -461,7 +461,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 	protected boolean isDocumentRegionBasedPartition(IStructuredDocumentRegion sdRegion, ITextRegion containedChildRegion, int offset) {
 		String documentRegionContext = sdRegion.getType();
 		if (containedChildRegion != null) {
-			if (documentRegionContext.equals(XMLJSPRegionContexts.JSP_DIRECTIVE_NAME) || documentRegionContext.equals(XMLJSPRegionContexts.JSP_ROOT_TAG_NAME)) {
+			if (documentRegionContext.equals(DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) || documentRegionContext.equals(DOMJSPRegionContexts.JSP_ROOT_TAG_NAME)) {
 				setInternalPartition(offset, containedChildRegion.getLength(), ST_JSP_DIRECTIVE);
 				return true;
 			}

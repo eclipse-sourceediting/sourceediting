@@ -11,7 +11,7 @@
 package org.eclipse.jst.jsp.core.internal.parser.internal;
 
 import org.eclipse.jst.jsp.core.internal.parser.JSPCodeRegion;
-import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
+import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.parser.regions.XMLParserRegionFactory;
 
@@ -27,7 +27,7 @@ public class JSPParserRegionFactory extends XMLParserRegionFactory {
 
 	public ITextRegion createToken(String context, int start, int textLength, int length, String lang, String surroundingTag) {
 		ITextRegion newRegion = null;
-		if (context == XMLJSPRegionContexts.JSP_CONTENT) {
+		if (context == DOMJSPRegionContexts.JSP_CONTENT) {
 			newRegion = new JSPCodeRegion(context, start, textLength, length);
 		}
 		else

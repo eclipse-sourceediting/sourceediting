@@ -20,7 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jst.jsp.core.internal.Logger;
-import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
+import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.parser.BlockMarker;
 import org.eclipse.wst.sse.core.parser.BlockTokenizer;
 import org.eclipse.wst.sse.core.parser.TagMarker;
@@ -38,7 +38,7 @@ import org.eclipse.wst.xml.core.internal.parser.IntStack;
  * on 1/27/05 4:49 PM from the specification file
  * <tt>file:/D:/eclipse.wtp/workspace/org.eclipse.wst.sse.core/DevTimeSupport/SedModel/HTMLTokenizer/devel/JSPTokenizer.jflex</tt>
  */
-public class JSPTokenizer implements BlockTokenizer, XMLJSPRegionContexts {
+public class JSPTokenizer implements BlockTokenizer, DOMJSPRegionContexts {
 
   /** this character denotes the end of file */
   final public static int YYEOF = -1;
@@ -873,7 +873,7 @@ public class JSPTokenizer implements BlockTokenizer, XMLJSPRegionContexts {
 
 	private JSPParserRegionFactory fRegionFactory = new JSPParserRegionFactory();
 
-	private static final String rcsver = "$Id: JSPTokenizer.java,v 1.5 2005/03/15 06:02:54 david_williams Exp $";//$NON-NLS-1$
+	private static final String rcsver = "$Id: JSPTokenizer.java,v 1.6 2005/03/15 17:34:05 david_williams Exp $";//$NON-NLS-1$
 
 	/**
 	 * user method 

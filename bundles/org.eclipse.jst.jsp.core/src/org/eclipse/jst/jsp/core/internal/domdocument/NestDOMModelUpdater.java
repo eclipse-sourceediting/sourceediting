@@ -12,7 +12,7 @@
 
 package org.eclipse.jst.jsp.core.internal.domdocument;
 
-import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
+import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.wst.xml.core.internal.document.XMLModelImpl;
 import org.eclipse.wst.xml.core.internal.document.XMLModelUpdater;
 
@@ -27,7 +27,7 @@ public class NestDOMModelUpdater extends XMLModelUpdater {
 	}
 
 	protected boolean isNestedTagClose(String regionType) {
-		boolean result = regionType == XMLJSPRegionContexts.JSP_CLOSE || regionType == XMLJSPRegionContexts.JSP_DIRECTIVE_CLOSE;
+		boolean result = regionType == DOMJSPRegionContexts.JSP_CLOSE || regionType == DOMJSPRegionContexts.JSP_DIRECTIVE_CLOSE;
 		return result;
 	}
 

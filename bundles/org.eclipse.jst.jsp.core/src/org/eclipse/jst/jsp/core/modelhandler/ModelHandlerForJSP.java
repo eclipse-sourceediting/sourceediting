@@ -16,7 +16,7 @@ import org.eclipse.jst.jsp.core.encoding.JSPDocumentLoader;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.document.DocumentLoaderForJSP;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
-import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
+import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.ModelLoader;
 import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.document.IDocumentLoader;
@@ -49,7 +49,7 @@ public class ModelHandlerForJSP extends AbstractModelHandler {
 	// "com.ibm.etools.webedit.editor.HTMLEditor"; //$NON-NLS-1$
 
 	protected void addJSPTagName(JSPSourceParser parser, String tagname) {
-		BlockMarker bm = new BlockMarker(tagname, null, XMLJSPRegionContexts.JSP_CONTENT, true);
+		BlockMarker bm = new BlockMarker(tagname, null, DOMJSPRegionContexts.JSP_CONTENT, true);
 		parser.addBlockMarker(bm);
 	}
 

@@ -12,7 +12,7 @@ package org.eclipse.jst.jsp.ui.taginfo;
 
 
 
-import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
+import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.wst.html.ui.taginfo.HTMLTagInfoHoverProcessor;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -34,7 +34,7 @@ public class JSPTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor {
 			return null;
 
 		String regionType = region.getType();
-		if (regionType == XMLJSPRegionContexts.JSP_DIRECTIVE_NAME) {
+		if (regionType == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) {
 			result = computeJSPDirHelp((XMLNode) treeNode, parentNode, flatNode, region);
 		}
 		else

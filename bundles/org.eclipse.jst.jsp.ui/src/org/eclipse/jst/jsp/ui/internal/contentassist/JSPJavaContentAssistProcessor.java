@@ -21,7 +21,7 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
-import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
+import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
@@ -156,7 +156,7 @@ public class JSPJavaContentAssistProcessor implements IContentAssistProcessor, I
 		if (treeNode instanceof XMLNode) {
 			xNode = (XMLNode) treeNode;
 			flat = xNode.getFirstStructuredDocumentRegion();
-			if (flat != null && flat.getType() == XMLJSPRegionContexts.JSP_CONTENT) {
+			if (flat != null && flat.getType() == DOMJSPRegionContexts.JSP_CONTENT) {
 				flat = flat.getPrevious();
 			}
 		}
@@ -170,7 +170,7 @@ public class JSPJavaContentAssistProcessor implements IContentAssistProcessor, I
 		}
 
 		// ADD CDATA PROPOSAL IF IT'S AN XML-JSP TAG  
-		if (flat != null && flat.getType() != XMLJSPRegionContexts.JSP_SCRIPTLET_OPEN && flat.getType() != XMLJSPRegionContexts.JSP_DECLARATION_OPEN && flat.getType() != XMLJSPRegionContexts.JSP_EXPRESSION_OPEN && flat.getType() != XMLRegionContext.BLOCK_TEXT && (openRegion != null && openRegion.getType() != XMLJSPRegionContexts.JSP_DIRECTIVE_OPEN) && !inAttributeRegion(flat, documentPosition)) {
+		if (flat != null && flat.getType() != DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN && flat.getType() != DOMJSPRegionContexts.JSP_DECLARATION_OPEN && flat.getType() != DOMJSPRegionContexts.JSP_EXPRESSION_OPEN && flat.getType() != XMLRegionContext.BLOCK_TEXT && (openRegion != null && openRegion.getType() != DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN) && !inAttributeRegion(flat, documentPosition)) {
 
 			// determine if cursor is before or after selected range
 			int adjustedDocPosition = documentPosition;

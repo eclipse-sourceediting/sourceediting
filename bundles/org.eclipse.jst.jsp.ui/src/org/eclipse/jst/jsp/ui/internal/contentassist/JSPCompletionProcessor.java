@@ -27,7 +27,7 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
-import org.eclipse.jst.jsp.core.model.parser.XMLJSPRegionContexts;
+import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -181,7 +181,7 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 			XMLNode parent = (XMLNode) xmlNode.getParentNode();
 			if (parent != null) {
 				sdRegion = parent.getFirstStructuredDocumentRegion();
-				inExpression = sdRegion != null && (sdRegion.getType() == XMLJSPRegionContexts.JSP_EXPRESSION_OPEN || sdRegion.getType() == XMLJSPRegionContexts.JSP_SCRIPTLET_OPEN);
+				inExpression = sdRegion != null && (sdRegion.getType() == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN || sdRegion.getType() == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN);
 			}
 		}
 		return inExpression;

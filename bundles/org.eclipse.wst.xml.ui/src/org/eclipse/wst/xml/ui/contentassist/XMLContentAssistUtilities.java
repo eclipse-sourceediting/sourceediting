@@ -42,7 +42,7 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
      * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
      * way for expedency. Should be evolved in future to depend on "nestedContext".
      */
-	private class XMLJSPRegionContexts {
+	private class DOMJSPRegionContextsPrivateCopy {
 		private static final String JSP_CLOSE = "JSP_CLOSE"; //$NON-NLS-1$
 		private static final String JSP_DECLARATION_OPEN = "JSP_DECLARATION_OPEN"; //$NON-NLS-1$
 		private static final String JSP_SCRIPTLET_OPEN = "JSP_SCRIPTLET_OPEN"; //$NON-NLS-1$
@@ -390,7 +390,7 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 	public static boolean isJSPCloseDelimiter(String type) {
 		if (type == null)
 			return false;
-		return (type.equals(XMLJSPRegionContexts.JSP_CLOSE) || type.equals(XMLRegionContext.XML_TAG_CLOSE));
+		return (type.equals(DOMJSPRegionContextsPrivateCopy.JSP_CLOSE) || type.equals(XMLRegionContext.XML_TAG_CLOSE));
 	}
 
 	/**
@@ -439,7 +439,7 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 	public static boolean isJSPOpenDelimiter(String type) {
 		if (type == null)
 			return false;
-		return (type.equals(XMLJSPRegionContexts.JSP_SCRIPTLET_OPEN) || type.equals(XMLJSPRegionContexts.JSP_DECLARATION_OPEN) || type.equals(XMLJSPRegionContexts.JSP_EXPRESSION_OPEN));
+		return (type.equals(DOMJSPRegionContextsPrivateCopy.JSP_SCRIPTLET_OPEN) || type.equals(DOMJSPRegionContextsPrivateCopy.JSP_DECLARATION_OPEN) || type.equals(DOMJSPRegionContextsPrivateCopy.JSP_EXPRESSION_OPEN));
 	}
 
 	/**
