@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.format;
+package org.eclipse.jst.jsp.ui.format;
 
 import java.util.LinkedList;
 import java.util.Map;

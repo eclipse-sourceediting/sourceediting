@@ -21,7 +21,6 @@
       <import plugin="org.eclipse.text" export="true"/>
     <!-- currently need jface.text for org.eclipse.jface.text.formatter package. 
          need to study to see how to best have model-only formatting -->  
-    <import plugin="org.eclipse.jface.text" export="true"/> 
 <!-- need to re-export emf.common since our API depends on it, 
 			such as StructuredTextUndoManager's getCommmand method returns an 
 			emf.common.Command

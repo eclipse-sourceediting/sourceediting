@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.format;
+package org.eclipse.wst.sse.ui.format;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -26,6 +26,7 @@ import org.eclipse.jface.text.formatter.IFormattingContext;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IModelManagerPlugin;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
+import org.eclipse.wst.sse.core.format.IStructuredFormatProcessor;
 
 
 public class StructuredFormattingStrategy extends ContextBasedFormattingStrategy {
