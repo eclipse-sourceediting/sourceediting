@@ -17,7 +17,7 @@ import java.util.StringTokenizer;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
+import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 
 /**
  * Manages text hovers for Structured Text editors
@@ -194,7 +194,7 @@ public class TextHoverManager {
 	 */
 	public TextHoverDescriptor[] getTextHovers() {
 		if (fTextHovers == null) {
-			String textHoverStrings = getPreferenceStore().getString(CommonEditorPreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS);
+			String textHoverStrings = getPreferenceStore().getString(EditorPreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS);
 			fTextHovers = generateTextHoverDescriptors(textHoverStrings);
 		}
 		return fTextHovers;

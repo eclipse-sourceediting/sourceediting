@@ -26,6 +26,7 @@ import org.eclipse.wst.html.core.HTML40Namespace;
 import org.eclipse.wst.html.core.HTMLCMProperties;
 import org.eclipse.wst.html.core.contentmodel.HTMLCMDocument;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
+import org.eclipse.wst.html.ui.internal.preferences.HTMLUIPreferenceNames;
 import org.eclipse.wst.javascript.common.ui.contentassist.JavaScriptContentAssistProcessor;
 import org.eclipse.wst.sse.core.AdapterFactory;
 import org.eclipse.wst.sse.core.IModelManager;
@@ -42,7 +43,6 @@ import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.edit.util.SharedEditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
-import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.xml.core.document.XMLDocument;
 import org.eclipse.wst.xml.core.document.XMLModel;
 import org.eclipse.wst.xml.core.document.XMLNode;
@@ -376,10 +376,10 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 	}
 
 	protected void reinit() {
-		String key = CommonEditorPreferenceNames.AUTO_PROPOSE;
+		String key = HTMLUIPreferenceNames.AUTO_PROPOSE;
 		boolean doAuto = getPreferenceStore().getBoolean(key);
 		if (doAuto) {
-			key = CommonEditorPreferenceNames.AUTO_PROPOSE_CODE;
+			key = HTMLUIPreferenceNames.AUTO_PROPOSE_CODE;
 			completionProposalAutoActivationCharacters = getPreferenceStore().getString(key).toCharArray();
 		}
 		else {
@@ -402,7 +402,7 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 	public void propertyChange(PropertyChangeEvent event) {
 		String property = event.getProperty();
 
-		if (property.compareTo(CommonEditorPreferenceNames.AUTO_PROPOSE) == 0 || property.compareTo(CommonEditorPreferenceNames.AUTO_PROPOSE_CODE) == 0) {
+		if (property.compareTo(HTMLUIPreferenceNames.AUTO_PROPOSE) == 0 || property.compareTo(HTMLUIPreferenceNames.AUTO_PROPOSE_CODE) == 0) {
 			reinit();
 		}
 	}

@@ -38,6 +38,7 @@ import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapterFactory;
 import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.Logger;
+import org.eclipse.jst.jsp.ui.internal.preferences.JSPUIPreferenceNames;
 import org.eclipse.wst.common.contentmodel.CMDocument;
 import org.eclipse.wst.common.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.common.contentmodel.CMNamedNodeMap;
@@ -75,7 +76,6 @@ import org.eclipse.wst.sse.ui.edit.util.SharedEditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.sse.ui.internal.contentassist.IRelevanceConstants;
-import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
 import org.eclipse.wst.xml.core.document.XMLModel;
@@ -1050,7 +1050,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		// activation from HTML
 //		AbstractUIPlugin htmlPlugin = (AbstractUIPlugin) Platform.getPlugin(HTMLEditorPlugin.ID);
 		IPreferenceStore store = JSPUIPlugin.getDefault().getPreferenceStore();
-		String key = CommonEditorPreferenceNames.AUTO_PROPOSE_CODE;
+		String key = JSPUIPreferenceNames.AUTO_PROPOSE_CODE;
 
 		String chars = store.getString(key);
 		return (chars != null) ? chars.toCharArray() : new char[0];

@@ -15,9 +15,9 @@ import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
+import org.eclipse.jst.jsp.ui.internal.preferences.JSPUIPreferenceNames;
 import org.eclipse.jst.jsp.ui.templates.TemplateContextTypeJSP;
 import org.eclipse.jst.jsp.ui.templates.TemplateContextTypeJSPAttribute;
 import org.eclipse.jst.jsp.ui.templates.TemplateContextTypeJSPAttributeValue;
@@ -25,7 +25,6 @@ import org.eclipse.jst.jsp.ui.templates.TemplateContextTypeJSPTag;
 import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
 import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistryImpl;
 import org.eclipse.wst.sse.ui.registry.embedded.EmbeddedAdapterFactoryRegistryImpl;
@@ -76,52 +75,13 @@ public class JSPUIPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * @deprecated using JSPUIPreferenceInitializer instead
-	 */
-	protected void initializeDefaultJSPPreferences(IPreferenceStore store) {
-//		
-//		String ctId = IContentTypeIdentifier.ContentTypeID_JSP;
-//		// setting the same as HTML
-//		store.setDefault(PreferenceKeyGenerator.generateKey(CommonEditorPreferenceNames.CONTENT_ASSIST_SUPPORTED, ctId), true);
-//		store.setDefault(PreferenceKeyGenerator.generateKey(CommonEditorPreferenceNames.AUTO_PROPOSE, ctId), true);
-//		store.setDefault(PreferenceKeyGenerator.generateKey(CommonEditorPreferenceNames.AUTO_PROPOSE_CODE, ctId), CommonEditorPreferenceNames.LT);
-//
-//		store.setDefault(PreferenceKeyGenerator.generateKey(CommonEditorPreferenceNames.EDITOR_VALIDATION_METHOD, ctId), CommonEditorPreferenceNames.EDITOR_VALIDATION_WORKBENCH_DEFAULT); //$NON-NLS-1$
-//		store.setDefault(PreferenceKeyGenerator.generateKey(CommonEditorPreferenceNames.EDITOR_USE_INFERRED_GRAMMAR, ctId), true);
-//		
-//		// JSP Style Preferences
-//		String NOBACKGROUNDBOLD = " | null | false";   //$NON-NLS-1$
-//		String styleValue = ColorHelper.getColorString(127, 0, 127) + NOBACKGROUNDBOLD;
-//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsXML.TAG_ATTRIBUTE_NAME, ctId), styleValue);
-//		
-//		styleValue = ColorHelper.getColorString(42, 0, 255)  + NOBACKGROUNDBOLD;
-//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsXML.TAG_ATTRIBUTE_VALUE, ctId), styleValue);
-//		
-//		styleValue = "null" + NOBACKGROUNDBOLD;  //$NON-NLS-1$
-//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsXML.TAG_ATTRIBUTE_EQUALS, ctId), styleValue); // specified value is black; leaving as widget default
-//		
-//		styleValue = ColorHelper.getColorString(63, 95, 191)  + NOBACKGROUNDBOLD;
-//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsXML.COMMENT_BORDER, ctId), styleValue);
-//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsXML.COMMENT_TEXT, ctId), styleValue);
-//		
-//		styleValue = ColorHelper.getColorString(0, 128, 128)  + NOBACKGROUNDBOLD;
-//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsXML.TAG_BORDER, ctId), styleValue);
-//		
-//		styleValue = ColorHelper.getColorString(63, 127, 127)  + NOBACKGROUNDBOLD;
-//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsXML.TAG_NAME, ctId), styleValue);
-//		
-//		styleValue = ColorHelper.getColorString(191, 95, 63)  + NOBACKGROUNDBOLD;
-//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsHTML.SCRIPT_AREA_BORDER, ctId), styleValue);
-	}
-	
-	/**
 	 * Returns the template store for the jsp editor templates.
 	 * 
 	 * @return the template store for the jsp editor templates
 	 */
 	public TemplateStore getTemplateStore() {
 		if (fTemplateStore == null) {
-			fTemplateStore= new ContributionTemplateStore(getTemplateContextRegistry(), getPreferenceStore(), CommonEditorPreferenceNames.TEMPLATES_KEY);
+			fTemplateStore= new ContributionTemplateStore(getTemplateContextRegistry(), getPreferenceStore(), JSPUIPreferenceNames.TEMPLATES_KEY);
 
 			try {
 				fTemplateStore.load();

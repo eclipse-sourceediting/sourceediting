@@ -28,11 +28,11 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.preferences.ui.AbstractPreferencePage;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.editor.IHelpContextIds;
+import org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames;
 
 public class XMLSourcePreferencePage extends AbstractPreferencePage implements ModifyListener, SelectionListener, IWorkbenchPreferencePage {
 	// Content Assist
@@ -144,8 +144,8 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 
 	protected void initializeValuesForContentAssistGroup() {
 		// Content Assist
-		fAutoPropose.setSelection(getPreferenceStore().getBoolean(CommonEditorPreferenceNames.AUTO_PROPOSE));
-		fAutoProposeText.setText(getPreferenceStore().getString(CommonEditorPreferenceNames.AUTO_PROPOSE_CODE));
+		fAutoPropose.setSelection(getPreferenceStore().getBoolean(XMLUIPreferenceNames.AUTO_PROPOSE));
+		fAutoProposeText.setText(getPreferenceStore().getString(XMLUIPreferenceNames.AUTO_PROPOSE_CODE));
 	}
 
 	protected void initializeValuesForFormattingGroup() {
@@ -157,7 +157,7 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 	}
 
 	protected void initializeValuesForGrammarConstraintsGroup() {
-		fUseInferredGrammar.setSelection(getPreferenceStore().getBoolean(CommonEditorPreferenceNames.EDITOR_USE_INFERRED_GRAMMAR));
+		fUseInferredGrammar.setSelection(getPreferenceStore().getBoolean(XMLUIPreferenceNames.USE_INFERRED_GRAMMAR));
 	}
 
 	protected void performDefaults() {
@@ -173,8 +173,8 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 
 	protected void performDefaultsForContentAssistGroup() {
 		// Content Assist
-		fAutoPropose.setSelection(getPreferenceStore().getDefaultBoolean(CommonEditorPreferenceNames.AUTO_PROPOSE));
-		fAutoProposeText.setText(getPreferenceStore().getDefaultString(CommonEditorPreferenceNames.AUTO_PROPOSE_CODE));
+		fAutoPropose.setSelection(getPreferenceStore().getDefaultBoolean(XMLUIPreferenceNames.AUTO_PROPOSE));
+		fAutoProposeText.setText(getPreferenceStore().getDefaultString(XMLUIPreferenceNames.AUTO_PROPOSE_CODE));
 	}
 
 	protected void performDefaultsForFormattingGroup() {
@@ -186,7 +186,7 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 	}
 
 	protected void performDefaultsForGrammarConstraintsGroup() {
-		fUseInferredGrammar.setSelection(getPreferenceStore().getDefaultBoolean(CommonEditorPreferenceNames.EDITOR_USE_INFERRED_GRAMMAR));
+		fUseInferredGrammar.setSelection(getPreferenceStore().getDefaultBoolean(XMLUIPreferenceNames.USE_INFERRED_GRAMMAR));
 	}
 
 	public boolean performOk() {
@@ -205,8 +205,8 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 
 	protected void storeValuesForContentAssistGroup() {
 		// Content Assist
-		getPreferenceStore().setValue(CommonEditorPreferenceNames.AUTO_PROPOSE, fAutoPropose.getSelection());
-		getPreferenceStore().setValue(CommonEditorPreferenceNames.AUTO_PROPOSE_CODE, fAutoProposeText.getText());
+		getPreferenceStore().setValue(XMLUIPreferenceNames.AUTO_PROPOSE, fAutoPropose.getSelection());
+		getPreferenceStore().setValue(XMLUIPreferenceNames.AUTO_PROPOSE_CODE, fAutoProposeText.getText());
 	}
 
 	protected void storeValuesForFormattingGroup() {
@@ -218,7 +218,7 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 	}
 
 	protected void storeValuesForGrammarConstraintsGroup() {
-		getPreferenceStore().setValue(CommonEditorPreferenceNames.EDITOR_USE_INFERRED_GRAMMAR, fUseInferredGrammar.getSelection());
+		getPreferenceStore().setValue(XMLUIPreferenceNames.USE_INFERRED_GRAMMAR, fUseInferredGrammar.getSelection());
 	}
 
 	protected void validateValues() {

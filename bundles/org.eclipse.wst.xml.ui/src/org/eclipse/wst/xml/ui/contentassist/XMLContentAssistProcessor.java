@@ -16,8 +16,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+import org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames;
 
 public class XMLContentAssistProcessor extends AbstractContentAssistProcessor implements IPropertyChangeListener {
 
@@ -55,16 +55,16 @@ public class XMLContentAssistProcessor extends AbstractContentAssistProcessor im
 	public void propertyChange(PropertyChangeEvent event) {
 		String property = event.getProperty();
 
-		if (property.compareTo(CommonEditorPreferenceNames.AUTO_PROPOSE) == 0 || property.compareTo(CommonEditorPreferenceNames.AUTO_PROPOSE_CODE) == 0) {
+		if (property.compareTo(XMLUIPreferenceNames.AUTO_PROPOSE) == 0 || property.compareTo(XMLUIPreferenceNames.AUTO_PROPOSE_CODE) == 0) {
 			reinit();
 		}
 	}
 
 	protected void reinit() {
-		String key = CommonEditorPreferenceNames.AUTO_PROPOSE;
+		String key = XMLUIPreferenceNames.AUTO_PROPOSE;
 		boolean doAuto = getPreferenceStore().getBoolean(key);
 		if (doAuto) {
-			key = CommonEditorPreferenceNames.AUTO_PROPOSE_CODE;
+			key = XMLUIPreferenceNames.AUTO_PROPOSE_CODE;
 			completionProposalAutoActivationCharacters = getPreferenceStore().getString(key).toCharArray();
 		} else {
 			completionProposalAutoActivationCharacters = null;

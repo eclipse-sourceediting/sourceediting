@@ -41,7 +41,7 @@ import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.ui.extension.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
+import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 import org.eclipse.wst.sse.ui.util.EditorUtility;
 
 /**
@@ -60,9 +60,9 @@ public class Highlighter implements IHighlighter {
 
 	private IPropertyChangeListener fForegroundScaleListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
-			if (CommonEditorPreferenceNames.READ_ONLY_FOREGROUND_SCALE.equals(event.getProperty())) {
+			if (EditorPreferenceNames.READ_ONLY_FOREGROUND_SCALE.equals(event.getProperty())) {
 				IPreferenceStore editorStore = SSEUIPlugin.getDefault().getPreferenceStore();
-				readOnlyForegroundScaleFactor = editorStore.getInt(CommonEditorPreferenceNames.READ_ONLY_FOREGROUND_SCALE);
+				readOnlyForegroundScaleFactor = editorStore.getInt(EditorPreferenceNames.READ_ONLY_FOREGROUND_SCALE);
 				disposeColorTable();
 				refreshDisplay();
 			}
@@ -369,7 +369,7 @@ public class Highlighter implements IHighlighter {
 
 		IPreferenceStore editorStore = SSEUIPlugin.getDefault().getPreferenceStore();
 		editorStore.addPropertyChangeListener(fForegroundScaleListener);
-		readOnlyForegroundScaleFactor = editorStore.getInt(CommonEditorPreferenceNames.READ_ONLY_FOREGROUND_SCALE);
+		readOnlyForegroundScaleFactor = editorStore.getInt(EditorPreferenceNames.READ_ONLY_FOREGROUND_SCALE);
 
 		if (textWidget != null) {
 			textWidget.removeLineStyleListener(this);

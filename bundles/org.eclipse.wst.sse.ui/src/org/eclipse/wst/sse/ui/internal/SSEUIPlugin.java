@@ -18,7 +18,6 @@ import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistryImpl;
@@ -71,17 +70,6 @@ public class SSEUIPlugin extends AbstractUIPlugin {
 			fTextHoverManager = new TextHoverManager();
 		}
 		return fTextHoverManager;
-	}
-
-	/**
-	 * This method is here so that other editor plugins can set Editor
-	 * defaults in their initializeDefaultPreferences(...) methods.
-	 * 
-	 * @deprecated other editor plugins should not need this plugin to initialize anything
-	 * (should use EditorsUI)
-	 * @param store
-	 */
-	public void initializeDefaultEditorPreferences(IPreferenceStore store) {
 	}
 
 	/**

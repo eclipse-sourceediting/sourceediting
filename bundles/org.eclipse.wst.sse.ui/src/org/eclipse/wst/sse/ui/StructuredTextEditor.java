@@ -158,6 +158,7 @@ import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.ui.internal.editor.StructuredModelDocumentProvider;
 import org.eclipse.wst.sse.ui.internal.extension.BreakpointProviderBuilder;
 import org.eclipse.wst.sse.ui.internal.hyperlink.OpenHyperlinkAction;
+import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 import org.eclipse.wst.sse.ui.internal.properties.ShowPropertiesAction;
 import org.eclipse.wst.sse.ui.internal.selection.SelectionHistory;
@@ -165,7 +166,6 @@ import org.eclipse.wst.sse.ui.internal.selection.StructureSelectEnclosingAction;
 import org.eclipse.wst.sse.ui.internal.selection.StructureSelectHistoryAction;
 import org.eclipse.wst.sse.ui.internal.selection.StructureSelectNextAction;
 import org.eclipse.wst.sse.ui.internal.selection.StructureSelectPreviousAction;
-import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.text.DocumentRegionEdgeMatcher;
 import org.eclipse.wst.sse.ui.util.Assert;
 import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
@@ -689,7 +689,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 */
 	protected void configureSourceViewerDecorationSupport(SourceViewerDecorationSupport support) {
 		support.setCharacterPairMatcher(createCharacterPairMatcher());
-		support.setMatchingCharacterPainterPreferenceKeys(CommonEditorPreferenceNames.MATCHING_BRACKETS, CommonEditorPreferenceNames.MATCHING_BRACKETS_COLOR);
+		support.setMatchingCharacterPainterPreferenceKeys(EditorPreferenceNames.MATCHING_BRACKETS, EditorPreferenceNames.MATCHING_BRACKETS_COLOR);
 
 		super.configureSourceViewerDecorationSupport(support);
 	}
@@ -1830,7 +1830,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	protected void handlePreferenceStoreChanged(PropertyChangeEvent event) {
 		String property = event.getProperty();
 
-		if (CommonEditorPreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS.equals(property)) {
+		if (EditorPreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS.equals(property)) {
 			updateHoverBehavior();
 		}
 

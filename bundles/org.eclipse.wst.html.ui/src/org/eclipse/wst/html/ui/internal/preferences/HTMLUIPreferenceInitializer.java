@@ -4,7 +4,6 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.style.IStyleConstantsHTML;
-import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.preferences.ui.ColorHelper;
 import org.eclipse.wst.xml.ui.style.IStyleConstantsXML;
 
@@ -19,10 +18,8 @@ public class HTMLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = HTMLUIPlugin.getDefault().getPreferenceStore();
 
-		store.setDefault(CommonEditorPreferenceNames.AUTO_PROPOSE, true);
-		store.setDefault(CommonEditorPreferenceNames.AUTO_PROPOSE_CODE, "<");//$NON-NLS-1$
-
-		store.setDefault(CommonEditorPreferenceNames.EDITOR_USE_INFERRED_GRAMMAR, true);
+		store.setDefault(HTMLUIPreferenceNames.AUTO_PROPOSE, true);
+		store.setDefault(HTMLUIPreferenceNames.AUTO_PROPOSE_CODE, "<");//$NON-NLS-1$
 		
 		// HTML Style Preferences
 		String NOBACKGROUNDBOLD = " | null | false";   //$NON-NLS-1$

@@ -15,17 +15,16 @@ import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
 import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
 import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.wst.html.ui.internal.preferences.HTMLUIPreferenceNames;
 import org.eclipse.wst.html.ui.templates.TemplateContextTypeHTML;
 import org.eclipse.wst.html.ui.templates.TemplateContextTypeHTMLAttribute;
 import org.eclipse.wst.html.ui.templates.TemplateContextTypeHTMLAttributeValue;
 import org.eclipse.wst.html.ui.templates.TemplateContextTypeHTMLTag;
-import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistryImpl;
 import org.eclipse.wst.sse.ui.registry.embedded.EmbeddedAdapterFactoryRegistryImpl;
@@ -76,79 +75,13 @@ public class HTMLUIPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * @deprecated using HTMLUIPreferenceInitializer instead
-	 */
-	protected void initializeDefaultHTMLPreferences(IPreferenceStore store) {
-//		String ctId = IContentTypeIdentifier.ContentTypeID_HTML;
-//
-//		store.setDefault(PreferenceKeyGenerator.generateKey(CommonEditorPreferenceNames.CONTENT_ASSIST_SUPPORTED, ctId), true);
-//		store.setDefault(PreferenceKeyGenerator.generateKey(CommonEditorPreferenceNames.AUTO_PROPOSE, ctId), true);
-//		store.setDefault(PreferenceKeyGenerator.generateKey(CommonEditorPreferenceNames.AUTO_PROPOSE_CODE, ctId), CommonEditorPreferenceNames.LT);
-//
-//		store.setDefault(PreferenceKeyGenerator.generateKey(CommonEditorPreferenceNames.EDITOR_VALIDATION_METHOD, ctId), CommonEditorPreferenceNames.EDITOR_VALIDATION_WORKBENCH_DEFAULT); //$NON-NLS-1$
-//		store.setDefault(PreferenceKeyGenerator.generateKey(CommonEditorPreferenceNames.EDITOR_USE_INFERRED_GRAMMAR, ctId), true);
-//		
-//		// HTML Style Preferences
-//		String NOBACKGROUNDBOLD = " | null | false";   //$NON-NLS-1$
-//		String styleValue = ColorHelper.getColorString(127, 0, 127) + NOBACKGROUNDBOLD;
-//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsXML.TAG_ATTRIBUTE_NAME, ctId), styleValue);
-//		
-//		styleValue = ColorHelper.getColorString(42, 0, 255)  + NOBACKGROUNDBOLD;
-//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsXML.TAG_ATTRIBUTE_VALUE, ctId), styleValue);
-//		
-//		styleValue = "null" + NOBACKGROUNDBOLD;  //$NON-NLS-1$
-//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsXML.TAG_ATTRIBUTE_EQUALS, ctId), styleValue); // specified value is black; leaving as widget default
-//		
-//		styleValue = ColorHelper.getColorString(63, 95, 191)  + NOBACKGROUNDBOLD;
-//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsXML.COMMENT_BORDER, ctId), styleValue);
-//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsXML.COMMENT_TEXT, ctId), styleValue);
-//		
-//		styleValue = ColorHelper.getColorString(0, 128, 128)  + NOBACKGROUNDBOLD;
-//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsXML.DECL_BORDER, ctId), styleValue);
-//
-//		styleValue = ColorHelper.getColorString(0, 0, 128)  + NOBACKGROUNDBOLD;
-//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsXML.DOCTYPE_NAME, ctId), styleValue);
-//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_PUBREF, ctId), styleValue);
-//		
-//		styleValue = ColorHelper.getColorString(128, 128, 128)  + NOBACKGROUNDBOLD;
-//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID, ctId), styleValue);
-//
-//		styleValue = ColorHelper.getColorString(63, 127, 95)  + NOBACKGROUNDBOLD;
-//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_SYSREF, ctId), styleValue);
-//
-//		styleValue = "null" + NOBACKGROUNDBOLD;	//$NON-NLS-1$
-//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsXML.XML_CONTENT, ctId), styleValue);	// specified value is black; leaving as widget default
-//
-//		styleValue = ColorHelper.getColorString(0, 128, 128)  + NOBACKGROUNDBOLD;
-//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsXML.TAG_BORDER, ctId), styleValue);
-//		
-//		styleValue = ColorHelper.getColorString(63, 127, 127)  + NOBACKGROUNDBOLD;
-//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsXML.TAG_NAME, ctId), styleValue);
-//		
-//		styleValue = ColorHelper.getColorString(0, 128, 128)  + NOBACKGROUNDBOLD;
-//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsXML.PI_BORDER, ctId), styleValue);
-// 
-//		styleValue = "null" + NOBACKGROUNDBOLD;	//$NON-NLS-1$
-//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsXML.PI_CONTENT, ctId), styleValue);	// specified value is black; leaving as widget default
-//
-//		styleValue = ColorHelper.getColorString(0, 128, 128)  + NOBACKGROUNDBOLD;
-//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsXML.CDATA_BORDER, ctId), styleValue);
-//		
-//		styleValue = ColorHelper.getColorString(0, 0, 0)  + NOBACKGROUNDBOLD;
-//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsXML.CDATA_TEXT, ctId), styleValue);
-//		
-//		styleValue = ColorHelper.getColorString(191, 95, 63)  + NOBACKGROUNDBOLD;
-//		store.setDefault(PreferenceKeyGenerator.generateKey(IStyleConstantsHTML.SCRIPT_AREA_BORDER, ctId), styleValue);
-	}
-	
-	/**
 	 * Returns the template store for the html editor templates.
 	 * 
 	 * @return the template store for the html editor templates
 	 */
 	public TemplateStore getTemplateStore() {
 		if (fTemplateStore == null) {
-			fTemplateStore= new ContributionTemplateStore(getTemplateContextRegistry(), getPreferenceStore(), CommonEditorPreferenceNames.TEMPLATES_KEY);
+			fTemplateStore= new ContributionTemplateStore(getTemplateContextRegistry(), getPreferenceStore(), HTMLUIPreferenceNames.TEMPLATES_KEY);
 
 			try {
 				fTemplateStore.load();

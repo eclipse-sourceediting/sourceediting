@@ -21,13 +21,13 @@ import org.eclipse.wst.sse.core.IFactoryRegistry;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.modelhandler.IDocumentTypeHandler;
 import org.eclipse.wst.sse.core.util.Assert;
-import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
 import org.eclipse.wst.sse.ui.views.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.xml.core.modelhandler.ModelHandlerForXML;
 import org.eclipse.wst.xml.core.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.ui.DOMObserver;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+import org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames;
 import org.eclipse.wst.xml.ui.views.contentoutline.JFaceNodeAdapterFactory;
 import org.eclipse.wst.xml.ui.views.properties.XMLPropertySourceAdapterFactory;
 
@@ -77,7 +77,7 @@ public class AdapterFactoryProviderForXML implements AdapterFactoryProvider {
 				CMDocumentManager documentManager = modelQuery.getCMDocumentManager();
 				if (documentManager != null) {
 					IPreferenceStore store = XMLUIPlugin.getDefault().getPreferenceStore();
-					boolean useInferredGrammar = (store != null) ? store.getBoolean(CommonEditorPreferenceNames.EDITOR_USE_INFERRED_GRAMMAR) : true;
+					boolean useInferredGrammar = (store != null) ? store.getBoolean(XMLUIPreferenceNames.USE_INFERRED_GRAMMAR) : true;
 
 					documentManager.setPropertyEnabled(CMDocumentManager.PROPERTY_ASYNC_LOAD, true);
 					documentManager.setPropertyEnabled(CMDocumentManager.PROPERTY_AUTO_LOAD, false);

@@ -2,7 +2,6 @@ package org.eclipse.wst.xml.ui.internal.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.preferences.ui.ColorHelper;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.style.IStyleConstantsXML;
@@ -20,11 +19,11 @@ public class XMLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = XMLUIPlugin.getDefault().getPreferenceStore();
 		
-		store.setDefault(CommonEditorPreferenceNames.AUTO_PROPOSE, true);
-		store.setDefault(CommonEditorPreferenceNames.AUTO_PROPOSE_CODE, "<"); //$NON-NLS-1$
+		store.setDefault(XMLUIPreferenceNames.AUTO_PROPOSE, true);
+		store.setDefault(XMLUIPreferenceNames.AUTO_PROPOSE_CODE, "<"); //$NON-NLS-1$
 
 		store.setDefault(
-				CommonEditorPreferenceNames.EDITOR_USE_INFERRED_GRAMMAR, true);
+					XMLUIPreferenceNames.USE_INFERRED_GRAMMAR, true);
 
 		// XML Style Preferences
 		String NOBACKGROUNDBOLD = " | null | false"; //$NON-NLS-1$

@@ -45,6 +45,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
+import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.TabFolderLayout;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
@@ -66,7 +67,7 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 	private ColorEditor fAppearanceColorEditor;
 	private List fAppearanceColorList;
 
-	private final String[][] fAppearanceColorListModel = new String[][]{{SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.2"), CommonEditorPreferenceNames.MATCHING_BRACKETS_COLOR}}; //$NON-NLS-1$
+	private final String[][] fAppearanceColorListModel = new String[][]{{SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.2"), EditorPreferenceNames.MATCHING_BRACKETS_COLOR}}; //$NON-NLS-1$
 	private Map fCheckBoxes = new HashMap();
 	private SelectionListener fCheckBoxListener = new SelectionListener() {
 		public void widgetDefaultSelected(SelectionEvent e) {
@@ -145,7 +146,7 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		appearanceComposite.setLayout(layout);
 
 		String label = SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.20"); //$NON-NLS-1$
-		addCheckBox(appearanceComposite, label, CommonEditorPreferenceNames.MATCHING_BRACKETS, 0);
+		addCheckBox(appearanceComposite, label, EditorPreferenceNames.MATCHING_BRACKETS, 0);
 
 		label = SSEUIPlugin.getResourceString("%StructuredTextEditorPreferencePage.30"); //$NON-NLS-1$
 		addCheckBox(appearanceComposite, label, CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS, 0);
@@ -282,8 +283,8 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 	private OverlayPreferenceStore.OverlayKey[] createOverlayStoreKeys() {
 		ArrayList overlayKeys = new ArrayList();
 
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, CommonEditorPreferenceNames.MATCHING_BRACKETS_COLOR));
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, CommonEditorPreferenceNames.MATCHING_BRACKETS));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, EditorPreferenceNames.MATCHING_BRACKETS_COLOR));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, EditorPreferenceNames.MATCHING_BRACKETS));
 		
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS));
 

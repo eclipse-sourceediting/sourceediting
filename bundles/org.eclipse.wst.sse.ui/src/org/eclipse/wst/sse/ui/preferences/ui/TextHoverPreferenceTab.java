@@ -50,8 +50,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
+import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
-import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.taginfo.TextHoverManager;
 import org.eclipse.wst.sse.ui.taginfo.TextHoverManager.TextHoverDescriptor;
 import org.eclipse.wst.sse.ui.util.EditorUtility;
@@ -285,7 +285,7 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 	private OverlayPreferenceStore.OverlayKey[] createOverlayStoreKeys() {
 		ArrayList overlayKeys = new ArrayList();
 
-		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, CommonEditorPreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS));
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.STRING, EditorPreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS));
 
 		OverlayPreferenceStore.OverlayKey[] keys = new OverlayPreferenceStore.OverlayKey[overlayKeys.size()];
 		overlayKeys.toArray(keys);
@@ -401,7 +401,7 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 	 */
 	public void performOk() {
 		String textHoverString = generateTextHoverString();
-		getOverlayStore().setValue(CommonEditorPreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS, textHoverString);
+		getOverlayStore().setValue(EditorPreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS, textHoverString);
 		getTextHoverManager().resetTextHovers(); // notify text hover manager
 		// it should reset to get
 		// latest preferences
@@ -412,7 +412,7 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 	 * store (which is the preferences)
 	 */
 	private void restoreFromOverlay() {
-		String descriptorsString = getOverlayStore().getString(CommonEditorPreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS);
+		String descriptorsString = getOverlayStore().getString(EditorPreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS);
 		fTextHovers = getTextHoverManager().generateTextHoverDescriptors(descriptorsString);
 	}
 
