@@ -24,34 +24,11 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
  * piece of code.
  */
 public class StructuredDocumentFactory {
-	public static final int WRITE_SYNCHRONIZED = 3;
-	public static final int DEFAULT = WRITE_SYNCHRONIZED;
-	public static final int UNSYNCHRONIZED = 1;
+	private static final int WRITE_SYNCHRONIZED = 3;
+	private static final int DEFAULT = WRITE_SYNCHRONIZED;
+	private static final int UNSYNCHRONIZED = 1;
 
-	public static IStructuredDocument getNewStructuredDocumentInstance() {
-		// be default, use thread safe one
-		return getNewStructuredDocumentInstance(DEFAULT);
-	}
-
-	public static IStructuredDocument getNewStructuredDocumentInstance(int type) {
-		IStructuredDocument result = null;
-		switch (type) {
-			case UNSYNCHRONIZED :
-				result = new BasicStructuredDocument();
-				break;
-
-			case WRITE_SYNCHRONIZED :
-				result = new JobSafeStructuredDocument();
-				break;
-
-			default :
-				throw new IllegalArgumentException("request document type was not known");
-
-		}
-		return result;
-	}
-
-	public static IStructuredDocument getNewStructuredDocumentInstance(int type, RegionParser parser) {
+	private static IStructuredDocument getNewStructuredDocumentInstance(int type, RegionParser parser) {
 		IStructuredDocument result = null;
 		switch (type) {
 			case UNSYNCHRONIZED :
@@ -68,16 +45,22 @@ public class StructuredDocumentFactory {
 		return result;
 	}
 
+	/**
+	 * Provides the (system default) structured document initialized with the
+	 * parser.
+	 * 
+	 * @param parser
+	 * @return
+	 */
 	public static IStructuredDocument getNewStructuredDocumentInstance(RegionParser parser) {
-		// be default, use thread safe one
 		return getNewStructuredDocumentInstance(DEFAULT, parser);
 	}
 
 	/**
 	 * Not intended to be instantiated
-	 *  
+	 * 
 	 */
-	protected StructuredDocumentFactory() {
+	private StructuredDocumentFactory() {
 		super();
 	}
 }
