@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.format;
 
+import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.jface.text.BadLocationException;
@@ -38,7 +39,6 @@ public class TextNodeFormatter extends NodeFormatter {
 			}
 			int lineWidth = getFormatPreferences().getLineWidth();
 			XMLNode parentNode = (XMLNode) node.getParentNode();
-			XMLNode nextSibling = (XMLNode) node.getNextSibling();
 			String nodeIndentation = formatContraints.getCurrentIndent();
 
 			// compute current available line width
@@ -85,13 +85,13 @@ public class TextNodeFormatter extends NodeFormatter {
 				// not enough space, need to reflow text
 
 				currentAvailableLineWidth = lineWidth - getIndentationLength(nodeIndentation);
-				Vector vector = reflowText(compressedText, currentAvailableLineWidth);
+				List vector = reflowText(compressedText, currentAvailableLineWidth);
 				int vectorSize = vector.size();
 				String reflowedText = new String();
 
 				for (int i = 0; i < vectorSize; i++) {
-					if (((String) vector.elementAt(i)).trim().length() > 0)
-						reflowedText = reflowedText + lineDelimiter + nodeIndentation + (String) vector.elementAt(i);
+					if (((String) vector.get(i)).trim().length() > 0)
+						reflowedText = reflowedText + lineDelimiter + nodeIndentation + (String) vector.get(i);
 					else
 						reflowedText = reflowedText + lineDelimiter;
 				}

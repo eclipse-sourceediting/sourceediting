@@ -167,7 +167,6 @@ public class NodeFormatter implements IStructuredFormatter {
 			} catch (BadLocationException exception) {
 				throw new SourceEditingRuntimeException(exception);
 			}
-			String tagName = node.getNodeName();
 
 			if (node.getParentNode() != null) {
 				if (node.getParentNode().getNodeType() == Node.DOCUMENT_NODE)
@@ -245,7 +244,6 @@ public class NodeFormatter implements IStructuredFormatter {
 				throw new SourceEditingRuntimeException(exception);
 			}
 			String lineIndent = formatContraints.getCurrentIndent();
-			String tagName = node.getNodeName();
 
 			if (node.getParentNode() != null) {
 				if (node.getParentNode().getNodeType() == Node.DOCUMENT_NODE) {

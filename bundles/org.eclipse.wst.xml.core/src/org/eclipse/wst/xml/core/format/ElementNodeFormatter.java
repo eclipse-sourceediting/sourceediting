@@ -43,8 +43,6 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 	static protected final String XML_SPACE = "xml:space";//$NON-NLS-1$
 
 	protected void formatEndTag(XMLNode node, IStructuredFormatContraints formatContraints) {
-		String tagName = node.getNodeName();
-
 		if (!isEndTagMissing(node)) {
 			// end tag exists
 
@@ -140,7 +138,6 @@ public class ElementNodeFormatter extends DocumentNodeFormatter {
 		boolean splitMultiAttrs = ((IStructuredFormatPreferencesXML) fFormatPreferences).getSplitMultiAttrs();
 		IStructuredDocumentRegion flatNode = node.getFirstStructuredDocumentRegion();
 		NamedNodeMap attributes = node.getAttributes();
-		String tagName = node.getNodeName();
 
 		// Note: attributes should not be null even if the node has no
 		// attributes. However, attributes.getLength() will be 0. But, check
