@@ -49,6 +49,13 @@ public class LineStyleProviderForCSS extends AbstractLineStyleProvider implement
 		return (TextAttribute) getTextAttributes().get(IStyleConstantsCSS.NORMAL);
 	}
 
+	/**
+	 * Look up the TextAttribute for the given region context. Might return
+	 * null for unusual text.
+	 * 
+	 * @param type
+	 * @return
+	 */
 	protected TextAttribute getAttributeFor(String type) {
 		return (TextAttribute) getTextAttributes().get(fColorTypes.get(type));
 	}
