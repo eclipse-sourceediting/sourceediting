@@ -17,7 +17,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
-import org.eclipse.wst.sse.core.text.rules.StructuredTextPartitioner;
+import org.eclipse.wst.sse.core.text.IStructuredPartitions;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
@@ -82,9 +82,9 @@ public class TestViewerConfiguration extends TestCase {
 		if(!fDisplayExists)
 			return;
 		
-		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, StructuredTextPartitioner.ST_DEFAULT_PARTITION);
+		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, IStructuredPartitions.DEFAULT_PARTITION);
 		assertNotNull(strategies);
-		assertTrue("there are no auto edit strategies", strategies.length==0);
+		assertTrue("there are no auto edit strategies", strategies.length > 0);
 	}
 	
 	public void testGetConfiguredContentTypes() {

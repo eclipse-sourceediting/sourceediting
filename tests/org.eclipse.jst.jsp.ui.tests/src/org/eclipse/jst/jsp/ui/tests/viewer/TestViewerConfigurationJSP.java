@@ -11,9 +11,9 @@ import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.IAnnotationHover;
-import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
+import org.eclipse.jst.jsp.core.text.IJSPPartitions;
+import org.eclipse.jst.jsp.ui.StructuredTextViewerConfigurationJSP;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
-import org.eclipse.jst.jsp.ui.internal.editor.StructuredTextViewerConfigurationJSP;
 import org.eclipse.jst.jsp.ui.tests.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -85,9 +85,9 @@ public class TestViewerConfigurationJSP extends TestCase {
 		if(!fDisplayExists)
 			return;
 		
-		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, StructuredTextPartitionerForJSP.ST_DEFAULT_JSP);
+		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, IJSPPartitions.JSP_DEFAULT);
 		assertNotNull(strategies);
-		assertTrue("there are no auto edit strategies", strategies.length > 1);
+		assertTrue("there are no auto edit strategies", strategies.length > 0);
 	}
 	
 	public void testGetConfiguredContentTypes() {

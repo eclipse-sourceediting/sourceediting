@@ -18,7 +18,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
+import org.eclipse.jst.jsp.core.internal.text.StructuredTextPartitionerForJSP;
 import org.eclipse.jst.jsp.ui.tests.document.UnzippedProjectTester;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
@@ -28,7 +28,7 @@ import org.eclipse.wst.sse.core.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.util.Utilities;
-import org.eclipse.wst.xml.core.text.rules.StructuredTextPartitionerForXML;
+import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 
 
 public class TestModelsFromFiles extends UnzippedProjectTester {

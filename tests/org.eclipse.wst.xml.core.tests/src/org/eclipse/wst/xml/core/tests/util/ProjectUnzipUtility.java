@@ -94,7 +94,7 @@ public class ProjectUnzipUtility {
 		}
 	}
 
-	public final static String PROJECT_ZIPS_FOLDER = "ProjectTestFiles";
+	public final static String PROJECT_ZIPS_FOLDER = "projecttestfiles";
 	private List fCreatedProjects = null;
 
 	public ProjectUnzipUtility() {
@@ -306,6 +306,9 @@ public class ProjectUnzipUtility {
 		refreshWorkspace();
 		//change prereqs to get this functionality back in
 		IProject proj = ResourcesPlugin.getWorkspace().getRoot().getProject(projName);
+		if (!proj.exists()) {
+			proj.create(new NullProgressMonitor());
+		}
 		// need to add java nature, or else project won't "exist()" in the
 		// java
 		// element sense

@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
-import org.eclipse.wst.xml.core.text.rules.StructuredTextPartitionerForXML;
+import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 
 
 

@@ -20,7 +20,7 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.sse.ui.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
-import org.eclipse.wst.xml.core.text.rules.StructuredTextPartitionerForXML;
+import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.tests.Logger;
@@ -87,9 +87,9 @@ public class TestViewerConfigurationXML extends TestCase {
 			return;
 		
 		
-		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, StructuredTextPartitionerForXML.ST_DEFAULT_XML);
+		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, IXMLPartitions.XML_DEFAULT);
 		assertNotNull(strategies);
-		assertTrue(strategies.length > 0);
+		assertTrue("there are no auto edit strategies", strategies.length > 0);
 	}
 	
 	public void testGetConfiguredContentTypes() {

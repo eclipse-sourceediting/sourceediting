@@ -19,15 +19,15 @@ import junit.framework.TestCase;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITypedRegion;
-import org.eclipse.jst.jsp.core.internal.text.rules.StructuredTextPartitionerForJSP;
-import org.eclipse.wst.css.core.internal.text.rules.StructuredTextPartitionerForCSS;
-import org.eclipse.wst.html.core.internal.text.rules.StructuredTextPartitionerForHTML;
+import org.eclipse.jst.jsp.core.text.IJSPPartitions;
+import org.eclipse.wst.css.core.text.ICSSPartitions;
+import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.xml.core.text.rules.StructuredTextPartitionerForXML;
+import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
 public class TestStructuredPartitioner extends TestCase {
 
@@ -48,7 +48,7 @@ public class TestStructuredPartitioner extends TestCase {
 		int nPartitions = doComputePartitioningTest("testfiles/html/example01.html");
 		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		checkSeams();
-		verifyPartitionTypes(partitions, new String[]{StructuredTextPartitionerForHTML.ST_HTML_DECLARATION, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, StructuredTextPartitionerForHTML.ST_HTML_COMMENT, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML});
+		verifyPartitionTypes(partitions, new String[]{IHTMLPartitions.HTML_DECLARATION, IHTMLPartitions.HTML_DEFAULT, IHTMLPartitions.HTML_COMMENT, IHTMLPartitions.HTML_DEFAULT});
 	}
 
 	public void testHTML2() throws IOException, BadLocationException {
@@ -57,7 +57,7 @@ public class TestStructuredPartitioner extends TestCase {
 		int nPartitions = doComputePartitioningTest("testfiles/html/example02.html");
 		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		checkSeams();
-		verifyPartitionTypes(partitions, new String[]{StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, StructuredTextPartitionerForHTML.ST_SCRIPT, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, StructuredTextPartitionerForHTML.ST_SCRIPT, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, StructuredTextPartitionerForHTML.ST_SCRIPT, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML});
+		verifyPartitionTypes(partitions, new String[]{IHTMLPartitions.HTML_DEFAULT, IHTMLPartitions.SCRIPT, IHTMLPartitions.HTML_DEFAULT, IHTMLPartitions.SCRIPT, IHTMLPartitions.HTML_DEFAULT, IHTMLPartitions.SCRIPT, IHTMLPartitions.HTML_DEFAULT});
 	}
 
 	public void testHTML3() throws IOException, BadLocationException {
@@ -66,7 +66,7 @@ public class TestStructuredPartitioner extends TestCase {
 		int nPartitions = doComputePartitioningTest(file);
 		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		checkSeams();
-		verifyPartitionTypes(partitions, new String[]{StructuredTextPartitionerForHTML.ST_DEFAULT_HTML});
+		verifyPartitionTypes(partitions, new String[]{IHTMLPartitions.HTML_DEFAULT});
 
 		// 121 if CRLF
 		//  ITypedRegion scriptPartition = getPartitionTest(file, 121);
@@ -76,9 +76,9 @@ public class TestStructuredPartitioner extends TestCase {
 		ITypedRegion part1 = getPartitionTest(file, 121);
 		ITypedRegion part2 = getPartitionTest(file, 116);
 
-//		assertEquals("partition is wrong type!", scriptPartition.getType(), StructuredTextPartitionerForHTML.ST_SCRIPT);
+//		assertEquals("partition is wrong type!", scriptPartition.getType(), IHTMLPartitions.ST_SCRIPT);
 		// the critical position is surrounded with HTML > 5 characters in either direction; this should be good enough
-		assertTrue("partition is wrong type! :(" + part1.getType() + "|" + part2.getType() + ")", part1.getType().equals(StructuredTextPartitionerForHTML.ST_SCRIPT) || part2.getType().equals(StructuredTextPartitionerForHTML.ST_SCRIPT));
+		assertTrue("partition is wrong type! :(" + part1.getType() + "|" + part2.getType() + ")", part1.getType().equals(IHTMLPartitions.SCRIPT) || part2.getType().equals(IHTMLPartitions.SCRIPT));
 		assertTrue("partition is not zero length!", (part1.getLength() == 0 || part2.getLength() == 0));
 	}
 
@@ -89,7 +89,7 @@ public class TestStructuredPartitioner extends TestCase {
 		int nPartitions = doComputePartitioningTest("testfiles/jsp/example01.jsp");
 		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		checkSeams();
-		verifyPartitionTypes(partitions, new String[]{StructuredTextPartitionerForJSP.ST_JSP_DIRECTIVE, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, StructuredTextPartitionerForJSP.ST_JSP_DIRECTIVE, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML});
+		verifyPartitionTypes(partitions, new String[]{IJSPPartitions.JSP_DIRECTIVE, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_DIRECTIVE, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_CONTENT_DELIMITER, IJSPPartitions.JSP_CONTENT_JAVA, IJSPPartitions.JSP_CONTENT_DELIMITER, IHTMLPartitions.HTML_DEFAULT});
 	}
 
 	public void testJSP2() throws IOException, BadLocationException {
@@ -97,7 +97,7 @@ public class TestStructuredPartitioner extends TestCase {
 		int nPartitions = doComputePartitioningTest("testfiles/jsp/example02.jsp");
 		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		checkSeams();
-		verifyPartitionTypes(partitions, new String[]{StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, StructuredTextPartitionerForHTML.ST_HTML_COMMENT, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML,});
+		verifyPartitionTypes(partitions, new String[]{IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_CONTENT_DELIMITER, IJSPPartitions.JSP_CONTENT_JAVA, IJSPPartitions.JSP_CONTENT_DELIMITER, IHTMLPartitions.HTML_DEFAULT, IHTMLPartitions.HTML_COMMENT, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_CONTENT_DELIMITER, IJSPPartitions.JSP_CONTENT_JAVA, IJSPPartitions.JSP_CONTENT_DELIMITER, IHTMLPartitions.HTML_DEFAULT,});
 	}
 
 	public void testJSP3() throws IOException, BadLocationException {
@@ -105,7 +105,7 @@ public class TestStructuredPartitioner extends TestCase {
 		int nPartitions = doComputePartitioningTest("testfiles/jsp/example03.jsp");
 		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		checkSeams();
-		verifyPartitionTypes(partitions, new String[]{StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, StructuredTextPartitionerForHTML.ST_SCRIPT, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, StructuredTextPartitionerForCSS.ST_STYLE, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML,});
+		verifyPartitionTypes(partitions, new String[]{IHTMLPartitions.HTML_DEFAULT, IHTMLPartitions.SCRIPT, IHTMLPartitions.HTML_DEFAULT, ICSSPartitions.STYLE, IHTMLPartitions.HTML_DEFAULT,});
 	}
 
 	public void testJSP4() throws IOException, BadLocationException {
@@ -113,7 +113,7 @@ public class TestStructuredPartitioner extends TestCase {
 		int nPartitions = doComputePartitioningTest("testfiles/jsp/example04.jsp");
 		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		checkSeams();
-		verifyPartitionTypes(partitions, new String[]{StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER, "org.eclipse.wst.html.SCRIPT.language.MYLANGUAGE", StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, StructuredTextPartitionerForJSP.ST_JSP_COMMENT, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML});
+		verifyPartitionTypes(partitions, new String[]{IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_CONTENT_DELIMITER, IJSPPartitions.JSP_CONTENT_JAVA, IJSPPartitions.JSP_CONTENT_DELIMITER, "org.eclipse.wst.html.SCRIPT.language.MYLANGUAGE", IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_COMMENT, IHTMLPartitions.HTML_DEFAULT});
 	}
 
 	public void testJSP5() throws IOException, BadLocationException {
@@ -121,7 +121,7 @@ public class TestStructuredPartitioner extends TestCase {
 		int nPartitions = doComputePartitioningTest("testfiles/jsp/example05.jsp");
 		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		checkSeams();
-		verifyPartitionTypes(partitions, new String[]{StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, StructuredTextPartitionerForHTML.ST_SCRIPT, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, StructuredTextPartitionerForJSP.ST_JSP_COMMENT, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_JAVA, StructuredTextPartitionerForJSP.ST_JSP_CONTENT_DELIMITER, StructuredTextPartitionerForHTML.ST_DEFAULT_HTML});
+		verifyPartitionTypes(partitions, new String[]{IHTMLPartitions.HTML_DEFAULT, IHTMLPartitions.SCRIPT, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_CONTENT_DELIMITER, IJSPPartitions.JSP_CONTENT_JAVA, IJSPPartitions.JSP_CONTENT_DELIMITER, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_COMMENT, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_CONTENT_DELIMITER, IJSPPartitions.JSP_CONTENT_JAVA, IJSPPartitions.JSP_CONTENT_DELIMITER, IHTMLPartitions.HTML_DEFAULT, IJSPPartitions.JSP_CONTENT_DELIMITER, IJSPPartitions.JSP_CONTENT_JAVA, IJSPPartitions.JSP_CONTENT_DELIMITER, IHTMLPartitions.HTML_DEFAULT});
 	}
 
 	public void testJSP6() throws IOException, BadLocationException {
@@ -129,7 +129,7 @@ public class TestStructuredPartitioner extends TestCase {
 		int nPartitions = doComputePartitioningTest("testfiles/jsp/example06.jsp");
 		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		checkSeams();
-		verifyPartitionTypes(partitions, new String[]{StructuredTextPartitionerForJSP.ST_JSP_DIRECTIVE,});
+		verifyPartitionTypes(partitions, new String[]{IJSPPartitions.JSP_DIRECTIVE,});
 	}
 
 	public void testXML1() throws IOException, BadLocationException {
@@ -137,7 +137,7 @@ public class TestStructuredPartitioner extends TestCase {
 		int nPartitions = doComputePartitioningTest("testfiles/xml/example01.xml");
 		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		checkSeams();
-		verifyPartitionTypes(partitions, new String[]{StructuredTextPartitionerForXML.ST_XML_PI, StructuredTextPartitionerForXML.ST_DEFAULT_XML, StructuredTextPartitionerForXML.ST_XML_DECLARATION, StructuredTextPartitionerForXML.ST_DEFAULT_XML, StructuredTextPartitionerForXML.ST_XML_COMMENT, StructuredTextPartitionerForXML.ST_DEFAULT_XML});
+		verifyPartitionTypes(partitions, new String[]{IXMLPartitions.XML_PI, IXMLPartitions.XML_DEFAULT, IXMLPartitions.XML_DECLARATION, IXMLPartitions.XML_DEFAULT, IXMLPartitions.XML_COMMENT, IXMLPartitions.XML_DEFAULT});
 	}
 	
 	public void testPerfXML() throws IOException, BadLocationException {
@@ -145,14 +145,14 @@ public class TestStructuredPartitioner extends TestCase {
 		int nPartitions = doTimedComputePartitioningTest("testfiles/xml/company300k.xml");
 		//assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		//checkSeams();
-		//verifyPartitionTypes(partitions, new String[]{StructuredTextPartitionerForXML.ST_XML_PI, StructuredTextPartitionerForXML.ST_DEFAULT_XML, StructuredTextPartitionerForXML.ST_XML_DECLARATION, StructuredTextPartitionerForXML.ST_DEFAULT_XML, StructuredTextPartitionerForXML.ST_XML_COMMENT, StructuredTextPartitionerForXML.ST_DEFAULT_XML});
+		//verifyPartitionTypes(partitions, new String[]{IXMLPartitions.ST_XML_PI, IXMLPartitions.ST_DEFAULT_XML, IXMLPartitions.ST_XML_DECLARATION, IXMLPartitions.ST_DEFAULT_XML, IXMLPartitions.ST_XML_COMMENT, IXMLPartitions.ST_DEFAULT_XML});
 	}
 	public void testPerfJSP() throws IOException, BadLocationException {
 		//int expectedPartitions = 6;
 		int nPartitions = doTimedComputePartitioningTest("testfiles/jsp/company300k.jsp");
 		//assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		//checkSeams();
-		//verifyPartitionTypes(partitions, new String[]{StructuredTextPartitionerForXML.ST_XML_PI, StructuredTextPartitionerForXML.ST_DEFAULT_XML, StructuredTextPartitionerForXML.ST_XML_DECLARATION, StructuredTextPartitionerForXML.ST_DEFAULT_XML, StructuredTextPartitionerForXML.ST_XML_COMMENT, StructuredTextPartitionerForXML.ST_DEFAULT_XML});
+		//verifyPartitionTypes(partitions, new String[]{IXMLPartitions.ST_XML_PI, IXMLPartitions.ST_DEFAULT_XML, IXMLPartitions.ST_XML_DECLARATION, IXMLPartitions.ST_DEFAULT_XML, IXMLPartitions.ST_XML_COMMENT, IXMLPartitions.ST_DEFAULT_XML});
 	}
 
 	public void testEmpty() throws IOException, BadLocationException {
@@ -160,7 +160,7 @@ public class TestStructuredPartitioner extends TestCase {
 		int nPartitions = doComputePartitioningTest("testfiles/xml/empty.xml");
 		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
 		checkSeams();
-		verifyPartitionTypes(partitions, new String[]{StructuredTextPartitionerForXML.ST_DEFAULT_XML});
+		verifyPartitionTypes(partitions, new String[]{IXMLPartitions.XML_DEFAULT});
 	}
 
 	/**

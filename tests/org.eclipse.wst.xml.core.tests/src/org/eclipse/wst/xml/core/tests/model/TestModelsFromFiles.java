@@ -20,8 +20,8 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.exceptions.ResourceAlreadyExists;
 import org.eclipse.wst.sse.core.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
+import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 import org.eclipse.wst.xml.core.tests.document.UnzippedProjectTester;
-import org.eclipse.wst.xml.core.text.rules.StructuredTextPartitionerForXML;
 
 
 
