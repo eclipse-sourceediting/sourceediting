@@ -15,6 +15,9 @@ package org.eclipse.wst.sse.ui.extensions;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.part.MultiPageEditorSite;
@@ -39,7 +42,7 @@ public class ConfigurationPointCalculator {
 	protected String fSubContext = null;
 
 	/**
-	 *  
+	 * 
 	 */
 	public ConfigurationPointCalculator() {
 		super();
@@ -72,8 +75,14 @@ public class ConfigurationPointCalculator {
 				points.add(editorClass.getName());
 			editorClass = editorClass.getSuperclass();
 		}
-		if (fContentType != null && !points.contains(fContentType))
-			points.add(fContentType);
+
+		IContentType contentType = Platform.getContentTypeManager().getContentType(fContentType);
+		while (contentType != null && !contentType.getId().equals(IContentTypeManager.CT_TEXT)) {
+			if (!points.contains(contentType.getId()))
+				points.add(contentType.getId());
+			contentType = contentType.getBaseType();
+		}
+
 		if (!points.contains(fRootClass.getName()))
 			points.add(fRootClass.getName());
 		return (String[]) points.toArray(new String[0]);
