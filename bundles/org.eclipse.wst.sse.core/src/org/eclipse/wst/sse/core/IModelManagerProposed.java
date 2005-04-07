@@ -31,11 +31,11 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
  * other to prevent model leaks.
  * 
  * There are three ways to get a model based on usage and responsibility: for
- * 'WRITE', just for 'SHARED', and 'UNSHARED'. Contrary to their names, a
+ * 'MODIFY', just for 'SHARED', and 'UNSHARED'. Contrary to their names, a
  * model can technically be modified, and all modifications directly affect
  * the commonly shared version of the model. It is part of the API contract,
  * however, that clients who get a model for SHARED do not modify it. The
- * significance of the 'WRITE' model is that the client is registering their
+ * significance of the 'MODIFY' model is that the client is registering their
  * interest in saving changes to the model.
  * 
  * Clients can reference this interface, but should not implement.
@@ -46,10 +46,10 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
 public interface IModelManagerProposed {
 
 	/**
-	 * ReadEditType is used internally to create. Not intended to be
-	 * referenced by clients.
+	 * AccessType is used internally as a JRE 1.4 compatible enumerated type.
+	 * Not intended to be referenced by clients.
 	 */
-	static class ReadEditType {
+	static class AccessType {
 		private String fType;
 
 		/**
@@ -57,7 +57,7 @@ public interface IModelManagerProposed {
 		 * 
 		 * @param type
 		 */
-		ReadEditType(String type) {
+		AccessType(String type) {
 			super();
 			fType = type;
 		}
@@ -66,7 +66,7 @@ public interface IModelManagerProposed {
 		 * For debug purposes only.
 		 */
 		public String toString() {
-			return "Model ReadEditType: " + fType;
+			return "Model Access Type: " + fType;
 		}
 	}
 
@@ -75,22 +75,22 @@ public interface IModelManagerProposed {
 	 * the client intentially wants a model that is not shared with other
 	 * clients. NOTSHARED models can not be saved.
 	 */
-	final ReadEditType NOTSHARED = new ReadEditType("NOTSHARED"); //$NON-NLS-1$
+	final AccessType NOTSHARED = new AccessType("NOTSHARED"); //$NON-NLS-1$
 
 	/**
 	 * Constant to provide compile-time safe parameter. <code>SHARED</code>signifies
 	 * the client is not intending to make changes and does not care whether
 	 * the model accessed is saved.
 	 */
-	final ReadEditType SHARED = new ReadEditType("SHARED"); //$NON-NLS-1$
+	final AccessType SHARED = new AccessType("SHARED"); //$NON-NLS-1$
 
 	/**
-	 * Constant to provide compile-time safe parameter. <code>WRITE</code>signifies
+	 * Constant to provide compile-time safe parameter. <code>MODIFY</code>signifies
 	 * the client is intending to make changes and is responsible for saving
-	 * changes (or not) if they are the last one holding WRITE access to the
+	 * changes (or not) if they are the last one holding MODIFY access to the
 	 * model before it's released.
 	 */
-	final ReadEditType WRITE = new ReadEditType("WRITE"); //$NON-NLS-1$
+	final AccessType MODIFY = new AccessType("MODIFY"); //$NON-NLS-1$
 
 	/**
 	 * copyModel is similar to a deep clone. The resulting model is shared,
@@ -106,9 +106,9 @@ public interface IModelManagerProposed {
 	 * @throws ResourceInUse
 	 * 
 	 * ISSUE: is this important enough to be API, or can clients solve
-	 * themselves 
+	 * themselves
 	 */
-	IStructuredModel copyModel(IPath oldLocation, IPath newLocation, ReadEditType type) throws ResourceInUse;
+	IStructuredModel copyModel(IPath oldLocation, IPath newLocation, AccessType type) throws ResourceInUse;
 
 	/**
 	 * createNewInstance is similar to clone, except the new instance has no
@@ -166,7 +166,7 @@ public interface IModelManagerProposed {
 	 * Note: callers of this method must still release the model when
 	 * finished. Returns the model for this document if it already exists and
 	 * is being shared. Returns null if this is not the case. The ReadEditType
-	 * must be either WRITE or SHARED.
+	 * must be either MODIFY or SHARED.
 	 * 
 	 * ISSUE: should we accept IDocument on parameter for future evolution,
 	 * and constrain to StructuredDocuments at runtime?
@@ -176,20 +176,20 @@ public interface IModelManagerProposed {
 	 * @param document
 	 * @return
 	 */
-	IStructuredModel getExistingModel(Object requester, ReadEditType type, IDocument document);
+	IStructuredModel getExistingModel(Object requester, AccessType type, IDocument document);
 
 	/**
 	 * Callers of this method must still release the model when finished.
 	 * Returns the model for this location if it already exists and is being
 	 * shared. Returns null if this is not the case. The ReadEditType must be
-	 * either WRITE or SHARED.
+	 * either MODIFY or SHARED.
 	 * 
 	 * @param requester
 	 * @param type
 	 * @param location
 	 * @return
 	 */
-	public IStructuredModel getExistingModel(Object requester, ReadEditType type, IPath location);
+	public IStructuredModel getExistingModel(Object requester, AccessType type, IPath location);
 
 	/**
 	 * Returns the model that has the specified document as its structured
@@ -201,7 +201,7 @@ public interface IModelManagerProposed {
 	 * @param document
 	 * @return
 	 */
-	public IStructuredModel getModel(Object requester, ReadEditType type, IProgressMonitor progressMonitor, IDocument document);
+	public IStructuredModel getModel(Object requester, AccessType type, IProgressMonitor progressMonitor, IDocument document);
 
 	/**
 	 * Returns the model based on the content at the specified location.
@@ -214,7 +214,7 @@ public interface IModelManagerProposed {
 	 * @throws IOException
 	 * @throws CoreException
 	 */
-	public IStructuredModel getModel(Object requester, ReadEditType type, IProgressMonitor progressMonitor, IPath location) throws IOException, CoreException;
+	public IStructuredModel getModel(Object requester, AccessType type, IProgressMonitor progressMonitor, IPath location) throws IOException, CoreException;
 
 	/**
 	 * This method will not create a new model if it already exists ... if
@@ -233,7 +233,7 @@ public interface IModelManagerProposed {
 	 * @throws IOException
 	 * @throws CoreException
 	 */
-	IStructuredModel getNewModel(Object requester, IPath location, boolean force, ReadEditType type, IProgressMonitor progressMonitor) throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException;
+	IStructuredModel getNewModel(Object requester, IPath location, boolean force, AccessType type, IProgressMonitor progressMonitor) throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException;
 
 	/**
 	 * This function returns true if there are other references to the
@@ -247,13 +247,13 @@ public interface IModelManagerProposed {
 	/**
 	 * This function returns true if there are other references to the
 	 * underlying model, shared in the specified way. The ReadEditType must be
-	 * either WRITE or SHARED.
+	 * either MODIFY or SHARED.
 	 * 
 	 * @param location
 	 * @param type
 	 * @return
 	 */
-	boolean isShared(IPath location, ReadEditType type);
+	boolean isShared(IPath location, AccessType type);
 
 	/**
 	 * This method can be called when the content type of a model changes. Its
@@ -281,7 +281,7 @@ public interface IModelManagerProposed {
 	 * @param structuredModel
 	 * @param type
 	 */
-	void releaseModel(Object requester, IStructuredModel structuredModel, ReadEditType type);
+	void releaseModel(Object requester, IStructuredModel structuredModel, AccessType type);
 
 	/**
 	 * Writes the underlying document to the IPath.
