@@ -213,12 +213,12 @@
           on which this as-you-type IValidator can operate.
           These partition type definitions may be found in:
           
-        &lt;code&gt;org.eclipse.wst.sse.core.text.IStructuredPartitions&lt;/code&gt;
-          &lt;code&gt;org.eclipse.wst.xml.core.text.IXMLPartitions&lt;/code&gt;
-          &lt;code&gt;org.eclipse.wst.html.core.text.IHTMLPartitions&lt;/code&gt;
-          &lt;code&gt;org.eclipse.jst.jsp.core.text.IJSPPartitions&lt;/code&gt;
-          &lt;code&gt;org.eclipse.wst.dtd.core.text.IDTDPartitions&lt;/code&gt;
-          &lt;code&gt;org.eclipse.wst.css.core.text.ICSSPartitions&lt;/code&gt;
+          &lt;code&gt;org.eclipse.wst.sse.core.text.IStructuredPartitionTypes&lt;/code&gt;
+          &lt;code&gt;org.eclipse.wst.xml.core.text.IXMLPartitionTypes&lt;/code&gt;
+          &lt;code&gt;org.eclipse.wst.html.core.text.IHTMLPartitionTypes&lt;/code&gt;
+          &lt;code&gt;org.eclipse.jst.jsp.core.text.IJSPPartitionTypes&lt;/code&gt;
+          &lt;code&gt;org.eclipse.wst.dtd.core.text.IDTDPartitionTypes&lt;/code&gt;
+          &lt;code&gt;org.eclipse.wst.css.core.text.ICSSPartitionTypes&lt;/code&gt;
       &lt;/li&gt;
      &lt;/ul&gt;
     &lt;/li&gt;

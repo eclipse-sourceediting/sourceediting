@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.reconcile.validator;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.text.IDocument;
@@ -28,29 +27,12 @@ public class IncrementalHelper implements IValidationContext {
 		fProject = project;
 	}
 
-	public IFile getFileFromFilename(String filename) {
-		// true means include phantom resources
-		IResource res = getProject().findMember(filename, true);
-		if (res instanceof IFile) {
-			return (IFile) res;
-		}
-		return null;
-	}
-
 	public String getPortableName(IResource resource) {
 		return resource.getProjectRelativePath().toString();
 	}
 
 	public IProject getProject() {
 		return fProject;
-	}
-
-	public String getTargetObjectName(Object object) {
-		if (object == null)
-			return null;
-		if (object instanceof IResource)
-			return getPortableName((IResource) object);
-		return object.toString();
 	}
 
 	public Object loadModel(String symbolicName) {

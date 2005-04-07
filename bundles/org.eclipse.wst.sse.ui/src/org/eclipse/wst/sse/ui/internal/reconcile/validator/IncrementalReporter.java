@@ -73,7 +73,10 @@ public class IncrementalReporter implements IReporter {
 	}
 
 	public void removeAllMessages(IValidator validator) {
-		messages.clear();
+		Object o = messages.get(validator);
+		if(o != null && o instanceof List) {
+			((List)o).clear();
+		}
 	}
 
 	public void removeAllMessages(IValidator validator, Object object) {

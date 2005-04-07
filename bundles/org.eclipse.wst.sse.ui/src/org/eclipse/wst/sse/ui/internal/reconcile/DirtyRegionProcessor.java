@@ -380,18 +380,13 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 	}
 
 	/**
-	 * Invoke a refresh on the viewer on the given node.
+	 * Invoke dirty region processing.
 	 * 
 	 * @param node
 	 */
 	public final void processDirtyRegion(DirtyRegion dr) {
 		if (dr == null)
 			return;
-        
-        // if no strategies, don't bother doing
-        // anything.
-	    if(getStrategyTypes().size() == 0)
-            return;
         
 		cancel();
 		addRequest(dr);
