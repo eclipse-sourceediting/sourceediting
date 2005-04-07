@@ -35,8 +35,7 @@ public class PropCMNumber extends PropCMNode {
 	public final static java.lang.String VAL_LENGTH = "length";//$NON-NLS-1$
 	public final static java.lang.String VAL_PERCENTAGE = "percentage";//$NON-NLS-1$
 	public final static java.lang.String VAL_TIME = "time";//$NON-NLS-1$
-	public final static java.lang.String VAL_HASH = "hash"; // for
-															// hex-color//$NON-NLS-1$
+	public final static java.lang.String VAL_HASH = "hash"; //$NON-NLS-1$
 	public final static java.lang.String VAL_NUM = "number";//$NON-NLS-1$
 	public final static String DIM_CM = "cm";//$NON-NLS-1$
 	public final static String DIM_DEG = "deg";//$NON-NLS-1$

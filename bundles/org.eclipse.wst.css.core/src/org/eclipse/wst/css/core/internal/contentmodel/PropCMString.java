@@ -26,8 +26,7 @@ public class PropCMString extends PropCMNode {
 	public final static java.lang.String VAL_COUNTER_ID = "counterId";//$NON-NLS-1$
 	public final static java.lang.String VAL_PAGE_ID = "pageId";//$NON-NLS-1$
 	public final static java.lang.String VAL_VOICE = "voice";//$NON-NLS-1$
-	public final static java.lang.String VAL_ANY = "any"; // reserved
-															// name//$NON-NLS-1$
+	public final static java.lang.String VAL_ANY = "any"; //$NON-NLS-1$
 
 	/**
 	 * 

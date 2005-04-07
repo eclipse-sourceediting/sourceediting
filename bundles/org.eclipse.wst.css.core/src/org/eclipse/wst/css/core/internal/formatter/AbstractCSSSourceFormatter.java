@@ -781,10 +781,7 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 	 */
 	String getLineDelimiter(ICSSNode node) {
 		ICSSModel model = (node != null) ? node.getOwnerDocument().getModel() : null;
-		return (model != null) ? model.getStructuredDocument().getLineDelimiter() : "\n" /*
-																							 * default
-																							 * delimiter
-																							 */;//$NON-NLS-1$
+		return (model != null) ? model.getStructuredDocument().getLineDelimiter() : "\n"; //$NON-NLS-1$
 
 		// TODO : check whether to use model.getLineDelimiter() or
 		// model.getStructuredDocument().getLineDelimiter()

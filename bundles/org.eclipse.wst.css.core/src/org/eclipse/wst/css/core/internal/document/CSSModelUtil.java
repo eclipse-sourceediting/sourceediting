@@ -13,11 +13,12 @@ package org.eclipse.wst.css.core.internal.document;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.css.core.document.ICSSAttr;
 import org.eclipse.wst.css.core.document.ICSSNode;
 import org.eclipse.wst.css.core.document.ICSSNodeList;
 import org.eclipse.wst.css.core.document.ICSSRuleContainer;
-import org.eclipse.wst.css.core.internal.CSSCorePlugin;
+import org.eclipse.wst.css.core.internal.CSSCoreMessages;
 import org.eclipse.wst.css.core.parser.CSSRegionContexts;
 import org.eclipse.wst.css.core.util.CSSUtil;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
@@ -69,22 +70,22 @@ class CSSModelUtil {
 			String nodeText = CSSUtil.getClassString(node) + ": ";//$NON-NLS-1$
 			IStructuredDocumentRegion flatNode = node.getFirstStructuredDocumentRegion();
 			if (flatNode == null && (!(node instanceof CSSStyleDeclarationImpl || node instanceof CSSStyleSheetImpl) || node.getFirstChild() != null)) {
-				errors.add(CSSCorePlugin.getResourceString("%1concat_ERROR_", (new Object[]{nodeText}))); //$NON-NLS-1$ = "{0}first flat node is null."
+				errors.add(NLS.bind(CSSCoreMessages._1concat_ERROR_, (new Object[]{nodeText}))); //$NON-NLS-1$ = "{0}first flat node is null."
 			}
 			else if (flatNode != null) {
 				IStructuredDocumentRegion modelNode = structuredDocument.getRegionAtCharacterOffset(flatNode.getStart());
 				if (flatNode != modelNode) {
-					errors.add(CSSCorePlugin.getResourceString("%2concat_ERROR_", (new Object[]{nodeText}))); //$NON-NLS-1$ = "{0}first flat node is not in model."
+					errors.add(NLS.bind(CSSCoreMessages._2concat_ERROR_, (new Object[]{nodeText}))); //$NON-NLS-1$ = "{0}first flat node is not in model."
 				}
 			}
 			flatNode = node.getLastStructuredDocumentRegion();
 			if (flatNode == null && (!(node instanceof CSSStyleDeclarationImpl || node instanceof CSSStyleSheetImpl) || node.getFirstChild() != null)) {
-				errors.add(CSSCorePlugin.getResourceString("%3concat_ERROR_", (new Object[]{nodeText}))); //$NON-NLS-1$ = "{0}last flat node is null."
+				errors.add(NLS.bind(CSSCoreMessages._3concat_ERROR_, (new Object[]{nodeText}))); //$NON-NLS-1$ = "{0}last flat node is null."
 			}
 			else if (flatNode != null) {
 				IStructuredDocumentRegion modelNode = structuredDocument.getRegionAtCharacterOffset(flatNode.getStart());
 				if (flatNode != modelNode) {
-					errors.add(CSSCorePlugin.getResourceString("%4concat_ERROR_", (new Object[]{nodeText}))); //$NON-NLS-1$ = "{0}last flat node is not in model."
+					errors.add(NLS.bind(CSSCoreMessages._4concat_ERROR_, (new Object[]{nodeText}))); //$NON-NLS-1$ = "{0}last flat node is not in model."
 				}
 			}
 		}
@@ -94,26 +95,26 @@ class CSSModelUtil {
 			ITextRegion region = node.getFirstRegion();
 			IStructuredDocumentRegion parentRegion = node.getDocumentRegion();
 			if (region == null && (!(node instanceof MediaListImpl) || node.getFirstChild() != null)) {
-				errors.add(CSSCorePlugin.getResourceString("%25concat_ERROR_", (new Object[]{nodeText}))); //$NON-NLS-1$ = "{0}first region is null."
+				errors.add(NLS.bind(CSSCoreMessages._25concat_ERROR_, (new Object[]{nodeText}))); //$NON-NLS-1$ = "{0}first region is null."
 			}
 			else if (region != null) {
 				int offset = parentRegion.getStartOffset(region);
 				IStructuredDocumentRegion modelNode = structuredDocument.getRegionAtCharacterOffset(offset);
 				ITextRegion modelRegion = modelNode.getRegionAtCharacterOffset(offset);
 				if (region != modelRegion) {
-					errors.add(CSSCorePlugin.getResourceString("%26concat_ERROR_", (new Object[]{nodeText}))); //$NON-NLS-1$ = "{0}first region is not in model."
+					errors.add(NLS.bind(CSSCoreMessages._26concat_ERROR_, (new Object[]{nodeText}))); //$NON-NLS-1$ = "{0}first region is not in model."
 				}
 			}
 			region = node.getLastRegion();
 			if (region == null && (!(node instanceof MediaListImpl) || node.getFirstChild() != null)) {
-				errors.add(CSSCorePlugin.getResourceString("%27concat_ERROR_", (new Object[]{nodeText}))); //$NON-NLS-1$ = "{0}last region is null."
+				errors.add(NLS.bind(CSSCoreMessages._27concat_ERROR_, (new Object[]{nodeText}))); //$NON-NLS-1$ = "{0}last region is null."
 			}
 			else if (region != null) {
 				int offset = parentRegion.getStartOffset(region);
 				IStructuredDocumentRegion modelNode = structuredDocument.getRegionAtCharacterOffset(offset);
 				ITextRegion modelRegion = modelNode.getRegionAtCharacterOffset(offset);
 				if (region != modelRegion) {
-					errors.add(CSSCorePlugin.getResourceString("%28concat_ERROR_", (new Object[]{nodeText}))); //$NON-NLS-1$ = "{0}last region is not in model."
+					errors.add(NLS.bind(CSSCoreMessages._28concat_ERROR_, (new Object[]{nodeText}))); //$NON-NLS-1$ = "{0}last region is not in model."
 				}
 			}
 		}
@@ -127,26 +128,26 @@ class CSSModelUtil {
 			ITextRegion region = node.getFirstRegion();
 			IStructuredDocumentRegion parentRegion = node.getDocumentRegion();
 			if (region == null && 0 < attr.getValue().length()) {
-				errors.add(CSSCorePlugin.getResourceString("%5concat_ERROR_", (new Object[]{nodeText}))); //$NON-NLS-1$ = "{0}first region is null."
+				errors.add(NLS.bind(CSSCoreMessages._5concat_ERROR_, (new Object[]{nodeText}))); //$NON-NLS-1$ = "{0}first region is null."
 			}
 			else if (region != null) {
 				int offset = parentRegion.getStartOffset(region);
 				IStructuredDocumentRegion modelNode = structuredDocument.getRegionAtCharacterOffset(offset);
 				ITextRegion modelRegion = modelNode.getRegionAtCharacterOffset(offset);
 				if (region != modelRegion) {
-					errors.add(CSSCorePlugin.getResourceString("%6concat_ERROR_", (new Object[]{nodeText}))); //$NON-NLS-1$ = "{0}first region is not in model."
+					errors.add(NLS.bind(CSSCoreMessages._6concat_ERROR_, (new Object[]{nodeText}))); //$NON-NLS-1$ = "{0}first region is not in model."
 				}
 			}
 			region = node.getLastRegion();
 			if (region == null && 0 < attr.getValue().length()) {
-				errors.add(CSSCorePlugin.getResourceString("%7concat_ERROR_", (new Object[]{nodeText}))); //$NON-NLS-1$ = "{0}last region is null."
+				errors.add(NLS.bind(CSSCoreMessages._7concat_ERROR_, (new Object[]{nodeText}))); //$NON-NLS-1$ = "{0}last region is null."
 			}
 			else if (region != null) {
 				int offset = parentRegion.getStartOffset(region);
 				IStructuredDocumentRegion modelNode = structuredDocument.getRegionAtCharacterOffset(offset);
 				ITextRegion modelRegion = modelNode.getRegionAtCharacterOffset(offset);
 				if (region != modelRegion) {
-					errors.add(CSSCorePlugin.getResourceString("%8concat_ERROR_", (new Object[]{nodeText}))); //$NON-NLS-1$ = "{0}last region is not in model."
+					errors.add(NLS.bind(CSSCoreMessages._8concat_ERROR_, (new Object[]{nodeText}))); //$NON-NLS-1$ = "{0}last region is not in model."
 				}
 			}
 		}

@@ -24,7 +24,7 @@ import org.eclipse.wst.css.core.document.ICSSPageRule;
 import org.eclipse.wst.css.core.document.ICSSStyleDeclaration;
 import org.eclipse.wst.css.core.document.ICSSStyleRule;
 import org.eclipse.wst.css.core.document.ICSSStyleSheet;
-import org.eclipse.wst.css.core.internal.CSSCorePlugin;
+import org.eclipse.wst.css.core.internal.CSSCoreMessages;
 import org.eclipse.wst.css.core.internal.encoding.CSSDocumentLoader;
 import org.eclipse.wst.css.core.util.ImportRuleCollector;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
@@ -433,7 +433,7 @@ class CSSStyleSheetImpl extends CSSDocumentImpl implements ICSSStyleSheet {
 	 *         will contain the <code>Node</code>.
 	 */
 	public CSSRule getOwnerRule() {
-		Assert.isTrue(false, CSSCorePlugin.getResourceString("%You_cannot_use_CSSStyleShe_UI_")); //$NON-NLS-1$ = "You cannot use CSSStyleSheet.getOwnerRule() because of many referencers of this rule\nPlease use getOnwerRules()"
+		Assert.isTrue(false, CSSCoreMessages.You_cannot_use_CSSStyleShe_UI_); //$NON-NLS-1$ = "You cannot use CSSStyleSheet.getOwnerRule() because of many referencers of this rule\nPlease use getOnwerRules()"
 		// for @import
 		return null;
 	}
