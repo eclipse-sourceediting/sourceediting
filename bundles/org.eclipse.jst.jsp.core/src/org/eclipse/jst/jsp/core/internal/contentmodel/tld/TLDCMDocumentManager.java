@@ -447,9 +447,9 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		}
 
 		public void setStructuredDocument(IStructuredDocument newDocument) {
-			Assert.isTrue(newDocument != null, "null document");
-			Assert.isTrue(newDocument.getParser() != null, "null document parser");
-			Assert.isTrue(newDocument.getParser() instanceof JSPSourceParser, "can only listen to document with a JSPSourceParser");
+			Assert.isTrue(newDocument != null, "null document"); //$NON-NLS-1$
+			Assert.isTrue(newDocument.getParser() != null, "null document parser"); //$NON-NLS-1$
+			Assert.isTrue(newDocument.getParser() instanceof JSPSourceParser, "can only listen to document with a JSPSourceParser"); //$NON-NLS-1$
 			getSourceParser().removeStructuredDocumentRegionHandler(this);
 			setSourceParser((JSPSourceParser) newDocument.getParser());
 			getSourceParser().addStructuredDocumentRegionHandler(this);

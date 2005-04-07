@@ -46,6 +46,6 @@ public class ServletRecord implements ITaglibRecord {
 	}
 
 	public String toString() {
-		return "ServletRecord: " + location + tldRecords;
+		return "ServletRecord: " + location + tldRecords; //$NON-NLS-1$
 	}
 }

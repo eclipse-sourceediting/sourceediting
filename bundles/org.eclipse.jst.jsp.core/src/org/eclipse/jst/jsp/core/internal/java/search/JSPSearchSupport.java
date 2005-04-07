@@ -40,6 +40,7 @@ import org.eclipse.jdt.internal.compiler.util.SimpleLookupTable;
 import org.eclipse.jdt.internal.core.JavaModelManager;
 import org.eclipse.jdt.internal.core.search.indexing.IndexManager;
 import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
+import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.java.JSP2ServletNameUtil;
@@ -103,7 +104,7 @@ public class JSPSearchSupport {
         // constructor w/ java element
         public SearchJob(IJavaElement element, IJavaSearchScope scope, SearchRequestor requestor) {
 
-            super("JSP Search - " + element.getElementName());
+            super(JSPCoreMessages.JSP_Search + element.getElementName());
             this.fElement = element;
             this.fScope = scope;
             this.fRequestor = requestor;
@@ -112,7 +113,7 @@ public class JSPSearchSupport {
         // constructor w/ search text
         public SearchJob(String searchText, IJavaSearchScope scope, int searchFor, int limitTo, int matchMode, boolean isCaseSensitive, SearchRequestor requestor) {
 
-            super("JSP Search - " + searchText);
+            super(JSPCoreMessages.JSP_Search + searchText);
             this.fSearchText = searchText;
             this.fScope = scope;
             this.fSearchFor = searchFor;
@@ -461,7 +462,7 @@ public class JSPSearchSupport {
         String classname = split[split.length - 1];
 
         // ignore anything but .java matches (like .class binary matches)
-        if(!searchDocPath.endsWith(".java")) {
+        if(!searchDocPath.endsWith(".java")) { //$NON-NLS-1$
             return null;
         }
 

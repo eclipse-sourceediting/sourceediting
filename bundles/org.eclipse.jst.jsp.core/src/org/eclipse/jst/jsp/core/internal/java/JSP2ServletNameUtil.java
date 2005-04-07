@@ -32,7 +32,7 @@ public class JSP2ServletNameUtil {
 			return qualifiedTypeName;
 		
 		StringBuffer buf = new StringBuffer();
-		String possible = "";
+		String possible = ""; //$NON-NLS-1$
 	
 		// remove the .java extension if there is one
 		if(qualifiedTypeName.endsWith(".java"))//$NON-NLS-1$

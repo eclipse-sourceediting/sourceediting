@@ -49,7 +49,7 @@ public class JSPTranslationAdapterFactory extends AbstractAdapterFactory {
 		if (target instanceof IDOMNode && fAdapter == null) {
 			fAdapter = new JSPTranslationAdapter(((IDOMNode) target).getModel());
 			if(DEBUG) {
-				System.out.println("(+) JSPTranslationAdapterFactory [" + this + "] created adapter: " + fAdapter);
+				System.out.println("(+) JSPTranslationAdapterFactory [" + this + "] created adapter: " + fAdapter); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 		return fAdapter;
@@ -69,7 +69,7 @@ public class JSPTranslationAdapterFactory extends AbstractAdapterFactory {
 	public void release() {
 		if (fAdapter != null) {
 			if(DEBUG) {
-				System.out.println("(-) JSPTranslationAdapterFactory [" + this + "] releasing adapter: " + fAdapter);
+				System.out.println("(-) JSPTranslationAdapterFactory [" + this + "] releasing adapter: " + fAdapter); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			fAdapter.release();
 		}

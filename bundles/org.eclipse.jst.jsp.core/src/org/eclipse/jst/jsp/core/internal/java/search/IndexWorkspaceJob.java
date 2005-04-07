@@ -26,7 +26,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
-import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
+import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 
 /**
  * Re-indexes the entire workspace.
@@ -81,7 +81,7 @@ public class IndexWorkspaceJob extends Job {
 					if(file.exists()) {
 						
 						if(DEBUG)
-							System.out.println("(+) IndexWorkspaceJob adding file: " + file.getName());
+							System.out.println("(+) IndexWorkspaceJob adding file: " + file.getName()); //$NON-NLS-1$
 						// this call will check the ContentTypeDescription, so don't need to do it here.
 						//JSPSearchSupport.getInstance().addJspFile(file);
 						this.files.add(file);
@@ -105,7 +105,7 @@ public class IndexWorkspaceJob extends Job {
 	public IndexWorkspaceJob() {
 		// pa_TODO may want to say something like "Rebuilding JSP Index" to be more
 		// descriptive instead of "Updating JSP Index" since they are 2 different things
-		super(JSPCorePlugin.getResourceString("%JSPIndexManager.0"));
+		super(JSPCoreMessages.JSPIndexManager_0);
 		setPriority(Job.LONG);
 		setSystem(true);
 	}

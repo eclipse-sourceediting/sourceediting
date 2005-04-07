@@ -45,6 +45,6 @@ public class JarRecord implements ITaglibRecord {
 	}
 
 	public String toString() {
-		return "JarRecord: " + location + " <-> " + urlRecords;
+		return "JarRecord: " + location + " <-> " + urlRecords; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

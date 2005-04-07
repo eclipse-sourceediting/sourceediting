@@ -34,8 +34,10 @@ import org.eclipse.jdt.internal.core.JavaModelManager;
 import org.eclipse.jdt.internal.core.index.Index;
 import org.eclipse.jdt.internal.core.search.indexing.IndexManager;
 import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
+import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.Logger;
+import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Bundle;
 
 /**
@@ -73,7 +75,7 @@ public class JSPIndexManager implements IResourceChangeListener {
 	public static final int S_CANCELED = 4;
 	
 	/** symbolic name for OSGI framework */
-	private final String OSGI_FRAMEWORK_ID = "org.eclipse.osgi";
+	private final String OSGI_FRAMEWORK_ID = "org.eclipse.osgi"; //$NON-NLS-1$
 	
 	/**
 	 * Collects JSP files from a resource delta.
@@ -197,8 +199,8 @@ public class JSPIndexManager implements IResourceChangeListener {
 					try {
 						ss.addJspFile(this.jspFiles [i]);
 						// JSP Indexer processing n files
-						processingNFiles = JSPCorePlugin.getResourceString("%JSPIndexManager.2", new String[]{Integer.toString((this.jspFiles .length -i))});
-						monitor.subTask(processingNFiles + " - " + this.jspFiles [i].getName());
+						processingNFiles = NLS.bind(JSPCoreMessages.JSPIndexManager_2, new String[]{Integer.toString((this.jspFiles .length -i))});
+						monitor.subTask(processingNFiles + " - " + this.jspFiles [i].getName()); //$NON-NLS-1$
 						monitor.worked(1);
 						
 						if(DEBUG) {
@@ -339,7 +341,7 @@ public class JSPIndexManager implements IResourceChangeListener {
 	
 	public synchronized void setIndexState(int state) {
 		if(DEBUG) {
-			System.out.println("JSPIndexManager setting index state to: " + state2String(state));
+			System.out.println("JSPIndexManager setting index state to: " + state2String(state)); //$NON-NLS-1$
 		}
 		Plugin jspModelPlugin = JSPCorePlugin.getDefault();
 		jspModelPlugin.getPluginPreferences().setValue(PKEY_INDEX_STATE, state);
@@ -347,19 +349,19 @@ public class JSPIndexManager implements IResourceChangeListener {
 		
 	}
 	private String state2String(int state) {
-		String s = "UNKNOWN";
+		String s = "UNKNOWN";	//$NON-NLS-1$
 		switch(state) {
 			case(S_STABLE):
-				s = "S_STABLE";
+				s = "S_STABLE";	//$NON-NLS-1$
 				break;
 			case(S_UPDATING):
-				s = "S_UPDATING";
+				s = "S_UPDATING";	//$NON-NLS-1$
 				break;
 			case(S_CANCELED):
-				s = "S_CANCELED";
+				s = "S_CANCELED";	//$NON-NLS-1$
 				break;
 			case(S_REBUILDING):
-				s = "S_REBUILDING";
+				s = "S_REBUILDING";	//$NON-NLS-1$
 				break;
 		}
 		return s;
@@ -391,7 +393,7 @@ public class JSPIndexManager implements IResourceChangeListener {
 	private void rebuildIndex() {
 		
 		if(DEBUG) 
-			System.out.println("*** JSP Index unstable, requesting re-indexing");
+			System.out.println("*** JSP Index unstable, requesting re-indexing"); //$NON-NLS-1$
 
 		final IndexWorkspaceJob indexingJob = new IndexWorkspaceJob();
 		
@@ -417,7 +419,7 @@ public class JSPIndexManager implements IResourceChangeListener {
 	 */
 	public final void indexFiles(IFile[] files) {
 		// updating JSP Index
-		String taskName = JSPCorePlugin.getResourceString("%JSPIndexManager.0");
+		String taskName = JSPCoreMessages.JSPIndexManager_0;
 		
 		// Processing resource delta
 		final Job processFiles = new ProcessFilesJob(taskName, files);
@@ -494,7 +496,7 @@ public class JSPIndexManager implements IResourceChangeListener {
 		// this must be done first according to section 4.19.2 from the OSGi R3 spec.  
 		boolean shuttingDown = Platform.getBundle(OSGI_FRAMEWORK_ID).getState() == Bundle.STOPPING;
 		if (DEBUG && shuttingDown) {
-			System.out.println("JSPIndexManager: system is shutting down!");
+			System.out.println("JSPIndexManager: system is shutting down!"); //$NON-NLS-1$
 		}
 		return shuttingDown;
 	}

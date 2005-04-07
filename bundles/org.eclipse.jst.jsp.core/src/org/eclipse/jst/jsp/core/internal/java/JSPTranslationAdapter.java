@@ -122,7 +122,7 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 		if(fJSPTranslation != null) {
 			
 			if(DEBUG)
-				System.out.println("JSPTranslationAdapter releasing:" + fJSPTranslation);
+				System.out.println("JSPTranslationAdapter releasing:" + fJSPTranslation); //$NON-NLS-1$
 			
 			fJSPTranslation.release();
 		}
@@ -154,7 +154,7 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 			// it's going to be rebuilt, so we release it here
 			if(fJSPTranslation != null) {
 				if(DEBUG)
-					System.out.println("JSPTranslationAdapter releasing:" + fJSPTranslation);
+					System.out.println("JSPTranslationAdapter releasing:" + fJSPTranslation); //$NON-NLS-1$
 				fJSPTranslation.release();
 			}
 			fJSPTranslation = new JSPTranslationExtension(getXMLModel().getStructuredDocument(), fJavaDocument, getJavaProject(), translator);

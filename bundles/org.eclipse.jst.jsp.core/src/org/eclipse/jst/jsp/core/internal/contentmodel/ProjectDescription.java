@@ -56,7 +56,7 @@ class ProjectDescription {
 	class DeltaVisitor implements IResourceDeltaVisitor {
 		public boolean visit(IResourceDelta delta) throws CoreException {
 			if (delta.getResource().getType() == IResource.FILE) {
-				if (delta.getResource().getName().endsWith(".tld")) {
+				if (delta.getResource().getName().endsWith(".tld")) { //$NON-NLS-1$
 					if (delta.getKind() == IResourceDelta.REMOVED) {
 						removeTLD(delta.getResource());
 					}
@@ -64,7 +64,7 @@ class ProjectDescription {
 						updateTLD(delta.getResource(), delta.getKind());
 					}
 				}
-				else if (delta.getResource().getName().endsWith(".jar")) {
+				else if (delta.getResource().getName().endsWith(".jar")) { //$NON-NLS-1$
 					if (delta.getKind() == IResourceDelta.REMOVED) {
 						removeJAR(delta.getResource());
 					}
@@ -72,7 +72,7 @@ class ProjectDescription {
 						updateJAR(delta.getResource(), delta.getKind());
 					}
 				}
-				else if (delta.getResource().getName().endsWith(".tag") || delta.getResource().getName().endsWith(".tagx")) {
+				else if (delta.getResource().getName().endsWith(".tag") || delta.getResource().getName().endsWith(".tagx")) { //$NON-NLS-1$ //$NON-NLS-2$
 					if (delta.getKind() == IResourceDelta.REMOVED) {
 						removeTagDir(delta.getResource());
 					}
@@ -96,13 +96,13 @@ class ProjectDescription {
 	class Indexer implements IResourceProxyVisitor {
 		public boolean visit(IResourceProxy proxy) throws CoreException {
 			if (proxy.getType() == IResource.FILE) {
-				if (proxy.getName().endsWith(".tld")) {
+				if (proxy.getName().endsWith(".tld")) { //$NON-NLS-1$
 					updateTLD(proxy.requestResource(), ITaglibRecordEvent.ADDED);
 				}
-				else if (proxy.getName().endsWith(".jar")) {
+				else if (proxy.getName().endsWith(".jar")) { //$NON-NLS-1$
 					updateJAR(proxy.requestResource(), ITaglibRecordEvent.ADDED);
 				}
-				else if (proxy.getName().endsWith(".tag") || proxy.getName().endsWith(".tagx")) {
+				else if (proxy.getName().endsWith(".tag") || proxy.getName().endsWith(".tagx")) { //$NON-NLS-1$ //$NON-NLS-2$
 					updateTagDir(proxy.requestResource(), ITaglibRecordEvent.ADDED);
 				}
 				else if (proxy.getName().equals(WEB_XML) && proxy.requestResource().getParent().getName().equals(WEB_INF)) {
@@ -134,29 +134,29 @@ class ProjectDescription {
 			String string = fTaglibRecord.toString();
 			switch (fType) {
 				case ITaglibRecordEvent.ADDED :
-					string += " ADDED (" + TaglibRecordEvent.class.getName() + ")";
+					string += " ADDED (" + TaglibRecordEvent.class.getName() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 					break;
 				case ITaglibRecordEvent.CHANGED :
-					string += " CHANGED (" + TaglibRecordEvent.class.getName() + ")";
+					string += " CHANGED (" + TaglibRecordEvent.class.getName() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 					break;
 				case ITaglibRecordEvent.REMOVED :
-					string += " REMOVED (" + TaglibRecordEvent.class.getName() + ")";
+					string += " REMOVED (" + TaglibRecordEvent.class.getName() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 					break;
 				default :
-					string += " other:" + fType + " (" + TaglibRecordEvent.class.getName() + ")";
+					string += " other:" + fType + " (" + TaglibRecordEvent.class.getName() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					break;
 			}
 			return string;
 		}
 	}
 
-	static boolean _debugIndexCreation = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/indexcreation"));
-	static boolean _debugIndexTime = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/indextime"));
+	static boolean _debugIndexCreation = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/indexcreation")); //$NON-NLS-1$ //$NON-NLS-2$
+	static boolean _debugIndexTime = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/indextime")); //$NON-NLS-1$ //$NON-NLS-2$
 
-	private static final String WEB_INF = "WEB-INF";
+	private static final String WEB_INF = "WEB-INF"; //$NON-NLS-1$
 
-	private static final IPath WEB_INF_PATH = new Path("WEB-INF");
-	private static final String WEB_XML = "web.xml";
+	private static final IPath WEB_INF_PATH = new Path("WEB-INF"); //$NON-NLS-1$
+	private static final String WEB_XML = "web.xml"; //$NON-NLS-1$
 
 	/*
 	 * Records active JARs on the classpath. Taglib descriptors should be
@@ -200,7 +200,7 @@ class ProjectDescription {
 		JarRecord libraryRecord = (JarRecord) createJARRecord(libraryLocation);
 		fClasspathJars.put(libraryLocation, libraryRecord);
 		for (int i = 0; i < entries.length; i++) {
-			if (entries[i].endsWith(".tld")) {
+			if (entries[i].endsWith(".tld")) { //$NON-NLS-1$
 				InputStream contents = JarUtilities.getInputStream(libraryLocation, entries[i]);
 				if (contents != null) {
 					String uri = extractURI(libraryLocation, contents);
@@ -209,11 +209,11 @@ class ProjectDescription {
 						record.uri = uri;
 						record.baseLocation = libraryLocation;
 						try {
-							record.url = new URL("jar:file:" + libraryLocation + "!/" + entries[i]);
+							record.url = new URL("jar:file:" + libraryLocation + "!/" + entries[i]); //$NON-NLS-1$ //$NON-NLS-2$
 							libraryRecord.urlRecords.add(record);
 							fClasspathReferences.put(uri, record);
 							if (_debugIndexCreation)
-								System.out.println("created record for " + uri + "@" + record.getURL());
+								System.out.println("created record for " + uri + "@" + record.getURL()); //$NON-NLS-1$ //$NON-NLS-2$
 						}
 						catch (MalformedURLException e) {
 							// don't record this URI
@@ -233,13 +233,13 @@ class ProjectDescription {
 
 	void updateJAR(IResource jar, int deltaKind) {
 		if (_debugIndexCreation)
-			System.out.println("creating records for JAR " + jar.getFullPath());
+			System.out.println("creating records for JAR " + jar.getFullPath()); //$NON-NLS-1$
 		String jarLocationString = jar.getLocation().toString();
 		String[] entries = JarUtilities.getEntryNames(jar);
 		JarRecord jarRecord = (JarRecord) createJARRecord(jar);
 		fJARReferences.put(jar.getFullPath().toString(), jarRecord);
 		for (int i = 0; i < entries.length; i++) {
-			if (entries[i].endsWith(".tld")) {
+			if (entries[i].endsWith(".tld")) { //$NON-NLS-1$
 				InputStream contents = JarUtilities.getInputStream(jar, entries[i]);
 				if (contents != null) {
 					String uri = extractURI(jarLocationString, contents);
@@ -248,11 +248,11 @@ class ProjectDescription {
 						record.uri = uri;
 						record.baseLocation = jarLocationString;
 						try {
-							record.url = new URL("jar:file:" + jarLocationString + "!/" + entries[i]);
+							record.url = new URL("jar:file:" + jarLocationString + "!/" + entries[i]); //$NON-NLS-1$ //$NON-NLS-2$
 							jarRecord.urlRecords.add(record);
 							getImplicitReferences(jarLocationString).put(uri, record);
 							if (_debugIndexCreation)
-								System.out.println("created record for " + uri + "@" + record.getURL());
+								System.out.println("created record for " + uri + "@" + record.getURL()); //$NON-NLS-1$ //$NON-NLS-2$
 						}
 						catch (MalformedURLException e) {
 							// don't record this URI
@@ -298,19 +298,19 @@ class ProjectDescription {
 		if (document == null)
 			return;
 		if (_debugIndexCreation)
-			System.out.println("creating records for " + webxml.getFullPath());
+			System.out.println("creating records for " + webxml.getFullPath()); //$NON-NLS-1$
 
 		ServletRecord servletRecord = new ServletRecord();
 		servletRecord.location = webxml.getLocation();
 		fServletReferences.put(servletRecord.getWebXML().toString(), servletRecord);
 		NodeList taglibs = document.getElementsByTagName(JSP12TLDNames.TAGLIB);
 		for (int i = 0; i < taglibs.getLength(); i++) {
-			String uri = readTextofChild(taglibs.item(i), "taglib-uri").trim();
+			String uri = readTextofChild(taglibs.item(i), "taglib-uri").trim(); //$NON-NLS-1$
 			// specified location is relative to root of the webapp
-			String location = readTextofChild(taglibs.item(i), "taglib-location").trim();
+			String location = readTextofChild(taglibs.item(i), "taglib-location").trim(); //$NON-NLS-1$
 			TLDRecord record = new TLDRecord();
 			record.uri = uri;
-			if (location.startsWith("/")) {
+			if (location.startsWith("/")) { //$NON-NLS-1$
 				record.location = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(getLocalRoot(webxml.getLocation().toString()) + location);
 			}
 			else {
@@ -319,7 +319,7 @@ class ProjectDescription {
 			servletRecord.tldRecords.add(record);
 			getImplicitReferences(webxml.getLocation().toString()).put(uri, record);
 			if (_debugIndexCreation)
-				System.out.println("created record for " + uri + "@" + record.location);
+				System.out.println("created record for " + uri + "@" + record.location); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(servletRecord, deltaKind));
 	}
@@ -341,7 +341,7 @@ class ProjectDescription {
 
 	void updateTLD(IResource tld, int deltaKind) {
 		if (_debugIndexCreation)
-			System.out.println("creating record for " + tld.getFullPath());
+			System.out.println("creating record for " + tld.getFullPath()); //$NON-NLS-1$
 		TLDRecord record = createTLDRecord(tld);
 		fTLDReferences.put(tld.getFullPath().toString(), record);
 		if (record.uri != null) {
@@ -379,13 +379,13 @@ class ProjectDescription {
 			record = new TagDirRecord();
 			record.location = tagdir.getFullPath();
 			// JSP 2.0 section 8.4.3
-			if (tagdir.getName().equals("tags"))
-				record.shortName = "tags";
+			if (tagdir.getName().equals("tags")) //$NON-NLS-1$
+				record.shortName = "tags"; //$NON-NLS-1$
 			else {
 				IPath tagdirPath = tagdir.getFullPath();
 				String[] segments = tagdirPath.segments();
 				for (int i = 1; record.shortName == null && i < segments.length; i++) {
-					if (segments[i - 1].equals("WEB-INF") && segments[i].equals("tags")) {
+					if (segments[i - 1].equals("WEB-INF") && segments[i].equals("tags")) { //$NON-NLS-1$ //$NON-NLS-2$
 						IPath tagdirLocalPath = tagdirPath.removeFirstSegments(i + 1);
 						record.shortName = tagdirLocalPath.toString().replace('/', '-');
 					}
@@ -549,7 +549,7 @@ class ProjectDescription {
 		}
 
 		if (_debugIndexTime)
-			System.out.println("indexed " + fProject.getName() + " in " + (System.currentTimeMillis() - time0) + "ms");
+			System.out.println("indexed " + fProject.getName() + " in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	void indexClasspath() {
@@ -560,7 +560,7 @@ class ProjectDescription {
 		IJavaProject javaProject = JavaCore.create(fProject);
 		indexClasspath(javaProject);
 		if (_debugIndexTime)
-			System.out.println("indexed " + fProject.getName() + " classpath in " + (System.currentTimeMillis() - time0) + "ms");
+			System.out.println("indexed " + fProject.getName() + " classpath in " + (System.currentTimeMillis() - time0) + "ms"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	/**
@@ -629,7 +629,7 @@ class ProjectDescription {
 				}
 			}
 			catch (JavaModelException e) {
-				Logger.logException("Error searching Java Build Path + (" + fProject.getName() + ") for tag libraries", e);
+				Logger.logException("Error searching Java Build Path + (" + fProject.getName() + ") for tag libraries", e); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			fClasspathProjects.pop();
 		}
@@ -664,7 +664,7 @@ class ProjectDescription {
 
 	void removeJAR(IResource jar) {
 		if (_debugIndexCreation)
-			System.out.println("removing records for JAR " + jar.getFullPath());
+			System.out.println("removing records for JAR " + jar.getFullPath()); //$NON-NLS-1$
 		JarRecord record = (JarRecord) fJARReferences.remove(jar.getFullPath());
 		if (record != null) {
 			URLRecord[] records = (URLRecord[]) record.getURLRecords().toArray(new URLRecord[0]);
@@ -677,13 +677,13 @@ class ProjectDescription {
 
 	void removeServlets(IResource webxml) {
 		if (_debugIndexCreation)
-			System.out.println("removing records for " + webxml.getFullPath());
+			System.out.println("removing records for " + webxml.getFullPath()); //$NON-NLS-1$
 		ServletRecord record = (ServletRecord) fServletReferences.remove(webxml.getLocation().toString());
 		if (record != null) {
 			TLDRecord[] records = (TLDRecord[]) record.getTLDRecords().toArray(new TLDRecord[0]);
 			for (int i = 0; i < records.length; i++) {
 				if (_debugIndexCreation)
-					System.out.println("removed record for " + records[i].uri + "@" + records[i].location);
+					System.out.println("removed record for " + records[i].uri + "@" + records[i].location); //$NON-NLS-1$ //$NON-NLS-2$
 				getImplicitReferences(webxml.getLocation().toString()).remove(records[i].getURI());
 			}
 			TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.REMOVED));
@@ -698,7 +698,7 @@ class ProjectDescription {
 
 	void removeTLD(IResource tld) {
 		if (_debugIndexCreation)
-			System.out.println("removing record for " + tld.getFullPath());
+			System.out.println("removing record for " + tld.getFullPath()); //$NON-NLS-1$
 		TLDRecord record = (TLDRecord) fTLDReferences.remove(tld.getFullPath());
 		if (record != null) {
 			if (record.uri != null) {
@@ -721,7 +721,7 @@ class ProjectDescription {
 		 * Workaround for problem in URIHelper; uris starting with '/' are
 		 * returned as-is.
 		 */
-		if (reference.startsWith("/")) {
+		if (reference.startsWith("/")) { //$NON-NLS-1$
 			location = getLocalRoot(basePath) + reference;
 		}
 		else {

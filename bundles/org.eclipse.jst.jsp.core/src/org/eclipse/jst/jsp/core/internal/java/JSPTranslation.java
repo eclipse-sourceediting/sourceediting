@@ -74,8 +74,8 @@ public class JSPTranslation implements IJSPTranslation {
 	// don't want to hold onto model (via translator)
 	// all relevant info is extracted in the constructor.
 	//private JSPTranslator fTranslator = null;
-	private String fJavaText = "";
-	private String fJspText = "";
+	private String fJavaText = ""; //$NON-NLS-1$
+	private String fJspText = ""; //$NON-NLS-1$
 	
 	private ICompilationUnit fCompilationUnit = null;
 	private IProgressMonitor fProgressMonitor = null;
@@ -372,7 +372,7 @@ public class JSPTranslation implements IJSPTranslation {
 
 				if (!jProject.exists()) {
 					if(DEBUG) {
-						System.out.println("** Abort create working copy: cannot create working copy: JSP is not in a Java project");
+						System.out.println("** Abort create working copy: cannot create working copy: JSP is not in a Java project"); //$NON-NLS-1$
 					}
 					return null;
 				}
@@ -389,7 +389,7 @@ public class JSPTranslation implements IJSPTranslation {
 				}
 				if (packageFragmentRoot == null) {
 					if(DEBUG) {
-						System.out.println("** Abort create working copy: cannot create working copy: JSP is not in a Java project with source package fragment root");
+						System.out.println("** Abort create working copy: cannot create working copy: JSP is not in a Java project with source package fragment root"); //$NON-NLS-1$
 					}
 					return null;
 				}
@@ -404,9 +404,9 @@ public class JSPTranslation implements IJSPTranslation {
 		setContents(cu);
 
 		if(DEBUG) {
-			System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-			System.out.println("(+) JSPTranslation ["+ this + "] finished creating CompilationUnit: " + cu);
-			System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+			System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"); //$NON-NLS-1$
+			System.out.println("(+) JSPTranslation ["+ this + "] finished creating CompilationUnit: " + cu); //$NON-NLS-1$ //$NON-NLS-2$
+			System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"); //$NON-NLS-1$
 		}
 		
 		return cu;
@@ -546,9 +546,9 @@ public class JSPTranslation implements IJSPTranslation {
 			if(fCompilationUnit != null) {
 				try {
 					if(DEBUG) {
-						System.out.println("------------------------------------------------------------------");
-						System.out.println("(-) JSPTranslation [" + this +"] discarding CompilationUnit: " + fCompilationUnit);
-						System.out.println("------------------------------------------------------------------");
+						System.out.println("------------------------------------------------------------------"); //$NON-NLS-1$
+						System.out.println("(-) JSPTranslation [" + this +"] discarding CompilationUnit: " + fCompilationUnit); //$NON-NLS-1$ //$NON-NLS-2$
+						System.out.println("------------------------------------------------------------------"); //$NON-NLS-1$
 					}
 					fCompilationUnit.discardWorkingCopy();	
 				} 

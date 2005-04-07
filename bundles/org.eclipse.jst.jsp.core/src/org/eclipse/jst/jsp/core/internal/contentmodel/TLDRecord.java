@@ -43,6 +43,6 @@ public class TLDRecord implements ITaglibRecord {
 	}
 
 	public String toString() {
-		return "TLDRecord: " + location + " <-> " + uri;
+		return "TLDRecord: " + location + " <-> " + uri; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

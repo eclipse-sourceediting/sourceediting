@@ -155,12 +155,12 @@ public class TaglibIndex {
 							}
 							for (int i = 0; i < projects.length; i++) {
 								if (_debugIndexCreation) {
-									System.out.println("TaglibIndex noticed " + projects[i].getName() + " is about to be deleted/closed");
+									System.out.println("TaglibIndex noticed " + projects[i].getName() + " is about to be deleted/closed"); //$NON-NLS-1$ //$NON-NLS-2$
 								}
 								ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(projects[i]);
 								if (description != null) {
 									if (_debugIndexCreation) {
-										System.out.println("removing index of " + description.fProject.getName());
+										System.out.println("removing index of " + description.fProject.getName()); //$NON-NLS-1$
 									}
 									description.clear();
 								}
@@ -214,12 +214,12 @@ public class TaglibIndex {
 									}
 									if (!projects[i].isAccessible() || (deltas[i] != null && deltas[i].getKind() == IResourceDelta.REMOVED)) {
 										if (_debugIndexCreation) {
-											System.out.println("TaglibIndex noticed " + projects[i].getName() + " is no longer accessible");
+											System.out.println("TaglibIndex noticed " + projects[i].getName() + " is no longer accessible"); //$NON-NLS-1$ //$NON-NLS-2$
 										}
 										ProjectDescription description = (ProjectDescription) fProjectDescriptions.remove(projects[i]);
 										if (description != null) {
 											if (_debugIndexCreation) {
-												System.out.println("removing index of " + description.fProject.getName());
+												System.out.println("removing index of " + description.fProject.getName()); //$NON-NLS-1$
 											}
 											description.clear();
 										}
@@ -240,9 +240,9 @@ public class TaglibIndex {
 	}
 
 	static final boolean _debugChangeListener = false;
-	static boolean _debugIndexCreation = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/indexcreation"));
-	static boolean _debugEvents = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/events"));
-	static final boolean _debugResolution = "true".equals(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/resolve"));
+	static boolean _debugIndexCreation = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/indexcreation")); //$NON-NLS-1$ //$NON-NLS-2$
+	static boolean _debugEvents = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/events")); //$NON-NLS-1$ //$NON-NLS-2$
+	static final boolean _debugResolution = "true".equals(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/resolve")); //$NON-NLS-1$ //$NON-NLS-2$
 
 	static TaglibIndex _instance;
 
@@ -252,7 +252,7 @@ public class TaglibIndex {
 
 	static void fireTaglibRecordEvent(ITaglibRecordEvent event) {
 		if(_debugEvents) {
-			System.out.println("TaglibIndex fired event:" + event);
+			System.out.println("TaglibIndex fired event:" + event); //$NON-NLS-1$
 		}
 		ITaglibIndexListener[] listeners = _instance.fTaglibIndexListeners;
 		if (listeners != null) {
@@ -301,18 +301,18 @@ public class TaglibIndex {
 		ITaglibRecord result = _instance.internalResolve(basePath, reference, crossProjects);
 		if (_debugResolution) {
 			if (result == null) {
-				System.out.println("TaglibIndex could not resolve \"" + reference + "\" from " + basePath);
+				System.out.println("TaglibIndex could not resolve \"" + reference + "\" from " + basePath); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			else {
 				switch (result.getRecordType()) {
 					case (ITaglibRecord.TLD) : {
 						TLDRecord record = (TLDRecord) result;
-						System.out.println("TaglibIndex resolved " + basePath + ":" + reference + " = " + record.getLocation());
+						System.out.println("TaglibIndex resolved " + basePath + ":" + reference + " = " + record.getLocation()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					}
 						break;
 					case (ITaglibRecord.JAR) : {
 						JarRecord record = (JarRecord) result;
-						System.out.println("TaglibIndex resolved " + basePath + ":" + reference + " = " + record.getLocation());
+						System.out.println("TaglibIndex resolved " + basePath + ":" + reference + " = " + record.getLocation()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					}
 						break;
 					case (ITaglibRecord.TAGDIR) : {
@@ -320,7 +320,7 @@ public class TaglibIndex {
 						break;
 					case (ITaglibRecord.URL) : {
 						URLRecord record = (URLRecord) result;
-						System.out.println("TaglibIndex resolved " + basePath + ":" + reference + " = " + record.getURL());
+						System.out.println("TaglibIndex resolved " + basePath + ":" + reference + " = " + record.getURL()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					}
 						break;
 				}

@@ -85,7 +85,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 	 */
 	private CMDocument buildCMDocumentFromDirectory(File directory) {
 		if (_debug) {
-			System.out.println("not implemented: tagdir loading for " + directory.getAbsolutePath());
+			System.out.println("not implemented: tagdir loading for " + directory.getAbsolutePath()); //$NON-NLS-1$
 		}
 		return null;
 	}
@@ -479,7 +479,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 			if (child.getNodeType() == Node.ENTITY_REFERENCE_NODE) {
 				String reference = ((EntityReference) child).getNodeValue();
 				if (reference == null && child.getNodeName() != null) {
-					reference = "&" + child.getNodeName() + ";";
+					reference = "&" + child.getNodeName() + ";"; //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				if (reference != null) {
 					s.append(reference.trim());
@@ -507,7 +507,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 
 		if (root == null) {
 			if (_debug) {
-				System.out.println("null \"taglib\" element for TLD " + baseLocation);
+				System.out.println("null \"taglib\" element for TLD " + baseLocation); //$NON-NLS-1$
 			}
 			return document;
 		}
@@ -609,16 +609,16 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 				TLDRecord record = (TLDRecord) reference;
 				document = (CMDocumentImpl) buildCMDocumentFromFile(record.getLocation().toString());
 				if (_debug && document != null && document.getElements().getLength() == 0) {
-					System.out.println("failure parsing " + record.getLocation());
+					System.out.println("failure parsing " + record.getLocation()); //$NON-NLS-1$
 				}
 
 				if (document.getSmallIcon() != null) {
-					String iconPath = URIHelper.normalize(((TLDDocument) document).getSmallIcon(), record.getLocation().toString(), "/");
-					document.setProperty(JSP12TLDNames.SMALL_ICON, "file:" + iconPath);
+					String iconPath = URIHelper.normalize(((TLDDocument) document).getSmallIcon(), record.getLocation().toString(), "/"); //$NON-NLS-1$
+					document.setProperty(JSP12TLDNames.SMALL_ICON, "file:" + iconPath); //$NON-NLS-1$
 				}
 				if (document.getLargeIcon() != null) {
-					String iconPath = URIHelper.normalize(((TLDDocument) document).getLargeIcon(), record.getLocation().toString(), "/");
-					document.setProperty(JSP12TLDNames.LARGE_ICON, "file:" + iconPath);
+					String iconPath = URIHelper.normalize(((TLDDocument) document).getLargeIcon(), record.getLocation().toString(), "/"); //$NON-NLS-1$
+					document.setProperty(JSP12TLDNames.LARGE_ICON, "file:" + iconPath); //$NON-NLS-1$
 				}
 			}
 				break;
@@ -626,15 +626,15 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 				JarRecord record = (JarRecord) reference;
 				document = (CMDocumentImpl) buildCMDocumentFromJar(record.getLocation().toString());
 				if (document.getSmallIcon() != null) {
-					String iconPath = URIHelper.normalize(((TLDDocument) document).getSmallIcon(), record.getLocation().toString() + "!META-INF/", "/");
-					document.setProperty(JSP12TLDNames.SMALL_ICON, "jar:file:" + iconPath);
+					String iconPath = URIHelper.normalize(((TLDDocument) document).getSmallIcon(), record.getLocation().toString() + "!META-INF/", "/"); //$NON-NLS-1$ //$NON-NLS-2$
+					document.setProperty(JSP12TLDNames.SMALL_ICON, "jar:file:" + iconPath); //$NON-NLS-1$
 				}
 				if (document.getLargeIcon() != null) {
-					String iconPath = URIHelper.normalize(((TLDDocument) document).getLargeIcon(), record.getLocation().toString() + "!META-INF/", "/");
-					document.setProperty(JSP12TLDNames.LARGE_ICON, "jar:file:" + iconPath);
+					String iconPath = URIHelper.normalize(((TLDDocument) document).getLargeIcon(), record.getLocation().toString() + "!META-INF/", "/"); //$NON-NLS-1$ //$NON-NLS-2$
+					document.setProperty(JSP12TLDNames.LARGE_ICON, "jar:file:" + iconPath); //$NON-NLS-1$
 				}
 				if (document != null && document.getElements().getLength() == 0) {
-					System.out.println("failure parsing " + record.getLocation());
+					System.out.println("failure parsing " + record.getLocation()); //$NON-NLS-1$
 				}
 			}
 				break;
@@ -656,11 +656,11 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 					urlContents = connection.getInputStream();
 					document = (CMDocumentImpl) buildCMDocument(record.getBaseLocation(), urlContents);
 					if (document.getSmallIcon() != null) {
-						String iconPath = URIHelper.normalize(((TLDDocument) document).getSmallIcon(), record.getURL().toString(), "/");
+						String iconPath = URIHelper.normalize(((TLDDocument) document).getSmallIcon(), record.getURL().toString(), "/"); //$NON-NLS-1$
 						document.setProperty(JSP12TLDNames.SMALL_ICON, iconPath);
 					}
 					if (document.getLargeIcon() != null) {
-						String iconPath = URIHelper.normalize(((TLDDocument) document).getLargeIcon(), record.getURL().toString(), "/");
+						String iconPath = URIHelper.normalize(((TLDDocument) document).getLargeIcon(), record.getURL().toString(), "/"); //$NON-NLS-1$
 						document.setProperty(JSP12TLDNames.LARGE_ICON, iconPath);
 					}
 					connection.setUseCaches(doCache);

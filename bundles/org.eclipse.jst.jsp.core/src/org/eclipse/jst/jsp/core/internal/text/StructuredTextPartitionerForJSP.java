@@ -120,7 +120,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 				String prefixText = StringUtils.strip(prefixValue) + ":"; //$NON-NLS-1$
 				if (!fCustomActionPrefixes.contains(prefixText)) {
 					if(debugPrefixListener == true) {
-						System.out.println("StructuredTextPartitionerForJSP.PrefixListener learning prefix: " + prefixText);
+						System.out.println("StructuredTextPartitionerForJSP.PrefixListener learning prefix: " + prefixText); //$NON-NLS-1$
 					}
 					fCustomActionPrefixes.add(prefixText);
 				}
@@ -132,7 +132,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 			fCustomActionPrefixes.clear();
 			fCustomActionPrefixes.add(JSP11Namespace.JSP_TAG_PREFIX + ":"); //$NON-NLS-1$
 			if(debugPrefixListener == true) {
-				System.out.println("StructuredTextPartitionerForJSP.PrefixListener forgetting learned prefixes");
+				System.out.println("StructuredTextPartitionerForJSP.PrefixListener forgetting learned prefixes"); //$NON-NLS-1$
 			}
 		}
 
@@ -161,7 +161,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 		}
 	}
 
-	static final boolean debugPrefixListener = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/partitioner/prefixlistener"));
+	static final boolean debugPrefixListener = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/partitioner/prefixlistener")); //$NON-NLS-1$ //$NON-NLS-2$
 
 
 	// for compatibility with v5.1.0, we'll reuse ST_JSP_DIRECTIVE for action

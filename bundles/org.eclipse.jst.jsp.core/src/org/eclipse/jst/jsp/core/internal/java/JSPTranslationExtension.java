@@ -130,12 +130,12 @@ public class JSPTranslationExtension extends JSPTranslation {
 		}
 
 		if(DEBUG) {
-			System.out.println("================================================");
-			System.out.println("deltas:");
+			System.out.println("================================================"); //$NON-NLS-1$
+			System.out.println("deltas:"); //$NON-NLS-1$
 			String javaText = getJavaText();
 			for(int i=0; i<deltas.length; i++) 
-				System.out.println("pos[" + deltas[i].preOffset + ":" + deltas[i].preLength + "]" + javaText.substring(deltas[i].preOffset, deltas[i].preOffset + deltas[i].preLength) );
-			System.out.println("===============================================");
+				System.out.println("pos[" + deltas[i].preOffset + ":" + deltas[i].preLength + "]" + javaText.substring(deltas[i].preOffset, deltas[i].preOffset + deltas[i].preLength) ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			System.out.println("==============================================="); //$NON-NLS-1$
 		}
 		
 		// apply the edit to the java document

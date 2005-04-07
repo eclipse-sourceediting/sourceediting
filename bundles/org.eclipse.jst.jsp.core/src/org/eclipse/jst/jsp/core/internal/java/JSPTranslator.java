@@ -93,8 +93,8 @@ public class JSPTranslator {
 	public static final String EXPRESSION_SUFFIX = ");"; //$NON-NLS-1$
 	private String fSuperclass = "javax.servlet.http.HttpServlet"; //$NON-NLS-1$
 
-	private String fTryCatchStart = ENDL + "try {" + ENDL;
-	private String fTryCatchEnd = " } catch (java.lang.Exception e) {} " + ENDL;
+	private String fTryCatchStart = ENDL + "try {" + ENDL; //$NON-NLS-1$
+	private String fTryCatchEnd = " } catch (java.lang.Exception e) {} " + ENDL; //$NON-NLS-1$
 
 	/** fSourcePosition = position in JSP source */
 	private int fSourcePosition = -1;
@@ -545,19 +545,19 @@ public class JSPTranslator {
 		if (DEBUG) {
 			Iterator it = fJava2JspRanges.keySet().iterator();
 			while (it.hasNext()) {
-				System.out.println("--------------------------------------------------------------");
+				System.out.println("--------------------------------------------------------------"); //$NON-NLS-1$
 				Position java = (Position) it.next();
-				System.out.println("Java range:[" + java.offset + ":" + java.length + "]");
-				System.out.println("[" + fResult.toString().substring(java.offset, java.offset + java.length) + "]");
-				System.out.println("--------------------------------------------------------------");
-				System.out.println("|maps to...|");
-				System.out.println("==============================================================");
+				System.out.println("Java range:[" + java.offset + ":" + java.length + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				System.out.println("[" + fResult.toString().substring(java.offset, java.offset + java.length) + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+				System.out.println("--------------------------------------------------------------"); //$NON-NLS-1$
+				System.out.println("|maps to...|"); //$NON-NLS-1$
+				System.out.println("=============================================================="); //$NON-NLS-1$
 				Position jsp = (Position) fJava2JspRanges.get(java);
-				System.out.println("JSP range:[" + jsp.offset + ":" + jsp.length + "]");
-				System.out.println("[" + fJspTextBuffer.toString().substring(jsp.offset, jsp.offset + jsp.length) + "]");
-				System.out.println("==============================================================");
-				System.out.println("");
-				System.out.println("");
+				System.out.println("JSP range:[" + jsp.offset + ":" + jsp.length + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				System.out.println("[" + fJspTextBuffer.toString().substring(jsp.offset, jsp.offset + jsp.length) + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+				System.out.println("=============================================================="); //$NON-NLS-1$
+				System.out.println(""); //$NON-NLS-1$
+				System.out.println(""); //$NON-NLS-1$
 			}
 		}
 
@@ -1540,7 +1540,7 @@ public class JSPTranslator {
 	 * @param addToMap
 	 */
 	private void appendImportToBuffer(String importName, ITextRegionCollection jspReferenceRegion, boolean addToMap) {
-		String javaImportString = "import " + importName + ";" + ENDL;
+		String javaImportString = "import " + importName + ";" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$
 		fUserImports.append(javaImportString);
 		if (addToMap) {
 			addImportToMap(importName, jspReferenceRegion);

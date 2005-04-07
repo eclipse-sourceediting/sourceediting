@@ -56,6 +56,6 @@ public class TagDirRecord implements ITaglibRecord {
 	}
 
 	public String toString() {
-		return "TagdirRecord: " + location + " <-> " + shortName;
+		return "TagdirRecord: " + location + " <-> " + shortName; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

@@ -51,6 +51,6 @@ public class URLRecord implements ITaglibRecord {
 	}
 
 	public String toString() {
-		return "URLRecord: " + baseLocation + " <-> " + uri;
+		return "URLRecord: " + baseLocation + " <-> " + uri; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 }

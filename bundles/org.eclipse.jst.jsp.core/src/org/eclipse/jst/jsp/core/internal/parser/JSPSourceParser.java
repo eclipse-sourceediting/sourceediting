@@ -42,7 +42,7 @@ import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 public class JSPSourceParser extends XMLSourceParser implements JSPCapableParser {
 	protected class NestablePrefixHandler implements StructuredDocumentRegionHandler, StructuredDocumentRegionHandlerExtension {
 
-		private static final String XMLNS = "xmlns:";
+		private static final String XMLNS = "xmlns:"; //$NON-NLS-1$
 
 		/**
 		 * Enables a TLD owning the given prefix loaded from the given URI at

@@ -241,7 +241,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 			beanId = getAttributeValue("id", sdRegion); //$NON-NLS-1$
 			
 			if (beanId != null && (beanType != null || beanClass != null)) {
-				if (beanType.equals(""))
+				if (beanType.equals("")) //$NON-NLS-1$
 				    beanType = beanClass;
 				String prefix = beanType + " " + beanId + " = "; //$NON-NLS-1$ //$NON-NLS-2$
 				String suffix = "null;\n"; //$NON-NLS-1$

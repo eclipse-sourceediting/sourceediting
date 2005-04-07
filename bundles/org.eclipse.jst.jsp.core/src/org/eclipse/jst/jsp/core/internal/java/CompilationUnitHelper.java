@@ -39,7 +39,7 @@ public class CompilationUnitHelper {
         if (fWorkingCopyOwner == null) {
             fWorkingCopyOwner = new WorkingCopyOwner() {
                 public String toString() {
-                    return "JSP Working copy owner";
+                    return "JSP Working copy owner"; //$NON-NLS-1$
                 }
             };
         }
