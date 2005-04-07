@@ -38,8 +38,9 @@ import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 
+
 /**
- * @author pavery
+ * @since 1.0
  */
 public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasable, IResourceDependentProcessor {
 	// for debugging

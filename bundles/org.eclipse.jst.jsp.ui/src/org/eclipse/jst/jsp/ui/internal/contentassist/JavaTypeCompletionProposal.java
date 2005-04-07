@@ -36,6 +36,8 @@ import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 /**
  * An implementation of ICompletionProposal whose values can be
  * read after creation.
+ * 
+ * @since 1.0
  */
 public class JavaTypeCompletionProposal extends CustomCompletionProposal implements IRelevanceCompletionProposal {
 
@@ -180,6 +182,7 @@ public class JavaTypeCompletionProposal extends CustomCompletionProposal impleme
 				adjustmentLength = directive.length();
 			}
 			catch (BadLocationException e) {
+				// ignore
 			}
 
 			try {
@@ -259,17 +262,6 @@ public class JavaTypeCompletionProposal extends CustomCompletionProposal impleme
 		apply(viewer.getDocument(), trigger, offset);
 	}
 
-	/**
-	 * borrowed from JavaCompletionProposal
-	 * @see org.eclipse.jface.text.contentassist.ICompletionProposalExtension2#validate(org.eclipse.jface.text.IDocument, int, org.eclipse.jface.text.DocumentEvent)
-	 */
-//	public boolean validate(IDocument document, int offset, DocumentEvent event) {
-//		if (offset < getReplacementOffset())
-//			return false;
-//		boolean validated = startsWith(document, offset, getDisplayString());
-//		return validated;
-//	}
-
 	// code is borrowed from JavaCompletionProposal
 	protected boolean startsWith(IDocument document, int offset, String word) {
 		int wordLength = word == null ? 0 : word.length();
@@ -285,6 +277,7 @@ public class JavaTypeCompletionProposal extends CustomCompletionProposal impleme
 			//return word.substring(0, length).equalsIgnoreCase(start);
 		}
 		catch (BadLocationException x) {
+			// ignore
 		}
 
 		return false;

@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.contentassist;
 
+/**
+ * @since 1.0
+ */
 public interface IJavaPropertyDescriptor {
 
 	String getDeclaredType();

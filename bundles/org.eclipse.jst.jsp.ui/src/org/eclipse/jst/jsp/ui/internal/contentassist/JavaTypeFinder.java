@@ -18,16 +18,14 @@ import java.util.List;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
-import org.eclipse.jdt.core.search.ITypeNameRequestor;
 import org.eclipse.jdt.core.search.SearchEngine;
+import org.eclipse.jdt.core.search.SearchPattern;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
@@ -35,60 +33,9 @@ import org.eclipse.wst.sse.ui.internal.contentassist.IRelevanceConstants;
 import org.eclipse.wst.xml.uriresolver.util.URIHelper;
 
 /**
- *
+ * @since 1.0
  */
 public class JavaTypeFinder {
-	// COPIED TO REMOVE INTERNAL DEPENDENCY FOR NOW...
-	// org.eclipse.jdt.internal.codeassist.R_DEFAULT
-	static int R_DEFAULT = 0;
-
-	protected static class JavaTypeNameRequestor implements ITypeNameRequestor {
-
-		private JavaTypeResultCollector collector = null;
-		private StringBuffer s = null;
-		private boolean allowInterfaces = true;
-
-		public JavaTypeNameRequestor(boolean allowInterfaces) {
-			super();
-			this.allowInterfaces = allowInterfaces;
-			collector = new JavaTypeResultCollector(allowInterfaces);
-			s = new StringBuffer();
-		}
-
-		private char[] getCompletionName(char[] packageName, char[][] enclosingTypeNames, char[] simpleTypeName) {
-			s.delete(0, s.length());
-			if (packageName != null && packageName.length > 0) {
-				s.append(packageName);
-				s.append('.');
-			}
-			if (enclosingTypeNames != null) {
-				for (int i = 0; i < enclosingTypeNames.length; i++) {
-					if (enclosingTypeNames[i].length > 0) {
-						s.append(enclosingTypeNames[i]);
-						s.append('.');
-					}
-				}
-			}
-			s.append(simpleTypeName);
-			return s.toString().toCharArray();
-		}
-
-		public void acceptClass(char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path) {
-			// forbid inner classes as they don't work [yet]
-			if (enclosingTypeNames == null || enclosingTypeNames.length == 0)
-				collector.acceptClass(packageName, simpleTypeName, getCompletionName(packageName, enclosingTypeNames, simpleTypeName), Flags.AccPublic, 0, 0, R_DEFAULT);
-		}
-
-		public void acceptInterface(char[] packageName, char[] simpleTypeName, char[][] enclosingTypeNames, String path) {
-			// forbid inner classes as they don't work [yet]
-			if (this.allowInterfaces && (enclosingTypeNames == null || enclosingTypeNames.length == 0))
-				collector.acceptInterface(packageName, simpleTypeName, getCompletionName(packageName, enclosingTypeNames, simpleTypeName), Flags.AccPublic, 0, 0, R_DEFAULT);
-		}
-
-		public JavaTypeResultCollector getCollector() {
-			return collector;
-		}
-	}
 
 	public static ICompletionProposal[] getBeanProposals(IResource resource, int replacementStart, int replacementLength) {
 		ICompletionProposal[] typeProposals = getTypeProposals(resource, replacementStart, replacementLength);
@@ -122,7 +69,7 @@ public class JavaTypeFinder {
 		}
 	}
 
-	protected static ICompletionProposal[] getSerializedProposals(IResource resource, int replacementStart, int replacementLength) {
+	private static ICompletionProposal[] getSerializedProposals(IResource resource, int replacementStart, int replacementLength) {
 		List names = new ArrayList();
 		List resources = new ArrayList();
 		getMembers(resource.getProject(), resources);
@@ -140,35 +87,46 @@ public class JavaTypeFinder {
 		return (ICompletionProposal[]) names.toArray(new ICompletionProposal[names.size()]);
 	}
 
-	protected static ICompletionProposal[] findTypeProposals(IResource resource, int replacementStart, int replacementLength, boolean allowInterfaces) {
+	/**
+	 *
+	 * @param resource
+	 * @param replacementStart
+	 * @param replacementLength
+	 * @param searchFor IJavaSearchConstants.TYPE, IJavaSearchConstants.CLASS
+	 * @return
+	 */
+	private static ICompletionProposal[] findProposals(IResource resource, int replacementStart, int replacementLength, int searchFor, boolean ignoreAbstractClasses) {
 
-		JavaTypeNameRequestor requestor = new JavaTypeNameRequestor(allowInterfaces);
-		requestor.getCollector().setReplacementStart(replacementStart);
-		requestor.getCollector().setReplacementLength(replacementLength);
+		JavaTypeNameRequestor requestor = new JavaTypeNameRequestor();
+		requestor.setJSPOffset(replacementStart);
+		requestor.setReplacementLength(replacementLength);
+		requestor.setIgnoreAbstractClasses(ignoreAbstractClasses);
 
 		try {
 			IJavaElement[] elements = new IJavaElement[]{getJavaProject(resource)};
 			IJavaSearchScope scope = SearchEngine.createJavaSearchScope(elements);
-			new SearchEngine().searchAllTypeNames(ResourcesPlugin.getWorkspace(), null, null, IJavaSearchConstants.PATTERN_MATCH, IJavaSearchConstants.CASE_INSENSITIVE, IJavaSearchConstants.TYPE, scope, requestor, IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
+			new SearchEngine().searchAllTypeNames(null, null, SearchPattern.R_PATTERN_MATCH | SearchPattern.R_PREFIX_MATCH, searchFor, scope, requestor, IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
+
 		}
 		catch (CoreException exc) {
 			Logger.logException(exc);
 		}
-		catch (Exception exc) { // JavaModel
+		catch (Exception exc) { 
+			// JavaModel
 			Logger.logException(exc);
 		}
-		return requestor.getCollector().getResults();
-	}
-
-	public static ICompletionProposal[] getClassProposals(IResource resource, int replacementStart, int replacementLength) {
-		return findTypeProposals(resource, replacementStart, replacementLength, false);
+		return requestor.getProposals();
 	}
 
 	public static ICompletionProposal[] getTypeProposals(IResource resource, int replacementStart, int replacementLength) {
-		return findTypeProposals(resource, replacementStart, replacementLength, true);
+		return findProposals(resource, replacementStart, replacementLength, IJavaSearchConstants.TYPE, false);
+	}
+	
+	public static ICompletionProposal[] getClassProposals(IResource resource, int replacementStart, int replacementLength) {
+		return findProposals(resource, replacementStart, replacementLength, IJavaSearchConstants.CLASS, true);
 	}
 
-	public static IJavaProject getJavaProject(IResource resource) {
+	private static IJavaProject getJavaProject(IResource resource) {
 		IProject proj = resource.getProject();
 		IJavaProject javaProject = JavaCore.create(proj);
 		return javaProject;

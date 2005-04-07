@@ -34,7 +34,7 @@ import org.eclipse.jst.jsp.ui.internal.Logger;
  * given a fully qualified beanname. Bean properties can be retrieved using:
  * <code>getRuntimeProperties(IResource baseResource, String typeName)</code>
  * 
- * @author pavery
+ * @since 1.0
  */
 public class BeanInfoProvider implements IBeanInfoProvider {
 
@@ -169,8 +169,8 @@ public class BeanInfoProvider implements IBeanInfoProvider {
 					if (!param0.equals("int")) //$NON-NLS-1$
 						// not a valid indexed property
 						continue;
-					else
-						type = getDecodedTypeName(encodedParams[1]);
+					
+					type = getDecodedTypeName(encodedParams[1]);
 				}
 				else {
 					// one param, regular setter
@@ -243,10 +243,8 @@ public class BeanInfoProvider implements IBeanInfoProvider {
 					//it's not an indexed property
 					continue;
 				}
-				else {
-					// it is indexed, prop type is an ARRAY
-					returnType += "[]"; //$NON-NLS-1$
-				}
+				// it is indexed, prop type is an ARRAY
+				returnType += "[]"; //$NON-NLS-1$
 			}
 
 			readable.add(name);

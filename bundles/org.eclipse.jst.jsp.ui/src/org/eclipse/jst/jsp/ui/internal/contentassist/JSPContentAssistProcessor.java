@@ -104,6 +104,8 @@ import org.w3c.dom.NodeList;
 /**
  * Adds proposals not normally covered by the generic behavior with the
  * content model
+ * 
+ * @since 1.0
  */
 public class JSPContentAssistProcessor extends AbstractContentAssistProcessor implements IResourceDependentProcessor {
 
@@ -514,8 +516,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 							CMElementDeclaration ed = (CMElementDeclaration) jspelements.item(j);
 							if (rejectElements.contains(ed.getNodeName()))
 								continue;
-							else
-								elementDecls.add(ed);
+							elementDecls.add(ed);
 						}
 					}
 				}
@@ -740,9 +741,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 							// not
 							// javascript...)
 							return getJSPJavaCompletionProposals(viewer, documentPosition);
-						} else {
-							partitionType = IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT;
-						}
+						} 
+						partitionType = IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT;
 					}
 				} else if ((firstRegion.getType() == XMLRegionContext.XML_TAG_OPEN) && documentPosition >= fnDelim.getEndOffset()) {
 					// anything else inbetween
@@ -760,9 +760,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 							String checkType = getPartitionType((StructuredTextViewer) viewer, documentPosition - 1);
 							if (checkType != IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT) {
 								return getJSPJavaCompletionProposals(viewer, documentPosition);
-							} else {
-								partitionType = IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT;
-							}
+							} 
+							partitionType = IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT;
 						}
 					}
 				} else if (XMLContentAssistUtilities.isJSPOpenDelimiter(fnDelim)) {
@@ -829,8 +828,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 				// TODO: handle non-Java code such as nested tags
 				if (testRegion.getType().equals(DOMJSPRegionContexts.JSP_CONTENT))
 					return getJSPJavaCompletionProposals(viewer, documentPosition);
-				else
-					return EMPTY_PROPOSAL_SET;
+				return EMPTY_PROPOSAL_SET;
 			}
 		}
 
@@ -1243,6 +1241,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 	 *      int, ITextRegion, IDOMNode)
 	 */
 	protected void addEntityProposals(ContentAssistRequest contentAssistRequest, int documentPosition, ITextRegion completionRegion, IDOMNode treeNode) {
+		// ignore
 	}
 
 	/**

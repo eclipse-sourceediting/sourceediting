@@ -17,6 +17,9 @@ public class JSPCompletionProposal extends CustomCompletionProposal implements I
 		super(replacementString, replacementOffset, replacementLength, cursorPosition, image, displayString, contextInformation, additionalProposalInfo, relevance, updateReplacementLengthOnValidate);
 	}
 	
+	/**
+	 * Sets cursor position after applying.
+	 */
 	public void apply(ITextViewer viewer, char trigger, int stateMask, int offset) {
 		super.apply(viewer, trigger, stateMask, offset);
 		viewer.setSelectedRange(getCursorPosition(), 0);

@@ -14,6 +14,7 @@ import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.swt.graphics.Image;
 
 /**
+ * Passed into ICodeComplete#codeComplete(int offset, CompletionRequestor requestor).
  * Adapts IJavaCompletionProposals to JSPCompletion proposals.
  * This includes:
  *  - translating offsets
@@ -166,5 +167,9 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 
 	private void setJspName(String jspName) {
 		fJspName = jspName;
+	}
+	
+	static char[] getTypeTriggers() {
+		return TYPE_TRIGGERS;
 	}
 }

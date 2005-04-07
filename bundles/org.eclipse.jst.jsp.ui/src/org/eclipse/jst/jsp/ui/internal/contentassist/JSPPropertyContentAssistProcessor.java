@@ -34,11 +34,10 @@ import org.w3c.dom.NodeList;
 
 /**
  * This class computes attribute value completion proposals for &lt;jsp:[gs]etProperty&gt; tags.
- *
+ * @since 1.0
  */
 public class JSPPropertyContentAssistProcessor extends JSPDummyContentAssistProcessor {
 
-	IBeanInfoProvider provider = null;
 	protected IResource resource = null;
 
 	public JSPPropertyContentAssistProcessor() {
@@ -131,7 +130,7 @@ public class JSPPropertyContentAssistProcessor extends JSPDummyContentAssistProc
 				}
 				if (typeName != null && typeName.length() > 0) {
 					// find the class/type/beanName definition and obtain the list of properties
-					BeanInfoProvider provider = new BeanInfoProvider();
+					IBeanInfoProvider provider = new BeanInfoProvider();
 					IJavaPropertyDescriptor[] descriptors = provider.getRuntimeProperties(resource, typeName);
 					CustomCompletionProposal proposal = null;
 					String displayString = ""; //$NON-NLS-1$
@@ -211,12 +210,8 @@ public class JSPPropertyContentAssistProcessor extends JSPDummyContentAssistProc
 
 	public void release() {
 		resource = null;
-		provider = null;
 	}
-
-	/**
-	 * @see com.ibm.sed.structured.contentassist.IContentAssistProcessor#initialize(org.eclipse.core.resources.IResource)
-	 */
+	
 	public void initialize(IResource iResource) {
 		this.resource = iResource;
 	}

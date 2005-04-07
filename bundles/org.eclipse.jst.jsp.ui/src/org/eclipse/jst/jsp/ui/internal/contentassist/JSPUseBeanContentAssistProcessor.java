@@ -24,6 +24,9 @@ import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.eclipse.wst.xml.ui.contentassist.ContentAssistRequest;
 
+/**
+ * @since 1.0
+ */
 public class JSPUseBeanContentAssistProcessor extends JSPDummyContentAssistProcessor {
 
 	public JSPUseBeanContentAssistProcessor() {
@@ -76,6 +79,7 @@ public class JSPUseBeanContentAssistProcessor extends JSPDummyContentAssistProce
 		}
 		else {
 			if (attributeName.equals(JSP11Namespace.ATTR_NAME_CLASS)) {
+				// class is the concrete implementation class
 				ICompletionProposal[] classProposals = JavaTypeFinder.getClassProposals(fResource, start, length);
 				if (classProposals != null) {
 					for (int j = 0; j < classProposals.length; j++) {
@@ -86,6 +90,8 @@ public class JSPUseBeanContentAssistProcessor extends JSPDummyContentAssistProce
 				}
 			}
 			else if (attributeName.equals(JSP11Namespace.ATTR_NAME_TYPE)) {
+				// type is the more general type for the bean
+				// which means it may be an interface
 				ICompletionProposal[] typeProposals = JavaTypeFinder.getTypeProposals(fResource, start, length);
 				if (typeProposals != null) {
 					for (int j = 0; j < typeProposals.length; j++) {

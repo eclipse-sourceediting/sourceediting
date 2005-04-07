@@ -24,8 +24,7 @@ import org.eclipse.swt.custom.StyleRange;
 
 
 /**
- * 
- * @author pavery
+ * @since 1.0
  */
 public class JavaParameterListValidator implements IContextInformationValidator, IContextInformationPresenter {
     
@@ -34,11 +33,6 @@ public class JavaParameterListValidator implements IContextInformationValidator,
     private IContextInformation fInformation;
     
     private int fCurrentParameter;
-    
-    
-    
-    public JavaParameterListValidator() {
-    }
     
     /**
      * @see IContextInformationValidator#install(IContextInformation, ITextViewer, int)

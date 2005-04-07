@@ -38,6 +38,9 @@ import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.eclipse.wst.xml.ui.contentassist.XMLRelevanceConstants;
 import org.eclipse.wst.xml.ui.util.SharedXMLEditorPluginImageHelper;
 
+/**
+ * @since 1.0
+ */
 public class JSPJavaContentAssistProcessor implements IContentAssistProcessor, IResourceDependentProcessor, IReleasable {
 	protected IResource fResource;
 	protected char completionProposalAutoActivationCharacters[] = new char[]{'.'};

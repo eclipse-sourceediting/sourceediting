@@ -30,6 +30,8 @@ import org.eclipse.swt.graphics.Image;
  * JSPTemplateCompletionProcessor is asked for content assist proposals, the
  * jsp content assist processor has already set the context type for
  * templates.
+ * 
+ * @since 1.0
  */
 class JSPTemplateCompletionProcessor extends TemplateCompletionProcessor {
 	private String fContextTypeId = null;

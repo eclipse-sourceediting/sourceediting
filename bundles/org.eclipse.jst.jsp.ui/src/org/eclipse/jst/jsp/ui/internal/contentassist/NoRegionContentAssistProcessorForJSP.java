@@ -23,8 +23,7 @@ import org.eclipse.wst.sse.core.text.IStructuredPartitionTypes;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
 /**
- * 
- * @author pavery
+ * @since 1.0
  */
 public class NoRegionContentAssistProcessorForJSP extends NoRegionContentAssistProcessorForHTML {
 
