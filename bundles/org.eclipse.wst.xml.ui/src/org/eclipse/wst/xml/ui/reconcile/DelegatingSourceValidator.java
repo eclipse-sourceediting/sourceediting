@@ -52,10 +52,8 @@ import org.w3c.dom.NodeList;
  * @author Mark Hutchinson
  * 
  */
-public class DelegatingSourceValidator implements IValidator { // these are
-																// the
-																// selection
-																// Strategies:
+public class DelegatingSourceValidator implements IValidator { 
+  //the selection strategies:
 	protected static final String ALL_ATTRIBUTES = "ALL_ATTRIBUTES";
 	protected static final String ATTRIBUTE_NAME = "ATTRIBUTE_NAME";
 	protected static final String ATTRIBUTE_VALUE = "ATTRIBUTE_VALUE";
@@ -63,7 +61,7 @@ public class DelegatingSourceValidator implements IValidator { // these are
 	protected static final String TEXT = "TEXT";
 	protected static final String FIRST_NON_WHITESPACE_TEXT = "FIRST_NON_WHITESPACE_TEXT";
 	protected static final String TEXT_ENTITY_REFERENCE = "TEXT_ENTITY_REFERENCE";
-	protected static final String NAME_OF_ATTRIBUTE_WITH_GIVEN_VALUE = "NAME_OF_ATTRIBUTE_WITH_GIVEN_VALUE";
+	protected static final String VALUE_OF_ATTRIBUTE_WITH_GIVEN_VALUE = "VALUE_OF_ATTRIBUTE_WITH_GIVEN_VALUE";
 
 	protected static final String COLUMN_NUMBER_ATTRIBUTE = "columnNumber";
 	protected static final String SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE = "squiggleSelectionStrategy";
@@ -193,6 +191,10 @@ public class DelegatingSourceValidator implements IValidator { // these are
 					updateValidationMessages(messages, document, reporter);
 				}
 			}
+      catch (Exception e)
+      {
+        e.printStackTrace();
+      }
 
 			finally {
 				if (xmlModel != null)
@@ -216,20 +218,23 @@ public class DelegatingSourceValidator implements IValidator { // these are
 		for (int i = 0; i < messages.size(); i++) {
 			IMessage message = (IMessage) messages.get(i);
 			try {
-				int column = ((Integer) message.getAttribute(COLUMN_NUMBER_ATTRIBUTE)).intValue();
-				String selectionStrategy = (String) message.getAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE);
-				String nameOrValue = (String) message.getAttribute(SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE);
-
-				// convert the line and Column numbers to an offset:
-				int start = document.getStructuredDocument().getLineOffset(message.getLineNumber() - 1) + column - 1;
-
-				// calculate the "better" start and end offset:
-				int[] result = computeStartEndLocation(start, message.getText(), selectionStrategy, nameOrValue, document);
-				if (result != null) {
-					message.setOffset(result[0]);
-					message.setLength(result[1] - result[0]);
-					reporter.addMessage(this, message);
-				}
+        if (message.getAttribute(COLUMN_NUMBER_ATTRIBUTE) != null)
+        {
+  				int column = ((Integer) message.getAttribute(COLUMN_NUMBER_ATTRIBUTE)).intValue();
+  				String selectionStrategy = (String) message.getAttribute(SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE);
+  				String nameOrValue = (String) message.getAttribute(SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE);
+  
+  				// convert the line and Column numbers to an offset:
+  				int start = document.getStructuredDocument().getLineOffset(message.getLineNumber() - 1) + column - 1;
+  
+  				// calculate the "better" start and end offset:
+  				int[] result = computeStartEndLocation(start, message.getText(), selectionStrategy, nameOrValue, document);
+  				if (result != null) {
+  					message.setOffset(result[0]);
+  					message.setLength(result[1] - result[0]);
+  					reporter.addMessage(this, message);
+  				}
+        }
 			}
 			catch (BadLocationException e) { // this exception should not
 												// occur - it is thrown if
@@ -302,9 +307,8 @@ public class DelegatingSourceValidator implements IValidator { // these are
 			IndexedRegion region = document.getModel().getIndexedRegion(startOffset);
 			IndexedRegion prevRegion = document.getModel().getIndexedRegion(startOffset - 1);
 
-			if (prevRegion != region) { // if between two regions, the one on
-										// the left is the one we are
-										// interested in
+			if (prevRegion != region) { 
+        // if between two regions, the one onthe left is the one we are interested in
 				region = prevRegion;
 			}
 
@@ -326,8 +330,7 @@ public class DelegatingSourceValidator implements IValidator { // these are
 				Node node = (Node) region;
 
 				if (selectionStrategy.equals(START_TAG)) {// then we want to
-															// highlight the
-															// opening tag
+				//underline the opening tag
 					if (node.getNodeType() == Node.ELEMENT_NODE) {
 						IDOMElement element = (IDOMElement) node;
 						startEndPositions[0] = element.getStartOffset() + 1;
@@ -335,16 +338,7 @@ public class DelegatingSourceValidator implements IValidator { // these are
 					}
 				}
 				else if (selectionStrategy.equals(ATTRIBUTE_NAME)) { // in
-																		// this
-																		// case
-																		// we
-																		// want
-																		// to
-																		// underline
-																		// the
-																		// offending
-																		// attribute
-																		// name
+				//underline the attribute's name
 					if (node.getNodeType() == Node.ELEMENT_NODE) {
 						IDOMElement element = (IDOMElement) node;
 						IDOMNode attributeNode = (IDOMNode) (element.getAttributeNode(nameOrValue));
@@ -354,16 +348,8 @@ public class DelegatingSourceValidator implements IValidator { // these are
 						}
 					}
 				}
-				else if (selectionStrategy.equals(ATTRIBUTE_VALUE)) {// in
-																		// this
-																		// case
-																		// we
-																		// want
-																		// to
-																		// underline
-																		// the
-																		// attribute's
-																		// value
+				else if (selectionStrategy.equals(ATTRIBUTE_VALUE)) {
+          //underline the attribute's value
 					if (node.getNodeType() == Node.ELEMENT_NODE) {
 						IDOMElement element = (IDOMElement) node;
 						IDOMAttr attributeNode = (IDOMAttr) (element.getAttributeNode(nameOrValue));
@@ -373,10 +359,8 @@ public class DelegatingSourceValidator implements IValidator { // these are
 						}
 					}
 				}
-				else if (selectionStrategy.equals(ALL_ATTRIBUTES)) {// then
-																	// underline
-																	// ALL
-																	// attributes
+				else if (selectionStrategy.equals(ALL_ATTRIBUTES)) {
+          //underline all attributes
 					if (node.getNodeType() == Node.ELEMENT_NODE) {
 						IDOMElement element = (IDOMElement) node;
 						NamedNodeMap attributes = element.getAttributes();
@@ -390,12 +374,8 @@ public class DelegatingSourceValidator implements IValidator { // these are
 						}
 					}
 				}
-				else if (selectionStrategy.equals(TEXT)) {// in this case we
-															// want to
-															// underline the
-															// text (but not
-															// any extra
-															// whitespace)
+				else if (selectionStrategy.equals(TEXT)) {
+          //underline the text between the tags
 					if (node.getNodeType() == Node.TEXT_NODE) {
 						IDOMText textNode = (IDOMText) node;
 						int start = textNode.getStartOffset();
@@ -422,19 +402,9 @@ public class DelegatingSourceValidator implements IValidator { // these are
 						}
 					}
 				}
-				else if (selectionStrategy.equals(FIRST_NON_WHITESPACE_TEXT)) { // here
-																				// we
-																				// search
-																				// through
-																				// all
-																				// the
-																				// child
-																				// nodes,
-																				// and
-																				// give
-																				// the
-																				// range
-					// of the first non-whitespace node
+				else if (selectionStrategy.equals(FIRST_NON_WHITESPACE_TEXT)) { 
+          // search through all child nodes and return range of first non-whitespace
+          // text node
 					if (node.getNodeType() == Node.ELEMENT_NODE) {
 						NodeList nodes = node.getChildNodes();
 						for (int i = 0; i < nodes.getLength(); i++) {
@@ -473,16 +443,7 @@ public class DelegatingSourceValidator implements IValidator { // these are
 						startEndPositions[1] = region.getEndOffset();
 					}
 				}
-				else if (selectionStrategy.equals(NAME_OF_ATTRIBUTE_WITH_GIVEN_VALUE)) {// underline
-																						// the
-																						// name
-																						// of
-																						// the
-																						// attribute
-																						// containing
-																						// the
-																						// given
-																						// value
+				else if (selectionStrategy.equals(VALUE_OF_ATTRIBUTE_WITH_GIVEN_VALUE)) {
 					if (node.getNodeType() == Node.ELEMENT_NODE) {
 						// here we will search through all attributes for the
 						// one with the
