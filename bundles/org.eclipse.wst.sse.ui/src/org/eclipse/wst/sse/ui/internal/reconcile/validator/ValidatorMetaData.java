@@ -26,7 +26,7 @@ import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
-import org.eclipse.wst.validation.core.IValidator;
+import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 import org.osgi.framework.Bundle;
 
 

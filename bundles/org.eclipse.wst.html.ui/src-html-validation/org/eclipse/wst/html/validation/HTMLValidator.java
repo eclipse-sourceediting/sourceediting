@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ * IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.wst.html.validation;
 
 import java.io.IOException;
@@ -19,13 +29,13 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.util.URIResolver;
 import org.eclipse.wst.sse.core.validate.ValidationAdapter;
-import org.eclipse.wst.validation.core.IFileDelta;
-import org.eclipse.wst.validation.core.IMessage;
-import org.eclipse.wst.validation.core.IReporter;
-import org.eclipse.wst.validation.core.IValidationContext;
-import org.eclipse.wst.validation.core.IValidator;
 import org.eclipse.wst.validation.internal.operations.IWorkbenchHelper;
 import org.eclipse.wst.validation.internal.operations.WorkbenchReporter;
+import org.eclipse.wst.validation.internal.provisional.core.IFileDelta;
+import org.eclipse.wst.validation.internal.provisional.core.IMessage;
+import org.eclipse.wst.validation.internal.provisional.core.IReporter;
+import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
+import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 import org.eclipse.wst.xml.core.document.IDOMDocument;
 import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.document.DocumentTypeAdapter;
@@ -62,7 +72,8 @@ public class HTMLValidator implements IValidator {
 				model = manager.getModelForRead(file);
 			}
 			catch (UnsupportedEncodingException ex) {
-				// retry ignoring META charset for invalid META charset specification
+				// retry ignoring META charset for invalid META charset
+				// specification
 				// recreate input stream, because it is already partially read
 				model = manager.getModelForRead(file, new String(), null);
 			}
@@ -153,14 +164,14 @@ public class HTMLValidator implements IValidator {
 		if (file != null) {
 			prj = file.getProject();
 		}
-		if ((prj == null) && (model != null)){
+		if ((prj == null) && (model != null)) {
 			URIResolver res = model.getResolver();
 			if (res != null) {
 				prj = res.getProject();
 			}
 		}
 		final WorkbenchReporter reporter = new WorkbenchReporter(prj, new NullProgressMonitor());
-		return validate( reporter, file, model);
+		return validate(reporter, file, model);
 	}
 
 	/**
@@ -184,10 +195,11 @@ public class HTMLValidator implements IValidator {
 		adapter.setReporter(rep);
 		if (reporter != null) {
 			String args[] = new String[]{file.getFullPath().toString()};
-			
-//			Message mess = new Message("HTMLValidation", //$NON-NLS-1$
-//						SeverityEnum.LOW_SEVERITY, "MESSAGE_HTML_VALIDATION_MESSAGE_UI_", //$NON-NLS-1$
-//						args);
+
+			// Message mess = new Message("HTMLValidation", //$NON-NLS-1$
+			// SeverityEnum.LOW_SEVERITY,
+			// "MESSAGE_HTML_VALIDATION_MESSAGE_UI_", //$NON-NLS-1$
+			// args);
 			Message mess = new LocalizedMessage(IMessage.LOW_SEVERITY, "MESSAGE_HTML_VALIDATION_MESSAGE_UI_");
 			mess.setParams(args);
 			reporter.displaySubtask(this, mess);
@@ -253,8 +265,8 @@ public class HTMLValidator implements IValidator {
 	 */
 	private void validateFull(IValidationContext helper, IReporter reporter, IFileDelta[] fileDelta) {
 		IProject project = null;
-		if(helper instanceof IWorkbenchHelper) {
-			IWorkbenchHelper wbHelper = (IWorkbenchHelper)helper;
+		if (helper instanceof IWorkbenchHelper) {
+			IWorkbenchHelper wbHelper = (IWorkbenchHelper) helper;
 			project = wbHelper.getProject();
 		}
 		else {
@@ -266,8 +278,9 @@ public class HTMLValidator implements IValidator {
 		validateContainer(helper, reporter, project);
 	}
 
-	/* 
+	/*
 	 * added to get rid or dependency on IWorkbenchHelper
+	 * 
 	 * @see com.ibm.sse.editor.extensions.validator.IWorkbenchHelper#getResource(com.ibm.sse.editor.extensions.validator.IFileDelta)
 	 */
 	public IResource getResource(IFileDelta delta) {

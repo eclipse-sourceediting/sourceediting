@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ * IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.wst.html.validation;
 
 import java.util.MissingResourceException;
@@ -10,11 +20,11 @@ import org.osgi.framework.BundleContext;
  * The main plugin class to be used in the desktop.
  */
 public class HTMLValidationPlugin extends Plugin {
-	//The shared instance.
+	// The shared instance.
 	private static HTMLValidationPlugin plugin;
-	//Resource bundle.
+	// Resource bundle.
 	private ResourceBundle resourceBundle;
-	
+
 	/**
 	 * The constructor.
 	 */
@@ -47,14 +57,15 @@ public class HTMLValidationPlugin extends Plugin {
 	}
 
 	/**
-	 * Returns the string from the plugin's resource bundle,
-	 * or 'key' if not found.
+	 * Returns the string from the plugin's resource bundle, or 'key' if not
+	 * found.
 	 */
 	public static String getResourceString(String key) {
 		ResourceBundle bundle = HTMLValidationPlugin.getDefault().getResourceBundle();
 		try {
 			return (bundle != null) ? bundle.getString(key) : key;
-		} catch (MissingResourceException e) {
+		}
+		catch (MissingResourceException e) {
 			return key;
 		}
 	}
@@ -66,7 +77,8 @@ public class HTMLValidationPlugin extends Plugin {
 		try {
 			if (resourceBundle == null)
 				resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.html.validation.HTMLValidationPluginResources");
-		} catch (MissingResourceException x) {
+		}
+		catch (MissingResourceException x) {
 			resourceBundle = null;
 		}
 		return resourceBundle;

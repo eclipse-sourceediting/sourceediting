@@ -33,7 +33,7 @@ import org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcili
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentAdapter;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
-import org.eclipse.wst.validation.core.IValidator;
+import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 
 
 /**

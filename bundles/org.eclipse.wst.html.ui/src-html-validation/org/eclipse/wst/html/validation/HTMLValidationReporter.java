@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ * IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.wst.html.validation;
 
 import org.eclipse.core.resources.IFile;
@@ -6,9 +16,9 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.validate.ValidationMessage;
 import org.eclipse.wst.sse.core.validate.ValidationReporter;
-import org.eclipse.wst.validation.core.IMessage;
-import org.eclipse.wst.validation.core.IReporter;
-import org.eclipse.wst.validation.core.IValidator;
+import org.eclipse.wst.validation.internal.provisional.core.IMessage;
+import org.eclipse.wst.validation.internal.provisional.core.IReporter;
+import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 
 public class HTMLValidationReporter implements ValidationReporter {
 
@@ -38,12 +48,14 @@ public class HTMLValidationReporter implements ValidationReporter {
 
 		if (this.reporter != null) {
 			this.reporter.removeAllMessages(this.owner, this.file);
-		} else {
+		}
+		else {
 			// remove by myself?
 			String id = HTMLValidator.class.getName();
 			try {
 				// TaskListHelper API changed
-				//TaskListHelper.getTaskList().removeAllTasks(id, this.file, null);
+				// TaskListHelper.getTaskList().removeAllTasks(id, this.file,
+				// null);
 				TaskListHelper.getTaskList().removeAllTasks(this.file, id, null);
 			}
 			catch (CoreException ex) {
@@ -72,15 +84,14 @@ public class HTMLValidationReporter implements ValidationReporter {
 
 		if (this.reporter != null) {
 			this.reporter.addMessage(this.owner, mes);
-		} else {
+		}
+		else {
 			// add by myself?
 			String id = HTMLValidator.class.getName();
 			String location = Integer.toString(mes.getLineNumber());
 			String name = this.file.getFullPath().toString();
 			try {
-				TaskListHelper.getTaskList().addTask(id, this.file, location,
-					mes.getId(), mes.getText(), mes.getSeverity(),
-					name, mes.getGroupName(), mes.getOffset(), mes.getLength());
+				TaskListHelper.getTaskList().addTask(id, this.file, location, mes.getId(), mes.getText(), mes.getSeverity(), name, mes.getGroupName(), mes.getOffset(), mes.getLength());
 			}
 			catch (CoreException ex) {
 			}

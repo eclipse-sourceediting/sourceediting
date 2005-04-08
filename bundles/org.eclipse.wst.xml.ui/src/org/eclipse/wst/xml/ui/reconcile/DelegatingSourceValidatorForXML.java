@@ -11,8 +11,8 @@
 
 package org.eclipse.wst.xml.ui.reconcile;
 
-import org.eclipse.wst.validation.ValidationFactory;
-import org.eclipse.wst.validation.core.IValidator;
+import org.eclipse.wst.validation.internal.provisional.ValidationFactory;
+import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 
 /**
  * @author Mark Hutchinson

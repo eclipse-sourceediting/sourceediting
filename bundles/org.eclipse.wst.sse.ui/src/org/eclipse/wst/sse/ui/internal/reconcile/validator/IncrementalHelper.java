@@ -15,7 +15,7 @@ package org.eclipse.wst.sse.ui.internal.reconcile.validator;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.wst.validation.core.IValidationContext;
+import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 
 
 
