@@ -30,7 +30,6 @@ import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.wst.html.ui.edit.ui.CleanupActionHTML;
 import org.eclipse.wst.html.ui.internal.search.HTMLFindOccurrencesAction;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
@@ -47,7 +46,7 @@ public class StructuredTextEditorJSP extends StructuredTextEditor {
 	protected void createActions() {
 		super.createActions();
 
-		ResourceBundle resourceBundle = SSEUIPlugin.getDefault().getResourceBundle();
+		ResourceBundle resourceBundle = JSPUIMessages.getResourceBundle();
 
 		Action action = new CleanupActionHTML(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_CLEANUP_DOCUMENT + UNDERSCORE, this);
 		action.setActionDefinitionId(ActionDefinitionIds.CLEANUP_DOCUMENT);

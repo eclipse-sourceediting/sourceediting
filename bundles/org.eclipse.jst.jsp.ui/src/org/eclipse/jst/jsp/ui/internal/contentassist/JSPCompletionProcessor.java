@@ -27,10 +27,10 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
+import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.IResourceDependentProcessor;
 import org.eclipse.wst.xml.core.document.IDOMDocument;
@@ -131,7 +131,7 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 		if(collector != null) {
 			results = collector.getJSPCompletionProposals();
 			if (results == null || results.length < 1)
-				fErrorMessage = SSEUIPlugin.getResourceString("%Java_Content_Assist_is_not_UI_"); //$NON-NLS-1$ = "Java Content Assist is not available for the current cursor location"
+				fErrorMessage = JSPUIMessages.Java_Content_Assist_is_not_UI_;
 		}
 		return results;
 	}

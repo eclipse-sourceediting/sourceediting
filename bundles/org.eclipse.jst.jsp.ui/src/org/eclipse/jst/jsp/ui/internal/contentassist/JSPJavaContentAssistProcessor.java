@@ -22,13 +22,13 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.text.IJSPPartitionTypes;
+import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
@@ -45,7 +45,7 @@ public class JSPJavaContentAssistProcessor implements IContentAssistProcessor, I
 	protected IResource fResource;
 	protected char completionProposalAutoActivationCharacters[] = new char[]{'.'};
 	protected char contextInformationAutoActivationCharacters[] = null;
-	protected static final String UNKNOWN_CONTEXT = SSEUIPlugin.getResourceString("%Content_Assist_not_availab_UI_"); //$NON-NLS-1$ = "Content Assist not available at the current location "
+	protected static final String UNKNOWN_CONTEXT = JSPUIMessages.Content_Assist_not_availab_UI_;
 	protected String fErrorMessage = null;
 	private JSPCompletionProcessor fJspCompletionProcessor = null;
 

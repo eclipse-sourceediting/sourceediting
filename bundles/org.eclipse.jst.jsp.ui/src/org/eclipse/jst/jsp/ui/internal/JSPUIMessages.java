@@ -60,6 +60,8 @@ public class JSPUIMessages extends NLS {
 	public static String OccurrencesSearchQuery_2;
 	public static String Override_method_in;
 	public static String Creating_files_encoding;
+	public static String Content_Assist_not_availab_UI_;
+	public static String Java_Content_Assist_is_not_UI_;
 	
 	static {
 		// load message values from bundle file
