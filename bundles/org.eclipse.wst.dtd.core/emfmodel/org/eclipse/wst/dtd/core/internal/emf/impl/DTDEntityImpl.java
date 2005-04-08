@@ -60,7 +60,7 @@ import org.eclipse.wst.dtd.core.internal.emf.util.DTDPathnameUtil;
 public class DTDEntityImpl extends DTDContentImpl implements DTDEntity, ENamedElement, DTDContent {
 
 	public String getPathname() {
-		return DTDPathnameUtil.makePath(null, "Ent", getName(), -1);
+		return DTDPathnameUtil.makePath(null, "Ent", getName(), -1); //$NON-NLS-1$
 	}
 
 
@@ -76,7 +76,7 @@ public class DTDEntityImpl extends DTDContentImpl implements DTDEntity, ENamedEl
 
 
 		DTDObject obj = null;
-		if (type.equals("Content")) {
+		if (type.equals("Content")) { //$NON-NLS-1$
 			obj = getContent();
 		}
 		else {
@@ -651,9 +651,9 @@ public class DTDEntityImpl extends DTDContentImpl implements DTDEntity, ENamedEl
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (comment: ");
+		result.append(" (comment: "); //$NON-NLS-1$
 		result.append(comment);
-		result.append(", parameterEntity: ");
+		result.append(", parameterEntity: "); //$NON-NLS-1$
 		result.append(parameterEntity);
 		result.append(')');
 		return result.toString();

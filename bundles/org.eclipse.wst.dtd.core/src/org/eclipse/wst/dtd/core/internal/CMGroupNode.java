@@ -36,7 +36,7 @@ public class CMGroupNode extends CMRepeatableNode {
 	}
 
 	public void addChild() {
-		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_CM_GRP_NODE_ADD_CHILD")); //$NON-NLS-1$
+		beginRecording(this, DTDCoreMessages._UI_LABEL_CM_GRP_NODE_ADD_CHILD); //$NON-NLS-1$
 		DTDNode lastNode = (DTDNode) getLastChild();
 		String elementName = DTDUniqueNameHelper.getUniqueName(getChildrenList(), "ChildNode"); //$NON-NLS-1$
 		if (lastNode != null) {
@@ -50,7 +50,7 @@ public class CMGroupNode extends CMRepeatableNode {
 	}
 
 	public void addGroup() {
-		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_CM_GRP_NODE_ADD_GRP")); //$NON-NLS-1$
+		beginRecording(this, DTDCoreMessages._UI_LABEL_CM_GRP_NODE_ADD_GRP); //$NON-NLS-1$
 		DTDNode lastNode = (DTDNode) getLastChild();
 		if (lastNode != null) {
 			replaceText(this, lastNode.getEndOffset(), 0, String.valueOf(getConnector()) + " ()"); //$NON-NLS-1$
@@ -226,7 +226,7 @@ public class CMGroupNode extends CMRepeatableNode {
 	}
 
 	public void insertChildNode(String nodeText, int position) {
-		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_CM_GRP_NODE_INSERT_ELEMENT")); //$NON-NLS-1$
+		beginRecording(this, DTDCoreMessages._UI_LABEL_CM_GRP_NODE_INSERT_ELEMENT); //$NON-NLS-1$
 		insertChildNode(this, nodeText, position);
 		endRecording(this);
 	}
@@ -380,7 +380,7 @@ public class CMGroupNode extends CMRepeatableNode {
 				getDTDFile().notifyNodeChanged(this);
 				return;
 			}
-			beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_CM_GRP_NODE_CONNECTOR")); //$NON-NLS-1$
+			beginRecording(this, DTDCoreMessages._UI_LABEL_CM_GRP_NODE_CONNECTOR); //$NON-NLS-1$
 			for (int i = 0; i < children.length - 1; i++) {
 				DTDNode childA = (DTDNode) children[i];
 				DTDNode childB = (DTDNode) children[i + 1];

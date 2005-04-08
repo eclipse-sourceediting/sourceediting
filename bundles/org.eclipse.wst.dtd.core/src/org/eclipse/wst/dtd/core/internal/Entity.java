@@ -22,11 +22,11 @@ import org.eclipse.wst.sse.core.text.ITextRegion;
 // external node contains code to help set and get public ids
 public class Entity extends ExternalNode {
 
-	private static String setExternalEntity = DTDCorePlugin.getDTDString("_UI_LABEL_ENTITY_SET_EXT_ENTITY"); //$NON-NLS-1$
-	private static String setGeneralEntity = DTDCorePlugin.getDTDString("_UI_LABEL_ENTITY_SET_GENERAL_ENTITY"); //$NON-NLS-1$
-	private static String setInternalEntity = DTDCorePlugin.getDTDString("_UI_LABEL_ENTITY_SET_INT_ENTITY"); //$NON-NLS-1$
+	private static String setExternalEntity = DTDCoreMessages._UI_LABEL_ENTITY_SET_EXT_ENTITY; //$NON-NLS-1$
+	private static String setGeneralEntity = DTDCoreMessages._UI_LABEL_ENTITY_SET_GENERAL_ENTITY; //$NON-NLS-1$
+	private static String setInternalEntity = DTDCoreMessages._UI_LABEL_ENTITY_SET_INT_ENTITY; //$NON-NLS-1$
 
-	private static String setParameterEntity = DTDCorePlugin.getDTDString("_UI_LABEL_ENTITY_SET_PARM_ENTITY"); //$NON-NLS-1$
+	private static String setParameterEntity = DTDCoreMessages._UI_LABEL_ENTITY_SET_PARM_ENTITY; //$NON-NLS-1$
 
 	public Entity(DTDFile file, IStructuredDocumentRegion flatNode) {
 		super(file, flatNode, DTDRegionTypes.ENTITY_TAG);
@@ -237,7 +237,7 @@ public class Entity extends ExternalNode {
 	 *            Value to assign to notationName.
 	 */
 	public void setNotationName(String newNotation) {
-		beginRecording(this, "NDATA " + DTDCorePlugin.getDTDString("_UI_LABEL_ENTITY_NDATA_CHANGE")); //$NON-NLS-1$ //$NON-NLS-2$
+		beginRecording(this, "NDATA " + DTDCoreMessages._UI_LABEL_ENTITY_NDATA_CHANGE); //$NON-NLS-1$ //$NON-NLS-2$
 		setNotationName(this, newNotation);
 		endRecording(this);
 	}
@@ -325,7 +325,7 @@ public class Entity extends ExternalNode {
 	 *            Value to assign to value.
 	 */
 	public void setValue(String v) {
-		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_ENTITY_VALUE_CHG")); //$NON-NLS-1$
+		beginRecording(this, DTDCoreMessages._UI_LABEL_ENTITY_VALUE_CHG); //$NON-NLS-1$
 		setValue(this, v);
 		endRecording(this);
 	}

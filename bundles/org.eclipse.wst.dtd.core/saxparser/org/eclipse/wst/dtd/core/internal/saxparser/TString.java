@@ -19,9 +19,9 @@ import java.util.StringTokenizer;
  */
 
 public class TString {
-	private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	private static final String ALPHANUMERIC = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-	private static final String NUMERIC = "0123456789";
+	private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"; //$NON-NLS-1$
+	private static final String ALPHANUMERIC = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; //$NON-NLS-1$
+	private static final String NUMERIC = "0123456789"; //$NON-NLS-1$
 
 	// change all occurrences of oldPat to newPat
 	public static String change(String in, String oldPat, String newPat) {
@@ -93,7 +93,7 @@ public class TString {
 	public static String word(String in, int i) {
 		StringTokenizer st = new StringTokenizer(in);
 		if (i <= 0 || i > st.countTokens())
-			return "";
+			return ""; //$NON-NLS-1$
 		else {
 			String ret = new String();
 			while (st.hasMoreTokens()) {
@@ -102,13 +102,13 @@ public class TString {
 					return ret;
 			}
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	public static String words(String in, int i) {
 		StringTokenizer st = new StringTokenizer(in);
 		if (i <= 0 || i > st.countTokens())
-			return "";
+			return ""; //$NON-NLS-1$
 		else {
 			while (st.hasMoreTokens()) {
 				if (--i == 0)
@@ -116,9 +116,9 @@ public class TString {
 				st.nextToken();
 			}
 			if (st.hasMoreTokens())
-				return st.nextToken("");
+				return st.nextToken(""); //$NON-NLS-1$
 			else
-				return "";
+				return ""; //$NON-NLS-1$
 		}
 	}
 
@@ -128,7 +128,7 @@ public class TString {
 
 		StringBuffer sb = new StringBuffer(in);
 		for (int i = 0; i < len; i++) {
-			sb.append(" ");
+			sb.append(" "); //$NON-NLS-1$
 		}
 		return sb.toString();
 	}
@@ -248,7 +248,7 @@ public class TString {
 
 		if (src != null) {
 			while (src.length() > 0) {
-				if (src.endsWith(" "))
+				if (src.endsWith(" ")) //$NON-NLS-1$
 					src = src.substring(0, src.length() - 1);
 				else
 					break;
@@ -318,7 +318,7 @@ public class TString {
 		if (in.startsWith(token))
 			return in.substring(token.length(), in.length());
 		else
-			throw new Exception("Expected: " + token + " but got:" + word(in, 1));
+			throw new Exception("Expected: " + token + " but got:" + word(in, 1)); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public static long getLong(String str) {
@@ -336,7 +336,7 @@ public class TString {
 	// return = true
 
 	public static boolean containsDoubleBlanks(String srcString) {
-		String bb = "  ";
+		String bb = "  "; //$NON-NLS-1$
 		char b = bb.charAt(0);
 
 		if (srcString.length() > 0) {

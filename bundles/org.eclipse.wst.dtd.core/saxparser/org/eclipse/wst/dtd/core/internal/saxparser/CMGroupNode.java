@@ -20,7 +20,7 @@ public class CMGroupNode extends CMRepeatableNode {
 	private Vector children = new Vector();
 
 	public CMGroupNode() {
-		super("GROUP");
+		super("GROUP"); //$NON-NLS-1$
 	}
 
 	public int getType() {
@@ -49,14 +49,14 @@ public class CMGroupNode extends CMRepeatableNode {
 	}
 
 	public String toString() {
-		String result = "Group ( - kind: " + getGroupKind() + " OccType: " + getOccurrence() + "\n";
+		String result = "Group ( - kind: " + getGroupKind() + " OccType: " + getOccurrence() + "\n"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		Enumeration en = children.elements();
 		while (en.hasMoreElements()) {
-			result += " " + en.nextElement();
+			result += " " + en.nextElement(); //$NON-NLS-1$
 		}
 
-		result += "Group )";
+		result += "Group )"; //$NON-NLS-1$
 		return result;
 	}
 }

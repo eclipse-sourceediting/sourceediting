@@ -21,14 +21,14 @@ public class DTDPathnameUtil {
 			pn = type;
 		}
 		else if (cnt <= 0) {
-			pn = type + ":" + ((name == null) ? "" : name);
+			pn = type + ":" + ((name == null) ? "" : name); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		else {
-			pn = type + ":" + ((name == null) ? "" : name) + ":" + cnt;
+			pn = type + ":" + ((name == null) ? "" : name) + ":" + cnt; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 
 		if (parentPath != null) {
-			return parentPath + "." + pn;
+			return parentPath + "." + pn; //$NON-NLS-1$
 		}
 		else {
 			return pn;
@@ -128,15 +128,15 @@ public class DTDPathnameUtil {
 				String hex = Integer.toHexString(c);
 				int l = hex.length();
 				if (l == 1) {
-					o.append("_000");
+					o.append("_000"); //$NON-NLS-1$
 					o.append(hex);
 				}
 				else if (l == 2) {
-					o.append("_00");
+					o.append("_00"); //$NON-NLS-1$
 					o.append(hex);
 				}
 				else if (l == 3) {
-					o.append("_0");
+					o.append("_0"); //$NON-NLS-1$
 					o.append(hex);
 				}
 				else {
@@ -185,14 +185,14 @@ public class DTDPathnameUtil {
 			pn = type;
 		}
 		else if (cnt <= 0) {
-			pn = type + ":" + ((name == null) ? "" : name);
+			pn = type + ":" + ((name == null) ? "" : name); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		else {
-			pn = type + ":" + ((name == null) ? "" : name) + ":" + cnt;
+			pn = type + ":" + ((name == null) ? "" : name) + ":" + cnt; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 
 		if (parentPath != null) {
-			return parentPath + "." + pn;
+			return parentPath + "." + pn; //$NON-NLS-1$
 		}
 		else {
 			return pn;
@@ -300,15 +300,15 @@ public class DTDPathnameUtil {
 				String hex = Integer.toHexString(c);
 				int l = hex.length();
 				if (l == 1) {
-					o.append("_000");
+					o.append("_000"); //$NON-NLS-1$
 					o.append(hex);
 				}
 				else if (l == 2) {
-					o.append("_00");
+					o.append("_00"); //$NON-NLS-1$
 					o.append(hex);
 				}
 				else if (l == 3) {
-					o.append("_0");
+					o.append("_0"); //$NON-NLS-1$
 					o.append(hex);
 				}
 				else {

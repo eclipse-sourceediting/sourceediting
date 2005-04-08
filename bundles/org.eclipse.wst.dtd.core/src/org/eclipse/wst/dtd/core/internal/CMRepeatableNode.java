@@ -48,7 +48,7 @@ public abstract class CMRepeatableNode extends CMNode {
 	abstract public ITextRegion getOccurrenceRegion();
 
 	public void setOccurrence(char occurrence) {
-		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_CM_REP_NODE_CHG_OCCUR")); //$NON-NLS-1$
+		beginRecording(this, DTDCoreMessages._UI_LABEL_CM_REP_NODE_CHG_OCCUR); //$NON-NLS-1$
 		setOccurrence(this, occurrence);
 		endRecording(this);
 	}

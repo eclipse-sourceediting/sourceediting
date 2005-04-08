@@ -61,7 +61,7 @@ public final class DTDGroupKind extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDGroupKind SEQUENCE_LITERAL = new DTDGroupKind(SEQUENCE, "SEQUENCE");
+	public static final DTDGroupKind SEQUENCE_LITERAL = new DTDGroupKind(SEQUENCE, "SEQUENCE"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>CHOICE</b></em>' literal object. <!-- begin-user-doc
@@ -76,7 +76,7 @@ public final class DTDGroupKind extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDGroupKind CHOICE_LITERAL = new DTDGroupKind(CHOICE, "CHOICE");
+	public static final DTDGroupKind CHOICE_LITERAL = new DTDGroupKind(CHOICE, "CHOICE"); //$NON-NLS-1$
 
 	/**
 	 * An array of all the '<em><b>Group Kind</b></em>' enumerators. <!--

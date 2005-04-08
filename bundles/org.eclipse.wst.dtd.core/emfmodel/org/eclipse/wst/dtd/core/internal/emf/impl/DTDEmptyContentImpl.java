@@ -166,7 +166,7 @@ public class DTDEmptyContentImpl extends DTDElementContentImpl implements DTDEmp
 	}
 
 	public String getContentName() {
-		return "EMPTY";
+		return "EMPTY"; //$NON-NLS-1$
 	}
 
 }

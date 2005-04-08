@@ -33,6 +33,6 @@ public class CMReferenceNode extends CMRepeatableNode {
 	}
 
 	public String toString() {
-		return " RefName: " + getName() + " Type: " + getType() + " OccType: " + getOccurrence() + "\n";
+		return " RefName: " + getName() + " Type: " + getType() + " OccType: " + getOccurrence() + "\n"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 	}
 }

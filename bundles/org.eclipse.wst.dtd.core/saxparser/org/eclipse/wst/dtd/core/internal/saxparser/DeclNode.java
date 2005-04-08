@@ -96,7 +96,7 @@ public class DeclNode {
 	public String toString()
 
 	{
-		return "Node Name: " + declName + " Type: " + type + " ContentString: " + contentString;
+		return "Node Name: " + declName + " Type: " + type + " ContentString: " + contentString; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 

@@ -39,7 +39,7 @@ public abstract class TopLevelNode extends DTDNode {
 	// specialize this so we delete the objects flat node range
 	// AND any whitespace
 	public void delete() {
-		beginRecording(getDTDFile(), DTDCorePlugin.getDTDString("_UI_LABEL_TOP_LEVEL_NODE_DELETE")); //$NON-NLS-1$
+		beginRecording(getDTDFile(), DTDCoreMessages._UI_LABEL_TOP_LEVEL_NODE_DELETE); //$NON-NLS-1$
 		IStructuredDocumentRegion first = (IStructuredDocumentRegion) flatNodes.get(0);
 		IStructuredDocumentRegion last = (IStructuredDocumentRegion) flatNodes.get(flatNodes.size() - 1);
 		int startOffset = first.getStartOffset();

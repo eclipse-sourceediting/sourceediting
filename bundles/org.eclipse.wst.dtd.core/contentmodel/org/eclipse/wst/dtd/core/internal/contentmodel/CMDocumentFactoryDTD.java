@@ -25,7 +25,7 @@ public class CMDocumentFactoryDTD implements CMDocumentFactory {
 		// work around a bug in our parsers
 		// todo... revisit this
 		//
-		String fileProtocol = "file:";
+		String fileProtocol = "file:"; //$NON-NLS-1$
 		if (uri.startsWith(fileProtocol)) {
 			uri = uri.substring(fileProtocol.length());
 		}

@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.dtd.core.contenttype.ContentTypeIdForDTD;
 import org.eclipse.wst.dtd.core.internal.parser.DTDRegionTypes;
+import org.eclipse.wst.dtd.ui.internal.DTDUIMessages;
 import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.dtd.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.dtd.ui.internal.style.IStyleConstantsDTD;
@@ -69,7 +70,7 @@ public class DTDColorPage extends AbstractColorPage {
 	}
 
 	public String getSampleText() {
-		return DTDUIPlugin.getResourceString("DTDColorPage.0"); //$NON-NLS-1$
+		return DTDUIMessages.DTDColorPage_0; //$NON-NLS-1$
 	}
 
 	protected void initContextStyleMap(Dictionary contextStyleMap) {
@@ -117,14 +118,14 @@ public class DTDColorPage extends AbstractColorPage {
 	}
 
 	protected void initDescriptions(Dictionary descriptions) {
-		descriptions.put(IStyleConstantsDTD.DTD_COMMENT, DTDUIPlugin.getResourceString("DTDColorPage.1")); //$NON-NLS-1$
-		descriptions.put(IStyleConstantsDTD.DTD_DATA, DTDUIPlugin.getResourceString("DTDColorPage.2")); //$NON-NLS-1$
-		descriptions.put(IStyleConstantsDTD.DTD_DEFAULT, DTDUIPlugin.getResourceString("DTDColorPage.3")); //$NON-NLS-1$
-		descriptions.put(IStyleConstantsDTD.DTD_KEYWORD, DTDUIPlugin.getResourceString("DTDColorPage.4")); //$NON-NLS-1$
-		descriptions.put(IStyleConstantsDTD.DTD_STRING, DTDUIPlugin.getResourceString("DTDColorPage.5")); //$NON-NLS-1$
-		descriptions.put(IStyleConstantsDTD.DTD_SYMBOL, DTDUIPlugin.getResourceString("DTDColorPage.6")); //$NON-NLS-1$
-		descriptions.put(IStyleConstantsDTD.DTD_TAG, DTDUIPlugin.getResourceString("DTDColorPage.7")); //$NON-NLS-1$
-		descriptions.put(IStyleConstantsDTD.DTD_TAGNAME, DTDUIPlugin.getResourceString("DTDColorPage.8")); //$NON-NLS-1$
+		descriptions.put(IStyleConstantsDTD.DTD_COMMENT, DTDUIMessages.DTDColorPage_1); //$NON-NLS-1$
+		descriptions.put(IStyleConstantsDTD.DTD_DATA, DTDUIMessages.DTDColorPage_2); //$NON-NLS-1$
+		descriptions.put(IStyleConstantsDTD.DTD_DEFAULT, DTDUIMessages.DTDColorPage_3); //$NON-NLS-1$
+		descriptions.put(IStyleConstantsDTD.DTD_KEYWORD, DTDUIMessages.DTDColorPage_4); //$NON-NLS-1$
+		descriptions.put(IStyleConstantsDTD.DTD_STRING, DTDUIMessages.DTDColorPage_5); //$NON-NLS-1$
+		descriptions.put(IStyleConstantsDTD.DTD_SYMBOL, DTDUIMessages.DTDColorPage_6); //$NON-NLS-1$
+		descriptions.put(IStyleConstantsDTD.DTD_TAG, DTDUIMessages.DTDColorPage_7); //$NON-NLS-1$
+		descriptions.put(IStyleConstantsDTD.DTD_TAGNAME, DTDUIMessages.DTDColorPage_8); //$NON-NLS-1$
 	}
 
 	protected void initStyleList(ArrayList list) {

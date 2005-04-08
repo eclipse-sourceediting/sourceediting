@@ -1079,102 +1079,102 @@ public class DTDPackageImpl extends EPackageImpl implements DTDPackage {
 		dtdEntityReferenceContentEClass.getESuperTypes().add(this.getDTDRepeatableContent());
 
 		// Initialize classes and features; add operations and parameters
-		initEClass(dtdElementContentEClass, DTDElementContent.class, "DTDElementContent", IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getDTDElementContent_Group(), this.getDTDGroupContent(), this.getDTDGroupContent_Content(), "group", null, 0, 1, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES);
-		initEReference(getDTDElementContent_Element(), this.getDTDElement(), this.getDTDElement_Content(), "element", null, 0, 1, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES);
+		initEClass(dtdElementContentEClass, DTDElementContent.class, "DTDElementContent", IS_ABSTRACT, !IS_INTERFACE); //$NON-NLS-1$
+		initEReference(getDTDElementContent_Group(), this.getDTDGroupContent(), this.getDTDGroupContent_Content(), "group", null, 0, 1, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES); //$NON-NLS-1$
+		initEReference(getDTDElementContent_Element(), this.getDTDElement(), this.getDTDElement_Content(), "element", null, 0, 1, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES); //$NON-NLS-1$
 
-		initEClass(dtdGroupContentEClass, DTDGroupContent.class, "DTDGroupContent", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getDTDGroupContent_GroupKind(), this.getDTDGroupKind(), "groupKind", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID);
-		initEReference(getDTDGroupContent_Content(), this.getDTDElementContent(), this.getDTDElementContent_Group(), "content", null, 1, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES);
+		initEClass(dtdGroupContentEClass, DTDGroupContent.class, "DTDGroupContent", !IS_ABSTRACT, !IS_INTERFACE); //$NON-NLS-1$
+		initEAttribute(getDTDGroupContent_GroupKind(), this.getDTDGroupKind(), "groupKind", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID); //$NON-NLS-1$
+		initEReference(getDTDGroupContent_Content(), this.getDTDElementContent(), this.getDTDElementContent_Group(), "content", null, 1, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES); //$NON-NLS-1$
 
-		initEClass(dtdAttributeEClass, DTDAttribute.class, "DTDAttribute", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getDTDAttribute_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID);
-		initEAttribute(getDTDAttribute_DefaultKind(), this.getDTDDefaultKind(), "defaultKind", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID);
-		initEAttribute(getDTDAttribute_DefaultValueString(), ecorePackage.getEString(), "defaultValueString", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID);
-		initEReference(getDTDAttribute_AttributeNameReferencedEntity(), this.getDTDEntity(), this.getDTDEntity_AttributeNameReference(), "attributeNameReferencedEntity", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES);
-		initEReference(getDTDAttribute_AttributeTypeReferencedEntity(), this.getDTDEntity(), this.getDTDEntity_AttributeTypeReference(), "attributeTypeReferencedEntity", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES);
-		initEReference(getDTDAttribute_DTDElement(), this.getDTDElement(), this.getDTDElement_DTDAttribute(), "DTDElement", null, 0, 1, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES);
+		initEClass(dtdAttributeEClass, DTDAttribute.class, "DTDAttribute", !IS_ABSTRACT, !IS_INTERFACE); //$NON-NLS-1$
+		initEAttribute(getDTDAttribute_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID); //$NON-NLS-1$
+		initEAttribute(getDTDAttribute_DefaultKind(), this.getDTDDefaultKind(), "defaultKind", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID); //$NON-NLS-1$
+		initEAttribute(getDTDAttribute_DefaultValueString(), ecorePackage.getEString(), "defaultValueString", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID); //$NON-NLS-1$
+		initEReference(getDTDAttribute_AttributeNameReferencedEntity(), this.getDTDEntity(), this.getDTDEntity_AttributeNameReference(), "attributeNameReferencedEntity", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES); //$NON-NLS-1$
+		initEReference(getDTDAttribute_AttributeTypeReferencedEntity(), this.getDTDEntity(), this.getDTDEntity_AttributeTypeReference(), "attributeTypeReferencedEntity", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES); //$NON-NLS-1$
+		initEReference(getDTDAttribute_DTDElement(), this.getDTDElement(), this.getDTDElement_DTDAttribute(), "DTDElement", null, 0, 1, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES); //$NON-NLS-1$
 
-		initEClass(dtdElementEClass, DTDElement.class, "DTDElement", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getDTDElement_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID);
-		initEReference(getDTDElement_Content(), this.getDTDElementContent(), this.getDTDElementContent_Element(), "content", null, 1, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES);
-		initEReference(getDTDElement_DTDAttribute(), this.getDTDAttribute(), this.getDTDAttribute_DTDElement(), "DTDAttribute", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES);
+		initEClass(dtdElementEClass, DTDElement.class, "DTDElement", !IS_ABSTRACT, !IS_INTERFACE); //$NON-NLS-1$
+		initEAttribute(getDTDElement_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID); //$NON-NLS-1$
+		initEReference(getDTDElement_Content(), this.getDTDElementContent(), this.getDTDElementContent_Element(), "content", null, 1, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES); //$NON-NLS-1$
+		initEReference(getDTDElement_DTDAttribute(), this.getDTDAttribute(), this.getDTDAttribute_DTDElement(), "DTDAttribute", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES); //$NON-NLS-1$
 
-		initEClass(dtdEmptyContentEClass, DTDEmptyContent.class, "DTDEmptyContent", !IS_ABSTRACT, !IS_INTERFACE);
+		initEClass(dtdEmptyContentEClass, DTDEmptyContent.class, "DTDEmptyContent", !IS_ABSTRACT, !IS_INTERFACE); //$NON-NLS-1$
 
-		initEClass(dtdAnyContentEClass, DTDAnyContent.class, "DTDAnyContent", !IS_ABSTRACT, !IS_INTERFACE);
+		initEClass(dtdAnyContentEClass, DTDAnyContent.class, "DTDAnyContent", !IS_ABSTRACT, !IS_INTERFACE); //$NON-NLS-1$
 
-		initEClass(dtdpcDataContentEClass, DTDPCDataContent.class, "DTDPCDataContent", !IS_ABSTRACT, !IS_INTERFACE);
+		initEClass(dtdpcDataContentEClass, DTDPCDataContent.class, "DTDPCDataContent", !IS_ABSTRACT, !IS_INTERFACE); //$NON-NLS-1$
 
-		initEClass(dtdElementReferenceContentEClass, DTDElementReferenceContent.class, "DTDElementReferenceContent", !IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getDTDElementReferenceContent_ReferencedElement(), this.getDTDElement(), null, "referencedElement", null, 1, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES);
+		initEClass(dtdElementReferenceContentEClass, DTDElementReferenceContent.class, "DTDElementReferenceContent", !IS_ABSTRACT, !IS_INTERFACE); //$NON-NLS-1$
+		initEReference(getDTDElementReferenceContent_ReferencedElement(), this.getDTDElement(), null, "referencedElement", null, 1, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES); //$NON-NLS-1$
 
-		initEClass(dtdRepeatableContentEClass, DTDRepeatableContent.class, "DTDRepeatableContent", IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getDTDRepeatableContent_Occurrence(), this.getDTDOccurrenceType(), "occurrence", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID);
+		initEClass(dtdRepeatableContentEClass, DTDRepeatableContent.class, "DTDRepeatableContent", IS_ABSTRACT, !IS_INTERFACE); //$NON-NLS-1$
+		initEAttribute(getDTDRepeatableContent_Occurrence(), this.getDTDOccurrenceType(), "occurrence", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID); //$NON-NLS-1$
 
-		initEClass(dtdFileEClass, DTDFile.class, "DTDFile", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getDTDFile_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID);
-		initEAttribute(getDTDFile_ParseError(), ecorePackage.getEBoolean(), "parseError", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID);
-		initEReference(getDTDFile_DTDContent(), this.getDTDContent(), this.getDTDContent_DTDFile(), "DTDContent", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES);
-		initEReference(getDTDFile_DTDEnumerationType(), this.getDTDEnumerationType(), this.getDTDEnumerationType_DTDFile(), "DTDEnumerationType", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES);
+		initEClass(dtdFileEClass, DTDFile.class, "DTDFile", !IS_ABSTRACT, !IS_INTERFACE); //$NON-NLS-1$
+		initEAttribute(getDTDFile_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID); //$NON-NLS-1$
+		initEAttribute(getDTDFile_ParseError(), ecorePackage.getEBoolean(), "parseError", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID); //$NON-NLS-1$
+		initEReference(getDTDFile_DTDContent(), this.getDTDContent(), this.getDTDContent_DTDFile(), "DTDContent", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES); //$NON-NLS-1$
+		initEReference(getDTDFile_DTDEnumerationType(), this.getDTDEnumerationType(), this.getDTDEnumerationType_DTDFile(), "DTDEnumerationType", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES); //$NON-NLS-1$
 
-		initEClass(dtdBasicTypeEClass, DTDBasicType.class, "DTDBasicType", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getDTDBasicType_Kind(), this.getDTDBasicTypeKind(), "kind", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID);
+		initEClass(dtdBasicTypeEClass, DTDBasicType.class, "DTDBasicType", !IS_ABSTRACT, !IS_INTERFACE); //$NON-NLS-1$
+		initEAttribute(getDTDBasicType_Kind(), this.getDTDBasicTypeKind(), "kind", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID); //$NON-NLS-1$
 
-		initEClass(dtdEnumerationTypeEClass, DTDEnumerationType.class, "DTDEnumerationType", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getDTDEnumerationType_Kind(), this.getDTDEnumGroupKind(), "kind", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID);
-		initEReference(getDTDEnumerationType_DTDFile(), this.getDTDFile(), this.getDTDFile_DTDEnumerationType(), "DTDFile", null, 0, 1, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES);
+		initEClass(dtdEnumerationTypeEClass, DTDEnumerationType.class, "DTDEnumerationType", !IS_ABSTRACT, !IS_INTERFACE); //$NON-NLS-1$
+		initEAttribute(getDTDEnumerationType_Kind(), this.getDTDEnumGroupKind(), "kind", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID); //$NON-NLS-1$
+		initEReference(getDTDEnumerationType_DTDFile(), this.getDTDFile(), this.getDTDFile_DTDEnumerationType(), "DTDFile", null, 0, 1, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES); //$NON-NLS-1$
 
-		initEClass(dtdNotationEClass, DTDNotation.class, "DTDNotation", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getDTDNotation_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID);
-		initEAttribute(getDTDNotation_SystemID(), ecorePackage.getEString(), "systemID", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID);
-		initEAttribute(getDTDNotation_PublicID(), ecorePackage.getEString(), "publicID", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID);
-		initEReference(getDTDNotation_Entity(), this.getDTDExternalEntity(), this.getDTDExternalEntity_Notation(), "entity", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES);
+		initEClass(dtdNotationEClass, DTDNotation.class, "DTDNotation", !IS_ABSTRACT, !IS_INTERFACE); //$NON-NLS-1$
+		initEAttribute(getDTDNotation_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID); //$NON-NLS-1$
+		initEAttribute(getDTDNotation_SystemID(), ecorePackage.getEString(), "systemID", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID); //$NON-NLS-1$
+		initEAttribute(getDTDNotation_PublicID(), ecorePackage.getEString(), "publicID", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID); //$NON-NLS-1$
+		initEReference(getDTDNotation_Entity(), this.getDTDExternalEntity(), this.getDTDExternalEntity_Notation(), "entity", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES); //$NON-NLS-1$
 
-		initEClass(dtdEntityEClass, DTDEntity.class, "DTDEntity", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getDTDEntity_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID);
-		initEAttribute(getDTDEntity_ParameterEntity(), ecorePackage.getEBoolean(), "parameterEntity", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID);
-		initEReference(getDTDEntity_Content(), this.getDTDEntityContent(), this.getDTDEntityContent_DTDEntity(), "content", null, 1, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES);
-		initEReference(getDTDEntity_ParmEntityRef(), this.getDTDParameterEntityReference(), this.getDTDParameterEntityReference_Entity(), "parmEntityRef", null, 1, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES);
-		initEReference(getDTDEntity_EntityReference(), this.getDTDEntityReferenceContent(), this.getDTDEntityReferenceContent_ElementReferencedEntity(), "entityReference", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES);
-		initEReference(getDTDEntity_AttributeNameReference(), this.getDTDAttribute(), this.getDTDAttribute_AttributeNameReferencedEntity(), "attributeNameReference", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES);
-		initEReference(getDTDEntity_AttributeTypeReference(), this.getDTDAttribute(), this.getDTDAttribute_AttributeTypeReferencedEntity(), "attributeTypeReference", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES);
+		initEClass(dtdEntityEClass, DTDEntity.class, "DTDEntity", !IS_ABSTRACT, !IS_INTERFACE); //$NON-NLS-1$
+		initEAttribute(getDTDEntity_Comment(), ecorePackage.getEString(), "comment", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID); //$NON-NLS-1$
+		initEAttribute(getDTDEntity_ParameterEntity(), ecorePackage.getEBoolean(), "parameterEntity", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID); //$NON-NLS-1$
+		initEReference(getDTDEntity_Content(), this.getDTDEntityContent(), this.getDTDEntityContent_DTDEntity(), "content", null, 1, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES); //$NON-NLS-1$
+		initEReference(getDTDEntity_ParmEntityRef(), this.getDTDParameterEntityReference(), this.getDTDParameterEntityReference_Entity(), "parmEntityRef", null, 1, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES); //$NON-NLS-1$
+		initEReference(getDTDEntity_EntityReference(), this.getDTDEntityReferenceContent(), this.getDTDEntityReferenceContent_ElementReferencedEntity(), "entityReference", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES); //$NON-NLS-1$
+		initEReference(getDTDEntity_AttributeNameReference(), this.getDTDAttribute(), this.getDTDAttribute_AttributeNameReferencedEntity(), "attributeNameReference", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES); //$NON-NLS-1$
+		initEReference(getDTDEntity_AttributeTypeReference(), this.getDTDAttribute(), this.getDTDAttribute_AttributeTypeReferencedEntity(), "attributeTypeReference", null, 0, -1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES); //$NON-NLS-1$
 
-		initEClass(dtdEntityContentEClass, DTDEntityContent.class, "DTDEntityContent", IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getDTDEntityContent_DTDEntity(), this.getDTDEntity(), this.getDTDEntity_Content(), "DTDEntity", null, 0, 1, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES);
+		initEClass(dtdEntityContentEClass, DTDEntityContent.class, "DTDEntityContent", IS_ABSTRACT, !IS_INTERFACE); //$NON-NLS-1$
+		initEReference(getDTDEntityContent_DTDEntity(), this.getDTDEntity(), this.getDTDEntity_Content(), "DTDEntity", null, 0, 1, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES); //$NON-NLS-1$
 
-		initEClass(dtdExternalEntityEClass, DTDExternalEntity.class, "DTDExternalEntity", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getDTDExternalEntity_SystemID(), ecorePackage.getEString(), "systemID", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID);
-		initEAttribute(getDTDExternalEntity_PublicID(), ecorePackage.getEString(), "publicID", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID);
-		initEReference(getDTDExternalEntity_Notation(), this.getDTDNotation(), this.getDTDNotation_Entity(), "notation", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES);
-		initEReference(getDTDExternalEntity_EntityReferencedFromAnotherFile(), this.getDTDFile(), null, "entityReferencedFromAnotherFile", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES);
+		initEClass(dtdExternalEntityEClass, DTDExternalEntity.class, "DTDExternalEntity", !IS_ABSTRACT, !IS_INTERFACE); //$NON-NLS-1$
+		initEAttribute(getDTDExternalEntity_SystemID(), ecorePackage.getEString(), "systemID", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID); //$NON-NLS-1$
+		initEAttribute(getDTDExternalEntity_PublicID(), ecorePackage.getEString(), "publicID", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID); //$NON-NLS-1$
+		initEReference(getDTDExternalEntity_Notation(), this.getDTDNotation(), this.getDTDNotation_Entity(), "notation", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES); //$NON-NLS-1$
+		initEReference(getDTDExternalEntity_EntityReferencedFromAnotherFile(), this.getDTDFile(), null, "entityReferencedFromAnotherFile", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES); //$NON-NLS-1$
 
-		initEClass(dtdInternalEntityEClass, DTDInternalEntity.class, "DTDInternalEntity", !IS_ABSTRACT, !IS_INTERFACE);
-		initEAttribute(getDTDInternalEntity_Value(), ecorePackage.getEString(), "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID);
+		initEClass(dtdInternalEntityEClass, DTDInternalEntity.class, "DTDInternalEntity", !IS_ABSTRACT, !IS_INTERFACE); //$NON-NLS-1$
+		initEAttribute(getDTDInternalEntity_Value(), ecorePackage.getEString(), "value", null, 0, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID); //$NON-NLS-1$
 
-		initEClass(dtdParameterEntityReferenceEClass, DTDParameterEntityReference.class, "DTDParameterEntityReference", !IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getDTDParameterEntityReference_Entity(), this.getDTDEntity(), this.getDTDEntity_ParmEntityRef(), "entity", null, 1, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES);
+		initEClass(dtdParameterEntityReferenceEClass, DTDParameterEntityReference.class, "DTDParameterEntityReference", !IS_ABSTRACT, !IS_INTERFACE); //$NON-NLS-1$
+		initEReference(getDTDParameterEntityReference_Entity(), this.getDTDEntity(), this.getDTDEntity_ParmEntityRef(), "entity", null, 1, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES); //$NON-NLS-1$
 
-		initEClass(dtdEntityReferenceContentEClass, DTDEntityReferenceContent.class, "DTDEntityReferenceContent", !IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getDTDEntityReferenceContent_ElementReferencedEntity(), this.getDTDEntity(), this.getDTDEntity_EntityReference(), "elementReferencedEntity", null, 1, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES);
+		initEClass(dtdEntityReferenceContentEClass, DTDEntityReferenceContent.class, "DTDEntityReferenceContent", !IS_ABSTRACT, !IS_INTERFACE); //$NON-NLS-1$
+		initEReference(getDTDEntityReferenceContent_ElementReferencedEntity(), this.getDTDEntity(), this.getDTDEntity_EntityReference(), "elementReferencedEntity", null, 1, 1, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES); //$NON-NLS-1$
 
-		initEClass(dtdContentEClass, DTDContent.class, "DTDContent", IS_ABSTRACT, !IS_INTERFACE);
-		initEReference(getDTDContent_DTDFile(), this.getDTDFile(), this.getDTDFile_DTDContent(), "DTDFile", null, 0, 1, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES);
+		initEClass(dtdContentEClass, DTDContent.class, "DTDContent", IS_ABSTRACT, !IS_INTERFACE); //$NON-NLS-1$
+		initEReference(getDTDContent_DTDFile(), this.getDTDFile(), this.getDTDFile_DTDContent(), "DTDFile", null, 0, 1, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES); //$NON-NLS-1$
 
 		// Initialize enums and add enum literals
-		initEEnum(dtdOccurrenceTypeEEnum, DTDOccurrenceType.class, "DTDOccurrenceType");
+		initEEnum(dtdOccurrenceTypeEEnum, DTDOccurrenceType.class, "DTDOccurrenceType"); //$NON-NLS-1$
 		addEEnumLiteral(dtdOccurrenceTypeEEnum, DTDOccurrenceType.ONE_LITERAL);
 		addEEnumLiteral(dtdOccurrenceTypeEEnum, DTDOccurrenceType.OPTIONAL_LITERAL);
 		addEEnumLiteral(dtdOccurrenceTypeEEnum, DTDOccurrenceType.ONE_OR_MORE_LITERAL);
 		addEEnumLiteral(dtdOccurrenceTypeEEnum, DTDOccurrenceType.ZERO_OR_MORE_LITERAL);
 
-		initEEnum(dtdDefaultKindEEnum, DTDDefaultKind.class, "DTDDefaultKind");
+		initEEnum(dtdDefaultKindEEnum, DTDDefaultKind.class, "DTDDefaultKind"); //$NON-NLS-1$
 		addEEnumLiteral(dtdDefaultKindEEnum, DTDDefaultKind.IMPLIED_LITERAL);
 		addEEnumLiteral(dtdDefaultKindEEnum, DTDDefaultKind.REQUIRED_LITERAL);
 		addEEnumLiteral(dtdDefaultKindEEnum, DTDDefaultKind.FIXED_LITERAL);
 		addEEnumLiteral(dtdDefaultKindEEnum, DTDDefaultKind.NOFIXED_LITERAL);
 
-		initEEnum(dtdBasicTypeKindEEnum, DTDBasicTypeKind.class, "DTDBasicTypeKind");
+		initEEnum(dtdBasicTypeKindEEnum, DTDBasicTypeKind.class, "DTDBasicTypeKind"); //$NON-NLS-1$
 		addEEnumLiteral(dtdBasicTypeKindEEnum, DTDBasicTypeKind.NONE_LITERAL);
 		addEEnumLiteral(dtdBasicTypeKindEEnum, DTDBasicTypeKind.CDATA_LITERAL);
 		addEEnumLiteral(dtdBasicTypeKindEEnum, DTDBasicTypeKind.ID_LITERAL);
@@ -1185,15 +1185,15 @@ public class DTDPackageImpl extends EPackageImpl implements DTDPackage {
 		addEEnumLiteral(dtdBasicTypeKindEEnum, DTDBasicTypeKind.NMTOKEN_LITERAL);
 		addEEnumLiteral(dtdBasicTypeKindEEnum, DTDBasicTypeKind.NMTOKENS_LITERAL);
 
-		initEEnum(dtdEnumGroupKindEEnum, DTDEnumGroupKind.class, "DTDEnumGroupKind");
+		initEEnum(dtdEnumGroupKindEEnum, DTDEnumGroupKind.class, "DTDEnumGroupKind"); //$NON-NLS-1$
 		addEEnumLiteral(dtdEnumGroupKindEEnum, DTDEnumGroupKind.NAME_TOKEN_GROUP_LITERAL);
 		addEEnumLiteral(dtdEnumGroupKindEEnum, DTDEnumGroupKind.NOTATION_GROUP_LITERAL);
 
-		initEEnum(dtdGroupKindEEnum, DTDGroupKind.class, "DTDGroupKind");
+		initEEnum(dtdGroupKindEEnum, DTDGroupKind.class, "DTDGroupKind"); //$NON-NLS-1$
 		addEEnumLiteral(dtdGroupKindEEnum, DTDGroupKind.SEQUENCE_LITERAL);
 		addEEnumLiteral(dtdGroupKindEEnum, DTDGroupKind.CHOICE_LITERAL);
 
-		initEEnum(xmlSchemaDefinedTypeEEnum, XMLSchemaDefinedType.class, "XMLSchemaDefinedType");
+		initEEnum(xmlSchemaDefinedTypeEEnum, XMLSchemaDefinedType.class, "XMLSchemaDefinedType"); //$NON-NLS-1$
 		addEEnumLiteral(xmlSchemaDefinedTypeEEnum, XMLSchemaDefinedType.NONE_LITERAL);
 		addEEnumLiteral(xmlSchemaDefinedTypeEEnum, XMLSchemaDefinedType.STRING_LITERAL);
 		addEEnumLiteral(xmlSchemaDefinedTypeEEnum, XMLSchemaDefinedType.BOOLEAN_LITERAL);

@@ -96,13 +96,13 @@ public class ParameterEntityReference extends NamedTopLevelNode {
 	}
 
 	public void setReferencedEntity(String name) {
-		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_PARM_ENTITY_REF_CHG_ENTITY_REF")); //$NON-NLS-1$
+		beginRecording(this, DTDCoreMessages._UI_LABEL_PARM_ENTITY_REF_CHG_ENTITY_REF); //$NON-NLS-1$
 		setReferencedEntity(this, name);
 		endRecording(this);
 	}
 
 	public void setText(String newText) {
-		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_PARM_ENTITY_REF_COMMENT_CHG")); //$NON-NLS-1$
+		beginRecording(this, DTDCoreMessages._UI_LABEL_PARM_ENTITY_REF_COMMENT_CHG); //$NON-NLS-1$
 		StartEndPair pair = new StartEndPair();
 		getStartAndEndOffsetForText(pair);
 		replaceText(this, pair.startOffset, pair.endOffset - pair.startOffset, newText);

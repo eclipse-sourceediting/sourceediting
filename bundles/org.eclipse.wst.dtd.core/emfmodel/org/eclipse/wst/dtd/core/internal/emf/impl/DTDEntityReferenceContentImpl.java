@@ -49,17 +49,17 @@ public class DTDEntityReferenceContentImpl extends DTDRepeatableContentImpl impl
 	public String getContentName() {
 		DTDEntity e = getElementReferencedEntity();
 		if (e == null)
-			return "";
+			return ""; //$NON-NLS-1$
 		return e.getName();
 	}
 
 	public String unparseRepeatableContent() {
 		DTDEntity entityRef = getElementReferencedEntity();
 		if (entityRef.isParameterEntity()) {
-			return "%" + getContentName() + ";";
+			return "%" + getContentName() + ";"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		else {
-			return "&" + getContentName() + ";";
+			return "&" + getContentName() + ";"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

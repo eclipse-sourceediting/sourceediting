@@ -73,10 +73,10 @@ public class DTDScanner {
 		CMNode cmNode = null;
 		contentString.skipPastSpaces();
 		if (contentString.skippedString(empty_string)) {
-			cmNode = new CMBasicNode("EMPTY", CMNodeType.EMPTY);
+			cmNode = new CMBasicNode("EMPTY", CMNodeType.EMPTY); //$NON-NLS-1$
 		}
 		else if (contentString.skippedString(any_string)) {
-			cmNode = new CMBasicNode("ANY", CMNodeType.ANY);
+			cmNode = new CMBasicNode("ANY", CMNodeType.ANY); //$NON-NLS-1$
 		}
 		else if (contentString.lookingAtChar('%', true)) {
 			cmNode = new CMReferenceNode(contentString.getData(), CMNodeType.ENTITY_REFERENCE);
@@ -113,7 +113,7 @@ public class DTDScanner {
 		// System.out.println("ScanMixed...");
 		CMGroupNode cmNode = new CMGroupNode();
 		cmNode.setGroupKind(CMNodeType.GROUP_CHOICE);
-		cmNode.addChild(new CMBasicNode("#PCDATA", CMNodeType.PCDATA));
+		cmNode.addChild(new CMBasicNode("#PCDATA", CMNodeType.PCDATA)); //$NON-NLS-1$
 
 		// int prevNodeIndex = -1;
 		boolean starRequired = false;
@@ -159,7 +159,7 @@ public class DTDScanner {
 			int len = nodeOffset - prevNodeOffset;
 			String refName = contentString.getString(prevNodeOffset, len);
 			prevNodeOffset = nodeOffset;
-			if (refName.startsWith("%"))
+			if (refName.startsWith("%")) //$NON-NLS-1$
 				cmNode.addChild(new CMReferenceNode(refName, CMNodeType.ENTITY_REFERENCE));
 			else
 				cmNode.addChild(new CMReferenceNode(refName, CMNodeType.ELEMENT_REFERENCE));
@@ -236,7 +236,7 @@ public class DTDScanner {
 			nodeName = contentString.getString(prevNodeOffset, len);
 
 			CMRepeatableNode rn;
-			if (nodeName.startsWith("%")) {
+			if (nodeName.startsWith("%")) { //$NON-NLS-1$
 				rn = new CMReferenceNode(nodeName, CMNodeType.ENTITY_REFERENCE);
 			}
 			else {
@@ -378,28 +378,28 @@ public class DTDScanner {
 						attNode.type = new String(id_string);
 					}
 					else if (!contentString.lookingAtChar('S', true)) {
-						attNode.type = "IDREF";
+						attNode.type = "IDREF"; //$NON-NLS-1$
 					}
 					else {
-						attNode.type = "IDREFS";
+						attNode.type = "IDREFS"; //$NON-NLS-1$
 					}
 					scannerState = Att_Scanner_State_DefaultType;
 				}
 				else if (contentString.skippedString(entit_string)) {
 					if (contentString.lookingAtChar('Y', true)) {
-						attNode.type = "ENTITY";
+						attNode.type = "ENTITY"; //$NON-NLS-1$
 					}
 					else if (contentString.skippedString(ies_string)) {
-						attNode.type = "ENTITIES";
+						attNode.type = "ENTITIES"; //$NON-NLS-1$
 					}
 					scannerState = Att_Scanner_State_DefaultType;
 				}
 				else if (contentString.skippedString(nmtoken_string)) {
 					if (contentString.lookingAtChar('S', true)) {
-						attNode.type = "NMTOKENS";
+						attNode.type = "NMTOKENS"; //$NON-NLS-1$
 					}
 					else {
-						attNode.type = "NMTOKEN";
+						attNode.type = "NMTOKEN"; //$NON-NLS-1$
 					}
 					scannerState = Att_Scanner_State_DefaultType;
 				}
@@ -408,21 +408,21 @@ public class DTDScanner {
 						contentString.skipPastSpaces();
 					}
 					if (!contentString.lookingAtChar('(', true)) {
-						System.out.println(" missing ( in notation ");
+						System.out.println(" missing ( in notation "); //$NON-NLS-1$
 					}
-					attNode.type = "NOTATION";
+					attNode.type = "NOTATION"; //$NON-NLS-1$
 					attNode.enumList = scanEnumeration(contentString, true);
 					scannerState = Att_Scanner_State_DefaultType;
 				}
 				else if (contentString.lookingAtChar('(', true)) {
-					attNode.type = "ENUMERATION";
+					attNode.type = "ENUMERATION"; //$NON-NLS-1$
 					attNode.enumList = scanEnumeration(contentString, false);
 					scannerState = Att_Scanner_State_DefaultType;
 				}
 				else {
 					scannerState = checkForAttributeWithPEReference(attNode, scannerState);
 					if (scannerState == Att_Scanner_State_Type) {
-						setErrorString("Failed to find type for attribute '" + attNode.name + "'.  Please refer to the original DTD file.");
+						setErrorString("Failed to find type for attribute '" + attNode.name + "'.  Please refer to the original DTD file."); //$NON-NLS-1$ //$NON-NLS-2$
 						// we failed to find a type for this attribute
 						return attList;
 					}
@@ -445,7 +445,7 @@ public class DTDScanner {
 					}
 					else
 						// "default"
-						attNode.defaultType = "NOFIXED";
+						attNode.defaultType = "NOFIXED"; //$NON-NLS-1$
 
 					if (contentString.lookingAtSpace(true))
 						contentString.skipPastSpaces();
@@ -508,7 +508,7 @@ public class DTDScanner {
 
 			// System.out.println("State_name : " + rawText);
 
-			if (rawText.startsWith("%") && rawText.endsWith(";")) {
+			if (rawText.startsWith("%") && rawText.endsWith(";")) { //$NON-NLS-1$ //$NON-NLS-2$
 				String pe = rawText.substring(1, rawText.length() - 1);
 
 				pEntity = entityPool.referPara(pe);
@@ -529,7 +529,7 @@ public class DTDScanner {
 		else if (scannerState == Att_Scanner_State_Type) {
 			if (contentString.lookingAtChar('%', true)) {
 				rawText = getPEName();
-				attNode.type = "%" + rawText;
+				attNode.type = "%" + rawText; //$NON-NLS-1$
 				String peName = rawText.substring(0, rawText.length() - 1);
 				// System.out.println("State_type : pe- " + peName);
 				pEntity = entityPool.referPara(peName);
@@ -625,7 +625,7 @@ public class DTDScanner {
 					nextState = Att_Scanner_State_DefaultType;
 				}
 				else
-					System.out.println("WhatistheNext Attr Part - is not an Attr Type");
+					System.out.println("WhatistheNext Attr Part - is not an Attr Type"); //$NON-NLS-1$
 
 			}
 
@@ -803,7 +803,7 @@ public class DTDScanner {
 
 			if (!sp.lookingAtChar('|', true)) {
 				if (!sp.lookingAtChar(')', true)) {
-					System.out.println("scanning enum values - error missing ')'");
+					System.out.println("scanning enum values - error missing ')'"); //$NON-NLS-1$
 					break;
 				}
 				break;
@@ -847,7 +847,7 @@ public class DTDScanner {
 		sp.skipToChar(qchar, true);
 		int len = sp.getCurrentOffset() - sOffset - 1;
 		if (len == 0)
-			value = "";
+			value = ""; //$NON-NLS-1$
 		else
 			value = sp.getString(sOffset, len);
 
@@ -1100,11 +1100,11 @@ public class DTDScanner {
 		}
 
 		// DTDScanner sc = new DTDScanner(argv[0]);
-		DTDScanner sc = new DTDScanner("hello.dtd", " gif SYSTEM \"GIF File\" ");
+		DTDScanner sc = new DTDScanner("hello.dtd", " gif SYSTEM \"GIF File\" "); //$NON-NLS-1$ //$NON-NLS-2$
 
 		NotationDecl n = sc.scanNotationDecl();
-		System.out.println("Noation Name: " + n.getNodeName());
-		System.out.println("SystemId: " + n.getSystemId());
+		System.out.println("Noation Name: " + n.getNodeName()); //$NON-NLS-1$
+		System.out.println("SystemId: " + n.getSystemId()); //$NON-NLS-1$
 
 
 		// Attributes

@@ -44,7 +44,7 @@ public abstract class DTDEntityContentImpl extends EObjectImpl implements DTDEnt
 	}
 
 	public String getPathname() {
-		return DTDPathnameUtil.makePath(getDTDEntity().getPathname(), "Content", null, -1);
+		return DTDPathnameUtil.makePath(getDTDEntity().getPathname(), "Content", null, -1); //$NON-NLS-1$
 	}
 
 	public DTDObject findObject(String relativePath) {
@@ -66,7 +66,7 @@ public abstract class DTDEntityContentImpl extends EObjectImpl implements DTDEnt
 	public void setDTDEntity(DTDEntity newDTDEntity) {
 		if (newDTDEntity != eContainer || (eContainerFeatureID != DTDPackage.DTD_ENTITY_CONTENT__DTD_ENTITY && newDTDEntity != null)) {
 			if (EcoreUtil.isAncestor(this, newDTDEntity))
-				throw new IllegalArgumentException("Recursive containment not allowed for " + toString() + ".");
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString() + "."); //$NON-NLS-1$ //$NON-NLS-2$
 			NotificationChain msgs = null;
 			if (eContainer != null)
 				msgs = eBasicRemoveFromContainer(msgs);

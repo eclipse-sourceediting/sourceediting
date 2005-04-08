@@ -63,9 +63,9 @@ public class DTDInternalEntityImpl extends DTDEntityContentImpl implements DTDIn
 	public String unparse() {
 		StringBuffer sb = new StringBuffer(64);
 		if (getValue() == null)
-			sb.append("\"\"");
+			sb.append("\"\""); //$NON-NLS-1$
 		else {
-			sb.append("\"").append(replaceDoubleQuotes(getValue())).append("\"");
+			sb.append("\"").append(replaceDoubleQuotes(getValue())).append("\""); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return sb.toString();
 	}
@@ -81,7 +81,7 @@ public class DTDInternalEntityImpl extends DTDEntityContentImpl implements DTDIn
 			char current = characters.current();
 
 			if (current == '"') {
-				newValue.append("&#34;");
+				newValue.append("&#34;"); //$NON-NLS-1$
 			}
 			else {
 				newValue.append(current);
@@ -230,7 +230,7 @@ public class DTDInternalEntityImpl extends DTDEntityContentImpl implements DTDIn
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (value: ");
+		result.append(" (value: "); //$NON-NLS-1$
 		result.append(value);
 		result.append(')');
 		return result.toString();

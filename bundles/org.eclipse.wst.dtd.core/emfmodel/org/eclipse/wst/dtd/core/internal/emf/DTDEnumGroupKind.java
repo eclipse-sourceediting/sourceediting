@@ -61,7 +61,7 @@ public final class DTDEnumGroupKind extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDEnumGroupKind NAME_TOKEN_GROUP_LITERAL = new DTDEnumGroupKind(NAME_TOKEN_GROUP, "NAME_TOKEN_GROUP");
+	public static final DTDEnumGroupKind NAME_TOKEN_GROUP_LITERAL = new DTDEnumGroupKind(NAME_TOKEN_GROUP, "NAME_TOKEN_GROUP"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>NOTATION GROUP</b></em>' literal object. <!--
@@ -76,7 +76,7 @@ public final class DTDEnumGroupKind extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDEnumGroupKind NOTATION_GROUP_LITERAL = new DTDEnumGroupKind(NOTATION_GROUP, "NOTATION_GROUP");
+	public static final DTDEnumGroupKind NOTATION_GROUP_LITERAL = new DTDEnumGroupKind(NOTATION_GROUP, "NOTATION_GROUP"); //$NON-NLS-1$
 
 	/**
 	 * An array of all the '<em><b>Enum Group Kind</b></em>' enumerators.

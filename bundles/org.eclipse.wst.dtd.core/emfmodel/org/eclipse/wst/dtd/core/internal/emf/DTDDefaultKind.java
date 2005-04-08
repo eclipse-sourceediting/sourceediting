@@ -82,7 +82,7 @@ public final class DTDDefaultKind extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDDefaultKind IMPLIED_LITERAL = new DTDDefaultKind(IMPLIED, "IMPLIED");
+	public static final DTDDefaultKind IMPLIED_LITERAL = new DTDDefaultKind(IMPLIED, "IMPLIED"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>REQUIRED</b></em>' literal object. <!-- begin-user-doc
@@ -97,7 +97,7 @@ public final class DTDDefaultKind extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDDefaultKind REQUIRED_LITERAL = new DTDDefaultKind(REQUIRED, "REQUIRED");
+	public static final DTDDefaultKind REQUIRED_LITERAL = new DTDDefaultKind(REQUIRED, "REQUIRED"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>FIXED</b></em>' literal object. <!-- begin-user-doc
@@ -112,7 +112,7 @@ public final class DTDDefaultKind extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDDefaultKind FIXED_LITERAL = new DTDDefaultKind(FIXED, "FIXED");
+	public static final DTDDefaultKind FIXED_LITERAL = new DTDDefaultKind(FIXED, "FIXED"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>NOFIXED</b></em>' literal object. <!-- begin-user-doc
@@ -127,7 +127,7 @@ public final class DTDDefaultKind extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDDefaultKind NOFIXED_LITERAL = new DTDDefaultKind(NOFIXED, "NOFIXED");
+	public static final DTDDefaultKind NOFIXED_LITERAL = new DTDDefaultKind(NOFIXED, "NOFIXED"); //$NON-NLS-1$
 
 	/**
 	 * An array of all the '<em><b>Default Kind</b></em>' enumerators.

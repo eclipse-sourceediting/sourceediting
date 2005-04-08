@@ -14,12 +14,12 @@ import org.eclipse.emf.common.notify.impl.AdapterImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 
 public abstract class CMNodeImpl extends AdapterImpl implements CMNode {
-	protected static final String PROPERTY_DOCUMENTATION = "documentation";
-	protected static final String PROPERTY_DOCUMENTATION_SOURCE = "documentationSource";
-	protected static final String PROPERTY_DOCUMENTATION_LANGUAGE = "documentationLanguage";
-	protected static final String PROPERTY_MOF_NOTIFIER = "key";
-	protected static final String PROPERTY_DEFINITION_INFO = "http://org.eclipse.wst/cm/properties/definitionInfo";
-	protected static final String PROPERTY_DEFINITION = "http://org.eclipse.wst/cm/properties/definition";
+	protected static final String PROPERTY_DOCUMENTATION = "documentation"; //$NON-NLS-1$
+	protected static final String PROPERTY_DOCUMENTATION_SOURCE = "documentationSource"; //$NON-NLS-1$
+	protected static final String PROPERTY_DOCUMENTATION_LANGUAGE = "documentationLanguage"; //$NON-NLS-1$
+	protected static final String PROPERTY_MOF_NOTIFIER = "key"; //$NON-NLS-1$
+	protected static final String PROPERTY_DEFINITION_INFO = "http://org.eclipse.wst/cm/properties/definitionInfo"; //$NON-NLS-1$
+	protected static final String PROPERTY_DEFINITION = "http://org.eclipse.wst/cm/properties/definition"; //$NON-NLS-1$
 
 	public abstract Object getKey();
 

@@ -12,10 +12,10 @@
 package org.eclipse.wst.dtd.core.internal.emf;
 
 public class DTDConstants {
-	public static String DTD_ERROR_LINE_PREFIX = "<!--ERROR ";
-	public static String DTD_ERROR_LINE_SUFFIX = " -->";
-	public static final String DTD_EXTENSION = "dtd";
-	public static final String XML_EXTENSION = "xml";
-	public static final String XMI_EXTENSION = "xmi";
-	public static final String DTD_XMI_EXTENSION = "dtd.xmi";
+	public static String DTD_ERROR_LINE_PREFIX = "<!--ERROR "; //$NON-NLS-1$
+	public static String DTD_ERROR_LINE_SUFFIX = " -->"; //$NON-NLS-1$
+	public static final String DTD_EXTENSION = "dtd"; //$NON-NLS-1$
+	public static final String XML_EXTENSION = "xml"; //$NON-NLS-1$
+	public static final String XMI_EXTENSION = "xmi"; //$NON-NLS-1$
+	public static final String DTD_XMI_EXTENSION = "dtd.xmi"; //$NON-NLS-1$
 }

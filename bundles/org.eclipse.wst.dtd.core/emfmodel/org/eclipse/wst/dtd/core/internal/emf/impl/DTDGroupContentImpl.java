@@ -76,7 +76,7 @@ public class DTDGroupContentImpl extends DTDRepeatableContentImpl implements DTD
 	}
 
 	public String getContentName() {
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	public String getContentDetail() {
@@ -87,7 +87,7 @@ public class DTDGroupContentImpl extends DTDRepeatableContentImpl implements DTD
 	}
 
 	public String unparseRepeatableContent() {
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	/**
@@ -283,7 +283,7 @@ public class DTDGroupContentImpl extends DTDRepeatableContentImpl implements DTD
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (groupKind: ");
+		result.append(" (groupKind: "); //$NON-NLS-1$
 		result.append(groupKind);
 		result.append(')');
 		return result.toString();

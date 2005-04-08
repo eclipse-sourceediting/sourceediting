@@ -81,7 +81,7 @@ public final class DTDOccurrenceType extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDOccurrenceType ONE_LITERAL = new DTDOccurrenceType(ONE, "ONE");
+	public static final DTDOccurrenceType ONE_LITERAL = new DTDOccurrenceType(ONE, "ONE"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>OPTIONAL</b></em>' literal object. <!-- begin-user-doc
@@ -96,7 +96,7 @@ public final class DTDOccurrenceType extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDOccurrenceType OPTIONAL_LITERAL = new DTDOccurrenceType(OPTIONAL, "OPTIONAL");
+	public static final DTDOccurrenceType OPTIONAL_LITERAL = new DTDOccurrenceType(OPTIONAL, "OPTIONAL"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>ONE OR MORE</b></em>' literal object. <!--
@@ -111,7 +111,7 @@ public final class DTDOccurrenceType extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDOccurrenceType ONE_OR_MORE_LITERAL = new DTDOccurrenceType(ONE_OR_MORE, "ONE_OR_MORE");
+	public static final DTDOccurrenceType ONE_OR_MORE_LITERAL = new DTDOccurrenceType(ONE_OR_MORE, "ONE_OR_MORE"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>ZERO OR MORE</b></em>' literal object. <!--
@@ -126,7 +126,7 @@ public final class DTDOccurrenceType extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDOccurrenceType ZERO_OR_MORE_LITERAL = new DTDOccurrenceType(ZERO_OR_MORE, "ZERO_OR_MORE");
+	public static final DTDOccurrenceType ZERO_OR_MORE_LITERAL = new DTDOccurrenceType(ZERO_OR_MORE, "ZERO_OR_MORE"); //$NON-NLS-1$
 
 	/**
 	 * An array of all the '<em><b>Occurrence Type</b></em>' enumerators.

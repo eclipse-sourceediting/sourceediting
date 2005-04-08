@@ -58,7 +58,7 @@ public class DTDElementReferenceContentImpl extends DTDRepeatableContentImpl imp
 	public String getContentName() {
 		DTDElement e = getReferencedElement();
 		if (e == null)
-			return "";
+			return ""; //$NON-NLS-1$
 		return e.getName();
 	}
 

@@ -65,7 +65,7 @@ public class AttributeEnumList extends DTDNode {
 	}
 
 	public void setItems(String[] items) {
-		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_ATTR_ENUM_ITEMS")); //$NON-NLS-1$
+		beginRecording(this, DTDCoreMessages._UI_LABEL_ATTR_ENUM_ITEMS); //$NON-NLS-1$
 		setItems(this, items);
 		endRecording(this);
 	}

@@ -29,22 +29,22 @@ public class DTDUniqueNameHelper {
 
 	static public String getUniqueElementName(DTDFile dtdFile) {
 		List elements = dtdFile.listDTDElement();
-		return getUniqueName(elements, "NewElement");
+		return getUniqueName(elements, "NewElement"); //$NON-NLS-1$
 	}
 
 	static public String getUniqueEntityName(DTDFile dtdFile) {
 		List entities = dtdFile.listDTDEntity();
-		return getUniqueName(entities, "NewEntity");
+		return getUniqueName(entities, "NewEntity"); //$NON-NLS-1$
 	}
 
 	static public String getUniqueNotationName(DTDFile dtdFile) {
 		List notations = dtdFile.listDTDNotation();
-		return getUniqueName(notations, "NewNotation");
+		return getUniqueName(notations, "NewNotation"); //$NON-NLS-1$
 	}
 
 	static public String getUniqueAttributeName(DTDElement element) {
 		List attrs = element.getDTDAttribute();
-		return getUniqueName(attrs, "NewAttribute");
+		return getUniqueName(attrs, "NewAttribute"); //$NON-NLS-1$
 	}
 
 	static public String getUniqueName(List objs, String token) {
@@ -68,7 +68,7 @@ public class DTDUniqueNameHelper {
 			}
 		}
 		// we shouldn't get here
-		return "No Name found";
+		return "No Name found"; //$NON-NLS-1$
 	}
 
 	static public String getName(Object obj) {
@@ -84,7 +84,7 @@ public class DTDUniqueNameHelper {
 		else if (obj instanceof DTDAttribute) {
 			return ((DTDAttribute) obj).getName();
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 
@@ -94,7 +94,7 @@ public class DTDUniqueNameHelper {
 	protected static String getUniqueElementNameGen(DTDFile dtdFile) {
 
 		List elements = dtdFile.listDTDElement();
-		return getUniqueName(elements, "NewElement");
+		return getUniqueName(elements, "NewElement"); //$NON-NLS-1$
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class DTDUniqueNameHelper {
 	protected static String getUniqueEntityNameGen(DTDFile dtdFile) {
 
 		List entities = dtdFile.listDTDEntity();
-		return getUniqueName(entities, "NewEntity");
+		return getUniqueName(entities, "NewEntity"); //$NON-NLS-1$
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class DTDUniqueNameHelper {
 	protected static String getUniqueNotationNameGen(DTDFile dtdFile) {
 
 		List notations = dtdFile.listDTDNotation();
-		return getUniqueName(notations, "NewNotation");
+		return getUniqueName(notations, "NewNotation"); //$NON-NLS-1$
 	}
 
 	/**
@@ -121,7 +121,7 @@ public class DTDUniqueNameHelper {
 	protected static String getUniqueAttributeNameGen(DTDElement element) {
 
 		List attrs = element.getDTDAttribute();
-		return getUniqueName(attrs, "NewAttribute");
+		return getUniqueName(attrs, "NewAttribute"); //$NON-NLS-1$
 	}
 
 	/**
@@ -149,7 +149,7 @@ public class DTDUniqueNameHelper {
 			}
 		}
 		// we shouldn't get here
-		return "No Name found";
+		return "No Name found"; //$NON-NLS-1$
 	}
 
 	/**
@@ -169,6 +169,6 @@ public class DTDUniqueNameHelper {
 		else if (obj instanceof DTDAttribute) {
 			return ((DTDAttribute) obj).getName();
 		}
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 }// DTDUniqueNameHelper

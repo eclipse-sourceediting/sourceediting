@@ -21,8 +21,6 @@ import org.eclipse.wst.dtd.core.internal.emf.DTDParameterEntityReference;
 import org.eclipse.wst.dtd.core.internal.emf.DTDSourceOffset;
 
 public class DTDObjectFinder extends DTDVisitor {
-	public static final String copyright = "(c) Copyright IBM Corporation 2000, 2002.";
-
 	public class SourceOffset {
 		// Convenience class to find containment of object
 		private int start, end;

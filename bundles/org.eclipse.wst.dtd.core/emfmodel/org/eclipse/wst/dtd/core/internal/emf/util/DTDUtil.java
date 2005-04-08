@@ -175,7 +175,7 @@ public class DTDUtil {
 			return true;
 		}
 		catch (Exception ex) {
-			System.out.println("Save model exception " + ex);
+			System.out.println("Save model exception " + ex); //$NON-NLS-1$
 			ex.printStackTrace();
 			return false;
 		}
@@ -348,18 +348,18 @@ public class DTDUtil {
 	// This gets the name with pseudo namespace prefixes if dtdFile is not
 	// null
 	public static String getName(DTDObject obj, DTDFile dtdFile) {
-		String name = "";
+		String name = ""; //$NON-NLS-1$
 		if (obj instanceof DTDEntity) {
 			DTDEntity entity = (DTDEntity) obj;
 			if (dtdFile != null && !entity.getDTDFile().equals(dtdFile)) {
-				name = new Path(entity.getDTDFile().getName()).lastSegment() + ": ";
+				name = new Path(entity.getDTDFile().getName()).lastSegment() + ": "; //$NON-NLS-1$
 			}
-			name += "%" + ((DTDEntity) obj).getName() + ";";
+			name += "%" + ((DTDEntity) obj).getName() + ";"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		else if (obj instanceof DTDElement) {
 			DTDElement element = (DTDElement) obj;
 			if (dtdFile != null && !element.getDTDFile().equals(dtdFile)) {
-				name = new Path(element.getDTDFile().getName()).lastSegment() + ": ";
+				name = new Path(element.getDTDFile().getName()).lastSegment() + ": "; //$NON-NLS-1$
 			}
 			name += ((DTDElement) obj).getName();
 		}
@@ -374,10 +374,10 @@ public class DTDUtil {
 
 		switch (groupKind) {
 			case DTDGroupKind.SEQUENCE :
-				type = "DTDSequence";
+				type = "DTDSequence"; //$NON-NLS-1$
 				break;
 			case DTDGroupKind.CHOICE :
-				type = "DTDChoice";
+				type = "DTDChoice"; //$NON-NLS-1$
 				break;
 		}
 
@@ -386,24 +386,24 @@ public class DTDUtil {
 	}
 
 	public static String getReferenceType(int occurrence) {
-		String type = "DTDReference";
+		String type = "DTDReference"; //$NON-NLS-1$
 		type += getRepeatableTypeSuffix(occurrence);
 		return type;
 	}
 
 	private static String getRepeatableTypeSuffix(int occurrence) {
-		return "(" + (char) occurrence + ")";
+		return "(" + (char) occurrence + ")"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public static void main(String args[]) {
-		System.out.println("\nStarting ...");
+		System.out.println("\nStarting ..."); //$NON-NLS-1$
 
 		if (args.length != 1)
-			System.out.println("usage: DtdUtil inputfile.dtd");
+			System.out.println("usage: DtdUtil inputfile.dtd"); //$NON-NLS-1$
 
 		java.io.File inputFile = new File(args[0]);
 
-		String dtdFileName = "";
+		String dtdFileName = ""; //$NON-NLS-1$
 		try {
 			dtdFileName = inputFile.getCanonicalPath();
 		}
@@ -419,12 +419,12 @@ public class DTDUtil {
 		// TODO: fix port
 		// d2m.parse(dtdFileName);
 		try {
-			d2m.saveAs(dtdModelName + "." + DTDConstants.DTD_XMI_EXTENSION);
+			d2m.saveAs(dtdModelName + "." + DTDConstants.DTD_XMI_EXTENSION); //$NON-NLS-1$
 		}
 		catch (Exception e) {
-			System.out.println("Exception thrown during model save: " + e);
+			System.out.println("Exception thrown during model save: " + e); //$NON-NLS-1$
 		}
-		System.out.println("Done.");
+		System.out.println("Done."); //$NON-NLS-1$
 	}
 
 	public org.eclipse.core.runtime.IPath getPath() {
@@ -433,7 +433,7 @@ public class DTDUtil {
 			return currentDTDPath.removeLastSegments(1).addTrailingSeparator();
 		}
 
-		return new Path("");
+		return new Path(""); //$NON-NLS-1$
 	}
 
 	// /**

@@ -72,7 +72,7 @@ public class DTDElementImpl extends EClassImpl implements DTDElement {
 	}
 
 	public String getPathname() {
-		return DTDPathnameUtil.makePath(null, "Elem", getName(), -1);
+		return DTDPathnameUtil.makePath(null, "Elem", getName(), -1); //$NON-NLS-1$
 	}
 
 	public DTDObject findObject(String relativePath) {
@@ -86,11 +86,11 @@ public class DTDElementImpl extends EClassImpl implements DTDElement {
 		String name = (String) result[1];
 
 		DTDObject obj = null;
-		if (type.equals("Attr")) {
+		if (type.equals("Attr")) { //$NON-NLS-1$
 			// TODO: fix port
 			// obj = findAttribute(name);
 		}
-		else if ((type.equals("Content")) || (type.equals("ElemRef")) || (type.equals("EntRef"))) {
+		else if ((type.equals("Content")) || (type.equals("ElemRef")) || (type.equals("EntRef"))) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			obj = getContent();
 		}
 		else {
@@ -124,13 +124,13 @@ public class DTDElementImpl extends EClassImpl implements DTDElement {
 	}
 
 	public String getAttributeDetail() {
-		String attributeString = "";
+		String attributeString = ""; //$NON-NLS-1$
 		Collection attributes = getDTDAttribute();
 		if (attributes != null) {
 			boolean seenOne = false;
 			for (java.util.Iterator i = attributes.iterator(); i.hasNext();) {
 				if (seenOne) {
-					attributeString = attributeString + ", ";
+					attributeString = attributeString + ", "; //$NON-NLS-1$
 				}
 				else {
 					seenOne = true;
@@ -510,7 +510,7 @@ public class DTDElementImpl extends EClassImpl implements DTDElement {
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (comment: ");
+		result.append(" (comment: "); //$NON-NLS-1$
 		result.append(comment);
 		result.append(')');
 		return result.toString();
@@ -639,7 +639,7 @@ public class DTDElementImpl extends EClassImpl implements DTDElement {
 	public void setDTDFile(DTDFile newDTDFile) {
 		if (newDTDFile != eContainer || (eContainerFeatureID != DTDPackage.DTD_ELEMENT__DTD_FILE && newDTDFile != null)) {
 			if (EcoreUtil.isAncestor(this, newDTDFile))
-				throw new IllegalArgumentException("Recursive containment not allowed for " + toString() + ".");
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString() + "."); //$NON-NLS-1$ //$NON-NLS-2$
 			NotificationChain msgs = null;
 			if (eContainer != null)
 				msgs = eBasicRemoveFromContainer(msgs);

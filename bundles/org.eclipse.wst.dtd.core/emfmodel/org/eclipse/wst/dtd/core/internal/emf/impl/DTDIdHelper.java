@@ -23,21 +23,21 @@ public class DTDIdHelper {
 	}
 
 	public String computeContentId(DTDElementContent content) {
-		String id = "";
+		String id = ""; //$NON-NLS-1$
 		if (content instanceof DTDEmptyContent) {
-			id = "#EMPTY";
+			id = "#EMPTY"; //$NON-NLS-1$
 		}
 		else if (content instanceof DTDPCDataContent) {
-			id = "#PCDATA";
+			id = "#PCDATA"; //$NON-NLS-1$
 		}
 		else if (content instanceof DTDEmptyContent) {
-			id = "#EMPTY";
+			id = "#EMPTY"; //$NON-NLS-1$
 		}
 		else if (content instanceof DTDElementReferenceContent) {
-			id = "#" + ((DTDElementReferenceContent) content).getReferencedElement().getName();
+			id = "#" + ((DTDElementReferenceContent) content).getReferencedElement().getName(); //$NON-NLS-1$
 		}
 		else if (content instanceof DTDEntityReferenceContent) {
-			id = "#" + ((DTDEntityReferenceContent) content).getElementReferencedEntity().getName();
+			id = "#" + ((DTDEntityReferenceContent) content).getElementReferencedEntity().getName(); //$NON-NLS-1$
 		}
 		else if (content instanceof DTDGroupContent) {
 			id = computeGroupId((DTDGroupContent) content);
@@ -46,7 +46,7 @@ public class DTDIdHelper {
 	}
 
 	public String computeGroupId(DTDGroupContent grp) {
-		String groupId = "_";
+		String groupId = "_"; //$NON-NLS-1$
 		return groupId;
 	}
 
@@ -55,21 +55,21 @@ public class DTDIdHelper {
 	 */
 	protected String computeContentIdGen(DTDElementContent content) {
 
-		String id = "";
+		String id = ""; //$NON-NLS-1$
 		if (content instanceof DTDEmptyContent) {
-			id = "#EMPTY";
+			id = "#EMPTY"; //$NON-NLS-1$
 		}
 		else if (content instanceof DTDPCDataContent) {
-			id = "#PCDATA";
+			id = "#PCDATA"; //$NON-NLS-1$
 		}
 		else if (content instanceof DTDEmptyContent) {
-			id = "#EMPTY";
+			id = "#EMPTY"; //$NON-NLS-1$
 		}
 		else if (content instanceof DTDElementReferenceContent) {
-			id = "#" + ((DTDElementReferenceContent) content).getReferencedElement().getName();
+			id = "#" + ((DTDElementReferenceContent) content).getReferencedElement().getName(); //$NON-NLS-1$
 		}
 		else if (content instanceof DTDEntityReferenceContent) {
-			id = "#" + ((DTDEntityReferenceContent) content).getElementReferencedEntity().getName();
+			id = "#" + ((DTDEntityReferenceContent) content).getElementReferencedEntity().getName(); //$NON-NLS-1$
 		}
 		else if (content instanceof DTDGroupContent) {
 			id = computeGroupId((DTDGroupContent) content);
@@ -82,7 +82,7 @@ public class DTDIdHelper {
 	 */
 	protected String computeGroupIdGen(DTDGroupContent grp) {
 
-		String groupId = "_";
+		String groupId = "_"; //$NON-NLS-1$
 		return groupId;
 	}
 }

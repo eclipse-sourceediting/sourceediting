@@ -24,7 +24,7 @@ public class CMDocumentEncodingHelper {
 			try {
 				URL url = new URL(uri);
 				inputStream = url.openStream();
-				String[] encodingInfo = (String[]) cmDocument.getProperty("encodingInfo");
+				String[] encodingInfo = (String[]) cmDocument.getProperty("encodingInfo"); //$NON-NLS-1$
 				if (encodingInfo != null) {
 					// if (Display.getCurrent() != null)
 					// {
@@ -61,8 +61,8 @@ public class CMDocumentEncodingHelper {
 	// This code is taken from org.eclipse.wst.xml.uriresolver.util.URIHelper
 	// I didn't want to add this plugin as a dependency
 	// in order to simplify our xerces dependenies
-	protected static final String FILE_PROTOCOL = "file:";
-	protected static final String PROTOCOL_PATTERN = ":";
+	protected static final String FILE_PROTOCOL = "file:"; //$NON-NLS-1$
+	protected static final String PROTOCOL_PATTERN = ":"; //$NON-NLS-1$
 
 	public static String addImpliedFileProtocol(String uri) {
 		if (!hasProtocol(uri)) {

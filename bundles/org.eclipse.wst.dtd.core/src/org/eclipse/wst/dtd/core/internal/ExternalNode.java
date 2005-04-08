@@ -188,7 +188,7 @@ public abstract class ExternalNode extends NamedTopLevelNode {
 	 *            Value to assign to publicID.
 	 */
 	public void setPublicID(String v) {
-		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_EXT_NODE_PUBLIC_ID_CHG")); //$NON-NLS-1$
+		beginRecording(this, DTDCoreMessages._UI_LABEL_EXT_NODE_PUBLIC_ID_CHG); //$NON-NLS-1$
 		setPublicID(this, v);
 		endRecording(this);
 	}
@@ -243,7 +243,7 @@ public abstract class ExternalNode extends NamedTopLevelNode {
 	 *            Value to assign to systemID.
 	 */
 	public void setSystemID(String v) {
-		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_EXT_NODE_SYSTEM_ID_CHG")); //$NON-NLS-1$
+		beginRecording(this, DTDCoreMessages._UI_LABEL_EXT_NODE_SYSTEM_ID_CHG); //$NON-NLS-1$
 		setSystemID(this, v);
 		endRecording(this);
 	}

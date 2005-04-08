@@ -63,7 +63,7 @@ public class DTDContentImpl extends ENamedElementImpl implements DTDContent, EOb
 	public void setDTDFile(DTDFile newDTDFile) {
 		if (newDTDFile != eContainer || (eContainerFeatureID != DTDPackage.DTD_CONTENT__DTD_FILE && newDTDFile != null)) {
 			if (EcoreUtil.isAncestor(this, newDTDFile))
-				throw new IllegalArgumentException("Recursive containment not allowed for " + toString() + ".");
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString() + "."); //$NON-NLS-1$ //$NON-NLS-2$
 			NotificationChain msgs = null;
 			if (eContainer != null)
 				msgs = eBasicRemoveFromContainer(msgs);

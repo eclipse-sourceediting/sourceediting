@@ -147,7 +147,7 @@ public class DTDFileImpl extends ENamedElementImpl implements DTDFile, ENamedEle
 
 
 	public String getPathname() {
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 
@@ -165,16 +165,16 @@ public class DTDFileImpl extends ENamedElementImpl implements DTDFile, ENamedEle
 		String name = (String) result[1];
 
 		DTDObject obj = null;
-		if (type.equals("Elem")) {
+		if (type.equals("Elem")) { //$NON-NLS-1$
 			obj = findElement(name);
 		}
-		else if (type.equals("Ent")) {
+		else if (type.equals("Ent")) { //$NON-NLS-1$
 			obj = findEntity(name);
 		}
-		else if (type.equals("PEnt")) {
+		else if (type.equals("PEnt")) { //$NON-NLS-1$
 			obj = findParameterEntityReference(name);
 		}
-		else if (type.equals("Nota")) {
+		else if (type.equals("Nota")) { //$NON-NLS-1$
 			obj = findNotation(name);
 		}
 		else {
@@ -476,9 +476,9 @@ public class DTDFileImpl extends ENamedElementImpl implements DTDFile, ENamedEle
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (comment: ");
+		result.append(" (comment: "); //$NON-NLS-1$
 		result.append(comment);
-		result.append(", parseError: ");
+		result.append(", parseError: "); //$NON-NLS-1$
 		result.append(parseError);
 		result.append(')');
 		return result.toString();

@@ -32,7 +32,7 @@ public class StringParser {
 
 	public String getString(int offset, int length) {
 		if (length == 0)
-			return "";
+			return ""; //$NON-NLS-1$
 		return fData.substring(offset, offset + length);
 	}
 

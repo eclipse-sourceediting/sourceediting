@@ -75,7 +75,7 @@ public abstract class DTDNode extends NodeContainer implements IndexedRegion {
 	}
 
 	public void delete(DTDNode child) {
-		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_DTD_NODE_DELETE")); //$NON-NLS-1$
+		beginRecording(this, DTDCoreMessages._UI_LABEL_DTD_NODE_DELETE); //$NON-NLS-1$
 		delete(this, child);
 		endRecording(this);
 	}
@@ -296,7 +296,7 @@ public abstract class DTDNode extends NodeContainer implements IndexedRegion {
 	}
 
 	public void setName(String name) {
-		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_DTD_NODE_NAME_CHG")); //$NON-NLS-1$
+		beginRecording(this, DTDCoreMessages._UI_LABEL_DTD_NODE_NAME_CHG); //$NON-NLS-1$
 		setName(this, name);
 		endRecording(this);
 	}

@@ -72,7 +72,7 @@ public class StructuredTextFoldingProviderDTD implements IStructuredTextFoldingP
 
 		long end = System.currentTimeMillis();
 		if (debugProjectionPerf)
-			System.out.println("StructuredTextFoldingProviderDTD.addAllAnnotations: " + (end - start));
+			System.out.println("StructuredTextFoldingProviderDTD.addAllAnnotations: " + (end - start)); //$NON-NLS-1$
 	}
 
 	/**
@@ -241,8 +241,8 @@ public class StructuredTextFoldingProviderDTD implements IStructuredTextFoldingP
 
 		long end = System.currentTimeMillis();
 		if (debugProjectionPerf) {
-			String nodeName = node != null ? node.getNodeName() : "null";
-			System.out.println("StructuredTextFoldingProviderDTD.nodeChanged (" + nodeName + "):" + (end - start));
+			String nodeName = node != null ? node.getNodeName() : "null"; //$NON-NLS-1$
+			System.out.println("StructuredTextFoldingProviderDTD.nodeChanged (" + nodeName + "):" + (end - start)); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
@@ -267,7 +267,7 @@ public class StructuredTextFoldingProviderDTD implements IStructuredTextFoldingP
 
 		long end = System.currentTimeMillis();
 		if (debugProjectionPerf)
-			System.out.println("StructuredTextFoldingProviderDTD.nodesAdded: " + (end - start));
+			System.out.println("StructuredTextFoldingProviderDTD.nodesAdded: " + (end - start)); //$NON-NLS-1$
 	}
 
 	public void nodesRemoved(NodesEvent event) {
@@ -289,7 +289,7 @@ public class StructuredTextFoldingProviderDTD implements IStructuredTextFoldingP
 
 		long end = System.currentTimeMillis();
 		if (debugProjectionPerf)
-			System.out.println("StructuredTextFoldingProviderDTD.nodesRemoved: " + (end - start));
+			System.out.println("StructuredTextFoldingProviderDTD.nodesRemoved: " + (end - start)); //$NON-NLS-1$
 	}
 
 	public void projectionDisabled() {

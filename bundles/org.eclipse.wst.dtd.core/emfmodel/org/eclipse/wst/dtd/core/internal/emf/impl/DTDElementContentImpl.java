@@ -88,7 +88,7 @@ public abstract class DTDElementContentImpl extends EObjectImpl implements DTDEl
 				cnt++;
 			}
 		}
-		return DTDPathnameUtil.makePath(((parent == null) ? "NULL_PARENT" : parent.getPathname()), "Content", null, cnt);
+		return DTDPathnameUtil.makePath(((parent == null) ? "NULL_PARENT" : parent.getPathname()), "Content", null, cnt); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public DTDObject findObject(String relativePath) {
@@ -200,7 +200,7 @@ public abstract class DTDElementContentImpl extends EObjectImpl implements DTDEl
 	public void setGroup(DTDGroupContent newGroup) {
 		if (newGroup != eContainer || (eContainerFeatureID != DTDPackage.DTD_ELEMENT_CONTENT__GROUP && newGroup != null)) {
 			if (EcoreUtil.isAncestor(this, newGroup))
-				throw new IllegalArgumentException("Recursive containment not allowed for " + toString() + ".");
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString() + "."); //$NON-NLS-1$ //$NON-NLS-2$
 			NotificationChain msgs = null;
 			if (eContainer != null)
 				msgs = eBasicRemoveFromContainer(msgs);
@@ -233,7 +233,7 @@ public abstract class DTDElementContentImpl extends EObjectImpl implements DTDEl
 	public void setElement(DTDElement newElement) {
 		if (newElement != eContainer || (eContainerFeatureID != DTDPackage.DTD_ELEMENT_CONTENT__ELEMENT && newElement != null)) {
 			if (EcoreUtil.isAncestor(this, newElement))
-				throw new IllegalArgumentException("Recursive containment not allowed for " + toString() + ".");
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString() + "."); //$NON-NLS-1$ //$NON-NLS-2$
 			NotificationChain msgs = null;
 			if (eContainer != null)
 				msgs = eBasicRemoveFromContainer(msgs);

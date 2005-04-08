@@ -119,21 +119,21 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 		StringBuffer value = new StringBuffer();
 		switch (getDefaultKind().getValue()) {
 			case DTDDefaultKind.IMPLIED :
-				value.append("#IMPLIED");
+				value.append("#IMPLIED"); //$NON-NLS-1$
 				break;
 			case DTDDefaultKind.REQUIRED :
-				value.append("#REQUIRED");
+				value.append("#REQUIRED"); //$NON-NLS-1$
 				break;
 			case DTDDefaultKind.FIXED :
 				String type = getDTDType().toString();
 				if (!(type.equals(DTDType.ID) || type.equals(DTDType.IDREF) || type.equals(DTDType.ENUM_NAME_TOKEN_GROUP) || type.equals(DTDType.IDREFS))) {
-					value.append("#FIXED \"").append(getDefaultValueString()).append("\"");
+					value.append("#FIXED \"").append(getDefaultValueString()).append("\""); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				break;
 			case DTDDefaultKind.NOFIXED :
 				String defaultValue = getDefaultValueString();
 				if (defaultValue != null)
-					value.append("\"").append(defaultValue).append("\"");
+					value.append("\"").append(defaultValue).append("\""); //$NON-NLS-1$ //$NON-NLS-2$
 				break;
 		}
 
@@ -141,40 +141,40 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 		// Get the attribute type
 		DTDEntity typeEnt = getAttributeTypeReferencedEntity();
 		if (typeEnt != null) {
-			result.append(" %" + typeEnt.getName() + "; ").append(value);
+			result.append(" %" + typeEnt.getName() + "; ").append(value); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		else {
 			DTDType dtdType = getDTDType();
 			if (dtdType instanceof DTDBasicType) {
 				switch (((DTDBasicType) dtdType).getKind().getValue()) {
 					case DTDBasicTypeKind.CDATA :
-						result.append(" CDATA ").append(value);
+						result.append(" CDATA ").append(value); //$NON-NLS-1$
 						break;
 					case DTDBasicTypeKind.ID :
-						result.append(" ID ").append(value);
+						result.append(" ID ").append(value); //$NON-NLS-1$
 						break;
 					case DTDBasicTypeKind.IDREF :
-						result.append(" IDREF ").append(value);
+						result.append(" IDREF ").append(value); //$NON-NLS-1$
 						break;
 					case DTDBasicTypeKind.IDREFS :
-						result.append(" IDREFS ").append(value);
+						result.append(" IDREFS ").append(value); //$NON-NLS-1$
 						break;
 					case DTDBasicTypeKind.ENTITY :
-						result.append(" ENTITY ").append(value);
+						result.append(" ENTITY ").append(value); //$NON-NLS-1$
 						break;
 					case DTDBasicTypeKind.ENTITIES :
-						result.append(" ENTITIES ").append(value);
+						result.append(" ENTITIES ").append(value); //$NON-NLS-1$
 						break;
 					case DTDBasicTypeKind.NMTOKEN :
-						result.append(" NMTOKEN ").append(value);
+						result.append(" NMTOKEN ").append(value); //$NON-NLS-1$
 						break;
 					case DTDBasicTypeKind.NMTOKENS :
-						result.append(" NMTOKENS ").append(value);
+						result.append(" NMTOKENS ").append(value); //$NON-NLS-1$
 						break;
 				}
 			}
 			else if (dtdType instanceof DTDEnumerationType) {
-				result.append(" ").append(buildEnumString((DTDEnumerationType) dtdType)).append(value);
+				result.append(" ").append(buildEnumString((DTDEnumerationType) dtdType)).append(value); //$NON-NLS-1$
 			}
 		}
 
@@ -184,20 +184,20 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 
 
 	private String buildEnumString(DTDEnumerationType enumType) {
-		String result = "";
+		String result = ""; //$NON-NLS-1$
 
 
 		if (enumType.getKind().getValue() == DTDEnumGroupKind.NOTATION_GROUP)
-			result += "NOTATION ";
+			result += "NOTATION "; //$NON-NLS-1$
 
 
 		Iterator i = enumType.getEnumLiterals().iterator();
 		if (i.hasNext()) {
-			result += "(" + ((EEnumLiteral) i.next()).toString();
+			result += "(" + ((EEnumLiteral) i.next()).toString(); //$NON-NLS-1$
 			while (i.hasNext()) {
-				result += " | " + ((EEnumLiteral) i.next()).toString();
+				result += " | " + ((EEnumLiteral) i.next()).toString(); //$NON-NLS-1$
 			}
-			result += ") ";
+			result += ") "; //$NON-NLS-1$
 		}
 
 
@@ -619,7 +619,7 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 	public void setDTDElement(DTDElement newDTDElement) {
 		if (newDTDElement != eContainer || (eContainerFeatureID != DTDPackage.DTD_ATTRIBUTE__DTD_ELEMENT && newDTDElement != null)) {
 			if (EcoreUtil.isAncestor(this, newDTDElement))
-				throw new IllegalArgumentException("Recursive containment not allowed for " + toString() + ".");
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString() + "."); //$NON-NLS-1$ //$NON-NLS-2$
 			NotificationChain msgs = null;
 			if (eContainer != null)
 				msgs = eBasicRemoveFromContainer(msgs);
@@ -967,11 +967,11 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (comment: ");
+		result.append(" (comment: "); //$NON-NLS-1$
 		result.append(comment);
-		result.append(", defaultKind: ");
+		result.append(", defaultKind: "); //$NON-NLS-1$
 		result.append(defaultKind);
-		result.append(", defaultValueString: ");
+		result.append(", defaultValueString: "); //$NON-NLS-1$
 		result.append(defaultValueString);
 		result.append(')');
 		return result.toString();

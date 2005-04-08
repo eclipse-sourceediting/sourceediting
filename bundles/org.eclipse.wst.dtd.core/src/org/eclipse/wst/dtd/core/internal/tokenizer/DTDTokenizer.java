@@ -12,7 +12,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-
+/*nlsXXX*/
 package org.eclipse.wst.dtd.core.internal.tokenizer;
 
 import org.eclipse.wst.dtd.core.internal.parser.DTDRegionTypes;

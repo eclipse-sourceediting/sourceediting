@@ -51,23 +51,23 @@ public class DTDPrinter extends DTDVisitor {
 	public void visitDTDNotation(DTDNotation notation) {
 		generateComment(notation);
 		updateStartOffset(notation, sb.length());
-		sb.append("<!NOTATION ");
-		sb.append(notation.getName()).append(" ");
+		sb.append("<!NOTATION "); //$NON-NLS-1$
+		sb.append(notation.getName()).append(" "); //$NON-NLS-1$
 
 		String publicID = notation.getPublicID();
 		String systemID = notation.getSystemID();
-		if (publicID == null || publicID.equals("")) {
-			sb.append("SYSTEM ");
+		if (publicID == null || publicID.equals("")) { //$NON-NLS-1$
+			sb.append("SYSTEM "); //$NON-NLS-1$
 		}
 		else {
-			sb.append("PUBLIC \"").append(publicID).append("\" ");
+			sb.append("PUBLIC \"").append(publicID).append("\" "); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		if (systemID == null) {
-			sb.append("\"\"");
+			sb.append("\"\""); //$NON-NLS-1$
 		}
 		else {
-			sb.append("\"").append(systemID).append("\"");
+			sb.append("\"").append(systemID).append("\""); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		endTag();
 		updateEndOffset(notation, sb.length() - 1); // -1 for the newline char
@@ -77,12 +77,12 @@ public class DTDPrinter extends DTDVisitor {
 	public void visitDTDEntity(DTDEntity entity) {
 		generateComment(entity);
 		updateStartOffset(entity, sb.length());
-		sb.append("<!ENTITY ");
+		sb.append("<!ENTITY "); //$NON-NLS-1$
 
 		if (entity.isParameterEntity())
-			sb.append("% ");
+			sb.append("% "); //$NON-NLS-1$
 
-		sb.append(entity.getName()).append(" ");
+		sb.append(entity.getName()).append(" "); //$NON-NLS-1$
 		sb.append(entity.getContent().unparse());
 
 		endTag();
@@ -93,15 +93,15 @@ public class DTDPrinter extends DTDVisitor {
 	public void visitDTDElement(DTDElement element) {
 		generateComment(element);
 		updateStartOffset(element, sb.length());
-		sb.append("<!ELEMENT " + element.getName());
+		sb.append("<!ELEMENT " + element.getName()); //$NON-NLS-1$
 		DTDElementContent content = element.getContent();
 		if (content instanceof DTDPCDataContent || content instanceof DTDElementReferenceContent) {
-			sb.append(" (");
+			sb.append(" ("); //$NON-NLS-1$
 			super.visitDTDElement(element);
-			sb.append(")");
+			sb.append(")"); //$NON-NLS-1$
 		} // end of if ()
 		else {
-			sb.append(" ");
+			sb.append(" "); //$NON-NLS-1$
 			super.visitDTDElement(element);
 		} // end of else
 		endTag();
@@ -112,14 +112,14 @@ public class DTDPrinter extends DTDVisitor {
 	public void visitDTDParameterEntityReference(DTDParameterEntityReference parmEntity) {
 		generateComment(parmEntity);
 		updateStartOffset(parmEntity, sb.length());
-		sb.append("%" + parmEntity.getName() + ";\n");
+		sb.append("%" + parmEntity.getName() + ";\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		updateEndOffset(parmEntity, sb.length() - 1); // -1 for the newline
 														// char
 	}
 
 	public void visitDTDElementContent(DTDElementContent content) {
 		updateStartOffset(content, sb.length());
-		String trailingChars = "";
+		String trailingChars = ""; //$NON-NLS-1$
 		if (content instanceof DTDRepeatableContent) {
 			DTDRepeatableContent repeatContent = (DTDRepeatableContent) content;
 			DTDOccurrenceType occurrenceType = repeatContent.getOccurrence();
@@ -128,8 +128,8 @@ public class DTDPrinter extends DTDVisitor {
 				int occurType = occurrenceType.getValue();
 				if (occurType != DTDOccurrenceType.ONE) {
 					if (repeatContent instanceof DTDEntityReferenceContent) {
-						sb.append("(");
-						trailingChars = ")";
+						sb.append("("); //$NON-NLS-1$
+						trailingChars = ")"; //$NON-NLS-1$
 					}
 					trailingChars += (char) occurType;
 				}
@@ -151,7 +151,7 @@ public class DTDPrinter extends DTDVisitor {
 	}
 
 	public void visitDTDGroupContent(DTDGroupContent group) {
-		sb.append("(");
+		sb.append("("); //$NON-NLS-1$
 		DTDGroupKind kind = group.getGroupKind();
 		// MOF2EMF Port
 		// Integer groupKind = group.getGroupKind();
@@ -159,7 +159,7 @@ public class DTDPrinter extends DTDVisitor {
 			group.setGroupKind(DTDGroupKind.get(DTDGroupKind.SEQUENCE));
 		} // end of if ()
 
-		String con = group.getGroupKind().getValue() == DTDGroupKind.CHOICE ? " | " : ", ";
+		String con = group.getGroupKind().getValue() == DTDGroupKind.CHOICE ? " | " : ", "; //$NON-NLS-1$ //$NON-NLS-2$
 
 		// Loop thru the children of the current group
 		Collection content = group.getContent();
@@ -176,7 +176,7 @@ public class DTDPrinter extends DTDVisitor {
 			}
 		}
 
-		sb.append(")");
+		sb.append(")"); //$NON-NLS-1$
 	}
 
 	private void visitAttributes(DTDElement elem) {
@@ -186,34 +186,34 @@ public class DTDPrinter extends DTDVisitor {
 			DTDAttribute attrib = (DTDAttribute) i.next();
 			String comment = attrib.getComment();
 			if (comment != null && comment.length() > 0)
-				sb.append("<!--\n ").append(comment).append("\n-->\n");
-			sb.append("<!ATTLIST " + elem.getName() + "\n");
-			sb.append(" ");
+				sb.append("<!--\n ").append(comment).append("\n-->\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			sb.append("<!ATTLIST " + elem.getName() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
+			sb.append(" "); //$NON-NLS-1$
 			updateStartOffset(attrib, sb.length());
 			sb.append(attrib.unparse());
 			updateEndOffset(attrib, sb.length());
-			sb.append("\n");
+			sb.append("\n"); //$NON-NLS-1$
 			for (; i.hasNext();) {
 				attrib = (DTDAttribute) i.next();
 				comment = attrib.getComment();
 				if (comment != null && comment.length() > 0) {
-					sb.append(">\n");
+					sb.append(">\n"); //$NON-NLS-1$
 					if (comment != null && comment.length() > 0)
-						sb.append("<!--\n ").append(comment).append("\n-->\n");
-					sb.append("<!ATTLIST " + elem.getName() + "\n");
+						sb.append("<!--\n ").append(comment).append("\n-->\n"); //$NON-NLS-1$ //$NON-NLS-2$
+					sb.append("<!ATTLIST " + elem.getName() + "\n"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
-				sb.append(" ");
+				sb.append(" "); //$NON-NLS-1$
 				updateStartOffset(attrib, sb.length());
 				sb.append(attrib.unparse());
 				updateEndOffset(attrib, sb.length());
-				sb.append("\n");
+				sb.append("\n"); //$NON-NLS-1$
 			}
-			sb.append(">\n");
+			sb.append(">\n"); //$NON-NLS-1$
 		}
 	}
 
 	private void endTag() {
-		sb.append(">\n");
+		sb.append(">\n"); //$NON-NLS-1$
 	}
 
 	private void updateStartOffset(DTDSourceOffset o, int offset) {
@@ -239,7 +239,7 @@ public class DTDPrinter extends DTDVisitor {
 			commentString = ((DTDNotation) dtdObject).getComment();
 
 		if (commentString != null && commentString.length() > 0) {
-			sb.append("<!--").append(commentString).append("-->\n");
+			sb.append("<!--").append(commentString).append("-->\n"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
+import org.eclipse.wst.dtd.core.internal.DTDCoreMessages;
 import org.eclipse.wst.dtd.core.internal.emf.DTDAnyContent;
 import org.eclipse.wst.dtd.core.internal.emf.DTDAttribute;
 import org.eclipse.wst.dtd.core.internal.emf.DTDBasicType;
@@ -163,7 +163,7 @@ public class DTDModelBuilder extends DTDSaxArtifactVisitor {
 		// System.out.println(" ext entity toMof: " );
 		if (dtdEntity.isParameterEntity()) {
 
-			dtdUtil.getPEPool().put("%" + entity.getNodeName() + ";", dtdEntity);
+			dtdUtil.getPEPool().put("%" + entity.getNodeName() + ";", dtdEntity); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		super.visitExternalEntityDecl(entity);
@@ -177,7 +177,7 @@ public class DTDModelBuilder extends DTDSaxArtifactVisitor {
 		intEntity.setValue(entity.getValue());
 		// System.out.println(" int entity toMof: " );
 		if (dtdEntity.isParameterEntity()) {
-			dtdUtil.getPEPool().put("%" + entity.getNodeName() + ";", dtdEntity);
+			dtdUtil.getPEPool().put("%" + entity.getNodeName() + ";", dtdEntity); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		super.visitInternalEntityDecl(entity);
@@ -272,7 +272,7 @@ public class DTDModelBuilder extends DTDSaxArtifactVisitor {
 			else {
 				if (entityDecl.getErrorMessage() == null) {
 					ErrorMessage dtdError = new ErrorMessage();
-					dtdError.setErrorMessage(DTDCorePlugin.getDTDString("_ERROR_INCL_FILE_LOAD_FAILURE") + " '" + systemId + "'");
+					dtdError.setErrorMessage(DTDCoreMessages._ERROR_INCL_FILE_LOAD_FAILURE + " '" + systemId + "'"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 					addErrorMessage(dtdError, extEntity.getDTDEntity());
 				}
 
@@ -280,13 +280,13 @@ public class DTDModelBuilder extends DTDSaxArtifactVisitor {
 					extEntity.setSystemID(systemId);
 				}
 				else {
-					extEntity.setSystemID("");
+					extEntity.setSystemID(""); //$NON-NLS-1$
 				}
 			}
 		} // end of if ()
 		else {
 			// set the system id to be ""
-			extEntity.setSystemID("");
+			extEntity.setSystemID(""); //$NON-NLS-1$
 		}
 	}
 
@@ -512,9 +512,9 @@ public class DTDModelBuilder extends DTDSaxArtifactVisitor {
 			return aElement;
 		}
 
-		String errorMsg = DTDCorePlugin.getDTDString("_ERROR_UNDECLARED_ELEMENT_1");
-		errorMsg += "\"" + name + "\"";
-		errorMsg += DTDCorePlugin.getDTDString("_UI_ERRORPART_UNDECLARED_ELEMENT_2");
+		String errorMsg = DTDCoreMessages._ERROR_UNDECLARED_ELEMENT_1; //$NON-NLS-1$
+		errorMsg += "\"" + name + "\""; //$NON-NLS-1$ //$NON-NLS-2$
+		errorMsg += DTDCoreMessages._UI_ERRORPART_UNDECLARED_ELEMENT_2; //$NON-NLS-1$
 
 		ErrorMessage dtdError = new ErrorMessage();
 
@@ -609,7 +609,7 @@ public class DTDModelBuilder extends DTDSaxArtifactVisitor {
 	public void finishAttribute(DTDAttribute dtdattr, AttNode attdef) {
 		boolean parseError = false;
 
-		if (attdef.name.startsWith("%")) {
+		if (attdef.name.startsWith("%")) { //$NON-NLS-1$
 			String peName = attdef.name.trim();
 			DTDEntity en = (DTDEntity) dtdUtil.getPEPool().get(peName);
 			if (en != null) {
@@ -658,8 +658,8 @@ public class DTDModelBuilder extends DTDSaxArtifactVisitor {
 				case AttNode.ID :
 					// check for duplicate ID attribute
 					if (hasIDAttribute(dtdattr)) {
-						String errMsg = DTDCorePlugin.getDTDString("_ERROR_DUP_ID_ATTRIBUTE_1");
-						errMsg += attdef.name + DTDCorePlugin.getDTDString("_UI_ERRORPART_DUP_ID_ATTRIBUTE_2");
+						String errMsg = DTDCoreMessages._ERROR_DUP_ID_ATTRIBUTE_1; //$NON-NLS-1$
+						errMsg += attdef.name + DTDCoreMessages._UI_ERRORPART_DUP_ID_ATTRIBUTE_2; //$NON-NLS-1$
 						// dtdattr.getDTDElement().getIElement().setDTDErrorMessage(errMsg);
 						// dtdattr.getDTDElement().getDTDFile().setParseError(true);
 						parseError = true;
@@ -732,10 +732,10 @@ public class DTDModelBuilder extends DTDSaxArtifactVisitor {
 		if (defaultValue != null) {
 			if (attrType == AttNode.ENUMERATION || attrType == AttNode.NOTATION) {
 				if (!isDefaultEnumValueValid(attdef, defaultValue)) {
-					String typeString = (attrType == AttNode.ENUMERATION ? "enumeration" : "notation");
-					String errMsg = DTDCorePlugin.getDTDString("_ERROR_INVALID_DEFAULT_ATTR_VALUE_1");
-					errMsg += typeString + DTDCorePlugin.getDTDString("_UI_ERRORPART_INVALID_DEFAULT_ATTR_VALUE_2");
-					errMsg += attdef.name + "'";
+					String typeString = (attrType == AttNode.ENUMERATION ? "enumeration" : "notation"); //$NON-NLS-1$ //$NON-NLS-2$
+					String errMsg = DTDCoreMessages._ERROR_INVALID_DEFAULT_ATTR_VALUE_1; //$NON-NLS-1$
+					errMsg += typeString + DTDCoreMessages._UI_ERRORPART_INVALID_DEFAULT_ATTR_VALUE_2; //$NON-NLS-1$
+					errMsg += attdef.name + "'"; //$NON-NLS-1$
 
 					// dtdattr.getDTDElement().getIElement().setDTDErrorMessage(errMsg);
 					// dtdattr.getDTDElement().getDTDFile().setParseError(true);
@@ -1136,7 +1136,7 @@ public class DTDModelBuilder extends DTDSaxArtifactVisitor {
 	// if (entityDecl.getErrorMessage() == null)
 	// {
 	// ErrorMessage dtdError = new ErrorMessage();
-	// dtdError.setErrorMessage(DTDCorePlugin.getDTDString("_ERROR_INCL_FILE_LOAD_FAILURE")
+	// dtdError.setErrorMessage(DTDCoreMessages.getString("_ERROR_INCL_FILE_LOAD_FAILURE")
 	// + " '" + systemId + "'");
 	// addErrorMessage(dtdError, extEntity.getDTDEntity());
 	// }
@@ -1425,10 +1425,10 @@ public class DTDModelBuilder extends DTDSaxArtifactVisitor {
 	//
 	//
 	// String errorMsg =
-	// DTDCorePlugin.getDTDString("_ERROR_UNDECLARED_ELEMENT_1");
+	// DTDCoreMessages.getString("_ERROR_UNDECLARED_ELEMENT_1");
 	// errorMsg += "\"" + name + "\"";
 	// errorMsg +=
-	// DTDCorePlugin.getDTDString("_UI_ERRORPART_UNDECLARED_ELEMENT_2");
+	// DTDCoreMessages.getString("_UI_ERRORPART_UNDECLARED_ELEMENT_2");
 	//
 	//
 	// ErrorMessage dtdError = new ErrorMessage();
@@ -1592,9 +1592,9 @@ public class DTDModelBuilder extends DTDSaxArtifactVisitor {
 	// // check for duplicate ID attribute
 	// if (hasIDAttribute(dtdattr))
 	// {
-	// String errMsg = DTDCorePlugin.getDTDString("_ERROR_DUP_ID_ATTRIBUTE_1");
+	// String errMsg = DTDCoreMessages.getString("_ERROR_DUP_ID_ATTRIBUTE_1");
 	// errMsg += attdef.name +
-	// DTDCorePlugin.getDTDString("_UI_ERRORPART_DUP_ID_ATTRIBUTE_2");
+	// DTDCoreMessages.getString("_UI_ERRORPART_DUP_ID_ATTRIBUTE_2");
 	// // dtdattr.getDTDElement().getIElement().setDTDErrorMessage(errMsg);
 	// // dtdattr.getDTDElement().getDTDFile().setParseError(true);
 	// parseError = true;
@@ -1690,9 +1690,9 @@ public class DTDModelBuilder extends DTDSaxArtifactVisitor {
 	// String typeString =
 	// (attrType==AttNode.ENUMERATION?"enumeration":"notation");
 	// String errMsg =
-	// DTDCorePlugin.getDTDString("_ERROR_INVALID_DEFAULT_ATTR_VALUE_1");
+	// DTDCoreMessages.getString("_ERROR_INVALID_DEFAULT_ATTR_VALUE_1");
 	// errMsg += typeString +
-	// DTDCorePlugin.getDTDString("_UI_ERRORPART_INVALID_DEFAULT_ATTR_VALUE_2");
+	// DTDCoreMessages.getString("_UI_ERRORPART_INVALID_DEFAULT_ATTR_VALUE_2");
 	// errMsg += attdef.name + "'";
 	//
 	//

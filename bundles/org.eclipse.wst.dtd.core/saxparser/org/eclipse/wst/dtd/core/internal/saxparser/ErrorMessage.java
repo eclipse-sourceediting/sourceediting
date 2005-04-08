@@ -30,13 +30,13 @@ public class ErrorMessage {
 	}
 
 	public void setSeverity(String severity) {
-		if (severity == "warning") {
+		if (severity == "warning") { //$NON-NLS-1$
 			this.severity = 0;
 		}
-		else if (severity == "error") {
+		else if (severity == "error") { //$NON-NLS-1$
 			this.severity = 1;
 		}
-		else if (severity == "fatal") {
+		else if (severity == "fatal") { //$NON-NLS-1$
 			this.severity = 2;
 		}
 	}
@@ -109,6 +109,6 @@ public class ErrorMessage {
 
 
 	public void addNewErrorMessageLine(String newLine) {
-		errorString += "\n" + newLine;
+		errorString += "\n" + newLine; //$NON-NLS-1$
 	}
 }

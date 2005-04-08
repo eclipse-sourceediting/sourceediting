@@ -85,19 +85,19 @@ public class DTDExternalEntityImpl extends DTDEntityContentImpl implements DTDEx
 
 	public String unparse() {
 		StringBuffer text = new StringBuffer(100);
-		if (getPublicID() == null || getPublicID().equals("")) {
-			text.append("SYSTEM ");
+		if (getPublicID() == null || getPublicID().equals("")) { //$NON-NLS-1$
+			text.append("SYSTEM "); //$NON-NLS-1$
 		}
 		else {
-			text.append("PUBLIC \"").append(getPublicID()).append("\" ");
+			text.append("PUBLIC \"").append(getPublicID()).append("\" "); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		String systemId = getSystemID();
 
-		text.append("\"").append(systemId).append("\"");
+		text.append("\"").append(systemId).append("\""); //$NON-NLS-1$ //$NON-NLS-2$
 
 		DTDNotation notation = getNotation();
 		if (notation != null)
-			text.append(" NDATA ").append(notation.getName());
+			text.append(" NDATA ").append(notation.getName()); //$NON-NLS-1$
 
 		return text.toString();
 	}
@@ -389,9 +389,9 @@ public class DTDExternalEntityImpl extends DTDEntityContentImpl implements DTDEx
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (systemID: ");
+		result.append(" (systemID: "); //$NON-NLS-1$
 		result.append(systemID);
-		result.append(", publicID: ");
+		result.append(", publicID: "); //$NON-NLS-1$
 		result.append(publicID);
 		result.append(')');
 		return result.toString();

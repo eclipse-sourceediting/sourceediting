@@ -36,7 +36,7 @@ public class DTDErrorMessage {
 	}
 
 	public String toString() {
-		return "(" + declarationType + ":" + declarationName + ") " + lineNo + ":" + charOffSet + " " + errorMessage;
+		return "(" + declarationType + ":" + declarationName + ") " + lineNo + ":" + charOffSet + " " + errorMessage; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 	}
 
 	/**
@@ -44,6 +44,6 @@ public class DTDErrorMessage {
 	 */
 	protected String toStringGen() {
 
-		return "(" + declarationType + ":" + declarationName + ") " + lineNo + ":" + charOffSet + " " + errorMessage;
+		return "(" + declarationType + ":" + declarationName + ") " + lineNo + ":" + charOffSet + " " + errorMessage; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 	}
 }

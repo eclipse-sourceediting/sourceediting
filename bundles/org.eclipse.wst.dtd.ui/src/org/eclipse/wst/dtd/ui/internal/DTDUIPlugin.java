@@ -12,12 +12,8 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.ui.internal;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
@@ -35,36 +31,11 @@ public class DTDUIPlugin extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns the string from the plugin's resource bundle, or 'key' if not
-	 * found.
-	 */
-	public static String getResourceString(String key) {
-		ResourceBundle bundle = DTDUIPlugin.getDefault().getResourceBundle();
-		String bundleKey = null;
-		if (key.startsWith("%")) {
-			bundleKey = key.substring(1);
-		}
-		else {
-			bundleKey = key;
-		}
-		try {
-			if (bundle != null)
-				return bundle.getString(bundleKey);
-		}
-		catch (MissingResourceException e) {
-		}
-		return key;
-	}
-
-	/**
 	 * Returns the workspace instance.
 	 */
 	public static IWorkspace getWorkspace() {
 		return ResourcesPlugin.getWorkspace();
 	}
-
-	// Resource bundle.
-	private ResourceBundle resourceBundle;
 
 	/**
 	 * The constructor.
@@ -72,20 +43,5 @@ public class DTDUIPlugin extends AbstractUIPlugin {
 	public DTDUIPlugin() {
 		super();
 		plugin = this;
-	}
-
-	/**
-	 * Returns the plugin's resource bundle,
-	 */
-	public ResourceBundle getResourceBundle() {
-		if (resourceBundle == null) {
-			try {
-				resourceBundle = Platform.getResourceBundle(getBundle());
-			}
-			catch (MissingResourceException x) {
-				resourceBundle = null;
-			}
-		}
-		return resourceBundle;
 	}
 }

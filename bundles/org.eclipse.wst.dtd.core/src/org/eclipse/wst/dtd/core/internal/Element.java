@@ -37,7 +37,7 @@ public class Element extends NamedTopLevelNode {
 	}
 
 	public void addAttribute(String name) {
-		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_ELEMENT_ADD_ATTR")); //$NON-NLS-1$
+		beginRecording(this, DTDCoreMessages._UI_LABEL_ELEMENT_ADD_ATTR); //$NON-NLS-1$
 		List attLists = getAttributeLists();
 		if (attLists.size() == 0) {
 			getDTDFile().createAttributeList(this, getName(), true);
@@ -51,7 +51,7 @@ public class Element extends NamedTopLevelNode {
 	}
 
 	public void addChild() {
-		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_ELEMENT_ADD_CHILD")); //$NON-NLS-1$
+		beginRecording(this, DTDCoreMessages._UI_LABEL_ELEMENT_ADD_CHILD); //$NON-NLS-1$
 		addContent(this, " EMPTY"); //$NON-NLS-1$
 		endRecording(this);
 	}
@@ -78,7 +78,7 @@ public class Element extends NamedTopLevelNode {
 	}
 
 	public void addGroup() {
-		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_ELEMENT_ADD_GRP")); //$NON-NLS-1$
+		beginRecording(this, DTDCoreMessages._UI_LABEL_ELEMENT_ADD_GRP); //$NON-NLS-1$
 		addContent(this, " ()"); //$NON-NLS-1$
 		endRecording(this);
 	}

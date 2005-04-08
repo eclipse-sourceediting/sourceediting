@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.impl.EEnumImpl;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
-import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
+import org.eclipse.wst.dtd.core.internal.DTDCoreMessages;
 import org.eclipse.wst.dtd.core.internal.emf.DTDEnumGroupKind;
 import org.eclipse.wst.dtd.core.internal.emf.DTDEnumerationType;
 import org.eclipse.wst.dtd.core.internal.emf.DTDFile;
@@ -47,7 +47,7 @@ public class DTDEnumerationTypeImpl extends EEnumImpl implements DTDEnumerationT
 	 */
 	protected static final DTDEnumGroupKind KIND_EDEFAULT = DTDEnumGroupKind.NAME_TOKEN_GROUP_LITERAL;
 
-	public final static String enumerationTypeDescriptions[] = {DTDCorePlugin.getDTDString("_UI_ENUM_NAME_TOKENS_DESC"), DTDCorePlugin.getDTDString("_UI_ENUM_NOTATION_DESC")};
+	public final static String enumerationTypeDescriptions[] = {DTDCoreMessages._UI_ENUM_NAME_TOKENS_DESC, DTDCoreMessages._UI_ENUM_NOTATION_DESC}; //$NON-NLS-1$ //$NON-NLS-2$
 
 	public final static int enumerationTypeKinds[] = {DTDEnumGroupKind.NAME_TOKEN_GROUP, DTDEnumGroupKind.NOTATION_GROUP};
 
@@ -91,7 +91,7 @@ public class DTDEnumerationTypeImpl extends EEnumImpl implements DTDEnumerationT
 
 	public String getPathname() {
 		// TBD
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	public DTDObject findObject(String relativePath) {
@@ -132,7 +132,7 @@ public class DTDEnumerationTypeImpl extends EEnumImpl implements DTDEnumerationT
 	public void setDTDFile(DTDFile newDTDFile) {
 		if (newDTDFile != eContainer || (eContainerFeatureID != DTDPackage.DTD_ENUMERATION_TYPE__DTD_FILE && newDTDFile != null)) {
 			if (EcoreUtil.isAncestor(this, newDTDFile))
-				throw new IllegalArgumentException("Recursive containment not allowed for " + toString() + ".");
+				throw new IllegalArgumentException("Recursive containment not allowed for " + toString() + "."); //$NON-NLS-1$ //$NON-NLS-2$
 			NotificationChain msgs = null;
 			if (eContainer != null)
 				msgs = eBasicRemoveFromContainer(msgs);
@@ -353,7 +353,7 @@ public class DTDEnumerationTypeImpl extends EEnumImpl implements DTDEnumerationT
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (kind: ");
+		result.append(" (kind: "); //$NON-NLS-1$
 		result.append(kind);
 		result.append(')');
 		return result.toString();

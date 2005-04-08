@@ -19,10 +19,10 @@ import java.util.Iterator;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.actions.SelectionListenerAction;
 import org.eclipse.wst.dtd.core.internal.CMNode;
-import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
 import org.eclipse.wst.dtd.core.internal.DTDFile;
 import org.eclipse.wst.dtd.core.internal.DTDNode;
 import org.eclipse.wst.dtd.core.internal.util.DTDBatchNodeDelete;
+import org.eclipse.wst.dtd.ui.internal.DTDUIMessages;
 
 
 public class DeleteAction extends SelectionListenerAction {
@@ -48,7 +48,7 @@ public class DeleteAction extends SelectionListenerAction {
 				batchDelete.addNode((DTDNode) element);
 			}
 		}
-		dtdFile.getDTDModel().beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_DTD_FILE_DELETE")); //$NON-NLS-1$
+		dtdFile.getDTDModel().beginRecording(this, DTDUIMessages._UI_LABEL_DTD_FILE_DELETE); //$NON-NLS-1$
 		batchDelete.deleteNodes(this);
 		dtdFile.getDTDModel().endRecording(this);
 	}

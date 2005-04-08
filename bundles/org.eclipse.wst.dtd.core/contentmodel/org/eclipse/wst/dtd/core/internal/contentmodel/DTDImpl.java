@@ -145,7 +145,7 @@ public class DTDImpl {
 	 */
 	public static abstract class DTDBaseAdapter extends CMNodeImpl {
 		public String getNodeName() {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 
 		public boolean isAdapterForType(Object type) {
@@ -154,7 +154,7 @@ public class DTDImpl {
 
 		public Object getProperty(String propertyName) {
 			Object result = null;
-			if (propertyName.equals("CMDocument")) {
+			if (propertyName.equals("CMDocument")) { //$NON-NLS-1$
 				result = getCMDocument();
 			}
 			else if (propertyName.equals(PROPERTY_DOCUMENTATION)) {
@@ -169,7 +169,7 @@ public class DTDImpl {
 			else if (propertyName.equals(PROPERTY_MOF_NOTIFIER)) {
 				result = getKey();
 			}
-			else if (propertyName.equals("spec")) {
+			else if (propertyName.equals("spec")) { //$NON-NLS-1$
 				result = getSpec();
 			}
 			else {
@@ -232,7 +232,7 @@ public class DTDImpl {
 		}
 
 		public String getSpec() {
-			return attribute.getDTDElement().getName() + "/@" + attribute.getName();
+			return attribute.getDTDElement().getName() + "/@" + attribute.getName(); //$NON-NLS-1$
 		}
 
 		public int getNodeType() {
@@ -294,9 +294,9 @@ public class DTDImpl {
 
 			public Object getProperty(String propertyName) {
 				Object result = null;
-				if (propertyName.equals("isValidEmptyValue")) {
+				if (propertyName.equals("isValidEmptyValue")) { //$NON-NLS-1$
 					String dataTypeName = getDataTypeName();
-					result = (dataTypeName == null || dataTypeName.equals(CMDataType.CDATA)) ? "true" : "false";
+					result = (dataTypeName == null || dataTypeName.equals(CMDataType.CDATA)) ? "true" : "false"; //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				return result;
 			}
@@ -420,10 +420,10 @@ public class DTDImpl {
 			if (documentation == null) {
 				String comment = getDTDElement().getComment();
 				if (comment != null) {
-					String value = "";
-					StringTokenizer st = new StringTokenizer(comment, "\n");
+					String value = ""; //$NON-NLS-1$
+					StringTokenizer st = new StringTokenizer(comment, "\n"); //$NON-NLS-1$
 					while (st.hasMoreTokens()) {
-						value += st.nextToken().trim() + "\n";
+						value += st.nextToken().trim() + "\n"; //$NON-NLS-1$
 					}
 					documentation = new CMDocumentationImpl(value);
 				}
@@ -444,7 +444,7 @@ public class DTDImpl {
 		}
 
 		public String getNodeName() {
-			return "";
+			return ""; //$NON-NLS-1$
 		}
 
 		public int getNodeType() {
@@ -481,7 +481,7 @@ public class DTDImpl {
 
 		public DTDElementAdapter(DTDElement element) {
 			this.element = element;
-			dataType = new CMDataTypeImpl("#PCDATA", getDTDElement().getName());
+			dataType = new CMDataTypeImpl("#PCDATA", getDTDElement().getName()); //$NON-NLS-1$
 		}
 
 		public Object getKey() {
@@ -501,7 +501,7 @@ public class DTDImpl {
 		}
 
 		public String getDefinitionInfo() {
-			return "global";
+			return "global"; //$NON-NLS-1$
 		}
 
 		public CMNode getDefinition() {
@@ -518,7 +518,7 @@ public class DTDImpl {
 
 		public DTDElementReferenceContentAdapter(DTDElementReferenceContent content) {
 			this.content = content;
-			dataType = new CMDataTypeImpl("#PCDATA", getDTDElement().getName());
+			dataType = new CMDataTypeImpl("#PCDATA", getDTDElement().getName()); //$NON-NLS-1$
 		}
 
 		public Object getKey() {
@@ -567,7 +567,7 @@ public class DTDImpl {
 		}
 
 		public String getValue() {
-			String value = "";
+			String value = ""; //$NON-NLS-1$
 			if (dtdEntity.getContent() instanceof DTDInternalEntity) {
 				DTDInternalEntity content = (DTDInternalEntity) dtdEntity.getContent();
 				value = content.getValue();
@@ -632,7 +632,7 @@ public class DTDImpl {
 	 * DTDFileAdapter
 	 */
 	public static class DTDFileAdapter extends DTDBaseAdapter implements CMDocument {
-		protected final String DEFAULT_ROOT_NAME = "http://org.eclipse.wst/cm/properties/defaultRootName";
+		protected final String DEFAULT_ROOT_NAME = "http://org.eclipse.wst/cm/properties/defaultRootName"; //$NON-NLS-1$
 
 		protected DTDFile dtdFile;
 		protected CMNamedNodeMapImpl namedNodeMap;
@@ -671,11 +671,11 @@ public class DTDImpl {
 
 				// add the built in entity declarations
 				//
-				entityNodeMap.getHashtable().put("amp", new CMEntityDeclarationImpl("amp", "&"));
-				entityNodeMap.getHashtable().put("lt", new CMEntityDeclarationImpl("lt", "<"));
-				entityNodeMap.getHashtable().put("gt", new CMEntityDeclarationImpl("gt", ">"));
-				entityNodeMap.getHashtable().put("quot", new CMEntityDeclarationImpl("quot", "\""));
-				entityNodeMap.getHashtable().put("apos", new CMEntityDeclarationImpl("apos", "'"));
+				entityNodeMap.getHashtable().put("amp", new CMEntityDeclarationImpl("amp", "&")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				entityNodeMap.getHashtable().put("lt", new CMEntityDeclarationImpl("lt", "<")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				entityNodeMap.getHashtable().put("gt", new CMEntityDeclarationImpl("gt", ">")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				entityNodeMap.getHashtable().put("quot", new CMEntityDeclarationImpl("quot", "\"")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				entityNodeMap.getHashtable().put("apos", new CMEntityDeclarationImpl("apos", "'")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 				for (Iterator i = dtdFile.listDTDEntity().iterator(); i.hasNext();) {
 					DTDEntity dtdEntity = (DTDEntity) i.next();
@@ -700,7 +700,7 @@ public class DTDImpl {
 		}
 
 		public String getNodeName() {
-			return dtdFile.getName() + ".dtd";
+			return dtdFile.getName() + ".dtd"; //$NON-NLS-1$
 		}
 
 		public Object getProperty(String propertyName) {
@@ -712,13 +712,13 @@ public class DTDImpl {
 					result = dtdElement.getName();
 				}
 			}
-			else if (propertyName.equals("annotationMap")) {
+			else if (propertyName.equals("annotationMap")) { //$NON-NLS-1$
 				result = annotationMap;
 			}
-			else if (propertyName.equals("encodingInfo")) {
+			else if (propertyName.equals("encodingInfo")) { //$NON-NLS-1$
 				result = encodingInfo;
 			}
-			else if (propertyName.equals("globalPropertyMap")) {
+			else if (propertyName.equals("globalPropertyMap")) { //$NON-NLS-1$
 				result = globalPropertyMap;
 			}
 			else {
@@ -736,10 +736,10 @@ public class DTDImpl {
 		public CMDataTypeInfoTable() {
 			// hashtable.put(DTDType.CDATA, null));
 			instanceValueTable = new String[DTDBasicTypeImpl.basicTypeKinds.length];
-			instanceValueTable[DTDBasicTypeKind.ENTITY] = "entity";
-			instanceValueTable[DTDBasicTypeKind.ENTITIES] = "entities";
-			instanceValueTable[DTDBasicTypeKind.NMTOKEN] = "nmtoken";
-			instanceValueTable[DTDBasicTypeKind.NMTOKENS] = "nmtokens";
+			instanceValueTable[DTDBasicTypeKind.ENTITY] = "entity"; //$NON-NLS-1$
+			instanceValueTable[DTDBasicTypeKind.ENTITIES] = "entities"; //$NON-NLS-1$
+			instanceValueTable[DTDBasicTypeKind.NMTOKEN] = "nmtoken"; //$NON-NLS-1$
+			instanceValueTable[DTDBasicTypeKind.NMTOKENS] = "nmtokens"; //$NON-NLS-1$
 
 			dataTypeNameTable = new String[DTDBasicTypeImpl.basicTypeKinds.length];
 			dataTypeNameTable[DTDBasicTypeKind.CDATA] = CMDataType.CDATA;

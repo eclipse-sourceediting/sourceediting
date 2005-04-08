@@ -63,7 +63,7 @@ public abstract class DTDRepeatableContentImpl extends DTDElementContentImpl imp
 		StringBuffer sb = new StringBuffer(128);
 		if (getOccurrence().getValue() != DTDOccurrenceType.ONE) {
 			if (this instanceof DTDEntityReferenceContent) {
-				sb.append("(").append(unparseRepeatableContent()).append(")");
+				sb.append("(").append(unparseRepeatableContent()).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			else {
 				sb.append(unparseRepeatableContent());
@@ -242,7 +242,7 @@ public abstract class DTDRepeatableContentImpl extends DTDElementContentImpl imp
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (occurrence: ");
+		result.append(" (occurrence: "); //$NON-NLS-1$
 		result.append(occurrence);
 		result.append(')');
 		return result.toString();

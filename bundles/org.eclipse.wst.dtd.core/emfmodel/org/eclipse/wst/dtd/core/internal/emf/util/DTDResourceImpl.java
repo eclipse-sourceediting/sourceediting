@@ -20,7 +20,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
-import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
+import org.eclipse.wst.dtd.core.internal.DTDCoreMessages;
 import org.eclipse.wst.dtd.core.internal.emf.DTDFile;
 import org.eclipse.wst.dtd.core.internal.emf.DTDObject;
 
@@ -72,7 +72,7 @@ public class DTDResourceImpl extends ResourceImpl {
 				}
 			}
 		}
-		System.out.println(">>> DTDKey Error: cannot find object " + uriFragment);
+		System.out.println(">>> DTDKey Error: cannot find object " + uriFragment); //$NON-NLS-1$
 		return super.getEObject(uriFragment);
 	}
 
@@ -161,6 +161,6 @@ public class DTDResourceImpl extends ResourceImpl {
 	}
 
 	public void save(ZipOutputStream zos, String entry, String metaModelName) throws Exception {
-		throw new Exception(DTDCorePlugin.getDTDString("_EXC_OPERATION_NOT_SUPPORTED"));
+		throw new Exception(DTDCoreMessages._EXC_OPERATION_NOT_SUPPORTED); //$NON-NLS-1$
 	}
 }

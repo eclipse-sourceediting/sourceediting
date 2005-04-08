@@ -136,7 +136,7 @@ public final class DTDBasicTypeKind extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDBasicTypeKind NONE_LITERAL = new DTDBasicTypeKind(NONE, "NONE");
+	public static final DTDBasicTypeKind NONE_LITERAL = new DTDBasicTypeKind(NONE, "NONE"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>CDATA</b></em>' literal object. <!-- begin-user-doc
@@ -151,7 +151,7 @@ public final class DTDBasicTypeKind extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDBasicTypeKind CDATA_LITERAL = new DTDBasicTypeKind(CDATA, "CDATA");
+	public static final DTDBasicTypeKind CDATA_LITERAL = new DTDBasicTypeKind(CDATA, "CDATA"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>ID</b></em>' literal object. <!-- begin-user-doc -->
@@ -165,7 +165,7 @@ public final class DTDBasicTypeKind extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDBasicTypeKind ID_LITERAL = new DTDBasicTypeKind(ID, "ID");
+	public static final DTDBasicTypeKind ID_LITERAL = new DTDBasicTypeKind(ID, "ID"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>IDREF</b></em>' literal object. <!-- begin-user-doc
@@ -180,7 +180,7 @@ public final class DTDBasicTypeKind extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDBasicTypeKind IDREF_LITERAL = new DTDBasicTypeKind(IDREF, "IDREF");
+	public static final DTDBasicTypeKind IDREF_LITERAL = new DTDBasicTypeKind(IDREF, "IDREF"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>IDREFS</b></em>' literal object. <!-- begin-user-doc
@@ -195,7 +195,7 @@ public final class DTDBasicTypeKind extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDBasicTypeKind IDREFS_LITERAL = new DTDBasicTypeKind(IDREFS, "IDREFS");
+	public static final DTDBasicTypeKind IDREFS_LITERAL = new DTDBasicTypeKind(IDREFS, "IDREFS"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>ENTITY</b></em>' literal object. <!-- begin-user-doc
@@ -210,7 +210,7 @@ public final class DTDBasicTypeKind extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDBasicTypeKind ENTITY_LITERAL = new DTDBasicTypeKind(ENTITY, "ENTITY");
+	public static final DTDBasicTypeKind ENTITY_LITERAL = new DTDBasicTypeKind(ENTITY, "ENTITY"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>ENTITIES</b></em>' literal object. <!-- begin-user-doc
@@ -225,7 +225,7 @@ public final class DTDBasicTypeKind extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDBasicTypeKind ENTITIES_LITERAL = new DTDBasicTypeKind(ENTITIES, "ENTITIES");
+	public static final DTDBasicTypeKind ENTITIES_LITERAL = new DTDBasicTypeKind(ENTITIES, "ENTITIES"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>NMTOKEN</b></em>' literal object. <!-- begin-user-doc
@@ -240,7 +240,7 @@ public final class DTDBasicTypeKind extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDBasicTypeKind NMTOKEN_LITERAL = new DTDBasicTypeKind(NMTOKEN, "NMTOKEN");
+	public static final DTDBasicTypeKind NMTOKEN_LITERAL = new DTDBasicTypeKind(NMTOKEN, "NMTOKEN"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>NMTOKENS</b></em>' literal object. <!-- begin-user-doc
@@ -255,7 +255,7 @@ public final class DTDBasicTypeKind extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final DTDBasicTypeKind NMTOKENS_LITERAL = new DTDBasicTypeKind(NMTOKENS, "NMTOKENS");
+	public static final DTDBasicTypeKind NMTOKENS_LITERAL = new DTDBasicTypeKind(NMTOKENS, "NMTOKENS"); //$NON-NLS-1$
 
 	/**
 	 * An array of all the '<em><b>Basic Type Kind</b></em>' enumerators.

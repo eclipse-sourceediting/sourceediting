@@ -31,7 +31,7 @@ import org.eclipse.wst.dtd.core.internal.emf.DTDPackage;
  */
 public class DTDAnyContentImpl extends DTDElementContentImpl implements DTDAnyContent {
 	public String getContentName() {
-		return "ANY";
+		return "ANY"; //$NON-NLS-1$
 	}
 
 	/**

@@ -21,8 +21,6 @@ import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
 
 
 public class DTDResourceFactoryImpl extends ResourceFactoryImpl {
-	public static final String copyright = "(c) Copyright IBM Corporation 2002.";
-
 	public DTDResourceFactoryImpl() {
 		super();
 	}

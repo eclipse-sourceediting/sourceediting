@@ -50,7 +50,7 @@ import org.eclipse.wst.dtd.core.internal.emf.util.DTDPathnameUtil;
 public class DTDNotationImpl extends DTDContentImpl implements DTDNotation, DTDContent {
 
 	public String getPathname() {
-		return DTDPathnameUtil.makePath(null, "Nota", getName(), -1);
+		return DTDPathnameUtil.makePath(null, "Nota", getName(), -1); //$NON-NLS-1$
 	}
 
 
@@ -429,11 +429,11 @@ public class DTDNotationImpl extends DTDContentImpl implements DTDNotation, DTDC
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (comment: ");
+		result.append(" (comment: "); //$NON-NLS-1$
 		result.append(comment);
-		result.append(", systemID: ");
+		result.append(", systemID: "); //$NON-NLS-1$
 		result.append(systemID);
-		result.append(", publicID: ");
+		result.append(", publicID: "); //$NON-NLS-1$
 		result.append(publicID);
 		result.append(')');
 		return result.toString();

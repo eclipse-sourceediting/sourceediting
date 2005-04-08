@@ -37,6 +37,6 @@ public class CMBasicNode extends CMNode {
 	}
 
 	public String toString() {
-		return " BasicNodeName: " + getName() + " Type: " + getType() + "\n";
+		return " BasicNodeName: " + getName() + " Type: " + getType() + "\n"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 }

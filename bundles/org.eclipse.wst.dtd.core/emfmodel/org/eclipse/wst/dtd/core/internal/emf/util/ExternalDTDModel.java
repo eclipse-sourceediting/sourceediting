@@ -42,7 +42,7 @@ public class ExternalDTDModel {
 	public boolean loadModel(ResourceSet resources, String uri) {
 		boolean rc = true;
 
-		if (uri == null || uri.equals("")) {
+		if (uri == null || uri.equals("")) { //$NON-NLS-1$
 			return false;
 		}
 

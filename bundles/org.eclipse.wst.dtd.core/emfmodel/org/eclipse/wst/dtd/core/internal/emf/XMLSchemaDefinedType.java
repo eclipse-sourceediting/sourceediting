@@ -191,7 +191,7 @@ public final class XMLSchemaDefinedType extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final XMLSchemaDefinedType NONE_LITERAL = new XMLSchemaDefinedType(NONE, "NONE");
+	public static final XMLSchemaDefinedType NONE_LITERAL = new XMLSchemaDefinedType(NONE, "NONE"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>STRING</b></em>' literal object. <!-- begin-user-doc
@@ -206,7 +206,7 @@ public final class XMLSchemaDefinedType extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final XMLSchemaDefinedType STRING_LITERAL = new XMLSchemaDefinedType(STRING, "STRING");
+	public static final XMLSchemaDefinedType STRING_LITERAL = new XMLSchemaDefinedType(STRING, "STRING"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>BOOLEAN</b></em>' literal object. <!-- begin-user-doc
@@ -221,7 +221,7 @@ public final class XMLSchemaDefinedType extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final XMLSchemaDefinedType BOOLEAN_LITERAL = new XMLSchemaDefinedType(BOOLEAN, "BOOLEAN");
+	public static final XMLSchemaDefinedType BOOLEAN_LITERAL = new XMLSchemaDefinedType(BOOLEAN, "BOOLEAN"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>FLOAT</b></em>' literal object. <!-- begin-user-doc
@@ -236,7 +236,7 @@ public final class XMLSchemaDefinedType extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final XMLSchemaDefinedType FLOAT_LITERAL = new XMLSchemaDefinedType(FLOAT, "FLOAT");
+	public static final XMLSchemaDefinedType FLOAT_LITERAL = new XMLSchemaDefinedType(FLOAT, "FLOAT"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>DOUBLE</b></em>' literal object. <!-- begin-user-doc
@@ -251,7 +251,7 @@ public final class XMLSchemaDefinedType extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final XMLSchemaDefinedType DOUBLE_LITERAL = new XMLSchemaDefinedType(DOUBLE, "DOUBLE");
+	public static final XMLSchemaDefinedType DOUBLE_LITERAL = new XMLSchemaDefinedType(DOUBLE, "DOUBLE"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>DECIMAL</b></em>' literal object. <!-- begin-user-doc
@@ -266,7 +266,7 @@ public final class XMLSchemaDefinedType extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final XMLSchemaDefinedType DECIMAL_LITERAL = new XMLSchemaDefinedType(DECIMAL, "DECIMAL");
+	public static final XMLSchemaDefinedType DECIMAL_LITERAL = new XMLSchemaDefinedType(DECIMAL, "DECIMAL"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>TIMEINSTANT</b></em>' literal object. <!--
@@ -281,7 +281,7 @@ public final class XMLSchemaDefinedType extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final XMLSchemaDefinedType TIMEINSTANT_LITERAL = new XMLSchemaDefinedType(TIMEINSTANT, "TIMEINSTANT");
+	public static final XMLSchemaDefinedType TIMEINSTANT_LITERAL = new XMLSchemaDefinedType(TIMEINSTANT, "TIMEINSTANT"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>TIMEDURATION</b></em>' literal object. <!--
@@ -296,7 +296,7 @@ public final class XMLSchemaDefinedType extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final XMLSchemaDefinedType TIMEDURATION_LITERAL = new XMLSchemaDefinedType(TIMEDURATION, "TIMEDURATION");
+	public static final XMLSchemaDefinedType TIMEDURATION_LITERAL = new XMLSchemaDefinedType(TIMEDURATION, "TIMEDURATION"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>RECURRINGINSTANT</b></em>' literal object. <!--
@@ -312,7 +312,7 @@ public final class XMLSchemaDefinedType extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final XMLSchemaDefinedType RECURRINGINSTANT_LITERAL = new XMLSchemaDefinedType(RECURRINGINSTANT, "RECURRINGINSTANT");
+	public static final XMLSchemaDefinedType RECURRINGINSTANT_LITERAL = new XMLSchemaDefinedType(RECURRINGINSTANT, "RECURRINGINSTANT"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>BINARY</b></em>' literal object. <!-- begin-user-doc
@@ -327,7 +327,7 @@ public final class XMLSchemaDefinedType extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final XMLSchemaDefinedType BINARY_LITERAL = new XMLSchemaDefinedType(BINARY, "BINARY");
+	public static final XMLSchemaDefinedType BINARY_LITERAL = new XMLSchemaDefinedType(BINARY, "BINARY"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>URI</b></em>' literal object. <!-- begin-user-doc -->
@@ -341,7 +341,7 @@ public final class XMLSchemaDefinedType extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final XMLSchemaDefinedType URI_LITERAL = new XMLSchemaDefinedType(URI, "URI");
+	public static final XMLSchemaDefinedType URI_LITERAL = new XMLSchemaDefinedType(URI, "URI"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>INTEGER</b></em>' literal object. <!-- begin-user-doc
@@ -356,7 +356,7 @@ public final class XMLSchemaDefinedType extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final XMLSchemaDefinedType INTEGER_LITERAL = new XMLSchemaDefinedType(INTEGER, "INTEGER");
+	public static final XMLSchemaDefinedType INTEGER_LITERAL = new XMLSchemaDefinedType(INTEGER, "INTEGER"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>DATE</b></em>' literal object. <!-- begin-user-doc -->
@@ -370,7 +370,7 @@ public final class XMLSchemaDefinedType extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final XMLSchemaDefinedType DATE_LITERAL = new XMLSchemaDefinedType(DATE, "DATE");
+	public static final XMLSchemaDefinedType DATE_LITERAL = new XMLSchemaDefinedType(DATE, "DATE"); //$NON-NLS-1$
 
 	/**
 	 * The '<em><b>TIME</b></em>' literal object. <!-- begin-user-doc -->
@@ -384,7 +384,7 @@ public final class XMLSchemaDefinedType extends AbstractEnumerator {
 	 * @generated
 	 * @ordered
 	 */
-	public static final XMLSchemaDefinedType TIME_LITERAL = new XMLSchemaDefinedType(TIME, "TIME");
+	public static final XMLSchemaDefinedType TIME_LITERAL = new XMLSchemaDefinedType(TIME, "TIME"); //$NON-NLS-1$
 
 	/**
 	 * An array of all the '<em><b>XML Schema Defined Type</b></em>'

@@ -27,7 +27,7 @@ public class AttributeList extends NamedTopLevelNode {
 	}
 
 	public void addAttribute(String name) {
-		beginRecording(this, DTDCorePlugin.getDTDString("_UI_LABEL_ATTR_LIST_ADD")); //$NON-NLS-1$
+		beginRecording(this, DTDCoreMessages._UI_LABEL_ATTR_LIST_ADD); //$NON-NLS-1$
 
 		DTDNode lastAttribute = (DTDNode) getLastChild();
 		if (lastAttribute != null) {

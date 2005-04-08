@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.EClassImpl;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.InternalEList;
-import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
+import org.eclipse.wst.dtd.core.internal.DTDCoreMessages;
 import org.eclipse.wst.dtd.core.internal.emf.DTDBasicType;
 import org.eclipse.wst.dtd.core.internal.emf.DTDBasicTypeKind;
 import org.eclipse.wst.dtd.core.internal.emf.DTDObject;
@@ -46,7 +46,7 @@ public class DTDBasicTypeImpl extends EClassImpl implements DTDBasicType, EClass
 
 	public final static String basicTypeStrings[] = {DTDType.NONE, DTDType.CDATA, DTDType.ID, DTDType.IDREF, DTDType.IDREFS, DTDType.ENTITY, DTDType.ENTITIES, DTDType.NMTOKEN, DTDType.NMTOKENS};
 
-	public final static String basicTypeDescriptions[] = {DTDCorePlugin.getDTDString("_UI_NONE_DESC"), DTDCorePlugin.getDTDString("_UI_CHARACTER_DATA_DESC"), DTDCorePlugin.getDTDString("_UI_IDENTIFIER_DESC"), DTDCorePlugin.getDTDString("_UI_ID_REFERENCE_DESC"), DTDCorePlugin.getDTDString("_UI_ID_REFERENCES_DESC"), DTDCorePlugin.getDTDString("_UI_ENTITY_NAME_DESC"), DTDCorePlugin.getDTDString("_UI_ENTITY_NAMES_DESC"), DTDCorePlugin.getDTDString("_UI_NAME_TOKEN_DESC"), DTDCorePlugin.getDTDString("_UI_NAME_TOKENS_DESC")};
+	public final static String basicTypeDescriptions[] = {DTDCoreMessages._UI_NONE_DESC, DTDCoreMessages._UI_CHARACTER_DATA_DESC, DTDCoreMessages._UI_IDENTIFIER_DESC, DTDCoreMessages._UI_ID_REFERENCE_DESC, DTDCoreMessages._UI_ID_REFERENCES_DESC, DTDCoreMessages._UI_ENTITY_NAME_DESC, DTDCoreMessages._UI_ENTITY_NAMES_DESC, DTDCoreMessages._UI_NAME_TOKEN_DESC, DTDCoreMessages._UI_NAME_TOKENS_DESC}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
 
 	public final static int basicTypeKinds[] = {DTDBasicTypeKind.NONE, DTDBasicTypeKind.CDATA, DTDBasicTypeKind.ID, DTDBasicTypeKind.IDREF, DTDBasicTypeKind.IDREFS, DTDBasicTypeKind.ENTITY, DTDBasicTypeKind.ENTITIES, DTDBasicTypeKind.NMTOKEN, DTDBasicTypeKind.NMTOKENS};
 
@@ -78,7 +78,7 @@ public class DTDBasicTypeImpl extends EClassImpl implements DTDBasicType, EClass
 
 	public String getPathname() {
 		// TBD
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	public DTDObject findObject(String relativePath) {
@@ -418,7 +418,7 @@ public class DTDBasicTypeImpl extends EClassImpl implements DTDBasicType, EClass
 			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (kind: ");
+		result.append(" (kind: "); //$NON-NLS-1$
 		result.append(kind);
 		result.append(')');
 		return result.toString();

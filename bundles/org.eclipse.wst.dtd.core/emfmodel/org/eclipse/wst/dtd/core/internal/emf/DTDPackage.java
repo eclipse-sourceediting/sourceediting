@@ -38,7 +38,7 @@ public interface DTDPackage extends EPackage {
 	 * 
 	 * @generated
 	 */
-	String eNAME = "dtd";
+	String eNAME = "dtd"; //$NON-NLS-1$
 
 	/**
 	 * The package namespace URI. <!-- begin-user-doc --> <!-- end-user-doc
@@ -46,7 +46,7 @@ public interface DTDPackage extends EPackage {
 	 * 
 	 * @generated
 	 */
-	String eNS_URI = "http:///com/ibm/etools/dtd.ecore";
+	String eNS_URI = "http:///com/ibm/etools/dtd.ecore"; //$NON-NLS-1$
 
 	/**
 	 * The package namespace name. <!-- begin-user-doc --> <!-- end-user-doc
@@ -54,7 +54,7 @@ public interface DTDPackage extends EPackage {
 	 * 
 	 * @generated
 	 */
-	String eNS_PREFIX = "org.eclipse.wst.dtd.core.internal.emf";
+	String eNS_PREFIX = "org.eclipse.wst.dtd.core.internal.emf"; //$NON-NLS-1$
 
 	/**
 	 * The singleton instance of the package. <!-- begin-user-doc --> <!--

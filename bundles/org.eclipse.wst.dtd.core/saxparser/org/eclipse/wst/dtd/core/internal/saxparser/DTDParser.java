@@ -38,8 +38,8 @@ import org.xml.sax.ext.LexicalHandler;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class DTDParser extends DefaultHandler implements ContentHandler, DTDHandler, ErrorHandler, DeclHandler, LexicalHandler {
-	private String contentString = "";
-	private String declString = "";
+	private String contentString = ""; //$NON-NLS-1$
+	private String declString = ""; //$NON-NLS-1$
 
 	/* Canonical output. */
 	protected boolean canonical;
@@ -90,14 +90,14 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 	protected DTDParser(String encoding, boolean canonical) throws UnsupportedEncodingException {
 
 		if (encoding == null)
-			encoding = "UTF-8";
+			encoding = "UTF-8"; //$NON-NLS-1$
 
 		this.canonical = canonical;
 		try {
 			SAXParser sparser = SAXParserFactory.newInstance().newSAXParser();
 			reader = sparser.getXMLReader();
-			reader.setProperty("http://xml.org/sax/properties/declaration-handler", this);
-			reader.setProperty("http://xml.org/sax/properties/lexical-handler", this);
+			reader.setProperty("http://xml.org/sax/properties/declaration-handler", this); //$NON-NLS-1$
+			reader.setProperty("http://xml.org/sax/properties/lexical-handler", this); //$NON-NLS-1$
 			reader.setContentHandler(this);
 			reader.setDTDHandler(this);
 			reader.setErrorHandler(this);
@@ -114,10 +114,10 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 		try {
 			boolean isReadable = URIHelper.isReadableURI(uri, true);
 			if (!isReadable) {
-				throw new Exception("DTD parse error. Can not read the specified URI : " + uri);
+				throw new Exception("DTD parse error. Can not read the specified URI : " + uri); //$NON-NLS-1$
 			}
 
-			String document = "<!DOCTYPE root SYSTEM \"" + uri + "\"><root/>";
+			String document = "<!DOCTYPE root SYSTEM \"" + uri + "\"><root/>"; //$NON-NLS-1$ //$NON-NLS-2$
 			entityDepth = 0;
 			currentDTD = new DTD(uri);
 			reader.parse(new InputSource(new StringReader(document)));
@@ -185,14 +185,14 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 
 	public void notationDecl(String name, String publicId, String systemId) throws SAXException {
 		startDeclaration(DeclNode.NOTATION);
-		declString = "<!NOTATION";
+		declString = "<!NOTATION"; //$NON-NLS-1$
 		if (entityDepth == 1 || parsingExternalPEReference) {
-			String xs = " ";
+			String xs = " "; //$NON-NLS-1$
 			xs += name;
 			if (publicId == null)
-				xs += " SYSTEM " + "\"" + systemId + "\"";
+				xs += " SYSTEM " + "\"" + systemId + "\""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			else
-				xs += " PUBLIC " + "\"" + publicId + "\" " + "\"" + systemId + "\"";
+				xs += " PUBLIC " + "\"" + publicId + "\" " + "\"" + systemId + "\""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 			contentString += xs;
 			parseCurrentDeclaration();
 		}
@@ -204,7 +204,7 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 
 	public void elementDecl(String name, String model) throws SAXException {
 		startDeclaration(DeclNode.ELEMENT);
-		declString = "<!ELEMENT";
+		declString = "<!ELEMENT"; //$NON-NLS-1$
 
 		// KB: With early versions of Xerces 2.x, startEntity("[dtd]") used to
 		// be called before this method
@@ -213,47 +213,47 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 		// Because of this, we need to handle the case where entityDepth == 0
 		// as well.
 		if (entityDepth == 0 || entityDepth == 1 || parsingExternalPEReference)
-			parseCurrentDeclarationHelper(name + " " + model);
+			parseCurrentDeclarationHelper(name + " " + model); //$NON-NLS-1$
 	}
 
-	protected String attributeString = "";
+	protected String attributeString = ""; //$NON-NLS-1$
 
 	public void attributeDecl(String eName, String aName, String type, String valueDefault, String value) throws SAXException {
 		startDeclaration(DeclNode.ATTLIST);
-		declString = "<!ATTLIST";
+		declString = "<!ATTLIST"; //$NON-NLS-1$
 
-		attributeString += " " + aName;
+		attributeString += " " + aName; //$NON-NLS-1$
 		if (type != null)
-			attributeString += " " + type;
+			attributeString += " " + type; //$NON-NLS-1$
 		if (valueDefault != null)
-			attributeString += " " + valueDefault;
+			attributeString += " " + valueDefault; //$NON-NLS-1$
 		if (value != null)
-			attributeString += " '" + value + "'";
+			attributeString += " '" + value + "'"; //$NON-NLS-1$ //$NON-NLS-2$
 
-		attributeString = eName + " " + attributeString + ">";
+		attributeString = eName + " " + attributeString + ">"; //$NON-NLS-1$ //$NON-NLS-2$
 		parseCurrentDeclarationHelper(attributeString);
-		attributeString = "";
+		attributeString = ""; //$NON-NLS-1$
 	}
 
 	public void internalEntityDecl(String name, String value) throws SAXException {
 		startDeclaration(DeclNode.INTERNAL_ENTITY);
-		declString = "<!ENTITY";
+		declString = "<!ENTITY"; //$NON-NLS-1$
 
 		boolean isPEDecl = false;
 		String localName = name;
 		if (entityDepth == 1 || parsingExternalPEReference) {
 			// build up a string: e.g. " % STRDOM "(#PCDATA)">"
-			String xs = " ";
-			if (name.startsWith("%")) {
+			String xs = " "; //$NON-NLS-1$
+			if (name.startsWith("%")) { //$NON-NLS-1$
 				isPEDecl = true;
 				localName = name.substring(1);
-				xs += "% ";
+				xs += "% "; //$NON-NLS-1$
 				xs += name.substring(1);
 			}
 			else
 				xs += name;
 
-			xs += " \"" + value + "\">";
+			xs += " \"" + value + "\">"; //$NON-NLS-1$ //$NON-NLS-2$
 
 			contentString += xs;
 			// save expanded entity value
@@ -265,24 +265,24 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 
 	public void externalEntityDecl(String name, String publicId, String systemId) throws SAXException {
 		startDeclaration(DeclNode.EXTERNAL_ENTITY);
-		declString = "<!ENTITY";
+		declString = "<!ENTITY"; //$NON-NLS-1$
 
 		if (entityDepth == 1 || parsingExternalPEReference) {
 			// build up a string:
 			// ex1) " % FIELD SYSTEM "oagis_fields.dtd">"
 			// ex2) " % FIELD PUBLIC "FOO">"
-			String xs = " ";
-			if (name.startsWith("%")) {
-				xs += "% ";
+			String xs = " "; //$NON-NLS-1$
+			if (name.startsWith("%")) { //$NON-NLS-1$
+				xs += "% "; //$NON-NLS-1$
 				xs += name.substring(1);
 			}
 			else
 				xs += name;
 
 			if (systemId != null)
-				xs += " SYSTEM \"" + systemId + "\">";
+				xs += " SYSTEM \"" + systemId + "\">"; //$NON-NLS-1$ //$NON-NLS-2$
 			else if (publicId != null)
-				xs += " PUBLIC \"" + publicId + "\">";
+				xs += " PUBLIC \"" + publicId + "\">"; //$NON-NLS-1$ //$NON-NLS-2$
 
 			contentString += xs;
 			parseCurrentDeclaration();
@@ -332,12 +332,12 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 	 */
 
 	public void startEntity(String name) throws SAXException {
-		if (name.equals("[dtd]")) {
+		if (name.equals("[dtd]")) { //$NON-NLS-1$
 			startDeclaration(DeclNode.START_ENTITY_DTD);
 		}
 		else if (currentDeclNode == null) {
 			// PE reference in markupdecl section
-			if (name.startsWith("%")) {
+			if (name.startsWith("%")) { //$NON-NLS-1$
 				String peName = name.substring(1);
 				EntityDecl en = entityPool.referPara(peName);
 
@@ -370,7 +370,7 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 			}
 		}
 		else if (entityDepth == 1 || parsingExternalPEReference) {
-			String xs = (String) reader.getProperty("http://xml.org/sax/properties/xml-string");
+			String xs = (String) reader.getProperty("http://xml.org/sax/properties/xml-string"); //$NON-NLS-1$
 			contentString += xs;
 		}
 		entityDepth++;
@@ -386,15 +386,15 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 	 * @see #startEntity
 	 */
 	public void endEntity(String name) throws SAXException {
-		if (name.equals("[dtd]")) {
+		if (name.equals("[dtd]")) { //$NON-NLS-1$
 			startDeclaration(DeclNode.END_ENTITY_DTD);
 		}
 		else if (!peRefStack.empty()) {
 			parseExternalPEReference(name);
 		}
 		else if (entityDepth == 1 || parsingExternalPEReference) {
-			if (!contentString.endsWith(name + ";")) {
-				String xs = (String) reader.getProperty("http://xml.org/sax/properties/xml-string");
+			if (!contentString.endsWith(name + ";")) { //$NON-NLS-1$
+				String xs = (String) reader.getProperty("http://xml.org/sax/properties/xml-string"); //$NON-NLS-1$
 				contentString += xs;
 			}
 		}
@@ -438,7 +438,7 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 		if (comment == null)
 			comment = new String(ch);
 		else
-			comment += "\n" + new String(ch); // append all comments.
+			comment += "\n" + new String(ch); // append all comments. //$NON-NLS-1$
 		// The comment will get reset after
 		// it has been attached to the following
 		// declaration.
@@ -450,27 +450,27 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 
 	/* Warning. */
 	public void warning(SAXParseException ex) {
-		String error = "[Source Line] " + declString + contentString + "\n";
-		error += "[Warning    ] " + getLocationString(ex) + ": " + ex.getMessage();
-		setErrorInformation(ex, "warning");
+		String error = "[Source Line] " + declString + contentString + "\n";  //$NON-NLS-1$//$NON-NLS-2$
+		error += "[Warning    ] " + getLocationString(ex) + ": " + ex.getMessage();  //$NON-NLS-1$//$NON-NLS-2$
+		setErrorInformation(ex, "warning"); //$NON-NLS-1$
 
 		parseCurrentDeclaration();
 	}
 
 	/* Error. */
 	public void error(SAXParseException ex) {
-		String error = "[Source Line] " + declString + contentString + "\n";
-		error += "[Error   ] " + getLocationString(ex) + ": " + ex.getMessage();
-		setErrorInformation(ex, "error");
+		String error = "[Source Line] " + declString + contentString + "\n";  //$NON-NLS-1$//$NON-NLS-2$
+		error += "[Error   ] " + getLocationString(ex) + ": " + ex.getMessage();  //$NON-NLS-1$//$NON-NLS-2$
+		setErrorInformation(ex, "error"); //$NON-NLS-1$
 
 		parseCurrentDeclaration();
 	}
 
 	/* Fatal error. */
 	public void fatalError(SAXParseException ex) throws SAXException {
-		String error = "[Source Line] " + declString + contentString + "\n";
-		error += "[Fatal Error] " + getLocationString(ex) + ": " + ex.getMessage();
-		setErrorInformation(ex, "fatal");
+		String error = "[Source Line] " + declString + contentString + "\n";  //$NON-NLS-1$//$NON-NLS-2$
+		error += "[Fatal Error] " + getLocationString(ex) + ": " + ex.getMessage();  //$NON-NLS-1$//$NON-NLS-2$
+		setErrorInformation(ex, "fatal"); //$NON-NLS-1$
 
 		parseCurrentDeclaration();
 	}
@@ -502,15 +502,15 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 		}
 		else {
 			currentDeclNode = new DeclNode(type);
-			contentString = "";
-			declString = "";
+			contentString = ""; //$NON-NLS-1$
+			declString = ""; //$NON-NLS-1$
 			expandedEntityValue = null;
 		}
 	}
 
 	private void parseCurrentDeclaration() {
 		parseCurrentDeclarationHelper(contentString);
-		contentString = "";
+		contentString = ""; //$NON-NLS-1$
 	}
 
 	private void parseCurrentDeclarationHelper(String declarationString) {
@@ -525,7 +525,7 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 		if (currentDeclNode != null) {
 			BaseNode baseNode = null;
 			// strip out the ending markup symbol ">"
-			if (declarationString.endsWith(">"))
+			if (declarationString.endsWith(">")) //$NON-NLS-1$
 				declarationString = declarationString.substring(0, declarationString.length() - 1);
 
 			int sIndex;
@@ -543,7 +543,7 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 					scanner = new DTDScanner(currentDTD.getName(), cString);
 					CMNode contentModel = scanner.scanContentModel();
 					if (contentModel == null && errorMessage == null) {
-						createErrorMessage("Expecting '(' in content model", "error");
+						createErrorMessage("Expecting '(' in content model", "error"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
 
 					((ElementDecl) baseNode).setContentModelNode(contentModel);
@@ -588,7 +588,7 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 						((Attlist) baseNode).setAttDefs(attrs);
 					}
 					if (errorString != null) {
-						createErrorMessage(errorString, "error");
+						createErrorMessage(errorString, "error"); //$NON-NLS-1$
 					}
 					break;
 				}
@@ -625,7 +625,7 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 	}
 
 	private void addPEReferenceNode(String name) {
-		if (name.startsWith("%")) {
+		if (name.startsWith("%")) { //$NON-NLS-1$
 			name = name.substring(1); // strip out the % from entity name
 		}
 		EntityDecl e = new EntityDecl(name, currentDTD.getName(), null, true);
@@ -649,13 +649,13 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 
 	private boolean isDTDLoaded(String uri) {
 		boolean loaded = false;
-		String list = "";
+		String list = ""; //$NON-NLS-1$
 		if (dtdList != null) {
 			Enumeration en = dtdList.elements();
 			while (en.hasMoreElements()) {
 				DTD dtd = (DTD) en.nextElement();
 				list += dtd.getName();
-				list += ",";
+				list += ","; //$NON-NLS-1$
 				if (dtd.getName().equals(uri)) {
 					loaded = true;
 					break;
@@ -696,19 +696,19 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 			String arg = argv[i];
 
 			// options
-			if (arg.startsWith("-")) {
+			if (arg.startsWith("-")) { //$NON-NLS-1$
 
-				if (arg.equals("-c")) {
+				if (arg.equals("-c")) { //$NON-NLS-1$
 					canonical = true;
 					continue;
 				}
 
-				if (arg.equals("-x")) {
+				if (arg.equals("-x")) { //$NON-NLS-1$
 					expandEntityReferences = true;
 					continue;
 				}
 
-				if (arg.equals("-h")) {
+				if (arg.equals("-h")) { //$NON-NLS-1$
 					printUsage();
 					System.exit(1);
 				}
@@ -728,12 +728,12 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 	/** Prints the usage. */
 	private static void printUsage() {
 
-		System.err.println("usage: java sax.DTDParser (options) uri ...");
+		System.err.println("usage: java sax.DTDParser (options) uri ..."); //$NON-NLS-1$
 		System.err.println();
-		System.err.println("options:");
-		System.err.println("  -c       Canonical XML output.");
-		System.err.println("  -x       Expand entity references.");
-		System.err.println("  -h       This help screen.");
+		System.err.println("options:"); //$NON-NLS-1$
+		System.err.println("  -c       Canonical XML output."); //$NON-NLS-1$
+		System.err.println("  -x       Expand entity references."); //$NON-NLS-1$
+		System.err.println("  -h       This help screen."); //$NON-NLS-1$
 
 	} // printUsage()
 

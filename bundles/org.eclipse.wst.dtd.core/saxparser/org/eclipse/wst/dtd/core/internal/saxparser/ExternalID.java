@@ -111,13 +111,13 @@ public class ExternalID {
 	public String toString() {
 		String ret;
 		if (isSystem()) {
-			ret = "SYSTEM \"" + getSystemLiteral() + "\"";
+			ret = "SYSTEM \"" + getSystemLiteral() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		else if (null != getSystemLiteral()) {
-			ret = "PUBLIC \"" + getPubIdLiteral() + "\" \"" + getSystemLiteral() + "\"";
+			ret = "PUBLIC \"" + getPubIdLiteral() + "\" \"" + getSystemLiteral() + "\""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		}
 		else {
-			ret = "PUBLIC \"" + getPubIdLiteral() + "\""; // for NOTATION
+			ret = "PUBLIC \"" + getPubIdLiteral() + "\""; // for NOTATION //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return ret;
 	}

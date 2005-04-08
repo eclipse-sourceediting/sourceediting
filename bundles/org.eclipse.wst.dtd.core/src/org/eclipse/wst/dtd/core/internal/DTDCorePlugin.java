@@ -12,10 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.core.internal;
 
-import java.text.MessageFormat;
-import java.util.ResourceBundle;
-
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
@@ -33,15 +29,6 @@ public class DTDCorePlugin extends AbstractUIPlugin {
 		return AbstractUIPlugin.imageDescriptorFromPlugin(thisID, iconName);
 	}
 
-	public static String getDTDString(String key) {
-		// In case it is invoked from a command line
-		if (getInstance() == null) {
-			return ""; //$NON-NLS-1$
-		}
-
-		return getInstance().getString(key);
-	}
-
 	public synchronized static DTDCorePlugin getInstance() {
 		return instance;
 	}
@@ -49,8 +36,6 @@ public class DTDCorePlugin extends AbstractUIPlugin {
 	public static DTDCorePlugin getPlugin() {
 		return instance;
 	}
-
-	private ResourceBundle resourceBundle;
 
 	public DTDCorePlugin() {
 		super();
@@ -68,37 +53,5 @@ public class DTDCorePlugin extends AbstractUIPlugin {
 		}
 
 		return image;
-	}
-
-	public ResourceBundle getResourceBundle() {
-		if (resourceBundle == null) {
-			try {
-				resourceBundle = Platform.getResourceBundle(getBundle());
-			}
-			catch (java.util.MissingResourceException exception) {
-			}
-		}
-		return resourceBundle;
-	}
-
-	/**
-	 * This gets the string resource.
-	 */
-	public String getString(String key) {
-		return getResourceBundle().getString(key);
-	}
-
-	/**
-	 * This gets the string resource and does one substitution.
-	 */
-	public String getString(String key, Object s1) {
-		return MessageFormat.format(getString(key), new Object[]{s1});
-	}
-
-	/**
-	 * This gets the string resource and does two substitutions.
-	 */
-	public String getString(String key, Object s1, Object s2) {
-		return MessageFormat.format(getString(key), new Object[]{s1, s2});
 	}
 }

@@ -34,7 +34,7 @@ import org.eclipse.wst.dtd.core.internal.NodeList;
 import org.eclipse.wst.dtd.core.internal.document.DTDModelImpl;
 import org.eclipse.wst.dtd.core.internal.parser.DTDRegionTypes;
 import org.eclipse.wst.dtd.core.internal.util.LabelValuePair;
-import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
+import org.eclipse.wst.dtd.ui.internal.DTDUIMessages;
 import org.eclipse.wst.dtd.ui.internal.editor.DTDEditorPluginImageHelper;
 import org.eclipse.wst.dtd.ui.internal.editor.DTDEditorPluginImages;
 import org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions.AddAttributeAction;
@@ -94,18 +94,18 @@ public class DTDContextMenuHelper // extends FocusAdapter
 	public DTDContextMenuHelper(StructuredTextEditor editor) {
 		this.fEditor = editor;
 		fMenuListener = new DTDMenuListener();
-		addNotationAction = new AddNotationAction(editor, DTDUIPlugin.getResourceString("_UI_ACTION_ADD_DTD_NOTATION")); //$NON-NLS-1$
-		addEntityAction = new AddEntityAction(editor, DTDUIPlugin.getResourceString("_UI_ACTION_ADD_DTD_ENTITY")); //$NON-NLS-1$
-		addElementAction = new AddElementAction(editor, DTDUIPlugin.getResourceString("_UI_ACTION_ADD_DTD_ELEMENT")); //$NON-NLS-1$
-		addCommentAction = new AddCommentAction(editor, DTDUIPlugin.getResourceString("_UI_ACTION_ADD_DTD_COMMENT")); //$NON-NLS-1$
+		addNotationAction = new AddNotationAction(editor, DTDUIMessages._UI_ACTION_ADD_DTD_NOTATION); //$NON-NLS-1$
+		addEntityAction = new AddEntityAction(editor, DTDUIMessages._UI_ACTION_ADD_DTD_ENTITY); //$NON-NLS-1$
+		addElementAction = new AddElementAction(editor, DTDUIMessages._UI_ACTION_ADD_DTD_ELEMENT); //$NON-NLS-1$
+		addCommentAction = new AddCommentAction(editor, DTDUIMessages._UI_ACTION_ADD_DTD_COMMENT); //$NON-NLS-1$
 
-		addParameterEntityReferenceAction = new AddParameterEntityReferenceAction(editor, DTDUIPlugin.getResourceString("_UI_ACTION_ADD_PARAM_ENTITY_REF")); //$NON-NLS-1$
-		deleteAction = new DeleteAction(DTDUIPlugin.getResourceString("_UI_ACTION_DTD_DELETE")); //$NON-NLS-1$
-		addAttributeAction = new AddAttributeAction(editor, DTDUIPlugin.getResourceString("_UI_ACTION_ADD_ATTRIBUTE")); //$NON-NLS-1$
-		addAttributeListAction = new AddAttributeListAction(editor, DTDUIPlugin.getResourceString("_UI_ACTION_ADD_ATTRIBUTELIST")); //$NON-NLS-1$
+		addParameterEntityReferenceAction = new AddParameterEntityReferenceAction(editor, DTDUIMessages._UI_ACTION_ADD_PARAM_ENTITY_REF); //$NON-NLS-1$
+		deleteAction = new DeleteAction(DTDUIMessages._UI_ACTION_DTD_DELETE); //$NON-NLS-1$
+		addAttributeAction = new AddAttributeAction(editor, DTDUIMessages._UI_ACTION_ADD_ATTRIBUTE); //$NON-NLS-1$
+		addAttributeListAction = new AddAttributeListAction(editor, DTDUIMessages._UI_ACTION_ADD_ATTRIBUTELIST); //$NON-NLS-1$
 
-		addGroupToContentModelAction = new AddGroupToContentModelAction(editor, DTDUIPlugin.getResourceString("_UI_ACTION_GROUP_ADD_GROUP")); //$NON-NLS-1$
-		addElementToContentModelAction = new AddElementToContentModelAction(editor, DTDUIPlugin.getResourceString("_UI_ACTION_ADD_ELEMENT")); //$NON-NLS-1$
+		addGroupToContentModelAction = new AddGroupToContentModelAction(editor, DTDUIMessages._UI_ACTION_GROUP_ADD_GROUP); //$NON-NLS-1$
+		addElementToContentModelAction = new AddElementToContentModelAction(editor, DTDUIMessages._UI_ACTION_ADD_ELEMENT); //$NON-NLS-1$
 
 		addNotationAction.setImageDescriptor(DTDEditorPluginImageHelper.getInstance().getImageDescriptor(DTDEditorPluginImages.IMG_OBJ_ADD_NOTATION));
 		addEntityAction.setImageDescriptor(DTDEditorPluginImageHelper.getInstance().getImageDescriptor(DTDEditorPluginImages.IMG_OBJ_ADD_ENTITY));

@@ -50,11 +50,11 @@ public class DTDParameterEntityReferenceImpl extends DTDContentImpl implements D
 		if (entity != null) {
 			return getEntity().getName();
 		} // end of if ()
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	public String getPathname() {
-		return DTDPathnameUtil.makePath(null, "PEnt", getName(), -1);
+		return DTDPathnameUtil.makePath(null, "PEnt", getName(), -1); //$NON-NLS-1$
 	}
 
 	public DTDObject findObject(String relativePath) {

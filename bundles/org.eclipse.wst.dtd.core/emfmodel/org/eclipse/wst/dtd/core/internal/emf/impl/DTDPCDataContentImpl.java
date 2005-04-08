@@ -166,6 +166,6 @@ public class DTDPCDataContentImpl extends DTDElementContentImpl implements DTDPC
 	}
 
 	public String getContentName() {
-		return "#PCDATA";
+		return "#PCDATA"; //$NON-NLS-1$
 	}
 }

@@ -60,22 +60,22 @@ public class NodeList {
 
 	public String getName() {
 		if (listType == DTDRegionTypes.ELEMENT_TAG) {
-			return DTDCorePlugin.getDTDString("_UI_LABEL_NODE_LIST_ELEMENTS"); //$NON-NLS-1$
+			return DTDCoreMessages._UI_LABEL_NODE_LIST_ELEMENTS; //$NON-NLS-1$
 		}
 		else if (listType == DTDRegionTypes.ENTITY_TAG) {
-			return DTDCorePlugin.getDTDString("_UI_LABEL_NODE_LIST_ENTITIES"); //$NON-NLS-1$
+			return DTDCoreMessages._UI_LABEL_NODE_LIST_ENTITIES; //$NON-NLS-1$
 		}
 		else if (listType == DTDRegionTypes.NOTATION_TAG) {
-			return DTDCorePlugin.getDTDString("_UI_LABEL_NODE_LIST_NOTATIONS"); //$NON-NLS-1$
+			return DTDCoreMessages._UI_LABEL_NODE_LIST_NOTATIONS; //$NON-NLS-1$
 		}
 		else if (listType == DTDRegionTypes.COMMENT_START) {
-			return DTDCorePlugin.getDTDString("_UI_LABEL_NODE_LIST_COMMENTS"); //$NON-NLS-1$
+			return DTDCoreMessages._UI_LABEL_NODE_LIST_COMMENTS; //$NON-NLS-1$
 		}
 		else if (listType == DTDRegionTypes.ATTLIST_TAG) {
-			return DTDCorePlugin.getDTDString("_UI_LABEL_NODE_LIST_ATTRIBUTES"); //$NON-NLS-1$
+			return DTDCoreMessages._UI_LABEL_NODE_LIST_ATTRIBUTES; //$NON-NLS-1$
 		}
 		else if (listType == DTDRegionTypes.UNKNOWN_CONTENT) {
-			return DTDCorePlugin.getDTDString("_UI_LABEL_NODE_LIST_OTHER"); //$NON-NLS-1$
+			return DTDCoreMessages._UI_LABEL_NODE_LIST_OTHER; //$NON-NLS-1$
 		}
 		return ""; //$NON-NLS-1$
 	}

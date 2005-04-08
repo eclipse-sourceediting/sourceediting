@@ -13,18 +13,18 @@ package org.eclipse.wst.dtd.core.internal.emf;
 
 public interface DTDType extends DTDObject {
 	// constant strings for dtd attribute types
-	public static final String NONE = "None";
+	public static final String NONE = "None"; //$NON-NLS-1$
 
-	public static final String CDATA = "Character Data (CDATA)";
-	public static final String ID = "Identifier (ID)";
-	public static final String IDREF = "ID Reference (IDREF)";
-	public static final String IDREFS = "ID References (IDREFS)";
-	public static final String ENTITY = "Entity Name (ENTITY)";
-	public static final String ENTITIES = "Entity Names (ENTITIES)";
-	public static final String NMTOKEN = "Name Token (NMTOKEN)";
-	public static final String NMTOKENS = "Name Tokens (NMTOKENS)";
-	public static final String ENUM_NAME_TOKEN_GROUP = "Enumerated Name Tokens";
-	public static final String ENUM_NOTATION_GROUP = "Enumerated NOTATION";
+	public static final String CDATA = "Character Data (CDATA)"; //$NON-NLS-1$
+	public static final String ID = "Identifier (ID)"; //$NON-NLS-1$
+	public static final String IDREF = "ID Reference (IDREF)"; //$NON-NLS-1$
+	public static final String IDREFS = "ID References (IDREFS)"; //$NON-NLS-1$
+	public static final String ENTITY = "Entity Name (ENTITY)"; //$NON-NLS-1$
+	public static final String ENTITIES = "Entity Names (ENTITIES)"; //$NON-NLS-1$
+	public static final String NMTOKEN = "Name Token (NMTOKEN)"; //$NON-NLS-1$
+	public static final String NMTOKENS = "Name Tokens (NMTOKENS)"; //$NON-NLS-1$
+	public static final String ENUM_NAME_TOKEN_GROUP = "Enumerated Name Tokens"; //$NON-NLS-1$
+	public static final String ENUM_NOTATION_GROUP = "Enumerated NOTATION"; //$NON-NLS-1$
 
 	public String toString();
 
