@@ -43,7 +43,7 @@ import org.w3c.dom.Node;
  * Source JSP page
  */
 public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExecutableExtension {
-	private String fClassPattern = null; //$NON-NLS-1$ 
+	private String fClassPattern = null; 
 
 	/*
 	 * (non-Javadoc)
@@ -67,7 +67,7 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 			// null);
 			IResource res = getResourceFromInput(input);
 			if (res != null) {
-				IBreakpoint point = JDIDebugModel.createStratumBreakpoint(res, "JSP", res.getName(), null, getClassPattern(), editorLineNumber, pos, pos, 0, true, null); //$NON-NLS-1$ //$NON-NLS-2$
+				IBreakpoint point = JDIDebugModel.createStratumBreakpoint(res, "JSP", res.getName(), null, getClassPattern(), editorLineNumber, pos, pos, 0, true, null); //$NON-NLS-1$
 				if (point == null) {
 					status = new Status(IStatus.ERROR, JSPUIPlugin.ID, IStatus.ERROR, "unsupported input type", null); //$NON-NLS-1$
 				}
@@ -84,14 +84,14 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 				}
 				Map attributes = new HashMap();
 				attributes.put(StructuredResourceMarkerAnnotationModel.SECONDARY_ID_KEY, id);
-				IBreakpoint point = JDIDebugModel.createStratumBreakpoint(res, "JSP", input.getName(), null, getClassPattern(), editorLineNumber, pos, pos, 0, true, attributes); //$NON-NLS-1$ //$NON-NLS-2$
+				IBreakpoint point = JDIDebugModel.createStratumBreakpoint(res, "JSP", input.getName(), null, getClassPattern(), editorLineNumber, pos, pos, 0, true, attributes); //$NON-NLS-1$
 				if (point == null) {
 					status = new Status(IStatus.ERROR, JSPUIPlugin.ID, IStatus.ERROR, "unsupported input type", null); //$NON-NLS-1$
 				}
 			}
 		}
 		if (status == null) {
-			status = new Status(IStatus.OK, JSPUIPlugin.ID, IStatus.OK, JSPUIMessages.OK, null); //$NON-NLS-1$
+			status = new Status(IStatus.OK, JSPUIPlugin.ID, IStatus.OK, JSPUIMessages.OK, null);
 		}
 		return status;
 	}
@@ -141,8 +141,8 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 
 				// blank lines or lines with only an open or close brace or
 				// scriptlet tag cannot have a breakpoint
-				if (lineText.equals("") || lineText.equals("{") || //$NON-NLS-2$//$NON-NLS-1$
-							lineText.equals("}") || lineText.equals("<%"))//$NON-NLS-2$//$NON-NLS-1$
+				if (lineText.equals("") || lineText.equals("{") ||  //$NON-NLS-1$ //$NON-NLS-2$
+							lineText.equals("}") || lineText.equals("<%")) //$NON-NLS-1$ //$NON-NLS-2$
 				{
 					result = -1;
 				}
