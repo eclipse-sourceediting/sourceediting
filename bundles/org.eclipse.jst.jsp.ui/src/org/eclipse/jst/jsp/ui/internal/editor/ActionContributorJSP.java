@@ -42,7 +42,7 @@ public class ActionContributorJSP extends ActionContributorHTML {
 	private RetargetTextEditorAction moveElementAction = null;
 	private IMenuManager refactorMenu = null;
 	
-	private static final String[] EDITOR_IDS = {"org.eclipse.jst.jsp.ui.StructuredTextEditorJSP", "org.eclipse.wst.sse.ui.StructuredTextEditor"}; //$NON-NLS-1$ //$NON-NLS-2$
+	private static final String[] EDITOR_IDS = {"org.eclipse.jst.jsp.core.jspsource.source", "org.eclipse.wst.sse.ui.StructuredTextEditor"}; //$NON-NLS-1$ //$NON-NLS-2$
 
 	public ActionContributorJSP() {
 		super();

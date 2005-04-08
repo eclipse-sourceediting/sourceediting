@@ -28,7 +28,7 @@ import org.eclipse.wst.sse.ui.internal.actions.ActionContributor;
  * Note that this class is still valid for single page editor.
  */
 public class ActionContributorDTD extends ActionContributor {
-	protected static final String[] EDITOR_IDS = {"org.eclipse.wst.dtd.ui.StructuredTextEditorDTD", "org.eclipse.wst.sse.ui.StructuredTextEditor"}; //$NON-NLS-1$ //$NON-NLS-2$
+	protected static final String[] EDITOR_IDS = {"org.eclipse.wst.dtd.core.dtdsource.source", "org.eclipse.wst.sse.ui.StructuredTextEditor"}; //$NON-NLS-1$ //$NON-NLS-2$
 
 	/*
 	 * (non-Javadoc)

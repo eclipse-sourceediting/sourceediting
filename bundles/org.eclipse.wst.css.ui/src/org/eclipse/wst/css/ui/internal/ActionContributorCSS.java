@@ -38,7 +38,7 @@ import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstan
  * Note that this class is still valid for single page editor.
  */
 public class ActionContributorCSS extends ActionContributor {
-	private static final String[] EDITOR_IDS = {"org.eclipse.wst.css.ui.StructuredTextEditorCSS", "org.eclipse.wst.sse.ui.StructuredTextEditor"}; //$NON-NLS-1$ //$NON-NLS-2$
+	private static final String[] EDITOR_IDS = {"org.eclipse.wst.css.core.csssource.source", "org.eclipse.wst.sse.ui.StructuredTextEditor"}; //$NON-NLS-1$ //$NON-NLS-2$
 
 	protected RetargetTextEditorAction fContentAssist = null;
 	protected RetargetTextEditorAction fCleanupDocument = null;

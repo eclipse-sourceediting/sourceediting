@@ -45,7 +45,7 @@
             contributorClass="org.eclipse.wst.html.ui.edit.ui.ActionContributorHTML"
             class="org.eclipse.wst.html.ui.StructuredTextEditorHTML"
             symbolicFontName="org.eclipse.wst.sse.ui.textfont"
-            id="org.eclipse.wst.html.ui.StructuredTextEditorHTML">
+            id="org.eclipse.wst.html.core.htmlsource.source">
       </editor>
    </extension>
    <extension
@@ -236,13 +236,13 @@
       <actionSetPartAssociation
             targetID="org.eclipse.ui.edit.text.actionSet.annotationNavigation">
          <part
-               id="org.eclipse.wst.html.ui.StructuredTextEditorHTML">
+               id="org.eclipse.wst.html.core.htmlsource.source">
          </part>
       </actionSetPartAssociation>
       <actionSetPartAssociation
             targetID="org.eclipse.ui.NavigateActionSet">
          <part
-               id="org.eclipse.wst.html.ui.StructuredTextEditorHTML">
+               id="org.eclipse.wst.html.core.htmlsource.source">
          </part>
       </actionSetPartAssociation>
    </extension>

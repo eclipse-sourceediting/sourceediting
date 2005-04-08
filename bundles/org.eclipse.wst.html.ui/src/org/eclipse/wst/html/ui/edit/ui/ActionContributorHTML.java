@@ -20,7 +20,7 @@ import org.eclipse.wst.xml.ui.actions.ActionContributorXML;
  * Note that this class is still valid for single page editor.
  */
 public class ActionContributorHTML extends ActionContributorXML {
-	private static final String[] EDITOR_IDS = {"org.eclipse.wst.html.ui.StructuredTextEditorHTML", "org.eclipse.wst.sse.ui.StructuredTextEditor"}; //$NON-NLS-1$ //$NON-NLS-2$
+	private static final String[] EDITOR_IDS = {"org.eclipse.wst.html.core.htmlsource.source", "org.eclipse.wst.sse.ui.StructuredTextEditor"}; //$NON-NLS-1$ //$NON-NLS-2$
 
 	/* (non-Javadoc)
 	 * @see com.ibm.sse.editor.xml.ui.actions.ActionContributor#getExtensionIDs()

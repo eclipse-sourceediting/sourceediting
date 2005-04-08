@@ -1224,6 +1224,20 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 				setModel(model);
 			}
 
+			// currently this only works if createpartcontrol has not been called yet
+			if (getModel() != null) {
+				String contentType = getModel().getContentTypeIdentifier();
+				setEditorContextMenuId(contentType+".source.EditorContext"); //$NON-NLS-1$
+				setRulerContextMenuId(contentType+".source.RulerContext");	//$NON-NLS-1$
+				setHelpContextId(contentType+".source.HelpId");				//$NON-NLS-1$
+				// allows help to be set at any time (not just on AbstractTextEditor's
+				// creation)
+				if ((getHelpContextId() != null) && (getSourceViewer() != null) && (getSourceViewer().getTextWidget() != null)) {
+					IWorkbenchHelpSystem helpSystem = SSEUIPlugin.getDefault().getWorkbench().getHelpSystem();
+					helpSystem.setHelp(getSourceViewer().getTextWidget(), getHelpContextId());
+				}
+			}
+			
 			if (fProjectionModelUpdater != null)
 				fProjectionModelUpdater.initialize();
 

@@ -316,7 +316,10 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 				IEditorPart ownerEditor = page.getActiveEditor();
 				if (ownerEditor != null) {
 					fContextMenuRegistered = true;
-					getSite().registerContextMenu(ownerEditor.getEditorSite().getId() + "#outlinecontext", fContextMenuManager, this);
+					if (getModel() != null)
+						getSite().registerContextMenu(getModel().getContentTypeIdentifier()+".source.OutlineContext", fContextMenuManager, this);	//$NON-NLS-1$
+					else
+						getSite().registerContextMenu(ownerEditor.getSite().getId()+".OutlineContext", fContextMenuManager, this);	//$NON-NLS-1$
 				}
 			}
 		}

@@ -39,7 +39,7 @@
             contributorClass="org.eclipse.wst.css.ui.internal.ActionContributorCSS"
             class="org.eclipse.wst.css.ui.internal.StructuredTextEditorCSS"
             symbolicFontName="org.eclipse.wst.sse.ui.textfont"
-            id="org.eclipse.wst.css.ui.StructuredTextEditorCSS">
+            id="org.eclipse.wst.css.core.csssource.source">
       </editor>
    </extension>
    <extension
@@ -128,13 +128,13 @@
       <actionSetPartAssociation
             targetID="org.eclipse.ui.edit.text.actionSet.annotationNavigation">
          <part
-               id="org.eclipse.wst.css.ui.StructuredTextEditorCSS">
+               id="org.eclipse.wst.css.core.csssource.source">
          </part>
       </actionSetPartAssociation>
       <actionSetPartAssociation
             targetID="org.eclipse.ui.NavigateActionSet">
          <part
-               id="org.eclipse.wst.css.ui.StructuredTextEditorCSS">
+               id="org.eclipse.wst.css.core.csssource.source">
          </part>
       </actionSetPartAssociation>
    </extension>
