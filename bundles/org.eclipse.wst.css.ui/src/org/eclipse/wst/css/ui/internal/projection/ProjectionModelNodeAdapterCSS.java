@@ -271,8 +271,8 @@ public class ProjectionModelNodeAdapterCSS implements INodeAdapter {
 
 		long end = System.currentTimeMillis();
 		if (debugProjectionPerf) {
-			String nodeName = node != null ? node.toString() : "null";
-			System.out.println("ProjectionModelNodeAdapterCSS.updateAdapter (" + nodeName + "):" + (end - start));
+			String nodeName = node != null ? node.toString() : "null"; //$NON-NLS-1$
+			System.out.println("ProjectionModelNodeAdapterCSS.updateAdapter (" + nodeName + "):" + (end - start)); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 }

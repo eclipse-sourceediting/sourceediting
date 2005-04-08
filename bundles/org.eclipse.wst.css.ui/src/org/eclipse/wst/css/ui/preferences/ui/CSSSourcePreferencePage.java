@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.preferences.CSSModelPreferenceNames;
+import org.eclipse.wst.css.ui.internal.CSSUIMessages;
 import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.css.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
@@ -36,20 +37,20 @@ public class CSSSourcePreferencePage extends XMLSourcePreferencePage {
 	private final static String FORMATTING_LINE_WIDTH = SSEUIPlugin.getResourceString("%Line_width__UI_"); //$NON-NLS-1$; 
 	private final static String FORMATTING_INDENT_USING_TABS = SSEUIPlugin.getResourceString("%&Indent_using_tabs_3"); //$NON-NLS-1$
 	// CSS Formatting
-	private final static String FORMATTING_INSERT_LINE_BREAK = CSSUIPlugin.getResourceString("%PrefsLabel.WrappingInsertLineBreak"); //$NON-NLS-1$
-	private final static String FORMATTING_WRAPPING_WITHOUT_ATTR = CSSUIPlugin.getResourceString("%PrefsLabel.WrappingWithoutAttr");//$NON-NLS-1$
+	private final static String FORMATTING_INSERT_LINE_BREAK = CSSUIMessages.PrefsLabel_WrappingInsertLineBreak; //$NON-NLS-1$
+	private final static String FORMATTING_WRAPPING_WITHOUT_ATTR = CSSUIMessages.PrefsLabel_WrappingWithoutAttr;//$NON-NLS-1$
 
 	// Case
-	private final static String CASE_GROUP = CSSUIPlugin.getResourceString("%PrefsLabel.CaseGroup"); //$NON-NLS-1$
-	private final static String CASE_IDENT = CSSUIPlugin.getResourceString("%PrefsLabel.CaseIdent"); //$NON-NLS-1$
-	private final static String CASE_PROP_NAME = CSSUIPlugin.getResourceString("%PrefsLabel.CasePropName"); //$NON-NLS-1$
-	private final static String CASE_PROP_VALUE = CSSUIPlugin.getResourceString("%PrefsLabel.CasePropValue"); //$NON-NLS-1$
-	private final static String CASE_IDENT_UPPER = CSSUIPlugin.getResourceString("%PrefsLabel.CaseIdentUpper"); //$NON-NLS-1$
-	private final static String CASE_IDENT_LOWER = CSSUIPlugin.getResourceString("%PrefsLabel.CaseIdentLower"); //$NON-NLS-1$
-	private final static String CASE_PROP_NAME_UPPER = CSSUIPlugin.getResourceString("%PrefsLabel.CasePropNameUpper"); //$NON-NLS-1$
-	private final static String CASE_PROP_NAME_LOWER = CSSUIPlugin.getResourceString("%PrefsLabel.CasePropNameLower"); //$NON-NLS-1$
-	private final static String CASE_PROP_VALUE_UPPER = CSSUIPlugin.getResourceString("%PrefsLabel.CasePropValueUpper"); //$NON-NLS-1$
-	private final static String CASE_PROP_VALUE_LOWER = CSSUIPlugin.getResourceString("%PrefsLabel.CasePropValueLower"); //$NON-NLS-1$
+	private final static String CASE_GROUP = CSSUIMessages.PrefsLabel_CaseGroup; //$NON-NLS-1$
+	private final static String CASE_IDENT = CSSUIMessages.PrefsLabel_CaseIdent; //$NON-NLS-1$
+	private final static String CASE_PROP_NAME = CSSUIMessages.PrefsLabel_CasePropName; //$NON-NLS-1$
+	private final static String CASE_PROP_VALUE = CSSUIMessages.PrefsLabel_CasePropValue; //$NON-NLS-1$
+	private final static String CASE_IDENT_UPPER = CSSUIMessages.PrefsLabel_CaseIdentUpper; //$NON-NLS-1$
+	private final static String CASE_IDENT_LOWER = CSSUIMessages.PrefsLabel_CaseIdentLower; //$NON-NLS-1$
+	private final static String CASE_PROP_NAME_UPPER = CSSUIMessages.PrefsLabel_CasePropNameUpper; //$NON-NLS-1$
+	private final static String CASE_PROP_NAME_LOWER = CSSUIMessages.PrefsLabel_CasePropNameLower; //$NON-NLS-1$
+	private final static String CASE_PROP_VALUE_UPPER = CSSUIMessages.PrefsLabel_CasePropValueUpper; //$NON-NLS-1$
+	private final static String CASE_PROP_VALUE_LOWER = CSSUIMessages.PrefsLabel_CasePropValueLower; //$NON-NLS-1$
 
 	// one property per one line
 	protected Button fPropertyPerLine;

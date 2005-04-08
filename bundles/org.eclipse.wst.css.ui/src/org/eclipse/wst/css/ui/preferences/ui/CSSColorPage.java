@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.css.core.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.css.core.parser.CSSRegionContexts;
+import org.eclipse.wst.css.ui.internal.CSSUIMessages;
 import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.css.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.css.ui.style.IStyleConstantsCSS;
@@ -78,7 +79,7 @@ public class CSSColorPage extends AbstractColorPage {
 	 * getSampleText method comment.
 	 */
 	public String getSampleText() {
-		return CSSUIPlugin.getResourceString("%PrefsLabel.ColorSample"); //$NON-NLS-1$
+		return CSSUIMessages.PrefsLabel_ColorSample; //$NON-NLS-1$
 	}
 
 	/**
@@ -153,19 +154,19 @@ public class CSSColorPage extends AbstractColorPage {
 	 */
 	protected void initDescriptions(Dictionary descriptions) {
 		// create descriptions for hilighting types
-		descriptions.put(IStyleConstantsCSS.NORMAL, CSSUIPlugin.getResourceString("%PrefsLabel.ColorNormal"));//$NON-NLS-1$
-		descriptions.put(IStyleConstantsCSS.ATMARK_RULE, CSSUIPlugin.getResourceString("%PrefsLabel.ColorAtmarkRule"));//$NON-NLS-1$
-		descriptions.put(IStyleConstantsCSS.SELECTOR, CSSUIPlugin.getResourceString("%PrefsLabel.ColorSelector"));//$NON-NLS-1$
-		descriptions.put(IStyleConstantsCSS.MEDIA, CSSUIPlugin.getResourceString("%PrefsLabel.ColorMedia"));//$NON-NLS-1$
-		descriptions.put(IStyleConstantsCSS.COMMENT, CSSUIPlugin.getResourceString("%PrefsLabel.ColorComment"));//$NON-NLS-1$
-		descriptions.put(IStyleConstantsCSS.PROPERTY_NAME, CSSUIPlugin.getResourceString("%PrefsLabel.ColorPropertyName"));//$NON-NLS-1$
-		descriptions.put(IStyleConstantsCSS.PROPERTY_VALUE, CSSUIPlugin.getResourceString("%PrefsLabel.ColorPropertyValue"));//$NON-NLS-1$
-		descriptions.put(IStyleConstantsCSS.URI, CSSUIPlugin.getResourceString("%PrefsLabel.ColorUri"));//$NON-NLS-1$
-		descriptions.put(IStyleConstantsCSS.STRING, CSSUIPlugin.getResourceString("%PrefsLabel.ColorString"));//$NON-NLS-1$
-		descriptions.put(IStyleConstantsCSS.COLON, CSSUIPlugin.getResourceString("%PrefsLabel.ColorColon"));//$NON-NLS-1$
-		descriptions.put(IStyleConstantsCSS.SEMI_COLON, CSSUIPlugin.getResourceString("%PrefsLabel.ColorSemiColon"));//$NON-NLS-1$
-		descriptions.put(IStyleConstantsCSS.CURLY_BRACE, CSSUIPlugin.getResourceString("%PrefsLabel.ColorCurlyBrace"));//$NON-NLS-1$
-		descriptions.put(IStyleConstantsCSS.ERROR, CSSUIPlugin.getResourceString("%PrefsLabel.ColorError"));//$NON-NLS-1$
+		descriptions.put(IStyleConstantsCSS.NORMAL, CSSUIMessages.PrefsLabel_ColorNormal);//$NON-NLS-1$
+		descriptions.put(IStyleConstantsCSS.ATMARK_RULE, CSSUIMessages.PrefsLabel_ColorAtmarkRule);//$NON-NLS-1$
+		descriptions.put(IStyleConstantsCSS.SELECTOR, CSSUIMessages.PrefsLabel_ColorSelector);//$NON-NLS-1$
+		descriptions.put(IStyleConstantsCSS.MEDIA, CSSUIMessages.PrefsLabel_ColorMedia);//$NON-NLS-1$
+		descriptions.put(IStyleConstantsCSS.COMMENT, CSSUIMessages.PrefsLabel_ColorComment);//$NON-NLS-1$
+		descriptions.put(IStyleConstantsCSS.PROPERTY_NAME, CSSUIMessages.PrefsLabel_ColorPropertyName);//$NON-NLS-1$
+		descriptions.put(IStyleConstantsCSS.PROPERTY_VALUE, CSSUIMessages.PrefsLabel_ColorPropertyValue);//$NON-NLS-1$
+		descriptions.put(IStyleConstantsCSS.URI, CSSUIMessages.PrefsLabel_ColorUri);//$NON-NLS-1$
+		descriptions.put(IStyleConstantsCSS.STRING, CSSUIMessages.PrefsLabel_ColorString);//$NON-NLS-1$
+		descriptions.put(IStyleConstantsCSS.COLON, CSSUIMessages.PrefsLabel_ColorColon);//$NON-NLS-1$
+		descriptions.put(IStyleConstantsCSS.SEMI_COLON, CSSUIMessages.PrefsLabel_ColorSemiColon);//$NON-NLS-1$
+		descriptions.put(IStyleConstantsCSS.CURLY_BRACE, CSSUIMessages.PrefsLabel_ColorCurlyBrace);//$NON-NLS-1$
+		descriptions.put(IStyleConstantsCSS.ERROR, CSSUIMessages.PrefsLabel_ColorError);//$NON-NLS-1$
 	}
 
 	/**

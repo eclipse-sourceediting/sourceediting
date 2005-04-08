@@ -56,7 +56,7 @@ public class StructuredTextFoldingProviderCSS implements IStructuredTextFoldingP
 
 		long end = System.currentTimeMillis();
 		if (debugProjectionPerf)
-			System.out.println("StructuredTextFoldingProviderCSS.addAllAdapters: " + (end - start));
+			System.out.println("StructuredTextFoldingProviderCSS.addAllAdapters: " + (end - start)); //$NON-NLS-1$
 	}
 
 	/**

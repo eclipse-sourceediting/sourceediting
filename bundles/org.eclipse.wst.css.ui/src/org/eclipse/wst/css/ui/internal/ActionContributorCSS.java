@@ -49,7 +49,7 @@ public class ActionContributorCSS extends ActionContributor {
 	public ActionContributorCSS() {
 		super();
 
-		ResourceBundle resourceBundle = SSEUIPlugin.getDefault().getResourceBundle();
+		ResourceBundle resourceBundle = CSSUIMessages.getResourceBundle();
 
 		// edit commands
 		fContentAssist = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
@@ -65,7 +65,7 @@ public class ActionContributorCSS extends ActionContributor {
 		fFormatActiveElements = new RetargetTextEditorAction(resourceBundle, ""); //$NON-NLS-1$
 		fFormatActiveElements.setActionDefinitionId(ActionDefinitionIds.FORMAT_ACTIVE_ELEMENTS);
 
-		fFormatMenu = new MenuManager(SSEUIPlugin.getResourceString("%FormatMenu.label")); //$NON-NLS-1$
+		fFormatMenu = new MenuManager(CSSUIMessages.FormatMenu_label);
 		fFormatMenu.add(fFormatDocument);
 		fFormatMenu.add(fFormatActiveElements);
 	}
@@ -89,9 +89,7 @@ public class ActionContributorCSS extends ActionContributor {
 
 		// source commands
 		String sourceMenuLabel = SSEUIPlugin.getResourceString("%SourceMenu.label"); //$NON-NLS-1$
-		String sourceMenuId = "sourceMenuId"; // This is just a menu id. No
-											  // need to translate.
-											  // //$NON-NLS-1$
+		String sourceMenuId = "sourceMenuId"; //$NON-NLS-1$
 		IMenuManager sourceMenu = new MenuManager(sourceMenuLabel, sourceMenuId);
 		menu.insertAfter(IWorkbenchActionConstants.M_EDIT, sourceMenu);
 		if (sourceMenu != null) {

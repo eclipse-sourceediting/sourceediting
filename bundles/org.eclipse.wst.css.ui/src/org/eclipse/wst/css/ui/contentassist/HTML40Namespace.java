@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
+/*nlsXXX*/
 package org.eclipse.wst.css.ui.contentassist;
 
 

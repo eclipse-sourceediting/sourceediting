@@ -32,7 +32,7 @@ import org.eclipse.wst.css.core.metamodel.CSSMMNode;
 import org.eclipse.wst.css.core.metamodel.CSSMetaModel;
 import org.eclipse.wst.css.core.metamodel.util.CSSMetaModelFinder;
 import org.eclipse.wst.css.core.metamodel.util.CSSMetaModelUtil;
-import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
+import org.eclipse.wst.css.ui.internal.CSSUIMessages;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.w3c.dom.css.CSSStyleDeclaration;
@@ -72,7 +72,7 @@ public class CSSPropertySource implements INodeAdapter, IPropertySource {
 		if (name != null && 0 < name.length()) {
 			name = name.toLowerCase();
 			if (category == null) {
-				category = CSSUIPlugin.getResourceString("%INFO_Not_Categorized_1"); //$NON-NLS-1$
+				category = CSSUIMessages.INFO_Not_Categorized_1; //$NON-NLS-1$
 			}
 			descriptor = new CSSTextPropertyDescriptor(name, name, fNode, category);
 			//			if (category == null) {
@@ -308,8 +308,8 @@ public class CSSPropertySource implements INodeAdapter, IPropertySource {
 				}
 			} catch (Exception e) {
 				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-				String title = CSSUIPlugin.getResourceString("%Title.InvalidValue"); //$NON-NLS-1$
-				String message = CSSUIPlugin.getResourceString("%Message.InvalidValue"); //$NON-NLS-1$
+				String title = CSSUIMessages.Title_InvalidValue; //$NON-NLS-1$
+				String message = CSSUIMessages.Message_InvalidValue; //$NON-NLS-1$
 				MessageDialog.openWarning(window.getShell(), title, message);
 			}
 		}
