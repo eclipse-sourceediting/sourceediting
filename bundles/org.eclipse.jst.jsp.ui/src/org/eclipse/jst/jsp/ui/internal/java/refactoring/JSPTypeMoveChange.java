@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchScope;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchSupport;
-import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
+import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
 
@@ -38,7 +38,7 @@ public class JSPTypeMoveChange extends Change {
 	}
 
 	public String getName() {
-		return JSPUIPlugin.getResourceString("%JSP_changes"); //$NON-NLS-1$
+		return JSPUIMessages.JSP_changes; //$NON-NLS-1$
 	}
 
 	public void initializeValidationData(IProgressMonitor pm) {

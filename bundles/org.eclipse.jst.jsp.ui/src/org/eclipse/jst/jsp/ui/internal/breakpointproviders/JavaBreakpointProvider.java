@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.debug.core.JDIDebugModel;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
@@ -76,7 +77,7 @@ public class JavaBreakpointProvider extends AbstractBreakpointProvider {
 				}
 			}
 		}
-		return new Status(IStatus.OK, JSPUIPlugin.ID, IStatus.OK, JSPUIPlugin.getResourceString("%OK"), null); //$NON-NLS-1$
+		return new Status(IStatus.OK, JSPUIPlugin.ID, IStatus.OK, JSPUIMessages.OK, null); //$NON-NLS-1$
 	}
 
 	/*

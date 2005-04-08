@@ -282,7 +282,7 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 	public void release() {
 		if (fTranslationAdapter != null) {
 			if(DEBUG) {
-				System.out.println("ReconcileStepForJSPTranslation ["+this+"] releasing JSPTranslationAdapter " + fTranslationAdapter);
+				System.out.println("ReconcileStepForJSPTranslation ["+this+"] releasing JSPTranslationAdapter " + fTranslationAdapter); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			fTranslationAdapter.release();
 		}

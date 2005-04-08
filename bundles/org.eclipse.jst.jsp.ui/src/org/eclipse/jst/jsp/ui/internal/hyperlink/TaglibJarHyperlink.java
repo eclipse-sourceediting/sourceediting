@@ -98,7 +98,7 @@ class TaglibJarHyperlink implements IHyperlink {
 	}
 
 	public void open() {
-		IEditorInput input = new URLFileHyperlink.StorageEditorInput(new ZipStorage(fZipFilePath.toFile(), "META-INF/taglib.tld"));
+		IEditorInput input = new URLFileHyperlink.StorageEditorInput(new ZipStorage(fZipFilePath.toFile(), "META-INF/taglib.tld")); //$NON-NLS-1$
 		IEditorDescriptor descriptor;
 		try {
 			descriptor = IDE.getEditorDescriptor(input.getName());

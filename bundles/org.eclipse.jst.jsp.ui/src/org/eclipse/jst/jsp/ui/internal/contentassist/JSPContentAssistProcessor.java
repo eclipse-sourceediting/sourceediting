@@ -920,8 +920,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		for (int i = 0; i < regularJSPResults.length; i++) {
 			ICompletionProposal test = regularJSPResults[i];
 
-			System.out.println("proposal > " + test.getDisplayString());
-			System.out.println("relevance > " + ((CustomCompletionProposal) test).getRelevance());
+			System.out.println("proposal > " + test.getDisplayString()); //$NON-NLS-1$
+			System.out.println("relevance > " + ((CustomCompletionProposal) test).getRelevance()); //$NON-NLS-1$
 
 			if (isRelevanceAllowed(((CustomCompletionProposal) test).getRelevance())) {
 				filteredProposals.add(test);

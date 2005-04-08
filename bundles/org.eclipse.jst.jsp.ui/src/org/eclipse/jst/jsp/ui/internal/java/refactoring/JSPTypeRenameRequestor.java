@@ -16,7 +16,7 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.search.SearchMatch;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.search.JavaSearchDocumentDelegate;
-import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
+import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 
 /**
  * Creates document change(s) for a type rename.
@@ -57,7 +57,7 @@ public class JSPTypeRenameRequestor extends BasicRefactorSearchRequestor {
 		
 		String typeName = getElement().getElementName();
 		String newName = getNewName();
-		String description = MessageFormat.format(JSPUIPlugin.getResourceString("%BasicRefactorSearchRequestor.4"), new String[]{typeName, newName}); //$NON-NLS-1$
+		String description = MessageFormat.format(JSPUIMessages.BasicRefactorSearchRequestor_4, new String[]{typeName, newName}); //$NON-NLS-1$
 		return description;
 	}
 }

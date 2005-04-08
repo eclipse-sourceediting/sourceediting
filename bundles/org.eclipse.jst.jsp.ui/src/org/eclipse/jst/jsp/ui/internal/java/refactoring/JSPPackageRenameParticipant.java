@@ -13,7 +13,7 @@ package org.eclipse.jst.jsp.ui.internal.java.refactoring;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
+import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.CompositeChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
@@ -66,7 +66,7 @@ public class JSPPackageRenameParticipant extends RenameParticipant {
 		 Change[] changes = JSPPackageRenameChange.createChangesFor(this.fPkg, getArguments().getNewName());
 		 CompositeChange multiChange = null;
 		 if(changes.length > 0)
-			multiChange = new CompositeChange(JSPUIPlugin.getResourceString("%JSP_changes"), changes); //$NON-NLS-1$
+			multiChange = new CompositeChange(JSPUIMessages.JSP_changes, changes); //$NON-NLS-1$
 	     return multiChange;
 	}
 	

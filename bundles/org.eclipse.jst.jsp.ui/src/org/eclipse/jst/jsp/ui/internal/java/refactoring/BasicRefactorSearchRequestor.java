@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -34,11 +33,12 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchSupport;
 import org.eclipse.jst.jsp.core.internal.java.search.JavaSearchDocumentDelegate;
-import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
+import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.ltk.core.refactoring.Change;
 import org.eclipse.ltk.core.refactoring.DocumentChange;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
@@ -122,10 +122,10 @@ public class BasicRefactorSearchRequestor extends SearchRequestor {
 		private TextEdit fEdit = null;
 		private IFile fJSPFile = null;
 		private IDocument fJSPDoc = null;
-		private String fDescription = JSPUIPlugin.getResourceString("%BasicRefactorSearchRequestor.0"); //$NON-NLS-1$
+		private String fDescription = JSPUIMessages.BasicRefactorSearchRequestor_0;
 		
 		public RenameChange(IFile jspFile, IDocument jspDoc, TextEdit edit, String description) {
-			super("JSP Rename Change", jspDoc);
+			super(JSPUIMessages.BasicRefactorSearchRequestor_6, jspDoc);
 			this.fEdit = edit;
 			this.fJSPFile = jspFile;
 			this.fJSPDoc = jspDoc;
@@ -330,7 +330,7 @@ public class BasicRefactorSearchRequestor extends SearchRequestor {
 		try {
 			// document lines are 0 based
 			String lineNumber = Integer.toString(doc.getLineOfOffset(edit.getOffset()) + 1);
-			description += " " + MessageFormat.format(JSPUIPlugin.getResourceString("%BasicRefactorSearchRequestor.1"), new String[]{file, lineNumber}); //$NON-NLS-1$
+			description += " " + NLS.bind(JSPUIMessages.BasicRefactorSearchRequestor_1, new String[]{file, lineNumber}); //$NON-NLS-1$
 		} 
 		catch (BadLocationException e) {
 			Logger.logException(e);

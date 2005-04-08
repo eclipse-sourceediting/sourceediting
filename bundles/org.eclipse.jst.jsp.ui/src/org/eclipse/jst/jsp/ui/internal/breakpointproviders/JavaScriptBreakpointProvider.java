@@ -18,6 +18,7 @@ import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.IBreakpointManager;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.SourceEditingTextTools;
@@ -50,7 +51,7 @@ public class JavaScriptBreakpointProvider extends AbstractBreakpointProvider {
 //				}
 			}
 		}
-		return new Status(IStatus.OK, JSPUIPlugin.ID, IStatus.OK, JSPUIPlugin.getResourceString("%OK"), null); //$NON-NLS-1$
+		return new Status(IStatus.OK, JSPUIPlugin.ID, IStatus.OK, JSPUIMessages.OK, null); //$NON-NLS-1$
 	}
 
 	/*

@@ -11,9 +11,6 @@
 package org.eclipse.jst.jsp.ui.internal;
 
 import java.io.IOException;
-import java.text.MessageFormat;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
@@ -32,11 +29,7 @@ import org.eclipse.wst.sse.ui.registry.embedded.EmbeddedAdapterFactoryRegistryIm
 public class JSPUIPlugin extends AbstractUIPlugin {
 	public final static String ID = "org.eclipse.jst.jsp.ui"; //$NON-NLS-1$
 
-	protected static JSPUIPlugin instance = null;
-	//Resource bundle.
-	private ResourceBundle resourceBundle;
-	private static final String KEY_PREFIX = "%"; //$NON-NLS-1$
-	private static final String KEY_DOUBLE_PREFIX = "%%"; //$NON-NLS-1$	
+	protected static JSPUIPlugin instance = null;	
 	
 	/**
 	 * The template store for the jsp editor. 
@@ -107,50 +100,5 @@ public class JSPUIPlugin extends AbstractUIPlugin {
 		}
 
 		return fContextTypeRegistry;
-	}
-
-	/**
-	 * Returns the string from the plugin's resource bundle,
-	 * or 'key' if not found.
-	 */
-	public static String getResourceString(String value) {
-		String s = value.trim();
-		if (!s.startsWith(KEY_PREFIX, 0))
-			return s;
-		if (s.startsWith(KEY_DOUBLE_PREFIX, 0))
-			return s.substring(1);
-
-		int ix = s.indexOf(' ');
-		String key = ix == -1 ? s : s.substring(0, ix);
-
-		ResourceBundle bundle = getDefault().getResourceBundle();
-		try {
-			return (bundle != null) ? bundle.getString(key.substring(1)) : key;
-		} catch (MissingResourceException e) {
-			return key;
-		}
-	}
-
-	public static String getResourceString(String key, Object[] args) {
-
-		try {
-			return MessageFormat.format(getResourceString(key), args);
-		} catch (IllegalArgumentException e) {
-			return getResourceString(key);
-		}
-
-	}
-
-	/**
-	 * Returns the plugin's resource bundle,
-	 */
-	public ResourceBundle getResourceBundle() {
-		try {
-			if (resourceBundle == null)
-				resourceBundle = ResourceBundle.getBundle("org.eclipse.jst.jsp.ui.internal.JSPUIPluginResources");
-		} catch (MissingResourceException x) {
-			resourceBundle = null;
-		}
-		return resourceBundle;
 	}
 }

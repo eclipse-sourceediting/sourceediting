@@ -11,6 +11,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.ui.INewWizard;
@@ -22,33 +23,33 @@ import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.eclipse.ui.ide.IDE;
 
 public class NewJSPWizard extends Wizard implements INewWizard {
-	static String PAGE_IMAGE = "/icons/full/wizban/newjspfile_wiz.gif";
+	static String PAGE_IMAGE = "/icons/full/wizban/newjspfile_wiz.gif"; //$NON-NLS-1$
 	private WizardNewFileCreationPage fNewFilePage;
 	private IStructuredSelection fSelection;
-	List fValidExtensions = new ArrayList(Arrays.asList(new String[]{"jsp", "jspf"}));
+	List fValidExtensions = new ArrayList(Arrays.asList(new String[]{"jsp", "jspf"})); //$NON-NLS-1$ //$NON-NLS-2$
 
 	public void addPages() {
-		fNewFilePage = new WizardNewFileCreationPage("JSPWizardNewFileCreationPage", new StructuredSelection(IDE.computeSelectedResources(fSelection))) {
+		fNewFilePage = new WizardNewFileCreationPage("JSPWizardNewFileCreationPage", new StructuredSelection(IDE.computeSelectedResources(fSelection))) { //$NON-NLS-1$
 			protected boolean validatePage() {
 				IPath handlePath = new Path(getFileName());
 				String extension = handlePath.getFileExtension();
 				if (extension == null || !fValidExtensions.contains(extension)) {
-					setErrorMessage(JSPUIPlugin.getResourceString("%_ERROR_FILENAME_MUST_END_JSP"));
+					setErrorMessage(JSPUIMessages._ERROR_FILENAME_MUST_END_JSP);
 					return false;
 				}
 				setErrorMessage(null);
 				return super.validatePage();
 			}
 		};
-		fNewFilePage.setTitle(JSPUIPlugin.getResourceString("%_UI_WIZARD_NEW_HEADING"));
-		fNewFilePage.setDescription(JSPUIPlugin.getResourceString("%_UI_WIZARD_NEW_DESCRIPTION"));
+		fNewFilePage.setTitle(JSPUIMessages._UI_WIZARD_NEW_HEADING);
+		fNewFilePage.setDescription(JSPUIMessages._UI_WIZARD_NEW_DESCRIPTION);
 
 		addPage(fNewFilePage);
 	}
 
 	public void init(IWorkbench aWorkbench, IStructuredSelection aSelection) {
 		fSelection = aSelection;
-		setWindowTitle(JSPUIPlugin.getResourceString("%_UI_WIZARD_NEW_TITLE"));
+		setWindowTitle(JSPUIMessages._UI_WIZARD_NEW_TITLE);
 		if (PAGE_IMAGE != null) {
 			ImageDescriptor descriptor = JSPUIPlugin.getDefault().getImageRegistry().getDescriptor(PAGE_IMAGE);
 			if (descriptor == null) {

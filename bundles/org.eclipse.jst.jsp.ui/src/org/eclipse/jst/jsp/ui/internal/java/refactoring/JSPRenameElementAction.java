@@ -18,7 +18,7 @@ import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.ui.refactoring.RenameSupport;
-import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
+import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -87,7 +87,7 @@ public class JSPRenameElementAction extends TextEditorAction {
 			}
 		}
 		else  {
-			PlatformStatusLineUtil.displayErrorMessage(JSPUIPlugin.getResourceString("%JSPRenameElementAction.0")); //$NON-NLS-1$
+			PlatformStatusLineUtil.displayErrorMessage(JSPUIMessages.JSPRenameElementAction_0); //$NON-NLS-1$
 			PlatformStatusLineUtil.addOneTimeClearListener();
 		}
 	}

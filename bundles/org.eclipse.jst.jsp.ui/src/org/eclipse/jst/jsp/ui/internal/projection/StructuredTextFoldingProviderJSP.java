@@ -97,7 +97,7 @@ public class StructuredTextFoldingProviderJSP implements IStructuredTextFoldingP
 		}
 		long end = System.currentTimeMillis();
 		if (debugProjectionPerf)
-			System.out.println("StructuredTextFoldingProviderJSP.addAllAdapters: " + (end - start));
+			System.out.println("StructuredTextFoldingProviderJSP.addAllAdapters: " + (end - start)); //$NON-NLS-1$
 	}
 
 	/**
@@ -144,7 +144,7 @@ public class StructuredTextFoldingProviderJSP implements IStructuredTextFoldingP
 		
 		long end = System.currentTimeMillis();
 		if (debugProjectionPerf)
-			System.out.println("StructuredTextFoldingProviderJSP.getAdapterFactoryHTML: " + (end - start));
+			System.out.println("StructuredTextFoldingProviderJSP.getAdapterFactoryHTML: " + (end - start)); //$NON-NLS-1$
 		return factory;
 	}
 
@@ -191,7 +191,7 @@ public class StructuredTextFoldingProviderJSP implements IStructuredTextFoldingP
 		
 		long end = System.currentTimeMillis();
 		if (debugProjectionPerf)
-			System.out.println("StructuredTextFoldingProviderJSP.getAdapterFactoryJSP: " + (end - start));
+			System.out.println("StructuredTextFoldingProviderJSP.getAdapterFactoryJSP: " + (end - start)); //$NON-NLS-1$
 		return factory;
 	}
 

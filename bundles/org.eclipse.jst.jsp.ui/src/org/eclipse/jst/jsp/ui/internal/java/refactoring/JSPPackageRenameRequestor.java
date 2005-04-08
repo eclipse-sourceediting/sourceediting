@@ -11,7 +11,8 @@
 package org.eclipse.jst.jsp.ui.internal.java.refactoring;
 
 import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
+import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * Overrides get description
@@ -34,7 +35,7 @@ public class JSPPackageRenameRequestor extends BasicRefactorSearchRequestor {
 	protected String getDescription() {
 		String packageName = getElement().getElementName();
 		String newName = getNewName();
-		String description = JSPUIPlugin.getResourceString("%BasicRefactorSearchRequestor.5", new String[]{packageName, newName}); //$NON-NLS-1$
+		String description = NLS.bind(JSPUIMessages.BasicRefactorSearchRequestor_5, (new String[]{packageName, newName})); //$NON-NLS-1$
 		return description;
 	}
 }

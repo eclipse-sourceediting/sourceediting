@@ -18,6 +18,7 @@ import java.util.Iterator;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.editor.IHelpContextIds;
 import org.eclipse.swt.widgets.Composite;
@@ -54,7 +55,7 @@ public class JSPColorPage extends XMLColorPage {
 	}
 
 	public String getSampleText() {
-		return JSPUIPlugin.getResourceString("%Sample_JSP_doc"); //$NON-NLS-1$ = "<%@ page \n\tlanguage=\"java\" \n\tcontentType=\"text/html; charset=ISO-8859-1\"\n%>\n<jsp:include flush=\"true\" page=\"titleBar.jsp\"/>\n\n<%-- Use below tags ONLY for JSP 1.1 --%>\n<%\n\tSystem.out.println(\"Welcome!\");\n%>\n<%-- Use below tags ONLY for JSP 1.2 --%>\n<jsp:scriptlet>\n\tSystem.out.println(\"Welcome!\");\n</jsp:scriptlet>"
+		return JSPUIMessages.Sample_JSP_doc; //$NON-NLS-1$ = "<%@ page \n\tlanguage=\"java\" \n\tcontentType=\"text/html; charset=ISO-8859-1\"\n%>\n<jsp:include flush=\"true\" page=\"titleBar.jsp\"/>\n\n<%-- Use below tags ONLY for JSP 1.1 --%>\n<%\n\tSystem.out.println(\"Welcome!\");\n%>\n<%-- Use below tags ONLY for JSP 1.2 --%>\n<jsp:scriptlet>\n\tSystem.out.println(\"Welcome!\");\n</jsp:scriptlet>"
 	}
 
 	protected void initContextStyleMap(Dictionary contextStyleMap) {
@@ -88,7 +89,7 @@ public class JSPColorPage extends XMLColorPage {
 		initCommonDescriptions(descriptions);
 		descriptions.remove(IStyleConstantsXML.XML_CONTENT); // leave content between tags alone
 		descriptions.remove(IStyleConstantsXML.DECL_BORDER); // xml/html specific
-		descriptions.put(IStyleConstantsHTML.SCRIPT_AREA_BORDER, JSPUIPlugin.getResourceString("%JSP_Delimiters_UI_")); //$NON-NLS-1$ = "JSP Delimiters"
+		descriptions.put(IStyleConstantsHTML.SCRIPT_AREA_BORDER, JSPUIMessages.JSP_Delimiters_UI_); //$NON-NLS-1$ = "JSP Delimiters"
 	}
 
 	protected void initStyleList(ArrayList list) {

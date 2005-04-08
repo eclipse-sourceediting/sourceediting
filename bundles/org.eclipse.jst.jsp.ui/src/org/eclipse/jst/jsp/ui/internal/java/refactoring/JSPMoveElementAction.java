@@ -26,7 +26,7 @@ import org.eclipse.jdt.internal.ui.refactoring.reorg.ReorgMoveWizard;
 import org.eclipse.jdt.internal.ui.refactoring.reorg.ReorgQueries;
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
+import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.ltk.core.refactoring.participants.MoveRefactoring;
 import org.eclipse.ltk.ui.refactoring.RefactoringWizard;
@@ -125,7 +125,7 @@ public class JSPMoveElementAction extends TextEditorAction {
 			}
 		}
 		else  {
-			PlatformStatusLineUtil.displayErrorMessage(JSPUIPlugin.getResourceString("%JSPMoveElementAction.0")); //$NON-NLS-1$
+			PlatformStatusLineUtil.displayErrorMessage(JSPUIMessages.JSPMoveElementAction_0); //$NON-NLS-1$
 		}
 	}
 

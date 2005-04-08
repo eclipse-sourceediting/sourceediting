@@ -20,8 +20,9 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.search.SearchDocument;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchScope;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchSupport;
+import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.search.ui.ISearchResult;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.search.BasicSearchQuery;
 
 /**
@@ -104,11 +105,11 @@ public class JSPSearchQuery extends BasicSearchQuery {
 	 */
 	public String getLabel() {
 		String[] args = {getSearchText(), getOccurrencesCountText(), getFilename()};
-		return SSEUIPlugin.getResourceString("%OccurrencesSearchQuery.0", args);
+		return NLS.bind(JSPUIMessages.OccurrencesSearchQuery_0, args);
 	}
 
 	private String getFilename() {
-		String filename = SSEUIPlugin.getResourceString("%OccurrencesSearchQuery.2"); //$NON-NLS-1$
+		String filename = JSPUIMessages.OccurrencesSearchQuery_2;
 		if(getFile() != null)
 			filename = getFile().getName();
 		return filename;

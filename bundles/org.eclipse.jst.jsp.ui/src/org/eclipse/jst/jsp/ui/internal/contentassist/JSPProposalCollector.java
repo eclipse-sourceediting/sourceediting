@@ -42,7 +42,7 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 		}
 		
 		if(translation == null)
-			throw new IllegalArgumentException("JSPTranslation cannot be null");
+			throw new IllegalArgumentException("JSPTranslation cannot be null"); //$NON-NLS-1$
 		
 		fTranslation = translation;
 	}
