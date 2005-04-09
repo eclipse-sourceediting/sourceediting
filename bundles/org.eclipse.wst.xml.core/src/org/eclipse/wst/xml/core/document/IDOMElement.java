@@ -23,7 +23,6 @@ import org.w3c.dom.Element;
  * @since 1.0
  * 
  */
-
 public interface IDOMElement extends IDOMNode, Element {
 
 	/**
@@ -121,7 +120,7 @@ public interface IDOMElement extends IDOMNode, Element {
 	/**
 	 * Signify that this tag is a comment
 	 * 
-	 * For use only by parsers?
+	 * For use only by parsers.
 	 * 
 	 */
 	void setCommentTag(boolean isCommentTag);
@@ -129,14 +128,14 @@ public interface IDOMElement extends IDOMNode, Element {
 	/**
 	 * Signify that this tag is an empty tag
 	 * 
-	 * For use only by parsers?
+	 * For use only by parsers
 	 */
 	void setEmptyTag(boolean isEmptyTag);
 
 	/**
 	 * Signify that this tag is a JSP tag
 	 * 
-	 * For use only by parsers?
+	 * For use only by parsers
 	 * 
 	 */
 	void setJSPTag(boolean isJSPTag);
