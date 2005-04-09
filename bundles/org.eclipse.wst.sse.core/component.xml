@@ -11,6 +11,13 @@
                 <type name="LifecycleNotificationManager" reference="false" implement="false" subclass="false" instantiate="false" />
                 <type name="ModelLifecycleEvent" reference="false" implement="false" subclass="false" instantiate="false" />
                 <type name="DocumentChanged" reference="false" implement="false" subclass="false" instantiate="false" />
+                <type name="IStructuredModel" reference="false" implement="false" subclass="false" instantiate="false" />
+                <type name="IModelManager" reference="false" implement="false" subclass="false" instantiate="false" />
+        </package>
+
+        <package name="org.eclipse.wst.sse.core.document">
+        </package>
+        <package name="org.eclipse.wst.sse.core.model">
         </package>
 
         <!--    dw -->
