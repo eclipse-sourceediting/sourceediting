@@ -12,7 +12,7 @@ package org.eclipse.jst.jsp.core.encoding;
 
 import java.io.IOException;
 
-import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;
+import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
 
 public interface IJSPHeadContentDetector extends IDocumentCharsetDetector {
 	String getContentType() throws IOException;

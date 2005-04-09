@@ -39,11 +39,19 @@ public abstract class StructuredDocumentEvent extends DocumentEvent {
 		fOriginalRequester = document;
 	}
 
+	/**
+	 * We assume (and require) that an IStructuredDocument's are always the
+	 * source of StructuredDocument events.
+	 */
 	protected StructuredDocumentEvent(IStructuredDocument document, Object originalRequester) {
 		this(document);
 		fOriginalRequester = originalRequester;
 	}
 
+	/**
+	 * We assume (and require) that an IStructuredDocument's are always the
+	 * source of StructuredDocument events.
+	 */
 	protected StructuredDocumentEvent(IStructuredDocument document, Object originalRequester, String changes, int offset, int lengthToReplace) {
 		this(document);
 		fOriginalRequester = originalRequester;
@@ -57,7 +65,7 @@ public abstract class StructuredDocumentEvent extends DocumentEvent {
 	 * 
 	 * @return the text that is being deleted
 	 */
-	public java.lang.String getDeletedText() {
+	public String getDeletedText() {
 		return fDeletedText;
 	}
 
@@ -85,8 +93,7 @@ public abstract class StructuredDocumentEvent extends DocumentEvent {
 	}
 
 	/**
-	 * @param newDeletedText
-	 *            java.lang.String
+	 * Not to be called by clients, only parsers and reparsers.
 	 */
 	public void setDeletedText(java.lang.String newDeletedText) {
 		fDeletedText = newDeletedText;
@@ -95,7 +102,8 @@ public abstract class StructuredDocumentEvent extends DocumentEvent {
 	/**
 	 * for debugging only
 	 * 
-	 * @deprecated - need to fix unit tests, then delete this
+	 * @deprecated - need to fix unit tests which depend on this exact format,
+	 *             then delete this
 	 */
 	public String toString() {
 		// return getClass().getName() + "[source=" + source + "]";

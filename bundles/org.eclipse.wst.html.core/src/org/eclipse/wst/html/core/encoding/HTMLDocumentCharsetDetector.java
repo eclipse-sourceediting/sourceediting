@@ -12,8 +12,8 @@ package org.eclipse.wst.html.core.encoding;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.html.core.internal.contenttype.HTMLResourceEncodingDetector;
-import org.eclipse.wst.sse.core.document.DocumentReader;
-import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;
+import org.eclipse.wst.sse.core.internal.document.DocumentReader;
+import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
 
 /**
  * This class parses beginning portion of HTML file to get the encoding value

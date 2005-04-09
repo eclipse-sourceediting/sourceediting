@@ -37,7 +37,7 @@ import org.eclipse.core.runtime.content.IContentDescription;
  * isInitialized is set when the loader or dumper processes have been used,
  * but even this can't be counted on 100% if the document has been modified
  * since.
- *  
+ * 
  */
 public class EncodingMemento implements Cloneable {
 
@@ -67,9 +67,7 @@ public class EncodingMemento implements Cloneable {
 	public final static String USER_IS_USING_JAVA_ENCODING = "UserIsUsingJavaEncoding"; //$NON-NLS-1$
 	private String fAppropriateDefault;
 	private String fDetectedCharsetName;
-	private EncodingRule fEncodingRule;
 	private String fInvalidEncoding;
-	private boolean fIsInitialized;
 
 
 	private String fJavaCharsetName;
@@ -77,13 +75,14 @@ public class EncodingMemento implements Cloneable {
 	private boolean fUTF83ByteBOMUsed;
 
 	/**
-	 * TODO: will change to bit-wise, once trace info is removed.
+	 * Returns a clone of this object.
 	 */
 	public Object clone() {
 		EncodingMemento object = null;
 		try {
 			object = (EncodingMemento) super.clone();
-		} catch (CloneNotSupportedException e) {
+		}
+		catch (CloneNotSupportedException e) {
 			// impossible, since we're implementing here
 		}
 
@@ -126,15 +125,6 @@ public class EncodingMemento implements Cloneable {
 	}
 
 	/**
-	 * Returns the encodingRule in effect during last load or save
-	 * 
-	 * @return EncodingRule
-	 */
-	public EncodingRule getEncodingRule() {
-		return fEncodingRule;
-	}
-
-	/**
 	 * Returns a charset name that was detected, but not found to be a charset
 	 * suppoorted by the VM.
 	 * 
@@ -166,20 +156,13 @@ public class EncodingMemento implements Cloneable {
 		else if (isUnicodeStream()) {
 			if (getJavaCharsetName().equals("UTF-16") || getJavaCharsetName().equals("UTF-16LE")) { //$NON-NLS-1$ //$NON-NLS-2$
 				bom = IContentDescription.BOM_UTF_16LE;
-			} else if (getJavaCharsetName().equals("UTF-16BE")) { //$NON-NLS-1$
+			}
+			else if (getJavaCharsetName().equals("UTF-16BE")) { //$NON-NLS-1$
 				bom = IContentDescription.BOM_UTF_16BE;
 			}
 
 		}
 		return bom;
-	}
-
-	/**
-	 * @deprecated - not sure if needed, or should at least be restricted
-	 *             access.
-	 */
-	public boolean isInitialized() {
-		return fIsInitialized;
 	}
 
 	/**
@@ -227,19 +210,8 @@ public class EncodingMemento implements Cloneable {
 		fDetectedCharsetName = detectedCharsetName;
 	}
 
-	public void setEncodingRule(EncodingRule encodingRule) {
-		fEncodingRule = encodingRule;
-	}
-
 	public void setInvalidEncoding(String invalidEncoding) {
 		fInvalidEncoding = invalidEncoding;
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public void setIsInitialized(boolean isInitialized) {
-		fIsInitialized = isInitialized;
 	}
 
 	/**

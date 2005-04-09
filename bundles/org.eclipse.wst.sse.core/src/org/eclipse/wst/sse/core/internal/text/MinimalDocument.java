@@ -190,7 +190,7 @@ public class MinimalDocument implements IStructuredDocument {
 		return data.getLength();
 	}
 
-	public String getLineDelimiter() {
+	public String getPreferedLineDelimiter() {
 		throw new NotImplementedException("intentionally not implemented"); //$NON-NLS-1$
 	}
 
@@ -381,7 +381,7 @@ public class MinimalDocument implements IStructuredDocument {
 		throw new NotImplementedException("intentionally not implemented"); //$NON-NLS-1$
 	}
 
-	public void setLineDelimiter(String delimiter) {
+	public void setPreferredLineDelimiter(String delimiter) {
 		throw new NotImplementedException("intentionally not implemented"); //$NON-NLS-1$
 	}
 
@@ -423,5 +423,17 @@ public class MinimalDocument implements IStructuredDocument {
 	 */
 	public void stopSequentialRewrite() {
 		throw new NotImplementedException("intentionally not implemented"); //$NON-NLS-1$
+	}
+
+	public String getLineDelimiter() {
+		return null;
+	}
+
+	public String getPreferredLineDelimiter() {
+		return null;
+	}
+
+	public void setLineDelimiter(String delimiter) {
+		
 	}
 }

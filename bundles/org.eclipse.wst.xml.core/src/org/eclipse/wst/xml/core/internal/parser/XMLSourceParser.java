@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.wst.sse.core.document.DocumentReader;
+import org.eclipse.wst.sse.core.internal.document.DocumentReader;
 import org.eclipse.wst.sse.core.internal.text.CharSequenceReader;
 import org.eclipse.wst.sse.core.internal.text.IRegionComparible;
 import org.eclipse.wst.sse.core.parser.BlockMarker;

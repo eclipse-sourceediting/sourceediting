@@ -21,7 +21,7 @@ import org.eclipse.wst.css.core.internal.formatter.CSSSourceGenerator;
 import org.eclipse.wst.css.core.internal.formatter.StyleDeclItemFormatter;
 import org.eclipse.wst.css.core.internal.parser.CSSSourceParser;
 import org.eclipse.wst.sse.core.IndexedRegion;
-import org.eclipse.wst.sse.core.document.IDocumentLoader;
+import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.w3c.dom.DOMException;

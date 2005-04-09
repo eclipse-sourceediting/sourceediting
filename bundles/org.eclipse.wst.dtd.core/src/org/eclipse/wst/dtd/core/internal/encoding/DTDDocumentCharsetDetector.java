@@ -21,8 +21,8 @@ package org.eclipse.wst.dtd.core.internal.encoding;
 import java.io.IOException;
 
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.wst.sse.core.document.DocumentReader;
-import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;
+import org.eclipse.wst.sse.core.internal.document.DocumentReader;
+import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
 import org.eclipse.wst.xml.core.encoding.XMLDocumentCharsetDetector;
 
 

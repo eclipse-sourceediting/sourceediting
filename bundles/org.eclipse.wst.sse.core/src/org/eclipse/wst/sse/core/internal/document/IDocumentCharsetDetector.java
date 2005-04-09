@@ -10,18 +10,13 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.document;
+package org.eclipse.wst.sse.core.internal.document;
 
-import java.io.IOException;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-
-public interface IDocumentLoaderForFileBuffers extends IDocumentLoader {
-
-	IEncodedDocument createNewStructuredDocument(IFile iFile, IProgressMonitor monitor) throws IOException, CoreException;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
 
 
-	void release(IFile iFile, IProgressMonitor monitor) throws CoreException;
+
+public interface IDocumentCharsetDetector extends IResourceCharsetDetector {
+	void set(IDocument document);
 }

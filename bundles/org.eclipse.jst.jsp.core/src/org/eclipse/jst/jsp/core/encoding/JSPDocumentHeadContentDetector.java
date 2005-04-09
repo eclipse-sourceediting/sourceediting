@@ -12,7 +12,7 @@ package org.eclipse.jst.jsp.core.encoding;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jst.jsp.core.internal.contenttype.JSPResourceEncodingDetector;
-import org.eclipse.wst.sse.core.document.DocumentReader;
+import org.eclipse.wst.sse.core.internal.document.DocumentReader;
 
 /**
  * This class parses beginning portion of JSP file to get attributes in page

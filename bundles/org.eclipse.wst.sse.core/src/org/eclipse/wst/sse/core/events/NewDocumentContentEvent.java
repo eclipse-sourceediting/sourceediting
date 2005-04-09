@@ -18,8 +18,8 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
  * The NewDocumentContentEvent is fired when an instance of a
  * IStructuredDocument replaces all of its text.
  * 
- * ISSUE: not currently used, but believe there's still some efficiencies to
- * be had if we do.
+ * ISSUE: not currently used, but there's still some efficiencies to be had so
+ * plan to implement.
  * 
  * @since 1.0
  */

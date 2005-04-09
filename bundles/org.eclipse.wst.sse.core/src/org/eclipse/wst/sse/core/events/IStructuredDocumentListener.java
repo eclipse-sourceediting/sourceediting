@@ -12,7 +12,9 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.events;
 
-
+/**
+ * @deprecated will be removed since we now subclass DocumentEvent.
+ */
 
 public interface IStructuredDocumentListener {
 

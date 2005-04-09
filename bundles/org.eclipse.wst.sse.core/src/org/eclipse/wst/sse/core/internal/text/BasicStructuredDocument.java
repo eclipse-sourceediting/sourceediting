@@ -45,7 +45,6 @@ import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.SequentialRewriteTextStore;
 import org.eclipse.jface.text.TypedRegion;
-import org.eclipse.wst.sse.core.document.StructuredDocumentFactory;
 import org.eclipse.wst.sse.core.events.AboutToBeChangedEvent;
 import org.eclipse.wst.sse.core.events.IModelAboutToBeChangedListener;
 import org.eclipse.wst.sse.core.events.IStructuredDocumentListener;
@@ -57,6 +56,7 @@ import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentRegionsReplacedEvent;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.Logger;
+import org.eclipse.wst.sse.core.internal.document.StructuredDocumentFactory;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.internal.text.rules.StructuredTextPartitioner;
 import org.eclipse.wst.sse.core.internal.undo.StructuredTextUndoManager;
@@ -2672,5 +2672,14 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		// they had selected) then a "NoChange" event should have been fired.
 		Assert.isNotNull(result, "no structuredDocument event was created in IStructuredDocument::updateStructuredDocument"); //$NON-NLS-1$
 		return result;
+	}
+
+	public String getPreferredLineDelimiter() {
+		return getLineDelimiter();
+	}
+
+	public void setPreferredLineDelimiter(String probableLineDelimiter) {
+		setLineDelimiter(probableLineDelimiter);
+
 	}
 }

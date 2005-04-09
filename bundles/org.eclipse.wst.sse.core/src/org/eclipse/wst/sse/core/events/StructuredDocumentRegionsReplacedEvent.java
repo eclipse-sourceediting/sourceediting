@@ -24,7 +24,6 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
  * 
  * @since 1.0
  */
-
 public class StructuredDocumentRegionsReplacedEvent extends StructuredDocumentEvent {
 
 	private IStructuredDocumentRegionList fNewStructuredDocumentRegions;

@@ -13,8 +13,8 @@
 package org.eclipse.wst.xml.core.encoding;
 
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.wst.sse.core.document.DocumentReader;
-import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;
+import org.eclipse.wst.sse.core.internal.document.DocumentReader;
+import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
 import org.eclipse.wst.xml.core.internal.contenttype.XMLResourceEncodingDetector;
 
 

@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.document;
+package org.eclipse.wst.sse.core.internal.document;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,8 +26,7 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.wst.sse.core.internal.document.NullStructuredDocumentPartitioner;
-import org.eclipse.wst.sse.core.internal.document.TextUtilities;
+import org.eclipse.wst.sse.core.document.IEncodedDocument;
 import org.eclipse.wst.sse.core.internal.encoding.CodedIO;
 import org.eclipse.wst.sse.core.internal.encoding.CodedReaderCreator;
 import org.eclipse.wst.sse.core.internal.encoding.ContentTypeEncodingPreferences;
@@ -45,7 +44,7 @@ public abstract class AbstractDocumentLoader implements IDocumentLoader {
 
 	private CodedReaderCreator fCodedReaderCreator;
 	protected IDocumentCharsetDetector fDocumentEncodingDetector;
-	//private boolean fPropertiesObtained;
+	// private boolean fPropertiesObtained;
 
 	protected EncodingMemento fEncodingMemento;
 	protected Reader fFullPreparedReader;
@@ -74,7 +73,8 @@ public abstract class AbstractDocumentLoader implements IDocumentLoader {
 				newText.append(allText.substring(lineStartOffset, lineEndOffset));
 				if ((i < lineCount - 1) && (tempDoc.getLineDelimiter(i) != null))
 					newText.append(lineDelimiterToUse);
-			} catch (org.eclipse.jface.text.BadLocationException exception) {
+			}
+			catch (org.eclipse.jface.text.BadLocationException exception) {
 				// should fix up to either throw nothing, or the right thing,
 				// but
 				// in the course of refactoring, this was easiest "quick fix".
@@ -108,7 +108,7 @@ public abstract class AbstractDocumentLoader implements IDocumentLoader {
 			structuredDocument.setDocumentPartitioner(defaultPartitioner);
 		}
 		defaultPartitioner.connect(structuredDocument);
-		
+
 		return structuredDocument;
 	}
 
@@ -127,7 +127,8 @@ public abstract class AbstractDocumentLoader implements IDocumentLoader {
 			fFullPreparedReader = getCodedReaderCreator().getCodedReader();
 
 			setDocumentContentsFromReader(structuredDocument, fFullPreparedReader);
-		} finally {
+		}
+		finally {
 			if (fFullPreparedReader != null) {
 				fFullPreparedReader.close();
 			}
@@ -152,10 +153,12 @@ public abstract class AbstractDocumentLoader implements IDocumentLoader {
 			fFullPreparedReader = codedReaderCreator.getCodedReader();
 			structuredDocument.setEncodingMemento(fEncodingMemento);
 			setDocumentContentsFromReader(structuredDocument, fFullPreparedReader);
-		} catch (CoreException e) {
+		}
+		catch (CoreException e) {
 			// impossible in this context
 			throw new Error(e);
-		} finally {
+		}
+		finally {
 			if (fFullPreparedReader != null) {
 				fFullPreparedReader.close();
 			}
@@ -172,13 +175,15 @@ public abstract class AbstractDocumentLoader implements IDocumentLoader {
 			try {
 				charRead = inputStream.read();
 				charPosition++;
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				// this is expected, since we're expecting failure,
 				// so no need to do anything.
 				errorFound = true;
 				break;
 			}
-		} while (!(charRead == -1 || errorFound));
+		}
+		while (!(charRead == -1 || errorFound));
 
 		if (errorFound)
 			// dmw, blindly modified to +1 to get unit tests to work, moving
@@ -270,21 +275,23 @@ public abstract class AbstractDocumentLoader implements IDocumentLoader {
 			// set here, only if null (should already be set, but if not,
 			// we'll set so any subsequent editing inserts what we're
 			// assuming)
-			if (!theFlatModel.getLineDelimiter().equals(probableLineDelimiter)) {
-				theFlatModel.setLineDelimiter(probableLineDelimiter);
+			if (!theFlatModel.getPreferredLineDelimiter().equals(probableLineDelimiter)) {
+				theFlatModel.setPreferredLineDelimiter(probableLineDelimiter);
 			}
 			convertedText = originalString;
-		} else {
+		}
+		else {
 			if (!preferredLineDelimiter.equals(probableLineDelimiter)) {
 				// technically, wouldn't have to convert line delimiters
 				// here at beginning, but when we save, if the preferred
 				// line delimter is "leave alone" then we do leave alone,
 				// so best to be right from beginning.
 				convertedText = convertLineDelimiters(originalString, preferredLineDelimiter);
-				theFlatModel.setLineDelimiter(preferredLineDelimiter);
-			} else {
+				theFlatModel.setPreferredLineDelimiter(preferredLineDelimiter);
+			}
+			else {
 				// they are already the same, no conversion needed
-				theFlatModel.setLineDelimiter(preferredLineDelimiter);
+				theFlatModel.setPreferredLineDelimiter(preferredLineDelimiter);
 				convertedText = originalString;
 			}
 		}
@@ -311,9 +318,11 @@ public abstract class AbstractDocumentLoader implements IDocumentLoader {
 					fBlocksRead++;
 				}
 			}
-		} catch (MalformedInputException e) {
+		}
+		catch (MalformedInputException e) {
 			throw new MalformedInputExceptionWithDetail(fEncodingMemento.getJavaCharsetName(), fBlocksRead * CodedIO.MAX_BUF_SIZE + numRead + e.getInputLength());
-		} catch (UnmappableCharacterException e) {
+		}
+		catch (UnmappableCharacterException e) {
 			throw new MalformedInputExceptionWithDetail(fEncodingMemento.getJavaCharsetName(), fBlocksRead * CodedIO.MAX_BUF_SIZE + numRead + e.getInputLength());
 
 		}
@@ -337,8 +346,9 @@ public abstract class AbstractDocumentLoader implements IDocumentLoader {
 				buffer.append(tBuff, 0, numRead);
 			}
 			// remember -- we didn't open stream ... so we don't close it
-		} catch (MalformedInputException e) {
-//			int pos = e.getInputLength();
+		}
+		catch (MalformedInputException e) {
+			// int pos = e.getInputLength();
 			EncodingMemento localEncodingMemento = getEncodingMemento();
 			boolean couldReset = true;
 			String encodingNameInError = localEncodingMemento.getJavaCharsetName();
@@ -347,7 +357,8 @@ public abstract class AbstractDocumentLoader implements IDocumentLoader {
 			}
 			try {
 				bufferedReader.reset();
-			} catch (IOException resetException) {
+			}
+			catch (IOException resetException) {
 				// the only errro that can occur during reset is an
 				// IOException
 				// due to already being past the rest mark. In that case, we
@@ -361,7 +372,7 @@ public abstract class AbstractDocumentLoader implements IDocumentLoader {
 			if (couldReset) {
 
 				charPostion = getCharPostionOfFailure(bufferedReader);
-				//getCharPostionOfFailure(new InputStreamReader(inStream,
+				// getCharPostionOfFailure(new InputStreamReader(inStream,
 				// javaEncodingNameInError));
 			}
 			// all of that just to throw more accurate error

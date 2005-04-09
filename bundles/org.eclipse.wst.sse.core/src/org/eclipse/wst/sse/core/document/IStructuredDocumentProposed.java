@@ -10,35 +10,34 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.text;
+package org.eclipse.wst.sse.core.document;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.text.IDocumentExtension;
-import org.eclipse.wst.sse.core.document.IEncodedDocument;
 import org.eclipse.wst.sse.core.events.IStructuredDocumentListener;
 import org.eclipse.wst.sse.core.events.NewDocumentEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
+import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
 
 
 /**
  * A IStructuredDocument is a collection of StructuredDocumentRegions. It's
- * often called "flat" because its contents by design do not contain much
- * structural information beyond containment. Clients should not implement.
+ * often called a "flat model" because its does contain some structural
+ * information, but not very much, usually, at most, a few levels of
+ * containment.
+ * 
+ * Clients should not implement.
+ * 
+ * @since 1.0
  */
 public interface IStructuredDocumentProposed extends IEncodedDocument, IDocumentExtension, IAdaptable {
 
 	/**
-	 * The StructuredDocumentListeners and ModelChangedListeners are very
-	 * similar. They both receive identical events. The difference is the
-	 * timing. The "pure" StructuredDocumentListeners are notified after the
-	 * structuredDocument has been changed, but before other, related models
-	 * may have been changed such as the Structural Model. The Structural
-	 * model is in fact itself a "pure" StructuredDocumentListner. The
-	 * ModelChangedListeners can rest assured that all models and data have
-	 * been updated from the change by the tiem they are notified. This is
-	 * especially important for the text widget, for example, which may rely
-	 * on both structuredDocument and structural model information.
+	 * The document changing listeners receives the same events as the
+	 * document listeners, but the difference is the timing and
+	 * synchronization of data changes and notifications.
 	 */
 	void addDocumentChangingListener(IStructuredDocumentListener listener);
 
@@ -68,24 +67,33 @@ public interface IStructuredDocumentProposed extends IEncodedDocument, IDocument
 	 * not be depended on blindly to reflect what encoding to use. For that,
 	 * must go through the normal rules expressed in Loaders and Dumpers.
 	 */
-
 	EncodingMemento getEncodingMemento();
 
 	/**
-	 * This can be considered the preferred delimiter.
+	 * Returns the region contained by offset.
+	 * 
+	 * @param offset
+	 * @return
 	 */
-	public String getLineDelimiter();
-
 	IStructuredDocumentRegion getRegionAtCharacterOffset(int offset);
 
 	/**
-	 * Expensive call.
+	 * Resturns a list of the structured document regions.
 	 * 
-	 * @return
+	 * Note: possibly expensive call, not to be used casually.
+	 * 
+	 * @return a list of the structured document regions.
 	 */
 	IStructuredDocumentRegionList getRegionList();
 
 
+	/**
+	 * Returns the text of this document.
+	 * 
+	 * Same as 'get' in super class, added for descriptiveness.
+	 * 
+	 * @return the text of this document.
+	 */
 	String getText();
 
 	/**
@@ -112,6 +120,11 @@ public interface IStructuredDocumentProposed extends IEncodedDocument, IDocument
 	 */
 	IStructuredDocumentProposed newInstance();
 
+	/**
+	 * The document changing listeners receives the same events as the
+	 * document listeners, but the difference is the timing and
+	 * synchronization of data changes and notifications.
+	 */
 	void removeDocumentChangingListener(IStructuredDocumentListener listener);
 
 	/**
@@ -121,30 +134,22 @@ public interface IStructuredDocumentProposed extends IEncodedDocument, IDocument
 	 * found in the requestedChange string. If oldStart and oldEnd are equal,
 	 * it is an insertion request. If requestedChange is null (or empty) it is
 	 * a delete request. Otherwise it is a replace request.
+	 * 
+	 * Similar to 'replace' in super class.
 	 */
 	StructuredDocumentEvent replaceText(Object requester, int oldStart, int replacementLength, String requestedChange);
 
 	/**
 	 * Note, same as replaceText API, but will allow readonly areas to be
-	 * replaced. This should seldom be called with a value of "true" for
-	 * ignoreReadOnlySetting. One case where its ok is with undo operations
-	 * (since, presumably, if user just did something that happended to
-	 * involve some inserting readonly text, they should normally be allowed
-	 * to still undo that operation. Otherwise, I can't think of a single
-	 * example, unless its to give the user a choice, e.g. "you are about to
+	 * replaced. This method is not to be called by clients, only
+	 * infrastructure. For example, one case where its ok is with undo
+	 * operations (since, presumably, if user just did something that
+	 * happended to involve some inserting readonly text, they should normally
+	 * be allowed to still undo that operation. There might be other cases
+	 * where its used to give the user a choice, e.g. "you are about to
 	 * overwrite read only portions, do you want to continue".
 	 */
 	StructuredDocumentEvent overrideReadOnlyreplaceText(Object requester, int oldStart, int replacementLength, String requestedChange);
-
-	/**
-	 * This method is to remember info about the encoding When the resource
-	 * was last loaded or saved. Note: it is not kept "current", that is, can
-	 * not be depended on blindly to reflect what encoding to use. For that,
-	 * must go through the normal rules expressed in Loaders and Dumpers.
-	 */
-	void setEncodingMemento(EncodingMemento encodingMemento);
-
-	public void setLineDelimiter(String delimiter);
 
 	/**
 	 * One of the APIs to manipulate the IStructuredDocument in terms of Text.

@@ -22,7 +22,6 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
  * 
  * @since 1.0
  */
-
 public class NewDocumentEvent extends StructuredDocumentEvent {
 
 
@@ -52,6 +51,9 @@ public class NewDocumentEvent extends StructuredDocumentEvent {
 		return 0;
 	}
 
+	/**
+	 * for a new document, the text involved is the complete text.
+	 */
 	public String getText() {
 		String results = getStructuredDocument().getText();
 		return results;

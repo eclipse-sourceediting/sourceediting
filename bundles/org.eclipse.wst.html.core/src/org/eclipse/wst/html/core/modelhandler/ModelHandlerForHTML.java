@@ -14,8 +14,8 @@ import org.eclipse.wst.html.core.encoding.HTMLDocumentCharsetDetector;
 import org.eclipse.wst.html.core.encoding.HTMLDocumentLoader;
 import org.eclipse.wst.html.core.encoding.HTMLModelLoader;
 import org.eclipse.wst.sse.core.IModelLoader;
-import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;
-import org.eclipse.wst.sse.core.document.IDocumentLoader;
+import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
+import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.modelhandler.AbstractModelHandler;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 

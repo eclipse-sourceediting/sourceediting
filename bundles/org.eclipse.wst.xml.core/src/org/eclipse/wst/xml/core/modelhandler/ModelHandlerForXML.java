@@ -13,8 +13,8 @@
 package org.eclipse.wst.xml.core.modelhandler;
 
 import org.eclipse.wst.sse.core.IModelLoader;
-import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;
-import org.eclipse.wst.sse.core.document.IDocumentLoader;
+import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
+import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.modelhandler.AbstractModelHandler;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 import org.eclipse.wst.xml.core.encoding.XMLDocumentCharsetDetector;

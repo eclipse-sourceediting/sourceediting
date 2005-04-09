@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.document;
+package org.eclipse.wst.sse.core.internal.document;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -40,7 +40,7 @@ public class DocumentReader extends Reader {
 	}
 
 	public void close() throws IOException {
-		// do nothing
+		// do nothing for a 'document'
 	}
 
 	/**

@@ -15,17 +15,44 @@ package org.eclipse.wst.sse.core.document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 
-
-
+/**
+ * This interface is strictly to define important "document properties" not
+ * found in IDocument, but not central to "StructuredDocument".
+ * 
+ * Its not to be be implmented by clients.
+ * 
+ * @since 1.0
+ */
 
 public interface IEncodedDocument extends IDocument {
 
+	/**
+	 * Returns the encoding memento for this document.
+	 * 
+	 * @return the encoding memento for this document.
+	 */
 	EncodingMemento getEncodingMemento();
 
-	String getLineDelimiter();
+	/**
+	 * Returns the preferred line delimiter for this document.
+	 */
+	String getPreferredLineDelimiter();
 
+	/**
+	 * Sets the encoding memento for this document.
+	 * 
+	 * Is not to be called by clients, only document creation classes.
+	 * 
+	 * @param localEncodingMemento
+	 */
 	void setEncodingMemento(EncodingMemento localEncodingMemento);
 
-	void setLineDelimiter(String probableLineDelimiter);
+	/**
+	 * Sets the preferredLineDelimiter. Is not to be called by clients, only
+	 * document creation classes.
+	 * 
+	 * @param probableLineDelimiter
+	 */
+	void setPreferredLineDelimiter(String probableLineDelimiter);
 
 }

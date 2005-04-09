@@ -12,8 +12,8 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.modelhandler;
 
-import org.eclipse.wst.sse.core.document.IDocumentCharsetDetector;
-import org.eclipse.wst.sse.core.document.IDocumentLoader;
+import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
+import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
 
 /**
  * Interface to allow custom content types to be defined as extension points
