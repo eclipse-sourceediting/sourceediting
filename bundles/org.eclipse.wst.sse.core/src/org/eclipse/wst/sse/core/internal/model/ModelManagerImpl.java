@@ -47,7 +47,6 @@ import org.eclipse.text.edits.TextEdit;
 import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.IModelLoader;
 import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelManagerListener;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.document.IEncodedDocument;
 import org.eclipse.wst.sse.core.exceptions.ResourceAlreadyExists;
@@ -169,7 +168,6 @@ public class ModelManagerImpl implements IModelManager {
 	private Dictionary fManagedObjects;
 
 	private ModelHandlerRegistry fModelHandlerRegistry;
-	private Object[] fModelManagerListeners;
 	private int modelManagerStateChanging;
 	private final ReadEditType READ = new ReadEditType("read"); //$NON-NLS-1$
 
@@ -448,19 +446,6 @@ public class ModelManagerImpl implements IModelManager {
 			throw new IllegalArgumentException();
 	}
 
-	/**
-	 * This API allows clients to declare that they are about to make a
-	 * "massive" change one or more models. This change might be in terms of
-	 * content or it might be in terms of the model id or base location. Note
-	 * that in the case of embedded calls, notification to listners is sent
-	 * only once. The method isModelStateChanging can be used by a client to
-	 * determine if the model is already in a change sequence.
-	 */
-	public synchronized void aboutToChangeModels() {
-		// notice this is just a public avenue to our protected method
-		fireModelsAboutToBeChanged();
-	}
-
 	protected void addFactories(IStructuredModel model, IModelHandler handler) {
 		Assert.isNotNull(model, "model can not be null"); //$NON-NLS-1$
 		Assert.isNotNull(handler, "model handler can not be null"); //$NON-NLS-1$
@@ -482,28 +467,6 @@ public class ModelManagerImpl implements IModelManager {
 				IAdapterFactory factory = (IAdapterFactory) iterator.next();
 				registry.addFactory(factory);
 			}
-		}
-	}
-
-	public synchronized void addModelManagerListener(IModelManagerListener listener) {
-		if (!Utilities.contains(fModelManagerListeners, listener)) {
-			int oldSize = 0;
-			if (fModelManagerListeners != null) {
-				// normally won't be null, but we need to be sure, for first
-				// time through
-				oldSize = fModelManagerListeners.length;
-			}
-			int newSize = oldSize + 1;
-			Object[] newListeners = new Object[newSize];
-			if (fModelManagerListeners != null) {
-				System.arraycopy(fModelManagerListeners, 0, newListeners, 0, oldSize);
-			}
-			// add listener to last position
-			newListeners[newSize - 1] = listener;
-			//
-			// now switch new for old
-			fModelManagerListeners = newListeners;
-			//
 		}
 	}
 
@@ -563,21 +526,6 @@ public class ModelManagerImpl implements IModelManager {
 			resolver = new ProjectResolver(project);
 		resolver.setFileBaseLocation(file.getLocation().toString());
 		return resolver;
-	}
-
-	/**
-	 * This API allows a client controlled way of notifying all
-	 * IModelManagerEvent listners that several models have changed. This
-	 * method is a matched pair to aboutToChangeModels, and must be called
-	 * after aboutToChangeModel ... or some listeners could be left waiting
-	 * indefinitely for the changed event. So, its suggested that
-	 * changedModels always be in a finally clause. Likewise, a client should
-	 * never call changedModel without calling aboutToChangeModel first. In
-	 * the case of embedded calls, the notification is just sent once.
-	 */
-	public synchronized void changedModels() {
-		// notice this is just a public avenue to our protected method
-		fireModelsChanged();
 	}
 
 	/*
@@ -938,62 +886,6 @@ public class ModelManagerImpl implements IModelManager {
 		// encodingRule, use3ByteBOM, file);
 		model.setDirtyState(false);
 		model.setNewState(false);
-	}
-
-	/**
-	 * Informs all registered model state listeners that the the model is
-	 * about to under go a "large" change. This change might be interms of
-	 * contents, in might be in terms of the model id or base location.
-	 */
-	protected void fireModelsAboutToBeChanged() {
-		// notice we only fire this event if we are not already in a model
-		// state changing sequence
-		if (modelManagerStateChanging == 0) {
-			// we must assign listeners to local variable, since the add and
-			// remove listner
-			// methods can change the actual instance of the listener array
-			// from another thread
-			if (fModelManagerListeners != null) {
-				Object[] holdListeners = fModelManagerListeners;
-				for (int i = 0; i < holdListeners.length; i++) {
-					((IModelManagerListener) holdListeners[i]).modelsAboutToBeChanged();
-				}
-			}
-		}
-		// we always increment counter, for every request (so must receive
-		// corresponding number of 'changedModel' requests)
-		modelManagerStateChanging++;
-	}
-
-	/**
-	 * Informs all registered model state listeners that an impending change
-	 * is now complete. This method must only be called by 'modelChanged'
-	 * since it keeps track of counts.
-	 */
-	protected void fireModelsChanged() {
-		// always decrement
-		modelManagerStateChanging--;
-		// to be less than zero is a programming error, but we'll reset to
-		// zero
-		// with no error messages.
-		if (modelManagerStateChanging < 0)
-			modelManagerStateChanging = 0;
-		// We only fire this event if all pending requests are done.
-		// That is, if we've received the same number of fireModelChanged as
-		// we
-		// have fireModelAboutToBeChanged.
-		if (modelManagerStateChanging == 0) {
-			// we must assign listeners to local variable, since the add and
-			// remove listner
-			// methods can change the actual instance of the listener array
-			// from another thread
-			if (fModelManagerListeners != null) {
-				Object[] holdListeners = fModelManagerListeners;
-				for (int i = 0; i < holdListeners.length; i++) {
-					((IModelManagerListener) holdListeners[i]).modelsChanged();
-				}
-			}
-		}
 	}
 
 	private EnumeratedModelIds getEnumeratedModelIds() {
@@ -1594,30 +1486,6 @@ public class ModelManagerImpl implements IModelManager {
 			trace("re-loading model", id); //$NON-NLS-1$
 		}
 		return structuredModel;
-	}
-
-	public synchronized void removeModelManagerListener(IModelManagerListener listener) {
-
-		if ((fModelManagerListeners != null) && (listener != null)) {
-			// if its not in the listeners, we'll ignore the request
-			if (Utilities.contains(fModelManagerListeners, listener)) {
-				int oldSize = fModelManagerListeners.length;
-				int newSize = oldSize - 1;
-				Object[] newListeners = new Object[newSize];
-				int index = 0;
-				for (int i = 0; i < oldSize; i++) {
-					if (fModelManagerListeners[i] == listener) { // ignore
-					}
-					else {
-						// copy old to new if its not the one we are removing
-						newListeners[index++] = fModelManagerListeners[i];
-					}
-				}
-				// now that we have a new array, let's switch it for the old
-				// one
-				fModelManagerListeners = newListeners;
-			}
-		}
 	}
 
 	public void saveModel(IFile iFile, String id, EncodingRule encodingRule) throws UnsupportedEncodingException, IOException, CoreException {

@@ -42,40 +42,11 @@ public interface IModelManager {
 	public final static String UNMANAGED_MODEL = "org.eclipse.wst.sse.core.IModelManager.UNMANAGED_MODEL"; //$NON-NLS-1$
 
 	/**
-	 * This API allows clients to declare that they are about to make a
-	 * "large" change to the model. This change might be in terms of content
-	 * or it might be in terms of the model id or base location.
-	 * 
-	 * Note that in the case of embedded calls, notification to listners is
-	 * sent only once.
-	 * 
-	 * The method isModelStateChanging can be used by a client to determin if
-	 * the model is already in a change sequence.
-	 */
-	void aboutToChangeModels();
-
-	void addModelManagerListener(IModelManagerListener listener);
-
-	/**
 	 * Calculate id provides a common way to determine the id from the input
 	 * ... needed to get and save the model. It is a simple class utility, but
 	 * is an instance method so can be accessed via interface.
 	 */
 	public String calculateId(IFile file);
-
-	/**
-	 * This API allows a client controlled way of notifying all ModelEvent
-	 * listners that the model has been changed. This method is a matched pair
-	 * to aboutToChangeModel, and must be called after aboutToChangeModel ...
-	 * or some listeners could be left waiting indefinitely for the changed
-	 * event. So, its suggested that changedModel always be in a finally
-	 * clause. Likewise, a client should never call changedModel without
-	 * calling aboutToChangeModel first.
-	 * 
-	 * In the case of embedded calls, the notification is just sent once.
-	 * 
-	 */
-	void changedModels();
 
 	IStructuredModel copyModelForEdit(String oldId, String newId) throws ResourceInUse;
 
@@ -320,8 +291,6 @@ public interface IModelManager {
 	 * @deprecated
 	 */
 	IStructuredModel reloadModel(Object id, InputStream inStream) throws UnsupportedEncodingException;
-
-	void removeModelManagerListener(IModelManagerListener listener);
 
 	void saveStructuredDocument(IStructuredDocument structuredDocument, IFile iFile) throws UnsupportedEncodingException, IOException, CoreException;
 

@@ -14,7 +14,7 @@ package org.eclipse.wst.sse.core.document;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.text.IDocumentExtension;
-import org.eclipse.wst.sse.core.events.IStructuredDocumentListener;
+import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.wst.sse.core.events.NewDocumentEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
@@ -39,7 +39,7 @@ public interface IStructuredDocumentProposed extends IEncodedDocument, IDocument
 	 * document listeners, but the difference is the timing and
 	 * synchronization of data changes and notifications.
 	 */
-	void addDocumentChangingListener(IStructuredDocumentListener listener);
+	void addDocumentChangingListener(IDocumentListener listener);
 
 	/**
 	 * this API ensures that any portion of the document within startOff to
@@ -125,8 +125,8 @@ public interface IStructuredDocumentProposed extends IEncodedDocument, IDocument
 	 * document listeners, but the difference is the timing and
 	 * synchronization of data changes and notifications.
 	 */
-	void removeDocumentChangingListener(IStructuredDocumentListener listener);
-
+	void removeDocumentChangingListener(IDocumentListener listener);
+ 
 	/**
 	 * One of the APIs to manipulate the IStructuredDocument.
 	 * 
