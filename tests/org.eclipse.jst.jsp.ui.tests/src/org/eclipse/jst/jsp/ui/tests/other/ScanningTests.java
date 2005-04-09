@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
-import org.eclipse.wst.sse.core.document.StructuredDocumentFactory;
+import org.eclipse.wst.sse.core.internal.document.StructuredDocumentFactory;
 import org.eclipse.wst.sse.core.internal.text.StructuredDocumentRegionIterator;
 import org.eclipse.wst.sse.core.parser.BlockMarker;
 import org.eclipse.wst.sse.core.parser.RegionParser;
