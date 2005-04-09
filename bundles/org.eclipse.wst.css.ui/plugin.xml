@@ -35,11 +35,11 @@
       <editor
             name="%CSS_Source_Page_Editor.name"
             icon="icons/sourceEditor.gif"
-            extensions="css"
             contributorClass="org.eclipse.wst.css.ui.internal.ActionContributorCSS"
             class="org.eclipse.wst.css.ui.internal.StructuredTextEditorCSS"
             symbolicFontName="org.eclipse.wst.sse.ui.textfont"
             id="org.eclipse.wst.css.core.csssource.source">
+      <contentTypeBinding contentTypeId="org.eclipse.wst.css.core.csssource" />
       </editor>
    </extension>
    <extension

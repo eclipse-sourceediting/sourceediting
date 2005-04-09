@@ -37,22 +37,12 @@
       <editor
             name="%XML_Source_Page_Editor.name"
             icon="icons/sourceEditor.gif"
-            extensions="tld, nst, xmi, dadx, wsdl, xsl"
-            contributorClass="org.eclipse.wst.xml.ui.actions.ActionContributorXML"
-            class="org.eclipse.wst.xml.ui.StructuredTextEditorXML"
-            symbolicFontName="org.eclipse.wst.sse.ui.textfont"
-            id="org.eclipse.core.runtime.xml.source2">
-      </editor>
-      <!-- Separate editor definition for xml source page to mark it as the default editor -->
-      <editor
-            name="%XML_Source_Page_Editor.name"
-            icon="icons/sourceEditor.gif"
-            extensions="xml"
             default="true"
             contributorClass="org.eclipse.wst.xml.ui.actions.ActionContributorXML"
             class="org.eclipse.wst.xml.ui.StructuredTextEditorXML"
             symbolicFontName="org.eclipse.wst.sse.ui.textfont"
             id="org.eclipse.core.runtime.xml.source">
+      <contentTypeBinding contentTypeId="org.eclipse.core.runtime.xml" />
       </editor>
    </extension>
    <extension
@@ -211,10 +201,10 @@
       <editor
             name="%XML_Editor.name"
             icon="icons/xmldoc.gif"
-            extensions="xml, tld, nst, xmi"
             contributorClass="org.eclipse.wst.xml.internal.ui.XMLMultiPageEditorActionBarContributor"
             class="org.eclipse.wst.xml.internal.ui.XMLMultiPageEditorPart"
             id="org.eclipse.wst.xml.internal.ui.XMLMultiPageEditorPart">
+      <contentTypeBinding contentTypeId="org.eclipse.core.runtime.xml" />
       </editor>
    </extension>
 <!-- Editor actionsets -->

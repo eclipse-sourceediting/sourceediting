@@ -41,11 +41,12 @@
       <editor
             name="%HTML_Source_Page_Editor.name"
             icon="icons/sourceEditor.gif"
-            extensions="html, htm, xhtml, jhtml, shtml, shtm, html-ss, wml"
+            default="true"
             contributorClass="org.eclipse.wst.html.ui.edit.ui.ActionContributorHTML"
             class="org.eclipse.wst.html.ui.StructuredTextEditorHTML"
             symbolicFontName="org.eclipse.wst.sse.ui.textfont"
             id="org.eclipse.wst.html.core.htmlsource.source">
+      <contentTypeBinding contentTypeId="org.eclipse.wst.html.core.htmlsource" />
       </editor>
    </extension>
    <extension
