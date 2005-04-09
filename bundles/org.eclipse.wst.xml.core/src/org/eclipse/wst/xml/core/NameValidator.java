@@ -24,7 +24,6 @@ import org.eclipse.wst.xml.core.internal.parser.XML10Names;
  * 
  * @since 1.0
  */
-
 public final class NameValidator {
 
 	private static XML10Names xml10charChecker = null;
