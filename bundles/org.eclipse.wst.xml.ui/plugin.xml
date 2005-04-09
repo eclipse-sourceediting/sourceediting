@@ -43,6 +43,7 @@
             symbolicFontName="org.eclipse.wst.sse.ui.textfont"
             id="org.eclipse.core.runtime.xml.source">
       <contentTypeBinding contentTypeId="org.eclipse.core.runtime.xml" />
+      <contentTypeBinding contentTypeId="org.eclipse.wst.xml.core.xmlsource" />
       </editor>
    </extension>
    <extension
