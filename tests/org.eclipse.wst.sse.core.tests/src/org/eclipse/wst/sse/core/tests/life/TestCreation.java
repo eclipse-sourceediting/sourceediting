@@ -11,7 +11,7 @@
 package org.eclipse.wst.sse.core.tests.life;
 
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.ModelLifecycleEvent;
+import org.eclipse.wst.sse.core.internal.model.ModelLifecycleEvent;
 
 import junit.framework.TestCase;
 
