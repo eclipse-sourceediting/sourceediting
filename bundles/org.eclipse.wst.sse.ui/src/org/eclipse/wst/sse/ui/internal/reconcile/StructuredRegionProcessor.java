@@ -28,7 +28,6 @@ import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.wst.sse.core.IModelLifecycleListener;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
-import org.eclipse.wst.sse.core.ModelLifecycleEvent;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.events.IStructuredDocumentListener;
 import org.eclipse.wst.sse.core.events.NewDocumentEvent;
@@ -36,6 +35,7 @@ import org.eclipse.wst.sse.core.events.NoChangeEvent;
 import org.eclipse.wst.sse.core.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.events.RegionsReplacedEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentRegionsReplacedEvent;
+import org.eclipse.wst.sse.core.internal.model.ModelLifecycleEvent;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
@@ -346,7 +346,7 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 	}
 
 	/**
-	 * @see org.eclipse.wst.sse.core.IModelLifecycleListener#processPostModelEvent(org.eclipse.wst.sse.core.ModelLifecycleEvent)
+	 * @see org.eclipse.wst.sse.core.IModelLifecycleListener#processPostModelEvent(org.eclipse.wst.sse.core.internal.model.ModelLifecycleEvent)
 	 */
 	public void processPostModelEvent(ModelLifecycleEvent event) {
 
@@ -383,7 +383,7 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 	}
 
 	/**
-	 * @see org.eclipse.wst.sse.core.IModelLifecycleListener#processPreModelEvent(org.eclipse.wst.sse.core.ModelLifecycleEvent)
+	 * @see org.eclipse.wst.sse.core.IModelLifecycleListener#processPreModelEvent(org.eclipse.wst.sse.core.internal.model.ModelLifecycleEvent)
 	 */
 	public void processPreModelEvent(ModelLifecycleEvent event) {
 

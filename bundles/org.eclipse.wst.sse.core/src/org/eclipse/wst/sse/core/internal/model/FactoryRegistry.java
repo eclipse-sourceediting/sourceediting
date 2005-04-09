@@ -10,13 +10,14 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core;
+package org.eclipse.wst.sse.core.internal.model;
 
 
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.internal.Logger;
 
 

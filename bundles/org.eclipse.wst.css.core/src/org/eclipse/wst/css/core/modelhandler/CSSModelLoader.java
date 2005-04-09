@@ -13,10 +13,10 @@ package org.eclipse.wst.css.core.modelhandler;
 
 import org.eclipse.wst.css.core.internal.document.CSSModelImpl;
 import org.eclipse.wst.css.core.internal.encoding.CSSDocumentLoader;
-import org.eclipse.wst.sse.core.AbstractModelLoader;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IModelLoader;
 import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
+import org.eclipse.wst.sse.core.internal.model.AbstractModelLoader;
 
 
 /**

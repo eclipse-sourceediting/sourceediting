@@ -6,10 +6,10 @@ import org.eclipse.jface.text.source.projection.IProjectionListener;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.wst.css.core.document.ICSSDocument;
 import org.eclipse.wst.css.core.document.ICSSModel;
-import org.eclipse.wst.sse.core.FactoryRegistry;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 
 /**

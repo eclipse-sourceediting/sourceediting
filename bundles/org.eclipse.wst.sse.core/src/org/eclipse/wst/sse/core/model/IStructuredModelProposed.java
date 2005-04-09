@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core;
+package org.eclipse.wst.sse.core.model;
 
 import java.io.IOException;
 
@@ -17,6 +17,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.wst.sse.core.IModelStateListener;
+import org.eclipse.wst.sse.core.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 
 

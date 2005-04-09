@@ -15,7 +15,7 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 import org.eclipse.wst.sse.core.AbstractNotifier;
-import org.eclipse.wst.sse.core.FactoryRegistry;
+import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;

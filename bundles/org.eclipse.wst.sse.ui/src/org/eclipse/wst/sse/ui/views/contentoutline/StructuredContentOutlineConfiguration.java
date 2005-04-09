@@ -27,7 +27,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.ui.part.IShowInSource;
 import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.part.ShowInContext;
-import org.eclipse.wst.sse.core.FactoryRegistry;
+import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;

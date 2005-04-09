@@ -16,8 +16,8 @@ import java.util.Iterator;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.util.SafeRunnable;
-import org.eclipse.wst.sse.core.FactoryRegistry;
 import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;

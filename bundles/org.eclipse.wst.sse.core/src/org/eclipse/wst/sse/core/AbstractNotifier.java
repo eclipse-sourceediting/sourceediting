@@ -18,6 +18,7 @@ import java.util.Collections;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.sse.core.internal.Logger;
+import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 
 
 

@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core;
 
+import org.eclipse.wst.sse.core.internal.model.ModelLifecycleEvent;
+
 /**
  * This is an early version of a class that may change over the next few
  * milestones.

@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
-import org.eclipse.wst.sse.core.AbstractStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.events.IStructuredDocumentListener;
 import org.eclipse.wst.sse.core.events.NewDocumentEvent;
@@ -20,6 +19,7 @@ import org.eclipse.wst.sse.core.events.NoChangeEvent;
 import org.eclipse.wst.sse.core.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.events.RegionsReplacedEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentRegionsReplacedEvent;
+import org.eclipse.wst.sse.core.internal.model.AbstractStructuredModel;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;

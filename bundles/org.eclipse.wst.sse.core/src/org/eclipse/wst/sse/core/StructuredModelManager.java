@@ -13,6 +13,7 @@ package org.eclipse.wst.sse.core;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
+import org.eclipse.wst.sse.core.internal.model.ModelManagerImpl;
 import org.osgi.framework.Bundle;
 
 /**
@@ -44,7 +45,7 @@ public class StructuredModelManager {
 			if (state == Bundle.ACTIVE) {
 				isReady = true;
 				// getInstance is a synchronized static method.
-				modelManager = ModelManagerImpl.getInstance();
+		 		modelManager = ModelManagerImpl.getInstance();
 			}
 			else if (state == Bundle.STARTING) {
 				try {

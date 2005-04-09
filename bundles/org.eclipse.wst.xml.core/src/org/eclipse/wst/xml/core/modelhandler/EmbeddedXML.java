@@ -15,7 +15,7 @@ package org.eclipse.wst.xml.core.modelhandler;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.wst.sse.core.FactoryRegistry;
+import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.sse.core.parser.JSPCapableParser;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryAdapterFactoryForEmbeddedXML;

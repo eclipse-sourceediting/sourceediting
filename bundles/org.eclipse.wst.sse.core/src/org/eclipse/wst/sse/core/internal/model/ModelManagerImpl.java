@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core;
+package org.eclipse.wst.sse.core.internal.model;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -44,6 +44,11 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
+import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.IModelLoader;
+import org.eclipse.wst.sse.core.IModelManager;
+import org.eclipse.wst.sse.core.IModelManagerListener;
+import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.document.IEncodedDocument;
 import org.eclipse.wst.sse.core.exceptions.ResourceAlreadyExists;
 import org.eclipse.wst.sse.core.exceptions.ResourceInUse;
@@ -81,7 +86,7 @@ import org.eclipse.wst.sse.core.util.Utilities;
  * This class also provides a convenient place to register Model Loaders and
  * Dumpers based on 'type'.
  */
-class ModelManagerImpl implements IModelManager {
+public class ModelManagerImpl implements IModelManager {
 
 	static class EnumeratedModelIds implements Enumeration {
 
@@ -143,7 +148,13 @@ class ModelManagerImpl implements IModelManager {
 	private static ModelManagerImpl instance;
 	private final static int READ_BUFFER_SIZE = 4096;
 
-	synchronized static IModelManager getInstance() {
+	/**
+	 * Not to be called by clients, will be made
+	 * restricted access.
+	 * 
+	 * @return
+	 */
+	public synchronized static IModelManager getInstance() {
 
 		if (instance == null) {
 			instance = new ModelManagerImpl();

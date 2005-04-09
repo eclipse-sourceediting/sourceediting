@@ -15,13 +15,13 @@ package org.eclipse.wst.xml.core.modelhandler;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.wst.sse.core.AbstractModelLoader;
 import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IModelLoader;
 import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
 import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
+import org.eclipse.wst.sse.core.internal.model.AbstractModelLoader;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.encoding.XMLDocumentLoader;

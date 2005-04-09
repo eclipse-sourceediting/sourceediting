@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core;
+package org.eclipse.wst.sse.core.internal.model;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +24,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.ILock;
+import org.eclipse.wst.sse.core.DocumentChanged;
+import org.eclipse.wst.sse.core.IModelLifecycleListener;
+import org.eclipse.wst.sse.core.IModelManager;
+import org.eclipse.wst.sse.core.IModelStateListener;
+import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.IndexedRegion;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.events.AboutToBeChangedEvent;
 import org.eclipse.wst.sse.core.events.IModelAboutToBeChangedListener;
 import org.eclipse.wst.sse.core.events.IStructuredDocumentListener;

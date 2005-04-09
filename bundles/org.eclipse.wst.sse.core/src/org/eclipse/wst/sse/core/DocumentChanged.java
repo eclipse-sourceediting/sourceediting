@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core;
 
+import org.eclipse.wst.sse.core.internal.model.ModelLifecycleEvent;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 
 public class DocumentChanged extends ModelLifecycleEvent {

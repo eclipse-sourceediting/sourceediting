@@ -23,8 +23,8 @@ import org.eclipse.wst.css.core.internal.formatter.CSSSourceFormatterFactory;
 import org.eclipse.wst.css.core.internal.formatter.CSSSourceGenerator;
 import org.eclipse.wst.css.core.util.ImportRuleCollector;
 import org.eclipse.wst.sse.core.AbstractNotifier;
-import org.eclipse.wst.sse.core.FactoryRegistry;
 import org.eclipse.wst.sse.core.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.w3c.dom.DOMException;
 
 

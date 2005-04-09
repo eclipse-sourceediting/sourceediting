@@ -10,9 +10,10 @@
  *     
  *******************************************************************************/
 
-package org.eclipse.wst.sse.core;
+package org.eclipse.wst.sse.core.model;
 
 import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.wst.sse.core.IAdapterFactory;
 /**
  * Provides a means for clients to register IAdapterFactories for use
  * by infrastructure when StructuredModels are created. 

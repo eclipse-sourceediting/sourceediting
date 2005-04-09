@@ -10,7 +10,9 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core;
+package org.eclipse.wst.sse.core.internal.model;
+
+import org.eclipse.wst.sse.core.IStructuredModel;
 
 /**
  * This is an early version of a class that may change over the next few

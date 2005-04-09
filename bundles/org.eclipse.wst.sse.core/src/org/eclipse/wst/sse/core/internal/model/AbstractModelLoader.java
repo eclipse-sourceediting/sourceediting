@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core;
+package org.eclipse.wst.sse.core.internal.model;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +22,9 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocumentExtension3;
+import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.IModelLoader;
+import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.document.IEncodedDocument;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;

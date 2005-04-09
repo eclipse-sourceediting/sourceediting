@@ -22,7 +22,7 @@ import org.eclipse.wst.html.core.htmlcss.HTMLStyleSelectorAdapterFactory;
 import org.eclipse.wst.html.core.htmlcss.StyleAdapterFactory;
 import org.eclipse.wst.html.core.modelquery.ModelQueryAdapterFactoryForEmbeddedHTML;
 import org.eclipse.wst.sse.core.IAdapterFactory;
-import org.eclipse.wst.sse.core.FactoryRegistry;
+import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.sse.core.parser.BlockMarker;
 import org.eclipse.wst.sse.core.parser.BlockTagParser;
