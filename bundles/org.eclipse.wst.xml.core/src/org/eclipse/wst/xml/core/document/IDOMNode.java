@@ -23,8 +23,11 @@ import org.eclipse.wst.xml.core.internal.document.InvalidCharacterException;
 import org.w3c.dom.Node;
 
 /**
- * A interface to make concept clearer, just to denote the combination of
- * three other interfaces.
+ * This interface describes the extended functionality of our source-oriented
+ * DOM. First, our nodes extend the w3c Node interface, IndexedRegion, and
+ * INodeNotifier. Plus, has the extra methods called out here.
+ * 
+ * ISSUE: the 'read-only' API should be broken out in their own interface
  * 
  * @since 1.0
  * 
@@ -34,56 +37,106 @@ public interface IDOMNode extends IndexedRegion, INodeNotifier, Node {
 	/**
 	 * Gets the last structured document region of this node.
 	 * 
-	 * @return
+	 * ISSUE: need to resolve getEnd/getLast confusion.
+	 * 
+	 * @return IStructuredDocumentRegion - returns the last structured
+	 *         document region associated with
 	 */
 	IStructuredDocumentRegion getEndStructuredDocumentRegion();
 
 	/**
 	 * Gets the first structured document region of this node.
 	 * 
-	 * @return
+	 * ISSUE: need to resolve getFirst/getStart confusion
+	 * 
+	 * @return the first structured document region of this node.
 	 */
 	IStructuredDocumentRegion getFirstStructuredDocumentRegion();
 
 	/**
 	 * Gets the last structured document region of this node.
 	 * 
-	 * @return
+	 * ISSUE: need to resolve getEnd/getLast confusion.
+	 * 
+	 * @return IStructuredDocumentRegion - returns the last structured
+	 *         document region associated with
 	 */
 	IStructuredDocumentRegion getLastStructuredDocumentRegion();
 
 	/**
-	 * Returns the model associated with this node.
+	 * Returns the model associated with this node. Returns null if not part
+	 * of an active model.
+	 * 
+	 * @return IDOMModel - returns the IDOMModel this node is part of.
 	 */
 	IDOMModel getModel();
 
 	/**
-	 * Returns a region representing the name of this node.
+	 * Get's the region representing the name of this node
+	 * 
+	 * ISSUE: only implemented/used at attribute and DTDNodes -- should move.
+	 * 
+	 * @return ITextRegion - returns the ITextRegion associated with this
+	 *         Node.
+	 * 
+	 * @deprecated
 	 */
 	ITextRegion getNameRegion();
 
 	/**
-	 * Returns the source representing this node.
+	 * Returns the literal source representing this node in source document.
+	 * 
+	 * ISSUE: need to fix implementation to match.
+	 * 
+	 * @return the literal source representing this node in source document.
 	 */
 	String getSource();
 
 	/**
-	 * Returns the first StructuredDocumentRegion of this Node.
+	 * Gets the first structured document region of this node.
+	 * 
+	 * ISSUE: need to resolve getFirst/getStart confusion
+	 * 
+	 * @return the first structured document region of this node.
 	 */
 	IStructuredDocumentRegion getStartStructuredDocumentRegion();
 
 	/**
-	 * Returns the structured Document that underlies this model.
+	 * Returns the structured document that underlies this node's model.
+	 * 
+	 * Returns null if this node is not actively part of a source document. In
+	 * contrast, in the pure DOM world, "owning document" is not null even
+	 * after a node is deleted from the DOM.
+	 * 
+	 * ISSUE: we need to fix our implementation to match this spec.
+	 * 
+	 * @return the structured document.
 	 */
 	IStructuredDocument getStructuredDocument();
 
 	/**
-	 * Get's the region representing the value of this node.
+	 * Get's the region representing the value of this node if only one
+	 * ITextRegion, null otherwise.
+	 * 
+	 * ISSUE: only implemented/used at attribute level, move "down".
+	 * 
+	 * @return ITextRegion - returns the ITextRegion associated with this
+	 *         Node.
+	 * 
+	 * @deprecated
 	 */
 	ITextRegion getValueRegion();
 
 	/**
-	 * Get's the source of this nodes value.
+	 * Returns a string representing the source of this node, but with
+	 * character enties converted (e.g. &lt; is converted to '<').
+	 * 
+	 * ISSUE: need to better spec extent of this conversion, we may not know
+	 * all character entities.
+	 * 
+	 * ISSUE: need to fix implementation to match spec.
+	 * 
+	 * @return String - get's the source of this Node.
 	 */
 	String getValueSource();
 
@@ -96,14 +149,19 @@ public interface IDOMNode extends IndexedRegion, INodeNotifier, Node {
 	boolean isChildEditable();
 
 	/**
-	 * Returns true if tag is closed.
+	 * Returns true if tag is closed in source.
+	 * 
+	 * In our source orient DOM we sometimes end a Node without it being
+	 * explicitly closed in source.
+	 * 
+	 * @return boolean - true if node is closed
 	 */
 	boolean isClosed();
 
 	/**
-	 * Returns true if this node is a container.
+	 * Returns true if this node can contain children.
 	 * 
-	 * @return boolean
+	 * @return boolean - true if this node can contain children.
 	 */
 	boolean isContainer();
 
@@ -126,7 +184,7 @@ public interface IDOMNode extends IndexedRegion, INodeNotifier, Node {
 	void setDataEditable(boolean editable);
 
 	/**
-	 * Set's readonly state of data
+	 * Sets readonly state of data
 	 * 
 	 * faster approach to set read-only state.
 	 */

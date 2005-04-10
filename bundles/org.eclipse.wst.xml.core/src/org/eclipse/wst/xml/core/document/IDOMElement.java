@@ -26,57 +26,81 @@ import org.w3c.dom.Element;
 public interface IDOMElement extends IDOMNode, Element {
 
 	/**
-	 * @deprecated this should probably not be public
+	 * Retuns the start offset of the end tag.
+	 * 
+	 * ISSUE: need to sort out need for this
+	 * 
+	 * @return int - the start offset of the end tag.
 	 */
 	int getEndStartOffset();
 
 	/**
-	 * get's the end tag name
-	 */
-	String getEndTagName();
-
-	/**
-	 * @deprecated this should probably not be public
+	 * Returns the end offset of the
 	 * 
+	 * ISSUE: need to sort out need for this
+	 * 
+	 * @return int - the end offset of the start tag.
 	 */
 	int getStartEndOffset();
 
 	/**
-	 * Returns true if has an end tag
+	 * Returns true if has an end tag.
+	 * 
+	 * In our source-oriented DOM, sometimes Elements are "ended", even
+	 * without an explicit end tag in the source.
+	 * 
+	 * @return true if has an end tag.
 	 */
 	boolean hasEndTag();
 
 	/**
 	 * returns true if has a start tag.
+	 * 
+	 * In our source-oriented DOM, a lone end tag will cause a node to be
+	 * created in the tree, unlike well-formed-only DOMs.
+	 * 
+	 * @return true if has a start tag.
 	 */
 	boolean hasStartTag();
 
 	/**
-	 * returns true if this element is a comment
+	 * returns true if this element is a comment element
+	 * 
+	 * @return true if this element is a comment element
 	 */
 	boolean isCommentTag();
 
 	/**
 	 * isEmptyTag method
 	 * 
-	 * @return boolean
+	 * @return boolean - true if is empty tag, false otherwise
 	 */
 	boolean isEmptyTag();
 
 	/**
+	 * NOT CLIENT API
+	 * 
+	 * 
+	 * @deprecated - I believe this can be cleaned out.
 	 */
 	boolean isEndTag();
 
 	/**
 	 * Returns true for "global tag" (basically, without prefix)
+	 * 
+	 * @return true for "global tag" (basically, without prefix)
 	 */
 	boolean isGlobalTag();
 
 	/**
-	 * Returns true for no the start and the end tags
+	 * Returns true for no start and the end tags in source.
 	 * 
 	 * Provided for some very special cases when, for example, and HTML tag is
-	 * assumed in an HTML document that does not have an HTML tag.
+	 * assumed in an HTML document that does not have a literal HTML tag.
+	 * 
+	 * ISSUE: check with clients to see if still needed
+	 * 
+	 * @return true or no start and the end tags in source.
 	 */
 	boolean isImplicitTag();
 
@@ -92,32 +116,38 @@ public interface IDOMElement extends IDOMNode, Element {
 	/**
 	 * Returns true if start tag is closed.
 	 * 
+	 * @return true if start tag is closed.
 	 */
 	boolean isStartTagClosed();
 
 	/**
 	 * returns true if is xml tag
 	 * 
-	 * ISSUE: I need to spec this better.
+	 * ISSUE: need to spec this better.
 	 * 
+	 * @return true if is xml tag
 	 */
 	boolean isXMLTag();
 
 	/**
+	 * NOT CLIENT API
+	 * 
 	 * notifyEndTagChanged
 	 * 
-	 * @deprecated this should probably not be public
 	 */
 	void notifyEndTagChanged();
 
 	/**
+	 * NOT CLIENT API
+	 * 
 	 * notifyStartTagChanged
 	 * 
-	 * @deprecated this should probably not be public
 	 */
 	void notifyStartTagChanged();
 
 	/**
+	 * NOT CLIENT API
+	 * 
 	 * Signify that this tag is a comment
 	 * 
 	 * For use only by parsers.
@@ -126,6 +156,8 @@ public interface IDOMElement extends IDOMNode, Element {
 	void setCommentTag(boolean isCommentTag);
 
 	/**
+	 * NOT CLIENT API
+	 * 
 	 * Signify that this tag is an empty tag
 	 * 
 	 * For use only by parsers
@@ -133,9 +165,14 @@ public interface IDOMElement extends IDOMNode, Element {
 	void setEmptyTag(boolean isEmptyTag);
 
 	/**
+	 * NOT CLIENT API
+	 * 
 	 * Signify that this tag is a JSP tag
 	 * 
 	 * For use only by parsers
+	 * 
+	 * ISSUE: I have had one non-parsing client who has had to use this ...
+	 * need to check
 	 * 
 	 */
 	void setJSPTag(boolean isJSPTag);

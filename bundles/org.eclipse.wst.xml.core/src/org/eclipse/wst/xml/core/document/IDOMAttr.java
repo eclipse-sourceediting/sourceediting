@@ -31,6 +31,8 @@ public interface IDOMAttr extends IDOMNode, Attr {
 	 * Get's the region in attribute representing the '=' sign. May or may not
 	 * have whitespace surrounding it.
 	 * 
+	 * @return ITextRegion - the region representing the equals sign, or null
+	 *         if their is no equals sign.
 	 */
 	ITextRegion getEqualRegion();
 
@@ -38,14 +40,15 @@ public interface IDOMAttr extends IDOMNode, Attr {
 	 * Gets the source location of the end of the attribute name, including
 	 * whitespace.
 	 * 
-	 * @return
+	 * @return int - the source location of the end of the attribute name,
+	 *         including whitespace.
 	 */
 	int getNameRegionEndOffset();
 
 	/**
 	 * Gets the source location of the start of the attribute name.
 	 * 
-	 * @return
+	 * @return int - the source location of the start of the attribute name.
 	 */
 	int getNameRegionStartOffset();
 
@@ -53,7 +56,7 @@ public interface IDOMAttr extends IDOMNode, Attr {
 	/**
 	 * Gets the text associated with the attribute name.
 	 * 
-	 * @return
+	 * @return String - the text associated with the attribute name.
 	 */
 	String getNameRegionText();
 
@@ -61,28 +64,32 @@ public interface IDOMAttr extends IDOMNode, Attr {
 	 * Gets the source location of the end of the attribute name, excluding
 	 * whitespace.
 	 * 
-	 * @return
+	 * @return int - returns the source location of the end of the attribute
+	 *         name, excluding whitespace.
 	 */
 	int getNameRegionTextEndOffset();
 
 	/**
 	 * Gets the source location of the start of the attribute value.
 	 * 
-	 * @return
+	 * @return int - returns the source location of the start of the attribute
+	 *         value.
+	 * 
+	 * ISSUE: need to better spec interaction with quote marks
 	 */
 	int getValueRegionStartOffset();
 
 	/**
 	 * Gets the text associated with the attribute value.
 	 * 
-	 * @return
+	 * @return String - returns the text associated with the attribute value.
 	 */
 	String getValueRegionText();
 
 	/**
 	 * Check if Attr has a nested value (such as a JSP expression).
 	 * 
-	 * @return true if contains a nested value
+	 * @return true if contains a nested value, false otherwise.
 	 */
 	boolean hasNestedValue();
 
@@ -98,13 +105,19 @@ public interface IDOMAttr extends IDOMNode, Attr {
 	 * false if attribute is preceeded by a prefix (whether valid name space
 	 * or not). Returns true if its owning element is a global element.
 	 * 
+	 * @return true if attribute is defined globally for document. Returns
+	 *         false if attribute is preceeded by a prefix (whether valid name
+	 *         space or not). Returns true if its owning element is a global
+	 *         element.
 	 */
 	boolean isGlobalAttr();
 
 	/**
 	 * Returns true if is xml attr
 	 * 
-	 * ISSUE: need to figure out how to specify this one.
+	 * ISSUE: need to figure out how to specify this one in a meaningful way.
+	 * 
+	 * @return boolean - returns true if is xml attr
 	 */
 	boolean isXMLAttr();
 

@@ -23,26 +23,35 @@ import org.w3c.dom.Text;
  * @since 1.0
  * 
  */
-
 public interface IDOMText extends IDOMNode, Text {
 
 	/**
+	 * NOT API - can be eliminated or moved to ltk level
+	 *
 	 * Appends the content of the text node
+	 * 
+	 * @param text -
+	 *            the Text to append.
 	 */
 	void appendText(Text text);
 
 	/**
-	 * Inserts the content of the text node at the specified position
-	 */
-	void insertText(Text text, int offset);
-
-	/**
+	 * NOT API - can be eliminated or moved to ltk level
+	 * 
 	 * Returns true if is not valid.
 	 */
 	boolean isInvalid();
 
 	/**
-	 * Returns true if is entirely white space
+	 * Returns true if is entirely white space.
+	 * 
+	 * This is intened to be better performing that all clients getting the
+	 * source, and checking themselves.
+	 * 
+	 * ISSUE: need to clarify if implementation is pure to "white space" as
+	 * per DOM spec?
+	 * 
+	 * @return true if is entirely white space.
 	 */
 	boolean isWhitespace();
 }

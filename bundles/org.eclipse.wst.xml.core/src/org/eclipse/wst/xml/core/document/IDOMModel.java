@@ -38,6 +38,8 @@ public interface IDOMModel extends IStructuredModel {
 	ISourceGenerator getGenerator();
 
 	/**
+	 * NOT CLIENT API
+	 * 
 	 * Returns an XMLModelNotifier. Clients should not use.
 	 * 
 	 * ISSUE: should be "internalized".
@@ -46,6 +48,8 @@ public interface IDOMModel extends IStructuredModel {
 	XMLModelNotifier getModelNotifier();
 
 	/**
+	 * NOT CLIENT API
+	 *
 	 * Sets the model notifier Clients should not use.
 	 * 
 	 * ISSUE: need to review with legacy clients.

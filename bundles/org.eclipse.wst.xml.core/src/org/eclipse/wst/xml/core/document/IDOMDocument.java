@@ -23,7 +23,7 @@ import org.w3c.dom.traversal.DocumentTraversal;
 
 /**
  * This interface enables creation of DOCTYPE declaration and some DOM Level 2
- * interfaces.
+ * interfaces. May be referenced but not implemented by clients.
  * 
  * @since 1.0
  */
@@ -40,42 +40,58 @@ public interface IDOMDocument extends IDOMNode, Document, DocumentRange, Documen
 	 *            --%&gt;)
 	 * @return Element element instance
 	 * @throws DOMException
-	 *             throwed if the element name is registered as comment
-	 *             element
+	 *             thrown if the element name is registered as comment element
 	 */
 	Element createCommentElement(String tagName, boolean isJSPTag) throws DOMException;
 
 	/**
 	 * Creates a DocumentType node
+	 * 
+	 * ISSUE: I believe this 'name' is the one specific in doctype extension,
+	 * need to verify.
+	 * 
+	 * @param name -
+	 *            name of the doctype
+	 * @return DocumentType - returns a document type node.
 	 */
 	DocumentType createDoctype(String name);
 
 	/**
-	 * Returns the DocumnetType ID
+	 * Returns the DocumentType ID. Unlike the standard DOM approach of
+	 * "getDocumentType().getPublicId()", this method returns the id even if
+	 * implicit.
 	 * 
+	 * @return the DocumentType ID
 	 */
 	String getDocumentTypeId();
 
 	/**
-	 * isJSPDocument
+	 * NOT API ... needs to be removed/changed
 	 * 
 	 * ISSUE: need to specify
+	 * 
+	 * @return true if is JSPDocument
+	 * @deprecated
 	 * 
 	 */
 	boolean isJSPDocument();
 
 	/**
-	 * isJSPType
+	 * NOT API ... needs to be removed/changed
 	 * 
 	 * ISSUE: need to specify
+	 * 
+	 * @deprecated
 	 * 
 	 */
 	boolean isJSPType();
 
 	/**
-	 * isXMLType
+	 * NOT API ... needs to be removed/changed
 	 * 
 	 * ISSUE: need to specify
+	 * 
+	 * @deprecated
 	 * 
 	 */
 	boolean isXMLType();

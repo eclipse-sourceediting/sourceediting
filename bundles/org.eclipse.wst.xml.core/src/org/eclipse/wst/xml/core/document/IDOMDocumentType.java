@@ -28,14 +28,16 @@ public interface IDOMDocumentType extends IDOMNode, DocumentType {
 	/**
 	 * Sets document type's public id, as source.
 	 * 
-	 * @param publicId
+	 * @param String -
+	 *            the publicId
 	 */
 	void setPublicId(String publicId);
 
 	/**
 	 * Sets docment type's system id, as source.
 	 * 
-	 * @param systemId
+	 * @param String -
+	 *            the systemId
 	 */
 	void setSystemId(String systemId);
 }

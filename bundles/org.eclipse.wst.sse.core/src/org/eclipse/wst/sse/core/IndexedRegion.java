@@ -17,13 +17,20 @@ package org.eclipse.wst.sse.core;
 /**
  * This type is used to indicate positions and lengths in source. Notice that
  * while getEndOffset and getLength are redundant, given that
+ * 
  * <pre>
  * <code>
- *      getEndOffset() == getStartOffset() + getLength();
+ *          getEndOffset() == getStartOffset() + getLength(); 
  * </code>
- * </pre> 
- * we provide (require) both since in some cases implementors may be
- * able to provide one or the other more efficiently.
+ * </pre>
+ * 
+ * we provide (require) both since in some cases implementors may be able to
+ * provide one or the other more efficiently.
+ * 
+ * Note: it is not part of the API contract that implementors of IndexedRegion --
+ * as a whole collection for a particular source -- must completely cover the
+ * original source. They currently often do, so thought I'd mention explicitly
+ * this may not always be true.
  * 
  * @since 1.0
  */

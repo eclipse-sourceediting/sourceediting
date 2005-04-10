@@ -28,6 +28,8 @@ import org.w3c.dom.Text;
  * 
  * ISourceGenerator allows DOM models to generate source appropriate for their
  * parameter, relative to the model that provides the source generator.
+ * 
+ * ISSUE: This should be part of "ltk" level.
  */
 
 public interface ISourceGenerator {
