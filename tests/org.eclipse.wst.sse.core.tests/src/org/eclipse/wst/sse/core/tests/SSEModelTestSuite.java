@@ -13,6 +13,14 @@ package org.eclipse.wst.sse.core.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.wst.sse.core.tests.events.TestAboutToBeChangedEvent;
+import org.eclipse.wst.sse.core.tests.events.TestNewDocumentContentEvent;
+import org.eclipse.wst.sse.core.tests.events.TestNewDocumentEvent;
+import org.eclipse.wst.sse.core.tests.events.TestNoChangeEvent;
+import org.eclipse.wst.sse.core.tests.events.TestRegionChangedEvent;
+import org.eclipse.wst.sse.core.tests.events.TestRegionsReplacedEvent;
+import org.eclipse.wst.sse.core.tests.events.TestStructuredDocumentRegionsReplacedEvent;
+
 
 public class SSEModelTestSuite extends TestSuite {
 
@@ -26,12 +34,17 @@ public class SSEModelTestSuite extends TestSuite {
 	}
 
 	// not ready for threaded tests, yet.
-	// private static Class[] classes = new Class[]{TestOfThreadLocalImprovement.class, TestOfThreadLocalWithChanges.class, TestCreation.class};
+	// private static Class[] classes = new
+	// Class[]{TestOfThreadLocalImprovement.class,
+	// TestOfThreadLocalWithChanges.class, TestCreation.class};
 
-	// private static Class[] classes = new Class[]{TestCreation.class, TestDocumentReader.class};
-	// private static Class[] classes = new Class[]{TestCreation.class, TestDocumentReader.class, TestCharSequenceReader.class, TestRegionMatches.class};
+	// private static Class[] classes = new Class[]{TestCreation.class,
+	// TestDocumentReader.class};
+	// private static Class[] classes = new Class[]{TestCreation.class,
+	// TestDocumentReader.class, TestCharSequenceReader.class,
+	// TestRegionMatches.class};
 
-	private static Class[] classes = new Class[]{ExistenceTest.class};
+	private static Class[] classes = new Class[]{ExistenceTest.class, TestNewDocumentContentEvent.class, TestAboutToBeChangedEvent.class, TestNewDocumentEvent.class, TestNoChangeEvent.class, TestRegionChangedEvent.class,TestRegionsReplacedEvent.class,TestStructuredDocumentRegionsReplacedEvent.class};
 
 	public SSEModelTestSuite() {
 		super("SSE Model Basic Test Suite");
