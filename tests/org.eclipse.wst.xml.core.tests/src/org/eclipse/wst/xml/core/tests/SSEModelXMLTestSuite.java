@@ -19,6 +19,7 @@ import org.eclipse.wst.xml.core.tests.dom.NameValidatorTests;
 import org.eclipse.wst.xml.core.tests.model.TestModelsFromFiles;
 import org.eclipse.wst.xml.core.tests.model.TestStructuredModel;
 import org.eclipse.wst.xml.core.tests.model.TestXMLModelLoader;
+import org.eclipse.wst.xml.core.tests.text.TestStructuredPartitionerXML;
 
 
 
@@ -34,7 +35,7 @@ public class SSEModelXMLTestSuite extends TestSuite {
 		addTest(new TestSuite(TestXMLDocumentLoader.class));
 
 		addTest(new TestSuite(TestStructuredModel.class));
-		
+		addTest(new TestSuite(TestStructuredPartitionerXML.class));
 		addTest(new TestSuite(NameValidatorTests.class));
 		addTest(new TestSuite(TransitionTests.class));
 		

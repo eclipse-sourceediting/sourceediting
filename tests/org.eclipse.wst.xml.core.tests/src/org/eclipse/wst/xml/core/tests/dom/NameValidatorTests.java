@@ -42,7 +42,7 @@ public class NameValidatorTests extends TestCase {
 					{"spaceafter ", Boolean.FALSE},
 					{"ns:namespace", Boolean.TRUE},
 					{":funnyns", Boolean.TRUE},
-					/* ISSUE: is this really valid name */
+					/* ISSUE: is "endns:" really valid name */
 					{"endns:", Boolean.TRUE},
 					{"us_underscore", Boolean.TRUE},
 					{"_underscore", Boolean.TRUE},
