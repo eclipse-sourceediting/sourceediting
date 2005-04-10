@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
 import org.eclipse.wst.xml.core.document.IDOMNode;
@@ -49,7 +49,7 @@ public class PropagatingAdapterImpl implements PropagatingAdapter {
 		if (adaptOnCreateFactories != null) {
 			Iterator iterator = adaptOnCreateFactories.iterator();
 			while (iterator.hasNext()) {
-				IAdapterFactory factory = (IAdapterFactory) iterator.next();
+				INodeAdapterFactory factory = (INodeAdapterFactory) iterator.next();
 				factory.adapt(node);
 			}
 		}
@@ -59,7 +59,7 @@ public class PropagatingAdapterImpl implements PropagatingAdapter {
 	/**
 	 * This mechanism can be made "easier to use" later.
 	 */
-	public void addAdaptOnCreateFactory(IAdapterFactory factory) {
+	public void addAdaptOnCreateFactory(INodeAdapterFactory factory) {
 		//adaptOnCreateFactories.add(factory);
 		getAdaptOnCreateFactories().add(factory);
 	}
@@ -92,10 +92,10 @@ public class PropagatingAdapterImpl implements PropagatingAdapter {
 	//	}
 
 	/**
-	 * @see PropagatingAdapter#initializeForFactory(IAdapterFactory,
+	 * @see PropagatingAdapter#initializeForFactory(INodeAdapterFactory,
 	 *      INodeNotifier)
 	 */
-	public void initializeForFactory(IAdapterFactory factory, INodeNotifier node) {
+	public void initializeForFactory(INodeAdapterFactory factory, INodeNotifier node) {
 		// we're DOM specific implimentation
 		if (node instanceof IDOMNode) {
 			IDOMNode xmlNode = (IDOMNode) node;
@@ -159,7 +159,7 @@ public class PropagatingAdapterImpl implements PropagatingAdapter {
 		if (adaptOnCreateFactories != null) {
 			Iterator iterator = adaptOnCreateFactories.iterator();
 			while (iterator.hasNext()) {
-				IAdapterFactory factory = (IAdapterFactory) iterator.next();
+				INodeAdapterFactory factory = (INodeAdapterFactory) iterator.next();
 				factory.release();
 			}
 		}

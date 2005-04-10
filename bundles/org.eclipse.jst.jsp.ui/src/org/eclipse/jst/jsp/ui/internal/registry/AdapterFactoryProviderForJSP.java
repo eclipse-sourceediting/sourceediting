@@ -19,7 +19,7 @@ import org.eclipse.jst.jsp.core.modelhandler.ModelHandlerForJSP;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterFactoryForHTML;
-import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
@@ -53,7 +53,7 @@ public class AdapterFactoryProviderForJSP implements AdapterFactoryProvider {
 	protected void addContentBasedFactories(IStructuredModel structuredModel) {
 		FactoryRegistry factoryRegistry = structuredModel.getFactoryRegistry();
 		Assert.isNotNull(factoryRegistry, "Program Error: client caller must ensure model has factory registry"); //$NON-NLS-1$
-		IAdapterFactory factory = null;
+		INodeAdapterFactory factory = null;
 		// == this list came from the previous "HTML only" list
 		//        factory = factoryRegistry.getFactoryFor(ContentAssistAdapter.class);
 		//        if (factory == null) {

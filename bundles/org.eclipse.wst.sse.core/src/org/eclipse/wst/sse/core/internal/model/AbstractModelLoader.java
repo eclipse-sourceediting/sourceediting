@@ -22,7 +22,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocumentExtension3;
-import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.IModelLoader;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.document.IEncodedDocument;
@@ -75,7 +75,7 @@ public abstract class AbstractModelLoader implements IModelLoader {
 		if (factoryList != null) {
 			Iterator iterator = factoryList.iterator();
 			while (iterator.hasNext()) {
-				IAdapterFactory factory = (IAdapterFactory) iterator.next();
+				INodeAdapterFactory factory = (INodeAdapterFactory) iterator.next();
 				registry.addFactory(factory);
 			}
 		}
@@ -155,7 +155,7 @@ public abstract class AbstractModelLoader implements IModelLoader {
 		List newAdapterFactories = new ArrayList();
 		Iterator oldListIterator = oldAdapterFactories.iterator();
 		while (oldListIterator.hasNext()) {
-			IAdapterFactory oldAdapterFactory = (IAdapterFactory) oldListIterator.next();
+			INodeAdapterFactory oldAdapterFactory = (INodeAdapterFactory) oldListIterator.next();
 			// now "clone" the adapterfactory
 			newAdapterFactories.add(oldAdapterFactory.copy());
 		}

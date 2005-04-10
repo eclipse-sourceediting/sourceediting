@@ -21,8 +21,7 @@ package org.eclipse.wst.sse.core;
  * @since 1.0
  * 
  */
-
-public interface IAdapterFactory {
+public interface INodeAdapterFactory {
 
 	/**
 	 * The primary purpose of an adapter factory is to create an adapter and
@@ -47,7 +46,7 @@ public interface IAdapterFactory {
 	 * 
 	 * @return an instance of this adapter factory.
 	 */
-	public IAdapterFactory copy();
+	public INodeAdapterFactory copy();
 
 	/**
 	 * isFactoryForType is called by infrastructure to decide if this adapter

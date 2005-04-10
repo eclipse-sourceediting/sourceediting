@@ -26,7 +26,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.properties.PropertySheetPage;
-import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapterFactory;
@@ -114,11 +114,11 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
 
-	protected IAdapterFactory adapterFactory;
+	protected INodeAdapterFactory adapterFactory;
 	protected CMDocumentManagerListener cmDocumentManagerListener;
 	private BufferedOutlineUpdater fUpdater = null;
 
-	public JFaceNodeAdapter(IAdapterFactory adapterFactory) {
+	public JFaceNodeAdapter(INodeAdapterFactory adapterFactory) {
 
 		super();
 		this.adapterFactory = adapterFactory;

@@ -13,14 +13,14 @@ package org.eclipse.wst.html.core.htmlcss;
 
 
 import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSelectorAdapter;
-import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 
 /**
  * Insert the type's description here.
  */
-public class HTMLStyleSelectorAdapterFactory implements IAdapterFactory {
+public class HTMLStyleSelectorAdapterFactory implements INodeAdapterFactory {
 
 	private static HTMLStyleSelectorAdapterFactory instance;
 	private Object toMatch = IStyleSelectorAdapter.class;
@@ -74,7 +74,7 @@ public class HTMLStyleSelectorAdapterFactory implements IAdapterFactory {
 	/**
 	 * Overriding copy method
 	 */
-	public IAdapterFactory copy() {
+	public INodeAdapterFactory copy() {
 		return getInstance();
 	}
 

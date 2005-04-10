@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.modelhandler.IDocumentTypeHandler;
 
@@ -65,8 +65,8 @@ public class PluginContributedFactoryReader {
 		return loadRegistry(type);
 	}
 
-	protected IAdapterFactory loadFactoryFromConfigurationElement(IConfigurationElement element, Object requesterType) {
-		IAdapterFactory factory = null;
+	protected INodeAdapterFactory loadFactoryFromConfigurationElement(IConfigurationElement element, Object requesterType) {
+		INodeAdapterFactory factory = null;
 		if (element.getName().equals(TAG_NAME)) {
 			String contentType = element.getAttribute(ATTR_CONTENTTYPE);
 			if (!requesterType.equals(contentType))
@@ -80,7 +80,7 @@ public class PluginContributedFactoryReader {
 			// for adapter factories
 			if (className != null) {
 				try {
-					factory = (IAdapterFactory) element.createExecutableExtension(ATTR_CLASS);
+					factory = (INodeAdapterFactory) element.createExecutableExtension(ATTR_CLASS);
 				} catch (CoreException e) {
 					// if an error occurs here, its probably that the plugin
 					// could not be found/loaded
@@ -115,7 +115,7 @@ public class PluginContributedFactoryReader {
 				// to avoid repeat processing
 				factoryList = new Vector();
 				for (int i = 0; i < elements.length; i++) {
-					IAdapterFactory factory = loadFactoryFromConfigurationElement(elements[i], contentType);
+					INodeAdapterFactory factory = loadFactoryFromConfigurationElement(elements[i], contentType);
 					if (factory != null)
 						factoryList.add(factory);
 				}

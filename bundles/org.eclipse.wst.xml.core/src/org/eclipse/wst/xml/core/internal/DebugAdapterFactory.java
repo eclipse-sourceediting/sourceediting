@@ -15,7 +15,7 @@ package org.eclipse.wst.xml.core.internal;
 import java.util.ArrayList;
 
 import org.eclipse.wst.sse.core.AbstractAdapterFactory;
-import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.PropagatingAdapterFactory;
@@ -45,11 +45,11 @@ public class DebugAdapterFactory extends AbstractAdapterFactory implements Propa
 	 * 
 	 * @see org.eclipse.wst.sse.core.PropagatingAdapterFactory#addContributedFactories(org.eclipse.wst.sse.core.IAdapterFactory)
 	 */
-	public void addContributedFactories(IAdapterFactory factory) {
+	public void addContributedFactories(INodeAdapterFactory factory) {
 		//none expected
 	}
 
-	public IAdapterFactory copy() {
+	public INodeAdapterFactory copy() {
 		return new DebugAdapterFactory(this.adapterKey, this.shouldRegisterAdapter);
 	}
 

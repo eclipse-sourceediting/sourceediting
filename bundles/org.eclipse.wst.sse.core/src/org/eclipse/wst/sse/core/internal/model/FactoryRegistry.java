@@ -17,7 +17,7 @@ package org.eclipse.wst.sse.core.internal.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.Logger;
 
 
@@ -54,7 +54,7 @@ public final class FactoryRegistry {
 
 	}
 
-	public void addFactory(IAdapterFactory factory) {
+	public void addFactory(INodeAdapterFactory factory) {
 		_getFactories().add(factory);
 	}
 
@@ -71,7 +71,7 @@ public final class FactoryRegistry {
 		// is not thread safe.
 		List internalList = _getFactories();
 		for (int i = 0; i < internalList.size(); i++) {
-			IAdapterFactory factory = (IAdapterFactory) internalList.get(i);
+			INodeAdapterFactory factory = (INodeAdapterFactory) internalList.get(i);
 			if (factory.isFactoryForType(type)) {
 				result = true;
 				break;
@@ -100,9 +100,9 @@ public final class FactoryRegistry {
 	 * than one factory that can answer 'true' that the most recently added
 	 * factory is used.
 	 */
-	public IAdapterFactory getFactoryFor(Object type) {
+	public INodeAdapterFactory getFactoryFor(Object type) {
 
-		IAdapterFactory result = null;
+		INodeAdapterFactory result = null;
 		if (factories == null)
 			return null;
 		int listSize = factories.size();
@@ -111,7 +111,7 @@ public final class FactoryRegistry {
 			// isFactoryForType so it gets choosen.
 			// Notice we are going through the list backwards to get the
 			// factory added last.
-			IAdapterFactory a = (IAdapterFactory) factories.get(i);
+			INodeAdapterFactory a = (INodeAdapterFactory) factories.get(i);
 			if (a.isFactoryForType(type)) {
 				result = a;
 				break;
@@ -132,7 +132,7 @@ public final class FactoryRegistry {
 		// themselves from the registry.
 		List localList = getFactories();
 		for (int i = 0; i < localList.size(); i++) {
-			IAdapterFactory a = (IAdapterFactory) localList.get(i);
+			INodeAdapterFactory a = (INodeAdapterFactory) localList.get(i);
 			// To help bullet proof code, we'll catch and log
 			// any messages thrown by factories during release,
 			// but we'll attempt to keep going.
@@ -163,7 +163,7 @@ public final class FactoryRegistry {
 			for (int i = listSize - 1; i >= 0; i--) {
 				// It is the adapter factories responsibility to answer
 				// isFactoryForType so it gets choosen.
-				IAdapterFactory a = (IAdapterFactory) factories.get(i);
+				INodeAdapterFactory a = (INodeAdapterFactory) factories.get(i);
 				if (a.isFactoryForType(type)) {
 					factories.remove(a);
 				}
@@ -171,7 +171,7 @@ public final class FactoryRegistry {
 		}
 	}
 
-	public void removeFactory(IAdapterFactory factory) {
+	public void removeFactory(INodeAdapterFactory factory) {
 		_getFactories().remove(factory);
 
 	}

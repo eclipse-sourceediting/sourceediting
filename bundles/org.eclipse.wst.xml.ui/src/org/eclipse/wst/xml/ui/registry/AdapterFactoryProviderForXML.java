@@ -14,7 +14,7 @@ package org.eclipse.wst.xml.ui.registry;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.views.properties.IPropertySource;
-import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.modelhandler.IDocumentTypeHandler;
@@ -48,7 +48,7 @@ public class AdapterFactoryProviderForXML implements AdapterFactoryProvider {
 	protected void addContentBasedFactories(IStructuredModel structuredModel) {
 		FactoryRegistry factoryRegistry = structuredModel.getFactoryRegistry();
 		Assert.isNotNull(factoryRegistry, "Program Error: client caller must ensure model has factory registry"); //$NON-NLS-1$
-		IAdapterFactory factory = null;
+		INodeAdapterFactory factory = null;
 		// == this list came from the previous "XML only" list
 
 		// what was this still here? (6/4/03)

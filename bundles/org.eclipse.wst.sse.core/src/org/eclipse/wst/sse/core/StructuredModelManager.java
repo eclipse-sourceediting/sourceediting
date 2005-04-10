@@ -21,8 +21,7 @@ import org.osgi.framework.Bundle;
  * 
  * @since 1.0
  */
-
-public class StructuredModelManager {
+final public class StructuredModelManager {
 	/**
 	 * Do not allow instances to be created.
 	 */
@@ -32,10 +31,12 @@ public class StructuredModelManager {
 
 	/**
 	 * Provides access to the instance of IModelManager. Returns null if model
-	 * manager can not be created or is not valid (e.g. when workbench is
+	 * manager can not be created or is not valid (such as, when workbench is
 	 * shutting down).
+	 * 
+	 * @return IModelManager - returns the one model manager for structured
+	 *         model
 	 */
-
 	public static IModelManager getModelManager() {
 		boolean isReady = false;
 		IModelManager modelManager = null;
@@ -45,7 +46,7 @@ public class StructuredModelManager {
 			if (state == Bundle.ACTIVE) {
 				isReady = true;
 				// getInstance is a synchronized static method.
-		 		modelManager = ModelManagerImpl.getInstance();
+				modelManager = ModelManagerImpl.getInstance();
 			}
 			else if (state == Bundle.STARTING) {
 				try {

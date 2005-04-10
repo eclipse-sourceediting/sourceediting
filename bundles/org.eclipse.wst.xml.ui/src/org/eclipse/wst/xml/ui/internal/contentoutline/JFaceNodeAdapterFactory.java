@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.eclipse.wst.sse.core.AbstractAdapterFactory;
-import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
@@ -53,7 +53,7 @@ public class JFaceNodeAdapterFactory extends AbstractAdapterFactory implements I
 		fListeners.add(listener);
 	}
 
-	public IAdapterFactory copy() {
+	public INodeAdapterFactory copy() {
 
 		return new JFaceNodeAdapterFactory(this.adapterKey, this.shouldRegisterAdapter);
 	}

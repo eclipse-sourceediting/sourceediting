@@ -12,7 +12,7 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.wst.css.core.internal.modelhandler.ModelHandlerForCSS;
 import org.eclipse.wst.css.ui.internal.contentoutline.JFaceNodeAdapterFactoryCSS;
 import org.eclipse.wst.css.ui.internal.properties.CSSPropertySourceAdapterFactory;
-import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.modelhandler.IDocumentTypeHandler;
@@ -33,7 +33,7 @@ public class AdapterFactoryProviderCSS implements AdapterFactoryProvider {
 	protected void addContentBasedFactories(IStructuredModel structuredModel) {
 		FactoryRegistry factoryRegistry = structuredModel.getFactoryRegistry();
 		Assert.isNotNull(factoryRegistry, "Program Error: client caller must ensure model has factory registry"); //$NON-NLS-1$
-		IAdapterFactory factory = null;
+		INodeAdapterFactory factory = null;
 
 		factory = factoryRegistry.getFactoryFor(IPropertySource.class);
 		if (factory == null) {

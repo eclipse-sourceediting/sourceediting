@@ -17,7 +17,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.sse.core.AbstractAdapterFactory;
-import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.IModelStateListener;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
@@ -52,7 +52,7 @@ public class ModelQueryAdapterFactoryForJSP extends AbstractAdapterFactory imple
 		super(key, registerAdapters);
 	}
 
-	public IAdapterFactory copy() {
+	public INodeAdapterFactory copy() {
 		return new ModelQueryAdapterFactoryForJSP(this.adapterKey, this.shouldRegisterAdapter);
 	}
 

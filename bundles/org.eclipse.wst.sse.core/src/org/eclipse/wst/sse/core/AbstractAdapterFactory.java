@@ -18,7 +18,7 @@ package org.eclipse.wst.sse.core;
  * itself (this) as the key. Subclasses need to provide a way to create the
  * adapter, and can override or call other methods.
  */
-abstract public class AbstractAdapterFactory implements IAdapterFactory {
+abstract public class AbstractAdapterFactory implements INodeAdapterFactory {
 
 	// ISSUE: make private and use setters/getters
 	protected Object adapterKey;
@@ -75,7 +75,7 @@ abstract public class AbstractAdapterFactory implements IAdapterFactory {
 	 * default, we'll return the same instance, for convenience of those using
 	 * singleton factories.
 	 */
-	public IAdapterFactory copy() {
+	public INodeAdapterFactory copy() {
 		return this;
 	}
 

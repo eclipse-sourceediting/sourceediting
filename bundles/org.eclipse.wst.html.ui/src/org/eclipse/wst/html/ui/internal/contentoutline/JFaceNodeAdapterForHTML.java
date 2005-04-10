@@ -17,7 +17,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.html.core.HTML40Namespace;
 import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImageHelper;
 import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImages;
-import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeAdapter;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -38,7 +38,7 @@ public class JFaceNodeAdapterForHTML extends JFaceNodeAdapter {
 	 * Constructor for JFaceNodeAdapterForHTML.
 	 * @param adapterFactory
 	 */
-	public JFaceNodeAdapterForHTML(IAdapterFactory adapterFactory) {
+	public JFaceNodeAdapterForHTML(INodeAdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 

@@ -30,7 +30,7 @@ import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImages;
 import org.eclipse.wst.html.ui.internal.preferences.HTMLUIPreferenceNames;
 import org.eclipse.wst.html.ui.internal.templates.TemplateContextTypeIdsHTML;
 import org.eclipse.wst.javascript.common.ui.internal.contentassist.JavaScriptContentAssistProcessor;
-import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
@@ -62,7 +62,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor implements IPropertyChangeListener {
-	private IAdapterFactory factoryForCSS = null;
+	private INodeAdapterFactory factoryForCSS = null;
 	protected IPreferenceStore fPreferenceStore = null;
 	protected boolean isXHTML = false;
 	protected IResource fResource = null;

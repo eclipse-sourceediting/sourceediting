@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.html.core.validate.HTMLValidationAdapterFactory;
-import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -185,7 +185,7 @@ public class HTMLValidator implements IValidator {
 		if (!hasHTMLFeature(document))
 			return null; // ignore
 
-		IAdapterFactory factory = HTMLValidationAdapterFactory.getInstance();
+		INodeAdapterFactory factory = HTMLValidationAdapterFactory.getInstance();
 		ValidationAdapter adapter = (ValidationAdapter) factory.adapt(document);
 		if (adapter == null)
 			return null; // error

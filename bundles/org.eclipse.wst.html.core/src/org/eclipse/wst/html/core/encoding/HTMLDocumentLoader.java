@@ -22,7 +22,7 @@ import org.eclipse.wst.html.core.htmlcss.StyleAdapterFactory;
 import org.eclipse.wst.html.core.internal.contenttype.EncodingGuesser;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.html.core.modelquery.ModelQueryAdapterFactoryForHTML;
-import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.document.IEncodedDocument;
@@ -105,7 +105,7 @@ public class HTMLDocumentLoader extends AbstractDocumentLoader {
 	 */
 	public List getAdapterFactories() {
 		List result = new ArrayList();
-		IAdapterFactory factory = null;
+		INodeAdapterFactory factory = null;
 		factory = StyleAdapterFactory.getInstance();
 		result.add(factory);
 		factory = HTMLStyleSelectorAdapterFactory.getInstance();

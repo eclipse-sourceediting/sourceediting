@@ -44,7 +44,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
-import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.IModelLoader;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
@@ -464,7 +464,7 @@ public class ModelManagerImpl implements IModelManager {
 		if (factoryList != null) {
 			Iterator iterator = factoryList.iterator();
 			while (iterator.hasNext()) {
-				IAdapterFactory factory = (IAdapterFactory) iterator.next();
+				INodeAdapterFactory factory = (INodeAdapterFactory) iterator.next();
 				registry.addFactory(factory);
 			}
 		}

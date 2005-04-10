@@ -41,7 +41,7 @@ public class ModelQueryAdapterFactoryForEmbeddedXML extends ModelQueryAdapterFac
 	}
 
 	/**
-	 * @see org.eclipse.wst.sse.core.IAdapterFactory#adapt(INodeNotifier)
+	 * @see org.eclipse.wst.sse.core.INodeAdapterFactory#adapt(INodeNotifier)
 	 */
 	public INodeAdapter adapt(INodeNotifier object) {
 		return adaptNew(object);

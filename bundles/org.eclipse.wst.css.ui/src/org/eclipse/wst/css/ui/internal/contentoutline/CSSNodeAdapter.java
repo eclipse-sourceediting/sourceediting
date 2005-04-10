@@ -25,7 +25,7 @@ import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclaration;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleRule;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleSheet;
-import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
@@ -66,13 +66,13 @@ class CSSNodeAdapter implements INodeAdapter, Runnable {
 		}
 	}
 
-	protected IAdapterFactory adapterFactory;
+	protected INodeAdapterFactory adapterFactory;
 	private Vector notifyQueue;
 	StyleViewUpdater lastUpdater;
 	protected int delayMSecs = 500;
 	final static Class ADAPTER_KEY = IJFaceNodeAdapter.class;
 
-	public CSSNodeAdapter(IAdapterFactory adapterFactory) {
+	public CSSNodeAdapter(INodeAdapterFactory adapterFactory) {
 		super();
 		this.adapterFactory = adapterFactory;
 	}

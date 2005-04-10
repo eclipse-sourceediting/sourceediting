@@ -13,7 +13,7 @@
 package org.eclipse.wst.sse.core.model;
 
 import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 /**
  * Provides a means for clients to register IAdapterFactories for use
  * by infrastructure when StructuredModels are created. 
@@ -25,9 +25,9 @@ public interface IFactoryManagerProposed {
 	 * @param factory
 	 * @param contentType
 	 */
-	void addAdapterFactory(IAdapterFactory factory, IContentType contentType);
+	void addAdapterFactory(INodeAdapterFactory factory, IContentType contentType);
 
-	void removeAdapterFactory(IAdapterFactory factory, IContentType contentType);
+	void removeAdapterFactory(INodeAdapterFactory factory, IContentType contentType);
 
 
 }

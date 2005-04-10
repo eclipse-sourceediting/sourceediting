@@ -12,7 +12,7 @@ package org.eclipse.jst.jsp.core.internal.document;
 
 import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
 import org.eclipse.wst.sse.core.AbstractAdapterFactory;
-import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.ui.contentproperties.ContentSettingsChangeSubject;
@@ -24,7 +24,7 @@ import org.w3c.dom.Node;
  * This class adapts document 
  * with the an instance of PageDirectiveAdapter
  */
-public class PageDirectiveAdapterFactory extends AbstractAdapterFactory implements IAdapterFactory {
+public class PageDirectiveAdapterFactory extends AbstractAdapterFactory implements INodeAdapterFactory {
 
 
 	private PageDirectiveAdapter pageDirectiveAdapterInstance = null;
@@ -94,7 +94,7 @@ public class PageDirectiveAdapterFactory extends AbstractAdapterFactory implemen
 		return pageDirectiveAdapterInstance;
 	}
 
-	public IAdapterFactory copy() {
+	public INodeAdapterFactory copy() {
 
 		return new PageDirectiveAdapterFactory(this.adapterKey, this.shouldRegisterAdapter);
 	}

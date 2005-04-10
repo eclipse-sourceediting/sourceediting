@@ -16,7 +16,7 @@ package org.eclipse.wst.dtd.ui.internal.views.properties;
 
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.wst.sse.core.AbstractAdapterFactory;
-import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 
@@ -31,7 +31,7 @@ public class DTDPropertySourceAdapterFactory extends AbstractAdapterFactory {
 		super(adapterKey, registerAdapters);
 	}
 
-	public IAdapterFactory copy() {
+	public INodeAdapterFactory copy() {
 		return new DTDPropertySourceAdapterFactory(this.adapterKey, this.shouldRegisterAdapter);
 	}
 

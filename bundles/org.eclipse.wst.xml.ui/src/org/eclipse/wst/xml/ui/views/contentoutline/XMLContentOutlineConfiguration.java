@@ -29,7 +29,7 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.wst.common.ui.dnd.ObjectTransfer;
 import org.eclipse.wst.common.ui.dnd.ViewerDragAdapter;
 import org.eclipse.wst.common.ui.dnd.ViewerDropAdapter;
-import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
 import org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration;
@@ -81,7 +81,7 @@ public class XMLContentOutlineConfiguration extends StructuredContentOutlineConf
 	public IContentProvider getContentProvider(TreeViewer viewer) {
 		if (fContentProvider == null) {
 			if (getFactory() != null) {
-				fContentProvider = new JFaceNodeContentProvider((IAdapterFactory) getFactory());
+				fContentProvider = new JFaceNodeContentProvider((INodeAdapterFactory) getFactory());
 			} else {
 				fContentProvider = super.getContentProvider(viewer);
 			}
@@ -95,7 +95,7 @@ public class XMLContentOutlineConfiguration extends StructuredContentOutlineConf
 	public ILabelProvider getLabelProvider(TreeViewer viewer) {
 		if (fLabelProvider == null) {
 			if (getFactory() != null) {
-				fLabelProvider = new JFaceNodeLabelProvider((IAdapterFactory) getFactory());
+				fLabelProvider = new JFaceNodeLabelProvider((INodeAdapterFactory) getFactory());
 			} else {
 				fLabelProvider = super.getLabelProvider(viewer);
 			}

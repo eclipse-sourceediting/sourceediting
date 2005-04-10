@@ -89,7 +89,7 @@ public abstract class AbstractNotifier implements INodeNotifier {
 		if (result == null) {
 			FactoryRegistry reg = getFactoryRegistry();
 			if (reg != null) {
-				IAdapterFactory factory = reg.getFactoryFor(type);
+				INodeAdapterFactory factory = reg.getFactoryFor(type);
 				if (factory != null) {
 					result = factory.adapt(this);
 				}

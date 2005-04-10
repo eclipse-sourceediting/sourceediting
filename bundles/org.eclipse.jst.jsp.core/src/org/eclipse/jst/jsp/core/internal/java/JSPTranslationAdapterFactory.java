@@ -12,7 +12,7 @@ package org.eclipse.jst.jsp.core.internal.java;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.sse.core.AbstractAdapterFactory;
-import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.xml.core.document.IDOMNode;
@@ -39,9 +39,9 @@ public class JSPTranslationAdapterFactory extends AbstractAdapterFactory {
 	}
 
 	/**
-	 * @see com.ibm.sse.model.IAdapterFactory#copy()
+	 * @see com.ibm.sse.model.INodeAdapterFactory#copy()
 	 */
-	public IAdapterFactory copy() {
+	public INodeAdapterFactory copy() {
 		return new JSPTranslationAdapterFactory();
 	}
 

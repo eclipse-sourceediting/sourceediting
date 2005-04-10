@@ -12,9 +12,13 @@
                 <type name="ModelLifecycleEvent" reference="false" implement="false" subclass="false" instantiate="false" />
                 <type name="DocumentChanged" reference="false" implement="false" subclass="false" instantiate="false" />
                 <type name="IModelManager" reference="false" implement="false" subclass="false" instantiate="false" />
+                <type name="IStructuredModel" reference="false" implement="false" subclass="false" instantiate="false" />
+                <type name="IModelLoader" reference="false" implement="false" subclass="false" instantiate="false" />
+                <type name="AbstractNotifier" reference="false" implement="false" subclass="false" instantiate="false" />
         </package>
 
         <package name="org.eclipse.wst.sse.core.document">
+                <type name="IEncodedDocument" reference="false" implement="false" subclass="false" instantiate="false" />
         </package>
         <package name="org.eclipse.wst.sse.core.model">
                 <type name="IModelManagerProposed$AccessType" reference="false" implement="false" subclass="false" instantiate="false" />
@@ -31,10 +35,7 @@
                 <type name="IStructuredTextReParser" reference="false" implement="false" subclass="false" instantiate="false" />
                 <type name="IStructuredTextPartitioner" reference="false" implement="false" subclass="false" instantiate="false" />
                 <type name="IStructuredModel" reference="false" implement="false" subclass="false" instantiate="false" />
-                <type name="IEncodedDocument" reference="false" implement="false" subclass="false" instantiate="false" />
         </package>
-        <!--    nitin-->
-        <package name="org.eclipse.wst.sse.core.filebuffers" />
 
         <package name="org.eclipse.wst.sse.core.preferences" >
                 <type name="PreferenceChangeListener" reference="false" implement="false" subclass="false" instantiate="false" />

@@ -13,7 +13,7 @@ package org.eclipse.wst.html.core.validate;
 
 
 import org.eclipse.wst.sse.core.AbstractAdapterFactory;
-import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.validate.ValidationAdapter;
@@ -66,7 +66,7 @@ public class HTMLValidationAdapterFactory extends AbstractAdapterFactory {
 	 * Overriding Object's clone() method
 	 * This is used in IModelManager's IStructuredModel copying.
 	 */
-	public IAdapterFactory copy() {
+	public INodeAdapterFactory copy() {
 		return getInstance();
 	}
 }
