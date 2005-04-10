@@ -13,8 +13,10 @@
 package org.eclipse.wst.sse.core.document;
 
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension;
 import org.eclipse.jface.text.IDocumentListener;
+import org.eclipse.jface.text.Position;
 import org.eclipse.wst.sse.core.events.NewDocumentEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
@@ -32,7 +34,7 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
  * 
  * @since 1.0
  */
-public interface IStructuredDocumentProposed extends IEncodedDocument, IDocumentExtension, IAdaptable {
+public interface IStructuredDocumentProposed extends IDocument, IDocumentExtension, IAdaptable {
 
 	/**
 	 * The document changing listeners receives the same events as the
@@ -60,14 +62,6 @@ public interface IStructuredDocumentProposed extends IEncodedDocument, IDocument
 	 * @return
 	 */
 	boolean containsReadOnly(int startOffset, int length);
-
-	/**
-	 * This method is to remember info about the encoding When the resource
-	 * was last loaded or saved. Note: it is not kept "current", that is, can
-	 * not be depended on blindly to reflect what encoding to use. For that,
-	 * must go through the normal rules expressed in Loaders and Dumpers.
-	 */
-	EncodingMemento getEncodingMemento();
 
 	/**
 	 * Returns the region contained by offset.
@@ -126,7 +120,7 @@ public interface IStructuredDocumentProposed extends IEncodedDocument, IDocument
 	 * synchronization of data changes and notifications.
 	 */
 	void removeDocumentChangingListener(IDocumentListener listener);
- 
+
 	/**
 	 * One of the APIs to manipulate the IStructuredDocument.
 	 * 
@@ -155,7 +149,75 @@ public interface IStructuredDocumentProposed extends IEncodedDocument, IDocument
 	 * One of the APIs to manipulate the IStructuredDocument in terms of Text.
 	 * 
 	 * The setText method replaces all text in the model.
+	 * 
+	 * @param requester -
+	 *            the object requesting the document be created.
+	 * @param allText -
+	 *            all the text of the document.
+	 * @return NewDocumentEvent - besides causing this event to be sent to
+	 *         document listeners, the event is returned.
 	 */
 	NewDocumentEvent setText(Object requester, String allText);
+
+	/**
+	 * Returns the encoding memento for this document.
+	 * 
+	 * @return the encoding memento for this document.
+	 */
+	EncodingMemento getEncodingMemento();
+
+	/**
+	 * Returns the line delimiter detected when this document was read from
+	 * storage.
+	 * 
+	 * @return line delimiter detected when this document was read from
+	 *         storage.
+	 */
+	String getDetectedLineDelimiter();
+
+	/**
+	 * Sets the encoding memento for this document.
+	 * 
+	 * Is not to be called by clients, only document creation classes.
+	 * 
+	 * @param localEncodingMemento
+	 */
+	void setEncodingMemento(EncodingMemento localEncodingMemento);
+
+	/**
+	 * Sets the detected line delimiter when the document was read. Is not to
+	 * be called by clients, only document creation classes.
+	 * 
+	 * @param probableLineDelimiter
+	 */
+	void setDetectedLineDelimiter(String probableLineDelimiter);
+
+	/**
+	 * This function provides a way for clients to compare a string with a
+	 * region of the documnet, without having to retrieve (create) a string
+	 * from the document, thus more efficient of lots of comparisons being
+	 * done.
+	 * 
+	 * @param ignoreCase -
+	 *            if true the characters are compared based on identity. If
+	 *            false, the string are compared with case accounted for.
+	 * @param testString -
+	 *            the string to compare.
+	 * @param documentOffset -
+	 *            the document in the offset to start the comparison.
+	 * @param length -
+	 *            the length in the document to compare (Note: technically,
+	 *            clients could just provide the string, and we could infer
+	 *            the length from the string supplied, but this leaves every
+	 *            client to correctly not even ask us if the the string length
+	 *            doesn't match the expected length, so this is an effort to
+	 *            maximize performance with correct code.
+	 * @return true if matches, false otherwise.
+	 */
+	boolean stringMatches(boolean ignoreCase, String testString, int documentOffset, int length);
+	
+	Position createPosition(int offset, String category, String type);
+	
+	Position createPosition(int offset, int length, String category, String type);
 
 }

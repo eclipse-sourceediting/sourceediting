@@ -29,8 +29,8 @@ public class NewDocumentContentEvent extends NewDocumentEvent {
 	 * 
 	 * @param document
 	 *            the document being changed
-	 * @param the
-	 *            original requester of the change
+	 * @param originalRequester
+	 *            the original requester of the change
 	 */
 	public NewDocumentContentEvent(IStructuredDocument document, Object originalRequester) {
 		super(document, originalRequester);

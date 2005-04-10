@@ -44,7 +44,8 @@ public interface IStructuredDocumentRegionList {
 	 * Returns the structured document region at index i.
 	 * 
 	 * @param i
-	 * @return
+	 *            index of region to return
+	 * @return the region at specified offset.
 	 */
 	IStructuredDocumentRegion item(int i);
 }

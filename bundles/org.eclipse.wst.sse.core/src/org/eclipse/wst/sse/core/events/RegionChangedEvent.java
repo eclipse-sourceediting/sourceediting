@@ -38,12 +38,19 @@ public class RegionChangedEvent extends StructuredDocumentEvent {
 	 * Creates instance of a RegionChangedEvent.
 	 * 
 	 * @param document
+	 *            the document being changed.
 	 * @param originalRequester
+	 *            the object making the request for the change.
 	 * @param structuredDocumentRegion
+	 *            the containing region
 	 * @param changedRegion
+	 *            the region that has changed.
 	 * @param changes
+	 *            the string representing the change.
 	 * @param offset
+	 *            the offset of the change.
 	 * @param lengthToReplace
+	 *            the length specified to be replaced.
 	 */
 	public RegionChangedEvent(IStructuredDocument document, Object originalRequester, IStructuredDocumentRegion structuredDocumentRegion, ITextRegion changedRegion, String changes, int offset, int lengthToReplace) {
 		super(document, originalRequester, changes, offset, lengthToReplace);

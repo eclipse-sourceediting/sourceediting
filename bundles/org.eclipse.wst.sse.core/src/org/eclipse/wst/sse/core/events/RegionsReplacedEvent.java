@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,14 +32,22 @@ public class RegionsReplacedEvent extends StructuredDocumentEvent {
 	/**
 	 * Creates an instance of the RegionsReplacedEvent.
 	 * 
-	 * @param source
-	 * @param originalSource
-	 * @param flatNode
-	 * @param oldRegions
-	 * @param newRegions
-	 * @param changes
-	 * @param offset
-	 * @param lengthToReplace
+	 * @param document -
+	 *            document being changed.
+	 * @param originalRequester -
+	 *            requester of the change.
+	 * @param structuredDocumentRegion -
+	 *            the region containing the change.
+	 * @param oldRegions -
+	 *            the old Regions being replaced.
+	 * @param newRegions -
+	 *            the new regions being added.
+	 * @param changes -
+	 *            the String representing the change.
+	 * @param offset -
+	 *            the offset of the change.
+	 * @param lengthToReplace -
+	 *            the length of text to replace.
 	 */
 	public RegionsReplacedEvent(IStructuredDocument document, Object originalRequester, IStructuredDocumentRegion structuredDocumentRegion, ITextRegionList oldRegions, ITextRegionList newRegions, String changes, int offset, int lengthToReplace) {
 		super(document, originalRequester, changes, offset, lengthToReplace);

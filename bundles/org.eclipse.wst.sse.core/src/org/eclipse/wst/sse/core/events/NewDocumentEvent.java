@@ -26,6 +26,8 @@ public class NewDocumentEvent extends StructuredDocumentEvent {
 
 
 	/**
+	 * Creates a new instance of the NewDocumentEvent.
+	 * 
 	 * @param document
 	 *            being changed
 	 * @param originalRequester
@@ -36,23 +38,28 @@ public class NewDocumentEvent extends StructuredDocumentEvent {
 	}
 
 	/**
-	 * This doesn't mean quite the same thing as the IStructuredDocument
-	 * Events in the super class.
+	 * This returns the length of the new document.
+	 * 
+	 * @return int returns the length of the new document.
 	 */
 	public int getLength() {
-		return fLength;
+		return getStructuredDocument().getLength();
 	}
 
 	/**
 	 * This doesn't mean quite the same thing as the IStructuredDocument
 	 * Events in the super class. It always will return zero.
+	 * 
+	 * @return int for a newDocument, the offset of is always 0
 	 */
 	public int getOffset() {
 		return 0;
 	}
 
 	/**
-	 * for a new document, the text involved is the complete text.
+	 * For a new document, the text involved is the complete text.
+	 * 
+	 * @return String the text that is the complete text of the documnet.
 	 */
 	public String getText() {
 		String results = getStructuredDocument().getText();

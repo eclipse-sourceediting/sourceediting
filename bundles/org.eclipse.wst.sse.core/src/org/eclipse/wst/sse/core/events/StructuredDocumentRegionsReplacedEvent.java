@@ -32,13 +32,20 @@ public class StructuredDocumentRegionsReplacedEvent extends StructuredDocumentEv
 	/**
 	 * Creates an instance of StructuredDocumentRegionsReplacedEvent
 	 * 
-	 * @param source
-	 * @param originalSource
-	 * @param oldStructuredDocumentRegions
-	 * @param newStructuredDocumentRegions
-	 * @param changes
-	 * @param offset
-	 * @param lengthToReplace
+	 * @param document -
+	 *            the document being changed.
+	 * @param originalRequester -
+	 *            the requester of the change.
+	 * @param oldStructuredDocumentRegions -
+	 *            the old document regions removed.
+	 * @param newStructuredDocumentRegions -
+	 *            the new document regions added.
+	 * @param changes -
+	 *            a string representing the text change.
+	 * @param offset -
+	 *            the offset of the change.
+	 * @param lengthToReplace -
+	 *            the length of text requested to be replaced.
 	 */
 	public StructuredDocumentRegionsReplacedEvent(IStructuredDocument document, Object originalRequester, IStructuredDocumentRegionList oldStructuredDocumentRegions, IStructuredDocumentRegionList newStructuredDocumentRegions, String changes, int offset, int lengthToReplace) {
 		super(document, originalRequester, changes, offset, lengthToReplace);
