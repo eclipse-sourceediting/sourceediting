@@ -1272,15 +1272,16 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 					offset = moreOffset;
 				}
 				else {
-					// should never happen
-					throw new Error();
+					// can happen if myLength is 0.
+					// no adjustment possible.
+					result = new String();
 				}
 			}
 
 		}
-		// if ((0 > offset) || (0 > length) || (offset + length > myLength))
-		// throw new BadLocationException();
-		result = getStore().get(offset, length);
+		if (result == null) {
+			result = getStore().get(offset, length);
+		}
 		return result;
 	}
 

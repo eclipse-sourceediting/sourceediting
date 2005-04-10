@@ -123,7 +123,7 @@ public class XMLModelImpl extends AbstractStructuredModel implements IStructured
 	 * calling aboutToChangeModel first.
 	 * 
 	 * In the case of embedded calls, the notification is just sent once.
-	 *  
+	 * 
 	 */
 	public void changedModel() {
 		// NOTE: the order of 'changedModel' and 'endChanging' is significant.
@@ -374,7 +374,8 @@ public class XMLModelImpl extends AbstractStructuredModel implements IStructured
 				parent = child;
 				child = (IDOMNode) parent.getFirstChild();
 			}
-		} else {
+		}
+		else {
 			// search from the last
 			IDOMNode child = (IDOMNode) this.document.getLastChild();
 			while (child != null) {
@@ -452,9 +453,11 @@ public class XMLModelImpl extends AbstractStructuredModel implements IStructured
 		this.document.removeChildNodes();
 		try {
 			parser.replaceStructuredDocumentRegions(getStructuredDocument().getRegionList(), null);
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			Logger.logException(ex);
-		} finally {
+		}
+		finally {
 			setActive(null);
 			if (!isChanging)
 				notifier.endChanging();
@@ -550,25 +553,28 @@ public class XMLModelImpl extends AbstractStructuredModel implements IStructured
 		if (structuredDocument != getStructuredDocument())
 			setStructuredDocument(structuredDocument);
 		IStructuredDocumentRegionList flatNodes = structuredDocument.getRegionList();
-		if (flatNodes == null)
+		if ((flatNodes == null) || (flatNodes.getLength() == 0)) {
 			return;
+		}
 		if (this.document == null)
 			return; // being constructed
 		XMLModelUpdater updater = getActiveUpdater();
 		if (updater != null) { // being updated
 			try {
 				updater.replaceStructuredDocumentRegions(flatNodes, null);
-			} catch (Exception ex) {
+			}
+			catch (Exception ex) {
 				Logger.logException(ex);
 				this.refresh = true;
 				handleRefresh();
-			} finally {
+			}
+			finally {
 				setActive(null);
 			}
-			//			// for new model, we might need to
-			//			// re-init, e.g. if someone calls setText
-			//			// on an existing model
-			//          checkForReinit();
+			// // for new model, we might need to
+			// // re-init, e.g. if someone calls setText
+			// // on an existing model
+			// checkForReinit();
 			return;
 		}
 		XMLModelNotifier notifier = getModelNotifier();
@@ -580,10 +586,12 @@ public class XMLModelImpl extends AbstractStructuredModel implements IStructured
 		this.document.removeChildNodes();
 		try {
 			parser.replaceStructuredDocumentRegions(flatNodes, null);
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			Logger.logException(ex);
 			// meaningless to refresh, because the result might be the same
-		} finally {
+		}
+		finally {
 			setActive(null);
 			if (!isChanging) {
 				getModelNotifier().endChanging();
@@ -591,7 +599,7 @@ public class XMLModelImpl extends AbstractStructuredModel implements IStructured
 			// ignore refresh
 			this.refresh = false;
 		}
-		//			checkForReinit();
+		// checkForReinit();
 	}
 
 	/**
@@ -602,15 +610,17 @@ public class XMLModelImpl extends AbstractStructuredModel implements IStructured
 			// cleanup updater staffs
 			try {
 				updater.replaceStructuredDocumentRegions(null, null);
-			} catch (Exception ex) {
+			}
+			catch (Exception ex) {
 				Logger.logException(ex);
 				this.refresh = true;
 				handleRefresh();
-			} finally {
+			}
+			finally {
 				setActive(null);
 			}
 			// I guess no chanage means the model could not need re-init
-			//checkForReinit();
+			// checkForReinit();
 			return;
 		}
 	}
@@ -630,18 +640,21 @@ public class XMLModelImpl extends AbstractStructuredModel implements IStructured
 		if (updater != null) { // being updated
 			try {
 				updater.replaceStructuredDocumentRegions(newStructuredDocumentRegions, oldStructuredDocumentRegions);
-			} catch (Exception ex) {
+			}
+			catch (Exception ex) {
 				if (ex.getClass().equals(StructuredDocumentRegionManagementException.class)) {
 					Logger.traceException(TRACE_PARSER_MANAGEMENT_EXCEPTION, ex);
-				} else {
+				}
+				else {
 					Logger.logException(ex);
 				}
 				this.refresh = true;
 				handleRefresh();
-			} finally {
+			}
+			finally {
 				setActive(null);
 			}
-			//checkForReinit();
+			// checkForReinit();
 			return;
 		}
 		XMLModelNotifier notifier = getModelNotifier();
@@ -652,11 +665,13 @@ public class XMLModelImpl extends AbstractStructuredModel implements IStructured
 		setActive(parser);
 		try {
 			parser.replaceStructuredDocumentRegions(newStructuredDocumentRegions, oldStructuredDocumentRegions);
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			Logger.logException(ex);
 			this.refresh = true;
 			handleRefresh();
-		} finally {
+		}
+		finally {
 			setActive(null);
 			if (!isChanging) {
 				notifier.endChanging();
@@ -685,14 +700,16 @@ public class XMLModelImpl extends AbstractStructuredModel implements IStructured
 		if (updater != null) { // being updated
 			try {
 				updater.changeRegion(flatNode, region);
-			} catch (Exception ex) {
+			}
+			catch (Exception ex) {
 				Logger.logException(ex);
 				this.refresh = true;
 				handleRefresh();
-			} finally {
+			}
+			finally {
 				setActive(null);
 			}
-			//			checkForReinit();
+			// checkForReinit();
 			return;
 		}
 		XMLModelNotifier notifier = getModelNotifier();
@@ -703,18 +720,20 @@ public class XMLModelImpl extends AbstractStructuredModel implements IStructured
 		setActive(parser);
 		try {
 			parser.changeRegion(flatNode, region);
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			Logger.logException(ex);
 			this.refresh = true;
 			handleRefresh();
-		} finally {
+		}
+		finally {
 			setActive(null);
 			if (!isChanging) {
 				notifier.endChanging();
 				handleRefresh();
 			}
 		}
-		//			checkForReinit();
+		// checkForReinit();
 	}
 
 	/**
@@ -737,14 +756,16 @@ public class XMLModelImpl extends AbstractStructuredModel implements IStructured
 		if (updater != null) { // being updated
 			try {
 				updater.replaceRegions(flatNode, newRegions, oldRegions);
-			} catch (Exception ex) {
+			}
+			catch (Exception ex) {
 				Logger.logException(ex);
 				this.refresh = true;
 				handleRefresh();
-			} finally {
+			}
+			finally {
 				setActive(null);
 			}
-			//			checkForReinit();
+			// checkForReinit();
 			return;
 		}
 		XMLModelNotifier notifier = getModelNotifier();
@@ -755,25 +776,27 @@ public class XMLModelImpl extends AbstractStructuredModel implements IStructured
 		setActive(parser);
 		try {
 			parser.replaceRegions(flatNode, newRegions, oldRegions);
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			Logger.logException(ex);
 			this.refresh = true;
 			handleRefresh();
-		} finally {
+		}
+		finally {
 			setActive(null);
 			if (!isChanging) {
 				notifier.endChanging();
 				handleRefresh();
 			}
 		}
-		//			checkForReinit();
+		// checkForReinit();
 	}
 
 	/**
 	 */
 	public void releaseFromEdit() {
 		if (!isShared()) {
-			//this.document.releaseStyleSheets();
+			// this.document.releaseStyleSheets();
 			this.document.releaseDocumentType();
 		}
 		super.releaseFromEdit();
@@ -783,7 +806,7 @@ public class XMLModelImpl extends AbstractStructuredModel implements IStructured
 	 */
 	public void releaseFromRead() {
 		if (!isShared()) {
-			//this.document.releaseStyleSheets();
+			// this.document.releaseStyleSheets();
 			this.document.releaseDocumentType();
 		}
 		super.releaseFromRead();
@@ -798,7 +821,8 @@ public class XMLModelImpl extends AbstractStructuredModel implements IStructured
 		// (and not used)
 		if (active == null) {
 			document.activateTagNameCache(true);
-		} else {
+		}
+		else {
 			document.activateTagNameCache(false);
 		}
 
