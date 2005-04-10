@@ -11,9 +11,9 @@ package org.eclipse.wst.css.core.tests.model;
 import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.wst.css.core.document.ICSSModel;
-import org.eclipse.wst.css.core.document.ICSSStyleSheet;
 import org.eclipse.wst.css.core.internal.CSSCorePlugin;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleSheet;
 import org.eclipse.wst.css.core.preferences.CSSModelPreferenceNames;
 import org.eclipse.wst.css.core.tests.util.FileUtil;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;

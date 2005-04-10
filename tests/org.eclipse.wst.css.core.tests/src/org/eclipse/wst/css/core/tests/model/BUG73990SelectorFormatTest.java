@@ -2,8 +2,8 @@ package org.eclipse.wst.css.core.tests.model;
 
 import java.io.IOException;
 
-import org.eclipse.wst.css.core.document.ICSSModel;
-import org.eclipse.wst.css.core.format.FormatProcessorCSS;
+import org.eclipse.wst.css.core.internal.format.FormatProcessorCSS;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.css.core.tests.util.FileUtil;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 

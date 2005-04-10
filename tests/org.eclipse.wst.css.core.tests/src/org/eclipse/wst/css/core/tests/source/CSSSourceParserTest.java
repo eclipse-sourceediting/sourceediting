@@ -15,7 +15,7 @@ import java.util.Iterator;
 
 import junit.framework.TestCase;
 
-import org.eclipse.wst.css.core.document.ICSSModel;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.css.core.tests.util.FileUtil;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;

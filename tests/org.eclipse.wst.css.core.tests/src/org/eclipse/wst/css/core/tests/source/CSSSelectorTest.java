@@ -10,12 +10,12 @@ package org.eclipse.wst.css.core.tests.source;
 
 import junit.framework.TestCase;
 
-import org.eclipse.wst.css.core.document.ICSSSelector;
-import org.eclipse.wst.css.core.document.ICSSSelectorCombinator;
-import org.eclipse.wst.css.core.document.ICSSSelectorItem;
-import org.eclipse.wst.css.core.document.ICSSSelectorList;
-import org.eclipse.wst.css.core.document.ICSSSimpleSelector;
 import org.eclipse.wst.css.core.internal.document.CSSSelectorListImpl;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSSelector;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSSelectorCombinator;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSSelectorItem;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSSelectorList;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSSimpleSelector;
 
 
 public class CSSSelectorTest extends TestCase {

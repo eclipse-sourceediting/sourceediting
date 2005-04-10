@@ -14,11 +14,11 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.eclipse.wst.css.core.document.ICSSModel;
 import org.eclipse.wst.css.core.internal.parser.CSSSourceParser;
-import org.eclipse.wst.css.core.parser.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
+import org.eclipse.wst.css.core.internal.util.CSSUtil;
 import org.eclipse.wst.css.core.tests.util.FileUtil;
-import org.eclipse.wst.css.core.util.CSSUtil;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;

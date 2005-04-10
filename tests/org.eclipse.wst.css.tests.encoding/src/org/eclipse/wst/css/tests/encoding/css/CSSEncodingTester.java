@@ -23,7 +23,7 @@ import java.nio.charset.CodingErrorAction;
 
 import junit.framework.TestCase;
 
-import org.eclipse.wst.css.core.internal.content.CSSResourceEncodingDetector;
+import org.eclipse.wst.css.core.internal.contenttype.CSSResourceEncodingDetector;
 import org.eclipse.wst.css.tests.encoding.CSSEncodingTestsPlugin;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;

@@ -8,9 +8,9 @@
  ****************************************************************************/
 package org.eclipse.wst.css.core.tests.model;
 
-import org.eclipse.wst.css.core.document.ICSSDocument;
-import org.eclipse.wst.css.core.document.ICSSMediaRule;
-import org.eclipse.wst.css.core.document.ICSSStyleSheet;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSDocument;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSMediaRule;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleSheet;
 import org.eclipse.wst.css.core.tests.util.FileUtil;
 import org.w3c.dom.css.CSSMediaRule;
 import org.w3c.dom.css.CSSRule;

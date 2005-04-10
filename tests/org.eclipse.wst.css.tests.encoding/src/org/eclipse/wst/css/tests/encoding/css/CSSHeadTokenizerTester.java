@@ -15,9 +15,9 @@ import java.io.Reader;
 
 import junit.framework.TestCase;
 
-import org.eclipse.wst.css.core.internal.content.CSSHeadTokenizer;
-import org.eclipse.wst.css.core.internal.content.CSSHeadTokenizerConstants;
-import org.eclipse.wst.css.core.internal.content.HeadParserToken;
+import org.eclipse.wst.css.core.internal.contenttype.CSSHeadTokenizer;
+import org.eclipse.wst.css.core.internal.contenttype.CSSHeadTokenizerConstants;
+import org.eclipse.wst.css.core.internal.contenttype.HeadParserToken;
 import org.eclipse.wst.css.tests.encoding.CSSEncodingTestsPlugin;
 
 public class CSSHeadTokenizerTester extends TestCase {

@@ -21,7 +21,7 @@ import java.io.Writer;
 import java.net.URL;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.css.core.document.ICSSModel;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;

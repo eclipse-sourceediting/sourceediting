@@ -15,8 +15,8 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.eclipse.wst.css.core.parser.CSSTextParser;
-import org.eclipse.wst.css.core.parser.CSSTextToken;
+import org.eclipse.wst.css.core.internal.parserz.CSSTextParser;
+import org.eclipse.wst.css.core.internal.parserz.CSSTextToken;
 import org.eclipse.wst.css.core.tests.util.FileUtil;
 
 

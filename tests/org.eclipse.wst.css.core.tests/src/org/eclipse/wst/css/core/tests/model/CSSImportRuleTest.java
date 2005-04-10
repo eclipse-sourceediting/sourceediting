@@ -8,9 +8,9 @@
  ****************************************************************************/
 package org.eclipse.wst.css.core.tests.model;
 
-import org.eclipse.wst.css.core.document.ICSSDocument;
-import org.eclipse.wst.css.core.document.ICSSImportRule;
-import org.eclipse.wst.css.core.document.ICSSStyleSheet;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSDocument;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSImportRule;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleSheet;
 import org.w3c.dom.css.CSSImportRule;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSRuleList;
