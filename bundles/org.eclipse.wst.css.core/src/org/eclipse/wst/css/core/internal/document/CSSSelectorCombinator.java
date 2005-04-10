@@ -12,7 +12,7 @@ package org.eclipse.wst.css.core.internal.document;
 
 
 
-import org.eclipse.wst.css.core.document.ICSSSelectorCombinator;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSSelectorCombinator;
 
 /**
  * 

@@ -13,8 +13,8 @@ package org.eclipse.wst.css.core.internal.formatter;
 
 
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.wst.css.core.document.ICSSAttr;
-import org.eclipse.wst.css.core.document.ICSSNode;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSAttr;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 
 
 public interface CSSSourceGenerator extends CSSSourceFormatter {

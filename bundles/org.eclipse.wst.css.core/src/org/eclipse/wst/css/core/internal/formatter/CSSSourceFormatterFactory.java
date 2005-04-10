@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.css.core.internal.formatter;
 
-import org.eclipse.wst.css.core.document.ICSSNode;
-import org.eclipse.wst.css.core.document.ICSSPrimitiveValue;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSPrimitiveValue;
 import org.eclipse.wst.sse.core.INodeNotifier;
 
 

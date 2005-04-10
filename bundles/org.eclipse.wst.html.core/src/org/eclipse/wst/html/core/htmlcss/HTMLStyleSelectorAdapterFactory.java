@@ -12,7 +12,7 @@ package org.eclipse.wst.html.core.htmlcss;
 
 
 
-import org.eclipse.wst.css.core.adapters.IStyleSelectorAdapter;
+import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSelectorAdapter;
 import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;

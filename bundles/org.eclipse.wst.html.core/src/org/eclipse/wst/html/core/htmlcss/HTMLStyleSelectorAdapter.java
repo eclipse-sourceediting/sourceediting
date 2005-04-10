@@ -14,8 +14,8 @@ package org.eclipse.wst.html.core.htmlcss;
 
 import java.util.StringTokenizer;
 
-import org.eclipse.wst.css.core.adapters.IStyleSelectorAdapter;
-import org.eclipse.wst.css.core.document.ICSSSimpleSelector;
+import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSelectorAdapter;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSSimpleSelector;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.w3c.dom.Element;
 

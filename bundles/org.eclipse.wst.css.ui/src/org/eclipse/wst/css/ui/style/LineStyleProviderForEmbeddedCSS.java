@@ -15,8 +15,8 @@ import java.util.List;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.swt.custom.StyleRange;
-import org.eclipse.wst.css.core.parser.CSSTextParser;
-import org.eclipse.wst.css.core.parser.CSSTextToken;
+import org.eclipse.wst.css.core.internal.parserz.CSSTextParser;
+import org.eclipse.wst.css.core.internal.parserz.CSSTextToken;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 

@@ -13,7 +13,7 @@ package org.eclipse.wst.css.core.internal.document;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.wst.css.core.document.ICSSSimpleSelector;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSSimpleSelector;
 
 
 /**

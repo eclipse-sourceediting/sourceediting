@@ -12,13 +12,13 @@ package org.eclipse.wst.html.core.htmlcss;
 
 
 
-import org.eclipse.wst.css.core.document.ICSSNode;
-import org.eclipse.wst.css.core.document.ICSSSelector;
-import org.eclipse.wst.css.core.document.ICSSSelectorList;
-import org.eclipse.wst.css.core.document.ICSSStyleDeclaration;
-import org.eclipse.wst.css.core.document.ICSSStyleRule;
-import org.eclipse.wst.css.core.util.AbstractCssTraverser;
-import org.eclipse.wst.css.core.util.CSSStyleDeclarationFactory;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSSelector;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSSelectorList;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclaration;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleRule;
+import org.eclipse.wst.css.core.internal.util.AbstractCssTraverser;
+import org.eclipse.wst.css.core.internal.util.CSSStyleDeclarationFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.css.ElementCSSInlineStyle;
 

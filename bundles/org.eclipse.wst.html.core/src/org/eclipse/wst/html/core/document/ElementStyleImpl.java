@@ -16,8 +16,8 @@
  */
 package org.eclipse.wst.html.core.document;
 
-import org.eclipse.wst.css.core.adapters.IStyleDeclarationAdapter;
-import org.eclipse.wst.css.core.adapters.IStyleSheetAdapter;
+import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleDeclarationAdapter;
+import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSheetAdapter;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.xml.core.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.document.ElementImpl;

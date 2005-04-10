@@ -14,12 +14,12 @@ package org.eclipse.wst.html.core.htmlcss;
 
 import java.util.Enumeration;
 
-import org.eclipse.wst.css.core.document.ICSSStyleDeclItem;
-import org.eclipse.wst.css.core.document.ICSSStyleDeclaration;
-import org.eclipse.wst.css.core.document.ICSSValue;
 import org.eclipse.wst.css.core.internal.contentmodel.PropCMProperty;
-import org.eclipse.wst.css.core.util.CSSLinkConverter;
-import org.eclipse.wst.css.core.util.declaration.CSSPropertyContext;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclaration;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSValue;
+import org.eclipse.wst.css.core.internal.util.CSSLinkConverter;
+import org.eclipse.wst.css.core.internal.util.declaration.CSSPropertyContext;
 
 /**
  */

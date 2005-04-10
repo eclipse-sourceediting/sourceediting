@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.htmlcss;
 
-import org.eclipse.wst.css.core.util.declaration.ValueData;
+import org.eclipse.wst.css.core.internal.util.declaration.ValueData;
 
 
 

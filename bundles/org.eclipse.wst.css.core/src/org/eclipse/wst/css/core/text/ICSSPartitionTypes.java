@@ -3,9 +3,9 @@ package org.eclipse.wst.css.core.text;
 import org.eclipse.wst.sse.core.text.IStructuredPartitionTypes;
 
 /**
- * This interface is not intended to be implemented.
- * It defines the partitioning for CSS and all its partitions.
- * Clients should reference the partition type Strings defined here directly.
+ * This interface is not intended to be implemented. It defines the
+ * partitioning for CSS and all its partitions. Clients should reference the
+ * partition type Strings defined here directly.
  * 
  * @since 1.0
  */

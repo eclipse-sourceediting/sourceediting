@@ -12,9 +12,9 @@ package org.eclipse.wst.css.core.internal.document;
 
 
 
-import org.eclipse.wst.css.core.document.ICSSDocument;
-import org.eclipse.wst.css.core.document.ICSSNode;
-import org.eclipse.wst.css.core.document.ICSSStyleDeclaration;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSDocument;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclaration;
 
 public abstract class CSSStyleDeclarationFactoryContext {
 

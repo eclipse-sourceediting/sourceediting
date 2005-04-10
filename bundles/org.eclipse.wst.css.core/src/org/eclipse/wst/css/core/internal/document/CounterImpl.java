@@ -12,8 +12,8 @@ package org.eclipse.wst.css.core.internal.document;
 
 
 
-import org.eclipse.wst.css.core.document.ICSSNode;
-import org.eclipse.wst.css.core.document.ICounter;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
+import org.eclipse.wst.css.core.internal.provisional.document.ICounter;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.css.Counter;
 

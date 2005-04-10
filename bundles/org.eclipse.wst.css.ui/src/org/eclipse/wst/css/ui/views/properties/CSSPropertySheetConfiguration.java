@@ -18,7 +18,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.wst.css.core.document.ICSSNode;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.sse.ui.views.properties.StructuredPropertySheetConfiguration;
 
 public class CSSPropertySheetConfiguration extends StructuredPropertySheetConfiguration {

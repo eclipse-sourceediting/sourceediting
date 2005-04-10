@@ -12,13 +12,13 @@ package org.eclipse.wst.css.core.internal.document;
 
 import java.util.Iterator;
 
-import org.eclipse.wst.css.core.document.ICSSDocument;
-import org.eclipse.wst.css.core.document.ICSSPrimitiveValue;
-import org.eclipse.wst.css.core.document.ICSSStyleDeclItem;
-import org.eclipse.wst.css.core.document.ICounter;
 import org.eclipse.wst.css.core.internal.contentmodel.PropCMProperty;
-import org.eclipse.wst.css.core.parser.CSSRegionContexts;
-import org.eclipse.wst.css.core.util.CSSUtil;
+import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSDocument;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSPrimitiveValue;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
+import org.eclipse.wst.css.core.internal.provisional.document.ICounter;
+import org.eclipse.wst.css.core.internal.util.CSSUtil;
 import org.eclipse.wst.sse.core.internal.text.TextRegionListImpl;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;

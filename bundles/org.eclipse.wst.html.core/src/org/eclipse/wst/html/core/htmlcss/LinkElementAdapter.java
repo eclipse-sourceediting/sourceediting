@@ -14,10 +14,10 @@ import java.io.UnsupportedEncodingException;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.wst.css.core.adapters.IModelProvideAdapter;
-import org.eclipse.wst.css.core.adapters.IStyleSheetListAdapter;
 import org.eclipse.wst.css.core.contenttype.ContentTypeIdForCSS;
-import org.eclipse.wst.css.core.document.ICSSModel;
+import org.eclipse.wst.css.core.internal.provisional.adapters.IModelProvideAdapter;
+import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSheetListAdapter;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.util.URIResolver;

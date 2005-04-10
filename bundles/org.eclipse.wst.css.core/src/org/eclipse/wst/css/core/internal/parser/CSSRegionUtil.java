@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.css.core.internal.parser;
 
-import org.eclipse.wst.css.core.parser.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
 
 
 public class CSSRegionUtil {

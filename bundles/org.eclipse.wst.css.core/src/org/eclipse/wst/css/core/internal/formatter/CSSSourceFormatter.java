@@ -13,7 +13,7 @@ package org.eclipse.wst.css.core.internal.formatter;
 
 
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.wst.css.core.document.ICSSNode;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 
 
 /**

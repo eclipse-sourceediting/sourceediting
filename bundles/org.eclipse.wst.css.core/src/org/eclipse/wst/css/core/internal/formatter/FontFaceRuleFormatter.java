@@ -13,8 +13,8 @@ package org.eclipse.wst.css.core.internal.formatter;
 
 
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.wst.css.core.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
@@ -38,7 +38,7 @@ public class FontFaceRuleFormatter extends DeclContainerFormatter {
 	/**
 	 * 
 	 */
-	protected void formatPre(org.eclipse.wst.css.core.document.ICSSNode node, StringBuffer source) {
+	protected void formatPre(org.eclipse.wst.css.core.internal.provisional.document.ICSSNode node, StringBuffer source) {
 		CSSCleanupStrategy stgy = getCleanupStrategy(node);
 
 		int start = ((IndexedRegion) node).getStartOffset();

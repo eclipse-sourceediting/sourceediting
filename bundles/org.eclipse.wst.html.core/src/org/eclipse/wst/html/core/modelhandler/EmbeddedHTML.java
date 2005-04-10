@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.wst.css.core.adapters.IStyleSelectorAdapter;
+import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSelectorAdapter;
 import org.eclipse.wst.html.core.document.HTMLDocumentTypeAdapterFactory;
 import org.eclipse.wst.html.core.document.HTMLModelParserAdapterFactory;
 import org.eclipse.wst.html.core.htmlcss.HTMLStyleSelectorAdapterFactory;

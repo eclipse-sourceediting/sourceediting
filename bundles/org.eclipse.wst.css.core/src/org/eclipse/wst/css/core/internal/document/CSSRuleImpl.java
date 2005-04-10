@@ -12,7 +12,7 @@ package org.eclipse.wst.css.core.internal.document;
 
 
 
-import org.eclipse.wst.css.core.document.ICSSNode;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.css.CSSStyleSheet;
 

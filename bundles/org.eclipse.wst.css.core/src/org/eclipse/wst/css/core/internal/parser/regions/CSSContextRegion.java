@@ -12,6 +12,8 @@ package org.eclipse.wst.css.core.internal.parser.regions;
 
 import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
 
+// ISSUE: this apprears not required to be subclassed and could be removed.
+
 public class CSSContextRegion extends ContextRegion {
 	public CSSContextRegion(String context, int start, int textLength, int length) {
 		fType = context;

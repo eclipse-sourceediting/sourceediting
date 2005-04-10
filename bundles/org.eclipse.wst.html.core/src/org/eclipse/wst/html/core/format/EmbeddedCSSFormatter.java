@@ -12,10 +12,10 @@ package org.eclipse.wst.html.core.format;
 
 
 
-import org.eclipse.wst.css.core.adapters.IStyleSheetAdapter;
-import org.eclipse.wst.css.core.document.ICSSModel;
-import org.eclipse.wst.css.core.document.ICSSNode;
-import org.eclipse.wst.css.core.format.CSSSourceFormatter;
+import org.eclipse.wst.css.core.internal.format.CSSSourceFormatter;
+import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSheetAdapter;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.html.core.HTMLFormatContraints;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;

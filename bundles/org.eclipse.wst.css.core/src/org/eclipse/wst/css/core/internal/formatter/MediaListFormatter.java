@@ -13,12 +13,12 @@ package org.eclipse.wst.css.core.internal.formatter;
 
 
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.wst.css.core.document.ICSSAttr;
-import org.eclipse.wst.css.core.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
-import org.eclipse.wst.css.core.parser.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSAttr;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
+import org.eclipse.wst.css.core.internal.util.RegionIterator;
 import org.eclipse.wst.css.core.preferences.CSSPreferenceHelper;
-import org.eclipse.wst.css.core.util.RegionIterator;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;

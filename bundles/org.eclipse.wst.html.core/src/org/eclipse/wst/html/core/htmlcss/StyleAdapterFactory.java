@@ -12,9 +12,9 @@ package org.eclipse.wst.html.core.htmlcss;
 
 
 
-import org.eclipse.wst.css.core.adapters.IStyleDeclarationAdapter;
-import org.eclipse.wst.css.core.adapters.IStyleSheetAdapter;
-import org.eclipse.wst.css.core.adapters.IStyleSheetListAdapter;
+import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleDeclarationAdapter;
+import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSheetAdapter;
+import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSheetListAdapter;
 import org.eclipse.wst.html.core.HTML40Namespace;
 import org.eclipse.wst.sse.core.IAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;

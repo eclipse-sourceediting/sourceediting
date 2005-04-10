@@ -16,11 +16,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.wst.css.core.document.ICSSSelector;
-import org.eclipse.wst.css.core.document.ICSSSelectorList;
-import org.eclipse.wst.css.core.parser.CSSRegionContexts;
-import org.eclipse.wst.css.core.parser.CSSTextParser;
-import org.eclipse.wst.css.core.parser.CSSTextToken;
+import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.parserz.CSSTextParser;
+import org.eclipse.wst.css.core.internal.parserz.CSSTextToken;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSSelector;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSSelectorList;
 import org.w3c.dom.Element;
 
 

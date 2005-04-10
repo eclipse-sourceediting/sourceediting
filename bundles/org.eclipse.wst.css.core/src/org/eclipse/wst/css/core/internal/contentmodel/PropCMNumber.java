@@ -19,7 +19,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.Vector;
 
-import org.eclipse.wst.css.core.document.ICSSPrimitiveValue;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSPrimitiveValue;
 import org.w3c.dom.css.CSSPrimitiveValue;
 
 

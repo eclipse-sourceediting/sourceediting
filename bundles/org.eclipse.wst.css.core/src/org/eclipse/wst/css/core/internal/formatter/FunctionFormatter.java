@@ -13,9 +13,9 @@ package org.eclipse.wst.css.core.internal.formatter;
 
 
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.wst.css.core.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
-import org.eclipse.wst.css.core.parser.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
@@ -87,7 +87,7 @@ abstract public class FunctionFormatter extends AbstractCSSSourceFormatter {
 	/**
 	 * 
 	 */
-	protected void formatPost(org.eclipse.wst.css.core.document.ICSSNode node, java.lang.StringBuffer source) {
+	protected void formatPost(org.eclipse.wst.css.core.internal.provisional.document.ICSSNode node, java.lang.StringBuffer source) {
 		CSSCleanupStrategy stgy = getCleanupStrategy(node);
 
 		int end = ((IndexedRegion) node).getEndOffset();

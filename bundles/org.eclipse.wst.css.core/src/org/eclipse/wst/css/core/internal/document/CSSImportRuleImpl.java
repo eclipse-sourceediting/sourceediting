@@ -12,15 +12,15 @@ package org.eclipse.wst.css.core.internal.document;
 
 
 
-import org.eclipse.wst.css.core.adapters.IModelProvideAdapter;
-import org.eclipse.wst.css.core.document.ICSSImportRule;
-import org.eclipse.wst.css.core.document.ICSSModel;
-import org.eclipse.wst.css.core.document.ICSSNode;
-import org.eclipse.wst.css.core.document.ICSSStyleSheet;
 import org.eclipse.wst.css.core.internal.Logger;
-import org.eclipse.wst.css.core.util.CSSLinkConverter;
-import org.eclipse.wst.css.core.util.CSSUtil;
-import org.eclipse.wst.css.core.util.URLModelProviderCSS;
+import org.eclipse.wst.css.core.internal.provisional.adapters.IModelProvideAdapter;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSImportRule;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleSheet;
+import org.eclipse.wst.css.core.internal.util.CSSLinkConverter;
+import org.eclipse.wst.css.core.internal.util.CSSUtil;
+import org.eclipse.wst.css.core.internal.util.URLModelProviderCSS;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.xml.core.document.IDOMNode;

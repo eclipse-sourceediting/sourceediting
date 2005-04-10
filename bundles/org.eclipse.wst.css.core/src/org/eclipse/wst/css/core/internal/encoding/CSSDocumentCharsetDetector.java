@@ -13,8 +13,8 @@ package org.eclipse.wst.css.core.internal.encoding;
 import java.util.Iterator;
 
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.wst.css.core.internal.content.CSSResourceEncodingDetector;
-import org.eclipse.wst.css.core.parser.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.contenttype.CSSResourceEncodingDetector;
+import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
 import org.eclipse.wst.sse.core.internal.document.DocumentReader;
 import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;

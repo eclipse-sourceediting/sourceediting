@@ -19,7 +19,7 @@ import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.wst.css.core.format.FormatProcessorCSS;
+import org.eclipse.wst.css.core.internal.format.FormatProcessorCSS;
 import org.eclipse.wst.css.core.text.ICSSPartitionTypes;
 import org.eclipse.wst.css.ui.autoedit.StructuredAutoEditStrategyCSS;
 import org.eclipse.wst.css.ui.contentassist.CSSContentAssistProcessor;

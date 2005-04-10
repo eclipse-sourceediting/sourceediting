@@ -14,14 +14,14 @@ package org.eclipse.wst.css.core.internal.document;
 
 import java.util.Iterator;
 
-import org.eclipse.wst.css.core.document.ICSSDocument;
-import org.eclipse.wst.css.core.document.ICSSModel;
-import org.eclipse.wst.css.core.document.ICSSNamedNodeMap;
-import org.eclipse.wst.css.core.document.ICSSNode;
-import org.eclipse.wst.css.core.document.ICSSNodeList;
 import org.eclipse.wst.css.core.internal.formatter.CSSSourceFormatterFactory;
 import org.eclipse.wst.css.core.internal.formatter.CSSSourceGenerator;
-import org.eclipse.wst.css.core.util.ImportRuleCollector;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSDocument;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNamedNodeMap;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNodeList;
+import org.eclipse.wst.css.core.internal.util.ImportRuleCollector;
 import org.eclipse.wst.sse.core.AbstractNotifier;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;

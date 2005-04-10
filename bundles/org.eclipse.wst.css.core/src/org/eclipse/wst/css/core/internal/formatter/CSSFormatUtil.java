@@ -13,11 +13,11 @@ package org.eclipse.wst.css.core.internal.formatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.wst.css.core.adapters.ICSSModelAdapter;
-import org.eclipse.wst.css.core.adapters.IStyleDeclarationAdapter;
-import org.eclipse.wst.css.core.adapters.IStyleSheetAdapter;
-import org.eclipse.wst.css.core.document.ICSSModel;
-import org.eclipse.wst.css.core.document.ICSSNode;
+import org.eclipse.wst.css.core.internal.provisional.adapters.ICSSModelAdapter;
+import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleDeclarationAdapter;
+import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSheetAdapter;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;

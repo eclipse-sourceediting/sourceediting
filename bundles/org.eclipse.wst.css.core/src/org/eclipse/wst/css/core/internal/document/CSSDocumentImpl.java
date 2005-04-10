@@ -12,17 +12,17 @@ package org.eclipse.wst.css.core.internal.document;
 
 
 
-import org.eclipse.wst.css.core.document.ICSSCharsetRule;
-import org.eclipse.wst.css.core.document.ICSSDocument;
-import org.eclipse.wst.css.core.document.ICSSImportRule;
-import org.eclipse.wst.css.core.document.ICSSMediaRule;
-import org.eclipse.wst.css.core.document.ICSSModel;
-import org.eclipse.wst.css.core.document.ICSSNode;
-import org.eclipse.wst.css.core.document.ICSSPageRule;
-import org.eclipse.wst.css.core.document.ICSSPrimitiveValue;
-import org.eclipse.wst.css.core.document.ICSSStyleDeclItem;
-import org.eclipse.wst.css.core.document.ICSSStyleDeclaration;
-import org.eclipse.wst.css.core.document.ICSSStyleRule;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSCharsetRule;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSDocument;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSImportRule;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSMediaRule;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSPageRule;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSPrimitiveValue;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclaration;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleRule;
 import org.w3c.dom.css.CSSFontFaceRule;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.w3c.dom.css.CSSRule;

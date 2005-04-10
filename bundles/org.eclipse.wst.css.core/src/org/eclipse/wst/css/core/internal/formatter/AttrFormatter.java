@@ -13,16 +13,16 @@ package org.eclipse.wst.css.core.internal.formatter;
 
 
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.wst.css.core.document.ICSSAttr;
-import org.eclipse.wst.css.core.document.ICSSCharsetRule;
-import org.eclipse.wst.css.core.document.ICSSImportRule;
-import org.eclipse.wst.css.core.document.ICSSNode;
-import org.eclipse.wst.css.core.document.ICSSPageRule;
-import org.eclipse.wst.css.core.document.ICSSStyleDeclItem;
-import org.eclipse.wst.css.core.document.ICSSStyleRule;
 import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSAttr;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSCharsetRule;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSImportRule;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSPageRule;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleRule;
+import org.eclipse.wst.css.core.internal.util.CSSUtil;
 import org.eclipse.wst.css.core.preferences.CSSPreferenceHelper;
-import org.eclipse.wst.css.core.util.CSSUtil;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 
@@ -106,7 +106,7 @@ public class AttrFormatter extends DefaultCSSSourceFormatter {
 			if (attr.getName().equals(ICSSStyleRule.SELECTOR) || attr.getName().equals(ICSSPageRule.SELECTOR)) {
 			}
 			else if (attr.getName().equals(ICSSImportRule.HREF)) {
-				String uri = org.eclipse.wst.css.core.util.CSSLinkConverter.stripFunc(value);
+				String uri = org.eclipse.wst.css.core.internal.util.CSSLinkConverter.stripFunc(value);
 				String func = mgr.isPropValueUpperCase() ? "URL(" : "url(";//$NON-NLS-2$//$NON-NLS-1$
 				if (mgr.isQuoteInURI()) {
 					String quote = mgr.getQuoteString(attr.getOwnerDocument().getModel());

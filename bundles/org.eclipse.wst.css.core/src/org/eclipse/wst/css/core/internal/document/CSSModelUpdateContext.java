@@ -14,10 +14,10 @@ package org.eclipse.wst.css.core.internal.document;
 
 import java.util.LinkedList;
 
-import org.eclipse.wst.css.core.document.ICSSNode;
-import org.eclipse.wst.css.core.document.ICSSPrimitiveValue;
-import org.eclipse.wst.css.core.util.AbstractCssTraverser;
-import org.eclipse.wst.css.core.util.CSSUtil;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSPrimitiveValue;
+import org.eclipse.wst.css.core.internal.util.AbstractCssTraverser;
+import org.eclipse.wst.css.core.internal.util.CSSUtil;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.css.CSSPrimitiveValue;
 

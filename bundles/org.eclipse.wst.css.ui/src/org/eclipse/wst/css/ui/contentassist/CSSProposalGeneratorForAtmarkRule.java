@@ -14,16 +14,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.wst.css.core.document.ICSSCharsetRule;
-import org.eclipse.wst.css.core.document.ICSSDocument;
-import org.eclipse.wst.css.core.document.ICSSImportRule;
-import org.eclipse.wst.css.core.document.ICSSModel;
-import org.eclipse.wst.css.core.document.ICSSNode;
-import org.eclipse.wst.css.core.metamodel.CSSMMNode;
-import org.eclipse.wst.css.core.metamodel.util.CSSMetaModelUtil;
-import org.eclipse.wst.css.core.parser.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.metamodel.CSSMMNode;
+import org.eclipse.wst.css.core.internal.metamodel.util.CSSMetaModelUtil;
+import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSCharsetRule;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSDocument;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSImportRule;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
+import org.eclipse.wst.css.core.internal.util.SelectionCollector;
 import org.eclipse.wst.css.core.preferences.CSSPreferenceHelper;
-import org.eclipse.wst.css.core.util.SelectionCollector;
 import org.eclipse.wst.css.ui.image.CSSImageType;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 

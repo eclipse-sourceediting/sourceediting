@@ -12,9 +12,9 @@ package org.eclipse.wst.html.core.htmlcss;
 
 
 
-import org.eclipse.wst.css.core.adapters.IStyleDeclarationAdapter;
-import org.eclipse.wst.css.core.document.ICSSModel;
 import org.eclipse.wst.css.core.internal.parser.CSSSourceParser;
+import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleDeclarationAdapter;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.events.IStructuredDocumentListener;
 import org.eclipse.wst.sse.core.events.NewDocumentEvent;

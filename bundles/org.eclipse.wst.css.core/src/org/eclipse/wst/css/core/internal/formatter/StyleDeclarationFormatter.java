@@ -13,9 +13,9 @@ package org.eclipse.wst.css.core.internal.formatter;
 
 
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.wst.css.core.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
-import org.eclipse.wst.css.core.parser.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
@@ -79,16 +79,16 @@ public class StyleDeclarationFormatter extends DefaultCSSSourceFormatter {
 		}
 		else if (prev == null) { // generate source : before the first
 									// declaration
-			org.eclipse.wst.css.core.util.RegionIterator it = null;
+			org.eclipse.wst.css.core.internal.util.RegionIterator it = null;
 			if (end > 0) {
 				IStructuredDocument structuredDocument = node.getOwnerDocument().getModel().getStructuredDocument();
-				it = new org.eclipse.wst.css.core.util.RegionIterator(structuredDocument, end - 1);
+				it = new org.eclipse.wst.css.core.internal.util.RegionIterator(structuredDocument, end - 1);
 			}
 			else {
 				int pos = getChildInsertPos(node);
 				if (pos >= 0) {
 					IStructuredDocument structuredDocument = node.getOwnerDocument().getModel().getStructuredDocument();
-					it = new org.eclipse.wst.css.core.util.RegionIterator(structuredDocument, pos - 1);
+					it = new org.eclipse.wst.css.core.internal.util.RegionIterator(structuredDocument, pos - 1);
 				}
 			}
 			if (it != null) {
@@ -108,16 +108,16 @@ public class StyleDeclarationFormatter extends DefaultCSSSourceFormatter {
 		}
 		else if (child == null) { // generate source : after the last
 									// declaration
-			org.eclipse.wst.css.core.util.RegionIterator it = null;
+			org.eclipse.wst.css.core.internal.util.RegionIterator it = null;
 			if (start > 0) {
 				IStructuredDocument structuredDocument = node.getOwnerDocument().getModel().getStructuredDocument();
-				it = new org.eclipse.wst.css.core.util.RegionIterator(structuredDocument, start);
+				it = new org.eclipse.wst.css.core.internal.util.RegionIterator(structuredDocument, start);
 			}
 			else {
 				int pos = getChildInsertPos(node);
 				if (pos >= 0) {
 					IStructuredDocument structuredDocument = node.getOwnerDocument().getModel().getStructuredDocument();
-					it = new org.eclipse.wst.css.core.util.RegionIterator(structuredDocument, pos);
+					it = new org.eclipse.wst.css.core.internal.util.RegionIterator(structuredDocument, pos);
 				}
 			}
 			if (it != null) {

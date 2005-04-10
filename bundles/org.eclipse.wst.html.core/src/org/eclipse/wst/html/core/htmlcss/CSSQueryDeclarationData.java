@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.htmlcss;
 
-import org.eclipse.wst.css.core.document.ICSSStyleDeclItem;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
 
 
 

@@ -13,11 +13,11 @@ package org.eclipse.wst.css.core.internal.formatter;
 
 
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.wst.css.core.document.ICSSModel;
-import org.eclipse.wst.css.core.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
-import org.eclipse.wst.css.core.parser.CSSRegionContexts;
-import org.eclipse.wst.css.core.util.RegionIterator;
+import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
+import org.eclipse.wst.css.core.internal.util.RegionIterator;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -192,7 +192,7 @@ public class StyleSheetFormatter extends AbstractCSSSourceFormatter {
 	/**
 	 * 
 	 */
-	protected void formatPre(org.eclipse.wst.css.core.document.ICSSNode node, java.lang.StringBuffer source) {
+	protected void formatPre(org.eclipse.wst.css.core.internal.provisional.document.ICSSNode node, java.lang.StringBuffer source) {
 		int start = ((IndexedRegion) node).getStartOffset();
 		int end = (node.getFirstChild() != null && ((IndexedRegion) node.getFirstChild()).getEndOffset() > 0) ? ((IndexedRegion) node.getFirstChild()).getStartOffset() : getChildInsertPos(node);
 		if (end > 0) {

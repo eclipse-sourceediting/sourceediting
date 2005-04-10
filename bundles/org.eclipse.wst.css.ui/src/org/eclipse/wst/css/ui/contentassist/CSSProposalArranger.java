@@ -16,15 +16,15 @@ import java.util.List;
 
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
-import org.eclipse.wst.css.core.document.ICSSMediaRule;
-import org.eclipse.wst.css.core.document.ICSSNode;
-import org.eclipse.wst.css.core.document.ICSSPageRule;
-import org.eclipse.wst.css.core.document.ICSSPrimitiveValue;
-import org.eclipse.wst.css.core.document.ICSSStyleDeclItem;
-import org.eclipse.wst.css.core.document.ICSSStyleDeclaration;
-import org.eclipse.wst.css.core.document.ICSSStyleRule;
-import org.eclipse.wst.css.core.document.ICSSStyleSheet;
-import org.eclipse.wst.css.core.parser.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSMediaRule;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSPageRule;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSPrimitiveValue;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclaration;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleRule;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleSheet;
 import org.w3c.dom.css.CSSFontFaceRule;
 
 class CSSProposalArranger {

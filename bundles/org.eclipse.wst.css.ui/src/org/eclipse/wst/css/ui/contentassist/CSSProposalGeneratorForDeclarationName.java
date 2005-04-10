@@ -16,11 +16,11 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.wst.css.core.document.ICSSNode;
-import org.eclipse.wst.css.core.document.ICSSStyleDeclItem;
-import org.eclipse.wst.css.core.metamodel.CSSMMNode;
-import org.eclipse.wst.css.core.metamodel.util.CSSMetaModelUtil;
-import org.eclipse.wst.css.core.parser.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.metamodel.CSSMMNode;
+import org.eclipse.wst.css.core.internal.metamodel.util.CSSMetaModelUtil;
+import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
 import org.eclipse.wst.css.core.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.css.ui.image.CSSImageType;
 import org.eclipse.wst.css.ui.preferences.CSSPreferenceManager;

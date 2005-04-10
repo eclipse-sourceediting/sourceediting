@@ -11,14 +11,14 @@
 package org.eclipse.wst.css.ui.contentassist;
 
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.wst.css.core.document.ICSSDocument;
-import org.eclipse.wst.css.core.document.ICSSModel;
-import org.eclipse.wst.css.core.document.ICSSNode;
-import org.eclipse.wst.css.core.metamodel.CSSMetaModel;
-import org.eclipse.wst.css.core.metamodel.util.CSSMetaModelFinder;
-import org.eclipse.wst.css.core.parser.CSSRegionContexts;
-import org.eclipse.wst.css.core.util.CSSUtil;
-import org.eclipse.wst.css.core.util.RegionIterator;
+import org.eclipse.wst.css.core.internal.metamodel.CSSMetaModel;
+import org.eclipse.wst.css.core.internal.metamodel.util.CSSMetaModelFinder;
+import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSDocument;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
+import org.eclipse.wst.css.core.internal.util.CSSUtil;
+import org.eclipse.wst.css.core.internal.util.RegionIterator;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;

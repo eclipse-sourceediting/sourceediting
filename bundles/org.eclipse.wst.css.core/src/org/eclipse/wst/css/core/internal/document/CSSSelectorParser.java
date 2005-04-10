@@ -15,10 +15,10 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.wst.css.core.document.ICSSSelectorCombinator;
-import org.eclipse.wst.css.core.document.ICSSSelectorItem;
-import org.eclipse.wst.css.core.parser.CSSRegionContexts;
-import org.eclipse.wst.css.core.parser.CSSTextToken;
+import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.parserz.CSSTextToken;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSSelectorCombinator;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSSelectorItem;
 
 
 /**

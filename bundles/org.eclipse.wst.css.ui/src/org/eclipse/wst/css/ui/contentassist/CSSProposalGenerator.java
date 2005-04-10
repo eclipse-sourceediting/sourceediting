@@ -17,9 +17,9 @@ import java.util.List;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.wst.css.core.parser.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.util.RegionIterator;
 import org.eclipse.wst.css.core.preferences.CSSPreferenceHelper;
-import org.eclipse.wst.css.core.util.RegionIterator;
 import org.eclipse.wst.css.ui.image.CSSImageHelper;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 

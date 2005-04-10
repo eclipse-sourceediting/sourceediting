@@ -14,8 +14,8 @@ package org.eclipse.wst.css.core.internal.document;
 
 import java.util.Iterator;
 
-import org.eclipse.wst.css.core.document.ICSSNamedNodeMap;
-import org.eclipse.wst.css.core.document.ICSSNode;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNamedNodeMap;
+import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 
 
 /**
