@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -29,11 +29,12 @@ public final class NameValidator {
 	private static XML10Names xml10charChecker = null;
 
 	/**
-	 * Returns true if <code>name</code> is valid XML name according to 1.0
-	 * rules, false otherwise.
+	 * Returns true if <code>name</code> is valid XML name according to XML
+	 * 1.0 rules, false otherwise.
 	 * 
 	 * @param name
-	 * @return boolean
+	 *            name is the string to test
+	 * @return true if valid name according to XML 1.0 rules, false otherwise.
 	 */
 	public synchronized static final boolean isValid(String name) {
 
