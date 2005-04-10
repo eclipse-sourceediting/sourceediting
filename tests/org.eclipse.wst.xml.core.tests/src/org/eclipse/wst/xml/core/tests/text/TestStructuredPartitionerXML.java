@@ -12,7 +12,6 @@ package org.eclipse.wst.xml.core.tests.text;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringBufferInputStream;
 import java.text.DecimalFormat;
 
 import junit.framework.TestCase;
@@ -31,7 +30,7 @@ import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
 public class TestStructuredPartitionerXML extends TestCase {
-
+	
 	private boolean DEBUG_PRINT_RESULT = false;
 	protected ITypedRegion[] partitions = null;
 
@@ -55,7 +54,7 @@ public class TestStructuredPartitionerXML extends TestCase {
 			IModelManager modelManager = StructuredModelManager.getModelManager();
 			InputStream inStream = getClass().getResourceAsStream(filename);
 			if (inStream == null)
-				inStream = new StringBufferInputStream("");
+				inStream = new NullStream();
 			model = modelManager.getModelForEdit(filename, inStream, null);
 		}
 		catch (IOException ex) {
@@ -167,11 +166,11 @@ public class TestStructuredPartitionerXML extends TestCase {
 	}
 
 	public void testPerfXML() throws IOException, BadLocationException {
-		//int expectedPartitions = 6;
+		int expectedPartitions = 6;
 		int nPartitions = doTimedComputePartitioningTest("testfiles/xml/company300k.xml");
-		//assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
-		//checkSeams();
-		//verifyPartitionTypes(partitions, new String[]{IXMLPartitions.ST_XML_PI, IXMLPartitions.ST_DEFAULT_XML, IXMLPartitions.ST_XML_DECLARATION, IXMLPartitions.ST_DEFAULT_XML, IXMLPartitions.ST_XML_COMMENT, IXMLPartitions.ST_DEFAULT_XML});
+		assertTrue("wrong number of partitions", nPartitions == expectedPartitions);
+		checkSeams();
+		verifyPartitionTypes(partitions, new String[]{IXMLPartitions.XML_PI, IXMLPartitions.XML_DEFAULT, IXMLPartitions.XML_DECLARATION, IXMLPartitions.XML_DEFAULT, IXMLPartitions.XML_COMMENT, IXMLPartitions.XML_DEFAULT});
 	}
 	
 	/**
@@ -201,7 +200,7 @@ public class TestStructuredPartitionerXML extends TestCase {
 		IModelManager modelManager = StructuredModelManager.getModelManager();
 		InputStream inStream = getClass().getResourceAsStream(filename);
 		if (inStream == null)
-			inStream = new StringBufferInputStream("");
+			inStream = new NullStream();
 		IStructuredModel model = modelManager.getModelForEdit(filename, inStream, null);
 
 		IStructuredDocument structuredDocument = model.getStructuredDocument();
@@ -314,7 +313,7 @@ public class TestStructuredPartitionerXML extends TestCase {
 		IModelManager modelManager = StructuredModelManager.getModelManager();
 		InputStream inStream = getClass().getResourceAsStream(filename);
 		if (inStream == null)
-			inStream = new StringBufferInputStream("");
+			inStream = new NullStream();
 		IStructuredModel model = modelManager.getModelForEdit(filename, inStream, null);
 	
 		IStructuredDocument structuredDocument = model.getStructuredDocument();
