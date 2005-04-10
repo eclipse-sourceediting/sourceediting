@@ -16,7 +16,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
 import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
-import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
@@ -33,13 +33,13 @@ import org.w3c.dom.Node;
  */
 public class TestPageDirective extends TestCase {
 
-	class MyEmbeddedFactory implements IAdapterFactory {
+	class MyEmbeddedFactory implements INodeAdapterFactory {
 
 		public INodeAdapter adapt(INodeNotifier object) {
 			return null;
 		}
 
-		public IAdapterFactory copy() {
+		public INodeAdapterFactory copy() {
 			return null;
 		}
 

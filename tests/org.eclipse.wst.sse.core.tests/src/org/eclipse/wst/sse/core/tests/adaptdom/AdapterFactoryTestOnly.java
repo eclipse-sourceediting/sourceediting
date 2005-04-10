@@ -12,7 +12,7 @@ package org.eclipse.wst.sse.core.tests.adaptdom;
 
 import java.util.Iterator;
 
-import org.eclipse.wst.sse.core.IAdapterFactory;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.w3c.dom.Attr;
@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
  * Creation date: (11/14/00 7:08:18 PM)
  * @author: David Williams
  */
-public class AdapterFactoryTestOnly implements IAdapterFactory {
+public class AdapterFactoryTestOnly implements INodeAdapterFactory {
 	// This factory deals with three adapters
 	java.util.List adapters = new java.util.ArrayList();
 
@@ -106,7 +106,7 @@ public class AdapterFactoryTestOnly implements IAdapterFactory {
 	public void release() {
 	}
 
-	public IAdapterFactory copy() {
+	public INodeAdapterFactory copy() {
 		return new AdapterFactoryTestOnly();
 	}
 
