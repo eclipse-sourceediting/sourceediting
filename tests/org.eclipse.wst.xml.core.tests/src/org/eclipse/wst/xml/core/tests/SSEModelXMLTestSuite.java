@@ -16,6 +16,7 @@ import junit.framework.TestSuite;
 import org.eclipse.wst.xml.core.tests.document.TestXMLDocumentLoader;
 import org.eclipse.wst.xml.core.tests.document.TransitionTests;
 import org.eclipse.wst.xml.core.tests.dom.NameValidatorTests;
+import org.eclipse.wst.xml.core.tests.model.TestModelManager;
 import org.eclipse.wst.xml.core.tests.model.TestModelsFromFiles;
 import org.eclipse.wst.xml.core.tests.model.TestStructuredModel;
 import org.eclipse.wst.xml.core.tests.model.TestXMLModelLoader;
@@ -34,11 +35,10 @@ public class SSEModelXMLTestSuite extends TestSuite {
 		addTest(new TestSuite(TestXMLModelLoader.class));
 		addTest(new TestSuite(TestXMLDocumentLoader.class));
 
+		addTest(new TestSuite(TestModelManager.class));
 		addTest(new TestSuite(TestStructuredModel.class));
 		addTest(new TestSuite(TestStructuredPartitionerXML.class));
 		addTest(new TestSuite(NameValidatorTests.class));
 		addTest(new TestSuite(TransitionTests.class));
-		
-		
 	}
 }
