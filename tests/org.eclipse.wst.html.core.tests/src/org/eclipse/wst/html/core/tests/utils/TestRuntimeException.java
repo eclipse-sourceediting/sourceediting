@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.tests.utils;
 
-import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 
 
 /**
@@ -57,7 +56,7 @@ public class TestRuntimeException extends RuntimeException {
 		if (originalException != null) {
 			String embeddedMessage = originalException.getMessage();
 			// not all exceptions (e.g. many NullPointer exception) have messages
-			String originalError = HTMLCorePlugin.getResourceString("Original_Error__UI_"); //$NON-NLS-1$ = "Original Error:"
+			String originalError = "Original error:";	//$NON-NLS-1$
 			if (embeddedMessage != null)
 				result = result + "  " + originalError + " " + embeddedMessage;//$NON-NLS-2$//$NON-NLS-1$
 			else
