@@ -12,9 +12,9 @@ package org.eclipse.wst.html.ui.internal.contentassist;
 
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.wst.css.core.text.ICSSPartitionTypes;
-import org.eclipse.wst.css.ui.contentassist.CSSContentAssistProcessor;
+import org.eclipse.wst.css.ui.internal.contentassist.CSSContentAssistProcessor;
 import org.eclipse.wst.html.core.text.IHTMLPartitionTypes;
-import org.eclipse.wst.javascript.common.ui.internal.contentassist.JavaScriptContentAssistProcessor;
+import org.eclipse.wst.javascript.ui.internal.common.contentassist.JavaScriptContentAssistProcessor;
 import org.eclipse.wst.xml.ui.contentassist.NoRegionContentAssistProcessor;
 
 /**

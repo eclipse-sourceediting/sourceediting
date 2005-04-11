@@ -27,7 +27,7 @@ import org.eclipse.jst.jsp.ui.internal.java.refactoring.JSPRenameElementAction;
 import org.eclipse.jst.jsp.ui.internal.java.search.JSPFindOccurrencesAction;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
-import org.eclipse.wst.html.ui.edit.ui.CleanupActionHTML;
+import org.eclipse.wst.html.ui.internal.edit.ui.CleanupActionHTML;
 import org.eclipse.wst.html.ui.internal.search.HTMLFindOccurrencesAction;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;

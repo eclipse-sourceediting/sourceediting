@@ -42,7 +42,7 @@
             name="%HTML_Source_Page_Editor.name"
             icon="icons/sourceEditor.gif"
             default="true"
-            contributorClass="org.eclipse.wst.html.ui.edit.ui.ActionContributorHTML"
+            contributorClass="org.eclipse.wst.html.ui.internal.edit.ui.ActionContributorHTML"
             class="org.eclipse.wst.html.ui.StructuredTextEditorHTML"
             symbolicFontName="org.eclipse.wst.sse.ui.textfont"
             id="org.eclipse.wst.html.core.htmlsource.source">
@@ -57,7 +57,7 @@
             target="org.eclipse.wst.html.core.htmlsource"/>
       <configuration
       		type="contentoutlineconfiguration"
-            class="org.eclipse.wst.html.ui.views.contentoutline.HTMLContentOutlineConfiguration"
+            class="org.eclipse.wst.html.ui.internal.views.contentoutline.HTMLContentOutlineConfiguration"
             target="org.eclipse.wst.html.core.htmlsource"/>
       <configuration
       		type="propertysheetconfiguration"
@@ -69,7 +69,7 @@
             target="org.eclipse.wst.html.core.htmlsource"/>
       <configuration
       		type="characterpairmatcher"
-            class="org.eclipse.wst.html.ui.text.HTMLDocumentRegionEdgeMatcher"
+            class="org.eclipse.wst.html.ui.internal.text.HTMLDocumentRegionEdgeMatcher"
             target="org.eclipse.wst.html.core.htmlsource"/>
       <configuration
       		type="structuredtextfoldingprovider"
@@ -101,14 +101,14 @@
    <extension
          point="org.eclipse.wst.sse.ui.adapterFactoryDescription">
       <adapterFactoryDescription
-            class="org.eclipse.wst.html.ui.registry.AdapterFactoryProviderForHTML">
+            class="org.eclipse.wst.html.ui.internal.registry.AdapterFactoryProviderForHTML">
             <contentType id="org.eclipse.wst.html.core.htmlsource"/>
       </adapterFactoryDescription>
    </extension>
    <extension
          point="org.eclipse.wst.sse.ui.embeddedAdapterFactoryProvider">
       <embeddedAdapterFactoryProvider
-            class="org.eclipse.wst.html.ui.registry.AdapterFactoryProviderForEmbeddedHTML">
+            class="org.eclipse.wst.html.ui.internal.registry.AdapterFactoryProviderForEmbeddedHTML">
       </embeddedAdapterFactoryProvider>
    </extension>
    <extension
@@ -117,25 +117,25 @@
       <page
             name="%HTML_Files.name"
             category="org.eclipse.wst.sse.ui.preferences"
-            class="org.eclipse.wst.html.ui.preferences.ui.HTMLFilesPreferencePage"
+            class="org.eclipse.wst.html.ui.internal.preferences.ui.HTMLFilesPreferencePage"
             id="org.eclipse.wst.html.ui.preferences">
       </page>
       <page
             name="%HTML_Source.name"
             category="org.eclipse.wst.html.ui.preferences"
-            class="org.eclipse.wst.html.ui.preferences.ui.HTMLSourcePreferencePage"
+            class="org.eclipse.wst.html.ui.internal.preferences.ui.HTMLSourcePreferencePage"
             id="org.eclipse.wst.html.ui.preferences.source">
       </page>
       <page
             name="%HTML_Templates.name"
             category="org.eclipse.wst.html.ui.preferences"
-            class="org.eclipse.wst.html.ui.preferences.ui.HTMLTemplatePreferencePage"
+            class="org.eclipse.wst.html.ui.internal.preferences.ui.HTMLTemplatePreferencePage"
             id="org.eclipse.wst.html.ui.preferences.templates">
       </page>
       <page
             name="%HTML_Styles.name"
             category="org.eclipse.wst.html.ui.preferences"
-            class="org.eclipse.wst.html.ui.preferences.ui.HTMLColorPage"
+            class="org.eclipse.wst.html.ui.internal.preferences.ui.HTMLColorPage"
             id="org.eclipse.wst.html.ui.preferences.styles">
       </page>
    </extension>
@@ -147,7 +147,7 @@
             objectClass="org.eclipse.core.resources.IProject"
             adaptable="true"
             name="%WebContentSettings.name"
-            class="org.eclipse.wst.html.ui.contentproperties.ui.ProjectContentSettingsPropertyPage"
+            class="org.eclipse.wst.html.ui.internal.contentproperties.ui.ProjectContentSettingsPropertyPage"
             id="org.eclipse.wst.html.ui.dynamicprojectpropertypage">
          <filter
                name="nature"
@@ -159,7 +159,7 @@
             objectClass="org.eclipse.core.resources.IProject"
             adaptable="true"
             name="%WebContentSettings.name"
-            class="org.eclipse.wst.html.ui.contentproperties.ui.ProjectContentSettingsPropertyPage"
+            class="org.eclipse.wst.html.ui.internal.contentproperties.ui.ProjectContentSettingsPropertyPage"
             id="org.eclipse.wst.html.ui.staticprojectpropertypage">
          <filter
                name="nature"
@@ -171,7 +171,7 @@
             adaptable="true"
             name="%WebContentSettings.name"
             nameFilter="*.htm*"
-            class="org.eclipse.wst.html.ui.contentproperties.ui.HTMLContentSettingsPropertyPage"
+            class="org.eclipse.wst.html.ui.internal.contentproperties.ui.HTMLContentSettingsPropertyPage"
             id="org.eclipse.wst.html.ui.htmlpropertypage">
       </page>
       <page
@@ -179,7 +179,7 @@
             adaptable="true"
             name="%WebContentSettings.name"
             nameFilter="*.shtml"
-            class="org.eclipse.wst.html.ui.contentproperties.ui.HTMLContentSettingsPropertyPage"
+            class="org.eclipse.wst.html.ui.internal.contentproperties.ui.HTMLContentSettingsPropertyPage"
             id="org.eclipse.wst.html.ui.htmlpropertypage">
       </page>
       <page
@@ -187,7 +187,7 @@
             adaptable="true"
             name="%WebContentSettings.name"
             nameFilter="*.xhtml"
-            class="org.eclipse.wst.html.ui.contentproperties.ui.HTMLContentSettingsPropertyPage"
+            class="org.eclipse.wst.html.ui.internal.contentproperties.ui.HTMLContentSettingsPropertyPage"
             id="org.eclipse.wst.html.ui.htmlpropertypage">
       </page>
       <page
@@ -195,7 +195,7 @@
             adaptable="true"
             name="%WebContentSettings.name"
             nameFilter="*.jhtml"
-            class="org.eclipse.wst.html.ui.contentproperties.ui.HTMLContentSettingsPropertyPage"
+            class="org.eclipse.wst.html.ui.internal.contentproperties.ui.HTMLContentSettingsPropertyPage"
             id="org.eclipse.wst.html.ui.htmlpropertypage">
       </page>
       <page
@@ -203,7 +203,7 @@
             adaptable="true"
             name="%WebContentSettings.name"
             nameFilter="*.jsp"
-            class="org.eclipse.wst.html.ui.contentproperties.ui.HTMLContentSettingsPropertyPage"
+            class="org.eclipse.wst.html.ui.internal.contentproperties.ui.HTMLContentSettingsPropertyPage"
             id="org.eclipse.wst.html.ui.htmlpropertypage">
       </page>
       <page
@@ -211,7 +211,7 @@
             adaptable="true"
             name="%WebContentSettings.name"
             nameFilter="*.jspf"
-            class="org.eclipse.wst.html.ui.contentproperties.ui.HTMLContentSettingsPropertyPage"
+            class="org.eclipse.wst.html.ui.internal.contentproperties.ui.HTMLContentSettingsPropertyPage"
             id="org.eclipse.wst.html.ui.htmlpropertypage">
       </page>
       <page
@@ -219,7 +219,7 @@
             adaptable="true"
             name="%WebContentSettings.name"
             nameFilter="*.jsf"
-            class="org.eclipse.wst.html.ui.contentproperties.ui.HTMLContentSettingsPropertyPage"
+            class="org.eclipse.wst.html.ui.internal.contentproperties.ui.HTMLContentSettingsPropertyPage"
             id="org.eclipse.wst.html.ui.htmlpropertypage">
       </page>
       <page
@@ -227,7 +227,7 @@
             adaptable="true"
             name="%WebContentSettings.name"
             nameFilter="*.wml"
-            class="org.eclipse.wst.html.ui.contentproperties.ui.HTMLContentSettingsPropertyPage"
+            class="org.eclipse.wst.html.ui.internal.contentproperties.ui.HTMLContentSettingsPropertyPage"
             id="org.eclipse.wst.html.ui.htmlpropertypage">
       </page>
    </extension>

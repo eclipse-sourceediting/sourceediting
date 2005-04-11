@@ -18,7 +18,7 @@ import org.eclipse.jst.jsp.ui.internal.editor.IHelpContextIds;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.html.ui.preferences.ui.HTMLFilesPreferencePage;
+import org.eclipse.wst.html.ui.internal.preferences.ui.HTMLFilesPreferencePage;
 
 public class JSPFilesPreferencePage extends HTMLFilesPreferencePage {
 

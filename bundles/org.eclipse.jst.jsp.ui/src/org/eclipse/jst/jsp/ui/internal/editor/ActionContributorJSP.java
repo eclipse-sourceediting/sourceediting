@@ -21,7 +21,7 @@ import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
-import org.eclipse.wst.html.ui.edit.ui.ActionContributorHTML;
+import org.eclipse.wst.html.ui.internal.edit.ui.ActionContributorHTML;
 import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
 
 /**

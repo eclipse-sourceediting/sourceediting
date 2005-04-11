@@ -9,7 +9,7 @@
 package org.eclipse.wst.css.ui.internal;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.wst.css.ui.edit.ui.CleanupActionCSS;
+import org.eclipse.wst.css.ui.internal.edit.ui.CleanupActionCSS;
 import org.eclipse.wst.css.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.css.ui.internal.selection.StructureSelectEnclosingCSSAction;
 import org.eclipse.wst.css.ui.internal.selection.StructureSelectNextCSSAction;

@@ -13,11 +13,11 @@ package org.eclipse.wst.html.core.internal.encoding;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.wst.html.core.htmlcss.HTMLStyleSelectorAdapterFactory;
-import org.eclipse.wst.html.core.htmlcss.StyleAdapterFactory;
 import org.eclipse.wst.html.core.internal.document.DOMStyleModelImpl;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeAdapterFactory;
 import org.eclipse.wst.html.core.internal.document.HTMLModelParserAdapterFactory;
+import org.eclipse.wst.html.core.internal.htmlcss.HTMLStyleSelectorAdapterFactory;
+import org.eclipse.wst.html.core.internal.htmlcss.StyleAdapterFactory;
 import org.eclipse.wst.html.core.internal.modelquery.ModelQueryAdapterFactoryForHTML;
 import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.INodeNotifier;

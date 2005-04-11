@@ -3,7 +3,7 @@ package org.eclipse.wst.html.ui.internal.preferences;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
-import org.eclipse.wst.html.ui.style.IStyleConstantsHTML;
+import org.eclipse.wst.html.ui.internal.style.IStyleConstantsHTML;
 import org.eclipse.wst.sse.ui.preferences.ui.ColorHelper;
 import org.eclipse.wst.xml.ui.style.IStyleConstantsXML;
 

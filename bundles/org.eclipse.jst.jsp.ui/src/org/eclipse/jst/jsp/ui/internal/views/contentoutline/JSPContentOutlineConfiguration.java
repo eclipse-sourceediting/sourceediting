@@ -12,7 +12,7 @@ package org.eclipse.jst.jsp.ui.internal.views.contentoutline;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
-import org.eclipse.wst.html.ui.views.contentoutline.HTMLContentOutlineConfiguration;
+import org.eclipse.wst.html.ui.internal.views.contentoutline.HTMLContentOutlineConfiguration;
 
 //public class JSPContentOutlineConfiguration extends StructuredContentOutlineConfiguration {
 public class JSPContentOutlineConfiguration extends HTMLContentOutlineConfiguration {

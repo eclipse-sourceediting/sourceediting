@@ -16,10 +16,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSelectorAdapter;
-import org.eclipse.wst.html.core.htmlcss.HTMLStyleSelectorAdapterFactory;
-import org.eclipse.wst.html.core.htmlcss.StyleAdapterFactory;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeAdapterFactory;
 import org.eclipse.wst.html.core.internal.document.HTMLModelParserAdapterFactory;
+import org.eclipse.wst.html.core.internal.htmlcss.HTMLStyleSelectorAdapterFactory;
+import org.eclipse.wst.html.core.internal.htmlcss.StyleAdapterFactory;
 import org.eclipse.wst.html.core.internal.modelquery.ModelQueryAdapterFactoryForEmbeddedHTML;
 import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;

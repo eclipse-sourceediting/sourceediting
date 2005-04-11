@@ -13,7 +13,7 @@ package org.eclipse.wst.html.ui;
 import java.util.ResourceBundle;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.wst.html.ui.edit.ui.CleanupActionHTML;
+import org.eclipse.wst.html.ui.internal.edit.ui.CleanupActionHTML;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.html.ui.internal.search.HTMLFindOccurrencesAction;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
