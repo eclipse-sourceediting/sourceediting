@@ -71,15 +71,15 @@ public class BugFixesTest extends BaseTestCase
   }
   
   /**
-   * Test /bugfixes/ValidateWithDTD/ValidateWithDTDInvalid.xml. TODO: Re-enable the test once the source of the linux problem is found.
+   * Test /bugfixes/ValidateWithDTD/ValidateWithDTDInvalid.xml.
    */
-//  public void testValidateWithDTDInvalid()
-//  {
-//  	String testname = "ValidateWithDTDInvalid";
-//    String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "ValidateWithDTD/" + testname + ".xml";
-//    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + BUGFIXES_DIR + "ValidateWithDTD/" + testname + ".xml-log";
-//    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + BUGFIXES_DIR + "ValidateWithDTD/" + testname + ".xml-log";
-//    
-//    runTest(testfile, loglocation, idealloglocation);
-//  }
+  public void testValidateWithDTDInvalid()
+  {
+  	String testname = "ValidateWithDTDInvalid";
+    String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "ValidateWithDTD/" + testname + ".xml";
+    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + BUGFIXES_DIR + "ValidateWithDTD/" + testname + ".xml-log";
+    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + BUGFIXES_DIR + "ValidateWithDTD/" + testname + ".xml-log";
+    
+    runTest(testfile, loglocation, idealloglocation);
+  }
 }
