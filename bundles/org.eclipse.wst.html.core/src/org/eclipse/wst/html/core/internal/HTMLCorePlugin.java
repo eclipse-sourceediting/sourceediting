@@ -10,10 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal;
 
-import java.text.MessageFormat;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Plugin;
@@ -28,11 +24,7 @@ import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
  */
 public class HTMLCorePlugin extends Plugin {
 	//The shared instance.
-	private static HTMLCorePlugin plugin;
-	//Resource bundle.
-	private ResourceBundle resourceBundle;
-	private static final String KEY_PREFIX = "%"; //$NON-NLS-1$
-	private static final String KEY_DOUBLE_PREFIX = "%%"; //$NON-NLS-1$	
+	private static HTMLCorePlugin plugin;	
 
 	/**
 	 * The constructor.
@@ -95,49 +87,5 @@ public class HTMLCorePlugin extends Plugin {
 		prefs.setDefault(HTMLFilesPreferenceNames.DEFAULT_SUFFIX, HTMLFilesPreferenceNames.HTML_SUFFIX);
 		prefs.setDefault(HTMLFilesPreferenceNames.GENERATE_DOCUMENT_TYPE, true);
 		prefs.setDefault(HTMLFilesPreferenceNames.GENERATE_GENERATOR, true);
-	}
-	/**
-	 * Returns the string from the plugin's resource bundle,
-	 * or 'key' if not found.
-	 */
-	public static String getResourceString(String value) {
-		String s = value.trim();
-		if (!s.startsWith(KEY_PREFIX, 0))
-			return s;
-		if (s.startsWith(KEY_DOUBLE_PREFIX, 0))
-			return s.substring(1);
-
-		int ix = s.indexOf(' ');
-		String key = ix == -1 ? s : s.substring(0, ix);
-
-		ResourceBundle bundle = getDefault().getResourceBundle();
-		try {
-			return (bundle != null) ? bundle.getString(key.substring(1)) : key;
-		} catch (MissingResourceException e) {
-			return key;
-		}
-	}
-
-	public static String getResourceString(String key, Object[] args) {
-
-		try {
-			return MessageFormat.format(getResourceString(key), args);
-		} catch (IllegalArgumentException e) {
-			return getResourceString(key);
-		}
-
-	}
-
-	/**
-	 * Returns the plugin's resource bundle,
-	 */
-	public ResourceBundle getResourceBundle() {
-		try {
-			if (resourceBundle == null)
-				resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.html.core.internal.HTMLCorePluginResources");
-		} catch (MissingResourceException x) {
-			resourceBundle = null;
-		}
-		return resourceBundle;
 	}
 }

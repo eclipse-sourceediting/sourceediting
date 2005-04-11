@@ -18,37 +18,38 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.Logger;
 
 public class NewHTMLWizard extends Wizard implements INewWizard {
-	static String PAGE_IMAGE = "/icons/full/wizban/newhfile_wiz.gif";
+	static String PAGE_IMAGE = "/icons/full/wizban/newhfile_wiz.gif"; //$NON-NLS-1$
 	private WizardNewFileCreationPage fNewFilePage;
 	private IStructuredSelection fSelection;
-	List fValidExtensions = new ArrayList(Arrays.asList(new String[]{"html", "xhtml"}));
+	List fValidExtensions = new ArrayList(Arrays.asList(new String[]{"html", "xhtml"})); //$NON-NLS-1$ //$NON-NLS-2$
 
 	public void addPages() {
-		fNewFilePage = new WizardNewFileCreationPage("HTMLWizardNewFileCreationPage", new StructuredSelection(IDE.computeSelectedResources(fSelection))) {
+		fNewFilePage = new WizardNewFileCreationPage("HTMLWizardNewFileCreationPage", new StructuredSelection(IDE.computeSelectedResources(fSelection))) { //$NON-NLS-1$
 			protected boolean validatePage() {
 				IPath handlePath = new Path(getFileName());
 				String extension = handlePath.getFileExtension();
 				if (extension == null || !fValidExtensions.contains(extension)) {
-					setErrorMessage(HTMLUIPlugin.getResourceString("%_ERROR_FILENAME_MUST_END_HTML"));
+					setErrorMessage(HTMLUIMessages._ERROR_FILENAME_MUST_END_HTML);
 					return false;
 				}
 				setErrorMessage(null);
 				return super.validatePage();
 			}
 		};
-		fNewFilePage.setTitle(HTMLUIPlugin.getResourceString("%_UI_WIZARD_NEW_HEADING"));
-		fNewFilePage.setDescription(HTMLUIPlugin.getResourceString("%_UI_WIZARD_NEW_DESCRIPTION"));
+		fNewFilePage.setTitle(HTMLUIMessages._UI_WIZARD_NEW_HEADING);
+		fNewFilePage.setDescription(HTMLUIMessages._UI_WIZARD_NEW_DESCRIPTION);
 
 		addPage(fNewFilePage);
 	}
 
 	public void init(IWorkbench aWorkbench, IStructuredSelection aSelection) {
 		fSelection = aSelection;
-		setWindowTitle(HTMLUIPlugin.getResourceString("%_UI_WIZARD_NEW_TITLE"));
+		setWindowTitle(HTMLUIMessages._UI_WIZARD_NEW_TITLE);
 		if (PAGE_IMAGE != null) {
 			ImageDescriptor descriptor = HTMLUIPlugin.getDefault().getImageRegistry().getDescriptor(PAGE_IMAGE);
 			if (descriptor == null) {

@@ -17,13 +17,13 @@ import org.eclipse.wst.css.core.internal.metamodel.CSSProfile;
 import org.eclipse.wst.css.core.internal.metamodel.CSSProfileRegistry;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeEntry;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeRegistry;
+import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.sse.core.internal.encoding.CommonCharsetNames;
 import org.eclipse.wst.sse.ui.contentproperties.ui.ComboList;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 public final class ContentSettingsRegistry {
 
-	private static final String NONE = SSEUIPlugin.getResourceString("%UI_none"); //$NON-NLS-1$
+	private static final String NONE = HTMLUIMessages.UI_none;
 
 	public static String maxLengthStringInHTMLDocumentTypeRegistry = ""; //$NON-NLS-1$
 	public static String maxLengthStringInCharacterCodeRegistry = ""; //$NON-NLS-1$

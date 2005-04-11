@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
+import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.html.ui.internal.Logger;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.ui.contentproperties.IContentSettings;
@@ -51,7 +51,7 @@ public final class ProjectContentSettingsPropertyPage extends ContentSettingsPro
 
 		// create description of implecit DOCTYPE	
 		Label label = new Label(propertyPage, SWT.LEFT);
-		label.setText(HTMLUIPlugin.getResourceString("%UI_Description_of_role_of_following_DOCTYPE"));//$NON-NLS-1$
+		label.setText(HTMLUIMessages.UI_Description_of_role_of_following_DOCTYPE);
 		GridData data = new GridData();
 		data.horizontalAlignment = GridData.FILL;
 		data.horizontalSpan = numCols;
@@ -202,7 +202,7 @@ public final class ProjectContentSettingsPropertyPage extends ContentSettingsPro
 		GridData data = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
 		data.horizontalIndent = 10;
 		publicLabel.setLayoutData(data);
-		publicLabel.setText(HTMLUIPlugin.getResourceString("%UI_Public_ID"));//$NON-NLS-1$
+		publicLabel.setText(HTMLUIMessages.UI_Public_ID);
 		publicIdText = new Text(super.propertyPage, SWT.BORDER | SWT.READ_ONLY);
 		data = new GridData();
 
@@ -212,7 +212,7 @@ public final class ProjectContentSettingsPropertyPage extends ContentSettingsPro
 		data = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_HORIZONTAL);
 		data.horizontalIndent = 10;
 		systemLabel.setLayoutData(data);
-		systemLabel.setText(HTMLUIPlugin.getResourceString("%UI_System_ID"));//$NON-NLS-1$
+		systemLabel.setText(HTMLUIMessages.UI_System_ID);
 		systemIdText = new Text(super.propertyPage, SWT.BORDER | SWT.READ_ONLY);
 		data = new GridData();
 

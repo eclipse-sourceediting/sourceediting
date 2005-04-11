@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.html.core.contenttype.ContentTypeIdForHTML;
+import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.core.IModelManager;
@@ -50,7 +51,7 @@ public class HTMLColorPage extends XMLColorPage {
 	}
 
 	public String getSampleText() {
-		return HTMLUIPlugin.getResourceString("%Sample_HTML_doc"); //$NON-NLS-1$ = "<!DOCTYPE HTML\n\tPUBLIC \"-//W3C/DTD/ HTML 4.01 Transitional//EN\"\n\t\"http://www.w3.org/TR/html4/loose.dtd\">\n<HTML>\n\t<HEAD>\n\t\t<META content=\"text/html\">\n\t\t<TITLE>HTML Highlighting Preferences</TITLE>\n\t</HEAD>\n<BODY>\n\t<!--\n\t\twe need a flaming logo!\n\t-->\n\t<%\t%>\n</BODY>\n</HTML>"
+		return HTMLUIMessages.Sample_HTML_doc;
 
 	}
 

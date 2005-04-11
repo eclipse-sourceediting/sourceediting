@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.html.validation;
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
@@ -22,8 +19,6 @@ import org.osgi.framework.BundleContext;
 public class HTMLValidationPlugin extends Plugin {
 	// The shared instance.
 	private static HTMLValidationPlugin plugin;
-	// Resource bundle.
-	private ResourceBundle resourceBundle;
 
 	/**
 	 * The constructor.
@@ -46,7 +41,6 @@ public class HTMLValidationPlugin extends Plugin {
 	public void stop(BundleContext context) throws Exception {
 		super.stop(context);
 		plugin = null;
-		resourceBundle = null;
 	}
 
 	/**
@@ -54,33 +48,5 @@ public class HTMLValidationPlugin extends Plugin {
 	 */
 	public static HTMLValidationPlugin getDefault() {
 		return plugin;
-	}
-
-	/**
-	 * Returns the string from the plugin's resource bundle, or 'key' if not
-	 * found.
-	 */
-	public static String getResourceString(String key) {
-		ResourceBundle bundle = HTMLValidationPlugin.getDefault().getResourceBundle();
-		try {
-			return (bundle != null) ? bundle.getString(key) : key;
-		}
-		catch (MissingResourceException e) {
-			return key;
-		}
-	}
-
-	/**
-	 * Returns the plugin's resource bundle,
-	 */
-	public ResourceBundle getResourceBundle() {
-		try {
-			if (resourceBundle == null)
-				resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.html.validation.HTMLValidationPluginResources");
-		}
-		catch (MissingResourceException x) {
-			resourceBundle = null;
-		}
-		return resourceBundle;
 	}
 }

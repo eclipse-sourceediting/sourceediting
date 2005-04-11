@@ -18,10 +18,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
+import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.xml.ui.preferences.XMLSourcePreferencePage;
 
 public class HTMLSourcePreferencePage extends XMLSourcePreferencePage {
@@ -58,19 +58,19 @@ public class HTMLSourcePreferencePage extends XMLSourcePreferencePage {
 
 	protected Composite createContentsForPreferredCaseGroup(Composite parent, int columnSpan) {
 		Group caseGroup = createGroup(parent, columnSpan);
-		caseGroup.setText(SSEUIPlugin.getResourceString("%Preferred_markup_case_UI_")); //$NON-NLS-1$ = "Preferred markup case"
+		caseGroup.setText(HTMLUIMessages.Preferred_markup_case_UI_);
 
 		// d257064 need to associate group w/ radio buttons so radio buttons header can be read
 		Group tagNameGroup = createGroup(caseGroup, 1);
-		tagNameGroup.setText(SSEUIPlugin.getResourceString("%Tag_names__UI_")); //$NON-NLS-1$ = "Tag names:"
-		fTagNameUpper = createRadioButton(tagNameGroup, SSEUIPlugin.getResourceString("%Tag_names_Upper_case_UI_")); //$NON-NLS-1$ = "&Upper case"
-		fTagNameLower = createRadioButton(tagNameGroup, SSEUIPlugin.getResourceString("%Tag_names_Lower_case_UI_")); //$NON-NLS-1$ = "&Lower case"
+		tagNameGroup.setText(HTMLUIMessages.Tag_names__UI_);
+		fTagNameUpper = createRadioButton(tagNameGroup, HTMLUIMessages.Tag_names_Upper_case_UI_);
+		fTagNameLower = createRadioButton(tagNameGroup, HTMLUIMessages.Tag_names_Lower_case_UI_);
 
 		// d257064 need to associate group w/ radio buttons so radio buttons header can be read
 		Group attrNameGroup = createGroup(caseGroup, 1);
-		attrNameGroup.setText(SSEUIPlugin.getResourceString("%Attribute_names__UI_")); //$NON-NLS-1$ = "Attribute names:"
-		fAttrNameUpper = createRadioButton(attrNameGroup, SSEUIPlugin.getResourceString("%Attribute_names_Upper_case_UI_")); //$NON-NLS-1$ = "U&pper case"
-		fAttrNameLower = createRadioButton(attrNameGroup, SSEUIPlugin.getResourceString("%Attribute_names_Lower_case_UI_")); //$NON-NLS-1$ = "L&ower case"
+		attrNameGroup.setText(HTMLUIMessages.Attribute_names__UI_);
+		fAttrNameUpper = createRadioButton(attrNameGroup, HTMLUIMessages.Attribute_names_Upper_case_UI_);
+		fAttrNameLower = createRadioButton(attrNameGroup, HTMLUIMessages.Attribute_names_Lower_case_UI_);
 
 		return parent;
 

@@ -24,12 +24,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.html.core.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
+import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.internal.cleanup.XMLCleanupPreferencesImpl;
 
@@ -57,7 +57,7 @@ public class CleanupDialogHTML extends Dialog implements SelectionListener {
 	}
 
 	public Control createDialogArea(Composite parent) {
-		getShell().setText(SSEUIPlugin.getResourceString("%Cleanup_UI_")); //$NON-NLS-1$ = "Cleanup"
+		getShell().setText(HTMLUIMessages.Cleanup_UI_);
 		Composite composite = new Composite(parent, SWT.NULL);
 
 		createDialogAreaInComposite(composite);
@@ -70,33 +70,33 @@ public class CleanupDialogHTML extends Dialog implements SelectionListener {
 		// Convert tag name case
 		// d257064 need to associate group w/ radio buttons so radio buttons header can be read
 		Group tagNameCase = new Group(composite, SWT.NONE);
-		tagNameCase.setText(SSEUIPlugin.getResourceString("%Tag_name_case_for_HTML_UI_")); //$NON-NLS-1$ = "Tag name case for HTML:"
+		tagNameCase.setText(HTMLUIMessages.Tag_name_case_for_HTML_UI_);
 		GridLayout hLayout = new GridLayout();
 		hLayout.numColumns = 3;
 		tagNameCase.setLayout(hLayout);
 		fRadioButtonTagNameCaseAsis = new Button(tagNameCase, SWT.RADIO);
-		fRadioButtonTagNameCaseAsis.setText(SSEUIPlugin.getResourceString("%Tag_name_case_As-is_UI_")); //$NON-NLS-1$ = "&As-is"
+		fRadioButtonTagNameCaseAsis.setText(HTMLUIMessages.Tag_name_case_As_is_UI_);
 		fRadioButtonTagNameCaseAsis.addSelectionListener(this);
 		fRadioButtonTagNameCaseLower = new Button(tagNameCase, SWT.RADIO);
-		fRadioButtonTagNameCaseLower.setText(SSEUIPlugin.getResourceString("%Tag_name_case_Lower_UI_")); //$NON-NLS-1$ = "&Lower"
+		fRadioButtonTagNameCaseLower.setText(HTMLUIMessages.Tag_name_case_Lower_UI_);
 		fRadioButtonTagNameCaseLower.addSelectionListener(this);
 		fRadioButtonTagNameCaseUpper = new Button(tagNameCase, SWT.RADIO);
-		fRadioButtonTagNameCaseUpper.setText(SSEUIPlugin.getResourceString("%Tag_name_case_Upper_UI_")); //$NON-NLS-1$ = "&Upper"
+		fRadioButtonTagNameCaseUpper.setText(HTMLUIMessages.Tag_name_case_Upper_UI_);
 		fRadioButtonTagNameCaseUpper.addSelectionListener(this);
 
 		// Convert attr name case
 		// d257064 need to associate group w/ radio buttons so radio buttons header can be read
 		Group attrNameCase = new Group(composite, SWT.NONE);
-		attrNameCase.setText(SSEUIPlugin.getResourceString("%Attribute_name_case_for_HTML_UI_")); //$NON-NLS-1$ = "Attribute name case for HTML:"
+		attrNameCase.setText(HTMLUIMessages.Attribute_name_case_for_HTML_UI_);
 		attrNameCase.setLayout(hLayout);
 		fRadioButtonAttrNameCaseAsis = new Button(attrNameCase, SWT.RADIO);
-		fRadioButtonAttrNameCaseAsis.setText(SSEUIPlugin.getResourceString("%Attribute_name_case_As-is_UI_")); //$NON-NLS-1$ = "A&s-is"
+		fRadioButtonAttrNameCaseAsis.setText(HTMLUIMessages.Attribute_name_case_As_is_UI_);
 		fRadioButtonAttrNameCaseAsis.addSelectionListener(this);
 		fRadioButtonAttrNameCaseLower = new Button(attrNameCase, SWT.RADIO);
-		fRadioButtonAttrNameCaseLower.setText(SSEUIPlugin.getResourceString("%Attribute_name_case_Lower_UI_")); //$NON-NLS-1$ = "L&ower"
+		fRadioButtonAttrNameCaseLower.setText(HTMLUIMessages.Attribute_name_case_Lower_UI_);
 		fRadioButtonAttrNameCaseLower.addSelectionListener(this);
 		fRadioButtonAttrNameCaseUpper = new Button(attrNameCase, SWT.RADIO);
-		fRadioButtonAttrNameCaseUpper.setText(SSEUIPlugin.getResourceString("%Attribute_name_case_Upper_UI_")); //$NON-NLS-1$ = "U&pper"
+		fRadioButtonAttrNameCaseUpper.setText(HTMLUIMessages.Attribute_name_case_Upper_UI_);
 		fRadioButtonAttrNameCaseUpper.addSelectionListener(this);
 	}
 
@@ -115,40 +115,40 @@ public class CleanupDialogHTML extends Dialog implements SelectionListener {
 
 		// Insert missing required attrs
 		fCheckBoxInsertRequiredAttrs = new Button(composite, SWT.CHECK);
-		fCheckBoxInsertRequiredAttrs.setText(SSEUIPlugin.getResourceString("%Insert_required_attributes_UI_")); //$NON-NLS-1$
+		fCheckBoxInsertRequiredAttrs.setText(HTMLUIMessages.Insert_required_attributes_UI_);
 		fCheckBoxInsertRequiredAttrs.addSelectionListener(this);
 
 		// Insert missing begin/end tags
 		fCheckBoxInsertMissingTags = new Button(composite, SWT.CHECK);
-		fCheckBoxInsertMissingTags.setText(SSEUIPlugin.getResourceString("%Insert_missing_tags_UI_")); //$NON-NLS-1$ = "Insert missing tags"
+		fCheckBoxInsertMissingTags.setText(HTMLUIMessages.Insert_missing_tags_UI_);
 		fCheckBoxInsertMissingTags.addSelectionListener(this);
 
 		// Quote attribute values
 		fCheckBoxQuoteAttrValues = new Button(composite, SWT.CHECK);
-		fCheckBoxQuoteAttrValues.setText(SSEUIPlugin.getResourceString("%Quote_attribute_values_UI_")); //$NON-NLS-1$ = "Quote attribute values"
+		fCheckBoxQuoteAttrValues.setText(HTMLUIMessages.Quote_attribute_values_UI_);
 		fCheckBoxQuoteAttrValues.addSelectionListener(this);
 
 		// Format source
 		fCheckBoxFormatSource = new Button(composite, SWT.CHECK);
-		fCheckBoxFormatSource.setText(SSEUIPlugin.getResourceString("%Format_source_UI_")); //$NON-NLS-1$ = "Format source"
+		fCheckBoxFormatSource.setText(HTMLUIMessages.Format_source_UI_);
 		fCheckBoxFormatSource.addSelectionListener(this);
 
 		// Convert EOL code
 		fCheckBoxConvertEOLCodes = new Button(composite, SWT.CHECK);
-		fCheckBoxConvertEOLCodes.setText(SSEUIPlugin.getResourceString("%Convert_EOL_codes_UI_")); //$NON-NLS-1$ = "Convert end-of-line codes"
+		fCheckBoxConvertEOLCodes.setText(HTMLUIMessages.Convert_EOL_codes_UI_);
 		fCheckBoxConvertEOLCodes.addSelectionListener(this);
 		Composite EOLCodes = new Composite(composite, SWT.NULL);
 		GridLayout hLayout = new GridLayout();
 		hLayout.numColumns = 3;
 		EOLCodes.setLayout(hLayout);
 		fRadioButtonConvertEOLWindows = new Button(EOLCodes, SWT.RADIO);
-		fRadioButtonConvertEOLWindows.setText(SSEUIPlugin.getResourceString("%EOL_Windows_UI")); //$NON-NLS-1$ = "Windows"
+		fRadioButtonConvertEOLWindows.setText(HTMLUIMessages.EOL_Windows_UI);
 		fRadioButtonConvertEOLWindows.addSelectionListener(this);
 		fRadioButtonConvertEOLUnix = new Button(EOLCodes, SWT.RADIO);
-		fRadioButtonConvertEOLUnix.setText(SSEUIPlugin.getResourceString("%EOL_Unix_UI")); //$NON-NLS-1$ = "Unix"
+		fRadioButtonConvertEOLUnix.setText(HTMLUIMessages.EOL_Unix_UI);
 		fRadioButtonConvertEOLUnix.addSelectionListener(this);
 		fRadioButtonConvertEOLMac = new Button(EOLCodes, SWT.RADIO);
-		fRadioButtonConvertEOLMac.setText(SSEUIPlugin.getResourceString("%EOL_Mac_UI")); //$NON-NLS-1$ = "Mac"
+		fRadioButtonConvertEOLMac.setText(HTMLUIMessages.EOL_Mac_UI);
 		fRadioButtonConvertEOLMac.addSelectionListener(this);
 	}
 

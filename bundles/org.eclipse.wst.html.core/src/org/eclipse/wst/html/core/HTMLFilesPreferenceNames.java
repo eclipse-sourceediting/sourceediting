@@ -30,5 +30,5 @@ public interface HTMLFilesPreferenceNames extends CommonModelPreferenceNames {
 	// Platform.getProduct() is spec'd so it might return null.
 	// Its expected for any final product it would not be, so we'll return 
 	// "WTP" for development/interim builds. No need to translate. 
-	static String GENERATOR = (product == null) ? "WTP": product.getName();
+	static String GENERATOR = (product == null) ? "WTP": product.getName(); //$NON-NLS-1$
 }
