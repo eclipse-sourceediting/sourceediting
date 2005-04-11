@@ -15,8 +15,8 @@ import java.util.Iterator;
 
 import org.eclipse.wst.css.core.internal.metamodel.CSSProfile;
 import org.eclipse.wst.css.core.internal.metamodel.CSSProfileRegistry;
-import org.eclipse.wst.html.core.document.HTMLDocumentTypeEntry;
-import org.eclipse.wst.html.core.document.HTMLDocumentTypeRegistry;
+import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeEntry;
+import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeRegistry;
 import org.eclipse.wst.sse.core.internal.encoding.CommonCharsetNames;
 import org.eclipse.wst.sse.ui.contentproperties.ui.ComboList;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;

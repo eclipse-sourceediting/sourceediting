@@ -14,8 +14,8 @@ package org.eclipse.jst.jsp.core.internal.parser;
 import java.util.Iterator;
 
 import org.eclipse.jst.jsp.core.JSP12Namespace;
-import org.eclipse.jst.jsp.core.contentmodel.tld.JSP11TLDNames;
-import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP11TLDNames;
+import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.text.CoreNodeList;
@@ -29,7 +29,7 @@ import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.xml.core.internal.parser.XMLStructuredDocumentReParser;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 public class JSPReParser extends XMLStructuredDocumentReParser {
 
@@ -187,25 +187,25 @@ public class JSPReParser extends XMLStructuredDocumentReParser {
 
 		IStructuredDocumentRegion previous = parent.getPrevious();
 		// case 1 test
-		if (parent.getRegions().size() == 1 && region.getType() == XMLRegionContext.XML_TAG_OPEN && (previous == null || (!previous.isEnded() || previous.getType() == XMLRegionContext.XML_CONTENT))) {
+		if (parent.getRegions().size() == 1 && region.getType() == DOMRegionContext.XML_TAG_OPEN && (previous == null || (!previous.isEnded() || previous.getType() == DOMRegionContext.XML_CONTENT))) {
 			result = true;
 		}
 		//case 2 test
 		if (region instanceof ITextRegionContainer) {
 			ITextRegionContainer container = (ITextRegionContainer) region;
 			ITextRegion internal = container.getRegions().get(container.getRegions().size() - 1);
-			if (internal.getType() == XMLRegionContext.WHITE_SPACE && container.getRegions().size() >= 2)
+			if (internal.getType() == DOMRegionContext.WHITE_SPACE && container.getRegions().size() >= 2)
 				internal = container.getRegions().get(container.getRegions().size() - 2);
-			if (internal.getType() == XMLRegionContext.XML_EMPTY_TAG_CLOSE) {
+			if (internal.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE) {
 				result = true;
 			}
 		}
 		//case 3 test
-		if (changesIncludeA_lt && (region.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME || region.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE)) {
+		if (changesIncludeA_lt && (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME || region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)) {
 			result = true;
 		}
 		//case 4 test
-		if (delsIncludeA_gt && region.getType() == XMLRegionContext.XML_TAG_CLOSE) {
+		if (delsIncludeA_gt && region.getType() == DOMRegionContext.XML_TAG_CLOSE) {
 			result = true;
 		}
 		return result;
@@ -216,7 +216,7 @@ public class JSPReParser extends XMLStructuredDocumentReParser {
 	 * IStructuredDocumentRegion, includes a jsp:root tag
 	 */
 	private boolean isJspRoot(ITextRegionList regions) {
-		return regions.size() > 1 && regions.get(0).getType() == XMLRegionContext.XML_TAG_OPEN && regions.get(1).getType() == DOMJSPRegionContexts.JSP_ROOT_TAG_NAME;
+		return regions.size() > 1 && regions.get(0).getType() == DOMRegionContext.XML_TAG_OPEN && regions.get(1).getType() == DOMJSPRegionContexts.JSP_ROOT_TAG_NAME;
 	}
 
 	/**
@@ -226,7 +226,7 @@ public class JSPReParser extends XMLStructuredDocumentReParser {
 	 */
 	private boolean isTaglibOrInclude(IStructuredDocumentRegion node, ITextRegionList regions) {
 		boolean sizeAndTypesMatch = (regions.size() > 1) && (regions.get(1).getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME)
-					&& (regions.get(0).getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN || regions.get(0).getType() == XMLRegionContext.XML_TAG_OPEN);
+					&& (regions.get(0).getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN || regions.get(0).getType() == DOMRegionContext.XML_TAG_OPEN);
 		if (!sizeAndTypesMatch)
 			return false;
 		ITextRegion region = regions.get(1);

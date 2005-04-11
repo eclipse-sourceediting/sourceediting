@@ -22,7 +22,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.wst.html.core.validate.HTMLValidationAdapterFactory;
+import org.eclipse.wst.html.core.internal.validate.HTMLValidationAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;

@@ -15,7 +15,7 @@ package org.eclipse.wst.xml.core.internal.parser;
 import org.eclipse.wst.sse.core.internal.text.StructuredDocumentReParser;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredTextReParser;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 
 public class XMLStructuredDocumentReParser extends StructuredDocumentReParser {
@@ -97,14 +97,14 @@ public class XMLStructuredDocumentReParser extends StructuredDocumentReParser {
 	protected boolean isLoneOpenFollowedByContent(IStructuredDocumentRegion flatNode) {
 		boolean result = false;
 		String type = flatNode.getType();
-		if (type == XMLRegionContext.XML_CONTENT) {
+		if (type == DOMRegionContext.XML_CONTENT) {
 			IStructuredDocumentRegion previous = flatNode.getPrevious();
 			String previousType = null;
 			if (previous != null) {
 				previousType = previous.getType();
 			}
 			if (previousType != null) {
-				result = (previousType == XMLRegionContext.XML_TAG_OPEN);
+				result = (previousType == DOMRegionContext.XML_TAG_OPEN);
 			}
 		}
 		return result;
@@ -113,7 +113,7 @@ public class XMLStructuredDocumentReParser extends StructuredDocumentReParser {
 	protected boolean isPartOfBlockRegion(IStructuredDocumentRegion flatNode) {
 		boolean result = false;
 		String type = flatNode.getType();
-		result = (type == XMLRegionContext.BLOCK_TEXT);
+		result = (type == DOMRegionContext.BLOCK_TEXT);
 		return result;
 	}
 

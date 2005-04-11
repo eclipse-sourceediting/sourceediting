@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.wst.xml.core.document.IDOMNode;
-import org.eclipse.wst.xml.core.format.NodeFormatter;
+import org.eclipse.wst.xml.core.internal.provisional.format.NodeFormatter;
 import org.w3c.dom.Node;
 
 public class DragNodesCommand extends BaseDragNodesCommand

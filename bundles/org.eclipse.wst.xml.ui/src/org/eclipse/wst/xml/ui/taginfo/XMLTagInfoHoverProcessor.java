@@ -35,7 +35,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceHelper;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -96,11 +96,11 @@ public class XMLTagInfoHoverProcessor implements ITextHover {
 		if (region == null)
 			return null;
 		String regionType = region.getType();
-		if (regionType == XMLRegionContext.XML_TAG_NAME)
+		if (regionType == DOMRegionContext.XML_TAG_NAME)
 			result = computeTagNameHelp((IDOMNode) treeNode, parentNode, flatNode, region);
-		else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME)
+		else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)
 			result = computeTagAttNameHelp((IDOMNode) treeNode, parentNode, flatNode, region);
-		else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE)
+		else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)
 			result = computeTagAttValueHelp((IDOMNode) treeNode, parentNode, flatNode, region);
 		return result;
 	}
@@ -176,7 +176,7 @@ public class XMLTagInfoHoverProcessor implements ITextHover {
 		ITextRegion nameRegion = null;
 		while (i >= 0) {
 			nameRegion = openRegions.get(i--);
-			if (nameRegion.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME)
+			if (nameRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)
 				break;
 		}
 		return nameRegion;
@@ -262,7 +262,7 @@ public class XMLTagInfoHoverProcessor implements ITextHover {
 			// only supply hoverhelp for tag name, attribute name, or
 			// attribute value
 			String regionType = region.getType();
-			if ((regionType == XMLRegionContext.XML_TAG_NAME) || (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) || (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE)) {
+			if ((regionType == DOMRegionContext.XML_TAG_NAME) || (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) || (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)) {
 				try {
 					// check if we are at whitespace before or after line
 					IRegion line = textViewer.getDocument().getLineInformationOfOffset(offset);
@@ -300,7 +300,7 @@ public class XMLTagInfoHoverProcessor implements ITextHover {
 			// only supply hoverhelp for tag name, attribute name, or
 			// attribute value
 			String regionType = region.getType();
-			if ((regionType == XMLRegionContext.XML_TAG_NAME) || (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) || (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE)) {
+			if ((regionType == DOMRegionContext.XML_TAG_NAME) || (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) || (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)) {
 				try {
 					// check if we are at whitespace before or after line
 					IRegion line = textViewer.getDocument().getLineInformationOfOffset(offset);

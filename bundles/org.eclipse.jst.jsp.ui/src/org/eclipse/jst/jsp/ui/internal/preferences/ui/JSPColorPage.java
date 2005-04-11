@@ -17,7 +17,7 @@ import java.util.Iterator;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
-import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.editor.IHelpContextIds;
@@ -30,7 +30,7 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore.OverlayKey;
 import org.eclipse.wst.sse.ui.preferences.ui.StyledTextColorPicker;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.preferences.XMLColorPage;
 import org.eclipse.wst.xml.ui.style.IStyleConstantsXML;
 
@@ -61,11 +61,11 @@ public class JSPColorPage extends XMLColorPage {
 	protected void initContextStyleMap(Dictionary contextStyleMap) {
 
 		initCommonContextStyleMap(contextStyleMap);
-		contextStyleMap.remove(XMLRegionContext.XML_CONTENT); // leave content between tags alone
-		contextStyleMap.remove(XMLRegionContext.XML_DECLARATION_OPEN); // xml/html specific
-		contextStyleMap.remove(XMLRegionContext.XML_DECLARATION_CLOSE); // xml/html specific
-		contextStyleMap.remove(XMLRegionContext.XML_ELEMENT_DECLARATION); // xml/html specific
-		contextStyleMap.remove(XMLRegionContext.XML_ELEMENT_DECL_CLOSE); // xml/html specific
+		contextStyleMap.remove(DOMRegionContext.XML_CONTENT); // leave content between tags alone
+		contextStyleMap.remove(DOMRegionContext.XML_DECLARATION_OPEN); // xml/html specific
+		contextStyleMap.remove(DOMRegionContext.XML_DECLARATION_CLOSE); // xml/html specific
+		contextStyleMap.remove(DOMRegionContext.XML_ELEMENT_DECLARATION); // xml/html specific
+		contextStyleMap.remove(DOMRegionContext.XML_ELEMENT_DECL_CLOSE); // xml/html specific
 
 		//	contextStyleMap.put(XMLJSPRegionContexts.JSP_CONTENT, HTMLColorManager.SCRIPT_AREA);
 		//	contextStyleMap.put(XMLJSPRegionContexts.BLOCK_TEXT, HTMLColorManager.SCRIPT_AREA);

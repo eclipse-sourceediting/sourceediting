@@ -11,7 +11,7 @@
 package org.eclipse.jst.jsp.core.internal.parser.internal;
 
 import org.eclipse.jst.jsp.core.internal.parser.JSPCodeRegion;
-import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.parser.regions.XMLParserRegionFactory;
 

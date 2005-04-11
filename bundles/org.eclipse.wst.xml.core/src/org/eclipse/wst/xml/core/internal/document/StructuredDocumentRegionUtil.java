@@ -17,7 +17,7 @@ package org.eclipse.wst.xml.core.internal.document;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 
 /**
@@ -88,10 +88,10 @@ class StructuredDocumentRegionUtil {
 	 */
 	static String getFirstRegionType(IStructuredDocumentRegion flatNode) {
 		if (flatNode == null)
-			return XMLRegionContext.UNDEFINED;
+			return DOMRegionContext.UNDEFINED;
 		ITextRegionList regions = flatNode.getRegions();
 		if (regions == null || regions.size() == 0)
-			return XMLRegionContext.UNDEFINED;
+			return DOMRegionContext.UNDEFINED;
 		ITextRegion region = regions.get(0);
 		return region.getType();
 	}
@@ -127,10 +127,10 @@ class StructuredDocumentRegionUtil {
 	 */
 	static String getLastRegionType(IStructuredDocumentRegion flatNode) {
 		if (flatNode == null)
-			return XMLRegionContext.UNDEFINED;
+			return DOMRegionContext.UNDEFINED;
 		ITextRegionList regions = flatNode.getRegions();
 		if (regions == null || regions.size() == 0)
-			return XMLRegionContext.UNDEFINED;
+			return DOMRegionContext.UNDEFINED;
 		ITextRegion region = regions.get(regions.size() - 1);
 		return region.getType();
 	}

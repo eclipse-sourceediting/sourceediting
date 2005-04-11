@@ -23,15 +23,15 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.xml.core.IXMLNamespace;
-import org.eclipse.wst.xml.core.commentelement.CommentElementAdapter;
 import org.eclipse.wst.xml.core.document.IDOMElement;
 import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.document.IDOMNode;
+import org.eclipse.wst.xml.core.internal.commentelement.CommentElementAdapter;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.parser.XMLSourceParser;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -439,7 +439,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		while (e.hasNext()) {
 			ITextRegion region = (ITextRegion) e.next();
 			String regionType = region.getType();
-			if (regionType == XMLRegionContext.XML_TAG_NAME || isNestedEndTag(regionType)) {
+			if (regionType == DOMRegionContext.XML_TAG_NAME || isNestedEndTag(regionType)) {
 				return this.endStructuredDocumentRegion.getText(region);
 			}
 		}
@@ -736,12 +736,12 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		}
 		String regionType = StructuredDocumentRegionUtil.getLastRegionType(flatNode);
 		if (isCommentTag()) {
-			return (isNestedClosedComment(regionType) || regionType == XMLRegionContext.XML_COMMENT_CLOSE);
+			return (isNestedClosedComment(regionType) || regionType == DOMRegionContext.XML_COMMENT_CLOSE);
 		}
 		if (isJSPTag()) {
 			return isNestedClosed(regionType);
 		}
-		return (regionType == XMLRegionContext.XML_TAG_CLOSE || regionType == XMLRegionContext.XML_EMPTY_TAG_CLOSE || regionType == XMLRegionContext.XML_DECLARATION_CLOSE);
+		return (regionType == DOMRegionContext.XML_TAG_CLOSE || regionType == DOMRegionContext.XML_EMPTY_TAG_CLOSE || regionType == DOMRegionContext.XML_DECLARATION_CLOSE);
 	}
 
 	protected boolean isNestedClosed(String regionType) {
@@ -846,14 +846,14 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 			return true; // will be generated
 		String regionType = StructuredDocumentRegionUtil.getLastRegionType(flatNode);
 		if (isCommentTag()) {
-			return (isNestedClosedComment(regionType) || regionType == XMLRegionContext.XML_COMMENT_CLOSE);
+			return (isNestedClosedComment(regionType) || regionType == DOMRegionContext.XML_COMMENT_CLOSE);
 		}
 		if (isJSPTag()) {
 			if (isContainer())
 				return true; // start tag always has a single region
 			return isClosedNestedDirective(regionType);
 		}
-		return (regionType == XMLRegionContext.XML_TAG_CLOSE || regionType == XMLRegionContext.XML_EMPTY_TAG_CLOSE || regionType == XMLRegionContext.XML_DECLARATION_CLOSE);
+		return (regionType == DOMRegionContext.XML_TAG_CLOSE || regionType == DOMRegionContext.XML_EMPTY_TAG_CLOSE || regionType == DOMRegionContext.XML_DECLARATION_CLOSE);
 	}
 
 	protected boolean isClosedNestedDirective(String regionType) {
@@ -917,7 +917,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		DocumentImpl document = (DocumentImpl) getContainerDocument();
 		if (document == null)
 			return;
-		XMLModelImpl model = (XMLModelImpl) document.getModel();
+		DOMModelImpl model = (DOMModelImpl) document.getModel();
 		if (model == null)
 			return;
 		model.attrReplaced(this, newAttr, oldAttr);
@@ -930,7 +930,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		DocumentImpl document = (DocumentImpl) getContainerDocument();
 		if (document == null)
 			return;
-		XMLModelImpl model = (XMLModelImpl) document.getModel();
+		DOMModelImpl model = (DOMModelImpl) document.getModel();
 		if (model == null)
 			return;
 		model.endTagChanged(this);
@@ -942,7 +942,7 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 		DocumentImpl document = (DocumentImpl) getContainerDocument();
 		if (document == null)
 			return;
-		XMLModelImpl model = (XMLModelImpl) document.getModel();
+		DOMModelImpl model = (DOMModelImpl) document.getModel();
 		if (model == null)
 			return;
 		model.startTagChanged(this);

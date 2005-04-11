@@ -19,14 +19,14 @@ import java.util.Vector;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleRule;
 import org.eclipse.wst.css.ui.image.CSSImageType;
-import org.eclipse.wst.html.core.contentmodel.HTMLCMDocumentFactory;
-import org.eclipse.wst.xml.core.contentmodel.CMDocType;
+import org.eclipse.wst.html.core.internal.contentmodel.HTMLCMDocumentFactory;
 import org.eclipse.wst.xml.core.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.document.DocumentTypeAdapter;
+import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMDocType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 

@@ -16,7 +16,7 @@ import java.util.ResourceBundle;
 
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.ui.internal.search.BasicFindOccurrencesAction;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
 
@@ -45,7 +45,7 @@ public class XMLFindOccurrencesAction extends BasicFindOccurrencesAction {
 
 	public String[] getRegionTypes() {
 
-		return new String[]{XMLRegionContext.XML_TAG_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE};
+		return new String[]{DOMRegionContext.XML_TAG_NAME, DOMRegionContext.XML_TAG_ATTRIBUTE_NAME, DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE};
 	}
 
 }

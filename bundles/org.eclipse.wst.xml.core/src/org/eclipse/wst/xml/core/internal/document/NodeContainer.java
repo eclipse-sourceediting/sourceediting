@@ -302,7 +302,7 @@ public abstract class NodeContainer extends NodeImpl implements Node, NodeList {
 
 	public boolean isChildEditable() {
 		if (!fChildEditable) {
-			XMLModelImpl model = (XMLModelImpl) getModel();
+			DOMModelImpl model = (DOMModelImpl) getModel();
 			if (model != null && model.isReparsing()) {
 				return true;
 			}
@@ -351,7 +351,7 @@ public abstract class NodeContainer extends NodeImpl implements Node, NodeList {
 
 		syncChildEditableState(newChild);
 
-		XMLModelImpl model = (XMLModelImpl) document.getModel();
+		DOMModelImpl model = (DOMModelImpl) document.getModel();
 		if (model == null)
 			return;
 		model.childReplaced(this, newChild, oldChild);

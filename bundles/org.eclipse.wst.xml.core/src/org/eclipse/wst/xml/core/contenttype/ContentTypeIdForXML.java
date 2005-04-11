@@ -13,13 +13,12 @@
 package org.eclipse.wst.xml.core.contenttype;
 
 /**
- * This class, with its one field, is a convience to provide compile-time
+ * This class, with its few field, is a convience to provide compile-time
  * safety when refering to a contentType ID. The value of the contenttype id
  * field must match what is specified in plugin.xml file.
  * 
  * @since 1.0
  */
-
 public class ContentTypeIdForXML {
 	/**
 	 * This content type is actually supplied by base Eclipse. Its given here

@@ -14,7 +14,7 @@ package org.eclipse.jst.jsp.ui.internal.editor;
 
 import org.eclipse.jst.jsp.core.JSP11Namespace;
 import org.eclipse.jst.jsp.core.JSP12Namespace;
-import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
+import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapter;
 import org.eclipse.wst.xml.core.document.IDOMDocument;
 import org.eclipse.wst.xml.ui.extensions.XMLSourceEditingTextTools;
 import org.w3c.dom.Document;

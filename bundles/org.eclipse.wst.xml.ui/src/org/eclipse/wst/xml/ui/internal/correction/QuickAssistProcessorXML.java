@@ -29,7 +29,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -106,7 +106,7 @@ public class QuickAssistProcessorXML implements IQuickAssistProcessor {
 			regionTextEndOffset = endStructuredDocumentRegion.getTextEndOffset(region);
 		}
 
-		if (region != null && (region.getType() == XMLRegionContext.XML_TAG_NAME || region.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) && offset <= regionTextEndOffset)
+		if (region != null && (region.getType() == DOMRegionContext.XML_TAG_NAME || region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) && offset <= regionTextEndOffset)
 			proposals.add(new RenameInFileQuickAssistProposal());
 	}
 

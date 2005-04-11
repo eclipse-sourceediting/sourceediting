@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.document;
 
-import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.xml.core.document.IDOMDocument;

@@ -31,7 +31,7 @@ import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 import org.eclipse.wst.xml.core.document.IDOMNode;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.correction.ProblemIDsXML;
 import org.w3c.dom.Node;
 
@@ -84,7 +84,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 		int end = structuredDocumentRegion.getEndOffset();
 		for (int i = 0; i < textRegions.size() && errorCount < ELEMENT_ERROR_LIMIT && !structuredDocumentRegion.isDeleted(); i++) {
 			ITextRegion textRegion = textRegions.get(i);
-			if (textRegion.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME || textRegion.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS || textRegion.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+			if (textRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME || textRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS || textRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 				if (start > structuredDocumentRegion.getStartOffset(textRegion))
 					start = structuredDocumentRegion.getStartOffset(textRegion);
 				end = structuredDocumentRegion.getEndOffset(textRegion);
@@ -114,7 +114,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 		boolean closed = false;
 		for (int i = 0; i < regions.size()  && !structuredDocumentRegion.isDeleted(); i++) {
 			r = regions.get(i);
-			if (r.getType() == XMLRegionContext.XML_TAG_CLOSE || r.getType() == XMLRegionContext.XML_EMPTY_TAG_CLOSE)
+			if (r.getType() == DOMRegionContext.XML_TAG_CLOSE || r.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE)
 				closed = true;
 		}
 		if (!closed) {
@@ -140,7 +140,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 		ITextRegionList regions = structuredDocumentRegion.getRegions();
 		if (regions.size() == 2) {
 			// missing name region
-			if (regions.get(0).getType() == XMLRegionContext.XML_TAG_OPEN && regions.get(1).getType() == XMLRegionContext.XML_TAG_CLOSE) {
+			if (regions.get(0).getType() == DOMRegionContext.XML_TAG_OPEN && regions.get(1).getType() == DOMRegionContext.XML_TAG_CLOSE) {
 				String message = SSEUIPlugin.getResourceString("%ReconcileStepForMarkup.3"); //$NON-NLS-1$
 				int start = structuredDocumentRegion.getStartOffset();
 				int length = structuredDocumentRegion.getLength();
@@ -167,7 +167,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 		int errorCount = 0;
 		for (int i = 0; i < textRegions.size() && errorCount < ELEMENT_ERROR_LIMIT; i++) {
 			ITextRegion textRegion = textRegions.get(i);
-			if (textRegion.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME || isTagCloseTextRegion(textRegion)) {
+			if (textRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME || isTagCloseTextRegion(textRegion)) {
 				// dangling name and '='
 				if (attrState == 2 && i >= 2) {
 					// create annotation
@@ -206,9 +206,9 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 					errorCount++;
 				}
 				attrState = 1;
-			} else if (textRegion.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+			} else if (textRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
 				attrState = 2;
-			} else if (textRegion.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+			} else if (textRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 				attrState = 0;
 			}
 		}
@@ -253,7 +253,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 		int errorCount = 0;
 		for (int i = 0; i < regions.size() && errorCount < ELEMENT_ERROR_LIMIT && !structuredDocumentRegion.isDeleted(); i++) {
 			r = regions.get(i);
-			if (r.getType() == XMLRegionContext.XML_TAG_NAME) {
+			if (r.getType() == DOMRegionContext.XML_TAG_NAME) {
 				String piText = structuredDocumentRegion.getText(r);
 				int index = piText.indexOf(":"); //$NON-NLS-1$
 				if (index != -1) {
@@ -282,7 +282,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 		int errorCount = 0;
 		for (int i = 0; i < regions.size() && errorCount < ELEMENT_ERROR_LIMIT; i++) {
 			r = regions.get(i);
-			if (r.getType() != XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE)
+			if (r.getType() != DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)
 				continue;
 
 			attrValueText = structuredDocumentRegion.getText(r);
@@ -354,12 +354,12 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
     				ITextRegion r = null;
     				for (int i = 0; i < regions.size(); i++) {
     					r = regions.get(i);
-    					if (r.getType() == XMLRegionContext.XML_TAG_OPEN || r.getType() == XMLRegionContext.XML_TAG_CLOSE) {
+    					if (r.getType() == DOMRegionContext.XML_TAG_OPEN || r.getType() == DOMRegionContext.XML_TAG_CLOSE) {
     						length++;
-    					} else if (r.getType() == XMLRegionContext.XML_TAG_NAME) {
+    					} else if (r.getType() == DOMRegionContext.XML_TAG_NAME) {
     						tagName = sdRegion.getText(r);
     						length += tagName.length();
-    					} else if (r.getType() == XMLRegionContext.XML_EMPTY_TAG_CLOSE) {
+    					} else if (r.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE) {
     						selfClosed = true;
     					}
     				}
@@ -375,7 +375,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
     					// quick fix info
     					String tagClose = "/>"; //$NON-NLS-1$
     					int tagCloseOffset = xmlNode.getFirstStructuredDocumentRegion().getEndOffset();
-    					if (r != null && r.getType() == XMLRegionContext.XML_TAG_CLOSE) {
+    					if (r != null && r.getType() == DOMRegionContext.XML_TAG_CLOSE) {
     						tagClose = "/"; //$NON-NLS-1$
     						tagCloseOffset--;
     					}
@@ -406,7 +406,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 		IStructuredDocumentRegion prev = structuredDocumentRegion.getPrevious();
 		if (prev != null && !prev.isDeleted()) {
 			String prevText = prev.getFullText();
-			if (prev.getType() == XMLRegionContext.XML_CONTENT && prevText.endsWith(" ")) { //$NON-NLS-1$
+			if (prev.getType() == DOMRegionContext.XML_CONTENT && prevText.endsWith(" ")) { //$NON-NLS-1$
 				String message = SSEUIPlugin.getResourceString("%ReconcileStepForMarkup.5"); //$NON-NLS-1$
 				int start = prev.getStartOffset();
 				int length = prev.getLength();
@@ -487,7 +487,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 	private boolean isEndTag(IStructuredDocumentRegion structuredDocumentRegion) {
 		if (structuredDocumentRegion == null || structuredDocumentRegion.isDeleted())
 			return false;
-		return structuredDocumentRegion.getFirstRegion().getType() == XMLRegionContext.XML_END_TAG_OPEN;
+		return structuredDocumentRegion.getFirstRegion().getType() == DOMRegionContext.XML_END_TAG_OPEN;
 	}
 
 	/**
@@ -500,7 +500,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 	private boolean isPI(IStructuredDocumentRegion structuredDocumentRegion) {
         if (structuredDocumentRegion == null || structuredDocumentRegion.isDeleted())
             return false;
-		return structuredDocumentRegion.getFirstRegion().getType() == XMLRegionContext.XML_PI_OPEN;
+		return structuredDocumentRegion.getFirstRegion().getType() == DOMRegionContext.XML_PI_OPEN;
 	}
 
 	/**
@@ -513,14 +513,14 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 	private boolean isStartTag(IStructuredDocumentRegion structuredDocumentRegion) {
 		if (structuredDocumentRegion == null || structuredDocumentRegion.isDeleted())
 			return false;
-		return structuredDocumentRegion.getFirstRegion().getType() == XMLRegionContext.XML_TAG_OPEN;
+		return structuredDocumentRegion.getFirstRegion().getType() == DOMRegionContext.XML_TAG_OPEN;
 	}
 
 	// Because we check the "proper" closing separately from attribute
 	// sequencing, we need to know what's
 	// an appropriate close.
 	private boolean isTagCloseTextRegion(ITextRegion textRegion) {
-		return textRegion.getType() == XMLRegionContext.XML_TAG_CLOSE || textRegion.getType() == XMLRegionContext.XML_EMPTY_TAG_CLOSE;
+		return textRegion.getType() == DOMRegionContext.XML_TAG_CLOSE || textRegion.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE;
 	}
 
 	/**
@@ -532,7 +532,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 	private boolean isXMLContent(IStructuredDocumentRegion structuredDocumentRegion) {
         if(structuredDocumentRegion == null || structuredDocumentRegion.isDeleted())
             return false;
-		return structuredDocumentRegion.getFirstRegion().getType() == XMLRegionContext.XML_CONTENT;
+		return structuredDocumentRegion.getFirstRegion().getType() == DOMRegionContext.XML_CONTENT;
 	}
 
 	/*

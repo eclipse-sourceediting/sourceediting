@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.tasks;
 
-import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.xml.core.builder.delegates.XMLTaskTagSeeker;
+import org.eclipse.wst.xml.core.internal.builder.delegates.XMLTaskTagSeeker;
 
 public class JSPTaskTagSeeker extends XMLTaskTagSeeker {
 	protected boolean isCommentRegion(IStructuredDocumentRegion region, ITextRegion textRegion) {

@@ -31,7 +31,7 @@ import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.IResourceDependentProcessor;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
 
@@ -168,7 +168,7 @@ public class NoRegionContentAssistProcessor implements IContentAssistProcessor, 
 			String currentRegionType = sdRegion.getType();
 			//System.out.println("current region type is >> " +
 			// currentRegionType);
-			if (currentRegionType == XMLRegionContext.UNDEFINED) {
+			if (currentRegionType == DOMRegionContext.UNDEFINED) {
 				IStructuredDocumentRegion sdPrev = sdRegion.getPrevious();
 				if (sdPrev != null) {
 					String prevRegionType = sdPrev.getType();

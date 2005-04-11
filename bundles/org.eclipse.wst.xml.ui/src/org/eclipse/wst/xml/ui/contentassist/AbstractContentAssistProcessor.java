@@ -60,7 +60,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQueryActio
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceHelper;
 import org.eclipse.wst.xml.core.internal.document.AttrImpl;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.editor.CMImageUtil;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
@@ -222,7 +222,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		ITextRegion nameRegion = null;
 		while (i >= 0) {
 			nameRegion = openRegions.get(i--);
-			if (nameRegion.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME)
+			if (nameRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)
 				break;
 		}
 
@@ -416,7 +416,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 							if (image == null) {
 								image = XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC);
 							}
-							if (contentAssistRequest.getRegion().getType() == XMLRegionContext.XML_TAG_NAME) {
+							if (contentAssistRequest.getRegion().getType() == DOMRegionContext.XML_TAG_NAME) {
 								proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getStartOffset(), contentAssistRequest.getRegion().getTextLength(), proposedText.length(), image, proposedText, null, proposedInfo, XMLRelevanceConstants.R_END_TAG_NAME);
 							}
 							else {
@@ -472,7 +472,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			// skip backward to "<", "</", or the (unclosed) start tag, null
 			// if not found
 			String type = ""; //$NON-NLS-1$
-			while (xmlEndTagOpen != null && (type = xmlEndTagOpen.getType()) != XMLRegionContext.XML_END_TAG_OPEN && type != XMLRegionContext.XML_TAG_CLOSE && !needsEndTag(xmlEndTagOpen) && type != XMLRegionContext.XML_TAG_OPEN) {
+			while (xmlEndTagOpen != null && (type = xmlEndTagOpen.getType()) != DOMRegionContext.XML_END_TAG_OPEN && type != DOMRegionContext.XML_TAG_CLOSE && !needsEndTag(xmlEndTagOpen) && type != DOMRegionContext.XML_TAG_OPEN) {
 				xmlEndTagOpen = xmlEndTagOpen.getPrevious();
 			}
 
@@ -500,7 +500,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					addProposal = true;
 				}
 			}
-			else if (type == XMLRegionContext.XML_END_TAG_OPEN) {
+			else if (type == DOMRegionContext.XML_END_TAG_OPEN) {
 				// this is the case for: <tag> </ |
 				// possibly <tag> </ |<anotherTag>
 				// should only be replacing white space...
@@ -511,7 +511,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				displayString = SSEUIPlugin.getResourceString("%15concat", (new Object[]{node.getNodeName()})); //$NON-NLS-1$
 				addProposal = true;
 			}
-			else if (type == XMLRegionContext.XML_TAG_OPEN) {
+			else if (type == DOMRegionContext.XML_TAG_OPEN) {
 				// this is the case for: <tag> < |
 				replaceText = "/" + node.getNodeName() + ">"; //$NON-NLS-1$ //$NON-NLS-2$ $NON-NLS-2$
 				cursorOffset = replaceText.length();
@@ -1121,19 +1121,19 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 
 		// Handle the most common and best supported cases
 		if (xmlnode.getNodeType() == Node.ELEMENT_NODE || xmlnode.getNodeType() == Node.DOCUMENT_NODE) {
-			if (regionType == XMLRegionContext.XML_TAG_OPEN) {
+			if (regionType == DOMRegionContext.XML_TAG_OPEN) {
 				contentAssistRequest = computeTagOpenProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
 			}
-			else if (regionType == XMLRegionContext.XML_TAG_NAME) {
+			else if (regionType == DOMRegionContext.XML_TAG_NAME) {
 				contentAssistRequest = computeTagNameProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
 			}
-			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+			else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 				contentAssistRequest = computeAttributeProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
 			}
-			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+			else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
 				contentAssistRequest = computeEqualsProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
 			}
-			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE && documentPosition == sdRegion.getTextEndOffset() && (sdRegion.getText(completionRegion).endsWith("\"") || sdRegion.getText(completionRegion).endsWith("\'"))) //$NON-NLS-1$ //$NON-NLS-2$
+			else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE && documentPosition == sdRegion.getTextEndOffset() && (sdRegion.getText(completionRegion).endsWith("\"") || sdRegion.getText(completionRegion).endsWith("\'"))) //$NON-NLS-1$ //$NON-NLS-2$
 			{
 				// this is for when the cursor is at the end of the closing
 				// quote for an attribute..
@@ -1141,23 +1141,23 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				contentAssistRequest = newContentAssistRequest(actualNode, actualNode, sdRegion, completionRegion, documentPosition, 0, matchString);
 				addTagCloseProposals(contentAssistRequest);
 			}
-			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+			else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 				contentAssistRequest = computeAttributeValueProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
 			}
-			else if ((regionType == XMLRegionContext.XML_TAG_CLOSE) || (regionType == XMLRegionContext.XML_EMPTY_TAG_CLOSE) || (regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_DIRECTIVE_CLOSE))) {
+			else if ((regionType == DOMRegionContext.XML_TAG_CLOSE) || (regionType == DOMRegionContext.XML_EMPTY_TAG_CLOSE) || (regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_DIRECTIVE_CLOSE))) {
 				contentAssistRequest = computeTagCloseProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
 			}
-			else if (regionType == XMLRegionContext.XML_END_TAG_OPEN) {
+			else if (regionType == DOMRegionContext.XML_END_TAG_OPEN) {
 				contentAssistRequest = computeEndTagOpenProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
 			}
-			else if (regionType == XMLRegionContext.XML_CONTENT || regionType == XMLRegionContext.XML_CHAR_REFERENCE || regionType == XMLRegionContext.XML_ENTITY_REFERENCE || regionType == XMLRegionContext.XML_PE_REFERENCE) {
+			else if (regionType == DOMRegionContext.XML_CONTENT || regionType == DOMRegionContext.XML_CHAR_REFERENCE || regionType == DOMRegionContext.XML_ENTITY_REFERENCE || regionType == DOMRegionContext.XML_PE_REFERENCE) {
 				contentAssistRequest = computeContentProposals(documentPosition, matchString, completionRegion, treeNode, xmlnode);
 			}
 
 			// These ITextRegion types begin DOM Elements as well and although
 			// internally harder to assist,
 			// text insertions directly before them can be made
-			else if (documentPosition == sdRegion.getStartOffset(completionRegion) && (regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_COMMENT_OPEN) || regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_DECLARATION_OPEN) || regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_DIRECTIVE_OPEN) || regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_EXPRESSION_OPEN) || regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_SCRIPTLET_OPEN) || regionType == XMLRegionContext.XML_DECLARATION_OPEN || regionType == XMLRegionContext.XML_PI_OPEN || regionType == XMLRegionContext.XML_COMMENT_OPEN || regionType == XMLRegionContext.XML_CDATA_OPEN)) {
+			else if (documentPosition == sdRegion.getStartOffset(completionRegion) && (regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_COMMENT_OPEN) || regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_DECLARATION_OPEN) || regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_DIRECTIVE_OPEN) || regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_EXPRESSION_OPEN) || regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_SCRIPTLET_OPEN) || regionType == DOMRegionContext.XML_DECLARATION_OPEN || regionType == DOMRegionContext.XML_PI_OPEN || regionType == DOMRegionContext.XML_COMMENT_OPEN || regionType == DOMRegionContext.XML_CDATA_OPEN)) {
 				contentAssistRequest = newContentAssistRequest(treeNode, xmlnode.getParentNode(), sdRegion, completionRegion, documentPosition, 0, matchString);
 				addTagInsertionProposals(contentAssistRequest, getElementPositionForModelQuery(treeNode));
 				addStartDocumentProposals(contentAssistRequest);
@@ -1170,7 +1170,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			if (documentPosition >= sdRegion.getTextEndOffset(completionRegion))
 				addTagInsertionProposals(contentAssistRequest, getElementPositionForModelQuery(treeNode) + 1);
 		}
-		else if (documentPosition == sdRegion.getStartOffset(completionRegion) && (regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_COMMENT_OPEN) || regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_DECLARATION_OPEN) || regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_DIRECTIVE_OPEN) || regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_EXPRESSION_OPEN) || regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_SCRIPTLET_OPEN) || regionType == XMLRegionContext.XML_DECLARATION_OPEN || regionType == XMLRegionContext.XML_PI_OPEN || regionType == XMLRegionContext.XML_COMMENT_OPEN || regionType == XMLRegionContext.XML_CDATA_OPEN)) {
+		else if (documentPosition == sdRegion.getStartOffset(completionRegion) && (regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_COMMENT_OPEN) || regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_DECLARATION_OPEN) || regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_DIRECTIVE_OPEN) || regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_EXPRESSION_OPEN) || regionType.equals(DOMJSPRegionContextsPrivateCopy.JSP_SCRIPTLET_OPEN) || regionType == DOMRegionContext.XML_DECLARATION_OPEN || regionType == DOMRegionContext.XML_PI_OPEN || regionType == DOMRegionContext.XML_COMMENT_OPEN || regionType == DOMRegionContext.XML_CDATA_OPEN)) {
 			contentAssistRequest = newContentAssistRequest(treeNode, xmlnode.getParentNode(), sdRegion, completionRegion, documentPosition, 0, matchString);
 			addTagInsertionProposals(contentAssistRequest, getElementPositionForModelQuery(treeNode));
 			addStartDocumentProposals(contentAssistRequest);
@@ -1298,7 +1298,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		IStructuredDocumentRegion sdRegionAtCompletionOffset = node.getStructuredDocument().getRegionAtCharacterOffset(completionRegionStart + completionRegionLength);
 		ITextRegion regionAtEndOfCompletion = sdRegionAtCompletionOffset.getRegionAtCharacterOffset(completionRegionStart + completionRegionLength);
 
-		if (documentPosition != completionRegionStart && regionAtEndOfCompletion != null && regionAtEndOfCompletion.getType() == XMLRegionContext.XML_TAG_NAME) {
+		if (documentPosition != completionRegionStart && regionAtEndOfCompletion != null && regionAtEndOfCompletion.getType() == DOMRegionContext.XML_TAG_NAME) {
 			ITextRegion nameRegion = regionAtEndOfCompletion;
 			contentAssistRequest = newContentAssistRequest(nodeAtOffset, nodeAtOffset.getParentNode(), sdRegion, completionRegion, sdRegion.getStartOffset(nameRegion), nameRegion.getTextLength(), matchString);
 		}
@@ -1331,7 +1331,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		// only handle XML content for now
 		Vector proposals = new Vector(); // ICompletionProposals
 		IStructuredDocumentRegion sdRegion = getStructuredDocumentRegion(documentPosition);
-		if (completionRegion != null && completionRegion.getType() == XMLRegionContext.XML_CONTENT) {
+		if (completionRegion != null && completionRegion.getType() == DOMRegionContext.XML_CONTENT) {
 			int nodeOffset = documentPosition - sdRegion.getStartOffset(completionRegion);
 			String regionText = sdRegion.getFullText(completionRegion);
 
@@ -1386,7 +1386,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		ContentAssistRequest contentAssistRequest = null;
 		IStructuredDocumentRegion sdRegion = getStructuredDocumentRegion(documentPosition);
 		ITextRegion valueRegion = node.getStartStructuredDocumentRegion().getRegionAtCharacterOffset(sdRegion.getStartOffset(completionRegion) + completionRegion.getLength());
-		if (valueRegion != null && valueRegion.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE && sdRegion.getStartOffset(valueRegion) <= documentPosition) {
+		if (valueRegion != null && valueRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE && sdRegion.getStartOffset(valueRegion) <= documentPosition) {
 			// replace the adjacent attribute value
 			contentAssistRequest = newContentAssistRequest(nodeAtOffset, node, sdRegion, valueRegion, sdRegion.getStartOffset(valueRegion), valueRegion.getTextLength(), matchString);
 		}
@@ -1455,7 +1455,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					if (documentPosition > sdRegion.getStartOffset(completionRegion) + completionRegion.getLength()) {
 						// it's attributes
 						contentAssistRequest = newContentAssistRequest(actualNode, actualNode, sdRegion, completionRegion, documentPosition - matchString.length(), matchString.length(), matchString);
-						if (node.getStructuredDocument().getRegionAtCharacterOffset(sdRegion.getStartOffset(completionRegion) - 1).getRegionAtCharacterOffset(sdRegion.getStartOffset(completionRegion) - 1).getType() == XMLRegionContext.XML_TAG_OPEN)
+						if (node.getStructuredDocument().getRegionAtCharacterOffset(sdRegion.getStartOffset(completionRegion) - 1).getRegionAtCharacterOffset(sdRegion.getStartOffset(completionRegion) - 1).getType() == DOMRegionContext.XML_TAG_OPEN)
 							addAttributeNameProposals(contentAssistRequest);
 						addTagCloseProposals(contentAssistRequest);
 					}
@@ -1487,7 +1487,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				addTagCloseProposals(contentAssistRequest);
 			}
 			else {
-				if (sdRegion.getRegions().get(0).getType() != XMLRegionContext.XML_END_TAG_OPEN) {
+				if (sdRegion.getRegions().get(0).getType() != DOMRegionContext.XML_END_TAG_OPEN) {
 					contentAssistRequest = newContentAssistRequest(node, node.getParentNode(), sdRegion, completionRegion, sdRegion.getStartOffset(completionRegion), completionRegion.getTextLength(), matchString);
 					addTagNameProposals(contentAssistRequest, getElementPositionForModelQuery(nodeAtOffset));
 				}
@@ -1730,7 +1730,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		}
 
 		// valid WHITE_SPACE region handler (#179924)
-		if (region != null && region.getType() == XMLRegionContext.WHITE_SPACE) {
+		if (region != null && region.getType() == DOMRegionContext.WHITE_SPACE) {
 			ITextRegion previousRegion = sdRegion.getRegionAtCharacterOffset(sdRegion.getStartOffset(region) - 1);
 			if (previousRegion != null)
 				region = previousRegion;
@@ -1792,7 +1792,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				// IStructuredDocumentRegion if the current
 				// IStructuredDocumentRegion isn't plain content or if it's
 				// preceded by an orphan '<'
-				if ((offset == flatNode.getStartOffset()) && (flatNode.getPrevious() != null) && (flatNode.getRegionAtCharacterOffset(documentPosition) != null && flatNode.getRegionAtCharacterOffset(documentPosition).getType() != XMLRegionContext.XML_CONTENT || flatNode.getPrevious().getLastRegion().getType() == XMLRegionContext.XML_TAG_OPEN || flatNode.getPrevious().getLastRegion().getType() == XMLRegionContext.XML_END_TAG_OPEN)) {
+				if ((offset == flatNode.getStartOffset()) && (flatNode.getPrevious() != null) && (flatNode.getRegionAtCharacterOffset(documentPosition) != null && flatNode.getRegionAtCharacterOffset(documentPosition).getType() != DOMRegionContext.XML_CONTENT || flatNode.getPrevious().getLastRegion().getType() == DOMRegionContext.XML_TAG_OPEN || flatNode.getPrevious().getLastRegion().getType() == DOMRegionContext.XML_END_TAG_OPEN)) {
 					// Is the region also the start of the node? If so, the
 					// previous IStructuredDocumentRegion is
 					// where to look for a useful region.
@@ -1910,10 +1910,10 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			return ""; //$NON-NLS-1$
 		String matchString = null;
 		String regionType = aRegion.getType();
-		if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS || regionType == XMLRegionContext.XML_TAG_OPEN || (offset > parent.getStartOffset(aRegion) + aRegion.getTextLength())) {
+		if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS || regionType == DOMRegionContext.XML_TAG_OPEN || (offset > parent.getStartOffset(aRegion) + aRegion.getTextLength())) {
 			matchString = ""; //$NON-NLS-1$
 		}
-		else if (regionType == XMLRegionContext.XML_CONTENT) {
+		else if (regionType == DOMRegionContext.XML_CONTENT) {
 			matchString = ""; //$NON-NLS-1$
 		}
 		else {
@@ -2021,7 +2021,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 		String name = ""; //$NON-NLS-1$
 		for (int i = 0; i < regions.size(); i++) {
 			region = regions.get(i);
-			if (region.getType() == XMLRegionContext.XML_TAG_NAME) {
+			if (region.getType() == DOMRegionContext.XML_TAG_NAME) {
 				name = sdRegion.getText(region);
 				break;
 			}
@@ -2067,7 +2067,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 
 	protected boolean isCloseRegion(ITextRegion region) {
 		String type = region.getType();
-		return ((type == XMLRegionContext.XML_PI_CLOSE) || (type == XMLRegionContext.XML_TAG_CLOSE) || (type == XMLRegionContext.XML_EMPTY_TAG_CLOSE) || (type == XMLRegionContext.XML_CDATA_CLOSE) || (type == XMLRegionContext.XML_COMMENT_CLOSE) || (type == XMLRegionContext.XML_ATTLIST_DECL_CLOSE) || (type == XMLRegionContext.XML_ELEMENT_DECL_CLOSE) || (type == XMLRegionContext.XML_DOCTYPE_DECLARATION_CLOSE) || (type == DOMJSPRegionContextsPrivateCopy.JSP_CLOSE) || (type == DOMJSPRegionContextsPrivateCopy.JSP_COMMENT_CLOSE) || (type.equals(DOMJSPRegionContextsPrivateCopy.JSP_DIRECTIVE_CLOSE)) || (type == XMLRegionContext.XML_DECLARATION_CLOSE));
+		return ((type == DOMRegionContext.XML_PI_CLOSE) || (type == DOMRegionContext.XML_TAG_CLOSE) || (type == DOMRegionContext.XML_EMPTY_TAG_CLOSE) || (type == DOMRegionContext.XML_CDATA_CLOSE) || (type == DOMRegionContext.XML_COMMENT_CLOSE) || (type == DOMRegionContext.XML_ATTLIST_DECL_CLOSE) || (type == DOMRegionContext.XML_ELEMENT_DECL_CLOSE) || (type == DOMRegionContext.XML_DOCTYPE_DECLARATION_CLOSE) || (type == DOMJSPRegionContextsPrivateCopy.JSP_CLOSE) || (type == DOMJSPRegionContextsPrivateCopy.JSP_COMMENT_CLOSE) || (type.equals(DOMJSPRegionContextsPrivateCopy.JSP_DIRECTIVE_CLOSE)) || (type == DOMRegionContext.XML_DECLARATION_CLOSE));
 	}
 
 	/*
@@ -2137,7 +2137,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 
 	protected boolean isNameRegion(ITextRegion region) {
 		String type = region.getType();
-		return ((type == XMLRegionContext.XML_TAG_NAME) || (type == DOMJSPRegionContextsPrivateCopy.JSP_DIRECTIVE_NAME) || (type == XMLRegionContext.XML_ELEMENT_DECL_NAME) || (type == XMLRegionContext.XML_DOCTYPE_NAME) || (type == XMLRegionContext.XML_ATTLIST_DECL_NAME) || (type == DOMJSPRegionContextsPrivateCopy.JSP_ROOT_TAG_NAME) || type.equals(DOMJSPRegionContextsPrivateCopy.JSP_DIRECTIVE_NAME));
+		return ((type == DOMRegionContext.XML_TAG_NAME) || (type == DOMJSPRegionContextsPrivateCopy.JSP_DIRECTIVE_NAME) || (type == DOMRegionContext.XML_ELEMENT_DECL_NAME) || (type == DOMRegionContext.XML_DOCTYPE_NAME) || (type == DOMRegionContext.XML_ATTLIST_DECL_NAME) || (type == DOMJSPRegionContextsPrivateCopy.JSP_ROOT_TAG_NAME) || type.equals(DOMJSPRegionContextsPrivateCopy.JSP_DIRECTIVE_NAME));
 	}
 
 	protected boolean isQuote(String string) {
@@ -2150,14 +2150,14 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 
 	private boolean isSelfClosed(IStructuredDocumentRegion startTag) {
 		ITextRegionList regions = startTag.getRegions();
-		return regions.get(regions.size() - 1).getType() == XMLRegionContext.XML_EMPTY_TAG_CLOSE;
+		return regions.get(regions.size() - 1).getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE;
 	}
 
 	private boolean isStartTag(IStructuredDocumentRegion sdRegion) {
 		boolean result = false;
 		if (sdRegion.getRegions().size() > 0) {
 			ITextRegion r = sdRegion.getRegions().get(0);
-			result = r.getType() == XMLRegionContext.XML_TAG_OPEN && sdRegion.isEnded();
+			result = r.getType() == DOMRegionContext.XML_TAG_OPEN && sdRegion.isEnded();
 		}
 		return result;
 	}

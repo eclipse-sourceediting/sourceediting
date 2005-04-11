@@ -16,10 +16,10 @@ package org.eclipse.wst.xml.core.internal.document;
 
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.xml.core.document.ISourceGenerator;
 import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.document.IDOMText;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.document.ISourceGenerator;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -246,7 +246,7 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 		ITextRegion region = StructuredDocumentRegionUtil.getFirstRegion(flatNode);
 		if (region != null) {
 			String regionType = region.getType();
-			if (regionType == XMLRegionContext.XML_ENTITY_REFERENCE || regionType == XMLRegionContext.XML_CHAR_REFERENCE) {
+			if (regionType == DOMRegionContext.XML_ENTITY_REFERENCE || regionType == DOMRegionContext.XML_CHAR_REFERENCE) {
 				String name = StructuredDocumentRegionUtil.getEntityRefName(flatNode, region);
 				if (name != null) {
 					DocumentImpl document = (DocumentImpl) getOwnerDocument();
@@ -582,7 +582,7 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 		}
 
 		String regionType = StructuredDocumentRegionUtil.getFirstRegionType(flatNode);
-		if (regionType != XMLRegionContext.XML_CONTENT && isNotNestedContent(regionType) && regionType != XMLRegionContext.XML_ENTITY_REFERENCE && regionType != XMLRegionContext.XML_CHAR_REFERENCE && regionType != XMLRegionContext.BLOCK_TEXT && regionType != XMLRegionContext.WHITE_SPACE) {
+		if (regionType != DOMRegionContext.XML_CONTENT && isNotNestedContent(regionType) && regionType != DOMRegionContext.XML_ENTITY_REFERENCE && regionType != DOMRegionContext.XML_CHAR_REFERENCE && regionType != DOMRegionContext.BLOCK_TEXT && regionType != DOMRegionContext.WHITE_SPACE) {
 			return true;
 		}
 

@@ -29,15 +29,15 @@ import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.xml.core.document.IDOMAttr;
 import org.eclipse.wst.xml.core.document.IDOMDocument;
 import org.eclipse.wst.xml.core.document.IDOMElement;
-import org.eclipse.wst.xml.core.document.ISourceGenerator;
 import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.document.IDOMNode;
+import org.eclipse.wst.xml.core.document.ISourceGenerator;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -139,7 +139,7 @@ public class ElementNodeCleanupHandler extends NodeCleanupHandler {
 			ITextRegionList regions = startTagStructuredDocumentRegion.getRegions();
 			ITextRegion lastRegion = regions.get(regions.size() - 1);
 			// format children and end tag if not empty element tag
-			if (lastRegion.getType() != XMLRegionContext.XML_EMPTY_TAG_CLOSE) {
+			if (lastRegion.getType() != DOMRegionContext.XML_EMPTY_TAG_CLOSE) {
 				NodeList childNodes = newNode.getChildNodes();
 				if (childNodes == null || childNodes.getLength() == 0 || (childNodes.getLength() == 1 && (childNodes.item(0)).getNodeType() == Node.TEXT_NODE && ((childNodes.item(0)).getNodeValue().trim().length() == 0))) {
 					IDOMModel structuredModel = newNode.getModel();
@@ -279,7 +279,7 @@ public class ElementNodeCleanupHandler extends NodeCleanupHandler {
 
 			IStructuredDocumentRegion endTagStructuredDocumentRegion = newNode.getEndStructuredDocumentRegion();
 			ITextRegionList startStructuredDocumentRegionRegions = startTagStructuredDocumentRegion.getRegions();
-			if (startTagStructuredDocumentRegion != null && startStructuredDocumentRegionRegions != null && (startStructuredDocumentRegionRegions.get(startStructuredDocumentRegionRegions.size() - 1)).getType() == XMLRegionContext.XML_EMPTY_TAG_CLOSE) {
+			if (startTagStructuredDocumentRegion != null && startStructuredDocumentRegionRegions != null && (startStructuredDocumentRegionRegions.get(startStructuredDocumentRegionRegions.size() - 1)).getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE) {
 
 			} else {
 				if (startTagStructuredDocumentRegion == null) {
@@ -327,10 +327,10 @@ public class ElementNodeCleanupHandler extends NodeCleanupHandler {
 					IStructuredDocumentRegion startStructuredDocumentRegion = newNode.getStartStructuredDocumentRegion();
 					int index = startStructuredDocumentRegion.getEndOffset();
 					ITextRegion lastRegion = startStructuredDocumentRegion.getLastRegion();
-					if (lastRegion.getType() == XMLRegionContext.XML_TAG_CLOSE) {
+					if (lastRegion.getType() == DOMRegionContext.XML_TAG_CLOSE) {
 						index--;
 						lastRegion = startStructuredDocumentRegion.getRegionAtCharacterOffset(index - 1);
-					} else if (lastRegion.getType() == XMLRegionContext.XML_EMPTY_TAG_CLOSE) {
+					} else if (lastRegion.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE) {
 						index = index - 2;
 						lastRegion = startStructuredDocumentRegion.getRegionAtCharacterOffset(index - 1);
 					}
@@ -393,7 +393,7 @@ public class ElementNodeCleanupHandler extends NodeCleanupHandler {
 				ITextRegion lastRegion = flatnodeRegions.get(flatnodeRegions.size() - 1);
 				if (lastRegion != null) {
 					String regionType = lastRegion.getType();
-					if ((regionType != XMLRegionContext.XML_EMPTY_TAG_CLOSE) && (regionType != XMLRegionContext.XML_TAG_CLOSE)) {
+					if ((regionType != DOMRegionContext.XML_EMPTY_TAG_CLOSE) && (regionType != DOMRegionContext.XML_TAG_CLOSE)) {
 						IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
 
 						// insert ">" after lastRegion of flatNode

@@ -21,7 +21,7 @@ import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.xml.core.document.IDOMElement;
 import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.document.IDOMText;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Node;
 
 
@@ -104,11 +104,11 @@ class ReadOnlyController {
 		String startType;
 		String endType;
 		if (node.isCommentTag()) {
-			startType = XMLRegionContext.XML_COMMENT_OPEN;
-			endType = XMLRegionContext.XML_COMMENT_CLOSE;
+			startType = DOMRegionContext.XML_COMMENT_OPEN;
+			endType = DOMRegionContext.XML_COMMENT_CLOSE;
 		} else {
-			startType = XMLRegionContext.XML_TAG_NAME;
-			endType = XMLRegionContext.XML_TAG_CLOSE;
+			startType = DOMRegionContext.XML_TAG_NAME;
+			endType = DOMRegionContext.XML_TAG_CLOSE;
 		}
 
 		int startOffset = -1;

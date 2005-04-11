@@ -30,12 +30,12 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.jst.jsp.core.JSP11Namespace;
 import org.eclipse.jst.jsp.core.JSP12Namespace;
-import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
 import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
+import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapter;
 import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapterFactory;
-import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.text.IJSPPartitionTypes;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.Logger;
@@ -45,9 +45,9 @@ import org.eclipse.jst.jsp.ui.internal.preferences.JSPUIPreferenceNames;
 import org.eclipse.jst.jsp.ui.internal.templates.TemplateContextTypeIdsJSP;
 import org.eclipse.wst.css.ui.contentassist.CSSContentAssistProcessor;
 import org.eclipse.wst.html.core.HTMLCMProperties;
-import org.eclipse.wst.html.core.contentmodel.HTMLCMDocumentFactory;
-import org.eclipse.wst.html.core.contentmodel.HTMLElementDeclaration;
-import org.eclipse.wst.html.core.contentmodel.JSPCMDocument;
+import org.eclipse.wst.html.core.internal.contentmodel.HTMLCMDocumentFactory;
+import org.eclipse.wst.html.core.internal.contentmodel.HTMLElementDeclaration;
+import org.eclipse.wst.html.core.internal.contentmodel.JSPCMDocument;
 import org.eclipse.wst.html.core.text.IHTMLPartitionTypes;
 import org.eclipse.wst.html.ui.internal.contentassist.HTMLContentAssistProcessor;
 import org.eclipse.wst.javascript.common.ui.internal.contentassist.JavaScriptContentAssistProcessor;
@@ -73,9 +73,6 @@ import org.eclipse.wst.sse.ui.internal.contentassist.IRelevanceConstants;
 import org.eclipse.wst.sse.ui.internal.contentassist.IResourceDependentProcessor;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
-import org.eclipse.wst.xml.core.contentmodel.CMDocType;
-import org.eclipse.wst.xml.core.contentmodel.CMDocumentTracker;
-import org.eclipse.wst.xml.core.contentmodel.CMNodeWrapper;
 import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
@@ -85,8 +82,11 @@ import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQueryAction;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.parser.XMLSourceParser;
+import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMDocType;
+import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMDocumentTracker;
+import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMNodeWrapper;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.contentassist.AbstractContentAssistProcessor;
 import org.eclipse.wst.xml.ui.contentassist.ContentAssistRequest;
@@ -251,7 +251,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		ITextRegion nameRegion = null;
 		while (i >= 0) {
 			nameRegion = openRegions.get(i--);
-			if (nameRegion.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME)
+			if (nameRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)
 				break;
 		}
 
@@ -263,7 +263,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 			currentValue = node.getAttributes().getNamedItem(attributeName).getNodeValue();
 
 		// on an empty value, add all the JSP and taglib tags
-		if ((contentAssistRequest.getRegion().getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS && contentAssistRequest.getReplacementLength() == 0) || (contentAssistRequest.getRegion().getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE && (currentValue == null || currentValue.length() == 0))) {
+		if ((contentAssistRequest.getRegion().getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS && contentAssistRequest.getReplacementLength() == 0) || (contentAssistRequest.getRegion().getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE && (currentValue == null || currentValue.length() == 0))) {
 			List rejectElements = new ArrayList();
 			rejectElements.add(JSP12Namespace.ElementName.SCRIPTLET);
 			rejectElements.add(JSP12Namespace.ElementName.EXPRESSION);
@@ -296,7 +296,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 			}
 		}
 
-		else if (contentAssistRequest.getRegion().getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+		else if (contentAssistRequest.getRegion().getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 			try {
 				// Create a new model for Content Assist to operate on. This
 				// will simulate
@@ -614,14 +614,14 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		// check for xml-jsp tags...
 		// CMVC 243657
 		if (partitionType == IJSPPartitionTypes.JSP_DIRECTIVE && fn != null) {
-			IStructuredDocumentRegion possibleXMLJSP = ((fn.getType() == XMLRegionContext.XML_CONTENT) && fn.getPrevious() != null) ? fn.getPrevious() : fn;
+			IStructuredDocumentRegion possibleXMLJSP = ((fn.getType() == DOMRegionContext.XML_CONTENT) && fn.getPrevious() != null) ? fn.getPrevious() : fn;
 			ITextRegionList regions = possibleXMLJSP.getRegions();
 			if (regions.size() > 1) {
 				// check bounds cases
 				ITextRegion xmlOpenOrClose = regions.get(0);
-				if (xmlOpenOrClose.getType() == XMLRegionContext.XML_TAG_OPEN && documentPosition == possibleXMLJSP.getStartOffset()) {
+				if (xmlOpenOrClose.getType() == DOMRegionContext.XML_TAG_OPEN && documentPosition == possibleXMLJSP.getStartOffset()) {
 					// do regular jsp content assist
-				} else if (xmlOpenOrClose.getType() == XMLRegionContext.XML_END_TAG_OPEN && documentPosition > possibleXMLJSP.getStartOffset()) {
+				} else if (xmlOpenOrClose.getType() == DOMRegionContext.XML_END_TAG_OPEN && documentPosition > possibleXMLJSP.getStartOffset()) {
 					// do regular jsp content assist
 				} else {
 					// possible xml-jsp
@@ -655,14 +655,14 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 						if (documentPosition >= fn.getStartOffset() + sdr.getStartOffset() && documentPosition <= fn.getStartOffset() + sdr.getEndOffset()) {
 							return getJSPJavaCompletionProposals(viewer, documentPosition);
 						}
-					} else if (sdr.getType() == XMLRegionContext.XML_TAG_NAME) {
+					} else if (sdr.getType() == DOMRegionContext.XML_TAG_NAME) {
 						if (documentPosition > fn.getStartOffset() + sdr.getStartOffset() && documentPosition < fn.getStartOffset() + sdr.getEndOffset()) {
 							return EMPTY_PROPOSAL_SET;
 						} else if (documentPosition == fn.getStartOffset() + sdr.getEndOffset() && sdr.getNext() != null && sdr.getNext().getType() == DOMJSPRegionContexts.JSP_CONTENT) {
 							// the end of an open tag <script>
 							// <jsp:scriptlet>| blah </jsp:scriptlet>
 							return getJSPJavaCompletionProposals(viewer, documentPosition);
-						} else if (documentPosition == fn.getStartOffset() + sdr.getStartOffset() && sdr.getPrevious() != null && sdr.getPrevious().getType() == XMLRegionContext.XML_TAG_NAME) {
+						} else if (documentPosition == fn.getStartOffset() + sdr.getStartOffset() && sdr.getPrevious() != null && sdr.getPrevious().getType() == DOMRegionContext.XML_TAG_NAME) {
 							return getJSPJavaCompletionProposals(viewer, documentPosition);
 						}
 					}
@@ -717,13 +717,13 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 			if (XMLContentAssistUtilities.isXMLJSPDelimiter(fnDelim)) {
 				// since it's a delimiter, we know it's a ITextRegionContainer
 				ITextRegion firstRegion = fnDelim.getRegions().get(0);
-				if (fnDelim.getStartOffset() == documentPosition && (firstRegion.getType() == XMLRegionContext.XML_TAG_OPEN)) {
+				if (fnDelim.getStartOffset() == documentPosition && (firstRegion.getType() == DOMRegionContext.XML_TAG_OPEN)) {
 					// |<jsp:scriptlet> </jsp:scriptlet>
 					// (pa) commented out so that we get regular behavior JSP
 					// macros etc...
 					// return getHTMLCompletionProposals(viewer,
 					// documentPosition);
-				} else if (fnDelim.getStartOffset() == documentPosition && (firstRegion.getType() == XMLRegionContext.XML_END_TAG_OPEN)) {
+				} else if (fnDelim.getStartOffset() == documentPosition && (firstRegion.getType() == DOMRegionContext.XML_END_TAG_OPEN)) {
 					// <jsp:scriptlet> |</jsp:scriptlet>
 					// check previous partition type to see if it's JAVASCRIPT
 					// if it is, we're just gonna let the embedded JAVASCRIPT
@@ -744,7 +744,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 						} 
 						partitionType = IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT;
 					}
-				} else if ((firstRegion.getType() == XMLRegionContext.XML_TAG_OPEN) && documentPosition >= fnDelim.getEndOffset()) {
+				} else if ((firstRegion.getType() == DOMRegionContext.XML_TAG_OPEN) && documentPosition >= fnDelim.getEndOffset()) {
 					// anything else inbetween
 					return getJSPJavaCompletionProposals(viewer, documentPosition);
 				}
@@ -781,7 +781,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		// <![CDATA[ <%|%> ]]>
 		// or a comment region
 		// <!-- <% |%> -->
-		if (fn != null && (fn.getType() == XMLRegionContext.XML_CDATA_TEXT || fn.getType() == XMLRegionContext.XML_COMMENT_TEXT)) {
+		if (fn != null && (fn.getType() == DOMRegionContext.XML_CDATA_TEXT || fn.getType() == DOMRegionContext.XML_COMMENT_TEXT)) {
 			if (fn instanceof ITextRegionContainer) {
 				Object[] cdataRegions = fn.getRegions().toArray();
 				ITextRegion r = null;
@@ -808,7 +808,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		// proposal
 		ITextRegion attrContainer = (fn != null) ? fn.getRegionAtCharacterOffset(documentPosition) : null;
 		if (attrContainer != null && attrContainer instanceof ITextRegionContainer) {
-			if (attrContainer.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+			if (attrContainer.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 				// test location of the cursor
 				// return null if it's in the middle of an open/close
 				// delimeter
@@ -1130,7 +1130,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		}
 		String[] directiveNames = {"page", "include", "taglib"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		// suggest JSP Expression inside of XML comments
-		if (completionRegion.getType() == XMLRegionContext.XML_COMMENT_TEXT && !isXMLFormat(doc)) {
+		if (completionRegion.getType() == DOMRegionContext.XML_COMMENT_TEXT && !isXMLFormat(doc)) {
 			if (request == null)
 				request = newContentAssistRequest(treeNode, xmlnode, sdRegion, completionRegion, documentPosition, 0, ""); //$NON-NLS-1$
 			request.addProposal(new CustomCompletionProposal("<%=  %>", documentPosition, 0, 4, JSPEditorPluginImageHelper.getInstance().getImage(JSPEditorPluginImages.IMG_OBJ_TAG_GENERIC), "jsp:expression", null, "&lt;%= %&gt;", XMLRelevanceConstants.R_JSP)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$

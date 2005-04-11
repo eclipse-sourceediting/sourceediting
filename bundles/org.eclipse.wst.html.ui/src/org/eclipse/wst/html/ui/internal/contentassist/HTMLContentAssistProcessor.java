@@ -23,7 +23,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.wst.css.ui.contentassist.CSSContentAssistProcessor;
 import org.eclipse.wst.html.core.HTML40Namespace;
 import org.eclipse.wst.html.core.HTMLCMProperties;
-import org.eclipse.wst.html.core.contentmodel.HTMLCMDocument;
+import org.eclipse.wst.html.core.internal.contentmodel.HTMLCMDocument;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImageHelper;
 import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImages;
@@ -50,8 +50,8 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 import org.eclipse.wst.xml.ui.contentassist.AbstractContentAssistProcessor;
 import org.eclipse.wst.xml.ui.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.contentassist.XMLContentModelGenerator;
@@ -176,17 +176,17 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 		// check if it's in a comment node
 		IStructuredDocument structuredDocument = (IStructuredDocument) textViewer.getDocument();
 		IStructuredDocumentRegion fn = structuredDocument.getRegionAtCharacterOffset(documentPosition);
-		if (fn != null && fn.getType() == XMLRegionContext.XML_COMMENT_TEXT && documentPosition != fn.getStartOffset()) {
+		if (fn != null && fn.getType() == DOMRegionContext.XML_COMMENT_TEXT && documentPosition != fn.getStartOffset()) {
 			return new ICompletionProposal[0];
 		}
 
 		// CMVC 242695
 		// if it's a </script> tag, bounce back to JS ca processor...
-		if (fn != null && fn.getType() == XMLRegionContext.XML_TAG_NAME && documentPosition == fn.getStartOffset()) {
+		if (fn != null && fn.getType() == DOMRegionContext.XML_TAG_NAME && documentPosition == fn.getStartOffset()) {
 			ITextRegionList v = fn.getRegions();
 			if (v.size() > 1) {
 				// determine that it's a close tag
-				if ((v.get(0)).getType() == XMLRegionContext.XML_END_TAG_OPEN) {
+				if ((v.get(0)).getType() == DOMRegionContext.XML_END_TAG_OPEN) {
 					Iterator it = v.iterator();
 					ITextRegion region = null;
 					// search for script tag name
@@ -247,7 +247,7 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 			ITextRegion styleValueRegion = null;
 			while (regions.hasNext()) {
 				styleNameRegion = (ITextRegion) regions.next();
-				if (styleNameRegion.getType().equals(XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) && sdRegion.getText(styleNameRegion).equalsIgnoreCase(HTML40Namespace.ATTR_NAME_STYLE)) { //$NON-NLS-1$
+				if (styleNameRegion.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) && sdRegion.getText(styleNameRegion).equalsIgnoreCase(HTML40Namespace.ATTR_NAME_STYLE)) { //$NON-NLS-1$
 					// the next region should be "="
 					if (regions.hasNext()) {
 						regions.next(); // skip the "="

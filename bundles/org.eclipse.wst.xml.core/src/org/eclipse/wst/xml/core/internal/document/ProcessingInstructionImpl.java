@@ -19,7 +19,7 @@ import java.util.Iterator;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
 import org.w3c.dom.ProcessingInstruction;
@@ -90,9 +90,9 @@ public class ProcessingInstructionImpl extends NodeImpl implements ProcessingIns
 		while (e.hasNext()) {
 			ITextRegion region = (ITextRegion) e.next();
 			String regionType = region.getType();
-			if (regionType == XMLRegionContext.XML_PI_OPEN)
+			if (regionType == DOMRegionContext.XML_PI_OPEN)
 				continue;
-			if (regionType == XMLRegionContext.XML_PI_CLOSE) {
+			if (regionType == DOMRegionContext.XML_PI_CLOSE) {
 				closeRegion = region;
 			}
 			else {
@@ -157,7 +157,7 @@ public class ProcessingInstructionImpl extends NodeImpl implements ProcessingIns
 		if (flatNode == null)
 			return true; // will be generated
 		String regionType = StructuredDocumentRegionUtil.getLastRegionType(flatNode);
-		return (regionType == XMLRegionContext.XML_PI_CLOSE);
+		return (regionType == DOMRegionContext.XML_PI_CLOSE);
 	}
 
 	/**

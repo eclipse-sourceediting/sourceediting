@@ -26,15 +26,15 @@
          point="org.eclipse.wst.sse.core.modelHandler">
       <modelHandler
             default="true"
-            class="org.eclipse.wst.xml.core.modelhandler.ModelHandlerForXML"
+            class="org.eclipse.wst.xml.core.internal.modelhandler.ModelHandlerForXML"
             associatedContentTypeId="org.eclipse.core.runtime.xml"
-            id="org.eclipse.wst.xml.core.modelhandler">
+            id="org.eclipse.wst.xml.core.internal.modelhandler">
       </modelHandler>
    </extension>
    <extension
          point="org.eclipse.wst.sse.core.embeddedTypeHandler">
       <embeddedTypeHandler
-            class="org.eclipse.wst.xml.core.modelhandler.EmbeddedXML">
+            class="org.eclipse.wst.xml.core.internal.modelhandler.EmbeddedXML">
       </embeddedTypeHandler>
    </extension>
    
@@ -42,7 +42,7 @@
          id="org.eclipse.wst.xml.core.builderdelegate.todo"
          point="org.eclipse.wst.sse.core.builderdelegate">
       <participant
-            class="org.eclipse.wst.xml.core.builder.delegates.XMLTaskTagSeeker"
+            class="org.eclipse.wst.xml.core.internal.builder.delegates.XMLTaskTagSeeker"
             contentType="org.eclipse.core.runtime.xml,org.eclipse.wst.xml.core.xmlsource">
       </participant>
    </extension>
@@ -89,7 +89,7 @@
    <extension
          point="org.eclipse.wst.sse.core.formatProcessors">
       <processor
-            class="org.eclipse.wst.xml.core.format.FormatProcessorXML"
+            class="org.eclipse.wst.xml.core.internal.provisional.format.FormatProcessorXML"
             contentTypeId="org.eclipse.core.runtime.xml">
       </processor>
    </extension>

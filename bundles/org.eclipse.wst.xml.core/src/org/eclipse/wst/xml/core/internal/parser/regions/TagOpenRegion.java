@@ -15,11 +15,11 @@ package org.eclipse.wst.xml.core.internal.parser.regions;
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 
 public class TagOpenRegion implements ITextRegion {
-	static private final String fType = XMLRegionContext.XML_TAG_OPEN;
+	static private final String fType = DOMRegionContext.XML_TAG_OPEN;
 	private int fLength;
 	private int fStart;
 	private int fTextLength;

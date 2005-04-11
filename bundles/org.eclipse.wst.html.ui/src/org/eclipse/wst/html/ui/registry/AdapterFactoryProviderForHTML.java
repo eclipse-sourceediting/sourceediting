@@ -11,7 +11,7 @@
 package org.eclipse.wst.html.ui.registry;
 
 import org.eclipse.ui.views.properties.IPropertySource;
-import org.eclipse.wst.html.core.modelhandler.ModelHandlerForHTML;
+import org.eclipse.wst.html.core.internal.modelhandler.ModelHandlerForHTML;
 import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterFactoryForHTML;
 import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.IStructuredModel;

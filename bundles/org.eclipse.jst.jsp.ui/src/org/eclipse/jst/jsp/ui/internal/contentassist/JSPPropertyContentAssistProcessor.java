@@ -24,7 +24,7 @@ import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xml.core.document.IDOMNode;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.contentassist.XMLRelevanceConstants;
 import org.eclipse.wst.xml.ui.util.SharedXMLEditorPluginImageHelper;
@@ -59,7 +59,7 @@ public class JSPPropertyContentAssistProcessor extends JSPDummyContentAssistProc
 		String attributeName = null;
 		while (i >= 0) {
 			attrNameRegion = openRegions.get(i--);
-			if (attrNameRegion.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME)
+			if (attrNameRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)
 				break;
 		}
 		if (attrNameRegion != null)
@@ -70,14 +70,14 @@ public class JSPPropertyContentAssistProcessor extends JSPDummyContentAssistProc
 		boolean isGetProperty = true;
 		for (int j = 0; j < openRegions.size(); j++) {
 			tagNameRegion = openRegions.get(j);
-			if (tagNameRegion.getType() == XMLRegionContext.XML_TAG_NAME && open.getText(tagNameRegion).trim().equals("jsp:setProperty")) { //$NON-NLS-1$
+			if (tagNameRegion.getType() == DOMRegionContext.XML_TAG_NAME && open.getText(tagNameRegion).trim().equals("jsp:setProperty")) { //$NON-NLS-1$
 				isGetProperty = false;
 				break;
 			}
 		}
 
 		String currentValue = null;
-		if (contentAssistRequest.getRegion().getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE)
+		if (contentAssistRequest.getRegion().getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)
 			currentValue = contentAssistRequest.getText();
 		else
 			currentValue = ""; //$NON-NLS-1$

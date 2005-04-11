@@ -15,13 +15,13 @@ package org.eclipse.wst.xml.core.internal.parser.regions;
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 
 
 public class AttributeEqualsRegion implements ITextRegion {
 	static private final byte fTextLength = 1;
-	static private final String fType = XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS;
+	static private final String fType = DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS;
 	private short fLength;
 	private int fStart;
 

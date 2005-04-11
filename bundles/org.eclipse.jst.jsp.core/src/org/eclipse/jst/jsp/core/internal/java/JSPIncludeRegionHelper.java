@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.java;
 
-import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 
 /**
@@ -36,7 +36,7 @@ class JSPIncludeRegionHelper extends XMLJSPRegionHelper {
 	 */
 	protected boolean isJSPStartRegion(IStructuredDocumentRegion sdRegion) {
 		String type = sdRegion.getFirstRegion().getType();
-		return type == XMLRegionContext.XML_TAG_OPEN || type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN || type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN || type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN || type == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN || type == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME;
+		return type == DOMRegionContext.XML_TAG_OPEN || type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN || type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN || type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN || type == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN || type == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME;
 	}
 
 	protected boolean isDeclaration(String tagName) {

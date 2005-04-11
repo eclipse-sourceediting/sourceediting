@@ -23,7 +23,7 @@ import java.io.IOException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.sse.core.internal.document.DocumentReader;
 import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
-import org.eclipse.wst.xml.core.encoding.XMLDocumentCharsetDetector;
+import org.eclipse.wst.xml.core.internal.encoding.XMLDocumentCharsetDetector;
 
 
 /**

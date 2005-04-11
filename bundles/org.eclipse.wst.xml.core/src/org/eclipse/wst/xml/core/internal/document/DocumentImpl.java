@@ -23,10 +23,10 @@ import java.util.Map;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 import org.eclipse.wst.xml.core.NameValidator;
 import org.eclipse.wst.xml.core.IXMLCharEntity;
-import org.eclipse.wst.xml.core.commentelement.impl.CommentElementRegistry;
 import org.eclipse.wst.xml.core.document.IDOMDocument;
 import org.eclipse.wst.xml.core.document.IDOMElement;
 import org.eclipse.wst.xml.core.document.IDOMModel;
+import org.eclipse.wst.xml.core.internal.commentelement.impl.CommentElementRegistry;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMEntityDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
@@ -114,7 +114,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 	private static final boolean usetagnamecache = true;
 	private DocumentTypeAdapter documentTypeAdapter = null;
 
-	private XMLModelImpl model = null;
+	private DOMModelImpl model = null;
 	private TagNameCache tagNameCache;
 
 	/**
@@ -1019,7 +1019,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 	 */
 
 	protected void setModel(IDOMModel model) {
-		this.model = (XMLModelImpl) model;
+		this.model = (DOMModelImpl) model;
 	}
 
 	/**

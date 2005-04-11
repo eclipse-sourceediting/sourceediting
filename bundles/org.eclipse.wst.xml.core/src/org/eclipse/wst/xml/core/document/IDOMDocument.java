@@ -70,8 +70,9 @@ public interface IDOMDocument extends IDOMNode, Document, DocumentRange, Documen
 	 * 
 	 * ISSUE: need to specify
 	 * 
-	 * @return true if is JSPDocument
 	 * @deprecated
+	 * 
+	 * @return true if is JSPDocument
 	 * 
 	 */
 	boolean isJSPDocument();
@@ -87,11 +88,11 @@ public interface IDOMDocument extends IDOMNode, Document, DocumentRange, Documen
 	boolean isJSPType();
 
 	/**
-	 * NOT API ... needs to be removed/changed
+	 * NOT API ... may removed/changed
 	 * 
-	 * ISSUE: need to specify
+	 * ISSUE: need to specify -- currently used to denote an HTML DOM document
+	 * is XHTML
 	 * 
-	 * @deprecated
 	 * 
 	 */
 	boolean isXMLType();

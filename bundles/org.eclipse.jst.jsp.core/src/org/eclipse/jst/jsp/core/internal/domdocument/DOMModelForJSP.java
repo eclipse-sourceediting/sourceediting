@@ -12,12 +12,12 @@
 
 package org.eclipse.jst.jsp.core.internal.domdocument;
 
-import org.eclipse.wst.html.core.document.XMLStyleModelImpl;
+import org.eclipse.wst.html.core.internal.document.DOMStyleModelImpl;
 import org.eclipse.wst.xml.core.internal.document.XMLModelParser;
 import org.eclipse.wst.xml.core.internal.document.XMLModelUpdater;
 import org.w3c.dom.Document;
 
-public class DOMModelForJSP extends XMLStyleModelImpl {
+public class DOMModelForJSP extends DOMStyleModelImpl {
 
 	/**
 	 * 

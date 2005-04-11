@@ -17,7 +17,7 @@ package org.eclipse.wst.xml.core.internal.parser.regions;
 import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionContainer;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 
 /**
@@ -49,23 +49,23 @@ public class XMLParserRegionFactory {
 
 	public ITextRegion createToken(String context, int start, int textLength, int length, String lang, String surroundingTag) {
 		ITextRegion newRegion = null;
-		if (context == XMLRegionContext.XML_CDATA_TEXT) {
+		if (context == DOMRegionContext.XML_CDATA_TEXT) {
 			newRegion = new XMLCDataTextRegion(start, textLength, length);
-		} else if (context == XMLRegionContext.XML_CONTENT) {
+		} else if (context == DOMRegionContext.XML_CONTENT) {
 			newRegion = new XMLContentRegion(start, length);
-		} else if (context == XMLRegionContext.XML_TAG_NAME) {
+		} else if (context == DOMRegionContext.XML_TAG_NAME) {
 			newRegion = new TagNameRegion(start, textLength, length);
-		} else if (context == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+		} else if (context == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 			newRegion = new AttributeNameRegion(start, textLength, length);
-		} else if (context == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+		} else if (context == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
 			newRegion = new AttributeEqualsRegion(start, textLength, length);
-		} else if (context == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+		} else if (context == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 			newRegion = new AttributeValueRegion(start, textLength, length);
-		} else if (context == XMLRegionContext.XML_TAG_OPEN) {
+		} else if (context == DOMRegionContext.XML_TAG_OPEN) {
 			newRegion = new TagOpenRegion(start, textLength, length);
-		} else if (context == XMLRegionContext.XML_TAG_CLOSE) {
+		} else if (context == DOMRegionContext.XML_TAG_CLOSE) {
 			newRegion = new TagCloseRegion(start);
-		} else if (context == XMLRegionContext.WHITE_SPACE) {
+		} else if (context == DOMRegionContext.WHITE_SPACE) {
 			newRegion = new WhiteSpaceOnlyRegion(start, length);
 		} else
 		// removed this condition during transition, and implemented in
@@ -73,7 +73,7 @@ public class XMLParserRegionFactory {
 		//		if (context == XMLJSPRegionContexts.JSP_CONTENT) {
 		//			newRegion = new JSPCodeRegion(context, start, textLength, length);
 		//		} else
-		if (context == XMLRegionContext.BLOCK_TEXT) {
+		if (context == DOMRegionContext.BLOCK_TEXT) {
 			newRegion = new BlockTextRegion(context, start, textLength, length);
 			((BlockTextRegion) newRegion).setSurroundingTag(surroundingTag);
 		} else {

@@ -20,7 +20,7 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Node;
 
 
@@ -124,7 +124,7 @@ public class XMLDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 		int nextRegionOffset = fStructuredDocumentRegion.getEndOffset(fTextRegion);
 		ITextRegion nextRegion = fStructuredDocumentRegion.getRegionAtCharacterOffset(nextRegionOffset);
 
-		if ((prevRegion != null) && (prevRegion.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) && (nextRegion != null) && (nextRegion.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE)) {
+		if ((prevRegion != null) && (prevRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) && (nextRegion != null) && (nextRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)) {
 			fStructuredTextViewer.setSelectedRange(fStructuredDocumentRegion.getStartOffset(prevRegion), nextRegion.getTextEnd() - prevRegion.getStart());
 		}
 	}
@@ -136,7 +136,7 @@ public class XMLDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 		if (nextRegion != null) {
 			nextRegionOffset = fStructuredDocumentRegion.getEndOffset(nextRegion);
 			nextRegion = fStructuredDocumentRegion.getRegionAtCharacterOffset(nextRegionOffset);
-			if ((nextRegion != null) && (nextRegion.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE)) {
+			if ((nextRegion != null) && (nextRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)) {
 				fStructuredTextViewer.setSelectedRange(fStructuredDocumentRegion.getStartOffset(fTextRegion), nextRegion.getTextEnd() - fTextRegion.getStart());
 			} else {
 				// attribute has no value
@@ -183,23 +183,23 @@ public class XMLDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 		if (prevRegion != null) {
 			prevRegionOffset = fStructuredDocumentRegion.getStartOffset(prevRegion) - 1;
 			prevRegion = fStructuredDocumentRegion.getRegionAtCharacterOffset(prevRegionOffset);
-			if ((prevRegion != null) && (prevRegion.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
+			if ((prevRegion != null) && (prevRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
 				fStructuredTextViewer.setSelectedRange(fStructuredDocumentRegion.getStartOffset(prevRegion), fTextRegion.getTextEnd() - prevRegion.getStart());
 			}
 		}
 	}
 
 	protected void processElementDoubleClicked() {
-		if (fTextRegion.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE)
+		if (fTextRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)
 			processElementAttrValueDoubleClicked(); // special handling for
 		// XML_TAG_ATTRIBUTE_VALUE
 		else {
 			if (fDoubleClickCount == 1) {
 				fStructuredTextViewer.setSelectedRange(fStructuredDocumentRegion.getStart() + fTextRegion.getStart(), fTextRegion.getTextLength());
 			} else if (fDoubleClickCount == 2) {
-				if (fTextRegion.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME)
+				if (fTextRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)
 					processElementAttrNameDoubleClicked2Times();
-				else if (fTextRegion.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS)
+				else if (fTextRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS)
 					processElementAttrEqualsDoubleClicked2Times();
 				else {
 					fStructuredTextViewer.setSelectedRange(fStructuredDocumentRegion.getStart(), fStructuredDocumentRegion.getLength());
@@ -222,7 +222,7 @@ public class XMLDoubleClickStrategy extends DefaultTextDoubleClickStrategy {
 				// selection
 				fDoubleClickCount++;
 		} else if (fDoubleClickCount == 2) {
-			if (fTextRegion.getType() == XMLRegionContext.UNDEFINED) {
+			if (fTextRegion.getType() == DOMRegionContext.UNDEFINED) {
 				fStructuredTextViewer.setSelectedRange(fStructuredDocumentRegion.getStart(), fStructuredDocumentRegion.getLength());
 				fDoubleClickCount = 0;
 			} else {

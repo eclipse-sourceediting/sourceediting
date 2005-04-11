@@ -15,8 +15,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jst.jsp.core.JSP12Namespace;
-import org.eclipse.jst.jsp.core.contentmodel.tld.TLDElementDeclaration;
-import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
+import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
@@ -26,13 +26,13 @@ import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.IBreakpointProvider;
-import org.eclipse.wst.xml.core.contentmodel.CMNodeWrapper;
 import org.eclipse.wst.xml.core.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMNodeWrapper;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -148,7 +148,7 @@ public abstract class AbstractBreakpointProvider implements IBreakpointProvider 
 						//						}
 					}
 					// a custom tag, jsp:useBean, getproperty or setproperty statement is also a valid breakpoint location
-					else if (region.getType().equals(XMLRegionContext.XML_TAG_NAME) && (isCustomTagRegion(model.getIndexedRegion(regionStartOffset)) || regionContainer.getText(region).equals(JSP12Namespace.ElementName.USEBEAN) || regionContainer.getText(region).equals(JSP12Namespace.ElementName.GETPROPERTY) || regionContainer.getText(region).equals(JSP12Namespace.ElementName.SETPROPERTY))) {
+					else if (region.getType().equals(DOMRegionContext.XML_TAG_NAME) && (isCustomTagRegion(model.getIndexedRegion(regionStartOffset)) || regionContainer.getText(region).equals(JSP12Namespace.ElementName.USEBEAN) || regionContainer.getText(region).equals(JSP12Namespace.ElementName.GETPROPERTY) || regionContainer.getText(region).equals(JSP12Namespace.ElementName.SETPROPERTY))) {
 
 						if (regionStartOffset > startOffset)
 							return regionStartOffset;

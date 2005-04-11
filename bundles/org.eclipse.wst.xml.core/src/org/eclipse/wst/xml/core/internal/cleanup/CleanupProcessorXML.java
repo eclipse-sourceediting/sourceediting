@@ -20,8 +20,8 @@ import org.eclipse.wst.sse.core.internal.cleanup.StructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
-import org.eclipse.wst.xml.core.format.FormatProcessorXML;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.provisional.format.FormatProcessorXML;
 import org.w3c.dom.Node;
 
 

@@ -12,10 +12,10 @@ package org.eclipse.jst.jsp.ui.internal.registry;
 
 import java.util.Iterator;
 
-import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
+import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapter;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapterFactory;
-import org.eclipse.jst.jsp.core.modelhandler.ModelHandlerForJSP;
+import org.eclipse.jst.jsp.core.internal.modelhandler.ModelHandlerForJSP;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterFactoryForHTML;

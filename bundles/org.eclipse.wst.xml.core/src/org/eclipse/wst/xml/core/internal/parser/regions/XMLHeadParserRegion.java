@@ -15,7 +15,7 @@ package org.eclipse.wst.xml.core.internal.parser.regions;
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 
 /**
@@ -30,7 +30,7 @@ public class XMLHeadParserRegion implements ITextRegion {
 	private String fText;
 	private int fTextLength;
 	// specify correct type
-	private String fType = XMLRegionContext.UNDEFINED;
+	private String fType = DOMRegionContext.UNDEFINED;
 
 	public XMLHeadParserRegion() {
 		super();

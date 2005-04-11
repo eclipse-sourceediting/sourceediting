@@ -14,7 +14,7 @@ package org.eclipse.wst.xml.core.internal.text;
 
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 
 public class XMLStructuredDocumentRegion extends BasicStructuredDocumentRegion implements IStructuredDocumentRegion {
@@ -28,7 +28,7 @@ public class XMLStructuredDocumentRegion extends BasicStructuredDocumentRegion i
 		// normally, we want the second region as the flatnode type ... since
 		// the
 		// first one is usually just "open tag".
-		if ((result != XMLRegionContext.XML_PI_OPEN) && (getRegions().size() > 1)) {
+		if ((result != DOMRegionContext.XML_PI_OPEN) && (getRegions().size() > 1)) {
 			result = getRegions().get(1).getType();
 		}
 		return result;

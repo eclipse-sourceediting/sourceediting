@@ -30,9 +30,9 @@
   <extension
          point="org.eclipse.wst.sse.core.modelHandler">
       <modelHandler
-            class="org.eclipse.jst.jsp.core.modelhandler.ModelHandlerForJSP"
+            class="org.eclipse.jst.jsp.core.internal.modelhandler.ModelHandlerForJSP"
             associatedContentTypeId="org.eclipse.jst.jsp.core.jspsource"
-            id="org.eclipse.jst.jsp.core.modelhandler">
+            id="org.eclipse.jst.jsp.core.internal.modelhandler">
       </modelHandler>
    </extension>
    <extension
@@ -104,7 +104,7 @@
    <extension
          point="org.eclipse.wst.sse.core.formatProcessors">
       <processor
-            class="org.eclipse.wst.html.core.format.HTMLFormatProcessorImpl"
+            class="org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl"
             contentTypeId="org.eclipse.jst.jsp.core.jspsource">
       </processor>
    </extension>

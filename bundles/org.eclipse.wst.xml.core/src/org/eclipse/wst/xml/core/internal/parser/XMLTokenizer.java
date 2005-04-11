@@ -26,7 +26,7 @@ import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.parser.regions.XMLParserRegionFactory;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 
 /**
@@ -35,7 +35,7 @@ import org.eclipse.wst.xml.core.parser.XMLRegionContext;
  * on 1/27/05 4:48 PM from the specification file
  * <tt>file:/D:/eclipse.wtp/workspace/org.eclipse.wst.sse.core/DevTimeSupport/SedModel/HTMLTokenizer/devel/XMLTokenizer.jflex</tt>
  */
-public class XMLTokenizer implements BlockTokenizer, XMLRegionContext {
+public class XMLTokenizer implements BlockTokenizer, DOMRegionContext {
 
   /** this character denotes the end of file */
   final public static int YYEOF = -1;

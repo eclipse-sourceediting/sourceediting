@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.contentmodel.tld;
 
-import org.eclipse.jst.jsp.core.contentmodel.tld.JSP12TLDNames;
-import org.eclipse.jst.jsp.core.contentmodel.tld.TLDVariable;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDVariable;
 import org.eclipse.wst.sse.core.util.StringUtils;
 
 

@@ -32,7 +32,7 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
@@ -66,10 +66,10 @@ public class InsertRequiredAttrsQuickAssistProposal implements ICompletionPropos
 		IStructuredDocumentRegion startStructuredDocumentRegion = node.getStartStructuredDocumentRegion();
 		int index = startStructuredDocumentRegion.getEndOffset();
 		ITextRegion lastRegion = startStructuredDocumentRegion.getLastRegion();
-		if (lastRegion.getType() == XMLRegionContext.XML_TAG_CLOSE) {
+		if (lastRegion.getType() == DOMRegionContext.XML_TAG_CLOSE) {
 			index--;
 			lastRegion = startStructuredDocumentRegion.getRegionAtCharacterOffset(index - 1);
-		} else if (lastRegion.getType() == XMLRegionContext.XML_EMPTY_TAG_CLOSE) {
+		} else if (lastRegion.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE) {
 			index = index - 2;
 			lastRegion = startStructuredDocumentRegion.getRegionAtCharacterOffset(index - 1);
 		}

@@ -22,7 +22,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jst.jsp.core.JSP11Namespace;
 import org.eclipse.jst.jsp.core.JSP12Namespace;
-import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -31,7 +31,7 @@ import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.sse.ui.internal.contentassist.IRelevanceCompletionProposal;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 /**
  * An implementation of ICompletionProposal whose values can be
@@ -98,7 +98,7 @@ public class JavaTypeCompletionProposal extends CustomCompletionProposal impleme
 		boolean isImport = false;
 		for (int i = 0; i < regions.size(); i++) {
 			ITextRegion region = regions.get(i);
-			if (region.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+			if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 				if (flatNode.getText(region).equals(JSP11Namespace.ATTR_NAME_IMPORT)) {
 					isImport = true;
 				}
@@ -106,7 +106,7 @@ public class JavaTypeCompletionProposal extends CustomCompletionProposal impleme
 					isImport = false;
 				}
 			}
-			else if (isImport && region.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+			else if (isImport && region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 				importSpec = flatNode.getText(region);
 			}
 		}

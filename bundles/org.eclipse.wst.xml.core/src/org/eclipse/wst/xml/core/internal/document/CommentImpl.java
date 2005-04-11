@@ -19,7 +19,7 @@ import java.util.Iterator;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Comment;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
@@ -95,7 +95,7 @@ public class CommentImpl extends CharacterDataImpl implements Comment {
 		while (e.hasNext()) {
 			ITextRegion region = (ITextRegion) e.next();
 			String regionType = region.getType();
-			if (regionType == XMLRegionContext.XML_COMMENT_OPEN || regionType == XMLRegionContext.XML_COMMENT_CLOSE || isNestedCommentOpenClose(regionType)) {
+			if (regionType == DOMRegionContext.XML_COMMENT_OPEN || regionType == DOMRegionContext.XML_COMMENT_CLOSE || isNestedCommentOpenClose(regionType)) {
 				continue;
 			}
 			if (contentRegion == null) { // first content
@@ -141,7 +141,7 @@ public class CommentImpl extends CharacterDataImpl implements Comment {
 		if (flatNode == null)
 			return true; // will be generated
 		String regionType = StructuredDocumentRegionUtil.getLastRegionType(flatNode);
-		return (regionType == XMLRegionContext.XML_COMMENT_CLOSE || isNestedCommentClose(regionType));
+		return (regionType == DOMRegionContext.XML_COMMENT_CLOSE || isNestedCommentClose(regionType));
 	}
 
 	/**

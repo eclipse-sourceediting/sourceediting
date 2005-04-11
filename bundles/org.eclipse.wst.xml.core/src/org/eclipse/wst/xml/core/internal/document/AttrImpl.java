@@ -27,7 +27,7 @@ import org.eclipse.wst.xml.core.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
@@ -478,7 +478,7 @@ public boolean hasNestedValue() {
 			if (region == null)
 				continue;
 			String regionType = region.getType();
-			if (regionType == XMLRegionContext.XML_TAG_OPEN || isNestedLanguageOpening(regionType))
+			if (regionType == DOMRegionContext.XML_TAG_OPEN || isNestedLanguageOpening(regionType))
 				return true;
 		}
 		return false;
@@ -577,7 +577,7 @@ public boolean hasNestedValue() {
 		DocumentImpl document = (DocumentImpl) this.ownerElement.getContainerDocument();
 		if (document == null)
 			return;
-		XMLModelImpl model = (XMLModelImpl) document.getModel();
+		DOMModelImpl model = (DOMModelImpl) document.getModel();
 		if (model == null)
 			return;
 		model.nameChanged(this);
@@ -592,7 +592,7 @@ public boolean hasNestedValue() {
 		DocumentImpl document = (DocumentImpl) this.ownerElement.getContainerDocument();
 		if (document == null)
 			return;
-		XMLModelImpl model = (XMLModelImpl) document.getModel();
+		DOMModelImpl model = (DOMModelImpl) document.getModel();
 		if (model == null)
 			return;
 		model.valueChanged(this);

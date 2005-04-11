@@ -21,13 +21,13 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.core.util.Utilities;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 
 public class WhiteSpaceOnlyRegion implements ITextRegion {
 	static private final byte fTextLength = 0;
 
-	static private final String fType = XMLRegionContext.WHITE_SPACE;
+	static private final String fType = DOMRegionContext.WHITE_SPACE;
 	protected int fLength;
 	protected int fStart;
 

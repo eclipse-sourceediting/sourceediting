@@ -20,10 +20,10 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jst.jsp.core.JSP11Namespace;
 import org.eclipse.jst.jsp.core.JSP12Namespace;
-import org.eclipse.jst.jsp.core.contentmodel.tld.JSP12TLDNames;
-import org.eclipse.jst.jsp.core.encoding.JSPDocumentHeadContentDetector;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
+import org.eclipse.jst.jsp.core.internal.encoding.JSPDocumentHeadContentDetector;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
-import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.text.IJSPPartitionTypes;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
@@ -37,8 +37,8 @@ import org.eclipse.wst.sse.core.text.IStructuredTextPartitioner;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.StringUtils;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 
 public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 
@@ -100,14 +100,14 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 					ITextRegion region = regions.get(i);
 					int startOffset = taglibStructuredDocumentRegion.getStartOffset(region);
 					int textLength = region.getTextLength();
-					if (region.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+					if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 						prefixnameDetected = getTextSource().regionMatches(startOffset, textLength, JSP12TLDNames.PREFIX);
 						//String regionText =
 						// fTextSource.getText(startOffset, textLength);
 						//prefixname =
 						// regionText.equals(JSP12TLDNames.PREFIX);
 					}
-					else if (prefixnameDetected && region.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+					else if (prefixnameDetected && region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 						prefixValue = getTextSource().getText(startOffset, textLength);
 					}
 				}
@@ -341,7 +341,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 			// only find parent names from a start tag
 			if (regions.size() > 1) {
 				ITextRegion r = regions.get(1);
-				if (regions.get(0).getType().equals(XMLRegionContext.XML_TAG_OPEN) && r.getType().equals(XMLRegionContext.XML_TAG_NAME)) {
+				if (regions.get(0).getType().equals(DOMRegionContext.XML_TAG_OPEN) && r.getType().equals(DOMRegionContext.XML_TAG_NAME)) {
 					result = sdRegion.getText(r);
 				}
 			}
@@ -373,7 +373,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 		else if (region_type == DOMJSPRegionContexts.JSP_EL_OPEN || region_type == DOMJSPRegionContexts.JSP_EL_CONTENT || region_type == DOMJSPRegionContexts.JSP_EL_CLOSE || region_type == DOMJSPRegionContexts.JSP_EL_DQUOTE
 					|| region_type == DOMJSPRegionContexts.JSP_EL_SQUOTE || region_type == DOMJSPRegionContexts.JSP_EL_QUOTED_CONTENT)
 			result = IJSPPartitionTypes.JSP_DEFAULT_EL;
-		else if (region_type == XMLRegionContext.XML_CONTENT) {
+		else if (region_type == DOMRegionContext.XML_CONTENT) {
 			// possibly between <jsp:scriptlet>, <jsp:expression>,
 			// <jsp:declaration>
 			IStructuredDocumentRegion sdRegion = this.structuredDocument.getRegionAtCharacterOffset(offset);
@@ -423,7 +423,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 	 * @return
 	 */
 	private boolean isAction(IStructuredDocumentRegion sdRegion, int offset) {
-		if (!sdRegion.getType().equals(XMLRegionContext.XML_TAG_NAME))
+		if (!sdRegion.getType().equals(DOMRegionContext.XML_TAG_NAME))
 			return false;
 		// shouldn't get a tag name region type unless a tag name region
 		// exists
@@ -469,7 +469,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 	private boolean isValidJspActionRegionType(String type) {
 		// true for anything that can be within <jsp:scriptlet>,
 		// <jsp:expression>, <jsp:declaration>
-		return type == XMLRegionContext.XML_CONTENT || type == XMLRegionContext.BLOCK_TEXT || type == XMLRegionContext.XML_CDATA_OPEN || type == XMLRegionContext.XML_CDATA_TEXT || type == XMLRegionContext.XML_CDATA_CLOSE;
+		return type == DOMRegionContext.XML_CONTENT || type == DOMRegionContext.BLOCK_TEXT || type == DOMRegionContext.XML_CDATA_OPEN || type == DOMRegionContext.XML_CDATA_TEXT || type == DOMRegionContext.XML_CDATA_CLOSE;
 	}
 
 	public IDocumentPartitioner newInstance() {

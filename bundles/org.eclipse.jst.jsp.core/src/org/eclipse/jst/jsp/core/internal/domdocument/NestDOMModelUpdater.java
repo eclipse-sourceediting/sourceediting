@@ -12,8 +12,8 @@
 
 package org.eclipse.jst.jsp.core.internal.domdocument;
 
-import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
-import org.eclipse.wst.xml.core.internal.document.XMLModelImpl;
+import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
+import org.eclipse.wst.xml.core.internal.document.DOMModelImpl;
 import org.eclipse.wst.xml.core.internal.document.XMLModelUpdater;
 
 
@@ -22,7 +22,7 @@ public class NestDOMModelUpdater extends XMLModelUpdater {
 	/**
 	 * @param model
 	 */
-	public NestDOMModelUpdater(XMLModelImpl model) {
+	public NestDOMModelUpdater(DOMModelImpl model) {
 		super(model);
 	}
 

@@ -15,12 +15,12 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 import org.eclipse.wst.xml.core.IXMLCharEntity;
-import org.eclipse.wst.xml.core.commentelement.impl.CommentElementRegistry;
 import org.eclipse.wst.xml.core.document.IDOMAttr;
 import org.eclipse.wst.xml.core.document.IDOMDocument;
 import org.eclipse.wst.xml.core.document.IDOMElement;
-import org.eclipse.wst.xml.core.document.ISourceGenerator;
 import org.eclipse.wst.xml.core.document.IDOMNode;
+import org.eclipse.wst.xml.core.document.ISourceGenerator;
+import org.eclipse.wst.xml.core.internal.commentelement.impl.CommentElementRegistry;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.w3c.dom.Attr;

@@ -18,12 +18,12 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.core.util.Utilities;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 
 
 public class XMLContentRegion implements ITextRegion {
-	static private final String fType = XMLRegionContext.XML_CONTENT;
+	static private final String fType = DOMRegionContext.XML_CONTENT;
 	// length and textLength are always the same for content region
 	//private int fTextLength;
 	private int fLength;

@@ -17,10 +17,11 @@ import org.eclipse.wst.html.core.HTMLCMProperties;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMContentBuilderImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-public class HTMLContentBuilder extends org.eclipse.wst.xml.core.internal.contentmodel.util.DOMContentBuilderImpl {
+public class HTMLContentBuilder extends DOMContentBuilderImpl {
 
 	private int fTagCase;
 	private int fAttrCase;

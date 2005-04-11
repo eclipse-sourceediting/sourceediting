@@ -13,13 +13,13 @@ package org.eclipse.jst.jsp.ui.internal.style;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.util.PropertyChangeEvent;
-import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.wst.html.ui.style.IStyleConstantsHTML;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.ui.style.AbstractLineStyleProvider;
 import org.eclipse.wst.sse.ui.style.LineStyleProvider;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.style.IStyleConstantsXML;
 
 public class LineStyleProviderForJSP extends AbstractLineStyleProvider implements LineStyleProvider{
@@ -77,34 +77,34 @@ public class LineStyleProviderForJSP extends AbstractLineStyleProvider implement
 				//              seem worth it, since if adpaters factories are working
 				// right,
 				//              then wouldn't be needed.
-				else if (type == XMLRegionContext.XML_TAG_NAME) {
+				else if (type == DOMRegionContext.XML_TAG_NAME) {
 					result = (TextAttribute) getTextAttributes().get(IStyleConstantsXML.TAG_NAME);
 				}
-				else if ((type == XMLRegionContext.XML_TAG_OPEN) || (type == XMLRegionContext.XML_END_TAG_OPEN) || (type == XMLRegionContext.XML_TAG_CLOSE) || (type == XMLRegionContext.XML_EMPTY_TAG_CLOSE)) {
+				else if ((type == DOMRegionContext.XML_TAG_OPEN) || (type == DOMRegionContext.XML_END_TAG_OPEN) || (type == DOMRegionContext.XML_TAG_CLOSE) || (type == DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
 					result = (TextAttribute) getTextAttributes().get(IStyleConstantsXML.TAG_BORDER);
 				}
-				else if (type == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+				else if (type == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 					result = (TextAttribute) getTextAttributes().get(IStyleConstantsXML.TAG_ATTRIBUTE_NAME);
 				}
-				else if ((type == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) || (type == DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE) || (type == DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_SQUOTE)) {
+				else if ((type == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) || (type == DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE) || (type == DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_SQUOTE)) {
 					result = (TextAttribute) getTextAttributes().get(IStyleConstantsXML.TAG_ATTRIBUTE_VALUE);
 				}
-				else if (type == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+				else if (type == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
 					result = (TextAttribute) getTextAttributes().get(IStyleConstantsXML.TAG_ATTRIBUTE_EQUALS);
 				}
 
 				// DMW: added 9/1/2002 Undefined color may need addjustment :)
-				else if (type == XMLRegionContext.UNDEFINED)
+				else if (type == DOMRegionContext.UNDEFINED)
 					result = (TextAttribute) getTextAttributes().get(IStyleConstantsXML.XML_CONTENT);
 
-				else if (type == XMLRegionContext.WHITE_SPACE)
+				else if (type == DOMRegionContext.WHITE_SPACE)
 					result = (TextAttribute) getTextAttributes().get(IStyleConstantsXML.XML_CONTENT);
 				// DMW added 8/30/2002 -- should provide JSP specific
 				// preference for "custom tag content" (both tag dependent,
 				// BLOCKED_TEXT, and not, XML CONTENT)
-				else if (type == XMLRegionContext.XML_CONTENT)
+				else if (type == DOMRegionContext.XML_CONTENT)
 					result = (TextAttribute) getTextAttributes().get(IStyleConstantsXML.XML_CONTENT);
-				else if (type == XMLRegionContext.BLOCK_TEXT)
+				else if (type == DOMRegionContext.BLOCK_TEXT)
 					result = (TextAttribute) getTextAttributes().get(IStyleConstantsXML.CDATA_TEXT);
 			}
 		}

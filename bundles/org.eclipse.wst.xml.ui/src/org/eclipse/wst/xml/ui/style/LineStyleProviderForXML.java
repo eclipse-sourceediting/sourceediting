@@ -18,7 +18,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.ui.style.AbstractLineStyleProvider;
 import org.eclipse.wst.sse.ui.style.LineStyleProvider;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
 public class LineStyleProviderForXML extends AbstractLineStyleProvider implements LineStyleProvider {
@@ -41,49 +41,49 @@ public class LineStyleProviderForXML extends AbstractLineStyleProvider implement
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.CDATA_TEXT);
 		}
 		String type = region.getType();
-		if ((type == XMLRegionContext.XML_CONTENT) || (type == XMLRegionContext.XML_DOCTYPE_INTERNAL_SUBSET)) {
+		if ((type == DOMRegionContext.XML_CONTENT) || (type == DOMRegionContext.XML_DOCTYPE_INTERNAL_SUBSET)) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.XML_CONTENT);
-		} else if ((type == XMLRegionContext.XML_TAG_OPEN) || (type == XMLRegionContext.XML_END_TAG_OPEN) || (type == XMLRegionContext.XML_TAG_CLOSE) || (type == XMLRegionContext.XML_EMPTY_TAG_CLOSE)) {
+		} else if ((type == DOMRegionContext.XML_TAG_OPEN) || (type == DOMRegionContext.XML_END_TAG_OPEN) || (type == DOMRegionContext.XML_TAG_CLOSE) || (type == DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.TAG_BORDER);
-		} else if ((type == XMLRegionContext.XML_CDATA_OPEN) || (type == XMLRegionContext.XML_CDATA_CLOSE)) {
+		} else if ((type == DOMRegionContext.XML_CDATA_OPEN) || (type == DOMRegionContext.XML_CDATA_CLOSE)) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.CDATA_BORDER);
-		} else if (type == XMLRegionContext.XML_CDATA_TEXT) {
+		} else if (type == DOMRegionContext.XML_CDATA_TEXT) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.CDATA_TEXT);
-		} else if (type == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+		} else if (type == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.TAG_ATTRIBUTE_NAME);
-		} else if (type == XMLRegionContext.XML_DOCTYPE_DECLARATION) {
+		} else if (type == DOMRegionContext.XML_DOCTYPE_DECLARATION) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.TAG_NAME);
-		} else if (type == XMLRegionContext.XML_TAG_NAME) {
+		} else if (type == DOMRegionContext.XML_TAG_NAME) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.TAG_NAME);
-		} else if ((type == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE)) {
+		} else if ((type == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.TAG_ATTRIBUTE_VALUE);
-		} else if (type == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+		} else if (type == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.TAG_ATTRIBUTE_EQUALS);
-		} else if ((type == XMLRegionContext.XML_COMMENT_OPEN) || (type == XMLRegionContext.XML_COMMENT_CLOSE)) {
+		} else if ((type == DOMRegionContext.XML_COMMENT_OPEN) || (type == DOMRegionContext.XML_COMMENT_CLOSE)) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.COMMENT_BORDER);
-		} else if (type == XMLRegionContext.XML_COMMENT_TEXT) {
+		} else if (type == DOMRegionContext.XML_COMMENT_TEXT) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.COMMENT_TEXT);
-		} else if (type == XMLRegionContext.XML_DOCTYPE_NAME) {
+		} else if (type == DOMRegionContext.XML_DOCTYPE_NAME) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.DOCTYPE_NAME);
-		} else if (type == XMLRegionContext.XML_PI_CONTENT) {
+		} else if (type == DOMRegionContext.XML_PI_CONTENT) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.PI_CONTENT);
-		} else if ((type == XMLRegionContext.XML_PI_OPEN) || (type == XMLRegionContext.XML_PI_CLOSE)) {
+		} else if ((type == DOMRegionContext.XML_PI_OPEN) || (type == DOMRegionContext.XML_PI_CLOSE)) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.PI_BORDER);
-		} else if ((type == XMLRegionContext.XML_DECLARATION_OPEN) || (type == XMLRegionContext.XML_DECLARATION_CLOSE)) {
+		} else if ((type == DOMRegionContext.XML_DECLARATION_OPEN) || (type == DOMRegionContext.XML_DECLARATION_CLOSE)) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.DECL_BORDER);
-		} else if (type == XMLRegionContext.XML_DOCTYPE_EXTERNAL_ID_SYSREF) {
+		} else if (type == DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_SYSREF) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_SYSREF);
-		} else if (type == XMLRegionContext.XML_DOCTYPE_EXTERNAL_ID_PUBREF) {
+		} else if (type == DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_PUBREF) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_PUBREF);
-		} else if (type == XMLRegionContext.XML_DOCTYPE_EXTERNAL_ID_PUBLIC || type == XMLRegionContext.XML_DOCTYPE_EXTERNAL_ID_SYSTEM) {
+		} else if (type == DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_PUBLIC || type == DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_SYSTEM) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID);
-		} else if (type == XMLRegionContext.UNDEFINED) {
+		} else if (type == DOMRegionContext.UNDEFINED) {
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.CDATA_TEXT);
-		} else if (type == XMLRegionContext.WHITE_SPACE) {
+		} else if (type == DOMRegionContext.WHITE_SPACE) {
 			// white space is normall not on its own ... but when it is, we'll
 			// treat as content
 			return (TextAttribute) getTextAttributes().get(IStyleConstantsXML.XML_CONTENT);
-		} else if ((type == XMLRegionContext.XML_CHAR_REFERENCE) || (type == XMLRegionContext.XML_ENTITY_REFERENCE) || (type == XMLRegionContext.XML_PE_REFERENCE)) {
+		} else if ((type == DOMRegionContext.XML_CHAR_REFERENCE) || (type == DOMRegionContext.XML_ENTITY_REFERENCE) || (type == DOMRegionContext.XML_PE_REFERENCE)) {
 			// we may want to character and entity references to have it own
 			// color in future,
 			// but for now, we'll make attribute value

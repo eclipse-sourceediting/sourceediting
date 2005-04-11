@@ -16,7 +16,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.ui.style.LineStyleProvider;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.style.IStyleConstantsXML;
 import org.eclipse.wst.xml.ui.style.LineStyleProviderForXML;
 
@@ -36,7 +36,7 @@ public class LineStyleProviderForHTML extends LineStyleProviderForXML implements
 		if (region == null) {
 			return (TextAttribute)getTextAttributes().get(IStyleConstantsXML.XML_CONTENT);
 		}
-		if (region.getType() == XMLRegionContext.BLOCK_TEXT) {
+		if (region.getType() == DOMRegionContext.BLOCK_TEXT) {
 			return (TextAttribute)getTextAttributes().get(IStyleConstantsXML.XML_CONTENT);
 		}
 		// first try "standard" tag attributes from super class

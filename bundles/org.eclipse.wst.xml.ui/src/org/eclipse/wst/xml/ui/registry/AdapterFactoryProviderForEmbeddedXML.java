@@ -17,7 +17,7 @@ import org.eclipse.wst.sse.core.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.sse.ui.registry.embedded.EmbeddedAdapterFactoryProvider;
 import org.eclipse.wst.xml.core.document.IDOMDocument;
 import org.eclipse.wst.xml.core.document.IDOMModel;
-import org.eclipse.wst.xml.core.modelhandler.EmbeddedXML;
+import org.eclipse.wst.xml.core.internal.modelhandler.EmbeddedXML;
 
 
 public class AdapterFactoryProviderForEmbeddedXML implements EmbeddedAdapterFactoryProvider {

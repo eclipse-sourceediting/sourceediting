@@ -38,7 +38,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.css.core.text.ICSSPartitionTypes;
 import org.eclipse.wst.css.ui.contentassist.CSSContentAssistProcessor;
 import org.eclipse.wst.css.ui.style.LineStyleProviderForEmbeddedCSS;
-import org.eclipse.wst.html.core.format.HTMLFormatProcessorImpl;
+import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.html.core.text.IHTMLPartitionTypes;
 import org.eclipse.wst.html.ui.internal.contentassist.HTMLContentAssistProcessor;

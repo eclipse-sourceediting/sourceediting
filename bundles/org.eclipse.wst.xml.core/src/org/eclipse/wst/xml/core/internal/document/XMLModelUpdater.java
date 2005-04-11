@@ -23,9 +23,9 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.xml.core.document.IDOMElement;
-import org.eclipse.wst.xml.core.document.ISourceGenerator;
 import org.eclipse.wst.xml.core.document.IDOMNode;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.document.ISourceGenerator;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -42,11 +42,11 @@ public class XMLModelUpdater {
 	private int gapOffset = 0;
 	private IStructuredDocumentRegion gapStructuredDocumentRegion = null;
 	private ISourceGenerator generator = null;
-	private XMLModelImpl model = null;
+	private DOMModelImpl model = null;
 	private NodeImpl nextNode = null;
 	private NodeImpl parentNode = null;
 
-	protected XMLModelUpdater(XMLModelImpl model) {
+	protected XMLModelUpdater(DOMModelImpl model) {
 		super();
 
 		if (model != null) {
@@ -629,7 +629,7 @@ public class XMLModelUpdater {
 		if (flatNode == null)
 			return null;
 		ITextRegion region = StructuredDocumentRegionUtil.getLastRegion(flatNode);
-		if (region == null || region.getType() != XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE)
+		if (region == null || region.getType() != DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)
 			return null;
 		String value = flatNode.getText(region);
 		if (value == null)
@@ -1270,7 +1270,7 @@ public class XMLModelUpdater {
 			boolean isLastAttr = false;
 			if (nextRegion != null) {
 				String regionType = nextRegion.getType();
-				if (regionType == XMLRegionContext.XML_TAG_CLOSE || regionType == XMLRegionContext.XML_EMPTY_TAG_CLOSE || isNestedTagClose(regionType)) {
+				if (regionType == DOMRegionContext.XML_TAG_CLOSE || regionType == DOMRegionContext.XML_EMPTY_TAG_CLOSE || isNestedTagClose(regionType)) {
 					isLastAttr = true;
 				}
 			}
@@ -1303,7 +1303,7 @@ public class XMLModelUpdater {
 				for (int i = regions.size() - 1; i >= 0; i--) {
 					ITextRegion region = regions.get(i);
 					String regionType = region.getType();
-					if (regionType == XMLRegionContext.XML_TAG_CLOSE || regionType == XMLRegionContext.XML_EMPTY_TAG_CLOSE || isNestedTagClose(regionType))
+					if (regionType == DOMRegionContext.XML_TAG_CLOSE || regionType == DOMRegionContext.XML_EMPTY_TAG_CLOSE || isNestedTagClose(regionType))
 						continue;
 					int regionEnd = region.getEnd();
 					if (regionEnd == region.getTextEnd())
@@ -1676,7 +1676,7 @@ public class XMLModelUpdater {
 		while (e.hasNext()) {
 			ITextRegion region = (ITextRegion) e.next();
 			String regionType = region.getType();
-			if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+			if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 				attr = (AttrImpl) attributes.item(++index);
 				if (attr != null) {
 					attr.setNameRegion(region);
@@ -1685,11 +1685,11 @@ public class XMLModelUpdater {
 					attr.setValueRegion(null);
 				}
 			}
-			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+			else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
 				if (attr != null)
 					attr.setEqualRegion(region);
 			}
-			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+			else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 				if (attr != null) {
 					attr.setValueRegion(region);
 					attr = null;

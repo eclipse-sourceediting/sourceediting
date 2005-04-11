@@ -20,7 +20,7 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
-import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.text.IJSPPartitionTypes;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.wst.sse.core.IndexedRegion;
@@ -34,7 +34,7 @@ import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.sse.ui.internal.contentassist.IResourceDependentProcessor;
 import org.eclipse.wst.xml.core.document.IDOMNode;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.contentassist.XMLRelevanceConstants;
 import org.eclipse.wst.xml.ui.util.SharedXMLEditorPluginImageHelper;
 
@@ -97,7 +97,7 @@ public class JSPJavaContentAssistProcessor implements IContentAssistProcessor, I
 		}
 
 		// ADD CDATA PROPOSAL IF IT'S AN XML-JSP TAG  
-		if (flat != null && flat.getType() != DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN && flat.getType() != DOMJSPRegionContexts.JSP_DECLARATION_OPEN && flat.getType() != DOMJSPRegionContexts.JSP_EXPRESSION_OPEN && flat.getType() != XMLRegionContext.BLOCK_TEXT && (openRegion != null && openRegion.getType() != DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN) && !inAttributeRegion(flat, documentPosition)) {
+		if (flat != null && flat.getType() != DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN && flat.getType() != DOMJSPRegionContexts.JSP_DECLARATION_OPEN && flat.getType() != DOMJSPRegionContexts.JSP_EXPRESSION_OPEN && flat.getType() != DOMRegionContext.BLOCK_TEXT && (openRegion != null && openRegion.getType() != DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN) && !inAttributeRegion(flat, documentPosition)) {
 
 			// determine if cursor is before or after selected range
 			int adjustedDocPosition = documentPosition;
@@ -144,7 +144,7 @@ public class JSPJavaContentAssistProcessor implements IContentAssistProcessor, I
 	private boolean inAttributeRegion(IStructuredDocumentRegion flat, int documentPosition) {
 		ITextRegion attrContainer = flat.getRegionAtCharacterOffset(documentPosition);
 		if (attrContainer != null && attrContainer instanceof ITextRegionContainer) {
-			if (attrContainer.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+			if (attrContainer.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 				return true;
 			}
 		}

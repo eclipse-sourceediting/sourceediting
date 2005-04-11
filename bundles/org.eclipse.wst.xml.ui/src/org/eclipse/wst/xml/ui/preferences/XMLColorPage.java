@@ -30,7 +30,7 @@ import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore.Overla
 import org.eclipse.wst.sse.ui.preferences.ui.AbstractColorPage;
 import org.eclipse.wst.sse.ui.preferences.ui.StyledTextColorPicker;
 import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.xml.ui.style.IStyleConstantsXML;
@@ -74,24 +74,24 @@ public class XMLColorPage extends AbstractColorPage {
 
 	protected void initCommonContextStyleMap(Dictionary contextStyleMap) {
 
-		contextStyleMap.put(XMLRegionContext.XML_COMMENT_OPEN, IStyleConstantsXML.COMMENT_BORDER);
-		contextStyleMap.put(XMLRegionContext.XML_COMMENT_TEXT, IStyleConstantsXML.COMMENT_TEXT);
-		contextStyleMap.put(XMLRegionContext.XML_COMMENT_CLOSE, IStyleConstantsXML.COMMENT_BORDER);
+		contextStyleMap.put(DOMRegionContext.XML_COMMENT_OPEN, IStyleConstantsXML.COMMENT_BORDER);
+		contextStyleMap.put(DOMRegionContext.XML_COMMENT_TEXT, IStyleConstantsXML.COMMENT_TEXT);
+		contextStyleMap.put(DOMRegionContext.XML_COMMENT_CLOSE, IStyleConstantsXML.COMMENT_BORDER);
 
-		contextStyleMap.put(XMLRegionContext.XML_TAG_OPEN, IStyleConstantsXML.TAG_BORDER);
-		contextStyleMap.put(XMLRegionContext.XML_END_TAG_OPEN, IStyleConstantsXML.TAG_BORDER);
-		contextStyleMap.put(XMLRegionContext.XML_TAG_NAME, IStyleConstantsXML.TAG_NAME);
-		contextStyleMap.put(XMLRegionContext.XML_TAG_ATTRIBUTE_NAME, IStyleConstantsXML.TAG_ATTRIBUTE_NAME);
-		contextStyleMap.put(XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE, IStyleConstantsXML.TAG_ATTRIBUTE_VALUE);
-		contextStyleMap.put(XMLRegionContext.XML_TAG_CLOSE, IStyleConstantsXML.TAG_BORDER);
-		contextStyleMap.put(XMLRegionContext.XML_EMPTY_TAG_CLOSE, IStyleConstantsXML.TAG_BORDER);
+		contextStyleMap.put(DOMRegionContext.XML_TAG_OPEN, IStyleConstantsXML.TAG_BORDER);
+		contextStyleMap.put(DOMRegionContext.XML_END_TAG_OPEN, IStyleConstantsXML.TAG_BORDER);
+		contextStyleMap.put(DOMRegionContext.XML_TAG_NAME, IStyleConstantsXML.TAG_NAME);
+		contextStyleMap.put(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME, IStyleConstantsXML.TAG_ATTRIBUTE_NAME);
+		contextStyleMap.put(DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE, IStyleConstantsXML.TAG_ATTRIBUTE_VALUE);
+		contextStyleMap.put(DOMRegionContext.XML_TAG_CLOSE, IStyleConstantsXML.TAG_BORDER);
+		contextStyleMap.put(DOMRegionContext.XML_EMPTY_TAG_CLOSE, IStyleConstantsXML.TAG_BORDER);
 
-		contextStyleMap.put(XMLRegionContext.XML_DECLARATION_OPEN, IStyleConstantsXML.DECL_BORDER);
-		contextStyleMap.put(XMLRegionContext.XML_DECLARATION_CLOSE, IStyleConstantsXML.DECL_BORDER);
-		contextStyleMap.put(XMLRegionContext.XML_ELEMENT_DECLARATION, IStyleConstantsXML.DECL_BORDER);
-		contextStyleMap.put(XMLRegionContext.XML_ELEMENT_DECL_CLOSE, IStyleConstantsXML.DECL_BORDER);
+		contextStyleMap.put(DOMRegionContext.XML_DECLARATION_OPEN, IStyleConstantsXML.DECL_BORDER);
+		contextStyleMap.put(DOMRegionContext.XML_DECLARATION_CLOSE, IStyleConstantsXML.DECL_BORDER);
+		contextStyleMap.put(DOMRegionContext.XML_ELEMENT_DECLARATION, IStyleConstantsXML.DECL_BORDER);
+		contextStyleMap.put(DOMRegionContext.XML_ELEMENT_DECL_CLOSE, IStyleConstantsXML.DECL_BORDER);
 
-		contextStyleMap.put(XMLRegionContext.XML_CONTENT, IStyleConstantsXML.XML_CONTENT);
+		contextStyleMap.put(DOMRegionContext.XML_CONTENT, IStyleConstantsXML.XML_CONTENT);
 	}
 
 	protected void initCommonDescriptions(Dictionary descriptions) {
@@ -128,13 +128,13 @@ public class XMLColorPage extends AbstractColorPage {
 
 		initCommonContextStyleMap(contextStyleMap);
 		initDocTypeContextStyleMap(contextStyleMap);
-		contextStyleMap.put(XMLRegionContext.XML_CDATA_OPEN, IStyleConstantsXML.CDATA_BORDER);
-		contextStyleMap.put(XMLRegionContext.XML_CDATA_TEXT, IStyleConstantsXML.CDATA_TEXT);
-		contextStyleMap.put(XMLRegionContext.XML_CDATA_CLOSE, IStyleConstantsXML.CDATA_BORDER);
+		contextStyleMap.put(DOMRegionContext.XML_CDATA_OPEN, IStyleConstantsXML.CDATA_BORDER);
+		contextStyleMap.put(DOMRegionContext.XML_CDATA_TEXT, IStyleConstantsXML.CDATA_TEXT);
+		contextStyleMap.put(DOMRegionContext.XML_CDATA_CLOSE, IStyleConstantsXML.CDATA_BORDER);
 
-		contextStyleMap.put(XMLRegionContext.XML_PI_OPEN, IStyleConstantsXML.PI_BORDER);
-		contextStyleMap.put(XMLRegionContext.XML_PI_CONTENT, IStyleConstantsXML.PI_CONTENT);
-		contextStyleMap.put(XMLRegionContext.XML_PI_CLOSE, IStyleConstantsXML.PI_BORDER);
+		contextStyleMap.put(DOMRegionContext.XML_PI_OPEN, IStyleConstantsXML.PI_BORDER);
+		contextStyleMap.put(DOMRegionContext.XML_PI_CONTENT, IStyleConstantsXML.PI_CONTENT);
+		contextStyleMap.put(DOMRegionContext.XML_PI_CLOSE, IStyleConstantsXML.PI_BORDER);
 
 	}
 
@@ -150,15 +150,15 @@ public class XMLColorPage extends AbstractColorPage {
 
 	protected void initDocTypeContextStyleMap(Dictionary contextStyleMap) {
 
-		contextStyleMap.put(XMLRegionContext.XML_ELEMENT_DECL_NAME, IStyleConstantsXML.DOCTYPE_NAME);
-		contextStyleMap.put(XMLRegionContext.XML_DOCTYPE_DECLARATION, IStyleConstantsXML.TAG_NAME);
-		contextStyleMap.put(XMLRegionContext.XML_DOCTYPE_DECLARATION_CLOSE, IStyleConstantsXML.DECL_BORDER);
+		contextStyleMap.put(DOMRegionContext.XML_ELEMENT_DECL_NAME, IStyleConstantsXML.DOCTYPE_NAME);
+		contextStyleMap.put(DOMRegionContext.XML_DOCTYPE_DECLARATION, IStyleConstantsXML.TAG_NAME);
+		contextStyleMap.put(DOMRegionContext.XML_DOCTYPE_DECLARATION_CLOSE, IStyleConstantsXML.DECL_BORDER);
 
-		contextStyleMap.put(XMLRegionContext.XML_DOCTYPE_NAME, IStyleConstantsXML.DOCTYPE_NAME);
-		contextStyleMap.put(XMLRegionContext.XML_DOCTYPE_EXTERNAL_ID_PUBLIC, IStyleConstantsXML.DOCTYPE_EXTERNAL_ID);
-		contextStyleMap.put(XMLRegionContext.XML_DOCTYPE_EXTERNAL_ID_PUBREF, IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_PUBREF);
-		contextStyleMap.put(XMLRegionContext.XML_DOCTYPE_EXTERNAL_ID_SYSTEM, IStyleConstantsXML.DOCTYPE_EXTERNAL_ID);
-		contextStyleMap.put(XMLRegionContext.XML_DOCTYPE_EXTERNAL_ID_SYSREF, IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_SYSREF);
+		contextStyleMap.put(DOMRegionContext.XML_DOCTYPE_NAME, IStyleConstantsXML.DOCTYPE_NAME);
+		contextStyleMap.put(DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_PUBLIC, IStyleConstantsXML.DOCTYPE_EXTERNAL_ID);
+		contextStyleMap.put(DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_PUBREF, IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_PUBREF);
+		contextStyleMap.put(DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_SYSTEM, IStyleConstantsXML.DOCTYPE_EXTERNAL_ID);
+		contextStyleMap.put(DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_SYSREF, IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_SYSREF);
 	}
 
 	protected void initDocTypeDescriptions(Dictionary descriptions) {

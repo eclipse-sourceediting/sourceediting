@@ -31,6 +31,10 @@ public interface IDOMAttr extends IDOMNode, Attr {
 	 * Get's the region in attribute representing the '=' sign. May or may not
 	 * have whitespace surrounding it.
 	 * 
+	 * @deprecated - 
+	 * ISSUE: need to change/remove to avoid exposing 'ITextRegion'
+	 * change to offset pattern, as others.
+	 * 
 	 * @return ITextRegion - the region representing the equals sign, or null
 	 *         if their is no equals sign.
 	 */

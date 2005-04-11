@@ -27,7 +27,7 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.xml.core.document.IDOMNode;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 
 /**
@@ -91,7 +91,7 @@ public class AttributeContextInformationPresenter implements IContextInformation
 		StyleRange[] sorted = new StyleRange[fInfo.getInformationDisplayString().length()];
 		for (int i = 0; i < regions.size(); i++) {
 			r = regions.get(i);
-			if (r.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+			if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 				attrName = sdRegion.getText(r);
 				temp = map.get(attrName);
 				if (temp != null) {

@@ -33,7 +33,7 @@ import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.xml.core.document.IDOMNode;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
@@ -66,7 +66,7 @@ public class RenameInFileQuickAssistProposal implements ICompletionProposal, ICo
 				if (region != null) {
 					group.addPosition(new LinkedPosition(document, startStructuredDocumentRegion.getStartOffset() + region.getStart(), region.getTextLength(), 0));
 
-					if (region.getType() == XMLRegionContext.XML_TAG_NAME && node.getEndStructuredDocumentRegion() != null) {
+					if (region.getType() == DOMRegionContext.XML_TAG_NAME && node.getEndStructuredDocumentRegion() != null) {
 						region = node.getEndStructuredDocumentRegion().getRegions().get(1);
 						if (region != null)
 							group.addPosition(new LinkedPosition(document, node.getEndStructuredDocumentRegion().getStartOffset() + region.getStart(), region.getTextLength(), 1));
@@ -75,7 +75,7 @@ public class RenameInFileQuickAssistProposal implements ICompletionProposal, ICo
 					IStructuredDocumentRegion endStructuredDocumentRegion = node.getEndStructuredDocumentRegion();
 					region = (endStructuredDocumentRegion == null) ? null : endStructuredDocumentRegion.getRegionAtCharacterOffset(offset);
 					if (region != null) {
-						if (region.getType() == XMLRegionContext.XML_TAG_NAME && node.getStartStructuredDocumentRegion() != null) {
+						if (region.getType() == DOMRegionContext.XML_TAG_NAME && node.getStartStructuredDocumentRegion() != null) {
 							ITextRegion startTagNameRegion = node.getStartStructuredDocumentRegion().getRegions().get(1);
 							if (region != null) {
 								group.addPosition(new LinkedPosition(document, node.getStartStructuredDocumentRegion().getStartOffset() + startTagNameRegion.getStart(), startTagNameRegion.getTextLength(), 0));

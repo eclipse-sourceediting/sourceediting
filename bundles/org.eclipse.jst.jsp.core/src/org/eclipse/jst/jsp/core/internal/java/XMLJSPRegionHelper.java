@@ -21,7 +21,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
-import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.parser.BlockMarker;
 import org.eclipse.wst.sse.core.parser.StructuredDocumentRegionHandler;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -30,7 +30,7 @@ import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 
 /**
@@ -155,7 +155,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 					}
 				}
 			}
-			else if (sdRegion.getFirstRegion().getType() == XMLRegionContext.XML_CONTENT) {
+			else if (sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_CONTENT) {
 				if (fTagname != null) {
 					processUseBean(sdRegion);
 					processOtherRegions(sdRegion);
@@ -263,7 +263,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	protected void processIncludeDirective(IStructuredDocumentRegion sdRegion) {
 		if (isIncludeDirective(fTagname)) {
 			// the directive name region itself contains the attrs...
-			if (sdRegion.getRegions().get(0).getType() == XMLRegionContext.XML_CONTENT)
+			if (sdRegion.getRegions().get(0).getType() == DOMRegionContext.XML_CONTENT)
 				sdRegion = sdRegion.getPrevious();
 			String fileLocation = getAttributeValue("file", sdRegion); //$NON-NLS-1$
 			this.fTranslator.handleIncludeFile(fileLocation);
@@ -325,12 +325,12 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 		ITextRegion nameRegion, valueRegion = null;
 		while (it.hasNext()) {
 			nameRegion = (ITextRegion) it.next();
-			if (nameRegion.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+			if (nameRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 				textRegionText = sdRegionText.substring(nameRegion.getStart(), nameRegion.getEnd());
 				if (textRegionText.equalsIgnoreCase(attrName)) {
 					while (it.hasNext()) {
 						valueRegion = (ITextRegion) it.next();
-						if (valueRegion.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+						if (valueRegion.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 							attrValue = sdRegionText.substring(valueRegion.getStart(), valueRegion.getEnd());
 							break; // inner
 						}
@@ -347,7 +347,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	 * return true for elements whose contents we might want to add to the java file we are building
 	 */
 	protected boolean isJSPStartRegion(IStructuredDocumentRegion sdRegion) {
-		return (sdRegion.getFirstRegion().getType() == XMLRegionContext.XML_TAG_OPEN || sdRegion.getFirstRegion().getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN);
+		return (sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_TAG_OPEN || sdRegion.getFirstRegion().getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN);
 	}
 
 	protected boolean isJSPRegion(String tagName) {

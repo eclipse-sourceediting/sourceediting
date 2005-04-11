@@ -16,7 +16,7 @@ package org.eclipse.wst.xml.core.internal.document;
 
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.xml.core.document.IDOMDocumentType;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -143,7 +143,7 @@ public class DocumentTypeImpl extends NodeImpl implements IDOMDocumentType {
 		if (flatNode == null)
 			return true; // will be generated
 		String regionType = StructuredDocumentRegionUtil.getLastRegionType(flatNode);
-		return (regionType == XMLRegionContext.XML_DOCTYPE_DECLARATION_CLOSE || regionType == XMLRegionContext.XML_DECLARATION_CLOSE);
+		return (regionType == DOMRegionContext.XML_DOCTYPE_DECLARATION_CLOSE || regionType == DOMRegionContext.XML_DECLARATION_CLOSE);
 	}
 
 	/**

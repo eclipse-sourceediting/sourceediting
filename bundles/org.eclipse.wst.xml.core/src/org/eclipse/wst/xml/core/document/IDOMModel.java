@@ -31,6 +31,7 @@ public interface IDOMModel extends IStructuredModel {
 	IDOMDocument getDocument();
 
 	/**
+	 * 
 	 * Returns an source generator appropriate for this model.
 	 * 
 	 * @return the source generator

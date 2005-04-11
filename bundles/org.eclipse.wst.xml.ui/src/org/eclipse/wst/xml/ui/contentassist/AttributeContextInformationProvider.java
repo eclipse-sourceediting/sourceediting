@@ -32,7 +32,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMGroup;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNodeList;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -203,6 +203,6 @@ class AttributeContextInformationProvider {
 	 */
 	private boolean isEndTag(IStructuredDocumentRegion sdRegion) {
 		ITextRegionList regions = sdRegion.getRegions();
-		return regions.get(0).getType() == XMLRegionContext.XML_END_TAG_OPEN;
+		return regions.get(0).getType() == DOMRegionContext.XML_END_TAG_OPEN;
 	}
 }

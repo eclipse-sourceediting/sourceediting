@@ -18,7 +18,7 @@ import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
-import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.text.IJSPPartitionTypes;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.swt.graphics.Point;
@@ -28,7 +28,7 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.search.BasicFindOccurrencesAction;
 import org.eclipse.wst.xml.core.document.IDOMDocument;
 import org.eclipse.wst.xml.core.document.IDOMModel;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 /**
  * <p>
@@ -103,7 +103,7 @@ public class JSPFindOccurrencesAction extends BasicFindOccurrencesAction impleme
 	 * @see com.ibm.sse.editor.internal.search.BasicFindOccurrencesAction#getRegionTypes()
 	 */
 	public String[] getRegionTypes() {
-		return new String[]{XMLRegionContext.BLOCK_TEXT, DOMJSPRegionContexts.JSP_CONTENT};
+		return new String[]{DOMRegionContext.BLOCK_TEXT, DOMJSPRegionContexts.JSP_CONTENT};
 	}
 
 	private IFile getJspFile() {

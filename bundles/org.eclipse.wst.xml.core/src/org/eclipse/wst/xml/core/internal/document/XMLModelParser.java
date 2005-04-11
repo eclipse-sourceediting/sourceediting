@@ -22,12 +22,12 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.xml.core.commentelement.impl.CommentElementConfiguration;
-import org.eclipse.wst.xml.core.commentelement.impl.CommentElementRegistry;
 import org.eclipse.wst.xml.core.document.IDOMDocument;
 import org.eclipse.wst.xml.core.document.IDOMElement;
 import org.eclipse.wst.xml.core.document.IDOMModel;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.commentelement.impl.CommentElementConfiguration;
+import org.eclipse.wst.xml.core.internal.commentelement.impl.CommentElementRegistry;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
@@ -44,11 +44,11 @@ public class XMLModelParser {
 	private XMLModelContext context = null;
 	private DocumentImpl document = null;
 
-	private XMLModelImpl model = null;
+	private DOMModelImpl model = null;
 
 	/**
 	 */
-	protected XMLModelParser(XMLModelImpl model) {
+	protected XMLModelParser(DOMModelImpl model) {
 		super();
 
 		if (model != null) {
@@ -283,7 +283,7 @@ public class XMLModelParser {
 			while (e.hasNext()) {
 				ITextRegion region = (ITextRegion) e.next();
 				String regionType = region.getType();
-				if (regionType == XMLRegionContext.XML_TAG_CLOSE)
+				if (regionType == DOMRegionContext.XML_TAG_CLOSE)
 					continue;
 
 				// other region has changed
@@ -296,7 +296,7 @@ public class XMLModelParser {
 			while (e.hasNext()) {
 				ITextRegion region = (ITextRegion) e.next();
 				String regionType = region.getType();
-				if (regionType == XMLRegionContext.XML_TAG_CLOSE)
+				if (regionType == DOMRegionContext.XML_TAG_CLOSE)
 					continue;
 
 				// other region has changed
@@ -326,19 +326,19 @@ public class XMLModelParser {
 
 		// optimize typical cases
 		String regionType = region.getType();
-		if (regionType == XMLRegionContext.XML_CONTENT || regionType == XMLRegionContext.XML_COMMENT_TEXT || regionType == XMLRegionContext.XML_CDATA_TEXT || regionType == XMLRegionContext.BLOCK_TEXT || isNestedContent(regionType)) {
+		if (regionType == DOMRegionContext.XML_CONTENT || regionType == DOMRegionContext.XML_COMMENT_TEXT || regionType == DOMRegionContext.XML_CDATA_TEXT || regionType == DOMRegionContext.BLOCK_TEXT || isNestedContent(regionType)) {
 			changeData(flatNode, region);
 		}
-		else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+		else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 			changeAttrName(flatNode, region);
 		}
-		else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+		else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 			changeAttrValue(flatNode, region);
 		}
-		else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+		else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
 			changeAttrEqual(flatNode, region);
 		}
-		else if (regionType == XMLRegionContext.XML_TAG_NAME || isNestedTagName(regionType)) {
+		else if (regionType == DOMRegionContext.XML_TAG_NAME || isNestedTagName(regionType)) {
 			changeTagName(flatNode, region);
 		}
 		else {
@@ -374,14 +374,14 @@ public class XMLModelParser {
 			while (e.hasNext()) {
 				ITextRegion region = (ITextRegion) e.next();
 				String regionType = region.getType();
-				if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME || regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS || regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE)
+				if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME || regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS || regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)
 					continue;
-				if (regionType == XMLRegionContext.XML_TAG_CLOSE) {
+				if (regionType == DOMRegionContext.XML_TAG_CLOSE) {
 					// change from empty tag may have impact on structure
 					if (!element.isEmptyTag())
 						continue;
 				}
-				else if (regionType == XMLRegionContext.XML_TAG_NAME || isNestedTagName(regionType)) {
+				else if (regionType == DOMRegionContext.XML_TAG_NAME || isNestedTagName(regionType)) {
 					String oldTagName = element.getTagName();
 					String newTagName = flatNode.getText(region);
 					if (oldTagName != null && newTagName != null && oldTagName.equals(newTagName)) {
@@ -401,14 +401,14 @@ public class XMLModelParser {
 			while (e.hasNext()) {
 				ITextRegion region = (ITextRegion) e.next();
 				String regionType = region.getType();
-				if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME || regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS || regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE)
+				if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME || regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS || regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)
 					continue;
-				if (regionType == XMLRegionContext.XML_TAG_CLOSE) {
+				if (regionType == DOMRegionContext.XML_TAG_CLOSE) {
 					// change from empty tag may have impact on structure
 					if (!element.isEmptyTag())
 						continue;
 				}
-				else if (regionType == XMLRegionContext.XML_TAG_NAME || isNestedTagName(regionType)) {
+				else if (regionType == DOMRegionContext.XML_TAG_NAME || isNestedTagName(regionType)) {
 					// if new tag name is unchanged, it's OK
 					if (tagNameUnchanged)
 						continue;
@@ -468,7 +468,7 @@ public class XMLModelParser {
 		while (e.hasNext()) {
 			ITextRegion region = (ITextRegion) e.next();
 			String regionType = region.getType();
-			if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+			if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 				if (newAttr != null) {
 					// insert deferred new attribute
 					element.insertAttributeNode(newAttr, attrIndex++);
@@ -498,12 +498,12 @@ public class XMLModelParser {
 					newAttr = attr;
 				}
 			}
-			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+			else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
 				if (attr != null) {
 					attr.setEqualRegion(region);
 				}
 			}
-			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+			else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 				if (attr != null) {
 					attr.setValueRegion(region);
 					if (attr != newAttr && oldValueRegion != region) {
@@ -582,7 +582,7 @@ public class XMLModelParser {
 		// if it's not a change in the end tag of an element with the start
 		// tag,
 		// and case has been changed, set to element and notify
-		if (!element.hasStartTag() || StructuredDocumentRegionUtil.getFirstRegionType(flatNode) != XMLRegionContext.XML_END_TAG_OPEN) {
+		if (!element.hasStartTag() || StructuredDocumentRegionUtil.getFirstRegionType(flatNode) != DOMRegionContext.XML_END_TAG_OPEN) {
 			String tagName = element.getTagName();
 			if (tagName == null || !tagName.equals(newTagName)) {
 				element.setTagName(newTagName);
@@ -927,7 +927,7 @@ public class XMLModelParser {
 			if (isNestedCommentOpen(regionType)) {
 				isJSPTag = true;
 			}
-			else if (regionType == XMLRegionContext.XML_COMMENT_TEXT || isNestedCommentText(regionType)) {
+			else if (regionType == DOMRegionContext.XML_COMMENT_TEXT || isNestedCommentText(regionType)) {
 				if (data == null) {
 					data = flatNode.getText(region);
 				}
@@ -989,18 +989,18 @@ public class XMLModelParser {
 		while (e.hasNext()) {
 			ITextRegion region = (ITextRegion) e.next();
 			String regionType = region.getType();
-			if (regionType == XMLRegionContext.XML_DOCTYPE_DECLARATION) {
+			if (regionType == DOMRegionContext.XML_DOCTYPE_DECLARATION) {
 				isDocType = true;
 			}
-			else if (regionType == XMLRegionContext.XML_DOCTYPE_NAME) {
+			else if (regionType == DOMRegionContext.XML_DOCTYPE_NAME) {
 				if (name == null)
 					name = flatNode.getText(region);
 			}
-			else if (regionType == XMLRegionContext.XML_DOCTYPE_EXTERNAL_ID_PUBREF) {
+			else if (regionType == DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_PUBREF) {
 				if (publicId == null)
 					publicId = StructuredDocumentRegionUtil.getAttrValue(flatNode, region);
 			}
-			else if (regionType == XMLRegionContext.XML_DOCTYPE_EXTERNAL_ID_SYSREF) {
+			else if (regionType == DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_SYSREF) {
 				if (systemId == null)
 					systemId = StructuredDocumentRegionUtil.getAttrValue(flatNode, region);
 			}
@@ -1080,7 +1080,7 @@ public class XMLModelParser {
 		while (e.hasNext()) {
 			ITextRegion region = (ITextRegion) e.next();
 			String regionType = region.getType();
-			if (regionType == XMLRegionContext.XML_TAG_NAME || isNestedTagName(regionType)) {
+			if (regionType == DOMRegionContext.XML_TAG_NAME || isNestedTagName(regionType)) {
 				if (tagName == null)
 					tagName = flatNode.getText(region);
 			}
@@ -1130,7 +1130,7 @@ public class XMLModelParser {
 		while (e.hasNext()) {
 			ITextRegion region = (ITextRegion) e.next();
 			String regionType = region.getType();
-			if (regionType == XMLRegionContext.XML_ENTITY_REFERENCE || regionType == XMLRegionContext.XML_CHAR_REFERENCE) {
+			if (regionType == DOMRegionContext.XML_ENTITY_REFERENCE || regionType == DOMRegionContext.XML_CHAR_REFERENCE) {
 				if (name == null)
 					name = StructuredDocumentRegionUtil.getEntityRefName(flatNode, region);
 			}
@@ -1228,7 +1228,7 @@ public class XMLModelParser {
 			else if (isNestedTagClose(regionType)) {
 				isCloseTag = true;
 			}
-			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+			else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 				String name = flatNode.getText(region);
 				attr = (AttrImpl) this.document.createAttribute(name);
 				if (attr != null) {
@@ -1238,12 +1238,12 @@ public class XMLModelParser {
 					attrNodes.addElement(attr);
 				}
 			}
-			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+			else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
 				if (attr != null) {
 					attr.setEqualRegion(region);
 				}
 			}
-			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+			else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 				if (attr != null) {
 					attr.setValueRegion(region);
 					attr = null;
@@ -1419,7 +1419,7 @@ public class XMLModelParser {
 		while (e.hasNext()) {
 			ITextRegion region = (ITextRegion) e.next();
 			String regionType = region.getType();
-			if (regionType == XMLRegionContext.XML_PI_OPEN || regionType == XMLRegionContext.XML_PI_CLOSE)
+			if (regionType == DOMRegionContext.XML_PI_OPEN || regionType == DOMRegionContext.XML_PI_CLOSE)
 				continue;
 			if (target == null)
 				target = flatNode.getText(region);
@@ -1484,14 +1484,14 @@ public class XMLModelParser {
 		while (e.hasNext()) {
 			ITextRegion region = (ITextRegion) e.next();
 			String regionType = region.getType();
-			if (regionType == XMLRegionContext.XML_TAG_NAME || isNestedTagName(regionType)) {
+			if (regionType == DOMRegionContext.XML_TAG_NAME || isNestedTagName(regionType)) {
 				if (tagName == null)
 					tagName = flatNode.getText(region);
 			}
-			else if (regionType == XMLRegionContext.XML_EMPTY_TAG_CLOSE) {
+			else if (regionType == DOMRegionContext.XML_EMPTY_TAG_CLOSE) {
 				isEmptyTag = true;
 			}
-			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+			else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 				String name = flatNode.getText(region);
 				attr = (AttrImpl) this.document.createAttribute(name);
 				if (attr != null) {
@@ -1501,12 +1501,12 @@ public class XMLModelParser {
 					attrNodes.addElement(attr);
 				}
 			}
-			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+			else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
 				if (attr != null) {
 					attr.setEqualRegion(region);
 				}
 			}
-			else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+			else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 				if (attr != null) {
 					attr.setValueRegion(region);
 					attr = null;
@@ -1553,25 +1553,25 @@ public class XMLModelParser {
 	 */
 	protected void insertStructuredDocumentRegion(IStructuredDocumentRegion flatNode) {
 		String regionType = StructuredDocumentRegionUtil.getFirstRegionType(flatNode);
-		if (regionType == XMLRegionContext.XML_TAG_OPEN) {
+		if (regionType == DOMRegionContext.XML_TAG_OPEN) {
 			insertStartTag(flatNode);
 		}
-		else if (regionType == XMLRegionContext.XML_END_TAG_OPEN) {
+		else if (regionType == DOMRegionContext.XML_END_TAG_OPEN) {
 			insertEndTag(flatNode);
 		}
-		else if (regionType == XMLRegionContext.XML_COMMENT_OPEN || isNestedCommentOpen(regionType)) {
+		else if (regionType == DOMRegionContext.XML_COMMENT_OPEN || isNestedCommentOpen(regionType)) {
 			insertComment(flatNode);
 		}
-		else if (regionType == XMLRegionContext.XML_ENTITY_REFERENCE || regionType == XMLRegionContext.XML_CHAR_REFERENCE) {
+		else if (regionType == DOMRegionContext.XML_ENTITY_REFERENCE || regionType == DOMRegionContext.XML_CHAR_REFERENCE) {
 			insertEntityRef(flatNode);
 		}
-		else if (regionType == XMLRegionContext.XML_DECLARATION_OPEN) {
+		else if (regionType == DOMRegionContext.XML_DECLARATION_OPEN) {
 			insertDecl(flatNode);
 		}
-		else if (regionType == XMLRegionContext.XML_PI_OPEN) {
+		else if (regionType == DOMRegionContext.XML_PI_OPEN) {
 			insertPI(flatNode);
 		}
-		else if (regionType == XMLRegionContext.XML_CDATA_OPEN) {
+		else if (regionType == DOMRegionContext.XML_CDATA_OPEN) {
 			insertCDATASection(flatNode);
 		}
 		else if (isNestedTag(regionType)) {
@@ -2349,10 +2349,10 @@ public class XMLModelParser {
 
 		// optimize typical cases
 		String regionType = StructuredDocumentRegionUtil.getFirstRegionType(flatNode);
-		if (regionType == XMLRegionContext.XML_TAG_OPEN) {
+		if (regionType == DOMRegionContext.XML_TAG_OPEN) {
 			changeStartTag(flatNode, newRegions, oldRegions);
 		}
-		else if (regionType == XMLRegionContext.XML_END_TAG_OPEN) {
+		else if (regionType == DOMRegionContext.XML_END_TAG_OPEN) {
 			changeEndTag(flatNode, newRegions, oldRegions);
 		}
 		else {

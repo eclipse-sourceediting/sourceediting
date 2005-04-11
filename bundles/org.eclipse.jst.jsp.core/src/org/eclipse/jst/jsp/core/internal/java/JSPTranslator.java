@@ -29,13 +29,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
-import org.eclipse.jst.jsp.core.contentmodel.tld.JSP12TLDNames;
-import org.eclipse.jst.jsp.core.contentmodel.tld.TLDElementDeclaration;
-import org.eclipse.jst.jsp.core.contentmodel.tld.TLDVariable;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
-import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDVariable;
+import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.parser.BlockMarker;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -45,8 +45,6 @@ import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.sse.core.util.URIResolver;
-import org.eclipse.wst.xml.core.contentmodel.CMDocumentTracker;
-import org.eclipse.wst.xml.core.contentmodel.CMNodeWrapper;
 import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
@@ -54,7 +52,9 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMDocumentTracker;
+import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMNodeWrapper;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 /**
  * Translates a JSP document into a HttpServlet. Keeps two way mapping from
@@ -649,7 +649,7 @@ public class JSPTranslator {
 			// intercept HTML comment flat node
 			// also handles UNDEFINED (which is what CDATA comes in as)
 			// basically this part will handle any "embedded" JSP containers
-			if (getCurrentNode().getType() == XMLRegionContext.XML_COMMENT_TEXT || getCurrentNode().getType() == XMLRegionContext.XML_CDATA_TEXT || getCurrentNode().getType() == XMLRegionContext.UNDEFINED) {
+			if (getCurrentNode().getType() == DOMRegionContext.XML_COMMENT_TEXT || getCurrentNode().getType() == DOMRegionContext.XML_CDATA_TEXT || getCurrentNode().getType() == DOMRegionContext.UNDEFINED) {
 				translateXMLCommentNode(getCurrentNode());
 			}
 			else // iterate through each region in the flat node
@@ -711,11 +711,11 @@ public class JSPTranslator {
 			ITextRegion r = null;
 			while (it.hasNext()) {
 				r = (ITextRegion) it.next();
-				if (r.getType() == DOMJSPRegionContexts.JSP_CONTENT || r.getType() == XMLRegionContext.XML_CONTENT)
+				if (r.getType() == DOMJSPRegionContexts.JSP_CONTENT || r.getType() == DOMRegionContext.XML_CONTENT)
 					break;
 				else if (r.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME)
 					break;
-				else if (r.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE && getCurrentNode().getFullText(r).trim().equals("import")) //$NON-NLS-1$
+				else if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE && getCurrentNode().getFullText(r).trim().equals("import")) //$NON-NLS-1$
 					break;
 			}
 		}
@@ -737,7 +737,7 @@ public class JSPTranslator {
 			// CMVC 241869
 			// content assist was not showing up in JSP inside a javascript
 			// region
-			if (type == XMLRegionContext.BLOCK_TEXT) {
+			if (type == DOMRegionContext.BLOCK_TEXT) {
 				// check if it's nested jsp in a script tag...
 				if (region instanceof ITextRegionContainer) {
 					translateJSPNode(region, regions, type, EMBEDDED_JSP);
@@ -756,7 +756,7 @@ public class JSPTranslator {
 			{
 				translateJSPNode(region, regions, type, JSPType);
 			}
-			else if (type != null && type == XMLRegionContext.XML_TAG_OPEN) {
+			else if (type != null && type == DOMRegionContext.XML_TAG_OPEN) {
 				translateXMLNode(containerRegion, regions);
 			}
 		}
@@ -817,7 +817,7 @@ public class JSPTranslator {
 	 * determines if the type is a pure JSP type (not XML)
 	 */
 	protected boolean isJSP(String type) {
-		return ((type == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN || type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN || type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN || type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN || type == DOMJSPRegionContexts.JSP_CONTENT) && type != XMLRegionContext.XML_TAG_OPEN);
+		return ((type == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN || type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN || type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN || type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN || type == DOMJSPRegionContexts.JSP_CONTENT) && type != DOMRegionContext.XML_TAG_OPEN);
 		// checking XML_TAG_OPEN so <jsp:directive.xxx/> gets treated like
 		// other XML jsp tags
 	}
@@ -834,7 +834,7 @@ public class JSPTranslator {
 		ITextRegion r = null;
 		if (regions.hasNext()) {
 			r = (ITextRegion) regions.next();
-			if (r.getType() == XMLRegionContext.XML_TAG_NAME || r.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) // <jsp:directive.xxx
+			if (r.getType() == DOMRegionContext.XML_TAG_NAME || r.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) // <jsp:directive.xxx
 			// comes
 			// in
 			// as
@@ -909,7 +909,7 @@ public class JSPTranslator {
 									// should be safe because
 									// "file" is the only attribute for the
 									// include directive
-									while (r != null && regions.hasNext() && !r.getType().equals(XMLRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
+									while (r != null && regions.hasNext() && !r.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
 										r = (ITextRegion) regions.next();
 									}
 									attrValue = getAttributeValue(r, regions);
@@ -940,7 +940,7 @@ public class JSPTranslator {
 							// <jsp:include page="filename") />
 							while (regions.hasNext()) {
 								r = (ITextRegion) regions.next();
-								if (r.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME && getCurrentNode().getText(r).equals("page")) { //$NON-NLS-1$
+								if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME && getCurrentNode().getText(r).equals("page")) { //$NON-NLS-1$
 									String filename = getAttributeValue(r, regions);
 									handleIncludeFile(filename);
 									break;
@@ -1176,7 +1176,7 @@ public class JSPTranslator {
 				// PMR 18368, B663
 				// skip to required "file" attribute, should be safe because
 				// "file" is the only attribute for the include directive
-				while (r != null && regions.hasNext() && !r.getType().equals(XMLRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
+				while (r != null && regions.hasNext() && !r.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
 					r = (ITextRegion) regions.next();
 				}
 				fileLocation = getAttributeValue(r, regions);
@@ -1251,9 +1251,9 @@ public class JSPTranslator {
 	 * @return the value for the attribute name (r), or null if isn't one
 	 */
 	protected String getAttributeValue(ITextRegion r, Iterator remainingRegions) {
-		if (r.getType().equals(XMLRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
-			if (remainingRegions.hasNext() && (r = (ITextRegion) remainingRegions.next()) != null && r.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
-				if (remainingRegions.hasNext() && (r = (ITextRegion) remainingRegions.next()) != null && r.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+		if (r.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
+			if (remainingRegions.hasNext() && (r = (ITextRegion) remainingRegions.next()) != null && r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+				if (remainingRegions.hasNext() && (r = (ITextRegion) remainingRegions.next()) != null && r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 					// handle include for the filename
 					return StringUtils.stripQuotes(getCurrentNode().getText(r));
 				}
@@ -1271,12 +1271,12 @@ public class JSPTranslator {
 		// iterate all attributes
 		while (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() != DOMJSPRegionContexts.JSP_CLOSE) {
 			attrName = attrValue = null;
-			if (r.getType().equals(XMLRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
+			if (r.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
 
 				attrName = getCurrentNode().getText(r).trim();
 				if (attrName.length() > 0) {
-					if (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
-						if (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+					if (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+						if (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 
 							attrValue = StringUtils.strip(getCurrentNode().getText(r));
 						}
@@ -1523,7 +1523,7 @@ public class JSPTranslator {
 		boolean isUseBean = false;
 		for (int i = 0; i < regions.size(); i++) {
 			r = regions.get(i);
-			if (r.getType() == XMLRegionContext.XML_TAG_NAME && jspReferenceRegion.getText(r).equals("jsp:useBean")) { //$NON-NLS-1$
+			if (r.getType() == DOMRegionContext.XML_TAG_NAME && jspReferenceRegion.getText(r).equals("jsp:useBean")) { //$NON-NLS-1$
 				isUseBean = true;
 				break;
 			}
@@ -1582,12 +1582,12 @@ public class JSPTranslator {
 		ITextRegion r = null;
 		for (int i = 0; i < size; i++) {
 			r = regions.get(i);
-			if (r.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME)
+			if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)
 				if (jspReferenceRegion.getText(r).trim().equals("import")) { //$NON-NLS-1$
 					// get the attr value region
 					if (size > i + 2) {
 						r = regions.get(i + 2);
-						if (r.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+						if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 
 							String jspImportText = jspReferenceRegion.getText(r);
 
@@ -1676,9 +1676,9 @@ public class JSPTranslator {
 
 		for (int j = 0; j < regions.size(); j++) {
 			r = regions.get(j);
-			if (r.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+			if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 				attrName = jspReferenceRegion.getText(r);
-				if (regions.size() >= j + 2 && regions.get(j + 2).getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+				if (regions.size() >= j + 2 && regions.get(j + 2).getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 					// get attr value
 					r = regions.get(j + 2);
 					attrValue = jspReferenceRegion.getText(r);
@@ -1757,7 +1757,7 @@ public class JSPTranslator {
 		int start = stRegion.getStartOffset();
 		int end = stRegion.getEndOffset();
 		// adjustment necessary for embedded region containers
-		if (stRegion instanceof ITextRegionContainer && stRegion.getType() == XMLRegionContext.BLOCK_TEXT) {
+		if (stRegion instanceof ITextRegionContainer && stRegion.getType() == DOMRegionContext.BLOCK_TEXT) {
 			if (stRegion.getRegions() != null && stRegion.getRegions().size() > 1) {
 				ITextRegion jspContent = stRegion.getRegions().get(1); // should
 				// be
@@ -1769,13 +1769,13 @@ public class JSPTranslator {
 		}
 		int CDATAOffset = 0; // number of characters lost in conversion
 		int bufferSize = 0;
-		if (stRegion.getType() == DOMJSPRegionContexts.JSP_CONTENT || stRegion.getType() == XMLRegionContext.BLOCK_TEXT // need
+		if (stRegion.getType() == DOMJSPRegionContexts.JSP_CONTENT || stRegion.getType() == DOMRegionContext.BLOCK_TEXT // need
 					// this
 					// for
 					// embedded
 					// JSP
 					// regions
-					|| stRegion.getType() == XMLRegionContext.XML_TAG_NAME) // need
+					|| stRegion.getType() == DOMRegionContext.XML_TAG_NAME) // need
 		// this
 		// in
 		// case
@@ -1816,7 +1816,7 @@ public class JSPTranslator {
 		// iterate XMLCONTENT and CDATA regions
 		// loop fCurrentNode until you hit </jsp:scriptlet> (or other closing
 		// tag name)
-		while (getCurrentNode() != null && getCurrentNode().getType() != XMLRegionContext.XML_TAG_NAME) // need
+		while (getCurrentNode() != null && getCurrentNode().getType() != DOMRegionContext.XML_TAG_NAME) // need
 		// to
 		// stop
 		// on
@@ -1865,13 +1865,13 @@ public class JSPTranslator {
 	protected int unescapeRegion(ITextRegion r, StringBuffer sb) {
 		String s = ""; //$NON-NLS-1$
 		int lengthBefore = 0, lengthAfter = 0, cdata_tags_length = 0;
-		if (r != null && (r.getType() == XMLRegionContext.XML_CONTENT || r.getType() == XMLRegionContext.XML_ENTITY_REFERENCE)) {
+		if (r != null && (r.getType() == DOMRegionContext.XML_CONTENT || r.getType() == DOMRegionContext.XML_ENTITY_REFERENCE)) {
 			lengthBefore = (getCurrentNode() != r) ? getCurrentNode().getFullText(r).length() : getCurrentNode().getFullText().length();
 			s = EscapedTextUtil.getUnescapedText(getCurrentNode(), r);
 			lengthAfter = s.length();
 			sb.append(s);
 		}
-		else if (r != null && r.getType() == XMLRegionContext.XML_CDATA_TEXT) {
+		else if (r != null && r.getType() == DOMRegionContext.XML_CDATA_TEXT) {
 			if (r instanceof ITextRegionContainer) // only interested in
 													// contents
 			{
@@ -1881,10 +1881,10 @@ public class JSPTranslator {
 				ITextRegion temp = null;
 				while (it.hasNext()) {
 					temp = (ITextRegion) it.next();
-					if (temp instanceof ITextRegionContainer || temp.getType() == XMLRegionContext.XML_CDATA_TEXT) {
+					if (temp instanceof ITextRegionContainer || temp.getType() == DOMRegionContext.XML_CDATA_TEXT) {
 						sb.append(getCurrentNode().getFullText(temp));
 					}
-					else if (temp.getType() == XMLRegionContext.XML_CDATA_OPEN || temp.getType() == XMLRegionContext.XML_CDATA_CLOSE) {
+					else if (temp.getType() == DOMRegionContext.XML_CDATA_OPEN || temp.getType() == DOMRegionContext.XML_CDATA_CLOSE) {
 						cdata_tags_length += temp.getLength();
 					}
 				}
@@ -1904,13 +1904,13 @@ public class JSPTranslator {
 		String className = null;
 
 		Iterator regions = container.getRegions().iterator();
-		while (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && (r.getType() != XMLRegionContext.XML_TAG_CLOSE || r.getType() != XMLRegionContext.XML_EMPTY_TAG_CLOSE)) {
+		while (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && (r.getType() != DOMRegionContext.XML_TAG_CLOSE || r.getType() != DOMRegionContext.XML_EMPTY_TAG_CLOSE)) {
 
 			attrName = attrValue = null;
-			if (r.getType().equals(XMLRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
+			if (r.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
 				attrName = container.getText(r).trim();
-				if (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
-					if (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+				if (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) {
+					if (regions.hasNext() && (r = (ITextRegion) regions.next()) != null && r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 						attrValue = StringUtils.stripQuotes(container.getText(r));
 					}
 					// has equals, but no value?

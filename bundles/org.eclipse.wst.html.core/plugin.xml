@@ -27,22 +27,22 @@
          point="org.eclipse.wst.sse.core.modelHandler">
       <modelHandler
             default="no"
-            class="org.eclipse.wst.html.core.modelhandler.ModelHandlerForHTML"
+            class="org.eclipse.wst.html.core.internal.modelhandler.ModelHandlerForHTML"
             associatedContentTypeId="org.eclipse.wst.html.core.htmlsource"
-            id="org.eclipse.wst.html.core.modelhandler">
+            id="org.eclipse.wst.html.core.internal.modelhandler">
       </modelHandler>
    </extension>
    <extension
          point="org.eclipse.wst.sse.core.embeddedTypeHandler">
       <embeddedTypeHandler
-            class="org.eclipse.wst.html.core.modelhandler.EmbeddedHTML">
+            class="org.eclipse.wst.html.core.internal.modelhandler.EmbeddedHTML">
       </embeddedTypeHandler>
    </extension>
    <extension
          id="org.eclipse.wst.sse.html.core.builderdelegate.todo"
          point="org.eclipse.wst.sse.core.builderdelegate">
       <participant
-            class="org.eclipse.wst.xml.core.builder.delegates.XMLTaskTagSeeker"
+            class="org.eclipse.wst.xml.core.internal.builder.delegates.XMLTaskTagSeeker"
             contentType="org.eclipse.wst.html.core.htmlsource">
       </participant>
    </extension>
@@ -57,7 +57,7 @@
          point="org.eclipse.wst.sse.core.commentElementHandler">
       <handler-custom
             commenttype="xml"
-            class="org.eclipse.wst.html.core.commentelement.handlers.CommentElementHandlerForSSI">
+            class="org.eclipse.wst.html.core.internal.commentelement.handlers.CommentElementHandlerForSSI">
          <startwith
                prefix="#">
          </startwith>
@@ -97,7 +97,7 @@
    <extension
          point="org.eclipse.wst.sse.core.formatProcessors">
       <processor
-            class="org.eclipse.wst.html.core.format.HTMLFormatProcessorImpl"
+            class="org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl"
             contentTypeId="org.eclipse.wst.html.core.htmlsource">
       </processor>
    </extension>

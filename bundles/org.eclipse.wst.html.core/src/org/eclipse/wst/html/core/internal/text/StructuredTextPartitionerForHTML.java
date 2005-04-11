@@ -24,8 +24,8 @@ import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.ScriptLanguageKeys;
 import org.eclipse.wst.sse.core.util.StringUtils;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 
 /**
  * Document partitioner for HTML. Client-side scripts of type JavaScript are
@@ -76,16 +76,16 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 		}
 
 		ITextRegionList regions = node.getRegions();
-		if (regions.size() > 4 && regions.get(1).getType() == XMLRegionContext.XML_TAG_NAME) {
+		if (regions.size() > 4 && regions.get(1).getType() == DOMRegionContext.XML_TAG_NAME) {
 			ITextRegion potentialLanguageRegion = regions.get(1);
 			String potentialLanguageString = node.getText(potentialLanguageRegion);
 			if (potentialLanguageString.equalsIgnoreCase(HTML40Namespace.ElementName.SCRIPT)) {
 				for (int i = 0; i < regions.size(); i++) {
 					ITextRegion region = regions.get(i);
 					String regionType = region.getType();
-					if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME)
+					if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)
 						attrNameRegion = region;
-					else if (regionType == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+					else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 						String attrName = node.getText(attrNameRegion);
 						if (attrName.equalsIgnoreCase(HTML40Namespace.ATTR_NAME_LANGUAGE))
 							language = StringUtils.strip(node.getText(region));
@@ -106,7 +106,7 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 	}
 
 	private boolean isValidScriptingRegionType(String type) {
-		return type == XMLRegionContext.BLOCK_TEXT || type == XMLRegionContext.XML_CDATA_OPEN || type == XMLRegionContext.XML_CDATA_TEXT || type == XMLRegionContext.XML_CDATA_CLOSE;
+		return type == DOMRegionContext.BLOCK_TEXT || type == DOMRegionContext.XML_CDATA_OPEN || type == DOMRegionContext.XML_CDATA_TEXT || type == DOMRegionContext.XML_CDATA_CLOSE;
 	}
 
 	protected void initLegalContentTypes() {
@@ -129,9 +129,9 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 
 	public String getPartitionType(ITextRegion region, int offset) {
 		String result = null;
-		if (region.getType() == XMLRegionContext.XML_COMMENT_TEXT || region.getType() == XMLRegionContext.XML_COMMENT_OPEN)
+		if (region.getType() == DOMRegionContext.XML_COMMENT_TEXT || region.getType() == DOMRegionContext.XML_COMMENT_OPEN)
 			result = IHTMLPartitionTypes.HTML_COMMENT;
-		else if (region.getType() == XMLRegionContext.XML_DOCTYPE_DECLARATION || region.getType() == XMLRegionContext.XML_DECLARATION_OPEN)
+		else if (region.getType() == DOMRegionContext.XML_DOCTYPE_DECLARATION || region.getType() == DOMRegionContext.XML_DECLARATION_OPEN)
 			result = IHTMLPartitionTypes.HTML_DECLARATION;
 		else
 			result = super.getPartitionType(region, offset);
@@ -145,14 +145,14 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 		
 		ITextRegion[] regions = previousNode.getRegions().toArray();
 		for (int i = 0; i < regions.length; i++) {
-			if(regions[i].getType() == XMLRegionContext.XML_TAG_NAME) {
+			if(regions[i].getType() == DOMRegionContext.XML_TAG_NAME) {
 				previousStartTagNameRegion = regions[i];
 				break;
 			}
 		}
 		regions = nextNode.getRegions().toArray();
 		for (int i = 0; i < regions.length; i++) {
-			if(regions[i].getType() == XMLRegionContext.XML_TAG_NAME) {
+			if(regions[i].getType() == DOMRegionContext.XML_TAG_NAME) {
 				nextEndTagNameRegion = regions[i];
 				break;
 			}

@@ -523,7 +523,7 @@ public abstract class NodeImpl extends AbstractNotifier implements IDOMNode {
 
 	public boolean isDataEditable() {
 		if (!fDataEditable) {
-			XMLModelImpl model = (XMLModelImpl) getModel();
+			DOMModelImpl model = (DOMModelImpl) getModel();
 			if (model != null && model.isReparsing()) {
 				return true;
 			}
@@ -596,7 +596,7 @@ public abstract class NodeImpl extends AbstractNotifier implements IDOMNode {
 		DocumentImpl document = (DocumentImpl) getContainerDocument();
 		if (document == null)
 			return;
-		XMLModelImpl model = (XMLModelImpl) document.getModel();
+		DOMModelImpl model = (DOMModelImpl) document.getModel();
 		if (model == null)
 			return;
 		model.editableChanged(this);
@@ -612,7 +612,7 @@ public abstract class NodeImpl extends AbstractNotifier implements IDOMNode {
 
 		syncDataEditableState();
 
-		XMLModelImpl model = (XMLModelImpl) document.getModel();
+		DOMModelImpl model = (DOMModelImpl) document.getModel();
 		if (model == null)
 			return;
 		model.valueChanged(this);

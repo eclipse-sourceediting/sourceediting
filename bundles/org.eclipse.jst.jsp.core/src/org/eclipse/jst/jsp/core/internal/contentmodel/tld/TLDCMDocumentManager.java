@@ -36,19 +36,19 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.jst.jsp.core.JSP12Namespace;
-import org.eclipse.jst.jsp.core.contentmodel.tld.JSP11TLDNames;
-import org.eclipse.jst.jsp.core.contentmodel.tld.JSP12TLDNames;
-import org.eclipse.jst.jsp.core.contentmodel.tld.JSP20TLDNames;
-import org.eclipse.jst.jsp.core.contentmodel.tld.TLDDocument;
-import org.eclipse.jst.jsp.core.contentmodel.tld.TLDElementDeclaration;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.ITaglibIndexListener;
 import org.eclipse.jst.jsp.core.internal.contentmodel.ITaglibRecord;
 import org.eclipse.jst.jsp.core.internal.contentmodel.ITaglibRecordEvent;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibIndex;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP11TLDNames;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP20TLDNames;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDDocument;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
-import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.common.uriresolver.URIResolverPlugin;
 import org.eclipse.wst.sse.core.parser.BlockMarker;
 import org.eclipse.wst.sse.core.parser.StructuredDocumentRegionHandler;
@@ -62,7 +62,7 @@ import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.uriresolver.util.URIHelper;
 
 public class TLDCMDocumentManager implements ITaglibIndexListener {
@@ -79,7 +79,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 			if (getParser() == null)
 				return;
 			if (getParser().getBlockMarker(tagnameNS) == null) {
-				getParser().addBlockMarker(new BlockMarker(tagnameNS, marker, XMLRegionContext.BLOCK_TEXT, true, false));
+				getParser().addBlockMarker(new BlockMarker(tagnameNS, marker, DOMRegionContext.BLOCK_TEXT, true, false));
 				if (_debug) {
 					System.out.println("TLDCMDocumentManager added block marker: " + tagnameNS + "@" + marker.getStartOffset()); //$NON-NLS-2$//$NON-NLS-1$
 				}
@@ -273,7 +273,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 			try {
 				for (int i = 0; i < regions.size(); i++) {
 					ITextRegion region = regions.get(i);
-					if (region.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+					if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 						if (textSource.getText(includeStructuredDocumentRegion.getStartOffset(region), region.getTextLength()).equals(JSP12TLDNames.FILE)) {
 							isFilename = true;
 						}
@@ -281,7 +281,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 							isFilename = false;
 						}
 					}
-					else if (isFilename && region.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+					else if (isFilename && region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 						includedFile = textSource.getText(includeStructuredDocumentRegion.getStartOffset(region), region.getTextLength());
 						isFilename = false;
 					}
@@ -325,7 +325,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 			try {
 				for (int i = 0; i < regions.size(); i++) {
 					ITextRegion region = regions.get(i);
-					if (region.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+					if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 						String name = textSource.getText(taglibStructuredDocumentRegion.getStartOffset(region), region.getTextLength());
 						if (name.startsWith(XMLNS)) { //$NON-NLS-1$
 							prefix = name.substring(XMLNS_LENGTH);
@@ -337,7 +337,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 							taglib = false;
 						}
 					}
-					else if (taglib && region.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+					else if (taglib && region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 						uri = textSource.getText(taglibStructuredDocumentRegion.getStartOffset(region), region.getTextLength());
 						if (uri != null && prefix != null && (StringUtils.strip(uri).length() > 0) && (StringUtils.strip(prefix).length() > 0)) {
 							if (anchorStructuredDocumentRegion == null)
@@ -377,7 +377,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 					// remember attribute name
 					int startOffset = taglibStructuredDocumentRegion.getStartOffset(region);
 					int textLength = region.getTextLength();
-					if (region.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+					if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 						// String name = textSource.getText(startOffset,
 						// textLength);
 						if (textSource.regionMatches(startOffset, textLength, JSP11TLDNames.PREFIX)) {
@@ -394,7 +394,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 						}
 					}
 					// process value
-					else if (region.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+					else if (region.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 						if (JSP11TLDNames.PREFIX.equals(attrName))
 							prefix = textSource.getText(startOffset, textLength);
 						else if (JSP11TLDNames.URI.equals(attrName))
@@ -429,7 +429,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 			Iterator names = getParser().getBlockMarkers().iterator();
 			while (names.hasNext()) {
 				BlockMarker marker = (BlockMarker) names.next();
-				if (!marker.isGlobal() && marker.getContext() == XMLRegionContext.BLOCK_TEXT) {
+				if (!marker.isGlobal() && marker.getContext() == DOMRegionContext.BLOCK_TEXT) {
 					if (_debug) {
 						System.out.println("TLDCMDocumentManager removing block tag named: " + marker.getTagName()); //$NON-NLS-1$
 					}

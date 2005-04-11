@@ -13,7 +13,7 @@ package org.eclipse.jst.jsp.core.internal.contentmodel.tld;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jst.jsp.core.contentmodel.tld.TLDFunction;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDFunction;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 
 public class TLDFunctionImpl implements TLDFunction {

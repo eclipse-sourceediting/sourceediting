@@ -27,7 +27,7 @@ import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xml.core.document.IDOMElement;
 import org.eclipse.wst.xml.core.document.IDOMNode;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -390,7 +390,7 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 	public static boolean isJSPCloseDelimiter(String type) {
 		if (type == null)
 			return false;
-		return (type.equals(DOMJSPRegionContextsPrivateCopy.JSP_CLOSE) || type.equals(XMLRegionContext.XML_TAG_CLOSE));
+		return (type.equals(DOMJSPRegionContextsPrivateCopy.JSP_CLOSE) || type.equals(DOMRegionContext.XML_TAG_CLOSE));
 	}
 
 	/**
@@ -458,7 +458,7 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 			String regionText = ""; //$NON-NLS-1$
 			for (int i = 0; i < regions.length; i++) {
 				temp = (ITextRegion) regions[i];
-				if (temp.getType() == XMLRegionContext.XML_TAG_NAME) {
+				if (temp.getType() == DOMRegionContext.XML_TAG_NAME) {
 					regionText = fn.getText(temp);
 					if (regionText.equalsIgnoreCase("jsp:scriptlet") || regionText.equalsIgnoreCase("jsp:expression") || regionText.equalsIgnoreCase("jsp:declaration")) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						isDelimiter = true;

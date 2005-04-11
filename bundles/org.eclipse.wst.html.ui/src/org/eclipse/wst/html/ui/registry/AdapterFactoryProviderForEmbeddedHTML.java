@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.registry;
 
-import org.eclipse.wst.html.core.modelhandler.EmbeddedHTML;
+import org.eclipse.wst.html.core.internal.modelhandler.EmbeddedHTML;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.sse.ui.registry.embedded.EmbeddedAdapterFactoryProvider;

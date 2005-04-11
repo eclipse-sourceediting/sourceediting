@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.document;
 
-
-
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Comment;
@@ -29,141 +27,175 @@ import org.w3c.dom.Text;
  * ISourceGenerator allows DOM models to generate source appropriate for their
  * parameter, relative to the model that provides the source generator.
  * 
- * ISSUE: This should be part of "ltk" level.
  */
 
 public interface ISourceGenerator {
 
 	/**
 	 * Generate attribute name.
+	 * 
+	 * @param attr -
+	 *            the Attr
+	 * @return String - the string generated
 	 */
 	String generateAttrName(Attr attr);
 
 	/**
 	 * generateAttrValue
+	 * 
+	 * @param attr -
+	 *            the Attr
+	 * @return String - the string generated
 	 */
 	String generateAttrValue(Attr attr);
 
 	/**
 	 * generateAttrValue
+	 * 
+	 * @param attr -
+	 *            the Attr
+	 * @param char -
+	 *            the type of quote desired (' or ").
+	 * @return String - the string generated
 	 */
 	String generateAttrValue(Attr attr, char quote);
 
 	/**
 	 * generateAttrValue
+	 * 
+	 * @param value
+	 *            the String value
+	 * @param char -
+	 *            the type of quote desired (' or ").
+	 * @return String - the string generated
 	 */
 	String generateAttrValue(String value, char quote);
 
 	/**
 	 * generateCDATASection method
 	 * 
-	 * @return java.lang.String
 	 * @param comment
-	 *            org.w3c.dom.CDATASection
+	 *            CDATASection
+	 * @return String - the string generated
 	 */
 	String generateCDATASection(CDATASection cdata);
 
 	/**
 	 * generateChild method
 	 * 
-	 * @return java.lang.String
-	 * @param org.w3c.dom.Node
+	 * @return String
+	 * @param Node
+	 * @return String - the string generated
 	 */
 	String generateChild(Node parentNode);
 
 	/**
 	 * generateCloseTag
+	 * 
+	 * @param node -
+	 *            the Node
+	 * @return String - the string generated
 	 */
 	String generateCloseTag(Node node);
 
 	/**
 	 * generateComment method
 	 * 
-	 * @return java.lang.String
 	 * @param comment
 	 *            org.w3c.dom.Comment
+	 * @return String - the string generated
 	 */
 	String generateComment(Comment comment);
 
 	/**
 	 * generateDoctype method
 	 * 
-	 * @return java.lang.String
 	 * @param docType
-	 *            org.w3c.dom.DocumentType
+	 *            DocumentType
+	 * @return String - the string generated
 	 */
 	String generateDoctype(DocumentType docType);
 
 	/**
 	 * generateElement method
 	 * 
-	 * @return java.lang.String
-	 * @param element
+	 * @param element -
 	 *            Element
+	 * @return String - the string generated
 	 */
 	String generateElement(Element element);
 
 	/**
 	 * generateEndTag method
 	 * 
-	 * @return java.lang.String
-	 * @param element
-	 *            org.w3c.dom.Element
+	 * @param element -
+	 *            Element
+	 * @return String - the string generated
 	 */
 	String generateEndTag(Element element);
 
 	/**
 	 * generateEntityRef method
 	 * 
-	 * @return java.lang.String
 	 * @param entityRef
-	 *            org.w3c.dom.EntityReference
+	 *            EntityReference
+	 * @return String - the string generated
 	 */
 	String generateEntityRef(EntityReference entityRef);
 
 	/**
 	 * generatePI method
 	 * 
-	 * @return java.lang.String
-	 * @param pi
-	 *            org.w3c.dom.ProcessingInstruction
+	 * @param pi -
+	 *            ProcessingInstruction
+	 * @return String - the string generated
 	 */
 	String generatePI(ProcessingInstruction pi);
 
 	/**
 	 * generateSource method
 	 * 
-	 * @return java.lang.String
-	 * @param node
-	 *            org.w3c.dom.Node
+	 * @param node -
+	 *            the Node
+	 * @return String - the string generated
 	 */
 	String generateSource(Node node);
 
 	/**
 	 * generateStartTag method
 	 * 
-	 * @return java.lang.String
 	 * @param element
 	 *            Element
+	 * @return String - the string generated
 	 */
 	String generateStartTag(Element element);
 
 	/**
 	 * Generate tag name.
+	 * 
+	 * @param element -
+	 *            element
+	 * @return String - the string generated
 	 */
 	String generateTagName(Element element);
 
 	/**
 	 * generateText method
 	 * 
-	 * @return java.lang.String
-	 * @param text
-	 *            org.w3c.dom.Text
+	 * @param text -
+	 *            the Text
+	 * @return String - the string generated
 	 */
 	String generateText(Text text);
 
 	/**
 	 * generate text data
+	 * 
+	 * @param text -
+	 *            the Text
+	 * @param data -
+	 *            the data
+	 * @return String - the string generated
 	 */
 	String generateTextData(Text text, String data);
 }

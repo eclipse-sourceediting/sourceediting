@@ -52,7 +52,6 @@ import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 import org.eclipse.wst.xml.core.document.IDOMModel;
-import org.eclipse.wst.xml.core.internal.document.XMLModelImpl;
 import org.eclipse.wst.xsd.ui.internal.graph.XSDGraphViewer;
 //import org.eclipse.wst.xsd.ui.internal.graph.model.XSDModelAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.util.OpenOnSelectionHelper;
@@ -76,7 +75,6 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
   XSDSelectionManager xsdSelectionManager;
 
   private IStructuredModel result;
-  private XMLModelImpl model;
 
   public XSDEditor()
   {

@@ -19,7 +19,7 @@ package org.eclipse.jst.jsp.core.internal.contentmodel.tld;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jst.jsp.core.contentmodel.tld.TLDValidator;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDValidator;
 import org.eclipse.wst.sse.core.util.StringUtils;
 
 

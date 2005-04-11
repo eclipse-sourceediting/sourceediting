@@ -14,9 +14,9 @@ package org.eclipse.jst.jsp.core.internal.contentmodel.tld;
 
 import java.util.Enumeration;
 
-import org.eclipse.jst.jsp.core.contentmodel.tld.JSP12TLDNames;
-import org.eclipse.jst.jsp.core.contentmodel.tld.TLDAttributeDeclaration;
-import org.eclipse.jst.jsp.core.contentmodel.tld.TLDDocument;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDAttributeDeclaration;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDDocument;
 import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;

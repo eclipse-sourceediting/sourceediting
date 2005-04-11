@@ -16,7 +16,7 @@
  */
 package org.eclipse.jst.jsp.core.internal.contentmodel.tld;
 
-import org.eclipse.jst.jsp.core.contentmodel.tld.TLDInitParam;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDInitParam;
 import org.eclipse.wst.sse.core.util.StringUtils;
 
 

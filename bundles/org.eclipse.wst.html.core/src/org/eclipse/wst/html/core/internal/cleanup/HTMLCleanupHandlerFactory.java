@@ -16,7 +16,7 @@ import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupHandler;
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.xml.core.document.IDOMNode;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Node;
 
 // nakamori_TODO: check and remove CSS formatting
@@ -127,7 +127,7 @@ class HTMLCleanupHandlerFactory {
 		IStructuredDocumentRegion flatNode = ((IDOMNode) node).getFirstStructuredDocumentRegion();
 		if (flatNode == null)
 			return false;
-		if (flatNode.getType() != XMLRegionContext.BLOCK_TEXT)
+		if (flatNode.getType() != DOMRegionContext.BLOCK_TEXT)
 			return false;
 
 		// check if the parent is STYLE element

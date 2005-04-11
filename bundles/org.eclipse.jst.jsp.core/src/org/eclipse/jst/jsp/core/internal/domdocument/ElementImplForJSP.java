@@ -12,8 +12,8 @@
 
 package org.eclipse.jst.jsp.core.internal.domdocument;
 
-import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
-import org.eclipse.wst.html.core.document.ElementStyleImpl;
+import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
+import org.eclipse.wst.html.core.internal.document.ElementStyleImpl;
 import org.eclipse.wst.xml.core.internal.document.ElementImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;

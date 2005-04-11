@@ -27,7 +27,7 @@ import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.util.CSSClassTraverser;
 import org.eclipse.wst.css.core.internal.util.ImportRuleCollector;
 import org.eclipse.wst.html.core.HTML40Namespace;
-import org.eclipse.wst.html.core.contentmodel.JSP11Namespace;
+import org.eclipse.wst.html.core.internal.contentmodel.JSP11Namespace;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.xml.core.document.IDOMElement;

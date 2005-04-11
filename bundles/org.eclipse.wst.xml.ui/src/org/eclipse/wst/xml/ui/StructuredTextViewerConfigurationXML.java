@@ -48,7 +48,7 @@ import org.eclipse.wst.sse.ui.taginfo.AnnotationHoverProcessor;
 import org.eclipse.wst.sse.ui.taginfo.ProblemAnnotationHoverProcessor;
 import org.eclipse.wst.sse.ui.taginfo.TextHoverManager;
 import org.eclipse.wst.sse.ui.util.EditorUtility;
-import org.eclipse.wst.xml.core.format.FormatProcessorXML;
+import org.eclipse.wst.xml.core.internal.provisional.format.FormatProcessorXML;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.contentassist.NoRegionContentAssistProcessor;

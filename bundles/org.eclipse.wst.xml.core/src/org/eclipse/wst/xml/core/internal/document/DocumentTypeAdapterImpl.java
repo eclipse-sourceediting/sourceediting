@@ -102,7 +102,7 @@ public class DocumentTypeAdapterImpl implements DocumentTypeAdapter {
 		IDOMModel model = this.document.getModel();
 		if (model == null)
 			return;
-		((XMLModelImpl) model).documentTypeChanged();
+		((DOMModelImpl) model).documentTypeChanged();
 	}
 
 	/**

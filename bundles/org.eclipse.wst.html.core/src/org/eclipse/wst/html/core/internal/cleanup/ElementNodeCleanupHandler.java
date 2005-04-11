@@ -37,15 +37,15 @@ import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.xml.core.document.IDOMAttr;
 import org.eclipse.wst.xml.core.document.IDOMDocument;
 import org.eclipse.wst.xml.core.document.IDOMElement;
-import org.eclipse.wst.xml.core.document.ISourceGenerator;
 import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.document.IDOMNode;
+import org.eclipse.wst.xml.core.document.ISourceGenerator;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -383,7 +383,7 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 			IStructuredDocumentRegion endTagStructuredDocumentRegion = newNode.getEndStructuredDocumentRegion();
 
 			ITextRegionList regionList = startTagStructuredDocumentRegion.getRegions();
-			if (startTagStructuredDocumentRegion != null && regionList != null && regionList.get(regionList.size() - 1).getType() == XMLRegionContext.XML_EMPTY_TAG_CLOSE) {
+			if (startTagStructuredDocumentRegion != null && regionList != null && regionList.get(regionList.size() - 1).getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE) {
 
 			}
 			else {
@@ -428,7 +428,7 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 			ITextRegion lastRegion = regionList.get(regionList.size() - 1);
 			if (lastRegion != null) {
 				String regionType = lastRegion.getType();
-				if ((regionType != XMLRegionContext.XML_EMPTY_TAG_CLOSE) && (regionType != XMLRegionContext.XML_TAG_CLOSE)) {
+				if ((regionType != DOMRegionContext.XML_EMPTY_TAG_CLOSE) && (regionType != DOMRegionContext.XML_TAG_CLOSE)) {
 					IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
 
 					// insert ">" after lastRegion of flatNode
@@ -563,11 +563,11 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 					IStructuredDocumentRegion startStructuredDocumentRegion = newNode.getStartStructuredDocumentRegion();
 					int index = startStructuredDocumentRegion.getEndOffset();
 					ITextRegion lastRegion = startStructuredDocumentRegion.getLastRegion(); 
-					if (lastRegion.getType() == XMLRegionContext.XML_TAG_CLOSE) {
+					if (lastRegion.getType() == DOMRegionContext.XML_TAG_CLOSE) {
 						index--;
 						lastRegion = startStructuredDocumentRegion.getRegionAtCharacterOffset(index - 1);
 					}
-					else if (lastRegion.getType() == XMLRegionContext.XML_EMPTY_TAG_CLOSE) {
+					else if (lastRegion.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE) {
 						index = index - 2;
 						lastRegion = startStructuredDocumentRegion.getRegionAtCharacterOffset(index - 1);
 					}

@@ -36,7 +36,7 @@ import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.xml.core.internal.Logger;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 
 /**
@@ -104,7 +104,7 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 	 */
 	protected IStructuredDocumentRegion createStructuredDocumentRegion(String type) {
 		IStructuredDocumentRegion newNode = null;
-		if (type == XMLRegionContext.BLOCK_TEXT)
+		if (type == DOMRegionContext.BLOCK_TEXT)
 			newNode = XMLStructuredRegionFactory.createRegion(XMLStructuredRegionFactory.XML_BLOCK);
 		else
 			newNode = XMLStructuredRegionFactory.createRegion(XMLStructuredRegionFactory.XML);
@@ -287,8 +287,8 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 			type = region.getType();
 			// these types (might) demand a IStructuredDocumentRegion for each
 			// of them
-			if (type == XMLRegionContext.BLOCK_TEXT) {
-				if (currentNode != null && currentNode.getLastRegion().getType() == XMLRegionContext.BLOCK_TEXT) {
+			if (type == DOMRegionContext.BLOCK_TEXT) {
+				if (currentNode != null && currentNode.getLastRegion().getType() == DOMRegionContext.BLOCK_TEXT) {
 					// multiple block texts indicated embedded containers; no
 					// new IStructuredDocumentRegion
 					currentNode.addRegion(region);
@@ -324,7 +324,7 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 				}
 			}
 			// the following contexts OPEN new StructuredDocumentRegions
-			else if ((currentNode != null && currentNode.isEnded()) || (type == XMLRegionContext.XML_CONTENT) || (type == XMLRegionContext.XML_CHAR_REFERENCE) || (type == XMLRegionContext.XML_ENTITY_REFERENCE) || (type == XMLRegionContext.XML_PI_OPEN) || (type == XMLRegionContext.XML_TAG_OPEN) || (type == XMLRegionContext.XML_END_TAG_OPEN) || (type == XMLRegionContext.XML_COMMENT_OPEN) || (type == XMLRegionContext.XML_CDATA_OPEN) || (type == XMLRegionContext.XML_DECLARATION_OPEN)) {
+			else if ((currentNode != null && currentNode.isEnded()) || (type == DOMRegionContext.XML_CONTENT) || (type == DOMRegionContext.XML_CHAR_REFERENCE) || (type == DOMRegionContext.XML_ENTITY_REFERENCE) || (type == DOMRegionContext.XML_PI_OPEN) || (type == DOMRegionContext.XML_TAG_OPEN) || (type == DOMRegionContext.XML_END_TAG_OPEN) || (type == DOMRegionContext.XML_COMMENT_OPEN) || (type == DOMRegionContext.XML_CDATA_OPEN) || (type == DOMRegionContext.XML_DECLARATION_OPEN)) {
 				if (currentNode != null) {
 					// ensure that any existing node is at least terminated
 					if (!currentNode.isEnded()) {
@@ -349,7 +349,7 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 			}
 			// the following contexts neither open nor close
 			// StructuredDocumentRegions; just add to them
-			else if ((type == XMLRegionContext.XML_TAG_NAME) || (type == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME) || (type == XMLRegionContext.XML_TAG_ATTRIBUTE_EQUALS) || (type == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) || (type == XMLRegionContext.XML_COMMENT_TEXT) || (type == XMLRegionContext.XML_PI_CONTENT) || (type == XMLRegionContext.XML_DOCTYPE_INTERNAL_SUBSET)) {
+			else if ((type == DOMRegionContext.XML_TAG_NAME) || (type == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) || (type == DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS) || (type == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) || (type == DOMRegionContext.XML_COMMENT_TEXT) || (type == DOMRegionContext.XML_PI_CONTENT) || (type == DOMRegionContext.XML_DOCTYPE_INTERNAL_SUBSET)) {
 				currentNode.addRegion(region);
 				currentNode.setLength(region.getStart() + region.getLength() - currentNode.getStart());
 				region.adjustStart(-currentNode.getStart());
@@ -358,7 +358,7 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 			}
 			// the following contexts close off StructuredDocumentRegions
 			// cleanly
-			else if ((type == XMLRegionContext.XML_PI_CLOSE) || (type == XMLRegionContext.XML_TAG_CLOSE) || (type == XMLRegionContext.XML_EMPTY_TAG_CLOSE) || (type == XMLRegionContext.XML_COMMENT_CLOSE) || (type == XMLRegionContext.XML_DECLARATION_CLOSE) || (type == XMLRegionContext.XML_CDATA_CLOSE)) {
+			else if ((type == DOMRegionContext.XML_PI_CLOSE) || (type == DOMRegionContext.XML_TAG_CLOSE) || (type == DOMRegionContext.XML_EMPTY_TAG_CLOSE) || (type == DOMRegionContext.XML_COMMENT_CLOSE) || (type == DOMRegionContext.XML_DECLARATION_CLOSE) || (type == DOMRegionContext.XML_CDATA_CLOSE)) {
 				currentNode.setEnded(true);
 				currentNode.setLength(region.getStart() + region.getLength() - currentNode.getStart());
 				currentNode.addRegion(region);
@@ -367,7 +367,7 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 				//region.setParent(currentNode);
 			}
 			// this is extremely rare, but valid
-			else if (type == XMLRegionContext.WHITE_SPACE) {
+			else if (type == DOMRegionContext.WHITE_SPACE) {
 				ITextRegion lastRegion = currentNode.getLastRegion();
 				// pack the embedded container with this region
 				if (lastRegion instanceof ITextRegionContainer) {
@@ -383,11 +383,11 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 				}
 				currentNode.getLastRegion().adjustLength(region.getLength());
 				currentNode.adjustLength(region.getLength());
-			} else if (type == XMLRegionContext.UNDEFINED && currentNode != null) {
+			} else if (type == DOMRegionContext.UNDEFINED && currentNode != null) {
 				// skip on a very-first region situation as the default
 				// behavior is good enough
 				// combine with previous if also undefined
-				if (currentNode.getLastRegion() != null && currentNode.getLastRegion().getType() == XMLRegionContext.UNDEFINED) {
+				if (currentNode.getLastRegion() != null && currentNode.getLastRegion().getType() == DOMRegionContext.UNDEFINED) {
 					currentNode.getLastRegion().adjustLength(region.getLength());
 					currentNode.adjustLength(region.getLength());
 				}
@@ -420,7 +420,7 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 			// be more readable if that is handled here as well, but the
 			// current layout
 			// ensures that they open StructuredDocumentRegions the same way
-			if ((type == XMLRegionContext.XML_CONTENT) || (type == XMLRegionContext.XML_CHAR_REFERENCE) || (type == XMLRegionContext.XML_ENTITY_REFERENCE)) {
+			if ((type == DOMRegionContext.XML_CONTENT) || (type == DOMRegionContext.XML_CHAR_REFERENCE) || (type == DOMRegionContext.XML_ENTITY_REFERENCE)) {
 				currentNode.setEnded(true);
 			}
 			if (headNode == null && currentNode != null) {

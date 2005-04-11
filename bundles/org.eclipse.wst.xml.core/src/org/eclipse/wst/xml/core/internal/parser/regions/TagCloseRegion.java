@@ -16,13 +16,13 @@ import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 
 public class TagCloseRegion implements ITextRegion {
 	static private final byte fLength = 1;
 	static private final byte fTextLength = 1;
-	static private final String fType = XMLRegionContext.XML_TAG_CLOSE;
+	static private final String fType = DOMRegionContext.XML_TAG_CLOSE;
 	private int fStart;
 
 

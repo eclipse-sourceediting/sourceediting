@@ -18,11 +18,11 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.core.util.Utilities;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 
 public class XMLCDataTextRegion implements ITextRegion {
-	static private final String fType = XMLRegionContext.XML_CDATA_TEXT;
+	static private final String fType = DOMRegionContext.XML_CDATA_TEXT;
 	private int fLength;
 	private int fStart;
 	private int fTextLength;

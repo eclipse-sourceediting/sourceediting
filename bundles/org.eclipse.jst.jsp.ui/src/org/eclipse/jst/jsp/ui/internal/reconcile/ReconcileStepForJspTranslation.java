@@ -23,7 +23,7 @@ import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationExtension;
-import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
@@ -36,7 +36,7 @@ import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 import org.eclipse.wst.xml.core.document.IDOMDocument;
 import org.eclipse.wst.xml.core.document.IDOMModel;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 /**
  * Creates a JSPTranslation for use w/ the JavaReconcileStep. Adapts Java
@@ -204,7 +204,7 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 		regions = sdRegion.getRegions();
 		for (int i = 0; i < regions.size(); i++) {
 			r = regions.get(i);
-			if (r.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME || r.getType() == XMLRegionContext.XML_TAG_NAME) {
+			if (r.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME || r.getType() == DOMRegionContext.XML_TAG_NAME) {
 				tagName = sdRegion.getText(r).trim();
 				if (tagName.equals("include")) { //$NON-NLS-1$
 					adjustForInclude(annotation, pos, sdRegion, regions, i);
@@ -238,10 +238,10 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 		String noQuotes;
 		for (int j = startingRegionNumber; j < regions.size(); j++) {
 			r = regions.get(j);
-			if (r.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME && !sdRegion.getText(r).trim().equals("file")) //$NON-NLS-1$
+			if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME && !sdRegion.getText(r).trim().equals("file")) //$NON-NLS-1$
 				// there's only one attribute allowed for <@include
 				break;
-			else if (r.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+			else if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 				tagName = sdRegion.getText(r).trim();
 				noQuotes = StringUtils.strip(tagName);
 				pos.offset = sdRegion.getStartOffset(r) + ((tagName.length() - noQuotes.length()) == 2 ? 1 : 0);
@@ -259,10 +259,10 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 
 		for (int j = startingRegionNumber; j < size; j++) {
 			r = regions.get(j);
-			if (r.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_NAME && sdRegion.getText(r).trim().equals("import")) { //$NON-NLS-1$
+			if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME && sdRegion.getText(r).trim().equals("import")) { //$NON-NLS-1$
 				if (size > j + 2) {
 					r = regions.get(j + 2);
-					if (r.getType() == XMLRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+					if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 						value = sdRegion.getText(r);
 						pos.offset = sdRegion.getStartOffset(r);
 						pos.length = value.trim().length();

@@ -15,7 +15,7 @@ package org.eclipse.wst.xml.core.internal.parser.regions;
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 
 /**
@@ -26,7 +26,7 @@ import org.eclipse.wst.xml.core.parser.XMLRegionContext;
 
 public class GenericTemplateRegion implements ITextRegion {
 	// specify correct type
-	static private final String fType = XMLRegionContext.UNDEFINED;
+	static private final String fType = DOMRegionContext.UNDEFINED;
 	private int fLength;
 	private int fStart;
 	private int fTextLength;

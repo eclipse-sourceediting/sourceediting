@@ -19,7 +19,7 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredTextPartitioner;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.parser.regions.BlockTextRegion;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
 public class StructuredTextPartitionerForXML extends StructuredTextPartitioner implements IStructuredTextPartitioner {
@@ -43,15 +43,15 @@ public class StructuredTextPartitionerForXML extends StructuredTextPartitioner i
 	 */
 	public String getPartitionType(ITextRegion region, int offset) {
 		String result = null;
-		if (region.getType() == XMLRegionContext.XML_COMMENT_TEXT)
+		if (region.getType() == DOMRegionContext.XML_COMMENT_TEXT)
 			result = IXMLPartitions.XML_COMMENT;
-		else if (region.getType() == XMLRegionContext.XML_CDATA_TEXT)
+		else if (region.getType() == DOMRegionContext.XML_CDATA_TEXT)
 			result = IXMLPartitions.XML_CDATA;
-		else if (region.getType() == XMLRegionContext.XML_PI_OPEN)
+		else if (region.getType() == DOMRegionContext.XML_PI_OPEN)
 			result = IXMLPartitions.XML_PI;
-		else if (region.getType() == XMLRegionContext.XML_DOCTYPE_DECLARATION)
+		else if (region.getType() == DOMRegionContext.XML_DOCTYPE_DECLARATION)
 			result = IXMLPartitions.XML_DECLARATION;
-		else if (region.getType() == XMLRegionContext.XML_DOCTYPE_INTERNAL_SUBSET)
+		else if (region.getType() == DOMRegionContext.XML_DOCTYPE_INTERNAL_SUBSET)
 			result = IXMLPartitions.DTD_SUBSET;
 		else
 			result = super.getPartitionType(region, offset);
@@ -89,7 +89,7 @@ public class StructuredTextPartitionerForXML extends StructuredTextPartitioner i
 		// nsd_TODO: David and I need to discuss, design, and implement this
 		// for all block tags and comments
 		// and make sure is part of "extensible" design of block tags
-		if (region.getType() == XMLRegionContext.BLOCK_TEXT) {
+		if (region.getType() == DOMRegionContext.BLOCK_TEXT) {
 			// for code safety, we'll always check instanceof, but I think
 			// always true.
 			if (region instanceof BlockTextRegion) {
@@ -108,10 +108,10 @@ public class StructuredTextPartitionerForXML extends StructuredTextPartitioner i
 		// this was moved down to subclass of StructuredTextPartioner
 		// for quick fix to transition problems. Heirarchy needs lots of
 		// cleanup.
-		if (previousStart != null && previousStart.getType() == XMLRegionContext.XML_TAG_OPEN && next.getType() == XMLRegionContext.XML_END_TAG_OPEN) {
+		if (previousStart != null && previousStart.getType() == DOMRegionContext.XML_TAG_OPEN && next.getType() == DOMRegionContext.XML_END_TAG_OPEN) {
 			ITextRegion previousName = previousStructuredDocumentRegion.getRegionAtCharacterOffset(previousStructuredDocumentRegion.getEndOffset(previousStart));
 			ITextRegion nextName = sdRegion.getRegionAtCharacterOffset(sdRegion.getEndOffset(next));
-			if (previousName != null && nextName != null && previousName.getType() == XMLRegionContext.XML_TAG_NAME && nextName.getType() == XMLRegionContext.XML_TAG_NAME) {
+			if (previousName != null && nextName != null && previousName.getType() == DOMRegionContext.XML_TAG_NAME && nextName.getType() == DOMRegionContext.XML_TAG_NAME) {
 				setInternalPartition(offset, 0, getPartitionTypeBetween(previousStructuredDocumentRegion, sdRegion));
 				partitionFound = true;
 			}

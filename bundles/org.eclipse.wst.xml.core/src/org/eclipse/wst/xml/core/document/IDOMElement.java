@@ -78,10 +78,9 @@ public interface IDOMElement extends IDOMNode, Element {
 	boolean isEmptyTag();
 
 	/**
-	 * NOT CLIENT API
+	 * Returns true if floating end tag. 
 	 * 
-	 * 
-	 * @deprecated - I believe this can be cleaned out.
+	 * @return true if floating end tag.
 	 */
 	boolean isEndTag();
 

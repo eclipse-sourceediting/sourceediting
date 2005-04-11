@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.document;
 
-import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
 import org.eclipse.wst.sse.core.AbstractAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;

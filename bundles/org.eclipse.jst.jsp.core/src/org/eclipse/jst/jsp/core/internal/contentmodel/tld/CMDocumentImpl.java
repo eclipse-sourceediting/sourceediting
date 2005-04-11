@@ -18,9 +18,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.jst.jsp.core.contentmodel.tld.TLDDocument;
-import org.eclipse.jst.jsp.core.contentmodel.tld.TLDValidator;
 import org.eclipse.jst.jsp.core.internal.Logger;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDDocument;
+import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDValidator;
 import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamespace;

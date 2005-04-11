@@ -13,7 +13,7 @@ package org.eclipse.jst.jsp.ui.internal.contentassist;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jst.jsp.core.JSP11Namespace;
-import org.eclipse.jst.jsp.core.model.parser.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.text.IJSPPartitionTypes;
 import org.eclipse.wst.html.core.text.IHTMLPartitionTypes;
 import org.eclipse.wst.html.ui.internal.contentassist.NoRegionContentAssistProcessorForHTML;
