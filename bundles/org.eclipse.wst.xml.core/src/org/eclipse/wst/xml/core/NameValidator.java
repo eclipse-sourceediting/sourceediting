@@ -19,8 +19,11 @@ import org.eclipse.wst.xml.core.internal.parser.XML10Names;
 /**
  * This class provides consistent way to pre-check if a string is a valid XML
  * name, before, for example, trying to actually create an Element with it.
- * Especially useful when the name to be checked is based on some user input,
- * and must, basically, be validated.
+ * Attempting to create an Element with an invalid name will throw the appropriate
+ * DOM Exception, but often clients want to check the validiting of a name
+ * such as based on some user input, long in advance of actually making 
+ * the DOM call. And, natually, want to give the user feedback in a more 
+ * timely fashion.
  * 
  * @since 1.0
  */
