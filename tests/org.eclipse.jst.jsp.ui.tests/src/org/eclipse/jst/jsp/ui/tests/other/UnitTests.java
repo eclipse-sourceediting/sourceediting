@@ -27,7 +27,6 @@ import org.eclipse.wst.sse.core.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.events.RegionsReplacedEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentRegionsReplacedEvent;
-import org.eclipse.wst.sse.core.exceptions.SourceEditingException;
 import org.eclipse.wst.sse.core.internal.document.StructuredDocumentFactory;
 import org.eclipse.wst.sse.core.parser.BlockMarker;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
@@ -559,7 +558,7 @@ public class UnitTests extends TestCase {
 
 	/**
 	 */
-	public void simpleTest() throws SourceEditingException {
+	public void simpleTest()  {
 
 		setUpJSP();
 		eventCase = 99;
@@ -585,7 +584,7 @@ public class UnitTests extends TestCase {
 
 	/**
 	 */
-	public void simpleTest2() throws SourceEditingException {
+	public void simpleTest2()  {
 
 		setUpXML();
 		eventCase = 99;
@@ -609,7 +608,7 @@ public class UnitTests extends TestCase {
 
 	/**
 	 */
-	public void simpleTest3() throws SourceEditingException {
+	public void simpleTest3()  {
 
 		setUpXML();
 		eventCase = 99;
@@ -645,7 +644,7 @@ public class UnitTests extends TestCase {
 	 * Creation date: (8/1/2001 6:28:59 PM)
 	 * @exception SourceEditingException The exception description.
 	 */
-	public void testDeleteBeginning() throws SourceEditingException {
+	public void testDeleteBeginning()  {
 
 		setUpXML();
 		eventCase = 4;
@@ -667,7 +666,7 @@ public class UnitTests extends TestCase {
 	 * Creation date: (8/1/2001 6:27:31 PM)
 	 * @exception SourceEditingException The exception description.
 	 */
-	public void testDeleteEnd() throws SourceEditingException {
+	public void testDeleteEnd()  {
 
 		setUpXML();
 		eventCase = 3;
@@ -686,7 +685,7 @@ public class UnitTests extends TestCase {
 
 	/**
 	 */
-	public void testEmbedded() throws SourceEditingException {
+	public void testEmbedded()  {
 
 		setUpJSP();
 		eventCase = GENERIC_NEW_MODEL_EVENT_CASE;
@@ -787,7 +786,7 @@ public class UnitTests extends TestCase {
 
 	/**
 	 */
-	public void testEmbeddedJSP2() throws SourceEditingException {
+	public void testEmbeddedJSP2()  {
 
 		setUpJSP();
 		eventCase = GENERIC_REGIONS_REPLACED_EVENT_CASE;
@@ -809,7 +808,7 @@ public class UnitTests extends TestCase {
 
 	}
 
-	public void testDeepEmbeddedJSP() throws SourceEditingException {
+	public void testDeepEmbeddedJSP()  {
 
 		setUpJSP();
 		eventCase = GENERIC_REGIONS_REPLACED_EVENT_CASE;
@@ -892,7 +891,7 @@ public class UnitTests extends TestCase {
 
 	}
 
-	public void testDeepEmbeddedJSP2() throws SourceEditingException {
+	public void testDeepEmbeddedJSP2()  {
 
 		setUpJSP();
 		eventCase = GENERIC_REGIONS_REPLACED_EVENT_CASE;
@@ -977,7 +976,7 @@ public class UnitTests extends TestCase {
 		assertEquals("ContextRegionContainer.getFullText() value incorrect: ", expectedText, fullText);
 	}
 
-	public void testJSP1() throws SourceEditingException {
+	public void testJSP1()  {
 
 		//testEvent = 23;
 		//tags = "abcd<%= abc %>efgh";
@@ -1003,7 +1002,7 @@ public class UnitTests extends TestCase {
 
 	}
 
-	public void testJSP2() throws SourceEditingException {
+	public void testJSP2()  {
 
 		//testEvent = 24;
 		//tags = "abcd<% abc %>efgh";
@@ -1029,7 +1028,7 @@ public class UnitTests extends TestCase {
 
 	}
 
-	public void testJSP3() throws SourceEditingException {
+	public void testJSP3()  {
 
 		//testEvent = 25;
 		//tags = "<%= abc %>";
@@ -1054,7 +1053,7 @@ public class UnitTests extends TestCase {
 		assertTrue("event type", eventResult);
 	}
 
-	public void testJSP4() throws SourceEditingException {
+	public void testJSP4()  {
 
 		//testEvent = 26;
 		//tags = "<% abc %>";
@@ -1095,7 +1094,7 @@ public class UnitTests extends TestCase {
 	 reparsed at (1), but not wait until (3).
 	 
 	 */
-	public void testJSP5() throws SourceEditingException {
+	public void testJSP5()  {
 
 		setUpJSP();
 		eventCase = GENERIC_NEW_MODEL_EVENT_CASE;
@@ -1179,7 +1178,7 @@ public class UnitTests extends TestCase {
 	 
 	 
 	 */
-	public void testJSP6() throws SourceEditingException {
+	public void testJSP6()  {
 		// caution ... we're re-using event checks from JSP5
 
 		setUpJSP();
@@ -1248,7 +1247,7 @@ public class UnitTests extends TestCase {
 	 * this test easily returns "ok" even with the no-space bug. Its mostly to
 	 * "hand examine" the structuredDocument created from the initial setText.
 	 */
-	public void testJSPDirective() throws SourceEditingException {
+	public void testJSPDirective()  {
 
 		setUpJSP();
 		eventCase = GENERIC_NODES_REPLACED_EVENT_CASE;
@@ -1278,7 +1277,7 @@ public class UnitTests extends TestCase {
 	 * Creation date: (8/1/2001 6:53:08 PM)
 	 * @exception SourceEditingException The exception description.
 	 */
-	public void testMethod10() throws SourceEditingException {
+	public void testMethod10()  {
 
 		setUpXML();
 		eventCase = 10;
@@ -1300,7 +1299,7 @@ public class UnitTests extends TestCase {
 	 * Creation date: (8/2/2001 10:56:04 AM)
 	 * @exception SourceEditingException The exception description.
 	 */
-	public void testMethod11() throws SourceEditingException {
+	public void testMethod11()  {
 
 		setUpXML();
 		eventCase = 11;
@@ -1322,7 +1321,7 @@ public class UnitTests extends TestCase {
 	 * Creation date: (8/2/2001 10:59:39 AM)
 	 * @exception SourceEditingException The exception description.
 	 */
-	public void testMethod12() throws SourceEditingException {
+	public void testMethod12()  {
 
 		setUpXML();
 		eventCase = 12;
@@ -1344,7 +1343,7 @@ public class UnitTests extends TestCase {
 	 * Creation date: (8/2/2001 11:00:59 AM)
 	 * @exception SourceEditingException The exception description.
 	 */
-	public void testMethod13() throws SourceEditingException {
+	public void testMethod13()  {
 
 		setUpXML();
 		eventCase = 13;
@@ -1366,7 +1365,7 @@ public class UnitTests extends TestCase {
 	 * Creation date: (8/2/2001 11:02:19 AM)
 	 * @exception SourceEditingException The exception description.
 	 */
-	public void testMethod14() throws SourceEditingException {
+	public void testMethod14()  {
 
 		setUpXML();
 		eventCase = 14;
@@ -1388,7 +1387,7 @@ public class UnitTests extends TestCase {
 	 * Creation date: (8/2/2001 11:03:53 AM)
 	 * @exception SourceEditingException The exception description.
 	 */
-	public void testMethod15() throws SourceEditingException {
+	public void testMethod15()  {
 
 		setUpXML();
 		eventCase = 15;
@@ -1410,7 +1409,7 @@ public class UnitTests extends TestCase {
 	 * Creation date: (8/2/2001 11:05:27 AM)
 	 * @exception SourceEditingException The exception description.
 	 */
-	public void testMethod16() throws SourceEditingException {
+	public void testMethod16()  {
 
 		setUpXML();
 		eventCase = 16;
@@ -1432,7 +1431,7 @@ public class UnitTests extends TestCase {
 	 * Creation date: (8/2/2001 11:06:33 AM)
 	 * @exception SourceEditingException The exception description.
 	 */
-	public void testMethod17() throws SourceEditingException {
+	public void testMethod17()  {
 
 		setUpXML();
 		eventCase = 17;
@@ -1454,7 +1453,7 @@ public class UnitTests extends TestCase {
 	 * Creation date: (8/2/2001 11:09:17 AM)
 	 * @exception SourceEditingException The exception description.
 	 */
-	public void testMethod18() throws SourceEditingException {
+	public void testMethod18()  {
 
 		setUpXML();
 		eventCase = 18;
@@ -1476,7 +1475,7 @@ public class UnitTests extends TestCase {
 	 * Creation date: (8/2/2001 11:10:30 AM)
 	 * @exception SourceEditingException The exception description.
 	 */
-	public void testMethod19() throws SourceEditingException {
+	public void testMethod19()  {
 
 		eventCase = 19;
 		setUpJSP();
@@ -1498,7 +1497,7 @@ public class UnitTests extends TestCase {
 	 * Creation date: (8/2/2001 11:12:05 AM)
 	 * @exception SourceEditingException The exception description.
 	 */
-	public void testMethod20() throws SourceEditingException {
+	public void testMethod20()  {
 
 		setUpJSP();
 
@@ -1521,7 +1520,7 @@ public class UnitTests extends TestCase {
 	 * Creation date: (8/2/2001 11:32:23 AM)
 	 * @exception SourceEditingException The exception description.
 	 */
-	public void testMethod21() throws SourceEditingException {
+	public void testMethod21()  {
 
 		setUpJSP();
 
@@ -1544,7 +1543,7 @@ public class UnitTests extends TestCase {
 	 * Creation date: (8/1/2001 6:45:29 PM)
 	 * @exception SourceEditingException The exception description.
 	 */
-	public void testMethod9() throws SourceEditingException {
+	public void testMethod9()  {
 
 		setUpXML();
 		eventCase = 9;
@@ -1566,7 +1565,7 @@ public class UnitTests extends TestCase {
 	 * Creation date: (8/1/2001 6:45:29 PM)
 	 * @exception SourceEditingException The exception description.
 	 */
-	public void testMethodAttributeNameReplace1() throws SourceEditingException {
+	public void testMethodAttributeNameReplace1()  {
 
 		//testEvent = 22;
 		//tags = "<tagName abc=\"bsf\">";
@@ -1596,7 +1595,7 @@ public class UnitTests extends TestCase {
 	 * Creation date: (8/1/2001 6:35:41 PM)
 	 * @exception SourceEditingException The exception description.
 	 */
-	public void testModifyMiddle() throws SourceEditingException {
+	public void testModifyMiddle()  {
 
 		setUpXML();
 		eventCase = 5;
@@ -1617,7 +1616,7 @@ public class UnitTests extends TestCase {
 	 * Insert the method's description here.
 	 * Creation date: (8/1/2001 6:06:33 PM)
 	 */
-	public void testNoChange1() throws SourceEditingException {
+	public void testNoChange1()  {
 
 		setUpXML();
 		eventCase = 1;
@@ -1639,7 +1638,7 @@ public class UnitTests extends TestCase {
 	 * Creation date: (8/1/2001 6:26:05 PM)
 	 * @exception SourceEditingException The exception description.
 	 */
-	public void testNoChange2() throws SourceEditingException {
+	public void testNoChange2()  {
 
 		setUpXML();
 		eventCase = 2;
@@ -1661,7 +1660,7 @@ public class UnitTests extends TestCase {
 	 * Creation date: (8/1/2001 6:38:25 PM)
 	 * @exception SourceEditingException The exception description.
 	 */
-	public void testSimilarStart() throws SourceEditingException {
+	public void testSimilarStart()  {
 
 		setUpXML();
 		eventCase = 6;
@@ -1683,7 +1682,7 @@ public class UnitTests extends TestCase {
 	 * Creation date: (8/1/2001 6:43:29 PM)
 	 * @exception SourceEditingException The exception description.
 	 */
-	public void testSimilarStartEnd() throws SourceEditingException {
+	public void testSimilarStartEnd()  {
 
 		setUpXML();
 		eventCase = 8;
@@ -1705,7 +1704,7 @@ public class UnitTests extends TestCase {
 	 * Creation date: (8/1/2001 6:41:46 PM)
 	 * @exception SourceEditingException The exception description.
 	 */
-	public void testSimiliarEnd() throws SourceEditingException {
+	public void testSimiliarEnd()  {
 
 		setUpXML();
 		eventCase = 7;
@@ -1724,7 +1723,7 @@ public class UnitTests extends TestCase {
 
 	/**
 	 */
-	public void testTagReDetection() throws SourceEditingException {
+	public void testTagReDetection()  {
 
 		setUpJSP();
 		// (nsd) 2003.12.10 - changed from NodesReplaced to RegionsReplaced since the start condition was changed
@@ -1755,7 +1754,7 @@ public class UnitTests extends TestCase {
 
 	/**
 	 */
-	public void testTagReDetection2() throws SourceEditingException {
+	public void testTagReDetection2()  {
 
 		setUpJSP();
 		eventCase = GENERIC_REGION_CHANGED_EVENT_CASE;
@@ -1780,7 +1779,7 @@ public class UnitTests extends TestCase {
 
 	/**
 	 */
-	public void testTagReDetection3() throws SourceEditingException {
+	public void testTagReDetection3()  {
 
 		setUpJSP();
 		eventCase = GENERIC_NODES_REPLACED_EVENT_CASE;
@@ -1819,7 +1818,7 @@ public class UnitTests extends TestCase {
 		super.setUp();
 	}
 
-	public void testPageDirective() throws SourceEditingException {
+	public void testPageDirective()  {
 		boolean verbose = false;
 		setUpJSP();
 		eventCase = 999; //GENERIC_NODES_REPLACED_EVENT_CASE;

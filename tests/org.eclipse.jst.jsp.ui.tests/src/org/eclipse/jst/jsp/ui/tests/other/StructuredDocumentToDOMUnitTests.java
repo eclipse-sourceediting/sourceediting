@@ -21,7 +21,6 @@ import org.eclipse.wst.sse.core.events.NoChangeEvent;
 import org.eclipse.wst.sse.core.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.events.RegionsReplacedEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentRegionsReplacedEvent;
-import org.eclipse.wst.sse.core.exceptions.SourceEditingException;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
@@ -164,7 +163,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 	/**
 	 * Unit test -- tests basic parsing results of inserting a test string into an initial string.
 	 */
-	void testNodeDeletion() throws SourceEditingException {
+	void testNodeDeletion()  {
 		//String initialString = "<par><x>\ntextx\n</x>\n<y>\ntexty\n</y></par>";
 		//String initialString = "<par><x>textx</x><y>texty</y></par>";
 		// test cases for two text nodes left together (remove <b/>):
@@ -229,7 +228,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 	/**
 	 * Unit test -- tests basic parsing results of inserting a test string into an initial string.
 	 */
-	void testNodeDeletion3() throws SourceEditingException {
+	void testNodeDeletion3()  {
 		String initialString = getTestString3();
 
 		// print out what we always can
@@ -285,7 +284,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 	/**
 	 * Unit test -- test insert followed by delete at beginning of string.
 	 */
-	void testNodeDeletion4() throws SourceEditingException {
+	void testNodeDeletion4() {
 		String initialString = getTestString4();
 
 		// print out what we always can
