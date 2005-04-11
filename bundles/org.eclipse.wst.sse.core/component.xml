@@ -9,6 +9,7 @@
         <!--    dw-->
         <package name="org.eclipse.wst.sse.core">
                 <type name="LifecycleNotificationManager" reference="false" implement="false" subclass="false" instantiate="false" />
+                <type name="IModelLifecycleListener" reference="false" implement="false" subclass="false" instantiate="false" />
                 <type name="ModelLifecycleEvent" reference="false" implement="false" subclass="false" instantiate="false" />
                 <type name="DocumentChanged" reference="false" implement="false" subclass="false" instantiate="false" />
                 <type name="IModelManager" reference="false" implement="false" subclass="false" instantiate="false" />
