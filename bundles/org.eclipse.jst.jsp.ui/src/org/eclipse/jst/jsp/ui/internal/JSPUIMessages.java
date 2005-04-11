@@ -56,6 +56,7 @@ public class JSPUIMessages extends NLS {
 	public static String CleanupDocument_label; // resource bundle
 	public static String CleanupDocument_tooltip; // resource bundle
 	public static String CleanupDocument_description; // resource bundle
+	public static String FindOccurrences_label;	// resource bundle
 	public static String OccurrencesSearchQuery_0;
 	public static String OccurrencesSearchQuery_2;
 	public static String Override_method_in;
