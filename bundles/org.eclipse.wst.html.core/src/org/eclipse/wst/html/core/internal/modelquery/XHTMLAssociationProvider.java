@@ -68,7 +68,16 @@ class XHTMLAssociationProvider extends XMLAssociationProvider {
 
 		if (grammerURI == null)
 			return null;
-		CMDocument cmDocument = documentManager.getCMDocument(publicId, grammerURI);
+		
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88896
+		// previously called the deprecated 2 argument form of getCMDocument, which eventually
+		// resulted in empty string for type, which I don't think the infrastructure was prepared 
+		// for. So, I deleted deprecated methods, and switched to null. 
+		// 'null' means to "create based on uri"
+		// and 'dtd' would work to mean load only those registered as dtd's
+		// CMDocument cmDocument = documentManager.getCMDocument(publicId, grammerURI);
+		//CMDocument cmDocument = documentManager.getCMDocument(publicId, grammerURI, "dtd");
+		CMDocument cmDocument = documentManager.getCMDocument(publicId, grammerURI, null);
 		return cmDocument;
 	}
 

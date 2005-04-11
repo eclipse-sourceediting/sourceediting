@@ -145,7 +145,10 @@ public class CMDocumentManagerImpl implements CMDocumentManager
   }    
   
 
-  public CMDocument getCMDocument(String publicId, String systemId, String type)
+  /* (non-Javadoc)
+ * @see org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManager#getCMDocument(java.lang.String, java.lang.String, java.lang.String)
+ */
+public CMDocument getCMDocument(String publicId, String systemId, String type)
   {                
     CMDocument cmDocument = null;                           
     String resolvedURI = null;
@@ -177,31 +180,6 @@ public class CMDocumentManagerImpl implements CMDocumentManager
     return cmDocument;   
   } 
   
-  /**
-   * @deprecated
-   */
-  public CMDocument getCMDocument(String publicId, String resolvedURI)
-  {
-    CMDocument cmDocument = null;                           
-
-    if (resolvedURI != null)
-    {                   
-      int status = cmDocumentCache.getStatus(resolvedURI);
-      if (status == CMDocumentCache.STATUS_LOADED)
-      {                      
-        cmDocument = cmDocumentCache.getCMDocument(resolvedURI);
-      }   
-      else if (status == CMDocumentCache.STATUS_NOT_LOADED)
-      {     
-        if (getPropertyEnabled(PROPERTY_AUTO_LOAD))
-        {
-          cmDocument = loadCMDocument(publicId, resolvedURI, "", getPropertyEnabled(PROPERTY_ASYNC_LOAD));
-        }
-      }
-    }
-    return cmDocument;   
-  }
-
   public void addCMDocumentReference(String publicId, String systemId, String type)
   {
     String resolvedURI = lookupOrCreateResolvedURI(publicId, systemId);

@@ -17,6 +17,7 @@ import java.util.StringTokenizer;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.wst.xml.core.internal.Logger;
 
 
 
@@ -69,6 +70,7 @@ public class CMDocumentFactoryRegistryReader
         }
         catch (Exception e)
         {
+			Logger.logException(e);
         }
       }
     }
