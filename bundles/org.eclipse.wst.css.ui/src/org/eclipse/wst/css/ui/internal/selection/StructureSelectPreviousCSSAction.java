@@ -10,8 +10,8 @@ package org.eclipse.wst.css.ui.internal.selection;
 
 import org.eclipse.jface.text.Region;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
+import org.eclipse.wst.css.ui.internal.CSSUIMessages;
 import org.eclipse.wst.sse.core.IndexedRegion;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.selection.SelectionHistory;
 import org.w3c.dom.Node;
@@ -19,9 +19,9 @@ import org.w3c.dom.Node;
 public class StructureSelectPreviousCSSAction extends StructureSelectCSSAction {
 	public StructureSelectPreviousCSSAction(StructuredTextEditor editor, SelectionHistory history) {
 		super(editor, history);
-		setText(SSEUIPlugin.getResourceString("%StructureSelectPrevious.label")); //$NON-NLS-1$
-		setToolTipText(SSEUIPlugin.getResourceString("%StructureSelectPrevious.tooltip")); //$NON-NLS-1$
-		setDescription(SSEUIPlugin.getResourceString("%StructureSelectPrevious.description")); //$NON-NLS-1$
+		setText(CSSUIMessages.StructureSelectPrevious_label);
+		setToolTipText(CSSUIMessages.StructureSelectPrevious_tooltip);
+		setDescription(CSSUIMessages.StructureSelectPrevious_description);
 	}
 
 	protected IndexedRegion getCursorIndexedRegion() {

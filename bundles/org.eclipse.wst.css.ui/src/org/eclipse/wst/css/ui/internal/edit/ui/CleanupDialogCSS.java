@@ -19,8 +19,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
 import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategyImpl;
+import org.eclipse.wst.css.ui.internal.CSSUIMessages;
 import org.eclipse.wst.css.ui.internal.editor.IHelpContextIds;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 public class CleanupDialogCSS extends Dialog {
 
@@ -58,9 +58,9 @@ public class CleanupDialogCSS extends Dialog {
 	 */
 	public Control createDialogArea(Composite parent) {
 		if (isEmbeddedCSS())
-			getShell().setText(SSEUIPlugin.getResourceString("%CSS_Cleanup_UI_")); //$NON-NLS-1$ = "CSS Cleanup"
+			getShell().setText(CSSUIMessages.CSS_Cleanup_UI_);
 		else
-			getShell().setText(SSEUIPlugin.getResourceString("%Cleanup_UI_")); //$NON-NLS-1$ = "Cleanup"
+			getShell().setText(CSSUIMessages.Cleanup_UI_);
 
 		Composite panel = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout();
@@ -77,16 +77,16 @@ public class CleanupDialogCSS extends Dialog {
 		// //$NON-NLS-1$ = "Identifier case:"
 		//		Canvas identCase = new Canvas(panel, SWT.NULL);
 		Group identCase = new Group(panel, SWT.NULL);
-		identCase.setText(SSEUIPlugin.getResourceString("%Identifier_case__UI_")); //$NON-NLS-1$ = "Identifier case:"
+		identCase.setText(CSSUIMessages.Identifier_case__UI_);
 		GridLayout hLayout = new GridLayout();
 		hLayout.numColumns = 3;
 		identCase.setLayout(hLayout);
 		fRadioButtonIdentCaseAsis = new Button(identCase, SWT.RADIO);
-		fRadioButtonIdentCaseAsis.setText(SSEUIPlugin.getResourceString("%As-is_UI_")); //$NON-NLS-1$ = "As-is"
+		fRadioButtonIdentCaseAsis.setText(CSSUIMessages.As_is_UI_);
 		fRadioButtonIdentCaseLower = new Button(identCase, SWT.RADIO);
-		fRadioButtonIdentCaseLower.setText(SSEUIPlugin.getResourceString("%Lower_UI_")); //$NON-NLS-1$ = "Lower"
+		fRadioButtonIdentCaseLower.setText(CSSUIMessages.Lower_UI_);
 		fRadioButtonIdentCaseUpper = new Button(identCase, SWT.RADIO);
-		fRadioButtonIdentCaseUpper.setText(SSEUIPlugin.getResourceString("%Upper_UI_")); //$NON-NLS-1$ = "Upper"
+		fRadioButtonIdentCaseUpper.setText(CSSUIMessages.Upper_UI_);
 
 		// Convert property name case
 		// ACC: Group radio buttons together so associated label is read
@@ -95,16 +95,16 @@ public class CleanupDialogCSS extends Dialog {
 		// //$NON-NLS-1$ = "Property name case:"
 		//		Canvas propNameCase = new Canvas(panel, SWT.NULL);
 		Group propNameCase = new Group(panel, SWT.NULL);
-		propNameCase.setText(SSEUIPlugin.getResourceString("%Property_name_case__UI_")); //$NON-NLS-1$ = "Property name case:"
+		propNameCase.setText(CSSUIMessages.Property_name_case__UI_);
 		hLayout = new GridLayout();
 		hLayout.numColumns = 3;
 		propNameCase.setLayout(hLayout);
 		fRadioButtonPropNameCaseAsis = new Button(propNameCase, SWT.RADIO);
-		fRadioButtonPropNameCaseAsis.setText(SSEUIPlugin.getResourceString("%As-is_UI_")); //$NON-NLS-1$ = "As-is"
+		fRadioButtonPropNameCaseAsis.setText(CSSUIMessages.As_is_UI_);
 		fRadioButtonPropNameCaseLower = new Button(propNameCase, SWT.RADIO);
-		fRadioButtonPropNameCaseLower.setText(SSEUIPlugin.getResourceString("%Lower_UI_")); //$NON-NLS-1$ = "Lower"
+		fRadioButtonPropNameCaseLower.setText(CSSUIMessages.Lower_UI_);
 		fRadioButtonPropNameCaseUpper = new Button(propNameCase, SWT.RADIO);
-		fRadioButtonPropNameCaseUpper.setText(SSEUIPlugin.getResourceString("%Upper_UI_")); //$NON-NLS-1$ = "Upper"
+		fRadioButtonPropNameCaseUpper.setText(CSSUIMessages.Upper_UI_);
 
 		// Convert property Value case
 		// ACC: Group radio buttons together so associated label is read
@@ -113,16 +113,16 @@ public class CleanupDialogCSS extends Dialog {
 		// //$NON-NLS-1$ = "Property value case:"
 		//		Canvas propValueCase = new Canvas(panel, SWT.NULL);
 		Group propValueCase = new Group(panel, SWT.NULL);
-		propValueCase.setText(SSEUIPlugin.getResourceString("%Property_value_case__UI_")); //$NON-NLS-1$ = "Property value case:"
+		propValueCase.setText(CSSUIMessages.Property_value_case__UI_);
 		hLayout = new GridLayout();
 		hLayout.numColumns = 3;
 		propValueCase.setLayout(hLayout);
 		fRadioButtonPropValueCaseAsis = new Button(propValueCase, SWT.RADIO);
-		fRadioButtonPropValueCaseAsis.setText(SSEUIPlugin.getResourceString("%As-is_UI_")); //$NON-NLS-1$ = "As-is"
+		fRadioButtonPropValueCaseAsis.setText(CSSUIMessages.As_is_UI_);
 		fRadioButtonPropValueCaseLower = new Button(propValueCase, SWT.RADIO);
-		fRadioButtonPropValueCaseLower.setText(SSEUIPlugin.getResourceString("%Lower_UI_")); //$NON-NLS-1$ = "Lower"
+		fRadioButtonPropValueCaseLower.setText(CSSUIMessages.Lower_UI_);
 		fRadioButtonPropValueCaseUpper = new Button(propValueCase, SWT.RADIO);
-		fRadioButtonPropValueCaseUpper.setText(SSEUIPlugin.getResourceString("%Upper_UI_")); //$NON-NLS-1$ = "Upper"
+		fRadioButtonPropValueCaseUpper.setText(CSSUIMessages.Upper_UI_);
 
 		if (!isEmbeddedCSS()) {
 			// Convert selector tag case
@@ -132,26 +132,26 @@ public class CleanupDialogCSS extends Dialog {
 			// //$NON-NLS-1$ = "Selector tag name case:"
 			//			Canvas selectorTagCase = new Canvas(panel, SWT.NULL);
 			Group selectorTagCase = new Group(panel, SWT.NULL);
-			selectorTagCase.setText(SSEUIPlugin.getResourceString("%Selector_tag_name_case__UI_")); //$NON-NLS-1$ = "Selector tag name case:"
+			selectorTagCase.setText(CSSUIMessages.Selector_tag_name_case__UI_);
 			hLayout = new GridLayout();
 			hLayout.numColumns = 3;
 			selectorTagCase.setLayout(hLayout);
 			fRadioButtonSelectorTagCaseAsis = new Button(selectorTagCase, SWT.RADIO);
-			fRadioButtonSelectorTagCaseAsis.setText(SSEUIPlugin.getResourceString("%As-is_UI_")); //$NON-NLS-1$ = "As-is"
+			fRadioButtonSelectorTagCaseAsis.setText(CSSUIMessages.As_is_UI_);
 			fRadioButtonSelectorTagCaseLower = new Button(selectorTagCase, SWT.RADIO);
-			fRadioButtonSelectorTagCaseLower.setText(SSEUIPlugin.getResourceString("%Lower_UI_")); //$NON-NLS-1$ = "Lower"
+			fRadioButtonSelectorTagCaseLower.setText(CSSUIMessages.Lower_UI_);
 			fRadioButtonSelectorTagCaseUpper = new Button(selectorTagCase, SWT.RADIO);
-			fRadioButtonSelectorTagCaseUpper.setText(SSEUIPlugin.getResourceString("%Upper_UI_")); //$NON-NLS-1$ = "Upper"
+			fRadioButtonSelectorTagCaseUpper.setText(CSSUIMessages.Upper_UI_);
 		}
 
 		// Quote attribute values
 		fCheckBoxQuoteValues = new Button(panel, SWT.CHECK);
-		fCheckBoxQuoteValues.setText(SSEUIPlugin.getResourceString("%Quote_values_UI_")); //$NON-NLS-1$ = "Quote values"
+		fCheckBoxQuoteValues.setText(CSSUIMessages.Quote_values_UI_);
 
 		if (!isEmbeddedCSS()) {
 			// Format source
 			fCheckBoxFormatSource = new Button(panel, SWT.CHECK);
-			fCheckBoxFormatSource.setText(SSEUIPlugin.getResourceString("%Format_source_UI_")); //$NON-NLS-1$ = "Format source"
+			fCheckBoxFormatSource.setText(CSSUIMessages.Format_source_UI_);
 		}
 
 		setCleanupOptions();

@@ -26,16 +26,15 @@ import org.eclipse.wst.css.ui.internal.CSSUIMessages;
 import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.css.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.xml.ui.preferences.XMLSourcePreferencePage;
 
 /**
  */
 public class CSSSourcePreferencePage extends XMLSourcePreferencePage {
 	// Formatting
-	private final static String FORMATTING_GROUP = SSEUIPlugin.getResourceString("%Formatting_UI_"); //$NON-NLS-1$
-	private final static String FORMATTING_LINE_WIDTH = SSEUIPlugin.getResourceString("%Line_width__UI_"); //$NON-NLS-1$; 
-	private final static String FORMATTING_INDENT_USING_TABS = SSEUIPlugin.getResourceString("%&Indent_using_tabs_3"); //$NON-NLS-1$
+	private final static String FORMATTING_GROUP = CSSUIMessages.Formatting_UI_;
+	private final static String FORMATTING_LINE_WIDTH = CSSUIMessages.Line_width__UI_; 
+	private final static String FORMATTING_INDENT_USING_TABS = CSSUIMessages.Indent_using_tabs_;
 	// CSS Formatting
 	private final static String FORMATTING_INSERT_LINE_BREAK = CSSUIMessages.PrefsLabel_WrappingInsertLineBreak; //$NON-NLS-1$
 	private final static String FORMATTING_WRAPPING_WITHOUT_ATTR = CSSUIMessages.PrefsLabel_WrappingWithoutAttr;//$NON-NLS-1$

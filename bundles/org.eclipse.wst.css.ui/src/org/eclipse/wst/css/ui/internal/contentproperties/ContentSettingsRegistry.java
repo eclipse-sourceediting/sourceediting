@@ -12,11 +12,11 @@ import java.util.Iterator;
 
 import org.eclipse.wst.css.core.internal.metamodel.CSSProfile;
 import org.eclipse.wst.css.core.internal.metamodel.CSSProfileRegistry;
+import org.eclipse.wst.css.ui.internal.CSSUIMessages;
 import org.eclipse.wst.sse.ui.contentproperties.ui.ComboList;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 public final class ContentSettingsRegistry {
-	private static final String NONE = SSEUIPlugin.getResourceString("%UI_none"); //$NON-NLS-1$
+	private static final String NONE = CSSUIMessages.UI_none;
 
 	public static void setCSSMetaModelRegistryInto(ComboList combo) {
 		combo.add(NONE, ""); //$NON-NLS-1$

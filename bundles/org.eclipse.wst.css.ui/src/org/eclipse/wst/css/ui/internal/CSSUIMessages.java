@@ -56,19 +56,45 @@ public class CSSUIMessages extends NLS {
 	public static String CleanupDocument_label; // resource bundle
 	public static String CleanupDocument_tooltip; // resource bundle
 	public static String CleanupDocument_description; // resource bundle
+	public static String UI_none;
+	public static String Cleanup_UI_;
+	public static String CSS_Cleanup_UI_;
+	public static String Identifier_case__UI_;
+	public static String Property_name_case__UI_;
+	public static String Property_value_case__UI_;
+	public static String Selector_tag_name_case__UI_;
+	public static String Quote_values_UI_;
+	public static String Format_source_UI_;
+	public static String As_is_UI_;
+	public static String Lower_UI_;
+	public static String Upper_UI_;
+	public static String SourceMenu_label;
+	public static String Formatting_UI_;
+	public static String Line_width__UI_;
+	public static String Indent_using_tabs_;
+	public static String StructureSelectEnclosing_label;
+	public static String StructureSelectEnclosing_tooltip;
+	public static String StructureSelectEnclosing_description;
+	public static String StructureSelectNext_label;
+	public static String StructureSelectNext_tooltip;
+	public static String StructureSelectNext_description;
+	public static String StructureSelectPrevious_label;
+	public static String StructureSelectPrevious_tooltip;
+	public static String StructureSelectPrevious_description;
 
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, CSSUIMessages.class);
 	}
-	
+
 	public static ResourceBundle getResourceBundle() {
 		try {
 			if (fResourceBundle == null)
 				fResourceBundle = ResourceBundle.getBundle(BUNDLE_NAME);
-		} catch (MissingResourceException x) {
+		}
+		catch (MissingResourceException x) {
 			fResourceBundle = null;
 		}
-		return fResourceBundle;		
+		return fResourceBundle;
 	}
 }

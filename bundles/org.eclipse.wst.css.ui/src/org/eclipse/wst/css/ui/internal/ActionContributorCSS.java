@@ -19,7 +19,6 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.actions.ActionContributor;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
@@ -88,7 +87,7 @@ public class ActionContributorCSS extends ActionContributor {
 		}
 
 		// source commands
-		String sourceMenuLabel = SSEUIPlugin.getResourceString("%SourceMenu.label"); //$NON-NLS-1$
+		String sourceMenuLabel = CSSUIMessages.SourceMenu_label;
 		String sourceMenuId = "sourceMenuId"; //$NON-NLS-1$
 		IMenuManager sourceMenu = new MenuManager(sourceMenuLabel, sourceMenuId);
 		menu.insertAfter(IWorkbenchActionConstants.M_EDIT, sourceMenu);
