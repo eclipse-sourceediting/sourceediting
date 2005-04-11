@@ -19,6 +19,9 @@ import org.eclipse.wst.sse.core.internal.SSECorePlugin;
  * when a service we use throws a checked exception, but we want to convert
  * and treat as a runtime exception. (Such as BadLocationException is a common
  * example).
+ * 
+ * @deprecated - this is really doing no good (and maybe harm) ... will
+ *             eliminate.
  */
 public class SourceEditingRuntimeException extends RuntimeException {
 
