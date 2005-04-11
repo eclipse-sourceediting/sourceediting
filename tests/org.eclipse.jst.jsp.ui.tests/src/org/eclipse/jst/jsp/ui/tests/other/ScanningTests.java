@@ -34,7 +34,7 @@ import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.xml.core.internal.parser.XMLSourceParser;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 /**
  * test class for basic parsing and scanning
@@ -128,8 +128,8 @@ public class ScanningTests {
 
 	public static RegionParser newParser() {
 		JSPSourceParser parser = new JSPSourceParser();
-		parser.addBlockMarker(new BlockMarker("foo", null, XMLRegionContext.BLOCK_TEXT, true));
-		parser.addBlockMarker(new BlockMarker("globalFoo", null, XMLRegionContext.BLOCK_TEXT, true));
+		parser.addBlockMarker(new BlockMarker("foo", null, DOMRegionContext.BLOCK_TEXT, true));
+		parser.addBlockMarker(new BlockMarker("globalFoo", null, DOMRegionContext.BLOCK_TEXT, true));
 		//		parser.addBlockMarker(new BlockMarker("jsp:expression", null, XMLJSPRegionContexts.JSP_CONTENT, true));
 		//		parser.addBlockMarker(new BlockMarker("jsp:scriptlet", null, XMLJSPRegionContexts.JSP_CONTENT, true));
 		//		parser.addBlockMarker(new BlockMarker("jsp:declaration", null, XMLJSPRegionContexts.JSP_CONTENT, true));
@@ -139,8 +139,8 @@ public class ScanningTests {
 
 	public static RegionParser newXMLParser() {
 		XMLSourceParser parser = new XMLSourceParser();
-		parser.addBlockMarker(new BlockMarker("Script", XMLRegionContext.BLOCK_TEXT, false));
-		parser.addBlockMarker(new BlockMarker("stylE", XMLRegionContext.BLOCK_TEXT, false));
+		parser.addBlockMarker(new BlockMarker("Script", DOMRegionContext.BLOCK_TEXT, false));
+		parser.addBlockMarker(new BlockMarker("stylE", DOMRegionContext.BLOCK_TEXT, false));
 		return parser;
 	}
 

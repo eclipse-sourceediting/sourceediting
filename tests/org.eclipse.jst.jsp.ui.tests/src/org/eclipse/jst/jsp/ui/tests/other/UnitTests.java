@@ -38,9 +38,9 @@ import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.xml.core.document.IDOMModel;
-import org.eclipse.wst.xml.core.internal.document.XMLModelImpl;
+import org.eclipse.wst.xml.core.internal.document.DOMModelImpl;
 import org.eclipse.wst.xml.core.internal.parser.XMLSourceParser;
-import org.eclipse.wst.xml.core.parser.XMLRegionContext;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 public class UnitTests extends TestCase {
 
@@ -522,7 +522,7 @@ public class UnitTests extends TestCase {
 
 		fModel.addDocumentChangedListener(proxy);
 
-		tree = new XMLModelImpl();
+		tree = new DOMModelImpl();
 
 		if (tree != null) {
 			fModel.addDocumentChangingListener((IStructuredDocumentListener) tree);
@@ -548,7 +548,7 @@ public class UnitTests extends TestCase {
 
 		fModel.addDocumentChangedListener(proxy);
 
-		tree = new XMLModelImpl();
+		tree = new DOMModelImpl();
 
 		if (tree != null) {
 			fModel.addDocumentChangingListener((IStructuredDocumentListener) tree);
@@ -963,7 +963,7 @@ public class UnitTests extends TestCase {
 		setUpJSP();
 		String startString = "<html><head><script> <%! String testvar = \"testvar\"; %> var test = <%= testvar %> </script></head></html>";
 		String expectedText = "<%! String testvar = \"testvar\"; %>";
-		((XMLSourceParser) fModel.getParser()).addBlockMarker(new BlockMarker("script", null, XMLRegionContext.BLOCK_TEXT, false)); //$NON-NLS-1$
+		((XMLSourceParser) fModel.getParser()).addBlockMarker(new BlockMarker("script", null, DOMRegionContext.BLOCK_TEXT, false)); //$NON-NLS-1$
 		fModel.setText(null, startString);
 
 		IStructuredDocumentRegionList nodes = fModel.getRegionList();

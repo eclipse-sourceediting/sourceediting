@@ -15,8 +15,8 @@ import java.io.IOException;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
 import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
+import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapter;
 import org.eclipse.wst.html.core.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.INodeNotifier;

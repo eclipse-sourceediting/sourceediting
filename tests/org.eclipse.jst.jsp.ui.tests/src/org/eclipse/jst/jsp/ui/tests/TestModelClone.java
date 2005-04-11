@@ -17,10 +17,10 @@ import java.util.List;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
 import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
+import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapter;
 import org.eclipse.wst.html.core.contenttype.ContentTypeIdForHTML;
-import org.eclipse.wst.html.core.modelhandler.EmbeddedHTML;
+import org.eclipse.wst.html.core.internal.modelhandler.EmbeddedHTML;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
@@ -28,7 +28,7 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.document.IDOMModel;
-import org.eclipse.wst.xml.core.modelhandler.EmbeddedXML;
+import org.eclipse.wst.xml.core.internal.modelhandler.EmbeddedXML;
 import org.w3c.dom.Document;
 
 /**

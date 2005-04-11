@@ -14,8 +14,8 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import org.eclipse.jst.jsp.core.PageDirectiveAdapter;
 import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
+import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapter;
 import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.INodeAdapter;
@@ -24,8 +24,8 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.xml.core.document.IDOMModel;
+import org.eclipse.wst.xml.core.internal.modelhandler.EmbeddedXML;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
-import org.eclipse.wst.xml.core.modelhandler.EmbeddedXML;
 import org.w3c.dom.Node;
 
 /**

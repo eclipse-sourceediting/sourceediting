@@ -16,7 +16,7 @@ import java.io.InputStream;
 
 import junit.framework.TestCase;
 
-import org.eclipse.wst.html.core.format.HTMLFormatProcessorImpl;
+import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -24,8 +24,8 @@ import org.eclipse.wst.sse.core.internal.format.AbstractStructuredFormatProcesso
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatPreferences;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.xml.core.format.FormatProcessorXML;
-import org.eclipse.wst.xml.core.format.IStructuredFormatPreferencesXML;
+import org.eclipse.wst.xml.core.internal.provisional.format.FormatProcessorXML;
+import org.eclipse.wst.xml.core.internal.provisional.format.IStructuredFormatPreferencesXML;
 
 public class FormatTester extends TestCase {
 	protected IModelManager fModelManager = null;

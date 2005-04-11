@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.service.datalocation.Location;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.xml.core.modelhandler.XMLModelLoader;
+import org.eclipse.wst.xml.core.internal.modelhandler.XMLModelLoader;
 import org.eclipse.wst.xml.core.tests.util.FileUtil;
 import org.eclipse.wst.xml.core.tests.util.ProjectUnzipUtility;
 

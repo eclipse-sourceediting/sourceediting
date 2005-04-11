@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.osgi.service.datalocation.Location;
-import org.eclipse.wst.xml.core.encoding.XMLDocumentLoader;
+import org.eclipse.wst.xml.core.internal.encoding.XMLDocumentLoader;
 import org.eclipse.wst.xml.core.tests.util.FileUtil;
 import org.eclipse.wst.xml.core.tests.util.ProjectUnzipUtility;
 

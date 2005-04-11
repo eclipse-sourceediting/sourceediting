@@ -28,8 +28,7 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.xml.core.document.IDOMModel;
-import org.eclipse.wst.xml.core.internal.document.XMLModelImpl;
-import org.eclipse.wst.xml.core.internal.util.DebugDocument;
+import org.eclipse.wst.xml.core.internal.document.DOMModelImpl;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -198,7 +197,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 		f.addDocumentChangedListener(this);
 		//
 
-		IDOMModel tree = new XMLModelImpl();
+		IDOMModel tree = new DOMModelImpl();
 		f.addDocumentChangingListener((IStructuredDocumentListener) tree);
 
 		// set text to structuredDocument (which updates tree)
@@ -254,7 +253,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 		f.addDocumentChangedListener(this);
 		//
 
-		IDOMModel tree = new XMLModelImpl();
+		IDOMModel tree = new DOMModelImpl();
 		f.addDocumentChangingListener((IStructuredDocumentListener) tree);
 
 		// set text to structuredDocument (which updates tree)
@@ -310,7 +309,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 		f.addDocumentChangedListener(this);
 		//
 
-		IDOMModel tree = new XMLModelImpl();
+		IDOMModel tree = new DOMModelImpl();
 		f.addDocumentChangingListener((IStructuredDocumentListener) tree);
 
 		// set text to structuredDocument (which updates tree)

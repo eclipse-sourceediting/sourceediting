@@ -16,8 +16,8 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
-import org.eclipse.wst.xml.core.modelhandler.ModelHandlerForXML;
-import org.eclipse.wst.xml.core.modelhandler.XMLModelLoader;
+import org.eclipse.wst.xml.core.internal.modelhandler.ModelHandlerForXML;
+import org.eclipse.wst.xml.core.internal.modelhandler.XMLModelLoader;
 import org.eclipse.wst.xml.core.tests.util.FileUtil;
 import org.eclipse.wst.xml.core.tests.util.ProjectUnzipUtility;
 
