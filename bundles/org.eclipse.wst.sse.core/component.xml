@@ -36,6 +36,7 @@
                 <type name="IStructuredTextReParser" reference="false" implement="false" subclass="false" instantiate="false" />
                 <type name="IStructuredTextPartitioner" reference="false" implement="false" subclass="false" instantiate="false" />
                 <type name="IStructuredModel" reference="false" implement="false" subclass="false" instantiate="false" />
+                <type name="IStructuredDocument" reference="false" implement="false" subclass="false" instantiate="false" />
         </package>
 
         <package name="org.eclipse.wst.sse.core.preferences" >
