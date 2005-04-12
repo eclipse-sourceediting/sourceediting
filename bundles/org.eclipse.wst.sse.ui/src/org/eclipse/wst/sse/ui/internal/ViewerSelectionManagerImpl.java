@@ -18,6 +18,7 @@ import java.util.Vector;
 
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewer;
+import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -77,16 +78,10 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager {
 	private List fSelectedNodes;
 
 	private int fTextSelectionEnd;
-	// TODO: private field never read locally
-	IndexedRegion fTextSelectionEndNode;
 	private ITextSelectionListener[] fTextSelectionListeners;
 	private int fTextSelectionStart;
-	// TODO: private field never read locally
-	IndexedRegion fTextSelectionStartNode;
 	private ITextViewer fTextViewer;
 	private InternalModelStateListener internalModelStateListener;
-	// TODO: private field never read locally
-	boolean isFiringNodeDoubleClick = false;
 	private boolean isFiringNodeSelectionChanged = false;
 
 	public ViewerSelectionManagerImpl() {
@@ -252,42 +247,48 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager {
 			fireNodeDoubleClickEvent(event);
 	}
 
-	protected void fireNodeDoubleClickEvent(DoubleClickEvent event) {
+	protected void fireNodeDoubleClickEvent(final DoubleClickEvent event) {
 		if ((fNodeDoubleClickListeners != null) && (!isModelChanging())) {
-			// we must assign listeners to local variable to be thread safe,
-			// since the add and remove listner methods
-			// can change this object's actual instance of the listener array
-			// from another thread
-			// (and since object assignment is atomic, we don't need to
-			// synchronize
-			isFiringNodeDoubleClick = true;
-			try {
-				IDoubleClickListener[] holdListeners = fNodeDoubleClickListeners;
+			/*
+			 * We must assign listeners to a local variable to be thread safe,
+			 * since the add and remove listener methods can change this
+			 * object's actual instance of the listener array from another
+			 * thread (and since object assignment is atomic, we don't need to
+			 * synchronize further)
+			 */
+			final IDoubleClickListener[] holdListeners = fNodeDoubleClickListeners;
 
-				for (int i = 0; i < holdListeners.length; i++) {
-					holdListeners[i].doubleClick(event);
-				}
-			}
-			finally {
-				isFiringNodeDoubleClick = false;
+			for (int i = 0; i < holdListeners.length; i++) {
+				final IDoubleClickListener currentListener = holdListeners[i];
+				SafeRunnable.run(new SafeRunnable() {
+					public void run() throws Exception {
+						currentListener.doubleClick(event);
+					}
+				});
 			}
 		}
 	}
 
-	protected void fireNodeSelectionChangedEvent(NodeSelectionChangedEvent event) {
+	protected void fireNodeSelectionChangedEvent(final NodeSelectionChangedEvent event) {
 		if ((fNodeSelectionListeners != null) && (!isModelChanging())) {
-			// we must assign listeners to local variable to be thread safe,
-			// since the add and remove listner methods
-			// can change this object's actual instance of the listener array
-			// from another thread
-			// (and since object assignment is atomic, we don't need to
-			// synchronize
 			isFiringNodeSelectionChanged = true;
-			try {
-				INodeSelectionListener[] holdListeners = fNodeSelectionListeners;
+			/*
+			 * We must assign listeners to a local variable to be thread safe,
+			 * since the add and remove listener methods can change this
+			 * object's actual instance of the listener array from another
+			 * thread (and since object assignment is atomic, we don't need to
+			 * synchronize further)
+			 */
+			final INodeSelectionListener[] holdListeners = fNodeSelectionListeners;
 
+			try {
 				for (int i = 0; i < holdListeners.length; i++) {
-					holdListeners[i].nodeSelectionChanged(event);
+					final INodeSelectionListener currentListener = holdListeners[i];
+					SafeRunnable.run(new SafeRunnable() {
+						public void run() throws Exception {
+							currentListener.nodeSelectionChanged(event);
+						}
+					});
 				}
 			}
 			finally {
@@ -296,18 +297,24 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager {
 		}
 	}
 
-	protected void fireTextSelectionChangedEvent(TextSelectionChangedEvent event) {
+	protected void fireTextSelectionChangedEvent(final TextSelectionChangedEvent event) {
 		if ((fTextSelectionListeners != null) && (!isModelChanging())) {
-			// we must assign listeners to local variable to be thread safe,
-			// since the add and remove listner methods
-			// can change this object's actual instance of the listener array
-			// from another thread
-			// (and since object assignment is atomic, we don't need to
-			// synchronize
-			ITextSelectionListener[] holdListeners = fTextSelectionListeners;
-			//
+			/*
+			 * We must assign listeners to a local variable to be thread safe,
+			 * since the add and remove listener methods can change this
+			 * object's actual instance of the listener array from another
+			 * thread (and since object assignment is atomic, we don't need to
+			 * synchronize further)
+			 */
+			final ITextSelectionListener[] holdListeners = fTextSelectionListeners;
+
 			for (int i = 0; i < holdListeners.length; i++) {
-				holdListeners[i].textSelectionChanged(event);
+				final ITextSelectionListener currentListener = holdListeners[i];
+				SafeRunnable.run(new SafeRunnable() {
+					public void run() throws Exception {
+						currentListener.textSelectionChanged(event);
+					}
+				});
 			}
 		}
 	}
@@ -329,8 +336,6 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager {
 			return new ArrayList(0);
 
 		IndexedRegion firstSelectedNode = fModel.getIndexedRegion(offset);
-		fTextSelectionStartNode = firstSelectedNode;
-		fTextSelectionEndNode = firstSelectedNode;
 
 		// Never send a "null" in the selection
 		List selectedNodes = null;
@@ -468,25 +473,35 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager {
 		// handle Structured selections
 		if (eventSelection instanceof IStructuredSelection) {
 			IStructuredSelection selection = (IStructuredSelection) eventSelection;
-			// System.out.println("selection: " + event.getSource() + " [" +
-			// selection.toArray().length + "] " +
-			// selection.getFirstElement());
-			List selectedNodes = selection.toList();
+			// the selection we were given
+			List selectionNodes = selection.toList();
+			// the selected nodes we'll actually propagate
+			List selectNodes = null;
+
 			int selectionStart = 0;
 			int selectionEnd = 0;
 
-			// something selected
-			if (selectedNodes.size() > 0) {
-				IndexedRegion firstSelectedNode = (IndexedRegion) selectedNodes.get(0);
-				selectionStart = firstSelectedNode.getStartOffset();
-				selectionEnd = firstSelectedNode.getEndOffset();
-
-				// remove all except the first selected node
-				selectedNodes = new Vector(1);
-				selectedNodes.add(firstSelectedNode);
+			/*
+			 * Find the first IndexedNode in the selection and compute a text
+			 * selection from it
+			 */
+			int l = selectionNodes.size();
+			for (int i = 0; i < l; i++) {
+				Object o = selectionNodes.get(i);
+				if (o instanceof IndexedRegion) {
+					IndexedRegion firstSelectedNode = (IndexedRegion) o;
+					selectionStart = firstSelectedNode.getStartOffset();
+					selectionEnd = firstSelectedNode.getEndOffset();
+					// only pass along the first selected node
+					selectNodes = new Vector(1);
+					selectNodes.add(firstSelectedNode);
+				}
+			}
+			if (selectNodes == null) {
+				selectNodes = selectionNodes;
 			}
 
-			processSelectionChanged(event.getSource(), selectedNodes, selectionStart, selectionEnd);
+			processSelectionChanged(event.getSource(), selectNodes, selectionStart, selectionEnd);
 		}
 		// handle text selection changes
 		else if (eventSelection instanceof ITextSelection) {
@@ -505,7 +520,6 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager {
 			else {
 				// option 2: works with all of the above plus Page Designer,
 				// but not as clean nor perfectly
-				// TODO: switch to option 1
 				Event selectionEvent = new Event();
 				selectionEvent.widget = fTextViewer.getTextWidget();
 				selectionEvent.display = fTextViewer.getTextWidget().getDisplay();
