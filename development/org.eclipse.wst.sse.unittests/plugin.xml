@@ -21,6 +21,7 @@
       <import plugin="org.eclipse.wst.css.core.tests"/>
       <import plugin="org.eclipse.wst.css.tests.encoding"/>
       <import plugin="org.eclipse.wst.css.ui.tests.performance"/>
+      <import plugin="org.eclipse.wst.dtd.ui.tests"/>
       <import plugin="org.eclipse.wst.html.core.tests"/>
       <import plugin="org.eclipse.wst.html.tests.encoding"/>
       <import plugin="org.eclipse.wst.html.ui.tests"/>
