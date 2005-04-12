@@ -25,12 +25,10 @@ import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.validation.internal.provisional.core.IFileDelta;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
-import org.eclipse.wst.validation.internal.provisional.core.ValidationException;
 import org.eclipse.wst.xml.core.document.IDOMAttr;
 import org.eclipse.wst.xml.core.document.IDOMDocument;
 import org.eclipse.wst.xml.core.document.IDOMElement;
@@ -38,6 +36,7 @@ import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.document.IDOMText;
 import org.eclispe.wst.validation.internal.core.IMessageAccess;
+import org.eclispe.wst.validation.internal.core.ValidationException;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -96,6 +95,11 @@ public class DelegatingSourceValidator implements IValidator {
 			if (symbolicName.equals("inputStream")) { //$NON-NLS-1$
 				return inputStream;
 			}
+			return null;
+		}
+
+		public String[] getURIs() {
+			// TODO Auto-generated method stub
 			return null;
 		}
 	}
@@ -163,11 +167,9 @@ public class DelegatingSourceValidator implements IValidator {
 	 * @param reporter
 	 *            Is an instance of an IReporter interface, which is used for
 	 *            interaction with the user.
-	 * @param delta
-	 *            an array containing the file to be validated. Only position
-	 *            0 will be validated
 	 */
-	public void validate(IValidationContext helper, IReporter reporter, IFileDelta[] delta) throws ValidationException {
+	public void validate(IValidationContext helper, IReporter reporter) throws ValidationException {
+		String[] delta = helper.getURIs();
 		if (delta.length > 0) {
 			// get the file, model and document:
 			IFile file = getFile(delta[0]);
@@ -184,7 +186,7 @@ public class DelegatingSourceValidator implements IValidator {
 					// Validate the file:
 					IValidationContext vHelper = new MyHelper(new ByteArrayInputStream(byteArray), file);
 					MyReporter vReporter = new MyReporter();
-					validator.validate(vHelper, vReporter, delta);
+					validator.validate(vHelper, vReporter);
 					List messages = vReporter.list;
 
 					// set the offset and length
@@ -251,8 +253,8 @@ public class DelegatingSourceValidator implements IValidator {
 	 *            the IFileDelta containing the file name to get
 	 * @return the IFile
 	 */
-	public IFile getFile(IFileDelta delta) {
-		IResource res = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(delta.getFileName()));
+	public IFile getFile(String delta) {
+		IResource res = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(delta));
 		return res instanceof IFile ? (IFile) res : null;
 	}
 

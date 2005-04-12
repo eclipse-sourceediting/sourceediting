@@ -11,9 +11,9 @@
 package org.eclipse.wst.html.validation;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.wst.validation.internal.operations.AWorkbenchHelper;
+import org.eclipse.wst.validation.internal.operations.WorkbenchContext;
 
-public class HTMLValidationWorkbenchHelper extends AWorkbenchHelper {
+public class HTMLValidationWorkbenchHelper extends WorkbenchContext {
 	/**
 	 */
 	public HTMLValidationWorkbenchHelper() {

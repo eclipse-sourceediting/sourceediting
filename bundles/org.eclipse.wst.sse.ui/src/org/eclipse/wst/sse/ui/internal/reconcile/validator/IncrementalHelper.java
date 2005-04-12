@@ -42,4 +42,9 @@ public class IncrementalHelper implements IValidationContext {
 	public Object loadModel(String symbolicName, Object[] parms) {
 		return null;
 	}
+
+	public String[] getURIs() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

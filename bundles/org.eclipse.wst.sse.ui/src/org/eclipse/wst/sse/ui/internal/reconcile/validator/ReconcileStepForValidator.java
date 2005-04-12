@@ -32,11 +32,11 @@ import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
-import org.eclipse.wst.validation.internal.provisional.core.IFileDelta;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 import org.eclispe.wst.validation.internal.core.FileDelta;
+import org.eclispe.wst.validation.internal.core.IFileDelta;
 
 
 /**
@@ -233,7 +233,9 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 				IncrementalReporter reporter = getReporter();
 
 				IFileDelta fullDelta = new FileDelta(file.getFullPath().toString(), IFileDelta.CHANGED);
-				fValidator.validate(helper, reporter, new IFileDelta[]{fullDelta});
+				String[] uris = helper.getURIs();
+				uris[0] = fullDelta.getFileName();
+				fValidator.validate(helper, reporter);
 
 				results = createAnnotations(reporter.getMessages());
 				reporter.removeAllMessages(fValidator);

@@ -30,9 +30,8 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.util.URIResolver;
 import org.eclipse.wst.sse.core.validate.ValidationAdapter;
-import org.eclipse.wst.validation.internal.operations.IWorkbenchHelper;
+import org.eclipse.wst.validation.internal.operations.IWorkbenchContext;
 import org.eclipse.wst.validation.internal.operations.WorkbenchReporter;
-import org.eclipse.wst.validation.internal.provisional.core.IFileDelta;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
@@ -144,17 +143,18 @@ public class HTMLValidator implements IValidator {
 
 	/**
 	 */
-	public void validate(IValidationContext helper, IReporter reporter, IFileDelta[] deltaArray) {
+	public void validate(IValidationContext helper, IReporter reporter) {
 		if (helper == null)
 			return;
 		if ((reporter != null) && (reporter.isCancelled() == true)) {
 			throw new OperationCanceledException();
 		}
+		String[] deltaArray = helper.getURIs();
 		if (deltaArray != null && deltaArray.length > 0) {
-			validateDelta(helper, reporter, deltaArray);
+			validateDelta(helper, reporter);
 		}
 		else {
-			validateFull(helper, reporter, deltaArray);
+			validateFull(helper, reporter);
 		}
 	}
 
@@ -232,10 +232,11 @@ public class HTMLValidator implements IValidator {
 
 	/**
 	 */
-	private void validateDelta(IValidationContext helper, IReporter reporter, IFileDelta[] deltaArray) {
+	private void validateDelta(IValidationContext helper, IReporter reporter) {
+		String[] deltaArray = helper.getURIs();
 		for (int i = 0; i < deltaArray.length; i++) {
-			IFileDelta delta = deltaArray[i];
-			if (delta == null || delta.getDeltaType() == IFileDelta.DELETED)
+			String delta = deltaArray[i];
+			if (delta == null)
 				continue;
 			IResource resource = getResource(delta);
 			if (resource == null || !(resource instanceof IFile))
@@ -264,10 +265,11 @@ public class HTMLValidator implements IValidator {
 
 	/**
 	 */
-	private void validateFull(IValidationContext helper, IReporter reporter, IFileDelta[] fileDelta) {
+	private void validateFull(IValidationContext helper, IReporter reporter) {
 		IProject project = null;
-		if (helper instanceof IWorkbenchHelper) {
-			IWorkbenchHelper wbHelper = (IWorkbenchHelper) helper;
+		String[] fileDelta = helper.getURIs();
+		if (helper instanceof IWorkbenchContext) {
+			IWorkbenchContext wbHelper = (IWorkbenchContext) helper;
 			project = wbHelper.getProject();
 		}
 		else {
@@ -284,12 +286,7 @@ public class HTMLValidator implements IValidator {
 	 * 
 	 * @see com.ibm.sse.editor.extensions.validator.IWorkbenchHelper#getResource(com.ibm.sse.editor.extensions.validator.IFileDelta)
 	 */
-	public IResource getResource(IFileDelta delta) {
-		IResource res = null;
-		if (delta instanceof IResource)
-			res = (IResource) delta;
-		else
-			res = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(delta.getFileName()));
-		return res;
+	public IResource getResource(String delta) {
+		return  ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(delta));
 	}
 }
