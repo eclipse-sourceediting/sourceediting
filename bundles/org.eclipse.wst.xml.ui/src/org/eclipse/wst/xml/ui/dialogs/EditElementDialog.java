@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.xml.core.NameValidator;
-import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.util.XMLCommonUIContextIds;
 import org.w3c.dom.Element;
 
@@ -79,7 +79,7 @@ public class EditElementDialog extends Dialog implements ModifyListener {
 		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		Label elementNameLabel = new Label(composite, SWT.NONE);
-		elementNameLabel.setText(XMLUIPlugin.getResourceString("%_UI_LABEL_ELEMENT_NAME")); //$NON-NLS-1$
+		elementNameLabel.setText(XMLUIMessages._UI_LABEL_ELEMENT_NAME); //$NON-NLS-1$
 
 		elementNameField = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -90,7 +90,7 @@ public class EditElementDialog extends Dialog implements ModifyListener {
 
 		// error message
 		errorMessageLabel = new Label(composite, SWT.NONE);
-		errorMessageLabel.setText(XMLUIPlugin.getResourceString("%error_message_goes_here")); //$NON-NLS-1$
+		errorMessageLabel.setText(XMLUIMessages.error_message_goes_here); //$NON-NLS-1$
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
 		errorMessageLabel.setLayoutData(gd);
@@ -128,7 +128,7 @@ public class EditElementDialog extends Dialog implements ModifyListener {
 			// TODO use checkName from model level
 			//errorMessage = ValidateHelper.checkXMLName(name);
 			if (!NameValidator.isValid(name)) {
-				errorMessage = XMLUIPlugin.getResourceString("%_UI_INVALID_NAME");
+				errorMessage = XMLUIMessages._UI_INVALID_NAME;
 			}
 		} else {
 			errorMessage = ""; //$NON-NLS-1$

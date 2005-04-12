@@ -15,20 +15,21 @@ import org.eclipse.jface.text.templates.SimpleTemplateVariableResolver;
 import org.eclipse.jface.text.templates.TemplateContext;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 
 public class EncodingTemplateVariableResolverXML extends SimpleTemplateVariableResolver {
 	private static final String ENCODING_TYPE = getEncodingType();
 
 	private static String getEncodingType() {
-		return "encoding";
+		return "encoding"; //$NON-NLS-1$
 	}
 
 	/**
 	 * Creates a new encoding variable
 	 */
 	public EncodingTemplateVariableResolverXML() {
-		super(ENCODING_TYPE, "Creating files encoding preference");
+		super(ENCODING_TYPE, XMLUIMessages.Creating_files_encoding);
 	}
 
 	protected String resolve(TemplateContext context) {

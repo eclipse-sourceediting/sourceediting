@@ -31,7 +31,7 @@ public class CMDocumentFactoryDescriptor
     {
       try
       {
-        factory = (CMDocumentFactory) fElement.createExecutableExtension("class");
+        factory = (CMDocumentFactory) fElement.createExecutableExtension("class"); //$NON-NLS-1$
       }
       catch (Exception e)
       {

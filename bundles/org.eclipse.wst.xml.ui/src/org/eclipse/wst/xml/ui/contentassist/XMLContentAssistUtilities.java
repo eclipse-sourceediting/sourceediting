@@ -17,17 +17,18 @@ import java.util.List;
 
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.util.ScriptLanguageKeys;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xml.core.document.IDOMElement;
 import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -106,11 +107,7 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 		if (!hasEndTag && !isJSPTag) {
 
 			// create appropriate close tag text
-			String proposedText = proposedText = "</" + tagName; // ResourceHandler
-			// wants text
-			// w/out
-			// ending '>'
-			// //$NON-NLS-1$
+			String proposedText = proposedText = "</" + tagName; //$NON-NLS-1$
 			String viewerText = viewer.getTextWidget().getText();
 			if (viewerText.length() >= documentPosition && viewerText.length() >= 2 && documentPosition >= 2) {
 				String last2chars = viewerText.substring(documentPosition - 2, documentPosition);
@@ -123,16 +120,13 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 			// create proposal
 			p = new CustomCompletionProposal(proposedText + ">", //$NON-NLS-1$
 						documentPosition, 0, proposedText.length() + 1, XMLEditorPluginImageHelper.getInstance().getImage(imagePath), //$NON-NLS-1$
-						SSEUIPlugin.getResourceString("%15concat", (new Object[]{proposedText})), //$NON-NLS-1$ = "End with '{0}>'"
+						NLS.bind(XMLUIMessages.End_with_, (new Object[]{proposedText})),
 						null, null, XMLRelevanceConstants.R_END_TAG);
 		}
 		else if (!hasEndTag && isJSPTag) {
 
 			// create appropriate close tag text
-			String proposedText = proposedText = "%"; // ResourceHandler
-			// wants
-			// text w/out ending '>'
-			// //$NON-NLS-1$
+			String proposedText = proposedText = "%"; //$NON-NLS-1$
 			String viewerText = viewer.getTextWidget().getText();
 
 			// TODO (pa) make it smarter to add "%>" or just ">" if % is
@@ -152,7 +146,7 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 			// create proposal
 			p = new CustomCompletionProposal(proposedText + ">", //$NON-NLS-1$
 						documentPosition, 0, proposedText.length() + 1, XMLEditorPluginImageHelper.getInstance().getImage(imagePath), //$NON-NLS-1$
-						SSEUIPlugin.getResourceString("%15concat", (new Object[]{proposedText})), //$NON-NLS-1$ = "End with '{0}>'"
+						NLS.bind(XMLUIMessages.End_with_, (new Object[]{proposedText})),
 						null, null, XMLRelevanceConstants.R_END_TAG);
 		}
 
@@ -204,11 +198,7 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 		if (!hasEndTag) {
 
 			// create appropriate close tag text
-			String proposedText = proposedText = "</" + tagName; // ResourceHandler
-			// wants text
-			// w/out
-			// ending '>'
-			// //$NON-NLS-1$
+			String proposedText = proposedText = "</" + tagName; //$NON-NLS-1$
 			String viewerText = viewer.getTextWidget().getText();
 			if (viewerText.length() >= documentPosition && viewerText.length() >= 2 && documentPosition >= 2) {
 				String last2chars = viewerText.substring(documentPosition - 2, documentPosition);
@@ -221,7 +211,7 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 			// create proposal
 			p = new CustomCompletionProposal(proposedText + ">", //$NON-NLS-1$
 						documentPosition, 0, proposedText.length() + 1, XMLEditorPluginImageHelper.getInstance().getImage(imagePath), //$NON-NLS-1$
-						SSEUIPlugin.getResourceString("%15concat", (new Object[]{proposedText})), //$NON-NLS-1$ = "End with '{0}>'"
+						NLS.bind(XMLUIMessages.End_with_, (new Object[]{proposedText})),
 						null, null, XMLRelevanceConstants.R_END_TAG);
 		}
 		return p;

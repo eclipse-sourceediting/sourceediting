@@ -13,7 +13,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.wst.xml.internal.ui.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.internal.ui.XMLEditorPluginImages;
-import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 public class ViewerExpandCollapseAction extends Action {
 
@@ -28,14 +28,14 @@ public class ViewerExpandCollapseAction extends Action {
 
 			setImageDescriptor(e_imageDescriptor);
 			setDisabledImageDescriptor(d_imageDescriptor);
-			setToolTipText(XMLUIPlugin.getResourceString("%_UI_INFO_EXPAND_ALL")); //$NON-NLS-1$
+			setToolTipText(XMLUIMessages._UI_INFO_EXPAND_ALL); //$NON-NLS-1$
 		} else {
 			ImageDescriptor e_imageDescriptor = XMLEditorPluginImageHelper.getInstance().getImageDescriptor(XMLEditorPluginImages.IMG_ETOOL_COLLAPSEALL);
 			ImageDescriptor d_imageDescriptor = XMLEditorPluginImageHelper.getInstance().getImageDescriptor(XMLEditorPluginImages.IMG_DTOOL_COLLAPSEALL);
 
 			setImageDescriptor(e_imageDescriptor);
 			setDisabledImageDescriptor(d_imageDescriptor);
-			setToolTipText(XMLUIPlugin.getResourceString("%_UI_INFO_COLLAPSE_ALL")); //$NON-NLS-1$
+			setToolTipText(XMLUIMessages._UI_INFO_COLLAPSE_ALL); //$NON-NLS-1$
 		}
 	}
 

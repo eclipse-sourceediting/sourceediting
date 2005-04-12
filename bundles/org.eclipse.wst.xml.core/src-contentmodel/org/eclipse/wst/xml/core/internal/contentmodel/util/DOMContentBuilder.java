@@ -39,7 +39,7 @@ public interface DOMContentBuilder
       | BUILD_FIRST_CHOICE
       | BUILD_TEXT_NODES;
       
-  public static final String PROPERTY_BUILD_BLANK_TEXT_NODES = "buildBlankTextNodes";
+  public static final String PROPERTY_BUILD_BLANK_TEXT_NODES = "buildBlankTextNodes"; //$NON-NLS-1$
   
   public void setBuildPolicy(int buildPolicy);
   public int  getBuildPolicy();

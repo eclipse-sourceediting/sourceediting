@@ -50,11 +50,11 @@ public class CMElementDeclarationImpl extends CMContentImpl implements CMElement
   public Object getProperty(String propertyName)
   { 
     Object result = null;               
-    if (propertyName.equals("http://org.eclipse.wst/cm/properties/nsPrefixQualification"))
+    if (propertyName.equals("http://org.eclipse.wst/cm/properties/nsPrefixQualification")) //$NON-NLS-1$
     {
-      result = isLocal ? "unqualified" : "qualified";
+      result = isLocal ? "unqualified" : "qualified"; //$NON-NLS-1$ //$NON-NLS-2$
     }    
-    else if (propertyName.equals("CMDocument"))
+    else if (propertyName.equals("CMDocument")) //$NON-NLS-1$
     {
       result = cmDocument;       
     }    

@@ -23,10 +23,10 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.actions.ActionContributor;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 /**
  * XMLEditorActionContributor
@@ -62,37 +62,37 @@ public class ActionContributorXML extends ActionContributor {
 	public ActionContributorXML() {
 		super();
 
-		ResourceBundle resourceBundle = SSEUIPlugin.getDefault().getResourceBundle();
+		ResourceBundle resourceBundle = XMLUIMessages.getResourceBundle();
 
 		// edit commands
-		fShowTooltipAction = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_INFORMATION + StructuredTextEditorActionConstants.DOT);
+		fShowTooltipAction = new RetargetTextEditorAction(resourceBundle, "");	//$NON-NLS-1$
 		fShowTooltipAction.setActionDefinitionId(ActionDefinitionIds.INFORMATION);
 
-		fContentAssist = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_PROPOSALS + StructuredTextEditorActionConstants.DOT);
+		fContentAssist = new RetargetTextEditorAction(resourceBundle, "");	//$NON-NLS-1$
 		fContentAssist.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
 
-		fQuickFix = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_QUICK_FIX + StructuredTextEditorActionConstants.DOT);
+		fQuickFix = new RetargetTextEditorAction(resourceBundle, "");	//$NON-NLS-1$
 		fQuickFix.setActionDefinitionId(ActionDefinitionIds.QUICK_FIX);
 
 		// source commands
-		fCleanupDocument = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_CLEANUP_DOCUMENT + StructuredTextEditorActionConstants.DOT);
+		fCleanupDocument = new RetargetTextEditorAction(resourceBundle, "");	//$NON-NLS-1$
 		fCleanupDocument.setActionDefinitionId(ActionDefinitionIds.CLEANUP_DOCUMENT);
 
-		fFormatDocument = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_DOCUMENT + StructuredTextEditorActionConstants.DOT);
+		fFormatDocument = new RetargetTextEditorAction(resourceBundle, "");	//$NON-NLS-1$
 		fFormatDocument.setActionDefinitionId(ActionDefinitionIds.FORMAT_DOCUMENT);
 
-		fFormatActiveElements = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_FORMAT_ACTIVE_ELEMENTS + StructuredTextEditorActionConstants.DOT);
+		fFormatActiveElements = new RetargetTextEditorAction(resourceBundle, "");	//$NON-NLS-1$
 		fFormatActiveElements.setActionDefinitionId(ActionDefinitionIds.FORMAT_ACTIVE_ELEMENTS);
 
-		fFormatMenu = new MenuManager(SSEUIPlugin.getResourceString("%FormatMenu.label")); //$NON-NLS-1$
+		fFormatMenu = new MenuManager(XMLUIMessages.FormatMenu_label);
 		fFormatMenu.add(fFormatDocument);
 		fFormatMenu.add(fFormatActiveElements);
 
 		// navigate commands
-		fOpenFileAction = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE + StructuredTextEditorActionConstants.DOT);
+		fOpenFileAction = new RetargetTextEditorAction(resourceBundle, "");	//$NON-NLS-1$
 		fOpenFileAction.setActionDefinitionId(ActionDefinitionIds.OPEN_FILE);
 
-		fFindOccurrences = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_FIND_OCCURRENCES + StructuredTextEditorActionConstants.DOT);
+		fFindOccurrences = new RetargetTextEditorAction(resourceBundle, "");	//$NON-NLS-1$
 		fFindOccurrences.setActionDefinitionId(ActionDefinitionIds.FIND_OCCURRENCES);
 	}
 
@@ -112,10 +112,8 @@ public class ActionContributorXML extends ActionContributor {
 		}
 
 		// source commands
-		String sourceMenuLabel = SSEUIPlugin.getResourceString("%SourceMenu.label"); //$NON-NLS-1$
-		String sourceMenuId = "sourceMenuId"; // This is just a menu id. No
-		// need to translate.
-		// //$NON-NLS-1$
+		String sourceMenuLabel = XMLUIMessages.SourceMenu_label;
+		String sourceMenuId = "sourceMenuId"; //$NON-NLS-1$
 		IMenuManager sourceMenu = new MenuManager(sourceMenuLabel, sourceMenuId);
 		menu.insertAfter(IWorkbenchActionConstants.M_EDIT, sourceMenu);
 		if (sourceMenu != null) {

@@ -112,12 +112,12 @@ public class EveryNodeDebugAdapter implements IDebugAdapter {
 		}
 
 		public void modelAboutToBeReinitialized(IStructuredModel structuredModel) {
-			Debug.println("modelAboutToBeReinitialized: " + "structuredModel: " + structuredModel);
+			Debug.println("modelAboutToBeReinitialized: " + "structuredModel: " + structuredModel); //$NON-NLS-1$ //$NON-NLS-2$
 
 		}
 
 		public void modelReinitialized(IStructuredModel structuredModel) {
-			Debug.println("modelReinitialized: " + "structuredModel: " + structuredModel);
+			Debug.println("modelReinitialized: " + "structuredModel: " + structuredModel); //$NON-NLS-1$ //$NON-NLS-2$
 
 		}
 

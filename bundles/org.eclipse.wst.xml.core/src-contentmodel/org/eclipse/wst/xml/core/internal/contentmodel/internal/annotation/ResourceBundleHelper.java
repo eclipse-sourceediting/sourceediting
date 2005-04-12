@@ -27,10 +27,10 @@ public class ResourceBundleHelper
 	  // try to load bundle from the location specified in the resourceURI
     // we make the assumption that the resourceURI points to the local file system
          
-    int index = resourceURI.lastIndexOf("/");
+    int index = resourceURI.lastIndexOf("/"); //$NON-NLS-1$
     if (index == -1)
     {
-      throw new Exception("Invalid resourceURI");
+      throw new Exception("Invalid resourceURI"); //$NON-NLS-1$
     }                               
 
     // Below we set 'resourceDirectory' so that it ends with a '/'.

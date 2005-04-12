@@ -45,7 +45,7 @@ public class ContentModelManager extends Plugin {
 
 	public CMDocument createCMDocument(String uri, String resourceType) {
 		if (resourceType == null && uri != null) {
-			int index = uri.lastIndexOf(".");
+			int index = uri.lastIndexOf("."); //$NON-NLS-1$
 			resourceType = uri.substring(index + 1);
 		}
 

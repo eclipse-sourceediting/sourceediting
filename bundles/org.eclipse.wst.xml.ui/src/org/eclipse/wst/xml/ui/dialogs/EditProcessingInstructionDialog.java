@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.util.XMLCommonUIContextIds;
 import org.w3c.dom.ProcessingInstruction;
 
@@ -72,14 +72,14 @@ public class EditProcessingInstructionDialog extends Dialog {
 		gd.widthHint = 250;
 
 		Label targetLabel = new Label(composite, SWT.NONE);
-		targetLabel.setText(XMLUIPlugin.getResourceString("%_UI_LABEL_TARGET_COLON")); //$NON-NLS-1$
+		targetLabel.setText(XMLUIMessages._UI_LABEL_TARGET_COLON); //$NON-NLS-1$
 
 		targetField = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		targetField.setLayoutData(gd);
 		targetField.setText(getDisplayValue(target));
 
 		Label dataLabel = new Label(composite, SWT.NONE);
-		dataLabel.setText(XMLUIPlugin.getResourceString("%_UI_LABEL_DATA_COLON")); //$NON-NLS-1$
+		dataLabel.setText(XMLUIMessages._UI_LABEL_DATA_COLON); //$NON-NLS-1$
 
 		dataField = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		dataField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

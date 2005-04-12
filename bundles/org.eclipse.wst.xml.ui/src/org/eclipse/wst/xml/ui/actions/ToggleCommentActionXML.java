@@ -18,8 +18,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 public class ToggleCommentActionXML extends UncommentActionXML {
 	public ToggleCommentActionXML(ResourceBundle bundle, String prefix, ITextEditor editor) {
@@ -27,7 +26,7 @@ public class ToggleCommentActionXML extends UncommentActionXML {
 	}
 
 	protected void processAction() {
-		fModel.beginRecording(this, SSEUIPlugin.getResourceString(StructuredTextEditorActionConstants.ACTION_NAME_COMMENT + ".tooltip")); //$NON-NLS-1$
+		fModel.beginRecording(this, XMLUIMessages.ToggleComment_tooltip);
 		fModel.aboutToChangeModel();
 
 		for (int i = fSelectionStartLine; i <= fSelectionEndLine; i++) {

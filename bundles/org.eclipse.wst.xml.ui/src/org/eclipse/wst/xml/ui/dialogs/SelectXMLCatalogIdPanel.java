@@ -24,7 +24,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.uriresolver.XMLCatalog;
 import org.eclipse.wst.xml.uriresolver.XMLCatalogEntry;
 
@@ -47,7 +47,7 @@ public class SelectXMLCatalogIdPanel extends Composite {
 		this.setLayoutData(gd);
 
 		Label label = new Label(this, SWT.NONE);
-		label.setText(XMLUIPlugin.getResourceString("%_UI_LABEL_XML_CATALOG_COLON")); //$NON-NLS-1$
+		label.setText(XMLUIMessages._UI_LABEL_XML_CATALOG_COLON); //$NON-NLS-1$
 
 		tableViewer = createTableViewer(this);
 		tableViewer.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -56,8 +56,8 @@ public class SelectXMLCatalogIdPanel extends Composite {
 
 	protected XMLCatalogTableViewer createTableViewer(Composite parent) {
 		String headings[] = new String[2];
-		headings[0] = XMLUIPlugin.getResourceString("%_UI_LABEL_KEY"); //$NON-NLS-1$
-		headings[1] = XMLUIPlugin.getResourceString("%_UI_LABEL_URI"); //$NON-NLS-1$
+		headings[0] = XMLUIMessages._UI_LABEL_KEY; //$NON-NLS-1$
+		headings[1] = XMLUIMessages._UI_LABEL_URI; //$NON-NLS-1$
 
 		XMLCatalogTableViewer theTableViewer = new XMLCatalogTableViewer(parent, headings) {
 

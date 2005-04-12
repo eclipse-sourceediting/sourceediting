@@ -14,7 +14,7 @@ package org.eclipse.wst.xml.core.internal.document;
 
 import org.eclipse.wst.xml.core.IXMLCharEntity;
 import org.eclipse.wst.xml.core.document.IDOMDocument;
-import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.XMLCoreMessages;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
 
@@ -268,7 +268,7 @@ public class SourceValidator {
 				int index = source.indexOf(JSPTag.TAG_CLOSE);
 				if (index < 0)
 					return true;
-				message = XMLCorePlugin.getResourceString("%Invalid_character_('>')_fo_ERROR_"); //$NON-NLS-1$ = "Invalid character ('>') found"
+				message = XMLCoreMessages.Invalid_character_gt_fo_ERROR_;
 				throw new InvalidCharacterException(message, '>', index + 1);
 			} else if (text.isCDATAContent()) {
 				endTagName = text.getParentNode().getNodeName();
@@ -307,12 +307,12 @@ public class SourceValidator {
 						}
 						// invalid tag
 					}
-					message = XMLCorePlugin.getResourceString("%Invalid_character_('<')_fo_ERROR_"); //$NON-NLS-1$ = "Invalid character ('<') found"
+					message = XMLCoreMessages.Invalid_character_lt_fo_ERROR_;
 					break;
 				case '>' :
 					if (acceptClose)
 						continue;
-					message = XMLCorePlugin.getResourceString("%Invalid_character_('>')_fo_ERROR_"); //$NON-NLS-1$ = "Invalid character ('>') found"
+					message = XMLCoreMessages.Invalid_character_gt_fo_ERROR_;
 					break;
 				case '&' :
 					if (acceptEntityRef) {
@@ -325,12 +325,12 @@ public class SourceValidator {
 						}
 						// invalid entity reference
 					}
-					message = XMLCorePlugin.getResourceString("%Invalid_character_('&')_fo_ERROR_"); //$NON-NLS-1$ = "Invalid character ('&') found"
+					message = XMLCoreMessages.Invalid_character_amp_fo_ERROR_;
 					break;
 				case '"' :
 					if (acceptQuote)
 						continue;
-					message = XMLCorePlugin.getResourceString("%Invalid_character_('__')_f_EXC_"); //$NON-NLS-1$ = "Invalid character ('\"') found"
+					message = XMLCoreMessages.Invalid_character__f_EXC_;
 					break;
 				default :
 					continue;

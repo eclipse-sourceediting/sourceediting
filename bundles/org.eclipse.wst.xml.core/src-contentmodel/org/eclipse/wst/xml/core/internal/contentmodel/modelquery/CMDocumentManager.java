@@ -40,7 +40,7 @@ public interface CMDocumentManager {
 	 * call addCMDocumentReference() to explicity trigger a load. This allows
 	 * the client to control exactly when loading should take place. )
 	 */
-	public static final String PROPERTY_AUTO_LOAD = "autoLoad";
+	public static final String PROPERTY_AUTO_LOAD = "autoLoad"; //$NON-NLS-1$
 
 	/**
 	 * This property specifies HOW CMDocuments are loaded. When set to false,
@@ -51,12 +51,12 @@ public interface CMDocumentManager {
 	 * CMDocumentManager will inform its listeners that the CMDocument has
 	 * been loaded.
 	 */
-	public static final String PROPERTY_ASYNC_LOAD = "asyncLoad";
+	public static final String PROPERTY_ASYNC_LOAD = "asyncLoad"; //$NON-NLS-1$
 
 	/**
 	 * 
 	 */
-	public static final String PROPERTY_USE_CACHED_RESOLVED_URI = "useCachedResovledURI";
+	public static final String PROPERTY_USE_CACHED_RESOLVED_URI = "useCachedResovledURI"; //$NON-NLS-1$
 
 	/**
 	 * Set the enabled state of a property.

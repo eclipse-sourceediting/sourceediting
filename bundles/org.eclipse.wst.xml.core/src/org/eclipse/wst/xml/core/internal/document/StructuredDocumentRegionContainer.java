@@ -40,7 +40,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.IStructuredDocumentRegion#addRegion(com.ibm.sed.structured.text.ITextRegion)
 	 */
 	public void addRegion(ITextRegion aRegion) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 
 	}
 
@@ -50,7 +50,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.ITextRegion#adjust(int)
 	 */
 	public void adjust(int i) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 
 	}
 
@@ -60,7 +60,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.ITextRegion#adjustLengthWith(int)
 	 */
 	public void adjustLength(int i) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 
 	}
 
@@ -70,7 +70,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.ITextRegion#adjustStart(int)
 	 */
 	public void adjustStart(int i) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 
 	}
 
@@ -80,7 +80,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.ITextRegion#adjustTextLength(int)
 	 */
 	public void adjustTextLength(int i) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 
 	}
 
@@ -106,7 +106,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.ITextRegionCollection#containsOffset(int)
 	 */
 	public boolean containsOffset(int i) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/*
@@ -116,7 +116,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 *      int)
 	 */
 	public boolean containsOffset(ITextRegion region, int i) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/*
@@ -125,7 +125,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.ITextRegion#equatePositions(com.ibm.sed.structured.text.ITextRegion)
 	 */
 	public void equatePositions(ITextRegion region) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 
 	}
 
@@ -135,7 +135,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.ITextRegionCollection#getDeepestRegionAtCharacterOffset(int)
 	 */
 	public ITextRegion getDeepestRegionAtCharacterOffset(int offset) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/**
@@ -159,7 +159,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.ITextRegionCollection#getEndOffset(com.ibm.sed.structured.text.ITextRegion)
 	 */
 	public int getEndOffset(ITextRegion containedRegion) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/*
@@ -168,7 +168,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.ITextRegionCollection#getFirstRegion()
 	 */
 	public ITextRegion getFirstRegion() {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/**
@@ -188,13 +188,13 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	/**
 	 */
 	public String getFullText(ITextRegion aRegion) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/**
 	 */
 	public String getFullText(String context) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/*
@@ -203,7 +203,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.ITextRegionCollection#getLastRegion()
 	 */
 	public ITextRegion getLastRegion() {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/**
@@ -227,13 +227,13 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.IStructuredDocumentRegion#getNext()
 	 */
 	public IStructuredDocumentRegion getNext() {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/** 
 	 */
 	public int getNumberOfRegions() {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/**
@@ -248,7 +248,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.IStructuredDocumentRegion#getParentDocument()
 	 */
 	public IStructuredDocument getParentDocument() {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/*
@@ -257,19 +257,19 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.IStructuredDocumentRegion#getPrevious()
 	 */
 	public IStructuredDocumentRegion getPrevious() {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/**
 	 */
 	public ITextRegion getRegionAtCharacterOffset(int offset) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/**
 	 */
 	public ITextRegionList getRegions() {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/**
@@ -293,7 +293,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.ITextRegionCollection#getStartOffset(com.ibm.sed.structured.text.ITextRegion)
 	 */
 	public int getStartOffset(ITextRegion containedRegion) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/**
@@ -338,13 +338,13 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	/**
 	 */
 	public String getText(ITextRegion aRegion) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/**
 	 */
 	public String getText(String context) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/**
@@ -365,7 +365,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.ITextRegionCollection#getTextEndOffset(com.ibm.sed.structured.text.ITextRegion)
 	 */
 	public int getTextEndOffset(ITextRegion containedRegion) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/**
@@ -410,7 +410,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.IStructuredDocumentRegion#isEnded()
 	 */
 	public boolean isEnded() {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/**
@@ -458,13 +458,13 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 *      int)
 	 */
 	public boolean sameAs(IStructuredDocumentRegion region, int shift) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/**
 	 */
 	public boolean sameAs(ITextRegion region, int shift) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/*
@@ -475,7 +475,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 *      com.ibm.sed.structured.text.ITextRegion, int)
 	 */
 	public boolean sameAs(ITextRegion oldRegion, IStructuredDocumentRegion documentRegion, ITextRegion newRegion, int shift) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	public void setDeleted(boolean deleted) {
@@ -488,7 +488,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.IStructuredDocumentRegion#setEnded(boolean)
 	 */
 	public void setEnded(boolean hasEnd) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/*
@@ -497,7 +497,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.IStructuredDocumentRegion#setLength(int)
 	 */
 	public void setLength(int newLength) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/*
@@ -506,7 +506,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.IStructuredDocumentRegion#setNext(com.ibm.sed.structured.text.IStructuredDocumentRegion)
 	 */
 	public void setNext(IStructuredDocumentRegion newNext) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/*
@@ -515,7 +515,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.IStructuredDocumentRegion#setParentDocument(com.ibm.sed.structured.text.IStructuredDocument)
 	 */
 	public void setParentDocument(IStructuredDocument document) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/*
@@ -524,13 +524,13 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.IStructuredDocumentRegion#setPrevious(com.ibm.sed.structured.text.IStructuredDocumentRegion)
 	 */
 	public void setPrevious(IStructuredDocumentRegion newPrevious) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/**
 	 */
 	public void setRegions(ITextRegionList embeddedRegions) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/*
@@ -539,7 +539,7 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 * @see com.ibm.sed.structured.text.IStructuredDocumentRegion#setStart(int)
 	 */
 	public void setStart(int newStart) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 
 	/**
@@ -572,6 +572,6 @@ class StructuredDocumentRegionContainer implements IStructuredDocumentRegion {
 	 *      java.lang.String, int, int)
 	 */
 	public StructuredDocumentEvent updateRegion(Object requester, IStructuredDocumentRegion flatnode, String changes, int start, int end) {
-		throw new Error("intentionally not implemented since should never be called");
+		throw new Error("intentionally not implemented since should never be called"); //$NON-NLS-1$
 	}
 }

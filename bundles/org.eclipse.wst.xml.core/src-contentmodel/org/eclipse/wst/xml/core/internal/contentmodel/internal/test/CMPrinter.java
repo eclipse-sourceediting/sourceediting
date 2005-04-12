@@ -38,11 +38,11 @@ public class CMPrinter extends CMVisitor
   protected Vector visitedElements = new Vector(); 
     
   /******   formatting    ******/
-  protected String indent = "";
+  protected String indent = ""; //$NON-NLS-1$
 
   protected void incrementIndent()
   {
-    indent = indent + "  ";
+    indent = indent + "  "; //$NON-NLS-1$
   }
 
   protected void decrementIndent()
@@ -67,45 +67,45 @@ public class CMPrinter extends CMVisitor
 
   public void visitCMAnyElement(CMAnyElement anyElement)
   {
-    sb.append(indent + "<CMAnyElement");
+    sb.append(indent + "<CMAnyElement"); //$NON-NLS-1$
     printAttributes(sb, anyElement);
-    sb.append(">/n");
+    sb.append(">/n"); //$NON-NLS-1$
     incrementIndent();
     printProperties(sb, anyElement);
     decrementIndent();
-    sb.append(indent + "</CMAnyElement>/n");
+    sb.append(indent + "</CMAnyElement>/n"); //$NON-NLS-1$
   }
 
   public void visitCMAttributeDeclaration(CMAttributeDeclaration ad)
   {
-    sb.append(indent + "<CMAttributeDeclaration");
+    sb.append(indent + "<CMAttributeDeclaration"); //$NON-NLS-1$
     printAttributes(sb, ad);
-    sb.append(">\n");
+    sb.append(">\n"); //$NON-NLS-1$
     incrementIndent();
     printProperties(sb, ad);
     decrementIndent();
     visitCMNode(ad.getAttrType());
-    sb.append(indent + "</CMAttributeDeclaration>\n");
+    sb.append(indent + "</CMAttributeDeclaration>\n"); //$NON-NLS-1$
   }
 
   public void visitCMDataType(CMDataType dataType)
   {
-    sb.append(indent + "<CMDataType");
+    sb.append(indent + "<CMDataType"); //$NON-NLS-1$
     printAttributes(sb, dataType);
-    sb.append(">\n");
+    sb.append(">\n"); //$NON-NLS-1$
     incrementIndent();
-    sb.append(indent + "<ImpliedValue kind=\"" + dataType.getImpliedValueKind() + "\">");
-    sb.append(dataType.getImpliedValue() + "</ImpliedValue>\n");
+    sb.append(indent + "<ImpliedValue kind=\"" + dataType.getImpliedValueKind() + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
+    sb.append(dataType.getImpliedValue() + "</ImpliedValue>\n"); //$NON-NLS-1$
     printEnumeration(sb, dataType.getEnumeratedValues());
     decrementIndent();
-    sb.append(indent + "</CMDataType>\n");
+    sb.append(indent + "</CMDataType>\n"); //$NON-NLS-1$
   }
 
   public void visitCMDocument(CMDocument document)
   {
-    sb.append(indent + "<CMDocument");
+    sb.append(indent + "<CMDocument"); //$NON-NLS-1$
     printAttributes(sb, document);
-    sb.append(">\n");
+    sb.append(">\n"); //$NON-NLS-1$
     incrementIndent();
 
     //    printEntities(sb, document.getEntities()); 
@@ -119,14 +119,14 @@ public class CMPrinter extends CMVisitor
     }
 
     decrementIndent();
-    sb.append(indent + "</CMDocument>\n");
+    sb.append(indent + "</CMDocument>\n"); //$NON-NLS-1$
   }
 
   public void visitCMGroup(CMGroup group)
   {
-    sb.append(indent + "<CMGroup");
+    sb.append(indent + "<CMGroup"); //$NON-NLS-1$
     printAttributes(sb, group);
-    sb.append(">\n");
+    sb.append(">\n"); //$NON-NLS-1$
     incrementIndent();
 
     CMNodeList nodeList = group.getChildNodes();
@@ -137,7 +137,7 @@ public class CMPrinter extends CMVisitor
     }
 
     decrementIndent();
-    sb.append(indent + "</CMGroup>\n");
+    sb.append(indent + "</CMGroup>\n"); //$NON-NLS-1$
   }
 
   public void visitCMElementDeclaration(CMElementDeclaration ed)
@@ -145,9 +145,9 @@ public class CMPrinter extends CMVisitor
     if (!visitedElements.contains(ed))
     {
       visitedElements.add(ed);
-      sb.append(indent + "<CMElementDeclaration");
+      sb.append(indent + "<CMElementDeclaration"); //$NON-NLS-1$
       printAttributes(sb, ed);
-      sb.append(">\n");
+      sb.append(">\n"); //$NON-NLS-1$
       incrementIndent();
       printProperties(sb, ed);
 
@@ -165,7 +165,7 @@ public class CMPrinter extends CMVisitor
         visitCMNode(dataType);
 
       decrementIndent();
-      sb.append(indent + "</CMElementDeclaration>\n");
+      sb.append(indent + "</CMElementDeclaration>\n"); //$NON-NLS-1$
     }
   }
 
@@ -174,16 +174,16 @@ public class CMPrinter extends CMVisitor
   {
     if ((values != null) && (values.length > 0))
     {
-      sb.append(indent + "<Enumeration>\n");
+      sb.append(indent + "<Enumeration>\n"); //$NON-NLS-1$
       incrementIndent();
 
       for (int i=0; i<values.length; i++)
       {
-        sb.append(indent + "<Value>" + values[i] + "</Values>\n");
+        sb.append(indent + "<Value>" + values[i] + "</Values>\n"); //$NON-NLS-1$ //$NON-NLS-2$
       }
 
       decrementIndent();
-      sb.append(indent + "</Enumeration>\n");
+      sb.append(indent + "</Enumeration>\n"); //$NON-NLS-1$
     }
   }
 
@@ -192,40 +192,40 @@ public class CMPrinter extends CMVisitor
   {
     if (cmnode != null)
     {
-      sb.append(" nodeName=\"" + cmnode.getNodeName() + "\"");
-      sb.append(" nodeType=\"" + cmnode.getNodeType() + "\"");
+      sb.append(" nodeName=\"" + cmnode.getNodeName() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+      sb.append(" nodeType=\"" + cmnode.getNodeType() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
 
       if (cmnode instanceof CMContent)
       {
-        sb.append(" minOccur=\"" + ((CMContent)cmnode).getMinOccur() + "\"");
-        sb.append(" maxOccur=\"" + ((CMContent)cmnode).getMaxOccur() + "\"");
+        sb.append(" minOccur=\"" + ((CMContent)cmnode).getMinOccur() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+        sb.append(" maxOccur=\"" + ((CMContent)cmnode).getMaxOccur() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
       }
       if (cmnode instanceof CMAnyElement)
       {
-        sb.append(" namespaceURI=\"" + ((CMAnyElement)cmnode).getNamespaceURI() + "\"");
+        sb.append(" namespaceURI=\"" + ((CMAnyElement)cmnode).getNamespaceURI() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
       }
       if (cmnode instanceof CMAttributeDeclaration)
       {
-        sb.append(" uasage=\"" + ((CMAttributeDeclaration)cmnode).getUsage() + "\"");
-        sb.append(" defaultValue=\"" + ((CMAttributeDeclaration)cmnode).getDefaultValue() + "\"");
+        sb.append(" uasage=\"" + ((CMAttributeDeclaration)cmnode).getUsage() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+        sb.append(" defaultValue=\"" + ((CMAttributeDeclaration)cmnode).getDefaultValue() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
       }
       if (cmnode instanceof CMDataType)
       { 
-        sb.append(" instanceValue=\"" + ((CMDataType)cmnode).generateInstanceValue() + "\"");
+        sb.append(" instanceValue=\"" + ((CMDataType)cmnode).generateInstanceValue() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
       }
       if (cmnode instanceof CMEntityDeclaration)
       {
         String value = ((CMEntityDeclaration)cmnode).getValue();
-        if (value.indexOf("\"") == -1) sb.append(" value=\"" + value + "\"");
-        else sb.append(" value=\"" + value + "\"");
+        if (value.indexOf("\"") == -1) sb.append(" value=\"" + value + "\""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        else sb.append(" value=\"" + value + "\""); //$NON-NLS-1$ //$NON-NLS-2$
       }
       if (cmnode instanceof CMGroup)
       {
-        sb.append(" operator=\"" + ((CMGroup)cmnode).getOperator() + "\"");
+        sb.append(" operator=\"" + ((CMGroup)cmnode).getOperator() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
       }
       if (cmnode instanceof CMElementDeclaration)
       {
-        sb.append(" contentType=\"" + ((CMElementDeclaration)cmnode).getContentType() + "\"");
+        sb.append(" contentType=\"" + ((CMElementDeclaration)cmnode).getContentType() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
   }
@@ -235,51 +235,51 @@ public class CMPrinter extends CMVisitor
   {
     if ((entities != null) && (entities.getLength()>0))
     {
-      sb.append(indent + "<Entities>\n");
+      sb.append(indent + "<Entities>\n"); //$NON-NLS-1$
       incrementIndent();
 
       for (Iterator i = entities.iterator(); i.hasNext();)
       {
         CMEntityDeclaration entity = (CMEntityDeclaration)i.next();
-        sb.append(indent + "<Entity");
+        sb.append(indent + "<Entity"); //$NON-NLS-1$
         printAttributes(sb, entity);
-        sb.append("/>\n");
+        sb.append("/>\n"); //$NON-NLS-1$
       }
 
       decrementIndent();
-      sb.append(indent + "</Entities>\n");
+      sb.append(indent + "</Entities>\n"); //$NON-NLS-1$
     }
   }
 
   public void printProperties(StringBuffer sb, CMNode cmnode)
   {
     List properties = getProperties(cmnode);
-    sb.append(indent + "<Properties>\n");
+    sb.append(indent + "<Properties>\n"); //$NON-NLS-1$
     incrementIndent();
 
     for (int i=0; i<properties.size(); i++)
     {
       String property = (String)properties.get(i);
-      sb.append(indent + "<Property name=\"" + property + "\"");
+      sb.append(indent + "<Property name=\"" + property + "\""); //$NON-NLS-1$ //$NON-NLS-2$
 
       if (cmnode.supports(property))
       {
-        sb.append(" supports=\"true\"");
+        sb.append(" supports=\"true\""); //$NON-NLS-1$
       }
       else
       {
-        sb.append(" supports=\"false\"");
+        sb.append(" supports=\"false\""); //$NON-NLS-1$
       }
       Object value = cmnode.getProperty(property);
-      if (value instanceof String) sb.append(" value=\"" + (String)value + "\"");
-      else if (value instanceof Boolean) sb.append(" value=\"" + value + "\"");
-      else if (value != null) sb.append(" value=\"" + value.getClass() + "\"");
-      else sb.append(" value=\"null\"");
-      sb.append("/>\n");
+      if (value instanceof String) sb.append(" value=\"" + (String)value + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+      else if (value instanceof Boolean) sb.append(" value=\"" + value + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+      else if (value != null) sb.append(" value=\"" + value.getClass() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+      else sb.append(" value=\"null\""); //$NON-NLS-1$
+      sb.append("/>\n"); //$NON-NLS-1$
     }
 
     decrementIndent();
-    sb.append(indent + "</Properties>\n");
+    sb.append(indent + "</Properties>\n"); //$NON-NLS-1$
   }
 
   public List getProperties(CMNode cmnode)
@@ -288,32 +288,32 @@ public class CMPrinter extends CMVisitor
       
     if (cmnode != null)
     {
-      properties.add("CMDocument");
-      properties.add("documentation");
-      properties.add("http://org.eclipse.wst/cm/properties/usesLocalElementDeclarations");
-      properties.add("http://org.eclipse.wst/cm/properties/isNameSpaceAware");
-      properties.add("http://org.eclipse.wst/cm/properties/nsPrefixQualification");
-      properties.add("http://org.eclipse.wst/cm/properties/nillable");
-      properties.add("http://org.eclipse.wst/cm/properties/mofNotifier");
-      properties.add("spec");
+      properties.add("CMDocument"); //$NON-NLS-1$
+      properties.add("documentation"); //$NON-NLS-1$
+      properties.add("http://org.eclipse.wst/cm/properties/usesLocalElementDeclarations"); //$NON-NLS-1$
+      properties.add("http://org.eclipse.wst/cm/properties/isNameSpaceAware"); //$NON-NLS-1$
+      properties.add("http://org.eclipse.wst/cm/properties/nsPrefixQualification"); //$NON-NLS-1$
+      properties.add("http://org.eclipse.wst/cm/properties/nillable"); //$NON-NLS-1$
+      properties.add("http://org.eclipse.wst/cm/properties/mofNotifier"); //$NON-NLS-1$
+      properties.add("spec"); //$NON-NLS-1$
 
       if (cmnode instanceof CMElementDeclaration)
       {
-        properties.add("http://org.eclipse.wst/cm/properties/definitionInfo");
-        properties.add("http://org.eclipse.wst/cm/properties/definition");
-        properties.add("XSITypes");
-        properties.add("DerivedElementDeclaration");
+        properties.add("http://org.eclipse.wst/cm/properties/definitionInfo"); //$NON-NLS-1$
+        properties.add("http://org.eclipse.wst/cm/properties/definition"); //$NON-NLS-1$
+        properties.add("XSITypes"); //$NON-NLS-1$
+        properties.add("DerivedElementDeclaration"); //$NON-NLS-1$
         // properties.add("SubstitutionGroup"); Currrently broken for nexted xsd files
-        properties.add("Abstract");
+        properties.add("Abstract"); //$NON-NLS-1$
       }
       if (cmnode instanceof CMDocument)
       {
-        properties.add("http://org.eclipse.wst/cm/properties/targetNamespaceURI");
-        properties.add("http://org.eclipse.wst/cm/properties/importedNamespaceInfo");
-        properties.add("http://org.eclipse.wst/cm/properties/namespaceInfo");
-        properties.add("http://org.eclipse.wst/cm/properties/elementFormDefault");
-        properties.add("annotationMap");
-        properties.add("encodingInfo");
+        properties.add("http://org.eclipse.wst/cm/properties/targetNamespaceURI"); //$NON-NLS-1$
+        properties.add("http://org.eclipse.wst/cm/properties/importedNamespaceInfo"); //$NON-NLS-1$
+        properties.add("http://org.eclipse.wst/cm/properties/namespaceInfo"); //$NON-NLS-1$
+        properties.add("http://org.eclipse.wst/cm/properties/elementFormDefault"); //$NON-NLS-1$
+        properties.add("annotationMap"); //$NON-NLS-1$
+        properties.add("encodingInfo"); //$NON-NLS-1$
       }
       // properties defines but not used
       // properties.add("documentationSource");

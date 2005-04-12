@@ -89,7 +89,7 @@ public class StructuredTextFoldingProviderXML implements IStructuredTextFoldingP
 
 		long end = System.currentTimeMillis();
 		if (debugProjectionPerf)
-			System.out.println("StructuredTextFoldingProviderXML.addAllAdapters: " + (end - start));
+			System.out.println("StructuredTextFoldingProviderXML.addAllAdapters: " + (end - start)); //$NON-NLS-1$
 	}
 
 	/**
@@ -135,7 +135,7 @@ public class StructuredTextFoldingProviderXML implements IStructuredTextFoldingP
 
 		long end = System.currentTimeMillis();
 		if (debugProjectionPerf)
-			System.out.println("StructuredTextFoldingProviderXML.getAdapterFactory: " + (end - start));
+			System.out.println("StructuredTextFoldingProviderXML.getAdapterFactory: " + (end - start)); //$NON-NLS-1$
 		return factory;
 	}
 

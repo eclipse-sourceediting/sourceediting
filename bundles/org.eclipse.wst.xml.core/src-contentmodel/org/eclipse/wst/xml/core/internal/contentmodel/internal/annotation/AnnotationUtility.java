@@ -28,7 +28,7 @@ public class AnnotationUtility
   public static void loadAnnotationsForGrammar(String publicId, CMDocument cmDocument)
   {
     List annotationFiles = ContentModelManager.getInstance().getAnnotationFiles(publicId);
-    AnnotationMap map = (AnnotationMap) cmDocument.getProperty("annotationMap");
+    AnnotationMap map = (AnnotationMap) cmDocument.getProperty("annotationMap"); //$NON-NLS-1$
     if (map != null)
     {
       for (Iterator i = annotationFiles.iterator(); i.hasNext();)

@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
 public class NamespaceInfoTable extends Composite {
@@ -89,11 +90,11 @@ public class NamespaceInfoTable extends Composite {
 			if (result.equals("")) { //$NON-NLS-1$
 				switch (column) {
 					case 0 : {
-						result = XMLUIPlugin.getResourceString("%_UI_NO_NAMESPACE_NAME"); //$NON-NLS-1$
+						result = XMLUIMessages._UI_NO_NAMESPACE_NAME; //$NON-NLS-1$
 						break;
 					}
 					case 1 : {
-						result = XMLUIPlugin.getResourceString("%_UI_NO_PREFIX"); //$NON-NLS-1$
+						result = XMLUIMessages._UI_NO_PREFIX; //$NON-NLS-1$
 						break;
 					}
 				}
@@ -144,9 +145,9 @@ public class NamespaceInfoTable extends Composite {
 		}
 	}
 
-	protected static final String LOCATION_HINT = XMLUIPlugin.getResourceString("%_UI_LABEL_LOCATION_HINT"); //$NON-NLS-1$
-	protected static final String NAMESPACE_URI = XMLUIPlugin.getResourceString("%_UI_LABEL_NAMESPACE_NAME"); //$NON-NLS-1$
-	protected static final String PREFIX = XMLUIPlugin.getResourceString("%_UI_LABEL_PREFIX"); //$NON-NLS-1$
+	protected static final String LOCATION_HINT = XMLUIMessages._UI_LABEL_LOCATION_HINT; //$NON-NLS-1$
+	protected static final String NAMESPACE_URI = XMLUIMessages._UI_LABEL_NAMESPACE_NAME; //$NON-NLS-1$
+	protected static final String PREFIX = XMLUIMessages._UI_LABEL_PREFIX; //$NON-NLS-1$
 	protected Button deleteButton;
 	protected boolean dummyRowsRemoved = false;
 	protected Button editButton;
@@ -175,7 +176,7 @@ public class NamespaceInfoTable extends Composite {
 		setLayout(createGridLayout());
 		setLayoutData(new GridData(GridData.FILL_BOTH));
 		Group namespaceInfoGroup = new Group(this, SWT.NONE);
-		namespaceInfoGroup.setText(XMLUIPlugin.getResourceString("%_UI_LABEL_XML_SCHEMA_INFORMATION")); //$NON-NLS-1$
+		namespaceInfoGroup.setText(XMLUIMessages._UI_LABEL_XML_SCHEMA_INFORMATION); //$NON-NLS-1$
 		namespaceInfoGroup.setLayout(new GridLayout());
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		if (widthHint != -1) {
@@ -265,19 +266,19 @@ public class NamespaceInfoTable extends Composite {
 		// add the New button
 		//
 		newButton = new Button(buttonComposite, SWT.NONE);
-		newButton.setText(XMLUIPlugin.getResourceString("%_UI_BUTTON_NEW")); //$NON-NLS-1$
+		newButton.setText(XMLUIMessages._UI_BUTTON_NEW); //$NON-NLS-1$
 		newButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		newButton.addSelectionListener(selectionListener);
 		// add the Edit button
 		//
 		editButton = new Button(buttonComposite, SWT.NONE);
-		editButton.setText(XMLUIPlugin.getResourceString("%_UI_BUTTON_EDIT")); //$NON-NLS-1$
+		editButton.setText(XMLUIMessages._UI_BUTTON_EDIT); //$NON-NLS-1$
 		editButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		editButton.addSelectionListener(selectionListener);
 		// add the Delete button
 		//
 		deleteButton = new Button(buttonComposite, SWT.NONE);
-		deleteButton.setText(XMLUIPlugin.getResourceString("%_UI_BUTTON_DELETE")); //$NON-NLS-1$
+		deleteButton.setText(XMLUIMessages._UI_BUTTON_DELETE); //$NON-NLS-1$
 		deleteButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		deleteButton.addSelectionListener(selectionListener);
 	}
@@ -333,14 +334,14 @@ public class NamespaceInfoTable extends Composite {
 		ISelection selection = tableViewer.getSelection();
 		Object selectedObject = (selection instanceof IStructuredSelection) ? ((IStructuredSelection) selection).getFirstElement() : null;
 		if (selectedObject instanceof NamespaceInfo) {
-			EditNamespaceInfoDialog dialog = invokeDialog(XMLUIPlugin.getResourceString("%_UI_LABEL_NEW_NAMESPACE_INFORMATION"), (NamespaceInfo) selectedObject); //$NON-NLS-1$
+			EditNamespaceInfoDialog dialog = invokeDialog(XMLUIMessages._UI_LABEL_NEW_NAMESPACE_INFORMATION, (NamespaceInfo) selectedObject); //$NON-NLS-1$
 			performDelayedUpdate();
 		}
 	}
 
 	public void performNew() {
 		NamespaceInfo info = new NamespaceInfo();
-		EditNamespaceInfoDialog dialog = invokeDialog(XMLUIPlugin.getResourceString("%_UI_LABEL_NEW_NAMESPACE_INFORMATION"), info); //$NON-NLS-1$
+		EditNamespaceInfoDialog dialog = invokeDialog(XMLUIMessages._UI_LABEL_NEW_NAMESPACE_INFORMATION, info); //$NON-NLS-1$
 		if (dialog.getReturnCode() == Window.OK) {
 			namespaceInfoList.add(info);
 			performDelayedUpdate();

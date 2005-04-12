@@ -135,7 +135,7 @@ public class DOMWriter
        if (outputDoctypeEnabled)
        {
          String data = getDocumentTypeData(doctype);
-         print("<!DOCTYPE " + data + ">");
+         print("<!DOCTYPE " + data + ">"); //$NON-NLS-1$ //$NON-NLS-2$
        }
      }
 
@@ -148,7 +148,7 @@ public class DOMWriter
        currentElementHasChildElements = hasChildElements(element);
 
        printIndent();
-       print("<");
+       print("<"); //$NON-NLS-1$
        print(element.getNodeName());
        visitAttributesHelper(element);
 
@@ -158,11 +158,11 @@ public class DOMWriter
        {
          if (currentElementHasChildElements || isRootElement)
          {
-           println(">");
+           println(">"); //$NON-NLS-1$
          }
          else
          {
-           print(">");
+           print(">"); //$NON-NLS-1$
          }
          indent += 2;
          visitChildNodesHelper(element);
@@ -172,13 +172,13 @@ public class DOMWriter
          {
            printIndent();
          }
-         print("</");
+         print("</"); //$NON-NLS-1$
          print(element.getNodeName());
-         println(">");
+         println(">"); //$NON-NLS-1$
        }
        else
        {
-         println("/>");
+         println("/>"); //$NON-NLS-1$
        }
 
        currentElementHasChildElements = parentElementHasChildNodes;
@@ -186,11 +186,11 @@ public class DOMWriter
 
      public void visitAttr(Attr attr)
      {
-       print(" ");
+       print(" "); //$NON-NLS-1$
        print(attr.getNodeName());
-       print("=\"");
+       print("=\""); //$NON-NLS-1$
        print(createPrintableCharacterData(attr.getValue()));
-       print("\"");
+       print("\""); //$NON-NLS-1$
      }
 
      public void visitText(Text text)
@@ -214,19 +214,19 @@ public class DOMWriter
      public void visitComment(Comment comment)
      {
        printIndent();
-       print("<!--");
+       print("<!--"); //$NON-NLS-1$
        print(comment.getNodeValue());
-       println("-->");
+       println("-->"); //$NON-NLS-1$
      }
 
      public void visitProcessingInstruction(ProcessingInstruction pi)
      {
        printIndent();
-       print("<?");
+       print("<?"); //$NON-NLS-1$
        print(pi.getNodeName());
-       print(" ");
+       print(" "); //$NON-NLS-1$
        print(pi.getNodeValue());
-       println("?>");
+       println("?>"); //$NON-NLS-1$
      }
              
 
@@ -277,15 +277,15 @@ public class DOMWriter
    */
   protected String createPrintableCharacterData(String string)
   {              
-    String result = "";
+    String result = ""; //$NON-NLS-1$
     int index = 0;                             
     while (true)
     {                                                 
-      int ampersandIndex = string.indexOf("&", index);
+      int ampersandIndex = string.indexOf("&", index); //$NON-NLS-1$
       if (ampersandIndex != -1)
       {
         result += string.substring(index, ampersandIndex);
-        result += "&amp;";
+        result += "&amp;"; //$NON-NLS-1$
         index = ampersandIndex + 1; 
       }
       else
@@ -314,38 +314,38 @@ public class DOMWriter
   public void print(Document document, String grammarURL)
   {
     String systemId = null;
-    if (grammarURL.endsWith("dtd"))
+    if (grammarURL.endsWith("dtd")) //$NON-NLS-1$
     {
-      int lastSlashIndex = Math.max(grammarURL.lastIndexOf("/"), grammarURL.lastIndexOf("\\"));
+      int lastSlashIndex = Math.max(grammarURL.lastIndexOf("/"), grammarURL.lastIndexOf("\\")); //$NON-NLS-1$ //$NON-NLS-2$
       if (lastSlashIndex != -1)
       {
         systemId = grammarURL.substring(lastSlashIndex + 1);
       }
     }
-    print(document, "UTF-8", grammarURL, null, systemId);
+    print(document, "UTF-8", grammarURL, null, systemId); //$NON-NLS-1$
 
   }
 
   /** a temporary hack to workaround our inability to create a DocumentType tag*/
   public void print(Document document, String encoding, String grammarFileName, String publicId, String systemId)
   {
-    out.println("<?xml version=\"1.0\"" + " encoding=\"" + encoding + "\"?>");  
-    if (grammarFileName.endsWith(".dtd"))
+    out.println("<?xml version=\"1.0\"" + " encoding=\"" + encoding + "\"?>");   //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    if (grammarFileName.endsWith(".dtd")) //$NON-NLS-1$
     {
-      String docTypeLine = "<!DOCTYPE " + document.getDocumentElement().getNodeName() + " ";
+      String docTypeLine = "<!DOCTYPE " + document.getDocumentElement().getNodeName() + " "; //$NON-NLS-1$ //$NON-NLS-2$
       if (publicId != null) 
       {
-        docTypeLine += "PUBLIC \"" + publicId + "\" ";
+        docTypeLine += "PUBLIC \"" + publicId + "\" "; //$NON-NLS-1$ //$NON-NLS-2$
         if (systemId != null)
         {
-          docTypeLine += "\"" + systemId + "\" ";
+          docTypeLine += "\"" + systemId + "\" "; //$NON-NLS-1$ //$NON-NLS-2$
         }
-        docTypeLine += ">";
+        docTypeLine += ">"; //$NON-NLS-1$
         out.println(docTypeLine);
       }
       else if (systemId != null)
       {
-        docTypeLine += "SYSTEM \"" + systemId + "\" >";
+        docTypeLine += "SYSTEM \"" + systemId + "\" >"; //$NON-NLS-1$ //$NON-NLS-2$
         out.println(docTypeLine);
       }
     }
@@ -357,17 +357,17 @@ public class DOMWriter
     String data = doctype.getName();
     if (doctype.getPublicId() != null)
     {
-      data += " PUBLIC \"" + doctype.getPublicId() + "\"";
+      data += " PUBLIC \"" + doctype.getPublicId() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
       String systemId = doctype.getSystemId();
       if (systemId == null)
       {
-        systemId = "";
+        systemId = ""; //$NON-NLS-1$
       }
-      data += " \"" + systemId + "\"";     
+      data += " \"" + systemId + "\"";      //$NON-NLS-1$ //$NON-NLS-2$
     }
     else
     {
-      data += " SYSTEM \"" + doctype.getSystemId() + "\"";
+      data += " SYSTEM \"" + doctype.getSystemId() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
     }
     return data;
   }     
@@ -398,7 +398,7 @@ public class DOMWriter
     {
       for (int i = 0; i < indent; i++)
       {
-        out.print(" ");
+        out.print(" "); //$NON-NLS-1$
       }
     }
   }       

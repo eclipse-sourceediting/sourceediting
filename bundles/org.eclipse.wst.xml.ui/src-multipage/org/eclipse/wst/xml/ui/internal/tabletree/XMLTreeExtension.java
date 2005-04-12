@@ -22,14 +22,14 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDescriptionBuilder;
-import org.eclipse.wst.xml.internal.ui.XMLEditorResourceHandler;
+import org.eclipse.wst.xml.internal.ui.XMLEditorMessages;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 public class XMLTreeExtension extends TreeExtension {
 
-	public final static String STRUCTURE_PROPERTY = XMLEditorResourceHandler.getResourceString("%XMLTreeExtension.0"); //$NON-NLS-1$
-	public final static String VALUE_PROPERTY = XMLEditorResourceHandler.getResourceString("%XMLTreeExtension.1"); //$NON-NLS-1$
+	public final static String STRUCTURE_PROPERTY = XMLEditorMessages.XMLTreeExtension_0;
+	public final static String VALUE_PROPERTY = XMLEditorMessages.XMLTreeExtension_1;
 
 	protected Composite control;
 	protected MyCellModifier modifier;
@@ -109,8 +109,8 @@ public class XMLTreeExtension extends TreeExtension {
 		// so that they know how to proceed to edit the blank view
 		gc.setForeground(tree.getDisplay().getSystemColor(SWT.COLOR_BLACK));
 		gc.setBackground(tree.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
-		gc.drawString(XMLEditorResourceHandler.getResourceString("%XMLTreeExtension.3"), 10, 10); //$NON-NLS-1$
-		gc.drawString(XMLEditorResourceHandler.getResourceString("%XMLTreeExtension.4"), 10, 10 + gc.getFontMetrics().getHeight()); //$NON-NLS-1$
+		gc.drawString(XMLEditorMessages.XMLTreeExtension_3, 10, 10);
+		gc.drawString(XMLEditorMessages.XMLTreeExtension_4, 10, 10 + gc.getFontMetrics().getHeight());
 	}
 
 	public String getElementValueHelper(Element element) {

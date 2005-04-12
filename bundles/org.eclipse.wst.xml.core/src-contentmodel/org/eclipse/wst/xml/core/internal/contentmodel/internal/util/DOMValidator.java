@@ -47,10 +47,10 @@ public class DOMValidator extends CMValidator
   protected String getFallbackNamepaceURI(CMElementDeclaration ed)
   {   
     String fallbackNamepaceURI = null;
-    CMDocument cmDocument = (CMDocument)ed.getProperty("CMDocument");
+    CMDocument cmDocument = (CMDocument)ed.getProperty("CMDocument"); //$NON-NLS-1$
     if (cmDocument != null)
     {
-      fallbackNamepaceURI = (String)cmDocument.getProperty("http://org.eclipse.wst/cm/properties/targetNamespaceURI");  
+      fallbackNamepaceURI = (String)cmDocument.getProperty("http://org.eclipse.wst/cm/properties/targetNamespaceURI");   //$NON-NLS-1$
     }  
     return fallbackNamepaceURI;
   }
@@ -89,15 +89,15 @@ public class DOMValidator extends CMValidator
    */
   public String createContentSpecification(Node node, boolean isNamespaceAware, String fallbackNamepaceURI)
   {
-    String result = "!";
+    String result = "!"; //$NON-NLS-1$
     switch (node.getNodeType())
     {
       case Node.ELEMENT_NODE :
       {  
         String nodeName = node.getNodeName();  
-        if (nodeName.startsWith("jsp:"))
+        if (nodeName.startsWith("jsp:")) //$NON-NLS-1$
         {  
-          result = "!"; // treat it as a comment so that it's ignored by the validator
+          result = "!"; // treat it as a comment so that it's ignored by the validator //$NON-NLS-1$
         }
         else
         {
@@ -107,11 +107,11 @@ public class DOMValidator extends CMValidator
             String uri = getNamespaceURI(node);
             if (uri != null)
             {
-              result = "[" + uri + "]" + result;   
+              result = "[" + uri + "]" + result;    //$NON-NLS-1$ //$NON-NLS-2$
             } 
             else if (fallbackNamepaceURI != null)
             {
-              result = "[" + fallbackNamepaceURI + "]" + result;  
+              result = "[" + fallbackNamepaceURI + "]" + result;   //$NON-NLS-1$ //$NON-NLS-2$
             }
           }  
           else
@@ -124,17 +124,17 @@ public class DOMValidator extends CMValidator
       }
       case Node.PROCESSING_INSTRUCTION_NODE :
       {
-        result = "?";
+        result = "?"; //$NON-NLS-1$
         break;
       }
       case Node.COMMENT_NODE :
       {
-        result = "!";
+        result = "!"; //$NON-NLS-1$
         break;
       }
       case Node.CDATA_SECTION_NODE :
       {
-        result = "\"" + node.getNodeName() + "\"";
+        result = "\"" + node.getNodeName() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
         break;
       }
       case Node.TEXT_NODE :
@@ -143,11 +143,11 @@ public class DOMValidator extends CMValidator
         // here we test to see if the test node is 'ignorable'
         if (data != null && data.trim().length() > 0)
         {
-          result = "\"" + node.getNodeName() + "\"";
+          result = "\"" + node.getNodeName() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
         }
         else
         {
-          result = "!"; // todo... use another symbol?
+          result = "!"; // todo... use another symbol? //$NON-NLS-1$
         }
         break;
       }
@@ -171,7 +171,7 @@ public class DOMValidator extends CMValidator
       }
       case CMNode.DATA_TYPE :
       {
-        list.add("\"" + cmNode.getNodeName() + "\"");
+        list.add("\"" + cmNode.getNodeName() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
         break;
       }
       case CMNode.GROUP :
@@ -181,12 +181,12 @@ public class DOMValidator extends CMValidator
       }
       case CMNode.ANY_ELEMENT :
       {
-        list.add("*");
+        list.add("*"); //$NON-NLS-1$
         break;
       }
       default :
       {
-        list.add("!");
+        list.add("!"); //$NON-NLS-1$
       }
     }
     return list;
@@ -198,12 +198,12 @@ public class DOMValidator extends CMValidator
    */              
   protected String createContentSpecificationForCMElementDeclaration(CMElementDeclaration ed)
   {  
-    CMDocument document = (CMDocument)ed.getProperty("CMDocument");
-    String uri = document != null ? (String)document.getProperty("http://org.eclipse.wst/cm/properties/targetNamespaceURI") : null;
+    CMDocument document = (CMDocument)ed.getProperty("CMDocument"); //$NON-NLS-1$
+    String uri = document != null ? (String)document.getProperty("http://org.eclipse.wst/cm/properties/targetNamespaceURI") : null; //$NON-NLS-1$
     String string = ed.getNodeName();
     if (uri != null)
     {            
-      string = "[" + uri + "]" + string;
+      string = "[" + uri + "]" + string; //$NON-NLS-1$ //$NON-NLS-2$
     }
     return string;
   }
@@ -238,7 +238,7 @@ public class DOMValidator extends CMValidator
 
     public void visitCMAnyElement(CMAnyElement anyElement)
     {   
-      list.add("*");
+      list.add("*"); //$NON-NLS-1$
     }
 
     public void visitCMGroup(CMGroup group)
@@ -264,7 +264,7 @@ public class DOMValidator extends CMValidator
 
   public boolean isNamespaceAware(CMElementDeclaration ed)
   { 
-    return ed != null ? ed.getProperty("http://org.eclipse.wst/cm/properties/isNameSpaceAware") != null : false;
+    return ed != null ? ed.getProperty("http://org.eclipse.wst/cm/properties/isNameSpaceAware") != null : false; //$NON-NLS-1$
   }
      
   /**

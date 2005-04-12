@@ -104,7 +104,7 @@ public abstract class XMLAssociationProvider extends BaseAssociationProvider imp
 
       if (doctypeInfo != null)
       {
-        result = getCMDocument(doctypeInfo[0], doctypeInfo[1], "DTD");
+        result = getCMDocument(doctypeInfo[0], doctypeInfo[1], "DTD"); //$NON-NLS-1$
       }                                             
       // defect 211236 ... in some cases calling this method can result in a cycle
       // we use the getDocumentFromCMNode as a flag to avoid this 
@@ -116,7 +116,7 @@ public abstract class XMLAssociationProvider extends BaseAssociationProvider imp
         {                
           // todo... add a getCMDocument() methods to CMNode
           // for now use the getProperty interface
-          result = (CMDocument)cmNode.getProperty("CMDocument");
+          result = (CMDocument)cmNode.getProperty("CMDocument"); //$NON-NLS-1$
         }
       }
     }
@@ -136,7 +136,7 @@ public abstract class XMLAssociationProvider extends BaseAssociationProvider imp
     NamespaceInfo namespaceInfo = namespaceTable.getNamespaceInfoForURI(uri);
     if (namespaceInfo != null)
     {
-      result = getCMDocument(namespaceInfo.uri, namespaceInfo.locationHint, "XSD");
+      result = getCMDocument(namespaceInfo.uri, namespaceInfo.locationHint, "XSD"); //$NON-NLS-1$
     }
     return result;
   }         
@@ -216,7 +216,7 @@ public abstract class XMLAssociationProvider extends BaseAssociationProvider imp
       else
       { 
         // we assume that this is an inferred CMDocument for a DTD style 'namespaceless' document
-        CMDocument cmDocument = getCMDocument("", "", "DTD");
+        CMDocument cmDocument = getCMDocument("", "", "DTD"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         if (cmDocument != null)
         {
           result = (CMElementDeclaration)cmDocument.getElements().getNamedItem(element.getNodeName()); 
@@ -260,7 +260,7 @@ public abstract class XMLAssociationProvider extends BaseAssociationProvider imp
           NamespaceInfo namespaceInfo = namespaceTable.getNamespaceInfoForPrefix(prefix);                   
           if (namespaceInfo != null) 
           {
-            CMDocument cmDocument = getCMDocument(namespaceInfo.uri, namespaceInfo.locationHint, "XSD");
+            CMDocument cmDocument = getCMDocument(namespaceInfo.uri, namespaceInfo.locationHint, "XSD"); //$NON-NLS-1$
             if (cmDocument != null)
             { 
               ed = (CMElementDeclaration)cmDocument.getElements().getNamedItem(unprefixedName);   
@@ -292,10 +292,10 @@ public abstract class XMLAssociationProvider extends BaseAssociationProvider imp
   protected CMElementDeclaration getDerivedCMElementDeclaration(Element element, CMElementDeclaration ed, NamespaceTable namespaceTable)
   {                      
     CMElementDeclaration result = null;
-    String xsiPrefix = namespaceTable.getPrefixForURI("http://www.w3.org/2001/XMLSchema-instance");
+    String xsiPrefix = namespaceTable.getPrefixForURI("http://www.w3.org/2001/XMLSchema-instance"); //$NON-NLS-1$
     if (xsiPrefix != null)
     {
-      String xsiTypeValue = element.getAttribute(xsiPrefix + ":type");
+      String xsiTypeValue = element.getAttribute(xsiPrefix + ":type"); //$NON-NLS-1$
       if (xsiTypeValue != null)
       {  
         String typePrefix = DOMNamespaceHelper.getPrefix(xsiTypeValue);
@@ -304,9 +304,9 @@ public abstract class XMLAssociationProvider extends BaseAssociationProvider imp
         String uriQualifiedTypeName = typeName;
         if (typeURI != null && typeURI.length() > 0) 
         {
-          uriQualifiedTypeName = "[" +  typeURI + "]" + typeName;
+          uriQualifiedTypeName = "[" +  typeURI + "]" + typeName; //$NON-NLS-1$ //$NON-NLS-2$
         }
-        result = (CMElementDeclaration)ed.getProperty("DerivedElementDeclaration=" + uriQualifiedTypeName);  
+        result = (CMElementDeclaration)ed.getProperty("DerivedElementDeclaration=" + uriQualifiedTypeName);   //$NON-NLS-1$
       }
     }                                                                                                    
     return result;

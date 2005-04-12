@@ -92,7 +92,7 @@ public class NamespaceTable extends NamespaceAttributeVisitor
       if (isMatchingString(nsInfo.uri, uri))
       {                 
         result = nsInfo;
-        if (testImplied && nsInfo.getProperty("isImplied") != null)
+        if (testImplied && nsInfo.getProperty("isImplied") != null) //$NON-NLS-1$
         {
           // continue
         }            
@@ -122,7 +122,7 @@ public class NamespaceTable extends NamespaceAttributeVisitor
 
   public NamespaceInfo getNamespaceInfoForPrefix(String prefix)
   {                                      
-    prefix = prefix != null ? prefix : "";
+    prefix = prefix != null ? prefix : ""; //$NON-NLS-1$
     return (NamespaceInfo)hashtable.get(prefix);
   }   
 
@@ -151,7 +151,7 @@ public class NamespaceTable extends NamespaceAttributeVisitor
 
   public void addNamespaceInfo(NamespaceInfo info)
   {                           
-    String key  = (info.prefix != null) ? info.prefix : "";
+    String key  = (info.prefix != null) ? info.prefix : ""; //$NON-NLS-1$
     internalAddNamespaceInfo(key, info);
   }
 
@@ -170,7 +170,7 @@ public class NamespaceTable extends NamespaceAttributeVisitor
         NamespaceInfo clone = new NamespaceInfo(info);    
         if (isImplied)
         {
-          clone.setProperty("isImplied", "true");
+          clone.setProperty("isImplied", "true"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         addNamespaceInfo(clone);
       }
@@ -191,9 +191,9 @@ public class NamespaceTable extends NamespaceAttributeVisitor
   {
     NamespaceInfo nsInfo = new NamespaceInfo();      
     nsInfo.prefix = null;
-    nsInfo.uri = "";      
+    nsInfo.uri = "";       //$NON-NLS-1$
     nsInfo.locationHint = locationHint;  
-    internalAddNamespaceInfo("", nsInfo);
+    internalAddNamespaceInfo("", nsInfo); //$NON-NLS-1$
   } 
 
   public void addNamespaceInfo(String prefix, String uri, String locationHint)
@@ -202,7 +202,7 @@ public class NamespaceTable extends NamespaceAttributeVisitor
     nsInfo.prefix = prefix;
     nsInfo.uri = uri;      
     nsInfo.locationHint = locationHint;  
-    internalAddNamespaceInfo(prefix != null ? prefix : "", nsInfo);
+    internalAddNamespaceInfo(prefix != null ? prefix : "", nsInfo); //$NON-NLS-1$
   } 
 
   public void addElement(Element element)

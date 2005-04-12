@@ -30,7 +30,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQueryAction;
-import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
@@ -159,8 +159,8 @@ public abstract class BaseNodeActionManager {
 			//
 			Element element = (Element) node;
 
-			IMenuManager addAttributeMenu = new MyMenuManager(XMLUIPlugin.getResourceString("%_UI_MENU_ADD_ATTRIBUTE")); //$NON-NLS-1$
-			IMenuManager addChildMenu = new MyMenuManager(XMLUIPlugin.getResourceString("%_UI_MENU_ADD_CHILD")); //$NON-NLS-1$
+			IMenuManager addAttributeMenu = new MyMenuManager(XMLUIMessages._UI_MENU_ADD_ATTRIBUTE); //$NON-NLS-1$
+			IMenuManager addChildMenu = new MyMenuManager(XMLUIMessages._UI_MENU_ADD_CHILD); //$NON-NLS-1$
 			menu.add(addAttributeMenu);
 			menu.add(addChildMenu);
 
@@ -195,7 +195,7 @@ public abstract class BaseNodeActionManager {
 
 
 	protected void contributeAddDocumentChildActions(IMenuManager menu, Document document, int ic, int vc) {
-		IMenuManager addChildMenu = new MyMenuManager(XMLUIPlugin.getResourceString("%_UI_MENU_ADD_CHILD")); //$NON-NLS-1$
+		IMenuManager addChildMenu = new MyMenuManager(XMLUIMessages._UI_MENU_ADD_CHILD); //$NON-NLS-1$
 		menu.add(addChildMenu);
 
 		// add PI and COMMENT
@@ -207,8 +207,8 @@ public abstract class BaseNodeActionManager {
 
 
 	protected void contributeAddSiblingActions(IMenuManager menu, Node node, int ic, int vc) {
-		IMenuManager addBeforeMenu = new MyMenuManager(XMLUIPlugin.getResourceString("%_UI_MENU_ADD_BEFORE")); //$NON-NLS-1$
-		IMenuManager addAfterMenu = new MyMenuManager(XMLUIPlugin.getResourceString("%_UI_MENU_ADD_AFTER")); //$NON-NLS-1$
+		IMenuManager addBeforeMenu = new MyMenuManager(XMLUIMessages._UI_MENU_ADD_BEFORE); //$NON-NLS-1$
+		IMenuManager addAfterMenu = new MyMenuManager(XMLUIMessages._UI_MENU_ADD_AFTER); //$NON-NLS-1$
 		menu.add(addBeforeMenu);
 		menu.add(addAfterMenu);
 
@@ -326,7 +326,7 @@ public abstract class BaseNodeActionManager {
 	protected void contributeReplaceActions(IMenuManager menu, List selectedNodeList, int ic, int vc) {
 		// 'Replace With...' actions
 		//                                                                                                                   
-		IMenuManager replaceWithMenu = new MyMenuManager(XMLUIPlugin.getResourceString("%_UI_MENU_REPLACE_WITH")); //$NON-NLS-1$
+		IMenuManager replaceWithMenu = new MyMenuManager(XMLUIMessages._UI_MENU_REPLACE_WITH); //$NON-NLS-1$
 		menu.add(replaceWithMenu);
 
 		if (modelQuery.getEditMode() == ModelQuery.EDIT_MODE_CONSTRAINED_STRICT && selectedNodeList.size() > 0) {

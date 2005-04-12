@@ -163,19 +163,19 @@ public class DOMContentBuilderImpl extends CMVisitor implements DOMContentBuilde
     String grammarFileName = cmDocument.getNodeName();
     if (!uglyTempHack)
     {                                                                     
-      String piValue = "version=\"1.0\"";
-      String[] encodingInfo = (String[])cmDocument.getProperty("encodingInfo");
+      String piValue = "version=\"1.0\""; //$NON-NLS-1$
+      String[] encodingInfo = (String[])cmDocument.getProperty("encodingInfo"); //$NON-NLS-1$
       String encoding = encodingInfo != null ? encodingInfo[1] : null;           
       if (encoding != null)
       {
-        piValue += " encoding=\"" + encoding + "\"";
+        piValue += " encoding=\"" + encoding + "\""; //$NON-NLS-1$ //$NON-NLS-2$
       }
-      ProcessingInstruction pi = document.createProcessingInstruction("xml", piValue);
+      ProcessingInstruction pi = document.createProcessingInstruction("xml", piValue); //$NON-NLS-1$
       document.appendChild(pi);
 
       // if we have a 'dtd' then add a DOCTYPE tag
       //
-      if (grammarFileName != null && grammarFileName.endsWith("dtd"))
+      if (grammarFileName != null && grammarFileName.endsWith("dtd")) //$NON-NLS-1$
       {
         DOMImplementation domImpl = document.getImplementation();
         DocumentType documentType = domImpl.createDocumentType(rootCMElementDeclaration.getElementName(), grammarFileName, grammarFileName);
@@ -185,7 +185,7 @@ public class DOMContentBuilderImpl extends CMVisitor implements DOMContentBuilde
     
     // if we have a schema add an xsi:schemaLocation attribute
     //
-    if (grammarFileName != null && grammarFileName.endsWith("xsd") && namespaceInfoList != null)
+    if (grammarFileName != null && grammarFileName.endsWith("xsd") && namespaceInfoList != null) //$NON-NLS-1$
     {              
       DOMNamespaceInfoManager manager = new DOMNamespaceInfoManager();    
       String name = rootCMElementDeclaration.getNodeName();
@@ -194,7 +194,7 @@ public class DOMContentBuilderImpl extends CMVisitor implements DOMContentBuilde
         NamespaceInfo info = (NamespaceInfo)namespaceInfoList.get(0);
         if (info.prefix != null && info.prefix.length() > 0)
         {
-          name = info.prefix + ":" + name;
+          name = info.prefix + ":" + name; //$NON-NLS-1$
         }
       }
       rootElement = createElement(rootCMElementDeclaration, name, document);
@@ -362,7 +362,7 @@ public class DOMContentBuilderImpl extends CMVisitor implements DOMContentBuilde
     //   Previous code uses a property value but new one uses
     //   buildPolicy.   
     if (getProperty(PROPERTY_BUILD_BLANK_TEXT_NODES) != null
-        && getProperty(PROPERTY_BUILD_BLANK_TEXT_NODES).equals("true"))
+        && getProperty(PROPERTY_BUILD_BLANK_TEXT_NODES).equals("true")) //$NON-NLS-1$
       buildPolicy = buildPolicy ^ BUILD_TEXT_NODES;
           
     if (buildTextNodes(buildPolicy))
@@ -376,13 +376,13 @@ public class DOMContentBuilderImpl extends CMVisitor implements DOMContentBuilde
         }
         else
         {
-          value = "pcdata";
+          value = "pcdata"; //$NON-NLS-1$
         }
       }
     }  
     else
     {
-      value = "";
+      value = ""; //$NON-NLS-1$
     }
     text = createTextNode(dataType, value, currentParent);
     linkNode(text);
@@ -422,7 +422,7 @@ public class DOMContentBuilderImpl extends CMVisitor implements DOMContentBuilde
         if (listSize > 0)
         {                                                                                                                                          
           CMElementDeclaration ed = (CMElementDeclaration)visitedCMElementDeclarationList.get(listSize - 1);
-          Object contentHint = ed.getProperty("contentHint");
+          Object contentHint = ed.getProperty("contentHint"); //$NON-NLS-1$
           if (contentHint instanceof CMNode)
           {        
             hintNode = (CMNode)contentHint;
@@ -485,7 +485,7 @@ public class DOMContentBuilderImpl extends CMVisitor implements DOMContentBuilde
       String name = computeName(ad, currentParent);         
       String value = valueHelper.getValue(ad, namespaceTable);
       Attr attr = createAttribute(ad, name, currentParent);      
-      attr.setValue(value != null ? value : "");
+      attr.setValue(value != null ? value : ""); //$NON-NLS-1$
       linkNode(attr);
     }
   }                     
@@ -495,7 +495,7 @@ public class DOMContentBuilderImpl extends CMVisitor implements DOMContentBuilde
     boolean result = false;
     if (ed != null)
     {
-      Object value = ed.getProperty("Abstract");
+      Object value = ed.getProperty("Abstract"); //$NON-NLS-1$
       result = (value ==  Boolean.TRUE);
     }
     return result;
@@ -504,7 +504,7 @@ public class DOMContentBuilderImpl extends CMVisitor implements DOMContentBuilde
   protected CMElementDeclaration getSubstitution(CMElementDeclaration ed)
   {
     CMElementDeclaration result = ed;
-    CMNodeList l = (CMNodeList)ed.getProperty("SubstitutionGroup");
+    CMNodeList l = (CMNodeList)ed.getProperty("SubstitutionGroup"); //$NON-NLS-1$
     if (l != null)
     {
       for (int i=0; i < l.getLength(); i++)
@@ -540,21 +540,21 @@ public class DOMContentBuilderImpl extends CMVisitor implements DOMContentBuilde
     alwaysVisit = false;
       
     String uri = anyElement.getNamespaceURI();  
-    String targetNSProperty = "http://org.eclipse.wst/cm/properties/targetNamespaceURI";
-    CMDocument parentCMDocument = (CMDocument)anyElement.getProperty("CMDocument");
+    String targetNSProperty = "http://org.eclipse.wst/cm/properties/targetNamespaceURI"; //$NON-NLS-1$
+    CMDocument parentCMDocument = (CMDocument)anyElement.getProperty("CMDocument"); //$NON-NLS-1$
     CMElementDeclaration ed = null;                          
 
-    System.out.println("parentCMDocument = " + parentCMDocument);
+    System.out.println("parentCMDocument = " + parentCMDocument); //$NON-NLS-1$
     if (parentCMDocument != null)
     {          
-      if (uri == null || uri.startsWith("##") || uri.equals(parentCMDocument.getProperty(targetNSProperty)))
+      if (uri == null || uri.startsWith("##") || uri.equals(parentCMDocument.getProperty(targetNSProperty))) //$NON-NLS-1$
       {                               
         ed = getSuitableElement(getParentCMElementDeclaration(), parentCMDocument);
       }
     }          
 
 
-    if (ed == null && externalCMDocumentSupport != null && uri != null && !uri.startsWith("##") && currentParent instanceof Element)
+    if (ed == null && externalCMDocumentSupport != null && uri != null && !uri.startsWith("##") && currentParent instanceof Element) //$NON-NLS-1$
     {
       CMDocument externalCMDocument = externalCMDocumentSupport.getCMDocument((Element)currentParent, uri);
       if (externalCMDocument != null)
@@ -571,7 +571,7 @@ public class DOMContentBuilderImpl extends CMVisitor implements DOMContentBuilde
       }  
       else
       {                       
-        Element element = document.createElement("ANY-ELEMENT");                   
+        Element element = document.createElement("ANY-ELEMENT");                    //$NON-NLS-1$
         linkNode(element);
       }              
     }               
@@ -643,7 +643,7 @@ public class DOMContentBuilderImpl extends CMVisitor implements DOMContentBuilde
       contentBuilder.createDefaultRootContent(cmDocument, element);
 
       System.out.println();
-      System.out.println("-----------------------------");
+      System.out.println("-----------------------------"); //$NON-NLS-1$
       DOMWriter writer = new DOMWriter();
       if (hack)
       {
@@ -653,11 +653,11 @@ public class DOMContentBuilderImpl extends CMVisitor implements DOMContentBuilde
       {
         writer.print(document);
       }
-      System.out.println("-----------------------------");
+      System.out.println("-----------------------------"); //$NON-NLS-1$
     }
     catch (Exception e)
     {
-      System.out.println("Error: " + e);
+      System.out.println("Error: " + e); //$NON-NLS-1$
       e.printStackTrace();
     }
   }

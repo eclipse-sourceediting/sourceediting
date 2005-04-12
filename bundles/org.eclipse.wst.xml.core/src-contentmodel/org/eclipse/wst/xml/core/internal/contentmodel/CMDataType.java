@@ -20,17 +20,17 @@ public interface CMDataType extends CMNode {
   // todo... at some point we should remove these names to
   // avoid exposing implementation details via the interfaces
   //
-	static final String CDATA = "CDATA";
-	static final String ID = "ID";
-	static final String IDREF = "IDREF";
-	static final String ENTITY = "ENTITY";
-	static final String ENTITIES = "ENTITIES";
-	static final String NOTATION = "NOTATION";
-	static final String NMTOKEN = "NMTOKEN";
-	static final String NMTOKENS = "NMTOKENS";
-	static final String NUMBER = "NUMBER";
-	static final String URI = "URI";
-	static final String ENUM = "ENUM";
+	static final String CDATA = "CDATA"; //$NON-NLS-1$
+	static final String ID = "ID"; //$NON-NLS-1$
+	static final String IDREF = "IDREF"; //$NON-NLS-1$
+	static final String ENTITY = "ENTITY"; //$NON-NLS-1$
+	static final String ENTITIES = "ENTITIES"; //$NON-NLS-1$
+	static final String NOTATION = "NOTATION"; //$NON-NLS-1$
+	static final String NMTOKEN = "NMTOKEN"; //$NON-NLS-1$
+	static final String NMTOKENS = "NMTOKENS"; //$NON-NLS-1$
+	static final String NUMBER = "NUMBER"; //$NON-NLS-1$
+	static final String URI = "URI"; //$NON-NLS-1$
+	static final String ENUM = "ENUM"; //$NON-NLS-1$
 
   static final int IMPLIED_VALUE_NONE             = 1;
   static final int IMPLIED_VALUE_FIXED            = 2;

@@ -141,15 +141,15 @@ public class InferredGrammarFactory
     for (Iterator iter = collection.iterator(); iter.hasNext(); )
     {
       CMDocument cmDocument = (CMDocument)iter.next(); 
-      System.out.println("-----------------------------------------------");
-      System.out.println("cmDocument (" + cmDocument.getProperty("http://org.eclipse.wst/cm/properties/targetNamespaceURI") +")"); 
+      System.out.println("-----------------------------------------------"); //$NON-NLS-1$
+      System.out.println("cmDocument (" + cmDocument.getProperty("http://org.eclipse.wst/cm/properties/targetNamespaceURI") +")");  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       CMNamedNodeMapImpl elementMap = (CMNamedNodeMapImpl)cmDocument.getElements();
       int size = elementMap.getLength();
       for (int i = 0; i < size; i++)
       {
         CMElementDeclaration ed = (CMElementDeclaration)elementMap.item(i);
         CMDescriptionBuilder builder = new CMDescriptionBuilder();
-        System.out.println("  ELEMENT " + ed.getNodeName() + " = " + builder.buildDescription(ed));
+        System.out.println("  ELEMENT " + ed.getNodeName() + " = " + builder.buildDescription(ed)); //$NON-NLS-1$ //$NON-NLS-2$
       }
     }
   }        

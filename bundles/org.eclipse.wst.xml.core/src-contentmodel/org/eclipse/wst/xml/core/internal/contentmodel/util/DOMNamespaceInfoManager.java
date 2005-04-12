@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
  */
 public class DOMNamespaceInfoManager
 {                               
-  public static final String XSI_URI = "http://www.w3.org/2001/XMLSchema-instance";
+  public static final String XSI_URI = "http://www.w3.org/2001/XMLSchema-instance"; //$NON-NLS-1$
 
   public DOMNamespaceInfoManager()
   {
@@ -52,7 +52,7 @@ public class DOMNamespaceInfoManager
     //                   
     Document document = element.getOwnerDocument();
                                 
-    String schemaLocationValue = "";     
+    String schemaLocationValue = "";      //$NON-NLS-1$
 
     for (Iterator iterator = namespaceInfoList.iterator(); iterator.hasNext(); )
     {
@@ -61,7 +61,7 @@ public class DOMNamespaceInfoManager
                
       if (nsInfo.uri != null) 
       {            
-        String attrName = nsInfo.prefix != null ? "xmlns:" + nsInfo.prefix : "xmlns";
+        String attrName = nsInfo.prefix != null ? "xmlns:" + nsInfo.prefix : "xmlns"; //$NON-NLS-1$ //$NON-NLS-2$
         Attr namespaceAttr = document.createAttribute(attrName);  
         namespaceAttr.setValue(nsInfo.uri);
         element.setAttributeNode(namespaceAttr);   
@@ -72,9 +72,9 @@ public class DOMNamespaceInfoManager
         if (nsInfo.locationHint != null)
         {
           schemaLocationValue += nsInfo.uri;
-          schemaLocationValue += " ";
+          schemaLocationValue += " "; //$NON-NLS-1$
           schemaLocationValue += nsInfo.locationHint;
-          schemaLocationValue += " ";   
+          schemaLocationValue += " ";    //$NON-NLS-1$
         }   
 
         if (nsInfo.uri.equals(XSI_URI))
@@ -86,7 +86,7 @@ public class DOMNamespaceInfoManager
       {
         // in this case we use the attribute "xsi:noNamespaceSchemaLocation"
         //
-        Attr attr = document.createAttribute("xsi:noNamespaceSchemaLocation");  
+        Attr attr = document.createAttribute("xsi:noNamespaceSchemaLocation");   //$NON-NLS-1$
         attr.setValue(nsInfo.locationHint);
         element.setAttributeNode(attr);
       } 
@@ -96,7 +96,7 @@ public class DOMNamespaceInfoManager
     {
       // we add an xmlns:xsi attribute to define 'xsi:schemaLocation' attribute
       //   
-      Attr attr = document.createAttribute("xmlns:xsi");
+      Attr attr = document.createAttribute("xmlns:xsi"); //$NON-NLS-1$
       attr.setValue(XSI_URI);
       element.setAttributeNode(attr);
     }
@@ -105,7 +105,7 @@ public class DOMNamespaceInfoManager
     {
       // create the "xsi:schemaLocation" attribute
       //
-      Attr attr = document.createAttribute("xsi:schemaLocation");
+      Attr attr = document.createAttribute("xsi:schemaLocation"); //$NON-NLS-1$
       attr.setValue(schemaLocationValue);
       element.setAttributeNode(attr);
     }                             

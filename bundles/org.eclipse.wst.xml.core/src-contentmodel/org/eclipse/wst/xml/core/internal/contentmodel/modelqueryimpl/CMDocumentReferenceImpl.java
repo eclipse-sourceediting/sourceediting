@@ -37,6 +37,6 @@ public class CMDocumentReferenceImpl implements CMDocumentReference
   
   public String toString()
   {
-    return "[" + publicId + ", " + systemId + "]";
+    return "[" + publicId + ", " + systemId + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
 }

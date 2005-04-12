@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.util.XMLCommonUIContextIds;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -86,7 +86,7 @@ public class EditAttributeDialog extends Dialog implements ModifyListener {
 		composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		Label attributeNameLabel = new Label(composite, SWT.NONE);
-		attributeNameLabel.setText(XMLUIPlugin.getResourceString("%_UI_LABEL_NAME_COLON")); //$NON-NLS-1$
+		attributeNameLabel.setText(XMLUIMessages._UI_LABEL_NAME_COLON); //$NON-NLS-1$
 
 		attributeNameField = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -96,7 +96,7 @@ public class EditAttributeDialog extends Dialog implements ModifyListener {
 		attributeNameField.addModifyListener(this);
 
 		Label attributeValueLabel = new Label(composite, SWT.NONE);
-		attributeValueLabel.setText(XMLUIPlugin.getResourceString("%_UI_LABEL_VALUE_COLON")); //$NON-NLS-1$
+		attributeValueLabel.setText(XMLUIMessages._UI_LABEL_VALUE_COLON); //$NON-NLS-1$
 
 		String value = attribute != null ? attribute.getValue() : ""; //$NON-NLS-1$
 		int style = SWT.SINGLE | SWT.BORDER;
@@ -112,7 +112,7 @@ public class EditAttributeDialog extends Dialog implements ModifyListener {
 
 		// error message
 		errorMessageLabel = new Label(composite, SWT.WRAP);
-		errorMessageLabel.setText(XMLUIPlugin.getResourceString("%error_message_goes_here")); //$NON-NLS-1$
+		errorMessageLabel.setText(XMLUIMessages.error_message_goes_here); //$NON-NLS-1$
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.widthHint = 200;
 		gd.heightHint = Math.max(30, errorMessageLabel.computeSize(0, 0, false).y * 2);
@@ -154,7 +154,7 @@ public class EditAttributeDialog extends Dialog implements ModifyListener {
 		if (name.length() > 0) {
 			Attr matchingAttribute = ownerElement.getAttributeNode(name);
 			if (matchingAttribute != null && matchingAttribute != attribute) {
-				errorMessage = XMLUIPlugin.getResourceString("%_ERROR_XML_ATTRIBUTE_ALREADY_EXISTS"); //$NON-NLS-1$
+				errorMessage = XMLUIMessages._ERROR_XML_ATTRIBUTE_ALREADY_EXISTS; //$NON-NLS-1$
 			} else {
 				// TODO get checkName from Model
 				//errorMessage = ValidateHelper.checkXMLName(name);

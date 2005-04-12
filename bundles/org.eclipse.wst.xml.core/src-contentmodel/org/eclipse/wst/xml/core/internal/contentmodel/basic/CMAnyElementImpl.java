@@ -27,7 +27,7 @@ public class CMAnyElementImpl extends CMContentImpl implements CMAnyElement
 
   public static String computeNodeName(String uri)
   {
-    return uri != null ? ("any#" + uri) : "any";
+    return uri != null ? ("any#" + uri) : "any"; //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   // implements CMNode

@@ -958,7 +958,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 		if (id == null)
 			return false;
 		// ISSUE: -- avoid this hardcoded string
-		return id.equals("org.eclipse.jst.jsp.core.jspsource");
+		return id.equals("org.eclipse.jst.jsp.core.jspsource"); //$NON-NLS-1$
 	}
 
 	/**

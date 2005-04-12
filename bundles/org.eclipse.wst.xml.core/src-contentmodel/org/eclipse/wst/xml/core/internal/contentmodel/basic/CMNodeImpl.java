@@ -21,7 +21,7 @@ public abstract class CMNodeImpl implements CMNode
    
   public String getNodeName()
   {
-    return "";
+    return ""; //$NON-NLS-1$
   }
  
   public boolean supports(String propertyName)
@@ -32,7 +32,7 @@ public abstract class CMNodeImpl implements CMNode
   public Object getProperty(String propertyName)
   {              
     Object result = null;
-    if ("isInferred".equals(propertyName))
+    if ("isInferred".equals(propertyName)) //$NON-NLS-1$
     {
       result = isInferred ? Boolean.TRUE : Boolean.FALSE;
     }

@@ -24,6 +24,7 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
@@ -36,7 +37,6 @@ import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
@@ -62,6 +62,7 @@ import org.eclipse.wst.xml.core.internal.document.AttrImpl;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.Logger;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.editor.CMImageUtil;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
@@ -98,9 +99,9 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 
 	}
 
-	protected static final String INTERNALERROR = SSEUIPlugin.getResourceString("%SEVERE_internal_error_occu_UI_"); //$NON-NLS-1$ = "SEVERE internal error occurred "
-	protected static final String UNKNOWN_ATTR = SSEUIPlugin.getResourceString("%No_known_attribute__UI_"); //$NON-NLS-1$ = "No known attribute "
-	protected static final String UNKNOWN_CONTEXT = SSEUIPlugin.getResourceString("%Content_Assist_not_availab_UI_"); //$NON-NLS-1$ = "Content Assist not available at the current location "
+	protected static final String INTERNALERROR = XMLUIMessages.SEVERE_internal_error_occu_UI_;
+	protected static final String UNKNOWN_ATTR = XMLUIMessages.No_known_attribute__UI_;
+	protected static final String UNKNOWN_CONTEXT = XMLUIMessages.Content_Assist_not_availab_UI_;
 	protected char completionProposalAutoActivationCharacters[] = null;
 	protected char contextInformationAutoActivationCharacters[] = null;
 	private AttributeContextInformationProvider fAttributeInfoProvider = null;
@@ -205,7 +206,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			}
 		}
 		else {
-			setErrorMessage(SSEUIPlugin.getResourceString("%25concat", (new Object[]{node.getNodeName()})));
+			setErrorMessage(NLS.bind(XMLUIMessages.Element__is_unknown, (new Object[]{node.getNodeName()})));
 		}
 	}
 
@@ -326,7 +327,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 
 	protected void addCommentProposal(ContentAssistRequest contentAssistRequest) {
 		contentAssistRequest.addProposal(new CustomCompletionProposal("<!--  -->", //$NON-NLS-1$
-					contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), 5, XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_COMMENT), SSEUIPlugin.getResourceString("%6concat", (new Object[]{" <!--  -->"})), //$NON-NLS-1$ = "comment {0}"//$NON-NLS-2$
+					contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), 5, XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_COMMENT), NLS.bind(XMLUIMessages.Comment__, (new Object[]{" <!--  -->"})), //$NON-NLS-1$
 					null, null, XMLRelevanceConstants.R_COMMENT));
 	}
 
@@ -388,7 +389,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 
 		if (contentAssistRequest.getStartOffset() + contentAssistRequest.getRegion().getTextLength() < contentAssistRequest.getReplacementBeginPosition()) {
 			CustomCompletionProposal proposal = new CustomCompletionProposal(">", //$NON-NLS-1$
-						contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), 1, XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC), SSEUIPlugin.getResourceString("%9concat", (new Object[]{" '>'"})), //$NON-NLS-1$ = "Close with {0}"//$NON-NLS-2$
+						contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), 1, XMLEditorPluginImageHelper.getInstance().getImage(XMLEditorPluginImages.IMG_OBJ_TAG_GENERIC), NLS.bind(XMLUIMessages.Close_with__, (new Object[]{" '>'"})), //$NON-NLS-1$
 						null, null, XMLRelevanceConstants.R_END_TAG_NAME);
 			contentAssistRequest.addProposal(proposal);
 		}
@@ -420,7 +421,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 								proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getStartOffset(), contentAssistRequest.getRegion().getTextLength(), proposedText.length(), image, proposedText, null, proposedInfo, XMLRelevanceConstants.R_END_TAG_NAME);
 							}
 							else {
-								proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), proposedText.length(), image, SSEUIPlugin.getResourceString("%9concat", (new Object[]{"'" + proposedText + "'"})), //$NON-NLS-1$ = "Close with {0}"//$NON-NLS-2$ //$NON-NLS-3$
+								proposal = new CustomCompletionProposal(proposedText, contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), proposedText.length(), image, NLS.bind(XMLUIMessages.Close_with__, (new Object[]{"'" + proposedText + "'"})), //$NON-NLS-1$ //$NON-NLS-2$
 											null, proposedInfo, XMLRelevanceConstants.R_END_TAG_NAME);
 							}
 							contentAssistRequest.addProposal(proposal);
@@ -496,7 +497,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					// replaceText = "</" + node.getNodeName() + ">";
 					// //$NON-NLS-1$ $NON-NLS-2$
 					cursorOffset = tagName.length() + 3;
-					displayString = SSEUIPlugin.getResourceString("%17concat", (new Object[]{tagName})); //$NON-NLS-1$
+					displayString = NLS.bind(XMLUIMessages.End_with__, (new Object[]{tagName}));
 					addProposal = true;
 				}
 			}
@@ -508,7 +509,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				replaceText = node.getNodeName() + ">"; //$NON-NLS-1$
 				cursorOffset = replaceText.length();
 				replaceBegin = xmlEndTagOpen.getTextEndOffset();
-				displayString = SSEUIPlugin.getResourceString("%15concat", (new Object[]{node.getNodeName()})); //$NON-NLS-1$
+				displayString = NLS.bind(XMLUIMessages.End_with_, (new Object[]{node.getNodeName()}));
 				addProposal = true;
 			}
 			else if (type == DOMRegionContext.XML_TAG_OPEN) {
@@ -520,7 +521,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				// should only be replacing white space...
 				replaceLength = (replaceBegin > xmlEndTagOpen.getTextEndOffset()) ? replaceBegin - xmlEndTagOpen.getTextEndOffset() : 0;
 				replaceBegin = xmlEndTagOpen.getTextEndOffset();
-				displayString = SSEUIPlugin.getResourceString("%15concat", (new Object[]{"/" + node.getNodeName()})); //$NON-NLS-1$ //$NON-NLS-2$
+				displayString = NLS.bind(XMLUIMessages.End_with_,  (new Object[]{"/" + node.getNodeName()})); //$NON-NLS-1$
 				addProposal = true;
 			}
 		}
@@ -536,7 +537,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 			if (parent != null && parent.getNodeType() != Node.DOCUMENT_NODE) {
 				replaceText = parent.getNodeName() + ">"; //$NON-NLS-1$
 				cursorOffset = replaceText.length();
-				displayString = SSEUIPlugin.getResourceString("%17concat", (new Object[]{parent.getNodeName()})); //$NON-NLS-1$
+				displayString = NLS.bind(XMLUIMessages.End_with__, (new Object[]{parent.getNodeName()}));
 				setErrorMessage(null);
 				addProposal = true;
 			}
@@ -676,7 +677,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					// this is one of the few times to ignore the length --
 								// always insert
 								// contentAssistRequest.getReplacementLength(),
-								0, getContentGenerator().getStartTagClose(node, elementDecl).length(), image, SSEUIPlugin.getResourceString("%3concat", (new Object[]{getContentGenerator().getStartTagClose(node, elementDecl)})), //$NON-NLS-1$ = "Close with '{0}'"
+								0, getContentGenerator().getStartTagClose(node, elementDecl).length(), image, NLS.bind(XMLUIMessages.Close_with___, (new Object[]{getContentGenerator().getStartTagClose(node, elementDecl)})),
 								null, proposedInfo, XMLRelevanceConstants.R_CLOSE_TAG);
 					contentAssistRequest.addProposal(proposal);
 				}
@@ -687,7 +688,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 								// this is one of the few times to ignore the
 								// length -- always insert
 								// contentAssistRequest.getReplacementLength(),
-								0, 1, image, SSEUIPlugin.getResourceString("%9concat", (new Object[]{" '>'"})), //$NON-NLS-1$ = "Close with {0}"//$NON-NLS-2$
+								0, 1, image, NLS.bind(XMLUIMessages.Close_with__, (new Object[]{" '>'"})), //$NON-NLS-1$
 								null, proposedInfo, XMLRelevanceConstants.R_CLOSE_TAG);
 					contentAssistRequest.addProposal(proposal);
 
@@ -705,7 +706,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 										// this is one of the few times to
 										// ignore the length -- always insert
 										// contentAssistRequest.getReplacementLength(),
-										0, 1, image, SSEUIPlugin.getResourceString("%5concat", (new Object[]{node.getNodeName()})), //$NON-NLS-1$ = "Close with '></{0}>'"
+										0, 1, image, NLS.bind(XMLUIMessages.Close_with____, (new Object[]{node.getNodeName()})),
 										null, proposedInfo, XMLRelevanceConstants.R_CLOSE_TAG);
 							contentAssistRequest.addProposal(proposal);
 						}
@@ -718,7 +719,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 									// this is one of the few times to ignore
 									// the length -- always insert
 									// contentAssistRequest.getReplacementLength(),
-									0, 2, image, SSEUIPlugin.getResourceString("%9concat", (new Object[]{" \"/>\""})), //$NON-NLS-1$ = "Close with {0}"//$NON-NLS-2$
+									0, 2, image, NLS.bind(XMLUIMessages.Close_with__, (new Object[]{" \"/>\""})), //$NON-NLS-1$
 									null, proposedInfo, XMLRelevanceConstants.R_CLOSE_TAG + 1); // +1
 						// to
 						// bring
@@ -738,7 +739,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 							// this is one of the few times to ignore the
 							// length -- always insert
 							// contentAssistRequest.getReplacementLength(),
-							0, 1, image, SSEUIPlugin.getResourceString("%9concat", (new Object[]{" '>'"})), //$NON-NLS-1$ = "Close with {0}"//$NON-NLS-2$
+							0, 1, image, NLS.bind(XMLUIMessages.Close_with__, (new Object[]{" '>'"})), //$NON-NLS-1$
 							null, proposedInfo, XMLRelevanceConstants.R_CLOSE_TAG);
 				contentAssistRequest.addProposal(proposal);
 			}
@@ -811,9 +812,9 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				Iterator nodeIterator = cmnodes.iterator();
 				if (!nodeIterator.hasNext()) {
 					if (getCMElementDeclaration(parent) != null)
-						error = SSEUIPlugin.getResourceString("%1concat", (new Object[]{parent.getNodeName()})); //$NON-NLS-1$ = "{0} has no available child tags."
+						error = NLS.bind(XMLUIMessages._Has_no_available_child, (new Object[]{parent.getNodeName()}));
 					else
-						error = SSEUIPlugin.getResourceString("%31concat", (new Object[]{parent.getNodeName()})); //$NON-NLS-1$
+						error = NLS.bind(XMLUIMessages.Element__is_unknown, (new Object[]{parent.getNodeName()}));
 				}
 				String matchString = contentAssistRequest.getMatchString();
 				// chop off any leading <'s and whitespace from the
@@ -849,10 +850,10 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					if (error != null)
 						setErrorMessage(error);
 					else if (contentAssistRequest.getMatchString() != null && contentAssistRequest.getMatchString().length() > 0)
-						setErrorMessage(SSEUIPlugin.getResourceString("%11concat", (new Object[]{parent.getNodeName(), contentAssistRequest.getMatchString()}))); //$NON-NLS-1$
+						setErrorMessage(NLS.bind(XMLUIMessages.No_known_child_tag, (new Object[]{parent.getNodeName(), contentAssistRequest.getMatchString()})));
 					//$NON-NLS-1$ = "No known child tag names of <{0}> begin with \"{1}\"."
 					else
-						setErrorMessage(SSEUIPlugin.getResourceString("%14concat", (new Object[]{parent.getNodeName()}))); //$NON-NLS-1$
+						setErrorMessage(NLS.bind(XMLUIMessages.__Has_no_known_child, (new Object[]{parent.getNodeName()})));
 				}
 			}
 		}
@@ -916,7 +917,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				//$NON-NLS-1$
 				matchString = matchString.substring(1);
 			if (!nodeIterator.hasNext())
-				error = SSEUIPlugin.getResourceString("%8concat", (new Object[]{parent.getNodeName()})); //$NON-NLS-1$
+				error = NLS.bind(XMLUIMessages.__Has_no_known_child, (new Object[]{parent.getNodeName()}));
 			while (nodeIterator.hasNext()) {
 				CMNode elementDecl = (CMNode) nodeIterator.next();
 				if (elementDecl != null) {
@@ -962,10 +963,10 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				if (error != null)
 					setErrorMessage(error);
 				else if (contentAssistRequest.getMatchString() != null && contentAssistRequest.getMatchString().length() > 0)
-					setErrorMessage(SSEUIPlugin.getResourceString("%27concat", (new Object[]{parent.getNodeName(), contentAssistRequest.getMatchString()}))); //$NON-NLS-1$
+					setErrorMessage(NLS.bind(XMLUIMessages.No_known_child_tag_names, (new Object[]{parent.getNodeName(), contentAssistRequest.getMatchString()})));
 				//$NON-NLS-1$ = "No known child tag names of <{0}> begin with \"{1}\""
 				else
-					setErrorMessage(SSEUIPlugin.getResourceString("%28concat", (new Object[]{parent.getNodeName()}))); //$NON-NLS-1$
+					setErrorMessage(NLS.bind(XMLUIMessages.__Has_no_known_child, (new Object[]{parent.getNodeName()})));
 			}
 		}
 		else if (parent.getNodeType() == Node.DOCUMENT_NODE) {
@@ -1620,7 +1621,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					continue;
 				if (Debug.displayInfo)
 					System.out.println(rootName + " already present!"); //$NON-NLS-1$
-				setErrorMessage(SSEUIPlugin.getResourceString("%18concat", (new Object[]{rootName}))); //$NON-NLS-1$ = "The document element <{0}> is already present."
+				setErrorMessage(NLS.bind(XMLUIMessages.The_document_element__, (new Object[]{rootName})));
 				return new ArrayList(0);
 			}
 		}
@@ -1645,9 +1646,9 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 						//$NON-NLS-4$//$NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$
 						//$NON-NLS-4$//$NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$
 						if (location.length() > 0)
-							setErrorMessage(SSEUIPlugin.getResourceString("%29concat", (new Object[]{rootName, location}))); //$NON-NLS-1$ = "No definition was found for element <{0}> in {1}"
+							setErrorMessage(NLS.bind(XMLUIMessages.No_definition_for_in, (new Object[]{rootName, location})));
 						else
-							setErrorMessage(SSEUIPlugin.getResourceString("%20concat", (new Object[]{rootName}))); //$NON-NLS-1$ = "No definition was found for element <{0}>"
+							setErrorMessage(NLS.bind(XMLUIMessages.No_definition_for, (new Object[]{rootName})));
 					}
 				}
 			}
@@ -1660,9 +1661,9 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 				//$NON-NLS-4$//$NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$
 				//$NON-NLS-4$//$NON-NLS-3$//$NON-NLS-2$//$NON-NLS-1$
 				if (location.length() > 0)
-					setErrorMessage(SSEUIPlugin.getResourceString("%24concat", (new Object[]{location}))); //$NON-NLS-1$ = "No content model found for {0}."
+					setErrorMessage(NLS.bind(XMLUIMessages.No_content_model_for, (new Object[]{location})));
 				else
-					setErrorMessage(SSEUIPlugin.getResourceString("%No_content_model_found_UI_")); //$NON-NLS-1$ = "No content model found"
+					setErrorMessage(XMLUIMessages.No_content_model_found_UI_);
 			}
 		}
 

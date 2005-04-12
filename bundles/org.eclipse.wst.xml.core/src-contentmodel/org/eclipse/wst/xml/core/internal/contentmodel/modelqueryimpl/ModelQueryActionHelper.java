@@ -332,8 +332,8 @@ public class ModelQueryActionHelper
           CMNode childOrigin= modelQuery.getOrigin(childElement);
 
           CMNodeList cmNodeList = childOrigin != null ? 
-                                    (CMNodeList)childOrigin.getProperty("SubstitutionGroup") :
-                                    (CMNodeList)childEd.getProperty("SubstitutionGroup");
+                                    (CMNodeList)childOrigin.getProperty("SubstitutionGroup") : //$NON-NLS-1$
+                                    (CMNodeList)childEd.getProperty("SubstitutionGroup"); //$NON-NLS-1$
 
           if (cmNodeList != null && cmNodeList.getLength() > 1)
           {                                                 
@@ -342,7 +342,7 @@ public class ModelQueryActionHelper
             for (int i = 0; i < cmNodeList.getLength(); i++)
             {         
               CMNode substitution = cmNodeList.item(i);
-              if (!substitution.getNodeName().equals(childEdName) && !Boolean.TRUE.equals(substitution.getProperty("Abstract")))
+              if (!substitution.getNodeName().equals(childEdName) && !Boolean.TRUE.equals(substitution.getProperty("Abstract"))) //$NON-NLS-1$
               {
                 Action action = new Action(ModelQueryAction.REPLACE, parent, cmNodeList.item(i), replaceIndex, replaceIndex);
                 actionList.add(action);

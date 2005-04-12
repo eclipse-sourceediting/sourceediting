@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.uriresolver.XMLCatalogEntry;
 import org.eclipse.wst.xml.uriresolver.util.URIHelper;
 
@@ -31,7 +31,7 @@ public class EditEntityHelper {
 		String[] extensions = {"dtd", "txt"}; //$NON-NLS-1$ //$NON-NLS-2$
 		SelectXMLCatalogIdDialog dialog = new SelectXMLCatalogIdDialog(parentShell, extensions);
 		dialog.create();
-		dialog.getShell().setText(XMLUIPlugin.getResourceString("%_UI_LABEL_SELECT_XML_CATALOG_ENTRY")); //$NON-NLS-1$
+		dialog.getShell().setText(XMLUIMessages._UI_LABEL_SELECT_XML_CATALOG_ENTRY); //$NON-NLS-1$
 		dialog.setBlockOnOpen(true);
 		dialog.open();
 		if (dialog.getReturnCode() == Window.OK) {
@@ -49,7 +49,7 @@ public class EditEntityHelper {
 		String[] extensions = {"dtd"}; //$NON-NLS-1$
 		SelectFileOrXMLCatalogIdDialog dialog = new SelectFileOrXMLCatalogIdDialog(parentShell, extensions, XMLCatalogEntry.SYSTEM);
 		dialog.create();
-		dialog.getShell().setText(XMLUIPlugin.getResourceString("%_UI_LABEL_SPECIFY_SYSTEM_ID")); //$NON-NLS-1$
+		dialog.getShell().setText(XMLUIMessages._UI_LABEL_SPECIFY_SYSTEM_ID); //$NON-NLS-1$
 		dialog.setBlockOnOpen(true);
 		dialog.open();
 		if (dialog.getReturnCode() == Window.OK) {

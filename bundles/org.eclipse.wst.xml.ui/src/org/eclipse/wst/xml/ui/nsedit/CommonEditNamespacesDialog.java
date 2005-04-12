@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.ui.dialogs.EditNamespaceInfoDialog;
 import org.eclipse.wst.xml.ui.dialogs.NamespaceInfoErrorHelper;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
 public class CommonEditNamespacesDialog {
@@ -141,7 +142,7 @@ public class CommonEditNamespacesDialog {
 		newButton = new Button(buttonComposite, SWT.NONE);
 		//newButton.setText(" " +
 		// XMLCommonUIPlugin.getInstance().getString("_UI_BUTTON_NEW") + " ");
-		newButton.setText("   " + XMLUIPlugin.getResourceString("%CommonEditNamespacesDialog.0") + "   "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		newButton.setText("   " + XMLUIMessages.CommonEditNamespacesDialog_0 + "   "); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		newButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL)); //ViewUtility.createHorizontalFill());
 		newButton.addSelectionListener(selectionListener);
 
@@ -152,7 +153,7 @@ public class CommonEditNamespacesDialog {
 		//gd.grabExcessHorizontalSpace = true;
 
 		editButton = new Button(buttonComposite, SWT.NONE);
-		editButton.setText(XMLUIPlugin.getResourceString("%_UI_BUTTON_EDIT")); //$NON-NLS-1$
+		editButton.setText(XMLUIMessages._UI_BUTTON_EDIT); //$NON-NLS-1$
 		editButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL)); //ViewUtility.createHorizontalFill());
 		editButton.addSelectionListener(selectionListener);
 
@@ -163,7 +164,7 @@ public class CommonEditNamespacesDialog {
 		//gd.grabExcessHorizontalSpace = true;
 
 		deleteButton = new Button(buttonComposite, SWT.NONE);
-		deleteButton.setText(XMLUIPlugin.getResourceString("%_UI_BUTTON_DELETE")); //$NON-NLS-1$
+		deleteButton.setText(XMLUIMessages._UI_BUTTON_DELETE); //$NON-NLS-1$
 		deleteButton.setLayoutData(new GridData(GridData.FILL_HORIZONTAL)); //ViewUtility.createHorizontalFill());
 		deleteButton.addSelectionListener(selectionListener);
 	}
@@ -281,7 +282,7 @@ public class CommonEditNamespacesDialog {
 	public void performEdit() {
 		Object selection = getSelection(tableViewer.getSelection());
 		if (selection != null) {
-			EditNamespaceInfoDialog dialog = invokeDialog(XMLUIPlugin.getResourceString("%_UI_LABEL_NEW_NAMESPACE_INFORMATION"), (NamespaceInfo) selection); //$NON-NLS-1$
+			EditNamespaceInfoDialog dialog = invokeDialog(XMLUIMessages._UI_LABEL_NEW_NAMESPACE_INFORMATION, (NamespaceInfo) selection); //$NON-NLS-1$
 			updateErrorMessage(namespaceInfoList);
 			performDelayedUpdate();
 		}
@@ -289,7 +290,7 @@ public class CommonEditNamespacesDialog {
 
 	public void performNew() {
 		Shell shell = XMLUIPlugin.getInstance().getWorkbench().getActiveWorkbenchWindow().getShell();
-		CommonAddNamespacesDialog dialog = new CommonAddNamespacesDialog(shell, XMLUIPlugin.getResourceString("%_UI_ADD_NAMESPACE_DECLARATIONS"), resourceLocation, namespaceInfoList); //$NON-NLS-1$
+		CommonAddNamespacesDialog dialog = new CommonAddNamespacesDialog(shell, XMLUIMessages._UI_ADD_NAMESPACE_DECLARATIONS, resourceLocation, namespaceInfoList); //$NON-NLS-1$
 		dialog.createAndOpen();
 		if (dialog.getReturnCode() == Window.OK) {
 			namespaceInfoList.addAll(dialog.getNamespaceInfoList());

@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.ContentModelManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
-import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.uriresolver.util.IdResolver;
 import org.eclipse.wst.xml.uriresolver.util.IdResolverImpl;
 import org.eclipse.wst.xml.uriresolver.util.URIHelper;
@@ -118,7 +118,7 @@ public class EditNamespaceInfoDialog extends Dialog {
 		// row 1
 		//
 		Label uriLabel = new Label(composite, SWT.NONE);
-		uriLabel.setText(XMLUIPlugin.getResourceString("%_UI_LABEL_NAMESPACE_NAME_COLON")); //$NON-NLS-1$
+		uriLabel.setText(XMLUIMessages._UI_LABEL_NAMESPACE_NAME_COLON); //$NON-NLS-1$
 
 		uriField = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -133,7 +133,7 @@ public class EditNamespaceInfoDialog extends Dialog {
 		// row 2
 		//
 		Label prefixLabel = new Label(composite, SWT.NONE);
-		prefixLabel.setText(XMLUIPlugin.getResourceString("%_UI_LABEL_PREFIX_COLON")); //$NON-NLS-1$
+		prefixLabel.setText(XMLUIMessages._UI_LABEL_PREFIX_COLON); //$NON-NLS-1$
 
 		prefixField = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -147,7 +147,7 @@ public class EditNamespaceInfoDialog extends Dialog {
 		// row 3
 		//
 		Label locationHintLabel = new Label(composite, SWT.NONE);
-		locationHintLabel.setText(XMLUIPlugin.getResourceString("%_UI_LABEL_LOCATION_HINT_COLON")); //$NON-NLS-1$
+		locationHintLabel.setText(XMLUIMessages._UI_LABEL_LOCATION_HINT_COLON); //$NON-NLS-1$
 
 		locationHintField = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -164,13 +164,13 @@ public class EditNamespaceInfoDialog extends Dialog {
 		};
 
 		browseButton = new Button(composite, SWT.NONE);
-		browseButton.setText(XMLUIPlugin.getResourceString("%_UI_LABEL_BROWSE")); //$NON-NLS-1$
+		browseButton.setText(XMLUIMessages._UI_LABEL_BROWSE); //$NON-NLS-1$
 		browseButton.addSelectionListener(selectionListener);
 		browseButton.setEnabled(locationHintField.getEnabled());
 
 		// error message
 		errorMessageLabel = new Label(dialogArea, SWT.NONE);
-		errorMessageLabel.setText(XMLUIPlugin.getResourceString("%error_message_goes_here")); //$NON-NLS-1$
+		errorMessageLabel.setText(XMLUIMessages.error_message_goes_here); //$NON-NLS-1$
 		errorMessageLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		Color color = new Color(errorMessageLabel.getDisplay(), 200, 0, 0);
 		errorMessageLabel.setForeground(color);
@@ -186,7 +186,7 @@ public class EditNamespaceInfoDialog extends Dialog {
 		String[] extensions = {".xsd"}; //$NON-NLS-1$
 		SelectFileOrXMLCatalogIdDialog dialog = new SelectFileOrXMLCatalogIdDialog(getShell(), extensions);
 		dialog.create();
-		dialog.getShell().setText(XMLUIPlugin.getResourceString("%_UI_LABEL_SELECT_FILE")); //$NON-NLS-1$
+		dialog.getShell().setText(XMLUIMessages._UI_LABEL_SELECT_FILE); //$NON-NLS-1$
 		dialog.setBlockOnOpen(true);
 		dialog.open();
 

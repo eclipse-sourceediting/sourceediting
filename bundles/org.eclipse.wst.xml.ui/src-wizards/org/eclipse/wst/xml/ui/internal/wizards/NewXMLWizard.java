@@ -66,13 +66,13 @@ public class NewXMLWizard extends NewModelWizard
   protected static final int CREATE_FROM_SCRATCH = 2;
 
   protected static final String[] createFromRadioButtonLabel
-    = {XMLWizard.getString("_UI_RADIO_XML_FROM_DTD"),
-       XMLWizard.getString("_UI_RADIO_XML_FROM_SCHEMA"),
-       XMLWizard.getString("_UI_RADIO_XML_FROM_SCRATCH")};
+    = {XMLWizardsMessages._UI_RADIO_XML_FROM_DTD,
+       XMLWizardsMessages._UI_RADIO_XML_FROM_SCHEMA,
+       XMLWizardsMessages._UI_RADIO_XML_FROM_SCRATCH};
 
-  protected static final String[] filePageFilterExtensions = {".xml"};
-  protected static final String[] browseXSDFilterExtensions = {".xsd"};
-  protected static final String[] browseDTDFilterExtensions = {".dtd"};
+  protected static final String[] filePageFilterExtensions = {".xml"}; //$NON-NLS-1$
+  protected static final String[] browseXSDFilterExtensions = {".xsd"}; //$NON-NLS-1$
+  protected static final String[] browseDTDFilterExtensions = {".dtd"}; //$NON-NLS-1$
 
   protected NewFilePage newFilePage;
   protected StartPage startPage;
@@ -86,8 +86,8 @@ public class NewXMLWizard extends NewModelWizard
 
   public NewXMLWizard()
   {
-    setWindowTitle(XMLWizard.getString("_UI_WIZARD_CREATE_XML_HEADING"));
-    setDefaultPageImageDescriptor(ImageDescriptor.createFromFile(XMLWizard.class,"icons/generatexml_wiz.gif"));
+    setWindowTitle(XMLWizardsMessages._UI_WIZARD_CREATE_XML_HEADING);
+    setDefaultPageImageDescriptor(ImageDescriptor.createFromFile(XMLWizard.class,"icons/generatexml_wiz.gif")); //$NON-NLS-1$
     generator = new NewXMLGenerator();
   }
   
@@ -113,7 +113,7 @@ public class NewXMLWizard extends NewModelWizard
       wizard.setNeedsProgressMonitor(true);
       WizardDialog dialog = new WizardDialog(shell, wizard);
       dialog.create();          
-      dialog.getShell().setText(XMLWizard.getString("_UI_DIALOG_NEW_TITLE"));     
+      dialog.getShell().setText(XMLWizardsMessages._UI_DIALOG_NEW_TITLE);     
       dialog.setBlockOnOpen(true);
       dialog.open();
     }         
@@ -131,7 +131,7 @@ public class NewXMLWizard extends NewModelWizard
     if (grammarURI == null)
     {
       // start page
-      startPage = new StartPage("StartPage", createFromRadioButtonLabel)
+      startPage = new StartPage("StartPage", createFromRadioButtonLabel) //$NON-NLS-1$
       {
         public void createControl(Composite parent)
         {
@@ -152,17 +152,17 @@ public class NewXMLWizard extends NewModelWizard
       };
 
 
-      startPage.setTitle(XMLWizard.getString("_UI_WIZARD_CREATE_XML_HEADING"));
-      startPage.setDescription(XMLWizard.getString("_UI_WIZARD_CREATE_XML_EXPL"));
+      startPage.setTitle(XMLWizardsMessages._UI_WIZARD_CREATE_XML_HEADING);
+      startPage.setDescription(XMLWizardsMessages._UI_WIZARD_CREATE_XML_EXPL);
       addPage(startPage);
     }
                                    
     // new file page                              
     newFilePage = new NewFilePage(selection);
-    newFilePage.setTitle(XMLWizard.getString("_UI_WIZARD_CREATE_XML_FILE_HEADING"));
-    newFilePage.setDescription(XMLWizard.getString("_UI_WIZARD_CREATE_XML_FILE_EXPL")); 
-    newFilePage.defaultName = (grammarURI != null) ? URIHelper.removeFileExtension(URIHelper.getLastSegment(grammarURI)) : "NewFile";
-    newFilePage.defaultFileExtension = ".xml";
+    newFilePage.setTitle(XMLWizardsMessages._UI_WIZARD_CREATE_XML_FILE_HEADING);
+    newFilePage.setDescription(XMLWizardsMessages._UI_WIZARD_CREATE_XML_FILE_EXPL); 
+    newFilePage.defaultName = (grammarURI != null) ? URIHelper.removeFileExtension(URIHelper.getLastSegment(grammarURI)) : "NewFile"; //$NON-NLS-1$
+    newFilePage.defaultFileExtension = ".xml"; //$NON-NLS-1$
     newFilePage.filterExtensions = filePageFilterExtensions;
     addPage(newFilePage);
      
@@ -172,8 +172,8 @@ public class NewXMLWizard extends NewModelWizard
             
     // select root element page
     selectRootElementPage = new SelectRootElementPage();
-    selectRootElementPage.setTitle(XMLWizard.getString("_UI_WIZARD_SELECT_ROOT_HEADING"));
-    selectRootElementPage.setDescription(XMLWizard.getString("_UI_WIZARD_SELECT_ROOT_EXPL"));
+    selectRootElementPage.setTitle(XMLWizardsMessages._UI_WIZARD_SELECT_ROOT_HEADING);
+    selectRootElementPage.setDescription(XMLWizardsMessages._UI_WIZARD_SELECT_ROOT_EXPL);
     addPage(selectRootElementPage);
   }
                   
@@ -200,11 +200,11 @@ public class NewXMLWizard extends NewModelWizard
     int result = CREATE_FROM_SCRATCH;
     if (grammarURI != null)
     {              
-      if (grammarURI.endsWith(".dtd"))
+      if (grammarURI.endsWith(".dtd")) //$NON-NLS-1$
       {
         result = CREATE_FROM_DTD;
       }
-      else if (grammarURI.endsWith(".xsd"))
+      else if (grammarURI.endsWith(".xsd")) //$NON-NLS-1$
       {
         result = CREATE_FROM_XSD;
       }
@@ -286,7 +286,7 @@ public class NewXMLWizard extends NewModelWizard
         String fileName = newFilePage.getFileName();
         if ((new Path(fileName)).getFileExtension() == null)
         {
-          newFilePage.setFileName(fileName.concat(".xml"));
+          newFilePage.setFileName(fileName.concat(".xml")); //$NON-NLS-1$
         }
 
         IFile newFile = newFilePage.createNewFile();
@@ -338,7 +338,7 @@ public class NewXMLWizard extends NewModelWizard
 
   protected String getDefaultSystemId()
   {  
-    String relativePath = "platform:/resource/" + newFilePage.getContainerFullPath().toString() + "/dummy"; 
+    String relativePath = "platform:/resource/" + newFilePage.getContainerFullPath().toString() + "/dummy";  //$NON-NLS-1$ //$NON-NLS-2$
     return URIHelper.getRelativeURI(generator.getGrammarURI(), relativePath);
   }                          
      
@@ -352,7 +352,7 @@ public class NewXMLWizard extends NewModelWizard
   
     SelectGrammarFilePage()
     {
-      super("SelectGrammarFilePage");
+      super("SelectGrammarFilePage"); //$NON-NLS-1$
     }  
 
     public void createControl(Composite parent)
@@ -383,14 +383,14 @@ public class NewXMLWizard extends NewModelWizard
       {                      
         if (getCreateMode() == CREATE_FROM_DTD)
         {                               
-          setTitle(XMLWizard.getString("_UI_WIZARD_SELECT_DTD_FILE_TITLE"));
-          setDescription(XMLWizard.getString("_UI_WIZARD_SELECT_DTD_FILE_DESC"));
+          setTitle(XMLWizardsMessages._UI_WIZARD_SELECT_DTD_FILE_TITLE);
+          setDescription(XMLWizardsMessages._UI_WIZARD_SELECT_DTD_FILE_DESC);
           panel.setFilterExtensions(browseDTDFilterExtensions);
         }
         else
         { 
-          setTitle(XMLWizard.getString("_UI_WIZARD_SELECT_XSD_FILE_TITLE"));
-          setDescription(XMLWizard.getString("_UI_WIZARD_SELECT_XSD_FILE_DESC"));
+          setTitle(XMLWizardsMessages._UI_WIZARD_SELECT_XSD_FILE_TITLE);
+          setDescription(XMLWizardsMessages._UI_WIZARD_SELECT_XSD_FILE_DESC);
           panel.setFilterExtensions(browseXSDFilterExtensions);
         } 
         generator.setGrammarURI(null);
@@ -437,7 +437,7 @@ public class NewXMLWizard extends NewModelWizard
       {         
         if (!URIHelper.isReadableURI(uri,false))
         {
-          errorMessage = XMLWizard.getString("_UI_LABEL_ERROR_CATALOG_ENTRY_INVALID");                  
+          errorMessage = XMLWizardsMessages._UI_LABEL_ERROR_CATALOG_ENTRY_INVALID;                  
         }
       }             
       return errorMessage;
@@ -467,7 +467,7 @@ public class NewXMLWizard extends NewModelWizard
 
     SelectRootElementPage()
     {
-      super("SelectRootElementPage");
+      super("SelectRootElementPage"); //$NON-NLS-1$
     }
 
     public void createControl(Composite parent)
@@ -481,7 +481,7 @@ public class NewXMLWizard extends NewModelWizard
 
       // select root element
       Label containerLabel = new Label(containerGroup, SWT.NONE);
-      containerLabel.setText(XMLWizard.getString("_UI_LABEL_ROOT_ELEMENT"));
+      containerLabel.setText(XMLWizardsMessages._UI_LABEL_ROOT_ELEMENT);
       combo = new Combo(containerGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
       combo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
       combo.addSelectionListener(this);
@@ -490,7 +490,7 @@ public class NewXMLWizard extends NewModelWizard
       // Options
       {
         Group group = new Group(containerGroup, SWT.NONE);
-        group.setText(XMLWizard.getString("_UI_WIZARD_CONTENT_OPTIONS"));
+        group.setText(XMLWizardsMessages._UI_WIZARD_CONTENT_OPTIONS);
         //WorkbenchHelp.setHelp(group, XMLBuilderContextIds.XMLC_CURRENT_GROUP);
         
         GridLayout layout = new GridLayout();
@@ -503,25 +503,25 @@ public class NewXMLWizard extends NewModelWizard
         radioButton = new Button[4];
                 
         radioButton[0] = new Button(group, SWT.CHECK);
-        radioButton[0].setText(XMLWizard.getString("_UI_WIZARD_CREATE_OPTIONAL_ATTRIBUTES"));
+        radioButton[0].setText(XMLWizardsMessages._UI_WIZARD_CREATE_OPTIONAL_ATTRIBUTES);
         radioButton[0].setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         radioButton[0].setSelection(false);
         //WorkbenchHelp.setHelp(radioButton[0], XMLBuilderContextIds.XMLC_CREATE_OPTIONAL_ATTRIBUTES);
         
         radioButton[1] = new Button(group, SWT.CHECK);
-        radioButton[1].setText(XMLWizard.getString("_UI_WIZARD_CREATE_OPTIONAL_ELEMENTS"));
+        radioButton[1].setText(XMLWizardsMessages._UI_WIZARD_CREATE_OPTIONAL_ELEMENTS);
         radioButton[1].setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         radioButton[1].setSelection(false);
         //WorkbenchHelp.setHelp(radioButton[1], XMLBuilderContextIds.XMLC_CREATE_OPTIONAL_ELEMENTS);
         
         radioButton[2] = new Button(group, SWT.CHECK);
-        radioButton[2].setText(XMLWizard.getString("_UI_WIZARD_CREATE_FIRST_CHOICE"));
+        radioButton[2].setText(XMLWizardsMessages._UI_WIZARD_CREATE_FIRST_CHOICE);
         radioButton[2].setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         radioButton[2].setSelection(true);
         //WorkbenchHelp.setHelp(radioButton[2], XMLBuilderContextIds.XMLC_CREATE_FIRST_CHOICE);
         
         radioButton[3] = new Button(group, SWT.CHECK);
-        radioButton[3].setText(XMLWizard.getString("_UI_WIZARD_FILL_ELEMENTS_AND_ATTRIBUTES"));
+        radioButton[3].setText(XMLWizardsMessages._UI_WIZARD_FILL_ELEMENTS_AND_ATTRIBUTES);
         radioButton[3].setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         radioButton[3].setSelection(true);                        
         //WorkbenchHelp.setHelp(radioButton[3], XMLBuilderContextIds.XMLC_FILL_ELEMENTS_AND_ATTRIBUTES);
@@ -529,13 +529,13 @@ public class NewXMLWizard extends NewModelWizard
         radioButton = new Button[2];
 
         radioButton[0] = new Button(group, SWT.RADIO);
-        radioButton[0].setText(XMLWizard.getString("_UI_WIZARD_CREATE_REQUIRED"));
+        radioButton[0].setText(XMLWizardsMessages.getString("_UI_WIZARD_CREATE_REQUIRED"));
         radioButton[0].setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         radioButton[0].setSelection(true);
         WorkbenchHelp.setHelp(radioButton[0], XMLBuilderContextIds.XMLC_CREATE_REQUIRED_ONLY);
 
         radioButton[1] = new Button(group, SWT.RADIO);
-        radioButton[1].setText(XMLWizard.getString("_UI_WIZARD_CREATE_OPTIONAL"));
+        radioButton[1].setText(XMLWizardsMessages.getString("_UI_WIZARD_CREATE_OPTIONAL"));
         radioButton[1].setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         WorkbenchHelp.setHelp(radioButton[1], XMLBuilderContextIds.XMLC_CREATE_REQUIRED_AND_OPTION);
 */
@@ -603,7 +603,7 @@ public class NewXMLWizard extends NewModelWizard
             for (int i = 0; i < nameNodeMap.getLength(); i++)
             {
               CMElementDeclaration cmElementDeclaration = (CMElementDeclaration)nameNodeMap.item(i);
-              Object value =  cmElementDeclaration.getProperty("Abstract");
+              Object value =  cmElementDeclaration.getProperty("Abstract"); //$NON-NLS-1$
               if  (value !=  Boolean.TRUE)
               {
                 nameNodeVector.add(cmElementDeclaration.getElementName());
@@ -616,7 +616,7 @@ public class NewXMLWizard extends NewModelWizard
               Arrays.sort(nameNodeArray, Collator.getInstance());
             }
 
-            String defaultRootName = (String) (generator.getCMDocument()).getProperty("http://org.eclipse.wst/cm/properties/defaultRootName");
+            String defaultRootName = (String) (generator.getCMDocument()).getProperty("http://org.eclipse.wst/cm/properties/defaultRootName"); //$NON-NLS-1$
             int defaultRootIndex = -1;
             combo.removeAll();
 
@@ -640,7 +640,7 @@ public class NewXMLWizard extends NewModelWizard
             }
           }
 
-          if (generator.getGrammarURI().endsWith("xsd"))
+          if (generator.getGrammarURI().endsWith("xsd")) //$NON-NLS-1$
           {                                       
             pageBook.showPage(xsdOptionsPanel); 
             generator.setDefaultSystemId(getDefaultSystemId());
@@ -659,7 +659,7 @@ public class NewXMLWizard extends NewModelWizard
             }
             xsdOptionsPanel.setNamespaceInfoList(generator.namespaceInfoList);
           }
-          else if (generator.getGrammarURI().endsWith("dtd"))
+          else if (generator.getGrammarURI().endsWith("dtd")) //$NON-NLS-1$
           {
             pageBook.showPage(dtdOptionsPanel);
             dtdOptionsPanel.update();
@@ -682,7 +682,7 @@ public class NewXMLWizard extends NewModelWizard
                             
     private String getDefaultPrefix(List nsInfoList)
     {
-      String defaultPrefix = "p";
+      String defaultPrefix = "p"; //$NON-NLS-1$
       if (nsInfoList == null)
         return defaultPrefix;
 
@@ -743,7 +743,7 @@ public class NewXMLWizard extends NewModelWizard
       }
       else if (generator.getRootElementName() == null || generator.getRootElementName().length() == 0)
       {
-        errorMessage = XMLWizard.getString("_ERROR_ROOT_ELEMENT_MUST_BE_SPECIFIED");
+        errorMessage = XMLWizardsMessages._ERROR_ROOT_ELEMENT_MUST_BE_SPECIFIED;
       }                  
 
       return errorMessage;
@@ -807,14 +807,14 @@ public class NewXMLWizard extends NewModelWizard
       {
         // todo... this is a nasty mess. I need to revist this code.
         //
-        String resourceURI = "platform:/resource" + newFilePage.getContainerFullPath().toString() + "/dummy";
+        String resourceURI = "platform:/resource" + newFilePage.getContainerFullPath().toString() + "/dummy"; //$NON-NLS-1$ //$NON-NLS-2$
         String resolvedPath = URIHelper.normalize(resourceURI, null, null);
-        if (resolvedPath.startsWith("file:/"))
+        if (resolvedPath.startsWith("file:/")) //$NON-NLS-1$
         {
           resolvedPath = resolvedPath.substring(6);
         }
         // end nasty messs
-        String tableTitle = XMLWizard.getString("_UI_LABEL_NAMESPACE_INFORMATION");
+        String tableTitle = XMLWizardsMessages._UI_LABEL_NAMESPACE_INFORMATION;
         editNamespaces = new CommonEditNamespacesDialog(co, new Path(resolvedPath), tableTitle, true, true);
       }
 
@@ -866,7 +866,7 @@ public class NewXMLWizard extends NewModelWizard
 
       setLayout(createOptionsPanelLayout());
       Group group = new Group(this, SWT.NONE);
-      group.setText(XMLWizard.getString("_UI_LABEL_DOCTYPE_INFORMATION"));
+      group.setText(XMLWizardsMessages._UI_LABEL_DOCTYPE_INFORMATION);
       //WorkbenchHelp.setHelp(group, XMLBuilderContextIds.XMLC_DOCUMENTATION_GROUP);
       
       GridLayout layout = new GridLayout();
@@ -875,14 +875,14 @@ public class NewXMLWizard extends NewModelWizard
       group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
                   
       Label publicIdLabel = new Label(group, SWT.NONE);
-      publicIdLabel.setText(XMLWizard.getString("_UI_LABEL_PUBLIC_ID"));
+      publicIdLabel.setText(XMLWizardsMessages._UI_LABEL_PUBLIC_ID);
       publicIdField = new Text(group, SWT.SINGLE | SWT.BORDER);
       publicIdField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
       publicIdField.addModifyListener(this);
       //WorkbenchHelp.setHelp(publicIdField, XMLBuilderContextIds.XMLC_PUBLIC);
       
       Label systemIdLabel = new Label(group, SWT.NONE);
-      systemIdLabel.setText(XMLWizard.getString("_UI_LABEL_SYSTEM_ID"));
+      systemIdLabel.setText(XMLWizardsMessages._UI_LABEL_SYSTEM_ID);
       systemIdField = new Text(group, SWT.SINGLE | SWT.BORDER);
       systemIdField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
       systemIdField.addModifyListener(this);
@@ -903,7 +903,7 @@ public class NewXMLWizard extends NewModelWizard
           theSystemId = xmlCatalogEntry.getWebAddress();
           if (theSystemId == null)
           {
-            theSystemId = generator.getGrammarURI().startsWith("http:") ? generator.getGrammarURI() : URIHelper.getLastSegment(generator.getGrammarURI());
+            theSystemId = generator.getGrammarURI().startsWith("http:") ? generator.getGrammarURI() : URIHelper.getLastSegment(generator.getGrammarURI()); //$NON-NLS-1$
           }  
         }                                          
         else
@@ -916,8 +916,8 @@ public class NewXMLWizard extends NewModelWizard
         theSystemId = getDefaultSystemId();
       }                                    
                                                                     
-      publicIdField.setText(thePublicId != null ? thePublicId : "");
-      systemIdField.setText(theSystemId != null ? theSystemId : "");
+      publicIdField.setText(thePublicId != null ? thePublicId : ""); //$NON-NLS-1$
+      systemIdField.setText(theSystemId != null ? theSystemId : ""); //$NON-NLS-1$
     }      
 
     public void modifyText(ModifyEvent e)

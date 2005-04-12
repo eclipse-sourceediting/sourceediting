@@ -15,7 +15,6 @@ package org.eclipse.wst.xml.ui.preferences;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -24,9 +23,9 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.ui.AbstractPreferencePage;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.editor.IHelpContextIds;
 
 public class XMLFilesPreferencePage extends AbstractPreferencePage {
@@ -49,28 +48,24 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 
 	protected void createContentsForCreatingGroup(Composite parent) {
 		Group creatingGroup = createGroup(parent, 1);
-		creatingGroup.setText(SSEUIPlugin.getResourceString("%Creating_files")); //$NON-NLS-1$
+		creatingGroup.setText(XMLUIMessages.Creating_files);
 
-		Label label = createLabel(creatingGroup, SSEUIPlugin.getResourceString("%Encoding_desc")); //$NON-NLS-1$
+		Label label = createLabel(creatingGroup, XMLUIMessages.Encoding_desc);
 
-		fEncodingSettings = new EncodingSettings(creatingGroup, SSEUIPlugin.getResourceString("%Encoding")); //$NON-NLS-1$
+		fEncodingSettings = new EncodingSettings(creatingGroup, XMLUIMessages.Encoding);
 	}
 
 	protected void createContentsForCreatingOrSavingGroup(Composite parent) {
 		Group creatingOrSavingGroup = createGroup(parent, 2);
-		creatingOrSavingGroup.setText(SSEUIPlugin.getResourceString("%Creating_or_saving_files")); //$NON-NLS-1$
+		creatingOrSavingGroup.setText(XMLUIMessages.Creating_or_saving_files);
 
-		Label label = createLabel(creatingOrSavingGroup, SSEUIPlugin.getResourceString("%End-of-line_code_desc")); //$NON-NLS-1$
+		Label label = createLabel(creatingOrSavingGroup, XMLUIMessages.End_of_line_code_desc);
 		((GridData) label.getLayoutData()).horizontalSpan = 2;
 		((GridData) label.getLayoutData()).grabExcessHorizontalSpace = true;
 
-		createLabel(creatingOrSavingGroup, SSEUIPlugin.getResourceString("%End-of-line_code")); //$NON-NLS-1$
+		createLabel(creatingOrSavingGroup, XMLUIMessages.End_of_line_code);
 		fEndOfLineCode = createDropDownBox(creatingOrSavingGroup);
 		populateLineDelimiters();
-	}
-
-	protected IPreferenceStore doGetPreferenceStore() {
-		return SSEUIPlugin.getDefault().getPreferenceStore();
 	}
 
 	protected void doSavePreferenceStore() {
@@ -156,16 +151,16 @@ public class XMLFilesPreferencePage extends AbstractPreferencePage {
 	 */
 	private void populateLineDelimiters() {
 		fEOLCodes = new Vector();
-		fEndOfLineCode.add(SSEUIPlugin.getResourceString("%EOL_Unix")); //$NON-NLS-1$
+		fEndOfLineCode.add(XMLUIMessages.EOL_Unix);
 		fEOLCodes.add(CommonEncodingPreferenceNames.LF);
 
-		fEndOfLineCode.add(SSEUIPlugin.getResourceString("%EOL_Mac")); //$NON-NLS-1$
+		fEndOfLineCode.add(XMLUIMessages.EOL_Mac);
 		fEOLCodes.add(CommonEncodingPreferenceNames.CR);
 
-		fEndOfLineCode.add(SSEUIPlugin.getResourceString("%EOL_Windows")); //$NON-NLS-1$
+		fEndOfLineCode.add(XMLUIMessages.EOL_Windows);
 		fEOLCodes.add(CommonEncodingPreferenceNames.CRLF);
 
-		fEndOfLineCode.add(SSEUIPlugin.getResourceString("%EOL_NoTranslation")); //$NON-NLS-1$
+		fEndOfLineCode.add(XMLUIMessages.EOL_NoTranslation);
 		fEOLCodes.add(CommonEncodingPreferenceNames.NO_TRANSLATION);
 	}
 

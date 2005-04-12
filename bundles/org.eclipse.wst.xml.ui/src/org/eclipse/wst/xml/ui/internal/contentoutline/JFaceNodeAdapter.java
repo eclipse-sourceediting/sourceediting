@@ -34,7 +34,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManagerListener;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
-import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.editor.CMImageUtil;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
@@ -319,7 +319,7 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 			if (notifier instanceof Node && (listener instanceof StructuredViewer) && (eventType == INodeNotifier.STRUCTURE_CHANGED || (eventType == INodeNotifier.CHANGE && changedFeature == null))) {
 
 				if (DEBUG)
-					System.out.println("JFaceNodeAdapter notified on event type > " + eventType);
+					System.out.println("JFaceNodeAdapter notified on event type > " + eventType); //$NON-NLS-1$
 
 				// refresh on structural and "unknown" changes
 				StructuredViewer structuredViewer = (StructuredViewer) listener;
@@ -335,7 +335,7 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 														    * &&
 														    * !propertySheetPage.getControl().isDisposed()
 														    */) {
-					RefreshPropertySheetJob refreshPropertySheetJob = new RefreshPropertySheetJob(getDisplay(), XMLUIPlugin.getResourceString("%JFaceNodeAdapter.1"), propertySheetPage); //$NON-NLS-1$
+					RefreshPropertySheetJob refreshPropertySheetJob = new RefreshPropertySheetJob(getDisplay(), XMLUIMessages.JFaceNodeAdapter_1, propertySheetPage); //$NON-NLS-1$
 					refreshPropertySheetJob.schedule();
 				}
 			}

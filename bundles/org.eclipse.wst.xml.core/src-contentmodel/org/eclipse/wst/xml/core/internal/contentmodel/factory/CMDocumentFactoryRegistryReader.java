@@ -24,10 +24,10 @@ import org.eclipse.wst.xml.core.internal.Logger;
 
 public class CMDocumentFactoryRegistryReader
 {
-  protected static final String EXTENSION_POINT_ID = "documentFactories";
-  protected static final String TAG_NAME = "factory";
-  protected static final String ATT_CLASS = "class";
-  protected static final String ATT_TYPE = "type";  
+  protected static final String EXTENSION_POINT_ID = "documentFactories"; //$NON-NLS-1$
+  protected static final String TAG_NAME = "factory"; //$NON-NLS-1$
+  protected static final String ATT_CLASS = "class"; //$NON-NLS-1$
+  protected static final String ATT_TYPE = "type";   //$NON-NLS-1$
   protected String pluginId, extensionPointId;
   
   protected CMDocumentFactoryRegistry registry;
@@ -39,7 +39,7 @@ public class CMDocumentFactoryRegistryReader
 
   public void readRegistry()
   {
-    String bundleid = "org.eclipse.wst.xml.core";
+    String bundleid = "org.eclipse.wst.xml.core"; //$NON-NLS-1$
     IExtensionPoint point = Platform.getExtensionRegistry().getExtensionPoint(bundleid, EXTENSION_POINT_ID);
     if (point != null)
     {
@@ -62,7 +62,7 @@ public class CMDocumentFactoryRegistryReader
         try
         {
           CMDocumentFactoryDescriptor descriptor = new CMDocumentFactoryDescriptor(element);
-          for (StringTokenizer st = new StringTokenizer(filenameExtensions, ","); st.hasMoreTokens(); )
+          for (StringTokenizer st = new StringTokenizer(filenameExtensions, ","); st.hasMoreTokens(); ) //$NON-NLS-1$
           {
           	String token = st.nextToken().trim();
 			registry.putFactory(token, descriptor);	

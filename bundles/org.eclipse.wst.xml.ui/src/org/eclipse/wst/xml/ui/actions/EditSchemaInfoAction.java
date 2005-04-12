@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceInfoManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.ui.dialogs.EditSchemaInfoDialog;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -136,7 +137,7 @@ public class EditSchemaInfoAction extends NodeAction {
 			dialog.setNamespaceInfoList(namespaceInfoList);
 			dialog.create();
 			//dialog.getShell().setSize(500, 300);
-			dialog.getShell().setText(XMLUIPlugin.getResourceString("%_UI_MENU_EDIT_SCHEMA_INFORMATION_TITLE")); //$NON-NLS-1$
+			dialog.getShell().setText(XMLUIMessages._UI_MENU_EDIT_SCHEMA_INFORMATION_TITLE); //$NON-NLS-1$
 			dialog.setBlockOnOpen(true);
 			dialog.open();
 

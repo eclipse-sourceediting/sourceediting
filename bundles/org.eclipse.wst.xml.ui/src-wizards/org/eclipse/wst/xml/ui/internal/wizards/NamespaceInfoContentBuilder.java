@@ -32,7 +32,7 @@ public class NamespaceInfoContentBuilder extends ContentBuilder
    
     public void visitCMElementDeclaration(CMElementDeclaration ed)
     {                      
-      if (ed.getProperty("http://org.eclipse.wst/cm/properties/definitionInfo") != null)
+      if (ed.getProperty("http://org.eclipse.wst/cm/properties/definitionInfo") != null) //$NON-NLS-1$
       {
         super.visitCMElementDeclaration(ed);
       }
@@ -41,13 +41,13 @@ public class NamespaceInfoContentBuilder extends ContentBuilder
     protected void createAnyElementNode(CMAnyElement anyElement)
     {
       String uri = anyElement.getNamespaceURI();
-      if (uri != null && !uri.startsWith("##"))
+      if (uri != null && !uri.startsWith("##")) //$NON-NLS-1$
       {
         if (table.get(uri) == null)
         {
           NamespaceInfo info = new NamespaceInfo();
           info.uri = uri;     
-          info.prefix = "p" + count++;
+          info.prefix = "p" + count++; //$NON-NLS-1$
           table.put(uri, info); 
           list.add(info);
         }

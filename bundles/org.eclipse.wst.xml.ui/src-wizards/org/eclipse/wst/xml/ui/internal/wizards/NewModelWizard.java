@@ -204,13 +204,13 @@ public class NewModelWizard extends Wizard implements INewWizard
    */
   public class NewFilePage extends WizardNewFileCreationPage
   {
-    public String defaultName = "NewFile";
-    public String defaultFileExtension = ".txt";
-    public String[] filterExtensions = { "*.txt"};
+    public String defaultName = "NewFile"; //$NON-NLS-1$
+    public String defaultFileExtension = ".txt"; //$NON-NLS-1$
+    public String[] filterExtensions = { "*.txt"}; //$NON-NLS-1$
 
     public NewFilePage(IStructuredSelection selection)
     {
-      super("", selection);
+      super("", selection); //$NON-NLS-1$
     }
 
     protected String computeDefaultFileName()
@@ -241,7 +241,7 @@ public class NewModelWizard extends Wizard implements INewWizard
     protected String existsFileAnyCase(String fileName)
     {
       if ( (getContainerFullPath() != null) && (getContainerFullPath().isEmpty() == false)
-            && (fileName.compareTo("") != 0))
+            && (fileName.compareTo("") != 0)) //$NON-NLS-1$
       {
         //look through all resources at the specified container - compare in upper case
         IResource parent = ResourcesPlugin.getWorkspace().getRoot().findMember(getContainerFullPath());
@@ -281,22 +281,22 @@ public class NewModelWizard extends Wizard implements INewWizard
         IEditorDescriptor[] descriptors =  editorRegistry.getEditors(getFileName());        
         if (descriptors.length == 0)
         {                                                                         
-          setErrorMessage(XMLWizard.getString("_ERROR_BAD_FILENAME_EXTENSION"));                                                    
+          setErrorMessage(XMLWizardsMessages._ERROR_BAD_FILENAME_EXTENSION);                                                    
           return false;
         }              
       }
       else
       {
         // no fileExtension, let's check for this file with an .xml extension
-        fullFileName += ".xml";
+        fullFileName += ".xml"; //$NON-NLS-1$
         if ( (getContainerFullPath() != null) && (getContainerFullPath().isEmpty() == false)
-           && (getFileName().compareTo("") != 0))
+           && (getFileName().compareTo("") != 0)) //$NON-NLS-1$
         {
           Path fullPath = new Path(getContainerFullPath().toString() + '/' + fullFileName);
           IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(fullPath);
           if (resource != null) 
           {
-            setErrorMessage(XMLWizard.getString("_ERROR_FILE_ALREADY_EXISTS"));
+            setErrorMessage(XMLWizardsMessages._ERROR_FILE_ALREADY_EXISTS);
             return false;    
           }
         }        
@@ -307,7 +307,7 @@ public class NewModelWizard extends Wizard implements INewWizard
       if (sameName != null) 
       {
          String qualifiedFileName = getContainerFullPath().toString() + '/' + fullFileName;
-         setErrorMessage(XMLWizard.getString("_ERROR_FILE_ALREADY_EXISTS") + " " +  sameName);
+         setErrorMessage(XMLWizardsMessages._ERROR_FILE_ALREADY_EXISTS + " " +  sameName); //$NON-NLS-1$
          return false;
       }
             

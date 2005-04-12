@@ -15,6 +15,7 @@ package org.eclipse.wst.xml.ui.actions;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.xml.ui.dialogs.EditProcessingInstructionDialog;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -64,7 +65,7 @@ public class EditProcessingInstructionAction extends NodeAction {
 		if (pi != null) {
 			dialog = new EditProcessingInstructionDialog(shell, pi);
 		} else {
-			dialog = new EditProcessingInstructionDialog(shell, XMLUIPlugin.getResourceString("%_UI_PI_TARGET_VALUE"), XMLUIPlugin.getResourceString("%_UI_PI_DATA_VALUE")); //$NON-NLS-1$ //$NON-NLS-2$
+			dialog = new EditProcessingInstructionDialog(shell, XMLUIMessages._UI_PI_TARGET_VALUE, XMLUIMessages._UI_PI_DATA_VALUE); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		dialog.create();

@@ -39,12 +39,12 @@ public class CMDescriptionBuilder extends CMVisitor
 
   public void visitCMAnyElement(CMAnyElement anyElement)
   {
-    sb.append("namespace:uri=\"" + anyElement.getNamespaceURI() + "\"");
+    sb.append("namespace:uri=\"" + anyElement.getNamespaceURI() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public void visitCMDataType(CMDataType dataType)
   {
-    sb.append("#PCDATA");
+    sb.append("#PCDATA"); //$NON-NLS-1$
   }
 
   public void visitCMDocument(CMDocument document)
@@ -62,16 +62,16 @@ public class CMDescriptionBuilder extends CMVisitor
     int op = group.getOperator();
     if (op == CMGroup.ALL)
     {
-      sb.append("all");
+      sb.append("all"); //$NON-NLS-1$
     }
 
-    sb.append("(");
+    sb.append("("); //$NON-NLS-1$
 
-    String separator = ", ";
+    String separator = ", "; //$NON-NLS-1$
 
     if (op == CMGroup.CHOICE)
     {
-      separator = " | ";
+      separator = " | "; //$NON-NLS-1$
     }
 
     CMNodeList nodeList = group.getChildNodes();
@@ -84,7 +84,7 @@ public class CMDescriptionBuilder extends CMVisitor
         sb.append(separator);
       }
     }
-    sb.append(")");
+    sb.append(")"); //$NON-NLS-1$
     addOccurenceSymbol(group);
   }
 
@@ -98,9 +98,9 @@ public class CMDescriptionBuilder extends CMVisitor
       {
         if (content.getNodeType() != CMNode.GROUP)
         {
-          sb.append("(");
+          sb.append("("); //$NON-NLS-1$
           visitCMNode(content);
-          sb.append(")");
+          sb.append(")"); //$NON-NLS-1$
         }
         else
         {
@@ -123,16 +123,16 @@ public class CMDescriptionBuilder extends CMVisitor
     {
       if (max > 1 || max == -1)
       {
-        sb.append("*");
+        sb.append("*"); //$NON-NLS-1$
       }
       else
       {
-        sb.append("?");
+        sb.append("?"); //$NON-NLS-1$
       }
     }
     else if (max > 1 || max == -1)
     {
-      sb.append("+");
+      sb.append("+"); //$NON-NLS-1$
     }
   }
 }

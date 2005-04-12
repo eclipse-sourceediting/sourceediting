@@ -63,7 +63,7 @@ public class CMDocumentLoader
     if (doctypeInfo != null)
     {
       // load the doctype if required
-      walkDocument = handleGrammar(doctypeInfo[0], doctypeInfo[1], "DTD");
+      walkDocument = handleGrammar(doctypeInfo[0], doctypeInfo[1], "DTD"); //$NON-NLS-1$
     }                                   
     else
     {                           
@@ -177,7 +177,7 @@ public class CMDocumentLoader
         for (Iterator i = newNamespaceList.iterator(); i.hasNext(); )
         {
           NamespaceInfo info = (NamespaceInfo)i.next();
-          handleGrammar(info.uri, info.locationHint, "XSD");
+          handleGrammar(info.uri, info.locationHint, "XSD"); //$NON-NLS-1$
         }
       }
     }                 

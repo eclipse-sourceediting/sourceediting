@@ -242,7 +242,7 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 			try {
 				text = fDocumentInput.get(offset, length);
 			} catch (BadLocationException e) {
-				text = "";
+				text = ""; //$NON-NLS-1$
 			}
 		} else {
 			if (fStringInput == null || fStringInput.length() == 0 || offset + length > fStringInput.length() || offset < 0) {

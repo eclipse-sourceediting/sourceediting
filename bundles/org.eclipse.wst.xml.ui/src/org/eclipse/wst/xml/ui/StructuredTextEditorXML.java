@@ -15,7 +15,6 @@ package org.eclipse.wst.xml.ui;
 import java.util.ResourceBundle;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
@@ -24,16 +23,19 @@ import org.eclipse.wst.xml.ui.actions.AddBlockCommentActionXML;
 import org.eclipse.wst.xml.ui.actions.CleanupActionXML;
 import org.eclipse.wst.xml.ui.actions.RemoveBlockCommentActionXML;
 import org.eclipse.wst.xml.ui.actions.ToggleCommentActionXML;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.xml.ui.internal.search.XMLFindOccurrencesAction;
 
 public class StructuredTextEditorXML extends StructuredTextEditor {
+	private final static String UNDERSCORE = "_"; //$NON-NLS-1$
+	
 	protected void createActions() {
 		super.createActions();
 
-		ResourceBundle resourceBundle = SSEUIPlugin.getDefault().getResourceBundle();
+		ResourceBundle resourceBundle = XMLUIMessages.getResourceBundle();
 
-		Action action = new CleanupActionXML(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_CLEANUP_DOCUMENT + DOT, this);
+		Action action = new CleanupActionXML(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_CLEANUP_DOCUMENT + UNDERSCORE, this);
 		action.setActionDefinitionId(ActionDefinitionIds.CLEANUP_DOCUMENT);
 		setAction(StructuredTextEditorActionConstants.ACTION_NAME_CLEANUP_DOCUMENT, action);
 
@@ -51,19 +53,19 @@ public class StructuredTextEditorXML extends StructuredTextEditor {
 		 * action);
 		 */
 
-		action = new ToggleCommentActionXML(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_TOGGLE_COMMENT + DOT, this);
+		action = new ToggleCommentActionXML(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_TOGGLE_COMMENT + UNDERSCORE, this);
 		action.setActionDefinitionId(ActionDefinitionIds.TOGGLE_COMMENT);
 		setAction(StructuredTextEditorActionConstants.ACTION_NAME_TOGGLE_COMMENT, action);
 
-		action = new AddBlockCommentActionXML(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_ADD_BLOCK_COMMENT + DOT, this);
+		action = new AddBlockCommentActionXML(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_ADD_BLOCK_COMMENT + UNDERSCORE, this);
 		action.setActionDefinitionId(ActionDefinitionIds.ADD_BLOCK_COMMENT);
 		setAction(StructuredTextEditorActionConstants.ACTION_NAME_ADD_BLOCK_COMMENT, action);
 
-		action = new RemoveBlockCommentActionXML(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_REMOVE_BLOCK_COMMENT + DOT, this);
+		action = new RemoveBlockCommentActionXML(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_REMOVE_BLOCK_COMMENT + UNDERSCORE, this);
 		action.setActionDefinitionId(ActionDefinitionIds.REMOVE_BLOCK_COMMENT);
 		setAction(StructuredTextEditorActionConstants.ACTION_NAME_REMOVE_BLOCK_COMMENT, action);
 
-		FindOccurrencesActionProvider foAction = new FindOccurrencesActionProvider(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_FIND_OCCURRENCES + DOT, this);
+		FindOccurrencesActionProvider foAction = new FindOccurrencesActionProvider(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_FIND_OCCURRENCES + UNDERSCORE, this);
 		foAction.addAction(new XMLFindOccurrencesAction(resourceBundle, "", this)); //$NON-NLS-1$
 		foAction.setActionDefinitionId(ActionDefinitionIds.FIND_OCCURRENCES);
 		setAction(StructuredTextEditorActionConstants.ACTION_NAME_FIND_OCCURRENCES, foAction);

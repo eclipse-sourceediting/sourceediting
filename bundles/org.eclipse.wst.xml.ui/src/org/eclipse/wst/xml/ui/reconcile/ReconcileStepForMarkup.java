@@ -21,17 +21,18 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.reconciler.IReconcileStep;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.correction.ProblemIDsXML;
 import org.w3c.dom.Node;
 
@@ -94,7 +95,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 		// create one error for all attributes in the end tag
 		if (errorCount > 0) {
 			Position p = new Position(start, end - start);
-			String message = SSEUIPlugin.getResourceString("%End_tag_has_attributes"); //$NON-NLS-1$
+			String message = XMLUIMessages.End_tag_has_attributes;
 			results.add(new TemporaryAnnotation(p, SEVERITY_GENERIC_ILLFORMED_SYNTAX, message, createKey(structuredDocumentRegion, getScope()), ProblemIDsXML.AttrsInEndTag));
 		}
 	}
@@ -119,7 +120,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 		}
 		if (!closed) {
 
-			String message = SSEUIPlugin.getResourceString("%ReconcileStepForMarkup.6"); //$NON-NLS-1$
+			String message = XMLUIMessages.ReconcileStepForMarkup_6;
 
 			int start = structuredDocumentRegion.getStartOffset();
 			int length = structuredDocumentRegion.getText().trim().length();
@@ -141,7 +142,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 		if (regions.size() == 2) {
 			// missing name region
 			if (regions.get(0).getType() == DOMRegionContext.XML_TAG_OPEN && regions.get(1).getType() == DOMRegionContext.XML_TAG_CLOSE) {
-				String message = SSEUIPlugin.getResourceString("%ReconcileStepForMarkup.3"); //$NON-NLS-1$
+				String message = XMLUIMessages.ReconcileStepForMarkup_3;
 				int start = structuredDocumentRegion.getStartOffset();
 				int length = structuredDocumentRegion.getLength();
 				Position p = new Position(start, length);
@@ -173,7 +174,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 					// create annotation
 					ITextRegion nameRegion = textRegions.get(i - 2);
 					Object[] args = {structuredDocumentRegion.getText(nameRegion)};
-					String message = SSEUIPlugin.getResourceString("%Attribute_{0}_is_missing_a_value", args);
+					String message = NLS.bind(XMLUIMessages.Attribute__is_missing_a_value, args);
 					int start = structuredDocumentRegion.getStartOffset(nameRegion);
 					int end = structuredDocumentRegion.getTextEndOffset(nameRegion);
 					Position p = new Position(start, end - start);
@@ -193,7 +194,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 					// create annotation
 					ITextRegion previousRegion = textRegions.get(i - 1);
 					Object[] args = {structuredDocumentRegion.getText(previousRegion)};
-					String message = SSEUIPlugin.getResourceString("%Attribute_{0}_has_no_value", args);
+					String message = NLS.bind(XMLUIMessages.Attribute__has_no_value, args);
 					int start = structuredDocumentRegion.getStartOffset(previousRegion);
 					int end = structuredDocumentRegion.getTextEndOffset(previousRegion);
 					Position p = new Position(start, end - start);
@@ -227,7 +228,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 				// this is possibly the case of "< tag"
 				if (prev.getRegions().size() == 1 && isStartTag(prev)) {
 					// add the error for preceding space in tag name
-					String message = SSEUIPlugin.getResourceString("%ReconcileStepForMarkup.2"); //$NON-NLS-1$
+					String message = XMLUIMessages.ReconcileStepForMarkup_2;
 					int start = structuredDocumentRegion.getStartOffset();
 					// find length of whitespace
 					int length = sdRegionText.trim().equals("") ? sdRegionText.length() : sdRegionText.indexOf(sdRegionText.trim()); //$NON-NLS-1$
@@ -257,7 +258,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 				String piText = structuredDocumentRegion.getText(r);
 				int index = piText.indexOf(":"); //$NON-NLS-1$
 				if (index != -1) {
-					String message = SSEUIPlugin.getResourceString("%ReconcileStepForMarkup.4"); //$NON-NLS-1$
+					String message = XMLUIMessages.ReconcileStepForMarkup_4;
 					int start = structuredDocumentRegion.getStartOffset(r) + index;
 					int length = piText.trim().length() - index;
 					Position p = new Position(start, length);
@@ -308,19 +309,19 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 			if (size == 1) {
 				if (one.equals(DQUOTE) || one.equals(SQUOTE)) {
 					// missing closing quote
-					String message = SSEUIPlugin.getResourceString("%ReconcileStepForMarkup.0"); //$NON-NLS-1$
+					String message = XMLUIMessages.ReconcileStepForMarkup_0;
 					addAttributeError(message, attrValueText, structuredDocumentRegion.getStartOffset(r), attrValueText.trim().length(), ProblemIDsXML.Unclassified, structuredDocumentRegion, results);
 					errorCount++;
 				} else {
 					// missing both
-					String message = SSEUIPlugin.getResourceString("%ReconcileStepForMarkup.1"); //$NON-NLS-1$
+					String message = XMLUIMessages.ReconcileStepForMarkup_1;
 					addAttributeError(message, attrValueText, structuredDocumentRegion.getStartOffset(r), attrValueText.trim().length(), ProblemIDsXML.AttrValueNotQuoted, structuredDocumentRegion, results);
 					errorCount++;
 				}
 			} else if (size == 2) {
 				if (one.equals(SQUOTE) && !two.equals(SQUOTE) || one.equals(DQUOTE) && !two.equals(DQUOTE)) {
 					// missing closing quote
-					String message = SSEUIPlugin.getResourceString("%ReconcileStepForMarkup.0"); //$NON-NLS-1$
+					String message = XMLUIMessages.ReconcileStepForMarkup_0;
 					addAttributeError(message, attrValueText, structuredDocumentRegion.getStartOffset(r), attrValueText.trim().length(), ProblemIDsXML.Unclassified, structuredDocumentRegion, results);
 					errorCount++;
 				}
@@ -366,7 +367,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
     
     				if (!selfClosed && tagName != null) {
     					Object[] args = {tagName};
-    					String message = SSEUIPlugin.getResourceString("%Missing_end_tag_{0}", args);
+    					String message = NLS.bind(XMLUIMessages.Missing_end_tag_, args);
     
     					int start = sdRegion.getStart();
     					Position p = new Position(start, length);
@@ -407,7 +408,7 @@ public class ReconcileStepForMarkup extends StructuredReconcileStep {
 		if (prev != null && !prev.isDeleted()) {
 			String prevText = prev.getFullText();
 			if (prev.getType() == DOMRegionContext.XML_CONTENT && prevText.endsWith(" ")) { //$NON-NLS-1$
-				String message = SSEUIPlugin.getResourceString("%ReconcileStepForMarkup.5"); //$NON-NLS-1$
+				String message = XMLUIMessages.ReconcileStepForMarkup_5;
 				int start = prev.getStartOffset();
 				int length = prev.getLength();
 				Position p = new Position(start, length);

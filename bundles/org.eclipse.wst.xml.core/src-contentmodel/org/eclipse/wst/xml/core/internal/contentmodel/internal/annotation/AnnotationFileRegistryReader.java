@@ -25,10 +25,10 @@ import org.eclipse.core.runtime.Platform;
 */
 public class AnnotationFileRegistryReader
 {
-  protected static final String EXTENSION_POINT_ID = "annotationFiles";
-  protected static final String TAG_NAME = "annotationFile";
-  protected static final String ATT_PUBLIC_ID = "publicId";
-  protected static final String ATT_LOCATION = "location";
+  protected static final String EXTENSION_POINT_ID = "annotationFiles"; //$NON-NLS-1$
+  protected static final String TAG_NAME = "annotationFile"; //$NON-NLS-1$
+  protected static final String ATT_PUBLIC_ID = "publicId"; //$NON-NLS-1$
+  protected static final String ATT_LOCATION = "location"; //$NON-NLS-1$
 
   private AnnotationFileRegistry annotationFileRegistry;
 
@@ -43,7 +43,7 @@ public class AnnotationFileRegistryReader
   public void readRegistry()
   {
     IPluginRegistry pluginRegistry = Platform.getPluginRegistry();
-	String pluginId = "org.eclipse.wst.xml.core";    
+	String pluginId = "org.eclipse.wst.xml.core";     //$NON-NLS-1$
     IExtensionPoint point = pluginRegistry.getExtensionPoint(pluginId, EXTENSION_POINT_ID);
     if (point != null)
     {

@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.taginfo;
 
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocumentation;
@@ -20,6 +19,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNodeList;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDescriptionBuilder;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 /**
  * Provides basic tag information such as element/attribute name, data type,
@@ -70,13 +70,13 @@ public class MarkupTagInfoProvider {
 	protected void printDataTypeInfo(StringBuffer sb, CMDataType dataType) {
 		String dataTypeName = dataType.getNodeName();
 		if ((dataTypeName != null) && (dataTypeName.length() > 0)) {
-			sb.append(PARAGRAPH_START + BOLD_START + SSEUIPlugin.getResourceString("%Data_Type____4") + SPACE + BOLD_END); //$NON-NLS-1$
+			sb.append(PARAGRAPH_START + BOLD_START + XMLUIMessages.Data_Type____4 + SPACE + BOLD_END);
 			sb.append(dataTypeName);
 			sb.append(PARAGRAPH_END);
 		}
 		String[] enumeratedValue = dataType.getEnumeratedValues();
 		if (enumeratedValue != null && enumeratedValue.length > 0) {
-			sb.append(PARAGRAPH_START + BOLD_START + SSEUIPlugin.getResourceString("%Enumerated_Values____5") + SPACE + BOLD_END); //$NON-NLS-1$
+			sb.append(PARAGRAPH_START + BOLD_START + XMLUIMessages.Enumerated_Values____5 + SPACE + BOLD_END);
 			sb.append(LIST_BEGIN);
 			for (int i = 0; i < enumeratedValue.length; i++) {
 				sb.append(LIST_ELEMENT + enumeratedValue[i]);
@@ -95,7 +95,7 @@ public class MarkupTagInfoProvider {
 
 			if (node.getNodeType() == CMNode.ELEMENT_DECLARATION) {
 				CMElementDeclaration ed = (CMElementDeclaration) node;
-				sb.append(PARAGRAPH_START + BOLD_START + SSEUIPlugin.getResourceString("%Element____1") + SPACE + BOLD_END); //$NON-NLS-1$
+				sb.append(PARAGRAPH_START + BOLD_START + XMLUIMessages.Element____1 + SPACE + BOLD_END);
 				sb.append(node.getNodeName());
 				sb.append(PARAGRAPH_END);
 				if (ed.getContentType() == CMElementDeclaration.PCDATA) {
@@ -107,14 +107,14 @@ public class MarkupTagInfoProvider {
 					CMDescriptionBuilder builder = new CMDescriptionBuilder();
 					String description = builder.buildDescription(node);
 					if ((description != null) && (description.length() > 0)) {
-						sb.append(PARAGRAPH_START + BOLD_START + SSEUIPlugin.getResourceString("%Content_Model____2") + SPACE + BOLD_END); //$NON-NLS-1$
+						sb.append(PARAGRAPH_START + BOLD_START + XMLUIMessages.Content_Model____2 + SPACE + BOLD_END);
 						sb.append(description + PARAGRAPH_END);
 					}
 				}
 				printDocumentation(sb, node);
 			} else if (node.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
 				CMAttributeDeclaration ad = (CMAttributeDeclaration) node;
-				sb.append(PARAGRAPH_START + BOLD_START + SSEUIPlugin.getResourceString("%Attribute____3") + SPACE + BOLD_END); //$NON-NLS-1$
+				sb.append(PARAGRAPH_START + BOLD_START + XMLUIMessages.Attribute____3 + SPACE + BOLD_END);
 				sb.append(node.getNodeName());
 				sb.append(PARAGRAPH_END);
 				CMDataType dataType = ad.getAttrType();
@@ -123,7 +123,7 @@ public class MarkupTagInfoProvider {
 				}
 				printDocumentation(sb, node);
 			} else if (node.getNodeType() == CMNode.DATA_TYPE) {
-				sb.append(PARAGRAPH_START + BOLD_START + SSEUIPlugin.getResourceString("%Data_Type____4") + SPACE + BOLD_END); //$NON-NLS-1$
+				sb.append(PARAGRAPH_START + BOLD_START + XMLUIMessages.Data_Type____4 + SPACE + BOLD_END);
 				sb.append(node.getNodeName());
 				sb.append(PARAGRAPH_END);
 				printDocumentation(sb, node);

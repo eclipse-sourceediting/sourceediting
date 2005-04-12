@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
-import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 public class CommonNamespaceInfoTable extends TableViewer {
 
@@ -86,11 +86,11 @@ public class CommonNamespaceInfoTable extends TableViewer {
 			if (result.equals("")) { //$NON-NLS-1$
 				switch (columnCode) {
 					case COLUMN_PREFIX : {
-						result = XMLUIPlugin.getResourceString("%_UI_NO_PREFIX"); //$NON-NLS-1$
+						result = XMLUIMessages._UI_NO_PREFIX; //$NON-NLS-1$
 						break;
 					}
 					case COLUMN_NAMESPACE_URI : {
-						result = XMLUIPlugin.getResourceString("%_UI_NO_NAMESPACE_NAME"); //$NON-NLS-1$
+						result = XMLUIMessages._UI_NO_NAMESPACE_NAME; //$NON-NLS-1$
 						break;
 					}
 				}
@@ -141,9 +141,9 @@ public class CommonNamespaceInfoTable extends TableViewer {
 	protected static final int COLUMN_PREFIX = 3;
 
 	protected static final String LABEL_CHECKBOX = ""; //$NON-NLS-1$
-	protected static final String LABEL_LOCATION_HINT = XMLUIPlugin.getResourceString("%_UI_LABEL_LOCATION_HINT"); //$NON-NLS-1$
-	protected static final String LABEL_NAMESPACE_URI = XMLUIPlugin.getResourceString("%_UI_LABEL_NAMESPACE_NAME"); //$NON-NLS-1$
-	protected static final String LABEL_PREFIX = XMLUIPlugin.getResourceString("%_UI_LABEL_PREFIX"); //$NON-NLS-1$
+	protected static final String LABEL_LOCATION_HINT = XMLUIMessages._UI_LABEL_LOCATION_HINT; //$NON-NLS-1$
+	protected static final String LABEL_NAMESPACE_URI = XMLUIMessages._UI_LABEL_NAMESPACE_NAME; //$NON-NLS-1$
+	protected static final String LABEL_PREFIX = XMLUIMessages._UI_LABEL_PREFIX; //$NON-NLS-1$
 	protected List checkedList = new ArrayList();
 
 	//protected List namespaceInfoList = new ArrayList();

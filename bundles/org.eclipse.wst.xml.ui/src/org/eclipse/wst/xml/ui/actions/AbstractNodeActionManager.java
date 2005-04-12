@@ -35,6 +35,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDescriptionBuilder;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMContentBuilder;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMContentBuilderImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceHelper;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.editor.CMImageUtil;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
@@ -70,7 +71,7 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 			String text = getLabel(parent, cmnode);
 			setText(text);
 			description = text;
-			undoDescription = XMLUIPlugin.getResourceString("%_UI_MENU_ADD") + " " + text; //$NON-NLS-1$ //$NON-NLS-2$
+			undoDescription = XMLUIMessages._UI_MENU_ADD + " " + text; //$NON-NLS-1$ //$NON-NLS-2$
 			ImageDescriptor descriptor = CMImageUtil.getImageDescriptor(cmnode);
 			if (descriptor == null) {
 				descriptor = imageDescriptorCache.getImageDescriptor(cmnode);
@@ -86,23 +87,23 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 
 			switch (nodeType) {
 				case Node.COMMENT_NODE : {
-					description = XMLUIPlugin.getResourceString("%_UI_MENU_COMMENT"); //$NON-NLS-1$
-					undoDescription = XMLUIPlugin.getResourceString("%_UI_MENU_ADD_COMMENT"); //$NON-NLS-1$
+					description = XMLUIMessages._UI_MENU_COMMENT; //$NON-NLS-1$
+					undoDescription = XMLUIMessages._UI_MENU_ADD_COMMENT; //$NON-NLS-1$
 					break;
 				}
 				case Node.PROCESSING_INSTRUCTION_NODE : {
-					description = XMLUIPlugin.getResourceString("%_UI_MENU_PROCESSING_INSTRUCTION"); //$NON-NLS-1$
-					undoDescription = XMLUIPlugin.getResourceString("%_UI_MENU_ADD_PROCESSING_INSTRUCTION"); //$NON-NLS-1$
+					description = XMLUIMessages._UI_MENU_PROCESSING_INSTRUCTION; //$NON-NLS-1$
+					undoDescription = XMLUIMessages._UI_MENU_ADD_PROCESSING_INSTRUCTION; //$NON-NLS-1$
 					break;
 				}
 				case Node.CDATA_SECTION_NODE : {
-					description = XMLUIPlugin.getResourceString("%_UI_MENU_CDATA_SECTION"); //$NON-NLS-1$
-					undoDescription = XMLUIPlugin.getResourceString("%_UI_MENU_ADD_CDATA_SECTION"); //$NON-NLS-1$
+					description = XMLUIMessages._UI_MENU_CDATA_SECTION; //$NON-NLS-1$
+					undoDescription = XMLUIMessages._UI_MENU_ADD_CDATA_SECTION; //$NON-NLS-1$
 					break;
 				}
 				case Node.TEXT_NODE : {
-					description = XMLUIPlugin.getResourceString("%_UI_MENU_PCDATA"); //$NON-NLS-1$
-					undoDescription = XMLUIPlugin.getResourceString("%_UI_MENU_ADD_PCDATA"); //$NON-NLS-1$
+					description = XMLUIMessages._UI_MENU_PCDATA; //$NON-NLS-1$
+					undoDescription = XMLUIMessages._UI_MENU_ADD_PCDATA; //$NON-NLS-1$
 					break;
 				}
 			}
@@ -124,11 +125,11 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 			boolean format = true;
 			switch (nodeType) {
 				case Node.COMMENT_NODE : {
-					newChildNode = document.createComment(XMLUIPlugin.getResourceString("%_UI_COMMENT_VALUE")); //$NON-NLS-1$
+					newChildNode = document.createComment(XMLUIMessages._UI_COMMENT_VALUE); //$NON-NLS-1$
 					break;
 				}
 				case Node.PROCESSING_INSTRUCTION_NODE : {
-					newChildNode = document.createProcessingInstruction(XMLUIPlugin.getResourceString("%_UI_PI_TARGET_VALUE"), XMLUIPlugin.getResourceString("%_UI_PI_DATA_VALUE")); //$NON-NLS-1$ //$NON-NLS-2$
+					newChildNode = document.createProcessingInstruction(XMLUIMessages._UI_PI_TARGET_VALUE, XMLUIMessages._UI_PI_DATA_VALUE); //$NON-NLS-1$ //$NON-NLS-2$
 					break;
 				}
 				case Node.CDATA_SECTION_NODE : {
@@ -174,18 +175,18 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 		protected List list;
 
 		public DeleteAction(List list) {
-			setText(XMLUIPlugin.getResourceString("%_UI_MENU_REMOVE")); //$NON-NLS-1$
+			setText(XMLUIMessages._UI_MENU_REMOVE); //$NON-NLS-1$
 			this.list = list;
 		}
 
 		public DeleteAction(Node node) {
-			setText(XMLUIPlugin.getResourceString("%_UI_MENU_REMOVE")); //$NON-NLS-1$
+			setText(XMLUIMessages._UI_MENU_REMOVE); //$NON-NLS-1$
 			list = new Vector();
 			list.add(node);
 		}
 
 		public String getUndoDescription() {
-			return XMLUIPlugin.getResourceString("%DELETE"); //$NON-NLS-1$
+			return XMLUIMessages.DELETE; //$NON-NLS-1$
 		}
 
 		public void run() {
@@ -293,19 +294,19 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 			this.parent = parent;
 			switch (nodeType) {
 				case Node.COMMENT_NODE : {
-					description = XMLUIPlugin.getResourceString("%_UI_MENU_COMMENT"); //$NON-NLS-1$
+					description = XMLUIMessages._UI_MENU_COMMENT; //$NON-NLS-1$
 					break;
 				}
 				case Node.PROCESSING_INSTRUCTION_NODE : {
-					description = XMLUIPlugin.getResourceString("%_UI_MENU_PROCESSING_INSTRUCTION"); //$NON-NLS-1$
+					description = XMLUIMessages._UI_MENU_PROCESSING_INSTRUCTION; //$NON-NLS-1$
 					break;
 				}
 				case Node.CDATA_SECTION_NODE : {
-					description = XMLUIPlugin.getResourceString("%_UI_MENU_CDATA_SECTION"); //$NON-NLS-1$
+					description = XMLUIMessages._UI_MENU_CDATA_SECTION; //$NON-NLS-1$
 					break;
 				}
 				case Node.TEXT_NODE : {
-					description = XMLUIPlugin.getResourceString("%_UI_MENU_PCDATA"); //$NON-NLS-1$
+					description = XMLUIMessages._UI_MENU_PCDATA; //$NON-NLS-1$
 					break;
 				}
 			}
@@ -323,7 +324,7 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 		}
 
 		public String getUndoDescription() {
-			return XMLUIPlugin.getResourceString("%_UI_MENU_ADD") + " " + description; //$NON-NLS-1$ //$NON-NLS-2$
+			return XMLUIMessages._UI_MENU_ADD + " " + description; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 
 		public void run() {
@@ -334,11 +335,11 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 			boolean format = true;
 			switch (nodeType) {
 				case Node.COMMENT_NODE : {
-					newChildNode = document.createComment(XMLUIPlugin.getResourceString("%_UI_COMMENT_VALUE")); //$NON-NLS-1$
+					newChildNode = document.createComment(XMLUIMessages._UI_COMMENT_VALUE); //$NON-NLS-1$
 					break;
 				}
 				case Node.PROCESSING_INSTRUCTION_NODE : {
-					newChildNode = document.createProcessingInstruction(XMLUIPlugin.getResourceString("%_UI_PI_TARGET_VALUE"), XMLUIPlugin.getResourceString("%_UI_PI_DATA_VALUE")); //$NON-NLS-1$ //$NON-NLS-2$
+					newChildNode = document.createProcessingInstruction(XMLUIMessages._UI_PI_TARGET_VALUE, XMLUIMessages._UI_PI_DATA_VALUE); //$NON-NLS-1$ //$NON-NLS-2$
 					break;
 				}
 				case Node.CDATA_SECTION_NODE : {
@@ -385,7 +386,7 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 		}
 
 		public String getUndoDescription() {
-			String result = XMLUIPlugin.getResourceString("%_UI_LABEL_UNDO_REPLACE_DESCRIPTION"); //$NON-NLS-1$
+			String result = XMLUIMessages._UI_LABEL_UNDO_REPLACE_DESCRIPTION; //$NON-NLS-1$
 			result += " " + getLabel(parent, cmnode); //$NON-NLS-1$
 			return result;
 		}
@@ -418,7 +419,7 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 	protected Action createAddAttributeAction(Element parent, CMAttributeDeclaration ad) {
 		Action action = null;
 		if (ad == null) {
-			action = new EditAttributeAction(this, parent, null, XMLUIPlugin.getResourceString("%_UI_MENU_NEW_ATTRIBUTE"), XMLUIPlugin.getResourceString("%_UI_MENU_NEW_ATTRIBUTE_TITLE")); //$NON-NLS-1$ //$NON-NLS-2$
+			action = new EditAttributeAction(this, parent, null, XMLUIMessages._UI_MENU_NEW_ATTRIBUTE, XMLUIMessages._UI_MENU_NEW_ATTRIBUTE_TITLE); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
 			action = new AddNodeAction(ad, parent, -1);
 		}
@@ -437,14 +438,14 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 
 
 	protected Action createAddDoctypeAction(Document document, int index) {
-		return new EditDoctypeAction(model, document, model.getBaseLocation(), XMLUIPlugin.getResourceString("%_UI_MENU_ADD_DTD_INFORMATION")); //$NON-NLS-1$
+		return new EditDoctypeAction(model, document, model.getBaseLocation(), XMLUIMessages._UI_MENU_ADD_DTD_INFORMATION); //$NON-NLS-1$
 	}
 
 
 	protected Action createAddElementAction(Node parent, CMElementDeclaration ed, int index) {
 		Action action = null;
 		if (ed == null) {
-			action = new EditElementAction(this, parent, index, XMLUIPlugin.getResourceString("%_UI_MENU_NEW_ELEMENT"), XMLUIPlugin.getResourceString("%_UI_MENU_NEW_ELEMENT_TITLE")); //$NON-NLS-1$ //$NON-NLS-2$
+			action = new EditElementAction(this, parent, index, XMLUIMessages._UI_MENU_NEW_ELEMENT, XMLUIMessages._UI_MENU_NEW_ELEMENT_TITLE); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
 			action = new AddNodeAction(ed, parent, index);
 		}
@@ -465,14 +466,14 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 
 	protected Action createAddProcessingInstructionAction(Node parent, int index) {
 		Node refChild = getRefChildNodeAtIndex(parent, index);
-		Action action = new EditProcessingInstructionAction(this, parent, refChild, XMLUIPlugin.getResourceString("%_UI_MENU_ADD_PROCESSING_INSTRUCTION"), XMLUIPlugin.getResourceString("%ADD_PROCESSING_INSTRUCTION")); //$NON-NLS-1$ //$NON-NLS-2$
+		Action action = new EditProcessingInstructionAction(this, parent, refChild, XMLUIMessages._UI_MENU_ADD_PROCESSING_INSTRUCTION, XMLUIMessages.ADD_PROCESSING_INSTRUCTION); //$NON-NLS-1$ //$NON-NLS-2$
 		action.setImageDescriptor(imageDescriptorCache.getImageDescriptor(new Integer(Node.PROCESSING_INSTRUCTION_NODE)));
 		return action;
 	}
 
 
 	protected Action createAddSchemaInfoAction(Element element) {
-		return new EditSchemaInfoAction(this, element.getOwnerDocument(), model.getBaseLocation(), XMLUIPlugin.getResourceString("%_UI_MENU_ADD_SCHEMA_INFORMATION")); //$NON-NLS-1$
+		return new EditSchemaInfoAction(this, element.getOwnerDocument(), model.getBaseLocation(), XMLUIMessages._UI_MENU_ADD_SCHEMA_INFORMATION); //$NON-NLS-1$
 	}
 
 
@@ -490,29 +491,29 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 
 
 	protected Action createEditAttributeAction(Attr attr, CMAttributeDeclaration ad) {
-		return new EditAttributeAction(this, attr.getOwnerElement(), attr, XMLUIPlugin.getResourceString("%_UI_MENU_EDIT_ATTRIBUTE"), XMLUIPlugin.getResourceString("%_UI_MENU_EDIT_ATTRIBUTE_TITLE")); //$NON-NLS-1$ //$NON-NLS-2$
+		return new EditAttributeAction(this, attr.getOwnerElement(), attr, XMLUIMessages._UI_MENU_EDIT_ATTRIBUTE, XMLUIMessages._UI_MENU_EDIT_ATTRIBUTE_TITLE); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 
 	protected Action createEditDoctypeAction(DocumentType doctype) {
-		return new EditDoctypeAction(model, doctype, model.getBaseLocation(), XMLUIPlugin.getResourceString("%_UI_MENU_EDIT_DOCTYPE")); //$NON-NLS-1$
+		return new EditDoctypeAction(model, doctype, model.getBaseLocation(), XMLUIMessages._UI_MENU_EDIT_DOCTYPE); //$NON-NLS-1$
 	}
 
 
 	protected Action createEditProcessingInstructionAction(ProcessingInstruction pi) {
-		return new EditProcessingInstructionAction(this, pi, XMLUIPlugin.getResourceString("%_UI_MENU_EDIT_PROCESSING_INSTRUCTION"), XMLUIPlugin.getResourceString("%_UI_MENU_EDIT_PROCESSING_INSTRUCTION_TITLE")); //$NON-NLS-1$ //$NON-NLS-2$
+		return new EditProcessingInstructionAction(this, pi, XMLUIMessages._UI_MENU_EDIT_PROCESSING_INSTRUCTION, XMLUIMessages._UI_MENU_EDIT_PROCESSING_INSTRUCTION_TITLE); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 
 	protected Action createEditSchemaInfoAction(Element element) {
-		return new EditSchemaInfoAction(this, element.getOwnerDocument(), model.getBaseLocation(), XMLUIPlugin.getResourceString("%_UI_MENU_EDIT_NAMESPACES")); //$NON-NLS-1$
+		return new EditSchemaInfoAction(this, element.getOwnerDocument(), model.getBaseLocation(), XMLUIMessages._UI_MENU_EDIT_NAMESPACES); //$NON-NLS-1$
 	}
 
 
 	protected Action createRenameAction(Node node) {
 		Action result = null;
 		if (node instanceof Element) {
-			result = new EditElementAction(this, (Element) node, XMLUIPlugin.getResourceString("%_UI_MENU_RENAME"), XMLUIPlugin.getResourceString("%_UI_MENU_RENAME_TITLE")); //$NON-NLS-1$ //$NON-NLS-2$
+			result = new EditElementAction(this, (Element) node, XMLUIMessages._UI_MENU_RENAME, XMLUIMessages._UI_MENU_RENAME_TITLE); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return result;
 	}

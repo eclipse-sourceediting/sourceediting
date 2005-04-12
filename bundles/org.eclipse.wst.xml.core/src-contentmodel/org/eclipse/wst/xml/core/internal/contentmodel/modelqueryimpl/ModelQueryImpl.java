@@ -147,26 +147,26 @@ public class ModelQueryImpl implements ModelQuery
       //          
       if (uri == null)
       {
-        uri = "##any";
+        uri = "##any"; //$NON-NLS-1$
       }               
 
-      if (uri.equals("##targetNamespace"))
+      if (uri.equals("##targetNamespace")) //$NON-NLS-1$
       {                                                      
-        CMDocument cmDocument = (CMDocument)ed.getProperty("CMDocument");
+        CMDocument cmDocument = (CMDocument)ed.getProperty("CMDocument"); //$NON-NLS-1$
         if (cmDocument != null)
         {  
           result.add(cmDocument);
         }
       }
-      else if (uri.equals("##any") || uri.equals("##other"))
+      else if (uri.equals("##any") || uri.equals("##other")) //$NON-NLS-1$ //$NON-NLS-2$
       {                                        
         String excludedURI = null;
-        if (uri.equals("##other"))
+        if (uri.equals("##other")) //$NON-NLS-1$
         {
-          CMDocument cmDocument = (CMDocument)ed.getProperty("CMDocument");       
+          CMDocument cmDocument = (CMDocument)ed.getProperty("CMDocument");        //$NON-NLS-1$
           if (cmDocument != null)
           {
-            excludedURI = (String)cmDocument.getProperty("http://org.eclipse.wst/cm/properties/targetNamespaceURI");
+            excludedURI = (String)cmDocument.getProperty("http://org.eclipse.wst/cm/properties/targetNamespaceURI"); //$NON-NLS-1$
           }
         }
                                
@@ -180,7 +180,7 @@ public class ModelQueryImpl implements ModelQuery
           NamespaceInfo info = (NamespaceInfo)i.next();
           if (info.uri != null && !info.uri.equals(excludedURI))
           {
-            CMDocument document = xmlAssociationProvider.getCMDocument(info.uri, info.locationHint, "XSD");
+            CMDocument document = xmlAssociationProvider.getCMDocument(info.uri, info.locationHint, "XSD"); //$NON-NLS-1$
             if (document != null)
             {
               result.add(document);
@@ -621,13 +621,13 @@ public class ModelQueryImpl implements ModelQuery
     protected String getKey(CMNode cmNode)
     {
       String key = cmNode.getNodeName();
-      CMDocument cmDocument = (CMDocument)cmNode.getProperty("CMDocument");
+      CMDocument cmDocument = (CMDocument)cmNode.getProperty("CMDocument"); //$NON-NLS-1$
       if (cmDocument != null)
       {                         
-        String namespaceURI = (String)cmDocument.getProperty("http://org.eclipse.wst/cm/properties/targetNamespaceURI");   
+        String namespaceURI = (String)cmDocument.getProperty("http://org.eclipse.wst/cm/properties/targetNamespaceURI");    //$NON-NLS-1$
         if (namespaceURI != null)
         {   
-          key = "[" + namespaceURI + "]" + key;
+          key = "[" + namespaceURI + "]" + key; //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
       return key;
@@ -644,7 +644,7 @@ public class ModelQueryImpl implements ModelQuery
       if ((includeOptions & INCLUDE_ATTRIBUTES) != 0)
       {
         v.addAll(attributeTable.values());
-        CMAttributeDeclaration nillableAttribute = (CMAttributeDeclaration)rootElementDeclaration.getProperty("http://org.eclipse.wst/cm/properties/nillable");
+        CMAttributeDeclaration nillableAttribute = (CMAttributeDeclaration)rootElementDeclaration.getProperty("http://org.eclipse.wst/cm/properties/nillable"); //$NON-NLS-1$
         if (nillableAttribute != null)
         {
           v.add(nillableAttribute);
@@ -660,7 +660,7 @@ public class ModelQueryImpl implements ModelQuery
         }
         else if (contentType == CMElementDeclaration.ANY)
         {      
-          CMDocument cmDocument =  (CMDocument)rootElementDeclaration.getProperty("CMDocument");
+          CMDocument cmDocument =  (CMDocument)rootElementDeclaration.getProperty("CMDocument"); //$NON-NLS-1$
           if (cmDocument != null)
           {
             CMNamedNodeMap elements = cmDocument.getElements();            
@@ -721,12 +721,12 @@ public class ModelQueryImpl implements ModelQuery
       }
       else
       {                                                                                  
-        if (!Boolean.TRUE.equals(ed.getProperty("Abstract")))
+        if (!Boolean.TRUE.equals(ed.getProperty("Abstract"))) //$NON-NLS-1$
         {
           childNodeTable.put(getKey(ed), ed);
         }
 
-        CMNodeList substitutionGroup = (CMNodeList)ed.getProperty("SubstitutionGroup");
+        CMNodeList substitutionGroup = (CMNodeList)ed.getProperty("SubstitutionGroup"); //$NON-NLS-1$
         if (substitutionGroup != null)
         {
           handleSubstitutionGroup(substitutionGroup);
@@ -742,7 +742,7 @@ public class ModelQueryImpl implements ModelQuery
         for (int i = 0; i < substitutionGroupLength; i++)
         {
           CMNode ed = substitutionGroup.item(i);
-          if (!Boolean.TRUE.equals(ed.getProperty("Abstract")))
+          if (!Boolean.TRUE.equals(ed.getProperty("Abstract"))) //$NON-NLS-1$
           {
             childNodeTable.put(getKey(ed), ed);
           }

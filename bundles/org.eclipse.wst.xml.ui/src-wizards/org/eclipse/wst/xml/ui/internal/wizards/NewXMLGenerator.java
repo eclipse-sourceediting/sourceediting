@@ -80,10 +80,10 @@ public class NewXMLGenerator {
 			uri = URIHelper.normalize(uri, null, null);
 			cmDocument = ContentModelManager.getInstance().createCMDocument(uri, null);
 
-			if (uri.endsWith(".dtd")) {
+			if (uri.endsWith(".dtd")) { //$NON-NLS-1$
 				if (errorList.size() > 0) {
-					title = XMLWizard.getString("_UI_INVALID_GRAMMAR_ERROR");
-					message = XMLWizard.getString("_UI_LABEL_ERROR_DTD_INVALID_INFO");
+					title = XMLWizardsMessages._UI_INVALID_GRAMMAR_ERROR;
+					message = XMLWizardsMessages._UI_LABEL_ERROR_DTD_INVALID_INFO;
 				}
 			}
 			else // ".xsd"
@@ -91,21 +91,21 @@ public class NewXMLGenerator {
 				// To be consistent with the schema editor validation
 				XMLSchemaValidationChecker validator = new XMLSchemaValidationChecker();
 				if (!validator.isValid(uri)) {
-					title = XMLWizard.getString("_UI_INVALID_GRAMMAR_ERROR");
-					message = XMLWizard.getString("_UI_LABEL_ERROR_SCHEMA_INVALID_INFO");
+					title = XMLWizardsMessages._UI_INVALID_GRAMMAR_ERROR;
+					message = XMLWizardsMessages._UI_LABEL_ERROR_SCHEMA_INVALID_INFO;
 				}
 				else if (cmDocument != null) {
 					int globalElementCount = cmDocument.getElements().getLength();
 					if (globalElementCount == 0) {
-						title = XMLWizard.getString("_UI_WARNING_TITLE_NO_ROOT_ELEMENTS");
-						message = XMLWizard.getString("_UI_WARNING_MSG_NO_ROOT_ELEMENTS");
+						title = XMLWizardsMessages._UI_WARNING_TITLE_NO_ROOT_ELEMENTS;
+						message = XMLWizardsMessages._UI_WARNING_MSG_NO_ROOT_ELEMENTS;
 					}
 				}
 			}
 		}
 		else {
-			title = XMLWizard.getString("_UI_WARNING_TITLE_NO_ROOT_ELEMENTS");
-			message = XMLWizard.getString("_UI_WARNING_URI_NOT_FOUND_COLON") + " " + uri;
+			title = XMLWizardsMessages._UI_WARNING_TITLE_NO_ROOT_ELEMENTS;
+			message = XMLWizardsMessages._UI_WARNING_URI_NOT_FOUND_COLON + " " + uri; //$NON-NLS-1$
 		}
 		errorInfo[0] = title;
 		errorInfo[1] = message;
@@ -120,7 +120,7 @@ public class NewXMLGenerator {
 		String charSet = preference.getString(CommonEncodingPreferenceNames.OUTPUT_CODESET);
 
 		PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, charSet));
-		writer.println("<?xml version=\"1.0\" encoding=\"" + charSet + "\"?>");
+		writer.println("<?xml version=\"1.0\" encoding=\"" + charSet + "\"?>"); //$NON-NLS-1$ //$NON-NLS-2$
 		writer.flush();
 		outputStream.close();
 
@@ -167,7 +167,7 @@ public class NewXMLGenerator {
 											// removed when 169191 is fixed
 		contentBuilder.createDefaultRootContent(cmDocument, cmElementDeclaration, namespaceInfoList);
 
-		String[] encodingInfo = (String[]) cmDocument.getProperty("encodingInfo");
+		String[] encodingInfo = (String[]) cmDocument.getProperty("encodingInfo"); //$NON-NLS-1$
 		if (encodingInfo == null) {
 			encodingInfo = new String[2];
 		}
@@ -195,7 +195,7 @@ public class NewXMLGenerator {
 		List result = new Vector();
 		XMLCatalog xmlCatalog = XMLCatalogPlugin.getInstance().getDefaultXMLCatalog();
 		if (cmDocument != null) {
-			result = (List) cmDocument.getProperty("http://org.eclipse.wst/cm/properties/namespaceInfo");
+			result = (List) cmDocument.getProperty("http://org.eclipse.wst/cm/properties/namespaceInfo"); //$NON-NLS-1$
 			if (result != null) {
 				int size = result.size();
 				for (int i = 0; i < size; i++) {
@@ -214,10 +214,10 @@ public class NewXMLGenerator {
 							locationInfo = defaultSystemId;
 						}
 						info.locationHint = locationInfo;
-						info.setProperty("locationHint-readOnly", "true");
+						info.setProperty("locationHint-readOnly", "true"); //$NON-NLS-1$ //$NON-NLS-2$
 					}
-					info.setProperty("uri-readOnly", "true");
-					info.setProperty("unremovable", "true");
+					info.setProperty("uri-readOnly", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+					info.setProperty("unremovable", "true"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 
@@ -247,8 +247,8 @@ public class NewXMLGenerator {
 		String[] errorList = null;
 
 		if (namespaceInfoList != null && isMissingNamespaceLocation()) {
-			String title = XMLWizard.getString("_UI_LABEL_NO_LOCATION_HINT");
-			String message = XMLWizard.getString("_UI_WARNING_MSG_NO_LOCATION_HINT_1") + " " + XMLWizard.getString("_UI_WARNING_MSG_NO_LOCATION_HINT_2") + "\n\n" + XMLWizard.getString("_UI_WARNING_MSG_NO_LOCATION_HINT_3");
+			String title = XMLWizardsMessages._UI_LABEL_NO_LOCATION_HINT;
+			String message = XMLWizardsMessages._UI_WARNING_MSG_NO_LOCATION_HINT_1 + " " + XMLWizardsMessages._UI_WARNING_MSG_NO_LOCATION_HINT_2 + "\n\n" + XMLWizardsMessages._UI_WARNING_MSG_NO_LOCATION_HINT_3; //$NON-NLS-1$ //$NON-NLS-2$
 
 			errorList = new String[2];
 			errorList[0] = title;

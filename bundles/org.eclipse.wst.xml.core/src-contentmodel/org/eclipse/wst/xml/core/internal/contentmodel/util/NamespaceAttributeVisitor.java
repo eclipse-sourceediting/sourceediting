@@ -21,8 +21,8 @@ import org.w3c.dom.NamedNodeMap;
 
 public class NamespaceAttributeVisitor
 {                                      
-  public static final String XML_SCHEMA_INSTANCE_URI = "http://www.w3.org/2001/XMLSchema-instance";
-  public String xsiPrefix = "xsi";
+  public static final String XML_SCHEMA_INSTANCE_URI = "http://www.w3.org/2001/XMLSchema-instance"; //$NON-NLS-1$
+  public String xsiPrefix = "xsi"; //$NON-NLS-1$
 
   public void visitXMLNamespaceAttribute(Attr attr, String namespacePrefix, String namespaceURI)
   {   
@@ -69,24 +69,24 @@ public class NamespaceAttributeVisitor
       String unprefixedName = DOMNamespaceHelper.getUnprefixedName(attr.getName());
       if (prefix != null && unprefixedName != null)
       {
-        if (prefix.equals("xmlns"))
+        if (prefix.equals("xmlns")) //$NON-NLS-1$
         {
           visitXMLNamespaceAttribute(attr, unprefixedName, attr.getValue());
         } 
-        else if (prefix.equals(xsiPrefix) && unprefixedName.equals("schemaLocation"))
+        else if (prefix.equals(xsiPrefix) && unprefixedName.equals("schemaLocation")) //$NON-NLS-1$
         {
           visitXSISchemaLocationAttribute(attr, attr.getValue());
         }
-        else if (prefix.equals(xsiPrefix) && unprefixedName.equals("noNamespaceSchemaLocation"))
+        else if (prefix.equals(xsiPrefix) && unprefixedName.equals("noNamespaceSchemaLocation")) //$NON-NLS-1$
         {
           visitXSINoNamespaceSchemaLocationAttribute(attr, attr.getValue());
         }
       }
       else if (unprefixedName != null)
       {
-        if (unprefixedName.equals("xmlns"))
+        if (unprefixedName.equals("xmlns")) //$NON-NLS-1$
         {
-          visitXMLNamespaceAttribute(attr, "", attr.getValue());
+          visitXMLNamespaceAttribute(attr, "", attr.getValue()); //$NON-NLS-1$
         }
       }      
     }

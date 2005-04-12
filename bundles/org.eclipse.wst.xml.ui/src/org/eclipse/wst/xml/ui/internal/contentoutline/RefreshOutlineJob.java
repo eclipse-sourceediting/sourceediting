@@ -25,7 +25,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -51,7 +51,7 @@ public class RefreshOutlineJob extends Job {
 	}
 	
 	public RefreshOutlineJob(StructuredViewer viewer) {
-		super(XMLUIPlugin.getResourceString("%refreshoutline.0"));
+		super(XMLUIMessages.refreshoutline_0); //$NON-NLS-1$
 		setPriority(Job.LONG);
 		setSystem(true);
 		fRequests = new ArrayList(1);
@@ -106,9 +106,9 @@ public class RefreshOutlineJob extends Job {
 	private boolean contains(Node root, Node possible) {
 
 		if (DEBUG) {
-			System.out.println("==============================================================================================================");
-			System.out.println("recursive call w/ root: " + root.getNodeName() + " and possible: " + possible);
-			System.out.println("--------------------------------------------------------------------------------------------------------------");
+			System.out.println("=============================================================================================================="); //$NON-NLS-1$
+			System.out.println("recursive call w/ root: " + root.getNodeName() + " and possible: " + possible); //$NON-NLS-1$ //$NON-NLS-2$
+			System.out.println("--------------------------------------------------------------------------------------------------------------"); //$NON-NLS-1$
 		}
 		
 		// the following checks are important
@@ -116,17 +116,17 @@ public class RefreshOutlineJob extends Job {
 		
 		// can't contain the parent if it's null
 		if (root == null) {
-		    if (DEBUG) System.out.println("returning false: root is null");
+		    if (DEBUG) System.out.println("returning false: root is null"); //$NON-NLS-1$
 			return false;
 		}
 		// nothing can be parent of Document node
 		if (possible instanceof Document) {
-		    if (DEBUG) System.out.println("returning false: possible is Document node");
+		    if (DEBUG) System.out.println("returning false: possible is Document node"); //$NON-NLS-1$
 		    return false;
 		}
 		// document contains everything
 		if(root instanceof Document) {
-		    if (DEBUG) System.out.println("returning true: root is Document node");
+		    if (DEBUG) System.out.println("returning true: root is Document node"); //$NON-NLS-1$
 		    return true;
 		}
 		
@@ -134,10 +134,10 @@ public class RefreshOutlineJob extends Job {
 		Node current = root;
 		// loop siblings
 		while (current != null) {
-			if (DEBUG) System.out.println("   -> iterating sibling (" + current.getNodeName() + ")");
+			if (DEBUG) System.out.println("   -> iterating sibling (" + current.getNodeName() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 			// found it
 			if (possible.equals(current)) {		    
-				if (DEBUG) System.out.println("   !!! found: " + possible.getNodeName() + " in subtree for: " + root.getNodeName());
+				if (DEBUG) System.out.println("   !!! found: " + possible.getNodeName() + " in subtree for: " + root.getNodeName()); //$NON-NLS-1$ //$NON-NLS-2$
 				return true;
 			}
 			// drop one level deeper if necessary
@@ -176,7 +176,7 @@ public class RefreshOutlineJob extends Job {
 			public void run() {
 			    
 			    if(DEBUG)
-			        System.out.println("refresh on: [" +node.getNodeName()+ "]");
+			        System.out.println("refresh on: [" +node.getNodeName()+ "]"); //$NON-NLS-1$ //$NON-NLS-2$
 			        
 			    if(node instanceof Document)
 			        fViewer.refresh();

@@ -46,7 +46,7 @@ public class AnnotationMap
     if (spec != null)
     {                
       list.add(annotation);
-      StringTokenizer st = new StringTokenizer(spec, "[]|\t\n\r\f ");                   
+      StringTokenizer st = new StringTokenizer(spec, "[]|\t\n\r\f ");                    //$NON-NLS-1$
       while (st.hasMoreTokens())
       {
         String cmNodeSpec = st.nextToken();
@@ -91,7 +91,7 @@ public class AnnotationMap
   public String getProperty(CMNode cmNode, String propertyName)
   {                                          
     String result = null;
-    String cmNodeSpec = (String)cmNode.getProperty("spec");
+    String cmNodeSpec = (String)cmNode.getProperty("spec"); //$NON-NLS-1$
     if (cmNodeSpec == null)
     {
       cmNodeSpec = cmNode.getNodeName();

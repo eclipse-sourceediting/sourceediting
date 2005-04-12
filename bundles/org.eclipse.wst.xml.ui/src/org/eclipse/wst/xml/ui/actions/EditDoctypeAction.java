@@ -23,7 +23,7 @@ import org.eclipse.wst.xml.core.document.IDOMDocument;
 import org.eclipse.wst.xml.core.document.IDOMDocumentType;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.eclipse.wst.xml.ui.dialogs.EditDoctypeDialog;
-import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Element;
@@ -92,7 +92,7 @@ public class EditDoctypeAction extends Action {
 				break;
 			}
 		}
-		return rootElement != null ? rootElement.getNodeName() : XMLUIPlugin.getResourceString("%_UI_LABEL_ROOT_ELEMENT_VALUE"); //$NON-NLS-1$
+		return rootElement != null ? rootElement.getNodeName() : XMLUIMessages._UI_LABEL_ROOT_ELEMENT_VALUE; //$NON-NLS-1$
 	}
 
 	public String getUndoDescription() {
@@ -144,13 +144,13 @@ public class EditDoctypeAction extends Action {
 		if (doctype != null) {
 			dialog = new EditDoctypeDialog(shell, doctype);
 			if (title == null) {
-				title = XMLUIPlugin.getResourceString("%_UI_LABEL_EDIT_DOCTYPE"); //$NON-NLS-1$
+				title = XMLUIMessages._UI_LABEL_EDIT_DOCTYPE; //$NON-NLS-1$
 			}
 		} else if (document != null) {
 			String rootElementName = getRootElementName(document);
 			dialog = new EditDoctypeDialog(shell, rootElementName, "", rootElementName + ".dtd"); //$NON-NLS-1$ //$NON-NLS-2$
 			if (title == null) {
-				title = XMLUIPlugin.getResourceString("%_UI_MENU_ADD_DTD_INFORMATION_TITLE"); //$NON-NLS-1$
+				title = XMLUIMessages._UI_MENU_ADD_DTD_INFORMATION_TITLE; //$NON-NLS-1$
 			}
 		}
 

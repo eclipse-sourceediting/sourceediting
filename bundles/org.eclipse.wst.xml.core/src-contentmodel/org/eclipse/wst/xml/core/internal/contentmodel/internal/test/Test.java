@@ -38,7 +38,7 @@ public class Test implements IPlatformRunnable
     }                    
     else
     {
-      System.out.println("xml file name argument required");
+      System.out.println("xml file name argument required"); //$NON-NLS-1$
     }
     return null;
   }
@@ -76,7 +76,7 @@ public class Test implements IPlatformRunnable
   protected void visitNode(Node node, ModelQuery mq, int indent)
   {                                                                                                    
     CMNode cmnode = mq.getCMNode(node);     
-    printlnIndented(indent, "node :" + node.getNodeName() + " cmnode : " + (cmnode != null ? cmnode.getNodeName() : "null"));
+    printlnIndented(indent, "node :" + node.getNodeName() + " cmnode : " + (cmnode != null ? cmnode.getNodeName() : "null")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     NamedNodeMap map = node.getAttributes();
     if (map != null)
     {                                    
@@ -102,7 +102,7 @@ public class Test implements IPlatformRunnable
   {    
     for (int i = 0; i < indent; i++)
     {
-      System.out.print(" ");
+      System.out.print(" "); //$NON-NLS-1$
     }
     System.out.println(string);
   }     

@@ -63,7 +63,7 @@ public class CMImageUtil {
 		if (cmnode == null)
 			return null;
 		// cache CM-specified images with the XML UI plugin
-		String imageURLString = (String) cmnode.getProperty("small-icon");
+		String imageURLString = (String) cmnode.getProperty("small-icon"); //$NON-NLS-1$
 		ImageDescriptor descriptor = null;
 		if (imageURLString != null && imageURLString.length() > 0) {
 			descriptor = XMLUIPlugin.getInstance().getImageRegistry()

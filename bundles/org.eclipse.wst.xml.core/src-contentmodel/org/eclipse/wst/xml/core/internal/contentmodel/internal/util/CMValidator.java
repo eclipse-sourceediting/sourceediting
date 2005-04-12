@@ -58,7 +58,7 @@ public class CMValidator
 
     public String toString()
     {
-      return "[GraphNode " + name + "]";
+      return "[GraphNode " + name + "]"; //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
 
@@ -82,7 +82,7 @@ public class CMValidator
 
     public Arc(int kind, GraphNode node, CMNode cmNode)
     {
-      this(kind, "", node, cmNode);
+      this(kind, "", node, cmNode); //$NON-NLS-1$
     }
 
     protected Arc(int kind, String name, GraphNode node, CMNode cmNode)
@@ -147,7 +147,7 @@ public class CMValidator
 
     protected String getGraphNodeName()
     {
-      return "n" + count++;
+      return "n" + count++; //$NON-NLS-1$
     }
 
 
@@ -208,8 +208,8 @@ public class CMValidator
     public void visitCMGroup(CMGroup group)
     {
       Context prevContext = context;
-      GraphNode in = new GraphNode("(" + getGraphNodeName());
-      GraphNode out = new GraphNode(")" + getGraphNodeName());
+      GraphNode in = new GraphNode("(" + getGraphNodeName()); //$NON-NLS-1$
+      GraphNode out = new GraphNode(")" + getGraphNodeName()); //$NON-NLS-1$
 
       int groupOperator = group.getOperator();
       if (groupOperator == CMGroup.SEQUENCE)
@@ -244,7 +244,7 @@ public class CMValidator
       GraphNode in = new GraphNode(getGraphNodeName());
       GraphNode out = new GraphNode(getGraphNodeName());
       createArcs(in, out, anyElement);
-      in.addArc(new Arc(Arc.ELEMENT, "any", out, anyElement));
+      in.addArc(new Arc(Arc.ELEMENT, "any", out, anyElement)); //$NON-NLS-1$
     }
   }
 
@@ -280,7 +280,7 @@ public class CMValidator
     {
       Arc arc = (Arc)e.nextElement();
       //boolean visit = false;
-      printlnIndented(indent, "Arc:" + arc.name + " (" + arc.kind + ")");
+      printlnIndented(indent, "Arc:" + arc.name + " (" + arc.kind + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       if (arc.kind == Arc.ELEMENT)
       {
         //table.add(currentGrammarObject, arc.grammarObject);
@@ -436,7 +436,7 @@ public class CMValidator
         {
           result.isValid = false;
           result.errorIndex = i;
-          result.errorMessage = "Element can not include PCDATA content";
+          result.errorMessage = "Element can not include PCDATA content"; //$NON-NLS-1$
         }
       }
     }
@@ -482,7 +482,7 @@ public class CMValidator
         {
           result.isValid = false;
           result.errorIndex = i;
-          result.errorMessage = "Element may only include PCDATA content";
+          result.errorMessage = "Element may only include PCDATA content"; //$NON-NLS-1$
           break;
         }
       }
@@ -497,7 +497,7 @@ public class CMValidator
         {
           result.isValid = false;
           result.errorIndex = i;
-          result.errorMessage = "Element may not contain PCDATA or Element content";
+          result.errorMessage = "Element may not contain PCDATA or Element content"; //$NON-NLS-1$
           break;
         }
       }
@@ -800,7 +800,7 @@ public class CMValidator
 
     public String toString()
     {
-      String string = "[" + head + "],";
+      String string = "[" + head + "],"; //$NON-NLS-1$ //$NON-NLS-2$
 
       if (tail != null)
       {
@@ -819,13 +819,13 @@ public class CMValidator
     public boolean isIgnorable(Object o)
     {
       String string = o.toString();
-      return string.startsWith("!") || string.startsWith("?");
+      return string.startsWith("!") || string.startsWith("?"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     public boolean isPCData(Object o)
     {
       String string = o.toString();
-      return string.startsWith("'") || string.startsWith("\"");
+      return string.startsWith("'") || string.startsWith("\""); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     public boolean isElement(Object o)
@@ -840,7 +840,7 @@ public class CMValidator
       { 
         CMElementDeclaration element = (CMElementDeclaration)cmNode;
         String name = o.toString();                              
-        int index = name.indexOf("]");
+        int index = name.indexOf("]"); //$NON-NLS-1$
         if (index != -1)
         {
           name = name.substring(index + 1);
@@ -850,7 +850,7 @@ public class CMValidator
         // TODO... here's we consider substitution groups... revisit to see if this should be moved into validator code
         if (!result)
         {
-          CMNodeList cmNodeList = (CMNodeList)element.getProperty("SubstitutionGroup");  
+          CMNodeList cmNodeList = (CMNodeList)element.getProperty("SubstitutionGroup");   //$NON-NLS-1$
           if (cmNodeList != null)
           {
             int cmNodeListLength = cmNodeList.getLength();
@@ -873,7 +873,7 @@ public class CMValidator
       else if (cmNode.getNodeType() == CMNode.ANY_ELEMENT)
       {                                   
         String string = o.toString();
-        if (string.equals("*"))
+        if (string.equals("*")) //$NON-NLS-1$
         {
           result = true;
         }
@@ -883,17 +883,17 @@ public class CMValidator
           String anyElementURI = anyElement.getNamespaceURI();    
           if (anyElementURI != null)
           {           
-            if (anyElementURI.equals("##any"))
+            if (anyElementURI.equals("##any")) //$NON-NLS-1$
             {                               
               result = true;
             }
-            else if (anyElementURI.equals("##other"))
+            else if (anyElementURI.equals("##other")) //$NON-NLS-1$
             {     
               result = true;    
-              CMDocument cmDocument = (CMDocument)anyElement.getProperty("CMDocument");  
+              CMDocument cmDocument = (CMDocument)anyElement.getProperty("CMDocument");   //$NON-NLS-1$
               if (cmDocument != null)
               {
-                String excludedURI = (String)cmDocument.getProperty("http://org.eclipse.wst/cm/properties/targetNamespaceURI");
+                String excludedURI = (String)cmDocument.getProperty("http://org.eclipse.wst/cm/properties/targetNamespaceURI"); //$NON-NLS-1$
                 if (excludedURI != null)
                 { 
                   String specifiedURI = getURIForContentSpecification(string);
@@ -904,13 +904,13 @@ public class CMValidator
                 }
               }
             } 
-            else if (anyElementURI.equals("##targetNamespace"))
+            else if (anyElementURI.equals("##targetNamespace")) //$NON-NLS-1$
             {
               result = true;
-              CMDocument cmDocument = (CMDocument)anyElement.getProperty("CMDocument");  
+              CMDocument cmDocument = (CMDocument)anyElement.getProperty("CMDocument");   //$NON-NLS-1$
               if (cmDocument != null)
               {     
-                String targetNamespaceURI = (String)cmDocument.getProperty("http://org.eclipse.wst/cm/properties/targetNamespaceURI");
+                String targetNamespaceURI = (String)cmDocument.getProperty("http://org.eclipse.wst/cm/properties/targetNamespaceURI"); //$NON-NLS-1$
                 String specifiedURI = getURIForContentSpecification(string);
                 if (specifiedURI != null && !targetNamespaceURI.equals(specifiedURI))
                 { 
@@ -941,7 +941,7 @@ public class CMValidator
     protected String getURIForContentSpecification(String specification)
     {           
       String result = null;
-      int index = specification.indexOf("]");
+      int index = specification.indexOf("]"); //$NON-NLS-1$
       if (index != -1)
       {                
         result = specification.substring(1, index);
@@ -982,7 +982,7 @@ public class CMValidator
           GraphNode graphNode = createGraph(element);
           printGraph(graphNode);
           */
-          println("-------------- begin validate ---------------");
+          println("-------------- begin validate ---------------"); //$NON-NLS-1$
 
           StringElementContentComparator comparator = new StringElementContentComparator();
           CMValidator validator = new CMValidator();
@@ -991,40 +991,40 @@ public class CMValidator
           if (result.isValid)
           {
             CMNode[] nodeMapping = result.getOriginArray();
-            println("Validation Success!");
-            print("  ");
+            println("Validation Success!"); //$NON-NLS-1$
+            print("  "); //$NON-NLS-1$
             for (int i = 0; i < nodeMapping.length; i++)
             {
-              String name = nodeMapping[i] != null ? nodeMapping[i].getNodeName() : "null";
-              print("[" + name + "]");
+              String name = nodeMapping[i] != null ? nodeMapping[i].getNodeName() : "null"; //$NON-NLS-1$
+              print("[" + name + "]"); //$NON-NLS-1$ //$NON-NLS-2$
             }
-            println("");
+            println(""); //$NON-NLS-1$
           }
           else
           {
-            println("Validation Failed! ");
+            println("Validation Failed! "); //$NON-NLS-1$
             if (result.errorMessage != null)
             {
-              println("  " + result.errorMessage);
+              println("  " + result.errorMessage); //$NON-NLS-1$
             }
           }
-          println("-------------- end validate ---------------");
+          println("-------------- end validate ---------------"); //$NON-NLS-1$
         }
         else
         {
-          println("element [" + elementName + "] can not be found");
+          println("element [" + elementName + "] can not be found"); //$NON-NLS-1$ //$NON-NLS-2$
         }
       }
       catch (Exception e)
       {
-        println("CMValidator error");
+        println("CMValidator error"); //$NON-NLS-1$
         e.printStackTrace();
       }
     }
     else
     {
-      println("2 args required... only " + arg.length + " provided");
-      println("usage java org.eclipse.wst.newxml.util.XMLUtil grammarFileName rootElementName pattern");
+      println("2 args required... only " + arg.length + " provided"); //$NON-NLS-1$ //$NON-NLS-2$
+      println("usage java org.eclipse.wst.newxml.util.XMLUtil grammarFileName rootElementName pattern"); //$NON-NLS-1$
     }
   }
 

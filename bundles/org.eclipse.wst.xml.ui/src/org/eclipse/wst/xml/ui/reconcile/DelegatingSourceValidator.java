@@ -54,18 +54,18 @@ import org.w3c.dom.NodeList;
  */
 public class DelegatingSourceValidator implements IValidator { 
   //the selection strategies:
-	protected static final String ALL_ATTRIBUTES = "ALL_ATTRIBUTES";
-	protected static final String ATTRIBUTE_NAME = "ATTRIBUTE_NAME";
-	protected static final String ATTRIBUTE_VALUE = "ATTRIBUTE_VALUE";
-	protected static final String START_TAG = "START_TAG";
-	protected static final String TEXT = "TEXT";
-	protected static final String FIRST_NON_WHITESPACE_TEXT = "FIRST_NON_WHITESPACE_TEXT";
-	protected static final String TEXT_ENTITY_REFERENCE = "TEXT_ENTITY_REFERENCE";
-	protected static final String VALUE_OF_ATTRIBUTE_WITH_GIVEN_VALUE = "VALUE_OF_ATTRIBUTE_WITH_GIVEN_VALUE";
+	protected static final String ALL_ATTRIBUTES = "ALL_ATTRIBUTES"; //$NON-NLS-1$
+	protected static final String ATTRIBUTE_NAME = "ATTRIBUTE_NAME"; //$NON-NLS-1$
+	protected static final String ATTRIBUTE_VALUE = "ATTRIBUTE_VALUE"; //$NON-NLS-1$
+	protected static final String START_TAG = "START_TAG"; //$NON-NLS-1$
+	protected static final String TEXT = "TEXT"; //$NON-NLS-1$
+	protected static final String FIRST_NON_WHITESPACE_TEXT = "FIRST_NON_WHITESPACE_TEXT"; //$NON-NLS-1$
+	protected static final String TEXT_ENTITY_REFERENCE = "TEXT_ENTITY_REFERENCE"; //$NON-NLS-1$
+	protected static final String VALUE_OF_ATTRIBUTE_WITH_GIVEN_VALUE = "VALUE_OF_ATTRIBUTE_WITH_GIVEN_VALUE"; //$NON-NLS-1$
 
-	protected static final String COLUMN_NUMBER_ATTRIBUTE = "columnNumber";
-	protected static final String SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE = "squiggleSelectionStrategy";
-	protected static final String SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE = "squiggleNameOrValue";
+	protected static final String COLUMN_NUMBER_ATTRIBUTE = "columnNumber"; //$NON-NLS-1$
+	protected static final String SQUIGGLE_SELECTION_STRATEGY_ATTRIBUTE = "squiggleSelectionStrategy"; //$NON-NLS-1$
+	protected static final String SQUIGGLE_NAME_OR_VALUE_ATTRIBUTE = "squiggleNameOrValue"; //$NON-NLS-1$
 
 	public DelegatingSourceValidator() {
 		super(); // constructor
@@ -86,14 +86,14 @@ public class DelegatingSourceValidator implements IValidator {
 		}
 
 		public Object loadModel(String symbolicName, Object[] parms) {
-			if (symbolicName.equals("getFile")) {
+			if (symbolicName.equals("getFile")) { //$NON-NLS-1$
 				return file;
 			}
 			return null;
 		}
 
 		public Object loadModel(String symbolicName) {
-			if (symbolicName.equals("inputStream")) {
+			if (symbolicName.equals("inputStream")) { //$NON-NLS-1$
 				return inputStream;
 			}
 			return null;

@@ -28,11 +28,11 @@ public class DOMNamespaceHelper
 	  String nsAttrName = null;
 	  if (prefix != null && prefix.length() > 0) 
     {
-		  nsAttrName = "xmlns:" + prefix;
+		  nsAttrName = "xmlns:" + prefix; //$NON-NLS-1$
 	  }
 	  else 
     {
-		  nsAttrName = "xmlns";
+		  nsAttrName = "xmlns"; //$NON-NLS-1$
 	  }
             
     // assume the node is qualified... look up the URI base on the prefix
@@ -105,7 +105,7 @@ public class DOMNamespaceHelper
   public static String getPrefix(String name)
   {
     String prefix = null;
-    int index = name.indexOf(":");
+    int index = name.indexOf(":"); //$NON-NLS-1$
     if (index != -1)
     {
       prefix = name.substring(0, index);
@@ -116,7 +116,7 @@ public class DOMNamespaceHelper
 
   public static String getUnprefixedName(String name)
   {
-    int index = name.indexOf(":");
+    int index = name.indexOf(":"); //$NON-NLS-1$
     if (index != -1)
     {
       name = name.substring(index + 1);
@@ -139,19 +139,19 @@ public class DOMNamespaceHelper
     //
     if (getPrefix(result) == null)
     {              
-      String qualification = (String)cmNode.getProperty("http://org.eclipse.wst/cm/properties/nsPrefixQualification");
+      String qualification = (String)cmNode.getProperty("http://org.eclipse.wst/cm/properties/nsPrefixQualification"); //$NON-NLS-1$
       // see if we need a namespace prefix
       //
-      if (qualification != null && qualification.equals("qualified"))
+      if (qualification != null && qualification.equals("qualified")) //$NON-NLS-1$
       {            
         if (prefix == null)                 
         {
           // todo... add getCMDocument() method to CMNode
           // for now use this getProperty() hack
-          CMDocument cmDocument = (CMDocument)cmNode.getProperty("CMDocument");
+          CMDocument cmDocument = (CMDocument)cmNode.getProperty("CMDocument"); //$NON-NLS-1$
           if (cmDocument != null)          
           {     
-            String namespaceURI = (String)cmDocument.getProperty("http://org.eclipse.wst/cm/properties/targetNamespaceURI");   
+            String namespaceURI = (String)cmDocument.getProperty("http://org.eclipse.wst/cm/properties/targetNamespaceURI");    //$NON-NLS-1$
             if (namespaceURI != null)
             {   
               // use the NamespaceTable to figure out the correct prefix for this namespace uri
@@ -171,7 +171,7 @@ public class DOMNamespaceHelper
         }
         if (prefix != null && prefix.length() > 0)
         {
-          result = prefix + ":" + result;
+          result = prefix + ":" + result; //$NON-NLS-1$
         }
       }    
     }
@@ -182,8 +182,8 @@ public class DOMNamespaceHelper
   public static String[] getURIQualifiedNameComponents(String uriQualifiedName)
   {
     String[] result = new String[2];
-    int firstIndex = uriQualifiedName.indexOf("[");
-    int lastIndex = uriQualifiedName.indexOf("]");
+    int firstIndex = uriQualifiedName.indexOf("["); //$NON-NLS-1$
+    int lastIndex = uriQualifiedName.indexOf("]"); //$NON-NLS-1$
     if (firstIndex != -1 && lastIndex > firstIndex)
     {
       result[0] = uriQualifiedName.substring(firstIndex + 1, lastIndex);

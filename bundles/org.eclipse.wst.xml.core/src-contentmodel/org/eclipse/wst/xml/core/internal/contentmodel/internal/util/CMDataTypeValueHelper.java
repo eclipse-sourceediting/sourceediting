@@ -42,9 +42,9 @@ public class CMDataTypeValueHelper
     //
     if (value == null)
     {
-      if (ad.getAttrName().equals("xml:lang"))    
+      if (ad.getAttrName().equals("xml:lang"))     //$NON-NLS-1$
       {
-        value = "EN";
+        value = "EN"; //$NON-NLS-1$
       }
     }
 
@@ -89,13 +89,13 @@ public class CMDataTypeValueHelper
       String dataTypeName = dataType.getDataTypeName();
       if (dataTypeName != null)
       {
-        if (dataTypeName.equals("ID"))
+        if (dataTypeName.equals("ID")) //$NON-NLS-1$
         {
-          value = "idvalue" + idCount++;
+          value = "idvalue" + idCount++; //$NON-NLS-1$
         }
-        else if (dataTypeName.equals("IDREF") || dataTypeName.equals("IDREFS"))
+        else if (dataTypeName.equals("IDREF") || dataTypeName.equals("IDREFS")) //$NON-NLS-1$ //$NON-NLS-2$
         {
-          value = "idvalue0";
+          value = "idvalue0"; //$NON-NLS-1$
         }
       }
     }     
@@ -109,8 +109,8 @@ public class CMDataTypeValueHelper
     CMDataType dataType = ad.getAttrType();
     if (dataType != null)
     {                                                          
-      String propertyValue = (String)dataType.getProperty("isValidEmptyValue");
-      if (propertyValue != null && propertyValue.equals("false"))
+      String propertyValue = (String)dataType.getProperty("isValidEmptyValue"); //$NON-NLS-1$
+      if (propertyValue != null && propertyValue.equals("false")) //$NON-NLS-1$
       {
         result = false;
       }
@@ -122,13 +122,13 @@ public class CMDataTypeValueHelper
   public boolean isXSIType(CMAttributeDeclaration ad)
   {         
     boolean result = false;
-    if (ad.getNodeName().equals("type")) 
+    if (ad.getNodeName().equals("type"))  //$NON-NLS-1$
     {
-      CMDocument cmDocument = (CMDocument)ad.getProperty("CMDocument");
+      CMDocument cmDocument = (CMDocument)ad.getProperty("CMDocument"); //$NON-NLS-1$
       if (cmDocument != null)
       {
-        String namespaceName = (String)cmDocument.getProperty("http://org.eclipse.wst/cm/properties/targetNamespaceURI");
-        if (namespaceName != null && namespaceName.equals("http://www.w3.org/2001/XMLSchema-instance"))
+        String namespaceName = (String)cmDocument.getProperty("http://org.eclipse.wst/cm/properties/targetNamespaceURI"); //$NON-NLS-1$
+        if (namespaceName != null && namespaceName.equals("http://www.w3.org/2001/XMLSchema-instance")) //$NON-NLS-1$
         {           
           result = true;
         }
@@ -142,16 +142,16 @@ public class CMDataTypeValueHelper
   {          
     List list = new Vector();                                                 
                                        
-    List xsiTypes = (List)ad.getProperty("XSITypes");
+    List xsiTypes = (List)ad.getProperty("XSITypes"); //$NON-NLS-1$
     if (xsiTypes != null && xsiTypes.size() > 0)
     {
       for (Iterator i = xsiTypes.iterator(); i.hasNext(); )
       { 
         String uriQualifiedName = (String)i.next();
         String[] components = DOMNamespaceHelper.getURIQualifiedNameComponents(uriQualifiedName);  
-        String prefix = table.getPrefixForURI(components[0] != null ? components[0] : "");
+        String prefix = table.getPrefixForURI(components[0] != null ? components[0] : ""); //$NON-NLS-1$
         String typeName = (prefix != null && prefix.length() > 0) ? 
-                           prefix + ":" + components[1] : 
+                           prefix + ":" + components[1] :  //$NON-NLS-1$
                            components[1];
         list.add(typeName);
       }

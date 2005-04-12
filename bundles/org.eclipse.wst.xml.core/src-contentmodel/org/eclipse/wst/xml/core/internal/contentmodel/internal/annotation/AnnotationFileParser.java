@@ -33,9 +33,9 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class AnnotationFileParser
 {
-  public static final String TAG_ID_ANNOTATIONS = "abstractGrammarAnnotations";
-  public static final String TAG_ID_ANNOTATION = "annotation";                               
-  public static final String TAG_ID_PROPERTY = "property";  
+  public static final String TAG_ID_ANNOTATIONS = "abstractGrammarAnnotations"; //$NON-NLS-1$
+  public static final String TAG_ID_ANNOTATION = "annotation";                                //$NON-NLS-1$
+  public static final String TAG_ID_PROPERTY = "property";   //$NON-NLS-1$
 
   /**
    * This method is called to parse an annotation file and store the contents into an annotationMap
@@ -67,10 +67,10 @@ public class AnnotationFileParser
     {       
       URL url = new URL(uri); 
       inputStream = url.openStream(); 
-      int index = uri.lastIndexOf("/");
+      int index = uri.lastIndexOf("/"); //$NON-NLS-1$
       if (index == -1)
       {
-        throw new Exception("malformed uri");
+        throw new Exception("malformed uri"); //$NON-NLS-1$
       }
       String baseURI = uri.substring(0, index);
       parse(map, inputStream, baseURI);               
@@ -95,7 +95,7 @@ public class AnnotationFileParser
 
   protected String quote(String string)
   {
-    return "\"" + string + "\"";
+    return "\"" + string + "\""; //$NON-NLS-1$ //$NON-NLS-2$
   }
 
 
@@ -103,7 +103,7 @@ public class AnnotationFileParser
   {
     for (int i = 0; i < indent; i++)
     {
-      out.print(" ");
+      out.print(" "); //$NON-NLS-1$
     }
     out.println(string);
   }    
@@ -134,9 +134,9 @@ public class AnnotationFileParser
         {                  
           String attributeName = attributes.getLocalName(i);
           String attributeValue = attributes.getValue(i);  
-          if (attributeName.equals("propertiesLocation"))
+          if (attributeName.equals("propertiesLocation")) //$NON-NLS-1$
           {                                                 
-            String resourceURI = baseURI + "/" + attributeValue;  
+            String resourceURI = baseURI + "/" + attributeValue;   //$NON-NLS-1$
             try
             {                     
               resourceBundle = ResourceBundleHelper.getResourceBundle(resourceURI);
@@ -146,9 +146,9 @@ public class AnnotationFileParser
               e.printStackTrace();
             }
           } 
-          else if (attributeName.equals("caseSensitive"))
+          else if (attributeName.equals("caseSensitive")) //$NON-NLS-1$
           {   
-            if (attributeValue.trim().equals("false"))
+            if (attributeValue.trim().equals("false")) //$NON-NLS-1$
             {
               annotationMap.setCaseSensitive(false);
             }                 
@@ -158,7 +158,7 @@ public class AnnotationFileParser
       else if (localName.equals(TAG_ID_ANNOTATION))
       {                 
         currentAnnotation = null;
-        String specValue = attributes.getValue("spec");                                          
+        String specValue = attributes.getValue("spec");                                           //$NON-NLS-1$
         if (specValue != null)
         {
           currentAnnotation = new Annotation();   
@@ -170,7 +170,7 @@ public class AnnotationFileParser
       {           
         if (currentAnnotation != null)
         {                          
-          currentPropertyName = attributes.getValue("name");   
+          currentPropertyName = attributes.getValue("name");    //$NON-NLS-1$
         }                                                   
       }           
     }   
@@ -182,7 +182,7 @@ public class AnnotationFileParser
         String propertyValue = propertyValueBuffer.toString();
         if (propertyValue != null)
         {
-          if (propertyValue.startsWith("%") && resourceBundle != null)
+          if (propertyValue.startsWith("%") && resourceBundle != null) //$NON-NLS-1$
           {  
             try
             {

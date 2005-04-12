@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.util.XMLCommonUIContextIds;
 import org.w3c.dom.DocumentType;
 
@@ -104,7 +104,7 @@ public class EditDoctypeDialog extends Dialog {
 		// row 1
 		//
 		Label rootElementNameLabel = new Label(composite, SWT.NONE);
-		rootElementNameLabel.setText(XMLUIPlugin.getResourceString("%_UI_LABEL_ROOT_ELEMENT_NAME_COLON")); //$NON-NLS-1$
+		rootElementNameLabel.setText(XMLUIMessages._UI_LABEL_ROOT_ELEMENT_NAME_COLON); //$NON-NLS-1$
 
 		rootElementNameField = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		WorkbenchHelp.setHelp(rootElementNameField, XMLCommonUIContextIds.XCUI_DOCTYPE_ROOT);
@@ -120,7 +120,7 @@ public class EditDoctypeDialog extends Dialog {
 		// row 2
 		//
 		Label publicIdLabel = new Label(composite, SWT.NONE);
-		publicIdLabel.setText(XMLUIPlugin.getResourceString("%_UI_LABEL_PUBLIC_ID_COLON")); //$NON-NLS-1$
+		publicIdLabel.setText(XMLUIMessages._UI_LABEL_PUBLIC_ID_COLON); //$NON-NLS-1$
 
 		publicIdField = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		WorkbenchHelp.setHelp(publicIdField, XMLCommonUIContextIds.XCUI_DOCTYPE_PUBLIC);
@@ -140,12 +140,12 @@ public class EditDoctypeDialog extends Dialog {
 
 		publicIdBrowseButton = new Button(composite, SWT.NONE);
 		WorkbenchHelp.setHelp(publicIdBrowseButton, XMLCommonUIContextIds.XCUI_DOCTYPE_PUBLIC_BROWSE);
-		publicIdBrowseButton.setText(XMLUIPlugin.getResourceString("%_UI_LABEL_BROWSE")); //$NON-NLS-1$
+		publicIdBrowseButton.setText(XMLUIMessages._UI_LABEL_BROWSE); //$NON-NLS-1$
 		publicIdBrowseButton.addSelectionListener(selectionListener);
 
 		// row 3
 		Label systemIdLabel = new Label(composite, SWT.NONE);
-		systemIdLabel.setText(XMLUIPlugin.getResourceString("%_UI_LABEL_SYSTEM_ID_COLON")); //$NON-NLS-1$
+		systemIdLabel.setText(XMLUIMessages._UI_LABEL_SYSTEM_ID_COLON); //$NON-NLS-1$
 
 		systemIdField = new Text(composite, SWT.SINGLE | SWT.BORDER);
 		WorkbenchHelp.setHelp(systemIdField, XMLCommonUIContextIds.XCUI_DOCTYPE_SYSTEM);
@@ -156,7 +156,7 @@ public class EditDoctypeDialog extends Dialog {
 
 		systemIdBrowseButton = new Button(composite, SWT.NONE);
 		WorkbenchHelp.setHelp(systemIdBrowseButton, XMLCommonUIContextIds.XCUI_DOCTYPE_SYSTEM_BROWSE);
-		systemIdBrowseButton.setText(XMLUIPlugin.getResourceString("%_UI_LABEL_BROWSE")); //$NON-NLS-1$
+		systemIdBrowseButton.setText(XMLUIMessages._UI_LABEL_BROWSE); //$NON-NLS-1$
 		systemIdBrowseButton.addSelectionListener(selectionListener);
 
 		// error message
@@ -222,9 +222,9 @@ public class EditDoctypeDialog extends Dialog {
 		if (errorChecking) {
 			String errorMessage = null;
 			if (getModelValue(systemIdField.getText()) == null) {
-				errorMessage = XMLUIPlugin.getResourceString("%_UI_WARNING_SYSTEM_ID_MUST_BE_SPECIFIED"); //$NON-NLS-1$
+				errorMessage = XMLUIMessages._UI_WARNING_SYSTEM_ID_MUST_BE_SPECIFIED; //$NON-NLS-1$
 			} else if (getModelValue(rootElementNameField.getText()) == null) {
-				errorMessage = XMLUIPlugin.getResourceString("%_UI_WARNING_ROOT_ELEMENT_MUST_BE_SPECIFIED"); //$NON-NLS-1$
+				errorMessage = XMLUIMessages._UI_WARNING_ROOT_ELEMENT_MUST_BE_SPECIFIED; //$NON-NLS-1$
 			}
 
 			errorMessageLabel.setText(errorMessage != null ? errorMessage : ""); //$NON-NLS-1$

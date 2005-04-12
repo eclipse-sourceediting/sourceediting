@@ -34,7 +34,7 @@ import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.internal.ui.IDesignViewer;
-import org.eclipse.wst.xml.internal.ui.XMLEditorResourceHandler;
+import org.eclipse.wst.xml.internal.ui.XMLEditorMessages;
 import org.eclipse.wst.xml.ui.actions.NodeAction;
 import org.eclipse.wst.xml.ui.dnd.XMLDragAndDropManager;
 import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
@@ -251,7 +251,7 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 	}
 
 	public String getTitle() {
-		return XMLEditorResourceHandler.getResourceString("%XMLTableTreeViewer.0"); //$NON-NLS-1$
+		return XMLEditorMessages.XMLTableTreeViewer_0;
 	}
 
 	protected void handleDispose(DisposeEvent event) {

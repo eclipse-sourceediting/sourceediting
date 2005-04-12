@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.wst.xml.core.internal.XMLCoreMessages;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.ContentModelManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.internal.annotation.AnnotationUtility;
@@ -59,7 +60,7 @@ public class CMDocumentManagerImpl implements CMDocumentManager
  
   public void setPropertyEnabled(String propertyName, boolean value)
   {
-    propertyTable.put(propertyName, value ? "true" : "false");
+    propertyTable.put(propertyName, value ? "true" : "false"); //$NON-NLS-1$ //$NON-NLS-2$
     for (Iterator i = listenerList.iterator(); i.hasNext(); )
     {
       CMDocumentManagerListener listener = (CMDocumentManagerListener)i.next();
@@ -71,7 +72,7 @@ public class CMDocumentManagerImpl implements CMDocumentManager
   public boolean getPropertyEnabled(String propertyName)
   {
     Object object = propertyTable.get(propertyName);
-    return object != null && object.equals("true");
+    return object != null && object.equals("true"); //$NON-NLS-1$
   }
 
 
@@ -91,7 +92,7 @@ public class CMDocumentManagerImpl implements CMDocumentManager
                    
   protected String lookupResolvedURI(String publicId)
   {
-    String key = publicId != null ? publicId : "";
+    String key = publicId != null ? publicId : ""; //$NON-NLS-1$
     return (String)publicIdTable.get(key);
   }
     
@@ -100,7 +101,7 @@ public class CMDocumentManagerImpl implements CMDocumentManager
   {                    
     String resolvedURI = null;                  
 
-    String key = publicId != null ? publicId : "";
+    String key = publicId != null ? publicId : ""; //$NON-NLS-1$
 
     if (getPropertyEnabled(PROPERTY_USE_CACHED_RESOLVED_URI))
     {
@@ -112,7 +113,7 @@ public class CMDocumentManagerImpl implements CMDocumentManager
       resolvedURI = cmDocumentReferenceProvider.resolveGrammarURI(publicId, systemId);
       if (resolvedURI == null)
       {
-        resolvedURI = "";
+        resolvedURI = ""; //$NON-NLS-1$
       }
       publicIdTable.put(key, resolvedURI);     
     }                       
@@ -196,7 +197,7 @@ public CMDocument getCMDocument(String publicId, String systemId, String type)
 
   public void addCMDocument(String publicId, String systemId, String resolvedURI, String type, CMDocument cmDocument)
   {
-    String key = publicId != null ? publicId : "";
+    String key = publicId != null ? publicId : ""; //$NON-NLS-1$
     publicIdTable.put(key, resolvedURI);
     cmDocumentCache.putCMDocument(resolvedURI, cmDocument);
   }
@@ -212,7 +213,7 @@ public CMDocument getCMDocument(String publicId, String systemId, String type)
       cmDocumentCache.setStatus(resolvedURI, CMDocumentCache.STATUS_LOADING);
       //Thread thread = new Thread(new AsyncBuildOperation(publicId, resolvedURI, type));
       //thread.start();
-      Job job = new Job("loading " + resolvedURI)
+      Job job = new Job(XMLCoreMessages.loading + resolvedURI)
       {
         public boolean belongsTo(Object family)
         {

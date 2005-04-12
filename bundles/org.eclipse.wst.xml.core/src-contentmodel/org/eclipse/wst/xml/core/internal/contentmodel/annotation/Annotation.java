@@ -28,12 +28,12 @@ public class Annotation
 
   public void setSpec(String spec)
   {
-    hashtable.put("spec", spec);
+    hashtable.put("spec", spec); //$NON-NLS-1$
   }     
 
   public String getSpec()
   {
-    return (String)hashtable.get("spec");
+    return (String)hashtable.get("spec"); //$NON-NLS-1$
   }
       
   public void setProperty(String name, String value)

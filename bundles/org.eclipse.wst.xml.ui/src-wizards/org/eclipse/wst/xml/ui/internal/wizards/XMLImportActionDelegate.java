@@ -31,13 +31,13 @@ import org.osgi.framework.Bundle;
 
 public class XMLImportActionDelegate implements IActionDelegate
 {
-  private static final String validateXSDPluginID = "org.eclipse.wst.xsd.validation";
-  private static final String xsdValidatorClassName = "org.eclipse.wst.xsd.validation.internal.ui.eclipse.XSDValidator";
+  private static final String validateXSDPluginID = "org.eclipse.wst.xsd.validation"; //$NON-NLS-1$
+  private static final String xsdValidatorClassName = "org.eclipse.wst.xsd.validation.internal.ui.eclipse.XSDValidator"; //$NON-NLS-1$
   
-  private static final String validateDTDPluginID = "org.eclipse.wst.dtd.validation";
-  private static final String dtdValidatorClassName = "org.eclipse.wst.dtd.validation.internal.ui.eclipse.DTDValidator";
+  private static final String validateDTDPluginID = "org.eclipse.wst.dtd.validation"; //$NON-NLS-1$
+  private static final String dtdValidatorClassName = "org.eclipse.wst.dtd.validation.internal.ui.eclipse.DTDValidator"; //$NON-NLS-1$
 
-  private static final String validationReportClassName = "org.eclipse.wst.xml.validation.internal.core.ValidationReport";
+  private static final String validationReportClassName = "org.eclipse.wst.xml.validation.internal.core.ValidationReport"; //$NON-NLS-1$
 
   
   /**
@@ -58,7 +58,7 @@ public class XMLImportActionDelegate implements IActionDelegate
       IFile file = (IFile)selectedObject;
       IStructuredSelection structuredSelection = (IStructuredSelection)selection;
 
-      if (file.getName().endsWith(".dtd") || file.getName().endsWith(".xsd"))
+      if (file.getName().endsWith(".dtd") || file.getName().endsWith(".xsd")) //$NON-NLS-1$ //$NON-NLS-2$
       { 
         IPath path = file.getLocation();
         String uri = URIHelper.getURIForFilePath(path.toString());
@@ -69,7 +69,7 @@ public class XMLImportActionDelegate implements IActionDelegate
 
         try
         {
-          if (file.getName().endsWith(".xsd"))
+          if (file.getName().endsWith(".xsd")) //$NON-NLS-1$
           {
             Class[] parameterTypes = new Class[] {String.class, InputStream.class};
             Object[] arguments = new Object[] {uri, null};
@@ -86,15 +86,15 @@ public class XMLImportActionDelegate implements IActionDelegate
               
               xsdValidatorClass = validateXSDBundle.loadClass(xsdValidatorClassName);
 
-              Method getInstanceMethod = xsdValidatorClass.getMethod("getInstance", null);
+              Method getInstanceMethod = xsdValidatorClass.getMethod("getInstance", null); //$NON-NLS-1$
               xsdValidatorObject = getInstanceMethod.invoke(null, null);  // static and no parameters
               
-              Method validateMethod = xsdValidatorClass.getMethod("validate", parameterTypes);
+              Method validateMethod = xsdValidatorClass.getMethod("validate", parameterTypes); //$NON-NLS-1$
               validationReportObject = validateMethod.invoke(xsdValidatorObject, arguments);
               
               validationReportClass = validateXSDBundle.loadClass(validationReportClassName);              
               
-              Method isValidMethod = validationReportClass.getMethod("isValid", null);
+              Method isValidMethod = validationReportClass.getMethod("isValid", null); //$NON-NLS-1$
               isValid = (Boolean)isValidMethod.invoke(validationReportObject, null);
 
               validationPluginsFound = true; // made it this far, so declare that validation can be performed
@@ -118,15 +118,15 @@ public class XMLImportActionDelegate implements IActionDelegate
 
               dtdValidatorClass = validateDTDBundle.loadClass(dtdValidatorClassName);
               
-              Method getInstanceMethod = dtdValidatorClass.getMethod("getInstance", null);
+              Method getInstanceMethod = dtdValidatorClass.getMethod("getInstance", null); //$NON-NLS-1$
               dtdValidatorObject = getInstanceMethod.invoke(null, null);  // static and no parameters
               
-              Method validateMethod = dtdValidatorClass.getMethod("validate", parameterTypes);
+              Method validateMethod = dtdValidatorClass.getMethod("validate", parameterTypes); //$NON-NLS-1$
               validationReportObject = validateMethod.invoke(dtdValidatorObject, arguments);
               
               validationReportClass = validateDTDBundle.loadClass(validationReportClassName);              
               
-              Method isValidMethod = validationReportClass.getMethod("isValid", null);
+              Method isValidMethod = validationReportClass.getMethod("isValid", null); //$NON-NLS-1$
               isValid = (Boolean)isValidMethod.invoke(validationReportObject, null);
               
               validationPluginsFound = true; // made it this far, so declare that validation can be performed
@@ -154,8 +154,8 @@ public class XMLImportActionDelegate implements IActionDelegate
         {
           if (isValid != null && !isValid.booleanValue())
           {
-            String title = XMLWizard.getString("_UI_DIALOG_TITLE_INVALID_GRAMMAR");
-            String message = XMLWizard.getString("_UI_DIALOG_MESSAGE_INVALID_GRAMMAR");
+            String title = XMLWizardsMessages._UI_DIALOG_TITLE_INVALID_GRAMMAR;
+            String message = XMLWizardsMessages._UI_DIALOG_MESSAGE_INVALID_GRAMMAR;
             boolean answer = MessageDialog.openQuestion(Display.getDefault().getActiveShell(), title, message);
             if (!answer)
               return;
@@ -164,8 +164,8 @@ public class XMLImportActionDelegate implements IActionDelegate
         else
         {
           // TODO externalize these strings
-          String title = "Validation Plugins Unavailable";
-          String message = "Validation cannot be performed because the validation plugins were disabled or not found.  The generated file may be invalid.  Do you wish to continue?";
+          String title = XMLWizardsMessages.Validation_Plugins_Unavailable;
+          String message = XMLWizardsMessages.Validation_cannot_be_performed;
           boolean answer = MessageDialog.openQuestion(Display.getDefault().getActiveShell(), title, message);
           if (!answer)
             return;

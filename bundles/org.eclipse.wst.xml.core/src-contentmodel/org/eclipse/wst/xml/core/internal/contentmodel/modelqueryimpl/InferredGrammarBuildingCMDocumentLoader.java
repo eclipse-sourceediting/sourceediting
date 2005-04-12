@@ -66,9 +66,9 @@ public class InferredGrammarBuildingCMDocumentLoader extends CMDocumentLoader
                 
     if (inferredCMDocument == null)
     {     
-      String cacheKey = "inferred-document";                   
-      inferredCMDocument = inferredGrammarFactory.createCMDocument("");  
-      cmDocumentManager.addCMDocument("", "", cacheKey, "DTD", inferredCMDocument);
+      String cacheKey = "inferred-document";                    //$NON-NLS-1$
+      inferredCMDocument = inferredGrammarFactory.createCMDocument("");   //$NON-NLS-1$
+      cmDocumentManager.addCMDocument("", "", cacheKey, "DTD", inferredCMDocument); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       createdCMDocumentTable.put(cacheKey, inferredCMDocument);
     } 
 
@@ -108,8 +108,8 @@ public class InferredGrammarBuildingCMDocumentLoader extends CMDocumentLoader
     {
       // when this is the root element
       // we need to add an implied "no namespace schema location"
-      uri = "ommitted-namespace";
-      namespaceTable.addNamespaceInfo(prefix, uri, "");
+      uri = "ommitted-namespace"; //$NON-NLS-1$
+      namespaceTable.addNamespaceInfo(prefix, uri, ""); //$NON-NLS-1$
     }  
 
     // here's where we update the inferred grammar if required
@@ -129,7 +129,7 @@ public class InferredGrammarBuildingCMDocumentLoader extends CMDocumentLoader
       {
         if (uri == null)
         {
-          uri = "ommitted-namespace";
+          uri = "ommitted-namespace"; //$NON-NLS-1$
         }
       }
     }
@@ -145,7 +145,7 @@ public class InferredGrammarBuildingCMDocumentLoader extends CMDocumentLoader
       {
         boolean createCMDocument = false;
 
-        String cacheKey = "inferred-document" + uri; 
+        String cacheKey = "inferred-document" + uri;  //$NON-NLS-1$
         inferredCMDocument = (CMDocument)createdCMDocumentTable.get(cacheKey);
 
         if (inferredCMDocument == null)
@@ -164,7 +164,7 @@ public class InferredGrammarBuildingCMDocumentLoader extends CMDocumentLoader
         {           
           //System.out.println("encountered element {" + element.getNodeName() + "} ... creating inferred CMDocument for " + uri);
           inferredCMDocument = inferredGrammarFactory.createCMDocument(uri);
-          cmDocumentManager.addCMDocument(uri, "", cacheKey, "XSD", inferredCMDocument);
+          cmDocumentManager.addCMDocument(uri, "", cacheKey, "XSD", inferredCMDocument); //$NON-NLS-1$ //$NON-NLS-2$
           createdCMDocumentTable.put(cacheKey, inferredCMDocument);
         }
 

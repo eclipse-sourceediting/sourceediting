@@ -50,17 +50,17 @@ public class CMAttributeDeclarationImpl extends CMNodeImpl implements CMAttribut
   public Object getProperty(String propertyName)
   {
     Object result = null;   
-    if (propertyName.equals("CMDocument"))
+    if (propertyName.equals("CMDocument")) //$NON-NLS-1$
     {
       result = cmDocument;
     } 
-    else if (propertyName.equals("XSITypes"))
+    else if (propertyName.equals("XSITypes")) //$NON-NLS-1$
     {                                      
       result = xsiTypes;
     }
-    else if (propertyName.equals("http://org.eclipse.wst/cm/properties/nsPrefixQualification"))
+    else if (propertyName.equals("http://org.eclipse.wst/cm/properties/nsPrefixQualification")) //$NON-NLS-1$
     {
-      result = prefixQualification ? "qualified" : "unqualified";
+      result = prefixQualification ? "qualified" : "unqualified"; //$NON-NLS-1$ //$NON-NLS-2$
     }  
     else
     {
@@ -112,7 +112,7 @@ public class CMAttributeDeclarationImpl extends CMNodeImpl implements CMAttribut
   /** @deprecated */
   public String getDefaultValue()
   {
-    return "";
+    return ""; //$NON-NLS-1$
   }                 
 
   /** @deprecated */

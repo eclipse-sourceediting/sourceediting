@@ -27,9 +27,9 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.preferences.ui.AbstractPreferencePage;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.xml.ui.internal.preferences.XMLUIPreferenceNames;
@@ -63,43 +63,43 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 
 	protected void createContentsForContentAssistGroup(Composite parent) {
 		Group contentAssistGroup = createGroup(parent, 2);
-		contentAssistGroup.setText(SSEUIPlugin.getResourceString("%Content_assist_UI_")); //$NON-NLS-1$ = "Content assist"
+		contentAssistGroup.setText(XMLUIMessages.Content_assist_UI_);
 
-		fAutoPropose = createCheckBox(contentAssistGroup, SSEUIPlugin.getResourceString("%Automatically_make_suggest_UI_")); //$NON-NLS-1$ = "Automatically make suggestions"
+		fAutoPropose = createCheckBox(contentAssistGroup, XMLUIMessages.Automatically_make_suggest_UI_);
 		((GridData) fAutoPropose.getLayoutData()).horizontalSpan = 2;
 		fAutoPropose.addSelectionListener(this);
 
-		fAutoProposeLabel = createLabel(contentAssistGroup, SSEUIPlugin.getResourceString("%Prompt_when_these_characte_UI_")); //$NON-NLS-1$ = "Prompt when these characters are inserted:"
+		fAutoProposeLabel = createLabel(contentAssistGroup, XMLUIMessages.Prompt_when_these_characte_UI_);
 		fAutoProposeText = createTextField(contentAssistGroup);
 	}
 
 	protected void createContentsForFormattingGroup(Composite parent) {
 		Group formattingGroup = createGroup(parent, 2);
-		formattingGroup.setText(SSEUIPlugin.getResourceString("%Formatting_UI_")); //$NON-NLS-1$ = "Formatting"
+		formattingGroup.setText(XMLUIMessages.Formatting_UI_);
 
-		fLineWidthLabel = createLabel(formattingGroup, SSEUIPlugin.getResourceString("%Line_width__UI_")); //$NON-NLS-1$ = "Line width:"
+		fLineWidthLabel = createLabel(formattingGroup, XMLUIMessages.Line_width__UI_);
 		fLineWidthText = new Text(formattingGroup, SWT.SINGLE | SWT.BORDER);
 		GridData gData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.BEGINNING);
 		gData.widthHint = 25;
 		fLineWidthText.setLayoutData(gData);
 		fLineWidthText.addModifyListener(this);
 
-		fSplitMultiAttrs = createCheckBox(formattingGroup, SSEUIPlugin.getResourceString("%Split_&multiple_attributes_2")); //$NON-NLS-1$
+		fSplitMultiAttrs = createCheckBox(formattingGroup, XMLUIMessages.Split_multiple_attributes);
 		((GridData) fSplitMultiAttrs.getLayoutData()).horizontalSpan = 2;
 
-		fIndentUsingTabs = createCheckBox(formattingGroup, SSEUIPlugin.getResourceString("%&Indent_using_tabs_3")); //$NON-NLS-1$
+		fIndentUsingTabs = createCheckBox(formattingGroup, XMLUIMessages.Indent_using_tabs);
 		((GridData) fIndentUsingTabs.getLayoutData()).horizontalSpan = 2;
 
-		fClearAllBlankLines = createCheckBox(formattingGroup, SSEUIPlugin.getResourceString("%Clear_all_blank_lines_UI_")); //$NON-NLS-1$ = "Clear all blank lines"
+		fClearAllBlankLines = createCheckBox(formattingGroup, XMLUIMessages.Clear_all_blank_lines_UI_);
 		((GridData) fClearAllBlankLines.getLayoutData()).horizontalSpan = 2;
 	}
 
 	protected void createContentsForGrammarConstraintsGroup(Composite parent) {
 		Group grammarConstraintsGroup = createGroup(parent, 1);
-		grammarConstraintsGroup.setText(SSEUIPlugin.getResourceString("%Grammar_Constraints")); //$NON-NLS-1$
+		grammarConstraintsGroup.setText(XMLUIMessages.Grammar_Constraints);
 		grammarConstraintsGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
 
-		fUseInferredGrammar = createCheckBox(grammarConstraintsGroup, SSEUIPlugin.getResourceString("%Use_inferred_grammar_in_absence_of_DTD/Schema")); //$NON-NLS-1$
+		fUseInferredGrammar = createCheckBox(grammarConstraintsGroup, XMLUIMessages.Use_inferred_grammar_in_absence_of);
 	}
 
 	protected IPreferenceStore doGetPreferenceStore() {

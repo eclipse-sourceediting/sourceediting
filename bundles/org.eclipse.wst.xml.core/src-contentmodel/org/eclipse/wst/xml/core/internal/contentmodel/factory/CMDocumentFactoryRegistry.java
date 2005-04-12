@@ -24,7 +24,7 @@ public class CMDocumentFactoryRegistry
 {
 	protected static CMDocumentFactoryRegistry instance;
 
-	private static String DEFAULT_RESOURCE_TYPE = "*";
+  private static String DEFAULT_RESOURCE_TYPE = "*"; //$NON-NLS-1$
 
 	protected Map resourceTypeMap = new HashMap();
 

@@ -23,7 +23,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 
 public class FTable
 {
-  public final static String START = "START";
+  public final static String START = "START"; //$NON-NLS-1$
 
   protected Hashtable hashtable = new Hashtable();
 

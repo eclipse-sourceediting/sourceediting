@@ -36,13 +36,13 @@ public class CMDocumentImpl extends CMNodeImpl implements CMDocument
 
   public String getNodeName()
   {
-    return "";
+    return ""; //$NON-NLS-1$
   }
  
   public Object getProperty(String propertyName)
   {
     Object result = null;
-    if (propertyName.equals("http://org.eclipse.wst/cm/properties/targetNamespaceURI"))
+    if (propertyName.equals("http://org.eclipse.wst/cm/properties/targetNamespaceURI")) //$NON-NLS-1$
     {
       result = targetNamespace;
     }                

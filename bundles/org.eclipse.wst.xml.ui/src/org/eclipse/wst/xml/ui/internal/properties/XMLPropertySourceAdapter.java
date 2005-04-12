@@ -36,7 +36,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.document.DocumentTypeAdapter;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.ui.internal.Logger;
-import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -50,7 +50,7 @@ import org.w3c.dom.Node;
  * adapters for the nodes in the tree.
  */
 public class XMLPropertySourceAdapter implements INodeAdapter, IPropertySource, IPropertySourceExtension, IPropertySource2 {
-	protected final static String CATEGORY_ATTRIBUTES = XMLUIPlugin.getResourceString("%XMLPropertySourceAdapter.0"); //$NON-NLS-1$
+	protected final static String CATEGORY_ATTRIBUTES = XMLUIMessages.XMLPropertySourceAdapter_0; //$NON-NLS-1$
 
 	private static final boolean fSetExpertFilter = false;
 
