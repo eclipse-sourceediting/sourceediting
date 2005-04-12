@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.dtd.ui.views.contentoutline;
+package org.eclipse.wst.dtd.ui.internal.views.contentoutline;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,11 +31,6 @@ import org.eclipse.wst.common.ui.dnd.ViewerDragAdapter;
 import org.eclipse.wst.common.ui.dnd.ViewerDropAdapter;
 import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.dtd.ui.internal.dnd.DTDDragAndDropManager;
-import org.eclipse.wst.dtd.ui.internal.views.contentoutline.DTDContextMenuHelper;
-import org.eclipse.wst.dtd.ui.internal.views.contentoutline.DTDLabelProvider;
-import org.eclipse.wst.dtd.ui.internal.views.contentoutline.DTDTreeContentProvider;
-import org.eclipse.wst.dtd.ui.internal.views.contentoutline.OrderAction;
-import org.eclipse.wst.dtd.ui.internal.views.contentoutline.SortAction;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateActionContributionItem;
 import org.eclipse.wst.sse.ui.util.Assert;

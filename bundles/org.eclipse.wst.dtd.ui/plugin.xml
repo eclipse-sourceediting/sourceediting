@@ -47,7 +47,7 @@
          point="org.eclipse.wst.sse.ui.extendedconfiguration">
       <configuration
       		type="contentoutlineconfiguration"
-            class="org.eclipse.wst.dtd.ui.views.contentoutline.DTDContentOutlineConfiguration"
+            class="org.eclipse.wst.dtd.ui.internal.views.contentoutline.DTDContentOutlineConfiguration"
             target="org.eclipse.wst.dtd.core.dtdsource"/>
       <configuration
       		type="textviewerconfiguration"
