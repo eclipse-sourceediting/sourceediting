@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.IModelLoader;
@@ -109,7 +110,7 @@ public abstract class AbstractModelLoader implements IModelLoader {
 		documentLoaderInstance = null;
 		IStructuredModel model = newModel();
 		model.setBaseLocation(baseLocation);
-		
+
 		addFactories(model, getAdapterFactories());
 		// For types with propagating adapters, it's important
 		// that the propagating adapter be in place before the contents
@@ -141,7 +142,7 @@ public abstract class AbstractModelLoader implements IModelLoader {
 		if (newModel instanceof AbstractStructuredModel) {
 			((AbstractStructuredModel) newModel).setContentTypeIdentifier(oldModel.getContentTypeIdentifier());
 		}
-		//addFactories(newModel, oldModel);
+		// addFactories(newModel, oldModel);
 		initEmbeddedType(oldModel, newModel);
 		// For types with propagating adapters, its important
 		// that the propagating adapter be in place before the contents
@@ -205,14 +206,14 @@ public abstract class AbstractModelLoader implements IModelLoader {
 			model.getStructuredDocument().set(structuredDocument.get());
 
 		// original hack
-		//model.setStructuredDocument((IStructuredDocument)
+		// model.setStructuredDocument((IStructuredDocument)
 		// structuredDocument);
-		//((IStructuredDocument) structuredDocument).fireNewDocument(this);
+		// ((IStructuredDocument) structuredDocument).fireNewDocument(this);
 		documentLoaderInstance = null;
-		//technicq of future
-		//model.setStructuredDocument((IStructuredDocument)
+		// technicq of future
+		// model.setStructuredDocument((IStructuredDocument)
 		// structuredDocument);
-		//documentLoaderInstance = null;
+		// documentLoaderInstance = null;
 	}
 
 	public void load(InputStream inputStream, IStructuredModel model, EncodingRule encodingRule) throws UnsupportedEncodingException, java.io.IOException {
@@ -220,7 +221,8 @@ public abstract class AbstractModelLoader implements IModelLoader {
 		IEncodedDocument structuredDocument = model.getStructuredDocument();
 		if (inputStream == null) {
 			structuredDocument = getDocumentLoader().createNewStructuredDocument();
-		} else {
+		}
+		else {
 			// assume's model has been initialized already with base location
 			structuredDocument = getDocumentLoader().createNewStructuredDocument(model.getBaseLocation(), inputStream, encodingRule);
 			// TODO: model's not designed for this!
@@ -230,9 +232,9 @@ public abstract class AbstractModelLoader implements IModelLoader {
 			// that 'fireNewDocument' method was causing unbalance
 			// "aboutToChange" and "changed"
 			// events.
-			//			model.setStructuredDocument((IStructuredDocument)
+			// model.setStructuredDocument((IStructuredDocument)
 			// structuredDocument);
-			//			((IStructuredDocument)
+			// ((IStructuredDocument)
 			// structuredDocument).fireNewDocument(this);
 			model.getStructuredDocument().set(structuredDocument.get());
 
@@ -251,7 +253,8 @@ public abstract class AbstractModelLoader implements IModelLoader {
 		if (encodingName != null && encodingName.trim().length() == 0) {
 			// redirect to new method
 			load(inputStream, model, EncodingRule.FORCE_DEFAULT);
-		} else {
+		}
+		else {
 			load(inputStream, model, EncodingRule.CONTENT_BASED);
 		}
 	}
@@ -262,7 +265,7 @@ public abstract class AbstractModelLoader implements IModelLoader {
 		if (DEBUG) {
 			memoryUsed = computeMem();
 			System.out.println("measuring heap memory for " + filename); //$NON-NLS-1$
-			//System.out.println("heap memory used before load: " +
+			// System.out.println("heap memory used before load: " +
 			// memoryUsed);
 		}
 
@@ -274,12 +277,13 @@ public abstract class AbstractModelLoader implements IModelLoader {
 		// get new document
 		if (inputStream == null) {
 			newstructuredDocument = getDocumentLoader().createNewStructuredDocument();
-		} else {
+		}
+		else {
 			newstructuredDocument = getDocumentLoader().createNewStructuredDocument(filename, inputStream);
 		}
 		if (DEBUG) {
 			long memoryAtEnd = computeMem();
-			//System.out.println("heap memory used after loading new
+			// System.out.println("heap memory used after loading new
 			// document: " + memoryAtEnd);
 			System.out.println("    heap memory implied used by document: " + (memoryAtEnd - memoryUsed)); //$NON-NLS-1$
 		}
@@ -288,22 +292,23 @@ public abstract class AbstractModelLoader implements IModelLoader {
 		// TODO: need to straighten out IEncodedDocument mess
 		if (newstructuredDocument instanceof IStructuredDocument) {
 			transformInstance((IStructuredDocument) oldStructuredDocument, (IStructuredDocument) newstructuredDocument);
-		} else {
+		}
+		else {
 			// we don't really expect this case, just included for safety
 			oldStructuredDocument.set(newstructuredDocument.get());
 		}
 		// original hack
-		//model.setStructuredDocument((IStructuredDocument)
+		// model.setStructuredDocument((IStructuredDocument)
 		// structuredDocument);
-		//((IStructuredDocument) structuredDocument).fireNewDocument(this);
+		// ((IStructuredDocument) structuredDocument).fireNewDocument(this);
 		documentLoaderInstance = null;
-		//technicq of future
-		//model.setStructuredDocument((IStructuredDocument)
+		// technicq of future
+		// model.setStructuredDocument((IStructuredDocument)
 		// structuredDocument);
-		//documentLoaderInstance = null;
+		// documentLoaderInstance = null;
 		if (DEBUG) {
 			long memoryAtEnd = computeMem();
-			//System.out.println("heap memory used after setting to model: "
+			// System.out.println("heap memory used after setting to model: "
 			// + memoryAtEnd);
 			System.out.println("    heap memory implied used by document and model: " + (memoryAtEnd - memoryUsed)); //$NON-NLS-1$
 		}
@@ -363,42 +368,44 @@ public abstract class AbstractModelLoader implements IModelLoader {
 			// (by being life cycle listeners)
 			load(inputStream, structuredModel, EncodingRule.CONTENT_BASED);
 
-			//			// Note: we apparently read the data (and encoding) correctly
-			//			// before, we just need to make sure we followed the same rule
+			// // Note: we apparently read the data (and encoding) correctly
+			// // before, we just need to make sure we followed the same rule
 			// as
-			//			// before.
-			//			EncodingMemento previousMemento =
+			// // before.
+			// EncodingMemento previousMemento =
 			// structuredModel.getStructuredDocument().getEncodingMemento();
-			//			EncodingRule previousRule = previousMemento.getEncodingRule();
-			//			//IFile file = ResourceUtil.getFileFor(structuredModel);
-			//			// Note: there's opportunity here for some odd behavior, if the
-			//			// settings have changed from the first load to the reload.
+			// EncodingRule previousRule = previousMemento.getEncodingRule();
+			// //IFile file = ResourceUtil.getFileFor(structuredModel);
+			// // Note: there's opportunity here for some odd behavior, if the
+			// // settings have changed from the first load to the reload.
 			// But,
-			//			// hopefully,
-			//			// will result in the intended behavior.
-			//			Reader allTextReader =
+			// // hopefully,
+			// // will result in the intended behavior.
+			// Reader allTextReader =
 			// getDocumentLoader().readInputStream(inputStream, previousRule);
 			//
-			//			// TODO: avoid use of String instance
-			//			getDocumentLoader().reload(structuredModel.getStructuredDocument(),
+			// // TODO: avoid use of String instance
+			// getDocumentLoader().reload(structuredModel.getStructuredDocument(),
 			// allTextReader);
-			//			// and now "reset" encoding memento to keep it current with the
-			//			// one
-			//			// that was just determined.
-			//			structuredModel.getStructuredDocument().setEncodingMemento(getDocumentLoader().getEncodingMemento());
-			//			structuredModel.setDirtyState(false);
-			//			StructuredTextUndoManager undoMgr =
+			// // and now "reset" encoding memento to keep it current with the
+			// // one
+			// // that was just determined.
+			// structuredModel.getStructuredDocument().setEncodingMemento(getDocumentLoader().getEncodingMemento());
+			// structuredModel.setDirtyState(false);
+			// StructuredTextUndoManager undoMgr =
 			// structuredModel.getUndoManager();
-			//			if (undoMgr != null) {
-			//				undoMgr.reset();
-			//			}
-		} catch (UnsupportedEncodingException e) {
+			// if (undoMgr != null) {
+			// undoMgr.reset();
+			// }
+		}
+		catch (UnsupportedEncodingException e) {
 			// couldn't happen. The program has apparently
 			// read the model once, and there'd be no reason the encoding
 			// could not be used again.
 			Logger.logException("Warning:  XMLLoader::reload.  This exception really should not have happened!! But will attemp to continue after dumping stack trace", e); //$NON-NLS-1$
 			throw new Error("Program Error", e); //$NON-NLS-1$
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			// couldn't happen. The program has apparently
 			// read the model once, and there'd be no (common) reason it
 			// couldn't be loaded again.
@@ -433,7 +440,8 @@ public abstract class AbstractModelLoader implements IModelLoader {
 					 * Skip the transferring here, the handler will do this
 					 * after everything else but the source is transferred.
 					 */
-				} else {
+				}
+				else {
 					((StructuredDocumentRegionParser) oldParser).removeStructuredDocumentRegionHandler(handler);
 					((StructuredDocumentRegionParser) newParser).addStructuredDocumentRegionHandler(handler);
 					handler.resetNodes();
@@ -454,7 +462,7 @@ public abstract class AbstractModelLoader implements IModelLoader {
 		((BasicStructuredDocument) oldInstance).setParser(newParser);
 
 		((BasicStructuredDocument) oldInstance).setReParser(newInstance.getReParser().newInstance());
-		
+
 		if (newInstance.getDocumentPartitioner() instanceof StructuredTextPartitioner) {
 			StructuredTextPartitioner partitioner = null;
 			if (oldInstance instanceof IDocumentExtension3 && newInstance instanceof IDocumentExtension3) {
@@ -473,7 +481,17 @@ public abstract class AbstractModelLoader implements IModelLoader {
 			}
 		}
 
-		oldInstance.setLineDelimiter(newInstance.getLineDelimiter());
+		String existingLineDelimiter = null;
+		try {
+			existingLineDelimiter = newInstance.getLineDelimiter(0);
+		}
+		catch (BadLocationException e) {
+			// if empty file, assume platform default
+			// TODO: should be using user set preference, per content type?
+			existingLineDelimiter = System.getProperty("line.separator"); //$NON-NLS-1$
+		}
+
+		oldInstance.setLineDelimiter(existingLineDelimiter); //$NON-NLS-1$);
 		if (newInstance.getEncodingMemento() != null) {
 			oldInstance.setEncodingMemento((EncodingMemento) newInstance.getEncodingMemento().clone());
 		}
@@ -499,5 +517,4 @@ public abstract class AbstractModelLoader implements IModelLoader {
 		newInstance = null;
 		oldInstance.set(holdString);
 	}
-
 }
