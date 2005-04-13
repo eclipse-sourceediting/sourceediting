@@ -270,10 +270,14 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 	 */
 	public Object getProperty(String propertyName) {
 		if (propertyName != null && propertyName.equals("tagInfo")) { //$NON-NLS-1$
-			return StringUtils.restoreMarkers(getTagInfo());	// return tag info
+			return getTagInfo();	// return tag info
+			// bug88336 no need to restore markers 
+			// return StringUtils.restoreMarkers(getTagInfo()); // return tag description
 		}
 		else if (propertyName != null && propertyName.equals("description")) {	//$NON-NLS-1$
-			return StringUtils.restoreMarkers(getDescription()); // return tag description
+			return getDescription();
+			// bug88336 no need to restore markers 
+			// return StringUtils.restoreMarkers(getDescription()); // return tag description
 		}
 		else if (propertyName.equals(TLDDocument.CM_KIND)) {
 			return TLDDocument.JSP_TLD;
@@ -318,7 +322,9 @@ public class CMElementDeclarationImpl implements TLDElementDeclaration {
 			AnnotationMap map = (AnnotationMap)getOwnerDocument().getProperty("annotationMap"); //$NON-NLS-1$
 			String spec = getSpec();
 			String result = map.getProperty(spec, "tagInfo"); //$NON-NLS-1$
-			return StringUtils.restoreMarkers(result); // return tag info
+			return result;
+			// bug88336 no need to restore markers 
+			// return StringUtils.restoreMarkers(result); // return tag info
 		}
 		return null;
 	}
