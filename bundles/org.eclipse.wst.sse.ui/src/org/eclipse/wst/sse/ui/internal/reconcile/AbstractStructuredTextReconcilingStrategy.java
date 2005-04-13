@@ -486,4 +486,8 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
         }
         return fComparator;
     }
+	
+	public boolean isTotalScope() {
+		return false;
+	}
 }

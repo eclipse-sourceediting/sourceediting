@@ -61,7 +61,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 	private long fDelay;
 
 	/** local queue of dirty regions (created here) to be reconciled */
-	private List fDirtyRegionQueue = null;
+	private List fDirtyRegionQueue = Collections.synchronizedList(new ArrayList());
 
 	/** document that this reconciler works on */
 	private IDocument fDocument = null;
@@ -80,10 +80,10 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 	private String fPartitioning;
 
 	/** The map of reconciling strategies. */
-	private Map fStrategies;
+	private Map fStrategies = new HashMap();
 
 	/** the list of partition types for which there are strategies */
-	private List fStrategyTypes = null;
+	private List fStrategyTypes = new ArrayList();
 
 	/** the text viewer */
 	private ITextViewer fViewer;
@@ -97,10 +97,8 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 		super(SSEUIMessages.proc_dirty_regions_0); //$NON-NLS-1$
 		setPriority(Job.LONG);
 		setSystem(true);
-		// init some fields
-		fStrategyTypes = new ArrayList();
 		setLocalProgressMonitor(new NullProgressMonitor());
-		fDirtyRegionQueue = Collections.synchronizedList(new ArrayList());
+		
 		// init reconciler stuff
 		setDelay(UPDATE_DELAY);
 	}
@@ -112,8 +110,6 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 	 * @param resource
 	 */
 	private synchronized void addRequest(DirtyRegion dr) {
-        
-        
         
 		List drq = getDirtyRegionQueue();
 		// if we already have a request which contains the new request,
@@ -285,6 +281,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 	}
 
 	/**
+	 * contentType is actually partitionType
 	 * @see IReconciler#getReconcilingStrategy(String)
 	 */
 	public IReconcilingStrategy getReconcilingStrategy(String contentType) {
@@ -492,9 +489,6 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 	 *      java.lang.String)
 	 */
 	public void setReconcilingStrategy(IReconcilingStrategy strategy, String contentType) {
-
-		if (fStrategies == null)
-			fStrategies = new HashMap();
 
 		if (strategy == null) {
 			fStrategies.remove(contentType);

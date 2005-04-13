@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.reconcile;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -129,20 +131,63 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 		if (!isInstalled())
 			return;
 
-		ITypedRegion[] tr = computePartitioning(dirtyRegion);
-		IReconcilingStrategy s = null;
+		ITypedRegion[] unfiltered = computePartitioning(dirtyRegion);
+		
+		// remove duplicate typed regions
+		// that are handled by the same "total scope" strategy
+		ITypedRegion[] filtered = filterTotalScopeRegions(unfiltered);
+		
+		IReconcilingStrategy s;
 		DirtyRegion dirty = null;
-		for (int i = 0; i < tr.length; i++) {
+		for (int i = 0; i < filtered.length; i++) {
 
-			dirty = createDirtyRegion(tr[i], DirtyRegion.INSERT);
-			s = getReconcilingStrategy(tr[i].getType());
-			if (s != null && dirty != null)
+			dirty = createDirtyRegion(filtered[i], DirtyRegion.INSERT);
+			s = getReconcilingStrategy(filtered[i].getType());
+			if (s != null && dirty != null) {
 				s.reconcile(dirty, dirty);
+			}
 
 			// validator for this partition
 			if (fValidatorStrategy != null)
-				fValidatorStrategy.reconcile(tr[i], dirty);
+				fValidatorStrategy.reconcile(filtered[i], dirty);
 		}
+	}
+
+	/**
+	 * Removed multiple "total-scope" regions (and leaves one)
+	 * for a each partitionType.  This improves performance
+	 * by preventing unnecessary full document validations.
+	 * 
+	 * @param unfiltered
+	 * @return
+	 */
+	private ITypedRegion[] filterTotalScopeRegions(ITypedRegion[] unfiltered) {
+		IReconcilingStrategy s = null;
+		// ensure there is only one typed region in the list
+		// for regions handled by "total scope" strategies
+		HashMap totalScopeRegions = new HashMap();
+		List allRegions = new ArrayList();
+		for (int i = 0; i < unfiltered.length; i++) {
+			String partitionType = unfiltered[i].getType();
+			s = getReconcilingStrategy(partitionType);
+			if(s instanceof AbstractStructuredTextReconcilingStrategy) {
+				// only allow one dirty region for a strategy
+				// that has "total scope"
+				if(((AbstractStructuredTextReconcilingStrategy)s).isTotalScope())
+					totalScopeRegions.put(partitionType, unfiltered[i]);
+				else
+					allRegions.add(unfiltered[i]);
+			}
+			else
+				allRegions.add(unfiltered[i]);
+		}
+		allRegions.addAll(totalScopeRegions.values());
+		ITypedRegion[] filtered = (ITypedRegion[])allRegions.toArray(new ITypedRegion[allRegions.size()]);
+		
+		if(DEBUG)
+			System.out.println("filtered out this many 'total-scope' regions: " + (unfiltered.length - filtered.length));
+		
+		return filtered;
 	}
 
 	/**

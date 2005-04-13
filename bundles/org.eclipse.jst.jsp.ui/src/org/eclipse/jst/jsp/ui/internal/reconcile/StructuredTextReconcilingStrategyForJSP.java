@@ -34,4 +34,13 @@ public class StructuredTextReconcilingStrategyForJSP extends AbstractStructuredT
 			fFirstStep = new ReconcileStepForJspTranslation(javaStep);
 		}
 	}
+	
+	/**
+	 * @return <code>true</code> if the entire document is validated
+	 * for each edit (this strategy can't handle partial document validation).
+	 * This will greatly help performance.
+	 */
+	public boolean isTotalScope() {
+		return true;
+	}
 }
