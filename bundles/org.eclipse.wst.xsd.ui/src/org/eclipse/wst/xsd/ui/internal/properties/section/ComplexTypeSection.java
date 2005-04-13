@@ -194,7 +194,7 @@ public class ComplexTypeSection extends AbstractSection
         }
         
         XSDComponentSelectionProvider provider = new XSDComponentSelectionProvider(currentIFile, schema);
-        XSDComponentSelectionDialog dialog = new XSDComponentSelectionDialog(shell, "Set Type", provider);  // TODO: Externalize This
+        XSDComponentSelectionDialog dialog = new XSDComponentSelectionDialog(shell, XSDEditorPlugin.getXSDString("_UI_LABEL_SET_TYPE"), provider);
         provider.setDialog(dialog);
         dialog.setBlockOnOpen(true);
         dialog.create();

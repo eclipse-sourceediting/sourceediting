@@ -27,22 +27,23 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.dialogs.types.common.ComponentSelectionDialog;
 import org.eclipse.wst.xsd.ui.internal.dialogs.types.common.IComponentSelectionProvider;
 import org.eclipse.wst.xsd.ui.internal.dialogs.types.xml.XMLComponentSelectionProvider.XMLComponentTreeObject;
 
 public class XMLComponentSelectionDialog extends ComponentSelectionDialog {
 
-    protected final static String DEFAULT_NAME_FIELD_TITLE = "Component Name:";
-    protected final static String DEFAULT_LIST_TITLE = "Matching Components:";
+    protected final static String DEFAULT_NAME_FIELD_TITLE = XSDEditorPlugin.getXSDString("_UI_LABEL_COMPONENT_NAME");
+    protected final static String DEFAULT_LIST_TITLE = XSDEditorPlugin.getXSDString("_UI_LABEL_MATCHING_COMPONENTS");
+	
+	public static final String SCOPE_SPECIFIED_FILE = XSDEditorPlugin.getXSDString("_UI_LABEL_SPECIFIED_FILE");
 
-	public static final String SCOPE_SPECIFIED_FILE = "Specified File";
+	public static final String SCOPE_ENCLOSING_PROJECT = XSDEditorPlugin.getXSDString("_UI_LABEL_ENCLOSING_PROJECT");
 
-	public static final String SCOPE_ENCLOSING_PROJECT = "Enclosing Project";
+	public static final String SCOPE_WORKSPACE = XSDEditorPlugin.getXSDString("_UI_LABEL_WORKSPACE");
 
-	public static final String SCOPE_WORKSPACE = "Workspace";
-
-	public static final String SCOPE_CURRENT_RESOURCE = "Current Resource";
+	public static final String SCOPE_CURRENT_RESOURCE = XSDEditorPlugin.getXSDString("_UI_LABEL_CURRENT_RESOURCE");
 
 	private String currentSearchScope = SCOPE_CURRENT_RESOURCE;
 
@@ -72,7 +73,7 @@ public Control createDialogArea(Composite parent) {
         //gridLayout.marginLeft = 2;
         group.setLayout(gridLayout);
         group.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        group.setText("Search Scope");
+        group.setText(XSDEditorPlugin.getXSDString("_UI_LABEL_SEARCH_SCOPE"));
         
         ScopeChangeListener scopeChangeListener = new ScopeChangeListener();
         radioButton[0] = new Button(group, SWT.RADIO);       
@@ -114,7 +115,7 @@ public Control createDialogArea(Composite parent) {
         
         
         Button check = new Button(group, SWT.CHECK);
-        check.setText("Use resource view to narrow search scope");
+        check.setText(XSDEditorPlugin.getXSDString("_UI_LABEL_NARROW_SEARCH_SCOPE_RESOURCE"));
         GridData gd = new GridData();
         gd.horizontalSpan = 3;
         check.setLayoutData(gd);

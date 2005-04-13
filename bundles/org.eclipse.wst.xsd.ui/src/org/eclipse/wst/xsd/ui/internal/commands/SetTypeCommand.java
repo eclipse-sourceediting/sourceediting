@@ -61,7 +61,7 @@ public class SetTypeCommand extends AbstractCommand
           IFile currentIFile = ((IFileEditorInput)getActiveEditor().getEditorInput()).getFile();
           
           XSDComponentSelectionProvider provider = new XSDComponentSelectionProvider(currentIFile, schema);
-          XSDComponentSelectionDialog dialog = new XSDComponentSelectionDialog(shell, "Set Type", provider);  // TODO: Externalize This
+          XSDComponentSelectionDialog dialog = new XSDComponentSelectionDialog(shell, XSDEditorPlugin.getXSDString("_UI_LABEL_SET_TYPE"), provider);
           provider.setDialog(dialog);
           
           dialog.setBlockOnOpen(true);

@@ -268,7 +268,7 @@ public class SimpleTypeSection extends AbstractSection
       IFile currentIFile = ((IFileEditorInput)getActiveEditor().getEditorInput()).getFile();
 
       XSDComponentSelectionProvider provider = new XSDComponentSelectionProvider(currentIFile, xsdSchema);
-      dialog = new XSDComponentSelectionDialog(shell, "Set Type", provider);  // TODO: Externalize This
+      dialog = new XSDComponentSelectionDialog(shell, XSDEditorPlugin.getXSDString("_UI_LABEL_SET_TYPE"), provider);
       provider.setDialog((XSDComponentSelectionDialog) dialog);
       
       if (input instanceof XSDSimpleTypeDefinition)

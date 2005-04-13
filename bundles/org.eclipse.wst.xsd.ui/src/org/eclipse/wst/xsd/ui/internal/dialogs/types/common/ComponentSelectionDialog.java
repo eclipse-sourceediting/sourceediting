@@ -44,6 +44,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 
 public class ComponentSelectionDialog extends Dialog {
     private Display display = Display.getCurrent();
@@ -57,7 +58,7 @@ public class ComponentSelectionDialog extends Dialog {
     protected Composite topComposite;
     protected Composite bottomComposite; 
     private String filterTextLabel = "";
-    private String componentListLabel = "Components:";  // TODO: Externalize String
+    private String componentListLabel = XSDEditorPlugin.getXSDString("_UI_LABEL_COMPONENTS");
     private Text textFilter;
     protected TreeViewer componentTreeViewer;
     private org.eclipse.swt.widgets.List qualifierList;
@@ -141,7 +142,7 @@ public class ComponentSelectionDialog extends Dialog {
 
         // Create Qualifier List widget
         Label qualifierLabel = new Label(mainComposite, SWT.NONE);
-        qualifierLabel.setText("Qualifier:");                       // TODO: Externalize String
+        qualifierLabel.setText(XSDEditorPlugin.getXSDString("_UI_LABEL_QUALIFIER"));
 
         qualifierList = new org.eclipse.swt.widgets.List(mainComposite, SWT.BORDER | SWT.SINGLE);
         GridData data = new GridData();

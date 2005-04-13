@@ -172,7 +172,7 @@ public class TypesPropertyDescriptor extends PropertyDescriptor
     {
       int tabIndex = 0;
       Composite client = (Composite)super.createDialogArea(parent);
-      getShell().setText("Available Types");
+      getShell().setText(XSDEditorPlugin.getXSDString("_UI_LABEL_AVAILABLE_TYPES"));
 
       typeObject = null;
       

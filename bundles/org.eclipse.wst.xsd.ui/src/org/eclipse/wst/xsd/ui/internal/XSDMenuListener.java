@@ -539,7 +539,7 @@ public class XSDMenuListener implements IMenuListener
       }
       
       manager.add(new Separator());
-      MenuManager setTypeCascadeMenu = new MenuManager("Set Type");
+      MenuManager setTypeCascadeMenu = new MenuManager(XSDEditorPlugin.getXSDString("_UI_LABEL_SET_TYPE"));
       manager.add(setTypeCascadeMenu);
 
       SetTypeAction setNewComplexTypeAction = new SetTypeAction("New Complex Type", ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDComplexType.gif"), concreteComponent);
@@ -552,7 +552,7 @@ public class XSDMenuListener implements IMenuListener
       setNewSimpleTypeAction.setEnabled(!isReadOnly);
       setTypeCascadeMenu.add(setNewSimpleTypeAction);
       
-      SetTypeAction setExistingTypeAction = new SetTypeAction("Set Existing Type...", concreteComponent);
+      SetTypeAction setExistingTypeAction = new SetTypeAction(XSDEditorPlugin.getXSDString("_UI_LABEL_SET_EXISTING_TYPE"), concreteComponent);
       setExistingTypeAction.setTypeKind(0);
       setExistingTypeAction.setEnabled(!isReadOnly);
       setTypeCascadeMenu.add(setExistingTypeAction);
@@ -2140,7 +2140,7 @@ public class XSDMenuListener implements IMenuListener
     oneOrMoreMultiplicity.setMinOccurs(1);
     oneOrMoreMultiplicity.setEnabled(!isReadOnly);
     
-    MenuManager multiplicityMenu = new MenuManager("Set Multiplicity");
+    MenuManager multiplicityMenu = new MenuManager(XSDEditorPlugin.getXSDString("_UI_ACTION_SET_MULTIPLICITY"));
     manager.add(multiplicityMenu);
     multiplicityMenu.add(oneMultiplicity);
     multiplicityMenu.add(zeroOrOneMultiplicity);
