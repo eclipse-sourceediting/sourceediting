@@ -69,6 +69,7 @@ import org.eclipse.wst.sse.core.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.core.util.Utilities;
+import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 
 /**
  * @author nsd A Status Line contribution intended to display the selected
@@ -93,14 +94,14 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 		protected Control createDialogArea(Composite parent) {
 			ISelection sel = fTextEditor.getSelectionProvider().getSelection();
 			ITextSelection textSelection = (ITextSelection) sel;
-			parent.getShell().setText("Selection Information: " + textSelection.getOffset() + "-" + (textSelection.getOffset() + textSelection.getLength()));
+			parent.getShell().setText(SSEUIMessages.OffsetStatusLineContributionItem_0 + textSelection.getOffset() + "-" + (textSelection.getOffset() + textSelection.getLength())); //$NON-NLS-1$ //$NON-NLS-2$
 			Composite composite = (Composite) super.createDialogArea(parent);
 
 			TabFolder tabfolder = new TabFolder(composite, SWT.NONE);
 			tabfolder.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 			TabItem partitionTab = new TabItem(tabfolder, SWT.BORDER);
-			partitionTab.setText("Partitions");
+			partitionTab.setText(SSEUIMessages.OffsetStatusLineContributionItem_2); //$NON-NLS-1$
 			Composite partitions = new Composite(tabfolder, SWT.NONE);
 			partitionTab.setControl(partitions);
 			createPartitionContents(partitions);
@@ -108,7 +109,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			// only create the ITextRegions tab for IStructuredDocuments
 			if (fDocument instanceof IStructuredDocument) {
 				TabItem regionTab = new TabItem(tabfolder, SWT.BORDER);
-				regionTab.setText("ITextRegions");
+				regionTab.setText(SSEUIMessages.OffsetStatusLineContributionItem_3); //$NON-NLS-1$
 				SashForm regions = new SashForm(tabfolder, SWT.NONE);
 				regions.setOrientation(SWT.HORIZONTAL);
 				regionTab.setControl(regions);
@@ -135,13 +136,13 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 				gd.horizontalSpan = 2;
 				modelContentTypeLabel.setLayoutData(gd);
-				modelContentTypeLabel.setText("Content-Type: " + model.getContentTypeIdentifier());
+				modelContentTypeLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_4 + model.getContentTypeIdentifier()); //$NON-NLS-1$
 
 				Text modelHandlerContentTypeLabel = new Text(partioningComposite, SWT.MULTI | SWT.WRAP | SWT.READ_ONLY);
 				gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 				gd.horizontalSpan = 2;
 				modelHandlerContentTypeLabel.setLayoutData(gd);
-				modelHandlerContentTypeLabel.setText("Model Handler: " + model.getModelHandler() + " (" + model.getModelHandler().getAssociatedContentTypeId() + ")");
+				modelHandlerContentTypeLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_5 + model.getModelHandler() + " (" + model.getModelHandler().getAssociatedContentTypeId() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 				Label blankRow = new Label(partioningComposite, SWT.NONE);
 				gd = new GridData(SWT.FILL, SWT.FILL, true, false);
@@ -153,7 +154,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			}
 
 			Text label = new Text(partioningComposite, SWT.SINGLE | SWT.READ_ONLY);
-			label.setText("Partitioning: ");
+			label.setText(SSEUIMessages.OffsetStatusLineContributionItem_8); //$NON-NLS-1$
 			label.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false));
 			final Combo partitioningCombo = new Combo(partioningComposite, SWT.READ_ONLY);
 			partitioningCombo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
@@ -170,7 +171,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			fPartitionTable.setContentProvider(new ArrayContentProvider());
 			fPartitionTable.getTable().setHeaderVisible(true);
 			fPartitionTable.getTable().setLinesVisible(true);
-			String[] columns = new String[]{"Start", "Length", "Type"};
+			String[] columns = new String[]{SSEUIMessages.OffsetStatusLineContributionItem_9, SSEUIMessages.OffsetStatusLineContributionItem_10, SSEUIMessages.OffsetStatusLineContributionItem_11}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			fPartitionTable.setLabelProvider(new ITableLabelProvider() {
 
 				public void addListener(ILabelProviderListener listener) {
@@ -198,7 +199,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 							break;
 					}
 					if (text == null)
-						text = "";
+						text = ""; //$NON-NLS-1$
 					return text;
 				}
 
@@ -229,7 +230,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 					ITextSelection textSelection = (ITextSelection) sel;
 					try {
 						String partitionerText = fDocument instanceof IDocumentExtension3 ? ((IDocumentExtension3) fDocument).getDocumentPartitioner(partitioningCombo.getItem(partitioningCombo.getSelectionIndex())).toString() : fDocument.getDocumentPartitioner().toString();
-						partitionerInstanceLabel.setText("Partitioner: " + partitionerText);
+						partitionerInstanceLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_13 + partitionerText); //$NON-NLS-1$
 						fPartitionTable.setInput(TextUtilities.computePartitioning(fDocument, partitioningCombo.getItem(partitioningCombo.getSelectionIndex()), textSelection.getOffset(), textSelection.getLength(), true));
 					}
 					catch (BadLocationException e1) {
@@ -254,7 +255,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				ITextSelection textSelection = (ITextSelection) sel;
 				fPartitionTable.setInput(TextUtilities.computePartitioning(fDocument, selectedPartitioning, textSelection.getOffset(), textSelection.getLength(), true));
 				String partitionerText = fDocument instanceof IDocumentExtension3 ? ((IDocumentExtension3) fDocument).getDocumentPartitioner(partitioningCombo.getItem(partitioningCombo.getSelectionIndex())).toString() : fDocument.getDocumentPartitioner().toString();
-				partitionerInstanceLabel.setText("Partitioner: " + partitionerText);
+				partitionerInstanceLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_14 + partitionerText); //$NON-NLS-1$
 			}
 			catch (BadLocationException e1) {
 				fPartitionTable.setInput(new ITypedRegion[0]);
@@ -286,10 +287,10 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			}
 
 			final TreeViewer tree = new TreeViewer(sashForm, SWT.V_SCROLL | SWT.H_SCROLL);
-			final String START = "Start";
-			final String LENGTH = "Length";
-			final String TEXTLENGTH = "Text Length";
-			final String CONTEXT = "Context";
+			final String START = SSEUIMessages.OffsetStatusLineContributionItem_15; //$NON-NLS-1$
+			final String LENGTH = SSEUIMessages.OffsetStatusLineContributionItem_16; //$NON-NLS-1$
+			final String TEXTLENGTH = SSEUIMessages.OffsetStatusLineContributionItem_17; //$NON-NLS-1$
+			final String CONTEXT = SSEUIMessages.OffsetStatusLineContributionItem_18; //$NON-NLS-1$
 			tree.setContentProvider(new ITreeContentProvider() {
 				public void dispose() {
 				}
@@ -343,14 +344,14 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			tree.setLabelProvider(new LabelProvider() {
 				public String getText(Object element) {
 					if (element instanceof Pair)
-						return ((Pair) element).fKey.toString().toLowerCase() + ": " + ((Pair) element).fValue;
+						return ((Pair) element).fKey.toString().toLowerCase() + ": " + ((Pair) element).fValue; //$NON-NLS-1$
 					if (element instanceof IStructuredDocumentRegion) {
 						IStructuredDocumentRegion documentRegion = (IStructuredDocumentRegion) element;
 						int packageNameLength = documentRegion.getClass().getPackage().getName().length();
 						if (packageNameLength > 0)
 							packageNameLength++;
 						String name = documentRegion.getClass().getName().substring(packageNameLength);
-						String text = "[" + documentRegion.getStartOffset() + "-" + documentRegion.getEndOffset() + "] " + name + "@" + element.hashCode() + " " + documentRegion.getType();
+						String text = "[" + documentRegion.getStartOffset() + "-" + documentRegion.getEndOffset() + "] " + name + "@" + element.hashCode() + " " + documentRegion.getType(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 						return text;
 					}
 					if (element instanceof ITextRegion) {
@@ -359,7 +360,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 						if (packageNameLength > 0)
 							packageNameLength++;
 						String name = textRegion.getClass().getName().substring(packageNameLength);
-						String text = "[" + textRegion.getStart() + "-" + textRegion.getEnd() + "] " + name + "@" + element.hashCode() + " " + textRegion.getType();
+						String text = "[" + textRegion.getStart() + "-" + textRegion.getEnd() + "] " + name + "@" + element.hashCode() + " " + textRegion.getType(); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 						return text;
 					}
 					return super.getText(element);
@@ -380,11 +381,11 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 								displayText.setText(fDocument.get(text.getOffset(), text.getLength()));
 							}
 							catch (BadLocationException e) {
-								displayText.setText("");
+								displayText.setText(""); //$NON-NLS-1$
 							}
 						}
 						else
-							displayText.setText("" + o);
+							displayText.setText("" + o); //$NON-NLS-1$
 					}
 				}
 			});

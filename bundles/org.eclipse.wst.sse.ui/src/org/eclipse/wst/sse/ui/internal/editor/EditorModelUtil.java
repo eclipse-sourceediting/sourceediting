@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
+import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
@@ -46,7 +47,7 @@ public class EditorModelUtil {
 		}
 
 		FactoryRegistry factoryRegistry = structuredModel.getFactoryRegistry();
-		Assert.isNotNull(factoryRegistry, "model in invalid state");
+		Assert.isNotNull(factoryRegistry, SSEUIMessages.EditorModelUtil_0); //$NON-NLS-1$
 		// Add all those appropriate for this particular type of content
 		while (adapterFactoryProviders.hasNext()) {
 			try {
@@ -57,7 +58,7 @@ public class EditorModelUtil {
 				 * don't specify a content type
 				 */
 				if (provider.isFor(structuredModel.getModelHandler())) {
-					Platform.run(new SafeRunnable("There was a problem adding adapter factories") {
+					Platform.run(new SafeRunnable(SSEUIMessages.EditorModelUtil_1) { //$NON-NLS-1$
 						public void run() {
 							provider.addAdapterFactories(structuredModel);
 						}

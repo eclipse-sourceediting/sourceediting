@@ -34,7 +34,7 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.extensions.openon.IOpenOn;
 import org.eclipse.wst.sse.ui.internal.Logger;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.openon.ExternalFileEditorInput;
 import org.eclipse.wst.sse.ui.util.PlatformStatusLineUtil;
 
@@ -46,7 +46,7 @@ import org.eclipse.wst.sse.ui.util.PlatformStatusLineUtil;
  * @deprecated Use base support for hyperlink navigation
  */
 abstract public class AbstractOpenOn implements IOpenOn {
-	protected final String CANNOT_OPEN = SSEUIPlugin.getResourceString("%AbstractOpenOn.0"); //$NON-NLS-1$
+	protected final String CANNOT_OPEN = SSEUIMessages.AbstractOpenOn_0; //$NON-NLS-1$
 	// document currently associated with open
 	private IDocument fDocument;
 	protected final String FILE_PROTOCOL = "file:/";//$NON-NLS-1$
@@ -123,7 +123,7 @@ abstract public class AbstractOpenOn implements IOpenOn {
 				model.releaseFromRead();
 			}
 		}
-		if (file == null && fileString.startsWith("/")) {
+		if (file == null && fileString.startsWith("/")) { //$NON-NLS-1$
 			file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(fileString));
 		}
 		return file;

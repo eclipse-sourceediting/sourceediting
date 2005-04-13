@@ -26,6 +26,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
@@ -67,7 +68,7 @@ public class TranslucencyPreferenceTab implements IPreferenceTab {
 		layout.numColumns = 2;
 		composite.setLayout(layout);
 
-		String text = SSEUIPlugin.getResourceString("%TranslucencyPreferenceTab.1"); //$NON-NLS-1$
+		String text = SSEUIMessages.TranslucencyPreferenceTab_1; //$NON-NLS-1$
 		fTranslucencyScale = new IntegerFieldEditor(EditorPreferenceNames.READ_ONLY_FOREGROUND_SCALE, text, composite);
 
 		fTranslucencyScale.setErrorMessage(JFaceResources.getString("StringFieldEditor.errorMessage"));//$NON-NLS-1$
@@ -103,7 +104,7 @@ public class TranslucencyPreferenceTab implements IPreferenceTab {
 	 * @see org.eclipse.wst.sse.ui.preferences.ui.IPreferenceTab#getTitle()
 	 */
 	public String getTitle() {
-		return SSEUIPlugin.getResourceString("%TranslucencyPreferenceTab.0"); //$NON-NLS-1$
+		return SSEUIMessages.TranslucencyPreferenceTab_0; //$NON-NLS-1$
 	}
 
 	/*

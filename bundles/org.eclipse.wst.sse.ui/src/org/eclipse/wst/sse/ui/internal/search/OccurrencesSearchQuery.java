@@ -27,6 +27,7 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.ui.internal.Logger;
+import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 /**
@@ -147,14 +148,14 @@ public class OccurrencesSearchQuery extends BasicSearchQuery {
 	}
 
 	private String getFilename() {
-		String filename = SSEUIPlugin.getResourceString("%OccurrencesSearchQuery.2"); //$NON-NLS-1$ "file"
+		String filename = SSEUIMessages.OccurrencesSearchQuery_2; //$NON-NLS-1$ "file"
 		if (getFile() != null)
 			filename = getFile().getName().toString();
 		return filename;
 	}
 
 	public String getLabel() {
-		String label = SSEUIPlugin.getResourceString("%OccurrencesSearchQuery.0"); //$NON-NLS-1$
+		String label = SSEUIMessages.OccurrencesSearchQuery_0; //$NON-NLS-1$
 		String[] args = {getSearchText(), getOccurrencesCountText(), getFilename()};
 		return MessageFormat.format(label, args);
 	}

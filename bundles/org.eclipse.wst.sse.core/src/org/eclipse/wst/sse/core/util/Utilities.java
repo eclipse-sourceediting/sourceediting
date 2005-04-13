@@ -37,7 +37,8 @@ public class Utilities {
 		if (changes == null) {
 			// the delete case
 			lengthDifference = 0 - lengthToReplace;
-		} else {
+		}
+		else {
 			lengthDifference = changes.length() - lengthToReplace;
 		}
 		if (Debug.debugStructuredDocument) {
@@ -113,8 +114,8 @@ public class Utilities {
 	 */
 	public static String makeShortId(Object id) {
 		if (id == null)
-			id = "NOID"; //com.ibm.sed.util.Assert.isNotNull(id);
-		// //$NON-NLS-1$
+			// com.ibm.sed.util.Assert.isNotNull(id);
+			id = "NOID";//$NON-NLS-1$
 		String whole = id.toString();
 		String part = whole.substring(whole.lastIndexOf("/") + 1); //$NON-NLS-1$
 		return "..." + part; //$NON-NLS-1$

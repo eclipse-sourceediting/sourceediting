@@ -14,6 +14,7 @@ package org.eclipse.wst.sse.ui.preferences.ui;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.preference.PreferencePage;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -34,6 +35,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 /**
@@ -235,7 +237,7 @@ public abstract class AbstractPreferencePage extends PreferencePage implements M
 	}
 
 	protected void setInvalidInputMessage(String widthText) {
-		String msg = SSEUIPlugin.getResourceString("%4concat", (new Object[]{widthText})); //$NON-NLS-1$ = "''{0}'' is not a valid input"
+		String msg = NLS.bind(SSEUIMessages._4concat, (new Object[]{widthText}));
 		setErrorMessage(msg);
 	}
 

@@ -36,7 +36,7 @@ import org.eclipse.wst.sse.ui.extension.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.extension.IExtendedEditorAction;
 import org.eclipse.wst.sse.ui.extension.IExtendedSimpleEditor;
 import org.eclipse.wst.sse.ui.extensions.ConfigurationPointCalculator;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
@@ -53,7 +53,7 @@ public class EditStructuredTextEditorPreferencesAction extends Action implements
 	private IExtendedSimpleEditor fEditor;
 
 	public EditStructuredTextEditorPreferencesAction() {
-		super(SSEUIPlugin.getResourceString("%EditPreferences.label"), EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_OBJ_PREFERENCES)); //$NON-NLS-1$
+		super(SSEUIMessages.EditPreferences_label, EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_OBJ_PREFERENCES)); //$NON-NLS-1$
 		WorkbenchHelp.setHelp(this, IHelpContextIds.CONTMNU_PREFERENCES_HELPID);
 	}
 
@@ -200,7 +200,7 @@ public class EditStructuredTextEditorPreferencesAction extends Action implements
 		BusyIndicator.showWhile(shell.getDisplay(), new Runnable() {
 			public void run() {
 				dialog.create();
-				dialog.setMessage(SSEUIPlugin.getResourceString("%EditStructuredTextEditorPreferencesAction.0")); //$NON-NLS-1$
+				dialog.setMessage(SSEUIMessages.EditStructuredTextEditorPreferencesAction_0); //$NON-NLS-1$
 				result[0] = (dialog.open() == Window.OK);
 			}
 		});

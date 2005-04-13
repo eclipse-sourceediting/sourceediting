@@ -34,6 +34,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.wst.sse.core.internal.SSECoreMessages;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.internal.encoding.util.Assert;
 import org.eclipse.wst.sse.core.internal.encoding.util.Logger;
@@ -451,7 +452,7 @@ public class CodedStreamCreator extends CodedIO {
 		final IFile file = fIFile;
 		final String charset = encoding;
 		// TODO: externalize string later
-		Job migrater = new Job("Migrate Charset") {
+		Job migrater = new Job(SSECoreMessages.Migrate_Charset) { //$NON-NLS-1$
 			protected IStatus run(IProgressMonitor monitor) {
 				if (file != null) {
 					try {

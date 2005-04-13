@@ -276,7 +276,7 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 		}
 	}
 
-	private static final String EMPTY_STRING = "";
+	private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
 	private final static boolean redrawBackground = true;
 
@@ -354,8 +354,8 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 
 		if (DEBUG && fDocument != null && !(fDocument instanceof ILockable)) {
 
-			System.out.println("Warning: non ILockable document used in StructuredDocumentToTextAdapter");
-			System.out.println("         document updates on non-display thread will not be safe if editor open");
+			System.out.println("Warning: non ILockable document used in StructuredDocumentToTextAdapter"); //$NON-NLS-1$
+			System.out.println("         document updates on non-display thread will not be safe if editor open"); //$NON-NLS-1$
 		}
 		if (fDocument instanceof IStructuredDocument) {
 			((IStructuredDocument) fDocument).addDocumentChangedListener(internalStructuredDocumentListener);
@@ -1260,7 +1260,7 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 			}
 			else {
 				// else, ignore!, since risk of deadlock
-				throw new IllegalStateException("non lockable document used for structuredDocumentToTextAdapter");
+				throw new IllegalStateException("non lockable document used for structuredDocumentToTextAdapter"); //$NON-NLS-1$
 			}
 		}
 	}

@@ -246,7 +246,7 @@ public class Highlighter implements IHighlighter {
 
 	private final boolean DEBUG = false;
 	private final StyleRange[] EMPTY_STYLE_RANGE = new StyleRange[0];
-	private static final String LINE_STYLE_PROVIDER_EXTENDED_ID = "linestyleprovider";
+	private static final String LINE_STYLE_PROVIDER_EXTENDED_ID = "linestyleprovider"; //$NON-NLS-1$
 
 	private IPropertyChangeListener fForegroundScaleListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {

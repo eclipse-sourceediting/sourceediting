@@ -38,7 +38,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.eclipse.wst.sse.core.preferences.PreferenceChangeListener;
 import org.eclipse.wst.sse.ui.internal.Logger;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -100,7 +100,7 @@ public abstract class PreferenceManager {
 				embeddedMessage = originalException.getClass().getName() + ": " + originalException.getMessage(); //$NON-NLS-1$
 				// not all exceptions have messages (e.g. many
 				// NullPointerException)
-				String originalError = SSEUIPlugin.getResourceString("%PreferenceManager.0"); //$NON-NLS-1$
+				String originalError = SSEUIMessages.PreferenceManager_0; //$NON-NLS-1$
 				if (result == null)
 					result = ""; //$NON-NLS-1$
 				if (embeddedMessage != null)

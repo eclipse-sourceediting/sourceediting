@@ -39,7 +39,7 @@ import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
 import org.eclipse.wst.sse.core.events.NewDocumentEvent;
 import org.eclipse.wst.sse.core.events.NoChangeEvent;
 import org.eclipse.wst.sse.ui.internal.Logger;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 
 /**
  * This job holds a queue of updates from the editor (DirtyRegions) to
@@ -94,7 +94,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 	public DirtyRegionProcessor() {
 		
 		// init job stuff
-		super(SSEUIPlugin.getResourceString("%proc_dirty_regions.0"));
+		super(SSEUIMessages.proc_dirty_regions_0); //$NON-NLS-1$
 		setPriority(Job.LONG);
 		setSystem(true);
 		// init some fields
@@ -157,7 +157,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
             tr = TextUtilities.computePartitioning(doc, getDocumentPartitioning(), drOffset, drLength, true);
 		}
 		catch (BadLocationException e) {
-            String info = "dr: ["+ drOffset+":"+ drLength + "] doc: [" + docLength + "] ";
+            String info = "dr: ["+ drOffset+":"+ drLength + "] doc: [" + docLength + "] "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			Logger.logException(info, e);
 			tr = new ITypedRegion[0];
 		}
@@ -196,7 +196,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 				durty = new DirtyRegion(offset, length, type, doc.get(offset, length));
 			}
 			catch (BadLocationException e) {
-                String info = "dr: ["+ offset+":"+ length + "] doc: [" + docLen + "] ";
+                String info = "dr: ["+ offset+":"+ length + "] doc: [" + docLen + "] "; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
                 Logger.logException(info, e);
 			}
 		}
@@ -393,8 +393,8 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 		schedule(getDelay());
 
 		if (DEBUG) {
-			System.out.println("added request for: [" + dr.getText() + "]");
-			System.out.println("queue size is now: " + getDirtyRegionQueue().size());
+			System.out.println("added request for: [" + dr.getText() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+			System.out.println("queue size is now: " + getDirtyRegionQueue().size()); //$NON-NLS-1$
 		}
 	}
 

@@ -72,8 +72,8 @@ public class AdapterFactoryRegistryImpl implements AdapterFactoryRegistry, Adapt
 
 	public Iterator getAdapterFactories() {
 		if (DEBUG) {
-			System.out.println("====================================================================================");
-			System.out.println("GETTING ALL ADAPTER FACTORIES");
+			System.out.println("===================================================================================="); //$NON-NLS-1$
+			System.out.println("GETTING ALL ADAPTER FACTORIES"); //$NON-NLS-1$
 		}
 
 		List results = new ArrayList();
@@ -86,13 +86,13 @@ public class AdapterFactoryRegistryImpl implements AdapterFactoryRegistry, Adapt
 			contentTypeId = (String) it.next();
 
 			if (DEBUG)
-				System.out.println(" + for: " + contentTypeId);
+				System.out.println(" + for: " + contentTypeId); //$NON-NLS-1$
 
 			results.addAll(getAdapterFactoriesAsList(contentTypeId));
 		}
 
 		if (DEBUG) {
-			System.out.println("====================================================================================");
+			System.out.println("===================================================================================="); //$NON-NLS-1$
 		}
 
 		return results.iterator();
@@ -100,8 +100,8 @@ public class AdapterFactoryRegistryImpl implements AdapterFactoryRegistry, Adapt
 
 	public Iterator getAdapterFactories(String contentTypeID) {
 		if (DEBUG) {
-			System.out.println("====================================================================================");
-			System.out.println("GETTING ADAPTER FACTORIES for: " + contentTypeID);
+			System.out.println("===================================================================================="); //$NON-NLS-1$
+			System.out.println("GETTING ADAPTER FACTORIES for: " + contentTypeID); //$NON-NLS-1$
 		}
 
 		List results = new ArrayList();
@@ -117,7 +117,7 @@ public class AdapterFactoryRegistryImpl implements AdapterFactoryRegistry, Adapt
 
 
 		if (DEBUG) {
-			System.out.println("====================================================================================");
+			System.out.println("===================================================================================="); //$NON-NLS-1$
 		}
 
 		return results.iterator();
@@ -164,7 +164,7 @@ public class AdapterFactoryRegistryImpl implements AdapterFactoryRegistry, Adapt
 				if (o != null) {
 					// this provider has already been created
 					if (DEBUG)
-						System.out.println("already created: " + element.getAttribute(ATT_CLASS));
+						System.out.println("already created: " + element.getAttribute(ATT_CLASS)); //$NON-NLS-1$
 
 					results.add(o);
 				}
@@ -174,7 +174,7 @@ public class AdapterFactoryRegistryImpl implements AdapterFactoryRegistry, Adapt
 						classname = element.getAttribute(ATT_CLASS);
 
 						if (DEBUG)
-							System.out.println("about to create: " + classname);
+							System.out.println("about to create: " + classname); //$NON-NLS-1$
 
 						// check if we created one already
 						existing = this.adapterProviders.get(classname);

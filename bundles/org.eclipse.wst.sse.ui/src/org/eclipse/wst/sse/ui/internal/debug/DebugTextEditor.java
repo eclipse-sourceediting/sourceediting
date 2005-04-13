@@ -61,7 +61,7 @@ import org.eclipse.wst.sse.ui.extension.IPopupMenuContributor;
 import org.eclipse.wst.sse.ui.extensions.ConfigurationPointCalculator;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.IExtendedStorageEditorInput;
 import org.eclipse.wst.sse.ui.internal.Logger;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.extension.BreakpointProviderBuilder;
@@ -375,7 +375,7 @@ public class DebugTextEditor extends TextEditor {
 			menu.add(getAction(ActionDefinitionIds.EDIT_BREAKPOINTS));
 			menu.add(new Separator());
 		} else {
-			Logger.log(Logger.INFO, getClass().getName() + " could not enable debugging actions");
+			Logger.log(Logger.INFO, getClass().getName() + " could not enable debugging actions"); //$NON-NLS-1$
 		}
 		super.rulerContextMenuAboutToShow(menu);
 	}
@@ -414,7 +414,7 @@ public class DebugTextEditor extends TextEditor {
 			// mapping, but since it relies on the IEditorSite ID, it can't be
 			// relied on for MultiPageEditorParts. Instead, force the action
 			// registration manually.
-			setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, new MarkerRulerAction(SSEUIPlugin.getDefault().getResourceBundle(), "Editor.ManageBookmarks.", this, getVerticalRuler(), IMarker.BOOKMARK, true));
+			setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, new MarkerRulerAction(SSEUIMessages.getResourceBundle(), "Editor.ManageBookmarks.", this, getVerticalRuler(), IMarker.BOOKMARK, true)); //$NON-NLS-1$
 		}
 		fShowInTargetIds = createShowInTargetIds();
 	}

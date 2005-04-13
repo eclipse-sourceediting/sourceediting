@@ -44,9 +44,9 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
-import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.IModelLoader;
 import org.eclipse.wst.sse.core.IModelManager;
+import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.document.IEncodedDocument;
 import org.eclipse.wst.sse.core.exceptions.ResourceAlreadyExists;
@@ -55,7 +55,7 @@ import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.FileBufferModelManager;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.NullMemento;
-import org.eclipse.wst.sse.core.internal.SSECorePlugin;
+import org.eclipse.wst.sse.core.internal.SSECoreMessages;
 import org.eclipse.wst.sse.core.internal.document.DocumentReader;
 import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.internal.encoding.CodedIO;
@@ -210,8 +210,8 @@ public class ModelManagerImpl implements IModelManager {
 		}
 		// we expect to always return something
 		if (sharedObject == null) {
-			debugException = new Exception("instance only for stack trace");
-			Logger.logException("Program Error: no model recorded for id " + id, debugException);
+			debugException = new Exception("instance only for stack trace"); //$NON-NLS-1$
+			Logger.logException("Program Error: no model recorded for id " + id, debugException); //$NON-NLS-1$
 		}
 
 
@@ -231,7 +231,7 @@ public class ModelManagerImpl implements IModelManager {
 				model = _commonCreateModel(id, handler, resolver);
 				IModelLoader loader = handler.getModelLoader();
 				if (inputStream == null) {
-					Logger.log(Logger.WARNING, "model was requested for id " + id + " without a content InputStream");
+					Logger.log(Logger.WARNING, "model was requested for id " + id + " without a content InputStream"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 				loader.load(id, Utilities.getMarkSupportedStream(inputStream), model, encoding, lineDelimiter);
 			}
@@ -408,7 +408,7 @@ public class ModelManagerImpl implements IModelManager {
 	public IStructuredModel _getModelFor(IStructuredDocument document, ReadEditType accessType) {
 		IStructuredModel model = null;
 		String id = FileBufferModelManager.getInstance().calculateId(document);
-		Assert.isNotNull(id, "unknown IStructuredDocument " + document);
+		Assert.isNotNull(id, "unknown IStructuredDocument " + document); //$NON-NLS-1$
 		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
 		if (sharedObject != null) {
 			sharedObject = (SharedObject) fManagedObjects.get(id);
@@ -732,7 +732,7 @@ public class ModelManagerImpl implements IModelManager {
 		ModelHandlerRegistry cr = getModelHandlerRegistry();
 		IModelHandler handler = cr.getHandlerForContentTypeId(contentTypeId);
 		if (handler == null)
-			Logger.log(Logger.ERROR, "Program error: no model handler found for " + contentTypeId);
+			Logger.log(Logger.ERROR, "Program error: no model handler found for " + contentTypeId); //$NON-NLS-1$
 		loader = handler.getDocumentLoader();
 		IStructuredDocument result = (IStructuredDocument) loader.createNewStructuredDocument();
 		return result;
@@ -1492,7 +1492,7 @@ public class ModelManagerImpl implements IModelManager {
 		// let's see if we already have it in our cache
 		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
 		if (sharedObject == null || sharedObject.theSharedModel == null) {
-			throw new SourceEditingRuntimeException(SSECorePlugin.getResourceString("%Program_Error__ModelManage_EXC_")); //$NON-NLS-1$ = "Program Error: ModelManagerImpl::saveModel. Model should be in the cache"
+			throw new SourceEditingRuntimeException(SSECoreMessages.Program_Error__ModelManage_EXC_); //$NON-NLS-1$ = "Program Error: ModelManagerImpl::saveModel. Model should be in the cache"
 		}
 		else {
 			boolean saved = false;
@@ -1531,7 +1531,7 @@ public class ModelManagerImpl implements IModelManager {
 		// let's see if we already have it in our cache
 		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
 		if (sharedObject == null) {
-			throw new SourceEditingRuntimeException(SSECorePlugin.getResourceString("%Program_Error__ModelManage_EXC_")); //$NON-NLS-1$ = "Program Error: ModelManagerImpl::saveModel. Model should be in the cache"
+			throw new SourceEditingRuntimeException(SSECoreMessages.Program_Error__ModelManage_EXC_); //$NON-NLS-1$ = "Program Error: ModelManagerImpl::saveModel. Model should be in the cache"
 		}
 		else {
 			// if this model was based on a File Buffer and we're writing back
@@ -1562,7 +1562,7 @@ public class ModelManagerImpl implements IModelManager {
 		// let's see if we already have it in our cache
 		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
 		if (sharedObject == null) {
-			throw new SourceEditingRuntimeException(SSECorePlugin.getResourceString("%Program_Error__ModelManage_EXC_")); //$NON-NLS-1$ = "Program Error: ModelManagerImpl::saveModel. Model should be in the cache"
+			throw new SourceEditingRuntimeException(SSECoreMessages.Program_Error__ModelManage_EXC_); //$NON-NLS-1$ = "Program Error: ModelManagerImpl::saveModel. Model should be in the cache"
 		}
 		else {
 			CodedStreamCreator codedStreamCreator = new CodedStreamCreator();

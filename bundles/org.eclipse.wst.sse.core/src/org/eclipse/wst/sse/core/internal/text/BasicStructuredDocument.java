@@ -158,7 +158,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 			if (cachedRegionPositionArray.size() > MAX_SIZE) {
 				cachedRegionPositionArray.clear();
 				if (DEBUG) {
-					System.out.println("cachedRegionPositionArray cleared at size " + MAX_SIZE);
+					System.out.println("cachedRegionPositionArray cleared at size " + MAX_SIZE); //$NON-NLS-1$
 				}
 			}
 			position = new Integer(cachedRegionPositionArray.size());

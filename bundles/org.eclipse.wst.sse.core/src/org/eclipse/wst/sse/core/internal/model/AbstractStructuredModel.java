@@ -43,7 +43,7 @@ import org.eclipse.wst.sse.core.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.ILockable;
 import org.eclipse.wst.sse.core.internal.Logger;
-import org.eclipse.wst.sse.core.internal.SSECorePlugin;
+import org.eclipse.wst.sse.core.internal.SSECoreMessages;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingRule;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
@@ -178,8 +178,8 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 
 	}
 
-	static final String DEBUG_STATE_TRACE_CATEGORY = "org.eclipse.wst.sse.core/structuredmodel/state";
-	static final boolean DEBUG_STATE = "true".equalsIgnoreCase(Platform.getDebugOption(DEBUG_STATE_TRACE_CATEGORY));
+	static final String DEBUG_STATE_TRACE_CATEGORY = "org.eclipse.wst.sse.core/structuredmodel/state"; //$NON-NLS-1$
+	static final boolean DEBUG_STATE = "true".equalsIgnoreCase(Platform.getDebugOption(DEBUG_STATE_TRACE_CATEGORY)); //$NON-NLS-1$
 
 	private FactoryRegistry factoryRegistry;
 	private String fBaseLocation;
@@ -524,7 +524,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		// another thread
 		if (fModelStateListeners != null) {
 			if (DEBUG_STATE) {
-				System.out.println("IModelStateListener event for " + getId() + " : modelAboutToBeReinitialized");
+				System.out.println("IModelStateListener event for " + getId() + " : modelAboutToBeReinitialized"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			Object[] holdListeners = fModelStateListeners;
 			for (int i = 0; i < holdListeners.length; i++) {
@@ -578,7 +578,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		// another thread
 		if (fModelStateListeners != null) {
 			if (DEBUG_STATE) {
-				System.out.println("IModelStateListener event for " + getId() + " : modelDirtyStateChanged");
+				System.out.println("IModelStateListener event for " + getId() + " : modelDirtyStateChanged"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			Object[] holdListeners = fModelStateListeners;
 			for (int i = 0; i < holdListeners.length; i++) {
@@ -596,7 +596,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		// another thread
 		if (fModelStateListeners != null) {
 			if (DEBUG_STATE) {
-				System.out.println("IModelStateListener event for " + getId() + " : modelReinitialized");
+				System.out.println("IModelStateListener event for " + getId() + " : modelReinitialized"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			Object[] holdListeners = fModelStateListeners;
 			for (int i = 0; i < holdListeners.length; i++) {
@@ -619,7 +619,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		// another thread
 		if (fModelStateListeners != null) {
 			if (DEBUG_STATE) {
-				System.out.println("IModelStateListener event for " + getId() + " : modelResourceDeleted");
+				System.out.println("IModelStateListener event for " + getId() + " : modelResourceDeleted"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			Object[] holdListeners = fModelStateListeners;
 			for (int i = 0; i < holdListeners.length; i++) {
@@ -642,7 +642,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		// another thread
 		if (fModelStateListeners != null) {
 			if (DEBUG_STATE) {
-				System.out.println("IModelStateListener event for " + getId() + " : modelResourceMoved");
+				System.out.println("IModelStateListener event for " + getId() + " : modelResourceMoved"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			Object[] holdListeners = fModelStateListeners;
 			for (int i = 0; i < holdListeners.length; i++) {
@@ -828,7 +828,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		if (fModelStateChanging == 0) {
 
 			if (DEBUG_STATE) {
-				System.out.println("IModelStateListener event for " + getId() + " : modelAboutToBeChanged"); //$NON-NLS-1$
+				System.out.println("IModelStateListener event for " + getId() + " : modelAboutToBeChanged"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
 			fireModelAboutToBeChanged();
@@ -859,7 +859,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		// and try to continue
 		if (fModelStateChanging < 0) {
 			fModelStateChanging = 0;
-			Logger.log(Logger.ERROR, "Program Error: modelStateChanging was less than zero");
+			Logger.log(Logger.ERROR, "Program Error: modelStateChanging was less than zero"); //$NON-NLS-1$
 		}
 
 
@@ -1362,7 +1362,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		// since it uses hashtables, and you can't have a null id for a
 		// hashtable.
 		if (newId == null)
-			throw new IllegalArgumentException(SSECorePlugin.getResourceString("%A_model's_id_can_not_be_nu_EXC_")); //$NON-NLS-1$ = "A model's id can not be null"
+			throw new IllegalArgumentException(SSECoreMessages.A_model_s_id_can_not_be_nu_EXC_); //$NON-NLS-1$ = "A model's id can not be null"
 		// To gaurd againt throwing a spurious ResourceInUse exception,
 		// which can occur when two pieces of code both want to change the id,
 		// so the second request is spurious, we'll ignore any requests that

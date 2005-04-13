@@ -115,7 +115,7 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 				tr = TextUtilities.getPartition(doc, IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING, offset, false);
 			} catch (BadLocationException e) {
 				if (DEBUG)
-					Logger.logException("problem getting partition at: " + offset, e);
+					Logger.logException("problem getting partition at: " + offset, e); //$NON-NLS-1$
 			}
 		}
 		return tr;

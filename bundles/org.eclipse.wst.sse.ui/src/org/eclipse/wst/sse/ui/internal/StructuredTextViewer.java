@@ -128,14 +128,14 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 	public static final int CLEANUP_DOCUMENT = BASE + 1;
 	public static final int FORMAT_ACTIVE_ELEMENTS = BASE + 3;
 
-	private static final String FORMAT_ACTIVE_ELEMENTS_TEXT = SSEUIPlugin.getResourceString("%Format_Active_Elements_UI_"); //$NON-NLS-1$
+	private static final String FORMAT_ACTIVE_ELEMENTS_TEXT = SSEUIMessages.Format_Active_Elements_UI_; //$NON-NLS-1$
 	public static final int FORMAT_DOCUMENT = BASE + 2;
-	private static final String FORMAT_DOCUMENT_TEXT = SSEUIPlugin.getResourceString("%Format_Document_UI_"); //$NON-NLS-1$
+	private static final String FORMAT_DOCUMENT_TEXT = SSEUIMessages.Format_Document_UI_; //$NON-NLS-1$
 	public static final int QUICK_FIX = BASE + 4;
-	private static final String TEXT_CUT = SSEUIPlugin.getResourceString("%Text_Cut_UI_"); //$NON-NLS-1$
-	private static final String TEXT_PASTE = SSEUIPlugin.getResourceString("%Text_Paste_UI_"); //$NON-NLS-1$
-	private static final String TEXT_SHIFT_LEFT = SSEUIPlugin.getResourceString("%Text_Shift_Left_UI_"); //$NON-NLS-1$ = "Text Shift Left"
-	private static final String TEXT_SHIFT_RIGHT = SSEUIPlugin.getResourceString("%Text_Shift_Right_UI_"); //$NON-NLS-1$ = "Text Shift Right"
+	private static final String TEXT_CUT = SSEUIMessages.Text_Cut_UI_; //$NON-NLS-1$
+	private static final String TEXT_PASTE = SSEUIMessages.Text_Paste_UI_; //$NON-NLS-1$
+	private static final String TEXT_SHIFT_LEFT = SSEUIMessages.Text_Shift_Left_UI_; //$NON-NLS-1$ = "Text Shift Left"
+	private static final String TEXT_SHIFT_RIGHT = SSEUIMessages.Text_Shift_Right_UI_; //$NON-NLS-1$ = "Text Shift Right"
 	private boolean fBackgroundupdateInProgress;
 	protected StructuredContentCleanupHandler fContentCleanupHandler = null;
 	protected IContentAssistant fCorrectionAssistant;

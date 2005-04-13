@@ -61,14 +61,14 @@ class AdapterFactoryRegistryReader {
 			map.put(contentTypeId, element2provider);
 
 			if (DEBUG)
-				System.out.println("added " + element.getAttribute(ATT_CLASS) + ", but didn't create exec extension");
+				System.out.println("added " + element.getAttribute(ATT_CLASS) + ", but didn't create exec extension"); //$NON-NLS-1$ //$NON-NLS-2$
 		} else {
 			// add element to unknown list (not executable ext yet...)
 			HashMap element2provider = (HashMap) o;
 			element2provider.put(element, null);
 
 			if (DEBUG)
-				System.out.println("added " + element.getAttribute(ATT_CLASS) + " to unknown list, but didn't create exec extension");
+				System.out.println("added " + element.getAttribute(ATT_CLASS) + " to unknown list, but didn't create exec extension"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 

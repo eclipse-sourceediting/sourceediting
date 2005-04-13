@@ -35,6 +35,7 @@ import org.eclipse.wst.sse.ui.extension.IExtendedMarkupEditor;
 import org.eclipse.wst.sse.ui.extension.IExtendedSimpleEditor;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.IBreakpointProvider;
 import org.eclipse.wst.sse.ui.internal.Logger;
+import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.extension.BreakpointProviderBuilder;
 import org.w3c.dom.Document;
@@ -50,7 +51,7 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 	 */
 	public ToggleBreakpointAction(ITextEditor editor, IVerticalRulerInfo rulerInfo) {
 		super(editor, rulerInfo);
-		setText(SSEUIPlugin.getResourceString("%ToggleBreakpointAction.0")); //$NON-NLS-1$
+		setText(SSEUIMessages.ToggleBreakpointAction_0); //$NON-NLS-1$
 	}
 
 	protected boolean createBreakpoints(int lineNumber) {
@@ -100,11 +101,11 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 
 		if (errors.size() > 0) {
 			Shell shell = editor.getSite().getShell();
-			MultiStatus allStatus = new MultiStatus(SSEUIPlugin.ID, IStatus.INFO, (IStatus[]) errors.toArray(new IStatus[0]), SSEUIPlugin.getResourceString("%ManageBreakpoints.error.adding.message1"), null); //$NON-NLS-1$
+			MultiStatus allStatus = new MultiStatus(SSEUIPlugin.ID, IStatus.INFO, (IStatus[]) errors.toArray(new IStatus[0]), SSEUIMessages.ManageBreakpoints_error_adding_message1, null); //$NON-NLS-1$
 			// show for conditions more severe than INFO or when no
 			// breakpoints were created
 			if (allStatus.getSeverity() > IStatus.INFO || getBreakpoints(getMarkers()).length < 1) {
-				ErrorDialog.openError(shell, SSEUIPlugin.getResourceString("%ManageBreakpoints.error.adding.title1"), SSEUIPlugin.getResourceString("%ManageBreakpoints.error.adding.message1"), allStatus); //$NON-NLS-1$ //$NON-NLS-2$
+				ErrorDialog.openError(shell, SSEUIMessages.ManageBreakpoints_error_adding_title1, SSEUIMessages.ManageBreakpoints_error_adding_message1, allStatus); //$NON-NLS-1$ //$NON-NLS-2$
 				return false;
 			}
 		}

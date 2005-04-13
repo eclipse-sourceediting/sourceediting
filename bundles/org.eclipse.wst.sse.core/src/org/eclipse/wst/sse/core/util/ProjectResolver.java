@@ -92,7 +92,7 @@ public class ProjectResolver implements URIResolver {
         // Workaround for problem in URIHelper; uris starting with '/' are
         // returned as-is.
         String location = uri;
-        if (uri.startsWith("/")) {
+        if (uri.startsWith("/")) { //$NON-NLS-1$
             IProject p = getProject();
             if(p != null && p.exists())
                 location = p.getLocation().toString() + uri;

@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 
@@ -118,15 +119,15 @@ public class TextHoverManager {
 	// list of different types of Source editor hovers
 	public static final String COMBINATION_HOVER = "combinationHover"; //$NON-NLS-1$
 	// hover descriptions are in .properties file with the key in the form of
-	// "[id].desc"
-	private static final String DESCRIPTION_KEY = ".desc"; //$NON-NLS-1$
+	// "[id]_desc"
+	private static final String DESCRIPTION_KEY = "_desc"; //$NON-NLS-1$
 	public static final String DOCUMENTATION_HOVER = "documentationHover"; //$NON-NLS-1$
 	public static final String HOVER_ATTRIBUTE_SEPARATOR = "|"; //$NON-NLS-1$
 	public static final String HOVER_SEPARATOR = ";"; //$NON-NLS-1$
 
 	// hover labels are in .properties file with the key in the form of
-	// "[id].label"
-	private static final String LABEL_KEY = ".label"; //$NON-NLS-1$
+	// "[id]_label"
+	private static final String LABEL_KEY = "_label"; //$NON-NLS-1$
 
 	public static final String NO_MODIFIER = "0"; //$NON-NLS-1$
 	public static final String PROBLEM_HOVER = "problemHover"; //$NON-NLS-1$
@@ -162,7 +163,7 @@ public class TextHoverManager {
 				if (modifierString.equals(NO_MODIFIER))
 					modifierString = ""; //$NON-NLS-1$
 
-				TextHoverDescriptor descriptor = new TextHoverDescriptor(id, SSEUIPlugin.getResourceString("%" + id + LABEL_KEY), SSEUIPlugin.getResourceString("%" + id + DESCRIPTION_KEY), enabled, modifierString);
+				TextHoverDescriptor descriptor = new TextHoverDescriptor(id, SSEUIMessages.getResourceBundle().getString(id + LABEL_KEY), SSEUIMessages.getResourceBundle().getString(id + DESCRIPTION_KEY), enabled, modifierString);
 				// should check to see if ids appear more than once
 				idToModifier.put(id, descriptor);
 			}
@@ -175,7 +176,7 @@ public class TextHoverManager {
 			if (desc != null) {
 				descriptors[i] = desc;
 			} else {
-				descriptors[i] = new TextHoverDescriptor(TEXT_HOVER_IDS[i], SSEUIPlugin.getResourceString("%" + TEXT_HOVER_IDS[i] + LABEL_KEY), SSEUIPlugin.getResourceString("%" + TEXT_HOVER_IDS + DESCRIPTION_KEY));
+				descriptors[i] = new TextHoverDescriptor(TEXT_HOVER_IDS[i], SSEUIMessages.getResourceBundle().getString(TEXT_HOVER_IDS[i] + LABEL_KEY), SSEUIMessages.getResourceBundle().getString(TEXT_HOVER_IDS + DESCRIPTION_KEY));
 			}
 		}
 		return descriptors;

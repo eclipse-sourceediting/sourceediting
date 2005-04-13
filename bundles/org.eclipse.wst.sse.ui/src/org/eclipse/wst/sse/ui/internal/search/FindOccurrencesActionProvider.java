@@ -25,7 +25,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.TextEditorAction;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.util.PlatformStatusLineUtil;
 
 /**
@@ -113,7 +113,7 @@ public class FindOccurrencesActionProvider extends TextEditorAction {
 	public void run() {
 
 		BasicFindOccurrencesAction action = getActionForCurrentSelection();
-		String errorMessage = SSEUIPlugin.getResourceString("%FindOccurrencesActionProvider.0"); //$NON-NLS-1$
+		String errorMessage = SSEUIMessages.FindOccurrencesActionProvider_0; //$NON-NLS-1$
 		if (action != null) {
 			action.update();
 			if (action.isEnabled()) {

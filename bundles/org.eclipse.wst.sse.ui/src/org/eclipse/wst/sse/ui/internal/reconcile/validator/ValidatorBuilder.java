@@ -52,7 +52,7 @@ public class ValidatorBuilder extends RegistryReader {
 	protected String targetContributionTag;
 	protected String targetID;
 
-    private final String UNKNOWN = "???";
+    private final String UNKNOWN = "???"; //$NON-NLS-1$
     
 	/**
 	 * Returns the name of the part ID attribute that is expected in the

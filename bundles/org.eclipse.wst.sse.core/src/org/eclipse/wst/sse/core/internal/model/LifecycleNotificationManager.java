@@ -23,8 +23,8 @@ import org.eclipse.wst.sse.core.util.Utilities;
  */
 
 class LifecycleNotificationManager {
-	static final String DEFAULT_TRACE_CATEGORY = "org.eclipse.wst.sse.core/structuredmodel/lifecycle";
-	static final boolean DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption(DEFAULT_TRACE_CATEGORY));
+	static final String DEFAULT_TRACE_CATEGORY = "org.eclipse.wst.sse.core/structuredmodel/lifecycle"; //$NON-NLS-1$
+	static final boolean DEBUG = "true".equalsIgnoreCase(Platform.getDebugOption(DEFAULT_TRACE_CATEGORY)); //$NON-NLS-1$
 
 
 	private Object[] fListeners;
@@ -46,7 +46,7 @@ class LifecycleNotificationManager {
 	 */
 	void addListener(IModelLifecycleListener listener) {
 		if (Utilities.contains(fListeners, listener)) {
-			Logger.log(Logger.WARNING_DEBUG, "IModelLifecycleListener " + listener + " listening more than once");
+			Logger.log(Logger.WARNING_DEBUG, "IModelLifecycleListener " + listener + " listening more than once"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		int oldSize = 0;
 		if (fListeners != null) {
@@ -94,14 +94,14 @@ class LifecycleNotificationManager {
 			fListeners = newListeners;
 		}
 		if (Utilities.contains(fListeners, listener)) {
-			Logger.log(Logger.WARNING_DEBUG, "IModelLifecycleListener " + listener + " removed once but still listening");
+			Logger.log(Logger.WARNING_DEBUG, "IModelLifecycleListener " + listener + " removed once but still listening"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
 
 	void signalLifecycleEvent(ModelLifecycleEvent event) {
 		if (DEBUG) {
-			Logger.trace(DEFAULT_TRACE_CATEGORY, "ModelLifecycleEvent fired for " + event.getModel().getId() + ": " + event.toString());
-			System.out.println("ModelLifecycleEvent fired for " + event.getModel().getId() + ": " + event.toString());
+			Logger.trace(DEFAULT_TRACE_CATEGORY, "ModelLifecycleEvent fired for " + event.getModel().getId() + ": " + event.toString()); //$NON-NLS-1$ //$NON-NLS-2$
+			System.out.println("ModelLifecycleEvent fired for " + event.getModel().getId() + ": " + event.toString()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		// We must assign listeners to local variable, since the add and
 		// remove listener methods can change the actual instance of the

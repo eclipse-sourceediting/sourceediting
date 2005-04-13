@@ -213,7 +213,7 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 					contains = true;
 
 				if (DEBUG)
-					System.out.println("checking if [" + rootStart + ":" + rootEnd + "] contains [" + possStart + ":" + possEnd + "] ... " + contains);
+					System.out.println("checking if [" + rootStart + ":" + rootEnd + "] contains [" + possStart + ":" + possEnd + "] ... " + contains); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 			}
 		}
 		finally {

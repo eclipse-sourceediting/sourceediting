@@ -37,6 +37,7 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.contentproperties.ContentSettings;
 import org.eclipse.wst.sse.ui.contentproperties.ContentSettingsCreator;
 import org.eclipse.wst.sse.ui.contentproperties.IContentSettings;
+import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 public abstract class ContentSettingsPropertyPage extends PropertyPage {
@@ -102,10 +103,10 @@ public abstract class ContentSettingsPropertyPage extends PropertyPage {
 	protected Composite composite;
 
 	protected IContentSettings contentSettings;
-	protected final String CSS_LABEL = SSEUIPlugin.getResourceString("%UI_CSS_profile___2"); //$NON-NLS-1$
-	protected final String DEVICE_LABEL = SSEUIPlugin.getResourceString("%UI_Target_Device___3"); //$NON-NLS-1$
+	protected final String CSS_LABEL = SSEUIMessages.UI_CSS_profile___2; //$NON-NLS-1$
+	protected final String DEVICE_LABEL = SSEUIMessages.UI_Target_Device___3; //$NON-NLS-1$
 
-	protected final String DOCUMENT_LABEL = SSEUIPlugin.getResourceString("%UI_Default_HTML_DOCTYPE_ID___1"); //$NON-NLS-1$
+	protected final String DOCUMENT_LABEL = SSEUIMessages.UI_Default_HTML_DOCTYPE_ID___1; //$NON-NLS-1$
 	protected int numberOfCombo;
 	protected int numCols = 1;
 	protected int numRows = 1;
@@ -127,7 +128,7 @@ public abstract class ContentSettingsPropertyPage extends PropertyPage {
 
 		Label label = new Label(propertyPage, SWT.LEFT);
 		label.setText(title);
-		if (title != null && title.startsWith(SSEUIPlugin.getResourceString("%UI_Default_HTML_DOCTYPE_ID___1"))) { //$NON-NLS-1$
+		if (title != null && title.startsWith(SSEUIMessages.UI_Default_HTML_DOCTYPE_ID___1)) { //$NON-NLS-1$
 			GridData data = new GridData();
 			data.horizontalIndent = 10;
 			label.setLayoutData(data);

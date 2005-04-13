@@ -39,7 +39,7 @@ public class StructuredDocumentFactory {
 				break;
 
 			default :
-				throw new IllegalArgumentException("request document type was not known");
+				throw new IllegalArgumentException("request document type was not known"); //$NON-NLS-1$
 
 		}
 		return result;

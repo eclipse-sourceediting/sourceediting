@@ -24,6 +24,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.sse.core.internal.encoding.util.CodedResourcePlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 
 /**
  * @deprecated - this should not be handled by the platform and not WTP
@@ -64,7 +65,7 @@ public class EncodingPreferencePage extends PreferencePage implements IWorkbench
 	protected Control createContents(Composite parent) {
 		Composite composite = createComposite(parent);
 
-		String description = CodedResourcePlugin.getResourceString("%EncodingPreferencePage.0"); //$NON-NLS-1$
+		String description = SSEUIMessages.EncodingPreferencePage_0; //$NON-NLS-1$
 		
 		// ISSUE: the following to lines look redundant, 
 		// not sure what was trying to be accomplished. 
@@ -72,7 +73,7 @@ public class EncodingPreferencePage extends PreferencePage implements IWorkbench
 		createLabel(composite, description);
 		createLabel(composite, ""); //$NON-NLS-1$
 
-		String checkBoxLabel = CodedResourcePlugin.getResourceString("%EncodingPreferencePage.1"); //$NON-NLS-1$
+		String checkBoxLabel = SSEUIMessages.EncodingPreferencePage_1; //$NON-NLS-1$
 		fUse3ByteBOMWithUTF8CheckBox = createCheckBox(composite, checkBoxLabel);
 
 		return composite;

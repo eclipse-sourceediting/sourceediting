@@ -38,7 +38,7 @@ import org.eclipse.wst.sse.ui.extension.ExtendedEditorActionBuilder;
 import org.eclipse.wst.sse.ui.extension.IExtendedContributor;
 import org.eclipse.wst.sse.ui.internal.GotoAnnotationAction;
 import org.eclipse.wst.sse.ui.internal.ISourceViewerActionBarContributor;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.ui.OffsetStatusLineContributionItem;
 
 /**
@@ -54,7 +54,7 @@ import org.eclipse.wst.sse.ui.internal.ui.OffsetStatusLineContributionItem;
  */
 public class ActionContributor extends TextEditorActionContributor implements ISourceViewerActionBarContributor, IExtendedContributor {
 
-	public static final boolean _showDebugStatus = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.ui/actioncontributor/debugstatusfields"));
+	public static final boolean _showDebugStatus = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.ui/actioncontributor/debugstatusfields")); //$NON-NLS-1$ //$NON-NLS-2$
 
 	private static final String[] EDITOR_IDS = {"org.eclipse.wst.sse.ui.StructuredTextEditor"}; //$NON-NLS-1$
 
@@ -85,7 +85,7 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 	public ActionContributor() {
 		super();
 
-		ResourceBundle resourceBundle = SSEUIPlugin.getDefault().getResourceBundle();
+		ResourceBundle resourceBundle = SSEUIMessages.getResourceBundle();
 
 		fCommandsSeparator = new Separator();
 
@@ -102,7 +102,7 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 		fStructureSelectHistoryAction = new RetargetTextEditorAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_STRUCTURE_SELECT_HISTORY + StructuredTextEditorActionConstants.DOT);
 		fStructureSelectHistoryAction.setActionDefinitionId(ActionDefinitionIds.STRUCTURE_SELECT_HISTORY);
 
-		fExpandSelectionToMenu = new MenuManager(SSEUIPlugin.getResourceString("%ExpandSelectionToMenu.label")); //$NON-NLS-1$
+		fExpandSelectionToMenu = new MenuManager(SSEUIMessages.ExpandSelectionToMenu_label); //$NON-NLS-1$
 		fExpandSelectionToMenu.add(fStructureSelectEnclosingAction);
 		fExpandSelectionToMenu.add(fStructureSelectNextAction);
 		fExpandSelectionToMenu.add(fStructureSelectPreviousAction);
@@ -161,8 +161,8 @@ public class ActionContributor extends TextEditorActionContributor implements IS
 		}
 
 		// source commands
-		String sourceMenuLabel = SSEUIPlugin.getResourceString("%SourceMenu.label"); //$NON-NLS-1$
-		String sourceMenuId = "sourceMenuId"; // This is just a menu id. No
+		String sourceMenuLabel = SSEUIMessages.SourceMenu_label; //$NON-NLS-1$
+		String sourceMenuId = "sourceMenuId"; // This is just a menu id. No //$NON-NLS-1$
 		// need to translate.
 		// //$NON-NLS-1$
 		IMenuManager sourceMenu = new MenuManager(sourceMenuLabel, sourceMenuId);

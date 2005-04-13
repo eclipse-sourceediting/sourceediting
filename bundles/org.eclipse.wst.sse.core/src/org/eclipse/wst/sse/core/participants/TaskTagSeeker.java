@@ -328,9 +328,9 @@ public abstract class TaskTagSeeker implements IBuilderDelegate {
 				}
 			}
 		} catch (CoreException e) {
-			Logger.logException("Exception with " + file.getFullPath().toString(), e);
+			Logger.logException("Exception with " + file.getFullPath().toString(), e); //$NON-NLS-1$
 		} catch (CharacterCodingException e) {
-			Logger.log(Logger.INFO, "TaskTagSeeker encountered CharacterCodingException reading " + file.getFullPath().toOSString());
+			Logger.log(Logger.INFO, "TaskTagSeeker encountered CharacterCodingException reading " + file.getFullPath().toOSString()); //$NON-NLS-1$
 		} catch (IOException e) {
 			Logger.logException(e);
 		}

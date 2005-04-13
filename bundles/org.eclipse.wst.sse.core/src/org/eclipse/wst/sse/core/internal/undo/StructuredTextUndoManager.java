@@ -29,7 +29,7 @@ import org.eclipse.wst.sse.core.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.events.RegionsReplacedEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentRegionsReplacedEvent;
-import org.eclipse.wst.sse.core.internal.SSECorePlugin;
+import org.eclipse.wst.sse.core.internal.SSECoreMessages;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.undo.CommandCursorPosition;
 import org.eclipse.wst.sse.core.undo.IDocumentSelectionMediator;
@@ -136,7 +136,7 @@ public class StructuredTextUndoManager implements IStructuredTextUndoManager {
 
 	}
 
-	private static final String TEXT_CHANGE_TEXT = SSECorePlugin.getResourceString("%Text_Change_UI_"); //$NON-NLS-1$
+	private static final String TEXT_CHANGE_TEXT = SSECoreMessages.Text_Change_UI_; //$NON-NLS-1$
 	private CommandStack fCommandStack = null;
 	private StructuredTextCompoundCommandImpl fCompoundCommand = null;
 	private String fCompoundCommandDescription = null;

@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.exceptions;
 
-import org.eclipse.wst.sse.core.internal.SSECorePlugin;
+import org.eclipse.wst.sse.core.internal.SSECoreMessages;
 
 /**
  * The SourceEditingRuntimeException is often thrown by Source Editor methods
@@ -65,7 +65,7 @@ public class SourceEditingRuntimeException extends RuntimeException {
 			embeddedMessage = originalException.getClass().getName() + ": " + originalException.getMessage(); //$NON-NLS-1$
 			// not all exceptions have messages (e.g. many
 			// NullPointerException)
-			String originalError = SSECorePlugin.getResourceString("%Original_Error__UI_"); //$NON-NLS-1$ = "Original Error:"
+			String originalError = SSECoreMessages.Original_Error__UI_; //$NON-NLS-1$ = "Original Error:"
 			if (result == null)
 				result = ""; //$NON-NLS-1$
 			if (embeddedMessage != null)

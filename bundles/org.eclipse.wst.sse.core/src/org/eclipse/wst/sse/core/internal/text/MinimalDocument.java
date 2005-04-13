@@ -231,8 +231,8 @@ public class MinimalDocument implements IStructuredDocument {
 	}
 
 	public ITypedRegion getPartition(int offset) throws BadLocationException {
-		Logger.log(Logger.WARNING, "An instance of MinimalDocument was asked for its partition, sometime indicating a deleted region was being accessed.");
-		return new TypedRegion(0,0, "undefined");
+		Logger.log(Logger.WARNING, "An instance of MinimalDocument was asked for its partition, sometime indicating a deleted region was being accessed."); //$NON-NLS-1$
+		return new TypedRegion(0,0, "undefined"); //$NON-NLS-1$
 		//throw new NotImplementedException("intentionally not implemented"); //$NON-NLS-1$
 	}
 

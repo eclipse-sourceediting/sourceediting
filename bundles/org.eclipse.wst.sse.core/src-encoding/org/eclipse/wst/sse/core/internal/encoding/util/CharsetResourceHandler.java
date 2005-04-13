@@ -15,7 +15,6 @@ package org.eclipse.wst.sse.core.internal.encoding.util;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -31,8 +30,6 @@ public class CharsetResourceHandler {
 	 */
 	public static ResourceBundle getResourceBundle() {
 		try {
-			// TODO: rework this in terms of Platform.getPlugin(descriptor)
-			// and Location
 			URL configURI = Platform.getBundle(ICodedResourcePlugin.ID).getEntry("/"); //$NON-NLS-1$
 			String configPathString = configURI + "config/charset"; //$NON-NLS-1$
 			return ResourceBundleHelper.getResourceBundle(configPathString);
@@ -66,14 +63,5 @@ public class CharsetResourceHandler {
 			result = "!" + key + "!";//$NON-NLS-2$//$NON-NLS-1$
 		}
 		return result;
-	}
-
-	public static String getString(String key, Object[] args) {
-		try {
-			return MessageFormat.format(getString(key), args);
-		}
-		catch (IllegalArgumentException e) {
-			return getString(key);
-		}
 	}
 }

@@ -14,16 +14,16 @@ package org.eclipse.wst.sse.ui.internal.selection;
 
 import org.eclipse.jface.text.Region;
 import org.eclipse.wst.sse.core.IndexedRegion;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 import org.w3c.dom.Node;
 
 public class StructureSelectNextAction extends StructureSelectAction {
 	public StructureSelectNextAction(StructuredTextEditor editor, SelectionHistory history) {
 		super(editor, history);
-		setText(SSEUIPlugin.getResourceString("%StructureSelectNext.label")); //$NON-NLS-1$
-		setToolTipText(SSEUIPlugin.getResourceString("%StructureSelectNext.tooltip")); //$NON-NLS-1$
-		setDescription(SSEUIPlugin.getResourceString("%StructureSelectNext.description")); //$NON-NLS-1$
+		setText(SSEUIMessages.StructureSelectNext_label); //$NON-NLS-1$
+		setToolTipText(SSEUIMessages.StructureSelectNext_tooltip); //$NON-NLS-1$
+		setDescription(SSEUIMessages.StructureSelectNext_description); //$NON-NLS-1$
 	}
 
 	protected IndexedRegion getCursorIndexedRegion() {

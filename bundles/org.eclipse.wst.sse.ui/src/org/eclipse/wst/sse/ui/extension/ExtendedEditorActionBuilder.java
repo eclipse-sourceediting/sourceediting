@@ -90,7 +90,7 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 								System.out.println(getClass().getName() + "#contributeToMenu() added: " + ad.getId()); //$NON-NLS-1$
 						}
 					} catch (Exception e) {
-						Logger.logException("contributing to menu", e);
+						Logger.logException("contributing to menu", e); //$NON-NLS-1$
 					}
 				}
 			}
@@ -134,7 +134,7 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 								System.out.println(getClass().getName() + "#contributeToPopupMenu() added: " + ad.getId()); //$NON-NLS-1$
 						}
 					} catch (Exception e) {
-						Logger.logException("contributing to popup", e);
+						Logger.logException("contributing to popup", e); //$NON-NLS-1$
 					}
 				}
 			}
@@ -172,7 +172,7 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 								System.out.println(getClass().getName() + "#contributeToToolBar() added: " + ad.getId()); //$NON-NLS-1$
 						}
 					} catch (Exception e) {
-						Logger.logException("contributing to toolbar", e);
+						Logger.logException("contributing to toolbar", e); //$NON-NLS-1$
 					}
 				}
 			}
@@ -247,7 +247,7 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 						}
 						item.setVisible(visible);
 					} catch (Exception e) {
-						Logger.logException("updating actions", e);
+						Logger.logException("updating actions", e); //$NON-NLS-1$
 					}
 				}
 			}
@@ -275,7 +275,7 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 							}
 						}
 					} catch (Exception e) {
-						Logger.logException("setting active editor on actions", e);
+						Logger.logException("setting active editor on actions", e); //$NON-NLS-1$
 					}
 				}
 			}
@@ -310,7 +310,7 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 							}
 						}
 					} catch (Exception e) {
-						Logger.logException("updating toolbar actions", e);
+						Logger.logException("updating toolbar actions", e); //$NON-NLS-1$
 					}
 				}
 			}

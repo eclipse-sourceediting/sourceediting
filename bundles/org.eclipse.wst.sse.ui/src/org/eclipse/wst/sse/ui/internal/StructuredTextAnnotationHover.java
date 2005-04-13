@@ -210,7 +210,7 @@ public class StructuredTextAnnotationHover implements IAnnotationHover, IReleasa
 
 		StringBuffer buffer = new StringBuffer();
 		printer.addPageProlog(buffer);
-		printer.addParagraph(buffer, SSEUIPlugin.getResourceString("%Multiple_errors")); //$NON-NLS-1$
+		printer.addParagraph(buffer, SSEUIMessages.Multiple_errors); //$NON-NLS-1$
 
 		printer.startBulletList(buffer);
 		Iterator e = messages.iterator();

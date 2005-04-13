@@ -89,7 +89,7 @@ public class BasicStructuredDocumentFactory implements IDocumentFactory, IExecut
 	 *      java.lang.String, java.lang.Object)
 	 */
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
-		fContentTypeIdentifier = config.getAttribute("contentTypeId");
+		fContentTypeIdentifier = config.getAttribute("contentTypeId"); //$NON-NLS-1$
 		if (data != null) {
 			if (data instanceof String && data.toString().length() > 0) {
 				fContentTypeIdentifier = (String) data;

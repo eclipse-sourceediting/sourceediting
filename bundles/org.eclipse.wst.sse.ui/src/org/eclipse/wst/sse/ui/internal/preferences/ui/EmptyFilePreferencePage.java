@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 
 public class EmptyFilePreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
@@ -47,7 +48,7 @@ public class EmptyFilePreferencePage extends PreferencePage implements IWorkbenc
 	protected Control createContents(Composite parent) {
 		Composite composite = createScrolledComposite(parent);
 
-		String description = "Expand the tree to edit preferences for a specific content type.";
+		String description = SSEUIMessages.EmptyFilePreferencePage_0; //$NON-NLS-1$
 		createLabel(composite, description);
 
 		setSize(composite);

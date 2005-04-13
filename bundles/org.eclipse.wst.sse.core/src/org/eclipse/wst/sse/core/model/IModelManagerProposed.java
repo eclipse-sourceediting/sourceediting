@@ -67,7 +67,7 @@ public interface IModelManagerProposed {
 		 * For debug purposes only.
 		 */
 		public String toString() {
-			return "Model Access Type: " + fType;
+			return "Model Access Type: " + fType; //$NON-NLS-1$
 		}
 	}
 

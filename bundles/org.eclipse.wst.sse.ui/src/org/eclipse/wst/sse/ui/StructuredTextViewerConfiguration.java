@@ -63,7 +63,7 @@ import org.eclipse.wst.sse.ui.util.EditorUtility;
  */
 public class StructuredTextViewerConfiguration extends TextSourceViewerConfiguration implements IExtendedConfiguration {
 
-	private static final String CONTENT_ASSIST_PROCESSOR_EXTENDED_ID = "contentassistprocessor";
+	private static final String CONTENT_ASSIST_PROCESSOR_EXTENDED_ID = "contentassistprocessor"; //$NON-NLS-1$
 	public static final String ID = "textviewerconfiguration"; //$NON-NLS-1$
 	protected String[] configuredContentTypes;
 	protected IEditorPart editorPart;
@@ -477,7 +477,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 *            the preference store to use
 	 */
 	public void setPreferenceStore(IPreferenceStore store) {
-		Assert.isLegal(fPreferenceStore == null || fPreferenceStore == store, "TextSourceViewerConfiguration's preference store may only be set once");
+		Assert.isLegal(fPreferenceStore == null || fPreferenceStore == store, "TextSourceViewerConfiguration's preference store may only be set once"); //$NON-NLS-1$
 		fPreferenceStore = store;
 	}
 }

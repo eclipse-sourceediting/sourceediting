@@ -30,6 +30,7 @@ import org.eclipse.ui.texteditor.AnnotationPreference;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.sse.ui.internal.ITemporaryAnnotation;
+import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 /**
@@ -77,7 +78,7 @@ public class AnnotationHoverProcessor implements ITextHover {
 	protected String formatMessages(List messages) {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(PARAGRAPH_START);
-		buffer.append(SSEUIPlugin.getResourceString("%Multiple_errors")); //$NON-NLS-1$
+		buffer.append(SSEUIMessages.Multiple_errors); //$NON-NLS-1$
 		buffer.append(LIST_BEGIN);
 
 		Iterator e = messages.iterator();

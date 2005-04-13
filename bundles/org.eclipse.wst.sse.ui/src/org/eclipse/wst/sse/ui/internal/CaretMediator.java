@@ -63,7 +63,7 @@ public class CaretMediator implements Listener {
 	class RefreshDelayJob extends Job {
 		private int fDelay = 0;
 		RefreshDelayJob(int delay) {
-			super("caret update");
+			super(SSEUIMessages.caret_update); //$NON-NLS-1$
 			setSystem(true);
 			fDelay = delay;
 		}

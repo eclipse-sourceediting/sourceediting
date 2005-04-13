@@ -72,7 +72,7 @@ public class ImageUtil {
 	 */
 	public static ImageDescriptor getImageDescriptorFromBundle(Bundle bundle, String subdirectoryAndFilename) {
 
-		URL path = bundle.getEntry("/");
+		URL path = bundle.getEntry("/"); //$NON-NLS-1$
 		URL fullPathString = null;
 		try {
 			fullPathString = new URL(path, subdirectoryAndFilename);

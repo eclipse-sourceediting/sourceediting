@@ -29,7 +29,7 @@ public class PropertyChangeUpdateActionContributionItem extends ActionContributi
 		public void propertyChange(PropertyChangeEvent event) {
 			if (event.getProperty().equals(fProperty)) {
 				if (debug) {
-					System.out.println(fProperty + " preference changed, updating " + getAction());
+					System.out.println(fProperty + " preference changed, updating " + getAction()); //$NON-NLS-1$
 				}
 				((IUpdate) getAction()).update();
 			}
@@ -53,7 +53,7 @@ public class PropertyChangeUpdateActionContributionItem extends ActionContributi
 
 	public void connect() {
 		if (debug) {
-			System.out.println("PropertyChangeUpdateActionContributionItem started listening for " + fProperty);
+			System.out.println("PropertyChangeUpdateActionContributionItem started listening for " + fProperty); //$NON-NLS-1$
 		}
 		if (fStore != null) {
 			fStore.addPropertyChangeListener(fListener);
@@ -62,7 +62,7 @@ public class PropertyChangeUpdateActionContributionItem extends ActionContributi
 
 	public void disconnect() {
 		if (debug) {
-			System.out.println("PropertyChangeUpdateActionContributionItem stopped listening for " + fProperty);
+			System.out.println("PropertyChangeUpdateActionContributionItem stopped listening for " + fProperty); //$NON-NLS-1$
 		}
 		if (fStore != null) {
 			fStore.removePropertyChangeListener(fListener);

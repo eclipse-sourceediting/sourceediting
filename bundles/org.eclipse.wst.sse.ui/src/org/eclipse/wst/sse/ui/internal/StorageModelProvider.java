@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.AnnotationModel;
 import org.eclipse.jface.text.source.IAnnotationModel;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
@@ -607,7 +608,7 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 		}
 		catch (CoreException noStorageExc) {
 			if (logExceptions)
-				Logger.logException(SSEUIPlugin.getResourceString("%32concat_EXC_", new Object[]{input.getName()}), noStorageExc); //$NON-NLS-1$
+				Logger.logException(NLS.bind(SSEUIMessages._32concat_EXC_, new Object[]{input.getName()}), noStorageExc);
 		}
 
 		IStructuredModel model = null;
@@ -618,7 +619,7 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 		}
 		catch (IOException e) {
 			if (logExceptions)
-				Logger.logException(SSEUIPlugin.getResourceString("%32concat_EXC_", new Object[]{input}), e); //$NON-NLS-1$
+				Logger.logException(NLS.bind(SSEUIMessages._32concat_EXC_, new Object[]{input}), e);
 		}
 		finally {
 			if (contents != null) {

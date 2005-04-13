@@ -64,6 +64,7 @@ import org.eclipse.wst.sse.core.participants.TaskTagSeeker;
 import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.sse.ui.internal.Logger;
+import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
 
@@ -84,17 +85,17 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 			for (int i = 0; i < fTags.length; i++) {
 				if (fTags[i].equals(element)) {
 					if (fPriorities[i].intValue() == IMarker.PRIORITY_HIGH) {
-						return SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.0"); //$NON-NLS-1$
+						return SSEUIMessages.TaskTagPreferenceTab_0; //$NON-NLS-1$
 					}
 					else if (fPriorities[i].intValue() == IMarker.PRIORITY_LOW) {
-						return SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.1"); //$NON-NLS-1$
+						return SSEUIMessages.TaskTagPreferenceTab_1; //$NON-NLS-1$
 					}
 					else {
-						return SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.2"); //$NON-NLS-1$
+						return SSEUIMessages.TaskTagPreferenceTab_2; //$NON-NLS-1$
 					}
 				}
 			}
-			return SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.3"); //$NON-NLS-1$
+			return SSEUIMessages.TaskTagPreferenceTab_3; //$NON-NLS-1$
 		}
 	}
 
@@ -111,7 +112,7 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 
 		protected void configureShell(Shell newShell) {
 			super.configureShell(newShell);
-			newShell.setText(SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.5")); //$NON-NLS-1$
+			newShell.setText(SSEUIMessages.TaskTagPreferenceTab_5); //$NON-NLS-1$
 		}
 
 		protected Control createButtonBar(Composite parent) {
@@ -125,7 +126,7 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 			composite.setLayout(new GridLayout(2, false));
 			composite.setLayoutData(new GridData(GridData.FILL_BOTH));
 			Label label = new Label(composite, SWT.NONE);
-			label.setText(SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.6")); //$NON-NLS-1$
+			label.setText(SSEUIMessages.TaskTagPreferenceTab_6); //$NON-NLS-1$
 			label.setLayoutData(new GridData());
 			tagText = new Text(composite, SWT.BORDER);
 			tagText.setText(text);
@@ -137,10 +138,10 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 			});
 
 			label = new Label(composite, SWT.NONE);
-			label.setText(SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.7")); //$NON-NLS-1$
+			label.setText(SSEUIMessages.TaskTagPreferenceTab_7); //$NON-NLS-1$
 			label.setLayoutData(new GridData());
 			priorityCombo = new Combo(composite, SWT.READ_ONLY | SWT.SINGLE);
-			priorityCombo.setItems(new String[]{SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.8"), SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.9"), SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.10")}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			priorityCombo.setItems(new String[]{SSEUIMessages.TaskTagPreferenceTab_8, SSEUIMessages.TaskTagPreferenceTab_9, SSEUIMessages.TaskTagPreferenceTab_10}); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			priorityCombo.select(2 - priority);
 			priorityCombo.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 			priorityCombo.addSelectionListener(new SelectionAdapter() {
@@ -216,15 +217,15 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 
 		fEnableCheckbox = new Button(composite, SWT.CHECK);
 		fEnableCheckbox.setSelection(fEnableTaskTags);
-		fEnableCheckbox.setText(SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.31"));
+		fEnableCheckbox.setText(SSEUIMessages.TaskTagPreferenceTab_31); //$NON-NLS-1$
 		fEnableCheckbox.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER, GridData.HORIZONTAL_ALIGN_BEGINNING, false, false, 2, 1));
 
 		valueTable = new TableViewer(composite, SWT.BORDER | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL);
 		valueTable.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
 		TableColumn textColumn = new TableColumn(valueTable.getTable(), SWT.NONE, 0);
-		textColumn.setText(SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.12")); //$NON-NLS-1$
+		textColumn.setText(SSEUIMessages.TaskTagPreferenceTab_12); //$NON-NLS-1$
 		TableColumn priorityColumn = new TableColumn(valueTable.getTable(), SWT.NONE, 1);
-		priorityColumn.setText(SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.13")); //$NON-NLS-1$
+		priorityColumn.setText(SSEUIMessages.TaskTagPreferenceTab_13); //$NON-NLS-1$
 		valueTable.setContentProvider(new ArrayContentProvider());
 		valueTable.setLabelProvider(new InternalTableLabelProvider());
 		valueTable.getTable().setLinesVisible(true);
@@ -239,22 +240,22 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 		buttons.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_BEGINNING));
 
 		final Button addButton = new Button(buttons, SWT.PUSH);
-		addButton.setText(SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.14")); //$NON-NLS-1$
+		addButton.setText(SSEUIMessages.TaskTagPreferenceTab_14); //$NON-NLS-1$
 		addButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER));
 		final Button editButton = new Button(buttons, SWT.PUSH);
-		editButton.setText(SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.15")); //$NON-NLS-1$
+		editButton.setText(SSEUIMessages.TaskTagPreferenceTab_15); //$NON-NLS-1$
 		editButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER));
 		final Button removeButton = new Button(buttons, SWT.PUSH);
-		removeButton.setText(SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.16")); //$NON-NLS-1$
+		removeButton.setText(SSEUIMessages.TaskTagPreferenceTab_16); //$NON-NLS-1$
 		removeButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER));
 
 		Label spacer = new Label(buttons, SWT.NONE);
 		spacer.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER));
 		final Button upButton = new Button(buttons, SWT.PUSH);
-		upButton.setText(SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.17")); //$NON-NLS-1$
+		upButton.setText(SSEUIMessages.TaskTagPreferenceTab_17); //$NON-NLS-1$
 		upButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER));
 		final Button downButton = new Button(buttons, SWT.PUSH);
-		downButton.setText(SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.18")); //$NON-NLS-1$
+		downButton.setText(SSEUIMessages.TaskTagPreferenceTab_18); //$NON-NLS-1$
 		downButton.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_CENTER));
 
 		editButton.setEnabled(false);
@@ -264,7 +265,7 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 
 		Label warning = new Label(composite, SWT.NONE);
 		warning.setLayoutData(new GridData());
-		warning.setText(SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.19")); //$NON-NLS-1$
+		warning.setText(SSEUIMessages.TaskTagPreferenceTab_19); //$NON-NLS-1$
 
 		valueTable.addPostSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -352,7 +353,7 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 	}
 
 	public String getTitle() {
-		return SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.20"); //$NON-NLS-1$
+		return SSEUIMessages.TaskTagPreferenceTab_20; //$NON-NLS-1$
 	}
 
 	private void loadPreferenceValues() {
@@ -427,10 +428,10 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 			}
 		}
 		else if (isDirty) {
-			MessageDialog dialog = new MessageDialog(fControl.getShell(), SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.22"), fControl.getShell().getImage(), SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.23"), MessageDialog.QUESTION, new String[]{SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.24"), SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.25"), SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.26")}, 2); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+			MessageDialog dialog = new MessageDialog(fControl.getShell(), SSEUIMessages.TaskTagPreferenceTab_22, fControl.getShell().getImage(), SSEUIMessages.TaskTagPreferenceTab_23, MessageDialog.QUESTION, new String[]{SSEUIMessages.TaskTagPreferenceTab_24, SSEUIMessages.TaskTagPreferenceTab_25, SSEUIMessages.TaskTagPreferenceTab_26}, 2); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 			int button = dialog.open();
 			if (button == 0) {
-				Job buildJob = new Job(SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.27")) { //$NON-NLS-1$
+				Job buildJob = new Job(SSEUIMessages.TaskTagPreferenceTab_27) { //$NON-NLS-1$
 					public Object getAdapter(Class adapter) {
 						return null;
 					}
@@ -449,13 +450,13 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 							}
 						}
 						if (monitor.isCanceled()) {
-							status = new Status(IStatus.CANCEL, SSEUIPlugin.ID, IStatus.OK, SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.28"), null); //$NON-NLS-1$
+							status = new Status(IStatus.CANCEL, SSEUIPlugin.ID, IStatus.OK, SSEUIMessages.TaskTagPreferenceTab_28, null); //$NON-NLS-1$
 						}
 						else if (errorCount == 0) {
-							status = new Status(IStatus.OK, SSEUIPlugin.ID, IStatus.OK, SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.29"), null); //$NON-NLS-1$
+							status = new Status(IStatus.OK, SSEUIPlugin.ID, IStatus.OK, SSEUIMessages.TaskTagPreferenceTab_29, null); //$NON-NLS-1$
 						}
 						else {
-							status = new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.OK, SSEUIPlugin.getResourceString("%TaskTagPreferenceTab.30"), null); //$NON-NLS-1$
+							status = new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.OK, SSEUIMessages.TaskTagPreferenceTab_30, null); //$NON-NLS-1$
 						}
 						return status;
 					}

@@ -65,7 +65,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 		super();
 		
 		if(v == null)
-			throw new IllegalArgumentException("validator cannot be null");
+			throw new IllegalArgumentException("validator cannot be null"); //$NON-NLS-1$
 		
 		fValidator = v;
         fScope = scope;

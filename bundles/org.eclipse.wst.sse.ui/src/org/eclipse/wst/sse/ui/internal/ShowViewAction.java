@@ -91,7 +91,7 @@ public abstract class ShowViewAction extends Action {
 			try {
 				page.showView(getViewID());
 			} catch (PartInitException e) {
-				ErrorDialog.openError(window.getShell(), SSEUIPlugin.getResourceString("%ShowView.errorTitle"), //$NON-NLS-1$
+				ErrorDialog.openError(window.getShell(), SSEUIMessages.ShowView_errorTitle, //$NON-NLS-1$
 							e.getMessage(), e.getStatus());
 			}
 		}

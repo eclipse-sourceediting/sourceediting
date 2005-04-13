@@ -68,7 +68,7 @@ public class JarUtilities {
 			jarfile = new ZipFile(jarFilename);
 		}
 		catch (IOException ioExc) {
-			Logger.logException("JarUtilities: " + jarFilename, ioExc);
+			Logger.logException("JarUtilities: " + jarFilename, ioExc); //$NON-NLS-1$
 			closeJarFile(jarfile);
 		}
 
@@ -81,7 +81,7 @@ public class JarUtilities {
 						entryInputStream = jarfile.getInputStream(zentry);
 					}
 					catch (IOException ioExc) {
-						Logger.logException("JarUtilities: " + jarFilename, ioExc);
+						Logger.logException("JarUtilities: " + jarFilename, ioExc); //$NON-NLS-1$
 					}
 
 					if (entryInputStream != null) {
@@ -145,10 +145,10 @@ public class JarUtilities {
 			}
 		}
 		catch (ZipException zExc) {
-			Logger.log(Logger.WARNING, "JarUtilities ZipException: " + jarFilename + " " + zExc.getMessage());
+			Logger.log(Logger.WARNING, "JarUtilities ZipException: " + jarFilename + " " + zExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		catch (IOException ioExc) {
-			Logger.log(Logger.WARNING, "JarUtilities IOException: " + jarFilename + " " + ioExc.getMessage());
+			Logger.log(Logger.WARNING, "JarUtilities IOException: " + jarFilename + " " + ioExc.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		finally {
 			closeJarFile(jarfile);

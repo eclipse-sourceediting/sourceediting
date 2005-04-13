@@ -30,6 +30,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -48,6 +49,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
@@ -88,7 +90,7 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 		}
 	}
 
-	private static final String DELIMITER = SSEUIPlugin.getResourceString("%TextHoverPreferenceTab.delimiter"); //$NON-NLS-1$
+	private static final String DELIMITER = SSEUIMessages.TextHoverPreferenceTab_delimiter; //$NON-NLS-1$
 	private Text fDescription;
 	private Table fHoverTable;
 	private TableViewer fHoverTableViewer;
@@ -136,7 +138,7 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 		// CommonEditorPreferenceNames.EDITOR_SHOW_TEXT_HOVER_AFFORDANCE, 0);
 
 		Label label = new Label(hoverComposite, SWT.NONE);
-		label.setText(SSEUIPlugin.getResourceString("%TextHoverPreferenceTab.hoverPreferences")); //$NON-NLS-1$
+		label.setText(SSEUIMessages.TextHoverPreferenceTab_hoverPreferences); //$NON-NLS-1$
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalAlignment = GridData.BEGINNING;
 		gd.horizontalSpan = 2;
@@ -168,11 +170,11 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 		});
 
 		fNameColumn = new TableColumn(fHoverTable, SWT.NONE);
-		fNameColumn.setText(SSEUIPlugin.getResourceString("%TextHoverPreferenceTab.nameColumnTitle")); //$NON-NLS-1$
+		fNameColumn.setText(SSEUIMessages.TextHoverPreferenceTab_nameColumnTitle); //$NON-NLS-1$
 		fNameColumn.setResizable(true);
 
 		fModifierColumn = new TableColumn(fHoverTable, SWT.NONE);
-		fModifierColumn.setText(SSEUIPlugin.getResourceString("%TextHoverPreferenceTab.modifierColumnTitle")); //$NON-NLS-1$
+		fModifierColumn.setText(SSEUIMessages.TextHoverPreferenceTab_modifierColumnTitle); //$NON-NLS-1$
 		fModifierColumn.setResizable(true);
 
 		fHoverTableViewer.setUseHashlookup(true);
@@ -207,7 +209,7 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 
 		// Text field for modifier string
 		label = new Label(hoverComposite, SWT.LEFT);
-		label.setText(SSEUIPlugin.getResourceString("%TextHoverPreferenceTab.keyModifier")); //$NON-NLS-1$
+		label.setText(SSEUIMessages.TextHoverPreferenceTab_keyModifier); //$NON-NLS-1$
 		fModifierEditor = new Text(hoverComposite, SWT.BORDER);
 		gd = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
 		fModifierEditor.setLayoutData(gd);
@@ -243,11 +245,11 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 					String insertString;
 
 					if (needsPrefixDelimiter && needsPostfixDelimiter)
-						insertString = SSEUIPlugin.getResourceString("%JavaEditorHoverConfigurationBlock.insertDelimiterAndModifierAndDelimiter", new String[]{Action.findModifierString(e.stateMask)}); //$NON-NLS-1$
+						insertString = NLS.bind(SSEUIMessages.TextHoverPreferenceTab_insertDelimiterAndModifierAndDelimiter, new String[]{Action.findModifierString(e.stateMask)});
 					else if (needsPrefixDelimiter)
-						insertString = SSEUIPlugin.getResourceString("%JavaEditorHoverConfigurationBlock.insertDelimiterAndModifier", new String[]{Action.findModifierString(e.stateMask)}); //$NON-NLS-1$
+						insertString = NLS.bind(SSEUIMessages.TextHoverPreferenceTab_insertDelimiterAndModifier, new String[]{Action.findModifierString(e.stateMask)});
 					else if (needsPostfixDelimiter)
-						insertString = SSEUIPlugin.getResourceString("%JavaEditorHoverConfigurationBlock.insertModifierAndDelimiter", new String[]{Action.findModifierString(e.stateMask)}); //$NON-NLS-1$
+						insertString = NLS.bind(SSEUIMessages.TextHoverPreferenceTab_insertModifierAndDelimiter, new String[]{Action.findModifierString(e.stateMask)});
 					else
 						insertString = Action.findModifierString(e.stateMask);
 
@@ -265,7 +267,7 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 
 		// Description
 		Label descriptionLabel = new Label(hoverComposite, SWT.LEFT);
-		descriptionLabel.setText(SSEUIPlugin.getResourceString("%TextHoverPreferenceTab.description")); //$NON-NLS-1$
+		descriptionLabel.setText(SSEUIMessages.TextHoverPreferenceTab_description); //$NON-NLS-1$
 		gd = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
 		gd.horizontalSpan = 2;
 		descriptionLabel.setLayoutData(gd);
@@ -319,7 +321,7 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 	 * @see org.eclipse.wst.sse.ui.preferences.ui.IPreferenceTab#getTitle()
 	 */
 	public String getTitle() {
-		return SSEUIPlugin.getResourceString("%TextHoverPreferenceTab.title"); //$NON-NLS-1$
+		return SSEUIMessages.TextHoverPreferenceTab_title; //$NON-NLS-1$
 	}
 
 	void handleHoverListSelection() {
@@ -420,7 +422,7 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 		IStatus status = new StatusInfo();
 
 		if (hoverConfig != null && hoverConfig.isEnabled() && EditorUtility.computeStateMask(hoverConfig.getModifierString()) == -1)
-			status = new StatusInfo(IStatus.ERROR, SSEUIPlugin.getResourceString("%TextHoverPreferenceTab.modifierIsNotValid", new String[]{hoverConfig.getModifierString()})); //$NON-NLS-1$
+			status = new StatusInfo(IStatus.ERROR, NLS.bind(SSEUIMessages.TextHoverPreferenceTab_modifierIsNotValid, new String[]{hoverConfig.getModifierString()}));
 
 		int i = 0;
 		HashMap stateMasks = new HashMap(fTextHovers.length);
@@ -429,9 +431,9 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 				String label = fTextHovers[i].getLabel();
 				Integer stateMask = new Integer(EditorUtility.computeStateMask(fTextHovers[i].getModifierString()));
 				if (stateMask.intValue() == -1)
-					status = new StatusInfo(IStatus.ERROR, SSEUIPlugin.getResourceString("%TextHoverPreferenceTab.modifierIsNotValidForHover", new String[]{fTextHovers[i].getModifierString(), label})); //$NON-NLS-1$
+					status = new StatusInfo(IStatus.ERROR, NLS.bind(SSEUIMessages.TextHoverPreferenceTab_modifierIsNotValidForHover, new String[]{fTextHovers[i].getModifierString(), label}));
 				else if (stateMasks.containsKey(stateMask))
-					status = new StatusInfo(IStatus.ERROR, SSEUIPlugin.getResourceString("%TextHoverPreferenceTab.duplicateModifier", new String[]{label, (String) stateMasks.get(stateMask)})); //$NON-NLS-1$
+					status = new StatusInfo(IStatus.ERROR, NLS.bind(SSEUIMessages.TextHoverPreferenceTab_duplicateModifier, new String[]{label, (String) stateMasks.get(stateMask)}));
 				else
 					stateMasks.put(stateMask, label);
 			}

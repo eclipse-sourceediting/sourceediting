@@ -460,7 +460,7 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
                     filteredAdditions.remove(addition);
                     ignore = true;
                     if(DEBUG)
-                        System.out.println(" ~ smart process ignoring: " + removal.getPosition().getOffset());
+                        System.out.println(" ~ smart process ignoring: " + removal.getPosition().getOffset()); //$NON-NLS-1$
                     break;
                 }
             }

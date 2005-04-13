@@ -41,10 +41,8 @@ public class SupportedJavaEncoding {
 				// the value (2nd param) is the real IANA name, names are
 				// case-insensitive
 				// Japanese
-				{"X-EUC-JP", "EUC-JP"}, // EUC encoding,
-				// Japanese//$NON-NLS-2$//$NON-NLS-1$
-				{"X-SJIS", "SHIFT_JIS"}, // Shift-JIS,
-				// Japanese//$NON-NLS-2$//$NON-NLS-1$
+				{"X-EUC-JP", "EUC-JP"}, //$NON-NLS-2$//$NON-NLS-1$
+				{"X-SJIS", "SHIFT_JIS"}, //$NON-NLS-2$//$NON-NLS-1$
 				{"ANSI_X3.4-1968", "US-ASCII"}}; //$NON-NLS-1$ //$NON-NLS-2$
 	private static ArrayList ianaEncodings = null, javaEncodings = null;
 
@@ -66,23 +64,19 @@ public class SupportedJavaEncoding {
 				// getIANAEncodingName().
 				{"US-ASCII", "ASCII"}, // US ASCII//$NON-NLS-2$//$NON-NLS-1$
 				// changed to Cp1252 for MS compatibility
-				//{"ISO-8859-1", "ISO8859_1"} // ISO Latin-1
-				{"ISO-8859-1", "Cp1252"}, // ISO
-				// Latin-1//$NON-NLS-2$//$NON-NLS-1$
-				{"ISO-8859-2", "ISO8859_2"}, // Central/East European (Slavic:
-				// Czech, Croat, German,
-				// Hungarian, Polish, Romanian,
-				// Slovak,
-				// Slovenian)//$NON-NLS-2$//$NON-NLS-1$
-				{"ISO-8859-3", "ISO8859_3"}, // Southern European (Esperanto,
-				// Galician, Maltese,
-				// Turkish)//$NON-NLS-2$//$NON-NLS-1$
-				{"ISO-8859-4", "ISO8859_4"}, // Cyrillic (Estonian, Latvian,
-				// Lithuanian)//$NON-NLS-2$//$NON-NLS-1$
-				{"ISO-8859-5", "ISO8859_5"}, // Cyrillic (Bulgarian,
-				// Byelorussian, Macedonian,
-				// Serbian,
-				// Ukrainian)//$NON-NLS-2$//$NON-NLS-1$
+				// {"ISO-8859-1", "ISO8859_1"} // ISO Latin-1
+				// ISO Latin-1
+				{"ISO-8859-1", "Cp1252"}, //$NON-NLS-2$//$NON-NLS-1$
+				// Central/East European (Slavic: Czech, Croat, German,
+				// Hungarian, Polish, Romanian, Slovak, Slovenian)
+				{"ISO-8859-2", "ISO8859_2"}, //$NON-NLS-2$//$NON-NLS-1$
+				// Southern European (Esperanto, Galician, Maltese, Turkish)
+				{"ISO-8859-3", "ISO8859_3"}, //$NON-NLS-2$//$NON-NLS-1$
+				// Cyrillic (Estonian, Latvian, Lithuanian)
+				{"ISO-8859-4", "ISO8859_4"}, //$NON-NLS-2$//$NON-NLS-1$
+				// Cyrillic (Bulgarian, Byelorussian, Macedonian, Serbian,
+				// Ukrainian)
+				{"ISO-8859-5", "ISO8859_5"}, //$NON-NLS-2$//$NON-NLS-1$
 				{"ISO-8859-6", "ISO8859_6"}, // Arabic(Logical)//$NON-NLS-2$//$NON-NLS-1$
 				{"WINDOWS-1256", "Cp1256"}, // Arabic//$NON-NLS-2$//$NON-NLS-1$
 				{"ISO-8859-7", "ISO8859_7"}, // Greek//$NON-NLS-2$//$NON-NLS-1$
@@ -93,46 +87,49 @@ public class SupportedJavaEncoding {
 				{"WINDOWS-1255", "Cp1255"}, // Hebrew//$NON-NLS-2$//$NON-NLS-1$
 				{"ISO-8859-9", "ISO8859_9"}, // Turkish//$NON-NLS-2$//$NON-NLS-1$
 				// Japanese
-				{"EUC-JP", "EUC_JP"}, // EUC encoding,
-				// Japanese//$NON-NLS-2$//$NON-NLS-1$
-				{"ISO-2022-JP", "ISO2022JP"}, // ISO 2022,
-				// Japanese//$NON-NLS-2$//$NON-NLS-1$
+				// EUC encoding, Japanese
+				{"EUC-JP", "EUC_JP"}, //$NON-NLS-2$//$NON-NLS-1$
+				// ISO 2022, Japanese
+				{"ISO-2022-JP", "ISO2022JP"}, //$NON-NLS-2$//$NON-NLS-1$
 				// changed for MS compatibility
-				//{"SHIFT_JIS", "SJIS"}, // Shift-JIS, Japanese
-				{"SHIFT_JIS", "MS932"}, // Shift-JIS,
-				// Japanese//$NON-NLS-2$//$NON-NLS-1$
+				// {"SHIFT_JIS", "SJIS"}, // Shift-JIS, Japanese
+				// Shift-JIS, Japanese
+				{"SHIFT_JIS", "MS932"}, //$NON-NLS-2$//$NON-NLS-1$
 				// Korean
 				// changed for MS compatibility
-				//{"EUC-KR", "EUC_KR"}, // EUC encoding, Korean
-				{"EUC-KR", "MS949"}, // EUC encoding,
-				// Korean//$NON-NLS-2$//$NON-NLS-1$
-				{"ISO-2022-KR", "ISO2022KR"}, // ISO 2022,
-				// Korean//$NON-NLS-2$//$NON-NLS-1$
+				// {"EUC-KR", "EUC_KR"}, // EUC encoding, Korean
+				// EUC encoding, Korean
+				{"EUC-KR", "MS949"}, //$NON-NLS-2$//$NON-NLS-1$
+				// ISO 2022, Korean
+				{"ISO-2022-KR", "ISO2022KR"}, //$NON-NLS-2$//$NON-NLS-1$
 				// Traditional Chinese
 				// changed for MS compatibility
-				//{"BIG5", "Big5"}, // Big5, Traditional Chinese
-				{"BIG5", "MS950"}, // Big5, Traditional
-				// Chinese//$NON-NLS-2$//$NON-NLS-1$
+				// {"BIG5", "Big5"}, // Big5, Traditional Chinese
+				// Big5, Traditional Chinese
+				{"BIG5", "MS950"}, //$NON-NLS-2$//$NON-NLS-1$
 				// Simplified Chinese(Use IANA MIME preferred name)
-				//{"GB_2312-80", "GBK"}, // GBK, Simplified Chinese
-				{"GB2312", "MS936"}, // GBK, Simplified
-				// Chinese//$NON-NLS-2$//$NON-NLS-1$
-				{"GB18030", "GB18030"}, // GB18030, new Chinese encoding
-				// //$NON-NLS-1$ //$NON-NLS-2$
+				// {"GB_2312-80", "GBK"}, // GBK, Simplified Chinese
+				// GBK, Simplified Chinese
+				{"GB2312", "MS936"}, //$NON-NLS-2$//$NON-NLS-1$
+				// GB18030, new Chinese encoding
+				{"GB18030", "GB18030"}, //$NON-NLS-1$ //$NON-NLS-2$
 				// Thai
-				{"TIS-620", "TIS620"}, // Thai. Thai Industrial Standards
-				// Institute(TISI)//$NON-NLS-2$//$NON-NLS-1$
-				{"WINDOWS-874", "MS874"}, // Microsoft
-				// Thai//$NON-NLS-2$//$NON-NLS-1$
+				// Thai. Thai Industrial Standards
+				// Institute(TISI)
+				{"TIS-620", "TIS620"}, //$NON-NLS-2$//$NON-NLS-1$
+				// Microsoft Thai
+				{"WINDOWS-874", "MS874"}, //$NON-NLS-2$//$NON-NLS-1$
 				// Unicode
-				{"UTF-8", "UTF8"}, // ISO 10646/Unicode, one-byte
-				// encoding//$NON-NLS-2$//$NON-NLS-1$
-				{"UTF-16", "UnicodeBig"}, // ISO 10646/Unicode, two-byte
-				// encoding//$NON-NLS-2$//$NON-NLS-1$
-				{"UTF-16BE", "UnicodeBig"}, // Unicode
-				// BigEndian//$NON-NLS-2$//$NON-NLS-1$
-				{"UTF-16LE", "UnicodeLittle"} // Unicode
-	// LittleEndian//$NON-NLS-2$//$NON-NLS-1$
+				// ISO 10646/Unicode, one-byte
+				// encoding
+				{"UTF-8", "UTF8"}, //$NON-NLS-2$//$NON-NLS-1$
+				// ISO 10646/Unicode, two-byte
+				// encoding
+				{"UTF-16", "UnicodeBig"},//$NON-NLS-2$//$NON-NLS-1$
+				// Unicode BigEndian
+				{"UTF-16BE", "UnicodeBig"}, //$NON-NLS-2$//$NON-NLS-1$
+				// Unicode LittleEndian
+				{"UTF-16LE", "UnicodeLittle"} //$NON-NLS-2$//$NON-NLS-1$
 	};
 	private static Hashtable supportedAliasNames = null;
 	private static Hashtable supportedEncodingDisplayNames = null;
@@ -184,7 +181,8 @@ public class SupportedJavaEncoding {
 	 * Convert IANA encoding name to Java Converter Name.
 	 */
 	public String getJavaConverterName(String iana) {
-		String iana_name = getUniquefromAlias(iana); // to see if iana is an
+		String iana_name = getUniquefromAlias(iana); // to see if iana is
+		// an
 		// alias
 		if (iana_name != null) {
 			return ((String) supportedEncodingNames.get(iana_name.toUpperCase()));

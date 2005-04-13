@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
+import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.preferences.TabFolderLayout;
 
 public class FilePreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
@@ -52,7 +52,7 @@ public class FilePreferencePage extends PreferencePage implements IWorkbenchPref
 	protected Control createContents(Composite parent) {
 		Composite composite = createComposite(parent, 1);
 
-		String description = SSEUIPlugin.getResourceString("%FilePreferencePage.0"); //$NON-NLS-1$
+		String description = SSEUIMessages.FilePreferencePage_0; //$NON-NLS-1$
 		createLabel(composite, description);
 		createLabel(composite, ""); //$NON-NLS-1$
 

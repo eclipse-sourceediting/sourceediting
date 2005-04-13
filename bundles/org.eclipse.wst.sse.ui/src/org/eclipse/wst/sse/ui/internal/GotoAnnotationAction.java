@@ -84,10 +84,10 @@ public class GotoAnnotationAction extends TextEditorAction {
 	 * @param editor
 	 */
 	public GotoAnnotationAction(String prefix, boolean forward) {
-		super(SSEUIPlugin.getDefault().getResourceBundle(), prefix, null);
+		super(SSEUIMessages.getResourceBundle(), prefix, null);
 		fForward = forward;
 		fPrefix = prefix;
-		fLabel = SSEUIPlugin.getResourceString("%" + fPrefix);
+		fLabel = SSEUIMessages.getResourceBundle().getString(fPrefix);
 	}
 
 	/*

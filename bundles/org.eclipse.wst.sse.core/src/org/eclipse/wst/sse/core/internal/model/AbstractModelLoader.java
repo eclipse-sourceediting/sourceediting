@@ -71,7 +71,7 @@ public abstract class AbstractModelLoader implements IModelLoader {
 	protected void addFactories(IStructuredModel model, List factoryList) {
 		Assert.isNotNull(model);
 		FactoryRegistry registry = model.getFactoryRegistry();
-		Assert.isNotNull(registry, "IStructuredModel " + model.getId() + " has a null FactoryRegistry");
+		Assert.isNotNull(registry, "IStructuredModel " + model.getId() + " has a null FactoryRegistry"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (factoryList != null) {
 			Iterator iterator = factoryList.iterator();
 			while (iterator.hasNext()) {
@@ -261,7 +261,7 @@ public abstract class AbstractModelLoader implements IModelLoader {
 		long memoryUsed = 0;
 		if (DEBUG) {
 			memoryUsed = computeMem();
-			System.out.println("measuring heap memory for " + filename);
+			System.out.println("measuring heap memory for " + filename); //$NON-NLS-1$
 			//System.out.println("heap memory used before load: " +
 			// memoryUsed);
 		}
@@ -281,7 +281,7 @@ public abstract class AbstractModelLoader implements IModelLoader {
 			long memoryAtEnd = computeMem();
 			//System.out.println("heap memory used after loading new
 			// document: " + memoryAtEnd);
-			System.out.println("    heap memory implied used by document: " + (memoryAtEnd - memoryUsed));
+			System.out.println("    heap memory implied used by document: " + (memoryAtEnd - memoryUsed)); //$NON-NLS-1$
 		}
 
 
@@ -305,7 +305,7 @@ public abstract class AbstractModelLoader implements IModelLoader {
 			long memoryAtEnd = computeMem();
 			//System.out.println("heap memory used after setting to model: "
 			// + memoryAtEnd);
-			System.out.println("    heap memory implied used by document and model: " + (memoryAtEnd - memoryUsed));
+			System.out.println("    heap memory implied used by document and model: " + (memoryAtEnd - memoryUsed)); //$NON-NLS-1$
 		}
 
 	}

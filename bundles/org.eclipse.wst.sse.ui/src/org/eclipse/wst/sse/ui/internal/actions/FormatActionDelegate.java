@@ -25,10 +25,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.sse.core.internal.exceptions.MalformedInputExceptionWithDetail;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
 import org.eclipse.wst.sse.ui.extension.FormatProcessorsExtensionReader;
 import org.eclipse.wst.sse.ui.internal.Logger;
+import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 public class FormatActionDelegate extends ResourceActionDelegate {
@@ -99,7 +101,7 @@ public class FormatActionDelegate extends ResourceActionDelegate {
 
 			if (fErrorStatus.getChildren().length > 0) {
 				status = fErrorStatus;
-				fErrorStatus = new MultiStatus(SSEUIPlugin.ID, IStatus.ERROR, SSEUIPlugin.getResourceString("%FormatActionDelegate.errorStatusMessage"), null); //$NON-NLS-1$
+				fErrorStatus = new MultiStatus(SSEUIPlugin.ID, IStatus.ERROR, SSEUIMessages.FormatActionDelegate_errorStatusMessage, null); //$NON-NLS-1$
 			}
 
 			return status;
@@ -107,7 +109,7 @@ public class FormatActionDelegate extends ResourceActionDelegate {
 
 	}
 
-	private MultiStatus fErrorStatus = new MultiStatus(SSEUIPlugin.ID, IStatus.ERROR, SSEUIPlugin.getResourceString("%FormatActionDelegate.errorStatusMessage"), null); //$NON-NLS-1$
+	private MultiStatus fErrorStatus = new MultiStatus(SSEUIPlugin.ID, IStatus.ERROR, SSEUIMessages.FormatActionDelegate_errorStatusMessage, null); //$NON-NLS-1$
 
 	protected void format(IProgressMonitor monitor, IFile file) {
 		try {
@@ -119,19 +121,19 @@ public class FormatActionDelegate extends ResourceActionDelegate {
 			IContentType contentType = contentDescription.getContentType();
 			IStructuredFormatProcessor formatProcessor = getFormatProcessor(contentType.getId());
 			if (formatProcessor != null && (monitor == null || !monitor.isCanceled())) {
-				String message = SSEUIPlugin.getResourceString("%FormatActionDelegate.3", new String[]{file.getFullPath().toString()}); //$NON-NLS-1$
+				String message = NLS.bind(SSEUIMessages.FormatActionDelegate_3, new String[]{file.getFullPath().toString()});
 				monitor.subTask(message);
 				formatProcessor.setProgressMonitor(monitor);
 				formatProcessor.formatFile(file);
 			}
 		} catch (MalformedInputExceptionWithDetail e) {
-			String message = SSEUIPlugin.getResourceString("%FormatActionDelegate.5", new String[]{file.getFullPath().toString()}); //$NON-NLS-1$
+			String message = NLS.bind(SSEUIMessages.FormatActionDelegate_5, new String[]{file.getFullPath().toString()});
 			fErrorStatus.add(new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.ERROR, message, e));
 		} catch (IOException e) {
-			String message = SSEUIPlugin.getResourceString("%FormatActionDelegate.4", new String[]{file.getFullPath().toString()}); //$NON-NLS-1$
+			String message = NLS.bind(SSEUIMessages.FormatActionDelegate_4, new String[]{file.getFullPath().toString()});
 			fErrorStatus.add(new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.ERROR, message, e));
 		} catch (CoreException e) {
-			String message = SSEUIPlugin.getResourceString("%FormatActionDelegate.4", new String[]{file.getFullPath().toString()}); //$NON-NLS-1$
+			String message = NLS.bind(SSEUIMessages.FormatActionDelegate_4, new String[]{file.getFullPath().toString()});
 			fErrorStatus.add(new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.ERROR, message, e));
 		}
 	}
@@ -152,7 +154,7 @@ public class FormatActionDelegate extends ResourceActionDelegate {
 						format(monitor, members[i]);
 				}
 			} catch (CoreException e) {
-				String message = SSEUIPlugin.getResourceString("%FormatActionDelegate.4", new String[]{resource.getFullPath().toString()}); //$NON-NLS-1$
+				String message = NLS.bind(SSEUIMessages.FormatActionDelegate_4, new String[]{resource.getFullPath().toString()});
 				fErrorStatus.add(new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.ERROR, message, e));
 			}
 		}
@@ -163,7 +165,7 @@ public class FormatActionDelegate extends ResourceActionDelegate {
 	}
 
 	protected Job getJob() {
-		return new FormatJob(SSEUIPlugin.getResourceString("%FormatActionDelegate.jobName")); //$NON-NLS-1$
+		return new FormatJob(SSEUIMessages.FormatActionDelegate_jobName); //$NON-NLS-1$
 	}
 
 	/*
@@ -178,7 +180,7 @@ public class FormatActionDelegate extends ResourceActionDelegate {
 		try {
 			resource.refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (CoreException e) {
-			String message = SSEUIPlugin.getResourceString("%FormatActionDelegate.4", new String[]{resource.getFullPath().toString()}); //$NON-NLS-1$
+			String message = NLS.bind(SSEUIMessages.FormatActionDelegate_4, new String[]{resource.getFullPath().toString()});
 			fErrorStatus.add(new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.ERROR, message, e));
 		}
 	}
