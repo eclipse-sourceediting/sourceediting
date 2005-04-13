@@ -69,9 +69,9 @@ import org.eclipse.wst.sse.ui.taginfo.TextHoverManager;
 import org.eclipse.wst.sse.ui.util.EditorUtility;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
-import org.eclipse.wst.xml.ui.doubleclick.XMLDoubleClickStrategy;
 import org.eclipse.wst.xml.ui.internal.autoedit.StructuredAutoEditStrategyXML;
 import org.eclipse.wst.xml.ui.internal.correction.CorrectionProcessorXML;
+import org.eclipse.wst.xml.ui.internal.doubleclick.XMLDoubleClickStrategy;
 import org.eclipse.wst.xml.ui.reconcile.StructuredTextReconcilingStrategyForMarkup;
 
 public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerConfiguration {

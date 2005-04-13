@@ -17,8 +17,8 @@ import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.ui.style.LineStyleProvider;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
-import org.eclipse.wst.xml.ui.style.IStyleConstantsXML;
-import org.eclipse.wst.xml.ui.style.LineStyleProviderForXML;
+import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
+import org.eclipse.wst.xml.ui.internal.style.LineStyleProviderForXML;
 
 public class LineStyleProviderForHTML extends LineStyleProviderForXML implements LineStyleProvider {
 

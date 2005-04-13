@@ -33,11 +33,11 @@ import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
 import org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration;
-import org.eclipse.wst.xml.ui.dnd.XMLDragAndDropManager;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
 import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
+import org.eclipse.wst.xml.ui.internal.dnd.XMLDragAndDropManager;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
 

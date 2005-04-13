@@ -86,13 +86,13 @@ import org.eclipse.wst.sse.ui.taginfo.TextHoverManager;
 import org.eclipse.wst.sse.ui.util.EditorUtility;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
-import org.eclipse.wst.xml.ui.doubleclick.XMLDoubleClickStrategy;
 import org.eclipse.wst.xml.ui.internal.correction.CorrectionProcessorXML;
+import org.eclipse.wst.xml.ui.internal.doubleclick.XMLDoubleClickStrategy;
+import org.eclipse.wst.xml.ui.internal.style.LineStyleProviderForXML;
+import org.eclipse.wst.xml.ui.internal.taginfo.XMLBestMatchHoverProcessor;
+import org.eclipse.wst.xml.ui.internal.taginfo.XMLInformationProvider;
+import org.eclipse.wst.xml.ui.internal.taginfo.XMLTagInfoHoverProcessor;
 import org.eclipse.wst.xml.ui.reconcile.StructuredTextReconcilingStrategyForMarkup;
-import org.eclipse.wst.xml.ui.style.LineStyleProviderForXML;
-import org.eclipse.wst.xml.ui.taginfo.XMLBestMatchHoverProcessor;
-import org.eclipse.wst.xml.ui.taginfo.XMLInformationProvider;
-import org.eclipse.wst.xml.ui.taginfo.XMLTagInfoHoverProcessor;
 
 public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerConfiguration {
 

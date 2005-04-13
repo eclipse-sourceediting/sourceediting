@@ -26,9 +26,9 @@ import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
-import org.eclipse.wst.xml.ui.preferences.EncodingSettings;
-import org.eclipse.wst.xml.ui.preferences.WorkbenchDefaultEncodingSettings;
-import org.eclipse.wst.xml.ui.preferences.XMLFilesPreferencePage;
+import org.eclipse.wst.xml.ui.internal.preferences.EncodingSettings;
+import org.eclipse.wst.xml.ui.internal.preferences.WorkbenchDefaultEncodingSettings;
+import org.eclipse.wst.xml.ui.internal.preferences.XMLFilesPreferencePage;
 
 public class HTMLFilesPreferencePage extends XMLFilesPreferencePage {
 	private WorkbenchDefaultEncodingSettings fInputEncodingSettings = null;

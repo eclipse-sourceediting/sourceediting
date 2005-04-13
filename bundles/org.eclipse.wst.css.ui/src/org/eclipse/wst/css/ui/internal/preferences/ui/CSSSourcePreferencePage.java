@@ -26,7 +26,7 @@ import org.eclipse.wst.css.ui.internal.CSSUIMessages;
 import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.css.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
-import org.eclipse.wst.xml.ui.preferences.XMLSourcePreferencePage;
+import org.eclipse.wst.xml.ui.internal.preferences.XMLSourcePreferencePage;
 
 /**
  */

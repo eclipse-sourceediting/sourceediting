@@ -17,7 +17,7 @@ import org.eclipse.wst.html.core.internal.contentmodel.HTMLElementDeclaration;
 import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
-import org.eclipse.wst.xml.ui.contentassist.XMLContentModelGenerator;
+import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentModelGenerator;
 import org.w3c.dom.Node;
 
 public class HTMLMinimalContentModelGenerator extends XMLContentModelGenerator {

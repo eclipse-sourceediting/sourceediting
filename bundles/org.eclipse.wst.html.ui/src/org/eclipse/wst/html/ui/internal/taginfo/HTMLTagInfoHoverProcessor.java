@@ -12,7 +12,7 @@ package org.eclipse.wst.html.ui.internal.taginfo;
 
 
 
-import org.eclipse.wst.xml.ui.taginfo.XMLTagInfoHoverProcessor;
+import org.eclipse.wst.xml.ui.internal.taginfo.XMLTagInfoHoverProcessor;
 
 /**
  * Provides hover help documentation for HTML tags

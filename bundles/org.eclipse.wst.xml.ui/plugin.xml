@@ -62,11 +62,11 @@
             target="org.eclipse.core.runtime.xml"/>
       <configuration
       		type="sourceeditingtexttools"
-            class="org.eclipse.wst.xml.ui.extensions.XMLSourceEditingTextTools"
+            class="org.eclipse.wst.xml.ui.XMLSourceEditingTextTools"
             target="org.eclipse.core.runtime.xml"/>
       <configuration
       		type="characterpairmatcher"
-            class="org.eclipse.wst.xml.ui.text.XMLDocumentRegionEdgeMatcher"
+            class="org.eclipse.wst.xml.ui.internal.text.XMLDocumentRegionEdgeMatcher"
             target="org.eclipse.core.runtime.xml"/>
       <configuration
       		type="structuredtextfoldingprovider"
@@ -98,14 +98,14 @@
    <extension
          point="org.eclipse.wst.sse.ui.adapterFactoryDescription">
       <adapterFactoryDescription
-            class="org.eclipse.wst.xml.ui.registry.AdapterFactoryProviderForXML">
+            class="org.eclipse.wst.xml.ui.internal.registry.AdapterFactoryProviderForXML">
             <contentType id="org.eclipse.core.runtime.xml"/>
       </adapterFactoryDescription>
    </extension>
    <extension
          point="org.eclipse.wst.sse.ui.embeddedAdapterFactoryProvider">
       <embeddedAdapterFactoryProvider
-            class="org.eclipse.wst.xml.ui.registry.AdapterFactoryProviderForEmbeddedXML">
+            class="org.eclipse.wst.xml.ui.internal.registry.AdapterFactoryProviderForEmbeddedXML">
       </embeddedAdapterFactoryProvider>
    </extension>
    <extension
@@ -114,25 +114,25 @@
       <page
             name="%XML_Files.name"
             category="org.eclipse.wst.sse.ui.preferences"
-            class="org.eclipse.wst.xml.ui.preferences.XMLFilesPreferencePage"
+            class="org.eclipse.wst.xml.ui.internal.preferences.XMLFilesPreferencePage"
             id="org.eclipse.wst.sse.ui.preferences.xml">
       </page>
       <page
             name="%XML_Source.name"
             category="org.eclipse.wst.sse.ui.preferences.xml"
-            class="org.eclipse.wst.xml.ui.preferences.XMLSourcePreferencePage"
+            class="org.eclipse.wst.xml.ui.internal.preferences.XMLSourcePreferencePage"
             id="org.eclipse.wst.sse.ui.preferences.xml.source">
       </page>
       <page
             name="%XML_Templates.name"
             category="org.eclipse.wst.sse.ui.preferences.xml"
-            class="org.eclipse.wst.xml.ui.preferences.XMLTemplatePreferencePage"
+            class="org.eclipse.wst.xml.ui.internal.preferences.XMLFilesPreferencePage"
             id="org.eclipse.wst.sse.ui.preferences.xml.templates">
       </page>
       <page
             name="%XML_Styles.name"
             category="org.eclipse.wst.sse.ui.preferences.xml"
-            class="org.eclipse.wst.xml.ui.preferences.XMLColorPage"
+            class="org.eclipse.wst.xml.ui.internal.preferences.XMLColorPage"
             id="org.eclipse.wst.sse.ui.preferences.xml.colors">
       </page>
    </extension>

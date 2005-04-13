@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.internal.style;
 
-import org.eclipse.wst.xml.ui.style.IStyleConstantsXML;
+import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
 
 /**
  * Contains the symbolic name of styles used by LineStyleProvider, ColorManager, and

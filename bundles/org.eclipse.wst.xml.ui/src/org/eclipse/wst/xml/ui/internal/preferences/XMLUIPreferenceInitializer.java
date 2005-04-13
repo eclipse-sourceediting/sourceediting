@@ -4,7 +4,7 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.wst.sse.ui.preferences.ui.ColorHelper;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
-import org.eclipse.wst.xml.ui.style.IStyleConstantsXML;
+import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
 
 /**
  * Sets default values for XML UI preferences

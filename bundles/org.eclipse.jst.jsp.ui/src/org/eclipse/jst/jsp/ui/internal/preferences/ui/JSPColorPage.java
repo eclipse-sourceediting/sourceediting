@@ -31,8 +31,8 @@ import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore.OverlayKey;
 import org.eclipse.wst.sse.ui.preferences.ui.StyledTextColorPicker;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
-import org.eclipse.wst.xml.ui.preferences.XMLColorPage;
-import org.eclipse.wst.xml.ui.style.IStyleConstantsXML;
+import org.eclipse.wst.xml.ui.internal.preferences.XMLColorPage;
+import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
 
 public class JSPColorPage extends XMLColorPage {
 

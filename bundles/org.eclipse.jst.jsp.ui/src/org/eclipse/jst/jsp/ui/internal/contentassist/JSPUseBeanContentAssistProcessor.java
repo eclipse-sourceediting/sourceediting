@@ -22,7 +22,7 @@ import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
-import org.eclipse.wst.xml.ui.contentassist.ContentAssistRequest;
+import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 
 /**
  * @since 1.0

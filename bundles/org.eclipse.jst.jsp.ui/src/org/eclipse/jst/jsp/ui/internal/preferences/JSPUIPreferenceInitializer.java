@@ -5,7 +5,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.wst.html.ui.internal.style.IStyleConstantsHTML;
 import org.eclipse.wst.sse.ui.preferences.ui.ColorHelper;
-import org.eclipse.wst.xml.ui.style.IStyleConstantsXML;
+import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
 
 /**
  * Sets default values for JSP UI preferences

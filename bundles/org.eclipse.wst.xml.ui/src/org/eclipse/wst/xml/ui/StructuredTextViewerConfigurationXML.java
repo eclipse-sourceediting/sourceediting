@@ -51,17 +51,17 @@ import org.eclipse.wst.sse.ui.util.EditorUtility;
 import org.eclipse.wst.xml.core.internal.provisional.format.FormatProcessorXML;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
-import org.eclipse.wst.xml.ui.contentassist.NoRegionContentAssistProcessor;
-import org.eclipse.wst.xml.ui.contentassist.XMLContentAssistProcessor;
-import org.eclipse.wst.xml.ui.doubleclick.XMLDoubleClickStrategy;
 import org.eclipse.wst.xml.ui.internal.autoedit.StructuredAutoEditStrategyXML;
+import org.eclipse.wst.xml.ui.internal.contentassist.NoRegionContentAssistProcessor;
+import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.correction.CorrectionProcessorXML;
+import org.eclipse.wst.xml.ui.internal.doubleclick.XMLDoubleClickStrategy;
 import org.eclipse.wst.xml.ui.internal.hyperlink.XMLHyperlinkDetector;
+import org.eclipse.wst.xml.ui.internal.style.LineStyleProviderForXML;
+import org.eclipse.wst.xml.ui.internal.taginfo.XMLBestMatchHoverProcessor;
+import org.eclipse.wst.xml.ui.internal.taginfo.XMLInformationProvider;
+import org.eclipse.wst.xml.ui.internal.taginfo.XMLTagInfoHoverProcessor;
 import org.eclipse.wst.xml.ui.reconcile.StructuredTextReconcilingStrategyForMarkup;
-import org.eclipse.wst.xml.ui.style.LineStyleProviderForXML;
-import org.eclipse.wst.xml.ui.taginfo.XMLBestMatchHoverProcessor;
-import org.eclipse.wst.xml.ui.taginfo.XMLInformationProvider;
-import org.eclipse.wst.xml.ui.taginfo.XMLTagInfoHoverProcessor;
 
 /**
  * This class provides

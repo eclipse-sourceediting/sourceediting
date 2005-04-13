@@ -5,7 +5,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.style.IStyleConstantsHTML;
 import org.eclipse.wst.sse.ui.preferences.ui.ColorHelper;
-import org.eclipse.wst.xml.ui.style.IStyleConstantsXML;
+import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
 
 /**
  * Sets default values for HTML UI preferences

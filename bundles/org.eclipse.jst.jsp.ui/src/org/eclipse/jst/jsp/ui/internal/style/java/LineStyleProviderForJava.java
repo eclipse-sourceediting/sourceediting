@@ -30,7 +30,7 @@ import org.eclipse.wst.html.ui.internal.style.IStyleConstantsHTML;
 import org.eclipse.wst.sse.ui.style.AbstractLineStyleProvider;
 import org.eclipse.wst.sse.ui.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.util.EditorUtility;
-import org.eclipse.wst.xml.ui.style.IStyleConstantsXML;
+import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
 import org.w3c.dom.Node;
 
 // Note: many of the methods in this class were based on (or copied from) those

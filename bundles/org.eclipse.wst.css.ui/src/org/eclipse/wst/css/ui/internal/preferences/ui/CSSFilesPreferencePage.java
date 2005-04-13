@@ -16,7 +16,7 @@ import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.css.ui.internal.editor.IHelpContextIds;
-import org.eclipse.wst.xml.ui.preferences.XMLFilesPreferencePage;
+import org.eclipse.wst.xml.ui.internal.preferences.XMLFilesPreferencePage;
 
 public class CSSFilesPreferencePage extends XMLFilesPreferencePage {
 	/*
