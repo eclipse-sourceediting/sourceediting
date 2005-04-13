@@ -13,7 +13,7 @@
 package org.eclipse.wst.xml.core.internal.validate;
 
 import org.eclipse.wst.sse.core.IndexedRegion;
-import org.eclipse.wst.sse.core.validate.ValidationAdapter;
+import org.eclipse.wst.sse.core.internal.validate.ValidationAdapter;
 import org.w3c.dom.Node;
 
 

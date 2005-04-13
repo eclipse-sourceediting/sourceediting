@@ -15,7 +15,7 @@ import java.util.Hashtable;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.html.core.internal.HTMLCoreMessages;
 import org.eclipse.wst.html.core.internal.Logger;
-import org.eclipse.wst.sse.core.validate.ValidationMessage;
+import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 import org.w3c.dom.Node;
 
 class MessageFactory implements ErrorState {

@@ -14,8 +14,8 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import org.eclipse.wst.sse.core.IndexedRegion;
-import org.eclipse.wst.sse.core.validate.ValidationAdapter;
-import org.eclipse.wst.sse.core.validate.ValidationReporter;
+import org.eclipse.wst.sse.core.internal.validate.ValidationAdapter;
+import org.eclipse.wst.sse.core.internal.validate.ValidationReporter;
 import org.eclipse.wst.xml.core.internal.validate.ValidationComponent;
 
 abstract class CompositeValidator extends ValidationComponent {

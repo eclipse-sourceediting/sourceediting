@@ -16,7 +16,7 @@ import org.eclipse.wst.sse.core.AbstractAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.sse.core.validate.ValidationAdapter;
+import org.eclipse.wst.sse.core.internal.validate.ValidationAdapter;
 import org.w3c.dom.Node;
 
 public class HTMLValidationAdapterFactory extends AbstractAdapterFactory {

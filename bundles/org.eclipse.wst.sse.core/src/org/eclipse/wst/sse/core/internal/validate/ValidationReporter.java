@@ -10,22 +10,15 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.validate;
+package org.eclipse.wst.sse.core.internal.validate;
 
 
-
-import org.eclipse.wst.sse.core.INodeAdapter;
-import org.eclipse.wst.sse.core.IndexedRegion;
 
 /**
  */
-public interface ValidationAdapter extends INodeAdapter {
+public interface ValidationReporter {
 
 	/**
 	 */
-	void setReporter(ValidationReporter reporter);
-
-	/**
-	 */
-	void validate(IndexedRegion node);
+	void report(ValidationMessage message);
 }

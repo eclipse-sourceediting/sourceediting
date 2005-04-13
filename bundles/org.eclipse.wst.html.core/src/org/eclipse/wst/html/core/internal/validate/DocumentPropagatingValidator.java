@@ -12,8 +12,8 @@ package org.eclipse.wst.html.core.internal.validate;
 
 
 import org.eclipse.wst.sse.core.IndexedRegion;
-import org.eclipse.wst.sse.core.validate.ValidationAdapter;
-import org.eclipse.wst.sse.core.validate.ValidationReporter;
+import org.eclipse.wst.sse.core.internal.validate.ValidationAdapter;
+import org.eclipse.wst.sse.core.internal.validate.ValidationReporter;
 import org.eclipse.wst.xml.core.internal.validate.AbstractPropagatingValidator;
 import org.eclipse.wst.xml.core.internal.validate.ValidationComponent;
 
