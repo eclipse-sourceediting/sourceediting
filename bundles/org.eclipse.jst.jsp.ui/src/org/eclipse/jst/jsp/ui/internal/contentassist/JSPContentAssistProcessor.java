@@ -603,10 +603,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 
 		// check the actual partition type
 		String partitionType = getPartitionType((StructuredTextViewer) viewer, documentPosition);
-		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(viewer.getDocument());
-		IStructuredDocument structuredDocument = sModel.getStructuredDocument();
-		sModel.releaseFromRead();
-
+		IStructuredDocument structuredDocument = (IStructuredDocument)viewer.getDocument();
+		
 		IStructuredDocumentRegion fn = structuredDocument.getRegionAtCharacterOffset(documentPosition);
 
 		// ////////////////////////////////////////////////////////////////////////////
