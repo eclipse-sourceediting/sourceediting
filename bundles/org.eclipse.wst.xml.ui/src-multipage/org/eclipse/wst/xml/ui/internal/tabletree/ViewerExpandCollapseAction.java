@@ -11,8 +11,6 @@ package org.eclipse.wst.xml.ui.internal.tabletree;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
-import org.eclipse.wst.xml.internal.ui.XMLEditorPluginImageHelper;
-import org.eclipse.wst.xml.internal.ui.XMLEditorPluginImages;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 public class ViewerExpandCollapseAction extends Action {

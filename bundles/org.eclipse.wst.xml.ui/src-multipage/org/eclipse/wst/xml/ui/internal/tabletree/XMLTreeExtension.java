@@ -22,7 +22,6 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDescriptionBuilder;
-import org.eclipse.wst.xml.internal.ui.XMLEditorMessages;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 

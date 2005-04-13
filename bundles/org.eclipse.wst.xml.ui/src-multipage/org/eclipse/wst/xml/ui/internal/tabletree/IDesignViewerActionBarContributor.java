@@ -6,21 +6,14 @@
  * 
  * Contributors: IBM Corporation - initial API and implementation
  ****************************************************************************/
-package org.eclipse.wst.xml.internal.ui;
+package org.eclipse.wst.xml.ui.internal.tabletree;
 
 
 
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.ui.internal.ViewerSelectionManager;
+import org.eclipse.ui.IActionBars;
+import org.eclipse.wst.sse.ui.internal.ISourceViewerActionBarContributor;
 
 
-public interface IDesignViewer {
-	public Control getControl();
-
-	String getTitle();
-
-	void setModel(IStructuredModel model);
-
-	void setViewerSelectionManager(ViewerSelectionManager viewerSelectionManager);
+public interface IDesignViewerActionBarContributor extends ISourceViewerActionBarContributor {
+	public void initViewerSpecificContributions(IActionBars bars);
 }

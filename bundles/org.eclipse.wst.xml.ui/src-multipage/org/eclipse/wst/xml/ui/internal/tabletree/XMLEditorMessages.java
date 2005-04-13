@@ -7,7 +7,7 @@
  * Contributors: 
  * IBM - Initial API and implementation
  **********************************************************************/
-package org.eclipse.wst.xml.internal.ui;
+package org.eclipse.wst.xml.ui.internal.tabletree;
 
 import org.eclipse.osgi.util.NLS;
 

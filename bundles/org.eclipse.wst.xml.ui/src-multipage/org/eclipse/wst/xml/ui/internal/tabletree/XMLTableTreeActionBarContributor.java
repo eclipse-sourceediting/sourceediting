@@ -33,10 +33,6 @@ import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.CMDocumentLoader;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.InferredGrammarBuildingCMDocumentLoader;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
-import org.eclipse.wst.xml.internal.ui.IDesignViewer;
-import org.eclipse.wst.xml.internal.ui.IDesignViewerActionBarContributor;
-import org.eclipse.wst.xml.internal.ui.XMLEditorMessages;
-import org.eclipse.wst.xml.internal.ui.XMLMultiPageEditorPart;
 import org.eclipse.wst.xml.ui.util.SharedXMLEditorPluginImageHelper;
 import org.w3c.dom.Document;
 

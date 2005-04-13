@@ -6,14 +6,13 @@
  * 
  * Contributors: IBM Corporation - initial API and implementation
  ****************************************************************************/
-package org.eclipse.wst.xml.internal.ui;
+package org.eclipse.wst.xml.ui.internal.tabletree;
 
 
 
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.sse.ui.internal.ISourceViewerActionBarContributor;
-import org.eclipse.wst.xml.ui.internal.tabletree.XMLTableTreeActionBarContributor;
 
 
 public class XMLMultiPageEditorActionBarContributor extends SourceEditorActionBarContributor {

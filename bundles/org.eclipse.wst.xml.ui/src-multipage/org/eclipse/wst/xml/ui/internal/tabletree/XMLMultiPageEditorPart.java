@@ -6,7 +6,7 @@
  * 
  * Contributors: IBM Corporation - initial API and implementation
  ****************************************************************************/
-package org.eclipse.wst.xml.internal.ui;
+package org.eclipse.wst.xml.ui.internal.tabletree;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,8 +53,6 @@ import org.eclipse.wst.xml.core.IXMLPreferenceNames;
 import org.eclipse.wst.xml.ui.StructuredTextEditorXML;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
-import org.eclipse.wst.xml.ui.internal.tabletree.XMLTableTreeHelpContextIds;
-import org.eclipse.wst.xml.ui.internal.tabletree.XMLTableTreeViewer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 

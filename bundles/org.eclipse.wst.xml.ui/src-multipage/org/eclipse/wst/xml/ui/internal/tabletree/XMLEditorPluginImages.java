@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xml.internal.ui;
+package org.eclipse.wst.xml.ui.internal.tabletree;
 
 /**
  * Bundle of most images used by the XML Editor plug-in.
