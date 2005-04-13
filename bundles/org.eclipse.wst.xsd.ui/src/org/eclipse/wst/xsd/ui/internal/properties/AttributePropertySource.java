@@ -36,17 +36,17 @@ public class AttributePropertySource
 {
   private String[] useComboValues =
   {
-        "",
-        "prohibited",   // XSDEditorPlugin.getXSDString("_UI_COMBO_BOX_PROHIBITED"),
-        "optional",   // XSDEditorPlugin.getXSDString("_UI_COMBO_BOX_OPTIONAL"),
-        "required"  // XSDEditorPlugin.getXSDString("_UI_COMBO_BOX_REQUIRED")
+        "", //$NON-NLS-1$
+        "prohibited",   // XSDEditorPlugin.getXSDString("_UI_COMBO_BOX_PROHIBITED"), //$NON-NLS-1$ 
+        "optional",   // XSDEditorPlugin.getXSDString("_UI_COMBO_BOX_OPTIONAL"), //$NON-NLS-1$
+        "required"  // XSDEditorPlugin.getXSDString("_UI_COMBO_BOX_REQUIRED") //$NON-NLS-1$
   };
 
   protected String formComboValues[] =
   {
-        "",
-        XSDEditorPlugin.getXSDString("_UI_COMBO_UNQUALIFIED"),
-        XSDEditorPlugin.getXSDString("_UI_COMBO_QUALIFIED")
+        "", //$NON-NLS-1$
+        XSDEditorPlugin.getXSDString("_UI_COMBO_UNQUALIFIED"), //$NON-NLS-1$
+        XSDEditorPlugin.getXSDString("_UI_COMBO_QUALIFIED") //$NON-NLS-1$
   };
   
   
@@ -109,7 +109,7 @@ public class AttributePropertySource
     }
     else
      {
-      str = XSDConstants.FIXED_ATTRIBUTE + "/" + XSDConstants.DEFAULT_ATTRIBUTE;
+      str = XSDConstants.FIXED_ATTRIBUTE + "/" + XSDConstants.DEFAULT_ATTRIBUTE; //$NON-NLS-1$
     }
     
     FixedOrDefaultTextPropertyDescriptor fixedOrDefaultDescriptor =
@@ -157,19 +157,19 @@ public class AttributePropertySource
       result = element.getAttribute((String) id);
       if (result == null)
       {
-        result = "";
+        result = ""; //$NON-NLS-1$
       }
       if (((String) id).equals(XSDConstants.TYPE_ATTRIBUTE))
       {
-        if (result.equals(""))
+        if (result.equals("")) //$NON-NLS-1$
         {
           if (checkForAnonymousType(element))
           {
-            return "**anonymous**";
+            return "**anonymous**"; //$NON-NLS-1$
           }
           else
           {
-            return XSDEditorPlugin.getXSDString("_UI_NO_TYPE"); 
+            return XSDEditorPlugin.getXSDString("_UI_NO_TYPE"); //$NON-NLS-1$ 
           }
         }
         else
@@ -179,7 +179,7 @@ public class AttributePropertySource
       }
       return result;
     }
-    return "";
+    return ""; //$NON-NLS-1$
   }
   /* (non-Javadoc)
    * @see org.eclipse.ui.views.properties.IPropertySource#isPropertySet(java.lang.Object)
@@ -201,7 +201,7 @@ public class AttributePropertySource
   {
     if (value == null)
     {
-      value = "";
+      value = ""; //$NON-NLS-1$
     }
     if (value instanceof String)
     {
@@ -214,7 +214,7 @@ public class AttributePropertySource
       }
       else if (((String) id).equals(XSDConstants.NAME_ATTRIBUTE))
       { 
-        beginRecording(XSDEditorPlugin.getXSDString("_UI_ATTRIBUTE_NAME_CHANGE"), element);
+        beginRecording(XSDEditorPlugin.getXSDString("_UI_ATTRIBUTE_NAME_CHANGE"), element); //$NON-NLS-1$
         // now rename any references to this element
         if (xsdSchema != null)
          {
@@ -232,8 +232,8 @@ public class AttributePropertySource
       }
       else if (((String) id).equals(XSDConstants.FIXED_ATTRIBUTE) || ((String) id).equals(XSDConstants.DEFAULT_ATTRIBUTE))
       {            
-        beginRecording(XSDEditorPlugin.getXSDString("_UI_ATTRIBUTE_VALUE_CHANGE"), element);
-        if (((String)value).equals(""))
+        beginRecording(XSDEditorPlugin.getXSDString("_UI_ATTRIBUTE_VALUE_CHANGE"), element); //$NON-NLS-1$
+        if (((String)value).equals("")) //$NON-NLS-1$
          {
           element.removeAttribute((String)id);
         }
@@ -245,8 +245,8 @@ public class AttributePropertySource
       }
       else if (((String) id).equals(XSDConstants.USE_ATTRIBUTE))
       {
-        beginRecording(XSDEditorPlugin.getXSDString("_UI_ATTRIBUTE_USE_CHANGE"), element);
-        if (((String)value).equals(""))
+        beginRecording(XSDEditorPlugin.getXSDString("_UI_ATTRIBUTE_USE_CHANGE"), element); //$NON-NLS-1$
+        if (((String)value).equals("")) //$NON-NLS-1$
         {
           element.removeAttribute(XSDConstants.USE_ATTRIBUTE);
         }
@@ -258,8 +258,8 @@ public class AttributePropertySource
       }
       else if (((String) id).equals(XSDConstants.FORM_ATTRIBUTE))
       {
-        beginRecording(XSDEditorPlugin.getXSDString("_UI_ATTRIBUTE_FORM_CHANGE"), element);
-        if (((String)value).equals(""))
+        beginRecording(XSDEditorPlugin.getXSDString("_UI_ATTRIBUTE_FORM_CHANGE"), element); //$NON-NLS-1$
+        if (((String)value).equals("")) //$NON-NLS-1$
         {
           element.removeAttribute(XSDConstants.FORM_ATTRIBUTE);
         }

@@ -121,12 +121,12 @@ public class AnyContentPropertyDescriptor extends PropertyDescriptor
     {
       int tabIndex = 0;
       Composite client = (Composite)super.createDialogArea(parent);
-      getShell().setText("Content for " + element.getLocalName());
+      getShell().setText(element.getLocalName());
       
       commentField = ViewUtility.createMultiTextField(client, 400, 200, true);
       
       WorkbenchHelp.setHelp(commentField, XSDEditorContextIds.XSDE_ANNOTATION_COMMENT);
-      commentField.setToolTipText(XSDEditorPlugin.getXSDString("_UI_TOOLTIP_COMMENT"));
+      commentField.setToolTipText(XSDEditorPlugin.getXSDString("_UI_TOOLTIP_COMMENT")); //$NON-NLS-1$
 
       String initialString = (String)getInitialContent();
       commentField.setText(initialString);
@@ -147,7 +147,7 @@ public class AnyContentPropertyDescriptor extends PropertyDescriptor
       }
       else
        {
-        result = "";
+        result = ""; //$NON-NLS-1$
       }
       return result;
     }

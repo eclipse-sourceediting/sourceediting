@@ -13,6 +13,7 @@ package org.eclipse.wst.xsd.ui.internal.refactor.delete;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.xsd.XSDAttributeDeclaration;
 import org.eclipse.xsd.XSDAttributeGroupContent;
@@ -79,17 +80,14 @@ public class GlobalAttributeCleanup extends BaseGlobalCleanup
             {
               if (getReplacementElementName() != null)
               {
-                // String msg = XSDPlugin.getSchemaString("_INFO_RESET_ATTRIBUTE_REFERENCE") + " <" + getReplacementElementName() + ">";
-								String msg = "Reset attribute reference " + " <" + getReplacementElementName() + ">";
+				String msg = XSDEditorPlugin.getPlugin().getString("_UI_WARNING_RESET_ATTR_REF", getReplacementElementName()); 
                 addMessage(msg, attrUse);
                 attrUse.getElement().setAttribute(XSDConstants.REF_ATTRIBUTE, getReplacementElementName());
               }
               else
               {
                 String name = getNamedComponentName(type);
-                // String msg = XSDPlugin.getSchemaString("_INFO_REMOVE_ATTRIBUTE_REFERENCE") +
-								String msg = "Remove attribute reference " +
-                         " <" + name + ">";
+				String msg = XSDEditorPlugin.getPlugin().getString("_UI_WARNING_REMOVE_ATTR_REF", name);
                 addMessage(msg, attrUse.getContainer());
                 
                 childrenToRemove.add(attrDecl.getElement());

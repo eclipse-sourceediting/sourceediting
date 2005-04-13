@@ -32,20 +32,20 @@ public class ComplexTypePropertySource
   extends BasePropertySource
   implements IPropertySource
 {
-  private String DERIVED_BY_ID = "derived by"; // XSDEditorPlugin.getXSDString("_UI_LABEL_DERIVED_BY"); 
-  private String BASE_TYPE_ID = "base type"; //  XSDEditorPlugin.getXSDString("_UI_LABEL_BASE_TYPE");
+  private String DERIVED_BY_ID = "derived by"; // XSDEditorPlugin.getXSDString("_UI_LABEL_DERIVED_BY");  //$NON-NLS-1$ 
+  private String BASE_TYPE_ID = "base type"; //  XSDEditorPlugin.getXSDString("_UI_LABEL_BASE_TYPE");  //$NON-NLS-1$
   
   private String[] blockOrFinalComboValues = 
   {
-    "",
-    "#all",
-    "extension",
-    "restriction"
+    "",    	//$NON-NLS-1$
+    "#all",  //$NON-NLS-1$
+    "extension", //$NON-NLS-1$
+    "restriction" //$NON-NLS-1$
   };
   
   private String derivedByChoicesComboValues[] =
   {
-        "",
+        "", //$NON-NLS-1$
         XSDConstants.RESTRICTION_ELEMENT_TAG,
         XSDConstants.EXTENSION_ELEMENT_TAG
   };
@@ -171,7 +171,7 @@ public class ComplexTypePropertySource
       
       if (result == null)
       {
-        result = "";
+        result = ""; //$NON-NLS-1$
       }
       
       if (attributeName.equals(DERIVED_BY_ID))
@@ -186,7 +186,7 @@ public class ComplexTypePropertySource
         }
         else
         {
-          return "";
+          return ""; //$NON-NLS-1$
         }
       }
       else if (attributeName.equals(XSDConstants.NAME_ATTRIBUTE))
@@ -196,7 +196,7 @@ public class ComplexTypePropertySource
         boolean isAnonymousType = checkForAnonymousType(element);
         if (isAnonymousType)
         {
-          return "**anonymous**";
+          return "**anonymous**";  //$NON-NLS-1$
         }
         else
         {
@@ -216,7 +216,7 @@ public class ComplexTypePropertySource
 //      {
 //      }
     }
-    return "";
+    return ""; //$NON-NLS-1$
   }
   /* (non-Javadoc)
    * @see org.eclipse.ui.views.properties.IPropertySource#isPropertySet(java.lang.Object)
@@ -238,7 +238,7 @@ public class ComplexTypePropertySource
   {
     if (value == null)
     {
-      value = "";
+      value = ""; //$NON-NLS-1$
     }
     if (value instanceof String)
     {
@@ -249,7 +249,7 @@ public class ComplexTypePropertySource
       {
         if (validateName(newValue))
         {
-          beginRecording(XSDEditorPlugin.getXSDString("_UI_COMPLEXTYPE_NAME_CHANGE"), element);
+          beginRecording(XSDEditorPlugin.getXSDString("_UI_COMPLEXTYPE_NAME_CHANGE"), element); //$NON-NLS-1$
           if (newValue.length() > 0)
           {
             // now rename any references to this type
@@ -277,7 +277,7 @@ public class ComplexTypePropertySource
       {
         Element contentModelElement = getDomHelper().getContentModelFromParent(element);
         String baseType = getDomHelper().getBaseType(contentModelElement);
-        beginRecording(XSDEditorPlugin.getXSDString("_UI_DERIVEDBY_CHANGE"), element);
+        beginRecording(XSDEditorPlugin.getXSDString("_UI_DERIVEDBY_CHANGE"), element); //$NON-NLS-1$
         Element derivedByElem = getDomHelper().getDerivedByElement(element);
         getDomHelper().changeDerivedByType(contentModelElement, newValue, baseType);
         endRecording(element);
@@ -286,7 +286,7 @@ public class ComplexTypePropertySource
       {
         String derivedBy = getDomHelper().getDerivedByName(element);
         
-        SetBaseTypeAction setBaseTypeAction = new SetBaseTypeAction(XSDEditorPlugin.getXSDString("_UI_LABEL_SET_BASE_TYPE"));
+        SetBaseTypeAction setBaseTypeAction = new SetBaseTypeAction(XSDEditorPlugin.getXSDString("_UI_LABEL_SET_BASE_TYPE")); //$NON-NLS-1$
         setBaseTypeAction.setXSDSchema(xsdSchema);
         setBaseTypeAction.setComplexTypeElement(element);
         setBaseTypeAction.setType(newValue);
@@ -300,19 +300,19 @@ public class ComplexTypePropertySource
       {
         if (attributeName.equals(XSDConstants.ABSTRACT_ATTRIBUTE))
         {
-          beginRecording(XSDEditorPlugin.getXSDString("_UI_COMPLEXTYPE_ABSTRACT_CHANGE"), element);
+          beginRecording(XSDEditorPlugin.getXSDString("_UI_COMPLEXTYPE_ABSTRACT_CHANGE"), element); //$NON-NLS-1$
         }
         else if (attributeName.equals(XSDConstants.MIXED_ATTRIBUTE))
         {
-          beginRecording(XSDEditorPlugin.getXSDString("_UI_COMPLEXTYPE_MIXED_CHANGE"), element);
+          beginRecording(XSDEditorPlugin.getXSDString("_UI_COMPLEXTYPE_MIXED_CHANGE"), element); //$NON-NLS-1$
         }
         else if (attributeName.equals(XSDConstants.BLOCK_ATTRIBUTE))
         {
-          beginRecording(XSDEditorPlugin.getXSDString("_UI_COMPLEXTYPE_BLOCK_CHANGE"), element);
+          beginRecording(XSDEditorPlugin.getXSDString("_UI_COMPLEXTYPE_BLOCK_CHANGE"), element); //$NON-NLS-1$
         }
         else if (attributeName.equals(XSDConstants.FINAL_ATTRIBUTE))
         {
-          beginRecording(XSDEditorPlugin.getXSDString("_UI_COMPLEXTYPE_FINAL_CHANGE"), element);
+          beginRecording(XSDEditorPlugin.getXSDString("_UI_COMPLEXTYPE_FINAL_CHANGE"), element); //$NON-NLS-1$
         }
         
         if (newValue.length() > 0)

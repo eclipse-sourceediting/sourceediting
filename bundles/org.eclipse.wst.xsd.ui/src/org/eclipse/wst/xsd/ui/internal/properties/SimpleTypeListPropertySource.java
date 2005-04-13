@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
+import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.util.XSDConstants;
 
@@ -92,12 +93,12 @@ public class SimpleTypeListPropertySource
         result = element.getAttribute((String) id);
         if (result == null)
         {
-          result = "**anonymous**";
+          result = "**anonymous**"; //$NON-NLS-1$
         }
         return result;
       }
     }
-    return "";
+    return ""; //$NON-NLS-1$
   }
   /* (non-Javadoc)
    * @see org.eclipse.ui.views.properties.IPropertySource#isPropertySet(java.lang.Object)
@@ -123,7 +124,7 @@ public class SimpleTypeListPropertySource
       {
         if (((String) id).equals(XSDConstants.ITEMTYPE_ATTRIBUTE))
         { 
-          beginRecording("ItemType Change", element);
+          beginRecording(XSDEditorPlugin.getXSDString("_UI_LABEL_ITEM_TYPE_CHANGE"), element); //$NON-NLS-1$
           element.setAttribute(XSDConstants.ITEMTYPE_ATTRIBUTE, (String)value);
           endRecording(element);
         }

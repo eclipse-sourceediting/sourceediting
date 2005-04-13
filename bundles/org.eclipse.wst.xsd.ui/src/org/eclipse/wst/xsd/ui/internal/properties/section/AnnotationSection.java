@@ -340,11 +340,11 @@ public class AnnotationSection extends AbstractSection
   {
     if (documentationPage != null)
     {
-      documentationPage.setText("");
+      documentationPage.setText(""); //$NON-NLS-1$
     }
     if (appInfoPage != null)
     {
-      appInfoPage.setText("");
+      appInfoPage.setText(""); //$NON-NLS-1$
     }
 
     if (an != null)
@@ -393,7 +393,7 @@ public class AnnotationSection extends AbstractSection
     public DocumentationWorkbookPage(XSDWorkbook workbook)
     {
       super(workbook);
-      this.getTabItem().setText("Documentation");
+      this.getTabItem().setText("Documentation"); 
     }
 
     public void setText(String value)
@@ -419,7 +419,7 @@ public class AnnotationSection extends AbstractSection
     public Control createControl (Composite parent)
     {
       page1 = getWidgetFactory().createFlatFormComposite(parent);
-      documentationText = getWidgetFactory().createText(page1, "", SWT.V_SCROLL | SWT.H_SCROLL);
+      documentationText = getWidgetFactory().createText(page1, "", SWT.V_SCROLL | SWT.H_SCROLL); //$NON-NLS-1$
       documentationText.addListener(SWT.Modify, AnnotationSection.this);
 
       FormData data = new FormData();
@@ -444,7 +444,7 @@ public class AnnotationSection extends AbstractSection
           documentationElement = (Element)documentationList.get(0);
         }
         
-        beginRecording(XSDEditorPlugin.getXSDString("_UI_DOCUMENTATION_COMMENT_CHANGE"), element);
+        beginRecording(XSDEditorPlugin.getXSDString("_UI_DOCUMENTATION_COMMENT_CHANGE"), element); //$NON-NLS-1$
         
         if (documentationElement == null)
         {
@@ -524,7 +524,7 @@ public class AnnotationSection extends AbstractSection
     public Control createControl (Composite parent)
     {
       page2 = getWidgetFactory().createFlatFormComposite(parent);
-      appInfoText = getWidgetFactory().createText(page2, "", SWT.V_SCROLL | SWT.H_SCROLL);
+      appInfoText = getWidgetFactory().createText(page2, "", SWT.V_SCROLL | SWT.H_SCROLL); //$NON-NLS-1$
       appInfoText.addListener(SWT.Modify, AnnotationSection.this);
       
       FormData data = new FormData();
@@ -551,7 +551,7 @@ public class AnnotationSection extends AbstractSection
           appInfoElement = (Element)appInfoList.get(0);
         }
 
-        beginRecording(XSDEditorPlugin.getXSDString("_UI_COMMENT_CHANGE"), element);
+        beginRecording(XSDEditorPlugin.getXSDString("_UI_COMMENT_CHANGE"), element); //$NON-NLS-1$
         if (appInfoElement == null)
         {
           appInfoElement = xsdAnnotation.createApplicationInformation(null);

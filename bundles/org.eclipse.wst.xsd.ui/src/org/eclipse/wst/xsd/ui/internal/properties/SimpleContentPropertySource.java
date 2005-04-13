@@ -29,12 +29,12 @@ public class SimpleContentPropertySource
   extends BasePropertySource
   implements IPropertySource
 {
-  private String DERIVED_BY_ID = "derived by";  // XSDEditorPlugin.getXSDString("_UI_LABEL_DERIVED_BY"); 
-  private String BASE_TYPE_ID = "base";  // XSDEditorPlugin.getXSDString("_UI_LABEL_BASE_TYPE");
+  private String DERIVED_BY_ID = "derived by";  // XSDEditorPlugin.getXSDString("_UI_LABEL_DERIVED_BY"); //$NON-NLS-1$ 
+  private String BASE_TYPE_ID = "base";  // XSDEditorPlugin.getXSDString("_UI_LABEL_BASE_TYPE"); //$NON-NLS-1$
   
   private String derivedByChoicesComboValues[] =
   {
-     "",
+     "",  //$NON-NLS-1$
      XSDConstants.RESTRICTION_ELEMENT_TAG,
      XSDConstants.EXTENSION_ELEMENT_TAG
   };
@@ -105,7 +105,7 @@ public class SimpleContentPropertySource
         String derivedBy = getDomHelper().getDerivedByName(element);
         if (derivedBy == null)
          {
-          derivedBy = "";
+          derivedBy = ""; //$NON-NLS-1$
         }
         return derivedBy;
       }
@@ -114,12 +114,12 @@ public class SimpleContentPropertySource
         String baseType = getDomHelper().getBaseType(element);
         if (baseType == null)
         {
-          baseType = "";
+          baseType = ""; //$NON-NLS-1$
         }
         return baseType;
       }
     }
-    return "";
+    return ""; //$NON-NLS-1$
   }
   /* (non-Javadoc)
    * @see org.eclipse.ui.views.properties.IPropertySource#isPropertySet(java.lang.Object)
@@ -150,18 +150,18 @@ public class SimpleContentPropertySource
         {            
           Document doc = element.getOwnerDocument();
           Element childElement = null;
-          beginRecording(XSDEditorPlugin.getXSDString("_UI_TYPE_CHANGE"), element);        
+          beginRecording(XSDEditorPlugin.getXSDString("_UI_TYPE_CHANGE"), element); //$NON-NLS-1$        
           getDomHelper().setDerivedByBaseType(element, derivedBy, (String)value);
           endRecording(element);
         }
         else if (((String) id).equals(DERIVED_BY_ID))
         {
-          beginRecording(XSDEditorPlugin.getXSDString("_UI_DERIVEDBY_CHANGE"), element);
+          beginRecording(XSDEditorPlugin.getXSDString("_UI_DERIVEDBY_CHANGE"), element); //$NON-NLS-1$
           String newDerivedBy = (String)value;
           if (newDerivedBy.equals(XSDConstants.RESTRICTION_ELEMENT_TAG))
           {
             String prefix = element.getPrefix();
-            String anyType = prefix == null? "anyType" : prefix + ":anyType"; 
+            String anyType = prefix == null? "anyType" : prefix + ":anyType";  //$NON-NLS-1$ $NON-NLS-2$
             getDomHelper().changeDerivedByType(element, (String)value, anyType);
           }
           else

@@ -31,6 +31,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.gef.util.editparts.AbstractComponentViewerRootEditPart;
 import org.eclipse.wst.xsd.ui.internal.gef.util.figures.FillLayout;
 import org.eclipse.wst.xsd.ui.internal.graph.GraphicsConstants;
@@ -138,7 +139,7 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
     }
     else
     {
-      label.setText("unknown object" + getModel().getClass().getName());
+      label.setText(XSDEditorPlugin.getXSDString("_UI_GRAPH_UNKNOWN_OBJECT") + getModel().getClass().getName());
       //arrowLabel.setVisible(false);
     }
 

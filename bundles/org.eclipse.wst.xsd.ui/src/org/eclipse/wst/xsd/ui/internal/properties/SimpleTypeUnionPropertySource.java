@@ -115,12 +115,12 @@ public class SimpleTypeUnionPropertySource
         result = element.getAttribute((String) id);
         if (result == null)
         { 
-          result = "";
+          result = ""; //$NON-NLS-1$
         }
         return result;
       }
     }
-    return "";
+    return ""; //$NON-NLS-1$
   }
   /* (non-Javadoc)
    * @see org.eclipse.ui.views.properties.IPropertySource#isPropertySet(java.lang.Object)
@@ -142,7 +142,7 @@ public class SimpleTypeUnionPropertySource
   {
     if (value == null)
     {
-      value = "";
+      value = ""; //$NON-NLS-1$
     }
     
     if (value instanceof String)
@@ -150,7 +150,7 @@ public class SimpleTypeUnionPropertySource
       String newValue = (String)value;
       if (((String) id).equals(XSDConstants.MEMBERTYPES_ATTRIBUTE))
       { 
-        beginRecording("MemberTypes Change", element);
+        beginRecording(XSDEditorPlugin.getXSDString("_UI_LABEL_MEMBERTYPES_CHANGE"), element); //$NON-NLS-1$
         if (newValue.length() > 0)
         {
           element.setAttribute(XSDConstants.MEMBERTYPES_ATTRIBUTE, (String)value);
@@ -262,7 +262,7 @@ public class SimpleTypeUnionPropertySource
           sb.append(memberTypesList.getItem(i));
           if (i < length - 1)
           {
-            sb.append(" ");
+            sb.append(" "); //$NON-NLS-1$
           }
         }
         result = sb.toString();
@@ -279,10 +279,10 @@ public class SimpleTypeUnionPropertySource
     {
       int tabIndex = 0;
       Composite client = (Composite)super.createDialogArea(parent);
-      getShell().setText("Union " + XSDConstants.MEMBERTYPES_ATTRIBUTE); 
+      getShell().setText("Union " + XSDConstants.MEMBERTYPES_ATTRIBUTE); //$NON-NLS-1$ 
       
       Label instructions = new Label(client, SWT.LEFT | SWT.WRAP);
-      instructions.setText("Select from the available types and add to the memberTypes list");
+      instructions.setText(XSDEditorPlugin.getXSDString("_UI_LABEL_SELECT_MEMBERTYPES")); //$NON-NLS-1$
       
       Composite columnsComposite = new Composite(client, SWT.NONE);
       GridLayout ccGL = new GridLayout();
@@ -310,7 +310,7 @@ public class SimpleTypeUnionPropertySource
       ViewUtility.createHorizontalFiller(columnsComposite, 1);
       
       Label memberListLabel = new Label(columnsComposite, SWT.LEFT);
-      memberListLabel.setText("memberTypes value:");
+      memberListLabel.setText(XSDEditorPlugin.getXSDString("_UI_LABEL_MEMBERTYPES_VALUE")); //$NON-NLS-1$  
       
       Composite dataComposite = new Composite(client, SWT.NONE);
       GridLayout dcGL = new GridLayout();
@@ -353,10 +353,10 @@ public class SimpleTypeUnionPropertySource
       bcGL.numColumns = 1;
       buttonComposite.setLayout(bcGL);
       addButton = new Button(buttonComposite, SWT.PUSH);
-      addButton.setText(">");
+      addButton.setText(">"); //$NON-NLS-1$
       addButton.addSelectionListener(this);
       removeButton = new Button(buttonComposite, SWT.PUSH);
-      removeButton.setText("<");
+      removeButton.setText("<"); //$NON-NLS-1$
       removeButton.addSelectionListener(this);
       
       Composite listComposite = new Composite(dataComposite, SWT.NONE);
@@ -453,7 +453,7 @@ public class SimpleTypeUnionPropertySource
        {
         TableItem item = new TableItem(table, SWT.NONE);
         item.setText(items.get(i).toString());
-        item.setImage(XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif"));
+        item.setImage(XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif")); //$NON-NLS-1$
         item.setData(items.get(i));
       }
     }
@@ -464,15 +464,15 @@ public class SimpleTypeUnionPropertySource
       if (showAnonymous)
        {
         TableItem anonymousItem = new TableItem(table, SWT.NONE);
-        anonymousItem.setText("**anonymous**");
-        anonymousItem.setData("**anonymous**");
+        anonymousItem.setText("**anonymous**"); //$NON-NLS-1$
+        anonymousItem.setData("**anonymous**"); //$NON-NLS-1$
       }
       List items = getUserSimpleTypeNamesList();
       for (int i = 0; i < items.size(); i++)
        {
         TableItem item = new TableItem(table, SWT.NONE);
         item.setText(items.get(i).toString());
-        item.setImage(XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif"));
+        item.setImage(XSDEditorPlugin.getXSDImage("icons/XSDSimpleType.gif")); //$NON-NLS-1$
         item.setData(items.get(i));
       }
     }
