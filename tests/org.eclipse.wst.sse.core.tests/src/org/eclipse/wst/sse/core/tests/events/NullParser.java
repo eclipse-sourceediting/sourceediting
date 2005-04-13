@@ -15,7 +15,7 @@ package org.eclipse.wst.sse.core.tests.events;
 import java.io.Reader;
 import java.util.List;
 
-import org.eclipse.wst.sse.core.parser.RegionParser;
+import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 
 public class NullParser implements RegionParser {
