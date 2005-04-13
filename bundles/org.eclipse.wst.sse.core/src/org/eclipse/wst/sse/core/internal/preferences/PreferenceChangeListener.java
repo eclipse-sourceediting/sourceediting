@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.preferences;
+package org.eclipse.wst.sse.core.internal.preferences;
 
 /**
  * @deprecated This used to be used by our own PreferenceManager but since

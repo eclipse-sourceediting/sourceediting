@@ -20,7 +20,7 @@ package org.eclipse.wst.xml.core.internal.document;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
+import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IModelHandler;
 import org.eclipse.wst.xml.core.NameValidator;
 import org.eclipse.wst.xml.core.IXMLCharEntity;
 import org.eclipse.wst.xml.core.document.IDOMDocument;

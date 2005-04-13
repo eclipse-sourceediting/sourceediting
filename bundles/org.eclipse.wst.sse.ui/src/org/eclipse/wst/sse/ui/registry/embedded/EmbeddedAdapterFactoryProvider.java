@@ -13,7 +13,7 @@
 package org.eclipse.wst.sse.ui.registry.embedded;
 
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.modelhandler.EmbeddedTypeHandler;
+import org.eclipse.wst.sse.core.internal.ltk.modelhandler.EmbeddedTypeHandler;
 
 
 public interface EmbeddedAdapterFactoryProvider {

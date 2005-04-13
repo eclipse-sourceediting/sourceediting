@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.builder;
+package org.eclipse.wst.sse.core.internal.ltk.builder;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.wst.sse.core.IStructuredModel;

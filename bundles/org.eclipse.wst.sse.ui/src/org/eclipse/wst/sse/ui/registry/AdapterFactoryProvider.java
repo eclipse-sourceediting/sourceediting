@@ -13,7 +13,7 @@
 package org.eclipse.wst.sse.ui.registry;
 
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.modelhandler.IDocumentTypeHandler;
+import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IDocumentTypeHandler;
 
 
 public interface AdapterFactoryProvider {

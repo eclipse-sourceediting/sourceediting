@@ -19,8 +19,8 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.sse.core.modelhandler.AbstractModelHandler;
-import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
+import org.eclipse.wst.sse.core.internal.ltk.modelhandler.AbstractModelHandler;
+import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IModelHandler;
 
 
 /**

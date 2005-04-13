@@ -12,7 +12,7 @@ package org.eclipse.jst.jsp.core.internal.modelhandler;
 
 
 
-import org.eclipse.wst.sse.core.modelhandler.EmbeddedTypeHandler;
+import org.eclipse.wst.sse.core.internal.ltk.modelhandler.EmbeddedTypeHandler;
 
 /**
  * This class is only for remembering old and new embedded handlers, 

@@ -12,7 +12,7 @@ package org.eclipse.wst.html.core;
 
 import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
+import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 
 /**
  * Additional preferences for new HTML Files generation

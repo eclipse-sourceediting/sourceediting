@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.filebuffers;
+package org.eclipse.wst.sse.core.internal.filebuffers;
 
 import org.eclipse.core.filebuffers.IDocumentFactory;
 import org.eclipse.core.runtime.CoreException;
@@ -22,9 +22,9 @@ import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.wst.sse.core.internal.document.NullStructuredDocumentPartitioner;
+import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
 import org.eclipse.wst.sse.core.internal.text.JobSafeStructuredDocument;
-import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 
 
 /**

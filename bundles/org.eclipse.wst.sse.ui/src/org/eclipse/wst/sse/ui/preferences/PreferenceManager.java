@@ -36,7 +36,7 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.eclipse.wst.sse.core.preferences.PreferenceChangeListener;
+import org.eclipse.wst.sse.core.internal.preferences.PreferenceChangeListener;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.w3c.dom.Document;

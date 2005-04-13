@@ -47,7 +47,7 @@
          name="%Structured_DTD_Document_Factory_Extension.name">
       <factory
             contentTypeId="org.eclipse.wst.dtd.core.dtdsource"
-            class="org.eclipse.wst.sse.core.filebuffers.BasicStructuredDocumentFactory"/>
+            class="org.eclipse.wst.sse.core.internal.filebuffers.BasicStructuredDocumentFactory"/>
    </extension>
 
 	<extension point="org.eclipse.team.core.fileTypes">

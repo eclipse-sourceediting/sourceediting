@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.wst.html.core.HTMLFilesPreferenceNames;
 import org.eclipse.wst.sse.core.internal.encoding.CommonCharsetNames;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
-import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
+import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 
 /**
  * The main plugin class to be used in the desktop.

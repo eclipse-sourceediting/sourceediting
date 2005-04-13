@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.modelhandler;
+package org.eclipse.wst.sse.core.internal.ltk.modelhandler;
 
 import java.util.ArrayList;
 import java.util.Collection;

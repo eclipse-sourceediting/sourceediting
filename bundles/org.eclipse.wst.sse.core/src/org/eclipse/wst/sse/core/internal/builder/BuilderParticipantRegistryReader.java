@@ -21,10 +21,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.sse.core.builder.IBuilderDelegate;
-import org.eclipse.wst.sse.core.builder.IBuilderParticipant;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
+import org.eclipse.wst.sse.core.internal.ltk.builder.IBuilderDelegate;
+import org.eclipse.wst.sse.core.internal.ltk.builder.IBuilderParticipant;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
 
 
