@@ -48,12 +48,10 @@ import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
-import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xsd.ui.internal.graph.XSDGraphViewer;
-//import org.eclipse.wst.xsd.ui.internal.graph.model.XSDModelAdapterFactory;
 import org.eclipse.wst.xsd.ui.internal.util.OpenOnSelectionHelper;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.XSDConcreteComponent;
@@ -140,7 +138,7 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
     }
     catch (PartInitException exception)
     {
-      throw new SourceEditingRuntimeException(SSECorePlugin.getResourceString("An_error_has_occurred_when1_ERROR_")); //$NON-NLS-1$ = "An error has occurred when initializing the input for the the editor's source page."
+      throw new SourceEditingRuntimeException(XSDEditorPlugin.getXSDString("An_error_has_occurred_when1_ERROR_")); //$NON-NLS-1$ = "An error has occurred when initializing the input for the the editor's source page."
     }
   }
 

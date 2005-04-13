@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
@@ -33,7 +34,6 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
-import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.openon.OpenOnAction;
@@ -372,7 +372,7 @@ public class XSDTextEditor extends StructuredTextEditorXML implements INodeSelec
   {
     super.createActions();
     addOpenOnSelectionListener();
-    ResourceBundle resourceBundle = SSECorePlugin.getDefault().getResourceBundle(); //ResourceBundle.getBundle(RESOURCE_BUNDLE_NAME);
+    ResourceBundle resourceBundle = Platform.getResourceBundle(XSDEditorPlugin.getPlugin().getBundle());
     
     wrappedAction = new WrappedOpenFileAction(resourceBundle, StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE + DOT, this);
     setAction(StructuredTextEditorActionConstants.ACTION_NAME_OPEN_FILE, wrappedAction);

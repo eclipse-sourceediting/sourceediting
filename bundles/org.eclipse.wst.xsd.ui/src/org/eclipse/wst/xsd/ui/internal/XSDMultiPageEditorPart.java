@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextInputListener;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Point;
@@ -48,7 +49,6 @@ import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.part.MultiPageEditorSite;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
-import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 import org.eclipse.wst.xml.core.IXMLPreferenceNames;
 import org.eclipse.wst.xml.ui.StructuredTextEditorXML;
@@ -175,7 +175,7 @@ public class XSDMultiPageEditorPart extends MultiPageEditorPart implements IProp
       // dispose editor
       dispose();
 
-      throw new SourceEditingRuntimeException(SSECorePlugin.getResourceString("An_error_has_occurred_when1_ERROR_")); //$NON-NLS-1$
+      throw new SourceEditingRuntimeException(XSDEditorPlugin.getXSDString("An_error_has_occurred_when1_ERROR_")); //$NON-NLS-1$
     }
   }
 
@@ -322,11 +322,11 @@ public class XSDMultiPageEditorPart extends MultiPageEditorPart implements IProp
             // very unlikely
 //            Logger.logException(ce);
           }
-          throw new PartInitException(SSECorePlugin.getResourceString("23concat_EXC_", (new Object[]{input.getName()}))); //$NON-NLS-1$
+          throw new PartInitException(NLS.bind(XSDEditorPlugin.getXSDString("23concat_EXC_"), (new Object[]{input.getName()}))); //$NON-NLS-1$
           //$NON-NLS-1$ = "Resource {0} does not exist."
         }
         else {
-          throw new PartInitException(SSECorePlugin.getResourceString("32concat_EXC_", (new Object[]{input.getName()}))); //$NON-NLS-1$
+          throw new PartInitException(NLS.bind(XSDEditorPlugin.getXSDString("32concat_EXC_"), (new Object[]{input.getName()}))); //$NON-NLS-1$
           //$NON-NLS-1$ = "Editor could not be open on {0}"
         }
       }
@@ -339,7 +339,7 @@ public class XSDMultiPageEditorPart extends MultiPageEditorPart implements IProp
       catch (CoreException noStorageExc) {
       }
       if (contents == null) {
-        throw new PartInitException(SSECorePlugin.getResourceString("32concat_EXC_", (new Object[]{input.getName()}))); //$NON-NLS-1$
+        throw new PartInitException(NLS.bind(XSDEditorPlugin.getXSDString("32concat_EXC_"), (new Object[]{input.getName()}))); //$NON-NLS-1$
       }
       else {
         try {
