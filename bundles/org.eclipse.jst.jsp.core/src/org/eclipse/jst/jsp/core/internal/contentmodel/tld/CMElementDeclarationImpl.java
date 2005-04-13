@@ -19,7 +19,7 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP11TLDNa
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDDocument;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
-import org.eclipse.wst.sse.core.util.StringUtils;
+import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;

@@ -27,8 +27,8 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
+import org.eclipse.wst.sse.core.internal.util.Assert;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.util.Assert;
 
 /**
  * Provides a direct mapping from IStructuredDocument to supporting

@@ -24,6 +24,9 @@ import org.eclipse.wst.sse.core.events.RegionsReplacedEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentRegionsReplacedEvent;
 import org.eclipse.wst.sse.core.internal.Logger;
+import org.eclipse.wst.sse.core.internal.util.Debug;
+import org.eclipse.wst.sse.core.internal.util.StringUtils;
+import org.eclipse.wst.sse.core.internal.util.Utilities;
 import org.eclipse.wst.sse.core.parser.BlockTagParser;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -32,9 +35,6 @@ import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.sse.core.util.Debug;
-import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.sse.core.util.Utilities;
 
 
 /**

@@ -25,7 +25,7 @@ import org.eclipse.wst.common.uriresolver.URIResolverPlugin;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.util.StringUtils;
+import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.sse.ui.openon.AbstractOpenOn;
 import org.eclipse.wst.xml.core.document.IDOMAttr;
 import org.eclipse.wst.xml.core.document.IDOMNode;

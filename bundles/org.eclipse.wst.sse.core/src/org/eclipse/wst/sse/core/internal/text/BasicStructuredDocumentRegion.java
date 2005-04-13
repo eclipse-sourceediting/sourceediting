@@ -19,13 +19,13 @@ import org.eclipse.wst.sse.core.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.Logger;
+import org.eclipse.wst.sse.core.internal.util.Assert;
+import org.eclipse.wst.sse.core.internal.util.Debug;
+import org.eclipse.wst.sse.core.internal.util.Utilities;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.sse.core.util.Assert;
-import org.eclipse.wst.sse.core.util.Debug;
-import org.eclipse.wst.sse.core.util.Utilities;
 
 
 public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion {

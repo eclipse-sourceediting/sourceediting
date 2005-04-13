@@ -48,13 +48,13 @@ import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentRegionsReplacedEvent;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.ILockable;
+import org.eclipse.wst.sse.core.internal.util.Debug;
+import org.eclipse.wst.sse.core.internal.util.Utilities;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.sse.core.util.Debug;
-import org.eclipse.wst.sse.core.util.Utilities;
 import org.eclipse.wst.sse.ui.util.Assert;
 
 

@@ -32,7 +32,7 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDListene
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDValidator;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDVariable;
 import org.eclipse.jst.jsp.core.internal.util.DocumentProvider;
-import org.eclipse.wst.sse.core.util.JarUtilities;
+import org.eclipse.wst.sse.core.internal.util.JarUtilities;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;

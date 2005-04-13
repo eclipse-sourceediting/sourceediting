@@ -22,7 +22,7 @@ import org.eclipse.wst.sse.core.IModelLoader;
 import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
 import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.internal.model.AbstractModelLoader;
-import org.eclipse.wst.sse.core.util.Debug;
+import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.DebugAdapterFactory;
 import org.eclipse.wst.xml.core.internal.document.DOMModelImpl;

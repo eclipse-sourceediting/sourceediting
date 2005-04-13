@@ -17,12 +17,12 @@ import org.eclipse.wst.css.core.internal.contenttype.CSSResourceEncodingDetector
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
 import org.eclipse.wst.sse.core.internal.document.DocumentReader;
 import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
+import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.sse.core.util.StringUtils;
 
 
 public class CSSDocumentCharsetDetector extends CSSResourceEncodingDetector implements IDocumentCharsetDetector {

@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.util;
+package org.eclipse.wst.sse.core.internal.util;
 
 
 
@@ -98,7 +98,7 @@ public final class Debug {
 			flatNode = (ITextRegionCollection) structuredDocumentRegions.nextElement();
 			if (!verbose) {
 				String outString = flatNode.toString();
-				outString = org.eclipse.wst.sse.core.util.StringUtils.escape(outString);
+				outString = org.eclipse.wst.sse.core.internal.util.StringUtils.escape(outString);
 				System.out.println(outString);
 			} else {
 				dump(flatNode, verbose);

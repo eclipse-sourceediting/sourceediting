@@ -81,7 +81,7 @@ public class ModelQueryAdapterFactoryForXML extends AbstractAdapterFactory imple
 	 */
 	protected INodeAdapter createAdapter(INodeNotifier target) {
 
-		if (org.eclipse.wst.sse.core.util.Debug.displayInfo)
+		if (org.eclipse.wst.sse.core.internal.util.Debug.displayInfo)
 			System.out.println("-----------------------ModelQueryAdapterFactoryForXML.createAdapter" + target); //$NON-NLS-1$
 		if (modelQueryAdapterImpl == null) {
 			if (target instanceof IDOMNode) {
@@ -104,14 +104,14 @@ public class ModelQueryAdapterFactoryForXML extends AbstractAdapterFactory imple
 						baseLocation = derivedPath.toString();
 					}
 				}
-				if (org.eclipse.wst.sse.core.util.Debug.displayInfo)
+				if (org.eclipse.wst.sse.core.internal.util.Debug.displayInfo)
 					System.out.println("----------------ModelQueryAdapterFactoryForXML... baseLocation : " + baseLocation); //$NON-NLS-1$
 
 				CMDocumentCache cmDocumentCache = new CMDocumentCache();
 				ModelQuery modelQuery = null;
 				IdResolver idResolver = null;
 
-				if (org.eclipse.wst.sse.core.util.Debug.displayInfo)
+				if (org.eclipse.wst.sse.core.internal.util.Debug.displayInfo)
 					System.out.println("********XMLModelQueryImpl"); //$NON-NLS-1$
 				idResolver = new XMLCatalogIdResolver(baseLocation, model.getResolver());
 				modelQuery = new XMLModelQueryImpl(cmDocumentCache, idResolver);

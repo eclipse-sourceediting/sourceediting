@@ -25,8 +25,8 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.wst.sse.core.util.Debug;
-import org.eclipse.wst.sse.core.util.Utilities;
+import org.eclipse.wst.sse.core.internal.util.Debug;
+import org.eclipse.wst.sse.core.internal.util.Utilities;
 import org.eclipse.wst.sse.ui.view.events.CaretEvent;
 import org.eclipse.wst.sse.ui.view.events.ICaretListener;
 

@@ -16,7 +16,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.eclipse.wst.sse.core.util.PathHelper;
+import org.eclipse.wst.sse.core.internal.util.PathHelper;
 
 /**
  * Hyperlink manager. Proved useful services like link conversion An utility

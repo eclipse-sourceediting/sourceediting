@@ -12,7 +12,7 @@ package org.eclipse.jst.jsp.core.internal.contentmodel.tld;
 
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDVariable;
-import org.eclipse.wst.sse.core.util.StringUtils;
+import org.eclipse.wst.sse.core.internal.util.StringUtils;
 
 
 public class TLDVariableImpl implements TLDVariable {

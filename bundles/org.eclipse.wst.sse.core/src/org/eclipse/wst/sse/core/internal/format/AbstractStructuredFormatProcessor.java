@@ -26,7 +26,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.Logger;
-import org.eclipse.wst.sse.core.util.Assert;
+import org.eclipse.wst.sse.core.internal.util.Assert;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
 

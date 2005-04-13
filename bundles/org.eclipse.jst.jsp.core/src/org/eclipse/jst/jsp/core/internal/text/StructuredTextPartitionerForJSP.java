@@ -28,6 +28,7 @@ import org.eclipse.jst.jsp.core.text.IJSPPartitionTypes;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
 import org.eclipse.wst.sse.core.internal.text.rules.StructuredTextPartitioner;
+import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.sse.core.parser.StructuredDocumentRegionHandler;
 import org.eclipse.wst.sse.core.parser.StructuredDocumentRegionHandlerExtension;
 import org.eclipse.wst.sse.core.parser.StructuredDocumentRegionParser;
@@ -36,7 +37,6 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredTextPartitioner;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 

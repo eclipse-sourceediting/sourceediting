@@ -17,7 +17,7 @@
 package org.eclipse.jst.jsp.core.internal.contentmodel.tld;
 
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDListener;
-import org.eclipse.wst.sse.core.util.StringUtils;
+import org.eclipse.wst.sse.core.internal.util.StringUtils;
 
 
 public class TLDListenerImpl implements TLDListener {

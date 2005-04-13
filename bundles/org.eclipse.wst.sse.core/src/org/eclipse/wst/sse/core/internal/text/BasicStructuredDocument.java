@@ -60,6 +60,9 @@ import org.eclipse.wst.sse.core.internal.document.StructuredDocumentFactory;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.internal.text.rules.StructuredTextPartitioner;
 import org.eclipse.wst.sse.core.internal.undo.StructuredTextUndoManager;
+import org.eclipse.wst.sse.core.internal.util.Assert;
+import org.eclipse.wst.sse.core.internal.util.Debug;
+import org.eclipse.wst.sse.core.internal.util.Utilities;
 import org.eclipse.wst.sse.core.parser.RegionParser;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -67,9 +70,6 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
 import org.eclipse.wst.sse.core.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.text.IStructuredTextReParser;
 import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
-import org.eclipse.wst.sse.core.util.Assert;
-import org.eclipse.wst.sse.core.util.Debug;
-import org.eclipse.wst.sse.core.util.Utilities;
 
 
 /**

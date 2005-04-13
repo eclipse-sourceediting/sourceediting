@@ -21,13 +21,13 @@ import java.util.List;
 
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
+import org.eclipse.wst.sse.core.internal.util.Debug;
+import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.sse.core.parser.BlockMarker;
 import org.eclipse.wst.sse.core.parser.BlockTokenizer;
 import org.eclipse.wst.sse.core.parser.TagMarker;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.sse.core.util.Debug;
-import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.xml.core.internal.parser.ContextRegionContainer;
 import org.eclipse.wst.xml.core.internal.parser.IntStack;
 
@@ -873,7 +873,7 @@ public class JSPTokenizer implements BlockTokenizer, DOMJSPRegionContexts {
 
 	private JSPParserRegionFactory fRegionFactory = new JSPParserRegionFactory();
 
-	private static final String rcsver = "$Id: JSPTokenizer.java,v 1.7 2005/04/11 06:21:03 david_williams Exp $";//$NON-NLS-1$
+	private static final String rcsver = "$Id: JSPTokenizer.java,v 1.8 2005/04/13 05:03:03 david_williams Exp $";//$NON-NLS-1$
 
 	/**
 	 * user method 

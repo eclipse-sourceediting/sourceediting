@@ -32,6 +32,7 @@ import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingRule;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 import org.eclipse.wst.sse.core.internal.text.rules.StructuredTextPartitioner;
+import org.eclipse.wst.sse.core.internal.util.Assert;
 import org.eclipse.wst.sse.core.parser.BlockMarker;
 import org.eclipse.wst.sse.core.parser.BlockTagParser;
 import org.eclipse.wst.sse.core.parser.RegionParser;
@@ -41,7 +42,6 @@ import org.eclipse.wst.sse.core.parser.StructuredDocumentRegionParser;
 import org.eclipse.wst.sse.core.parser.StructuredDocumentRegionParserExtension;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredPartitioning;
-import org.eclipse.wst.sse.core.util.Assert;
 
 
 /**

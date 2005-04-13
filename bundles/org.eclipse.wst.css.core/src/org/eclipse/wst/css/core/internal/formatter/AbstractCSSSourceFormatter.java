@@ -32,11 +32,11 @@ import org.eclipse.wst.css.core.internal.util.RegionIterator;
 import org.eclipse.wst.css.core.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.util.Assert;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.sse.core.util.Assert;
 
 /**
  * 

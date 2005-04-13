@@ -20,7 +20,7 @@ import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSheetListAda
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.util.URIResolver;
+import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.w3c.dom.Attr;

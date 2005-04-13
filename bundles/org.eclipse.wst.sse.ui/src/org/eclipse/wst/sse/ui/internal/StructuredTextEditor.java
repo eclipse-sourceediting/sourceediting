@@ -126,11 +126,11 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.internal.text.IExecutionDelegatable;
+import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
-import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.extension.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.extension.ExtendedEditorActionBuilder;
@@ -981,7 +981,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 */
 	public void dispose() {
 		Logger.trace("Source Editor", "StructuredTextEditor::dispose entry"); //$NON-NLS-1$ //$NON-NLS-2$
-		if (org.eclipse.wst.sse.core.util.Debug.perfTestAdapterClassLoading) {
+		if (org.eclipse.wst.sse.core.internal.util.Debug.perfTestAdapterClassLoading) {
 			System.out.println("Total calls to getAdapter: " + adapterRequests); //$NON-NLS-1$
 			System.out.println("Total time in getAdapter: " + adapterTime); //$NON-NLS-1$
 			System.out.println("Average time per call: " + (adapterTime / adapterRequests)); //$NON-NLS-1$
@@ -1343,7 +1343,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	}
 
 	public Object getAdapter(Class required) {
-		if (org.eclipse.wst.sse.core.util.Debug.perfTestAdapterClassLoading) {
+		if (org.eclipse.wst.sse.core.internal.util.Debug.perfTestAdapterClassLoading) {
 			startPerfTime = System.currentTimeMillis();
 		}
 		Object result = null;
@@ -1410,12 +1410,12 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			if (result == null)
 				result = super.getAdapter(required);
 		}
-		if (org.eclipse.wst.sse.core.util.Debug.perfTestAdapterClassLoading) {
+		if (org.eclipse.wst.sse.core.internal.util.Debug.perfTestAdapterClassLoading) {
 			long stop = System.currentTimeMillis();
 			adapterRequests++;
 			adapterTime += (stop - startPerfTime);
 		}
-		if (org.eclipse.wst.sse.core.util.Debug.perfTestAdapterClassLoading) {
+		if (org.eclipse.wst.sse.core.internal.util.Debug.perfTestAdapterClassLoading) {
 			System.out.println("Total calls to getAdapter: " + adapterRequests); //$NON-NLS-1$
 			System.out.println("Total time in getAdapter: " + adapterTime); //$NON-NLS-1$
 			System.out.println("Average time per call: " + (adapterTime / adapterRequests)); //$NON-NLS-1$

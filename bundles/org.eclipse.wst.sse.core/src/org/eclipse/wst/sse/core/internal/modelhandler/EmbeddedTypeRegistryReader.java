@@ -19,8 +19,8 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.sse.core.internal.Logger;
+import org.eclipse.wst.sse.core.internal.util.Assert;
 import org.eclipse.wst.sse.core.modelhandler.EmbeddedTypeHandler;
-import org.eclipse.wst.sse.core.util.Assert;
 
 
 public class EmbeddedTypeRegistryReader {

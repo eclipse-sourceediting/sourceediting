@@ -23,8 +23,8 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.sse.core.exceptions.ResourceAlreadyExists;
 import org.eclipse.wst.sse.core.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingRule;
+import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.util.URIResolver;
 
 
 /**

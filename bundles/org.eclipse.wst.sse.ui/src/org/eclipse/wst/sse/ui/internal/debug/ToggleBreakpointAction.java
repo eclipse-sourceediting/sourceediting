@@ -30,7 +30,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.util.Debug;
+import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.ui.extension.IExtendedMarkupEditor;
 import org.eclipse.wst.sse.ui.extension.IExtendedSimpleEditor;
 import org.eclipse.wst.sse.ui.extensions.breakpoint.IBreakpointProvider;

@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.util;
+package org.eclipse.wst.sse.core.internal.util;
 
 import org.eclipse.wst.sse.core.internal.Logger;
 

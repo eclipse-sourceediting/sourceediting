@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.sse.core.util.Assert;
+import org.eclipse.wst.sse.core.internal.util.Assert;
 import org.eclipse.wst.sse.ui.internal.Logger;
 
 

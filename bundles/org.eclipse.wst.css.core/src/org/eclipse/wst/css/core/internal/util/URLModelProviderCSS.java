@@ -37,9 +37,9 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.exceptions.ResourceAlreadyExists;
 import org.eclipse.wst.sse.core.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingRule;
-import org.eclipse.wst.sse.core.util.PathHelper;
-import org.eclipse.wst.sse.core.util.ProjectResolver;
-import org.eclipse.wst.sse.core.util.URIResolver;
+import org.eclipse.wst.sse.core.internal.util.PathHelper;
+import org.eclipse.wst.sse.core.internal.util.ProjectResolver;
+import org.eclipse.wst.sse.core.internal.util.URIResolver;
 
 /**
  */

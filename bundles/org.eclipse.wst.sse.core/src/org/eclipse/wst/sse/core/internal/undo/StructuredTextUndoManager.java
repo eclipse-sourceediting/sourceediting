@@ -30,14 +30,14 @@ import org.eclipse.wst.sse.core.events.RegionsReplacedEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentRegionsReplacedEvent;
 import org.eclipse.wst.sse.core.internal.SSECoreMessages;
+import org.eclipse.wst.sse.core.internal.util.Assert;
+import org.eclipse.wst.sse.core.internal.util.Utilities;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.undo.CommandCursorPosition;
 import org.eclipse.wst.sse.core.undo.IDocumentSelectionMediator;
 import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.core.undo.StructuredTextCommand;
 import org.eclipse.wst.sse.core.undo.UndoDocumentEvent;
-import org.eclipse.wst.sse.core.util.Assert;
-import org.eclipse.wst.sse.core.util.Utilities;
 
 public class StructuredTextUndoManager implements IStructuredTextUndoManager {
 

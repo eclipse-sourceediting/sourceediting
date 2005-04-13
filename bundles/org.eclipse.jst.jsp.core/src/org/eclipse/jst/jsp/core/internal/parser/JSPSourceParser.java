@@ -18,6 +18,8 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNa
 import org.eclipse.jst.jsp.core.internal.parser.internal.JSPTokenizer;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.internal.text.IRegionComparible;
+import org.eclipse.wst.sse.core.internal.util.Debug;
+import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.sse.core.parser.BlockTokenizer;
 import org.eclipse.wst.sse.core.parser.JSPCapableParser;
 import org.eclipse.wst.sse.core.parser.RegionParser;
@@ -30,8 +32,6 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.sse.core.util.Debug;
-import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.xml.core.internal.parser.XMLSourceParser;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 

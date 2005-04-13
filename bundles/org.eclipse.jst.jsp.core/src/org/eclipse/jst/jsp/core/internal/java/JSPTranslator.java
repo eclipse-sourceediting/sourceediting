@@ -36,6 +36,8 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNa
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDVariable;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
+import org.eclipse.wst.sse.core.internal.util.StringUtils;
+import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.sse.core.parser.BlockMarker;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -43,8 +45,6 @@ import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.sse.core.util.StringUtils;
-import org.eclipse.wst.sse.core.util.URIResolver;
 import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;

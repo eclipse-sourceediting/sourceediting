@@ -44,7 +44,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
 import org.eclipse.jst.jsp.core.internal.util.DocumentProvider;
-import org.eclipse.wst.sse.core.util.JarUtilities;
+import org.eclipse.wst.sse.core.internal.util.JarUtilities;
 import org.eclipse.wst.xml.uriresolver.util.URIHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

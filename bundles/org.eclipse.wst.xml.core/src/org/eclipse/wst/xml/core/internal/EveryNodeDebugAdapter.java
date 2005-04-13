@@ -25,8 +25,8 @@ import org.eclipse.wst.sse.core.events.NoChangeEvent;
 import org.eclipse.wst.sse.core.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.events.RegionsReplacedEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentRegionsReplacedEvent;
+import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.xml.core.document.IDOMNode;
 
 

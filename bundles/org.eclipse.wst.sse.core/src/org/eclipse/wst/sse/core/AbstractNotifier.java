@@ -98,7 +98,7 @@ public abstract class AbstractNotifier implements INodeNotifier {
 			// unusual.
 			// It might be because Factory is not working correctly, or
 			// not installed, so we'll allow warning message.
-			if ((result == null) && (org.eclipse.wst.sse.core.util.Debug.displayWarnings)) {
+			if ((result == null) && (org.eclipse.wst.sse.core.internal.util.Debug.displayWarnings)) {
 				System.out.println("Warning: no adapter was found or created for " + type); //$NON-NLS-1$
 			}
 		}

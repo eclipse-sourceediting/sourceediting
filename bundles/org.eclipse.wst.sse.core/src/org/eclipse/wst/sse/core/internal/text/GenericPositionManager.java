@@ -26,7 +26,7 @@ import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IPositionUpdater;
 import org.eclipse.jface.text.Position;
-import org.eclipse.wst.sse.core.util.Assert;
+import org.eclipse.wst.sse.core.internal.util.Assert;
 
 
 

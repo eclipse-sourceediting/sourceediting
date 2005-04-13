@@ -49,6 +49,7 @@ import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.internal.document.DocumentReader;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
+import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.parser.RegionParser;
 import org.eclipse.wst.sse.core.parser.StructuredDocumentRegionHandler;
@@ -58,7 +59,6 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.sse.core.util.StringUtils;
 
 
 /**

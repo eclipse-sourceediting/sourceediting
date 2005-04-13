@@ -25,10 +25,10 @@ import org.eclipse.wst.sse.core.exceptions.ResourceAlreadyExists;
 import org.eclipse.wst.sse.core.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingRule;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
+import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
-import org.eclipse.wst.sse.core.util.URIResolver;
 
 
 /**

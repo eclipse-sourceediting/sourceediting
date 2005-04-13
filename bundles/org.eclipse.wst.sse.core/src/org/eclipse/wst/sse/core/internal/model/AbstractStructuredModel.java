@@ -45,11 +45,11 @@ import org.eclipse.wst.sse.core.internal.ILockable;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.SSECoreMessages;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingRule;
+import org.eclipse.wst.sse.core.internal.util.URIResolver;
+import org.eclipse.wst.sse.core.internal.util.Utilities;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
-import org.eclipse.wst.sse.core.util.URIResolver;
-import org.eclipse.wst.sse.core.util.Utilities;
 
 
 public abstract class AbstractStructuredModel implements IStructuredModel {

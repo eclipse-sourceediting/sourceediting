@@ -13,7 +13,7 @@
 package org.eclipse.wst.xml.core.internal.provisional.format;
 
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatContraints;
-import org.eclipse.wst.sse.core.util.StringUtils;
+import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.w3c.dom.Node;
 

@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.util;
+package org.eclipse.wst.sse.core.internal.util;
 
 /**
  * Contains list of script languages and mime types

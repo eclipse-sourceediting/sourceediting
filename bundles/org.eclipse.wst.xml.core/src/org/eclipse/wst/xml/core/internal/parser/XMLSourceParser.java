@@ -23,6 +23,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.sse.core.internal.document.DocumentReader;
 import org.eclipse.wst.sse.core.internal.text.CharSequenceReader;
 import org.eclipse.wst.sse.core.internal.text.IRegionComparible;
+import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.core.parser.BlockMarker;
 import org.eclipse.wst.sse.core.parser.BlockTagParser;
 import org.eclipse.wst.sse.core.parser.BlockTokenizer;
@@ -34,7 +35,6 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 

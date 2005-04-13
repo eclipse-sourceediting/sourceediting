@@ -66,12 +66,12 @@ import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingRule;
 import org.eclipse.wst.sse.core.internal.exceptions.MalformedOutputExceptionWithDetail;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
+import org.eclipse.wst.sse.core.internal.util.Assert;
+import org.eclipse.wst.sse.core.internal.util.ProjectResolver;
+import org.eclipse.wst.sse.core.internal.util.URIResolver;
+import org.eclipse.wst.sse.core.internal.util.Utilities;
 import org.eclipse.wst.sse.core.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.util.Assert;
-import org.eclipse.wst.sse.core.util.ProjectResolver;
-import org.eclipse.wst.sse.core.util.URIResolver;
-import org.eclipse.wst.sse.core.util.Utilities;
 
 /**
  * Not intended to be subclassed, referenced or instantiated by clients.
@@ -1348,7 +1348,7 @@ public class ModelManagerImpl implements IModelManager {
 	 * not to use this function
 	 */
 	public synchronized void moveModel(Object oldId, Object newId) {
-		org.eclipse.wst.sse.core.util.Assert.isNotNull(oldId, "id parameter can not be null"); //$NON-NLS-1$
+		org.eclipse.wst.sse.core.internal.util.Assert.isNotNull(oldId, "id parameter can not be null"); //$NON-NLS-1$
 		SharedObject sharedObject = (SharedObject) fManagedObjects.get(oldId);
 		// if not found in cache, ignore request.
 		// this would normally be a program error

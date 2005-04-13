@@ -17,8 +17,8 @@ package org.eclipse.wst.sse.core.internal.text;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
+import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.util.Debug;
 
 
 public class StructuredDocumentRegionEnumeration implements Enumeration {
@@ -60,7 +60,7 @@ public class StructuredDocumentRegionEnumeration implements Enumeration {
 			count++;
 			countNode = countNode.getNext();
 		}
-		if (org.eclipse.wst.sse.core.util.Debug.DEBUG > 5) {
+		if (org.eclipse.wst.sse.core.internal.util.Debug.DEBUG > 5) {
 			System.out.println("N Nodes in StructuredDocumentRegionEnumeration Contructor: " + count); //$NON-NLS-1$
 		}
 	}

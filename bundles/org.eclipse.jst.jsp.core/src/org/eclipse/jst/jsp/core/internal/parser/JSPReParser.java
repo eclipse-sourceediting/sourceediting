@@ -19,6 +19,7 @@ import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.text.CoreNodeList;
+import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.core.parser.RegionParser;
 import org.eclipse.wst.sse.core.parser.StructuredDocumentRegionParser;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
@@ -27,7 +28,6 @@ import org.eclipse.wst.sse.core.text.IStructuredTextReParser;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.sse.core.util.Debug;
 import org.eclipse.wst.xml.core.internal.parser.XMLStructuredDocumentReParser;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 

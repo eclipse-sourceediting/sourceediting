@@ -213,7 +213,7 @@ public class ContextRegionContainer implements ITextRegionContainer {
 			int length = getRegions().size();
 			for (int i = 0; i < length; i++) {
 				ITextRegion region = getRegions().get(i);
-				if (org.eclipse.wst.sse.core.util.Debug.debugStructuredDocument) {
+				if (org.eclipse.wst.sse.core.internal.util.Debug.debugStructuredDocument) {
 					System.out.println("region(s) in IStructuredDocumentRegion::getRegionAtCharacterOffset: " + region); //$NON-NLS-1$
 					System.out.println("       requested offset: " + offset); //$NON-NLS-1$
 					//System.out.println(" transformedOffset: " +
