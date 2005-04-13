@@ -54,7 +54,7 @@
             target="org.eclipse.core.runtime.xml"/>
       <configuration
       		type="contentoutlineconfiguration"
-            class="org.eclipse.wst.xml.ui.views.contentoutline.XMLContentOutlineConfiguration"
+            class="org.eclipse.wst.xml.ui.internal.views.contentoutline.XMLContentOutlineConfiguration"
             target="org.eclipse.core.runtime.xml"/>
       <configuration
       		type="propertysheetconfiguration"

@@ -15,7 +15,7 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.contentoutline.HTMLNodeActionManager;
 import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
-import org.eclipse.wst.xml.ui.views.contentoutline.XMLContentOutlineConfiguration;
+import org.eclipse.wst.xml.ui.internal.views.contentoutline.XMLContentOutlineConfiguration;
 
 public class HTMLContentOutlineConfiguration extends XMLContentOutlineConfiguration {
 
