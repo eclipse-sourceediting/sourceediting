@@ -17,7 +17,7 @@ import org.eclipse.osgi.util.NLS;
  * @since 1.0
  */
 public class XMLEditorMessages extends NLS {
-	private static final String BUNDLE_NAME = "org.eclipse.wst.xml.internal.ui.XMLEditorResources";//$NON-NLS-1$
+	private static final String BUNDLE_NAME = "org.eclipse.wst.xml.ui.internal.tabletree.XMLEditorResources";//$NON-NLS-1$
 
 	public static String XMLTableTreeViewer_0;
 	public static String XMLMultiPageEditorPart_0;
