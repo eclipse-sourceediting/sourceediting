@@ -8,15 +8,19 @@
  * Contributors:
  * IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.html.validation;
+package org.eclipse.wst.html.internal.validation;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.wst.validation.internal.operations.WorkbenchContext;
 
-public class HTMLValidationWorkbenchHelper extends WorkbenchContext {
+/**
+ * A version of IHelper not dependent on IWorkbenchHelper.
+ * 
+ * @author pavery
+ */
+public class HTMLValidationHelper {
 	/**
 	 */
-	public HTMLValidationWorkbenchHelper() {
+	public HTMLValidationHelper() {
 		super();
 	}
 
@@ -41,7 +45,8 @@ public class HTMLValidationWorkbenchHelper extends WorkbenchContext {
 		if (object == null)
 			return null;
 		if (object instanceof IFile)
-			return getPortableName((IFile) object);
+			((IFile) object).getFullPath().toString();
 		return object.toString();
 	}
+
 }

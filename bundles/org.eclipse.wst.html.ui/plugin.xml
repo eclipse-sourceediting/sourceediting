@@ -354,11 +354,11 @@
 		nameFilter="*.jtpl">
 	  </filter>
 	  <helper
-		class="org.eclipse.wst.html.validation.HTMLValidationWorkbenchHelper">
+		class="org.eclipse.wst.html.internal.validation.HTMLValidationWorkbenchHelper">
 	  </helper>
 	  <run
 	  	enabled="false"
-		class="org.eclipse.wst.html.validation.HTMLValidator">
+		class="org.eclipse.wst.html.internal.validation.HTMLValidator">
 	  </run>
 	</validator>
    </extension>
@@ -371,7 +371,7 @@
          point="org.eclipse.wst.sse.ui.sourcevalidation">
       <validator
             scope="total"
-            class="org.eclipse.wst.html.validation.HTMLValidator"
+            class="org.eclipse.wst.html.internal.validation.HTMLValidator"
             id="org.eclipse.wst.html.htmlsourcevalidator">
          <contentTypeIdentifier
                id="org.eclipse.wst.html.core.htmlsource">
