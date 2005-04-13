@@ -15,8 +15,8 @@ package org.eclipse.jst.jsp.core.internal.parser;
 import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
-import org.eclipse.wst.sse.core.parser.RegionParser;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 
 public class JSPCodeRegion extends ForeignRegion {

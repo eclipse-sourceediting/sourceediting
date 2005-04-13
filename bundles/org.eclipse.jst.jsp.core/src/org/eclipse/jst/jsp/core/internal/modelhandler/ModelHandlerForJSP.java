@@ -20,7 +20,7 @@ import org.eclipse.wst.sse.core.IModelLoader;
 import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.AbstractModelHandler;
-import org.eclipse.wst.sse.core.parser.BlockMarker;
+import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 
 public class ModelHandlerForJSP extends AbstractModelHandler {
 

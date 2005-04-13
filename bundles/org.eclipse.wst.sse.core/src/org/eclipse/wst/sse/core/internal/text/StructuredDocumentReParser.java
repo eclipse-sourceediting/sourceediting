@@ -24,10 +24,10 @@ import org.eclipse.wst.sse.core.events.RegionsReplacedEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentRegionsReplacedEvent;
 import org.eclipse.wst.sse.core.internal.Logger;
+import org.eclipse.wst.sse.core.internal.ltk.parser.BlockTagParser;
 import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.sse.core.internal.util.Utilities;
-import org.eclipse.wst.sse.core.parser.BlockTagParser;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredTextReParser;
@@ -74,7 +74,7 @@ public class StructuredDocumentReParser implements IStructuredTextReParser {
 		StructuredDocumentEvent result = null;
 		if (blockTagList != null) {
 			for (int i = 0; i < blockTagList.size(); i++) {
-				org.eclipse.wst.sse.core.parser.BlockMarker blockTag = (org.eclipse.wst.sse.core.parser.BlockMarker) blockTagList.get(i);
+				org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker blockTag = (org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker) blockTagList.get(i);
 				String tagName = blockTag.getTagName();
 				result = checkForCriticalName("<" + tagName); //$NON-NLS-1$
 				if (result != null)

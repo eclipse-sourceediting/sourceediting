@@ -10,23 +10,15 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.parser;
+package org.eclipse.wst.sse.core.internal.ltk.parser;
 
 
 
-import java.util.List;
+public interface StructuredDocumentRegionParser extends RegionParser {
 
-public interface BlockTagParser {
+	void addStructuredDocumentRegionHandler(StructuredDocumentRegionHandler handler);
 
-	void addBlockMarker(BlockMarker marker);
+	void removeStructuredDocumentRegionHandler(StructuredDocumentRegionHandler handler);
 
-	void beginBlockScan(String tagName);
-
-	BlockMarker getBlockMarker(String tagName);
-
-	List getBlockMarkers();
-
-	void removeBlockMarker(BlockMarker marker);
-
-	void removeBlockMarker(String tagName);
+	void resetHandlers();
 }

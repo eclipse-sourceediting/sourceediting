@@ -10,49 +10,23 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.parser;
+package org.eclipse.wst.sse.core.internal.ltk.parser;
 
 
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
 import java.util.List;
 
-import org.eclipse.wst.sse.core.text.ITextRegion;
-
-
-public interface BlockTokenizer {
+public interface BlockTagParser {
 
 	void addBlockMarker(BlockMarker marker);
 
-	void beginBlockMarkerScan(String newTagName, String context);
+	void beginBlockScan(String tagName);
 
-	void beginBlockTagScan(String newTagName);
+	BlockMarker getBlockMarker(String tagName);
 
 	List getBlockMarkers();
 
-	ITextRegion getNextToken() throws IOException;
-
-	int getOffset();
-
-	boolean isEOF();
-
-	BlockTokenizer newInstance();
-
 	void removeBlockMarker(BlockMarker marker);
 
-	void removeBlockMarker(String tagname);
-
-	void reset(char[] charArray);
-
-	void reset(char[] charArray, int newOffset);
-
-	void reset(InputStream in);
-
-	void reset(InputStream in, int newOffset);
-
-	void reset(Reader in);
-
-	void reset(Reader in, int newOffset);
+	void removeBlockMarker(String tagName);
 }

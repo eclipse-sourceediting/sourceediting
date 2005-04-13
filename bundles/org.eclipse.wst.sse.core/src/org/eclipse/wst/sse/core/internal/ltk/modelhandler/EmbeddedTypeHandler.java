@@ -14,8 +14,8 @@ package org.eclipse.wst.sse.core.internal.ltk.modelhandler;
 
 import java.util.List;
 
+import org.eclipse.wst.sse.core.internal.ltk.parser.JSPCapableParser;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
-import org.eclipse.wst.sse.core.parser.JSPCapableParser;
 
 
 /**

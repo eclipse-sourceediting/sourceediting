@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.builder.delegates;
 
-import org.eclipse.wst.sse.core.participants.TaskTagSeeker;
+import org.eclipse.wst.sse.core.internal.participants.TaskTagSeeker;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;

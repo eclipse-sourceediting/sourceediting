@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.parser;
+package org.eclipse.wst.sse.core.internal.ltk.parser;
 
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 

@@ -18,7 +18,7 @@ import org.eclipse.wst.sse.core.events.NewDocumentEvent;
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.internal.IExecutionDelegate;
 import org.eclipse.wst.sse.core.internal.ILockable;
-import org.eclipse.wst.sse.core.parser.RegionParser;
+import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 
 
 

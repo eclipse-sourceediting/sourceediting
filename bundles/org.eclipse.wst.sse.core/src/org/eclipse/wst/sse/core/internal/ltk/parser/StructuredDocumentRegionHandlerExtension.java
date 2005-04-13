@@ -10,19 +10,11 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.parser;
+package org.eclipse.wst.sse.core.internal.ltk.parser;
 
-import java.util.List;
+import org.eclipse.wst.sse.core.text.IStructuredDocument;
 
-public interface JSPCapableParser extends RegionParser, BlockTagParser {
-	void addNestablePrefix(TagMarker marker);
 
-	/**
-	 * returns the TagMarkers for prefixes that are allowed to be nestable
-	 * 
-	 * @return
-	 */
-	List getNestablePrefixes();
-
-	void removeNestablePrefix(String tagName);
+public interface StructuredDocumentRegionHandlerExtension extends StructuredDocumentRegionHandler {
+	void setStructuredDocument(IStructuredDocument newDocument);
 }

@@ -23,8 +23,8 @@ import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.internal.document.StructuredDocumentFactory;
 import org.eclipse.wst.sse.core.internal.encoding.ContentTypeEncodingPreferences;
+import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
-import org.eclipse.wst.sse.core.parser.RegionParser;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 
 

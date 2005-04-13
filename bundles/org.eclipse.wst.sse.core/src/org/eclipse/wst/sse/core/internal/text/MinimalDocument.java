@@ -30,7 +30,7 @@ import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.NotImplementedException;
 import org.eclipse.wst.sse.core.internal.document.NullStructuredDocumentPartitioner;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
-import org.eclipse.wst.sse.core.parser.RegionParser;
+import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;

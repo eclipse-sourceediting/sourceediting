@@ -10,19 +10,19 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.parser;
+package org.eclipse.wst.sse.core.internal.ltk.parser;
+
+import java.util.List;
 
 
 
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-
-public interface StructuredDocumentRegionHandler {
-
-	// Sent when a IStructuredDocumentRegion is first parsed
-	public void nodeParsed(IStructuredDocumentRegion aCoreStructuredDocumentRegion);
-
-	// Sent when the calling parser's model undergoes a full reset
-	//   and any information based upon the old model should be
-	//   cleared
-	public void resetNodes();
+public interface StructuredDocumentRegionParserExtension extends StructuredDocumentRegionParser {
+	/**
+	 * Returns the current list of StructuredDocumentRegionHandlers listening
+	 * to this parser.
+	 * 
+	 * @return List - the list of listeners, the list may not be null and each
+	 *         element in it must implement StructuredDocumentRegionHandler
+	 */
+	List getStructuredDocumentRegionHandlers();
 }

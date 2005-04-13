@@ -18,10 +18,10 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP11TLDNa
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
+import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
+import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionParser;
 import org.eclipse.wst.sse.core.internal.text.CoreNodeList;
 import org.eclipse.wst.sse.core.internal.util.Debug;
-import org.eclipse.wst.sse.core.parser.RegionParser;
-import org.eclipse.wst.sse.core.parser.StructuredDocumentRegionParser;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
 import org.eclipse.wst.sse.core.text.IStructuredTextReParser;

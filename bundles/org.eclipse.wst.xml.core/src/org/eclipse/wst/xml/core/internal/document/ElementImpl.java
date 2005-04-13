@@ -17,7 +17,7 @@ package org.eclipse.wst.xml.core.internal.document;
 
 import java.util.Iterator;
 
-import org.eclipse.wst.sse.core.parser.RegionParser;
+import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;

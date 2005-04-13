@@ -14,8 +14,8 @@ package org.eclipse.wst.xml.core.internal.parser;
 
 
 
+import org.eclipse.wst.sse.core.internal.ltk.parser.IBlockedStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.parser.IBlockedStructuredDocumentRegion;
 
 
 public class BlockStructuredDocumentRegion extends BasicStructuredDocumentRegion implements IBlockedStructuredDocumentRegion {

@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.participants;
+package org.eclipse.wst.sse.core.internal.participants;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -49,12 +49,12 @@ import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.internal.document.DocumentReader;
 import org.eclipse.wst.sse.core.internal.ltk.builder.IBuilderDelegate;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IModelHandler;
+import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
+import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandler;
+import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionParser;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
 import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
-import org.eclipse.wst.sse.core.parser.RegionParser;
-import org.eclipse.wst.sse.core.parser.StructuredDocumentRegionHandler;
-import org.eclipse.wst.sse.core.parser.StructuredDocumentRegionParser;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
@@ -285,7 +285,7 @@ public abstract class TaskTagSeeker implements IBuilderDelegate {
 					documentParser.reset(new DocumentReader(textDocument));
 					documentParser.addStructuredDocumentRegionHandler(new StructuredDocumentRegionHandler() {
 						/**
-						 * @see org.eclipse.wst.sse.core.parser.StructuredDocumentRegionHandler#nodeParsed(org.eclipse.wst.sse.core.text.IStructuredDocumentRegion)
+						 * @see org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandler#nodeParsed(org.eclipse.wst.sse.core.text.IStructuredDocumentRegion)
 						 */
 						public void nodeParsed(IStructuredDocumentRegion documentRegion) {
 							ITextRegionList regions = documentRegion.getRegions();
@@ -304,7 +304,7 @@ public abstract class TaskTagSeeker implements IBuilderDelegate {
 						}
 
 						/**
-						 * @see org.eclipse.wst.sse.core.parser.StructuredDocumentRegionHandler#resetNodes()
+						 * @see org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandler#resetNodes()
 						 */
 						public void resetNodes() {
 						}

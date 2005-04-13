@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.participants;
+package org.eclipse.wst.sse.core.internal.participants;
 
 import java.util.Map;
 
