@@ -22,6 +22,8 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 public class IncrementalHelper implements IValidationContext {
 	private IProject fProject;
 
+	private String fURI = null;
+	
 	public IncrementalHelper(IDocument sourceDocument, IProject project) {
 		super();
 		fProject = project;
@@ -43,8 +45,13 @@ public class IncrementalHelper implements IValidationContext {
 		return null;
 	}
 
+	void setURI(String uri) {
+		fURI = uri;
+	}
+	
 	public String[] getURIs() {
-		// TODO Auto-generated method stub
-		return null;
+		if(fURI != null)
+			return new String[]{fURI};
+		return new String[0];
 	}
 }

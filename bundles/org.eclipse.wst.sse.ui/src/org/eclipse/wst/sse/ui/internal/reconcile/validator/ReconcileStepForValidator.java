@@ -33,10 +33,7 @@ import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
-import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
-import org.eclispe.wst.validation.internal.core.FileDelta;
-import org.eclispe.wst.validation.internal.core.IFileDelta;
 
 
 /**
@@ -55,7 +52,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
     }
     
 	private final IReconcileResult[] EMPTY_RECONCILE_RESULT_SET = new IReconcileResult[0];
-	private IValidationContext fHelper = null;
+	private IncrementalHelper fHelper = null;
 	private IncrementalReporter fReporter = null;
 	private int fScope = -1;
 	private IValidator fValidator = null;
@@ -150,7 +147,7 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 		return file;
 	}
 
-	private IValidationContext getHelper(IProject project) {
+	private IncrementalHelper getHelper(IProject project) {
 		if (fHelper == null)
 			fHelper = new IncrementalHelper(getStructuredDocument(), project);
 		return fHelper;
@@ -229,12 +226,11 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 
 		if (file != null) {
 			try {
-				IValidationContext helper = getHelper(project);
+				IncrementalHelper helper = getHelper(project);
 				IncrementalReporter reporter = getReporter();
-
-				IFileDelta fullDelta = new FileDelta(file.getFullPath().toString(), IFileDelta.CHANGED);
-				String[] uris = helper.getURIs();
-				uris[0] = fullDelta.getFileName();
+				
+				helper.setURI(file.getFullPath().toString());
+				
 				fValidator.validate(helper, reporter);
 
 				results = createAnnotations(reporter.getMessages());
