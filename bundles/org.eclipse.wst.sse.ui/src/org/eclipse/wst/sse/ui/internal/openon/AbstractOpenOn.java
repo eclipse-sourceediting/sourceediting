@@ -34,7 +34,7 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
-import org.eclipse.wst.sse.ui.util.PlatformStatusLineUtil;
+import org.eclipse.wst.sse.ui.internal.util.PlatformStatusLineUtil;
 
 
 /**

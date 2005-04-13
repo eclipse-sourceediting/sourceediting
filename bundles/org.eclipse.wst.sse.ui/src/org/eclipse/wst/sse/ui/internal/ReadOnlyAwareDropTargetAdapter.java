@@ -17,7 +17,6 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.sse.ui.extension.ExtendedEditorDropTargetAdapter;
 
 
 public class ReadOnlyAwareDropTargetAdapter extends ExtendedEditorDropTargetAdapter {

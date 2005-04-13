@@ -25,7 +25,7 @@ import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordRule;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.wst.sse.ui.util.EditorUtility;
+import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 
 /**
  * A Java code scanner.

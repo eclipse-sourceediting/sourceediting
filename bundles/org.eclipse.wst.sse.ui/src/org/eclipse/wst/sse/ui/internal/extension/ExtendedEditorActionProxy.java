@@ -28,8 +28,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
-import org.eclipse.wst.sse.ui.extension.IExtendedSimpleEditor;
 import org.eclipse.wst.sse.ui.extensions.ISelfValidateEditAction;
+import org.eclipse.wst.sse.ui.internal.IExtendedSimpleEditor;
 import org.eclipse.wst.sse.ui.internal.Logger;
 
 

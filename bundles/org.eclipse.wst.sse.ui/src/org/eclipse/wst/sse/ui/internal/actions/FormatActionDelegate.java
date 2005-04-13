@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.sse.core.internal.exceptions.MalformedInputExceptionWithDetail;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
-import org.eclipse.wst.sse.ui.extension.FormatProcessorsExtensionReader;
+import org.eclipse.wst.sse.ui.internal.FormatProcessorsExtensionReader;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;

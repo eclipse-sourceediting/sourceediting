@@ -39,7 +39,7 @@ import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateAction
 import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateActionContributionItem;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
-import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
+import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
 
 public class StructuredContentOutlineConfiguration extends ContentOutlineConfiguration {
 	/**

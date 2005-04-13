@@ -69,9 +69,9 @@
                id="org.eclipse.swt.dnd.FileTransfer">
          </transfer>
          <dropAction
-               class="org.eclipse.wst.sse.ui.extension.FileDropAction"
+               class="org.eclipse.wst.sse.ui.internal.FileDropAction"
                transferID="org.eclipse.swt.dnd.FileTransfer"
-               id="org.eclipse.wst.sse.ui.extension.FileDropAction">
+               id="org.eclipse.wst.sse.ui.internal.FileDropAction">
          </dropAction>
          <transfer
                priority="low"
@@ -81,9 +81,9 @@
                id="org.eclipse.swt.dnd.TextTransfer">
          </transfer>
          <dropAction
-               class="org.eclipse.wst.sse.ui.extension.TextDropAction"
+               class="org.eclipse.wst.sse.ui.internal.TextDropAction"
                transferID="org.eclipse.swt.dnd.TextTransfer"
-               id="corg.eclipse.wst.sse.ui.extension.TextDropAction">
+               id="org.eclipse.wst.sse.ui.internal.TextDropAction">
          </dropAction>
       </dropTargetContribution>
    </extension>

@@ -39,8 +39,8 @@ import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredPartitioning;
-import org.eclipse.wst.sse.ui.extension.ExtendedConfigurationBuilder;
-import org.eclipse.wst.sse.ui.extension.IExtendedConfiguration;
+import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
+import org.eclipse.wst.sse.ui.internal.IExtendedConfiguration;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextAnnotationHover;
@@ -51,11 +51,11 @@ import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorBuilder;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorMetaData;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorStrategy;
+import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
+import org.eclipse.wst.sse.ui.internal.util.Assert;
+import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.eclipse.wst.sse.ui.style.Highlighter;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
-import org.eclipse.wst.sse.ui.taginfo.TextHoverManager;
-import org.eclipse.wst.sse.ui.util.Assert;
-import org.eclipse.wst.sse.ui.util.EditorUtility;
 
 
 /**

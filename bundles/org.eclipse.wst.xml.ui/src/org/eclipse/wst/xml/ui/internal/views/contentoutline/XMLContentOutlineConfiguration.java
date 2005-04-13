@@ -31,7 +31,7 @@ import org.eclipse.wst.common.ui.dnd.ViewerDragAdapter;
 import org.eclipse.wst.common.ui.dnd.ViewerDropAdapter;
 import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
-import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
+import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
 import org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;

@@ -23,7 +23,7 @@ import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.TextEditorAction;
-import org.eclipse.wst.sse.ui.util.PlatformStatusLineUtil;
+import org.eclipse.wst.sse.ui.internal.util.PlatformStatusLineUtil;
 
 /**
  * A TextEditorAction that launches JDT rename element wizard

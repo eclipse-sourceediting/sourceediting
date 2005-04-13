@@ -64,12 +64,11 @@ import org.eclipse.wst.sse.core.undo.IDocumentSelectionMediator;
 import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.core.undo.UndoDocumentEvent;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
-import org.eclipse.wst.sse.ui.extension.IExtendedSimpleEditor;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
+import org.eclipse.wst.sse.ui.internal.util.PlatformStatusLineUtil;
+import org.eclipse.wst.sse.ui.internal.view.events.INodeSelectionListener;
+import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
-import org.eclipse.wst.sse.ui.util.PlatformStatusLineUtil;
-import org.eclipse.wst.sse.ui.view.events.INodeSelectionListener;
-import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
 

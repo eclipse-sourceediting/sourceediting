@@ -23,7 +23,7 @@ import org.eclipse.wst.css.core.internal.provisional.document.ICSSValue;
 import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateActionContributionItem;
-import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
+import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
 import org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration;
 
 public class CSSContentOutlineConfiguration extends StructuredContentOutlineConfiguration {

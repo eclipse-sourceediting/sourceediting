@@ -16,8 +16,8 @@ import org.eclipse.wst.dtd.core.internal.modelhandler.ModelHandlerForDTD;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IDocumentTypeHandler;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
+import org.eclipse.wst.sse.ui.internal.util.Assert;
 import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
-import org.eclipse.wst.sse.ui.util.Assert;
 
 
 /**

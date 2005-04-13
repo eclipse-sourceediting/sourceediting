@@ -33,7 +33,7 @@ import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.dtd.ui.internal.dnd.DTDDragAndDropManager;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateActionContributionItem;
-import org.eclipse.wst.sse.ui.util.Assert;
+import org.eclipse.wst.sse.ui.internal.util.Assert;
 import org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration;
 
 /**

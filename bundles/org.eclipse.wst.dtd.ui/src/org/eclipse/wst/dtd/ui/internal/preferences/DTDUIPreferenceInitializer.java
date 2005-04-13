@@ -4,7 +4,7 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.dtd.ui.internal.style.IStyleConstantsDTD;
-import org.eclipse.wst.sse.ui.preferences.ui.ColorHelper;
+import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 
 /**
  * Sets default values for DTD UI preferences

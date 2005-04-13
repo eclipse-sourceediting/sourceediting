@@ -27,7 +27,7 @@ import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore.OverlayKey;
-import org.eclipse.wst.sse.ui.preferences.ui.StyledTextColorPicker;
+import org.eclipse.wst.sse.ui.internal.preferences.ui.StyledTextColorPicker;
 import org.eclipse.wst.xml.ui.internal.preferences.XMLColorPage;
 
 public class HTMLColorPage extends XMLColorPage {

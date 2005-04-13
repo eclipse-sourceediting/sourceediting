@@ -21,9 +21,9 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.search.FindOccurrencesActionProvider;
-import org.eclipse.wst.xml.ui.actions.AddBlockCommentActionXML;
-import org.eclipse.wst.xml.ui.actions.RemoveBlockCommentActionXML;
-import org.eclipse.wst.xml.ui.actions.ToggleCommentActionXML;
+import org.eclipse.wst.xml.ui.internal.actions.AddBlockCommentActionXML;
+import org.eclipse.wst.xml.ui.internal.actions.RemoveBlockCommentActionXML;
+import org.eclipse.wst.xml.ui.internal.actions.ToggleCommentActionXML;
 
 public class StructuredTextEditorHTML extends StructuredTextEditor {
 	private final static String UNDERSCORE = "_"; //$NON-NLS-1$

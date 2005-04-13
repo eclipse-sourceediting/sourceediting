@@ -20,7 +20,7 @@ import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.dtd.core.internal.DTDCorePlugin;
 import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.dtd.ui.internal.editor.IHelpContextIds;
-import org.eclipse.wst.sse.ui.preferences.ui.AbstractPreferencePage;
+import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage;
 
 
 public class DTDFilesPreferencePage extends AbstractPreferencePage {

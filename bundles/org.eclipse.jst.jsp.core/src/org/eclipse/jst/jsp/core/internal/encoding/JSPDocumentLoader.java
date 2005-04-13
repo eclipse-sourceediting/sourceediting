@@ -46,7 +46,7 @@ import org.eclipse.wst.sse.core.internal.modelhandler.EmbeddedTypeRegistry;
 import org.eclipse.wst.sse.core.internal.modelhandler.EmbeddedTypeRegistryImpl;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.sse.ui.util.Assert;
+import org.eclipse.wst.sse.ui.internal.util.Assert;
 import org.eclipse.wst.xml.core.document.IDOMDocument;
 import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;

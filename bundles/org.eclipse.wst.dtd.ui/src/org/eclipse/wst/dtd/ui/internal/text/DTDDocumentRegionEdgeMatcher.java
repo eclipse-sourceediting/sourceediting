@@ -13,7 +13,7 @@
 package org.eclipse.wst.dtd.ui.internal.text;
 
 import org.eclipse.wst.dtd.core.internal.parser.DTDRegionTypes;
-import org.eclipse.wst.sse.ui.text.DocumentRegionEdgeMatcher;
+import org.eclipse.wst.sse.ui.internal.text.DocumentRegionEdgeMatcher;
 
 
 public class DTDDocumentRegionEdgeMatcher extends DocumentRegionEdgeMatcher {

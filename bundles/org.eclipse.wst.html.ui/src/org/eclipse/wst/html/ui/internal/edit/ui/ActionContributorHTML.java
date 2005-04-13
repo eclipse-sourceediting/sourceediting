@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.internal.edit.ui;
 
-import org.eclipse.wst.xml.ui.actions.ActionContributorXML;
+import org.eclipse.wst.xml.ui.internal.actions.ActionContributorXML;
 
 /**
  *

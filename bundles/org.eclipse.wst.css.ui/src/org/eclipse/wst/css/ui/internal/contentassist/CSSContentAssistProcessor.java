@@ -26,7 +26,7 @@ import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistUtilities;
-import org.eclipse.wst.xml.ui.util.SharedXMLEditorPluginImageHelper;
+import org.eclipse.wst.xml.ui.internal.util.SharedXMLEditorPluginImageHelper;
 
 public class CSSContentAssistProcessor implements IContentAssistProcessor {
 

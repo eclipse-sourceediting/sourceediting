@@ -21,7 +21,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.TextEditorAction;
-import org.eclipse.wst.sse.ui.extension.IExtendedSimpleEditor;
+import org.eclipse.wst.sse.ui.internal.IExtendedSimpleEditor;
 
 
 /**

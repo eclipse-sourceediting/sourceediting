@@ -5,7 +5,7 @@ package org.eclipse.wst.xsd.ui.reconcile;
 
 import org.eclipse.wst.validation.internal.provisional.ValidationFactory;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
-import org.eclipse.wst.xml.ui.reconcile.DelegatingSourceValidator;
+import org.eclipse.wst.xml.ui.internal.validation.DelegatingSourceValidator;
 
 /**
  * @author mhutchin

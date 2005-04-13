@@ -32,11 +32,11 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.core.internal.util.Utilities;
-import org.eclipse.wst.sse.ui.view.events.CaretEvent;
-import org.eclipse.wst.sse.ui.view.events.INodeSelectionListener;
-import org.eclipse.wst.sse.ui.view.events.ITextSelectionListener;
-import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
-import org.eclipse.wst.sse.ui.view.events.TextSelectionChangedEvent;
+import org.eclipse.wst.sse.ui.internal.view.events.CaretEvent;
+import org.eclipse.wst.sse.ui.internal.view.events.INodeSelectionListener;
+import org.eclipse.wst.sse.ui.internal.view.events.ITextSelectionListener;
+import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
+import org.eclipse.wst.sse.ui.internal.view.events.TextSelectionChangedEvent;
 
 
 public class ViewerSelectionManagerImpl implements ViewerSelectionManager {

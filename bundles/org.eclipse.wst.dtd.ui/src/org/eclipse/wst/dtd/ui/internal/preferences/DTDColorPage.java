@@ -32,8 +32,8 @@ import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore.OverlayKey;
-import org.eclipse.wst.sse.ui.preferences.ui.AbstractColorPage;
-import org.eclipse.wst.sse.ui.preferences.ui.StyledTextColorPicker;
+import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractColorPage;
+import org.eclipse.wst.sse.ui.internal.preferences.ui.StyledTextColorPicker;
 
 public class DTDColorPage extends AbstractColorPage {
 

@@ -18,7 +18,7 @@ import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.format.FormatProcessorXML;
-import org.eclipse.wst.xml.ui.actions.AbstractNodeActionManager;
+import org.eclipse.wst.xml.ui.internal.actions.AbstractNodeActionManager;
 import org.w3c.dom.Node;
 
 

@@ -32,7 +32,7 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.sse.ui.preferences.ui.ColorHelper;
+import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 import org.eclipse.wst.sse.ui.style.AbstractLineStyleProvider;
 import org.eclipse.wst.sse.ui.style.LineStyleProvider;
 

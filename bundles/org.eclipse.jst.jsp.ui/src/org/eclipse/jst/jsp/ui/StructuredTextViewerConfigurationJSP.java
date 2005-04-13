@@ -77,13 +77,13 @@ import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
+import org.eclipse.wst.sse.ui.internal.taginfo.AnnotationHoverProcessor;
+import org.eclipse.wst.sse.ui.internal.taginfo.ProblemAnnotationHoverProcessor;
+import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
+import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
 import org.eclipse.wst.sse.ui.style.LineStyleProvider;
-import org.eclipse.wst.sse.ui.taginfo.AnnotationHoverProcessor;
-import org.eclipse.wst.sse.ui.taginfo.ProblemAnnotationHoverProcessor;
-import org.eclipse.wst.sse.ui.taginfo.TextHoverManager;
-import org.eclipse.wst.sse.ui.util.EditorUtility;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 import org.eclipse.wst.xml.ui.internal.correction.CorrectionProcessorXML;
@@ -92,7 +92,7 @@ import org.eclipse.wst.xml.ui.internal.style.LineStyleProviderForXML;
 import org.eclipse.wst.xml.ui.internal.taginfo.XMLBestMatchHoverProcessor;
 import org.eclipse.wst.xml.ui.internal.taginfo.XMLInformationProvider;
 import org.eclipse.wst.xml.ui.internal.taginfo.XMLTagInfoHoverProcessor;
-import org.eclipse.wst.xml.ui.reconcile.StructuredTextReconcilingStrategyForMarkup;
+import org.eclipse.wst.xml.ui.internal.validation.StructuredTextReconcilingStrategyForMarkup;
 
 public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerConfiguration {
 

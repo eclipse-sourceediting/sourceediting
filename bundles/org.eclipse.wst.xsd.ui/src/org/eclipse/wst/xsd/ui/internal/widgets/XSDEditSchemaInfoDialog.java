@@ -18,8 +18,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.wst.xml.ui.dialogs.EditSchemaInfoDialog;
-import org.eclipse.wst.xml.ui.nsedit.CommonEditNamespacesTargetFieldDialog;
+import org.eclipse.wst.xml.ui.internal.dialogs.EditSchemaInfoDialog;
+import org.eclipse.wst.xml.ui.internal.nsedit.CommonEditNamespacesTargetFieldDialog;
 
 public class XSDEditSchemaInfoDialog extends EditSchemaInfoDialog {
 	String targetNamespace;

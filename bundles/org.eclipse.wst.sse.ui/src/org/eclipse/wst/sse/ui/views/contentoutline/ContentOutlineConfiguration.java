@@ -28,8 +28,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.wst.sse.ui.extension.IExtendedConfiguration;
-import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
+import org.eclipse.wst.sse.ui.internal.IExtendedConfiguration;
+import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
 
 /**
  * Configuration class for Outline Pages.  Not finalized.

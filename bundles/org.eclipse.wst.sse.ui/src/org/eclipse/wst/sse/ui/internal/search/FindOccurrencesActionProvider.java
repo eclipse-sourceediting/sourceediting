@@ -26,7 +26,7 @@ import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.TextEditorAction;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
-import org.eclipse.wst.sse.ui.util.PlatformStatusLineUtil;
+import org.eclipse.wst.sse.ui.internal.util.PlatformStatusLineUtil;
 
 /**
  * Performs the appropriate FindOccurrences action call based on selection.

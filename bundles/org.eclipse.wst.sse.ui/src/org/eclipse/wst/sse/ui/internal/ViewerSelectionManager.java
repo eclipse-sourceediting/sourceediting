@@ -21,9 +21,9 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.ui.view.events.ICaretListener;
-import org.eclipse.wst.sse.ui.view.events.INodeSelectionListener;
-import org.eclipse.wst.sse.ui.view.events.ITextSelectionListener;
+import org.eclipse.wst.sse.ui.internal.view.events.ICaretListener;
+import org.eclipse.wst.sse.ui.internal.view.events.INodeSelectionListener;
+import org.eclipse.wst.sse.ui.internal.view.events.ITextSelectionListener;
 
 
 public interface ViewerSelectionManager extends ICaretListener, IDoubleClickListener, ISelectionChangedListener, SelectionListener {

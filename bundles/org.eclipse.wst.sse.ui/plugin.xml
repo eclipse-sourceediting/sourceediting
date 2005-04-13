@@ -48,16 +48,9 @@
 		<initializer class="org.eclipse.wst.sse.ui.internal.PreferenceInitializer"/>
 	</extension>
 
-<!-- 
-		note: this perspective stuff should probably go in the 
-		com.ibm.etools.xml.tools.XMLPerspective 
-		or in the plugin.xml for com.ibm.etools.xml.tools
-	-->
-<!-- PERSPECTIVE EXTENSIONS -->
 
 <!-- reusable extensions -->
-   <extension
-         point="org.eclipse.wst.sse.ui.extendedconfiguration">
+   <extension point="org.eclipse.wst.sse.ui.extendedconfiguration" >
       <configuration 
       		type="contentoutlineconfiguration"
             class="org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration"
@@ -105,7 +98,7 @@
 <!--  Comment out for now since this preference page is not used
       <page
             name="%WEB_AND_XML_Files.name"
-            class="org.eclipse.wst.sse.ui.preferences.ui.FilePreferencePage"
+            class="org.eclipse.wst.sse.ui.internal.preferences.ui.FilePreferencePage"
             id="org.eclipse.wst.sse.ui.preferences">
       </page>
 -->
@@ -118,7 +111,7 @@
       <page
             name="%Structured_Text_Editor.name"
             category="org.eclipse.ui.preferencePages.Editors"
-            class="org.eclipse.wst.sse.ui.preferences.ui.StructuredTextEditorPreferencePage"
+       		class="org.eclipse.wst.sse.ui.internal.preferences.ui.StructuredTextEditorPreferencePage"
             id="org.eclipse.wst.sse.ui.preferences.editor">
       </page>
    </extension>
@@ -330,7 +323,7 @@
          </description>
       </fontDefinition>
    </extension>
-   <extension
+   <extension 
          point="org.eclipse.wst.sse.ui.dropTargetTransfers">
       <dropTargetContribution
             targetID="org.eclipse.wst.sse.ui.internal.StructuredTextEditor"
@@ -343,9 +336,9 @@
                id="org.eclipse.swt.dnd.FileTransfer">
          </transfer>
          <dropAction
-               class="org.eclipse.wst.sse.ui.extension.FileDropAction"
+               class="org.eclipse.wst.sse.ui.internal.FileDropAction"
                transferID="org.eclipse.swt.dnd.FileTransfer"
-               id="org.eclipse.wst.sse.ui.extension.FileDropAction">
+               id="org.eclipse.wst.sse.ui.internal.FileDropAction">
          </dropAction>
          <transfer
                priority="low"
@@ -355,10 +348,10 @@
                id="org.eclipse.swt.dnd.TextTransfer">
          </transfer>
          <dropAction
-               class="org.eclipse.wst.sse.ui.extension.TextDropAction"
+               class="org.eclipse.wst.sse.ui.internal.TextDropAction"
                transferID="org.eclipse.swt.dnd.TextTransfer"
-               id="org.eclipse.wst.sse.ui.extension.TextDropAction">
-         </dropAction>
+               id="org.eclipse.wst.sse.ui.internal.TextDropAction">
+         </dropAction> 
       </dropTargetContribution>
    </extension>
 

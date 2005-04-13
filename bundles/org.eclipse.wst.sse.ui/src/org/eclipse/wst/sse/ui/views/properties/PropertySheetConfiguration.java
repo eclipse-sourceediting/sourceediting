@@ -21,7 +21,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
-import org.eclipse.wst.sse.ui.extension.IExtendedConfiguration;
+import org.eclipse.wst.sse.ui.internal.IExtendedConfiguration;
 
 
 /**

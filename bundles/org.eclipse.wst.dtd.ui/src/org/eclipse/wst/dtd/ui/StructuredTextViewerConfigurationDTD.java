@@ -27,14 +27,14 @@ import org.eclipse.wst.sse.core.text.IStructuredPartitionTypes;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
+import org.eclipse.wst.sse.ui.internal.taginfo.AnnotationHoverProcessor;
+import org.eclipse.wst.sse.ui.internal.taginfo.ProblemAnnotationHoverProcessor;
+import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
+import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
 import org.eclipse.wst.sse.ui.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.style.LineStyleProviderForNoOp;
-import org.eclipse.wst.sse.ui.taginfo.AnnotationHoverProcessor;
-import org.eclipse.wst.sse.ui.taginfo.ProblemAnnotationHoverProcessor;
-import org.eclipse.wst.sse.ui.taginfo.TextHoverManager;
-import org.eclipse.wst.sse.ui.util.EditorUtility;
 
 
 /**

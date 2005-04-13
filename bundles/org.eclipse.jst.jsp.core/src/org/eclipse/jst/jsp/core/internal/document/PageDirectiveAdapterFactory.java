@@ -15,7 +15,7 @@ import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.ui.contentproperties.ContentSettingsChangeSubject;
-import org.eclipse.wst.sse.ui.util.Assert;
+import org.eclipse.wst.sse.ui.internal.util.Assert;
 import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.w3c.dom.Node;
 

@@ -29,8 +29,8 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.sse.ui.preferences.ui.ColorHelper;
-import org.eclipse.wst.sse.ui.util.EditorUtility;
+import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
+import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 
 
 public abstract class AbstractLineStyleProvider {

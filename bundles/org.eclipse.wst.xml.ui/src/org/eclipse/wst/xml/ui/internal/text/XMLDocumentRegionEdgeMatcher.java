@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.text;
 
-import org.eclipse.wst.sse.ui.text.DocumentRegionEdgeMatcher;
+import org.eclipse.wst.sse.ui.internal.text.DocumentRegionEdgeMatcher;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 

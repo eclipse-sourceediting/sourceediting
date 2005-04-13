@@ -38,11 +38,11 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.sse.ui.extension.ExtendedConfigurationBuilder;
+import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
-import org.eclipse.wst.sse.ui.util.EditorUtility;
+import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 
 /**
  * This class is to directly mediate between the Structured Document data

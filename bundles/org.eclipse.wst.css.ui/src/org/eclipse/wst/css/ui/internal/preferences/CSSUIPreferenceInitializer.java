@@ -4,7 +4,7 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.css.ui.internal.style.IStyleConstantsCSS;
-import org.eclipse.wst.sse.ui.preferences.ui.ColorHelper;
+import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 
 /**
  * Sets default values for CSS UI preferences

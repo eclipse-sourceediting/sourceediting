@@ -25,7 +25,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.sse.ui.extension.IActionValidator;
+import org.eclipse.wst.sse.ui.internal.IActionValidator;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.osgi.framework.Bundle;
 

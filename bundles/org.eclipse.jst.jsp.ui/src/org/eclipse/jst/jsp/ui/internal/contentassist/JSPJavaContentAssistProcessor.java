@@ -36,7 +36,7 @@ import org.eclipse.wst.sse.ui.internal.contentassist.IResourceDependentProcessor
 import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
-import org.eclipse.wst.xml.ui.util.SharedXMLEditorPluginImageHelper;
+import org.eclipse.wst.xml.ui.internal.util.SharedXMLEditorPluginImageHelper;
 
 /**
  * @since 1.0

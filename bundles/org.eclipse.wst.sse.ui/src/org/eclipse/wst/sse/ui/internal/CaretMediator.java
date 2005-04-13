@@ -27,8 +27,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.core.internal.util.Utilities;
-import org.eclipse.wst.sse.ui.view.events.CaretEvent;
-import org.eclipse.wst.sse.ui.view.events.ICaretListener;
+import org.eclipse.wst.sse.ui.internal.view.events.CaretEvent;
+import org.eclipse.wst.sse.ui.internal.view.events.ICaretListener;
 
 /**
  * Has the responsibility of listening for key events, and mouse events,

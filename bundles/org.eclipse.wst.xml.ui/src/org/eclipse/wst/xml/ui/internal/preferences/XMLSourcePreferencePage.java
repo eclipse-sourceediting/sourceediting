@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
-import org.eclipse.wst.sse.ui.preferences.ui.AbstractPreferencePage;
+import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;

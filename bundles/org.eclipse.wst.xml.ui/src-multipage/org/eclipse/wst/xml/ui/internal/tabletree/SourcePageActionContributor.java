@@ -13,7 +13,7 @@ package org.eclipse.wst.xml.ui.internal.tabletree;
 
 
 import org.eclipse.ui.IActionBars;
-import org.eclipse.wst.xml.ui.actions.ActionContributorXML;
+import org.eclipse.wst.xml.ui.internal.actions.ActionContributorXML;
 
 
 /**

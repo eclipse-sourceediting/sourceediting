@@ -52,10 +52,10 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMContentBuilder;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
-import org.eclipse.wst.xml.ui.dialogs.NamespaceInfoErrorHelper;
-import org.eclipse.wst.xml.ui.dialogs.SelectFileOrXMLCatalogIdPanel;
-import org.eclipse.wst.xml.ui.dialogs.UpdateListener;
-import org.eclipse.wst.xml.ui.nsedit.CommonEditNamespacesDialog;
+import org.eclipse.wst.xml.ui.internal.dialogs.NamespaceInfoErrorHelper;
+import org.eclipse.wst.xml.ui.internal.dialogs.SelectFileOrXMLCatalogIdPanel;
+import org.eclipse.wst.xml.ui.internal.dialogs.UpdateListener;
+import org.eclipse.wst.xml.ui.internal.nsedit.CommonEditNamespacesDialog;
 import org.eclipse.wst.xml.uriresolver.XMLCatalogEntry;
 import org.eclipse.wst.xml.uriresolver.util.URIHelper;
 

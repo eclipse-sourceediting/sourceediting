@@ -38,7 +38,7 @@
             name="%XML_Source_Page_Editor.name"
             icon="icons/sourceEditor.gif"
             default="true"
-            contributorClass="org.eclipse.wst.xml.ui.actions.ActionContributorXML"
+            contributorClass="org.eclipse.wst.xml.ui.internal.actions.ActionContributorXML"
             class="org.eclipse.wst.xml.ui.StructuredTextEditorXML"
             symbolicFontName="org.eclipse.wst.sse.ui.textfont"
             id="org.eclipse.core.runtime.xml.source">
@@ -96,7 +96,7 @@
             class="org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModelFactory"/>
    </extension>
    <extension
-         point="org.eclipse.wst.sse.ui.adapterFactoryDescription">
+         point="org.eclipse.wst.sse.ui.adapterFactoryDescription"> 
       <adapterFactoryDescription
             class="org.eclipse.wst.xml.ui.internal.registry.AdapterFactoryProviderForXML">
             <contentType id="org.eclipse.core.runtime.xml"/>
@@ -353,8 +353,8 @@
          point="org.eclipse.wst.sse.ui.sourcevalidation">
       <validator
             scope="total"
-            class="org.eclipse.wst.xml.ui.reconcile.DelegatingSourceValidatorForXML"
-            id="org.eclipse.wst.xml.ui.reconcile.DelegatingSourceValidatorForXML">
+            class="org.eclipse.wst.xml.ui.internal.validation.DelegatingSourceValidatorForXML"
+            id="org.eclipse.wst.xml.ui.internal.validation.DelegatingSourceValidatorForXML">
          <contentTypeIdentifier
                id="org.eclipse.core.runtime.xml">
             <partitionType

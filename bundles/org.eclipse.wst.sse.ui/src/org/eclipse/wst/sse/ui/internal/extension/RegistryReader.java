@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IPluginRegistry;
 import org.eclipse.wst.sse.ui.internal.Logger;
-import org.eclipse.wst.sse.ui.util.Sorter;
+import org.eclipse.wst.sse.ui.internal.util.Sorter;
 
 
 /**

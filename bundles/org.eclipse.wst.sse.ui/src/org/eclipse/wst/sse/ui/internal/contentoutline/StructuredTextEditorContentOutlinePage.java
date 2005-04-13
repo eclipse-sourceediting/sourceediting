@@ -58,10 +58,10 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.ui.internal.ViewerSelectionManager;
 import org.eclipse.wst.sse.ui.internal.actions.ActiveEditorActionHandler;
-import org.eclipse.wst.sse.ui.view.events.INodeSelectionListener;
-import org.eclipse.wst.sse.ui.view.events.ITextSelectionListener;
-import org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent;
-import org.eclipse.wst.sse.ui.view.events.TextSelectionChangedEvent;
+import org.eclipse.wst.sse.ui.internal.view.events.INodeSelectionListener;
+import org.eclipse.wst.sse.ui.internal.view.events.ITextSelectionListener;
+import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
+import org.eclipse.wst.sse.ui.internal.view.events.TextSelectionChangedEvent;
 import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
 
 

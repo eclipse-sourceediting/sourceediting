@@ -16,7 +16,7 @@ import java.util.HashMap;
 
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.wst.sse.ui.util.Assert;
+import org.eclipse.wst.sse.ui.internal.util.Assert;
 
 
 /**
