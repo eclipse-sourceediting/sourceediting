@@ -22,8 +22,6 @@ import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.TextEditorAction;
 import org.eclipse.wst.sse.ui.extension.IExtendedSimpleEditor;
-import org.eclipse.wst.sse.ui.extensions.openon.IOpenOn;
-import org.eclipse.wst.sse.ui.openon.OpenOnProvider;
 
 
 /**

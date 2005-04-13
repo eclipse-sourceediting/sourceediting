@@ -61,7 +61,7 @@
 			target="org.eclipse.jst.jsp.core.jspsource"/>
 		<configuration 
       		type="propertysheetconfiguration"
-			class="org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration"
+			class="org.eclipse.wst.xml.ui.internal.views.properties.XMLPropertySheetConfiguration"
 			target="org.eclipse.jst.jsp.core.jspsource"/>
 		<configuration 
       		type="sourceeditingtexttools"

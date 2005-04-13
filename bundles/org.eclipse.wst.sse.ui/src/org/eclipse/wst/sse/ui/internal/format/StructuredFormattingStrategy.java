@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui.format;
+package org.eclipse.wst.sse.ui.internal.format;
 
 import java.io.IOException;
 import java.util.LinkedList;

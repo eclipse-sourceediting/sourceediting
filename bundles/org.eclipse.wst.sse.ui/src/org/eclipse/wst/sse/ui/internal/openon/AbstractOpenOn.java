@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui.openon;
+package org.eclipse.wst.sse.ui.internal.openon;
 
 import java.io.File;
 
@@ -32,10 +32,8 @@ import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.ui.extensions.openon.IOpenOn;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
-import org.eclipse.wst.sse.ui.internal.openon.ExternalFileEditorInput;
 import org.eclipse.wst.sse.ui.util.PlatformStatusLineUtil;
 
 

@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.ui.extensions.openon;
+package org.eclipse.wst.sse.ui.internal.openon;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;

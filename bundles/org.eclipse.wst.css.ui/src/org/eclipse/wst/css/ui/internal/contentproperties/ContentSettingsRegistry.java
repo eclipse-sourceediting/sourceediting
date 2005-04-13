@@ -13,7 +13,7 @@ import java.util.Iterator;
 import org.eclipse.wst.css.core.internal.metamodel.CSSProfile;
 import org.eclipse.wst.css.core.internal.metamodel.CSSProfileRegistry;
 import org.eclipse.wst.css.ui.internal.CSSUIMessages;
-import org.eclipse.wst.sse.ui.contentproperties.ui.ComboList;
+import org.eclipse.wst.sse.ui.internal.contentproperties.ui.ComboList;
 
 public final class ContentSettingsRegistry {
 	private static final String NONE = CSSUIMessages.UI_none;

@@ -23,8 +23,8 @@ import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.html.ui.internal.Logger;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.ui.contentproperties.IContentSettings;
-import org.eclipse.wst.sse.ui.contentproperties.ui.ComboListOnPropertyPage;
-import org.eclipse.wst.sse.ui.contentproperties.ui.ContentSettingsPropertyPage;
+import org.eclipse.wst.sse.ui.internal.contentproperties.ui.ComboListOnPropertyPage;
+import org.eclipse.wst.sse.ui.internal.contentproperties.ui.ContentSettingsPropertyPage;
 
 public final class ProjectContentSettingsPropertyPage extends ContentSettingsPropertyPage implements org.eclipse.swt.events.SelectionListener {
 

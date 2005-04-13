@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.custom.BusyIndicator;
-import org.eclipse.wst.sse.ui.extensions.openon.IOpenOn;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.osgi.framework.Bundle;
 

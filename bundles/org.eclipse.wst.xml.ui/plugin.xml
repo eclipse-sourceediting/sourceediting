@@ -58,7 +58,7 @@
             target="org.eclipse.core.runtime.xml"/>
       <configuration
       		type="propertysheetconfiguration"
-            class="org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration"
+            class="org.eclipse.wst.xml.ui.internal.views.properties.XMLPropertySheetConfiguration"
             target="org.eclipse.core.runtime.xml"/>
       <configuration
       		type="sourceeditingtexttools"

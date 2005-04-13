@@ -19,7 +19,7 @@ import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeEntry;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeRegistry;
 import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.sse.core.internal.encoding.CommonCharsetNames;
-import org.eclipse.wst.sse.ui.contentproperties.ui.ComboList;
+import org.eclipse.wst.sse.ui.internal.contentproperties.ui.ComboList;
 
 public final class ContentSettingsRegistry {
 

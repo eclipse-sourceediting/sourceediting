@@ -27,7 +27,7 @@ import org.eclipse.wst.css.ui.internal.style.LineStyleProviderForCSS;
 import org.eclipse.wst.css.ui.internal.taginfo.CSSBestMatchHoverProcessor;
 import org.eclipse.wst.sse.core.text.IStructuredPartitionTypes;
 import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
-import org.eclipse.wst.sse.ui.format.StructuredFormattingStrategy;
+import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.style.IHighlighter;
 import org.eclipse.wst.sse.ui.taginfo.AnnotationHoverProcessor;
 import org.eclipse.wst.sse.ui.taginfo.ProblemAnnotationHoverProcessor;
