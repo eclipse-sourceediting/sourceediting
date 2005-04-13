@@ -1,0 +1,18 @@
+org.eclipse.wst.html.core.tests.parser.TextTest2
+Source :
+<a>hello &amp;lt;</a>
+
+
+StructuredDocument Regions :
+[0, 3] (<a>)
+[3, 9] (hello )
+[9, 14] (&amp;)
+[14, 17] (lt;)
+[17, 21] (</a>)
+
+Tree :
+#document
+--a/a@[0, 3] (<a>)@[17, 21] (</a>)
+----#text(hello &lt;)@{[3, 9] (hello ),[9, 14] (&amp;),[14, 17] (lt;)}
+
+hello &lt;

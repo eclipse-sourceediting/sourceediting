@@ -19,9 +19,9 @@ import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
+import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.eclipse.wst.sse.ui.style.Highlighter;
 import org.eclipse.wst.sse.ui.style.LineStyleProvider;
-import org.eclipse.wst.sse.ui.util.EditorUtility;
 
 public class TestLineStyleProvider implements LineStyleProvider {
 

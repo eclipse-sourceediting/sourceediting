@@ -1,0 +1,70 @@
+org.eclipse.wst.html.core.tests.parser.UpdaterTest10
+Source :
+<a b="c"><b></b></a>
+
+
+StructuredDocument Regions :
+[0, 9] (<a b="c">)
+[9, 12] (<b>)
+[12, 16] (</b>)
+[16, 20] (</a>)
+
+Tree :
+#document
+--a/a@[0, 9] (<a b&#61;"c">)@[16, 20] (</a>)
+----b/b@[9, 12] (<b>)@[12, 16] (</b>)
+
+IStructuredDocumentRegion:
+<b>
+0(<)true
+0(b)true
+0(>)true
+
+Source :
+<a b="c"><b c="d"></b></a>
+
+
+StructuredDocument Regions :
+[0, 9] (<a b="c">)
+[9, 18] (<b c="d">)
+[18, 22] (</b>)
+[22, 26] (</a>)
+
+Tree :
+#document
+--a/a@[0, 9] (<a b&#61;"c">)@[22, 26] (</a>)
+----b/b@[9, 18] (<b c&#61;"d">)@[18, 22] (</b>)
+
+IStructuredDocumentRegion:
+<b c="d">
+0(<)true
+0(b)true
+0(c)true
+0(=)true
+0("d")true
+0(>)true
+
+Source :
+<a b="cd"><b c="d"></b></a>
+
+
+StructuredDocument Regions :
+[0, 10] (<a b="cd">)
+[10, 19] (<b c="d">)
+[19, 23] (</b>)
+[23, 27] (</a>)
+
+Tree :
+#document
+--a/a@[0, 10] (<a b&#61;"cd">)@[23, 27] (</a>)
+----b/b@[10, 19] (<b c&#61;"d">)@[19, 23] (</b>)
+
+IStructuredDocumentRegion:
+<b c="d">
+0(<)true
+0(b)true
+0(c)true
+0(=)true
+0("d")true
+0(>)true
+

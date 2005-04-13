@@ -12,8 +12,8 @@ package org.eclipse.wst.xml.ui.tests.breakpoints;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.wst.sse.ui.extension.IExtendedEditorAction;
-import org.eclipse.wst.sse.ui.extension.IExtendedSimpleEditor;
+import org.eclipse.wst.sse.ui.internal.IExtendedEditorAction;
+import org.eclipse.wst.sse.ui.internal.IExtendedSimpleEditor;
 import org.eclipse.wst.xml.ui.tests.XMLUITestsPlugin;
 
 

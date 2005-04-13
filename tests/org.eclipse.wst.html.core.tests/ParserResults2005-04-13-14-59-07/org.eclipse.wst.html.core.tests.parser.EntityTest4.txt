@@ -1,0 +1,86 @@
+org.eclipse.wst.html.core.tests.parser.EntityTest4
+Source :
+<p>a&amp;b</p>
+
+
+StructuredDocument Regions :
+[0, 3] (<p>)
+[3, 4] (a)
+[4, 9] (&amp;)
+[9, 10] (b)
+[10, 14] (</p>)
+
+Tree :
+#document
+--p/p@[0, 3] (<p>)@[10, 14] (</p>)
+----#text(a&b)@{[3, 4] (a),[4, 9] (&amp;),[9, 10] (b)}
+
+Source :
+<p>a&amp;b</p>
+
+
+StructuredDocument Regions :
+[0, 3] (<p>)
+[3, 4] (a)
+[4, 9] (&amp;)
+[9, 10] (b)
+[10, 14] (</p>)
+
+Tree :
+#document
+--p/p@[0, 3] (<p>)@[10, 14] (</p>)
+----#text()
+----#text(a&b)@{[3, 4] (a),[4, 9] (&amp;),[9, 10] (b)}
+
+Source :
+<p>ca&amp;b</p>
+
+
+StructuredDocument Regions :
+[0, 3] (<p>)
+[3, 5] (ca)
+[5, 10] (&amp;)
+[10, 11] (b)
+[11, 15] (</p>)
+
+Tree :
+#document
+--p/p@[0, 3] (<p>)@[11, 15] (</p>)
+----#text(c)@[3,4]([3, 5] (ca))
+----#text(a&b)@{[4,5]([3, 5] (ca)),[5, 10] (&amp;),[10, 11] (b)}
+
+Source :
+<p>ca&amp;ba&amp;b</p>
+
+
+StructuredDocument Regions :
+[0, 3] (<p>)
+[3, 5] (ca)
+[5, 10] (&amp;)
+[10, 12] (ba)
+[12, 17] (&amp;)
+[17, 18] (b)
+[18, 22] (</p>)
+
+Tree :
+#document
+--p/p@[0, 3] (<p>)@[18, 22] (</p>)
+----#text(ca&b)@{[3, 5] (ca),[5, 10] (&amp;),[10,11]([10, 12] (ba))}
+----#text(a&b)@{[11,12]([10, 12] (ba)),[12, 17] (&amp;),[17, 18] (b)}
+
+Source :
+<p>ca&amp;b</p>
+
+
+StructuredDocument Regions :
+[0, 3] (<p>)
+[3, 5] (ca)
+[5, 10] (&amp;)
+[10, 11] (b)
+[11, 15] (</p>)
+
+Tree :
+#document
+--p/p@[0, 3] (<p>)@[11, 15] (</p>)
+----#text(ca&b)@{[3, 5] (ca),[5, 10] (&amp;),[10, 11] (b)}
+

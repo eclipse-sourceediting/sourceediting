@@ -1,0 +1,14 @@
+org.eclipse.wst.html.core.tests.parser.EntityTest8
+Source :
+&ibm;&rtp;
+
+
+StructuredDocument Regions :
+[0, 5] (&ibm;)
+[5, 10] (&rtp;)
+
+Tree :
+#document
+--ibm
+--rtp
+

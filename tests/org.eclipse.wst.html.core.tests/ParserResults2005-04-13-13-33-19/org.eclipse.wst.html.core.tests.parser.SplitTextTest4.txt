@@ -1,0 +1,71 @@
+org.eclipse.wst.html.core.tests.parser.SplitTextTest4
+Source :
+<p></p>
+
+
+StructuredDocument Regions :
+[0, 3] (<p>)
+[3, 7] (</p>)
+
+Tree :
+#document
+--p/p@[0, 3] (<p>)@[3, 7] (</p>)
+----#text()
+
+Source :
+<p>aaa</p>
+
+
+StructuredDocument Regions :
+[0, 3] (<p>)
+[3, 6] (aaa)
+[6, 10] (</p>)
+
+Tree :
+#document
+--p/p@[0, 3] (<p>)@[6, 10] (</p>)
+----#text(aaa)@[3, 6] (aaa)
+
+Source :
+<p></p>
+
+
+StructuredDocument Regions :
+[0, 3] (<p>)
+[3, 7] (</p>)
+
+Tree :
+#document
+--p/p@[0, 3] (<p>)@[3, 7] (</p>)
+----#text()
+
+Source :
+<p>cccc</p>
+
+
+StructuredDocument Regions :
+[0, 3] (<p>)
+[3, 7] (cccc)
+[7, 11] (</p>)
+
+Tree :
+#document
+--p/p@[0, 3] (<p>)@[7, 11] (</p>)
+----#text(cccc)@[3, 7] (cccc)
+----#text()
+
+Source :
+<p>ccccaaa</p>
+
+
+StructuredDocument Regions :
+[0, 3] (<p>)
+[3, 10] (ccccaaa)
+[10, 14] (</p>)
+
+Tree :
+#document
+--p/p@[0, 3] (<p>)@[10, 14] (</p>)
+----#text(cccc)@[3,7]([3, 10] (ccccaaa))
+----#text(aaa)@[7,10]([3, 10] (ccccaaa))
+

@@ -54,7 +54,7 @@
    </extension>
    -->
    <extension
-         point="org.eclipse.wst.sse.ui.extendedEditorActions">
+         point="org.eclipse.wst.sse.ui.extendedEditorActions"> 
       <editorContribution
             targetID="org.eclipse.wst.sse.ui.internal.StructuredTextEditor"
             id="org.eclipse.wst.xml.ui.tests.actions">
