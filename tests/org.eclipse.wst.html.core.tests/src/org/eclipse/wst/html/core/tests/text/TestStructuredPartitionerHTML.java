@@ -25,10 +25,10 @@ import org.eclipse.wst.html.core.text.IHTMLPartitionTypes;
 import org.eclipse.wst.sse.core.IModelManager;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.text.IStructuredTextPartitioner;
-import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
 public class TestStructuredPartitionerHTML extends TestCase {

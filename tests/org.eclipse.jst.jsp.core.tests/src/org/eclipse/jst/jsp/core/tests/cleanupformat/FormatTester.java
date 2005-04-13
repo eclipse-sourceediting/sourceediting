@@ -22,8 +22,8 @@ import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.format.AbstractStructuredFormatProcessor;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatPreferences;
-import org.eclipse.wst.sse.core.util.Debug;
-import org.eclipse.wst.sse.core.util.StringUtils;
+import org.eclipse.wst.sse.core.internal.util.Debug;
+import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.xml.core.internal.provisional.format.FormatProcessorXML;
 import org.eclipse.wst.xml.core.internal.provisional.format.IStructuredFormatPreferencesXML;
 

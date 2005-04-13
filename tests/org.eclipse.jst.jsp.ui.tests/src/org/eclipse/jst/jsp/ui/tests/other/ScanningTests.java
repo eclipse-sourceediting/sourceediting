@@ -25,14 +25,14 @@ import java.util.Vector;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
 import org.eclipse.wst.sse.core.internal.document.StructuredDocumentFactory;
 import org.eclipse.wst.sse.core.internal.text.StructuredDocumentRegionIterator;
+import org.eclipse.wst.sse.core.internal.util.Debug;
+import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.sse.core.parser.BlockMarker;
 import org.eclipse.wst.sse.core.parser.RegionParser;
 import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.sse.core.util.Debug;
-import org.eclipse.wst.sse.core.util.StringUtils;
 import org.eclipse.wst.xml.core.internal.parser.XMLSourceParser;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
