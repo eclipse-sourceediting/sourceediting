@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.model;
+package org.eclipse.wst.sse.core.internal.provisional.model;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

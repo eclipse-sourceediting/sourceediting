@@ -10,7 +10,7 @@
  *     
  *******************************************************************************/
 
-package org.eclipse.wst.sse.core.model;
+package org.eclipse.wst.sse.core.internal.provisional.model;
 
 public interface IStructuredModelEvent {
 

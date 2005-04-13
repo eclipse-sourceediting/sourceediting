@@ -10,7 +10,7 @@
  *     
  *******************************************************************************/
 
-package org.eclipse.wst.sse.core.model;
+package org.eclipse.wst.sse.core.internal.provisional.model;
 
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.wst.sse.core.INodeAdapterFactory;
