@@ -16,7 +16,7 @@ import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleSheet;
 import org.eclipse.wst.css.core.preferences.CSSModelPreferenceNames;
 import org.eclipse.wst.css.core.tests.util.FileUtil;
-import org.eclipse.wst.sse.core.preferences.CommonModelPreferenceNames;
+import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.w3c.dom.css.CSSValue;
 import org.w3c.dom.css.Counter;

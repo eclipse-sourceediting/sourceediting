@@ -22,7 +22,7 @@ import org.eclipse.wst.sse.core.INodeAdapter;
 import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.modelhandler.EmbeddedTypeHandler;
+import org.eclipse.wst.sse.core.internal.ltk.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.modelhandler.EmbeddedXML;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
