@@ -99,8 +99,9 @@ public class DelegatingSourceValidator implements IValidator {
 		}
 
 		public String[] getURIs() {
-			// TODO Auto-generated method stub
-			return null;
+			if(file != null)
+				return new String[]{file.getFullPath().toString()};
+			return new String[0];
 		}
 	}
 
