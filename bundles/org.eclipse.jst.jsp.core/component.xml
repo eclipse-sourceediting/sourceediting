@@ -5,15 +5,5 @@
         <plugin id="org.eclipse.jst.jsp.core" />
         <plugin id="org.eclipse.jst.jsp.ui" />
 
-        <package name="org.eclipse.jst.jsp.core">
-                 <type name="PageDirectiveAdapter" reference="false" implement="false" subclass="false" instantiate="false" />
-         </package>
-
-        <package name="org.eclipse.jst.jsp.core.model.parser" />
-        <package name="org.eclipse.jst.jsp.core.contenttype" />
-        <package name="org.eclipse.jst.jsp.core.text" />
-
-        <!-- ui -->
-        <package name="org.eclipse.jst.jsp.ui" />
 
 </component>

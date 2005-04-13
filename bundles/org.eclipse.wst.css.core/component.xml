@@ -5,14 +5,4 @@
         <plugin id="org.eclipse.wst.css.core" />
         <plugin id="org.eclipse.wst.css.ui" />
 
-
-        <package name="org.eclipse.wst.css.core.contenttype" />
-
-        <package name="org.eclipse.wst.css.core.text" />
-
-        <!-- ui -->
-
-        <!-- phil -->
-        <package name="org.eclipse.wst.css.ui" />
-
 </component>

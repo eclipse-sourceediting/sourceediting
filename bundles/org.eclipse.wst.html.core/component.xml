@@ -5,21 +5,4 @@
         <plugin id="org.eclipse.wst.html.core" />
         <plugin id="org.eclipse.wst.html.ui" />
 
-        <package name="org.eclipse.wst.html.core">
-                 <type name="HTMLFormatContraints" reference="false" implement="false" subclass="false" instantiate="false" />
-                 <type name="HTMLFilesPreferenceNames" reference="false" implement="false" subclass="false" instantiate="false" />
-                 <type name="PreferenceNames" reference="false" implement="false" subclass="false" instantiate="false" />
-                 <type name="HTMLCMProperties" reference="false" implement="false" subclass="false" instantiate="false" />
-                 <type name="HTMLCMProperties$Value" reference="false" implement="false" subclass="false" instantiate="false" />
-        </package>
-
-
-        <package name="org.eclipse.wst.html.core.contenttype" />
-        <package name="org.eclipse.wst.html.core.text" />
-
-        <!-- ui -->
-        <package name="org.eclipse.wst.html.ui">
-                 <type name="StructuredTextEditorHTML" reference="false" implement="false" subclass="false" instantiate="false" />
-        </package>
-
 </component>

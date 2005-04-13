@@ -8,21 +8,5 @@
         <plugin id="org.eclipse.wst.xml.uriresolver.ui" />
         <plugin id="org.eclipse.wst.xml.validation" />
 
-        <!--  dw -->
-        <package name="org.eclipse.wst.xml.core" >
-
-        </package>
-        <package name="org.eclipse.wst.xml.core.contenttype" />
-        <package name="org.eclipse.wst.xml.core.document" />
-        <package name="org.eclipse.wst.xml.core.parser" />
-        <package name="org.eclipse.wst.xml.core.text" />
-
-<!--    <package name="org.eclipse.wst.xml.uriresolver" /> -->
-<!--    <package name="org.eclipse.wst.xml.uriresolver.ui" /> -->
-
-        <!--  add in viewer config for xml, phil -->
-        <package name="org.eclipse.wst.xml.ui">
-                <type name="StructuredTextEditorXML" reference="false" implement="false" subclass="false" instantiate="false" />
-        </package>
 
 </component>
