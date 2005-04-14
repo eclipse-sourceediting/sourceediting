@@ -283,11 +283,12 @@ public class BaseTestCase extends TestCase
           if(filename.startsWith("file:"))
           {
             filename = filename.substring(5);
+			while(filename.startsWith("/"))
+	        {
+	          filename = filename.substring(1);
+	        }
           }
-          while(filename.startsWith("/"))
-          {
-            filename = filename.substring(1);
-          }
+          
           File file = new File(filename);
           FileInputStream in = new FileInputStream(file);
           IFile iFile = project.getFile(file.getName());
