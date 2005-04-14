@@ -63,7 +63,7 @@ public class BugFixesTest extends BaseTestCase
   public void testInvalidSchemaInXMLCatalog()
   {
     String testname = "InvalidSchemaInXMLCatalog";
-    String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "InvalidSchemaInXMLCatalog/" + testname + ".xsd";
+    String testfile = PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "InvalidSchemaInXMLCatalog/" + testname + ".xsd";
     String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + BUGFIXES_DIR + "InvalidSchemaInXMLCatalog/" + testname + ".xsd-log";
     String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + BUGFIXES_DIR + "InvalidSchemaInXMLCatalog/" + testname + ".xsd-log";
     
@@ -121,4 +121,17 @@ public class BugFixesTest extends BaseTestCase
     
     runTest(testfile, loglocation, idealloglocation);
   }
+  
+  /**
+   * Test /BugFixes/TwoOpenBrackets/TwoOpenBrackets.xsd
+   */
+//  public void testTwoOpenBrackets()
+//  {
+//    String testname = "TwoOpenBrackets";
+//    String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "TwoOpenBrackets/" + testname + ".xsd";
+//    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + BUGFIXES_DIR + "TwoOpenBrackets/" + testname + ".xsd-log";
+//    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + BUGFIXES_DIR + "TwoOpenBrackets/" + testname + ".xsd-log";
+//    
+//    runTest(testfile, loglocation, idealloglocation);
+//  }
 }

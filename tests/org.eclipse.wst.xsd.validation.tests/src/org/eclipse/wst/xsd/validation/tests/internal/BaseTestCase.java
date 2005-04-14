@@ -279,12 +279,12 @@ public class BaseTestCase extends TestCase
         try
 		{
           String filename = files[i];
-          filename = filename.replace('/','\\');
+          filename = filename.replace('\\','/');
           if(filename.startsWith("file:"))
           {
             filename = filename.substring(5);
           }
-          while(filename.startsWith("\\"))
+          while(filename.startsWith("/"))
           {
             filename = filename.substring(1);
           }
