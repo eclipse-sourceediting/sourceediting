@@ -88,8 +88,8 @@ public class HTMLDocumentContentValidator extends PrimeValidator {
 	}
 
 	/**
-	 * Allowing the INodeAdapter to compare itself against the type
-	 * allows it to return true in more than one case.
+	 * Allowing the INodeAdapter to compare itself against the type allows it
+	 * to return true in more than one case.
 	 */
 	public boolean isAdapterForType(Object type) {
 		return ((type == HTMLDocumentContentValidator.class) || super.isAdapterForType(type));
@@ -100,7 +100,7 @@ public class HTMLDocumentContentValidator extends PrimeValidator {
 	public void validate(IndexedRegion node) {
 		// isFragment check should be more intelligent.
 		boolean isFragment = true;
-		
+
 		Document target = (Document) node;
 		NodeList children = target.getChildNodes();
 		if (children == null)
@@ -137,7 +137,7 @@ public class HTMLDocumentContentValidator extends PrimeValidator {
 
 			switch (child.getNodeType()) {
 				case Node.ELEMENT_NODE :
-					if (! isFragment) {
+					if (!isFragment) {
 						Element childElem = (Element) child;
 						CMElementDeclaration ced = CMUtil.getDeclaration(childElem);
 						// Undefined element is valid.
@@ -154,17 +154,19 @@ public class HTMLDocumentContentValidator extends PrimeValidator {
 					}
 					break;
 				case Node.TEXT_NODE :
-					if (! isFragment) {
-						// TEXT node is valid when it contains white space characters only.
+					if (!isFragment) {
+						// TEXT node is valid when it contains white space
+						// characters only.
 						// Otherwise, it is invalid content.
-						if (((IDOMText) child).isWhitespace())
+						if (((IDOMText) child).isElementContentWhitespace())
 							continue;
 						error = ErrorState.INVALID_CONTENT_ERROR;
 						segType = FMUtil.SEG_WHOLE_TAG;
 					}
 					break;
 				case Node.DOCUMENT_TYPE_NODE :
-					// DOCTYPE is also valid when it appears once and only once.
+					// DOCTYPE is also valid when it appears once and only
+					// once.
 					if (!foundDoctype) {
 						foundDoctype = true;
 						continue;
@@ -177,7 +179,7 @@ public class HTMLDocumentContentValidator extends PrimeValidator {
 				case Node.PROCESSING_INSTRUCTION_NODE :
 					continue;
 				default :
-					if (! isFragment) {
+					if (!isFragment) {
 						error = ErrorState.INVALID_CONTENT_ERROR;
 						segType = FMUtil.SEG_WHOLE_TAG;
 					}

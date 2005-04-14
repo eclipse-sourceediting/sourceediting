@@ -35,6 +35,7 @@ import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Comment;
+import org.w3c.dom.DOMConfiguration;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.DocumentFragment;
@@ -97,10 +98,10 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 			NodeListImpl result = null;
 			if (active) {
 				result = (NodeListImpl) cache.get(tagName);
-				//					if (result != null) {
-				//						System.out.println("getElementsByTagname from cache: " +
+				// if (result != null) {
+				// System.out.println("getElementsByTagname from cache: " +
 				// tagName);
-				//					}
+				// }
 			}
 			return result;
 		}
@@ -275,7 +276,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 	public CDATASection createCDATASection(String data) throws DOMException {
 		// allow CDATA section
 		// if (!isXMLType()) {
-		//	throw new DOMException(DOMException.NOT_SUPPORTED_ERR, new
+		// throw new DOMException(DOMException.NOT_SUPPORTED_ERR, new
 		// String());
 		// }
 		CDATASectionImpl cdata = new CDATASectionImpl();
@@ -315,7 +316,8 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 		CommentElementRegistry registry = CommentElementRegistry.getInstance();
 		if (registry.setupCommentElement(element)) {
 			return element;
-		} else {
+		}
+		else {
 			throw new DOMException(DOMException.INVALID_CHARACTER_ERR, new String());
 		}
 	}
@@ -476,7 +478,8 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 		for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
 			if (child.getNodeType() == DOCUMENT_TYPE_NODE && child instanceof DocumentType) {
 				return (DocumentType) child;
-			} else if (child.getNodeType() == ELEMENT_NODE && ((IDOMElement) child).isCommentTag()) {
+			}
+			else if (child.getNodeType() == ELEMENT_NODE && ((IDOMElement) child).isCommentTag()) {
 				// search DOCTYPE inside of generic comment element
 				DocumentType docType = findDoctype(child);
 				if (docType != null) {
@@ -497,7 +500,8 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 				Element docElement = findDocumentElement(docName, element, firstFound);
 				if (docElement != null) {
 					return docElement;
-				} else {
+				}
+				else {
 					// added 'else continue' to better handle cases where
 					// there is "more than one root" element
 					// especially complicated by CommentElements, which are
@@ -521,7 +525,8 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 			if (isXMLType()) {
 				if (localName.equals(docName))
 					return element;
-			} else {
+			}
+			else {
 				if (localName.equalsIgnoreCase(docName))
 					return element;
 			}
@@ -554,7 +559,8 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 			if (name.charAt(1) == 'x') { // hexadecimal
 				radix = 16;
 				s = name.substring(2);
-			} else { // decimal
+			}
+			else { // decimal
 				s = name.substring(1);
 			}
 			if (s == null || s.length() == 0)
@@ -564,7 +570,8 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 			char c = 0;
 			try {
 				c = (char) Integer.parseInt(s, radix);
-			} catch (NumberFormatException ex) {
+			}
+			catch (NumberFormatException ex) {
 			}
 			if (c == 0)
 				return null;
@@ -666,14 +673,14 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 	/**
 	 */
 	protected DocumentTypeAdapter getDocumentTypeAdapter() {
-	    // be sure to release since possibly changing
-	    if(this.documentTypeAdapter != null) {
-	        this.documentTypeAdapter.release();
-	    }
-	    this.documentTypeAdapter = (DocumentTypeAdapter) getAdapterFor(DocumentTypeAdapter.class);
+		// be sure to release since possibly changing
+		if (this.documentTypeAdapter != null) {
+			this.documentTypeAdapter.release();
+		}
+		this.documentTypeAdapter = (DocumentTypeAdapter) getAdapterFor(DocumentTypeAdapter.class);
 		if (this.documentTypeAdapter == null) {
 			// add default adapter
-		    this.documentTypeAdapter = new DocumentTypeAdapterImpl(this);
+			this.documentTypeAdapter = new DocumentTypeAdapterImpl(this);
 			addAdapter(this.documentTypeAdapter);
 		}
 		return this.documentTypeAdapter;
@@ -908,7 +915,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 	}
 
 	private NodeListImpl internalGetElementsByTagName(String tagName) {
-		//System.out.println("getElementsByTagname: " + tagName);
+		// System.out.println("getElementsByTagname: " + tagName);
 		NodeIterator it = createNodeIterator(this, NodeFilter.SHOW_ALL, null, false);
 		if (it == null)
 			return new NodeListImpl();
@@ -966,8 +973,8 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 	protected boolean isValidName(String name) {
 		if (name == null || name.length() == 0)
 			return false;
-		//	// DMW: modified for XML4J 4.0.1
-		//	if (XMLChar.isValidName(name)) return true;
+		// // DMW: modified for XML4J 4.0.1
+		// if (XMLChar.isValidName(name)) return true;
 		if (NameValidator.isValid(name))
 			return true;
 		// special for invalid declaration
@@ -1066,5 +1073,82 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 	 * @since DOM Level 3
 	 */
 	public void setVersion(java.lang.String version) {
+	}
+
+	/**
+	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
+	 */
+	public String getInputEncoding() {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implmented in this version");
+	}
+
+	/**
+	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
+	 */
+	public String getXmlEncoding() {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implmented in this version");
+	}
+
+	/**
+	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
+	 */
+	public boolean getXmlStandalone() {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implmented in this version");
+	}
+
+	/**
+	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
+	 */
+	public void setXmlStandalone(boolean xmlStandalone) throws DOMException {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implmented in this version");
+	}
+
+	/**
+	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
+	 */
+	public String getXmlVersion() {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implmented in this version");
+	}
+
+	/**
+	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
+	 */
+	public void setXmlVersion(String xmlVersion) throws DOMException {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implmented in this version");
+	}
+
+	/**
+	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
+	 */
+	public String getDocumentURI() {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implmented in this version");
+	}
+
+	/**
+	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
+	 */
+	public void setDocumentURI(String documentURI) {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implmented in this version");
+	}
+
+	/**
+	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
+	 */
+	public DOMConfiguration getDomConfig() {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implmented in this version");
+	}
+
+	/**
+	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
+	 */
+	public void normalizeDocument() {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implmented in this version");
+	}
+
+	/**
+	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
+	 */
+	public Node renameNode(Node n, String namespaceURI, String qualifiedName) throws DOMException {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implmented in this version");
 	}
 }

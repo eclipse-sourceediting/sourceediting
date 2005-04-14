@@ -14,7 +14,6 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 
-
 import java.util.Iterator;
 
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
@@ -1442,5 +1441,26 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 			buffer.append(endStructuredDocumentRegion.toString());
 		}
 		return buffer.toString();
+	}
+
+	/**
+	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
+	 */
+	public void setIdAttribute(String name, boolean isId) throws DOMException {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not supported in this version");
+	}
+
+	/**
+	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
+	 */
+	public void setIdAttributeNS(String namespaceURI, String localName, boolean isId) throws DOMException {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not supported in this version");
+	}
+
+	/**
+	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
+	 */
+	public void setIdAttributeNode(Attr idAttr, boolean isId) throws DOMException {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not supported in this version");
 	}
 }

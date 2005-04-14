@@ -905,4 +905,11 @@ public class DOMModelImpl extends AbstractStructuredModel implements IStructured
 		}
 		getModelNotifier().valueChanged(node);
 	}
+
+	/**
+	 * NOT IMPLEMENTED. Is defined here in preparation of DOM 3.
+	 */
+	public Object getFeature(String feature, String version) {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version.");
+	}
 }

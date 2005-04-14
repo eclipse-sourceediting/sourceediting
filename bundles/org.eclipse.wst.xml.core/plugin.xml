@@ -13,6 +13,18 @@
       </library>
    </runtime>
    <requires>
+      <!-- we put xerces first on the pre-req path as a 
+      general convention that anyone using Eclipse class loader
+      will get the various XML/DOM classes in the same order, 
+      1. Platform, 2. Prereqs, 3. Self. 
+      we export the xerces classes, since
+      1. it *is* part of our plugin's interface 
+      to the rest of the world, and as such
+      2. There will be a "fast fail" error if someone is 
+      independently loading a conflicting version. 
+      -->
+      <import plugin="org.apache.xerces" export="true"/>
+      
       <import plugin="org.eclipse.wst.sse.core"/>
       <import plugin="org.eclipse.core.resources"/>
       <import plugin="org.eclipse.core.runtime"/>

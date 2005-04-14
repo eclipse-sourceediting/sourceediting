@@ -163,7 +163,7 @@ public class HTMLModelParserAdapter implements ModelParserAdapter {
 			String tagName = impl.getTagName();
 			if (tagName != null && tagName.equalsIgnoreCase(HTML40Namespace.ElementName.EMBED)) {
 				IDOMText text = (IDOMText) child;
-				if (!text.isWhitespace())
+				if (!text.isElementContentWhitespace())
 					return false;
 			}
 		}

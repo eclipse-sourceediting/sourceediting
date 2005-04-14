@@ -20,7 +20,10 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.document.InvalidCharacterException;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Node;
+import org.w3c.dom.TypeInfo;
+import org.w3c.dom.UserDataHandler;
 
 /**
  * This interface describes the extended functionality of our source-oriented
@@ -205,4 +208,76 @@ public interface IDOMNode extends IndexedRegion, INodeNotifier, Node {
 	 * "&amp;lt;", are accepted.
 	 */
 	void setValueSource(String source);
+	
+	
+
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public short compareDocumentPosition(Node other) throws DOMException;
+
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public String getBaseURI();
+
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public Object getFeature(String feature, String version);
+
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public String getTextContent() throws DOMException;
+
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public Object getUserData(String key);
+
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public boolean isDefaultNamespace(String namespaceURI);
+
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public boolean isEqualNode(Node arg);
+	
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public boolean isSameNode(Node other);
+
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public String lookupNamespaceURI(String prefix);
+
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public String lookupPrefix(String namespaceURI);
+	
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public void setTextContent(String textContent) throws DOMException;
+	
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public Object setUserData(String key, Object data, UserDataHandler handler);
+	
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public TypeInfo getSchemaTypeInfo();
+	
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public boolean isId();
 }

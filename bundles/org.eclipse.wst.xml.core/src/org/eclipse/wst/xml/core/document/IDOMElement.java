@@ -14,6 +14,8 @@ package org.eclipse.wst.xml.core.document;
 
 
 
+import org.w3c.dom.Attr;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 
 /**
@@ -78,7 +80,7 @@ public interface IDOMElement extends IDOMNode, Element {
 	boolean isEmptyTag();
 
 	/**
-	 * Returns true if floating end tag. 
+	 * Returns true if floating end tag.
 	 * 
 	 * @return true if floating end tag.
 	 */
@@ -175,4 +177,20 @@ public interface IDOMElement extends IDOMNode, Element {
 	 * 
 	 */
 	void setJSPTag(boolean isJSPTag);
+
+	/**
+	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
+	 */
+	public void setIdAttribute(String name, boolean isId);
+
+	/**
+	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
+	 */
+	public void setIdAttributeNS(String namespaceURI, String localName, boolean isId);
+
+	/**
+	 * NOT IMPLEMENTED. Is defined here in preparation for DOM 3.
+	 */
+	public void setIdAttributeNode(Attr idAttr, boolean isId) throws DOMException;
+
 }

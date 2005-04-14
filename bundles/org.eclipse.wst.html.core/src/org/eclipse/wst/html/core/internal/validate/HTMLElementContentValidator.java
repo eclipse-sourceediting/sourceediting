@@ -28,8 +28,8 @@ public class HTMLElementContentValidator extends PrimeValidator {
 	}
 
 	/**
-	 * Allowing the INodeAdapter to compare itself against the type
-	 * allows it to return true in more than one case.
+	 * Allowing the INodeAdapter to compare itself against the type allows it
+	 * to return true in more than one case.
 	 */
 	public boolean isAdapterForType(Object type) {
 		return ((type == HTMLElementContentValidator.class) || super.isAdapterForType(type));
@@ -56,29 +56,29 @@ public class HTMLElementContentValidator extends PrimeValidator {
 		}
 	}
 
-//	private int countExplicitSiblings(Element parent, String tagName) {
-//		NodeList children = parent.getChildNodes();
-//		int count = 0;
-//		for (int i = 0; i < children.getLength(); i++) {
-//			Node child = children.item(i);
-//			if (child.getNodeType() != Node.ELEMENT_NODE)
-//				continue;
-//			if (tagName.equalsIgnoreCase(((Element) child).getTagName())) {
-//				count++;
-//			}
-//		}
-//		return count;
-//	}
+	// private int countExplicitSiblings(Element parent, String tagName) {
+	// NodeList children = parent.getChildNodes();
+	// int count = 0;
+	// for (int i = 0; i < children.getLength(); i++) {
+	// Node child = children.item(i);
+	// if (child.getNodeType() != Node.ELEMENT_NODE)
+	// continue;
+	// if (tagName.equalsIgnoreCase(((Element) child).getTagName())) {
+	// count++;
+	// }
+	// }
+	// return count;
+	// }
 
-	/* The implementation of the following method is practical but accurate.
-	 * The accurate maximum occurence should be retreive from the content model.
-	 * However, it is useful enough, since almost implicit elements are HTML,
-	 * HEAD, or BODY.
+	/*
+	 * The implementation of the following method is practical but accurate.
+	 * The accurate maximum occurence should be retreive from the content
+	 * model. However, it is useful enough, since almost implicit elements are
+	 * HTML, HEAD, or BODY.
 	 */
-//	private int getMaxOccur(Element parent, String childTag) {
-//		return 1;
-//	}
-
+	// private int getMaxOccur(Element parent, String childTag) {
+	// return 1;
+	// }
 	private void validateNode(Element target, Node child) {
 		// NOTE: If the target element is 'UNKNOWN', that is, it has no
 		// element declaration, the content type of the element should be
@@ -95,7 +95,8 @@ public class HTMLElementContentValidator extends PrimeValidator {
 			case Node.ELEMENT_NODE :
 				Element childElem = (Element) child;
 				// Defect 200321:
-				// This validator cares only HTML/XHTML elements.  If a child is
+				// This validator cares only HTML/XHTML elements. If a child
+				// is
 				// an element of foreign markup languages, just ignore it.
 				if (CMUtil.isForeign(childElem))
 					return;
@@ -117,7 +118,8 @@ public class HTMLElementContentValidator extends PrimeValidator {
 							return;
 						if (CMUtil.isValidChild(edec, ced))
 							return;
-						// Now, it is the time to check inclusion, unless the target
+						// Now, it is the time to check inclusion, unless the
+						// target
 						// document is not a XHTML.
 						if (!CMUtil.isXHTML(edec)) {
 							// pure HTML
@@ -144,7 +146,7 @@ public class HTMLElementContentValidator extends PrimeValidator {
 						return;
 					case CMElementDeclaration.ELEMENT :
 					case CMElementDeclaration.EMPTY :
-						if (((IDOMText) child).isWhitespace())
+						if (((IDOMText) child).isElementContentWhitespace())
 							return;
 						error = ErrorState.INVALID_CONTENT_ERROR;
 						break;

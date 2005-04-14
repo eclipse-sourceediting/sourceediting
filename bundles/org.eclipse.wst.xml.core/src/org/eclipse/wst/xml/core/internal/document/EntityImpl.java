@@ -224,4 +224,18 @@ public class EntityImpl extends NodeImpl implements Entity {
 	 */
 	public void setVersion(java.lang.String version) {
 	}
+
+	public String getInputEncoding() {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version");
+	}
+
+	public String getXmlEncoding() {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version");
+	}
+
+
+	public String getXmlVersion() {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version");
+	}
+
 }

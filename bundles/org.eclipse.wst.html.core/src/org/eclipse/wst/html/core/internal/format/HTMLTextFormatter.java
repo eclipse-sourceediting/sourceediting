@@ -51,7 +51,7 @@ public class HTMLTextFormatter extends HTMLFormatter {
 		Node parent = text.getParentNode();
 		if (parent != null && parent.getNodeType() == Node.ELEMENT_NODE) {
 			IDOMElement element = (IDOMElement) parent;
-			if (!element.isGlobalTag() && !text.isWhitespace())
+			if (!element.isGlobalTag() && !text.isElementContentWhitespace())
 				return false;
 		}
 
@@ -67,10 +67,11 @@ public class HTMLTextFormatter extends HTMLFormatter {
 		return type == DOMRegionContext.BLOCK_TEXT;
 	}
 
-    /**
-     * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
-     * way for expedency. Should be evolved in future to depend on "nestedContext".
-     */
+	/**
+	 * ISSUE: this is a bit of hidden JSP knowledge that was implemented this
+	 * way for expedency. Should be evolved in future to depend on
+	 * "nestedContext".
+	 */
 	private boolean isNestedScannedRegion(String type) {
 		final String JSP_CONTENT = "JSP_CONTENT"; //$NON-NLS-1$
 		return type.equals(JSP_CONTENT);
