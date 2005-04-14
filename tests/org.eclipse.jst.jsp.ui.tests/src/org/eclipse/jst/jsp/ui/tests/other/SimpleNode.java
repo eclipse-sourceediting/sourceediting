@@ -15,10 +15,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.TypeInfo;
+import org.w3c.dom.UserDataHandler;
 
 /**
- * Insert the type's description here.
- * Creation date: (8/23/2000 9:24:02 PM)
+ * Insert the type's description here. Creation date: (8/23/2000 9:24:02 PM)
+ * 
  * @author: Kit Lo
  */
 public class SimpleNode implements Node {
@@ -81,11 +83,12 @@ public class SimpleNode implements Node {
 	}
 
 	/**
-	 * Returns the local part of the qualified name of this node.
-	 * <br>For nodes of any type other than <code>ELEMENT_NODE</code> and 
-	 * <code>ATTRIBUTE_NODE</code> and nodes created with a DOM Level 1 
-	 * method, such as <code>createElement</code> from the 
+	 * Returns the local part of the qualified name of this node. <br>
+	 * For nodes of any type other than <code>ELEMENT_NODE</code> and
+	 * <code>ATTRIBUTE_NODE</code> and nodes created with a DOM Level 1
+	 * method, such as <code>createElement</code> from the
 	 * <code>Document</code> interface, this is always <code>null</code>.
+	 * 
 	 * @since DOM Level 2
 	 */
 	public String getLocalName() {
@@ -93,18 +96,19 @@ public class SimpleNode implements Node {
 	}
 
 	/**
-	 * The namespace URI of this node, or <code>null</code> if it is 
-	 * unspecified.
-	 * <br>This is not a computed value that is the result of a namespace 
-	 * lookup based on an examination of the namespace declarations in 
-	 * scope. It is merely the namespace URI given at creation time.
-	 * <br>For nodes of any type other than <code>ELEMENT_NODE</code> and 
-	 * <code>ATTRIBUTE_NODE</code> and nodes created with a DOM Level 1 
-	 * method, such as <code>createElement</code> from the 
-	 * <code>Document</code> interface, this is always <code>null</code>.Per 
-	 * the Namespaces in XML Specification  an attribute does not inherit 
-	 * its namespace from the element it is attached to. If an attribute is 
-	 * not explicitly given a namespace, it simply has no namespace.
+	 * The namespace URI of this node, or <code>null</code> if it is
+	 * unspecified. <br>
+	 * This is not a computed value that is the result of a namespace lookup
+	 * based on an examination of the namespace declarations in scope. It is
+	 * merely the namespace URI given at creation time. <br>
+	 * For nodes of any type other than <code>ELEMENT_NODE</code> and
+	 * <code>ATTRIBUTE_NODE</code> and nodes created with a DOM Level 1
+	 * method, such as <code>createElement</code> from the
+	 * <code>Document</code> interface, this is always <code>null</code>.Per
+	 * the Namespaces in XML Specification an attribute does not inherit its
+	 * namespace from the element it is attached to. If an attribute is not
+	 * explicitly given a namespace, it simply has no namespace.
+	 * 
 	 * @since DOM Level 2
 	 */
 	public String getNamespaceURI() {
@@ -154,34 +158,39 @@ public class SimpleNode implements Node {
 	}
 
 	/**
-	 * The namespace prefix of this node, or <code>null</code> if it is 
-	 * unspecified.
-	 * <br>Note that setting this attribute, when permitted, changes the 
-	 * <code>nodeName</code> attribute, which holds the qualified name, as 
-	 * well as the <code>tagName</code> and <code>name</code> attributes of 
-	 * the <code>Element</code> and <code>Attr</code> interfaces, when 
-	 * applicable.
-	 * <br>Note also that changing the prefix of an attribute that is known to 
-	 * have a default value, does not make a new attribute with the default 
-	 * value and the original prefix appear, since the 
+	 * The namespace prefix of this node, or <code>null</code> if it is
+	 * unspecified. <br>
+	 * Note that setting this attribute, when permitted, changes the
+	 * <code>nodeName</code> attribute, which holds the qualified name, as
+	 * well as the <code>tagName</code> and <code>name</code> attributes
+	 * of the <code>Element</code> and <code>Attr</code> interfaces, when
+	 * applicable. <br>
+	 * Note also that changing the prefix of an attribute that is known to
+	 * have a default value, does not make a new attribute with the default
+	 * value and the original prefix appear, since the
 	 * <code>namespaceURI</code> and <code>localName</code> do not change.
-	 * <br>For nodes of any type other than <code>ELEMENT_NODE</code> and 
-	 * <code>ATTRIBUTE_NODE</code> and nodes created with a DOM Level 1 
-	 * method, such as <code>createElement</code> from the 
+	 * <br>
+	 * For nodes of any type other than <code>ELEMENT_NODE</code> and
+	 * <code>ATTRIBUTE_NODE</code> and nodes created with a DOM Level 1
+	 * method, such as <code>createElement</code> from the
 	 * <code>Document</code> interface, this is always <code>null</code>.
+	 * 
 	 * @exception DOMException
-	 *   INVALID_CHARACTER_ERR: Raised if the specified prefix contains an 
-	 *   illegal character.
-	 *   <br>NO_MODIFICATION_ALLOWED_ERR: Raised if this node is readonly.
-	 *   <br>NAMESPACE_ERR: Raised if the specified <code>prefix</code> is 
-	 *   malformed, if the <code>namespaceURI</code> of this node is 
-	 *   <code>null</code>, if the specified prefix is "xml" and the 
-	 *   <code>namespaceURI</code> of this node is different from "
-	 *   http://www.w3.org/XML/1998/namespace", if this node is an attribute 
-	 *   and the specified prefix is "xmlns" and the 
-	 *   <code>namespaceURI</code> of this node is different from "
-	 *   http://www.w3.org/2000/xmlns/", or if this node is an attribute and 
-	 *   the <code>qualifiedName</code> of this node is "xmlns" .
+	 *                INVALID_CHARACTER_ERR: Raised if the specified prefix
+	 *                contains an illegal character. <br>
+	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if this node is
+	 *                readonly. <br>
+	 *                NAMESPACE_ERR: Raised if the specified
+	 *                <code>prefix</code> is malformed, if the
+	 *                <code>namespaceURI</code> of this node is
+	 *                <code>null</code>, if the specified prefix is "xml"
+	 *                and the <code>namespaceURI</code> of this node is
+	 *                different from " http://www.w3.org/XML/1998/namespace",
+	 *                if this node is an attribute and the specified prefix is
+	 *                "xmlns" and the <code>namespaceURI</code> of this node
+	 *                is different from " http://www.w3.org/2000/xmlns/", or
+	 *                if this node is an attribute and the
+	 *                <code>qualifiedName</code> of this node is "xmlns" .
 	 * @since DOM Level 2
 	 */
 	public String getPrefix() {
@@ -197,8 +206,9 @@ public class SimpleNode implements Node {
 
 	/**
 	 * Returns whether this node (if it is an element) has any attributes.
-	 * @return <code>true</code> if this node has any attributes, 
-	 *   <code>false</code> otherwise.
+	 * 
+	 * @return <code>true</code> if this node has any attributes,
+	 *         <code>false</code> otherwise.
 	 * @since DOM Level 2
 	 */
 	public boolean hasAttributes() {
@@ -220,17 +230,20 @@ public class SimpleNode implements Node {
 	}
 
 	/**
-	 * Tests whether the DOM implementation implements a specific feature and 
+	 * Tests whether the DOM implementation implements a specific feature and
 	 * that feature is supported by this node.
-	 * @param featureThe name of the feature to test. This is the same name 
-	 *   which can be passed to the method <code>hasFeature</code> on 
-	 *   <code>DOMImplementation</code>.
-	 * @param versionThis is the version number of the feature to test. In 
-	 *   Level 2, version 1, this is the string "2.0". If the version is not 
-	 *   specified, supporting any version of the feature will cause the 
-	 *   method to return <code>true</code>.
-	 * @return Returns <code>true</code> if the specified feature is 
-	 *   supported on this node, <code>false</code> otherwise.
+	 * 
+	 * @param featureThe
+	 *            name of the feature to test. This is the same name which can
+	 *            be passed to the method <code>hasFeature</code> on
+	 *            <code>DOMImplementation</code>.
+	 * @param versionThis
+	 *            is the version number of the feature to test. In Level 2,
+	 *            version 1, this is the string "2.0". If the version is not
+	 *            specified, supporting any version of the feature will cause
+	 *            the method to return <code>true</code>.
+	 * @return Returns <code>true</code> if the specified feature is
+	 *         supported on this node, <code>false</code> otherwise.
 	 * @since DOM Level 2
 	 */
 	public boolean isSupported(String feature, String version) {
@@ -238,19 +251,20 @@ public class SimpleNode implements Node {
 	}
 
 	/**
-	 * Puts all <code>Text</code> nodes in the full depth of the sub-tree 
-	 * underneath this <code>Node</code>, including attribute nodes, into a 
-	 * "normal" form where only structure (e.g., elements, comments, 
-	 * processing instructions, CDATA sections, and entity references) 
-	 * separates <code>Text</code> nodes, i.e., there are neither adjacent 
-	 * <code>Text</code> nodes nor empty <code>Text</code> nodes. This can 
-	 * be used to ensure that the DOM view of a document is the same as if 
-	 * it were saved and re-loaded, and is useful when operations (such as 
-	 * XPointer  lookups) that depend on a particular document tree 
-	 * structure are to be used.In cases where the document contains 
-	 * <code>CDATASections</code>, the normalize operation alone may not be 
-	 * sufficient, since XPointers do not differentiate between 
+	 * Puts all <code>Text</code> nodes in the full depth of the sub-tree
+	 * underneath this <code>Node</code>, including attribute nodes, into a
+	 * "normal" form where only structure (e.g., elements, comments,
+	 * processing instructions, CDATA sections, and entity references)
+	 * separates <code>Text</code> nodes, i.e., there are neither adjacent
+	 * <code>Text</code> nodes nor empty <code>Text</code> nodes. This can
+	 * be used to ensure that the DOM view of a document is the same as if it
+	 * were saved and re-loaded, and is useful when operations (such as
+	 * XPointer lookups) that depend on a particular document tree structure
+	 * are to be used.In cases where the document contains
+	 * <code>CDATASections</code>, the normalize operation alone may not be
+	 * sufficient, since XPointers do not differentiate between
 	 * <code>Text</code> nodes and <code>CDATASection</code> nodes.
+	 * 
 	 * @version DOM Level 2
 	 */
 	public void normalize() {
@@ -285,4 +299,104 @@ public class SimpleNode implements Node {
 	public String toString() {
 		return getNodeName();
 	}
+
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public short compareDocumentPosition(Node other) throws DOMException {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version.");
+	}
+
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public String getBaseURI() {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version.");
+	}
+
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public Object getFeature(String feature, String version) {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version.");
+	}
+
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public String getTextContent() throws DOMException {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version.");
+	}
+
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public Object getUserData(String key) {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version.");
+	}
+
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public boolean isDefaultNamespace(String namespaceURI) {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version.");
+	}
+
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public boolean isEqualNode(Node arg) {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version.");
+	}
+
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public boolean isSameNode(Node other) {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version.");
+	}
+
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public String lookupNamespaceURI(String prefix) {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version.");
+	}
+
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public String lookupPrefix(String namespaceURI) {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version.");
+	}
+
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public void setTextContent(String textContent) throws DOMException {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version.");
+	}
+
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public Object setUserData(String key, Object data, UserDataHandler handler) {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version.");
+	}
+
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public TypeInfo getSchemaTypeInfo() {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version.");
+	}
+
+	/**
+	 * NOT IMPLEMENTED, is defined here in preparation of DOM Level 3
+	 */
+	public boolean isId() {
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented in this version.");
+	}
+
+
 }
