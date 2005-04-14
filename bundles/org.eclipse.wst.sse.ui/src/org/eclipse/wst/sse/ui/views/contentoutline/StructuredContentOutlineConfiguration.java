@@ -46,7 +46,7 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 	 * Structured source files tend to have large/long tree structures. Add a
 	 * collapse action to help with navigation.
 	 */
-	protected class CollapseTreeAction extends Action {
+	private class CollapseTreeAction extends Action {
 		private TreeViewer fTreeViewer = null;
 
 		public CollapseTreeAction(TreeViewer viewer) {
@@ -63,8 +63,7 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 		}
 	}
 
-	protected class ToggleLinkAction extends PropertyChangeUpdateAction {
-
+	private class ToggleLinkAction extends PropertyChangeUpdateAction {
 		public ToggleLinkAction(IPreferenceStore store, String preference) {
 			super(SSEUIMessages.StructuredContentOutlineConfiguration_1, store, preference, true); //$NON-NLS-1$
 			setToolTipText(getText());
