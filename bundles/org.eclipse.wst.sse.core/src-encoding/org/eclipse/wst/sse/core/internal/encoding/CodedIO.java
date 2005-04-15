@@ -243,7 +243,7 @@ public abstract class CodedIO {
 		byte[] BOM = (byte[]) contentDescription.getProperty(IContentDescription.BYTE_ORDER_MARK);
 		//result = (EncodingMemento)
 		// contentDescription.getProperty(IContentDescriptionExtended.ENCODING_MEMENTO);
-		result = createEncodingMemento(BOM, javaCharset, detectedCharset, unSupportedCharset, null, null);
+		result = createEncodingMemento(BOM, javaCharset, detectedCharset, unSupportedCharset, appropriateDefault, null);
 		if (!result.isValid()) {
 			result.setAppropriateDefault(appropriateDefault);
 			// integrity check for debugging "invalid" cases.

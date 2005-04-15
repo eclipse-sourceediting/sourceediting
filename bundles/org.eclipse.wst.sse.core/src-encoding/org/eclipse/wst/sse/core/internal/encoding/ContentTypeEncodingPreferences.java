@@ -13,6 +13,8 @@
 package org.eclipse.wst.sse.core.internal.encoding;
 
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.wst.sse.core.internal.encoding.util.Assert;
 
 
@@ -93,10 +95,24 @@ public abstract class ContentTypeEncodingPreferences {
 	}
 
 	public static final String getUserSpecifiedDefaultEncodingPreference(String contentTypeID) {
-		String enc = ContentBasedPreferenceGateway.getPreferencesString(contentTypeID, CommonEncodingPreferenceNames.INPUT_CODESET);
+		String enc = null;
+
+		// first try to get base's default encoding for content type
+		IContentType contentType = Platform.getContentTypeManager().getContentType(contentTypeID);
+		if (contentType != null) {
+			enc = contentType.getDefaultCharset();
+		}
+		
+		// next try to get sse's default encoding for content type
+		if (enc == null || enc.trim().length() == 0) {
+			enc = ContentBasedPreferenceGateway.getPreferencesString(contentTypeID, CommonEncodingPreferenceNames.INPUT_CODESET);
+		}
+		
+		// next, just try and use workbench encoding
 		if (enc == null || enc.trim().length() == 0) {
 			enc = getWorkbenchSpecifiedDefaultEncoding();
 		}
+		
 		// return blank as null
 		if (enc != null && enc.trim().length() == 0) {
 			enc = null;

@@ -15,6 +15,7 @@ package org.eclipse.wst.sse.core.internal.encoding;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 
 import sun.io.ByteToCharConverter;
@@ -47,12 +48,22 @@ public class NonContentBasedEncodingRules {
 
 
 	public static String getUserSpecifiedDefaultForContentType(IFile iFile) {
-		IContentType contentType = null;
 		String enc = null;
+		
+		IContentType contentType = null;
 		try {
 			contentType = iFile.getContentDescription().getContentType();
+			
+			// first try to get base's default encoding for content type 
+			if (contentType != null) {
+				enc = contentType.getDefaultCharset();
+			}
 
-			enc = ContentBasedPreferenceGateway.getPreferencesString(contentType, CommonEncodingPreferenceNames.INPUT_CODESET);
+			// next try to get sse's default encoding for content type
+			if (enc == null || enc.trim().length() == 0) {
+				enc = ContentBasedPreferenceGateway.getPreferencesString(contentType, CommonEncodingPreferenceNames.INPUT_CODESET);
+			}
+			
 			// return blank as null
 			if (enc != null && enc.trim().length() == 0) {
 				enc = null;
@@ -65,7 +76,19 @@ public class NonContentBasedEncodingRules {
 	}
 
 	public static String getUserSpecifiedDefaultForContentType(String contentTypeId) {
-		String enc = ContentBasedPreferenceGateway.getPreferencesString(contentTypeId, CommonEncodingPreferenceNames.INPUT_CODESET);
+		String enc = null;
+		
+		// first try to get base's default encoding for content type
+		IContentType contentType = Platform.getContentTypeManager().getContentType(contentTypeId);
+		if (contentType != null) {
+			enc = contentType.getDefaultCharset();
+		}
+		
+		// next try to get sse's default encoding for content type
+		if (enc == null || enc.trim().length() == 0) {
+			enc = ContentBasedPreferenceGateway.getPreferencesString(contentTypeId, CommonEncodingPreferenceNames.INPUT_CODESET);
+		}
+		
 		// return blank as null
 		if (enc != null && enc.trim().length() == 0) {
 			enc = null;

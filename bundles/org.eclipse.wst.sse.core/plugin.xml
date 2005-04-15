@@ -20,12 +20,7 @@
 		-->
       <import plugin="org.eclipse.text" export="true"/>
 
-		<!-- need to re-export emf.common since our API depends on it, 
-			such as StructuredTextUndoManager's getCommmand method returns an 
-			emf.common.Command
-		-->
-      <import plugin="org.eclipse.emf.common" export="true"/>
-      
+     
       <import plugin="org.eclipse.core.runtime"/>
       <import plugin="org.eclipse.core.filebuffers"/>
       <import plugin="org.eclipse.wst.xml.uriresolver"/>
