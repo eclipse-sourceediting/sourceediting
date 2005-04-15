@@ -399,6 +399,28 @@
 		</wizard>
 	</extension>
 	
+   <!-- Add new JSP wizard to J2EE Project Navigator -->
+   <extension
+		point="org.eclipse.wst.common.navigator.workbench.commonWizard">
+        <commonWizard
+			type="new"
+            wizardId="org.eclipse.jst.jsp.ui.internal.wizard.NewJSPWizard">
+			<enablement>
+				<or>
+		           <objectClass 
+		                name="org.eclipse.core.resources.IProject">
+		           </objectClass>
+		           <objectClass
+		                 name="org.eclipse.core.resources.IFolder">
+		           </objectClass> 
+		           <objectClass
+		                 name="org.eclipse.core.resources.IFile">
+		           </objectClass> 
+				</or>
+			</enablement>
+       </commonWizard>
+    </extension> 
+	
 	<extension
 		point="org.eclipse.ui.popupMenus">
 		<viewerContribution

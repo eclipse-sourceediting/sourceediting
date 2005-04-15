@@ -44,6 +44,13 @@ public class JSPUIMessages extends NLS {
 	public static String _UI_WIZARD_NEW_HEADING;
 	public static String _UI_WIZARD_NEW_DESCRIPTION;
 	public static String _ERROR_FILENAME_MUST_END_JSP;
+	public static String NewJSPTemplatesWizardPage_0;
+	public static String NewJSPTemplatesWizardPage_1;
+	public static String NewJSPTemplatesWizardPage_2;
+	public static String NewJSPTemplatesWizardPage_3;
+	public static String NewJSPTemplatesWizardPage_4;
+	public static String NewJSPTemplatesWizardPage_5;
+	public static String NewJSPTemplatesWizardPage_6;
 	public static String ToggleComment_label; // resource bundle
 	public static String ToggleComment_tooltip; // resource bundle
 	public static String ToggleComment_description; // resource bundle

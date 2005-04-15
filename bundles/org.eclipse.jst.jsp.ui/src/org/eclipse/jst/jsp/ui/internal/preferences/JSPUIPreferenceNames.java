@@ -52,4 +52,14 @@ public class JSPUIPreferenceNames {
 	private static String getTemplatesKey() {
 		return "org.eclipse.wst.sse.ui.custom_templates"; //$NON-NLS-1$
 	}
+
+	/**
+	 * The key to store the last template name used in new JSP file wizard.
+	 * Template name is stored instead of template id because user-created
+	 * templates do not have template ids.
+	 * <p>
+	 * Value is of type <code>String</code>.
+	 * </p>
+	 */
+	public static final String NEW_FILE_TEMPLATE_NAME = "newFileTemplateName"; //$NON-NLS-1$
 }
