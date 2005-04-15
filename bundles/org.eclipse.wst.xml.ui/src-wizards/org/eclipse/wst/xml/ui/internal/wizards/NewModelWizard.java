@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.wizards;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -17,6 +21,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardPage;
@@ -29,12 +35,10 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorDescriptor;
-import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
+import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
 
 public class NewModelWizard extends Wizard implements INewWizard
 {
@@ -207,6 +211,7 @@ public class NewModelWizard extends Wizard implements INewWizard
     public String defaultName = "NewFile"; //$NON-NLS-1$
     public String defaultFileExtension = ".txt"; //$NON-NLS-1$
     public String[] filterExtensions = { "*.txt"}; //$NON-NLS-1$
+	private List fValidExtensions = null;
 
     public NewFilePage(IStructuredSelection selection)
     {
@@ -270,49 +275,36 @@ public class NewModelWizard extends Wizard implements INewWizard
     }
 
 
-    protected boolean validatePage()
-    {     
-      String fullFileName = getFileName();
-      String fileExtension = (new Path(fullFileName)).getFileExtension();
-      if (fileExtension != null) 
-      {                    
-        IEditorRegistry editorRegistry = PlatformUI.getWorkbench().getEditorRegistry();
-        IEditorDescriptor defaultEditorDescriptor = editorRegistry.getDefaultEditor();   
-        IEditorDescriptor[] descriptors =  editorRegistry.getEditors(getFileName());        
-        if (descriptors.length == 0)
-        {                                                                         
-          setErrorMessage(XMLWizardsMessages._ERROR_BAD_FILENAME_EXTENSION);                                                    
-          return false;
-        }              
-      }
-      else
-      {
-        // no fileExtension, let's check for this file with an .xml extension
-        fullFileName += ".xml"; //$NON-NLS-1$
-        if ( (getContainerFullPath() != null) && (getContainerFullPath().isEmpty() == false)
-           && (getFileName().compareTo("") != 0)) //$NON-NLS-1$
-        {
-          Path fullPath = new Path(getContainerFullPath().toString() + '/' + fullFileName);
-          IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(fullPath);
-          if (resource != null) 
-          {
-            setErrorMessage(XMLWizardsMessages._ERROR_FILE_ALREADY_EXISTS);
-            return false;    
-          }
-        }        
-      }
+    protected boolean validatePage() {
+		String fullFileName = getFileName();
+		String fileExtension = (new Path(fullFileName)).getFileExtension();
+		if (fileExtension != null && (!getValidExtensions().contains(fileExtension))) {
+			setErrorMessage(XMLWizardsMessages._ERROR_BAD_FILENAME_EXTENSION);
+			return false;
+		}
+		// no fileExtension, let's check for this file with an .xml
+		// extension
+		fullFileName += ".xml"; //$NON-NLS-1$
+		if ((getContainerFullPath() != null) && (getContainerFullPath().isEmpty() == false) && (getFileName().compareTo("") != 0)) //$NON-NLS-1$
+		{
+			Path fullPath = new Path(getContainerFullPath().toString() + '/' + fullFileName);
+			IResource resource = ResourcesPlugin.getWorkspace().getRoot().findMember(fullPath);
+			if (resource != null) {
+				setErrorMessage(XMLWizardsMessages._ERROR_FILE_ALREADY_EXISTS);
+				return false;
+			}
+		}
 
-      // check for file should be case insensitive
-      String sameName = existsFileAnyCase(fullFileName);
-      if (sameName != null) 
-      {
-         String qualifiedFileName = getContainerFullPath().toString() + '/' + fullFileName;
-         setErrorMessage(XMLWizardsMessages._ERROR_FILE_ALREADY_EXISTS + " " +  sameName); //$NON-NLS-1$
-         return false;
-      }
-            
-      return super.validatePage();
-    }
+		// check for file should be case insensitive
+		String sameName = existsFileAnyCase(fullFileName);
+		if (sameName != null) {
+			String qualifiedFileName = getContainerFullPath().toString() + '/' + fullFileName;
+			setErrorMessage(XMLWizardsMessages._ERROR_FILE_ALREADY_EXISTS + " " + sameName); //$NON-NLS-1$
+			return false;
+		}
+
+		return super.validatePage();
+	}
 
     public void createControl(Composite parent)
     {
@@ -321,6 +313,19 @@ public class NewModelWizard extends Wizard implements INewWizard
       this.setFileName(computeDefaultFileName());
       setPageComplete(validatePage());
     }
+	
+	/**
+	 * Get list of valid extensions for XML Content type
+	 * 
+	 * @return List
+	 */
+	List getValidExtensions() {
+		if (fValidExtensions == null) {
+			IContentType type = Platform.getContentTypeManager().getContentType(ContentTypeIdForXML.ContentTypeID_XML);
+			fValidExtensions = new ArrayList(Arrays.asList(type.getFileSpecs(IContentType.FILE_EXTENSION_SPEC)));
+		}
+		return fValidExtensions;
+	}
   }
 }
 
