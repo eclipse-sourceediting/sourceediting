@@ -19,7 +19,7 @@ package org.eclipse.wst.xml.core.contenttype;
  * 
  * @since 1.0
  */
-public class ContentTypeIdForXML {
+final public class ContentTypeIdForXML {
 	/**
 	 * This content type is actually supplied by base Eclipse. Its given here
 	 * just as documentation for WTP based clients. Typically, clients should
