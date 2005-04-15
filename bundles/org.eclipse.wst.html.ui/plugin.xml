@@ -389,7 +389,7 @@
    </extension>
 	
 
-	<!-- New JSP wizard -->
+	<!-- New HTML wizard -->
 	<extension point="org.eclipse.ui.newWizards">
 		<wizard id="org.eclipse.wst.html.ui.internal.wizard.NewHTMLWizard"
 			name="%_UI_WIZARD_NAME"
@@ -400,6 +400,28 @@
 			<selection class="org.eclipse.core.resources.IResource" />
 		</wizard>
 	</extension>
+	
+   <!-- Add new HTML wizard to J2EE Project Navigator -->
+   <extension
+		point="org.eclipse.wst.common.navigator.workbench.commonWizard">
+        <commonWizard
+			type="new"
+            wizardId="org.eclipse.wst.html.ui.internal.wizard.NewHTMLWizard">
+			<enablement>
+				<or>
+		           <objectClass 
+		                name="org.eclipse.core.resources.IProject">
+		           </objectClass>
+		           <objectClass
+		                 name="org.eclipse.core.resources.IFolder">
+		           </objectClass> 
+		           <objectClass
+		                 name="org.eclipse.core.resources.IFile">
+		           </objectClass> 
+				</or>
+			</enablement>
+       </commonWizard>
+    </extension> 
 	
 	<extension
 		point="org.eclipse.ui.popupMenus">

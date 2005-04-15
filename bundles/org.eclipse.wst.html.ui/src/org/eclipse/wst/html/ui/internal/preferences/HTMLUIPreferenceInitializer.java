@@ -2,6 +2,7 @@ package org.eclipse.wst.html.ui.internal.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.templates.Template;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.style.IStyleConstantsHTML;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
@@ -72,6 +73,17 @@ public class HTMLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		
 		styleValue = ColorHelper.getColorString(191, 95, 63)  + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsHTML.SCRIPT_AREA_BORDER, styleValue);
+		
+		// set default new html file template to use in new file wizard
+		/*
+		 * Need to find template name that goes with default template id (name
+		 * may change for differnt language)
+		 */
+		String templateName = ""; //$NON-NLS-1$
+		Template template = HTMLUIPlugin.getDefault().getTemplateStore().findTemplateById("com.ibm.sse.editor.html.templates.html"); //$NON-NLS-1$
+		if (template != null)
+			templateName = template.getName();
+		store.setDefault(HTMLUIPreferenceNames.NEW_FILE_TEMPLATE_NAME, templateName);
 	}
 
 }

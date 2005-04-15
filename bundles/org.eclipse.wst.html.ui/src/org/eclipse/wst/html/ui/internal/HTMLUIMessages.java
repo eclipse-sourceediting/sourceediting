@@ -32,6 +32,13 @@ public class HTMLUIMessages extends NLS {
 	public static String _UI_WIZARD_NEW_HEADING;
 	public static String _UI_WIZARD_NEW_DESCRIPTION;
 	public static String _ERROR_FILENAME_MUST_END_HTML;
+	public static String NewHTMLTemplatesWizardPage_0;
+	public static String NewHTMLTemplatesWizardPage_1;
+	public static String NewHTMLTemplatesWizardPage_2;
+	public static String NewHTMLTemplatesWizardPage_3;
+	public static String NewHTMLTemplatesWizardPage_4;
+	public static String NewHTMLTemplatesWizardPage_5;
+	public static String NewHTMLTemplatesWizardPage_6;
 	public static String Creating_files_encoding;
 	public static String MESSAGE_HTML_VALIDATION_MESSAGE_UI_;
 	public static String CleanupDocument_label; // resource bundle
