@@ -11,7 +11,6 @@
 package org.eclipse.wst.xml.ui.internal.wizards;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.wst.common.ui.wizards.ExampleProjectCreationWizard;
 
 /**
  * Wizard used for creating the XML samples.

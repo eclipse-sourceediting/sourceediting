@@ -314,7 +314,7 @@
        </category>
        <wizard
             name="%XMLExample.name"
-            class="org.eclipse.wst.common.ui.wizards.ExampleProjectCreationWizard"
+            class="org.eclipse.wst.xml.ui.internal.wizards.ExampleProjectCreationWizard"
             category="org.eclipse.ui.Examples/org.eclipse.wst.xml.examples"
             id="org.eclipse.wst.xml.ui.XMLExampleProjectCreationWizard"
             project="true" 
