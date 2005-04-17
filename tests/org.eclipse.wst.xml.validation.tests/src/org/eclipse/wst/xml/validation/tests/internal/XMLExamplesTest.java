@@ -55,4 +55,17 @@ public class XMLExamplesTest extends BaseTestCase
     
     runTest(testfile, loglocation, idealloglocation);
   }
+  
+  /**
+   * Test /XMLExamples/j2ee/web.xml.
+   */
+  public void testWeb()
+  {
+  	String testname = "web";
+    String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + XMLExamples_DIR + "j2ee/" + testname + ".xml";
+    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + XMLExamples_DIR + "j2ee/" + testname + ".xml-log";
+    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + XMLExamples_DIR + "j2ee/" + testname + ".xml-log";
+    
+    runTest(testfile, loglocation, idealloglocation);
+  }
 }
