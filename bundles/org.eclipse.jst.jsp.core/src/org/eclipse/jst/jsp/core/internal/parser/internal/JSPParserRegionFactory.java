@@ -10,15 +10,15 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.parser.internal;
 
-import org.eclipse.jst.jsp.core.internal.parser.JSPCodeRegion;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
+import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.parser.regions.XMLParserRegionFactory;
 
 /**
  * 
- * This region factory is very specific to the parser output, 
- * and the specific implementation classes for various regions.
+ * This region factory is very specific to the parser output, and the specific
+ * implementation classes for various regions.
  */
 public class JSPParserRegionFactory extends XMLParserRegionFactory {
 	public JSPParserRegionFactory() {
@@ -28,7 +28,7 @@ public class JSPParserRegionFactory extends XMLParserRegionFactory {
 	public ITextRegion createToken(String context, int start, int textLength, int length, String lang, String surroundingTag) {
 		ITextRegion newRegion = null;
 		if (context == DOMJSPRegionContexts.JSP_CONTENT) {
-			newRegion = new JSPCodeRegion(context, start, textLength, length);
+			newRegion = new ForeignRegion(context, start, textLength, length);
 		}
 		else
 			newRegion = super.createToken(context, start, textLength, length, lang, surroundingTag);

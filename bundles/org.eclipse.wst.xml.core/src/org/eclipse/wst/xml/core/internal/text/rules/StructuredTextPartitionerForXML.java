@@ -18,7 +18,6 @@ import org.eclipse.wst.sse.core.internal.text.rules.StructuredTextPartitioner;
 import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.text.IStructuredTextPartitioner;
 import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.xml.core.internal.parser.regions.BlockTextRegion;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
@@ -92,12 +91,14 @@ public class StructuredTextPartitionerForXML extends StructuredTextPartitioner i
 		if (region.getType() == DOMRegionContext.BLOCK_TEXT) {
 			// for code safety, we'll always check instanceof, but I think
 			// always true.
-			if (region instanceof BlockTextRegion) {
+			if (region instanceof ForeignRegion) {
 				// super is used below so won't be ambiguous
-				newResult = getPartitionType((BlockTextRegion) region, offset);
-			} else if (region instanceof ForeignRegion) {
 				newResult = getPartitionType((ForeignRegion) region, offset);
-			} else {
+			}
+			else if (region instanceof ForeignRegion) {
+				newResult = getPartitionType((ForeignRegion) region, offset);
+			}
+			else {
 				newResult = getUnknown();
 			}
 		}

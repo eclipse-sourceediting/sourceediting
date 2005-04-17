@@ -79,7 +79,7 @@ public class ContextRegion implements ITextRegion {
 
 	}
 
-	protected boolean allLetterOrDigit(String changes) {
+	boolean allLetterOrDigit(String changes) {
 		boolean result = true;
 		for (int i = 0; i < changes.length(); i++) {
 			// TO_DO_FUTURE: check that a Java Letter or Digit is
@@ -92,7 +92,7 @@ public class ContextRegion implements ITextRegion {
 		return result;
 	}
 
-	protected boolean allWhiteSpace(String changes) {
+	boolean allWhiteSpace(String changes) {
 		boolean result = true;
 		for (int i = 0; i < changes.length(); i++) {
 			if (!Character.isWhitespace(changes.charAt(i))) {
@@ -104,7 +104,7 @@ public class ContextRegion implements ITextRegion {
 		return result;
 	}
 
-	protected boolean canHandleAsLetterOrDigit(String changes, int requestStart, int lengthToReplace) {
+	boolean canHandleAsLetterOrDigit(String changes, int requestStart, int lengthToReplace) {
 		boolean result = false;
 		// Make sure we are in a non-white space area
 		if ((requestStart <= (getTextEnd())) && (allLetterOrDigit(changes))) {
@@ -113,7 +113,7 @@ public class ContextRegion implements ITextRegion {
 		return result;
 	}
 
-	protected boolean canHandleAsWhiteSpace(String changes, int requestStart, int lengthToReplace) {
+	boolean canHandleAsWhiteSpace(String changes, int requestStart, int lengthToReplace) {
 		boolean result = false;
 		// if we are in the "white space" area of a region, then
 		// we don't want to handle, a reparse is needed.
@@ -131,7 +131,8 @@ public class ContextRegion implements ITextRegion {
 				// we are just inserting whitespace.
 				if (allWhiteSpace(changes)) {
 					result = true;
-				} else {
+				}
+				else {
 					result = false;
 				}
 
@@ -220,7 +221,7 @@ public class ContextRegion implements ITextRegion {
 		// NOTE: if the document held by any region has been updated and the
 		// region offsets have not
 		// yet been updated, the output from this method invalid.
-		//return com.ibm.sed.util.StringUtils.escape("('"+(getFirstRegion()
+		// return com.ibm.sed.util.StringUtils.escape("('"+(getFirstRegion()
 		// == null || document == null? "" :
 		// getText(getFirstRegion()))+"'"+getStart()+" -
 		// "+getEnd()+"'"+(getClose() == null || document == null ||

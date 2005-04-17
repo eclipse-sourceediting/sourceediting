@@ -201,6 +201,10 @@ public class TaglibController implements IDocumentSetupParticipant {
 	 * @return
 	 */
 	public static ITextFileBuffer getFileBuffer(TLDCMDocumentManager manager) {
+		// if _instance is null, we are already shutting donw
+		if (_instance == null)
+			return null;
+
 		ITextFileBuffer buffer = null;
 		synchronized (_instance.fDocumentMap) {
 			Iterator docInfos = _instance.fDocumentMap.values().iterator();

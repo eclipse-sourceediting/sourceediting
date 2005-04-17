@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.css.core.internal.parser.regions;
 
+import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 
 public class CSSTextRegionFactory {
@@ -22,7 +23,7 @@ public class CSSTextRegionFactory {
 
 	public ITextRegion createRegion(String context, int start, int textLength, int length) {
 		ITextRegion region = null;
-		region = new CSSContextRegion(context, start, textLength, length);
+		region = new ContextRegion(context, start, textLength, length);
 		return region;
 	}
 

@@ -12,13 +12,15 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.core.internal.parser;
 
+import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
 import org.eclipse.wst.sse.core.text.ITextRegion;
 
-public class DTDRegionFactory implements DTDRegionTypes {
+public class DTDRegionFactory {
 	public static ITextRegion createRegion(String tokenKind, int start, int length) {
 		ITextRegion region = null;
 		if (tokenKind != null) {
-			region = new DTDRegion(tokenKind, start, length);
+			// ISSUE: DTD regions don't distinguish text from white space
+			region = new ContextRegion(tokenKind, start, length, length);
 		}
 		return region;
 	}

@@ -21,13 +21,13 @@ import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 
 public class ForeignRegion extends ContextRegion {
 
-	protected String language = null;
-	protected String surroundingTag = null;
+	private String language = null;
+	private String surroundingTag = null;
 
 	/**
 	 * ForeignRegion constructor comment.
 	 */
-	public ForeignRegion() {
+	private ForeignRegion() {
 		super();
 	}
 

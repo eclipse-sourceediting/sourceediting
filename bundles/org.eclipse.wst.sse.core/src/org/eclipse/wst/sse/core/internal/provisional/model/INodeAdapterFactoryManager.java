@@ -18,7 +18,7 @@ import org.eclipse.wst.sse.core.INodeAdapterFactory;
  * Provides a means for clients to register IAdapterFactories for use
  * by infrastructure when StructuredModels are created. 
  */
-public interface IFactoryManagerProposed {
+public interface INodeAdapterFactoryManager {
 
 	/**
 	 * 
