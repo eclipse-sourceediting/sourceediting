@@ -914,13 +914,13 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 			case DTDPackage.DTD_ATTRIBUTE__ETYPE :
 				return eType != null;
 			case DTDPackage.DTD_ATTRIBUTE__CHANGEABLE :
-				return changeable != CHANGEABLE_EDEFAULT;
+				return ((eFlags & CHANGEABLE_EFLAG) != 0) != CHANGEABLE_EDEFAULT;
 			case DTDPackage.DTD_ATTRIBUTE__VOLATILE :
-				return volatile_ != VOLATILE_EDEFAULT;
+				return ((eFlags & VOLATILE_EFLAG) != 0) != VOLATILE_EDEFAULT;
 			case DTDPackage.DTD_ATTRIBUTE__TRANSIENT :
-				return transient_ != TRANSIENT_EDEFAULT;
+				return ((eFlags & TRANSIENT_EFLAG) != 0) != TRANSIENT_EDEFAULT;
 			case DTDPackage.DTD_ATTRIBUTE__UNIQUE :
-				return unique != UNIQUE_EDEFAULT;
+				return ((eFlags & UNIQUE_EFLAG) != 0) != UNIQUE_EDEFAULT;
 			case DTDPackage.DTD_ATTRIBUTE__DEFAULT_VALUE_LITERAL :
 				return DEFAULT_VALUE_LITERAL_EDEFAULT == null ? defaultValueLiteral != null : !DEFAULT_VALUE_LITERAL_EDEFAULT.equals(defaultValueLiteral);
 			case DTDPackage.DTD_ATTRIBUTE__DEFAULT_VALUE :
@@ -936,9 +936,9 @@ public class DTDAttributeImpl extends EAttributeImpl implements DTDAttribute {
 			case DTDPackage.DTD_ATTRIBUTE__ECONTAINING_CLASS :
 				return getEContainingClass() != null;
 			case DTDPackage.DTD_ATTRIBUTE__UNSETTABLE :
-				return unsettable != UNSETTABLE_EDEFAULT;
+				return ((eFlags & UNSETTABLE_EFLAG) != 0) != UNSETTABLE_EDEFAULT;
 			case DTDPackage.DTD_ATTRIBUTE__ID :
-				return iD != ID_EDEFAULT;
+				return ((eFlags & ID_EFLAG) != 0) != ID_EDEFAULT;
 			case DTDPackage.DTD_ATTRIBUTE__EATTRIBUTE_TYPE :
 				return basicGetEAttributeType() != null;
 			case DTDPackage.DTD_ATTRIBUTE__COMMENT :

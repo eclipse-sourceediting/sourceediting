@@ -429,9 +429,9 @@ public class DTDElementImpl extends EClassImpl implements DTDElement {
 			case DTDPackage.DTD_ELEMENT__EPACKAGE :
 				return getEPackage() != null;
 			case DTDPackage.DTD_ELEMENT__ABSTRACT :
-				return abstract_ != ABSTRACT_EDEFAULT;
+				return ((eFlags & ABSTRACT_EFLAG) != 0) != ABSTRACT_EDEFAULT;
 			case DTDPackage.DTD_ELEMENT__INTERFACE :
-				return interface_ != INTERFACE_EDEFAULT;
+				return ((eFlags & INTERFACE_EFLAG) != 0) != INTERFACE_EDEFAULT;
 			case DTDPackage.DTD_ELEMENT__ESUPER_TYPES :
 				return eSuperTypes != null && !getESuperTypes().isEmpty();
 			case DTDPackage.DTD_ELEMENT__EOPERATIONS :

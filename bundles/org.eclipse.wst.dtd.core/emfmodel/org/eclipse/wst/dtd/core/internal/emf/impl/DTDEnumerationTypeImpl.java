@@ -266,7 +266,7 @@ public class DTDEnumerationTypeImpl extends EEnumImpl implements DTDEnumerationT
 			case DTDPackage.DTD_ENUMERATION_TYPE__EPACKAGE :
 				return getEPackage() != null;
 			case DTDPackage.DTD_ENUMERATION_TYPE__SERIALIZABLE :
-				return serializable != SERIALIZABLE_EDEFAULT;
+				return ((eFlags & SERIALIZABLE_EFLAG) != 0) != SERIALIZABLE_EDEFAULT;
 			case DTDPackage.DTD_ENUMERATION_TYPE__ELITERALS :
 				return eLiterals != null && !getELiterals().isEmpty();
 			case DTDPackage.DTD_ENUMERATION_TYPE__KIND :
