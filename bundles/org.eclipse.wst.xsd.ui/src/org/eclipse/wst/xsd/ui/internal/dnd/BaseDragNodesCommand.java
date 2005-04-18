@@ -13,8 +13,8 @@ package org.eclipse.wst.xsd.ui.internal.dnd;
 import java.util.Collection;
 
 import org.eclipse.wst.common.ui.dnd.DefaultDragAndDropCommand;
-import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Node;

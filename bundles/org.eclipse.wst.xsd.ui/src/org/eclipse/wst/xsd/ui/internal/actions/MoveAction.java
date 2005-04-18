@@ -14,8 +14,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.wst.xml.core.document.IDOMModel;
-import org.eclipse.wst.xml.core.document.IDOMNode;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;

@@ -13,7 +13,7 @@ package org.eclipse.wst.xsd.ui.internal.dnd;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.eclipse.wst.xml.core.document.IDOMNode;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.provisional.format.NodeFormatter;
 import org.w3c.dom.Node;
 

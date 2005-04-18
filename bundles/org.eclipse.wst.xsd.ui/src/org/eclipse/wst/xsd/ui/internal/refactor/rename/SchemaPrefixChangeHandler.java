@@ -13,7 +13,7 @@ package org.eclipse.wst.xsd.ui.internal.refactor.rename;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.wst.xml.core.document.IDOMNode;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xsd.ui.internal.refactor.XSDVisitor;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.XSDAttributeDeclaration;

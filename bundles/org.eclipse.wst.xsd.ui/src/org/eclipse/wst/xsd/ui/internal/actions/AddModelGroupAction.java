@@ -12,8 +12,8 @@ package org.eclipse.wst.xsd.ui.internal.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
-import org.eclipse.wst.xsd.ui.internal.commands.AddModelGroupCommand;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
+import org.eclipse.wst.xsd.ui.internal.commands.AddModelGroupCommand;
 import org.eclipse.xsd.XSDCompositor;
 import org.eclipse.xsd.XSDConcreteComponent;
 

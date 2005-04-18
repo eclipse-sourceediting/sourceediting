@@ -39,10 +39,10 @@ import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstan
 import org.eclipse.wst.sse.ui.internal.openon.OpenOnAction;
 import org.eclipse.wst.sse.ui.internal.view.events.INodeSelectionListener;
 import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
-import org.eclipse.wst.xml.core.document.IDOMModel;
-import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
-import org.eclipse.wst.xml.ui.StructuredTextEditorXML;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.ui.internal.provisional.StructuredTextEditorXML;
 import org.eclipse.wst.xsd.ui.internal.properties.section.XSDTabbedPropertySheetPage;
 import org.eclipse.wst.xsd.ui.internal.provider.CategoryAdapter;
 import org.eclipse.wst.xsd.ui.internal.provider.XSDAdapterFactoryLabelProvider;

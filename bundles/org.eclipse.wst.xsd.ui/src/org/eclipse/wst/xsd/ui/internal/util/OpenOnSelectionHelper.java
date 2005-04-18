@@ -22,7 +22,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.wst.sse.core.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.xml.uriresolver.util.URIHelper;
 import org.eclipse.wst.xsd.ui.internal.XSDEditor;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;

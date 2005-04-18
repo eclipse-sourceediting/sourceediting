@@ -37,7 +37,7 @@ public class GlobalSimpleOrComplexTypeRenamer extends BaseRenamer
   
   
   /**
-   * @see XSDVisitor#visitElementDeclaration(XSDElementDeclaration)
+   * 
    */
   public void visitElementDeclaration(XSDElementDeclaration element)
   {

@@ -11,15 +11,12 @@
 package org.eclipse.wst.xsd.ui.internal.provider;
 
 import java.util.ArrayList;
-//import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
-//import org.eclipse.xsd.XSDAttributeGroupContent;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
-//import org.eclipse.xsd.XSDAttributeUse;
 import org.eclipse.xsd.XSDWildcard;
 
 
