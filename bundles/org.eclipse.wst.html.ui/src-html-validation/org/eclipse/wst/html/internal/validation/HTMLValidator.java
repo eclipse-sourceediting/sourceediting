@@ -30,6 +30,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.sse.core.internal.validate.ValidationAdapter;
+import org.eclipse.wst.validation.internal.core.Message;
 import org.eclipse.wst.validation.internal.operations.IWorkbenchContext;
 import org.eclipse.wst.validation.internal.operations.WorkbenchReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
@@ -39,7 +40,6 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 import org.eclipse.wst.xml.core.internal.document.DocumentTypeAdapter;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
-import org.eclispe.wst.validation.internal.core.Message;
 
 public class HTMLValidator implements IValidator {
 	/**
