@@ -14,7 +14,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.html.core.HTMLFilesPreferenceNames;
+import org.eclipse.wst.html.core.internal.provisional.HTMLFilesPreferenceNames;
 
 
 

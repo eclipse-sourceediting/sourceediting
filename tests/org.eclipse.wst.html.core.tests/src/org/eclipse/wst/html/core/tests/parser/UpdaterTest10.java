@@ -12,10 +12,10 @@ package org.eclipse.wst.html.core.tests.parser;
 
 import java.util.Iterator;
 
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.xml.core.document.IDOMModel;
-import org.eclipse.wst.xml.core.document.IDOMNode;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

@@ -13,8 +13,8 @@ import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jst.jsp.core.text.IJSPPartitionTypes;
-import org.eclipse.jst.jsp.ui.StructuredTextViewerConfigurationJSP;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
+import org.eclipse.jst.jsp.ui.internal.provisional.StructuredTextViewerConfigurationJSP;
 import org.eclipse.jst.jsp.ui.tests.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -22,10 +22,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
-import org.eclipse.wst.html.core.text.IHTMLPartitionTypes;
+import org.eclipse.wst.html.core.internal.provisional.text.IHTMLPartitionTypes;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
-import org.eclipse.wst.sse.ui.style.IHighlighter;
-import org.eclipse.wst.xml.core.text.IXMLPartitions;
+import org.eclipse.wst.sse.ui.internal.provisional.style.IHighlighter;
+import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
 
 /**
  * @author pavery

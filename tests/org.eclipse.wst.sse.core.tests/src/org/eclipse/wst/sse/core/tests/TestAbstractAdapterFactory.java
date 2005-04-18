@@ -2,9 +2,9 @@ package org.eclipse.wst.sse.core.tests;
 
 import junit.framework.TestCase;
 
-import org.eclipse.wst.sse.core.AbstractAdapterFactory;
-import org.eclipse.wst.sse.core.INodeAdapter;
-import org.eclipse.wst.sse.core.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.AbstractAdapterFactory;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 
 /**
  * 

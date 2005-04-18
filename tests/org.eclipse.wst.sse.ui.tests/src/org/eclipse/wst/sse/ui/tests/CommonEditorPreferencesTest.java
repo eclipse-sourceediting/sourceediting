@@ -16,7 +16,7 @@ import junit.framework.TestCase;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
+import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 

@@ -57,7 +57,7 @@ import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.texteditor.IElementStateListener;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
-import org.eclipse.wst.sse.ui.extensions.breakpoint.IExtendedStorageEditorInput;
+import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IExtendedStorageEditorInput;
 
 
 /**

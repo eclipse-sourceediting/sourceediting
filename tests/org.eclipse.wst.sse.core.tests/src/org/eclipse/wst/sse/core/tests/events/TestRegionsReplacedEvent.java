@@ -14,9 +14,9 @@ package org.eclipse.wst.sse.core.tests.events;
 
 import junit.framework.TestCase;
 
-import org.eclipse.wst.sse.core.events.RegionsReplacedEvent;
 import org.eclipse.wst.sse.core.internal.document.StructuredDocumentFactory;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.events.RegionsReplacedEvent;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 public class TestRegionsReplacedEvent extends TestCase {
 

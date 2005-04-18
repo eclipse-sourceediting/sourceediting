@@ -12,12 +12,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
-import org.eclipse.wst.dtd.core.text.IDTDPartitionTypes;
-import org.eclipse.wst.dtd.ui.StructuredTextViewerConfigurationDTD;
+import org.eclipse.wst.dtd.core.internal.provisional.text.IDTDPartitionTypes;
 import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
+import org.eclipse.wst.dtd.ui.internal.provisional.StructuredTextViewerConfigurationDTD;
 import org.eclipse.wst.dtd.ui.tests.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
-import org.eclipse.wst.sse.ui.style.IHighlighter;
+import org.eclipse.wst.sse.ui.internal.provisional.style.IHighlighter;
 
 public class TestViewerConfigurationDTD extends TestCase {
 

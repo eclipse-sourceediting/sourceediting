@@ -18,10 +18,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.ui.internal.provisional.style.Highlighter;
+import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
-import org.eclipse.wst.sse.ui.style.Highlighter;
-import org.eclipse.wst.sse.ui.style.LineStyleProvider;
 
 public class TestLineStyleProvider implements LineStyleProvider {
 

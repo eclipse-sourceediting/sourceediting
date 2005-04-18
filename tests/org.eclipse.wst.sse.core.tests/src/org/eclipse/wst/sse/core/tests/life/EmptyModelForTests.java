@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.tests.life;
 
-import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.model.AbstractStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 
 
 

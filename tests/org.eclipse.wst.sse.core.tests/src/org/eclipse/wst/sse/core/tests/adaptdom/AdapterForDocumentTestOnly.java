@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.tests.adaptdom;
 
-import org.eclipse.wst.sse.core.INodeAdapter;
-import org.eclipse.wst.sse.core.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.w3c.dom.Document;
 
 

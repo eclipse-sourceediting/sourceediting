@@ -20,15 +20,15 @@ import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jst.jsp.core.internal.text.StructuredTextPartitionerForJSP;
 import org.eclipse.jst.jsp.ui.tests.document.UnzippedProjectTester;
-import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.exceptions.ResourceAlreadyExists;
-import org.eclipse.wst.sse.core.exceptions.ResourceInUse;
+import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceAlreadyExists;
+import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 import org.eclipse.wst.sse.core.internal.util.Utilities;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.text.IStructuredPartitioning;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 
 

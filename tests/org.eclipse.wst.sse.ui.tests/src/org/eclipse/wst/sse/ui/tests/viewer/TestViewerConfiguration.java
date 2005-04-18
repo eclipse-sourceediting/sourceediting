@@ -22,12 +22,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
-import org.eclipse.wst.sse.core.text.IStructuredPartitionTypes;
-import org.eclipse.wst.sse.core.text.IStructuredPartitioning;
-import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTypes;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
-import org.eclipse.wst.sse.ui.style.IHighlighter;
+import org.eclipse.wst.sse.ui.internal.provisional.StructuredTextViewerConfiguration;
+import org.eclipse.wst.sse.ui.internal.provisional.style.IHighlighter;
 import org.eclipse.wst.sse.ui.tests.Logger;
 
 public class TestViewerConfiguration extends TestCase {

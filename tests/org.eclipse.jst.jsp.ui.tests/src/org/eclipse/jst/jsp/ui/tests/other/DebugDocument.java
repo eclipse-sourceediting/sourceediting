@@ -14,8 +14,8 @@ package org.eclipse.jst.jsp.ui.tests.other;
 
 import java.io.PrintStream;
 
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.xml.core.document.IDOMNode;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

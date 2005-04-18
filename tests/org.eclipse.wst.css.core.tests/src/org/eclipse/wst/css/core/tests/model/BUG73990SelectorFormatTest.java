@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.eclipse.wst.css.core.internal.format.FormatProcessorCSS;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.css.core.tests.util.FileUtil;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 public class BUG73990SelectorFormatTest extends AbstractModelTest {
 	public void testInsertText1() throws IOException {

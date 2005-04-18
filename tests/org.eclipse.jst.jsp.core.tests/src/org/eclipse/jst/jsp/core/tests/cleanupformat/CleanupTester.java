@@ -18,12 +18,12 @@ import java.io.UnsupportedEncodingException;
 import junit.framework.TestCase;
 
 import org.eclipse.wst.html.core.internal.cleanup.HTMLCleanupProcessorImpl;
-import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.cleanup.AbstractStructuredCleanupProcessor;
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
+import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.xml.core.internal.cleanup.CleanupProcessorXML;

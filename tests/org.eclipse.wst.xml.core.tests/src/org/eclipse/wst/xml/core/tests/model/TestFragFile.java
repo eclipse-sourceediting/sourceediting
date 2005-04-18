@@ -18,9 +18,9 @@ import java.io.UnsupportedEncodingException;
 
 import junit.framework.TestCase;
 
-import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 
 
 

@@ -14,11 +14,11 @@ package org.eclipse.wst.sse.core.tests.events;
 
 import junit.framework.TestCase;
 
-import org.eclipse.wst.sse.core.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.internal.document.StructuredDocumentFactory;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 public class TestRegionChangedEvent extends TestCase {
 	final private static String testString = "testing";

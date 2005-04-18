@@ -19,9 +19,9 @@ import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
-import org.eclipse.wst.css.core.contenttype.ContentTypeIdForCSS;
-import org.eclipse.wst.html.core.contenttype.ContentTypeIdForHTML;
-import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
+import org.eclipse.wst.css.core.internal.provisional.contenttype.ContentTypeIdForCSS;
+import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
+import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 
 /**
  * This class is to test very basics of content type handlers.

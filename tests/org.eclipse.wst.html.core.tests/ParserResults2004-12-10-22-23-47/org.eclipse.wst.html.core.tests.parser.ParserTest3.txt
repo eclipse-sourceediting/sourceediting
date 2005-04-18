@@ -11,7 +11,7 @@ Tree :
 --a@[0, 7] (<a b  >)
 
 b=[]
-org.eclipse.wst.sse.core.events.RegionChangedEvent
+org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent
 Source :
 <a b >
 

@@ -12,9 +12,9 @@ package org.eclipse.wst.sse.core.tests.adaptdom;
 
 import java.util.Iterator;
 
-import org.eclipse.wst.sse.core.INodeAdapterFactory;
-import org.eclipse.wst.sse.core.INodeAdapter;
-import org.eclipse.wst.sse.core.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

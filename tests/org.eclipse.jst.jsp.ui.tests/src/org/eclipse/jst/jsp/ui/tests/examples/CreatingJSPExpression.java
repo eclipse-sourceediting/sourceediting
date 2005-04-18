@@ -15,11 +15,11 @@ import java.io.IOException;
 import junit.framework.TestCase;
 
 import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
-import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.xml.core.document.IDOMElement;
-import org.eclipse.wst.xml.core.document.IDOMModel;
+import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.format.NodeFormatter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

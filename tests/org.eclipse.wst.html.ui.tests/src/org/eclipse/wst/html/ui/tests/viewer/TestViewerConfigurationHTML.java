@@ -18,12 +18,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
-import org.eclipse.wst.html.core.text.IHTMLPartitionTypes;
-import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
+import org.eclipse.wst.html.core.internal.provisional.text.IHTMLPartitionTypes;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
+import org.eclipse.wst.html.ui.internal.provisional.StructuredTextViewerConfigurationHTML;
 import org.eclipse.wst.html.ui.tests.Logger;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
-import org.eclipse.wst.sse.ui.style.IHighlighter;
+import org.eclipse.wst.sse.ui.internal.provisional.style.IHighlighter;
 
 /**
  * @author pavery

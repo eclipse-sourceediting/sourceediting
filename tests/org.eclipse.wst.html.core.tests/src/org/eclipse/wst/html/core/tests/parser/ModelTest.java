@@ -23,14 +23,14 @@ import org.eclipse.wst.html.core.tests.utils.DateUtil;
 import org.eclipse.wst.html.core.tests.utils.FileUtil;
 import org.eclipse.wst.html.core.tests.utils.StringCompareUtil;
 import org.eclipse.wst.html.core.tests.utils.TestWriter;
-import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.document.StructuredDocumentRegionChecker;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.Node;
 
 public abstract class ModelTest extends TestCase {

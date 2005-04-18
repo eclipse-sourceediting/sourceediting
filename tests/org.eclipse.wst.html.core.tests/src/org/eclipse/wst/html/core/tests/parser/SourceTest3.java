@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.tests.parser;
 
-import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.document.InvalidCharacterException;
 import org.eclipse.wst.xml.core.internal.document.SourceValidator;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

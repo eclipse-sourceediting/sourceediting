@@ -11,13 +11,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.service.datalocation.Location;
-import org.eclipse.wst.sse.core.IModelStateListener;
-import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.exceptions.ResourceInUse;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.xml.core.contenttype.ContentTypeIdForXML;
+import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.internal.modelhandler.ModelHandlerForXML;
 import org.eclipse.wst.xml.core.internal.modelhandler.XMLModelLoader;
+import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
 import org.eclipse.wst.xml.core.tests.util.FileUtil;
 import org.eclipse.wst.xml.core.tests.util.ProjectUnzipUtility;
 

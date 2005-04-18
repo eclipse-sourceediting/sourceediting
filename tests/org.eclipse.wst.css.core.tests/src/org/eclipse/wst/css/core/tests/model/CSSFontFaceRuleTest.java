@@ -13,7 +13,7 @@ import java.io.IOException;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSPrimitiveValue;
 import org.eclipse.wst.css.core.tests.util.FileUtil;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.w3c.dom.css.CSSFontFaceRule;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.w3c.dom.css.CSSRule;

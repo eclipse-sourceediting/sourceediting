@@ -17,11 +17,11 @@ import java.io.InputStream;
 import junit.framework.TestCase;
 
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
-import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.format.AbstractStructuredFormatProcessor;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatPreferences;
+import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.xml.core.internal.provisional.format.FormatProcessorXML;

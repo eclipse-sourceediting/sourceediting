@@ -11,7 +11,7 @@
 package org.eclipse.wst.html.core.tests.parser.css;
 
 import org.eclipse.wst.html.core.tests.parser.ModelTest;
-import org.eclipse.wst.xml.core.document.IDOMModel;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;

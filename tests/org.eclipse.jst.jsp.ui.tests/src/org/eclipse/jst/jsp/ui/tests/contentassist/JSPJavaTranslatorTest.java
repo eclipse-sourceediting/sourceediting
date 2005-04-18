@@ -16,11 +16,11 @@ import java.io.InputStream;
 import junit.framework.TestCase;
 
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslator;
-import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.xml.core.document.IDOMNode;
+import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 /**
  * This class tests the sed JSPJavaTranslator class

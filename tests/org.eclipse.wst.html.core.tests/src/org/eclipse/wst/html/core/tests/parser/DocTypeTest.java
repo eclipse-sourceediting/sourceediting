@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.tests.parser;
 
-import org.eclipse.wst.xml.core.document.IDOMDocument;
-import org.eclipse.wst.xml.core.document.IDOMDocumentType;
-import org.eclipse.wst.xml.core.document.IDOMModel;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocumentType;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.Element;
 
 public class DocTypeTest extends ModelTest {

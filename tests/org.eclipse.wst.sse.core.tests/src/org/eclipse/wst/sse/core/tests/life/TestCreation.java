@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.tests.life;
 
-import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.model.ModelLifecycleEvent;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 
 import junit.framework.TestCase;
 
