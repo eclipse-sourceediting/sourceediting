@@ -49,6 +49,7 @@ public class BaseTestCase extends TestCase
   protected String GENERATED_RESULTS_DIR = "testresources/generatedResults/";
   protected String IDEAL_RESULTS_DIR = "testresources/idealResults/";
   protected String LOG_FILE_LOCATION = "results.log";
+  protected static final String PLUGIN_NAME = "org.eclipse.wst.xsd.validation.tests";
   private XSDValidator validator = XSDValidator.getInstance();
   
   /* (non-Javadoc)
@@ -136,8 +137,8 @@ public class BaseTestCase extends TestCase
        {
          numwarnings++;
          String message = valmes.getMessage();
-         message = message.replaceAll("'[^']*org.eclipse.wst.xsd.validation.tests", "'org.eclipse.wst.xsd.validation.tests");
-         message = message.replaceAll("[(][^(]*org.eclipse.wst.xsd.validation.tests", "(org.eclipse.wst.xsd.validation.tests");
+         message = message.replaceAll("'[^']*" + PLUGIN_NAME + "[^'/]*/", "'");
+         message = message.replaceAll("[(][^(]*" + PLUGIN_NAME + "[^'/]*/", "(");
          warningsString.append(message + " [" + valmes.getLineNumber() +", " + valmes.getColumnNumber() +"]\n");
          warningsString.append(createNestedMessageString(valmes.getNestedMessages()));
        }
@@ -145,8 +146,8 @@ public class BaseTestCase extends TestCase
        {
          numerrors++;
          String message = valmes.getMessage();
-         message = message.replaceAll("'[^']*org.eclipse.wst.xsd.validation.tests", "'org.eclipse.wst.xsd.validation.tests");
-         message = message.replaceAll("[(][^(]*org.eclipse.wst.xsd.validation.tests", "(org.eclipse.wst.xsd.validation.tests");
+         message = message.replaceAll("'[^']*" + PLUGIN_NAME + "[^'/]*/", "'");
+         message = message.replaceAll("[(][^(]*" + PLUGIN_NAME + "[^'/]*/", "(");
          errorsString.append(message + " [" + valmes.getLineNumber() +", " + valmes.getColumnNumber() +"]\n");
          errorsString.append(createNestedMessageString(valmes.getNestedMessages()));
        }
@@ -221,8 +222,8 @@ public class BaseTestCase extends TestCase
         }
         // If the message contains any file references make them relative.
         String message = nesvalmes.getMessage();
-        message = message.replaceAll("'[^']*org.eclipse.wsdl.validate.tests", "'org.eclipse.wsdl.validate.tests");
-        message = message.replaceAll("[(][^(]*org.eclipse.wsdl.validate.tests", "[(]org.eclipse.wsdl.validate.tests");
+        message = message.replaceAll("'[^']*" + PLUGIN_NAME + "[^'/]*/", "'");
+        message = message.replaceAll("[(][^(]*" + PLUGIN_NAME + "[^'/]*/", "[(]");
         messageString += ("-> " + message + " [" + nesvalmes.getLineNumber() +", " + nesvalmes.getColumnNumber() +"]\n");
         messageString += createNestedMessageString(nesvalmes.getNestedMessages(), depth + 1);
       }
