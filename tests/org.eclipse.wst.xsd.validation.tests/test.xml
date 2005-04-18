@@ -35,7 +35,7 @@
     <ant target="core-test" antfile="${library-file}" dir="${eclipse-home}">
       <property name="data-dir" value="${workspace-folder}"/>
       <property name="plugin-name" value="${plugin-name}"/>
-      <property name="classname" value="org.eclipse.wst.xsd.validation.tests.AllXSDTests"/>
+      <property name="classname" value="org.eclipse.wst.xsd.validation.tests.internal.AllXSDTests"/>
     </ant>
 
   </target>
