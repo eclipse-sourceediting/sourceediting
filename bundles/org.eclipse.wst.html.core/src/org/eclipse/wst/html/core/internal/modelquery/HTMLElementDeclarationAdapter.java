@@ -12,7 +12,7 @@ package org.eclipse.wst.html.core.internal.modelquery;
 
 
 
-import org.eclipse.wst.sse.core.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 
 /**

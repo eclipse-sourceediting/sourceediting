@@ -13,7 +13,7 @@ package org.eclipse.wst.css.core.internal.document;
 
 
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 
 
 /**

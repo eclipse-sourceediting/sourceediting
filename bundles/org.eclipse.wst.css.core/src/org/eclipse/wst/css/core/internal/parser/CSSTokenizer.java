@@ -21,7 +21,7 @@ import java.util.List;
 import org.eclipse.wst.css.core.internal.parser.regions.CSSTextRegionFactory;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
 import org.eclipse.wst.css.core.internal.parserz.CSSTextToken;
-import org.eclipse.wst.sse.core.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 
 

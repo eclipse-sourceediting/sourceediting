@@ -16,7 +16,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.wst.css.core.internal.parser.CSSRegionUtil;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
-import org.eclipse.wst.sse.core.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 
 
 /**

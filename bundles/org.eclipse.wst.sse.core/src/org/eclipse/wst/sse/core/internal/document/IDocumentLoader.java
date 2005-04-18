@@ -19,8 +19,8 @@ import java.io.Reader;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.wst.sse.core.document.IEncodedDocument;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingRule;
+import org.eclipse.wst.sse.core.internal.provisional.document.IEncodedDocument;
 
 
 public interface IDocumentLoader {

@@ -23,18 +23,18 @@ import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.RGB;
-import org.eclipse.wst.dtd.core.contenttype.ContentTypeIdForDTD;
-import org.eclipse.wst.dtd.core.text.IDTDPartitionTypes;
+import org.eclipse.wst.dtd.core.internal.provisional.contenttype.ContentTypeIdForDTD;
+import org.eclipse.wst.dtd.core.internal.provisional.text.IDTDPartitionTypes;
 import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
-import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.IStructuredPartitioning;
-import org.eclipse.wst.sse.core.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
-import org.eclipse.wst.sse.ui.style.AbstractLineStyleProvider;
-import org.eclipse.wst.sse.ui.style.LineStyleProvider;
+import org.eclipse.wst.sse.ui.internal.provisional.style.AbstractLineStyleProvider;
+import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 
 public class LineStyleProviderForDTDSubSet extends AbstractLineStyleProvider implements LineStyleProvider {
 	private IStructuredModel fInternalModel = null;

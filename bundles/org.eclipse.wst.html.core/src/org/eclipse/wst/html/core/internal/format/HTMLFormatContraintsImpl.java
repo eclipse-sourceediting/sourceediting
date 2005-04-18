@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.format;
 
-import org.eclipse.wst.html.core.HTMLFormatContraints;
+import org.eclipse.wst.html.core.internal.provisional.HTMLFormatContraints;
 import org.eclipse.wst.sse.core.internal.format.StructuredFormatContraints;
 
 /**

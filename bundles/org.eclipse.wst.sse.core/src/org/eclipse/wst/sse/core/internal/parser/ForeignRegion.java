@@ -14,9 +14,9 @@ package org.eclipse.wst.sse.core.internal.parser;
 
 
 
-import org.eclipse.wst.sse.core.events.RegionChangedEvent;
-import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 
 
 public class ForeignRegion extends ContextRegion {
@@ -77,7 +77,7 @@ public class ForeignRegion extends ContextRegion {
 	}
 
 	public StructuredDocumentEvent updateRegion(Object requester, IStructuredDocumentRegion flatnode, String changes, int requestStart, int lengthToReplace) {
-		org.eclipse.wst.sse.core.events.RegionChangedEvent result = null;
+		org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent result = null;
 		int lengthDifference = org.eclipse.wst.sse.core.internal.util.Utilities.calculateLengthDifference(changes, lengthToReplace);
 		fLength += lengthDifference;
 		fTextLength += lengthDifference;

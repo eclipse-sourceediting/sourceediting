@@ -22,7 +22,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 /**
  * Factory for element declarations.
  */
-final class ElementCollection extends DeclCollection implements org.eclipse.wst.html.core.HTML40Namespace.ElementName {
+final class ElementCollection extends DeclCollection implements org.eclipse.wst.html.core.internal.provisional.HTML40Namespace.ElementName {
 
 
 	// Element IDs

@@ -16,7 +16,7 @@ package org.eclipse.wst.sse.ui.internal;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTargetEvent;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 
 public class ReadOnlyAwareDropTargetAdapter extends ExtendedEditorDropTargetAdapter {

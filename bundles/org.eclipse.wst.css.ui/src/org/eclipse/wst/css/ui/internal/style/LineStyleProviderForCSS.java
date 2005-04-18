@@ -18,9 +18,9 @@ import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
 import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
-import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.sse.ui.style.AbstractLineStyleProvider;
-import org.eclipse.wst.sse.ui.style.LineStyleProvider;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.ui.internal.provisional.style.AbstractLineStyleProvider;
+import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 
 /**
  */

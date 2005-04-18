@@ -113,7 +113,7 @@ public class ValidatorStrategy extends AbstractStructuredTextReconcilingStrategy
 	}
 
 	/**
-	 * @see org.eclipse.wst.sse.ui.reconcile.AbstractStructuredTextReconcilingStrategy#createReconcileSteps()
+	 * @see org.eclipse.wst.sse.ui.internal.provisional.reconcile.AbstractStructuredTextReconcilingStrategy#createReconcileSteps()
 	 */
 	public void createReconcileSteps() {
 		// do nothing, steps are created

@@ -14,9 +14,9 @@ package org.eclipse.wst.dtd.core.internal.text;
 
 import java.util.NoSuchElementException;
 
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.sse.core.text.ITextRegionList;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 
 
 public class RegionIterator {

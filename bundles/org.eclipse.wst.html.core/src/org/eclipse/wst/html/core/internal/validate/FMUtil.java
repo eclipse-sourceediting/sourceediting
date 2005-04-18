@@ -12,8 +12,8 @@ package org.eclipse.wst.html.core.internal.validate;
 
 
 
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.xml.core.document.IDOMNode;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 final class FMUtil {
 

@@ -19,18 +19,18 @@ import org.eclipse.jst.jsp.core.internal.modelhandler.ModelHandlerForJSP;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.wst.html.ui.internal.contentoutline.JFaceNodeAdapterFactoryForHTML;
-import org.eclipse.wst.sse.core.INodeAdapterFactory;
-import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IDocumentTypeHandler;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
+import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryProvider;
+import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryRegistry;
+import org.eclipse.wst.sse.ui.internal.provisional.registry.embedded.EmbeddedAdapterFactoryProvider;
 import org.eclipse.wst.sse.ui.internal.util.Assert;
-import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
-import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
-import org.eclipse.wst.sse.ui.registry.embedded.EmbeddedAdapterFactoryProvider;
-import org.eclipse.wst.xml.core.document.IDOMDocument;
-import org.eclipse.wst.xml.core.document.IDOMModel;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.ui.internal.properties.XMLPropertySourceAdapterFactory;
 
 public class AdapterFactoryProviderForJSP implements AdapterFactoryProvider {

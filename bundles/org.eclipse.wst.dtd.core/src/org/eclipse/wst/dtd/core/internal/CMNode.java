@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.core.internal;
 
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 
 // base class for an Element's contentmodel
 public abstract class CMNode extends DTDNode {

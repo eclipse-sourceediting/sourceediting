@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.validate;
 
-import org.eclipse.wst.sse.core.IndexedRegion;
-import org.eclipse.wst.xml.core.document.IDOMNode;
-import org.eclipse.wst.xml.core.document.IDOMText;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMText;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

@@ -17,8 +17,8 @@ import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.wst.css.core.internal.parserz.CSSTextParser;
 import org.eclipse.wst.css.core.internal.parserz.CSSTextToken;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 public class LineStyleProviderForEmbeddedCSS extends LineStyleProviderForCSS {
 

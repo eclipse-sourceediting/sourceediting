@@ -11,9 +11,9 @@
 package org.eclipse.wst.css.core.internal.text;
 
 import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.wst.css.core.text.ICSSPartitionTypes;
+import org.eclipse.wst.css.core.internal.provisional.text.ICSSPartitionTypes;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTypes;
 import org.eclipse.wst.sse.core.internal.text.rules.StructuredTextPartitioner;
-import org.eclipse.wst.sse.core.text.IStructuredPartitionTypes;
 
 public class StructuredTextPartitionerForCSS extends StructuredTextPartitioner {
 	

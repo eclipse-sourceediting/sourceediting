@@ -14,18 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.wst.html.core.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.core.internal.contenttype.EncodingGuesser;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeAdapterFactory;
 import org.eclipse.wst.html.core.internal.document.HTMLModelParserAdapterFactory;
 import org.eclipse.wst.html.core.internal.htmlcss.HTMLStyleSelectorAdapterFactory;
 import org.eclipse.wst.html.core.internal.htmlcss.StyleAdapterFactory;
 import org.eclipse.wst.html.core.internal.modelquery.ModelQueryAdapterFactoryForHTML;
+import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
-import org.eclipse.wst.sse.core.INodeAdapterFactory;
-import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.document.IEncodedDocument;
 import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
 import org.eclipse.wst.sse.core.internal.document.AbstractDocumentLoader;
 import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
@@ -34,12 +30,16 @@ import org.eclipse.wst.sse.core.internal.document.StructuredDocumentFactory;
 import org.eclipse.wst.sse.core.internal.encoding.ContentTypeEncodingPreferences;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.document.IEncodedDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.parser.XMLSourceParser;
 import org.eclipse.wst.xml.core.internal.parser.XMLStructuredDocumentReParser;
 import org.eclipse.wst.xml.core.internal.propagate.PropagatingAdapterFactoryImpl;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 public class HTMLDocumentLoader extends AbstractDocumentLoader {

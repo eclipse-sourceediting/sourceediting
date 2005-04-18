@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapter;
-import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;

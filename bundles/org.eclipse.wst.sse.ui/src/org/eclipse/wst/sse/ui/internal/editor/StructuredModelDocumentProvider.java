@@ -24,7 +24,7 @@ import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.IDocumentProviderExtension;
 import org.eclipse.ui.texteditor.IElementStateListener;
-import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 
 
 /**

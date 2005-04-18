@@ -17,7 +17,7 @@ import java.util.ResourceBundle;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
+import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 public class ToggleCommentActionXML extends UncommentActionXML {

@@ -14,8 +14,8 @@ package org.eclipse.wst.xml.core.internal.modelquery;
 
 
 
-import org.eclipse.wst.sse.core.INodeAdapter;
-import org.eclipse.wst.sse.core.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManager;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
 
@@ -41,7 +41,7 @@ public class ModelQueryAdapterFactoryForEmbeddedXML extends ModelQueryAdapterFac
 	}
 
 	/**
-	 * @see org.eclipse.wst.sse.core.INodeAdapterFactory#adapt(INodeNotifier)
+	 * @see org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory#adapt(INodeNotifier)
 	 */
 	public INodeAdapter adapt(INodeNotifier object) {
 		return adaptNew(object);

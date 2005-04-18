@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.contentmodel.chtml;
 
-import org.eclipse.wst.html.core.HTML40Namespace;
+import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
 
 
 

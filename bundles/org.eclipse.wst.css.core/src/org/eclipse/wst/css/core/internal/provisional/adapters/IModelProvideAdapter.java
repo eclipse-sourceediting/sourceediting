@@ -12,8 +12,8 @@ package org.eclipse.wst.css.core.internal.provisional.adapters;
 
 
 
-import org.eclipse.wst.sse.core.INodeAdapter;
-import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 
 /**
  * 

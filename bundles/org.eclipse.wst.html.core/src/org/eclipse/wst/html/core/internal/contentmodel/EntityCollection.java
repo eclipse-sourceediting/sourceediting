@@ -19,7 +19,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 /**
  * Factory for entity declarations.
  */
-final class EntityCollection extends DeclCollection implements org.eclipse.wst.html.core.HTML40Namespace.EntityName {
+final class EntityCollection extends DeclCollection implements org.eclipse.wst.html.core.internal.provisional.HTML40Namespace.EntityName {
 
 
 	private static class Ids {

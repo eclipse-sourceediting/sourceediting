@@ -14,11 +14,11 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.xml.core.document.IDOMModel;
-import org.eclipse.wst.xml.core.document.IDOMText;
-import org.eclipse.wst.xml.core.document.ISourceGenerator;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMText;
+import org.eclipse.wst.xml.core.internal.provisional.document.ISourceGenerator;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;

@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.xml.core.NameValidator;
+import org.eclipse.wst.xml.core.internal.provisional.NameValidator;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.util.XMLCommonUIContextIds;
 import org.w3c.dom.Element;

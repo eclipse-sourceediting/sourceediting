@@ -14,7 +14,7 @@ package org.eclipse.wst.xml.core.internal.cleanup;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
-import org.eclipse.wst.xml.core.IXMLPreferenceNames;
+import org.eclipse.wst.xml.core.internal.provisional.IXMLPreferenceNames;
 
 /**
  * @deprecated renamed to StructuredCleanupPreferences

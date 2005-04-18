@@ -14,8 +14,8 @@ package org.eclipse.wst.dtd.core.internal.builder.delegates;
 
 import org.eclipse.wst.dtd.core.internal.parser.DTDRegionTypes;
 import org.eclipse.wst.sse.core.internal.participants.TaskTagSeeker;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 
 public class DTDTaskTagSeeker extends TaskTagSeeker {

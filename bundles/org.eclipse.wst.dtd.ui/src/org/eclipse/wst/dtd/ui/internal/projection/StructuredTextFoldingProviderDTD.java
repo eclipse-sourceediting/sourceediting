@@ -16,9 +16,9 @@ import org.eclipse.wst.dtd.core.internal.TopLevelNode;
 import org.eclipse.wst.dtd.core.internal.document.DTDModelImpl;
 import org.eclipse.wst.dtd.core.internal.event.IDTDFileListener;
 import org.eclipse.wst.dtd.core.internal.event.NodesEvent;
-import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.IndexedRegion;
-import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 import org.w3c.dom.Node;
 

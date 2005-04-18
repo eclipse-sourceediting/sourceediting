@@ -13,7 +13,7 @@
 package org.eclipse.wst.sse.ui.internal;
 
 import org.eclipse.ui.texteditor.IDocumentProvider;
-import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 
 
 public interface IModelProvider extends IDocumentProvider {

@@ -13,9 +13,9 @@
 package org.eclipse.wst.sse.core.internal.document;
 
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 import org.eclipse.wst.sse.core.internal.text.JobSafeStructuredDocument;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
 
 
 /**

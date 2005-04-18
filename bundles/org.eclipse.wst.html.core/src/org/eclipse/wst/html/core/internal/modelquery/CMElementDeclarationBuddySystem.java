@@ -11,8 +11,8 @@
 package org.eclipse.wst.html.core.internal.modelquery;
 
 
-import org.eclipse.wst.html.core.HTMLCMProperties;
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLCMDocumentFactory;
+import org.eclipse.wst.html.core.internal.provisional.HTMLCMProperties;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;

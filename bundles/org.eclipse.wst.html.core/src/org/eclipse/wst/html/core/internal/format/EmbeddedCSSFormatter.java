@@ -16,11 +16,11 @@ import org.eclipse.wst.css.core.internal.format.CSSSourceFormatter;
 import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSheetAdapter;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
-import org.eclipse.wst.html.core.HTMLFormatContraints;
-import org.eclipse.wst.sse.core.INodeAdapter;
-import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.xml.core.document.IDOMNode;
-import org.eclipse.wst.xml.core.document.IDOMText;
+import org.eclipse.wst.html.core.internal.provisional.HTMLFormatContraints;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMText;
 
 // nakamori_TODO: check and remove
 

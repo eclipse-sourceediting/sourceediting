@@ -16,8 +16,8 @@ package org.eclipse.wst.sse.core.internal.text;
 
 import java.util.Enumeration;
 
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegionList;
 
 
 public class CoreNodeList implements IStructuredDocumentRegionList {

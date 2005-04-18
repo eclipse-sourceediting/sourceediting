@@ -19,25 +19,20 @@ import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CommandStack;
 import org.eclipse.emf.common.command.CommandStackListener;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.events.IStructuredDocumentListener;
-import org.eclipse.wst.sse.core.events.NewDocumentEvent;
-import org.eclipse.wst.sse.core.events.NoChangeEvent;
-import org.eclipse.wst.sse.core.events.RegionChangedEvent;
-import org.eclipse.wst.sse.core.events.RegionsReplacedEvent;
-import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
-import org.eclipse.wst.sse.core.events.StructuredDocumentRegionsReplacedEvent;
 import org.eclipse.wst.sse.core.internal.SSECoreMessages;
+import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.events.IStructuredDocumentListener;
+import org.eclipse.wst.sse.core.internal.provisional.events.NewDocumentEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.NoChangeEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.RegionsReplacedEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentRegionsReplacedEvent;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.util.Assert;
 import org.eclipse.wst.sse.core.internal.util.Utilities;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.undo.CommandCursorPosition;
-import org.eclipse.wst.sse.core.undo.IDocumentSelectionMediator;
-import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
-import org.eclipse.wst.sse.core.undo.StructuredTextCommand;
-import org.eclipse.wst.sse.core.undo.UndoDocumentEvent;
 
 public class StructuredTextUndoManager implements IStructuredTextUndoManager {
 

@@ -12,10 +12,10 @@
 package org.eclipse.wst.html.ui.internal.projection;
 
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
-import org.eclipse.wst.html.core.HTML40Namespace;
-import org.eclipse.wst.sse.core.AbstractAdapterFactory;
-import org.eclipse.wst.sse.core.INodeAdapter;
-import org.eclipse.wst.sse.core.INodeNotifier;
+import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
+import org.eclipse.wst.sse.core.internal.provisional.AbstractAdapterFactory;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.w3c.dom.Node;
 
 public class ProjectionModelNodeAdapterFactoryHTML extends AbstractAdapterFactory {

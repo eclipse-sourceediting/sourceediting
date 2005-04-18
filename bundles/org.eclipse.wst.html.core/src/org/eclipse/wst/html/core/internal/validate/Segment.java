@@ -12,7 +12,7 @@ package org.eclipse.wst.html.core.internal.validate;
 
 
 
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 
 public class Segment {
 

@@ -16,26 +16,26 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.eclipse.wst.dtd.core.document.DTDModel;
 import org.eclipse.wst.dtd.core.internal.DTDFile;
 import org.eclipse.wst.dtd.core.internal.DTDNode;
 import org.eclipse.wst.dtd.core.internal.Entity;
 import org.eclipse.wst.dtd.core.internal.NodeList;
 import org.eclipse.wst.dtd.core.internal.event.IDTDFileListener;
 import org.eclipse.wst.dtd.core.internal.event.NodesEvent;
+import org.eclipse.wst.dtd.core.internal.provisional.document.DTDModel;
 import org.eclipse.wst.dtd.core.internal.util.DTDReferenceUpdater;
 import org.eclipse.wst.dtd.core.internal.util.LabelValuePair;
-import org.eclipse.wst.sse.core.IndexedRegion;
-import org.eclipse.wst.sse.core.events.IStructuredDocumentListener;
-import org.eclipse.wst.sse.core.events.NewDocumentEvent;
-import org.eclipse.wst.sse.core.events.NoChangeEvent;
-import org.eclipse.wst.sse.core.events.RegionChangedEvent;
-import org.eclipse.wst.sse.core.events.RegionsReplacedEvent;
-import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
-import org.eclipse.wst.sse.core.events.StructuredDocumentRegionsReplacedEvent;
 import org.eclipse.wst.sse.core.internal.model.AbstractStructuredModel;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.events.IStructuredDocumentListener;
+import org.eclipse.wst.sse.core.internal.provisional.events.NewDocumentEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.NoChangeEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.RegionsReplacedEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentRegionsReplacedEvent;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 
 
 public final class DTDModelImpl extends AbstractStructuredModel implements IStructuredDocumentListener, DTDModel {

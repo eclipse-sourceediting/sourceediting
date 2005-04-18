@@ -14,15 +14,15 @@ import java.io.UnsupportedEncodingException;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.wst.css.core.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.css.core.internal.provisional.adapters.IModelProvideAdapter;
 import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSheetListAdapter;
+import org.eclipse.wst.css.core.internal.provisional.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
-import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
-import org.eclipse.wst.xml.core.document.IDOMModel;
-import org.eclipse.wst.xml.core.document.IDOMNode;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -77,7 +77,7 @@ public class LinkElementAdapter extends AbstractStyleSheetAdapter {
 		URIResolver resolver = baseModel.getResolver();
 
 		// resolve to absolute url : this need not exact location of css file. It is important that absurl is not null. 
-		String ref = getElement().getAttribute(org.eclipse.wst.html.core.HTML40Namespace.ATTR_NAME_HREF);
+		String ref = getElement().getAttribute(org.eclipse.wst.html.core.internal.provisional.HTML40Namespace.ATTR_NAME_HREF);
 		String absurl = (resolver != null && ref != null) ? resolver.getLocationByURI(ref, true) : null;
 		if ((absurl == null) || (absurl.length() == 0)) {
 			IPath basePath = new Path(baseModel.getBaseLocation());
@@ -147,7 +147,7 @@ public class LinkElementAdapter extends AbstractStyleSheetAdapter {
 
 			IDOMNode node = (IDOMNode) getElement();
 			if (node != null) {
-				node.notify(INodeNotifier.CHANGE, getElement().getAttributeNode(org.eclipse.wst.html.core.HTML40Namespace.ATTR_NAME_HREF), null, null, node.getStartOffset());
+				node.notify(INodeNotifier.CHANGE, getElement().getAttributeNode(org.eclipse.wst.html.core.internal.provisional.HTML40Namespace.ATTR_NAME_HREF), null, null, node.getStartOffset());
 			}
 		}
 	}

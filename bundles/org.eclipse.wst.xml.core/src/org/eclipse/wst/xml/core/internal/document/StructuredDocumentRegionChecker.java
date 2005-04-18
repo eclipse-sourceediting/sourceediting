@@ -17,8 +17,8 @@ package org.eclipse.wst.xml.core.internal.document;
 import java.io.IOException;
 import java.io.Writer;
 
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.xml.core.document.IDOMModel;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.Node;
 
 

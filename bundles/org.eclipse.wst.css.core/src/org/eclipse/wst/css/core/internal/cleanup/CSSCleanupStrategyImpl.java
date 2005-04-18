@@ -12,7 +12,7 @@ package org.eclipse.wst.css.core.internal.cleanup;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.wst.css.core.internal.CSSCorePlugin;
-import org.eclipse.wst.css.core.preferences.CSSModelPreferenceNames;
+import org.eclipse.wst.css.core.internal.provisional.preferences.CSSModelPreferenceNames;
 import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 
 

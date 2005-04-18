@@ -16,7 +16,7 @@ package org.eclipse.wst.sse.ui.internal.properties;
 
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
-import org.eclipse.wst.sse.core.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 
 
 public class AdapterPropertySourceProvider implements IPropertySourceProvider {

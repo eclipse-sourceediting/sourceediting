@@ -22,8 +22,8 @@ import org.eclipse.jface.text.TypedPosition;
 import org.eclipse.jface.text.formatter.ContextBasedFormattingStrategy;
 import org.eclipse.jface.text.formatter.FormattingContextProperties;
 import org.eclipse.jface.text.formatter.IFormattingContext;
-import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
+import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 
 
 public class StructuredFormattingStrategy extends ContextBasedFormattingStrategy {

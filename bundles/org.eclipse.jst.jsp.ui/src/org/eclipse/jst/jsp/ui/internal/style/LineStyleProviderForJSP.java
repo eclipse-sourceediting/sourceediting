@@ -16,9 +16,9 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.wst.html.ui.internal.style.IStyleConstantsHTML;
-import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.sse.ui.style.AbstractLineStyleProvider;
-import org.eclipse.wst.sse.ui.style.LineStyleProvider;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.ui.internal.provisional.style.AbstractLineStyleProvider;
+import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
 

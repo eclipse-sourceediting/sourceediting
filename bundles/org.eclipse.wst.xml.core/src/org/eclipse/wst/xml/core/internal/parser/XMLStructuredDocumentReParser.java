@@ -12,9 +12,9 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.parser;
 
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredTextReParser;
 import org.eclipse.wst.sse.core.internal.text.StructuredDocumentReParser;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.IStructuredTextReParser;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 

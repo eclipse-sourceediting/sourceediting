@@ -18,7 +18,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.wst.css.ui.internal.Logger;
 import org.eclipse.wst.css.ui.internal.style.IStyleConstantsCSS;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorNames;
-import org.eclipse.wst.sse.ui.preferences.PreferenceManager;
+import org.eclipse.wst.sse.ui.internal.provisional.preferences.PreferenceManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

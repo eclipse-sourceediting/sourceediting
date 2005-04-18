@@ -13,7 +13,7 @@
 package org.eclipse.wst.dtd.core.internal;
 
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 
 
 public class Unrecognized extends TopLevelNode {

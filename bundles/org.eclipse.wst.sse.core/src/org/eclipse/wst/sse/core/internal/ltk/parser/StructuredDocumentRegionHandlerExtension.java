@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.ltk.parser;
 
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 
 public interface StructuredDocumentRegionHandlerExtension extends StructuredDocumentRegionHandler {

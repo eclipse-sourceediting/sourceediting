@@ -14,7 +14,7 @@ package org.eclipse.wst.sse.core.internal.ltk.modelhandler;
 
 import java.util.List;
 
-import org.eclipse.wst.sse.core.IModelLoader;
+import org.eclipse.wst.sse.core.internal.provisional.IModelLoader;
 
 
 public interface IModelHandler extends IDocumentTypeHandler {

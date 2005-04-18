@@ -14,9 +14,9 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 
-import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.xml.core.document.IDOMDocument;
-import org.eclipse.wst.xml.core.document.IDOMModel;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.DocumentType;
 
 

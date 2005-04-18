@@ -53,11 +53,11 @@
    <extension point="org.eclipse.wst.sse.ui.extendedconfiguration" >
       <configuration 
       		type="contentoutlineconfiguration"
-            class="org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration"
+            class="org.eclipse.wst.sse.ui.internal.provisional.views.contentoutline.StructuredContentOutlineConfiguration"
             target="org.eclipse.wst.sse.ui.internal.StructuredTextEditor"/>
       <configuration 
       		type="propertysheetconfiguration"
-            class="org.eclipse.wst.sse.ui.views.properties.StructuredPropertySheetConfiguration"
+            class="org.eclipse.wst.sse.ui.internal.provisional.views.properties.StructuredPropertySheetConfiguration"
             target="org.eclipse.wst.sse.ui.internal.StructuredTextEditor"/>
       <configuration 
       		type="textviewerconfiguration"
@@ -99,13 +99,13 @@
       <page
             name="%WEB_AND_XML_Files.name"
             class="org.eclipse.wst.sse.ui.internal.preferences.ui.FilePreferencePage"
-            id="org.eclipse.wst.sse.ui.preferences">
+            id="org.eclipse.wst.sse.ui.internal.provisional.preferences">
       </page>
 -->
       <page
             name="%WEB_AND_XML_Files.name"
             class="org.eclipse.wst.sse.ui.internal.preferences.ui.EmptyFilePreferencePage"
-            id="org.eclipse.wst.sse.ui.preferences">
+            id="org.eclipse.wst.sse.ui.internal.provisional.preferences">
       </page>
 <!-- Source Editor Preference page under Workbench->Editors -->
       <page

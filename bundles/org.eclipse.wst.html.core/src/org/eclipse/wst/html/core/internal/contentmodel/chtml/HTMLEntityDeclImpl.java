@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.contentmodel.chtml;
 
-import org.eclipse.wst.html.core.HTMLCMProperties;
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLEntityDeclaration;
+import org.eclipse.wst.html.core.internal.provisional.HTMLCMProperties;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 
 

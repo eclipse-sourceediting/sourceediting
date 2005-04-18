@@ -14,12 +14,12 @@ package org.eclipse.wst.xml.core.internal.text.rules;
 
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredTextPartitioner;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.text.rules.StructuredTextPartitioner;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.IStructuredTextPartitioner;
-import org.eclipse.wst.sse.core.text.ITextRegion;
+import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
-import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
 public class StructuredTextPartitionerForXML extends StructuredTextPartitioner implements IStructuredTextPartitioner {
 

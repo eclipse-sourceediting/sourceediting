@@ -13,8 +13,8 @@
 package org.eclipse.wst.sse.core.internal.model;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.sse.core.IModelLifecycleListener;
 import org.eclipse.wst.sse.core.internal.Logger;
+import org.eclipse.wst.sse.core.internal.provisional.IModelLifecycleListener;
 import org.eclipse.wst.sse.core.internal.util.Utilities;
 
 

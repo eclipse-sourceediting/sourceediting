@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.modelquery;
 
-import org.eclipse.wst.html.core.HTMLCMProperties;
+import org.eclipse.wst.html.core.internal.provisional.HTMLCMProperties;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 
 /**

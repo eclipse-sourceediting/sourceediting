@@ -11,7 +11,7 @@
 package org.eclipse.wst.css.ui.internal.preferences;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.sse.ui.preferences.PreferenceManager;
+import org.eclipse.wst.sse.ui.internal.provisional.preferences.PreferenceManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

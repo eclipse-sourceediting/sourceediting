@@ -12,13 +12,13 @@ package org.eclipse.wst.html.core.internal.format;
 
 
 
-import org.eclipse.wst.html.core.HTMLCMProperties;
-import org.eclipse.wst.html.core.HTMLFormatContraints;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.xml.core.document.IDOMElement;
-import org.eclipse.wst.xml.core.document.IDOMNode;
-import org.eclipse.wst.xml.core.document.IDOMText;
+import org.eclipse.wst.html.core.internal.provisional.HTMLCMProperties;
+import org.eclipse.wst.html.core.internal.provisional.HTMLFormatContraints;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMText;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

@@ -20,9 +20,9 @@ import org.eclipse.wst.css.core.internal.metamodel.CSSProfileRegistry;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSDocument;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
-import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.ui.contentproperties.ContentSettingsCreator;
-import org.eclipse.wst.sse.ui.contentproperties.IContentSettings;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.ui.internal.provisional.contentproperties.ContentSettingsCreator;
+import org.eclipse.wst.sse.ui.internal.provisional.contentproperties.IContentSettings;
 
 
 public class CSSProfileFinder {

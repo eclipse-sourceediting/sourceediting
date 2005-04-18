@@ -15,18 +15,18 @@ package org.eclipse.wst.html.core.internal.htmlcss;
 import org.eclipse.wst.css.core.internal.parser.CSSSourceParser;
 import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleDeclarationAdapter;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
-import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.sse.core.events.IStructuredDocumentListener;
-import org.eclipse.wst.sse.core.events.NewDocumentEvent;
-import org.eclipse.wst.sse.core.events.NoChangeEvent;
-import org.eclipse.wst.sse.core.events.RegionChangedEvent;
-import org.eclipse.wst.sse.core.events.RegionsReplacedEvent;
-import org.eclipse.wst.sse.core.events.StructuredDocumentRegionsReplacedEvent;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
-import org.eclipse.wst.xml.core.document.IDOMNode;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.events.IStructuredDocumentListener;
+import org.eclipse.wst.sse.core.internal.provisional.events.NewDocumentEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.NoChangeEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.RegionsReplacedEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentRegionsReplacedEvent;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegionList;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -231,7 +231,7 @@ public class StyleAttrAdapter extends AbstractCSSModelAdapter implements IStruct
 			return; // error
 
 		String value = null;
-		Attr attr = element.getAttributeNode(org.eclipse.wst.html.core.HTML40Namespace.ATTR_NAME_STYLE);
+		Attr attr = element.getAttributeNode(org.eclipse.wst.html.core.internal.provisional.HTML40Namespace.ATTR_NAME_STYLE);
 		if (attr != null)
 			value = ((IDOMNode) attr).getValueSource();
 		structuredDocument.setText(this, value);
@@ -243,6 +243,6 @@ public class StyleAttrAdapter extends AbstractCSSModelAdapter implements IStruct
 	 * @return boolean
 	 */
 	private boolean isModelNecessary() {
-		return getElement() != null && getElement().getAttributeNode(org.eclipse.wst.html.core.HTML40Namespace.ATTR_NAME_STYLE) != null;
+		return getElement() != null && getElement().getAttributeNode(org.eclipse.wst.html.core.internal.provisional.HTML40Namespace.ATTR_NAME_STYLE) != null;
 	}
 }

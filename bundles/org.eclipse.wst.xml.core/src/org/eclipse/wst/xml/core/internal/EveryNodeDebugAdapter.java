@@ -14,20 +14,20 @@ package org.eclipse.wst.xml.core.internal;
 
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocumentListener;
-import org.eclipse.wst.sse.core.IModelStateListener;
-import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.events.AboutToBeChangedEvent;
-import org.eclipse.wst.sse.core.events.IModelAboutToBeChangedListener;
-import org.eclipse.wst.sse.core.events.IStructuredDocumentListener;
-import org.eclipse.wst.sse.core.events.NewDocumentEvent;
-import org.eclipse.wst.sse.core.events.NoChangeEvent;
-import org.eclipse.wst.sse.core.events.RegionChangedEvent;
-import org.eclipse.wst.sse.core.events.RegionsReplacedEvent;
-import org.eclipse.wst.sse.core.events.StructuredDocumentRegionsReplacedEvent;
+import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.events.AboutToBeChangedEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.IModelAboutToBeChangedListener;
+import org.eclipse.wst.sse.core.internal.provisional.events.IStructuredDocumentListener;
+import org.eclipse.wst.sse.core.internal.provisional.events.NewDocumentEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.NoChangeEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.RegionsReplacedEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentRegionsReplacedEvent;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.util.Debug;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.xml.core.document.IDOMNode;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 
 /**

@@ -13,11 +13,11 @@ package org.eclipse.wst.html.core.internal.modelhandler;
 import org.eclipse.wst.html.core.internal.encoding.HTMLDocumentCharsetDetector;
 import org.eclipse.wst.html.core.internal.encoding.HTMLDocumentLoader;
 import org.eclipse.wst.html.core.internal.encoding.HTMLModelLoader;
-import org.eclipse.wst.sse.core.IModelLoader;
 import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.AbstractModelHandler;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IModelHandler;
+import org.eclipse.wst.sse.core.internal.provisional.IModelLoader;
 
 public class ModelHandlerForHTML extends AbstractModelHandler implements IModelHandler {
 	/** 

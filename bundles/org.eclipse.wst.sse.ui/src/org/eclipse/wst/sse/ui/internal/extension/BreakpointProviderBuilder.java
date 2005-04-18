@@ -31,9 +31,9 @@ import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.wst.sse.ui.extensions.breakpoint.IBreakpointProvider;
-import org.eclipse.wst.sse.ui.extensions.breakpoint.SourceEditingTextTools;
 import org.eclipse.wst.sse.ui.internal.Logger;
+import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IBreakpointProvider;
+import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.SourceEditingTextTools;
 import org.osgi.framework.Bundle;
 
 

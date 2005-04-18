@@ -11,7 +11,7 @@
 package org.eclipse.wst.css.core.internal.parser.regions;
 
 import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
-import org.eclipse.wst.sse.core.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 public class CSSTextRegionFactory {
 	public synchronized static CSSTextRegionFactory getInstance() {

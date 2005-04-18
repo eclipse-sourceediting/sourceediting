@@ -14,12 +14,12 @@ package org.eclipse.wst.html.core.internal.document;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
-import org.eclipse.wst.sse.core.INodeAdapterFactory;
-import org.eclipse.wst.sse.core.INodeAdapter;
-import org.eclipse.wst.sse.core.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
-import org.eclipse.wst.xml.core.document.IDOMDocument;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.xml.core.internal.document.DocumentTypeAdapter;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 
 /**
  */

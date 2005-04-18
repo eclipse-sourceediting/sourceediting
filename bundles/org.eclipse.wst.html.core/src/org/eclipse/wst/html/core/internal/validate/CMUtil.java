@@ -13,9 +13,8 @@ package org.eclipse.wst.html.core.internal.validate;
 
 import java.util.Iterator;
 
-import org.eclipse.wst.html.core.HTMLCMProperties;
 import org.eclipse.wst.html.core.internal.modelquery.HMQUtil;
-import org.eclipse.wst.xml.core.document.IDOMElement;
+import org.eclipse.wst.html.core.internal.provisional.HTMLCMProperties;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
@@ -25,6 +24,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNodeList;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

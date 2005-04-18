@@ -12,8 +12,8 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal;
 
-import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.EmbeddedTypeHandler;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 
 
 public interface JSPAwareAdapterFactory extends INodeAdapterFactory {

@@ -20,7 +20,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 /**
  * ContentModelAdapter interface
  */
-public interface ContentModelAdapter extends org.eclipse.wst.sse.core.INodeAdapter {
+public interface ContentModelAdapter extends org.eclipse.wst.sse.core.internal.provisional.INodeAdapter {
 
 	/**
 	 * getCMDocument method
@@ -38,7 +38,7 @@ public interface ContentModelAdapter extends org.eclipse.wst.sse.core.INodeAdapt
 	 * INodeNotifier is passed for stateless (singleton) INodeAdapter
 	 * implementation.
 	 */
-	CMDocument getCMDocument(org.eclipse.wst.sse.core.INodeNotifier notifier);
+	CMDocument getCMDocument(org.eclipse.wst.sse.core.internal.provisional.INodeNotifier notifier);
 
 	/**
 	 * getDeclaration method
@@ -52,5 +52,5 @@ public interface ContentModelAdapter extends org.eclipse.wst.sse.core.INodeAdapt
 	 * INodeNotifier is passed for stateless (singleton) INodeAdapter
 	 * implementation.
 	 */
-	CMNode getDeclaration(org.eclipse.wst.sse.core.INodeNotifier notifier);
+	CMNode getDeclaration(org.eclipse.wst.sse.core.internal.provisional.INodeNotifier notifier);
 }

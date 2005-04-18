@@ -19,11 +19,11 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.sse.core.text.ITextRegionCollection;
-import org.eclipse.wst.sse.ui.preferences.PreferenceManager;
+import org.eclipse.wst.sse.ui.internal.provisional.preferences.PreferenceManager;
 import org.w3c.dom.Node;
 
 

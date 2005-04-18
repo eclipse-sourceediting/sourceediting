@@ -14,13 +14,13 @@ package org.eclipse.wst.xml.ui.internal.registry;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.views.properties.IPropertySource;
-import org.eclipse.wst.sse.core.INodeAdapterFactory;
-import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IDocumentTypeHandler;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.util.Assert;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
-import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
+import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryProvider;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelhandler.ModelHandlerForXML;

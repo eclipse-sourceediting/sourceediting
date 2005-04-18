@@ -38,7 +38,7 @@ public abstract class ValidationComponent implements ValidationAdapter {
 
 	/**
 	 */
-	public void notifyChanged(org.eclipse.wst.sse.core.INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
+	public void notifyChanged(org.eclipse.wst.sse.core.internal.provisional.INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
 		// This method will be implemented in the V2.
 	}
 

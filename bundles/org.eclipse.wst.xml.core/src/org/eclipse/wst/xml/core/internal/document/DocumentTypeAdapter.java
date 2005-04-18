@@ -14,7 +14,7 @@ package org.eclipse.wst.xml.core.internal.document;
 
 
 
-import org.eclipse.wst.sse.core.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.w3c.dom.DocumentType;
 
 

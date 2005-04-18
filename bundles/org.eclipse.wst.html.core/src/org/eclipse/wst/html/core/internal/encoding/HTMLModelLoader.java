@@ -19,19 +19,19 @@ import org.eclipse.wst.html.core.internal.document.HTMLModelParserAdapterFactory
 import org.eclipse.wst.html.core.internal.htmlcss.HTMLStyleSelectorAdapterFactory;
 import org.eclipse.wst.html.core.internal.htmlcss.StyleAdapterFactory;
 import org.eclipse.wst.html.core.internal.modelquery.ModelQueryAdapterFactoryForHTML;
-import org.eclipse.wst.sse.core.INodeAdapterFactory;
-import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.IModelLoader;
 import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
 import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.model.AbstractModelLoader;
+import org.eclipse.wst.sse.core.internal.provisional.IModelLoader;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.util.Debug;
-import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.DebugAdapterFactory;
 import org.eclipse.wst.xml.core.internal.parser.XMLSourceParser;
 import org.eclipse.wst.xml.core.internal.propagate.PropagatingAdapterFactoryImpl;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 public class HTMLModelLoader extends AbstractModelLoader {

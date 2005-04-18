@@ -22,20 +22,20 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.TypedRegion;
-import org.eclipse.wst.sse.core.events.IModelAboutToBeChangedListener;
-import org.eclipse.wst.sse.core.events.IStructuredDocumentListener;
-import org.eclipse.wst.sse.core.events.NewDocumentEvent;
-import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.NotImplementedException;
 import org.eclipse.wst.sse.core.internal.document.NullStructuredDocumentPartitioner;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegionList;
-import org.eclipse.wst.sse.core.text.IStructuredTextReParser;
-import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
+import org.eclipse.wst.sse.core.internal.provisional.events.IModelAboutToBeChangedListener;
+import org.eclipse.wst.sse.core.internal.provisional.events.IStructuredDocumentListener;
+import org.eclipse.wst.sse.core.internal.provisional.events.NewDocumentEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegionList;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredTextReParser;
+import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
 
 
 /**

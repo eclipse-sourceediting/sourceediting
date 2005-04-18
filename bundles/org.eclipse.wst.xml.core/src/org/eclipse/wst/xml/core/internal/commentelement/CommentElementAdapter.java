@@ -15,10 +15,10 @@ package org.eclipse.wst.xml.core.internal.commentelement;
 
 
 import org.eclipse.core.runtime.IPluginDescriptor;
-import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.xml.core.document.IDOMElement;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.xml.core.internal.commentelement.impl.CommentElementConfiguration;
 import org.eclipse.wst.xml.core.internal.document.TagAdapter;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 
 
 /**

@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.eclipse.wst.dtd.core.internal.text.RegionIterator;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 
 // interface for nodes that can exist at the top level in a dtdfile

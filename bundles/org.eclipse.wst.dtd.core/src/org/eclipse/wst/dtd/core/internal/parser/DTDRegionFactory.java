@@ -13,7 +13,7 @@
 package org.eclipse.wst.dtd.core.internal.parser;
 
 import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
-import org.eclipse.wst.sse.core.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 public class DTDRegionFactory {
 	public static ITextRegion createRegion(String tokenKind, int start, int length) {

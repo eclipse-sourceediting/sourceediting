@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.css.core.internal.parser;
 
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 
 public class CSSStructuredDocumentRegionFactory {
 	public static IStructuredDocumentRegion createRegion(String type) {

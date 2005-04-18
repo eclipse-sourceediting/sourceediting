@@ -13,8 +13,8 @@ package org.eclipse.wst.html.core.internal.contentmodel.ssi;
 import java.util.Hashtable;
 import java.util.Iterator;
 
-import org.eclipse.wst.html.core.HTML40Namespace;
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLCMDocumentFactory;
+import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;

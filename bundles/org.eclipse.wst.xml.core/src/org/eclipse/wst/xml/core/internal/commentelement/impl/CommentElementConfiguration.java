@@ -19,10 +19,10 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPluginDescriptor;
-import org.eclipse.wst.xml.core.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.commentelement.CommentElementAdapter;
 import org.eclipse.wst.xml.core.internal.commentelement.CommentElementHandler;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

@@ -14,7 +14,7 @@ package org.eclipse.wst.xml.core.internal.provisional.format;
 
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatContraints;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
-import org.eclipse.wst.xml.core.document.IDOMNode;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 
 public class DocumentNodeFormatter extends NodeFormatter {

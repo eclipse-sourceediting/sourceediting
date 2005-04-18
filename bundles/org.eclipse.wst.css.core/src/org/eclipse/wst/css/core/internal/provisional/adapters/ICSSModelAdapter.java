@@ -13,7 +13,7 @@ package org.eclipse.wst.css.core.internal.provisional.adapters;
 
 
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
-import org.eclipse.wst.sse.core.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 
 
 /**

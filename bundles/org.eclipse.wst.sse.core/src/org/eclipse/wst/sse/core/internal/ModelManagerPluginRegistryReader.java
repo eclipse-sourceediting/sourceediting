@@ -21,8 +21,8 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IDocumentTypeHandler;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.osgi.framework.Bundle;
 
 
@@ -126,15 +126,15 @@ public class ModelManagerPluginRegistryReader {
 									try {
 										factory = (INodeAdapterFactory) ctors[i].newInstance(new Object[]{adapterKey, new Boolean(doRegisterAdapters)});
 									} catch (IllegalAccessException e) {
-										throw new org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException(e);
+										throw new org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException(e);
 									} catch (IllegalArgumentException e) {
-										throw new org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException(e);
+										throw new org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException(e);
 									} catch (InstantiationException e) {
-										throw new org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException(e);
+										throw new org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException(e);
 									} catch (InvocationTargetException e) {
-										throw new org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException(e);
+										throw new org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException(e);
 									} catch (ExceptionInInitializerError e) {
-										throw new org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException(e);
+										throw new org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException(e);
 									}
 								}
 							}
@@ -143,9 +143,9 @@ public class ModelManagerPluginRegistryReader {
 							factory = (INodeAdapterFactory) element.createExecutableExtension(ATTR_CLASS);
 						}
 					} catch (ClassNotFoundException e) {
-						throw new org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException(e);
+						throw new org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException(e);
 					} catch (CoreException e) {
-						throw new org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException(e);
+						throw new org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException(e);
 					}
 				}
 			}

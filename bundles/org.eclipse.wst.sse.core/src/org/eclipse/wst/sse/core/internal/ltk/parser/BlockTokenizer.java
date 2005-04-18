@@ -19,7 +19,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.util.List;
 
-import org.eclipse.wst.sse.core.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 
 public interface BlockTokenizer {

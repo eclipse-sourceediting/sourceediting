@@ -24,8 +24,8 @@ import org.eclipse.wst.dtd.core.internal.text.DTDStructuredDocumentRegionFactory
 import org.eclipse.wst.dtd.core.internal.tokenizer.DTDTokenizer;
 import org.eclipse.wst.dtd.core.internal.tokenizer.Token;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 
 public class DTDRegionParser implements RegionParser {

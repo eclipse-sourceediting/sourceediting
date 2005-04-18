@@ -12,13 +12,13 @@ import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.wst.css.core.internal.modelhandler.ModelHandlerForCSS;
 import org.eclipse.wst.css.ui.internal.contentoutline.JFaceNodeAdapterFactoryCSS;
 import org.eclipse.wst.css.ui.internal.properties.CSSPropertySourceAdapterFactory;
-import org.eclipse.wst.sse.core.INodeAdapterFactory;
-import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IDocumentTypeHandler;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
+import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryProvider;
 import org.eclipse.wst.sse.ui.internal.util.Assert;
-import org.eclipse.wst.sse.ui.registry.AdapterFactoryProvider;
 
 public class AdapterFactoryProviderCSS implements AdapterFactoryProvider {
 	public boolean isFor(IDocumentTypeHandler contentTypeDescription) {

@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
-import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
+import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 
 
 

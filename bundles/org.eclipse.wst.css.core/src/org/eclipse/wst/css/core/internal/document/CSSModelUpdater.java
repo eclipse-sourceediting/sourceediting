@@ -18,11 +18,11 @@ import org.eclipse.wst.css.core.internal.formatter.CSSSourceGenerator;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSAttr;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.util.CSSUtil;
-import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.sse.core.events.NoChangeEvent;
-import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.events.NoChangeEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.w3c.dom.DOMException;
 
 

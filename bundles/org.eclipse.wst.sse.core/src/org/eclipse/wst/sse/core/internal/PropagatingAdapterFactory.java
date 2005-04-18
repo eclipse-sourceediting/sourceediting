@@ -16,7 +16,7 @@ package org.eclipse.wst.sse.core.internal;
 
 import java.util.ArrayList;
 
-import org.eclipse.wst.sse.core.INodeAdapterFactory;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 
 
 

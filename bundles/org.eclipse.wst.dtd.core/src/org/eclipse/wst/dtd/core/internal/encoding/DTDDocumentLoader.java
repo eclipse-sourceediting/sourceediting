@@ -16,13 +16,13 @@ import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.wst.dtd.core.internal.parser.DTDRegionParser;
 import org.eclipse.wst.dtd.core.internal.text.DTDStructuredDocumentReParser;
 import org.eclipse.wst.dtd.core.internal.text.StructuredTextPartitionerForDTD;
-import org.eclipse.wst.sse.core.document.IEncodedDocument;
 import org.eclipse.wst.sse.core.internal.document.AbstractDocumentLoader;
 import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.internal.document.StructuredDocumentFactory;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
+import org.eclipse.wst.sse.core.internal.provisional.document.IEncodedDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
 
 
 public final class DTDDocumentLoader extends AbstractDocumentLoader {

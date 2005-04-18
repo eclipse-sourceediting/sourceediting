@@ -12,7 +12,7 @@ package org.eclipse.jst.jsp.core.internal.parser.internal;
 
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
-import org.eclipse.wst.sse.core.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.parser.regions.XMLParserRegionFactory;
 
 /**

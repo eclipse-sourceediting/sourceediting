@@ -16,9 +16,9 @@ import org.eclipse.wst.css.core.internal.provisional.document.ICSSImportRule;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSPrimitiveValue;
-import org.eclipse.wst.css.core.preferences.CSSPreferenceHelper;
-import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.xml.core.document.IDOMNode;
+import org.eclipse.wst.css.core.internal.provisional.preferences.CSSPreferenceHelper;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.w3c.dom.css.CSSValue;
 

@@ -14,10 +14,10 @@ package org.eclipse.wst.dtd.core.internal.modelhandler;
 
 import org.eclipse.wst.dtd.core.internal.document.DTDModelImpl;
 import org.eclipse.wst.dtd.core.internal.encoding.DTDDocumentLoader;
-import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.IModelLoader;
 import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.internal.model.AbstractModelLoader;
+import org.eclipse.wst.sse.core.internal.provisional.IModelLoader;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 
 
 

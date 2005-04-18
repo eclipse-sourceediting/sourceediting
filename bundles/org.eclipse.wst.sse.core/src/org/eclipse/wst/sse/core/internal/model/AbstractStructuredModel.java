@@ -24,32 +24,32 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.ILock;
-import org.eclipse.wst.sse.core.DocumentChanged;
-import org.eclipse.wst.sse.core.IModelLifecycleListener;
-import org.eclipse.wst.sse.core.IModelManager;
-import org.eclipse.wst.sse.core.IModelStateListener;
-import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.IndexedRegion;
-import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.events.AboutToBeChangedEvent;
-import org.eclipse.wst.sse.core.events.IModelAboutToBeChangedListener;
-import org.eclipse.wst.sse.core.events.IStructuredDocumentListener;
-import org.eclipse.wst.sse.core.events.NewDocumentEvent;
-import org.eclipse.wst.sse.core.events.NoChangeEvent;
-import org.eclipse.wst.sse.core.events.RegionChangedEvent;
-import org.eclipse.wst.sse.core.events.RegionsReplacedEvent;
-import org.eclipse.wst.sse.core.events.StructuredDocumentRegionsReplacedEvent;
-import org.eclipse.wst.sse.core.exceptions.ResourceInUse;
-import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.ILockable;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.SSECoreMessages;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingRule;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IModelHandler;
+import org.eclipse.wst.sse.core.internal.provisional.DocumentChanged;
+import org.eclipse.wst.sse.core.internal.provisional.IModelLifecycleListener;
+import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.events.AboutToBeChangedEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.IModelAboutToBeChangedListener;
+import org.eclipse.wst.sse.core.internal.provisional.events.IStructuredDocumentListener;
+import org.eclipse.wst.sse.core.internal.provisional.events.NewDocumentEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.NoChangeEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.RegionsReplacedEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentRegionsReplacedEvent;
+import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
+import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.sse.core.internal.util.Utilities;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.undo.IStructuredTextUndoManager;
 
 
 public abstract class AbstractStructuredModel implements IStructuredModel {
@@ -665,7 +665,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	}
 
 	/**
-	 * @see org.eclipse.wst.sse.core.IStructuredModel#getContentTypeIdentifier()
+	 * @see org.eclipse.wst.sse.core.internal.provisional.IStructuredModel#getContentTypeIdentifier()
 	 */
 	public String getContentTypeIdentifier() {
 		if (fExplicitContentTypeIdentifier != null)

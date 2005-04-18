@@ -12,9 +12,9 @@ package org.eclipse.wst.html.core.internal.document;
 
 
 
-import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.xml.core.document.IDOMElement;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.xml.core.internal.document.TagAdapter;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 
 /**
  */

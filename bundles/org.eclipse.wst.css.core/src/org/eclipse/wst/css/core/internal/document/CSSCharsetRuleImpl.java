@@ -14,8 +14,8 @@ package org.eclipse.wst.css.core.internal.document;
 
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSCharsetRule;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
+import org.eclipse.wst.css.core.internal.provisional.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.css.core.internal.util.CSSUtil;
-import org.eclipse.wst.css.core.preferences.CSSPreferenceHelper;
 
 
 /**

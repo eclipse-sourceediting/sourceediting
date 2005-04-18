@@ -14,8 +14,8 @@ package org.eclipse.wst.html.core.internal.contentmodel;
 
 import java.util.Hashtable;
 
-import org.eclipse.wst.html.core.HTML40Namespace;
 import org.eclipse.wst.html.core.internal.contentmodel.chtml.CHCMDocImpl;
+import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMDocType;
 

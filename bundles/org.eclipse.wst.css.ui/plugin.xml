@@ -50,7 +50,7 @@
             target="org.eclipse.wst.css.core.csssource"/>
       <configuration 
       		type="textviewerconfiguration"
-            class="org.eclipse.wst.css.ui.StructuredTextViewerConfigurationCSS"
+            class="org.eclipse.wst.css.ui.internal.provisional.StructuredTextViewerConfigurationCSS"
             target="org.eclipse.wst.css.core.csssource"/>
       <configuration 
       		type="propertysheetconfiguration"
@@ -94,7 +94,7 @@
          point="org.eclipse.ui.preferencePages">
       <page
             name="%CSS_Files.name"
-            category="org.eclipse.wst.sse.ui.preferences"
+            category="org.eclipse.wst.sse.ui.internal.provisional.preferences"
             class="org.eclipse.wst.css.ui.internal.preferences.ui.CSSFilesPreferencePage"
             id="org.eclipse.wst.sse.ui.preferences.css">
       </page>

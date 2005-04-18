@@ -22,8 +22,8 @@ import org.eclipse.wst.css.core.internal.provisional.document.ICSSSelector;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSSelectorCombinator;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSSelectorItem;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSSimpleSelector;
-import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.xml.core.NameValidator;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.xml.core.internal.provisional.NameValidator;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 

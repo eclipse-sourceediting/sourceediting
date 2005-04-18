@@ -14,8 +14,8 @@ package org.eclipse.wst.sse.ui.internal.reconcile;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
-import org.eclipse.wst.sse.core.INodeAdapter;
-import org.eclipse.wst.sse.core.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 
 

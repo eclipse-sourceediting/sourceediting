@@ -12,9 +12,9 @@ package org.eclipse.wst.html.core.internal.contentmodel.chtml;
 
 import java.util.Hashtable;
 
-import org.eclipse.wst.html.core.HTMLCMProperties;
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLElementDeclaration;
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLPropertyDeclaration;
+import org.eclipse.wst.html.core.internal.provisional.HTMLCMProperties;
 import org.eclipse.wst.xml.core.internal.contentmodel.annotation.AnnotationMap;
 
 /**

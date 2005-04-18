@@ -21,7 +21,7 @@ import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.wst.sse.ui.extensions.breakpoint.SourceEditingTextTools;
+import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.SourceEditingTextTools;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 

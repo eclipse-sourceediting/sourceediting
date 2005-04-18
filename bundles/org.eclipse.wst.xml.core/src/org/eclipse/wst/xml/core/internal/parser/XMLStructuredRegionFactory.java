@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.parser;
 
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.xml.core.internal.text.XMLStructuredDocumentRegion;
 
 

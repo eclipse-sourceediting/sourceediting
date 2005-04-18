@@ -17,9 +17,9 @@ import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.css.ui.internal.Logger;
 import org.eclipse.wst.css.ui.internal.contentproperties.ContentSettingsRegistry;
 import org.eclipse.wst.css.ui.internal.editor.IHelpContextIds;
-import org.eclipse.wst.sse.ui.contentproperties.IContentSettings;
 import org.eclipse.wst.sse.ui.internal.contentproperties.ui.ComboListOnPropertyPage;
 import org.eclipse.wst.sse.ui.internal.contentproperties.ui.ContentSettingsPropertyPage;
+import org.eclipse.wst.sse.ui.internal.provisional.contentproperties.IContentSettings;
 
 public final class CSSContentSettingsPropertyPage extends ContentSettingsPropertyPage {
 

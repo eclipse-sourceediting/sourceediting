@@ -12,7 +12,7 @@ package org.eclipse.wst.html.core.internal.contentmodel;
 
 
 
-import org.eclipse.wst.html.core.HTML40Namespace;
+import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMGroup;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;

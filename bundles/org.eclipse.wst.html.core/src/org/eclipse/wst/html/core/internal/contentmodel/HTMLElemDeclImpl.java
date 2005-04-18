@@ -14,7 +14,7 @@ package org.eclipse.wst.html.core.internal.contentmodel;
 
 import java.util.Iterator;
 
-import org.eclipse.wst.html.core.HTMLCMProperties;
+import org.eclipse.wst.html.core.internal.provisional.HTMLCMProperties;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;

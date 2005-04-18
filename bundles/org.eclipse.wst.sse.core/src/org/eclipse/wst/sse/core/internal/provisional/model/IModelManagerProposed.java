@@ -18,10 +18,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.exceptions.ResourceAlreadyExists;
-import org.eclipse.wst.sse.core.exceptions.ResourceInUse;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceAlreadyExists;
+import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 /**
  * Responsible for managing IStructuredModels.
@@ -41,7 +41,7 @@ import org.eclipse.wst.sse.core.text.IStructuredDocument;
  * 
  * Clients can reference this interface, but should not implement.
  * 
- * @see org.eclipse.wst.sse.core.StructuredModelManager
+ * @see org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager
  * @since 1.0
  */
 public interface IModelManagerProposed {

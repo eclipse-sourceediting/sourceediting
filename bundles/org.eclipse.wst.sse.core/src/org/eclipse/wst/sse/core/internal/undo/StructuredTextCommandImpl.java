@@ -18,8 +18,7 @@ import org.eclipse.emf.common.command.AbstractCommand;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.sse.core.internal.Logger;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.undo.StructuredTextCommand;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 
 public class StructuredTextCommandImpl extends AbstractCommand implements StructuredTextCommand {

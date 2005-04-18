@@ -22,7 +22,7 @@ import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
-import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
+import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
 
 
 public class PreferenceInitializer extends AbstractPreferenceInitializer {

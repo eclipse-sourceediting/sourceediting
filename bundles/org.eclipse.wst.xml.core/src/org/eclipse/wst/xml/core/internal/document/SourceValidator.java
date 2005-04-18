@@ -12,9 +12,9 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.document;
 
-import org.eclipse.wst.xml.core.IXMLCharEntity;
-import org.eclipse.wst.xml.core.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.XMLCoreMessages;
+import org.eclipse.wst.xml.core.internal.provisional.IXMLCharEntity;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
 

@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.Position;
 import org.eclipse.ui.texteditor.MarkerAnnotation;
 import org.eclipse.ui.texteditor.ResourceMarkerAnnotationModel;
-import org.eclipse.wst.sse.ui.extensions.breakpoint.IBreakpointConstants;
+import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IBreakpointConstants;
 
 
 /**

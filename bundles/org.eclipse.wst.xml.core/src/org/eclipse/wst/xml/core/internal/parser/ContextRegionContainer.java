@@ -15,14 +15,14 @@ package org.eclipse.wst.xml.core.internal.parser;
 
 
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.text.TextRegionListImpl;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.sse.core.text.ITextRegionCollection;
-import org.eclipse.wst.sse.core.text.ITextRegionContainer;
-import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.xml.core.internal.Logger;
 
 
@@ -160,7 +160,7 @@ public class ContextRegionContainer implements ITextRegionContainer {
 		return getParent().getFullText(this);
 	}
 
-	public String getFullText(org.eclipse.wst.sse.core.text.ITextRegion aRegion) {
+	public String getFullText(org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion aRegion) {
 		// Must be proxied here since aRegion should always be a child of
 		// *this* container and indexed from
 		// this container's offset
@@ -270,7 +270,7 @@ public class ContextRegionContainer implements ITextRegionContainer {
 		return result;
 	}
 
-	public String getText(org.eclipse.wst.sse.core.text.ITextRegion aRegion) {
+	public String getText(org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion aRegion) {
 		// Must be proxied here since aRegion should always be a child of
 		// *this* container and indexed from
 		// this container's offset
@@ -376,7 +376,7 @@ public class ContextRegionContainer implements ITextRegionContainer {
 	}
 
 	public StructuredDocumentEvent updateRegion(Object requester, IStructuredDocumentRegion parent, String changes, int requestStart, int lengthToReplace) {
-		org.eclipse.wst.sse.core.events.RegionChangedEvent result = null;
+		org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent result = null;
 		// FUTURE_TO_DO: need to implement region level parsing in
 		// ITextRegionContainer::updateModel
 		// never being called?

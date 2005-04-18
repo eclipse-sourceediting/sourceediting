@@ -20,8 +20,8 @@ import java.util.Vector;
 
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.wst.common.ui.dnd.DefaultDragAndDropCommand;
-import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.xml.core.document.IDOMNode;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;

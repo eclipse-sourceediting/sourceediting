@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.css.core.internal.CSSCorePlugin;
-import org.eclipse.wst.css.core.preferences.CSSModelPreferenceNames;
+import org.eclipse.wst.css.core.internal.provisional.preferences.CSSModelPreferenceNames;
 import org.eclipse.wst.css.ui.internal.CSSUIMessages;
 import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.css.ui.internal.editor.IHelpContextIds;

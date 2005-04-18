@@ -16,7 +16,7 @@ import java.util.StringTokenizer;
 
 import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSelectorAdapter;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSSimpleSelector;
-import org.eclipse.wst.sse.core.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.w3c.dom.Element;
 
 /**

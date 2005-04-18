@@ -17,7 +17,7 @@ package org.eclipse.wst.sse.ui.internal.properties;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
-import org.eclipse.wst.sse.core.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 
 
 public class AdapterPropertySheetEntryLabelProvider extends LabelProvider {

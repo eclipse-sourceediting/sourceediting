@@ -12,9 +12,9 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.core.internal.text;
 
-import org.eclipse.wst.dtd.core.text.IDTDPartitionTypes;
+import org.eclipse.wst.dtd.core.internal.provisional.text.IDTDPartitionTypes;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTypes;
 import org.eclipse.wst.sse.core.internal.text.rules.StructuredTextPartitioner;
-import org.eclipse.wst.sse.core.text.IStructuredPartitionTypes;
 
 public class StructuredTextPartitionerForDTD extends StructuredTextPartitioner {
 

@@ -13,17 +13,17 @@ package org.eclipse.wst.html.core.internal.text;
 import java.util.Locale;
 
 import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.wst.css.core.text.ICSSPartitionTypes;
-import org.eclipse.wst.html.core.HTML40Namespace;
-import org.eclipse.wst.html.core.text.IHTMLPartitionTypes;
+import org.eclipse.wst.css.core.internal.provisional.text.ICSSPartitionTypes;
+import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
+import org.eclipse.wst.html.core.internal.provisional.text.IHTMLPartitionTypes;
 import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredTextPartitioner;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.text.rules.IStructuredTypedRegion;
 import org.eclipse.wst.sse.core.internal.util.ScriptLanguageKeys;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.IStructuredTextPartitioner;
-import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.sse.core.text.ITextRegionList;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 

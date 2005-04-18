@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal;
 
-import org.eclipse.wst.sse.core.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 
 
 public interface IDebugAdapter extends INodeAdapter {

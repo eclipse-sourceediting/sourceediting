@@ -12,12 +12,10 @@ package org.eclipse.wst.html.core.internal.document;
 
 
 
-import org.eclipse.wst.html.core.HTML40Namespace;
-import org.eclipse.wst.html.core.HTMLCMProperties;
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLElementDeclaration;
-import org.eclipse.wst.sse.core.INodeNotifier;
-import org.eclipse.wst.xml.core.document.IDOMElement;
-import org.eclipse.wst.xml.core.document.IDOMText;
+import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
+import org.eclipse.wst.html.core.internal.provisional.HTMLCMProperties;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMGroup;
@@ -26,6 +24,8 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNodeList;
 import org.eclipse.wst.xml.core.internal.document.CMNodeUtil;
 import org.eclipse.wst.xml.core.internal.document.ModelParserAdapter;
 import org.eclipse.wst.xml.core.internal.document.TagAdapter;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMText;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

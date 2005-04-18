@@ -22,10 +22,10 @@ import org.eclipse.wst.css.core.internal.provisional.document.ICSSDocument;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSImportRule;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
+import org.eclipse.wst.css.core.internal.provisional.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.css.core.internal.util.SelectionCollector;
-import org.eclipse.wst.css.core.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.css.ui.internal.image.CSSImageType;
-import org.eclipse.wst.sse.core.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 class CSSProposalGeneratorForAtmarkRule extends CSSProposalGenerator {
 

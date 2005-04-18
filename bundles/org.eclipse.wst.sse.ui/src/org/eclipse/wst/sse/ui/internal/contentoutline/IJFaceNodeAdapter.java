@@ -15,7 +15,7 @@ package org.eclipse.wst.sse.ui.internal.contentoutline;
 
 
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.wst.sse.core.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 
 
 public interface IJFaceNodeAdapter extends INodeAdapter {

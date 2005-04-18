@@ -197,7 +197,7 @@ public class StructuredTextAnnotationHover implements IAnnotationHover, IReleasa
 			}
 			return buf.toString();
 		} catch (IOException exception) {
-			throw new org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException(exception);
+			throw new org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException(exception);
 		} finally {
 			gc.dispose();
 		}

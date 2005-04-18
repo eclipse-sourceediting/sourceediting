@@ -20,7 +20,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.wst.sse.ui.views.properties.StructuredPropertySheetConfiguration;
+import org.eclipse.wst.sse.ui.internal.provisional.views.properties.StructuredPropertySheetConfiguration;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
 
@@ -35,7 +35,7 @@ public class XMLPropertySheetConfiguration extends StructuredPropertySheetConfig
 	}
 
 	/**
-	 * @see org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration#getSelection(org.eclipse.ui.IWorkbenchPart,
+	 * @see org.eclipse.wst.sse.ui.internal.provisional.views.properties.PropertySheetConfiguration#getSelection(org.eclipse.ui.IWorkbenchPart,
 	 *      org.eclipse.jface.viewers.ISelection)
 	 */
 	public ISelection getSelection(IWorkbenchPart selectingPart, ISelection selection) {

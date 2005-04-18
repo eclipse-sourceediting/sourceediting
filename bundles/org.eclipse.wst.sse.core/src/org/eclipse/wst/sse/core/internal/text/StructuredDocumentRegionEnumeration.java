@@ -17,8 +17,8 @@ package org.eclipse.wst.sse.core.internal.text;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.util.Debug;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 
 
 public class StructuredDocumentRegionEnumeration implements Enumeration {

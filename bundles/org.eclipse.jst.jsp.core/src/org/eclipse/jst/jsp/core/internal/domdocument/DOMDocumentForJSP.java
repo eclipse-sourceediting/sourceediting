@@ -13,8 +13,8 @@
 package org.eclipse.jst.jsp.core.internal.domdocument;
 
 import org.eclipse.wst.html.core.internal.document.DocumentStyleImpl;
-import org.eclipse.wst.xml.core.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Comment;
 import org.w3c.dom.DOMException;

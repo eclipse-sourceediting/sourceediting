@@ -12,8 +12,6 @@ package org.eclipse.wst.html.core.internal.commentelement.handlers;
 
 
 
-import org.eclipse.wst.xml.core.document.IDOMElement;
-import org.eclipse.wst.xml.core.document.ISourceGenerator;
 import org.eclipse.wst.xml.core.internal.commentelement.CommentElementHandler;
 import org.eclipse.wst.xml.core.internal.commentelement.util.CommentElementFactory;
 import org.eclipse.wst.xml.core.internal.commentelement.util.TagScanner;
@@ -21,6 +19,8 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
+import org.eclipse.wst.xml.core.internal.provisional.document.ISourceGenerator;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

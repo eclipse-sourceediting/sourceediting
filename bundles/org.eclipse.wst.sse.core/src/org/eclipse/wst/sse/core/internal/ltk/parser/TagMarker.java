@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.ltk.parser;
 
-import org.eclipse.wst.sse.core.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
 /**
  * ISSUE: need to provide functionality in improved API. 

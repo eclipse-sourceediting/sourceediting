@@ -13,7 +13,7 @@ package org.eclipse.wst.html.core.internal;
 
 
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.wst.html.core.HTMLCMProperties;
+import org.eclipse.wst.html.core.internal.provisional.HTMLCMProperties;
 import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMContentBuilderImpl;

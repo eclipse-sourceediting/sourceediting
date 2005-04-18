@@ -12,12 +12,12 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.registry;
 
-import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.EmbeddedTypeHandler;
-import org.eclipse.wst.sse.ui.registry.embedded.EmbeddedAdapterFactoryProvider;
-import org.eclipse.wst.xml.core.document.IDOMDocument;
-import org.eclipse.wst.xml.core.document.IDOMModel;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.ui.internal.provisional.registry.embedded.EmbeddedAdapterFactoryProvider;
 import org.eclipse.wst.xml.core.internal.modelhandler.EmbeddedXML;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 
 public class AdapterFactoryProviderForEmbeddedXML implements EmbeddedAdapterFactoryProvider {

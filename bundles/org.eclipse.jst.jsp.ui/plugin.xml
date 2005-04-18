@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin id="org.eclipse.jst.jsp.ui" name="%pluginName" version="1.0.0"
+<plugin id="org.eclipse.jst.jsp.ui" 
+	name="%pluginName" version="1.0.0"
 	provider-name="%providerName"
 	class="org.eclipse.jst.jsp.ui.internal.JSPUIPlugin">
 
@@ -53,7 +54,7 @@
 	<extension point="org.eclipse.wst.sse.ui.extendedconfiguration"> 
 		<configuration 
       		type="textviewerconfiguration"
-			class="org.eclipse.jst.jsp.ui.StructuredTextViewerConfigurationJSP"
+			class="org.eclipse.jst.jsp.ui.internal.provisional.StructuredTextViewerConfigurationJSP"
 			target="org.eclipse.jst.jsp.core.jspsource"/>
 		<configuration 
       		type="contentoutlineconfiguration"
@@ -110,7 +111,7 @@
 		<!-- JSP PREFERENCE PAGES                                                                 -->
 		<!--======================================================================================-->
 		<page name="%JSP_Files.name"
-			category="org.eclipse.wst.sse.ui.preferences"
+			category="org.eclipse.wst.sse.ui.internal.provisional.preferences"
 			class="org.eclipse.jst.jsp.ui.internal.preferences.ui.JSPFilesPreferencePage"
 			id="org.eclipse.wst.sse.ui.preferences.jsp">
 		</page>

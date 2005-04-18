@@ -17,10 +17,10 @@
 package org.eclipse.wst.html.core.internal.document;
 
 import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSheetListAdapter;
-import org.eclipse.wst.sse.core.INodeAdapter;
-import org.eclipse.wst.xml.core.document.IDOMDocument;
-import org.eclipse.wst.xml.core.document.IDOMModel;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

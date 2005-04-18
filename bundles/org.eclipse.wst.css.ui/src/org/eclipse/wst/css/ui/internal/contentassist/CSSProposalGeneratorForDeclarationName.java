@@ -21,7 +21,7 @@ import org.eclipse.wst.css.core.internal.metamodel.util.CSSMetaModelUtil;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
-import org.eclipse.wst.css.core.preferences.CSSPreferenceHelper;
+import org.eclipse.wst.css.core.internal.provisional.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.css.ui.internal.image.CSSImageType;
 import org.eclipse.wst.css.ui.internal.preferences.CSSPreferenceManager;
 

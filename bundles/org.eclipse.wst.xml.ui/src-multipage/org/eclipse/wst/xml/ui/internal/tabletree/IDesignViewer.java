@@ -11,7 +11,7 @@ package org.eclipse.wst.xml.ui.internal.tabletree;
 
 
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.ViewerSelectionManager;
 
 

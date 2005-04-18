@@ -15,7 +15,7 @@ package org.eclipse.wst.html.core.internal.contentmodel;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import org.eclipse.wst.html.core.HTML40Namespace;
+import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
 
 
 /**

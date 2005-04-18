@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.parser;
 
-import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.xml.core.internal.text.XMLStructuredDocumentRegion;
 
 public class JSPDirectiveStructuredDocumentRegion extends XMLStructuredDocumentRegion {

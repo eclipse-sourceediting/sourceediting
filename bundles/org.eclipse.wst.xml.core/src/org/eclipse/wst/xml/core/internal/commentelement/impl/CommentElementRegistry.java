@@ -18,8 +18,8 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.xml.core.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.commentelement.CommentElementHandler;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 
 
 /**

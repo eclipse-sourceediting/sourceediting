@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.html.core.internal.validate;
 
-import org.eclipse.wst.sse.core.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.validate.ValidationReporter;
 import org.eclipse.wst.xml.core.internal.validate.ValidationComponent;
 

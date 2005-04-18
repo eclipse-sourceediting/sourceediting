@@ -16,8 +16,8 @@ import java.util.ResourceBundle;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.sse.core.IndexedRegion;
-import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.xml.core.internal.document.CommentImpl;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 

@@ -13,7 +13,7 @@ package org.eclipse.wst.css.core.internal.provisional.adapters;
 
 
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSSimpleSelector;
-import org.eclipse.wst.sse.core.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.w3c.dom.Element;
 
 

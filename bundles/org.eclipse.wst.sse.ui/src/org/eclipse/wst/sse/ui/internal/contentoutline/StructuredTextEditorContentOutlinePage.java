@@ -53,16 +53,16 @@ import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
-import org.eclipse.wst.sse.core.IModelStateListener;
-import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
+import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.ViewerSelectionManager;
 import org.eclipse.wst.sse.ui.internal.actions.ActiveEditorActionHandler;
+import org.eclipse.wst.sse.ui.internal.provisional.views.contentoutline.ContentOutlineConfiguration;
 import org.eclipse.wst.sse.ui.internal.view.events.INodeSelectionListener;
 import org.eclipse.wst.sse.ui.internal.view.events.ITextSelectionListener;
 import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
 import org.eclipse.wst.sse.ui.internal.view.events.TextSelectionChangedEvent;
-import org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration;
 
 
 public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage implements INodeSelectionListener, ITextSelectionListener, IUpdate, IAdaptable {

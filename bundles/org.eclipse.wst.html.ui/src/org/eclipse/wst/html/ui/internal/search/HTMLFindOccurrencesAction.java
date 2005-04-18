@@ -13,10 +13,10 @@ package org.eclipse.wst.html.ui.internal.search;
 import java.util.ResourceBundle;
 
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.html.core.text.IHTMLPartitionTypes;
+import org.eclipse.wst.html.core.internal.provisional.text.IHTMLPartitionTypes;
 import org.eclipse.wst.sse.ui.internal.search.BasicFindOccurrencesAction;
+import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
-import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
 
 /**

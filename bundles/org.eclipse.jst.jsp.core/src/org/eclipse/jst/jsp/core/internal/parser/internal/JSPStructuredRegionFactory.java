@@ -11,7 +11,7 @@
 package org.eclipse.jst.jsp.core.internal.parser.internal;
 
 import org.eclipse.jst.jsp.core.internal.parser.JSPDirectiveStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.xml.core.internal.parser.XMLStructuredRegionFactory;
 
 /**

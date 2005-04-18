@@ -22,9 +22,9 @@ import org.eclipse.wst.css.core.internal.provisional.document.ICSSNamedNodeMap;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNodeList;
 import org.eclipse.wst.css.core.internal.util.ImportRuleCollector;
-import org.eclipse.wst.sse.core.AbstractNotifier;
-import org.eclipse.wst.sse.core.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
+import org.eclipse.wst.sse.core.internal.provisional.AbstractNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.w3c.dom.DOMException;
 
 

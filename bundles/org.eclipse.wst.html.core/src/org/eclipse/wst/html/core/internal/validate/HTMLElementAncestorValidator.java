@@ -12,12 +12,12 @@ package org.eclipse.wst.html.core.internal.validate;
 
 
 
-import org.eclipse.wst.html.core.HTMLCMProperties;
-import org.eclipse.wst.sse.core.IndexedRegion;
-import org.eclipse.wst.xml.core.document.IDOMNode;
+import org.eclipse.wst.html.core.internal.provisional.HTMLCMProperties;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.Element;
 
 public class HTMLElementAncestorValidator extends PrimeValidator {

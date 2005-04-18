@@ -24,7 +24,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.MultiTextEdit;
-import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
+import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 public class RemoveUnknownElementQuickFixProposal implements ICompletionProposal, ICompletionProposalExtension2 {

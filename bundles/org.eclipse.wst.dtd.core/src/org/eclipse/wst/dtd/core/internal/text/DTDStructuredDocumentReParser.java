@@ -12,10 +12,10 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.core.internal.text;
 
-import org.eclipse.wst.sse.core.events.StructuredDocumentEvent;
+import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredTextReParser;
 import org.eclipse.wst.sse.core.internal.text.StructuredDocumentReParser;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.IStructuredTextReParser;
 
 
 public class DTDStructuredDocumentReParser extends StructuredDocumentReParser {

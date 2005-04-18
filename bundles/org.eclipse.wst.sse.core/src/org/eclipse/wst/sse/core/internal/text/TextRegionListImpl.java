@@ -15,8 +15,8 @@ package org.eclipse.wst.sse.core.internal.text;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.sse.core.text.ITextRegionList;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 
 
 public class TextRegionListImpl implements ITextRegionList {

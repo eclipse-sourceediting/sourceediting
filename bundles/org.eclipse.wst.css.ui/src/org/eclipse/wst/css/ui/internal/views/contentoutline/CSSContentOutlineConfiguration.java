@@ -21,10 +21,10 @@ import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSValue;
 import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
-import org.eclipse.wst.sse.core.INodeAdapterFactory;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateActionContributionItem;
+import org.eclipse.wst.sse.ui.internal.provisional.views.contentoutline.StructuredContentOutlineConfiguration;
 import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
-import org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration;
 
 public class CSSContentOutlineConfiguration extends StructuredContentOutlineConfiguration {
 	private final String OUTLINE_SORT_PREF = "outline-sort"; //$NON-NLS-1$

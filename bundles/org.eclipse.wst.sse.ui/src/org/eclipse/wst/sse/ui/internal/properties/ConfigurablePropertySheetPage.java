@@ -30,16 +30,16 @@ import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertySheetPage;
-import org.eclipse.wst.sse.core.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.ViewerSelectionManager;
 import org.eclipse.wst.sse.ui.internal.actions.ActiveEditorActionHandler;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapterFactory;
+import org.eclipse.wst.sse.ui.internal.provisional.views.properties.IPropertySourceExtension;
+import org.eclipse.wst.sse.ui.internal.provisional.views.properties.PropertySheetConfiguration;
 import org.eclipse.wst.sse.ui.internal.view.events.INodeSelectionListener;
 import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
-import org.eclipse.wst.sse.ui.views.properties.IPropertySourceExtension;
-import org.eclipse.wst.sse.ui.views.properties.PropertySheetConfiguration;
 
 
 /**

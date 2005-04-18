@@ -12,8 +12,8 @@ package org.eclipse.wst.css.core.internal.text;
 
 
 
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
 
 /**
  * 

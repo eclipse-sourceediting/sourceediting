@@ -12,14 +12,14 @@ package org.eclipse.wst.html.ui.internal.contentoutline;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.wst.html.core.HTMLCMProperties;
-import org.eclipse.wst.html.core.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.core.internal.HTMLContentBuilder;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
-import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.html.core.internal.provisional.HTMLCMProperties;
+import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
 import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMContentBuilder;
 import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;

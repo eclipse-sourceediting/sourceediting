@@ -50,7 +50,7 @@ import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.TabFolderLayout;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
-import org.eclipse.wst.sse.ui.preferences.CommonEditorPreferenceNames;
+import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
 
 /**
  * Gutted version of JavaEditorPreferencePage

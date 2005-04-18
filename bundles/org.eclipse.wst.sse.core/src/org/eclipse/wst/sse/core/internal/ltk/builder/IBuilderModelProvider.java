@@ -13,8 +13,8 @@
 package org.eclipse.wst.sse.core.internal.ltk.builder;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 
 /**

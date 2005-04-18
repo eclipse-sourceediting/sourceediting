@@ -11,9 +11,9 @@ package org.eclipse.wst.xml.ui.internal.tabletree;
 
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
-import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistryImpl;
-import org.eclipse.wst.sse.ui.registry.embedded.EmbeddedAdapterFactoryRegistryImpl;
+import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryRegistry;
+import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryRegistryImpl;
+import org.eclipse.wst.sse.ui.internal.provisional.registry.embedded.EmbeddedAdapterFactoryRegistryImpl;
 
 /**
  * @deprecated This plugin has combined with the org.eclipse.wst.xml.ui plugin.

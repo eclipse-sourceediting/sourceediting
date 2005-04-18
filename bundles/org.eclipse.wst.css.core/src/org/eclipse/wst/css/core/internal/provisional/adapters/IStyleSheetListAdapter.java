@@ -14,7 +14,7 @@ package org.eclipse.wst.css.core.internal.provisional.adapters;
 
 import java.util.Enumeration;
 
-import org.eclipse.wst.sse.core.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.w3c.dom.Element;
 import org.w3c.dom.css.CSSStyleDeclaration;
 import org.w3c.dom.stylesheets.StyleSheetList;

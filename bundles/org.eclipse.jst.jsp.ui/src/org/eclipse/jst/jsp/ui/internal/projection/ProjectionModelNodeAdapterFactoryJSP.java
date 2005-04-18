@@ -12,8 +12,8 @@
 package org.eclipse.jst.jsp.ui.internal.projection;
 
 import org.eclipse.jst.jsp.core.JSP11Namespace;
-import org.eclipse.wst.sse.core.INodeAdapter;
-import org.eclipse.wst.sse.core.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.w3c.dom.Node;
 
 public class ProjectionModelNodeAdapterFactoryJSP extends ProjectionModelNodeAdapterFactoryHTML {

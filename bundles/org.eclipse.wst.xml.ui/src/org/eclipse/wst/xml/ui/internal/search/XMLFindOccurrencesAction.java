@@ -16,8 +16,8 @@ import java.util.ResourceBundle;
 
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.ui.internal.search.BasicFindOccurrencesAction;
+import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
-import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
 
 

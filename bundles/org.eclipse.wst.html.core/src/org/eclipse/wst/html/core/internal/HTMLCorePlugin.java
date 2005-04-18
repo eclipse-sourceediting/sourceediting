@@ -14,7 +14,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.wst.html.core.HTMLFilesPreferenceNames;
+import org.eclipse.wst.html.core.internal.provisional.HTMLFilesPreferenceNames;
 import org.eclipse.wst.sse.core.internal.encoding.CommonCharsetNames;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;

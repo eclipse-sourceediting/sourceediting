@@ -27,8 +27,8 @@ import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclarati
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleRule;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleSheet;
 import org.eclipse.wst.css.core.internal.util.ImportRuleCollector;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.util.Assert;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

@@ -15,7 +15,6 @@ package org.eclipse.wst.xml.core.internal.provisional.format;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.wst.sse.core.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatContraints;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatPreferences;
@@ -23,18 +22,19 @@ import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
 import org.eclipse.wst.sse.core.internal.format.StructuredFormatContraints;
 import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
 import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
+import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.xml.core.document.IDOMModel;
-import org.eclipse.wst.xml.core.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.document.CDATASectionImpl;
 import org.eclipse.wst.xml.core.internal.document.CharacterDataImpl;
 import org.eclipse.wst.xml.core.internal.document.CommentImpl;
 import org.eclipse.wst.xml.core.internal.parser.regions.TagNameRegion;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Node;
 
@@ -683,7 +683,7 @@ public class NodeFormatter implements IStructuredFormatter {
 	/**
 	 * Node changed. No format should be performed automatically.
 	 */
-	public void notifyChanged(org.eclipse.wst.sse.core.INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
+	public void notifyChanged(org.eclipse.wst.sse.core.internal.provisional.INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
 	}
 
 	protected void removeRegionSpaces(IDOMNode node, IStructuredDocumentRegion flatNode, ITextRegion region) {

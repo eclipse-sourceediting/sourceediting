@@ -16,7 +16,6 @@ package org.eclipse.wst.sse.core.internal.undo;
 
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.command.CompoundCommand;
-import org.eclipse.wst.sse.core.undo.CommandCursorPosition;
 
 
 

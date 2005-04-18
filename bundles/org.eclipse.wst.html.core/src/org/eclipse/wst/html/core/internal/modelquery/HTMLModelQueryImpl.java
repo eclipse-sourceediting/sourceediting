@@ -14,13 +14,13 @@ package org.eclipse.wst.html.core.internal.modelquery;
 import java.util.List;
 import java.util.Vector;
 
-import org.eclipse.wst.html.core.HTMLCMProperties;
-import org.eclipse.wst.xml.core.document.IDOMElement;
+import org.eclipse.wst.html.core.internal.provisional.HTMLCMProperties;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.ModelQueryImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.MovableModelQuery;
 import org.eclipse.wst.xml.uriresolver.util.IdResolver;
 import org.w3c.dom.Element;

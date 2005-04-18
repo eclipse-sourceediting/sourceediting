@@ -14,7 +14,7 @@ package org.eclipse.wst.xml.core.internal.commentelement;
 
 
 
-import org.eclipse.wst.xml.core.document.IDOMElement;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

@@ -12,7 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.model;
 
-import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 
 /**
  * This is an early version of a class that may change over the next few

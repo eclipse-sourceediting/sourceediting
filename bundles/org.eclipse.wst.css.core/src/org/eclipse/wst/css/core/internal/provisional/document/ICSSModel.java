@@ -13,7 +13,7 @@ package org.eclipse.wst.css.core.internal.provisional.document;
 
 
 import org.eclipse.wst.css.core.internal.event.ICSSStyleNotifier;
-import org.eclipse.wst.sse.core.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.w3c.dom.Node;
 
 

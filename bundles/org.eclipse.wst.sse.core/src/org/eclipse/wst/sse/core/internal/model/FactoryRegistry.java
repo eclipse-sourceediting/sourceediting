@@ -17,8 +17,8 @@ package org.eclipse.wst.sse.core.internal.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.wst.sse.core.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.Logger;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 
 
 /**

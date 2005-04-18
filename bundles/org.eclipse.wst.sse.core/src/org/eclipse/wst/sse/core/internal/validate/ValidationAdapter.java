@@ -14,8 +14,8 @@ package org.eclipse.wst.sse.core.internal.validate;
 
 
 
-import org.eclipse.wst.sse.core.INodeAdapter;
-import org.eclipse.wst.sse.core.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 
 /**
  */

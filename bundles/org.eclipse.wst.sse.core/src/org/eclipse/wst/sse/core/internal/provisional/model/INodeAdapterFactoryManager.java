@@ -13,7 +13,7 @@
 package org.eclipse.wst.sse.core.internal.provisional.model;
 
 import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.wst.sse.core.INodeAdapterFactory;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 /**
  * Provides a means for clients to register IAdapterFactories for use
  * by infrastructure when StructuredModels are created. 

@@ -16,8 +16,8 @@ import org.eclipse.wst.css.core.internal.event.ICSSStyleListener;
 import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSheetAdapter;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSSelector;
-import org.eclipse.wst.sse.core.INodeAdapter;
-import org.eclipse.wst.xml.core.document.IDOMNode;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 
 public class CSSEmbededStyleNotifyAdapter extends CSSStyleNotifyAdapter {

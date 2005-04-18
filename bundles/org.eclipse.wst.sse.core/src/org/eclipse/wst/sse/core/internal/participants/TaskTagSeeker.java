@@ -43,7 +43,6 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.wst.sse.core.document.IEncodedDocument;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.internal.document.DocumentReader;
@@ -54,11 +53,12 @@ import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHand
 import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionParser;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
 import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
+import org.eclipse.wst.sse.core.internal.provisional.document.IEncodedDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
-import org.eclipse.wst.sse.core.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.sse.core.text.ITextRegionList;
 
 
 /**
@@ -285,7 +285,7 @@ public abstract class TaskTagSeeker implements IBuilderDelegate {
 					documentParser.reset(new DocumentReader(textDocument));
 					documentParser.addStructuredDocumentRegionHandler(new StructuredDocumentRegionHandler() {
 						/**
-						 * @see org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandler#nodeParsed(org.eclipse.wst.sse.core.text.IStructuredDocumentRegion)
+						 * @see org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandler#nodeParsed(org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion)
 						 */
 						public void nodeParsed(IStructuredDocumentRegion documentRegion) {
 							ITextRegionList regions = documentRegion.getRegions();

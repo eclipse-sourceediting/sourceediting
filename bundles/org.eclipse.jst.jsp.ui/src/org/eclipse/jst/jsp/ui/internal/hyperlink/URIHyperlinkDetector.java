@@ -2,8 +2,8 @@ package org.eclipse.jst.jsp.ui.internal.hyperlink;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jst.jsp.ui.internal.Logger;
-import org.eclipse.wst.sse.core.IStructuredModel;
-import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceHelper;

@@ -29,10 +29,10 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.wst.common.ui.dnd.ObjectTransfer;
 import org.eclipse.wst.common.ui.dnd.ViewerDragAdapter;
 import org.eclipse.wst.common.ui.dnd.ViewerDropAdapter;
-import org.eclipse.wst.sse.core.INodeAdapterFactory;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
+import org.eclipse.wst.sse.ui.internal.provisional.views.contentoutline.StructuredContentOutlineConfiguration;
 import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
-import org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
@@ -90,7 +90,7 @@ public class XMLContentOutlineConfiguration extends StructuredContentOutlineConf
 	}
 
 	/**
-	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getLabelProvider(org.eclipse.jface.viewers.TreeViewer)
+	 * @see org.eclipse.wst.sse.ui.internal.provisional.views.contentoutline.ContentOutlineConfiguration#getLabelProvider(org.eclipse.jface.viewers.TreeViewer)
 	 */
 	public ILabelProvider getLabelProvider(TreeViewer viewer) {
 		if (fLabelProvider == null) {
@@ -104,7 +104,7 @@ public class XMLContentOutlineConfiguration extends StructuredContentOutlineConf
 	}
 
 	/**
-	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getMenuListener(org.eclipse.jface.viewers.TreeViewer)
+	 * @see org.eclipse.wst.sse.ui.internal.provisional.views.contentoutline.ContentOutlineConfiguration#getMenuListener(org.eclipse.jface.viewers.TreeViewer)
 	 */
 	public IMenuListener getMenuListener(TreeViewer viewer) {
 		if (fContextMenuFiller == null) {
@@ -145,7 +145,7 @@ public class XMLContentOutlineConfiguration extends StructuredContentOutlineConf
 	}
 
 	/**
-	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getTransferDragSourceListeners(org.eclipse.jface.viewers.TreeViewer)
+	 * @see org.eclipse.wst.sse.ui.internal.provisional.views.contentoutline.ContentOutlineConfiguration#getTransferDragSourceListeners(org.eclipse.jface.viewers.TreeViewer)
 	 */
 	public TransferDragSourceListener[] getTransferDragSourceListeners(TreeViewer treeViewer) {
 		if (fTransferDragSourceListeners == null) {

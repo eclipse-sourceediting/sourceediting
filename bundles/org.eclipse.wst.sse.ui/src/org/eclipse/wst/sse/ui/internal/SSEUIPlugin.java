@@ -15,10 +15,10 @@ package org.eclipse.wst.sse.ui.internal;
 
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryRegistry;
+import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryRegistryImpl;
+import org.eclipse.wst.sse.ui.internal.provisional.registry.embedded.EmbeddedAdapterFactoryRegistryImpl;
 import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
-import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistry;
-import org.eclipse.wst.sse.ui.registry.AdapterFactoryRegistryImpl;
-import org.eclipse.wst.sse.ui.registry.embedded.EmbeddedAdapterFactoryRegistryImpl;
 
 
 public class SSEUIPlugin extends AbstractUIPlugin {
