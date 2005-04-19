@@ -31,8 +31,11 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.INewWizard;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
@@ -43,7 +46,7 @@ import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 import org.eclipse.wst.common.ui.UIPlugin;
 
-public class ExampleProjectCreationWizard extends BasicNewResourceWizard implements INewWizard, IExecutableExtension {
+public class ExampleProjectCreationWizard extends Wizard implements INewWizard, IExecutableExtension {
 
 	private class ImportOverwriteQuery implements IOverwriteQuery {
 
@@ -105,6 +108,17 @@ public class ExampleProjectCreationWizard extends BasicNewResourceWizard impleme
 			addPage(pages[i]);
 		}
 	}
+	
+    public void init(IWorkbench workbench, IStructuredSelection currentSelection) {
+		if (exampleConfigElement != null) {
+			String banner = exampleConfigElement.getAttribute("banner"); //$NON-NLS-1$
+			if (banner != null) {
+				URL imageURL = Platform.find(Platform.getBundle(exampleConfigElement.getDeclaringExtension().getNamespace()), new Path(banner));
+				ImageDescriptor desc = ImageDescriptor.createFromURL(imageURL);
+				setDefaultPageImageDescriptor(desc);
+			}
+		}
+    }
 
 	protected IConfigurationElement[] getExtendedConfigurationElements() {
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
@@ -137,18 +151,7 @@ public class ExampleProjectCreationWizard extends BasicNewResourceWizard impleme
 			UIPlugin.log(target);
 		}
 	}
-
-	public void initializeDefaultPageImageDescriptor() {
-		if (exampleConfigElement != null) {
-			String banner = exampleConfigElement.getAttribute("banner"); //$NON-NLS-1$
-			if (banner != null) {
-				URL imageURL = Platform.find(Platform.getBundle(exampleConfigElement.getDeclaringExtension().getNamespace()), new Path(banner));
-				ImageDescriptor desc = ImageDescriptor.createFromURL(imageURL);
-				setDefaultPageImageDescriptor(desc);
-			}
-		}
-	}
-
+	
 	private void openResource(final IResource resource) {
 		if (resource.getType() != IResource.FILE) {
 			return;
