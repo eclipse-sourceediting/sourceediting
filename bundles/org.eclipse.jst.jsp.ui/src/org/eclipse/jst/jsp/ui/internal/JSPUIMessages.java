@@ -70,6 +70,9 @@ public class JSPUIMessages extends NLS {
 	public static String Creating_files_encoding;
 	public static String Content_Assist_not_availab_UI_;
 	public static String Java_Content_Assist_is_not_UI_;
+	public static String JSPSourcePreferencePage_0;
+	public static String JSPSourcePreferencePage_1;
+	public static String JSPSourcePreferencePage_2;
 	
 	static {
 		// load message values from bundle file
