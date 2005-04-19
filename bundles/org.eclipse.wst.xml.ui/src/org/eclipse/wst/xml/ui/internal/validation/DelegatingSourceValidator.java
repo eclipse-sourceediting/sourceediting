@@ -387,13 +387,17 @@ public class DelegatingSourceValidator implements IValidator {
 						char curChar = value.charAt(index);
 						// here we are finding start offset by skipping over
 						// whitespace:
-						while (curChar == '\n' || curChar == '\t' || curChar == '\r' || curChar == ' ') {
-							curChar = value.charAt(index);
-							index++;
-							start++;
-						}
-						startEndPositions[0] = start - 1;
-						startEndPositions[1] = start + value.trim().length() - 1;
+            while (curChar == '\n' || curChar == '\t' || curChar == '\r' || curChar == ' ') {
+              curChar = value.charAt(index);
+              index++;
+            }
+            if (index > 0) {
+              index--;
+
+            }
+            start = start + index;
+            startEndPositions[0] = start + index;
+            startEndPositions[1] = start + value.trim().length();
 					}
 					else if (node.getNodeType() == Node.ELEMENT_NODE) {
 						IDOMElement element = (IDOMElement) node;
