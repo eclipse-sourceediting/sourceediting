@@ -14,6 +14,8 @@ package org.eclipse.wst.sse.ui.internal;
 
 
 
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.swt.custom.ST;
 import org.eclipse.swt.custom.StyledText;
@@ -208,9 +210,9 @@ public class ExtendedEditorDropTargetAdapter extends DropTargetAdapter {
 				st.setCaretOffset(offset);
 			}
 
-			//			ISelectionProvider sp = textViewer.getSelectionProvider();
-			//			ISelection sel = new TextSelection(offset, 0);
-			//			sp.setSelection(sel);
+			// ISelectionProvider sp = textViewer.getSelectionProvider();
+			// ISelection sel = new TextSelection(offset, 0);
+			// sp.setSelection(sel);
 			textViewer.setSelectedRange(offset, 0);
 		}
 
@@ -242,9 +244,22 @@ public class ExtendedEditorDropTargetAdapter extends DropTargetAdapter {
 			// search nearest character
 			for (; p.x > -1; p.x--) {
 				try {
-					offset = st.getOffsetAtLocation(p) + 1; // + 1 to place
-					// cursor at an
-					// end of line
+					offset = st.getOffsetAtLocation(p);
+
+					/*
+					 * Now that a valid offset has been found, try to place at
+					 * the end of the line
+					 */
+					if (textViewer != null && textViewer.getDocument() != null) {
+						IRegion lineInfo = null;
+						try {
+							lineInfo = textViewer.getDocument().getLineInformationOfOffset(offset);
+						} catch (BadLocationException e1) {
+						}
+						if (lineInfo != null)
+							offset = lineInfo.getOffset() + lineInfo.getLength();
+					}
+
 					found = true;
 					break;
 				} catch (IllegalArgumentException ex) {
