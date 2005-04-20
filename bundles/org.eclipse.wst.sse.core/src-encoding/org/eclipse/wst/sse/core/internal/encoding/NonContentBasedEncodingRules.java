@@ -18,27 +18,10 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentType;
 
-import sun.io.ByteToCharConverter;
-
 public class NonContentBasedEncodingRules {
 
 	private static final String getJavaPlatformDefaultEncoding() {
-		// note: its important to use this system property,
-		// instead
-		// of
-		// ByteToCharConverter.getDefault().getCharacterEncoding()
-		// inorder to handle changes "on the fly". the
-		// ByteToCharConverter
-		// default is apparently set only when VM starts.
-		// There's not really any "cusomter scnererios"
-		// that change the
-		// default encoding "on the fly", but it is used
-		// during
-		// some automated tests.
 		String enc = System.getProperty("file.encoding"); //$NON-NLS-1$
-		if (enc == null || enc.trim().length() == 0) {
-			enc = ByteToCharConverter.getDefault().getCharacterEncoding();
-		}
 		// return blank as null
 		if (enc != null && enc.trim().length() == 0) {
 			enc = null;
