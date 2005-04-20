@@ -50,7 +50,7 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 		List beingRefreshed = Collections.synchronizedList(new ArrayList());
 
 		public void cacheCleared(org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache cache) {
-
+			// nothing to do
 		}
 
 		public void cacheUpdated(CMDocumentCache cache, final String uri, int oldStatus, int newStatus, CMDocument cmDocument) {
@@ -60,9 +60,16 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 			}
 		}
 
-		private Display getDisplay() {
-
-			return PlatformUI.getWorkbench().getDisplay();
+		Display getDisplay() {
+			Display display = null;
+			// Note: the workbench should always have a display
+			// (unless running headless), whereas Display.getCurrent()
+			// only returns the display if the currently executing thread
+			// has one.
+			if (PlatformUI.isWorkbenchRunning()) {
+				display = PlatformUI.getWorkbench().getDisplay();
+			}
+			return display;
 		}
 
 		public void propertyChanged(CMDocumentManager cmDocumentManager, String propertyName) {
@@ -72,11 +79,11 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 			}
 		}
 
-		protected void refreshViewers() {
+		private void refreshViewers() {
 
 			// we're counting on getListers returning a "copy" of the
 			// listeners, so we'll be thread safe.
-			Collection listeners = ((IJFaceNodeAdapterFactory) adapterFactory).getListeners();
+			Collection listeners = ((IJFaceNodeAdapterFactory) fAdapterFactory).getListeners();
 			Iterator iterator = listeners.iterator();
 			while (iterator.hasNext()) {
 				Object listener = iterator.next();
@@ -107,21 +114,24 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 
 	final static Class ADAPTER_KEY = IJFaceNodeAdapter.class;
 
-	// for debugging
-	private static final boolean DEBUG;
-	static {
+	/**
+	 * debug .option
+	 */
+	private static final boolean DEBUG = getDebugValue();
+	private static boolean getDebugValue() {
 		String value = Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/outline"); //$NON-NLS-1$
-		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+		boolean result = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+		return result;
 	}
 
-	protected INodeAdapterFactory adapterFactory;
-	protected CMDocumentManagerListener cmDocumentManagerListener;
+	INodeAdapterFactory fAdapterFactory;
+	private CMDocumentManagerListener cmDocumentManagerListener;
 	private BufferedOutlineUpdater fUpdater = null;
 
-	public JFaceNodeAdapter(INodeAdapterFactory adapterFactory) {
+	public JFaceNodeAdapter(INodeAdapterFactory adapterFactory1) {
 
 		super();
-		this.adapterFactory = adapterFactory;
+		this.fAdapterFactory = adapterFactory1;
 	}
 
 	protected Image createImage(Object object) {
@@ -208,15 +218,15 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 	}
 
 	Display getDisplay() {
-
+		Display display = null;
 		// Note: the workbench should always have a display
 		// (unless running headless), whereas Display.getCurrent()
 		// only returns the display if the currently executing thread
 		// has one.
-		if (PlatformUI.isWorkbenchRunning())
-			return PlatformUI.getWorkbench().getDisplay();
-		else
-			return null;
+		if (PlatformUI.isWorkbenchRunning()) {
+			display = PlatformUI.getWorkbench().getDisplay();
+		}
+		return display;
 	}
 
 	/**
@@ -280,7 +290,7 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 
 		// (pa) 20021217
 		// cmvc defect 235554 > use child.getNextSibling() instead of
-		//                          nodeList(item) for O(n) vs. O(n*n)
+		// nodeList(item) for O(n) vs. O(n*n)
 		Node node = (Node) object;
 		for (Node child = node.getFirstChild(); child != null; child = child.getNextSibling()) {
 			if (child.getNodeType() != Node.TEXT_NODE)
@@ -294,7 +304,9 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 	 * to return true in more than one case.
 	 */
 	public boolean isAdapterForType(Object type) {
-
+		if (type == null) {
+			return false;
+		}
 		return type.equals(ADAPTER_KEY);
 	}
 
@@ -311,30 +323,26 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 		// (That is, may be be worthy of job manager management). If they are
 		// found to be important enough to leave in,
 		// there's probably some optimization that can be done.
-		Collection listeners = ((JFaceNodeAdapterFactory) adapterFactory).getListeners();
+		Collection listeners = ((JFaceNodeAdapterFactory) fAdapterFactory).getListeners();
 		Iterator iterator = listeners.iterator();
 
 		while (iterator.hasNext()) {
 			Object listener = iterator.next();
 			if (notifier instanceof Node && (listener instanceof StructuredViewer) && (eventType == INodeNotifier.STRUCTURE_CHANGED || (eventType == INodeNotifier.CHANGE && changedFeature == null))) {
 
-				if (DEBUG)
+				if (DEBUG) {
 					System.out.println("JFaceNodeAdapter notified on event type > " + eventType); //$NON-NLS-1$
+				}
 
 				// refresh on structural and "unknown" changes
 				StructuredViewer structuredViewer = (StructuredViewer) listener;
 				// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=5230
-				if (structuredViewer.getControl() != null /*
-														   * &&
-														   * structuredViewer.getControl().isVisible()
-														   */)
+				if (structuredViewer.getControl() != null)
 					getOutlineUpdater().processNode(structuredViewer, (Node) notifier);
-			} else if ((listener instanceof PropertySheetPage) && ((eventType == INodeNotifier.CHANGE) || (eventType == INodeNotifier.STRUCTURE_CHANGED))) {
+			}
+			else if ((listener instanceof PropertySheetPage) && ((eventType == INodeNotifier.CHANGE) || (eventType == INodeNotifier.STRUCTURE_CHANGED))) {
 				PropertySheetPage propertySheetPage = (PropertySheetPage) listener;
-				if (propertySheetPage.getControl() != null /*
-														    * &&
-														    * !propertySheetPage.getControl().isDisposed()
-														    */) {
+				if (propertySheetPage.getControl() != null) {
 					RefreshPropertySheetJob refreshPropertySheetJob = new RefreshPropertySheetJob(getDisplay(), XMLUIMessages.JFaceNodeAdapter_1, propertySheetPage); //$NON-NLS-1$
 					refreshPropertySheetJob.schedule();
 				}

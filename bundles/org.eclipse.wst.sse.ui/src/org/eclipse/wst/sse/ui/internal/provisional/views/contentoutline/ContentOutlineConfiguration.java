@@ -43,7 +43,6 @@ public class ContentOutlineConfiguration implements IExtendedConfiguration, IAda
 
 	private IContentProvider fContentProvider;
 	private String fDeclaringID = null;
-	protected IDoubleClickListener fDoubleClickListener;
 	private KeyListener[] fKeyListeners;
 	private ILabelProvider fLabelProvider;
 

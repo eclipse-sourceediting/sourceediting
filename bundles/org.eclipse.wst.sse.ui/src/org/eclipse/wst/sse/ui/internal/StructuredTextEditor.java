@@ -32,7 +32,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.ui.actions.IToggleBreakpointsTarget;
 import org.eclipse.emf.common.command.Command;
@@ -57,8 +56,6 @@ import org.eclipse.jface.text.ITextOperationTarget;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.ITextViewerExtension;
 import org.eclipse.jface.text.ITextViewerExtension2;
-import org.eclipse.jface.text.ITextViewerExtension5;
-import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.ICharacterPairMatcher;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
@@ -68,7 +65,6 @@ import org.eclipse.jface.text.source.projection.ProjectionSupport;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.events.DisposeEvent;
@@ -100,7 +96,6 @@ import org.eclipse.ui.help.IWorkbenchHelpSystem;
 import org.eclipse.ui.part.EditorActionBarContributor;
 import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
-import org.eclipse.ui.texteditor.AnnotationPreference;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.DefaultRangeIndicator;
 import org.eclipse.ui.texteditor.IAbstractTextEditorHelpContextIds;
@@ -172,28 +167,23 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	class InternalElementStateListener implements IElementStateListener {
 
 		public void elementContentAboutToBeReplaced(Object element) {
-			// we just forward the event
-			handleElementContentAboutToBeReplaced(element);
+			// nothing to do
 		}
 
 		public void elementContentReplaced(Object element) {
-			// we just forward the event
-			handleElementContentReplaced(element);
+			// nothing to do
 		}
 
 		public void elementDeleted(Object element) {
-			// we just forward the event
-			handleElementDeleted(element);
+			// nothing to do
 		}
 
 		public void elementDirtyStateChanged(Object element, boolean isDirty) {
-			// we just forward the event
-			handleElementDirtyStateChanged(element, isDirty);
+			// nothing to do
 		}
 
 		public void elementMoved(Object originalElement, Object movedElement) {
-			// we just forward the event
-			handleElementMoved(originalElement, movedElement);
+			// nothing to do
 		}
 	}
 
@@ -249,11 +239,13 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 					}
 					getSourceViewer().configure(cfg);
 				}
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=1166
 				// investigate each error case post beta
 				Logger.logException("problem trying to configure after model change", e); //$NON-NLS-1$
-			} finally {
+			}
+			finally {
 				// so we don't freeze workbench (eg. during page language or
 				// content type change)
 				((ITextViewerExtension) getSourceViewer()).setRedraw(true);
@@ -283,7 +275,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			// simply execute the runnable.
 			if (getDisplay() == null || (Thread.currentThread() == getDisplay().getThread())) {
 				r.run();
-			} else {
+			}
+			else {
 				// otherwise force the runnable to run on the display thread.
 				getDisplay().asyncExec(r);
 			}
@@ -412,20 +405,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	private static final String UNDO_ACTION_TEXT = SSEUIMessages._Undo__0___Ctrl_Z_UI_; //$NON-NLS-1$ = "&Undo {0} @Ctrl+Z"
 	private static final String UNDO_ACTION_TEXT_DEFAULT = SSEUIMessages._Undo_Text_Change__Ctrl_Z_UI_; //$NON-NLS-1$ = "&Undo Text Change @Ctrl+Z"
 
-	/**
-	 * @param args
-	 *            java.lang.String[]
-	 */
-	public static void main(String[] args) {
-		StructuredTextEditor editor = null;
-		try {
-			editor = new StructuredTextEditor();
-			System.out.println("Created: " + editor); //$NON-NLS-1$
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	// development time/debug variables only
 	private int adapterRequests;
 	private long adapterTime;
@@ -434,13 +413,13 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	private Timer fBusyTimer;
 	Runnable fCurrentRunnable = null;
 	boolean fDirtyBeforeDocumentEvent = false;
-	protected ExtendedEditorDropTargetAdapter fDropAdapter;
-	protected DropTarget fDropTarget;
-	protected boolean fEditorDisposed = false;
+	private ExtendedEditorDropTargetAdapter fDropAdapter;
+	private DropTarget fDropTarget;
+	private boolean fEditorDisposed = false;
 	private IEditorPart fEditorPart;
 	private InternalModelStateListener fInternalModelStateListener;
 
-	protected MouseTracker fMouseTracker;
+	private MouseTracker fMouseTracker;
 	protected IContentOutlinePage fOutlinePage;
 	/** This editor's projection model updater */
 	private IStructuredTextFoldingProvider fProjectionModelUpdater;
@@ -453,8 +432,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	private IStructuredModel fStructuredModel;
 
 	private boolean fUpdateMenuTextPending;
-	protected int hoverX = -1;
-	protected int hoverY = -1;
+	int hoverX = -1;
+	int hoverY = -1;
 	private InternalElementStateListener internalElementStateListener = new InternalElementStateListener();
 	private boolean shouldClose = false;
 	private long startPerfTime;
@@ -465,15 +444,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		initializeDocumentProvider(null);
 	}
 
-	/*
-	 * This method is just to make firePropertyChanged accessbible from some
-	 * (anonomous) inner classes.
-	 */
-	protected void _firePropertyChange(int property) {
-		super.firePropertyChange(property);
-	}
-
-	protected void abstractTextEditorContextMenuAboutToShow(IMenuManager menu) {
+	private void abstractTextEditorContextMenuAboutToShow(IMenuManager menu) {
 		menu.add(new Separator(ITextEditorActionConstants.GROUP_UNDO));
 		menu.add(new Separator(ITextEditorActionConstants.GROUP_COPY));
 		menu.add(new Separator(ITextEditorActionConstants.GROUP_PRINT));
@@ -491,7 +462,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			addAction(menu, ITextEditorActionConstants.GROUP_COPY, ITextEditorActionConstants.COPY);
 			addAction(menu, ITextEditorActionConstants.GROUP_COPY, ITextEditorActionConstants.PASTE);
 			addAction(menu, ITextEditorActionConstants.GROUP_SAVE, ITextEditorActionConstants.SAVE);
-		} else {
+		}
+		else {
 			addAction(menu, ITextEditorActionConstants.GROUP_COPY, ITextEditorActionConstants.COPY);
 		}
 
@@ -524,11 +496,12 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		menu.appendToGroup(IWorkbenchActionConstants.GROUP_ADD, fShowPropertiesAction);
 	}
 
-	protected void addExtendedContextMenuActions(IMenuManager menu) {
+	private void addExtendedContextMenuActions(IMenuManager menu) {
 		IEditorActionBarContributor c = getEditorSite().getActionBarContributor();
 		if (c instanceof IPopupMenuContributor) {
 			((IPopupMenuContributor) c).contributeToPopupMenu(menu);
-		} else {
+		}
+		else {
 			ExtendedEditorActionBuilder builder = new ExtendedEditorActionBuilder();
 			IExtendedContributor pmc = builder.readActionExtensions(getConfigurationPoints());
 			if (pmc != null) {
@@ -594,7 +567,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			// completely open
 			// so set a flag not to open
 			shouldClose = true;
-		} else {
+		}
+		else {
 			if (getEditorPart() != null) {
 				Display display = getSite().getShell().getDisplay();
 				display.asyncExec(new Runnable() {
@@ -603,7 +577,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 						getSite().getPage().closeEditor(getEditorPart(), save);
 					}
 				});
-			} else {
+			}
+			else {
 				super.close(save);
 			}
 		}
@@ -656,7 +631,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 * Compute and set double-click action for the source editor, depending on
 	 * the input.
 	 */
-	protected void computeAndSetDoubleClickAction(IStructuredModel model) {
+	private void computeAndSetDoubleClickAction(IStructuredModel model) {
 		if (model == null)
 			return;
 		// If we're editing a breakpoint-supported input, make double-clicking
@@ -664,7 +639,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		String ext = BreakpointRulerAction.getFileExtension(getEditorInput());
 		if (BreakpointProviderBuilder.getInstance().isAvailable(model.getContentTypeIdentifier(), ext)) {
 			setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, getAction(ActionDefinitionIds.TOGGLE_BREAKPOINTS));
-		} else {
+		}
+		else {
 			// The Default Text Editor uses editorContribution to perform this
 			// mapping, but since it relies on the IEditorSite ID, it can't be
 			// relied on for MultiPageEditorParts. Instead, force the action
@@ -845,7 +821,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		return new ChainedPreferenceStore(new IPreferenceStore[]{sseEditorPrefs, baseEditorPrefs});
 	}
 
-	protected ContentOutlineConfiguration createContentOutlineConfiguration() {
+	private ContentOutlineConfiguration createContentOutlineConfiguration() {
 		ContentOutlineConfiguration cfg = null;
 		ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
 		String[] ids = getConfigurationPoints();
@@ -927,7 +903,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	/**
 	 * @return
 	 */
-	protected SourceEditingTextTools createSourceEditingTextTools() {
+	private SourceEditingTextTools createSourceEditingTextTools() {
 		SourceEditingTextTools tools = null;
 		ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
 		String[] ids = getConfigurationPoints();
@@ -951,7 +927,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		return sourceViewer;
 	}
 
-	protected StructuredTextViewerConfiguration createSourceViewerConfiguration() {
+	private StructuredTextViewerConfiguration createSourceViewerConfiguration() {
 		StructuredTextViewerConfiguration cfg = null;
 		ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
 		String[] ids = getConfigurationPoints();
@@ -1075,7 +1051,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 * Basically any code repeated in update() & dispose() should be placed
 	 * here.
 	 */
-	protected void disposeModelDependentFields() {
+	private void disposeModelDependentFields() {
 		// none at this level
 	}
 
@@ -1090,20 +1066,24 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			// stop listening to document event
 			// caused by the undo after validateEdit
 			final int offset = event.getOffset() + event.getLength();
+			final IStructuredModel internalModel = getInternalModel();
 			fCurrentRunnable = new Runnable() {
 				public void run() {
 					if (!fEditorDisposed) {
 						IStatus status = validateEdit(getSite().getShell());
 						if (status != null && status.isOK()) {
 							// nothing to do if 'ok'
-						} else {
-							getModel().getUndoManager().undo();
-							getSourceViewer().setSelectedRange(offset, 0);
-							if (!fDirtyBeforeDocumentEvent) {
-								// reset dirty state if
-								// model not dirty before
-								// document event
-								getModel().setDirtyState(false);
+						}
+						else {
+							if (internalModel != null) {
+								internalModel.getUndoManager().undo();
+								getSourceViewer().setSelectedRange(offset, 0);
+								if (!fDirtyBeforeDocumentEvent) {
+									// reset dirty state if
+									// model not dirty before
+									// document event
+									internalModel.setDirtyState(false);
+								}
 							}
 						}
 					}
@@ -1148,20 +1128,21 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			aboutToSaveModel();
 			updateEncodingMemento();
 			super.doSave(progressMonitor);
-		} finally {
+		}
+		finally {
 			savedModel();
 		}
 	}
 
 	private void savedModel() {
-		if (getModel() != null) {
-			getModel().changedModel();
+		if (getInternalModel() != null) {
+			getInternalModel().changedModel();
 		}
 	}
 
 	private void aboutToSaveModel() {
-		if (getModel() != null) {
-			getModel().aboutToChangeModel();
+		if (getInternalModel() != null) {
+			getInternalModel().aboutToChangeModel();
 		}
 	}
 
@@ -1199,19 +1180,17 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 				if (!model.isShared()) {
 					EditorModelUtil.addFactoriesTo(model);
 				}
-			} else {
+			}
+			else {
 				IDocument doc = getDocument();
-				// IMPL: need to cleanup throughout to avoid any instanceof
-				// checks
 				if (doc instanceof IStructuredDocument) {
 					// corresponding releaseFromEdit occurs in
-					// disposeDocumentProvider
-					model = StructuredModelManager.getModelManager().getExistingModelForEdit(doc);
-					if (model == null) {
-						model = StructuredModelManager.getModelManager().getModelForEdit((IStructuredDocument) doc);
-						EditorModelUtil.addFactoriesTo(model);
-					}
-				} else {
+					// dispose
+					model = StructuredModelManager.getModelManager().getModelForEdit((IStructuredDocument) doc);
+					EditorModelUtil.addFactoriesTo(model);
+				}
+
+				else {
 					logUnexpectedDocumentKind(input);
 				}
 			}
@@ -1220,26 +1199,29 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 				setModel(model);
 			}
 
-			// currently this only works if createpartcontrol has not been called yet
-			if (getModel() != null) {
-				String contentType = getModel().getContentTypeIdentifier();
-				setEditorContextMenuId(contentType+".source.EditorContext"); //$NON-NLS-1$
-				setRulerContextMenuId(contentType+".source.RulerContext");	//$NON-NLS-1$
-				setHelpContextId(contentType+".source.HelpId");				//$NON-NLS-1$
-				// allows help to be set at any time (not just on AbstractTextEditor's
+			// currently this only works if createpartcontrol has not been
+			// called yet
+			if (getInternalModel() != null) {
+				String contentType = getInternalModel().getContentTypeIdentifier();
+				setEditorContextMenuId(contentType + ".source.EditorContext"); //$NON-NLS-1$
+				setRulerContextMenuId(contentType + ".source.RulerContext"); //$NON-NLS-1$
+				setHelpContextId(contentType + ".source.HelpId"); //$NON-NLS-1$
+				// allows help to be set at any time (not just on
+				// AbstractTextEditor's
 				// creation)
 				if ((getHelpContextId() != null) && (getSourceViewer() != null) && (getSourceViewer().getTextWidget() != null)) {
 					IWorkbenchHelpSystem helpSystem = SSEUIPlugin.getDefault().getWorkbench().getHelpSystem();
 					helpSystem.setHelp(getSourceViewer().getTextWidget(), getHelpContextId());
 				}
 			}
-			
+
 			if (fProjectionModelUpdater != null)
 				fProjectionModelUpdater.initialize();
 
 			// start editor with smart insert mode
 			setInsertMode(SMART_INSERT);
-		} catch (CoreException exception) {
+		}
+		catch (CoreException exception) {
 			// dispose editor
 			dispose();
 
@@ -1252,14 +1234,16 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		String name = null;
 		if (input != null) {
 			name = input.getName();
-		} else {
+		}
+		else {
 			name = "input was null"; //$NON-NLS-1$
 		}
 		Logger.log(Logger.WARNING, "         Input Name: " + name); //$NON-NLS-1$
 		String implClass = null;
 		if (getDocument() != null) {
 			implClass = getDocument().getClass().toString();
-		} else {
+		}
+		else {
 			implClass = "document was null"; //$NON-NLS-1$
 		}
 		Logger.log(Logger.WARNING, "         Document implementation: " + implClass); //$NON-NLS-1$
@@ -1319,7 +1303,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 				((StructuredTextViewer) viewer).endBackgroundUpdate();
 			}
 			fBusyState = false;
-		} else {
+		}
+		else {
 			// we will only be in this branch for a back ground job that is
 			// taking
 			// longer than our normal time-out period (meaning we got notified
@@ -1344,7 +1329,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		// text editor
 		if (ITextEditor.class.equals(required)) {
 			result = this;
-		} else if (IWorkbenchSiteProgressService.class.equals(required)) {
+		}
+		else if (IWorkbenchSiteProgressService.class.equals(required)) {
 			return getEditorPart().getSite().getAdapter(IWorkbenchSiteProgressService.class);
 		}
 		// content outline page
@@ -1358,7 +1344,10 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 					StructuredTextEditorContentOutlinePage outlinePage = new StructuredTextEditorContentOutlinePage();
 					outlinePage.setConfiguration(cfg);
 					outlinePage.setViewerSelectionManager(getViewerSelectionManager());
-					outlinePage.setModel(getModel());
+					// note: model might be null at this point, but
+					// if so, once model is set in editor,
+					// update will be called and set it
+					outlinePage.setModel(getInternalModel());
 					fOutlinePage = outlinePage;
 				}
 			}
@@ -1375,28 +1364,37 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 					ConfigurablePropertySheetPage propertySheetPage = new ConfigurablePropertySheetPage();
 					propertySheetPage.setConfiguration(cfg);
 					propertySheetPage.setViewerSelectionManager(getViewerSelectionManager());
-					propertySheetPage.setModel(getModel());
+					// note: model might be null at this point, but
+					// if so, once model is set in editor,
+					// update will be called and set it
+					propertySheetPage.setModel(getInternalModel());
 					fPropertySheetPage = propertySheetPage;
 				}
 			}
 			result = fPropertySheetPage;
-		} else if (ViewerSelectionManager.class.equals(required)) {
+		}
+		else if (ViewerSelectionManager.class.equals(required)) {
 			result = getViewerSelectionManager();
-		} else if (SourceEditingTextTools.class.equals(required)) {
+		}
+		else if (SourceEditingTextTools.class.equals(required)) {
 			result = createSourceEditingTextTools();
-		} else if (IToggleBreakpointsTarget.class.equals(required)) {
+		}
+		else if (IToggleBreakpointsTarget.class.equals(required)) {
 			result = ToggleBreakpointsTarget.getInstance();
-		} else if (IShowInTargetList.class.equals(required)) {
+		}
+		else if (IShowInTargetList.class.equals(required)) {
 			return new ShowInTargetListAdapter();
-		} else {
+		}
+		else {
 			Document document = getDOMDocument();
 			if (document != null && document instanceof INodeNotifier) {
 				result = ((INodeNotifier) document).getAdapterFor(required);
 			}
 			if (result == null) {
-				if (getModel() != null) {
-					result = getModel().getAdapter(required);
-				} else {
+				if (getInternalModel() != null) {
+					result = getInternalModel().getAdapter(required);
+				}
+				else {
 					result = super.getAdapter(required);
 				}
 			}
@@ -1421,7 +1419,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 * IExtendedMarkupEditor method
 	 */
 	public Node getCaretNode() {
-		IStructuredModel model = getModel();
+		IStructuredModel model = getInternalModel();
 		if (model == null)
 			return null;
 		int pos = getCaretPosition();
@@ -1446,30 +1444,11 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		return vsm.getCaretPosition();
 	}
 
-	protected String[] getConfigurationPoints() {
+	private String[] getConfigurationPoints() {
 		String contentTypeIdentifierID = null;
-		if (getModel() != null)
-			contentTypeIdentifierID = getModel().getContentTypeIdentifier();
+		if (getInternalModel() != null)
+			contentTypeIdentifierID = getInternalModel().getContentTypeIdentifier();
 		return ConfigurationPointCalculator.getConfigurationPoints(this, contentTypeIdentifierID, ConfigurationPointCalculator.SOURCE, StructuredTextEditor.class);
-	}
-
-	/**
-	 * @deprecated - will be removed in M4
-	 */
-	public Node getCursorNode() {
-		if (getModel() != null)
-			return (Node) getModel().getIndexedRegion(getCursorOffset());
-		else
-			return null;
-	}
-
-	/**
-	 * @deprecated - will be removed in M4
-	 */
-	public int getCursorOffset() {
-		if (hoverX >= 0 && hoverY >= 0)
-			return getOffsetAtLocation(hoverX, hoverY);
-		return getCaretPosition();
 	}
 
 	/**
@@ -1485,7 +1464,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		// perhaps there's a better way?
 		if (getSourceViewer() != null && getSourceViewer().getTextWidget() != null && !getSourceViewer().getTextWidget().isDisposed()) {
 			result = super.getCursorPosition();
-		} else {
+		}
+		else {
 			result = "0:0"; //$NON-NLS-1$
 		}
 		return result;
@@ -1499,10 +1479,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 * IExtendedSimpleEditor method
 	 */
 	public IDocument getDocument() {
-		// ITextViewer tv = getTextViewer();
-		// return (tv != null) ? tv.getDocument() : null;
-		// The TextViewer may not be available at init
-		// time.
 		// The right way to get the document is thru
 		// DocumentProvider.
 		IDocumentProvider dp = getDocumentProvider();
@@ -1513,7 +1489,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 * IExtendedMarkupEditor method
 	 */
 	public Document getDOMDocument() {
-		IStructuredModel model = getModel();
+		IStructuredModel model = getInternalModel();
 		if (model != null) {
 			return (Document) model.getAdapter(Document.class);
 		}
@@ -1537,21 +1513,12 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 * @return the IFile from the currently active editor
 	 */
 	public IFile getFileInEditor() {
-		IStructuredModel model = getModel();
-		return ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(model.getBaseLocation()));
-		// (pa) this changed because FileBuffers don't use absolute location
-		// plain old getFile(...) should work now (for the relative URL)
-		// return
-		// ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(new
-		// Path(model.getBaseLocation()));
-	}
-
-	/**
-	 * @deprecated - will be removed in M4
-	 * @return
-	 */
-	protected String[] getFindOccurrencesRegionTypes() {
-		return new String[0];
+		IFile result = null;
+		IStructuredModel model = getInternalModel();
+		if (model != null) {
+			result = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(model.getBaseLocation()));
+		}
+		return result;
 	}
 
 	private InternalModelStateListener getInternalModelStateListener() {
@@ -1559,6 +1526,10 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			fInternalModelStateListener = new InternalModelStateListener();
 		}
 		return fInternalModelStateListener;
+	}
+
+	private IStructuredModel getInternalModel() {
+		return fStructuredModel;
 	}
 
 	/**
@@ -1584,10 +1555,12 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 					if (model == null) {
 						model = StructuredModelManager.getModelManager().getModelForEdit((IStructuredDocument) doc);
 					}
-					EditorModelUtil.addFactoriesTo(model);
 					fStructuredModel = model;
 				}
 			}
+			// factories will not be re-added if already exists
+			EditorModelUtil.addFactoriesTo(fStructuredModel);
+
 			if (initialModelNull && fStructuredModel != null) {
 				/*
 				 * DMW: 9/1/2002 -- why is update called here? No change has
@@ -1607,37 +1580,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			}
 		}
 		return fStructuredModel;
-	}
-
-	/**
-	 * Computes the document offset underlying the given text widget graphics
-	 * coordinates.
-	 * 
-	 * @deprecated - only used by methods meant to be removed in M4
-	 * 
-	 * this method will be removed in M4
-	 * 
-	 * @param x
-	 *            the x coordinate inside the text widget
-	 * @param y
-	 *            the y coordinate inside the text widget
-	 * @return the document offset corresponding to the given point
-	 */
-	protected int getOffsetAtLocation(int x, int y) {
-		StyledText styledText = getSourceViewer().getTextWidget();
-		if (styledText != null && !styledText.isDisposed()) {
-			try {
-				int widgetOffset = styledText.getOffsetAtLocation(new Point(x, y));
-				if (getSourceViewer() instanceof ITextViewerExtension5) {
-					ITextViewerExtension5 extension = (ITextViewerExtension5) getSourceViewer();
-					return extension.widgetOffset2ModelOffset(widgetOffset);
-				}
-				return widgetOffset + getSourceViewer().getVisibleRegion().getOffset();
-			} catch (IllegalArgumentException e) {
-				return getSourceViewer().getVisibleRegion().getLength();
-			}
-		}
-		return getCaretPosition();
 	}
 
 	/**
@@ -1769,28 +1711,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		updateStatusField(StructuredTextEditorActionConstants.STATUS_CATEGORY_OFFSET);
 	}
 
-	protected void handleElementContentAboutToBeReplaced(Object element) {
-		// do nothing
-	}
-
-	protected void handleElementContentReplaced(Object element) {
-		// do nothing, the model provider should reload the
-		// model
-	}
-
-	protected void handleElementDeleted(Object element) {
-		// do nothing, the superclass will close() us
-	}
-
-	protected void handleElementDirtyStateChanged(Object element, boolean isDirty) {
-		// do nothing, the superclass will fire a proeprty
-		// change
-	}
-
-	protected void handleElementMoved(Object oldElement, Object newElement) {
-		// do nothing, the editor input will be changed
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -1834,7 +1754,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		if (shouldClose) {
 			setSite(site);
 			close(false);
-		} else {
+		}
+		else {
 			super.init(site, input);
 		}
 	}
@@ -1886,7 +1807,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			// transition to org.eclipse
 			// WTPActivityBridge.getInstance().enableActivity(CORE_SSE_ACTIVITY_ID,
 			// true);
-		} catch (Exception t) {
+		}
+		catch (Exception t) {
 			// if something goes wrong with enabling activity, just log the
 			// error but dont
 			// have it break the editor
@@ -1909,9 +1831,9 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 */
 	private void initializeSourceViewer() {
 		if (getViewerSelectionManager() != null)
-			getViewerSelectionManager().setModel(getModel());
+			getViewerSelectionManager().setModel(getInternalModel());
 
-		computeAndSetDoubleClickAction(getModel());
+		computeAndSetDoubleClickAction(getInternalModel());
 
 		IAction contentAssistAction = getAction(StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_PROPOSALS);
 		if (contentAssistAction instanceof IUpdate) {
@@ -1995,21 +1917,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	}
 
 	/**
-	 * @deprecated - will be removed in M4
-	 * @param type
-	 * @return
-	 */
-	public boolean isFindOccurrencesRegionType(String type) {
-		String[] accept = getFindOccurrencesRegionTypes();
-		for (int i = 0; i < accept.length; i++) {
-			if (accept[i].equals(type))
-				return true;
-		}
-		return false;
-	}
-
-
-	/**
 	 * Return whether document folding should be enabled according to the
 	 * preference store settings.
 	 * 
@@ -2021,36 +1928,13 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		return (store.getBoolean(IStructuredTextFoldingProvider.FOLDING_ENABLED) && (System.getProperty("org.eclipse.wst.sse.ui.foldingenabled") != null)); //$NON-NLS-1$
 	}
 
-	/**
-	 * Returns whether the given annotation type is configured as a target
-	 * type for the "Go to Next/Previous Annotation" actions. Copied from
-	 * org.eclipse.jdt.internal.ui.javaeditor.JavaEditor
-	 * 
-	 * @param type
-	 *            the annotation type
-	 * @return <code>true</code> if this is a target type,
-	 *         <code>false</code> otherwise
-	 * @since 3.0
-	 */
-	protected boolean isNavigationTargetType(Annotation annotation) {
-		Preferences preferences = EditorsUI.getPluginPreferences();
-		AnnotationPreference preference = getAnnotationPreferenceLookup().getAnnotationPreference(annotation);
-		// See bug 41689
-		// String key= forward ?
-		// preference.getIsGoToNextNavigationTargetKey()
-		// :
-		// preference.getIsGoToPreviousNavigationTargetKey();
-		String key = preference == null ? null : preference.getIsGoToNextNavigationTargetKey();
-		return (key != null && preferences.getBoolean(key));
-	}
-
 	/*
 	 * @see IEditorPart#isSaveOnCloseNeeded()
 	 */
 	public boolean isSaveOnCloseNeeded() {
-		if (getModel() == null)
+		if (getInternalModel() == null)
 			return false;
-		return getModel().isSaveNeeded();
+		return getInternalModel().isSaveNeeded();
 	}
 
 	/*
@@ -2076,7 +1960,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 				projectionViewer.enableProjection();
 			}
 
-		} finally {
+		}
+		finally {
 			projectionViewer.setRedraw(true);
 		}
 	}
@@ -2117,15 +2002,18 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	}
 
 	protected void rulerContextMenuAboutToShow(IMenuManager menu) {
-		boolean debuggingAvailable = BreakpointProviderBuilder.getInstance().isAvailable(getModel().getContentTypeIdentifier(), BreakpointRulerAction.getFileExtension(getEditorInput()));
-		if (debuggingAvailable) {
-			menu.add(getAction(ActionDefinitionIds.TOGGLE_BREAKPOINTS));
-			menu.add(getAction(ActionDefinitionIds.MANAGE_BREAKPOINTS));
-			menu.add(getAction(ActionDefinitionIds.EDIT_BREAKPOINTS));
-			menu.add(new Separator());
+		IStructuredModel internalModel = getInternalModel();
+		if (internalModel != null) {
+			boolean debuggingAvailable = BreakpointProviderBuilder.getInstance().isAvailable(internalModel.getContentTypeIdentifier(), BreakpointRulerAction.getFileExtension(getEditorInput()));
+			if (debuggingAvailable) {
+				menu.add(getAction(ActionDefinitionIds.TOGGLE_BREAKPOINTS));
+				menu.add(getAction(ActionDefinitionIds.MANAGE_BREAKPOINTS));
+				menu.add(getAction(ActionDefinitionIds.EDIT_BREAKPOINTS));
+				menu.add(new Separator());
+			}
+			super.rulerContextMenuAboutToShow(menu);
+			addExtendedRulerContextMenuActions(menu);
 		}
-		super.rulerContextMenuAboutToShow(menu);
-		addExtendedRulerContextMenuActions(menu);
 	}
 
 	/**
@@ -2160,9 +2048,11 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		if (input instanceof IStructuredModel) {
 			// largely untested
 			setDocumentProvider(StructuredModelDocumentProvider.getInstance());
-		} else if (input instanceof IStorageEditorInput && !(input instanceof IFileEditorInput)) {
+		}
+		else if (input instanceof IStorageEditorInput && !(input instanceof IFileEditorInput)) {
 			setDocumentProvider(StorageModelProvider.getInstance());
-		} else {
+		}
+		else {
 			super.setDocumentProvider(input);
 		}
 	}
@@ -2196,66 +2086,17 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	/**
 	 * @deprecated - use setInput as if we were a text editor
 	 * 
-	 * Note: this weird API, setModel which takes input as parameter. Is
-	 * provided for those editors which don't otherwise have to know about
-	 * models's. (Is hard/impossible to override the setInput method.)
 	 */
 	public void setModel(IFileEditorInput input) {
-		// Assert.isNotNull(getDocumentProvider());
-		// if (fStructuredModel != null) {
-		// if (getDocument() != null) {
-		// getDocument().removeDocumentListener(this);
-		// fStructuredModel.removeModelStateListener(getInternalModelStateListener());
-		// }
-		// }
-		// if (!(getDocumentProvider() instanceof FileModelProvider)) {
-		// initializeDocumentProvider(FileModelProvider.getInstance());
-		// }
-		// // ((FileModelProvider)
-		// // getDocumentProvider()).createModelInfo(input);
-		// // fStructuredModel = ((FileModelProvider)
-		// // getDocumentProvider()).getModel(input);
-		// // model will be null in some error conditions.
-		// if (fStructuredModel == null) {
-		// close(false);
-		// }
-		// // DMW: checked for site after moving to 3/22
-		// // (2.1M4) Eclipse base.
-		// /// Later code in super classes were causing NPE's
-		// // because site, etc.,
-		// // hasn't been
-		// // initialized yet. If site is still null at this
-		// // point, we are
-		// // assuming
-		// // setInput and update are called later, perhaps
-		// // elsewhere.
-		// // But if site is not null (such as in DTD Editor)
-		// // then setInput and
-		// // update must
-		// // be called here.
-		// // if (getSite() != null) {
-		// setInput(input);
-		// fStructuredModel = ((FileModelProvider)
-		// getDocumentProvider()).getModel(input);
-		// if (fStructuredModel != null) {
-		// getDocument().addDocumentListener(this);
-		// fStructuredModel.addModelStateListener(getInternalModelStateListener());
-		// }
-		// // update() should be called whenever the model is
-		// // set or changed
-		// update();
-		// // }
 		setInput(input);
 	}
 
 	/**
-	 * Sets the model field within this editor, use only when: 1) there is no
-	 * IEditorInput (very special case, not well tested) 2) there is an
-	 * IEditorInput but the corresponding model needs to be set separately
+	 * Sets the model field within this editor.
 	 * 
-	 * @deprecated - this is a laregely untested usage
+	 * @deprecated - can eventually be eliminated
 	 */
-	public void setModel(IStructuredModel newModel) {
+	private void setModel(IStructuredModel newModel) {
 		Assert.isNotNull(getDocumentProvider());
 		if (fStructuredModel != null) {
 			if (fStructuredModel.getStructuredDocument() != null) {
@@ -2264,37 +2105,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			fStructuredModel.removeModelStateListener(getInternalModelStateListener());
 		}
 		fStructuredModel = newModel;
-		if (fStructuredModel != null) {
-			if (fStructuredModel.getStructuredDocument() != null) {
-				fStructuredModel.getStructuredDocument().addDocumentListener(this);
-			}
-			fStructuredModel.addModelStateListener(getInternalModelStateListener());
-		}
-		// update() should be called whenever the model is
-		// set or changed
-		update();
-	}
-
-	/**
-	 * @deprecated - initialize with a document provider and use setInput or
-	 *             setModel(IStructuredModel)
-	 * @param newModel
-	 * @param input
-	 */
-	public void setModel(IStructuredModel newModel, IFileEditorInput input) {
-		// _setAnnotationModel(input);
-		// setModel(newModel);
-		Assert.isNotNull(getDocumentProvider());
-		if (fStructuredModel != null) {
-			fStructuredModel.removeModelStateListener(getInternalModelStateListener());
-			if (fStructuredModel.getStructuredDocument() != null) {
-				fStructuredModel.getStructuredDocument().removeDocumentListener(this);
-			}
-		}
-		fStructuredModel = newModel;
-		// setInput in super will allow titles to be
-		// updated, etc.
-		setInput(input);
 		if (fStructuredModel != null) {
 			if (fStructuredModel.getStructuredDocument() != null) {
 				fStructuredModel.getStructuredDocument().addDocumentListener(this);
@@ -2340,7 +2150,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			//
 			// temp solution, for testing, uses "busy"
 			setPartName(SSEUIMessages.busy); //$NON-NLS-1$
-		} else {
+		}
+		else {
 			// reset to what it was
 			setPartName(fRememberTitle);
 		}
@@ -2377,7 +2188,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			if (cfg instanceof StructuredContentOutlineConfiguration) {
 				((StructuredContentOutlineConfiguration) cfg).setEditor(this);
 			}
-			((StructuredTextEditorContentOutlinePage) fOutlinePage).setModel(getModel());
+			((StructuredTextEditorContentOutlinePage) fOutlinePage).setModel(getInternalModel());
 			((StructuredTextEditorContentOutlinePage) fOutlinePage).setViewerSelectionManager(getViewerSelectionManager());
 			((StructuredTextEditorContentOutlinePage) fOutlinePage).setConfiguration(cfg);
 		}
@@ -2386,44 +2197,21 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			if (cfg instanceof StructuredPropertySheetConfiguration) {
 				((StructuredPropertySheetConfiguration) cfg).setEditor(this);
 			}
-			((ConfigurablePropertySheetPage) fPropertySheetPage).setModel(getModel());
+			((ConfigurablePropertySheetPage) fPropertySheetPage).setModel(getInternalModel());
 			((ConfigurablePropertySheetPage) fPropertySheetPage).setViewerSelectionManager(getViewerSelectionManager());
 			((ConfigurablePropertySheetPage) fPropertySheetPage).setConfiguration(cfg);
 		}
 		if (getViewerSelectionManager() != null)
-			getViewerSelectionManager().setModel(getModel());
+			getViewerSelectionManager().setModel(getInternalModel());
 		disposeModelDependentFields();
 
 		fShowInTargetIds = createShowInTargetIds();
 
-		// setSourceViewerConfiguration() was called once
-		// in
-		// StructuredTextMultiPageEditorPart.createSourcePage()
-		// to set the SourceViewerConfiguration first so
-		// the text editor won't
-		// use the default configuration first
-		// and switch to the
-		// StructuredTextViewerConfiguration later.
-		// However, the source viewer was not created yet
-		// at the time. Need to
-		// call setSourceViewerConfiguration() again here
-		// so getSourceViewer().configure(configuration) in
-		// setSourceViewerConfiguration() will be called.
-		// DMW: removed setSouceViewerConfiguration since
-		// shouldn't need the
-		// general case
-		// an longer, but added 'updateConfiguration' so it
-		// can still be
-		// sensitive
-		// to resource/model changes.
-		// setSourceViewerConfiguration();
+
 		updateSourceViewerConfiguration();
-		// (nsd) we never change it, so why null it out?
-		// else {
-		// super.setPreferenceStore(null);
-		// }
+
 		createModelDependentFields();
-		computeAndSetDoubleClickAction(getModel());
+		computeAndSetDoubleClickAction(getInternalModel());
 	}
 
 	/**
@@ -2445,15 +2233,17 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 
 	private void updateEncodingMemento() {
 		boolean failed = false;
-		if (getModel() != null) {
-			IStructuredDocument doc = getModel().getStructuredDocument();
+		IStructuredModel internalModel = getInternalModel();
+		if (internalModel != null) {
+			IStructuredDocument doc = internalModel.getStructuredDocument();
 			EncodingMemento memento = doc.getEncodingMemento();
-			IDocumentCharsetDetector detector = getModel().getModelHandler().getEncodingDetector();
+			IDocumentCharsetDetector detector = internalModel.getModelHandler().getEncodingDetector();
 			if (memento != null && detector != null)
 				detector.set(doc);
 			try {
 				detector.getEncoding();
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				failed = true;
 			}
 			// be sure to use the new instance
@@ -2492,11 +2282,13 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 						ITextHover textHover = configuration.getTextHover(sourceViewer, t, stateMask);
 						((ITextViewerExtension2) sourceViewer).setTextHover(textHover, t, stateMask);
 					}
-				} else {
+				}
+				else {
 					ITextHover textHover = configuration.getTextHover(sourceViewer, t);
 					((ITextViewerExtension2) sourceViewer).setTextHover(textHover, t, ITextViewerExtension2.DEFAULT_HOVER_STATE_MASK);
 				}
-			} else
+			}
+			else
 				sourceViewer.setTextHover(configuration.getTextHover(sourceViewer, t), t);
 		}
 	}
@@ -2570,14 +2362,15 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			if (updateActions) {
 				if (getEditorSite().getActionBars() != null) {
 					getEditorSite().getActionBars().updateActionBars();
-				} else if (getEditorPart() != null && getEditorPart().getEditorSite().getActionBars() != null) {
+				}
+				else if (getEditorPart() != null && getEditorPart().getEditorSite().getActionBars() != null) {
 					getEditorPart().getEditorSite().getActionBars().updateActionBars();
 				}
 			}
 		}
 	}
 
-	protected void updateSourceViewerConfiguration() {
+	private void updateSourceViewerConfiguration() {
 		SourceViewerConfiguration configuration = getSourceViewerConfiguration();
 		// no need to update source viewer configuration if one does not exist
 		// yet
@@ -2590,7 +2383,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		if (!(configuration instanceof StructuredTextViewerConfiguration)) {
 			configuration = createSourceViewerConfiguration();
 			setSourceViewerConfiguration(configuration);
-		} else {
+		}
+		else {
 			StructuredTextViewerConfiguration newViewerConfiguration = createSourceViewerConfiguration();
 			if (!((StructuredTextViewerConfiguration) configuration).getDeclaringID().equals(newViewerConfiguration.getDeclaringID())) {
 				// d282894 use newViewerConfiguration
@@ -2685,7 +2479,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			if (input == null) {
 				String msg = SSEUIMessages.Error_opening_file_UI_; //$NON-NLS-1$
 				status = new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.INFO, msg, null);
-			} else {
+			}
+			else {
 				validateState(input);
 				sanityCheckState(input);
 				if (isEditorInputReadOnly()) {
@@ -2697,11 +2492,13 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 								IPath path = s.getFullPath();
 								if (path != null) {
 									fname += path.toString();
-								} else {
+								}
+								else {
 									fname += s.getName();
 								}
 							}
-						} catch (CoreException e) { // IStorage is just for
+						}
+						catch (CoreException e) { // IStorage is just for
 							// file name,
 							// and it's an optional,
 							// therefore
@@ -2728,7 +2525,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 					getSourceViewer().setEditable(isEditable());
 				if (wasReadOnly != isEditorInputReadOnly())
 					updateStateDependentActions();
-			} catch (CoreException x) {
+			}
+			catch (CoreException x) {
 				ILog log = Platform.getLog(Platform.getBundle(PlatformUI.PLUGIN_ID));
 				log.log(x.getStatus());
 				statusError(x.getStatus());

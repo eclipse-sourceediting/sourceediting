@@ -41,19 +41,8 @@ public class AdapterFactoryProviderForDTD implements AdapterFactoryProvider {
 	public void addAdapterFactories(IStructuredModel structuredModel) {
 		FactoryRegistry factoryRegistry = structuredModel.getFactoryRegistry();
 		Assert.isNotNull(factoryRegistry, "Program Error: client caller must ensure model has factory registry"); //$NON-NLS-1$
-		// IAdapterFactory factory = null;
-
-		// factory = factoryRegistry.getFactoryFor(JFaceNodeAdapter.class);
-		// if (factory == null) {
-		// factory = new JFaceNodeAdapterFactory(JFaceNodeAdapter.class,
-		// true);
-		// factoryRegistry.addFactory(factory);
-		// }
 	}
 
-	/*
-	 * @see AdapterFactoryProvider#isFor(ContentTypeDescription)
-	 */
 	public boolean isFor(IDocumentTypeHandler contentTypeDescription) {
 		return (contentTypeDescription instanceof ModelHandlerForDTD);
 	}

@@ -45,12 +45,12 @@ public class StructuredTextAnnotationHover implements IAnnotationHover, IReleasa
 	 * Provides a set of convenience methods for creating HTML pages. Taken
 	 * from org.eclipse.jdt.internal.ui.text.HTMLPrinter
 	 */
-	protected class HTMLPrinter {
+	class HTMLPrinter {
 
-		public HTMLPrinter() {
+		HTMLPrinter() {
 		}
 
-		public void addBullet(StringBuffer buffer, String bullet) {
+		void addBullet(StringBuffer buffer, String bullet) {
 			if (bullet != null) {
 				buffer.append("<li>"); //$NON-NLS-1$
 				buffer.append(bullet);
@@ -58,27 +58,27 @@ public class StructuredTextAnnotationHover implements IAnnotationHover, IReleasa
 			}
 		}
 
-		public void addPageEpilog(StringBuffer buffer) {
+		void addPageEpilog(StringBuffer buffer) {
 			buffer.append("</font></body></html>"); //$NON-NLS-1$
 		}
 
-		public void addPageProlog(StringBuffer buffer) {
+		void addPageProlog(StringBuffer buffer) {
 			insertPageProlog(buffer, buffer.length());
 		}
 
-		public void addParagraph(StringBuffer buffer, Reader paragraphReader) {
+		void addParagraph(StringBuffer buffer, Reader paragraphReader) {
 			if (paragraphReader != null)
 				addParagraph(buffer, read(paragraphReader));
 		}
 
-		public void addParagraph(StringBuffer buffer, String paragraph) {
+		void addParagraph(StringBuffer buffer, String paragraph) {
 			if (paragraph != null) {
 				buffer.append("<p>"); //$NON-NLS-1$
 				buffer.append(paragraph);
 			}
 		}
 
-		public void addSmallHeader(StringBuffer buffer, String header) {
+		void addSmallHeader(StringBuffer buffer, String header) {
 			if (header != null) {
 				buffer.append("<h5>"); //$NON-NLS-1$
 				buffer.append(header);
@@ -86,20 +86,20 @@ public class StructuredTextAnnotationHover implements IAnnotationHover, IReleasa
 			}
 		}
 
-		public String convertToHTMLContent(String content) {
+		String convertToHTMLContent(String content) {
 			content = replace(content, '<', "&lt;"); //$NON-NLS-1$
 			return replace(content, '>', "&gt;"); //$NON-NLS-1$
 		}
 
-		public void endBulletList(StringBuffer buffer) {
+		void endBulletList(StringBuffer buffer) {
 			buffer.append("</ul>"); //$NON-NLS-1$
 		}
 
-		public void insertPageProlog(StringBuffer buffer, int position) {
+		void insertPageProlog(StringBuffer buffer, int position) {
 			buffer.insert(position, "<html><body text=\"#000000\" bgcolor=\"#FFFF88\"><font size=-1>"); //$NON-NLS-1$
 		}
 
-		public String read(Reader rd) {
+		String read(Reader rd) {
 
 			StringBuffer buffer = new StringBuffer();
 			char[] readBuffer = new char[2048];
@@ -111,7 +111,8 @@ public class StructuredTextAnnotationHover implements IAnnotationHover, IReleasa
 					n = rd.read(readBuffer);
 				}
 				return buffer.toString();
-			} catch (IOException x) {
+			}
+			catch (IOException x) {
 			}
 
 			return null;
@@ -137,19 +138,19 @@ public class StructuredTextAnnotationHover implements IAnnotationHover, IReleasa
 			return buffer.toString();
 		}
 
-		public void startBulletList(StringBuffer buffer) {
+		void startBulletList(StringBuffer buffer) {
 			buffer.append("<ul>"); //$NON-NLS-1$
 		}
 	}
 
 	private IDebugModelPresentation fDebugModelPresentation;
 
-	protected HTMLPrinter printer = new HTMLPrinter();
+	private HTMLPrinter printer = new HTMLPrinter();
 
 	/**
 	 * Returns the distance to the ruler line.
 	 */
-	protected int compareRulerLine(Position position, IDocument document, int line) {
+	private int compareRulerLine(Position position, IDocument document, int line) {
 
 		if (position.getOffset() > -1 && position.getLength() > -1) {
 			try {
@@ -158,7 +159,8 @@ public class StructuredTextAnnotationHover implements IAnnotationHover, IReleasa
 					return 1;
 				if (markerLine <= line && line <= document.getLineOfOffset(position.getOffset() + position.getLength()))
 					return 2;
-			} catch (BadLocationException x) {
+			}
+			catch (BadLocationException x) {
 			}
 		}
 
@@ -169,10 +171,12 @@ public class StructuredTextAnnotationHover implements IAnnotationHover, IReleasa
 	 * Formats the message of this hover to fit onto the screen.
 	 */
 	private String formatHoverText(String text, ISourceViewer sourceViewer) {
+		String result = null;
 		String lineDelim = new String();
 		try {
 			lineDelim = sourceViewer.getDocument().getLineDelimiter(0);
-		} catch (org.eclipse.jface.text.BadLocationException exception) {
+		}
+		catch (org.eclipse.jface.text.BadLocationException exception) {
 			// skip, just use default
 		}
 		Display display = sourceViewer.getTextWidget().getDisplay();
@@ -195,12 +199,15 @@ public class StructuredTextAnnotationHover implements IAnnotationHover, IReleasa
 				buf.append(line);
 				line = reader.readLine();
 			}
-			return buf.toString();
-		} catch (IOException exception) {
-			throw new org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException(exception);
-		} finally {
+			result = buf.toString();
+		}
+		catch (IOException exception) {
+			Logger.logException(exception);
+		}
+		finally {
 			gc.dispose();
 		}
+		return result;
 	}
 
 	/*
@@ -232,7 +239,8 @@ public class StructuredTextAnnotationHover implements IAnnotationHover, IReleasa
 			String text = marker.getAttribute(IMarker.MESSAGE, (String) null);
 			if (text != null) {
 				messages.add(text);
-			} else {
+			}
+			else {
 				try {
 					if (marker.isSubtypeOf(IBreakpoint.BREAKPOINT_MARKER)) {
 						IBreakpointManager manager = DebugPlugin.getDefault().getBreakpointManager();
@@ -250,7 +258,8 @@ public class StructuredTextAnnotationHover implements IAnnotationHover, IReleasa
 							}
 						}
 					}
-				} catch (CoreException e) {
+				}
+				catch (CoreException e) {
 					Logger.logException(e);
 				}
 			}
@@ -262,12 +271,12 @@ public class StructuredTextAnnotationHover implements IAnnotationHover, IReleasa
 				boolean duplicated = false;
 				for (int j = 0; j < messages.size(); j++)
 					duplicated = duplicated || messages.get(j).equals(message);
-				if (!duplicated)
+				if (!duplicated) {
 					messages.add(message);
-				//				else
-				//					System.out.println("duplicated message found: " +
-				// StringUtils.escape(message));
-			} else
+				}
+
+			}
+			else
 				messages.add(((ITemporaryAnnotation) temporaryAnnotations.get(i)).toString());
 		}
 		if (messages.size() > 1)
@@ -291,7 +300,7 @@ public class StructuredTextAnnotationHover implements IAnnotationHover, IReleasa
 	/**
 	 * Returns one marker which includes the ruler's line of activity.
 	 */
-	protected IMarker getMarker(ISourceViewer viewer, int line) {
+	private IMarker getMarker(ISourceViewer viewer, int line) {
 
 		IDocument document = viewer.getDocument();
 		IAnnotationModel model = viewer.getAnnotationModel();
@@ -324,7 +333,7 @@ public class StructuredTextAnnotationHover implements IAnnotationHover, IReleasa
 	/**
 	 * Returns one marker which includes the ruler's line of activity.
 	 */
-	protected List getTemporaryAnnotationsForLine(ISourceViewer viewer, int line) {
+	private List getTemporaryAnnotationsForLine(ISourceViewer viewer, int line) {
 
 		IDocument document = viewer.getDocument();
 		IAnnotationModel model = viewer.getAnnotationModel();
@@ -372,7 +381,7 @@ public class StructuredTextAnnotationHover implements IAnnotationHover, IReleasa
 	/**
 	 * Selects one marker from the two lists.
 	 */
-	protected IMarker select(List firstChoice, List secondChoice) {
+	private IMarker select(List firstChoice, List secondChoice) {
 		if (!firstChoice.isEmpty())
 			return (IMarker) firstChoice.get(0);
 		if (!secondChoice.isEmpty())

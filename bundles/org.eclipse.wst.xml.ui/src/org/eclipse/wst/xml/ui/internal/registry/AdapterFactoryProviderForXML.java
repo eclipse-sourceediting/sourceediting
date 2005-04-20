@@ -49,14 +49,6 @@ public class AdapterFactoryProviderForXML implements AdapterFactoryProvider {
 		FactoryRegistry factoryRegistry = structuredModel.getFactoryRegistry();
 		Assert.isNotNull(factoryRegistry, "Program Error: client caller must ensure model has factory registry"); //$NON-NLS-1$
 		INodeAdapterFactory factory = null;
-		// == this list came from the previous "XML only" list
-
-		// what was this still here? (6/4/03)
-		// I commented out on 6/4/03) but may have been something "extra"
-		// initializing
-		// old content assist adapter unnecessarily?
-		//factory =
-		// factoryRegistry.getFactoryFor(com.ibm.sed.edit.adapters.ContentAssistAdapter.class);
 
 		factory = factoryRegistry.getFactoryFor(IPropertySource.class);
 		if (factory == null) {

@@ -54,35 +54,6 @@ public class AdapterFactoryProviderForJSP implements AdapterFactoryProvider {
 		FactoryRegistry factoryRegistry = structuredModel.getFactoryRegistry();
 		Assert.isNotNull(factoryRegistry, "Program Error: client caller must ensure model has factory registry"); //$NON-NLS-1$
 		INodeAdapterFactory factory = null;
-		// == this list came from the previous "HTML only" list
-		//        factory = factoryRegistry.getFactoryFor(ContentAssistAdapter.class);
-		//        if (factory == null) {
-		//            factory = new HTMLContentAssistAdapterFactory(ContentAssistAdapter.class, false);
-		//            factoryRegistry.addFactory(factory);
-		//        }
-		//		factory = factoryRegistry.getFactoryFor(ContentAssistAdapter.class);
-		//		if (factory == null) {
-		//			factory = new JSPContentAssistAdapterFactory();
-		//			factoryRegistry.addFactory(factory);
-		//		}
-		//		factory = factoryRegistry.getFactoryFor(DoubleClickAdapter.class);
-		//		if (factory == null) {
-		//			factory = new DoubleClickAdapterFactory(DoubleClickAdapter.class, true);
-		//			factoryRegistry.addFactory(factory);
-		//		}
-		//		// == New adapter factories for tagInfo
-		//		factory = factoryRegistry.getFactoryFor(HoverHelpAdapter.class);
-		//		if (factory == null) {
-		//			factory = new JSPHoverHelpAdapterFactory(HoverHelpAdapter.class, true);
-		//			factoryRegistry.addFactory(factory);
-		//		}
-		//		factory = factoryRegistry.getFactoryFor(TagInfoProviderAdapter.class);
-		//		if (factory == null) {
-		//			factory = new JSTagInfoProviderAdapterFactory(TagInfoProviderAdapter.class, true);
-		//			factoryRegistry.addFactory(factory);
-		//		}
-		// ==
-		// == this list came from the previous 'for both XML and HTML' list
 		factory = factoryRegistry.getFactoryFor(IPropertySource.class);
 		if (factory == null) {
 			factory = new XMLPropertySourceAdapterFactory();
@@ -111,7 +82,8 @@ public class AdapterFactoryProviderForJSP implements AdapterFactoryProvider {
 				// made into registry mechanism
 				AdapterFactoryRegistry adapterRegistry = JSPUIPlugin.getDefault().getEmbeddedAdapterFactoryRegistry();
 				Iterator adapterList = adapterRegistry.getAdapterFactories();
-				// And all those appropriate for this particular type of content
+				// And all those appropriate for this particular type of
+				// content
 				while (adapterList.hasNext()) {
 					EmbeddedAdapterFactoryProvider provider = (EmbeddedAdapterFactoryProvider) adapterList.next();
 					if (provider.isFor(pageDirectiveAdapter.getEmbeddedType())) {
@@ -124,37 +96,13 @@ public class AdapterFactoryProviderForJSP implements AdapterFactoryProvider {
 	}
 
 	protected void addPropagatingAdapters(IStructuredModel structuredModel) {
-		//		if (structuredModel instanceof XMLModel) {
-		//			IAdapterFactory factory = null;
-		//			XMLModel xmlModel = (XMLModel) structuredModel;
-		//			XMLDocument document = xmlModel.getDocument();
-		//			PropagatingAdapter propagatingAdapter = (PropagatingAdapter) document.getAdapterFor(PropagatingAdapter.class);
-		//			if (propagatingAdapter != null) {
-		// DMW: 8/16/2002 removed since this one was no longer needed for page directive 
-		// lanague. It might still be needed for script and meta languages?
-		// but even they were "commented out" in the JSPPageDirectiveLineStyleUpdaterFactory
-		// so not sure what the plan it there.	
-		//				factory = new JSPPageDirectiveLineStyleUpdaterFactory();
-		//				propagatingAdapter.addAdaptOnCreateFactory(factory);
-		//				propagatingAdapter.initializeForFactory(factory, document);
-		//			}
-		//		}
 
 		if (structuredModel instanceof IDOMModel) {
-//			IAdapterFactory factory = null;
 			IDOMModel xmlModel = (IDOMModel) structuredModel;
 			IDOMDocument document = xmlModel.getDocument();
 			PropagatingAdapter propagatingAdapter = (PropagatingAdapter) document.getAdapterFor(PropagatingAdapter.class);
 			if (propagatingAdapter != null) {
-				//	checking if we should bother adding this factory
-				// if the preference says not to check validity, we don't bother creating this factory
-				// to improve performance...
-				//if(structuredModel.getStructuredPreferenceStore().getPreferenceString(CommonPreferenceNames.EDITOR_VALIDATION_METHOD).equals(CommonPreferenceNames.EDITOR_VALIDATION_CONTENT_MODEL)) {
-				//factory = new ReconcilerAdapterFactoryForXML();
-				//propagatingAdapter.addAdaptOnCreateFactory(factory);
-				// (pa) perf:
-				//propagatingAdapter.initializeForFactory(factory, xmlModel.getDocument());
-				//}
+				// what to do?
 			}
 		}
 	}

@@ -35,6 +35,9 @@ import org.eclipse.wst.sse.ui.internal.util.Assert;
 public class EditorModelUtil {
 
 	public static void addFactoriesTo(final IStructuredModel structuredModel) {
+		if (structuredModel == null)
+			return;
+		
 		AdapterFactoryRegistry adapterRegistry = SSEUIPlugin.getDefault().getAdapterFactoryRegistry();
 		String contentTypeId = structuredModel.getContentTypeIdentifier();
 
@@ -59,10 +62,10 @@ public class EditorModelUtil {
 				 */
 				if (provider.isFor(structuredModel.getModelHandler())) {
 					Platform.run(new SafeRunnable(SSEUIMessages.EditorModelUtil_1) { //$NON-NLS-1$
-						public void run() {
-							provider.addAdapterFactories(structuredModel);
-						}
-					});
+									public void run() {
+										provider.addAdapterFactories(structuredModel);
+									}
+								});
 				}
 			}
 			catch (Exception e) {
