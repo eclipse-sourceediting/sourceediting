@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -296,12 +297,17 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 				IPath fileLocation = new Path(URIHelper.normalize(StringUtils.strip(includedFile).trim(), getCurrentBaseLocation().toString(), root.toString()));
 				// check for "loops"
 				if (!getIncludes().contains(fileLocation) && fileLocation != null && !fileLocation.equals(getCurrentBaseLocation())) {
-					getIncludes().push(fileLocation);
-					if (getParser() != null)
-						new IncludeHelper(anchorStructuredDocumentRegion, getParser()).parse(fileLocation.toString());
-					else
-						Logger.log(Logger.WARNING, "Warning: parser text was requested by " + getClass().getName() + " but none was available; taglib support disabled"); //$NON-NLS-1$ //$NON-NLS-2$
-					getIncludes().pop();
+					
+				    // prevent slow performance when editing scriptlet part of the JSP
+					// only process includes if they've been modified
+				    if(hasAnyIncludeBeenModified(fileLocation.toString())) {
+						getIncludes().push(fileLocation);
+						if (getParser() != null)
+							new IncludeHelper(anchorStructuredDocumentRegion, getParser()).parse(fileLocation.toString());
+						else
+							Logger.log(Logger.WARNING, "Warning: parser text was requested by " + getClass().getName() + " but none was available; taglib support disabled"); //$NON-NLS-1$ //$NON-NLS-2$
+						getIncludes().pop();
+				    }
 				}
 				else {
 					if (Debug.debugTokenizer)
@@ -460,7 +466,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		protected IStructuredDocumentRegion fAnchor = null;
 		protected JSPSourceParser fLocalParser = null;
 		protected JSPSourceParser fParentParser = null;
-
+		
 		public IncludeHelper(IStructuredDocumentRegion anchor, JSPSourceParser rootParser) {
 			super();
 			fAnchor = anchor;
@@ -672,6 +678,11 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 
 	private List fTaglibTrackers = null;
 
+	// timestamp cache to prevent excessive reparsing
+	// of included files
+	// String (filepath) > Long (modification stamp)
+	HashMap fInclude2TimestampMap = new HashMap();
+	
 	public TLDCMDocumentManager() {
 		super();
 	}
@@ -913,4 +924,61 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		if (fParser != null)
 			fParser.addStructuredDocumentRegionHandler(getStructuredDocumentRegionHandler());
 	}
+	
+	/**
+     * @param fileLocation the "root" file
+     */
+    boolean hasAnyIncludeBeenModified(String fileLocation) {
+        
+        boolean result = false;
+        // check the top level
+        if (hasBeenModified(fileLocation)) {
+            result = true;
+        } else {
+            // check all includees
+            Iterator iter = fInclude2TimestampMap.keySet().iterator();
+            while (iter.hasNext()) {
+                if (hasBeenModified((String) iter.next())) {
+                    result = true;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+	
+	/**
+     * @param filename
+     * @return
+     */
+    boolean hasBeenModified(String filename) {		
+		
+        boolean result = false;
+        // quick filename/timestamp cache check here...
+        IPath filePath = new Path(filename);
+	    IFile f = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(filePath);
+	    if(f == null && filePath.segmentCount() > 1) {
+	        f = ResourcesPlugin.getWorkspace().getRoot().getFile(filePath);
+	    }
+	    if(f != null && f.exists()) {
+	        Long currentStamp = new Long(f.getModificationStamp());
+	        Object o = fInclude2TimestampMap.get(filename);
+	        if(o != null) {
+	            Long previousStamp = (Long)o;
+	            // stamps don't match, file changed
+	            if(currentStamp.longValue() != previousStamp.longValue()) {
+	                result = true;
+		            // store for next time
+		            fInclude2TimestampMap.put(filename, currentStamp);
+	            }
+	        }
+	        else {
+	            // return true, since we've not encountered this file yet.
+	            result = true;
+	            // store for next time
+	            fInclude2TimestampMap.put(filename, currentStamp);
+	        }
+	    }
+	    return result;
+    }
 }
