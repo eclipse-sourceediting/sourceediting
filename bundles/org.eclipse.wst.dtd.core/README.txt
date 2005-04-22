@@ -1,1 +1,0 @@
-This plugin extends the core model to implement a dtd specific model.
