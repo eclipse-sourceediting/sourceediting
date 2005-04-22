@@ -246,11 +246,6 @@
 			categoryId="org.eclipse.ui.category.edit"
 			id="org.eclipse.wst.xsd.ui.refactor.makeElementGlobal">
 		</command>
-		<keyBinding 
-			contextId="org.eclipse.wst.xsd.ui.text.editor.context"
-			commandId="org.eclipse.wst.xsd.ui.refactor.makeElementGlobal"
-			keyConfigurationId="org.eclipse.ui.defaultAcceleratorConfiguration">
-		</keyBinding>
 	</extension>
 	
    <extension point="org.eclipse.ui.commands">
@@ -259,11 +254,6 @@
 			categoryId="org.eclipse.ui.category.edit"
 			id="org.eclipse.wst.xsd.ui.refactor.makeTypeGlobal">
 		</command>
-		<keyBinding 
-			contextId="org.eclipse.wst.xsd.ui.text.editor.context"
-			commandId="org.eclipse.wst.xsd.ui.refactor.makeTypeGlobal"
-			keyConfigurationId="org.eclipse.ui.defaultAcceleratorConfiguration">
-		</keyBinding>
 	</extension>
    
     <!--extension
