@@ -125,13 +125,13 @@ public class BugFixesTest extends BaseTestCase
   /**
    * Test /BugFixes/TwoOpenBrackets/TwoOpenBrackets.xsd
    */
-//  public void testTwoOpenBrackets()
-//  {
-//    String testname = "TwoOpenBrackets";
-//    String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "TwoOpenBrackets/" + testname + ".xsd";
-//    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + BUGFIXES_DIR + "TwoOpenBrackets/" + testname + ".xsd-log";
-//    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + BUGFIXES_DIR + "TwoOpenBrackets/" + testname + ".xsd-log";
-//    
-//    runTest(testfile, loglocation, idealloglocation);
-//  }
+  public void testTwoOpenBrackets()
+  {
+    String testname = "TwoOpenBrackets";
+    String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "TwoOpenBrackets/" + testname + ".xsd";
+    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + BUGFIXES_DIR + "TwoOpenBrackets/" + testname + ".xsd-log";
+    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + BUGFIXES_DIR + "TwoOpenBrackets/" + testname + ".xsd-log";
+    
+    runTest(testfile, loglocation, idealloglocation);
+  }
 }
