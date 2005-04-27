@@ -19,6 +19,8 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Iterator;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -42,7 +44,7 @@ public class BaseTestCase extends TestCase
   protected String SAMPLES_DIR = "testresources/samples/";
   protected String GENERATED_RESULTS_DIR = "testresources/generatedResults/";
   protected String IDEAL_RESULTS_DIR = "testresources/idealResults/";
-  protected String LOG_FILE_LOCATION = "results.log";
+  protected static final String PLUGIN_NAME = "org.eclipse.wst.xml.validation.tests";
   private XMLValidator validator = XMLValidator.getInstance();
   
   /* (non-Javadoc)
@@ -108,6 +110,84 @@ public class BaseTestCase extends TestCase
     return filestring.toString();
   }
   
+//  /**
+//   * Create a log file for an XSD test.
+//   * 
+//   * @param filename The name of the log file to create.
+//   * @param valreport The validation report for this file.
+//   * @return The file contents as a string if successful or null if not successful.
+//   */
+//  private String createLog(String filename, ValidationReport valreport)
+//  {
+//     ValidationMessage[] valmessages = valreport.getValidationMessages();
+//     int nummessages = valmessages.length;//validator.getErrors().size() + validator.getWarnings().size();
+//     StringBuffer errorsString = new StringBuffer();
+//     StringBuffer warningsString = new StringBuffer();
+//     int numerrors = 0;
+//     int numwarnings = 0;
+//     for(int i = 0; i < nummessages; i++)
+//     {
+//       ValidationMessage valmes = valmessages[i];
+//       if(valmes.getSeverity() == ValidationMessage.SEV_LOW)
+//       {
+//         numwarnings++;
+//         warningsString.append(valmes.getMessage() + " [" + valmes.getLineNumber() +", " + valmes.getColumnNumber() +"]\n");
+//       }
+//       else
+//       {
+//         numerrors++;
+//         errorsString.append(valmes.getMessage() + " [" + valmes.getLineNumber() +", " + valmes.getColumnNumber() +"]\n");
+//       }
+//     }
+//     StringBuffer log = new StringBuffer();
+//     log.append("number of errors      : " + numerrors + "\n");
+//     log.append("number of warnings    : " + numwarnings + "\n\n");
+//     log.append("------------error list-------------------------------------------\n");
+//     if(numerrors == 0)
+//     {
+//       log.append("(none)\n");
+//     }
+//     else
+//     {
+//       log.append(errorsString.toString());
+//     }
+//     log.append("------------warning list-----------------------------------------\n");
+//     if(numwarnings == 0)
+//     {
+//       log.append("(none)\n");
+//     }
+//     else
+//     {
+//       log.append(warningsString.toString());
+//     }
+//     log.append("-----------------------------------------------------------------\n");
+//   
+//     DataOutputStream outStream = null;
+//    try
+//    {
+//      File logfile = new File(filename);
+//      File parent = logfile.getParentFile();
+//  	if (!parent.exists()) 
+//  	{
+//  	  parent.mkdirs();
+//  	}
+//      if(logfile.exists())
+//      {
+//        logfile.delete();
+//      }
+//      logfile.createNewFile();
+//      
+//      outStream = new DataOutputStream(new FileOutputStream(filename, true));
+//      outStream.writeBytes(log.toString());
+//      outStream.close();
+//
+//    } catch (IOException e)
+//    {
+//      // If we can't write the log then clear the log.
+//      log.delete(0, log.length());
+//    }
+//    return log.toString();
+//  }
   /**
    * Create a log file for an XSD test.
    * 
@@ -129,18 +209,27 @@ public class BaseTestCase extends TestCase
        if(valmes.getSeverity() == ValidationMessage.SEV_LOW)
        {
          numwarnings++;
-         warningsString.append(valmes.getMessage() + " [" + valmes.getLineNumber() +", " + valmes.getColumnNumber() +"]\n");
+         String message = valmes.getMessage();
+         message = message.replaceAll(".*" + PLUGIN_NAME, "");
+         message = message.replaceAll(".*" + PLUGIN_NAME, "");
+         warningsString.append(message + " [" + valmes.getLineNumber() +", " + valmes.getColumnNumber() +"]\n");
+         warningsString.append(createNestedMessageString(valmes.getNestedMessages()));
        }
        else
        {
          numerrors++;
-         errorsString.append(valmes.getMessage() + " [" + valmes.getLineNumber() +", " + valmes.getColumnNumber() +"]\n");
+         String message = valmes.getMessage();
+         message = message.replaceAll(".*" + PLUGIN_NAME, "");
+         message = message.replaceAll(".*" + PLUGIN_NAME, "");
+         errorsString.append(message + " [" + valmes.getLineNumber() +", " + valmes.getColumnNumber() +"]\n");
+         errorsString.append(createNestedMessageString(valmes.getNestedMessages()));
        }
      }
      StringBuffer log = new StringBuffer();
      log.append("number of errors      : " + numerrors + "\n");
-     log.append("number of warnings    : " + numwarnings + "\n\n");
-     log.append("------------error list-------------------------------------------\n");
+     log.append("number of warnings    : " + numwarnings + "\n");
+	   
+     log.append("\n------------error list-------------------------------------------\n");
      if(numerrors == 0)
      {
        log.append("(none)\n");
@@ -150,7 +239,7 @@ public class BaseTestCase extends TestCase
        log.append(errorsString.toString());
      }
      log.append("------------warning list-----------------------------------------\n");
-     if(numwarnings == 0)
+	 if(numwarnings == 0)
      {
        log.append("(none)\n");
      }
@@ -185,5 +274,38 @@ public class BaseTestCase extends TestCase
       log.delete(0, log.length());
     }
     return log.toString();
+  }
+  
+  private String createNestedMessageString(List nestedMessages)
+  {
+    return createNestedMessageString(nestedMessages, 0);
+  }
+  
+  private String createNestedMessageString(List nestedMessages, int depth)
+  {
+    if(nestedMessages != null && nestedMessages.size() > 0)
+    {
+      String messageString = "";
+      Iterator nestedMesIter = nestedMessages.iterator();
+      while(nestedMesIter.hasNext())
+      {
+        ValidationMessage nesvalmes = (ValidationMessage)nestedMesIter.next();
+        for(int i = 0; i < depth; i++)
+        {
+          messageString += " ";
+        }
+        // If the message contains any file references make them relative.
+        String message = nesvalmes.getMessage();
+        message = message.replaceAll(".*" + PLUGIN_NAME, "");
+        message = message.replaceAll(".*" + PLUGIN_NAME, "");
+        messageString += ("-> " + message + " [" + nesvalmes.getLineNumber() +", " + nesvalmes.getColumnNumber() +"]\n");
+        messageString += createNestedMessageString(nesvalmes.getNestedMessages(), depth + 1);
+      }
+      return messageString;
+    }
+    else
+    {
+      return "";
+    }
   }
 }
