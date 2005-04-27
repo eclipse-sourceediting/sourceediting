@@ -1,0 +1,8 @@
+number of errors      : 1
+number of warnings    : 0
+
+------------error list-------------------------------------------
+\testresources\samples\XMLExamples\InvoiceInvalid\Invoice.dtd (The system cannot find the file specified) [2, 53]
+------------warning list-----------------------------------------
+(none)
+-----------------------------------------------------------------

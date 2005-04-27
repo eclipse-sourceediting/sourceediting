@@ -82,4 +82,17 @@ public class BugFixesTest extends BaseTestCase
     
     runTest(testfile, loglocation, idealloglocation);
   }
+  
+  /**
+   * Test /bugfixes/NotWellFormed/NotWellFormed.xml.
+   */
+  public void testNotWellFormed()
+  {
+  	String testname = "NotWellFormed";
+    String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "NotWellFormed/" + testname + ".xml";
+    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + BUGFIXES_DIR + "NotWellFormed/" + testname + ".xml-log";
+    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + BUGFIXES_DIR + "NotWellFormed/" + testname + ".xml-log";
+    
+    runTest(testfile, loglocation, idealloglocation);
+  }
 }

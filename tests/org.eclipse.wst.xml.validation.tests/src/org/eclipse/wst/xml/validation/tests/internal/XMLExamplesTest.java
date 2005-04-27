@@ -44,6 +44,19 @@ public class XMLExamplesTest extends BaseTestCase
   }
   
   /**
+   * Test /XMLExamples/InvoiceInvalid/Invoice.xml.
+   */
+  public void testInvoiceInvalid()
+  {
+  	String testname = "Invoice";
+    String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + XMLExamples_DIR + "InvoiceInvalid/" + testname + ".xml";
+    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + XMLExamples_DIR + "InvoiceInvalid/" + testname + ".xml-log";
+    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + XMLExamples_DIR + "InvoiceInvalid/" + testname + ".xml-log";
+    
+    runTest(testfile, loglocation, idealloglocation);
+  }
+  
+  /**
    * Test /XMLExamples/PublicationCatalogue/Catalogue.xml.
    */
   public void testCatalogue()
@@ -52,6 +65,19 @@ public class XMLExamplesTest extends BaseTestCase
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + XMLExamples_DIR + "PublicationCatalogue/" + testname + ".xml";
     String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + XMLExamples_DIR + "PublicationCatalogue/" + testname + ".xml-log";
     String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + XMLExamples_DIR + "PublicationCatalogue/" + testname + ".xml-log";
+    
+    runTest(testfile, loglocation, idealloglocation);
+  }
+  
+  /**
+   * Test /XMLExamples/PublicationCatalogueInvalid/Catalogue.xml.
+   */
+  public void testCatalogueInvalid()
+  {
+  	String testname = "CatalogueInvalid";
+    String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + XMLExamples_DIR + "PublicationCatalogueInvalid/" + testname + ".xml";
+    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + XMLExamples_DIR + "PublicationCatalogueInvalid/" + testname + ".xml-log";
+    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + XMLExamples_DIR + "PublicationCatalogueInvalid/" + testname + ".xml-log";
     
     runTest(testfile, loglocation, idealloglocation);
   }
