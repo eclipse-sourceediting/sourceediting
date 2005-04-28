@@ -197,13 +197,13 @@
       </propertyTabs>
    </extension>
    
-   <!--
+
     <extension point="org.eclipse.wst.xml.uriresolver.catalogContributor">
-     <catalogContributor catalogId="default">
-       <mappingInfo key="http://www.w3.org/2001/XMLSchema" uri="w3c/XMLSchema.xsd"/>
+      <catalogContributor catalogId="default">
+        <mappingInfo key="http://www.w3.org/2001/XMLSchema" uri="platform:/resource/org.eclipse.xsd/cache/www.w3.org/2001/XMLSchema.xsd"/>
       </catalogContributor>
     </extension>
-    -->
+
  
   	<!-- intialize xsd reconcile validator -->
 	 <extension
