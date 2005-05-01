@@ -148,8 +148,7 @@ public class ModelManagerImpl implements IModelManager {
 	private final static int READ_BUFFER_SIZE = 4096;
 
 	/**
-	 * Not to be called by clients, will be made
-	 * restricted access.
+	 * Not to be called by clients, will be made restricted access.
 	 * 
 	 * @return
 	 */
@@ -260,7 +259,6 @@ public class ModelManagerImpl implements IModelManager {
 
 	private IStructuredModel _commonCreateModel(String id, IModelHandler handler, URIResolver resolver) throws ResourceInUse {
 
-		Assert.isNotNull(handler, "model handler can not be null"); //$NON-NLS-1$
 		IModelLoader loader = handler.getModelLoader();
 		IStructuredModel result = loader.createModel();
 		// in the past, id was null for "unmanaged" case, so we won't
@@ -446,16 +444,15 @@ public class ModelManagerImpl implements IModelManager {
 			throw new IllegalArgumentException();
 	}
 
-	protected void addFactories(IStructuredModel model, IModelHandler handler) {
+	private void addFactories(IStructuredModel model, IModelHandler handler) {
 		Assert.isNotNull(model, "model can not be null"); //$NON-NLS-1$
-		Assert.isNotNull(handler, "model handler can not be null"); //$NON-NLS-1$
 		FactoryRegistry registry = model.getFactoryRegistry();
 		Assert.isNotNull(registry, "Factory Registry can not be null"); //$NON-NLS-1$
 		List factoryList = handler.getAdapterFactories();
 		addFactories(model, factoryList);
 	}
 
-	protected void addFactories(IStructuredModel model, List factoryList) {
+	private void addFactories(IStructuredModel model, List factoryList) {
 		Assert.isNotNull(model, "model can not be null"); //$NON-NLS-1$
 		FactoryRegistry registry = model.getFactoryRegistry();
 		Assert.isNotNull(registry, "Factory Registry can not be null"); //$NON-NLS-1$
@@ -499,7 +496,7 @@ public class ModelManagerImpl implements IModelManager {
 		return id;
 	}
 
-	protected IModelHandler calculateType(IFile iFile) throws CoreException {
+	private IModelHandler calculateType(IFile iFile) throws CoreException {
 		// IModelManager mm = ((ModelManagerPlugin)
 		// Platform.getPlugin(ModelManagerPlugin.ID)).getModelManager();
 		ModelHandlerRegistry cr = getModelHandlerRegistry();
@@ -579,7 +576,7 @@ public class ModelManagerImpl implements IModelManager {
 	/**
 	 * this used to be in loader, but has been moved here
 	 */
-	protected IStructuredModel copy(IStructuredModel model, String newId) throws ResourceInUse {
+	private IStructuredModel copy(IStructuredModel model, String newId) throws ResourceInUse {
 		IStructuredModel newModel = null;
 		IStructuredModel oldModel = model;
 		IModelHandler modelHandler = oldModel.getModelHandler();
@@ -1032,7 +1029,7 @@ public class ModelManagerImpl implements IModelManager {
 
 	// TODO: replace (or supplement) this is a "model info" association to the
 	// IFile that created the model
-	protected IFile getFileFor(IStructuredModel model) {
+	private IFile getFileFor(IStructuredModel model) {
 		if (model == null)
 			return null;
 		String path = model.getBaseLocation();
@@ -1102,12 +1099,16 @@ public class ModelManagerImpl implements IModelManager {
 		if (id == null) {
 			throw new IllegalArgumentException("Program Error: id may not be null"); //$NON-NLS-1$
 		}
+		IStructuredModel result = null;
 
 		InputStream istream = Utilities.getMarkSupportedStream(inputStream);
 		IModelHandler handler = calculateType(id, istream);
-		Assert.isNotNull(handler, "model handler can not be null"); //$NON-NLS-1$
-		IStructuredModel result = null;
-		result = _commonCreateModel(istream, id, handler, resolver, EDIT, null, null);
+		if (handler != null) {
+			result = _commonCreateModel(istream, id, handler, resolver, EDIT, null, null);
+		}
+		else {
+			Logger.log(Logger.INFO, "no model handler found for id");
+		}
 		return result;
 	}
 
@@ -1254,36 +1255,6 @@ public class ModelManagerImpl implements IModelManager {
 	}
 
 	/**
-	 * Register adapters for resources using an extension point. Required to
-	 * ensure that calculateURIResolver has the necessary factories registered
-	 * before any models are loaded.
-	 * 
-	 * @deprecated - wrong place to do this
-	 */
-	protected void initResourceAdapters() {
-
-		// Note: see comment in plugin.xml for potentially
-		// breaking change in behavior.
-
-		// new URIResolverAdapterFactoryRegistryReader().loadRegistry();
-	}
-
-	// private boolean isResourceInUse(String id) {
-	//
-	// boolean result = false;
-	// IStructuredModel model = null;
-	// Enumeration ids = getEnumeratedModelIds();
-	// while (ids.hasMoreElements()) {
-	// Object inUseID = ids.nextElement();
-	// if (id.equals(inUseID)) {
-	// result = true;
-	// break;
-	// }
-	// }
-	// return result;
-	// }
-
-	/**
 	 * This function returns true if there are other references to the
 	 * underlying model.
 	 */
@@ -1420,10 +1391,10 @@ public class ModelManagerImpl implements IModelManager {
 	}
 
 	/**
-	 * protected for use in same package, not subclasses
+	 * default for use in same package, not subclasses
 	 * 
 	 */
-	protected synchronized void releaseFromEdit(Object id) {
+	synchronized void releaseFromEdit(Object id) {
 		Assert.isNotNull(id, "id parameter can not be null"); //$NON-NLS-1$
 		SharedObject sharedObject = null;
 
@@ -1439,10 +1410,10 @@ public class ModelManagerImpl implements IModelManager {
 	}
 
 	/**
-	 * protected for use in same package, not subclasses
+	 * default for use in same package, not subclasses
 	 * 
 	 */
-	protected synchronized void releaseFromRead(Object id) {
+	synchronized void releaseFromRead(Object id) {
 		Assert.isNotNull(id, "id parameter can not be null"); //$NON-NLS-1$
 		SharedObject sharedObject = null;
 
