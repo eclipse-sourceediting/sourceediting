@@ -207,6 +207,11 @@ public interface IModelManagerProposed {
 	/**
 	 * Returns the model based on the content at the specified location.
 	 * 
+	 * Note: if the ModelManager does not know how to create a model for 
+	 * such a file for content, null is return.
+	 * ISSUE: should we throw some special, meaningful, checked 
+	 * exception instead?
+	 * 
 	 * @param requester
 	 * @param type
 	 * @param progressMonitor
