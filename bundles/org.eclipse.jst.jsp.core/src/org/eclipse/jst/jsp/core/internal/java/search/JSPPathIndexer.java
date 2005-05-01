@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.core.search.SearchPattern;
-import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
+import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 
 /**
  * pa_TODO Still need to take into consideration:

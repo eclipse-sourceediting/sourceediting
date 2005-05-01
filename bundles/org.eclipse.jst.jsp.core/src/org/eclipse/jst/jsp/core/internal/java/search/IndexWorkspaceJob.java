@@ -25,8 +25,8 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
+import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 
 /**
  * Re-indexes the entire workspace.

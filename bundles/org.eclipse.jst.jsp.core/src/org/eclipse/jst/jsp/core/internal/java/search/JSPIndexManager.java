@@ -33,10 +33,10 @@ import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jdt.internal.core.JavaModelManager;
 import org.eclipse.jdt.internal.core.index.Index;
 import org.eclipse.jdt.internal.core.search.indexing.IndexManager;
-import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.Logger;
+import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.osgi.util.NLS;
 import org.osgi.framework.Bundle;
 

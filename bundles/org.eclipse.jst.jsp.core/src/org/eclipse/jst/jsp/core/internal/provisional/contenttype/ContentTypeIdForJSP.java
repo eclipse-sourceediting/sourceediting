@@ -10,7 +10,7 @@
  *     
  *******************************************************************************/
 
-package org.eclipse.jst.jsp.core.contenttype;
+package org.eclipse.jst.jsp.core.internal.provisional.contenttype;
 
 /**
  * This class, with its one field, is a convience to provide compile-time

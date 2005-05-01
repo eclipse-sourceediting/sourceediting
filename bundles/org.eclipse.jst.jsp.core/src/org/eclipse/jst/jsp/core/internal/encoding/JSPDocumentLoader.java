@@ -12,6 +12,7 @@ package org.eclipse.jst.jsp.core.internal.encoding;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 
 import org.eclipse.core.resources.IFile;
@@ -21,20 +22,23 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.jst.jsp.core.JSP11Namespace;
-import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
+import org.eclipse.jst.jsp.core.internal.Assert;
 import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapter;
 import org.eclipse.jst.jsp.core.internal.document.PageDirectiveWatcherFactory;
 import org.eclipse.jst.jsp.core.internal.parser.JSPReParser;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
+import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
+import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.text.StructuredTextPartitionerForJSP;
 import org.eclipse.wst.sse.core.internal.PropagatingAdapter;
 import org.eclipse.wst.sse.core.internal.document.AbstractDocumentLoader;
 import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.internal.document.StructuredDocumentFactory;
+import org.eclipse.wst.sse.core.internal.encoding.CodedIO;
 import org.eclipse.wst.sse.core.internal.encoding.CodedReaderCreator;
 import org.eclipse.wst.sse.core.internal.encoding.ContentTypeEncodingPreferences;
+import org.eclipse.wst.sse.core.internal.encoding.util.BufferedLimitedReader;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.EmbeddedTypeHandler;
 import org.eclipse.wst.sse.core.internal.ltk.parser.JSPCapableParser;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
@@ -46,7 +50,6 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.document.IEncodedDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
-import org.eclipse.wst.sse.ui.internal.util.Assert;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
@@ -211,9 +214,12 @@ public class JSPDocumentLoader extends AbstractDocumentLoader {
 			String mimeType = null;
 
 			IDocumentCharsetDetector jspProvider = getDocumentEncodingDetector();
-			jspProvider.set(getFullPreparedReader());
+			Reader fullPreparedReader = getFullPreparedReader();
+			BufferedLimitedReader limitedReader = new BufferedLimitedReader(fullPreparedReader, CodedIO.MAX_BUF_SIZE);
+			jspProvider.set(limitedReader);
 			if (jspProvider instanceof IJSPHeadContentDetector) {
 				mimeType = ((IJSPHeadContentDetector) jspProvider).getContentType();
+				fullPreparedReader.reset();
 			}
 
 			EmbeddedTypeRegistry reg = getEmbeddedContentTypeRegistry();
@@ -365,7 +371,7 @@ public class JSPDocumentLoader extends AbstractDocumentLoader {
 			initEmbeddedType(newModel);
 		}
 		else {
-			//initEmbeddedType(newModel);
+			// initEmbeddedType(newModel);
 			initCloneOfEmbeddedType(newModel, existingEmbeddedType, newEmbeddedContentType);
 		}
 		setLanguageInPageDirective(newModel);
@@ -400,8 +406,8 @@ public class JSPDocumentLoader extends AbstractDocumentLoader {
 		// being initialized, and doesn't even have content
 		// or an ID yet. I thought I'd leave, since it wouldn't
 		// hurt, in case its called in other circumstances.
-		//		String language = getLanguage(model);
-		//		pageDirectiveAdapter.setLanguage(language);
+		// String language = getLanguage(model);
+		// pageDirectiveAdapter.setLanguage(language);
 	}
 
 	/**
@@ -427,7 +433,7 @@ public class JSPDocumentLoader extends AbstractDocumentLoader {
 	protected IEncodedDocument newEncodedDocument() {
 		IStructuredDocument structuredDocument = StructuredDocumentFactory.getNewStructuredDocumentInstance(getParser());
 		((BasicStructuredDocument) structuredDocument).setReParser(new JSPReParser());
-		//		structuredDocument.setDocumentPartitioner(new
+		// structuredDocument.setDocumentPartitioner(new
 		// JSPJavaDocumentPartioner());
 		// even though this is an "empty model" ... we want it to have at
 		// least
@@ -448,7 +454,7 @@ public class JSPDocumentLoader extends AbstractDocumentLoader {
 		// document must have already been set for this to
 		// work.
 		Document document = domModel.getDocument();
-		Assert.isNotNull(document);
+		Assert.isNotNull(document, "Program Error: structured model had no structuredDocument");
 		// if there is a model in the adapter, this will adapt it to
 		// first node. After that the PropagatingAdater spreads over the
 		// children being
@@ -463,8 +469,7 @@ public class JSPDocumentLoader extends AbstractDocumentLoader {
 		// before content is set in the model, so taglib initization can
 		// take place.
 		((INodeNotifier) document).getAdapterFor(ModelQueryAdapter.class);
-		//
-		// 
+		
 	}
 
 	/**
@@ -499,33 +504,33 @@ public class JSPDocumentLoader extends AbstractDocumentLoader {
 		// to accomplish this, we'll just remove all, then
 		// add back with a call to pre-load adapt.
 		// let clients decide to unload adapters from document
-		//		Collection oldAdapters = document.getAdapters();
-		//		Iterator oldAdaptersIterator = oldAdapters.iterator();
-		//		while (oldAdaptersIterator.hasNext()) {
-		//			INodeAdapter oldAdapter = (INodeAdapter)
+		// Collection oldAdapters = document.getAdapters();
+		// Iterator oldAdaptersIterator = oldAdapters.iterator();
+		// while (oldAdaptersIterator.hasNext()) {
+		// INodeAdapter oldAdapter = (INodeAdapter)
 		// oldAdaptersIterator.next();
-		//			if (oldAdapter != pageDirectiveAdapter && oldAdapter !=
+		// if (oldAdapter != pageDirectiveAdapter && oldAdapter !=
 		// propagatingAdapter && oldAdapter != modelQueryAdapter) {
-		//				// DO NOT remove directly!
-		//				// can change contents while in notifity loop!
-		//				//oldAdaptersIterator.remove();
-		//				document.removeAdapter(oldAdapter);
-		//			}
-		//		}
+		// // DO NOT remove directly!
+		// // can change contents while in notifity loop!
+		// //oldAdaptersIterator.remove();
+		// document.removeAdapter(oldAdapter);
+		// }
+		// }
 		// DMW: I believe something like the following is needed,
 		// since releases cached adapters
-		//				if (document instanceof DocumentImpl) {
-		//					((DocumentImpl) document).releaseDocumentType();
-		//					((DocumentImpl) document).releaseStyleSheets();
-		//				}
+		// if (document instanceof DocumentImpl) {
+		// ((DocumentImpl) document).releaseDocumentType();
+		// ((DocumentImpl) document).releaseStyleSheets();
+		// }
 		// remember, embedded type factories are automatically cleared when
 		// embededType changed
 		pageDirectiveAdapter.setEmbeddedType(newEmbeddedContentType);
-		//		// but still need to clear the page directive watchers, and let
+		// // but still need to clear the page directive watchers, and let
 		// them
 		// be
 		// rediscovered (with new, accurate node as target)
-		//		pageDirectiveAdapter.clearPageWatchers();
+		// pageDirectiveAdapter.clearPageWatchers();
 		if (newEmbeddedContentType != null) {
 			newEmbeddedContentType.initializeFactoryRegistry(model.getFactoryRegistry());
 			newEmbeddedContentType.initializeParser((JSPCapableParser) structuredDocument.getParser());

@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jst.jsp.core.internal.contenttype;
+package org.eclipse.jst.jsp.core.internal.provisional.contenttype;
 
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.wst.sse.core.internal.encoding.ICodedResourcePlugin;
@@ -16,8 +16,7 @@ import org.eclipse.wst.sse.core.internal.encoding.ICodedResourcePlugin;
 
 public interface IContentDescriptionForJSP {
 	/**
-	 * This should not be considered API at this point. It should probably be
-	 * moved in future.
+	 * Extra properties as part of ContentDescription, if the content is JSP.
 	 */
 	public final static QualifiedName CONTENT_TYPE_ATTRIBUTE = new QualifiedName(ICodedResourcePlugin.ID, "contentTypeAttribute"); //$NON-NLS-1$
 	public final static QualifiedName LANGUAGE_ATTRIBUTE = new QualifiedName(ICodedResourcePlugin.ID, "languageAttribute"); //$NON-NLS-1$

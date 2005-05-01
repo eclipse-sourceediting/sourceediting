@@ -24,7 +24,7 @@ import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationExtension;
-import org.eclipse.jst.jsp.core.text.IJSPPartitionTypes;
+import org.eclipse.jst.jsp.core.internal.provisional.text.IJSPPartitionTypes;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;

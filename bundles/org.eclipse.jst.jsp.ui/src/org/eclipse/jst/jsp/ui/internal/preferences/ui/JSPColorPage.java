@@ -16,7 +16,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
+import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;

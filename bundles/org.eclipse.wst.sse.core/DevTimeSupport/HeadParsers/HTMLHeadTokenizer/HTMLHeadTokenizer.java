@@ -145,7 +145,7 @@ public class HTMLHeadTokenizer {
 
 
 	private boolean hasMore = true;
-	private final static int MAX_TO_SCAN = 1000;
+	private final static int MAX_TO_SCAN = 8000;
 	StringBuffer string = new StringBuffer();
 	// state stack for easier state handling
 	private IntStack fStateStack = new IntStack();

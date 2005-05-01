@@ -39,11 +39,11 @@ import org.eclipse.jdt.core.search.SearchRequestor;
 import org.eclipse.jdt.internal.compiler.util.SimpleLookupTable;
 import org.eclipse.jdt.internal.core.JavaModelManager;
 import org.eclipse.jdt.internal.core.search.indexing.IndexManager;
-import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.java.JSP2ServletNameUtil;
+import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 
 /**
  * Central access to java indexing and search. All contact between JDT indexing

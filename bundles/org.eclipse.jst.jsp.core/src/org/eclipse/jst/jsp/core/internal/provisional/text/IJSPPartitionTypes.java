@@ -1,4 +1,4 @@
-package org.eclipse.jst.jsp.core.text;
+package org.eclipse.jst.jsp.core.internal.provisional.text;
 
 
 /**

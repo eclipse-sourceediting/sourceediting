@@ -27,7 +27,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITypedRegion;
-import org.eclipse.jst.jsp.core.text.IJSPPartitionTypes;
+import org.eclipse.jst.jsp.core.internal.provisional.text.IJSPPartitionTypes;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.ui.IEditorInput;

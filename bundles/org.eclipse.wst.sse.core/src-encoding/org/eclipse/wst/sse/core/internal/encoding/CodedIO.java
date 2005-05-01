@@ -32,7 +32,7 @@ public abstract class CodedIO {
 
 	private final boolean DEBUG = false;
 	
-	public static final int MAX_BUF_SIZE = 1024 * 2;
+	public static final int MAX_BUF_SIZE = 1024 * 8;
 
 	public static final int MAX_MARK_SIZE = MAX_BUF_SIZE;
 

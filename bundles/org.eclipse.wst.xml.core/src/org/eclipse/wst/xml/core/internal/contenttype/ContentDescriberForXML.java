@@ -25,10 +25,10 @@ import org.eclipse.wst.sse.core.internal.encoding.IContentDescriptionExtended;
 import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
 
 
-public class ContentDescriberForXML implements ITextContentDescriber {
+public final class ContentDescriberForXML implements ITextContentDescriber {
 	private final static QualifiedName[] SUPPORTED_OPTIONS = {IContentDescription.CHARSET, IContentDescription.BYTE_ORDER_MARK, IContentDescriptionExtended.DETECTED_CHARSET, IContentDescriptionExtended.UNSUPPORTED_CHARSET, IContentDescriptionExtended.APPROPRIATE_DEFAULT};
 
-	protected IResourceCharsetDetector getDetector() {
+	private IResourceCharsetDetector getDetector() {
 		return new XMLResourceEncodingDetector();
 	}
 
@@ -140,7 +140,7 @@ public class ContentDescriberForXML implements ITextContentDescriber {
 	 * @param detector
 	 * @throws IOException
 	 */
-	protected void handleCalculations(IContentDescription description, IResourceCharsetDetector detector) throws IOException {
+	private void handleCalculations(IContentDescription description, IResourceCharsetDetector detector) throws IOException {
 		// note: if we're asked for one, we set them all. I need to be sure if
 		// called
 		// mulitiple times (one for each, say) that we don't waste time

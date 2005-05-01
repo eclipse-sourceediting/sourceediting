@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.jst.jsp.core;
+package org.eclipse.jst.jsp.core.internal.provisional;
 
 /**
  * Names for JSP 1.2 spec.

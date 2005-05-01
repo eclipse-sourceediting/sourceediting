@@ -13,8 +13,8 @@ package org.eclipse.jst.jsp.core.internal.parser;
 
 import java.util.Iterator;
 
-import org.eclipse.jst.jsp.core.JSP12Namespace;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP11TLDNames;
+import org.eclipse.jst.jsp.core.internal.provisional.JSP12Namespace;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionParser;

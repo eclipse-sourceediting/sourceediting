@@ -105,7 +105,8 @@ public class CodedReaderCreator extends CodedIO {
 		// have been set, and no need to get again.
 		if (fEncodingMemento != null) {
 			result = fEncodingMemento;
-		} else {
+		}
+		else {
 			if (fClientSuppliedStream) {
 				try {
 					limitedStream.reset();
@@ -115,11 +116,13 @@ public class CodedReaderCreator extends CodedIO {
 						fEncodingMemento = createMemento(contentDescription);
 					}
 					result = fEncodingMemento;
-				} finally {
+				}
+				finally {
 					limitedStream.reset();
 				}
-			} else {
-				//throw new IllegalStateException("unexpected state:
+			}
+			else {
+				// throw new IllegalStateException("unexpected state:
 				// encodingMemento was null but no input stream supplied by
 				// client"); //$NON-NLS-1$
 				result = null;
@@ -157,7 +160,8 @@ public class CodedReaderCreator extends CodedIO {
 			// cost of sometimes returning null
 			if (fIFile.exists())
 				contentDescription = fIFile.getContentDescription();
-		} catch (CoreException e) {
+		}
+		catch (CoreException e) {
 			// Assume if core exception occurs, we can still try more
 			// expensive
 			// discovery options.
@@ -168,13 +172,15 @@ public class CodedReaderCreator extends CodedIO {
 			try {
 				contents = fIFile.getContents();
 				contentDescription = Platform.getContentTypeManager().getDescriptionFor(contents, fIFile.getName(), IContentDescription.ALL);
-			} catch (CoreException e1) {
+			}
+			catch (CoreException e1) {
 				// Assume if core exception occurs, we can't really do much
 				// with
 				// determining encoding, etc.
 				Logger.logException(e1);
 				throw e1;
-			} catch (IOException e2) {
+			}
+			catch (IOException e2) {
 				// We likely couldn't get the contents of the file, something
 				// is really wrong
 				Logger.logException(e2);
@@ -183,7 +189,8 @@ public class CodedReaderCreator extends CodedIO {
 			if (contents != null) {
 				try {
 					contents.close();
-				} catch (IOException e2) {
+				}
+				catch (IOException e2) {
 					Logger.logException(e2);
 				}
 			}
@@ -222,7 +229,8 @@ public class CodedReaderCreator extends CodedIO {
 					result = checkForEncodingInContents(resettableLimitedStream);
 				}
 
-			} else {
+			}
+			else {
 				// stream null, may name's not.
 				if (fFilename != null) {
 					// filename not null
@@ -233,7 +241,8 @@ public class CodedReaderCreator extends CodedIO {
 					}
 				}
 			}
-		} finally {
+		}
+		finally {
 			if (resettableLimitedStream != null) {
 				handleStreamClose(resettableLimitedStream);
 			}
@@ -268,7 +277,8 @@ public class CodedReaderCreator extends CodedIO {
 		// see ... TODO look up bug number
 		if (encodingMemento.isUnicodeStream()) {
 			streamToReturn.skip(2);
-		} else if (encodingMemento.isUTF83ByteBOMUsed()) {
+		}
+		else if (encodingMemento.isUTF83ByteBOMUsed()) {
 			streamToReturn.skip(3);
 		}
 		String charsetName = encodingMemento.getJavaCharsetName();
@@ -287,14 +297,16 @@ public class CodedReaderCreator extends CodedIO {
 		if (fEncodingRule == EncodingRule.IGNORE_CONVERSION_ERROR) {
 			charsetDecoder.onMalformedInput(CodingErrorAction.REPLACE);
 			charsetDecoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
-		} else {
+		}
+		else {
 			charsetDecoder.onMalformedInput(CodingErrorAction.REPORT);
 			charsetDecoder.onUnmappableCharacter(CodingErrorAction.REPORT);
 		}
 		// more efficient to be buffered, and I know of no
 		// reason not to return
 		// that directly.
-		result = new BufferedReader(new InputStreamReader(streamToReturn, charsetDecoder));
+		result = new BufferedReader(new InputStreamReader(streamToReturn, charsetDecoder), CodedIO.MAX_BUF_SIZE);
+		result.mark(CodedIO.MAX_BUF_SIZE);
 		return result;
 	}
 
@@ -303,7 +315,8 @@ public class CodedReaderCreator extends CodedIO {
 		if (fEncodingMemento == null) {
 			if (fClientSuppliedStream) {
 				fEncodingMemento = findMementoFromStreamCase();
-			} else if (fIFile != null) {
+			}
+			else if (fIFile != null) {
 				fEncodingMemento = findMementoFromFileCase();
 			}
 		}
@@ -376,27 +389,33 @@ public class CodedReaderCreator extends CodedIO {
 		if (fIFile != null) {
 			InputStream inputStream = null;
 			try {
-				inputStream = fIFile.getContents();
-			} catch (CoreException e) {
+				// note we always get contents, even if out of synch
+				inputStream = fIFile.getContents(true);
+			}
+			catch (CoreException e) {
 				// SHOULD actually check for existence of
 				// fIStorage, but
 				// for now will just assume core exception
 				// means it
 				// doesn't exist on file system, yet.
+				// and we'll log, just in case its a noteable error
+				Logger.logException(e);
 				inputStream = new NullInputStream();
 			}
 			resettableStream = new BufferedInputStream(inputStream, CodedIO.MAX_BUF_SIZE);
-		} else {
+		}
+		else {
 			if (fInputStream != null) {
 				if (fInputStream.markSupported()) {
 					resettableStream = fInputStream;
-					//				try {
+					// try {
 					resettableStream.reset();
-					//					}
-					//					catch (IOException e) {
-					//						// assumed just hasn't been marked yet, so ignore
-					//					}
-				} else {
+					// }
+					// catch (IOException e) {
+					// // assumed just hasn't been marked yet, so ignore
+					// }
+				}
+				else {
 					resettableStream = new BufferedInputStream(fInputStream, CodedIO.MAX_BUF_SIZE);
 				}
 			}
@@ -415,25 +434,25 @@ public class CodedReaderCreator extends CodedIO {
 
 		EncodingMemento result = null;
 		String specDefault = null;
-		//		try {
-		//			specDefault = getEncodingDetector().getSpecDefaultEncoding();
-		//		}
-		//		catch (CoreException e) {
-		//			// If this exception occurs, assumes there is
-		//			// no specDefault
-		//		}
-		//		catch (IOException e) {
-		//			// If this exception occurs, assumes there is
-		//			// no specDefault
-		//		}
-		//		finally {
-		//			try {
-		//				handleStreamClose(fEncodingDetectorStream);
-		//			}
-		//			catch (IOException e1) {
-		//				// severe error, not much to do here
-		//			}
-		//		}
+		// try {
+		// specDefault = getEncodingDetector().getSpecDefaultEncoding();
+		// }
+		// catch (CoreException e) {
+		// // If this exception occurs, assumes there is
+		// // no specDefault
+		// }
+		// catch (IOException e) {
+		// // If this exception occurs, assumes there is
+		// // no specDefault
+		// }
+		// finally {
+		// try {
+		// handleStreamClose(fEncodingDetectorStream);
+		// }
+		// catch (IOException e1) {
+		// // severe error, not much to do here
+		// }
+		// }
 		// this logic should be moved to 'detection' if not already
 		String charset = NonContentBasedEncodingRules.useDefaultNameRules(specDefault);
 		Assert.isNotNull(charset, "post condition failed"); //$NON-NLS-1$
@@ -450,7 +469,8 @@ public class CodedReaderCreator extends CodedIO {
 		if (resettableInputStream != null) {
 			if (fClientSuppliedStream) {
 				resettableInputStream.reset();
-			} else {
+			}
+			else {
 
 				resettableInputStream.close();
 			}
@@ -461,7 +481,7 @@ public class CodedReaderCreator extends CodedIO {
 	// encoding for now. May improve the UI later by setting an informational
 	// message and/or disable the content properties encoding field.
 	// TODO: remake private else remove
-	 void migrateContentPropertiesEncoding(String encoding) throws CoreException {
+	void migrateContentPropertiesEncoding(String encoding) throws CoreException {
 		final IFile file = fIFile;
 		final String charset = encoding;
 		// TODO: externalize string later
@@ -470,7 +490,8 @@ public class CodedReaderCreator extends CodedIO {
 				if (file != null) {
 					try {
 						file.setCharset(charset, null);
-					} catch (CoreException e) {
+					}
+					catch (CoreException e) {
 						Logger.logException(e);
 					}
 				}

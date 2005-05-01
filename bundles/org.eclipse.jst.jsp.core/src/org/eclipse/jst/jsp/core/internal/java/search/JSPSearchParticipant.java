@@ -33,20 +33,23 @@ import org.eclipse.jdt.core.search.SearchRequestor;
 public class JSPSearchParticipant extends SearchParticipant {
 
 	// for debugging
-	private static final boolean DEBUG;
-	static {
-		String value= Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspsearch"); //$NON-NLS-1$
-		DEBUG= value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+	private static final boolean DEBUG = calculateValue();
+
+	private static boolean calculateValue() {
+		String value = Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jspsearch"); //$NON-NLS-1$
+		boolean debug = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+		return debug;
 	}
-	
+
 	/**
-	 * Important to never return null here or else Java search participation will break.
+	 * Important to never return null here or else Java search participation
+	 * will break.
 	 */
 	public SearchDocument getDocument(String documentPath) {
-		
+
 		SearchDocument sDoc = JSPSearchSupport.getInstance().getSearchDocument(documentPath);
 
-		if(sDoc == null){
+		if (sDoc == null) {
 			// return a dummy doc here so search participation doesn't break
 			return new NullSearchDocument(documentPath);
 		}
@@ -72,9 +75,9 @@ public class JSPSearchParticipant extends SearchParticipant {
 
 	public void locateMatches(SearchDocument[] indexMatches, SearchPattern pattern, IJavaSearchScope scope, SearchRequestor requestor, IProgressMonitor monitor) throws CoreException {
 
-		if(monitor != null && monitor.isCanceled())
+		if (monitor != null && monitor.isCanceled())
 			return;
-			
+
 		// filter out null matches
 		List filtered = new ArrayList();
 		SearchDocument match = null;
@@ -83,9 +86,10 @@ public class JSPSearchParticipant extends SearchParticipant {
 				System.out.println("found possible matching JavaSearchDocumentDelegate: " + indexMatches[i]); //$NON-NLS-1$
 			match = indexMatches[i];
 			if (match != null) {
-				// some matches may be null, or if the index is out of date, the file may not even exist
-				if(match instanceof JavaSearchDocumentDelegate && ((JavaSearchDocumentDelegate)match).getFile().exists())
-				filtered.add(match);
+				// some matches may be null, or if the index is out of date,
+				// the file may not even exist
+				if (match instanceof JavaSearchDocumentDelegate && ((JavaSearchDocumentDelegate) match).getFile().exists())
+					filtered.add(match);
 			}
 		}
 

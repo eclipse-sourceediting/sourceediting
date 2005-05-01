@@ -13,6 +13,7 @@ package org.eclipse.wst.css.core.internal.metamodelimpl;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -247,12 +248,14 @@ class ProfileHandler extends DefaultHandler {
 
 		void doCorrect(CSSMMNodeImpl node) {
 			Iterator i = node.getChildNodes();
+			ArrayList errorNodes = new ArrayList();
 			while (i.hasNext()) {
 				CSSMMNodeImpl child = (CSSMMNodeImpl) i.next();
 				doCorrect(child);
 				short error = child.getError();
 				if (error != MetaModelErrors.NO_ERROR) {
-					node.removeChild(child);
+					// node.removeChild(child);
+					errorNodes.add(child);
 
 					String str = "[CSSProfile Error] " + node.getName(); //$NON-NLS-1$
 					str += "(" + node.getType() + ") contains error node: "; //$NON-NLS-1$ //$NON-NLS-2$
@@ -264,6 +267,13 @@ class ProfileHandler extends DefaultHandler {
 					}
 				}
 			}
+			int errorSize = errorNodes.size();
+			if (errorSize > 0) {
+				for (int j = 0; j < errorSize; j++) {
+					CSSMMNodeImpl errorNode = (CSSMMNodeImpl) errorNodes.get(j);
+					node.removeChild(errorNode);
+				}
+			}
 		}
 	}
 
@@ -271,7 +281,7 @@ class ProfileHandler extends DefaultHandler {
 	private CSSMetaModelImpl fMetaModel = null;
 	private NodePool fNodePool = null;
 	private Stack fNodeStack = new Stack();
-	private boolean fLogging = false;
+	boolean fLogging = false;
 	private ResourceBundle fResourceBundle = null;
 
 	private final static String ATTR_NAME_DEFINITION = "name"; //$NON-NLS-1$

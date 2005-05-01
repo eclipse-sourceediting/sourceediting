@@ -15,7 +15,6 @@ package org.eclipse.jst.jsp.core.internal.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -30,7 +29,6 @@ import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.jst.jsp.core.internal.Logger;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.util.JarUtilities;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.DOMImplementation;
@@ -52,22 +50,23 @@ import org.xml.sax.SAXParseException;
  */
 
 public class DocumentProvider {
-	protected Document document = null;
-	protected ErrorHandler errorHandler = null;
+	private Document document = null;
+	private ErrorHandler errorHandler = null;
 	private String fBaseReference;
-	protected String fileName = null;
-	protected boolean fValidating = true;
-	protected InputStream inputStream = null;
-	protected String jarFileName = null;
-	protected EntityResolver resolver = null;
+	private String fileName = null;
+	private boolean fValidating = true;
+	private InputStream inputStream = null;
+	private String jarFileName = null;
+	private EntityResolver resolver = null;
 
-	protected Node rootElement = null;
-	protected String rootElementName = null;
+	private Node rootElement = null;
+	private String rootElementName = null;
 
 	public DocumentProvider() {
+		super();
 	}
 
-	protected Document _getParsedDocumentDOM2() {
+	private Document _getParsedDocumentDOM2() {
 		Document result = null;
 
 		InputStream is = null;
@@ -128,11 +127,11 @@ public class DocumentProvider {
 		return document;
 	}
 
-	protected DocumentBuilder getDocumentBuilder() {
+	private DocumentBuilder getDocumentBuilder() {
 		return CommonXML.getDocumentBuilder(isValidating());
 	}
 
-	protected DOMImplementation getDomImplementation() {
+	private DOMImplementation getDomImplementation() {
 		DocumentBuilder builder = null;
 		try {
 			builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -156,12 +155,13 @@ public class DocumentProvider {
 	 * child element manipulation.
 	 ************************************************************************/
 	public Element getElement(String name) {
+		Element result = null;
 		if (document == null)
 			load();
-		if (document != null)
-			return (Element) getNode(getRootElement(), name);
-		else
-			return null;
+		if (document != null) {
+			result = (Element) getNode(getRootElement(), name);
+		}
+		return result;
 	}
 
 	/**
@@ -234,7 +234,7 @@ public class DocumentProvider {
 		return jarFileName;
 	}
 
-	protected Node getNamedChild(Node parent, String childName) {
+	private Node getNamedChild(Node parent, String childName) {
 		if (parent == null) {
 			return null;
 		}
@@ -246,7 +246,7 @@ public class DocumentProvider {
 		return null;
 	}
 
-	protected Document getNewDocument() {
+	private Document getNewDocument() {
 		Document result = null;
 		try {
 			result = getDomImplementation().createDocument("", getRootElementName(), null); //$NON-NLS-1$
@@ -270,7 +270,7 @@ public class DocumentProvider {
 	 * structure exists below the head element, down through 'c', and returns
 	 * the element 'c'.
 	 ************************************************************************/
-	protected Node getNode(Node node, String name) {
+	private Node getNode(Node node, String name) {
 		StringTokenizer tokenizer = new StringTokenizer(name, "/"); //$NON-NLS-1$
 		String token = null;
 		while (tokenizer.hasMoreTokens()) {
@@ -305,7 +305,7 @@ public class DocumentProvider {
 		return errorHandler;
 	}
 
-	protected Document getParsedDocument() {
+	private Document getParsedDocument() {
 		Document result = null;
 		if (inputStream == null) {
 			File existenceTester = null;
@@ -337,7 +337,7 @@ public class DocumentProvider {
 	 * 
 	 * @return org.w3c.dom.Element
 	 */
-	protected Node getRootElement(Document doc) {
+	private Node getRootElement(Document doc) {
 		if (doc == null)
 			return null;
 		if (doc.getDocumentElement() != null)
@@ -361,7 +361,7 @@ public class DocumentProvider {
 		return rootElementName;
 	}
 
-	protected boolean isJAR() {
+	private boolean isJAR() {
 		return getJarFileName() != null;
 	}
 
@@ -403,7 +403,7 @@ public class DocumentProvider {
 		}
 	}
 
-	protected void saveDocument(Document odocument, OutputStream stream) throws IOException {
+	private void saveDocument(Document odocument, OutputStream stream) throws IOException {
 		CommonXML.serialize(odocument, stream);
 	}
 
@@ -456,37 +456,5 @@ public class DocumentProvider {
 	 */
 	public void setValidating(boolean b) {
 		fValidating = b;
-	}
-
-	public void store() {
-		if (isJAR())
-			return;
-
-		if (rootElement == null) {
-			document = getNewDocument();
-			rootElement = document.getDocumentElement();
-		}
-
-		try {
-			OutputStream ostream = new FileOutputStream(getFileName());
-
-			storeDocument(document, ostream);
-
-			ostream.flush();
-			ostream.close();
-		}
-		catch (IOException e) {
-			Logger.logException("Exception saving document " + getFileName(), e); //$NON-NLS-1$
-			throw new SourceEditingRuntimeException(e);
-		}
-	}
-
-	protected void storeDocument(Document odocument, OutputStream ostream) {
-		try {
-			saveDocument(odocument, ostream);
-		}
-		catch (IOException e) {
-			Logger.logException(e);
-		}
 	}
 }

@@ -22,8 +22,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 
 public class XMLDeclDetector {
-	private static final int MAX_BUF_SIZE = 1024 * 2;
-	private static final int MAX_MARK_SIZE = 1024 * 2;
+	private static final int MAX_BUF_SIZE = 1024 * 8;
+	private static final int MAX_MARK_SIZE = 1024 * 8;
 	protected boolean fHeaderParsed;
 	private boolean fIsXML;
 	protected Reader fReader;
