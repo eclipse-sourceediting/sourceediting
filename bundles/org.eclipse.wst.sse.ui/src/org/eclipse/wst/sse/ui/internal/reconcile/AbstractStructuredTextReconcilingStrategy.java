@@ -16,10 +16,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
@@ -41,6 +44,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.ITemporaryAnnotation;
+import org.eclipse.wst.sse.ui.internal.StructuredMarkerAnnotation;
 
 
 /**
@@ -64,6 +68,10 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	protected ITextEditor fTextEditor = null;
     private Comparator fComparator;
 
+	// list of "validator" annotations
+	// for gray/un-gray capability
+	private HashSet fMarkerAnnotations = new HashSet();
+	
 	/**
 	 * Creates a new strategy. The editor parameter is for access to the
 	 * annotation model.
@@ -85,6 +93,13 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 		// can be null when closing the editor
 		if (getAnnotationModel() != null) {
 			TemporaryAnnotation tempAnnotation = (TemporaryAnnotation) result;
+			
+			StructuredMarkerAnnotation sma = getCorrespondingMarkerAnnotation(tempAnnotation);
+			if(sma != null) {
+				// un-gray out the marker annotation
+				sma.setGrayed(false);
+			}
+			
 			getAnnotationModel().addAnnotation(tempAnnotation, tempAnnotation.getPosition());
 		}
 	}
@@ -155,9 +170,24 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 		IAnnotationModel annotationModel = getAnnotationModel();
 		// can be null when closing the editor
 		if (getAnnotationModel() != null) {
+			
+			// clear validator annotations
+			fMarkerAnnotations.clear();
+			
 			Iterator i = annotationModel.getAnnotationIterator();
 			while (i.hasNext()) {
+				
 				Object obj = i.next();
+				
+				// check if it's a validator marker annotation
+				// if it is save it for comparision later (to "gray" icons)
+				if(obj instanceof StructuredMarkerAnnotation) {
+					StructuredMarkerAnnotation sma = (StructuredMarkerAnnotation)obj;
+					
+					if(sma.getAnnotationType() == TemporaryAnnotation.ANNOT_ERROR || sma.getAnnotationType() == TemporaryAnnotation.ANNOT_WARNING)
+						fMarkerAnnotations.add(sma);
+				}
+				
 				if (!(obj instanceof TemporaryAnnotation))
 					continue;
 
@@ -370,6 +400,7 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	}
 
 	private void removeAnnotations(TemporaryAnnotation[] annotationsToRemove) {
+		
 		IAnnotationModel annotationModel = getAnnotationModel();
 		// can be null when closing the editor
 		if (annotationModel != null) {
@@ -379,7 +410,14 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 					    System.out.println("[trace reconciler] >** REMOVAL WAS CANCELLED **"); //$NON-NLS-1$
 					return;
 				}
+				StructuredMarkerAnnotation sma = getCorrespondingMarkerAnnotation(annotationsToRemove[i]);
+				if(sma != null) {
+					// gray out the marker annotation
+					sma.setGrayed(true);
+				}
+				// remove the temp one
 				annotationModel.removeAnnotation(annotationsToRemove[i]);
+				
 			}
 		}
         
@@ -391,7 +429,25 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 		}
 	}
 
-    private void removeAllAnnotations() {
+    private StructuredMarkerAnnotation getCorrespondingMarkerAnnotation(TemporaryAnnotation tempAnnotation) {
+		
+		Iterator it = fMarkerAnnotations.iterator();
+		while (it.hasNext()) {
+			StructuredMarkerAnnotation markerAnnotation = (StructuredMarkerAnnotation) it.next();
+			String message = ""; //$NON-NLS-1$
+			try {
+				message = (String) markerAnnotation.getMarker().getAttribute(IMarker.MESSAGE);
+			} catch (CoreException e) {
+				e.printStackTrace();
+			}
+			// it would be nice to check line number here...
+			if(message != null && message.equals(tempAnnotation.getText()))
+				return markerAnnotation;
+		}
+		return null;
+	}
+
+	private void removeAllAnnotations() {
         removeAnnotations(getAllAnnotationsToRemove());
     }
 

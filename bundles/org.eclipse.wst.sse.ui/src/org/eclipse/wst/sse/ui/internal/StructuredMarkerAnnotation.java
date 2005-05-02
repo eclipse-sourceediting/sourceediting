@@ -18,9 +18,15 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.model.IBreakpoint;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.debug.ui.IDebugModelPresentation;
-import org.eclipse.search.ui.SearchUI;
+import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.text.source.IAnnotationPresentation;
+import org.eclipse.search.ui.NewSearchUI;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.texteditor.MarkerAnnotation;
 import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
@@ -32,61 +38,89 @@ import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
  * org.eclipse.core.resource.problemmarker causing all problems to be skipped
  * in the OverviewRuler
  */
-public class StructuredMarkerAnnotation extends MarkerAnnotation {
-	//	private static final int ORIGINAL_MARKER_IMAGE= 1;
-	//	private static final int QUICKFIX_IMAGE= 2;
-	//	private static final int QUICKFIX_ERROR_IMAGE= 3;
-	//	private static final int OVERLAY_IMAGE= 4;
-	//	private static final int GRAY_IMAGE= 5;
-	private static final int BREAKPOINT_IMAGE = 6;
+public class StructuredMarkerAnnotation extends MarkerAnnotation implements IAnnotationPresentation {
 
-	private static final int NO_IMAGE = 0;
-	private int fImageType;
 	private IDebugModelPresentation fPresentation;
+	//controls if icon should be painted gray
+	private boolean fIsGrayed = false;
+	String fAnnotationType = null;
 
-	// TODO: private field never read loacally
-	String fType = null;
-
-	/**
-	 * Constructor
-	 * 
-	 * @param marker
-	 */
 	StructuredMarkerAnnotation(IMarker marker) {
 		super(marker);
-		// sets fType, for use w/ StructuredAnnotationAccess
 		initAnnotationType();
 	}
-
-
-	/*
-	 * (non-Javadoc)
-	 * 
+	
+	public final String getAnnotationType() {
+		return fAnnotationType;
+	}
+	
+	/**
+	 * Eventually will have to use IAnnotationPresentation & IAnnotationExtension
 	 * @see org.eclipse.ui.texteditor.MarkerAnnotation#getImage(org.eclipse.swt.widgets.Display)
 	 */
 	protected Image getImage(Display display) {
-		if (fImageType == BREAKPOINT_IMAGE) {
-			Image result = super.getImage(display);
-			if (result == null) {
+		Image image = null;
+		if (fAnnotationType == TemporaryAnnotation.ANNOT_BREAKPOINT) {
+			image = super.getImage(display);
+			if (image == null) {
 				IMarker marker = getMarker();
 				if (marker != null && marker.exists()) {
-					result = fPresentation.getImage(getMarker());
-					setImage(result);
+					image = fPresentation.getImage(getMarker());
 				}
 			}
-			return result;
 		}
+		else if(fAnnotationType == TemporaryAnnotation.ANNOT_ERROR) {
+			image = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
+		}
+		else if(fAnnotationType == TemporaryAnnotation.ANNOT_WARNING) {
+			image = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK);
+		}
+		else if(fAnnotationType == TemporaryAnnotation.ANNOT_INFO) {
+			image = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK);
+		}
+		else if(fAnnotationType == TemporaryAnnotation.ANNOT_TASK) {
+			image = PlatformUI.getWorkbench().getSharedImages().getImage(IDE.SharedImages.IMG_OBJS_TASK_TSK);
+		}
+		else if(fAnnotationType == TemporaryAnnotation.ANNOT_BOOKMARK) {
+			image = PlatformUI.getWorkbench().getSharedImages().getImage(IDE.SharedImages.IMG_OBJS_BKMRK_TSK);
+		}
+			
+		if(image != null && isGrayed())
+			setImage(getGrayImage(display, image));
+		else 
+			setImage(image);
+		
 		return super.getImage(display);
 	}
 
+	private Image getGrayImage(Display display, Image image) {
+		if (image != null) {
+			String key= Integer.toString(image.hashCode());
+			// make sure we cache the gray image
+			Image grayImage = JFaceResources.getImageRegistry().get(key);
+			if (grayImage == null) {
+				grayImage= new Image(display, image, SWT.IMAGE_GRAY);
+				JFaceResources.getImageRegistry().put(key, grayImage);
+			}
+			image= grayImage;
+		}
+		return image;
+	}
+	
+	public final boolean isGrayed() {
+		return fIsGrayed;
+	}
+	
+	public final void setGrayed(boolean grayed) {
+		fIsGrayed = grayed;
+	}
+	
 	/**
 	 * Initializes the annotation's icon representation and its drawing layer
 	 * based upon the properties of the underlying marker.
 	 */
 	protected void initAnnotationType() {
-		//		fQuickFixIconEnabled=
-		// PreferenceConstants.getPreferenceStore().getBoolean(PreferenceConstants.EDITOR_CORRECTION_INDICATION);
-		fImageType = NO_IMAGE;
+		
 		IMarker marker = getMarker();
 		if (MarkerUtilities.isMarkerType(marker, IBreakpoint.BREAKPOINT_MARKER)) {
 
@@ -95,32 +129,32 @@ public class StructuredMarkerAnnotation extends MarkerAnnotation {
 
 			setImage(null); // see bug 32469
 			setLayer(4);
-			fImageType = BREAKPOINT_IMAGE;
-
-			fType = TemporaryAnnotation.ANNOT_UNKNOWN;
+			//fImageType = BREAKPOINT_IMAGE;
+			fAnnotationType = TemporaryAnnotation.ANNOT_BREAKPOINT;
 
 		} else {
-			fType = TemporaryAnnotation.ANNOT_UNKNOWN;
+			
+			fAnnotationType = TemporaryAnnotation.ANNOT_UNKNOWN;
 			try {
 				if (marker.isSubtypeOf(IMarker.PROBLEM)) {
 					int severity = marker.getAttribute(IMarker.SEVERITY, -1);
 					switch (severity) {
 						case IMarker.SEVERITY_ERROR :
-							fType = TemporaryAnnotation.ANNOT_ERROR;
+							fAnnotationType = TemporaryAnnotation.ANNOT_ERROR;
 							break;
 						case IMarker.SEVERITY_WARNING :
-							fType = TemporaryAnnotation.ANNOT_WARNING;
+							fAnnotationType = TemporaryAnnotation.ANNOT_WARNING;
 							break;
 						case IMarker.SEVERITY_INFO :
-							fType = TemporaryAnnotation.ANNOT_INFO;
+							fAnnotationType = TemporaryAnnotation.ANNOT_INFO;
 							break;
 					}
 				} else if (marker.isSubtypeOf(IMarker.TASK))
-					fType = TemporaryAnnotation.ANNOT_TASK;
-				else if (marker.isSubtypeOf(SearchUI.SEARCH_MARKER)) {
-					fType = TemporaryAnnotation.ANNOT_SEARCH;
+					fAnnotationType = TemporaryAnnotation.ANNOT_TASK;
+				else if (marker.isSubtypeOf(NewSearchUI.SEARCH_MARKER)) {
+					fAnnotationType = TemporaryAnnotation.ANNOT_SEARCH;
 				} else if (marker.isSubtypeOf(IMarker.BOOKMARK))
-					fType = TemporaryAnnotation.ANNOT_BOOKMARK;
+					fAnnotationType = TemporaryAnnotation.ANNOT_BOOKMARK;
 
 			} catch (CoreException e) {
 				Logger.logException(e);

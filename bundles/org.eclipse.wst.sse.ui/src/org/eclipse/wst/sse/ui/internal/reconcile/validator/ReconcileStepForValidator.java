@@ -113,9 +113,13 @@ public class ReconcileStepForValidator extends StructuredReconcileStep {
 						type = TemporaryAnnotation.ANNOT_WARNING;
 						break;
 				}
-				Position p = new Position(offset, validationMessage.getLength());
-				ReconcileAnnotationKey key = createKey(getPartitionType(getDocument(), offset), getScope());
-				annotations.add(new TemporaryAnnotation(p, type, messageText, key));
+				// this position seems like it would be possibly be the wrong length
+				int length = validationMessage.getLength();
+				if(length >=0) {
+					Position p = new Position(offset, length);
+					ReconcileAnnotationKey key = createKey(getPartitionType(getDocument(), offset), getScope());
+					annotations.add(new TemporaryAnnotation(p, type, messageText, key));
+				}
 			}
 		
 		return (IReconcileResult[]) annotations.toArray(new IReconcileResult[annotations.size()]);
