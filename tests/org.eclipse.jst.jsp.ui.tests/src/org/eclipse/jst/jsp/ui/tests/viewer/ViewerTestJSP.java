@@ -18,7 +18,7 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jst.jsp.core.contenttype.ContentTypeIdForJSP;
+import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.ui.internal.provisional.StructuredTextViewerConfigurationJSP;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;

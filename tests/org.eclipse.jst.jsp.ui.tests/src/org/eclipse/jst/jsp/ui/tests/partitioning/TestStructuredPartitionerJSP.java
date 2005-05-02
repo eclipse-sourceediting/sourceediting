@@ -19,7 +19,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITypedRegion;
-import org.eclipse.jst.jsp.core.text.IJSPPartitionTypes;
+import org.eclipse.jst.jsp.core.internal.provisional.text.IJSPPartitionTypes;
 import org.eclipse.wst.css.core.internal.provisional.text.ICSSPartitionTypes;
 import org.eclipse.wst.html.core.internal.provisional.text.IHTMLPartitionTypes;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
