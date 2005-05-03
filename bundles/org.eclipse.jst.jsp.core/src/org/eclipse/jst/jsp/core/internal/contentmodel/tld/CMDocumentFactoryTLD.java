@@ -586,7 +586,7 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 			else if (nodeName.equals(JSP20TLDNames.FUNCTION)) {
 				TLDFunction function = createFunction(document, child);
 				if (function != null) {
-					document.getListeners().add(function);
+					document.getFunctions().add(function);
 				}
 			}
 			else if (nodeName.equals(JSP20TLDNames.TAGLIB_EXTENSION)) {
