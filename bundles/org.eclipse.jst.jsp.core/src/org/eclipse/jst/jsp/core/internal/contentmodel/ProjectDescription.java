@@ -55,41 +55,42 @@ class ProjectDescription {
 
 	class DeltaVisitor implements IResourceDeltaVisitor {
 		public boolean visit(IResourceDelta delta) throws CoreException {
-			if (delta.getResource().getType() == IResource.FILE) {
-				if (delta.getResource().getName().endsWith(".tld")) { //$NON-NLS-1$
+			IResource resource = delta.getResource();
+			if (resource.getType() == IResource.FILE) {
+				if (resource.getName().endsWith(".tld")) { //$NON-NLS-1$
 					if (delta.getKind() == IResourceDelta.REMOVED) {
-						removeTLD(delta.getResource());
+						removeTLD(resource);
 					}
 					else {
-						updateTLD(delta.getResource(), delta.getKind());
+						updateTLD(resource, delta.getKind());
 					}
 				}
-				else if (delta.getResource().getName().endsWith(".jar")) { //$NON-NLS-1$
+				else if (resource.getName().endsWith(".jar")) { //$NON-NLS-1$
 					if (delta.getKind() == IResourceDelta.REMOVED) {
-						removeJAR(delta.getResource());
+						removeJAR(resource);
 					}
 					else {
-						updateJAR(delta.getResource(), delta.getKind());
+						updateJAR(resource, delta.getKind());
 					}
 				}
-				else if (delta.getResource().getName().endsWith(".tag") || delta.getResource().getName().endsWith(".tagx")) { //$NON-NLS-1$ //$NON-NLS-2$
+				else if (resource.getName().endsWith(".tag") || resource.getName().endsWith(".tagx")) { //$NON-NLS-1$ //$NON-NLS-2$
 					if (delta.getKind() == IResourceDelta.REMOVED) {
-						removeTagDir(delta.getResource());
+						removeTagDir(resource);
 					}
 					else {
-						updateTagDir(delta.getResource(), delta.getKind());
+						updateTagDir(resource, delta.getKind());
 					}
 				}
-				else if (delta.getResource().getName().equals(WEB_XML) && delta.getResource().getParent().getName().equals(WEB_INF)) {
+				else if (resource.getName().equals(WEB_XML) && resource.getParent().getName().equals(WEB_INF)) {
 					if (delta.getKind() == IResourceDelta.REMOVED) {
-						removeServlets(delta.getResource());
+						removeServlets(resource);
 					}
 					else {
-						updateServlets(delta.getResource(), delta.getKind());
+						updateServlets(resource, delta.getKind());
 					}
 				}
 			}
-			return true;
+			return resource.getName().length() != 0 && resource.getName().charAt(0) != '.';
 		}
 	}
 
@@ -109,7 +110,8 @@ class ProjectDescription {
 					updateServlets(proxy.requestResource(), ITaglibRecordEvent.ADDED);
 				}
 			}
-			return true;
+			String name = proxy.getName();
+			return name.length() != 0 && name.charAt(0) != '.';
 		}
 	}
 
