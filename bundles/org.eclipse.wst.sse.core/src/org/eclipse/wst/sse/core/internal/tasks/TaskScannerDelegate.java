@@ -58,7 +58,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
 
-
 /**
  * A delegate to create IMarker.TASKs for "todos" and similiar comments.
  */

@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -29,19 +30,22 @@ import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
 
+/**
+ * Queueing Job for processing deltas and projects.
+ */
 class ScanningJob extends Job {
 	public static final boolean _debugJob = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks/job"));
-	static final String TASK_TAG_PROJECTS_SCANNED = "task-tag-projects-scanned"; //$NON-NLS-1$
+	static final String TASK_TAG_PROJECTS_ALREADY_SCANNED = "task-tag-projects-already-scanned"; //$NON-NLS-1$
 	private List fQueue = null;
 
-	public ScanningJob() {
+	ScanningJob() {
 		super(SSECoreMessages.TaskScanner_0);
 		fQueue = new ArrayList();
 		setPriority(Job.DECORATE);
 		setSystem(false);
 
-		SSECorePlugin.getDefault().getPluginPreferences().setDefault(CommonModelPreferenceNames.TASK_TAG_PROJECTS_SKIPPED, "");
-		SSECorePlugin.getDefault().getPluginPreferences().setDefault(TASK_TAG_PROJECTS_SCANNED, "");
+		SSECorePlugin.getDefault().getPluginPreferences().setDefault(CommonModelPreferenceNames.TASK_TAG_PROJECTS_IGNORED, "");
+		SSECorePlugin.getDefault().getPluginPreferences().setDefault(TASK_TAG_PROJECTS_ALREADY_SCANNED, "");
 	}
 
 	synchronized void addDelta(IResourceDelta delta) {
@@ -56,13 +60,13 @@ class ScanningJob extends Job {
 			fQueue.add(project);
 			if (_debugJob)
 				System.out.println("Adding project " + project.getName());
-			schedule(500);
+			schedule(600);
 		}
 	}
 
 	private boolean isEnabledProject(IResource project) {
-		String[] projectsIgnored = StringUtils.unpack(SSECorePlugin.getDefault().getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_PROJECTS_SKIPPED));
-		String[] projectsScanned = StringUtils.unpack(SSECorePlugin.getDefault().getPluginPreferences().getString(TASK_TAG_PROJECTS_SCANNED));
+		String[] projectsIgnored = StringUtils.unpack(SSECorePlugin.getDefault().getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_PROJECTS_IGNORED));
+		String[] projectsScanned = StringUtils.unpack(SSECorePlugin.getDefault().getPluginPreferences().getString(TASK_TAG_PROJECTS_ALREADY_SCANNED));
 
 		boolean shouldScan = true;
 		String name = project.getName();
@@ -90,16 +94,19 @@ class ScanningJob extends Job {
 	}
 
 	protected IStatus run(IProgressMonitor monitor) {
+		validateRememberedProjectList(CommonModelPreferenceNames.TASK_TAG_PROJECTS_IGNORED);
+		validateRememberedProjectList(TASK_TAG_PROJECTS_ALREADY_SCANNED);
+
 		IStatus status = null;
 		List currentQueue = retrieveQueue();
 		List errors = null;
 		int ticks = currentQueue.size();
 		String taskName = null;
 		if (_debugJob) {
-			taskName = "(" + ticks + " work items)";
+			taskName = "Scanning (" + ticks + " work items)";
 		}
 		else {
-			taskName = "";
+			taskName = "Scanning";
 		}
 		monitor.beginTask(taskName, ticks);
 
@@ -113,11 +120,11 @@ class ScanningJob extends Job {
 				}
 				else if (o instanceof IProject) {
 					TaskScanner.getInstance().scan((IProject) o, scanMonitor);
-					String[] projectsPreviouslyScanned = StringUtils.unpack(SSECorePlugin.getDefault().getPluginPreferences().getString(TASK_TAG_PROJECTS_SCANNED));
+					String[] projectsPreviouslyScanned = StringUtils.unpack(SSECorePlugin.getDefault().getPluginPreferences().getString(TASK_TAG_PROJECTS_ALREADY_SCANNED));
 					String[] updatedProjects = new String[projectsPreviouslyScanned.length + 1];
 					updatedProjects[projectsPreviouslyScanned.length] = ((IResource) o).getName();
 					System.arraycopy(projectsPreviouslyScanned, 0, updatedProjects, 0, projectsPreviouslyScanned.length);
-					SSECorePlugin.getDefault().getPluginPreferences().setValue(TASK_TAG_PROJECTS_SCANNED, StringUtils.pack(updatedProjects));
+					SSECorePlugin.getDefault().getPluginPreferences().setValue(TASK_TAG_PROJECTS_ALREADY_SCANNED, StringUtils.pack(updatedProjects));
 				}
 			}
 			catch (Exception e) {
@@ -144,5 +151,34 @@ class ScanningJob extends Job {
 
 		SSECorePlugin.getDefault().savePluginPreferences();
 		return status;
+	}
+
+	private void validateRememberedProjectList(String preferenceName) {
+		String[] rememberedProjectNames = StringUtils.unpack(SSECorePlugin.getDefault().getPluginPreferences().getString(preferenceName));
+		IResource[] workspaceProjects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
+		String[] projectNames = new String[workspaceProjects.length];
+		for (int i = 0; i < projectNames.length; i++) {
+			projectNames[i] = workspaceProjects[i].getName();
+		}
+
+		List projectNamesToRemember = new ArrayList(rememberedProjectNames.length);
+		for (int i = 0; i < rememberedProjectNames.length; i++) {
+			boolean rememberedProjectExists = false;
+			for (int j = 0; !rememberedProjectExists && j < projectNames.length; j++) {
+				if (rememberedProjectNames[i].equals(projectNames[j])) {
+					rememberedProjectExists = true;
+				}
+			}
+			if (rememberedProjectExists) {
+				projectNamesToRemember.add(rememberedProjectNames[i]);
+			}
+			else if (_debugJob) {
+				System.out.println("Removing " + rememberedProjectNames[i] + " removed from " + preferenceName);
+			}
+		}
+
+		if (projectNamesToRemember.size() != rememberedProjectNames.length) {
+			SSECorePlugin.getDefault().getPluginPreferences().setValue(preferenceName, StringUtils.pack((String[]) projectNamesToRemember.toArray(new String[projectNamesToRemember.size()])));
+		}
 	}
 }

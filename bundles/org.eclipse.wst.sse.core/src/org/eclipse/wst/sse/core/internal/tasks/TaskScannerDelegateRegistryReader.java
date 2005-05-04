@@ -63,7 +63,7 @@ class TaskScannerDelegateRegistryReader {
 					String[] contentTypeIds = StringUtils.unpack(delegateElements[j].getAttribute(ATT_CONTENT_TYPES));
 					IContentType[] contentTypes = new IContentType[contentTypeIds.length];
 					for (int i = 0; i < contentTypeIds.length; i++) {
-						contentTypes[i] = contentTypeManager.getContentType(contentTypeIds[i]);
+						contentTypes[i] = contentTypeManager.getContentType(contentTypeIds[i].trim());
 					}
 					for (int k = 0; k < contentTypeIds.length; k++) {
 						// allow wildcards to be returned as well
