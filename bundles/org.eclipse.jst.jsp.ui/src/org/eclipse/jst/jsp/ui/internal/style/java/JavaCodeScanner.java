@@ -22,7 +22,6 @@ import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.MultiLineRule;
 import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
-import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordRule;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
@@ -56,8 +55,8 @@ public class JavaCodeScanner extends org.eclipse.jface.text.rules.RuleBasedScann
 	 */
 	public JavaCodeScanner() {
 		// if we use null here, system default will be used
-		Color background = null; //provider.getColor(JavaColorProvider.EDITOR_BACKGROUND);
 		
+		Color background = null; //provider.getColor(JavaColorProvider.EDITOR_BACKGROUND);
 		JavaColorProvider.getInstance().loadJavaColors();
 		IToken keyword = new Token(new TextAttribute(EditorUtility.getColor(JavaColorProvider.KEYWORD), background, JavaColorProvider.KEYWORD_BOLD));
 		IToken type = new Token(new TextAttribute(EditorUtility.getColor(JavaColorProvider.TYPE), background, JavaColorProvider.TYPE_BOLD));
@@ -79,7 +78,7 @@ public class JavaCodeScanner extends org.eclipse.jface.text.rules.RuleBasedScann
 		rules.add(new SingleLineRule("'", "'", string, '\\'));//$NON-NLS-2$//$NON-NLS-1$
 
 		// Add generic whitespace rule.
-		rules.add(new WhitespaceRule(new JavaWhitespaceDetector()));
+		//rules.add(new WhitespaceRule(new JavaWhitespaceDetector()));
 
 		// Add word rule for keywords, types, and constants.
 		WordRule wordRule = new WordRule(new JavaWordDetector(), other);

@@ -21,6 +21,7 @@ import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.editor.IHelpContextIds;
+import org.eclipse.jst.jsp.ui.internal.style.IStyleConstantsJSP;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.help.WorkbenchHelp;
@@ -75,12 +76,17 @@ public class JSPColorPage extends XMLColorPage {
 		contextStyleMap.put(DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN, IStyleConstantsHTML.SCRIPT_AREA_BORDER);
 		contextStyleMap.put(DOMJSPRegionContexts.JSP_DIRECTIVE_CLOSE, IStyleConstantsHTML.SCRIPT_AREA_BORDER);
 		contextStyleMap.put(DOMJSPRegionContexts.JSP_CLOSE, IStyleConstantsHTML.SCRIPT_AREA_BORDER);
+		
+		contextStyleMap.put(DOMJSPRegionContexts.JSP_CONTENT, IStyleConstantsJSP.JSP_CONTENT);
+		
 		contextStyleMap.put(DOMJSPRegionContexts.JSP_DIRECTIVE_NAME, IStyleConstantsXML.TAG_NAME);
 		contextStyleMap.put(DOMJSPRegionContexts.JSP_ROOT_TAG_NAME, IStyleConstantsXML.TAG_NAME);
 		contextStyleMap.put(DOMJSPRegionContexts.JSP_COMMENT_OPEN, IStyleConstantsXML.COMMENT_BORDER);
 		contextStyleMap.put(DOMJSPRegionContexts.JSP_COMMENT_TEXT, IStyleConstantsXML.COMMENT_TEXT);
 		contextStyleMap.put(DOMJSPRegionContexts.JSP_COMMENT_CLOSE, IStyleConstantsXML.COMMENT_BORDER);
 
+		contextStyleMap.put(DOMJSPRegionContexts.JSP_CONTENT, IStyleConstantsJSP.JSP_CONTENT);
+		
 		contextStyleMap.put(DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, IStyleConstantsXML.TAG_ATTRIBUTE_VALUE);
 		contextStyleMap.put(DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_SQUOTE, IStyleConstantsXML.TAG_ATTRIBUTE_VALUE);
 	}
@@ -90,6 +96,7 @@ public class JSPColorPage extends XMLColorPage {
 		descriptions.remove(IStyleConstantsXML.XML_CONTENT); // leave content between tags alone
 		descriptions.remove(IStyleConstantsXML.DECL_BORDER); // xml/html specific
 		descriptions.put(IStyleConstantsHTML.SCRIPT_AREA_BORDER, JSPUIMessages.JSP_Delimiters_UI_); //$NON-NLS-1$ = "JSP Delimiters"
+		descriptions.put(IStyleConstantsJSP.JSP_CONTENT, JSPUIMessages.JSPColorPage_jsp_content);
 	}
 
 	protected void initStyleList(ArrayList list) {
@@ -97,17 +104,18 @@ public class JSPColorPage extends XMLColorPage {
 		list.remove(IStyleConstantsXML.XML_CONTENT); // leave content between tags alone
 		list.remove(IStyleConstantsXML.DECL_BORDER); // xml/html specific
 		list.add(IStyleConstantsHTML.SCRIPT_AREA_BORDER);
+		list.add(IStyleConstantsJSP.JSP_CONTENT);
 	}
 
 	protected void setupPicker(StyledTextColorPicker picker) {
 		IModelManager mmanager = StructuredModelManager.getModelManager();
 		picker.setParser(mmanager.createStructuredDocumentFor(ContentTypeIdForJSP.ContentTypeID_JSP).getParser());
 
-		// create descriptions for hilighting types
+		// create descriptions for highlighting types
 		Dictionary descriptions = new Hashtable();
 		initDescriptions(descriptions);
 
-		// map region types to hilighting types
+		// map region types to highlighting types
 		Dictionary contextStyleMap = new Hashtable();
 		initContextStyleMap(contextStyleMap);
 

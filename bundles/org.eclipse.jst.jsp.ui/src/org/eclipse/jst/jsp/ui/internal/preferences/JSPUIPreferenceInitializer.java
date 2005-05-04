@@ -4,6 +4,7 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.templates.Template;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
+import org.eclipse.jst.jsp.ui.internal.style.IStyleConstantsJSP;
 import org.eclipse.wst.html.ui.internal.style.IStyleConstantsHTML;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
@@ -51,6 +52,11 @@ public class JSPUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		styleValue = ColorHelper.getColorString(191, 95, 63) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsHTML.SCRIPT_AREA_BORDER, styleValue);
 
+		// white by default until requested otherwise
+		//styleValue = "null | " + ColorHelper.getColorString(240, 220, 200) + " | false"; //$NON-NLS-1$//$NON-NLS-2$
+		styleValue = "null | " + ColorHelper.getColorString(255,255,255) + " | false"; //$NON-NLS-1$//$NON-NLS-2$
+		store.setDefault(IStyleConstantsJSP.JSP_CONTENT, styleValue);
+		
 		// set default new jsp file template to use in new file wizard
 		/*
 		 * Need to find template name that goes with default template id (name

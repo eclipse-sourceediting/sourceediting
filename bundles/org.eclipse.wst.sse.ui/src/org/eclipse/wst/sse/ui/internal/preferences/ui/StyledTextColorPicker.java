@@ -268,14 +268,33 @@ public class StyledTextColorPicker extends Composite {
 			fForegroundLabel.setEnabled(false);
 			fBackgroundLabel.setEnabled(false);
 		} else {
-			fForeground.setEnabled(true);
-			fBackground.setEnabled(true);
-			fClearStyle.setEnabled(true);
-			fBold.setEnabled(true);
-			if (showItalic)
-				fItalic.setEnabled(true);
-			fForegroundLabel.setEnabled(true);
-			fBackgroundLabel.setEnabled(true);
+			// more granular enablement of StyledColorWidget
+			String colorStyleString = getPreferenceStore().getString(namedStyle);
+			String[] prefs = ColorHelper.unpackStylePreferences(colorStyleString);
+			if(prefs != null && prefs.length == 3) {
+				fForeground.setEnabled(prefs[0].startsWith("#"));
+				fForegroundLabel.setEnabled(prefs[0].startsWith("#"));
+				
+				fBackground.setEnabled(prefs[1].startsWith("#"));
+				fBackgroundLabel.setEnabled(prefs[1].startsWith("#"));
+				
+				fBold.setEnabled(prefs[1].equals("true"));
+				
+				fClearStyle.setEnabled(true);
+				if (showItalic)
+					fItalic.setEnabled(true);
+			}
+			else {
+				
+				fForeground.setEnabled(true);
+				fBackground.setEnabled(true);
+				fClearStyle.setEnabled(true);
+				fBold.setEnabled(true);
+				if (showItalic)
+					fItalic.setEnabled(true);
+				fForegroundLabel.setEnabled(true);
+				fBackgroundLabel.setEnabled(true);
+			}
 		}
 		TextAttribute attribute = getAttribute(namedStyle);
 		Color color = attribute.getForeground();

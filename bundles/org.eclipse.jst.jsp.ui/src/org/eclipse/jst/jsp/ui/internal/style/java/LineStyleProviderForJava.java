@@ -23,10 +23,12 @@ import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
+import org.eclipse.jst.jsp.ui.internal.style.IStyleConstantsJSP;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.html.ui.internal.style.IStyleConstantsHTML;
+import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 import org.eclipse.wst.sse.ui.internal.provisional.style.AbstractLineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
@@ -49,7 +51,6 @@ public class LineStyleProviderForJava extends AbstractLineStyleProvider implemen
 		loadColors();
 		fScanner = new JavaCodeScanner();
 		fDefaultTextAttribute = new TextAttribute(EditorUtility.getColor(JavaColorProvider.DEFAULT));
-
 	}
 
 	/**
@@ -62,11 +63,7 @@ public class LineStyleProviderForJava extends AbstractLineStyleProvider implemen
 	 */
 	protected void addRange(Collection presentation, int offset, int length, TextAttribute attr) {
 		
-		Point range = getHighlighter().getTextViewer().getSelectedRange();
-		int caret = range.x;
-		int selection = range.y;
-		IDocument doc = getDocument();
-		Color bg = attr.getBackground();
+//		Color bg = attr.getBackground();
 		// all editors use same background color
 //		// if current line highlight on, use line highlight color for background
 //		if(JavaColorProvider.EDITOR_CURRENT_LINE && selection == 1) {
@@ -79,8 +76,14 @@ public class LineStyleProviderForJava extends AbstractLineStyleProvider implemen
 //				Logger.logException(e);
 //			}
 //		}
-		
-		presentation.add(new StyleRange(offset, length, attr.getForeground(), bg, attr.getStyle()));
+		// support for user defined backgroud for JSP scriptlet regions
+		String styleString = JSPUIPlugin.getDefault().getPreferenceStore().getString(IStyleConstantsJSP.JSP_CONTENT);
+		String[] prefs = ColorHelper.unpackStylePreferences(styleString);
+		Color bgColor = (prefs != null && prefs.length == 3 && Display.getCurrent() != null)
+							? new Color(Display.getCurrent(), ColorHelper.toRGB(prefs[1]))
+							: attr.getBackground();
+							
+		presentation.add(new StyleRange(offset, length, attr.getForeground(), bgColor, attr.getStyle()));
 	}
 
 	protected void clearColors() {
