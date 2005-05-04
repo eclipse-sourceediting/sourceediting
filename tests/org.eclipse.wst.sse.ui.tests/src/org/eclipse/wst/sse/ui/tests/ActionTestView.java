@@ -13,8 +13,6 @@ package org.eclipse.wst.sse.ui.tests;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
@@ -31,7 +29,7 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.sse.core.internal.builder.StructuredDocumentBuilder;
+import org.eclipse.wst.sse.core.internal.tasks.TaskScanningScheduler;
 
 
 /**
@@ -43,27 +41,16 @@ public class ActionTestView extends ViewPart {
 
 	class RegisterBuilderAction extends Action {
 		public RegisterBuilderAction() {
-			super("Register SDMB");
-			setToolTipText("Register Structured Document Builder");
+			super("Redetect Tasks");
+			setToolTipText("Redetect All Tasks");
 		}
 
 		public void run() {
 			super.run();
-			StructuredDocumentBuilder.add(new NullProgressMonitor(), ResourcesPlugin.getWorkspace().getRoot(), null);
+			TaskScanningScheduler.refreshAll();
 		}
 	}
 
-	class RegisterBuilderActionWithContext extends Action {
-		public RegisterBuilderActionWithContext() {
-			super("Register SDMB w/UI");
-			setToolTipText("Register Structured Document Builder with UI Context");
-		}
-
-		public void run() {
-			super.run();
-			StructuredDocumentBuilder.add(new NullProgressMonitor(), ResourcesPlugin.getWorkspace().getRoot(), fControl);
-		}
-	}
 
 	class EmptyTextSetter extends Action {
 		public EmptyTextSetter() {
@@ -95,7 +82,6 @@ public class ActionTestView extends ViewPart {
 		List actions = new ArrayList();
 
 		actions.add(new RegisterBuilderAction());
-		actions.add(new RegisterBuilderActionWithContext());
 		actions.add(new EmptyTextSetter());
 
 		return actions;
