@@ -53,12 +53,11 @@
       </modelHandler>
    </extension>
    <extension
-         id="org.eclipse.wst.css.core.builderdelegate.todo"
-         point="org.eclipse.wst.sse.core.builderdelegate">
-      <participant
-            class="org.eclipse.wst.css.core.internal.tasks.CSSTaskTagSeeker"
-            contentType="org.eclipse.wst.css.core.csssource">
-      </participant>
+         id="org.eclipse.wst.css.core.taskdelegate"
+         point="org.eclipse.wst.sse.core.taskscanner">
+      <scanner
+            class="org.eclipse.wst.css.core.internal.tasks.CSSTaskScannerDelegate"
+            contentTypeIds="org.eclipse.wst.css.core.csssource" />
    </extension>
    <extension point="org.eclipse.core.filebuffers.documentCreation"
          id="org.eclipse.wst.css.core.documentfactories"

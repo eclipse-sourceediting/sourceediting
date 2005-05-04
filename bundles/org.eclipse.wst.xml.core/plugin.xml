@@ -51,12 +51,11 @@
    </extension>
    
    <extension
-         id="org.eclipse.wst.xml.core.builderdelegate.todo"
-         point="org.eclipse.wst.sse.core.builderdelegate">
-      <participant
-            class="org.eclipse.wst.xml.core.internal.builder.delegates.XMLTaskTagSeeker"
-            contentType="org.eclipse.core.runtime.xml,org.eclipse.wst.xml.core.xmlsource">
-      </participant>
+         id="org.eclipse.wst.xml.core.taskdelegate"
+         point="org.eclipse.wst.sse.core.taskscanner">
+      <scanner
+            class="org.eclipse.wst.xml.core.internal.tasks.XMLTaskScannerDelegate"
+            contentTypeIds="org.eclipse.wst.xml.core.xmlsource, org.eclipse.core.runtime.xml" />
    </extension>
    
    <extension point="org.eclipse.core.filebuffers.documentCreation"

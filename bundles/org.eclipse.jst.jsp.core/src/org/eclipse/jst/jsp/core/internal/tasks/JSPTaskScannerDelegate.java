@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2004 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,35 +7,16 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
  *******************************************************************************/
-package org.eclipse.wst.xml.core.internal.builder.delegates;
+package org.eclipse.jst.jsp.core.internal.tasks;
 
-import org.eclipse.wst.sse.core.internal.participants.TaskTagSeeker;
+import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
+import org.eclipse.wst.xml.core.internal.tasks.XMLTaskScannerDelegate;
 
-
-public class XMLTaskTagSeeker extends TaskTagSeeker {
-
-	/**
-	 *  
-	 */
-	public XMLTaskTagSeeker() {
-		super();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.core.participants.TaskTagSeeker#isCommentRegion(org.eclipse.wst.sse.core.text.IStructuredDocumentRegion,
-	 *      org.eclipse.wst.sse.core.text.ITextRegion)
-	 */
+public class JSPTaskScannerDelegate extends XMLTaskScannerDelegate {
 	protected boolean isCommentRegion(IStructuredDocumentRegion region, ITextRegion textRegion) {
-		return textRegion.getType().equals(DOMRegionContext.XML_COMMENT_TEXT);
-
+		return super.isCommentRegion(region, textRegion) || textRegion.getType().equals(DOMJSPRegionContexts.JSP_COMMENT_TEXT);
 	}
-
 }

@@ -43,8 +43,8 @@
    <extension-point id="modelHandler" name="%Model_Handler_Extension.name"/>
    <extension-point id="formatProcessors" name="%Format_Processors_Extension_Point.name" schema="schema/formatProcessors.exsd"/>
 
-<!-- not for use by clients -->
-   <extension-point id="builderdelegate" name="%Structured_Builder_Delegate_Extension_Point.name"/>
+<!-- not for use by clients (internal)-->
+   <extension-point id="taskscanner" name="%Task_Scanner_Extension_Point.name"/>
 
 <!-- define our task marker type -->
 	<extension id="task" name="%Structured_Sources_Task_Extension.name" point="org.eclipse.core.resources.markers">

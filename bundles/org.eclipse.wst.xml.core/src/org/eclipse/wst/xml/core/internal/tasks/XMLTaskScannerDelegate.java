@@ -10,16 +10,21 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.dtd.core.internal.builder.delegates;
+package org.eclipse.wst.xml.core.internal.tasks;
 
-import org.eclipse.wst.dtd.core.internal.parser.DTDRegionTypes;
-import org.eclipse.wst.sse.core.internal.participants.TaskTagSeeker;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.tasks.TaskScannerDelegate;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
+public class XMLTaskScannerDelegate extends TaskScannerDelegate {
 
-public class DTDTaskTagSeeker extends TaskTagSeeker {
+	public XMLTaskScannerDelegate() {
+		super();
+	}
+
 	protected boolean isCommentRegion(IStructuredDocumentRegion region, ITextRegion textRegion) {
-		return textRegion.getType().equals(DTDRegionTypes.COMMENT_CONTENT);
+		return textRegion.getType().equals(DOMRegionContext.XML_COMMENT_TEXT);
+
 	}
 }

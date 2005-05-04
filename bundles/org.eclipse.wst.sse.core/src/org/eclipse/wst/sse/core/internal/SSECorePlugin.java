@@ -14,12 +14,12 @@ package org.eclipse.wst.sse.core.internal;
 
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.wst.sse.core.internal.builder.StructuredDocumentBuilder;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
 import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.tasks.TaskScanningScheduler;
 import org.osgi.framework.BundleContext;
 
 
@@ -27,10 +27,8 @@ import org.osgi.framework.BundleContext;
  * SSE Core Plugin.
  */
 public class SSECorePlugin extends Plugin {
-	static SSECorePlugin instance = null;	
+	static SSECorePlugin instance = null;
 
-	private static final String OFF = "off"; //$NON-NLS-1$
-	public static final String STRUCTURED_BUILDER = "org.eclipse.wst.sse.core.structuredbuilder"; //$NON-NLS-1$
 	public static final String ID = "org.eclipse.wst.sse.core"; //$NON-NLS-1$
 
 	public static SSECorePlugin getDefault() {
@@ -87,7 +85,7 @@ public class SSECorePlugin extends Plugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		savePluginPreferences();
-		StructuredDocumentBuilder.shutdown();
+		TaskScanningScheduler.shutdown();
 		FileBufferModelManager.shutdown();
 
 		super.stop(context);
@@ -101,9 +99,13 @@ public class SSECorePlugin extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 
-		String build = System.getProperty(STRUCTURED_BUILDER);
-		if (build == null || !build.equalsIgnoreCase(OFF)) {
-			StructuredDocumentBuilder.startup();
+		/**
+		 * If the user starts the workbench with -Dorg.eclipse.wst.sse.core.taskscanner=off, the
+		 * scanner should be disabled
+		 */
+		String scan = System.getProperty("org.eclipse.wst.sse.core.taskscanner");
+		if (scan == null || !scan.equalsIgnoreCase("off")) {
+			TaskScanningScheduler.startup();
 		}
 		// initialize FileBuffer handling
 		FileBufferModelManager.startup();

@@ -39,12 +39,11 @@
       </embeddedTypeHandler>
    </extension>
    <extension
-         id="org.eclipse.wst.sse.html.core.builderdelegate.todo"
-         point="org.eclipse.wst.sse.core.builderdelegate">
-      <participant
-            class="org.eclipse.wst.xml.core.internal.builder.delegates.XMLTaskTagSeeker"
-            contentType="org.eclipse.wst.html.core.htmlsource">
-      </participant>
+         id="org.eclipse.wst.html.core.taskdelegate"
+         point="org.eclipse.wst.sse.core.taskscanner">
+      <scanner
+            class="org.eclipse.wst.xml.core.internal.tasks.XMLTaskScannerDelegate"
+            contentTypeIds="org.eclipse.wst.html.core.htmlsource" />
    </extension>
    <extension point="org.eclipse.core.filebuffers.documentCreation"
          id="org.eclipse.wst.html.core.documentfactories"

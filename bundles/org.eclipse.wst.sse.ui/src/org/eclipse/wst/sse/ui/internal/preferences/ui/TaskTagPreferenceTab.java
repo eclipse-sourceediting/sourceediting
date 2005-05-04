@@ -14,21 +14,17 @@ package org.eclipse.wst.sse.ui.internal.preferences.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 
 import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -60,12 +56,12 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
-import org.eclipse.wst.sse.core.internal.participants.TaskTagSeeker;
 import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
+import org.eclipse.wst.sse.core.internal.tasks.TaskScannerDelegate;
+import org.eclipse.wst.sse.core.internal.tasks.TaskScanningScheduler;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.editor.IHelpContextIds;
 
 public class TaskTagPreferenceTab implements IPreferenceTab {
@@ -421,7 +417,7 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 			try {
 				// When the tags are all removed, remove all the related
 				// markers so the builder can skip the marker deletion step
-				ResourcesPlugin.getWorkspace().getRoot().deleteMarkers(TaskTagSeeker.getTaskMarkerType(), true, IResource.DEPTH_INFINITE);
+				ResourcesPlugin.getWorkspace().getRoot().deleteMarkers(TaskScannerDelegate.getTaskMarkerType(), true, IResource.DEPTH_INFINITE);
 			}
 			catch (CoreException e) {
 				Logger.logException(e);
@@ -437,28 +433,8 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 					}
 
 					protected IStatus run(IProgressMonitor monitor) {
-						IStatus status = null;
-						IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
-						int errorCount = 0;
-						for (int i = 0; i < projects.length && !monitor.isCanceled(); i++) {
-							try {
-								projects[i].build(IncrementalProjectBuilder.FULL_BUILD, SSECorePlugin.STRUCTURED_BUILDER, new HashMap(), new SubProgressMonitor(monitor, projects.length));
-							}
-							catch (CoreException e) {
-								Logger.logException(e);
-								errorCount++;
-							}
-						}
-						if (monitor.isCanceled()) {
-							status = new Status(IStatus.CANCEL, SSEUIPlugin.ID, IStatus.OK, SSEUIMessages.TaskTagPreferenceTab_28, null); //$NON-NLS-1$
-						}
-						else if (errorCount == 0) {
-							status = new Status(IStatus.OK, SSEUIPlugin.ID, IStatus.OK, SSEUIMessages.TaskTagPreferenceTab_29, null); //$NON-NLS-1$
-						}
-						else {
-							status = new Status(IStatus.ERROR, SSEUIPlugin.ID, IStatus.OK, SSEUIMessages.TaskTagPreferenceTab_30, null); //$NON-NLS-1$
-						}
-						return status;
+						TaskScanningScheduler.refreshAll();
+						return Status.OK_STATUS;
 					}
 				};
 				buildJob.schedule(500);
@@ -469,14 +445,14 @@ public class TaskTagPreferenceTab implements IPreferenceTab {
 	}
 
 	public void performDefaults() {
-		Plugin modelPlugin = SSECorePlugin.getDefault();
-		String tags = modelPlugin.getPluginPreferences().getDefaultString(CommonModelPreferenceNames.TASK_TAG_TAGS);
-		String priorities = modelPlugin.getPluginPreferences().getDefaultString(CommonModelPreferenceNames.TASK_TAG_PRIORITIES);
+		Plugin corePlugin = SSECorePlugin.getDefault();
+		String tags = corePlugin.getPluginPreferences().getDefaultString(CommonModelPreferenceNames.TASK_TAG_TAGS);
+		String priorities = corePlugin.getPluginPreferences().getDefaultString(CommonModelPreferenceNames.TASK_TAG_PRIORITIES);
 		loadTagsAndPriorities(tags, priorities);
 		if (valueTable != null && valueTable.getControl() != null && !valueTable.getControl().isDisposed()) {
 			valueTable.setInput(fTags);
 		}
-		fEnableTaskTags = modelPlugin.getPluginPreferences().getDefaultBoolean(CommonModelPreferenceNames.TASK_TAG_ENABLE);
+		fEnableTaskTags = corePlugin.getPluginPreferences().getDefaultBoolean(CommonModelPreferenceNames.TASK_TAG_ENABLE);
 		fEnableCheckbox.setSelection(fEnableTaskTags);
 
 		isDirty = false;

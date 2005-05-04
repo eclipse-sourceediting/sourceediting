@@ -13,19 +13,11 @@ package org.eclipse.wst.css.core.internal.tasks;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
-import org.eclipse.wst.sse.core.internal.participants.TaskTagSeeker;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.tasks.TaskScannerDelegate;
 
-
-public class CSSTaskTagSeeker extends TaskTagSeeker {
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.model.builder.participants.TaskTagSeeker#getCommentedText(org.eclipse.jface.text.IDocument,
-	 *      int, int)
-	 */
+public class CSSTaskScannerDelegate extends TaskScannerDelegate {
 	protected String getCommentedText(IDocument document, int begin, int length) throws BadLocationException {
 		String text = super.getCommentedText(document, begin, length);
 		if (text != null && text.endsWith("*/")) { //$NON-NLS-1$

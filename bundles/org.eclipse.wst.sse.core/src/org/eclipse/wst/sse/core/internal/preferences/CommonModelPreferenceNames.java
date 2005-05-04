@@ -73,6 +73,7 @@ public interface CommonModelPreferenceNames {
 	String TASK_TAG_TAGS = "task-tag-tags"; //$NON-NLS-1$
 	String TASK_TAG_PRIORITIES = "task-tag-priorities"; //$NON-NLS-1$
 	String TASK_TAG_ENABLE = "task-tags"; //$NON-NLS-1$
+	String TASK_TAG_PROJECTS_SKIPPED = "task-tag-projects-toBeSkipped"; //$NON-NLS-1$
 
 
 	/**

@@ -33,14 +33,13 @@
 			id="org.eclipse.wst.dtd.core.internal.modelhandler">
 		</modelHandler>
 	</extension>
-	<extension
-		point="org.eclipse.wst.sse.core.builderdelegate"
-		id="org.eclipse.wst.dtd.core.builderdelegate.todo">
-		<participant
-			class="org.eclipse.wst.dtd.core.internal.builder.delegates.DTDTaskTagSeeker"
-			contentType="org.eclipse.wst.dtd.core.dtdsource"
-		/>
-	</extension>
+   <extension
+         id="org.eclipse.wst.dtd.core.taskdelegate"
+         point="org.eclipse.wst.sse.core.taskscanner">
+      <scanner
+            class="org.eclipse.wst.dtd.core.internal.tasks.DTDTaskScannerDelegate"
+            contentTypeIds="org.eclipse.wst.dtd.core.dtdsource" />
+   </extension>
 
    <extension point="org.eclipse.core.filebuffers.documentCreation"
          id="org.eclipse.wst.dtd.core.documentfactories"

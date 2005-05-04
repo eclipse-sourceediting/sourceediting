@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.internal.participants;
+package org.eclipse.wst.sse.core.internal.tasks;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,7 +30,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -46,7 +45,6 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.internal.document.DocumentReader;
-import org.eclipse.wst.sse.core.internal.ltk.builder.IBuilderDelegate;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandler;
@@ -62,10 +60,9 @@ import org.eclipse.wst.sse.core.internal.util.StringUtils;
 
 
 /**
- * A participant to create IMarker.TASKs for "todos" and similiar comments.
- * Clients should not subclass.
+ * A delegate to create IMarker.TASKs for "todos" and similiar comments.
  */
-public abstract class TaskTagSeeker implements IBuilderDelegate {
+public abstract class TaskScannerDelegate implements ITaskScannerDelegate {
 
 	public static class TaskTag {
 		public int priority;
@@ -77,16 +74,12 @@ public abstract class TaskTagSeeker implements IBuilderDelegate {
 		}
 	}
 
-	private static final boolean _debug = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/builder/participant/tasktag")); //$NON-NLS-1$ //$NON-NLS-2$
-	protected static final boolean _debugBuilderPerf = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/builder/time")); //$NON-NLS-1$ //$NON-NLS-2$
+	private static final boolean _debug = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks")); //$NON-NLS-1$ //$NON-NLS-2$
+	protected static final boolean _debugPerf = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks/time")); //$NON-NLS-1$ //$NON-NLS-2$
 
 	public static String getTaskMarkerType() {
 		return SSECorePlugin.ID + ".task"; //$NON-NLS-1$
 	}
-
-	// TODO: implement per-project enablement according to
-	// http://dev.eclipse.org/viewcvs/index.cgi/%7Echeckout%7E/platform-core-home/documents/user_settings/faq.html
-	boolean fEnabled = true;
 
 	// the list of attributes for the new tasks for the current file
 	protected List fNewMarkerAttributes = null;
@@ -95,44 +88,12 @@ public abstract class TaskTagSeeker implements IBuilderDelegate {
 	List oldMarkers = null;
 	private long time0;
 
-	public TaskTagSeeker() {
+	public TaskScannerDelegate() {
 		super();
 		fNewMarkerAttributes = new ArrayList();
 		if (_debug) {
 			System.out.println(getClass().getName() + " instance created"); //$NON-NLS-1$
 		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.core.builder.IBuilderDelegate#build(org.eclipse.core.resources.IFile,
-	 *      int, java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	public IStatus build(IFile file, int kind, Map args, IProgressMonitor monitor) {
-		if (monitor.isCanceled() || !isShouldBuild(file)) {
-			return Status.OK_STATUS;
-		}
-		if (_debugBuilderPerf) {
-			time0 = System.currentTimeMillis();
-		}
-		if (fTaskTags.length > 0) {
-			try {
-				// Delete old Task markers
-				file.deleteMarkers(getMarkerType(), true, IResource.DEPTH_ZERO);
-			} catch (CoreException e) {
-				Logger.logException("exception deleting old tasks", e); //$NON-NLS-1$ 
-			}
-			// on a clean build, don't add new Tasks
-			if (kind != IncrementalProjectBuilder.CLEAN_BUILD && fEnabled) {
-				findTasks(file, monitor);
-				createNewMarkers(file, monitor);
-			}
-		}
-		if (_debugBuilderPerf) {
-			System.out.println("" + (System.currentTimeMillis() - time0) + "ms for " + file.getLocation()); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		return Status.OK_STATUS;
 	}
 
 	/**
@@ -184,7 +145,8 @@ public abstract class TaskTagSeeker implements IBuilderDelegate {
 				};
 				finalFile.getWorkspace().run(r, null, IWorkspace.AVOID_UPDATE, monitor);
 				fNewMarkerAttributes.clear();
-			} catch (CoreException e1) {
+			}
+			catch (CoreException e1) {
 				Logger.logException(e1);
 			}
 		}
@@ -198,7 +160,8 @@ public abstract class TaskTagSeeker implements IBuilderDelegate {
 				d = file.getContentDescription();
 				if (d != null)
 					return d.getCharset();
-			} catch (CoreException e) {
+			}
+			catch (CoreException e) {
 				// should not be possible given the accessible and file type
 				// check above
 			}
@@ -209,15 +172,19 @@ public abstract class TaskTagSeeker implements IBuilderDelegate {
 				if (description != null) {
 					return description.getCharset();
 				}
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				// will try to cleanup in finally
-			} catch (CoreException e) {
+			}
+			catch (CoreException e) {
 				Logger.logException(e);
-			} finally {
+			}
+			finally {
 				if (contents != null) {
 					try {
 						contents.close();
-					} catch (Exception e) {
+					}
+					catch (Exception e) {
 						// not sure how to recover at this point
 					}
 				}
@@ -260,7 +227,8 @@ public abstract class TaskTagSeeker implements IBuilderDelegate {
 						}
 					}
 				}
-			} catch (BadLocationException e) {
+			}
+			catch (BadLocationException e) {
 				Logger.logException(e);
 			}
 		}
@@ -284,9 +252,6 @@ public abstract class TaskTagSeeker implements IBuilderDelegate {
 					setDocumentContent(textDocument, file.getContents(true), charset);
 					documentParser.reset(new DocumentReader(textDocument));
 					documentParser.addStructuredDocumentRegionHandler(new StructuredDocumentRegionHandler() {
-						/**
-						 * @see org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandler#nodeParsed(org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion)
-						 */
 						public void nodeParsed(IStructuredDocumentRegion documentRegion) {
 							ITextRegionList regions = documentRegion.getRegions();
 							for (int j = 0; j < regions.size(); j++) {
@@ -303,9 +268,6 @@ public abstract class TaskTagSeeker implements IBuilderDelegate {
 							}
 						}
 
-						/**
-						 * @see org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandler#resetNodes()
-						 */
 						public void resetNodes() {
 						}
 					});
@@ -327,48 +289,33 @@ public abstract class TaskTagSeeker implements IBuilderDelegate {
 					}
 				}
 			}
-		} catch (CoreException e) {
+		}
+		catch (CoreException e) {
 			Logger.logException("Exception with " + file.getFullPath().toString(), e); //$NON-NLS-1$
-		} catch (CharacterCodingException e) {
-			Logger.log(Logger.INFO, "TaskTagSeeker encountered CharacterCodingException reading " + file.getFullPath().toOSString()); //$NON-NLS-1$
-		} catch (IOException e) {
+		}
+		catch (CharacterCodingException e) {
+			Logger.log(Logger.INFO, "TaskScannerDelegate encountered CharacterCodingException reading " + file.getFullPath().toOSString()); //$NON-NLS-1$
+		}
+		catch (IOException e) {
 			Logger.logException(e);
 		}
 	}
 
-
-	/**
-	 * @param document
-	 * @param begin
-	 * @param length
-	 * @return
-	 * @throws BadLocationException
-	 */
 	protected String getCommentedText(IDocument document, int begin, int length) throws BadLocationException {
 		return document.get(begin, length);
 	}
+
 
 	final protected String getMarkerType() {
 		return SSECorePlugin.ID + ".task"; //$NON-NLS-1$
 	}
 
-	/**
-	 * @param region2
-	 * @return
-	 */
 	protected abstract boolean isCommentRegion(IStructuredDocumentRegion region, ITextRegion textRegion);
 
-	boolean isShouldBuild(IResource r) {
-		// skip "dot" files
-		String s = r.getName();
-		return s.length() == 0 || s.charAt(0) != '.';
-	}
-
-	private void loadPreference() {
+	private void loadTags() {
 		if (_debug) {
 			System.out.println(this + " loadPreference()"); //$NON-NLS-1$
 		}
-		fEnabled = SSECorePlugin.getDefault().getPluginPreferences().getBoolean(CommonModelPreferenceNames.TASK_TAG_ENABLE);
 		String tagsString = SSECorePlugin.getDefault().getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_TAGS);
 		String prioritiesString = SSECorePlugin.getDefault().getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_PRIORITIES);
 
@@ -393,7 +340,8 @@ public abstract class TaskTagSeeker implements IBuilderDelegate {
 				Integer number = null;
 				try {
 					number = Integer.valueOf(toker.nextToken().trim());
-				} catch (NumberFormatException e) {
+				}
+				catch (NumberFormatException e) {
 					number = new Integer(IMarker.PRIORITY_NORMAL);
 				}
 				if (i < tags.length) {
@@ -404,13 +352,35 @@ public abstract class TaskTagSeeker implements IBuilderDelegate {
 		fTaskTags = (TaskTag[]) list.toArray(new TaskTag[0]);
 	}
 
+	public IStatus scan(IFile file, IProgressMonitor monitor) {
+		if (monitor.isCanceled() || !shouldScan(file)) {
+			return Status.OK_STATUS;
+		}
+		if (_debugPerf) {
+			time0 = System.currentTimeMillis();
+		}
+		if (fTaskTags.length > 0) {
+			try {
+				// Delete old Task markers
+				file.deleteMarkers(getMarkerType(), true, IResource.DEPTH_ZERO);
+			}
+			catch (CoreException e) {
+				Logger.logException("exception deleting old tasks", e); //$NON-NLS-1$ 
+			}
+			// on a clean build, don't add new Tasks
+			// if (kind != IncrementalProjectBuilder.CLEAN_BUILD) {
+			findTasks(file, monitor);
+			createNewMarkers(file, monitor);
+			// }
+		}
+		if (_debugPerf) {
+			System.out.println("" + (System.currentTimeMillis() - time0) + "ms for " + file.getLocation()); //$NON-NLS-1$ //$NON-NLS-2$
+		}
+		return Status.OK_STATUS;
+	}
+
 	/**
-	 * Sets the document content from this stream, closing the stream when
-	 * done
-	 * 
-	 * @param document
-	 * @param contentStream
-	 * @param charset
+	 * Sets the document content from this stream and closes the stream
 	 */
 	protected void setDocumentContent(IDocument document, InputStream contentStream, String charset) {
 		Reader in = null;
@@ -424,22 +394,26 @@ public abstract class TaskTagSeeker implements IBuilderDelegate {
 				n = in.read(readBuffer);
 			}
 			document.set(buffer.toString());
-		} catch (IOException x) {
-		} finally {
+		}
+		catch (IOException x) {
+		}
+		finally {
 			if (in != null) {
 				try {
 					in.close();
-				} catch (IOException x) {
+				}
+				catch (IOException x) {
 				}
 			}
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.core.builder.IBuilderParticipant#shutdown(org.eclipse.core.resources.IProject)
-	 */
+	boolean shouldScan(IResource r) {
+		// skip "dot" files
+		String s = r.getName();
+		return s.length() == 0 || s.charAt(0) != '.';
+	}
+
 	public void shutdown(IProject project) {
 		if (_debug) {
 			System.out.println(this + " shutdown for " + project.getName()); //$NON-NLS-1$
@@ -447,21 +421,15 @@ public abstract class TaskTagSeeker implements IBuilderDelegate {
 		fTaskTags = null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.core.builder.IBuilderParticipant#startup(org.eclipse.core.resources.IProject,
-	 *      int, java.util.Map)
-	 */
-	public void startup(IProject project, int kind, Map args) {
+	public void startup(IProject project) {
 		if (_debug) {
 			System.out.println(this + " startup for " + project.getName()); //$NON-NLS-1$
 		}
-		if (_debugBuilderPerf) {
+		if (_debugPerf) {
 			time0 = System.currentTimeMillis();
 		}
-		loadPreference();
-		if (_debugBuilderPerf) {
+		loadTags();
+		if (_debugPerf) {
 			System.out.println("" + (System.currentTimeMillis() - time0) + "ms loading prefs for " + project.getName()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}

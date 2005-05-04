@@ -42,14 +42,15 @@
             class="org.eclipse.jst.jsp.core.internal.contentmodel.tld.CMDocumentFactoryTLD">
       </factory>
    </extension>
+
    <extension
-         id="org.eclipse.jst.jsp.core.builderdelegate.todo"
-         point="org.eclipse.wst.sse.core.builderdelegate">
-      <participant
-            class="org.eclipse.jst.jsp.core.internal.tasks.JSPTaskTagSeeker"
-            contentType="org.eclipse.jst.jsp.core.jspsource">
-      </participant>
+         id="org.eclipse.jst.jsp.core.taskdelegate"
+         point="org.eclipse.wst.sse.core.taskscanner">
+      <scanner
+            class="org.eclipse.jst.jsp.core.internal.tasks.JSPTaskScannerDelegate"
+            contentTypeIds="org.eclipse.jst.jsp.core.jspsource" />
    </extension>
+
    <extension point="org.eclipse.core.filebuffers.documentCreation"
          id="org.eclipse.jst.jsp.core.documentfactories"
          name="%Structured_JSP_Document_Factory_Extension.name">

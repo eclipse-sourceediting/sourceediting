@@ -22,8 +22,7 @@ public class SSECoreMessages extends NLS {
 	public static String A_model_s_id_can_not_be_nu_EXC_;
 	public static String Program_Error__ModelManage_EXC_;
 	public static String Original_Error__UI_;
-	public static String ModelPlugin_0;
-	public static String StructuredDocumentBuilder_0;
+	public static String TaskScanner_0;
 	public static String Text_Change_UI_;
 
 	public static String Migrate_Charset;
