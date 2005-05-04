@@ -12,6 +12,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.text.rules;
 
+import java.util.Locale;
+
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.wst.sse.core.internal.parser.ForeignRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -46,6 +48,17 @@ public class StructuredTextPartitionerForXML extends StructuredTextPartitioner i
 			result = IXMLPartitions.XML_COMMENT;
 		else if (region.getType() == DOMRegionContext.XML_CDATA_TEXT)
 			result = IXMLPartitions.XML_CDATA;
+		else if (region.getType() == DOMRegionContext.XML_PI_CONTENT) {
+			/**
+			 * Grammatically, it's impossible to get a PI_CONTENT region
+			 * without a preceding XML_TAG_NAME region. Relying on this,
+			 * extract the target processor name and create a partition type
+			 * dynamically.
+			 */
+			IStructuredDocumentRegion docRegion = structuredDocument.getRegionAtCharacterOffset(offset);
+			ITextRegion name = docRegion.getRegionAtCharacterOffset(docRegion.getStartOffset() + region.getStart() - 1);
+			result = IXMLPartitions.PROCESSING_INSTRUCTION_PREFIX + docRegion.getText(name).toUpperCase(Locale.ENGLISH);
+		}
 		else if (region.getType() == DOMRegionContext.XML_PI_OPEN)
 			result = IXMLPartitions.XML_PI;
 		else if (region.getType() == DOMRegionContext.XML_DOCTYPE_DECLARATION)

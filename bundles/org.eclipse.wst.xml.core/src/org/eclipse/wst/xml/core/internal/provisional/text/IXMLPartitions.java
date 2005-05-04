@@ -17,6 +17,13 @@ public interface IXMLPartitions {
 	String XML_DECLARATION = "org.eclipse.wst.xml.XML_DECL"; //$NON-NLS-1$
 	String XML_COMMENT = "org.eclipse.wst.xml.XML_COMMENT"; //$NON-NLS-1$
 	
+	/*
+	 * This value is used as a prefix to any unknown processing instructions
+	 * we find. The processor target name is converted to uppercase and
+	 * appended to the prefix to create a unique partition type.
+	 */
+	String PROCESSING_INSTRUCTION_PREFIX = "org.eclipse.wst.xml.PROCESSING_INSTRUCTION:"; //$NON-NLS-1$
+
 	/**
 	 * Should match
 	 * org.eclipse.wst.sse.core.dtd.partitioning.StructuredTextPartitionerForDTD.ST_DTD_SUBSET
