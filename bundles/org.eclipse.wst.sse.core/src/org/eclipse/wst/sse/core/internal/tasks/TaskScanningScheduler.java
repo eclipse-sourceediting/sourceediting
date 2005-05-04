@@ -113,6 +113,7 @@ public class TaskScanningScheduler {
 	private TaskScanningScheduler() {
 		super();
 		fJob = new ScanningJob();
+		visitor = new ListenerVisitor();
 	}
 
 	void enqueue(IWorkspaceRoot root) {
