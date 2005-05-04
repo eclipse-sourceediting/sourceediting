@@ -98,36 +98,38 @@ public class JSPIndexManager implements IResourceChangeListener {
 			}
 			
 			try {
-				int kind = delta.getKind();
-				boolean added = (kind & IResourceDelta.ADDED) == IResourceDelta.ADDED;
-				boolean isInterestingChange = false;
-				if((kind & IResourceDelta.CHANGED) == IResourceDelta.CHANGED) {
-					int flags = delta.getFlags();
-					// ignore things like marker changes
-					isInterestingChange = (flags & IResourceDelta.CONTENT) == IResourceDelta.CONTENT || (flags & IResourceDelta.REPLACED) == IResourceDelta.REPLACED;
-				}
-				boolean removed = (kind & IResourceDelta.REMOVED) == IResourceDelta.REMOVED;
-				if(added || isInterestingChange) {
+				if(!isHiddenResource(delta.getFullPath())) {
 					
-					// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3553
-					// quick check if it's even JSP related to improve performance
-					// checking name from the delta before getting resource because it's lighter
-					int numSegments = delta.getFullPath().segmentCount();
-					String filename = delta.getFullPath().segment(numSegments-1);
-					if (getJspContentType().isAssociatedWith(filename)) {
+					int kind = delta.getKind();
+					boolean added = (kind & IResourceDelta.ADDED) == IResourceDelta.ADDED;
+					boolean isInterestingChange = false;
+					if((kind & IResourceDelta.CHANGED) == IResourceDelta.CHANGED) {
+						int flags = delta.getFlags();
+						// ignore things like marker changes
+						isInterestingChange = (flags & IResourceDelta.CONTENT) == IResourceDelta.CONTENT || (flags & IResourceDelta.REPLACED) == IResourceDelta.REPLACED;
+					}
+					boolean removed = (kind & IResourceDelta.REMOVED) == IResourceDelta.REMOVED;
+					if(added || isInterestingChange) {
 						
-						IResource r = delta.getResource();
-						if (r != null && r.getType() == IResource.FILE) {	
-							this.jspFiles.put(r.getFullPath(), r);
+						// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3553
+						// quick check if it's even JSP related to improve performance
+						// checking name from the delta before getting resource because it's lighter
+						int numSegments = delta.getFullPath().segmentCount();
+						String filename = delta.getFullPath().segment(numSegments-1);
+						if (getJspContentType().isAssociatedWith(filename)) {
+							IResource r = delta.getResource();
+							if (r != null && r.exists() && r.getType() == IResource.FILE) {
+								this.jspFiles.put(r.getFullPath(), r);
+							}
 						}
 					}
-				}
-				else if(removed) {
-					// handle cleanup 
-					if(delta.getResource() != null) {
-						IResource r = delta.getResource();
-						if(r.getType() == IResource.FOLDER && r.exists()) {
-							deleteIndex((IFile)r);
+					else if(removed) {
+						// handle cleanup 
+						if(delta.getResource() != null) {
+							IResource r = delta.getResource();
+							if(r.getType() == IResource.FOLDER && r.exists()) {
+								deleteIndex((IFile)r);
+							}
 						}
 					}
 				}
@@ -140,6 +142,15 @@ public class JSPIndexManager implements IResourceChangeListener {
 			}
 			// if the delta has children, continue to add/remove files
 			return true;
+		}
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=93463
+		private boolean isHiddenResource(IPath p) {
+			String[] segments = p.segments();
+			for (int i = 0; i < segments.length; i++) {
+				if(segments[i].startsWith("."))
+					return true;
+			}
+			return false;
 		}
 		
 		private void deleteIndex(IFile folder) {
