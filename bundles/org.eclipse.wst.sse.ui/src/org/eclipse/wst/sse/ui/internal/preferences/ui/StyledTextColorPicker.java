@@ -96,7 +96,7 @@ public class StyledTextColorPicker extends Composite {
 	public static final String ITALIC = "italic"; //$NON-NLS-1$
 	public static final String NAME = "name"; //$NON-NLS-1$
 
-	private static final boolean showItalic = false;
+	protected static final boolean showItalic = false;
 	protected AccessibleControlListener backgroundAccListener = new AccessibleControlAdapter() {
 		/**
 		 * @see org.eclipse.swt.accessibility.AccessibleControlAdapter#getValue(AccessibleControlEvent)
@@ -257,7 +257,7 @@ public class StyledTextColorPicker extends Composite {
 	}
 
 	// activate controls based on the given local color type
-	private void activate(String namedStyle) {
+	protected void activate(String namedStyle) {
 		if (namedStyle == null) {
 			fForeground.setEnabled(false);
 			fBackground.setEnabled(false);
@@ -267,34 +267,17 @@ public class StyledTextColorPicker extends Composite {
 				fItalic.setEnabled(false);
 			fForegroundLabel.setEnabled(false);
 			fBackgroundLabel.setEnabled(false);
-		} else {
-			// more granular enablement of StyledColorWidget
-			String colorStyleString = getPreferenceStore().getString(namedStyle);
-			String[] prefs = ColorHelper.unpackStylePreferences(colorStyleString);
-			if(prefs != null && prefs.length == 3) {
-				fForeground.setEnabled(prefs[0].startsWith("#"));
-				fForegroundLabel.setEnabled(prefs[0].startsWith("#"));
-				
-				fBackground.setEnabled(prefs[1].startsWith("#"));
-				fBackgroundLabel.setEnabled(prefs[1].startsWith("#"));
-				
-				fBold.setEnabled(prefs[1].equals("true"));
-				
-				fClearStyle.setEnabled(true);
-				if (showItalic)
-					fItalic.setEnabled(true);
-			}
-			else {
-				
-				fForeground.setEnabled(true);
-				fBackground.setEnabled(true);
-				fClearStyle.setEnabled(true);
-				fBold.setEnabled(true);
-				if (showItalic)
-					fItalic.setEnabled(true);
-				fForegroundLabel.setEnabled(true);
-				fBackgroundLabel.setEnabled(true);
-			}
+		} 
+		else {		
+			fForeground.setEnabled(true);
+			fBackground.setEnabled(true);
+			fClearStyle.setEnabled(true);
+			fBold.setEnabled(true);
+			if (showItalic)
+				fItalic.setEnabled(true);
+			fForegroundLabel.setEnabled(true);
+			fBackgroundLabel.setEnabled(true);
+			
 		}
 		TextAttribute attribute = getAttribute(namedStyle);
 		Color color = attribute.getForeground();

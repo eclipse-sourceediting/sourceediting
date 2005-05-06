@@ -28,7 +28,7 @@ import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 
 public abstract class AbstractColorPage extends org.eclipse.jface.preference.PreferencePage implements org.eclipse.ui.IWorkbenchPreferencePage {
-	private OverlayPreferenceStore fOverlayStore;
+	protected OverlayPreferenceStore fOverlayStore;
 	protected StyledTextColorPicker fPicker = null;
 
 	/**

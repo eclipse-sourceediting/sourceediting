@@ -52,9 +52,7 @@ public class JSPUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		styleValue = ColorHelper.getColorString(191, 95, 63) + NOBACKGROUNDBOLD;
 		store.setDefault(IStyleConstantsHTML.SCRIPT_AREA_BORDER, styleValue);
 
-		// white by default until requested otherwise
-		//styleValue = "null | " + ColorHelper.getColorString(240, 220, 200) + " | false"; //$NON-NLS-1$//$NON-NLS-2$
-		styleValue = "null | " + ColorHelper.getColorString(255,255,255) + " | false"; //$NON-NLS-1$//$NON-NLS-2$
+		styleValue = "null" + NOBACKGROUNDBOLD; //$NON-NLS-1$
 		store.setDefault(IStyleConstantsJSP.JSP_CONTENT, styleValue);
 		
 		// set default new jsp file template to use in new file wizard

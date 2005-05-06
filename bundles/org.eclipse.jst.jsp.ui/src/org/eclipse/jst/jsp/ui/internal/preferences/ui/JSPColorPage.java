@@ -22,6 +22,8 @@ import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.editor.IHelpContextIds;
 import org.eclipse.jst.jsp.ui.internal.style.IStyleConstantsJSP;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.help.WorkbenchHelp;
@@ -37,6 +39,21 @@ import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
 
 public class JSPColorPage extends XMLColorPage {
 
+	/**
+	 * Overridden to set up StyledTextColorPicker differently
+	 */
+	protected void createContentsForPicker(Composite parent) {
+		// create the color picker
+		fPicker = new JSPStyledTextColorPicker(parent, SWT.NULL);
+		GridData data = new GridData(GridData.FILL_BOTH);
+		fPicker.setLayoutData(data);
+
+		fPicker.setPreferenceStore(fOverlayStore);
+		setupPicker(fPicker);
+
+		fPicker.setText(getSampleText());
+	}
+	
 	/**
 	 * Set up all the style preference keys in the overlay store
 	 */
@@ -84,8 +101,6 @@ public class JSPColorPage extends XMLColorPage {
 		contextStyleMap.put(DOMJSPRegionContexts.JSP_COMMENT_OPEN, IStyleConstantsXML.COMMENT_BORDER);
 		contextStyleMap.put(DOMJSPRegionContexts.JSP_COMMENT_TEXT, IStyleConstantsXML.COMMENT_TEXT);
 		contextStyleMap.put(DOMJSPRegionContexts.JSP_COMMENT_CLOSE, IStyleConstantsXML.COMMENT_BORDER);
-
-		contextStyleMap.put(DOMJSPRegionContexts.JSP_CONTENT, IStyleConstantsJSP.JSP_CONTENT);
 		
 		contextStyleMap.put(DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_DQUOTE, IStyleConstantsXML.TAG_ATTRIBUTE_VALUE);
 		contextStyleMap.put(DOMJSPRegionContexts.XML_TAG_ATTRIBUTE_VALUE_SQUOTE, IStyleConstantsXML.TAG_ATTRIBUTE_VALUE);
@@ -126,16 +141,17 @@ public class JSPColorPage extends XMLColorPage {
 		picker.setDescriptions(descriptions);
 		picker.setStyleList(styleList);
 
-		//	updatePickerFont(picker);
 	}
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
 	 */
 	protected Control createContents(Composite parent) {
+		
 		Control c = super.createContents(parent);
 		WorkbenchHelp.setHelp(c, IHelpContextIds.JSP_PREFWEBX_STYLES_HELPID);
 		return c;
 	}
+	
 	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.PreferencePage#doGetPreferenceStore()
 	 */
