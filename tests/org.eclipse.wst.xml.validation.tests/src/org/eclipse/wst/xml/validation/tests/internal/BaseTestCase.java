@@ -210,8 +210,8 @@ public class BaseTestCase extends TestCase
        {
          numwarnings++;
          String message = valmes.getMessage();
-         message = message.replaceAll(".*" + PLUGIN_NAME, "");
-         message = message.replaceAll(".*" + PLUGIN_NAME, "");
+         message = message.replaceAll(".*" + PLUGIN_NAME + "[^/\\\\]*", "");
+         message = message.replaceAll(".*" + PLUGIN_NAME + "[^/\\\\]*", "");
          warningsString.append(message + " [" + valmes.getLineNumber() +", " + valmes.getColumnNumber() +"]\n");
          warningsString.append(createNestedMessageString(valmes.getNestedMessages()));
        }
@@ -219,8 +219,8 @@ public class BaseTestCase extends TestCase
        {
          numerrors++;
          String message = valmes.getMessage();
-         message = message.replaceAll(".*" + PLUGIN_NAME, "");
-         message = message.replaceAll(".*" + PLUGIN_NAME, "");
+         message = message.replaceAll(".*" + PLUGIN_NAME + "[^/\\\\]*", "");
+         message = message.replaceAll(".*" + PLUGIN_NAME + "[^/\\\\]*", "");
          errorsString.append(message + " [" + valmes.getLineNumber() +", " + valmes.getColumnNumber() +"]\n");
          errorsString.append(createNestedMessageString(valmes.getNestedMessages()));
        }
@@ -296,8 +296,8 @@ public class BaseTestCase extends TestCase
         }
         // If the message contains any file references make them relative.
         String message = nesvalmes.getMessage();
-        message = message.replaceAll(".*" + PLUGIN_NAME, "");
-        message = message.replaceAll(".*" + PLUGIN_NAME, "");
+        message = message.replaceAll(".*" + PLUGIN_NAME + "[^/\\\\]*", "");
+        message = message.replaceAll(".*" + PLUGIN_NAME + "[^/\\\\]*", "");
         messageString += ("-> " + message + " [" + nesvalmes.getLineNumber() +", " + nesvalmes.getColumnNumber() +"]\n");
         messageString += createNestedMessageString(nesvalmes.getNestedMessages(), depth + 1);
       }
