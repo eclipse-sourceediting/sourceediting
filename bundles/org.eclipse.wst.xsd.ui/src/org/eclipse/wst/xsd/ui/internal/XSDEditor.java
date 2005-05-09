@@ -86,7 +86,6 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
   public void init(IEditorSite site, IEditorInput editorInput) throws PartInitException
   {
     super.init(site, editorInput);
-    
     IWorkbenchWindow dw=PlatformUI.getWorkbench().getActiveWorkbenchWindow();
     IWorkbenchPage page=dw.getActivePage();
     getSite().getPage().addPartListener(partListener);
@@ -445,32 +444,51 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
       resourceSet.setURIConverter(new XSDURIConverter(resourceFile));
 
       String pathName = "";
+	  
+	  Resource resource = null;
       // If the resource is in the workspace....
       // otherwise the user is trying to open an external file
       if (resourceFile != null)
       {
         pathName = resourceFile.getFullPath().toString();
-        Resource resource = resourceSet.getResource(URI.createPlatformResourceURI(pathName), true);
-//      resource.getContents().add(xsdSchema);
-        resourceSet.getResources().add(resource);
-      
-        Object obj = resource.getContents().get(0);
-        if (obj instanceof XSDSchema)
-        {
-          xsdSchema = (XSDSchema)obj;
-        }
-
-//      URIConverter uriConverter = resourceSet.getURIConverter();
-//      resourceSet.setURIConverter(new XSDURIConverter(resourceFile));
- 
-        xsdSchema.setElement((Element)node);
-        resource.setModified(false);
+		
+		if (resourceFile.exists())
+		{
+          resource = resourceSet.getResource(URI.createPlatformResourceURI(pathName), true);
+		}
+        else  
+		{
+          // get resource from File URI.  This happens when we try to open the imported schema
+		  // from the importing schema that was opened via the Open External File action.
+		  resource = resourceSet.getResource(URI.createFileURI(pathName), true);
+		}
       }
       else
       {
-        xsdSchema.setElement((Element)node);
+		// This is the case where open external xsd file is attempted
+        IEditorInput input = getEditorInput();	  
+		if (input instanceof JavaFileEditorInput) // for some reason it is a JavaFileEditorInput
+		{
+		  IPath path = ((JavaFileEditorInput)input).getPath(input);
+          URI uri = URI.createFileURI(path.toString());
+	      resource = resourceSet.getResource(uri, true);
+		}
       }
-    }
+	  
+	  if (resource != null)
+	  {
+		resourceSet.getResources().add(resource);
+	      
+	    Object obj = resource.getContents().get(0);
+	    if (obj instanceof XSDSchema)
+	    {
+	      xsdSchema = (XSDSchema)obj;
+	    }
+	 
+	    xsdSchema.setElement((Element)node);
+	    resource.setModified(false);
+	  }
+	}
     catch (StackOverflowError e)
     {
 //      XSDEditorPlugin.getPlugin().getMsgLogger().write("Stack overflow encountered.  Possibly an invalid recursive circular schema");

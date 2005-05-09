@@ -534,7 +534,7 @@ public class XSDMultiPageEditorPart extends MultiPageEditorPart implements IProp
   }
 
   public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-    editorInputIsAcceptable(input);
+//    editorInputIsAcceptable(input);
     try {
       super.init(site, input);
       if (partListener == null) {
