@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
@@ -44,6 +45,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.ITemporaryAnnotation;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.StructuredMarkerAnnotation;
 
 
@@ -437,8 +439,13 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 			String message = ""; //$NON-NLS-1$
 			try {
 				message = (String) markerAnnotation.getMarker().getAttribute(IMarker.MESSAGE);
-			} catch (CoreException e) {
-				e.printStackTrace();
+			} 
+			catch(ResourceException e) {
+				// sometimes get a org.eclipse.core.internal.resources.ResourceException
+				// if marker is removed while in this code
+			}
+			catch (CoreException e) {
+				Logger.logException(e);
 			}
 			// it would be nice to check line number here...
 			if(message != null && message.equals(tempAnnotation.getText()))
