@@ -19,7 +19,6 @@ import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
 import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.tasks.TaskScanningScheduler;
 import org.osgi.framework.BundleContext;
 
 
@@ -85,7 +84,6 @@ public class SSECorePlugin extends Plugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		savePluginPreferences();
-		TaskScanningScheduler.shutdown();
 		FileBufferModelManager.shutdown();
 
 		super.stop(context);
@@ -99,14 +97,6 @@ public class SSECorePlugin extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 
-		/**
-		 * If the user starts the workbench with -Dorg.eclipse.wst.sse.core.taskscanner=off, the
-		 * scanner should be disabled
-		 */
-		String scan = System.getProperty("org.eclipse.wst.sse.core.taskscanner");
-		if (scan == null || !scan.equalsIgnoreCase("off")) {
-			TaskScanningScheduler.startup();
-		}
 		// initialize FileBuffer handling
 		FileBufferModelManager.startup();
 	}
