@@ -21,8 +21,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.IResourceDeltaVisitor;
-import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
@@ -31,6 +29,9 @@ import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.wst.sse.core.internal.Logger;
 
+/**
+ * Dispatcher for scanning based on deltas and requested projects
+ */
 class TaskScanner {
 	private static final boolean _debug = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks")); //$NON-NLS-1$ //$NON-NLS-2$
 	private static final boolean _debugContentTypeDetection = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks/detection")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -97,31 +98,25 @@ class TaskScanner {
 		if (scanMonitor.isCanceled())
 			return;
 		try {
-			IResourceVisitor innerScanner = new IResourceVisitor() {
-				public boolean visit(IResource visitee) throws CoreException {
-					if ((visitee.getType() & IResource.FOLDER) > 0 || (visitee.getType() & IResource.PROJECT) > 0) {
-						SubProgressMonitor childMonitor = new SubProgressMonitor(scanMonitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
-						IResource[] children = ((IContainer) visitee).members();
-						childMonitor.beginTask("", children.length);
-						for (int i = children.length - 1; i >= 0; i--) {
-							internalScan(project, children[i], new SubProgressMonitor(childMonitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK));
-						}
-						childMonitor.done();
+			String name = resource.getName();
+			if (name.length() != 0 && name.charAt(0) != '.') {
+				if ((resource.getType() & IResource.FOLDER) > 0 || (resource.getType() & IResource.PROJECT) > 0) {
+					SubProgressMonitor childMonitor = new SubProgressMonitor(scanMonitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
+					IResource[] children = ((IContainer) resource).members();
+					childMonitor.beginTask("", children.length);
+					for (int i = children.length - 1; i >= 0; i--) {
+						internalScan(project, children[i], new SubProgressMonitor(childMonitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK));
 					}
-					else if ((visitee.getType() & IResource.FILE) > 0) {
-						scanFile(project, (IFile) visitee, scanMonitor);
-						scanMonitor.worked(1);
-					}
-					else {
-						scanMonitor.worked(1);
-					}
-					String name = visitee.getName();
-					return name.length() != 0 && name.charAt(0) != '.';
+					childMonitor.done();
 				}
-			};
-
-			scanMonitor.beginTask("", 1);
-			resource.accept(innerScanner);
+				else if ((resource.getType() & IResource.FILE) > 0) {
+					scanFile(project, (IFile) resource, scanMonitor);
+					scanMonitor.worked(1);
+				}
+				else {
+					scanMonitor.worked(1);
+				}
+			}
 			scanMonitor.done();
 		}
 		catch (CoreException e) {
@@ -132,40 +127,35 @@ class TaskScanner {
 	void internalScan(IResourceDelta delta, final IProgressMonitor monitor) {
 		if (monitor.isCanceled())
 			return;
-		IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
-			public boolean visit(IResourceDelta fileDelta) throws CoreException {
-				if (monitor.isCanceled())
-					return false;
-				IResource resource = fileDelta.getResource();
-				if ((resource.getType() & IResource.FOLDER) > 0 || (resource.getType() & IResource.PROJECT) > 0) {
-					IResourceDelta[] children = fileDelta.getAffectedChildren();
-					String name = fileDelta.getFullPath().lastSegment();
-					if (name.length() != 0 && name.charAt(0) != '.' && children.length > 0) {
-						SubProgressMonitor childMonitor = new SubProgressMonitor(monitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
-						childMonitor.beginTask("", children.length);
-						for (int i = 0; i < children.length; i++) {
-							internalScan(children[i], new SubProgressMonitor(childMonitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK));
-						}
-						childMonitor.done();
+		try {
+			String name = delta.getFullPath().lastSegment();
+			IResource resource = delta.getResource();
+			if ((resource.getType() & IResource.FOLDER) > 0 || (resource.getType() & IResource.PROJECT) > 0) {
+				IResourceDelta[] children = delta.getAffectedChildren();
+				if (name.length() != 0 && name.charAt(0) != '.' && children.length > 0) {
+					SubProgressMonitor childMonitor = new SubProgressMonitor(monitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
+					childMonitor.beginTask("", children.length);
+					for (int i = children.length - 1; i >= 0; i--) {
+						internalScan(children[i], new SubProgressMonitor(childMonitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK));
 					}
-					else {
-						monitor.worked(1);
-					}
+					childMonitor.done();
 				}
-				else if ((resource.getType() & IResource.FILE) > 0) {
-					if ((fileDelta.getKind() & IResourceDelta.ADDED) > 0 || ((fileDelta.getKind() & IResourceDelta.CHANGED) > 0 && (fileDelta.getFlags() & IResourceDelta.CONTENT) > 0)) {
-						IFile file = (IFile) resource;
-						scanFile(file.getProject(), file, monitor);
-					}
+				else {
 					monitor.worked(1);
 				}
-				return false;
 			}
-		};
-		try {
-			delta.accept(visitor);
+			else if (name.length() != 0 && name.charAt(0) != '.' && (resource.getType() & IResource.FILE) > 0) {
+				if ((delta.getKind() & IResourceDelta.ADDED) > 0 || ((delta.getKind() & IResourceDelta.CHANGED) > 0 && (delta.getFlags() & IResourceDelta.CONTENT) > 0)) {
+					IFile file = (IFile) resource;
+					scanFile(file.getProject(), file, monitor);
+				}
+				monitor.worked(1);
+			}
+			else {
+				monitor.worked(1);
+			}
 		}
-		catch (CoreException e) {
+		catch (Exception e) {
 			monitor.done();
 			Logger.logException(e);
 		}
