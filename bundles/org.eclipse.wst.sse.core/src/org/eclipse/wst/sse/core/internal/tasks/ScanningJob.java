@@ -49,10 +49,12 @@ class ScanningJob extends Job {
 	}
 
 	synchronized void addDelta(IResourceDelta delta) {
-		fQueue.add(delta);
-		if (_debugJob)
-			System.out.println("Adding delta " + delta.getFullPath() + " " + delta.getKind());
-		schedule(100);
+		if (!isIgnoredProject(delta)) {
+			fQueue.add(delta);
+			if (_debugJob)
+				System.out.println("Adding delta " + delta.getFullPath() + " " + delta.getKind());
+			schedule(100);
+		}
 	}
 
 	synchronized void addProject(IProject project) {
@@ -85,6 +87,23 @@ class ScanningJob extends Job {
 			}
 		}
 		return shouldScan;
+	}
+
+	private boolean isIgnoredProject(IResourceDelta delta) {
+		IResource resource = delta.getResource();
+		boolean ignore = false;
+		if (resource.getType() == IResource.PROJECT) {
+			String[] projectsIgnored = StringUtils.unpack(SSECorePlugin.getDefault().getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_PROJECTS_IGNORED));
+			String name = resource.getName();
+			for (int j = 0; !ignore && j < projectsIgnored.length; j++) {
+				if (projectsIgnored[j].equals(name)) {
+					if (_debugJob)
+						System.out.println("Scanning Job ignoring " + resource.getName());
+					ignore = true;
+				}
+			}
+		}
+		return ignore;
 	}
 
 	synchronized List retrieveQueue() {
