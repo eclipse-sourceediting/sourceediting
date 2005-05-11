@@ -44,7 +44,7 @@ import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
-import org.eclipse.wst.common.ui.UIPlugin;
+import org.eclipse.wst.common.ui.internal.UIPlugin;
 
 public class ExampleProjectCreationWizard extends Wizard implements INewWizard, IExecutableExtension {
 

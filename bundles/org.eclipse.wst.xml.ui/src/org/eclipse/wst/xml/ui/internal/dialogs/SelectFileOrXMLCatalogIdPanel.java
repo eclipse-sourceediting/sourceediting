@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.part.PageBook;
-import org.eclipse.wst.common.ui.viewers.SelectSingleFileView;
+import org.eclipse.wst.common.ui.internal.viewers.SelectSingleFileView;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.uriresolver.XMLCatalog;
 import org.eclipse.wst.xml.uriresolver.XMLCatalogEntry;

@@ -19,7 +19,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
-import org.eclipse.wst.common.ui.UIPlugin;
+import org.eclipse.wst.common.ui.internal.UIPlugin;
 
 public class ExampleProjectCreationWizardPage extends WizardNewProjectCreationPage {
 

@@ -38,7 +38,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 import org.eclipse.ui.wizards.datatransfer.ZipFileStructureProvider;
-import org.eclipse.wst.common.ui.UIPlugin;
+import org.eclipse.wst.common.ui.internal.UIPlugin;
 import org.osgi.framework.Bundle;
 
 public class ExampleProjectCreationOperation implements IRunnableWithProgress {

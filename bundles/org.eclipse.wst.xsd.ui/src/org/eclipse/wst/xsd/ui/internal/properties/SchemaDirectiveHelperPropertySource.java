@@ -27,7 +27,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
 import org.eclipse.ui.views.properties.PropertyDescriptor;
-import org.eclipse.wst.common.ui.viewers.ResourceFilter;
+import org.eclipse.wst.common.ui.internal.viewers.ResourceFilter;
 import org.eclipse.wst.xml.uriresolver.util.URIHelper;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.wizards.XSDSelectIncludeFileWizard;

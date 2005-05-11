@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.common.ui.viewers.SelectSingleFilePage;
+import org.eclipse.wst.common.ui.internal.viewers.SelectSingleFilePage;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.util.ViewUtility;
 import org.eclipse.xsd.XSDSchema;

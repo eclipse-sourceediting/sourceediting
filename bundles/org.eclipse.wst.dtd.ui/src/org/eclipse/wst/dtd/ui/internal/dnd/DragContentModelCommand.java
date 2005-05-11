@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.swt.dnd.DND;
-import org.eclipse.wst.common.ui.dnd.DefaultDragAndDropCommand;
+import org.eclipse.wst.common.ui.internal.dnd.DefaultDragAndDropCommand;
 import org.eclipse.wst.dtd.core.internal.CMBasicNode;
 import org.eclipse.wst.dtd.core.internal.CMGroupNode;
 import org.eclipse.wst.dtd.core.internal.CMNode;

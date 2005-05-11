@@ -16,8 +16,8 @@ package org.eclipse.wst.dtd.ui.internal.dnd;
 
 import java.util.Collection;
 
-import org.eclipse.wst.common.ui.dnd.DragAndDropCommand;
-import org.eclipse.wst.common.ui.dnd.DragAndDropManager;
+import org.eclipse.wst.common.ui.internal.dnd.DragAndDropCommand;
+import org.eclipse.wst.common.ui.internal.dnd.DragAndDropManager;
 import org.eclipse.wst.dtd.core.internal.Attribute;
 import org.eclipse.wst.dtd.core.internal.CMNode;
 import org.eclipse.wst.dtd.core.internal.DTDNode;

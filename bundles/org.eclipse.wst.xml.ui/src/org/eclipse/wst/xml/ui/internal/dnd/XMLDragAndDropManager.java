@@ -19,11 +19,11 @@ import java.util.Collection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.wst.common.ui.dnd.DragAndDropCommand;
-import org.eclipse.wst.common.ui.dnd.DragAndDropManager;
-import org.eclipse.wst.common.ui.dnd.ObjectTransfer;
-import org.eclipse.wst.common.ui.dnd.ViewerDragAdapter;
-import org.eclipse.wst.common.ui.dnd.ViewerDropAdapter;
+import org.eclipse.wst.common.ui.internal.dnd.DragAndDropCommand;
+import org.eclipse.wst.common.ui.internal.dnd.DragAndDropManager;
+import org.eclipse.wst.common.ui.internal.dnd.ObjectTransfer;
+import org.eclipse.wst.common.ui.internal.dnd.ViewerDragAdapter;
+import org.eclipse.wst.common.ui.internal.dnd.ViewerDropAdapter;
 import org.w3c.dom.Node;
 
 public class XMLDragAndDropManager implements DragAndDropManager {

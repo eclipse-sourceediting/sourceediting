@@ -12,8 +12,8 @@ package org.eclipse.wst.xsd.ui.internal.dnd;
 
 import java.util.Collection;
 
-import org.eclipse.wst.common.ui.dnd.DragAndDropCommand;
-import org.eclipse.wst.common.ui.dnd.DragAndDropManager;
+import org.eclipse.wst.common.ui.internal.dnd.DragAndDropCommand;
+import org.eclipse.wst.common.ui.internal.dnd.DragAndDropManager;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Node;
@@ -39,7 +39,7 @@ public class XSDDragAndDropManager implements DragAndDropManager
   } 
 
   /**
-   * @see org.eclipse.wst.common.ui.dnd.DragAndDropManager#createCommand(Object, float, int, int, Collection)
+   * @see org.eclipse.wst.common.ui.internal.dnd.DragAndDropManager#createCommand(Object, float, int, int, Collection)
    */
   public DragAndDropCommand createCommand(
     Object target,

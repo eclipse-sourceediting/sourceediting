@@ -38,7 +38,7 @@ public class DragNodesCommand extends BaseDragNodesCommand
   }
 
   /**
-   * @see org.eclipse.wst.common.ui.dnd.DragAndDropCommand#canExecute()
+   * @see org.eclipse.wst.common.ui.internal.dnd.DragAndDropCommand#canExecute()
    */
   public boolean canExecute()
   {
@@ -53,7 +53,7 @@ public class DragNodesCommand extends BaseDragNodesCommand
 
   
   /**
-   * @see org.eclipse.wst.common.ui.dnd.DragAndDropCommand#execute()
+   * @see org.eclipse.wst.common.ui.internal.dnd.DragAndDropCommand#execute()
    */
   public void execute()
   {
