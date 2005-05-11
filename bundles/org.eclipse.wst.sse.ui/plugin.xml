@@ -327,7 +327,7 @@
          point="org.eclipse.wst.sse.ui.dropTargetTransfers">
       <dropTargetContribution
             targetID="org.eclipse.wst.sse.ui.internal.StructuredTextEditor"
-            id="org.eclipse.wst.sse.ui.extention.ExtendedTransfers">
+            id="org.eclipse.wst.sse.ui.extension.ExtendedTransfers">
          <transfer
                priority="mid"
                singleton="true"
