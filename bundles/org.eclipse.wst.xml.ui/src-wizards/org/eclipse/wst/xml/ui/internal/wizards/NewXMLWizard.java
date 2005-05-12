@@ -56,8 +56,8 @@ import org.eclipse.wst.xml.ui.internal.dialogs.NamespaceInfoErrorHelper;
 import org.eclipse.wst.xml.ui.internal.dialogs.SelectFileOrXMLCatalogIdPanel;
 import org.eclipse.wst.xml.ui.internal.dialogs.UpdateListener;
 import org.eclipse.wst.xml.ui.internal.nsedit.CommonEditNamespacesDialog;
-import org.eclipse.wst.xml.uriresolver.XMLCatalogEntry;
-import org.eclipse.wst.xml.uriresolver.util.URIHelper;
+import org.eclipse.wst.xml.uriresolver.internal.XMLCatalogEntry;
+import org.eclipse.wst.xml.uriresolver.internal.util.URIHelper;
 
 public class NewXMLWizard extends NewModelWizard
 {                                  

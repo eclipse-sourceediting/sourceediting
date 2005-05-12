@@ -51,7 +51,7 @@ import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.util.ProjectResolver;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
-import org.eclipse.wst.xml.uriresolver.util.URIHelper;
+import org.eclipse.wst.xml.uriresolver.internal.util.URIHelper;
 
 
 public class FileBufferModelManager {

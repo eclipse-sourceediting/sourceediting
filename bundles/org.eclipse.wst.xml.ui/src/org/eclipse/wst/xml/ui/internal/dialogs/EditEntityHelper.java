@@ -18,8 +18,8 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
-import org.eclipse.wst.xml.uriresolver.XMLCatalogEntry;
-import org.eclipse.wst.xml.uriresolver.util.URIHelper;
+import org.eclipse.wst.xml.uriresolver.internal.XMLCatalogEntry;
+import org.eclipse.wst.xml.uriresolver.internal.util.URIHelper;
 
 public class EditEntityHelper {
 

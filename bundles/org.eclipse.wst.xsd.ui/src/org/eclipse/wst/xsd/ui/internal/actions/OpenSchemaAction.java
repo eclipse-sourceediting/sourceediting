@@ -11,7 +11,7 @@
 package org.eclipse.wst.xsd.ui.internal.actions;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.wst.xml.uriresolver.util.URIHelper;
+import org.eclipse.wst.xml.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xsd.ui.internal.util.OpenOnSelectionHelper;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDSchemaDirective;

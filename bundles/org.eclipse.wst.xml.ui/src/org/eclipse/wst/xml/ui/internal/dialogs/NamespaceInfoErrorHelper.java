@@ -19,8 +19,8 @@ import java.util.List;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceInfoManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
-import org.eclipse.wst.xml.uriresolver.util.IdResolver;
-import org.eclipse.wst.xml.uriresolver.util.URIHelper;
+import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
+import org.eclipse.wst.xml.uriresolver.internal.util.URIHelper;
 
 public class NamespaceInfoErrorHelper {
 

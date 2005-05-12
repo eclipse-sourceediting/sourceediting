@@ -14,7 +14,7 @@ package org.eclipse.wst.html.core.internal.modelquery;
 
 import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.SimpleAssociationProvider;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
-import org.eclipse.wst.xml.uriresolver.util.IdResolver;
+import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
 
 /**
  */

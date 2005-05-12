@@ -21,7 +21,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQueryCMPro
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
 import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMDocType;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
-import org.eclipse.wst.xml.uriresolver.util.IdResolver;
+import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Node;

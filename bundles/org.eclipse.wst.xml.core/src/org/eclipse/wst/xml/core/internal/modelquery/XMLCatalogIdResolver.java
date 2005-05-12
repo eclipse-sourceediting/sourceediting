@@ -13,10 +13,10 @@
 package org.eclipse.wst.xml.core.internal.modelquery;
 
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
-import org.eclipse.wst.xml.uriresolver.XMLCatalog;
-import org.eclipse.wst.xml.uriresolver.XMLCatalogPlugin;
-import org.eclipse.wst.xml.uriresolver.util.IdResolver;
-import org.eclipse.wst.xml.uriresolver.util.URIHelper;
+import org.eclipse.wst.xml.uriresolver.internal.XMLCatalog;
+import org.eclipse.wst.xml.uriresolver.internal.XMLCatalogPlugin;
+import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
+import org.eclipse.wst.xml.uriresolver.internal.util.URIHelper;
 
 
 public class XMLCatalogIdResolver implements IdResolver {

@@ -36,8 +36,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
-import org.eclipse.wst.xml.uriresolver.XMLCatalogEntry;
-import org.eclipse.wst.xml.uriresolver.util.URIHelper;
+import org.eclipse.wst.xml.uriresolver.internal.XMLCatalogEntry;
+import org.eclipse.wst.xml.uriresolver.internal.util.URIHelper;
 
 
 public class XMLCatalogTableViewer extends TableViewer {

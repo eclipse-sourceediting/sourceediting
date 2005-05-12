@@ -15,7 +15,7 @@ package org.eclipse.wst.xml.core.internal.ssemodelquery;
 
 
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
-import org.eclipse.wst.xml.uriresolver.util.IdResolver;
+import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
 
 public interface MovableModelQuery extends ModelQuery {
 

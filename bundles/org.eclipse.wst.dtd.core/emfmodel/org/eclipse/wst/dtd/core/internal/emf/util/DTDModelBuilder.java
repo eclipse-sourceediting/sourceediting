@@ -59,8 +59,8 @@ import org.eclipse.wst.dtd.core.internal.saxparser.ElementDecl;
 import org.eclipse.wst.dtd.core.internal.saxparser.EntityDecl;
 import org.eclipse.wst.dtd.core.internal.saxparser.ErrorMessage;
 import org.eclipse.wst.dtd.core.internal.saxparser.NotationDecl;
-import org.eclipse.wst.xml.uriresolver.util.IdResolver;
-import org.eclipse.wst.xml.uriresolver.util.IdResolverImpl;
+import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
+import org.eclipse.wst.xml.uriresolver.internal.util.IdResolverImpl;
 
 public class DTDModelBuilder extends DTDSaxArtifactVisitor {
 	DTD dtd;

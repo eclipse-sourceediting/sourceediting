@@ -35,12 +35,12 @@ import org.eclipse.wst.xml.core.internal.contentmodel.util.ContentBuilder;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMContentBuilderImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMWriter;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
-import org.eclipse.wst.xml.uriresolver.XMLCatalog;
-import org.eclipse.wst.xml.uriresolver.XMLCatalogEntry;
-import org.eclipse.wst.xml.uriresolver.XMLCatalogPlugin;
-import org.eclipse.wst.xml.uriresolver.util.IdResolver;
-import org.eclipse.wst.xml.uriresolver.util.IdResolverImpl;
-import org.eclipse.wst.xml.uriresolver.util.URIHelper;
+import org.eclipse.wst.xml.uriresolver.internal.XMLCatalog;
+import org.eclipse.wst.xml.uriresolver.internal.XMLCatalogEntry;
+import org.eclipse.wst.xml.uriresolver.internal.XMLCatalogPlugin;
+import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
+import org.eclipse.wst.xml.uriresolver.internal.util.IdResolverImpl;
+import org.eclipse.wst.xml.uriresolver.internal.util.URIHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

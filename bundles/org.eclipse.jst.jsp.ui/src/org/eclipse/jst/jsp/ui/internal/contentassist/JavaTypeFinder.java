@@ -30,7 +30,7 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.sse.ui.internal.contentassist.IRelevanceConstants;
-import org.eclipse.wst.xml.uriresolver.util.URIHelper;
+import org.eclipse.wst.xml.uriresolver.internal.util.URIHelper;
 
 /**
  * @since 1.0

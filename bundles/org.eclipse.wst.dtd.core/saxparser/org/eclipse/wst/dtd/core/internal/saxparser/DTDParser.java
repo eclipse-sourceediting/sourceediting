@@ -22,9 +22,9 @@ import java.util.Vector;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.eclipse.wst.xml.uriresolver.util.IdResolver;
-import org.eclipse.wst.xml.uriresolver.util.IdResolverImpl;
-import org.eclipse.wst.xml.uriresolver.util.URIHelper;
+import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
+import org.eclipse.wst.xml.uriresolver.internal.util.IdResolverImpl;
+import org.eclipse.wst.xml.uriresolver.internal.util.URIHelper;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DTDHandler;
 import org.xml.sax.ErrorHandler;

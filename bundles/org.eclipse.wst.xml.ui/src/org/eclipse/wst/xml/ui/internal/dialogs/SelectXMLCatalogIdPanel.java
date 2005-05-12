@@ -25,8 +25,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
-import org.eclipse.wst.xml.uriresolver.XMLCatalog;
-import org.eclipse.wst.xml.uriresolver.XMLCatalogEntry;
+import org.eclipse.wst.xml.uriresolver.internal.XMLCatalog;
+import org.eclipse.wst.xml.uriresolver.internal.XMLCatalogEntry;
 
 public class SelectXMLCatalogIdPanel extends Composite {
 	protected int catalogEntryType;

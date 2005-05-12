@@ -22,7 +22,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.ModelQueryI
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.MovableModelQuery;
-import org.eclipse.wst.xml.uriresolver.util.IdResolver;
+import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
