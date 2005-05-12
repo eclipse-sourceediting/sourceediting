@@ -206,21 +206,19 @@ public class BaseTestCase extends TestCase
      for(int i = 0; i < nummessages; i++)
      {
        ValidationMessage valmes = valmessages[i];
+	   String message = valmes.getMessage();
+	   // Replace operating system specific slashes.
+	   message = message.replaceAll("\\\\","/");
+	   message = message.replaceAll(".*" + PLUGIN_NAME + "[^/\\\\]*", "");
        if(valmes.getSeverity() == ValidationMessage.SEV_LOW)
        {
          numwarnings++;
-         String message = valmes.getMessage();
-         message = message.replaceAll(".*" + PLUGIN_NAME + "[^/\\\\]*", "");
-         message = message.replaceAll(".*" + PLUGIN_NAME + "[^/\\\\]*", "");
          warningsString.append(message + " [" + valmes.getLineNumber() +", " + valmes.getColumnNumber() +"]\n");
          warningsString.append(createNestedMessageString(valmes.getNestedMessages()));
        }
        else
        {
          numerrors++;
-         String message = valmes.getMessage();
-         message = message.replaceAll(".*" + PLUGIN_NAME + "[^/\\\\]*", "");
-         message = message.replaceAll(".*" + PLUGIN_NAME + "[^/\\\\]*", "");
          errorsString.append(message + " [" + valmes.getLineNumber() +", " + valmes.getColumnNumber() +"]\n");
          errorsString.append(createNestedMessageString(valmes.getNestedMessages()));
        }

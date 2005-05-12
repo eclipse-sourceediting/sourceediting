@@ -2,7 +2,7 @@ number of errors      : 1
 number of warnings    : 0
 
 ------------error list-------------------------------------------
-\testresources\samples\XMLExamples\PublicationCatalogueInvalid\CatalogueInvalid.xml (The system cannot find the file specified)". [1, 0]
+/testresources/samples/XMLExamples/PublicationCatalogueInvalid/CatalogueInvalid.xml (The system cannot find the file specified)". [1, 0]
 ------------warning list-----------------------------------------
 (none)
 -----------------------------------------------------------------
