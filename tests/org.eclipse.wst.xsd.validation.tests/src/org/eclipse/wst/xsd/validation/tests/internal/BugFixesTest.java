@@ -15,9 +15,9 @@ import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.wst.xml.uriresolver.XMLCatalog;
-import org.eclipse.wst.xml.uriresolver.XMLCatalogEntry;
-import org.eclipse.wst.xml.uriresolver.XMLCatalogPlugin;
+import org.eclipse.wst.xml.uriresolver.internal.XMLCatalog;
+import org.eclipse.wst.xml.uriresolver.internal.XMLCatalogEntry;
+import org.eclipse.wst.xml.uriresolver.internal.XMLCatalogPlugin;
 
 /**
  * Test class for bug fixes.
