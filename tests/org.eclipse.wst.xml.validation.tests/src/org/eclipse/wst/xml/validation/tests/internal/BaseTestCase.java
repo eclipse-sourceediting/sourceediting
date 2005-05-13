@@ -11,15 +11,6 @@
 
 package org.eclipse.wst.xml.validation.tests.internal;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -42,10 +33,7 @@ public class BaseTestCase extends TestCase
   protected String FILE_PROTOCOL = "file:///"; 
   protected String PLUGIN_ABSOLUTE_PATH;
   protected String SAMPLES_DIR = "testresources/samples/";
-  protected String GENERATED_RESULTS_DIR = "testresources/generatedResults/";
-  protected String IDEAL_RESULTS_DIR = "testresources/idealResults/";
-  protected static final String PLUGIN_NAME = "org.eclipse.wst.xml.validation.tests";
-  private XMLValidator validator = XMLValidator.getInstance();
+  protected XMLValidator validator = XMLValidator.getInstance();
   
   /* (non-Javadoc)
    * @see junit.framework.TestCase#setUp()
@@ -56,254 +44,41 @@ public class BaseTestCase extends TestCase
   }
   
   /**
-   * Run a validator test. The test will run the validator, log the results and compare the results
-   * with the ideal results. The test will only pass if the two log files are the same.
+   * Run a validator test. The test will run the validator, and compare the validation result with
+   * the information specified.
    * 
    * @param testfile The file to run the validator test on.
-   * @param loglocation The location to create the log file.
-   * @param idealloglocation The location of the ideal log file.
+   * @param keys The list of allows message keys.
+   * @param numErrors The number of expected errors.
+   * @param numWarnings The number of expected warnings.
    */
-  public void runTest(String testfile, String loglocation, String idealloglocation)
+  public void runTest(String testfile, List keys, int numErrors, int numWarnings)
   {
     ValidationReport valreport = validator.validate(testfile);
-    try
-    {
-      createLog(loglocation, valreport);
-      String generatedLog = getStringFromFile(loglocation);
-      String idealLog = getStringFromFile(idealloglocation);
-      assertEquals(idealLog, generatedLog);
-    } catch (Exception e)
-    {
-      fail("Could not compare log files");
-    }
-  }
-  
-  /**
-   * Get a string representation of a file.
-   * 
-   * @param filename the file name of the file to get the string representation.
-   * @return The string representation if successful.
-   * @throws Exception Thrown if unable to create a string representaion of the file.
-   */
-  private String getStringFromFile(String filename) throws Exception
-  {
-    StringBuffer filestring = new StringBuffer();
-    Reader reader = null;
-    BufferedReader bufreader = null;
-    try
-    {
-      File file = new File(filename);
-      reader = new FileReader(file);
-      bufreader = new BufferedReader(reader);
-      while (bufreader.ready())
-      {
-        filestring.append(bufreader.readLine() + "\n");
-      }
-    } catch (FileNotFoundException e)
-    {
-      throw new Exception();
-    } finally
-    {
-      bufreader.close();
-      reader.close();
-    }
-    return filestring.toString();
-  }
-  
-//  /**
-//   * Create a log file for an XSD test.
-//   * 
-//   * @param filename The name of the log file to create.
-//   * @param valreport The validation report for this file.
-//   * @return The file contents as a string if successful or null if not successful.
-//   */
-//  private String createLog(String filename, ValidationReport valreport)
-//  {
-//     ValidationMessage[] valmessages = valreport.getValidationMessages();
-//     int nummessages = valmessages.length;//validator.getErrors().size() + validator.getWarnings().size();
-//     StringBuffer errorsString = new StringBuffer();
-//     StringBuffer warningsString = new StringBuffer();
-//     int numerrors = 0;
-//     int numwarnings = 0;
-//     for(int i = 0; i < nummessages; i++)
-//     {
-//       ValidationMessage valmes = valmessages[i];
-//       if(valmes.getSeverity() == ValidationMessage.SEV_LOW)
-//       {
-//         numwarnings++;
-//         warningsString.append(valmes.getMessage() + " [" + valmes.getLineNumber() +", " + valmes.getColumnNumber() +"]\n");
-//       }
-//       else
-//       {
-//         numerrors++;
-//         errorsString.append(valmes.getMessage() + " [" + valmes.getLineNumber() +", " + valmes.getColumnNumber() +"]\n");
-//       }
-//     }
-//     StringBuffer log = new StringBuffer();
-//     log.append("number of errors      : " + numerrors + "\n");
-//     log.append("number of warnings    : " + numwarnings + "\n\n");
-//     log.append("------------error list-------------------------------------------\n");
-//     if(numerrors == 0)
-//     {
-//       log.append("(none)\n");
-//     }
-//     else
-//     {
-//       log.append(errorsString.toString());
-//     }
-//     log.append("------------warning list-----------------------------------------\n");
-//     if(numwarnings == 0)
-//     {
-//       log.append("(none)\n");
-//     }
-//     else
-//     {
-//       log.append(warningsString.toString());
-//     }
-//     log.append("-----------------------------------------------------------------\n");
-//   
-//     DataOutputStream outStream = null;
-//    try
-//    {
-//      File logfile = new File(filename);
-//      File parent = logfile.getParentFile();
-//  	if (!parent.exists()) 
-//  	{
-//  	  parent.mkdirs();
-//  	}
-//      if(logfile.exists())
-//      {
-//        logfile.delete();
-//      }
-//      logfile.createNewFile();
-//      
-//      outStream = new DataOutputStream(new FileOutputStream(filename, true));
-//      outStream.writeBytes(log.toString());
-//      outStream.close();
-//
-//    } catch (IOException e)
-//    {
-//      // If we can't write the log then clear the log.
-//      log.delete(0, log.length());
-//    }
-//    return log.toString();
-//  }
-  /**
-   * Create a log file for an XSD test.
-   * 
-   * @param filename The name of the log file to create.
-   * @param valreport The validation report for this file.
-   * @return The file contents as a string if successful or null if not successful.
-   */
-  private String createLog(String filename, ValidationReport valreport)
-  {
-     ValidationMessage[] valmessages = valreport.getValidationMessages();
-     int nummessages = valmessages.length;//validator.getErrors().size() + validator.getWarnings().size();
-     StringBuffer errorsString = new StringBuffer();
-     StringBuffer warningsString = new StringBuffer();
-     int numerrors = 0;
-     int numwarnings = 0;
-     for(int i = 0; i < nummessages; i++)
-     {
-       ValidationMessage valmes = valmessages[i];
-	   String message = valmes.getMessage();
-	   // Replace operating system specific slashes.
-	   message = message.replaceAll("\\\\","/");
-	   message = message.replaceAll(".*" + PLUGIN_NAME + "[^/\\\\]*", "");
-       if(valmes.getSeverity() == ValidationMessage.SEV_LOW)
-       {
-         numwarnings++;
-         warningsString.append(message + " [" + valmes.getLineNumber() +", " + valmes.getColumnNumber() +"]\n");
-         warningsString.append(createNestedMessageString(valmes.getNestedMessages()));
-       }
-       else
-       {
-         numerrors++;
-         errorsString.append(message + " [" + valmes.getLineNumber() +", " + valmes.getColumnNumber() +"]\n");
-         errorsString.append(createNestedMessageString(valmes.getNestedMessages()));
-       }
-     }
-     StringBuffer log = new StringBuffer();
-     log.append("number of errors      : " + numerrors + "\n");
-     log.append("number of warnings    : " + numwarnings + "\n");
-	   
-     log.append("\n------------error list-------------------------------------------\n");
-     if(numerrors == 0)
-     {
-       log.append("(none)\n");
-     }
-     else
-     {
-       log.append(errorsString.toString());
-     }
-     log.append("------------warning list-----------------------------------------\n");
-	 if(numwarnings == 0)
-     {
-       log.append("(none)\n");
-     }
-     else
-     {
-       log.append(warningsString.toString());
-     }
-     log.append("-----------------------------------------------------------------\n");
-   
-     DataOutputStream outStream = null;
-    try
-    {
-      File logfile = new File(filename);
-      File parent = logfile.getParentFile();
-  	if (!parent.exists()) 
-  	{
-  	  parent.mkdirs();
-  	}
-      if(logfile.exists())
-      {
-        logfile.delete();
-      }
-      logfile.createNewFile();
-      
-      outStream = new DataOutputStream(new FileOutputStream(filename, true));
-      outStream.writeBytes(log.toString());
-      outStream.close();
+	
+	ValidationMessage[] valmessages = valreport.getValidationMessages();
+    int nummessages = valmessages.length;
+	
+	int errorCount = 0;
+	int warningCount = 0;
 
-    } catch (IOException e)
+    for(int i = 0; i < nummessages; i++)
     {
-      // If we can't write the log then clear the log.
-      log.delete(0, log.length());
-    }
-    return log.toString();
-  }
-  
-  private String createNestedMessageString(List nestedMessages)
-  {
-    return createNestedMessageString(nestedMessages, 0);
-  }
-  
-  private String createNestedMessageString(List nestedMessages, int depth)
-  {
-    if(nestedMessages != null && nestedMessages.size() > 0)
-    {
-      String messageString = "";
-      Iterator nestedMesIter = nestedMessages.iterator();
-      while(nestedMesIter.hasNext())
+      ValidationMessage valmes = valmessages[i];
+	  String key = valmes.getKey();
+	  assertTrue("The message key " + key + " is not correct.", keys.contains(key));
+      if(valmes.getSeverity() == ValidationMessage.SEV_LOW)
       {
-        ValidationMessage nesvalmes = (ValidationMessage)nestedMesIter.next();
-        for(int i = 0; i < depth; i++)
-        {
-          messageString += " ";
-        }
-        // If the message contains any file references make them relative.
-        String message = nesvalmes.getMessage();
-        message = message.replaceAll(".*" + PLUGIN_NAME + "[^/\\\\]*", "");
-        message = message.replaceAll(".*" + PLUGIN_NAME + "[^/\\\\]*", "");
-        messageString += ("-> " + message + " [" + nesvalmes.getLineNumber() +", " + nesvalmes.getColumnNumber() +"]\n");
-        messageString += createNestedMessageString(nesvalmes.getNestedMessages(), depth + 1);
+        warningCount++;
       }
-      return messageString;
+      else
+      {
+        errorCount++;
+      }
     }
-    else
-    {
-      return "";
-    }
+    assertEquals(errorCount + " errors were reported but " + numErrors + " errors were expected.", numErrors, errorCount);
+	assertEquals(warningCount + " warnings were reported but " + numWarnings + " warnings were expected.", numWarnings, warningCount);
   }
+  
+  
 }

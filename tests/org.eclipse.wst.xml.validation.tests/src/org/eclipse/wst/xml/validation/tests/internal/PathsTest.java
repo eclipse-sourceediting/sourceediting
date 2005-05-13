@@ -10,6 +10,9 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.validation.tests.internal;
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 /**
@@ -38,10 +41,11 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "SpaceInPathValid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "Space InPath/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "Space InPath/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "Space InPath/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -51,10 +55,12 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "SpaceInPathInvalid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "Space InPath/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "Space InPath/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "Space InPath/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	keys.add("MarkupEntityMismatch");
+	int numErrors = 1;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -64,10 +70,11 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "CloseBracketInPathValid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "CloseBracket)InPath/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "CloseBracket)InPath/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "CloseBracket)InPath/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -77,10 +84,12 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "CloseBracketInPathInvalid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "CloseBracket)InPath/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "CloseBracket)InPath/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "CloseBracket)InPath/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	keys.add("MarkupEntityMismatch");
+	int numErrors = 1;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -90,10 +99,11 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "CloseBracket)InFilenameValid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "CloseBracketInFilename/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "CloseBracketInFilename/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "CloseBracketInFilename/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -103,10 +113,12 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "CloseBracket)InFilenameInvalid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "CloseBracketInFilename/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "CloseBracketInFilename/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "CloseBracketInFilename/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	keys.add("MarkupEntityMismatch");
+	int numErrors = 1;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -116,10 +128,11 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "DashInPathValid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "Dash-InPath/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "Dash-InPath/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "Dash-InPath/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -129,10 +142,12 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "DashInPathInvalid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "Dash-InPath/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "Dash-InPath/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "Dash-InPath/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	keys.add("MarkupEntityMismatch");
+	int numErrors = 1;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -142,10 +157,11 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "Dash-InFilenameValid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "DashInFilename/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "DashInFilename/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "DashInFilename/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -155,10 +171,12 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "Dash-InFilenameInvalid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "DashInFilename/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "DashInFilename/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "DashInFilename/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	keys.add("MarkupEntityMismatch");
+	int numErrors = 1;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -168,10 +186,11 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "ExclamationInPathValid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "Exclamation!InPath/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "Exclamation!InPath/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "Exclamation!InPath/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -181,10 +200,12 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "ExclamationInPathInvalid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "Exclamation!InPath/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "Exclamation!InPath/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "Exclamation!InPath/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	keys.add("MarkupEntityMismatch");
+	int numErrors = 1;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -194,10 +215,11 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "Exclamation!InFilenameValid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "ExclamationInFilename/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "ExclamationInFilename/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "ExclamationInFilename/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -207,10 +229,12 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "Exclamation!InFilenameInvalid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "ExclamationInFilename/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "ExclamationInFilename/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "ExclamationInFilename/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	keys.add("MarkupEntityMismatch");
+	int numErrors = 1;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -220,10 +244,11 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "OpenBracketInPathValid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "OpenBracket(InPath/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "OpenBracket(InPath/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "OpenBracket(InPath/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -233,10 +258,12 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "OpenBracketInPathInvalid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "OpenBracket(InPath/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "OpenBracket(InPath/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "OpenBracket(InPath/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	keys.add("MarkupEntityMismatch");
+	int numErrors = 1;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -246,10 +273,11 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "OpenBracket(InFilenameValid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "OpenBracketInFilename/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "OpenBracketInFilename/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "OpenBracketInFilename/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -259,10 +287,12 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "OpenBracket(InFilenameInvalid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "OpenBracketInFilename/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "OpenBracketInFilename/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "OpenBracketInFilename/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	keys.add("MarkupEntityMismatch");
+	int numErrors = 1;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -272,10 +302,11 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "PeriodInPathValid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "Period.InPath/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "Period.InPath/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "Period.InPath/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -285,10 +316,12 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "PeriodInPathInvalid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "Period.InPath/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "Period.InPath/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "Period.InPath/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	keys.add("MarkupEntityMismatch");
+	int numErrors = 1;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -298,10 +331,11 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "Period.InFilenameValid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "PeriodInFilename/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "PeriodInFilename/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "PeriodInFilename/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -311,10 +345,12 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "Period.InFilenameInvalid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "PeriodInFilename/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "PeriodInFilename/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "PeriodInFilename/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	keys.add("MarkupEntityMismatch");
+	int numErrors = 1;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -324,10 +360,11 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "QuoteInPathValid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "Quote'InPath/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "Quote'InPath/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "Quote'InPath/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -337,10 +374,12 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "QuoteInPathInvalid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "Quote'InPath/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "Quote'InPath/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "Quote'InPath/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	keys.add("MarkupEntityMismatch");
+	int numErrors = 1;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -350,10 +389,11 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "Quote'InFilenameValid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "QuoteInFilename/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "QuoteInFilename/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "QuoteInFilename/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -363,10 +403,12 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "Quote'InFilenameInvalid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "QuoteInFilename/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "QuoteInFilename/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "QuoteInFilename/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	keys.add("MarkupEntityMismatch");
+	int numErrors = 1;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -376,10 +418,11 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "Space InFilenameValid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "SpaceInFilename/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "SpaceInFilename/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "SpaceInFilename/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -389,10 +432,12 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "Space InFilenameInvalid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "SpaceInFilename/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "SpaceInFilename/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "SpaceInFilename/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	keys.add("MarkupEntityMismatch");
+	int numErrors = 1;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -402,10 +447,11 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "TildeInPathValid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "Tilde~InPath/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "Tilde~InPath/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "Tilde~InPath/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -415,10 +461,12 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "TildeInPathInvalid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "Tilde~InPath/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "Tilde~InPath/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "Tilde~InPath/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	keys.add("MarkupEntityMismatch");
+	int numErrors = 1;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -428,10 +476,11 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "Tilde~InFilenameValid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "TildeInFilename/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "TildeInFilename/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "TildeInFilename/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -441,10 +490,12 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "Tilde~InFilenameInvalid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "TildeInFilename/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "TildeInFilename/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "TildeInFilename/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	keys.add("MarkupEntityMismatch");
+	int numErrors = 1;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -454,10 +505,11 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "UnderscoreInPathValid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "Underscore_InPath/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "Underscore_InPath/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "Underscore_InPath/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -467,10 +519,12 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "UnderscoreInPathInvalid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "Underscore_InPath/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "Underscore_InPath/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "Underscore_InPath/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	keys.add("MarkupEntityMismatch");
+	int numErrors = 1;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -480,10 +534,11 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "Underscore_InFilenameValid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "UnderscoreInFilename/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "UnderscoreInFilename/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "UnderscoreInFilename/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -493,10 +548,12 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "Underscore_InFilenameInvalid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "UnderscoreInFilename/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "UnderscoreInFilename/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "UnderscoreInFilename/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	keys.add("MarkupEntityMismatch");
+	int numErrors = 1;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -506,10 +563,11 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "AngleHatInPathValid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "AngleHat^InPath/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "AngleHat^InPath/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "AngleHat^InPath/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -519,10 +577,12 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "AngleHatInPathInvalid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "AngleHat^InPath/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "AngleHat^InPath/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "AngleHat^InPath/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	keys.add("MarkupEntityMismatch");
+	int numErrors = 1;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -532,10 +592,11 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "AngleHat^InFilenameValid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "AngleHatInFilename/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "AngleHatInFilename/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "AngleHatInFilename/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -545,9 +606,11 @@ public class PathsTest extends BaseTestCase
   {
   	String testname = "AngleHat^InFilenameInvalid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + PATHS_DIR + "AngleHatInFilename/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + PATHS_DIR + "AngleHatInFilename/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + PATHS_DIR + "AngleHatInFilename/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	keys.add("MarkupEntityMismatch");
+	int numErrors = 1;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
 }

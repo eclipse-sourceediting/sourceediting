@@ -1,8 +1,0 @@
-number of errors      : 1
-number of warnings    : 0
-
-------------error list-------------------------------------------
-The element type "noclosingtag" must be terminated by the matching end-tag "</noclosingtag>". [4, 3]
-------------warning list-----------------------------------------
-(none)
------------------------------------------------------------------

@@ -10,6 +10,9 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.validation.tests.internal;
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 /**
@@ -38,10 +41,11 @@ public class BugFixesTest extends BaseTestCase
   {
   	String testname = "RootNoNSChildNS";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "RootNoNSChildNS/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + BUGFIXES_DIR + "RootNoNSChildNS/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + BUGFIXES_DIR + "RootNoNSChildNS/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -51,10 +55,11 @@ public class BugFixesTest extends BaseTestCase
   {
   	String testname = "Empty";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "EmptyFile/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + BUGFIXES_DIR + "EmptyFile/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + BUGFIXES_DIR + "EmptyFile/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -64,10 +69,11 @@ public class BugFixesTest extends BaseTestCase
   {
   	String testname = "ValidateWithDTDValid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "ValidateWithDTD/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + BUGFIXES_DIR + "ValidateWithDTD/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + BUGFIXES_DIR + "ValidateWithDTD/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -77,10 +83,12 @@ public class BugFixesTest extends BaseTestCase
   {
   	String testname = "ValidateWithDTDInvalid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "ValidateWithDTD/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + BUGFIXES_DIR + "ValidateWithDTD/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + BUGFIXES_DIR + "ValidateWithDTD/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	keys.add("MSG_CONTENT_INVALID");
+	int numErrors = 1;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -90,9 +98,11 @@ public class BugFixesTest extends BaseTestCase
   {
   	String testname = "NotWellFormed";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "NotWellFormed/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + BUGFIXES_DIR + "NotWellFormed/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + BUGFIXES_DIR + "NotWellFormed/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	keys.add("ETagRequired");
+	int numErrors = 1;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
 }

@@ -10,6 +10,9 @@
  *******************************************************************************/
 
 package org.eclipse.wst.xml.validation.tests.internal;
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 /**
@@ -37,10 +40,11 @@ public class XMLExamplesTest extends BaseTestCase
   {
   	String testname = "Invoice";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + XMLExamples_DIR + "Invoice/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + XMLExamples_DIR + "Invoice/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + XMLExamples_DIR + "Invoice/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -50,10 +54,12 @@ public class XMLExamplesTest extends BaseTestCase
   {
   	String testname = "Invoice";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + XMLExamples_DIR + "InvoiceInvalid/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + XMLExamples_DIR + "InvoiceInvalid/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + XMLExamples_DIR + "InvoiceInvalid/" + testname + ".xml-log";
+	List keys = new ArrayList();
+	keys.add("FILE_NOT_FOUND");
+	int numErrors = 1;
+	int numWarnings = 0;
     
-    runTest(testfile, loglocation, idealloglocation);
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -63,10 +69,11 @@ public class XMLExamplesTest extends BaseTestCase
   {
   	String testname = "Catalogue";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + XMLExamples_DIR + "PublicationCatalogue/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + XMLExamples_DIR + "PublicationCatalogue/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + XMLExamples_DIR + "PublicationCatalogue/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -76,10 +83,12 @@ public class XMLExamplesTest extends BaseTestCase
   {
   	String testname = "CatalogueInvalid";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + XMLExamples_DIR + "PublicationCatalogueInvalid/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + XMLExamples_DIR + "PublicationCatalogueInvalid/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + XMLExamples_DIR + "PublicationCatalogueInvalid/" + testname + ".xml-log";
+	List keys = new ArrayList();
+	keys.add("FILE_NOT_FOUND");
+	int numErrors = 1;
+	int numWarnings = 0;
     
-    runTest(testfile, loglocation, idealloglocation);
+	runTest(testfile, keys, numErrors, numWarnings);
   }
   
   /**
@@ -89,9 +98,10 @@ public class XMLExamplesTest extends BaseTestCase
   {
   	String testname = "web";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + XMLExamples_DIR + "j2ee/" + testname + ".xml";
-    String loglocation = PLUGIN_ABSOLUTE_PATH + GENERATED_RESULTS_DIR + XMLExamples_DIR + "j2ee/" + testname + ".xml-log";
-    String idealloglocation = PLUGIN_ABSOLUTE_PATH + IDEAL_RESULTS_DIR + XMLExamples_DIR + "j2ee/" + testname + ".xml-log";
-    
-    runTest(testfile, loglocation, idealloglocation);
+	List keys = new ArrayList();
+	int numErrors = 0;
+	int numWarnings = 0;
+
+	runTest(testfile, keys, numErrors, numWarnings);
   }
 }

@@ -1,8 +1,0 @@
-number of errors      : 1
-number of warnings    : 0
-
-------------error list-------------------------------------------
-XML document structures must start and end within the same entity. [2, 7]
-------------warning list-----------------------------------------
-(none)
------------------------------------------------------------------
