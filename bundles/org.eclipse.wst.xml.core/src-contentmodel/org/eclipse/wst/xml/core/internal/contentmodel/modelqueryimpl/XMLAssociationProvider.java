@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
@@ -122,7 +123,7 @@ public abstract class XMLAssociationProvider extends BaseAssociationProvider imp
     }
     catch (Exception e)
     {
-      e.printStackTrace();
+      Logger.logException("exception locating CMDocument for " + node, e);
     }
     return result;
   }    
@@ -282,7 +283,7 @@ public abstract class XMLAssociationProvider extends BaseAssociationProvider imp
     }
     catch (Exception e)
     { 
-      e.printStackTrace();
+      Logger.logException("exception locating element declaration for " + targetElement, e);
     } 
   
     return currentED;
