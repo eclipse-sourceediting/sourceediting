@@ -61,7 +61,7 @@
             target="org.eclipse.wst.sse.ui.internal.StructuredTextEditor"/>
       <configuration 
       		type="textviewerconfiguration"
- 			class="org.eclipse.wst.sse.ui.internal.StructuredTextViewer"
+ 			class="org.eclipse.wst.sse.ui.internal.provisional.StructuredTextViewerConfiguration"
             target="org.eclipse.wst.sse.ui.internal.StructuredTextEditor"/>
       <definition 
       		type="preferencepages"
