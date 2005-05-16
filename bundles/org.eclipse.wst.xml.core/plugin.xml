@@ -125,6 +125,8 @@
 	
 	
 	  	<extension-point name="%Content_Model_Document_Factories_Extension.name" id="documentFactories"/>
+	  	
+	    <extension-point name="Model Query Extension" id="modelQueryExtensions"/>
 
   		<extension-point name="%Content_Model_Annotation_Files_Extension.name" id="annotationFiles"/>
 

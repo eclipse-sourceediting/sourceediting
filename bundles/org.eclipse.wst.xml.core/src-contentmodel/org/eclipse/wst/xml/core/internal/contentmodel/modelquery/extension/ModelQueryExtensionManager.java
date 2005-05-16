@@ -25,8 +25,4 @@ public interface ModelQueryExtensionManager
   List getDataTypeValues(Element element, CMNode cmNode);                             
 
   void filterAvailableElementContent(List availableContent, Element element, CMElementDeclaration ed);
-
-  void addExtension(ModelQueryExtension extension);
-
-  void removeExtension(ModelQueryExtension extension);
 }

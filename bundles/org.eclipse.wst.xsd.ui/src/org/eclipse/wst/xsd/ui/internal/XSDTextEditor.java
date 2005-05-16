@@ -13,7 +13,6 @@ package org.eclipse.wst.xsd.ui.internal;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IMenuManager;
@@ -39,8 +38,6 @@ import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstan
 import org.eclipse.wst.sse.ui.internal.openon.OpenOnAction;
 import org.eclipse.wst.sse.ui.internal.view.events.INodeSelectionListener;
 import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
-import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.ui.internal.provisional.StructuredTextEditorXML;
 import org.eclipse.wst.xsd.ui.internal.properties.section.XSDTabbedPropertySheetPage;
@@ -128,8 +125,7 @@ public class XSDTextEditor extends StructuredTextEditorXML implements INodeSelec
 		return super.getAdapter(required);
 	}
   
-  XSDModelQueryContributor xsdModelQueryContributor = new XSDModelQueryContributor();
-
+ 
   protected XSDContentOutlinePage outlinePage;
 
   /*
@@ -300,11 +296,7 @@ public class XSDTextEditor extends StructuredTextEditorXML implements INodeSelec
    */
   public void setModel(IFileEditorInput input)
   {                     
-    super.setModel(input);
-    if (getModel() instanceof IDOMModel)
-    {
-      xsdModelQueryContributor.setModel((IDOMModel)getModel());
-    }
+    super.setModel(input);   
     file = input.getFile();
   }
 
@@ -390,35 +382,6 @@ public class XSDTextEditor extends StructuredTextEditorXML implements INodeSelec
 		fRefactorMenuGroup.setContext(context);
 		fRefactorMenuGroup.fillContextMenu(menu);
 		fRefactorMenuGroup.setContext(null);
-	}
-    
-
-  class XSDModelQueryContributor extends AbstractXSDModelQueryContributor
-  {
-    public AbstractXSDDataTypeValueExtension createXSDDataTypeValueExtension(ModelQuery modelQuery)
-    {
-      return new XSDDataTypeValueExtension(modelQuery);
-    }
-  }
- 
-
-  class XSDDataTypeValueExtension extends AbstractXSDDataTypeValueExtension
-  {                             
-    public XSDDataTypeValueExtension(ModelQuery modelQuery)
-    {
-      super(modelQuery);
-    }
-
-    public String getId()
-    {
-      return "XSDDataTypeValueExtension";
-    }
-     
-    protected XSDSchema getEnclosingXSDSchema(Element element)
-    {
-      return getXSDSchema();
-    }   
-  }
-
+	}   
 }
 

@@ -255,6 +255,14 @@
 			id="org.eclipse.wst.xsd.ui.refactor.makeTypeGlobal">
 		</command>
 	</extension>
+		
+    <!-- this extension point is used to augment the ModelQuery to provide schema specific guided editing -->
+    <extension point="org.eclipse.wst.xml.core.modelQueryExtensions">
+		<modelQueryExtension
+			class="org.eclipse.wst.xsd.ui.internal.text.XSDModelQueryExtension"
+			contentType="org.eclipse.wst.xsd.contentmodel.xsdsource">
+		</modelQueryExtension>
+	</extension>
    
     <!--extension
        point="org.eclipse.ltk.core.refactoring.renameParticipants">

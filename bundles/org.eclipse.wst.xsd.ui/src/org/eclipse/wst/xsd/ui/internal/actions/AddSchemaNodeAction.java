@@ -56,6 +56,6 @@ public class AddSchemaNodeAction extends Action
    */
   public void run()
   {
-    editor.createDefaultSchemaNode();
+    editor.createDefaultSchemaNode(editor.getDOMDocument());
   }
 }
