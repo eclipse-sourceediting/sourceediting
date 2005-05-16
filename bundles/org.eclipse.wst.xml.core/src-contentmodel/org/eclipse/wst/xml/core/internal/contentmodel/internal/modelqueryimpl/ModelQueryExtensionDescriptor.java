@@ -29,7 +29,7 @@ public class ModelQueryExtensionDescriptor
     return (ModelQueryExtension) configuration.createExecutableExtension(CLASS_ATTRIBUTE);
   }
 
-  public String getConentTypeId()
+  public String getContentTypeId()
   {
     if (contentTypeId == null)
     {

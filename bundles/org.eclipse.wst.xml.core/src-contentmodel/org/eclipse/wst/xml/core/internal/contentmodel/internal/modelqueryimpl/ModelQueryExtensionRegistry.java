@@ -32,7 +32,7 @@ public class ModelQueryExtensionRegistry
       for (Iterator i = descriptors.iterator(); i.hasNext();)
       {
         ModelQueryExtensionDescriptor descriptor = (ModelQueryExtensionDescriptor) i.next();
-        if (contentTypeId.equals(descriptor.getConentTypeId()))
+        if (contentTypeId.equals(descriptor.getContentTypeId()))
         {
           if (descriptor.getNamespace() == null ||  descriptor.getNamespace().equals(namespace))
           {  
