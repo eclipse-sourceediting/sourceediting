@@ -18,6 +18,7 @@ import java.util.Iterator;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.text.IDocument;
@@ -52,6 +53,7 @@ import org.eclipse.ui.texteditor.TextEditorAction;
  */
 public class GotoAnnotationAction extends TextEditorAction {
 
+	private static final boolean _debug = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.ui/gotoNextAnnotation")); //$NON-NLS-1$  //$NON-NLS-2$
 	/**
 	 * Clears the status line on selection changed.
 	 */
@@ -258,6 +260,9 @@ public class GotoAnnotationAction extends TextEditorAction {
 			}
 			if (annotation != null) {
 				updateAnnotationViews(annotation);
+				if (_debug) {
+					System.out.println("select and reveal " + annotation.getType() + "@" + position.getOffset() + ":" + position.getLength());
+				}
 				getTextEditor().selectAndReveal(position.getOffset(), position.getLength());
 				if (editorStatusLine != null) {
 					editorStatusLine.setMessage(true, null, null);
