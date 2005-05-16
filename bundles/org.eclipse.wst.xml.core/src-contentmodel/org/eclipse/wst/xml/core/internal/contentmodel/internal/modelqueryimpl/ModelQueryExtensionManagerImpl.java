@@ -58,33 +58,32 @@ public class ModelQueryExtensionManagerImpl implements ModelQueryExtensionManage
     return list;  
   }                               
 
-  public void filterAvailableElementContent(List list, Element element, CMElementDeclaration ed)
+  public void filterAvailableElementContent(List cmnodes, Element element, CMElementDeclaration ed)
   {
     String contentTypeId = getContentTypeId(element);
     String parentNamespace = element.getNamespaceURI();
 
-    for (Iterator j = list.iterator(); j.hasNext(); )
+	List modelQueryExtensions = modelQueryExtensionRegistry.getApplicableExtensions(contentTypeId, parentNamespace);
+	
+    for (Iterator j = cmnodes.iterator(); j.hasNext(); )
     {
       CMNode cmNode = (CMNode)j.next();  
       String namespace = getNamespace(cmNode);
       String name = cmNode.getNodeName();
       
       boolean include = true;
-      for (Iterator k = modelQueryExtensionRegistry.getApplicableExtensions(contentTypeId, parentNamespace).iterator(); k.hasNext();)
+      for(int k = 0; k < modelQueryExtensions.size() && include; k++) {
       {
-        ModelQueryExtension extension = (ModelQueryExtension)k.next();
-        include = extension.isApplicableChildElement(element, namespace, name);
-        if (!include)
-        {
-          break;
-        }  
-      }  
-      if (!include)
-      {
-        // remove the cmNode form the list
-        j.remove();
-      }       
-    }   
+          ModelQueryExtension extension = (ModelQueryExtension)modelQueryExtensions.get(k);
+          include = extension.isApplicableChildElement(element, namespace, name);
+          if (!include)
+		  {
+            // remove the cmNode from the list
+            j.remove();
+          }
+        }
+      }
+    }
   }
   
   private String getNamespace(CMNode cmNode)
