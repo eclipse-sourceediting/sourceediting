@@ -52,6 +52,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMContentBuilder;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
+import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.dialogs.NamespaceInfoErrorHelper;
 import org.eclipse.wst.xml.ui.internal.dialogs.SelectFileOrXMLCatalogIdPanel;
 import org.eclipse.wst.xml.ui.internal.dialogs.UpdateListener;
@@ -270,6 +271,7 @@ public class NewXMLWizard extends NewModelWizard
   {       
     boolean result = true;
     super.performFinish();
+    String fileName = null;
     try
     {                                                                                   
 
@@ -283,7 +285,7 @@ public class NewXMLWizard extends NewModelWizard
 
       if (result)
       {
-        String fileName = newFilePage.getFileName();
+        fileName = newFilePage.getFileName();
         if ((new Path(fileName)).getFileExtension() == null)
         {
           newFilePage.setFileName(fileName.concat(".xml")); //$NON-NLS-1$
@@ -311,7 +313,7 @@ public class NewXMLWizard extends NewModelWizard
     }
     catch (Exception e)
     {
-      //e.printStackTrace();
+      Logger.logException("Exception completing New XML wizard " + fileName, e);
     }
     return result;
   }  

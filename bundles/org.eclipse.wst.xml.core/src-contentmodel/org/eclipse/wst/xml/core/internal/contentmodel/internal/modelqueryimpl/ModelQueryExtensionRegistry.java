@@ -13,8 +13,11 @@ package org.eclipse.wst.xml.core.internal.contentmodel.internal.modelqueryimpl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.extension.ModelQueryExtension;
 
 public class ModelQueryExtensionRegistry
@@ -41,7 +44,8 @@ public class ModelQueryExtensionRegistry
               ModelQueryExtension extension = descriptor.createModelQueryExtension();
               list.add(extension);
             }
-            catch (Exception e) {             
+            catch (CoreException e) {
+            	Logger.logException("problem creating model query extension", e);
             }
           }  
         }

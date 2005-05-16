@@ -102,14 +102,8 @@ public class ModelQueryExtensionManagerImpl implements ModelQueryExtensionManage
     String contentTypeId = "org.eclipse.core.runtime.xml";
     if (node instanceof IDOMNode)
     {
-      try
-      {
-        IDOMNode domNode = (IDOMNode)node;
-        contentTypeId = domNode.getModel().getContentTypeIdentifier();
-      }
-      catch (Exception e)
-      {        
-      }
+      IDOMNode domNode = (IDOMNode) node;
+      contentTypeId = domNode.getModel().getContentTypeIdentifier();
     }   
     return contentTypeId;
   } 

@@ -13,6 +13,7 @@
 package org.eclipse.wst.xml.core.internal.contentmodel.internal.test;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Iterator;
 import java.util.List;
@@ -62,7 +63,7 @@ public class CMPrinter extends CMVisitor
       writer.flush();
       fileStream.close();
     }
-    catch (Exception e) {}  
+    catch (IOException e) {}  
   }
 
   public void visitCMAnyElement(CMAnyElement anyElement)

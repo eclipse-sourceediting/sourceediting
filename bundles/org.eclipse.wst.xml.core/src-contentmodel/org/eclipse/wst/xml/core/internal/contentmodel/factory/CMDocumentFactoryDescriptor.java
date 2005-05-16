@@ -13,6 +13,7 @@
 package org.eclipse.wst.xml.core.internal.contentmodel.factory;
 
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.wst.xml.core.internal.Logger;
 
 
 public class CMDocumentFactoryDescriptor
@@ -35,7 +36,7 @@ public class CMDocumentFactoryDescriptor
       }
       catch (Exception e)
       {
-        e.printStackTrace();
+        Logger.logException("Exception loading CMDocumentFactory",e);
       }
     }
     return factory;

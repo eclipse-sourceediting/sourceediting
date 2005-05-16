@@ -12,6 +12,7 @@
 */
 package org.eclipse.wst.xml.core.internal.contentmodel.internal.annotation;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.URL;
@@ -70,7 +71,7 @@ public class AnnotationFileParser
       int index = uri.lastIndexOf("/"); //$NON-NLS-1$
       if (index == -1)
       {
-        throw new Exception("malformed uri"); //$NON-NLS-1$
+        throw new Exception("malformed url " + uri); //$NON-NLS-1$
       }
       String baseURI = uri.substring(0, index);
       parse(map, inputStream, baseURI);               
@@ -83,10 +84,12 @@ public class AnnotationFileParser
     finally
     {
       try
-      {
-        inputStream.close();
+      { if(inputStream != null)
+        {
+          inputStream.close();
+        }
       }
-      catch (Exception e)
+      catch (IOException e)
       {
       }
     }
