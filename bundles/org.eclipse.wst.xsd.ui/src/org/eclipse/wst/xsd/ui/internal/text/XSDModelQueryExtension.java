@@ -5,6 +5,7 @@ import java.util.List;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.extension.ModelQueryExtension;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
+import org.eclipse.xsd.XSDSchema;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -134,9 +135,9 @@ public class XSDModelQueryExtension extends ModelQueryExtension
     return result;
   } 
   
-  protected TypesHelper getTypesHelper(Element element)
-  {
-    TypesHelper typeHelper = null;
+  protected XSDSchema lookupOrCreateSchemaForElement(Element element)
+  {            
+    XSDSchema result = null;
     Document document = element.getOwnerDocument();
     if (document instanceof INodeNotifier)
     {
@@ -148,9 +149,15 @@ public class XSDModelQueryExtension extends ModelQueryExtension
         notifier.addAdapter(adapter);        
         adapter.createSchema(document.getDocumentElement()); 
       } 
-      typeHelper = new TypesHelper(adapter.getSchema());
-    }  
-    return typeHelper;
+      result = adapter.getSchema();
+    }    
+    return result;
+  }   
+  
+  protected TypesHelper getTypesHelper(Element element)
+  {
+    XSDSchema schema = lookupOrCreateSchemaForElement(element);
+    return new TypesHelper(schema);  
   }
 
   
