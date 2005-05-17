@@ -18,8 +18,6 @@ import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.ui.editors.text.EditorsUI;
-import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
-import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.projection.IStructuredTextFoldingProvider;
 import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
@@ -57,10 +55,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		// SWT.CONTROL
 		// elsewhere
 		store.setDefault(EditorPreferenceNames.EDITOR_TEXT_HOVER_MODIFIERS, "combinationHover|true|0;problemHover|false|0;documentationHover|false|0;annotationHover|true|" + mod2Name); //$NON-NLS-1$
-
-		// tab width is also a model-side preference so need to load default
-		// from there
-		store.setDefault(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_TAB_WIDTH, CommonModelPreferenceNames.DEFAULT_TAB_WIDTH);
 
 		// set default read-only foreground color scale value
 		store.setDefault(EditorPreferenceNames.READ_ONLY_FOREGROUND_SCALE, 30);
