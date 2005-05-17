@@ -47,6 +47,27 @@ public class XSDModelQueryExtension extends ModelQueryExtension
         list.addAll(getTypesHelper(e).getUserComplexTypeNamesList());
       }
     }
+    else if (checkName(name, "namespace"))
+    {
+      if (checkName(currentElementName, "any") || 
+          checkName(currentElementName, "anyAttribute"))
+      {
+        list.add("##any");
+        list.add("##other");
+        list.add("##targetNamespace");
+        list.add("##local");
+      }
+    }
+    else if (checkName(name, "maxOccurs"))
+    {
+      list.add("1");
+      list.add("unbounded");
+    }
+    else if (checkName(name, "minOccurs"))
+    {
+      list.add("0");
+      list.add("1");
+    }    
     else if (checkName(name, "itemType"))
     {
       if (checkName(currentElementName, "list"))
