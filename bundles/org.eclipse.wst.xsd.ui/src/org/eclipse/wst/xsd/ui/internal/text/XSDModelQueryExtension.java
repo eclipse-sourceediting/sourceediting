@@ -47,6 +47,14 @@ public class XSDModelQueryExtension extends ModelQueryExtension
         list.addAll(getTypesHelper(e).getUserComplexTypeNamesList());
       }
     }
+    else if (checkName(name, "blockDefault") ||
+             checkName(name, "finalDefault"))      
+    {    
+       list.add("#all");
+       list.add("substitution");
+       list.add("extension");
+       list.add("restriction");
+    }  
     else if (checkName(name, "namespace"))
     {
       if (checkName(currentElementName, "any") || 
