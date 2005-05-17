@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jst.jsp.core.internal.Assert;
+import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapter;
 import org.eclipse.jst.jsp.core.internal.document.PageDirectiveWatcherFactory;
 import org.eclipse.jst.jsp.core.internal.parser.JSPReParser;
@@ -454,7 +455,7 @@ public class JSPDocumentLoader extends AbstractDocumentLoader {
 		// document must have already been set for this to
 		// work.
 		Document document = domModel.getDocument();
-		Assert.isNotNull(document, "Program Error: structured model had no structuredDocument");
+		Assert.isNotNull(document, JSPCoreMessages.JSPDocumentLoader_1);
 		// if there is a model in the adapter, this will adapt it to
 		// first node. After that the PropagatingAdater spreads over the
 		// children being

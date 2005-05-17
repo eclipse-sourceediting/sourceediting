@@ -313,7 +313,7 @@ public class NewXMLWizard extends NewModelWizard
     }
     catch (Exception e)
     {
-      Logger.logException("Exception completing New XML wizard " + fileName, e);
+      Logger.logException("Exception completing New XML wizard " + fileName, e);	//$NON-NLS-1$
     }
     return result;
   }  

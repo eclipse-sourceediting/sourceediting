@@ -38,7 +38,8 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.wizards.datatransfer.ImportOperation;
 import org.eclipse.ui.wizards.datatransfer.ZipFileStructureProvider;
-import org.eclipse.wst.common.ui.internal.UIPlugin;
+import org.eclipse.wst.xml.ui.internal.Logger;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.osgi.framework.Bundle;
 
 public class ExampleProjectCreationOperation implements IRunnableWithProgress {
@@ -91,7 +92,7 @@ public class ExampleProjectCreationOperation implements IRunnableWithProgress {
 		int nNatures = (natures == null) ? 0 : natures.length;
 		int nReferences = (references == null) ? 0 : references.length;
 
-		monitor.beginTask(UIPlugin.getResourceString("ExampleProjectCreationOperation.op_desc_proj"), nImports + 1); //$NON-NLS-1$
+		monitor.beginTask(XMLWizardsMessages.ExampleProjectCreationOperation_op_desc_proj, nImports + 1);
 
 		String name = page.getProjectName();
 
@@ -137,7 +138,7 @@ public class ExampleProjectCreationOperation implements IRunnableWithProgress {
 			String importPath = curr.getAttribute("src"); //$NON-NLS-1$
 			if (importPath == null) {
 				importPath = ""; //$NON-NLS-1$
-				UIPlugin.log("projectsetup descriptor: import missing"); //$NON-NLS-1$
+				Logger.log(Logger.ERROR, "projectsetup descriptor: import missing"); //$NON-NLS-1$
 				return;
 			}
 
@@ -171,7 +172,7 @@ public class ExampleProjectCreationOperation implements IRunnableWithProgress {
 		}
 		catch (IOException e) {
 			String message = pluginRelativePath + ": " + e.getMessage(); //$NON-NLS-1$
-			Status status = new Status(IStatus.ERROR, UIPlugin.getPluginId(), IStatus.ERROR, message, e);
+			Status status = new Status(IStatus.ERROR, XMLUIPlugin.ID, IStatus.ERROR, message, e);
 			throw new CoreException(status);
 		}
 	}
@@ -190,7 +191,7 @@ public class ExampleProjectCreationOperation implements IRunnableWithProgress {
 			monitor = new NullProgressMonitor();
 		}
 		try {
-			monitor.beginTask(UIPlugin.getResourceString("ExampleProjectCreationOperation.op_desc"), pages.length); //$NON-NLS-1$
+			monitor.beginTask(XMLWizardsMessages.ExampleProjectCreationOperation_op_desc, pages.length);
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 
 			for (int i = 0; i < pages.length; i++) {

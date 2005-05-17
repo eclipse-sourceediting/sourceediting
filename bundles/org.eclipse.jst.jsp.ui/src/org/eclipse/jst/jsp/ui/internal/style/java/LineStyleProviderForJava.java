@@ -79,7 +79,7 @@ public class LineStyleProviderForJava extends AbstractLineStyleProvider implemen
 		// support for user defined backgroud for JSP scriptlet regions
 		String styleString = JSPUIPlugin.getDefault().getPreferenceStore().getString(IStyleConstantsJSP.JSP_CONTENT);
 		String[] prefs = ColorHelper.unpackStylePreferences(styleString);
-		Color bgColor = (prefs != null && prefs.length == 3 && prefs[1].startsWith("#") && Display.getCurrent() != null)
+		Color bgColor = (prefs != null && prefs.length == 3 && prefs[1].startsWith("#") && Display.getCurrent() != null) //$NON-NLS-1$
 							? new Color(Display.getCurrent(), ColorHelper.toRGB(prefs[1]))
 							: attr.getBackground();
 							

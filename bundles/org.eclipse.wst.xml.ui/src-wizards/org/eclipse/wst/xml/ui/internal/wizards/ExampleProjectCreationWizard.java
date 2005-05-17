@@ -33,18 +33,21 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.WorkspaceModifyDelegatingOperation;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
-import org.eclipse.wst.common.ui.internal.UIPlugin;
+import org.eclipse.wst.xml.ui.internal.Logger;
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
 public class ExampleProjectCreationWizard extends Wizard implements INewWizard, IExecutableExtension {
 
@@ -54,8 +57,8 @@ public class ExampleProjectCreationWizard extends Wizard implements INewWizard, 
 			final int[] result = {IDialogConstants.CANCEL_ID};
 			getShell().getDisplay().syncExec(new Runnable() {
 				public void run() {
-					String title = UIPlugin.getResourceString("ExampleProjectCreationWizard.overwritequery.title"); //$NON-NLS-1$
-					String msg = UIPlugin.getString("ExampleProjectCreationWizard.overwritequery.message", file); //$NON-NLS-1$
+					String title = XMLWizardsMessages.ExampleProjectCreationWizard_overwritequery_title;
+					String msg = NLS.bind(XMLWizardsMessages.ExampleProjectCreationWizard_overwritequery_message, file);
 					String[] options = {IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL, IDialogConstants.YES_TO_ALL_LABEL, IDialogConstants.CANCEL_LABEL};
 					MessageDialog dialog = new MessageDialog(getShell(), title, null, msg, MessageDialog.QUESTION, options, 0);
 					result[0] = dialog.open();
@@ -82,8 +85,8 @@ public class ExampleProjectCreationWizard extends Wizard implements INewWizard, 
 
 	public ExampleProjectCreationWizard() {
 		super();
-		setDialogSettings(UIPlugin.getDefault().getDialogSettings());
-		setWindowTitle(UIPlugin.getResourceString("ExampleProjectCreationWizard.title")); //$NON-NLS-1$
+		setDialogSettings(XMLUIPlugin.getDefault().getDialogSettings());
+		setWindowTitle(XMLWizardsMessages.ExampleProjectCreationWizard_title);
 		setNeedsProgressMonitor(true);
 	}
 
@@ -97,7 +100,7 @@ public class ExampleProjectCreationWizard extends Wizard implements INewWizard, 
 			return;
 		IConfigurationElement[] children = exampleConfigElement.getChildren("projectsetup"); //$NON-NLS-1$
 		if (children == null || children.length == 0) {
-			UIPlugin.log("descriptor must contain one ore more projectsetup tags"); //$NON-NLS-1$
+			Logger.log(Logger.ERROR, "descriptor must contain one ore more projectsetup tags"); //$NON-NLS-1$
 			return;
 		}
 
@@ -134,21 +137,17 @@ public class ExampleProjectCreationWizard extends Wizard implements INewWizard, 
 		return exampleWizardCEs;
 	}
 
-	protected ImageDescriptor getImageDescriptor(String banner) {
-		return UIPlugin.getDefault().getImageDescriptor(banner);
-	}
-
 	private void handleException(Throwable target) {
-		String title = UIPlugin.getResourceString("ExampleProjectCreationWizard.op_error.title"); //$NON-NLS-1$
-		String message = UIPlugin.getResourceString("ExampleProjectCreationWizard.op_error.message"); //$NON-NLS-1$
+		String title = XMLWizardsMessages.ExampleProjectCreationWizard_op_error_title;
+		String message = XMLWizardsMessages.ExampleProjectCreationWizard_op_error_message;
 		if (target instanceof CoreException) {
 			IStatus status = ((CoreException) target).getStatus();
 			ErrorDialog.openError(getShell(), title, message, status);
-			UIPlugin.log(status);
+			Logger.logException(status.getMessage(), status.getException());
 		}
 		else {
 			MessageDialog.openError(getShell(), title, target.getMessage());
-			UIPlugin.log(target);
+			Logger.logException(target);
 		}
 	}
 	
@@ -156,7 +155,7 @@ public class ExampleProjectCreationWizard extends Wizard implements INewWizard, 
 		if (resource.getType() != IResource.FILE) {
 			return;
 		}
-		IWorkbenchWindow window = UIPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
+		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window == null) {
 			return;
 		}
@@ -169,7 +168,7 @@ public class ExampleProjectCreationWizard extends Wizard implements INewWizard, 
 						IDE.openEditor(activePage, (IFile) resource, WEB_BROWSER_ID, true);
 					}
 					catch (PartInitException e) {
-						UIPlugin.log(e);
+						Logger.logException(e);
 					}
 				}
 			});

@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
-import org.eclipse.wst.common.ui.internal.UIPlugin;
 
 public class ExampleProjectCreationWizardPage extends WizardNewProjectCreationPage {
 
@@ -95,7 +94,7 @@ public class ExampleProjectCreationWizardPage extends WizardNewProjectCreationPa
 			for (int i = 0; i < pages.length; i++) {
 				if ((pages[i] != this) && (pages[i] instanceof ExampleProjectCreationWizardPage)) {
 					if (projectName.equals(((ExampleProjectCreationWizardPage) pages[i]).getProjectName())) {
-						setErrorMessage(UIPlugin.getResourceString("ExampleProjectCreationWizardPage.error.alreadyexists")); //$NON-NLS-1$
+						setErrorMessage(XMLWizardsMessages.ExampleProjectCreationWizardPage_error_alreadyexists);
 						return false;
 					}
 				}

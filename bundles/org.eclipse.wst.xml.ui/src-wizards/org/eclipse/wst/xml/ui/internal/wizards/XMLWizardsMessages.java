@@ -63,6 +63,14 @@ public class XMLWizardsMessages extends NLS {
 	public static String _UI_LABEL_NAMESPACE_INFORMATION;
 	public static String Validation_Plugins_Unavailable;
 	public static String Validation_cannot_be_performed;
+	public static String ExampleProjectCreationOperation_op_desc;
+	public static String ExampleProjectCreationOperation_op_desc_proj;
+	public static String ExampleProjectCreationWizard_title;
+	public static String ExampleProjectCreationWizard_op_error_title;
+	public static String ExampleProjectCreationWizard_op_error_message;
+	public static String ExampleProjectCreationWizard_overwritequery_title;
+	public static String ExampleProjectCreationWizard_overwritequery_message;
+	public static String ExampleProjectCreationWizardPage_error_alreadyexists;
 	
 	static {
 		// load message values from bundle file
