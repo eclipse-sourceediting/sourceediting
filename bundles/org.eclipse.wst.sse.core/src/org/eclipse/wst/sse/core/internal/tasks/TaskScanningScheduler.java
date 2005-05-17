@@ -77,7 +77,7 @@ public class TaskScanningScheduler {
 
 
 	public static void refreshAll() {
-		SSECorePlugin.getDefault().getPluginPreferences().setValue(ScanningJob.TASK_TAG_PROJECTS_ALREADY_SCANNED, "");
+		SSECorePlugin.getDefault().getPluginPreferences().setValue(ScanningJob.TASK_TAG_PROJECTS_ALREADY_SCANNED, ""); //$NON-NLS-1$
 		scheduler.enqueue(ResourcesPlugin.getWorkspace().getRoot());
 	}
 

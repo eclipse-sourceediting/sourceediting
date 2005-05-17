@@ -79,7 +79,7 @@ public class AnnotationFileRegistryReader
         }
         catch (Exception e)
         {
-          Logger.logException("problem adding annotation file " + location, e);
+          Logger.logException("problem adding annotation file " + location, e); //$NON-NLS-1$
         }
       }
     }

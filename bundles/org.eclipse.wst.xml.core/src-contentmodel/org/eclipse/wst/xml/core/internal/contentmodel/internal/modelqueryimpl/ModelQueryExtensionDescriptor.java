@@ -12,9 +12,9 @@ import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.extension.Model
  */
 public class ModelQueryExtensionDescriptor
 {
-  private static final String CONTENT_TYPE_ATTRIBUTE = "contentType";
-  private static final String NAMESPACE_ATTRIBUTE = "namespace";
-  private static final String CLASS_ATTRIBUTE = "class";
+  private static final String CONTENT_TYPE_ATTRIBUTE = "contentType"; //$NON-NLS-1$
+  private static final String NAMESPACE_ATTRIBUTE = "namespace"; //$NON-NLS-1$
+  private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
   private IConfigurationElement configuration;
   private String contentTypeId;
   private String namespace;

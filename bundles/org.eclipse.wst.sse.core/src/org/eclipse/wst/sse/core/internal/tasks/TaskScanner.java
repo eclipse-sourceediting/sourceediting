@@ -103,7 +103,7 @@ class TaskScanner {
 				if ((resource.getType() & IResource.FOLDER) > 0 || (resource.getType() & IResource.PROJECT) > 0) {
 					SubProgressMonitor childMonitor = new SubProgressMonitor(scanMonitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
 					IResource[] children = ((IContainer) resource).members();
-					childMonitor.beginTask("", children.length);
+					childMonitor.beginTask("", children.length); //$NON-NLS-1$
 					for (int i = children.length - 1; i >= 0; i--) {
 						internalScan(project, children[i], new SubProgressMonitor(childMonitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK));
 					}
@@ -136,7 +136,7 @@ class TaskScanner {
 					IResourceDelta[] children = delta.getAffectedChildren();
 					if (name.length() != 0 && name.charAt(0) != '.' && children.length > 0) {
 						SubProgressMonitor childMonitor = new SubProgressMonitor(monitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
-						childMonitor.beginTask("", children.length);
+						childMonitor.beginTask("", children.length); //$NON-NLS-1$
 						for (int i = children.length - 1; i >= 0; i--) {
 							internalScan(children[i], new SubProgressMonitor(childMonitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK));
 						}
@@ -174,7 +174,7 @@ class TaskScanner {
 			time0 = System.currentTimeMillis();
 		}
 		try {
-			scanMonitor.beginTask("", project.members().length);
+			scanMonitor.beginTask("", project.members().length); //$NON-NLS-1$
 			internalScan(project, project, scanMonitor);
 			shutdownDelegates(project);
 			scanMonitor.done();
@@ -193,7 +193,7 @@ class TaskScanner {
 		if (_debugOverallPerf) {
 			time0 = System.currentTimeMillis();
 		}
-		monitor.beginTask("", 1);
+		monitor.beginTask("", 1); //$NON-NLS-1$
 		internalScan(delta, monitor);
 		shutdownDelegates(delta.getResource().getProject());
 		monitor.done();

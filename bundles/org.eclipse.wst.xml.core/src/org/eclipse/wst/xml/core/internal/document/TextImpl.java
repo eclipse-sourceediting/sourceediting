@@ -1127,7 +1127,7 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 	}
 
 	public String getWholeText() {
-		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not Implemented in this version.");
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not Implemented in this version."); //$NON-NLS-1$
 	}
     /**
 	 * Replaces the text of the current node and all logically-adjacent text
@@ -1173,6 +1173,6 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 	 */
     public Text replaceWholeText(String content)
                                  throws DOMException {
-		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented");
+		throw new DOMException(DOMException.NOT_SUPPORTED_ERR, "Not implemented"); //$NON-NLS-1$
     }
 }

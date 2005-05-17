@@ -12,7 +12,7 @@
  *
  * </copyright>
  *
- * $Id: StrictCompoundCommand.java,v 1.1 2005/04/15 23:31:25 david_williams Exp $
+ * $Id: StrictCompoundCommand.java,v 1.2 2005/05/17 18:23:07 nitind Exp $
  */
 package org.eclipse.emf.common.command;
 
@@ -197,7 +197,7 @@ public class StrictCompoundCommand extends CompoundCommand {
 								}
 							}
 							catch (RuntimeException exception) {
-								Logger.logException("_UI_IgnoreException_exception", exception);
+								Logger.logException(EMFCommonMessages._UI_IgnoreException_exception, exception);
 
 								result = false;
 								break;
@@ -402,7 +402,7 @@ public class StrictCompoundCommand extends CompoundCommand {
 					return true;
 				}
 				catch (RuntimeException exception) {
-					Logger.logException("_UI_IgnoreException_exception", exception);
+					Logger.logException(EMFCommonMessages._UI_IgnoreException_exception, exception);
 				}
 			}
 
@@ -417,9 +417,9 @@ public class StrictCompoundCommand extends CompoundCommand {
 	 */
 	public String toString() {
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (isUndoable: " + isUndoable + ")");
-		result.append(" (isPessimistic: " + isPessimistic + ")");
-		result.append(" (rightMostExecutedCommandIndex: " + rightMostExecutedCommandIndex + ")");
+		result.append(" (isUndoable: " + isUndoable + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+		result.append(" (isPessimistic: " + isPessimistic + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+		result.append(" (rightMostExecutedCommandIndex: " + rightMostExecutedCommandIndex + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		return result.toString();
 	}

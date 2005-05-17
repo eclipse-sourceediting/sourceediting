@@ -185,7 +185,7 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 		ITypedRegion[] filtered = (ITypedRegion[])allRegions.toArray(new ITypedRegion[allRegions.size()]);
 		
 		if(DEBUG)
-			System.out.println("filtered out this many 'total-scope' regions: " + (unfiltered.length - filtered.length));
+			System.out.println("filtered out this many 'total-scope' regions: " + (unfiltered.length - filtered.length)); //$NON-NLS-1$
 		
 		return filtered;
 	}

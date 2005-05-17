@@ -12,7 +12,7 @@
  *
  * </copyright>
  *
- * $Id: CommandWrapper.java,v 1.1 2005/04/15 23:31:25 david_williams Exp $
+ * $Id: CommandWrapper.java,v 1.2 2005/05/17 18:23:07 nitind Exp $
  */
 package org.eclipse.emf.common.command;
 
@@ -234,7 +234,7 @@ public class CommandWrapper extends AbstractCommand {
 	 * @return the label.
 	 */
 	public String getLabel() {
-		return label == null ? command == null ? "_UI_CommandWrapper_label" : command.getLabel() : label;
+		return label == null ? command == null ? EMFCommonMessages._UI_CommandWrapper_label : command.getLabel() : label;
 	}
 
 	/**
@@ -243,7 +243,7 @@ public class CommandWrapper extends AbstractCommand {
 	 * @return the description.
 	 */
 	public String getDescription() {
-		return description == null ? command == null ? "_UI_CommandWrapper_description" : command.getDescription() : description;
+		return description == null ? command == null ? EMFCommonMessages._UI_CommandWrapper_description : command.getDescription() : description;
 	}
 
 	/**
@@ -260,7 +260,7 @@ public class CommandWrapper extends AbstractCommand {
 	 */
 	public String toString() {
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (command: " + command + ")");
+		result.append(" (command: " + command + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		return result.toString();
 	}

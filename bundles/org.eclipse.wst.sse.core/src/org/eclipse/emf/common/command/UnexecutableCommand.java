@@ -12,7 +12,7 @@
  *
  * </copyright>
  *
- * $Id: UnexecutableCommand.java,v 1.1 2005/04/15 23:31:25 david_williams Exp $
+ * $Id: UnexecutableCommand.java,v 1.2 2005/05/17 18:23:07 nitind Exp $
  */
 package org.eclipse.emf.common.command;
 
@@ -31,7 +31,7 @@ public class UnexecutableCommand extends AbstractCommand {
 	 * Only one private instance is created.
 	 */
 	private UnexecutableCommand() {
-		super("_UI_UnexecutableCommand_label", "_UI_UnexecutableCommand_description");
+		super(EMFCommonMessages._UI_UnexecutableCommand_label, EMFCommonMessages._UI_UnexecutableCommand_description);
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class UnexecutableCommand extends AbstractCommand {
 	 *                always.
 	 */
 	public void execute() {
-		throw new RuntimeException("UnsupportedOperation");
+		throw new RuntimeException("UnsupportedOperation"); //$NON-NLS-1$
 	}
 
 	/**
@@ -69,6 +69,6 @@ public class UnexecutableCommand extends AbstractCommand {
 	 *                always.
 	 */
 	public void redo() {
-		throw new RuntimeException("UnsupportedOperation");
+		throw new RuntimeException("UnsupportedOperation"); //$NON-NLS-1$
 	}
 }

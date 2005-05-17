@@ -36,7 +36,7 @@ public class CMDocumentFactoryDescriptor
       }
       catch (Exception e)
       {
-        Logger.logException("Exception loading CMDocumentFactory",e);
+        Logger.logException("Exception loading CMDocumentFactory",e); //$NON-NLS-1$
       }
     }
     return factory;

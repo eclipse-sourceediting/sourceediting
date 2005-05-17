@@ -12,13 +12,15 @@
  *
  * </copyright>
  *
- * $Id: AbstractCommand.java,v 1.1 2005/04/15 23:31:25 david_williams Exp $
+ * $Id: AbstractCommand.java,v 1.2 2005/05/17 18:23:07 nitind Exp $
  */
 package org.eclipse.emf.common.command;
 
 
 import java.util.Collection;
 import java.util.Collections;
+
+import org.eclipse.osgi.util.NLS;
 
 
 /**
@@ -136,7 +138,7 @@ public abstract class AbstractCommand implements Command {
 	 *                always.
 	 */
 	public void undo() {
-		throw new RuntimeException("_EXC_Method_not_implemented");
+		throw new RuntimeException(NLS.bind(EMFCommonMessages._EXC_Method_not_implemented, this.getClass().getName() + ".undo()")); //$NON-NLS-1$
 	}
 
 	/**
@@ -161,7 +163,7 @@ public abstract class AbstractCommand implements Command {
 	 * Javadoc copied from interface.
 	 */
 	public String getLabel() {
-		return label == null ? "_UI_AbstractCommand_label" : label;
+		return label == null ? EMFCommonMessages._UI_AbstractCommand_label : label;
 	}
 
 	/**
@@ -178,7 +180,7 @@ public abstract class AbstractCommand implements Command {
 	 * Javadoc copied from interface.
 	 */
 	public String getDescription() {
-		return description == null ? "_UI_AbstractCommand_description" : description;
+		return description == null ? EMFCommonMessages._UI_AbstractCommand_description : description;
 	}
 
 	/**
@@ -233,10 +235,10 @@ public abstract class AbstractCommand implements Command {
 		String className = getClass().getName();
 		int lastDotIndex = className.lastIndexOf('.');
 		StringBuffer result = new StringBuffer(lastDotIndex == -1 ? className : className.substring(lastDotIndex + 1));
-		result.append(" (label: " + label + ")");
-		result.append(" (description: " + description + ")");
-		result.append(" (isPrepared: " + isPrepared + ")");
-		result.append(" (isExecutable: " + isExecutable + ")");
+		result.append(" (label: " + label + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+		result.append(" (description: " + description + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+		result.append(" (isPrepared: " + isPrepared + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+		result.append(" (isExecutable: " + isExecutable + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		return result.toString();
 	}

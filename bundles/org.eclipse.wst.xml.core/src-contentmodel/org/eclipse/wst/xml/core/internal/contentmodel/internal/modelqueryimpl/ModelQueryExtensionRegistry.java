@@ -45,7 +45,7 @@ public class ModelQueryExtensionRegistry
               list.add(extension);
             }
             catch (CoreException e) {
-            	Logger.logException("problem creating model query extension", e);
+            	Logger.logException("problem creating model query extension", e); //$NON-NLS-1$
             }
           }  
         }

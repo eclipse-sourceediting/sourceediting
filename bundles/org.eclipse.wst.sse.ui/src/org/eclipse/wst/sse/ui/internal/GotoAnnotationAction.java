@@ -261,7 +261,7 @@ public class GotoAnnotationAction extends TextEditorAction {
 			if (annotation != null) {
 				updateAnnotationViews(annotation);
 				if (_debug) {
-					System.out.println("select and reveal " + annotation.getType() + "@" + position.getOffset() + ":" + position.getLength());
+					System.out.println("select and reveal " + annotation.getType() + "@" + position.getOffset() + ":" + position.getLength()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				}
 				getTextEditor().selectAndReveal(position.getOffset(), position.getLength());
 				if (editorStatusLine != null) {

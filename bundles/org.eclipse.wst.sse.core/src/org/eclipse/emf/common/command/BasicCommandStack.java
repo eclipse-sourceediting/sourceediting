@@ -12,7 +12,7 @@
  *
  * </copyright>
  *
- * $Id: BasicCommandStack.java,v 1.1 2005/04/15 23:31:25 david_williams Exp $
+ * $Id: BasicCommandStack.java,v 1.2 2005/05/17 18:23:07 nitind Exp $
  */
 package org.eclipse.emf.common.command;
 
@@ -244,7 +244,7 @@ public class BasicCommandStack implements CommandStack {
 	 * the plugin.
 	 */
 	protected void handleError(Exception exception) {
-		Logger.logException("_UI_IgnoreException_exception", exception);
+		Logger.logException(EMFCommonMessages._UI_IgnoreException_exception, exception);
 	}
 
 	/**

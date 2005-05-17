@@ -99,7 +99,7 @@ public class ModelQueryExtensionManagerImpl implements ModelQueryExtensionManage
   
   private String getContentTypeId(Node node)
   {
-    String contentTypeId = "org.eclipse.core.runtime.xml";
+    String contentTypeId = "org.eclipse.core.runtime.xml"; //$NON-NLS-1$
     if (node instanceof IDOMNode)
     {
       IDOMNode domNode = (IDOMNode) node;

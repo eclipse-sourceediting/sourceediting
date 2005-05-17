@@ -73,8 +73,8 @@ public class SSEUIPlugin extends AbstractUIPlugin {
 		 * -Dorg.eclipse.wst.sse.core.taskscanner=off, the scanner should be
 		 * disabled
 		 */
-		String scan = System.getProperty("org.eclipse.wst.sse.core.taskscanner");
-		if (scan == null || !scan.equalsIgnoreCase("off")) {
+		String scan = System.getProperty("org.eclipse.wst.sse.core.taskscanner"); //$NON-NLS-1$
+		if (scan == null || !scan.equalsIgnoreCase("off")) { //$NON-NLS-1$
 			TaskScanningScheduler.startup();
 		}
 	}

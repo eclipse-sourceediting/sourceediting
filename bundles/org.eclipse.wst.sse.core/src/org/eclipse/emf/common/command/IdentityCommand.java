@@ -12,7 +12,7 @@
  *
  * </copyright>
  *
- * $Id: IdentityCommand.java,v 1.1 2005/04/15 23:31:25 david_williams Exp $
+ * $Id: IdentityCommand.java,v 1.2 2005/05/17 18:23:07 nitind Exp $
  */
 package org.eclipse.emf.common.command;
 
@@ -191,14 +191,14 @@ public class IdentityCommand extends AbstractCommand {
 	 * Javadoc copied from base class.
 	 */
 	public String getLabel() {
-		return label == null ? "_UI_IdentityCommand_label" : label;
+		return label == null ? EMFCommonMessages._UI_IdentityCommand_label : label;
 	}
 
 	/*
 	 * Javadoc copied from base class.
 	 */
 	public String getDescription() {
-		return description == null ? "_UI_IdentityCommand_description" : description;
+		return description == null ? EMFCommonMessages._UI_IdentityCommand_description : description;
 	}
 
 	/**

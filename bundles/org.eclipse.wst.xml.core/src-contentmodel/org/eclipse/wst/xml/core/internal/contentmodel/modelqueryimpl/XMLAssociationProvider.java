@@ -123,7 +123,7 @@ public abstract class XMLAssociationProvider extends BaseAssociationProvider imp
     }
     catch (Exception e)
     {
-      Logger.logException("exception locating CMDocument for " + node, e);
+      Logger.logException("exception locating CMDocument for " + node, e); //$NON-NLS-1$
     }
     return result;
   }    
@@ -283,7 +283,7 @@ public abstract class XMLAssociationProvider extends BaseAssociationProvider imp
     }
     catch (Exception e)
     { 
-      Logger.logException("exception locating element declaration for " + targetElement, e);
+      Logger.logException("exception locating element declaration for " + targetElement, e); //$NON-NLS-1$
     } 
   
     return currentED;
