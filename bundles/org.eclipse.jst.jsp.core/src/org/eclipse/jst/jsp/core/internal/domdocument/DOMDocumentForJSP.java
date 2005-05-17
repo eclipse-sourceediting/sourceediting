@@ -13,6 +13,9 @@
 package org.eclipse.jst.jsp.core.internal.domdocument;
 
 import org.eclipse.wst.html.core.internal.document.DocumentStyleImpl;
+import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
+import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.Attr;
@@ -31,6 +34,40 @@ public class DOMDocumentForJSP extends DocumentStyleImpl {
 		super();
 	}
 
+	/**
+	 * Default behavior for getting an adapter.
+	 * Overridden in case embedded type provides a different adapter
+	 * we don't want to use a cached one.
+	 */
+	public INodeAdapter getAdapterFor(Object type) {
+
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=85484
+
+		// just always create a new one for JSP
+		// need to investigate if this is a performance hit...
+		// seems to make HTML Validator (even) slower
+		INodeAdapter result = null; //getExistingAdapter(type);
+		
+		// if we didn't find one in our list already,
+		// let's create it
+		FactoryRegistry reg = getFactoryRegistry();
+		if (reg != null) {
+			INodeAdapterFactory factory = reg.getFactoryFor(type);
+			if (factory != null) {
+				INodeAdapter newAdapter = factory.adapt(this);
+				result = newAdapter;
+			}
+		}
+		// We won't prevent null from being returned, but it would be
+		// unusual.
+		// It might be because Factory is not working correctly, or
+		// not installed, so we'll allow warning message.
+		if ((result == null) && (org.eclipse.wst.sse.core.internal.util.Debug.displayWarnings)) {
+			System.out.println("Warning: no adapter was found or created for " + type); //$NON-NLS-1$
+		}
+		return result;
+	}
+	
 	/**
 	 * @param that
 	 */

@@ -55,8 +55,9 @@ public class HTMLDocumentTypeAdapterFactory implements INodeAdapterFactory, Pref
 	 * object with the correct instance of the adapter.
 	 */
 	public INodeAdapter adapt(INodeNotifier notifier) {
-		DocumentTypeAdapter adapter = (DocumentTypeAdapter)notifier.getExistingAdapter(DocumentTypeAdapter.class);
-		if (adapter != null)
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=85484
+		DocumentTypeAdapter adapter = null;//(DocumentTypeAdapter)notifier.getExistingAdapter(DocumentTypeAdapter.class);
+		if (adapter != null && adapter instanceof HTMLDocumentTypeAdapter)
 			return adapter;
 		if (!(notifier instanceof IDOMDocument))
 			return null;
