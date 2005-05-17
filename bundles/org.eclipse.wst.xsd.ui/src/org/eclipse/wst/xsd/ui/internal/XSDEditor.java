@@ -35,7 +35,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.editors.text.JavaFileEditorInput;
+import org.eclipse.ui.editors.text.ILocationProvider;
 import org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertySheetPageContributor;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -307,9 +307,9 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
     {
       resourceFile = ((IFileEditorInput) input).getFile();
     }
-    else if (input instanceof JavaFileEditorInput)
+    else if (input instanceof ILocationProvider)
     {
-      IPath path = ((JavaFileEditorInput)input).getPath(input);
+      IPath path = ((ILocationProvider)input).getPath(input);
       String ext = path.getFileExtension();
       if (ext != null && ext.equals("xsd"))
       {
@@ -319,7 +319,6 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
     }
     else
     {
-//      XSDEditorPlugin.getPlugin().getMsgLogger().write("###Error...XSDEditor::createPages() .. Can't find input..Exiting..");
       return false;
     }
     return true;
