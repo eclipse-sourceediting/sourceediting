@@ -20,7 +20,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
@@ -440,12 +439,9 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 			try {
 				message = (String) markerAnnotation.getMarker().getAttribute(IMarker.MESSAGE);
 			} 
-			catch(ResourceException e) {
-				// sometimes get a org.eclipse.core.internal.resources.ResourceException
-				// if marker is removed while in this code
-			}
 			catch (CoreException e) {
-				Logger.logException(e);
+				if(DEBUG)
+					Logger.logException(e);
 			}
 			// it would be nice to check line number here...
 			if(message != null && message.equals(tempAnnotation.getText()))
