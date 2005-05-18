@@ -13,12 +13,12 @@
 package org.eclipse.wst.xml.ui.internal.util;
 
 import java.text.MessageFormat;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.ui.views.markers.internal.ImageFactory;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 
 /**
@@ -39,17 +39,14 @@ public class XMLCommonResources {
 
 	private XMLUIPlugin editorPlugin;
 
-	protected ImageFactory imageFactory;
 	private ResourceBundle resourceBundle;
 
 	public XMLCommonResources(XMLUIPlugin editorPlugin) {
 		instance = this;
 		this.editorPlugin = editorPlugin;
-		//imageFactory = new ImageFactory();
 		try {
 			resourceBundle = ResourceBundle.getBundle("org.eclipse.wst.xml.ui.internal.XMLUIPluginResources"); //$NON-NLS-1$
-			imageFactory = new ImageFactory();
-		} catch (java.util.MissingResourceException exception) {
+		} catch (MissingResourceException exception) {
 			//TODO... log an error message
 			//B2BUtilPlugin.getPlugin().getMsgLogger().write(B2BUtilPlugin.getGUIString("_WARN_PLUGIN_PROPERTIES_MISSING")
 			// + descriptor.getLabel());
