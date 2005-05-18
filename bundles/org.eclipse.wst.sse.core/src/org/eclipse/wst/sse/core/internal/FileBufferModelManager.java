@@ -444,7 +444,15 @@ public class FileBufferModelManager {
 					 */
 					info.selfConnected = true;
 				}
-				model = getModel((IStructuredDocument) buffer.getDocument());
+				/*
+				 * Check the document type. Although returning null for
+				 * unknown documents would be fair, try to get a model if the
+				 * document is at least a valid type.
+				 */
+				IDocument bufferDocument = buffer.getDocument();
+				if (bufferDocument instanceof IStructuredDocument) {
+					model = getModel((IStructuredDocument) bufferDocument);
+				}
 			}
 		}
 		catch (CoreException e) {
