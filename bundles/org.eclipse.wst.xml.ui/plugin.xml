@@ -125,7 +125,7 @@
       <page
             name="%XML_Templates.name"
             category="org.eclipse.wst.sse.ui.preferences.xml"
-            class="org.eclipse.wst.xml.ui.internal.preferences.XMLFilesPreferencePage"
+            class="org.eclipse.wst.xml.ui.internal.preferences.XMLTemplatePreferencePage"
             id="org.eclipse.wst.sse.ui.preferences.xml.templates">
       </page>
       <page
