@@ -59,6 +59,7 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
   protected SimpleDirectEditPolicy simpleDirectEditPolicy = new SimpleDirectEditPolicy();
   protected boolean isReadOnly;
   protected boolean isSelected;
+  protected Font font;
   
   protected IFigure createFigure()
   {
@@ -81,7 +82,7 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
     labelHolder.add(label);
     
     try
-	  {
+	{
       // evil hack to provide underlines
       Object model = getModel();
       
@@ -102,26 +103,27 @@ public class TopLevelComponentEditPart extends BaseEditPart implements IFeedback
             Object data = fontData.getClass().getField("data").get(fontData);
 //            System.out.println("data" + data.getClass());
             data.getClass().getField("lfUnderline").setByte(data, (byte)1);
-            Font font = new Font(Display.getCurrent(), fontData);
-            label.setFont(font);        
-
+            font = new Font(Display.getCurrent(), fontData);
+            label.setFont(font);
         }
       }
-	  }
+	}
     catch (Exception e)
-	  {
+	{
 
-	  }
-    //FontData data = label.getFont().getFontData()[0];
-    //data.data.lfUnderline = 1;
-    
-    //RectangleFigure line = new RectangleFigure();    
-    //line.setPreferredSize(2, 1);   
-    //labelHolder.add(line, 1);    
-    
-    //label.getFont().getFontData()[0].setStyle()
+	}
     
     return typeGroup;
+  }
+  
+  public void deactivate()
+  {
+	  super.deactivate();
+	  if (font != null)
+	  {
+		  font.dispose();
+		  font = null;
+	  }
   }
   
   public void refreshVisuals()
