@@ -23,6 +23,25 @@ public class SSEUIMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.wst.sse.ui.internal.SSEUIPluginResources";//$NON-NLS-1$
 	private static ResourceBundle fResourceBundle;
 
+	public static ResourceBundle getResourceBundle() {
+		try {
+			if (fResourceBundle == null)
+				fResourceBundle = ResourceBundle.getBundle(BUNDLE_NAME);
+		} catch (MissingResourceException x) {
+			fResourceBundle = null;
+		}
+		return fResourceBundle;
+	}
+
+	private SSEUIMessages() {
+		// cannot create new instance
+	}
+
+	static {
+		// load message values from bundle file
+		NLS.initializeMessages(BUNDLE_NAME, SSEUIMessages.class);
+	}
+
 	public static String Error_opening_file_UI_;
 	public static String _UI_File_is_read_only;
 	public static String _32concat_EXC_;
@@ -113,10 +132,6 @@ public class SSEUIMessages extends NLS {
 	public static String StructureSelectHistory_description;
 	public static String Text_Shift_Right_UI_;
 	public static String Text_Shift_Left_UI_;
-	// public static String Save_label;
-	// public static String An_error_has_occurred_when_ERROR_;
-	// public static String Problems_During_Save_As_UI_;
-	// public static String Save_could_not_be_complete_UI_;
 
 	public static String _4concat;
 	public static String Content_type__UI_;
@@ -146,85 +161,24 @@ public class SSEUIMessages extends NLS {
 	public static String ManageBreakpoints_tooltip;
 	public static String ManageBreakpoints_error_adding_title1;
 	public static String ManageBreakpoints_error_adding_message1;
-	// public static String ManageBreakpoints_error_removing_title1;
-	// public static String ManageBreakpoints_error_removing_message1;
-	// public static String ManageBreakpoints_error_retrieving_message;
 
 	public static String AbstractColorPageDescription;
-	// public static String JSPSourcePreferencePageDescription;
 	public static String EditorModelUtil_0;
 	public static String EditorModelUtil_1;
-
-	// These strings are accessed using resource bundle and in properties
-	// file, need to use '.' instead of '_' in some keys
-	public static String Editor_ManageBookmarks_tooltip;
-	public static String Editor_ManageBookmarks_image;
-	public static String Editor_ManageBookmarks_description;
-	public static String Editor_ManageBookmarks_add_label;
-	public static String Editor_ManageBookmarks_remove_label;
-	public static String Editor_ManageBookmarks_add_dialog_title;
-	public static String Editor_ManageBookmarks_add_dialog_message;
-	public static String Editor_ManageBookmarks_error_dialog_title;
-	public static String Editor_ManageBookmarks_error_dialog_message;
-	public static String Editor_ManageTasks_tooltip;
-	public static String Editor_ManageTasks_image;
-	public static String Editor_ManageTasks_description;
-	public static String Editor_ManageTasks_add_label;
-	public static String Editor_ManageTasks_remove_label;
-	public static String Editor_ManageTasks_add_dialog_title;
-	public static String Editor_ManageTasks_add_dialog_message;
-	public static String Editor_ManageTasks_error_dialog_title;
-	public static String Editor_ManageTasks_error_dialog_message;
 
 	// web content settings
 	public static String UI_Default_HTML_DOCTYPE_ID___1;
 	public static String UI_CSS_profile___2;
 	public static String UI_Target_Device___3;
 
-	// public static String Editor_error_save_message;
-	// public static String Editor_error_save_title;
-	// public static String Editor_warning_save_delete;
-
-	// actions
-	// public static String Previous_annotation;
-	// public static String Next_annotation;
-
-	// Annotation Types
-	// public static String AnnotationTypes_Errors;
-	// public static String AnnotationTypes_Warnings;
-	// public static String AnnotationTypes_Tasks;
-	// public static String AnnotationTypes_SearchResults;
-	// public static String AnnotationTypes_Bookmarks;
-	// public static String AnnotationTypes_Others;
-
-	// public static String Editor_ConvertToWindows_label;
-	// public static String Editor_ConvertToWindows_tooltip;
-	// public static String Editor_ConvertToWindows_image;
-	// public static String Editor_ConvertToWindows_description;
-	//
-	// public static String Editor_ConvertToUNIX_label;
-	// public static String Editor_ConvertToUNIX_tooltip;
-	// public static String Editor_ConvertToUNIX_image;
-	// public static String Editor_ConvertToUNIX_description;
-	//
-	// public static String Editor_ConvertToMac_label;
-	// public static String Editor_ConvertToMac_tooltip;
-	// public static String Editor_ConvertToMac_image;
-	// public static String Editor_ConvertToMac_description;
-
 	public static String Editor_ToggleInsertMode_label;
 
-	public static String EditPreferences_label;
-	public static String EditPreferences_tooltip;
-	public static String EditPreferences_description;
 	//
 	// These strings are used in Workbench menu bar
 	//
 	public static String ExpandSelectionToMenu_label;
 	public static String SourceMenu_label;
-	// public static String ConvertLineDelimitersMenu_label;
-	// public static String FindOccurrences_label;
-	//
+
 	public static String FindOccurrencesActionProvider_0;
 	public static String RemoveAction_0;
 	public static String ShowPropertiesAction_0;
@@ -236,11 +190,7 @@ public class SSEUIMessages extends NLS {
 	public static String FormatActionDelegate_3;
 	public static String FormatActionDelegate_4;
 	public static String FormatActionDelegate_5;
-	// public static String ConvertLineDelimitersToCRLFActionDelegate_jobName;
-	// public static String
-	// ConvertLineDelimitersToCRLFActionDelegate_errorStatusMessage;
-	// public static String ConvertLineDelimitersToCRLFActionDelegate_3;
-	// public static String ConvertLineDelimitersToCRLFActionDelegate_4;
+
 	public static String TranslucencyPreferenceTab_0;
 	public static String TranslucencyPreferenceTab_1;
 	public static String StructuredTextEditorPreferencePage_2;
@@ -289,10 +239,7 @@ public class SSEUIMessages extends NLS {
 	public static String EditBreakpointAction_0;
 	// Used in Structured Text Editor Preference Page / Hovers Tab
 	public static String TextHoverPreferenceTab_title;
-	// public static String TextHoverPreferenceTab_annotationRollover;
-	// public static String TextHoverPreferenceTab_showAffordance;
 	public static String TextHoverPreferenceTab_hoverPreferences;
-	// public static String TextHoverPreferenceTab_enabled;
 	public static String TextHoverPreferenceTab_keyModifier;
 	public static String TextHoverPreferenceTab_description;
 	public static String TextHoverPreferenceTab_modifierIsNotValid;
@@ -317,15 +264,10 @@ public class SSEUIMessages extends NLS {
 
 	public static String EditStructuredTextEditorPreferencesAction_0;
 	public static String StructuredTextEditorPreferencePage_0;
-	// public static String BasicFindOccurrencesAction_0;
-	// public static String BasicSearchLabelProvider_0;
 	public static String PreferenceManager_0;
-	// public static String NavigationPreferenceTab_0;
+
 	public static String OccurrencesSearchQuery_0;
-	// public static String OccurrencesSearchQuery_1;
 	public static String OccurrencesSearchQuery_2;
-	// public static String FileModelProvider_0;
-	// public static String JFaceNodeAdapter_0;
 	public static String ShowView_errorTitle;
 	public static String proc_dirty_regions_0;
 	// Encoding
@@ -352,23 +294,86 @@ public class SSEUIMessages extends NLS {
 	public static String OffsetStatusLineContributionItem_17;
 	public static String OffsetStatusLineContributionItem_18;
 
-	static {
-		// load message values from bundle file
-		NLS.initializeMessages(BUNDLE_NAME, SSEUIMessages.class);
-	}
+	/*
+	 * *****Below are possibly unused strings that may be removed *****
+	 */
+	public static String Save_label;
+	public static String An_error_has_occurred_when_ERROR_;
+	public static String Problems_During_Save_As_UI_;
+	public static String Save_could_not_be_complete_UI_;
+	public static String ManageBreakpoints_error_removing_title1;
+	public static String ManageBreakpoints_error_removing_message1;
+	public static String ManageBreakpoints_error_retrieving_message;
+	public static String JSPSourcePreferencePageDescription;
+	public static String Editor_error_save_message;
+	public static String Editor_error_save_title;
+	public static String Editor_warning_save_delete;
 
-	private SSEUIMessages() {
-		// cannot create new instance
-	}
+	public static String Previous_annotation;
+	public static String Next_annotation;
 
-	public static ResourceBundle getResourceBundle() {
-		try {
-			if (fResourceBundle == null)
-				fResourceBundle = ResourceBundle.getBundle(BUNDLE_NAME);
-		}
-		catch (MissingResourceException x) {
-			fResourceBundle = null;
-		}
-		return fResourceBundle;
-	}
+	public static String AnnotationTypes_Errors;
+	public static String AnnotationTypes_Warnings;
+	public static String AnnotationTypes_Tasks;
+	public static String AnnotationTypes_SearchResults;
+	public static String AnnotationTypes_Bookmarks;
+	public static String AnnotationTypes_Others;
+
+	public static String Editor_ConvertToWindows_label;
+	public static String Editor_ConvertToWindows_tooltip;
+	public static String Editor_ConvertToWindows_image;
+	public static String Editor_ConvertToWindows_description;
+
+	public static String Editor_ConvertToUNIX_label;
+	public static String Editor_ConvertToUNIX_tooltip;
+	public static String Editor_ConvertToUNIX_image;
+	public static String Editor_ConvertToUNIX_description;
+
+	public static String Editor_ConvertToMac_label;
+	public static String Editor_ConvertToMac_tooltip;
+	public static String Editor_ConvertToMac_image;
+	public static String Editor_ConvertToMac_description;
+	public static String ConvertLineDelimitersMenu_label;
+	public static String FindOccurrences_label;
+
+	public static String ConvertLineDelimitersToCRLFActionDelegate_jobName;
+	public static String ConvertLineDelimitersToCRLFActionDelegate_errorStatusMessage;
+	public static String ConvertLineDelimitersToCRLFActionDelegate_3;
+	public static String ConvertLineDelimitersToCRLFActionDelegate_4;
+
+	public static String TextHoverPreferenceTab_annotationRollover;
+	public static String TextHoverPreferenceTab_showAffordance;
+	public static String TextHoverPreferenceTab_enabled;
+
+	public static String BasicFindOccurrencesAction_0;
+	public static String BasicSearchLabelProvider_0;
+	public static String NavigationPreferenceTab_0;
+	public static String OccurrencesSearchQuery_1;
+	public static String FileModelProvider_0;
+	public static String JFaceNodeAdapter_0;
+
+	// These strings are accessed using resource bundle and in properties
+	// file, need to use '.' instead of '_' in some keys
+	public static String Editor_ManageBookmarks_tooltip;
+	public static String Editor_ManageBookmarks_image;
+	public static String Editor_ManageBookmarks_description;
+	public static String Editor_ManageBookmarks_add_label;
+	public static String Editor_ManageBookmarks_remove_label;
+	public static String Editor_ManageBookmarks_add_dialog_title;
+	public static String Editor_ManageBookmarks_add_dialog_message;
+	public static String Editor_ManageBookmarks_error_dialog_title;
+	public static String Editor_ManageBookmarks_error_dialog_message;
+	public static String Editor_ManageTasks_tooltip;
+	public static String Editor_ManageTasks_image;
+	public static String Editor_ManageTasks_description;
+	public static String Editor_ManageTasks_add_label;
+	public static String Editor_ManageTasks_remove_label;
+	public static String Editor_ManageTasks_add_dialog_title;
+	public static String Editor_ManageTasks_add_dialog_message;
+	public static String Editor_ManageTasks_error_dialog_title;
+	public static String Editor_ManageTasks_error_dialog_message;
+
+	/*
+	 * *****Above are possibly unused strings that may be removed*****
+	 */
 }
