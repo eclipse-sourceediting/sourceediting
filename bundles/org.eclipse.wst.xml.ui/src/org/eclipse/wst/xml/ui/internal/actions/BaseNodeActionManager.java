@@ -113,7 +113,7 @@ public abstract class BaseNodeActionManager {
 
 	public void contributeActions(IMenuManager menu, List selection) {
 		int editMode = modelQuery.getEditMode();
-		int ic = (editMode == ModelQuery.EDIT_MODE_CONSTRAINED_STRICT) ? ModelQuery.INCLUDE_CHILD_NODES | ModelQuery.INCLUDE_SEQUENCE_GROUPS : ModelQuery.INCLUDE_CHILD_NODES;
+		int ic = ModelQuery.INCLUDE_CHILD_NODES;
 		int vc = (editMode == ModelQuery.EDIT_MODE_CONSTRAINED_STRICT) ? ModelQuery.VALIDITY_STRICT : ModelQuery.VALIDITY_NONE;
 
 		List implicitlySelectedNodeList = null;
