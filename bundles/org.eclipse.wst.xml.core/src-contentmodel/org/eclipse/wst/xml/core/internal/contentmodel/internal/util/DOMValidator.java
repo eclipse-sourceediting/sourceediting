@@ -307,7 +307,8 @@ public class DOMValidator extends CMValidator
   {           
     List clonedList = clone(contentSpecificationList);
     insert(clonedList, insertIndex, cmNode);
-    return isValid(ed, clonedList);
+    boolean result = isPartiallyValid(ed, clonedList);   
+    return result;
   }  
 
   /**
@@ -358,7 +359,28 @@ public class DOMValidator extends CMValidator
     validate(ed, contentSpecificationList, stringContentComparitor, result);
     return result.isValid;
   }
-            
+
+  public boolean isPartiallyValid(CMElementDeclaration ed, List contentSpecificationList)
+  {
+    CMValidator.ElementPathRecordingResult result = new CMValidator.ElementPathRecordingResult();
+    validate(ed, contentSpecificationList, stringContentComparitor, result);
+    int count = getElementCount(contentSpecificationList);
+    System.out.println("elementOriginList " + result.getPartialValidationCount() + "vs" + count);
+    return result.getPartialValidationCount() >= count;
+  }  
+  
+  public int getElementCount(List contentSpecificationList)
+  {
+    int count = 0;
+    for (Iterator i = contentSpecificationList.iterator(); i.hasNext(); )
+    {
+      if (stringContentComparitor.isElement(i.next()))
+      {
+        count++;
+      }  
+    }  
+    return count;
+  }
 
   protected Result validate(CMElementDeclaration ed, Element element)
   {

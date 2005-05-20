@@ -573,12 +573,14 @@ public class CMValidator
   {
     protected Vector elementOriginStack = new Vector();
     protected CMNode[] originArray = null;
+    protected int partialValidationCount = 0;
 
     public void push(Arc arc)
     {
       if (arc.kind == Arc.ELEMENT)
       {
         elementOriginStack.add(arc.cmNode);
+        partialValidationCount = Math.max(elementOriginStack.size(), partialValidationCount);
       }
     }
 
@@ -605,7 +607,12 @@ public class CMValidator
     {
       this.originArray = originArray;
     }
-  }
+    
+    public int getPartialValidationCount()
+    {
+      return partialValidationCount;
+    }
+  }  
 
   /**
    *
