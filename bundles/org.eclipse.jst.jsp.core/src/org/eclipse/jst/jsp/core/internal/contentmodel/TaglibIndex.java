@@ -339,7 +339,7 @@ public class TaglibIndex {
 	private TaglibIndex() {
 		super();
 		fResourceChangeListener = new ResourceChangeListener();
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(fResourceChangeListener);
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(fResourceChangeListener, IResourceChangeEvent.POST_CHANGE);
 		fClasspathChangeListener = new ClasspathChangeListener();
 		JavaCore.addElementChangedListener(fClasspathChangeListener);
 		fProjectDescriptions = new HashMap();
