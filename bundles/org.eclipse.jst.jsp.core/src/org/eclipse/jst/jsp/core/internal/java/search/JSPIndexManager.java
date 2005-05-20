@@ -11,7 +11,9 @@
 package org.eclipse.jst.jsp.core.internal.java.search;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -179,14 +181,35 @@ public class JSPIndexManager implements IResourceChangeListener {
 	 * schedules JSP files for indexing by Java core
 	 */
 	private class ProcessFilesJob extends Job { 
-		IFile[] jspFiles =  null;
-		ProcessFilesJob(String taskName, IFile[] files) {
+		List fileList =  null;
+		private final int maximumToRemember = 50;
+		ProcessFilesJob(String taskName) {
 			super(taskName);
-			this.jspFiles = files;
+			fileList = new ArrayList();
+		}
+		
+		synchronized void process(IFile[] files) {
+			for (int i = 0; i < files.length; i++) {
+				fileList.add(files[i]);
+			}
+			if(DEBUG) {
+				System.out.println("JSPIndexManager queuing " + files.length + " files"); //$NON-NLS-2$ //$NON-NLS-1$
+			}
+			schedule(20);
+		}
+		
+		synchronized IFile[] getFiles() {
+			IFile[] files = (IFile[]) fileList.toArray(new IFile[fileList.size()]);
+			if (fileList.size() > maximumToRemember) {
+				fileList = new ArrayList();
+			}
+			else {
+				fileList.clear();
+			}
+			return files;
 		}
 		
 		protected IStatus run(IProgressMonitor monitor) {
-			
 			if(isCanceled(monitor) || frameworkIsShuttingDown()) {
 				setCanceledState();
 				return Status.CANCEL_STATUS;
@@ -195,27 +218,31 @@ public class JSPIndexManager implements IResourceChangeListener {
 			long start = System.currentTimeMillis();
 			
 			try {
+				IFile[] filesToBeProcessed = getFiles();
+				if(DEBUG) {
+					System.out.println("JSPIndexManager indexing " + filesToBeProcessed.length + " files"); //$NON-NLS-2$ //$NON-NLS-1$
+				}
 				// API indicates that monitor is never null
-				monitor.beginTask("", this.jspFiles .length); //$NON-NLS-1$
+				monitor.beginTask("", filesToBeProcessed.length); //$NON-NLS-1$
 				JSPSearchSupport ss = JSPSearchSupport.getInstance();
 				String processingNFiles = ""; //$NON-NLS-1$
 
 				
-				for(int i = 0; i<this.jspFiles.length; i++) {
+				for(int i = 0; i < filesToBeProcessed.length; i++) {
 
 					if(isCanceled(monitor) || frameworkIsShuttingDown()) {
 						setCanceledState();
 						return Status.CANCEL_STATUS;
 					}
 					try {
-						ss.addJspFile(this.jspFiles [i]);
+						ss.addJspFile(filesToBeProcessed [i]);
 						// JSP Indexer processing n files
-						processingNFiles = NLS.bind(JSPCoreMessages.JSPIndexManager_2, new String[]{Integer.toString((this.jspFiles .length -i))});
-						monitor.subTask(processingNFiles + " - " + this.jspFiles [i].getName()); //$NON-NLS-1$
+						processingNFiles = NLS.bind(JSPCoreMessages.JSPIndexManager_2, new String[]{Integer.toString((filesToBeProcessed .length -i))});
+						monitor.subTask(processingNFiles + " - " + filesToBeProcessed [i].getName()); //$NON-NLS-1$
 						monitor.worked(1);
 						
 						if(DEBUG) {
-							System.out.println("JSPIndexManager Job added file: " + this.jspFiles [i].getName()); //$NON-NLS-1$
+							System.out.println("JSPIndexManager Job added file: " + filesToBeProcessed [i].getName()); //$NON-NLS-1$
 						}
 					}
 					catch (Exception e){
@@ -228,7 +255,7 @@ public class JSPIndexManager implements IResourceChangeListener {
 					    // a possible solution is to keep track of the exceptions logged
 					    // and only log a certain amt of the same one, otherwise skip it.
 						if(!frameworkIsShuttingDown()) {
-						    String filename = this.jspFiles[i] != null ? this.jspFiles[i].getFullPath().toString() : ""; //$NON-NLS-1$
+						    String filename = filesToBeProcessed[i] != null ? filesToBeProcessed[i].getFullPath().toString() : ""; //$NON-NLS-1$
 						    Logger.logException("JSPIndexer problem indexing:" + filename,  e); //$NON-NLS-1$
 						}
 					}
@@ -271,8 +298,20 @@ public class JSPIndexManager implements IResourceChangeListener {
 		
 	static long fTotalTime = 0;
 	
+	// Job for processing resource delta
+	ProcessFilesJob processFilesJob = null;
+	
 	private JSPIndexManager(){
-		// only one instance
+		processFilesJob = new ProcessFilesJob(JSPCoreMessages.JSPIndexManager_0);
+		// only show in verbose mode
+		processFilesJob.setSystem(true);
+		processFilesJob.setPriority(Job.LONG);
+		processFilesJob.addJobChangeListener(new JobChangeAdapter() {
+			public void done(IJobChangeEvent event) {
+				super.done(event);
+				setStableState();
+			}
+		});
 	}
 	
 	public synchronized static JSPIndexManager getInstance() {
@@ -429,27 +468,10 @@ public class JSPIndexManager implements IResourceChangeListener {
 	 * @param files
 	 */
 	public final void indexFiles(IFile[] files) {
-		// updating JSP Index
-		String taskName = JSPCoreMessages.JSPIndexManager_0;
-		
-		// Processing resource delta
-		final Job processFiles = new ProcessFilesJob(taskName, files);
-
-		// only show in verbose mode
-		processFiles.setSystem(true);
-		
-		// don't use this rule
+				// don't use this rule
 		// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=4931
 		//processFiles.setRule(new IndexFileRule());
-		
-		processFiles.setPriority(Job.LONG);
-		processFiles.addJobChangeListener(new JobChangeAdapter() {
-			public void done(IJobChangeEvent event) {
-				super.done(event);
-				setStableState();
-			}
-		});
-		processFiles.schedule();
+		processFilesJob.process(files);
 	}
 	
 	
