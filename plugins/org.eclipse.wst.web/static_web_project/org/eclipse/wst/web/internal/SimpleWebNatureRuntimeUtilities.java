@@ -10,10 +10,9 @@ package org.eclipse.wst.web.internal;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jem.util.emf.workbench.ProjectUtilities;
 import org.eclipse.wst.web.internal.operation.IStaticWebNature;
 import org.eclipse.wst.web.internal.operation.StaticWebNatureRuntime;
-
-import org.eclipse.jem.util.emf.workbench.ProjectUtilities;
 
 
 public class SimpleWebNatureRuntimeUtilities {

@@ -15,10 +15,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-
-//import org.eclipse.jst.j2ee.internal.project.IWebNatureConstants;
-//import org.eclipse.jst.j2ee.internal.web.operations.WebNatureRuntimeUtilities;
-
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.ServerUtil;
