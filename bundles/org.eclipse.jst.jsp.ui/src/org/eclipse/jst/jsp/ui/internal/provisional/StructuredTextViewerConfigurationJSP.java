@@ -40,7 +40,6 @@ import org.eclipse.jst.jsp.ui.internal.autoedit.StructuredAutoEditStrategyJSP;
 import org.eclipse.jst.jsp.ui.internal.contentassist.JSPContentAssistProcessor;
 import org.eclipse.jst.jsp.ui.internal.contentassist.JSPJavaContentAssistProcessor;
 import org.eclipse.jst.jsp.ui.internal.contentassist.NoRegionContentAssistProcessorForJSP;
-import org.eclipse.jst.jsp.ui.internal.correction.CorrectionProcessorJSP;
 import org.eclipse.jst.jsp.ui.internal.format.FormattingStrategyJSPJava;
 import org.eclipse.jst.jsp.ui.internal.hyperlink.JSPJavaHyperlinkDetector;
 import org.eclipse.jst.jsp.ui.internal.hyperlink.TaglibHyperlinkDetector;
@@ -86,7 +85,6 @@ import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
-import org.eclipse.wst.xml.ui.internal.correction.CorrectionProcessorXML;
 import org.eclipse.wst.xml.ui.internal.doubleclick.XMLDoubleClickStrategy;
 import org.eclipse.wst.xml.ui.internal.style.LineStyleProviderForXML;
 import org.eclipse.wst.xml.ui.internal.taginfo.XMLBestMatchHoverProcessor;
@@ -202,21 +200,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 	}
 
 	public IContentAssistant getCorrectionAssistant(ISourceViewer sourceViewer) {
-		IContentAssistant ca = super.getCorrectionAssistant(sourceViewer);
-
-		if (ca != null && ca instanceof ContentAssistant) {
-			ContentAssistant correctionAssistant = (ContentAssistant) ca;
-			ITextEditor editor = getTextEditor();
-			if (editor != null) {
-				IContentAssistProcessor correctionProcessor = new CorrectionProcessorXML(editor);
-				correctionAssistant.setContentAssistProcessor(correctionProcessor, IHTMLPartitionTypes.HTML_DEFAULT);
-
-				correctionProcessor = new CorrectionProcessorJSP(editor);
-				correctionAssistant.setContentAssistProcessor(correctionProcessor, IJSPPartitionTypes.JSP_CONTENT_JAVA);
-			}
-		}
-
-		return ca;
+		return null;
 	}
 
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {

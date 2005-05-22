@@ -28,6 +28,7 @@ public class JSPUIMessages extends NLS {
 	public static String Refactor_label;
 	public static String RenameElement_label; // resource bundle
 	public static String MoveElement_label; // resource bundle
+	public static String MoveElementWizard;
 	public static String OK;
 	public static String JSP_changes;
 	public static String ActionContributorJSP_0;

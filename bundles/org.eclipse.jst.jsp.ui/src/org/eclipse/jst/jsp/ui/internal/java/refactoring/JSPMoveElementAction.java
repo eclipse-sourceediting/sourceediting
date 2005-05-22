@@ -19,7 +19,6 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.corext.codemanipulation.CodeGenerationSettings;
 import org.eclipse.jdt.internal.corext.refactoring.reorg.JavaMoveProcessor;
 import org.eclipse.jdt.internal.corext.util.CodeFormatterUtil;
-import org.eclipse.jdt.internal.ui.refactoring.RefactoringMessages;
 import org.eclipse.jdt.internal.ui.refactoring.actions.RefactoringStarter;
 import org.eclipse.jdt.internal.ui.refactoring.reorg.CreateTargetQueries;
 import org.eclipse.jdt.internal.ui.refactoring.reorg.ReorgMoveWizard;
@@ -104,7 +103,6 @@ public class JSPMoveElementAction extends TextEditorAction {
 			
 				RefactoringWizard wizard= createWizard(refactoring);
 				
-				
 				/*
 				 * We want to get the shell from the refactoring dialog but it's not
 				 * known at this point, so we pass the wizard and then, once the dialog
@@ -113,10 +111,9 @@ public class JSPMoveElementAction extends TextEditorAction {
 				
 				processor.setCreateTargetQueries(new CreateTargetQueries(wizard));
 				processor.setReorgQueries(new ReorgQueries(wizard));
-				
-				new RefactoringStarter().activate(refactoring, wizard, parent, 
-					RefactoringMessages.getString("OpenRefactoringWizardAction.refactoring"), //$NON-NLS-1$ 
-					true);
+				//String openRefactoringWizMsg = RefactoringMessages.getString("OpenRefactoringWizardAction.refactoring"); //$NON-NLS-1$
+				String openRefactoringWizMsg = JSPUIMessages.MoveElementWizard; //"Move the selected elements"; //$NON-NLS-1$
+				new RefactoringStarter().activate(refactoring, wizard, parent, openRefactoringWizMsg, true);
 				
 				PlatformStatusLineUtil.clearStatusLine();
 				
