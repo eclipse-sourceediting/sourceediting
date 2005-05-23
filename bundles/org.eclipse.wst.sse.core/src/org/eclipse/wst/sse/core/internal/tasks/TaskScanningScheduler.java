@@ -34,7 +34,7 @@ public class TaskScanningScheduler {
 						delta.accept(this);
 					}
 					catch (CoreException e) {
-						Logger.logException("Exception managing buildspec list", e); //$NON-NLS-1$
+						Logger.logException("Exception handling resource change", e); //$NON-NLS-1$
 					}
 				}
 			}
@@ -49,22 +49,7 @@ public class TaskScanningScheduler {
 				if (resource.getType() == IResource.ROOT)
 					return true;
 				else if (resource.getType() == IResource.PROJECT) {
-					// if (delta.getKind() == IResourceDelta.ADDED) {
-					// if (_debugResourceChangeListener) {
-					// System.out.println("Project " +
-					// delta.getResource().getName() + " added to workspace
-					// and
-					// registering with
-					// TaskScanner");//$NON-NLS-2$//$NON-NLS-1$
-					// }
-					// IProject project = (IProject) resource;
-					// if (project != null && project.isAccessible()) {
-					// fJob.addProject(project);
-					// }
-					// }
-					// else {
 					fJob.addDelta(delta);
-					// }
 					return false;
 				}
 			}
