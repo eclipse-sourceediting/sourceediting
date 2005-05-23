@@ -120,7 +120,7 @@ public class TestViewerConfigurationJSP extends TestCase {
 			return;
 		
 		IContentAssistant ca = fConfig.getCorrectionAssistant(fViewer);
-		assertNotNull("there is no correction assistant", ca);
+		assertNull("there is now a correction assistant?", ca);
 	}
 	
 	public void testGetContentFormatter() {
