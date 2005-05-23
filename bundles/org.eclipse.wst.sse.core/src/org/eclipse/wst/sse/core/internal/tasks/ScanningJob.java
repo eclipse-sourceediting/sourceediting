@@ -29,6 +29,7 @@ import org.eclipse.wst.sse.core.internal.SSECoreMessages;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
+import org.osgi.framework.Bundle;
 
 /**
  * Queueing Job for processing deltas and projects.
@@ -37,6 +38,9 @@ class ScanningJob extends Job {
 	public static final boolean _debugJob = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks/job"));
 	static final String TASK_TAG_PROJECTS_ALREADY_SCANNED = "task-tag-projects-already-scanned"; //$NON-NLS-1$
 	private List fQueue = null;
+
+	/** symbolic name for OSGI framework */
+	private final String OSGI_FRAMEWORK_ID = "org.eclipse.osgi"; //$NON-NLS-1$
 
 	ScanningJob() {
 		super(SSECoreMessages.TaskScanner_0);
@@ -51,8 +55,27 @@ class ScanningJob extends Job {
 	synchronized void addDelta(IResourceDelta delta) {
 		if (!isIgnoredProject(delta)) {
 			fQueue.add(delta);
-			if (_debugJob)
-				System.out.println("Adding delta " + delta.getFullPath() + " " + delta.getKind());
+			if (_debugJob) {
+				String kind = null;
+				switch (delta.getKind()) {
+					case IResourceDelta.ADDED :
+						kind = " [IResourceDelta.ADDED]"; //$NON-NLS-1$
+						break;
+					case IResourceDelta.CHANGED :
+						kind = " [IResourceDelta.CHANGED]"; //$NON-NLS-1$
+						break;
+					case IResourceDelta.REMOVED :
+						kind = " [IResourceDelta.REMOVED]"; //$NON-NLS-1$
+						break;
+					case IResourceDelta.ADDED_PHANTOM :
+						kind = " [IResourceDelta.ADDED_PHANTOM]"; //$NON-NLS-1$
+						break;
+					case IResourceDelta.REMOVED_PHANTOM :
+						kind = " [IResourceDelta.REMOVED_PHANTOM]"; //$NON-NLS-1$
+						break;
+				}
+				System.out.println("Adding delta " + delta.getFullPath() + kind);
+			}
 			schedule(100);
 		}
 	}
@@ -60,10 +83,29 @@ class ScanningJob extends Job {
 	synchronized void addProject(IProject project) {
 		if (isEnabledProject(project)) {
 			fQueue.add(project);
-			if (_debugJob)
+			if (_debugJob) {
 				System.out.println("Adding project " + project.getName());
+			}
 			schedule(600);
 		}
+	}
+
+	/**
+	 * A check to see if the OSGI framework is shutting down.
+	 * 
+	 * @return true if the System Bundle is stopped (ie. the framework is
+	 *         shutting down)
+	 */
+	boolean frameworkIsShuttingDown() {
+		// in the Framework class there's a note:
+		// set the state of the System Bundle to STOPPING.
+		// this must be done first according to section 4.19.2 from the OSGi
+		// R3 spec.
+		boolean shuttingDown = Platform.getBundle(OSGI_FRAMEWORK_ID).getState() == Bundle.STOPPING;
+		if (_debugJob && shuttingDown) {
+			System.out.println("ScanningJob: system is shutting down!"); //$NON-NLS-1$
+		}
+		return shuttingDown;
 	}
 
 	private boolean isEnabledProject(IResource project) {
@@ -113,6 +155,9 @@ class ScanningJob extends Job {
 	}
 
 	protected IStatus run(IProgressMonitor monitor) {
+		if (frameworkIsShuttingDown())
+			return Status.OK_STATUS;
+
 		validateRememberedProjectList(CommonModelPreferenceNames.TASK_TAG_PROJECTS_IGNORED);
 		validateRememberedProjectList(TASK_TAG_PROJECTS_ALREADY_SCANNED);
 
