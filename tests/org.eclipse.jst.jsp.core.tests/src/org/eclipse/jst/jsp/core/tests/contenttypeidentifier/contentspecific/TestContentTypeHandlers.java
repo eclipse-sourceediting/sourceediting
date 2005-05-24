@@ -136,7 +136,7 @@ public class TestContentTypeHandlers extends TestCase {
 		IContentTypeManager registry = getContentTypeRegistry();
 		IContentType identifier1 = registry.getContentType(id);
 		IContentType identifier2 = registry.getDescriptionFor(new NullStream(), filename, IContentDescription.ALL).getContentType();
-		assertTrue("mulitple content type identifiers need to map to same instance ", identifier1 == identifier2);
+		assertTrue("mulitple content type identifiers need to be equal (but not same instance) ", identifier1.equals(identifier2));
 	}
 
 }
