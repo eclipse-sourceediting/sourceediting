@@ -27,6 +27,13 @@ import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
 
 public final class ContentDescriberForXML implements ITextContentDescriber {
 	private final static QualifiedName[] SUPPORTED_OPTIONS = {IContentDescription.CHARSET, IContentDescription.BYTE_ORDER_MARK, IContentDescriptionExtended.DETECTED_CHARSET, IContentDescriptionExtended.UNSUPPORTED_CHARSET, IContentDescriptionExtended.APPROPRIATE_DEFAULT};
+	/**
+	 * <code>restrictedMode</code> is used just for testing/experiments. 
+	 * 
+	 *  If in restrictedMode, our "custom" contentType is seen as valid only in cases
+	 *  that the platform's standard one does not cover. 
+	 */
+	private boolean restrictedMode = false;
 
 	private IResourceCharsetDetector getDetector() {
 		return new XMLResourceEncodingDetector();
@@ -41,7 +48,7 @@ public final class ContentDescriberForXML implements ITextContentDescriber {
 	public int describe(InputStream contents, IContentDescription description) throws IOException {
 		int result = IContentDescriber.INDETERMINATE;
 
-		calculateSupportedOptions(contents, description);
+		result = calculateSupportedOptions(result, contents, description);
 
 		return result;
 	}
@@ -55,7 +62,7 @@ public final class ContentDescriberForXML implements ITextContentDescriber {
 	public int describe(Reader contents, IContentDescription description) throws IOException {
 		int result = IContentDescriber.INDETERMINATE;
 
-		calculateSupportedOptions(contents, description);
+		result = calculateSupportedOptions(result, contents, description);
 
 		return result;
 	}
@@ -70,12 +77,14 @@ public final class ContentDescriberForXML implements ITextContentDescriber {
 		return SUPPORTED_OPTIONS;
 	}
 
-	private void calculateSupportedOptions(InputStream contents, IContentDescription description) throws IOException {
+	private int calculateSupportedOptions(int result, InputStream contents, IContentDescription description) throws IOException {
+		int returnResult = result;
 		if (isRelevent(description)) {
 			IResourceCharsetDetector detector = getDetector();
 			detector.set(contents);
-			handleCalculations(description, detector);
+			returnResult = handleCalculations(result, description, detector);
 		}
+		return returnResult;
 	}
 
 	/**
@@ -83,12 +92,14 @@ public final class ContentDescriberForXML implements ITextContentDescriber {
 	 * @param description
 	 * @throws IOException
 	 */
-	private void calculateSupportedOptions(Reader contents, IContentDescription description) throws IOException {
+	private int calculateSupportedOptions(int result, Reader contents, IContentDescription description) throws IOException {
+		int returnResult = result;
 		if (isRelevent(description)) {
 			IResourceCharsetDetector detector = getDetector();
 			detector.set(contents);
-			handleCalculations(description, detector);
+			returnResult = handleCalculations(result, description, detector);
 		}
+		return returnResult;
 	}
 
 	private void handleDetectedSpecialCase(IContentDescription description, Object detectedCharset, Object javaCharset) {
@@ -118,7 +129,7 @@ public final class ContentDescriberForXML implements ITextContentDescriber {
 	private boolean isRelevent(IContentDescription description) {
 		boolean result = false;
 		if (description == null)
-			result = false;
+			result = true;
 		else if (description.isRequested(IContentDescription.BYTE_ORDER_MARK))
 			result = true;
 		else if (description.isRequested(IContentDescription.CHARSET))
@@ -140,66 +151,87 @@ public final class ContentDescriberForXML implements ITextContentDescriber {
 	 * @param detector
 	 * @throws IOException
 	 */
-	private void handleCalculations(IContentDescription description, IResourceCharsetDetector detector) throws IOException {
-		// note: if we're asked for one, we set them all. I need to be sure if
-		// called
-		// mulitiple times (one for each, say) that we don't waste time
-		// processing same
-		// content again.
+	private int handleCalculations(int result, IContentDescription description, IResourceCharsetDetector detector) throws IOException {
+		int returnResult = result;
 		EncodingMemento encodingMemento = detector.getEncodingMemento();
-		// TODO: I need to verify to see if this BOM work is always done
-		// by text type.
-		Object detectedByteOrderMark = encodingMemento.getUnicodeBOM();
-		if (detectedByteOrderMark != null) {
-			Object existingByteOrderMark = description.getProperty(IContentDescription.BYTE_ORDER_MARK);
-			// not sure why would ever be different, so if is different, may
-			// need to "push" up into base.
-			if (!detectedByteOrderMark.equals(existingByteOrderMark))
-				description.setProperty(IContentDescription.BYTE_ORDER_MARK, detectedByteOrderMark);
-		}
+		if (description != null) {
+			// TODO: I need to verify to see if this BOM work is always done
+			// by text type.
+			Object detectedByteOrderMark = encodingMemento.getUnicodeBOM();
+			if (detectedByteOrderMark != null) {
+				Object existingByteOrderMark = description.getProperty(IContentDescription.BYTE_ORDER_MARK);
+				// not sure why would ever be different, so if is different,
+				// may
+				// need to "push" up into base.
+				if (!detectedByteOrderMark.equals(existingByteOrderMark))
+					description.setProperty(IContentDescription.BYTE_ORDER_MARK, detectedByteOrderMark);
+			}
 
 
-		if (!encodingMemento.isValid()) {
-			// note: after setting here, its the mere presence of
-			// IContentDescriptionExtended.UNSUPPORTED_CHARSET
-			// in the resource's description that can be used to determine if
-			// invalid
-			// in those cases, the "detected" property contains an
-			// "appropriate default" to use.
-			description.setProperty(IContentDescriptionExtended.UNSUPPORTED_CHARSET, encodingMemento.getInvalidEncoding());
-			description.setProperty(IContentDescriptionExtended.APPROPRIATE_DEFAULT, encodingMemento.getAppropriateDefault());
-		}
+			if (!encodingMemento.isValid()) {
+				// note: after setting here, its the mere presence of
+				// IContentDescriptionExtended.UNSUPPORTED_CHARSET
+				// in the resource's description that can be used to determine
+				// if invalid in those cases, the "detected" property contains
+				// an "appropriate default" to use.
+				description.setProperty(IContentDescriptionExtended.UNSUPPORTED_CHARSET, encodingMemento.getInvalidEncoding());
+				description.setProperty(IContentDescriptionExtended.APPROPRIATE_DEFAULT, encodingMemento.getAppropriateDefault());
+			}
 
-		Object detectedCharset = encodingMemento.getDetectedCharsetName();
-		Object javaCharset = encodingMemento.getJavaCharsetName();
+			Object detectedCharset = encodingMemento.getDetectedCharsetName();
+			Object javaCharset = encodingMemento.getJavaCharsetName();
 
-		// we always include detected, if its different than java
-		handleDetectedSpecialCase(description, detectedCharset, javaCharset);
+			// we always include detected, if its different than java
+			handleDetectedSpecialCase(description, detectedCharset, javaCharset);
 
-		if (javaCharset != null) {
-			Object existingCharset = description.getProperty(IContentDescription.CHARSET);
-			if (javaCharset.equals(existingCharset)) {
-				handleDetectedSpecialCase(description, detectedCharset, javaCharset);
-			} else {
-				// we may need to add what we found, but only need to add
-				// if different from default.the
-				Object defaultCharset = getDetector().getSpecDefaultEncoding();
-				if (defaultCharset != null) {
-					if (!defaultCharset.equals(javaCharset)) {
+			if (javaCharset != null) {
+				Object existingCharset = description.getProperty(IContentDescription.CHARSET);
+				if (javaCharset.equals(existingCharset)) {
+					handleDetectedSpecialCase(description, detectedCharset, javaCharset);
+				}
+				else {
+					// we may need to add what we found, but only need to add
+					// if different from the default
+					Object defaultCharset = getDetector().getSpecDefaultEncoding();
+					if (defaultCharset != null) {
+						if (!defaultCharset.equals(javaCharset)) {
+							description.setProperty(IContentDescription.CHARSET, javaCharset);
+						}
+					}
+					else {
+						// assuming if there is no spec default, we always
+						// need to add.
+						// TODO: this is probably a dead branch in current
+						// code, should re-examine for removal.
 						description.setProperty(IContentDescription.CHARSET, javaCharset);
 					}
-				} else {
-					// assuming if there is no spec default, we always need to
-					// add, I'm assuming
-					description.setProperty(IContentDescription.CHARSET, javaCharset);
 				}
 			}
 		}
 
-		// avoid adding anything if not absolutly needed, since always
-		// "cached" per session
-		// description.setProperty(IContentDescriptionExtended.ENCODING_MEMENTO,
-		// encodingMemento);
+		returnResult = determineValidity(detector, returnResult);
+		return returnResult;
+	}
+
+	private int determineValidity(IResourceCharsetDetector detector, int returnResult) {
+		// we always expect XMLResourceEncodingDetector, but just to make safe
+		// cast.
+		if (detector instanceof XMLResourceEncodingDetector) {
+			XMLResourceEncodingDetector xmlResourceDetector = (XMLResourceEncodingDetector) detector;
+			if (xmlResourceDetector.isDeclDetected()) {
+				if (restrictedMode ) {
+					// if there is no initial whitespace, then platform's
+					// default one will do.
+					if (xmlResourceDetector.hasInitialWhiteSpace()) {
+						returnResult = IContentDescriber.VALID;
+					}
+				}
+				else {
+					returnResult = IContentDescriber.VALID;
+				}
+			}
+		}
+		return returnResult;
 	}
 
 }
