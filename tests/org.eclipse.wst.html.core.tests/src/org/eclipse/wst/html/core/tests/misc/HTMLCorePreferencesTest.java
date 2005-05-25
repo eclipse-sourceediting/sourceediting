@@ -94,18 +94,27 @@ public class HTMLCorePreferencesTest extends TestCase {
 	}
 
 	private void pluginSetPreferenceBoolean(IEclipsePreferences node, String prefKey) {
-		boolean originalValue = node.getBoolean(prefKey, false);
-		boolean expectedValue = !originalValue;
+		boolean originalValue = false;
+		boolean expectedValue = true;
+		
+		String originalString = node.get(prefKey, "bogus");
+		if (!"bogus".equals(originalString)) {
+			originalValue = Boolean.valueOf(originalString).booleanValue();
+			expectedValue = !originalValue;
+		}
 		node.putBoolean(prefKey, expectedValue);
 		boolean foundValue = node.getBoolean(prefKey, true);
 		assertEquals("Set preference value failed using plugin.getPreferenceStore. Key: " + prefKey + "  expected: " + expectedValue + " found: " + foundValue, expectedValue, foundValue);
-
+		
 		// attempt to restore original preference value
-		node.putBoolean(prefKey, originalValue);
+		if ("bogus".equals(originalString))
+			node.remove(prefKey);
+		else
+			node.put(prefKey, originalString);
 	}
 
 	private void pluginSetPreferenceString(IEclipsePreferences node, String prefKey) {
-		String originalValue = node.get(prefKey, "");
+		String originalValue = node.get(prefKey, "bogus");
 		String expectedValue = Long.toString(System.currentTimeMillis()); // random
 																			// string
 		node.put(prefKey, expectedValue);
@@ -113,6 +122,9 @@ public class HTMLCorePreferencesTest extends TestCase {
 		assertEquals("Set preference value failed using plugin.getPreferenceStore. Key: " + prefKey + "  expected: " + expectedValue + " found: " + foundValue, expectedValue, foundValue);
 
 		// attempt to restore original preference value
-		node.put(prefKey, originalValue);
+		if ("bogus".equals(originalValue))
+			node.remove(prefKey);
+		else
+			node.put(prefKey, originalValue);
 	}
 }

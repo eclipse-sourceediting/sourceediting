@@ -94,14 +94,23 @@ public class CSSCorePreferencesTest extends TestCase {
 	}
 
 	private void pluginSetPreferenceBoolean(IEclipsePreferences node, String prefKey) {
-		boolean originalValue = node.getBoolean(prefKey, false);
-		boolean expectedValue = !originalValue;
+		boolean originalValue = false;
+		boolean expectedValue = true;
+		
+		String originalString = node.get(prefKey, "bogus");
+		if (!"bogus".equals(originalString)) {
+			originalValue = Boolean.valueOf(originalString).booleanValue();
+			expectedValue = !originalValue;
+		}
 		node.putBoolean(prefKey, expectedValue);
 		boolean foundValue = node.getBoolean(prefKey, true);
 		assertEquals("Set preference value failed using plugin.getPreferenceStore. Key: " + prefKey + "  expected: " + expectedValue + " found: " + foundValue, expectedValue, foundValue);
-
+		
 		// attempt to restore original preference value
-		node.putBoolean(prefKey, originalValue);
+		if ("bogus".equals(originalString))
+			node.remove(prefKey);
+		else
+			node.put(prefKey, originalString);
 	}
 
 	private void pluginSetPreferenceInt(IEclipsePreferences node, String prefKey) {
@@ -112,6 +121,9 @@ public class CSSCorePreferencesTest extends TestCase {
 		assertEquals("Set preference value failed using plugin.getPreferenceStore. Key: " + prefKey + "  expected: " + expectedValue + " found: " + foundValue, expectedValue, foundValue);
 
 		// attempt to restore original preference value
-		node.putInt(prefKey, originalValue);
+		if (originalValue == -999)
+			node.remove(prefKey);
+		else
+			node.putInt(prefKey, originalValue);
 	}
 }
