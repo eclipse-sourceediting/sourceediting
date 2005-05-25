@@ -1376,6 +1376,9 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		else if (ViewerSelectionManager.class.equals(required)) {
 			result = getViewerSelectionManager();
 		}
+		else if (IDocument.class.equals(required)) {
+			result = getDocumentProvider().getDocument(getEditorInput());
+		}
 		else if (SourceEditingTextTools.class.equals(required)) {
 			result = createSourceEditingTextTools();
 		}
