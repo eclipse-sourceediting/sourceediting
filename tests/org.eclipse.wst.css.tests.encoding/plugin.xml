@@ -19,6 +19,7 @@
       <import plugin="org.eclipse.wst.css.core"/>
       <import plugin="org.junit"/>
       <import plugin="org.eclipse.wst.sse.core"/>
+      <import plugin="org.eclipse.wst.xml.tests.encoding"/>
    </requires>
 
 </plugin>

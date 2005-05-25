@@ -44,8 +44,8 @@ public class XMLMalformedInputTests extends TestCase {
 
 	/**
 	 * Tests for a file, filename that should throw a
-	 * MalformedInputExceptionWithDetail at character, expectedPosition.
-	 * This happens when no encoding is specified, so the default is used, but
+	 * MalformedInputExceptionWithDetail at character, expectedPosition. This
+	 * happens when no encoding is specified, so the default is used, but
 	 * there are characters that the default encoding does not recognize
 	 */
 	private void doTestMalformedInput(String filename, IResourceCharsetDetector detector, int expectedPosition) throws IOException {
@@ -57,7 +57,7 @@ public class XMLMalformedInputTests extends TestCase {
 		InputStream inputStream = new FileInputStream(file);
 		InputStream istream = getMarkSupportedStream(inputStream);
 		detector.set(istream);
-		//	IEncodedDocument doc =
+		// IEncodedDocument doc =
 		// detector.createNewStructuredDocument(filename, istream);
 		EncodingMemento encodingMemento = detector.getEncodingMemento();
 		String foundIANAEncoding = encodingMemento.getJavaCharsetName();
@@ -73,9 +73,9 @@ public class XMLMalformedInputTests extends TestCase {
 		// now, try reading as per encoding
 		inputStream = new FileInputStream(file);
 		// skip BOM for this case
-		//		System.out.println(inputStream.read());
-		//		System.out.println(inputStream.read());
-		//		System.out.println(inputStream.read());
+		// System.out.println(inputStream.read());
+		// System.out.println(inputStream.read());
+		// System.out.println(inputStream.read());
 		InputStreamReader reader = new InputStreamReader(inputStream, charsetDecoder);
 
 		try {
@@ -118,10 +118,10 @@ public class XMLMalformedInputTests extends TestCase {
 		assertTrue("Wrong character position detected in MalformedInputException.  Expected: " + expectedPosition + " Found: " + badCharPosition, (badCharPosition == expectedPosition) || badCharPosition == expectedPosition - 2);
 	}
 
-//	public void testXSLMalformedInput() throws IOException {
-//		String filename = fileLocation + "MalformedNoEncoding.xsl";
-//		doTestMalformedInput(filename, new XMLResourceEncodingDetector(), 211);
-//	}
+	// public void testXSLMalformedInput() throws IOException {
+	// String filename = fileLocation + "MalformedNoEncoding.xsl";
+	// doTestMalformedInput(filename, new XMLResourceEncodingDetector(), 211);
+	// }
 
 	/**
 	 * Ensures that an InputStream has mark/reset support.
@@ -159,7 +159,8 @@ public class XMLMalformedInputTests extends TestCase {
 		// all of that just to throw more accurate error
 		// note: we do the conversion to ianaName, instead of using the local
 		// variable,
-		// because this is ultimately only for the user error message (that is,
+		// because this is ultimately only for the user error message (that
+		// is,
 		// the error occurred
 		// in context of javaEncodingName no matter what ianaEncodingName is
 		throw new MalformedInputExceptionWithDetail(encodingName, charPostion);
@@ -168,6 +169,7 @@ public class XMLMalformedInputTests extends TestCase {
 	private int getCharPostionOfFailure(Reader reader) throws IOException {
 		int charPosition = 1;
 		int charRead = -1;
+		int result = -1;
 		boolean errorFound = false;
 		do {
 			try {
@@ -189,9 +191,10 @@ public class XMLMalformedInputTests extends TestCase {
 		while ((charRead != -1 && !errorFound) && reader.ready());
 
 		if (errorFound)
-			return charPosition;
+			result = charPosition;
 		else
-			return -1;
+			result = -1;
+		return result;
 	}
 
 	private String escape(char aChar, boolean escapeSpace) {

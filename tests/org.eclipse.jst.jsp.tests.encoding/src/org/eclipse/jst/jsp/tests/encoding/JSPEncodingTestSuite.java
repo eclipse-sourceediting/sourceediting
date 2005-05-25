@@ -15,10 +15,11 @@ import junit.framework.TestSuite;
 
 import org.eclipse.jst.jsp.tests.encoding.jsp.JSPEncodingTests;
 import org.eclipse.jst.jsp.tests.encoding.jsp.JSPHeadTokenizerTester;
+import org.eclipse.jst.jsp.tests.encoding.jsp.TestContentTypeDetectionForJSP;
 
 public class JSPEncodingTestSuite extends TestSuite {
 
-	private static Class[] classes = new Class[]{JSPEncodingTests.class, JSPHeadTokenizerTester.class};
+	private static Class[] classes = new Class[]{JSPEncodingTests.class, JSPHeadTokenizerTester.class, TestContentTypeDetectionForJSP.class};
 
 	public static Test suite() {
 		return new JSPEncodingTestSuite();

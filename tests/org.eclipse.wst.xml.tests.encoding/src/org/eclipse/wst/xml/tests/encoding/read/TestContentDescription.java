@@ -13,7 +13,6 @@ package org.eclipse.wst.xml.tests.encoding.read;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 
 import junit.framework.TestCase;
 
@@ -39,7 +38,7 @@ public class TestContentDescription extends TestCase {
 	//	private final String fileRoot =
 	// "/builds/Workspaces/HeadWorkspace/org.eclipse.wst.xml.tests.encoding/";
 	//	private final String fileLocation = fileRoot + fileDir;
-	private static final boolean DEBUG = false;
+	private static final boolean DEBUG = true;
 	//private static final boolean DEBUG_TEST_DETAIL = false;
 	// needs to be static, since JUnit creates difference instances for each
 	// test
@@ -156,15 +155,15 @@ public class TestContentDescription extends TestCase {
 			return; //won't try 32 bit right now
 		}
 		expectedJavaCharset = massageCharset(expectedJavaCharset);
-		Reader reader = null;
 		IFile file = (IFile) fTestProject.findMember(filePath);
 		assertNotNull("Error in test case: file not found: " + filePath, file);
 
-		IContentDescription contentDescription = file.getContentDescription();
-		assertNotNull("Null content description", contentDescription);
-//		EncodingMemento encodingMemento = (EncodingMemento) contentDescription.getProperty(IContentDescriptionExtended.ENCODING_MEMENTO);
-//		assertNotNull("Null encodingMemento!", encodingMemento);
-		String foundCharset = contentDescription.getCharset();
+		IContentDescription fileContentDescription = file.getContentDescription();
+		IContentDescription streamContentDescription = Platform.getContentTypeManager().getDescriptionFor(file.getContents(), file.getName(), IContentDescription.ALL);
+	//	assertEquals("comparing file and stream contentDescription", fileContentDescription, streamContentDescription);
+
+		assertNotNull("Null content description", fileContentDescription);
+		String foundCharset = fileContentDescription.getCharset();
 		foundCharset = massageCharset(foundCharset);
 
 		if (expectedJavaCharset == null || expectedJavaCharset.equals("expectPlatformCharset")) {

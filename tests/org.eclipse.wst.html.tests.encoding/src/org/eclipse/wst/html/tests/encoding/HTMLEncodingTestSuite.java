@@ -15,10 +15,11 @@ import junit.framework.TestSuite;
 
 import org.eclipse.wst.html.tests.encoding.html.HTMLEncodingTests;
 import org.eclipse.wst.html.tests.encoding.html.HTMLHeadTokenizerTester;
+import org.eclipse.wst.html.tests.encoding.html.TestContentTypeDetectionForHTML;
 
 public class HTMLEncodingTestSuite extends TestSuite {
 
-	private static Class[] classes = new Class[]{HTMLEncodingTests.class, HTMLHeadTokenizerTester.class};
+	private static Class[] classes = new Class[]{HTMLEncodingTests.class, HTMLHeadTokenizerTester.class, TestContentTypeDetectionForHTML.class};
 
 	public static Test suite() {
 		return new HTMLEncodingTestSuite();

@@ -71,9 +71,11 @@ public class XMLHeadTokenizerTester extends TestCase {
 		}
 		else {
 			if (expectedName == null) {
-				// TODO: this test branch needs to be improved ... doesn't fail
+				// TODO: this test branch needs to be improved ... doesn't
+				// fail
 				// as it should
-				// (such as when tokenizer changed to return early when Unicode
+				// (such as when tokenizer changed to return early when
+				// Unicode
 				// stream found).
 				assertTrue("expected no encoding, but found: " + resultValue, resultValue == null);
 			}
@@ -120,15 +122,16 @@ public class XMLHeadTokenizerTester extends TestCase {
 	}
 
 	private boolean isLegalString(String tokenType) {
-		if (tokenType == null)
-			return false;
-		else
-			return tokenType.equals(EncodingParserConstants.StringValue) || tokenType.equals(EncodingParserConstants.UnDelimitedStringValue) || tokenType.equals(EncodingParserConstants.InvalidTerminatedStringValue) || tokenType.equals(EncodingParserConstants.InvalidTermintatedUnDelimitedStringValue);
+		boolean result = false;
+		if (tokenType != null) {
+			result = tokenType.equals(EncodingParserConstants.StringValue) || tokenType.equals(EncodingParserConstants.UnDelimitedStringValue) || tokenType.equals(EncodingParserConstants.InvalidTerminatedStringValue) || tokenType.equals(EncodingParserConstants.InvalidTermintatedUnDelimitedStringValue);
+		}
+		return result;
 	}
 
 	/**
 	 * Normal XMLDeclaration with default encoding specified (UTF-8)
-	 *  
+	 * 
 	 */
 	public void testBestCase() {
 		String filename = fileLocation + "testNormalCase.xml";
@@ -141,14 +144,13 @@ public class XMLHeadTokenizerTester extends TestCase {
 	 * itself can't read correctly. Returns null in "pure" tokenizer test, but
 	 * encoding detector case should still handle since looks for bytes first.
 	 */
-//	public void testUTF16() {
-//		String filename = fileLocation + "testUTF16.xml";
-//		doTestFile(filename, "UTF16BEInStream");
-//	}
-
+	// public void testUTF16() {
+	// String filename = fileLocation + "testUTF16.xml";
+	// doTestFile(filename, "UTF16BEInStream");
+	// }
 	/**
 	 * Just to make sure we don't choke on empty file.
-	 *  
+	 * 
 	 */
 	public void testEmptyFile() {
 		String filename = fileLocation + "EmptyFile.xml";
@@ -165,7 +167,7 @@ public class XMLHeadTokenizerTester extends TestCase {
 
 	/**
 	 * Extended XML Declaration that contains 'standalone' attribute
-	 *  
+	 * 
 	 */
 	public void testExtraAttrCase() {
 		String filename = fileLocation + "testExtraValidStuff.xml";
@@ -176,7 +178,7 @@ public class XMLHeadTokenizerTester extends TestCase {
 	/**
 	 * A case with a valid encoding, but extra attributes which are not
 	 * valid/meaningful.
-	 *  
+	 * 
 	 */
 	public void testExtraJunkCase() {
 		String filename = fileLocation + "testExtraJunk.xml";
@@ -188,7 +190,7 @@ public class XMLHeadTokenizerTester extends TestCase {
 	 * encoding value. In this case, tokenizer handles as undelimite string,
 	 * but if we ever modifiy to also look for 'version', then would not work
 	 * the same.
-	 *  
+	 * 
 	 */
 	public void testIllFormed() {
 		String filename = fileLocation + "testIllFormed.xml";
@@ -197,7 +199,7 @@ public class XMLHeadTokenizerTester extends TestCase {
 
 	/**
 	 * Missing XMLDecl end tag ... we should be able to safely guess.
-	 *  
+	 * 
 	 */
 	public void testIllFormed2() {
 		String filename = fileLocation + "testIllFormed2.xml";
@@ -207,7 +209,7 @@ public class XMLHeadTokenizerTester extends TestCase {
 	/**
 	 * Missing end quote on UTF-8 attribute, so picks up following attribte
 	 * too.
-	 *  
+	 * 
 	 */
 	public void testIllFormed3() {
 		String filename = fileLocation + "testIllFormed3.xml";
@@ -215,9 +217,9 @@ public class XMLHeadTokenizerTester extends TestCase {
 	}
 
 	/**
-	 * Missing end quote on UTF-8 attribute, but then XMLDeclEnds, so should be
-	 * able to handle
-	 *  
+	 * Missing end quote on UTF-8 attribute, but then XMLDeclEnds, so should
+	 * be able to handle
+	 * 
 	 */
 	public void testIllFormed4() {
 		String filename = fileLocation + "testIllFormed4.xml";
@@ -226,7 +228,7 @@ public class XMLHeadTokenizerTester extends TestCase {
 
 	/**
 	 * Test of missing end quote on encoding value.
-	 *  
+	 * 
 	 */
 	public void testIllformedNormalNonDefault() {
 		String filename = fileLocation + "IllformedNormalNonDefault.xml";
@@ -236,7 +238,7 @@ public class XMLHeadTokenizerTester extends TestCase {
 	/**
 	 * Empty string as encoding value; (And, malformed input, for UTF-8 ...
 	 * should not effect results of this level of test).
-	 *  
+	 * 
 	 */
 	public void testMalformedNoEncoding() {
 		String filename = fileLocation + "MalformedNoEncoding.xml";
@@ -246,7 +248,7 @@ public class XMLHeadTokenizerTester extends TestCase {
 	/**
 	 * Empty string as encoding value; (And, malformed input, for UTF-8 ...
 	 * should not effect results of this level of test).
-	 *  
+	 * 
 	 */
 	public void testMalformedNoEncodingXSL() {
 		String filename = fileLocation + "MalformedNoEncoding.xsl";
@@ -255,7 +257,7 @@ public class XMLHeadTokenizerTester extends TestCase {
 
 	/**
 	 * XMLDeclaration not all on same line
-	 *  
+	 * 
 	 */
 	public void testMultiLineCase() {
 		String filename = fileLocation + "testMultiLine.xml";
@@ -265,7 +267,7 @@ public class XMLHeadTokenizerTester extends TestCase {
 
 	/**
 	 * No encoding in XMLDeclaration
-	 *  
+	 * 
 	 */
 	public void testNoEncoding() {
 		String filename = fileLocation + "NoEncoding.xml";
@@ -274,7 +276,7 @@ public class XMLHeadTokenizerTester extends TestCase {
 
 	/**
 	 * ?Is this a dup?
-	 *  
+	 * 
 	 */
 	public void testNoEncodingCase() {
 		String filename = fileLocation + "testNoEncodingValue.xml";
@@ -283,7 +285,7 @@ public class XMLHeadTokenizerTester extends TestCase {
 
 	/**
 	 * Normal XMLDeclaration with ISO-1 specified
-	 *  
+	 * 
 	 */
 	public void testNormalNonDefault() {
 		String filename = fileLocation + "NormalNonDefault.xml";
@@ -292,7 +294,7 @@ public class XMLHeadTokenizerTester extends TestCase {
 
 	/**
 	 * No XMLDeclaration at all. (Invalid, but should still be able to parse).
-	 *  
+	 * 
 	 */
 	public void testNoXMLDecl() {
 		String filename = fileLocation + "testNoXMLDecl.xml";
@@ -301,7 +303,7 @@ public class XMLHeadTokenizerTester extends TestCase {
 
 	/**
 	 * Hard to handle safely (may appear in comment, for example).
-	 *  
+	 * 
 	 */
 	public void testNoXMLDeclAtFirst() {
 		String filename = fileLocation + "testNoXMLDeclAtFirst.xml";
@@ -311,7 +313,7 @@ public class XMLHeadTokenizerTester extends TestCase {
 	/**
 	 * This test is just to make sure the scanning ends before end of file is
 	 * reached.
-	 *  
+	 * 
 	 */
 	public void testNoXMLDeclInLargeFile() {
 		String filename = fileLocation + "testNoXMLDeclInLargeFile.xml";
@@ -329,28 +331,27 @@ public class XMLHeadTokenizerTester extends TestCase {
 	/**
 	 * Testing as a result of CMVC defect 217720
 	 */
-//	public void testUTF16LEWithJapaneseChars() {
-//		String filename = fileLocation + "utf16UnicodeStreamWithNoEncodingInHeader2.xml";
-//		doTestFile(filename, "UTF16LEInStream");
-//	}
-
+	// public void testUTF16LEWithJapaneseChars() {
+	// String filename = fileLocation +
+	// "utf16UnicodeStreamWithNoEncodingInHeader2.xml";
+	// doTestFile(filename, "UTF16LEInStream");
+	// }
 	/**
 	 * Testing as a result of CMVC defect 217720
 	 */
-//	public void testUTF16BEWithJapaneseChars() {
-//		String filename = fileLocation + "utf16UnicodeStreamWithNoEncodingInHeaderBE.xml";
-//		doTestFile(filename, "UTF16BEInStream");
-//	}
-
+	// public void testUTF16BEWithJapaneseChars() {
+	// String filename = fileLocation +
+	// "utf16UnicodeStreamWithNoEncodingInHeaderBE.xml";
+	// doTestFile(filename, "UTF16BEInStream");
+	// }
 	/**
-	 * A common case. 
-	 *  
+	 * A common case.
+	 * 
 	 */
-//	public void testUTF8With3ByteBOM() {
-//		String filename = fileLocation + "UTF8With3ByteBOM.xml";
-//		doTestFile(filename, "UTF83ByteBOMInStream");
-//	}
-
+	// public void testUTF8With3ByteBOM() {
+	// String filename = fileLocation + "UTF8With3ByteBOM.xml";
+	// doTestFile(filename, "UTF83ByteBOMInStream");
+	// }
 	public void UTF16LEAtStartOfLargeFile() {
 		String filename = fileLocation + "UTF16LEAtStartOfLargeFile.xml";
 		doTestFile(filename, "UTF16LEInStream");

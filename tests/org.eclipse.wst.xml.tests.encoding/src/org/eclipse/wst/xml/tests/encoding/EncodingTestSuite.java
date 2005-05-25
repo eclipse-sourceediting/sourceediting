@@ -10,27 +10,27 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.tests.encoding;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 import org.eclipse.wst.xml.tests.encoding.properties.TestCommonNames;
 import org.eclipse.wst.xml.tests.encoding.properties.TestOverrides;
 import org.eclipse.wst.xml.tests.encoding.read.TestCodedReader;
 import org.eclipse.wst.xml.tests.encoding.read.TestCodedReaderOnGennedFiles;
 import org.eclipse.wst.xml.tests.encoding.read.TestContentDescription;
 import org.eclipse.wst.xml.tests.encoding.read.TestContentTypeDescriptionOnGennedFiles;
-import org.eclipse.wst.xml.tests.encoding.read.TestContentTypeDetection;
+import org.eclipse.wst.xml.tests.encoding.read.TestContentTypeDetectionForXML;
 import org.eclipse.wst.xml.tests.encoding.read.TestContentTypes;
 import org.eclipse.wst.xml.tests.encoding.write.TestCodedWrite;
 import org.eclipse.wst.xml.tests.encoding.xml.XMLEncodingTests;
 import org.eclipse.wst.xml.tests.encoding.xml.XMLHeadTokenizerTester;
 import org.eclipse.wst.xml.tests.encoding.xml.XMLMalformedInputTests;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 
 public class EncodingTestSuite extends TestSuite {
 
 	// FIXME: commented out lang. spec. tests, until all migrated to org.eclipse 
-	private static Class[] classes = new Class[]{TestOverrides.class, TestCodedReader.class, TestCodedWrite.class, XMLEncodingTests.class, XMLHeadTokenizerTester.class, XMLMalformedInputTests.class, TestContentTypeDescriptionOnGennedFiles.class, TestCodedReaderOnGennedFiles.class, TestContentTypeDetection.class, TestContentDescription.class, TestContentTypes.class, TestCommonNames.class};
+	private static Class[] classes = new Class[]{TestOverrides.class, TestCodedReader.class, TestCodedWrite.class, XMLEncodingTests.class, XMLHeadTokenizerTester.class, XMLMalformedInputTests.class, TestContentTypeDescriptionOnGennedFiles.class, TestCodedReaderOnGennedFiles.class, TestContentDescription.class, TestContentTypes.class, TestCommonNames.class, TestContentTypeDetectionForXML.class};
 	//private static Class[] classes = new Class[]{TestOverrides.class, CSSEncodingTester.class, CSSHeadTokenizerTester.class, HTMLEncodingTests.class, HTMLHeadTokenizerTester.class, JSPEncodingTests.class, JSPHeadTokenizerTester.class, TestCodedReader.class, TestCodedWrite.class, XMLEncodingTests.class, XMLHeadTokenizerTester.class, XMLMalformedInputTests.class, TestContentTypeDescriptionOnGennedFiles.class, TestCodedReaderOnGennedFiles.class, TestContentTypeDetection.class, TestContentDescription.class, TestContentTypes.class, TestCommonNames.class};
 	public EncodingTestSuite() {
 		super("Encoding Test Suite");

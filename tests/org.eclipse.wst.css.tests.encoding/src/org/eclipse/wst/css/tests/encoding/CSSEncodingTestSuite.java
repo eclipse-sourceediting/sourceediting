@@ -15,10 +15,11 @@ import junit.framework.TestSuite;
 
 import org.eclipse.wst.css.tests.encoding.css.CSSEncodingTester;
 import org.eclipse.wst.css.tests.encoding.css.CSSHeadTokenizerTester;
+import org.eclipse.wst.css.tests.encoding.css.TestContentTypeDetectionForCSS;
 
 public class CSSEncodingTestSuite extends TestSuite {
 
-	private static Class[] classes = new Class[]{CSSEncodingTester.class, CSSHeadTokenizerTester.class};
+	private static Class[] classes = new Class[]{CSSEncodingTester.class, CSSHeadTokenizerTester.class, TestContentTypeDetectionForCSS.class};
 
 	public static Test suite() {
 		return new CSSEncodingTestSuite();
