@@ -13,10 +13,11 @@ package org.eclipse.wst.css.core.internal.formatter;
 
 
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
-import org.eclipse.wst.css.core.internal.provisional.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.css.core.internal.util.RegionIterator;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -63,71 +64,65 @@ public class MediaRuleFormatter extends AbstractCSSSourceFormatter {
 			}
 			// extract source
 			if (child != null && child.getNodeType() == ICSSNode.MEDIALIST_NODE) { // between
-																					// "@media"
-																					// and
-																					// mediatype
+				// "@media"
+				// and
+				// mediatype
 				for (int i = 0; i < regions.length; i++) {
 					appendSpaceBefore(node, regions[i], source);
 					source.append(decoratedRegion(regions[i], 0, stgy)); // must
-																			// be
-																			// comments
+					// be
+					// comments
 				}
 				appendSpaceBefore(node, toAppend, source);
-			}
-			else if (child != null && (child.getPreviousSibling() == null || child.getPreviousSibling().getNodeType() == ICSSNode.MEDIALIST_NODE)) { // between
-																																						// mediatype
-																																						// and
-																																						// the
-																																						// first
-																																						// style
-																																						// rule
+			} else if (child != null && (child.getPreviousSibling() == null || child.getPreviousSibling().getNodeType() == ICSSNode.MEDIALIST_NODE)) { // between
+				// mediatype
+				// and
+				// the
+				// first
+				// style
+				// rule
 				for (int i = 0; i < regions.length; i++) {
 					appendSpaceBefore(node, regions[i], source);
 					source.append(decoratedRegion(regions[i], 0, stgy)); // must
-																			// be
-																			// comments
+					// be
+					// comments
 				}
 				appendDelimBefore(node, null, source);
-			}
-			else { // between styles
+			} else { // between styles
 				for (int i = 0; i < regions.length; i++) {
 					appendDelimBefore(node, regions[i], source);
 					source.append(decoratedRegion(regions[i], 0, stgy)); // must
-																			// be
-																			// comments
+					// be
+					// comments
 				}
 				appendDelimBefore(node, null, source);
 			}
-		}
-		else { // source generation
+		} else { // source generation
 			if (child == null && prev != null && prev.getNodeType() != ICSSNode.MEDIALIST_NODE) { // after
-																									// the
-																									// last
-																									// style
-																									// rule
+				// the
+				// last
+				// style
+				// rule
 				appendDelimBefore(node.getParentNode(), null, source);
-			}
-			else if (child != null && child.getNodeType() == ICSSNode.MEDIALIST_NODE) { // between
-																						// "@media"
-																						// and
-																						// mediatype
+			} else if (child != null && child.getNodeType() == ICSSNode.MEDIALIST_NODE) { // between
+				// "@media"
+				// and
+				// mediatype
 				appendSpaceBefore(node, toAppend, source);
-			}
-			else if (prev != null && prev.getNodeType() == ICSSNode.MEDIALIST_NODE) { // between
-																						// mediatype
-																						// and
-																						// the
-																						// first
-																						// style
-																						// rule
+			} else if (prev != null && prev.getNodeType() == ICSSNode.MEDIALIST_NODE) { // between
+				// mediatype
+				// and
+				// the
+				// first
+				// style
+				// rule
 				appendSpaceBefore(node, "{", source);//$NON-NLS-1$
 				source.append("{");//$NON-NLS-1$
 				if (child != null)
 					appendDelimBefore(node, null, source);
 				else
 					appendDelimBefore(node.getParentNode(), null, source);
-			}
-			else { // normal case
+			} else { // normal case
 				appendDelimBefore(node, null, source);
 			}
 		}
@@ -144,45 +139,43 @@ public class MediaRuleFormatter extends AbstractCSSSourceFormatter {
 		CompoundRegion[] regions = getRegionsWithoutWhiteSpaces(structuredDocument, region, stgy);
 		CompoundRegion[] outside = getOutsideRegions(structuredDocument, region);
 		if (child != null && child.getNodeType() == ICSSNode.MEDIALIST_NODE) { // between
-																				// "@media"
-																				// and
-																				// mediatype
+			// "@media"
+			// and
+			// mediatype
 			for (int i = 0; i < regions.length; i++) {
 				if (i != 0 || needS(outside[0]))
 					appendSpaceBefore(node, regions[i], source);
 				source.append(decoratedRegion(regions[i], 0, stgy)); // must
-																		// be
-																		// comments
+				// be
+				// comments
 			}
 			if (needS(outside[1]) && ((IndexedRegion) child).getStartOffset() == region.getOffset() + region.getLength()) {
 				appendSpaceBefore(node, toAppend, source);
 			}
-		}
-		else if (child != null && (child.getPreviousSibling() == null || child.getPreviousSibling().getNodeType() == ICSSNode.MEDIALIST_NODE)) { // between
-																																					// mediatype
-																																					// and
-																																					// the
-																																					// first
-																																					// style
-																																					// rule
+		} else if (child != null && (child.getPreviousSibling() == null || child.getPreviousSibling().getNodeType() == ICSSNode.MEDIALIST_NODE)) { // between
+			// mediatype
+			// and
+			// the
+			// first
+			// style
+			// rule
 			for (int i = 0; i < regions.length; i++) {
 				if (i != 0 || needS(outside[0]))
 					appendSpaceBefore(node, regions[i], source);
 				source.append(decoratedRegion(regions[i], 0, stgy)); // must
-																		// be
-																		// comments
+				// be
+				// comments
 			}
 			if (needS(outside[1]) && ((IndexedRegion) child).getStartOffset() == region.getOffset() + region.getLength()) {
 				appendDelimBefore(node, null, source);
 			}
-		}
-		else { // between styles
+		} else { // between styles
 			for (int i = 0; i < regions.length; i++) {
 				if (i != 0 || needS(outside[0]))
 					appendDelimBefore(node, regions[i], source);
 				source.append(decoratedRegion(regions[i], 0, stgy)); // must
-																		// be
-																		// comments
+				// be
+				// comments
 			}
 			if (needS(outside[1]) && ((IndexedRegion) child).getStartOffset() == region.getOffset() + region.getLength()) {
 				appendDelimBefore(node, null, source);
@@ -206,8 +199,7 @@ public class MediaRuleFormatter extends AbstractCSSSourceFormatter {
 					appendDelimBefore(node, regions[i], source);
 					source.append(decoratedRegion(regions[i], 0, stgy));
 				}
-			}
-			else {
+			} else {
 				boolean bInCurlyBrace = false;
 				for (int i = 0; i < regions.length; i++) {
 					if (!bInCurlyBrace)
@@ -219,8 +211,7 @@ public class MediaRuleFormatter extends AbstractCSSSourceFormatter {
 						bInCurlyBrace = true;
 				}
 			}
-		}
-		else { // source generation
+		} else { // source generation
 			String delim = getLineDelimiter(node);
 			if (node.getLastChild() != null && node.getLastChild().getNodeType() == ICSSNode.MEDIALIST_NODE) {
 				appendSpaceBefore(node, "{", source);//$NON-NLS-1$
@@ -255,7 +246,7 @@ public class MediaRuleFormatter extends AbstractCSSSourceFormatter {
 	protected void formatPre(ICSSNode node, StringBuffer source) {
 		int start = ((IndexedRegion) node).getStartOffset();
 		int end = (node.getFirstChild() != null && ((IndexedRegion) node.getFirstChild()).getEndOffset() > 0) ? ((IndexedRegion) node.getFirstChild()).getStartOffset() : getChildInsertPos(node);
-		CSSPreferenceHelper mgr = CSSPreferenceHelper.getInstance();
+
 		if (end > 0) { // source formatting
 			CSSCleanupStrategy stgy = getCleanupStrategy(node);
 
@@ -266,10 +257,9 @@ public class MediaRuleFormatter extends AbstractCSSSourceFormatter {
 					appendSpaceBefore(node, regions[i], source);
 				source.append(decoratedIdentRegion(regions[i], stgy));
 			}
-		}
-		else { // source generation
+		} else { // source generation
 			String str = MEDIA;
-			if (mgr.isIdentUpperCase())
+			if (CSSCorePlugin.getDefault().getPluginPreferences().getInt(CSSCorePreferenceNames.CASE_IDENTIFIER) == CSSCorePreferenceNames.UPPER)
 				str = MEDIA.toUpperCase();
 			source.append(str);
 		}
@@ -306,8 +296,7 @@ public class MediaRuleFormatter extends AbstractCSSSourceFormatter {
 			IStructuredDocumentRegion flatNode = node.getOwnerDocument().getModel().getStructuredDocument().getRegionAtCharacterOffset(n - 1);
 			if (flatNode.getRegionAtCharacterOffset(n - 1).getType() == CSSRegionContexts.CSS_LBRACE)
 				return n - 1;
-			else
-				return n;
+			return n;
 		}
 		return -1;
 	}
@@ -337,9 +326,9 @@ public class MediaRuleFormatter extends AbstractCSSSourceFormatter {
 			return 0;
 
 		if (node.getFirstChild().getNextSibling() == node.getLastChild()) { // inserted
-																			// first
-																			// style
-																			// rule
+			// first
+			// style
+			// rule
 			IStructuredDocumentRegion flatNode = node.getOwnerDocument().getModel().getStructuredDocument().getRegionAtCharacterOffset(insertPos);
 			if (flatNode == null)
 				return 0;
@@ -377,9 +366,9 @@ public class MediaRuleFormatter extends AbstractCSSSourceFormatter {
 			return 0;
 
 		if (node.getFirstChild().getNextSibling() == node.getLastChild()) { // inserted
-																			// first
-																			// style
-																			// rule
+			// first
+			// style
+			// rule
 			int pos = ((IndexedRegion) node.getFirstChild()).getEndOffset();
 			if (pos <= 0)
 				pos = ((IndexedRegion) node).getStartOffset() + 6 /*

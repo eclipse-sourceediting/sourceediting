@@ -17,8 +17,8 @@ import org.eclipse.core.runtime.Preferences;
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupHandler;
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.internal.cleanup.StructuredCleanupPreferences;
-import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.w3c.dom.Node;
 
 
@@ -44,15 +44,13 @@ public class NodeCleanupHandler implements IStructuredCleanupHandler {
 
 			Preferences preferences = getModelPreferences();
 			if (preferences != null) {
-				fCleanupPreferences.setTagNameCase(preferences.getInt(CommonModelPreferenceNames.CLEANUP_TAG_NAME_CASE));
-				fCleanupPreferences.setAttrNameCase(preferences.getInt(CommonModelPreferenceNames.CLEANUP_ATTR_NAME_CASE));
-				fCleanupPreferences.setCompressEmptyElementTags(preferences.getBoolean(CommonModelPreferenceNames.COMPRESS_EMPTY_ELEMENT_TAGS));
-				fCleanupPreferences.setInsertRequiredAttrs(preferences.getBoolean(CommonModelPreferenceNames.INSERT_REQUIRED_ATTRS));
-				fCleanupPreferences.setInsertMissingTags(preferences.getBoolean(CommonModelPreferenceNames.INSERT_MISSING_TAGS));
-				fCleanupPreferences.setQuoteAttrValues(preferences.getBoolean(CommonModelPreferenceNames.QUOTE_ATTR_VALUES));
-				fCleanupPreferences.setFormatSource(preferences.getBoolean(CommonModelPreferenceNames.FORMAT_SOURCE));
-				fCleanupPreferences.setConvertEOLCodes(preferences.getBoolean(CommonModelPreferenceNames.CONVERT_EOL_CODES));
-				fCleanupPreferences.setEOLCode(preferences.getString(CommonModelPreferenceNames.CLEANUP_EOL_CODE));
+				fCleanupPreferences.setCompressEmptyElementTags(preferences.getBoolean(XMLCorePreferenceNames.COMPRESS_EMPTY_ELEMENT_TAGS));
+				fCleanupPreferences.setInsertRequiredAttrs(preferences.getBoolean(XMLCorePreferenceNames.INSERT_REQUIRED_ATTRS));
+				fCleanupPreferences.setInsertMissingTags(preferences.getBoolean(XMLCorePreferenceNames.INSERT_MISSING_TAGS));
+				fCleanupPreferences.setQuoteAttrValues(preferences.getBoolean(XMLCorePreferenceNames.QUOTE_ATTR_VALUES));
+				fCleanupPreferences.setFormatSource(preferences.getBoolean(XMLCorePreferenceNames.FORMAT_SOURCE));
+				fCleanupPreferences.setConvertEOLCodes(preferences.getBoolean(XMLCorePreferenceNames.CONVERT_EOL_CODES));
+				fCleanupPreferences.setEOLCode(preferences.getString(XMLCorePreferenceNames.CLEANUP_EOL_CODE));
 			}
 		}
 

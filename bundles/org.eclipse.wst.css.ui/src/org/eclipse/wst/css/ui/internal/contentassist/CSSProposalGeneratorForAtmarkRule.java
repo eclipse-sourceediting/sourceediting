@@ -14,15 +14,16 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.metamodel.CSSMMNode;
 import org.eclipse.wst.css.core.internal.metamodel.util.CSSMetaModelUtil;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSCharsetRule;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSDocument;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSImportRule;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
-import org.eclipse.wst.css.core.internal.provisional.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.css.core.internal.util.SelectionCollector;
 import org.eclipse.wst.css.ui.internal.image.CSSImageType;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -44,7 +45,7 @@ class CSSProposalGeneratorForAtmarkRule extends CSSProposalGenerator {
 	 */
 	CSSProposalGeneratorForAtmarkRule(CSSContentAssistContext context) {
 		super(context);
-		fUseUpperCase = CSSPreferenceHelper.getInstance().isIdentUpperCase();
+		fUseUpperCase = CSSCorePlugin.getDefault().getPluginPreferences().getInt(CSSCorePreferenceNames.CASE_IDENTIFIER) == CSSCorePreferenceNames.UPPER;
 	}
 
 	/**

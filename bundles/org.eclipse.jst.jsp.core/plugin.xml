@@ -145,4 +145,9 @@
 			content-type="org.eclipse.core.runtime.xml"
 			file-extensions="tld"/>
 	</extension>		 
+	
+	<!-- initialize jsp core preferences -->
+	<extension point="org.eclipse.core.runtime.preferences">
+         <initializer class="org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceInitializer"/>
+	</extension>
 </plugin>

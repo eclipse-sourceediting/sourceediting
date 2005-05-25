@@ -13,12 +13,13 @@ package org.eclipse.wst.css.core.internal.formatter;
 
 
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSAttr;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSPageRule;
-import org.eclipse.wst.css.core.internal.provisional.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.css.core.internal.util.RegionIterator;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -105,7 +106,7 @@ public class PageRuleFormatter extends DeclContainerFormatter {
 
 		int start = ((IndexedRegion) node).getStartOffset();
 		int end = (node.getFirstChild() != null && ((IndexedRegion) node.getFirstChild()).getEndOffset() > 0) ? ((IndexedRegion) node.getFirstChild()).getStartOffset() : getChildInsertPos(node);
-		CSSPreferenceHelper mgr = CSSPreferenceHelper.getInstance();
+
 		if (end > 0) { // format source
 			IStructuredDocument structuredDocument = node.getOwnerDocument().getModel().getStructuredDocument();
 			CompoundRegion[] regions = getRegionsWithoutWhiteSpaces(structuredDocument, new FormatRegion(start, end - start), stgy);
@@ -117,7 +118,7 @@ public class PageRuleFormatter extends DeclContainerFormatter {
 		}
 		else { // generate source
 			String str = PAGE;
-			if (mgr.isIdentUpperCase())
+			if (CSSCorePlugin.getDefault().getPluginPreferences().getInt(CSSCorePreferenceNames.CASE_IDENTIFIER) == CSSCorePreferenceNames.UPPER)
 				str = PAGE.toUpperCase();
 			source.append(str);
 			str = ((ICSSPageRule) node).getSelectorText();

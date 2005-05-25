@@ -17,15 +17,16 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.metamodel.CSSMMNode;
 import org.eclipse.wst.css.core.internal.metamodel.CSSMMSelector;
 import org.eclipse.wst.css.core.internal.metamodel.util.CSSMMTypeCollector;
 import org.eclipse.wst.css.core.internal.parser.CSSRegionUtil;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSPageRule;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleRule;
-import org.eclipse.wst.css.core.internal.provisional.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.css.ui.internal.image.CSSImageType;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
@@ -64,7 +65,7 @@ class CSSProposalGeneratorForPseudoSelector extends CSSProposalGenerator {
 			}
 		}
 
-		boolean useUpperCase = CSSPreferenceHelper.getInstance().isIdentUpperCase();
+		boolean useUpperCase = CSSCorePlugin.getDefault().getPluginPreferences().getInt(CSSCorePreferenceNames.CASE_IDENTIFIER) == CSSCorePreferenceNames.UPPER;
 
 		List tags = getSelectorTags();
 		Collections.sort(tags);

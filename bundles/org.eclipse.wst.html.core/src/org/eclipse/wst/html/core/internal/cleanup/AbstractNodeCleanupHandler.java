@@ -13,10 +13,10 @@ package org.eclipse.wst.html.core.internal.cleanup;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
+import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupHandler;
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupPreferences;
 import org.eclipse.wst.sse.core.internal.cleanup.StructuredCleanupPreferences;
-import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
@@ -40,15 +40,13 @@ abstract class AbstractNodeCleanupHandler implements IStructuredCleanupHandler {
 	
 			Preferences preferences = getModelPreferences();
 			if (preferences != null) {
-				fCleanupPreferences.setTagNameCase(preferences.getInt(CommonModelPreferenceNames.CLEANUP_TAG_NAME_CASE));
-				fCleanupPreferences.setAttrNameCase(preferences.getInt(CommonModelPreferenceNames.CLEANUP_ATTR_NAME_CASE));
-				fCleanupPreferences.setCompressEmptyElementTags(preferences.getBoolean(CommonModelPreferenceNames.COMPRESS_EMPTY_ELEMENT_TAGS));
-				fCleanupPreferences.setInsertRequiredAttrs(preferences.getBoolean(CommonModelPreferenceNames.INSERT_REQUIRED_ATTRS));
-				fCleanupPreferences.setInsertMissingTags(preferences.getBoolean(CommonModelPreferenceNames.INSERT_MISSING_TAGS));
-				fCleanupPreferences.setQuoteAttrValues(preferences.getBoolean(CommonModelPreferenceNames.QUOTE_ATTR_VALUES));
-				fCleanupPreferences.setFormatSource(preferences.getBoolean(CommonModelPreferenceNames.FORMAT_SOURCE));
-				fCleanupPreferences.setConvertEOLCodes(preferences.getBoolean(CommonModelPreferenceNames.CONVERT_EOL_CODES));
-				fCleanupPreferences.setEOLCode(preferences.getString(CommonModelPreferenceNames.CLEANUP_EOL_CODE));
+				fCleanupPreferences.setCompressEmptyElementTags(preferences.getBoolean(HTMLCorePreferenceNames.COMPRESS_EMPTY_ELEMENT_TAGS));
+				fCleanupPreferences.setInsertRequiredAttrs(preferences.getBoolean(HTMLCorePreferenceNames.INSERT_REQUIRED_ATTRS));
+				fCleanupPreferences.setInsertMissingTags(preferences.getBoolean(HTMLCorePreferenceNames.INSERT_MISSING_TAGS));
+				fCleanupPreferences.setQuoteAttrValues(preferences.getBoolean(HTMLCorePreferenceNames.QUOTE_ATTR_VALUES));
+				fCleanupPreferences.setFormatSource(preferences.getBoolean(HTMLCorePreferenceNames.FORMAT_SOURCE));
+				fCleanupPreferences.setConvertEOLCodes(preferences.getBoolean(HTMLCorePreferenceNames.CONVERT_EOL_CODES));
+				fCleanupPreferences.setEOLCode(preferences.getString(HTMLCorePreferenceNames.CLEANUP_EOL_CODE));
 			}
 		}
 

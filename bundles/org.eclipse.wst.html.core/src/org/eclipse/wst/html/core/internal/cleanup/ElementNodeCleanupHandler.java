@@ -24,8 +24,8 @@ import org.eclipse.wst.css.core.internal.format.CSSSourceFormatter;
 import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleDeclarationAdapter;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
+import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupHandler;
-import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
@@ -133,7 +133,7 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 		if (element.isCommentTag())
 			return; // do nothing
 
-		int attrNameCase = CommonModelPreferenceNames.ASIS;
+		int attrNameCase = HTMLCorePreferenceNames.ASIS;
 
 		if (shouldIgnoreCase(element))
 			attrNameCase = getCleanupPreferences().getAttrNameCase();
@@ -150,9 +150,9 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 			//          English locale should be used to convert between uppercase and lowercase
 			//          (otherwise "link" would be converted to "LÝNK" in Turkish, where '?' in "LÝNK"
 			//          is the "I Overdot Capital" in Turkish).
-			if (attrNameCase == CommonModelPreferenceNames.LOWER)
+			if (attrNameCase == HTMLCorePreferenceNames.LOWER)
 				newAttrName = oldAttrName.toLowerCase(Locale.US);
-			else if (attrNameCase == CommonModelPreferenceNames.UPPER)
+			else if (attrNameCase == HTMLCorePreferenceNames.UPPER)
 				newAttrName = oldAttrName.toUpperCase(Locale.US);
 
 			if (newAttrName.compareTo(oldAttrName) != 0) {
@@ -171,7 +171,7 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 		if (element.isCommentTag())
 			return node; // do nothing
 
-		int tagNameCase = CommonModelPreferenceNames.ASIS;
+		int tagNameCase = HTMLCorePreferenceNames.ASIS;
 
 		if (shouldIgnoreCase(element))
 			tagNameCase = getCleanupPreferences().getTagNameCase();
@@ -185,9 +185,9 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 		//          English locale should be used to convert between uppercase and lowercase
 		//          (otherwise "link" would be converted to "LÝNK" in Turkish, where '?' in "LÝNK"
 		//          is the "I Overdot Capital" in Turkish).
-		if (tagNameCase == CommonModelPreferenceNames.LOWER)
+		if (tagNameCase == HTMLCorePreferenceNames.LOWER)
 			newTagName = oldTagName.toLowerCase(Locale.US);
-		else if (tagNameCase == CommonModelPreferenceNames.UPPER)
+		else if (tagNameCase == HTMLCorePreferenceNames.UPPER)
 			newTagName = oldTagName.toUpperCase(Locale.US);
 
 		IDOMModel structuredModel = node.getModel();

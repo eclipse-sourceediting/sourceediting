@@ -13,8 +13,8 @@ package org.eclipse.wst.html.ui.internal.contentassist;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLElementDeclaration;
+import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.html.core.internal.provisional.HTMLCMProperties;
-import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentModelGenerator;
@@ -36,8 +36,8 @@ public class HTMLMinimalContentModelGenerator extends XMLContentModelGenerator {
 	private void init() {
 		//IPreferenceStore prefs = CommonPreferencesPlugin.getDefault().getPreferenceStore(ContentType.ContentTypeID_HTML);
 		Preferences prefs = HTMLCorePlugin.getDefault().getPluginPreferences();
-		fTagCase = prefs.getInt(CommonModelPreferenceNames.TAG_NAME_CASE);
-		fAttrCase = prefs.getInt(CommonModelPreferenceNames.ATTR_NAME_CASE);
+		fTagCase = prefs.getInt(HTMLCorePreferenceNames.TAG_NAME_CASE);
+		fAttrCase = prefs.getInt(HTMLCorePreferenceNames.ATTR_NAME_CASE);
 	}
 
 	protected void generateEndTag(String tagName, Node parentNode, CMElementDeclaration elementDecl, StringBuffer buffer) {
@@ -78,12 +78,12 @@ public class HTMLMinimalContentModelGenerator extends XMLContentModelGenerator {
 			else if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION)
 				caseVal = fAttrCase;
 			switch (caseVal) {
-				case CommonModelPreferenceNames.LOWER :
+				case HTMLCorePreferenceNames.LOWER :
 					{
 						name = name.toLowerCase();
 					}
 					break;
-				case CommonModelPreferenceNames.UPPER :
+				case HTMLCorePreferenceNames.UPPER :
 					{
 						name = name.toUpperCase();
 					}

@@ -19,8 +19,8 @@ import java.io.UnsupportedEncodingException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.html.core.internal.cleanup.HTMLCleanupProcessorImpl;
+import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupPreferences;
-import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
@@ -68,12 +68,12 @@ public class HTMLConverter {
 		pref.setQuoteAttrValues(true);
 		pref.setFormatSource(false);
 		if (model.getDocument().isXMLType()) { // XHTML
-			pref.setTagNameCase(CommonModelPreferenceNames.LOWER);
-			pref.setAttrNameCase(CommonModelPreferenceNames.LOWER);
+			pref.setTagNameCase(HTMLCorePreferenceNames.LOWER);
+			pref.setAttrNameCase(HTMLCorePreferenceNames.LOWER);
 		}
 		else {
-			pref.setTagNameCase(CommonModelPreferenceNames.ASIS);
-			pref.setAttrNameCase(CommonModelPreferenceNames.ASIS);
+			pref.setTagNameCase(HTMLCorePreferenceNames.ASIS);
+			pref.setAttrNameCase(HTMLCorePreferenceNames.ASIS);
 		}
 
 		processor.cleanupModel(model);

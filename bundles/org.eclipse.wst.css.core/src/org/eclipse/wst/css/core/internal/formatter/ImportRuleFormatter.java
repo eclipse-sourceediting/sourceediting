@@ -12,13 +12,15 @@ package org.eclipse.wst.css.core.internal.formatter;
 
 
 
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSAttr;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSImportRule;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
-import org.eclipse.wst.css.core.internal.provisional.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.css.core.internal.util.CSSUtil;
 import org.eclipse.wst.css.core.internal.util.RegionIterator;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
@@ -67,8 +69,7 @@ public class ImportRuleFormatter extends AbstractCSSSourceFormatter {
 					else
 						context.start = it.getStructuredDocumentRegion().getStartOffset(region);
 					it.next();
-				}
-				else
+				} else
 					context.start = it.getStructuredDocumentRegion().getStartOffset(region);
 				it.next();
 				it.next();
@@ -78,27 +79,23 @@ public class ImportRuleFormatter extends AbstractCSSSourceFormatter {
 						context.end = it.getStructuredDocumentRegion().getEndOffset(next);
 					else
 						context.end = it.getStructuredDocumentRegion().getEndOffset(region);
-				}
-				else
+				} else
 					context.end = it.getStructuredDocumentRegion().getEndOffset(region);
-			}
-			else {
+			} else {
 				ICSSNode child = node.getFirstChild();
 				IStructuredDocumentRegion flatNode = null;
 				ITextRegion region = null;
 				if (child == null) {
 					flatNode = node.getOwnerDocument().getModel().getStructuredDocument().getRegionAtCharacterOffset(((IndexedRegion) node).getEndOffset() - 1);
 					region = flatNode.getRegionAtCharacterOffset(((IndexedRegion) node).getEndOffset() - 1);
-				}
-				else {
+				} else {
 					flatNode = node.getOwnerDocument().getModel().getStructuredDocument().getRegionAtCharacterOffset(((IndexedRegion) child).getStartOffset() - 1);
 					region = flatNode.getRegionAtCharacterOffset(((IndexedRegion) child).getStartOffset() - 1);
 				}
 				if (region.getType() == CSSRegionContexts.CSS_S) {
 					context.start = flatNode.getStartOffset(region);
 					context.end = flatNode.getEndOffset(region);
-				}
-				else {
+				} else {
 					context.start = flatNode.getEndOffset();
 					context.end = flatNode.getEndOffset();
 				}
@@ -139,17 +136,15 @@ public class ImportRuleFormatter extends AbstractCSSSourceFormatter {
 			for (int i = 0; i < regions.length; i++) {
 				appendSpaceBefore(node, regions[i], source);
 				source.append(decoratedRegion(regions[i], 0, stgy)); // must
-																		// be
-																		// comments
+				// be
+				// comments
 			}
 			appendSpaceBefore(node, toAppend, source);
-		}
-		else if (prev != null && child != null) { // generate source : ????
+		} else if (prev != null && child != null) { // generate source : ????
 			source.append(",");//$NON-NLS-1$
 			appendSpaceBefore(node, toAppend, source);
-		}
-		else if (child != null) { // generate source : between 'url()' and
-									// media types
+		} else if (child != null) { // generate source : between 'url()' and
+			// media types
 			appendSpaceBefore(node, toAppend, source);
 		}
 	}
@@ -167,7 +162,7 @@ public class ImportRuleFormatter extends AbstractCSSSourceFormatter {
 			if (i != 0 || needS(outside[0]))
 				appendSpaceBefore(node, regions[i], source);
 			source.append(decoratedRegion(regions[i], 0, stgy)); // must be
-																	// comments
+			// comments
 		}
 		if (needS(outside[1])) {
 			if (((IndexedRegion) child).getStartOffset() == region.getOffset() + region.getLength())
@@ -192,6 +187,8 @@ public class ImportRuleFormatter extends AbstractCSSSourceFormatter {
 				appendDelimBefore(node, regions[i], source);
 				source.append(decoratedRegion(regions[i], 0, stgy));
 			}
+		} else {
+			source.append(";"); //$NON-NLS-1$
 		}
 	}
 
@@ -205,7 +202,7 @@ public class ImportRuleFormatter extends AbstractCSSSourceFormatter {
 		CompoundRegion[] regions = getRegionsWithoutWhiteSpaces(structuredDocument, region, stgy);
 		CompoundRegion[] outside = getOutsideRegions(structuredDocument, region);
 		for (int i = 0; i < regions.length; i++) {
-			if (i != 0 || needS(outside[0]))
+			if ((i != 0 || needS(outside[0])) && !regions[i].getType().equals(CSSRegionContexts.CSS_DELIMITER))
 				appendDelimBefore(node, regions[i], source);
 			source.append(decoratedRegion(regions[i], 0, stgy));
 		}
@@ -217,7 +214,7 @@ public class ImportRuleFormatter extends AbstractCSSSourceFormatter {
 	protected void formatPre(ICSSNode node, StringBuffer source) {
 		int start = ((IndexedRegion) node).getStartOffset();
 		int end = (node.getFirstChild() != null && ((IndexedRegion) node.getFirstChild()).getEndOffset() > 0) ? ((IndexedRegion) node.getFirstChild()).getStartOffset() : getChildInsertPos(node);
-		CSSPreferenceHelper mgr = CSSPreferenceHelper.getInstance();
+
 		if (end > 0) { // format source
 			CSSCleanupStrategy stgy = getCleanupStrategy(node);
 
@@ -233,15 +230,16 @@ public class ImportRuleFormatter extends AbstractCSSSourceFormatter {
 					appendSpaceBefore(node, regions[i], source);
 				source.append(str);
 			}
-		}
-		else { // generate source
+		} else { // generate source
+			Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
+
 			String str = IMPORT;
-			if (mgr.isIdentUpperCase())
+			if (preferences.getInt(CSSCorePreferenceNames.CASE_IDENTIFIER) == CSSCorePreferenceNames.UPPER)
 				str = IMPORT.toUpperCase();
-			String quote = mgr.getQuoteString(node.getOwnerDocument().getModel());
+			String quote = preferences.getString(CSSCorePreferenceNames.FORMAT_QUOTE);
 			source.append(str);
 			str = "url(";//$NON-NLS-1$
-			if (mgr.isPropValueUpperCase())
+			if (preferences.getInt(CSSCorePreferenceNames.CASE_PROPERTY_VALUE) == CSSCorePreferenceNames.UPPER)
 				str = str.toUpperCase();
 			String href = ((ICSSImportRule) node).getHref();
 			quote = CSSUtil.detectQuote(href, quote);
@@ -291,32 +289,29 @@ public class ImportRuleFormatter extends AbstractCSSSourceFormatter {
 		ICSSAttr attr = (ICSSAttr) node.getAttributes().getNamedItem(ICSSImportRule.HREF);
 		if (attr != null && ((IndexedRegion) attr).getEndOffset() > 0)
 			return ((IndexedRegion) attr).getStartOffset();
-		else {
-			IndexedRegion iNode = (IndexedRegion) node;
-			if (iNode.getEndOffset() <= 0)
-				return -1;
+		IndexedRegion iNode = (IndexedRegion) node;
+		if (iNode.getEndOffset() <= 0)
+			return -1;
 
-			FormatRegion formatRegion = null;
-			ICSSNode child = node.getFirstChild();
-			if (child != null && ((IndexedRegion) child).getEndOffset() > 0)
-				formatRegion = new FormatRegion(iNode.getStartOffset(), ((IndexedRegion) child).getStartOffset() - iNode.getStartOffset());
-			else
-				formatRegion = new FormatRegion(iNode.getStartOffset(), iNode.getEndOffset() - iNode.getStartOffset());
-			CompoundRegion regions[] = getRegionsWithoutWhiteSpaces(node.getOwnerDocument().getModel().getStructuredDocument(), formatRegion, getCleanupStrategy(node));
+		FormatRegion formatRegion = null;
+		ICSSNode child = node.getFirstChild();
+		if (child != null && ((IndexedRegion) child).getEndOffset() > 0)
+			formatRegion = new FormatRegion(iNode.getStartOffset(), ((IndexedRegion) child).getStartOffset() - iNode.getStartOffset());
+		else
+			formatRegion = new FormatRegion(iNode.getStartOffset(), iNode.getEndOffset() - iNode.getStartOffset());
+		CompoundRegion regions[] = getRegionsWithoutWhiteSpaces(node.getOwnerDocument().getModel().getStructuredDocument(), formatRegion, getCleanupStrategy(node));
 
-			boolean atrule = false;
-			for (int i = 0; i < regions.length; i++) {
-				if (regions[i].getType() == CSSRegionContexts.CSS_IMPORT) {
-					atrule = true;
-					continue;
-				}
-				else if (!atrule)
-					continue;
-				if (regions[i].getType() != CSSRegionContexts.CSS_COMMENT)
-					return regions[i].getStartOffset();
-			}
-			return (child != null && ((IndexedRegion) child).getEndOffset() > 0) ? ((IndexedRegion) child).getStartOffset() : iNode.getEndOffset();
+		boolean atrule = false;
+		for (int i = 0; i < regions.length; i++) {
+			if (regions[i].getType() == CSSRegionContexts.CSS_IMPORT) {
+				atrule = true;
+				continue;
+			} else if (!atrule)
+				continue;
+			if (regions[i].getType() != CSSRegionContexts.CSS_COMMENT)
+				return regions[i].getStartOffset();
 		}
+		return (child != null && ((IndexedRegion) child).getEndOffset() > 0) ? ((IndexedRegion) child).getStartOffset() : iNode.getEndOffset();
 	}
 
 	/**
@@ -328,8 +323,7 @@ public class ImportRuleFormatter extends AbstractCSSSourceFormatter {
 			IStructuredDocumentRegion flatNode = node.getOwnerDocument().getModel().getStructuredDocument().getRegionAtCharacterOffset(n - 1);
 			if (flatNode.getRegionAtCharacterOffset(n - 1).getType() == CSSRegionContexts.CSS_DELIMITER)
 				return n - 1;
-			else
-				return n;
+			return n;
 		}
 		return -1;
 	}

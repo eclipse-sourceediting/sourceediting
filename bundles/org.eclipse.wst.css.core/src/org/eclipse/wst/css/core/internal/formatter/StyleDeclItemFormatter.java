@@ -12,14 +12,16 @@ package org.eclipse.wst.css.core.internal.formatter;
 
 
 
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSAttr;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSPrimitiveValue;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
-import org.eclipse.wst.css.core.internal.provisional.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.css.core.internal.util.RegionIterator;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -45,16 +47,16 @@ public class StyleDeclItemFormatter extends DefaultCSSSourceFormatter {
 	 * 
 	 */
 	private void appendAfterColonSpace(ICSSNode node, StringBuffer source) {
-		CSSPreferenceHelper mgr = CSSPreferenceHelper.getInstance();
-		int n = mgr.getSpacesPostDelimiter();
+		Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
+		int n = preferences.getInt(CSSCorePreferenceNames.FORMAT_PROP_POST_DELIM);
 
-		if (mgr.getMaxLineWidth() > 0 && (!mgr.isProhibitWrapOnAttr() || node.getOwnerDocument().getNodeType() != ICSSNode.STYLEDECLARATION_NODE)) {
+		if (preferences.getInt(CSSCorePreferenceNames.LINE_WIDTH) > 0 && (!preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR) || node.getOwnerDocument().getNodeType() != ICSSNode.STYLEDECLARATION_NODE)) {
 			int length = getLastLineLength(node, source);
 			int append = getFirstChildRegionLength(node);
-			if (length + n + append > mgr.getMaxLineWidth()) {
+			if (length + n + append > preferences.getInt(CSSCorePreferenceNames.LINE_WIDTH)) {
 				source.append(getLineDelimiter(node));
 				source.append(getIndent(node));
-				source.append(mgr.getIndentString());
+				source.append(getIndentString());
 				n = 0; // no space is necessary
 			}
 		}
@@ -104,19 +106,16 @@ public class StyleDeclItemFormatter extends DefaultCSSSourceFormatter {
 						context.start = it.getStructuredDocumentRegion().getStartOffset(prev);
 					else
 						context.start = it.getStructuredDocumentRegion().getStartOffset(region);
-				}
-				else
+				} else
 					context.start = it.getStructuredDocumentRegion().getStartOffset(region);
 				context.end = it.getStructuredDocumentRegion().getEndOffset(region);
-			}
-			else {
+			} else {
 				IStructuredDocumentRegion flatNode = node.getOwnerDocument().getModel().getStructuredDocument().getRegionAtCharacterOffset(((IndexedRegion) node).getEndOffset() - 1);
 				ITextRegion region = flatNode.getRegionAtCharacterOffset(((IndexedRegion) node).getEndOffset() - 1);
 				if (region.getType() == CSSRegionContexts.CSS_S) {
 					context.start = flatNode.getStartOffset(region);
 					context.end = flatNode.getEndOffset(region);
-				}
-				else {
+				} else {
 					context.start = flatNode.getEndOffset();
 					context.end = flatNode.getEndOffset();
 				}
@@ -152,8 +151,8 @@ public class StyleDeclItemFormatter extends DefaultCSSSourceFormatter {
 			for (int i = 0; i < regions.length; i++) {
 				appendSpaceBefore(node, regions[i], source);
 				source.append(decoratedRegion(regions[i], 2, stgy)); // must
-																		// be
-																		// comments
+				// be
+				// comments
 			}
 		}
 		if (child != null && child instanceof ICSSPrimitiveValue) {
@@ -179,7 +178,7 @@ public class StyleDeclItemFormatter extends DefaultCSSSourceFormatter {
 			if (i != 0 || needS(outside[0]))
 				appendSpaceBefore(node, regions[i], source);
 			source.append(decoratedRegion(regions[i], 2, stgy)); // must be
-																	// comments
+			// comments
 		}
 		if (needS(outside[1])) {
 			if (((IndexedRegion) child).getStartOffset() == region.getOffset() + region.getLength()) {
@@ -204,18 +203,10 @@ public class StyleDeclItemFormatter extends DefaultCSSSourceFormatter {
 				appendSpaceBefore(node, regions[i], source);
 				source.append(decoratedIdentRegion(regions[i], stgy));
 			}
-		}
-		else { // generate source
+		} else { // generate source
 			// append "!important"
 			String priority = ((ICSSStyleDeclItem) node).getPriority();
 			if (priority != null && priority.length() > 0) {
-				CSSPreferenceHelper mgr = CSSPreferenceHelper.getInstance();
-				if (!mgr.isPreserveCase()) {
-					if (mgr.isIdentUpperCase())
-						priority = priority.toUpperCase();
-					else
-						priority = priority.toLowerCase();
-				}
 				appendSpaceBefore(node, priority, source);
 				source.append(priority);
 			}
@@ -244,7 +235,7 @@ public class StyleDeclItemFormatter extends DefaultCSSSourceFormatter {
 	protected void formatPre(ICSSNode node, StringBuffer source) {
 		int start = ((IndexedRegion) node).getStartOffset();
 		int end = (node.getFirstChild() != null && ((IndexedRegion) node.getFirstChild()).getEndOffset() > 0) ? ((IndexedRegion) node.getFirstChild()).getStartOffset() : getChildInsertPos(node);
-		CSSPreferenceHelper mgr = CSSPreferenceHelper.getInstance();
+		Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
 		if (end > 0) { // format source
 			CSSCleanupStrategy stgy = getCleanupStrategy(node);
 
@@ -255,22 +246,21 @@ public class StyleDeclItemFormatter extends DefaultCSSSourceFormatter {
 					appendSpaceBefore(node, regions[i], source);
 				source.append(decoratedPropNameRegion(regions[i], stgy));
 			}
-		}
-		else { // generatoe source
+		} else { // generatoe source
 			ICSSStyleDeclItem item = (ICSSStyleDeclItem) node;
-			if (mgr.isPropNameUpperCase())
+			if (preferences.getInt(CSSCorePreferenceNames.CASE_PROPERTY_NAME) == CSSCorePreferenceNames.UPPER)
 				source.append(item.getPropertyName().toUpperCase());
 			else
 				source.append(item.getPropertyName());
 
-			int k = mgr.getSpacesPreDelimiter();
-			if (mgr.getMaxLineWidth() > 0 && (!mgr.isProhibitWrapOnAttr() || node.getOwnerDocument().getNodeType() != ICSSNode.STYLEDECLARATION_NODE)) {
+			int k = preferences.getInt(CSSCorePreferenceNames.FORMAT_PROP_PRE_DELIM);
+			if (preferences.getInt(CSSCorePreferenceNames.LINE_WIDTH) > 0 && (!preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR) || node.getOwnerDocument().getNodeType() != ICSSNode.STYLEDECLARATION_NODE)) {
 				int length = getLastLineLength(node, source);
 				int append = 1;
-				if (length + k + append > mgr.getMaxLineWidth()) {
+				if (length + k + append > preferences.getInt(CSSCorePreferenceNames.LINE_WIDTH)) {
 					source.append(getLineDelimiter(node));
 					source.append(getIndent(node));
-					source.append(mgr.getIndentString());
+					source.append(getIndentString());
 					k = 0; // no space is necessary
 				}
 			}
@@ -301,8 +291,7 @@ public class StyleDeclItemFormatter extends DefaultCSSSourceFormatter {
 		if (needS(outside[1])) {
 			if (isIncludesPreEnd(node, region) && (!isCleanup() || getCleanupStrategy(node).isFormatSource())) {
 				appendAfterColonSpace(node, source);
-			}
-			else
+			} else
 				appendSpaceBefore(node, outside[1], source);
 		}
 	}
@@ -330,18 +319,16 @@ public class StyleDeclItemFormatter extends DefaultCSSSourceFormatter {
 		ICSSAttr attr = (ICSSAttr) node.getAttributes().getNamedItem(ICSSStyleDeclItem.IMPORTANT);
 		if (attr != null && ((IndexedRegion) attr).getEndOffset() > 0)
 			return ((IndexedRegion) attr).getStartOffset();
-		else {
-			IndexedRegion iNode = (IndexedRegion) node;
-			if (iNode.getEndOffset() <= 0)
-				return -1;
+		IndexedRegion iNode = (IndexedRegion) node;
+		if (iNode.getEndOffset() <= 0)
+			return -1;
 
-			CompoundRegion regions[] = getRegionsWithoutWhiteSpaces(node.getOwnerDocument().getModel().getStructuredDocument(), new FormatRegion(iNode.getStartOffset(), iNode.getEndOffset() - iNode.getStartOffset()), getCleanupStrategy(node));
-			for (int i = regions.length - 1; i >= 0; i--) {
-				if (regions[i].getType() == CSSRegionContexts.CSS_DECLARATION_VALUE_IMPORTANT)
-					return regions[i].getStartOffset();
-			}
-			return iNode.getEndOffset();
+		CompoundRegion regions[] = getRegionsWithoutWhiteSpaces(node.getOwnerDocument().getModel().getStructuredDocument(), new FormatRegion(iNode.getStartOffset(), iNode.getEndOffset() - iNode.getStartOffset()), getCleanupStrategy(node));
+		for (int i = regions.length - 1; i >= 0; i--) {
+			if (regions[i].getType() == CSSRegionContexts.CSS_DECLARATION_VALUE_IMPORTANT)
+				return regions[i].getStartOffset();
 		}
+		return iNode.getEndOffset();
 	}
 
 	/**
@@ -379,8 +366,7 @@ public class StyleDeclItemFormatter extends DefaultCSSSourceFormatter {
 
 			return n;
 		}
-		else
-			return -1;
+		return -1;
 	}
 
 	/**
@@ -390,5 +376,24 @@ public class StyleDeclItemFormatter extends DefaultCSSSourceFormatter {
 		if (instance == null)
 			instance = new StyleDeclItemFormatter();
 		return instance;
+	}
+
+	private String getIndentString() {
+		String indent = ""; //$NON-NLS-1$
+
+		Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
+		if (preferences != null) {
+			String indentChar = " "; //$NON-NLS-1$
+			String indentCharPref = preferences.getString(CSSCorePreferenceNames.INDENTATION_CHAR);
+			if (CSSCorePreferenceNames.TAB.equals(indentCharPref)) {
+				indentChar = "\t"; //$NON-NLS-1$
+			}
+			int indentationWidth = preferences.getInt(CSSCorePreferenceNames.INDENTATION_SIZE);
+
+			for (int i = 0; i < indentationWidth; i++) {
+				indent += indentChar;
+			}
+		}
+		return indent;
 	}
 }

@@ -12,8 +12,7 @@ package org.eclipse.wst.css.core.internal.cleanup;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.wst.css.core.internal.CSSCorePlugin;
-import org.eclipse.wst.css.core.internal.provisional.preferences.CSSModelPreferenceNames;
-import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 
 
 
@@ -83,12 +82,12 @@ public class CSSCleanupStrategyImpl implements CSSCleanupStrategy {
 	 */
 	private void initialize() {
 		Preferences prefs = CSSCorePlugin.getDefault().getPluginPreferences();
-		fIdentCase = getCleanupCaseValue(prefs.getInt(CSSModelPreferenceNames.CLEANUP_CASE_IDENTIFIER));
-		fPropNameCase = getCleanupCaseValue(prefs.getInt(CSSModelPreferenceNames.CLEANUP_CASE_PROPERTY_NAME));
-		fPropValueCase = getCleanupCaseValue(prefs.getInt(CSSModelPreferenceNames.CLEANUP_CASE_PROPERTY_VALUE));
-		fSelectorTagCase = getCleanupCaseValue(prefs.getInt(CSSModelPreferenceNames.CLEANUP_CASE_SELECTOR));
-		fQuoteValues = prefs.getBoolean(CommonModelPreferenceNames.QUOTE_ATTR_VALUES);
-		fFormatSource = prefs.getBoolean(CommonModelPreferenceNames.FORMAT_SOURCE);
+		fIdentCase = getCleanupCaseValue(prefs.getInt(CSSCorePreferenceNames.CLEANUP_CASE_IDENTIFIER));
+		fPropNameCase = getCleanupCaseValue(prefs.getInt(CSSCorePreferenceNames.CLEANUP_CASE_PROPERTY_NAME));
+		fPropValueCase = getCleanupCaseValue(prefs.getInt(CSSCorePreferenceNames.CLEANUP_CASE_PROPERTY_VALUE));
+		fSelectorTagCase = getCleanupCaseValue(prefs.getInt(CSSCorePreferenceNames.CLEANUP_CASE_SELECTOR));
+		fQuoteValues = prefs.getBoolean(CSSCorePreferenceNames.QUOTE_ATTR_VALUES);
+		fFormatSource = prefs.getBoolean(CSSCorePreferenceNames.FORMAT_SOURCE);
 	}
 
 	/**
@@ -100,9 +99,9 @@ public class CSSCleanupStrategyImpl implements CSSCleanupStrategy {
 	 */
 	private short getCleanupCaseValue(int value) {
 		switch (value) {
-			case CommonModelPreferenceNames.LOWER :
+			case CSSCorePreferenceNames.LOWER :
 				return LOWER;
-			case CommonModelPreferenceNames.UPPER :
+			case CSSCorePreferenceNames.UPPER :
 				return UPPER;
 		}
 		return ASIS;
@@ -180,12 +179,12 @@ public class CSSCleanupStrategyImpl implements CSSCleanupStrategy {
 
 	// TODO: a saveOptions should be added to CSSCleanupStrategy interface
 	public void saveOptions() {
-		CSSCorePlugin.getDefault().getPluginPreferences().setValue(CSSModelPreferenceNames.CLEANUP_CASE_IDENTIFIER, fIdentCase);
-		CSSCorePlugin.getDefault().getPluginPreferences().setValue(CSSModelPreferenceNames.CLEANUP_CASE_PROPERTY_NAME, fPropNameCase);
-		CSSCorePlugin.getDefault().getPluginPreferences().setValue(CSSModelPreferenceNames.CLEANUP_CASE_PROPERTY_VALUE, fPropValueCase);
-		CSSCorePlugin.getDefault().getPluginPreferences().setValue(CSSModelPreferenceNames.CLEANUP_CASE_SELECTOR, fSelectorTagCase);
-		CSSCorePlugin.getDefault().getPluginPreferences().setValue(CommonModelPreferenceNames.QUOTE_ATTR_VALUES, fQuoteValues);
-		CSSCorePlugin.getDefault().getPluginPreferences().setValue(CommonModelPreferenceNames.FORMAT_SOURCE, fFormatSource);
+		CSSCorePlugin.getDefault().getPluginPreferences().setValue(CSSCorePreferenceNames.CLEANUP_CASE_IDENTIFIER, fIdentCase);
+		CSSCorePlugin.getDefault().getPluginPreferences().setValue(CSSCorePreferenceNames.CLEANUP_CASE_PROPERTY_NAME, fPropNameCase);
+		CSSCorePlugin.getDefault().getPluginPreferences().setValue(CSSCorePreferenceNames.CLEANUP_CASE_PROPERTY_VALUE, fPropValueCase);
+		CSSCorePlugin.getDefault().getPluginPreferences().setValue(CSSCorePreferenceNames.CLEANUP_CASE_SELECTOR, fSelectorTagCase);
+		CSSCorePlugin.getDefault().getPluginPreferences().setValue(CSSCorePreferenceNames.QUOTE_ATTR_VALUES, fQuoteValues);
+		CSSCorePlugin.getDefault().getPluginPreferences().setValue(CSSCorePreferenceNames.FORMAT_SOURCE, fFormatSource);
 		CSSCorePlugin.getDefault().savePluginPreferences();
 	}
 }

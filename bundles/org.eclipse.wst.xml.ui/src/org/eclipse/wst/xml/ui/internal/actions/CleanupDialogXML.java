@@ -24,9 +24,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
-import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.editor.IHelpContextIds;
 
@@ -137,13 +137,13 @@ public class CleanupDialogXML extends Dialog implements SelectionListener {
 
 	protected void initializeOptions() {
 
-		fCheckBoxCompressEmptyElementTags.setSelection(getModelPreferences().getBoolean(CommonModelPreferenceNames.COMPRESS_EMPTY_ELEMENT_TAGS));
-		fCheckBoxInsertRequiredAttrs.setSelection(getModelPreferences().getBoolean(CommonModelPreferenceNames.INSERT_REQUIRED_ATTRS));
-		fCheckBoxInsertMissingTags.setSelection(getModelPreferences().getBoolean(CommonModelPreferenceNames.INSERT_MISSING_TAGS));
-		fCheckBoxQuoteAttrValues.setSelection(getModelPreferences().getBoolean(CommonModelPreferenceNames.QUOTE_ATTR_VALUES));
-		fCheckBoxFormatSource.setSelection(getModelPreferences().getBoolean(CommonModelPreferenceNames.FORMAT_SOURCE));
-		fCheckBoxConvertEOLCodes.setSelection(getModelPreferences().getBoolean(CommonModelPreferenceNames.CONVERT_EOL_CODES));
-		String EOLCode = getModelPreferences().getString(CommonModelPreferenceNames.CLEANUP_EOL_CODE);
+		fCheckBoxCompressEmptyElementTags.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.COMPRESS_EMPTY_ELEMENT_TAGS));
+		fCheckBoxInsertRequiredAttrs.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.INSERT_REQUIRED_ATTRS));
+		fCheckBoxInsertMissingTags.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.INSERT_MISSING_TAGS));
+		fCheckBoxQuoteAttrValues.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.QUOTE_ATTR_VALUES));
+		fCheckBoxFormatSource.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.FORMAT_SOURCE));
+		fCheckBoxConvertEOLCodes.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.CONVERT_EOL_CODES));
+		String EOLCode = getModelPreferences().getString(XMLCorePreferenceNames.CLEANUP_EOL_CODE);
 		if (EOLCode.compareTo(CommonEncodingPreferenceNames.LF) == 0)
 			fRadioButtonConvertEOLUnix.setSelection(true);
 		else if (EOLCode.compareTo(CommonEncodingPreferenceNames.CR) == 0)
@@ -166,18 +166,18 @@ public class CleanupDialogXML extends Dialog implements SelectionListener {
 
 	protected void storeOptions() {
 
-		getModelPreferences().setValue(CommonModelPreferenceNames.COMPRESS_EMPTY_ELEMENT_TAGS, fCheckBoxCompressEmptyElementTags.getSelection());
-		getModelPreferences().setValue(CommonModelPreferenceNames.INSERT_REQUIRED_ATTRS, fCheckBoxInsertRequiredAttrs.getSelection());
-		getModelPreferences().setValue(CommonModelPreferenceNames.INSERT_MISSING_TAGS, fCheckBoxInsertMissingTags.getSelection());
-		getModelPreferences().setValue(CommonModelPreferenceNames.QUOTE_ATTR_VALUES, fCheckBoxQuoteAttrValues.getSelection());
-		getModelPreferences().setValue(CommonModelPreferenceNames.FORMAT_SOURCE, fCheckBoxFormatSource.getSelection());
-		getModelPreferences().setValue(CommonModelPreferenceNames.CONVERT_EOL_CODES, fCheckBoxConvertEOLCodes.getSelection());
+		getModelPreferences().setValue(XMLCorePreferenceNames.COMPRESS_EMPTY_ELEMENT_TAGS, fCheckBoxCompressEmptyElementTags.getSelection());
+		getModelPreferences().setValue(XMLCorePreferenceNames.INSERT_REQUIRED_ATTRS, fCheckBoxInsertRequiredAttrs.getSelection());
+		getModelPreferences().setValue(XMLCorePreferenceNames.INSERT_MISSING_TAGS, fCheckBoxInsertMissingTags.getSelection());
+		getModelPreferences().setValue(XMLCorePreferenceNames.QUOTE_ATTR_VALUES, fCheckBoxQuoteAttrValues.getSelection());
+		getModelPreferences().setValue(XMLCorePreferenceNames.FORMAT_SOURCE, fCheckBoxFormatSource.getSelection());
+		getModelPreferences().setValue(XMLCorePreferenceNames.CONVERT_EOL_CODES, fCheckBoxConvertEOLCodes.getSelection());
 		if (fRadioButtonConvertEOLUnix.getSelection()) {
-			getModelPreferences().setValue(CommonModelPreferenceNames.CLEANUP_EOL_CODE, CommonEncodingPreferenceNames.LF);
+			getModelPreferences().setValue(XMLCorePreferenceNames.CLEANUP_EOL_CODE, CommonEncodingPreferenceNames.LF);
 		} else if (fRadioButtonConvertEOLMac.getSelection()) {
-			getModelPreferences().setValue(CommonModelPreferenceNames.CLEANUP_EOL_CODE, CommonEncodingPreferenceNames.CR);
+			getModelPreferences().setValue(XMLCorePreferenceNames.CLEANUP_EOL_CODE, CommonEncodingPreferenceNames.CR);
 		} else {
-			getModelPreferences().setValue(CommonModelPreferenceNames.CLEANUP_EOL_CODE, CommonEncodingPreferenceNames.CRLF);
+			getModelPreferences().setValue(XMLCorePreferenceNames.CLEANUP_EOL_CODE, CommonEncodingPreferenceNames.CRLF);
 		}
 		// explicitly save plugin preferences so values are stored
 		XMLCorePlugin.getDefault().savePluginPreferences();

@@ -45,36 +45,12 @@ public class SSECorePlugin extends Plugin {
 	protected void initializeDefaultPluginPreferences() {
 		Preferences prefs = getDefault().getPluginPreferences();
 		// set model preference defaults
-		prefs.setDefault(CommonModelPreferenceNames.CLEANUP_TAG_NAME_CASE, CommonModelPreferenceNames.ASIS);
-		prefs.setDefault(CommonModelPreferenceNames.CLEANUP_ATTR_NAME_CASE, CommonModelPreferenceNames.ASIS);
-		prefs.setDefault(CommonModelPreferenceNames.COMPRESS_EMPTY_ELEMENT_TAGS, true);
-		prefs.setDefault(CommonModelPreferenceNames.INSERT_REQUIRED_ATTRS, true);
-		prefs.setDefault(CommonModelPreferenceNames.INSERT_MISSING_TAGS, true);
-		prefs.setDefault(CommonModelPreferenceNames.QUOTE_ATTR_VALUES, true);
-		prefs.setDefault(CommonModelPreferenceNames.FORMAT_SOURCE, true);
-		prefs.setDefault(CommonModelPreferenceNames.CONVERT_EOL_CODES, false);
-		prefs.setDefault(CommonEncodingPreferenceNames.INPUT_CODESET, ""); //$NON-NLS-1$
-		prefs.setDefault(CommonEncodingPreferenceNames.OUTPUT_CODESET, CommonModelPreferenceNames.UTF_8);
-		prefs.setDefault(CommonEncodingPreferenceNames.END_OF_LINE_CODE, ""); //$NON-NLS-1$
-		prefs.setDefault(CommonModelPreferenceNames.TAB_WIDTH, CommonModelPreferenceNames.DEFAULT_TAB_WIDTH);
-		prefs.setDefault(CommonModelPreferenceNames.FORMATTING_SUPPORTED, false);
-		prefs.setDefault(CommonModelPreferenceNames.LINE_WIDTH, 72);
-		prefs.setDefault(CommonModelPreferenceNames.SPLIT_MULTI_ATTRS, false);
-		prefs.setDefault(CommonModelPreferenceNames.INDENT_USING_TABS, true);
-		prefs.setDefault(CommonModelPreferenceNames.CLEAR_ALL_BLANK_LINES, false);
-		prefs.setDefault(CommonModelPreferenceNames.PREFERRED_MARKUP_CASE_SUPPORTED, false);
-		prefs.setDefault(CommonModelPreferenceNames.TAG_NAME_CASE, CommonModelPreferenceNames.UPPER);
-		prefs.setDefault(CommonModelPreferenceNames.ATTR_NAME_CASE, CommonModelPreferenceNames.LOWER);
+
+		prefs.setDefault(CommonEncodingPreferenceNames.USE_3BYTE_BOM_WITH_UTF8, false);
+		
 		prefs.setDefault(CommonModelPreferenceNames.TASK_TAG_ENABLE, false);
 		prefs.setDefault(CommonModelPreferenceNames.TASK_TAG_TAGS, "TODO,FIXME,XXX"); //$NON-NLS-1$
 		prefs.setDefault(CommonModelPreferenceNames.TASK_TAG_PRIORITIES, "1,2,1"); //$NON-NLS-1$
-
-		initializeDefaultPluginPreferencesForEncoding(prefs);
-
-	}
-
-	private void initializeDefaultPluginPreferencesForEncoding(Preferences prefs) {
-		prefs.setDefault(CommonEncodingPreferenceNames.USE_3BYTE_BOM_WITH_UTF8, false);
 	}
 
 	/*

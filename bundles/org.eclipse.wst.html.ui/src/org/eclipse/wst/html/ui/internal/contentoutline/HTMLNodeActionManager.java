@@ -15,10 +15,10 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.wst.html.core.internal.HTMLContentBuilder;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
+import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.html.core.internal.provisional.HTMLCMProperties;
 import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
-import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMContentBuilder;
@@ -69,16 +69,16 @@ public class HTMLNodeActionManager extends XMLNodeActionManager {
 		if (shouldIgnoreCase(cmnode)) {
 			String name = cmnode.getNodeName();
 			if (cmnode.getNodeType() == CMNode.ELEMENT_DECLARATION) {
-				if (fTagCase == CommonModelPreferenceNames.LOWER)
+				if (fTagCase == HTMLCorePreferenceNames.LOWER)
 					name = name.toLowerCase();
-				else if (fTagCase == CommonModelPreferenceNames.UPPER)
+				else if (fTagCase == HTMLCorePreferenceNames.UPPER)
 					name = name.toUpperCase();
 				// else do nothing
 			}
 			else if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
-				if (fAttrCase == CommonModelPreferenceNames.LOWER)
+				if (fAttrCase == HTMLCorePreferenceNames.LOWER)
 					name = name.toLowerCase();
-				else if (fAttrCase == CommonModelPreferenceNames.UPPER)
+				else if (fAttrCase == HTMLCorePreferenceNames.UPPER)
 					name = name.toUpperCase();
 				// else do nothing
 			}
@@ -97,8 +97,8 @@ public class HTMLNodeActionManager extends XMLNodeActionManager {
 	protected void updateCase() {
 		if (model.getModelHandler().getAssociatedContentTypeId().equals(ContentTypeIdForHTML.ContentTypeID_HTML)) {
 			Preferences prefs = HTMLCorePlugin.getDefault().getPluginPreferences(); //$NON-NLS-1$
-			fTagCase = prefs.getInt(CommonModelPreferenceNames.TAG_NAME_CASE);
-			fAttrCase = prefs.getInt(CommonModelPreferenceNames.ATTR_NAME_CASE);
+			fTagCase = prefs.getInt(HTMLCorePreferenceNames.TAG_NAME_CASE);
+			fAttrCase = prefs.getInt(HTMLCorePreferenceNames.ATTR_NAME_CASE);
 			//		Element caseSettings = HTMLPreferenceManager.getHTMLInstance().getElement(PreferenceNames.PREFERRED_CASE);
 			//		fTagCase = caseSettings.getAttribute(PreferenceNames.TAGNAME);
 			//		fAttrCase = caseSettings.getAttribute(PreferenceNames.ATTRIBUTENAME);

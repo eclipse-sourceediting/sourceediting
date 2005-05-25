@@ -13,8 +13,8 @@ package org.eclipse.wst.html.core.internal;
 
 
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.html.core.internal.provisional.HTMLCMProperties;
-import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMContentBuilderImpl;
 import org.w3c.dom.Document;
@@ -32,8 +32,8 @@ public class HTMLContentBuilder extends DOMContentBuilderImpl {
 	public HTMLContentBuilder(Document document) {
 		super(document);
 		Preferences prefs = HTMLCorePlugin.getDefault().getPluginPreferences();
-		fTagCase = prefs.getInt(CommonModelPreferenceNames.TAG_NAME_CASE);
-		fAttrCase = prefs.getInt(CommonModelPreferenceNames.ATTR_NAME_CASE);
+		fTagCase = prefs.getInt(HTMLCorePreferenceNames.TAG_NAME_CASE);
+		fAttrCase = prefs.getInt(HTMLCorePreferenceNames.ATTR_NAME_CASE);
 		//	Element caseSettings = HTMLPreferenceManager.getHTMLInstance().getElement(PreferenceNames.PREFERRED_CASE);
 		//	fTagCase = caseSettings.getAttribute(PreferenceNames.TAGNAME);
 		//	fAttrCase = caseSettings.getAttribute(PreferenceNames.ATTRIBUTENAME);
@@ -45,16 +45,16 @@ public class HTMLContentBuilder extends DOMContentBuilderImpl {
 		//	if (cmnode instanceof HTMLCMNode && ((HTMLCMNode) cmnode).shouldIgnoreCase()) {
 		if (shouldIgnoreCase(cmnode)) {
 			if (cmnode.getNodeType() == CMNode.ELEMENT_DECLARATION) {
-				if (fTagCase == CommonModelPreferenceNames.LOWER)
+				if (fTagCase == HTMLCorePreferenceNames.LOWER)
 					name = name.toLowerCase();
-				else if (fTagCase == CommonModelPreferenceNames.UPPER)
+				else if (fTagCase == HTMLCorePreferenceNames.UPPER)
 					name = name.toUpperCase();
 				// else do nothing
 			}
 			else if (cmnode.getNodeType() == CMNode.ATTRIBUTE_DECLARATION) {
-				if (fAttrCase == CommonModelPreferenceNames.LOWER)
+				if (fAttrCase == HTMLCorePreferenceNames.LOWER)
 					name = name.toLowerCase();
-				else if (fAttrCase == CommonModelPreferenceNames.UPPER)
+				else if (fAttrCase == HTMLCorePreferenceNames.UPPER)
 					name = name.toUpperCase();
 				// else do nothing
 			}

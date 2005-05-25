@@ -12,49 +12,10 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.preferences;
 
-
 /**
- * Here is a description of how each common model file preference is used.
+ * @deprecated CommonModelPreferenceNames are now managed by each individual
+ *             content type. (XXCorePreferenceNames)
  * 
- * tabWidth The number of spaces representing a tab. This number is also used
- * as number of spaces to indent during formatting when indentUsingTabs is
- * false.
- * 
- * splitLines Indicates if long lines should be splitted.
- * 
- * splitLinesUsingEditorsWidth Indicates if long lines should be splitted
- * using the editor's current width. The editor's current width will be used
- * when splitting long lines if splitLinesUsingEditorWidth is true. lineWidth
- * will be used when splitting long lines if splitLinesUsingEditorWidth is
- * false.
- * 
- * lineWidth The maximum width of a line before a line split is needed. This
- * number is only used when lineSplitting is true, otherwise it's ignored.
- * 
- * splitMultiAttrs Indicates if tags with multiple attributes should be
- * formatted (splitting each attr on a new line).
- * 
- * indentUsingTabs Indicates if tabs should be used for indentation during
- * formatting. The same number of spaces specified by tabWidth will be used
- * for indentation if indentUsingTabs is false.
- * 
- * clearAllBlankLines Indicates if all blanks lines should be cleared during
- * formatting. Blanks lines will be kept when clearAllBlankLines is false.
- * 
- * formattingSupported Indicates if the current content type supports
- * formatting. The splitLines, splitLinesUsingEditorsWidth, lineWidth,
- * splitMultiAttrs, and indentUsingTabs preferences will be meaningless if
- * formattingSupported is false.
- * 
- * contentAssistSupported Indicates if the current content type supports
- * content assist. The autoPropose, and autoProposeCode preferences will be
- * meaningless if contentAssistSupported is false.
- * 
- * preferredMarkupCaseSupported Indicates if the current content type supports
- * "preferred markup case for content assist, and code generation". The
- * tagNameCase, and attrNameCase preferences will be meaningless if
- * preferredMarkupCaseSupported is false.
- *  
  */
 public interface CommonModelPreferenceNames {
 	String TAB_WIDTH = "tabWidth";//$NON-NLS-1$

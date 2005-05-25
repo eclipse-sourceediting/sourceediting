@@ -13,10 +13,11 @@ package org.eclipse.wst.css.core.internal.formatter;
 
 
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
-import org.eclipse.wst.css.core.internal.provisional.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -60,9 +61,8 @@ abstract public class FunctionFormatter extends AbstractCSSSourceFormatter {
 				appendSpaceBefore(node, regions[i], source);
 				source.append(decoratedRegion(regions[i], 2, stgy));
 			}
-		}
-		else if (prev != null && child != null) { // generate source between
-													// parameters
+		} else if (prev != null && child != null) { // generate source between
+			// parameters
 			source.append(",");//$NON-NLS-1$
 		}
 		appendSpaceBefore(node, toAppend, source);
@@ -99,8 +99,7 @@ abstract public class FunctionFormatter extends AbstractCSSSourceFormatter {
 				appendSpaceBefore(node, regions[i], source);
 				source.append(decoratedRegion(regions[i], 2, stgy));
 			}
-		}
-		else { // generate source
+		} else { // generate source
 			source.append(")");//$NON-NLS-1$
 		}
 	}
@@ -127,7 +126,7 @@ abstract public class FunctionFormatter extends AbstractCSSSourceFormatter {
 	protected void formatPre(ICSSNode node, StringBuffer source) {
 		int start = ((IndexedRegion) node).getStartOffset();
 		int end = (node.getFirstChild() != null && ((IndexedRegion) node.getFirstChild()).getEndOffset() > 0) ? ((IndexedRegion) node.getFirstChild()).getStartOffset() : getChildInsertPos(node);
-		CSSPreferenceHelper mgr = CSSPreferenceHelper.getInstance();
+
 		if (end > 0) { // format source
 			CSSCleanupStrategy stgy = getCleanupStrategy(node);
 
@@ -138,10 +137,9 @@ abstract public class FunctionFormatter extends AbstractCSSSourceFormatter {
 					appendSpaceBefore(node, regions[i], source);
 				source.append(decoratedPropValueRegion(regions[i], stgy));
 			}
-		}
-		else { // generate source
+		} else { // generate source
 			String func = getFunc();
-			if (mgr.isPropValueUpperCase())
+			if (CSSCorePlugin.getDefault().getPluginPreferences().getInt(CSSCorePreferenceNames.CASE_PROPERTY_VALUE) == CSSCorePreferenceNames.UPPER)
 				func = func.toUpperCase();
 			source.append(func);
 		}
@@ -174,8 +172,7 @@ abstract public class FunctionFormatter extends AbstractCSSSourceFormatter {
 			IStructuredDocumentRegion flatNode = node.getOwnerDocument().getModel().getStructuredDocument().getRegionAtCharacterOffset(n - 1);
 			if (flatNode.getRegionAtCharacterOffset(n - 1).getType() == CSSRegionContexts.CSS_DECLARATION_VALUE_PARENTHESIS_CLOSE)
 				return n - 1;
-			else
-				return n;
+			return n;
 		}
 		return -1;
 	}

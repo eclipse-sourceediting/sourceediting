@@ -72,6 +72,9 @@ public class CSSUIMessages extends NLS {
 	public static String Formatting_UI_;
 	public static String Line_width__UI_;
 	public static String Indent_using_tabs_;
+	public static String Indent_using_spaces;
+	public static String Indentation_size;
+	public static String Indentation_size_tip;
 	public static String StructureSelectEnclosing_label;
 	public static String StructureSelectEnclosing_tooltip;
 	public static String StructureSelectEnclosing_description;

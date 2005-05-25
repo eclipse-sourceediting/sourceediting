@@ -12,11 +12,13 @@ package org.eclipse.wst.css.core.internal.util;
 
 
 
+import org.eclipse.core.runtime.Preferences;
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSImportRule;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSPrimitiveValue;
-import org.eclipse.wst.css.core.internal.provisional.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.css.CSSPrimitiveValue;
@@ -53,12 +55,13 @@ public class CSSLinkConverter extends org.eclipse.wst.css.core.internal.util.Abs
 	public static String addFunc(String value) {
 		if (!value.trim().toLowerCase().startsWith(URL_BEGIN)) {
 			// pa_TODO css pref
-			CSSPreferenceHelper mgr = CSSPreferenceHelper.getInstance();
-			String quote = mgr.getQuoteString(null);
+			Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
+
+			String quote = preferences.getString(CSSCorePreferenceNames.FORMAT_QUOTE);
 			value = CSSUtil.stripQuotes(value);
 			quote = CSSUtil.detectQuote(value, quote);
 			String str = URL_BEGIN;
-			if (mgr.isPropValueUpperCase())
+			if (preferences.getInt(CSSCorePreferenceNames.CASE_PROPERTY_VALUE) == CSSCorePreferenceNames.UPPER)
 				str = str.toUpperCase();
 			StringBuffer buf = new StringBuffer(str);
 			buf.append(quote);
@@ -67,8 +70,7 @@ public class CSSLinkConverter extends org.eclipse.wst.css.core.internal.util.Abs
 			buf.append(URL_END);
 			return buf.toString();
 		}
-		else
-			return value;
+		return value;
 	}
 
 
@@ -102,8 +104,7 @@ public class CSSLinkConverter extends org.eclipse.wst.css.core.internal.util.Abs
 	protected short preNode(ICSSNode node) {
 		if (node.getNodeType() == ICSSNode.PRIMITIVEVALUE_NODE) {
 			toAbsolute((CSSValue) node);
-		}
-		else if (node.getNodeType() == ICSSNode.IMPORTRULE_NODE) {
+		} else if (node.getNodeType() == ICSSNode.IMPORTRULE_NODE) {
 			ICSSImportRule iRule = (ICSSImportRule) node;
 			iRule.setHref(toAbsolute(addFunc(iRule.getHref())));
 		}
@@ -126,8 +127,7 @@ public class CSSLinkConverter extends org.eclipse.wst.css.core.internal.util.Abs
 			int endParenthesis = field.lastIndexOf(URL_END);
 			if (endParenthesis > url) {
 				field = field.substring(url + 4, endParenthesis);
-			}
-			else
+			} else
 				field = field.substring(url + 4);
 		}
 		return field.trim();
@@ -147,17 +147,14 @@ public class CSSLinkConverter extends org.eclipse.wst.css.core.internal.util.Abs
 			int end = field.lastIndexOf(D_QUOTE);
 			if (end > quote) {
 				field = field.substring(quote + 1, end);
-			}
-			else
+			} else
 				field = field.substring(quote + 1);
-		}
-		else if (field.toLowerCase().startsWith(S_QUOTE)) {
+		} else if (field.toLowerCase().startsWith(S_QUOTE)) {
 			int quote = field.indexOf(S_QUOTE);
 			int end = field.lastIndexOf(S_QUOTE);
 			if (end > quote) {
 				field = field.substring(quote + 1, end);
-			}
-			else
+			} else
 				field = field.substring(quote + 1);
 		}
 

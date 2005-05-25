@@ -15,9 +15,6 @@ package org.eclipse.wst.xml.core.internal;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.core.runtime.Preferences;
-import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
-import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 
 
 /**
@@ -47,39 +44,5 @@ public class XMLCorePlugin extends Plugin {
 	public XMLCorePlugin() {
 		super();
 		plugin = this;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.core.runtime.Plugin#initializeDefaultPluginPreferences()
-	 */
-	protected void initializeDefaultPluginPreferences() {
-		Preferences prefs = getDefault().getPluginPreferences();
-		// set model preference defaults
-		prefs.setDefault(CommonModelPreferenceNames.CLEANUP_TAG_NAME_CASE, CommonModelPreferenceNames.ASIS);
-		prefs.setDefault(CommonModelPreferenceNames.CLEANUP_ATTR_NAME_CASE, CommonModelPreferenceNames.ASIS);
-		prefs.setDefault(CommonModelPreferenceNames.COMPRESS_EMPTY_ELEMENT_TAGS, true);
-		prefs.setDefault(CommonModelPreferenceNames.INSERT_REQUIRED_ATTRS, true);
-		prefs.setDefault(CommonModelPreferenceNames.INSERT_MISSING_TAGS, true);
-		prefs.setDefault(CommonModelPreferenceNames.QUOTE_ATTR_VALUES, true);
-		prefs.setDefault(CommonModelPreferenceNames.FORMAT_SOURCE, true);
-		prefs.setDefault(CommonModelPreferenceNames.CONVERT_EOL_CODES, false);
-
-		prefs.setDefault(CommonEncodingPreferenceNames.INPUT_CODESET, ""); //$NON-NLS-1$
-		prefs.setDefault(CommonEncodingPreferenceNames.OUTPUT_CODESET, CommonModelPreferenceNames.UTF_8);
-		prefs.setDefault(CommonEncodingPreferenceNames.END_OF_LINE_CODE, ""); //$NON-NLS-1$
-
-		prefs.setDefault(CommonModelPreferenceNames.TAB_WIDTH, 4);
-
-		prefs.setDefault(CommonModelPreferenceNames.FORMATTING_SUPPORTED, true);
-		prefs.setDefault(CommonModelPreferenceNames.LINE_WIDTH, 72);
-		prefs.setDefault(CommonModelPreferenceNames.SPLIT_MULTI_ATTRS, false);
-		prefs.setDefault(CommonModelPreferenceNames.INDENT_USING_TABS, true);
-		prefs.setDefault(CommonModelPreferenceNames.CLEAR_ALL_BLANK_LINES, false);
-
-		prefs.setDefault(CommonModelPreferenceNames.PREFERRED_MARKUP_CASE_SUPPORTED, false);
-		prefs.setDefault(CommonModelPreferenceNames.TAG_NAME_CASE, CommonModelPreferenceNames.LOWER);
-		prefs.setDefault(CommonModelPreferenceNames.ATTR_NAME_CASE, CommonModelPreferenceNames.LOWER);
 	}
 }

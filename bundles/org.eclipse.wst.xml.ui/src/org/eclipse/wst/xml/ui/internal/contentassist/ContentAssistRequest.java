@@ -23,15 +23,11 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
-import org.eclipse.wst.sse.ui.internal.provisional.preferences.PreferenceManager;
 import org.w3c.dom.Node;
 
 
 public class ContentAssistRequest {
 	protected IStructuredDocumentRegion documentRegion = null;
-
-
-	protected PreferenceManager fPreferenceManager = null;
 	protected List macros = new ArrayList();
 	protected String matchString;
 	protected Node node = null;
@@ -46,7 +42,7 @@ public class ContentAssistRequest {
 	/**
 	 * XMLContentAssistRequest constructor comment.
 	 */
-	public ContentAssistRequest(Node node, Node parent, IStructuredDocumentRegion documentRegion, ITextRegion completionRegion, int begin, int length, String filter, PreferenceManager preferencesManager) {
+	public ContentAssistRequest(Node node, Node parent, IStructuredDocumentRegion documentRegion, ITextRegion completionRegion, int begin, int length, String filter) {
 		super();
 		setNode(node);
 		setParent(parent);
@@ -55,7 +51,6 @@ public class ContentAssistRequest {
 		setMatchString(filter);
 		setReplacementBeginPosition(begin);
 		setReplacementLength(length);
-		fPreferenceManager = preferencesManager;
 	}
 
 	public void addMacro(ICompletionProposal newProposal) {

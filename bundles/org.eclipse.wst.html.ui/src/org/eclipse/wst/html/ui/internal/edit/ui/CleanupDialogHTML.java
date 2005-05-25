@@ -23,12 +23,12 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
+import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IModelHandler;
-import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.cleanup.XMLCleanupPreferencesImpl;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
@@ -159,18 +159,18 @@ public class CleanupDialogHTML extends Dialog implements SelectionListener {
 	}
 
 	protected void initializeOptionsForHTML() {
-		int tagNameCase = getModelPreferences().getInt(CommonModelPreferenceNames.CLEANUP_TAG_NAME_CASE);
-		if (tagNameCase == CommonModelPreferenceNames.UPPER)
+		int tagNameCase = getModelPreferences().getInt(HTMLCorePreferenceNames.CLEANUP_TAG_NAME_CASE);
+		if (tagNameCase == HTMLCorePreferenceNames.UPPER)
 			fRadioButtonTagNameCaseUpper.setSelection(true);
-		else if (tagNameCase == CommonModelPreferenceNames.LOWER)
+		else if (tagNameCase == HTMLCorePreferenceNames.LOWER)
 			fRadioButtonTagNameCaseLower.setSelection(true);
 		else
 			fRadioButtonTagNameCaseAsis.setSelection(true);
 
-		int attrNameCase = getModelPreferences().getInt(CommonModelPreferenceNames.CLEANUP_ATTR_NAME_CASE);
-		if (attrNameCase == CommonModelPreferenceNames.UPPER)
+		int attrNameCase = getModelPreferences().getInt(HTMLCorePreferenceNames.CLEANUP_ATTR_NAME_CASE);
+		if (attrNameCase == HTMLCorePreferenceNames.UPPER)
 			fRadioButtonAttrNameCaseUpper.setSelection(true);
-		else if (attrNameCase == CommonModelPreferenceNames.LOWER)
+		else if (attrNameCase == HTMLCorePreferenceNames.LOWER)
 			fRadioButtonAttrNameCaseLower.setSelection(true);
 		else
 			fRadioButtonAttrNameCaseAsis.setSelection(true);
@@ -180,13 +180,13 @@ public class CleanupDialogHTML extends Dialog implements SelectionListener {
 		if (isHTMLType())
 			initializeOptionsForHTML();
 
-		fCheckBoxInsertRequiredAttrs.setSelection(getModelPreferences().getBoolean(CommonModelPreferenceNames.INSERT_REQUIRED_ATTRS));
-		fCheckBoxInsertMissingTags.setSelection(getModelPreferences().getBoolean(CommonModelPreferenceNames.INSERT_MISSING_TAGS));
-		fCheckBoxQuoteAttrValues.setSelection(getModelPreferences().getBoolean(CommonModelPreferenceNames.QUOTE_ATTR_VALUES));
-		fCheckBoxFormatSource.setSelection(getModelPreferences().getBoolean(CommonModelPreferenceNames.FORMAT_SOURCE));
-		fCheckBoxConvertEOLCodes.setSelection(getModelPreferences().getBoolean(CommonModelPreferenceNames.CONVERT_EOL_CODES));
+		fCheckBoxInsertRequiredAttrs.setSelection(getModelPreferences().getBoolean(HTMLCorePreferenceNames.INSERT_REQUIRED_ATTRS));
+		fCheckBoxInsertMissingTags.setSelection(getModelPreferences().getBoolean(HTMLCorePreferenceNames.INSERT_MISSING_TAGS));
+		fCheckBoxQuoteAttrValues.setSelection(getModelPreferences().getBoolean(HTMLCorePreferenceNames.QUOTE_ATTR_VALUES));
+		fCheckBoxFormatSource.setSelection(getModelPreferences().getBoolean(HTMLCorePreferenceNames.FORMAT_SOURCE));
+		fCheckBoxConvertEOLCodes.setSelection(getModelPreferences().getBoolean(HTMLCorePreferenceNames.CONVERT_EOL_CODES));
 		if (fCheckBoxConvertEOLCodes.getSelection()) {
-			String EOLCode = getModelPreferences().getString(CommonModelPreferenceNames.CLEANUP_EOL_CODE);
+			String EOLCode = getModelPreferences().getString(HTMLCorePreferenceNames.CLEANUP_EOL_CODE);
 			if (EOLCode == CommonEncodingPreferenceNames.LF)
 				fRadioButtonConvertEOLUnix.setSelection(true);
 			else if (EOLCode == CommonEncodingPreferenceNames.CR)
@@ -199,18 +199,18 @@ public class CleanupDialogHTML extends Dialog implements SelectionListener {
 
 	protected void storeOptionsForHTML() {
 		if (fRadioButtonTagNameCaseUpper.getSelection())
-			getModelPreferences().setValue(CommonModelPreferenceNames.CLEANUP_TAG_NAME_CASE, CommonModelPreferenceNames.UPPER);
+			getModelPreferences().setValue(HTMLCorePreferenceNames.CLEANUP_TAG_NAME_CASE, HTMLCorePreferenceNames.UPPER);
 		else if (fRadioButtonTagNameCaseLower.getSelection())
-			getModelPreferences().setValue(CommonModelPreferenceNames.CLEANUP_TAG_NAME_CASE, CommonModelPreferenceNames.LOWER);
+			getModelPreferences().setValue(HTMLCorePreferenceNames.CLEANUP_TAG_NAME_CASE, HTMLCorePreferenceNames.LOWER);
 		else
-			getModelPreferences().setValue(CommonModelPreferenceNames.CLEANUP_TAG_NAME_CASE, CommonModelPreferenceNames.ASIS);
+			getModelPreferences().setValue(HTMLCorePreferenceNames.CLEANUP_TAG_NAME_CASE, HTMLCorePreferenceNames.ASIS);
 
 		if (fRadioButtonAttrNameCaseUpper.getSelection())
-			getModelPreferences().setValue(CommonModelPreferenceNames.CLEANUP_ATTR_NAME_CASE, CommonModelPreferenceNames.UPPER);
+			getModelPreferences().setValue(HTMLCorePreferenceNames.CLEANUP_ATTR_NAME_CASE, HTMLCorePreferenceNames.UPPER);
 		else if (fRadioButtonAttrNameCaseLower.getSelection())
-			getModelPreferences().setValue(CommonModelPreferenceNames.CLEANUP_ATTR_NAME_CASE, CommonModelPreferenceNames.LOWER);
+			getModelPreferences().setValue(HTMLCorePreferenceNames.CLEANUP_ATTR_NAME_CASE, HTMLCorePreferenceNames.LOWER);
 		else
-			getModelPreferences().setValue(CommonModelPreferenceNames.CLEANUP_ATTR_NAME_CASE, CommonModelPreferenceNames.ASIS);
+			getModelPreferences().setValue(HTMLCorePreferenceNames.CLEANUP_ATTR_NAME_CASE, HTMLCorePreferenceNames.ASIS);
 
 		// explicitly save plugin preferences so values are stored
 		HTMLCorePlugin.getDefault().savePluginPreferences();
@@ -219,34 +219,34 @@ public class CleanupDialogHTML extends Dialog implements SelectionListener {
 	protected void storeOptions() {
 		if (isHTMLType()) {
 			storeOptionsForHTML();
-			XMLCleanupPreferencesImpl.getInstance().setTagNameCase(getModelPreferences().getInt(CommonModelPreferenceNames.CLEANUP_TAG_NAME_CASE));
-			XMLCleanupPreferencesImpl.getInstance().setAttrNameCase(getModelPreferences().getInt(CommonModelPreferenceNames.CLEANUP_ATTR_NAME_CASE));
+			XMLCleanupPreferencesImpl.getInstance().setTagNameCase(getModelPreferences().getInt(HTMLCorePreferenceNames.CLEANUP_TAG_NAME_CASE));
+			XMLCleanupPreferencesImpl.getInstance().setAttrNameCase(getModelPreferences().getInt(HTMLCorePreferenceNames.CLEANUP_ATTR_NAME_CASE));
 		}
 		else {
-			XMLCleanupPreferencesImpl.getInstance().setTagNameCase(CommonModelPreferenceNames.ASIS);
-			XMLCleanupPreferencesImpl.getInstance().setAttrNameCase(CommonModelPreferenceNames.ASIS);
+			XMLCleanupPreferencesImpl.getInstance().setTagNameCase(HTMLCorePreferenceNames.ASIS);
+			XMLCleanupPreferencesImpl.getInstance().setAttrNameCase(HTMLCorePreferenceNames.ASIS);
 		}
 
-		getModelPreferences().setValue(CommonModelPreferenceNames.INSERT_REQUIRED_ATTRS, fCheckBoxInsertRequiredAttrs.getSelection());
-		getModelPreferences().setValue(CommonModelPreferenceNames.INSERT_MISSING_TAGS, fCheckBoxInsertMissingTags.getSelection());
-		getModelPreferences().setValue(CommonModelPreferenceNames.QUOTE_ATTR_VALUES, fCheckBoxQuoteAttrValues.getSelection());
-		getModelPreferences().setValue(CommonModelPreferenceNames.FORMAT_SOURCE, fCheckBoxFormatSource.getSelection());
-		getModelPreferences().setValue(CommonModelPreferenceNames.CONVERT_EOL_CODES, fCheckBoxConvertEOLCodes.getSelection());
+		getModelPreferences().setValue(HTMLCorePreferenceNames.INSERT_REQUIRED_ATTRS, fCheckBoxInsertRequiredAttrs.getSelection());
+		getModelPreferences().setValue(HTMLCorePreferenceNames.INSERT_MISSING_TAGS, fCheckBoxInsertMissingTags.getSelection());
+		getModelPreferences().setValue(HTMLCorePreferenceNames.QUOTE_ATTR_VALUES, fCheckBoxQuoteAttrValues.getSelection());
+		getModelPreferences().setValue(HTMLCorePreferenceNames.FORMAT_SOURCE, fCheckBoxFormatSource.getSelection());
+		getModelPreferences().setValue(HTMLCorePreferenceNames.CONVERT_EOL_CODES, fCheckBoxConvertEOLCodes.getSelection());
 		XMLCleanupPreferencesImpl.getInstance().setInsertMissingTags(fCheckBoxInsertMissingTags.getSelection());
 		XMLCleanupPreferencesImpl.getInstance().setQuoteAttrValues(fCheckBoxQuoteAttrValues.getSelection());
 		XMLCleanupPreferencesImpl.getInstance().setFormatSource(fCheckBoxFormatSource.getSelection());
 		XMLCleanupPreferencesImpl.getInstance().setConvertEOLCodes(fCheckBoxConvertEOLCodes.getSelection());
 		if (fCheckBoxConvertEOLCodes.getSelection()) {
 			if (fRadioButtonConvertEOLUnix.getSelection()) {
-				getModelPreferences().setValue(CommonModelPreferenceNames.CLEANUP_EOL_CODE, CommonEncodingPreferenceNames.LF);
+				getModelPreferences().setValue(HTMLCorePreferenceNames.CLEANUP_EOL_CODE, CommonEncodingPreferenceNames.LF);
 				XMLCleanupPreferencesImpl.getInstance().setEOLCode(CommonEncodingPreferenceNames.LF);
 			}
 			else if (fRadioButtonConvertEOLMac.getSelection()) {
-				getModelPreferences().setValue(CommonModelPreferenceNames.CLEANUP_EOL_CODE, CommonEncodingPreferenceNames.CR);
+				getModelPreferences().setValue(HTMLCorePreferenceNames.CLEANUP_EOL_CODE, CommonEncodingPreferenceNames.CR);
 				XMLCleanupPreferencesImpl.getInstance().setEOLCode(CommonEncodingPreferenceNames.CR);
 			}
 			else {
-				getModelPreferences().setValue(CommonModelPreferenceNames.CLEANUP_EOL_CODE, CommonEncodingPreferenceNames.CRLF);
+				getModelPreferences().setValue(HTMLCorePreferenceNames.CLEANUP_EOL_CODE, CommonEncodingPreferenceNames.CRLF);
 				XMLCleanupPreferencesImpl.getInstance().setEOLCode(CommonEncodingPreferenceNames.CRLF);
 			}
 		}

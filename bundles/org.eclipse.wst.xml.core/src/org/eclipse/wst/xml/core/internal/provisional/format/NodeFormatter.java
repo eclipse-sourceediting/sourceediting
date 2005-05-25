@@ -15,13 +15,11 @@ package org.eclipse.wst.xml.core.internal.provisional.format;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatContraints;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatPreferences;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
 import org.eclipse.wst.sse.core.internal.format.StructuredFormatContraints;
 import org.eclipse.wst.sse.core.internal.parser.ContextRegion;
-import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -33,6 +31,7 @@ import org.eclipse.wst.xml.core.internal.document.CDATASectionImpl;
 import org.eclipse.wst.xml.core.internal.document.CharacterDataImpl;
 import org.eclipse.wst.xml.core.internal.document.CommentImpl;
 import org.eclipse.wst.xml.core.internal.parser.regions.TagNameRegion;
+import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
@@ -416,20 +415,22 @@ public class NodeFormatter implements IStructuredFormatter {
 
 			Preferences preferences = getModelPreferences();
 			if (preferences != null) {
-				fFormatPreferences.setLineWidth(preferences.getInt(CommonModelPreferenceNames.LINE_WIDTH));
-				((IStructuredFormatPreferencesXML) fFormatPreferences).setSplitMultiAttrs(preferences.getBoolean(CommonModelPreferenceNames.SPLIT_MULTI_ATTRS));
-				fFormatPreferences.setClearAllBlankLines(preferences.getBoolean(CommonModelPreferenceNames.CLEAR_ALL_BLANK_LINES));
+				fFormatPreferences.setLineWidth(preferences.getInt(XMLCorePreferenceNames.LINE_WIDTH));
+				((IStructuredFormatPreferencesXML) fFormatPreferences).setSplitMultiAttrs(preferences.getBoolean(XMLCorePreferenceNames.SPLIT_MULTI_ATTRS));
+				fFormatPreferences.setClearAllBlankLines(preferences.getBoolean(XMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES));
 
-				if (preferences.getBoolean(CommonModelPreferenceNames.INDENT_USING_TABS))
-					fFormatPreferences.setIndent("\t"); //$NON-NLS-1$
-				else {
-					int tabWidth = SSECorePlugin.getDefault().getPluginPreferences().getInt(CommonModelPreferenceNames.TAB_WIDTH);
-					String indent = ""; //$NON-NLS-1$
-					for (int i = 0; i < tabWidth; i++) {
-						indent += " "; //$NON-NLS-1$
-					}
-					fFormatPreferences.setIndent(indent);
+				String indentChar = " "; //$NON-NLS-1$
+				String indentCharPref = preferences.getString(XMLCorePreferenceNames.INDENTATION_CHAR);
+				if (XMLCorePreferenceNames.TAB.equals(indentCharPref)) {
+					indentChar = "\t"; //$NON-NLS-1$
 				}
+				int indentationWidth = preferences.getInt(XMLCorePreferenceNames.INDENTATION_SIZE);
+
+				String indent = ""; //$NON-NLS-1$
+				for (int i = 0; i < indentationWidth; i++) {
+					indent += indentChar;
+				}
+				fFormatPreferences.setIndent(indent);
 			}
 		}
 

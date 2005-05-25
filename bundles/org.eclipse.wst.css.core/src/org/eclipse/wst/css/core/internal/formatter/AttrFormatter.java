@@ -12,8 +12,11 @@ package org.eclipse.wst.css.core.internal.formatter;
 
 
 
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSAttr;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSCharsetRule;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSImportRule;
@@ -21,7 +24,6 @@ import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSPageRule;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleRule;
-import org.eclipse.wst.css.core.internal.provisional.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.css.core.internal.util.CSSUtil;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -99,7 +101,8 @@ public class AttrFormatter extends DefaultCSSSourceFormatter {
 			}
 		}
 		else { // generate source
-			CSSPreferenceHelper mgr = CSSPreferenceHelper.getInstance();
+			Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
+			
 			String value = attr.getValue();
 			if (value == null)
 				value = "";//$NON-NLS-1$
@@ -107,9 +110,9 @@ public class AttrFormatter extends DefaultCSSSourceFormatter {
 			}
 			else if (attr.getName().equals(ICSSImportRule.HREF)) {
 				String uri = org.eclipse.wst.css.core.internal.util.CSSLinkConverter.stripFunc(value);
-				String func = mgr.isPropValueUpperCase() ? "URL(" : "url(";//$NON-NLS-2$//$NON-NLS-1$
-				if (mgr.isQuoteInURI()) {
-					String quote = mgr.getQuoteString(attr.getOwnerDocument().getModel());
+				String func = preferences.getInt(CSSCorePreferenceNames.CASE_PROPERTY_VALUE) == CSSCorePreferenceNames.UPPER ? "URL(" : "url(";//$NON-NLS-2$//$NON-NLS-1$
+				if (preferences.getBoolean(CSSCorePreferenceNames.FORMAT_QUOTE_IN_URI)) {
+					String quote = preferences.getString(CSSCorePreferenceNames.FORMAT_QUOTE);
 					quote = CSSUtil.detectQuote(uri, quote);
 					value = func + quote + uri + quote + ")";//$NON-NLS-1$
 				}
@@ -118,26 +121,26 @@ public class AttrFormatter extends DefaultCSSSourceFormatter {
 				}
 			}
 			else if (attr.getName().equals(ICSSCharsetRule.ENCODING)) {
-				String quote = mgr.getQuoteString(attr.getOwnerDocument().getModel());
+				String quote = preferences.getString(CSSCorePreferenceNames.FORMAT_QUOTE);
 				if (!value.startsWith("\"") && !value.startsWith("\'"))//$NON-NLS-2$//$NON-NLS-1$
 					value = quote + value;
 				if (!value.endsWith("\"") && !value.endsWith("\'"))//$NON-NLS-2$//$NON-NLS-1$
 					value = value + quote;
 			}
 			else if (attr.getName().equals(ICSSStyleDeclItem.IMPORTANT)) {
-				if (mgr.isPropValueUpperCase())
+				if (preferences.getInt(CSSCorePreferenceNames.CASE_PROPERTY_VALUE) == CSSCorePreferenceNames.UPPER)
 					value = value.toUpperCase();
 				else
 					value = value.toLowerCase();
 			}
 			else if (attr.getName() == null || attr.getName().length() == 0) {
-				if (mgr.isIdentUpperCase())
+				if (CSSCorePlugin.getDefault().getPluginPreferences().getInt(CSSCorePreferenceNames.CASE_IDENTIFIER) == CSSCorePreferenceNames.UPPER)
 					value = value.toUpperCase();
 				else
 					value = value.toLowerCase();
 			}
 			else {
-				if (mgr.isPropValueUpperCase())
+				if (preferences.getInt(CSSCorePreferenceNames.CASE_PROPERTY_VALUE) == CSSCorePreferenceNames.UPPER)
 					value = value.toUpperCase();
 				else
 					value = value.toLowerCase();

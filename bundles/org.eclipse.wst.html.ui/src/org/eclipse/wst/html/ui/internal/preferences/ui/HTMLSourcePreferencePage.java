@@ -18,10 +18,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
+import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
-import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.xml.ui.internal.preferences.XMLSourcePreferencePage;
 
 public class HTMLSourcePreferencePage extends XMLSourcePreferencePage {
@@ -77,32 +77,32 @@ public class HTMLSourcePreferencePage extends XMLSourcePreferencePage {
 	}
 
 	protected void performDefaults() {
-		fTagNameUpper.setSelection(getModelPreferences().getDefaultInt(CommonModelPreferenceNames.TAG_NAME_CASE) == CommonModelPreferenceNames.UPPER);
-		fTagNameLower.setSelection(getModelPreferences().getDefaultInt(CommonModelPreferenceNames.TAG_NAME_CASE) == CommonModelPreferenceNames.LOWER);
-		fAttrNameUpper.setSelection(getModelPreferences().getDefaultInt(CommonModelPreferenceNames.ATTR_NAME_CASE) == CommonModelPreferenceNames.UPPER);
-		fAttrNameLower.setSelection(getModelPreferences().getDefaultInt(CommonModelPreferenceNames.ATTR_NAME_CASE) == CommonModelPreferenceNames.LOWER);
+		fTagNameUpper.setSelection(getModelPreferences().getDefaultInt(HTMLCorePreferenceNames.TAG_NAME_CASE) == HTMLCorePreferenceNames.UPPER);
+		fTagNameLower.setSelection(getModelPreferences().getDefaultInt(HTMLCorePreferenceNames.TAG_NAME_CASE) == HTMLCorePreferenceNames.LOWER);
+		fAttrNameUpper.setSelection(getModelPreferences().getDefaultInt(HTMLCorePreferenceNames.ATTR_NAME_CASE) == HTMLCorePreferenceNames.UPPER);
+		fAttrNameLower.setSelection(getModelPreferences().getDefaultInt(HTMLCorePreferenceNames.ATTR_NAME_CASE) == HTMLCorePreferenceNames.LOWER);
 
 		super.performDefaults();
 	}
 
 	protected void initializeValues() {
-		fTagNameUpper.setSelection(getModelPreferences().getInt(CommonModelPreferenceNames.TAG_NAME_CASE) == CommonModelPreferenceNames.UPPER);
-		fTagNameLower.setSelection(getModelPreferences().getInt(CommonModelPreferenceNames.TAG_NAME_CASE) == CommonModelPreferenceNames.LOWER);
-		fAttrNameUpper.setSelection(getModelPreferences().getInt(CommonModelPreferenceNames.ATTR_NAME_CASE) == CommonModelPreferenceNames.UPPER);
-		fAttrNameLower.setSelection(getModelPreferences().getInt(CommonModelPreferenceNames.ATTR_NAME_CASE) == CommonModelPreferenceNames.LOWER);
+		fTagNameUpper.setSelection(getModelPreferences().getInt(HTMLCorePreferenceNames.TAG_NAME_CASE) == HTMLCorePreferenceNames.UPPER);
+		fTagNameLower.setSelection(getModelPreferences().getInt(HTMLCorePreferenceNames.TAG_NAME_CASE) == HTMLCorePreferenceNames.LOWER);
+		fAttrNameUpper.setSelection(getModelPreferences().getInt(HTMLCorePreferenceNames.ATTR_NAME_CASE) == HTMLCorePreferenceNames.UPPER);
+		fAttrNameLower.setSelection(getModelPreferences().getInt(HTMLCorePreferenceNames.ATTR_NAME_CASE) == HTMLCorePreferenceNames.LOWER);
 
 		super.initializeValues();
 	}
 
 	protected void storeValues() {
 		if (fTagNameUpper.getSelection())
-			getModelPreferences().setValue(CommonModelPreferenceNames.TAG_NAME_CASE, CommonModelPreferenceNames.UPPER);
+			getModelPreferences().setValue(HTMLCorePreferenceNames.TAG_NAME_CASE, HTMLCorePreferenceNames.UPPER);
 		else
-			getModelPreferences().setValue(CommonModelPreferenceNames.TAG_NAME_CASE, CommonModelPreferenceNames.LOWER);
+			getModelPreferences().setValue(HTMLCorePreferenceNames.TAG_NAME_CASE, HTMLCorePreferenceNames.LOWER);
 		if (fAttrNameUpper.getSelection())
-			getModelPreferences().setValue(CommonModelPreferenceNames.ATTR_NAME_CASE, CommonModelPreferenceNames.UPPER);
+			getModelPreferences().setValue(HTMLCorePreferenceNames.ATTR_NAME_CASE, HTMLCorePreferenceNames.UPPER);
 		else
-			getModelPreferences().setValue(CommonModelPreferenceNames.ATTR_NAME_CASE, CommonModelPreferenceNames.LOWER);
+			getModelPreferences().setValue(HTMLCorePreferenceNames.ATTR_NAME_CASE, HTMLCorePreferenceNames.LOWER);
 
 		super.storeValues();
 	}

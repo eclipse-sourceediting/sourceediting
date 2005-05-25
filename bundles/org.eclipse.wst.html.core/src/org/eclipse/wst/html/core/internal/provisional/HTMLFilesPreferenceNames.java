@@ -12,12 +12,11 @@ package org.eclipse.wst.html.core.internal.provisional;
 
 import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 
 /**
- * Additional preferences for new HTML Files generation
+ * @deprecated not used in WTP
  */
-public interface HTMLFilesPreferenceNames extends CommonModelPreferenceNames {
+public interface HTMLFilesPreferenceNames {
 
 	static final String DEFAULT_SUFFIX = "defaultSuffix";//$NON-NLS-1$
 	static final String HTML_SUFFIX = "html";//$NON-NLS-1$

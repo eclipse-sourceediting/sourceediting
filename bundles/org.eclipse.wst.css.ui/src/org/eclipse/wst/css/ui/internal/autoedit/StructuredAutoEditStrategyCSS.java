@@ -8,12 +8,14 @@
  ****************************************************************************/
 package org.eclipse.wst.css.ui.internal.autoedit;
 
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentCommand;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.texteditor.ITextEditorExtension3;
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
-import org.eclipse.wst.css.core.internal.provisional.preferences.CSSPreferenceHelper;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.util.RegionIterator;
 import org.eclipse.wst.css.ui.internal.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -123,7 +125,7 @@ public class StructuredAutoEditStrategyCSS extends BasicAutoEditStrategy {
 		if (str != null)
 			buf.append(str);
 		while (shift-- != 0)
-			buf.append(CSSPreferenceHelper.getInstance().getIndentString());
+			buf.append(getIndentString());
 		command.text = buf.toString();
 
 	}
@@ -135,8 +137,8 @@ public class StructuredAutoEditStrategyCSS extends BasicAutoEditStrategy {
 		if (!(textEditor instanceof ITextEditorExtension3 && ((ITextEditorExtension3) textEditor).getInsertMode() == ITextEditorExtension3.SMART_INSERT))
 			return;
 
-		//return;
-		///*
+		// return;
+		// /*
 		structuredDocument = (IStructuredDocument) document;
 
 		if (command.length == 0 && command.text != null) {
@@ -150,7 +152,7 @@ public class StructuredAutoEditStrategyCSS extends BasicAutoEditStrategy {
 				autoIndentAfterClose(command, CSSRegionContexts.CSS_DECLARATION_VALUE_PARENTHESIS_CLOSE);
 			}
 		}
-		//*/
+		// */
 	}
 
 	/**
@@ -181,7 +183,7 @@ public class StructuredAutoEditStrategyCSS extends BasicAutoEditStrategy {
 				int end = findEndOfWhiteSpace(structuredDocument, start, position);
 				return structuredDocument.get(start, end - start);
 			} else if (region.getType() == CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_START ||
-			//region.getType() == CSSRegionContexts.CSS_PARENTHESIS_OPEN ||
+			// region.getType() == CSSRegionContexts.CSS_PARENTHESIS_OPEN ||
 						region.getType() == CSSRegionContexts.CSS_DECLARATION_VALUE_FUNCTION || region.getType() == CSSRegionContexts.CSS_DECLARATION_SEPARATOR) {
 				int position = flatNode.getStart() + region.getStart();
 				int line = structuredDocument.getLineOfOffset(position);
@@ -225,17 +227,17 @@ public class StructuredAutoEditStrategyCSS extends BasicAutoEditStrategy {
 			ITextRegion r = it.prev();
 			CompoundRegion region = new CompoundRegion(it.getStructuredDocumentRegion(), r);
 			if (region.getType() == CSSRegionContexts.CSS_LBRACE ||
-			//          region.getType() == CSSRegionContexts.CSS_RBRACE ||
+			// region.getType() == CSSRegionContexts.CSS_RBRACE ||
 						region.getType() == CSSRegionContexts.CSS_SELECTOR_ATTRIBUTE_START ||
-						//          region.getType() ==
+						// region.getType() ==
 						// CSSRegionContexts.CSS_BRACKET_CLOSE ||
-						//// region.getType() ==
+						// // region.getType() ==
 						// CSSRegionContexts.CSS_PARENTHESIS_OPEN ||
-						//          region.getType() ==
+						// region.getType() ==
 						// CSSRegionContexts.CSS_PARENTHESIS_CLOSE ||
 						region.getType() == CSSRegionContexts.CSS_DELIMITER || region.getType() == CSSRegionContexts.CSS_DECLARATION_DELIMITER ||
-						//          region.getType() == CSSRegionContexts.CSS_COLON ||
-						//          region.getType() == CSSRegionContexts.CSS_COMMENT
+						// region.getType() == CSSRegionContexts.CSS_COLON ||
+						// region.getType() == CSSRegionContexts.CSS_COMMENT
 						// ||
 						region.getType() == CSSRegionContexts.CSS_DECLARATION_VALUE_FUNCTION) {
 				return region;
@@ -360,8 +362,8 @@ public class StructuredAutoEditStrategyCSS extends BasicAutoEditStrategy {
 			// skip to PARENTHESIS_OPEN
 			while (it.hasPrev()) {
 				region = it.prev();
-				if (//region.getType() ==
-					// CSSRegionContexts.CSS_PARENTHESIS_OPEN ||
+				if (// region.getType() ==
+				// CSSRegionContexts.CSS_PARENTHESIS_OPEN ||
 				region.getType() == CSSRegionContexts.CSS_DECLARATION_VALUE_FUNCTION)
 					nest--;
 				else if (region.getType() == CSSRegionContexts.CSS_DECLARATION_VALUE_PARENTHESIS_CLOSE)
@@ -497,5 +499,23 @@ public class StructuredAutoEditStrategyCSS extends BasicAutoEditStrategy {
 		return end;
 	}
 
-}
 
+	private String getIndentString() {
+		String indent = ""; //$NON-NLS-1$
+
+		Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
+		if (preferences != null) {
+			String indentChar = " "; //$NON-NLS-1$
+			String indentCharPref = preferences.getString(CSSCorePreferenceNames.INDENTATION_CHAR);
+			if (CSSCorePreferenceNames.TAB.equals(indentCharPref)) {
+				indentChar = "\t"; //$NON-NLS-1$
+			}
+			int indentationWidth = preferences.getInt(CSSCorePreferenceNames.INDENTATION_SIZE);
+
+			for (int i = 0; i < indentationWidth; i++) {
+				indent += indentChar;
+			}
+		}
+		return indent;
+	}
+}

@@ -83,8 +83,6 @@ public class StyleSheetFormatter extends AbstractCSSSourceFormatter {
 		}
 		else if (prev != null && child != null) { // source generation :
 													// between two rules
-			if (prev.getNodeType() == ICSSNode.IMPORTRULE_NODE || prev.getNodeType() == ICSSNode.CHARSETRULE_NODE || prev.getNodeType() == ICSSNode.UNKNOWNRULE_NODE)
-				source.append(";");//$NON-NLS-1$
 			source.append(delim);
 			source.append(delim);
 		}
@@ -103,8 +101,6 @@ public class StyleSheetFormatter extends AbstractCSSSourceFormatter {
 			}
 			else if (child == null) { // source formatting : after the last
 										// rule
-				if (prev.getNodeType() == ICSSNode.IMPORTRULE_NODE || prev.getNodeType() == ICSSNode.CHARSETRULE_NODE || prev.getNodeType() == ICSSNode.UNKNOWNRULE_NODE)
-					source.append(";");//$NON-NLS-1$
 				if (start > 0 && start <= ((IndexedRegion) node).getEndOffset()) {
 					appendDelimBefore(node, null, source);
 				}
@@ -115,11 +111,6 @@ public class StyleSheetFormatter extends AbstractCSSSourceFormatter {
 					}
 				}
 			}
-		}
-		else if (prev != null && child == null) { // source generation :
-													// after the last rule
-			if (prev.getNodeType() == ICSSNode.IMPORTRULE_NODE || prev.getNodeType() == ICSSNode.CHARSETRULE_NODE || prev.getNodeType() == ICSSNode.UNKNOWNRULE_NODE)
-				source.append(";");//$NON-NLS-1$
 		}
 	}
 
@@ -163,10 +154,6 @@ public class StyleSheetFormatter extends AbstractCSSSourceFormatter {
 				appendDelimBefore(node, null, source);
 		}
 		else { // source generation
-			ICSSNode lastChild = node.getLastChild();
-			if (lastChild != null && (lastChild.getNodeType() == ICSSNode.CHARSETRULE_NODE || lastChild.getNodeType() == ICSSNode.IMPORTRULE_NODE || lastChild.getNodeType() == ICSSNode.UNKNOWNRULE_NODE)) {
-				source.append(";");//$NON-NLS-1$
-			}
 			if (node.getOwnerDocument().getModel() != null && node.getOwnerDocument().getModel().getStyleSheetType() == ICSSModel.EMBEDDED)
 				appendDelimBefore(node, null, source);
 			return; // nothing

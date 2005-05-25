@@ -2202,7 +2202,7 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	}
 
 	protected ContentAssistRequest newContentAssistRequest(Node node, Node possibleParent, IStructuredDocumentRegion documentRegion, ITextRegion completionRegion, int begin, int length, String filter) {
-		return new ContentAssistRequest(node, possibleParent, documentRegion, completionRegion, begin, length, filter, null);
+		return new ContentAssistRequest(node, possibleParent, documentRegion, completionRegion, begin, length, filter);
 	}
 
 	public void release() {

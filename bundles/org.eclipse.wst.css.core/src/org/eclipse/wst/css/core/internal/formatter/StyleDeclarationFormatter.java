@@ -12,11 +12,13 @@ package org.eclipse.wst.css.core.internal.formatter;
 
 
 
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
-import org.eclipse.wst.css.core.internal.provisional.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -51,7 +53,6 @@ public class StyleDeclarationFormatter extends DefaultCSSSourceFormatter {
 		if (child == null && prev == null)
 			return;
 
-		CSSPreferenceHelper mgr = CSSPreferenceHelper.getInstance();
 		if (start > 0 && start < end) { // format source
 			IStructuredDocument structuredDocument = node.getOwnerDocument().getModel().getStructuredDocument();
 			// get meaning regions
@@ -68,23 +69,20 @@ public class StyleDeclarationFormatter extends DefaultCSSSourceFormatter {
 			for (int i = 0; i < regions.length; i++) {
 				appendSpaceBefore(node, regions[i], source);
 				source.append(decoratedRegion(regions[i], 0, stgy)); // must
-																		// be
-																		// comments
+				// be
+				// comments
 			}
-		}
-		else if (prev != null && child != null) { // generate source :
-													// between two
-													// declarations
+		} else if (prev != null && child != null) { // generate source :
+			// between two
+			// declarations
 			source.append(";");//$NON-NLS-1$
-		}
-		else if (prev == null) { // generate source : before the first
-									// declaration
+		} else if (prev == null) { // generate source : before the first
+			// declaration
 			org.eclipse.wst.css.core.internal.util.RegionIterator it = null;
 			if (end > 0) {
 				IStructuredDocument structuredDocument = node.getOwnerDocument().getModel().getStructuredDocument();
 				it = new org.eclipse.wst.css.core.internal.util.RegionIterator(structuredDocument, end - 1);
-			}
-			else {
+			} else {
 				int pos = getChildInsertPos(node);
 				if (pos >= 0) {
 					IStructuredDocument structuredDocument = node.getOwnerDocument().getModel().getStructuredDocument();
@@ -105,15 +103,13 @@ public class StyleDeclarationFormatter extends DefaultCSSSourceFormatter {
 						break;
 				}
 			}
-		}
-		else if (child == null) { // generate source : after the last
-									// declaration
+		} else if (child == null) { // generate source : after the last
+			// declaration
 			org.eclipse.wst.css.core.internal.util.RegionIterator it = null;
 			if (start > 0) {
 				IStructuredDocument structuredDocument = node.getOwnerDocument().getModel().getStructuredDocument();
 				it = new org.eclipse.wst.css.core.internal.util.RegionIterator(structuredDocument, start);
-			}
-			else {
+			} else {
 				int pos = getChildInsertPos(node);
 				if (pos >= 0) {
 					IStructuredDocument structuredDocument = node.getOwnerDocument().getModel().getStructuredDocument();
@@ -147,9 +143,10 @@ public class StyleDeclarationFormatter extends DefaultCSSSourceFormatter {
 				}
 				appendDelimBefore(node.getParentNode(), toAppendRegion, source);
 			}
-		}
-		else if ((prev != null || ((IndexedRegion) node).getEndOffset() <= 0)) {
-			if (mgr.isOnePropertyPerLine() && (node.getOwnerDocument() != node || !mgr.isProhibitWrapOnAttr()))
+		} else if ((prev != null || ((IndexedRegion) node).getEndOffset() <= 0)) {
+			Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
+
+			if (preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_ONE_PER_LINE) && (node.getOwnerDocument() != node || !preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR)))
 				appendDelimBefore(node, null, source);
 			else if (prev != null || node.getOwnerDocument() != node)
 				appendSpaceBefore(node, toAppend, source);
@@ -165,18 +162,18 @@ public class StyleDeclarationFormatter extends DefaultCSSSourceFormatter {
 		IStructuredDocument structuredDocument = node.getOwnerDocument().getModel().getStructuredDocument();
 		CompoundRegion[] regions = getRegionsWithoutWhiteSpaces(structuredDocument, region, stgy);
 		CompoundRegion[] outside = getOutsideRegions(structuredDocument, region);
-		CSSPreferenceHelper mgr = CSSPreferenceHelper.getInstance();
+
 		for (int i = 0; i < regions.length; i++) {
 			if (i != 0 || needS(outside[0]))
 				appendSpaceBefore(node, regions[i], source);
 			source.append(decoratedRegion(regions[i], 0, stgy)); // must be
-																	// comments
+			// comments
 		}
+		Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
 		if (needS(outside[1])) {
-			if (((IndexedRegion) child).getStartOffset() == region.getOffset() + region.getLength() && mgr.isOnePropertyPerLine() && (node.getOwnerDocument() != node || !mgr.isProhibitWrapOnAttr())) {
+			if (((IndexedRegion) child).getStartOffset() == region.getOffset() + region.getLength() && preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_ONE_PER_LINE) && (node.getOwnerDocument() != node || !preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR))) {
 				appendDelimBefore(node, null, source);
-			}
-			else
+			} else
 				appendSpaceBefore(node, toAppend, source);
 		}
 	}
@@ -192,8 +189,7 @@ public class StyleDeclarationFormatter extends DefaultCSSSourceFormatter {
 			CSSSourceGenerator formatter = getParentFormatter(node);
 			return (formatter != null) ? formatter.getChildInsertPos(node.getParentNode()) : -1;
 		}
-		else
-			return pos;
+		return pos;
 	}
 
 	/**

@@ -14,13 +14,12 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
+import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.html.core.internal.provisional.HTMLCMProperties;
 import org.eclipse.wst.html.core.internal.provisional.HTMLFormatContraints;
-import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatContraints;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatPreferences;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
-import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
@@ -613,20 +612,22 @@ public class HTMLFormatter implements IStructuredFormatter {
 
 			Preferences preferences = HTMLCorePlugin.getDefault().getPluginPreferences();
 			if (preferences != null) {
-				fFormatPreferences.setLineWidth(preferences.getInt(CommonModelPreferenceNames.LINE_WIDTH));
-				((IStructuredFormatPreferencesXML) fFormatPreferences).setSplitMultiAttrs(preferences.getBoolean(CommonModelPreferenceNames.SPLIT_MULTI_ATTRS));
-				fFormatPreferences.setClearAllBlankLines(preferences.getBoolean(CommonModelPreferenceNames.CLEAR_ALL_BLANK_LINES));
+				fFormatPreferences.setLineWidth(preferences.getInt(HTMLCorePreferenceNames.LINE_WIDTH));
+				((IStructuredFormatPreferencesXML) fFormatPreferences).setSplitMultiAttrs(preferences.getBoolean(HTMLCorePreferenceNames.SPLIT_MULTI_ATTRS));
+				fFormatPreferences.setClearAllBlankLines(preferences.getBoolean(HTMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES));
 
-				if (preferences.getBoolean(CommonModelPreferenceNames.INDENT_USING_TABS))
-					fFormatPreferences.setIndent("\t"); //$NON-NLS-1$
-				else {
-					int tabWidth = SSECorePlugin.getDefault().getPluginPreferences().getInt(CommonModelPreferenceNames.TAB_WIDTH);
-					String indent = ""; //$NON-NLS-1$
-					for (int i = 0; i < tabWidth; i++) {
-						indent += " "; //$NON-NLS-1$
-					}
-					fFormatPreferences.setIndent(indent);
+				String indentChar = " "; //$NON-NLS-1$
+				String indentCharPref = preferences.getString(HTMLCorePreferenceNames.INDENTATION_CHAR);
+				if (HTMLCorePreferenceNames.TAB.equals(indentCharPref)) {
+					indentChar = "\t"; //$NON-NLS-1$
 				}
+				int indentationWidth = preferences.getInt(HTMLCorePreferenceNames.INDENTATION_SIZE);
+
+				String indent = ""; //$NON-NLS-1$
+				for (int i = 0; i < indentationWidth; i++) {
+					indent += indentChar;
+				}
+				fFormatPreferences.setIndent(indent);
 			}
 		}
 

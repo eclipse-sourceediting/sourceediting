@@ -23,27 +23,35 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.help.WorkbenchHelp;
-import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.editor.IHelpContextIds;
 
 public class XMLSourcePreferencePage extends AbstractPreferencePage implements ModifyListener, SelectionListener, IWorkbenchPreferencePage {
+	private final int MIN_INDENTATION_SIZE = 0;
+	private final int MAX_INDENTATION_SIZE = 16;
+
 	// Content Assist
 	protected Button fAutoPropose;
 	protected Label fAutoProposeLabel;
 	protected Text fAutoProposeText;
 	protected Button fClearAllBlankLines;
-	protected Button fIndentUsingTabs;
+
 	// Formatting
 	protected Label fLineWidthLabel;
 	protected Text fLineWidthText;
 	protected Button fSplitMultiAttrs;
+	private Button fIndentUsingTabs;
+	private Button fIndentUsingSpaces;
+	private Spinner fIndentationSize;
+
 	// grammar constraints
 	protected Button fUseInferredGrammar;
 
@@ -85,12 +93,25 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 
 		fSplitMultiAttrs = createCheckBox(formattingGroup, XMLUIMessages.Split_multiple_attributes);
 		((GridData) fSplitMultiAttrs.getLayoutData()).horizontalSpan = 2;
-
-		fIndentUsingTabs = createCheckBox(formattingGroup, XMLUIMessages.Indent_using_tabs);
-		((GridData) fIndentUsingTabs.getLayoutData()).horizontalSpan = 2;
-
 		fClearAllBlankLines = createCheckBox(formattingGroup, XMLUIMessages.Clear_all_blank_lines_UI_);
 		((GridData) fClearAllBlankLines.getLayoutData()).horizontalSpan = 2;
+
+		fIndentUsingTabs = createRadioButton(formattingGroup, XMLUIMessages.Indent_using_tabs);
+		((GridData) fIndentUsingTabs.getLayoutData()).horizontalSpan = 2;
+		
+		fIndentUsingSpaces = createRadioButton(formattingGroup, XMLUIMessages.Indent_using_spaces);		
+		((GridData) fIndentUsingSpaces.getLayoutData()).horizontalSpan = 2;
+
+		createLabel(formattingGroup, XMLUIMessages.Indentation_size);
+		fIndentationSize = new Spinner(formattingGroup, SWT.READ_ONLY | SWT.BORDER);
+		GridData gd = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		fIndentationSize.setLayoutData(gd);
+		fIndentationSize.setToolTipText(XMLUIMessages.Indentation_size_tip);
+		fIndentationSize.setMinimum(MIN_INDENTATION_SIZE);
+		fIndentationSize.setMaximum(MAX_INDENTATION_SIZE);
+		fIndentationSize.setIncrement(1);
+		fIndentationSize.setPageIncrement(4);
+		fIndentationSize.addModifyListener(this);
 	}
 
 	protected void createContentsForGrammarConstraintsGroup(Composite parent) {
@@ -122,15 +143,6 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 		}
 	}
 
-	/**
-	 * @deprecated key no longer needed (preference should be stored in their own preference store)
-	 */
-	protected String getKey(String key) {
-//		String contentTypeId = IContentTypeIdentifier.ContentTypeID_SSEXML;
-//		return PreferenceKeyGenerator.generateKey(key, contentTypeId);
-		return key;
-	}
-
 	protected Preferences getModelPreferences() {
 		return XMLCorePlugin.getDefault().getPluginPreferences();
 	}
@@ -149,10 +161,19 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 
 	protected void initializeValuesForFormattingGroup() {
 		// Formatting
-		fLineWidthText.setText(getModelPreferences().getString(CommonModelPreferenceNames.LINE_WIDTH));
-		fSplitMultiAttrs.setSelection(getModelPreferences().getBoolean(CommonModelPreferenceNames.SPLIT_MULTI_ATTRS));
-		fIndentUsingTabs.setSelection(getModelPreferences().getBoolean(CommonModelPreferenceNames.INDENT_USING_TABS));
-		fClearAllBlankLines.setSelection(getModelPreferences().getBoolean(CommonModelPreferenceNames.CLEAR_ALL_BLANK_LINES));
+		fLineWidthText.setText(getModelPreferences().getString(XMLCorePreferenceNames.LINE_WIDTH));
+		fSplitMultiAttrs.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.SPLIT_MULTI_ATTRS));
+		fClearAllBlankLines.setSelection(getModelPreferences().getBoolean(XMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES));
+
+		if (XMLCorePreferenceNames.TAB.equals(getModelPreferences().getString(XMLCorePreferenceNames.INDENTATION_CHAR))) {
+			fIndentUsingTabs.setSelection(true);
+			fIndentUsingSpaces.setSelection(false);
+		} else {
+			fIndentUsingSpaces.setSelection(true);
+			fIndentUsingTabs.setSelection(false);
+		}
+
+		fIndentationSize.setSelection(getModelPreferences().getInt(XMLCorePreferenceNames.INDENTATION_SIZE));
 	}
 
 	protected void initializeValuesForGrammarConstraintsGroup() {
@@ -178,10 +199,18 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 
 	protected void performDefaultsForFormattingGroup() {
 		// Formatting
-		fLineWidthText.setText(getModelPreferences().getDefaultString(CommonModelPreferenceNames.LINE_WIDTH));
-		fSplitMultiAttrs.setSelection(getModelPreferences().getDefaultBoolean(CommonModelPreferenceNames.SPLIT_MULTI_ATTRS));
-		fIndentUsingTabs.setSelection(getModelPreferences().getDefaultBoolean(CommonModelPreferenceNames.INDENT_USING_TABS));
-		fClearAllBlankLines.setSelection(getModelPreferences().getDefaultBoolean(CommonModelPreferenceNames.CLEAR_ALL_BLANK_LINES));
+		fLineWidthText.setText(getModelPreferences().getDefaultString(XMLCorePreferenceNames.LINE_WIDTH));
+		fSplitMultiAttrs.setSelection(getModelPreferences().getDefaultBoolean(XMLCorePreferenceNames.SPLIT_MULTI_ATTRS));
+		fClearAllBlankLines.setSelection(getModelPreferences().getDefaultBoolean(XMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES));
+
+		if (XMLCorePreferenceNames.TAB.equals(getModelPreferences().getDefaultString(XMLCorePreferenceNames.INDENTATION_CHAR))) {
+			fIndentUsingTabs.setSelection(true);
+			fIndentUsingSpaces.setSelection(false);
+		} else {
+			fIndentUsingSpaces.setSelection(true);
+			fIndentUsingTabs.setSelection(false);
+		}
+		fIndentationSize.setSelection(getModelPreferences().getDefaultInt(XMLCorePreferenceNames.INDENTATION_SIZE));
 	}
 
 	protected void performDefaultsForGrammarConstraintsGroup() {
@@ -210,10 +239,16 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 
 	protected void storeValuesForFormattingGroup() {
 		// Formatting
-		getModelPreferences().setValue(CommonModelPreferenceNames.LINE_WIDTH, fLineWidthText.getText());
-		getModelPreferences().setValue(CommonModelPreferenceNames.SPLIT_MULTI_ATTRS, fSplitMultiAttrs.getSelection());
-		getModelPreferences().setValue(CommonModelPreferenceNames.INDENT_USING_TABS, fIndentUsingTabs.getSelection());
-		getModelPreferences().setValue(CommonModelPreferenceNames.CLEAR_ALL_BLANK_LINES, fClearAllBlankLines.getSelection());
+		getModelPreferences().setValue(XMLCorePreferenceNames.LINE_WIDTH, fLineWidthText.getText());
+		getModelPreferences().setValue(XMLCorePreferenceNames.SPLIT_MULTI_ATTRS, fSplitMultiAttrs.getSelection());
+		getModelPreferences().setValue(XMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES, fClearAllBlankLines.getSelection());
+
+		if (fIndentUsingTabs.getSelection()) {
+			getModelPreferences().setValue(XMLCorePreferenceNames.INDENTATION_CHAR, XMLCorePreferenceNames.TAB);
+		} else {
+			getModelPreferences().setValue(XMLCorePreferenceNames.INDENTATION_CHAR, XMLCorePreferenceNames.SPACE);
+		}
+		getModelPreferences().setValue(XMLCorePreferenceNames.INDENTATION_SIZE, fIndentationSize.getSelection());
 	}
 
 	protected void storeValuesForGrammarConstraintsGroup() {
@@ -232,6 +267,19 @@ public class XMLSourcePreferencePage extends AbstractPreferencePage implements M
 					throw new NumberFormatException();
 			} catch (NumberFormatException nfexc) {
 				setInvalidInputMessage(widthText);
+				setValid(false);
+				isError = true;
+			}
+		}
+
+		int indentSize = 0;
+		if (fIndentationSize != null) {
+			try {
+				indentSize = fIndentationSize.getSelection();
+				if ((indentSize < MIN_INDENTATION_SIZE) || (indentSize > MAX_INDENTATION_SIZE))
+					throw new NumberFormatException();
+			} catch (NumberFormatException nfexc) {
+				setInvalidInputMessage(Integer.toString(indentSize));
 				setValid(false);
 				isError = true;
 			}

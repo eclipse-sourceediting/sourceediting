@@ -119,6 +119,11 @@
 		</content-type>
    </extension>
    
+	<!-- initialize xml core preferences -->
+	<extension point="org.eclipse.core.runtime.preferences">
+         <initializer class="org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceInitializer"/>
+	</extension>
+   
    	<!-- added following from content model plugin.xml -->
 	
 	

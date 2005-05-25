@@ -18,110 +18,75 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.css.core.internal.CSSCorePlugin;
-import org.eclipse.wst.css.core.internal.provisional.preferences.CSSModelPreferenceNames;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.ui.internal.CSSUIMessages;
 import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.css.ui.internal.editor.IHelpContextIds;
-import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
-import org.eclipse.wst.xml.ui.internal.preferences.XMLSourcePreferencePage;
+import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage;
 
 /**
  */
-public class CSSSourcePreferencePage extends XMLSourcePreferencePage {
-	// Formatting
-	private final static String FORMATTING_GROUP = CSSUIMessages.Formatting_UI_;
-	private final static String FORMATTING_LINE_WIDTH = CSSUIMessages.Line_width__UI_; 
-	private final static String FORMATTING_INDENT_USING_TABS = CSSUIMessages.Indent_using_tabs_;
-	// CSS Formatting
-	private final static String FORMATTING_INSERT_LINE_BREAK = CSSUIMessages.PrefsLabel_WrappingInsertLineBreak; //$NON-NLS-1$
-	private final static String FORMATTING_WRAPPING_WITHOUT_ATTR = CSSUIMessages.PrefsLabel_WrappingWithoutAttr;//$NON-NLS-1$
+public class CSSSourcePreferencePage extends AbstractPreferencePage {
+	// Content Assist
+	protected Button fAutoPropose;
+	protected Label fAutoProposeLabel;
 
-	// Case
-	private final static String CASE_GROUP = CSSUIMessages.PrefsLabel_CaseGroup; //$NON-NLS-1$
-	private final static String CASE_IDENT = CSSUIMessages.PrefsLabel_CaseIdent; //$NON-NLS-1$
-	private final static String CASE_PROP_NAME = CSSUIMessages.PrefsLabel_CasePropName; //$NON-NLS-1$
-	private final static String CASE_PROP_VALUE = CSSUIMessages.PrefsLabel_CasePropValue; //$NON-NLS-1$
-	private final static String CASE_IDENT_UPPER = CSSUIMessages.PrefsLabel_CaseIdentUpper; //$NON-NLS-1$
-	private final static String CASE_IDENT_LOWER = CSSUIMessages.PrefsLabel_CaseIdentLower; //$NON-NLS-1$
-	private final static String CASE_PROP_NAME_UPPER = CSSUIMessages.PrefsLabel_CasePropNameUpper; //$NON-NLS-1$
-	private final static String CASE_PROP_NAME_LOWER = CSSUIMessages.PrefsLabel_CasePropNameLower; //$NON-NLS-1$
-	private final static String CASE_PROP_VALUE_UPPER = CSSUIMessages.PrefsLabel_CasePropValueUpper; //$NON-NLS-1$
-	private final static String CASE_PROP_VALUE_LOWER = CSSUIMessages.PrefsLabel_CasePropValueLower; //$NON-NLS-1$
-
-	// one property per one line
-	protected Button fPropertyPerLine;
-	// prohibit wrapping if style attribute
-	protected Button fNowrapAttr;
-
+	protected Text fAutoProposeText;
+	protected Button fClearAllBlankLines;
+	protected Button fIdentLower;
 	// case of output character
 	// case of identifier
 	protected Button fIdentUpper;
-	protected Button fIdentLower;
+	private Spinner fIndentationSize;
+	private Button fIndentUsingSpaces;
+	
+	private Button fIndentUsingTabs;
+	// Formatting
+	protected Label fLineWidthLabel;
+	
+	protected Text fLineWidthText;
+	// prohibit wrapping if style attribute
+	protected Button fNowrapAttr;
+	// one property per one line
+	protected Button fPropertyPerLine;
+	protected Button fPropNameLower;
+
 	// case of property name
 	protected Button fPropNameUpper;
-	protected Button fPropNameLower;
+	protected Button fPropValueLower;
 	// case of property value
 	protected Button fPropValueUpper;
-	protected Button fPropValueLower;
+	protected Button fSplitMultiAttrs;
+	private final int MAX_INDENTATION_SIZE = 16;
+	private final int MIN_INDENTATION_SIZE = 0;
 
-	protected void createContentsForFormattingGroup(Composite parent) {
-		Group formattingGroup = createGroup(parent, 2);
-		formattingGroup.setText(FORMATTING_GROUP);
-		//		// assigning one help for whole group
-		//		WorkbenchHelp.setHelp(formattingGroup,
-		// "com.ibm.etools.webedit.core.cssp1200"); //$NON-NLS-1$
 
-		fLineWidthLabel = createLabel(formattingGroup, FORMATTING_LINE_WIDTH);
-		fLineWidthText = new Text(formattingGroup, SWT.SINGLE | SWT.BORDER);
-		GridData gData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.BEGINNING);
-		gData.widthHint = 25;
-		fLineWidthText.setLayoutData(gData);
-		fLineWidthText.addModifyListener(this);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
+	 */
+	protected Control createContents(Composite parent) {
+		Composite composite = (Composite) super.createContents(parent);
+		WorkbenchHelp.setHelp(composite, IHelpContextIds.CSS_PREFWEBX_SOURCE_HELPID);
 
-		fPropertyPerLine = createCheckBox(formattingGroup, FORMATTING_INSERT_LINE_BREAK);
-		((GridData) fPropertyPerLine.getLayoutData()).horizontalSpan = 2;
+		createContentsForFormattingGroup(composite);
+		createContentsForContentAssistGroup(composite);
+		setSize(composite);
+		loadPreferences();
 
-		fIndentUsingTabs = createCheckBox(formattingGroup, FORMATTING_INDENT_USING_TABS);
-		((GridData) fIndentUsingTabs.getLayoutData()).horizontalSpan = 2;
-
-		fNowrapAttr = createCheckBox(formattingGroup, FORMATTING_WRAPPING_WITHOUT_ATTR);
-		((GridData) fNowrapAttr.getLayoutData()).horizontalSpan = 2;
+		return composite;
 	}
 
-	protected void performDefaultsForFormattingGroup() {
-		// Formatting
-		Preferences prefs = getModelPreferences();
-		fLineWidthText.setText(prefs.getDefaultString(CommonModelPreferenceNames.LINE_WIDTH));
-		fPropertyPerLine.setSelection(prefs.getDefaultBoolean(CSSModelPreferenceNames.WRAPPING_ONE_PER_LINE));
-		fIndentUsingTabs.setSelection(prefs.getDefaultBoolean(CommonModelPreferenceNames.INDENT_USING_TABS));
-		fNowrapAttr.setSelection(prefs.getDefaultBoolean(CSSModelPreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR));
-	}
-
-	protected void initializeValuesForFormattingGroup() {
-		// Formatting
-		Preferences prefs = getModelPreferences();
-		fLineWidthText.setText(prefs.getString(CommonModelPreferenceNames.LINE_WIDTH));
-		fPropertyPerLine.setSelection(prefs.getBoolean(CSSModelPreferenceNames.WRAPPING_ONE_PER_LINE));
-		fIndentUsingTabs.setSelection(prefs.getBoolean(CommonModelPreferenceNames.INDENT_USING_TABS));
-		fNowrapAttr.setSelection(prefs.getBoolean(CSSModelPreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR));
-	}
-
-	protected void storeValuesForFormattingGroup() {
-		// Formatting
-		Preferences prefs = getModelPreferences();
-		prefs.setValue(CommonModelPreferenceNames.LINE_WIDTH, fLineWidthText.getText());
-		prefs.setValue(CSSModelPreferenceNames.WRAPPING_ONE_PER_LINE, fPropertyPerLine.getSelection());
-		prefs.setValue(CommonModelPreferenceNames.INDENT_USING_TABS, fIndentUsingTabs.getSelection());
-		prefs.setValue(CSSModelPreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR, fNowrapAttr.getSelection());
-	}
-
-	protected void createContentsForContentAssistGroup(Composite parent) {
+	private void createContentsForContentAssistGroup(Composite parent) {
 		// not content assist, but preferred case
 		Group caseGroup = createGroup(parent, 3);
-		caseGroup.setText(CASE_GROUP);
+		caseGroup.setText(CSSUIMessages.PrefsLabel_CaseGroup);
 		//		WorkbenchHelp.setHelp(caseGroup,
 		// "com.ibm.etools.webedit.core.cssp1400"); //$NON-NLS-1$
 
@@ -132,89 +97,79 @@ public class CSSSourcePreferencePage extends XMLSourcePreferencePage {
 		// use group for radio buttons so that associated label is read
 		//		Composite identGroup = createComposite(caseGroup, 1);
 		Group identGroup = createGroup(caseGroup, 1);
-		identGroup.setText(CASE_IDENT);
-		fIdentUpper = createRadioButton(identGroup, CASE_IDENT_UPPER);
-		fIdentLower = createRadioButton(identGroup, CASE_IDENT_LOWER);
+		identGroup.setText(CSSUIMessages.PrefsLabel_CaseIdent);
+		fIdentUpper = createRadioButton(identGroup, CSSUIMessages.PrefsLabel_CaseIdentUpper);
+		fIdentLower = createRadioButton(identGroup, CSSUIMessages.PrefsLabel_CaseIdentLower);
 
 		// use group for radio buttons so that associated label is read
 		//		Composite propNameGroup = createComposite(caseGroup, 1);
 		Group propNameGroup = createGroup(caseGroup, 1);
-		propNameGroup.setText(CASE_PROP_NAME);
-		fPropNameUpper = createRadioButton(propNameGroup, CASE_PROP_NAME_UPPER);
-		fPropNameLower = createRadioButton(propNameGroup, CASE_PROP_NAME_LOWER);
+		propNameGroup.setText(CSSUIMessages.PrefsLabel_CasePropName);
+		fPropNameUpper = createRadioButton(propNameGroup, CSSUIMessages.PrefsLabel_CasePropNameUpper);
+		fPropNameLower = createRadioButton(propNameGroup, CSSUIMessages.PrefsLabel_CasePropNameLower);
 
 		// use group for radio buttons so that associated label is read
 		//		Composite propValueGroup = createComposite(caseGroup, 1);
 		Group propValueGroup = createGroup(caseGroup, 1);
-		propValueGroup.setText(CASE_PROP_VALUE);
-		fPropValueUpper = createRadioButton(propValueGroup, CASE_PROP_VALUE_UPPER);
-		fPropValueLower = createRadioButton(propValueGroup, CASE_PROP_VALUE_LOWER);
+		propValueGroup.setText(CSSUIMessages.PrefsLabel_CasePropValue);
+		fPropValueUpper = createRadioButton(propValueGroup, CSSUIMessages.PrefsLabel_CasePropValueUpper);
+		fPropValueLower = createRadioButton(propValueGroup, CSSUIMessages.PrefsLabel_CasePropValueLower);
 	}
 
-	protected void performDefaultsForContentAssistGroup() {
-		// not content assist, but preferred case
-		Preferences prefs = getModelPreferences();
-		fIdentUpper.setSelection(prefs.getDefaultInt(CSSModelPreferenceNames.CASE_IDENTIFIER) == CommonModelPreferenceNames.UPPER);
-		fIdentLower.setSelection(prefs.getDefaultInt(CSSModelPreferenceNames.CASE_IDENTIFIER) == CommonModelPreferenceNames.LOWER);
-		fPropNameUpper.setSelection(prefs.getDefaultInt(CSSModelPreferenceNames.CASE_PROPERTY_NAME) == CommonModelPreferenceNames.UPPER);
-		fPropNameLower.setSelection(prefs.getDefaultInt(CSSModelPreferenceNames.CASE_PROPERTY_NAME) == CommonModelPreferenceNames.LOWER);
-		fPropValueUpper.setSelection(prefs.getDefaultInt(CSSModelPreferenceNames.CASE_PROPERTY_VALUE) == CommonModelPreferenceNames.UPPER);
-		fPropValueLower.setSelection(prefs.getDefaultInt(CSSModelPreferenceNames.CASE_PROPERTY_VALUE) == CommonModelPreferenceNames.LOWER);
+	private void createContentsForFormattingGroup(Composite parent) {
+		Group formattingGroup = createGroup(parent, 2);
+		formattingGroup.setText(CSSUIMessages.Formatting_UI_);
+		//		// assigning one help for whole group
+		//		WorkbenchHelp.setHelp(formattingGroup,
+		// "com.ibm.etools.webedit.core.cssp1200"); //$NON-NLS-1$
+
+		fLineWidthLabel = createLabel(formattingGroup, CSSUIMessages.Line_width__UI_);
+		fLineWidthText = new Text(formattingGroup, SWT.SINGLE | SWT.BORDER);
+		GridData gData = new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING | GridData.BEGINNING);
+		gData.widthHint = 25;
+		fLineWidthText.setLayoutData(gData);
+		fLineWidthText.addModifyListener(this);
+
+		fPropertyPerLine = createCheckBox(formattingGroup, CSSUIMessages.PrefsLabel_WrappingInsertLineBreak);
+		((GridData) fPropertyPerLine.getLayoutData()).horizontalSpan = 2;
+
+		fNowrapAttr = createCheckBox(formattingGroup, CSSUIMessages.PrefsLabel_WrappingWithoutAttr);
+		((GridData) fNowrapAttr.getLayoutData()).horizontalSpan = 2;
+		
+		fIndentUsingTabs = createRadioButton(formattingGroup, CSSUIMessages.Indent_using_tabs_);
+		((GridData) fIndentUsingTabs.getLayoutData()).horizontalSpan = 2;
+		fIndentUsingSpaces = createRadioButton(formattingGroup, CSSUIMessages.Indent_using_spaces);
+		((GridData) fIndentUsingSpaces.getLayoutData()).horizontalSpan = 2;
+		
+		createLabel(formattingGroup, CSSUIMessages.Indentation_size);
+		fIndentationSize = new Spinner(formattingGroup, SWT.READ_ONLY | SWT.BORDER);
+		GridData gd= new GridData(GridData.HORIZONTAL_ALIGN_BEGINNING);
+		fIndentationSize.setLayoutData(gd);
+		fIndentationSize.setToolTipText(CSSUIMessages.Indentation_size_tip);
+		fIndentationSize.setMinimum(MIN_INDENTATION_SIZE);
+		fIndentationSize.setMaximum(MAX_INDENTATION_SIZE);
+		fIndentationSize.setIncrement(1);
+		fIndentationSize.setPageIncrement(4);
+		fIndentationSize.addModifyListener(this);
 	}
 
-	protected void initializeValuesForContentAssistGroup() {
-		// not content assist, but preferred case
-		Preferences prefs = getModelPreferences();
-		fIdentUpper.setSelection(prefs.getInt(CSSModelPreferenceNames.CASE_IDENTIFIER) == CommonModelPreferenceNames.UPPER);
-		fIdentLower.setSelection(prefs.getInt(CSSModelPreferenceNames.CASE_IDENTIFIER) == CommonModelPreferenceNames.LOWER);
-		fPropNameUpper.setSelection(prefs.getInt(CSSModelPreferenceNames.CASE_PROPERTY_NAME) == CommonModelPreferenceNames.UPPER);
-		fPropNameLower.setSelection(prefs.getInt(CSSModelPreferenceNames.CASE_PROPERTY_NAME) == CommonModelPreferenceNames.LOWER);
-		fPropValueUpper.setSelection(prefs.getInt(CSSModelPreferenceNames.CASE_PROPERTY_VALUE) == CommonModelPreferenceNames.UPPER);
-		fPropValueLower.setSelection(prefs.getInt(CSSModelPreferenceNames.CASE_PROPERTY_VALUE) == CommonModelPreferenceNames.LOWER);
-	}
-
-	protected void storeValuesForContentAssistGroup() {
-		// not content assist, but preferred case
-		Preferences prefs = getModelPreferences();
-		prefs.setValue(CSSModelPreferenceNames.CASE_IDENTIFIER, (fIdentUpper.getSelection()) ? CommonModelPreferenceNames.UPPER : CommonModelPreferenceNames.LOWER);
-		prefs.setValue(CSSModelPreferenceNames.CASE_PROPERTY_NAME, (fPropNameUpper.getSelection()) ? CommonModelPreferenceNames.UPPER : CommonModelPreferenceNames.LOWER);
-		prefs.setValue(CSSModelPreferenceNames.CASE_PROPERTY_VALUE, (fPropValueUpper.getSelection()) ? CommonModelPreferenceNames.UPPER : CommonModelPreferenceNames.LOWER);
-	}
-
-	protected void createContentsForGrammarConstraintsGroup(Composite parent) {
-		// do nothing
-	}
-
-	protected void performDefaultsForGrammarConstraintsGroup() {
-		// do nothing
-	}
-
-	protected void initializeValuesForGrammarConstraintsGroup() {
-		// do nothing
-	}
-
-	protected void storeValuesForGrammarConstraintsGroup() {
-		// do nothing
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see org.eclipse.jface.preference.PreferencePage#doGetPreferenceStore()
 	 */
-	//	protected IPreferenceStore doGetPreferenceStore() {
-	//		return CSSUIPlugin.getDefault().getPreferenceStore();
-	//	}
+	protected IPreferenceStore doGetPreferenceStore() {
+		return CSSUIPlugin.getDefault().getPreferenceStore();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see com.ibm.sse.editor.xml.preferences.ui.XMLFilesPreferencePage#doSavePreferenceStore()
 	 */
-	protected void doSavePreferenceStore() {
+	private void doSavePreferenceStore() {
 		CSSUIPlugin.getDefault().savePluginPreferences();
 		CSSCorePlugin.getDefault().savePluginPreferences(); // model
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -224,20 +179,110 @@ public class CSSSourcePreferencePage extends XMLSourcePreferencePage {
 		return CSSCorePlugin.getDefault().getPluginPreferences();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
-	 */
-	protected Control createContents(Composite parent) {
-		Control c = super.createContents(parent);
-		WorkbenchHelp.setHelp(c, IHelpContextIds.CSS_PREFWEBX_SOURCE_HELPID);
-		return c;
+	protected void initializeValues() {
+		initializeValuesForFormattingGroup();
+		initializeValuesForContentAssistGroup();
 	}
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.preference.PreferencePage#doGetPreferenceStore()
-	 */
-	protected IPreferenceStore doGetPreferenceStore() {
-		return CSSUIPlugin.getDefault().getPreferenceStore();
+	
+	private void initializeValuesForContentAssistGroup() {
+		// not content assist, but preferred case
+		Preferences prefs = getModelPreferences();
+		fIdentUpper.setSelection(prefs.getInt(CSSCorePreferenceNames.CASE_IDENTIFIER) == CSSCorePreferenceNames.UPPER);
+		fIdentLower.setSelection(prefs.getInt(CSSCorePreferenceNames.CASE_IDENTIFIER) == CSSCorePreferenceNames.LOWER);
+		fPropNameUpper.setSelection(prefs.getInt(CSSCorePreferenceNames.CASE_PROPERTY_NAME) == CSSCorePreferenceNames.UPPER);
+		fPropNameLower.setSelection(prefs.getInt(CSSCorePreferenceNames.CASE_PROPERTY_NAME) == CSSCorePreferenceNames.LOWER);
+		fPropValueUpper.setSelection(prefs.getInt(CSSCorePreferenceNames.CASE_PROPERTY_VALUE) == CSSCorePreferenceNames.UPPER);
+		fPropValueLower.setSelection(prefs.getInt(CSSCorePreferenceNames.CASE_PROPERTY_VALUE) == CSSCorePreferenceNames.LOWER);
+	}
+
+	private void initializeValuesForFormattingGroup() {
+		// Formatting
+		Preferences prefs = getModelPreferences();
+		fLineWidthText.setText(prefs.getString(CSSCorePreferenceNames.LINE_WIDTH));
+		fPropertyPerLine.setSelection(prefs.getBoolean(CSSCorePreferenceNames.WRAPPING_ONE_PER_LINE));
+		fNowrapAttr.setSelection(prefs.getBoolean(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR));
+		
+		if (CSSCorePreferenceNames.TAB.equals(getModelPreferences().getString(CSSCorePreferenceNames.INDENTATION_CHAR))) {
+			fIndentUsingTabs.setSelection(true);
+			fIndentUsingSpaces.setSelection(false);
+		} else {
+			fIndentUsingSpaces.setSelection(true);
+			fIndentUsingTabs.setSelection(false);
+		}
+			
+		fIndentationSize.setSelection(getModelPreferences().getInt(CSSCorePreferenceNames.INDENTATION_SIZE));
+	}
+	
+	protected void performDefaults() {
+		performDefaultsForFormattingGroup();
+		performDefaultsForContentAssistGroup();
+
+		validateValues();
+		enableValues();
+
+		super.performDefaults();
+	}
+	
+	private void performDefaultsForContentAssistGroup() {
+		// not content assist, but preferred case
+		Preferences prefs = getModelPreferences();
+		fIdentUpper.setSelection(prefs.getDefaultInt(CSSCorePreferenceNames.CASE_IDENTIFIER) == CSSCorePreferenceNames.UPPER);
+		fIdentLower.setSelection(prefs.getDefaultInt(CSSCorePreferenceNames.CASE_IDENTIFIER) == CSSCorePreferenceNames.LOWER);
+		fPropNameUpper.setSelection(prefs.getDefaultInt(CSSCorePreferenceNames.CASE_PROPERTY_NAME) == CSSCorePreferenceNames.UPPER);
+		fPropNameLower.setSelection(prefs.getDefaultInt(CSSCorePreferenceNames.CASE_PROPERTY_NAME) == CSSCorePreferenceNames.LOWER);
+		fPropValueUpper.setSelection(prefs.getDefaultInt(CSSCorePreferenceNames.CASE_PROPERTY_VALUE) == CSSCorePreferenceNames.UPPER);
+		fPropValueLower.setSelection(prefs.getDefaultInt(CSSCorePreferenceNames.CASE_PROPERTY_VALUE) == CSSCorePreferenceNames.LOWER);
+	}
+
+	private void performDefaultsForFormattingGroup() {
+		// Formatting
+		Preferences prefs = getModelPreferences();
+		fLineWidthText.setText(prefs.getDefaultString(CSSCorePreferenceNames.LINE_WIDTH));
+		fPropertyPerLine.setSelection(prefs.getDefaultBoolean(CSSCorePreferenceNames.WRAPPING_ONE_PER_LINE));
+		fNowrapAttr.setSelection(prefs.getDefaultBoolean(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR));
+		
+		if (CSSCorePreferenceNames.TAB.equals(getModelPreferences().getDefaultString(CSSCorePreferenceNames.INDENTATION_CHAR))) {
+			fIndentUsingTabs.setSelection(true);
+			fIndentUsingSpaces.setSelection(false);
+		} else {
+			fIndentUsingSpaces.setSelection(true);
+			fIndentUsingTabs.setSelection(false);
+		}		
+		fIndentationSize.setSelection(getModelPreferences().getDefaultInt(CSSCorePreferenceNames.INDENTATION_SIZE));
+	}
+
+	public boolean performOk() {
+		boolean result = super.performOk();
+
+		doSavePreferenceStore();
+
+		return result;
+	}
+
+	protected void storeValues() {
+		storeValuesForFormattingGroup();
+		storeValuesForContentAssistGroup();
+	}
+
+	private void storeValuesForContentAssistGroup() {
+		// not content assist, but preferred case
+		Preferences prefs = getModelPreferences();
+		prefs.setValue(CSSCorePreferenceNames.CASE_IDENTIFIER, (fIdentUpper.getSelection()) ? CSSCorePreferenceNames.UPPER : CSSCorePreferenceNames.LOWER);
+		prefs.setValue(CSSCorePreferenceNames.CASE_PROPERTY_NAME, (fPropNameUpper.getSelection()) ? CSSCorePreferenceNames.UPPER : CSSCorePreferenceNames.LOWER);
+		prefs.setValue(CSSCorePreferenceNames.CASE_PROPERTY_VALUE, (fPropValueUpper.getSelection()) ? CSSCorePreferenceNames.UPPER : CSSCorePreferenceNames.LOWER);
+	}
+	private void storeValuesForFormattingGroup() {
+		// Formatting
+		Preferences prefs = getModelPreferences();
+		prefs.setValue(CSSCorePreferenceNames.LINE_WIDTH, fLineWidthText.getText());
+		prefs.setValue(CSSCorePreferenceNames.WRAPPING_ONE_PER_LINE, fPropertyPerLine.getSelection());
+		prefs.setValue(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR, fNowrapAttr.getSelection());
+		
+		if (fIndentUsingTabs.getSelection()) {
+			getModelPreferences().setValue(CSSCorePreferenceNames.INDENTATION_CHAR, CSSCorePreferenceNames.TAB);
+		} else {
+			getModelPreferences().setValue(CSSCorePreferenceNames.INDENTATION_CHAR, CSSCorePreferenceNames.SPACE);
+		}
+		getModelPreferences().setValue(CSSCorePreferenceNames.INDENTATION_SIZE, fIndentationSize.getSelection());
 	}
 }

@@ -14,13 +14,9 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPIndexManager;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchSupport;
-import org.eclipse.wst.sse.core.internal.encoding.CommonCharsetNames;
-import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
-import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -50,42 +46,6 @@ public class JSPCorePlugin extends Plugin {
 	 */
 	public static IWorkspace getWorkspace() {
 		return ResourcesPlugin.getWorkspace();
-	}
-
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugin#initializeDefaultPluginPreferences()
-	 */
-	protected void initializeDefaultPluginPreferences() {
-		Preferences prefs = getDefault().getPluginPreferences();
-		// set model preference defaults
-		prefs.setDefault(CommonModelPreferenceNames.CLEANUP_TAG_NAME_CASE, CommonModelPreferenceNames.ASIS);
-		prefs.setDefault(CommonModelPreferenceNames.CLEANUP_ATTR_NAME_CASE, CommonModelPreferenceNames.ASIS);
-		prefs.setDefault(CommonModelPreferenceNames.INSERT_MISSING_TAGS, true);
-		prefs.setDefault(CommonModelPreferenceNames.QUOTE_ATTR_VALUES, true);
-		prefs.setDefault(CommonModelPreferenceNames.FORMAT_SOURCE, true);
-		prefs.setDefault(CommonModelPreferenceNames.CONVERT_EOL_CODES, false);
-
-		prefs.setDefault(CommonEncodingPreferenceNames.INPUT_CODESET, ""); //$NON-NLS-1$
-
-		String defaultEnc = CommonModelPreferenceNames.UTF_8;
-		String systemEnc = System.getProperty("file.encoding");		 //$NON-NLS-1$
-		if (systemEnc != null) {
-			defaultEnc = CommonCharsetNames.getPreferredDefaultIanaName(systemEnc, CommonModelPreferenceNames.UTF_8);
-		}
-		prefs.setDefault(CommonEncodingPreferenceNames.OUTPUT_CODESET, defaultEnc);
-		
-		prefs.setDefault(CommonEncodingPreferenceNames.END_OF_LINE_CODE, ""); //$NON-NLS-1$
-		prefs.setDefault(CommonModelPreferenceNames.TAB_WIDTH, CommonModelPreferenceNames.DEFAULT_TAB_WIDTH);
-
-		prefs.setDefault(CommonModelPreferenceNames.FORMATTING_SUPPORTED, true);
-		prefs.setDefault(CommonModelPreferenceNames.LINE_WIDTH, 72);
-		prefs.setDefault(CommonModelPreferenceNames.SPLIT_MULTI_ATTRS, false);
-		prefs.setDefault(CommonModelPreferenceNames.INDENT_USING_TABS, true);
-		prefs.setDefault(CommonModelPreferenceNames.CLEAR_ALL_BLANK_LINES, false);
-
-		prefs.setDefault(CommonModelPreferenceNames.PREFERRED_MARKUP_CASE_SUPPORTED, true);
-		prefs.setDefault(CommonModelPreferenceNames.TAG_NAME_CASE, CommonModelPreferenceNames.UPPER);
-		prefs.setDefault(CommonModelPreferenceNames.ATTR_NAME_CASE, CommonModelPreferenceNames.LOWER);
 	}
 
 	/* (non-Javadoc)

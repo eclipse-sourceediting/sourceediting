@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.metamodel.CSSMMDescriptor;
 import org.eclipse.wst.css.core.internal.metamodel.CSSMMFunction;
 import org.eclipse.wst.css.core.internal.metamodel.CSSMMNode;
@@ -24,10 +25,10 @@ import org.eclipse.wst.css.core.internal.metamodel.CSSMMUnit;
 import org.eclipse.wst.css.core.internal.metamodel.util.CSSFunctionID;
 import org.eclipse.wst.css.core.internal.metamodel.util.CSSMetaModelUtil;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSPrimitiveValue;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
-import org.eclipse.wst.css.core.internal.provisional.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.css.core.internal.util.CSSUtil;
 import org.eclipse.wst.css.core.internal.util.RegionIterator;
 import org.eclipse.wst.css.ui.internal.image.CSSImageType;
@@ -50,7 +51,7 @@ class CSSProposalGeneratorForDeclarationValue extends CSSProposalGenerator {
 	 */
 	CSSProposalGeneratorForDeclarationValue(CSSContentAssistContext context) {
 		super(context);
-		fUseUpperCase = CSSPreferenceHelper.getInstance().isPropValueUpperCase();
+		fUseUpperCase = CSSCorePlugin.getDefault().getPluginPreferences().getInt(CSSCorePreferenceNames.CASE_PROPERTY_VALUE) == CSSCorePreferenceNames.UPPER;
 	}
 
 	/**

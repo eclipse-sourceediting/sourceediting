@@ -16,14 +16,15 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.Preferences;
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.metamodel.CSSMMNode;
 import org.eclipse.wst.css.core.internal.metamodel.util.CSSMetaModelUtil;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
-import org.eclipse.wst.css.core.internal.provisional.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.css.ui.internal.image.CSSImageType;
-import org.eclipse.wst.css.ui.internal.preferences.CSSPreferenceManager;
 
 class CSSProposalGeneratorForDeclarationName extends CSSProposalGenerator {
 
@@ -42,14 +43,13 @@ class CSSProposalGeneratorForDeclarationName extends CSSProposalGenerator {
 	 */
 	protected Iterator getCandidates() {
 		List candidates = new ArrayList();
-
-		CSSPreferenceHelper prefs = CSSPreferenceHelper.getInstance();
+		Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
 		String preDelim = "";//$NON-NLS-1$
-		for (int i = 0; i < prefs.getSpacesPreDelimiter(); i++) {
+		for (int i = 0; i < preferences.getInt(CSSCorePreferenceNames.FORMAT_PROP_PRE_DELIM); i++) {
 			preDelim += ' ';//$NON-NLS-1$
 		}
 		String postDelim = "";//$NON-NLS-1$
-		for (int i = 0; i < prefs.getSpacesPostDelimiter(); i++) {
+		for (int i = 0; i < preferences.getInt(CSSCorePreferenceNames.FORMAT_PROP_POST_DELIM); i++) {
 			postDelim += ' ';//$NON-NLS-1$
 		}
 
@@ -70,7 +70,7 @@ class CSSProposalGeneratorForDeclarationName extends CSSProposalGenerator {
 			names.add(node);
 		}
 		sortNames(names);
-		//Collections.sort(names);
+		// Collections.sort(names);
 
 		boolean bAddColon = true;
 		if (targetNode instanceof ICSSStyleDeclItem && fContext.targetHas(CSSRegionContexts.CSS_DECLARATION_SEPARATOR)) {
@@ -81,7 +81,7 @@ class CSSProposalGeneratorForDeclarationName extends CSSProposalGenerator {
 		while (i.hasNext()) {
 			CSSMMNode node = (CSSMMNode) i.next();
 			String text = node.getName();
-			text = (prefs.isPropNameUpperCase()) ? text.toUpperCase() : text.toLowerCase();
+			text = (preferences.getInt(CSSCorePreferenceNames.CASE_PROPERTY_NAME) == CSSCorePreferenceNames.UPPER) ? text.toUpperCase() : text.toLowerCase();
 			if (!isMatch(text)) {
 				continue;
 			}
@@ -96,9 +96,9 @@ class CSSProposalGeneratorForDeclarationName extends CSSProposalGenerator {
 				buf.append(postDelim);
 				cursorPos += 1 + postDelim.length();
 			}
-			//			if (! (targetNode instanceof ICSSStyleDeclItem)) {
-			//				buf.append(';');//$NON-NLS-1$
-			//			}
+			// if (! (targetNode instanceof ICSSStyleDeclItem)) {
+			// buf.append(';');//$NON-NLS-1$
+			// }
 
 			CSSCACandidate item = new CSSCACandidate();
 			item.setReplacementString(buf.toString());
@@ -112,9 +112,6 @@ class CSSProposalGeneratorForDeclarationName extends CSSProposalGenerator {
 	}
 
 	void sortNames(List names) {
-		CSSPreferenceManager prefMan = CSSPreferenceManager.getInstance();
-		final boolean categorize = prefMan.getContentAssistCategorize();
-
 		Collections.sort(names, new Comparator() {
 			public int compare(Object o1, Object o2) {
 				CSSMMNode node1 = (CSSMMNode) o1;
@@ -125,20 +122,18 @@ class CSSProposalGeneratorForDeclarationName extends CSSProposalGenerator {
 					return -1;
 				}
 				int diff = 0;
-				if (categorize) {
-					String category1 = node1.getAttribute("category"); //$NON-NLS-1$
-					String category2 = node2.getAttribute("category"); //$NON-NLS-1$
-					if (category1 == null) {
-						if (category2 == null) {
-							diff = 0;
-						} else {
-							return 1;
-						}
-					} else if (category2 == null) {
-						return -1;
+				String category1 = node1.getAttribute("category"); //$NON-NLS-1$
+				String category2 = node2.getAttribute("category"); //$NON-NLS-1$
+				if (category1 == null) {
+					if (category2 == null) {
+						diff = 0;
 					} else {
-						diff = category1.compareTo(category2);
+						return 1;
 					}
+				} else if (category2 == null) {
+					return -1;
+				} else {
+					diff = category1.compareTo(category2);
 				}
 				if (diff == 0) {
 					String name = node1.getName();

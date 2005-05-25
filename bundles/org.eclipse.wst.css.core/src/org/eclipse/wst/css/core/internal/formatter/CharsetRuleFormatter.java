@@ -12,13 +12,15 @@ package org.eclipse.wst.css.core.internal.formatter;
 
 
 
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSAttr;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSCharsetRule;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
-import org.eclipse.wst.css.core.internal.provisional.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.css.core.internal.util.CSSUtil;
 import org.eclipse.wst.css.core.internal.util.RegionIterator;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
@@ -66,19 +68,16 @@ public class CharsetRuleFormatter extends DefaultCSSSourceFormatter {
 						context.start = it.getStructuredDocumentRegion().getStartOffset(prev);
 					else
 						context.start = it.getStructuredDocumentRegion().getStartOffset(region);
-				}
-				else
+				} else
 					context.start = it.getStructuredDocumentRegion().getStartOffset(region);
 				context.end = it.getStructuredDocumentRegion().getEndOffset(region);
-			}
-			else {
+			} else {
 				IStructuredDocumentRegion flatNode = node.getOwnerDocument().getModel().getStructuredDocument().getRegionAtCharacterOffset(((IndexedRegion) node).getEndOffset() - 1);
 				ITextRegion region = flatNode.getRegionAtCharacterOffset(((IndexedRegion) node).getEndOffset() - 1);
 				if (region.getType() == CSSRegionContexts.CSS_S) {
 					context.start = flatNode.getStartOffset(region);
 					context.end = flatNode.getStartOffset(region);
-				}
-				else {
+				} else {
 					context.start = flatNode.getEndOffset() + 1;
 					context.end = flatNode.getEndOffset();
 				}
@@ -100,17 +99,17 @@ public class CharsetRuleFormatter extends DefaultCSSSourceFormatter {
 		if (end > 0) { // format source
 			int start = ((IndexedRegion) node).getStartOffset();
 			formatPre(node, new FormatRegion(start, end - start), source);
-		}
-		else { // generate source
-			CSSPreferenceHelper mgr = CSSPreferenceHelper.getInstance();
-			String quote = mgr.getQuoteString(node.getOwnerDocument().getModel());
+		} else { // generate source
+			Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
+
+			String quote = preferences.getString(CSSCorePreferenceNames.FORMAT_QUOTE);
 			String str = CHARSET;
-			if (mgr.isIdentUpperCase())
+			if (preferences.getInt(CSSCorePreferenceNames.CASE_IDENTIFIER) == CSSCorePreferenceNames.UPPER)
 				str = CHARSET.toUpperCase();
 			source.append(str);
 			String enc = ((ICSSCharsetRule) node).getEncoding();
 			quote = CSSUtil.detectQuote(enc, quote);
-			str = quote + ((enc != null) ? enc : "") + quote;//$NON-NLS-1$
+			str = quote + ((enc != null) ? enc : "") + quote + ";";//$NON-NLS-1$ //$NON-NLS-2$
 			appendSpaceBefore(node, str, source);
 			source.append(str);
 		}
@@ -126,7 +125,7 @@ public class CharsetRuleFormatter extends DefaultCSSSourceFormatter {
 		CompoundRegion[] regions = getRegionsWithoutWhiteSpaces(structuredDocument, region, stgy);
 		CompoundRegion[] outside = getOutsideRegions(structuredDocument, region);
 		for (int i = 0; i < regions.length; i++) {
-			if (i != 0 || needS(outside[0]))
+			if ((i != 0 || needS(outside[0])) && !regions[i].getType().equals(CSSRegionContexts.CSS_DELIMITER))
 				appendSpaceBefore(node, regions[i], source);
 			source.append(decoratedIdentRegion(regions[i], stgy));
 		}
@@ -148,18 +147,16 @@ public class CharsetRuleFormatter extends DefaultCSSSourceFormatter {
 		ICSSAttr attr = (ICSSAttr) node.getAttributes().getNamedItem(ICSSCharsetRule.ENCODING);
 		if (attr != null && ((IndexedRegion) attr).getEndOffset() > 0)
 			return ((IndexedRegion) attr).getStartOffset();
-		else {
-			IndexedRegion iNode = (IndexedRegion) node;
-			if (iNode.getEndOffset() <= 0)
-				return -1;
+		IndexedRegion iNode = (IndexedRegion) node;
+		if (iNode.getEndOffset() <= 0)
+			return -1;
 
-			CompoundRegion regions[] = getRegionsWithoutWhiteSpaces(node.getOwnerDocument().getModel().getStructuredDocument(), new FormatRegion(iNode.getStartOffset(), iNode.getEndOffset() - iNode.getStartOffset()), stgy);
-			for (int i = regions.length - 1; i >= 0; i--) {
-				if (regions[i].getType() != CSSRegionContexts.CSS_COMMENT)
-					return regions[i].getStartOffset();
-			}
-			return iNode.getEndOffset();
+		CompoundRegion regions[] = getRegionsWithoutWhiteSpaces(node.getOwnerDocument().getModel().getStructuredDocument(), new FormatRegion(iNode.getStartOffset(), iNode.getEndOffset() - iNode.getStartOffset()), stgy);
+		for (int i = regions.length - 1; i >= 0; i--) {
+			if (regions[i].getType() != CSSRegionContexts.CSS_COMMENT)
+				return regions[i].getStartOffset();
 		}
+		return iNode.getEndOffset();
 	}
 
 	/**
@@ -171,8 +168,7 @@ public class CharsetRuleFormatter extends DefaultCSSSourceFormatter {
 			IStructuredDocumentRegion flatNode = node.getOwnerDocument().getModel().getStructuredDocument().getRegionAtCharacterOffset(n - 1);
 			if (flatNode.getRegionAtCharacterOffset(n - 1).getType() == CSSRegionContexts.CSS_DELIMITER)
 				return n - 1;
-			else
-				return n;
+			return n;
 		}
 		return -1;
 	}

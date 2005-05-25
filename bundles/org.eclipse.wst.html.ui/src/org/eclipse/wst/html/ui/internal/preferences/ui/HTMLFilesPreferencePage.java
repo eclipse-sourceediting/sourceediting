@@ -13,15 +13,12 @@ package org.eclipse.wst.html.ui.internal.preferences.ui;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
-import org.eclipse.wst.html.core.internal.provisional.HTMLFilesPreferenceNames;
 import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
@@ -32,9 +29,6 @@ import org.eclipse.wst.xml.ui.internal.preferences.XMLFilesPreferencePage;
 
 public class HTMLFilesPreferencePage extends XMLFilesPreferencePage {
 	private WorkbenchDefaultEncodingSettings fInputEncodingSettings = null;
-	private Text fHtmlext_Field;
-	private Button fDoctype_Button;
-	private Button fGenerator_Button;
 
 	/* (non-Javadoc)
 	 * @see com.ibm.sse.editor.preferences.ui.AbstractPreferencePage#getModelPreferences()
@@ -126,65 +120,11 @@ public class HTMLFilesPreferencePage extends XMLFilesPreferencePage {
 	protected void createContentsForCreatingGroup(Composite parent) {
 		Group creatingGroup = createGroup(parent, 2);
 		creatingGroup.setText(HTMLUIMessages.Creating_files);
-
-		// Add this suffix..
-		createLabel(creatingGroup, HTMLUIMessages.HTMLFilesPreferencePage_1);
-		fHtmlext_Field = createTextField(creatingGroup);
 		
 		// Encoding..
 		Label label = createLabel(creatingGroup, HTMLUIMessages.Encoding_desc);
 		((GridData)label.getLayoutData()).horizontalSpan = 2;
 		fEncodingSettings = new EncodingSettings(creatingGroup);
 		((GridData)fEncodingSettings.getLayoutData()).horizontalSpan = 2;
-		
-		// Insert DOCTYPE declaration
-		fDoctype_Button = createCheckBox(creatingGroup, HTMLUIMessages.HTMLFilesPreferencePage_2);
-		((GridData)fDoctype_Button.getLayoutData()).horizontalSpan = 2;
-		
-		// Insert GENERATOR with META tag
-		fGenerator_Button = createCheckBox(creatingGroup, HTMLUIMessages.HTMLFilesPreferencePage_3);
-		((GridData)fGenerator_Button.getLayoutData()).horizontalSpan = 2;
-	}
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.xml.preferences.ui.XMLFilesPreferencePage#initializeValuesForCreatingGroup()
-	 */
-	protected void initializeValuesForCreatingGroup() {
-		super.initializeValuesForCreatingGroup();
-		
-		String defaultSuffix = getModelPreferences().getString(HTMLFilesPreferenceNames.DEFAULT_SUFFIX);
-		if (defaultSuffix.length() > 0) {
-			fHtmlext_Field.setText(defaultSuffix);
-		}
-	
-		boolean bCheck;
-		bCheck = getModelPreferences().getBoolean(HTMLFilesPreferenceNames.GENERATE_DOCUMENT_TYPE);
-		fDoctype_Button.setSelection(bCheck);
-		
-		bCheck = getModelPreferences().getBoolean(HTMLFilesPreferenceNames.GENERATE_GENERATOR);
-		fGenerator_Button.setSelection(bCheck);
-	}
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.xml.preferences.ui.XMLFilesPreferencePage#performDefaultsForCreatingGroup()
-	 */
-	protected void performDefaultsForCreatingGroup() {
-		super.performDefaultsForCreatingGroup();
-
-		fHtmlext_Field.setText(getModelPreferences().getDefaultString(HTMLFilesPreferenceNames.DEFAULT_SUFFIX));
-		
-		fDoctype_Button.setSelection(getModelPreferences().getDefaultBoolean(HTMLFilesPreferenceNames.GENERATE_DOCUMENT_TYPE));
-		fGenerator_Button.setSelection(getModelPreferences().getDefaultBoolean(HTMLFilesPreferenceNames.GENERATE_GENERATOR));
-	}
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.xml.preferences.ui.XMLFilesPreferencePage#storeValuesForCreatingGroup()
-	 */
-	protected void storeValuesForCreatingGroup() {
-		super.storeValuesForCreatingGroup();
-		
-		String str_ext = fHtmlext_Field.getText();	
-		getModelPreferences().setValue(HTMLFilesPreferenceNames.DEFAULT_SUFFIX, str_ext); 
-
-		getModelPreferences().setValue(HTMLFilesPreferenceNames.GENERATE_DOCUMENT_TYPE, fDoctype_Button.getSelection());
-	
-		getModelPreferences().setValue(HTMLFilesPreferenceNames.GENERATE_GENERATOR, fGenerator_Button.getSelection());
 	}
 }

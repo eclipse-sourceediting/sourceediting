@@ -12,9 +12,10 @@ package org.eclipse.wst.css.core.internal.document;
 
 
 
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSCharsetRule;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
-import org.eclipse.wst.css.core.internal.provisional.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.css.core.internal.util.CSSUtil;
 
 
@@ -85,7 +86,7 @@ class CSSCharsetRuleImpl extends CSSRuleImpl implements ICSSCharsetRule {
 		// pa_TODO css pref
 		// String quote =
 		// com.ibm.sse.editor.css.preferences.CSSPreferenceHelper.getInstance().getQuoteString((ICSSModel)getOwnerDocument().getModel());
-		String quote = CSSPreferenceHelper.getInstance().getQuoteString(null);
+		String quote = CSSCorePlugin.getDefault().getPluginPreferences().getString(CSSCorePreferenceNames.FORMAT_QUOTE);
 		String enc = CSSUtil.extractStringContents(encoding);
 		quote = CSSUtil.detectQuote(enc, quote);
 		setAttribute(ENCODING, quote + enc + quote);

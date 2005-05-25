@@ -210,4 +210,9 @@
             systemID="http://www.wapforum.org/DTD/wml13.dtd">
       </documentType>
    </extension>
+   
+	<!-- initialize html core preferences -->
+	<extension point="org.eclipse.core.runtime.preferences">
+         <initializer class="org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceInitializer"/>
+	</extension>
 </plugin>

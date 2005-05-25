@@ -92,4 +92,8 @@
 		</content-type>
    </extension>
 
+	<!-- initialize css core preferences -->
+	<extension point="org.eclipse.core.runtime.preferences">
+         <initializer class="org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceInitializer"/>
+	</extension>
 </plugin>

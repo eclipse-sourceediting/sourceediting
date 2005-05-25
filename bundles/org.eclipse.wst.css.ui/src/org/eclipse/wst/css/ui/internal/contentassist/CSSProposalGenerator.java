@@ -14,11 +14,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
-import org.eclipse.wst.css.core.internal.provisional.preferences.CSSPreferenceHelper;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.util.RegionIterator;
 import org.eclipse.wst.css.ui.internal.image.CSSImageHelper;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -79,20 +81,20 @@ abstract class CSSProposalGenerator {
 	protected StringAndOffset generateBraces() {
 		StringBuffer buf = new StringBuffer();
 		String lineDelimiter = fContext.getStructuredDocument().getLineDelimiter();
-		CSSPreferenceHelper prefs = CSSPreferenceHelper.getInstance();
-		String indentStr = prefs.getIndentString();
-		if (prefs.isNewLineOnOpenBrace()) {
+		Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
+		String indentStr = getIndentString();
+		if (preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_NEWLINE_ON_OPEN_BRACE)) {
 			buf.append(lineDelimiter);
 		}
 		buf.append("{");//$NON-NLS-1$
-		if (prefs.isOnePropertyPerLine()) {
+		if (preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_ONE_PER_LINE)) {
 			buf.append(lineDelimiter);
 			buf.append(indentStr);
 		} else {
 			buf.append(" ");//$NON-NLS-1$
 		}
 		int offset = buf.length();
-		if (prefs.isOnePropertyPerLine()) {
+		if (preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_ONE_PER_LINE)) {
 			buf.append(lineDelimiter);
 		} else {
 			buf.append(" ");//$NON-NLS-1$
@@ -140,14 +142,15 @@ abstract class CSSProposalGenerator {
 	 */
 	protected StringAndOffset generateURI() {
 		StringBuffer buf = new StringBuffer();
-		CSSPreferenceHelper prefs = CSSPreferenceHelper.getInstance();
+		
+		boolean isQuoteInURI = CSSCorePlugin.getDefault().getPluginPreferences().getBoolean(CSSCorePreferenceNames.FORMAT_QUOTE_IN_URI);
 		char quoteChar = getQuoteChar();
 		buf.append("url(");//$NON-NLS-1$
-		if (prefs.isQuoteInURI()) {
+		if (isQuoteInURI) {
 			buf.append(quoteChar);
 		}
 		int offset = buf.length();
-		if (prefs.isQuoteInURI()) {
+		if (isQuoteInURI) {
 			buf.append(quoteChar);
 		}
 		buf.append(")");//$NON-NLS-1$
@@ -176,8 +179,8 @@ abstract class CSSProposalGenerator {
 	 * @return char
 	 */
 	private char getQuoteChar() {
-		CSSPreferenceHelper prefs = CSSPreferenceHelper.getInstance();
-		String quoteStr = prefs.getQuoteString(fContext.getModel());
+
+		String quoteStr = CSSCorePlugin.getDefault().getPluginPreferences().getString(CSSCorePreferenceNames.FORMAT_QUOTE);
 		char quoteChar = (quoteStr != null && 0 < quoteStr.length()) ? quoteStr.charAt(0) : '"';
 		char attrQuote = fContext.getQuoteOfStyleAttribute();
 		if (attrQuote != 0) {
@@ -205,5 +208,25 @@ abstract class CSSProposalGenerator {
 		 * (textToReplace.length() == 0) { return true; } else { return
 		 * (text.toUpperCase().indexOf(textToReplace.toUpperCase()) == 0); }
 		 */
+	}
+	
+
+	private String getIndentString() {
+		String indent = ""; //$NON-NLS-1$
+
+		Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
+		if (preferences != null) {
+			String indentChar = " "; //$NON-NLS-1$
+			String indentCharPref = preferences.getString(CSSCorePreferenceNames.INDENTATION_CHAR);
+			if (CSSCorePreferenceNames.TAB.equals(indentCharPref)) {
+				indentChar = "\t"; //$NON-NLS-1$
+			}
+			int indentationWidth = preferences.getInt(CSSCorePreferenceNames.INDENTATION_SIZE);
+
+			for (int i = 0; i < indentationWidth; i++) {
+				indent += indentChar;
+			}
+		}
+		return indent;
 	}
 }

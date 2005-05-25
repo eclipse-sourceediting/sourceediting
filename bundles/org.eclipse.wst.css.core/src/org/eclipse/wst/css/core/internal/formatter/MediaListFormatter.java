@@ -13,11 +13,12 @@ package org.eclipse.wst.css.core.internal.formatter;
 
 
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSAttr;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
-import org.eclipse.wst.css.core.internal.provisional.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.css.core.internal.util.RegionIterator;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -82,8 +83,7 @@ public class MediaListFormatter extends DefaultCSSSourceFormatter {
 					context.end = ((IndexedRegion) node).getEndOffset();
 					last = true;
 				}
-			}
-			else {
+			} else {
 				last = true;
 				IStructuredDocumentRegion flatNode = node.getOwnerDocument().getModel().getStructuredDocument().getRegionAtCharacterOffset(((IndexedRegion) node).getEndOffset() - 1);
 				ITextRegion region = flatNode.getRegionAtCharacterOffset(((IndexedRegion) node).getEndOffset() - 1);
@@ -113,8 +113,7 @@ public class MediaListFormatter extends DefaultCSSSourceFormatter {
 				buf.append(","); //$NON-NLS-1$
 				appendSpaceBefore(node, "", buf); //$NON-NLS-1$
 			}
-		}
-		else if (!first && !last) {
+		} else if (!first && !last) {
 			buf.append(","); //$NON-NLS-1$
 			appendSpaceBefore(node, "", buf); //$NON-NLS-1$
 		}
@@ -129,7 +128,7 @@ public class MediaListFormatter extends DefaultCSSSourceFormatter {
 
 		int start = ((IndexedRegion) node).getStartOffset();
 		int end = ((IndexedRegion) node).getEndOffset();
-		CSSPreferenceHelper mgr = CSSPreferenceHelper.getInstance();
+
 		if (end > 0) { // format source
 			IStructuredDocument structuredDocument = node.getOwnerDocument().getModel().getStructuredDocument();
 			CompoundRegion[] regions = getRegionsWithoutWhiteSpaces(structuredDocument, new FormatRegion(start, end - start), stgy);
@@ -138,13 +137,12 @@ public class MediaListFormatter extends DefaultCSSSourceFormatter {
 					appendSpaceBefore(node, regions[i], source);
 				source.append(decoratedIdentRegion(regions[i], stgy));
 			}
-		}
-		else { // generate source
+		} else { // generate source
 			MediaList list = (MediaList) node;
 			int n = list.getLength();
 			for (int i = 0; i < n; i++) {
 				String medium = list.item(i);
-				if (mgr.isIdentUpperCase())
+				if (CSSCorePlugin.getDefault().getPluginPreferences().getInt(CSSCorePreferenceNames.CASE_IDENTIFIER) == CSSCorePreferenceNames.UPPER)
 					medium = medium.toUpperCase();
 				else
 					medium = medium.toLowerCase();
@@ -187,22 +185,19 @@ public class MediaListFormatter extends DefaultCSSSourceFormatter {
 
 		if (attr != null && ((IndexedRegion) attr).getEndOffset() > 0)
 			return ((IndexedRegion) attr).getStartOffset();
-		else {
-			IndexedRegion iNode = (IndexedRegion) node;
-			if (iNode.getEndOffset() <= 0)
-				return -1;
+		IndexedRegion iNode = (IndexedRegion) node;
+		if (iNode.getEndOffset() <= 0)
+			return -1;
 
-			/*
-			 * ITextRegion regions[] =
-			 * getRegionsWithoutWhiteSpaces(node.getOwnerDocument().getModel().getStructuredDocument(),
-			 * new FormatRegion(iNode.getStartOffset(), iNode.getEndOffset() -
-			 * iNode.getStartOffset() + 1)); for(int i=regions.length - 1; i >=
-			 * 0; i--) { if (regions[i].getType() ==
-			 * CSSRegionContexts.IMPORTANT_SYM) return
-			 * regions[i].getStartOffset(); }
-			 */
-			return iNode.getEndOffset();
-		}
+		/*
+		 * ITextRegion regions[] =
+		 * getRegionsWithoutWhiteSpaces(node.getOwnerDocument().getModel().getStructuredDocument(),
+		 * new FormatRegion(iNode.getStartOffset(), iNode.getEndOffset() -
+		 * iNode.getStartOffset() + 1)); for(int i=regions.length - 1; i >= 0;
+		 * i--) { if (regions[i].getType() == CSSRegionContexts.IMPORTANT_SYM)
+		 * return regions[i].getStartOffset(); }
+		 */
+		return iNode.getEndOffset();
 	}
 
 	/**

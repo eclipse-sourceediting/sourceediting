@@ -16,6 +16,11 @@ package org.eclipse.wst.sse.core.internal.encoding;
  * Common preference keys used to specify encoding and end of line.
  */
 public class CommonEncodingPreferenceNames {
+	
+	private CommonEncodingPreferenceNames() {
+		// empty private constructor so users cannot instantiate class
+	}
+
 	/**
 	 * Constant to be used when referring to CR/MAC line delimiter
 	 */

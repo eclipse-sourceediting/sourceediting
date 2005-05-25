@@ -12,10 +12,9 @@ package org.eclipse.wst.html.core.internal.format;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
-import org.eclipse.wst.sse.core.internal.SSECorePlugin;
+import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatPreferences;
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatter;
-import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.xml.core.internal.provisional.format.IStructuredFormatPreferencesXML;
 import org.eclipse.wst.xml.core.internal.provisional.format.StructuredFormatPreferencesXML;
 import org.w3c.dom.Node;
@@ -86,20 +85,22 @@ class HTMLFormatterFactory {
 
 			Preferences preferences = HTMLCorePlugin.getDefault().getPluginPreferences();
 			if (preferences != null) {
-				fFormatPreferences.setLineWidth(preferences.getInt(CommonModelPreferenceNames.LINE_WIDTH));
-				fFormatPreferences.setSplitMultiAttrs(preferences.getBoolean(CommonModelPreferenceNames.SPLIT_MULTI_ATTRS));
-				fFormatPreferences.setClearAllBlankLines(preferences.getBoolean(CommonModelPreferenceNames.CLEAR_ALL_BLANK_LINES));
+				fFormatPreferences.setLineWidth(preferences.getInt(HTMLCorePreferenceNames.LINE_WIDTH));
+				fFormatPreferences.setSplitMultiAttrs(preferences.getBoolean(HTMLCorePreferenceNames.SPLIT_MULTI_ATTRS));
+				fFormatPreferences.setClearAllBlankLines(preferences.getBoolean(HTMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES));
 
-				if (preferences.getBoolean(CommonModelPreferenceNames.INDENT_USING_TABS))
-					fFormatPreferences.setIndent("\t"); //$NON-NLS-1$
-				else {
-					int tabWidth = SSECorePlugin.getDefault().getPluginPreferences().getInt(CommonModelPreferenceNames.TAB_WIDTH);
-					String indent = ""; //$NON-NLS-1$
-					for (int i = 0; i < tabWidth; i++) {
-						indent += " "; //$NON-NLS-1$
-					}
-					fFormatPreferences.setIndent(indent);
+				String indentChar = " "; //$NON-NLS-1$
+				String indentCharPref = preferences.getString(HTMLCorePreferenceNames.INDENTATION_CHAR);
+				if (HTMLCorePreferenceNames.TAB.equals(indentCharPref)) {
+					indentChar = "\t"; //$NON-NLS-1$
 				}
+				int indentationWidth = preferences.getInt(HTMLCorePreferenceNames.INDENTATION_SIZE);
+
+				String indent = ""; //$NON-NLS-1$
+				for (int i = 0; i < indentationWidth; i++) {
+					indent += indentChar;
+				}
+				fFormatPreferences.setIndent(indent);
 			}
 		}
 

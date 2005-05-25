@@ -12,13 +12,15 @@ package org.eclipse.wst.css.core.internal.formatter;
 
 
 
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSAttr;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.provisional.document.ICounter;
-import org.eclipse.wst.css.core.internal.provisional.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.css.core.internal.util.CSSUtil;
 import org.eclipse.wst.css.core.internal.util.RegionIterator;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
@@ -45,6 +47,8 @@ public class CounterFormatter extends DefaultCSSSourceFormatter {
 	 * 
 	 */
 	public StringBuffer formatAttrChanged(ICSSNode node, ICSSAttr attr, boolean insert, AttrChangeContext context) {
+		Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
+		
 		StringBuffer source = new StringBuffer();
 		if (node == null || attr == null)
 			return source;
@@ -57,10 +61,8 @@ public class CounterFormatter extends DefaultCSSSourceFormatter {
 		context.start = iNode.getStartOffset();
 		context.end = iNode.getEndOffset();
 
-		CSSPreferenceHelper mgr = CSSPreferenceHelper.getInstance();
-
 		ICounter counter = (ICounter) node;
-		String quote = mgr.getQuoteString(node.getOwnerDocument().getModel());
+		String quote = preferences.getString(CSSCorePreferenceNames.FORMAT_QUOTE);
 		String sep = counter.getSeparator();
 		String ident = counter.getIdentifier();
 		String style = counter.getListStyle();
@@ -88,7 +90,7 @@ public class CounterFormatter extends DefaultCSSSourceFormatter {
 		sep = (sep == null || sep.length() == 0) ? null : (quote + sep + quote);
 
 		String func = (sep == null || sep.length() == 0) ? "counter(" : "counters(";//$NON-NLS-2$//$NON-NLS-1$
-		if (mgr.isPropValueUpperCase()) {
+		if (preferences.getInt(CSSCorePreferenceNames.CASE_PROPERTY_VALUE) == CSSCorePreferenceNames.UPPER) {
 			ident = ident.toUpperCase();
 			style = style.toUpperCase();
 			func = func.toUpperCase();
@@ -160,7 +162,8 @@ public class CounterFormatter extends DefaultCSSSourceFormatter {
 	protected void formatPre(ICSSNode node, StringBuffer source) {
 		int start = ((IndexedRegion) node).getStartOffset();
 		int end = ((IndexedRegion) node).getEndOffset();
-		CSSPreferenceHelper mgr = CSSPreferenceHelper.getInstance();
+
+		Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
 		CSSCleanupStrategy stgy = getCleanupStrategy(node);
 
 		if (end > 0) { // format source
@@ -178,7 +181,7 @@ public class CounterFormatter extends DefaultCSSSourceFormatter {
 		}
 		else { // generate source
 			ICounter counter = (ICounter) node;
-			String quote = mgr.getQuoteString(node.getOwnerDocument().getModel());
+			String quote = preferences.getString(CSSCorePreferenceNames.FORMAT_QUOTE);
 			String separator = counter.getSeparator();
 			quote = CSSUtil.detectQuote(separator, quote);
 			String sep = (separator == null || separator.length() == 0) ? null : (quote + separator + quote);
@@ -191,7 +194,7 @@ public class CounterFormatter extends DefaultCSSSourceFormatter {
 			if (style == null)
 				style = "";//$NON-NLS-1$
 
-			if (mgr.isPropValueUpperCase()) {
+			if (preferences.getInt(CSSCorePreferenceNames.CASE_PROPERTY_VALUE) == CSSCorePreferenceNames.UPPER) {
 				ident = ident.toUpperCase();
 				style = style.toUpperCase();
 				func = func.toUpperCase();

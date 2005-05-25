@@ -25,9 +25,6 @@ public class HTMLUIMessages extends NLS {
 
 	public static String Sample_HTML_doc;
 	public static String HTMLFilesPreferencePage_0;
-	public static String HTMLFilesPreferencePage_1;
-	public static String HTMLFilesPreferencePage_2;
-	public static String HTMLFilesPreferencePage_3;
 	public static String _UI_WIZARD_NEW_TITLE;
 	public static String _UI_WIZARD_NEW_HEADING;
 	public static String _UI_WIZARD_NEW_DESCRIPTION;
@@ -85,6 +82,12 @@ public class HTMLUIMessages extends NLS {
 	public static String EOL_Unix_UI;
 	public static String EOL_Mac_UI;
 
+	// below are possibly unused strings that may be deleted
+	public static String HTMLFilesPreferencePage_1;
+	public static String HTMLFilesPreferencePage_2;
+	public static String HTMLFilesPreferencePage_3;
+	// above are possibly unused strings that may be deleted
+	
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, HTMLUIMessages.class);

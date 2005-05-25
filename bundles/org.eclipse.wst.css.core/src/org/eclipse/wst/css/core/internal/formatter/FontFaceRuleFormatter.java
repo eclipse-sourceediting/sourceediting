@@ -13,9 +13,10 @@ package org.eclipse.wst.css.core.internal.formatter;
 
 
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
-import org.eclipse.wst.css.core.internal.provisional.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
@@ -53,9 +54,8 @@ public class FontFaceRuleFormatter extends DeclContainerFormatter {
 			}
 		}
 		else {
-			CSSPreferenceHelper mgr = CSSPreferenceHelper.getInstance();
 			String str = FONT_FACE;
-			if (mgr.isIdentUpperCase())
+			if (CSSCorePlugin.getDefault().getPluginPreferences().getInt(CSSCorePreferenceNames.CASE_IDENTIFIER) == CSSCorePreferenceNames.UPPER)
 				str = FONT_FACE.toUpperCase();
 			source.append(str);
 			appendSpaceBefore(node, "{", source);//$NON-NLS-1$

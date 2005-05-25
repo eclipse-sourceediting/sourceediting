@@ -12,14 +12,16 @@ package org.eclipse.wst.css.core.internal.formatter;
 
 
 
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
 import org.eclipse.wst.css.core.internal.contentmodel.PropCMProperty;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSPrimitiveValue;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
-import org.eclipse.wst.css.core.internal.provisional.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.css.core.internal.util.CSSUtil;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -46,14 +48,14 @@ public class PrimitiveValueFormatter extends DefaultCSSSourceFormatter {
 	protected void formatPre(ICSSNode node, StringBuffer source) {
 		int start = ((IndexedRegion) node).getStartOffset();
 		int end = ((IndexedRegion) node).getEndOffset();
-		CSSPreferenceHelper mgr = CSSPreferenceHelper.getInstance();
+		Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
 		CSSCleanupStrategy stgy = getCleanupStrategy(node);
 
 		if (end > 0) { // format source
 			IStructuredDocument structuredDocument = node.getOwnerDocument().getModel().getStructuredDocument();
 			CompoundRegion[] regions = getRegionsWithoutWhiteSpaces(structuredDocument, new FormatRegion(start, end - start), stgy);
 			boolean appendQuote = regions.length > 1 && node.getParentNode() instanceof ICSSStyleDeclItem && isCleanup() && getCleanupStrategy(node).isQuoteValues() && (((ICSSStyleDeclItem) node.getParentNode()).getPropertyName().equals(PropCMProperty.P_FONT) || ((ICSSStyleDeclItem) node.getParentNode()).getPropertyName().equals(PropCMProperty.P_FONT_FAMILY) || ((ICSSStyleDeclItem) node.getParentNode()).getPropertyName().equals(PropCMProperty.P_VOICE_FAMILY));
-			String quote = mgr.getQuoteString(node.getOwnerDocument().getModel());
+			String quote = preferences.getString(CSSCorePreferenceNames.FORMAT_QUOTE);
 
 			StringBuffer strBuf = new StringBuffer();
 			boolean skipSpace = false;
@@ -82,7 +84,7 @@ public class PrimitiveValueFormatter extends DefaultCSSSourceFormatter {
 		else { // generate source
 			ICSSPrimitiveValue value = (ICSSPrimitiveValue) node;
 			short type = value.getPrimitiveType();
-			String quote = mgr.getQuoteString(node.getOwnerDocument().getModel());
+			String quote = preferences.getString(CSSCorePreferenceNames.FORMAT_QUOTE);
 
 			String str = null;
 			switch (type) {
@@ -117,7 +119,7 @@ public class PrimitiveValueFormatter extends DefaultCSSSourceFormatter {
 				case ICSSPrimitiveValue.CSS_INHERIT_PRIMITIVE :
 					str = value.getStringValue();
 					if (str != null) {
-						if (mgr.isPropValueUpperCase())
+						if (preferences.getInt(CSSCorePreferenceNames.CASE_PROPERTY_VALUE) == CSSCorePreferenceNames.UPPER)
 							str = str.toUpperCase();
 						else
 							str.toLowerCase();
@@ -227,7 +229,7 @@ public class PrimitiveValueFormatter extends DefaultCSSSourceFormatter {
 					postStr = quote + ")";//$NON-NLS-1$
 					break;
 			}
-			if (mgr.isPropValueUpperCase()) {
+			if (preferences.getInt(CSSCorePreferenceNames.CASE_PROPERTY_VALUE) == CSSCorePreferenceNames.UPPER) {
 				if (preStr != null)
 					preStr = preStr.toUpperCase();
 				if (postStr != null)

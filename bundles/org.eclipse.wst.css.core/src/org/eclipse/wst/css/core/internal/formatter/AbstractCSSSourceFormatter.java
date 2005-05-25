@@ -13,12 +13,15 @@ package org.eclipse.wst.css.core.internal.formatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.DefaultLineTracker;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.TextUtilities;
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategy;
 import org.eclipse.wst.css.core.internal.cleanup.CSSCleanupStrategyImpl;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSAttr;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSDocument;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
@@ -26,7 +29,6 @@ import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclaration;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleSheet;
-import org.eclipse.wst.css.core.internal.provisional.preferences.CSSPreferenceHelper;
 import org.eclipse.wst.css.core.internal.util.CSSLinkConverter;
 import org.eclipse.wst.css.core.internal.util.CSSUtil;
 import org.eclipse.wst.css.core.internal.util.RegionIterator;
@@ -64,15 +66,14 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 		if (isCleanup() && !getCleanupStrategy(node).isFormatSource())
 			return; // for not formatting case on cleanup action
 		String delim = getLineDelimiter(node);
-		CSSPreferenceHelper mgr = CSSPreferenceHelper.getInstance();
+
 		boolean needIndent = !(node instanceof ICSSStyleSheet);
 		if (toAppend == null) {
 			source.append(delim);
 			source.append(getIndent(node));
 			if (needIndent)
-				source.append(mgr.getIndentString());
-		}
-		else {
+				source.append(getIndentString());
+		} else {
 			String type = toAppend.getType();
 			if (type == CSSRegionContexts.CSS_COMMENT) {
 				RegionIterator it = new RegionIterator(toAppend.getDocumentRegion(), toAppend.getTextRegion());
@@ -82,42 +83,40 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 					source.append(delim);
 					source.append(getIndent(node));
 					if (needIndent)
-						source.append(mgr.getIndentString());
-				}
-				else {
+						source.append(getIndentString());
+				} else {
 					appendSpaceBefore(node, toAppend.getText(), source);
 				}
-			}
-			else if (type == CSSRegionContexts.CSS_DELIMITER || type == CSSRegionContexts.CSS_DECLARATION_DELIMITER) {
+			} else if (type == CSSRegionContexts.CSS_DELIMITER || type == CSSRegionContexts.CSS_DECLARATION_DELIMITER) {
 				RegionIterator it = new RegionIterator(toAppend.getDocumentRegion(), toAppend.getTextRegion());
 				it.prev();
 				ITextRegion prev = it.prev();
+
+				Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
+
 				if (prev.getType() == CSSRegionContexts.CSS_S && TextUtilities.indexOf(DefaultLineTracker.DELIMITERS, it.getStructuredDocumentRegion().getText(prev), 0)[0] >= 0) {
 					source.append(delim);
 					source.append(getIndent(node));
 					if (needIndent)
-						source.append(mgr.getIndentString());
-				}
-				else if (mgr.getMaxLineWidth() > 0 && (!mgr.isProhibitWrapOnAttr() || node.getOwnerDocument().getNodeType() != ICSSNode.STYLEDECLARATION_NODE)) {
+						source.append(getIndentString());
+				} else if (preferences.getInt(CSSCorePreferenceNames.LINE_WIDTH) > 0 && (!preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR) || node.getOwnerDocument().getNodeType() != ICSSNode.STYLEDECLARATION_NODE)) {
 					int length = getLastLineLength(node, source);
 					int append = 1;
-					if (length + append > mgr.getMaxLineWidth()) {
+					if (length + append > preferences.getInt(CSSCorePreferenceNames.LINE_WIDTH)) {
 						source.append(getLineDelimiter(node));
 						source.append(getIndent(node));
 						if (needIndent)
-							source.append(mgr.getIndentString());
+							source.append(getIndentString());
 					}
 				}
-			}
-			else if (type == CSSRegionContexts.CSS_RBRACE || type == CSSRegionContexts.CSS_LBRACE) {
+			} else if (type == CSSRegionContexts.CSS_RBRACE || type == CSSRegionContexts.CSS_LBRACE) {
 				source.append(delim);
 				source.append(getIndent(node));
-			}
-			else {
+			} else {
 				source.append(delim);
 				source.append(getIndent(node));
 				if (needIndent)
-					source.append(mgr.getIndentString());
+					source.append(getIndentString());
 			}
 		}
 	}
@@ -131,7 +130,9 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 		if (isCleanup() && !getCleanupStrategy(node).isFormatSource())
 			return; // for not formatting case on cleanup action
 		String type = toAppend.getType();
-		CSSPreferenceHelper mgr = CSSPreferenceHelper.getInstance();
+
+		Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
+
 		boolean needIndent = !(node instanceof ICSSStyleSheet);
 		if (type == CSSRegionContexts.CSS_COMMENT) {
 			// check whether previous region is 'S' and has CR-LF
@@ -143,50 +144,45 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 				source.append(delim);
 				source.append(getIndent(node));
 				if (needIndent)
-					source.append(mgr.getIndentString());
-			}
-			else {
+					source.append(getIndentString());
+			} else {
 				appendSpaceBefore(node, toAppend.getText(), source);
 			}
-		}
-		else if (type == CSSRegionContexts.CSS_LBRACE && mgr.isNewLineOnOpenBrace()) {
+		} else if (type == CSSRegionContexts.CSS_LBRACE && preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_NEWLINE_ON_OPEN_BRACE)) {
 			String delim = getLineDelimiter(node);
 			source.append(delim);
 			source.append(getIndent(node));
 			// } else if (type == CSSRegionContexts.CSS_CURLY_BRACE_CLOSE) {
 			// } else if (type == CSSRegionContexts.CSS_INCLUDES || type ==
 			// CSSRegionContexts.CSS_DASHMATCH) {
-		}
-		else if (type == CSSRegionContexts.CSS_DECLARATION_SEPARATOR && node instanceof ICSSStyleDeclItem) {
-			int n = mgr.getSpacesPreDelimiter();
-			if (mgr.getMaxLineWidth() > 0 && (!mgr.isProhibitWrapOnAttr() || node.getOwnerDocument().getNodeType() != ICSSNode.STYLEDECLARATION_NODE)) {
+		} else if (type == CSSRegionContexts.CSS_DECLARATION_SEPARATOR && node instanceof ICSSStyleDeclItem) {
+			int n = preferences.getInt(CSSCorePreferenceNames.FORMAT_PROP_PRE_DELIM);
+			if (preferences.getInt(CSSCorePreferenceNames.LINE_WIDTH) > 0 && (!preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR) || node.getOwnerDocument().getNodeType() != ICSSNode.STYLEDECLARATION_NODE)) {
 				int length = getLastLineLength(node, source);
 				int append = 1;
-				if (length + n + append > mgr.getMaxLineWidth()) {
+				if (length + n + append > preferences.getInt(CSSCorePreferenceNames.LINE_WIDTH)) {
 					source.append(getLineDelimiter(node));
 					source.append(getIndent(node));
 					if (needIndent)
-						source.append(mgr.getIndentString());
+						source.append(getIndentString());
 					n = 0; // no space is necessary
 				}
 			}
 			// no delimiter case
 			while (n-- > 0)
 				source.append(" ");//$NON-NLS-1$
-		}
-		else if (type == CSSRegionContexts.CSS_DECLARATION_DELIMITER || type == CSSRegionContexts.CSS_DECLARATION_VALUE_OPERATOR || type == CSSRegionContexts.CSS_DECLARATION_VALUE_PARENTHESIS_CLOSE) {
-			if (mgr.getMaxLineWidth() > 0 && (!mgr.isProhibitWrapOnAttr() || node.getOwnerDocument().getNodeType() != ICSSNode.STYLEDECLARATION_NODE)) {
+		} else if (type == CSSRegionContexts.CSS_DECLARATION_DELIMITER || type == CSSRegionContexts.CSS_DECLARATION_VALUE_OPERATOR || type == CSSRegionContexts.CSS_DECLARATION_VALUE_PARENTHESIS_CLOSE) {
+			if (preferences.getInt(CSSCorePreferenceNames.LINE_WIDTH) > 0 && (!preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR) || node.getOwnerDocument().getNodeType() != ICSSNode.STYLEDECLARATION_NODE)) {
 				int length = getLastLineLength(node, source);
 				int append = 1;
-				if (length + append > mgr.getMaxLineWidth()) {
+				if (length + append > preferences.getInt(CSSCorePreferenceNames.LINE_WIDTH)) {
 					source.append(getLineDelimiter(node));
 					source.append(getIndent(node));
 					if (needIndent)
-						source.append(mgr.getIndentString());
+						source.append(getIndentString());
 				}
 			}
-		}
-		else
+		} else
 			appendSpaceBefore(node, toAppend.getText(), source);
 	}
 
@@ -198,21 +194,21 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 			return;
 		if (isCleanup() && !getCleanupStrategy(node).isFormatSource())
 			return; // for not formatting case on cleanup action
-		CSSPreferenceHelper mgr = CSSPreferenceHelper.getInstance();
-		if (toAppend != null && toAppend.startsWith("{") && mgr.isNewLineOnOpenBrace()) {//$NON-NLS-1$
+
+		Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
+		if (toAppend != null && toAppend.startsWith("{") && preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_NEWLINE_ON_OPEN_BRACE)) {//$NON-NLS-1$
 			source.append(getLineDelimiter(node));
 			source.append(getIndent(node));
 			return;
-		}
-		else if (/* ! mgr.isOnePropertyPerLine() && */mgr.getMaxLineWidth() > 0 && (!mgr.isProhibitWrapOnAttr() || node.getOwnerDocument().getNodeType() != ICSSNode.STYLEDECLARATION_NODE)) {
+		} else if (/* ! mgr.isOnePropertyPerLine() && */preferences.getInt(CSSCorePreferenceNames.LINE_WIDTH) > 0 && (!preferences.getBoolean(CSSCorePreferenceNames.WRAPPING_PROHIBIT_WRAP_ON_ATTR) || node.getOwnerDocument().getNodeType() != ICSSNode.STYLEDECLARATION_NODE)) {
 			int n = getLastLineLength(node, source);
 			int append = (toAppend != null) ? TextUtilities.indexOf(DefaultLineTracker.DELIMITERS, toAppend, 0)[0] : 0;
 			if (toAppend != null)
 				append = (append < 0) ? toAppend.length() : append;
-			if (n + append + 1 > mgr.getMaxLineWidth()) {
+			if (n + append + 1 > preferences.getInt(CSSCorePreferenceNames.LINE_WIDTH)) {
 				source.append(getLineDelimiter(node));
 				source.append(getIndent(node));
-				source.append(mgr.getIndentString());
+				source.append(getIndentString());
 				return;
 			}
 		}
@@ -262,16 +258,14 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 			else
 				return text.toLowerCase();
 		}
-		else {
-			CSSPreferenceHelper mgr = CSSPreferenceHelper.getInstance();
 
-			if (mgr.isPreserveCase() || region.getType() == CSSRegionContexts.CSS_COMMENT)
-				return text;
-			else if (mgr.isIdentUpperCase())
-				return text.toUpperCase();
-			else
-				return text.toLowerCase();
-		}
+		Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
+		if (region.getType() == CSSRegionContexts.CSS_COMMENT)
+			return text;
+		else if (preferences.getInt(CSSCorePreferenceNames.CASE_IDENTIFIER) == CSSCorePreferenceNames.UPPER)
+			return text.toUpperCase();
+		else
+			return text.toLowerCase();
 	}
 
 	/**
@@ -292,16 +286,14 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 			else
 				return text.toLowerCase();
 		}
-		else {
-			CSSPreferenceHelper mgr = CSSPreferenceHelper.getInstance();
+		Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
 
-			if (mgr.isPreserveCase() || region.getType() != CSSRegionContexts.CSS_DECLARATION_PROPERTY)
-				return text;
-			else if (mgr.isPropNameUpperCase())
-				return text.toUpperCase();
-			else
-				return text.toLowerCase();
-		}
+		if (region.getType() != CSSRegionContexts.CSS_DECLARATION_PROPERTY)
+			return text;
+		else if (preferences.getInt(CSSCorePreferenceNames.CASE_PROPERTY_NAME) == CSSCorePreferenceNames.UPPER)
+			return text.toUpperCase();
+		else
+			return text.toLowerCase();
 	}
 
 	/**
@@ -318,23 +310,8 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 		if (isCleanup()) {
 			if (stgy.getPropValueCase() != CSSCleanupStrategy.ASIS) {
 				if (type == CSSRegionContexts.CSS_COMMENT) {
-				}
-				else {
+				} else {
 					if (stgy.getPropValueCase() == CSSCleanupStrategy.UPPER)
-						text = text.toUpperCase();
-					else
-						text = text.toLowerCase();
-				}
-			}
-		}
-		else {
-			CSSPreferenceHelper mgr = CSSPreferenceHelper.getInstance();
-
-			if (!mgr.isPreserveCase()) {
-				if (type == CSSRegionContexts.CSS_COMMENT) {
-				}
-				else {
-					if (mgr.isPropValueUpperCase())
 						text = text.toUpperCase();
 					else
 						text = text.toLowerCase();
@@ -351,30 +328,29 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 		if (isFormat())
 			return region.getText();
 
-		CSSPreferenceHelper mgr = CSSPreferenceHelper.getInstance();
+		Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
 		String text = region.getText();
 		if (region.getType() == CSSRegionContexts.CSS_URI) {
 			String uri = CSSLinkConverter.stripFunc(text);
-			boolean upper = (type == 0) ? mgr.isIdentUpperCase() : ((type == 1) ? mgr.isPropNameUpperCase() : mgr.isPropValueUpperCase());
-			String func = mgr.isPreserveCase() ? text.substring(0, 4) : (upper ? "URL(" : "url(");//$NON-NLS-2$//$NON-NLS-1$
+
+			boolean prefIsUpper = preferences.getInt(CSSCorePreferenceNames.CASE_IDENTIFIER) == CSSCorePreferenceNames.UPPER;
+			boolean upper = (type == 0) ? prefIsUpper : ((type == 1) ? preferences.getInt(CSSCorePreferenceNames.CASE_PROPERTY_NAME) == CSSCorePreferenceNames.UPPER : preferences.getInt(CSSCorePreferenceNames.CASE_PROPERTY_VALUE) == CSSCorePreferenceNames.UPPER);
+			String func = text.substring(0, 4);
 			if (isCleanup()) {
 				upper = ((type == 0) ? stgy.getIdentCase() : ((type == 1) ? stgy.getPropNameCase() : stgy.getPropValueCase())) == CSSCleanupStrategy.UPPER;
 				func = ((type == 0) ? stgy.getIdentCase() : ((type == 1) ? stgy.getPropNameCase() : stgy.getPropValueCase())) == CSSCleanupStrategy.ASIS ? text.substring(0, 4) : (upper ? "URL(" : "url(");//$NON-NLS-2$//$NON-NLS-1$
 			}
-			if ((!isCleanup() && mgr.isQuoteInURI()) || (isCleanup() && stgy.isQuoteValues())) {
-				String quote = mgr.getQuoteString(null /* reserved parameter */);
+			if ((!isCleanup() && preferences.getBoolean(CSSCorePreferenceNames.FORMAT_QUOTE_IN_URI)) || (isCleanup() && stgy.isQuoteValues())) {
+				String quote = preferences.getString(CSSCorePreferenceNames.FORMAT_QUOTE);
 				quote = CSSUtil.detectQuote(uri, quote);
 				text = func + quote + uri + quote + ")";//$NON-NLS-1$
-			}
-			else if (isCleanup() && !stgy.isQuoteValues()) {
+			} else if (isCleanup() && !stgy.isQuoteValues()) {
 				text = func + CSSLinkConverter.removeFunc(text) + ")";//$NON-NLS-1$
-			}
-			else {
+			} else {
 				text = func + uri + ")";//$NON-NLS-1$
 			}
-		}
-		else if (region.getType() == CSSRegionContexts.CSS_STRING && (!isCleanup() || stgy.isQuoteValues())) {
-			String quote = mgr.getQuoteString(null /* reserved parameter */);
+		} else if (region.getType() == CSSRegionContexts.CSS_STRING && (!isCleanup() || stgy.isQuoteValues())) {
+			String quote = preferences.getString(CSSCorePreferenceNames.FORMAT_QUOTE);
 			// begginning
 			if (!text.startsWith(quote)) {
 				if (text.startsWith("\"") || text.startsWith("\'")) //$NON-NLS-1$ //$NON-NLS-2$
@@ -494,15 +470,14 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 						childSource = ((AbstractCSSSourceFormatter) formatter).formatProc(child);
 					else
 						childSource = ((AbstractCSSSourceFormatter) formatter).formatProc(child, overlappedRegion(region, curStart, curEnd));
-				}
-				else
+				} else
 					toFinish = true;
 			}
 			// append between children
 			if (!first) {
 				curEnd = ((IndexedRegion) child).getStartOffset(); // change
-																	// only
-																	// start
+				// only
+				// start
 				if (start < curEnd) {
 					int curStart = ((IndexedRegion) child.getPreviousSibling()).getEndOffset();
 					if (curStart < end) {
@@ -598,8 +573,7 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 				else
 					formatPost(node, overlappedRegion(region, curStart, curEnd), source);
 			}
-		}
-		else {
+		} else {
 			curEnd = getChildInsertPos(node);
 			if (overlaps(region, curStart, curEnd)) {
 				if (includes(region, curStart, curEnd))
@@ -634,20 +608,20 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 	 *            org.eclipse.wst.css.core.model.interfaces.ICSSNode
 	 */
 	protected CSSCleanupStrategy getCleanupStrategy(ICSSNode node) {
-		CSSCleanupStrategy strategy = CSSCleanupStrategyImpl.getInstance();
+		CSSCleanupStrategy currentStrategy = CSSCleanupStrategyImpl.getInstance();
 		ICSSDocument doc = node.getOwnerDocument();
 		if (doc == null)
-			return strategy;
+			return currentStrategy;
 		ICSSModel model = doc.getModel();
 		if (model == null)
-			return strategy;
+			return currentStrategy;
 		if (model.getStyleSheetType() != ICSSModel.EXTERNAL) {
 			// TODO - TRANSITION Nakamori-san, or Kit, how can we move to
 			// "HTML" plugin?
 			// can we subclass?
-			// strategy = CSSInHTMLCleanupStrategyImpl.getInstance();
+			// currentStrategy = CSSInHTMLCleanupStrategyImpl.getInstance();
 		}
-		return strategy;
+		return currentStrategy;
 	}
 
 	/**
@@ -666,12 +640,11 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 		if (parent == null)
 			return "";//$NON-NLS-1$
 
-		CSSPreferenceHelper mgr = CSSPreferenceHelper.getInstance();
 		String parentIndent = getIndent(parent);
 		if (parent instanceof org.w3c.dom.css.CSSRule)
-			return parentIndent + mgr.getIndentString();
+			return parentIndent + getIndentString();
 		if (node.getParentNode() instanceof ICSSStyleDeclaration)
-			return parentIndent + mgr.getIndentString();
+			return parentIndent + getIndentString();
 		return parentIndent;
 	}
 
@@ -686,8 +659,8 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 		int n = str.lastIndexOf(delim);
 		if (n < 0)
 			return str.length();
-		else
-			return str.length() - n - delim.length();
+
+		return str.length() - n - delim.length();
 	}
 
 	/**
@@ -798,8 +771,7 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 			ITextRegion textRegion = it.prev();
 			IStructuredDocumentRegion documentRegion = it.getStructuredDocumentRegion();
 			ret[0] = new CompoundRegion(documentRegion, textRegion);
-		}
-		else {
+		} else {
 			ret[0] = null;
 		}
 		it.reset(model, reg.getOffset() + reg.getLength());
@@ -807,8 +779,7 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 			ITextRegion textRegion = it.next();
 			IStructuredDocumentRegion documentRegion = it.getStructuredDocumentRegion();
 			ret[1] = new CompoundRegion(documentRegion, textRegion);
-		}
-		else {
+		} else {
 			ret[1] = null;
 		}
 		return ret;
@@ -865,8 +836,7 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 			list.toArray(regions);
 			return regions;
 		}
-		else
-			return new CompoundRegion[0];
+		return new CompoundRegion[0];
 	}
 
 	/**
@@ -887,12 +857,12 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 				if (end < flatNode.getStartOffset(region))
 					break;
 				if (region.getType() != CSSRegionContexts.CSS_S || (isCleanup() && !stgy.isFormatSource())) // for
-																											// not
-																											// formatting
-																											// case
-																											// on
-																											// cleanup
-																											// action
+					// not
+					// formatting
+					// case
+					// on
+					// cleanup
+					// action
 					list.add(new CompoundRegion(flatNode, region));
 			}
 			flatNode = flatNode.getNext();
@@ -902,8 +872,7 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 			list.toArray(regions);
 			return regions;
 		}
-		else
-			return new CompoundRegion[0];
+		return new CompoundRegion[0];
 	}
 
 	/**
@@ -912,8 +881,8 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 	public static boolean includes(IRegion region, int start, int end) {
 		if (region == null)
 			return false;
-		else
-			return (region.getOffset() <= start) && (end <= region.getOffset() + region.getLength());
+
+		return (region.getOffset() <= start) && (end <= region.getOffset() + region.getLength());
 	}
 
 	/**
@@ -964,8 +933,26 @@ public abstract class AbstractCSSSourceFormatter implements CSSSourceGenerator {
 	public static boolean overlaps(IRegion region, int start, int end) {
 		if (region == null)
 			return false;
-		else
-			return (start < region.getOffset() + region.getLength()) && (region.getOffset() < end);
+
+		return (start < region.getOffset() + region.getLength()) && (region.getOffset() < end);
 	}
 
+	private String getIndentString() {
+		String indent = ""; //$NON-NLS-1$
+
+		Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
+		if (preferences != null) {
+			String indentChar = " "; //$NON-NLS-1$
+			String indentCharPref = preferences.getString(CSSCorePreferenceNames.INDENTATION_CHAR);
+			if (CSSCorePreferenceNames.TAB.equals(indentCharPref)) {
+				indentChar = "\t"; //$NON-NLS-1$
+			}
+			int indentationWidth = preferences.getInt(CSSCorePreferenceNames.INDENTATION_SIZE);
+
+			for (int i = 0; i < indentationWidth; i++) {
+				indent += indentChar;
+			}
+		}
+		return indent;
+	}
 }

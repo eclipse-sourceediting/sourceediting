@@ -14,7 +14,7 @@ package org.eclipse.wst.html.core.internal.document;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
-import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
+import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
@@ -23,7 +23,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 
 /**
  */
-public class HTMLDocumentTypeAdapterFactory implements INodeAdapterFactory, Preferences.IPropertyChangeListener, CommonModelPreferenceNames {
+public class HTMLDocumentTypeAdapterFactory implements INodeAdapterFactory, Preferences.IPropertyChangeListener {
 
 	private int tagNameCase = DocumentTypeAdapter.UPPER_CASE;
 	private int attrNameCase = DocumentTypeAdapter.LOWER_CASE;
@@ -97,7 +97,7 @@ public class HTMLDocumentTypeAdapterFactory implements INodeAdapterFactory, Pref
 		if (property == null)
 			return;
 
-		if (property.equals(TAG_NAME_CASE) || property.equals(ATTR_NAME_CASE)) {
+		if (property.equals(HTMLCorePreferenceNames.TAG_NAME_CASE) || property.equals(HTMLCorePreferenceNames.ATTR_NAME_CASE)) {
 			updateCases();
 		}
 	}
@@ -111,10 +111,10 @@ public class HTMLDocumentTypeAdapterFactory implements INodeAdapterFactory, Pref
 		if (this.preferences == null)
 			return;
 
-		if (this.preferences.getInt(TAG_NAME_CASE) == LOWER) {
+		if (this.preferences.getInt(HTMLCorePreferenceNames.TAG_NAME_CASE) == HTMLCorePreferenceNames.LOWER) {
 			this.tagNameCase = DocumentTypeAdapter.LOWER_CASE;
 		}
-		if (this.preferences.getInt(ATTR_NAME_CASE) == UPPER) {
+		if (this.preferences.getInt(HTMLCorePreferenceNames.ATTR_NAME_CASE) == HTMLCorePreferenceNames.UPPER) {
 			this.attrNameCase = DocumentTypeAdapter.UPPER_CASE;
 		}
 	}

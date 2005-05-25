@@ -89,7 +89,6 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 */
 	public StructuredTextViewerConfiguration(IPreferenceStore store) {
 		super(store);
-		fPreferenceStore = store;
 		fContentAssistProcessors = new ArrayList();
 	}
 
