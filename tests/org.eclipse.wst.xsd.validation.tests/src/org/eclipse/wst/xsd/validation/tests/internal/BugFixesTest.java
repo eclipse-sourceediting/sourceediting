@@ -15,9 +15,12 @@ import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.wst.xml.uriresolver.internal.XMLCatalog;
-import org.eclipse.wst.xml.uriresolver.internal.XMLCatalogEntry;
-import org.eclipse.wst.xml.uriresolver.internal.XMLCatalogPlugin;
+import org.eclipse.wst.xml.catalog.internal.provisional.ICatalog;
+import org.eclipse.wst.xml.catalog.internal.provisional.ICatalogEntry;
+import org.eclipse.wst.xml.catalog.internal.provisional.INextCatalog;
+import org.eclipse.wst.xml.catalog.internal.provisional.XMLCatalogPlugin;
+
+
 
 /**
  * Test class for bug fixes.
@@ -70,17 +73,26 @@ public class BugFixesTest extends BaseTestCase
     IProject project = createSimpleProject("Project", new String[]{testfile});
     IFile file = project.getFile(testname + ".xsd");
     
-    XMLCatalog catalog = XMLCatalogPlugin.getInstance().getDefaultXMLCatalog();
-    catalog = catalog.getChildCatalog(XMLCatalog.USER_CATALOG_ID);
-    XMLCatalogEntry entry = catalog.createEntry();
-    entry.setKey("http://www.example.com/invalid");
-    entry.setURI("platform:/resource/Project/InvalidSchemaInXMLCatalog.xsd");
-    entry.setType(XMLCatalogEntry.PUBLIC);
-    catalog.addEntry(entry);
+    ICatalog catalog = XMLCatalogPlugin.getInstance().getDefaultXMLCatalog();
+    INextCatalog[] nextCatalogs = catalog.getNextCatalogs();
+    for (int i = 0; i < nextCatalogs.length; i++)
+	{
+		INextCatalog nextCatalog = nextCatalogs[i];
+		if(XMLCatalogPlugin.USER_CATALOG_ID.equals(nextCatalog.getId())){
+			ICatalog userCatalog = nextCatalog.getReferencedCatalog();
+			if(userCatalog != null)
+			{
+				ICatalogEntry catalogEntry = (ICatalogEntry)userCatalog.createCatalogElement(ICatalogEntry.ENTRY_TYPE_PUBLIC);
+			    catalogEntry.setKey("testKey");
+			    catalogEntry.setURI("http://testuri");
+			    userCatalog.addCatalogElement(catalogEntry);
+			    runTest("platform:/resource/Project/InvalidSchemaInXMLCatalog.xsd"/*FILE_PROTOCOL + file.getLocation().toString()*/, loglocation, idealloglocation);
+			    catalog.removeCatalogElement(catalogEntry);
+			}	
+		}	
+	}
     
-    runTest("platform:/resource/Project/InvalidSchemaInXMLCatalog.xsd"/*FILE_PROTOCOL + file.getLocation().toString()*/, loglocation, idealloglocation);
-    
-    catalog.removeEntry(entry);
+   
   }
   
   /**
