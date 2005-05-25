@@ -17,8 +17,9 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wst.xml.catalog.internal.provisional.ICatalogEntry;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
-import org.eclipse.wst.xml.uriresolver.internal.XMLCatalogEntry;
+
 import org.eclipse.wst.xml.uriresolver.internal.util.URIHelper;
 
 public class EditEntityHelper {
@@ -47,7 +48,7 @@ public class EditEntityHelper {
 
 	public void performBrowseForSystemId(Shell parentShell, Text systemIdField, IPath resourceLocation) {
 		String[] extensions = {"dtd"}; //$NON-NLS-1$
-		SelectFileOrXMLCatalogIdDialog dialog = new SelectFileOrXMLCatalogIdDialog(parentShell, extensions, XMLCatalogEntry.SYSTEM);
+		SelectFileOrXMLCatalogIdDialog dialog = new SelectFileOrXMLCatalogIdDialog(parentShell, extensions, ICatalogEntry.ENTRY_TYPE_SYSTEM);
 		dialog.create();
 		dialog.getShell().setText(XMLUIMessages._UI_LABEL_SPECIFY_SYSTEM_ID); //$NON-NLS-1$
 		dialog.setBlockOnOpen(true);

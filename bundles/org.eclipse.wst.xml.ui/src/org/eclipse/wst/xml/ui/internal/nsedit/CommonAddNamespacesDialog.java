@@ -26,10 +26,12 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.wst.xml.catalog.internal.provisional.ICatalog;
+import org.eclipse.wst.xml.catalog.internal.provisional.ICatalogEntry;
+import org.eclipse.wst.xml.catalog.internal.provisional.INextCatalog;
+import org.eclipse.wst.xml.catalog.internal.provisional.XMLCatalogPlugin;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
-import org.eclipse.wst.xml.uriresolver.internal.XMLCatalog;
-import org.eclipse.wst.xml.uriresolver.internal.XMLCatalogEntry;
-import org.eclipse.wst.xml.uriresolver.internal.XMLCatalogPlugin;
+
 
 
 public class CommonAddNamespacesDialog extends Dialog {
@@ -68,10 +70,11 @@ public class CommonAddNamespacesDialog extends Dialog {
 		}
 	}
 
-	protected void addCatalogMapToList(XMLCatalog catalog, List list) {
-		for (Iterator i = catalog.getEntries().iterator(); i.hasNext();) {
-			XMLCatalogEntry entry = (XMLCatalogEntry) i.next();
-			if (entry.getType() == XMLCatalogEntry.PUBLIC && entry.getURI().endsWith(".xsd")) { //$NON-NLS-1$
+	protected void addCatalogMapToList(ICatalog catalog, List list) {
+		ICatalogEntry[] entries = catalog.getCatalogEntries();
+		for ( int i = 0; i < entries.length; i++) {
+			ICatalogEntry entry = entries[i];
+			if (entry.getEntryType() == ICatalogEntry.ENTRY_TYPE_PUBLIC && entry.getURI().endsWith(".xsd")) { //$NON-NLS-1$
 				if (!isAlreadyDeclared(entry.getKey())) {
 					NamespaceInfo namespaceInfo = new NamespaceInfo(entry.getKey(), "xx", null); //$NON-NLS-1$
 					list.add(namespaceInfo);
@@ -132,10 +135,29 @@ public class CommonAddNamespacesDialog extends Dialog {
 		List list = new ArrayList();
 
 		addBuiltInNamespaces(list);
-		XMLCatalog catalog = XMLCatalogPlugin.getInstance().getDefaultXMLCatalog();
-		addCatalogMapToList(catalog.getChildCatalog(XMLCatalog.USER_CATALOG_ID), list);
-		addCatalogMapToList(catalog.getChildCatalog(XMLCatalog.SYSTEM_CATALOG_ID), list);
+		ICatalog defaultCatalog = XMLCatalogPlugin.getInstance().getDefaultXMLCatalog();
+		INextCatalog[] nextCatalogs = defaultCatalog.getNextCatalogs();
+        for (int i = 0; i < nextCatalogs.length; i++)
+        {
+            INextCatalog catalog = nextCatalogs[i];
+            ICatalog referencedCatalog = catalog.getReferencedCatalog();
+            if (referencedCatalog != null)
+            {
+                if (XMLCatalogPlugin.USER_CATALOG_ID
+                        .equals(referencedCatalog.getId()))
+                {
+                	ICatalog userCatalog = referencedCatalog;
+                	addCatalogMapToList(userCatalog, list);
 
+                } else if (XMLCatalogPlugin.SYSTEM_CATALOG_ID
+                        .equals(referencedCatalog.getId()))
+                {
+                	ICatalog systemCatalog = referencedCatalog;
+            		addCatalogMapToList(systemCatalog, list);
+                }
+            }
+        }
+	
 		computeAddablePrefixes(list, existingNamespaces);
 
 		addNamespacesControl.setNamespaceInfoList(list);

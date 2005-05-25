@@ -34,9 +34,9 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.wst.xml.catalog.internal.provisional.ICatalogEntry;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
-import org.eclipse.wst.xml.uriresolver.internal.XMLCatalogEntry;
 import org.eclipse.wst.xml.uriresolver.internal.util.URIHelper;
 
 
@@ -53,9 +53,9 @@ public class XMLCatalogTableViewer extends TableViewer {
 			Comparator comparator = new Comparator() {
 				public int compare(Object o1, Object o2) {
 					int result = 0;
-					if (o1 instanceof XMLCatalogEntry && o2 instanceof XMLCatalogEntry) {
-						XMLCatalogEntry mappingInfo1 = (XMLCatalogEntry) o1;
-						XMLCatalogEntry mappingInfo2 = (XMLCatalogEntry) o2;
+					if (o1 instanceof ICatalogEntry && o2 instanceof ICatalogEntry) {
+						ICatalogEntry mappingInfo1 = (ICatalogEntry) o1;
+						ICatalogEntry mappingInfo2 = (ICatalogEntry) o2;
 						result = Collator.getInstance().compare(mappingInfo1.getKey(), mappingInfo2.getKey());
 					}
 					return result;
@@ -79,8 +79,8 @@ public class XMLCatalogTableViewer extends TableViewer {
 			Image result = null;
 			if (columnIndex == 0) {
 				Image base = null;
-				if (object instanceof XMLCatalogEntry) {
-					XMLCatalogEntry catalogEntry = (XMLCatalogEntry) object;
+				if (object instanceof ICatalogEntry) {
+					ICatalogEntry catalogEntry = (ICatalogEntry) object;
 					String uri = catalogEntry.getURI();
 					if (uri.endsWith("dtd")) { //$NON-NLS-1$
 						base = dtdFileImage;
@@ -107,8 +107,8 @@ public class XMLCatalogTableViewer extends TableViewer {
 
 		public String getColumnText(Object object, int columnIndex) {
 			String result = null;
-			if (object instanceof XMLCatalogEntry) {
-				XMLCatalogEntry catalogEntry = (XMLCatalogEntry) object;
+			if (object instanceof ICatalogEntry) {
+				ICatalogEntry catalogEntry = (ICatalogEntry) object;
 				result = columnIndex == 0 ? catalogEntry.getKey() : catalogEntry.getURI();
 				result = URIHelper.removePlatformResourceProtocol(result);
 			}
@@ -130,8 +130,8 @@ public class XMLCatalogTableViewer extends TableViewer {
 
 		public boolean select(Viewer viewer, Object parent, Object element) {
 			boolean result = false;
-			if (element instanceof XMLCatalogEntry) {
-				XMLCatalogEntry catalogEntry = (XMLCatalogEntry) element;
+			if (element instanceof ICatalogEntry) {
+				ICatalogEntry catalogEntry = (ICatalogEntry) element;
 				for (int i = 0; i < extensions.length; i++) {
 					if (catalogEntry.getURI().endsWith(extensions[i])) {
 						result = true;

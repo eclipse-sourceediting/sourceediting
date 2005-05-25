@@ -26,6 +26,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
+import org.eclipse.wst.xml.catalog.internal.provisional.ICatalog;
+import org.eclipse.wst.xml.catalog.internal.provisional.ICatalogEntry;
+import org.eclipse.wst.xml.catalog.internal.provisional.XMLCatalogPlugin;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
@@ -35,9 +38,6 @@ import org.eclipse.wst.xml.core.internal.contentmodel.util.ContentBuilder;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMContentBuilderImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMWriter;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
-import org.eclipse.wst.xml.uriresolver.internal.XMLCatalog;
-import org.eclipse.wst.xml.uriresolver.internal.XMLCatalogEntry;
-import org.eclipse.wst.xml.uriresolver.internal.XMLCatalogPlugin;
 import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
 import org.eclipse.wst.xml.uriresolver.internal.util.IdResolverImpl;
 import org.eclipse.wst.xml.uriresolver.internal.util.URIHelper;
@@ -51,7 +51,7 @@ public class NewXMLGenerator {
 	protected int buildPolicy;
 	protected String rootElementName;
 
-	protected XMLCatalogEntry xmlCatalogEntry;
+	protected ICatalogEntry xmlCatalogEntry;
 
 	// info for dtd
 	protected String publicId;
@@ -193,7 +193,7 @@ public class NewXMLGenerator {
 
 	public void createNamespaceInfoList() {
 		List result = new Vector();
-		XMLCatalog xmlCatalog = XMLCatalogPlugin.getInstance().getDefaultXMLCatalog();
+		ICatalog xmlCatalog = XMLCatalogPlugin.getInstance().getDefaultXMLCatalog();
 		if (cmDocument != null) {
 			result = (List) cmDocument.getProperty("http://org.eclipse.wst/cm/properties/namespaceInfo"); //$NON-NLS-1$
 			if (result != null) {
@@ -203,8 +203,8 @@ public class NewXMLGenerator {
 					if (i == 0) {
 						String locationInfo = null;
 						if (xmlCatalogEntry != null) {
-							if (xmlCatalogEntry.getType() == XMLCatalogEntry.PUBLIC) {
-								locationInfo = xmlCatalogEntry.getWebAddress();
+							if (xmlCatalogEntry.getEntryType() == ICatalogEntry.ENTRY_TYPE_PUBLIC) {
+								locationInfo = xmlCatalogEntry.getAttributeValue(ICatalogEntry.ATTR_WEB_URL);
 							}
 							else {
 								locationInfo = xmlCatalogEntry.getKey();
@@ -259,11 +259,11 @@ public class NewXMLGenerator {
 	}
 
 
-	public void setXMLCatalogEntry(XMLCatalogEntry catalogEntry) {
+	public void setXMLCatalogEntry(ICatalogEntry catalogEntry) {
 		xmlCatalogEntry = catalogEntry;
 	}
 
-	public XMLCatalogEntry getXMLCatalogEntry() {
+	public ICatalogEntry getXMLCatalogEntry() {
 		return xmlCatalogEntry;
 	}
 

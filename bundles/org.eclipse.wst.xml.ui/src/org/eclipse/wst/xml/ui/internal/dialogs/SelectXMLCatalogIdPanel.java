@@ -13,7 +13,6 @@
 package org.eclipse.wst.xml.ui.internal.dialogs;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -24,18 +23,21 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.wst.xml.catalog.internal.provisional.ICatalog;
+import org.eclipse.wst.xml.catalog.internal.provisional.ICatalogEntry;
+import org.eclipse.wst.xml.catalog.internal.provisional.INextCatalog;
+import org.eclipse.wst.xml.catalog.internal.provisional.XMLCatalogPlugin;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
-import org.eclipse.wst.xml.uriresolver.internal.XMLCatalog;
-import org.eclipse.wst.xml.uriresolver.internal.XMLCatalogEntry;
+
 
 public class SelectXMLCatalogIdPanel extends Composite {
 	protected int catalogEntryType;
 	protected boolean doTableSizeHack = false;
 
 	protected XMLCatalogTableViewer tableViewer;
-	protected XMLCatalog xmlCatalog;
+	protected ICatalog xmlCatalog;
 
-	public SelectXMLCatalogIdPanel(Composite parent, XMLCatalog xmlCatalog) {
+	public SelectXMLCatalogIdPanel(Composite parent, ICatalog xmlCatalog) {
 		super(parent, SWT.NONE);
 		this.xmlCatalog = xmlCatalog;
 
@@ -61,12 +63,12 @@ public class SelectXMLCatalogIdPanel extends Composite {
 
 		XMLCatalogTableViewer theTableViewer = new XMLCatalogTableViewer(parent, headings) {
 
-			protected void addXMLCatalogEntries(List list, Collection collection) {
-				for (Iterator i = collection.iterator(); i.hasNext();) {
-					XMLCatalogEntry entry = (XMLCatalogEntry) i.next();
+			protected void addXMLCatalogEntries(List list, ICatalogEntry[] entries) {
+				for (int i=0; i < entries.length; i++) {
+					ICatalogEntry entry = entries[i];
 					if (catalogEntryType == 0) {
 						list.add(entry);
-					} else if (catalogEntryType == entry.getType()) {
+					} else if (catalogEntryType == entry.getEntryType()) {
 						list.add(entry);
 					}
 				}
@@ -87,9 +89,28 @@ public class SelectXMLCatalogIdPanel extends Composite {
 					}
 				} else {
 					result = new Vector();
-
-					addXMLCatalogEntries(result, xmlCatalog.getChildCatalog(XMLCatalog.SYSTEM_CATALOG_ID).getEntries());
-					addXMLCatalogEntries(result, xmlCatalog.getChildCatalog(XMLCatalog.USER_CATALOG_ID).getEntries());
+					 INextCatalog[] nextCatalogs = xmlCatalog.getNextCatalogs();
+				        for (int i = 0; i < nextCatalogs.length; i++)
+				        {
+				            INextCatalog catalog = nextCatalogs[i];
+				            ICatalog referencedCatalog = catalog.getReferencedCatalog();
+				            if (referencedCatalog != null)
+				            {
+				                if (XMLCatalogPlugin.SYSTEM_CATALOG_ID
+				                        .equals(referencedCatalog.getId()))
+				                {
+				                    ICatalog systemCatalog = referencedCatalog;
+				                    addXMLCatalogEntries(result, systemCatalog.getCatalogEntries());
+				                    
+				                } else if (XMLCatalogPlugin.USER_CATALOG_ID
+				                        .equals(referencedCatalog.getId()))
+				                {
+				                	ICatalog userCatalog = referencedCatalog;
+				                    addXMLCatalogEntries(result, userCatalog.getCatalogEntries());
+				   				 
+				                }
+				            }
+				        }
 				}
 				return result;
 			}
@@ -99,7 +120,7 @@ public class SelectXMLCatalogIdPanel extends Composite {
 
 
 	public String getId() {
-		XMLCatalogEntry entry = getXMLCatalogEntry();
+		ICatalogEntry entry = getXMLCatalogEntry();
 		return entry != null ? entry.getKey() : null;
 	}
 
@@ -108,16 +129,16 @@ public class SelectXMLCatalogIdPanel extends Composite {
 	}
 
 	public String getURI() {
-		XMLCatalogEntry entry = getXMLCatalogEntry();
+		ICatalogEntry entry = getXMLCatalogEntry();
 		return entry != null ? entry.getURI() : null;
 	}
 
-	public XMLCatalogEntry getXMLCatalogEntry() {
-		XMLCatalogEntry result = null;
+	public ICatalogEntry getXMLCatalogEntry() {
+		ICatalogEntry result = null;
 		ISelection selection = tableViewer.getSelection();
 		Object selectedObject = (selection instanceof IStructuredSelection) ? ((IStructuredSelection) selection).getFirstElement() : null;
-		if (selectedObject instanceof XMLCatalogEntry) {
-			result = (XMLCatalogEntry) selectedObject;
+		if (selectedObject instanceof ICatalogEntry) {
+			result = (ICatalogEntry) selectedObject;
 		}
 		return result;
 	}

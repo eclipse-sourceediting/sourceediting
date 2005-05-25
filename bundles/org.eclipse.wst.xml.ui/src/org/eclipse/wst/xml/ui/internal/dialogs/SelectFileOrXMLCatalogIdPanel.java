@@ -25,10 +25,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.wst.common.ui.internal.viewers.SelectSingleFileView;
+import org.eclipse.wst.xml.catalog.internal.provisional.ICatalog;
+import org.eclipse.wst.xml.catalog.internal.provisional.ICatalogEntry;
+import org.eclipse.wst.xml.catalog.internal.provisional.XMLCatalogPlugin;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
-import org.eclipse.wst.xml.uriresolver.internal.XMLCatalog;
-import org.eclipse.wst.xml.uriresolver.internal.XMLCatalogEntry;
-import org.eclipse.wst.xml.uriresolver.internal.XMLCatalogPlugin;
+
 
 public class SelectFileOrXMLCatalogIdPanel extends Composite implements SelectionListener {
 
@@ -98,7 +99,7 @@ public class SelectFileOrXMLCatalogIdPanel extends Composite implements Selectio
 
 		selectSingleFileView = new MySelectSingleFileView(pageBook);
 
-		XMLCatalog xmlCatalog = XMLCatalogPlugin.getInstance().getDefaultXMLCatalog();
+		ICatalog xmlCatalog = XMLCatalogPlugin.getInstance().getDefaultXMLCatalog();
 		selectXMLCatalogIdPanel = new SelectXMLCatalogIdPanel(pageBook, xmlCatalog);
 		selectXMLCatalogIdPanel.getTableViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -116,8 +117,8 @@ public class SelectFileOrXMLCatalogIdPanel extends Composite implements Selectio
 		return result;
 	}
 
-	public XMLCatalogEntry getXMLCatalogEntry() {
-		XMLCatalogEntry result = null;
+	public ICatalogEntry getXMLCatalogEntry() {
+		ICatalogEntry result = null;
 		if (radioButton[1].getSelection()) {
 			result = selectXMLCatalogIdPanel.getXMLCatalogEntry();
 		}

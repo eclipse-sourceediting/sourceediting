@@ -47,6 +47,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
+import org.eclipse.wst.xml.catalog.internal.provisional.ICatalogEntry;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
@@ -57,7 +58,6 @@ import org.eclipse.wst.xml.ui.internal.dialogs.NamespaceInfoErrorHelper;
 import org.eclipse.wst.xml.ui.internal.dialogs.SelectFileOrXMLCatalogIdPanel;
 import org.eclipse.wst.xml.ui.internal.dialogs.UpdateListener;
 import org.eclipse.wst.xml.ui.internal.nsedit.CommonEditNamespacesDialog;
-import org.eclipse.wst.xml.uriresolver.internal.XMLCatalogEntry;
 import org.eclipse.wst.xml.uriresolver.internal.util.URIHelper;
 
 public class NewXMLWizard extends NewModelWizard
@@ -426,7 +426,7 @@ public class NewXMLWizard extends NewModelWizard
       return panel.getXMLCatalogId();
     }                            
     
-    public XMLCatalogEntry getXMLCatalogEntry()
+    public ICatalogEntry getXMLCatalogEntry()
     {
       return panel.getXMLCatalogEntry();   
     }    
@@ -895,14 +895,14 @@ public class NewXMLWizard extends NewModelWizard
     {                           
       String thePublicId = null;                              
       String theSystemId = null;
-      XMLCatalogEntry xmlCatalogEntry = generator.getXMLCatalogEntry();
+      ICatalogEntry xmlCatalogEntry = generator.getXMLCatalogEntry();
 
       if (xmlCatalogEntry != null)
       {
-        if (xmlCatalogEntry.getType() == XMLCatalogEntry.PUBLIC)
+        if (xmlCatalogEntry.getEntryType() == ICatalogEntry.ENTRY_TYPE_PUBLIC)
         {
           thePublicId = xmlCatalogEntry.getKey();
-          theSystemId = xmlCatalogEntry.getWebAddress();
+          theSystemId = xmlCatalogEntry.getAttributeValue(ICatalogEntry.ATTR_WEB_URL);
           if (theSystemId == null)
           {
             theSystemId = generator.getGrammarURI().startsWith("http:") ? generator.getGrammarURI() : URIHelper.getLastSegment(generator.getGrammarURI()); //$NON-NLS-1$

@@ -25,9 +25,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.wst.xml.uriresolver.internal.XMLCatalog;
-import org.eclipse.wst.xml.uriresolver.internal.XMLCatalogEntry;
-import org.eclipse.wst.xml.uriresolver.internal.XMLCatalogPlugin;
+import org.eclipse.wst.xml.catalog.internal.provisional.ICatalog;
+import org.eclipse.wst.xml.catalog.internal.provisional.ICatalogEntry;
+import org.eclipse.wst.xml.catalog.internal.provisional.XMLCatalogPlugin;
+
 
 
 
@@ -50,8 +51,8 @@ public class SelectXMLCatalogIdDialog extends Dialog {
 			ISelection selection = panel.getTableViewer().getSelection();
 			Object selectedObject = (selection instanceof IStructuredSelection) ? ((IStructuredSelection) selection).getFirstElement() : null;
 
-			if (selectedObject instanceof XMLCatalogEntry) {
-				XMLCatalogEntry mappingInfo = (XMLCatalogEntry) selectedObject;
+			if (selectedObject instanceof ICatalogEntry) {
+				ICatalogEntry mappingInfo = (ICatalogEntry) selectedObject;
 				publicId = mappingInfo.getKey();
 				systemId = computeDefaultSystemId(mappingInfo);
 			}
@@ -59,8 +60,8 @@ public class SelectXMLCatalogIdDialog extends Dialog {
 		super.buttonPressed(buttonId);
 	}
 
-	protected String computeDefaultSystemId(XMLCatalogEntry mappingInfo) {
-		String result = mappingInfo.getWebAddress();
+	protected String computeDefaultSystemId(ICatalogEntry mappingInfo) {
+		String result = mappingInfo.getAttributeValue(ICatalogEntry.ATTR_WEB_URL);
 		if (result == null && mappingInfo.getURI() != null) {
 			int index = mappingInfo.getURI().lastIndexOf("/"); //$NON-NLS-1$
 			String lastSegment = index != -1 ? mappingInfo.getURI().substring(index + 1) : mappingInfo.getURI();
@@ -81,7 +82,7 @@ public class SelectXMLCatalogIdDialog extends Dialog {
 		//WorkbenchHelp.setHelp(dialogArea,
 		// XMLCommonUIContextIds.XCUI_CATALOG_DIALOG);
 
-		XMLCatalog xmlCatalog = XMLCatalogPlugin.getInstance().getDefaultXMLCatalog();
+		ICatalog xmlCatalog = XMLCatalogPlugin.getInstance().getDefaultXMLCatalog();
 		panel = new SelectXMLCatalogIdPanel(dialogArea, xmlCatalog);
 
 		ISelectionChangedListener listener = new ISelectionChangedListener() {
