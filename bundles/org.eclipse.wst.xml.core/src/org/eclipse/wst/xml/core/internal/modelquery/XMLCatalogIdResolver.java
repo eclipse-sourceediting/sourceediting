@@ -12,9 +12,12 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.modelquery;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
-import org.eclipse.wst.xml.uriresolver.internal.XMLCatalog;
-import org.eclipse.wst.xml.uriresolver.internal.XMLCatalogPlugin;
+import org.eclipse.wst.xml.catalog.internal.provisional.ICatalog;
+import org.eclipse.wst.xml.catalog.internal.provisional.XMLCatalogPlugin;
 import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
 import org.eclipse.wst.xml.uriresolver.internal.util.URIHelper;
 
@@ -59,10 +62,19 @@ public class XMLCatalogIdResolver implements IdResolver {
 		// first see if we can map the publicId to an alternative systemId
 		// note: should probably verify the mappedSystemId before ignoring the
 		// systemId
-		XMLCatalog xmlCatalog = XMLCatalogPlugin.getInstance().getDefaultXMLCatalog();
-		String mappedSystemId = xmlCatalog.getMappedSystemId(publicId, systemId);
-		if (mappedSystemId != null) {
-			systemId = mappedSystemId;
+		ICatalog xmlCatalog = XMLCatalogPlugin.getInstance().getDefaultXMLCatalog();
+		try
+		{
+			String mappedSystemId = xmlCatalog.resolvePublic(publicId, systemId);
+			if (mappedSystemId != null) {
+				systemId = mappedSystemId;
+			}
+		} catch (MalformedURLException e)
+		{
+			
+		} catch (IOException e)
+		{
+			
 		}
 
 		// normalize the systemId

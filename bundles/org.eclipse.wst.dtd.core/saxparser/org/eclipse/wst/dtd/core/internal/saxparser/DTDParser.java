@@ -669,6 +669,9 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 		InputSource result = null;
 		IdResolver idResolver = new IdResolverImpl(currentDTD.getName());
 		String uri = idResolver.resolveId(publicId, systemId);
+		if(uri == null){
+			uri = systemId;
+		}
 		result = new InputSource(uri);
 		return result;
 	}
