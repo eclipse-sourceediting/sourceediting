@@ -29,8 +29,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.xml.tests.encoding.TestsPlugin;
 import org.eclipse.wst.xml.tests.encoding.util.ProjectUnzipUtility;
 
@@ -42,7 +40,7 @@ public class TestContentTypeDetection extends TestCase {
 	// test
 	private static boolean fTestProjectInitialized;
 	private static int nSetups = 0;
-	private static final String TEST_PROJECT_NAME = "com.ibm.encoding.resource.newtests";
+	private static final String TEST_PROJECT_NAME = "org.eclipse.wst.xml.temp.tests.encoding.resource.newtests";
 
 	private static void createProject(IProject project, IPath locationPath, IProgressMonitor monitor) throws CoreException {
 		if (monitor == null) {
@@ -188,26 +186,21 @@ public class TestContentTypeDetection extends TestCase {
 		nSetups--;
 		if (nSetups == 0) {
 			if (!DEBUG) {
-				 Display display = PlatformUI.getWorkbench().getDisplay();
-				display.asyncExec(new Runnable() {
-					public void run() {
-						ProjectUnzipUtility projUtil = new ProjectUnzipUtility();
-						IProject proj = fTestProject;
-						fTestProject = null;
-						try {
-							projUtil.deleteProject(proj);
-						}
-						catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				});
+//				 Display display = PlatformUI.getWorkbench().getDisplay();
+//				display.asyncExec(new Runnable() {
+//					public void run() {
+//						ProjectUnzipUtility projUtil = new ProjectUnzipUtility();
+//						IProject proj = fTestProject;
+//						fTestProject = null;
+//						try {
+//							projUtil.deleteProject(proj);
+//						}
+//						catch (Exception e) {
+//							e.printStackTrace();
+//						}
+//					}
+//				});
 			}
 		}
 	}
-
-
-
-
-
 }
