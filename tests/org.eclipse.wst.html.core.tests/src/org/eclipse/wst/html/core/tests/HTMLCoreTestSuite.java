@@ -13,7 +13,7 @@ package org.eclipse.wst.html.core.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.eclipse.wst.html.core.tests.misc.TestPreferenceValues;
+import org.eclipse.wst.html.core.tests.misc.HTMLCorePreferencesTest;
 
 
 
@@ -31,6 +31,6 @@ public class HTMLCoreTestSuite extends TestSuite {
 		super("HTML Core TestSuite");
 
 		addTest(ModelParserTests.suite());
-		addTest(new TestSuite(TestPreferenceValues.class));
+		addTest(new TestSuite(HTMLCorePreferencesTest.class));
 	}
 }

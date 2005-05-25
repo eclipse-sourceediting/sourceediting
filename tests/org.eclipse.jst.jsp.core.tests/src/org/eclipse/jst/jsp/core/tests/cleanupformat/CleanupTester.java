@@ -18,9 +18,9 @@ import java.io.UnsupportedEncodingException;
 import junit.framework.TestCase;
 
 import org.eclipse.wst.html.core.internal.cleanup.HTMLCleanupProcessorImpl;
+import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.sse.core.internal.cleanup.AbstractStructuredCleanupProcessor;
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupPreferences;
-import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
@@ -54,8 +54,6 @@ public class CleanupTester extends TestCase {
 
 		// init CleanupPreferences
 		IStructuredCleanupPreferences cleanupPreferences = fCleanupProcessor.getCleanupPreferences();
-		cleanupPreferences.setTagNameCase(CommonModelPreferenceNames.ASIS);
-		cleanupPreferences.setAttrNameCase(CommonModelPreferenceNames.ASIS);
 		cleanupPreferences.setCompressEmptyElementTags(false);
 		cleanupPreferences.setInsertRequiredAttrs(false);
 		cleanupPreferences.setInsertMissingTags(true);
@@ -84,8 +82,6 @@ public class CleanupTester extends TestCase {
 
 		// init CleanupPreferences
 		IStructuredCleanupPreferences cleanupPreferences = fCleanupProcessor.getCleanupPreferences();
-		cleanupPreferences.setTagNameCase(CommonModelPreferenceNames.ASIS);
-		cleanupPreferences.setAttrNameCase(CommonModelPreferenceNames.ASIS);
 		cleanupPreferences.setCompressEmptyElementTags(false);
 		cleanupPreferences.setInsertRequiredAttrs(false);
 		cleanupPreferences.setInsertMissingTags(true);
@@ -114,8 +110,6 @@ public class CleanupTester extends TestCase {
 
 		// init CleanupPreferences
 		IStructuredCleanupPreferences cleanupPreferences = fCleanupProcessor.getCleanupPreferences();
-		cleanupPreferences.setTagNameCase(CommonModelPreferenceNames.ASIS);
-		cleanupPreferences.setAttrNameCase(CommonModelPreferenceNames.ASIS);
 		cleanupPreferences.setCompressEmptyElementTags(true);
 		cleanupPreferences.setInsertRequiredAttrs(false);
 		cleanupPreferences.setInsertMissingTags(false);
@@ -144,8 +138,8 @@ public class CleanupTester extends TestCase {
 
 		// init CleanupPreferences
 		IStructuredCleanupPreferences cleanupPreferences = fHTMLCleanupProcessor.getCleanupPreferences();
-		cleanupPreferences.setTagNameCase(CommonModelPreferenceNames.UPPER);
-		cleanupPreferences.setAttrNameCase(CommonModelPreferenceNames.LOWER);
+		cleanupPreferences.setTagNameCase(HTMLCorePreferenceNames.UPPER);
+		cleanupPreferences.setAttrNameCase(HTMLCorePreferenceNames.LOWER);
 		cleanupPreferences.setCompressEmptyElementTags(false);
 		cleanupPreferences.setInsertRequiredAttrs(false);
 		cleanupPreferences.setInsertMissingTags(true);
@@ -174,8 +168,8 @@ public class CleanupTester extends TestCase {
 
 		// init CleanupPreferences
 		IStructuredCleanupPreferences cleanupPreferences = fHTMLCleanupProcessor.getCleanupPreferences();
-		cleanupPreferences.setTagNameCase(CommonModelPreferenceNames.UPPER);
-		cleanupPreferences.setAttrNameCase(CommonModelPreferenceNames.LOWER);
+		cleanupPreferences.setTagNameCase(HTMLCorePreferenceNames.UPPER);
+		cleanupPreferences.setAttrNameCase(HTMLCorePreferenceNames.LOWER);
 		cleanupPreferences.setCompressEmptyElementTags(false);
 		cleanupPreferences.setInsertRequiredAttrs(false);
 		cleanupPreferences.setInsertMissingTags(true);

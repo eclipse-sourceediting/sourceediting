@@ -12,11 +12,10 @@ import junit.framework.TestCase;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.wst.css.core.internal.CSSCorePlugin;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleSheet;
-import org.eclipse.wst.css.core.internal.provisional.preferences.CSSModelPreferenceNames;
 import org.eclipse.wst.css.core.tests.util.FileUtil;
-import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.w3c.dom.css.CSSValue;
 import org.w3c.dom.css.Counter;
@@ -30,9 +29,9 @@ public class AbstractModelTest extends TestCase {
 		super.setUp();
 
 		Preferences prefs = CSSCorePlugin.getDefault().getPluginPreferences();
-		prefs.setValue(CSSModelPreferenceNames.CASE_IDENTIFIER, CommonModelPreferenceNames.LOWER);
-		prefs.setValue(CSSModelPreferenceNames.CASE_PROPERTY_NAME, CommonModelPreferenceNames.LOWER);
-		prefs.setValue(CSSModelPreferenceNames.CASE_PROPERTY_VALUE, CommonModelPreferenceNames.LOWER);
+		prefs.setValue(CSSCorePreferenceNames.CASE_IDENTIFIER, CSSCorePreferenceNames.LOWER);
+		prefs.setValue(CSSCorePreferenceNames.CASE_PROPERTY_NAME, CSSCorePreferenceNames.LOWER);
+		prefs.setValue(CSSCorePreferenceNames.CASE_PROPERTY_VALUE, CSSCorePreferenceNames.LOWER);
 
 		fModel = FileUtil.createModel();
 	}

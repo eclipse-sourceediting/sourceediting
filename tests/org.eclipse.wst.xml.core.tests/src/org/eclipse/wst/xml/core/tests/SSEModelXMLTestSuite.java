@@ -42,5 +42,6 @@ public class SSEModelXMLTestSuite extends TestSuite {
 		addTest(new TestSuite(TestStructuredPartitionerXML.class));
 		addTest(new TestSuite(NameValidatorTests.class));
 		addTest(new TestSuite(TransitionTests.class));
+		addTest(new TestSuite(XMLCorePreferencesTest.class));
 	}
 }

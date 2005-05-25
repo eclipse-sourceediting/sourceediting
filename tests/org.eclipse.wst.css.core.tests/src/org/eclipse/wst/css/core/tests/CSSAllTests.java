@@ -32,6 +32,7 @@ public class CSSAllTests extends TestSuite {
 		addSourceTests(suite);
 		addModelTests(suite);
 
+		suite.addTestSuite(CSSCorePreferencesTest.class);
 		return suite;
 	}
 
