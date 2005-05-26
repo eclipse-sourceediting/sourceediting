@@ -7,7 +7,7 @@
 
 <template name="%Templates.jspdeclaration.name" description="%Templates.jspdeclaration.desc" id="org.eclipse.jst.jsp.ui.templates.jspdeclaration" context="jsp_tag" enabled="true">%Templates.jspdeclaration.content</template>
 
-<template name="%Templates.jspexpression.name" description="%Templates.jspexpression.desc" id="org.eclipse.jst.jsp.ui.templates.jspexpression" context="jsp_tag" enabled="true">%Templates.jspexpression.content</template>
+<template name="%Templates.jspexpression.name" description="%Templates.jspexpression.desc" id="org.eclipse.jst.jsp.ui.templates.jspexpression" context="jsp_all" enabled="true">%Templates.jspexpression.content</template>
 
 <template name="%Templates.jspincludedirective.name" description="%Templates.jspincludedirective.desc" id="org.eclipse.jst.jsp.ui.templates.jspincludedirective" context="jsp_tag" enabled="true">%Templates.jspincludedirective.content</template>
 

@@ -290,9 +290,6 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 				contents.append('"');
 				CustomCompletionProposal proposal = new CustomCompletionProposal(contents.toString(), contentAssistRequest.getReplacementBeginPosition(), contentAssistRequest.getReplacementLength(), contents.length(), JSPEditorPluginImageHelper.getInstance().getImage(JSPEditorPluginImages.IMG_OBJ_TAG_GENERIC), tagname, null, null, XMLRelevanceConstants.R_JSP_ATTRIBUTE_VALUE);
 				contentAssistRequest.addProposal(proposal);
-
-				addTemplates(contentAssistRequest, TemplateContextTypeIdsJSP.TAG);
-				addTemplates(contentAssistRequest, TemplateContextTypeIdsJSP.ALL);
 			}
 		}
 
