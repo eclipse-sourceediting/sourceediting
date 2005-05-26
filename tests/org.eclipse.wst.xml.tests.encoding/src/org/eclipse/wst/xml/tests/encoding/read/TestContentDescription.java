@@ -43,7 +43,7 @@ public class TestContentDescription extends TestCase {
 	// needs to be static, since JUnit creates difference instances for each
 	// test
 	private static boolean fTestProjectInitialized;
-	private static final String TEST_PROJECT_NAME = "com.ibm.encoding.resource.newtests";
+	private static final String TEST_PROJECT_NAME = "org.eclipse.encoding.resource.newtests";
 	static IProject fTestProject;
 	private static int nSetups = 0;
 
