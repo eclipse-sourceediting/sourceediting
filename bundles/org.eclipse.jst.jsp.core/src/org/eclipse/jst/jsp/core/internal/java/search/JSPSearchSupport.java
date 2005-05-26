@@ -36,9 +36,7 @@ import org.eclipse.jdt.core.search.SearchDocument;
 import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jdt.core.search.SearchPattern;
 import org.eclipse.jdt.core.search.SearchRequestor;
-import org.eclipse.jdt.internal.compiler.util.SimpleLookupTable;
 import org.eclipse.jdt.internal.core.JavaModelManager;
-import org.eclipse.jdt.internal.core.search.indexing.IndexManager;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.Logger;
@@ -495,15 +493,13 @@ public class JSPSearchSupport {
     //how can we make sure participant indexLocations are updated at startup?
     public final IPath computeIndexLocation(IPath containerPath) {
 
-        // pa_TODO there should be a non internal way to do this.
-        IndexManager indexManager = JavaModelManager.getJavaModelManager().getIndexManager();
-        SimpleLookupTable indexLocations = indexManager.indexLocations;
-
         String indexLocation = null;
-        Object obj = indexLocations.get(containerPath);
-        if (obj != null) {
-            indexLocation = (String) obj;
-        } else {
+        // we don't want to inadvertently use a JDT Index
+        // we want to be sure to use the Index from the JSP location
+        //Object obj = indexLocations.get(containerPath);
+        //if (obj != null) {
+        //    indexLocation = (String) obj;
+        //} else {
             // create index entry
             String pathString = containerPath.toOSString();
             this.fChecksumCalculator.reset();
@@ -515,8 +511,9 @@ public class JSPSearchSupport {
 
             // pa_TODO need to add to java path too, so JDT search support knows
             // there should be a non internal way to do this.
-            indexLocations.put(containerPath, indexLocation);
-        }
+            // https://bugs.eclipse.org/bugs/show_bug.cgi?id=77564
+            JavaModelManager.getJavaModelManager().getIndexManager().indexLocations.put(containerPath, indexLocation);
+        //}
         return new Path(indexLocation);
     }
 
