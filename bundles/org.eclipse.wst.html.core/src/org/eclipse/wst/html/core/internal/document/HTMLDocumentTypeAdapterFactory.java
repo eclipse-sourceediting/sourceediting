@@ -56,9 +56,17 @@ public class HTMLDocumentTypeAdapterFactory implements INodeAdapterFactory, Pref
 	 */
 	public INodeAdapter adapt(INodeNotifier notifier) {
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=85484
-		DocumentTypeAdapter adapter = null;//(DocumentTypeAdapter)notifier.getExistingAdapter(DocumentTypeAdapter.class);
-		if (adapter != null && adapter instanceof HTMLDocumentTypeAdapter)
-			return adapter;
+		
+		// remove old adapter, or else they may collect
+		DocumentTypeAdapter oldAdapter = (DocumentTypeAdapter)notifier.getExistingAdapter(DocumentTypeAdapter.class);
+		if(oldAdapter != null) {
+			oldAdapter.release();
+			notifier.removeAdapter(oldAdapter);
+		}
+		
+		DocumentTypeAdapter adapter = null;
+//		if (adapter != null && adapter instanceof HTMLDocumentTypeAdapter)
+//			return adapter;
 		if (!(notifier instanceof IDOMDocument))
 			return null;
 		adapter = new HTMLDocumentTypeAdapter((IDOMDocument) notifier, this);
@@ -129,9 +137,9 @@ public class HTMLDocumentTypeAdapterFactory implements INodeAdapterFactory, Pref
 	}
 
 	/**
-	 * Overriding copy method
+	 * <ol>verriding copy method
 	 */
 	public INodeAdapterFactory copy() {
 		return new HTMLDocumentTypeAdapterFactory();
 	}
-}
+} 

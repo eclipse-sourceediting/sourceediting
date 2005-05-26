@@ -16,6 +16,7 @@ import org.eclipse.wst.html.core.internal.document.DocumentStyleImpl;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
+import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.Attr;
@@ -46,7 +47,16 @@ public class DOMDocumentForJSP extends DocumentStyleImpl {
 		// just always create a new one for JSP
 		// need to investigate if this is a performance hit...
 		// seems to make HTML Validator (even) slower
-		INodeAdapter result = null; //getExistingAdapter(type);
+		
+		INodeAdapter oldAdapter = getExistingAdapter(type);
+		if(oldAdapter != null) {
+			if(oldAdapter instanceof IReleasable) {
+				((IReleasable)oldAdapter).release();
+				removeAdapter(oldAdapter);
+			}
+		}
+		
+		INodeAdapter result = null;
 		
 		// if we didn't find one in our list already,
 		// let's create it
