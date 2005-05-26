@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.wst.html.ui.internal.text;
 
-import org.eclipse.jdt.internal.ui.text.JavaPairMatcher;
 import org.eclipse.wst.sse.ui.internal.text.DocumentRegionEdgeMatcher;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
