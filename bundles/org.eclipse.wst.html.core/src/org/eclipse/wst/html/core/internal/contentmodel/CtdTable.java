@@ -19,7 +19,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 
 /**
  * for TABLE.
- * (CAPTION?, (COL*|COLGROUP*), THEAD?, TFOOT?, TBODY+)
+ * (CAPTION?, (COL*|COLGROUP*), THEAD?, TFOOT?, TBODY+, TR+)
  */
 final class CtdTable extends ComplexTypeDefinition {
 
@@ -33,7 +33,7 @@ final class CtdTable extends ComplexTypeDefinition {
 
 	/**
 	 * (CAPTION?, (COL*|COLGROUP*), THEAD?, TFOOT?, TBODY+)
-	 * --> ((CAPTION)?, ((COL)* | (COLGROUP)*), (THEAD)?, (TFOOT)?, (TBODY)+)
+	 * --> ((CAPTION)?, ((COL)* | (COLGROUP)*), (THEAD)?, (TFOOT)?, (TBODY)+, (TR)+)
 	 */
 	protected void createContent() {
 		if (content != null)
@@ -97,11 +97,23 @@ final class CtdTable extends ComplexTypeDefinition {
 			wrap.appendChild(dec);
 
 		// (TBODY)+
-		wrap = new CMGroupImpl(CMGroup.SEQUENCE, 1, CMContentImpl.UNBOUNDED);
+		// TBODY has optional start and end tags
+		wrap = new CMGroupImpl(CMGroup.SEQUENCE, 0, CMContentImpl.UNBOUNDED);
 		if (wrap == null)
 			return;
 		content.appendChild(wrap);
 		dec = collection.getNamedItem(HTML40Namespace.ElementName.TBODY);
+		if (dec != null)
+			wrap.appendChild(dec);
+
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=96101
+		// TBODY start and end tag are optional, so TR should be allowed here
+		// (TR)+
+		wrap = new CMGroupImpl(CMGroup.SEQUENCE, 1, CMContentImpl.UNBOUNDED);
+		if (wrap == null)
+			return;
+		content.appendChild(wrap);
+		dec = collection.getNamedItem(HTML40Namespace.ElementName.TR);
 		if (dec != null)
 			wrap.appendChild(dec);
 	}
