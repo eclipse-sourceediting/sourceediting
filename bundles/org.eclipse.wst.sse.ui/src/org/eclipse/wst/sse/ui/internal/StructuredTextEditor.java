@@ -1163,7 +1163,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 				}
 			}
 
-			if (fStructuredModel != null) {
+			if (fStructuredModel != null && !(getDocumentProvider() instanceof IModelProvider)) {
 				fStructuredModel.releaseFromEdit();
 			}
 
