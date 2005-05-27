@@ -21,67 +21,180 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IStorage;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.util.Assert;
 import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.ListViewer;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TableLayout;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IEditorDescriptor;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorRegistry;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPersistableElement;
+import org.eclipse.ui.IReusableEditor;
+import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.ResourceSelectionDialog;
 import org.eclipse.ui.editors.text.EditorsUI;
+import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.texteditor.IElementStateListener;
+import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IExtendedStorageEditorInput;
 
 
 /**
- * 
  * @author nitin
  * 
- * A view to assist in testing out ExtendedStorageEditorInput handling.
- * In-progress.
+ * A view to assist in testing out StructuredTextEditor's EditorInput
+ * handling.
+ * 
+ * Permanently in-progress.
  */
 public class ExtendedStorageEditorInputView extends ViewPart {
-
-	class AddInputAction extends Action {
-		public AddInputAction() {
-			super("Add");
+	class AddFileInputAction extends Action {
+		public AddFileInputAction() {
+			super("Add FileEditorInput");
 		}
 
 		public void run() {
 			super.run();
-			FileDialog dlg = new FileDialog(getListViewer().getControl().getShell());
+			ResourceSelectionDialog dlg = new ResourceSelectionDialog(fInputList.getControl().getShell(), ResourcesPlugin.getWorkspace().getRoot(), "Choose");
+			int retval = dlg.open();
+			if (retval == Window.OK) {
+				Object[] files = dlg.getResult();
+				for (int i = 0; i < files.length; i++) {
+					fInputs.add(new FileEditorInput((IFile) files[i]));
+				}
+				fInputList.refresh(true);
+			}
+		}
+	}
+
+	class AddStorageInputAction extends Action {
+		public AddStorageInputAction() {
+			super("Add StorageEditorInput");
+		}
+
+		public void run() {
+			super.run();
+			FileDialog dlg = new FileDialog(fInputList.getControl().getShell());
 			String fileName = dlg.open();
 			if (fileName != null) {
 				fInputs.add(new FileStorageEditorInput(new File(fileName)));
-				getListViewer().refresh(true);
+				fInputList.refresh(true);
 			}
+		}
+	}
+
+	class DoubleClickListener implements IDoubleClickListener {
+		public void doubleClick(DoubleClickEvent event) {
+			new InputOpenAction().run();
+		}
+	}
+
+	class EditorInputLabelProvider implements ITableLabelProvider {
+		ILabelProvider baseProvider = new WorkbenchLabelProvider();
+
+		public void addListener(ILabelProviderListener listener) {
+		}
+
+		public void dispose() {
+		}
+
+		public Image getColumnImage(Object element, int columnIndex) {
+			if (element instanceof IFileEditorInput && columnIndex == 0) {
+				return baseProvider.getImage(((IFileEditorInput) element).getFile());
+			}
+			return null;
+		}
+
+		public String getColumnText(Object element, int columnIndex) {
+			IEditorInput input = (IEditorInput) element;
+			String text = null;
+			switch (columnIndex) {
+				case 0 :
+					try {
+						if (element instanceof FileStorageEditorInput) {
+							text = ((FileStorageEditorInput) element).getStorage().getFullPath().toString();
+							if (((FileStorageEditorInput) element).isDirty()) {
+								text = "*" + text;
+							}
+						}
+						else if (element instanceof IFileEditorInput) {
+							text = ((IFileEditorInput) element).getFile().getFullPath().toString();
+						}
+					}
+					catch (CoreException e) {
+						e.printStackTrace();
+					}
+
+					break;
+				case 1 :
+					if (element instanceof FileStorageEditorInput) {
+						text = "FileStorageEditorInput";
+					}
+					else if (element instanceof IFileEditorInput) {
+						text = "FileEditorInput";
+					}
+					else {
+						text = input.getClass().getName();
+					}
+					break;
+			}
+			if (text == null)
+				text = "";
+			return text;
+		}
+
+		public boolean isLabelProperty(Object element, String property) {
+			return false;
+		}
+
+		public void removeListener(ILabelProviderListener listener) {
+
 		}
 	}
 
@@ -124,9 +237,11 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 				contents.close();
 
 				contents = new ByteArrayInputStream(buffer.array());
-			} catch (FileNotFoundException e) {
+			}
+			catch (FileNotFoundException e) {
 				contents = new ByteArrayInputStream(new byte[0]);
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				contents = new ByteArrayInputStream(new byte[0]);
 			}
 			return contents;
@@ -160,38 +275,10 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 		}
 	}
 
-	class FileStorageEditorInputLabelProvider extends LabelProvider {
-		public String getText(Object element) {
-			String text = super.getText(element);
-			Assert.isTrue(element instanceof FileStorageEditorInput);
-			try {
-				text = ((FileStorageEditorInput) element).getStorage().getFullPath().toString();
-				if (((FileStorageEditorInput) element).isDirty()) {
-					text = "*" + text;
-				}
-			} catch (CoreException e) {
-			}
-			return text;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
-		 */
-		public Image getImage(Object element) {
-			return null;
-		}
-	}
-
 	class FileStorageEditorInput implements IExtendedStorageEditorInput {
 		List fElementStateListeners = new Vector(0);
 		boolean fIsDirty = false;
 		FileBackedStorage fStorage = null;
-
-		File getFile() {
-			return fStorage.fFile;
-		}
 
 		FileStorageEditorInput(File file) {
 			fStorage = new FileBackedStorage(file);
@@ -253,6 +340,10 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 		 */
 		public Object getAdapter(Class adapter) {
 			return null;
+		}
+
+		File getFile() {
+			return fStorage.fFile;
 		}
 
 		/*
@@ -318,51 +409,68 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 		}
 	}
 
-	class InputChangeDirtyStateAction extends Action {
+	class InputChangeDirtyStateAction extends Action implements IUpdate {
 		public InputChangeDirtyStateAction() {
 			super("Toggle dirty flag");
 		}
 
 		public void run() {
 			super.run();
-			FileStorageEditorInput[] inputs = getSelectedInputs();
+			IEditorInput[] inputs = getSelectedInputs();
 			for (int i = 0; i < inputs.length; i++) {
-				inputs[i].elementDirtyStateChanged(!inputs[i].isDirty());
+				if (inputs[i] instanceof FileStorageEditorInput) {
+					((FileStorageEditorInput) inputs[i]).elementDirtyStateChanged(!((FileStorageEditorInput) inputs[i]).isDirty());
+				}
 			}
-			getListViewer().refresh(true);
+			fInputList.refresh(true);
 		}
 
+		public void update() {
+			setEnabled(fSelectedElement != null && fSelectedElement instanceof FileStorageEditorInput);
+		}
 	}
 
-	class InputDeleteAction extends Action {
+	class InputDeleteAction extends Action implements IUpdate {
 		public InputDeleteAction() {
 			super("Delete Input");
 		}
 
 		public void run() {
 			super.run();
-			FileStorageEditorInput[] inputs = getSelectedInputs();
+			IEditorInput[] inputs = getSelectedInputs();
 			for (int i = 0; i < inputs.length; i++) {
-				inputs[i].elementDeleted();
+				if (inputs[i] instanceof FileStorageEditorInput) {
+					((FileStorageEditorInput) inputs[i]).elementDeleted();
+				}
 			}
 			for (int i = 0; i < inputs.length; i++) {
 				fInputs.remove(inputs[i]);
 			}
-			getListViewer().refresh();
+			fInputList.refresh();
+		}
+
+		public void update() {
+			setEnabled(fSelectedElement != null && fSelectedElement instanceof FileStorageEditorInput);
 		}
 	}
 
-	class InputMoveAction extends Action {
+	class InputMoveAction extends Action implements IUpdate {
 		public InputMoveAction() {
 			super("Move Input");
 		}
 
 		public void run() {
 			super.run();
-			FileStorageEditorInput[] inputs = getSelectedInputs();
+			IEditorInput[] inputs = getSelectedInputs();
 			for (int i = 0; i < inputs.length; i++) {
-				inputs[i].elementMoved(inputs[i], inputs[i]);
+				if (inputs[i] instanceof FileStorageEditorInput) {
+					((FileStorageEditorInput) inputs[i]).elementMoved(inputs[i], inputs[i]);
+				}
 			}
+		}
+
+		public void update() {
+			setEnabled(fSelectedElement != null && fSelectedElement instanceof FileStorageEditorInput);
 		}
 	}
 
@@ -373,14 +481,81 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 
 		public void run() {
 			super.run();
-			FileStorageEditorInput[] inputs = getSelectedInputs();
+			IEditorInput[] inputs = getSelectedInputs();
 			for (int i = 0; i < inputs.length; i++) {
 				try {
-					getSite().getWorkbenchWindow().getActivePage().openEditor(inputs[i], getEditorId(inputs[i].getName()));
-				} catch (PartInitException e) {
+					getSite().getWorkbenchWindow().getActivePage().openEditor(inputs[i], getEditorId(inputs[i]));
+				}
+				catch (PartInitException e) {
 					openError(getSite().getWorkbenchWindow().getActivePage().getWorkbenchWindow().getShell(), "OpenSystemEditorAction.dialogTitle", e.getMessage(), e);
 				}
 			}
+		}
+	}
+
+	class InputReplaceContentsAction extends Action implements IUpdate {
+		public InputReplaceContentsAction() {
+			super("Replace Input's Contents");
+		}
+
+		public void run() {
+			super.run();
+			IEditorInput[] inputs = getSelectedInputs();
+			for (int i = 0; i < inputs.length; i++) {
+				((FileStorageEditorInput) inputs[i]).elementContentAboutToBeReplaced();
+				((FileStorageEditorInput) inputs[i]).elementContentReplaced();
+			}
+		}
+
+		public void update() {
+			setEnabled(fSelectedElement != null && fSelectedElement instanceof FileStorageEditorInput);
+		}
+	}
+
+	class RemoveInputAction extends Action {
+		public RemoveInputAction() {
+			super("Remove");
+		}
+
+		public void run() {
+			super.run();
+			IEditorInput[] inputs = getSelectedInputs();
+			for (int i = 0; i < inputs.length; i++) {
+				fInputs.remove(inputs[i]);
+			}
+			fInputList.refresh();
+		}
+	}
+
+
+	class ReuseEditorAction extends Action implements IUpdate {
+		public ReuseEditorAction() {
+			super("Reuse Editor");
+		}
+
+		public void run() {
+			super.run();
+			IEditorInput[] inputs = getSelectedInputs();
+			for (int i = 0; i < inputs.length; i++) {
+				IEditorPart editor = getSite().getWorkbenchWindow().getActivePage().getActiveEditor();
+				if (editor instanceof IReusableEditor) {
+					getSite().getWorkbenchWindow().getActivePage().reuseEditor(((IReusableEditor) editor), inputs[i]);
+				}
+				else {
+					SSEUIPlugin.getDefault().getWorkbench().getDisplay().beep();
+				}
+			}
+		}
+
+		public void update() {
+			boolean enable = true;
+			try {
+				enable = fSelectedElement != null && getSite().getWorkbenchWindow().getActivePage().getActiveEditor() instanceof IReusableEditor;
+			}
+			catch (Exception e) {
+				enable = true;
+			}
+			setEnabled(enable);
 		}
 	}
 
@@ -399,52 +574,26 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 			// Open an error dialog and include the extra
 			// status information from the nested CoreException
 			ErrorDialog.openError(parent, title, message, nestedException.getStatus());
-		} else {
+		}
+		else {
 			// Open a regular error dialog since there is no
 			// extra information to display
 			MessageDialog.openError(parent, title, message);
 		}
 	}
 
+	private List actions = null;
 
-	class InputReplaceContentsAction extends Action {
-		public InputReplaceContentsAction() {
-			super("Replace Input's Contents");
-		}
-
-		public void run() {
-			super.run();
-			FileStorageEditorInput[] inputs = getSelectedInputs();
-			for (int i = 0; i < inputs.length; i++) {
-				inputs[i].elementContentAboutToBeReplaced();
-				inputs[i].elementContentReplaced();
-			}
-		}
-	}
-
-	class RemoveInputAction extends Action {
-		public RemoveInputAction() {
-			super("Remove");
-		}
-
-		public void run() {
-			super.run();
-			FileStorageEditorInput[] inputs = getSelectedInputs();
-			for (int i = 0; i < inputs.length; i++) {
-				fInputs.remove(inputs[i]);
-			}
-			getListViewer().refresh();
-		}
-	}
-
-	ListViewer fInputList = null;
+	TableViewer fInputList = null;
 
 	List fInputs = new ArrayList(0);
 
-	class DoubleClickListener implements IDoubleClickListener {
-		public void doubleClick(DoubleClickEvent event) {
-			new InputOpenAction().run();
-		}
+	Object fSelectedElement = null;
+
+
+	public ExtendedStorageEditorInputView() {
+		super();
+		actions = new ArrayList();
 	}
 
 	/*
@@ -453,10 +602,30 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 	 * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
 	public void createPartControl(Composite parent) {
-		fInputList = new ListViewer(parent, SWT.MULTI);
+		fInputList = new TableViewer(parent, SWT.FULL_SELECTION | SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		fInputList.setContentProvider(new ArrayContentProvider());
-		fInputList.setLabelProvider(new FileStorageEditorInputLabelProvider());
+		fInputList.setLabelProvider(new EditorInputLabelProvider());
 		fInputList.addDoubleClickListener(new DoubleClickListener());
+		fInputList.getTable().setHeaderVisible(true);
+		fInputList.getTable().setLinesVisible(true);
+		String[] columns = new String[]{"Path", "Type"};
+		fInputList.setLabelProvider(new EditorInputLabelProvider());
+
+
+		TableLayout tlayout = new TableLayout();
+		CellEditor[] cellEditors = new CellEditor[5];
+		for (int i = 0; i < columns.length; i++) {
+			tlayout.addColumnData(new ColumnWeightData(1));
+			TableColumn tc = new TableColumn(fInputList.getTable(), SWT.NONE);
+			tc.setText(columns[i]);
+			tc.setResizable(true);
+			tc.setWidth(Display.getCurrent().getBounds().width / 14);
+		}
+		fInputList.setCellEditors(cellEditors);
+		fInputList.setColumnProperties(columns);
+
+		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+		fInputList.getTable().setLayoutData(gd);
 
 		MenuManager menuManager = new MenuManager("#popup"); //$NON-NLS-1$
 		menuManager.setRemoveAllWhenShown(false);
@@ -476,41 +645,23 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 		SSETestsPlugin.getDefault().getPluginPreferences().setDefault(getInputsPreferenceName(), "");
 		String paths[] = StringUtils.unpack(SSETestsPlugin.getDefault().getPluginPreferences().getString(getInputsPreferenceName()));
 		for (int i = 0; i < paths.length; i++) {
-			fInputs.add(new FileStorageEditorInput(new File(paths[i])));
+			if (paths[i].startsWith("S!")) {
+				fInputs.add(new FileStorageEditorInput(new File(paths[i].substring(2))));
+			}
+			else if (paths[i].startsWith("F!")) {
+				fInputs.add(new FileEditorInput(ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(paths[i].substring(2)))));
+			}
 		}
 
 		fInputList.setInput(fInputs);
-	}
-
-
-	String getEditorId(String filename) {
-		IWorkbench workbench = PlatformUI.getWorkbench();
-		IEditorRegistry editorRegistry = workbench.getEditorRegistry();
-		IEditorDescriptor descriptor = editorRegistry.getDefaultEditor(filename);
-		if (descriptor != null)
-			return descriptor.getId();
-		return EditorsUI.DEFAULT_TEXT_EDITOR_ID;
-	}
-
-	ListViewer getListViewer() {
-		return fInputList;
-	}
-
-	FileStorageEditorInput[] getSelectedInputs() {
-		ISelection selection = getListViewer().getSelection();
-		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection sel = (IStructuredSelection) selection;
-			if (sel.isEmpty()) {
-				return new FileStorageEditorInput[0];
-			} else {
-				Object[] arr = sel.toArray();
-				FileStorageEditorInput[] inputs = new FileStorageEditorInput[arr.length];
-				System.arraycopy(arr, 0, inputs, 0, inputs.length);
-				return inputs;
+		fInputList.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				IStructuredSelection sel = ((IStructuredSelection) event.getSelection());
+				fSelectedElement = sel.getFirstElement();
 			}
-		}
-		return new FileStorageEditorInput[0];
+		});
 	}
+
 
 	/*
 	 * (non-Javadoc)
@@ -521,9 +672,19 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 		List paths = new ArrayList(0);
 		for (int i = 0; i < fInputs.size(); i++) {
 			try {
-				String path = ((FileStorageEditorInput) fInputs.get(i)).getFile().getCanonicalPath();
-				paths.add(path);
-			} catch (IOException e) {
+				Object input = fInputs.get(i);
+				String path = null;
+				if (input instanceof FileStorageEditorInput) {
+					path = "S!" + ((FileStorageEditorInput) input).getFile().getCanonicalPath();
+				}
+				else if (input instanceof IFileEditorInput) {
+					path = "F!" + ((IFileEditorInput) input).getFile().getFullPath().toString();
+				}
+				if (path != null) {
+					paths.add(path);
+				}
+			}
+			catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
@@ -531,11 +692,65 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 		SSETestsPlugin.getDefault().savePluginPreferences();
 	}
 
+	String getEditorId(IEditorInput input) {
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		IEditorRegistry editorRegistry = workbench.getEditorRegistry();
+		IContentType[] types = null;
+		String editorID = null;
+		if (input instanceof IStorageEditorInput) {
+			InputStream inputStream = null;
+			try {
+				inputStream = ((IStorageEditorInput) input).getStorage().getContents();
+			}
+			catch (CoreException e) {
+				e.printStackTrace();
+			}
+			try {
+				types = Platform.getContentTypeManager().findContentTypesFor(inputStream, input.getName());
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+			try {
+				if (inputStream != null) {
+					inputStream.close();
+				}
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		IEditorDescriptor descriptor = editorRegistry.getDefaultEditor(input.getName(), types[0]);
+		if (descriptor != null) {
+			editorID = descriptor.getId();
+		}
+		if (editorID == null) {
+			editorID = EditorsUI.DEFAULT_TEXT_EDITOR_ID;
+		}
+		return editorID;
+	}
+
 	/**
 	 * @return
 	 */
 	String getInputsPreferenceName() {
 		return "ExtendedStorageEditorInputView:inputs";
+	}
+
+	IEditorInput[] getSelectedInputs() {
+		ISelection selection = fInputList.getSelection();
+		if (selection instanceof IStructuredSelection) {
+			IStructuredSelection sel = (IStructuredSelection) selection;
+			if (sel.isEmpty()) {
+				return new IEditorInput[0];
+			}
+			Object[] arr = sel.toArray();
+			IEditorInput[] inputs = new IEditorInput[arr.length];
+			System.arraycopy(arr, 0, inputs, 0, inputs.length);
+			return inputs;
+		}
+		return new IEditorInput[0];
 	}
 
 
@@ -546,15 +761,24 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 	 */
 	public void init(IViewSite site) throws PartInitException {
 		super.init(site);
-		site.getActionBars().getToolBarManager().add(new AddInputAction());
-		site.getActionBars().getToolBarManager().add(new RemoveInputAction());
 
-		site.getActionBars().getMenuManager().add(new InputOpenAction());
+		site.getActionBars().getToolBarManager().add(rememberAction(new AddStorageInputAction()));
+		site.getActionBars().getToolBarManager().add(rememberAction(new AddFileInputAction()));
+		site.getActionBars().getToolBarManager().add(rememberAction(new ReuseEditorAction()));
+		site.getActionBars().getToolBarManager().add(rememberAction(new RemoveInputAction()));
+
+		site.getActionBars().getMenuManager().add(rememberAction(new InputOpenAction()));
+		site.getActionBars().getMenuManager().add(rememberAction(new ReuseEditorAction()));
 		site.getActionBars().getMenuManager().add(new Separator());
-		site.getActionBars().getMenuManager().add(new InputMoveAction());
-		site.getActionBars().getMenuManager().add(new InputChangeDirtyStateAction());
-		site.getActionBars().getMenuManager().add(new InputDeleteAction());
-		site.getActionBars().getMenuManager().add(new InputReplaceContentsAction());
+		site.getActionBars().getMenuManager().add(rememberAction(new InputMoveAction()));
+		site.getActionBars().getMenuManager().add(rememberAction(new InputChangeDirtyStateAction()));
+		site.getActionBars().getMenuManager().add(rememberAction(new InputDeleteAction()));
+		site.getActionBars().getMenuManager().add(rememberAction(new InputReplaceContentsAction()));
+	}
+
+	IAction rememberAction(IAction action) {
+		actions.add(action);
+		return action;
 	}
 
 	/*
@@ -563,6 +787,16 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 	 * @see org.eclipse.ui.IWorkbenchPart#setFocus()
 	 */
 	public void setFocus() {
-		getListViewer().getControl().setFocus();
+		fInputList.getControl().setFocus();
+	}
+
+
+	protected void updateEnablement() {
+		for (int i = 0; i < actions.size(); i++) {
+			Object action = actions.get(i);
+			if (action instanceof IUpdate) {
+				((IUpdate) action).update();
+			}
+		}
 	}
 }
