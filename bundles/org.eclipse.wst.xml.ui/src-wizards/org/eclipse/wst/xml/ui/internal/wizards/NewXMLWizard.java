@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -103,8 +104,7 @@ public class NewXMLWizard extends NewModelWizard
 
 
   public static void showDialog(Shell shell, IFile file, IStructuredSelection structuredSelection)
-  {                        
-    List errorList = new Vector();          
+  {                             
     String[] errorInfo = new String[2];
     CMDocument cmDocument = NewXMLGenerator.createCMDocument(file.getLocation().toOSString(), errorInfo);
     if (errorInfo[0] == null)
@@ -322,10 +322,15 @@ public class NewXMLWizard extends NewModelWizard
   {  
 	// Open editor on new file.
   	String editorId = null;
-  	IEditorDescriptor editor = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(file.getLocation().toOSString());
-  	if(editor != null){
-  		editorId = editor.getId();
-  	}
+  	try {
+		IEditorDescriptor editor = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(file.getLocation().toOSString(), file.getContentDescription().getContentType());
+		if(editor != null){
+			editorId = editor.getId();
+		}
+	} catch (CoreException e1) {
+		// editor id could not be retrieved, so we can not open editor
+		return;
+	}
   	IWorkbenchWindow dw = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 	try {
 		if (dw != null) {
@@ -334,7 +339,10 @@ public class NewXMLWizard extends NewModelWizard
 				page.openEditor(new FileEditorInput(file), editorId, true);
 		}
 	} catch (PartInitException e) {
+		// editor can not open for some reason
+		return;
 	}
+	
   }
   
 
@@ -563,6 +571,7 @@ public class NewXMLWizard extends NewModelWizard
 
     public void widgetDefaultSelected(SelectionEvent event)
     {
+    	// do nothing
     }
 
     public void setVisible(boolean visible)
@@ -705,8 +714,7 @@ public class NewXMLWizard extends NewModelWizard
         }
         return s;
       }
-      else
-        return defaultPrefix;
+      return defaultPrefix;
     }
 
     public boolean isPageComplete()
