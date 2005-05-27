@@ -115,22 +115,6 @@
 		</extendableOperation>
 	</extension>
 	
-	<!-- this extension is needed to migrate the 5.1.2 StaticWebNature ID to the new 6.0 ID -->
-	<extension
-		id="NatureMappings"
-		name="Static Nature Mappings"
-		point="org.eclipse.wst.common.migration.natureMapping">
-		<natureMapping>
-			<mapping
-				position="first"
-				name="Nature Mapping"
-				newValue="org.eclipse.wst.web.StaticWebNature">
-				<alias
-					value="com.ibm.etools.j2ee.StaticWebNature">
-				</alias>
-			</mapping>
-		</natureMapping>
-	</extension>
 	<!-- ====================================================== -->
 <!-- Extension point: org.eclipse.ui.projectNatureImages    -->
 <!-- Purpose: Attach icon overlays for J2EE project natures -->
