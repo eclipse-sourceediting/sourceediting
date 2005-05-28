@@ -2,6 +2,7 @@ package org.eclipse.wst.xsd.ui.internal.text;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.extension.ModelQueryExtension;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;

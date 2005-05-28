@@ -19,7 +19,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wst.xml.catalog.internal.provisional.ICatalogEntry;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
-
 import org.eclipse.wst.xml.uriresolver.internal.util.URIHelper;
 
 public class EditEntityHelper {

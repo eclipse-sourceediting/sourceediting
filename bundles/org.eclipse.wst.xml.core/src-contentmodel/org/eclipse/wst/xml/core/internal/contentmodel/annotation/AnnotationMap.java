@@ -19,7 +19,7 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
-import org.eclipse.wst.xml.core.internal.contentmodel.internal.annotation.*;
+import org.eclipse.wst.xml.core.internal.contentmodel.internal.annotation.AnnotationFileParser;
 
 
 /**

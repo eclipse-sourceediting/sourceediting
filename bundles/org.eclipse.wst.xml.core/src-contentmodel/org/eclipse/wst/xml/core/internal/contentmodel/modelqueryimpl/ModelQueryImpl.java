@@ -28,7 +28,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMGroup;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNodeList;
-import org.eclipse.wst.xml.core.internal.contentmodel.internal.modelqueryimpl.*;
+import org.eclipse.wst.xml.core.internal.contentmodel.internal.modelqueryimpl.ModelQueryExtensionManagerImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.internal.util.CMDataTypeValueHelper;
 import org.eclipse.wst.xml.core.internal.contentmodel.internal.util.DOMValidator;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManager;

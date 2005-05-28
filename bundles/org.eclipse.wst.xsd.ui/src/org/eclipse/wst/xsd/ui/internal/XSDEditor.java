@@ -12,6 +12,7 @@ package org.eclipse.wst.xsd.ui.internal;
 
 import java.util.ArrayList;
 import java.util.EventObject;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.command.BasicCommandStack;

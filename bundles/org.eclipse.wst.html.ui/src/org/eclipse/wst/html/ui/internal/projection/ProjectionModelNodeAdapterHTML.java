@@ -25,10 +25,10 @@ import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.wst.html.ui.internal.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
-import org.eclipse.wst.html.ui.internal.Logger;
 import org.w3c.dom.Node;
 
 /**

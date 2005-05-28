@@ -13,6 +13,7 @@ package org.eclipse.wst.xsd.ui.internal;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IMenuManager;
