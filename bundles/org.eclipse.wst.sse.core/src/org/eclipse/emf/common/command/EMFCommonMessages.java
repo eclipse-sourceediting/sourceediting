@@ -15,7 +15,7 @@ import org.eclipse.osgi.util.NLS;
 /**
  * 
  */
-public class EMFCommonMessages extends NLS {
+class EMFCommonMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.emf.common.command.EMFCommonResources"; //$NON-NLS-1$
 
 	private EMFCommonMessages() {
