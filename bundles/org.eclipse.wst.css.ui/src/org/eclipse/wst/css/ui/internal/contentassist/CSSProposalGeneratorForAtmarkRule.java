@@ -40,8 +40,6 @@ class CSSProposalGeneratorForAtmarkRule extends CSSProposalGenerator {
 	/**
 	 * CSSAtmarkRuleProposalGenerator constructor comment.
 	 * 
-	 * @param context
-	 *            com.ibm.sed.contentassist.old.css.CSSContentAssistContext
 	 */
 	CSSProposalGeneratorForAtmarkRule(CSSContentAssistContext context) {
 		super(context);

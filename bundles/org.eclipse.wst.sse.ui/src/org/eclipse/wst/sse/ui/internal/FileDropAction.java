@@ -27,12 +27,6 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 public class FileDropAction extends AbstractDropAction {
 
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.edit.extension.IDropAction#run(org.eclipse.swt.dnd.DropTargetEvent,
-	 *      com.ibm.sed.edit.extension.IExtendedSimpleEditor)
-	 */
 	public boolean run(DropTargetEvent event, IExtendedSimpleEditor targetEditor) {
 		String[] strs = (String[]) event.data;
 		if (strs == null || strs.length == 0) {

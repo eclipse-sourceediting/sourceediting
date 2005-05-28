@@ -78,50 +78,24 @@ public class CleanupProcessorCSS extends AbstractStructuredCleanupProcessor {
 		cleanupModel(structuredModel, start, length);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.model.cleanup.IStructuredCleanupProcessor#cleanupDocument(org.eclipse.jface.text.IDocument)
-	 */
 	public void cleanupDocument(IDocument document) throws IOException, CoreException {
 		// TODO should implement, or delete?
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.model.cleanup.IStructuredCleanupProcessor#cleanupDocument(org.eclipse.jface.text.IDocument,
-	 *      int, int)
-	 */
 	public void cleanupDocument(IDocument document, int start, int length) throws IOException, CoreException {
 		// TODO should implement, or delete?
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.model.cleanup.AbstractStructuredCleanupProcessor#getCleanupHandler(org.w3c.dom.Node)
-	 */
 	protected IStructuredCleanupHandler getCleanupHandler(Node node) {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.model.cleanup.AbstractStructuredCleanupProcessor#getFormatProcessor()
-	 */
 	protected IStructuredFormatProcessor getFormatProcessor() {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.model.cleanup.AbstractStructuredCleanupProcessor#refreshCleanupPreferences()
-	 */
 	protected void refreshCleanupPreferences() {
 	}
 }

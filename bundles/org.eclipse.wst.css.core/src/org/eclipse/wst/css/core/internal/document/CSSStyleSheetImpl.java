@@ -92,10 +92,6 @@ class CSSStyleSheetImpl extends CSSDocumentImpl implements ICSSStyleSheet {
 		setOwnerDocument(this);
 	}
 
-	/**
-	 * @param that
-	 *            com.ibm.sed.css.treemodel.CSSStyleSheetImpl
-	 */
 	CSSStyleSheetImpl(CSSStyleSheetImpl that) {
 		super(that);
 		setOwnerDocument(this);
@@ -116,11 +112,6 @@ class CSSStyleSheetImpl extends CSSDocumentImpl implements ICSSStyleSheet {
 		return ret;
 	}
 
-	/**
-	 * @return com.ibm.sed.treemodel.css.CSSNode
-	 * @param deep
-	 *            boolean
-	 */
 	public ICSSNode cloneNode(boolean deep) {
 		CSSStyleSheetImpl cloned = new CSSStyleSheetImpl(this);
 
@@ -322,11 +313,6 @@ class CSSStyleSheetImpl extends CSSDocumentImpl implements ICSSStyleSheet {
 		return null;
 	}
 
-	/**
-	 * @return com.ibm.sed.css.treemodel.CSSRuleImpl
-	 * @param index
-	 *            int
-	 */
 	CSSRuleImpl getIndexedRule(int index) {
 		if (index < 0)
 			return null;

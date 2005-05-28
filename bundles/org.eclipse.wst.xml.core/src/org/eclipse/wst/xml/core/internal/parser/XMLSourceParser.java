@@ -263,9 +263,7 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 		return fTokenizer;
 	}
 
-	/**
-	 * @see com.ibm.sed.parser.RegionParser#newInstance()
-	 */
+
 	public RegionParser newInstance() {
 		XMLSourceParser newInstance = new XMLSourceParser();
 		newInstance.setTokenizer(getTokenizer().newInstance());

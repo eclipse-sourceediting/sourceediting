@@ -26,13 +26,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 
-/**
- */
 public class CommentElementHandlerForSSI implements CommentElementHandler {
 
-	/**
-	 * @see com.ibm.sed.model.commentelement.CommentElementHandler#createElement(Document, String, boolean)
-	 */
 	public Element createElement(Document document, String data, boolean isJSPTag) {
 		ModelQuery modelQuery = ModelQueryUtil.getModelQuery(document);
 		if (modelQuery == null) {
@@ -80,9 +75,6 @@ public class CommentElementHandlerForSSI implements CommentElementHandler {
 		return element;
 	}
 
-	/**
-	 * @see com.ibm.sed.model.commentelement.CommentElementHandler#generateStartTagContent(IDOMElement)
-	 */
 	public String generateStartTagContent(IDOMElement element) {
 		ISourceGenerator generator = element.getModel().getGenerator();
 		StringBuffer buffer = new StringBuffer();
@@ -113,9 +105,6 @@ public class CommentElementHandlerForSSI implements CommentElementHandler {
 		return buffer.toString();
 	}
 
-	/**
-	 * @see com.ibm.sed.model.commentelement.CommentElementHandler#generateEndTagContent(IDOMElement)
-	 */
 	public String generateEndTagContent(IDOMElement element) {
 		return null; // always empty
 	}
@@ -124,9 +113,6 @@ public class CommentElementHandlerForSSI implements CommentElementHandler {
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ibm.sed.model.commentelement.CommentElementHandler#isCommentElement(com.ibm.sed.model.xml.XMLElement)
-	 */
 	public boolean isCommentElement(IDOMElement element) {
 		if (element == null) {
 			return false;

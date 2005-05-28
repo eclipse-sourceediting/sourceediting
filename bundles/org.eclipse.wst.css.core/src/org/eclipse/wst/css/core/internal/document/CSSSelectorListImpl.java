@@ -78,11 +78,6 @@ public class CSSSelectorListImpl implements ICSSSelectorList {
 		return getSelectors().size();
 	}
 
-	/**
-	 * @return com.ibm.sed.css.interfaces.ICSSSelector
-	 * @param index
-	 *            int
-	 */
 	public ICSSSelector getSelector(int index) {
 		List selectors = getSelectors();
 		if (0 <= index && index < selectors.size()) {

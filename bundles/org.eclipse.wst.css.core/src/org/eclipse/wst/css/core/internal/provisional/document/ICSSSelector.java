@@ -21,11 +21,6 @@ import org.w3c.dom.Element;
  */
 public interface ICSSSelector {
 
-	/**
-	 * @return com.ibm.sed.css.interfaces.ICSSSelectorItem
-	 * @param index
-	 *            int
-	 */
 	ICSSSelectorItem getItem(int index);
 
 	/**

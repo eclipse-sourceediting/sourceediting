@@ -38,9 +38,6 @@ public class JSPTranslationAdapterFactory extends AbstractAdapterFactory {
 		super();
 	}
 
-	/**
-	 * @see com.ibm.sse.model.INodeAdapterFactory#copy()
-	 */
 	public INodeAdapterFactory copy() {
 		return new JSPTranslationAdapterFactory();
 	}
@@ -55,17 +52,11 @@ public class JSPTranslationAdapterFactory extends AbstractAdapterFactory {
 		return fAdapter;
 	}
 
-	/**
-	 * @see com.ibm.sse.model.AbstractAdapterFactory#isFactoryForType(java.lang.Object)
-	 */
 
 	public boolean isFactoryForType(Object type) {
 		return type.equals(IJSPTranslation.class);
 	}
 
-	/**
-	 * @see com.ibm.sse.model.AbstractAdapterFactory#release()
-	 */
 	public void release() {
 		if (fAdapter != null) {
 			if(DEBUG) {

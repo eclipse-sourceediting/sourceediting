@@ -34,10 +34,6 @@ class RectImpl extends CSSPrimitiveContainer implements Rect {
 		super(CSS_RECT);
 	}
 
-	/**
-	 * @param that
-	 *            com.ibm.sed.css.treemodel.RectImpl
-	 */
 	RectImpl(RectImpl that) {
 		super(that);
 

@@ -26,9 +26,6 @@ public interface ICSSModel extends ICSSStyleNotifier, IStructuredModel {
 	public static final String EMBEDDED = "embeddedCSS"; //$NON-NLS-1$
 	public static final String INLINE = "inlineCSS"; //$NON-NLS-1$
 
-	/**
-	 * @return com.ibm.sed.css.interfaces.ICSSDocument
-	 */
 	ICSSDocument getDocument();
 
 	/**

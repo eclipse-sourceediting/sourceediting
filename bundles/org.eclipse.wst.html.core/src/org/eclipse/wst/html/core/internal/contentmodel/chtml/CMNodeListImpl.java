@@ -16,8 +16,6 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 
 /**
  * Analog of dom.NodeList for CM.
- * So, the implementation is very similar to
- * {@link com.ibm.sed.model.xml.NodeListImpl}.<br>
  */
 class CMNodeListImpl implements org.eclipse.wst.xml.core.internal.contentmodel.CMNodeList {
 

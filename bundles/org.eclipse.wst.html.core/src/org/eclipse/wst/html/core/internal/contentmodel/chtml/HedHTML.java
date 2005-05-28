@@ -53,7 +53,6 @@ final class HedHTML extends HTMLElemDeclImpl {
 	 *   </tr>
 	 * </tbody>
 	 * </table><br>
-	 * @see com.ibm.sed.contentmodel.html.AbstractHTMLElemDeclImpl
 	 */
 	protected void createAttributeDeclarations() {
 		if (attributes != null)

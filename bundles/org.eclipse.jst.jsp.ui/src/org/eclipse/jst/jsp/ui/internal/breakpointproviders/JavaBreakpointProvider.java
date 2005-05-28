@@ -51,18 +51,13 @@ public class JavaBreakpointProvider extends AbstractBreakpointProvider {
 	}
 
 
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.extensions.BreakpointProvider#canAddBreakpoint(org.w3c.dom.Document, org.eclipse.jface.text.IDocument, org.eclipse.ui.IEditorInput, org.w3c.dom.Node, int, int)
-	 */
+
 	public boolean canAddBreakpoint(Document doc, IDocument idoc, IEditorInput input, Node node, int lineNumber, int offset) {
 		IResource res = input instanceof IFileEditorInput ? ((IFileEditorInput) input).getFile() : null;
 
 		return res != null && !isBreakpointExist(res, lineNumber) && isValidPosition(doc, idoc, lineNumber) && (getPageLanguage(doc) == JAVA);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.extensions.breakpoint.IBreakpointProvider#addBreakpoint(org.w3c.dom.Document, org.eclipse.jface.text.IDocument, org.eclipse.ui.IEditorInput, org.w3c.dom.Node, int, int)
-	 */
 	public IStatus addBreakpoint(Document doc, IDocument idoc, IEditorInput input, Node node, int lineNumber, int offset) throws CoreException {
 		int pos = getValidPosition(doc, idoc, lineNumber);
 		if (pos != NO_VALID_CONTENT) {
@@ -104,15 +99,9 @@ public class JavaBreakpointProvider extends AbstractBreakpointProvider {
 		return getValidPosition(doc, idoc, lineNumber) != NO_VALID_CONTENT;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.extensions.BreakpointProvider#setSourceEditingTextTools(com.ibm.sse.editor.extensions.SourceEditingTextTools)
-	 */
 	public void setSourceEditingTextTools(SourceEditingTextTools util) {
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.extensions.BreakpointProvider#getResource(org.eclipse.ui.IStorageEditorInput)
-	 */
 	public IResource getResource(IEditorInput input) {
 		return getEditorInputResource(input);
 	}

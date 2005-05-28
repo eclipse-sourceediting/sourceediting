@@ -355,9 +355,6 @@ final class ElementCollection extends DeclCollection implements org.eclipse.wst.
 		return edec;
 	}
 
-	/**
-	 * @return com.ibm.sed.contentmodel.html.AttributeCollection
-	 */
 	public AttributeCollection getAttributeCollection() {
 		return attributeCollection;
 	}

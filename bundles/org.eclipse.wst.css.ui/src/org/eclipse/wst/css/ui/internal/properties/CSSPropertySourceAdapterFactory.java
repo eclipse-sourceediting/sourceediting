@@ -14,7 +14,6 @@ import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 
 
 
-//import com.ibm.sed.edit.xml.DOMPropertySource;
 public class CSSPropertySourceAdapterFactory extends AbstractAdapterFactory {
 	/**
 	 * PropertySourceAdapterFactory constructor comment.

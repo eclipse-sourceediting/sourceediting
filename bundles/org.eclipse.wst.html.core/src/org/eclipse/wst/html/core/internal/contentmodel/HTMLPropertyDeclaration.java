@@ -97,9 +97,6 @@ public interface HTMLPropertyDeclaration {
 	 * That is, when <code>&lt;P&gt;</code> appears at the next to <code>P</code>,
 	 * which end tags is omitted, it represents not only the beginning of the
 	 * new <code>P</code> element but also the end of the previous <code>P</code>.
-	 * <br>
-	 * See the C++DOM/HTMLParser#_terminate(Element*) method.
-	 * @param nextElement com.ibm.sed.contentmodel.html.HTMLElementDeclaration
 	 */
 	boolean shouldTerminateAt(HTMLElementDeclaration nextElement);
 }

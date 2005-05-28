@@ -179,17 +179,10 @@ public final class Debug {
 	public static final String toStringUtil(IStructuredDocument object) {
 		String className = object.getClass().getName();
 		String shortClassName = className.substring(className.lastIndexOf(".") + 1); //$NON-NLS-1$
-		// ==> // String resultText = null;
 		String result = shortClassName;
 		// NOTE: if the document held by any region has been updated and the
 		// region offsets have not
 		// yet been updated, the output from this method invalid.
-		//return com.ibm.sed.util.StringUtils.escape("('"+(getFirstRegion()
-		// == null || document == null? "" :
-		// getText(getFirstRegion()))+"'"+getStart()+" -
-		// "+getEnd()+"'"+(getClose() == null || document == null ||
-		// getRegions().size()<2 ? "" : getText(getClose()))+"')
-		// "+getRegions());
 		return result;
 
 	}
@@ -197,17 +190,10 @@ public final class Debug {
 	public static final String toStringUtil(ITextRegionCollection object) {
 		String className = object.getClass().getName();
 		String shortClassName = className.substring(className.lastIndexOf(".") + 1); //$NON-NLS-1$
-		// ==> // String resultText = null;
 		String result = shortClassName;
 		// NOTE: if the document held by any region has been updated and the
 		// region offsets have not
 		// yet been updated, the output from this method invalid.
-		//return com.ibm.sed.util.StringUtils.escape("('"+(getFirstRegion()
-		// == null || document == null? "" :
-		// getText(getFirstRegion()))+"'"+getStart()+" -
-		// "+getEnd()+"'"+(getClose() == null || document == null ||
-		// getRegions().size()<2 ? "" : getText(getClose()))+"')
-		// "+getRegions());
 		return result;
 
 	}

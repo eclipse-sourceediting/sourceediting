@@ -50,7 +50,6 @@ final class HedTABLE extends HTMLElemDeclImpl {
 	 * (height %Pixels; #IMPLIED)
 	 * (background %URI; #IMPLIED)
 	 * (bordercolor %Color #IMPLIED) ... D205514
-	 * @see com.ibm.sed.contentmodel.html.AbstractHTMLElemDeclImpl
 	 */
 	protected void createAttributeDeclarations() {
 		if (attributes != null)

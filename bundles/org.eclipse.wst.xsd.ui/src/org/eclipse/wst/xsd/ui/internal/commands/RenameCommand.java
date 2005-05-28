@@ -30,9 +30,6 @@ public class RenameCommand
     this.editPart = editPart;
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.xsd.edit.actions.AbstractCommand#run()
-   */
   public void run()
   {
     if (editPart instanceof ElementDeclarationEditPart)
@@ -55,9 +52,6 @@ public class RenameCommand
     }
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.xsd.edit.actions.AbstractCommand#adopt(org.eclipse.xsd.XSDConcreteComponent)
-   */
   protected boolean adopt(XSDConcreteComponent model)
   {
     return false;

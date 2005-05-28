@@ -156,7 +156,6 @@ abstract class DeclCollection implements CMNamedNodeMap {
 	}
 
 	/**
-	 * @param declarations com.ibm.sed.contentmodel.html.CMGroupImpl
 	 * @param names java.util.Iterator
 	 */
 	public void getDeclarations(CMGroupImpl group, Iterator names) {

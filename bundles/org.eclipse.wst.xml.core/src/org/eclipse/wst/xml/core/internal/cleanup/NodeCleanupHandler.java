@@ -27,17 +27,12 @@ public class NodeCleanupHandler implements IStructuredCleanupHandler {
 	protected IStructuredCleanupPreferences fCleanupPreferences = null;
 	protected IProgressMonitor fProgressMonitor = null;
 
-	/**
-	 * @see com.ibm.sed.partitionCleanup.CleanupHandler#cleanup(com.ibm.sed.model.xml.XMLNode)
-	 */
+
 	public Node cleanup(Node node) {
 
 		return node;
 	}
 
-	/**
-	 * @see com.ibm.sed.partitionCleanup.CleanupHandler#getCleanupPreferences()
-	 */
 	public IStructuredCleanupPreferences getCleanupPreferences() {
 		if (fCleanupPreferences == null) {
 			fCleanupPreferences = new StructuredCleanupPreferences();

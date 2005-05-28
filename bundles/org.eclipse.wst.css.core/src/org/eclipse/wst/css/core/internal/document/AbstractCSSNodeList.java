@@ -22,11 +22,6 @@ abstract class AbstractCSSNodeList {
 
 	protected Vector nodes = null;
 
-	/**
-	 * @return com.ibm.sed.css.interfaces.CSSNode
-	 * @param ndoe
-	 *            com.ibm.sed.css.interfaces.CSSNode
-	 */
 	ICSSNode appendNode(ICSSNode node) {
 		if (node == null)
 			return null;
@@ -45,11 +40,7 @@ abstract class AbstractCSSNodeList {
 		return this.nodes.size();
 	}
 
-	/**
-	 * @return com.ibm.sed.css.interfaces.CSSNode
-	 * @param index
-	 *            int
-	 */
+
 	protected ICSSNode itemImpl(int index) {
 		if (this.nodes == null)
 			return null;
@@ -58,11 +49,7 @@ abstract class AbstractCSSNodeList {
 		return (ICSSNode) this.nodes.elementAt(index);
 	}
 
-	/**
-	 * @return com.ibm.sed.css.interfaces.CSSNode
-	 * @param index
-	 *            com.ibm.sed.css.interfaces.CSSNode
-	 */
+
 	ICSSNode removeNode(int index) {
 		if (this.nodes == null)
 			return null; // no node

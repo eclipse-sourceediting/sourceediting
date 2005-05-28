@@ -35,8 +35,6 @@ class CSSProposalGeneratorForHTMLTag extends CSSProposalGenerator {
 	/**
 	 * CSSStyleRuleProposalGenerator constructor comment.
 	 * 
-	 * @param context
-	 *            com.ibm.sed.contentassist.old.css.CSSContentAssistContext
 	 */
 	CSSProposalGeneratorForHTMLTag(CSSContentAssistContext context) {
 		super(context);

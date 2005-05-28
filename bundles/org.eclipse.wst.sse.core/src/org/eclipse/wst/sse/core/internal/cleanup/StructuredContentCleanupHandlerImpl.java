@@ -20,9 +20,6 @@ import org.eclipse.jface.text.Assert;
 public class StructuredContentCleanupHandlerImpl implements StructuredContentCleanupHandler {
 	protected Map fCleanupProcessors;
 
-	/**
-	 * @see com.ibm.sed.partitionCleanup.StructuredContentCleanupHandler#getCleanupProcessor(java.lang.String)
-	 */
 	public IStructuredCleanupProcessor getCleanupProcessor(String contentType) {
 		Assert.isNotNull(contentType);
 
@@ -32,10 +29,6 @@ public class StructuredContentCleanupHandlerImpl implements StructuredContentCle
 		return (IStructuredCleanupProcessor) fCleanupProcessors.get(contentType);
 	}
 
-	/**
-	 * @see com.ibm.sed.partitionCleanup.StructuredContentCleanupHandler#setCleanupProcessor(com.ibm.sed.partitionCleanup.CleanupProcessor,
-	 *      java.lang.String)
-	 */
 	public void setCleanupProcessor(IStructuredCleanupProcessor cleanupProcessor, String contentType) {
 		Assert.isNotNull(contentType);
 

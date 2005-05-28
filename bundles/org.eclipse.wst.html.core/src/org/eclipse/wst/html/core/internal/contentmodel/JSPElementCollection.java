@@ -691,7 +691,6 @@ final class JSPElementCollection extends DeclCollection implements JSP11Namespac
 	}
 
 	/**
-	 * @return com.ibm.sed.contentmodel.html.CMGroupImpl
 	 * @param eid int
 	 */
 	private CMGroupImpl createContent(int eid) {
@@ -756,7 +755,6 @@ final class JSPElementCollection extends DeclCollection implements JSP11Namespac
 	}
 
 	/**
-	 * @return com.ibm.sed.contentmodel.html.HTMLElemDeclImpl
 	 * @param eid int
 	 */
 	private HTMLElementDeclaration createElemDecl(int eid) {

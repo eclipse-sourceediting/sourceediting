@@ -33,7 +33,6 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements CHTMLNames
 
 	/**
 	 * Create an attribute declaration.
-	 * @return com.ibm.sed.contentmodel.html.HTMLAttrDeclImpl
 	 * @param attrName java.lang.String
 	 */
 	private HTMLAttrDeclImpl create(String attrName) {
@@ -222,14 +221,12 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements CHTMLNames
 
 	/**
 	 * Get %bodycolors; declarations.
-	 * @param attributes com.ibm.sed.contentmodel.html.CMNamedNodeMapImpl
 	 */
 	public void getBodycolors(CMNamedNodeMapImpl declarations) {
 	}
 
 	/**
 	 * Get align attribute which has %IAlign; as values..
-	 * @param attributes com.ibm.sed.contentmodel.html.CMNamedNodeMapImpl
 	 */
 	public static final HTMLAttrDeclImpl createAlignForImage() {
 		// align (local)
@@ -250,7 +247,6 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements CHTMLNames
 	 * So, it can't treat as global attributes.
 	 * <strong>NOTE: These attribute declaration has
 	 * no owner CMDocument instance.</strong>
-	 * @return com.ibm.sed.contentmodel.html.HTMLAttrDeclImpl
 	 */
 	public static final HTMLAttrDeclImpl createAlignForParagraph() {
 		HTMLCMDataTypeImpl atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
@@ -265,21 +261,18 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements CHTMLNames
 	/**
 	 * Get %attrs; declarations.
 	 * %attrs; consists of %coreattrs;, %i18n, and %events;.
-	 * @param attributes com.ibm.sed.contentmodel.html.CMNamedNodeMapImpl
 	 */
 	public void getAttrs(CMNamedNodeMapImpl declarations) {
 	}
 
 	/**
 	 * Get %coreattrs; declarations.
-	 * @param attributes com.ibm.sed.contentmodel.html.CMNamedNodeMapImpl
 	 */
 	public void getCore(CMNamedNodeMapImpl declarations) {
 	}
 
 	/**
 	 * Get a global attribute declaration.
-	 * @return com.ibm.sed.contentmodel.html.HTMLAttrributeDeclaration
 	 * @param attrName java.lang.String
 	 */
 	public HTMLAttributeDeclaration getDeclaration(String attrName) {
@@ -296,7 +289,6 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements CHTMLNames
 
 	/**
 	 * Get declarations which are specified by names.
-	 * @param declarations com.ibm.sed.contentmodel.html.CMNamedNodeMapImpl
 	 * @param names java.util.Iterator
 	 */
 	public void getDeclarations(CMNamedNodeMapImpl declarations, Iterator names) {
@@ -310,14 +302,12 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements CHTMLNames
 
 	/**
 	 * Get %events; declarations.
-	 * @param attributes com.ibm.sed.contentmodel.html.CMNamedNodeMapImpl
 	 */
 	public void getEvents(CMNamedNodeMapImpl declarations) {
 	}
 
 	/**
 	 * Get %i18n; declarations.
-	 * @param attributes com.ibm.sed.contentmodel.html.CMNamedNodeMapImpl
 	 */
 	public void getI18n(CMNamedNodeMapImpl declarations) {
 	}

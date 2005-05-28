@@ -28,11 +28,6 @@ public class DOMCSSImpl {
 		super();
 	}
 
-	/**
-	 * @return com.ibm.sed.css.interfaces.CSSStyleDeclBlock
-	 * @exception org.w3c.dom.DOMException
-	 *                The exception description.
-	 */
 	public static ICSSStyleDeclaration createCSSStyleDeclaration() throws org.w3c.dom.DOMException {
 		CSSStyleDeclarationImpl document = new CSSStyleDeclarationImpl(true);
 

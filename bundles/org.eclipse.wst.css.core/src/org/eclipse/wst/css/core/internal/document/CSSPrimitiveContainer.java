@@ -19,35 +19,16 @@ import org.eclipse.wst.css.core.internal.provisional.document.ICSSDocument;
  */
 abstract class CSSPrimitiveContainer extends CSSPrimitiveValueImpl {
 
-	/**
-	 * CSSRegionContainer constructor comment.
-	 * 
-	 * @param that
-	 *            com.ibm.sed.css.treemodel.CSSPrimitiveValueImpl
-	 */
 	CSSPrimitiveContainer(CSSPrimitiveContainer that) {
 		super(that);
 	}
 
-	/**
-	 * CSSRegionContainer constructor comment.
-	 * 
-	 * @param primitiveType
-	 *            short
-	 */
 	CSSPrimitiveContainer(short primitiveType) {
 		super(primitiveType);
 	}
 
-	/**
-	 * 
-	 */
 	protected abstract void initPrimitives();
 
-	/**
-	 * @param ownerDocument
-	 *            com.ibm.sed.css.interfaces.ICSSDocument
-	 */
 	void setOwnerDocument(ICSSDocument ownerDocument) {
 		super.setOwnerDocument(ownerDocument);
 

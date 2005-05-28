@@ -55,11 +55,7 @@ public class XMLHeadParserRegion implements ITextRegion {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegion#adjustTextLength(int)
-	 */
+
 	public void adjustTextLength(int i) {
 		fTextLength += 1;
 

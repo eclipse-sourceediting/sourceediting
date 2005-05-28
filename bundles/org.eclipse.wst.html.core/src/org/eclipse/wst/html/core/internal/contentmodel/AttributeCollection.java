@@ -45,7 +45,7 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 
 	/**
 	 * Create an attribute declaration.
-	 * @return com.ibm.sed.contentmodel.html.HTMLAttrDeclImpl
+
 	 * @param attrName java.lang.String
 	 */
 	private HTMLAttrDeclImpl create(String attrName) {
@@ -1110,7 +1110,7 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 	/**
 	 * Get align attribute which has %CAlign; as values..
 	 * At this time (4/19/2001), it is identical to %LAlign;.
-	 * @param attributes com.ibm.sed.contentmodel.html.CMNamedNodeMapImpl
+	 *
 	 */
 	public static final HTMLAttrDeclImpl createAlignForCaption() {
 		// align (local)
@@ -1125,7 +1125,6 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 
 	/**
 	 * Get align attribute which has %IAlign; as values..
-	 * @param attributes com.ibm.sed.contentmodel.html.CMNamedNodeMapImpl
 	 */
 	public static final HTMLAttrDeclImpl createAlignForImage() {
 		// align (local)
@@ -1140,7 +1139,6 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 
 	/**
 	 * Get align attribute which has %LAlign; as values..
-	 * @param attributes com.ibm.sed.contentmodel.html.CMNamedNodeMapImpl
 	 */
 	public static final HTMLAttrDeclImpl createAlignForLegend() {
 		// align (local)
@@ -1161,7 +1159,6 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 	 * So, it can't treat as global attributes.
 	 * <strong>NOTE: These attribute declaration has
 	 * no owner CMDocument instance.</strong>
-	 * @return com.ibm.sed.contentmodel.html.HTMLAttrDeclImpl
 	 */
 	public static final HTMLAttrDeclImpl createAlignForParagraph() {
 		HTMLCMDataTypeImpl atype = new HTMLCMDataTypeImpl(CMDataType.ENUM);
@@ -1176,7 +1173,6 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 	/**
 	 * Get %attrs; declarations.
 	 * %attrs; consists of %coreattrs;, %i18n, and %events;.
-	 * @param attributes com.ibm.sed.contentmodel.html.CMNamedNodeMapImpl
 	 */
 	public void getAttrs(CMNamedNodeMapImpl declarations) {
 		// %coreattrs;
@@ -1192,7 +1188,6 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 
 	/**
 	 * Get %bodycolors; declarations.
-	 * @param attributes com.ibm.sed.contentmodel.html.CMNamedNodeMapImpl
 	 */
 	public void getBodycolors(CMNamedNodeMapImpl declarations) {
 		Iterator names = Arrays.asList(BODYCOLORS).iterator();
@@ -1205,7 +1200,6 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 	 *  - (align (left|center|right|justify|char) #IMPLIED)
 	 *  - (char %Character; #IMPLIED)
 	 *  - (charoff %Length; #IMPLIED)
-	 * @param attributes com.ibm.sed.contentmodel.html.CMNamedNodeMapImpl
 	 */
 	public void getCellhalign(CMNamedNodeMapImpl declarations) {
 		// (align (left|center|right|justify|char) #IMPLIED) should be defined
@@ -1227,7 +1221,6 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 	 * Get %cellvalign; declarations.
 	 * %cellhaligh; is:
 	 *  - (valign (top|middle|bottom|baseline) #IMPLIED)
-	 * @param attributes com.ibm.sed.contentmodel.html.CMNamedNodeMapImpl
 	 */
 	public void getCellvalign(CMNamedNodeMapImpl declarations) {
 		HTMLAttributeDeclaration dec = getDeclaration(HTML40Namespace.ATTR_NAME_VALIGN);
@@ -1237,7 +1230,6 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 
 	/**
 	 * Get %coreattrs; declarations.
-	 * @param attributes com.ibm.sed.contentmodel.html.CMNamedNodeMapImpl
 	 */
 	public void getCore(CMNamedNodeMapImpl declarations) {
 		Iterator names = Arrays.asList(CORE).iterator();
@@ -1246,7 +1238,6 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 
 	/**
 	 * Get a global attribute declaration.
-	 * @return com.ibm.sed.contentmodel.html.HTMLAttrributeDeclaration
 	 * @param attrName java.lang.String
 	 */
 	public HTMLAttributeDeclaration getDeclaration(String attrName) {
@@ -1263,7 +1254,6 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 
 	/**
 	 * Get declarations which are specified by names.
-	 * @param declarations com.ibm.sed.contentmodel.html.CMNamedNodeMapImpl
 	 * @param names java.util.Iterator
 	 */
 	public void getDeclarations(CMNamedNodeMapImpl declarations, Iterator names) {
@@ -1277,7 +1267,6 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 
 	/**
 	 * Get %events; declarations.
-	 * @param attributes com.ibm.sed.contentmodel.html.CMNamedNodeMapImpl
 	 */
 	public void getEvents(CMNamedNodeMapImpl declarations) {
 		Iterator names = Arrays.asList(EVENTS).iterator();
@@ -1286,7 +1275,6 @@ final class AttributeCollection extends CMNamedNodeMapImpl implements HTML40Name
 
 	/**
 	 * Get %i18n; declarations.
-	 * @param attributes com.ibm.sed.contentmodel.html.CMNamedNodeMapImpl
 	 */
 	public void getI18n(CMNamedNodeMapImpl declarations) {
 		Iterator names = Arrays.asList(I18N).iterator();

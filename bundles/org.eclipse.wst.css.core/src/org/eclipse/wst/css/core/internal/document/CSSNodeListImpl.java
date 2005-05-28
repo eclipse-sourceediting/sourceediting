@@ -15,23 +15,12 @@ package org.eclipse.wst.css.core.internal.document;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNodeList;
 
-/**
- * 
- */
 class CSSNodeListImpl extends AbstractCSSNodeList implements ICSSNodeList {
 
-	/**
-	 * CSSNodeListImpl constructor comment.
-	 */
 	CSSNodeListImpl() {
 		super();
 	}
 
-	/**
-	 * @return com.ibm.sed.treemodel.css.CSSNode
-	 * @param index
-	 *            int
-	 */
 	public ICSSNode item(int index) {
 		return itemImpl(index);
 	}

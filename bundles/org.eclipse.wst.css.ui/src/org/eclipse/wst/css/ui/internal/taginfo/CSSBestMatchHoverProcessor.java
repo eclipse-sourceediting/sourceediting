@@ -20,11 +20,6 @@ import org.eclipse.wst.sse.ui.internal.taginfo.AbstractBestMatchHoverProcessor;
  */
 public class CSSBestMatchHoverProcessor extends AbstractBestMatchHoverProcessor {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.editor.taginfo.AbstractBestMatchHoverProcessor#getTagInfoHover()
-	 */
 	protected ITextHover getTagInfoHover() {
 		// CSS has no taginfo hover
 		return null;

@@ -49,10 +49,6 @@ public abstract class AbstractCssTraverser {
 		apply(model.getDocument());
 	}
 
-	/**
-	 * @param root
-	 *            com.ibm.sed.css.interfaces.ICSSNode
-	 */
 	public final void apply(ICSSNode root) {
 		travStack = new Stack();
 		if (fTraverseImported) {
@@ -72,18 +68,11 @@ public abstract class AbstractCssTraverser {
 		end(root);
 	}
 
-	/**
-	 * @return short
-	 * @param node
-	 *            com.ibm.sed.css.interfaces.ICSSNode
-	 */
+
 	protected void begin(ICSSNode node) {
 	}
 
-	/**
-	 * @param node
-	 *            com.ibm.sed.css.interfaces.ICSSNode
-	 */
+
 	protected void end(ICSSNode node) {
 	}
 
@@ -94,20 +83,12 @@ public abstract class AbstractCssTraverser {
 		return fTraverseImported;
 	}
 
-	/**
-	 * @return short
-	 * @param node
-	 *            com.ibm.sed.css.interfaces.ICSSNode
-	 */
+
 	protected short postNode(ICSSNode node) {
 		return (short) 0;
 	}
 
-	/**
-	 * @return short
-	 * @param node
-	 *            com.ibm.sed.css.interfaces.ICSSNode
-	 */
+
 	protected short preNode(ICSSNode node) {
 		return (short) 0;
 	}
@@ -128,11 +109,7 @@ public abstract class AbstractCssTraverser {
 		fTraverseImportFirst = newTraverseImportFirst;
 	}
 
-	/**
-	 * @return short
-	 * @param node
-	 *            com.ibm.sed.css.interfaces.ICSSNode
-	 */
+
 	private final short traverse(ICSSNode node) {
 		if (node == null)
 			return TRAV_CONT;

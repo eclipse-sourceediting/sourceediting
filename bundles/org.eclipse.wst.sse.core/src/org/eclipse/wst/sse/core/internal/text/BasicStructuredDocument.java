@@ -961,12 +961,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.IStructuredDocument#clearReadOnly(int,
-	 *      int)
-	 */
+
 	public void clearReadOnly(int startOffset, int length) {
 		// TODO DW I still need to implement smarter algorithm that
 		// adust existing RO regions, if needed. For now, I'll just
@@ -1088,12 +1083,6 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		return getPositionManager().containsPositionCategory(category);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.IStructuredDocument#containsReadOnly(int,
-	 *      int)
-	 */
 	public boolean containsReadOnly(int startOffset, int length) {
 		boolean result = false;
 		try {
@@ -1289,9 +1278,6 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 
-	/**
-	 * @return com.ibm.sed.structuredDocument.core.IStructuredDocumentRegion
-	 */
 	IStructuredDocumentRegion getCachedDocumentRegion() {
 		IStructuredDocumentRegion result = null;
 		if (USE_LOCAL_THREAD) {
@@ -1370,9 +1356,6 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		return documentPartitioner;
 	}
 
-	/**
-	 * @see com.ibm.sed.structuredDocument.IStructuredDocument#getEncodingMemento()
-	 */
 	public EncodingMemento getEncodingMemento() {
 		return encodingMemento;
 	}
@@ -1954,12 +1937,6 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		return getLength();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.IStructuredDocument#makeReadOnly(int,
-	 *      int)
-	 */
 	public void makeReadOnly(int startOffset, int length) {
 
 		// doesn't make sense to have a readonly region of 0 length,
@@ -1999,9 +1976,6 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		}
 	}
 
-	/**
-	 * @see com.ibm.sed.structuredDocument.IStructuredDocument#newInstance()
-	 */
 	public IStructuredDocument newInstance() {
 		IStructuredDocument newInstance = StructuredDocumentFactory.getNewStructuredDocumentInstance(getParser().newInstance());
 		((BasicStructuredDocument) newInstance).setReParser(getReParser().newInstance());
@@ -2455,9 +2429,6 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		fireDocumentPartitioningChanged(event);
 	}
 
-	/**
-	 * @see com.ibm.sed.structuredDocument.IStructuredDocument#setEncodingMemento(EncodingMemento)
-	 */
 	public void setEncodingMemento(EncodingMemento encodingMemento) {
 		this.encodingMemento = encodingMemento;
 	}

@@ -540,8 +540,6 @@ public class DOMModelImpl extends AbstractStructuredModel implements IStructured
 	/**
 	 * newModel method
 	 * 
-	 * @param structuredDocumentEvent
-	 *            com.ibm.sed.structuredDocument.impl.events.NewModelEvent
 	 */
 	public void newModel(NewDocumentEvent structuredDocumentEvent) {
 		if (structuredDocumentEvent == null)
@@ -628,8 +626,6 @@ public class DOMModelImpl extends AbstractStructuredModel implements IStructured
 	/**
 	 * nodesReplaced method
 	 * 
-	 * @param event
-	 *            com.ibm.sed.structuredDocument.impl.events.NodesReplacedElement
 	 */
 	public void nodesReplaced(StructuredDocumentRegionsReplacedEvent event) {
 		if (event == null)
@@ -685,7 +681,6 @@ public class DOMModelImpl extends AbstractStructuredModel implements IStructured
 	 * regionChanged method
 	 * 
 	 * @param structuredDocumentEvent
-	 *            com.ibm.sed.structuredDocument.impl.events.RegionChangedEvent
 	 */
 	public void regionChanged(RegionChangedEvent event) {
 		if (event == null)
@@ -740,7 +735,6 @@ public class DOMModelImpl extends AbstractStructuredModel implements IStructured
 	 * regionsReplaced method
 	 * 
 	 * @param event
-	 *            com.ibm.sed.structuredDocument.impl.events.RegionReplacedEvent
 	 */
 	public void regionsReplaced(RegionsReplacedEvent event) {
 		if (event == null)
@@ -856,7 +850,6 @@ public class DOMModelImpl extends AbstractStructuredModel implements IStructured
 	 * setStructuredDocument method
 	 * 
 	 * @param structuredDocument
-	 *            com.ibm.sed.structuredDocument.IStructuredDocument
 	 */
 	public void setStructuredDocument(IStructuredDocument structuredDocument) {
 		IStructuredDocument oldStructuredDocument = super.getStructuredDocument();

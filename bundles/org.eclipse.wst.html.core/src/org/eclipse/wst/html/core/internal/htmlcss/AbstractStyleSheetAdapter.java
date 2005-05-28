@@ -116,12 +116,7 @@ public abstract class AbstractStyleSheetAdapter extends AbstractCSSModelAdapter 
 			currentModel.releaseFromRead();
 	}
 
-	/**
-	 * @param srcModel com.ibm.sed.css.model.interfaces.ICSSModel
-	 * @param removed com.ibm.sed.css.model.interfaces.ICSSSelector[]
-	 * @param added com.ibm.sed.css.model.interfaces.ICSSSelector[]
-	 * @param media java.lang.String
-	 */
+
 	public void styleChanged(ICSSModel srcModel, ICSSSelector[] removed, ICSSSelector[] added, String media) {
 		Element element = getElement();
 		if (element == null)
@@ -182,9 +177,7 @@ public abstract class AbstractStyleSheetAdapter extends AbstractCSSModelAdapter 
 
 	}
 
-	/**
-	 * @param srcModel com.ibm.sed.css.model.interfaces.ICSSModel
-	 */
+	
 	public void styleUpdate(ICSSModel srcModel) {
 		IDOMNode node = (IDOMNode) getElement();
 		if (node == null)

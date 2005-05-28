@@ -32,12 +32,6 @@ abstract class CSSRegionContainer extends CSSNodeImpl {
 		super();
 	}
 
-	/**
-	 * CSSRegionContainer constructor comment.
-	 * 
-	 * @param that
-	 *            com.ibm.sed.css.treemodel.CSSRegionContainer
-	 */
 	CSSRegionContainer(CSSRegionContainer that) {
 		super(that);
 	}
@@ -88,25 +82,14 @@ abstract class CSSRegionContainer extends CSSNodeImpl {
 		return fParentRegion;
 	}
 
-	/**
-	 * @return com.ibm.sed.structuredDocument.ITextRegion
-	 */
 	ITextRegion getFirstRegion() {
 		return fFirstRegion;
 	}
 
-	/**
-	 * @return com.ibm.sed.structuredDocument.ITextRegion
-	 */
 	ITextRegion getLastRegion() {
 		return fLastRegion;
 	}
 
-	/**
-	 * @return com.ibm.sed.structuredDocument.ITextRegion
-	 * @param index
-	 *            int
-	 */
 	ITextRegion getRegion(int index) {
 		if (getFirstRegion() == null)
 			return null;
@@ -163,8 +146,6 @@ abstract class CSSRegionContainer extends CSSNodeImpl {
 
 
 	/**
-	 * @param region
-	 *            com.ibm.sed.structuredDocument.ITextRegion
 	 * @deprecated
 	 */
 	ITextRegion setFirstRegion(ITextRegion region) {
@@ -173,9 +154,6 @@ abstract class CSSRegionContainer extends CSSNodeImpl {
 	}
 
 	/**
-	 * @return com.ibm.sed.structuredDocument.ITextRegion
-	 * @param lastRegion
-	 *            com.ibm.sed.structuredDocument.ITextRegion
 	 * @deprecated
 	 */
 	ITextRegion setLastRegion(ITextRegion lastRegion) {
@@ -183,12 +161,6 @@ abstract class CSSRegionContainer extends CSSNodeImpl {
 		return lastRegion;
 	}
 
-	/**
-	 * @param firstRegion
-	 *            com.ibm.sed.structuredDocument.ITextRegion
-	 * @param lastRegion
-	 *            com.ibm.sed.structuredDocument.ITextRegion
-	 */
 	void setRangeRegion(IStructuredDocumentRegion parentRegion, ITextRegion firstRegion, ITextRegion lastRegion) {
 		this.fParentRegion = parentRegion;
 		this.fFirstRegion = firstRegion;

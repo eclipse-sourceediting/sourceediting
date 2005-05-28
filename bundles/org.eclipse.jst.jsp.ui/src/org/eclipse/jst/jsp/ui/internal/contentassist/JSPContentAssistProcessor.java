@@ -1014,18 +1014,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		return super.getContextInformationAutoActivationCharacters();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.contentassist.xml.AbstractContentAssistProcessor#getCompletionProposalAutoActivationCharacters()
-	 */
+
 	public char[] getCompletionProposalAutoActivationCharacters() {
-		// CMVC 260546
-		// return from HTML preference,
-		// since we know that we are inhereiting the preference for auto
-		// activation from HTML
-		// AbstractUIPlugin htmlPlugin = (AbstractUIPlugin)
-		// Platform.getPlugin(HTMLEditorPlugin.ID);
 		IPreferenceStore store = JSPUIPlugin.getDefault().getPreferenceStore();
 		String key = JSPUIPreferenceNames.AUTO_PROPOSE_CODE;
 
@@ -1231,18 +1221,11 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		}
 	}
 
-	/**
-	 * @see com.ibm.sed.contentassist.old.xml.AbstractContentAssistProcessor#addEntityProposals(ContentAssistRequest,
-	 *      int, ITextRegion, IDOMNode)
-	 */
+
 	protected void addEntityProposals(ContentAssistRequest contentAssistRequest, int documentPosition, ITextRegion completionRegion, IDOMNode treeNode) {
 		// ignore
 	}
 
-	/**
-	 * @see com.ibm.sed.contentassist.old.xml.AbstractContentAssistProcessor#addTagInsertionProposals(ContentAssistRequest,
-	 *      int)
-	 */
 	protected void addTagInsertionProposals(ContentAssistRequest contentAssistRequest, int childPosition) {
 		addTemplates(contentAssistRequest, TemplateContextTypeIdsJSP.TAG);
 

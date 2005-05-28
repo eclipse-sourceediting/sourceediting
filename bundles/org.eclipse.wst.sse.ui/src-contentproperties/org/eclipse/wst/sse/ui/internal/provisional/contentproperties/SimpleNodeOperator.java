@@ -206,22 +206,6 @@ class SimpleNodeOperator {
 		return addElementUnder(root, tagName, attMap);
 	}
 
-	/*
-	 * private void createObjectOfDocument() throws
-	 * ReadContentSettingsFailureException{ try { //parser = new DOMParser();
-	 * parser = ParseUtil.getDOMParser(); parser.parse(settingsFileName);
-	 * //fDocument = parser.getDocument(); fDocument =
-	 * ParseUtil._getDocument(parser); //get the root of the XML fDocument
-	 * root = fDocument.getLastChild(); if (root == null) { throw new
-	 * ReadContentSettingsFailureException("Error: Node
-	 * root==null");//$NON-NLS-1$ } filter = new AllElements(); } catch
-	 * (SAXException e){ com.ibm.sed.util.Logger.log(e); throw new
-	 * ReadContentSettingsFailureException(e.toString()); } catch (IOException
-	 * e){ com.ibm.sed.util.Logger.log(e); throw new
-	 * ReadContentSettingsFailureException(e.toString()); } catch
-	 * (ClassNotFoundException e){ com.ibm.sed.util.Logger.log(e); throw new
-	 * ReadContentSettingsFailureException(e.toString()); } }
-	 */
 	private void createObjectOfDocument() throws ReadContentSettingsFailureException {
 		try {
 			fDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new File(settingsFileName));

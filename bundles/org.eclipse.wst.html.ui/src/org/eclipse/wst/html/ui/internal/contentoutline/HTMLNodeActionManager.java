@@ -105,9 +105,6 @@ public class HTMLNodeActionManager extends XMLNodeActionManager {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.xml.ui.actions.AbstractNodeActionManager#reformat(org.w3c.dom.Node, boolean)
-	 */
 	public void reformat(Node newElement, boolean deep) {
 		try {
 			// tell the model that we are about to make a big model change

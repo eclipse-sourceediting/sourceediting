@@ -136,11 +136,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 			}
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see com.ibm.sse.model.parser.StructuredDocumentRegionHandlerExtension#setStructuredDocument(com.ibm.sse.model.text.IStructuredDocument)
-		 */
+
 		public void setStructuredDocument(IStructuredDocument newDocument) {
 			resetNodes();
 			((StructuredDocumentRegionParser) structuredDocument.getParser()).removeStructuredDocumentRegionHandler(this);
@@ -353,9 +349,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 		return getEmbeddedPartitioner().getPartitionType(region, offset);
 	}
 
-	/**
-	 * @see com.ibm.sed.model.StructuredTextPartitioner#getPartitionType(com.ibm.sed.structuredDocument.ITextRegion)
-	 */
+
 	public String getPartitionType(ITextRegion region, int offset) {
 		String result = null;
 		final String region_type = region.getType();
@@ -437,12 +431,6 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 		return fPrefixParseListener.startsWithCustomActionPrefix(tagName);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structuredDocument.partition.StructuredTextPartitioner#getOverrideDocumentPartitionType(com.ibm.sed.structured.text.IStructuredDocumentRegion,
-	 *      com.ibm.sed.structured.text.ITextRegion)
-	 */
 	protected boolean isDocumentRegionBasedPartition(IStructuredDocumentRegion sdRegion, ITextRegion containedChildRegion, int offset) {
 		String documentRegionContext = sdRegion.getType();
 		if (containedChildRegion != null) {
@@ -501,10 +489,6 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 		}
 	}
 
-	/**
-	 * @see com.ibm.sed.structuredDocument.partition.StructuredTextPartitioner#createPartition(int,
-	 *      int, java.lang.String)
-	 */
 	protected void setInternalPartition(int offset, int length, String type) {
 		//TODO: need to carry this single instance idea further to be
 		// complete,

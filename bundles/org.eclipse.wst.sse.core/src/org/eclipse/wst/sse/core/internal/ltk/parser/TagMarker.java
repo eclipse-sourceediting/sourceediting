@@ -45,9 +45,6 @@ public class TagMarker {
 		setMarker(marker);
 	}
 
-	/**
-	 * @return com.ibm.sed.structuredDocument.ITextRegion
-	 */
 	public final ITextRegion getMarker() {
 		return fMarker;
 	}
@@ -68,7 +65,6 @@ public class TagMarker {
 
 	/**
 	 * @param newMarker
-	 *            com.ibm.sed.structuredDocument.ITextRegion
 	 */
 	public final void setMarker(ITextRegion newMarker) {
 		fMarker = newMarker;

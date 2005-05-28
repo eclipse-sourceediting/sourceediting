@@ -249,7 +249,6 @@ public abstract class NodeImpl extends AbstractNotifier implements IDOMNode {
 	/**
 	 * getFirstStructuredDocumentRegion method
 	 * 
-	 * @return com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
 	public IStructuredDocumentRegion getFirstStructuredDocumentRegion() {
 		return StructuredDocumentRegionUtil.getStructuredDocumentRegion(this.flatNode);
@@ -282,7 +281,6 @@ public abstract class NodeImpl extends AbstractNotifier implements IDOMNode {
 	/**
 	 * getLastStructuredDocumentRegion method
 	 * 
-	 * @return com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
 	public IStructuredDocumentRegion getLastStructuredDocumentRegion() {
 		return StructuredDocumentRegionUtil.getStructuredDocumentRegion(this.flatNode);

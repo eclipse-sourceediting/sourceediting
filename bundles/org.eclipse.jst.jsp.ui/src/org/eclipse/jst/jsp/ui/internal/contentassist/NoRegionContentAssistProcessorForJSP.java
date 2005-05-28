@@ -58,9 +58,6 @@ public class NoRegionContentAssistProcessorForJSP extends NoRegionContentAssistP
 		fPartitionToProcessorMap.put(IJSPPartitionTypes.JSP_CONTENT_JAVA, jspJavaContentAssistProcessor);
 	}
 
-	/* 
-	 * @see com.ibm.sse.editor.xml.contentassist.NoRegionContentAssistProcessor#initNameToProcessorMap()
-	 */
 	protected void initNameToProcessorMap() {
 		super.initNameToProcessorMap();
 		JSPPropertyContentAssistProcessor jspPropertyCAP = new JSPPropertyContentAssistProcessor();
@@ -87,9 +84,6 @@ public class NoRegionContentAssistProcessorForJSP extends NoRegionContentAssistP
 		return false;
 	}
 
-	/*
-	 * @see com.ibm.sse.editor.xml.contentassist.NoRegionContentAssistProcessor#guessContentAssistProcessor(org.eclipse.jface.text.ITextViewer, int)
-	 */
 	protected IContentAssistProcessor guessContentAssistProcessor(ITextViewer viewer, int documentOffset) {
 		IContentAssistProcessor p = super.guessContentAssistProcessor(viewer, documentOffset);
 		if (p == null) {

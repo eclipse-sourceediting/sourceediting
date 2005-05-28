@@ -31,8 +31,6 @@ abstract class CSSRuleDeclContainer extends CSSRuleImpl {
 	/**
 	 * CSSRuleDeclContainer constructor comment.
 	 * 
-	 * @param that
-	 *            com.ibm.sed.css.treemodel.CSSRuleImpl
 	 */
 	CSSRuleDeclContainer(CSSRuleDeclContainer that) {
 		super(that);

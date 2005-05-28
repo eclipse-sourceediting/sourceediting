@@ -33,9 +33,6 @@ class MediaListImpl extends CSSRegionContainer implements MediaList {
 
 	/**
 	 * MediaListImpl constructor comment.
-	 * 
-	 * @param that
-	 *            com.ibm.sed.css.treemodel.CSSContainer
 	 */
 	MediaListImpl(MediaListImpl that) {
 		super(that);
@@ -66,14 +63,6 @@ class MediaListImpl extends CSSRegionContainer implements MediaList {
 		setAttribute("medium" + Integer.toString(mediumCounter++), newMedium);//$NON-NLS-1$
 	}
 
-	/**
-	 * Insert the method's description here. Creation date: (2001/01/17
-	 * 18:50:29)
-	 * 
-	 * @return com.ibm.sed.treemodel.css.CSSNode
-	 * @param deep
-	 *            boolean
-	 */
 	public ICSSNode cloneNode(boolean deep) {
 		MediaListImpl cloned = new MediaListImpl(this);
 		return cloned;

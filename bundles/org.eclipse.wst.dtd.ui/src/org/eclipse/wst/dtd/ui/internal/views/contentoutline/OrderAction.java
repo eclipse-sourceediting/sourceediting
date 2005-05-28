@@ -28,7 +28,7 @@ import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateAction
 
 
 /**
- * Based on com.ibm.etools.dtd.editor.DTDContentOutlinePage#OrderAction
+ * Based on DTDContentOutlinePage#OrderAction
  */
 public class OrderAction extends PropertyChangeUpdateAction {
 	private DTDTreeContentProvider contentProvider;

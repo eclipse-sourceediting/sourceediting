@@ -121,9 +121,6 @@ public class JSPUseBeanContentAssistProcessor extends JSPDummyContentAssistProce
 		}
 	}
 
-	/**
-	 * @see com.ibm.sed.structured.contentassist.IContentAssistProcessorExtension#release()
-	 */
 	public void release() {
 		fResource = null;
 	}

@@ -77,7 +77,6 @@ final class ComplexTypeDefinitionFactory {
 	 * Factory method for ComplexTypeDefinition.
 	 * Each instance created in this method must be registered into
 	 * the map with its name.
-	 * @return com.ibm.sed.contentmodel.html.ComplexTypeDefinition
 	 * @param definitionName java.lang.String
 	 * @param elementCollection ElementCollection
 	 */
@@ -135,7 +134,6 @@ final class ComplexTypeDefinitionFactory {
 
 	/**
 	 * For singleton.<br>
-	 * @return com.ibm.sed.contentmodel.html.ComplexTypeDefinitionFactory
 	 */
 	public synchronized static ComplexTypeDefinitionFactory getInstance() {
 		if (instance != null)

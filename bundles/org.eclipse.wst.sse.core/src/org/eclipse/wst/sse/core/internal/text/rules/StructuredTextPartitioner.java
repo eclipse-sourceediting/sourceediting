@@ -323,9 +323,7 @@ public class StructuredTextPartitioner implements IDocumentPartitioner {
 		return result;
 	}
 
-	/**
-	 * @see com.ibm.sed.model.StructuredTextPartitioner#getPartitionType(com.ibm.sed.structuredDocument.ITextRegion)
-	 */
+
 	protected String getPartitionType(IBlockedStructuredDocumentRegion blockedStructuredDocumentRegion, int offset) {
 		String result = null;
 		ITextRegionList regions = blockedStructuredDocumentRegion.getRegions();

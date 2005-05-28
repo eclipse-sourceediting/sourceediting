@@ -64,17 +64,10 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 		JavaCore.getPlugin();
 	}
 
-	/**
-	 * @see com.ibm.sse.model.INodeAdapter#isAdapterForType(java.lang.Object)
-	 */
 	public boolean isAdapterForType(Object type) {
 		return type.equals(IJSPTranslation.class);
 	}
 
-	/**
-	 * @see com.ibm.sse.model.INodeAdapter#notifyChanged(com.ibm.sse.model.INodeNotifier,
-	 *      int, java.lang.Object, java.lang.Object, java.lang.Object, int)
-	 */
 	public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
 		// nothing to do
 	}
@@ -108,9 +101,6 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 		fDocumentIsDirty = true;
 	}
 
-	/**
-	 * @see com.ibm.sse.editor.IReleasable#release()
-	 */
 	public void release() {
 		
 		if(fJspDocument != null)
@@ -131,7 +121,6 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 	/**
 	 * Returns the JSPTranslation for this adapter.
 	 * 
-	 * @see com.ibm.sse.editor.jsp.java.JSPTranslation
 	 * @return a JSPTranslationExtension
 	 */
 	public synchronized JSPTranslationExtension getJSPTranslation() {

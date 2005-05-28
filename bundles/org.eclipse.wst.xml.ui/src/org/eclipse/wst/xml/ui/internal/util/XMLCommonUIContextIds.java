@@ -18,7 +18,7 @@ package org.eclipse.wst.xml.ui.internal.util;
  * Context help id constants.
  */
 public interface XMLCommonUIContextIds {
-	public static final String PLUGIN_NAME = "com.ibm.etools.xml.common.ui"; //$NON-NLS-1$
+	public static final String PLUGIN_NAME = "org.eclipse.wst.xml.ui"; //$NON-NLS-1$
 
 
 	/* CONTEXT_IDs for "Assign an XSL Stylesheet To The XML File" dialog */

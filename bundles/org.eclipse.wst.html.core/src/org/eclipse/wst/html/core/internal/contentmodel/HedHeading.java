@@ -53,8 +53,6 @@ final class HedHeading extends HedInlineContainer {
 	 * <p>However, %align is used in sevaral times.  I wouldn't write same code
 	 * in many times.  So, I add a new utility method into <code>CMUtil</code>
 	 * to create the attribute declaration.</p>
-	 * <br>
-	 * @see com.ibm.sed.contentmodel.html.HTMLElemDeclImpl
 	 */
 	protected void createAttributeDeclarations() {
 		if (attributes != null)

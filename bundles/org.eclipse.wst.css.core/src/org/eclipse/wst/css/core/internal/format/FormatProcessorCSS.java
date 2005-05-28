@@ -75,33 +75,14 @@ public class FormatProcessorCSS extends AbstractStructuredFormatProcessor {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.model.format.AbstractStructuredFormatProcessor#getFormatPreferences()
-	 */
 	public IStructuredFormatPreferences getFormatPreferences() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.model.format.AbstractStructuredFormatProcessor#getFormatter(org.w3c.dom.Node)
-	 */
 	protected IStructuredFormatter getFormatter(Node node) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.model.format.AbstractStructuredFormatProcessor#refreshFormatPreferences()
-	 */
 	protected void refreshFormatPreferences() {
-		// TODO Auto-generated method stub
-
 	}
 }

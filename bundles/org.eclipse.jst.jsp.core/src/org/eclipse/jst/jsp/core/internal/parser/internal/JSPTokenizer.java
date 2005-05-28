@@ -873,7 +873,7 @@ public class JSPTokenizer implements BlockTokenizer, DOMJSPRegionContexts {
 
 	private JSPParserRegionFactory fRegionFactory = new JSPParserRegionFactory();
 
-	private static final String rcsver = "$Id: JSPTokenizer.java,v 1.10 2005/04/18 08:00:30 david_williams Exp $";//$NON-NLS-1$
+	private static final String rcsver = "$Id: JSPTokenizer.java,v 1.11 2005/05/28 01:26:17 david_williams Exp $";//$NON-NLS-1$
 
 	/**
 	 * user method 
@@ -1609,7 +1609,6 @@ private final String doBlockTagScan() throws IOException {
 	/**
 	 * user method
 	 *
-	 * @see com.ibm.sed.parser.BlockTokenizer#newInstance()
 	 */
 	public BlockTokenizer newInstance() {
 		JSPTokenizer newInstance = new JSPTokenizer();

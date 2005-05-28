@@ -50,10 +50,6 @@ public class HTMLStyleSelectorAdapterFactory implements INodeAdapterFactory {
 		return adapter;
 	}
 
-	/**
-	 * Insert the method's description here.
-	 * @return com.ibm.iwt.css.adapters.HTMLStyleSelectorAdapterFactory
-	 */
 	public synchronized static HTMLStyleSelectorAdapterFactory getInstance() {
 		if (instance == null)
 			instance = new HTMLStyleSelectorAdapterFactory();

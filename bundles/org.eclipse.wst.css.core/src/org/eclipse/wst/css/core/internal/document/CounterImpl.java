@@ -30,10 +30,6 @@ class CounterImpl extends CSSPrimitiveContainer implements ICounter {
 		super(CSS_COUNTER);
 	}
 
-	/**
-	 * @param that
-	 *            com.ibm.sed.css.treemodel.CounterImpl
-	 */
 	CounterImpl(CounterImpl that) {
 		super(that);
 	}

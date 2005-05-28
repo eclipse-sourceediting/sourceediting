@@ -30,10 +30,6 @@ class CSSPrimitiveValueImpl extends CSSRegionContainer implements ICSSPrimitiveV
 	private float fFloatValue = 0.0f;
 	private String fStringValue = null;
 
-	/**
-	 * @param that
-	 *            com.ibm.sed.css.treemodel.CSSPrimitiveValueImpl
-	 */
 	CSSPrimitiveValueImpl(CSSPrimitiveValueImpl that) {
 		super(that);
 
@@ -42,19 +38,11 @@ class CSSPrimitiveValueImpl extends CSSRegionContainer implements ICSSPrimitiveV
 		this.fStringValue = that.fStringValue;
 	}
 
-	/**
-	 * 
-	 */
 	CSSPrimitiveValueImpl(short primitiveType) {
 		super();
 		fPrimitiveType = primitiveType;
 	}
 
-	/**
-	 * @return com.ibm.sed.css.interfaces.CSSNode
-	 * @param deep
-	 *            boolean
-	 */
 	public ICSSNode cloneNode(boolean deep) {
 		CSSPrimitiveValueImpl cloned = new CSSPrimitiveValueImpl(this);
 

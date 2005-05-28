@@ -34,7 +34,6 @@ final class HedFontStyle extends HedInlineContainer {
 
 	/**
 	 * %attrs;
-	 * @see com.ibm.sed.contentmodel.html.HTMLElemDeclImpl
 	 */
 	protected void createAttributeDeclarations() {
 		if (attributes != null)

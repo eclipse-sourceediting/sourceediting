@@ -115,9 +115,6 @@ public class HTMLSourcePreferencePage extends XMLSourcePreferencePage {
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.preferences.ui.xml.XMLSourcePreferencePage#getModelPreferences()
-	 */
 	protected Preferences getModelPreferences() {
 		return HTMLCorePlugin.getDefault().getPluginPreferences();
 	}

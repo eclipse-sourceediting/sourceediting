@@ -33,9 +33,6 @@ class JCMDocImpl extends CMNodeImpl implements JSPCMDocument {
 		elements = new JSPElementCollection();
 	}
 
-	/**
-	 * @see com.ibm.sed.contentmodel.html.HTMLCMDocument
-	 */
 	public HTMLElementDeclaration getElementDeclaration(String elementName) {
 		if (elements == null)
 			return null;
@@ -56,9 +53,6 @@ class JCMDocImpl extends CMNodeImpl implements JSPCMDocument {
 		return null;
 	}
 
-	/**
-	 * @see com.ibm.sed.contentmodel.html.HTMLCMDocument
-	 */
 	public HTMLEntityDeclaration getEntityDeclaration(String entityName) {
 		return null;
 	}

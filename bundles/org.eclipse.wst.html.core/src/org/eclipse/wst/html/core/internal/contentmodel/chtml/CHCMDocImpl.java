@@ -40,39 +40,24 @@ public class CHCMDocImpl extends CMNodeImpl implements HTMLCMDocument {
 		entities = new EntityCollection();
 	}
 
-	/**
-	 * @return com.ibm.sed.contentmodel.html.AttributeCollection
-	 */
 	AttributeCollection getAttributes() {
 		return attributes;
 	}
 
-	/**
-	 * @see com.ibm.sed.contentmodel.html.HTMLCMDocument
-	 */
 	public HTMLElementDeclaration getElementDeclaration(String elementName) {
 		if (elements == null)
 			return null;
 		return (HTMLElementDeclaration) elements.getNamedItem(elementName);
 	}
 
-	/**
-	 * @see org.eclipse.wst.xml.core.internal.contentmodel.CMDocument
-	 */
 	public CMNamedNodeMap getElements() {
 		return elements;
 	}
 
-	/**
-	 * @see org.eclipse.wst.xml.core.internal.contentmodel.CMDocument
-	 */
 	public CMNamedNodeMap getEntities() {
 		return entities;
 	}
 
-	/**
-	 * @see com.ibm.sed.contentmodel.html.HTMLCMDocument
-	 */
 	public HTMLEntityDeclaration getEntityDeclaration(String entityName) {
 		if (entities == null)
 			return null;

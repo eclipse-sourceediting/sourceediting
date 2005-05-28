@@ -419,14 +419,11 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	/**
 	 * getEndStructuredDocumentRegion method
 	 * 
-	 * @return com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
 	public IStructuredDocumentRegion getEndStructuredDocumentRegion() {
 		return this.endStructuredDocumentRegion;
 	}
 
-	/**
-	 */
 	public String getEndTagName() {
 		if (this.endStructuredDocumentRegion == null)
 			return null;
@@ -454,7 +451,6 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	/**
 	 * getFirstStructuredDocumentRegion method
 	 * 
-	 * @return com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
 	public IStructuredDocumentRegion getFirstStructuredDocumentRegion() {
 		IStructuredDocumentRegion flatNode = getStructuredDocumentRegion();
@@ -466,7 +462,6 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	/**
 	 * getLastStructuredDocumentRegion method
 	 * 
-	 * @return com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
 	public IStructuredDocumentRegion getLastStructuredDocumentRegion() {
 		if (this.endStructuredDocumentRegion != null)
@@ -568,7 +563,6 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	/**
 	 * getStartStructuredDocumentRegion method
 	 * 
-	 * @return com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
 	public IStructuredDocumentRegion getStartStructuredDocumentRegion() {
 		return getStructuredDocumentRegion();
@@ -1309,7 +1303,6 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	 * setEndStructuredDocumentRegion method
 	 * 
 	 * @param flatNode
-	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
 	void setEndStructuredDocumentRegion(IStructuredDocumentRegion flatNode) {
 		this.endStructuredDocumentRegion = flatNode;
@@ -1395,7 +1388,6 @@ public class ElementImpl extends NodeContainer implements IDOMElement {
 	 * setStartStructuredDocumentRegion method
 	 * 
 	 * @param flatNode
-	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
 	void setStartStructuredDocumentRegion(IStructuredDocumentRegion flatNode) {
 		setStructuredDocumentRegion(flatNode);

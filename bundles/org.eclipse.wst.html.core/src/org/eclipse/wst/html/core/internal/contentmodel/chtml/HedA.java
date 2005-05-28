@@ -69,7 +69,6 @@ final class HedA extends HedInlineContainer {
 	 * Exclusion.
 	 * <code>A</code> has the exclusion.
 	 * It is <code>A</code> itself.
-	 * @see com.ibm.sed.contentmodel.html.HTMLElementDeclaration
 	 */
 	public CMContent getExclusion() {
 		if (exclusion != null)

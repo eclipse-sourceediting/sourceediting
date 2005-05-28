@@ -74,7 +74,6 @@ public interface HTMLElementDeclaration extends CMElementDeclaration {
 
 	/**
 	 * A short hand method to get an attribute declaration of a HTML element.
-	 * @return com.ibm.sed.contentmodel.html.HTMLAttributeDeclaration
 	 * @param attrName java.lang.String
 	 */
 	HTMLAttributeDeclaration getAttributeDeclaration(String attrName);

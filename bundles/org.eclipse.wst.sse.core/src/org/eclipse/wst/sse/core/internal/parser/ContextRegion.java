@@ -41,39 +41,20 @@ public class ContextRegion implements ITextRegion {
 		fLength = newLength;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.core.ITextRegionCore#adjust(int)
-	 */
+
 	public void adjust(int i) {
 		fStart += i;
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.core.ITextRegionCore#adjustLengthWith(int)
-	 */
 	public void adjustLength(int i) {
 		fLength += i;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.core.ITextRegionCore#adjustStart(int)
-	 */
 	public void adjustStart(int i) {
 		fStart += i;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegion#adjustTextLength(int)
-	 */
 	public void adjustTextLength(int i) {
 		fTextLength += i;
 
@@ -142,32 +123,17 @@ public class ContextRegion implements ITextRegion {
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.core.ITextRegionCore#contains(int)
-	 */
 	public boolean contains(int position) {
 
 		return fStart <= position && position < fStart + fLength;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.core.ITextRegionCore#equatePositions(com.ibm.sed.structured.text.ITextRegion)
-	 */
 	public void equatePositions(ITextRegion region) {
 		fStart = region.getStart();
 		fLength = region.getLength();
 		fTextLength = region.getTextLength();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegion#getEnd()
-	 */
 	public int getEnd() {
 		return fStart + fLength;
 	}
@@ -180,11 +146,6 @@ public class ContextRegion implements ITextRegion {
 		return fStart;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegion#getTextEnd()
-	 */
 	public int getTextEnd() {
 		return fStart + fTextLength;
 	}
@@ -216,17 +177,10 @@ public class ContextRegion implements ITextRegion {
 	public String toString() {
 		String className = getClass().getName();
 		String shortClassName = className.substring(className.lastIndexOf(".") + 1); //$NON-NLS-1$
-		// ==> // String resultText = null;
 		String result = shortClassName + "--> " + getType() + ": " + getStart() + "-" + getTextEnd() + (getTextEnd() != getEnd() ? ("/" + getEnd()) : ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		// NOTE: if the document held by any region has been updated and the
 		// region offsets have not
 		// yet been updated, the output from this method invalid.
-		// return com.ibm.sed.util.StringUtils.escape("('"+(getFirstRegion()
-		// == null || document == null? "" :
-		// getText(getFirstRegion()))+"'"+getStart()+" -
-		// "+getEnd()+"'"+(getClose() == null || document == null ||
-		// getRegions().size()<2 ? "" : getText(getClose()))+"')
-		// "+getRegions());
 		return result;
 	}
 

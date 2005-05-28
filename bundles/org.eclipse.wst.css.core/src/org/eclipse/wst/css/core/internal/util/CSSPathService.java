@@ -31,10 +31,6 @@ public class CSSPathService {
 
 	/**
 	 * @return java.lang.String
-	 * @param baseModel
-	 *            com.ibm.sed.model.IStructuredModel
-	 * @param ref
-	 *            java.lang.String
 	 */
 	public static String getAbsoluteURL(IStructuredModel baseModel, String ref) {
 		String absLink = URLModelProviderCSS.resolveURI(baseModel, ref, true);

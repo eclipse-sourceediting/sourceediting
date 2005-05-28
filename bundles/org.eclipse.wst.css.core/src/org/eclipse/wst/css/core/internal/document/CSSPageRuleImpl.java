@@ -31,19 +31,10 @@ class CSSPageRuleImpl extends CSSRuleDeclContainer implements ICSSPageRule {
 		super();
 	}
 
-	/**
-	 * @param that
-	 *            com.ibm.sed.css.treemodel.CSSPageRuleImpl
-	 */
 	CSSPageRuleImpl(CSSPageRuleImpl that) {
 		super(that);
 	}
 
-	/**
-	 * @return com.ibm.sed.css.interfaces.CSSNode
-	 * @param deep
-	 *            boolean
-	 */
 	public ICSSNode cloneNode(boolean deep) {
 		CSSPageRuleImpl cloned = new CSSPageRuleImpl(this);
 
@@ -70,9 +61,6 @@ class CSSPageRuleImpl extends CSSRuleDeclContainer implements ICSSPageRule {
 		return PAGERULE_NODE;
 	}
 
-	/**
-	 * @return com.ibm.sed.css.interfaces.ICSSSelectorList
-	 */
 	public ICSSSelectorList getSelectors() {
 		return fSelectorList;
 	}

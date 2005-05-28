@@ -58,7 +58,6 @@ public class NoChangeEvent extends StructuredDocumentEvent {
 	 * change to a document's content.
 	 * 
 	 * @param source
-	 *            com.ibm.sed.structuredDocument.IStructuredDocument
 	 * @param originalSource
 	 *            java.lang.Object
 	 * @param changes

@@ -22,9 +22,6 @@ import org.eclipse.wst.xml.ui.internal.contentassist.NoRegionContentAssistProces
  * @author pavery
  */
 public class NoRegionContentAssistProcessorForHTML extends NoRegionContentAssistProcessor {
-	/*
-	 * @see com.ibm.sse.editor.xml.contentassist.NoRegionContentAssistProcessor#initPartitionToProcessorMap()
-	 */
 	protected void initPartitionToProcessorMap() {
 		super.initPartitionToProcessorMap();
 		IContentAssistProcessor htmlProcessor = new HTMLContentAssistProcessor();

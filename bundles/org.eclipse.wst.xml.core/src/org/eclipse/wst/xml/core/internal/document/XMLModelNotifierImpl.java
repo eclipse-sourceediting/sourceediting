@@ -114,9 +114,6 @@ public class XMLModelNotifierImpl implements XMLModelNotifier {
 		this.doingNewModel = newModel;
 	}
 
-	/**
-	 * @see com.ibm.sed.model.xml.XMLModelNotifier#cancelPending()
-	 */
 	public void cancelPending() {
 		// we don't want to change the size of this array, since
 		// the array may be being processed, in the defferred notification

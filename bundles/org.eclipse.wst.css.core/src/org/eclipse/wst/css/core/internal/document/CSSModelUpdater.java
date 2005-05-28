@@ -306,28 +306,6 @@ class CSSModelUpdater {
 	}
 
 	/**
-	 * 
-	 */
-	// private int getDocumentEnd() {
-	// int end = -1;
-	// IStructuredDocument structuredDocument =
-	// fModel.getStructuredDocument();
-	// if (structuredDocument != null) {
-	// if (structuredDocument instanceof
-	// com.ibm.sed.structured.text.impl.BasicStructuredDocument) {
-	// end =
-	// ((com.ibm.sed.structured.text.impl.BasicStructuredDocument)structuredDocument).getLength();
-	// }
-	// }
-	// return end;
-	// }
-	/**
-	 * 
-	 */
-	// private IStructuredDocument getStructuredDocument() {
-	// return (fModel != null) ? getStructuredDocument() : null;
-	// }
-	/**
 	 * @return org.eclipse.wst.css.core.model.CSSNodeImpl
 	 * @param parentNode
 	 *            org.eclipse.wst.css.core.model.CSSNodeImpl

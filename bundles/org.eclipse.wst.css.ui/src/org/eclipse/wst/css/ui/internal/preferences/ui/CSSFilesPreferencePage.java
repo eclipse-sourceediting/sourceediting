@@ -19,38 +19,18 @@ import org.eclipse.wst.css.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.xml.ui.internal.preferences.XMLFilesPreferencePage;
 
 public class CSSFilesPreferencePage extends XMLFilesPreferencePage {
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.preference.PreferencePage#doGetPreferenceStore()
-	 */
 	protected IPreferenceStore doGetPreferenceStore() {
 		return CSSUIPlugin.getDefault().getPreferenceStore();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.editor.xml.preferences.ui.XMLFilesPreferencePage#doSavePreferenceStore()
-	 */
 	protected void doSavePreferenceStore() {
 		CSSCorePlugin.getDefault().savePluginPreferences(); // model
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.editor.preferences.ui.AbstractPreferencePage#getModelPreferences()
-	 */
 	protected Preferences getModelPreferences() {
 		return CSSCorePlugin.getDefault().getPluginPreferences();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
-	 */
 	protected Control createContents(Composite parent) {
 		Control c = super.createContents(parent);
 		WorkbenchHelp.setHelp(c, IHelpContextIds.CSS_PREFWEBX_FILES_HELPID);

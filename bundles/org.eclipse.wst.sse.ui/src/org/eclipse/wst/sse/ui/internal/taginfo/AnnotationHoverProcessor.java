@@ -105,12 +105,7 @@ public class AnnotationHoverProcessor implements ITextHover {
 		return EditorsUI.getAnnotationPreferenceLookup().getAnnotationPreference(annotation);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.taginfo.AbstractTextHoverProcessor#getHoverInfo(org.eclipse.jface.text.ITextViewer,
-	 *      org.eclipse.jface.text.IRegion, boolean)
-	 */
+
 	public String getHoverInfo(ITextViewer viewer, IRegion hoverRegion) {
 		IAnnotationModel model = ((SourceViewer) viewer).getAnnotationModel();
 		if (model != null) {

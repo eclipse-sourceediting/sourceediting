@@ -44,7 +44,6 @@ public class JFaceNodeContentProvider implements ITreeContentProvider {
 	/**
 	 * Returns the JFace adapter for the specified object.
 	 * 
-	 * @return com.ibm.sed.view.tree.DOMJFaceAdapter The JFace adapter
 	 * @param adaptable
 	 *            java.lang.Object The object to get the adapter for
 	 */

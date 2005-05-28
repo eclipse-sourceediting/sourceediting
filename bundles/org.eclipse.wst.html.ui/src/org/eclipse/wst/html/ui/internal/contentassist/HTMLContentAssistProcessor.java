@@ -468,10 +468,6 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 		return fPreferenceStore;
 	}
 
-	/**
-	 * @see com.ibm.sed.edit.adapters.ExtendedContentAssistAdapter#computeCompletionProposals(ITextViewer,
-	 *      int, IndexedRegion, ITextRegion)
-	 */
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer, int documentPosition, IndexedRegion indexedNode, ITextRegion region) {
 		return computeCompletionProposals(viewer, documentPosition);
 	}

@@ -38,8 +38,6 @@ class CSSStyleDeclItemImpl extends CSSStructuredDocumentRegionContainer implemen
 	/**
 	 * CSSStyleDeclItemImpl constructor comment.
 	 * 
-	 * @param that
-	 *            com.ibm.sed.css.treemodel.CSSNodeImpl
 	 */
 	CSSStyleDeclItemImpl(CSSStyleDeclItemImpl that) {
 		super(that);
@@ -64,7 +62,6 @@ class CSSStyleDeclItemImpl extends CSSStructuredDocumentRegionContainer implemen
 	}
 
 	/**
-	 * @return com.ibm.sed.treemodel.css.CSSNode
 	 * @param deep
 	 *            boolean
 	 */

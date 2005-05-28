@@ -24,9 +24,7 @@ public class CoreNodeList implements IStructuredDocumentRegionList {
 	int countedLength;
 	int currentIndex = -1;
 
-	//com.ibm.sed.interfaces.core.Core
 	IStructuredDocumentRegion[] flatNodes;
-	//com.ibm.sed.interfaces.core.Core
 	IStructuredDocumentRegion head;
 
 	/**

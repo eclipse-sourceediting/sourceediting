@@ -51,7 +51,6 @@ final class HedTITLE extends HedPcdata {
 	 * It is <code>%head.misc;</code>.
 	 * %head.misc; is <code>SCRIPT|STYLE|META|LINK|OBJECT</code>.
 	 * <br>
-	 * @see com.ibm.sed.contentmodel.html.HTMLElementDeclaration
 	 */
 	public CMContent getExclusion() {
 		if (exclusion != null)

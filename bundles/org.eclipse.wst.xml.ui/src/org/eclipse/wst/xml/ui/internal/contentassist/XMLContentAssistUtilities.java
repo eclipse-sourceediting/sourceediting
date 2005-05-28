@@ -74,8 +74,7 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 	 * @param parentTagName
 	 *            the tag on which you are checkin for an ending tag
 	 * @param imagePath
-	 *            content assist image path in realation to com.ibm.sed.
-	 *            structured. contentassist. xmlSourceEditorImageHelper
+	 *            content assist image relative path 
 	 * @return ICompletionProposal
 	 */
 	public static ICompletionProposal computeJSPEndTagProposal(ITextViewer viewer, int documentPosition, IndexedRegion indexedNode, String parentTagName, String imagePath) {
@@ -169,8 +168,7 @@ public class XMLContentAssistUtilities extends ContentAssistUtils {
 	 * @param parentTagName
 	 *            the tag on which you are checkin for an ending tag
 	 * @param imagePath
-	 *            content assist image path in realation to com.ibm.sed.
-	 *            structured. contentassist. xmlSourceEditorImageHelper
+	 *            content assist relative image path
 	 * @return ICompletionProposal
 	 */
 	public static ICompletionProposal computeXMLEndTagProposal(ITextViewer viewer, int documentPosition, IndexedRegion indexedNode, String parentTagName, String imagePath) {

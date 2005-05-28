@@ -68,16 +68,10 @@ public class JSPSearchQuery extends BasicSearchQuery {
 		return this;
 	}
 
-	/**
-	 * @see com.ibm.sse.editor.internal.search.BasicSearchQuery#getRunnable()
-	 */
 	protected IWorkspaceRunnable getRunnable() {
 		return new SingleFileSearch();
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.internal.search.BasicSearchQuery#doQuery()
-	 */
 	protected IStatus doQuery() {
 		
 		clearMatches();
@@ -121,16 +115,10 @@ public class JSPSearchQuery extends BasicSearchQuery {
 		return count;
 	}
 
-	/**
-	 * @see com.ibm.sse.editor.internal.search.BasicSearchQuery#getSearchText()
-	 */
 	protected String getSearchText() {
 		return this.fElement.getElementName();
 	}
 	
-	/**
-	 * @see org.eclipse.search.ui.ISearchQuery#canRerun()
-	 */
 	public boolean canRerun() {
 		
 		return false;

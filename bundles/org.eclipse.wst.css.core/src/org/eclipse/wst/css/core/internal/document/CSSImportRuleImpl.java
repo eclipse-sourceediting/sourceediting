@@ -44,19 +44,10 @@ class CSSImportRuleImpl extends CSSRuleImpl implements ICSSImportRule {
 		super();
 	}
 
-	/**
-	 * @param that
-	 *            com.ibm.sed.css.treemodel.CSSImportRuleImpl
-	 */
 	CSSImportRuleImpl(CSSImportRuleImpl that) {
 		super(that);
 	}
 
-	/**
-	 * @return com.ibm.sed.css.interfaces.CSSNode
-	 * @param deep
-	 *            boolean
-	 */
 	public ICSSNode cloneNode(boolean deep) {
 		CSSImportRuleImpl cloned = new CSSImportRuleImpl(this);
 

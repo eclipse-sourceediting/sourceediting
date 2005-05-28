@@ -51,8 +51,6 @@ final class HedTITLE extends HedPcdata {
 	 * <code>TITLE</code> has the exclusion.
 	 * It is <code>%head.misc;</code>.
 	 * %head.misc; is <code>SCRIPT|STYLE|META|LINK|OBJECT</code>.
-	 * <br>
-	 * @see com.ibm.sed.contentmodel.html.HTMLElementDeclaration
 	 */
 	public CMContent getExclusion() {
 		if (exclusion != null)

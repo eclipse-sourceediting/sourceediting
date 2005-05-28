@@ -30,9 +30,7 @@ public abstract class AbstractPropagatingValidator extends ValidationComponent {
 
 	protected abstract ValidationAdapter getValidator();
 
-	/**
-	 * @see com.ibm.sed.adapters.validate.ValidationAdapter#validate(IndexedRegion)
-	 */
+
 	public void validate(IndexedRegion node) {
 		if (node == null)
 			return;

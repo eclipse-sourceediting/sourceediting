@@ -172,9 +172,7 @@ public class JSPDocumentLoader extends AbstractDocumentLoader {
 		return DEFAULT_MIME_TYPE;
 	}
 
-	/**
-	 * @see com.ibm.sed.model.AbstractDumper#getDocumentEncodingDetector()
-	 */
+
 	public IDocumentCharsetDetector getDocumentEncodingDetector() {
 		if (fDocumentEncodingDetector == null) {
 			fDocumentEncodingDetector = new JSPDocumentHeadContentDetector();

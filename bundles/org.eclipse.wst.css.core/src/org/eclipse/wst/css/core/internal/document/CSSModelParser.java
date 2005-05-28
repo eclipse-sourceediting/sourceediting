@@ -181,8 +181,6 @@ class CSSModelParser {
 	 * CSSStyleSheet.createCSSRule(String)
 	 * 
 	 * @return org.w3c.dom.css.CSSRule
-	 * @param flatNodes
-	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegionList
 	 */
 	CSSRule createCSSRule(IStructuredDocumentRegionList flatNodes) {
 		if (flatNodes == null) {
@@ -1164,10 +1162,6 @@ class CSSModelParser {
 		fCreationContext.clear();
 	}
 
-	/**
-	 * @param event
-	 *            com.ibm.sed.structuredDocument.events.StructuredDocumentEvent
-	 */
 	void setStructuredDocumentEvent(StructuredDocumentEvent event) {
 		if (fStructuredDocumentWalker == null) {
 			fStructuredDocumentWalker = new StructuredDocumentWalker();

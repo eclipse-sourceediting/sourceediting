@@ -29,10 +29,6 @@ abstract class CSSRuleImpl extends CSSStructuredDocumentRegionContainer implemen
 		super();
 	}
 
-	/**
-	 * @param that
-	 *            com.ibm.sed.css.treemodel.CSSRuleImpl
-	 */
 	CSSRuleImpl(CSSRuleImpl that) {
 		super(that);
 	}

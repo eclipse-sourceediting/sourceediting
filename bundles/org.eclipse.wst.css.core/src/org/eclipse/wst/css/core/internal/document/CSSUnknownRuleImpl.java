@@ -31,19 +31,10 @@ class CSSUnknownRuleImpl extends CSSRuleImpl implements CSSUnknownRule {
 		super();
 	}
 
-	/**
-	 * @param that
-	 *            com.ibm.sed.css.treemodel.CSSUnknownRuleImpl
-	 */
 	CSSUnknownRuleImpl(CSSUnknownRuleImpl that) {
 		super(that);
 	}
 
-	/**
-	 * @return com.ibm.sed.css.interfaces.CSSNode
-	 * @param deep
-	 *            boolean
-	 */
 	public ICSSNode cloneNode(boolean deep) {
 		CSSUnknownRuleImpl cloned = new CSSUnknownRuleImpl(this);
 

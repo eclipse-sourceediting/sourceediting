@@ -19,10 +19,5 @@ import org.w3c.dom.css.DOMImplementationCSS;
  */
 public interface IDOMImplementationCSS extends DOMImplementationCSS {
 
-	/**
-	 * @return com.ibm.sed.treemodel.cei.CSSStyleDeclBlock
-	 * @exception org.w3c.dom.DOMException
-	 *                The exception description.
-	 */
 	ICSSStyleDeclaration createCSSStyleDeclaration() throws org.w3c.dom.DOMException;
 }

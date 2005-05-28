@@ -14,15 +14,9 @@ package org.eclipse.wst.css.core.internal.provisional.document;
 
 import org.w3c.dom.css.CSSStyleRule;
 
-/**
- * 
- */
 public interface ICSSStyleRule extends ICSSNode, CSSStyleRule {
 
 	java.lang.String SELECTOR = "selector"; //$NON-NLS-1$
 
-	/**
-	 * @return com.ibm.sed.css.interfaces.ICSSSelectorList
-	 */
 	ICSSSelectorList getSelectors();
 }

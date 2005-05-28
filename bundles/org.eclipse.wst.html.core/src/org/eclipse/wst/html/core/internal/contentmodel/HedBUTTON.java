@@ -72,7 +72,6 @@ final class HedBUTTON extends HedFlowContainer {
 	 * Exclusion.
 	 * <code>FORM</code> has the exclusion.
 	 * It is <code>FORM</code> itself.
-	 * @see com.ibm.sed.contentmodel.html.HTMLElementDeclaration
 	 */
 	public CMContent getExclusion() {
 		if (exclusion != null)

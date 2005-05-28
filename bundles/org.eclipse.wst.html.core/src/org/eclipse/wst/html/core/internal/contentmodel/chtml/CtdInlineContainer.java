@@ -40,16 +40,10 @@ final class CtdInlineContainer extends ComplexTypeDefinition {
 		collection.getInline(content);
 	}
 
-	/**
-	 * @see com.ibm.sed.contentmodel.html.ComplexTypeDefinition
-	 */
 	public int getContentType() {
 		return CMElementDeclaration.MIXED;
 	}
 
-	/**
-	 * @see com.ibm.sed.contentmodel.html.ComplexTypeDefinition
-	 */
 	public String getTypeName() {
 		return ComplexTypeDefinitionFactory.CTYPE_INLINE_CONTAINER;
 	}

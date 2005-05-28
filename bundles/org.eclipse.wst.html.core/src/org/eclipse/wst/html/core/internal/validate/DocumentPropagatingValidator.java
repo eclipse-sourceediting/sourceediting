@@ -42,16 +42,10 @@ class DocumentPropagatingValidator extends AbstractPropagatingValidator {
 		propagatee.setReporter(reporter);
 	}
 
-	/**
-	 * @see com.ibm.sed.validate.html.AbstractPropagatingValidator#getPropagatee()
-	 */
 	protected final ValidationComponent getPropagatee() {
 		return propagatee;
 	}
 
-	/**
-	 * @see com.ibm.sed.validate.html.AbstractPropagatingValidator#getValidator()
-	 */
 	protected final ValidationAdapter getValidator() {
 		return validator;
 	}

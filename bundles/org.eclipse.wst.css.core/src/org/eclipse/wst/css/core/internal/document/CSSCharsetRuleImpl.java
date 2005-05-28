@@ -31,19 +31,10 @@ class CSSCharsetRuleImpl extends CSSRuleImpl implements ICSSCharsetRule {
 		super();
 	}
 
-	/**
-	 * @param that
-	 *            com.ibm.sed.css.treemodel.CSSCharsetRuleImpl
-	 */
 	CSSCharsetRuleImpl(CSSCharsetRuleImpl that) {
 		super(that);
 	}
 
-	/**
-	 * @return com.ibm.sed.css.interfaces.CSSNode
-	 * @param deep
-	 *            boolean
-	 */
 	public ICSSNode cloneNode(boolean deep) {
 		CSSCharsetRuleImpl cloned = new CSSCharsetRuleImpl(this);
 
@@ -79,13 +70,7 @@ class CSSCharsetRuleImpl extends CSSRuleImpl implements ICSSCharsetRule {
 		return CHARSET_RULE;
 	}
 
-	/**
-	 * 
-	 */
 	public void setEncoding(String encoding) throws org.w3c.dom.DOMException {
-		// pa_TODO css pref
-		// String quote =
-		// com.ibm.sse.editor.css.preferences.CSSPreferenceHelper.getInstance().getQuoteString((ICSSModel)getOwnerDocument().getModel());
 		String quote = CSSCorePlugin.getDefault().getPluginPreferences().getString(CSSCorePreferenceNames.FORMAT_QUOTE);
 		String enc = CSSUtil.extractStringContents(encoding);
 		quote = CSSUtil.detectQuote(enc, quote);

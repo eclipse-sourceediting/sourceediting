@@ -27,7 +27,7 @@ import org.w3c.dom.Node;
 
 /**
  * A IBreakpointProvider supporting server-side JavaScript as a JSP language
- *
+ * 
  */
 public class JavaScriptBreakpointProvider extends AbstractBreakpointProvider {
 	public boolean canAddBreakpoint(Document doc, IDocument idoc, IEditorInput input, Node node, int lineNumber, int offset) {
@@ -35,29 +35,20 @@ public class JavaScriptBreakpointProvider extends AbstractBreakpointProvider {
 		return res != null && !isBreakpointExist(res, lineNumber) && isValidPosition(doc, idoc, lineNumber) && (getPageLanguage(doc) != JAVA);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.extensions.breakpoint.IBreakpointProvider#addBreakpoint(org.w3c.dom.Document, org.eclipse.jface.text.IDocument, org.eclipse.ui.IEditorInput, org.w3c.dom.Node, int, int)
-	 */
+
 	public IStatus addBreakpoint(Document doc, IDocument idoc, IEditorInput input, Node node, int lineNumber, int offset) {
 		int pos = getValidPosition(doc, idoc, lineNumber);
 		if (pos != NO_VALID_CONTENT && canAddBreakpoint(doc, idoc, input, node, lineNumber, offset)) {
 			IResource res = getEditorInputResource(input);
 			if (res != null) {
-//				try {
 				new JavascriptLineBreakpoint(res, lineNumber, pos, pos);
-//				}
-//				catch(CoreException e) {
-//					return new Status(IStatus.ERROR, JSPUIPlugin.ID, IStatus.ERROR, "Problem adding Java breakpoint", e);
-//				}
 			}
 		}
 		return new Status(IStatus.OK, JSPUIPlugin.ID, IStatus.OK, JSPUIMessages.OK, null); //$NON-NLS-1$
 	}
 
 	/*
-	 * @param res
-	 * @param lineNumber
-	 * @return boolean
+	 * @param res @param lineNumber @return boolean
 	 */
 	private boolean isBreakpointExist(IResource res, int lineNumber) {
 		IBreakpointManager manager = DebugPlugin.getDefault().getBreakpointManager();
@@ -79,24 +70,15 @@ public class JavaScriptBreakpointProvider extends AbstractBreakpointProvider {
 	}
 
 	/*
-	 * @param doc
-	 * @param idoc
-	 * @param lineNumber
-	 * @return boolean
+	 * @param doc @param idoc @param lineNumber @return boolean
 	 */
 	private boolean isValidPosition(Document doc, IDocument idoc, int lineNumber) {
 		return getValidPosition(doc, idoc, lineNumber) != NO_VALID_CONTENT;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.extensions.IBreakpointProvider#setSourceEditingTextTools(com.ibm.sse.editor.extensions.SourceEditingTextTools)
-	 */
 	public void setSourceEditingTextTools(SourceEditingTextTools util) {
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.extensions.IBreakpointProvider#getResource(org.eclipse.ui.IStorageEditorInput)
-	 */
 	public IResource getResource(IEditorInput input) {
 		return getEditorInputResource(input);
 	}

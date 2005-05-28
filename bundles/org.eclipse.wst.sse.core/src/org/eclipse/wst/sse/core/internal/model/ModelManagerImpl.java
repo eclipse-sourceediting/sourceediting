@@ -1053,10 +1053,6 @@ public class ModelManagerImpl implements IModelManager {
 		return _commonGetModel(iFile, EDIT, null, null);
 	}
 
-	/**
-	 * @see com.ibm.sed.model.IModelManager#getModelForEdit(IFile,
-	 *      EncodingRule)
-	 */
 	public synchronized IStructuredModel getModelForEdit(IFile iFile, EncodingRule encodingRule) throws UnsupportedEncodingException, IOException, CoreException {
 
 		Assert.isNotNull(iFile, "IFile parameter can not be null"); //$NON-NLS-1$

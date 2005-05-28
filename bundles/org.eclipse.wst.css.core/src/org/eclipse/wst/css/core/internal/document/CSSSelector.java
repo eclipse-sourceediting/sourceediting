@@ -71,11 +71,6 @@ class CSSSelector implements ICSSSelector {
 		return true;
 	}
 
-	/**
-	 * @return com.ibm.sed.css.interfaces.ICSSSelectorItem
-	 * @param index
-	 *            int
-	 */
 	public ICSSSelectorItem getItem(int index) {
 		if (fItems == null) {
 			fItems = parseSelector(fTokens);

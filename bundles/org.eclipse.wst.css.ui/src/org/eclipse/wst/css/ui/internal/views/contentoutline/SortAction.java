@@ -28,8 +28,8 @@ import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.css.ui.internal.editor.CSSEditorPluginImages;
 import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateAction;
 
-/**
- * Based on com.ibm.etools.dtd.editor.DTDContentOutlinePage#SortAction
+/*
+ * Based on DTDContentOutlinePage#SortAction
  */
 class SortAction extends PropertyChangeUpdateAction {
 	private TreeViewer treeViewer;

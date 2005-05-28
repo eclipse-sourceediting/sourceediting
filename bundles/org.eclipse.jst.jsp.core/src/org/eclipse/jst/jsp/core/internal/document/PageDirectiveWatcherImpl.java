@@ -51,16 +51,10 @@ class PageDirectiveWatcherImpl implements PageDirectiveWatcher {
 
 	}
 
-	/**
-	 * @see com.ibm.sse.model.INodeAdapter#isAdapterForType(Object)
-	 */
 	public boolean isAdapterForType(Object type) {
 		return (type == adapterType);
 	}
 
-	/**
-	 * @see com.ibm.sse.model.INodeAdapter#notifyChanged(INodeNotifier, int, Object, Object, Object, int)
-	 */
 	public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
 		// we should only be added to page directives, so if we see a page directive
 		// change, we need to check its attributes, and notify the PageDirectiveAdapter when 
@@ -97,25 +91,16 @@ class PageDirectiveWatcherImpl implements PageDirectiveWatcher {
 
 	}
 
-	/**
-	 * @see com.ibm.sed.content.impl.PageDirectiveWatcher#getContentType()
-	 */
 	public String getContentType() {
 		String contentTypeValue = targetElement.getAttribute("contentType"); //$NON-NLS-1$
 		return contentTypeValue;
 	}
 
-	/**
-	 * @see com.ibm.sed.content.impl.PageDirectiveWatcher#getLanguage()
-	 */
 	public String getLanguage() {
 		String languageValue = targetElement.getAttribute("language"); //$NON-NLS-1$
 		return languageValue;
 	}
 
-	/**
-	 * @see com.ibm.sed.content.impl.PageDirectiveWatcher#getOffset()
-	 */
 	public int getOffset() {
 		return targetElement.getStartOffset();
 	}

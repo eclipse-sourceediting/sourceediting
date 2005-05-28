@@ -82,14 +82,6 @@ public class CSSModelImpl extends AbstractStructuredModel implements ICSSModel, 
 		getStyleNotifier().addStyleListener(listener);
 	}
 
-	/**
-	 * @param parentNode
-	 *            com.ibm.sed.css.treemodel.CSSNodeImpl
-	 * @param newAttr
-	 *            com.ibm.sed.css.treemodel.CSSNodeImpl
-	 * @param oldAttr
-	 *            com.ibm.sed.css.treemodel.CSSNodeImpl
-	 */
 	void attrReplaced(CSSNodeImpl parentNode, CSSNodeImpl newAttr, CSSNodeImpl oldAttr) {
 		if (!fStructuredDocumentUpdate) {
 			CSSModelUpdater updater = getUpdater();
@@ -147,14 +139,6 @@ public class CSSModelImpl extends AbstractStructuredModel implements ICSSModel, 
 		super.beginRecording(requester, label, description);
 	}
 
-	/**
-	 * @param parentNode
-	 *            com.ibm.sed.css.treemodel.CSSNodeImpl
-	 * @param newChild
-	 *            com.ibm.sed.css.treemodel.CSSNodeImpl
-	 * @param oldChild
-	 *            com.ibm.sed.css.treemodel.CSSNodeImpl
-	 */
 	void childReplaced(CSSNodeImpl parentNode, CSSNodeImpl newChild, CSSNodeImpl oldChild) {
 		if (!fStructuredDocumentUpdate) {
 			CSSModelUpdater updater = getUpdater();
@@ -241,9 +225,6 @@ public class CSSModelImpl extends AbstractStructuredModel implements ICSSModel, 
 		}
 	}
 
-	/**
-	 * @return com.ibm.sed.css.treemodel.CSSDocumentImpl
-	 */
 	private CSSDocumentImpl createDocument() {
 		CSSDocumentImpl doc = null;
 		int parserMode = CSSSourceParser.MODE_STYLESHEET;
@@ -291,9 +272,6 @@ public class CSSModelImpl extends AbstractStructuredModel implements ICSSModel, 
 		getStyleNotifier().endRecording();
 	}
 
-	/**
-	 * @return com.ibm.sed.css.interfaces.ICSSDocument
-	 */
 	public ICSSDocument getDocument() {
 		if (document == null) {
 			this.document = createDocument();
@@ -302,9 +280,6 @@ public class CSSModelImpl extends AbstractStructuredModel implements ICSSModel, 
 		return this.document;
 	}
 
-	/**
-	 * @return com.ibm.sed.structuredDocument.IStructuredDocument
-	 */
 	public IStructuredDocument getStructuredDocument() {
 		IStructuredDocument structuredDocument = super.getStructuredDocument();
 		if (structuredDocument != null)
@@ -313,12 +288,6 @@ public class CSSModelImpl extends AbstractStructuredModel implements ICSSModel, 
 		// the first time
 		Assert.isNotNull(getModelHandler());
 		structuredDocument = (IStructuredDocument) getModelHandler().getDocumentLoader().createNewStructuredDocument();
-		// structuredDocument = new
-		// com.ibm.sed.structuredDocument.impl.IStructuredDocument(IStructuredModel.CSS);
-		// CSSStructuredDocumentReParser reParser = new
-		// CSSStructuredDocumentReParser();
-		// reParser.setStructuredDocument(structuredDocument);
-		// ((com.ibm.sed.structuredDocument.impl.IStructuredDocument)structuredDocument).setReParser(reParser);
 
 		setStructuredDocument(structuredDocument);
 
@@ -426,10 +395,6 @@ public class CSSModelImpl extends AbstractStructuredModel implements ICSSModel, 
 		return (getStyleSheetType() == EXTERNAL) && super.isShared();
 	}
 
-	/**
-	 * @param structuredDocumentEvent
-	 *            com.ibm.sed.structuredDocument.events.NewModelEvent
-	 */
 	public void newModel(NewDocumentEvent structuredDocumentEvent) {
 		if (structuredDocumentEvent == null)
 			return;
@@ -463,10 +428,6 @@ public class CSSModelImpl extends AbstractStructuredModel implements ICSSModel, 
 		// nop
 	}
 
-	/**
-	 * @param structuredDocumentEvent
-	 *            com.ibm.sed.structuredDocument.events.StructuredDocumentRegionsReplacedEvent
-	 */
 	public void nodesReplaced(StructuredDocumentRegionsReplacedEvent structuredDocumentEvent) {
 		if (structuredDocumentEvent == null) {
 			return;
@@ -504,10 +465,6 @@ public class CSSModelImpl extends AbstractStructuredModel implements ICSSModel, 
 		structuredDocument.replaceText(this, 0, 0, source);
 	}
 
-	/**
-	 * @param structuredDocumentEvent
-	 *            com.ibm.sed.structuredDocument.events.RegionChangedEvent
-	 */
 	public void regionChanged(RegionChangedEvent structuredDocumentEvent) {
 		if (structuredDocumentEvent == null) {
 			return;
@@ -530,10 +487,6 @@ public class CSSModelImpl extends AbstractStructuredModel implements ICSSModel, 
 		fStructuredDocumentUpdate = false;
 	}
 
-	/**
-	 * @param structuredDocumentEvent
-	 *            com.ibm.sed.structuredDocument.events.RegionsReplacedEvent
-	 */
 	public void regionsReplaced(RegionsReplacedEvent structuredDocumentEvent) {
 		if (structuredDocumentEvent == null)
 			return;
@@ -583,10 +536,6 @@ public class CSSModelImpl extends AbstractStructuredModel implements ICSSModel, 
 		getStyleNotifier().removeStyleListener(listener);
 	}
 
-	/**
-	 * @param newStructuredDocument
-	 *            com.ibm.sed.structuredDocument.IStructuredDocument
-	 */
 	public void setStructuredDocument(IStructuredDocument newStructuredDocument) {
 		IStructuredDocument oldStructuredDocument = super.getStructuredDocument();
 		if (newStructuredDocument == oldStructuredDocument)
@@ -622,10 +571,6 @@ public class CSSModelImpl extends AbstractStructuredModel implements ICSSModel, 
 		getStyleNotifier().styleUpdate(srcModel);
 	}
 
-	/**
-	 * @param node
-	 *            com.ibm.sed.css.treemodel.CSSNodeImpl
-	 */
 	void valueChanged(CSSNodeImpl node, String oldValue) {
 		if (!fStructuredDocumentUpdate) {
 			CSSModelUpdater updater = getUpdater();

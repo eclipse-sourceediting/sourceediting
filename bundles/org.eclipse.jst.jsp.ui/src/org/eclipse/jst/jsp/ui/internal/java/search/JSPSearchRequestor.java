@@ -39,9 +39,7 @@ public class JSPSearchRequestor extends BasicJSPSearchRequestor {
 		this.fJavaRequestor = javaRequestor;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jst.jsp.ui.internal.java.search.BasicJSPSearchRequestor#addSearchMatch(com.ibm.sse.model.text.IStructuredDocument, org.eclipse.core.resources.IFile, int, int, java.lang.String)
-	 */
+
 	protected void addSearchMatch(IDocument jspDocument, IFile jspFile, int jspStart, int jspEnd, String jspText) {
 		
 		if(!jspFile.exists())

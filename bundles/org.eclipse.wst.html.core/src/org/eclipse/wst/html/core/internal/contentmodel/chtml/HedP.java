@@ -60,7 +60,6 @@ final class HedP extends HedInlineContainer {
 	 * in many times.  So, I add a new utility method into <code>CMUtil</code>
 	 * to create the attribute declaration.</p>
 	 * <br>
-	 * @see com.ibm.sed.contentmodel.html.HTMLElemDeclImpl
 	 */
 	protected void createAttributeDeclarations() {
 		if (attributes != null)

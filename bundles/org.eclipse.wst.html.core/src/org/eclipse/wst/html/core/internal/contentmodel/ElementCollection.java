@@ -743,15 +743,10 @@ final class ElementCollection extends DeclCollection implements org.eclipse.wst.
 		return edec;
 	}
 
-	/**
-	 * @return com.ibm.sed.contentmodel.html.AttributeCollection
-	 */
 	public AttributeCollection getAttributeCollection() {
 		return attributeCollection;
 	}
 
-	/**
-	 */
 	public final Collection getNamesOfBlock() {
 		// P, DL, DIV, CENTER, NOSCRIPT, NOFRAMES, BLOCKQUOTE, FORM, ISINDEX, HR,
 		// TABLE, FIELDSET, ADDRESS

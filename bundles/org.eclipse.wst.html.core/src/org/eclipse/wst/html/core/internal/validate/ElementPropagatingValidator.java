@@ -34,16 +34,10 @@ class ElementPropagatingValidator extends AbstractPropagatingValidator {
 		validator.setReporter(reporter);
 	}
 
-	/**
-	 * @see com.ibm.sed.validate.html.AbstractPropagatingValidator#getPropagatee()
-	 */
 	protected ValidationComponent getPropagatee() {
 		return this;
 	}
 
-	/**
-	 * @see com.ibm.sed.validate.html.AbstractPropagatingValidator#getValidator()
-	 */
 	protected ValidationAdapter getValidator() {
 		return validator;
 	}

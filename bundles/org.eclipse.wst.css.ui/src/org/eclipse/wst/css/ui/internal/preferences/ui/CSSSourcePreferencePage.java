@@ -87,29 +87,20 @@ public class CSSSourcePreferencePage extends AbstractPreferencePage {
 		// not content assist, but preferred case
 		Group caseGroup = createGroup(parent, 3);
 		caseGroup.setText(CSSUIMessages.PrefsLabel_CaseGroup);
-		//		WorkbenchHelp.setHelp(caseGroup,
-		// "com.ibm.etools.webedit.core.cssp1400"); //$NON-NLS-1$
-
-		//		createLabel(caseGroup, CASE_IDENT);
-		//		createLabel(caseGroup, CASE_PROP_NAME);
-		//		createLabel(caseGroup, CASE_PROP_VALUE);
 
 		// use group for radio buttons so that associated label is read
-		//		Composite identGroup = createComposite(caseGroup, 1);
 		Group identGroup = createGroup(caseGroup, 1);
 		identGroup.setText(CSSUIMessages.PrefsLabel_CaseIdent);
 		fIdentUpper = createRadioButton(identGroup, CSSUIMessages.PrefsLabel_CaseIdentUpper);
 		fIdentLower = createRadioButton(identGroup, CSSUIMessages.PrefsLabel_CaseIdentLower);
 
 		// use group for radio buttons so that associated label is read
-		//		Composite propNameGroup = createComposite(caseGroup, 1);
 		Group propNameGroup = createGroup(caseGroup, 1);
 		propNameGroup.setText(CSSUIMessages.PrefsLabel_CasePropName);
 		fPropNameUpper = createRadioButton(propNameGroup, CSSUIMessages.PrefsLabel_CasePropNameUpper);
 		fPropNameLower = createRadioButton(propNameGroup, CSSUIMessages.PrefsLabel_CasePropNameLower);
 
 		// use group for radio buttons so that associated label is read
-		//		Composite propValueGroup = createComposite(caseGroup, 1);
 		Group propValueGroup = createGroup(caseGroup, 1);
 		propValueGroup.setText(CSSUIMessages.PrefsLabel_CasePropValue);
 		fPropValueUpper = createRadioButton(propValueGroup, CSSUIMessages.PrefsLabel_CasePropValueUpper);
@@ -119,9 +110,6 @@ public class CSSSourcePreferencePage extends AbstractPreferencePage {
 	private void createContentsForFormattingGroup(Composite parent) {
 		Group formattingGroup = createGroup(parent, 2);
 		formattingGroup.setText(CSSUIMessages.Formatting_UI_);
-		//		// assigning one help for whole group
-		//		WorkbenchHelp.setHelp(formattingGroup,
-		// "com.ibm.etools.webedit.core.cssp1200"); //$NON-NLS-1$
 
 		fLineWidthLabel = createLabel(formattingGroup, CSSUIMessages.Line_width__UI_);
 		fLineWidthText = new Text(formattingGroup, SWT.SINGLE | SWT.BORDER);
@@ -160,21 +148,11 @@ public class CSSSourcePreferencePage extends AbstractPreferencePage {
 		return CSSUIPlugin.getDefault().getPreferenceStore();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.editor.xml.preferences.ui.XMLFilesPreferencePage#doSavePreferenceStore()
-	 */
 	private void doSavePreferenceStore() {
 		CSSUIPlugin.getDefault().savePluginPreferences();
 		CSSCorePlugin.getDefault().savePluginPreferences(); // model
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.editor.preferences.ui.AbstractPreferencePage#getModelPreferences()
-	 */
 	protected Preferences getModelPreferences() {
 		return CSSCorePlugin.getDefault().getPluginPreferences();
 	}

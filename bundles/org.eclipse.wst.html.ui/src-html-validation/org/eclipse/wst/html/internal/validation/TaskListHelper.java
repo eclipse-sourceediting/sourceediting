@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.CoreException;
 
 /**
  * pa_TODO moved this class here for now to remove dependency on
- * com.ibm.etools.validation.
+ * validation packages
  * 
  * This class is intended to be used only by the validation framework. The
  * TaskListHelper class will be removed in Milestone 4.

@@ -29,10 +29,6 @@ public class TaglibTracker extends CMDocumentWrapperImpl implements CMDocumentTr
 		fStructuredDocumentRegion = aStructuredDocumentRegion;
 	}
 
-	/**
-	 * 
-	 * @return com.ibm.sed.structuredDocument.IStructuredDocumentRegion
-	 */
 	public IStructuredDocumentRegion getStructuredDocumentRegion() {
 		return fStructuredDocumentRegion;
 	}

@@ -46,14 +46,9 @@ public class TagNameRegion implements ITextRegion {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegion#adjustTextLength(int)
-	 */
+
 	public void adjustTextLength(int i) {
 		fTextLength += i;
-
 	}
 
 	public void equatePositions(ITextRegion region) {

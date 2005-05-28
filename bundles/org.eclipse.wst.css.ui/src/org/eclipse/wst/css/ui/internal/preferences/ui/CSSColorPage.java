@@ -58,8 +58,6 @@ public class CSSColorPage extends AbstractColorPage {
 		super.createContents(pageComponent);
 
 		// assigning one help for whole group
-		//		WorkbenchHelp.setHelp(pageComponent,
-		// "com.ibm.etools.webedit.core.cssp2000"); //$NON-NLS-1$
 		WorkbenchHelp.setHelp(pageComponent, IHelpContextIds.CSS_PREFWEBX_STYLES_HELPID);
 
 		return pageComponent;
@@ -69,9 +67,6 @@ public class CSSColorPage extends AbstractColorPage {
 		Composite coloringComposite = super.createColoringComposite(parent);
 
 		// assigning one help for whole group
-		//		WorkbenchHelp.setHelp(coloringComposite,
-		// "com.ibm.etools.webedit.core.cssp2100"); //$NON-NLS-1$
-
 		return coloringComposite;
 	}
 

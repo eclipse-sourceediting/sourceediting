@@ -27,10 +27,6 @@ public class HTMLStyleSelectorAdapter implements IStyleSelectorAdapter {
 	static private HTMLStyleSelectorAdapter instance;
 	private Object toMatch = IStyleSelectorAdapter.class;
 
-	/**
-	 * Insert the method's description here.
-	 * @return com.ibm.sed.model.html.css.HTMLStyleSelectorAdapter
-	 */
 	public synchronized static HTMLStyleSelectorAdapter getInstance() {
 		if (instance == null) {
 			instance = new HTMLStyleSelectorAdapter();
@@ -38,16 +34,10 @@ public class HTMLStyleSelectorAdapter implements IStyleSelectorAdapter {
 		return instance;
 	}
 
-	/**
-	 * @see com.ibm.sed.model.INodeAdapter
-	 */
 	public boolean isAdapterForType(Object type) {
 		return type == toMatch;
 	}
 
-	/**
-	 * @see com.ibm.sed.css.adapters.IStyleSelectorAdapter
-	 */
 	public boolean match(ICSSSimpleSelector selector, Element element, String pseudoName) {
 		if (element == null)
 			return false;
@@ -146,9 +136,6 @@ public class HTMLStyleSelectorAdapter implements IStyleSelectorAdapter {
 		return true;
 	}
 
-	/**
-	 * @see com.ibm.sed.model.INodeAdapter
-	 */
 	public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
 	}
 }

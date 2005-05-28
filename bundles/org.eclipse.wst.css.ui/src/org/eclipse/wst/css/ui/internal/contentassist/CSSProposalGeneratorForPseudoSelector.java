@@ -38,8 +38,6 @@ class CSSProposalGeneratorForPseudoSelector extends CSSProposalGenerator {
 	/**
 	 * CSSProposalGeneratorForPseudoSelector constructor comment.
 	 * 
-	 * @param context
-	 *            com.ibm.sed.contentassist.old.css.CSSContentAssistContext
 	 */
 	CSSProposalGeneratorForPseudoSelector(CSSContentAssistContext context) {
 		super(context);

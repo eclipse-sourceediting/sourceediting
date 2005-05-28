@@ -50,7 +50,6 @@ final class HedNOFRAMES extends HTMLElemDeclImpl {
 	 * Exclusion.
 	 * <code>NOFRAMES</code> has the exclusion.
 	 * It is <code>NOFRAMES</code> itself.
-	 * @see com.ibm.sed.contentmodel.html.HTMLElementDeclaration
 	 */
 	public CMContent getExclusion() {
 		if (exclusion != null)

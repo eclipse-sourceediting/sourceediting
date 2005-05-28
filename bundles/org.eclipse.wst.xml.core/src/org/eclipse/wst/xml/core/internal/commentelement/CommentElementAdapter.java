@@ -46,9 +46,6 @@ public class CommentElementAdapter implements TagAdapter {
 		return fConfiguration;
 	}
 
-	/**
-	 * @see com.ibm.sed.model.xml.TagAdapter#getEndTag(IDOMElement)
-	 */
 	public String getEndTag(IDOMElement element) {
 		String content = fHandler.generateEndTagContent(element);
 		if (content == null) {
@@ -78,9 +75,6 @@ public class CommentElementAdapter implements TagAdapter {
 		return getConfiguration().getProperty(name);
 	}
 
-	/**
-	 * @see com.ibm.sed.model.xml.TagAdapter#getStartTag(IDOMElement)
-	 */
 	public String getStartTag(IDOMElement element) {
 		String content = fHandler.generateStartTagContent(element);
 		if (content == null) {
@@ -95,9 +89,6 @@ public class CommentElementAdapter implements TagAdapter {
 		return buffer.toString();
 	}
 
-	/**
-	 * @see com.ibm.sed.model.INodeAdapter#isAdapterForType(Object)
-	 */
 	public boolean isAdapterForType(Object type) {
 		return (type == CommentElementAdapter.class || type == TagAdapter.class);
 	}
@@ -106,17 +97,10 @@ public class CommentElementAdapter implements TagAdapter {
 		return (!fHandler.isEmpty());
 	}
 
-	/**
-	 * @see com.ibm.sed.model.xml.TagAdapter#isEndTag()
-	 */
 	public boolean isEndTag() {
 		return fEndTag;
 	}
 
-	/**
-	 * @see com.ibm.sed.model.INodeAdapter#notifyChanged(INodeNotifier, int,
-	 *      Object, Object, Object, int)
-	 */
 	public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
 	}
 

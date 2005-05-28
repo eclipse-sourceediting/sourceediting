@@ -629,9 +629,7 @@ public class StyledTextColorPicker extends Composite {
 		return null;
 	}
 
-	/**
-	 * @return com.ibm.sed.parser.RegionParser
-	 */
+
 	public RegionParser getParser() {
 		return fParser;
 	}
@@ -870,7 +868,6 @@ public class StyledTextColorPicker extends Composite {
 
 	/**
 	 * @param newParser
-	 *            com.ibm.sed.parser.RegionParser
 	 */
 	public void setParser(RegionParser newParser) {
 		fParser = newParser;

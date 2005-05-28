@@ -39,9 +39,6 @@ public class StructuredTextPartitionerForXML extends StructuredTextPartitioner i
 		fSupportedTypes = configuredContentTypes;
 	}
 
-	/**
-	 * @see com.ibm.sed.model.StructuredTextPartitioner#getPartitionType(com.ibm.sed.structuredDocument.ITextRegion)
-	 */
 	public String getPartitionType(ITextRegion region, int offset) {
 		String result = null;
 		if (region.getType() == DOMRegionContext.XML_COMMENT_TEXT)

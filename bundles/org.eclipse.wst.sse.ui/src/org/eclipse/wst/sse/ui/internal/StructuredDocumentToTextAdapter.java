@@ -1267,7 +1267,6 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 
 	/**
 	 * @param newModel
-	 *            com.ibm.sed.structuredDocument.IStructuredDocument
 	 */
 	public void setDocument(IDocument document) {
 

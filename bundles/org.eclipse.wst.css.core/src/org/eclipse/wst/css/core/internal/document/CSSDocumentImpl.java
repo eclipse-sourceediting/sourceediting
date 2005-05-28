@@ -44,19 +44,11 @@ abstract class CSSDocumentImpl extends CSSStructuredDocumentRegionContainer impl
 		super();
 	}
 
-	/**
-	 * @param that
-	 *            com.ibm.sed.css.treemodel.CSSDocumentImpl
-	 */
+
 	CSSDocumentImpl(CSSDocumentImpl that) {
 		super(that);
 	}
 
-	/**
-	 * @return com.ibm.sed.css.interfaces.ICSSNode
-	 * @param name
-	 *            java.lang.String
-	 */
 	ICSSNode createCSSAttr(String name) {
 		CSSAttrImpl attr = new CSSAttrImpl(name);
 		attr.setOwnerDocument(this);
@@ -133,11 +125,6 @@ abstract class CSSDocumentImpl extends CSSStructuredDocumentRegionContainer impl
 		return null;
 	}
 
-	/**
-	 * @return com.ibm.sed.treemodel.cei.CSSStyleDeclItem
-	 * @param propertyName
-	 *            java.lang.String
-	 */
 	public ICSSStyleDeclItem createCSSStyleDeclItem(String propertyName) {
 		CSSStyleDeclItemImpl item = new CSSStyleDeclItemImpl(propertyName);
 		item.setOwnerDocument(this);
@@ -166,17 +153,10 @@ abstract class CSSDocumentImpl extends CSSStructuredDocumentRegionContainer impl
 		return null;
 	}
 
-	/**
-	 * @return com.ibm.sed.css.interfaces.ICSSModel
-	 */
 	public ICSSModel getModel() {
 		return fModel;
 	}
 
-	/**
-	 * @param model
-	 *            com.ibm.sed.css.treemodel.CSSModelImpl
-	 */
 	void setModel(CSSModelImpl model) {
 		this.fModel = model;
 	}

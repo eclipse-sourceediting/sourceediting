@@ -117,7 +117,6 @@ public interface IStructuredModel extends IAdaptable {
 
 	/**
 	 * @deprecated
-	 * @return com.ibm.sed.model.IStructuredModel
 	 */
 	IStructuredModel copy(String id) throws ResourceInUse, ResourceAlreadyExists;
 

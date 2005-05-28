@@ -47,7 +47,6 @@ final class HedIMG extends HedEmpty {
 	 * (hspace %Pixels; #IMPLIED)
 	 * (vspace %Pixels; #IMPLIED)
 	 * (mapfile %URI; #IMPLIED)
-	 * @see com.ibm.sed.contentmodel.html.AbstractHTMLElemDeclImpl
 	 */
 	protected void createAttributeDeclarations() {
 		if (attributes != null)

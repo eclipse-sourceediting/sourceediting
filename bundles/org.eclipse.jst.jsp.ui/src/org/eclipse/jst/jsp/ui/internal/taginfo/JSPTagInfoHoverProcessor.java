@@ -24,9 +24,6 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
  */
 public class JSPTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor {
 
-	/* (non-Javadoc)
-	 * @see com.ibm.sed.structured.taginfo.AbstractTextHoverProcessor#computeRegionHelp(com.ibm.sed.model.IndexedRegion, com.ibm.sed.model.xml.XMLNode, com.ibm.sed.structured.text.IStructuredDocumentRegion, com.ibm.sed.structured.text.ITextRegion)
-	 */
 	protected String computeRegionHelp(IndexedRegion treeNode, IDOMNode parentNode, IStructuredDocumentRegion flatNode, ITextRegion region) {
 		String result = null;
 

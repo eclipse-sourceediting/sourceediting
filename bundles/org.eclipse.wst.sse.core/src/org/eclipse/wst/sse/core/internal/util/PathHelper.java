@@ -19,7 +19,7 @@ import java.util.StringTokenizer;
 
 /**
  * Collection of helper methods to manage and convert links Originally part of
- * the LinksManager (com.ibm.iwt.parser.util)
+ * the LinksManager 
  */
 public class PathHelper {
 	public static final String BACKWARD_SLASH = "\\";//$NON-NLS-1$

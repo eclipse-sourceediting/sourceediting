@@ -210,9 +210,7 @@ public class JSPModelLoader extends AbstractModelLoader {
 		return result;
 	}
 
-	/**
-	 * @see com.ibm.sed.model.AbstractDumper#getDocumentEncodingDetector()
-	 */
+
 	public IJSPHeadContentDetector getHeadParser() {
 		return new JSPDocumentHeadContentDetector();
 	}

@@ -100,11 +100,6 @@ public class ValidatorBuilder extends RegistryReader {
 		readRegistry(registry, PLUGIN_ID, extensionPoint);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.edit.internal.extension.RegistryReader#readElement(org.eclipse.core.runtime.IConfigurationElement)
-	 */
 	protected boolean readElement(IConfigurationElement element) {
 		String tag = element.getName();
 		//ie. targetContributionTag == validator

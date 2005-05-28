@@ -21,16 +21,10 @@ import org.w3c.dom.Node;
 
 public class HTMLCleanupProcessorImpl extends CleanupProcessorXML {
 
-	/**
-	 * @see com.ibm.sed.partitionCleanup.AbstractCleanupProcessorImpl#getContentType()
-	 */
 	protected String getContentType() {
 		return ContentTypeIdForHTML.ContentTypeID_HTML;
 	}
 
-	/**
-	 * @see com.ibm.sed.partitionCleanup.AbstractCleanupProcessorImpl#getCleanupHandler(com.ibm.sed.model.xml.XMLNode)
-	 */
 	protected IStructuredCleanupHandler getCleanupHandler(Node node) {
 		return HTMLCleanupHandlerFactory.getInstance().createHandler(node, getCleanupPreferences());
 	}

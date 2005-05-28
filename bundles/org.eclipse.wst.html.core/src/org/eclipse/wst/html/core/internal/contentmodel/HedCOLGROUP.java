@@ -25,9 +25,6 @@ final class HedCOLGROUP extends HTMLElemDeclImpl {
 
 	private static String[] terminators = {HTML40Namespace.ElementName.COLGROUP, HTML40Namespace.ElementName.CAPTION, HTML40Namespace.ElementName.THEAD, HTML40Namespace.ElementName.TBODY, HTML40Namespace.ElementName.TFOOT, HTML40Namespace.ElementName.TR};
 
-	/**
-	 * @param ownerDocument com.ibm.sed.contentmodel.html.HCMDocImpl
-	 */
 	public HedCOLGROUP(ElementCollection collection) {
 		super(HTML40Namespace.ElementName.COLGROUP, collection);
 		typeDefinitionName = ComplexTypeDefinitionFactory.CTYPE_COLUMN_GROUP;

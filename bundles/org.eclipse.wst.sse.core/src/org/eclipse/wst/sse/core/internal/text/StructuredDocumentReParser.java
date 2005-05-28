@@ -1135,11 +1135,6 @@ public class StructuredDocumentReParser implements IStructuredTextReParser {
 		StructuredDocumentEvent result = null;
 		ITextRegionList oldRegions = oldNode.getRegions();
 		ITextRegionList newRegions = newNode.getRegions();
-		// Also causes ArrayStoreExceptions when we encounter a container
-		//      ITextRegion[] oldRegionsArray = new
-		// com.ibm.sed.parser.ContextRegion[oldRegions.size()];
-		//      ITextRegion[] newRegionsArray = new
-		// com.ibm.sed.parser.ContextRegion[newRegions.size()];
 		ITextRegion[] oldRegionsArray = oldRegions.toArray();
 		ITextRegion[] newRegionsArray = newRegions.toArray();
 		//
@@ -1459,10 +1454,6 @@ public class StructuredDocumentReParser implements IStructuredTextReParser {
 		}
 	}
 
-	/**
-	 * @param newstructuredDocument
-	 *            com.ibm.sed.structuredDocument.impl.IStructuredDocument
-	 */
 	public void setStructuredDocument(IStructuredDocument newStructuredDocument) {
 		// NOTE: this method (and class) depend on being able to
 		// do the following cast (i.e. references some fields directly)

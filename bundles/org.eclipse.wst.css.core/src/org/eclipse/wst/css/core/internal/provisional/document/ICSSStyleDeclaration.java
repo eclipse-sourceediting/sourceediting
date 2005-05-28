@@ -14,33 +14,11 @@ package org.eclipse.wst.css.core.internal.provisional.document;
 
 import org.w3c.dom.css.CSSStyleDeclaration;
 
-/**
- * 
- */
 public interface ICSSStyleDeclaration extends ICSSDocument, CSSStyleDeclaration {
 
-	/**
-	 * @return com.ibm.sed.treemodel.cei.CSSStyleDeclItem
-	 * @param propertyName
-	 *            java.lang.String
-	 */
 	ICSSStyleDeclItem getDeclItemNode(String propertyName);
 
-	/**
-	 * @return com.ibm.sed.treemodel.cei.CSSStyleDeclItem
-	 * @param oldDecl
-	 *            com.ibm.sed.treemodel.cei.CSSStyleDeclItem
-	 * @exception org.w3c.dom.DOMException
-	 *                The exception description.
-	 */
 	ICSSStyleDeclItem removeDeclItemNode(ICSSStyleDeclItem oldDecl) throws org.w3c.dom.DOMException;
 
-	/**
-	 * @return com.ibm.sed.treemodel.cei.CSSStyleDeclItem
-	 * @param newDecl
-	 *            com.ibm.sed.treemodel.cei.CSSStyleDeclItem
-	 * @exception org.w3c.dom.DOMException
-	 *                The exception description.
-	 */
 	ICSSStyleDeclItem setDeclItemNode(ICSSStyleDeclItem newDecl) throws org.w3c.dom.DOMException;
 }

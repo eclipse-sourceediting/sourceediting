@@ -14,7 +14,7 @@
 
 package org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions;
 
-// import com.ibm.etools.dtd.util.DTDUniqueNameHelper;
+
 import org.eclipse.wst.dtd.core.internal.DTDNode;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 

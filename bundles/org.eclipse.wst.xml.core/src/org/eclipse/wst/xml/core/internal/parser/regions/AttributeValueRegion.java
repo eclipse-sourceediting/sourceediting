@@ -47,11 +47,6 @@ public class AttributeValueRegion implements ITextRegion {
 		fStart += i;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegion#adjustTextLength(int)
-	 */
 	public void adjustTextLength(int i) {
 		fTextLength += 1;
 	}

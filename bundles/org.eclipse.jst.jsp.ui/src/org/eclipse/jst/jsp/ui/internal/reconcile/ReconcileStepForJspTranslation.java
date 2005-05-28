@@ -116,11 +116,6 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 		return fTranslationAdapter;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.editor.internal.ui.text.AbstractStructuredReconcileStep#getModel()
-	 */
 	public IReconcilableModel getModel() {
 		return fModel;
 	}
@@ -274,11 +269,6 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.editor.xml.reconcile.StructuredReconcileStep#release()
-	 */
 	public void release() {
 		if (fTranslationAdapter != null) {
 			if(DEBUG) {

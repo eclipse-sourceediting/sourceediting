@@ -60,25 +60,19 @@ public class ActionContributorJSP extends ActionContributorHTML {
 		refactorMenu.add(this.moveElementAction);
 	}
 	
-	/**
-	 * @see com.ibm.sse.editor.ui.ActionContributor#getExtensionIDs()
-	 */
+
 	protected String[] getExtensionIDs() {
 		return EDITOR_IDS;
 	}
 	
-	/**
-	 * @see com.ibm.sse.editor.xml.ui.actions.ActionContributorXML#addToMenu(org.eclipse.jface.action.IMenuManager)
-	 */
+
 	protected void addToMenu(IMenuManager menu) {
 		super.addToMenu(menu);
 
 		menu.insertAfter(IWorkbenchActionConstants.M_EDIT, this.refactorMenu);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.xml.ui.actions.ActionContributorXML#setActiveEditor(org.eclipse.ui.IEditorPart)
-	 */
+
 	public void setActiveEditor(IEditorPart activeEditor) {
 		
 		super.setActiveEditor(activeEditor);
@@ -86,9 +80,7 @@ public class ActionContributorJSP extends ActionContributorHTML {
 		this.moveElementAction.setAction(getAction(getTextEditor(getActiveEditorPart()), IActionConstantsJSP.ACTION_NAME_MOVE_ELEMENT));
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.xml.ui.actions.ActionContributorXML#setViewerSpecificContributionsEnabled(boolean)
-	 */
+
 	public void setViewerSpecificContributionsEnabled(boolean enabled) {
 		
 		super.setViewerSpecificContributionsEnabled(enabled);

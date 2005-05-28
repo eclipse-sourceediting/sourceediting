@@ -29,12 +29,6 @@ abstract class CSSStructuredDocumentRegionContainer extends CSSNodeImpl {
 		super();
 	}
 
-	/**
-	 * CSSContainer constructor comment.
-	 * 
-	 * @param that
-	 *            com.ibm.sed.css.treemodel.CSSNodeImpl
-	 */
 	CSSStructuredDocumentRegionContainer(CSSStructuredDocumentRegionContainer that) {
 		super(that);
 	}
@@ -67,18 +61,10 @@ abstract class CSSStructuredDocumentRegionContainer extends CSSNodeImpl {
 		return -1;
 	}
 
-	/**
-	 * @return com.ibm.sed.structuredDocument.IStructuredDocumentRegion
-	 */
 	IStructuredDocumentRegion getFirstStructuredDocumentRegion() {
 		return firstStructuredDocumentRegion;
 	}
 
-	/**
-	 * @return com.ibm.sed.structuredDocument.IStructuredDocumentRegion
-	 * @param index
-	 *            int
-	 */
 	IStructuredDocumentRegion getStructuredDocumentRegion(int index) {
 		IStructuredDocumentRegion node = firstStructuredDocumentRegion;
 		for (int i = index; i > 0; i--) {
@@ -103,9 +89,6 @@ abstract class CSSStructuredDocumentRegionContainer extends CSSNodeImpl {
 		return i;
 	}
 
-	/**
-	 * @return com.ibm.sed.structuredDocument.IStructuredDocumentRegion
-	 */
 	IStructuredDocumentRegion getLastStructuredDocumentRegion() {
 		return lastStructuredDocumentRegion;
 	}
@@ -120,12 +103,6 @@ abstract class CSSStructuredDocumentRegionContainer extends CSSNodeImpl {
 		return -1;
 	}
 
-	/**
-	 * @param first
-	 *            com.ibm.sed.structuredDocument.core.IStructuredDocumentRegion
-	 * @param last
-	 *            com.ibm.sed.structuredDocument.core.IStructuredDocumentRegion
-	 */
 	boolean includeRangeStructuredDocumentRegion(IStructuredDocumentRegion first, IStructuredDocumentRegion last) {
 		boolean bModified = false;
 
@@ -195,32 +172,16 @@ abstract class CSSStructuredDocumentRegionContainer extends CSSNodeImpl {
 			super.setCssText(cssText);
 	}
 
-	/**
-	 * @return com.ibm.sed.structuredDocument.core.IStructuredDocumentRegion
-	 * @param node
-	 *            com.ibm.sed.structuredDocument.core.IStructuredDocumentRegion
-	 */
 	IStructuredDocumentRegion setFirstStructuredDocumentRegion(IStructuredDocumentRegion node) {
 		firstStructuredDocumentRegion = node;
 		return node;
 	}
 
-	/**
-	 * @return com.ibm.sed.structuredDocument.core.IStructuredDocumentRegion
-	 * @param node
-	 *            com.ibm.sed.structuredDocument.core.IStructuredDocumentRegion
-	 */
 	IStructuredDocumentRegion setLastStructuredDocumentRegion(IStructuredDocumentRegion node) {
 		lastStructuredDocumentRegion = node;
 		return node;
 	}
 
-	/**
-	 * @param firstNode
-	 *            com.ibm.sed.structuredDocument.core.IStructuredDocumentRegion
-	 * @param lastNode
-	 *            com.ibm.sed.structuredDocument.core.IStructuredDocumentRegion
-	 */
 	void setRangeStructuredDocumentRegion(IStructuredDocumentRegion firstNode, IStructuredDocumentRegion lastNode) {
 		if (firstNode != null)
 			setFirstStructuredDocumentRegion(firstNode);

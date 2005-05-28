@@ -46,8 +46,6 @@ class CSSProposalGeneratorForDeclarationValue extends CSSProposalGenerator {
 	/**
 	 * CSSProposalGeneratorForDeclarationValue constructor comment.
 	 * 
-	 * @param context
-	 *            com.ibm.sed.contentassist.old.css.CSSContentAssistContext
 	 */
 	CSSProposalGeneratorForDeclarationValue(CSSContentAssistContext context) {
 		super(context);

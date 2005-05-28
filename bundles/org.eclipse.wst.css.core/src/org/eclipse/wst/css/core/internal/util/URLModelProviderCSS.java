@@ -82,7 +82,6 @@ public class URLModelProviderCSS {
 		}
 
 		// need to remove file:// scheme if necessary
-		// see com.ibm.sed.util.ProjectResolver.getLocationByURI()
 		try {
 			final URL aURL = new URL(absURL);
 			// An actual URL was given, only file:/// is supported

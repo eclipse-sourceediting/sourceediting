@@ -31,8 +31,6 @@ class CSSProposalGeneratorForDeclarationName extends CSSProposalGenerator {
 	/**
 	 * CSSProposalGeneratorForDeclaration constructor comment.
 	 * 
-	 * @param context
-	 *            com.ibm.sed.contentassist.old.css.CSSContentAssistContext
 	 */
 	CSSProposalGeneratorForDeclarationName(CSSContentAssistContext context) {
 		super(context);

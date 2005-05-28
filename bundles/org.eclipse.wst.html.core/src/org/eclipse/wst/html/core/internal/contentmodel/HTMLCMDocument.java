@@ -23,14 +23,12 @@ public interface HTMLCMDocument extends CMDocument {
 
 	/**
 	 * A short hand method to get a element declaration for a HTML element.<br>
-	 * @return com.ibm.sed.contentmodel.html.HTMLElementDeclaration
 	 * @param elementName java.lang.String
 	 */
 	HTMLElementDeclaration getElementDeclaration(String elementName);
 
 	/**
 	 * A short hand method to get a entity declaration of HTML documents.<br>
-	 * @return com.ibm.sed.contentmodel.html.HTMLEntityDeclaration
 	 * @param entityName java.lang.String
 	 */
 	HTMLEntityDeclaration getEntityDeclaration(String entityName);

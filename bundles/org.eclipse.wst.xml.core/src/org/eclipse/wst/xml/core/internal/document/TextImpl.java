@@ -299,7 +299,6 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 	/**
 	 * getFirstStructuredDocumentRegion method
 	 * 
-	 * @return com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
 	public IStructuredDocumentRegion getFirstStructuredDocumentRegion() {
 		return StructuredDocumentRegionUtil.getFirstStructuredDocumentRegion(getStructuredDocumentRegion());
@@ -308,7 +307,6 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 	/**
 	 * getLastStructuredDocumentRegion method
 	 * 
-	 * @return com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
 	public IStructuredDocumentRegion getLastStructuredDocumentRegion() {
 		return StructuredDocumentRegionUtil.getLastStructuredDocumentRegion(getStructuredDocumentRegion());

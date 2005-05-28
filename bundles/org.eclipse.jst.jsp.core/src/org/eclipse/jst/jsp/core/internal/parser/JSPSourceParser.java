@@ -182,11 +182,6 @@ public class JSPSourceParser extends XMLSourceParser implements JSPCapableParser
 			}
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see com.ibm.sse.model.parser.StructuredDocumentRegionHandlerExtension#setStructuredDocument(com.ibm.sse.model.text.IStructuredDocument)
-		 */
 		public void setStructuredDocument(IStructuredDocument newDocument) {
 			resetNodes();
 			getStructuredDocumentRegionHandlers().remove(this);
@@ -219,9 +214,7 @@ public class JSPSourceParser extends XMLSourceParser implements JSPCapableParser
 		return fTokenizer;
 	}
 
-	/**
-	 * @see com.ibm.sed.parser.RegionParser#newInstance()
-	 */
+
 	public RegionParser newInstance() {
 		JSPSourceParser newInstance = new JSPSourceParser();
 		newInstance.setTokenizer(getTokenizer().newInstance());

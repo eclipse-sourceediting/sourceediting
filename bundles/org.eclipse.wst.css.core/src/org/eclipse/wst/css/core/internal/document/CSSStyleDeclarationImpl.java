@@ -28,10 +28,6 @@ class CSSStyleDeclarationImpl extends CSSDocumentImpl implements ICSSStyleDeclar
 
 	private boolean fIsDocument;
 
-	/**
-	 * @param that
-	 *            com.ibm.sed.css.treemodel.CSSStyleDeclBlockImpl
-	 */
 	CSSStyleDeclarationImpl(CSSStyleDeclarationImpl that) {
 		super(that);
 		this.fIsDocument = that.fIsDocument;
@@ -40,9 +36,6 @@ class CSSStyleDeclarationImpl extends CSSDocumentImpl implements ICSSStyleDeclar
 		}
 	}
 
-	/**
-	 * 
-	 */
 	CSSStyleDeclarationImpl(boolean isDocument) {
 		super();
 		fIsDocument = isDocument;
@@ -51,11 +44,6 @@ class CSSStyleDeclarationImpl extends CSSDocumentImpl implements ICSSStyleDeclar
 		}
 	}
 
-	/**
-	 * @return com.ibm.sed.treemodel.css.CSSNode
-	 * @param deep
-	 *            boolean
-	 */
 	public ICSSNode cloneNode(boolean deep) {
 		CSSStyleDeclarationImpl cloned = new CSSStyleDeclarationImpl(this);
 
@@ -65,11 +53,6 @@ class CSSStyleDeclarationImpl extends CSSDocumentImpl implements ICSSStyleDeclar
 		return cloned;
 	}
 
-	/**
-	 * @return com.ibm.sed.treemodel.cei.CSSStyleDeclItem
-	 * @param propertyName
-	 *            java.lang.String
-	 */
 	public ICSSStyleDeclItem getDeclItemNode(String propertyName) {
 		ICSSNode node = getLastChild();
 		propertyName = propertyName.trim();
@@ -212,13 +195,6 @@ class CSSStyleDeclarationImpl extends CSSDocumentImpl implements ICSSStyleDeclar
 		return null;
 	}
 
-	/**
-	 * @return com.ibm.sed.treemodel.cei.CSSStyleDeclItem
-	 * @param oldDecl
-	 *            com.ibm.sed.treemodel.cei.CSSStyleDeclItem
-	 * @exception org.w3c.dom.DOMException
-	 *                The exception description.
-	 */
 	public ICSSStyleDeclItem removeDeclItemNode(ICSSStyleDeclItem oldDecl) throws DOMException {
 		return (ICSSStyleDeclItem) removeChild((CSSNodeImpl) oldDecl);
 	}
@@ -246,16 +222,6 @@ class CSSStyleDeclarationImpl extends CSSDocumentImpl implements ICSSStyleDeclar
 		return null;
 	}
 
-	/**
-	 * Insert the method's description here. Creation date: (2001/01/16
-	 * 23:18:51)
-	 * 
-	 * @return com.ibm.sed.treemodel.cei.CSSStyleDeclItem
-	 * @param newDecl
-	 *            com.ibm.sed.treemodel.cei.CSSStyleDeclItem
-	 * @exception org.w3c.dom.DOMException
-	 *                The exception description.
-	 */
 	public ICSSStyleDeclItem setDeclItemNode(ICSSStyleDeclItem newDecl) throws DOMException {
 		if (newDecl == null)
 			return null;

@@ -36,7 +36,6 @@ final class CtdHtml extends ComplexTypeDefinition {
 	/**
 	 * (%html.content;).
 	 * %html.content; is HEAD, (FRAMESET | BODY).
-	 * @see com.ibm.sed.contentmodel.html.ComplexTypeDefinition
 	 */
 	protected void createContent() {
 		if (content != null)
@@ -65,15 +64,11 @@ final class CtdHtml extends ComplexTypeDefinition {
 
 	/**
 	 * Element content.
-	 * @see com.ibm.sed.contentmodel.html.ComplexTypeDefinition
 	 */
 	public int getContentType() {
 		return CMElementDeclaration.ELEMENT;
 	}
 
-	/**
-	 * @see com.ibm.sed.contentmodel.html.ComplexTypeDefinition
-	 */
 	public String getTypeName() {
 		return ComplexTypeDefinitionFactory.CTYPE_HTML;
 	}

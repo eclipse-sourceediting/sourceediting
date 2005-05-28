@@ -1499,9 +1499,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		return null;
 	}
 
-	/**
-	 * @see com.ibm.sed.edit.extension.IExtendedSimpleEditor#getEditorPart()
-	 */
+
 	public IEditorPart getEditorPart() {
 		if (fEditorPart == null)
 			return this;

@@ -19,17 +19,10 @@ public class RegionToStringUtil {
 	static public String toString(ITextRegion region) {
 		String className = region.getClass().getName();
 		String shortClassName = className.substring(className.lastIndexOf(".") + 1); //$NON-NLS-1$
-		// ==> // String resultText = null;
 		String result = shortClassName + "--> " + region.getType() + ": " + region.getStart() + "-" + region.getTextEnd() + (region.getTextEnd() != region.getEnd() ? ("/" + region.getEnd()) : ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		// NOTE: if the document held by any region has been updated and the
 		// region offsets have not
 		// yet been updated, the output from this method invalid.
-		//return com.ibm.sed.util.StringUtils.escape("('"+(getFirstRegion()
-		// == null || document == null? "" :
-		// getText(getFirstRegion()))+"'"+getStart()+" -
-		// "+getEnd()+"'"+(getClose() == null || document == null ||
-		// getRegions().size()<2 ? "" : getText(getClose()))+"')
-		// "+getRegions());
 		return result;
 	}
 

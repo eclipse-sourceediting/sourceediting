@@ -84,10 +84,7 @@ public class ContentAssistRequest {
 		return results;
 	}
 
-	/**
-	 * 
-	 * @return com.ibm.sed.structuredDocument.core.IStructuredDocumentRegion
-	 */
+
 	public IStructuredDocumentRegion getDocumentRegion() {
 		return documentRegion;
 	}
@@ -132,10 +129,6 @@ public class ContentAssistRequest {
 		return proposals;
 	}
 
-	/**
-	 * 
-	 * @return com.ibm.sed.structuredDocument.core.ITextRegion
-	 */
 	public ITextRegion getRegion() {
 		return region;
 	}
@@ -210,7 +203,6 @@ public class ContentAssistRequest {
 	/**
 	 * 
 	 * @param newRegion
-	 *            com.ibm.sed.structuredDocument.ITextRegion
 	 */
 	public void setRegion(ITextRegion newRegion) {
 		region = newRegion;

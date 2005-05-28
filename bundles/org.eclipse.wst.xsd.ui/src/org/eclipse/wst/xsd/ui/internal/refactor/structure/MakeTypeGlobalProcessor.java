@@ -58,17 +58,12 @@ public class MakeTypeGlobalProcessor extends RenameProcessor implements INameUpd
 	public boolean canEnableTextUpdating() {
 		return true;
 	}
-	/* (non-Javadoc)
-	 * @see com.ibm.xsd.internal.refactoring.rename.XSDRenameProcessor#getAffectedProjectNatures()
-	 */
+
 	protected String[] getAffectedProjectNatures() throws CoreException {
 		//TODO: find project natures of the files that are going to be refactored
 		return new String[0];
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.ibm.xsd.internal.refactoring.rename.XSDRenameProcessor#loadDerivedParticipants(org.eclipse.ltk.core.refactoring.RefactoringStatus, java.util.List, java.lang.String[], org.eclipse.ltk.core.refactoring.participants.SharableParticipants)
-	 */
 	protected void loadDerivedParticipants(RefactoringStatus status,
 			List result, String[] natures, SharableParticipants shared)
 			throws CoreException {

@@ -45,26 +45,11 @@ import org.w3c.dom.Node;
 public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExecutableExtension {
 	private String fClassPattern = null; 
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.editor.extensions.breakpoint.IBreakpointProvider#addBreakpoint(org.w3c.dom.Document,
-	 *      org.eclipse.jface.text.IDocument, org.eclipse.ui.IEditorInput,
-	 *      org.w3c.dom.Node, int, int)
-	 */
 	public IStatus addBreakpoint(Document doc, IDocument idoc, IEditorInput input, Node node, int editorLineNumber, int offset) throws CoreException {
 		// check if there is a valid position to set breakpoint
 		int pos = getValidPosition(idoc, editorLineNumber);
 		IStatus status = null;
 		if (pos >= 0) {
-			//SSE C3 behavior
-			//  JDIDebugModel.createStratumBreakpoint(res, "JSP",
-			// getTypeName(res), null, "*_jsp", lineNumber, -1, -1, 0, true,
-			// null); //$NON-NLS-1$ //$NON-NLS-2$
-			//Java Family Example 3.0
-			//  JDIDebugModel.createStratumBreakpoint(resource, null,
-			// resource.getName(), null, null, lineNumber, -1, -1, 0, true,
-			// null);
 			IResource res = getResourceFromInput(input);
 			if (res != null) {
 				IBreakpoint point = JDIDebugModel.createStratumBreakpoint(res, "JSP", res.getName(), null, getClassPattern(), editorLineNumber, pos, pos, 0, true, null); //$NON-NLS-1$
@@ -100,11 +85,7 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 		return fClassPattern;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.editor.extensions.breakpoint.IBreakpointProvider#getResource(org.eclipse.ui.IStorageEditorInput)
-	 */
+
 	public IResource getResource(IEditorInput input) {
 		return getResourceFromInput(input);
 	}
@@ -185,11 +166,6 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.editor.extensions.breakpoint.IBreakpointProvider#setSourceEditingTextTools(com.ibm.sse.editor.extensions.breakpoint.SourceEditingTextTools)
-	 */
 	public void setSourceEditingTextTools(SourceEditingTextTools util) {
 		// not used
 	}

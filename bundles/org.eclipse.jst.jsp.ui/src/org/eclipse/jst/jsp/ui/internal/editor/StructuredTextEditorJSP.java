@@ -112,11 +112,6 @@ public class StructuredTextEditorJSP extends StructuredTextEditor {
 		return elements;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.editor.StructuredTextEditor#addContextMenuActions(org.eclipse.jface.action.IMenuManager)
-	 */
 	protected void addContextMenuActions(IMenuManager menu) {
 
 		super.addContextMenuActions(menu);

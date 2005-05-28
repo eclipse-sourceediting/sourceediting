@@ -33,10 +33,6 @@ class RGBColorImpl extends CSSPrimitiveContainer implements RGBColor {
 		super(CSS_RGBCOLOR);
 	}
 
-	/**
-	 * @param that
-	 *            com.ibm.sed.css.treemodel.RGBColorImpl
-	 */
 	RGBColorImpl(RGBColorImpl that) {
 		super(that);
 

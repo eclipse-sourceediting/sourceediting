@@ -26,12 +26,6 @@ public class CSSPropertySheetConfiguration extends StructuredPropertySheetConfig
 		super();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.editor.views.properties.StructuredPropertySheetConfiguration#getSelection(org.eclipse.jface.viewers.ISelection,
-	 *      org.eclipse.ui.IWorkbenchPart)
-	 */
 	public ISelection getSelection(IWorkbenchPart selectingPart, ISelection selection) {
 		ISelection preferredSelection = super.getSelection(selectingPart, selection);
 		if (preferredSelection instanceof IStructuredSelection) {

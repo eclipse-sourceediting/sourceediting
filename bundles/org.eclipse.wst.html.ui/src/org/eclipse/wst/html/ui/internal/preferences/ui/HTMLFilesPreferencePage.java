@@ -30,9 +30,6 @@ import org.eclipse.wst.xml.ui.internal.preferences.XMLFilesPreferencePage;
 public class HTMLFilesPreferencePage extends XMLFilesPreferencePage {
 	private WorkbenchDefaultEncodingSettings fInputEncodingSettings = null;
 
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.preferences.ui.AbstractPreferencePage#getModelPreferences()
-	 */
 	protected Preferences getModelPreferences() {
 		return HTMLCorePlugin.getDefault().getPluginPreferences();
 	}
@@ -44,9 +41,6 @@ public class HTMLFilesPreferencePage extends XMLFilesPreferencePage {
 		return HTMLUIPlugin.getDefault().getPreferenceStore();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.xml.preferences.ui.XMLFilesPreferencePage#doSavePreferenceStore()
-	 */
 	protected void doSavePreferenceStore() {
 		HTMLCorePlugin.getDefault().savePluginPreferences(); // model
 	}
@@ -75,9 +69,6 @@ public class HTMLFilesPreferencePage extends XMLFilesPreferencePage {
 		fInputEncodingSettings = new WorkbenchDefaultEncodingSettings(group);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.preferences.ui.AbstractPreferencePage#initializeValues()
-	 */
 	protected void initializeValues() {
 		super.initializeValues();
 		initializeValuesForLoadingGroup();
@@ -103,9 +94,6 @@ public class HTMLFilesPreferencePage extends XMLFilesPreferencePage {
 		fInputEncodingSettings.setIANATag(encoding);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.preferences.ui.AbstractPreferencePage#storeValues()
-	 */
 	protected void storeValues() {
 		super.storeValues();
 		storeValuesForLoadingGroup();
@@ -114,9 +102,6 @@ public class HTMLFilesPreferencePage extends XMLFilesPreferencePage {
 	protected void storeValuesForLoadingGroup() {
 		getModelPreferences().setValue(CommonEncodingPreferenceNames.INPUT_CODESET, fInputEncodingSettings.getIANATag());		
 	}
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.xml.preferences.ui.XMLFilesPreferencePage#createContentsForCreatingGroup(org.eclipse.swt.widgets.Composite)
-	 */
 	protected void createContentsForCreatingGroup(Composite parent) {
 		Group creatingGroup = createGroup(parent, 2);
 		creatingGroup.setText(HTMLUIMessages.Creating_files);

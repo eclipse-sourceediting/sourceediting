@@ -114,7 +114,6 @@ public class Utilities {
 	 */
 	public static String makeShortId(Object id) {
 		if (id == null)
-			// com.ibm.sed.util.Assert.isNotNull(id);
 			id = "NOID";//$NON-NLS-1$
 		String whole = id.toString();
 		String part = whole.substring(whole.lastIndexOf("/") + 1); //$NON-NLS-1$

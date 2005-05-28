@@ -53,29 +53,18 @@ public class CSSContentOutlineConfiguration extends StructuredContentOutlineConf
 		return items;
 	}
 
-	/**
-	 * @see com.ibm.sse.editor.views.contentoutline.ContentOutlineConfiguration#getContentProvider(org.eclipse.jface.viewers.TreeViewer)
-	 */
 	public IContentProvider getContentProvider(TreeViewer viewer) {
 		if (fContentProvider == null && getFactory() != null)
 			fContentProvider = new JFaceNodeContentProviderCSS((INodeAdapterFactory) getFactory());
 		return fContentProvider;
 	}
 
-	/**
-	 * @see com.ibm.sse.editor.views.contentoutline.ContentOutlineConfiguration#getLabelProvider(org.eclipse.jface.viewers.TreeViewer)
-	 */
 	public ILabelProvider getLabelProvider(TreeViewer viewer) {
 		if (fLabelProvider == null && getFactory() != null)
 			fLabelProvider = new JFaceNodeLabelProviderCSS((INodeAdapterFactory) getFactory());
 		return fLabelProvider;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.editor.views.contentoutline.ContentOutlineConfiguration#getNodes(java.util.List)
-	 */
 	public List getNodes(List nodes) {
 		List filteredNodes = new ArrayList(nodes);
 
@@ -105,11 +94,6 @@ public class CSSContentOutlineConfiguration extends StructuredContentOutlineConf
 		return targetNodes;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.editor.views.contentoutline.ContentOutlineConfiguration#getSelectedNodes(com.ibm.sse.editor.view.events.NodeSelectionChangedEvent)
-	 */
 	public List getSelectedNodes(NodeSelectionChangedEvent event) {
 		return getNodes(event.getSelectedNodes());
 	}

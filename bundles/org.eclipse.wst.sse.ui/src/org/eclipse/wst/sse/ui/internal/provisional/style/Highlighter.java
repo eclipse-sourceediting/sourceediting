@@ -761,11 +761,6 @@ public class Highlighter implements IHighlighter {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.style.IHighlighter#uninstall()
-	 */
 	public void uninstall() {
 		if (textWidget != null && !textWidget.isDisposed()) {
 			textWidget.removeLineStyleListener(this);

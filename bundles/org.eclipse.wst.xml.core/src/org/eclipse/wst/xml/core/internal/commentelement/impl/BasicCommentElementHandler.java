@@ -39,10 +39,7 @@ class BasicCommentElementHandler implements CommentElementHandler {
 		this.isEmpty = isEmpty;
 	}
 
-	/**
-	 * @see com.ibm.sed.model.commentelement.CommentElementHandler#createElement(Document,
-	 *      String, boolean)
-	 */
+
 	public Element createElement(Document document, String data, boolean isJSPTag) {
 		Element element = null;
 		String str = data.trim();
@@ -75,9 +72,7 @@ class BasicCommentElementHandler implements CommentElementHandler {
 		return element;
 	}
 
-	/**
-	 * @see com.ibm.sed.model.commentelement.CommentElementHandler#getEndTag(IDOMElement)
-	 */
+
 	public String generateEndTagContent(IDOMElement element) {
 		if (isEmpty) {
 			return null;
@@ -95,9 +90,6 @@ class BasicCommentElementHandler implements CommentElementHandler {
 		return buffer.toString();
 	}
 
-	/**
-	 * @see com.ibm.sed.model.commentelement.CommentElementHandler#getStartTag(IDOMElement)
-	 */
 	public String generateStartTagContent(IDOMElement element) {
 		ISourceGenerator generator = element.getModel().getGenerator();
 		StringBuffer buffer = new StringBuffer();
@@ -133,20 +125,10 @@ class BasicCommentElementHandler implements CommentElementHandler {
 		return buffer.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.model.commentelement.CommentElementHandler#isCommentElement(com.ibm.sed.model.xml.XMLElement)
-	 */
 	public boolean isCommentElement(IDOMElement element) {
 		return (element != null && element.getTagName().equals(elementName)) ? true : false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.model.commentelement.CommentElementHandler#isEmpty()
-	 */
 	public boolean isEmpty() {
 		return isEmpty;
 	}

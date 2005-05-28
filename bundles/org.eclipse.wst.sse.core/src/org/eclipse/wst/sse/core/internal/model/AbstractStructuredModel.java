@@ -723,9 +723,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		return fModelHandler;
 	}
 
-	/**
-	 * @return com.ibm.sed.model.IModelManager
-	 */
+
 	public IModelManager getModelManager() {
 
 		return _getModelManager();
@@ -777,17 +775,13 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 	}
 
 
-	/**
-	 * @return com.ibm.sed.util.URIResolver
-	 */
+
 	public URIResolver getResolver() {
 
 		return fResolver;
 	}
 
-	/**
-	 * @return com.ibm.sed.structuredDocument.IStructuredDocument
-	 */
+
 	public IStructuredDocument getStructuredDocument() {
 
 		return fStructuredDocument;
@@ -1437,10 +1431,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 
 
 
-	/**
-	 * @param newModelManager
-	 *            com.ibm.sed.model.IModelManager
-	 */
+
 	public void setModelManager(IModelManager newModelManager) {
 
 		fModelManager = newModelManager;
@@ -1474,19 +1465,13 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		reinitializeStateData = object;
 	}
 
-	/**
-	 * @param newResolver
-	 *            com.ibm.sed.util.URIResolver
-	 */
+
 	public void setResolver(URIResolver newResolver) {
 
 		fResolver = newResolver;
 	}
 
-	/**
-	 * @param newStructuredDocument
-	 *            com.ibm.sed.structuredDocument.IStructuredDocument
-	 */
+
 	public void setStructuredDocument(IStructuredDocument newStructuredDocument) {
 
 		boolean lifeCycleNotification = false;

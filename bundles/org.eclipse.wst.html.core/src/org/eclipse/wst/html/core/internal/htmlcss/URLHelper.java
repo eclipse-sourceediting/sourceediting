@@ -11,7 +11,7 @@
 package org.eclipse.wst.html.core.internal.htmlcss;
 
 /**
- * @deprecated - use com.ibm.sse.model.css.util.URLHelper
+ * @deprecated 
  */
 public class URLHelper extends org.eclipse.wst.css.core.internal.util.URLHelper {
 

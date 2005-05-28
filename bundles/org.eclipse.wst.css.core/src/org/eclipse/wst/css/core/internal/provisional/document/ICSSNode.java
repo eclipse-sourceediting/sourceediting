@@ -35,11 +35,6 @@ public interface ICSSNode {
 	short LINKSTYLE_NODE = 14;
 	short ELEMENTCSSINLINESTYLE_NODE = 15;
 
-	/**
-	 * @return com.ibm.sed.treemodel.css.CSSNode
-	 * @param deep
-	 *            boolean
-	 */
 	ICSSNode cloneNode(boolean deep);
 
 	/**
@@ -47,24 +42,12 @@ public interface ICSSNode {
 	 */
 	ICSSNamedNodeMap getAttributes();
 
-	/**
-	 * @return com.ibm.sed.treemodel.css.CSSNodeList
-	 */
 	ICSSNodeList getChildNodes();
 
-	/**
-	 * @return com.ibm.sed.treemodel.css.CSSNode
-	 */
 	ICSSNode getFirstChild();
 
-	/**
-	 * @return com.ibm.sed.treemodel.css.CSSNode
-	 */
 	ICSSNode getLastChild();
 
-	/**
-	 * @return com.ibm.sed.treemodel.css.CSSNode
-	 */
 	ICSSNode getNextSibling();
 
 	/**
@@ -72,19 +55,10 @@ public interface ICSSNode {
 	 */
 	short getNodeType();
 
-	/**
-	 * @return com.ibm.sed.treemodel.css.CSSDocument
-	 */
 	ICSSDocument getOwnerDocument();
 
-	/**
-	 * @return com.ibm.sed.treemodel.css.CSSNode
-	 */
 	ICSSNode getParentNode();
 
-	/**
-	 * @return com.ibm.sed.treemodel.css.CSSNode
-	 */
 	ICSSNode getPreviousSibling();
 
 	/**

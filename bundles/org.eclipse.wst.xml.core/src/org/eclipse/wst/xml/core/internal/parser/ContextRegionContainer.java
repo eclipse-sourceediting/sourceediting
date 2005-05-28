@@ -54,16 +54,12 @@ public class ContextRegionContainer implements ITextRegionContainer {
 		return ((IStructuredDocumentRegion) parent).getParentDocument();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegion#adjust(int)
-	 */
+
 	public void adjust(int i) {
 
 		start += i;
 		// I erroneously added length and textLength
-		// may want to rename this method to adjustStart
+		// TODO: may want to rename this method to adjustStart
 		//length += i;
 		//textLength += i;
 
@@ -77,11 +73,7 @@ public class ContextRegionContainer implements ITextRegionContainer {
 		start += i;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegion#adjustTextLength(int)
-	 */
+
 	public void adjustTextLength(int i) {
 		textLength += i;
 
@@ -92,12 +84,6 @@ public class ContextRegionContainer implements ITextRegionContainer {
 		return getStartOffset() <= i && i < getEndOffset();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegionCollection#containsOffset(com.ibm.sed.structured.text.ITextRegion,
-	 *      int)
-	 */
 	public boolean containsOffset(ITextRegion containedRegion, int offset) {
 		return getStartOffset(containedRegion) <= offset && offset < getEndOffset(containedRegion);
 	}
@@ -121,42 +107,15 @@ public class ContextRegionContainer implements ITextRegionContainer {
 		return getStartOffset() + getLength();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegionCollection#getEndOffset(com.ibm.sed.structured.text.ITextRegion)
-	 */
 	public int getEndOffset(ITextRegion containedRegion) {
 		return getStartOffset(containedRegion) + containedRegion.getLength();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegionCollection#getFirstRegion()
-	 */
 	public ITextRegion getFirstRegion() {
 		return getRegions().get(0);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegionCollection#getFullText()
-	 */
 	public String getFullText() {
-		// CMVC > 252430, 245586
-		// unit test > com.ibm.sed.tests.other.UnitTests.testDeepEmbeddedJSP3
-		// this code modified on 6/25/03 (pa)
-
-		//		String result = null;
-		//		try {
-		//			result = _getParentDocument().get(start, length);
-		//		} catch (BadLocationException e) {
-		//			Logger.logException("program error: unreachable exception", e);
-		// //$NON-NLS-1$
-		//		}
-		//		return result;
 		return getParent().getFullText(this);
 	}
 
@@ -164,20 +123,9 @@ public class ContextRegionContainer implements ITextRegionContainer {
 		// Must be proxied here since aRegion should always be a child of
 		// *this* container and indexed from
 		// this container's offset
-		//	try {
 		return parent.getFullText().substring(start + aRegion.getStart(), start + aRegion.getEnd());
-		//} catch (Exception e) {
-		//if (com.ibm.sed.util.Debug.debugStructuredDocument)
-		//e.printStackTrace();
-		//}
-		//return "";//$NON-NLS-1$
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegionCollection#getLastRegion()
-	 */
 	public ITextRegion getLastRegion() {
 		return getRegions().get(getRegions().size() - 1);
 	}
@@ -186,11 +134,7 @@ public class ContextRegionContainer implements ITextRegionContainer {
 		return length;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegionCollection#getNumberOfRegions()
-	 */
+
 	public int getNumberOfRegions() {
 		return getRegions().size();
 	}
@@ -245,11 +189,6 @@ public class ContextRegionContainer implements ITextRegionContainer {
 		return getParent().getStartOffset() + getStart();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegionCollection#getStartOffset(com.ibm.sed.structured.text.ITextRegion)
-	 */
 	public int getStartOffset(ITextRegion containedRegion) {
 		return getStartOffset() + containedRegion.getStart();
 	}
@@ -274,27 +213,10 @@ public class ContextRegionContainer implements ITextRegionContainer {
 		// Must be proxied here since aRegion should always be a child of
 		// *this* container and indexed from
 		// this container's offset
-		//	com.ibm.sed.util.Assert.isTrue(regions.contains(aRegion));
-		//try {
 		return parent.getText().substring(start + aRegion.getStart(), start + aRegion.getTextEnd());
-		//} catch (Exception e) {
-		//if (com.ibm.sed.util.Debug.debugStructuredDocument)
-		//com.ibm.sed.util.Logger.log(e);
-		//}
-		// return ""; //$NON-NLS-1$
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegion#getTextEnd()
-	 */
 	public int getTextEnd() {
-		//		int result = 0;
-		//		ITextRegion lastRegion = (ITextRegion) regions.get(regions.size() -
-		// 1);
-		//		result = getStartOffset(lastRegion) + lastRegion.getTextLength();
-		//		return result;
 		return start + textLength;
 	}
 
@@ -316,11 +238,6 @@ public class ContextRegionContainer implements ITextRegionContainer {
 		return getStartOffset() + region.getTextEnd();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegionCollection#getTextEndOffset(com.ibm.sed.structured.text.ITextRegion)
-	 */
 	public int getTextEndOffset(ITextRegion containedRegion) {
 		int result = 0;
 		if (regions != null) {

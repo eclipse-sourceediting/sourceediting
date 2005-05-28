@@ -22,10 +22,5 @@ public interface ICSSNodeList {
 	 */
 	int getLength();
 
-	/**
-	 * @return com.ibm.sed.treemodel.css.CSSNode
-	 * @param index
-	 *            int
-	 */
 	ICSSNode item(int index);
 }

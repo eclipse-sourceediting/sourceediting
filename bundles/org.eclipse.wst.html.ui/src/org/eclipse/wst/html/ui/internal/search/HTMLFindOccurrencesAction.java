@@ -30,17 +30,11 @@ public class HTMLFindOccurrencesAction extends BasicFindOccurrencesAction {
 		super(bundle, prefix, editor);
 	}
 
-	/**
-	 * @see com.ibm.sse.editor.internal.search.BasicFindOccurrencesAction#getPartitionTypes()
-	 */
 	public String[] getPartitionTypes() {
 
 		return new String[]{IHTMLPartitionTypes.HTML_DEFAULT, IXMLPartitions.XML_DEFAULT};
 	}
 
-	/**
-	 * @see com.ibm.sse.editor.internal.search.BasicFindOccurrencesAction#getRegionTypes()
-	 */
 	public String[] getRegionTypes() {
 
 		return new String[]{DOMRegionContext.XML_TAG_NAME, DOMRegionContext.XML_TAG_ATTRIBUTE_NAME, DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE};

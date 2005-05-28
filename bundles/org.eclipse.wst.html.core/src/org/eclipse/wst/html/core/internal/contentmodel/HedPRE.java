@@ -63,7 +63,6 @@ final class HedPRE extends HedInlineContainer {
 	 * It is <code>%pre.exclusion;</code>.
 	 * %pre.exclusion is:
 	 * IMG | OBJECT | APPLET | BIG | SMALL | SUB | SUP | FONT | BASEFONT
-	 * @see com.ibm.sed.contentmodel.html.HTMLElementDeclaration
 	 */
 	public CMContent getExclusion() {
 		if (exclusion != null)

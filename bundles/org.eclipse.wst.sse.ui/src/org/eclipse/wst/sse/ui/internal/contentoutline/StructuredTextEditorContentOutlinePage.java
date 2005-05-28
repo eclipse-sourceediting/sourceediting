@@ -251,9 +251,7 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 		return getTreeViewer().getControl();
 	}
 
-	/**
-	 * @return com.ibm.sed.treemodel.IStructuredModel
-	 */
+
 	protected IStructuredModel getModel() {
 		return fModel;
 	}

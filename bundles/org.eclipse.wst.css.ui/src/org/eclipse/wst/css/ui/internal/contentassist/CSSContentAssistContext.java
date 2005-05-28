@@ -69,16 +69,10 @@ class CSSContentAssistContext {
 		return fDocumentOffset;
 	}
 
-	/**
-	 * @return com.ibm.sed.structuredDocument.IStructuredDocument
-	 */
 	IStructuredDocument getStructuredDocument() {
 		return fStructuredDocument;
 	}
 
-	/**
-	 * @return com.ibm.sse.model.css.model.ICSSModel
-	 */
 	ICSSModel getModel() {
 		return fModel;
 	}
@@ -95,9 +89,6 @@ class CSSContentAssistContext {
 		return fQuote;
 	}
 
-	/**
-	 *  
-	 */
 	ITextRegion getRegionByOffset(int offset) {
 		ITextRegion region = null;
 		if (fStructuredDocument != null) {
@@ -127,53 +118,14 @@ class CSSContentAssistContext {
 		return fReplaceBegin;
 	}
 
-	/**
-	 * 
-	 * @return com.ibm.sed.structuredDocument.ITextRegion
-	 */
-	//	ITextRegion getSignificantTargetRegion() {
-	//		ITextRegion targetRegion = getTargetRegion();
-	//		RegionIterator iterator = null;
-	//		if (targetRegion == null) {
-	//			if (0 < fCursorPos) {
-	//				iterator = new RegionIterator(fStructuredDocument, fCursorPos - 1);
-	//			}
-	//		} else {
-	//			iterator = getRegionIterator();
-	//		}
-	//		if (iterator != null) {
-	//			while (iterator.hasPrev()) {
-	//				ITextRegion region = iterator.prev();
-	//				String type = region.getType();
-	//				if (type != CSSRegionContexts.CSS_S && type !=
-	// CSSRegionContexts.CSS_COMMENT &&
-	//					type != CSSRegionContexts.CSS_CDO && type != CSSRegionContexts.CSS_CDC)
-	// {
-	//					targetRegion = region;
-	//					break;
-	//				}
-	//			}
-	//		}
-	//
-	//		return targetRegion;
-	//	}
-	/**
-	 *  
-	 */
 	ICSSNode getTargetNode() {
 		return fTargetNode;
 	}
 
-	/**
-	 *  
-	 */
 	private int getTargetPos() {
 		return fTargetPos;
 	}
 
-	/**
-	 * @return com.ibm.sed.structuredDocument.ITextRegion
-	 */
 	ITextRegion getTargetRegion() {
 		return getRegionByOffset(getTargetPos());
 	}
@@ -186,10 +138,6 @@ class CSSContentAssistContext {
 		return (fStructuredDocument != null) ? fStructuredDocument.getRegionAtCharacterOffset(offset) : null;
 	}
 
-	/**
-	 * 
-	 * @return com.ibm.sed.structuredDocument.ITextRegion
-	 */
 	ITextRegion getTargetRegionPrevious() {
 		ITextRegion previousRegion = null;
 		ITextRegion targetRegion = getTargetRegion();

@@ -126,10 +126,6 @@ public class XMLModelParser {
 	/**
 	 * changeAttrName method
 	 * 
-	 * @param flatNode
-	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegion
-	 * @param region
-	 *            com.ibm.sed.structuredDocument.ITextRegion
 	 */
 	private void changeAttrName(IStructuredDocumentRegion flatNode, ITextRegion region) {
 		int offset = flatNode.getStart();
@@ -171,10 +167,6 @@ public class XMLModelParser {
 	/**
 	 * changeAttrValue method
 	 * 
-	 * @param flatNode
-	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegion
-	 * @param region
-	 *            com.ibm.sed.structuredDocument.ITextRegion
 	 */
 	private void changeAttrValue(IStructuredDocumentRegion flatNode, ITextRegion region) {
 		int offset = flatNode.getStart();
@@ -215,10 +207,6 @@ public class XMLModelParser {
 	/**
 	 * changeData method
 	 * 
-	 * @param flatNode
-	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegion
-	 * @param region
-	 *            com.ibm.sed.structuredDocument.ITextRegion
 	 */
 	private void changeData(IStructuredDocumentRegion flatNode, ITextRegion region) {
 		int offset = flatNode.getStart();
@@ -312,10 +300,6 @@ public class XMLModelParser {
 	/**
 	 * changeRegion method
 	 * 
-	 * @param flatNode
-	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegion
-	 * @param region
-	 *            com.ibm.sed.structuredDocument.ITextRegion
 	 */
 	void changeRegion(IStructuredDocumentRegion flatNode, ITextRegion region) {
 		if (flatNode == null || region == null)
@@ -529,8 +513,6 @@ public class XMLModelParser {
 	/**
 	 * changeStructuredDocumentRegion method
 	 * 
-	 * @param flatNode
-	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
 	private void changeStructuredDocumentRegion(IStructuredDocumentRegion flatNode) {
 		if (flatNode == null)
@@ -884,8 +866,6 @@ public class XMLModelParser {
 	/**
 	 * insertCDATASection method
 	 * 
-	 * @param flatNode
-	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
 	private void insertCDATASection(IStructuredDocumentRegion flatNode) {
 		ITextRegionList regions = flatNode.getRegions();
@@ -910,8 +890,6 @@ public class XMLModelParser {
 	/**
 	 * insertComment method
 	 * 
-	 * @param flatNode
-	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
 	private void insertComment(IStructuredDocumentRegion flatNode) {
 		ITextRegionList regions = flatNode.getRegions();
@@ -973,8 +951,6 @@ public class XMLModelParser {
 	/**
 	 * insertDecl method
 	 * 
-	 * @param flatNode
-	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
 	private void insertDecl(IStructuredDocumentRegion flatNode) {
 		ITextRegionList regions = flatNode.getRegions();
@@ -1067,8 +1043,6 @@ public class XMLModelParser {
 	/**
 	 * insertEndTag method
 	 * 
-	 * @param flatNode
-	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
 	private void insertEndTag(IStructuredDocumentRegion flatNode) {
 		ITextRegionList regions = flatNode.getRegions();
@@ -1117,8 +1091,6 @@ public class XMLModelParser {
 	/**
 	 * insertEntityRef method
 	 * 
-	 * @param flatNode
-	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
 	private void insertEntityRef(IStructuredDocumentRegion flatNode) {
 		ITextRegionList regions = flatNode.getRegions();
@@ -1180,8 +1152,6 @@ public class XMLModelParser {
 	/**
 	 * insertInvalidDecl method
 	 * 
-	 * @param flatNode
-	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
 	private void insertInvalidDecl(IStructuredDocumentRegion flatNode) {
 		ITextRegionList regions = flatNode.getRegions();
@@ -1206,8 +1176,6 @@ public class XMLModelParser {
 	/**
 	 * insertJSPTag method
 	 * 
-	 * @param flatNode
-	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
 	private void insertNestedTag(IStructuredDocumentRegion flatNode) {
 		ITextRegionList regions = flatNode.getRegions();
@@ -1406,8 +1374,6 @@ public class XMLModelParser {
 	/**
 	 * insertPI method
 	 * 
-	 * @param flatNode
-	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
 	private void insertPI(IStructuredDocumentRegion flatNode) {
 		ITextRegionList regions = flatNode.getRegions();
@@ -1468,8 +1434,6 @@ public class XMLModelParser {
 	/**
 	 * insertStartTag method
 	 * 
-	 * @param flatNode
-	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
 	private void insertStartTag(IStructuredDocumentRegion flatNode) {
 		ITextRegionList regions = flatNode.getRegions();
@@ -1548,8 +1512,6 @@ public class XMLModelParser {
 	/**
 	 * insertStructuredDocumentRegion method
 	 * 
-	 * @param flatNode
-	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
 	protected void insertStructuredDocumentRegion(IStructuredDocumentRegion flatNode) {
 		String regionType = StructuredDocumentRegionUtil.getFirstRegionType(flatNode);
@@ -1612,8 +1574,6 @@ public class XMLModelParser {
 	 * insertText method Can be called from subclasses, not to be overrided or
 	 * re-implemented.
 	 * 
-	 * @param flatNode
-	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
 	protected void insertText(IStructuredDocumentRegion flatNode) {
 		TextImpl text = (TextImpl) this.context.findPreviousText();
@@ -2203,8 +2163,6 @@ public class XMLModelParser {
 	/**
 	 * removeStructuredDocumentRegion method
 	 * 
-	 * @param oldStructuredDocumentRegion
-	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
 	private void removeStructuredDocumentRegion(IStructuredDocumentRegion oldStructuredDocumentRegion) {
 		NodeImpl next = (NodeImpl) this.context.getNextNode();
@@ -2333,8 +2291,6 @@ public class XMLModelParser {
 	/**
 	 * replaceRegions method
 	 * 
-	 * @param flatNode
-	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 * @param newRegions
 	 *            java.util.Vector
 	 * @param oldRegions
@@ -2363,10 +2319,6 @@ public class XMLModelParser {
 	/**
 	 * replaceStructuredDocumentRegions method
 	 * 
-	 * @param newStructuredDocumentRegions
-	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegionList
-	 * @param oldStructuredDocumentRegions
-	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegionList
 	 */
 	void replaceStructuredDocumentRegions(IStructuredDocumentRegionList newStructuredDocumentRegions, IStructuredDocumentRegionList oldStructuredDocumentRegions) {
 		if (this.document == null)
@@ -2414,8 +2366,6 @@ public class XMLModelParser {
 	/**
 	 * setupContext method
 	 * 
-	 * @param flatNode
-	 *            com.ibm.sed.structuredDocument.IStructuredDocumentRegion
 	 */
 	private void setupContext(IStructuredDocumentRegion startStructuredDocumentRegion) {
 		int offset = startStructuredDocumentRegion.getStart();

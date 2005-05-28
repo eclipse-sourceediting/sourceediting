@@ -19,8 +19,8 @@ import org.eclipse.wst.dtd.core.internal.DTDNode;
 import org.eclipse.wst.dtd.core.internal.NodeList;
 
 
-/**
- * Based on com.ibm.etools.dtd.editor.viewers.DTDLabelProvider
+/*
+ * Based on DTDLabelProvider
  */
 
 public class DTDLabelProvider extends LabelProvider {

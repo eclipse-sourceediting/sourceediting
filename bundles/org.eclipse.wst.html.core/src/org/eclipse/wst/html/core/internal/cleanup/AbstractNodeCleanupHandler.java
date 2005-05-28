@@ -31,9 +31,7 @@ abstract class AbstractNodeCleanupHandler implements IStructuredCleanupHandler {
 		fCleanupPreferences = cleanupPreferences;
 	}
 
-	/**
-	 * @see com.ibm.sed.partitionCleanup.CleanupHandler#getCleanupPreferences()
-	 */
+
 	public IStructuredCleanupPreferences getCleanupPreferences() {
 		if (fCleanupPreferences == null) {
 			fCleanupPreferences = new StructuredCleanupPreferences();
@@ -53,9 +51,7 @@ abstract class AbstractNodeCleanupHandler implements IStructuredCleanupHandler {
 		return fCleanupPreferences;
 	}
 
-	/**
-	 * @see com.ibm.sed.partitionCleanup.CleanupHandler#setProgressMonitor(org.eclipse.core.runtime.IProgressMonitor)
-	 */
+
 	public void setProgressMonitor(IProgressMonitor progressMonitor) {
 
 		fProgressMonitor = progressMonitor;

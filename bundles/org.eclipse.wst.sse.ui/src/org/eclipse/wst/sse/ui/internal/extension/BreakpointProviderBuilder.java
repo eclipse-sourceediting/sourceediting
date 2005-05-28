@@ -388,9 +388,6 @@ public class BreakpointProviderBuilder extends RegistryReader {
 		readRegistry(registry, PLUGIN_ID, extensionPoint);
 	}
 
-	/*
-	 * @see com.ibm.sed.edit.internal.extension.RegistryReader#readElement(org.eclipse.core.runtime.IConfigurationElement)
-	 */
 	protected boolean readElement(IConfigurationElement element) {
 		String tag = element.getName();
 		if (tag.equals(targetContributionTag)) {

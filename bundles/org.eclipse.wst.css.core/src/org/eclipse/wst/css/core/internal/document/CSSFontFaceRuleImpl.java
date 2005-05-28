@@ -28,19 +28,10 @@ class CSSFontFaceRuleImpl extends CSSRuleDeclContainer implements CSSFontFaceRul
 		super();
 	}
 
-	/**
-	 * @param that
-	 *            com.ibm.sed.css.treemodel.CSSFontFaceRuleImpl
-	 */
 	CSSFontFaceRuleImpl(CSSFontFaceRuleImpl that) {
 		super(that);
 	}
 
-	/**
-	 * @return com.ibm.sed.css.interfaces.CSSNode
-	 * @param deep
-	 *            boolean
-	 */
 	public ICSSNode cloneNode(boolean deep) {
 		CSSFontFaceRuleImpl cloned = new CSSFontFaceRuleImpl(this);
 

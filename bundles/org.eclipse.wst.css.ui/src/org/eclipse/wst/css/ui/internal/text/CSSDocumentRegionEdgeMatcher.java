@@ -52,14 +52,6 @@ public class CSSDocumentRegionEdgeMatcher implements ICharacterPairMatcher {
 		return fAnchor;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.editor.ui.text.DocumentRegionEdgeMatcher#match(org.eclipse.jface.text.IDocument,
-	 *      int)
-	 */
-
-
 	public IRegion match(IDocument document, int offset) {
 		if (document instanceof IStructuredDocument) {
 			IStructuredDocumentRegion r = ((IStructuredDocument) document).getRegionAtCharacterOffset(offset);

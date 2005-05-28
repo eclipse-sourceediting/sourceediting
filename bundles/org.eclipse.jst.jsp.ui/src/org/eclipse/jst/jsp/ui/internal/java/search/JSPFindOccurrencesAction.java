@@ -46,16 +46,11 @@ public class JSPFindOccurrencesAction extends BasicFindOccurrencesAction impleme
 		super(bundle, prefix, editor);
 	}
 
-	/**
-	 * @see com.ibm.sse.editor.internal.search.BasicFindOccurrencesAction#getSearchQuery()
-	 */
+
 	public ISearchQuery getSearchQuery() {
 		return new JSPSearchQuery(getJspFile(), getJavaElement());
 	}
 
-	/**
-	 * @see com.ibm.sse.editor.internal.search.BasicFindOccurrencesAction#update()
-	 */
 	public void update() {
 
 		super.update();
@@ -92,16 +87,10 @@ public class JSPFindOccurrencesAction extends BasicFindOccurrencesAction impleme
 		return elements;
 	}
 
-	/**
-	 * @see com.ibm.sse.editor.internal.search.BasicFindOccurrencesAction#getPartitionTypes()
-	 */
 	public String[] getPartitionTypes() {
 		return new String[]{IJSPPartitionTypes.JSP_DEFAULT, IJSPPartitionTypes.JSP_CONTENT_JAVA};
 	}
 
-	/**
-	 * @see com.ibm.sse.editor.internal.search.BasicFindOccurrencesAction#getRegionTypes()
-	 */
 	public String[] getRegionTypes() {
 		return new String[]{DOMRegionContext.BLOCK_TEXT, DOMJSPRegionContexts.JSP_CONTENT};
 	}

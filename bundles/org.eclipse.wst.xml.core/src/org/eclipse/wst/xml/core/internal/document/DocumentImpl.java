@@ -301,12 +301,6 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 		return comment;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.model.xml.XMLDocument#createCommentElement(java.lang.String,
-	 *      boolean)
-	 */
 	public Element createCommentElement(String tagName, boolean isJSPTag) throws DOMException {
 		if (!isJSPType() && isJSPTag) {
 			throw new DOMException(DOMException.INVALID_MODIFICATION_ERR, new String());

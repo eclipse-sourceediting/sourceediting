@@ -56,12 +56,6 @@ class CSSModelUtil {
 		}
 	}
 
-	/**
-	 * @param node
-	 *            org.eclipse.wst.css.core.model.interfaces.ICSSNode
-	 * @param structuredDocument
-	 *            com.ibm.sed.structuredDocument.IStructuredDocument
-	 */
 	static boolean diagnoseNode(ICSSNode parent, IStructuredDocument structuredDocument) {
 		// check this
 		Vector errors = new Vector();

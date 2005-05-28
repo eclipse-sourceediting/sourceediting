@@ -821,7 +821,6 @@ private final String doBlockTagScan() throws IOException {
 	/**
 	 * user method
 	 *
-	 * @see com.ibm.sed.parser.BlockTokenizer#newInstance()
 	 */
 	public BlockTokenizer newInstance() {
 		JSPTokenizer newInstance = new JSPTokenizer();

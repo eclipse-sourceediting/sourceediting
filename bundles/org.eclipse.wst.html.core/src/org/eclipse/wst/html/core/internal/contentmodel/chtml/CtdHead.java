@@ -156,7 +156,6 @@ final class CtdHead extends ComplexTypeDefinition {
 
 	/**
 	 * Element content.<br>
-	 * @see com.ibm.sed.contentmodel.html.ComplexTypeDefinition
 	 */
 	public int getContentType() {
 		return CMElementDeclaration.ELEMENT;

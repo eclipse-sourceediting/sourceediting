@@ -32,10 +32,6 @@ class CSSMediaRuleImpl extends CSSRuleImpl implements ICSSMediaRule {
 		super();
 	}
 
-	/**
-	 * @param that
-	 *            com.ibm.sed.css.treemodel.CSSMediaRuleImpl
-	 */
 	CSSMediaRuleImpl(CSSMediaRuleImpl that) {
 		super(that);
 	}
@@ -55,11 +51,6 @@ class CSSMediaRuleImpl extends CSSRuleImpl implements ICSSMediaRule {
 		return ret;
 	}
 
-	/**
-	 * @return com.ibm.sed.css.interfaces.CSSNode
-	 * @param deep
-	 *            boolean
-	 */
 	public ICSSNode cloneNode(boolean deep) {
 		CSSMediaRuleImpl cloned = new CSSMediaRuleImpl(this);
 
@@ -101,11 +92,6 @@ class CSSMediaRuleImpl extends CSSRuleImpl implements ICSSMediaRule {
 		return list;
 	}
 
-	/**
-	 * @return com.ibm.sed.css.treemodel.CSSRuleImpl
-	 * @param index
-	 *            int
-	 */
 	CSSRuleImpl getIndexedRule(int index) {
 		if (index < 0)
 			return null;

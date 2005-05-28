@@ -64,7 +64,6 @@ final class HedLABEL extends HedInlineContainer {
 	 * Exclusion.
 	 * <code>LABEL</code> has the exclusion.
 	 * It is <code>LABEL</code> itself.
-	 * @see com.ibm.sed.contentmodel.html.HTMLElementDeclaration
 	 */
 	public CMContent getExclusion() {
 		if (exclusion != null)

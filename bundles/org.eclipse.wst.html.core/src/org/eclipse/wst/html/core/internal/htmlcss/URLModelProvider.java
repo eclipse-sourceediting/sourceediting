@@ -89,7 +89,6 @@ public class URLModelProvider {
 		}
 
 		// need to remove file:// scheme if necessary
-		// see com.ibm.sed.util.ProjectResolver.getLocationByURI()
 		try {
 			final java.net.URL aURL = new java.net.URL(absURL);
 			// An actual URL was given, only file:/// is supported

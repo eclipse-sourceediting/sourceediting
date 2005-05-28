@@ -31,9 +31,6 @@ public class JSPSingleFileSearchRequestor extends BasicJSPSearchRequestor {
 		this.fQuery = query;
 	}
 	
-	/**
-	 * @see org.eclipse.jst.jsp.ui.internal.java.search.BasicJSPSearchRequestor#addSearchMatch(com.ibm.sse.model.text.IStructuredDocument, org.eclipse.core.resources.IFile, int, int, java.lang.String)
-	 */
 	protected void addSearchMatch(IDocument jspDocument, IFile jspFile, int jspStart, int jspEnd, String jspText) {
 		// add match to JSP query...
 		this.fQuery.addMatch(jspDocument, jspStart, jspEnd);

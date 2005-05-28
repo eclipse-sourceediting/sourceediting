@@ -60,8 +60,6 @@ final class HedMENU extends HedListItemContainer {
 	 * %heading; is: H1 | H2 | H3 | H4 | H5 | H6.
 	 * %list; is : UL | OL | DIR | MENU.
 	 * %preformatted; is PRE.
-	 * <br>
-	 * @see com.ibm.sed.contentmodel.html.HTMLElementDeclaration
 	 */
 	public CMContent getExclusion() {
 		if (exclusion != null)

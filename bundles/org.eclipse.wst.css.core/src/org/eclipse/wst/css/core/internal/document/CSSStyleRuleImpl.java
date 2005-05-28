@@ -32,19 +32,10 @@ class CSSStyleRuleImpl extends CSSRuleDeclContainer implements ICSSStyleRule {
 		super();
 	}
 
-	/**
-	 * @param that
-	 *            com.ibm.sed.css.treemodel.CSSStyleRuleImpl
-	 */
 	CSSStyleRuleImpl(CSSStyleRuleImpl that) {
 		super(that);
 	}
 
-	/**
-	 * @return com.ibm.sed.css.interfaces.CSSNode
-	 * @param deep
-	 *            boolean
-	 */
 	public ICSSNode cloneNode(boolean deep) {
 		CSSStyleRuleImpl cloned = new CSSStyleRuleImpl(this);
 
@@ -68,9 +59,6 @@ class CSSStyleRuleImpl extends CSSRuleDeclContainer implements ICSSStyleRule {
 		return STYLERULE_NODE;
 	}
 
-	/**
-	 * @return com.ibm.sed.css.interfaces.ICSSSelectorList
-	 */
 	public ICSSSelectorList getSelectors() {
 		return fSelectorList;
 	}

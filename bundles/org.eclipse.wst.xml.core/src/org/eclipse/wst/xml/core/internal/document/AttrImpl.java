@@ -115,11 +115,7 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 		return 0;
 	}
 
-	/**
-	 * getEqualRegion method
-	 * 
-	 * @return com.ibm.sed.structuredDocument.ITextRegion
-	 */
+	
 	public ITextRegion getEqualRegion() {
 		return this.equalRegion;
 	}
@@ -146,11 +142,7 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 		return this.name;
 	}
 
-	/**
-	 * getNameRegion method
-	 * 
-	 * @return com.ibm.sed.structuredDocument.ITextRegion
-	 */
+
 	public ITextRegion getNameRegion() {
 		return this.nameRegion;
 	}
@@ -360,11 +352,6 @@ public class AttrImpl extends NodeImpl implements IDOMAttr {
 		return buffer.toString();
 	}
 
-	/**
-	 * getValueRegion method
-	 * 
-	 * @return com.ibm.sed.structuredDocument.ITextRegion
-	 */
 	public ITextRegion getValueRegion() {
 		return this.valueRegion;
 	}
@@ -621,12 +608,6 @@ public boolean hasNestedValue() {
 		removeRegions();
 	}
 
-	/**
-	 * setEqualRegion method
-	 * 
-	 * @param equalRegion
-	 *            com.ibm.sed.structuredDocument.ITextRegion
-	 */
 	void setEqualRegion(ITextRegion equalRegion) {
 		this.equalRegion = equalRegion;
 	}
@@ -651,18 +632,10 @@ public boolean hasNestedValue() {
 		}
 	}
 
-	/**
-	 * setNameRegion method
-	 * 
-	 * @param nameRegion
-	 *            com.ibm.sed.structuredDocument.ITextRegion
-	 */
 	void setNameRegion(ITextRegion nameRegion) {
 		this.nameRegion = nameRegion;
 	}
 
-	/**
-	 */
 	protected void setNamespaceURI(String namespaceURI) {
 		this.namespaceURI = namespaceURI;
 	}
@@ -735,20 +708,12 @@ public boolean hasNestedValue() {
 		}
 	}
 
-	/**
-	 * setValueRegion method
-	 * 
-	 * @param newValueRegion
-	 *            com.ibm.sed.structuredDocument.ITextRegion
-	 */
 	void setValueRegion(ITextRegion valueRegion) {
 		this.valueRegion = valueRegion;
 		if (valueRegion != null)
 			this.valueSource = null;
 	}
 
-	/**
-	 */
 	public void setValueSource(String source) {
 		if (this.ownerElement != null && !this.ownerElement.isDataEditable()) {
 			throw new DOMException(DOMException.NO_MODIFICATION_ALLOWED_ERR, new String());

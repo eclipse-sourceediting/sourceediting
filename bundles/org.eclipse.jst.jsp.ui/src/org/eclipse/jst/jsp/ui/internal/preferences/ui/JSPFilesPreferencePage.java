@@ -22,9 +22,7 @@ import org.eclipse.wst.html.ui.internal.preferences.ui.HTMLFilesPreferencePage;
 
 public class JSPFilesPreferencePage extends HTMLFilesPreferencePage {
 
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.preferences.ui.AbstractPreferencePage#getModelPreferences()
-	 */
+
 	protected Preferences getModelPreferences() {
 		return JSPCorePlugin.getDefault().getPluginPreferences();
 	}
@@ -36,9 +34,6 @@ public class JSPFilesPreferencePage extends HTMLFilesPreferencePage {
 		return JSPUIPlugin.getDefault().getPreferenceStore();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.xml.preferences.ui.XMLFilesPreferencePage#doSavePreferenceStore()
-	 */
 	protected void doSavePreferenceStore() {
 		JSPCorePlugin.getDefault().savePluginPreferences(); // model
 	}

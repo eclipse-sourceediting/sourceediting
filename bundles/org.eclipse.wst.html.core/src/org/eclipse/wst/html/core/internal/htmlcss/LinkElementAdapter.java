@@ -61,10 +61,6 @@ public class LinkElementAdapter extends AbstractStyleSheetAdapter {
 		adapter.childReplaced();
 	}
 
-	/**
-	 * 
-	 * @return com.ibm.sed.css.model.interfaces.ICSSModel
-	 */
 	protected ICSSModel createModel() {
 		// create phantom(broken link) external CSS model
 		if (getElement() == null)

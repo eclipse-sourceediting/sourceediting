@@ -65,7 +65,6 @@ public interface ICSSDocument extends ICSSNode {
 	ICSSStyleDeclaration createCSSStyleDeclaration();
 
 	/**
-	 * @return com.ibm.sed.treemodel.cei.CSSStyleDeclItem
 	 * @param propertyName
 	 *            java.lang.String
 	 */
@@ -86,9 +85,6 @@ public interface ICSSDocument extends ICSSNode {
 	 */
 	MediaList createMediaList();
 
-	/**
-	 * @return com.ibm.sed.css.interfaces.ICSSModel
-	 */
 	ICSSModel getModel();
 
 	/**

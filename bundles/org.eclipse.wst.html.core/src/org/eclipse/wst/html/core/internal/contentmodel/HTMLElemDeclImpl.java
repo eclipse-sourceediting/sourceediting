@@ -93,10 +93,6 @@ abstract class HTMLElemDeclImpl extends CMContentImpl implements HTMLElementDecl
 	 */
 	protected abstract void createAttributeDeclarations();
 
-	/**
-	 * 
-	 * @return com.ibm.sed.contentmodel.html.ComplexTypeDefinition
-	 */
 	private ComplexTypeDefinition createComplexTypeDefinition() {
 		if (typeDefinitionName.equals(ComplexTypeDefinitionFactory.CTYPE_CDATA) || typeDefinitionName.equals(ComplexTypeDefinitionFactory.CTYPE_EMPTY) || typeDefinitionName.equals(ComplexTypeDefinitionFactory.CTYPE_PCDATA))
 			return null;
@@ -111,8 +107,6 @@ abstract class HTMLElemDeclImpl extends CMContentImpl implements HTMLElementDecl
 
 	/**
 	 * Get an attribute declaration.
-	 * <br>
-	 * @see com.ibm.sed.contentmodel.html.HTMLElementDeclaration
 	 */
 	public HTMLAttributeDeclaration getAttributeDeclaration(String attrName) {
 		if (attributes == null) {
@@ -141,7 +135,6 @@ abstract class HTMLElemDeclImpl extends CMContentImpl implements HTMLElementDecl
 
 	/**
 	 * Get an instance of complex type definition.
-	 * @return com.ibm.sed.contentmodel.html.ComplexTypeDefinition
 	 */
 	private ComplexTypeDefinition getComplexTypeDefinition() {
 		if (typeDefinition == null)
@@ -204,8 +197,6 @@ abstract class HTMLElemDeclImpl extends CMContentImpl implements HTMLElementDecl
 	 * Exclusion.
 	 * Almost elements don't have a exclusion.
 	 * Only classes those have exclusion should override this method.
-	 * <br>
-	 * @see com.ibm.sed.contentmodel.html.HTMLElementDeclaration
 	 */
 	public CMContent getExclusion() {
 		return null;
@@ -222,8 +213,6 @@ abstract class HTMLElemDeclImpl extends CMContentImpl implements HTMLElementDecl
 	 * Inclusion.
 	 * Almost elements don't have a inclusion.
 	 * Only classes those have inclusion should override this method.
-	 * <br>
-	 * @see com.ibm.sed.contentmodel.html.HTMLElementDeclaration
 	 */
 	public CMContent getInclusion() {
 		return null;

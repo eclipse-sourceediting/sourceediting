@@ -21,9 +21,6 @@ import org.eclipse.wst.sse.ui.internal.taginfo.AbstractBestMatchHoverProcessor;
 public class HTMLBestMatchHoverProcessor extends AbstractBestMatchHoverProcessor {
 	HTMLTagInfoHoverProcessor fTagInfoHover;
 
-	/* (non-Javadoc)
-	 * @see com.ibm.sse.editor.structured.taginfo.AbstractBestMatchHoverProcessor#getTagInfoHover()
-	 */
 	protected ITextHover getTagInfoHover() {
 		if (fTagInfoHover == null) {
 			fTagInfoHover = new HTMLTagInfoHoverProcessor();

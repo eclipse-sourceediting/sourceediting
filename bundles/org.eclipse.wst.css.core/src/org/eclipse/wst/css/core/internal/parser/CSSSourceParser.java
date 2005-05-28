@@ -59,11 +59,6 @@ public class CSSSourceParser implements RegionParser {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.model.parser.RegionParser#getNodes()
-	 */
 	public IStructuredDocumentRegion getDocumentRegions() {
 		IStructuredDocumentRegion headnode = null;
 		if (headnode == null) {
@@ -83,11 +78,6 @@ public class CSSSourceParser implements RegionParser {
 		return headnode;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.model.parser.RegionParser#getRegions()
-	 */
 	public List getRegions() {
 		IStructuredDocumentRegion headNode = null;
 		if (!getTokenizer().isEOF()) {
@@ -123,48 +113,23 @@ public class CSSSourceParser implements RegionParser {
 		return allRegions;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.model.parser.RegionParser#reset(java.io.Reader)
-	 */
 	public void reset(Reader reader) {
 		primReset();
 		getTokenizer().reset(reader, 0);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.model.parser.RegionParser#reset(java.io.Reader, int)
-	 */
 	public void reset(Reader reader, int offset) {
 		reset(reader);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.model.parser.RegionParser#reset(java.lang.String)
-	 */
 	public void reset(String input) {
 		reset(new StringReader(input));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.model.parser.RegionParser#reset(java.lang.String, int)
-	 */
 	public void reset(String input, int offset) {
 		reset(input);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sse.model.parser.RegionParser#newInstance()
-	 */
 	public RegionParser newInstance() {
 		return new CSSSourceParser();
 	}

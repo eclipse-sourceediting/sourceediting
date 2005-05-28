@@ -69,11 +69,6 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 		_getRegions().add(aRegion);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegion#adjust(int)
-	 */
 	public void adjust(int i) {
 		start += i;
 	}
@@ -86,46 +81,23 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 		start += i;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegion#adjustTextLength(int)
-	 */
 	public void adjustTextLength(int i) {
 		// not supported
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegionCollection#containsOffset(int)
-	 */
 	public boolean containsOffset(int i) {
 
 		return getStartOffset() <= i && i < getEndOffset();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegionCollection#containsOffset(com.ibm.sed.structured.text.ITextRegion,
-	 *      int)
-	 */
 	public boolean containsOffset(ITextRegion containedRegion, int offset) {
 		return getStartOffset(containedRegion) <= offset && offset < getEndOffset(containedRegion);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegion#equatePositions(com.ibm.sed.structured.text.ITextRegion)
-	 */
 	public void equatePositions(ITextRegion region) {
 		start = region.getStart();
 		length = region.getLength();
-		//textLength = region.getTextLength();
-
 	}
 
 	/**
@@ -144,31 +116,16 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 		return getEnd();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegionCollection#getEndOffset(com.ibm.sed.structured.text.ITextRegion)
-	 */
 	public int getEndOffset(ITextRegion containedRegion) {
 		return getStartOffset(containedRegion) + containedRegion.getLength();
 	}
 
-	//	public IStructuredDocumentRegion getFirstNode() {
-	//		IStructuredDocumentRegion aNode = (IStructuredDocumentRegion)
-	// fOwningDocument.getFirstStructuredDocumentRegion();
-	//		return aNode;
-	//	}
 	public ITextRegion getFirstRegion() {
 		if (_getRegions() == null)
 			return null;
 		return _getRegions().get(0);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegionCollection#getFullText()
-	 */
 	public String getFullText() {
 		try {
 			return getParentDocument().get(start, length);
@@ -223,11 +180,6 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 		return _getRegions().size();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.IStructuredDocumentRegion#getDocument()
-	 */
 	public IStructuredDocument getParentDocument() {
 
 		return fParentDocument;
@@ -291,11 +243,6 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 		return getStart();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegionCollection#getStartOffset(com.ibm.sed.structured.text.ITextRegion)
-	 */
 	public int getStartOffset(ITextRegion containedRegion) {
 		// assert: containedRegion can not be null
 		// (might be performance hit if literally put in assert call,
@@ -352,14 +299,7 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegion#getTextEnd()
-	 */
 	public int getTextEnd() {
-
-		//return start + textLength;
 		return start + length;
 	}
 
@@ -371,22 +311,11 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 		return getStartOffset() + region.getTextEnd();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegionCollection#getTextEndOffset(com.ibm.sed.structured.text.ITextRegion)
-	 */
 	public int getTextEndOffset(ITextRegion containedRegion) {
 		return getStartOffset(containedRegion) + containedRegion.getTextLength();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegion#getTextLength()
-	 */
 	public int getTextLength() {
-		//return textLength;
 		return length;
 	}
 
@@ -618,17 +547,6 @@ public class BasicStructuredDocumentRegion implements IStructuredDocumentRegion 
 		}
 	}
 
-	// This is a language specific method (e.g. HTML, Java, Prolog, etc.) so
-	// could/should be made configurable.
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegion#updateModel(java.lang.Object,
-	 *      com.ibm.sed.structured.text.IStructuredDocumentRegion,
-	 *      java.lang.String, int, int)
-	 */
-	//	public StructuredDocumentEvent updateModel(Object requester, String
-	// changes, int start, int end, IStructuredDocumentRegion flatnode) {
 	public StructuredDocumentEvent updateRegion(Object requester, IStructuredDocumentRegion structuredDocumentRegion, String changes, int requestStart, int lengthToReplace) {
 		StructuredDocumentEvent result = null;
 		int lengthDifference = Utilities.calculateLengthDifference(changes, lengthToReplace);

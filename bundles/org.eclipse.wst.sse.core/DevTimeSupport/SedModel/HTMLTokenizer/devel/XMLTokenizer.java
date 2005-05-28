@@ -918,7 +918,6 @@ public void reset(java.io.Reader in, int newOffset) {
 	/**
 	 * user method
 	 *
-	 * @see com.ibm.sed.parser.BlockTokenizer#newInstance()
 	 */
 	public BlockTokenizer newInstance() {
 		XMLTokenizer newInstance = new XMLTokenizer();

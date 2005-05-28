@@ -284,7 +284,6 @@ public class HTMLValidator implements IValidator {
 	/*
 	 * added to get rid or dependency on IWorkbenchHelper
 	 * 
-	 * @see com.ibm.sse.editor.extensions.validator.IWorkbenchHelper#getResource(com.ibm.sse.editor.extensions.validator.IFileDelta)
 	 */
 	public IResource getResource(String delta) {
 		return  ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(delta));

@@ -52,8 +52,7 @@ final class HedHTML extends HTMLElemDeclImpl {
 	 *     <td>{@link HTML_VERSION_TRANSITIONAL}</td><td>deplecated in HTML4.01</td>
 	 *   </tr>
 	 * </tbody>
-	 * </table><br>
-	 * @see com.ibm.sed.contentmodel.html.AbstractHTMLElemDeclImpl
+	 * </table>
 	 */
 	protected void createAttributeDeclarations() {
 		if (attributes != null)

@@ -36,10 +36,6 @@ public class DeclContainerFormatter extends DefaultCSSSourceFormatter {
 	/**
 	 * 
 	 * @return java.lang.String
-	 * @param region
-	 *            com.ibm.sed.structuredDocument.ITextRegion
-	 * @param prevRegion
-	 *            com.ibm.sed.structuredDocument.ITextRegion
 	 */
 	protected String decoratedSelectorRegion(CompoundRegion region, CompoundRegion prevRegion, CSSCleanupStrategy stgy) {
 		String text = region.getText();

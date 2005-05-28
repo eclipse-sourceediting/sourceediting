@@ -48,10 +48,6 @@ abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, Indexed
 		super();
 	}
 
-	/**
-	 * @param that
-	 *            com.ibm.sed.css.treemodel.CSSNodeImpl
-	 */
 	CSSNodeImpl(CSSNodeImpl that) {
 		if (that != null) {
 			this.fOwnerDocument = that.fOwnerDocument;
@@ -65,23 +61,10 @@ abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, Indexed
 		}
 	}
 
-	/**
-	 * @return com.ibm.sed.css.treemodel.CSSNodeImpl
-	 * @param newChild
-	 *            com.ibm.sed.css.treemodel.CSSNodeImpl
-	 * @exception org.w3c.dom.DOMException
-	 *                The exception description.
-	 */
 	protected CSSNodeImpl appendChild(CSSNodeImpl newChild) throws org.w3c.dom.DOMException {
 		return insertBefore(newChild, null);
 	}
 
-	/**
-	 * @param newParent
-	 *            com.ibm.sed.css.interfaces.ICSSNode
-	 * @param deep
-	 *            boolean
-	 */
 	void cloneChildNodes(ICSSNode newParent, boolean deep) {
 		if (newParent == null || newParent == this)
 			return;
@@ -125,11 +108,6 @@ abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, Indexed
 		return null;
 	}
 
-	/**
-	 * @return com.ibm.sed.css.treemodel.CSSAttrImpl
-	 * @param name
-	 *            java.lang.String
-	 */
 	protected CSSAttrImpl getAttributeNode(String name) {
 		if (fAttrs == null)
 			return null;
@@ -152,9 +130,6 @@ abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, Indexed
 		return fAttrs;
 	}
 
-	/**
-	 * @return com.ibm.sed.css.treemodel.CSSNodeList
-	 */
 	public ICSSNodeList getChildNodes() {
 		CSSNodeListImpl list = new CSSNodeListImpl();
 		for (ICSSNode node = getFirstChild(); node != null; node = node.getNextSibling()) {
@@ -163,11 +138,6 @@ abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, Indexed
 		return list;
 	}
 
-	/**
-	 * @return com.ibm.sed.css.interfaces.ICSSNode
-	 * @param node
-	 *            com.ibm.sed.css.interfaces.ICSSNode
-	 */
 	ICSSNode getCommonAncestor(ICSSNode node) {
 		if (node == null)
 			return null;
@@ -182,9 +152,6 @@ abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, Indexed
 		return null; // not found
 	}
 
-	/**
-	 * @return com.ibm.sed.css.treemodel.CSSDocumentImpl
-	 */
 	CSSDocumentImpl getContainerDocument() {
 		for (ICSSNode node = this; node != null; node = node.getParentNode()) {
 			if (node instanceof CSSDocumentImpl) {
@@ -196,11 +163,6 @@ abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, Indexed
 		return null;
 	}
 
-	/**
-	 * @return com.ibm.sed.css.treemodel.CSSNodeImpl
-	 * @param offset
-	 *            int
-	 */
 	CSSNodeImpl getContainerNode(int offset) {
 		if (!contains(offset))
 			return null;
@@ -226,61 +188,35 @@ abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, Indexed
 		return null;
 	}
 
-	/**
-	 * @return com.ibm.sed.css.treemodel.CSSNode
-	 */
 	public ICSSNode getFirstChild() {
 		return this.fFirstChild;
 	}
 
-	/**
-	 * @return com.ibm.sed.css.treemodel.CSSNode
-	 */
 	public ICSSNode getLastChild() {
 		return this.fLastChild;
 	}
 
-	/**
-	 * @return com.ibm.sed.css.treemodel.CSSNode
-	 */
 	public ICSSNode getNextSibling() {
 		return this.fNextSibling;
 	}
 
-	/**
-	 * @return com.ibm.sed.css.interfaces.ICSSNode
-	 * @param offset
-	 *            int
-	 */
 	ICSSNode getNodeAt(int offset) {
 		// the same as getContainerNode()
 		return getContainerNode(offset);
 	}
 
-	/**
-	 * @return com.ibm.sed.css.treemodel.CSSDocument
-	 */
 	public ICSSDocument getOwnerDocument() {
 		return this.fOwnerDocument;
 	}
 
-	/**
-	 * @return com.ibm.sed.css.treemodel.CSSNode
-	 */
 	public ICSSNode getParentNode() {
 		return this.fParentNode;
 	}
 
-	/**
-	 * @return com.ibm.sed.css.treemodel.CSSNode
-	 */
 	public ICSSNode getPreviousSibling() {
 		return this.fPreviousSibling;
 	}
 
-	/**
-	 * @return com.ibm.sed.css.interfaces.CSSFactory
-	 */
 	ICSSNode getRootNode() {
 		CSSNodeImpl parent = (CSSNodeImpl) getParentNode();
 		if (parent == null)
@@ -302,15 +238,6 @@ abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, Indexed
 		return false;
 	}
 
-	/**
-	 * @return com.ibm.sed.css.treemodel.CSSNodeImpl
-	 * @param newChild
-	 *            com.ibm.sed.css.treemodel.CSSNodeImpl
-	 * @param refChild
-	 *            com.ibm.sed.css.treemodel.CSSNodeImpl
-	 * @exception org.w3c.dom.DOMException
-	 *                The exception description.
-	 */
 	protected CSSNodeImpl insertBefore(CSSNodeImpl newChild, CSSNodeImpl refChild) throws org.w3c.dom.DOMException {
 		if (newChild == null)
 			return null;
@@ -340,12 +267,6 @@ abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, Indexed
 		return newChild;
 	}
 
-	/**
-	 * @param newAttr
-	 *            com.ibm.sed.css.treemodel.CSSNodeImpl
-	 * @param oldAttr
-	 *            com.ibm.sed.css.treemodel.CSSNodeImpl
-	 */
 	protected void notifyAttrReplaced(CSSNodeImpl newAttr, CSSNodeImpl oldAttr) {
 		// for model
 		ICSSDocument doc = getContainerDocument();
@@ -365,12 +286,6 @@ abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, Indexed
 		notify(type, oldAttr, oldAttr, newAttr, getStartOffset());
 	}
 
-	/**
-	 * @param newChild
-	 *            com.ibm.sed.css.treemodel.CSSNode
-	 * @param oldChild
-	 *            com.ibm.sed.css.treemodel.CSSNode
-	 */
 	protected void notifyChildReplaced(CSSNodeImpl newChild, CSSNodeImpl oldChild) {
 		// for model
 		ICSSDocument doc = getContainerDocument();
@@ -390,10 +305,6 @@ abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, Indexed
 		notify(type, oldChild, oldChild, newChild, getStartOffset());
 	}
 
-	/**
-	 * @param attr
-	 *            com.ibm.sed.css.treemodel.CSSNodeImpl
-	 */
 	void removeAttributeNode(CSSNodeImpl attr) {
 		// find
 		int nAttrs = fAttrs.getLength();
@@ -406,13 +317,6 @@ abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, Indexed
 		}
 	}
 
-	/**
-	 * @return com.ibm.sed.css.treemodel.CSSNodeImpl
-	 * @param newChild
-	 *            com.ibm.sed.css.treemodel.CSSNodeImpl
-	 * @exception org.w3c.dom.DOMException
-	 *                The exception description.
-	 */
 	protected CSSNodeImpl removeChild(CSSNodeImpl oldChild) throws org.w3c.dom.DOMException {
 		if (oldChild == null)
 			return null;
@@ -461,15 +365,6 @@ abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, Indexed
 		}
 	}
 
-	/**
-	 * @return com.ibm.sed.css.treemodel.CSSNodeImpl
-	 * @param newChild
-	 *            com.ibm.sed.css.treemodel.CSSNodeImpl
-	 * @param oldChild
-	 *            com.ibm.sed.css.treemodel.CSSNodeImpl
-	 * @exception org.w3c.dom.DOMException
-	 *                The exception description.
-	 */
 	protected CSSNodeImpl replaceChild(CSSNodeImpl newChild, CSSNodeImpl oldChild) throws org.w3c.dom.DOMException {
 		if (oldChild == null)
 			return newChild;
@@ -525,34 +420,18 @@ abstract class CSSNodeImpl extends AbstractNotifier implements ICSSNode, Indexed
 		throw new DOMException(DOMException.INVALID_MODIFICATION_ERR, "");//$NON-NLS-1$
 	}
 
-	/**
-	 * @param nextSibling
-	 *            com.ibm.sed.css.interfaces.ICSSNode
-	 */
 	private void setNextSibling(ICSSNode nextSibling) {
 		this.fNextSibling = (CSSNodeImpl) nextSibling;
 	}
 
-	/**
-	 * @param ownerDocument
-	 *            com.ibm.sed.css.interfaces.CSSDocument
-	 */
 	void setOwnerDocument(ICSSDocument ownerDocument) {
 		this.fOwnerDocument = (CSSDocumentImpl) ownerDocument;
 	}
 
-	/**
-	 * @param parentNode
-	 *            com.ibm.sed.css.interfaces.ICSSNode
-	 */
 	private void setParentNode(ICSSNode parentNode) {
 		this.fParentNode = (CSSNodeImpl) parentNode;
 	}
 
-	/**
-	 * @param previousSibling
-	 *            com.ibm.sed.css.interfaces.ICSSNode
-	 */
 	private void setPreviousSibling(ICSSNode previousSibling) {
 		this.fPreviousSibling = (CSSNodeImpl) previousSibling;
 	}

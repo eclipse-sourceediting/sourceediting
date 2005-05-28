@@ -39,8 +39,8 @@ import org.eclipse.wst.dtd.core.internal.event.IDTDFileListener;
 import org.eclipse.wst.dtd.core.internal.event.NodesEvent;
 
 
-/**
- * Based on com.ibm.etools.dtd.editor.viewers.DTDTreeContentProvider
+/* 
+ * Based on DTDTreeContentProvider
  */
 
 public class DTDTreeContentProvider implements ITreeContentProvider, IDTDFileListener {

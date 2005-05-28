@@ -37,16 +37,10 @@ class HCMDocImpl extends CMNodeImpl implements HTMLCMDocument {
 		entities = new EntityCollection();
 	}
 
-	/**
-	 * @return com.ibm.sed.contentmodel.html.AttributeCollection
-	 */
 	AttributeCollection getAttributes() {
 		return attributes;
 	}
 
-	/**
-	 * @see com.ibm.sed.contentmodel.html.HTMLCMDocument
-	 */
 	public HTMLElementDeclaration getElementDeclaration(String elementName) {
 		if (elements == null)
 			return null;
@@ -67,9 +61,6 @@ class HCMDocImpl extends CMNodeImpl implements HTMLCMDocument {
 		return entities;
 	}
 
-	/**
-	 * @see com.ibm.sed.contentmodel.html.HTMLCMDocument
-	 */
 	public HTMLEntityDeclaration getEntityDeclaration(String entityName) {
 		if (entities == null)
 			return null;

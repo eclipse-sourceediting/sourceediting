@@ -49,11 +49,7 @@ public class WhiteSpaceOnlyRegion implements ITextRegion {
 		fStart += i;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.ibm.sed.structured.text.ITextRegion#adjustTextLength(int)
-	 */
+
 	public void adjustTextLength(int i) {
 		// not supported
 

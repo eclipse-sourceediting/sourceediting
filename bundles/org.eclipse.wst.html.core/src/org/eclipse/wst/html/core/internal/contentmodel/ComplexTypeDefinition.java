@@ -57,7 +57,6 @@ abstract class ComplexTypeDefinition {
 
 	/**
 	 * Get content hint.
-	 * @return com.ibm.sed.contentmodel.html.HTMLElementDeclaration
 	 */
 	public HTMLElementDeclaration getPrimaryCandidate() {
 		if (primaryCandidateName == null)

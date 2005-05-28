@@ -42,11 +42,6 @@ public class ModelHandlerForJSP extends AbstractModelHandler {
 		setAssociatedContentTypeId(AssociatedContentTypeID);
 	}
 
-	//	private static final String PageDesigner =
-	// "com.ibm.etools.webedit.page.PageDesigner"; //$NON-NLS-1$
-	//	private static final String HTMLEditor =
-	// "com.ibm.etools.webedit.editor.HTMLEditor"; //$NON-NLS-1$
-
 	protected void addJSPTagName(JSPSourceParser parser, String tagname) {
 		BlockMarker bm = new BlockMarker(tagname, null, DOMJSPRegionContexts.JSP_CONTENT, true);
 		parser.addBlockMarker(bm);

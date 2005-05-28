@@ -27,7 +27,6 @@ public interface ContentModelAdapter extends org.eclipse.wst.sse.core.internal.p
 	 * 
 	 * @return CMDocument
 	 * @param notifer
-	 *            com.ibm.sed.model.INodeNotifier
 	 * 
 	 * Returns CMDocument associated to the adapting node. For exampl : HTML
 	 * CMDocument is associated to HTML Document node, DTD CMDocument is
@@ -45,7 +44,6 @@ public interface ContentModelAdapter extends org.eclipse.wst.sse.core.internal.p
 	 * 
 	 * @return CMNode
 	 * @param notifer
-	 *            com.ibm.sed.model.INodeNotifier
 	 * 
 	 * Returns ElementDefinition or AttributeDefinition for the adapting node.
 	 * 

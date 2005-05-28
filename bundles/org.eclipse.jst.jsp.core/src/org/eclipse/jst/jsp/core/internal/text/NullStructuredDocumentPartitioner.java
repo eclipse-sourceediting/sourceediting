@@ -59,7 +59,7 @@ public class NullStructuredDocumentPartitioner implements IStructuredTextPartiti
 
 	}
 
-	public final static String ST_UNKNOWN_PARTITION = "com.ibm.sse.UNKNOWN_PARTITION_TYPE"; //$NON-NLS-1$
+	public final static String ST_UNKNOWN_PARTITION = "org.eclipse.wst.sse.UNKNOWN_PARTITION_TYPE"; //$NON-NLS-1$
 	private final String[] legalTypes = new String[]{ST_UNKNOWN_PARTITION};
 
 	public NullStructuredDocumentPartitioner() {

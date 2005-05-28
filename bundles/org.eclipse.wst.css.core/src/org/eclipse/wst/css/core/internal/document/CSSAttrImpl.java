@@ -24,12 +24,6 @@ class CSSAttrImpl extends CSSRegionContainer implements ICSSAttr {
 	private String fValue = null;
 	private CSSNodeImpl ownerCSSNode = null;
 
-	/**
-	 * CSSAttrImpl constructor comment.
-	 * 
-	 * @param that
-	 *            com.ibm.sed.css.treemodel.CSSRegionContainer
-	 */
 	CSSAttrImpl(CSSAttrImpl that) {
 		super(that);
 		this.fName = that.fName;
@@ -44,11 +38,6 @@ class CSSAttrImpl extends CSSRegionContainer implements ICSSAttr {
 		this.fName = name;
 	}
 
-	/**
-	 * @return com.ibm.sed.treemodel.css.CSSNode
-	 * @param deep
-	 *            boolean
-	 */
 	public ICSSNode cloneNode(boolean deep) {
 		return new CSSAttrImpl(this);
 	}
@@ -74,9 +63,6 @@ class CSSAttrImpl extends CSSRegionContainer implements ICSSAttr {
 		return ATTR_NODE;
 	}
 
-	/**
-	 * @return com.ibm.sed.css.treemodel.CSSNodeImpl
-	 */
 	public ICSSNode getOwnerCSSNode() {
 		return ownerCSSNode;
 	}
@@ -130,10 +116,6 @@ class CSSAttrImpl extends CSSRegionContainer implements ICSSAttr {
 		fName = newName;
 	}
 
-	/**
-	 * @param newOwnerCSSNode
-	 *            com.ibm.sed.css.treemodel.CSSNodeImpl
-	 */
 	protected void setOwnerCSSNode(CSSNodeImpl newOwnerCSSNode) {
 		ownerCSSNode = newOwnerCSSNode;
 	}

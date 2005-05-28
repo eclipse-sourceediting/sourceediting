@@ -22,7 +22,6 @@ public interface JSPCMDocument extends org.eclipse.wst.xml.core.internal.content
 	/**
 	 * A short hand method to get a element declaration for a JSP element.
 	 * JSP declaration class implements HTMLElementDeclaration interface.
-	 * @return com.ibm.sed.contentmodel.html.HTMLElementDeclaration
 	 * @param elementName java.lang.String
 	 */
 	HTMLElementDeclaration getElementDeclaration(String elementName);
