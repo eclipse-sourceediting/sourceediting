@@ -119,13 +119,6 @@ public class ScanningTests {
 		return chars;
 	}
 
-	public static void main(String[] args) {
-		//checkTokenSeams(args[args.length - 1]);
-		//Vector nodes = ScanningTests.parseFile(args[args.length - 1]);
-		//com.ibm.sed.contentassist.xml.FlatToXMLTreeConvertor conv = new com.ibm.sed.contentassist.xml.FlatToXMLTreeConvertor();
-		//conv.createTree(nodes.elements());
-	}
-
 	public static RegionParser newParser() {
 		JSPSourceParser parser = new JSPSourceParser();
 		parser.addBlockMarker(new BlockMarker("foo", null, DOMRegionContext.BLOCK_TEXT, true));

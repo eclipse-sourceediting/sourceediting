@@ -258,13 +258,6 @@ public class ScannerUnitTests extends TestCase {
 		return fModel.getRegionList();
 	}
 
-	/*
-	 * protected void setupModel(Object contentType) { if(contentType == null)
-	 * type = com.ibm.sed.model.IStructuredModel.XML; else type = contentType;
-	 * fModel = new
-	 * com.ibm.sed.structuredDocument.impl.IStructuredDocument(type); parser =
-	 * (HTMLSourceParser)fModel.getParser(); }
-	 */
 	protected void setupModel(IModelHandler contentType) {
 
 		fModel = (IStructuredDocument) contentType.getDocumentLoader().createNewStructuredDocument();

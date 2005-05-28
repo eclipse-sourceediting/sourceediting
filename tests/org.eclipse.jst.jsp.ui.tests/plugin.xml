@@ -37,16 +37,6 @@
    </requires>
 
 
-<!-- TO GET PICKED UP BY com.ibm.etools.commontests.testcollector -->
-	<!--
-   <extension
-         point="com.ibm.etools.commontests.testcollector.suites">
-      <suite
-            suiteName="SSE JSP Tests"
-            suiteClass="org.eclipse.jst.jsp.ui.tests.application.SSEJSPTestSuite">
-      </suite>
-   </extension>
-   -->
    <extension
          point="org.eclipse.ui.views">
       <view

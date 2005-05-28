@@ -61,8 +61,8 @@ public class VersionRemover {
 	}
 
 	protected void fixupFile(File file) {
-		// only load and fixup files named plugin.xml or fragment.xml under eclipse\plugins\com.ibm.*
-		if (!(file.getName().equalsIgnoreCase("plugin.xml") || file.getName().equalsIgnoreCase("fragment.xml")) || file.getAbsolutePath().indexOf("eclipse\\plugins\\com.ibm.") == -1)
+		// only load and fixup files named plugin.xml or fragment.xml under eclipse\plugins\XXXXXXX.*
+		if (!(file.getName().equalsIgnoreCase("plugin.xml") || file.getName().equalsIgnoreCase("fragment.xml")) || file.getAbsolutePath().indexOf("eclipse\\plugins\\XXXXXXX.") == -1)
 			return;
 		//		System.out.println(file.getAbsolutePath());
 		try {

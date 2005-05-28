@@ -37,7 +37,7 @@ public class TestModelHandlers extends TestCase {
 	}
 
 	public void testCSSExists() {
-		String id = ContentTypeIdForCSS.ContentTypeID_CSS; //"com.ibm.sse.model.handler.css"; 
+		String id = ContentTypeIdForCSS.ContentTypeID_CSS;  
 		ModelHandlerRegistry registry = getModelHandlerRegistry();
 		IModelHandler handler = registry.getHandlerForContentTypeId(id);
 		assertTrue("model handler registry does not have CSS type ", handler != null && handler.getAssociatedContentTypeId().equals(id));

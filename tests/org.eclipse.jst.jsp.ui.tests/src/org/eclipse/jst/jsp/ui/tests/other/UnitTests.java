@@ -509,7 +509,6 @@ public class UnitTests extends TestCase {
 	 */
 	protected void setUpXML() {
 
-		//  type = com.ibm.sed.model.IStructuredModel.XML;
 		IModelManager mm = StructuredModelManager.getModelManager();
 		try {
 			fModel = mm.createStructuredDocumentFor("dummy.xml", (InputStream) null, null);
@@ -517,8 +516,6 @@ public class UnitTests extends TestCase {
 		catch (IOException e) {
 			// do nothing, since dummy
 		}
-		//fModel = new com.ibm.sed.structuredDocument.impl.IStructuredDocument(new XMLSourceParser());
-
 		fModel.addDocumentChangedListener(proxy);
 
 		tree = new DOMModelImpl();
@@ -535,7 +532,6 @@ public class UnitTests extends TestCase {
 	 */
 	protected void setUpJSP() {
 
-		//type = com.ibm.sed.model.IStructuredModel.HTML;
 		IModelManager mm = StructuredModelManager.getModelManager();
 		try {
 			fModel = mm.createStructuredDocumentFor("dummy.jsp", (InputStream) null, null);
@@ -978,10 +974,6 @@ public class UnitTests extends TestCase {
 
 	public void testJSP1()  {
 
-		//testEvent = 23;
-		//tags = "abcd<%= abc %>efgh";
-		//testStructuredDocumentReplacement(testEvent, tags, " ","abcd< %= abc %>efgh", 5, 0, com.ibm.sed.model.IStructuredModel.HTML);
-
 		setUpJSP();
 		eventCase = 23;
 		String startString = "abcd<%= abc %>efgh";
@@ -1003,10 +995,6 @@ public class UnitTests extends TestCase {
 	}
 
 	public void testJSP2()  {
-
-		//testEvent = 24;
-		//tags = "abcd<% abc %>efgh";
-		//testStructuredDocumentReplacement(testEvent, tags, " ","abcd< % abc %>efgh", 5, 0, com.ibm.sed.model.IStructuredModel.HTML);
 
 		setUpJSP();
 		eventCase = 24;
@@ -1030,10 +1018,6 @@ public class UnitTests extends TestCase {
 
 	public void testJSP3()  {
 
-		//testEvent = 25;
-		//tags = "<%= abc %>";
-		//testStructuredDocumentReplacement(testEvent, tags, " ","< %= abc %>", 1, 0, com.ibm.sed.model.IStructuredModel.HTML);
-
 		setUpJSP();
 		eventCase = 25;
 		String startString = "<%= abc %>";
@@ -1054,10 +1038,6 @@ public class UnitTests extends TestCase {
 	}
 
 	public void testJSP4()  {
-
-		//testEvent = 26;
-		//tags = "<% abc %>";
-		//testStructuredDocumentReplacement(testEvent, tags, " ","< % abc %>", 1, 0, com.ibm.sed.model.IStructuredModel.HTML);
 
 		setUpJSP();
 		eventCase = 26;

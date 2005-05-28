@@ -3,7 +3,6 @@
 	<name>org.eclipse.wst.xml.validation.tests</name>
 	<comment></comment>
 	<projects>
-		<project>com.ibm.etools.validation.xml</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

@@ -180,7 +180,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 		String outString = StringUtils.escape(initialString);
 		System.out.println("Initial String: " + outString);
 		// always start with fresh model
-		IStructuredDocument f = null; //new com.ibm.sed.structuredDocument.impl.IStructuredDocument(com.ibm.sed.model.IStructuredModel.XML);
+		IStructuredDocument f = null; 
 
 		IModelManager mm = StructuredModelManager.getModelManager();
 		try {
@@ -238,7 +238,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 		String outString = StringUtils.escape(initialString);
 		System.out.println("Initial String: " + outString);
 		// always start with fresh model
-		IStructuredDocument f = null; //new com.ibm.sed.structuredDocument.impl.IStructuredDocument(com.ibm.sed.model.IStructuredModel.XML);
+		IStructuredDocument f = null; 
 
 		IModelManager mm = StructuredModelManager.getModelManager();
 		try {
@@ -294,7 +294,7 @@ public class StructuredDocumentToDOMUnitTests implements IStructuredDocumentList
 		String outString = StringUtils.escape(initialString);
 		System.out.println("Initial String: " + outString);
 		// always start with fresh model
-		IStructuredDocument f = null; //new com.ibm.sed.structuredDocument.impl.IStructuredDocument(com.ibm.sed.model.IStructuredModel.XML);
+		IStructuredDocument f = null; 
 
 		IModelManager mm = StructuredModelManager.getModelManager();
 		try {
