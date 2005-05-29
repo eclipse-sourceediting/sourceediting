@@ -24,7 +24,6 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.eclipse.core.internal.resources.ProjectDescription;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -263,7 +262,7 @@ public class BaseTestCase extends TestCase
     }
     try
     {
-      IProjectDescription projectDescription = new ProjectDescription();
+      IProjectDescription projectDescription = project.getDescription(); 
       projectDescription.setName(projectName);
       project.setDescription(projectDescription, null);
     }
