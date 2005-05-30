@@ -1,0 +1,25 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Encoding Tests Plug-in
+Bundle-SymbolicName: org.eclipse.wst.xml.tests.encoding
+Bundle-Version: 1.0.0
+Bundle-ClassPath: tests.jar
+Bundle-Activator: org.eclipse.wst.xml.tests.encoding.TestsPlugin
+Bundle-Vendor: Eclipse.org
+Bundle-Localization: plugin
+Export-Package: org.eclipse.wst.xml.tests.encoding,
+ org.eclipse.wst.xml.tests.encoding.pref,
+ org.eclipse.wst.xml.tests.encoding.properties,
+ org.eclipse.wst.xml.tests.encoding.read,
+ org.eclipse.wst.xml.tests.encoding.util,
+ org.eclipse.wst.xml.tests.encoding.write,
+ org.eclipse.wst.xml.tests.encoding.xml
+Require-Bundle: org.eclipse.core.resources,
+ org.junit,
+ org.eclipse.ui,
+ org.eclipse.ui.workbench,
+ org.eclipse.ui.ide,
+ org.eclipse.wst.xml.core,
+ org.eclipse.core.runtime,
+ org.eclipse.wst.sse.core
+Eclipse-AutoStart: true

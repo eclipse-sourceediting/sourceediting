@@ -159,7 +159,7 @@ public class TestContentDescription extends TestCase {
 		assertNotNull("Error in test case: file not found: " + filePath, file);
 
 		IContentDescription fileContentDescription = file.getContentDescription();
-		IContentDescription streamContentDescription = Platform.getContentTypeManager().getDescriptionFor(file.getContents(), file.getName(), IContentDescription.ALL);
+	//	IContentDescription streamContentDescription = Platform.getContentTypeManager().getDescriptionFor(file.getContents(), file.getName(), IContentDescription.ALL);
 	//	assertEquals("comparing file and stream contentDescription", fileContentDescription, streamContentDescription);
 
 		assertNotNull("Null content description", fileContentDescription);

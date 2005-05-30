@@ -1,0 +1,27 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: SSE Model XML Tests
+Bundle-SymbolicName: org.eclipse.wst.xml.core.tests; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-ClassPath: ssemodelxmltests.jar
+Bundle-Activator: org.eclipse.wst.xml.core.tests.SSEModelXMLTestsPlugin
+Bundle-Vendor: Eclipse.org
+Bundle-Localization: plugin
+Export-Package: org.eclipse.wst.xml.core.tests,
+ org.eclipse.wst.xml.core.tests.document,
+ org.eclipse.wst.xml.core.tests.dom,
+ org.eclipse.wst.xml.core.tests.hacks,
+ org.eclipse.wst.xml.core.tests.model,
+ org.eclipse.wst.xml.core.tests.text,
+ org.eclipse.wst.xml.core.tests.text.testfiles.xml,
+ org.eclipse.wst.xml.core.tests.util
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.wst.xml.core,
+ org.junit,
+ org.eclipse.core.filebuffers,
+ org.eclipse.core.resources,
+ org.eclipse.ui,
+ org.eclipse.ui.ide,
+ org.eclipse.text,
+ org.eclipse.wst.sse.core
+Eclipse-AutoStart: true

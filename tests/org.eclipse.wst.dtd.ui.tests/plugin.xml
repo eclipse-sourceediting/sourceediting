@@ -1,37 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin
-   id="org.eclipse.wst.dtd.ui.tests"
-   name="DTD UI Tests"
-   version="1.0.0"
-   provider-name="Eclipse.org"
-   class="org.eclipse.wst.dtd.ui.tests.internal.DTDUITestsPlugin">
+<plugin>
 
-   <runtime>
-      <library name="dtduitests.jar">
-         <export name="*"/>
-      </library>
-   </runtime>
-
-   <requires>
-		<import plugin="org.eclipse.core.resources"/>
-		<import plugin="org.eclipse.core.runtime" />
-		<import plugin="org.eclipse.jface.text"/>
-		<import plugin="org.eclipse.ui" />
-		<import plugin="org.eclipse.ui.editors"/>
-		<import plugin="org.eclipse.ui.ide" />
-		<import plugin="org.eclipse.ui.views"/>
-		<import plugin="org.eclipse.ui.workbench"/>
-		<import plugin="org.eclipse.ui.workbench.texteditor"/>
-		<import plugin="org.eclipse.wst.common.ui"/>
-		<import plugin="org.eclipse.wst.common.uriresolver"/>
-		<import plugin="org.eclipse.wst.dtd.core"/>
-		<import plugin="org.eclipse.wst.dtd.ui"/>
-		<import plugin="org.eclipse.wst.sse.core"/>
-		<import plugin="org.eclipse.wst.sse.ui"/>
-		<import plugin="org.eclipse.wst.validation"/>
-		<import plugin="org.eclipse.wst.xml.core"/>
-		<import plugin="org.junit"/>
-   </requires>
-
+    
 </plugin>

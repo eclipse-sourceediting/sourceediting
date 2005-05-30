@@ -1,37 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin
-	id="org.eclipse.wst.xml.core.tests"
-	name="SSE Model XML Tests"
-	version="1.0.0"
-	provider-name="Eclipse.org"
-	class="org.eclipse.wst.xml.core.tests.SSEModelXMLTestsPlugin">
-
-	<runtime>
-		<library name="ssemodelxmltests.jar">
-			<export name="*" />
-		</library>
-	</runtime>
-	<requires>
-		<import plugin="org.eclipse.core.runtime"/>
-		<import plugin="org.eclipse.wst.xml.core" />
-		<import plugin="org.junit" />
-  <import plugin="org.eclipse.core.filebuffers"/>
-  <import plugin="org.eclipse.core.resources"/>
-  <import plugin="org.eclipse.ui"/>
-  <import plugin="org.eclipse.ui.ide"/>
-  <import plugin="org.eclipse.text"/>
-  <import plugin="org.eclipse.wst.sse.core"/>
-	</requires>
-
-
-   <extension
-         point="org.eclipse.core.runtime.contentTypes">
+<plugin>
+	 <extension
+        point="org.eclipse.core.runtime.contentTypes">
 		<!-- associate .fragx files with the XML content type -->
 		<file-association
 			content-type="org.eclipse.core.runtime.xml"
 			file-extensions="fragx"/>
-	</extension>		 
-
-
+	 </extension>		 
 </plugin>

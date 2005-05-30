@@ -1,25 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin
-	id="org.eclipse.jst.jsp.core.tests"
-	name="JSP Core Tests"
-	version="1.0.0"
-	provider-name="Eclipse.org"
-	class="org.eclipse.jst.jsp.core.tests.JSPCoreTestsPlugin">
+<plugin>
 
-	<runtime>
-		<library name="jspcoretests.jar">
-			<export name="*" />
-		</library>
-	</runtime>
-	<requires>
-		<import plugin="org.junit" />
-		<import plugin="org.eclipse.wst.html.core" />
-		<import plugin="org.eclipse.wst.xml.core" />
-		<import plugin="org.eclipse.wst.sse.core" />
-  		<import plugin="org.eclipse.core.resources"/>
-    <import plugin="org.eclipse.core.runtime"/>
-    <import plugin="org.eclipse.jst.jsp.core"/>
-    <import plugin="org.eclipse.wst.css.core"/>
-	</requires>
+		
 </plugin>

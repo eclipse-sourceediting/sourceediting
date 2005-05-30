@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin
-	id="org.eclipse.wst.css.core.tests"
-	name="CSS Core Tests Plug-in"
-	version="1.0.0"
-	provider-name="Eclipse.org"
-	class="org.eclipse.wst.css.core.tests.CSSCoreTestsPlugin">
+<plugin>
 
-	<runtime>
-		<library name="csscoretests.jar">
-			<export name="*" />
-		</library>
-	</runtime>
-	<requires>
-		<import plugin="org.eclipse.wst.css.core" />
-		<import plugin="org.junit" />
-		<import plugin="org.eclipse.wst.sse.core" />
-  <import plugin="org.eclipse.core.resources"/>
-  <import plugin="org.eclipse.core.runtime"/>
-	</requires>
-
+		
 </plugin>
