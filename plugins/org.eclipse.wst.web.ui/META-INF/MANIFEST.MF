@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Simple Web UI Plug-in
+Bundle-SymbolicName: org.eclipse.wst.web.ui; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-ClassPath: ui.jar
+Bundle-Activator: org.eclipse.wst.web.ui.internal.WSTWebUIPlugin
+Bundle-Vendor: Eclipse.org
+Bundle-Localization: plugin
+Export-Package: org.eclipse.wst.web.ui.internal,
+ org.eclipse.wst.web.ui.internal.wizards
+Require-Bundle: org.eclipse.core.resources,
+ org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.eclipse.ui.ide,
+ org.eclipse.emf.common,
+ org.eclipse.wst.common.frameworks,
+ org.eclipse.wst.common.frameworks.ui,
+ org.eclipse.wst.web
+Eclipse-AutoStart: true

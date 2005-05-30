@@ -1,30 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin
-   id="org.eclipse.wst.web.ui"
-   name="Simple Web UI Plug-in"
-   version="1.0.0"
-   provider-name="Eclipse.org"
-   description="This plugin contains the UI to create a simple non j2ee web project."
-   class="org.eclipse.wst.web.ui.internal.WSTWebUIPlugin">
+<plugin>
 
-   <runtime>
-      <library name="ui.jar">
-         <export name="*"/>
-      </library>
-   </runtime>
-
-   <requires>
-      <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.emf.common"/>
-      <import plugin="org.eclipse.wst.common.frameworks"/>
-      <import plugin="org.eclipse.wst.common.frameworks.ui"/>
-      <import plugin="org.eclipse.wst.web"/>
-   </requires>
-  <!-- static web project wizard -->
+     <!-- static web project wizard -->
    <extension
          point="org.eclipse.wst.common.frameworks.ui.extendableWizard">
       <extendableWizard
