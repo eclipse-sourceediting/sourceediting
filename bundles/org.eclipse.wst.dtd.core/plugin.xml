@@ -1,32 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin
-	id="org.eclipse.wst.dtd.core"
-	name="%pluginName"
-	version="1.0.0"
-	provider-name="%providerName"
-	class="org.eclipse.wst.dtd.core.internal.DTDCorePlugin">
+<plugin>
 
-	<runtime>
-		<library name="dtdcore.jar">
-			<export name="*" />
-		</library>
-	</runtime>
-	<requires>
-		<import plugin="org.eclipse.core.resources"/>
-		<import plugin="org.eclipse.core.runtime" />
-		<import plugin="org.eclipse.emf.ecore"/>
-		<import plugin="org.eclipse.jface.text" />
-		<import plugin="org.eclipse.ui" />
-		<import plugin="org.eclipse.wst.common.uriresolver"/>
-		<import plugin="org.eclipse.wst.sse.core" />
-		<import plugin="org.eclipse.wst.validation"/>
-		<import plugin="org.eclipse.wst.xml.core" />
-		<import plugin="org.eclipse.wst.xml.uriresolver"/>
-	</requires>
-
-
-	<extension point="org.eclipse.wst.sse.core.modelHandler">
+			<extension point="org.eclipse.wst.sse.core.modelHandler">
 		<modelHandler
 			class="org.eclipse.wst.dtd.core.internal.modelhandler.ModelHandlerForDTD"
 			associatedContentTypeId="org.eclipse.wst.dtd.core.dtdsource"

@@ -1,49 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin
-   id="org.eclipse.wst.xsd.ui"
-   name="%_UI_PLUGIN_NAME"
-   version="1.0.0"
-   provider-name="Eclipse.org"
-   class="org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin">
+<plugin>
 
-   <runtime>
-      <library name="xsdeditor.jar">
-         <export name="*"/>
-      </library>
-   </runtime>
-   <requires>
-      <import plugin="org.eclipse.core.runtime.compatibility"/>
-      
-      <import plugin="org.eclipse.wst.xml.uriresolver"/>
-      <import plugin="org.eclipse.wst.sse.ui"/>
-      <import plugin="org.eclipse.wst.sse.core"/>
-      <import plugin="org.eclipse.wst.xml.core"/>
-      <import plugin="org.eclipse.wst.xml.ui"/>
-      <import plugin="org.eclipse.wst.common.ui"/>
-      
-      <import plugin="org.eclipse.jface.text"/>
-      <import plugin="org.eclipse.xsd"/>
-      <import plugin="org.eclipse.gef"/>
-      <import plugin="org.eclipse.jface"/>
-      <import plugin="org.eclipse.ui.editors"/>
-      <import plugin="org.eclipse.ui.workbench.texteditor"/>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.ui.views"/>
-      <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.eclipse.wst.common.ui.properties"/>
-      <import plugin="org.eclipse.xsd.edit"/>
-      <import plugin="org.eclipse.emf.edit"/>
-      <import plugin="org.eclipse.emf.edit.ui"/> 
-      <import plugin="org.eclipse.wst.validation"/>
-      
-      <import plugin="org.eclipse.ltk.core.refactoring" />
-	  <import plugin="org.eclipse.ltk.ui.refactoring" />
-    </requires>
-
-
-   <extension
+     <extension
          point="org.eclipse.ui.editors">
       <editor
             name="%_UI_EDITOR_NAME"

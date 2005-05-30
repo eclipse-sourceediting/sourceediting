@@ -1,42 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin
-   id="org.eclipse.wst.sse.ui"
-   name="%pluginName"
-   version="1.0.0"
-   provider-name="%providerName"
-   class="org.eclipse.wst.sse.ui.internal.SSEUIPlugin">
+<plugin>
 
-   <runtime>
-      <library name="editor.jar">
-         <export name="*"/>
-      </library>
-   </runtime>
-   <requires>
-      <import plugin="org.eclipse.ui.ide"/>
-      <import plugin="org.eclipse.jface.text"/>
-<!-- added for break point support -->
-<!-- -->
-      <import plugin="org.eclipse.debug.core"/>
-      <import plugin="org.eclipse.debug.ui"/>
-      <import plugin="org.eclipse.ui.editors"/>
-<!-- added for marker and annotation support -->
-      <import plugin="org.eclipse.search"/>
-      <import plugin="org.eclipse.swt"/>
-      <import plugin="org.eclipse.jface"/>
-      <import plugin="org.eclipse.ui"/>
-      <import plugin="org.eclipse.ui.workbench.texteditor"/>
-      <import plugin="org.eclipse.ui.workbench"/>
-      <import plugin="org.eclipse.ui.views"/>
-      <import plugin="org.eclipse.wst.sse.core"/>
-      <import plugin="org.eclipse.core.filebuffers"/>
-      <import plugin="org.eclipse.core.resources"/>
-      <import plugin="org.eclipse.core.runtime"/>
-      <import plugin="org.eclipse.wst.validation"/>
-   </requires>
-
-
-   <extension-point id="adapterFactoryDescription" name="%Adapter_Factory_Description_Extension.name"/>
+     <extension-point id="adapterFactoryDescription" name="%Adapter_Factory_Description_Extension.name"/>
    <extension-point id="embeddedAdapterFactoryProvider" name="%Embedded_Content_Type_Adapter_Factory_Provider_Extension.name"/>
    <extension-point id="extendedEditorActions" name="%Extended_Editor_Actions_Extension.name"/>
    <extension-point id="dropTargetTransfers" name="%Drop_Target_Transfers_Extension.name"/>
