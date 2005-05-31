@@ -52,7 +52,6 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.document.DocumentReader;
 import org.eclipse.wst.sse.core.internal.encoding.CodedStreamCreator;
-import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 
 /**
  * Creates document change(s) for an IJavaElement rename.
@@ -182,29 +181,29 @@ public class BasicRefactorSearchRequestor extends SearchRequestor {
 		 * @return
 		 */
 		private boolean isOpenInEditor(IDocument jspDoc) {
-			
 			IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
 			IWorkbenchWindow w = null;
 			for (int i = 0; i < windows.length; i++) {
-				
+
 				w = windows[i];
 				IWorkbenchPage page = w.getActivePage();
-				if(page != null) {
-					
+				if (page != null) {
+
 					IEditorReference[] references = page.getEditorReferences();
 					IEditorPart editor = null;
 					Object o = null;
 					IDocument doc = null;
 					for (int j = 0; j < references.length; j++) {
-						
+
 						editor = references[j].getEditor(true);
 						// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=3764
-						// use adapter to get ITextEditor (for things like page designer)
+						// use adapter to get ITextEditor (for things like
+						// page designer)
 						o = editor.getAdapter(ITextEditor.class);
-						if(o != null && o instanceof StructuredTextEditor) {
-							
-							doc = ((StructuredTextEditor)o).getDocument();
-							if(doc != null && doc.equals(jspDoc)) {
+						if (o != null && o instanceof ITextEditor) {
+
+							doc = ((ITextEditor) o).getDocumentProvider().getDocument(editor.getEditorInput());
+							if (doc != null && doc.equals(jspDoc)) {
 								return true;
 							}
 						}
