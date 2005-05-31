@@ -23,9 +23,9 @@ import org.eclipse.wst.common.frameworks.internal.operations.ProjectCreationOp;
 import org.eclipse.wst.web.internal.ISimpleWebNatureConstants;
 import org.eclipse.wst.web.internal.WSTWebPlugin;
 
-public class SimpleWebModuleCreationOp extends ProjectCreationOp implements ISimpleWebModuleCreationDataModelProperties {
+public class SimpleWebModuleCreationOperation extends ProjectCreationOp implements ISimpleWebModuleCreationDataModelProperties {
 
-    public SimpleWebModuleCreationOp(IDataModel dataModel) {
+    public SimpleWebModuleCreationOperation(IDataModel dataModel) {
         super(dataModel);
     }
 

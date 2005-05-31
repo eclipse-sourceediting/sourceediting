@@ -30,7 +30,7 @@ public class SimpleWebModuleCreationDataModelProvider extends ProjectCreationDat
     }
 
     public IDataModelOperation getDefaultOperation() {
-        return new SimpleWebModuleCreationOp(getDataModel());
+        return new SimpleWebModuleCreationOperation(getDataModel());
     }
 
     protected final void addStaticWebNature() {
