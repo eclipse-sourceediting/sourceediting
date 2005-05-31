@@ -15,6 +15,9 @@ package org.eclipse.wst.sse.ui.internal.search;
 import java.util.ResourceBundle;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -61,7 +64,7 @@ public class BasicFindOccurrencesAction extends TextEditorAction {
 	private void configure(StructuredTextEditor editor, IStructuredDocumentRegion sdRegion, ITextRegion r, String type) {
 
 		this.fFile = editor.getFileInEditor();
-		this.fDocument = (IStructuredDocument) editor.getDocument();
+		this.fDocument = (IStructuredDocument) editor.getDocumentProvider().getDocument(editor.getEditorInput());
 		this.fMatchText = sdRegion.getText(r);
 		this.fMatchRegionType = type;
 	}
@@ -114,7 +117,7 @@ public class BasicFindOccurrencesAction extends TextEditorAction {
 
 	/**
 	 * Clients should override to provide their own search for the file.
-	 *  
+	 * 
 	 */
 	public ISearchQuery getSearchQuery() {
 		return new OccurrencesSearchQuery(this.fFile, this.fDocument, this.fMatchText, this.fMatchRegionType);
@@ -144,20 +147,26 @@ public class BasicFindOccurrencesAction extends TextEditorAction {
 		super.update();
 
 		// determine if action should be enabled or not
-		StructuredTextEditor editor = (StructuredTextEditor) getTextEditor();
-		IStructuredDocumentRegion sdRegion = editor.getSelectedDocumentRegion();
-		if (sdRegion != null) {
-
-			ITextRegion r = editor.getSelectedTextRegion(sdRegion);
-			if (r != null) {
-
-				String type = r.getType();
-				if (enabledForRegionType(type)) {
-					configure(editor, sdRegion, r, type);
-					setEnabled(true);
-				} else {
-					unconfigure();
-					setEnabled(false);
+		ITextEditor editor = getTextEditor();
+		ISelection selection = editor.getSelectionProvider().getSelection();
+		if (selection instanceof ITextSelection) {
+			ITextSelection textSelection = (ITextSelection) selection;
+			IDocument document = editor.getDocumentProvider().getDocument(editor.getEditorInput());
+			if (document instanceof IStructuredDocument) {
+				IStructuredDocumentRegion sdRegion = ((IStructuredDocument) document).getRegionAtCharacterOffset(textSelection.getOffset());
+				if (sdRegion != null) {
+					ITextRegion r = sdRegion.getRegionAtCharacterOffset(textSelection.getOffset());
+					if (r != null) {
+						String type = r.getType();
+						if (enabledForRegionType(type) && editor instanceof StructuredTextEditor) {
+							configure((StructuredTextEditor) editor, sdRegion, r, type);
+							setEnabled(true);
+						}
+						else {
+							unconfigure();
+							setEnabled(false);
+						}
+					}
 				}
 			}
 		}
