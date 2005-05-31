@@ -9,43 +9,32 @@
 
 package org.eclipse.wst.web.ui.internal.wizards;
 
-import java.lang.reflect.InvocationTargetException;
-
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.internal.WorkbenchPlugin;
-import org.eclipse.ui.internal.dialogs.WorkbenchWizardElement;
-import org.eclipse.ui.wizards.IWizardDescriptor;
-import org.eclipse.ui.wizards.IWizardRegistry;
-import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
-import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
-import org.eclipse.wst.common.frameworks.internal.operations.WTPOperation;
-import org.eclipse.wst.common.frameworks.internal.operations.WTPOperationDataModel;
-import org.eclipse.wst.common.frameworks.internal.ui.WTPWizard;
+import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
+import org.eclipse.wst.common.frameworks.datamodel.IDataModelProvider;
+import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizard;
 import org.eclipse.wst.web.internal.ResourceHandler;
 import org.eclipse.wst.web.internal.WSTWebPlugin;
-import org.eclipse.wst.web.internal.operation.SimpleWebModuleCreationDataModel;
-import org.eclipse.wst.web.internal.operation.SimpleWebModuleCreationOperation;
+import org.eclipse.wst.web.internal.operation.SimpleWebModuleCreationDataModelProvider;
 
-public class SimpleWebModuleCreationWizard extends WTPWizard implements IExecutableExtension, INewWizard {
+public class SimpleWebModuleCreationWizard extends DataModelWizard implements IExecutableExtension, INewWizard {
 
-	public SimpleWebModuleCreationWizard(SimpleWebModuleCreationDataModel model) {
+	public SimpleWebModuleCreationWizard(IDataModel model) {
 		super(model);
 	}
-
-	public SimpleWebModuleCreationWizard() {
-		super();
-	}
-
-	public String getWizardID() {
-		return "org.eclipse.wst.web.ui.internal.wizards.SimpleWebModuleCreation"; //$NON-NLS-1$
-	}
+    
+    public SimpleWebModuleCreationWizard() {
+        super();
+    }
+    
+    protected IDataModelProvider getDefaultProvider() {
+        return new SimpleWebModuleCreationDataModelProvider();
+    }
 
 	/*
 	 * (non-Javadoc)
@@ -53,63 +42,26 @@ public class SimpleWebModuleCreationWizard extends WTPWizard implements IExecuta
 	 * @see org.eclipse.jface.wizard.Wizard#addPages()
 	 */
 	public void doAddPages() {
-		addPage(new SimpleWebModuleWizardBasePage((SimpleWebModuleCreationDataModel) model, "page1")); //$NON-NLS-1$
+		addPage(new SimpleWebModuleWizardBasePage(getDataModel(), "page1")); //$NON-NLS-1$
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jem.util.ui.wizard.WTPWizard#createDefaultModel()
-	 */
-	protected WTPOperationDataModel createDefaultModel() {
-		return new SimpleWebModuleCreationDataModel();
-	}
+    public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {   
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jem.util.ui.wizard.WTPWizard#createOperation()
-	 */
-	protected WTPOperation createBaseOperation() {
-		return new SimpleWebModuleCreationOperation((SimpleWebModuleCreationDataModel) model);
-	}
+    public void init(IWorkbench workbench, IStructuredSelection selection) {
+        setWindowTitle(ResourceHandler.getString("StaticWebProjectCreationWizard.Wizard_Title")); //$NON-NLS-1$
+        setDefaultPageImageDescriptor(WSTWebPlugin.getDefault().getImageDescriptor("newwprj_wiz")); //$NON-NLS-1$
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.core.runtime.IExecutableExtension#setInitializationData(org.eclipse.core.runtime.IConfigurationElement,
-	 *      java.lang.String, java.lang.Object)
-	 */
-	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
-		// Do nothing
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-	 *      org.eclipse.jface.viewers.IStructuredSelection)
-	 */
-	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		setWindowTitle(ResourceHandler.getString("StaticWebProjectCreationWizard.Wizard_Title")); //$NON-NLS-1$
-
-		setDefaultPageImageDescriptor(WSTWebPlugin.getDefault().getImageDescriptor("newwprj_wiz")); //$NON-NLS-1$
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jem.util.ui.wizard.WTPWizard#postPerformFinish()
-	 */
-	protected void postPerformFinish() throws InvocationTargetException {
-		IWizardRegistry newWizardRegistry = WorkbenchPlugin.getDefault().getNewWizardRegistry();		
-		
-		IWizardDescriptor descriptor = newWizardRegistry.findWizard(getWizardID());
-
-		if(descriptor instanceof WorkbenchWizardElement)
-			BasicNewProjectResourceWizard.updatePerspective(((WorkbenchWizardElement)descriptor).getConfigurationElement());
-		IWorkbenchWindow window = WSTWebPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
-		IProject project = ((SimpleWebModuleCreationDataModel) model).getTargetProject();
-		BasicNewResourceWizard.selectAndReveal(project, window);
-	}
+//	protected void postPerformFinish() throws InvocationTargetException {
+//		IWizardRegistry newWizardRegistry = WorkbenchPlugin.getDefault().getNewWizardRegistry();		
+//		
+//		IWizardDescriptor descriptor = newWizardRegistry.findWizard(getWizardID());
+//
+//		if(descriptor instanceof WorkbenchWizardElement)
+//			BasicNewProjectResourceWizard.updatePerspective(((WorkbenchWizardElement)descriptor).getConfigurationElement());
+//		IWorkbenchWindow window = WSTWebPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow();
+//		IProject project = ((SimpleWebModuleCreationDataModel) model).getTargetProject();
+//		BasicNewResourceWizard.selectAndReveal(project, window);
+//	}
 }

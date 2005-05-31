@@ -18,23 +18,17 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.wst.common.frameworks.internal.operations.ProjectCreationDataModel;
+import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
+import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPage;
 import org.eclipse.wst.common.frameworks.internal.ui.NewProjectGroup;
-import org.eclipse.wst.common.frameworks.internal.ui.WTPWizardPage;
 import org.eclipse.wst.web.internal.ResourceHandler;
 import org.eclipse.wst.web.internal.WSTWebPlugin;
-import org.eclipse.wst.web.internal.operation.SimpleWebModuleCreationDataModel;
+import org.eclipse.wst.web.internal.operation.ISimpleWebModuleCreationDataModelProperties;
 
-class SimpleWebModuleWizardBasePage extends WTPWizardPage {
+class SimpleWebModuleWizardBasePage extends DataModelWizardPage implements ISimpleWebModuleCreationDataModelProperties{
 	protected NewProjectGroup projectNameGroup;
 
-	/**
-	 * WebProjectWizardBasePage constructor comment.
-	 * 
-	 * @param pageName
-	 *            java.lang.String
-	 */
-	public SimpleWebModuleWizardBasePage(SimpleWebModuleCreationDataModel dataModel, String pageName) {
+	public SimpleWebModuleWizardBasePage(IDataModel dataModel, String pageName) {
 		super(dataModel, pageName);
 		setDescription(ResourceHandler.getString("StaticWebProjectWizardBasePage.Page_Description")); //$NON-NLS-1$
 		setTitle(ResourceHandler.getString("StaticWebProjectWizardBasePage.Page_Title")); //$NON-NLS-1$
@@ -64,9 +58,8 @@ class SimpleWebModuleWizardBasePage extends WTPWizardPage {
 	 * @see org.eclipse.jem.util.ui.wizard.WTPWizardPage#getValidationPropertyNames()
 	 */
 	protected String[] getValidationPropertyNames() {
-		return new String[]{ProjectCreationDataModel.PROJECT_NAME, ProjectCreationDataModel.PROJECT_LOCATION};
+		return new String[]{PROJECT_NAME, PROJECT_LOCATION};
 	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -89,6 +82,6 @@ class SimpleWebModuleWizardBasePage extends WTPWizardPage {
 	}
 
 	private final void createProjectNameGroup(Composite parent) {
-		projectNameGroup = new NewProjectGroup(parent, SWT.NULL, (ProjectCreationDataModel) model);
+		projectNameGroup = new NewProjectGroup(parent, SWT.NULL, model, synchHelper);
 	}
 }
