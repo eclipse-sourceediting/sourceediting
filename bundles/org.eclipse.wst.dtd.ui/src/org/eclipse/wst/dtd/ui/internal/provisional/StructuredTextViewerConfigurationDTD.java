@@ -15,6 +15,7 @@ package org.eclipse.wst.dtd.ui.internal.provisional;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextHover;
+import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.dtd.core.internal.provisional.text.IDTDPartitionTypes;
@@ -68,6 +69,10 @@ public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerCo
 			configuredContentTypes = new String[]{IDTDPartitionTypes.DTD_DEFAULT, IStructuredPartitionTypes.DEFAULT_PARTITION, IStructuredPartitionTypes.UNKNOWN_PARTITION};
 		}
 		return configuredContentTypes;
+	}
+	
+	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
+		return null;
 	}
 
 	/*
