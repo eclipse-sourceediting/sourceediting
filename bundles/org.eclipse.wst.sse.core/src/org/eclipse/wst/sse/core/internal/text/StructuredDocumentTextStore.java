@@ -8,6 +8,8 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
+ *     Viacheslav Kabanovich/Exadel 97817 Wrong algoritm in class StructuredDocumentTextStore
+ *     			https://bugs.eclipse.org/bugs/show_bug.cgi?id=97817
  *     
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.text;
@@ -120,7 +122,7 @@ public class StructuredDocumentTextStore implements ITextStore, CharSequence, IR
 	private boolean regionMatches(int offset, String stringToCompare) {
 		boolean result = true;
 		int stringOffset = 0;
-		int len = stringToCompare.length();
+		int len = offset + stringToCompare.length();
 		for (int i = offset; i < len; i++) {
 			if (charAt(i) != stringToCompare.charAt(stringOffset++)) {
 				result = false;
