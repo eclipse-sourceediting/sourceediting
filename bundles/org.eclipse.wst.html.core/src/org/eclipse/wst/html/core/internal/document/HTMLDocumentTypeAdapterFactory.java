@@ -134,10 +134,14 @@ public class HTMLDocumentTypeAdapterFactory implements INodeAdapterFactory, Pref
 	        fAdapter.release();
 	        fNotifier.removeAdapter(fAdapter);
 	    }	
+	    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=95960
+		if (this.preferences != null) {
+			this.preferences.removePropertyChangeListener(this);
+		}
 	}
 
 	/**
-	 * <ol>verriding copy method
+	 * Overriding copy method
 	 */
 	public INodeAdapterFactory copy() {
 		return new HTMLDocumentTypeAdapterFactory();
