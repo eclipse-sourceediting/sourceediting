@@ -632,6 +632,15 @@ public class ModelQueryImpl implements ModelQuery
       }
       return key;
     }
+    
+    protected void addToTable(Hashtable table, CMNode cmNode)
+    {
+      String nodeName = cmNode.getNodeName();
+      if (nodeName != null && nodeName.length() > 0)
+      {  
+        table.put(getKey(cmNode), cmNode);
+      }  
+    }
 
     public List computeAvailableContent(int includeOptions)
     {                   
@@ -699,8 +708,7 @@ public class ModelQueryImpl implements ModelQuery
           for (int i = 0; i < size; i++)
           {                       
             CMNode ed = map.item(i);                  
-
-            childNodeTable.put(getKey(ed), ed);
+            addToTable(childNodeTable,ed);
           }        
         }                
       }
@@ -723,7 +731,7 @@ public class ModelQueryImpl implements ModelQuery
       {                                                                                  
         if (!Boolean.TRUE.equals(ed.getProperty("Abstract"))) //$NON-NLS-1$
         {
-          childNodeTable.put(getKey(ed), ed);
+          addToTable(childNodeTable,ed);
         }
 
         CMNodeList substitutionGroup = (CMNodeList)ed.getProperty("SubstitutionGroup"); //$NON-NLS-1$
@@ -744,7 +752,7 @@ public class ModelQueryImpl implements ModelQuery
           CMNode ed = substitutionGroup.item(i);
           if (!Boolean.TRUE.equals(ed.getProperty("Abstract"))) //$NON-NLS-1$
           {
-            childNodeTable.put(getKey(ed), ed);
+            addToTable(childNodeTable,ed);
           }
         }
       }
