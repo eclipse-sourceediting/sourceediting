@@ -156,6 +156,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		fPartitionToProcessorMap.put(IJSPPartitionTypes.JSP_DIRECTIVE, xmlProcessor);
 		fPartitionToProcessorMap.put(IHTMLPartitionTypes.HTML_COMMENT, htmlProcessor);
 		fPartitionToProcessorMap.put(IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT, javascriptProcessor);
+		fPartitionToProcessorMap.put(IJSPPartitionTypes.JSP_DEFAULT_EL, jspJavaProcessor);
 		fPartitionToProcessorMap.put(IHTMLPartitionTypes.SCRIPT, javascriptProcessor); // default
 		// to
 		// javascript

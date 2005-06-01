@@ -172,4 +172,8 @@ public class JSPProposalCollector extends CompletionProposalCollector {
 	static char[] getTypeTriggers() {
 		return TYPE_TRIGGERS;
 	}
+
+	public JSPTranslation getTranslation() {
+		return fTranslation;
+	}
 }

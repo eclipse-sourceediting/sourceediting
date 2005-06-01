@@ -103,10 +103,11 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 					ICompilationUnit cu = translation.getCompilationUnit();
 
 					// can't get java proposals w/out a compilation unit
-					if (cu == null)
+					// or without a valid position
+					if (cu == null || -1 == fJavaPosition)
 						return new ICompletionProposal[0];
 					
-					collector = new JSPProposalCollector(cu, translation);
+					collector = getProposalCollector(cu, translation);
 					synchronized (cu) {
 						cu.codeComplete(fJavaPosition, collector, null);
 					}
@@ -135,7 +136,11 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 		}
 		return results;
 	}
-
+	
+	protected JSPProposalCollector getProposalCollector(ICompilationUnit cu, JSPTranslation translation) {
+		return new JSPProposalCollector(cu, translation);
+	}
+	
 	/**
 	 * For debugging translation mapping only.
 	 * 

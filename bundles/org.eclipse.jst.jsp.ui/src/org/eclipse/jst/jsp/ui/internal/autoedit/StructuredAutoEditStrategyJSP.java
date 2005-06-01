@@ -46,6 +46,18 @@ public class StructuredAutoEditStrategyJSP extends StructuredAutoEditStrategyXML
 							Logger.logException(e);
 						}
 
+					} if (structuredDocumentCommand.text.equals("{")) { //$NON-NLS-1$
+						IDOMNode node = (IDOMNode) model.getIndexedRegion(structuredDocumentCommand.offset);
+						try {
+							if ((prefixedWith(document, structuredDocumentCommand.offset, "$") || prefixedWith(document, structuredDocumentCommand.offset, "#")) && 
+									!node.getSource().endsWith("}")) { //$NON-NLS-1$ //$NON-NLS-2$
+								structuredDocumentCommand.doit = false;
+								structuredDocumentCommand.addCommand(structuredDocumentCommand.offset, 0, " }", null); //$NON-NLS-1$
+							}
+						}
+						catch (BadLocationException e) {
+							Logger.logException(e);
+						}
 					}
 					else
 						super.customizeDocumentCommand(document, structuredDocumentCommand);

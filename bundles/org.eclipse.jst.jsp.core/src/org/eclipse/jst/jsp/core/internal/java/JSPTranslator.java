@@ -35,6 +35,11 @@ import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDVariable;
+import org.eclipse.jst.jsp.core.internal.java.jspel.ASTExpression;
+import org.eclipse.jst.jsp.core.internal.java.jspel.ELGenerator;
+import org.eclipse.jst.jsp.core.internal.java.jspel.JSPELParser;
+import org.eclipse.jst.jsp.core.internal.java.jspel.ParseException;
+import org.eclipse.jst.jsp.core.internal.java.jspel.Token;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -64,7 +69,6 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
  * @author pavery
  */
 public class JSPTranslator {
-
 	// for debugging
 	private static final boolean DEBUG;
 	static {
@@ -107,6 +111,8 @@ public class JSPTranslator {
 
 	/** user java code in body of the service method */
 	private StringBuffer fUserCode = new StringBuffer();
+	/** user EL Expression */
+	private StringBuffer fUserELExpressions = new StringBuffer();
 	/** user defined vars declared in the beginning of the class */
 	private StringBuffer fUserDeclarations = new StringBuffer();
 
@@ -171,6 +177,9 @@ public class JSPTranslator {
 	private HashMap fDeclarationRanges = new HashMap();
 
 	private HashMap fUseBeanRanges = new HashMap();
+	
+	private HashMap fUserELRanges = new HashMap();
+	
 	/**
 	 * ranges that don't directly map from java code to JSP code (eg.
 	 * <%@include file="included.jsp"%>
@@ -184,6 +193,13 @@ public class JSPTranslator {
 	 * the file or strucdtured document depending what is available
 	 */
 	private StringBuffer fJspTextBuffer = new StringBuffer();
+	
+	/**
+	 * JSP Expression Language Parser.
+	 */
+	private JSPELParser elParser = null;
+
+	private ArrayList fELProblems = new ArrayList();
 
 	/**
 	 * configure using an XMLNode
@@ -333,6 +349,7 @@ public class JSPTranslator {
 		fUserCode = new StringBuffer();
 		fUserDeclarations = new StringBuffer();
 		fUserImports = new StringBuffer();
+		fUserELExpressions = new StringBuffer();
 
 		fResult = null;
 		fCursorOwner = null; // the buffer where the cursor is
@@ -357,9 +374,13 @@ public class JSPTranslator {
 		fCodeRanges.clear();
 		fUseBeanRanges.clear();
 		fDeclarationRanges.clear();
+		fUserELRanges.clear();
 		fIndirectRanges.clear();
 
 		fJspTextBuffer = new StringBuffer();
+		
+		fELProblems = new ArrayList();
+		
 	}
 
 	/**
@@ -410,6 +431,10 @@ public class JSPTranslator {
 		// user declarations
 		append(fUserDeclarations);
 		javaOffset += fUserDeclarations.length();
+		
+		updateRanges(fUserELRanges, javaOffset);
+		append(fUserELExpressions);
+		javaOffset += fUserELExpressions.length();
 
 		fResult.append(fServiceHeader);
 		javaOffset += fServiceHeader.length();
@@ -440,6 +465,8 @@ public class JSPTranslator {
 		fJava2JspRanges.putAll(fImportRanges);
 		fJava2JspRanges.putAll(fDeclarationRanges);
 		fJava2JspRanges.putAll(fCodeRanges);
+		fJava2JspRanges.putAll(fUserELRanges);
+		
 	}
 
 	/**
@@ -591,7 +618,7 @@ public class JSPTranslator {
 			CMNamedNodeMap elements = null;
 			while (taglibs.hasNext()) {
 				doc = (CMDocument) taglibs.next();
-				CMNode node = null;
+				CMNode node = null;	
 				if ((elements = doc.getElements()) != null && (node = elements.getNamedItem(tagToAdd)) != null && node.getNodeType() == CMNode.ELEMENT_DECLARATION) {
 					if (node instanceof CMNodeWrapper) {
 						node = ((CMNodeWrapper) node).getOriginNode();
@@ -817,7 +844,7 @@ public class JSPTranslator {
 	 * determines if the type is a pure JSP type (not XML)
 	 */
 	protected boolean isJSP(String type) {
-		return ((type == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN || type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN || type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN || type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN || type == DOMJSPRegionContexts.JSP_CONTENT) && type != DOMRegionContext.XML_TAG_OPEN);
+		return ((type == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN || type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN || type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN || type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN || type == DOMJSPRegionContexts.JSP_CONTENT || type == DOMJSPRegionContexts.JSP_EL_OPEN) && type != DOMRegionContext.XML_TAG_OPEN);
 		// checking XML_TAG_OPEN so <jsp:directive.xxx/> gets treated like
 		// other XML jsp tags
 	}
@@ -969,7 +996,7 @@ public class JSPTranslator {
 								// embedded region
 								// so we only translate on the JSP open tags
 								// (not content)
-								if (type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN || type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN || type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN || type == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN) {
+								if (type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN || type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN || type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN || type == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN || type == DOMJSPRegionContexts.JSP_EL_OPEN) {
 									// now call jsptranslate
 									// System.out.println("embedded jsp OPEN
 									// >>>> " +
@@ -1038,6 +1065,31 @@ public class JSPTranslator {
 				setCursorOwner(getJSPTypeForRegion(region));
 			}
 		}
+ }
+
+	
+	private void translateEL(String elText, IStructuredDocumentRegion currentNode, int contentStart, int contentLength) {
+		if(null == elParser) {
+			elParser = JSPELParser.createParser(elText);
+		} else {
+			elParser.ReInit(elText);
+		}
+		
+		try {
+			ASTExpression expression = elParser.Expression();
+			ELGenerator gen = new ELGenerator();
+			gen.generate(expression, fUserELExpressions, fUserELRanges, this, currentNode, contentStart, contentLength);
+		} catch (ParseException e) {
+			Token curTok = e.currentToken;
+			int problemStartOffset;
+			int problemEndOffset;
+			Position pos = null;
+			problemStartOffset =  contentStart + curTok.beginColumn;
+			problemEndOffset = contentStart + curTok.endColumn;
+			
+			pos = new Position(problemStartOffset, problemEndOffset - problemStartOffset + 1);
+			fELProblems.add(new ELProblem(pos, e.getLocalizedMessage()));
+		}
 	}
 
 	/**
@@ -1079,8 +1131,10 @@ public class JSPTranslator {
 
 			// check next region to see if it's content
 			if (i + 1 < embeddedRegions.size()) {
-				if (embeddedRegions.get(i + 1).getType() == DOMJSPRegionContexts.JSP_CONTENT)
+				String regionType = embeddedRegions.get(i + 1).getType();
+				if (regionType == DOMJSPRegionContexts.JSP_CONTENT || regionType == DOMJSPRegionContexts.JSP_EL_CONTENT)
 					content = embeddedRegions.get(i + 1);
+				
 			}
 
 			if (content != null) {
@@ -1103,6 +1157,9 @@ public class JSPTranslator {
 				else if (type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN) {
 					fLastJSPType = DECLARATION;
 					translateDeclarationString(embeddedContainer.getText(content), fCurrentNode, contentStart, content.getLength());
+				} else if (type == DOMJSPRegionContexts.JSP_EL_OPEN) {
+					fLastJSPType = EXPRESSION;
+					translateEL(embeddedContainer.getText(content), fCurrentNode, contentStart, content.getLength());
 				}
 
 				// calculate relative offset in buffer
@@ -1990,5 +2047,13 @@ public class JSPTranslator {
 
 	final public IStructuredDocumentRegion getCurrentNode() {
 		return fCurrentNode;
+	}
+
+	public ArrayList getELProblems() {
+		return fELProblems;
+	}
+
+	public IStructuredDocument getStructuredDocument() {
+		return fStructuredDocument;
 	}
 }

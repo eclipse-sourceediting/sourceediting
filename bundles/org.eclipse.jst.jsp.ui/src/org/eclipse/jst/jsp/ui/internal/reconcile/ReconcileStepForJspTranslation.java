@@ -12,6 +12,7 @@ package org.eclipse.jst.jsp.ui.internal.reconcile;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -20,6 +21,7 @@ import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilableModel;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.reconciler.IReconcileStep;
+import org.eclipse.jst.jsp.core.internal.java.ELProblem;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationExtension;
@@ -32,6 +34,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentAdapter;
+import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
@@ -81,10 +84,28 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 
 		if(DEBUG)
             System.out.println("[trace reconciler] > JSP TRANSLATE step done"); //$NON-NLS-1$	
+		
+		//return EMPTY_RECONCILE_RESULT_SET;
+		return adaptELProblems();
+	}
 
-		// this step doesn't actually produce results, only creates the java
-		// model
-		return EMPTY_RECONCILE_RESULT_SET;
+	private IReconcileResult[] adaptELProblems() {
+		List problems = fJSPTranslation.getELProblems();
+		TemporaryAnnotation[] annotations = new TemporaryAnnotation[problems.size()];
+			for (int i = 0; i < problems.size(); i++) {
+				annotations[i] = createTemporaryAnnotationFromProblem((ELProblem) problems.get(i));
+			}
+			return annotations;
+	}
+
+	private TemporaryAnnotation createTemporaryAnnotationFromProblem(ELProblem problem) {
+		IStructuredDocument sDoc = (IStructuredDocument) ((DocumentAdapter) getInputModel()).getDocument();
+		String type = TemporaryAnnotation.ANNOT_ERROR;
+		ReconcileAnnotationKey key = null;
+		key = createKey(sDoc.getRegionAtCharacterOffset(problem.getFPos().getOffset()), ReconcileAnnotationKey.TOTAL);
+		TemporaryAnnotation annotation = new TemporaryAnnotation(problem.getFPos(), type, problem.getFMessage(), key);
+		annotation.setAdditionalFixInfo(problem);
+		return annotation;
 	}
 
 	/**

@@ -125,4 +125,44 @@
 	<extension point="org.eclipse.core.runtime.preferences">
          <initializer class="org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceInitializer"/>
 	</extension>
+	
+	
+	<extension
+                id="JSPELValidator"
+                name="JSPEL Validator"
+                point="org.eclipse.wst.validation.validator">
+           <validator>
+           <projectNature
+                id="org.eclipse.wst.common.modulecore.ModuleCoreNature">
+           </projectNature>
+                  <filter
+                        objectClass="org.eclipse.core.resources.IFile"
+                        nameFilter="*.jsp">
+                  </filter>
+                  <filter
+                        objectClass="org.eclipse.core.resources.IFile"
+                        nameFilter="*.jspf">
+                  </filter>
+                  <filter
+                        objectClass="org.eclipse.core.resources.IFile"
+                        nameFilter="*.jsf">
+                  </filter>
+                  <filter
+                        objectClass="org.eclipse.core.resources.IFile"
+                        nameFilter="*.jsv">
+                  </filter>
+                  <filter
+                        objectClass="org.eclipse.core.resources.IFile"
+                        nameFilter="*.jtpl">
+                  </filter>
+                  <helper
+                        class="org.eclipse.jst.jsp.core.internal.JSPELValidationHelper">
+                  </helper>
+                  <run
+                        enabled="true"
+                        class="org.eclipse.jst.jsp.core.internal.JSPELValidator">
+                  </run>
+                </validator>
+    </extension>
+	
 </plugin>

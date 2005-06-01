@@ -47,7 +47,7 @@ public class JSPJavaContentAssistProcessor implements IContentAssistProcessor, I
 	protected char contextInformationAutoActivationCharacters[] = null;
 	protected static final String UNKNOWN_CONTEXT = JSPUIMessages.Content_Assist_not_availab_UI_;
 	protected String fErrorMessage = null;
-	private JSPCompletionProcessor fJspCompletionProcessor = null;
+	protected JSPCompletionProcessor fJspCompletionProcessor = null;
 
 	public JSPJavaContentAssistProcessor() {
 		super();
@@ -205,7 +205,7 @@ public class JSPJavaContentAssistProcessor implements IContentAssistProcessor, I
 	/**
 	 * 
 	 */
-	private JSPCompletionProcessor getJspCompletionProcessor() {
+	protected JSPCompletionProcessor getJspCompletionProcessor() {
 		if (fJspCompletionProcessor == null) {
 			fJspCompletionProcessor = new JSPCompletionProcessor(fResource);
 			fJspCompletionProcessor.initialize(fResource);

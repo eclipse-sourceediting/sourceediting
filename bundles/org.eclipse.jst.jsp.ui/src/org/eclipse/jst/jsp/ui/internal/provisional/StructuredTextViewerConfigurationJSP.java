@@ -38,6 +38,7 @@ import org.eclipse.jst.jsp.core.internal.provisional.text.IJSPPartitionTypes;
 import org.eclipse.jst.jsp.core.internal.text.StructuredTextPartitionerForJSP;
 import org.eclipse.jst.jsp.ui.internal.autoedit.StructuredAutoEditStrategyJSP;
 import org.eclipse.jst.jsp.ui.internal.contentassist.JSPContentAssistProcessor;
+import org.eclipse.jst.jsp.ui.internal.contentassist.JSPELContentAssistProcessor;
 import org.eclipse.jst.jsp.ui.internal.contentassist.JSPJavaContentAssistProcessor;
 import org.eclipse.jst.jsp.ui.internal.contentassist.NoRegionContentAssistProcessorForJSP;
 import org.eclipse.jst.jsp.ui.internal.format.FormattingStrategyJSPJava;
@@ -47,6 +48,7 @@ import org.eclipse.jst.jsp.ui.internal.hyperlink.URIHyperlinkDetector;
 import org.eclipse.jst.jsp.ui.internal.reconcile.StructuredTextReconcilingStrategyForJSP;
 import org.eclipse.jst.jsp.ui.internal.style.LineStyleProviderForJSP;
 import org.eclipse.jst.jsp.ui.internal.style.java.LineStyleProviderForJava;
+import org.eclipse.jst.jsp.ui.internal.style.jspel.LineStyleProviderForJSPEL;
 import org.eclipse.jst.jsp.ui.internal.taginfo.JSPBestMatchHoverProcessor;
 import org.eclipse.jst.jsp.ui.internal.taginfo.JSPJavaBestMatchHoverProcessor;
 import org.eclipse.jst.jsp.ui.internal.taginfo.JSPJavaJavadocHoverProcessor;
@@ -162,6 +164,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 			IContentAssistProcessor jspContentAssistProcessor = new JSPContentAssistProcessor();
 			IContentAssistProcessor jspJavaContentAssistProcessor = new JSPJavaContentAssistProcessor();
 			IContentAssistProcessor noRegionProcessorJsp = new NoRegionContentAssistProcessorForJSP();
+			IContentAssistProcessor jspELContentAssistProcessor = new JSPELContentAssistProcessor();
 
 			// HTML
 			setContentAssistProcessor(contentAssistant, htmlContentAssistProcessor, IHTMLPartitionTypes.HTML_DEFAULT);
@@ -189,6 +192,8 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 			setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT);
 			// JSP Java
 			setContentAssistProcessor(contentAssistant, jspJavaContentAssistProcessor, IJSPPartitionTypes.JSP_CONTENT_JAVA);
+			// JSP EL
+			setContentAssistProcessor(contentAssistant, jspELContentAssistProcessor, IJSPPartitionTypes.JSP_DEFAULT_EL);
 			// unknown
 			setContentAssistProcessor(contentAssistant, noRegionProcessorJsp, IStructuredPartitionTypes.UNKNOWN_PARTITION);
 			// CMVC 269718
@@ -264,6 +269,9 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 			// JSP Java or JSP JavaScript
 			highlighter.addProvider(IJSPPartitionTypes.JSP_CONTENT_JAVA, new LineStyleProviderForJava());
 			highlighter.addProvider(IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT, new LineStyleProviderForJavaScript());
+			
+			// JSPEL 
+			highlighter.addProvider(IJSPPartitionTypes.JSP_DEFAULT_EL, new LineStyleProviderForJSPEL());
 		}
 
 		return highlighter;
@@ -443,6 +451,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 					fReconciler.setReconcilingStrategy(jspStrategy, IJSPPartitionTypes.JSP_CONTENT_JAVA);
 					fReconciler.setReconcilingStrategy(jspStrategy, IJSPPartitionTypes.JSP_CONTENT_DELIMITER);
 					fReconciler.setReconcilingStrategy(jspStrategy, IJSPPartitionTypes.JSP_DIRECTIVE);
+					fReconciler.setReconcilingStrategy(jspStrategy, IJSPPartitionTypes.JSP_DEFAULT_EL);
 
 					fReconciler.setDefaultStrategy(markupStrategy);
 
