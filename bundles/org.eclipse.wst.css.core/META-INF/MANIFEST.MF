@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.css.core; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: cssmodel.jar
 Bundle-Activator: org.eclipse.wst.css.core.internal.CSSCorePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin

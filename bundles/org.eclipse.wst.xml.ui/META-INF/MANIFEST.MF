@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.xml.ui; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: xmleditor.jar
 Bundle-Activator: org.eclipse.wst.xml.ui.internal.XMLUIPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin

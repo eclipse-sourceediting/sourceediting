@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.xml.core; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: xmlmodel.jar
 Bundle-Activator: org.eclipse.wst.xml.core.internal.XMLCorePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin

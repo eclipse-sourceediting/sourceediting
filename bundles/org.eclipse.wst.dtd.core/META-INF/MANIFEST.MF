@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.wst.dtd.core; singleton:=true
 Bundle-Version: 1.0.0
-Bundle-ClassPath: dtdcore.jar
 Bundle-Activator: org.eclipse.wst.dtd.core.internal.DTDCorePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
