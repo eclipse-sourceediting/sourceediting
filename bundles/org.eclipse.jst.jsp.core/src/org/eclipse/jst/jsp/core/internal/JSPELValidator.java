@@ -70,26 +70,30 @@ public class JSPELValidator implements org.eclipse.wst.validation.internal.provi
 	}
 
 	public void validate(IValidationContext helper, IReporter reporter) throws ValidationException {
-		String [] uris = helper.getURIs();
+		String[] uris = helper.getURIs();
 		reporter.removeAllMessages(this);
-		for(int i = 0; i < uris.length; i++) {
-			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(uris[i]));
-			IStructuredModel model = null;
-			try {
-				model = StructuredModelManager.getModelManager().getModelForRead(file);
-				DOMModelForJSP jspModel = (DOMModelForJSP)model;
+		// IValidationContext may return a null array
+		if (uris != null) {
+			for (int i = 0; i < uris.length; i++) {
+				IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(uris[i]));
+				IStructuredModel model = null;
+				try {
+					model = StructuredModelManager.getModelManager().getModelForRead(file);
+					DOMModelForJSP jspModel = (DOMModelForJSP) model;
 					IStructuredDocument structuredDoc = jspModel.getStructuredDocument();
 					IStructuredDocumentRegion curNode = structuredDoc.getFirstStructuredDocumentRegion();
-					while(null != (curNode = curNode.getNext())) {
-						if (curNode.getType() != DOMRegionContext.XML_COMMENT_TEXT && curNode.getType() != DOMRegionContext.XML_CDATA_TEXT && 
-								curNode.getType() != DOMRegionContext.UNDEFINED) {
+					while (null != (curNode = curNode.getNext())) {
+						if (curNode.getType() != DOMRegionContext.XML_COMMENT_TEXT && curNode.getType() != DOMRegionContext.XML_CDATA_TEXT && curNode.getType() != DOMRegionContext.UNDEFINED) {
 							validateRegionContainer(curNode, reporter, file);
-						}	
-					}	
-			} catch (Exception e) {}
-			finally {
-				if( null != model)
-					model.releaseFromRead();
+						}
+					}
+				}
+				catch (Exception e) {
+				}
+				finally {
+					if (null != model)
+						model.releaseFromRead();
+				}
 			}
 		}
 	}
