@@ -11,7 +11,7 @@
 package org.eclipse.wst.html.core.internal.modelhandler;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,6 +28,7 @@ import org.eclipse.wst.sse.core.internal.ltk.parser.JSPCapableParser;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.util.Assert;
+import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.xml.core.internal.document.DocumentTypeAdapter;
 import org.eclipse.wst.xml.core.internal.document.ModelParserAdapter;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
@@ -36,7 +37,7 @@ public class EmbeddedHTML implements EmbeddedTypeHandler {
 	public String ContentTypeID_EmbeddedHTML = "org.eclipse.wst.html.core.internal.contenttype.EmbeddedHTML"; //$NON-NLS-1$
 
 	// saved for removal later
-	private HashSet fLocalFactories = new HashSet();
+	private HashMap fLocalFactories = new HashMap();
 
 	private List supportedMimeTypes;
 
@@ -99,7 +100,14 @@ public class EmbeddedHTML implements EmbeddedTypeHandler {
 		if (!registry.contains(DocumentTypeAdapter.class)) {
 			factory = new HTMLDocumentTypeAdapterFactory();
 			registry.addFactory(factory);
-			fLocalFactories.add(factory);
+			
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=95960
+			// remove and release the old adapter factory
+			Object o = fLocalFactories.remove(DocumentTypeAdapter.class);
+			if(o != null && o instanceof IReleasable)
+				((IReleasable)o).release();
+			
+			fLocalFactories.put(DocumentTypeAdapter.class, factory);
 		}
 		if (!registry.contains(ModelParserAdapter.class)) {
 			factory = HTMLModelParserAdapterFactory.getInstance();
@@ -117,7 +125,7 @@ public class EmbeddedHTML implements EmbeddedTypeHandler {
 		Assert.isNotNull(registry);
 		
         if (!fLocalFactories.isEmpty()) {
-            Iterator it = fLocalFactories.iterator();
+            Iterator it = fLocalFactories.values().iterator();
             while (it.hasNext()) {
                 INodeAdapterFactory af = (INodeAdapterFactory) it.next();
                 af.release();
