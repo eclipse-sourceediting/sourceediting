@@ -59,8 +59,8 @@ public class AdapterFactoryRegistryTest extends TestCase {
 			// System.out.println(provider.getClass().getName());
 		}
 
-		// should have encountered all expected adater factories.
-		assertTrue(known.isEmpty());
+		// should have encountered all expected adapter factories.
+		assertEquals("unknown (extra) adapter factories found", 0, known.size());
 	}
 
 	public void testGetFactoriesXML() {
