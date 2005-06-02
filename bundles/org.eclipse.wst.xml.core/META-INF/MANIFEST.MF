@@ -6,8 +6,7 @@ Bundle-Version: 1.0.0
 Bundle-Activator: org.eclipse.wst.xml.core.internal.XMLCorePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Export-Package: .,
- org.eclipse.wst.xml.core.internal,
+Export-Package: org.eclipse.wst.xml.core.internal,
  org.eclipse.wst.xml.core.internal.cleanup,
  org.eclipse.wst.xml.core.internal.commentelement,
  org.eclipse.wst.xml.core.internal.commentelement.impl,
