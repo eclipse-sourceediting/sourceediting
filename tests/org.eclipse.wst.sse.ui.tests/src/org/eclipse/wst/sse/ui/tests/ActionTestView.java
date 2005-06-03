@@ -29,7 +29,6 @@ import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.sse.core.internal.tasks.TaskScanningScheduler;
 
 
 /**
@@ -38,19 +37,6 @@ import org.eclipse.wst.sse.core.internal.tasks.TaskScanningScheduler;
  * A view to hang actions off of to execute arbitrary code at arbitrary times.
  */
 public class ActionTestView extends ViewPart {
-
-	class RegisterBuilderAction extends Action {
-		public RegisterBuilderAction() {
-			super("Redetect Tasks");
-			setToolTipText("Redetect All Tasks");
-		}
-
-		public void run() {
-			super.run();
-			TaskScanningScheduler.refreshAll();
-		}
-	}
-
 
 	class EmptyTextSetter extends Action {
 		public EmptyTextSetter() {
@@ -81,7 +67,6 @@ public class ActionTestView extends ViewPart {
 	private List createActions() {
 		List actions = new ArrayList();
 
-		actions.add(new RegisterBuilderAction());
 		actions.add(new EmptyTextSetter());
 
 		return actions;
