@@ -2,7 +2,7 @@
 <?eclipse version="3.0"?>
 <plugin>
 
-    
+
 <!-- deprecated -->
    <extension-point id="adaptOnCreateFactory" name="%Adapt_On_Create_Factory_Extension.name"/>
    <extension-point id="documentTypes" name="%Document_Types_Extension.name"/>
@@ -15,6 +15,7 @@
 	-->
    <extension-point id="cssprofile" name="%CSS_Profile_Extension.name"/>
    <extension-point id="commentElementHandler" name="%Comment_Element_Handler_Extension.name"/>
+
 <!-- this plug-in provides support for this extension point -->
    <extension-point id="modelHandler" name="%Model_Handler_Extension.name"/>
    <extension-point id="formatProcessors" name="%Format_Processors_Extension_Point.name" schema="schema/formatProcessors.exsd"/>
@@ -28,7 +29,9 @@
     	<persistent value="true"/>
 	</extension>
 	
-	
-
+<!-- Make sure default preference values are set at runtime -->
+	<extension point="org.eclipse.core.runtime.preferences">
+		<initializer class="org.eclipse.wst.sse.core.internal.preferences.PreferenceInitializer"/>
+	</extension>
 	
 </plugin>

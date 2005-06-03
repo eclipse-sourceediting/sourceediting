@@ -10,12 +10,14 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.sse.core.internal.tasks;
+package org.eclipse.wst.sse.core.internal.provisional.tasks;
+
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
+import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 
 /**
  * Delegates for the main Task Scanner. Delegates may be contributed using the
@@ -24,14 +26,33 @@ import org.eclipse.core.runtime.IStatus;
  * call the startup() method, scan(), and then shutdown() in sequence. Scanner
  * instances will be reused across projects but are not shared per content
  * type. Delegates should not hold on to references to models or resources
- * after shutdown().
+ * after shutdown() and should take care not to leak memory or resources.
  */
-public interface ITaskScannerDelegate {
-	IStatus scan(IFile file, IProgressMonitor monitor);
+public interface IFileTaskScanner {
+	String TASK_MARKER_ID = SSECorePlugin.ID + ".task"; //$NON-NLS-1$;
+
+	/**
+	 * Requests that the list of automatically discovered tasks for the given
+	 * file be updated. Once completed, the list of tasks should correspond
+	 * exactly to the file's contents.
+	 * 
+	 * @param file -
+	 *            the file to be scanned
+	 * @param taskTags -
+	 *            the list of task tags for which to scan
+	 * @param monitor -
+	 *            a progress monitor
+	 * @return an array of maps containing the attributes for task markers to
+	 *         be created
+	 */
+	Map[] scan(IFile file, TaskTag[] taskTags, IProgressMonitor monitor);
 
 	/**
 	 * Notifies the delegate that scanning is done for now. Resources held
 	 * from startup should now be released.
+	 * 
+	 * @param project -
+	 *            the project that was just scanned
 	 */
 	void shutdown(IProject project);
 
@@ -41,7 +62,8 @@ public interface ITaskScannerDelegate {
 	 * expensive configuration for the given project.
 	 * 
 	 * @param project -
-	 *            the project that's about to be scanned
+	 *            the project that is about to be scanned
+	 * 
 	 */
 	void startup(IProject project);
 }

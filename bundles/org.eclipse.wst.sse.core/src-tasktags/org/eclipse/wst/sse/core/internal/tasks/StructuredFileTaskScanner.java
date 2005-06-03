@@ -21,75 +21,55 @@ import java.nio.charset.CharacterCodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.wst.sse.core.internal.Logger;
-import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 import org.eclipse.wst.sse.core.internal.document.DocumentReader;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionHandler;
 import org.eclipse.wst.sse.core.internal.ltk.parser.StructuredDocumentRegionParser;
 import org.eclipse.wst.sse.core.internal.modelhandler.ModelHandlerRegistry;
-import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.internal.provisional.document.IEncodedDocument;
+import org.eclipse.wst.sse.core.internal.provisional.tasks.IFileTaskScanner;
+import org.eclipse.wst.sse.core.internal.provisional.tasks.TaskTag;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
-import org.eclipse.wst.sse.core.internal.util.StringUtils;
 
 /**
  * A delegate to create IMarker.TASKs for "todos" and similiar comments.
  */
-public abstract class TaskScannerDelegate implements ITaskScannerDelegate {
-
-	public static class TaskTag {
-		public int priority;
-		public String text;
-
-		public TaskTag(String taskText, int taskPriority) {
-			this.text = taskText;
-			this.priority = taskPriority;
-		}
-	}
+public abstract class StructuredFileTaskScanner implements IFileTaskScanner {
 
 	private static final boolean _debug = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks")); //$NON-NLS-1$ //$NON-NLS-2$
 	protected static final boolean _debugPerf = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks/time")); //$NON-NLS-1$ //$NON-NLS-2$
 
-	public static String getTaskMarkerType() {
-		return SSECorePlugin.ID + ".task"; //$NON-NLS-1$
-	}
-
 	// the list of attributes for the new tasks for the current file
-	protected List fNewMarkerAttributes = null;
+	protected List fNewMarkerAttributeMaps = null;
 
-	private TaskTag[] fTaskTags = null;
 	List oldMarkers = null;
 	private long time0;
 
-	public TaskScannerDelegate() {
+	public StructuredFileTaskScanner() {
 		super();
-		fNewMarkerAttributes = new ArrayList();
+		fNewMarkerAttributeMaps = new ArrayList();
 		if (_debug) {
 			System.out.println(getClass().getName() + " instance created"); //$NON-NLS-1$
 		}
@@ -108,7 +88,8 @@ public abstract class TaskScannerDelegate implements ITaskScannerDelegate {
 		attributes.put(IMarker.CHAR_START, new Integer(startOffset));
 		attributes.put(IMarker.CHAR_END, new Integer(startOffset + length));
 		attributes.put(IMarker.MESSAGE, text);
-		attributes.put(IMarker.USER_EDITABLE, Boolean.FALSE);
+		attributes.put(IMarker.USER_EDITABLE, Boolean.TRUE);
+		attributes.put("org.eclipse.ui.part.IShowInTarget", new String[]{""});
 
 		switch (priority) {
 			case IMarker.PRIORITY_HIGH : {
@@ -127,30 +108,6 @@ public abstract class TaskScannerDelegate implements ITaskScannerDelegate {
 		return attributes;
 	}
 
-	protected void createNewMarkers(IFile file, IProgressMonitor monitor) {
-		final IFile finalFile = file;
-		if (file.isAccessible() && fNewMarkerAttributes.size() > 0) {
-			if (_debug) {
-				System.out.println("" + fNewMarkerAttributes.size() + " tasks for " + file.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-			try {
-				IWorkspaceRunnable r = new IWorkspaceRunnable() {
-					public void run(IProgressMonitor progressMonitor) throws CoreException {
-						for (int i = 0; i < fNewMarkerAttributes.size(); i++) {
-							IMarker marker = finalFile.createMarker(getMarkerType());
-							marker.setAttributes((Map) fNewMarkerAttributes.get(i));
-						}
-					}
-				};
-				finalFile.getWorkspace().run(r, null, IWorkspace.AVOID_UPDATE, monitor);
-				fNewMarkerAttributes.clear();
-			}
-			catch (CoreException e1) {
-				Logger.logException(e1);
-			}
-		}
-	}
-
 	private String detectCharset(IFile file) {
 		if (file.getType() == IResource.FILE && file.isAccessible()) {
 			IContentDescription d = null;
@@ -161,8 +118,10 @@ public abstract class TaskScannerDelegate implements ITaskScannerDelegate {
 					return d.getCharset();
 			}
 			catch (CoreException e) {
-				// should not be possible given the accessible and file type
-				// check above
+				/*
+				 * should not be possible given the accessible and file type
+				 * check above
+				 */
 			}
 			InputStream contents = null;
 			try {
@@ -197,7 +156,7 @@ public abstract class TaskScannerDelegate implements ITaskScannerDelegate {
 	 * @param documentRegion
 	 * @param comment
 	 */
-	protected void findTasks(IDocument document, IStructuredDocumentRegion documentRegion, ITextRegion comment) {
+	protected void findTasks(IDocument document, TaskTag[] taskTags, IStructuredDocumentRegion documentRegion, ITextRegion comment) {
 		if (isCommentRegion(documentRegion, comment)) {
 			int startOffset = documentRegion.getStartOffset(comment);
 			int endOffset = documentRegion.getTextEndOffset(comment);
@@ -210,19 +169,18 @@ public abstract class TaskScannerDelegate implements ITaskScannerDelegate {
 					int end = Math.min(endOffset, line.getOffset() + line.getLength());
 					int length = end - begin;
 
-					// TODO: improve our search algorithm; use search or
-					// regionMatch?
+					/* XXX: This generates a lot of garbage objects */
 
 					String commentedText = getCommentedText(document, begin, length);
+					String comparisonText = commentedText.toLowerCase(Locale.ENGLISH);
 
-					for (int i = 0; i < fTaskTags.length; i++) {
-						int tagIndex = commentedText.indexOf(fTaskTags[i].text);
+					for (int i = 0; i < taskTags.length; i++) {
+						int tagIndex = comparisonText.indexOf(taskTags[i].getTag().toLowerCase(Locale.ENGLISH));
 						if (tagIndex >= 0) {
 							String markerDescription = commentedText.substring(tagIndex);
 							int markerOffset = begin + tagIndex;
 							int markerLength = end - markerOffset;
-							fNewMarkerAttributes.add(createInitialMarkerAttributes(markerDescription, lineNumber, markerOffset, markerLength, fTaskTags[i].priority));
-							break;
+							fNewMarkerAttributeMaps.add(createInitialMarkerAttributes(markerDescription, lineNumber, markerOffset, markerLength, taskTags[i].getPriority()));
 						}
 					}
 				}
@@ -233,7 +191,7 @@ public abstract class TaskScannerDelegate implements ITaskScannerDelegate {
 		}
 	}
 
-	private void findTasks(IFile file, IProgressMonitor monitor) {
+	private void findTasks(IFile file, final TaskTag[] taskTags, IProgressMonitor monitor) {
 		try {
 			IModelHandler handler = ModelHandlerRegistry.getInstance().getHandlerFor(file);
 
@@ -255,7 +213,7 @@ public abstract class TaskScannerDelegate implements ITaskScannerDelegate {
 							ITextRegionList regions = documentRegion.getRegions();
 							for (int j = 0; j < regions.size(); j++) {
 								ITextRegion comment = regions.get(j);
-								findTasks(textDocument, documentRegion, comment);
+								findTasks(textDocument, taskTags, documentRegion, comment);
 							}
 							// disconnect the document regions
 							if (documentRegion.getPrevious() != null) {
@@ -282,7 +240,7 @@ public abstract class TaskScannerDelegate implements ITaskScannerDelegate {
 						ITextRegionList regions = documentRegion.getRegions();
 						for (int j = 0; j < regions.size(); j++) {
 							ITextRegion comment = regions.get(j);
-							findTasks(document, documentRegion, comment);
+							findTasks(document, taskTags, documentRegion, comment);
 						}
 						documentRegion = documentRegion.getNext();
 					}
@@ -293,7 +251,7 @@ public abstract class TaskScannerDelegate implements ITaskScannerDelegate {
 			Logger.logException("Exception with " + file.getFullPath().toString(), e); //$NON-NLS-1$
 		}
 		catch (CharacterCodingException e) {
-			Logger.log(Logger.INFO, "TaskScannerDelegate encountered CharacterCodingException reading " + file.getFullPath().toOSString()); //$NON-NLS-1$
+			Logger.log(Logger.INFO, "StructuredFileTaskScanner encountered CharacterCodingException reading " + file.getLocation()); //$NON-NLS-1$
 		}
 		catch (IOException e) {
 			Logger.logException(e);
@@ -304,78 +262,23 @@ public abstract class TaskScannerDelegate implements ITaskScannerDelegate {
 		return document.get(begin, length);
 	}
 
-
-	final protected String getMarkerType() {
-		return SSECorePlugin.ID + ".task"; //$NON-NLS-1$
-	}
-
 	protected abstract boolean isCommentRegion(IStructuredDocumentRegion region, ITextRegion textRegion);
 
-	private void loadTags() {
-		if (_debug) {
-			System.out.println(this + " loadPreference()"); //$NON-NLS-1$
-		}
-		String tagsString = SSECorePlugin.getDefault().getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_TAGS);
-		String prioritiesString = SSECorePlugin.getDefault().getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_PRIORITIES);
-
-		List list = new ArrayList();
-		StringTokenizer toker = null;
-		if (tagsString.length() > 0) {
-			toker = new StringTokenizer(tagsString, ","); //$NON-NLS-1$
-			while (toker.hasMoreTokens()) {
-				// since we're separating the values with ',', escape ',' in
-				// the
-				// values
-				list.add(StringUtils.replace(toker.nextToken(), "&comma;", ",").trim()); //$NON-NLS-1$ //$NON-NLS-2$
-			}
-		}
-		String[] tags = (String[]) list.toArray(new String[0]);
-		list.clear();
-
-		if (prioritiesString.length() > 0) {
-			toker = new StringTokenizer(prioritiesString, ","); //$NON-NLS-1$
-			int i = 0;
-			while (toker.hasMoreTokens() && i < tags.length) {
-				Integer number = null;
-				try {
-					number = Integer.valueOf(toker.nextToken().trim());
-				}
-				catch (NumberFormatException e) {
-					number = new Integer(IMarker.PRIORITY_NORMAL);
-				}
-				if (i < tags.length) {
-					list.add(new TaskTag(tags[i++], number.intValue()));
-				}
-			}
-		}
-		fTaskTags = (TaskTag[]) list.toArray(new TaskTag[0]);
-	}
-
-	public IStatus scan(IFile file, IProgressMonitor monitor) {
+	public synchronized Map[] scan(IFile file, TaskTag[] taskTags, IProgressMonitor monitor) {
+		fNewMarkerAttributeMaps.clear();
 		if (monitor.isCanceled() || !shouldScan(file)) {
-			return Status.OK_STATUS;
+			return new Map[0];
 		}
 		if (_debugPerf) {
 			time0 = System.currentTimeMillis();
 		}
-		if (fTaskTags.length > 0) {
-			try {
-				// Delete old Task markers
-				file.deleteMarkers(getMarkerType(), true, IResource.DEPTH_ZERO);
-			}
-			catch (CoreException e) {
-				Logger.logException("exception deleting old tasks", e); //$NON-NLS-1$ 
-			}
-			// on a clean build, don't add new Tasks
-			// if (kind != IncrementalProjectBuilder.CLEAN_BUILD) {
-			findTasks(file, monitor);
-			createNewMarkers(file, monitor);
-			// }
+		if (taskTags.length > 0) {
+			findTasks(file, taskTags, monitor);
 		}
 		if (_debugPerf) {
 			System.out.println("" + (System.currentTimeMillis() - time0) + "ms for " + file.getLocation()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		return Status.OK_STATUS;
+		return (Map[]) fNewMarkerAttributeMaps.toArray(new Map[fNewMarkerAttributeMaps.size()]);
 	}
 
 	/**
@@ -417,7 +320,6 @@ public abstract class TaskScannerDelegate implements ITaskScannerDelegate {
 		if (_debug) {
 			System.out.println(this + " shutdown for " + project.getName()); //$NON-NLS-1$
 		}
-		fTaskTags = null;
 	}
 
 	public void startup(IProject project) {
@@ -427,7 +329,6 @@ public abstract class TaskScannerDelegate implements ITaskScannerDelegate {
 		if (_debugPerf) {
 			time0 = System.currentTimeMillis();
 		}
-		loadTags();
 		if (_debugPerf) {
 			System.out.println("" + (System.currentTimeMillis() - time0) + "ms loading prefs for " + project.getName()); //$NON-NLS-1$ //$NON-NLS-2$
 		}

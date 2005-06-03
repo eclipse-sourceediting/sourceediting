@@ -11,6 +11,9 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.tasks;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -22,6 +25,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
+import org.eclipse.wst.sse.core.internal.provisional.tasks.IFileTaskScanner;
+import org.eclipse.wst.sse.core.internal.util.StringUtils;
 
 public class TaskScanningScheduler {
 	private class ListenerVisitor implements IResourceChangeListener, IResourceDeltaVisitor {
@@ -60,11 +65,25 @@ public class TaskScanningScheduler {
 
 	private static TaskScanningScheduler scheduler;
 
-
-	public static void refreshAll() {
-		SSECorePlugin.getDefault().getPluginPreferences().setValue(ScanningJob.TASK_TAG_PROJECTS_ALREADY_SCANNED, ""); //$NON-NLS-1$
+	public static void refresh() {
+		SSECorePlugin.getDefault().getPluginPreferences().setValue(TaskScanningJob.TASK_TAG_PROJECTS_ALREADY_SCANNED, ""); //$NON-NLS-1$
 		scheduler.enqueue(ResourcesPlugin.getWorkspace().getRoot());
 	}
+
+	public static void refresh(IProject project) {
+		String[] projectNames = StringUtils.unpack(SSECorePlugin.getDefault().getPluginPreferences().getString(TaskScanningJob.TASK_TAG_PROJECTS_ALREADY_SCANNED)); //$NON-NLS-1$
+		List freshProjectList = new ArrayList();
+		for (int i = 0; i < projectNames.length; i++) {
+			if (!projectNames[i].equals(project.getName())) {
+				freshProjectList.add(projectNames[i]);
+			}
+		}
+		String freshProjects = StringUtils.pack((String[]) freshProjectList.toArray(new String[freshProjectList.size()]));
+		SSECorePlugin.getDefault().getPluginPreferences().setValue(TaskScanningJob.TASK_TAG_PROJECTS_ALREADY_SCANNED, freshProjects); //$NON-NLS-1$
+
+		scheduler.enqueue(project);
+	}
+
 
 	/**
 	 * Only for use by SSECorePlugin class
@@ -91,17 +110,31 @@ public class TaskScanningScheduler {
 		scheduler.enqueue(ResourcesPlugin.getWorkspace().getRoot());
 	}
 
-	ScanningJob fJob = null;
+	TaskScanningJob fJob = null;
 
 	ListenerVisitor visitor = null;
 
 	private TaskScanningScheduler() {
 		super();
-		fJob = new ScanningJob();
+		fJob = new TaskScanningJob();
 		visitor = new ListenerVisitor();
 	}
 
+	void enqueue(IProject project) {
+		try {
+			project.deleteMarkers(IFileTaskScanner.TASK_MARKER_ID, true, IResource.DEPTH_INFINITE);
+		}
+		catch (CoreException e) {
+		}
+		fJob.addProject(project);
+	}
+
 	void enqueue(IWorkspaceRoot root) {
+		try {
+			root.deleteMarkers(IFileTaskScanner.TASK_MARKER_ID, true, IResource.DEPTH_INFINITE);
+		}
+		catch (CoreException e) {
+		}
 		IProject[] allProjects = root.getProjects();
 		for (int i = 0; i < allProjects.length; i++) {
 			fJob.addProject(allProjects[i]);

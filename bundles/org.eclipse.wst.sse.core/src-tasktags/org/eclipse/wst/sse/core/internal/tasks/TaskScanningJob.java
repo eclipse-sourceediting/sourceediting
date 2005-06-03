@@ -27,14 +27,13 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.wst.sse.core.internal.SSECoreMessages;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
-import org.eclipse.wst.sse.core.internal.preferences.CommonModelPreferenceNames;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.osgi.framework.Bundle;
 
 /**
  * Queueing Job for processing deltas and projects.
  */
-class ScanningJob extends Job {
+class TaskScanningJob extends Job {
 	public static final boolean _debugJob = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks/job"));
 	static final String TASK_TAG_PROJECTS_ALREADY_SCANNED = "task-tag-projects-already-scanned"; //$NON-NLS-1$
 	private List fQueue = null;
@@ -42,42 +41,39 @@ class ScanningJob extends Job {
 	/** symbolic name for OSGI framework */
 	private final String OSGI_FRAMEWORK_ID = "org.eclipse.osgi"; //$NON-NLS-1$
 
-	ScanningJob() {
+	TaskScanningJob() {
 		super(SSECoreMessages.TaskScanner_0);
 		fQueue = new ArrayList();
 		setPriority(Job.DECORATE);
 		setSystem(false);
 
-		SSECorePlugin.getDefault().getPluginPreferences().setDefault(CommonModelPreferenceNames.TASK_TAG_PROJECTS_IGNORED, "");
 		SSECorePlugin.getDefault().getPluginPreferences().setDefault(TASK_TAG_PROJECTS_ALREADY_SCANNED, "");
 	}
 
 	synchronized void addDelta(IResourceDelta delta) {
-		if (!isIgnoredProject(delta)) {
-			fQueue.add(delta);
-			if (_debugJob) {
-				String kind = null;
-				switch (delta.getKind()) {
-					case IResourceDelta.ADDED :
-						kind = " [IResourceDelta.ADDED]"; //$NON-NLS-1$
-						break;
-					case IResourceDelta.CHANGED :
-						kind = " [IResourceDelta.CHANGED]"; //$NON-NLS-1$
-						break;
-					case IResourceDelta.REMOVED :
-						kind = " [IResourceDelta.REMOVED]"; //$NON-NLS-1$
-						break;
-					case IResourceDelta.ADDED_PHANTOM :
-						kind = " [IResourceDelta.ADDED_PHANTOM]"; //$NON-NLS-1$
-						break;
-					case IResourceDelta.REMOVED_PHANTOM :
-						kind = " [IResourceDelta.REMOVED_PHANTOM]"; //$NON-NLS-1$
-						break;
-				}
-				System.out.println("Adding delta " + delta.getFullPath() + kind);
+		fQueue.add(delta);
+		if (_debugJob) {
+			String kind = null;
+			switch (delta.getKind()) {
+				case IResourceDelta.ADDED :
+					kind = " [IResourceDelta.ADDED]"; //$NON-NLS-1$
+					break;
+				case IResourceDelta.CHANGED :
+					kind = " [IResourceDelta.CHANGED]"; //$NON-NLS-1$
+					break;
+				case IResourceDelta.REMOVED :
+					kind = " [IResourceDelta.REMOVED]"; //$NON-NLS-1$
+					break;
+				case IResourceDelta.ADDED_PHANTOM :
+					kind = " [IResourceDelta.ADDED_PHANTOM]"; //$NON-NLS-1$
+					break;
+				case IResourceDelta.REMOVED_PHANTOM :
+					kind = " [IResourceDelta.REMOVED_PHANTOM]"; //$NON-NLS-1$
+					break;
 			}
-			schedule(100);
+			System.out.println("Adding delta " + delta.getFullPath() + kind);
 		}
+		schedule(100);
 	}
 
 	synchronized void addProject(IProject project) {
@@ -103,24 +99,16 @@ class ScanningJob extends Job {
 		// R3 spec.
 		boolean shuttingDown = Platform.getBundle(OSGI_FRAMEWORK_ID).getState() == Bundle.STOPPING;
 		if (_debugJob && shuttingDown) {
-			System.out.println("ScanningJob: system is shutting down!"); //$NON-NLS-1$
+			System.out.println("TaskScanningJob: system is shutting down!"); //$NON-NLS-1$
 		}
 		return shuttingDown;
 	}
 
 	private boolean isEnabledProject(IResource project) {
-		String[] projectsIgnored = StringUtils.unpack(SSECorePlugin.getDefault().getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_PROJECTS_IGNORED));
 		String[] projectsScanned = StringUtils.unpack(SSECorePlugin.getDefault().getPluginPreferences().getString(TASK_TAG_PROJECTS_ALREADY_SCANNED));
 
 		boolean shouldScan = true;
 		String name = project.getName();
-		for (int j = 0; shouldScan && j < projectsIgnored.length; j++) {
-			if (projectsIgnored[j].equals(name)) {
-				if (_debugJob)
-					System.out.println("Scanning Job ignoring " + project.getName());
-				shouldScan = false;
-			}
-		}
 		for (int j = 0; shouldScan && j < projectsScanned.length; j++) {
 			if (projectsScanned[j].equals(name)) {
 				if (_debugJob)
@@ -131,23 +119,6 @@ class ScanningJob extends Job {
 		return shouldScan;
 	}
 
-	private boolean isIgnoredProject(IResourceDelta delta) {
-		IResource resource = delta.getResource();
-		boolean ignore = false;
-		if (resource.getType() == IResource.PROJECT) {
-			String[] projectsIgnored = StringUtils.unpack(SSECorePlugin.getDefault().getPluginPreferences().getString(CommonModelPreferenceNames.TASK_TAG_PROJECTS_IGNORED));
-			String name = resource.getName();
-			for (int j = 0; !ignore && j < projectsIgnored.length; j++) {
-				if (projectsIgnored[j].equals(name)) {
-					if (_debugJob)
-						System.out.println("Scanning Job ignoring " + resource.getName());
-					ignore = true;
-				}
-			}
-		}
-		return ignore;
-	}
-
 	synchronized List retrieveQueue() {
 		List queue = fQueue;
 		fQueue = new ArrayList();
@@ -155,10 +126,6 @@ class ScanningJob extends Job {
 	}
 
 	protected IStatus run(IProgressMonitor monitor) {
-		if (frameworkIsShuttingDown())
-			return Status.OK_STATUS;
-
-		validateRememberedProjectList(CommonModelPreferenceNames.TASK_TAG_PROJECTS_IGNORED);
 		validateRememberedProjectList(TASK_TAG_PROJECTS_ALREADY_SCANNED);
 
 		IStatus status = null;
@@ -177,13 +144,15 @@ class ScanningJob extends Job {
 		IProgressMonitor scanMonitor = null;
 		while (!currentQueue.isEmpty()) {
 			Object o = currentQueue.remove(0);
+			if (frameworkIsShuttingDown())
+				return Status.OK_STATUS;
 			try {
 				scanMonitor = new SubProgressMonitor(monitor, 1);
 				if (o instanceof IResourceDelta) {
-					TaskScanner.getInstance().scan((IResourceDelta) o, scanMonitor);
+					WorkspaceTaskScanner.getInstance().scan((IResourceDelta) o, scanMonitor);
 				}
 				else if (o instanceof IProject) {
-					TaskScanner.getInstance().scan((IProject) o, scanMonitor);
+					WorkspaceTaskScanner.getInstance().scan((IProject) o, scanMonitor);
 					String[] projectsPreviouslyScanned = StringUtils.unpack(SSECorePlugin.getDefault().getPluginPreferences().getString(TASK_TAG_PROJECTS_ALREADY_SCANNED));
 					String[] updatedProjects = new String[projectsPreviouslyScanned.length + 1];
 					updatedProjects[projectsPreviouslyScanned.length] = ((IResource) o).getName();
