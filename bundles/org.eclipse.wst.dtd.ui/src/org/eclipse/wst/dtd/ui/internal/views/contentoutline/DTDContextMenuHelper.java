@@ -14,12 +14,12 @@
 
 package org.eclipse.wst.dtd.ui.internal.views.contentoutline;
 
-import java.util.List;
-
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.IActionBars;
@@ -61,9 +61,20 @@ public class DTDContextMenuHelper // extends FocusAdapter
 		 */
 		public void menuAboutToShow(IMenuManager manager) {
 			updateActions();
-			List selection = DTDContextMenuHelper.this.fEditor.getSelectedNodes();
-			if (selection != null && selection.size() == 1)
-				addActionItemsForSelection(selection.get(0), manager);
+			Object node = null;
+			ISelection selection = DTDContextMenuHelper.this.fEditor.getSelectionProvider().getSelection();
+			if (selection instanceof IStructuredSelection) {
+				node = ((IStructuredSelection) selection).getFirstElement();
+			}
+			if (node == null && selection instanceof ITextSelection) {
+				node = fEditor.getModel().getIndexedRegion(((ITextSelection) selection).getOffset());
+			}
+			if (node != null) {
+				addActionItemsForSelection(node, manager);
+			}
+//			List selection = DTDContextMenuHelper.this.fEditor.getSelectedNodes();
+//			if (node != null)
+//				addActionItemsForSelection(node, manager);
 		}
 	}
 

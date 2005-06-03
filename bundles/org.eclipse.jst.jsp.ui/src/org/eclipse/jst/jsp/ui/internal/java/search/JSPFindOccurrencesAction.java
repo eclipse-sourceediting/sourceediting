@@ -15,13 +15,14 @@ import java.util.ResourceBundle;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
+import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.core.internal.provisional.text.IJSPPartitionTypes;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.search.ui.ISearchQuery;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
@@ -70,7 +71,6 @@ public class JSPFindOccurrencesAction extends BasicFindOccurrencesAction impleme
 	 * @return currently selected IJavaElements
 	 */
 	public IJavaElement[] getJavaElementsForCurrentSelection() {
-
 		IJavaElement[] elements = new IJavaElement[0];
 		StructuredTextEditor editor = (StructuredTextEditor) getTextEditor();
 		// get JSP translation object for this viewer's document
@@ -80,8 +80,11 @@ public class JSPFindOccurrencesAction extends BasicFindOccurrencesAction impleme
 			JSPTranslationAdapter adapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
 			if (adapter != null) {
 				JSPTranslation translation = adapter.getJSPTranslation();
-				Point selected = editor.getSelectionRange();
-				elements = translation.getElementsFromJspRange(selected.x, selected.x + selected.y);
+				ISelection s = editor.getSelectionProvider().getSelection();
+				if (s instanceof ITextSelection) {
+					ITextSelection selection = (ITextSelection) s;
+					elements = translation.getElementsFromJspRange(selection.getOffset(), selection.getLength());
+				}
 			}
 		}
 		return elements;
