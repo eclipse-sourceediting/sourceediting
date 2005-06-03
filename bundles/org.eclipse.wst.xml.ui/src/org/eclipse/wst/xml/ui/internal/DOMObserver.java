@@ -13,12 +13,14 @@
 package org.eclipse.wst.xml.ui.internal;
 
 
-import java.util.Timer;
-import java.util.TimerTask;
-
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.CMDocumentLoader;
@@ -28,7 +30,6 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-
 
 /**
  * This class is used to observe changes in the DOM and perform
@@ -103,10 +104,7 @@ public class DOMObserver {
 					if (node.getNodeType() == Node.ELEMENT_NODE) {
 						Element element = (Element) node;
 						switch (eventType) {
-							case INodeNotifier.CHANGE : {
-								invokeDelayedCMDocumentLoad();
-								break;
-							}
+							case INodeNotifier.CHANGE :
 							case INodeNotifier.STRUCTURE_CHANGED : {
 								// structure change
 								invokeDelayedCMDocumentLoad();
@@ -127,37 +125,39 @@ public class DOMObserver {
 		}
 	}
 
-	class MyTimerTask extends TimerTask {
-		public MyTimerTask() {
-			super();
-			timerTaskCount++;
+	/**
+	 * Intentionally left visible to the user
+	 */
+	class TimerJob extends Job {
+		public TimerJob() {
+			super(SSEUIMessages.LoadingReferencedGrammars);
+			setPriority(Job.SHORT);
 		}
 
-		public void run() {
-			timerTaskCount--;
-			if (timerTaskCount == 0) {
-				invokeCMDocumentLoad();
-			}
+		public IStatus run(IProgressMonitor monitor) {
+			monitor.beginTask("", IProgressMonitor.UNKNOWN);  //$NON-NLS-1$
+			invokeCMDocumentLoad();
+			monitor.done();
+			return Status.OK_STATUS;
 		}
 	}
 
-	protected static Timer timer = new Timer(true);
-	protected Document document;
+	private Job timer = new TimerJob();
+	protected Document fDocument;
 	protected boolean isGrammarInferenceEnabled;
 	protected IStructuredModel model;
-	protected int timerTaskCount = 0;
 
 	public DOMObserver(IStructuredModel model) {
-		this.document = (model instanceof IDOMModel) ? ((IDOMModel) model).getDocument() : null;
+		fDocument = (model instanceof IDOMModel) ? ((IDOMModel) model).getDocument() : null;
 
-		if (document != null) {
-			ModelQuery modelQuery = ModelQueryUtil.getModelQuery(document);
+		if (fDocument != null) {
+			ModelQuery modelQuery = ModelQueryUtil.getModelQuery(fDocument);
 			if (modelQuery != null && modelQuery.getCMDocumentManager() != null) {
 				CMDocumentManager cmDocumentManager = modelQuery.getCMDocumentManager();
 				cmDocumentManager.setPropertyEnabled(CMDocumentManager.PROPERTY_AUTO_LOAD, false);
 			}
 
-			MyDocumentAdapter myDocumentAdapter = new MyDocumentAdapter(document);
+			MyDocumentAdapter myDocumentAdapter = new MyDocumentAdapter(fDocument);
 		}
 	}
 
@@ -171,16 +171,15 @@ public class DOMObserver {
 	}
 
 	public void invokeCMDocumentLoad() {
-		ModelQuery modelQuery = ModelQueryUtil.getModelQuery(document);
+		ModelQuery modelQuery = ModelQueryUtil.getModelQuery(fDocument);
 		if (modelQuery != null && modelQuery.getCMDocumentManager() != null) {
-			CMDocumentLoader loader = isGrammarInferenceEnabled ? new InferredGrammarBuildingCMDocumentLoader(document, modelQuery) : new CMDocumentLoader(document, modelQuery);
+			CMDocumentLoader loader = isGrammarInferenceEnabled ? new InferredGrammarBuildingCMDocumentLoader(fDocument, modelQuery) : new CMDocumentLoader(fDocument, modelQuery);
 			loader.loadCMDocuments();
 		}
 	}
 
 	public void invokeDelayedCMDocumentLoad() {
-		// Display.getCurrent().timerExec(2000, new MyTimerTask());
-		timer.schedule(new MyTimerTask(), 2000);
+		timer.schedule(2000);
 	}
 
 	public void setGrammarInferenceEnabled(boolean isEnabled) {
