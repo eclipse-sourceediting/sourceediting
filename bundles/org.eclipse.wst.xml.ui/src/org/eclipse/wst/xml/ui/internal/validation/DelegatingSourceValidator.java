@@ -37,6 +37,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMText;
+import org.eclipse.wst.xml.ui.internal.Logger;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -51,7 +52,7 @@ import org.w3c.dom.NodeList;
  * @author Mark Hutchinson
  * 
  */
-public class DelegatingSourceValidator implements IValidator { 
+public abstract class DelegatingSourceValidator implements IValidator { 
   //the selection strategies:
 	protected static final String ALL_ATTRIBUTES = "ALL_ATTRIBUTES"; //$NON-NLS-1$
 	protected static final String ATTRIBUTE_NAME = "ATTRIBUTE_NAME"; //$NON-NLS-1$
@@ -155,9 +156,7 @@ public class DelegatingSourceValidator implements IValidator {
 		}
 	}
 
-	protected IValidator getDelegateValidator() {
-		return null;// this class must be overridden by a subclass
-	}
+	protected abstract IValidator getDelegateValidator();
 
 	/**
 	 * Calls a delegate validator getting and updates it's list of
@@ -196,7 +195,7 @@ public class DelegatingSourceValidator implements IValidator {
 			}
       catch (Exception e)
       {
-        e.printStackTrace();
+        Logger.logException(e);
       }
 
 			finally {
