@@ -12,7 +12,6 @@ package org.eclipse.wst.xsd.ui.internal;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -28,7 +27,6 @@ import org.eclipse.jface.text.ITextInputListener;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorActionBarContributor;
@@ -50,12 +48,13 @@ import org.eclipse.ui.part.MultiPageEditorSite;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 import org.eclipse.wst.xml.core.internal.provisional.IXMLPreferenceNames;
 import org.eclipse.wst.xml.ui.internal.Logger;
+import org.eclipse.wst.xml.ui.internal.provisional.IDOMSourceEditingTextTools;
 import org.eclipse.wst.xml.ui.internal.provisional.StructuredTextEditorXML;
 import org.eclipse.wst.xml.ui.internal.tabletree.XMLEditorMessages;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 
 public class XSDMultiPageEditorPart extends MultiPageEditorPart implements IPropertyListener
 {
@@ -410,51 +409,15 @@ public class XSDMultiPageEditorPart extends MultiPageEditorPart implements IProp
     return result;
   }
 
-  /**
-   * IExtendedMarkupEditor method
-   */
-  public Node getCaretNode() {
-    if (getTextEditor() == null)
-      return null;
-
-    return getTextEditor().getCaretNode();
-  }
-
-  /**
-   * IExtendedSimpleEditor method
-   */
-  public int getCaretPosition() {
-    if (getTextEditor() == null)
-      return -1;
-
-    return getTextEditor().getCaretPosition();
-  }
-
-  /**
-   * IExtendedSimpleEditor method
-   */
-  public IDocument getDocument() {
-    if (getTextEditor() == null)
-      return null;
-
-    return getTextEditor().getDocument();
-  }
-
-  /**
-   * IExtendedMarkupEditor method
-   */
   public Document getDOMDocument() {
     if (getTextEditor() == null)
       return null;
 
-    return getTextEditor().getDOMDocument();
-  }
-
-  /**
-   * IExtendedSimpleEditor method
-   */
-  public IEditorPart getEditorPart() {
-    return this;
+    ISourceEditingTextTools tools = (ISourceEditingTextTools) getAdapter(ISourceEditingTextTools.class);
+    if(tools != null && tools instanceof IDOMSourceEditingTextTools) {
+    	return ((IDOMSourceEditingTextTools)tools).getDOMDocument();
+    }
+    return null;
   }
 
   protected IStructuredModel getModel() {
@@ -466,25 +429,6 @@ public class XSDMultiPageEditorPart extends MultiPageEditorPart implements IProp
 
   protected IPreferenceStore getPreferenceStore() {
     return XSDEditorPlugin.getPlugin().getPreferenceStore();
-  }
-
-  /**
-   * IExtendedMarkupEditor method
-   */
-  public List getSelectedNodes() {
-    if (getTextEditor() == null)
-      return null;
-    return getTextEditor().getSelectedNodes();
-  }
-
-  /**
-   * IExtendedSimpleEditor method
-   */
-  public Point getSelectionRange() {
-    if (getTextEditor() == null)
-      return new Point(-1, -1);
-
-    return getTextEditor().getSelectionRange();
   }
 
   public StructuredTextEditor getTextEditor() {
