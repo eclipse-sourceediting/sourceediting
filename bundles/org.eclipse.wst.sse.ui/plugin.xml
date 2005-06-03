@@ -2,7 +2,7 @@
 <?eclipse version="3.0"?>
 <plugin>
 
-     <extension-point id="adapterFactoryDescription" name="%Adapter_Factory_Description_Extension.name"/>
+   <extension-point id="adapterFactoryDescription" name="%Adapter_Factory_Description_Extension.name"/>
    <extension-point id="embeddedAdapterFactoryProvider" name="%Embedded_Content_Type_Adapter_Factory_Provider_Extension.name"/>
    <extension-point id="extendedEditorActions" name="%Extended_Editor_Actions_Extension.name"/>
    <extension-point id="dropTargetTransfers" name="%Drop_Target_Transfers_Extension.name"/>
@@ -73,6 +73,14 @@
             class="org.eclipse.wst.sse.ui.internal.preferences.ui.EmptyFilePreferencePage"
             id="org.eclipse.wst.sse.ui.internal.provisional.preferences">
       </page>
+      <!-- "common" task tags preference page -->
+      <page
+            name="%Task_Tags_Preferences.name"
+            category="org.eclipse.wst.sse.ui.internal.provisional.preferences"
+            class="org.eclipse.wst.sse.ui.internal.preferences.ui.TaskTagPreferencePage"
+            id="org.eclipse.wst.sse.ui.preferences.tasktags">
+      </page>
+
 <!-- Source Editor Preference page under Workbench->Editors -->
       <page
             name="%Structured_Text_Editor.name"
@@ -81,6 +89,18 @@
             id="org.eclipse.wst.sse.ui.preferences.editor">
       </page>
    </extension>
+<!-- ================================================================================================ -->
+<!-- common task tags property page -->
+<!-- ================================================================================================ -->
+	<extension point="org.eclipse.ui.propertyPages">
+	  <page
+	    id="org.eclipse.wst.sse.ui.project.properties.tasktags"
+	    name="%Task_Tags_Preferences.name"
+	    objectClass="org.eclipse.core.resources.IProject"
+	    adaptable="true"
+	    class="org.eclipse.wst.sse.ui.internal.preferences.ui.TaskTagPreferencePage"/>
+	</extension>
+
 <!--
 		<extension-point id="dragSourceTransfers" name="Drag Source Transfers"/>
 	-->
@@ -436,7 +456,6 @@
 			  class="org.eclipse.wst.sse.ui.internal.search.OccurrencesSearchViewPage">
 		 </viewPage>
 	</extension>
-
 	
 <!-- extension point for breakpoint extension -->
    <extension-point id="breakpoint" name="%Breakpoint_Extension_Point.name"/>

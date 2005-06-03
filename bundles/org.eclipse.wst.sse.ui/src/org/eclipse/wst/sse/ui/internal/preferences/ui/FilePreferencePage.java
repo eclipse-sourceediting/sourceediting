@@ -60,11 +60,11 @@ public class FilePreferencePage extends PreferencePage implements IWorkbenchPref
 		folder.setLayout(new TabFolderLayout());
 		folder.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		TabItem taskItem = new TabItem(folder, SWT.NONE);
-		IPreferenceTab tasksTab = new TaskTagPreferenceTab();
-		taskItem.setText(tasksTab.getTitle());
-		Control taskTags = tasksTab.createContents(folder);
-		taskItem.setControl(taskTags);
+//		TabItem taskItem = new TabItem(folder, SWT.NONE);
+//		IPreferenceTab tasksTab = new TaskTagPreferenceTab();
+//		taskItem.setText(tasksTab.getTitle());
+//		Control taskTags = tasksTab.createContents(folder);
+//		taskItem.setControl(taskTags);
 
 		TabItem translucenceItem = new TabItem(folder, SWT.NONE);
 		IPreferenceTab translucenceTab = new TranslucencyPreferenceTab(this);
@@ -72,7 +72,7 @@ public class FilePreferencePage extends PreferencePage implements IWorkbenchPref
 		Control translucenceControl = translucenceTab.createContents(folder);
 		translucenceItem.setControl(translucenceControl);
 
-		fTabs = new IPreferenceTab[]{tasksTab, translucenceTab};
+		fTabs = new IPreferenceTab[]{/*tasksTab,*/ translucenceTab};
 
 		return composite;
 	}

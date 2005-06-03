@@ -208,9 +208,6 @@ public class SSEUIMessages extends NLS {
 	public static String TaskTagPreferenceTab_5;
 	public static String TaskTagPreferenceTab_6;
 	public static String TaskTagPreferenceTab_7;
-	public static String TaskTagPreferenceTab_8;
-	public static String TaskTagPreferenceTab_9;
-	public static String TaskTagPreferenceTab_10;
 	public static String TaskTagPreferenceTab_12;
 	public static String TaskTagPreferenceTab_13;
 	public static String TaskTagPreferenceTab_14;
@@ -230,6 +227,14 @@ public class SSEUIMessages extends NLS {
 	public static String TaskTagPreferenceTab_29;
 	public static String TaskTagPreferenceTab_30;
 	public static String TaskTagPreferenceTab_31;
+	public static String TaskTagPreferencePage_32;
+	public static String TaskTagPreferenceTab_33;
+	public static String TaskTagExclusionTab_01;
+	public static String TaskTagExclusionTab_02;
+	public static String TaskTagExclusionTab_03;
+
+	public static String PropertyPreferencePage_01;
+	public static String PropertyPreferencePage_02;
 
 	public static String FilePreferencePage_0;
 	public static String NoModificationCompletionProposal_0;
@@ -351,6 +356,12 @@ public class SSEUIMessages extends NLS {
 	public static String OccurrencesSearchQuery_1;
 	public static String FileModelProvider_0;
 	public static String JFaceNodeAdapter_0;
+
+	public static String ConfigureProjectSettings;
+	public static String ConfigureWorkspaceSettings;
+	public static String EnableProjectSettings;
+
+	public static String LoadingReferencedGrammars;
 
 	// These strings are accessed using resource bundle and in properties
 	// file, need to use '.' instead of '_' in some keys
