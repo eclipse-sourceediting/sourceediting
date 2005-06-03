@@ -1,12 +1,12 @@
-package org.eclipse.jst.jsp.core.internal;
+package org.eclipse.jst.jsp.core.internal.validation;
 
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.domdocument.DOMModelForJSP;
-import org.eclipse.wst.validation.internal.operations.LocalizedMessage;
 import org.eclipse.jst.jsp.core.internal.java.jspel.JSPELParser;
 import org.eclipse.jst.jsp.core.internal.java.jspel.ParseException;
 import org.eclipse.jst.jsp.core.internal.java.jspel.Token;
@@ -19,6 +19,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionCollection;
 import org.eclipse.wst.validation.internal.core.Message;
 import org.eclipse.wst.validation.internal.core.ValidationException;
+import org.eclipse.wst.validation.internal.operations.LocalizedMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;

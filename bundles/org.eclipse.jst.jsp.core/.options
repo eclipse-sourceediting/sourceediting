@@ -30,3 +30,4 @@ org.eclipse.jst.jsp.core/partitioner/prefixlistener=false
 
 org.eclipse.jst.jsp.core/debug/jspjavamapping=false
 
+org.eclipse.jst.jsp.core/debug/jspvalidator=false

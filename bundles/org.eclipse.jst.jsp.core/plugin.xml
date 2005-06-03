@@ -129,7 +129,7 @@
 	
 	<extension
                 id="JSPELValidator"
-                name="JSPEL Validator"
+                name="%EL_Syntax_Validator.name"
                 point="org.eclipse.wst.validation.validator">
            <validator>
            <projectNature
@@ -155,14 +155,62 @@
                         objectClass="org.eclipse.core.resources.IFile"
                         nameFilter="*.jtpl">
                   </filter>
-                  <helper
-                        class="org.eclipse.jst.jsp.core.internal.JSPELValidationHelper">
-                  </helper>
+			      <helper
+			            class="org.eclipse.wst.validation.internal.operations.WorkbenchContext">
+			      </helper>
                   <run
                         enabled="true"
-                        class="org.eclipse.jst.jsp.core.internal.JSPELValidator">
+                        class="org.eclipse.jst.jsp.core.internal.validation.JSPELValidator">
                   </run>
                 </validator>
     </extension>
+	
+	<!--======================================================================================-->
+	<!-- Workbench validation                                       						  -->
+	<!--======================================================================================-->
+   <extension
+		id="JSPValidator"
+		name="%JSP_Syntax_Validator.name"
+		point="org.eclipse.wst.validation.validator">
+      <validator>
+      <projectNature
+        id="org.eclipse.wst.common.modulecore.ModuleCoreNature">
+      </projectNature>
+      <projectNature
+        id="org.eclipse.jdt.core.javanature">
+      </projectNature>
+      <projectNature
+        id="org.eclipse.wst.web.StaticWebNature">
+      </projectNature>
+      
+	  <filter
+		objectClass="org.eclipse.core.resources.IFile"
+		nameFilter="*.jsp">
+	  </filter>
+	  <filter
+		objectClass="org.eclipse.core.resources.IFile"
+		nameFilter="*.jspf">
+	  </filter>
+	  <filter
+		objectClass="org.eclipse.core.resources.IFile"
+		nameFilter="*.jsf">
+	  </filter>
+      <filter
+            objectClass="org.eclipse.core.resources.IFile"
+            nameFilter="*.jsv">
+      </filter>
+      <filter
+            objectClass="org.eclipse.core.resources.IFile"
+            nameFilter="*.jtpl">
+      </filter>
+      <helper
+            class="org.eclipse.wst.validation.internal.operations.WorkbenchContext">
+      </helper>
+	  <run
+	  	enabled="true"
+		class="org.eclipse.jst.jsp.core.internal.validation.JSPValidator">
+	  </run>
+	</validator>
+   </extension>
 	
 </plugin>
