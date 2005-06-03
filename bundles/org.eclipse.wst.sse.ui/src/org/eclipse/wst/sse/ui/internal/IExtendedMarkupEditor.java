@@ -21,13 +21,27 @@ import org.w3c.dom.Node;
 
 /**
  * IExtendedMarkupEditor
- * @deprecated
+ * 
+ * @deprecated use the editor's ISourceEditingTextTools adapter and cast to
+ *             IDOMSourceEditingTextTools when appropriate
  */
 public interface IExtendedMarkupEditor extends IExtendedSimpleEditor {
 
+	/**
+	 * @deprecated - use the IDOMSourceEditingTextTools.getNode(int) method
+	 *             with ISourceEditingTextTools.getCaretOffset()
+	 * @return
+	 */
 	public Node getCaretNode();
 
+	/**
+	 * @deprecated - use method on IDOMSourceEditingTextTools
+	 */
 	public Document getDOMDocument();
 
+	/**
+	 * @deprecated - some editors will provide the list of selected nodes as
+	 *             part of ISourceEditingTextTools.getSelection()
+	 */
 	public List getSelectedNodes();
 }
