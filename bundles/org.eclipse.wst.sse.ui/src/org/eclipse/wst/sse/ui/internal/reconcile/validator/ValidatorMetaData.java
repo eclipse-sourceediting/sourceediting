@@ -168,14 +168,14 @@ public class ValidatorMetaData {
 	}
 
 	/**
-	 * @param element
-	 * @return Transfer
+	 * @return a validator instance based on this ValidatorMetaData instance
 	 */
 	public IValidator createValidator() {
 		Object obj = null;
 		obj = createExtension();
-		if (obj == null)
+		if (obj == null) {
 			return null;
+		}
 		return (obj instanceof IValidator) ? (IValidator) obj : null;
 	}
 
