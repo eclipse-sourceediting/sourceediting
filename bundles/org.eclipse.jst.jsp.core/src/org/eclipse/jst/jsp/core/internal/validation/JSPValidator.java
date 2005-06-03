@@ -65,8 +65,6 @@ public class JSPValidator implements IValidator {
 						
 						if(DEBUG)
 							System.out.println("(+) JSPValidator adding file: " + file.getName()); //$NON-NLS-1$
-						// this call will check the ContentTypeDescription, so don't need to do it here.
-						//JSPSearchSupport.getInstance().addJspFile(file);
 						fFiles.add(file);
 	
 						// don't search deeper for files
@@ -81,7 +79,7 @@ public class JSPValidator implements IValidator {
 		    return (IFile[])fFiles.toArray(new IFile[this.fFiles.size()]);
 		}
 		
-		IContentType getJspContentType() {
+		private IContentType getJspContentType() {
 			if(fContentTypeJSP == null)
 				fContentTypeJSP = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
 			return fContentTypeJSP;
