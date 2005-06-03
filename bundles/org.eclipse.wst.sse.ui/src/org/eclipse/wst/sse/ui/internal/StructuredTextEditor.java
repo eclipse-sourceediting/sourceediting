@@ -13,6 +13,7 @@
 package org.eclipse.wst.sse.ui.internal;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -116,13 +117,9 @@ import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
-import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.text.IExecutionDelegatable;
 import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
@@ -146,8 +143,8 @@ import org.eclipse.wst.sse.ui.internal.properties.ConfigurablePropertySheetPage;
 import org.eclipse.wst.sse.ui.internal.properties.ShowPropertiesAction;
 import org.eclipse.wst.sse.ui.internal.provisional.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.ConfigurationPointCalculator;
+import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.NullSourceEditingTextTools;
-import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.SourceEditingTextTools;
 import org.eclipse.wst.sse.ui.internal.provisional.views.contentoutline.ContentOutlineConfiguration;
 import org.eclipse.wst.sse.ui.internal.provisional.views.contentoutline.StructuredContentOutlineConfiguration;
 import org.eclipse.wst.sse.ui.internal.provisional.views.properties.PropertySheetConfiguration;
@@ -159,10 +156,67 @@ import org.eclipse.wst.sse.ui.internal.selection.StructureSelectNextAction;
 import org.eclipse.wst.sse.ui.internal.selection.StructureSelectPreviousAction;
 import org.eclipse.wst.sse.ui.internal.text.DocumentRegionEdgeMatcher;
 import org.eclipse.wst.sse.ui.internal.util.Assert;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 
-public class StructuredTextEditor extends TextEditor implements IExtendedMarkupEditor, IDocumentListener {
+public class StructuredTextEditor extends TextEditor {
+
+	class InternalDocumentListener implements IDocumentListener {
+		// This is for the IDocumentListener interface
+		public void documentAboutToBeChanged(DocumentEvent event) {
+			fDirtyBeforeDocumentEvent = isDirty();
+		}
+
+		// This is for the IDocumentListener interface
+		public void documentChanged(DocumentEvent event) {
+			if (isEditorInputReadOnly()) {
+				// stop listening to document event
+				// caused by the undo after validateEdit
+				final int offset = event.getOffset() + event.getLength();
+				final IStructuredModel internalModel = getInternalModel();
+				fCurrentRunnable = new Runnable() {
+					public void run() {
+						if (!fEditorDisposed) {
+							IStatus status = validateEdit(getSite().getShell());
+							if (status != null && status.isOK()) {
+								// nothing to do if 'ok'
+							}
+							else {
+								if (internalModel != null) {
+									internalModel.getUndoManager().undo();
+									getSourceViewer().setSelectedRange(offset, 0);
+									if (!fDirtyBeforeDocumentEvent) {
+										// reset dirty state if
+										// model not dirty before
+										// document event
+										internalModel.setDirtyState(false);
+									}
+								}
+							}
+						}
+						fCurrentRunnable = null;
+					}
+				};
+				/*
+				 * We need to ensure that this is run via 'asyncExec' since
+				 * these notifications can come from a non-ui thread.
+				 * 
+				 * The non-ui thread call would occur when creating a new file
+				 * under ClearCase (or other library) control. The creation of
+				 * the new file would trigger a validateEdit call, on another
+				 * thread, that would prompt the user to add the new file to
+				 * version control.
+				 */
+				Display display = getDisplay();
+				if (display != null) {
+					if (Thread.currentThread() != display.getThread())
+						// future_TODO: there's probably a better
+						// way than relying on asycnExec
+						display.asyncExec(fCurrentRunnable);
+					else
+						fCurrentRunnable.run();
+				}
+			}
+		}
+	}
 
 	class InternalElementStateListener implements IElementStateListener {
 
@@ -375,11 +429,10 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	private static final long BUSY_STATE_DELAY = 1000;
 	public static final String CORE_SSE_ACTIVITY_ID = "com.ibm.wtp.xml.core"; //$NON-NLS-1$
 	protected static final String DOT = "."; //$NON-NLS-1$
-	private final static String UNDERSCORE = "_"; //$NON-NLS-1$
 	private static final String EDITOR_CONTEXT_MENU_ID = "org.eclipse.wst.sse.ui.StructuredTextEditor.context"; //$NON-NLS-1$
-
 	/** Non-NLS strings */
 	private static final String EDITOR_KEYBINDING_SCOPE_ID = "org.eclipse.wst.sse.ui.structuredTextEditorScope"; //$NON-NLS-1$
+
 	public static final String GROUP_NAME_ADDITIONS = "additions"; //$NON-NLS-1$
 	public static final String GROUP_NAME_FORMAT = "Format"; //$NON-NLS-1$
 	public static final String GROUP_NAME_FORMAT_EXT = "Format.ext"; //$NON-NLS-1$
@@ -398,6 +451,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	 * object.
 	 */
 	static final protected IStatus STATUS_OK = new Status(IStatus.OK, SSEUIPlugin.ID, IStatus.OK, "OK", null); //$NON-NLS-1$
+	private final static String UNDERSCORE = "_"; //$NON-NLS-1$
 
 	/** Translatable strings */
 	private static final String UNDO_ACTION_DESC = SSEUIMessages.Undo___0___UI_; //$NON-NLS-1$ = "Undo: {0}."
@@ -417,6 +471,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	private DropTarget fDropTarget;
 	private boolean fEditorDisposed = false;
 	private IEditorPart fEditorPart;
+	private IDocumentListener fInternalDocumentListener;
 	private InternalModelStateListener fInternalModelStateListener;
 
 	private MouseTracker fMouseTracker;
@@ -442,6 +497,12 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 
 		super();
 		initializeDocumentProvider(null);
+	}
+
+	private void aboutToSaveModel() {
+		if (getInternalModel() != null) {
+			getInternalModel().aboutToChangeModel();
+		}
 	}
 
 	private void abstractTextEditorContextMenuAboutToShow(IMenuManager menu) {
@@ -511,11 +572,11 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		}
 	}
 
+
+
 	protected void addExtendedRulerContextMenuActions(IMenuManager menu) {
 		// none at this level
 	}
-
-
 
 	/**
 	 * 
@@ -529,6 +590,17 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			beginBusyStateInternal();
 		}
 	}
+
+	// private void addFindOccurrencesAction(String matchType, String
+	// matchText, IMenuManager menu) {
+	//
+	// AbstractFindOccurrencesAction action = new
+	// AbstractFindOccurrencesAction(getFileInEditor(), new
+	// SearchUIConfiguration(), (IStructuredDocument) getDocument(),
+	// matchType, matchText, getProgressMonitor());
+	// action.setText("Occurrences of \"" + matchText + "\" in File");
+	// menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT, action);
+	// }
 
 	/**
 	 * 
@@ -545,17 +617,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		}
 		showBusy(true);
 	}
-
-	// private void addFindOccurrencesAction(String matchType, String
-	// matchText, IMenuManager menu) {
-	//
-	// AbstractFindOccurrencesAction action = new
-	// AbstractFindOccurrencesAction(getFileInEditor(), new
-	// SearchUIConfiguration(), (IStructuredDocument) getDocument(),
-	// matchType, matchText, getProgressMonitor());
-	// action.setText("Occurrences of \"" + matchText + "\" in File");
-	// menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT, action);
-	// }
 
 	/**
 	 * Instead of us closing directly, we have to close with our containing
@@ -903,16 +964,35 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	/**
 	 * @return
 	 */
-	private SourceEditingTextTools createSourceEditingTextTools() {
-		SourceEditingTextTools tools = null;
+	private ISourceEditingTextTools createSourceEditingTextTools() {
+		ISourceEditingTextTools tools = null;
 		ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
 		String[] ids = getConfigurationPoints();
 		for (int i = 0; tools == null && i < ids.length; i++) {
-			tools = (SourceEditingTextTools) builder.getConfiguration(NullSourceEditingTextTools.ID, ids[i]);
+			tools = (ISourceEditingTextTools) builder.getConfiguration(NullSourceEditingTextTools.ID, ids[i]);
 		}
 		if (tools == null) {
 			tools = NullSourceEditingTextTools.getInstance();
 		}
+		try {
+			Method method = tools.getClass().getMethod("setTextEditor", new Class[]{StructuredTextEditor.class}); //$NON-NLS-1$
+			if (method == null) {
+				method = tools.getClass().getMethod("setTextEditor", new Class[]{ITextEditor.class}); //$NON-NLS-1$
+			}
+			if (method == null) {
+				method = tools.getClass().getMethod("setTextEditor", new Class[]{IEditorPart.class}); //$NON-NLS-1$
+			}
+			if (method != null) {
+				if (!method.isAccessible()) {
+					method.setAccessible(true);
+				}
+				method.invoke(tools, new Object[]{this});
+			}
+		}
+		catch (Exception e) {
+			Logger.logException("Problem creating ISourceEditingTextTools implementation", e); //$NON-NLS-1$
+		}
+
 		return tools;
 	}
 
@@ -957,14 +1037,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			System.out.println("Average time per call: " + (adapterTime / adapterRequests)); //$NON-NLS-1$
 		}
 
-
-		int caretOffset = getCaretPosition();
-		// safeguard values used in the Position below
-		if (caretOffset < 0) {
-			caretOffset = 0;
-		}
-
-
 		// dispose of document folding support
 		if (fProjectionModelUpdater != null) {
 			fProjectionModelUpdater.uninstall();
@@ -995,14 +1067,15 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		// but makes a memory leak
 		// less severe.
 		if (fStructuredModel != null) {
-			if (fStructuredModel.getStructuredDocument() != null)
-				fStructuredModel.getStructuredDocument().removeDocumentListener(this);
+			if (fStructuredModel.getStructuredDocument() != null) {
+				fStructuredModel.getStructuredDocument().removeDocumentListener(getInternalDocumentListener());
+			}
 			fStructuredModel.removeModelStateListener(getInternalModelStateListener());
 		}
 
-		if (getDocument() != null) {
-			IDocument doc = getDocument();
-			doc.removeDocumentListener(this);
+		IDocument doc = getDocumentProvider().getDocument(getEditorInput());
+		if (doc != null) {
+			doc.removeDocumentListener(getInternalDocumentListener());
 			if (doc instanceof IExecutionDelegatable) {
 				((IExecutionDelegatable) doc).setExecutionDelegate(null);
 			}
@@ -1055,63 +1128,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		// none at this level
 	}
 
-	// This is for the IDocumentListener interface
-	public void documentAboutToBeChanged(DocumentEvent event) {
-		fDirtyBeforeDocumentEvent = isDirty();
-	}
-
-	// This is for the IDocumentListener interface
-	public void documentChanged(DocumentEvent event) {
-		if (isEditorInputReadOnly()) {
-			// stop listening to document event
-			// caused by the undo after validateEdit
-			final int offset = event.getOffset() + event.getLength();
-			final IStructuredModel internalModel = getInternalModel();
-			fCurrentRunnable = new Runnable() {
-				public void run() {
-					if (!fEditorDisposed) {
-						IStatus status = validateEdit(getSite().getShell());
-						if (status != null && status.isOK()) {
-							// nothing to do if 'ok'
-						}
-						else {
-							if (internalModel != null) {
-								internalModel.getUndoManager().undo();
-								getSourceViewer().setSelectedRange(offset, 0);
-								if (!fDirtyBeforeDocumentEvent) {
-									// reset dirty state if
-									// model not dirty before
-									// document event
-									internalModel.setDirtyState(false);
-								}
-							}
-						}
-					}
-					fCurrentRunnable = null;
-				}
-			};
-			/*
-			 * We need to ensure that this is run via 'asyncExec' since these
-			 * notifications can come from a non-ui thread.
-			 * 
-			 * The non-ui thread call would occur when creating a new file
-			 * under ClearCase (or other library) control. The creation of the
-			 * new file would trigger a validateEdit call, on another thread,
-			 * that would prompt the user to add the new file to version
-			 * control.
-			 */
-			Display display = getDisplay();
-			if (display != null) {
-				if (Thread.currentThread() != display.getThread())
-					// future_TODO: there's probably a better
-					// way than relying on asycnExec
-					display.asyncExec(fCurrentRunnable);
-				else
-					fCurrentRunnable.run();
-			}
-		}
-	}
-
 	/**
 	 * @see ITextEditor#doRevertToSaved
 	 */
@@ -1131,18 +1147,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		}
 		finally {
 			savedModel();
-		}
-	}
-
-	private void savedModel() {
-		if (getInternalModel() != null) {
-			getInternalModel().changedModel();
-		}
-	}
-
-	private void aboutToSaveModel() {
-		if (getInternalModel() != null) {
-			getInternalModel().aboutToChangeModel();
 		}
 	}
 
@@ -1169,8 +1173,9 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 
 			super.doSetInput(input);
 
-			if (getDocument() instanceof IExecutionDelegatable) {
-				((IExecutionDelegatable) getDocument()).setExecutionDelegate(new EditorExecutionContext(this));
+			IDocument newDocument = getDocumentProvider().getDocument(input);
+			if (newDocument instanceof IExecutionDelegatable) {
+				((IExecutionDelegatable) newDocument).setExecutionDelegate(new EditorExecutionContext(this));
 			}
 
 			IStructuredModel model = null;
@@ -1182,11 +1187,10 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 				}
 			}
 			else {
-				IDocument doc = getDocument();
-				if (doc instanceof IStructuredDocument) {
+				if (newDocument instanceof IStructuredDocument) {
 					// corresponding releaseFromEdit occurs in
-					// dispose
-					model = StructuredModelManager.getModelManager().getModelForEdit((IStructuredDocument) doc);
+					// dispose()
+					model = StructuredModelManager.getModelManager().getModelForEdit((IStructuredDocument) newDocument);
 					EditorModelUtil.addFactoriesTo(model);
 				}
 
@@ -1229,26 +1233,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		}
 	}
 
-	private void logUnexpectedDocumentKind(IEditorInput input) {
-		Logger.log(Logger.WARNING, "StructuredTextEditor being used without StructuredDocument"); //$NON-NLS-1$
-		String name = null;
-		if (input != null) {
-			name = input.getName();
-		}
-		else {
-			name = "input was null"; //$NON-NLS-1$
-		}
-		Logger.log(Logger.WARNING, "         Input Name: " + name); //$NON-NLS-1$
-		String implClass = null;
-		if (getDocument() != null) {
-			implClass = getDocument().getClass().toString();
-		}
-		else {
-			implClass = "document was null"; //$NON-NLS-1$
-		}
-		Logger.log(Logger.WARNING, "         Document implementation: " + implClass); //$NON-NLS-1$
-	}
-
 	/**
 	 * Sets up this editor's context menu before it is made visible.
 	 * 
@@ -1285,7 +1269,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		// time. We always wait for the time out.
 		resetBusyState();
 	}
-
 
 	/**
 	 * Note this method can be called indirectly from background job operation
@@ -1379,7 +1362,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		else if (IDocument.class.equals(required)) {
 			result = getDocumentProvider().getDocument(getEditorInput());
 		}
-		else if (SourceEditingTextTools.class.equals(required)) {
+		else if (ISourceEditingTextTools.class.equals(required)) {
 			result = createSourceEditingTextTools();
 		}
 		else if (IToggleBreakpointsTarget.class.equals(required)) {
@@ -1389,10 +1372,10 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			return new ShowInTargetListAdapter();
 		}
 		else {
-			Document document = getDOMDocument();
-			if (document != null && document instanceof INodeNotifier) {
-				result = ((INodeNotifier) document).getAdapterFor(required);
-			}
+			// Document document = getDOMDocument();
+			// if (document != null && document instanceof INodeNotifier) {
+			// result = ((INodeNotifier) document).getAdapterFor(required);
+			// }
 			if (result == null) {
 				if (getInternalModel() != null) {
 					result = getInternalModel().getAdapter(required);
@@ -1418,34 +1401,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		return result;
 	}
 
-	/**
-	 * IExtendedMarkupEditor method
-	 */
-	public Node getCaretNode() {
-		IStructuredModel model = getInternalModel();
-		if (model == null)
-			return null;
-		int pos = getCaretPosition();
-		IndexedRegion inode = model.getIndexedRegion(pos);
-		if (inode == null)
-			inode = model.getIndexedRegion(pos - 1);
-		return (inode instanceof Node) ? (Node) inode : null;
-	}
-
-	/**
-	 * IExtendedSimpleEditor method
-	 */
-	public int getCaretPosition() {
-		ViewerSelectionManager vsm = getViewerSelectionManager();
-		if (vsm == null)
-			return -1;
-		// nsd_TODO: are we being overly paranoid?
-		StructuredTextViewer stv = getTextViewer();
-		if (stv != null && stv.getControl() != null && !stv.getControl().isDisposed()) {
-			return stv.widgetOffset2ModelOffset(vsm.getCaretPosition());
-		}
-		return vsm.getCaretPosition();
-	}
 
 	private String[] getConfigurationPoints() {
 		String contentTypeIdentifierID = null;
@@ -1478,28 +1433,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		return PlatformUI.getWorkbench().getDisplay();
 	}
 
-	/**
-	 * IExtendedSimpleEditor method
-	 */
-	public IDocument getDocument() {
-		// The right way to get the document is thru
-		// DocumentProvider.
-		IDocumentProvider dp = getDocumentProvider();
-		return (dp != null) ? dp.getDocument(getEditorInput()) : null;
-	}
-
-	/**
-	 * IExtendedMarkupEditor method
-	 */
-	public Document getDOMDocument() {
-		IStructuredModel model = getInternalModel();
-		if (model != null) {
-			return (Document) model.getAdapter(Document.class);
-		}
-		return null;
-	}
-
-
 	public IEditorPart getEditorPart() {
 		if (fEditorPart == null)
 			return this;
@@ -1507,10 +1440,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	}
 
 	/**
-	 * @deprecated - will be removed in M4
-	 * 
-	 * used only by Search and there are alternate means besides making this
-	 * API
+	 * @deprecated - used only by Search and there are alternate means besides
+	 *             making this API
 	 * @return the IFile from the currently active editor
 	 */
 	public IFile getFileInEditor() {
@@ -1522,15 +1453,22 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		return result;
 	}
 
+	private IDocumentListener getInternalDocumentListener() {
+		if (fInternalDocumentListener == null) {
+			fInternalDocumentListener = new InternalDocumentListener();
+		}
+		return fInternalDocumentListener;
+	}
+
+	private IStructuredModel getInternalModel() {
+		return fStructuredModel;
+	}
+
 	private InternalModelStateListener getInternalModelStateListener() {
 		if (fInternalModelStateListener == null) {
 			fInternalModelStateListener = new InternalModelStateListener();
 		}
 		return fInternalModelStateListener;
-	}
-
-	private IStructuredModel getInternalModel() {
-		return fStructuredModel;
 	}
 
 	/**
@@ -1546,11 +1484,13 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		if (fStructuredModel == null)
 			initialModelNull = true;
 		if (fStructuredModel == null) {
+			// lazily set the model instance, although this is an ABNORMAL
+			// CODE PATH
 			if (getDocumentProvider() instanceof IModelProvider) {
 				fStructuredModel = ((IModelProvider) getDocumentProvider()).getModel(getEditorInput());
 			}
 			else {
-				IDocument doc = getDocument();
+				IDocument doc = getDocumentProvider().getDocument(getEditorInput());
 				if (doc instanceof IStructuredDocument) {
 					IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForEdit(doc);
 					if (model == null) {
@@ -1581,90 +1521,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			}
 		}
 		return fStructuredModel;
-	}
-
-	/**
-	 * @deprecated - will be removed in M4
-	 * 
-	 * used only by Search and there are alternate means besides making this
-	 * API
-	 * 
-	 * @return the IStructuredDocumentRegion that the text selection in the
-	 *         editor resolves to, or <code>null</code> if the range covers
-	 *         more than one region.
-	 */
-	public IStructuredDocumentRegion getSelectedDocumentRegion() {
-		Point p = getSelectionRange();
-		int start = p.x;
-		int end = p.x + p.y;
-
-		IDocument doc = getDocument();
-		if (doc instanceof IStructuredDocument) {
-			IStructuredDocument structuredDocument = (IStructuredDocument) doc;
-			IStructuredDocumentRegion firstSdRegion = structuredDocument.getRegionAtCharacterOffset(start);
-			IStructuredDocumentRegion secondSdRegion = structuredDocument.getRegionAtCharacterOffset(end);
-			if (firstSdRegion != null && secondSdRegion != null) {
-				if (firstSdRegion.equals(secondSdRegion) || firstSdRegion.getEndOffset() == end) {
-					// the selection is on the same region or
-					// the selection ends right on the end of the first region
-					return firstSdRegion;
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * IExtendedMarkupEditor method
-	 */
-	public List getSelectedNodes() {
-		ViewerSelectionManager vsm = getViewerSelectionManager();
-		return (vsm != null) ? vsm.getSelectedNodes() : null;
-	}
-
-	/**
-	 * @deprecated
-	 * 
-	 * used only by Search and there are alternate means besides making this
-	 * API
-	 * 
-	 * will be removed in M4
-	 * 
-	 * @param sdRegion
-	 *            the IStructuredDocumentRegion that you want to check
-	 *            selection on
-	 * @return the ITextRegion that the text selection in the editor resolves
-	 *         to, or <code>null</code> if the range covers more than one
-	 *         region or none.
-	 */
-	public ITextRegion getSelectedTextRegion(IStructuredDocumentRegion sdRegion) {
-		Assert.isNotNull(sdRegion);
-
-		Point p = getSelectionRange();
-		int start = p.x;
-		int end = p.x + p.y;
-
-		ITextRegion first = sdRegion.getRegionAtCharacterOffset(start);
-		ITextRegion second = sdRegion.getRegionAtCharacterOffset(end);
-		if (first != null && second != null) {
-			if (first.equals(second) || sdRegion.getEndOffset(first) == end) {
-				// the selection is on the same region
-				// the selection ends right on the end of the first region
-				return first;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * IExtendedSimpleEditor method
-	 */
-	public Point getSelectionRange() {
-		ITextViewer tv = getSourceViewer();
-		if (tv == null)
-			return new Point(-1, -1);
-		else
-			return tv.getSelectedRange();
 	}
 
 	private IStatusLineManager getStatusLineManager() {
@@ -1878,7 +1734,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		initializeDrop(sourceViewer);
 	}
 
-
 	protected void installEncodingSupport() {
 		// TODO: install our custom support that can
 		// update document appropriately
@@ -1917,6 +1772,7 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			projectionViewer.doOperation(ProjectionViewer.TOGGLE);
 	}
 
+
 	/**
 	 * Return whether document folding should be enabled according to the
 	 * preference store settings.
@@ -1936,6 +1792,27 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		if (getInternalModel() == null)
 			return false;
 		return getInternalModel().isSaveNeeded();
+	}
+
+	private void logUnexpectedDocumentKind(IEditorInput input) {
+		Logger.log(Logger.WARNING, "StructuredTextEditor being used without StructuredDocument"); //$NON-NLS-1$
+		String name = null;
+		if (input != null) {
+			name = input.getName();
+		}
+		else {
+			name = "input was null"; //$NON-NLS-1$
+		}
+		Logger.log(Logger.WARNING, "         Input Name: " + name); //$NON-NLS-1$
+		String implClass = null;
+		IDocument document = getDocumentProvider().getDocument(input);
+		if (document != null) {
+			implClass = document.getClass().getName();
+		}
+		else {
+			implClass = "document was null"; //$NON-NLS-1$
+		}
+		Logger.log(Logger.WARNING, "        Unexpected IDocument implementation: " + implClass); //$NON-NLS-1$
 	}
 
 	/*
@@ -2026,6 +1903,12 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		super.safelySanityCheckState(input);
 	}
 
+	private void savedModel() {
+		if (getInternalModel() != null) {
+			getInternalModel().changedModel();
+		}
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -2064,8 +1947,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 
 	/**
 	 * @deprecated - Clients should use .getAdapter(Control) to get the text
-	 *             viewer control and set its help context. Will be removed in
-	 *             M4.
+	 *             viewer control and set its help context. Will be removed.
+	 * 
 	 * 
 	 * We expose this normally protected method so clients can provide their
 	 * own help.
@@ -2085,7 +1968,8 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 	}
 
 	/**
-	 * @deprecated - use setInput as if we were a text editor
+	 * @deprecated - use setInput as if we were a text editor - may be REMOVED
+	 *             AT ANY TIME
 	 * 
 	 */
 	public void setModel(IFileEditorInput input) {
@@ -2101,14 +1985,14 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 		Assert.isNotNull(getDocumentProvider());
 		if (fStructuredModel != null) {
 			if (fStructuredModel.getStructuredDocument() != null) {
-				fStructuredModel.getStructuredDocument().removeDocumentListener(this);
+				fStructuredModel.getStructuredDocument().removeDocumentListener(getInternalDocumentListener());
 			}
 			fStructuredModel.removeModelStateListener(getInternalModelStateListener());
 		}
 		fStructuredModel = newModel;
 		if (fStructuredModel != null) {
 			if (fStructuredModel.getStructuredDocument() != null) {
-				fStructuredModel.getStructuredDocument().addDocumentListener(this);
+				fStructuredModel.getStructuredDocument().addDocumentListener(getInternalDocumentListener());
 			}
 			fStructuredModel.addModelStateListener(getInternalModelStateListener());
 		}
@@ -2133,15 +2017,6 @@ public class StructuredTextEditor extends TextEditor implements IExtendedMarkupE
 			stv.unconfigure();
 			stv.configure(config);
 		}
-	}
-
-	/**
-	 * Overridden to allow custom tab title for multi-page editors
-	 * 
-	 * @see org.eclipse.ui.part.WorkbenchPart#setTitle(java.lang.String)
-	 */
-	public void setTitle(String title) {
-		super.setTitle(title);
 	}
 
 	public void showBusy(boolean busy) {
