@@ -11,13 +11,12 @@ public class ELProblem {
 		fMessage = message;
 	}
 	
-	public String getFMessage() {
+	public String getMessage() {
 		return fMessage;
 	}
 	
 
-	public Position getFPos() {
+	public Position getPosition() {
 		return fPos;
 	}
-	
 }
