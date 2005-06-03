@@ -19,11 +19,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
-import org.eclipse.wst.common.frameworks.internal.operations.ProjectCreationOp;
+import org.eclipse.wst.common.frameworks.internal.operations.ProjectCreationOperation;
 import org.eclipse.wst.web.internal.ISimpleWebNatureConstants;
 import org.eclipse.wst.web.internal.WSTWebPlugin;
 
-public class SimpleWebModuleCreationOperation extends ProjectCreationOp implements ISimpleWebModuleCreationDataModelProperties {
+public class SimpleWebModuleCreationOperation extends ProjectCreationOperation implements ISimpleWebModuleCreationDataModelProperties {
 
     public SimpleWebModuleCreationOperation(IDataModel dataModel) {
         super(dataModel);
