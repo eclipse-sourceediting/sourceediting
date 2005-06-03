@@ -102,8 +102,8 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 		IStructuredDocument sDoc = (IStructuredDocument) ((DocumentAdapter) getInputModel()).getDocument();
 		String type = TemporaryAnnotation.ANNOT_ERROR;
 		ReconcileAnnotationKey key = null;
-		key = createKey(sDoc.getRegionAtCharacterOffset(problem.getFPos().getOffset()), ReconcileAnnotationKey.TOTAL);
-		TemporaryAnnotation annotation = new TemporaryAnnotation(problem.getFPos(), type, problem.getFMessage(), key);
+		key = createKey(sDoc.getRegionAtCharacterOffset(problem.getPosition().getOffset()), ReconcileAnnotationKey.TOTAL);
+		TemporaryAnnotation annotation = new TemporaryAnnotation(problem.getPosition(), type, problem.getMessage(), key);
 		annotation.setAdditionalFixInfo(problem);
 		return annotation;
 	}
