@@ -12,30 +12,34 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.provisional;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.text.TextSelection;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
+import org.eclipse.wst.sse.ui.internal.ViewerSelectionManager;
+import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.NodeLocation;
-import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.SourceEditingTextTools;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMText;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-
 /**
- * Implements SourceEditingTextTools interface
+ * Implements ISourceEditingTextTools interface
  */
-public class XMLSourceEditingTextTools implements SourceEditingTextTools, INodeAdapter {
+public class XMLSourceEditingTextTools implements IDOMSourceEditingTextTools, INodeAdapter {
 
 	protected class NodeLocationImpl implements NodeLocation {
 		private IDOMNode node;
@@ -70,27 +74,88 @@ public class XMLSourceEditingTextTools implements SourceEditingTextTools, INodeA
 		}
 	}
 
+	class StructuredTextSelection extends TextSelection implements IStructuredSelection {
+		List selectedNodes = null;
 
-	public Document getDOMDocument(IMarker marker) {
-		if (marker == null)
-			return null;
-
-		IResource res = marker.getResource();
-		if (res == null || !(res instanceof IFile))
-			return null;
-
-		IModelManager mm = StructuredModelManager.getModelManager();
-		IStructuredModel model = null;
-		try {
-			model = mm.getExistingModelForRead((IFile) res);
-			if (model == null || !(model instanceof IDOMModel))
-				return null;
-
-			return ((IDOMModel) model).getDocument();
-		} finally {
-			if (model != null)
-				model.releaseFromRead();
+		public StructuredTextSelection(ITextSelection selection) {
+			super(fTextEditor.getDocumentProvider().getDocument(fTextEditor.getEditorInput()), selection.getOffset(), selection.getLength());
+			selectedNodes = ((ViewerSelectionManager) fTextEditor.getAdapter(ViewerSelectionManager.class)).getSelectedNodes();
 		}
+
+		public Object getFirstElement() {
+			return selectedNodes.size() > 0 ? selectedNodes.get(0) : null;
+		}
+
+		public Iterator iterator() {
+			return selectedNodes.iterator();
+		}
+
+		public int size() {
+			return selectedNodes.size();
+		}
+
+		public Object[] toArray() {
+			return selectedNodes.toArray();
+		}
+
+		public List toList() {
+			return new ArrayList(selectedNodes);
+		}
+	}
+
+	StructuredTextEditor fTextEditor = null;
+
+	public int getCaretOffset() {
+		ViewerSelectionManager vsm = (ViewerSelectionManager) fTextEditor.getAdapter(ViewerSelectionManager.class);
+		if (vsm == null)
+			return -1;
+		StructuredTextViewer stv = fTextEditor.getTextViewer();
+		if (stv != null && stv.getControl() != null && !stv.getControl().isDisposed()) {
+			return stv.widgetOffset2ModelOffset(vsm.getCaretPosition());
+		}
+		return vsm.getCaretPosition();
+	}
+
+	public IDocument getDocument() {
+		return fTextEditor.getDocumentProvider().getDocument(fTextEditor.getEditorInput());
+	}
+
+	public Document getDOMDocument() {
+		return (Document) fTextEditor.getModel().getAdapter(Document.class);
+	}
+
+	/*
+	 * If similar function is needed, composite it around the text editor's
+	 * instance. Removed also because it returns an alread-released model
+	 * 
+	 * public Document getDOMDocument(IMarker marker) { if (marker == null)
+	 * return null;
+	 * 
+	 * IResource res = marker.getResource(); if (res == null || !(res
+	 * instanceof IFile)) return null;
+	 * 
+	 * IModelManager mm = StructuredModelManager.getModelManager();
+	 * IStructuredModel model = null; try { model =
+	 * mm.getExistingModelForRead((IFile) res); if (model == null || !(model
+	 * instanceof IDOMModel)) return null;
+	 * 
+	 * return ((IDOMModel) model).getDocument(); } finally { if (model !=
+	 * null) model.releaseFromRead(); } }
+	 */
+
+	public IEditorPart getEditorPart() {
+		return fTextEditor.getEditorPart();
+	}
+
+	public Node getNode(int offset) throws BadLocationException {
+		Node node = null;
+		if (0 <= offset && offset <= getDocument().getLength()) {
+			node = (Node) fTextEditor.getModel().getIndexedRegion(offset);
+		}
+		else {
+			throw new BadLocationException();
+		}
+		return node;
 	}
 
 	/*
@@ -108,6 +173,22 @@ public class XMLSourceEditingTextTools implements SourceEditingTextTools, INodeA
 		return ""; //$NON-NLS-1$
 	}
 
+	public ITextSelection getSelection() {
+		ISelection selection = fTextEditor.getSelectionProvider().getSelection();
+		if (selection instanceof ITextSelection) {
+			ITextSelection structuredTextSelection = new StructuredTextSelection((ITextSelection) selection);
+			return structuredTextSelection;
+		}
+		return TextSelection.emptySelection();
+	}
+
+	/**
+	 * IExtendedMarkupEditor method
+	 */
+	// public List getSelectedNodes() {
+	// ViewerSelectionManager vsm = getViewerSelectionManager();
+	// return (vsm != null) ? vsm.getSelectedNodes() : null;
+	// }
 	public int getStartOffset(Node node) {
 		if (node == null || !(node instanceof IDOMText))
 			return -1;
@@ -122,7 +203,7 @@ public class XMLSourceEditingTextTools implements SourceEditingTextTools, INodeA
 	 * @see org.eclipse.wst.sse.core.core.INodeAdapter#isAdapterForType(java.lang.Object)
 	 */
 	public boolean isAdapterForType(Object type) {
-		return SourceEditingTextTools.class.equals(type);
+		return ISourceEditingTextTools.class.equals(type);
 	}
 
 	/*
@@ -132,5 +213,9 @@ public class XMLSourceEditingTextTools implements SourceEditingTextTools, INodeA
 	 *      int, java.lang.Object, java.lang.Object, java.lang.Object, int)
 	 */
 	public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
+	}
+
+	public void setTextEditor(StructuredTextEditor editor) {
+		fTextEditor = editor;
 	}
 }

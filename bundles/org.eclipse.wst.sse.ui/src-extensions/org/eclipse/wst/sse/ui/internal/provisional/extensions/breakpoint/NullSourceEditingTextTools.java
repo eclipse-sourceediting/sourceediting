@@ -12,61 +12,50 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint;
 
-import org.eclipse.core.resources.IMarker;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.jface.text.TextSelection;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 
-public class NullSourceEditingTextTools implements SourceEditingTextTools {
+public class NullSourceEditingTextTools implements ISourceEditingTextTools {
 	public static final String ID = "sourceeditingtexttools"; //$NON-NLS-1$
-	private static NullSourceEditingTextTools instance;
+	private ITextEditor fTextEditor;
 
 	/**
 	 * @return
 	 */
-	public synchronized static SourceEditingTextTools getInstance() {
-		if (instance == null)
-			instance = new NullSourceEditingTextTools();
-		return instance;
+	public synchronized static ISourceEditingTextTools getInstance() {
+		return new NullSourceEditingTextTools();
 	}
 
 	private NullSourceEditingTextTools() {
 		super();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.ui.extensions.breakpoint.SourceEditingTextTools#getDOMDocument(org.eclipse.core.resources.IMarker)
-	 */
-	public Document getDOMDocument(IMarker marker) {
-		return null;
+	public int getCaretOffset() {
+		ISelection sel = fTextEditor.getSelectionProvider().getSelection();
+		if (sel instanceof ITextSelection) {
+			return ((ITextSelection) sel).getOffset();
+		}
+		return -1;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.ui.extensions.breakpoint.SourceEditingTextTools#getNodeLocation(org.w3c.dom.Node)
-	 */
-	public NodeLocation getNodeLocation(Node node) {
-		return null;
+	public IDocument getDocument() {
+		return fTextEditor.getDocumentProvider().getDocument(fTextEditor.getEditorInput());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.ui.extensions.breakpoint.SourceEditingTextTools#getPageLanguage(org.w3c.dom.Node)
-	 */
-	public String getPageLanguage(Node node) {
-		return null;
+	public IEditorPart getEditorPart() {
+		return fTextEditor;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.ui.extensions.breakpoint.SourceEditingTextTools#getStartOffset(org.w3c.dom.Node)
-	 */
-	public int getStartOffset(Node node) {
-		return 0;
+	public ITextSelection getSelection() {
+		return TextSelection.emptySelection();
 	}
 
+	void setTextEditor(ITextEditor editor) {
+		fTextEditor = editor;
+	}
 }

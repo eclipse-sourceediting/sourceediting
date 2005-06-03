@@ -12,22 +12,19 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal;
 
-
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.ui.IEditorPart;
 
 /**
  * Action for file drop
  */
 public class FileDropAction extends AbstractDropAction {
-
-
-	public boolean run(DropTargetEvent event, IExtendedSimpleEditor targetEditor) {
+	public boolean run(DropTargetEvent event, IEditorPart targetEditor) {
 		String[] strs = (String[]) event.data;
 		if (strs == null || strs.length == 0) {
 			return false;

@@ -32,8 +32,8 @@ import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.sse.ui.internal.Logger;
+import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IBreakpointProvider;
-import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.SourceEditingTextTools;
 import org.osgi.framework.Bundle;
 
 
@@ -320,9 +320,9 @@ public class BreakpointProviderBuilder extends RegistryReader {
 		IBreakpointProvider[] providers = new IBreakpointProvider[s.size()];
 		Iterator itr = s.iterator();
 		int i = 0;
-		SourceEditingTextTools tools = null;
+		ISourceEditingTextTools tools = null;
 		if (editorpart != null && itr.hasNext())
-			tools = (SourceEditingTextTools) editorpart.getAdapter(SourceEditingTextTools.class);
+			tools = (ISourceEditingTextTools) editorpart.getAdapter(ISourceEditingTextTools.class);
 		while (itr.hasNext()) {
 			providers[i] = (IBreakpointProvider) itr.next();
 			providers[i].setSourceEditingTextTools(tools);

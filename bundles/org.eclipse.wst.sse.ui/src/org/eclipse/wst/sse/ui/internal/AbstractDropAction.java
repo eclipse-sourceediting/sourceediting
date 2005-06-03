@@ -15,68 +15,80 @@ package org.eclipse.wst.sse.ui.internal;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.dnd.DropTargetEvent;
-import org.eclipse.swt.graphics.Point;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 
 /**
  */
 public abstract class AbstractDropAction implements IDropAction {
 
 	/*
-	 * replace targetEditor's current selection by "text"
+	 * Replaces targetEditor's current selection by "text"
 	 */
-	protected boolean insert(String text, IExtendedSimpleEditor targetEditor) {
+	protected boolean insert(String text, IEditorPart targetEditor) {
 		if (text == null || text.length() == 0) {
-			return false;
+			return true;
 		}
 
-		Point pt = targetEditor.getSelectionRange();
-		IDocument doc = targetEditor.getDocument();
+		ITextSelection textSelection = null;
+		IDocument doc = null;
+		ISelection selection = null;
 
-		try {
-			doc.replace(pt.x, pt.y, text);
-		} catch (BadLocationException e) {
-			return false;
+		ISourceEditingTextTools tools = (ISourceEditingTextTools) targetEditor.getAdapter(ISourceEditingTextTools.class);
+		if (tools != null) {
+			doc = tools.getDocument();
+			selection = tools.getSelection();
 		}
 
 		ITextEditor textEditor = null;
-
 		if (targetEditor instanceof ITextEditor) {
 			textEditor = (ITextEditor) targetEditor;
 		}
-		if (textEditor == null && targetEditor.getEditorPart() instanceof ITextEditor) {
-			textEditor = (ITextEditor) targetEditor.getEditorPart();
-		}
-		if (textEditor == null && targetEditor instanceof IAdaptable) {
+		if (textEditor == null) {
 			textEditor = (ITextEditor) ((IAdaptable) targetEditor).getAdapter(ITextEditor.class);
 		}
-		if (textEditor == null) {
-			textEditor = (ITextEditor) targetEditor.getEditorPart().getAdapter(ITextEditor.class);
+		if (textEditor == null && tools != null && tools.getEditorPart() instanceof ITextEditor) {
+			textEditor = (ITextEditor) tools.getEditorPart();
 		}
-		if (textEditor != null) {
+		if (textEditor == null && tools != null && tools.getEditorPart() != null) {
+			textEditor = (ITextEditor) tools.getEditorPart().getAdapter(ITextEditor.class);
+		}
+
+		if (selection == null && textEditor != null) {
+			selection = textEditor.getSelectionProvider().getSelection();
+		}
+		if (doc == null && textEditor != null) {
+			doc = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
+		}
+
+		if (selection instanceof ITextSelection) {
+			textSelection = (ITextSelection) selection;
+			try {
+				doc.replace(textSelection.getOffset(), textSelection.getLength(), text);
+			}
+			catch (BadLocationException e) {
+				return false;
+			}
+		}
+		if (textEditor != null && textSelection != null) {
 			ISelectionProvider sp = textEditor.getSelectionProvider();
-			ISelection sel = new TextSelection(pt.x, text.length());
+			ITextSelection sel = new TextSelection(textSelection.getOffset(), text.length());
 			sp.setSelection(sel);
-			textEditor.selectAndReveal(pt.x, text.length());
+			textEditor.selectAndReveal(sel.getOffset(), sel.getLength());
 		}
 
 		return true;
 	}
 
-
-	/**
-	 * @see IDropAction#isSupportedData(Object)
-	 */
 	public boolean isSupportedData(Object data) {
 		return true;
 	}
 
-	/**
-	 * @see IDropAction#run(DropTargetEvent, IExtendedSimpleEditor)
-	 */
-	public abstract boolean run(DropTargetEvent event, IExtendedSimpleEditor targetEditor);
+	public abstract boolean run(DropTargetEvent event, IEditorPart targetEditor);
 }

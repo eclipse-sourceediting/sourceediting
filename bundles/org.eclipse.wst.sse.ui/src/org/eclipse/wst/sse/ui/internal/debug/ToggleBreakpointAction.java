@@ -31,15 +31,12 @@ import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.util.Debug;
-import org.eclipse.wst.sse.ui.internal.IExtendedMarkupEditor;
 import org.eclipse.wst.sse.ui.internal.IExtendedSimpleEditor;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.extension.BreakpointProviderBuilder;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IBreakpointProvider;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 
 /**
  * ToggleBreakpointAction
@@ -70,13 +67,6 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 		String contentType = getContentType(document);
 		IBreakpointProvider[] providers = BreakpointProviderBuilder.getInstance().getBreakpointProviders(editor, contentType, getFileExtension(input));
 
-		Document doc = null;
-		Node node = null;
-		if (editor instanceof IExtendedMarkupEditor) {
-			doc = ((IExtendedMarkupEditor) editor).getDOMDocument();
-			node = ((IExtendedMarkupEditor) editor).getCaretNode();
-		}
-
 		int pos = -1;
 		if (editor instanceof IExtendedSimpleEditor) {
 			pos = ((IExtendedSimpleEditor) editor).getCaretPosition();
@@ -88,7 +78,7 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 			try {
 				if (Debug.debugBreakpoints)
 					System.out.println(providers[i].getClass().getName() + " adding breakpoint to line " + lineNumber); //$NON-NLS-1$
-				IStatus status = providers[i].addBreakpoint(doc, document, input, node, lineNumber, pos);
+				IStatus status = providers[i].addBreakpoint(document, input, lineNumber, pos);
 				if (status != null && !status.isOK()) {
 					errors.add(status);
 				}

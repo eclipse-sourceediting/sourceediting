@@ -15,18 +15,13 @@ package org.eclipse.wst.sse.ui.internal;
 
 
 import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.ui.IEditorPart;
 
 /**
  * TextDropAction
  */
 public class TextDropAction extends AbstractDropAction {
-
-
-	/**
-	 * @see AbstractDropAction#run(DropTargetEvent, IExtendedSimpleEditor)
-	 */
-	public boolean run(DropTargetEvent event, IExtendedSimpleEditor targetEditor) {
+	public boolean run(DropTargetEvent event, IEditorPart targetEditor) {
 		return insert((String) event.data, targetEditor);
 	}
-
 }

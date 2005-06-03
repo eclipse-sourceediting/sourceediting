@@ -17,8 +17,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorInput;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
+import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 
 /**
  * Interface to provide breakpoint creation
@@ -28,17 +27,11 @@ public interface IBreakpointProvider {
 	/**
 	 * Adds breakpoint to specified position
 	 * 
-	 * @param doc
-	 *            w3c DOM Document object or <code>null</code> if called
-	 *            from a non-DOM based editor plugin
-	 * @param idoc
+	 * @param document
 	 *            IDocument object
 	 * @param input
 	 *            current editor input, not necessarily an IFileEditorInput or
 	 *            linked to a resource in any way
-	 * @param node
-	 *            current caret node or <code>null</code> if called from a
-	 *            non-DOM based editor plugin
 	 * @param lineNumber
 	 *            current line number
 	 * @param offset
@@ -49,7 +42,7 @@ public interface IBreakpointProvider {
 	 *         information is both valid for a breakpoint and one could not be
 	 *         added.
 	 */
-	IStatus addBreakpoint(Document doc, IDocument idoc, IEditorInput input, Node node, int lineNumber, int offset) throws CoreException;
+	IStatus addBreakpoint(IDocument document, IEditorInput input, int lineNumber, int offset) throws CoreException;
 
 	/**
 	 * Returns corresponding resource from editor input
@@ -60,10 +53,10 @@ public interface IBreakpointProvider {
 	IResource getResource(IEditorInput input);
 
 	/**
-	 * Set SourceEditingTextTools object
+	 * Set ISourceEditingTextTools object
 	 * 
 	 * @param tool
-	 *            SourceEditingTextTools object
+	 *            ISourceEditingTextTools object
 	 */
-	void setSourceEditingTextTools(SourceEditingTextTools tool);
+	void setSourceEditingTextTools(ISourceEditingTextTools tool);
 }

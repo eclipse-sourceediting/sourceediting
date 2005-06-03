@@ -12,8 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal;
 
-
-
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
@@ -30,7 +28,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Caret;
-
+import org.eclipse.ui.IEditorPart;
 
 /**
  * ExtendedEditorDropTargetAdapter
@@ -40,7 +38,7 @@ public class ExtendedEditorDropTargetAdapter extends DropTargetAdapter {
 	private Point caret = null;
 	private String[] editorIds;
 	private int orgOffset = 0;
-	private IExtendedSimpleEditor targetEditor = null;
+	private IEditorPart targetEditor = null;
 	private ITextViewer textViewer = null;
 
 	private Transfer[] transfers = null;
@@ -273,7 +271,7 @@ public class ExtendedEditorDropTargetAdapter extends DropTargetAdapter {
 		return offset;
 	}
 
-	public IExtendedSimpleEditor getTargetEditor() {
+	public IEditorPart getTargetEditor() {
 		return targetEditor;
 	}
 
@@ -297,7 +295,7 @@ public class ExtendedEditorDropTargetAdapter extends DropTargetAdapter {
 
 	/**
 	 */
-	public void setTargetEditor(IExtendedSimpleEditor targetEditor) {
+	public void setTargetEditor(IEditorPart targetEditor) {
 		this.targetEditor = targetEditor;
 	}
 

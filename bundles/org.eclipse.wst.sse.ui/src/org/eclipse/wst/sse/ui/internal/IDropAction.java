@@ -15,6 +15,7 @@ package org.eclipse.wst.sse.ui.internal;
 
 
 import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.ui.IEditorPart;
 
 /**
  */
@@ -32,5 +33,5 @@ public interface IDropAction {
 	 * @return boolean true for the action is actually processed false for the
 	 *         action is not processed.
 	 */
-	public boolean run(DropTargetEvent event, IExtendedSimpleEditor targetEditor);
+	public boolean run(DropTargetEvent event, IEditorPart targetEditor);
 }
