@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Unittests
 Bundle-SymbolicName: org.eclipse.wst.sse.unittests
 Bundle-Version: 1.0.0
-Bundle-ClassPath: ssejunit.jar
+Bundle-ClassPath: sseunittests.jar
 Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.sse.unittests
