@@ -34,11 +34,10 @@
             id="org.eclipse.wst.css.core.internal.modelhandler">
       </modelHandler>
    </extension>
-   <extension
-         id="org.eclipse.wst.css.core.taskdelegate"
-         point="org.eclipse.wst.sse.core.taskscanner">
+   <extension point="org.eclipse.wst.sse.core.taskscanner">
       <scanner
-            class="org.eclipse.wst.css.core.internal.tasks.CSSTaskScannerDelegate"
+            id="org.eclipse.wst.css.core.internal.tasks.CSSFileTaskScanner"
+            class="org.eclipse.wst.css.core.internal.tasks.CSSFileTaskScanner"
             contentTypeIds="org.eclipse.wst.css.core.csssource" />
    </extension>
    <extension point="org.eclipse.core.filebuffers.documentCreation"

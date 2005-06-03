@@ -15,9 +15,13 @@ package org.eclipse.wst.dtd.core.internal.tasks;
 import org.eclipse.wst.dtd.core.internal.parser.DTDRegionTypes;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.tasks.TaskScannerDelegate;
+import org.eclipse.wst.sse.core.internal.tasks.StructuredFileTaskScanner;
 
-public class DTDTaskScannerDelegate extends TaskScannerDelegate {
+public class DTDFileTaskScanner extends StructuredFileTaskScanner {
+	public DTDFileTaskScanner() {
+		super();
+	}
+
 	protected boolean isCommentRegion(IStructuredDocumentRegion region, ITextRegion textRegion) {
 		return textRegion.getType().equals(DTDRegionTypes.COMMENT_CONTENT);
 	}

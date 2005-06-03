@@ -18,14 +18,13 @@
       </embeddedTypeHandler>
    </extension>
    
-   <extension
-         id="org.eclipse.wst.xml.core.taskdelegate"
-         point="org.eclipse.wst.sse.core.taskscanner">
+   <extension point="org.eclipse.wst.sse.core.taskscanner">
       <scanner
-            class="org.eclipse.wst.xml.core.internal.tasks.XMLTaskScannerDelegate"
-            contentTypeIds="org.eclipse.wst.xml.core.xmlsource, org.eclipse.core.runtime.xml" />
+            id="org.eclipse.wst.xml.core.internal.tasks.XMLFileTaskScanner"
+            class="org.eclipse.wst.xml.core.internal.tasks.XMLFileTaskScanner"
+            contentTypeIds="org.eclipse.core.runtime.xml" />
    </extension>
-   
+    
    <extension point="org.eclipse.core.filebuffers.documentCreation"
          id="org.eclipse.wst.xml.core.documentfactories"
          name="%Structured_XML_Document_Factory_Extension.name">

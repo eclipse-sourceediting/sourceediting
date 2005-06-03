@@ -9,11 +9,11 @@
 			id="org.eclipse.wst.dtd.core.internal.modelhandler">
 		</modelHandler>
 	</extension>
-   <extension
-         id="org.eclipse.wst.dtd.core.taskdelegate"
-         point="org.eclipse.wst.sse.core.taskscanner">
+
+   <extension point="org.eclipse.wst.sse.core.taskscanner">
       <scanner
-            class="org.eclipse.wst.dtd.core.internal.tasks.DTDTaskScannerDelegate"
+            id="org.eclipse.wst.dtd.core.internal.tasks.DTDFileTaskScanner"
+            class="org.eclipse.wst.dtd.core.internal.tasks.DTDFileTaskScanner"
             contentTypeIds="org.eclipse.wst.dtd.core.dtdsource" />
    </extension>
 

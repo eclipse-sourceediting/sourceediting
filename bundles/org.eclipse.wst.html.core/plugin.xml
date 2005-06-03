@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-
-     <extension
+   <extension
          point="org.eclipse.wst.sse.core.modelHandler">
       <modelHandler
             default="no"
@@ -17,11 +16,10 @@
             class="org.eclipse.wst.html.core.internal.modelhandler.EmbeddedHTML">
       </embeddedTypeHandler>
    </extension>
-   <extension
-         id="org.eclipse.wst.html.core.taskdelegate"
-         point="org.eclipse.wst.sse.core.taskscanner">
+   <extension point="org.eclipse.wst.sse.core.taskscanner">
       <scanner
-            class="org.eclipse.wst.xml.core.internal.tasks.XMLTaskScannerDelegate"
+            id="org.eclipse.wst.html.core.internal.tasks.HTMLFileTaskScanner"
+            class="org.eclipse.wst.xml.core.internal.tasks.XMLFileTaskScanner"
             contentTypeIds="org.eclipse.wst.html.core.htmlsource" />
    </extension>
    <extension point="org.eclipse.core.filebuffers.documentCreation"

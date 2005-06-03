@@ -15,9 +15,13 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.css.core.internal.parserz.CSSRegionContexts;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.tasks.TaskScannerDelegate;
+import org.eclipse.wst.sse.core.internal.tasks.StructuredFileTaskScanner;
 
-public class CSSTaskScannerDelegate extends TaskScannerDelegate {
+public class CSSFileTaskScanner extends StructuredFileTaskScanner {
+	public CSSFileTaskScanner() {
+		super();
+	}
+
 	protected String getCommentedText(IDocument document, int begin, int length) throws BadLocationException {
 		String text = super.getCommentedText(document, begin, length);
 		if (text != null && text.endsWith("*/")) { //$NON-NLS-1$

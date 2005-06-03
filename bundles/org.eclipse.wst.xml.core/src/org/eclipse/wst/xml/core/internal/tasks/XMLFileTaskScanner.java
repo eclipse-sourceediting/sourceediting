@@ -14,17 +14,15 @@ package org.eclipse.wst.xml.core.internal.tasks;
 
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.core.internal.tasks.TaskScannerDelegate;
+import org.eclipse.wst.sse.core.internal.tasks.StructuredFileTaskScanner;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
-public class XMLTaskScannerDelegate extends TaskScannerDelegate {
-
-	public XMLTaskScannerDelegate() {
+public class XMLFileTaskScanner extends StructuredFileTaskScanner {
+	public XMLFileTaskScanner() {
 		super();
 	}
 
 	protected boolean isCommentRegion(IStructuredDocumentRegion region, ITextRegion textRegion) {
 		return textRegion.getType().equals(DOMRegionContext.XML_COMMENT_TEXT);
-
 	}
 }

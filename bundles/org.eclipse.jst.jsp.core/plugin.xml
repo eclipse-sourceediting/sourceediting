@@ -18,11 +18,10 @@
       </factory>
    </extension>
 
-   <extension
-         id="org.eclipse.jst.jsp.core.taskdelegate"
-         point="org.eclipse.wst.sse.core.taskscanner">
+   <extension point="org.eclipse.wst.sse.core.taskscanner">
       <scanner
-            class="org.eclipse.jst.jsp.core.internal.tasks.JSPTaskScannerDelegate"
+            id="org.eclipse.jst.jsp.core.internal.tasks.JSPFileTaskScanner"
+            class="org.eclipse.jst.jsp.core.internal.tasks.JSPFileTaskScanner"
             contentTypeIds="org.eclipse.jst.jsp.core.jspsource" />
    </extension>
 
@@ -110,7 +109,7 @@
          <content-type
                file-extensions="tag,tagx,tagf"
                priority="high"
-               name="%JSP_Tag_Content_Type_Extension_Element.name"
+               name="%JSP_Fragment_Content_Type_Extension_Element.name"
                id="tagsource"
                base-type="org.eclipse.jst.jsp.core.jspsource"
 			   default-charset="UTF-8">
