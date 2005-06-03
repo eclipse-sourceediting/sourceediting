@@ -17,11 +17,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IBreakpointProvider;
-import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.SourceEditingTextTools;
 import org.eclipse.wst.xml.ui.tests.XMLUITestsPlugin;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 
 
 public class BreakpointErrorProvider implements IBreakpointProvider {
@@ -33,7 +31,7 @@ public class BreakpointErrorProvider implements IBreakpointProvider {
 	 *      org.eclipse.jface.text.IDocument, org.eclipse.ui.IEditorInput,
 	 *      org.w3c.dom.Node, int, int)
 	 */
-	public IStatus addBreakpoint(Document doc, IDocument idoc, IEditorInput input, Node node, int lineNumber, int offset) throws CoreException {
+	public IStatus addBreakpoint(IDocument idoc, IEditorInput input, int lineNumber, int offset) throws CoreException {
 		XMLUITestsPlugin.getDefault().getPreferenceStore().setDefault("break-error", false);
 		boolean enable = XMLUITestsPlugin.getDefault().getPreferenceStore().getBoolean("break-error");
 		if (enable)
@@ -58,6 +56,6 @@ public class BreakpointErrorProvider implements IBreakpointProvider {
 	 * 
 	 * @see org.eclipse.wst.sse.ui.extensions.breakpoint.IBreakpointProvider#setSourceEditingTextTools(org.eclipse.wst.sse.ui.extensions.breakpoint.SourceEditingTextTools)
 	 */
-	public void setSourceEditingTextTools(SourceEditingTextTools tool) {
+	public void setSourceEditingTextTools(ISourceEditingTextTools tool) {
 	}
 }
