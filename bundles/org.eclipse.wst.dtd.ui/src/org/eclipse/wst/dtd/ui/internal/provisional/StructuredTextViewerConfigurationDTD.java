@@ -15,6 +15,7 @@ package org.eclipse.wst.dtd.ui.internal.provisional;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextHover;
+import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -70,9 +71,12 @@ public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerCo
 		}
 		return configuredContentTypes;
 	}
-	
+
+	// WORKAROUND for bug 98408
 	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
-		return null;
+		ContentAssistant assistant = (ContentAssistant) super.getContentAssistant(sourceViewer);
+		assistant.setContentAssistProcessor(null, IDTDPartitionTypes.DTD_DEFAULT);
+		return assistant;
 	}
 
 	/*
@@ -122,7 +126,7 @@ public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerCo
 		}
 		return super.getTextHover(sourceViewer, contentType, stateMask);
 	}
-	
+
 	public IReconciler getReconciler(ISourceViewer sourceViewer) {
 
 		if (fReconciler != null) {
@@ -133,34 +137,38 @@ public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerCo
 		}
 
 		if (fReconciler == null) {
-            fReconciler = new StructuredRegionProcessor();
+			fReconciler = new StructuredRegionProcessor();
 			fReconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
 		}
 
 		boolean reconcilingEnabled = fPreferenceStore.getBoolean(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
-		
-        if(!reconcilingEnabled)
-            return fReconciler;
-        
+
+		if (!reconcilingEnabled)
+			return fReconciler;
+
 		// the second time through, the strategies are set
 		if (fReconciler != null) {
 
-			IDocument doc = ((StructuredTextEditor)editorPart).getDocumentProvider().getDocument(editorPart.getEditorInput());
+			IDocument doc = ((StructuredTextEditor) editorPart).getDocumentProvider().getDocument(editorPart.getEditorInput());
 			IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
-			
+
 			try {
 
 				if (sModel != null) {
-					
-					//IReconcilingStrategy markupStrategy = new StructuredTextReconcilingStrategyForMarkup((ITextEditor) editorPart);
-                    //fReconciler.setReconcilingStrategy(markupStrategy, IXMLPartitions.XML_DEFAULT);
-					//fReconciler.setDefaultStrategy(markupStrategy);
+
+					// IReconcilingStrategy markupStrategy = new
+					// StructuredTextReconcilingStrategyForMarkup((ITextEditor)
+					// editorPart);
+					// fReconciler.setReconcilingStrategy(markupStrategy,
+					// IXMLPartitions.XML_DEFAULT);
+					// fReconciler.setDefaultStrategy(markupStrategy);
 
 					String contentTypeId = sModel.getContentTypeIdentifier();
-					if(contentTypeId != null)
+					if (contentTypeId != null)
 						fReconciler.setValidatorStrategy(createValidatorStrategy(contentTypeId));
 				}
-			} finally {
+			}
+			finally {
 				if (sModel != null)
 					sModel.releaseFromRead();
 			}
