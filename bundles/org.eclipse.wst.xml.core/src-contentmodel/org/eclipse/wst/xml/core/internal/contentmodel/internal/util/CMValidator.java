@@ -17,17 +17,14 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
-
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAnyElement;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMGroup;
-import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNodeList;
-import org.eclipse.wst.xml.core.internal.contentmodel.ContentModelManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMVisitor;
 
 
@@ -280,7 +277,7 @@ public class CMValidator
     {
       Arc arc = (Arc)e.nextElement();
       //boolean visit = false;
-      printlnIndented(indent, "Arc:" + arc.name + " (" + arc.kind + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      //printlnIndented(indent, "Arc:" + arc.name + " (" + arc.kind + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       if (arc.kind == Arc.ELEMENT)
       {
         //table.add(currentGrammarObject, arc.grammarObject);
@@ -965,85 +962,5 @@ public class CMValidator
       v.add(arg[i]);
     }
     return v;
-  }
-
-
-  public static void main(String arg[])
-  {
-    if (arg.length > 1)
-    {
-      try
-      {
-        //CMDocumentFactoryRegistry.getInstance().registerCMDocumentBuilderWithClassName("org.eclipse.wst.xml.core.internal.contentmodel.mofimpl.CMDocumentBuilderImpl");
-
-        String grammarFileName = arg[0];
-        String elementName = arg[1];
-
-        CMDocument cmDocument = ContentModelManager.getInstance().createCMDocument(grammarFileName, null);
-        
-        CMNamedNodeMap elementMap = cmDocument.getElements();
-        CMElementDeclaration element = (CMElementDeclaration)elementMap.getNamedItem(elementName);
-        if (element != null)
-        { /*
-          println("found element [" + elementName + "]  contentType = " + element.getContentType());
-          GraphNode graphNode = createGraph(element);
-          printGraph(graphNode);
-          */
-          println("-------------- begin validate ---------------"); //$NON-NLS-1$
-
-          StringElementContentComparator comparator = new StringElementContentComparator();
-          CMValidator validator = new CMValidator();
-          ElementPathRecordingResult result = new ElementPathRecordingResult();
-          validator.getOriginArray(element, createStringList(arg, 2), comparator, result);
-          if (result.isValid)
-          {
-            CMNode[] nodeMapping = result.getOriginArray();
-            println("Validation Success!"); //$NON-NLS-1$
-            print("  "); //$NON-NLS-1$
-            for (int i = 0; i < nodeMapping.length; i++)
-            {
-              String name = nodeMapping[i] != null ? nodeMapping[i].getNodeName() : "null"; //$NON-NLS-1$
-              print("[" + name + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-            }
-            println(""); //$NON-NLS-1$
-          }
-          else
-          {
-            println("Validation Failed! "); //$NON-NLS-1$
-            if (result.errorMessage != null)
-            {
-              println("  " + result.errorMessage); //$NON-NLS-1$
-            }
-          }
-          println("-------------- end validate ---------------"); //$NON-NLS-1$
-        }
-        else
-        {
-          println("element [" + elementName + "] can not be found"); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-      }
-      catch (Exception e)
-      {
-        println("CMValidator error"); //$NON-NLS-1$
-        e.printStackTrace();
-      }
-    }
-    else
-    {
-      println("2 args required... only " + arg.length + " provided"); //$NON-NLS-1$ //$NON-NLS-2$
-      println("usage java org.eclipse.wst.newxml.util.XMLUtil grammarFileName rootElementName pattern"); //$NON-NLS-1$
-    }
-  }
-
-  public static void print(String string)
-  {  
-  }
-	  
-  public static void println(String string)
-  {  
-  }
-  
-  public static void printlnIndented(int indent, String string)
-  {
   }
 }
