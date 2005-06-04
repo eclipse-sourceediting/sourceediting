@@ -3,9 +3,9 @@
 	<!-- The property ${eclipse-home} should be passed into this script -->
 	<!-- Set a meaningful default value for when it is not. -->
 	<!-- <property name="eclipse-home" value="${basedir}\..\.." /> -->
-		<echo message="basedir ${basedir}" />
-		<echo message="eclipse place ${eclipse-home}" />
-	
+	<echo message="basedir ${basedir}" />
+	<echo message="eclipse place ${eclipse-home}" />
+
 	<!-- sets the properties plugin-name, and library-file -->
 	<property name="plugin-name" value="org.eclipse.wst.xml.core.tests" />
 	<property name="library-file" value="${eclipse-home}/plugins/org.eclipse.test_3.1.0/library.xml" />
@@ -21,13 +21,13 @@
 
 	<!-- This target defines the tests that need to be run. -->
 	<target name="suite">
-		<property name="wst-folder" value="${eclipse-home}/wst_folder"/>
+		<property name="wst-folder" value="${eclipse-home}/wst_folder" />
 		<delete dir="${wst-folder}" quiet="true" />
 		<ant target="core-test" antfile="${library-file}" dir="${eclipse-home}">
 			<property name="data-dir" value="${wst-folder}" />
 			<property name="plugin-name" value="${plugin-name}" />
 			<property name="classname" value="org.eclipse.wst.xml.core.tests.SSEModelXMLTestSuite" />
-			<property name="plugin-path" value="${eclipse-home}/plugins/${plugin-name}"/>
+			<property name="plugin-path" value="${eclipse-home}/plugins/${plugin-name}" />
 		</ant>
 	</target>
 

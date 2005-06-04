@@ -2,14 +2,13 @@
 <?eclipse version="3.0"?>
 <plugin>
 
-     <extension
-         point="org.eclipse.ui.views">
-      <view
-            name="Embedded JSP Structured Text Viewer"
-            icon="icons/sourceEditor.gif"
-            category="org.eclipse.wst.sse.ui.tests"
-            class="org.eclipse.jst.jsp.ui.tests.viewer.ViewerTestJSP"
-            id="org.eclipse.jst.jsp.ui.tests.viewer.ViewerTestJSP"/>
-   </extension>
+	<extension point="org.eclipse.ui.views">
+		<view
+			name="Embedded JSP Structured Text Viewer"
+			icon="icons/sourceEditor.gif"
+			category="org.eclipse.wst.sse.ui.tests"
+			class="org.eclipse.jst.jsp.ui.tests.viewer.ViewerTestJSP"
+			id="org.eclipse.jst.jsp.ui.tests.viewer.ViewerTestJSP" />
+	</extension>
 
 </plugin>

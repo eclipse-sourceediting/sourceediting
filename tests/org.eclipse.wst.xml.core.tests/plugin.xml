@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
 <plugin>
-	 <extension
-        point="org.eclipse.core.runtime.contentTypes">
+	<extension point="org.eclipse.core.runtime.contentTypes">
 		<!-- associate .fragx files with the XML content type -->
 		<file-association
 			content-type="org.eclipse.core.runtime.xml"
-			file-extensions="fragx"/>
-	 </extension>		 
+			file-extensions="fragx" />
+	</extension>
+
+	<extension
+		id="Test"
+		point="org.eclipse.core.runtime.applications">
+		<application>
+			<run
+				class="org.eclipse.wst.xml.core.internal.contentmodel.internal.test.Test" />
+		</application>
+	</extension>
+
 </plugin>
