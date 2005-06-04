@@ -365,7 +365,7 @@ public class DOMValidator extends CMValidator
     CMValidator.ElementPathRecordingResult result = new CMValidator.ElementPathRecordingResult();
     validate(ed, contentSpecificationList, stringContentComparitor, result);
     int count = getElementCount(contentSpecificationList);
-    System.out.println("elementOriginList " + result.getPartialValidationCount() + "vs" + count);
+    //System.out.println("elementOriginList " + result.getPartialValidationCount() + "vs" + count);
     return result.getPartialValidationCount() >= count;
   }  
   
