@@ -13,7 +13,7 @@
 		point="org.eclipse.core.runtime.applications">
 		<application>
 			<run
-				class="org.eclipse.wst.xml.core.internal.contentmodel.internal.test.Test" />
+				class="org.eclipse.wst.xml.core.tests.contentmodel.CMVisitorTest" />
 		</application>
 	</extension>
 
