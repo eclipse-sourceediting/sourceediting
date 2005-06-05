@@ -18,6 +18,7 @@ public class ModelQueryExtensionDescriptor
   private IConfigurationElement configuration;
   private String contentTypeId;
   private String namespace;
+  private ModelQueryExtension extension;
 
   public ModelQueryExtensionDescriptor(IConfigurationElement element)
   {
@@ -26,7 +27,11 @@ public class ModelQueryExtensionDescriptor
 
   public ModelQueryExtension createModelQueryExtension() throws CoreException
   {
-    return (ModelQueryExtension) configuration.createExecutableExtension(CLASS_ATTRIBUTE);
+    if (extension == null)
+    {  
+      extension = (ModelQueryExtension) configuration.createExecutableExtension(CLASS_ATTRIBUTE);
+    }  
+    return extension;
   }
 
   public String getContentTypeId()
