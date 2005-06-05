@@ -4,3 +4,4 @@ dtdcore.jar
 *.zip
 build.xml
 temp.folder
+@dot
