@@ -14,6 +14,7 @@ package org.eclipse.wst.xml.core.internal.contentmodel.internal.util;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -343,14 +344,19 @@ public class CMValidator
 
         if (traverseArc)
         {
-          // see if this arc leads to a correct solution
-          result.push(arc);
-          validateElementList(list, arc.node, comparator, result, loopFlag);
-          if (result.isValid)
-          {
-            break;
+          // test to see if we can push this arc due to facet constraints
+          //
+          if (result.canPush(arc))
+          {          
+            // see if this arc leads to a correct solution          
+            result.push(arc);
+            validateElementList(list, arc.node, comparator, result, loopFlag);
+            if (result.isValid)
+            {
+              break;
+            }
+            result.pop(arc);
           }
-          result.pop(arc);
         }
       }
     }
@@ -415,6 +421,21 @@ public class CMValidator
         if (elementContent.size() < 500)
         {
           boolean isGraphValidationNeeded = !(elementList == null && contentType == CMElementDeclaration.MIXED);
+          
+          CMContent content = ed.getContent();
+          
+          // exlicity handle 'All' groups
+          //
+          if (content.getNodeType() == CMNode.GROUP)
+          {
+            CMGroup group = (CMGroup)content;
+            if (group.getOperator() == CMGroup.ALL)
+            {
+              isGraphValidationNeeded = false;
+              validatAllGroupContent(elementContent, comparator, group, result);                               
+            }              
+          }  
+          
           if (isGraphValidationNeeded)
           {
             // validate the elementList using a graph
@@ -461,7 +482,77 @@ public class CMValidator
     //   assume elementContent will always be valid for this content type
     // }
   }
-
+    
+  class AllGroupItemCount
+  {
+    int count = 0;    
+  }
+  
+  private void validatAllGroupContent(List elementContent, ElementContentComparator comparator, CMGroup allGroup, Result result) 
+  {
+    boolean isValid = false;
+    boolean isPartiallyValid = true;
+    HashMap map = new HashMap();
+    CMNodeList list = allGroup.getChildNodes();
+    for (int j = list.getLength() - 1; j >= 0; j--)
+    {
+      CMNode node = list.item(j);      
+      if (map.get(node) == null)
+      {  
+        map.put(node, new AllGroupItemCount());
+      }  
+    }    
+    int validitionCount = 0;
+    for (Iterator i = elementContent.iterator(); i.hasNext(); validitionCount++)
+    {
+      Object o = i.next();        
+      if (comparator.isElement(o))
+      {              
+        // test to see if the element is listed in the all group
+        //
+        CMNode matchingCMNode = null;
+        for (int j = list.getLength() - 1; j >= 0; j--)
+        {
+          CMNode node = list.item(j);
+          if (comparator.matches(o, node))
+          {
+            matchingCMNode = node;
+            break;
+          }             
+        }                              
+        if (matchingCMNode == null)
+        {     
+          isPartiallyValid = false;
+          break;
+        }
+        else
+        {  
+          // test to see that the element occurs only once
+          //
+          AllGroupItemCount itemCount = (AllGroupItemCount)map.get(matchingCMNode);
+          if (itemCount != null)
+          {  
+            if (itemCount.count > 0)
+            {
+              // we don't want to allow too many elements!
+              // we consider 'not enough' to be partially valid... but not 'too many'
+              isPartiallyValid = false;
+              break;
+            }  
+            else
+            {
+              itemCount.count++;
+            }  
+          }
+        }  
+      }  
+    }
+    if (result instanceof ElementPathRecordingResult && isPartiallyValid)
+    {
+      ((ElementPathRecordingResult)result).setPartialValidationCount(validitionCount);
+    }  
+    result.isValid = isValid;
+  }
 
   public void getOriginArray(CMElementDeclaration ed, List elementContent, ElementContentComparator comparator, ElementPathRecordingResult result)
   {
@@ -604,12 +695,12 @@ public class CMValidator
     }  
     CMNode[] result = new CMNode[nextSiblingList.size()];
     nextSiblingList.toArray(result);    
-    System.out.print("getNextSibling(" +elementName + ")");
-    for (int i = 0; i < result.length; i++)
-    {
-      System.out.print("[" + result[i].getNodeName() + "]");
-    }  
-    System.out.println();
+    //System.out.print("getNextSibling(" +elementName + ")");
+    //for (int i = 0; i < result.length; i++)
+    //{
+    //  System.out.print("[" + result[i].getNodeName() + "]");
+    //}  
+    //System.out.println();
     return result;
   }
 
@@ -623,6 +714,11 @@ public class CMValidator
     public String errorMessage;
     public boolean isRepeatTraversed; // detects if a repeat has been traversed
 
+    public boolean canPush(Arc arc)
+    {
+      return true;
+    }
+    
     public void push(Arc arc)
     {
       // overide this method to record traversed nodes
@@ -642,16 +738,75 @@ public class CMValidator
    */
   public static class ElementPathRecordingResult extends Result
   {
+    protected List arcNodeStack = new ArrayList();
     protected Vector elementOriginStack = new Vector();
     protected CMNode[] originArray = null;
     protected int partialValidationCount = 0;
 
+    
+    // this method is used to support facet counts
+    //
+    public boolean canPush(Arc arc)
+    {
+      //System.out.println("canPush " + arc.cmNode);       
+      boolean result = true;   
+      try
+      {        
+        // TODO... handle facets on repeating groups
+        // 
+        if (arc.kind == Arc.ELEMENT && arc.cmNode != null)
+        {
+          int nodeType = arc.cmNode.getNodeType();
+          if (nodeType == CMNode.ELEMENT_DECLARATION)
+          {
+            CMContent content = (CMContent)arc.cmNode;            
+            int maxOccur = content.getMaxOccur();
+            if (maxOccur > 1)
+            {                         
+              // we need to test to see how many times this cmNode has been repeated
+              //            
+              int repeated = 0;
+              //System.out.print("repeat(" +  content.getNodeName() + ")");
+              for (int i = arcNodeStack.size() - 1; i >= 0; i--)
+              {  
+                CMNode node = (CMNode)arcNodeStack.get(i);
+                //System.out.print("[" + node.getNodeName() + "]");                
+                if (node != content)
+                {
+                  break;
+                }  
+                repeated++;
+                if (repeated >= maxOccur)
+                {
+                  result = false;
+                  break;
+                }  
+              }
+              //System.out.println();
+              //System.out.println("content : " + content.getNodeName() + " repeats=" + repeated);  
+            }             
+          }        
+        }
+      }
+      catch (Exception e)
+      {
+        e.printStackTrace();
+      }
+      //System.out.flush();
+      return result;
+    }
+    
     public void push(Arc arc)
     {
       if (arc.kind == Arc.ELEMENT)
       {
         elementOriginStack.add(arc.cmNode);
         partialValidationCount = Math.max(elementOriginStack.size(), partialValidationCount);
+      }
+      if (arc.kind == Arc.ELEMENT || arc.kind == Arc.LINK)
+      {
+        //System.out.println("push " + arc.cmNode);
+        arcNodeStack.add(arc.cmNode);
       }
     }
 
@@ -662,6 +817,11 @@ public class CMValidator
         int size = elementOriginStack.size();
         elementOriginStack.remove(size - 1);
       }
+      if (arc.kind == Arc.ELEMENT || arc.kind == Arc.LINK)
+      {
+        int size = arcNodeStack.size();
+        arcNodeStack.remove(size - 1);
+      }      
     }
 
     public Vector getElementOriginList()
@@ -682,6 +842,11 @@ public class CMValidator
     public int getPartialValidationCount()
     {
       return partialValidationCount;
+    }
+
+    public void setPartialValidationCount(int partialValidationCount)
+    {
+      this.partialValidationCount = partialValidationCount;
     }
   }  
 
