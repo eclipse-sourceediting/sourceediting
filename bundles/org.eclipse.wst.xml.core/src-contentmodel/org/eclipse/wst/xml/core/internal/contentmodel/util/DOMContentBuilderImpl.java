@@ -544,7 +544,7 @@ public class DOMContentBuilderImpl extends CMVisitor implements DOMContentBuilde
     CMDocument parentCMDocument = (CMDocument)anyElement.getProperty("CMDocument"); //$NON-NLS-1$
     CMElementDeclaration ed = null;                          
 
-    System.out.println("parentCMDocument = " + parentCMDocument); //$NON-NLS-1$
+    //System.out.println("parentCMDocument = " + parentCMDocument); //$NON-NLS-1$
     if (parentCMDocument != null)
     {          
       if (uri == null || uri.startsWith("##") || uri.equals(parentCMDocument.getProperty(targetNSProperty))) //$NON-NLS-1$
