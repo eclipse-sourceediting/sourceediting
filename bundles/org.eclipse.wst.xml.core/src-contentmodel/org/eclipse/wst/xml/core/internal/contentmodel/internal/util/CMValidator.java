@@ -748,32 +748,38 @@ public class CMValidator
     //
     public boolean canPush(Arc arc)
     {     
-      boolean result = true;  
-      /*
+      boolean result = true;        
       try
       {        
         if (arc.kind == Arc.REPEAT)
-        {
+        {          
           if (arc.cmNode instanceof CMContent)
           {
-            CMContent content = (CMContent)arc.cmNode;            
-            ItemCount itemCount = (ItemCount)activeItemCountList.get(activeItemCountList.size() - 1);
+            CMContent content = (CMContent)arc.cmNode;
             
-            // here we need to compute if we can do another repeat
-            // if we increase the repeat count by '1' will this violate the maxOccurs
+            // we only need to do 'special' facet checking if the maxOccurs is > 1
+            // values of '0' and '-1' (unbounded) work 'for free' without any special checking
             //
-            if (itemCount.count + 1 >= content.getMaxOccur())
-            {
-              result = false;
+            if (content.getMaxOccur() > 1)
+            {  
+              ItemCount itemCount = (ItemCount)activeItemCountList.get(activeItemCountList.size() - 1);
+              
+              // here we need to compute if we can do another repeat
+              // if we increase the repeat count by '1' will this violate the maxOccurs
+              //
+              if (itemCount.count + 1 >= content.getMaxOccur())
+              {
+                result = false;
+              }
             }
-            //System.out.println("canPush REPEAT (" + itemCount.count + ")" + content.getNodeName() + " result= " + result);              
+            //System.out.println("canPush REPEAT (" + itemCount.count + ")" + content.getNodeName() + " result= " + result);            
           } 
         }       
       }
       catch (Exception e)
       {
         e.printStackTrace();
-      }*/
+      }
       //System.out.flush();
       return result;
     }
