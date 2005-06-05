@@ -421,11 +421,10 @@ public class CMValidator
         if (elementContent.size() < 500)
         {
           boolean isGraphValidationNeeded = !(elementList == null && contentType == CMElementDeclaration.MIXED);
-          
-          CMContent content = ed.getContent();
-          
+                      
           // exlicity handle 'All' groups
           //
+          CMContent content = ed.getContent();
           if (content.getNodeType() == CMNode.GROUP)
           {
             CMGroup group = (CMGroup)content;
@@ -483,7 +482,7 @@ public class CMValidator
     // }
   }
     
-  class AllGroupItemCount
+  static class ItemCount
   {
     int count = 0;    
   }
@@ -499,7 +498,7 @@ public class CMValidator
       CMNode node = list.item(j);      
       if (map.get(node) == null)
       {  
-        map.put(node, new AllGroupItemCount());
+        map.put(node, new ItemCount());
       }  
     }    
     int validitionCount = 0;
@@ -529,7 +528,7 @@ public class CMValidator
         {  
           // test to see that the element occurs only once
           //
-          AllGroupItemCount itemCount = (AllGroupItemCount)map.get(matchingCMNode);
+          ItemCount itemCount = (ItemCount)map.get(matchingCMNode);
           if (itemCount != null)
           {  
             if (itemCount.count > 0)
@@ -737,8 +736,9 @@ public class CMValidator
    *
    */
   public static class ElementPathRecordingResult extends Result
-  {
-    protected List arcNodeStack = new ArrayList();
+  {  
+    protected List activeItemCountList = new ArrayList();
+    protected List inactiveItemCountList = new ArrayList();    
     protected Vector elementOriginStack = new Vector();
     protected CMNode[] originArray = null;
     protected int partialValidationCount = 0;
@@ -747,51 +747,33 @@ public class CMValidator
     // this method is used to support facet counts
     //
     public boolean canPush(Arc arc)
-    {
-      //System.out.println("canPush " + arc.cmNode);       
-      boolean result = true;   
+    {     
+      boolean result = true;  
+      /*
       try
       {        
-        // TODO... handle facets on repeating groups
-        // 
-        if (arc.kind == Arc.ELEMENT && arc.cmNode != null)
+        if (arc.kind == Arc.REPEAT)
         {
-          int nodeType = arc.cmNode.getNodeType();
-          if (nodeType == CMNode.ELEMENT_DECLARATION)
+          if (arc.cmNode instanceof CMContent)
           {
             CMContent content = (CMContent)arc.cmNode;            
-            int maxOccur = content.getMaxOccur();
-            if (maxOccur > 1)
-            {                         
-              // we need to test to see how many times this cmNode has been repeated
-              //            
-              int repeated = 0;
-              //System.out.print("repeat(" +  content.getNodeName() + ")");
-              for (int i = arcNodeStack.size() - 1; i >= 0; i--)
-              {  
-                CMNode node = (CMNode)arcNodeStack.get(i);
-                //System.out.print("[" + node.getNodeName() + "]");                
-                if (node != content)
-                {
-                  break;
-                }  
-                repeated++;
-                if (repeated >= maxOccur)
-                {
-                  result = false;
-                  break;
-                }  
-              }
-              //System.out.println();
-              //System.out.println("content : " + content.getNodeName() + " repeats=" + repeated);  
-            }             
-          }        
-        }
+            ItemCount itemCount = (ItemCount)activeItemCountList.get(activeItemCountList.size() - 1);
+            
+            // here we need to compute if we can do another repeat
+            // if we increase the repeat count by '1' will this violate the maxOccurs
+            //
+            if (itemCount.count + 1 >= content.getMaxOccur())
+            {
+              result = false;
+            }
+            //System.out.println("canPush REPEAT (" + itemCount.count + ")" + content.getNodeName() + " result= " + result);              
+          } 
+        }       
       }
       catch (Exception e)
       {
         e.printStackTrace();
-      }
+      }*/
       //System.out.flush();
       return result;
     }
@@ -800,28 +782,59 @@ public class CMValidator
     {
       if (arc.kind == Arc.ELEMENT)
       {
+        //System.out.println("[X]push(" + arc.kind + ")" + arc.cmNode.getNodeName());
         elementOriginStack.add(arc.cmNode);
         partialValidationCount = Math.max(elementOriginStack.size(), partialValidationCount);
       }
-      if (arc.kind == Arc.ELEMENT || arc.kind == Arc.LINK)
+      else if (arc.kind == Arc.PREV_IN)
       {
-        //System.out.println("push " + arc.cmNode);
-        arcNodeStack.add(arc.cmNode);
+        //System.out.println("[X]push(" + arc.kind + ")" + arc.cmNode.getNodeName());
+        activeItemCountList.add(new ItemCount());   
       }
+      else if (arc.kind == Arc.OUT_NEXT)
+      {        
+        //System.out.println("[X]push(" + arc.kind + ")" + arc.cmNode.getNodeName() + "[" + arc + "]");
+        int size = activeItemCountList.size();
+        ItemCount itemCount = (ItemCount)activeItemCountList.get(size - 1);
+        activeItemCountList.remove(size - 1);
+        inactiveItemCountList.add(itemCount); 
+      }      
+      else if (arc.kind == Arc.REPEAT)
+      {
+        //System.out.println("[X]push(" + arc.kind + ")" + arc.cmNode.getNodeName());
+        ItemCount itemCount = (ItemCount)activeItemCountList.get(activeItemCountList.size() - 1);
+        itemCount.count++;
+        //System.out.println("repeat(" + itemCount.count + ")" + arc.cmNode.getNodeName());
+      }        
     }
 
     public void pop(Arc arc)
     {
       if (arc.kind == Arc.ELEMENT)
       {
+        //System.out.println("[X]pop(" + arc.kind + ")" + arc.cmNode.getNodeName());
         int size = elementOriginStack.size();
         elementOriginStack.remove(size - 1);
       }
-      if (arc.kind == Arc.ELEMENT || arc.kind == Arc.LINK)
+      else if (arc.kind == Arc.PREV_IN)
       {
-        int size = arcNodeStack.size();
-        arcNodeStack.remove(size - 1);
-      }      
+        //System.out.println("[X]pop(" + arc.kind + ")" + arc.cmNode.getNodeName());
+        activeItemCountList.remove(activeItemCountList.size() - 1);        
+      }
+      else if (arc.kind == Arc.OUT_NEXT)
+      {
+        //System.out.println("[X]pop(" + arc.kind + ")" + arc.cmNode.getNodeName());
+        int size = inactiveItemCountList.size();
+        ItemCount itemCount = (ItemCount)inactiveItemCountList.get(size - 1);
+        inactiveItemCountList.remove(size - 1);
+        activeItemCountList.add(itemCount);     
+      }  
+      else if (arc.kind == Arc.REPEAT)
+      {
+        //System.out.println("[X]pop(" + arc.kind + ")" + arc.cmNode.getNodeName());
+        ItemCount itemCount = (ItemCount)activeItemCountList.get(activeItemCountList.size() - 1);
+        itemCount.count--;
+      }     
     }
 
     public Vector getElementOriginList()
