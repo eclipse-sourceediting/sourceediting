@@ -12,6 +12,7 @@
 */
 package org.eclipse.wst.xml.core.internal.contentmodel.internal.util;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -299,50 +300,6 @@ public class CMValidator
     }
   }
 
-
-  public void populateFTable(FTable table, GraphNode node, CMElementDeclaration prevED, Vector namedArcList, Vector unamedArcList, int indent)
-  {
-    //String decoration = node.isTerminal ? " *" : "";
-    //printlnIndented(indent, "GraphNode:" + node.name + decoration);
-
-    indent += 2;
-    for (Enumeration e = node.arcList.elements() ; e.hasMoreElements() ;)
-    {
-      Arc arc = (Arc)e.nextElement();
-     //boolean visit = false;
-      //printlnIndented(indent, "Arc:" + arc.name + " (" + arc.kind + ")");
-      if (arc.kind == Arc.ELEMENT)
-      {
-        CMElementDeclaration newED = (CMElementDeclaration)arc.cmNode;
-        table.add(prevED, newED);
-        if (!namedArcList.contains(arc))
-        {
-          namedArcList.add(arc);
-          unamedArcList = new Vector();
-          populateFTable(table, arc.node, newED, namedArcList, unamedArcList, indent + 2);
-        }
-      }
-      else
-      {
-        if (!unamedArcList.contains(arc))
-        {
-          unamedArcList.add(arc);
-          populateFTable(table, arc.node, prevED, namedArcList, unamedArcList, indent + 2);
-        }
-      }
-    }
-  }
-
-
-  public FTable getFTable(CMElementDeclaration ed)
-  {
-    FTable table = new FTable();
-    GraphNode node = lookupOrCreateGraph(ed);
-    populateFTable(table, node, ed, new Vector(), new Vector(), 0);
-    return table;
-  }
-
-
   public void printGraph(GraphNode node)
   {
     printGraph(node, new Vector(), new Vector(), 0);
@@ -537,6 +494,123 @@ public class CMValidator
       }
       result.setOriginArray(cmNodeArray);
     }
+  }
+  
+  private void collectNamedArcs(GraphNode node, List namedArcList, int indent)
+  {
+    //printlnIndented(indent, "GraphNode:" + node.name + decoration);
+    indent += 2;
+    for (Iterator i = node.arcList.iterator(); i.hasNext() ;)
+    {
+      Arc arc = (Arc)i.next();
+      //printlnIndented(indent, "Arc:" + arc.name + " (" + arc.kind + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      if (arc.kind == Arc.ELEMENT)
+      { 
+        if (!namedArcList.contains(arc))
+        {
+          namedArcList.add(arc);
+          collectNamedArcs(arc.node, namedArcList, indent + 2);
+        }
+      }
+      else if (arc.kind != Arc.REPEAT && arc.kind != Arc.OPTIONAL)
+      {
+        collectNamedArcs(arc.node, namedArcList, indent + 2);
+      }
+    }
+  }
+  
+  
+  private List getMatchingArcs(CMElementDeclaration ed, String elementName)
+  {
+    List arcList = new ArrayList();
+    GraphNode graphNode = lookupOrCreateGraph(ed);
+    if (elementName == null)
+    {
+      // here we add the 'root' arc
+      for (Iterator i = graphNode.arcList.iterator(); i.hasNext() ;)
+      {
+        Arc arc = (Arc)i.next();
+        if (arc.kind == Arc.PREV_IN)
+        {
+          arcList.add(arc);
+          break;
+        }  
+      }
+    }
+    else
+    { 
+      List namedArcs = new ArrayList();
+      collectNamedArcs(graphNode, namedArcs, 0);
+      for (Iterator i = namedArcs.iterator(); i.hasNext(); )
+      {
+        Arc arc = (Arc)i.next();
+        if (arc.cmNode != null && elementName.equals(arc.cmNode.getNodeName()))
+        {  
+          arcList.add(arc);
+        }  
+      }  
+    }      
+    return arcList;
+  }
+
+  
+  private void collectNextSiblings(GraphNode node, List nextSiblingList, List namedArcList, List unamedArcList, int indent)
+  {
+    //printlnIndented(indent, "GraphNode:" + node.name + decoration);
+    indent += 2;
+    for (Iterator i = node.arcList.iterator(); i.hasNext(); )
+    {
+      Arc arc = (Arc)i.next();
+      if (arc.kind == Arc.ELEMENT)
+      {       
+        if (!namedArcList.contains(arc))
+        {
+          if (arc.cmNode != null)
+          {  
+            nextSiblingList.add(arc.cmNode);
+            if (arc.cmNode.getNodeType() == CMNode.ELEMENT_DECLARATION ||
+                arc.cmNode.getNodeType() == CMNode.ANY_ELEMENT)
+            {              
+              namedArcList.add(arc);
+              CMContent cmNode = (CMContent)arc.cmNode; 
+              if (cmNode.getMinOccur() == 0)
+              {
+                unamedArcList = new ArrayList();
+                collectNextSiblings(arc.node, nextSiblingList, namedArcList, unamedArcList, indent + 2);
+              }
+            }            
+          }
+        }
+      }  
+      else
+      {
+        if (!unamedArcList.contains(arc))
+        {
+          unamedArcList.add(arc);
+          collectNextSiblings(arc.node, nextSiblingList, namedArcList, unamedArcList, indent + 2);
+        }
+      }
+    }  
+  }
+    
+  public CMNode[] getNextSiblings(CMElementDeclaration ed, String elementName)
+  {
+    List arcList = getMatchingArcs(ed, elementName);
+    List nextSiblingList = new ArrayList();
+    for (Iterator i = arcList.iterator(); i.hasNext(); )
+    {
+      Arc arc = (Arc)i.next();
+      collectNextSiblings(arc.node, nextSiblingList, new ArrayList(), new ArrayList(), 0);      
+    }  
+    CMNode[] result = new CMNode[nextSiblingList.size()];
+    nextSiblingList.toArray(result);    
+    System.out.print("getNextSibling(" +elementName + ")");
+    for (int i = 0; i < result.length; i++)
+    {
+      System.out.print("[" + result[i].getNodeName() + "]");
+    }  
+    System.out.println();
+    return result;
   }
 
   /**
