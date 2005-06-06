@@ -33,10 +33,8 @@ import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.wst.sse.ui.internal.StructuredResourceMarkerAnnotationModel;
+import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IBreakpointProvider;
-import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.SourceEditingTextTools;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 
 /**
  * A IBreakpointProvider supporting JSP breakpoints for a Non-Java Language
@@ -45,9 +43,9 @@ import org.w3c.dom.Node;
 public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExecutableExtension {
 	private String fClassPattern = null; 
 
-	public IStatus addBreakpoint(Document doc, IDocument idoc, IEditorInput input, Node node, int editorLineNumber, int offset) throws CoreException {
+	public IStatus addBreakpoint(IDocument document, IEditorInput input, int editorLineNumber, int offset) throws CoreException {
 		// check if there is a valid position to set breakpoint
-		int pos = getValidPosition(idoc, editorLineNumber);
+		int pos = getValidPosition(document, editorLineNumber);
 		IStatus status = null;
 		if (pos >= 0) {
 			IResource res = getResourceFromInput(input);
@@ -166,7 +164,7 @@ public class JavaStratumBreakpointProvider implements IBreakpointProvider, IExec
 		}
 	}
 
-	public void setSourceEditingTextTools(SourceEditingTextTools util) {
+	public void setSourceEditingTextTools(ISourceEditingTextTools tools) {
 		// not used
 	}
 }

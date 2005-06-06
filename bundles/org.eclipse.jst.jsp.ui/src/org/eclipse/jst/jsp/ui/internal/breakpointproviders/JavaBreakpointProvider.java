@@ -21,18 +21,19 @@ import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.SourceEditingTextTools;
+import org.eclipse.wst.xml.ui.internal.provisional.IDOMSourceEditingTextTools;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 /**
  * A BreakpointProvider supporting server-side Java as a JSP language
+ * 
+ * @deprecated
  */
 public class JavaBreakpointProvider extends AbstractBreakpointProvider {
 
 	/*
-	 * @param res
-	 * @return String
+	 * @param res @return String
 	 */
 	private static final String getTypeName(IResource res) {
 		IPath path = res.getFullPath();
@@ -52,14 +53,8 @@ public class JavaBreakpointProvider extends AbstractBreakpointProvider {
 
 
 
-	public boolean canAddBreakpoint(Document doc, IDocument idoc, IEditorInput input, Node node, int lineNumber, int offset) {
-		IResource res = input instanceof IFileEditorInput ? ((IFileEditorInput) input).getFile() : null;
-
-		return res != null && !isBreakpointExist(res, lineNumber) && isValidPosition(doc, idoc, lineNumber) && (getPageLanguage(doc) == JAVA);
-	}
-
-	public IStatus addBreakpoint(Document doc, IDocument idoc, IEditorInput input, Node node, int lineNumber, int offset) throws CoreException {
-		int pos = getValidPosition(doc, idoc, lineNumber);
+	public IStatus addBreakpoint(IDocument document, IEditorInput input, int lineNumber, int offset) throws CoreException {
+		int pos = getValidPosition(document, lineNumber);
 		if (pos != NO_VALID_CONTENT) {
 			IResource res = getEditorInputResource(input);
 			if (res != null) {
@@ -67,7 +62,7 @@ public class JavaBreakpointProvider extends AbstractBreakpointProvider {
 				try {
 					JDIDebugModel.createLineBreakpoint(res, typeName, lineNumber, pos, pos, 0, true, null);
 				}
-				catch(CoreException e) {
+				catch (CoreException e) {
 					return e.getStatus();
 				}
 			}
@@ -75,10 +70,22 @@ public class JavaBreakpointProvider extends AbstractBreakpointProvider {
 		return new Status(IStatus.OK, JSPUIPlugin.ID, IStatus.OK, JSPUIMessages.OK, null); //$NON-NLS-1$
 	}
 
+	public boolean canAddBreakpoint(IDocument document, IEditorInput input, Node node, int lineNumber, int offset) {
+		IResource res = input instanceof IFileEditorInput ? ((IFileEditorInput) input).getFile() : null;
+		Document doc = null;
+		if (getSourceEditingTextTools() instanceof IDOMSourceEditingTextTools) {
+			doc = ((IDOMSourceEditingTextTools) getSourceEditingTextTools()).getDOMDocument();
+		}
+
+		return res != null && !isBreakpointExist(res, lineNumber) && isValidPosition(document, lineNumber) && (getPageLanguage(doc) == JAVA);
+	}
+
+	public IResource getResource(IEditorInput input) {
+		return getEditorInputResource(input);
+	}
+
 	/*
-	 * @param res
-	 * @param lineNumber
-	 * @return boolean
+	 * @param res @param lineNumber @return boolean
 	 */
 	private boolean isBreakpointExist(IResource res, int lineNumber) {
 		try {
@@ -90,19 +97,9 @@ public class JavaBreakpointProvider extends AbstractBreakpointProvider {
 	}
 
 	/*
-	 * @param doc
-	 * @param idoc
-	 * @param lineNumber
-	 * @return boolean
+	 * @param doc @param idoc @param lineNumber @return boolean
 	 */
-	private boolean isValidPosition(Document doc, IDocument idoc, int lineNumber) {
-		return getValidPosition(doc, idoc, lineNumber) != NO_VALID_CONTENT;
-	}
-
-	public void setSourceEditingTextTools(SourceEditingTextTools util) {
-	}
-
-	public IResource getResource(IEditorInput input) {
-		return getEditorInputResource(input);
+	private boolean isValidPosition(IDocument idoc, int lineNumber) {
+		return getValidPosition(idoc, lineNumber) != NO_VALID_CONTENT;
 	}
 }

@@ -23,7 +23,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * Implements SourceEditingTextTools interface
+ * Implements ISourceEditingTextTools interface
  */
 public class JSPSourceEditingTextTools extends XMLSourceEditingTextTools {
 

@@ -21,24 +21,23 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.SourceEditingTextTools;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 
 /**
  * A IBreakpointProvider supporting server-side JavaScript as a JSP language
  * 
  */
 public class JavaScriptBreakpointProvider extends AbstractBreakpointProvider {
-	public boolean canAddBreakpoint(Document doc, IDocument idoc, IEditorInput input, Node node, int lineNumber, int offset) {
+	public boolean canAddBreakpoint(IDocument document, IEditorInput input, int lineNumber, int offset) {
 		IResource res = getEditorInputResource(input);
-		return res != null && !isBreakpointExist(res, lineNumber) && isValidPosition(doc, idoc, lineNumber) && (getPageLanguage(doc) != JAVA);
+		Document doc = null;
+		return res != null && !isBreakpointExist(res, lineNumber) && isValidPosition(document, lineNumber) && (getPageLanguage(doc) != JAVA);
 	}
 
 
-	public IStatus addBreakpoint(Document doc, IDocument idoc, IEditorInput input, Node node, int lineNumber, int offset) {
-		int pos = getValidPosition(doc, idoc, lineNumber);
-		if (pos != NO_VALID_CONTENT && canAddBreakpoint(doc, idoc, input, node, lineNumber, offset)) {
+	public IStatus addBreakpoint(IDocument document, IEditorInput input, int lineNumber, int offset) {
+		int pos = getValidPosition(document, lineNumber);
+		if (pos != NO_VALID_CONTENT && canAddBreakpoint(document, input, lineNumber, offset)) {
 			IResource res = getEditorInputResource(input);
 			if (res != null) {
 				new JavascriptLineBreakpoint(res, lineNumber, pos, pos);
@@ -72,11 +71,8 @@ public class JavaScriptBreakpointProvider extends AbstractBreakpointProvider {
 	/*
 	 * @param doc @param idoc @param lineNumber @return boolean
 	 */
-	private boolean isValidPosition(Document doc, IDocument idoc, int lineNumber) {
-		return getValidPosition(doc, idoc, lineNumber) != NO_VALID_CONTENT;
-	}
-
-	public void setSourceEditingTextTools(SourceEditingTextTools util) {
+	private boolean isValidPosition(IDocument idoc, int lineNumber) {
+		return getValidPosition(idoc, lineNumber) != NO_VALID_CONTENT;
 	}
 
 	public IResource getResource(IEditorInput input) {
