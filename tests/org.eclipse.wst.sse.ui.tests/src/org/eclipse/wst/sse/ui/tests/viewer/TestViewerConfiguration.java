@@ -19,7 +19,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTypes;
@@ -253,21 +252,6 @@ public class TestViewerConfiguration extends TestCase {
 		
 		// to not mess up other tests
 		fConfig.setDeclaringID(origID);
-	}
-	public void testGetSetEditorPart() {
-		
-		// probably no display
-		if(!fDisplayExists)
-			return;
-		
-		IEditorPart origPart = fConfig.getEditorPart();
-		
-		fConfig.setEditorPart(null);
-		IEditorPart gottenPart = fConfig.getEditorPart();
-		assertNull(gottenPart);
-		
-		// don't mess up other tests
-		fConfig.setEditorPart(origPart);
 	}
 
 	public void testGetHyperlinkPresenter() {

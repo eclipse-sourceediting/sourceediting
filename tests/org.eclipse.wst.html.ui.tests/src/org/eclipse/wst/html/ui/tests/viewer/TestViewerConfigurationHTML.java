@@ -224,4 +224,19 @@ public class TestViewerConfigurationHTML extends TestCase {
 			assertNotNull("hover was null for partition: " + hoverPartitions[i], hover);
 		}
 	}
+	
+	public void testGetIndentPrefixes() {
+		// probably no display
+		if(!fDisplayExists)
+			return;
+		
+		String[] contentTypes = fConfig.getConfiguredContentTypes(fViewer);
+		for (int i = 0; i < contentTypes.length; i++) {
+			String prefixes[] = fConfig.getIndentPrefixes(fViewer, contentTypes[i]);
+			if(prefixes != null) {
+				return;
+			}
+		}
+		assertTrue("there are no configured indent prefixes", false);
+	}
 }
