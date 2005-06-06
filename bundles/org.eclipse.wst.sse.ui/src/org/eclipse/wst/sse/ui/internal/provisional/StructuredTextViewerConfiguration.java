@@ -252,7 +252,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	/**
 	 * @return Returns the editorPart.
 	 */
-	protected IEditorPart getEditorPart() {
+	public IEditorPart getEditorPart() {
 		return editorPart;
 	}
 
@@ -289,12 +289,16 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 * @see SourceViewerConfiguration#getHoverControlCreator(ISourceViewer)
 	 */
 	public IInformationControlCreator getInformationControlCreator(ISourceViewer sourceViewer) {
+		return getInformationControlCreator(sourceViewer, false);
+	}
+
+	private IInformationControlCreator getInformationControlCreator(ISourceViewer sourceViewer, final boolean cutDown) {
 		return new IInformationControlCreator() {
 			public IInformationControl createInformationControl(Shell parent) {
 				// int style= cutDown ? SWT.NONE : (SWT.V_SCROLL |
 				// SWT.H_SCROLL);
 				int style = SWT.NONE;
-				return new DefaultInformationControl(parent, style, new HTMLTextPresenter(false));
+				return new DefaultInformationControl(parent, style, new HTMLTextPresenter(cutDown));
 			}
 		};
 	}

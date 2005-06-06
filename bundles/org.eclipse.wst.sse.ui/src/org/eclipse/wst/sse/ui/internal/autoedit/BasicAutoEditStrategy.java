@@ -19,9 +19,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-/**
- * @deprecated Just copy the one helper method into your IAutoEditStrategy
- */
 public abstract class BasicAutoEditStrategy implements IAutoEditStrategy {
 	/**
 	 * Return the active text editor if possible, otherwise the active editor
