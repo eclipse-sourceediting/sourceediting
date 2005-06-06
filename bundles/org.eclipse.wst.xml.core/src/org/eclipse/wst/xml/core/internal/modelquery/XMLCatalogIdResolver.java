@@ -15,11 +15,11 @@ package org.eclipse.wst.xml.core.internal.modelquery;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.xml.catalog.internal.provisional.ICatalog;
 import org.eclipse.wst.xml.catalog.internal.provisional.XMLCatalogPlugin;
 import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
-import org.eclipse.wst.xml.uriresolver.internal.util.URIHelper;
 
 
 public class XMLCatalogIdResolver implements IdResolver {

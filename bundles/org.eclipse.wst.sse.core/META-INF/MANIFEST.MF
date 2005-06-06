@@ -38,5 +38,5 @@ Require-Bundle: org.eclipse.core.resources,
  org.eclipse.text;visibility:=reexport,
  org.eclipse.core.runtime,
  org.eclipse.core.filebuffers,
- org.eclipse.wst.xml.uriresolver
+ org.eclipse.wst.common.uriresolver
 Eclipse-AutoStart: true

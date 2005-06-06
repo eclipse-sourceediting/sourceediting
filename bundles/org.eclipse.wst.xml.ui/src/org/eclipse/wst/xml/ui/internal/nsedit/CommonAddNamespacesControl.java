@@ -30,12 +30,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.PageBook;
+import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.dialogs.SelectFileOrXMLCatalogIdDialog;
 import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
 import org.eclipse.wst.xml.uriresolver.internal.util.IdResolverImpl;
-import org.eclipse.wst.xml.uriresolver.internal.util.URIHelper;
 
 public class CommonAddNamespacesControl extends Composite implements SelectionListener {
 

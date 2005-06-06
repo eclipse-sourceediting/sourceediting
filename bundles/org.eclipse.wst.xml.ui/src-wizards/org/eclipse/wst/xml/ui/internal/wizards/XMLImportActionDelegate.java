@@ -26,7 +26,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.xml.uriresolver.internal.util.URIHelper;
+import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.osgi.framework.Bundle;
 
 public class XMLImportActionDelegate implements IActionDelegate

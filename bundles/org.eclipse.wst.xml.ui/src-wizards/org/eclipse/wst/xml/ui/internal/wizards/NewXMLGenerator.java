@@ -25,6 +25,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.util.Assert;
+import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.xml.catalog.internal.provisional.ICatalog;
 import org.eclipse.wst.xml.catalog.internal.provisional.ICatalogEntry;
@@ -40,7 +41,6 @@ import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMWriter;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
 import org.eclipse.wst.xml.uriresolver.internal.util.IdResolverImpl;
-import org.eclipse.wst.xml.uriresolver.internal.util.URIHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

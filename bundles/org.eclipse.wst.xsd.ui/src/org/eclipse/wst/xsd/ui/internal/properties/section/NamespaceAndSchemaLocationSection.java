@@ -32,7 +32,7 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.wst.common.ui.internal.viewers.ResourceFilter;
 import org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedPropertyConstants;
 import org.eclipse.wst.common.ui.properties.internal.provisional.TabbedPropertySheetWidgetFactory;
-import org.eclipse.wst.xml.uriresolver.internal.util.URIHelper;
+import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.refactor.delete.XSDExternalFileCleanup;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;

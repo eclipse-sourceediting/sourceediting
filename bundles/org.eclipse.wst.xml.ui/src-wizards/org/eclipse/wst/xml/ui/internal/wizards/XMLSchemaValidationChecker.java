@@ -11,7 +11,7 @@
 package org.eclipse.wst.xml.ui.internal.wizards;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.wst.xml.uriresolver.internal.util.URIHelper;
+import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
