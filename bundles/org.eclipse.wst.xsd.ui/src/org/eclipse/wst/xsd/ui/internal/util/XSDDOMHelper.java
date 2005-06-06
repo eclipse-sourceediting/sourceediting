@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xsd.ui.internal.util;
 
+import java.util.ArrayList;
+
 import org.eclipse.wst.sse.core.internal.format.IStructuredFormatProcessor;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -488,7 +490,7 @@ public class XSDDOMHelper
 
     Element derivedByElement = getDerivedByElement(element);
     
-    if (derivedByElement.getLocalName().equals(derivedByType))
+    if (derivedByElement != null && derivedByElement.getLocalName().equals(derivedByType))
     {
     	return; // it's already the derived by type
     }
@@ -501,6 +503,8 @@ public class XSDDOMHelper
     {
     	newNode = doc.createElementNS(XSDDOMHelper.XMLSchemaURI, prefix + XSDConstants.EXTENSION_ELEMENT_TAG);
     }
+	
+    newNode.setAttribute("base", type);
 
     if (derivedByElement != null)
     {
@@ -514,9 +518,41 @@ public class XSDDOMHelper
           newNode.appendChild(node.cloneNode(true));
         }
       }
-      newNode.setAttribute("base", type);
-      element.replaceChild(newNode, derivedByElement);
+	  element.replaceChild(newNode, derivedByElement);
+    }
+    else 
+	{
+		Element parent = (Element) element.getParentNode();				// get back to complexType
+        NodeList nodes = parent.getChildNodes();
+		ArrayList nodeSaveList = new ArrayList();
+		
+		// save children. (nodes turns out to be the same object as parent;
+		// deleting them from parent will delete them from nodes.)
+        for (int i = 0; i < nodes.getLength(); i++)			
+        {
+          Node node = nodes.item(i);      
+		  nodeSaveList.add(node);
+        }
 
+        // remove children so we can surround them by complexContent
+        for (int i = 0; i < nodeSaveList.size(); i++)			
+        {
+          Node node = (Node) nodeSaveList.get(i);      
+          parent.removeChild(node);
+        }
+		
+		// build a complexContent element
+		Element complexContent = doc.createElementNS(XSDDOMHelper.XMLSchemaURI, prefix + XSDConstants.COMPLEXCONTENT_ELEMENT_TAG);
+		parent.appendChild(complexContent);					// insert into complexType
+		complexContent.appendChild(newNode);				// insert derivation type
+        for (int i = 0; i < nodeSaveList.size(); i++)			// insert children previously of complexType
+        {
+          Node node = (Node) nodeSaveList.get(i);       
+          newNode.appendChild(node.cloneNode(true));
+        }
+		
+		parent.appendChild(complexContent);
+		formatChild(complexContent);
     }
   }
 
