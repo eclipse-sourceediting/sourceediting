@@ -50,7 +50,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IModelLoader;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.util.ProjectResolver;
+import org.eclipse.wst.sse.core.internal.util.ModuleResolver;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
 
 
@@ -318,7 +318,7 @@ public class FileBufferModelManager {
 			IProject project = workspaceFile.getProject();
 			resolver = (URIResolver) project.getAdapter(URIResolver.class);
 			if (resolver == null) {
-				resolver = new ProjectResolver(project);
+				resolver = new ModuleResolver(project);
 			}
 			resolver.setFileBaseLocation(workspaceFile.getLocation().toString());
 		}
