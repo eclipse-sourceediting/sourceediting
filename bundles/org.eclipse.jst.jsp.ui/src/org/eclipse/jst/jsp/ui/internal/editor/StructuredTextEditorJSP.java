@@ -12,30 +12,22 @@ package org.eclipse.jst.jsp.ui.internal.editor;
 
 import java.util.ResourceBundle;
 
-import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
-import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
-import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
 import org.eclipse.jst.jsp.ui.internal.IActionConstantsJSP;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
 import org.eclipse.jst.jsp.ui.internal.java.refactoring.JSPMoveElementAction;
 import org.eclipse.jst.jsp.ui.internal.java.refactoring.JSPRenameElementAction;
 import org.eclipse.jst.jsp.ui.internal.java.search.JSPFindOccurrencesAction;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.wst.html.ui.internal.edit.ui.CleanupActionHTML;
 import org.eclipse.wst.html.ui.internal.search.HTMLFindOccurrencesAction;
-import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
 import org.eclipse.wst.sse.ui.internal.search.FindOccurrencesActionProvider;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.ui.internal.actions.AddBlockCommentActionXML;
 import org.eclipse.wst.xml.ui.internal.actions.RemoveBlockCommentActionXML;
 import org.eclipse.wst.xml.ui.internal.actions.ToggleCommentActionXML;
@@ -78,38 +70,6 @@ public class StructuredTextEditorJSP extends StructuredTextEditor {
 		JSPMoveElementAction moveAction = new JSPMoveElementAction(JSPUIMessages.getResourceBundle(), IActionConstantsJSP.ACTION_NAME_MOVE_ELEMENT + UNDERSCORE, this);
 		setAction(IActionConstantsJSP.ACTION_NAME_MOVE_ELEMENT, moveAction);
 		markAsSelectionDependentAction(IActionConstantsJSP.ACTION_NAME_MOVE_ELEMENT, true);
-	}
-
-	/**
-	 * Uses the input's JSPTranslation to get currently selected Java
-	 * elements.
-	 * 
-	 * @return currently selected IJavaElements *
-	 * @deprecated - to be refactored and made to use the editor's selection
-	 *             provider
-	 */
-	public IJavaElement[] getJavaElementsForCurrentSelection() {
-
-		IJavaElement[] elements = new IJavaElement[0];
-		// get JSP translation object for this viewer's document
-		IDOMModel xmlModel = (IDOMModel) StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
-		try {
-			if (xmlModel != null) {
-				IDOMDocument xmlDoc = xmlModel.getDocument();
-
-				JSPTranslationAdapter adapter = (JSPTranslationAdapter) xmlDoc.getAdapterFor(IJSPTranslation.class);
-				if (adapter != null) {
-					JSPTranslation translation = adapter.getJSPTranslation();
-					Point selected = getSelectionRange();
-					elements = translation.getElementsFromJspRange(selected.x, selected.x + selected.y);
-				}
-			}
-		}
-		finally {
-			if (xmlModel != null)
-				xmlModel.releaseFromRead();
-		}
-		return elements;
 	}
 
 	protected void addContextMenuActions(IMenuManager menu) {
