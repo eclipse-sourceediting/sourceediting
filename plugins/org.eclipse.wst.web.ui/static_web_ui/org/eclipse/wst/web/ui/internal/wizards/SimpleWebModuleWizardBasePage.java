@@ -16,7 +16,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizardPage;
@@ -77,7 +77,7 @@ class SimpleWebModuleWizardBasePage extends DataModelWizardPage implements ISimp
 		detail.setLayout(new GridLayout());
 		detail.setData(new GridData(GridData.FILL_BOTH));
 
-		WorkbenchHelp.setHelp(top, "com.ibm.etools.webtools.wizards.basic.webw1450"); //$NON-NLS-1$
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(top, "com.ibm.etools.webtools.wizards.basic.webw1450"); //$NON-NLS-1$
 		return top;
 	}
 

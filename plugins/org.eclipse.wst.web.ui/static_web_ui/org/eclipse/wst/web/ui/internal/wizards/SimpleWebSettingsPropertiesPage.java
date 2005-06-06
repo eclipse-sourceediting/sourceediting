@@ -27,8 +27,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PropertyPage;
-import org.eclipse.ui.help.WorkbenchHelp;
 import org.eclipse.wst.web.internal.ResourceHandler;
 import org.eclipse.wst.web.internal.SimpleWebNatureRuntimeUtilities;
 import org.eclipse.wst.web.internal.WebPropertiesUtil;
@@ -113,7 +113,7 @@ public class SimpleWebSettingsPropertiesPage extends PropertyPage {
 	}
 
 	protected void createStaticControls(Composite parent, Listener listener) {
-		WorkbenchHelp.setHelp(parent, "com.ibm.etools.webtools.webp1100"); //$NON-NLS-1$
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, "com.ibm.etools.webtools.webp1100"); //$NON-NLS-1$
 
 		IStaticWebNature webNature = SimpleWebNatureRuntimeUtilities.getRuntime(fProject);
 
