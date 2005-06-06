@@ -12,7 +12,7 @@
  *
  * </copyright>
  *
- * $Id: UnexecutableCommand.java,v 1.2 2005/05/17 18:23:07 nitind Exp $
+ * $Id: UnexecutableCommand.java,v 1.3 2005/06/06 05:36:11 david_williams Exp $
  */
 package org.eclipse.emf.common.command;
 
@@ -31,7 +31,7 @@ public class UnexecutableCommand extends AbstractCommand {
 	 * Only one private instance is created.
 	 */
 	private UnexecutableCommand() {
-		super(EMFCommonMessages._UI_UnexecutableCommand_label, EMFCommonMessages._UI_UnexecutableCommand_description);
+		super(UnDoCommonMessages._UI_UnexecutableCommand_label, UnDoCommonMessages._UI_UnexecutableCommand_description);
 	}
 
 	/**

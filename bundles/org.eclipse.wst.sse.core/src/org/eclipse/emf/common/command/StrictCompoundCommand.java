@@ -12,7 +12,7 @@
  *
  * </copyright>
  *
- * $Id: StrictCompoundCommand.java,v 1.2 2005/05/17 18:23:07 nitind Exp $
+ * $Id: StrictCompoundCommand.java,v 1.3 2005/06/06 05:36:11 david_williams Exp $
  */
 package org.eclipse.emf.common.command;
 
@@ -197,7 +197,7 @@ public class StrictCompoundCommand extends CompoundCommand {
 								}
 							}
 							catch (RuntimeException exception) {
-								Logger.logException(EMFCommonMessages._UI_IgnoreException_exception, exception);
+								Logger.logException(UnDoCommonMessages._UI_IgnoreException_exception, exception);
 
 								result = false;
 								break;
@@ -402,7 +402,7 @@ public class StrictCompoundCommand extends CompoundCommand {
 					return true;
 				}
 				catch (RuntimeException exception) {
-					Logger.logException(EMFCommonMessages._UI_IgnoreException_exception, exception);
+					Logger.logException(UnDoCommonMessages._UI_IgnoreException_exception, exception);
 				}
 			}
 

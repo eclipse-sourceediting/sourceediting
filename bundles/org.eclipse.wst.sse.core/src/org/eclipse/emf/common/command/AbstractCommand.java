@@ -12,7 +12,7 @@
  *
  * </copyright>
  *
- * $Id: AbstractCommand.java,v 1.2 2005/05/17 18:23:07 nitind Exp $
+ * $Id: AbstractCommand.java,v 1.3 2005/06/06 05:36:11 david_williams Exp $
  */
 package org.eclipse.emf.common.command;
 
@@ -138,7 +138,7 @@ public abstract class AbstractCommand implements Command {
 	 *                always.
 	 */
 	public void undo() {
-		throw new RuntimeException(NLS.bind(EMFCommonMessages._EXC_Method_not_implemented, this.getClass().getName() + ".undo()")); //$NON-NLS-1$
+		throw new RuntimeException(NLS.bind(UnDoCommonMessages._EXC_Method_not_implemented, this.getClass().getName() + ".undo()")); //$NON-NLS-1$
 	}
 
 	/**
@@ -163,7 +163,7 @@ public abstract class AbstractCommand implements Command {
 	 * Javadoc copied from interface.
 	 */
 	public String getLabel() {
-		return label == null ? EMFCommonMessages._UI_AbstractCommand_label : label;
+		return label == null ? UnDoCommonMessages._UI_AbstractCommand_label : label;
 	}
 
 	/**
@@ -180,7 +180,7 @@ public abstract class AbstractCommand implements Command {
 	 * Javadoc copied from interface.
 	 */
 	public String getDescription() {
-		return description == null ? EMFCommonMessages._UI_AbstractCommand_description : description;
+		return description == null ? UnDoCommonMessages._UI_AbstractCommand_description : description;
 	}
 
 	/**

@@ -15,15 +15,15 @@ import org.eclipse.osgi.util.NLS;
 /**
  * 
  */
-class EMFCommonMessages extends NLS {
-	private static final String BUNDLE_NAME = "org.eclipse.emf.common.command.EMFCommonResources"; //$NON-NLS-1$
+class UnDoCommonMessages extends NLS {
+	private static final String BUNDLE_NAME = "org.eclipse.emf.common.command.UnDoCommonResources"; //$NON-NLS-1$
 
-	private EMFCommonMessages() {
+	private UnDoCommonMessages() {
 	}
 
 	static {
 		// initialize resource bundle
-		NLS.initializeMessages(BUNDLE_NAME, EMFCommonMessages.class);
+		NLS.initializeMessages(BUNDLE_NAME, UnDoCommonMessages.class);
 	}
 	public static String _UI_UnexecutableCommand_label;
 	public static String _UI_UnexecutableCommand_description;

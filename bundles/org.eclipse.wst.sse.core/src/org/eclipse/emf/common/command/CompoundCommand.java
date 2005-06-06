@@ -12,7 +12,7 @@
  *
  * </copyright>
  *
- * $Id: CompoundCommand.java,v 1.2 2005/05/17 18:23:07 nitind Exp $
+ * $Id: CompoundCommand.java,v 1.3 2005/06/06 05:36:11 david_williams Exp $
  */
 package org.eclipse.emf.common.command;
 
@@ -307,7 +307,7 @@ public class CompoundCommand extends AbstractCommand {
 					}
 				}
 				catch (RuntimeException nestedException) {
-					Logger.logException(EMFCommonMessages._UI_IgnoreException_exception, nestedException);
+					Logger.logException(UnDoCommonMessages._UI_IgnoreException_exception, nestedException);
 				}
 
 				throw exception;
@@ -357,7 +357,7 @@ public class CompoundCommand extends AbstractCommand {
 					}
 				}
 				catch (RuntimeException nestedException) {
-					Logger.logException(EMFCommonMessages._UI_IgnoreException_exception, exception);
+					Logger.logException(UnDoCommonMessages._UI_IgnoreException_exception, exception);
 				}
 
 
@@ -389,7 +389,7 @@ public class CompoundCommand extends AbstractCommand {
 					}
 				}
 				catch (RuntimeException nestedException) {
-					Logger.logException(EMFCommonMessages._UI_IgnoreException_exception, nestedException);
+					Logger.logException(UnDoCommonMessages._UI_IgnoreException_exception, nestedException);
 				}
 
 				throw exception;
@@ -490,7 +490,7 @@ public class CompoundCommand extends AbstractCommand {
 			return label;
 		}
 		else if (commandList.isEmpty()) {
-			return EMFCommonMessages._UI_CompoundCommand_label;
+			return UnDoCommonMessages._UI_CompoundCommand_label;
 		}
 		else if (resultIndex == LAST_COMMAND_ALL || resultIndex == MERGE_COMMAND_ALL) {
 			return ((Command) commandList.get(commandList.size() - 1)).getLabel();
@@ -499,7 +499,7 @@ public class CompoundCommand extends AbstractCommand {
 			return ((Command) commandList.get(resultIndex)).getLabel();
 		}
 		else {
-			return EMFCommonMessages._UI_CompoundCommand_label;
+			return UnDoCommonMessages._UI_CompoundCommand_label;
 		}
 	}
 
@@ -515,7 +515,7 @@ public class CompoundCommand extends AbstractCommand {
 			return description;
 		}
 		else if (commandList.isEmpty()) {
-			return EMFCommonMessages._UI_CompoundCommand_description;
+			return UnDoCommonMessages._UI_CompoundCommand_description;
 		}
 		else if (resultIndex == LAST_COMMAND_ALL || resultIndex == MERGE_COMMAND_ALL) {
 			return ((Command) commandList.get(commandList.size() - 1)).getDescription();
@@ -524,7 +524,7 @@ public class CompoundCommand extends AbstractCommand {
 			return ((Command) commandList.get(resultIndex)).getDescription();
 		}
 		else {
-			return EMFCommonMessages._UI_CompoundCommand_description;
+			return UnDoCommonMessages._UI_CompoundCommand_description;
 		}
 	}
 
@@ -622,7 +622,7 @@ public class CompoundCommand extends AbstractCommand {
 					return true;
 				}
 				catch (RuntimeException exception) {
-					Logger.logException(EMFCommonMessages._UI_IgnoreException_exception, exception);
+					Logger.logException(UnDoCommonMessages._UI_IgnoreException_exception, exception);
 				}
 			}
 
