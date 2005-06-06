@@ -106,7 +106,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			}
 		}
 	}
-	
+
 	/**
 	 * A private delegate class to move INodeSelectionListener and
 	 * IDoubleClickListener off of the viewer's APIs
@@ -118,7 +118,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 
 		public void nodeSelectionChanged(NodeSelectionChangedEvent event) {
 			handleNodeSelectionChanged(event);
-		}		
+		}
 	}
 
 	/** Text operation codes */
@@ -140,9 +140,9 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 	protected IContentAssistant fCorrectionAssistant;
 	protected boolean fCorrectionAssistantInstalled;
 	private IDocumentAdapter fDocAdapter;
-	
+
 	private InternalSelectionListener fSelectionListener = null;
-	
+
 	/**
 	 * TODO Temporary workaround for BUG44665
 	 */
@@ -159,6 +159,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 	private TextVerifyListener fVerifyListener = new TextVerifyListener();
 
 	private ViewerSelectionManager fViewerSelectionManager;
+	private SourceViewerConfiguration fConfiguration;
 
 	/**
 	 * @see org.eclipse.jface.text.source.SourceViewer#SourceViewer(Composite,
@@ -216,9 +217,8 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 	}
 
 	/**
-	 * Should be identical to superclass version. Also, we get the tab width
-	 * from the preference manager. Plus, we get our own special Highlighter.
-	 * Plus we uninstall before installing.
+	 * Should be identical to superclass version. Plus, we get our own special
+	 * Highlighter. Plus we uninstall before installing.
 	 */
 	public void configure(SourceViewerConfiguration configuration) {
 
@@ -348,18 +348,14 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			String[] prefixes = configuration.getIndentPrefixes(this, t);
 			if (prefixes != null && prefixes.length > 0)
 				setIndentPrefixes(prefixes, t);
-			// removed 'defaultPrefix' for Eclipse V2 replaced with
-			// defaultPrefixes
-			/*
-			 * String prefix = configuration.getDefaultPrefix(this, t); if
-			 * (prefix != null && prefix.length() > 0)
-			 * setDefaultPrefix(prefix, t);
-			 */
+
 			prefixes = configuration.getDefaultPrefixes(this, t);
 			if (prefixes != null && prefixes.length > 0)
 				setDefaultPrefixes(prefixes, t);
 		}
 		activatePlugins();
+
+		fConfiguration = configuration;
 	}
 
 	/**
@@ -518,6 +514,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 				break;
 			case SHIFT_RIGHT :
 				beginRecording(TEXT_SHIFT_RIGHT, TEXT_SHIFT_RIGHT, cursorPosition, selectionLength);
+				updateIndentationPrefixes();
 				super.doOperation(SHIFT_RIGHT);
 				selection = getTextWidget().getSelection();
 				cursorPosition = selection.x;
@@ -526,6 +523,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 				break;
 			case SHIFT_LEFT :
 				beginRecording(TEXT_SHIFT_LEFT, TEXT_SHIFT_LEFT, cursorPosition, selectionLength);
+				updateIndentationPrefixes();
 				super.doOperation(SHIFT_LEFT);
 				selection = getTextWidget().getSelection();
 				cursorPosition = selection.x;
@@ -560,7 +558,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 				try {
 					// begin recording
 					beginRecording(FORMAT_ACTIVE_ELEMENTS_TEXT, FORMAT_ACTIVE_ELEMENTS_TEXT, cursorPosition, selectionLength);
-					
+
 					// format
 					Point s = getSelectedRange();
 					IRegion region = new Region(s.x, s.y);
@@ -1066,38 +1064,17 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 	 * Uninstalls anything that was installed by configure
 	 */
 	public void unconfigure() {
-
 		Logger.trace("Source Editor", "StructuredTextViewer::unconfigure entry"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (fHighlighter != null) {
 			fHighlighter.uninstall();
 		}
 
-		// presentationreconciler, reconciler, contentassist, infopresenter
-		// are all unconfigured in superclass so think about removing from
-		// here
-		if (fPresentationReconciler != null) {
-			fPresentationReconciler.uninstall();
-			fPresentationReconciler = null;
-		}
-		if (fReconciler != null) {
-			fReconciler.uninstall();
-			fReconciler = null;
-		}
-		if (fContentAssistant != null) {
-			fContentAssistant.uninstall();
-			fContentAssistantInstalled = false;
-		}
-		if (fInformationPresenter != null)
-			fInformationPresenter.uninstall();
-
-		setHyperlinkDetectors(null, SWT.NONE);
-
 		// doesn't seem to be handled elsewhere, so we'll be sure error
 		// messages's are cleared.
 		setErrorMessage(null);
 
-		// unconfigure recently added to super class?!
 		super.unconfigure();
+		fConfiguration = null;
 		Logger.trace("Source Editor", "StructuredTextViewer::unconfigure exit"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
@@ -1115,5 +1092,20 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 	public void undoOperationSelectionChanged(UndoDocumentEvent event) {
 		if (event.getRequester() != null && event.getRequester().equals(this) && event.getDocument().equals(getDocument()))
 			setSelectedRange(event.getOffset(), event.getLength());
+	}
+
+	/**
+	 * Make sure indentation is correct before using.
+	 */
+	private void updateIndentationPrefixes() {
+		SourceViewerConfiguration configuration = fConfiguration;
+		if (fConfiguration != null) {
+			String[] types = configuration.getConfiguredContentTypes(this);
+			for (int i = 0; i < types.length; i++) {
+				String[] prefixes = configuration.getIndentPrefixes(this, types[i]);
+				if (prefixes != null && prefixes.length > 0)
+					setIndentPrefixes(prefixes, types[i]);
+			}
+		}
 	}
 }

@@ -419,18 +419,18 @@ public class NodeFormatter implements IStructuredFormatter {
 				((IStructuredFormatPreferencesXML) fFormatPreferences).setSplitMultiAttrs(preferences.getBoolean(XMLCorePreferenceNames.SPLIT_MULTI_ATTRS));
 				fFormatPreferences.setClearAllBlankLines(preferences.getBoolean(XMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES));
 
-				String indentChar = " "; //$NON-NLS-1$
+				char indentChar = ' ';
 				String indentCharPref = preferences.getString(XMLCorePreferenceNames.INDENTATION_CHAR);
 				if (XMLCorePreferenceNames.TAB.equals(indentCharPref)) {
-					indentChar = "\t"; //$NON-NLS-1$
+					indentChar = '\t';
 				}
 				int indentationWidth = preferences.getInt(XMLCorePreferenceNames.INDENTATION_SIZE);
 
-				String indent = ""; //$NON-NLS-1$
+				StringBuffer indent = new StringBuffer();
 				for (int i = 0; i < indentationWidth; i++) {
-					indent += indentChar;
+					indent.append(indentChar);
 				}
-				fFormatPreferences.setIndent(indent);
+				fFormatPreferences.setIndent(indent.toString());
 			}
 		}
 

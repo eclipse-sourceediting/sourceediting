@@ -8,6 +8,7 @@ Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.html.internal.validation,
  org.eclipse.wst.html.ui.internal,
+ org.eclipse.wst.html.ui.internal.autoedit,
  org.eclipse.wst.html.ui.internal.contentassist,
  org.eclipse.wst.html.ui.internal.contentoutline,
  org.eclipse.wst.html.ui.internal.contentproperties.ui,

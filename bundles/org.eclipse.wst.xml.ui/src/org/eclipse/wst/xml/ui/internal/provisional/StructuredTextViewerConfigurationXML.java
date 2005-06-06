@@ -14,7 +14,9 @@ package org.eclipse.wst.xml.ui.internal.provisional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
@@ -48,6 +50,8 @@ import org.eclipse.wst.sse.ui.internal.taginfo.AnnotationHoverProcessor;
 import org.eclipse.wst.sse.ui.internal.taginfo.ProblemAnnotationHoverProcessor;
 import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.eclipse.wst.xml.core.internal.provisional.format.FormatProcessorXML;
 import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
@@ -65,31 +69,35 @@ import org.eclipse.wst.xml.ui.internal.validation.StructuredTextReconcilingStrat
 
 /**
  * This class provides
+ * 
  * @since 1.0
  */
 public class StructuredTextViewerConfigurationXML extends StructuredTextViewerConfiguration {
-    
+
 	InformationPresenter fInformationPresenter = null;
 
 	public StructuredTextViewerConfigurationXML() {
 		super();
 	}
-	
+
 	public StructuredTextViewerConfigurationXML(IPreferenceStore store) {
 		super(store);
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getAutoEditStrategies(org.eclipse.jface.text.source.ISourceViewer, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getAutoEditStrategies(org.eclipse.jface.text.source.ISourceViewer,
+	 *      java.lang.String)
 	 */
 	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
 		List allStrategies = new ArrayList(0);
-		
+
 		IAutoEditStrategy[] superStrategies = super.getAutoEditStrategies(sourceViewer, contentType);
 		for (int i = 0; i < superStrategies.length; i++) {
 			allStrategies.add(superStrategies[i]);
 		}
-		
+
 		if (contentType == IXMLPartitions.XML_DEFAULT) {
 			allStrategies.add(new StructuredAutoEditStrategyXML());
 		}
@@ -183,6 +191,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 			fInformationPresenter.setInformationProvider(xmlInformationProvider, IStructuredPartitionTypes.DEFAULT_PARTITION);
 			fInformationPresenter.setInformationProvider(xmlInformationProvider, IXMLPartitions.XML_DEFAULT);
 			fInformationPresenter.setSizeConstraints(60, 10, true, true);
+			fInformationPresenter.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
 		}
 		return fInformationPresenter;
 	}
@@ -197,31 +206,31 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		}
 
 		if (fReconciler == null) {
-            fReconciler = new StructuredRegionProcessor();
+			fReconciler = new StructuredRegionProcessor();
 			fReconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
 		}
 
 		boolean reconcilingEnabled = fPreferenceStore.getBoolean(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
-		
-        if(!reconcilingEnabled)
-            return fReconciler;
-        
+
+		if (!reconcilingEnabled)
+			return fReconciler;
+
 		// the second time through, the strategies are set
 		if (fReconciler != null) {
 
-			IDocument doc = ((StructuredTextEditor)editorPart).getDocumentProvider().getDocument(editorPart.getEditorInput());
+			IDocument doc = ((StructuredTextEditor) editorPart).getDocumentProvider().getDocument(editorPart.getEditorInput());
 			IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
-			
+
 			try {
 
 				if (sModel != null) {
-					
+
 					IReconcilingStrategy markupStrategy = new StructuredTextReconcilingStrategyForMarkup((ITextEditor) editorPart);
-                    fReconciler.setReconcilingStrategy(markupStrategy, IXMLPartitions.XML_DEFAULT);
+					fReconciler.setReconcilingStrategy(markupStrategy, IXMLPartitions.XML_DEFAULT);
 					fReconciler.setDefaultStrategy(markupStrategy);
 
 					String contentTypeId = sModel.getContentTypeIdentifier();
-					if(contentTypeId != null)
+					if (contentTypeId != null)
 						fReconciler.setValidatorStrategy(createValidatorStrategy(contentTypeId));
 				}
 			} finally {
@@ -272,18 +281,20 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 			fInformationPresenter.uninstall();
 		}
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.ui.editors.text.TextSourceViewerConfiguration#getHyperlinkDetectors(org.eclipse.jface.text.source.ISourceViewer)
 	 */
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
 		if (sourceViewer == null || !fPreferenceStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED))
 			return null;
-		
+
 		List allDetectors = new ArrayList(0);
 		allDetectors.add(new XMLHyperlinkDetector());
-		
-		IHyperlinkDetector[] superDetectors =  super.getHyperlinkDetectors(sourceViewer);
+
+		IHyperlinkDetector[] superDetectors = super.getHyperlinkDetectors(sourceViewer);
 		for (int m = 0; m < superDetectors.length; m++) {
 			IHyperlinkDetector detector = superDetectors[m];
 			if (!allDetectors.contains(detector)) {
@@ -291,5 +302,47 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 			}
 		}
 		return (IHyperlinkDetector[]) allDetectors.toArray(new IHyperlinkDetector[0]);
+	}
+
+	public String[] getIndentPrefixes(ISourceViewer sourceViewer, String contentType) {
+		Vector vector = new Vector();
+
+		// prefix[0] is either '\t' or ' ' x tabWidth, depending on preference
+		Preferences preferences = XMLCorePlugin.getDefault().getPluginPreferences();
+		int indentationWidth = preferences.getInt(XMLCorePreferenceNames.INDENTATION_SIZE);
+		String indentCharPref = preferences.getString(XMLCorePreferenceNames.INDENTATION_CHAR);
+		boolean useSpaces = XMLCorePreferenceNames.SPACE.equals(indentCharPref);
+
+		for (int i = 0; i <= indentationWidth; i++) {
+			StringBuffer prefix = new StringBuffer();
+			boolean appendTab = false;
+
+			if (useSpaces) {
+				for (int j = 0; j + i < indentationWidth; j++)
+					prefix.append(' ');
+
+				if (i != 0)
+					appendTab = true;
+			} else {
+				for (int j = 0; j < i; j++)
+					prefix.append(' ');
+
+				if (i != indentationWidth)
+					appendTab = true;
+			}
+
+			if (appendTab) {
+				prefix.append('\t');
+				vector.add(prefix.toString());
+				// remove the tab so that indentation - tab is also an indent
+				// prefix
+				prefix.deleteCharAt(prefix.length() - 1);
+			}
+			vector.add(prefix.toString());
+		}
+
+		vector.add(""); //$NON-NLS-1$
+
+		return (String[]) vector.toArray(new String[vector.size()]);
 	}
 }

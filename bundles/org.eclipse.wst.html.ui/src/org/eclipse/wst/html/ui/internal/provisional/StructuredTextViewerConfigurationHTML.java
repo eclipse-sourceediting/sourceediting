@@ -12,7 +12,9 @@ package org.eclipse.wst.html.ui.internal.provisional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jdt.ui.text.JavaSourceViewerConfiguration;
 import org.eclipse.jdt.ui.text.JavaTextTools;
@@ -38,7 +40,9 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.css.core.internal.provisional.text.ICSSPartitionTypes;
 import org.eclipse.wst.css.ui.internal.contentassist.CSSContentAssistProcessor;
 import org.eclipse.wst.css.ui.internal.style.LineStyleProviderForEmbeddedCSS;
+import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
+import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.html.core.internal.provisional.text.IHTMLPartitionTypes;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.html.ui.internal.contentassist.HTMLContentAssistProcessor;
@@ -79,27 +83,30 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 	InformationPresenter fInformationPresenter = null;
 
 	private JavaSourceViewerConfiguration fJavaSourceViewerConfiguration;
-	
+
 	public StructuredTextViewerConfigurationHTML() {
 		super();
 	}
-	
+
 	public StructuredTextViewerConfigurationHTML(IPreferenceStore store) {
 		super(store);
 	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getAutoEditStrategies(org.eclipse.jface.text.source.ISourceViewer, java.lang.String)
+
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getAutoEditStrategies(org.eclipse.jface.text.source.ISourceViewer,
+	 *      java.lang.String)
 	 */
 	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
 		List allStrategies = new ArrayList(0);
-		
+
 		IAutoEditStrategy[] superStrategies = super.getAutoEditStrategies(sourceViewer, contentType);
 		for (int i = 0; i < superStrategies.length; i++) {
 			allStrategies.add(superStrategies[i]);
 		}
-		
+
 		if (contentType == IHTMLPartitionTypes.HTML_DEFAULT || contentType == IHTMLPartitionTypes.HTML_DECLARATION) {
 			allStrategies.add(new StructuredAutoEditStrategyXML());
 		}
@@ -248,6 +255,7 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 			fInformationPresenter.setInformationProvider(javascriptInformationProvider, IHTMLPartitionTypes.SCRIPT);
 
 			fInformationPresenter.setSizeConstraints(60, 10, true, true);
+			fInformationPresenter.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
 		}
 
 		return fInformationPresenter;
@@ -302,8 +310,7 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 					if (contentTypeId != null)
 						fReconciler.setValidatorStrategy(createValidatorStrategy(contentTypeId));
 				}
-			}
-			finally {
+			} finally {
 				if (sModel != null)
 					sModel.releaseFromRead();
 			}
@@ -319,26 +326,21 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 			if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {
 				String hoverType = hoverDescs[i].getId();
 				if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType)) {
-					// treat specially if it's JavaScript, HTML otherwise
-					if (contentType.equals(IHTMLPartitionTypes.SCRIPT)) {
+					// check if script or html is needed
+					if (contentType == IHTMLPartitionTypes.SCRIPT) {
 						hover = new JavaScriptBestMatchHoverProcessor();
-					}
-					else {
+					} else if (contentType == IHTMLPartitionTypes.HTML_DEFAULT) {
 						hover = new HTMLBestMatchHoverProcessor();
 					}
-				}
-				else if (TextHoverManager.PROBLEM_HOVER.equalsIgnoreCase(hoverType)) {
+				} else if (TextHoverManager.PROBLEM_HOVER.equalsIgnoreCase(hoverType)) {
 					hover = new ProblemAnnotationHoverProcessor();
-				}
-				else if (TextHoverManager.ANNOTATION_HOVER.equalsIgnoreCase(hoverType)) {
+				} else if (TextHoverManager.ANNOTATION_HOVER.equalsIgnoreCase(hoverType)) {
 					hover = new AnnotationHoverProcessor();
-				}
-				else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType)) {
-					// treat specially if it's JavaScript, HTML otherwise
-					if (contentType.equals(IHTMLPartitionTypes.SCRIPT)) {
+				} else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType)) {
+					// check if script or html is needed
+					if (contentType == IHTMLPartitionTypes.SCRIPT) {
 						hover = new JavaScriptTagInfoHoverProcessor();
-					}
-					else {
+					} else if (contentType == IHTMLPartitionTypes.HTML_DEFAULT) {
 						hover = new HTMLTagInfoHoverProcessor();
 					}
 				}
@@ -357,5 +359,47 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 		// InformationPresenters
 		if (fInformationPresenter != null)
 			fInformationPresenter.uninstall();
+	}
+
+	public String[] getIndentPrefixes(ISourceViewer sourceViewer, String contentType) {
+		Vector vector = new Vector();
+
+		// prefix[0] is either '\t' or ' ' x tabWidth, depending on preference
+		Preferences preferences = HTMLCorePlugin.getDefault().getPluginPreferences();
+		int indentationWidth = preferences.getInt(HTMLCorePreferenceNames.INDENTATION_SIZE);
+		String indentCharPref = preferences.getString(HTMLCorePreferenceNames.INDENTATION_CHAR);
+		boolean useSpaces = HTMLCorePreferenceNames.SPACE.equals(indentCharPref);
+
+		for (int i = 0; i <= indentationWidth; i++) {
+			StringBuffer prefix = new StringBuffer();
+			boolean appendTab = false;
+
+			if (useSpaces) {
+				for (int j = 0; j + i < indentationWidth; j++)
+					prefix.append(' ');
+
+				if (i != 0)
+					appendTab = true;
+			} else {
+				for (int j = 0; j < i; j++)
+					prefix.append(' ');
+
+				if (i != indentationWidth)
+					appendTab = true;
+			}
+
+			if (appendTab) {
+				prefix.append('\t');
+				vector.add(prefix.toString());
+				// remove the tab so that indentation - tab is also an indent
+				// prefix
+				prefix.deleteCharAt(prefix.length() - 1);
+			}
+			vector.add(prefix.toString());
+		}
+
+		vector.add(""); //$NON-NLS-1$
+
+		return (String[]) vector.toArray(new String[vector.size()]);
 	}
 }

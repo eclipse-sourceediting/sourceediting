@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,10 +7,8 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
  *******************************************************************************/
-package org.eclipse.wst.xml.ui.internal.autoedit;
+package org.eclipse.wst.html.ui.internal.autoedit;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.BadLocationException;
@@ -24,19 +22,18 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorExtension3;
+import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
+import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
+import org.eclipse.wst.html.ui.internal.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.internal.StructuredDocumentCommand;
-import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
-import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
-import org.eclipse.wst.xml.ui.internal.Logger;
 import org.w3c.dom.Node;
 
-
-public class StructuredAutoEditStrategyXML implements IAutoEditStrategy {
+public class StructuredAutoEditStrategyHTML implements IAutoEditStrategy {
 	public void customizeDocumentCommand(IDocument document, DocumentCommand command) {
 		StructuredDocumentCommand structuredDocumentCommand = (StructuredDocumentCommand) command;
 		Object textEditor = getActiveTextEditor();
@@ -115,9 +112,9 @@ public class StructuredAutoEditStrategyXML implements IAutoEditStrategy {
 	private void smartInsertForTab(DocumentCommand command, IDocument document) {
 		// tab key was pressed. now check preferences to see if need to insert
 		// spaces instead of tab
-		Preferences preferences = XMLCorePlugin.getDefault().getPluginPreferences();
-		if (XMLCorePreferenceNames.SPACE.equals(preferences.getString(XMLCorePreferenceNames.INDENTATION_CHAR))) {
-			int indentationWidth = preferences.getInt(XMLCorePreferenceNames.INDENTATION_SIZE);
+		Preferences preferences = HTMLCorePlugin.getDefault().getPluginPreferences();
+		if (HTMLCorePreferenceNames.SPACE.equals(preferences.getString(HTMLCorePreferenceNames.INDENTATION_CHAR))) {
+			int indentationWidth = preferences.getInt(HTMLCorePreferenceNames.INDENTATION_SIZE);
 
 			StringBuffer indent = new StringBuffer();
 			if (indentationWidth != 0) {
@@ -140,12 +137,12 @@ public class StructuredAutoEditStrategyXML implements IAutoEditStrategy {
 			command.text = indent.toString();
 		}
 	}
-	
+
 	/**
 	 * Return the active text editor if possible, otherwise the active editor
 	 * part.
 	 * 
-	 * @return Object
+	 * @return
 	 */
 	private Object getActiveTextEditor() {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();

@@ -10,7 +10,9 @@ package org.eclipse.wst.css.ui.internal.provisional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
+import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
@@ -19,7 +21,9 @@ import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.formatter.MultiPassContentFormatter;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.wst.css.core.internal.CSSCorePlugin;
 import org.eclipse.wst.css.core.internal.format.FormatProcessorCSS;
+import org.eclipse.wst.css.core.internal.preferences.CSSCorePreferenceNames;
 import org.eclipse.wst.css.core.internal.provisional.text.ICSSPartitionTypes;
 import org.eclipse.wst.css.ui.internal.autoedit.StructuredAutoEditStrategyCSS;
 import org.eclipse.wst.css.ui.internal.contentassist.CSSContentAssistProcessor;
@@ -119,5 +123,47 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 			i++;
 		}
 		return super.getTextHover(sourceViewer, contentType, stateMask);
+	}
+	
+	public String[] getIndentPrefixes(ISourceViewer sourceViewer, String contentType) {
+		Vector vector = new Vector();
+
+		// prefix[0] is either '\t' or ' ' x tabWidth, depending on preference
+		Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
+		int indentationWidth = preferences.getInt(CSSCorePreferenceNames.INDENTATION_SIZE);
+		String indentCharPref = preferences.getString(CSSCorePreferenceNames.INDENTATION_CHAR);
+		boolean useSpaces = CSSCorePreferenceNames.SPACE.equals(indentCharPref);
+
+		for (int i = 0; i <= indentationWidth; i++) {
+			StringBuffer prefix = new StringBuffer();
+			boolean appendTab = false;
+
+			if (useSpaces) {
+				for (int j = 0; j + i < indentationWidth; j++)
+					prefix.append(' ');
+
+				if (i != 0)
+					appendTab = true;
+			} else {
+				for (int j = 0; j < i; j++)
+					prefix.append(' ');
+
+				if (i != indentationWidth)
+					appendTab = true;
+			}
+
+			if (appendTab) {
+				prefix.append('\t');
+				vector.add(prefix.toString());
+				// remove the tab so that indentation - tab is also an indent
+				// prefix
+				prefix.deleteCharAt(prefix.length() - 1);
+			}
+			vector.add(prefix.toString());
+		}
+
+		vector.add(""); //$NON-NLS-1$
+
+		return (String[]) vector.toArray(new String[vector.size()]);
 	}
 }

@@ -41,18 +41,18 @@ public class HTMLFormatProcessorImpl extends FormatProcessorXML {
 				((IStructuredFormatPreferencesXML) fFormatPreferences).setSplitMultiAttrs(preferences.getBoolean(HTMLCorePreferenceNames.SPLIT_MULTI_ATTRS));
 				fFormatPreferences.setClearAllBlankLines(preferences.getBoolean(HTMLCorePreferenceNames.CLEAR_ALL_BLANK_LINES));
 
-				String indentChar = " "; //$NON-NLS-1$
+				char indentChar = ' ';
 				String indentCharPref = preferences.getString(HTMLCorePreferenceNames.INDENTATION_CHAR);
 				if (HTMLCorePreferenceNames.TAB.equals(indentCharPref)) {
-					indentChar = "\t"; //$NON-NLS-1$
+					indentChar = '\t';
 				}
 				int indentationWidth = preferences.getInt(HTMLCorePreferenceNames.INDENTATION_SIZE);
 
-				String indent = ""; //$NON-NLS-1$
+				StringBuffer indent = new StringBuffer();
 				for (int i = 0; i < indentationWidth; i++) {
-					indent += indentChar;
+					indent.append(indentChar);
 				}
-				fFormatPreferences.setIndent(indent);
+				fFormatPreferences.setIndent(indent.toString());
 			}
 		}
 

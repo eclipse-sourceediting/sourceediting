@@ -212,21 +212,21 @@ abstract class CSSProposalGenerator {
 	
 
 	private String getIndentString() {
-		String indent = ""; //$NON-NLS-1$
+		StringBuffer indent = new StringBuffer();
 
 		Preferences preferences = CSSCorePlugin.getDefault().getPluginPreferences();
 		if (preferences != null) {
-			String indentChar = " "; //$NON-NLS-1$
+			char indentChar = ' ';
 			String indentCharPref = preferences.getString(CSSCorePreferenceNames.INDENTATION_CHAR);
 			if (CSSCorePreferenceNames.TAB.equals(indentCharPref)) {
-				indentChar = "\t"; //$NON-NLS-1$
+				indentChar = '\t';
 			}
 			int indentationWidth = preferences.getInt(CSSCorePreferenceNames.INDENTATION_SIZE);
 
 			for (int i = 0; i < indentationWidth; i++) {
-				indent += indentChar;
+				indent.append(indentChar);
 			}
 		}
-		return indent;
+		return indent.toString();
 	}
 }
