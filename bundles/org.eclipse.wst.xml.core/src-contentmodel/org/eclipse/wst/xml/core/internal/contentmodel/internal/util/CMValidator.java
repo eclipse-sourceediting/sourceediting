@@ -489,7 +489,7 @@ public class CMValidator
   
   private void validatAllGroupContent(List elementContent, ElementContentComparator comparator, CMGroup allGroup, Result result) 
   {
-    boolean isValid = false;
+    boolean isValid = true;
     boolean isPartiallyValid = true;
     HashMap map = new HashMap();
     CMNodeList list = allGroup.getChildNodes();
@@ -522,6 +522,7 @@ public class CMValidator
         if (matchingCMNode == null)
         {     
           isPartiallyValid = false;
+          isValid = false;
           break;
         }
         else
@@ -546,13 +547,32 @@ public class CMValidator
         }  
       }  
     }
+    if (isValid)
+    {  
+      for (int j = list.getLength() - 1; j >= 0; j--)
+      {
+        CMNode node = list.item(j);      
+        if (node.getNodeType() == CMNode.ELEMENT_DECLARATION)
+        {  
+          CMContent content = (CMContent)node;
+          ItemCount itemCount = (ItemCount)map.get(node);
+//          System.out.print("content " + content.getNodeName() + " " + content.getMinOccur());
+          if (itemCount.count < content.getMinOccur())
+          {  
+            isValid = false;
+            break;
+          }  
+        }  
+      }
+    }
     if (result instanceof ElementPathRecordingResult && isPartiallyValid)
     {
       ((ElementPathRecordingResult)result).setPartialValidationCount(validitionCount);
     }  
     result.isValid = isValid;
-  }
-
+  }  
+  
+  
   public void getOriginArray(CMElementDeclaration ed, List elementContent, ElementContentComparator comparator, ElementPathRecordingResult result)
   {
     CMNode[] cmNodeArray = null;
