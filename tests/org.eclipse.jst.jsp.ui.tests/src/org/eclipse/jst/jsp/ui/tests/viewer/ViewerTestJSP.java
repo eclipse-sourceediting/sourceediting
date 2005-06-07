@@ -47,7 +47,7 @@ import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
 import org.w3c.dom.Attr;
 
 public class ViewerTestJSP extends ViewPart {
-	private final String SSE_EDITOR_FONT = "com.ibm.sse.editor.textfont";
+	private final String SSE_EDITOR_FONT = "org.eclipse.wst.sse.ui.textfont";
 	private final String DEFAULT_VIEWER_CONTENTS = "<%@ page contentType=\"text/html; charset=ISO-8859-1\" %>\n";
 
 	private StructuredTextViewer fSourceViewer = null;

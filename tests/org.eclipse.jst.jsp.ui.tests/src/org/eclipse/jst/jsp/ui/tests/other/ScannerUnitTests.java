@@ -19,9 +19,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.eclipse.jst.jsp.core.internal.modelhandler.ModelHandlerForJSP;
-import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
-import org.eclipse.jst.jsp.ui.tests.JSPUITestsPlugin;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockTagParser;
@@ -372,42 +370,6 @@ public class ScannerUnitTests extends TestCase {
 					&& checkSimpleRegionTypes(nodes.item(i++).getRegions(), new String[]{DOMRegionContext.XML_CONTENT});
 		assertTrue("region context type check", typeCheck);
 		verifyModelLength();
-	}
-
-	public void testBufferOverrun_2_JSP() {
-
-		IStructuredModel model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(ContentTypeIdForJSP.ContentTypeID_JSP);
-		InputStream testInput = JSPUITestsPlugin.class.getResourceAsStream("parsing/testfiles/DefaultSubPerson0ResultsForm.jsp");
-		assertTrue("no input loaded", testInput != null);
-		String text = loadChars(testInput);
-		int originalLength = text.length();
-		try {
-			model.getStructuredDocument().setText(this, text);
-		}
-		catch (StackOverflowError e) {
-			// probably will never trigger
-			assertNull("Upper boundary looping error encountered, exception not caught in source parser", e);
-		}
-		assertTrue("Upper boundary looping error encountered; data lost", model.getStructuredDocument().getLastStructuredDocumentRegion().getEndOffset() == originalLength);
-	}
-
-	public void testBufferOverrun_JSP() {
-
-		IStructuredModel model = StructuredModelManager.getModelManager().createUnManagedStructuredModelFor(ContentTypeIdForJSP.ContentTypeID_JSP);
-		InputStream input = JSPUITestsPlugin.class.getResourceAsStream("parsing/testfiles/ChecksApprover.jsp");
-		assertTrue("no input loaded", input != null);
-		String text = loadChars(input);
-		int originalLength = text.length();
-		String insertedText = "123456789012345678";
-		model.getStructuredDocument().setText(this, text);
-		try {
-			model.getStructuredDocument().replaceText(this, 11073, 0, insertedText);
-		}
-		catch (ArrayIndexOutOfBoundsException e) {
-			// probably will never trigger
-			assertNull("Upper boundary violated, exception not caught in source parser", e);
-		}
-		assertTrue("Upper boundary of tokenizer array violated; data lost", model.getStructuredDocument().getLastStructuredDocumentRegion().getEndOffset() == originalLength + insertedText.length());
 	}
 
 	private void testBufferUnderRun_1(IStructuredDocumentRegionList nodes) {

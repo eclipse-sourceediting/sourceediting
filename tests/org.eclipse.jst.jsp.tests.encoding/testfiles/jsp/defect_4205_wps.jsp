@@ -1,6 +1,5 @@
 <%@ page session="false" buffer="none" %>
 <%@ page language="java" contentType="text/html;charset=utf-8"%>
-<%@ page import="com.ibm.wps.*" %>
 <%@ taglib uri="/WEB-INF/tld/engine.tld" prefix="wps" %>
 <wps:constants/>
 

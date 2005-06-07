@@ -103,13 +103,22 @@ public class BeanInfoProviderTest extends TestCase {
 				root.open(null);
 			IPackageFragment frag = getPackageFragment(root, "BEAN_TESTS");
 			openAll(frag);
-			frag = getPackageFragment(root, "com");
+			frag = getPackageFragment(root, "org");
 			if (frag != null && !frag.isOpen())
 				openAll(frag);
-			frag = getPackageFragment(root, "com.ibm");
+			frag = getPackageFragment(root, "org.eclipse");
 			if (frag != null && !frag.isOpen())
 				openAll(frag);
-			frag = getPackageFragment(root, "com.ibm.test");
+			frag = getPackageFragment(root, "org.eclipse.jst");
+			if (frag != null && !frag.isOpen())
+				openAll(frag);
+			frag = getPackageFragment(root, "org.eclipse.jst.jsp");
+			if (frag != null && !frag.isOpen())
+				openAll(frag);
+			frag = getPackageFragment(root, "org.eclipse.jst.jsp.ui");
+			if (frag != null && !frag.isOpen())
+				openAll(frag);
+			frag = getPackageFragment(root, "org.eclipse.jst.jsp.ui.tests");
 			if (frag != null && !frag.isOpen())
 				openAll(frag);
 		}
@@ -178,7 +187,7 @@ public class BeanInfoProviderTest extends TestCase {
 	}
 
 	private void beanInProject() {
-		IJavaPropertyDescriptor[] descriptors = getProvider().getRuntimeProperties(fResource, "com.ibm.test.BaseAlbumCollectionBean");
+		IJavaPropertyDescriptor[] descriptors = getProvider().getRuntimeProperties(fResource, "org.eclipse.jst.jsp.ui.tests.BaseAlbumCollectionBean");
 		assertEquals("Number of properties for BaseAlbumCollectionBean:", 4, descriptors.length);
 		List getOnly = new ArrayList();
 		List setOnly = new ArrayList();
