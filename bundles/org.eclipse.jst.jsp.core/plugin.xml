@@ -98,7 +98,7 @@
 		<content-type
 			file-extensions="jspf,jsf"
 			priority="high"
-			name="%JSP_Content_Type_Extension_Element.name"
+			name="%JSP_Fragment_Content_Type_Extension_Element.name"
 			id="jspfragmentsource"
 			base-type="org.eclipse.jst.jsp.core.jspsource"
 			default-charset="ISO-8859-1">
@@ -109,7 +109,7 @@
 		<content-type
 			file-extensions="tag,tagx,tagf"
 			priority="high"
-			name="%JSP_Fragment_Content_Type_Extension_Element.name"
+			name="%JSP_Tag_Content_Type_Extension_Element.name"
 			id="tagsource"
 			base-type="org.eclipse.jst.jsp.core.jspsource"
 			default-charset="UTF-8">
