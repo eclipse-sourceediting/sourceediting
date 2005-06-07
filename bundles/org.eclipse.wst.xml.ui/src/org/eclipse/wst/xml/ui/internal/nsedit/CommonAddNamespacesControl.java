@@ -30,12 +30,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.part.PageBook;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.dialogs.SelectFileOrXMLCatalogIdDialog;
-import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
-import org.eclipse.wst.xml.uriresolver.internal.util.IdResolverImpl;
 
 public class CommonAddNamespacesControl extends Composite implements SelectionListener {
 
@@ -140,8 +140,8 @@ public class CommonAddNamespacesControl extends Composite implements SelectionLi
 					locationHintField.setText(uri);
 				} else if (id != null) {
 					locationHintField.setText(id);
-					IdResolver resolver = new IdResolverImpl(null);
-					grammarURI = resolver.resolveId(id, id);
+					URIResolver resolver = URIResolverPlugin.createResolver();
+					grammarURI = resolver.resolve(null, id, id);
 				}
 
 				try {

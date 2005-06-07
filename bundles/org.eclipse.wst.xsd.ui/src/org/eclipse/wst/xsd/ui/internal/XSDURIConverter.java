@@ -16,8 +16,8 @@ import java.io.InputStream;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.impl.URIConverterImpl;
-import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
-import org.eclipse.wst.xml.uriresolver.internal.util.IdResolverImpl;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 
 public class XSDURIConverter extends URIConverterImpl
 {
@@ -39,8 +39,8 @@ public class XSDURIConverter extends URIConverterImpl
     // if ("http".equals(scheme))
     {
       String theURI = uri.toString();
-      IdResolver idResolver = new IdResolverImpl(theURI);
-      String result = idResolver.resolveId("/", null, theURI);
+      URIResolver idResolver = URIResolverPlugin.createResolver();
+      String result = idResolver.resolve("/", null, theURI);
       if (result != null)
       {
         mappedURI = createURI(result);

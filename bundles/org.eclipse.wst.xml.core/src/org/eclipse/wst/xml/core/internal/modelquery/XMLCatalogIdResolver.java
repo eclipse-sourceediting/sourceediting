@@ -19,10 +19,10 @@ import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.xml.catalog.internal.provisional.ICatalog;
 import org.eclipse.wst.xml.catalog.internal.provisional.XMLCatalogPlugin;
-import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
 
 
-public class XMLCatalogIdResolver implements IdResolver {
+
+public class XMLCatalogIdResolver implements org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver {
 	protected String resourceLocation;
 
 	protected URIResolver uriresolver;
@@ -51,14 +51,8 @@ public class XMLCatalogIdResolver implements IdResolver {
 		return location;
 	}
 
-	/**
-	 * @deprecated in superclass
-	 */
-	public String resolveId(String publicId, String systemId) {
-		return resolveId(getResourceLocation(), publicId, systemId);
-	}
 
-	public String resolveId(String base, String publicId, String systemId) {
+	public String resolve(String base, String publicId, String systemId) {
 		// first see if we can map the publicId to an alternative systemId
 		// note: should probably verify the mappedSystemId before ignoring the
 		// systemId

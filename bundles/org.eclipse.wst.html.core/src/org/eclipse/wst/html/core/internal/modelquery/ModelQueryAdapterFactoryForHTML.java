@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.sse.core.internal.provisional.AbstractAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
@@ -31,7 +32,6 @@ import org.eclipse.wst.xml.core.internal.modelquery.XMLCatalogIdResolver;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapterImpl;
-import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
 
 /**
  * Creates a ModelQueryAdapter for HTML models
@@ -95,7 +95,7 @@ public class ModelQueryAdapterFactoryForHTML extends AbstractAdapterFactory impl
 					System.out.println("----------------ModelQueryAdapterFactoryForHTML... baseLocation : " + baseLocation); //$NON-NLS-1$
 
 				CMDocumentCache cmDocumentCache = new CMDocumentCache();
-				IdResolver idResolver = new XMLCatalogIdResolver(baseLocation, model.getResolver());
+				URIResolver idResolver = new XMLCatalogIdResolver(baseLocation, model.getResolver());
 				ModelQuery modelQuery = new HTMLModelQueryImpl(cmDocumentCache, idResolver);
 				modelQuery.setEditMode(ModelQuery.EDIT_MODE_UNCONSTRAINED);
 				modelQueryAdapterImpl = new ModelQueryAdapterImpl(cmDocumentCache, modelQuery, idResolver);

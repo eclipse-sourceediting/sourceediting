@@ -14,9 +14,9 @@ package org.eclipse.wst.xml.core.internal.modelquery;
 
 
 
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.XMLAssociationProvider;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
-import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
 import org.w3c.dom.Document;
 
 /**
@@ -24,14 +24,14 @@ import org.w3c.dom.Document;
  */
 class XMLModelQueryAssociationProvider extends XMLAssociationProvider {
 
-	protected IdResolver idResolver;
+	protected URIResolver idResolver;
 
-	public XMLModelQueryAssociationProvider(CMDocumentCache cache, IdResolver idResolver) {
+	public XMLModelQueryAssociationProvider(CMDocumentCache cache, URIResolver idResolver) {
 		super(cache);
 		this.idResolver = idResolver;
 	}
 
 	protected String resolveGrammarURI(Document document, String publicId, String systemId) {
-		return idResolver.resolveId(publicId, systemId);
+		return idResolver.resolve(null, publicId, systemId);
 	}
 }

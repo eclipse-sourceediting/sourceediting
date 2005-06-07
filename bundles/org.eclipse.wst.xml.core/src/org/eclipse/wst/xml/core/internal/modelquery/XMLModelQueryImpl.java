@@ -14,25 +14,25 @@ package org.eclipse.wst.xml.core.internal.modelquery;
 
 
 
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.ModelQueryImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.MovableModelQuery;
-import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
 
 
 public class XMLModelQueryImpl extends ModelQueryImpl implements MovableModelQuery {
 
 	protected CMDocumentCache fCache = null;
 
-	public XMLModelQueryImpl(CMDocumentCache cache, IdResolver idResolver) {
+	public XMLModelQueryImpl(CMDocumentCache cache, URIResolver idResolver) {
 		super(new XMLModelQueryAssociationProvider(cache, idResolver));
 		fCache = cache;
 	}
 
 	/**
-	 * @see MovableModelQuery#setIdResolver(IdResolver)
+	 * @see MovableModelQuery#setIdResolver(URIResolver)
 	 */
-	public void setIdResolver(IdResolver newIdResolver) {
+	public void setIdResolver(URIResolver newIdResolver) {
 		modelQueryAssociationProvider = new XMLModelQueryAssociationProvider(fCache, newIdResolver);
 	}
 }

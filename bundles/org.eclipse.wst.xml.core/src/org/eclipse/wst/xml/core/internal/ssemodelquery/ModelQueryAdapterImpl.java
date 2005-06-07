@@ -14,19 +14,19 @@ package org.eclipse.wst.xml.core.internal.ssemodelquery;
 
 
 
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
-import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
 
 
 public class ModelQueryAdapterImpl implements ModelQueryAdapter {
 	protected CMDocumentCache cmDocumentCache;
-	protected IdResolver idResolver;
+	protected URIResolver idResolver;
 
 	protected ModelQuery modelQuery;
 
-	public ModelQueryAdapterImpl(CMDocumentCache cmDocumentCache, ModelQuery modelQuery, IdResolver idResolver) {
+	public ModelQueryAdapterImpl(CMDocumentCache cmDocumentCache, ModelQuery modelQuery, URIResolver idResolver) {
 		this.cmDocumentCache = cmDocumentCache;
 		this.modelQuery = modelQuery;
 		this.idResolver = idResolver;
@@ -36,7 +36,7 @@ public class ModelQueryAdapterImpl implements ModelQueryAdapter {
 		return cmDocumentCache;
 	}
 
-	public IdResolver getIdResolver() {
+	public URIResolver getIdResolver() {
 		return idResolver;
 	}
 
@@ -65,10 +65,10 @@ public class ModelQueryAdapterImpl implements ModelQueryAdapter {
 	}
 
 	/**
-	 * @see ModelQueryAdapter#setIdResolver(IdResolver)
+	 * @see ModelQueryAdapter#setIdResolver(URIResolver)
 	 */
 
-	public void setIdResolver(IdResolver newIdResolver) {
+	public void setIdResolver(URIResolver newIdResolver) {
 		idResolver = newIdResolver;
 		if (modelQuery instanceof MovableModelQuery)
 			((MovableModelQuery) modelQuery).setIdResolver(newIdResolver);

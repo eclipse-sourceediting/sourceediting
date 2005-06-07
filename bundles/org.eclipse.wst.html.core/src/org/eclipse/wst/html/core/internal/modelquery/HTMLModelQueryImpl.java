@@ -14,6 +14,7 @@ package org.eclipse.wst.html.core.internal.modelquery;
 import java.util.List;
 import java.util.Vector;
 
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.html.core.internal.provisional.HTMLCMProperties;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
@@ -22,7 +23,6 @@ import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.ModelQueryI
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.MovableModelQuery;
-import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -31,7 +31,7 @@ public class HTMLModelQueryImpl extends ModelQueryImpl implements MovableModelQu
 
 	protected CMDocumentCache fCache = null;
 
-	public HTMLModelQueryImpl(CMDocumentCache cache, IdResolver idResolver) {
+	public HTMLModelQueryImpl(CMDocumentCache cache, URIResolver idResolver) {
 		super(new HTMLModelQueryAssociationProvider(cache, idResolver));
 		fCache = cache;
 	}
@@ -91,7 +91,7 @@ public class HTMLModelQueryImpl extends ModelQueryImpl implements MovableModelQu
 	/**
 	 * @see MovableModelQuery#setIdResolver(IdResolver)
 	 */
-	public void setIdResolver(IdResolver newIdResolver) {
+	public void setIdResolver(URIResolver newIdResolver) {
 		modelQueryAssociationProvider = new HTMLModelQueryAssociationProvider(fCache, newIdResolver);
 	}
 

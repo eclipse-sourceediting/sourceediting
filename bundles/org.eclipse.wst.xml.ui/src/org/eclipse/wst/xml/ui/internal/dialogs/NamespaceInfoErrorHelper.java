@@ -16,11 +16,11 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMNamespaceInfoManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
-import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
 
 public class NamespaceInfoErrorHelper {
 
@@ -29,7 +29,7 @@ public class NamespaceInfoErrorHelper {
 	public NamespaceInfoErrorHelper() {
 	}
 
-	public String computeErrorMessage(List namespaceInfoList, IdResolver idResolver) {
+	public String computeErrorMessage(List namespaceInfoList, URIResolver idResolver) {
 		String result = null;
 		Hashtable prefixTable = new Hashtable();
 		Hashtable uriTable = new Hashtable();
@@ -65,7 +65,7 @@ public class NamespaceInfoErrorHelper {
 				}
 
 				if (nsInfo.locationHint != null && idResolver != null) {
-					String grammarURI = idResolver.resolveId(nsInfo.locationHint, nsInfo.locationHint);
+					String grammarURI = idResolver.resolve(null, nsInfo.locationHint, nsInfo.locationHint);
 					if (!URIHelper.isReadableURI(grammarURI, false)) {
 						result = XMLUIMessages._UI_WARNING_SCHEMA_CAN_NOT_BE_LOCATED + " '" + nsInfo.locationHint + "'"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 						break;

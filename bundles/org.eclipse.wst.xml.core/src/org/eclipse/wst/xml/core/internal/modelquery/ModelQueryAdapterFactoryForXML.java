@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.sse.core.internal.provisional.AbstractAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
@@ -32,7 +33,6 @@ import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapterImpl;
-import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
 
 
 public class ModelQueryAdapterFactoryForXML extends AbstractAdapterFactory implements IModelStateListener {
@@ -109,7 +109,7 @@ public class ModelQueryAdapterFactoryForXML extends AbstractAdapterFactory imple
 
 				CMDocumentCache cmDocumentCache = new CMDocumentCache();
 				ModelQuery modelQuery = null;
-				IdResolver idResolver = null;
+				URIResolver idResolver = null;
 
 				if (org.eclipse.wst.sse.core.internal.util.Debug.displayInfo)
 					System.out.println("********XMLModelQueryImpl"); //$NON-NLS-1$

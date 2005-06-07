@@ -11,10 +11,10 @@
 package org.eclipse.wst.html.core.internal.modelquery;
 
 
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.XMLAssociationProvider;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
-import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
 import org.w3c.dom.Document;
 
 /**
@@ -26,13 +26,13 @@ import org.w3c.dom.Document;
  */
 class XHTMLAssociationProvider extends XMLAssociationProvider {
 
-	protected IdResolver idResolver = null;
+	protected URIResolver idResolver = null;
 	private String fCachedGrammerURI;
 	private String fCachedPublicID;
 	private String fCachedSystemID;
 	private static final boolean USE_QUICK_CACHE = true;
 
-	public XHTMLAssociationProvider(CMDocumentCache cache, IdResolver idResolver) {
+	public XHTMLAssociationProvider(CMDocumentCache cache, URIResolver idResolver) {
 		super(cache);
 		this.idResolver = idResolver;
 	}
@@ -56,14 +56,14 @@ class XHTMLAssociationProvider extends XMLAssociationProvider {
 				grammerURI = fCachedGrammerURI;
 			}
 			else {
-				grammerURI = idResolver.resolveId(publicId, systemId);
+				grammerURI = idResolver.resolve(null, publicId, systemId);
 				fCachedGrammerURI = grammerURI;
 				fCachedPublicID = publicId;
 				fCachedSystemID = systemId;
 			}
 		}
 		else {
-			grammerURI = idResolver.resolveId(publicId, systemId);
+			grammerURI = idResolver.resolve(null, publicId, systemId);
 		}
 
 		if (grammerURI == null)
@@ -84,6 +84,6 @@ class XHTMLAssociationProvider extends XMLAssociationProvider {
 	/**
 	 */
 	protected String resolveGrammarURI(Document document, String publicId, String systemId) {
-		return idResolver.resolveId(publicId, systemId);
+		return idResolver.resolve(null, publicId, systemId);
 	}
 }

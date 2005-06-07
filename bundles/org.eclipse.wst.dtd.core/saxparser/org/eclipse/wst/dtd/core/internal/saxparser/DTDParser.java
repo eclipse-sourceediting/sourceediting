@@ -22,9 +22,9 @@ import java.util.Vector;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
-import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
-import org.eclipse.wst.xml.uriresolver.internal.util.IdResolverImpl;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.DTDHandler;
 import org.xml.sax.ErrorHandler;
@@ -350,8 +350,8 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 					parsingExternalPEReference = false;
 				}
 				else {
-					IdResolver idResolver = new IdResolverImpl(currentDTD.getName());
-					String uri = idResolver.resolveId(publicId, systemId);
+					URIResolver idResolver = URIResolverPlugin.createResolver();
+					String uri = idResolver.resolve(currentDTD.getName(), publicId, systemId);
 					if (!isDTDLoaded(uri)) {
 						// not loaded
 						// out.println(" DTD not loaded .. create new DTD: "
@@ -667,8 +667,8 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 
 	public InputSource resolveEntity(String publicId, String systemId) throws SAXException {
 		InputSource result = null;
-		IdResolver idResolver = new IdResolverImpl(currentDTD.getName());
-		String uri = idResolver.resolveId(publicId, systemId);
+		URIResolver idResolver = URIResolverPlugin.createResolver();
+		String uri = idResolver.resolve(currentDTD.getName(), publicId, systemId);
 		if(uri == null){
 			uri = systemId;
 		}

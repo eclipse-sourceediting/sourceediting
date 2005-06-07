@@ -19,6 +19,8 @@ import org.eclipse.emf.ecore.EEnumLiteral;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.dtd.core.internal.DTDCoreMessages;
 import org.eclipse.wst.dtd.core.internal.emf.DTDAnyContent;
 import org.eclipse.wst.dtd.core.internal.emf.DTDAttribute;
@@ -59,8 +61,6 @@ import org.eclipse.wst.dtd.core.internal.saxparser.ElementDecl;
 import org.eclipse.wst.dtd.core.internal.saxparser.EntityDecl;
 import org.eclipse.wst.dtd.core.internal.saxparser.ErrorMessage;
 import org.eclipse.wst.dtd.core.internal.saxparser.NotationDecl;
-import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
-import org.eclipse.wst.xml.uriresolver.internal.util.IdResolverImpl;
 
 public class DTDModelBuilder extends DTDSaxArtifactVisitor {
 	DTD dtd;
@@ -261,8 +261,8 @@ public class DTDModelBuilder extends DTDSaxArtifactVisitor {
 		String systemId = entityDecl.getSystemId();
 		String publicId = entityDecl.getPublicId();
 		if (systemId != null) {
-			IdResolver idResolver = new IdResolverImpl(dtd.getName());
-			String uri = idResolver.resolveId(publicId, systemId);
+			URIResolver idResolver = URIResolverPlugin.createResolver();
+			String uri = idResolver.resolve(dtd.getName(), publicId, systemId);
 			ExternalDTDModel ed = dtdUtil.getExternalDTDModel(resources, uri);
 			if (ed != null) {
 				DTDFile referenceDtdFile = ed.getExternalDTDFile();

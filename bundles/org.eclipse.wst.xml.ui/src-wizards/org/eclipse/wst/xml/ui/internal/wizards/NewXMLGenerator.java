@@ -25,6 +25,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.util.Assert;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.xml.catalog.internal.provisional.ICatalog;
@@ -39,8 +41,6 @@ import org.eclipse.wst.xml.core.internal.contentmodel.util.ContentBuilder;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMContentBuilderImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.DOMWriter;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
-import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
-import org.eclipse.wst.xml.uriresolver.internal.util.IdResolverImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -324,11 +324,13 @@ public class NewXMLGenerator {
 
 	protected class MyExternalCMDocumentSupport implements DOMContentBuilderImpl.ExternalCMDocumentSupport {
 		protected List namespaceInfoList;
-		protected IdResolver idResolver;
+		protected URIResolver idResolver;
+		protected String resourceLocation;
 
 		protected MyExternalCMDocumentSupport(List namespaceInfoList, String resourceLocation) {
 			this.namespaceInfoList = namespaceInfoList;
-			idResolver = new IdResolverImpl(resourceLocation);
+			this.resourceLocation = resourceLocation;
+			idResolver = URIResolverPlugin.createResolver();
 		}
 
 		public CMDocument getCMDocument(Element element, String namespaceURI) {
@@ -343,7 +345,7 @@ public class NewXMLGenerator {
 					}
 				}
 				if (locationHint != null) {
-					grammarURI = idResolver.resolveId(locationHint, locationHint);
+					grammarURI = idResolver.resolve(resourceLocation, locationHint, locationHint);
 					result = ContentModelManager.getInstance().createCMDocument(getGrammarURI(), null);
 				}
 			}

@@ -34,13 +34,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.ContentModelManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
-import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
-import org.eclipse.wst.xml.uriresolver.internal.util.IdResolverImpl;
 
 public class EditNamespaceInfoDialog extends Dialog {
 
@@ -206,8 +206,8 @@ public class EditNamespaceInfoDialog extends Dialog {
 				locationHintField.setText(uri);
 			} else if (id != null) {
 				locationHintField.setText(id);
-				IdResolver resolver = new IdResolverImpl(null);
-				grammarURI = resolver.resolveId(id, id);
+				URIResolver resolver = URIResolverPlugin.createResolver();
+				grammarURI = resolver.resolve(null, id, id);
 			}
 
 			try {

@@ -13,6 +13,7 @@ package org.eclipse.wst.html.core.internal.modelquery;
 
 import java.util.Hashtable;
 
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.html.core.internal.contentmodel.HTMLCMDocumentFactory;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeEntry;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeRegistry;
@@ -21,7 +22,6 @@ import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQueryCMPro
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
 import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMDocType;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
-import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
 import org.w3c.dom.Node;
@@ -39,7 +39,7 @@ public class HTMLModelQueryCMProvider implements ModelQueryCMProvider {
 
 	private XHTMLAssociationProvider xhtmlassoc = null;
 
-	public HTMLModelQueryCMProvider(CMDocumentCache cache, IdResolver idResolver) {
+	public HTMLModelQueryCMProvider(CMDocumentCache cache, URIResolver idResolver) {
 		super();
 		xhtmlassoc = new XHTMLAssociationProvider(cache, idResolver);
 	}

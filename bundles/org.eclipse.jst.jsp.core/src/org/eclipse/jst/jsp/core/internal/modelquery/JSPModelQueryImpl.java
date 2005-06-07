@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapter;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
@@ -24,7 +25,6 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelqueryimpl.ModelQueryImpl;
 import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapter;
-import org.eclipse.wst.xml.uriresolver.internal.util.IdResolver;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -33,7 +33,7 @@ public class JSPModelQueryImpl extends ModelQueryImpl {
 
 	protected IStructuredModel jspModel = null;
 	private HashMap embeddedModelQueries = new HashMap();
-	public JSPModelQueryImpl(IStructuredModel model, IdResolver resolver) {
+	public JSPModelQueryImpl(IStructuredModel model, URIResolver resolver) {
 		super(new JSPModelQueryAssociationProvider());
 		jspModel = model;
 	}
