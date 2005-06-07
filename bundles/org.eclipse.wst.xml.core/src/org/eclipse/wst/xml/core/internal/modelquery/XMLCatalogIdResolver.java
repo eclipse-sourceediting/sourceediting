@@ -53,6 +53,10 @@ public class XMLCatalogIdResolver implements org.eclipse.wst.common.uriresolver.
 
 
 	public String resolve(String base, String publicId, String systemId) {
+    
+    if (base == null) {
+      base = getResourceLocation();
+    }  
 		// first see if we can map the publicId to an alternative systemId
 		// note: should probably verify the mappedSystemId before ignoring the
 		// systemId
