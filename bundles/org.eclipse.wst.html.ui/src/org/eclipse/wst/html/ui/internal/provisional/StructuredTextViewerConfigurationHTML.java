@@ -15,9 +15,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.jdt.ui.PreferenceConstants;
-import org.eclipse.jdt.ui.text.JavaSourceViewerConfiguration;
-import org.eclipse.jdt.ui.text.JavaTextTools;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.IDocument;
@@ -81,8 +78,6 @@ import org.eclipse.wst.xml.ui.internal.validation.StructuredTextReconcilingStrat
 public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerConfiguration {
 
 	InformationPresenter fInformationPresenter = null;
-
-	private JavaSourceViewerConfiguration fJavaSourceViewerConfiguration;
 
 	public StructuredTextViewerConfigurationHTML() {
 		super();
@@ -191,9 +186,6 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 		if (contentType.compareTo(IHTMLPartitionTypes.HTML_DEFAULT) == 0)
 			// HTML
 			return new XMLDoubleClickStrategy();
-		else if (contentType.compareTo(IHTMLPartitionTypes.SCRIPT) == 0)
-			// JavaScript
-			return getJavaSourceViewerConfiguration(sourceViewer).getDoubleClickStrategy(sourceViewer, contentType);
 		else
 			return super.getDoubleClickStrategy(sourceViewer, contentType);
 	}
@@ -259,15 +251,6 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 		}
 
 		return fInformationPresenter;
-	}
-
-	private JavaSourceViewerConfiguration getJavaSourceViewerConfiguration(ISourceViewer viewer) {
-		if (fJavaSourceViewerConfiguration == null) {
-			IPreferenceStore store = PreferenceConstants.getPreferenceStore();
-			JavaTextTools javaTextTools = new JavaTextTools(store);
-			fJavaSourceViewerConfiguration = new JavaSourceViewerConfiguration(javaTextTools.getColorManager(), store, getTextEditor(), getConfiguredDocumentPartitioning(viewer));
-		}
-		return fJavaSourceViewerConfiguration;
 	}
 
 	/**
