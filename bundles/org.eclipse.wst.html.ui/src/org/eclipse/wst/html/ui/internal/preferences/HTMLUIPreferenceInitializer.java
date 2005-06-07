@@ -80,7 +80,7 @@ public class HTMLUIPreferenceInitializer extends AbstractPreferenceInitializer {
 		 * may change for differnt language)
 		 */
 		String templateName = ""; //$NON-NLS-1$
-		Template template = HTMLUIPlugin.getDefault().getTemplateStore().findTemplateById("com.ibm.sse.editor.html.templates.html"); //$NON-NLS-1$
+		Template template = HTMLUIPlugin.getDefault().getTemplateStore().findTemplateById("org.eclipse.wst.html.ui.templates.html"); //$NON-NLS-1$
 		if (template != null)
 			templateName = template.getName();
 		store.setDefault(HTMLUIPreferenceNames.NEW_FILE_TEMPLATE_NAME, templateName);

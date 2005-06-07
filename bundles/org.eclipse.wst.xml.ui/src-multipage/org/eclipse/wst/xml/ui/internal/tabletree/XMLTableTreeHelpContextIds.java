@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.tabletree;
 
+import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+
 
 
 /**
@@ -22,7 +24,7 @@ package org.eclipse.wst.xml.ui.internal.tabletree;
  */
 public interface XMLTableTreeHelpContextIds {
 
-	public static final String PREFIX = "com.ibm.etools.sed.tabletree."; //$NON-NLS-1$
+	public static final String PREFIX = XMLUIPlugin.ID + ".design."; //$NON-NLS-1$
 
 	// XML Design View
 	public static final String XML_DESIGN_VIEW_HELPID = PREFIX + "xmlm3000"; //$NON-NLS-1$

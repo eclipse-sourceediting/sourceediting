@@ -90,10 +90,10 @@ public class XMLTableTreeActionBarContributor implements IDesignViewerActionBarC
 	public void init(IActionBars bars) {
 		IToolBarManager tbm = bars.getToolBarManager();
 
-		IMenuManager xmlMenu = bars.getMenuManager().findMenuUsingPath("com.ibm.etools.sed.editor.xmlmenu"); //$NON-NLS-1$
+		IMenuManager xmlMenu = bars.getMenuManager().findMenuUsingPath("org.eclipse.core.runtime.xml.design.xmlmenu"); //$NON-NLS-1$
 
 		if (xmlMenu == null) {
-			xmlMenu = new MenuManager(XMLEditorMessages.XMLTableTreeActionBarContributor_0, "com.ibm.etools.sed.editor.xmlmenu"); //$NON-NLS-1$ //$NON-NLS-2$
+			xmlMenu = new MenuManager(XMLEditorMessages.XMLTableTreeActionBarContributor_0, "org.eclipse.core.runtime.xml.design.xmlmenu"); //$NON-NLS-1$
 			bars.getMenuManager().insertBefore(IWorkbenchActionConstants.M_WINDOW, xmlMenu);
 		} else {
 			removeContributions(xmlMenu);

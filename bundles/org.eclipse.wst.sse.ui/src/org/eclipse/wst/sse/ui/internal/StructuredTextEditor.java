@@ -427,7 +427,6 @@ public class StructuredTextEditor extends TextEditor {
 
 	protected final static char[] BRACKETS = {'{', '}', '(', ')', '[', ']'};
 	private static final long BUSY_STATE_DELAY = 1000;
-	public static final String CORE_SSE_ACTIVITY_ID = "com.ibm.wtp.xml.core"; //$NON-NLS-1$
 	protected static final String DOT = "."; //$NON-NLS-1$
 	private static final String EDITOR_CONTEXT_MENU_ID = "org.eclipse.wst.sse.ui.StructuredTextEditor.context"; //$NON-NLS-1$
 	/** Non-NLS strings */

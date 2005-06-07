@@ -16,6 +16,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 
 /**
@@ -32,7 +33,7 @@ import org.eclipse.wst.validation.internal.provisional.core.IMessage;
  */
 public class TaskListUtility {
 	// private static final String PLUGIN_ID = ValidationPlugin.PLUGIN_ID;
-	private static final String PLUGIN_ID = "com.ibm.etools.validation";//$NON-NLS-1$
+	private static final String PLUGIN_ID = HTMLUIPlugin.ID;
 	private static final String VALIDATION_MARKER = PLUGIN_ID + ".problemmarker"; //$NON-NLS-1$ // The extension which is used to add validation markers to the task list
 	private static final String VALIDATION_MARKER_OWNER = "owner"; //$NON-NLS-1$ // The IValidator who owns the IMarker on the task list
 	private static final String VALIDATION_MARKER_SEVERITY = "validationSeverity"; //$NON-NLS-1$ // one of the IMessage values
