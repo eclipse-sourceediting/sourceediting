@@ -1103,7 +1103,7 @@ public class ModelManagerImpl implements IModelManager {
 			result = _commonCreateModel(istream, id, handler, resolver, EDIT, null, null);
 		}
 		else {
-			Logger.log(Logger.INFO, "no model handler found for id");
+			Logger.log(Logger.INFO, "no model handler found for id"); //$NON-NLS-1$
 		}
 		return result;
 	}

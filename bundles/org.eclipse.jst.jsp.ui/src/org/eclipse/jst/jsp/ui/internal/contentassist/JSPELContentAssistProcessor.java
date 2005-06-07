@@ -128,9 +128,9 @@ public class JSPELContentAssistProcessor extends JSPJavaContentAssistProcessor {
 				List functions = doc.getFunctions();
 				for(Iterator it = functions.iterator(); it.hasNext(); ) {
 					TLDFunction function = (TLDFunction)it.next();
-					CustomCompletionProposal proposal = new CustomCompletionProposal(function.getName() + "()", 
+					CustomCompletionProposal proposal = new CustomCompletionProposal(function.getName() + "()",  //$NON-NLS-1$
 							offset, 0, 
-							function.getName().length() + 1, null, function.getName() + " - " + function.getSignature(), null, null, 1);
+							function.getName().length() + 1, null, function.getName() + " - " + function.getSignature(), null, null, 1); //$NON-NLS-1$
 					
 					completionList.add(proposal);
 				}

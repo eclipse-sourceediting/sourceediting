@@ -19,14 +19,6 @@ import org.eclipse.osgi.util.NLS;
 public class SSECoreMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.wst.sse.core.internal.SSECorePluginResources";//$NON-NLS-1$
 
-	public static String A_model_s_id_can_not_be_nu_EXC_;
-	public static String Program_Error__ModelManage_EXC_;
-	public static String Original_Error__UI_;
-	public static String TaskScanner_0;
-	public static String Text_Change_UI_;
-
-	public static String Migrate_Charset;
-
 	static {
 		// load message values from bundle file
 		NLS.initializeMessages(BUNDLE_NAME, SSECoreMessages.class);
@@ -35,4 +27,13 @@ public class SSECoreMessages extends NLS {
 	private SSECoreMessages() {
 		// cannot create new instance
 	}
+
+	public static String A_model_s_id_can_not_be_nu_EXC_;
+	public static String Program_Error__ModelManage_EXC_;
+	public static String Original_Error__UI_;
+	public static String Text_Change_UI_;
+	public static String TaskScanner_0;
+	public static String TaskScanningJob_0;
+	public static String TaskScanningJob_1;
+	public static String Migrate_Charset;
 }

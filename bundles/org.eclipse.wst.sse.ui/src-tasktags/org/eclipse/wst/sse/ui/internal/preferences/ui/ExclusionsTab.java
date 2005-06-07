@@ -354,7 +354,7 @@ class ExclusionsTab implements IPreferenceTab {
 			defaultPreferences[i - 1] = fPreferencesLookupOrder[i].getNode(TaskTagPreferenceKeys.TASK_TAG_NODE);
 		}
 
-		String defaultIgnoredContentTypeIds = StringUtils.pack((String[]) new StringSorter().sort(StringUtils.unpack(fPreferencesService.get(TaskTagPreferenceKeys.TASK_TAG_CONTENTTYPES_IGNORED, "", defaultPreferences))));
+		String defaultIgnoredContentTypeIds = StringUtils.pack((String[]) new StringSorter().sort(StringUtils.unpack(fPreferencesService.get(TaskTagPreferenceKeys.TASK_TAG_CONTENTTYPES_IGNORED, "", defaultPreferences)))); //$NON-NLS-1$
 		String ignoredContentTypeIds = StringUtils.pack((String[]) new StringSorter().sort(ignoredIds.toArray()));
 		if (ignoredContentTypeIds.equals(defaultIgnoredContentTypeIds)) {
 			if (_debugPreferences) {

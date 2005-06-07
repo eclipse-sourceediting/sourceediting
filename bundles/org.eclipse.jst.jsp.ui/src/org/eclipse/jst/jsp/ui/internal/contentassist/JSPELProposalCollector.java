@@ -23,7 +23,7 @@ public class JSPELProposalCollector extends JSPProposalCollector {
 		String completion = null;
 		
 		if(proposal.getKind() == CompletionProposal.METHOD_REF && proposal.findParameterNames(null).length == 0) {
-			if(rawName.length() > 3 && rawName.startsWith("get")) {
+			if(rawName.length() > 3 && rawName.startsWith("get")) { //$NON-NLS-1$
 				completion = rawName.substring(3,4).toLowerCase() + rawName.substring(4, rawName.length());
 			} else {
 				return null;
@@ -52,7 +52,7 @@ public class JSPELProposalCollector extends JSPProposalCollector {
 				shortDisplayString = longDisplayString.substring(fistSpaceIndex);
 			}
 				
-			String displayString = completion + " " + shortDisplayString;
+			String displayString = completion + " " + shortDisplayString; //$NON-NLS-1$
 			IContextInformation contextInformation = javaProposal.getContextInformation();
 			String additionalInfo = javaProposal.getAdditionalProposalInfo();
 			int relevance = javaProposal.getRelevance();

@@ -373,7 +373,7 @@ class WorkspaceTaskScanner {
 				for (int j = 0; fileScanners != null && j < fileScanners.length; j++) {
 					if (scannerMonitor.isCanceled())
 						continue;
-					scannerMonitor.beginTask("", fileScanners.length);
+					scannerMonitor.beginTask("", fileScanners.length); //$NON-NLS-1$
 					try {
 						if (!fActiveScanners.contains(fileScanners[j]) && !monitor.isCanceled()) {
 							fileScanners[j].startup(file.getProject());

@@ -101,7 +101,7 @@ public class JSPValidator implements IValidator {
 				if(currentFile != null && currentFile.exists()) {
 					validateFile(currentFile, reporter);
 					if(DEBUG)
-						System.out.println("validating: ["+ uris[i]+"]");
+						System.out.println("validating: ["+ uris[i]+"]"); //$NON-NLS-1$ //$NON-NLS-2$
 				}
 			}
 		}
@@ -120,7 +120,7 @@ public class JSPValidator implements IValidator {
 			for (int i = 0; i < files.length; i++) {
 				validateFile(files[i], reporter);
 				if(DEBUG)
-					System.out.println("validating: ["+ files[i]+"]");
+					System.out.println("validating: ["+ files[i]+"]"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 	}

@@ -37,6 +37,6 @@ public final class TaskTag {
 	}
 
 	public String toString() {
-		return getTag() + ":" + getPriority();
+		return getTag() + ":" + getPriority(); //$NON-NLS-1$
 	}
 }

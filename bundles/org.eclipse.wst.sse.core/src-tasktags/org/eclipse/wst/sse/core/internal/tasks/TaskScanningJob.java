@@ -34,7 +34,7 @@ import org.osgi.framework.Bundle;
  * Queueing Job for processing deltas and projects.
  */
 class TaskScanningJob extends Job {
-	public static final boolean _debugJob = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks/job"));
+	public static final boolean _debugJob = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks/job")); //$NON-NLS-1$ //$NON-NLS-2$
 	static final String TASK_TAG_PROJECTS_ALREADY_SCANNED = "task-tag-projects-already-scanned"; //$NON-NLS-1$
 	private List fQueue = null;
 
@@ -47,7 +47,7 @@ class TaskScanningJob extends Job {
 		setPriority(Job.DECORATE);
 		setSystem(false);
 
-		SSECorePlugin.getDefault().getPluginPreferences().setDefault(TASK_TAG_PROJECTS_ALREADY_SCANNED, "");
+		SSECorePlugin.getDefault().getPluginPreferences().setDefault(TASK_TAG_PROJECTS_ALREADY_SCANNED, ""); //$NON-NLS-1$
 	}
 
 	synchronized void addDelta(IResourceDelta delta) {
@@ -71,7 +71,7 @@ class TaskScanningJob extends Job {
 					kind = " [IResourceDelta.REMOVED_PHANTOM]"; //$NON-NLS-1$
 					break;
 			}
-			System.out.println("Adding delta " + delta.getFullPath() + kind);
+			System.out.println("Adding delta " + delta.getFullPath() + kind); //$NON-NLS-1$
 		}
 		schedule(100);
 	}
@@ -80,7 +80,7 @@ class TaskScanningJob extends Job {
 		if (isEnabledProject(project)) {
 			fQueue.add(project);
 			if (_debugJob) {
-				System.out.println("Adding project " + project.getName());
+				System.out.println("Adding project " + project.getName()); //$NON-NLS-1$
 			}
 			schedule(600);
 		}
@@ -112,7 +112,7 @@ class TaskScanningJob extends Job {
 		for (int j = 0; shouldScan && j < projectsScanned.length; j++) {
 			if (projectsScanned[j].equals(name)) {
 				if (_debugJob)
-					System.out.println("Scanning Job skipping " + project.getName());
+					System.out.println("Scanning Job skipping " + project.getName()); //$NON-NLS-1$
 				shouldScan = false;
 			}
 		}
@@ -134,10 +134,10 @@ class TaskScanningJob extends Job {
 		int ticks = currentQueue.size();
 		String taskName = null;
 		if (_debugJob) {
-			taskName = "Scanning (" + ticks + " work items)";
+			taskName = "Scanning (" + ticks + " work items)"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		else {
-			taskName = "Scanning";
+			taskName = SSECoreMessages.TaskScanningJob_0;
 		}
 		monitor.beginTask(taskName, ticks);
 
@@ -164,7 +164,7 @@ class TaskScanningJob extends Job {
 				if (errors == null) {
 					errors = new ArrayList();
 				}
-				errors.add(new Status(IStatus.ERROR, SSECorePlugin.ID, IStatus.ERROR, "", e));
+				errors.add(new Status(IStatus.ERROR, SSECorePlugin.ID, IStatus.ERROR, "", e)); //$NON-NLS-1$
 			}
 		}
 		monitor.done();
@@ -178,7 +178,7 @@ class TaskScanningJob extends Job {
 			}
 			else {
 				IStatus[] statii = (IStatus[]) errors.toArray(new IStatus[errors.size()]);
-				status = new MultiStatus(SSECorePlugin.ID, IStatus.ERROR, statii, "Errors while detecting Tasks", null);
+				status = new MultiStatus(SSECorePlugin.ID, IStatus.ERROR, statii, SSECoreMessages.TaskScanningJob_1, null);
 			}
 		}
 
@@ -206,7 +206,7 @@ class TaskScanningJob extends Job {
 				projectNamesToRemember.add(rememberedProjectNames[i]);
 			}
 			else if (_debugJob) {
-				System.out.println("Removing " + rememberedProjectNames[i] + " removed from " + preferenceName);
+				System.out.println("Removing " + rememberedProjectNames[i] + " removed from " + preferenceName); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 

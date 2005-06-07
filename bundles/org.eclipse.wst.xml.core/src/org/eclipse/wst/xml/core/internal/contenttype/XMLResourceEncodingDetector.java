@@ -83,7 +83,7 @@ public class XMLResourceEncodingDetector extends AbstractResourceEncodingDetecto
 			if (tokenType == XMLHeadTokenizerConstants.XMLDeclStart) {
 				fDeclDetected = true;
 				String declText = token.getText();
-				if (declText.startsWith("<?")) {
+				if (declText.startsWith("<?")) { //$NON-NLS-1$
 					fInitialWhiteSpace = false;
 				}
 				else {

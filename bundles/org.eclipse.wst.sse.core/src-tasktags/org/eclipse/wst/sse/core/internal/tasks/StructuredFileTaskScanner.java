@@ -89,7 +89,7 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner {
 		attributes.put(IMarker.CHAR_END, new Integer(startOffset + length));
 		attributes.put(IMarker.MESSAGE, text);
 		attributes.put(IMarker.USER_EDITABLE, Boolean.TRUE);
-		attributes.put("org.eclipse.ui.part.IShowInTarget", new String[]{""});
+		attributes.put("org.eclipse.ui.part.IShowInTarget", new String[]{""}); //$NON-NLS-1$ //$NON-NLS-2$
 
 		switch (priority) {
 			case IMarker.PRIORITY_HIGH : {

@@ -55,7 +55,7 @@ public class StructuredAutoEditStrategyJSP extends StructuredAutoEditStrategyHTM
 					} if (structuredDocumentCommand.text.equals("{")) { //$NON-NLS-1$
 						IDOMNode node = (IDOMNode) model.getIndexedRegion(structuredDocumentCommand.offset);
 						try {
-							if ((prefixedWith(document, structuredDocumentCommand.offset, "$") || prefixedWith(document, structuredDocumentCommand.offset, "#")) && 
+							if ((prefixedWith(document, structuredDocumentCommand.offset, "$") || prefixedWith(document, structuredDocumentCommand.offset, "#")) &&  //$NON-NLS-1$ //$NON-NLS-2$
 									!node.getSource().endsWith("}")) { //$NON-NLS-1$ //$NON-NLS-2$
 								structuredDocumentCommand.doit = false;
 								structuredDocumentCommand.addCommand(structuredDocumentCommand.offset, 0, " }", null); //$NON-NLS-1$

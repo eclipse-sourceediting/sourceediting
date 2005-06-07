@@ -95,7 +95,7 @@
 		id="documentFactories" />
 
 	<extension-point
-		name="Model Query Extension"
+		name="%Model_Query_Extension.name"
 		id="modelQueryExtensions" />
 
 	<extension-point

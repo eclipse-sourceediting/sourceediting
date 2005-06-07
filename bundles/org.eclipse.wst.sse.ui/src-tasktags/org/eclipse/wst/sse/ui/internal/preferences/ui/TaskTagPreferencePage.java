@@ -265,7 +265,7 @@ public class TaskTagPreferencePage extends PropertyPreferencePage {
 				contexts[i].getNode(getPreferenceNodeQualifier()).flush();
 			}
 			catch (BackingStoreException e) {
-				Logger.logException("problem saving preference settings to scope " + contexts[i].getName(), e);
+				Logger.logException("problem saving preference settings to scope " + contexts[i].getName(), e); //$NON-NLS-1$
 			}
 		}
 
@@ -326,7 +326,7 @@ public class TaskTagPreferencePage extends PropertyPreferencePage {
 		}
 		else {
 			if (_debugPreferences) {
-				System.out.println(getClass().getName() + " setting " + TaskTagPreferenceKeys.TASK_TAG_ENABLE + " \"" + fEnableTaskTags + "\" in scope " + preferenceScopes[0].getName() + ":" + preferenceScopes[0].getLocation()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				System.out.println(getClass().getName() + " setting " + TaskTagPreferenceKeys.TASK_TAG_ENABLE + " \"" + fEnableTaskTags + "\" in scope " + preferenceScopes[0].getName() + ":" + preferenceScopes[0].getLocation()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 			}
 			preferenceScopes[0].getNode(getPreferenceNodeQualifier()).putBoolean(TaskTagPreferenceKeys.TASK_TAG_ENABLE, fEnableTaskTags);
 		}

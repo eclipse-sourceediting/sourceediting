@@ -50,7 +50,7 @@ public class ModuleResolver extends ProjectResolver {
 				if (virtualResources != null) {
 					for (int i = 0; i < virtualResources.length; i++) {
 						IPath runtimePath = null;
-						if (uri.startsWith("/")) {
+						if (uri.startsWith("/")) { //$NON-NLS-1$
 							runtimePath = new Path(uri);
 						}
 						else {

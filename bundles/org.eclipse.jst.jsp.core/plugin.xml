@@ -35,7 +35,7 @@
 	<extension
 		point="org.eclipse.core.filebuffers.documentSetup"
 		id="org.eclipse.jst.jsp.core.documentsetup"
-		name="Structured JSP Document Setup participant">
+		name="%Structured_JSP_Document_Setup_participant.name">
 		<participant
 			contentTypeId="org.eclipse.jst.jsp.core.jspsource"
 			class="org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController" />
