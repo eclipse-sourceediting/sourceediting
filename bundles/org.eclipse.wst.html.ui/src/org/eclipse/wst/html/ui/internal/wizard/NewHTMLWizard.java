@@ -28,12 +28,12 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
-import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.Logger;
+import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImageHelper;
+import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImages;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 
 public class NewHTMLWizard extends Wizard implements INewWizard {
-	static String PAGE_IMAGE = "/icons/full/wizban/newhfile_wiz.gif"; //$NON-NLS-1$
 	private WizardNewFileCreationPage fNewFilePage;
 	private NewHTMLTemplatesWizardPage fNewFileTemplatesPage;
 	private IStructuredSelection fSelection;
@@ -77,14 +77,9 @@ public class NewHTMLWizard extends Wizard implements INewWizard {
 	public void init(IWorkbench aWorkbench, IStructuredSelection aSelection) {
 		fSelection = aSelection;
 		setWindowTitle(HTMLUIMessages._UI_WIZARD_NEW_TITLE);
-		if (PAGE_IMAGE != null) {
-			ImageDescriptor descriptor = HTMLUIPlugin.getDefault().getImageRegistry().getDescriptor(PAGE_IMAGE);
-			if (descriptor == null) {
-				descriptor = ImageDescriptor.createFromURL(HTMLUIPlugin.getDefault().getBundle().getEntry(PAGE_IMAGE));
-				HTMLUIPlugin.getDefault().getImageRegistry().put(PAGE_IMAGE, descriptor);
-			}
-			setDefaultPageImageDescriptor(descriptor);
-		}
+		
+		ImageDescriptor descriptor = HTMLEditorPluginImageHelper.getInstance().getImageDescriptor(HTMLEditorPluginImages.IMG_WIZBAN_NEWHTMLFILE);
+		setDefaultPageImageDescriptor(descriptor);
 	}
 
 	private void openEditor(final IFile file) {

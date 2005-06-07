@@ -23,6 +23,8 @@ import org.eclipse.wst.css.ui.internal.editor.CSSEditorPluginImages;
 
 
 public class CSSImageHelper {
+	private static CSSImageHelper fInstance = null;
+
 	/**
 	 * singleton
 	 */
@@ -33,18 +35,53 @@ public class CSSImageHelper {
 		return fInstance;
 	}
 
+	private HashMap fImageDescRegistry = null;	// save a descriptor for each image
+	private Map fTypeMap = null;
+
 	/**
-	 * by relative path(from here)
+	 * 
 	 */
-	public Image getImage(String resource) {
-		if (resource == null) {
-			return null;
+	private CSSImageHelper() {
+		super();
+	}
+
+	/**
+	 * 
+	 */
+	private Image createImage(String resource) {
+		ImageDescriptor desc = AbstractUIPlugin.imageDescriptorFromPlugin(CSSUIPlugin.ID, resource);
+		Image image = null;
+
+		if (desc == null) {
+			desc = ImageDescriptor.getMissingImageDescriptor();
+			image = desc.createImage();
+		} else {
+			image = desc.createImage();
+			getImageRegistry().put(resource, image);
 		}
-		Image image = getImageRegistry().get(resource);
-		if (image == null) {
-			image = createImage(resource);
-		}
+
 		return image;
+	}
+
+	/**
+	 * Creates an image descriptor from the given imageFilePath and adds the
+	 * image descriptor to the image descriptor registry. If an image
+	 * descriptor could not be created, the default "missing" image descriptor
+	 * is returned but not added to the image descriptor registry.
+	 * 
+	 * @param imageFilePath
+	 * @return ImageDescriptor image descriptor for imageFilePath or default
+	 *         "missing" image descriptor if resource could not be found
+	 */
+	private ImageDescriptor createImageDescriptor(String imageFilePath) {
+		ImageDescriptor imageDescriptor = AbstractUIPlugin.imageDescriptorFromPlugin(CSSUIPlugin.ID, imageFilePath);
+		if (imageDescriptor != null) {
+			getImageDescriptorRegistry().put(imageFilePath, imageDescriptor);
+		} else {
+			imageDescriptor = ImageDescriptor.getMissingImageDescriptor();
+		}
+
+		return imageDescriptor;
 	}
 
 	/**
@@ -90,35 +127,55 @@ public class CSSImageHelper {
 	}
 
 	/**
-	 *  
+	 * by relative path(from here)
 	 */
-	private CSSImageHelper() {
-		super();
+	public Image getImage(String resource) {
+		if (resource == null) {
+			return null;
+		}
+		Image image = getImageRegistry().get(resource);
+		if (image == null) {
+			image = createImage(resource);
+		}
+		return image;
 	}
 
 	/**
-	 *  
+	 * Retrieves the image descriptor associated with resource from the image
+	 * descriptor registry. If the image descriptor cannot be retrieved,
+	 * attempt to find and load the image descriptor at the location specified
+	 * in resource.
+	 * 
+	 * @param resource
+	 *            the image descriptor to retrieve
+	 * @return ImageDescriptor the image descriptor assocated with resource or
+	 *         the default "missing" image descriptor if one could not be
+	 *         found
 	 */
-	private Image createImage(String resource) {
-		ImageDescriptor desc = AbstractUIPlugin.imageDescriptorFromPlugin(CSSUIPlugin.ID, resource);
-		Image image = null;
-
-		if (desc == null) {
-			desc = ImageDescriptor.getMissingImageDescriptor();
-			image = desc.createImage();
+	public ImageDescriptor getImageDescriptor(String resource) {
+		ImageDescriptor imageDescriptor = null;
+		Object o = getImageDescriptorRegistry().get(resource);
+		if (o == null) {
+			// create a descriptor
+			imageDescriptor = createImageDescriptor(resource);
 		} else {
-			image = desc.createImage();
-			getImageRegistry().put(resource, image);
+			imageDescriptor = (ImageDescriptor) o;
 		}
+		return imageDescriptor;
+	}
 
-		return image;
+	/**
+	 * Returns the image descriptor registry for this plugin.
+	 * 
+	 * @return HashMap - image descriptor registry for this plugin
+	 */
+	private HashMap getImageDescriptorRegistry() {
+		if (fImageDescRegistry == null)
+			fImageDescRegistry = new HashMap();
+		return fImageDescRegistry;
 	}
 
 	private ImageRegistry getImageRegistry() {
 		return JFaceResources.getImageRegistry();
 	}
-
-	private Map fTypeMap = null;
-	private static CSSImageHelper fInstance = null;
-
 }

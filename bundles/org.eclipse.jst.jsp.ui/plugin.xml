@@ -5,7 +5,7 @@
 	<extension point="org.eclipse.ui.editors">
 		<editor
 			name="%JSP_Source_Page_Editor.name"
-			icon="icons/sourceEditor.gif"
+			icon="icons//full/obj16/sourceEditor.gif"
 			extensions="jsp, jsf, jspf, jspx, tag, tagf"
 			contributorClass="org.eclipse.jst.jsp.ui.internal.editor.ActionContributorJSP"
 			class="org.eclipse.jst.jsp.ui.internal.editor.StructuredTextEditorJSP"
@@ -397,7 +397,7 @@
 			name="%_UI_WIZARD_NAME"
 			class="org.eclipse.jst.jsp.ui.internal.wizard.NewJSPWizard"
 			category="org.eclipse.wst.web.ui"
-			icon="icons/full/ctool16/newjsp_wiz.gif">
+			icon="icons/full/etool16/newjsp_wiz.gif">
 			<description>%_UI_WIZARD_CREATE_NEW_FILE</description>
 			<selection class="org.eclipse.core.resources.IResource" />
 		</wizard>

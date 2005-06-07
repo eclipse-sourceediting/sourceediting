@@ -22,11 +22,6 @@ import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 
 /**
  * Helper class to handle images provided by this plug-in.
- * 
- * NOTE: For internal use only. For images used externally, please use the
- * Shared***ImageHelper class instead.
- * 
- * @author amywu
  */
 public class HTMLEditorPluginImageHelper {
 	private final String PLUGINID = HTMLUIPlugin.ID;

@@ -20,8 +20,9 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.ui.internal.JSPUIMessages;
-import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 import org.eclipse.jst.jsp.ui.internal.Logger;
+import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImageHelper;
+import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImages;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
@@ -33,7 +34,6 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 
 public class NewJSPWizard extends Wizard implements INewWizard {
-	static String PAGE_IMAGE = "/icons/full/wizban/newjspfile_wiz.gif"; //$NON-NLS-1$
 	private WizardNewFileCreationPage fNewFilePage;
 	private NewJSPTemplatesWizardPage fNewFileTemplatesPage;
 	private IStructuredSelection fSelection;
@@ -77,14 +77,9 @@ public class NewJSPWizard extends Wizard implements INewWizard {
 	public void init(IWorkbench aWorkbench, IStructuredSelection aSelection) {
 		fSelection = aSelection;
 		setWindowTitle(JSPUIMessages._UI_WIZARD_NEW_TITLE);
-		if (PAGE_IMAGE != null) {
-			ImageDescriptor descriptor = JSPUIPlugin.getDefault().getImageRegistry().getDescriptor(PAGE_IMAGE);
-			if (descriptor == null) {
-				descriptor = ImageDescriptor.createFromURL(JSPUIPlugin.getDefault().getBundle().getEntry(PAGE_IMAGE));
-				JSPUIPlugin.getDefault().getImageRegistry().put(PAGE_IMAGE, descriptor);
-			}
-			setDefaultPageImageDescriptor(descriptor);
-		}
+		
+		ImageDescriptor descriptor = JSPEditorPluginImageHelper.getInstance().getImageDescriptor(JSPEditorPluginImages.IMG_OBJ_WIZBAN_NEWJSPFILE);
+		setDefaultPageImageDescriptor(descriptor);
 	}
 
 	private void openEditor(final IFile file) {

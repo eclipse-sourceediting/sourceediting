@@ -43,4 +43,6 @@ public class JSPEditorPluginImages {
     public static final String PACKAGE_OBJ = "icons/full/obj16/package_obj.gif"; //$NON-NLS-1$
     
     public static final String LOCAL_VARIABLE_OBJ = "icons/full/obj16/localvariable_obj.gif"; //$NON-NLS-1$
+    
+    public static final String IMG_OBJ_WIZBAN_NEWJSPFILE = "icons/full/wizban/newjspfile_wiz.gif"; //$NON-NLS-1$
 }

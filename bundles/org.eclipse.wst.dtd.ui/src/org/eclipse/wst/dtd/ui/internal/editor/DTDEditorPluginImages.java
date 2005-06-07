@@ -39,4 +39,6 @@ public class DTDEditorPluginImages {
 	public static final String IMG_OBJ_ORGANIZE_DTD_LOGICALLY = "icons/full/obj16/organize_dtd_logically.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJ_SORT = "icons/full/obj16/sort.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJ_VALIDATE = "icons/full/obj16/validate.gif"; //$NON-NLS-1$
+	
+	public static final String IMG_WIZBAN_NEWDTDFILE = "icons/full/wizban/newdtdfile_wiz.gif"; //$NON-NLS-1$
 }

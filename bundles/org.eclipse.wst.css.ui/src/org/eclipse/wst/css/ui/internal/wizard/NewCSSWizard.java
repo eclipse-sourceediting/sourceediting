@@ -15,11 +15,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.wst.css.ui.internal.CSSUIMessages;
-import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 import org.eclipse.wst.css.ui.internal.Logger;
+import org.eclipse.wst.css.ui.internal.editor.CSSEditorPluginImages;
+import org.eclipse.wst.css.ui.internal.image.CSSImageHelper;
 
 public class NewCSSWizard extends Wizard implements INewWizard {
-	static String PAGE_IMAGE = "/icons/full/wizban/newcssfile_wiz.gif"; //$NON-NLS-1$
 	private WizardNewFileCreationPage fNewFilePage;
 	private IStructuredSelection fSelection;
 
@@ -45,14 +45,8 @@ public class NewCSSWizard extends Wizard implements INewWizard {
 	public void init(IWorkbench aWorkbench, IStructuredSelection aSelection) {
 		fSelection = aSelection;
 		setWindowTitle(CSSUIMessages._UI_WIZARD_NEW_TITLE); //$NON-NLS-1$
-		if (PAGE_IMAGE != null) {
-			ImageDescriptor descriptor = CSSUIPlugin.getDefault().getImageRegistry().getDescriptor(PAGE_IMAGE);
-			if (descriptor == null) {
-				descriptor = ImageDescriptor.createFromURL(CSSUIPlugin.getDefault().getBundle().getEntry(PAGE_IMAGE));
-				CSSUIPlugin.getDefault().getImageRegistry().put(PAGE_IMAGE, descriptor);
-			}
-			setDefaultPageImageDescriptor(descriptor);
-		}
+		ImageDescriptor descriptor = CSSImageHelper.getInstance().getImageDescriptor(CSSEditorPluginImages.IMG_WIZBAN_NEWCSSFILE);
+		setDefaultPageImageDescriptor(descriptor);
 	}
 
 	private void openEditor(final IFile file) {

@@ -14,10 +14,10 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.eclipse.ui.ide.IDE;
-import org.eclipse.wst.dtd.core.internal.DTDResource;
 import org.eclipse.wst.dtd.ui.internal.DTDUIMessages;
-import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.dtd.ui.internal.Logger;
+import org.eclipse.wst.dtd.ui.internal.editor.DTDEditorPluginImageHelper;
+import org.eclipse.wst.dtd.ui.internal.editor.DTDEditorPluginImages;
 
 public class NewDTDWizard extends Wizard implements INewWizard {
 	private WizardNewFileCreationPage fNewFilePage;
@@ -45,11 +45,8 @@ public class NewDTDWizard extends Wizard implements INewWizard {
 	public void init(IWorkbench aWorkbench, IStructuredSelection aSelection) {
 		fSelection = aSelection;
 		setWindowTitle(DTDUIMessages._UI_WIZARD_NEW_DTD_TITLE); //$NON-NLS-1$
-		ImageDescriptor descriptor = DTDUIPlugin.getDefault().getImageRegistry().getDescriptor(DTDResource.NEWDTD);
-		if (descriptor == null) {
-			descriptor = ImageDescriptor.createFromURL(DTDUIPlugin.getDefault().getBundle().getEntry(DTDResource.NEWDTD));
-			DTDUIPlugin.getDefault().getImageRegistry().put(DTDResource.NEWDTD, descriptor);
-		}
+		
+		ImageDescriptor descriptor = DTDEditorPluginImageHelper.getInstance().getImageDescriptor(DTDEditorPluginImages.IMG_WIZBAN_NEWDTDFILE);
 		setDefaultPageImageDescriptor(descriptor);
 	}
 

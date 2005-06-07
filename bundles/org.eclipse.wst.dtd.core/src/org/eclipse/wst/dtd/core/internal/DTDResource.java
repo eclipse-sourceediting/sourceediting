@@ -34,7 +34,6 @@ public interface DTDResource {
 	public static final String FLDR_NOT = "icons/full/obj16/fldr_not.gif"; //$NON-NLS-1$
 	public static final String FLDR_UNREC = "icons/full/obj16/fldr_unrec.gif"; //$NON-NLS-1$
 
-	public static final String NEWDTD = "icons/full/obj16/newdtd_wiz.gif"; //$NON-NLS-1$
 	public static final String NEWHTMLFORM = "icons/full/obj16/genhtmform_wiz.gif"; //$NON-NLS-1$
 	public static final String NOTATIONICON = "icons/full/obj16/notation.gif"; //$NON-NLS-1$
 

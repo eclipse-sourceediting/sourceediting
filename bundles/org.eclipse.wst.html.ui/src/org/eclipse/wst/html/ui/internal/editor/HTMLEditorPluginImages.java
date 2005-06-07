@@ -28,4 +28,5 @@ public class HTMLEditorPluginImages {
 	public static final String IMG_OBJ_TAG_TEMPLATE = "icons/full/obj16/tag-template.gif";			//$NON-NLS-1$
 	public static final String IMG_OBJ_TAG_TITLE = "icons/full/obj16/tag-title.gif";			//$NON-NLS-1$
 	public static final String IMG_OBJ_TAG = "icons/full/obj16/tag.gif";			//$NON-NLS-1$
+	public static final String IMG_WIZBAN_NEWHTMLFILE = "icons/full/wizban/newhfile_wiz.gif";			//$NON-NLS-1$
 }
