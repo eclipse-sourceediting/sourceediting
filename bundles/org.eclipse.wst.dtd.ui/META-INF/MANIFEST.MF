@@ -30,10 +30,8 @@ Require-Bundle: org.eclipse.core.resources,
  org.eclipse.ui.workbench,
  org.eclipse.ui.workbench.texteditor,
  org.eclipse.wst.common.ui,
- org.eclipse.wst.common.uriresolver,
  org.eclipse.wst.dtd.core,
  org.eclipse.wst.sse.core,
  org.eclipse.wst.sse.ui,
- org.eclipse.wst.validation,
  org.eclipse.wst.xml.core
 Eclipse-AutoStart: true
