@@ -23,7 +23,9 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
@@ -33,6 +35,10 @@ import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
@@ -43,6 +49,7 @@ import org.eclipse.ui.part.MultiPageEditorSite;
 import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.wst.sse.ui.internal.extension.ActionDescriptor;
 import org.eclipse.wst.sse.ui.internal.extension.RegistryReader;
+import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 
 
 /**
@@ -65,6 +72,41 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 			this.cache = cache;
 		}
 
+		private IExtendedSimpleEditor computeExtendedEditor(final IEditorPart editor) {
+			IExtendedSimpleEditor simpleEditor = null;
+			if (editor instanceof IExtendedSimpleEditor) {
+				simpleEditor = (IExtendedSimpleEditor) editor;
+			}
+			if (editor != null && simpleEditor == null) {
+				final ISourceEditingTextTools tools = (ISourceEditingTextTools) editor.getAdapter(ISourceEditingTextTools.class);
+				if (tools != null) {
+					simpleEditor = new IExtendedSimpleEditor() {
+						public int getCaretPosition() {
+							return tools.getCaretOffset();
+						}
+
+						public IDocument getDocument() {
+							return tools.getDocument();
+						}
+
+						public IEditorPart getEditorPart() {
+							return tools.getEditorPart();
+						}
+
+						public Point getSelectionRange() {
+							ITextSelection selection = tools.getSelection();
+							return new Point(selection.getOffset(), selection.getOffset() + selection.getLength());
+						}
+
+						public IStatus validateEdit(Shell context) {
+							return Status.OK_STATUS;
+						}
+					};
+				}
+			}
+			return simpleEditor;
+		}
+
 		public void contributeToMenu(IMenuManager menu) {
 			menuBar = menu;
 			long time0 = System.currentTimeMillis();
@@ -77,7 +119,8 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 						if (debugMenu)
 							System.out.println(getClass().getName() + "#contributeToMenu() added: " + menuElement.getAttribute(ATT_ID)); //$NON-NLS-1$
 					}
-				} else if (obj instanceof ActionDescriptor) {
+				}
+				else if (obj instanceof ActionDescriptor) {
 					try {
 						ActionDescriptor ad = (ActionDescriptor) obj;
 						IMenuManager mm = contributeMenuAction(ad, menu, true, false);
@@ -88,7 +131,8 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 							if (debugMenu)
 								System.out.println(getClass().getName() + "#contributeToMenu() added: " + ad.getId()); //$NON-NLS-1$
 						}
-					} catch (Exception e) {
+					}
+					catch (Exception e) {
 						Logger.logException("contributing to menu", e); //$NON-NLS-1$
 					}
 				}
@@ -106,7 +150,8 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 					if ((menuElement.getName()).equals(TAG_POPUPMENU)) {
 						contributeMenu(menuElement, menu, true);
 					}
-				} else if (obj instanceof ActionDescriptor) {
+				}
+				else if (obj instanceof ActionDescriptor) {
 					try {
 						ActionDescriptor ad = (ActionDescriptor) obj;
 						IAction a = ad.getAction();
@@ -123,16 +168,19 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 									if (debugPopup && parent != null)
 										System.out.println(getClass().getName() + "#contributeToPopupMenu() added: " + ad.getId()); //$NON-NLS-1$
 								}
-							} catch (Exception e) {
+							}
+							catch (Exception e) {
 								Logger.logException(e);
 							}
 
-						} else {
+						}
+						else {
 							IMenuManager parent = contributeMenuAction(ad, menu, true, true);
 							if (debugPopup && parent != null)
 								System.out.println(getClass().getName() + "#contributeToPopupMenu() added: " + ad.getId()); //$NON-NLS-1$
 						}
-					} catch (Exception e) {
+					}
+					catch (Exception e) {
 						Logger.logException("contributing to popup", e); //$NON-NLS-1$
 					}
 				}
@@ -161,16 +209,19 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 								boolean contributed = contributeToolbarAction(ad, manager, true);
 								if (debugToolbar && contributed)
 									System.out.println(getClass().getName() + "#contributeToToolBar() added: " + ad.getId()); //$NON-NLS-1$
-							} else {
+							}
+							else {
 								if (debugToolbar)
 									System.out.println(getClass().getName() + "#contributeToToolBar(): [skipped] " + ad.getId()); //$NON-NLS-1$
 							}
-						} else {
+						}
+						else {
 							boolean contributed = contributeToolbarAction(ad, manager, true);
 							if (debugToolbar && contributed)
 								System.out.println(getClass().getName() + "#contributeToToolBar() added: " + ad.getId()); //$NON-NLS-1$
 						}
-					} catch (Exception e) {
+					}
+					catch (Exception e) {
 						Logger.logException("contributing to toolbar", e); //$NON-NLS-1$
 					}
 				}
@@ -209,7 +260,8 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 			if (site instanceof MultiPageEditorSite) {
 				Object multiPageEditor = ((MultiPageEditorSite) site).getMultiPageEditor();
 				activeEditorIsVisible = multiPageEditor.equals(site.getPage().getActiveEditor()) || multiPageEditor.equals(site.getPage().getActivePart());
-			} else {
+			}
+			else {
 				activeEditorIsVisible = site.getWorkbenchWindow().getPartService().getActivePart().equals(activeExtendedEditor.getEditorPart());
 			}
 			if (!activeEditorIsVisible)
@@ -245,7 +297,8 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 							visible = ((IExtendedEditorAction) action).isVisible();
 						}
 						item.setVisible(visible);
-					} catch (Exception e) {
+					}
+					catch (Exception e) {
 						Logger.logException("updating actions", e); //$NON-NLS-1$
 					}
 				}
@@ -254,7 +307,7 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 		}
 
 		public void setActiveEditor(IEditorPart editor) {
-			activeExtendedEditor = (editor instanceof IExtendedSimpleEditor) ? (IExtendedSimpleEditor) editor : null;
+			activeExtendedEditor = computeExtendedEditor(editor);
 			IKeyBindingService svc = (editor != null) ? editor.getEditorSite().getKeyBindingService() : null;
 			for (int i = 0; i < cache.size(); i++) {
 				Object obj = cache.get(i);
@@ -273,21 +326,22 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 								svc.registerAction(action);
 							}
 						}
-					} catch (Exception e) {
+					}
+					catch (Exception e) {
 						Logger.logException("setting active editor on actions", e); //$NON-NLS-1$
 					}
 				}
 			}
 
 			if (menuBar != null && editor != null) {
-				//				Class clz = editor.getClass();
-				//				while (clz != null) {
-				//					if (clz.getName().equals(targetID)) {
-				//						contributeToMenu(menuBar);
-				//						break;
-				//					}
-				//					clz = clz.getSuperclass();
-				//				}
+				// Class clz = editor.getClass();
+				// while (clz != null) {
+				// if (clz.getName().equals(targetID)) {
+				// contributeToMenu(menuBar);
+				// break;
+				// }
+				// clz = clz.getSuperclass();
+				// }
 				if (targetIDs.contains(editor.getEditorSite().getId())) {
 					contributeToMenu(menuBar);
 				}
@@ -308,7 +362,8 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 								((IUpdate) action).update();
 							}
 						}
-					} catch (Exception e) {
+					}
+					catch (Exception e) {
 						Logger.logException("updating toolbar actions", e); //$NON-NLS-1$
 					}
 				}
@@ -378,7 +433,8 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 			if (loc != -1) {
 				group = path.substring(loc + 1);
 				path = path.substring(0, loc);
-			} else {
+			}
+			else {
 				// assume that path represents a slot
 				// so actual path portion should be null
 				group = path;
@@ -391,7 +447,7 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 		if (path != null) {
 			parent = mng.findMenuUsingPath(path);
 			if (parent == null) {
-				//Logger.log("Invalid Menu Extension (Path is invalid): " +
+				// Logger.log("Invalid Menu Extension (Path is invalid): " +
 				// id);//$NON-NLS-1$
 				return;
 			}
@@ -431,7 +487,8 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 		// Add new menu
 		try {
 			parent.insertAfter(group, newMenu);
-		} catch (IllegalArgumentException e) {
+		}
+		catch (IllegalArgumentException e) {
 			Logger.log(Logger.ERROR, "Invalid Menu Extension (Group is missing): " + id); //$NON-NLS-1$
 		}
 	}
@@ -455,7 +512,7 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 		if (mpath != null) {
 			parent = parent.findMenuUsingPath(mpath);
 			if (parent == null) {
-				//Logger.log("Invalid Menu Extension (Path is invalid): " +
+				// Logger.log("Invalid Menu Extension (Path is invalid): " +
 				// ad.getId()); //$NON-NLS-1$
 				return null;
 			}
@@ -495,7 +552,8 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 					parent.appendToGroup(sep.getId(), ad.getAction());
 				else
 					parent.insertAfter(mgroup, ad.getAction());
-			} else {
+			}
+			else {
 				// Normal menu need to add existing contribution item to
 				// remove it from menu listener
 				if (sep != null && sep.isGroupMarker())
@@ -503,7 +561,8 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 				else
 					parent.insertAfter(mgroup, ad.getContributionItem());
 			}
-		} catch (IllegalArgumentException e) {
+		}
+		catch (IllegalArgumentException e) {
 			Logger.log(Logger.ERROR, "Invalid Menu Extension (Group is missing): " + ad.getId()); //$NON-NLS-1$
 			parent = null;
 		}
@@ -566,7 +625,8 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 				toolbar.appendToGroup(sep.getId(), ad.getAction());
 			else
 				toolbar.insertAfter(tgroup, ad.getAction());
-		} catch (IllegalArgumentException e) {
+		}
+		catch (IllegalArgumentException e) {
 			Logger.log(Logger.ERROR, "Invalid Toolbar Extension (Group is missing): " + ad.getId()); //$NON-NLS-1$
 			return false;
 		}
@@ -587,7 +647,8 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 			if ((ad != null) && (ad.getAction() == null)) {
 				ad = null;
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			Logger.traceException(EXTENDED_EDITOR, e);
 			ad = null;
 		}
@@ -663,29 +724,34 @@ public class ExtendedEditorActionBuilder extends RegistryReader {
 				// This is not of interest to us - don't go deeper
 				return true;
 			}
-		} else if (tag.equals(TAG_MENU)) {
+		}
+		else if (tag.equals(TAG_MENU)) {
 			if (readingCache == null)
 				readingCache = new ArrayList();
 			readingCache.add(element);
 			return true; // just cache the element - don't go into it
-		} else if (tag.equals(TAG_POPUPMENU)) {
+		}
+		else if (tag.equals(TAG_POPUPMENU)) {
 			if (readingCache == null)
 				readingCache = new ArrayList();
 			readingCache.add(element);
 			return true; // just cache the element - don't go into it
-		} else if (tag.equals(TAG_RULERMENU)) {
+		}
+		else if (tag.equals(TAG_RULERMENU)) {
 			if (readingCache == null)
 				readingCache = new ArrayList();
 			readingCache.add(element);
 			return true; // just cache the element - don't go into it
-		} else if (tag.equals(TAG_ACTION)) {
+		}
+		else if (tag.equals(TAG_ACTION)) {
 			if (readingCache == null)
 				readingCache = new ArrayList();
 			ActionDescriptor ad = createActionDescriptor(element);
 			if (ad != null)
 				readingCache.add(ad);
 			return true; // just cache the action - don't go into
-		} else {
+		}
+		else {
 			return false;
 		}
 
