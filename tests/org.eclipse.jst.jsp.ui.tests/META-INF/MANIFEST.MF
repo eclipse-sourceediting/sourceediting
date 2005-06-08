@@ -37,10 +37,6 @@ Require-Bundle: org.eclipse.jface.text,
  org.eclipse.jst.jsp.core,
  org.eclipse.wst.html.core,
  org.eclipse.wst.css.core,
- org.eclipse.wst.html.ui,
- org.eclipse.wst.xml.ui,
  org.eclipse.ui.views,
- org.eclipse.wst.css.ui,
- org.eclipse.core.runtime,
- org.eclipse.wst.javascript.ui
+ org.eclipse.core.runtime
 Eclipse-AutoStart: true
