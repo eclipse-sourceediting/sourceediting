@@ -20,15 +20,19 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
 
 /**
- * Delegates for the main Task Scanner. Delegates may be contributed using the
+ * Scanners for the main Task Scanner. Scanners may be contributed using the
  * org.eclipse.wst.sse.core.taskscanner extension point. For resources and
  * resource deltas with matching content types, the main scanner will first
  * call the startup() method, scan(), and then shutdown() in sequence. Scanner
  * instances will be reused across projects but are not shared per content
- * type. Delegates should not hold on to references to models or resources
+ * type. Scanners should not hold on to references to models or resources
  * after shutdown() and should take care not to leak memory or resources.
  */
 public interface IFileTaskScanner {
+	/**
+	 * Marker type ID of task markers that are created, all scanners are
+	 * expected to use this type or subtypes
+	 */
 	String TASK_MARKER_ID = SSECorePlugin.ID + ".task"; //$NON-NLS-1$;
 
 	/**
@@ -48,8 +52,8 @@ public interface IFileTaskScanner {
 	Map[] scan(IFile file, TaskTag[] taskTags, IProgressMonitor monitor);
 
 	/**
-	 * Notifies the delegate that scanning is done for now. Resources held
-	 * from startup should now be released.
+	 * Notifies the scanner that scanning is done for now. Resources held from
+	 * startup should now be released.
 	 * 
 	 * @param project -
 	 *            the project that was just scanned
@@ -57,9 +61,9 @@ public interface IFileTaskScanner {
 	void shutdown(IProject project);
 
 	/**
-	 * Notifies the delegate that a sequence of scans is about to be
-	 * requested. Ideally the time to load preferences and perform any
-	 * expensive configuration for the given project.
+	 * Notifies the scanner that a sequence of scans is about to be requested.
+	 * Ideally the time to load preferences and perform any expensive
+	 * configuration for the given project.
 	 * 
 	 * @param project -
 	 *            the project that is about to be scanned
