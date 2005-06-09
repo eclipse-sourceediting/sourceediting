@@ -176,7 +176,7 @@ public class XSDMultiPageEditorPart extends MultiPageEditorPart implements IProp
       // dispose editor
       dispose();
 
-      throw new SourceEditingRuntimeException(XSDEditorPlugin.getXSDString("An_error_has_occurred_when1_ERROR_")); //$NON-NLS-1$
+      throw new SourceEditingRuntimeException(XSDEditorPlugin.getXSDString(exception, "An_error_has_occurred_when1_ERROR_")); //$NON-NLS-1$
     }
   }
 

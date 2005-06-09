@@ -127,7 +127,7 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
     }
     catch (PartInitException exception)
     {
-      throw new SourceEditingRuntimeException(XSDEditorPlugin.getXSDString("An_error_has_occurred_when1_ERROR_")); //$NON-NLS-1$ = "An error has occurred when initializing the input for the the editor's source page."
+      throw new SourceEditingRuntimeException(exception, XSDEditorPlugin.getXSDString("An_error_has_occurred_when1_ERROR_")); //$NON-NLS-1$ = "An error has occurred when initializing the input for the the editor's source page."
     }
   }
   
