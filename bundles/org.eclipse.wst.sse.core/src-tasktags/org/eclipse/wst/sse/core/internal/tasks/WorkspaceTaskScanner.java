@@ -347,7 +347,6 @@ class WorkspaceTaskScanner {
 			return;
 
 		SubProgressMonitor scannerMonitor = new SubProgressMonitor(monitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
-		scannerMonitor.setTaskName(file.getFullPath().toString());
 		List markerAttributes = null;
 		IContentType[] types = detectContentTypes(file);
 		if (types != null) {
@@ -373,7 +372,7 @@ class WorkspaceTaskScanner {
 				for (int j = 0; fileScanners != null && j < fileScanners.length; j++) {
 					if (scannerMonitor.isCanceled())
 						continue;
-					scannerMonitor.beginTask("", fileScanners.length); //$NON-NLS-1$
+					scannerMonitor.beginTask(file.getFullPath().toString(), fileScanners.length); //$NON-NLS-1$
 					try {
 						if (!fActiveScanners.contains(fileScanners[j]) && !monitor.isCanceled()) {
 							fileScanners[j].startup(file.getProject());
