@@ -22,6 +22,7 @@ import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.TextEditorAction;
 import org.eclipse.wst.sse.ui.internal.IExtendedSimpleEditor;
+import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 
 
 /**
@@ -47,9 +48,14 @@ public class OpenOnAction extends TextEditorAction {
 
 				// figure out current offset
 				int offset = -1;
-				if (editor instanceof IExtendedSimpleEditor) {
+				ISourceEditingTextTools textTools = (ISourceEditingTextTools) getTextEditor().getAdapter(ISourceEditingTextTools.class);
+				if (textTools != null) {
+					offset = textTools.getCaretOffset();
+				}
+				else if (editor instanceof IExtendedSimpleEditor) {
 					offset = ((IExtendedSimpleEditor) editor).getCaretPosition();
-				} else {
+				}
+				else {
 					if (editor.getSelectionProvider() != null) {
 						ISelection sel = editor.getSelectionProvider().getSelection();
 						if (sel instanceof ITextSelection) {

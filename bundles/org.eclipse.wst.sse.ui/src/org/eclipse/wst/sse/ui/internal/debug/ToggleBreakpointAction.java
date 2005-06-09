@@ -31,11 +31,11 @@ import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.util.Debug;
-import org.eclipse.wst.sse.ui.internal.IExtendedSimpleEditor;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.extension.BreakpointProviderBuilder;
+import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.IBreakpointProvider;
 
 /**
@@ -68,8 +68,9 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 		IBreakpointProvider[] providers = BreakpointProviderBuilder.getInstance().getBreakpointProviders(editor, contentType, getFileExtension(input));
 
 		int pos = -1;
-		if (editor instanceof IExtendedSimpleEditor) {
-			pos = ((IExtendedSimpleEditor) editor).getCaretPosition();
+		ISourceEditingTextTools tools = (ISourceEditingTextTools) editor.getAdapter(ISourceEditingTextTools.class);
+		if (tools != null) {
+			pos = tools.getCaretOffset();
 		}
 
 		final int n = providers.length;
@@ -82,9 +83,11 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 				if (status != null && !status.isOK()) {
 					errors.add(status);
 				}
-			} catch (CoreException e) {
+			}
+			catch (CoreException e) {
 				errors.add(e.getStatus());
-			} catch (Exception t) {
+			}
+			catch (Exception t) {
 				Logger.logException("exception while adding breakpoint", t); //$NON-NLS-1$
 			}
 		}
@@ -111,7 +114,8 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 			if (model != null) {
 				contentType = model.getContentTypeIdentifier();
 			}
-		} finally {
+		}
+		finally {
 			if (model != null) {
 				model.releaseFromRead();
 			}
@@ -126,7 +130,8 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 			try {
 				breakpoints[i].getMarker().delete();
 				breakpointManager.removeBreakpoint(breakpoints[i], true);
-			} catch (CoreException e) {
+			}
+			catch (CoreException e) {
 				Logger.logException(e);
 			}
 		}
@@ -153,7 +158,8 @@ public class ToggleBreakpointAction extends BreakpointRulerAction {
 		if (document != null) {
 			String contentType = getContentType(document);
 			setEnabled(BreakpointProviderBuilder.getInstance().isAvailable(contentType, getFileExtension(input)));
-		} else {
+		}
+		else {
 			setEnabled(false);
 		}
 	}
