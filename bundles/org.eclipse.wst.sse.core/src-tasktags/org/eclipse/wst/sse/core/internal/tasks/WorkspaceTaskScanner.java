@@ -59,10 +59,6 @@ class WorkspaceTaskScanner {
 		return _instance;
 	}
 
-	static String getTaskMarkerType() {
-		return IFileTaskScanner.TASK_MARKER_ID;
-	}
-
 	private List fActiveScanners = null;
 	private IContentType[] fCurrentIgnoreContentTypes = null;
 	private TaskTag[] fCurrentTaskTags = null;
@@ -275,7 +271,7 @@ class WorkspaceTaskScanner {
 					public void run(IProgressMonitor progressMonitor) throws CoreException {
 						try {
 							// Delete old Task markers
-							file.deleteMarkers(getTaskMarkerType(), true, IResource.DEPTH_ZERO);
+							file.deleteMarkers(IMarker.TASK, true, IResource.DEPTH_ZERO);
 						}
 						catch (CoreException e) {
 							Logger.logException("exception deleting old tasks", e); //$NON-NLS-1$ 
@@ -285,7 +281,8 @@ class WorkspaceTaskScanner {
 								System.out.println("" + markerAttributes.length + " tasks for " + file.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$
 							}
 							for (int i = 0; i < markerAttributes.length; i++) {
-								IMarker marker = finalFile.createMarker(getTaskMarkerType());
+								String markerType = (String) markerAttributes[i].get(IMarker.TASK);
+								IMarker marker = finalFile.createMarker(markerType != null ? markerType : IMarker.TASK);
 								marker.setAttributes(markerAttributes[i]);
 							}
 						}

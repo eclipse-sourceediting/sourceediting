@@ -85,6 +85,7 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner {
 		Map attributes = new HashMap(6);
 		// marker line numbers are 1-based
 		attributes.put(IMarker.LINE_NUMBER, new Integer(documentLine + 1));
+		attributes.put(IMarker.TASK, IFileTaskScanner.TASK_MARKER_ID);
 		attributes.put(IMarker.CHAR_START, new Integer(startOffset));
 		attributes.put(IMarker.CHAR_END, new Integer(startOffset + length));
 		attributes.put(IMarker.MESSAGE, text);
