@@ -34,7 +34,7 @@ public class ModelGroupSectionDescriptor extends AbstractSectionDescriptor
    */
   public String getId()
   {
-    return "com.ibm.xsdeditor.section.modelgroup";
+    return "org.eclipse.wst.xsdeditor.section.modelgroup";
   }
 
   /* (non-Javadoc)
@@ -60,7 +60,7 @@ public class ModelGroupSectionDescriptor extends AbstractSectionDescriptor
    */
   public String getTargetTab()
   {
-    return "com.ibm.xmlwebservices.general";
+    return "org.eclipse.wst.xmlwebservices.general";
   }
 
   /* (non-Javadoc)

@@ -36,7 +36,7 @@ public class SimpleTypeSectionDescriptor extends AbstractSectionDescriptor
    */
   public String getId()
   {
-    return "com.ibm.xsdeditor.section.simpletype";
+    return "org.eclipse.wst.xsdeditor.section.simpletype";
   }
 
   /* (non-Javadoc)
@@ -62,12 +62,12 @@ public class SimpleTypeSectionDescriptor extends AbstractSectionDescriptor
    */
   public String getTargetTab()
   {
-    return "com.ibm.xmlwebservices.general";
+    return "org.eclipse.wst.xmlwebservices.general";
   }
   
   public String getAfterSection()
   {
-    return "com.ibm.xsdeditor.section.name";
+    return "org.eclipse.wst.xsdeditor.section.name";
   }
 
   /* (non-Javadoc)

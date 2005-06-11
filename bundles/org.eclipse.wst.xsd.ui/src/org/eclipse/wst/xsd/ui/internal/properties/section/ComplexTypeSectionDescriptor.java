@@ -53,7 +53,7 @@ public class ComplexTypeSectionDescriptor extends AbstractSectionDescriptor
    */
   public String getTargetTab()
   {
-    return "com.ibm.xmlwebservices.general";
+    return "org.eclipse.wst.xmlwebservices.general";
   }
 
   /* (non-Javadoc)
@@ -76,7 +76,7 @@ public class ComplexTypeSectionDescriptor extends AbstractSectionDescriptor
   
   public String getAfterSection()
   {
-    return "com.ibm.xsdeditor.section.name";
+    return "org.eclipse.wst.xsdeditor.section.name";
   }
 
 }

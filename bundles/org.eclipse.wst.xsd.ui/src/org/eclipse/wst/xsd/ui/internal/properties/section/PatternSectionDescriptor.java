@@ -35,7 +35,7 @@ public class PatternSectionDescriptor extends AbstractSectionDescriptor
    */
   public String getId()
   {
-    return "com.ibm.xsdeditor.section.pattern";
+    return "org.eclipse.wst.xsdeditor.section.pattern";
   }
 
   /* (non-Javadoc)
@@ -61,7 +61,7 @@ public class PatternSectionDescriptor extends AbstractSectionDescriptor
    */
   public String getTargetTab()
   {
-    return "com.ibm.xmlwebservices.general";
+    return "org.eclipse.wst.xmlwebservices.general";
   }
 
   /* (non-Javadoc)

@@ -36,7 +36,7 @@ public class EnumerationsSectionDescriptor extends AbstractSectionDescriptor
    */
   public String getId()
   {
-    return "com.ibm.xsdeditor.section.enumerations";
+    return "org.eclipse.wst.xsdeditor.section.enumerations";
   }
 
   /* (non-Javadoc)
@@ -62,7 +62,7 @@ public class EnumerationsSectionDescriptor extends AbstractSectionDescriptor
    */
   public String getTargetTab()
   {
-    return "com.ibm.xmlwebservices.enumerations";
+    return "org.eclipse.wst.xmlwebservices.enumerations";
   }
 
   /* (non-Javadoc)

@@ -37,7 +37,7 @@ public class SchemaLocationDescriptor extends AbstractSectionDescriptor
 	   */
 	  public String getId()
 	  {
-	    return "com.ibm.xsdeditor.section.schemaLocationSection";
+	    return "org.eclipse.wst.xsdeditor.section.schemaLocationSection";
 	  }
 
 	  /* (non-Javadoc)
@@ -63,7 +63,7 @@ public class SchemaLocationDescriptor extends AbstractSectionDescriptor
 	   */
 	  public String getTargetTab()
 	  {
-	    return "com.ibm.xmlwebservices.general";
+	    return "org.eclipse.wst.xmlwebservices.general";
 	  }
 
 	  /* (non-Javadoc)

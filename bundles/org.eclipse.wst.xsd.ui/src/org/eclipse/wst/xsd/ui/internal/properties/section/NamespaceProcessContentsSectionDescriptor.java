@@ -34,7 +34,7 @@ public class NamespaceProcessContentsSectionDescriptor extends AbstractSectionDe
    */
   public String getId()
   {
-    return "com.ibm.xsdeditor.section.namespaceprocesscontents";
+    return "org.eclipse.wst.xsdeditor.section.namespaceprocesscontents";
   }
 
   /* (non-Javadoc)
@@ -60,7 +60,7 @@ public class NamespaceProcessContentsSectionDescriptor extends AbstractSectionDe
    */
   public String getTargetTab()
   {
-    return "com.ibm.xmlwebservices.general";
+    return "org.eclipse.wst.xmlwebservices.general";
   }
 
   /* (non-Javadoc)

@@ -47,7 +47,7 @@ public class AnnotationSectionDescriptor extends AbstractSectionDescriptor
    */
   public String getId()
   {
-    return "com.ibm.xsdeditor.section.annotation";
+    return "org.eclipse.wst.xsdeditor.section.annotation";
   }
 
   /* (non-Javadoc)
@@ -73,7 +73,7 @@ public class AnnotationSectionDescriptor extends AbstractSectionDescriptor
    */
   public String getTargetTab()
   {
-    return "com.ibm.xmlwebservices.documentation";
+    return "org.eclipse.wst.xmlwebservices.documentation";
   }
 
   /* (non-Javadoc)

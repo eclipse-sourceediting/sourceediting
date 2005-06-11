@@ -40,7 +40,7 @@ public class NameSectionDescriptor extends AbstractSectionDescriptor implements 
    */
   public String getId()
   {
-    return "com.ibm.xsdeditor.section.name";
+    return "org.eclipse.wst.xsdeditor.section.name";
   }
 
   /* (non-Javadoc)
@@ -67,7 +67,7 @@ public class NameSectionDescriptor extends AbstractSectionDescriptor implements 
    */
   public String getTargetTab()
   {
-    return "com.ibm.xmlwebservices.general";
+    return "org.eclipse.wst.xmlwebservices.general";
   }
 
   /* (non-Javadoc)

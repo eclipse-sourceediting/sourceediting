@@ -38,7 +38,7 @@ public class MinMaxSectionDescriptor extends AbstractSectionDescriptor
    */
   public String getId()
   {
-    return "com.ibm.xsdeditor.section.minmax";
+    return "org.eclipse.wst.xsdeditor.section.minmax";
   }
 
   /* (non-Javadoc)
@@ -66,7 +66,7 @@ public class MinMaxSectionDescriptor extends AbstractSectionDescriptor
    */
   public String getTargetTab()
   {
-    return "com.ibm.xmlwebservices.general";
+    return "org.eclipse.wst.xmlwebservices.general";
   }
 
   /* (non-Javadoc)

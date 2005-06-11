@@ -36,7 +36,7 @@ public class FacetsSectionDescriptor extends AbstractSectionDescriptor
    */
   public String getId()
   {
-    return "com.ibm.xsdeditor.section.facets";
+    return "org.eclipse.wst.xsdeditor.section.facets";
   }
 
   /* (non-Javadoc)
@@ -62,7 +62,7 @@ public class FacetsSectionDescriptor extends AbstractSectionDescriptor
    */
   public String getTargetTab()
   {
-    return "com.ibm.xmlwebservices.facets";
+    return "org.eclipse.wst.xmlwebservices.facets";
   }
 
   /* (non-Javadoc)

@@ -35,7 +35,7 @@ public class AttributesViewSectionDescriptor extends AbstractSectionDescriptor
    */
   public String getId()
   {
-    return "com.ibm.xsdeditor.section.attributes";
+    return "org.eclipse.wst.xsdeditor.section.attributes";
   }
 
   /* (non-Javadoc)
@@ -87,7 +87,7 @@ public class AttributesViewSectionDescriptor extends AbstractSectionDescriptor
    */
   public String getTargetTab()
   {
-    return "com.ibm.xmlwebservices.attributes";
+    return "org.eclipse.wst.xmlwebservices.attributes";
   }
   
   /* (non-Javadoc)

@@ -40,7 +40,7 @@ public class TypesSectionDescriptor extends AbstractSectionDescriptor
    */
   public String getId()
   {
-    return "com.ibm.xsdeditor.section.types";
+    return "org.eclipse.wst.xsdeditor.section.types";
   }
 
   /* (non-Javadoc)
@@ -69,7 +69,7 @@ public class TypesSectionDescriptor extends AbstractSectionDescriptor
    */
   public String getTargetTab()
   {
-    return "com.ibm.xmlwebservices.general";
+    return "org.eclipse.wst.xmlwebservices.general";
   }
 
   /* (non-Javadoc)

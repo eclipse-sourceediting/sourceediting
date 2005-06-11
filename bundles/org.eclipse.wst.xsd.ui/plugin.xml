@@ -107,38 +107,38 @@
 			<propertyTab
 				label="%_UI_LABEL_GENERAL"
 				category="general"
-				id="com.ibm.xmlwebservices.general">
+				id="org.eclipse.wst.xmlwebservices.general">
 			</propertyTab>
 			<propertyTab
 				label="%_UI_LABEL_NAMESPACE"
 				category="namespace"
-				afterTab="com.ibm.xmlwebservices.general"
-				id="com.ibm.xmlwebservices.namespace">
+				afterTab="org.eclipse.wst.xmlwebservices.general"
+				id="org.eclipse.wst.xmlwebservices.namespace">
 			</propertyTab>
 			<propertyTab
 				label="%_UI_LABEL_OTHER"
 				category="other"
-				id="com.ibm.xmlwebservices.other">
+				id="org.eclipse.wst.xmlwebservices.other">
 			</propertyTab>
 			<propertyTab
 				label="%_UI_LABEL_ATTRIBUTES"
 				category="attributes"
-				id="com.ibm.xmlwebservices.attributes">
+				id="org.eclipse.wst.xmlwebservices.attributes">
 			</propertyTab>
 			<propertyTab
 				label="%_UI_LABEL_ENUMERATIONS"
 				category="enumerations"
-				id="com.ibm.xmlwebservices.enumerations">
+				id="org.eclipse.wst.xmlwebservices.enumerations">
 			</propertyTab>
 			<propertyTab
 				label="%_UI_LABEL_DOCUMENTATION"
 				category="documentation"
-				id="com.ibm.xmlwebservices.documentation">
+				id="org.eclipse.wst.xmlwebservices.documentation">
 			</propertyTab>
 			<propertyTab
 				label="%_UI_SECTION_ADVANCED_ATTRIBUTES"
 				category="facets"
-				id="com.ibm.xmlwebservices.facets">
+				id="org.eclipse.wst.xmlwebservices.facets">
 			</propertyTab>
 		</propertyTabs>
 	</extension>

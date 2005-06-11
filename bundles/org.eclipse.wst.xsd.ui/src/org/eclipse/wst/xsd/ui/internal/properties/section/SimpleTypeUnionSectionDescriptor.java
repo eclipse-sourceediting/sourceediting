@@ -33,7 +33,7 @@ public class SimpleTypeUnionSectionDescriptor extends AbstractSectionDescriptor
    */
   public String getId()
   {
-    return "com.ibm.xsdeditor.section.simpletypeunion";
+    return "org.eclipse.wst.xsdeditor.section.simpletypeunion";
   }
 
   /* (non-Javadoc)
@@ -59,7 +59,7 @@ public class SimpleTypeUnionSectionDescriptor extends AbstractSectionDescriptor
    */
   public String getTargetTab()
   {
-    return "com.ibm.xmlwebservices.general";
+    return "org.eclipse.wst.xmlwebservices.general";
   }
 
   /* (non-Javadoc)
