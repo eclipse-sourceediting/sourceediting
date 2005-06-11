@@ -1,8 +1,0 @@
-Reading "HTMLHeadTokenizer.jflex"
-
-Warning : Macro "SpaceChar" has been declared but never used.
-Constructing NFA : 660 states in NFA
-Converting NFA to DFA : 
-.........................................................................................................................
-135 states before minimization, 95 states in minimized DFA
-Writing code to "HTMLHeadTokenizer.java"
