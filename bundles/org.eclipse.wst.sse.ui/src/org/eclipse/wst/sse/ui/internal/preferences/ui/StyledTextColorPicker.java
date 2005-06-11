@@ -719,12 +719,13 @@ public class StyledTextColorPicker extends Composite {
 				}
 			}
 
-			public void widgetDoubleSelected(SelectionEvent e) {
-				selectColorAtOffset(e.x);
-				if (e.widget instanceof StyledText) {
-					((StyledText) e.widget).setSelection(e.x);
-				}
-			}
+// Commented out when moving to RC2 to remove "unused" error/warning			
+//			public void widgetDoubleSelected(SelectionEvent e) {
+//				selectColorAtOffset(e.x);
+//				if (e.widget instanceof StyledText) {
+//					((StyledText) e.widget).setSelection(e.x);
+//				}
+//			}
 
 			public void widgetSelected(SelectionEvent e) {
 				selectColorAtOffset(e.x);

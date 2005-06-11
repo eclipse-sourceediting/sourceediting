@@ -133,9 +133,10 @@ public class CommentElementConfiguration {
 						return null;
 					}
 
-					public String getElementPrefix() {
-						return null;
-					}
+// removed in RC2, ro removed "unused" error/warning
+//					public String getElementPrefix() {
+//						return null;
+//					}
 
 					public boolean isCommentElement(IDOMElement element) {
 						return false;
