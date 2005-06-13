@@ -152,6 +152,7 @@ public class FileBufferModelManager {
 		IPath fLocation;
 		IPath fPath;
 		final static String SEPARATOR = "/"; //$NON-NLS-1$ 
+		final static String FILE_PREFIX = "file:///";
 
 		CommonURIResolver(IPath path, IPath location) {
 			fLocation = location;
@@ -175,7 +176,7 @@ public class FileBufferModelManager {
 		}
 
 		public String getLocationByURI(String uri, String baseReference, boolean resolveCrossProjectLinks) {
-			return URIResolverPlugin.createResolver().resolve(baseReference, null, uri);
+			return URIResolverPlugin.createResolver().resolve(FILE_PREFIX + baseReference, null, uri);
 		}
 
 		public IProject getProject() {
@@ -183,7 +184,7 @@ public class FileBufferModelManager {
 		}
 
 		public IContainer getRootLocation() {
-			String root = URIResolverPlugin.createResolver().resolve(getFileBaseLocation(), null, SEPARATOR);
+			String root = URIResolverPlugin.createResolver().resolve(FILE_PREFIX + getFileBaseLocation(), null, SEPARATOR);
 			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(root));
 			for (int i = 0; i < files.length; i++) {
 				if ((files[i].getType() & IResource.FOLDER) == IResource.FOLDER) {
