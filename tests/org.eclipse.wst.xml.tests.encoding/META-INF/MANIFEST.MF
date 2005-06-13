@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Encoding Tests Plug-in
 Bundle-SymbolicName: org.eclipse.wst.xml.tests.encoding
-Bundle-Version: 1.0.0
+Bundle-Version: 0.7.0
 Bundle-ClassPath: tests.jar
 Bundle-Activator: org.eclipse.wst.xml.tests.encoding.TestsPlugin
 Bundle-Vendor: Eclipse.org

@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: DTD UI Tests
 Bundle-SymbolicName: org.eclipse.wst.dtd.ui.tests
-Bundle-Version: 1.0.0
+Bundle-Version: 0.7.0
 Bundle-ClassPath: dtduitests.jar
 Bundle-Activator: org.eclipse.wst.dtd.ui.tests.internal.DTDUITestsPlugin
 Bundle-Vendor: Eclipse.org
