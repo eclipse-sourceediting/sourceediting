@@ -29,6 +29,7 @@ import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.filebuffers.ITextFileBufferManager;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -42,6 +43,7 @@ import org.eclipse.core.runtime.content.IContentDescription;
 import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.internal.model.AbstractStructuredModel;
@@ -50,7 +52,6 @@ import org.eclipse.wst.sse.core.internal.provisional.IModelLoader;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.ResourceInUse;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.util.ModuleResolver;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
 
 
@@ -130,6 +131,68 @@ public class FileBufferModelManager {
 
 		public IContainer getRootLocation() {
 			return ResourcesPlugin.getWorkspace().getRoot();
+		}
+
+		public InputStream getURIStream(String uri) {
+			return null;
+		}
+
+		public void setFileBaseLocation(String newLocation) {
+		}
+
+		public void setProject(IProject newProject) {
+		}
+	}
+
+	/**
+	 * A URIResolver instance of models built on the extensible WST URI
+	 * resolver
+	 */
+	class CommonURIResolver implements URIResolver {
+		IPath fLocation;
+		IPath fPath;
+		final static String SEPARATOR = "/"; //$NON-NLS-1$ 
+
+		CommonURIResolver(IPath path, IPath location) {
+			fLocation = location;
+			fPath = path;
+		}
+
+		public String getFileBaseLocation() {
+			return fLocation.toString();
+		}
+
+		public String getLocationByURI(String uri) {
+			return getLocationByURI(uri, getFileBaseLocation(), false);
+		}
+
+		public String getLocationByURI(String uri, boolean resolveCrossProjectLinks) {
+			return getLocationByURI(uri, getFileBaseLocation(), resolveCrossProjectLinks);
+		}
+
+		public String getLocationByURI(String uri, String baseReference) {
+			return getLocationByURI(uri, baseReference, false);
+		}
+
+		public String getLocationByURI(String uri, String baseReference, boolean resolveCrossProjectLinks) {
+			return URIResolverPlugin.createResolver().resolve(baseReference, null, uri);
+		}
+
+		public IProject getProject() {
+			return ResourcesPlugin.getWorkspace().getRoot().getProject(fPath.segment(0));
+		}
+
+		public IContainer getRootLocation() {
+			String root = URIResolverPlugin.createResolver().resolve(getFileBaseLocation(), null, SEPARATOR);
+			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(root));
+			for (int i = 0; i < files.length; i++) {
+				if ((files[i].getType() & IResource.FOLDER) == IResource.FOLDER) {
+					if (((IFolder) files[i]).getFullPath().isPrefixOf(fPath)) {
+						return (IFolder) files[i];
+					}
+				}
+			}
+			return getProject();
 		}
 
 		public InputStream getURIStream(String uri) {
@@ -318,7 +381,7 @@ public class FileBufferModelManager {
 			IProject project = workspaceFile.getProject();
 			resolver = (URIResolver) project.getAdapter(URIResolver.class);
 			if (resolver == null) {
-				resolver = new ModuleResolver(project);
+				resolver = new CommonURIResolver(workspaceFile.getFullPath(), workspaceFile.getLocation());
 			}
 			resolver.setFileBaseLocation(workspaceFile.getLocation().toString());
 		}
