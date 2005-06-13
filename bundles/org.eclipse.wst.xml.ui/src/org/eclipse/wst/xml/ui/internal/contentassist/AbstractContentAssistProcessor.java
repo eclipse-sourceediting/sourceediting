@@ -1227,6 +1227,10 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 					if (sModel != null)
 						sModel.releaseFromRead();
 				}
+				if (contentAssistRequest == null) {
+					Logger.logException(new IllegalStateException("problem getting model")); //$NON-NLS-1$
+					return new ICompletionProposal[0];
+				}
 				return contentAssistRequest.getCompletionProposals();
 			}
 			// MASSIVE ERROR CONDITION
