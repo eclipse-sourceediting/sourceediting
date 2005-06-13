@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Unittests
 Bundle-SymbolicName: org.eclipse.wst.sse.unittests; singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 0.7.0
 Bundle-ClassPath: sseunittests.jar
 Bundle-Vendor: Eclipse.org
 Bundle-Localization: plugin
