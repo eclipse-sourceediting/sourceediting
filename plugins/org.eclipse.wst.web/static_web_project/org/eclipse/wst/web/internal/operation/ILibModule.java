@@ -10,6 +10,11 @@ package org.eclipse.wst.web.internal.operation;
 
 import org.eclipse.core.resources.IProject;
 
+//TODO DELETE jsholl
+/**
+ * @deprecated
+ *
+ */
 public interface ILibModule {
 	String getJarName();
 
