@@ -107,8 +107,8 @@ public class StaticWebDeployableObjectAdapterUtil {
 		Iterator iterator =  Arrays.asList(ServerUtil.getModules("web.static")).iterator(); //$NON-NLS-1$ //$NON-NLS-2$
 		while (iterator.hasNext()) {
 			deployable = (IModule) iterator.next();
-			if (deployable instanceof IModule) {
-				if (((IModule) deployable).getProject().equals(project))
+			if (deployable != null) {
+				if ((deployable).getProject().equals(project))
 					return deployable;
 			}
 		}
