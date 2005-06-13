@@ -13,13 +13,23 @@ package org.eclipse.wst.sse.core.internal.provisional.tasks;
 
 import org.eclipse.core.resources.IMarker;
 
+/**
+ * Simple representation of the values that make up a Task Tag
+ */
 public final class TaskTag {
 
 	public static final int PRIORITY_HIGH = IMarker.PRIORITY_HIGH;
 	public static final int PRIORITY_LOW = IMarker.PRIORITY_LOW;
 	public static final int PRIORITY_NORMAL = IMarker.PRIORITY_NORMAL;
 
+	/**
+	 * this task tag's priority
+	 */
 	private int fPriority = PRIORITY_NORMAL;
+	
+	/**
+	 * this task tag's "tagging" text
+	 */
 	private String fTag = null;
 
 	public TaskTag(String tag, int priority) {
