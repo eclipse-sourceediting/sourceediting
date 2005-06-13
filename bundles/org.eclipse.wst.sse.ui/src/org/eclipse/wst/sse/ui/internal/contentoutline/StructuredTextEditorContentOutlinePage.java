@@ -199,6 +199,19 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 		if (adapterFactory != null) {
 			adapterFactory.addListener(fTreeViewer);
 		}
+		
+		// set initial selection
+		if (getViewerSelectionManager() != null) {
+			List selectedNodes = getViewerSelectionManager().getSelectedNodes();
+			if (selectedNodes == null) {
+				selectedNodes = new ArrayList(0);
+			}
+			ISelection selection = new StructuredSelection(getConfiguration().getNodes(selectedNodes));
+			if (!selection.isEmpty()) {
+				setSelection(selection, true);
+			}
+		}
+		
 		// update local selection on invalid selection to prevent bounces
 		fTreeViewer.addInvalidSelectionListener(new ISelectionListener() {
 			public void selectionChanged(IWorkbenchPart part, ISelection selection) {
