@@ -125,6 +125,6 @@ public class AdapterFactoryRegistryTest extends TestCase {
 			assertTrue("!provider: " + notExpectedClassname + " shouldn't be in the list!", !notExpectedClassname.equals(provider.getClass().getName()));
 		}
 		// we should have at least found the expected factory (or factories)
-		assertTrue("extra providers: " + expected, expected.isEmpty());
+		assertTrue("extra providers (expected none): " + expected, expected.isEmpty());
 	}
 }
