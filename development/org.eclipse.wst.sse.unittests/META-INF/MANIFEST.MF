@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Unittests
-Bundle-SymbolicName: org.eclipse.wst.sse.unittests
+Bundle-SymbolicName: org.eclipse.wst.sse.unittests; singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: sseunittests.jar
 Bundle-Vendor: Eclipse.org
@@ -29,4 +29,5 @@ Require-Bundle: org.junit,
  org.eclipse.wst.xml.tests.encoding,
  org.eclipse.wst.xml.ui.tests,
  org.eclipse.wst.xml.ui.tests.performance,
- org.eclipse.wst.xml.validation.tests
+ org.eclipse.wst.xml.validation.tests,
+ org.eclipse.wst.xml.ui
