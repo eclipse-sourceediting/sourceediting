@@ -142,6 +142,7 @@
 		<editor
 			name="%XML_Editor.name"
 			icon="icons/xmldoc.gif"
+            default="true"
 			contributorClass="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorActionBarContributor"
 			class="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"
 			id="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart">
