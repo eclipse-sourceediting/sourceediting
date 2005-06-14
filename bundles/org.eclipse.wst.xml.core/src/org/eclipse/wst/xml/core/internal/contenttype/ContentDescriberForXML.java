@@ -33,7 +33,7 @@ public final class ContentDescriberForXML implements ITextContentDescriber {
 	 *  If in restrictedMode, our "custom" contentType is seen as valid only in cases
 	 *  that the platform's standard one does not cover. 
 	 */
-	private boolean restrictedMode = false;
+	private boolean restrictedMode = true;
 
 	private IResourceCharsetDetector getDetector() {
 		return new XMLResourceEncodingDetector();

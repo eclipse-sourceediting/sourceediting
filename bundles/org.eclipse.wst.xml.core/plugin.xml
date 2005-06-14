@@ -74,10 +74,10 @@
 	<extension point="org.eclipse.core.runtime.contentTypes">
 		<content-type
 			file-extensions="xml,xsl,xslt,dadx,wsdl,nst,xmi,xsd,exsd"
-			priority="normal"
+			priority="high"
 			name="%XML_Content_Type_Extension_Element.name"
 			id="xmlsource"
-			base-type="org.eclipse.core.runtime.xml"
+			base-type="org.eclipse.core.runtime.text"
 			default-charset="UTF-8">
 			<describer
 				class="org.eclipse.wst.xml.core.internal.contenttype.ContentDescriberForXML" />
