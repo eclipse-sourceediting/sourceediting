@@ -29,76 +29,77 @@ public class TestContentTypeDetectionForXML extends TestContentTypeDetection {
 	}
 
 	public void testFile104() throws CoreException, IOException {
-		doTest(expectedCustomXMLContentType, "testfiles/xml/eucjp.xml", null);
+		doTest(expectedXMLContentType, "testfiles/xml/eucjp.xml", null);
 	}
 
 	public void testFile104b() throws CoreException, IOException {
-		doTest(expectedCustomXMLContentType, "testfiles/xml/eucjp.xml", null);
+		doTest(expectedXMLContentType, "testfiles/xml/eucjp.xml", null);
 	}
 
 	public void testFile105() throws CoreException, IOException {
-		doTest(expectedCustomXMLContentType, "testfiles/xml/IllformedNormalNonDefault.xml", null);
+		doTest(expectedXMLContentType, "testfiles/xml/IllformedNormalNonDefault.xml", null);
 	}
 
 	public void testFile106() throws CoreException, IOException {
-		doTest(expectedCustomXMLContentType, "testfiles/xml/MalformedNoEncoding.xml", null);
+		doTest(expectedXMLContentType, "testfiles/xml/MalformedNoEncoding.xml", null);
 	}
 
 	public void testFile107() throws CoreException, IOException {
 		doTest(expectedCustomXMLContentType, "testfiles/xml/MalformedNoEncoding.xsl", null);
 	}
 
-	public void testFile107P() throws CoreException, IOException {
-		doTestForParent(expectedXMLContentType, "testfiles/xml/MalformedNoEncoding.xsl", null);
-	}
+	// TODO: fix to use "normal" xsl
+//	public void testFile107P() throws CoreException, IOException {
+//		doTestForParent(expectedXMLContentType, "testfiles/xml/MalformedNoEncoding.xsl", null);
+//	}
 
 	public void testFile108() throws CoreException, IOException {
-		doTest(expectedCustomXMLContentType, "testfiles/xml/NoEncoding.xml", null);
+		doTest(expectedXMLContentType, "testfiles/xml/NoEncoding.xml", null);
 	}
 
 	public void testFile109() throws CoreException, IOException {
-		doTest(expectedCustomXMLContentType, "testfiles/xml/NormalNonDefault.xml", null);
+		doTest(expectedXMLContentType, "testfiles/xml/NormalNonDefault.xml", null);
 	}
 
 
 	public void testFile110() throws CoreException, IOException {
-		doTest(expectedCustomXMLContentType, "testfiles/xml/shiftjis.xml", null);
+		doTest(expectedXMLContentType, "testfiles/xml/shiftjis.xml", null);
 	}
 
 	public void testFile111() throws CoreException, IOException {
-		doTest(expectedCustomXMLContentType, "testfiles/xml/testExtraJunk.xml", null);
+		doTest(expectedXMLContentType, "testfiles/xml/testExtraJunk.xml", null);
 	}
 
 	public void testFile112() throws CoreException, IOException {
-		doTest(expectedCustomXMLContentType, "testfiles/xml/testExtraValidStuff.xml", null);
+		doTest(expectedXMLContentType, "testfiles/xml/testExtraValidStuff.xml", null);
 	}
 
 	public void testFile113() throws CoreException, IOException {
-		doTest(expectedCustomXMLContentType, "testfiles/xml/testIllFormed.xml", null);
+		doTest(expectedXMLContentType, "testfiles/xml/testIllFormed.xml", null);
 	}
 
 	public void testFile114() throws CoreException, IOException {
-		doTest(expectedCustomXMLContentType, "testfiles/xml/testIllFormed2.xml", null);
+		doTest(expectedXMLContentType, "testfiles/xml/testIllFormed2.xml", null);
 	}
 
 	public void testFile115() throws CoreException, IOException {
-		doTest(expectedCustomXMLContentType, "testfiles/xml/testIllFormed3.xml", java.nio.charset.IllegalCharsetNameException.class);
+		doTest(expectedXMLContentType, "testfiles/xml/testIllFormed3.xml", java.nio.charset.IllegalCharsetNameException.class);
 	}
 
 	public void testFile116() throws CoreException, IOException {
-		doTest(expectedCustomXMLContentType, "testfiles/xml/testIllFormed4.xml", null);
+		doTest(expectedXMLContentType, "testfiles/xml/testIllFormed4.xml", null);
 	}
 
 	public void testFile117() throws CoreException, IOException {
-		doTest(expectedCustomXMLContentType, "testfiles/xml/testMultiLine.xml", null);
+		doTest(expectedXMLContentType, "testfiles/xml/testMultiLine.xml", null);
 	}
 
 	public void testFile118() throws CoreException, IOException {
-		doTest(expectedCustomXMLContentType, "testfiles/xml/testNoEncodingValue.xml", null);
+		doTest(expectedXMLContentType, "testfiles/xml/testNoEncodingValue.xml", null);
 	}
 
 	public void testFile119() throws CoreException, IOException {
-		doTest(expectedCustomXMLContentType, "testfiles/xml/testNormalCase.xml", null);
+		doTest(expectedXMLContentType, "testfiles/xml/testNormalCase.xml", null);
 	}
 
 	public void testFile120() throws CoreException, IOException {
