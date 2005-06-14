@@ -4,5 +4,4 @@
 	<component-depends unrestricted="true"/>
 	<plugin id="org.eclipse.wst.dtd.core" />
 	<plugin id="org.eclipse.wst.dtd.ui" />
-	<plugin id="org.eclipse.wst.dtd.validation" />
 </component>
