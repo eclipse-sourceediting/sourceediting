@@ -176,19 +176,7 @@ public class FileBufferModelManager {
 		}
 
 		public String getLocationByURI(String uri, String baseReference, boolean resolveCrossProjectLinks) {
-			boolean usePrefix = baseReference != null && baseReference.startsWith(FILE_PREFIX);
-			String reference = null;
-			if (usePrefix) {
-				reference = baseReference;
-			}
-			else {
-				reference = FILE_PREFIX + baseReference;
-			}
-			String result = URIResolverPlugin.createResolver().resolve(baseReference, null, uri);
-			if (!usePrefix && result.startsWith(FILE_PREFIX) && result.length() > FILE_PREFIX.length()) {
-				result = result.substring(FILE_PREFIX.length());
-			}
-			return result;
+			return URIResolverPlugin.createResolver().resolve(FILE_PREFIX + baseReference, null, uri);
 		}
 
 		public IProject getProject() {
