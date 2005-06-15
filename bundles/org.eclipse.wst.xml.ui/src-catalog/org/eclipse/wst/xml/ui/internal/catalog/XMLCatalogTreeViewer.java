@@ -42,9 +42,10 @@ import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
 public class XMLCatalogTreeViewer extends TreeViewer
 {                               
   public static final String copyright = "(c) Copyright IBM Corporation 2000, 2002.";
-  protected static Image xmlCatalogImage = ImageFactory.INSTANCE.getImage("icons/xmlcatalog.gif");
-  protected static Image errorImage = ImageFactory.INSTANCE.getImage("icons/error-overlay.gif");
-  protected static Image entryImage = ImageFactory.INSTANCE.getImage("icons/entry.gif");
+  protected static Image xmlCatalogImage = ImageFactory.INSTANCE.getImage("icons/obj16/xmlcatalog_obj.gif");
+  protected static Image errorImage = ImageFactory.INSTANCE.getImage("icons/ovr16/error-overlay.gif");
+  protected static Image entryImage = ImageFactory.INSTANCE.getImage("icons/obj16/entry_obj.gif");
+  protected static Image nextCatalogImage = ImageFactory.INSTANCE.getImage("icons/obj16/nextCatalog_obj.gif");
   
   protected static String ERROR_STATE_KEY = "errorstatekey";
 
@@ -126,7 +127,8 @@ public class XMLCatalogTreeViewer extends TreeViewer
       }          
       else if(object instanceof INextCatalog)
 	  {
-		  result = xmlCatalogImage;
+    	  // TODO: add image to the imageTable and add error overlay if next catalog URI is not readable
+		  result = nextCatalogImage;
 	  }
       return result;
     }

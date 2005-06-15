@@ -58,7 +58,9 @@ import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
  
 public class EditCatalogEntryDialog extends Dialog
 {
-	 protected static Image borwseImage = ImageFactory.INSTANCE.getImage("icons/file_expand.gif");
+	 protected static Image borwseImage = ImageFactory.INSTANCE.getImage("icons/obj16/file_expand.gif");
+	 protected static Image catalogEntryToolBarImage = ImageFactory.INSTANCE.getImage("icons/etool50/catalogEntry.gif");
+	 protected static Image nextCatalogToolBarImage = ImageFactory.INSTANCE.getImage("icons/etool50/nextCatalog.gif");
 	  
 	protected class CatalogEntryPage extends CatalogElementPage
 	{
@@ -868,7 +870,7 @@ public class EditCatalogEntryDialog extends Dialog
 		CatalogElementPage page = new CatalogEntryPage();
 		page.createControl(pageContainer);
 		ToolItem toolItem = new ToolItem (toolBar, SWT.PUSH);
-		toolItem.setImage(XMLCatalogTreeViewer.entryImage);
+		toolItem.setImage(catalogEntryToolBarImage);
 		toolItem.setText (XMLCatalogMessages.EditCatalogEntryDialog_catalogEntryLabel);
 		toolItem.setData(page);
 		toolItem.addSelectionListener(new ToolBarItemSelectionChangeListener());
@@ -977,7 +979,7 @@ public class EditCatalogEntryDialog extends Dialog
 		CatalogElementPage page = new NextCatalogPage();
 		page.createControl(pageContainer);
 		ToolItem toolItem = new ToolItem (toolBar, SWT.PUSH);
-		toolItem.setImage(XMLCatalogTreeViewer.xmlCatalogImage);
+		toolItem.setImage(nextCatalogToolBarImage);
 		toolItem.setText (XMLCatalogMessages.EditCatalogEntryDialog_nextCatalogLabel);
 		toolItem.setData(page);
 		toolItem.addSelectionListener(new ToolBarItemSelectionChangeListener());
