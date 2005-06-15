@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Simple Web Plug-in
 Bundle-SymbolicName: org.eclipse.wst.web; singleton:=true
-Bundle-Version: 1.0.0
+Bundle-Version: 0.7.0
 Bundle-ClassPath: runtime/staticweb.jar
 Bundle-Activator: org.eclipse.wst.web.internal.WSTWebPlugin
 Bundle-Vendor: Eclipse.org
