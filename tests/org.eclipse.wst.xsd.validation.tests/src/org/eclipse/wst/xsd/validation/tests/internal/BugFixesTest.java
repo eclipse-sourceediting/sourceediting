@@ -15,10 +15,10 @@ import junit.framework.TestSuite;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.wst.xml.catalog.internal.provisional.ICatalog;
-import org.eclipse.wst.xml.catalog.internal.provisional.ICatalogEntry;
-import org.eclipse.wst.xml.catalog.internal.provisional.INextCatalog;
-import org.eclipse.wst.xml.catalog.internal.provisional.XMLCatalogPlugin;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
 
 
 
@@ -73,12 +73,12 @@ public class BugFixesTest extends BaseTestCase
     IProject project = createSimpleProject("Project", new String[]{testfile});
     IFile file = project.getFile(testname + ".xsd");
     
-    ICatalog catalog = XMLCatalogPlugin.getInstance().getDefaultXMLCatalog();
+    ICatalog catalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
     INextCatalog[] nextCatalogs = catalog.getNextCatalogs();
     for (int i = 0; i < nextCatalogs.length; i++)
 	{
 		INextCatalog nextCatalog = nextCatalogs[i];
-		if(XMLCatalogPlugin.USER_CATALOG_ID.equals(nextCatalog.getId())){
+		if(XMLCorePlugin.USER_CATALOG_ID.equals(nextCatalog.getId())){
 			ICatalog userCatalog = nextCatalog.getReferencedCatalog();
 			if(userCatalog != null)
 			{
