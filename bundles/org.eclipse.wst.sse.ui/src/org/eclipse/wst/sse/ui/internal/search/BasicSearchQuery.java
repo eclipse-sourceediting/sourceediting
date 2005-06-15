@@ -179,8 +179,10 @@ public class BasicSearchQuery implements ISearchQuery {
 
 	public Match[] getMatches() {
 		// get rid of the old markers
-		deleteOccurrencesMarkers();
-		doQuery();
+		if(fFile.exists()) {
+			deleteOccurrencesMarkers();
+			doQuery();
+		}
 		return (Match[]) this.fMatches.toArray(new Match[this.fMatches.size()]);
 	}
 
