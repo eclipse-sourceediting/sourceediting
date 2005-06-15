@@ -120,6 +120,7 @@
 		</content-type>
 	</extension>
 
+<!-- moved to where the dtd's are contributed
 
 	<extension point="org.eclipse.wst.sse.core.documentTypes">
 		<documentType
@@ -188,7 +189,7 @@
 			systemID="http://www.wapforum.org/DTD/wml13.dtd">
 		</documentType>
 	</extension>
-
+-->
 	<!-- initialize html core preferences -->
 	<extension point="org.eclipse.core.runtime.preferences">
 		<initializer
