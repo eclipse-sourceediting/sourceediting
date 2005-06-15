@@ -25,9 +25,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.wst.common.ui.internal.viewers.SelectSingleFileView;
-import org.eclipse.wst.xml.catalog.internal.provisional.ICatalog;
-import org.eclipse.wst.xml.catalog.internal.provisional.ICatalogEntry;
-import org.eclipse.wst.xml.catalog.internal.provisional.XMLCatalogPlugin;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 
@@ -99,7 +99,7 @@ public class SelectFileOrXMLCatalogIdPanel extends Composite implements Selectio
 
 		selectSingleFileView = new MySelectSingleFileView(pageBook);
 
-		ICatalog xmlCatalog = XMLCatalogPlugin.getInstance().getDefaultXMLCatalog();
+		ICatalog xmlCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
 		selectXMLCatalogIdPanel = new SelectXMLCatalogIdPanel(pageBook, xmlCatalog);
 		selectXMLCatalogIdPanel.getTableViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {

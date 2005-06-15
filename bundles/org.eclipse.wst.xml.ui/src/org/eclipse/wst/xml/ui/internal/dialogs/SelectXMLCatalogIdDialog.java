@@ -25,9 +25,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.wst.xml.catalog.internal.provisional.ICatalog;
-import org.eclipse.wst.xml.catalog.internal.provisional.ICatalogEntry;
-import org.eclipse.wst.xml.catalog.internal.provisional.XMLCatalogPlugin;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
 
 
 
@@ -82,7 +82,7 @@ public class SelectXMLCatalogIdDialog extends Dialog {
 		//WorkbenchHelp.setHelp(dialogArea,
 		// XMLCommonUIContextIds.XCUI_CATALOG_DIALOG);
 
-		ICatalog xmlCatalog = XMLCatalogPlugin.getInstance().getDefaultXMLCatalog();
+		ICatalog xmlCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
 		panel = new SelectXMLCatalogIdPanel(dialogArea, xmlCatalog);
 
 		ISelectionChangedListener listener = new ISelectionChangedListener() {

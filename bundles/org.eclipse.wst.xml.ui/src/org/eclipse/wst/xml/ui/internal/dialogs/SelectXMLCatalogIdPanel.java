@@ -23,10 +23,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.wst.xml.catalog.internal.provisional.ICatalog;
-import org.eclipse.wst.xml.catalog.internal.provisional.ICatalogEntry;
-import org.eclipse.wst.xml.catalog.internal.provisional.INextCatalog;
-import org.eclipse.wst.xml.catalog.internal.provisional.XMLCatalogPlugin;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 
@@ -96,13 +96,13 @@ public class SelectXMLCatalogIdPanel extends Composite {
 				            ICatalog referencedCatalog = catalog.getReferencedCatalog();
 				            if (referencedCatalog != null)
 				            {
-				                if (XMLCatalogPlugin.SYSTEM_CATALOG_ID
+				                if (XMLCorePlugin.SYSTEM_CATALOG_ID
 				                        .equals(referencedCatalog.getId()))
 				                {
 				                    ICatalog systemCatalog = referencedCatalog;
 				                    addXMLCatalogEntries(result, systemCatalog.getCatalogEntries());
 				                    
-				                } else if (XMLCatalogPlugin.USER_CATALOG_ID
+				                } else if (XMLCorePlugin.USER_CATALOG_ID
 				                        .equals(referencedCatalog.getId()))
 				                {
 				                	ICatalog userCatalog = referencedCatalog;

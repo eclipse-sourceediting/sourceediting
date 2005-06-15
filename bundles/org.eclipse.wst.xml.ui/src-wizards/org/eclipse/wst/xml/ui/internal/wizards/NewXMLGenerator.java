@@ -29,10 +29,9 @@ import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
-import org.eclipse.wst.xml.catalog.internal.provisional.ICatalog;
-import org.eclipse.wst.xml.catalog.internal.provisional.ICatalogEntry;
-import org.eclipse.wst.xml.catalog.internal.provisional.XMLCatalogPlugin;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
@@ -193,7 +192,7 @@ public class NewXMLGenerator {
 
 	public void createNamespaceInfoList() {
 		List result = new Vector();
-		ICatalog xmlCatalog = XMLCatalogPlugin.getInstance().getDefaultXMLCatalog();
+		ICatalog xmlCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
 		if (cmDocument != null) {
 			result = (List) cmDocument.getProperty("http://org.eclipse.wst/cm/properties/namespaceInfo"); //$NON-NLS-1$
 			if (result != null) {

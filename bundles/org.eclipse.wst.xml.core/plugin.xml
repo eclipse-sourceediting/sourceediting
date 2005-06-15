@@ -23,6 +23,19 @@
 			class="org.eclipse.wst.xml.core.internal.tasks.XMLFileTaskScanner"
 			contentTypeIds="org.eclipse.core.runtime.xml" />
 	</extension>
+	 
+   <!-- Here we define a new extension point.  This extension point is used
+        to programmatically contribute catalog entries to the XML Catalog. -->
+   <extension-point id="catalogContributions" name="%XML_Catalog_Contributions_Extension_Point.name" schema="schema/catalogContributions.exsd"/>
+
+   <!-- This extension point extenends the Common Extensbile URI Resolver so that
+        the XML Catalog can participare in resolving processes. -->
+   <extension point="org.eclipse.wst.common.uriresolver.resolverExtensions">
+      <resolverExtension
+            stage="postnormalization"
+            class="org.eclipse.wst.xml.core.internal.catalog.XMLCatalogURIResolverExtension">
+      </resolverExtension>
+   </extension>
 
 	<extension
 		point="org.eclipse.core.filebuffers.documentCreation"

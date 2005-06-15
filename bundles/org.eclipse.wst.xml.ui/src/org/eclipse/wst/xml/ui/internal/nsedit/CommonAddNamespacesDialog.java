@@ -26,10 +26,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.wst.xml.catalog.internal.provisional.ICatalog;
-import org.eclipse.wst.xml.catalog.internal.provisional.ICatalogEntry;
-import org.eclipse.wst.xml.catalog.internal.provisional.INextCatalog;
-import org.eclipse.wst.xml.catalog.internal.provisional.XMLCatalogPlugin;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.INextCatalog;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 
 
@@ -135,7 +135,7 @@ public class CommonAddNamespacesDialog extends Dialog {
 		List list = new ArrayList();
 
 		addBuiltInNamespaces(list);
-		ICatalog defaultCatalog = XMLCatalogPlugin.getInstance().getDefaultXMLCatalog();
+		ICatalog defaultCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
 		INextCatalog[] nextCatalogs = defaultCatalog.getNextCatalogs();
         for (int i = 0; i < nextCatalogs.length; i++)
         {
@@ -143,13 +143,13 @@ public class CommonAddNamespacesDialog extends Dialog {
             ICatalog referencedCatalog = catalog.getReferencedCatalog();
             if (referencedCatalog != null)
             {
-                if (XMLCatalogPlugin.USER_CATALOG_ID
+                if (XMLCorePlugin.USER_CATALOG_ID
                         .equals(referencedCatalog.getId()))
                 {
                 	ICatalog userCatalog = referencedCatalog;
                 	addCatalogMapToList(userCatalog, list);
 
-                } else if (XMLCatalogPlugin.SYSTEM_CATALOG_ID
+                } else if (XMLCorePlugin.SYSTEM_CATALOG_ID
                         .equals(referencedCatalog.getId()))
                 {
                 	ICatalog systemCatalog = referencedCatalog;

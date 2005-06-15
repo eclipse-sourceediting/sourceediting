@@ -24,6 +24,12 @@ public class XMLCoreMessages {
 	public static String Invalid_character_amp_fo_ERROR_;
 	public static String Invalid_character__f_EXC_;
 	public static String loading;
+	public static String Catalog_entry_key_not_set;
+	public static String Catalog_entry_uri_not_set;
+	public static String Catalog_next_catalog_location_uri_not_set;
+	public static String Catalog_resolution_null_catalog;
+	public static String Catalog_resolution_malformed_url;
+	public static String Catalog_resolution_io_exception;
 
 	static {
 		// load message values from bundle file

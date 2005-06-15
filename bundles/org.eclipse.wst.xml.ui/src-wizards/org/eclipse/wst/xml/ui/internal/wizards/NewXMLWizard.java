@@ -49,7 +49,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
-import org.eclipse.wst.xml.catalog.internal.provisional.ICatalogEntry;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;

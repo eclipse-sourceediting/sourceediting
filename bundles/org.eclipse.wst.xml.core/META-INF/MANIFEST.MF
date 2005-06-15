@@ -8,6 +8,8 @@ Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.xml.core.internal,
  org.eclipse.wst.xml.core.internal.cleanup,
+ org.eclipse.wst.xml.core.internal.catalog,
+ org.eclipse.wst.xml.core.internal.catalog.provisional,
  org.eclipse.wst.xml.core.internal.commentelement,
  org.eclipse.wst.xml.core.internal.commentelement.impl,
  org.eclipse.wst.xml.core.internal.commentelement.util,
@@ -52,6 +54,5 @@ Require-Bundle: org.apache.xerces;visibility:=reexport,
  org.eclipse.core.runtime,
  org.eclipse.core.filebuffers,
  org.eclipse.text,
- org.eclipse.wst.common.uriresolver,
- org.eclipse.wst.xml.catalog  
+ org.eclipse.wst.common.uriresolver
 Eclipse-AutoStart: true

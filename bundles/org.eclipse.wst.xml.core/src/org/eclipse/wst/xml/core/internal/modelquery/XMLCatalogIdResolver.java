@@ -17,8 +17,8 @@ import java.net.MalformedURLException;
 
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
-import org.eclipse.wst.xml.catalog.internal.provisional.ICatalog;
-import org.eclipse.wst.xml.catalog.internal.provisional.XMLCatalogPlugin;
+import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
+import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
 
 
 
@@ -60,7 +60,7 @@ public class XMLCatalogIdResolver implements org.eclipse.wst.common.uriresolver.
 		// first see if we can map the publicId to an alternative systemId
 		// note: should probably verify the mappedSystemId before ignoring the
 		// systemId
-		ICatalog xmlCatalog = XMLCatalogPlugin.getInstance().getDefaultXMLCatalog();
+		ICatalog xmlCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
 		try
 		{
 			String mappedSystemId = xmlCatalog.resolvePublic(publicId, systemId);
