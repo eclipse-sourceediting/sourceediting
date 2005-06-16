@@ -48,6 +48,7 @@ public class DTDUIMessages extends NLS {
 	public static String DTDPropertySourceAdapter_0;
 	public static String DTDPropertySourceAdapter_1;
 	public static String DTDPropertySourceAdapter_2;
+	public static String SourceMenu_label;
 	public static String _UI_CREATE_NEW_DTD_FILE;
 	public static String _UI_WIZARD_NEW_DTD_TITLE;
 	public static String _UI_WIZARD_NEW_DTD_EXPL;
