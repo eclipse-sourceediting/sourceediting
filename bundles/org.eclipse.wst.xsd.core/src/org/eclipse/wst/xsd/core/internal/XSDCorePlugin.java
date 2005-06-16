@@ -1,11 +1,9 @@
 package org.eclipse.wst.xsd.core.internal;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.wst.xsd.contentmodel.internal.XSDCMManager;
-import org.eclipse.wst.xsd.contentmodel.internal.XSDTypeUtil;
 import org.osgi.framework.BundleContext;
 
 /**
