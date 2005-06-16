@@ -185,7 +185,8 @@ public class FileBufferModelManager {
 				reference = FILE_PREFIX + baseReference;
 			}
 			String result = URIResolverPlugin.createResolver().resolve(reference, null, uri);
-			System.out.println("URIResolverPlugin.createResolver().resolve(" + reference + ", null, " +uri+") = " + result);
+			// System.out.println("URIResolverPlugin.createResolver().resolve("
+			// + reference + ", null, " +uri+") = " + result);
 			if (!baseHasPrefix && result.startsWith(FILE_PREFIX) && result.length() > FILE_PREFIX.length()) {
 				result = result.substring(FILE_PREFIX.length());
 			}
