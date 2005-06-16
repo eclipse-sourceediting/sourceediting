@@ -58,10 +58,14 @@ public class HTMLDocumentTypeAdapterFactory implements INodeAdapterFactory, Pref
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=85484
 		
 		// remove old adapter, or else they may collect
-		DocumentTypeAdapter oldAdapter = (DocumentTypeAdapter)notifier.getExistingAdapter(DocumentTypeAdapter.class);
-		if(oldAdapter != null) {
-			oldAdapter.release();
-			notifier.removeAdapter(oldAdapter);
+//		DocumentTypeAdapter oldAdapter = (DocumentTypeAdapter)notifier.getExistingAdapter(DocumentTypeAdapter.class);
+//		if(oldAdapter != null) {
+//			oldAdapter.release();
+//			notifier.removeAdapter(oldAdapter);
+//		}
+		if(fAdapter != null && fNotifier != null) {
+			fAdapter.release();
+			fNotifier.removeAdapter(fAdapter);
 		}
 		
 		DocumentTypeAdapter adapter = null;

@@ -25,8 +25,6 @@ import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.wst.sse.core.internal.model.ModelLifecycleEvent;
 import org.eclipse.wst.sse.core.internal.provisional.IModelLifecycleListener;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -73,19 +71,6 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 		}
 	}
 
-	/**
-	 * Cancels any running reconcile operations via progress monitor. Ensures
-	 * that strategies are released on close of the editor.
-	 */
-	private class SourceWidgetDisposeListener implements DisposeListener {
-
-		public void widgetDisposed(DisposeEvent e) {
-			handleWidgetDisposed();
-		}
-	}
-
-	/** to cancel any long running reconciles if someone closes the editor */
-	private SourceWidgetDisposeListener fDisposeListener = null;
 	/** for initital reconcile when document is opened */
 	private SourceTextInputListener fTextInputListener = null;
 
@@ -298,24 +283,6 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 		}
 	}
 
-	public void handleWidgetDisposed() {
-
-		getLocalProgressMonitor().setCanceled(true);
-
-		List strategyTypes = getStrategyTypes();
-		if (!strategyTypes.isEmpty()) {
-			Iterator it = strategyTypes.iterator();
-			IReconcilingStrategy strategy = null;
-			while (it.hasNext()) {
-				strategy = getReconcilingStrategy((String) it.next());
-				if (strategy instanceof IReleasable) {
-					((IReleasable) strategy).release();
-					strategy = null;
-				}
-			}
-		}
-	}
-
 	/**
 	 * @param document
 	 */
@@ -340,9 +307,7 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 	public void install(ITextViewer textViewer) {
 
 		super.install(textViewer);
-		fDisposeListener = new SourceWidgetDisposeListener();
 		fTextInputListener = new SourceTextInputListener();
-		textViewer.getTextWidget().addDisposeListener(fDisposeListener);
 		textViewer.addTextInputListener(fTextInputListener);
 	}
 
@@ -452,7 +417,8 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 		// unhook old lifecycle listner
 		unhookModelLifecycleListener(currentDoc);
 		// add new lifecycle listener
-		hookUpModelLifecycleListener(newDocument);
+		if(newDocument != null)
+			hookUpModelLifecycleListener(newDocument);
 
 		// unhook old document listener
 		if (currentDoc != null && currentDoc instanceof IStructuredDocument)
@@ -516,8 +482,32 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 	 */
 	public void uninstall() {
 		if (isInstalled()) {
+			
+			getLocalProgressMonitor().setCanceled(true);
+			
+			// removes model listeners
+			unhookModelLifecycleListener(getDocument());
+			
+			// removes document listeners
+			reconcilerDocumentChanged(null);
+			
+			// removes widget listener
 			getTextViewer().removeTextInputListener(fTextInputListener);
-			getTextViewer().getTextWidget().removeDisposeListener(fDisposeListener);
+			//getTextViewer().getTextWidget().removeDisposeListener(fDisposeListener);
+			
+			// release all strategies
+			List strategyTypes = getStrategyTypes();
+			if (!strategyTypes.isEmpty()) {
+				Iterator it = strategyTypes.iterator();
+				IReconcilingStrategy strategy = null;
+				while (it.hasNext()) {
+					strategy = getReconcilingStrategy((String) it.next());
+					if (strategy instanceof IReleasable) {
+						((IReleasable) strategy).release();
+						strategy = null;
+					}
+				}
+			}
 		}
 		super.uninstall();
 	}

@@ -56,7 +56,6 @@ public class PageDirectiveAdapterFactory extends AbstractAdapterFactory implemen
 			if (node.getNodeType() == Node.DOCUMENT_NODE) {
 				result = getAdapterInstance(target);
 				ContentSettingsChangeSubject.getSubject().addListener(result);
-
 			}
 
 		}
@@ -66,6 +65,7 @@ public class PageDirectiveAdapterFactory extends AbstractAdapterFactory implemen
 	public void release() {
 		if (pageDirectiveAdapterInstance != null) {
 			ContentSettingsChangeSubject.getSubject().removeListener(pageDirectiveAdapterInstance);
+			pageDirectiveAdapterInstance.release();
 		}
 	}
 

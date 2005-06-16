@@ -65,6 +65,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
+import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
@@ -1086,10 +1087,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 				Object key = null;
 				while (it.hasNext()) {
 					key = it.next();
-					// TODO (pa) need to make sure processors w/ release()
-					// implement releasable
-					if (map.get(key) instanceof AbstractContentAssistProcessor) {
-						((AbstractContentAssistProcessor) map.get(key)).release();
+					if (map.get(key) instanceof IReleasable ) {
+						((IReleasable) map.get(key)).release();
 					}
 				}
 			}

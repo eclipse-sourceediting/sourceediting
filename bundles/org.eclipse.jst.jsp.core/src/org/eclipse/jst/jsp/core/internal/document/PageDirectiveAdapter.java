@@ -56,7 +56,8 @@ public interface PageDirectiveAdapter extends INodeAdapter, IContentSettingsList
 
 	INodeNotifier getTarget();
 
+	/** @deprecated not used? use release() **/
 	public void release(Object key);
-
-
+	
+	public void release();
 }

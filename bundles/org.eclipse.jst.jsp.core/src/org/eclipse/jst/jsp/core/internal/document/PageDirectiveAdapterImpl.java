@@ -606,7 +606,24 @@ public class PageDirectiveAdapterImpl implements PageDirectiveAdapter {
 					}
 				}
 			}
+			embeddedTypeHandler = null;
 		}
-
+	}
+	
+	public void release() {
+		if (embeddedTypeHandler != null) {
+			if (embeddedFactoryRegistry != null) {
+				Iterator iterator = embeddedFactoryRegistry.iterator();
+				INodeAdapterFactory factory = null;
+				while (iterator.hasNext()) {
+					factory = (INodeAdapterFactory) iterator.next();
+					factory.release();
+				}
+			}
+			// pa_TODO: possibly need to release here...
+			// or "uninitializeFactoryRegistry"
+			// initializeFactoryRegistry was called from JSPModelLoader
+			embeddedTypeHandler = null;
+		}
 	}
 }

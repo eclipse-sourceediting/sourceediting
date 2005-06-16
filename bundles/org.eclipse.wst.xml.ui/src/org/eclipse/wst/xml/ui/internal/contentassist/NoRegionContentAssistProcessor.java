@@ -49,8 +49,8 @@ public class NoRegionContentAssistProcessor implements IContentAssistProcessor, 
 
 	private final ICompletionProposal[] EMPTY_PROPOSAL_SET = new ICompletionProposal[0];
 	protected String fErrorMessage = null;
-	protected HashMap fNameToProcessorMap = null;
-	protected HashMap fPartitionToProcessorMap = null;
+	private HashMap fNameToProcessorMap = null;
+	private HashMap fPartitionToProcessorMap = null;
 	protected IResource fResource = null;
 
 	public NoRegionContentAssistProcessor() {
@@ -62,6 +62,33 @@ public class NoRegionContentAssistProcessor implements IContentAssistProcessor, 
 
 	}
 
+	protected void addPartitionProcessor(String key, IContentAssistProcessor processor) {
+		addProcessor(fPartitionToProcessorMap, key, processor);
+	}
+	protected void addNameProcessor(String key, IContentAssistProcessor processor) {
+		addProcessor(fNameToProcessorMap, key, processor);
+	}
+	protected IContentAssistProcessor getPartitionProcessor(String key) {
+		return (IContentAssistProcessor)fPartitionToProcessorMap.get(key);
+	}
+	
+	/**
+	 * Ensures release if it's a duplicate partition type.
+	 * 
+	 * @param map
+	 * @param key
+	 * @param processor
+	 */
+	private void addProcessor(HashMap map, String key, IContentAssistProcessor processor) {
+		Object o = map.remove(key);
+		if(o != null) {
+			if(o instanceof IReleasable) {
+				((IReleasable)o).release();
+			}
+		}
+		map.put(key, processor);
+	}
+	
 	/**
 	 * Figures out what the correct ICompletionProposalProcessor is and
 	 * computesCompletionProposals on that.
@@ -210,7 +237,7 @@ public class NoRegionContentAssistProcessor implements IContentAssistProcessor, 
 	 */
 	protected void initPartitionToProcessorMap() {
 		XMLContentAssistProcessor xmlProcessor = new XMLContentAssistProcessor();
-		fPartitionToProcessorMap.put(IXMLPartitions.XML_DEFAULT, xmlProcessor);
+		addProcessor(fPartitionToProcessorMap, IXMLPartitions.XML_DEFAULT, xmlProcessor);
 	}
 
 	public void release() {
@@ -224,8 +251,9 @@ public class NoRegionContentAssistProcessor implements IContentAssistProcessor, 
 			Object key = null;
 			while (it.hasNext()) {
 				key = it.next();
-				if (map.get(key) instanceof IReleasable)
+				if (map.get(key) instanceof IReleasable) {
 					((IReleasable) map.get(key)).release();
+				}
 			}
 			map.clear();
 			map = null;

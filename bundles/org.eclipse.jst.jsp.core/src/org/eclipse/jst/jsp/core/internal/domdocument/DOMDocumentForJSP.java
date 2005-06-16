@@ -52,8 +52,8 @@ public class DOMDocumentForJSP extends DocumentStyleImpl {
 		if(oldAdapter != null) {
 			if(oldAdapter instanceof IReleasable) {
 				((IReleasable)oldAdapter).release();
-				removeAdapter(oldAdapter);
 			}
+			removeAdapter(oldAdapter);
 		}
 		
 		INodeAdapter result = null;

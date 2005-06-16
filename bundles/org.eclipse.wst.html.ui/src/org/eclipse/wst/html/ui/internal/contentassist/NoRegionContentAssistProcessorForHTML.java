@@ -23,15 +23,16 @@ import org.eclipse.wst.xml.ui.internal.contentassist.NoRegionContentAssistProces
  */
 public class NoRegionContentAssistProcessorForHTML extends NoRegionContentAssistProcessor {
 	protected void initPartitionToProcessorMap() {
+		
 		super.initPartitionToProcessorMap();
 		IContentAssistProcessor htmlProcessor = new HTMLContentAssistProcessor();
-		fPartitionToProcessorMap.put(IHTMLPartitionTypes.HTML_DEFAULT, htmlProcessor);
-		fPartitionToProcessorMap.put(IHTMLPartitionTypes.HTML_COMMENT, htmlProcessor);
+		addPartitionProcessor(IHTMLPartitionTypes.HTML_DEFAULT, htmlProcessor);
+		addPartitionProcessor(IHTMLPartitionTypes.HTML_COMMENT, htmlProcessor);
 
 		IContentAssistProcessor jsContentAssistProcessor = new JavaScriptContentAssistProcessor();
-		fPartitionToProcessorMap.put(IHTMLPartitionTypes.SCRIPT, jsContentAssistProcessor);
+		addPartitionProcessor(IHTMLPartitionTypes.SCRIPT, jsContentAssistProcessor);
 
 		IContentAssistProcessor cssContentAssistProcessor = new CSSContentAssistProcessor();
-		fPartitionToProcessorMap.put(ICSSPartitionTypes.STYLE, cssContentAssistProcessor);
+		addPartitionProcessor(ICSSPartitionTypes.STYLE, cssContentAssistProcessor);
 	}
 }

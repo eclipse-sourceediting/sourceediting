@@ -239,6 +239,8 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		// get it, in order to disconnect from it.)
 		if (fStructuredDocument != null) {
 			fStructuredDocument.removeDocumentChangedListener(fDirtyStateWatcher);
+			fStructuredDocument.removeDocumentAboutToChangeListener(fDocumentToModelNotifier);
+			fStructuredDocument.removeDocumentChangedListener(fDocumentToModelNotifier);
 		}
 	}
 

@@ -372,6 +372,8 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 		// save for reinit and release
 		IContentAssistProcessor previousProcessor = ca.getContentAssistProcessor(partitionType);
 		if (previousProcessor != null) {
+			if(previousProcessor instanceof IReleasable)
+				((IReleasable)previousProcessor).release();
 			fContentAssistProcessors.remove(previousProcessor);
 		}
 		fContentAssistProcessors.add(newProcessor);

@@ -116,7 +116,6 @@ abstract public class AbstractContentAssistProcessor implements IContentAssistPr
 	private final boolean showValues = true;
 
 	public AbstractContentAssistProcessor() {
-		super();
 		init();
 	}
 
