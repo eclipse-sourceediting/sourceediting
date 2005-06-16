@@ -962,18 +962,22 @@ public class JSPTranslator {
 								}
 							}
 						}
-						else if (jspTagName.equals("include")) { //$NON-NLS-1$
-
-							// <jsp:include page="filename") />
-							while (regions.hasNext()) {
-								r = (ITextRegion) regions.next();
-								if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME && getCurrentNode().getText(r).equals("page")) { //$NON-NLS-1$
-									String filename = getAttributeValue(r, regions);
-									handleIncludeFile(filename);
-									break;
-								}
-							}
-						}
+						
+//						https://bugs.eclipse.org/bugs/show_bug.cgi?id=91281
+//						else if (jspTagName.equals("include")) { //$NON-NLS-1$
+							
+							// 
+//							// <jsp:include page="filename") />
+//							while (regions.hasNext()) {
+//								r = (ITextRegion) regions.next();
+//								if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME && getCurrentNode().getText(r).equals("page")) { //$NON-NLS-1$
+//									String filename = getAttributeValue(r, regions);
+//									handleIncludeFile(filename);
+//									break;
+//								}
+//							}
+//						}
+						
 					}
 				}
 				else {
