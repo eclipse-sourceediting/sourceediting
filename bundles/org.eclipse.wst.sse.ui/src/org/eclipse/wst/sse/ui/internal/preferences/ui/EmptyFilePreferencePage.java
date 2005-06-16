@@ -20,7 +20,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
@@ -49,23 +49,13 @@ public class EmptyFilePreferencePage extends PreferencePage implements IWorkbenc
 		Composite composite = createScrolledComposite(parent);
 
 		String description = SSEUIMessages.EmptyFilePreferencePage_0; //$NON-NLS-1$
-		createLabel(composite, description);
+		Text text = new Text(composite, SWT.READ_ONLY);
+		// some themes on GTK have different background colors for Text and Labels
+		text.setBackground(composite.getBackground());
+		text.setText(description);
 
 		setSize(composite);
 		return composite;
-	}
-
-	private Label createLabel(Composite parent, String text) {
-		Label label = new Label(parent, SWT.LEFT);
-		label.setText(text);
-
-		// GridData
-		GridData data = new GridData(GridData.FILL);
-		data.verticalAlignment = GridData.CENTER;
-		data.horizontalAlignment = GridData.FILL;
-		label.setLayoutData(data);
-
-		return label;
 	}
 
 	private Composite createScrolledComposite(Composite parent) {

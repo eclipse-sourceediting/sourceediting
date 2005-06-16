@@ -233,7 +233,7 @@ class ExclusionsTab implements IPreferenceTab {
 	public Control createContents(Composite tabFolder) {
 		Composite composite = new Composite(tabFolder, SWT.NONE);
 		composite.setLayout(new GridLayout(2, true));
-		Text description = new Text(composite, SWT.NONE);
+		Text description = new Text(composite, SWT.READ_ONLY);
 		description.setText(SSEUIMessages.TaskTagExclusionTab_02);
 		description.setBackground(composite.getBackground());
 
@@ -268,7 +268,7 @@ class ExclusionsTab implements IPreferenceTab {
 
 		new Label(composite, SWT.NONE).setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 
-		Text affectedTypesLabel = new Text(composite, SWT.NONE);
+		Text affectedTypesLabel = new Text(composite, SWT.READ_ONLY);
 		affectedTypesLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
 		affectedTypesLabel.setBackground(composite.getBackground());
 		affectedTypesLabel.setText(SSEUIMessages.TaskTagExclusionTab_03);

@@ -22,7 +22,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -94,6 +93,7 @@ import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.ITextEditorHelpContextIds;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.help.IWorkbenchHelpSystem;
+import org.eclipse.ui.ide.IDEActionFactory;
 import org.eclipse.ui.part.EditorActionBarContributor;
 import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
@@ -109,7 +109,6 @@ import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.IUpdate;
 import org.eclipse.ui.texteditor.IWorkbenchActionDefinitionIds;
-import org.eclipse.ui.texteditor.MarkerRulerAction;
 import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 import org.eclipse.ui.texteditor.TextOperationAction;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -705,7 +704,9 @@ public class StructuredTextEditor extends TextEditor {
 			// mapping, but since it relies on the IEditorSite ID, it can't be
 			// relied on for MultiPageEditorParts. Instead, force the action
 			// registration manually.
-			setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, new MarkerRulerAction(SSEUIMessages.getResourceBundle(), "Editor_ManageBookmarks_", this, getVerticalRuler(), IMarker.BOOKMARK, true)); //$NON-NLS-1$
+//			setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, new MarkerRulerAction(SSEUIMessages.getResourceBundle(), "Editor_ManageBookmarks_", this, getVerticalRuler(), IMarker.BOOKMARK, true)); //$NON-NLS-1$
+			// add bookmark action is already registered in AbstractDecoratedTextEditor, so just get it
+			setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, getAction(IDEActionFactory.BOOKMARK.getId()));
 		}
 	}
 
