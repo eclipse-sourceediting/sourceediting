@@ -12,6 +12,10 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.ui.internal.editor;
 
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.wst.dtd.ui.internal.DTDUIMessages;
 import org.eclipse.wst.sse.ui.internal.actions.ActionContributor;
 
 /**
@@ -37,5 +41,30 @@ public class ActionContributorDTD extends ActionContributor {
 	 */
 	protected String[] getExtensionIDs() {
 		return EDITOR_IDS;
+	}
+
+	protected void addToMenu(IMenuManager menu) {
+		// edit commands
+		IMenuManager editMenu = menu.findMenuUsingPath(IWorkbenchActionConstants.M_EDIT);
+		if (editMenu != null) {
+			editMenu.add(fCommandsSeparator);
+			editMenu.add(fToggleInsertModeAction);
+			editMenu.add(fCommandsSeparator);
+			editMenu.add(fExpandSelectionToMenu);
+			editMenu.add(fCommandsSeparator);
+			editMenu.add(fMenuAdditionsGroupMarker);
+		}
+
+		// source commands
+		String sourceMenuLabel = DTDUIMessages.SourceMenu_label;
+		String sourceMenuId = "sourceMenuId"; //$NON-NLS-1$
+		IMenuManager sourceMenu = new MenuManager(sourceMenuLabel, sourceMenuId);
+		menu.insertAfter(IWorkbenchActionConstants.M_EDIT, sourceMenu);
+		if (sourceMenu != null) {
+			sourceMenu.add(fCommandsSeparator);
+			sourceMenu.add(fShiftRight);
+			sourceMenu.add(fShiftLeft);
+			sourceMenu.add(fCommandsSeparator);
+		}
 	}
 }
