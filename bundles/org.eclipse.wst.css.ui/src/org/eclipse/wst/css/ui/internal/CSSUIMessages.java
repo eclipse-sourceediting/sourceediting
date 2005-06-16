@@ -84,6 +84,14 @@ public class CSSUIMessages extends NLS {
 	public static String StructureSelectPrevious_label;
 	public static String StructureSelectPrevious_tooltip;
 	public static String StructureSelectPrevious_description;
+	public static String Creating_files_encoding;
+	public static String NewCSSTemplatesWizardPage_0;
+	public static String NewCSSTemplatesWizardPage_1;
+	public static String NewCSSTemplatesWizardPage_2;
+	public static String NewCSSTemplatesWizardPage_3;
+	public static String NewCSSTemplatesWizardPage_4;
+	public static String NewCSSTemplatesWizardPage_5;
+	public static String NewCSSTemplatesWizardPage_6;
 
 	static {
 		// load message values from bundle file

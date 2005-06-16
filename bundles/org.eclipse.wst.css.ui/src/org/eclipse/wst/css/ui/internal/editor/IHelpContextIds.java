@@ -18,7 +18,7 @@ import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
  * This interface contains constants only; it is not intended to be
  * implemented.
  * </p>
- *  
+ * 
  */
 public interface IHelpContextIds {
 	// org.eclipse.wst.css.ui.
@@ -33,6 +33,8 @@ public interface IHelpContextIds {
 	public static final String CSS_PREFWEBX_SOURCE_HELPID = PREFIX + "webx0011"; //$NON-NLS-1$
 	// CSS Styles Preference page
 	public static final String CSS_PREFWEBX_STYLES_HELPID = PREFIX + "webx0012"; //$NON-NLS-1$
+	// CSS Template Preference page (no id for this yet)
+	public static final String CSS_PREFWEBX_TEMPLATES_HELPID = PREFIX + "webx0013"; //$NON-NLS-1$
 
 	// CSS Cleanup dialog
 	public static final String CSS_CLEANUP_HELPID = PREFIX + "xmlm1300"; //$NON-NLS-1$

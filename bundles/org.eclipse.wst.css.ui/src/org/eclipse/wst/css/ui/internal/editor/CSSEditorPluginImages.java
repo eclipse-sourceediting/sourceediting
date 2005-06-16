@@ -48,6 +48,7 @@ public class CSSEditorPluginImages {
 	public static final String IMG_OBJ_CATEGORY_UI = "icons/full/obj16/ui_props.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJ_CATEGORY_VISUAL = "icons/full/obj16/visual_props.gif"; //$NON-NLS-1$
 	public static final String IMG_OBJ_CATEGORY_DEFAULT = "icons/full/obj16/other_props.gif"; //$NON-NLS-1$
+	public static final String IMG_OBJ_TEMPLATE = "icons/full/obj16/tag-template.gif"; //$NON-NLS-1$
 	
 	public static final String IMG_WIZBAN_NEWCSSFILE = "icons/full/wizban/newcssfile_wiz.gif"; //$NON-NLS-1$
 }

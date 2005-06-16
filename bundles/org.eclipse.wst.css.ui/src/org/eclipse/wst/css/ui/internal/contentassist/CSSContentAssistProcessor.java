@@ -17,6 +17,7 @@ import org.eclipse.wst.css.core.internal.provisional.adapters.ICSSModelAdapter;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSDocument;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
+import org.eclipse.wst.css.ui.internal.templates.TemplateContextTypeIdsCSS;
 import org.eclipse.wst.html.core.internal.htmlcss.StyleAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -32,6 +33,7 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 
 	private int fDocumentOffset = 0;
 	private char fQuote = 0;
+	private CSSTemplateCompletionProcessor fTemplateProcessor = null;
 
 	/**
 	 * Return a list of proposed code completions based on the specified
@@ -48,6 +50,7 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 		IDOMNode xNode = null;
 		IDOMNode parent = null;
 		CSSProposalArranger arranger = null;
+		boolean isEmptyDocument = false;
 
 		// bail if we couldn't get an indexed node
 		// if(indexedNode == null) return new ICompletionProposal[0];
@@ -70,8 +73,7 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 				}
 				arranger = new CSSProposalArranger(pos, (ICSSNode) keyIndexedNode, offset, (char) 0);
 			}
-		}
-		else if (parent != null && parent.getNodeName().equalsIgnoreCase(HTML40Namespace.ElementName.STYLE)) {
+		} else if (parent != null && parent.getNodeName().equalsIgnoreCase(HTML40Namespace.ElementName.STYLE)) {
 			// now we know the cursor is in a <style> tag with a region
 			// use the parent because that will be the <style> tag
 			IStructuredModel cssModel = getCSSModel(parent);
@@ -85,8 +87,7 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 				}
 				arranger = new CSSProposalArranger(pos, (ICSSNode) keyIndexedNode, offset, (char) 0);
 			}
-		}
-		else if (indexedNode instanceof IDOMNode) {
+		} else if (indexedNode instanceof IDOMNode) {
 			// get model for node w/ style attribute
 			IStructuredModel cssModel = getCSSModel((IDOMNode) indexedNode);
 			if (cssModel != null) {
@@ -99,8 +100,7 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 					arranger = new CSSProposalArranger(documentPosition, (ICSSNode) keyIndexedNode, fDocumentOffset, fQuote);
 				}
 			}
-		}
-		else if (indexedNode instanceof ICSSNode) {
+		} else if (indexedNode instanceof ICSSNode) {
 			// when editing external CSS using CSS Designer, ICSSNode is
 			// passed.
 			ICSSDocument cssdoc = ((ICSSNode) indexedNode).getOwnerDocument();
@@ -117,8 +117,8 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 					}
 				}
 			}
-		}
-		else if (indexedNode == null && isViewerEmpty(viewer)) {
+		} else if (indexedNode == null && isViewerEmpty(viewer)) {
+			isEmptyDocument = true;
 			// the top of empty CSS Document
 			IStructuredModel cssModel = null;
 			try {
@@ -133,8 +133,7 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 						arranger = new CSSProposalArranger(documentPosition, (ICSSNode) keyIndexedNode, fDocumentOffset, fQuote);
 					}
 				}
-			}
-			finally {
+			} finally {
 				if (cssModel != null)
 					cssModel.releaseFromRead();
 			}
@@ -145,13 +144,45 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 			fDocumentOffset = 0;
 			proposals = arranger.getProposals();
 
+			ICompletionProposal[] newfileproposals = new ICompletionProposal[0];
+			ICompletionProposal[] anyproposals = new ICompletionProposal[0];
+			// add template proposals
+			if (getTemplateCompletionProcessor() != null) {
+				if (isEmptyDocument) {
+					getTemplateCompletionProcessor().setContextType(TemplateContextTypeIdsCSS.NEW);
+					newfileproposals = getTemplateCompletionProcessor().computeCompletionProposals(viewer, documentPosition);
+				}
+				getTemplateCompletionProcessor().setContextType(TemplateContextTypeIdsCSS.ALL);
+				anyproposals = getTemplateCompletionProcessor().computeCompletionProposals(viewer, documentPosition);
+			}
+
 			// add end tag if parent is not closed
 			ICompletionProposal endTag = XMLContentAssistUtilities.computeXMLEndTagProposal(viewer, documentPosition, indexedNode, HTML40Namespace.ElementName.STYLE, SharedXMLEditorPluginImageHelper.IMG_OBJ_TAG_GENERIC); //$NON-NLS-1$
-			if (endTag != null) {
-				ICompletionProposal[] plusOne = new ICompletionProposal[proposals.length + 1];
-				System.arraycopy(proposals, 0, plusOne, 1, proposals.length);
-				plusOne[0] = endTag;
-				proposals = plusOne;
+
+			// add the additional proposals
+			int additionalLength = newfileproposals.length + anyproposals.length;
+			additionalLength = (endTag != null) ? ++additionalLength : additionalLength;
+			if (additionalLength > 0) {
+				ICompletionProposal[] plusOnes = new ICompletionProposal[proposals.length + additionalLength];
+				int appendPos = proposals.length;
+				// add end tag proposal
+				if (endTag != null) {
+					System.arraycopy(proposals, 0, plusOnes, 1, proposals.length);
+					plusOnes[0] = endTag;
+					++appendPos;
+				} else {
+					System.arraycopy(proposals, 0, plusOnes, 0, proposals.length);
+				}
+				// add items in newfileproposals
+				for (int i = 0; i < newfileproposals.length; ++i) {
+					plusOnes[appendPos + i] = newfileproposals[i];
+				}
+				// add items in anyproposals
+				appendPos = appendPos + newfileproposals.length;
+				for (int i = 0; i < anyproposals.length; ++i) {
+					plusOnes[appendPos + i] = anyproposals[i];
+				}
+				proposals = plusOnes;
 			}
 		}
 		return proposals;
@@ -288,5 +319,12 @@ public class CSSContentAssistProcessor implements IContentAssistProcessor {
 	 */
 	public void setQuoteCharOfStyleAttribute(char quote) {
 		fQuote = quote;
+	}
+
+	private CSSTemplateCompletionProcessor getTemplateCompletionProcessor() {
+		if (fTemplateProcessor == null) {
+			fTemplateProcessor = new CSSTemplateCompletionProcessor();
+		}
+		return fTemplateProcessor;
 	}
 }
