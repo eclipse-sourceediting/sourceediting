@@ -15,9 +15,9 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.eclipse.wst.xml.validation.internal.core.ValidationMessage;
-import org.eclipse.wst.xml.validation.internal.core.ValidationReport;
-import org.eclipse.wst.xml.validation.internal.ui.eclipse.XMLValidator;
+import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
+import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
+import org.eclipse.wst.xml.ui.internal.validation.XMLValidator;
 
 
 /**
