@@ -19,44 +19,4 @@
 		</factory>
 	</extension>
 
-	<!-- ====================================================== -->
-	<!-- Define Assign Validate action on .xsd file             -->
-	<!-- ====================================================== -->
-	<extension point="org.eclipse.ui.popupMenus">
-		<objectContribution
-			objectClass="org.eclipse.core.resources.IFile"
-			nameFilter="*.xsd"
-			id="org.eclipse.wst.xsd.validation.xsdvalidationaction">
-			<action
-				label="%_UI_MENU_VALIDATE_XML"
-				class="org.eclipse.wst.xsd.validation.internal.ui.eclipse.ValidateSchemaActionDelegate"
-				enablesFor="1"
-				id="org.eclipse.wst.xsd.validation.internal.ui.eclipse.ValidateSchemaActionDelegate">
-			</action>
-		</objectContribution>
-	</extension>
-
-	<!-- ====================================================== -->
-	<!-- Register the XSD validator with the validation 		-->
-	<!-- framework. 										    -->
-	<!-- ====================================================== -->
-	<extension
-		id="xsdValidator"
-		name="%_UI_XML_SCHEMA_VALIDATOR"
-		point="org.eclipse.wst.validation.validator">
-		<validator>
-			<filter
-				objectClass="org.eclipse.core.resources.IFile"
-				caseSensitive="false"
-				nameFilter="*.xsd">
-			</filter>
-			<helper
-				class="org.eclipse.wst.xml.validation.internal.core.Helper">
-			</helper>
-			<run
-				class="org.eclipse.wst.xsd.validation.internal.ui.eclipse.Validator">
-			</run>
-		</validator>
-	</extension>
-
 </plugin>

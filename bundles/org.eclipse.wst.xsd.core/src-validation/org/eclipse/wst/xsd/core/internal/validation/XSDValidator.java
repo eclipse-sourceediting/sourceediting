@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsd.validation.internal;
+package org.eclipse.wst.xsd.core.internal.validation;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,8 +25,8 @@ import org.apache.xerces.xni.XNIException;
 import org.apache.xerces.xni.parser.XMLEntityResolver;
 import org.apache.xerces.xni.parser.XMLInputSource;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
-import org.eclipse.wst.xml.validation.internal.core.ValidationInfo;
-import org.eclipse.wst.xml.validation.internal.core.ValidationReport;
+import org.eclipse.wst.xml.core.internal.validation.core.ValidationInfo;
+import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;

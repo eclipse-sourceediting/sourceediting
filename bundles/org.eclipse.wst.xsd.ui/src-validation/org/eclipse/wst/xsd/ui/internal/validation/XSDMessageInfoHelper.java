@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.eclipse.wst.xsd.validation.internal.ui.eclipse;
+package org.eclipse.wst.xsd.ui.internal.validation;
 
 
 /**

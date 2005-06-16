@@ -113,6 +113,6 @@
 
 	<extension-point
 		name="%Content_Model_Annotation_Files_Extension.name"
-		id="annotationFiles" />
+		id="annotationFiles" />	
 
 </plugin>

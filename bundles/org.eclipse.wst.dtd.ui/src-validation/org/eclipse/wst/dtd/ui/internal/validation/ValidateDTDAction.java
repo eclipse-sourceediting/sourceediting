@@ -19,9 +19,9 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.dtd.core.internal.validation.DTDValidationMessages;
 import org.eclipse.wst.dtd.core.internal.validation.Validator;
-import org.eclipse.wst.xml.validation.internal.core.ValidateAction;
-import org.eclipse.wst.xml.validation.internal.core.ValidationMessage;
-import org.eclipse.wst.xml.validation.internal.core.ValidationReport;
+import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
+import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
+import org.eclipse.wst.xml.ui.internal.validation.core.ValidateAction;
 
 
 /**

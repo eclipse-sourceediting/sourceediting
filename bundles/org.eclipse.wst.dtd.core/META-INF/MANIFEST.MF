@@ -35,7 +35,5 @@ Require-Bundle: org.eclipse.core.resources,
  org.eclipse.wst.common.uriresolver,
  org.eclipse.wst.sse.core,
  org.eclipse.wst.xml.core,
- org.eclipse.wst.validation,
- org.eclipse.wst.xml.validation
- 
+ org.eclipse.wst.validation
 Eclipse-AutoStart: true

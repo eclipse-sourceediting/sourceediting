@@ -59,6 +59,7 @@ Require-Bundle: org.eclipse.core.runtime.compatibility,
  org.eclipse.emf.edit.ui,
  org.eclipse.wst.validation,
  org.eclipse.ltk.core.refactoring,
- org.eclipse.ltk.ui.refactoring
+ org.eclipse.ltk.ui.refactoring,
+ org.eclipse.wst.xsd.core
 Eclipse-AutoStart: true
 Plugin-Class: org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin

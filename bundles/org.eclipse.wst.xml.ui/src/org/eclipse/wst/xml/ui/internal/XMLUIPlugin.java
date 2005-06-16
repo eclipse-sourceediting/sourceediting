@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.templates.ContextTypeRegistry;
 import org.eclipse.jface.text.templates.persistence.TemplateStore;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.editors.text.templates.ContributionContextTypeRegistry;
 import org.eclipse.ui.editors.text.templates.ContributionTemplateStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -129,6 +130,19 @@ public class XMLUIPlugin extends AbstractUIPlugin {
 
 	public static Collection getXMLCatalogFileTypes() {
 		return catalogFileTypeMap.values();
+	}
+	
+	/**
+	   * Get an image from the registry. 
+	   * 
+	   * *This method is used by the referencingfile dialog and should be 
+	   *  removed when the dialog is moved to anothercomponent.
+	   * 
+	   * @param imageName The name of the image.
+	   * @return The image registered for the given name.
+	   */
+	public Image getImage(String imageName){
+	    return getWorkbench().getSharedImages().getImage(imageName);
 	}
 
 	class CatalogFileTypeRegistryReader extends BaseRegistryReader {

@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.wst.xsd.validation.internal.ui.eclipse;
+package org.eclipse.wst.xsd.ui.internal.validation;
 
 import java.io.InputStream;
 
@@ -20,8 +20,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
-import org.eclipse.wst.xml.validation.internal.core.ValidationMessage;
-import org.eclipse.wst.xml.validation.internal.core.ValidationReport;
+import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
+import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 
 
 
@@ -34,7 +34,7 @@ import org.eclipse.wst.xml.validation.internal.core.ValidationReport;
  * @author Lawrence Mandel, IBM
  * @author Keith Chong, IBM
  */
-public class ValidateAction extends org.eclipse.wst.xml.validation.internal.core.ValidateAction
+public class ValidateAction extends org.eclipse.wst.xml.ui.internal.validation.core.ValidateAction
 { 
   // Property file strings.
   private static final String _UI_DIALOG_XML_SCHEMA_INVALID_TEXT = "_UI_DIALOG_XML_SCHEMA_INVALID_TEXT";

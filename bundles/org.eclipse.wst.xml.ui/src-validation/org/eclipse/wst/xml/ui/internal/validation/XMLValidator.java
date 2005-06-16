@@ -9,47 +9,46 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.wst.xsd.validation.internal.ui.eclipse;
+package org.eclipse.wst.xml.ui.internal.validation;
 
 import java.io.InputStream;
 
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
-import org.eclipse.wst.xml.validation.internal.core.ValidationReport;
-
+import org.eclipse.wst.xml.core.internal.validation.XMLValidationReport;
 
 /**
- * An XSD validator specific to Eclipse. This validator will wrap the internal
- * XSD validator an provide automatic URI resolver support.
- * Using this class is equivalent to using the internal XSD validator and registering
+ * An XML validator specific to Eclipse. This validator will wrap the internal
+ * XML validator an provide automatic URI resolver support.
+ * Using this class is equivalent to using the internal XML validator and registering
  * the URI resolver.
  * 
  * @author Lawrence Mandel, IBM
  */
-public class XSDValidator
+public class XMLValidator
 {
-  private static XSDValidator instance = null;
-  private org.eclipse.wst.xsd.validation.internal.XSDValidator validator = null;
+  private static XMLValidator instance = null;
+  private org.eclipse.wst.xml.core.internal.validation.XMLValidator validator = null;
   
   /**
-   * Return the one and only instance of the XSD validator. The validator
+   * Return the one and only instance of the XML validator. The validator
    * can be reused and cannot be customized so there should only be one instance of it.
    * 
-   * @return The one and only instance of the XSD validator.
+   * @return The one and only instance of the XML validator.
    */
-  public static XSDValidator getInstance()
+  public static XMLValidator getInstance()
   {
     if(instance == null)
     {
-      instance = new XSDValidator();
+      instance = new XMLValidator();
     }
     return instance;
   }
   /**
-   * Constructor. Create the XSD validator and set the URI resolver.
+   * Constructor. Create the XML validator and set the URI resolver.
    */
-  protected XSDValidator()
+  protected XMLValidator()
   {
-    validator = new org.eclipse.wst.xsd.validation.internal.XSDValidator();
+    validator = new org.eclipse.wst.xml.core.internal.validation.XMLValidator();
     validator.setURIResolver(URIResolverPlugin.createResolver());
   }
   /**
@@ -57,11 +56,17 @@ public class XSDValidator
    * 
    * @param uri The URI of the file to validate.
    */
-  /*public ValidationReport validate(String uri)
+  public XMLValidationReport validate(String uri)
   {
     return validator.validate(uri);
-  }*/
-  public ValidationReport validate(String uri, InputStream inputStream)
+  }
+  /**
+   * Validate the InputStream
+   * 
+   * @param uri The URI of the file to validate.
+   * @param inputStream The input stream to validate.
+   */
+  public XMLValidationReport validate(String uri, InputStream inputStream)
   {
     return validator.validate(uri, inputStream);
   }

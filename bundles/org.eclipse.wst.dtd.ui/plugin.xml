@@ -165,7 +165,7 @@
 				nameFilter="*.dtd">
 			</filter>
 			<helper
-				class="org.eclipse.wst.xml.validation.internal.core.Helper">
+				class="org.eclipse.wst.xml.core.internal.validation.core.Helper">
 			</helper>
 			<run
 				class="org.eclipse.wst.dtd.ui.internal.validation.DTDValidator">

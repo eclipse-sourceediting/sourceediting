@@ -28,8 +28,8 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
-import org.eclipse.wst.xml.validation.internal.core.ValidationInfo;
-import org.eclipse.wst.xml.validation.internal.core.ValidationReport;
+import org.eclipse.wst.xml.core.internal.validation.core.ValidationInfo;
+import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;

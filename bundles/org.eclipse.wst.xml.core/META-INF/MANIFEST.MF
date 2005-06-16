@@ -7,9 +7,9 @@ Bundle-Activator: org.eclipse.wst.xml.core.internal.XMLCorePlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.xml.core.internal,
- org.eclipse.wst.xml.core.internal.cleanup,
  org.eclipse.wst.xml.core.internal.catalog,
  org.eclipse.wst.xml.core.internal.catalog.provisional,
+ org.eclipse.wst.xml.core.internal.cleanup,
  org.eclipse.wst.xml.core.internal.commentelement,
  org.eclipse.wst.xml.core.internal.commentelement.impl,
  org.eclipse.wst.xml.core.internal.commentelement.util,
@@ -45,6 +45,9 @@ Export-Package: org.eclipse.wst.xml.core.internal,
  org.eclipse.wst.xml.core.internal.text,
  org.eclipse.wst.xml.core.internal.text.rules,
  org.eclipse.wst.xml.core.internal.validate,
+ org.eclipse.wst.xml.core.internal.validation,
+ org.eclipse.wst.xml.core.internal.validation.core,
+ org.eclipse.wst.xml.core.internal.validation.core.logging,
  org.w3c.dom,
  org.w3c.dom.ranges,
  org.w3c.dom.traversal
@@ -54,5 +57,6 @@ Require-Bundle: org.apache.xerces;visibility:=reexport,
  org.eclipse.core.runtime,
  org.eclipse.core.filebuffers,
  org.eclipse.text,
- org.eclipse.wst.common.uriresolver
+ org.eclipse.wst.common.uriresolver,
+ org.eclipse.wst.validation
 Eclipse-AutoStart: true

@@ -366,4 +366,125 @@
 		</viewerContribution>
 	</extension>
 	
+	<!-- ====================================================== -->
+	<!-- Define Assign Validate action on .xml file             -->
+	<!-- ====================================================== -->
+	<extension point="org.eclipse.ui.popupMenus">
+		<objectContribution
+			objectClass="org.eclipse.core.resources.IFile"
+			nameFilter="*.xml"
+			id="org.eclipse.wst.xml.validation.xmlaction">
+			<visibility>
+				<not>
+					<or>
+						<objectState
+							name="projectNature"
+							value="org.eclipse.jst.j2ee.ejb.EJBNature" />
+						<objectState
+							name="projectNature"
+							value="org.eclipse.jst.j2ee.EARNature" />
+					</or>
+				</not>
+			</visibility>
+			<action
+				label="%_UI_MENU_VALIDATE_XML"
+				class="org.eclipse.wst.xml.ui.internal.validation.ValidateXMLFileActionDelegate"
+				enablesFor="1"
+				id="org.eclipse.wst.xml.ui.internal.validation.ValidateXMLFileActionDelegate">
+			</action>
+		</objectContribution>
+	</extension>
+	<!-- ====================================================== -->
+	<!-- Define Validate action on .tld file             -->
+	<!-- ====================================================== -->
+	<extension point="org.eclipse.ui.popupMenus">
+		<objectContribution
+			objectClass="org.eclipse.core.resources.IFile"
+			nameFilter="*.tld"
+			id="org.eclipse.wst.xml.validation.xmlaction">
+			<action
+				label="%_UI_MENU_VALIDATE_XML"
+				class="org.eclipse.wst.xml.ui.internal.validation.ValidateXMLFileActionDelegate"
+				enablesFor="1"
+				id="org.eclipse.wst.xml.ui.internal.validation.ValidateXMLFileActionDelegate">
+			</action>
+		</objectContribution>
+	</extension>
+	
+
+	<!-- ====================================================== -->
+	<!-- An extension for creating nested validation messages.  -->
+	<!-- This extension should be moved when the referenced     -->
+	<!-- files dialog is moved to another plugin.               -->
+	<!-- ====================================================== -->
+	<extension point="org.eclipse.ui.popupMenus">
+		<objectContribution
+			objectClass="org.eclipse.core.resources.IMarker"
+			id="org.eclipse.wst.xml.validation.internal.core.nestederrorlist"
+			nameFilter="*">
+			<filter
+				name="done"
+				value="true">
+			</filter>
+			<filter
+				name="type"
+				value="org.eclipse.wst.validation.problemmarker">
+			</filter>
+			<action
+				label="%_UI_REF_FILE_SHOW_DETAILS"
+				class="org.eclipse.wst.xml.ui.internal.validation.core.errorinfo.ReferencedFileErrorActionDelegate"
+				id="org.eclipse.wst.xml.ui.internal.validation.core.errorinfo.ReferencedFileErrorActionDelegate">
+			</action>
+		</objectContribution>
+	</extension>
+	
+	<!-- ====================================================== -->
+	<!-- Register the XML validator with the validation 		-->
+	<!-- framework. 										    -->
+	<!-- ====================================================== -->
+
+	<extension
+		id="xmlValidator"
+		name="%_UI_XML_VALIDATOR"
+		point="org.eclipse.wst.validation.validator">
+		<validator>
+			<!-- There is a custom XML validator for EJBs -->
+			<projectNature
+				include="false"
+				id="org.eclipse.jst.j2ee.ejb.EJBNature">
+			</projectNature>
+			<!-- There is a custom XML validator for EARs -->
+			<projectNature
+				include="false"
+				id="org.eclipse.jst.j2ee.EARNature">
+			</projectNature>
+			<filter
+				objectClass="org.eclipse.core.resources.IFile"
+				caseSensitive="false"
+				nameFilter="*.xml">
+			</filter>
+			<filter
+				objectClass="org.eclipse.core.resources.IFile"
+				caseSensitive="false"
+				nameFilter="*.gph">
+			</filter>
+			<filter
+				objectClass="org.eclipse.core.resources.IFile"
+				caseSensitive="false"
+				nameFilter="*.wdo-connections">
+			</filter>
+			<filter
+				objectClass="org.eclipse.core.resources.IFile"
+				caseSensitive="false"
+				nameFilter="*.tld" />
+			<helper
+				class="org.eclipse.wst.xml.core.internal.validation.core.Helper">
+			</helper>
+			<run
+				class="org.eclipse.wst.xml.ui.internal.validation.Validator">
+			</run>
+		</validator>
+	</extension>
+	
+	
 </plugin>
