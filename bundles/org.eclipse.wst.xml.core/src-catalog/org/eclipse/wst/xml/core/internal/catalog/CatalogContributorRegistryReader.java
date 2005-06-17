@@ -79,7 +79,7 @@ public class CatalogContributorRegistryReader
       }
     }
     // compatability extension point processing start 
-    IExtensionPoint deprecatedEP = pluginRegistry.getExtensionPoint(CompatabilityConstants.PLUGIN_ID, CompatabilityConstants.EXTENSION_POINT_ID);
+    IExtensionPoint deprecatedEP = pluginRegistry.getExtensionPoint(XMLCorePlugin.getDefault().getBundle().getSymbolicName(), CompatabilityConstants.EXTENSION_POINT_ID);
     if (point != null)
     {
       IConfigurationElement[] elements = deprecatedEP.getConfigurationElements();
