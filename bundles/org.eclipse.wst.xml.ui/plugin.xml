@@ -11,7 +11,7 @@
 			name="%_UI_PREF_XML_CATALOG"
 			category="org.eclipse.wst.sse.ui.internal.provisional.preferences"
 			class="org.eclipse.wst.xml.ui.internal.catalog.XMLCatalogPreferencePage"
-			id="org.eclipse.wst.xml.catalog.ui.XMLCatalogPreferencePage">
+			id="org.eclipse.wst.xml.core.ui.XMLCatalogPreferencePage">
 		</page>
 	</extension>
 	<extension
@@ -19,17 +19,17 @@
 		<fileType
 			extensions="dtd, ent, mod"
 			description="DTD Files"
-			id="org.eclipse.wst.xml.catalog.ui.catalogFileType.dtd">
+			id="org.eclipse.wst.xml.core.ui.catalogFileType.dtd">
 		</fileType>
 		<fileType
 			extensions="xsd"
 			description="XSD Files"
-			id="org.eclipse.wst.xml.catalog.ui.catalogFileType.xsd">
+			id="org.eclipse.wst.xml.core.ui.catalogFileType.xsd">
 		</fileType>
 		<fileType
 			extensions="tld"
 			description="Taglib Definition Files"
-			id="org.eclipse.wst.xml.catalog.ui.catalogFileType.tld">
+			id="org.eclipse.wst.xml.core.ui.catalogFileType.tld">
 		</fileType>
 	</extension>
 	<extension point="org.eclipse.wst.sse.ui.extendedconfiguration">

@@ -35,7 +35,7 @@ public class CatalogContributorRegistryReader
   protected static final String TAG_CONTRIBUTION = "catalogContribution";
   /*
    * this is a sample exptension 
-   * <extension point="org.eclipse.wst.xml.catalog.catalogContributions"> 
+   * <extension point="org.eclipse.wst.xml.core.catalogContributions"> 
    * <catalogContribution>
    *    <uri
    *             name="http://schemas.xmlsoap.org/wsdl/soap/" 

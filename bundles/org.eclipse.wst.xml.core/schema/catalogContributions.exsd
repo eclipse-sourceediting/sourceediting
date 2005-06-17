@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.wst.xml.catalog">
+<schema targetNamespace="org.eclipse.wst.xml.core">
 <annotation>
       <appInfo>
-         <meta.schema plugin="org.eclipse.wst.xml.catalog" id="catalogContributions" name="%XML_Catalog_Contributtions_Extension_Point.name"/>
+         <meta.schema plugin="org.eclipse.wst.xml.core" id="catalogContributions" name="%XML_Catalog_Contributtions_Extension_Point.name"/>
       </appInfo>
       <documentation>
          
