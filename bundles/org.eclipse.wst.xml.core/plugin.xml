@@ -93,7 +93,7 @@
 
 	<extension point="org.eclipse.core.runtime.contentTypes">
 		<content-type
-			file-extensions="xml,xsl,xslt,dadx,wsdl,nst,xmi,xsd,exsd"
+			file-extensions="xml,xsl,xslt,wsdl,xsd,exsd"
 			priority="high"
 			name="%XML_Content_Type_Extension_Element.name"
 			id="xmlsource"
