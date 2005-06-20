@@ -861,11 +861,9 @@ public class JSPTranslator {
 		ITextRegion r = null;
 		if (regions.hasNext()) {
 			r = (ITextRegion) regions.next();
-			if (r.getType() == DOMRegionContext.XML_TAG_NAME || r.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) // <jsp:directive.xxx
-			// comes
-			// in
-			// as
-			// this
+			// <jsp:directive.xxx > comes in as this
+			if (r.getType() == DOMRegionContext.XML_TAG_NAME || r.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME) 
+
 			{
 				String fullTagName = container.getFullText(r).trim();
 				if (fullTagName.indexOf(':') > -1) {
@@ -889,34 +887,15 @@ public class JSPTranslator {
 						}
 						else if (jspTagName.equals("scriptlet")) //$NON-NLS-1$
 						{
-							// <jsp:scriptlet>scriptlet
-							// content...</jsp:scriptlet>
-							IStructuredDocumentRegion sdr = getCurrentNode().getNext();
-							if (sdr != null) {
-								translateScriptletString(sdr.getText(), sdr, sdr.getStartOffset(), sdr.getEndOffset());
-							}
-							advanceNextNode();
+							translateXMLJSPContent(SCRIPTLET);
 						}
 						else if (jspTagName.equals("expression")) //$NON-NLS-1$
 						{
-							// <jsp:expression>expression
-							// content...</jsp:expression>
-							IStructuredDocumentRegion sdr = getCurrentNode().getNext();
-							if (sdr != null) {
-								translateExpressionString(sdr.getText(), sdr, sdr.getStartOffset(), sdr.getEndOffset());
-							}
-							advanceNextNode();
+							translateXMLJSPContent(EXPRESSION);
 						}
 						else if (jspTagName.equals("declaration")) //$NON-NLS-1$
 						{
-							// <jsp:declaration>declaration
-							// content...</jsp:declaration>
-							IStructuredDocumentRegion sdr = getCurrentNode().getNext();
-							if (sdr != null) {
-								translateDeclarationString(sdr.getText(), sdr, sdr.getStartOffset(), sdr.getEndOffset());
-
-							}
-							advanceNextNode();
+							translateXMLJSPContent(DECLARATION);
 						}
 						else if (jspTagName.equals("directive")) //$NON-NLS-1$
 						{
@@ -930,8 +909,7 @@ public class JSPTranslator {
 
 									String fileLocation = ""; //$NON-NLS-1$
 									String attrValue = ""; //$NON-NLS-1$
-									// CMVC 258311
-									// PMR 18368, B663
+
 									// skip to required "file" attribute,
 									// should be safe because
 									// "file" is the only attribute for the
@@ -1013,6 +991,42 @@ public class JSPTranslator {
 				}
 			}
 		}
+	}
+
+	private void translateXMLJSPContent(int type) {
+		// <jsp:scriplet> is current StructuredDocumentRegion
+		
+		// <jsp:scriptlet>scriptlet
+		// content...</jsp:scriptlet>
+		
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=93366
+		
+		// should actually be translating everything inbetween, which may 
+		// be more than one region
+		IStructuredDocumentRegion sdr = getCurrentNode().getNext();
+		StringBuffer content = new StringBuffer();
+		int start = sdr.getStartOffset();
+		int end = sdr.getEndOffset();
+		// read until </jsp:scriptlet>
+		while(sdr != null && sdr.getType() != DOMRegionContext.XML_TAG_NAME) {
+			content.append(sdr.getText());
+			end = sdr.getEndOffset();
+			sdr = sdr.getNext();
+		}
+		
+		switch(type) {
+			case SCRIPTLET:
+				translateScriptletString(content.toString(), getCurrentNode(), start, end);
+				break;
+			case EXPRESSION:
+				translateExpressionString(content.toString(), getCurrentNode(), start, end);
+				break;
+			case DECLARATION:
+				translateDeclarationString(content.toString(), getCurrentNode(), start, end);
+				break;
+		}
+		
+		advanceNextNode();
 	}
 
 	/**
