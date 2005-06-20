@@ -13,6 +13,7 @@ package org.eclipse.wst.xml.core.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.eclipse.wst.xml.core.tests.contentmodel.TestCatalogRetrivalAndModelCreation;
 import org.eclipse.wst.xml.core.tests.document.TestStructuredDocument;
 import org.eclipse.wst.xml.core.tests.document.TestXMLDocumentLoader;
 import org.eclipse.wst.xml.core.tests.document.TransitionTests;
@@ -43,5 +44,6 @@ public class SSEModelXMLTestSuite extends TestSuite {
 		addTest(new TestSuite(NameValidatorTests.class));
 		addTest(new TestSuite(TransitionTests.class));
 		addTest(new TestSuite(XMLCorePreferencesTest.class));
+		addTest(new TestSuite(TestCatalogRetrivalAndModelCreation.class));
 	}
 }
