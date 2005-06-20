@@ -104,6 +104,17 @@
 		</content-type>
 	</extension>
 
+	<extension point="org.eclipse.core.runtime.contentTypes">
+		<content-type
+			file-extensions="xsl,xslt"
+			priority="high"
+			name="%XSL_Content_Type_Extension_Element.name"
+			id="xslsource"
+			base-type="org.eclipse.core.runtime.xml"
+			default-charset="UTF-8">
+		</content-type>
+	</extension>
+
 	<!-- initialize xml core preferences -->
 	<extension point="org.eclipse.core.runtime.preferences">
 		<initializer
