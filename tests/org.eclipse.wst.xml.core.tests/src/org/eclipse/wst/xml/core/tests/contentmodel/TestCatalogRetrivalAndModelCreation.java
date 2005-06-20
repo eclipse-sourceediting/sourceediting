@@ -93,6 +93,18 @@ public class TestCatalogRetrivalAndModelCreation extends TestCase {
 	public void test2001Schema() throws MalformedURLException, IOException {
 		doURITest("http://www.w3.org/2001/XMLSchema");
 	}
+
+	/**
+	 * Tests if dtd NOT in our catalog can have a content model 
+	 * created. 
+	 * 
+	 * @throws MalformedURLException
+	 * @throws IOException
+	 */
+	public void testExternalDTD() throws MalformedURLException, IOException {
+		doCM_directURITest("http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd");
+	}
+	
 	public void test2001SchemaCMDirect() throws MalformedURLException, IOException {
 		doCM_directURITest("http://www.w3.org/2001/XMLSchema.xsd");
 	}
@@ -115,8 +127,7 @@ public class TestCatalogRetrivalAndModelCreation extends TestCase {
 
 	private void doCM_directURITest(String EXPECTED_URI) throws MalformedURLException, IOException {
 		ContentModelManager contentModelManager = ContentModelManager.getInstance();
-		String uriToUse = EXPECTED_URI;
-		CMDocument contentModel = contentModelManager.createCMDocument(uriToUse, null);
+		CMDocument contentModel = contentModelManager.createCMDocument(EXPECTED_URI, null);
 		assertNotNull("expected to create content model for " + EXPECTED_URI, contentModel);
 	}
 
