@@ -16,6 +16,7 @@ import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.xml.core.internal.document.ModelParserAdapter;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 
 /**
  */
@@ -30,16 +31,27 @@ public class HTMLModelParserAdapterFactory implements INodeAdapterFactory {
 	}
 
 	/**
-	 * Method that returns the adapter associated with the given object.
-	 * It may be a singleton or not ... depending on the needs of the INodeAdapter  ...
-	 * but in general it is recommended for an adapter to be stateless, 
-	 * so the efficiencies of a singleton can be gained.
-	 *
+	 * Method that returns the adapter associated with the given object. It
+	 * may be a singleton or not ... depending on the needs of the
+	 * INodeAdapter ... but in general it is recommended for an adapter to be
+	 * stateless, so the efficiencies of a singleton can be gained.
+	 * 
 	 * The implementation of this method should call addAdapter on the adapted
 	 * object with the correct instance of the adapter.
 	 */
 	public INodeAdapter adapt(INodeNotifier notifier) {
-		return new HTMLModelParserAdapter();
+		INodeAdapter adapter = null;
+		if (notifier != null) {
+			if (notifier instanceof IDOMDocument) {
+				adapter = notifier.getExistingAdapter(ModelParserAdapter.class);
+				if (adapter == null) {
+					adapter = new HTMLModelParserAdapter();
+					notifier.addAdapter(adapter);
+				}
+			}
+		}
+		return adapter;
+
 	}
 
 	/**
@@ -59,6 +71,7 @@ public class HTMLModelParserAdapterFactory implements INodeAdapterFactory {
 	/**
 	 */
 	public void release() {
+		// no state to cleanup
 	}
 
 	/**

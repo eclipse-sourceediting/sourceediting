@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSelectorAdapter;
+import org.eclipse.wst.css.core.internal.provisional.adapters.IStyleSheetAdapter;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeAdapterFactory;
 import org.eclipse.wst.html.core.internal.document.HTMLModelParserAdapterFactory;
 import org.eclipse.wst.html.core.internal.htmlcss.HTMLStyleSelectorAdapterFactory;
@@ -31,7 +32,7 @@ import org.eclipse.wst.xml.core.internal.document.ModelParserAdapter;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 public class EmbeddedHTML implements EmbeddedTypeHandler {
-	
+
 	public String ContentTypeID_EmbeddedHTML = "org.eclipse.wst.html.core.internal.contenttype.EmbeddedHTML"; //$NON-NLS-1$
 	private List supportedMimeTypes;
 
@@ -45,7 +46,7 @@ public class EmbeddedHTML implements EmbeddedTypeHandler {
 	/**
 	 * Convenience method to add tag names using BlockMarker object
 	 */
-	protected void addHTMLishTag(BlockTagParser parser, String tagname) {
+	private void addHTMLishTag(BlockTagParser parser, String tagname) {
 		BlockMarker bm = new BlockMarker(tagname, null, DOMRegionContext.BLOCK_TEXT, false);
 		parser.addBlockMarker(bm);
 	}
@@ -98,37 +99,48 @@ public class EmbeddedHTML implements EmbeddedTypeHandler {
 		if (!registry.contains(ModelParserAdapter.class)) {
 			factory = HTMLModelParserAdapterFactory.getInstance();
 			registry.addFactory(factory);
-			factory = StyleAdapterFactory.getInstance();
 		}
 		if (!registry.contains(IStyleSelectorAdapter.class)) {
-			registry.addFactory(factory);
+
 			factory = HTMLStyleSelectorAdapterFactory.getInstance();
 			registry.addFactory(factory);
 		}
+		if (!registry.contains(IStyleSheetAdapter.class)) {
+
+			factory = StyleAdapterFactory.getInstance();
+			registry.addFactory(factory);
+		}
+
 	}
 
 	public void uninitializeFactoryRegistry(FactoryRegistry registry) {
 		Assert.isNotNull(registry);
-		
-//		// note this BIG assumption about factory singletons!
-//		// for this particular list, they are, but may not
-//		// be in future.
-//
-//		IAdapterFactory factory = new HTMLDocumentTypeAdapterFactory();
-//		factory.release();
-//		registry.removeFactory(factory);
-//
-//		factory = HTMLModelParserAdapterFactory.getInstance();
-//		factory.release();
-//		registry.removeFactory(factory);
-//
-//		factory = StyleAdapterFactory.getInstance();
-//		factory.release();
-//		registry.removeFactory(factory);
-//
-//		factory = HTMLStyleSelectorAdapterFactory.getInstance();
-//		factory.release();
-//		registry.removeFactory(factory);
+
+		// ISSUE: should these factories be released? Or just 
+		// removed from this registry, because we are getting ready to
+		// re-add them?
+		INodeAdapterFactory factory = null;
+		if (!registry.contains(DocumentTypeAdapter.class)) {
+			factory = registry.getFactoryFor(DocumentTypeAdapter.class);
+			factory.release();
+			registry.removeFactory(factory);
+		}
+		if (!registry.contains(ModelParserAdapter.class)) {
+			factory = registry.getFactoryFor(ModelParserAdapter.class);
+			factory.release();
+			registry.removeFactory(factory);
+		}
+		if (!registry.contains(IStyleSelectorAdapter.class)) {
+			factory = registry.getFactoryFor(IStyleSelectorAdapter.class);
+			factory.release();
+			registry.removeFactory(factory);
+		}
+		if (!registry.contains(IStyleSheetAdapter.class)) {
+			factory = registry.getFactoryFor(IStyleSheetAdapter.class);
+			factory.release();
+			registry.removeFactory(factory);
+		}
+
 	}
 
 	public void uninitializeParser(JSPCapableParser parser) {

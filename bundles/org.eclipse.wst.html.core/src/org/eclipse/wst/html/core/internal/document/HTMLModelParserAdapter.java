@@ -307,6 +307,8 @@ public class HTMLModelParserAdapter implements ModelParserAdapter {
 	/**
 	 */
 	public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
+		// do nothing on notifiy change
+		// TODO: this means good candidate for regular platform adapter
 	}
 
 	private static boolean isValidChild(CMElementDeclaration parent, CMElementDeclaration child) {

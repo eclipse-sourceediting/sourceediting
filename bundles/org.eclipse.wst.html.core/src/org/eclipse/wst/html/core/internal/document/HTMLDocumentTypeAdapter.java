@@ -38,7 +38,7 @@ import org.w3c.dom.Node;
  */
 public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements IContentSettingsListener, HTMLDocumentTypeConstants {
 
-	private HTMLDocumentTypeAdapterFactory factory = null;
+	private HTMLDocumentTypeAdapterFactory fFactory = null;
 	private HTMLDocumentTypeEntry entry = null;
 	private boolean isXMLType = false;
 	private final static String XML = "xml"; //$NON-NLS-1$
@@ -57,7 +57,7 @@ public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements 
 	protected HTMLDocumentTypeAdapter(IDOMDocument document, HTMLDocumentTypeAdapterFactory factory) {
 		super(document);
 
-		this.factory = factory;
+		this.fFactory = factory;
 
 		// initialize
 		documentTypeChanged();
@@ -214,7 +214,7 @@ public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements 
 	public int getAttrNameCase() {
 		if (isXMLType())
 			return LOWER_CASE; // XHTML
-		return this.factory.getAttrNameCase();
+		return this.fFactory.getAttrNameCase();
 	}
 
 	/**
@@ -253,7 +253,7 @@ public class HTMLDocumentTypeAdapter extends DocumentTypeAdapterImpl implements 
 	public int getTagNameCase() {
 		if (isXMLType())
 			return LOWER_CASE; // XHTML
-		return this.factory.getTagNameCase();
+		return this.fFactory.getTagNameCase();
 	}
 
 	/**

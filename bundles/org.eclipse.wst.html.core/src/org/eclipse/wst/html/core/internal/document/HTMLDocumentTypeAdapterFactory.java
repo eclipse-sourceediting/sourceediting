@@ -12,6 +12,9 @@ package org.eclipse.wst.html.core.internal.document;
 
 
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
@@ -30,15 +33,14 @@ public class HTMLDocumentTypeAdapterFactory implements INodeAdapterFactory, Pref
 	private Preferences preferences = null;
 
 	// for removal later on release()
-	private DocumentTypeAdapter fAdapter = null;
-	private INodeNotifier fNotifier = null;
-	
+	private ArrayList fAdapters = new ArrayList();
 	/**
 	 */
 	public HTMLDocumentTypeAdapterFactory() {
 		super();
 		this.preferences = HTMLCorePlugin.getDefault().getPluginPreferences();
-		//this.store = CommonPreferencesPlugin.getDefault().getPreferenceStore(ContentTypeRegistry.HTML_ID);
+		// this.store =
+		// CommonPreferencesPlugin.getDefault().getPreferenceStore(ContentTypeRegistry.HTML_ID);
 		if (this.preferences != null) {
 			updateCases(); // initialize
 			this.preferences.addPropertyChangeListener(this);
@@ -46,40 +48,37 @@ public class HTMLDocumentTypeAdapterFactory implements INodeAdapterFactory, Pref
 	}
 
 	/**
-	 * Method that returns the adapter associated with the given object.
-	 * It may be a singleton or not ... depending on the needs of the INodeAdapter  ...
-	 * but in general it is recommended for an adapter to be stateless, 
-	 * so the efficiencies of a singleton can be gained.
-	 *
+	 * Method that returns the adapter associated with the given object. It
+	 * may be a singleton or not ... depending on the needs of the
+	 * INodeAdapter ... but in general it is recommended for an adapter to be
+	 * stateless, so the efficiencies of a singleton can be gained.
+	 * 
 	 * The implementation of this method should call addAdapter on the adapted
 	 * object with the correct instance of the adapter.
 	 */
 	public INodeAdapter adapt(INodeNotifier notifier) {
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=85484
-		
-		// remove old adapter, or else they may collect
-//		DocumentTypeAdapter oldAdapter = (DocumentTypeAdapter)notifier.getExistingAdapter(DocumentTypeAdapter.class);
-//		if(oldAdapter != null) {
-//			oldAdapter.release();
-//			notifier.removeAdapter(oldAdapter);
-//		}
-		if(fAdapter != null && fNotifier != null) {
-			fAdapter.release();
-			fNotifier.removeAdapter(fAdapter);
+		INodeAdapter result = null;
+		// only adapt IDOMDocument
+		if (notifier instanceof IDOMDocument) {
+
+			// if already has an adapter, no need to recreate/initialize.
+			// Note: this means if "doctype" for DOM changes,
+			// theDocumentTypeAdatper for that DOM
+			// should be removed (and released) and it will be re-created next
+			// time required.
+			DocumentTypeAdapter oldAdapter = (DocumentTypeAdapter) notifier.getExistingAdapter(DocumentTypeAdapter.class);
+			if (oldAdapter != null) {
+				result = oldAdapter;
+			}
+			else {
+				// note, the factory is included in this case to have a central place
+				// to come back to for case preferences.
+				result = new HTMLDocumentTypeAdapter((IDOMDocument) notifier, this);
+				notifier.addAdapter(result);
+				fAdapters.add(result);
+			}
 		}
-		
-		DocumentTypeAdapter adapter = null;
-//		if (adapter != null && adapter instanceof HTMLDocumentTypeAdapter)
-//			return adapter;
-		if (!(notifier instanceof IDOMDocument))
-			return null;
-		adapter = new HTMLDocumentTypeAdapter((IDOMDocument) notifier, this);
-		notifier.addAdapter(adapter);
-		
-		fAdapter = adapter;
-		fNotifier = notifier;
-		
-		return adapter;
+		return result;
 	}
 
 	/**
@@ -134,11 +133,17 @@ public class HTMLDocumentTypeAdapterFactory implements INodeAdapterFactory, Pref
 	/**
 	 */
 	public void release() {
-	    if(fAdapter != null && fNotifier != null) {
-	        fAdapter.release();
-	        fNotifier.removeAdapter(fAdapter);
-	    }	
-	    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=95960
+		// when this factory released, release all the 
+		// adapters its tracking.
+		Iterator iterator = fAdapters.iterator();
+		while (iterator.hasNext()) {
+			HTMLDocumentTypeAdapter adapterToRelease = (HTMLDocumentTypeAdapter) iterator.next();
+			adapterToRelease.release();
+			iterator.remove();
+		}
+		
+		
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=95960
 		if (this.preferences != null) {
 			this.preferences.removePropertyChangeListener(this);
 		}
@@ -150,4 +155,4 @@ public class HTMLDocumentTypeAdapterFactory implements INodeAdapterFactory, Pref
 	public INodeAdapterFactory copy() {
 		return new HTMLDocumentTypeAdapterFactory();
 	}
-} 
+}

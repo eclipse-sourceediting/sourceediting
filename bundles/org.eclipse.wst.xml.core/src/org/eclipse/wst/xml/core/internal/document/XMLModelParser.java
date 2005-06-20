@@ -24,7 +24,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.xml.core.internal.commentelement.impl.CommentElementConfiguration;
 import org.eclipse.wst.xml.core.internal.commentelement.impl.CommentElementRegistry;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
@@ -40,10 +39,7 @@ import org.w3c.dom.Text;
  * XMLModelParser
  */
 public class XMLModelParser {
-	private ModelParserAdapter adapter = null;
 	private XMLModelContext context = null;
-	private DocumentImpl document = null;
-
 	private DOMModelImpl model = null;
 
 	/**
@@ -53,18 +49,15 @@ public class XMLModelParser {
 
 		if (model != null) {
 			this.model = model;
-			this.document = (DocumentImpl) model.getDocument();
-			if (this.document != null) {
-				this.adapter = (ModelParserAdapter) this.document.getAdapterFor(ModelParserAdapter.class);
-			}
 		}
 	}
 
 	/**
 	 */
 	protected boolean canBeImplicitTag(Element element) {
-		if (this.adapter != null) {
-			return this.adapter.canBeImplicitTag(element);
+		ModelParserAdapter adapter = getParserAdapter();
+		if (adapter != null) {
+			return adapter.canBeImplicitTag(element);
 		}
 		return false;
 	}
@@ -72,8 +65,9 @@ public class XMLModelParser {
 	/**
 	 */
 	protected boolean canBeImplicitTag(Element element, Node child) {
-		if (this.adapter != null) {
-			return this.adapter.canBeImplicitTag(element, child);
+		ModelParserAdapter adapter = getParserAdapter();
+		if (adapter != null) {
+			return adapter.canBeImplicitTag(element, child);
 		}
 		return false;
 	}
@@ -94,8 +88,9 @@ public class XMLModelParser {
 				return false;
 			}
 		}
-		if (this.adapter != null) {
-			return this.adapter.canContain(element, child);
+		ModelParserAdapter adapter = getParserAdapter();
+		if (adapter != null) {
+			return adapter.canContain(element, child);
 		}
 		return true;
 	}
@@ -304,9 +299,9 @@ public class XMLModelParser {
 	void changeRegion(IStructuredDocumentRegion flatNode, ITextRegion region) {
 		if (flatNode == null || region == null)
 			return;
-		if (this.document == null)
+		if (this.model.getDocument() == null)
 			return;
-		this.context = new XMLModelContext(this.document);
+		this.context = new XMLModelContext(this.model.getDocument());
 
 		// optimize typical cases
 		String regionType = region.getType();
@@ -475,7 +470,7 @@ public class XMLModelParser {
 				}
 				else {
 					String name = flatNode.getText(region);
-					attr = (AttrImpl) this.document.createAttribute(name);
+					attr = (AttrImpl) this.model.getDocument().createAttribute(name);
 					if (attr != null)
 						attr.setNameRegion(region);
 					// defer insertion of new attribute
@@ -517,7 +512,7 @@ public class XMLModelParser {
 	private void changeStructuredDocumentRegion(IStructuredDocumentRegion flatNode) {
 		if (flatNode == null)
 			return;
-		if (this.document == null)
+		if (this.model.getDocument() == null)
 			return;
 
 		setupContext(flatNode);
@@ -715,12 +710,13 @@ public class XMLModelParser {
 			String[] prefixes = config.getPrefix();
 			for (int iPrefix = 0; iPrefix < prefixes.length; iPrefix++) {
 				if (trimmedData.startsWith(prefixes[iPrefix])) {
-					return config.createElement(this.document, data, isJSPTag);
+					return config.createElement(this.model.getDocument(), data, isJSPTag);
 				}
 			}
 		}
-		if (this.adapter != null) {
-			return this.adapter.createCommentElement(this.document, data, isJSPTag);
+		ModelParserAdapter adapter = getParserAdapter();
+		if (adapter != null) {
+			return adapter.createCommentElement(this.model.getDocument(), data, isJSPTag);
 		}
 		return null;
 	}
@@ -730,8 +726,9 @@ public class XMLModelParser {
 	 * such as HTML, BODY, HEAD, and TBODY for HTML document.
 	 */
 	protected Element createImplicitElement(Node parent, Node child) {
-		if (this.adapter != null) {
-			return this.adapter.createImplicitElement(this.document, parent, child);
+		ModelParserAdapter adapter = getParserAdapter();
+		if (adapter != null) {
+			return adapter.createImplicitElement(this.model.getDocument(), parent, child);
 		}
 		return null;
 	}
@@ -842,17 +839,16 @@ public class XMLModelParser {
 		}
 	}
 
-	/**
-	 */
-	protected final IDOMDocument getDocument() {
-		return this.document;
+	private ModelParserAdapter getParserAdapter() {
+		return (ModelParserAdapter) this.model.getDocument().getAdapterFor(ModelParserAdapter.class);
 	}
-
+	
 	/**
 	 */
 	protected String getFindRootName(String tagName) {
-		if (this.adapter != null) {
-			return this.adapter.getFindRootName(tagName);
+		ModelParserAdapter adapter = getParserAdapter();
+		if (adapter != null) {
+			return adapter.getFindRootName(tagName);
 		}
 		return null;
 	}
@@ -874,7 +870,7 @@ public class XMLModelParser {
 
 		CDATASectionImpl cdata = null;
 		try {
-			cdata = (CDATASectionImpl) this.document.createCDATASection(null);
+			cdata = (CDATASectionImpl) this.model.getDocument().createCDATASection(null);
 		}
 		catch (DOMException ex) {
 		}
@@ -939,7 +935,7 @@ public class XMLModelParser {
 			}
 		}
 
-		CommentImpl comment = (CommentImpl) this.document.createComment(null);
+		CommentImpl comment = (CommentImpl) this.model.getDocument().createComment(null);
 		if (comment == null)
 			return;
 		if (isJSPTag)
@@ -988,7 +984,7 @@ public class XMLModelParser {
 			return;
 		}
 
-		DocumentTypeImpl docType = (DocumentTypeImpl) this.document.createDoctype(name);
+		DocumentTypeImpl docType = (DocumentTypeImpl) this.model.getDocument().createDoctype(name);
 		if (docType == null)
 			return;
 		if (publicId != null)
@@ -1076,7 +1072,7 @@ public class XMLModelParser {
 		// invalid end tag
 		ElementImpl end = null;
 		try {
-			end = (ElementImpl) this.document.createElement(tagName);
+			end = (ElementImpl) this.model.getDocument().createElement(tagName);
 		}
 		catch (DOMException ex) {
 		}
@@ -1113,7 +1109,8 @@ public class XMLModelParser {
 			return;
 		}
 
-		String value = this.document.getCharValue(name);
+		// ISSUE: avoid this cast
+		String value = ((DocumentImpl)this.model.getDocument()).getCharValue(name);
 		if (value != null) { // character entity
 			TextImpl text = (TextImpl) this.context.findPreviousText();
 			if (text != null) { // existing text found
@@ -1125,7 +1122,7 @@ public class XMLModelParser {
 			}
 
 			// new text
-			text = (TextImpl) this.document.createTextNode(null);
+			text = (TextImpl) this.model.getDocument().createTextNode(null);
 			if (text == null)
 				return;
 			text.setStructuredDocumentRegion(flatNode);
@@ -1136,7 +1133,7 @@ public class XMLModelParser {
 		// general entity reference
 		EntityReferenceImpl ref = null;
 		try {
-			ref = (EntityReferenceImpl) this.document.createEntityReference(name);
+			ref = (EntityReferenceImpl) this.model.getDocument().createEntityReference(name);
 		}
 		catch (DOMException ex) {
 		}
@@ -1160,7 +1157,7 @@ public class XMLModelParser {
 
 		ElementImpl element = null;
 		try {
-			element = (ElementImpl) this.document.createElement("!");//$NON-NLS-1$
+			element = (ElementImpl) this.model.getDocument().createElement("!");//$NON-NLS-1$
 		}
 		catch (DOMException ex) {
 		}
@@ -1198,7 +1195,7 @@ public class XMLModelParser {
 			}
 			else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 				String name = flatNode.getText(region);
-				attr = (AttrImpl) this.document.createAttribute(name);
+				attr = (AttrImpl) this.model.getDocument().createAttribute(name);
 				if (attr != null) {
 					attr.setNameRegion(region);
 					if (attrNodes == null)
@@ -1239,7 +1236,7 @@ public class XMLModelParser {
 
 		ElementImpl element = null;
 		try {
-			element = (ElementImpl) this.document.createElement(tagName);
+			element = (ElementImpl) this.model.getDocument().createElement(tagName);
 		}
 		catch (DOMException ex) {
 		}
@@ -1391,7 +1388,7 @@ public class XMLModelParser {
 				target = flatNode.getText(region);
 		}
 
-		ProcessingInstructionImpl pi = (ProcessingInstructionImpl) this.document.createProcessingInstruction(target, null);
+		ProcessingInstructionImpl pi = (ProcessingInstructionImpl) this.model.getDocument().createProcessingInstruction(target, null);
 		if (pi == null)
 			return;
 		pi.setStructuredDocumentRegion(flatNode);
@@ -1457,7 +1454,7 @@ public class XMLModelParser {
 			}
 			else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 				String name = flatNode.getText(region);
-				attr = (AttrImpl) this.document.createAttribute(name);
+				attr = (AttrImpl) this.model.getDocument().createAttribute(name);
 				if (attr != null) {
 					attr.setNameRegion(region);
 					if (attrNodes == null)
@@ -1485,7 +1482,7 @@ public class XMLModelParser {
 
 		ElementImpl element = null;
 		try {
-			element = (ElementImpl) this.document.createElement(tagName);
+			element = (ElementImpl) this.model.getDocument().createElement(tagName);
 		}
 		catch (DOMException ex) {
 			// typically invalid name
@@ -1585,7 +1582,7 @@ public class XMLModelParser {
 		}
 
 		// new text
-		text = (TextImpl) this.document.createTextNode(null);
+		text = (TextImpl) this.model.getDocument().createTextNode(null);
 		if (text == null)
 			return;
 		text.setStructuredDocumentRegion(flatNode);
@@ -1595,8 +1592,9 @@ public class XMLModelParser {
 	/**
 	 */
 	protected boolean isEndTag(IDOMElement element) {
-		if (this.adapter != null) {
-			return this.adapter.isEndTag(element);
+		ModelParserAdapter adapter = getParserAdapter();
+		if (adapter != null) {
+			return adapter.isEndTag(element);
 		}
 		return element.isEndTag();
 	}
@@ -2299,9 +2297,9 @@ public class XMLModelParser {
 	void replaceRegions(IStructuredDocumentRegion flatNode, ITextRegionList newRegions, ITextRegionList oldRegions) {
 		if (flatNode == null)
 			return;
-		if (this.document == null)
+		if (this.model.getDocument() == null)
 			return;
-		this.context = new XMLModelContext(this.document);
+		this.context = new XMLModelContext(this.model.getDocument());
 
 		// optimize typical cases
 		String regionType = StructuredDocumentRegionUtil.getFirstRegionType(flatNode);
@@ -2321,9 +2319,9 @@ public class XMLModelParser {
 	 * 
 	 */
 	void replaceStructuredDocumentRegions(IStructuredDocumentRegionList newStructuredDocumentRegions, IStructuredDocumentRegionList oldStructuredDocumentRegions) {
-		if (this.document == null)
+		if (this.model.getDocument() == null)
 			return;
-		this.context = new XMLModelContext(this.document);
+		this.context = new XMLModelContext(this.model.getDocument());
 
 		int newCount = (newStructuredDocumentRegions != null ? newStructuredDocumentRegions.getLength() : 0);
 		int oldCount = (oldStructuredDocumentRegions != null ? oldStructuredDocumentRegions.getLength() : 0);

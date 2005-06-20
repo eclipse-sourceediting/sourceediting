@@ -113,7 +113,8 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 	// there are no (or few) "duplicate requests" ... then this cache
 	// is not needed.
 	private static final boolean usetagnamecache = true;
-	private DocumentTypeAdapter documentTypeAdapter = null;
+
+	//private DocumentTypeAdapter documentTypeAdapter = null;
 
 	private DOMModelImpl model = null;
 	private TagNameCache tagNameCache;
@@ -658,7 +659,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 	/**
 	 */
 	protected DocumentType getDocumentType() {
-		DocumentTypeAdapter adapter = getDocumentTypeAdapter();
+		DocumentTypeAdapter adapter = (DocumentTypeAdapter) getAdapterFor(DocumentTypeAdapter.class);;
 		if (adapter == null)
 			return getDoctype();
 		return adapter.getDocumentType();
@@ -666,19 +667,19 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 
 	/**
 	 */
-	protected DocumentTypeAdapter getDocumentTypeAdapter() {
-		// be sure to release since possibly changing
-		if (this.documentTypeAdapter != null) {
-			this.documentTypeAdapter.release();
-		}
-		this.documentTypeAdapter = (DocumentTypeAdapter) getAdapterFor(DocumentTypeAdapter.class);
-		if (this.documentTypeAdapter == null) {
-			// add default adapter
-			this.documentTypeAdapter = new DocumentTypeAdapterImpl(this);
-			addAdapter(this.documentTypeAdapter);
-		}
-		return this.documentTypeAdapter;
-	}
+//	protected DocumentTypeAdapter getDocumentTypeAdapter() {
+//		// be sure to release since possibly changing
+//		if (this.documentTypeAdapter != null) {
+//			this.documentTypeAdapter.release();
+//		}
+//		this.documentTypeAdapter = (DocumentTypeAdapter) getAdapterFor(DocumentTypeAdapter.class);
+//		if (this.documentTypeAdapter == null) {
+//			// add default adapter
+//			this.documentTypeAdapter = new DocumentTypeAdapterImpl(this);
+//			addAdapter(this.documentTypeAdapter);
+//		}
+//		return this.documentTypeAdapter;
+//	}
 
 	/**
 	 */
@@ -874,7 +875,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 	/**
 	 */
 	protected boolean ignoreCase() {
-		DocumentTypeAdapter adapter = getDocumentTypeAdapter();
+		DocumentTypeAdapter adapter = (DocumentTypeAdapter) getAdapterFor(DocumentTypeAdapter.class);
 		if (adapter == null)
 			return false;
 		return (adapter.getTagNameCase() != DocumentTypeAdapter.STRICT_CASE);
@@ -983,7 +984,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 	/**
 	 */
 	public boolean isXMLType() {
-		DocumentTypeAdapter adapter = getDocumentTypeAdapter();
+		DocumentTypeAdapter adapter = (DocumentTypeAdapter) getAdapterFor(DocumentTypeAdapter.class);
 		if (adapter == null)
 			return true;
 		return adapter.isXMLType();
@@ -991,12 +992,12 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 
 	/**
 	 */
-	protected void releaseDocumentType() {
-		if (this.documentTypeAdapter == null)
-			return;
-		this.documentTypeAdapter.release();
-		this.documentTypeAdapter = null;
-	}
+//	protected void releaseDocumentType() {
+//		if (this.documentTypeAdapter == null)
+//			return;
+//		this.documentTypeAdapter.release();
+//		this.documentTypeAdapter = null;
+//	}
 
 	/**
 	 * <p>

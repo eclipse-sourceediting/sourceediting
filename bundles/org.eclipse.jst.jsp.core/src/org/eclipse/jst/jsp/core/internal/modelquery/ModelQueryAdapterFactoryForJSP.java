@@ -162,7 +162,7 @@ public class ModelQueryAdapterFactoryForJSP extends AbstractAdapterFactory imple
 	}
 
 	public void modelReinitialized(IStructuredModel structuredModel) {
-		// TODO Auto-generated method stub
+		updateResolver(structuredModel);
 		
 	}
 

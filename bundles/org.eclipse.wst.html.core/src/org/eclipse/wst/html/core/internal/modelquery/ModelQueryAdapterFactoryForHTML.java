@@ -169,7 +169,6 @@ public class ModelQueryAdapterFactoryForHTML extends AbstractAdapterFactory impl
 	}
 
 	public void modelReinitialized(IStructuredModel structuredModel) {
-		// TODO Auto-generated method stub
-		
+		updateResolver(structuredModel);		
 	}
 }

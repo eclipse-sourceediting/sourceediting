@@ -682,7 +682,7 @@ public class XMLGeneratorImpl implements ISourceGenerator {
 		DocumentImpl document = (DocumentImpl) attr.getOwnerDocument();
 		if (document == null)
 			return DocumentTypeAdapter.STRICT_CASE;
-		DocumentTypeAdapter adapter = document.getDocumentTypeAdapter();
+		DocumentTypeAdapter adapter = (DocumentTypeAdapter) document.getAdapterFor(DocumentTypeAdapter.class);
 		if (adapter == null)
 			return DocumentTypeAdapter.STRICT_CASE;
 		return adapter.getAttrNameCase();
@@ -710,7 +710,7 @@ public class XMLGeneratorImpl implements ISourceGenerator {
 		DocumentImpl document = (DocumentImpl) element.getOwnerDocument();
 		if (document == null)
 			return DocumentTypeAdapter.STRICT_CASE;
-		DocumentTypeAdapter adapter = document.getDocumentTypeAdapter();
+		DocumentTypeAdapter adapter = (DocumentTypeAdapter) document.getAdapterFor(DocumentTypeAdapter.class);
 		if (adapter == null)
 			return DocumentTypeAdapter.STRICT_CASE;
 		return adapter.getTagNameCase();

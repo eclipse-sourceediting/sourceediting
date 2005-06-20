@@ -791,7 +791,7 @@ public class DOMModelImpl extends AbstractStructuredModel implements IStructured
 	public void releaseFromEdit() {
 		if (!isShared()) {
 			// this.document.releaseStyleSheets();
-			this.document.releaseDocumentType();
+			//this.document.releaseDocumentType();
 		}
 		super.releaseFromEdit();
 	}
@@ -801,7 +801,7 @@ public class DOMModelImpl extends AbstractStructuredModel implements IStructured
 	public void releaseFromRead() {
 		if (!isShared()) {
 			// this.document.releaseStyleSheets();
-			this.document.releaseDocumentType();
+			//this.document.releaseDocumentType();
 		}
 		super.releaseFromRead();
 	}

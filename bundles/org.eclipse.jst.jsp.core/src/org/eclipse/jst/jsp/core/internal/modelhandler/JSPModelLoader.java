@@ -66,7 +66,6 @@ public class JSPModelLoader extends AbstractModelLoader {
 	 */
 	private EmbeddedTypeRegistry embeddedContentTypeRegistry;
 	private final static String DEFAULT_MIME_TYPE = "text/html"; //$NON-NLS-1$
-	private final static String SPEC_DEFAULT_ENCODING = "ISO-8859-1"; //$NON-NLS-1$
 	private final static String DEFAULT_LANGUAGE = "java"; //$NON-NLS-1$
 
 	public JSPModelLoader() {
@@ -88,13 +87,6 @@ public class JSPModelLoader extends AbstractModelLoader {
 	public IStructuredModel newModel() {
 		DOMModelForJSP model = new DOMModelForJSP();
 		return model;
-	}
-
-	/**
-	 * Specification cites ISO-8859-1/Latin-1 as the default charset.
-	 */
-	protected String getDefaultEncoding() {
-		return SPEC_DEFAULT_ENCODING;
 	}
 
 	/**
@@ -244,16 +236,19 @@ public class JSPModelLoader extends AbstractModelLoader {
 	 * This init method is for the case where we are creating an empty model,
 	 * which we always do.
 	 */
-	private void initializeEmbeddedTypeFromDefault(IStructuredModel model) {
+	private void initializeEmbeddedTypeFromDefaultPre(IStructuredModel model) {
 		EmbeddedTypeHandler embeddedContentType = getJSPDefaultEmbeddedType();
-		initializeEmbeddedType(model, embeddedContentType);
+		initializeEmbeddedTypePre(model, embeddedContentType);
 	}
-
+	private void initializeEmbeddedTypeFromDefaultPost(IStructuredModel model) {
+		EmbeddedTypeHandler embeddedContentType = getJSPDefaultEmbeddedType();
+		initializeEmbeddedTypePost(model, embeddedContentType);
+	}
 	/**
 	 * This is "initialize" since is always assumes it hasn't been initalized
 	 * yet.
 	 */
-	private void initializeEmbeddedType(IStructuredModel model, EmbeddedTypeHandler embeddedContentType) {
+	private void initializeEmbeddedTypePre(IStructuredModel model, EmbeddedTypeHandler embeddedContentType) {
 		// check program logic
 		Assert.isNotNull(embeddedContentType, "Program error: invalid call during model initialization"); //$NON-NLS-1$
 		// once we know the embedded content type, we need to set it in the
@@ -266,6 +261,37 @@ public class JSPModelLoader extends AbstractModelLoader {
 		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) document.getAdapterFor(PageDirectiveAdapter.class);
 		pageDirectiveAdapter.setEmbeddedType(embeddedContentType);
 		embeddedContentType.initializeFactoryRegistry(model.getFactoryRegistry());
+		
+		
+//		IStructuredDocument structuredDocument = model.getStructuredDocument();
+//		embeddedContentType.initializeParser((JSPCapableParser) structuredDocument.getParser());
+		// adding language here, in this convienent central
+		// location, but some obvious renaming or refactoring
+		// wouldn't hurt, in future.
+		// I needed to add this language setting for JSP Fragment support
+		// Note: I don't think this attempted init counts for much.
+		// I think its always executed when model is very first
+		// being initialized, and doesn't even have content
+		// or an ID yet. I thought I'd leave, since it wouldn't
+		// hurt, in case its called in other circumstances.
+		// String language = getLanguage(model);
+		// pageDirectiveAdapter.setLanguage(language);
+	}
+	private void initializeEmbeddedTypePost(IStructuredModel model, EmbeddedTypeHandler embeddedContentType) {
+		// check program logic
+		Assert.isNotNull(embeddedContentType, "Program error: invalid call during model initialization"); //$NON-NLS-1$
+		// once we know the embedded content type, we need to set it in the
+		// PageDirectiveAdapter ... the order of initialization is
+		// critical here, the doc must have been created, but its contents not
+		// set yet,
+		// and all factories must have been set up also.
+//		IDOMModel domModel = (IDOMModel) model;
+//		IDOMDocument document = domModel.getDocument();
+//		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) document.getAdapterFor(PageDirectiveAdapter.class);
+//		pageDirectiveAdapter.setEmbeddedType(embeddedContentType);
+//		embeddedContentType.initializeFactoryRegistry(model.getFactoryRegistry());
+		
+		
 		IStructuredDocument structuredDocument = model.getStructuredDocument();
 		embeddedContentType.initializeParser((JSPCapableParser) structuredDocument.getParser());
 		// adding language here, in this convienent central
@@ -473,10 +499,12 @@ public class JSPModelLoader extends AbstractModelLoader {
 	/**
 	 * Method initEmbeddedType.
 	 */
-	protected void initEmbeddedType(IStructuredModel model) {
-		initializeEmbeddedTypeFromDefault(model);
+	protected void initEmbeddedTypePre(IStructuredModel model) {
+		initializeEmbeddedTypeFromDefaultPre(model);
 	}
-
+	protected void initEmbeddedTypePost(IStructuredModel model) {
+		initializeEmbeddedTypeFromDefaultPost(model);
+	}
 	/**
 	 * Method initEmbeddedType.
 	 */
@@ -484,7 +512,8 @@ public class JSPModelLoader extends AbstractModelLoader {
 		EmbeddedTypeHandler existingEmbeddedType = getEmbeddedType(oldModel);
 		EmbeddedTypeHandler newEmbeddedContentType = existingEmbeddedType.newInstance();
 		if (existingEmbeddedType == null) {
-			initEmbeddedType(newModel);
+			initEmbeddedTypePre(newModel);
+			initEmbeddedTypePost(newModel);
 		} else {
 			// initEmbeddedType(newModel);
 			initCloneOfEmbeddedType(newModel, existingEmbeddedType, newEmbeddedContentType);

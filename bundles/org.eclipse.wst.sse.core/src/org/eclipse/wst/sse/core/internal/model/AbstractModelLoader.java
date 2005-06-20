@@ -97,7 +97,8 @@ public abstract class AbstractModelLoader implements IModelLoader {
 			model.setStructuredDocument((IStructuredDocument) structuredDocument);
 			addFactories(model, getAdapterFactories());
 			//
-			initEmbeddedType(model);
+			initEmbeddedTypePre(model);
+			initEmbeddedTypePost(model);
 			// For types with propagating adapters, its important
 			// that the propagating adapter be in place before the contents
 			// are set.
@@ -116,10 +117,11 @@ public abstract class AbstractModelLoader implements IModelLoader {
 		// that the propagating adapter be in place before the contents
 		// are set.
 		preLoadAdapt(model);
+		initEmbeddedTypePre(model);
 
 		model.setStructuredDocument(structuredDocument);
 		//
-		initEmbeddedType(model);
+		initEmbeddedTypePost(model);
 
 		return model;
 	}
@@ -180,7 +182,9 @@ public abstract class AbstractModelLoader implements IModelLoader {
 	 * 
 	 * @param model
 	 */
-	protected void initEmbeddedType(IStructuredModel model) {
+	protected void initEmbeddedTypePre(IStructuredModel model) {
+	}
+	protected void initEmbeddedTypePost(IStructuredModel model) {
 	}
 
 	/**
