@@ -93,10 +93,12 @@ public class TestCatalogRetrivalAndModelCreation extends TestCase {
 	public void test2001Schema() throws MalformedURLException, IOException {
 		doURITest("http://www.w3.org/2001/XMLSchema");
 	}
-	public void test2001SchemaCM() throws MalformedURLException, IOException {
-		doCM_URITest("http://www.w3.org/2001/XMLSchema.xsd");
+	public void test2001SchemaCMDirect() throws MalformedURLException, IOException {
+		doCM_directURITest("http://www.w3.org/2001/XMLSchema.xsd");
 	}
-
+	public void test2001SchemaCMCatalog() throws MalformedURLException, IOException {
+		doURI_CMTest("http://www.w3.org/2001/XMLSchema");
+	}
 	private void doTest(String EXPECTED_PUBLICID) throws MalformedURLException, IOException {
 		ICatalog xmlCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
 		String resolved = xmlCatalog.resolvePublic(EXPECTED_PUBLICID, null);
@@ -111,15 +113,9 @@ public class TestCatalogRetrivalAndModelCreation extends TestCase {
 		assertNotNull("expected to create content model for " + EXPECTED_PUBLICID, contentModel);
 	}
 
-	private void doCM_URITest(String EXPECTED_URI) throws MalformedURLException, IOException {
-		ICatalog xmlCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
-		String resolved = xmlCatalog.resolvePublic(EXPECTED_URI, null);
+	private void doCM_directURITest(String EXPECTED_URI) throws MalformedURLException, IOException {
 		ContentModelManager contentModelManager = ContentModelManager.getInstance();
-		// this test should handle if in catalog or not?
 		String uriToUse = EXPECTED_URI;
-		if (resolved != null) {
-			uriToUse = resolved;
-		}
 		CMDocument contentModel = contentModelManager.createCMDocument(uriToUse, null);
 		assertNotNull("expected to create content model for " + EXPECTED_URI, contentModel);
 	}
@@ -129,6 +125,17 @@ public class TestCatalogRetrivalAndModelCreation extends TestCase {
 		ICatalog xmlCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
 		String resolved = xmlCatalog.resolveURI(EXPECTED_URI);
 		assertNotNull("expected to find " + EXPECTED_URI, resolved);
+
+	}
+	private void doURI_CMTest(String EXPECTED_URI) throws MalformedURLException, IOException {
+		 
+		ICatalog xmlCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
+		String resolved = xmlCatalog.resolveURI(EXPECTED_URI);
+		assertNotNull("expected to find " + EXPECTED_URI, resolved);
+		
+		ContentModelManager contentModelManager = ContentModelManager.getInstance();
+		CMDocument contentModel = contentModelManager.createCMDocument(resolved, null);
+		assertNotNull("expected to create content model for " + EXPECTED_URI, contentModel);
 
 	}
 
