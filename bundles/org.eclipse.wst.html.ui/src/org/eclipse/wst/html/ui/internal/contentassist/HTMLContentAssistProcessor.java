@@ -274,7 +274,8 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 							if (documentPosition == offset) {
 								// before quote
 								askCSS = false;
-							} else {
+							}
+							else {
 								offset++;
 								quote = firstChar;
 							}
@@ -321,36 +322,46 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 	private ICompletionProposal getHTMLTagPropsosal(StructuredTextViewer viewer, int documentPosition) {
 		IModelManager mm = StructuredModelManager.getModelManager();
 		IStructuredModel model = null;
+		ICompletionProposal result = null;
 		try {
-			if (mm != null)
+			if (mm != null) {
 				model = mm.getExistingModelForRead(viewer.getDocument());
 
-			IDOMDocument doc = ((IDOMModel) model).getDocument();
+				if (model != null) {
+					IDOMDocument doc = ((IDOMModel) model).getDocument();
 
-			ModelQuery mq = ModelQueryUtil.getModelQuery(doc);
-			// XHTML requires lowercase tagname for lookup
-			CMElementDeclaration htmlDecl = (CMElementDeclaration) mq.getCorrespondingCMDocument(doc).getElements().getNamedItem(HTML40Namespace.ElementName.HTML.toLowerCase());
-			if (htmlDecl != null) {
-				StringBuffer proposedTextBuffer = new StringBuffer();
-				getContentGenerator().generateTag(doc, htmlDecl, proposedTextBuffer);
+					ModelQuery mq = ModelQueryUtil.getModelQuery(doc);
+					if (mq != null) {
 
-				String proposedText = proposedTextBuffer.toString();
-				String requiredName = getContentGenerator().getRequiredName(doc, htmlDecl);
+						// XHTML requires lowercase tagname for lookup
+						CMElementDeclaration htmlDecl = (CMElementDeclaration) mq.getCorrespondingCMDocument(doc).getElements().getNamedItem(HTML40Namespace.ElementName.HTML.toLowerCase());
+						if (htmlDecl != null) {
+							StringBuffer proposedTextBuffer = new StringBuffer();
+							getContentGenerator().generateTag(doc, htmlDecl, proposedTextBuffer);
 
-				CustomCompletionProposal proposal = new CustomCompletionProposal(proposedText, documentPosition, // start
-							// pos
-							0, // replace length
-							requiredName.length() + 2, // cursor position
-							// after (relavtive to
-							// start)
+							String proposedText = proposedTextBuffer.toString();
+							String requiredName = getContentGenerator().getRequiredName(doc, htmlDecl);
+
+							CustomCompletionProposal proposal = new CustomCompletionProposal(proposedText, documentPosition,
+							/* start pos */
+							0, /* replace length */
+							requiredName.length() + 2, /*
+														 * cursor position
+														 * after (relavtive to
+														 * start)
+														 */
 							HTMLEditorPluginImageHelper.getInstance().getImage(HTMLEditorPluginImages.IMG_OBJ_TAG_GENERIC), requiredName, null, null, XMLRelevanceConstants.R_TAG_NAME);
-				return proposal;
+							result = proposal;
+						}
+					}
+				}
 			}
-		} finally {
+		}
+		finally {
 			if (model != null)
 				model.releaseFromRead();
 		}
-		return null;
+		return result;
 	}
 
 	/**
@@ -436,7 +447,8 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 		if (doAuto) {
 			key = HTMLUIPreferenceNames.AUTO_PROPOSE_CODE;
 			completionProposalAutoActivationCharacters = getPreferenceStore().getString(key).toCharArray();
-		} else {
+		}
+		else {
 			completionProposalAutoActivationCharacters = null;
 		}
 	}
