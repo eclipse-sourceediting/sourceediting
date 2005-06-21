@@ -8,39 +8,26 @@
  ****************************************************************************/
 package org.eclipse.wst.xml.ui.internal.tabletree;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceStatus;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextInputListener;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IPropertyListener;
-import org.eclipse.ui.IStorageEditorInput;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.help.WorkbenchHelp;
+import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.part.MultiPageEditorSite;
@@ -52,7 +39,7 @@ import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.provisional.StructuredTextEditorXML;
 
-public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IPropertyListener {
+public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 
 	/**
 	 * Internal part activation listener
@@ -70,7 +57,8 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 				fIsHandlingActivation = true;
 				try {
 					safelySanityCheckState();
-				} finally {
+				}
+				finally {
 					fIsHandlingActivation = false;
 				}
 			}
@@ -117,6 +105,62 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 		}
 	}
 
+	/**
+	 * Internal IPropertyListener
+	 */
+	class PropertyListener implements IPropertyListener {
+		public void propertyChanged(Object source, int propId) {
+			switch (propId) {
+				// had to implement input changed "listener" so that
+				// StructuredTextEditor could tell it containing editor that
+				// the input has change, when a 'resource moved' event is
+				// found.
+				case IEditorPart.PROP_INPUT :
+				case IEditorPart.PROP_DIRTY : {
+					if (source == getTextEditor()) {
+						if (getTextEditor().getEditorInput() != getEditorInput()) {
+							setInput(getTextEditor().getEditorInput());
+							/*
+							 * title should always change when input changes.
+							 * create runnable for following post call
+							 */
+							Runnable runnable = new Runnable() {
+								public void run() {
+									_firePropertyChange(IWorkbenchPart.PROP_TITLE);
+								}
+							};
+							/*
+							 * Update is just to post things on the display
+							 * queue (thread). We have to do this to get the
+							 * dirty property to get updated after other
+							 * things on the queue are executed.
+							 */
+							postOnDisplayQue(runnable);
+						}
+					}
+					break;
+				}
+				case IWorkbenchPart.PROP_TITLE : {
+					// update the input if the title is changed
+					if (source == getTextEditor()) {
+						if (getTextEditor().getEditorInput() != getEditorInput()) {
+							setInput(getTextEditor().getEditorInput());
+						}
+					}
+					break;
+				}
+				default : {
+					// propagate changes. Is this needed? Answer: Yes.
+					if (source == getTextEditor()) {
+						firePropertyChange(propId);
+					}
+					break;
+				}
+			}
+
+		}
+	}
+
 	class TextInputListener implements ITextInputListener {
 		public void inputDocumentAboutToBeChanged(IDocument oldInput, IDocument newInput) {
 		}
@@ -133,12 +177,15 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 	/** The design viewer */
 	private IDesignViewer fDesignViewer;
 
+	private PartListener fPartListener;
+
+	IPropertyListener fPropertyListener = null;
+
 	/** The source page index. */
 	private int fSourcePageIndex;
+
 	/** The text editor. */
 	private StructuredTextEditor fTextEditor;
-
-	private PartListener partListener;
 
 	/**
 	 * StructuredTextMultiPageEditorPart constructor comment.
@@ -172,7 +219,8 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 			// force an
 			// input refresh
 			fTextEditor.getTextViewer().addTextInputListener(new TextInputListener());
-		} catch (PartInitException exception) {
+		}
+		catch (PartInitException exception) {
 			// dispose editor
 			dispose();
 			Logger.logException(exception);
@@ -198,7 +246,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 	 * 
 	 */
 	private void createAndAddDesignPage() {
-		XMLTableTreeViewer tableTreeViewer = createDesignPage();
+		IDesignViewer tableTreeViewer = createDesignPage();
 
 		fDesignViewer = tableTreeViewer;
 		// note: By adding the design page as a Control instead of an
@@ -208,10 +256,10 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 		setPageText(fDesignPageIndex, tableTreeViewer.getTitle());
 	}
 
-	protected XMLTableTreeViewer createDesignPage() {
+	protected IDesignViewer createDesignPage() {
 		XMLTableTreeViewer tableTreeViewer = new XMLTableTreeViewer(getContainer());
-		//  Set the default infopop for XML design viewer.
-		WorkbenchHelp.setHelp(tableTreeViewer.getControl(), XMLTableTreeHelpContextIds.XML_DESIGN_VIEW_HELPID);
+		// Set the default infopop for XML design viewer.
+		XMLUIPlugin.getInstance().getWorkbench().getHelpSystem().setHelp(tableTreeViewer.getControl(), XMLTableTreeHelpContextIds.XML_DESIGN_VIEW_HELPID);
 		return tableTreeViewer;
 	}
 
@@ -230,9 +278,12 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 			addSourcePage();
 			connectDesignPage();
 
-			setActivePage();
-
-		} catch (PartInitException e) {
+			int activePageIndex = getPreferenceStore().getInt(IXMLPreferenceNames.LAST_ACTIVE_PAGE);
+			if (activePageIndex >= 0 && activePageIndex < getPageCount()) {
+				setActivePage(activePageIndex);
+			}
+		}
+		catch (PartInitException e) {
 			Logger.logException(e);
 			throw new RuntimeException(e);
 		}
@@ -257,7 +308,8 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 					return contributor;
 				}
 			};
-		} else {
+		}
+		else {
 			site = super.createSite(editor);
 		}
 		return site;
@@ -270,13 +322,10 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 		fTextEditor = createTextEditor();
 		fTextEditor.setEditorPart(this);
 
-		// Set the SourceViewerConfiguration now so the text editor won't use
-		// the default configuration first
-		// and switch to the StructuredTextViewerConfiguration later.
-		// DMW removed setSourceViewerConfiguration 3/26/2003 since added
-		// createPartControl to our text editor.
-		// fTextEditor.setSourceViewerConfiguration();
-		fTextEditor.addPropertyListener(this);
+		if (fPropertyListener == null) {
+			fPropertyListener = new PropertyListener();
+		}
+		fTextEditor.addPropertyListener(fPropertyListener);
 	}
 
 	/**
@@ -301,12 +350,10 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 		disconnectDesignPage();
 
 		IWorkbenchWindow window = getSite().getWorkbenchWindow();
-		window.getPartService().removePartListener(partListener);
-		window.getShell().removeShellListener(partListener);
-
-		getSite().getPage().removePartListener(partListener);
-		if (fTextEditor != null) {
-			fTextEditor.removePropertyListener(this);
+		window.getPartService().removePartListener(fPartListener);
+		window.getShell().removeShellListener(fPartListener);
+		if (fTextEditor != null && fPropertyListener != null) {
+			fTextEditor.removePropertyListener(fPropertyListener);
 		}
 
 		// moved to last when added window ... seems like
@@ -319,135 +366,45 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 	}
 
 	/*
-	 * (non-Javadoc) Saves the contents of this editor. <p> Subclasses must
-	 * override this method to implement the open-save-close lifecycle for an
-	 * editor. For greater details, see <code> IEditorPart </code></p>
+	 * (non-Javadoc)
 	 * 
-	 * @see IEditorPart
+	 * @see org.eclipse.ui.ISaveablePart#doSave(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	public void doSave(IProgressMonitor monitor) {
 		fTextEditor.doSave(monitor);
-		//		// this is a temporary way to force validation.
-		//		// when the validator is a workbench builder, the following lines
-		// can be removed
-		//		if (fDesignViewer != null)
-		//			fDesignViewer.saveOccurred();
-
 	}
 
 	/*
-	 * (non-Javadoc) Saves the contents of this editor to another object. <p>
-	 * Subclasses must override this method to implement the open-save-close
-	 * lifecycle for an editor. For greater details, see <code> IEditorPart
-	 * </code></p>
+	 * (non-Javadoc)
 	 * 
-	 * @see IEditorPart
+	 * @see org.eclipse.ui.ISaveablePart#doSaveAs()
 	 */
 	public void doSaveAs() {
 		fTextEditor.doSaveAs();
-		// 253619
-		// following used to be executed here, but is
-		// now called "back" from text editor (since
-		// mulitiple paths to the performSaveAs in StructuredTextEditor.
-		//doSaveAsForStructuredTextMulitPagePart();
 	}
 
-	private void editorInputIsAcceptable(IEditorInput input) throws PartInitException {
-		if (input instanceof IFileEditorInput) {
-			// verify that it can be opened
-			CoreException[] coreExceptionArray = new CoreException[1];
-			if (fileDoesNotExist((IFileEditorInput) input, coreExceptionArray)) {
-				CoreException coreException = coreExceptionArray[0];
-				if (coreException.getStatus().getCode() == IResourceStatus.FAILED_READ_LOCAL) {
-					// I'm assuming this is always 'does not exist'
-					// we'll refresh local go mimic behavior of default
-					// editor, where the
-					// troublesome file is refreshed (and will cause it to
-					// 'disappear' from Navigator.
-					try {
-						((IFileEditorInput) input).getFile().refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
-					} catch (CoreException ce) {
-						// very unlikely
-						Logger.logException(ce);
-					}
-					throw new PartInitException(NLS.bind(XMLEditorMessages.Resource__does_not_exist, (new Object[]{input.getName()})));
-				} else {
-					throw new PartInitException(NLS.bind(XMLEditorMessages.Editor_could_not_be_open, (new Object[]{input.getName()})));
-				}
-			}
-		} else if (input instanceof IStorageEditorInput) {
-			InputStream contents = null;
-			try {
-				contents = ((IStorageEditorInput) input).getStorage().getContents();
-			} catch (CoreException noStorageExc) {
-			}
-			if (contents == null) {
-				throw new PartInitException(NLS.bind(XMLEditorMessages.Editor_could_not_be_open, (new Object[]{input.getName()})));
-			} else {
-				try {
-					contents.close();
-				} catch (IOException e) {
-				}
-			}
-		}
-	}
-
-	//	void doSaveAsForStructuredTextMulitPagePart() {
-	//		setPageText(getActivePage(), fTextEditor.getTitle());
-	//		setInput(fTextEditor.getEditorInput());
-	//		if (fDesignViewer != null) {
-	//			//fDesignViewer.setEditorInput(fTextEditor.getEditorInput());
-	//			fDesignViewer.setModel(getModel());
-	//			fDesignViewer.saveAsOccurred();
-	//		}
-	//		// even though we've set title etc., several times already!
-	//		// only now is all prepared for it.
-	//		firePropertyChange(IWorkbenchPart.PROP_TITLE);
-	//		firePropertyChange(PROP_DIRTY);
-	//	}
 	/*
-	 * (non-Javadoc) Initializes the editor part with a site and input. <p>
-	 * Subclasses of <code> EditorPart </code> must implement this method.
-	 * Within the implementation subclasses should verify that the input type
-	 * is acceptable and then save the site and input. Here is sample code:
-	 * </p><pre> if (!(input instanceof IFileEditorInput)) throw new
-	 * PartInitException("Invalid Input: Must be IFileEditorInput");
-	 * setSite(site); setInput(editorInput); </pre>
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
 	 */
-	private boolean fileDoesNotExist(IFileEditorInput input, Throwable[] coreException) {
-		boolean result = false;
-		InputStream inStream = null;
-		if ((!(input.exists())) || (!(input.getFile().exists()))) {
-			result = true;
-		} else {
-			try {
-				inStream = input.getFile().getContents(true);
-			} catch (CoreException e) {
-				// very likely to be file not found
-				result = true;
-				coreException[0] = e;
-			} finally {
-				if (input != null) {
-					try {
-						if (inStream != null) {
-							inStream.close();
-						}
-					} catch (IOException e) {
-						Logger.logException(e);
-					}
-				}
-			}
-		}
-		return result;
-	}
-
 	public Object getAdapter(Class key) {
 		Object result = null;
 		if (key == IDesignViewer.class) {
 			result = fDesignViewer;
-		} else {
+
+		}
+		else if (key.equals(IGotoMarker.class)) {
+			result = new IGotoMarker() {
+				public void gotoMarker(IMarker marker) {
+					XMLMultiPageEditorPart.this.gotoMarker(marker);
+				}
+			};
+		}
+		else {
 			// DMW: I'm bullet-proofing this because
-			// its been reported (on 4.03 version) a null pointer sometimes
+			// its been reported (on IBM WSAD 4.03 version) a null pointer
+			// sometimes
 			// happens here on startup, when an editor has been left
 			// open when workbench shutdown.
 			if (fTextEditor != null) {
@@ -473,7 +430,9 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 	}
 
 	/*
-	 * (non-Javadoc) Method declared on IWorkbenchPart.
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.IWorkbenchPart#getTitle()
 	 */
 	public String getTitle() {
 		String title = null;
@@ -481,7 +440,8 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 			if (getEditorInput() != null) {
 				title = getEditorInput().getName();
 			}
-		} else {
+		}
+		else {
 			title = getTextEditor().getTitle();
 		}
 		if (title == null) {
@@ -490,63 +450,47 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 		return title;
 	}
 
-	/*
-	 * (non-Javadoc) Sets the cursor and selection state for this editor to
-	 * the passage defined by the given marker. <p> Subclasses may override.
-	 * For greater details, see <code> IEditorPart </code></p>
-	 * 
-	 * @see IEditorPart
-	 */
-	public void gotoMarker(IMarker marker) {
-		// (pa) 20020217 this was null when opening an editor that was
-		// already open
-		if (fTextEditor != null) {
-			IGotoMarker markerGotoer = (IGotoMarker) fTextEditor.getAdapter(IGotoMarker.class);
-			markerGotoer.gotoMarker(marker);
-		}
+	void gotoMarker(IMarker marker) {
+		setActivePage(fSourcePageIndex);
+		IDE.gotoMarker(fTextEditor, marker);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.IEditorPart#init(org.eclipse.ui.IEditorSite,
+	 *      org.eclipse.ui.IEditorInput)
+	 */
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-		editorInputIsAcceptable(input);
 		try {
 			super.init(site, input);
-			if (partListener == null) {
-				partListener = new PartListener();
+			if (fPartListener == null) {
+				fPartListener = new PartListener();
 			}
-			//getSite().getPage().addPartListener(partListner);
 			// we want to listen for our own activation
 			IWorkbenchWindow window = getSite().getWorkbenchWindow();
-			window.getPartService().addPartListener(partListener);
-			window.getShell().addShellListener(partListener);
-		} catch (Exception e) {
-			if (e instanceof SourceEditingRuntimeException) {
-				Throwable t = ((SourceEditingRuntimeException) e).getOriginalException();
-				if (t instanceof IOException) {
-					System.out.println(t);
-					// file not found
-				}
-			}
+			window.getPartService().addPartListener(fPartListener);
+			window.getShell().addShellListener(fPartListener);
+		}
+		catch (Exception e) {
+			Logger.logException("exception initializing " + getClass().getName(), e);
 		}
 		setPartName(input.getName());
 	}
 
 	/*
-	 * (non-Javadoc) Returns whether the "save as" operation is supported by
-	 * this editor. <p> Subclasses must override this method to implement the
-	 * open-save-close lifecycle for an editor. For greater details, see
-	 * <code> IEditorPart </code></p>
+	 * (non-Javadoc)
 	 * 
-	 * @see IEditorPart
+	 * @see org.eclipse.ui.ISaveablePart#isSaveAsAllowed()
 	 */
 	public boolean isSaveAsAllowed() {
 		return fTextEditor != null && fTextEditor.isSaveAsAllowed();
 	}
 
 	/*
-	 * (non-Javadoc) Returns whether the contents of this editor should be
-	 * saved when the editor is closed. <p> This method returns <code> true
-	 * </code> if and only if the editor is dirty ( <code> isDirty </code> ).
-	 * </p>
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.ui.ISaveablePart#isSaveOnCloseNeeded()
 	 */
 	public boolean isSaveOnCloseNeeded() {
 		// overriding super class since it does a lowly isDirty!
@@ -555,120 +499,42 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 		return isDirty();
 	}
 
-	/**
-	 * Notifies this multi-page editor that the page with the given id has
-	 * been activated. This method is called when the user selects a different
-	 * tab.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param newPageIndex
-	 *            the index of the activated page
+	 * @see org.eclipse.ui.part.MultiPageEditorPart#pageChange(int)
 	 */
 	protected void pageChange(int newPageIndex) {
 		super.pageChange(newPageIndex);
-
 		saveLastActivePageIndex(newPageIndex);
 	}
 
 	/**
 	 * Posts the update code "behind" the running operation.
 	 */
-	private void postOnDisplayQue(Runnable runnable) {
+	void postOnDisplayQue(Runnable runnable) {
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
 		if (windows != null && windows.length > 0) {
 			Display display = windows[0].getShell().getDisplay();
 			display.asyncExec(runnable);
-		} else
+		}
+		else
 			runnable.run();
 	}
 
-	/**
-	 * Indicates that a property has changed.
-	 * 
-	 * @param source
-	 *            the object whose property has changed
-	 * @param propId
-	 *            the id of the property which has changed; property ids are
-	 *            generally defined as constants on the source class
-	 */
-	public void propertyChanged(Object source, int propId) {
-		switch (propId) {
-			// had to implement input changed "listener" so that
-			// strucutedText could tell it containing editor that
-			// the input has change, when a 'resource moved' event is
-			// found.
-			case IEditorPart.PROP_INPUT :
-			case IEditorPart.PROP_DIRTY : {
-				if (source == fTextEditor) {
-					if (fTextEditor.getEditorInput() != getEditorInput()) {
-						setInput(fTextEditor.getEditorInput());
-						// title should always change when input changes.
-						// create runnable for following post call
-						Runnable runnable = new Runnable() {
-							public void run() {
-								_firePropertyChange(IWorkbenchPart.PROP_TITLE);
-							}
-						};
-						// Update is just to post things on the display queue
-						// (thread). We have to do this to get the dirty
-						// property to get updated after other things on the
-						// queue are executed.
-						postOnDisplayQue(runnable);
-					}
-				}
-				break;
-			}
-			case IWorkbenchPart.PROP_TITLE : {
-				// update the input if the title is changed
-				if (source == fTextEditor) {
-					if (fTextEditor.getEditorInput() != getEditorInput()) {
-						setInput(fTextEditor.getEditorInput());
-					}
-				}
-				break;
-			}
-			default : {
-				// propagate changes. Is this needed? Answer: Yes.
-				if (source == fTextEditor) {
-					firePropertyChange(propId);
-				}
-				break;
-			}
-		}
 
-	}
-
-	private void safelySanityCheckState() {
+	void safelySanityCheckState() {
 		// If we're called before editor is created, simply ignore since we
 		// delegate this function to our embedded TextEditor
-		if (getTextEditor() == null)
-			return;
-
-		getTextEditor().safelySanityCheckState(getEditorInput());
-
+		if (getTextEditor() != null) {
+			getTextEditor().safelySanityCheckState(getEditorInput());
+		}
 	}
 
 	private void saveLastActivePageIndex(int newPageIndex) {
 		// save the last active page index to preference manager
 		getPreferenceStore().setValue(IXMLPreferenceNames.LAST_ACTIVE_PAGE, newPageIndex);
-	}
-
-	/**
-	 * Sets the currently active page.
-	 */
-	protected void setActivePage() {
-		// retrieve the last active page index from preference manager
-		int activePageIndex = getPreferenceStore().getInt(IXMLPreferenceNames.LAST_ACTIVE_PAGE);
-
-		// We check this range since someone could hand edit the XML
-		// preference file to an invalid value ... which I know from
-		// experience :( ... if they do, we'll reset to default and continue
-		// rather than throw an assertion error in the setActivePage(int)
-		// method.
-		if (activePageIndex < 0 || activePageIndex >= getPageCount()) {
-			activePageIndex = fDesignPageIndex;
-		}
-		setActivePage(activePageIndex);
 	}
 
 	/*
@@ -685,15 +551,4 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 			fDesignViewer.setModel(getModel());
 		setPartName(input.getName());
 	}
-
-	/**
-	 * IExtendedMarkupEditor method
-	 */
-	public IStatus validateEdit(Shell context) {
-		if (getTextEditor() == null)
-			return new Status(IStatus.ERROR, XMLUIPlugin.ID, IStatus.INFO, "", null); //$NON-NLS-1$
-
-		return getTextEditor().validateEdit(context);
-	}
-
 }
