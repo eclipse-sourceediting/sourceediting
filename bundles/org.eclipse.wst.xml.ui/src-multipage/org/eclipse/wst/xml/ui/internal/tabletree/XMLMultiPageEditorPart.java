@@ -151,14 +151,14 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 	 * This method is just to make firePropertyChanged accessbible from some
 	 * (anonomous) inner classes.
 	 */
-	protected void _firePropertyChange(int property) {
+	void _firePropertyChange(int property) {
 		super.firePropertyChange(property);
 	}
 
 	/**
 	 * Adds the source page of the multi-page editor.
 	 */
-	protected void addSourcePage() throws PartInitException {
+	private void addSourcePage() throws PartInitException {
 		try {
 			fSourcePageIndex = addPage(fTextEditor, getEditorInput());
 			setPageText(fSourcePageIndex, XMLEditorMessages.XMLMultiPageEditorPart_0);
@@ -186,7 +186,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 	 * ViewerSelectionManager from the TextEditor. setModel is also done here
 	 * because getModel() needs to reference the TextEditor.
 	 */
-	protected void connectDesignPage() {
+	private void connectDesignPage() {
 		if (fDesignViewer != null) {
 			fDesignViewer.setViewerSelectionManager(fTextEditor.getViewerSelectionManager());
 			fDesignViewer.setModel(getModel());
@@ -197,10 +197,8 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 	 * Create and Add the Design Page using a registered factory
 	 * 
 	 */
-	protected void createAndAddDesignPage() {
-		XMLTableTreeViewer tableTreeViewer = new XMLTableTreeViewer(getContainer());
-		//  Set the default infopop for XML design viewer.
-		WorkbenchHelp.setHelp(tableTreeViewer.getControl(), XMLTableTreeHelpContextIds.XML_DESIGN_VIEW_HELPID);
+	private void createAndAddDesignPage() {
+		XMLTableTreeViewer tableTreeViewer = createDesignPage();
 
 		fDesignViewer = tableTreeViewer;
 		// note: By adding the design page as a Control instead of an
@@ -208,6 +206,13 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 		// a "null" active editor when the design page is made active
 		fDesignPageIndex = addPage(tableTreeViewer.getControl());
 		setPageText(fDesignPageIndex, tableTreeViewer.getTitle());
+	}
+
+	protected XMLTableTreeViewer createDesignPage() {
+		XMLTableTreeViewer tableTreeViewer = new XMLTableTreeViewer(getContainer());
+		//  Set the default infopop for XML design viewer.
+		WorkbenchHelp.setHelp(tableTreeViewer.getControl(), XMLTableTreeHelpContextIds.XML_DESIGN_VIEW_HELPID);
+		return tableTreeViewer;
 	}
 
 	/**
@@ -227,9 +232,6 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 
 			setActivePage();
 
-			// future_TODO: add a catch block here for any exception the
-			// design
-			// page throws and convert it into a more informative message.
 		} catch (PartInitException e) {
 			Logger.logException(e);
 			throw new RuntimeException(e);
@@ -282,11 +284,11 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 	 * 
 	 * @return StructuredTextEditor
 	 */
-	protected StructuredTextEditor createTextEditor() {
+	private StructuredTextEditor createTextEditor() {
 		return new StructuredTextEditorXML();
 	}
 
-	protected void disconnectDesignPage() {
+	private void disconnectDesignPage() {
 		if (fDesignViewer != null) {
 			fDesignViewer.setModel(null);
 			fDesignViewer.setViewerSelectionManager(null);
@@ -412,7 +414,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 	 * PartInitException("Invalid Input: Must be IFileEditorInput");
 	 * setSite(site); setInput(editorInput); </pre>
 	 */
-	protected boolean fileDoesNotExist(IFileEditorInput input, Throwable[] coreException) {
+	private boolean fileDoesNotExist(IFileEditorInput input, Throwable[] coreException) {
 		boolean result = false;
 		InputStream inStream = null;
 		if ((!(input.exists())) || (!(input.getFile().exists()))) {
@@ -455,14 +457,14 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 		return result;
 	}
 
-	protected IStructuredModel getModel() {
+	private IStructuredModel getModel() {
 		IStructuredModel model = null;
 		if (fTextEditor != null)
 			model = fTextEditor.getModel();
 		return model;
 	}
 
-	protected IPreferenceStore getPreferenceStore() {
+	private IPreferenceStore getPreferenceStore() {
 		return XMLUIPlugin.getDefault().getPreferenceStore();
 	}
 
@@ -570,7 +572,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 	/**
 	 * Posts the update code "behind" the running operation.
 	 */
-	protected void postOnDisplayQue(Runnable runnable) {
+	private void postOnDisplayQue(Runnable runnable) {
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
 		if (windows != null && windows.length > 0) {
@@ -636,7 +638,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 
 	}
 
-	protected void safelySanityCheckState() {
+	private void safelySanityCheckState() {
 		// If we're called before editor is created, simply ignore since we
 		// delegate this function to our embedded TextEditor
 		if (getTextEditor() == null)
@@ -646,7 +648,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart implements IProp
 
 	}
 
-	protected void saveLastActivePageIndex(int newPageIndex) {
+	private void saveLastActivePageIndex(int newPageIndex) {
 		// save the last active page index to preference manager
 		getPreferenceStore().setValue(IXMLPreferenceNames.LAST_ACTIVE_PAGE, newPageIndex);
 	}
