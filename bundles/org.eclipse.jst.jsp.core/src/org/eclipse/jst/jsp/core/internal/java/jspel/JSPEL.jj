@@ -3,8 +3,7 @@
   JAVA_UNICODE_ESCAPE = false;
   UNICODE_INPUT = true;
   STATIC = false;
-  OPTIMIZE_TOKEN_MANAGER = true;                                                                                                                                  
-  DEBUG_PARSER = true;
+  OPTIMIZE_TOKEN_MANAGER = true;                                                                                                                                 
 }
 
 PARSER_BEGIN(JSPELParser)

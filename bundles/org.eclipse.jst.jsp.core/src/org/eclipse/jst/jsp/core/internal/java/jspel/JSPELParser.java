@@ -24,42 +24,40 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
   }
 
   final public ASTExpression Expression() throws ParseException {
-    trace_call("Expression");
-    try {
                               /*@bgen(jjtree) Expression */
   ASTExpression jjtn000 = new ASTExpression(JJTEXPRESSION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
   jjtreeOpenNodeScope(jjtn000);
-      try {
-        if (jj_2_1(2147483647)) {
-          ChoiceExpression();
-        } else {
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case INTEGER_LITERAL:
-          case FLOATING_POINT_LITERAL:
-          case STRING_LITERAL:
-          case TRUE:
-          case FALSE:
-          case NULL:
-          case LPAREN:
-          case MINUS:
-          case NOT1:
-          case EMPTY:
-          case IDENTIFIER:
-            OrExpression();
+    try {
+      if (jj_2_1(2147483647)) {
+        ChoiceExpression();
+      } else {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case INTEGER_LITERAL:
+        case FLOATING_POINT_LITERAL:
+        case STRING_LITERAL:
+        case TRUE:
+        case FALSE:
+        case NULL:
+        case LPAREN:
+        case MINUS:
+        case NOT1:
+        case EMPTY:
+        case IDENTIFIER:
+          OrExpression();
                                                                             jjtree.closeNodeScope(jjtn000, true);
                                                                             jjtc000 = false;
                                                                             jjtreeCloseNodeScope(jjtn000);
                                                                             {if (true) return jjtn000;}
-            break;
-          default:
-            jj_la1[0] = jj_gen;
-            jj_consume_token(-1);
-            throw new ParseException();
-          }
+          break;
+        default:
+          jj_la1[0] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
         }
-      } catch (Throwable jjte000) {
+      }
+    } catch (Throwable jjte000) {
           if (jjtc000) {
             jjtree.clearNodeScope(jjtn000);
             jjtc000 = false;
@@ -73,55 +71,50 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
             {if (true) throw (ParseException)jjte000;}
           }
           {if (true) throw (Error)jjte000;}
-      } finally {
+    } finally {
           if (jjtc000) {
             jjtree.closeNodeScope(jjtn000, true);
             jjtreeCloseNodeScope(jjtn000);
           }
-      }
-    throw new Error("Missing return statement in function");
-    } finally {
-      trace_return("Expression");
     }
+    throw new Error("Missing return statement in function");
   }
 
   final public void OrExpression() throws ParseException {
-    trace_call("OrExpression");
-    try {
  /*@bgen(jjtree) #OrExpression(> 1) */
         ASTOrExpression jjtn000 = new ASTOrExpression(JJTOREXPRESSION);
         boolean jjtc000 = true;
         jjtree.openNodeScope(jjtn000);
         jjtreeOpenNodeScope(jjtn000);Token t;
-      try {
-        AndExpression();
-        label_1:
-        while (true) {
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case OR1:
-          case OR2:
-            ;
-            break;
-          default:
-            jj_la1[1] = jj_gen;
-            break label_1;
-          }
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case OR1:
-            t = jj_consume_token(OR1);
-            break;
-          case OR2:
-            t = jj_consume_token(OR2);
-            break;
-          default:
-            jj_la1[2] = jj_gen;
-            jj_consume_token(-1);
-            throw new ParseException();
-          }
-                                                   jjtn000.addOperatorToken(t);
-          AndExpression();
+    try {
+      AndExpression();
+      label_1:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case OR1:
+        case OR2:
+          ;
+          break;
+        default:
+          jj_la1[1] = jj_gen;
+          break label_1;
         }
-      } catch (Throwable jjte000) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case OR1:
+          t = jj_consume_token(OR1);
+          break;
+        case OR2:
+          t = jj_consume_token(OR2);
+          break;
+        default:
+          jj_la1[2] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+                                                   jjtn000.addOperatorToken(t);
+        AndExpression();
+      }
+    } catch (Throwable jjte000) {
           if (jjtc000) {
             jjtree.clearNodeScope(jjtn000);
             jjtc000 = false;
@@ -135,54 +128,49 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
             {if (true) throw (ParseException)jjte000;}
           }
           {if (true) throw (Error)jjte000;}
-      } finally {
+    } finally {
           if (jjtc000) {
             jjtree.closeNodeScope(jjtn000, jjtree.nodeArity() > 1);
             jjtreeCloseNodeScope(jjtn000);
           }
-      }
-    } finally {
-      trace_return("OrExpression");
     }
   }
 
   final public void AndExpression() throws ParseException {
-    trace_call("AndExpression");
-    try {
  /*@bgen(jjtree) #AndExpression(> 1) */
         ASTAndExpression jjtn000 = new ASTAndExpression(JJTANDEXPRESSION);
         boolean jjtc000 = true;
         jjtree.openNodeScope(jjtn000);
         jjtreeOpenNodeScope(jjtn000);Token t;
-      try {
-        EqualityExpression();
-        label_2:
-        while (true) {
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case AND1:
-          case AND2:
-            ;
-            break;
-          default:
-            jj_la1[3] = jj_gen;
-            break label_2;
-          }
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case AND1:
-            t = jj_consume_token(AND1);
-            break;
-          case AND2:
-            t = jj_consume_token(AND2);
-            break;
-          default:
-            jj_la1[4] = jj_gen;
-            jj_consume_token(-1);
-            throw new ParseException();
-          }
-                                                          jjtn000.addOperatorToken(t);
-          EqualityExpression();
+    try {
+      EqualityExpression();
+      label_2:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case AND1:
+        case AND2:
+          ;
+          break;
+        default:
+          jj_la1[3] = jj_gen;
+          break label_2;
         }
-      } catch (Throwable jjte000) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case AND1:
+          t = jj_consume_token(AND1);
+          break;
+        case AND2:
+          t = jj_consume_token(AND2);
+          break;
+        default:
+          jj_la1[4] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+                                                          jjtn000.addOperatorToken(t);
+        EqualityExpression();
+      }
+    } catch (Throwable jjte000) {
           if (jjtc000) {
             jjtree.clearNodeScope(jjtn000);
             jjtc000 = false;
@@ -196,62 +184,57 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
             {if (true) throw (ParseException)jjte000;}
           }
           {if (true) throw (Error)jjte000;}
-      } finally {
+    } finally {
           if (jjtc000) {
             jjtree.closeNodeScope(jjtn000, jjtree.nodeArity() > 1);
             jjtreeCloseNodeScope(jjtn000);
           }
-      }
-    } finally {
-      trace_return("AndExpression");
     }
   }
 
   final public void EqualityExpression() throws ParseException {
-    trace_call("EqualityExpression");
-    try {
  /*@bgen(jjtree) #EqualityExpression(> 1) */
         ASTEqualityExpression jjtn000 = new ASTEqualityExpression(JJTEQUALITYEXPRESSION);
         boolean jjtc000 = true;
         jjtree.openNodeScope(jjtn000);
         jjtreeOpenNodeScope(jjtn000);Token t;
-      try {
-        RelationalExpression();
-        label_3:
-        while (true) {
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case EQ1:
-          case EQ2:
-          case NEQ1:
-          case NEQ2:
-            ;
-            break;
-          default:
-            jj_la1[5] = jj_gen;
-            break label_3;
-          }
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case EQ1:
-            t = jj_consume_token(EQ1);
-            break;
-          case EQ2:
-            t = jj_consume_token(EQ2);
-            break;
-          case NEQ1:
-            t = jj_consume_token(NEQ1);
-            break;
-          case NEQ2:
-            t = jj_consume_token(NEQ2);
-            break;
-          default:
-            jj_la1[6] = jj_gen;
-            jj_consume_token(-1);
-            throw new ParseException();
-          }
-                                                             jjtn000.addOperatorToken(t);
-          RelationalExpression();
+    try {
+      RelationalExpression();
+      label_3:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case EQ1:
+        case EQ2:
+        case NEQ1:
+        case NEQ2:
+          ;
+          break;
+        default:
+          jj_la1[5] = jj_gen;
+          break label_3;
         }
-      } catch (Throwable jjte000) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case EQ1:
+          t = jj_consume_token(EQ1);
+          break;
+        case EQ2:
+          t = jj_consume_token(EQ2);
+          break;
+        case NEQ1:
+          t = jj_consume_token(NEQ1);
+          break;
+        case NEQ2:
+          t = jj_consume_token(NEQ2);
+          break;
+        default:
+          jj_la1[6] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+                                                             jjtn000.addOperatorToken(t);
+        RelationalExpression();
+      }
+    } catch (Throwable jjte000) {
           if (jjtc000) {
             jjtree.clearNodeScope(jjtn000);
             jjtc000 = false;
@@ -265,78 +248,73 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
             {if (true) throw (ParseException)jjte000;}
           }
           {if (true) throw (Error)jjte000;}
-      } finally {
+    } finally {
           if (jjtc000) {
             jjtree.closeNodeScope(jjtn000, jjtree.nodeArity() > 1);
             jjtreeCloseNodeScope(jjtn000);
           }
-      }
-    } finally {
-      trace_return("EqualityExpression");
     }
   }
 
   final public void RelationalExpression() throws ParseException {
-    trace_call("RelationalExpression");
-    try {
  /*@bgen(jjtree) #RelationalExpression(> 1) */
         ASTRelationalExpression jjtn000 = new ASTRelationalExpression(JJTRELATIONALEXPRESSION);
         boolean jjtc000 = true;
         jjtree.openNodeScope(jjtn000);
         jjtreeOpenNodeScope(jjtn000);Token t;
-      try {
-        AddExpression();
-        label_4:
-        while (true) {
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case GT1:
-          case GT2:
-          case LT1:
-          case LT2:
-          case LE1:
-          case LE2:
-          case GE1:
-          case GE2:
-            ;
-            break;
-          default:
-            jj_la1[7] = jj_gen;
-            break label_4;
-          }
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case LT1:
-            t = jj_consume_token(LT1);
-            break;
-          case LT2:
-            t = jj_consume_token(LT2);
-            break;
-          case GT1:
-            t = jj_consume_token(GT1);
-            break;
-          case GT2:
-            t = jj_consume_token(GT2);
-            break;
-          case GE1:
-            t = jj_consume_token(GE1);
-            break;
-          case GE2:
-            t = jj_consume_token(GE2);
-            break;
-          case LE1:
-            t = jj_consume_token(LE1);
-            break;
-          case LE2:
-            t = jj_consume_token(LE2);
-            break;
-          default:
-            jj_la1[8] = jj_gen;
-            jj_consume_token(-1);
-            throw new ParseException();
-          }
-                                                                                                                   jjtn000.addOperatorToken(t);
-          AddExpression();
+    try {
+      AddExpression();
+      label_4:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case GT1:
+        case GT2:
+        case LT1:
+        case LT2:
+        case LE1:
+        case LE2:
+        case GE1:
+        case GE2:
+          ;
+          break;
+        default:
+          jj_la1[7] = jj_gen;
+          break label_4;
         }
-      } catch (Throwable jjte000) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case LT1:
+          t = jj_consume_token(LT1);
+          break;
+        case LT2:
+          t = jj_consume_token(LT2);
+          break;
+        case GT1:
+          t = jj_consume_token(GT1);
+          break;
+        case GT2:
+          t = jj_consume_token(GT2);
+          break;
+        case GE1:
+          t = jj_consume_token(GE1);
+          break;
+        case GE2:
+          t = jj_consume_token(GE2);
+          break;
+        case LE1:
+          t = jj_consume_token(LE1);
+          break;
+        case LE2:
+          t = jj_consume_token(LE2);
+          break;
+        default:
+          jj_la1[8] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+                                                                                                                   jjtn000.addOperatorToken(t);
+        AddExpression();
+      }
+    } catch (Throwable jjte000) {
           if (jjtc000) {
             jjtree.clearNodeScope(jjtn000);
             jjtc000 = false;
@@ -350,54 +328,49 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
             {if (true) throw (ParseException)jjte000;}
           }
           {if (true) throw (Error)jjte000;}
-      } finally {
+    } finally {
           if (jjtc000) {
             jjtree.closeNodeScope(jjtn000, jjtree.nodeArity() > 1);
             jjtreeCloseNodeScope(jjtn000);
           }
-      }
-    } finally {
-      trace_return("RelationalExpression");
     }
   }
 
   final public void AddExpression() throws ParseException {
-    trace_call("AddExpression");
-    try {
  /*@bgen(jjtree) #AddExpression(> 1) */
         ASTAddExpression jjtn000 = new ASTAddExpression(JJTADDEXPRESSION);
         boolean jjtc000 = true;
         jjtree.openNodeScope(jjtn000);
         jjtreeOpenNodeScope(jjtn000);Token t;
-      try {
-        MultiplyExpression();
-        label_5:
-        while (true) {
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case PLUS:
-          case MINUS:
-            ;
-            break;
-          default:
-            jj_la1[9] = jj_gen;
-            break label_5;
-          }
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case PLUS:
-            t = jj_consume_token(PLUS);
-            break;
-          case MINUS:
-            t = jj_consume_token(MINUS);
-            break;
-          default:
-            jj_la1[10] = jj_gen;
-            jj_consume_token(-1);
-            throw new ParseException();
-          }
-                                                           jjtn000.addOperatorToken(t);
-          MultiplyExpression();
+    try {
+      MultiplyExpression();
+      label_5:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case PLUS:
+        case MINUS:
+          ;
+          break;
+        default:
+          jj_la1[9] = jj_gen;
+          break label_5;
         }
-      } catch (Throwable jjte000) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case PLUS:
+          t = jj_consume_token(PLUS);
+          break;
+        case MINUS:
+          t = jj_consume_token(MINUS);
+          break;
+        default:
+          jj_la1[10] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+                                                           jjtn000.addOperatorToken(t);
+        MultiplyExpression();
+      }
+    } catch (Throwable jjte000) {
           if (jjtc000) {
             jjtree.clearNodeScope(jjtn000);
             jjtc000 = false;
@@ -411,66 +384,61 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
             {if (true) throw (ParseException)jjte000;}
           }
           {if (true) throw (Error)jjte000;}
-      } finally {
+    } finally {
           if (jjtc000) {
             jjtree.closeNodeScope(jjtn000, jjtree.nodeArity() > 1);
             jjtreeCloseNodeScope(jjtn000);
           }
-      }
-    } finally {
-      trace_return("AddExpression");
     }
   }
 
   final public void MultiplyExpression() throws ParseException {
-    trace_call("MultiplyExpression");
-    try {
  /*@bgen(jjtree) #MultiplyExpression(> 1) */
         ASTMultiplyExpression jjtn000 = new ASTMultiplyExpression(JJTMULTIPLYEXPRESSION);
         boolean jjtc000 = true;
         jjtree.openNodeScope(jjtn000);
         jjtreeOpenNodeScope(jjtn000);Token t;
-      try {
-        UnaryExpression();
-        label_6:
-        while (true) {
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case MULTIPLY:
-          case DIVIDE1:
-          case DIVIDE2:
-          case MODULUS1:
-          case MODULUS2:
-            ;
-            break;
-          default:
-            jj_la1[11] = jj_gen;
-            break label_6;
-          }
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case MULTIPLY:
-            t = jj_consume_token(MULTIPLY);
-            break;
-          case DIVIDE1:
-            t = jj_consume_token(DIVIDE1);
-            break;
-          case DIVIDE2:
-            t = jj_consume_token(DIVIDE2);
-            break;
-          case MODULUS1:
-            t = jj_consume_token(MODULUS1);
-            break;
-          case MODULUS2:
-            t = jj_consume_token(MODULUS2);
-            break;
-          default:
-            jj_la1[12] = jj_gen;
-            jj_consume_token(-1);
-            throw new ParseException();
-          }
-                                                                                                      jjtn000.addOperatorToken(t);
-          UnaryExpression();
+    try {
+      UnaryExpression();
+      label_6:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case MULTIPLY:
+        case DIVIDE1:
+        case DIVIDE2:
+        case MODULUS1:
+        case MODULUS2:
+          ;
+          break;
+        default:
+          jj_la1[11] = jj_gen;
+          break label_6;
         }
-      } catch (Throwable jjte000) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case MULTIPLY:
+          t = jj_consume_token(MULTIPLY);
+          break;
+        case DIVIDE1:
+          t = jj_consume_token(DIVIDE1);
+          break;
+        case DIVIDE2:
+          t = jj_consume_token(DIVIDE2);
+          break;
+        case MODULUS1:
+          t = jj_consume_token(MODULUS1);
+          break;
+        case MODULUS2:
+          t = jj_consume_token(MODULUS2);
+          break;
+        default:
+          jj_la1[12] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+                                                                                                      jjtn000.addOperatorToken(t);
+        UnaryExpression();
+      }
+    } catch (Throwable jjte000) {
           if (jjtc000) {
             jjtree.clearNodeScope(jjtn000);
             jjtc000 = false;
@@ -484,32 +452,27 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
             {if (true) throw (ParseException)jjte000;}
           }
           {if (true) throw (Error)jjte000;}
-      } finally {
+    } finally {
           if (jjtc000) {
             jjtree.closeNodeScope(jjtn000, jjtree.nodeArity() > 1);
             jjtreeCloseNodeScope(jjtn000);
           }
-      }
-    } finally {
-      trace_return("MultiplyExpression");
     }
   }
 
   final public void ChoiceExpression() throws ParseException {
-    trace_call("ChoiceExpression");
-    try {
                            /*@bgen(jjtree) ChoiceExpression */
   ASTChoiceExpression jjtn000 = new ASTChoiceExpression(JJTCHOICEEXPRESSION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
   jjtreeOpenNodeScope(jjtn000);
-      try {
-        OrExpression();
-        jj_consume_token(COND);
-        Expression();
-        jj_consume_token(COLON);
-        Expression();
-      } catch (Throwable jjte000) {
+    try {
+      OrExpression();
+      jj_consume_token(COND);
+      Expression();
+      jj_consume_token(COLON);
+      Expression();
+    } catch (Throwable jjte000) {
           if (jjtc000) {
             jjtree.clearNodeScope(jjtn000);
             jjtc000 = false;
@@ -523,63 +486,58 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
             {if (true) throw (ParseException)jjte000;}
           }
           {if (true) throw (Error)jjte000;}
-      } finally {
+    } finally {
           if (jjtc000) {
             jjtree.closeNodeScope(jjtn000, true);
             jjtreeCloseNodeScope(jjtn000);
           }
-      }
-    } finally {
-      trace_return("ChoiceExpression");
     }
   }
 
   final public void UnaryExpression() throws ParseException {
-    trace_call("UnaryExpression");
-    try {
                           /*@bgen(jjtree) UnaryExpression */
   ASTUnaryExpression jjtn000 = new ASTUnaryExpression(JJTUNARYEXPRESSION);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
   jjtreeOpenNodeScope(jjtn000);
-      try {
+    try {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case MINUS:
+      case NOT1:
+      case EMPTY:
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case MINUS:
         case NOT1:
-        case EMPTY:
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case NOT1:
-            jj_consume_token(NOT1);
-            break;
-          case MINUS:
-            jj_consume_token(MINUS);
-            break;
-          case EMPTY:
-            jj_consume_token(EMPTY);
-            break;
-          default:
-            jj_la1[13] = jj_gen;
-            jj_consume_token(-1);
-            throw new ParseException();
-          }
-          UnaryExpression();
+          jj_consume_token(NOT1);
           break;
-        case INTEGER_LITERAL:
-        case FLOATING_POINT_LITERAL:
-        case STRING_LITERAL:
-        case TRUE:
-        case FALSE:
-        case NULL:
-        case LPAREN:
-        case IDENTIFIER:
-          Value();
+        case MINUS:
+          jj_consume_token(MINUS);
+          break;
+        case EMPTY:
+          jj_consume_token(EMPTY);
           break;
         default:
-          jj_la1[14] = jj_gen;
+          jj_la1[13] = jj_gen;
           jj_consume_token(-1);
           throw new ParseException();
         }
-      } catch (Throwable jjte000) {
+        UnaryExpression();
+        break;
+      case INTEGER_LITERAL:
+      case FLOATING_POINT_LITERAL:
+      case STRING_LITERAL:
+      case TRUE:
+      case FALSE:
+      case NULL:
+      case LPAREN:
+      case IDENTIFIER:
+        Value();
+        break;
+      default:
+        jj_la1[14] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    } catch (Throwable jjte000) {
           if (jjtc000) {
             jjtree.clearNodeScope(jjtn000);
             jjtc000 = false;
@@ -593,41 +551,36 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
             {if (true) throw (ParseException)jjte000;}
           }
           {if (true) throw (Error)jjte000;}
-      } finally {
+    } finally {
           if (jjtc000) {
             jjtree.closeNodeScope(jjtn000, true);
             jjtreeCloseNodeScope(jjtn000);
           }
-      }
-    } finally {
-      trace_return("UnaryExpression");
     }
   }
 
   final public void Value() throws ParseException {
-    trace_call("Value");
-    try {
                 /*@bgen(jjtree) Value */
   ASTValue jjtn000 = new ASTValue(JJTVALUE);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
   jjtreeOpenNodeScope(jjtn000);
-      try {
-        ValuePrefix();
-        label_7:
-        while (true) {
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case DOT:
-          case LBRACKET:
-            ;
-            break;
-          default:
-            jj_la1[15] = jj_gen;
-            break label_7;
-          }
-          ValueSuffix();
+    try {
+      ValuePrefix();
+      label_7:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case DOT:
+        case LBRACKET:
+          ;
+          break;
+        default:
+          jj_la1[15] = jj_gen;
+          break label_7;
         }
-      } catch (Throwable jjte000) {
+        ValueSuffix();
+      }
+    } catch (Throwable jjte000) {
           if (jjtc000) {
             jjtree.clearNodeScope(jjtn000);
             jjtc000 = false;
@@ -641,57 +594,52 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
             {if (true) throw (ParseException)jjte000;}
           }
           {if (true) throw (Error)jjte000;}
-      } finally {
+    } finally {
           if (jjtc000) {
             jjtree.closeNodeScope(jjtn000, true);
             jjtreeCloseNodeScope(jjtn000);
           }
-      }
-    } finally {
-      trace_return("Value");
     }
   }
 
   final public void ValuePrefix() throws ParseException {
-    trace_call("ValuePrefix");
-    try {
                       /*@bgen(jjtree) ValuePrefix */
   ASTValuePrefix jjtn000 = new ASTValuePrefix(JJTVALUEPREFIX);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
   jjtreeOpenNodeScope(jjtn000);
-      try {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case INTEGER_LITERAL:
-        case FLOATING_POINT_LITERAL:
-        case STRING_LITERAL:
-        case TRUE:
-        case FALSE:
-        case NULL:
-          Literal();
-          break;
-        case LPAREN:
-          jj_consume_token(LPAREN);
-          Expression();
-          jj_consume_token(RPAREN);
-          break;
-        default:
-          jj_la1[16] = jj_gen;
-          if (jj_2_2(3)) {
-            FunctionInvocation();
-          } else {
-            switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-            case IDENTIFIER:
-              jj_consume_token(IDENTIFIER);
-              break;
-            default:
-              jj_la1[17] = jj_gen;
-              jj_consume_token(-1);
-              throw new ParseException();
-            }
+    try {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case INTEGER_LITERAL:
+      case FLOATING_POINT_LITERAL:
+      case STRING_LITERAL:
+      case TRUE:
+      case FALSE:
+      case NULL:
+        Literal();
+        break;
+      case LPAREN:
+        jj_consume_token(LPAREN);
+        Expression();
+        jj_consume_token(RPAREN);
+        break;
+      default:
+        jj_la1[16] = jj_gen;
+        if (jj_2_2(3)) {
+          FunctionInvocation();
+        } else {
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case IDENTIFIER:
+            jj_consume_token(IDENTIFIER);
+            break;
+          default:
+            jj_la1[17] = jj_gen;
+            jj_consume_token(-1);
+            throw new ParseException();
           }
         }
-      } catch (Throwable jjte000) {
+      }
+    } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
         jjtc000 = false;
@@ -705,53 +653,48 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
         {if (true) throw (ParseException)jjte000;}
       }
       {if (true) throw (Error)jjte000;}
-      } finally {
+    } finally {
       if (jjtc000) {
         jjtree.closeNodeScope(jjtn000, true);
         jjtreeCloseNodeScope(jjtn000);
       }
-      }
-    } finally {
-      trace_return("ValuePrefix");
     }
   }
 
   final public void ValueSuffix() throws ParseException {
-    trace_call("ValueSuffix");
-    try {
  /*@bgen(jjtree) ValueSuffix */
         ASTValueSuffix jjtn000 = new ASTValueSuffix(JJTVALUESUFFIX);
         boolean jjtc000 = true;
         jjtree.openNodeScope(jjtn000);
         jjtreeOpenNodeScope(jjtn000);Token t = null;
-      try {
+    try {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case DOT:
+        jj_consume_token(DOT);
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case DOT:
-          jj_consume_token(DOT);
-          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-          case IDENTIFIER:
-            t = jj_consume_token(IDENTIFIER);
-            break;
-          default:
-            jj_la1[18] = jj_gen;
-            ;
-          }
+        case IDENTIFIER:
+          t = jj_consume_token(IDENTIFIER);
+          break;
+        default:
+          jj_la1[18] = jj_gen;
+          ;
+        }
                                       jjtree.closeNodeScope(jjtn000, true);
                                       jjtc000 = false;
                                       jjtreeCloseNodeScope(jjtn000);
                                       jjtn000.setPropertyNameToken(t);
-          break;
-        case LBRACKET:
-          jj_consume_token(LBRACKET);
-          Expression();
-          jj_consume_token(RBRACKET);
-          break;
-        default:
-          jj_la1[19] = jj_gen;
-          jj_consume_token(-1);
-          throw new ParseException();
-        }
-      } catch (Throwable jjte000) {
+        break;
+      case LBRACKET:
+        jj_consume_token(LBRACKET);
+        Expression();
+        jj_consume_token(RBRACKET);
+        break;
+      default:
+        jj_la1[19] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    } catch (Throwable jjte000) {
           if (jjtc000) {
             jjtree.clearNodeScope(jjtn000);
             jjtc000 = false;
@@ -765,69 +708,64 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
             {if (true) throw (ParseException)jjte000;}
           }
           {if (true) throw (Error)jjte000;}
-      } finally {
+    } finally {
           if (jjtc000) {
             jjtree.closeNodeScope(jjtn000, true);
             jjtreeCloseNodeScope(jjtn000);
           }
-      }
-    } finally {
-      trace_return("ValueSuffix");
     }
   }
 
   final public void FunctionInvocation() throws ParseException {
-    trace_call("FunctionInvocation");
-    try {
  /*@bgen(jjtree) FunctionInvocation */
         ASTFunctionInvocation jjtn000 = new ASTFunctionInvocation(JJTFUNCTIONINVOCATION);
         boolean jjtc000 = true;
         jjtree.openNodeScope(jjtn000);
         jjtreeOpenNodeScope(jjtn000);Token prefix = null, name = null;
-      try {
-        prefix = jj_consume_token(IDENTIFIER);
-        jj_consume_token(COLON);
+    try {
+      prefix = jj_consume_token(IDENTIFIER);
+      jj_consume_token(COLON);
                                       jjtn000.setFullFunctionName(prefix.image + ":");
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case IDENTIFIER:
-          name = jj_consume_token(IDENTIFIER);
-          break;
-        default:
-          jj_la1[20] = jj_gen;
-          ;
-        }
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case IDENTIFIER:
+        name = jj_consume_token(IDENTIFIER);
+        break;
+      default:
+        jj_la1[20] = jj_gen;
+        ;
+      }
         if(null != prefix && null != name)
                 jjtn000.setFullFunctionName(prefix.image + ":" + (null == name ? "" : name.image));
             else if(null != name)
                 jjtn000.setFullFunctionName(name.image);
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case LPAREN:
-          jj_consume_token(LPAREN);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case LPAREN:
+        jj_consume_token(LPAREN);
+        Expression();
+        label_8:
+        while (true) {
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case COMMA:
+            ;
+            break;
+          default:
+            jj_la1[21] = jj_gen;
+            break label_8;
+          }
+          jj_consume_token(COMMA);
           Expression();
-          label_8:
-          while (true) {
-            switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-            case COMMA:
-              ;
-              break;
-            default:
-              jj_la1[21] = jj_gen;
-              break label_8;
-            }
-            jj_consume_token(COMMA);
-            Expression();
-          }
-          try {
-            jj_consume_token(RPAREN);
-          } catch (Exception e) {
-
-          }
-          break;
-        default:
-          jj_la1[22] = jj_gen;
-          ;
         }
-      } catch (Throwable jjte000) {
+        try {
+          jj_consume_token(RPAREN);
+        } catch (Exception e) {
+
+        }
+        break;
+      default:
+        jj_la1[22] = jj_gen;
+        ;
+      }
+    } catch (Throwable jjte000) {
       if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
         jjtc000 = false;
@@ -841,58 +779,50 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
         {if (true) throw (ParseException)jjte000;}
       }
       {if (true) throw (Error)jjte000;}
-      } finally {
+    } finally {
       if (jjtc000) {
         jjtree.closeNodeScope(jjtn000, true);
         jjtreeCloseNodeScope(jjtn000);
       }
-      }
-    } finally {
-      trace_return("FunctionInvocation");
     }
   }
 
   final public void Literal() throws ParseException {
-    trace_call("Literal");
-    try {
                   /*@bgen(jjtree) Literal */
   ASTLiteral jjtn000 = new ASTLiteral(JJTLITERAL);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
   jjtreeOpenNodeScope(jjtn000);
-      try {
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case TRUE:
-          jj_consume_token(TRUE);
-          break;
-        case FALSE:
-          jj_consume_token(FALSE);
-          break;
-        case INTEGER_LITERAL:
-          jj_consume_token(INTEGER_LITERAL);
-          break;
-        case FLOATING_POINT_LITERAL:
-          jj_consume_token(FLOATING_POINT_LITERAL);
-          break;
-        case STRING_LITERAL:
-          jj_consume_token(STRING_LITERAL);
-          break;
-        case NULL:
-          jj_consume_token(NULL);
-          break;
-        default:
-          jj_la1[23] = jj_gen;
-          jj_consume_token(-1);
-          throw new ParseException();
-        }
-      } finally {
+    try {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case TRUE:
+        jj_consume_token(TRUE);
+        break;
+      case FALSE:
+        jj_consume_token(FALSE);
+        break;
+      case INTEGER_LITERAL:
+        jj_consume_token(INTEGER_LITERAL);
+        break;
+      case FLOATING_POINT_LITERAL:
+        jj_consume_token(FLOATING_POINT_LITERAL);
+        break;
+      case STRING_LITERAL:
+        jj_consume_token(STRING_LITERAL);
+        break;
+      case NULL:
+        jj_consume_token(NULL);
+        break;
+      default:
+        jj_la1[23] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    } finally {
           if (jjtc000) {
             jjtree.closeNodeScope(jjtn000, true);
             jjtreeCloseNodeScope(jjtn000);
           }
-      }
-    } finally {
-      trace_return("Literal");
     }
   }
 
@@ -1360,7 +1290,6 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
           }
         }
       }
-      trace_token(token, "");
       return token;
     }
     token = oldToken;
@@ -1368,13 +1297,9 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
     throw generateParseException();
   }
 
-  static private final class LookaheadSuccess extends java.lang.Error {
-
-	/**
-	 * Default <code>serialVersionUID</code>
-	 */
-	private static final long serialVersionUID = 1L; }
-  
+  static private final class LookaheadSuccess extends java.lang.Error { 
+    private static final long serialVersionUID = 1L; 
+  }
   final private LookaheadSuccess jj_ls = new LookaheadSuccess();
   final private boolean jj_scan_token(int kind) {
     if (jj_scanpos == jj_lastpos) {
@@ -1402,7 +1327,6 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
     else token = token.next = token_source.getNextToken();
     jj_ntk = -1;
     jj_gen++;
-      trace_token(token, " (in getNextToken)");
     return token;
   }
 
@@ -1495,53 +1419,10 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
     return new ParseException(token, exptokseq, tokenImage);
   }
 
-  private int trace_indent = 0;
-  private boolean trace_enabled = false;
-
   final public void enable_tracing() {
-    trace_enabled = true;
   }
 
   final public void disable_tracing() {
-    trace_enabled = false;
-  }
-
-  final private void trace_call(String s) {
-    if (trace_enabled) {
-      for (int i = 0; i < trace_indent; i++) { System.out.print(" "); }
-      System.out.println("Call:   " + s);
-    }
-    trace_indent = trace_indent + 2;
-  }
-
-  final private void trace_return(String s) {
-    trace_indent = trace_indent - 2;
-    if (trace_enabled) {
-      for (int i = 0; i < trace_indent; i++) { System.out.print(" "); }
-      System.out.println("Return: " + s);
-    }
-  }
-
-  final private void trace_token(Token t, String where) {
-    if (trace_enabled) {
-      for (int i = 0; i < trace_indent; i++) { System.out.print(" "); }
-      System.out.print("Consumed token: <" + tokenImage[t.kind]);
-      if (t.kind != 0 && !tokenImage[t.kind].equals("\"" + t.image + "\"")) {
-        System.out.print(": \"" + t.image + "\"");
-      }
-      System.out.println(">" + where);
-    }
-  }
-
-  final private void trace_scan(Token t1, int t2) {
-    if (trace_enabled) {
-      for (int i = 0; i < trace_indent; i++) { System.out.print(" "); }
-      System.out.print("Visited token: <" + tokenImage[t1.kind]);
-      if (t1.kind != 0 && !tokenImage[t1.kind].equals("\"" + t1.image + "\"")) {
-        System.out.print(": \"" + t1.image + "\"");
-      }
-      System.out.println(">; Expected token: <" + tokenImage[t2] + ">");
-    }
   }
 
   final private void jj_rescan_token() {
