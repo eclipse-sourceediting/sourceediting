@@ -38,6 +38,10 @@
 			target="org.eclipse.wst.dtd.core.dtdsource" />
 		<definition
 			type="preferencepages"
+			value="org.eclipse.wst.sse.ui.preferences.dtd.templates"
+			target="org.eclipse.wst.dtd.core.dtdsource" />
+		<definition
+			type="preferencepages"
 			value="org.eclipse.wst.sse.ui.preferences.dtd.styles"
 			target="org.eclipse.wst.dtd.core.dtdsource" />
 		<!-- provide syntax highlighting for DTD subset within XML -->
@@ -82,6 +86,12 @@
 			category="org.eclipse.wst.sse.ui.internal.provisional.preferences"
 			class="org.eclipse.wst.dtd.ui.internal.preferences.DTDFilesPreferencePage"
 			id="org.eclipse.wst.sse.ui.preferences.dtd">
+		</page>
+		<page
+			name="%DTD_Templates.name"
+			category="org.eclipse.wst.sse.ui.preferences.dtd"
+			class="org.eclipse.wst.dtd.ui.internal.preferences.DTDTemplatePreferencePage"
+			id="org.eclipse.wst.sse.ui.preferences.dtd.templates">
 		</page>
 		<page
 			name="%_UI_LABEL_DTD_STYLES"
@@ -188,4 +198,14 @@
 			</contentTypeIdentifier>
 		</validator>
 	</extension>
+
+	<!-- Templates -->
+	<extension point="org.eclipse.ui.editors.templates">
+		<contextType
+			name="%DTD_New_context_type_Extension_Element.name"
+			class="org.eclipse.wst.dtd.ui.internal.templates.TemplateContextTypeDTD"
+			id="dtd_new">
+		</contextType>
+	</extension>
+
 </plugin>

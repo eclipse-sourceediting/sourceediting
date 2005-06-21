@@ -53,6 +53,13 @@ public class DTDUIMessages extends NLS {
 	public static String _UI_WIZARD_NEW_DTD_TITLE;
 	public static String _UI_WIZARD_NEW_DTD_EXPL;
 	public static String _UI_LABEL_DTD_FILE_DELETE;
+	public static String NewDTDTemplatesWizardPage_0;
+	public static String NewDTDTemplatesWizardPage_1;
+	public static String NewDTDTemplatesWizardPage_2;
+	public static String NewDTDTemplatesWizardPage_3;
+	public static String NewDTDTemplatesWizardPage_4;
+	public static String NewDTDTemplatesWizardPage_5;
+	public static String NewDTDTemplatesWizardPage_6;
 
 	static {
 		// load message values from bundle file

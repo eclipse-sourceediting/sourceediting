@@ -30,6 +30,8 @@ public interface IHelpContextIds {
 	public static final String DTD_PREFWEBX_FILES_HELPID = PREFIX + "webx0020"; //$NON-NLS-1$
 	// DTD Styles Preference page
 	public static final String DTD_PREFWEBX_STYLES_HELPID = PREFIX + "webx0021"; //$NON-NLS-1$
+	// DTD Template Preference page (no id for this yet)
+	public static final String DTD_PREFWEBX_TEMPLATES_HELPID = PREFIX + "webx0022"; //$NON-NLS-1$
 
 	// DTD Source page editor
 	public static final String DTD_SOURCEVIEW_HELPID = PREFIX + "edtd0000"; //$NON-NLS-1$
