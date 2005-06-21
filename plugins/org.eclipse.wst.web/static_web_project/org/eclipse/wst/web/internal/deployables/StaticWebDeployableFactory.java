@@ -108,6 +108,6 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 	 */
 	protected IModule[] createModules(IProject project) {
 		// TODO Auto-generated method stub
-		return null;
+		return new IModule[] {createModule(project)};
 	}
 }
