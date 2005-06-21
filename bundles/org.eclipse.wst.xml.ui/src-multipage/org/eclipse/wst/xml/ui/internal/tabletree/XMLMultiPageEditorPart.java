@@ -152,7 +152,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 				default : {
 					// propagate changes. Is this needed? Answer: Yes.
 					if (source == getTextEditor()) {
-						firePropertyChange(propId);
+						_firePropertyChange(propId);
 					}
 					break;
 				}
