@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.html.core.internal.validate.HTMLValidationAdapterFactory;
 import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
@@ -201,7 +202,7 @@ public class HTMLValidator implements IValidator {
 			// SeverityEnum.LOW_SEVERITY,
 			// "MESSAGE_HTML_VALIDATION_MESSAGE_UI_", //$NON-NLS-1$
 			// args);
-			Message mess = new LocalizedMessage(IMessage.LOW_SEVERITY, HTMLUIMessages.MESSAGE_HTML_VALIDATION_MESSAGE_UI_);
+			Message mess = new LocalizedMessage(IMessage.LOW_SEVERITY, NLS.bind(HTMLUIMessages.MESSAGE_HTML_VALIDATION_MESSAGE_UI_, args));
 			mess.setParams(args);
 			reporter.displaySubtask(this, mess);
 		}
