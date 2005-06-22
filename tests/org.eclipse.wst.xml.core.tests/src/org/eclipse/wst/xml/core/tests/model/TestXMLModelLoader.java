@@ -66,7 +66,8 @@ public class TestXMLModelLoader extends TestCase {
 		IStructuredDocument sDoc = emptyModel.getStructuredDocument();
 		sDoc.set("<?xml version=\"1.0\"?>\n<test>\n<item attr=\"val\" /></test>\n");
 		
-		IStructuredModel modelFromDoc = fLoader.createModel(sDoc, "/test");
+		// null handlder is normally not valid, including only for this test.
+		IStructuredModel modelFromDoc = fLoader.createModel(sDoc, "/test", null);
 		assertNotNull("model from doc is null", modelFromDoc);
 	}
 	
