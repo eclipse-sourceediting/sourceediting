@@ -92,12 +92,13 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 		if (projects == null || projects.isEmpty())
 			cacheModules();
 		int i = 0;
-		Iterator modules = projects.values().iterator();
-		IModule[] modulesArray = new IModule[projects.values().size()];
+		Iterator modules = projects.keySet().iterator();
+		IModule[] modulesArray = new IModule[projects.size()];
 		while (modules.hasNext()) {
-			IModule element = (IModule) modules.next();
-			modulesArray[i++] = element;
-
+			IModule[] module = null;
+			IProject project = (IProject) modules.next();
+			module = (IModule[])projects.get(project);
+			modulesArray[i++] = module[0];
 		}
 		return modulesArray;
 
