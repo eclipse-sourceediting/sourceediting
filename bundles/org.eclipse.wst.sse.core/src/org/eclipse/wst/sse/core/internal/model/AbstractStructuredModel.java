@@ -855,7 +855,9 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 		// and try to continue
 		if (fModelStateChanging < 0) {
 			fModelStateChanging = 0;
-			Logger.log(Logger.ERROR, "Program Error: modelStateChanging was less than zero"); //$NON-NLS-1$
+			// should not be locked, but just in case
+			endLock();
+			throw new IllegalStateException("Program Error: modelStateChanging was less than zero");
 		}
 
 
