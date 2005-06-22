@@ -27,6 +27,7 @@ import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingRule;
+import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockTagParser;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
@@ -107,11 +108,15 @@ public abstract class AbstractModelLoader implements IModelLoader {
 		return model;
 	}
 
-	public IStructuredModel createModel(IStructuredDocument structuredDocument, String baseLocation) {
+	public IStructuredModel createModel(IStructuredDocument structuredDocument, String baseLocation, IModelHandler handler) {
 		documentLoaderInstance = null;
 		IStructuredModel model = newModel();
 		model.setBaseLocation(baseLocation);
-
+		
+		// handler must be set early, incase a re-init is 
+		// required during creation.
+		model.setModelHandler(handler);
+		
 		addFactories(model, getAdapterFactories());
 		// For types with propagating adapters, it's important
 		// that the propagating adapter be in place before the contents

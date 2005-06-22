@@ -553,11 +553,12 @@ public class FileBufferModelManager {
 			IStructuredModel model = null;
 			IModelHandler handler = ModelHandlerRegistry.getInstance().getHandlerForContentTypeId(info.contentTypeID);
 			IModelLoader loader = handler.getModelLoader();
-			model = loader.createModel(document, info.buffer.getLocation().toString());
+			model = loader.createModel(document, info.buffer.getLocation().toString(), handler);
 			try {
 				info.model = model;
 				model.setId(info.buffer.getLocation().toString());
-				model.setModelHandler(handler);
+				// handler now set by loader, for now
+				//model.setModelHandler(handler);
 				if (model instanceof AbstractStructuredModel) {
 					((AbstractStructuredModel) model).setContentTypeIdentifier(info.contentTypeID);
 				}

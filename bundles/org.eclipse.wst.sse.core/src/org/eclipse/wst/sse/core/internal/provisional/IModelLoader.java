@@ -19,6 +19,7 @@ import java.util.List;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingRule;
+import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IModelHandler;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 
@@ -81,6 +82,6 @@ public interface IModelLoader {
 	 * Create a Structured Model with the given StructuredDocument instance as
 	 * its document (instead of a new document instance as well)
 	 */
-	IStructuredModel createModel(IStructuredDocument document, String baseLocation);
+	IStructuredModel createModel(IStructuredDocument document, String baseLocation, IModelHandler handler);
 
 }
