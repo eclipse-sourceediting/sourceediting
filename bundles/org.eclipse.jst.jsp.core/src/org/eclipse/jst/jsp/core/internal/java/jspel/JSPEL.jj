@@ -162,12 +162,12 @@ ASTExpression Expression() : {/*@bgen(jjtree) Expression */
 {/*@bgen(jjtree) Expression */
         try {
 /*@egen*/
-	LOOKAHEAD(ChoiceExpression()) ChoiceExpression() | OrExpression()/*@bgen(jjtree)*/
-                                                                          {
-                                                                            jjtree.closeNodeScope(jjtn000, true);
-                                                                            jjtc000 = false;
-                                                                            jjtreeCloseNodeScope(jjtn000);
-                                                                          }
+	(LOOKAHEAD(ChoiceExpression()) ChoiceExpression() | OrExpression())/*@bgen(jjtree)*/
+                                                                            {
+                                                                              jjtree.closeNodeScope(jjtn000, true);
+                                                                              jjtc000 = false;
+                                                                              jjtreeCloseNodeScope(jjtn000);
+                                                                            }
 /*@egen*/ { return jjtn000; }/*@bgen(jjtree)*/
         } catch (Throwable jjte000) {
           if (jjtc000) {

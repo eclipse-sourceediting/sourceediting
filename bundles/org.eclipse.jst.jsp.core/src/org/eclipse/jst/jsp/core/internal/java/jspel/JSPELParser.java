@@ -46,10 +46,6 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
         case EMPTY:
         case IDENTIFIER:
           OrExpression();
-                                                                            jjtree.closeNodeScope(jjtn000, true);
-                                                                            jjtc000 = false;
-                                                                            jjtreeCloseNodeScope(jjtn000);
-                                                                            {if (true) return jjtn000;}
           break;
         default:
           jj_la1[0] = jj_gen;
@@ -57,6 +53,10 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
           throw new ParseException();
         }
       }
+                                                                              jjtree.closeNodeScope(jjtn000, true);
+                                                                              jjtc000 = false;
+                                                                              jjtreeCloseNodeScope(jjtn000);
+                                                                              {if (true) return jjtn000;}
     } catch (Throwable jjte000) {
           if (jjtc000) {
             jjtree.clearNodeScope(jjtn000);
@@ -948,6 +948,11 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
     return false;
   }
 
+  final private boolean jj_3_1() {
+    if (jj_3R_9()) return true;
+    return false;
+  }
+
   final private boolean jj_3R_24() {
     if (jj_3R_26()) return true;
     Token xsp;
@@ -955,11 +960,6 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
       xsp = jj_scanpos;
       if (jj_3R_27()) { jj_scanpos = xsp; break; }
     }
-    return false;
-  }
-
-  final private boolean jj_3_1() {
-    if (jj_3R_9()) return true;
     return false;
   }
 
@@ -975,6 +975,11 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
 
   final private boolean jj_3R_17() {
     if (jj_3R_11()) return true;
+    return false;
+  }
+
+  final private boolean jj_3R_16() {
+    if (jj_3R_9()) return true;
     return false;
   }
 
@@ -1006,11 +1011,6 @@ public class JSPELParser/*@bgen(jjtree)*/implements JSPELParserTreeConstants, JS
     jj_scanpos = xsp;
     if (jj_3R_17()) return true;
     }
-    return false;
-  }
-
-  final private boolean jj_3R_16() {
-    if (jj_3R_9()) return true;
     return false;
   }
 

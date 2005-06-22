@@ -155,7 +155,7 @@ TOKEN :
 
 ASTExpression Expression() : {}
 {
-	LOOKAHEAD(ChoiceExpression()) ChoiceExpression() | OrExpression() { return jjtThis; }
+	(LOOKAHEAD(ChoiceExpression()) ChoiceExpression() | OrExpression()) { return jjtThis; }
 }
 
 void OrExpression() #OrExpression(>1) : 
