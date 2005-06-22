@@ -362,6 +362,17 @@ public class SSEUIMessages extends NLS {
 	public static String EnableProjectSettings;
 
 	public static String LoadingReferencedGrammars;
+	
+	public static String Folding;
+	public static String StructuredTextEditorPreferencePage_3;
+	public static String Projection_Toggle_label;
+	public static String Projection_Toggle_tooltip;
+	public static String Projection_Toggle_description;
+	public static String Projection_Toggle_image;
+	public static String Projection_ExpandAll_label;
+	public static String Projection_ExpandAll_tooltip;
+	public static String Projection_ExpandAll_description;
+	public static String Projection_ExpandAll_image;
 
 	// These strings are accessed using resource bundle and in properties
 	// file, need to use '.' instead of '_' in some keys

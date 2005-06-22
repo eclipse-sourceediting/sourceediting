@@ -27,10 +27,13 @@ public class CSSUIMessages extends NLS {
 	public static String PrefsLabel_CasePropValue;
 	public static String PrefsLabel_CaseIdentUpper;
 	public static String PrefsLabel_CaseIdentLower;
+	public static String PrefsLabel_SelectorTagName;
 	public static String PrefsLabel_CasePropNameUpper;
 	public static String PrefsLabel_CasePropNameLower;
 	public static String PrefsLabel_CasePropValueUpper;
 	public static String PrefsLabel_CasePropValueLower;
+	public static String PrefsLabel_SelectorTagNameUpper;
+	public static String PrefsLabel_SelectorTagNameLower;
 	public static String PrefsLabel_ColorSample;
 	public static String PrefsLabel_ColorNormal;
 	public static String PrefsLabel_ColorAtmarkRule;
