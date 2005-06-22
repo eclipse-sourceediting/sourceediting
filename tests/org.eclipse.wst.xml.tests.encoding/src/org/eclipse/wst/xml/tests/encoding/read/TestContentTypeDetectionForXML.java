@@ -18,6 +18,9 @@ import org.eclipse.core.runtime.CoreException;
 
 public class TestContentTypeDetectionForXML extends TestContentTypeDetection {
 	private static final String expectedCustomXMLContentType = "org.eclipse.wst.xml.core.xmlsource";
+	
+	private static final String expectedXSLContentType = "org.eclipse.wst.xml.core.xslsource";
+	
 	private static final String expectedXMLContentType = "org.eclipse.core.runtime.xml";
 
 	public void testFile103() throws CoreException, IOException {
@@ -44,11 +47,17 @@ public class TestContentTypeDetectionForXML extends TestContentTypeDetection {
 		doTest(expectedXMLContentType, "testfiles/xml/MalformedNoEncoding.xml", null);
 	}
 
+	/**
+	 * This file is illformed in its specified charset
+	 * and characters. 
+	 * @throws CoreException
+	 * @throws IOException
+	 */
 	public void testFile107() throws CoreException, IOException {
-		doTest(expectedCustomXMLContentType, "testfiles/xml/MalformedNoEncoding.xsl", null);
+		doTest(expectedXSLContentType, "testfiles/xml/MalformedNoEncoding.xsl", null);
 	}
 
-	// TODO: fix to use "normal" xsl
+	// TODO: fix to use "illformed" xsl
 //	public void testFile107P() throws CoreException, IOException {
 //		doTestForParent(expectedXMLContentType, "testfiles/xml/MalformedNoEncoding.xsl", null);
 //	}
