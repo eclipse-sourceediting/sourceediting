@@ -18,6 +18,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.graph.XSDChildUtility;
 import org.eclipse.xsd.XSDCompositor;
+import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.util.XSDConstants;
@@ -75,44 +76,64 @@ public class XSDModelGroupAdapter extends XSDAbstractAdapter
       
       if (hasMinOccurs || hasMaxOccurs)
       {
-  	    result.append(" [");  
+        XSDConcreteComponent comp = xsdModelGroup.getContainer();
+        boolean isParticle = (comp instanceof XSDParticle);
+        if (isParticle)
+        {
+          result.append(" [");
+        }
   	    if (hasMinOccurs)
   	    {
-  	      int min = ((XSDParticle)xsdModelGroup.getContainer()).getMinOccurs();
-  		    if (min == XSDParticle.UNBOUNDED)
-  		    {
-  		      result.append("*");
-  		    }
-  		    else
-  		    {
-  		      result.append(String.valueOf(min));
+          if (isParticle)
+          {
+  	        int min = ((XSDParticle)comp).getMinOccurs();
+  		      if (min == XSDParticle.UNBOUNDED)
+  		      {
+  		        result.append("*");
+            } 
+  		      else
+  		      {
+  		        result.append(String.valueOf(min));
+            }
   		    }
   	    }
         else // print default
         {
-          int min = ((XSDParticle)xsdModelGroup.getContainer()).getMinOccurs();
-          result.append(String.valueOf(min));
+          if (isParticle)
+          {
+            int min = ((XSDParticle)comp).getMinOccurs();
+            result.append(String.valueOf(min));
+          }
         }
   	    if (hasMaxOccurs)
   	    {
-  	      int max = ((XSDParticle)xsdModelGroup.getContainer()).getMaxOccurs();
-  		    result.append("..");
-  		    if (max == XSDParticle.UNBOUNDED)
-  		    {
-  		      result.append("*");
-  		    }
-  		    else
-  		    {
-  		      result.append(String.valueOf(max));
+          if (isParticle)
+          {
+    	      int max = ((XSDParticle)comp).getMaxOccurs();
+  		      result.append("..");
+  		      if (max == XSDParticle.UNBOUNDED)
+  		      {
+  		        result.append("*");
+  		      }
+  		      else
+  		      {
+  		        result.append(String.valueOf(max));
+            }
   		    }
   	    }
         else // print default
         {
-          result.append("..");
-          int max = ((XSDParticle)xsdModelGroup.getContainer()).getMaxOccurs();
-          result.append(String.valueOf(max));
+          if (isParticle)
+          {
+            result.append("..");
+            int max = ((XSDParticle)comp).getMaxOccurs();
+            result.append(String.valueOf(max));
+          }
         }
-  	    result.append("]");
+        if (isParticle)
+        {
+    	    result.append("]");
+        }
       }
     }
     return result.toString();

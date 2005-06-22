@@ -58,6 +58,7 @@ import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDNamedComponent;
+import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.util.XSDConstants;
@@ -582,7 +583,10 @@ public class XSDMenuListener implements IMenuListener
       attributes = null;
       addCreateElementAction(manager, XSDConstants.ANY_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANY_ELEMENT"), attributes, parent, null);
       
-      addMultiplicityMenu(concreteComponent, manager);
+      if (concreteComponent.getContainer() instanceof XSDParticle)
+      {
+        addMultiplicityMenu(concreteComponent, manager);
+      }
     }
     else if (XSDDOMHelper.inputEquals(parent, XSDConstants.ALL_ELEMENT_TAG, false))
     { //
@@ -595,8 +599,11 @@ public class XSDMenuListener implements IMenuListener
       attributes.add(new DOMAttribute(XSDConstants.TYPE_ATTRIBUTE, getBuiltInStringQName()));
       addCreateElementAction(manager, XSDConstants.ELEMENT_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ELEMENT"), attributes, parent, null);
       addCreateElementRefAction(manager, XSDConstants.ELEMENT_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ELEMENT_REF"), parent, null);
-      
-      addMultiplicityMenu(concreteComponent, manager);
+
+      if (concreteComponent.getContainer() instanceof XSDParticle)
+      {
+        addMultiplicityMenu(concreteComponent, manager);
+      }
     }
     else if (XSDDOMHelper.inputEquals(parent, XSDConstants.ATTRIBUTEGROUP_ELEMENT_TAG, false))
     { //

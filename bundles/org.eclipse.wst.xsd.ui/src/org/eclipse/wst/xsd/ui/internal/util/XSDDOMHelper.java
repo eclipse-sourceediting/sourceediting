@@ -846,7 +846,10 @@ public class XSDDOMHelper
     }
     Node previousSibling = node.getPreviousSibling();
 
-		parentNode.removeChild(node);
+    if (parentNode != null)
+    {
+		  parentNode.removeChild(node);
+    }
 
     if (nextElement != null)
     {
