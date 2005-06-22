@@ -22,42 +22,42 @@ import org.eclipse.wst.xml.core.tests.util.FileUtil;
 import org.eclipse.wst.xml.core.tests.util.ProjectUnzipUtility;
 
 public class TestStructuredModel extends TestCase {
-	
+
 	private boolean isSetup = false;
 	private XMLModelLoader fLoader = null;
 
-	private final String fProjectName ="DOCUMENT-LOADER";
+	private final String fProjectName = "DOCUMENT-LOADER";
 	// is it a problem to unzip the same project in
 	// different tests?
 	private final String fZipFileName = "xml-document-loader-tests.zip";
-	
-    public TestStructuredModel() {
-        super("TestStructuredModel");
-    }
-	
-    protected void setUp() throws Exception {
-		
-    	super.setUp();
-		if(!this.isSetup){
+
+	public TestStructuredModel() {
+		super("TestStructuredModel");
+	}
+
+	protected void setUp() throws Exception {
+
+		super.setUp();
+		if (!this.isSetup) {
 			fLoader = new XMLModelLoader();
 			doSetup();
 			this.isSetup = true;
 		}
-    }
-	
-	private void doSetup() throws Exception {	
-	
+	}
+
+	private void doSetup() throws Exception {
+
 		// root of workspace directory
 		Location platformLocation = Platform.getInstanceLocation();
-		
+
 		ProjectUnzipUtility unzipUtil = new ProjectUnzipUtility();
 		File zipFile = FileUtil.makeFileFor(ProjectUnzipUtility.PROJECT_ZIPS_FOLDER, fZipFileName, ProjectUnzipUtility.PROJECT_ZIPS_FOLDER);
 		unzipUtil.unzipAndImport(zipFile, platformLocation.getURL().getFile());
 		unzipUtil.initJavaProject(fProjectName);
 	}
-	
+
 	public IStructuredModel getUnmanagedModel() {
-		// from a file	
+		// from a file
 		IFile f = getFile();
 		IStructuredModel model = null;
 		try {
@@ -81,11 +81,11 @@ public class TestStructuredModel extends TestCase {
 		}
 		return model;
 	}
-	
+
 	private IFile getFile() {
-		return ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(fProjectName + "/files/simple.xml"));	
+		return ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(fProjectName + "/files/simple.xml"));
 	}
-	
+
 	public void testAboutToChangeModel() {
 		IStructuredModel model = getUnmanagedModel();
 		model.aboutToChangeModel();
@@ -98,44 +98,59 @@ public class TestStructuredModel extends TestCase {
 			public void modelAboutToBeChanged(IStructuredModel model) {
 				//
 			}
+
 			public void modelChanged(IStructuredModel model) {
 				// 	
 			}
+
 			public void modelDirtyStateChanged(IStructuredModel model, boolean isDirty) {
 				//
 			}
+
 			public void modelResourceDeleted(IStructuredModel model) {
 				// 
 			}
+
 			public void modelResourceMoved(IStructuredModel oldModel, IStructuredModel newModel) {
 				// 		
 			}
+
 			public void modelAboutToBeReinitialized(IStructuredModel structuredModel) {
 				// 	
 			}
+
 			public void modelReinitialized(IStructuredModel structuredModel) {
 				// 
 			}
 		};
-		
+
 		model.aboutToChangeModel();
-		
+
 		model.removeModelStateListener(listener);
 	}
 
 
+	/**
+	 * Test expectes an exception since only a changedModel sent, 
+	 * without beginning 'aboutToChangeModel'
+	 *
+	 */
 	public void testChangedModel() {
 		IStructuredModel model = getUnmanagedModel();
-		model.changedModel();
+		try {
+			model.changedModel();
+		}
+		catch (Exception e) {
+			assertTrue(e instanceof IllegalStateException);
+		}
 	}
 
-
-	public void testGetContentType()  {
+	public void testGetContentType() {
 		IStructuredModel model = getUnmanagedModel();
 		String ct = model.getContentTypeIdentifier();
 		assertTrue("model has wrong content type:" + ct + " != " + ContentTypeIdForXML.ContentTypeID_XML, ct.equals(ContentTypeIdForXML.ContentTypeID_XML));
 	}
-	
+
 	public void testGetBaseLocation() {
 		IStructuredModel model = getUnmanagedModel();
 		String location = model.getBaseLocation();
@@ -149,17 +164,17 @@ public class TestStructuredModel extends TestCase {
 	}
 
 	public void testGetIndexedRegion() {
-		IStructuredModel model = getUnmanagedModel();	
+		IStructuredModel model = getUnmanagedModel();
 		model.getIndexedRegion(0);
 	}
 
 	public void testGetIndexedRegions() {
 		IStructuredModel model = getUnmanagedModel();
 		// not implemented yet...
-		//model.getIndexedRegions();
+		// model.getIndexedRegions();
 	}
 
-	public void  testGetStructuredDocument() {
+	public void testGetStructuredDocument() {
 		IStructuredModel model = getUnmanagedModel();
 		IStructuredDocument doc = model.getStructuredDocument();
 		assertNotNull("document is null", doc);
@@ -178,7 +193,7 @@ public class TestStructuredModel extends TestCase {
 	public void testIsNew() {
 		IStructuredModel model = getUnmanagedModel();
 		// this API seems strange
-		//assertFalse("new model check failed", model.isNew());
+		// assertFalse("new model check failed", model.isNew());
 	}
 
 	public void testIsReinitializationNeeded() {
