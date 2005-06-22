@@ -1133,8 +1133,15 @@ public class StructuredTextEditor extends TextEditor {
 	 */
 	public void doRevertToSaved() {
 		super.doRevertToSaved();
-		if (fOutlinePage != null && fOutlinePage instanceof IUpdate)
+		if (fOutlinePage != null && fOutlinePage instanceof IUpdate) {
 			((IUpdate) fOutlinePage).update();
+		}
+		// reset undo
+		IDocument doc = getDocumentProvider().getDocument(getEditorInput());
+		if (doc instanceof IStructuredDocument) {
+			((IStructuredDocument) doc).getUndoManager().getCommandStack().flush();
+		}
+		
 		// update menu text
 		updateMenuText();
 	}
