@@ -51,17 +51,19 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 		try {
 			IModule deployable = null;
 			StaticWebDeployable projectModule = null;
-			IBaseWebNature nature = (IBaseWebNature) project.getNature(ISimpleWebNatureConstants.STATIC_NATURE_ID);
-			deployable = nature.getModule();
-			if (deployable == null) {
-				projectModule = new StaticWebDeployable(nature.getProject());
-				deployable = createModule(projectModule.getId(), projectModule.getName(), projectModule.getType(), projectModule.getVersion(), projectModule.getProject());
-				nature.setModule(deployable);
-				projectModule.initialize(deployable);
-				//deployable = projectModule.getModule();
+			if (project.hasNature(ISimpleWebNatureConstants.STATIC_NATURE_ID)) {
+				IBaseWebNature nature = (IBaseWebNature) project.getNature(ISimpleWebNatureConstants.STATIC_NATURE_ID);
+				deployable = nature.getModule();
+				if (deployable == null) {
+					projectModule = new StaticWebDeployable(nature.getProject());
+					deployable = createModule(projectModule.getId(), projectModule.getName(), projectModule.getType(), projectModule.getVersion(), projectModule.getProject());
+					nature.setModule(deployable);
+					projectModule.initialize(deployable);
+					//deployable = projectModule.getModule();
+				}
+				moduleDelegates.add(projectModule);
+				return deployable;
 			}
-			moduleDelegates.add(projectModule);
-			return deployable;
 		} catch (Exception e) {
 			//Ignore
 		}
@@ -108,7 +110,8 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 	 * @see org.eclipse.wst.server.core.util.ProjectModuleFactoryDelegate#createModules(org.eclipse.core.resources.IProject)
 	 */
 	protected IModule[] createModules(IProject project) {
-		// TODO Auto-generated method stub
-		return new IModule[] {createModule(project)};
+
+		IModule mod = createModule(project);
+		return (mod == null) ? null : new IModule[] {mod};
 	}
 }
