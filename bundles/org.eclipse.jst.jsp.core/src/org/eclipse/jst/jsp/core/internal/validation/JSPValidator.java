@@ -76,7 +76,7 @@ public class JSPValidator implements IValidator {
 		}
 		
 		public final IFile[] getFiles() {
-		    return (IFile[])fFiles.toArray(new IFile[this.fFiles.size()]);
+		    return (IFile[])fFiles.toArray(new IFile[fFiles.size()]);
 		}
 		
 		private IContentType getJspContentType() {
@@ -96,7 +96,7 @@ public class JSPValidator implements IValidator {
 		IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();
 		if(uris.length > 0) {
 			IFile currentFile = null;
-			for (int i = 0; i < uris.length; i++) {
+			for (int i = 0; i < uris.length && !reporter.isCancelled(); i++) {
 				currentFile = wsRoot.getFile(new Path(uris[i]));
 				if(currentFile != null && currentFile.exists()) {
 					validateFile(currentFile, reporter);
@@ -117,7 +117,7 @@ public class JSPValidator implements IValidator {
 					e.printStackTrace();
 			}
 			IFile[] files = visitor.getFiles();
-			for (int i = 0; i < files.length; i++) {
+			for (int i = 0; i < files.length && !reporter.isCancelled(); i++) {
 				validateFile(files[i], reporter);
 				if(DEBUG)
 					System.out.println("validating: ["+ files[i]+"]"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -149,7 +149,7 @@ public class JSPValidator implements IValidator {
 				// remove old messages
 				reporter.removeAllMessages(this, f);
 				// add new messages
-				for (int i = 0; i < problems.size(); i++) {
+				for (int i = 0; i < problems.size()  && !reporter.isCancelled(); i++) {
 					IMessage m = createMessageFromProblem((IProblem)problems.get(i), f, translation, model.getStructuredDocument());
 					if(m != null)
 						reporter.addMessage(this, m);
