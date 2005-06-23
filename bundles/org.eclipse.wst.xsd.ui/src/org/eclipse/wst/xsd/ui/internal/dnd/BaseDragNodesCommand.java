@@ -15,6 +15,7 @@ import java.util.Collection;
 import org.eclipse.wst.common.ui.internal.dnd.DefaultDragAndDropCommand;
 import org.eclipse.wst.xml.core.internal.document.DocumentImpl;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
+import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.util.XSDDOMHelper;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Node;
@@ -68,7 +69,7 @@ public abstract class BaseDragNodesCommand extends DefaultDragAndDropCommand
       
       if (model != null)
       {
-        model.beginRecording(this, "Move");
+        model.beginRecording(this, XSDEditorPlugin.getXSDString("_UI_LABEL_MOVE"));
       }
     }
   }

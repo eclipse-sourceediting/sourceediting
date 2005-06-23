@@ -2134,15 +2134,15 @@ public class XSDMenuListener implements IMenuListener
     oneMultiplicity.setMaxOccurs(1);
     oneMultiplicity.setMinOccurs(1);
     oneMultiplicity.setEnabled(!isReadOnly);
-    SetMultiplicityAction zeroOrMoreMultiplicity = new SetMultiplicityAction(concreteComponent, "0..* (Zero or More)");
+    SetMultiplicityAction zeroOrMoreMultiplicity = new SetMultiplicityAction(concreteComponent, "0..* (" + XSDEditorPlugin.getXSDString("_ZERO_OR_MORE") + ")");
     zeroOrMoreMultiplicity.setMaxOccurs(-1);
     zeroOrMoreMultiplicity.setMinOccurs(0);
     zeroOrMoreMultiplicity.setEnabled(!isReadOnly);
-    SetMultiplicityAction zeroOrOneMultiplicity = new SetMultiplicityAction(concreteComponent, "0..1 (Zero or One)");
+    SetMultiplicityAction zeroOrOneMultiplicity = new SetMultiplicityAction(concreteComponent, "0..1 (" + XSDEditorPlugin.getXSDString("_ZERO_OR_ONE") + ")");
     zeroOrOneMultiplicity.setMaxOccurs(1);
     zeroOrOneMultiplicity.setMinOccurs(0);
     zeroOrOneMultiplicity.setEnabled(!isReadOnly);
-    SetMultiplicityAction oneOrMoreMultiplicity = new SetMultiplicityAction(concreteComponent, "1..* (One or More)");
+    SetMultiplicityAction oneOrMoreMultiplicity = new SetMultiplicityAction(concreteComponent, "1..* (" + XSDEditorPlugin.getXSDString("_ONE_OR_MORE") + ")");
     oneOrMoreMultiplicity.setMaxOccurs(-1);
     oneOrMoreMultiplicity.setMinOccurs(1);
     oneOrMoreMultiplicity.setEnabled(!isReadOnly);

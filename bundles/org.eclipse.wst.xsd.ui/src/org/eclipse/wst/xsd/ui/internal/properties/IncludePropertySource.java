@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
+import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.refactor.delete.XSDExternalFileCleanup;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDInclude;
@@ -146,8 +147,7 @@ public class IncludePropertySource
 
     String existingSchemaLocation = includeElement.getAttribute(XSDConstants.SCHEMALOCATION_ATTRIBUTE);
 
-//  beginRecording(XSDEditorPlugin.getXSDString("_UI_INCLUDE_CHANGE"), includeElement);
-    beginRecording("Include Change", includeElement);
+    beginRecording(XSDEditorPlugin.getXSDString("_UI_LABEL_INCLUDE_CHANGE"), includeElement);
     includeElement.setAttribute(XSDConstants.SCHEMALOCATION_ATTRIBUTE, newLocation);
     
     // If there is no existing schemaLocation, then just set it

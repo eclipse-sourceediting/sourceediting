@@ -337,10 +337,10 @@ public class XSDComponentSelectionProvider extends XMLComponentSelectionProvider
     
 
 	public String getListTitle() {
-		return "Matching Types:";
+		return XSDEditorPlugin.getXSDString("_UI_LABEL_MATCHING_TYPES");
 	}
 
 	public String getNameFieldTitle() {
-		return "Type Name:";
+		return XSDEditorPlugin.getXSDString("_UI_LABEL_TYPE_NAME");
 	}
 }

@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
@@ -86,7 +87,7 @@ public class MoveAction extends Action
     IDOMModel model = getModel();      
     if (model != null)
     {
-      model.beginRecording(this, "Move");
+      model.beginRecording(this, XSDEditorPlugin.getXSDString("_UI_LABEL_MOVE"));
     }
   }
   

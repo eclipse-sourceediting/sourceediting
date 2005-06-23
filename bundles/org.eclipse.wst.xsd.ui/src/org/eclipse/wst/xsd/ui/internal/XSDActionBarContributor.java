@@ -70,7 +70,7 @@ public class XSDActionBarContributor extends MultiPageEditorActionBarContributor
 	renameElementAction.setActionDefinitionId("org.eclipse.wst.xsd.ui.refactor.rename.element"); // TODO: add to contstants command id
 		
 	// the refactor menu, add the menu itself to add all refactor actions
-	refactorMenu = new MenuManager("Refactor", RefactorActionGroup.MENU_ID); //TODO: externalize string
+	refactorMenu = new MenuManager(XSDEditorPlugin.getXSDString("refactoring.menu.label"), RefactorActionGroup.MENU_ID); //TODO: externalize string
 	refactorMenu.add(this.renameElementAction);
   }
 

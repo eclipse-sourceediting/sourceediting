@@ -13,6 +13,7 @@ package org.eclipse.wst.xsd.ui.internal.refactor.delete;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.wst.xsd.ui.internal.XSDEditorPlugin;
 import org.eclipse.wst.xsd.ui.internal.util.TypesHelper;
 import org.eclipse.xsd.XSDAttributeGroupContent;
 import org.eclipse.xsd.XSDAttributeGroupDefinition;
@@ -76,8 +77,7 @@ public class GlobalAttributeGroupCleanup extends BaseGlobalCleanup
           {
             if (getReplacementElementName() != null)
             {
-              // String msg = XSDPlugin.getSchemaString("_INFO_RESET_ATTRIBUTE_GROUP_REFERENCE") + " <" + getReplacementElementName() + ">";
-							String msg = "Reset attribute group reference " + " <" + getReplacementElementName() + ">";
+			  String msg = XSDEditorPlugin.getXSDString("_INFO_RESET_ATTRIBUTE_GROUP_REFERENCE") + " <" + getReplacementElementName() + ">";
               addMessage(msg, attrGroupDef);
               attrGroupDef.getElement().setAttribute(XSDConstants.REF_ATTRIBUTE, getReplacementElementName());
             }
@@ -85,9 +85,7 @@ public class GlobalAttributeGroupCleanup extends BaseGlobalCleanup
             {
               // remove the attribute group reference
               String name = getNamedComponentName(type);
-              // String msg = XSDPlugin.getSchemaString("_INFO_REMOVE_ATTRIBUTE_GROUP_REFERENCE") + " <" + name + ">";
-							String msg = "Remove attribute group reference " + " <" + name + ">";
-  
+			  String msg = XSDEditorPlugin.getXSDString("_INFO_REMOVE_ATTRIBUTE_GROUP_REFERENCE") + " <" + name + ">";  
               addMessage(msg, attrGroupDef.getContainer());
               
               childrenToRemove.add(attrGroupDef.getElement());

@@ -359,7 +359,7 @@ public class SchemaPropertySource
        return;
     }
 
-    doc.getModel().beginRecording(this, "Target Namespace Change");
+    doc.getModel().beginRecording(this, XSDEditorPlugin.getXSDString("_UI_LABEL_TARGETNAMESPACE_CHANGE"));
     String xsdForXSDPrefix = xsdSchema.getSchemaForSchemaQNamePrefix();
     Map map = xsdSchema.getQNamePrefixToNamespaceMap();
 
