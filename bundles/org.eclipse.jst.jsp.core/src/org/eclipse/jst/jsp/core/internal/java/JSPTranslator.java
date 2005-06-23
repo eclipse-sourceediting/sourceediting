@@ -23,9 +23,11 @@ import java.util.List;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
+import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
@@ -33,15 +35,18 @@ import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
-import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDElementDeclaration;
-import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.TLDVariable;
 import org.eclipse.jst.jsp.core.internal.java.jspel.ASTExpression;
 import org.eclipse.jst.jsp.core.internal.java.jspel.ELGenerator;
 import org.eclipse.jst.jsp.core.internal.java.jspel.JSPELParser;
 import org.eclipse.jst.jsp.core.internal.java.jspel.ParseException;
 import org.eclipse.jst.jsp.core.internal.java.jspel.Token;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
+import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelper;
+import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelperManager;
+import org.eclipse.jst.jsp.core.internal.taglib.TaglibVariable;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -51,12 +56,10 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
-import org.eclipse.wst.xml.core.internal.contentmodel.CMNamedNodeMap;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMDocumentTracker;
-import org.eclipse.wst.xml.core.internal.provisional.contentmodel.CMNodeWrapper;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
@@ -569,22 +572,27 @@ public class JSPTranslator {
 	 */
 	public final StringBuffer getTranslation() {
 
-		if (DEBUG) {
-			Iterator it = fJava2JspRanges.keySet().iterator();
-			while (it.hasNext()) {
-				System.out.println("--------------------------------------------------------------"); //$NON-NLS-1$
-				Position java = (Position) it.next();
-				System.out.println("Java range:[" + java.offset + ":" + java.length + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				System.out.println("[" + fResult.toString().substring(java.offset, java.offset + java.length) + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-				System.out.println("--------------------------------------------------------------"); //$NON-NLS-1$
-				System.out.println("|maps to...|"); //$NON-NLS-1$
-				System.out.println("=============================================================="); //$NON-NLS-1$
-				Position jsp = (Position) fJava2JspRanges.get(java);
-				System.out.println("JSP range:[" + jsp.offset + ":" + jsp.length + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-				System.out.println("[" + fJspTextBuffer.toString().substring(jsp.offset, jsp.offset + jsp.length) + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-				System.out.println("=============================================================="); //$NON-NLS-1$
-				System.out.println(""); //$NON-NLS-1$
-				System.out.println(""); //$NON-NLS-1$
+		if (DEBUG) {	
+			try {
+				Iterator it = fJava2JspRanges.keySet().iterator();
+				while (it.hasNext()) {
+					System.out.println("--------------------------------------------------------------"); //$NON-NLS-1$
+					Position java = (Position) it.next();
+					System.out.println("Java range:[" + java.offset + ":" + java.length + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					System.out.println("[" + fResult.toString().substring(java.offset, java.offset + java.length) + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+					System.out.println("--------------------------------------------------------------"); //$NON-NLS-1$
+					System.out.println("|maps to...|"); //$NON-NLS-1$
+					System.out.println("=============================================================="); //$NON-NLS-1$
+					Position jsp = (Position) fJava2JspRanges.get(java);
+					System.out.println("JSP range:[" + jsp.offset + ":" + jsp.length + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					System.out.println("[" + fJspTextBuffer.toString().substring(jsp.offset, jsp.offset + jsp.length) + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+					System.out.println("=============================================================="); //$NON-NLS-1$
+					System.out.println(""); //$NON-NLS-1$
+					System.out.println(""); //$NON-NLS-1$
+				}
+			}
+			catch(Exception e) {
+				e.printStackTrace();
 			}
 		}
 
@@ -600,59 +608,34 @@ public class JSPTranslator {
 	public final String getJspText() {
 		return fJspTextBuffer.toString();
 	}
-
-	/**
-	 * adds the variables for a tag in a taglib to the dummy java document
-	 * 
-	 * @param tagToAdd
-	 *            is the name of the tag whose variables we want to add
-	 */
+	
 	protected void addTaglibVariables(String tagToAdd) {
-		if (fModelQuery != null) {
-			// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=5159
-			TLDCMDocumentManager docMgr = TaglibController.getTLDCMDocumentManager(fStructuredDocument);
-			if (docMgr == null)
-				return;
-			Iterator taglibs = docMgr.getCMDocumentTrackers(fCurrentNode.getStartOffset()).iterator();
-			CMDocument doc = null;
-			CMNamedNodeMap elements = null;
-			while (taglibs.hasNext()) {
-				doc = (CMDocument) taglibs.next();
-				CMNode node = null;	
-				if ((elements = doc.getElements()) != null && (node = elements.getNamedItem(tagToAdd)) != null && node.getNodeType() == CMNode.ELEMENT_DECLARATION) {
-					if (node instanceof CMNodeWrapper) {
-						node = ((CMNodeWrapper) node).getOriginNode();
-					}
-					// future_TODO
-					// FOR TAGLIB 1.1 STYLE, WE NEED TO INSTANTIATE THE
-					// TagExtraInfo class and get the variables that way
-					// use reflection to create class...
-					// VariableInfo[] getVariableInfo(TagData data)
-					// THIS IS ONLY FOR TAGLIB 1.2 STYLE .tld files
-					List list = ((TLDElementDeclaration) node).getVariables();
-					Iterator it = list.iterator();
-					while (it.hasNext()) {
-						TLDVariable var = (TLDVariable) it.next();
-						String varName = var.getNameGiven();
-						if (varName == null) {
-							varName = var.getNameFromAttribute();
-						}
-						if (varName != null) {
-							String varClass = "java.lang.String"; //$NON-NLS-1$ // the default class...
-							if (var.getVariableClass() != null) {
-								varClass = var.getVariableClass();
-							}
-							// add to declarations...
-							String newDeclaration = varClass + " " + varName + " = null;" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$
-							// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=5159
-							// not adding to map to avoid strange refactoring
-							// behavior
-							appendToBuffer(newDeclaration, fUserCode, false, fCurrentNode);
-						}
-					}
-				}
-			}
+		IFile f = getFile();
+		if(f == null && f.exists()) 
+			return;
+		
+		TaglibHelper helper = TaglibHelperManager.getInstance().getTaglibHelper(f);
+		IStructuredDocumentRegion customTag = getCurrentNode();
+		TaglibVariable[] taglibVars = helper.getTaglibVariables(tagToAdd, getStructuredDocument(), customTag);
+		String decl = "";
+		for (int i = 0; i < taglibVars.length; i++) {
+			decl = taglibVars[i].getDeclarationString();
+			appendToBuffer(decl, fUserCode, false, fCurrentNode);
 		}
+	}
+	
+	private IFile getFile() {
+		IFile f = null;
+		IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(getStructuredDocument());
+		try {
+			if(sModel != null) 
+				f = FileBuffers.getWorkspaceFileAtLocation(new Path(sModel.getBaseLocation()));
+		}
+		finally {
+			if(sModel != null)
+				sModel.releaseFromRead();
+		}
+		return f;
 	}
 
 	/*

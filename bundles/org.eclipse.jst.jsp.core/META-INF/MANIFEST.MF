@@ -39,5 +39,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jdt.core,
  org.eclipse.text,
  org.eclipse.wst.common.uriresolver,
- org.eclipse.wst.validation
+ org.eclipse.wst.validation,
+ org.eclipse.tomcat;resolution:=optional
 Eclipse-AutoStart: true
