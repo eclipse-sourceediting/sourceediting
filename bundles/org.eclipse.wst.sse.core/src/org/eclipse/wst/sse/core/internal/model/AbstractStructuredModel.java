@@ -870,7 +870,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 			}
 
 			endLock();
-			// notifify listeners outline locked state (or deadlock
+			// notifify listeners outside of locked state (or deadlock
 			// can occur if one of them calls us back.
 			fireModelChanged();
 		}
