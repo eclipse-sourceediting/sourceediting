@@ -100,6 +100,9 @@ Old catalog entires form defined with catalogContributor tag are still supported
                <documentation>
                   The value of the uri attribute could be relative to the plugin.xml file, use platform:/ or file:/ protocols.
                </documentation>
+               <appInfo>
+                  <meta.attribute kind="resource"/>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="webURL" type="string">
@@ -140,6 +143,9 @@ Old catalog entires form defined with catalogContributor tag are still supported
                <documentation>
                   The value of the uri attribute could be relative to the plugin.xml file, use platform:/ or file:/ protocols.
                </documentation>
+               <appInfo>
+                  <meta.attribute kind="resource"/>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
@@ -166,6 +172,9 @@ Old catalog entires form defined with catalogContributor tag are still supported
                <documentation>
                   The value of the uri attribute could be relative to the plugin.xml file, use platform:/ or file:/ protocols.
                </documentation>
+               <appInfo>
+                  <meta.attribute kind="resource"/>
+               </appInfo>
             </annotation>
          </attribute>
          <attribute name="name" type="string" use="required">
@@ -197,6 +206,9 @@ Old catalog entires form defined with catalogContributor tag are still supported
                <documentation>
                   The value of the uri attribute could be relative to the plugin.xml file, use platform:/ or file:/ protocols.
                </documentation>
+               <appInfo>
+                  <meta.attribute kind="resource"/>
+               </appInfo>
             </annotation>
          </attribute>
       </complexType>
