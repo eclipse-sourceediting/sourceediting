@@ -20,6 +20,7 @@ import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jst.jsp.core.internal.text.StructuredTextPartitionerForJSP;
 import org.eclipse.jst.jsp.ui.tests.document.UnzippedProjectTester;
+import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
@@ -68,7 +69,30 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 	public void testReload() throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
 		doTestReload("testfiles/regressionTestFiles/defect223365/SelColBeanRow12ResultsForm.jsp", BasicStructuredDocument.class, StructuredTextPartitionerForJSP.class);
 	}
-
+	
+	public void testJSPWithXMLOutput() throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
+		doTestReload("testfiles/jsp/jsp-xml-output.jsp", BasicStructuredDocument.class, StructuredTextPartitionerForJSP.class);
+	}
+	
+	public void testXHTMLTransitional1() throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
+		doTestCreate("testfiles/xhtml/testx.html", BasicStructuredDocument.class, StructuredTextPartitionerForHTML.class);
+	}
+	
+	public void testXHTMLTransitional2() throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
+		doTestCreate("testfiles/xhtml/testx.jsp", BasicStructuredDocument.class, StructuredTextPartitionerForJSP.class);
+	}
+	
+	public void testXHTMLTransitional3() throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
+		doTestCreate("testfiles/xhtml/testx.xhtml", BasicStructuredDocument.class, StructuredTextPartitionerForHTML.class);
+	}
+	
+	public void testHTMLTransitional1() throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
+		doTestCreate("testfiles/html/testh.html", BasicStructuredDocument.class, StructuredTextPartitionerForHTML.class);
+	}
+	
+	public void testHTMLTransitional2() throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
+		doTestCreate("testfiles/html/testh.jsp", BasicStructuredDocument.class, StructuredTextPartitionerForJSP.class);
+	}
 /*  
  * TODO: these test files are missing, for some reason when running on build machine ... need to re-construct
 	public void testNearEmptyJSP() throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
