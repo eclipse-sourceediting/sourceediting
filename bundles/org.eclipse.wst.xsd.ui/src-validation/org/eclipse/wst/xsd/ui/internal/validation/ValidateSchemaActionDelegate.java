@@ -25,7 +25,6 @@ import org.eclipse.ui.IActionDelegate;
 public class ValidateSchemaActionDelegate
        implements IActionDelegate
 {
-  public static final String copyright = "(c) Copyright IBM Corporation 2002.";
   protected ISelection selection;
 
   public void run(IAction action)

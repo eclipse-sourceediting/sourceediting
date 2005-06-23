@@ -27,7 +27,6 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 
 public class Validator implements IValidator
 {
-  public static final String copyright = "(c) Copyright IBM Corporation 2000, 2002.";
   private final String GET_FILE = "getFile";
   public final String GET_PROJECT_FILES = "getAllFiles";
 

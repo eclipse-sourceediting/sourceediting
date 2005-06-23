@@ -27,7 +27,6 @@ import org.eclipse.swt.widgets.Shell;
 
 class WindowUtility
 {
-	public static final String copyright = "(c) Copyright IBM Corporation 2000, 2002.";
 	public static Object getSelection(ISelection selection)
 	{
 		if (selection == null)

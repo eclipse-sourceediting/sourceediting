@@ -26,7 +26,6 @@ import org.eclipse.wst.xsd.core.internal.XSDCorePlugin;
 
 public class XSDValidatorManager extends AbstractUIPlugin 
 {
-  public static final String copyright = "(c) Copyright IBM Corporation 2000, 2002.";
   protected static XSDValidatorManager plugin;
  
   public XSDValidatorManager(IPluginDescriptor descriptor) 
