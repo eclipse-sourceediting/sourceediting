@@ -33,13 +33,13 @@ public class JSPELValidator implements org.eclipse.wst.validation.internal.provi
 		ITextRegionCollection containerRegion = container;
 		Iterator regions = containerRegion.getRegions().iterator();
 		ITextRegion region = null;
-		while (regions.hasNext()) {
+		while (regions.hasNext() && !reporter.isCancelled()) {
 			region = (ITextRegion) regions.next();
 			String type = region.getType();
 			if (type != null && region instanceof ITextRegionCollection) {
 				ITextRegionCollection parentRegion = ((ITextRegionCollection)region);				
 				Iterator childRegions = parentRegion.getRegions().iterator();
-				while(childRegions.hasNext()) {
+				while(childRegions.hasNext() && !reporter.isCancelled()) {
 					ITextRegion childRegion = (ITextRegion)childRegions.next();
 					if(childRegion.getType() == DOMJSPRegionContexts.JSP_EL_CONTENT)
 						validateXMLNode(parentRegion, childRegion, reporter, file);
@@ -75,7 +75,7 @@ public class JSPELValidator implements org.eclipse.wst.validation.internal.provi
 		reporter.removeAllMessages(this);
 		// IValidationContext may return a null array
 		if (uris != null) {
-			for (int i = 0; i < uris.length; i++) {
+			for (int i = 0; i < uris.length && !reporter.isCancelled(); i++) {
 				IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(uris[i]));
 				IStructuredModel model = null;
 				try {
@@ -83,7 +83,7 @@ public class JSPELValidator implements org.eclipse.wst.validation.internal.provi
 					DOMModelForJSP jspModel = (DOMModelForJSP) model;
 					IStructuredDocument structuredDoc = jspModel.getStructuredDocument();
 					IStructuredDocumentRegion curNode = structuredDoc.getFirstStructuredDocumentRegion();
-					while (null != (curNode = curNode.getNext())) {
+					while (null != (curNode = curNode.getNext())  && !reporter.isCancelled()) {
 						if (curNode.getType() != DOMRegionContext.XML_COMMENT_TEXT && curNode.getType() != DOMRegionContext.XML_CDATA_TEXT && curNode.getType() != DOMRegionContext.UNDEFINED) {
 							validateRegionContainer(curNode, reporter, file);
 						}
