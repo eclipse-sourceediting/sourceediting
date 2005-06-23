@@ -185,41 +185,42 @@ public class FormatActionDelegate extends ResourceActionDelegate {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.ui.edit.util.ResourceActionDelegate#processorAvailable(org.eclipse.core.resources.IResource)
+	/* (non-Javadoc)
+	 * @see org.eclipse.wst.sse.ui.internal.actions.ResourceActionDelegate#processorAvailable(org.eclipse.core.resources.IResource)
 	 */
 	protected boolean processorAvailable(IResource resource) {
 		boolean result = false;
-		try {
-			if (resource instanceof IFile) {
-				IFile file = (IFile) resource;
+		if (resource.isAccessible()) {
+			try {
+				if (resource instanceof IFile) {
+					IFile file = (IFile) resource;
 
-				IStructuredFormatProcessor formatProcessor = null;
-				IContentDescription contentDescription = file.getContentDescription();
-				if (contentDescription != null) {
-					IContentType contentType = contentDescription.getContentType();
-					formatProcessor = getFormatProcessor(contentType.getId());
-				}
-				if (formatProcessor != null)
-					result = true;
-			} else if (resource instanceof IContainer) {
-				IContainer container = (IContainer) resource;
-
-				IResource[] members;
-				members = container.members();
-				for (int i = 0; i < members.length; i++) {
-					boolean available = processorAvailable(members[i]);
-
-					if (available) {
+					IStructuredFormatProcessor formatProcessor = null;
+					IContentDescription contentDescription = file.getContentDescription();
+					if (contentDescription != null) {
+						IContentType contentType = contentDescription.getContentType();
+						formatProcessor = getFormatProcessor(contentType.getId());
+					}
+					if (formatProcessor != null)
 						result = true;
-						break;
+				}
+				else if (resource instanceof IContainer) {
+					IContainer container = (IContainer) resource;
+					IResource[] members;
+					members = container.members();
+					for (int i = 0; i < members.length; i++) {
+						boolean available = processorAvailable(members[i]);
+
+						if (available) {
+							result = true;
+							break;
+						}
 					}
 				}
 			}
-		} catch (CoreException e) {
-			Logger.logException(e);
+			catch (CoreException e) {
+				Logger.logException(e);
+			}
 		}
 
 		return result;
