@@ -42,9 +42,9 @@ public class CatalogWriterTest extends AbstractCatalogTest {
 
 		// write catalog
 		URL resultsFolder = TestPlugin.getDefault().getBundle().getEntry(
-				"/actual_results");
+				"/");
 		IPath path = new Path(Platform.resolve(resultsFolder).getFile());
-		String resultCatalogFile = path.append("catalog1.xml").toFile().toURI().toString();
+		String resultCatalogFile = path.append("actual_results/catalog1.xml").toFile().toURI().toString();
 		testCatalog.setLocation(resultCatalogFile);
 		// write catalog
 		testCatalog.save();
