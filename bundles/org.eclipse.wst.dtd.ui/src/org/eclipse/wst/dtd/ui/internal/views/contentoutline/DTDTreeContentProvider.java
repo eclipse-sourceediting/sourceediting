@@ -37,10 +37,11 @@ import org.eclipse.wst.dtd.core.internal.ParameterEntityReference;
 import org.eclipse.wst.dtd.core.internal.document.DTDModelImpl;
 import org.eclipse.wst.dtd.core.internal.event.IDTDFileListener;
 import org.eclipse.wst.dtd.core.internal.event.NodesEvent;
+import org.eclipse.wst.dtd.core.internal.parser.DTDRegionTypes;
 
 
-/* 
- * Based on DTDTreeContentProvider
+/**
+ * Tree content provider for DTD models.
  */
 
 public class DTDTreeContentProvider implements ITreeContentProvider, IDTDFileListener {
@@ -91,28 +92,38 @@ public class DTDTreeContentProvider implements ITreeContentProvider, IDTDFileLis
 		// otherwise
 		if (parentElement instanceof DTDFile) {
 			if (isShowLogicalOrder()) {
+				// return the visible node lists
 				if (logicalNodeLists == null) {
-					DTDFile file = (DTDFile) parentElement;
-					Object[] children = file.getNodeLists().toArray();
-					for (int i = 0; i < children.length; i++) {
-						children[i] = new IndexedNodeList((NodeList) children[i]);
+					Iterator nodeLists = ((DTDFile) parentElement).getNodeLists().iterator();
+					List visibleLists = new ArrayList(7);
+					while (nodeLists.hasNext()) {
+						NodeList list = (NodeList) nodeLists.next();
+						if (isVisibleNodeList(list)) {
+							visibleLists.add(list);
+						}
 					}
-					logicalNodeLists = children;
+					logicalNodeLists = visibleLists.toArray();
 				}
 				return logicalNodeLists;
 			}
 			else {
-				return ((DTDFile) parentElement).getNodes().toArray();
+				// return the visible nodes
+				List allNodes = ((DTDFile) parentElement).getNodes();
+				List visibleNodes = new ArrayList(allNodes.size());
+				for (int i = 0; i < allNodes.size(); i++) {
+					Object o = allNodes.get(i);
+					if (isVisibleNode(o)) {
+						visibleNodes.add(o);
+					}
+				}
+				return visibleNodes.toArray();
 			}
 		}
 		else if (parentElement instanceof NodeList) {
 			return ((NodeList) parentElement).getNodes().toArray();
 		}
-		else if (parentElement instanceof IndexedNodeList) {
-			return ((IndexedNodeList) parentElement).getTarget().getNodes().toArray();
-		}
-		else if (parentElement instanceof Element && isShowLogicalOrder()) {
-			// then group the attributes under the element
+		else if (parentElement instanceof Element) {
+			// always group the attributes directly under the element
 			Object[] children = ((DTDNode) parentElement).getChildren();
 			List attributes = ((Element) parentElement).getElementAttributes();
 			Object[] logicalChildren = new Object[children.length + attributes.size()];
@@ -147,18 +158,23 @@ public class DTDTreeContentProvider implements ITreeContentProvider, IDTDFileLis
 		Object parent = null;
 		if (element instanceof DTDNode) {
 			DTDNode node = (DTDNode) element;
-			if (element instanceof Attribute && isShowLogicalOrder()) {
+			if (element instanceof Attribute) {
+				// then we must say that the element with the same name
+				// as our attribute's parent attributelist is our parent
+				parent = node.getParentNode();
+				if (parent != null && parent instanceof AttributeList) {
+					return getParent(parent);
+				}
+			}
+			if (element instanceof AttributeList) {
 				// then we must say that the element with the same name
 				// as our attributelist is our parent
-				parent = node.getParentNode();
-				if (parent != null) {
-					String attListName = ((DTDNode) parent).getName();
-					Iterator iter = node.getDTDFile().getNodes().iterator();
-					while (iter.hasNext()) {
-						DTDNode currentNode = (DTDNode) iter.next();
-						if (currentNode instanceof AttributeList && currentNode.getName().equals(attListName)) {
-							parent = currentNode;
-						}
+				String attListName = ((AttributeList) element).getName();
+				Iterator iter = node.getDTDFile().getElementsAndParameterEntityReferences().getNodes().iterator();
+				while (iter.hasNext() && parent == null) {
+					DTDNode currentNode = (DTDNode) iter.next();
+					if (currentNode instanceof Element && currentNode.getName().equals(attListName)) {
+						parent = currentNode;
 					}
 				}
 			}
@@ -173,8 +189,8 @@ public class DTDTreeContentProvider implements ITreeContentProvider, IDTDFileLis
 				if (isShowLogicalOrder()) {
 					Object[] indexedNodeLists = getChildren(((DTDModelImpl) fInputObject).getDTDFile());
 					for (int i = 0; i < indexedNodeLists.length && parent == null; i++) {
-						if (indexedNodeLists[i] instanceof IndexedNodeList) {
-							if (((IndexedNodeList) indexedNodeLists[i]).contains(element))
+						if (indexedNodeLists[i] instanceof NodeList) {
+							if (((NodeList) indexedNodeLists[i]).getNodes().contains(element))
 								parent = indexedNodeLists[i];
 						}
 					}
@@ -184,7 +200,7 @@ public class DTDTreeContentProvider implements ITreeContentProvider, IDTDFileLis
 				}
 			}
 		}
-		else if (element instanceof IndexedNodeList && fInputObject instanceof DTDModelImpl) {
+		else if (element instanceof NodeList && fInputObject instanceof DTDModelImpl) {
 			parent = ((DTDModelImpl) fInputObject).getDTDFile();
 		}
 		return parent;
@@ -214,6 +230,17 @@ public class DTDTreeContentProvider implements ITreeContentProvider, IDTDFileLis
 	 */
 	public boolean isShowLogicalOrder() {
 		return showLogicalOrder;
+	}
+
+	private boolean isVisibleNode(Object o) {
+		if (o instanceof AttributeList) {
+			return false;
+		}
+		return true;
+	}
+
+	private boolean isVisibleNodeList(NodeList nodeList) {
+		return !nodeList.getListType().equals(DTDRegionTypes.ATTLIST_TAG);
 	}
 
 	public void nodeChanged(DTDNode node) {
@@ -286,12 +313,12 @@ public class DTDTreeContentProvider implements ITreeContentProvider, IDTDFileLis
 	/**
 	 * Set the value of showLogicalOrder.
 	 * 
-	 * @param v
+	 * @param value
 	 *            Value to assign to showLogicalOrder.
 	 */
-	public void setShowLogicalOrder(boolean v) {
-		this.showLogicalOrder = v;
-		if (!v) {
+	public void setShowLogicalOrder(boolean value) {
+		this.showLogicalOrder = value;
+		if (!value) {
 			// if not using logical order, lose the cached lists
 			logicalNodeLists = null;
 		}

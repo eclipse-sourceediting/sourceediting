@@ -45,9 +45,6 @@ public class DTDLabelProvider extends LabelProvider {
 		else if (element instanceof NodeList) {
 			image = ((NodeList) element).getImage();
 		}
-		else if (element instanceof IndexedNodeList) {
-			return ((IndexedNodeList) element).getTarget().getImage();
-		}
 		else if (element instanceof DTDFile) {
 			image = ((DTDFile) element).getImage();
 		}
@@ -70,21 +67,29 @@ public class DTDLabelProvider extends LabelProvider {
 			String name = ((DTDNode) element).getName();
 
 			// strip leading whitespace (useful for multi-line comments)
-			int i = 0;
-			for (i = 0; i < name.length(); i++) {
-				if (!Character.isWhitespace(name.charAt(i)))
+			int firstSignificantCharacter = 0;
+			int lastVisibleCharacter = name.length() - 1;
+			for (firstSignificantCharacter = 0; firstSignificantCharacter < name.length(); firstSignificantCharacter++) {
+				if (!Character.isWhitespace(name.charAt(firstSignificantCharacter)))
 					break;
 			}
-			if (i > 0 && i < name.length() - 1)
-				name = name.substring(i);
+			// keep only the first line of text in a multi-line name
+			if (firstSignificantCharacter < lastVisibleCharacter) {
+				for (lastVisibleCharacter = firstSignificantCharacter + 1; lastVisibleCharacter < name.length(); lastVisibleCharacter++) {
+					char character = name.charAt(lastVisibleCharacter);
+					if (character == '\r' || character == '\n')
+						break;
+				}
+			}
+			if (firstSignificantCharacter > 0 && firstSignificantCharacter < name.length() - 1) {
+				name = name.substring(firstSignificantCharacter, lastVisibleCharacter);
+			}
 
 			return name;
 		}
 		else if (element instanceof NodeList) {
-			return ((NodeList) element).getListType();
-		}
-		else if (element instanceof IndexedNodeList) {
-			return ((IndexedNodeList) element).getTarget().getName();
+			// return ((NodeList) element).getListType();
+			return ((NodeList) element).getName();
 		}
 		else if (element instanceof DTDFile) {
 			return ((DTDFile) element).getName();

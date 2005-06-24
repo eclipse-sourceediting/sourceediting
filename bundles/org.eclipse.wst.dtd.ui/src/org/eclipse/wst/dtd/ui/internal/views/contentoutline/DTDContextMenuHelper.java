@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.dtd.core.internal.AttributeList;
 import org.eclipse.wst.dtd.core.internal.CMGroupNode;
 import org.eclipse.wst.dtd.core.internal.CMNode;
@@ -50,6 +51,9 @@ import org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions.DeleteAction
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 
 
+/**
+ * Menu helper for Content Outline page.  This should not be used elsewhere.
+ */
 public class DTDContextMenuHelper // extends FocusAdapter
 {
 
@@ -62,7 +66,8 @@ public class DTDContextMenuHelper // extends FocusAdapter
 		public void menuAboutToShow(IMenuManager manager) {
 			updateActions();
 			Object node = null;
-			ISelection selection = DTDContextMenuHelper.this.fEditor.getSelectionProvider().getSelection();
+			IContentOutlinePage outline = (IContentOutlinePage) DTDContextMenuHelper.this.fEditor.getAdapter(IContentOutlinePage.class);
+			ISelection selection = outline.getSelection();
 			if (selection instanceof IStructuredSelection) {
 				node = ((IStructuredSelection) selection).getFirstElement();
 			}
@@ -72,9 +77,6 @@ public class DTDContextMenuHelper // extends FocusAdapter
 			if (node != null) {
 				addActionItemsForSelection(node, manager);
 			}
-//			List selection = DTDContextMenuHelper.this.fEditor.getSelectedNodes();
-//			if (node != null)
-//				addActionItemsForSelection(node, manager);
 		}
 	}
 
@@ -155,10 +157,9 @@ public class DTDContextMenuHelper // extends FocusAdapter
 		menu.add(redoAction);
 		menu.add(new Separator());
 
-		if (selectedObject instanceof IndexedNodeList) {
-			// http://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=4201
+		if (selectedObject instanceof NodeList) {
 			// add appropriate menu to logical view
-			NodeList folder = ((IndexedNodeList) selectedObject).getTarget();
+			NodeList folder = (NodeList) selectedObject;
 			if (folder.getListType().equals(DTDRegionTypes.NOTATION_TAG)) {
 				menu.add(addNotationAction);
 			}
@@ -171,6 +172,9 @@ public class DTDContextMenuHelper // extends FocusAdapter
 
 				menu.add(addElementAction);
 				menu.add(addParameterEntityReferenceAction);
+			}
+			else if (folder.getListType().equals(DTDRegionTypes.ATTLIST_TAG)) {
+				menu.add(addAttributeAction);
 			}
 		}
 		if (selectedObject instanceof DTDFile || selectedObject == null) {
