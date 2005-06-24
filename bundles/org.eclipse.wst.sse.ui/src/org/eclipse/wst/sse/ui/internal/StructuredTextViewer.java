@@ -680,7 +680,6 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 	}
 
 	void handleDoubleClick(DoubleClickEvent event) {
-
 		IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 		int selectionSize = selection.size();
 		List selectedNodes = selection.toList();
@@ -691,11 +690,14 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			// something selected
 			// only one node can be double-clicked at a time
 			// so, we get the first one
-			doubleClickedNode = (IndexedRegion) selectedNodes.get(0);
-			selectionStart = doubleClickedNode.getStartOffset();
-			selectionEnd = doubleClickedNode.getEndOffset();
-			// set new selection
-			setSelectedRange(selectionStart, selectionEnd - selectionStart);
+			Object o = selectedNodes.get(0);
+			if(o instanceof IndexedRegion) {
+				doubleClickedNode = (IndexedRegion) o;
+				selectionStart = doubleClickedNode.getStartOffset();
+				selectionEnd = doubleClickedNode.getEndOffset();
+				// set new selection
+				setSelectedRange(selectionStart, selectionEnd - selectionStart);
+			}
 		}
 	}
 
@@ -949,8 +951,12 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			return true;
 		// if the range would be the entire document's length, there's nothing
 		// to show
-		IndexedRegion firstIndexedNode = (IndexedRegion) selectedNodes.get(0);
-		return firstIndexedNode.getEndOffset() - firstIndexedNode.getStartOffset() >= getDocument().getLength();
+		Object o = selectedNodes.get(0);
+		if (o instanceof IndexedRegion) {
+			IndexedRegion firstIndexedNode = (IndexedRegion) o;
+			return firstIndexedNode.getEndOffset() - firstIndexedNode.getStartOffset() >= getDocument().getLength();
+		}
+		return true;
 	}
 
 	/**
