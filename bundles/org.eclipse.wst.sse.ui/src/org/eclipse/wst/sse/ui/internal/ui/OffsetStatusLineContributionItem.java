@@ -130,10 +130,28 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			partioningComposite.setLayout(new GridLayout(2, false));
 			partioningComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
+			Text documentTypeLabel = new Text(partioningComposite, SWT.SINGLE | SWT.READ_ONLY);
+			GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+			gd.horizontalSpan = 2;
+			documentTypeLabel.setLayoutData(gd);
+			documentTypeLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_6 + fDocument.getClass().getName()); //$NON-NLS-1$
+
+			Text documentProviderLabel = new Text(partioningComposite, SWT.SINGLE | SWT.READ_ONLY);
+			gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+			gd.horizontalSpan = 2;
+			documentProviderLabel.setLayoutData(gd);
+			documentProviderLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_7 + fTextEditor.getDocumentProvider().getClass().getName()); //$NON-NLS-1$
+
+			Text editorInputLabel = new Text(partioningComposite, SWT.SINGLE | SWT.READ_ONLY);
+			gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+			gd.horizontalSpan = 2;
+			editorInputLabel.setLayoutData(gd);
+			editorInputLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_12 + fTextEditor.getEditorInput().getClass().getName()); //$NON-NLS-1$
+
 			IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(fDocument);
 			if (model != null) {
 				Text modelContentTypeLabel = new Text(partioningComposite, SWT.SINGLE | SWT.READ_ONLY);
-				GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+				gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 				gd.horizontalSpan = 2;
 				modelContentTypeLabel.setLayoutData(gd);
 				modelContentTypeLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_4 + model.getContentTypeIdentifier()); //$NON-NLS-1$
@@ -160,7 +178,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			partitioningCombo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
 			final Text partitionerInstanceLabel = new Text(partioningComposite, SWT.SINGLE | SWT.READ_ONLY);
-			GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
+			gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 			gd.horizontalSpan = 2;
 			partitionerInstanceLabel.setLayoutData(gd);
 
@@ -255,7 +273,7 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				ITextSelection textSelection = (ITextSelection) sel;
 				fPartitionTable.setInput(TextUtilities.computePartitioning(fDocument, selectedPartitioning, textSelection.getOffset(), textSelection.getLength(), true));
 				String partitionerText = fDocument instanceof IDocumentExtension3 ? ((IDocumentExtension3) fDocument).getDocumentPartitioner(partitioningCombo.getItem(partitioningCombo.getSelectionIndex())).toString() : fDocument.getDocumentPartitioner().toString();
-				partitionerInstanceLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_14 + partitionerText); //$NON-NLS-1$
+				partitionerInstanceLabel.setText(SSEUIMessages.OffsetStatusLineContributionItem_13 + partitionerText); //$NON-NLS-1$
 			}
 			catch (BadLocationException e1) {
 				fPartitionTable.setInput(new ITypedRegion[0]);

@@ -288,12 +288,14 @@ public class SSEUIMessages extends NLS {
 	public static String OffsetStatusLineContributionItem_3;
 	public static String OffsetStatusLineContributionItem_4;
 	public static String OffsetStatusLineContributionItem_5;
+	public static String OffsetStatusLineContributionItem_6;
+	public static String OffsetStatusLineContributionItem_7;
 	public static String OffsetStatusLineContributionItem_8;
 	public static String OffsetStatusLineContributionItem_9;
 	public static String OffsetStatusLineContributionItem_10;
 	public static String OffsetStatusLineContributionItem_11;
+	public static String OffsetStatusLineContributionItem_12;
 	public static String OffsetStatusLineContributionItem_13;
-	public static String OffsetStatusLineContributionItem_14;
 	public static String OffsetStatusLineContributionItem_15;
 	public static String OffsetStatusLineContributionItem_16;
 	public static String OffsetStatusLineContributionItem_17;
