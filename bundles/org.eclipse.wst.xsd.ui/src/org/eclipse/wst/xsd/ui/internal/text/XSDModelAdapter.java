@@ -6,6 +6,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xsd.ui.internal.util.XSDSchemaLocationResolverAdapterFactory;
 import org.eclipse.xsd.XSDFactory;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.impl.XSDSchemaImpl;
@@ -53,10 +54,7 @@ public class XSDModelAdapter implements INodeAdapter
       XSDSchemaImpl.getSchemaForSchema(schemaForSchemaNamespace);      
       
       resourceSet = XSDSchemaImpl.createResourceSet();
-            
-      
-      //TODO... what does this do?
-      //resourceSet.setURIConverter(new XSDURIConverter(resourceFile));
+      resourceSet.getAdapterFactories().add(new XSDSchemaLocationResolverAdapterFactory());                
       
       // TODO... gotta pester SSE folks to provide 'useful' baseLocations
       // 

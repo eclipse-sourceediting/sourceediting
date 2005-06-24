@@ -137,6 +137,11 @@ public class Catalog implements ICatalog
 			{
 				result = getMappedURI(systemMap, systemId);
 			}
+			// our clients used to pass namespace in place of public id, so we need to check uri map for those
+			if (result == null)
+			{
+				result = getMappedURI(uriMap, publicId);
+			}
 			if (result == null)
 			{
 				result = resolveSubordinateCatalogs(

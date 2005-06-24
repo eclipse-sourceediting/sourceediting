@@ -12,14 +12,8 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.modelquery;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-
-//import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.sse.core.internal.util.URIResolver;
-import org.eclipse.wst.xml.core.internal.Logger;
-import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
-import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
 
 
 
@@ -63,6 +57,9 @@ public class XMLCatalogIdResolver implements org.eclipse.wst.common.uriresolver.
 		if (base == null) {
 			base = getResourceLocation();
 		}
+		
+		result = URIResolverPlugin.createResolver().resolve(base, publicId, systemId);
+		/*
 		// first see if we can map the publicId to an alternative systemId
 		// note: should probably verify the mappedSystemId before ignoring the
 		// systemId
@@ -103,7 +100,7 @@ public class XMLCatalogIdResolver implements org.eclipse.wst.common.uriresolver.
 //			result = URIHelper.normalize(result, base, null);
 //			normalized = true;
 //		}
-		
+		*/
 		return result;
 	}
 
