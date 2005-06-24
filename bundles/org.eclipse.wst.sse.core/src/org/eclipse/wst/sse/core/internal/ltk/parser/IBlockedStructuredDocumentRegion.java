@@ -20,7 +20,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
  * Because these are "variable" partition types, its often handy (efficient)
  * to keep track of the partition type.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IBlockedStructuredDocumentRegion extends IStructuredDocumentRegion {
 	/**

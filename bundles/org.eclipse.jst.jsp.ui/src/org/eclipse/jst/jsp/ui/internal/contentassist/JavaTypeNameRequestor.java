@@ -17,7 +17,7 @@ import org.eclipse.wst.javascript.ui.internal.common.contentassist.IRelevanceCon
  * Use w/ JDT search engine to find all type names.
  * Creates proposals from matches reported.
  *
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class JavaTypeNameRequestor extends TypeNameRequestor {
 	

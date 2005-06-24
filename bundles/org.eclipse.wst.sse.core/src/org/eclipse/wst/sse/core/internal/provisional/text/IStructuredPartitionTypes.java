@@ -5,7 +5,7 @@ package org.eclipse.wst.sse.core.internal.provisional.text;
  * It defines the partitioning for StructuredDocuments.
  * Clients should reference the partition type Strings defined here directly.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IStructuredPartitionTypes {
 

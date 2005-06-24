@@ -70,7 +70,7 @@ import org.eclipse.wst.xml.ui.internal.validation.StructuredTextReconcilingStrat
 /**
  * This class provides
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class StructuredTextViewerConfigurationXML extends StructuredTextViewerConfiguration {
 

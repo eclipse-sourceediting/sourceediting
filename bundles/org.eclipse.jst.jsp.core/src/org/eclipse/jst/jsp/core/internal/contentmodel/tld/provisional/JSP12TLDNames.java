@@ -47,7 +47,7 @@ public interface JSP12TLDNames {
 	String NO = JSP11TLDNames.NO;
 
 	/*
-	 * @since JSP 1.2
+	 * @see Eclipse JSP 1.2
 	 */
 	String DESCRIPTION = "description"; //$NON-NLS-1$
 	String DISPLAY_NAME = "display-name"; //$NON-NLS-1$

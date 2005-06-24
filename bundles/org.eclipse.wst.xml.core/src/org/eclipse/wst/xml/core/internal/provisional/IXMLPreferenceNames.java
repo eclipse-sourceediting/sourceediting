@@ -15,7 +15,7 @@ package org.eclipse.wst.xml.core.internal.provisional;
 /**
  * Keys to use for preference settings.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 
 public interface IXMLPreferenceNames {

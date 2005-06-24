@@ -214,7 +214,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 	 *                <br>
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised when the source node
 	 *                is readonly.
-	 * @since DOM Level 3
+	 * @see DOM Level 3
 	 */
 	public org.w3c.dom.Node adoptNode(org.w3c.dom.Node source) throws org.w3c.dom.DOMException {
 		return null;
@@ -786,7 +786,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 	 * An attribute specifying, as part of the XML declaration, the encoding
 	 * of this document. This is <code>null</code> when unspecified.
 	 * 
-	 * @since DOM Level 3
+	 * @see DOM Level 3
 	 */
 	public java.lang.String getEncoding() {
 		return null;
@@ -832,7 +832,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 	 * An attribute specifying, as part of the XML declaration, whether this
 	 * document is standalone.
 	 * 
-	 * @since DOM Level 3
+	 * @see DOM Level 3
 	 */
 	public boolean getStandalone() {
 		return false;
@@ -851,7 +851,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 	 * behavior is undefined. This attribute is <code>true</code> by
 	 * defaults.
 	 * 
-	 * @since DOM Level 3
+	 * @see DOM Level 3
 	 */
 	public boolean getStrictErrorChecking() {
 		return false;
@@ -866,7 +866,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 	 * An attribute specifying, as part of the XML declaration, the version
 	 * number of this document. This is <code>null</code> when unspecified.
 	 * 
-	 * @since DOM Level 3
+	 * @see DOM Level 3
 	 */
 	public String getVersion() {
 		return null;
@@ -1008,7 +1008,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 	 * An attribute specifying, as part of the XML declaration, the encoding
 	 * of this document. This is <code>null</code> when unspecified.
 	 * 
-	 * @since DOM Level 3
+	 * @see DOM Level 3
 	 */
 	public void setEncoding(java.lang.String encoding) {
 	}
@@ -1033,7 +1033,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 	 * An attribute specifying, as part of the XML declaration, whether this
 	 * document is standalone.
 	 * 
-	 * @since DOM Level 3
+	 * @see DOM Level 3
 	 */
 	public void setStandalone(boolean standalone) {
 	}
@@ -1051,7 +1051,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 	 * behavior is undefined. This attribute is <code>true</code> by
 	 * defaults.
 	 * 
-	 * @since DOM Level 3
+	 * @see DOM Level 3
 	 */
 	public void setStrictErrorChecking(boolean strictErrorChecking) {
 	}
@@ -1065,7 +1065,7 @@ public class DocumentImpl extends NodeContainer implements IDOMDocument {
 	 * An attribute specifying, as part of the XML declaration, the version
 	 * number of this document. This is <code>null</code> when unspecified.
 	 * 
-	 * @since DOM Level 3
+	 * @see DOM Level 3
 	 */
 	public void setVersion(java.lang.String version) {
 	}

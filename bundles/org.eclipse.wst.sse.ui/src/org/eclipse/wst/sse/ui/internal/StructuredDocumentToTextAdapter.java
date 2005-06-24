@@ -540,7 +540,7 @@ public class StructuredDocumentToTextAdapter implements IDocumentAdapter, IDocum
 	 * @param document
 	 *            the document
 	 * @see IRepairableDocument#repairLineInformation()
-	 * @since 3.0
+	 * @see  Eclipse 3.0
 	 */
 	private void repairLineInformation(IDocument document) {
 		if (document instanceof IRepairableDocument) {

@@ -20,28 +20,28 @@ public interface TLDElementDeclaration extends CMElementDeclaration {
 	/**
 	 * The body content type
 	 * 
-	 * @since JSP 1.1
+	 * @see JSP 1.1
 	 */
 	String getBodycontent();
 
 	/**
 	 * Optional tag-specific information
 	 * 
-	 * @since JSP 1.2
+	 * @see JSP 1.2
 	 */
 	String getDescription();
 
 	/**
 	 * A short name that is intended to be displayed by tools
 	 * 
-	 * @since JSP 1.2
+	 * @see JSP 1.2
 	 */
 	String getDisplayName();
 
 	/**
 	 * Optional informal description of an example of a use of this tag
 	 * 
-	 * @since JSP 2.0
+	 * @see JSP 2.0
 	 */
 	String getExample();
 
@@ -49,21 +49,21 @@ public interface TLDElementDeclaration extends CMElementDeclaration {
 	 * Zero or more extensions that provide extra information about this tag,
 	 * for tool consumption
 	 * 
-	 * @since JSP 2.0
+	 * @see JSP 2.0
 	 */
 	List getExtensions();
 
 	/**
 	 * Optional tag-specific information
 	 * 
-	 * @since JSP 1.1
+	 * @see JSP 1.1
 	 */
 	String getInfo();
 
 	/**
 	 * Name of an optional large icon that can be used by tools
 	 * 
-	 * @since JSP 1.2
+	 * @see JSP 1.2
 	 */
 	String getLargeIcon();
 
@@ -79,14 +79,14 @@ public interface TLDElementDeclaration extends CMElementDeclaration {
 	 * 
 	 * @return the path to the .tag(x) file as defined in the .tld file, null
 	 *         if internal to the .tld
-	 * @since JSP 2.0
+	 * @see JSP 2.0
 	 */
 	String getPath();
 
 	/**
 	 * Name of an optional small icon that can be used by tools
 	 * 
-	 * @since JSP 1.2
+	 * @see JSP 1.2
 	 */
 	String getSmallIcon();
 
@@ -94,7 +94,7 @@ public interface TLDElementDeclaration extends CMElementDeclaration {
 	 * The name of the tag handler class implementing
 	 * javax.servlet.jsp.tagext.Tag
 	 * 
-	 * @since JSP 1.1
+	 * @see JSP 1.1
 	 */
 	String getTagclass();
 
@@ -102,12 +102,12 @@ public interface TLDElementDeclaration extends CMElementDeclaration {
 	 * The name of an optional subclass of
 	 * javax.servlet.jsp.tagext.TagExtraInfo
 	 * 
-	 * @since JSP 1.1
+	 * @see JSP 1.1
 	 */
 	String getTeiclass();
 
 	/**
-	 * @since JSP 1.2
+	 * @see JSP 1.2
 	 * @return List of TLDVariables
 	 */
 	List getVariables();

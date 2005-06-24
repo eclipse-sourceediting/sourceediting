@@ -23,13 +23,13 @@ public interface TLDAttributeDeclaration extends CMAttributeDeclaration {
 	/**
 	 * a description of the attribute
 	 * @return String
-	 * @since JSP 2.0
+	 * @see  JSP 2.0
 	 */
 	String getDescription();
 	
 	/**
 	 * the attribute's name
-	 * @since JSP 1.1
+	 * @see  JSP 1.1
 	 */
 	String getId();
 
@@ -37,13 +37,13 @@ public interface TLDAttributeDeclaration extends CMAttributeDeclaration {
 
 	/**
 	 * whether the attribute's value may be dynamically calculated at runtime by an expression
-	 * @since JSP 1.1
+	 * @see  JSP 1.1
 	 */
 	String getRtexprvalue();
 
 	/**
 	 * the type of the attribute's value
-	 * @since JSP 1.2
+	 * @see  JSP 1.2
 	 */
 	String getType();
 
@@ -56,7 +56,7 @@ public interface TLDAttributeDeclaration extends CMAttributeDeclaration {
 	
 	/**
 	 * if the attribute is required or optional
-	 * @since JSP 1.1
+	 * @see  JSP 1.1
 	 */
 	boolean isRequired();
 }

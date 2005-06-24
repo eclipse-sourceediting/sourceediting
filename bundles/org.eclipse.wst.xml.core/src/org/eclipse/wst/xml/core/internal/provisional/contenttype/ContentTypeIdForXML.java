@@ -17,7 +17,7 @@ package org.eclipse.wst.xml.core.internal.provisional.contenttype;
  * safety when refering to a contentType ID. The value of the contenttype id
  * field must match what is specified in plugin.xml file.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 final public class ContentTypeIdForXML {
 	/**

@@ -14,7 +14,7 @@ package org.eclipse.wst.xml.core.internal.preferences;
 /**
  * Common preference keys used by XML core
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class XMLCorePreferenceNames {
 	private XMLCorePreferenceNames() {

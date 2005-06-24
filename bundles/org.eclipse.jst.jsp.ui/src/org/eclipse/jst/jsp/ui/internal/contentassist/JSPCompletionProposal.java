@@ -9,7 +9,7 @@ import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 /**
  * Implements IJavaCompletionProposal for use with JSPProposalCollector.
  *
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class JSPCompletionProposal extends CustomCompletionProposal implements IJavaCompletionProposal  {
 

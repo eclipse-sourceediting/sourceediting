@@ -13,7 +13,7 @@ package org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional;
 
 /**
  * Defines an optional event listener object to be instantiated and registered automatically
- * @since JSP 1.2
+ * @see JSP 1.2
  */
 public interface TLDListener {
 	String getListenerClass();

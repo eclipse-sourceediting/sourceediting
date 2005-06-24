@@ -15,7 +15,7 @@ import org.eclipse.osgi.util.NLS;
 /**
  * Strings used by JSP Core
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class JSPCoreMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.jst.jsp.core.internal.JSPCorePluginResources"; //$NON-NLS-1$

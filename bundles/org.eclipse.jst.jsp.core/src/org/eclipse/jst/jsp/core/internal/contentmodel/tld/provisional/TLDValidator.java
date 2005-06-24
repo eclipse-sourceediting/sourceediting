@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * Defines an optional validator that can be used to validate the conformance of a JSP page to using this tag library
- * @since JSP 1.2
+ * @see JSP 1.2
  */
 public interface TLDValidator {
 	/**

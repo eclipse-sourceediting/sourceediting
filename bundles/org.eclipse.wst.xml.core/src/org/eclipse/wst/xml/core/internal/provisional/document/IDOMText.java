@@ -21,7 +21,7 @@ import org.w3c.dom.Text;
  * This interface provides extensions to corresponding DOM interface to enable
  * functions for source editing and incremental parsing.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  * 
  */
 public interface IDOMText extends IDOMNode, Text {
@@ -59,7 +59,7 @@ public interface IDOMText extends IDOMNode, Text {
 	 * element content during the load of the document or if validation occurs
 	 * while using <code>Document.normalizeDocument()</code>.
 	 * 
-	 * @since DOM Level 3
+	 * @see DOM Level 3
 	 * 
 	 * @return true if is entirely white space.
 	 */
@@ -75,7 +75,7 @@ public interface IDOMText extends IDOMNode, Text {
 	 * <code>Text</code> node that contains "bar" returns "barfoo", while on
 	 * the <code>Text</code> node that contains "foo" it returns "barfoo".
 	 * 
-	 * @since DOM Level 3
+	 * @see DOM Level 3
 	 * 
 	 */
 	public String getWholeText();
@@ -122,7 +122,7 @@ public interface IDOMText extends IDOMNode, Text {
 	 * @exception DOMException
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if one of the
 	 *                <code>Text</code> nodes being replaced is readonly.
-	 * @since DOM Level 3
+	 * @see DOM Level 3
 	 */
 	public Text replaceWholeText(String content) throws DOMException;
 

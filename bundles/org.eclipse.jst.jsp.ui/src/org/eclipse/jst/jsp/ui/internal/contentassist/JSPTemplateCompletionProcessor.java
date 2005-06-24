@@ -31,7 +31,7 @@ import org.eclipse.swt.graphics.Image;
  * jsp content assist processor has already set the context type for
  * templates.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 class JSPTemplateCompletionProcessor extends TemplateCompletionProcessor {
 	private String fContextTypeId = null;

@@ -38,7 +38,7 @@ import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEv
  * are provided, since some parsers/implementations favor one or the other for
  * efficiency.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface ITextRegion {
 

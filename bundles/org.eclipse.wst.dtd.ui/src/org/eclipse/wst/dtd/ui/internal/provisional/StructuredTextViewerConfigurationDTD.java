@@ -42,7 +42,7 @@ import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 /**
  * A source viewer configuration for DTDs.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class StructuredTextViewerConfigurationDTD extends StructuredTextViewerConfiguration {
 

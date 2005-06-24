@@ -25,7 +25,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
  * fired), those state variables could reset, or whatever, upon receiving this
  * event.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class NoChangeEvent extends StructuredDocumentEvent {
 	/**

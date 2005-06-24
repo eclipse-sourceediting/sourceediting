@@ -22,7 +22,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
  * with more than one IStructuredDocumentRegion, or when simply more than one
  * IStructuredDocumentRegion changes.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class StructuredDocumentRegionsReplacedEvent extends StructuredDocumentEvent {
 

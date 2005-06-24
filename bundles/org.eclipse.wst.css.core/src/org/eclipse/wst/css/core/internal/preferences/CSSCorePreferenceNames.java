@@ -13,7 +13,7 @@ package org.eclipse.wst.css.core.internal.preferences;
 /**
  * CSS core preference keys.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class CSSCorePreferenceNames {
 	private CSSCorePreferenceNames() {

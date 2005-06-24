@@ -25,7 +25,7 @@ import org.eclipse.wst.xml.core.internal.parser.XML10Names;
  * the DOM call. And, natually, want to give the user feedback in a more 
  * timely fashion.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public final class NameValidator {
 

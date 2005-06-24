@@ -641,7 +641,7 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 	 * element content during the load of the document or if validation occurs
 	 * while using <code>Document.normalizeDocument()</code>.
 	 * 
-	 * @since DOM Level 3
+	 * @see DOM Level 3
 	 */
 	public boolean isElementContentWhitespace() {
 		return isWhitespace();
@@ -1167,7 +1167,7 @@ public class TextImpl extends CharacterDataImpl implements IDOMText {
 	 * @exception DOMException
 	 *                NO_MODIFICATION_ALLOWED_ERR: Raised if one of the
 	 *                <code>Text</code> nodes being replaced is readonly.
-	 * @since DOM Level 3
+	 * @see DOM Level 3
 	 */
     public Text replaceWholeText(String content)
                                  throws DOMException {

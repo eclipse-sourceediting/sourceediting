@@ -21,7 +21,7 @@ import java.util.Collection;
  * to use the typical adapter pattern but with notification added, that is,
  * client's adapters will be notified when the nodeNotifier changes.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 
 public interface INodeNotifier {

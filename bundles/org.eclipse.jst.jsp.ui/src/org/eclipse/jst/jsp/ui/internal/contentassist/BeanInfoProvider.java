@@ -34,7 +34,7 @@ import org.eclipse.jst.jsp.ui.internal.Logger;
  * given a fully qualified beanname. Bean properties can be retrieved using:
  * <code>getRuntimeProperties(IResource baseResource, String typeName)</code>
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class BeanInfoProvider implements IBeanInfoProvider {
 

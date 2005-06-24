@@ -13,7 +13,7 @@ package org.eclipse.jst.jsp.ui.internal.contentassist;
 import org.eclipse.core.resources.IResource;
 
 /**
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IBeanInfoProvider {
 	IJavaPropertyDescriptor[] getRuntimeProperties(IResource baseResource, String typeName);

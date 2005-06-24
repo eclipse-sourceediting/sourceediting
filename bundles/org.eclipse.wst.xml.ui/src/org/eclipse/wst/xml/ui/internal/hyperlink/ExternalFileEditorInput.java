@@ -24,7 +24,6 @@ class ExternalFileEditorInput implements IEditorInput, ILocationProvider {
 	/**
 	 * The workbench adapter which simply provides the label.
 	 * 
-	 * @since 3.1
 	 */
 	private class WorkbenchAdapter implements IWorkbenchAdapter {
 		/*

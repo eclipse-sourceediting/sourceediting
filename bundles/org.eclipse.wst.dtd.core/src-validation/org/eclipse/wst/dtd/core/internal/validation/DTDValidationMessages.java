@@ -14,7 +14,7 @@ import org.eclipse.osgi.util.NLS;
 /**
  * Strings used by DTD Validation
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class DTDValidationMessages extends NLS {
 	public static String _ERROR_REF_ELEMENT_UNDEFINED;

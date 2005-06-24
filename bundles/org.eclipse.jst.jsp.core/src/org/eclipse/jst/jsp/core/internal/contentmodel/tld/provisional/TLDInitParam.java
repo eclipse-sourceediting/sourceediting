@@ -13,7 +13,7 @@ package org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional;
 
 /**
  * A name/value pair as an initialization param along with a description
- * @since JSP 1.2
+ * @see JSP 1.2
  */
 public interface TLDInitParam {
 	String getDescription();

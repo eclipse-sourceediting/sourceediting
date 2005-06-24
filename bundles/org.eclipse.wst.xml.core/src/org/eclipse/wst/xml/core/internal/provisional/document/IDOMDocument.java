@@ -25,7 +25,7 @@ import org.w3c.dom.traversal.DocumentTraversal;
  * This interface enables creation of DOCTYPE declaration and some DOM Level 2
  * interfaces. May be referenced but not implemented by clients.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IDOMDocument extends IDOMNode, Document, DocumentRange, DocumentTraversal {
 

@@ -19,7 +19,7 @@ import org.osgi.framework.Bundle;
 /**
  * Class to allow access to ModelManager. Not intended to be subclassed.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 final public class StructuredModelManager {
 	/**

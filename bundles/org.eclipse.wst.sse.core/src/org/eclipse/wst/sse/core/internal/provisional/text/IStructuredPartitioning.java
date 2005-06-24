@@ -3,7 +3,7 @@ package org.eclipse.wst.sse.core.internal.provisional.text;
 /**
  * Identifies the way that Documents are partitioned.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IStructuredPartitioning {
 	

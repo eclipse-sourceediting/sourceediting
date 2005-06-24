@@ -14,7 +14,7 @@ import org.eclipse.osgi.util.NLS;
 /**
  * Strings used by HTML Core
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class HTMLCoreMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.wst.html.core.internal.HTMLCorePluginResources";//$NON-NLS-1$

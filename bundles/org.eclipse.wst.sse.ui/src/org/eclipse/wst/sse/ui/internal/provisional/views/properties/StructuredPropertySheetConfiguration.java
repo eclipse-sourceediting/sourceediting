@@ -30,7 +30,7 @@ import org.eclipse.wst.sse.ui.internal.properties.AdapterPropertySourceProvider;
  * A PropertySheetConfiguration appropriate for StructuredTextEditors and
  * StructuredModels
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class StructuredPropertySheetConfiguration extends PropertySheetConfiguration {
 	protected IStructuredModel fModel;

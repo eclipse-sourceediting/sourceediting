@@ -37,7 +37,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
  * An implementation of ICompletionProposal whose values can be
  * read after creation.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class JavaTypeCompletionProposal extends CustomCompletionProposal implements IRelevanceCompletionProposal {
 

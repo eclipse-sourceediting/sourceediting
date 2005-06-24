@@ -28,7 +28,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
  * implementers. The main purposed of this abstraction it to provide a common
  * way to manage models that have an associated structured documnet.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  * 
  */
 public interface IStructuredModelProposed extends IAdaptable {

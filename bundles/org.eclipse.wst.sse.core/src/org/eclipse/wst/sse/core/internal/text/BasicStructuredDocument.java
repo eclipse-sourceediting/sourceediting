@@ -265,8 +265,6 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 
 	/**
 	 * The registered document partitioners.
-	 * 
-	 * @since 3.0
 	 */
 	private Map fDocumentPartitioners;
 	/** The registered document partitioning listeners */
@@ -1048,11 +1046,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		return typedRegions;
 	}
 
-	/*
-	 * @see org.eclipse.jface.text.IDocumentExtension3#computeZeroLengthPartitioning(java.lang.String,
-	 *      int, int)
-	 * @since 3.0
-	 */
+
 	public ITypedRegion[] computePartitioning(String partitioning, int offset, int length, boolean includeZeroLengthPartitions) throws BadLocationException, BadPartitioningException {
 		if ((0 > offset) || (0 > length) || (offset + length > getLength()))
 			throw new BadLocationException();
@@ -1140,7 +1134,6 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	 *            the document partitioning changed event
 	 * 
 	 * @see IDocumentPartitioningListenerExtension2
-	 * @since 3.0
 	 */
 	protected void fireDocumentPartitioningChanged(DocumentPartitioningChangedEvent event) {
 		if (fDocumentPartitioningListeners == null || fDocumentPartitioningListeners.size() == 0)
@@ -1313,11 +1306,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		return getDocumentPartitioner().getContentType(offset);
 	}
 
-	/*
-	 * @see org.eclipse.jface.text.IDocumentExtension3#getZeroLengthContentType(java.lang.String,
-	 *      int)
-	 * @since 3.0
-	 */
+
 	public String getContentType(String partitioning, int offset, boolean preferOpenPartitions) throws BadLocationException, BadPartitioningException {
 		if ((0 > offset) || (offset > getLength()))
 			throw new BadLocationException();
@@ -1343,10 +1332,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		return getDocumentPartitioner(IDocumentExtension3.DEFAULT_PARTITIONING);
 	}
 
-	/*
-	 * @see org.eclipse.jface.text.IDocumentExtension3#getDocumentPartitioner(java.lang.String)
-	 * @since 3.0
-	 */
+
 	public IDocumentPartitioner getDocumentPartitioner(String partitioning) {
 
 		IDocumentPartitioner documentPartitioner = null;
@@ -1394,10 +1380,6 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		return result;
 	}
 
-	/*
-	 * @see org.eclipse.jface.text.IDocumentExtension3#getLegalContentTypes(java.lang.String)
-	 * @since 3.0
-	 */
 	public String[] getLegalContentTypes(String partitioning) throws BadPartitioningException {
 		IDocumentPartitioner partitioner = getDocumentPartitioner(partitioning);
 		if (partitioner != null)
@@ -1558,11 +1540,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		return partition;
 	}
 
-	/*
-	 * @see org.eclipse.jface.text.IDocumentExtension3#getZeroLengthPartition(java.lang.String,
-	 *      int)
-	 * @since 3.0
-	 */
+
 	public ITypedRegion getPartition(String partitioning, int offset, boolean preferOpenPartitions) throws BadLocationException, BadPartitioningException {
 		if ((0 > offset) || (offset > getLength()))
 			throw new BadLocationException();
@@ -1585,10 +1563,6 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 	}
 
 
-	/*
-	 * @see org.eclipse.jface.text.IDocumentExtension3#getPartitionings()
-	 * @since 3.0
-	 */
 	public String[] getPartitionings() {
 		if (fDocumentPartitioners == null)
 			return new String[0];
@@ -2406,11 +2380,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		setDocumentPartitioner(IDocumentExtension3.DEFAULT_PARTITIONING, partitioner);
 	}
 
-	/*
-	 * @see org.eclipse.jface.text.IDocumentExtension3#setDocumentPartitioner(java.lang.String,
-	 *      org.eclipse.jface.text.IDocumentPartitioner)
-	 * @since 3.0
-	 */
+
 	public void setDocumentPartitioner(String partitioning, IDocumentPartitioner partitioner) {
 		if (partitioner == null) {
 			if (fDocumentPartitioners != null) {
@@ -2556,10 +2526,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		}
 	}
 
-	/*
-	 * @see org.eclipse.jface.text.IDocumentExtension#startSequentialRewrite(boolean)
-	 * @since 2.0
-	 */
+
 	public void startSequentialRewrite(boolean normalized) {
 		ITextStore store = new SequentialRewriteTextStore(getStore());
 		setTextStore(store);
@@ -2574,10 +2541,7 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 		++fStoppedCount;
 	}
 
-	/*
-	 * @see org.eclipse.jface.text.IDocumentExtension#stopSequentialRewrite()
-	 * @since 2.0
-	 */
+
 	public void stopSequentialRewrite() {
 		if (getStore() instanceof SequentialRewriteTextStore) {
 			SequentialRewriteTextStore srws = (SequentialRewriteTextStore) getStore();

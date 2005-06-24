@@ -41,7 +41,7 @@ public interface IDOMImplementation {
 	 *         inconsistent with the primary core
 	 *         <code>DOMImplementation</code> such as
 	 *         <code>hasFeature</code>, <code>getFeature</code>, etc.
-	 * @since DOM Level 3
+	 * @see DOM Level 3
 	 */
 	public Object getFeature(String feature, String version);
 

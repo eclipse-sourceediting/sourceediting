@@ -74,7 +74,7 @@ public class EntityImpl extends NodeImpl implements Entity {
 	 * of this entity, when it is an external parsed entity. This is
 	 * <code>null</code> otherwise.
 	 * 
-	 * @since DOM Level 3
+	 * @see DOM Level 3
 	 */
 	public java.lang.String getEncoding() {
 		return null;
@@ -137,7 +137,7 @@ public class EntityImpl extends NodeImpl implements Entity {
 	 * number of this entity, when it is an external parsed entity. This is
 	 * <code>null</code> otherwise.
 	 * 
-	 * @since DOM Level 3
+	 * @see DOM Level 3
 	 */
 	public java.lang.String getVersion() {
 		return null;
@@ -153,7 +153,7 @@ public class EntityImpl extends NodeImpl implements Entity {
 	 * of this entity, when it is an external parsed entity. This is
 	 * <code>null</code> otherwise.
 	 * 
-	 * @since DOM Level 3
+	 * @see DOM Level 3
 	 */
 	public void setEncoding(java.lang.String encoding) {
 	}
@@ -220,7 +220,7 @@ public class EntityImpl extends NodeImpl implements Entity {
 	 * number of this entity, when it is an external parsed entity. This is
 	 * <code>null</code> otherwise.
 	 * 
-	 * @since DOM Level 3
+	 * @see DOM Level 3
 	 */
 	public void setVersion(java.lang.String version) {
 	}

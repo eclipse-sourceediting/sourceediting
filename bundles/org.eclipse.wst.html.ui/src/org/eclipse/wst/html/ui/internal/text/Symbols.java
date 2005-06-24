@@ -15,7 +15,7 @@ package org.eclipse.wst.html.ui.internal.text;
 /**
  * Symbols for the heuristic java scanner.
  * 
- * @since 3.0
+ * @see Eclipse 3.0
  */
 interface Symbols {
 	int TokenEOF = -1;

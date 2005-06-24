@@ -17,7 +17,7 @@ import org.eclipse.osgi.util.NLS;
 /**
  * Strings used by XML UI
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class XMLUIMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.wst.xml.ui.internal.XMLUIPluginResources";//$NON-NLS-1$

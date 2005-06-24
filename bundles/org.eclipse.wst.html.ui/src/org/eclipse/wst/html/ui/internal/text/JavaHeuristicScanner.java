@@ -32,7 +32,7 @@ import org.eclipse.jface.text.TypedRegion;
  * not threadsafe.
  * </p>
  * 
- * @since 3.0
+ * @see Eclipse 3.0
  */
 final class JavaHeuristicScanner implements Symbols {
 	/**

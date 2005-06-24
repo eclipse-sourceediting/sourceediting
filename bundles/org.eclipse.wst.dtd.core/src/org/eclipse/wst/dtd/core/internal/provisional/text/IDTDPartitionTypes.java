@@ -6,7 +6,7 @@ package org.eclipse.wst.dtd.core.internal.provisional.text;
  * It defines the partition types DTD.
  * Clients should reference the partition type Strings defined here directly.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IDTDPartitionTypes {
 	

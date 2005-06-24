@@ -19,7 +19,7 @@ import org.eclipse.wst.xml.core.internal.document.XMLModelNotifier;
  * Provides means to get the XMLModel form of IStrucutredModel. Not to be
  * implemented or extended by clients.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IDOMModel extends IStructuredModel {
 

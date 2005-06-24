@@ -12,7 +12,7 @@ package org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional;
 
 /**
  * Information on the scripting variables defined by this tag.
- * @since JSP 1.2
+ * @see  JSP 1.2
  */
 public interface TLDVariable {
 

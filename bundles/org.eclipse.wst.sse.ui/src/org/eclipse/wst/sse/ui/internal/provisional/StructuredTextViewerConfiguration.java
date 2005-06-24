@@ -153,7 +153,7 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	/*
 	 * @see SourceViewerConfiguration#getConfiguredTextHoverStateMasks(ISourceViewer,
 	 *      String)
-	 * @since 2.1
+	 * @see 2.1
 	 */
 	public int[] getConfiguredTextHoverStateMasks(ISourceViewer sourceViewer, String contentType) {
 		// content type does not matter when getting hover state mask

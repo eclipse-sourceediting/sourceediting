@@ -6,7 +6,7 @@ package org.eclipse.wst.html.core.internal.provisional.text;
  * types for HTML. Clients should reference the partition type Strings defined
  * here directly.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IHTMLPartitionTypes {
 

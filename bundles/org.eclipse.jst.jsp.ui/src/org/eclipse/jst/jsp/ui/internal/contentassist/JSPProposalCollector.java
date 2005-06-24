@@ -21,7 +21,7 @@ import org.eclipse.swt.graphics.Image;
  *  - "fixing" up display strings
  *  - filtering some unwanted proposals
  *
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class JSPProposalCollector extends CompletionProposalCollector {
 

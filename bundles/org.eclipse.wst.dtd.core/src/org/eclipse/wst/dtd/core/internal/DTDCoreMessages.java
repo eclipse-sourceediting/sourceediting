@@ -14,7 +14,7 @@ import org.eclipse.osgi.util.NLS;
 /**
  * Strings used by DTD Core
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class DTDCoreMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.wst.dtd.core.internal.DTDCorePluginResources";//$NON-NLS-1$

@@ -16,7 +16,7 @@ package org.eclipse.wst.xml.core.internal.provisional;
 /**
  * XML Namespace constants
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IXMLNamespace {
 

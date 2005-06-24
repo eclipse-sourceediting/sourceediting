@@ -18,7 +18,7 @@ package org.eclipse.wst.sse.core.internal.provisional;
  * to manage this process, from creating, to adapting, to releasing, if
  * required.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  * 
  */
 public interface INodeAdapterFactory {

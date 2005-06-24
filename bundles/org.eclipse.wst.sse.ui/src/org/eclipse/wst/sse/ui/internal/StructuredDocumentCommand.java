@@ -48,7 +48,7 @@ public class StructuredDocumentCommand extends DocumentCommand {
 	/**
 	 * A command which is added to document commands.
 	 * 
-	 * @since 2.1
+	 * @see Eclipse 2.1
 	 */
 	private static class Command implements Comparable {
 		/** The length of the range to be replaced. */
@@ -71,7 +71,7 @@ public class StructuredDocumentCommand extends DocumentCommand {
 		 *            the text to replace with, may be <code>null</code>
 		 * @param owner
 		 *            the document command owner, may be <code>null</code>
-		 * @since 3.0
+		 * @see Eclipse 3.0
 		 */
 		public Command(int offset, int length, String text, IDocumentListener owner) {
 			if (offset < 0 || length < 0)
@@ -271,7 +271,7 @@ public class StructuredDocumentCommand extends DocumentCommand {
 	/**
 	 * Additional document commands.
 	 * 
-	 * @since 2.1
+	 * @see Eclipse 2.1
 	 */
 	private final List fCommands = new ArrayList();
 
@@ -291,7 +291,7 @@ public class StructuredDocumentCommand extends DocumentCommand {
 	 *            the command owner, may be <code>null</code>
 	 * @throws BadLocationException
 	 *             if the added command intersects with an existing one
-	 * @since 2.1
+	 * @see Eclipse 2.1
 	 */
 	public void addCommand(int offsetParameter, int lengthParameter, String textParameter, IDocumentListener ownerParameter) throws BadLocationException {
 		final Command command = new Command(offsetParameter, lengthParameter, textParameter, ownerParameter);
@@ -332,7 +332,7 @@ public class StructuredDocumentCommand extends DocumentCommand {
 	 * 
 	 * @param document
 	 *            the document on which to execute the commands
-	 * @since 2.1
+	 * @see Eclipse 2.1
 	 */
 	void executeStructuredDocumentCommand(IDocument document) throws BadLocationException {
 
@@ -392,7 +392,7 @@ public class StructuredDocumentCommand extends DocumentCommand {
 	 * Returns the position category for the caret offset position.
 	 * 
 	 * @return the position category for the caret offset position
-	 * @since 3.0
+	 * @see Eclipse 3.0
 	 */
 	private String getCategory() {
 		return toString();
@@ -402,7 +402,7 @@ public class StructuredDocumentCommand extends DocumentCommand {
 	 * Returns the number of commands including the original document command.
 	 * 
 	 * @return returns the number of commands
-	 * @since 2.1
+	 * @see Eclipse 2.1
 	 */
 	public int getCommandCount() {
 		return 1 + fCommands.size();
@@ -426,7 +426,7 @@ public class StructuredDocumentCommand extends DocumentCommand {
 	 * @param command
 	 *            the command
 	 * @return <code>true</code> if the command intersects with this command
-	 * @since 2.1
+	 * @see Eclipse 2.1
 	 */
 	private boolean intersects(Command command) {
 		boolean result = false;
@@ -448,7 +448,7 @@ public class StructuredDocumentCommand extends DocumentCommand {
 	 * @param command1
 	 *            the second command
 	 * @return <code>true</code> if the commands intersect
-	 * @since 2.1
+	 * @see Eclipse 2.1
 	 */
 	private boolean intersects(Command command0, Command command1) {
 		boolean result = false;
@@ -491,7 +491,7 @@ public class StructuredDocumentCommand extends DocumentCommand {
 	 * 
 	 * @return <code>true</code> if the caret offset should be updated,
 	 *         <code>false</code> otherwise
-	 * @since 3.0
+	 * @see Eclipse 3.0
 	 */
 	private boolean updateCaret() {
 		return shiftsCaret && caretOffset != -1;

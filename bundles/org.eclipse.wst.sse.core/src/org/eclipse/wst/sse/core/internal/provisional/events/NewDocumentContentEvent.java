@@ -21,7 +21,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
  * ISSUE: not currently used, but there's still some efficiencies to be had so
  * plan to implement.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class NewDocumentContentEvent extends NewDocumentEvent {
 	/**

@@ -32,7 +32,7 @@ import org.w3c.dom.UserDataHandler;
  * 
  * ISSUE: the 'read-only' API should be broken out in their own interface
  * 
- * @since 1.0
+ * @plannedfor 1.0
  * 
  */
 public interface IDOMNode extends IndexedRegion, INodeNotifier, Node {

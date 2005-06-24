@@ -82,7 +82,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		/**
 		 * Indicates whether verify events are forwarded or ignored.
 		 * 
-		 * @since 2.0
+		 * @plannedfor 2.0
 		 */
 		private boolean fForward = true;
 
@@ -91,7 +91,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		 * 
 		 * @param forward
 		 *            <code>true</code> if forwarding should be enabled.
-		 * @since 2.0
+		 * @plannedfor 2.0
 		 */
 		public void forward(boolean forward) {
 			fForward = forward;

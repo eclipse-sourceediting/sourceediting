@@ -17,7 +17,7 @@ import org.eclipse.osgi.util.NLS;
 /**
  * Strings used by SSE UI
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class SSEUIMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.wst.sse.ui.internal.SSEUIPluginResources";//$NON-NLS-1$

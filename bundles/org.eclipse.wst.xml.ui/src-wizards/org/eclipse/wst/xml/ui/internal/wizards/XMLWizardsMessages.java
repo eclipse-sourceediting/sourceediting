@@ -14,7 +14,7 @@ import org.eclipse.osgi.util.NLS;
 /**
  * Strings used by XML Wizards
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class XMLWizardsMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.wst.xml.ui.internal.wizards.wizardResource";//$NON-NLS-1$

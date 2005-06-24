@@ -217,7 +217,7 @@ public class DOMModelImpl extends AbstractStructuredModel implements IStructured
 	 *                WRONG_DOCUMENT_ERR: Raised if <code>doctype</code> has
 	 *                already been used with a different document or was
 	 *                created from a different implementation.
-	 * @since DOM Level 2
+	 * @see DOM Level 2
 	 */
 	public Document createDocument(String namespaceURI, String qualifiedName, DocumentType doctype) throws DOMException {
 		return null;
@@ -244,7 +244,7 @@ public class DOMModelImpl extends AbstractStructuredModel implements IStructured
 	 *                name contains an illegal character. <br>
 	 *                NAMESPACE_ERR: Raised if the <code>qualifiedName</code>
 	 *                is malformed.
-	 * @since DOM Level 2
+	 * @see DOM Level 2
 	 */
 	public DocumentType createDocumentType(String qualifiedName, String publicId, String systemId) throws DOMException {
 		DocumentTypeImpl documentType = new DocumentTypeImpl();

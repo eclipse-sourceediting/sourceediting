@@ -54,15 +54,12 @@ public class XMLUIPlugin extends AbstractUIPlugin {
 
 	/**
 	 * The template context type registry for the xml editor.
-	 * 
-	 * @since 3.0
 	 */
 	private ContextTypeRegistry fContextTypeRegistry;
 
 	/**
 	 * The template store for the xml editor.
 	 * 
-	 * @since 3.0
 	 */
 	private TemplateStore fTemplateStore;
 

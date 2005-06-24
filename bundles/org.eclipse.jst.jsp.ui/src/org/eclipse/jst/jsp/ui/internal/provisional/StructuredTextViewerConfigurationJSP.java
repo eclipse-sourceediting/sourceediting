@@ -450,7 +450,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 
 	/*
 	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getHyperlinkDetectors(org.eclipse.jface.text.source.ISourceViewer)
-	 * @since 3.1
+	 * @see Eclipse 3.1
 	 */
 	public IHyperlinkDetector[] getHyperlinkDetectors(ISourceViewer sourceViewer) {
 		if (fPreferenceStore == null)

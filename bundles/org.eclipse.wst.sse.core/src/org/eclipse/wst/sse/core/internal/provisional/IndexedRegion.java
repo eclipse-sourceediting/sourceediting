@@ -32,7 +32,7 @@ package org.eclipse.wst.sse.core.internal.provisional;
  * original source. They currently often do, so thought I'd mention explicitly
  * this may not always be true.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IndexedRegion {
 

@@ -288,7 +288,7 @@ public class GotoAnnotationAction extends TextEditorAction {
 	 *            the annotation
 	 * @return <code>true</code> if this is a target, <code>false</code>
 	 *         otherwise
-	 * @since 3.0
+	 * @see Eclipse 3.0
 	 */
 	protected boolean isNavigationTarget(Annotation annotation) {
 		Preferences preferences = EditorsUI.getPluginPreferences();

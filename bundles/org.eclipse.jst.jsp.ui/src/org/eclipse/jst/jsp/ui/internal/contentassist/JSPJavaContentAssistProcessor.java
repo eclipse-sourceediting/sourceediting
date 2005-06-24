@@ -39,7 +39,7 @@ import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
 import org.eclipse.wst.xml.ui.internal.util.SharedXMLEditorPluginImageHelper;
 
 /**
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class JSPJavaContentAssistProcessor implements IContentAssistProcessor, IResourceDependentProcessor, IReleasable {
 	protected IResource fResource;

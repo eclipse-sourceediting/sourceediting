@@ -15,7 +15,7 @@ package org.eclipse.wst.html.core.internal.preferences;
 /**
  * Common preference keys used by HTML core
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class HTMLCorePreferenceNames {
 	private HTMLCorePreferenceNames() {

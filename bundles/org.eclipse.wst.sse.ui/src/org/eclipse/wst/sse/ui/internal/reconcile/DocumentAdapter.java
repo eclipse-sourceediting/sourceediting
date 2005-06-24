@@ -18,7 +18,6 @@ import org.eclipse.jface.text.reconciler.IReconcilableModel;
 /**
  * Adapts an <code>IDocument</code> to a <code>IReconcilableModel</code>.
  * 
- * @since 3.0
  */
 public class DocumentAdapter implements IReconcilableModel {
 

@@ -16,7 +16,7 @@ package org.eclipse.wst.sse.core.internal.provisional.model;
 /**
  * Interface for those wanting to listen to a model's state changing.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IModelStateListenerProposed {
 

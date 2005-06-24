@@ -22,7 +22,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
  * except by subclasses in infrastructure. Not intended to be subclassed by
  * clients.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public abstract class StructuredDocumentEvent extends DocumentEvent {
 	private String fDeletedText;

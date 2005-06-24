@@ -23,7 +23,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTy
 import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
 
 /**
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class NoRegionContentAssistProcessorForJSP extends NoRegionContentAssistProcessorForHTML {
 

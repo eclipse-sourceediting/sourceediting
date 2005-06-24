@@ -225,10 +225,7 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 		return fDocument;
 	}
 
-	/**
-	 * @see org.eclipse.jface.text.reconciler.IReconcilerExtension#getDocumentPartitioning()
-	 * @since 3.0
-	 */
+
 	public String getDocumentPartitioning() {
 		if (fPartitioning == null)
 			return IDocumentExtension3.DEFAULT_PARTITIONING;
@@ -453,7 +450,6 @@ public class DirtyRegionProcessor extends Job implements IReconciler {
 	 * 
 	 * @param partitioning
 	 *            the document partitioning for this reconciler
-	 * @since 3.0
 	 */
 	public void setDocumentPartitioning(String partitioning) {
 		fPartitioning = partitioning;

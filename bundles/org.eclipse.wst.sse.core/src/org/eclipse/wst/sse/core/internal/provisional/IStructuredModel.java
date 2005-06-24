@@ -36,7 +36,7 @@ import org.eclipse.wst.sse.core.internal.util.URIResolver;
  * implementers. The main purposed of this abstraction it to provide a common
  * way to manage models that have an associated structured documnet.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  * 
  * ISSUE: this interface needs ton of cleanup!
  */

@@ -32,7 +32,7 @@ import org.eclipse.wst.sse.core.internal.text.JobSafeStructuredDocument;
  * org.eclipse.core.filebuffers.documentCreation extension point. This class
  * is not meant to be subclassed.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class BasicStructuredDocumentFactory implements IDocumentFactory, IExecutableExtension {
 

@@ -20,7 +20,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
  * 
  * ISSUE: need to change so this is used for 'set' only.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class NewDocumentEvent extends StructuredDocumentEvent {
 

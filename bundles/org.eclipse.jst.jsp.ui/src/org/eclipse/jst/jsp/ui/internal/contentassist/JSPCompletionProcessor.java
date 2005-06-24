@@ -40,7 +40,7 @@ import org.osgi.framework.BundleException;
 
 
 /**
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasable, IResourceDependentProcessor {
 	// for debugging

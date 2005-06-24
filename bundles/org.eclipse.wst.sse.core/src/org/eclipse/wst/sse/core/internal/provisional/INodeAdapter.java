@@ -18,7 +18,7 @@ package org.eclipse.wst.sse.core.internal.provisional;
  * The main difference between this type of adapter (IAdaptable) and base
  * adapter is that these adapters are notified of changes.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 
 public interface INodeAdapter {

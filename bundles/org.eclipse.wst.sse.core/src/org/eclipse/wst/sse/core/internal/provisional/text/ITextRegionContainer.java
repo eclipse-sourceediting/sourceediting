@@ -17,7 +17,7 @@ package org.eclipse.wst.sse.core.internal.provisional.text;
  * but is itself a region in an ITextRegionCollection, so its "parent" region
  * is maintained.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface ITextRegionContainer extends ITextRegionCollection {
 

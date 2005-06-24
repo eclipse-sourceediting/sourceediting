@@ -21,7 +21,7 @@ import java.util.Enumeration;
  * 
  * ISSUE: should extend ITextRegionList instead?
  * 
- * @since 1.0
+ * @plannedfor 1.0
  * 
  */
 public interface IStructuredDocumentRegionList {

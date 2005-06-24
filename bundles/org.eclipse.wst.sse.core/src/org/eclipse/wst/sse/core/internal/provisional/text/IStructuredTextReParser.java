@@ -19,7 +19,7 @@ import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEv
  * IStructuredTextReParser describes the characteristics and responsibilities
  * for reparsing a structured document.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IStructuredTextReParser {
 

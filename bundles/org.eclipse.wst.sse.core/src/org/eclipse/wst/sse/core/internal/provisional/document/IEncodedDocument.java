@@ -21,7 +21,7 @@ import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
  * 
  * Its not to be be implmented by clients.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 
 public interface IEncodedDocument extends IDocument {

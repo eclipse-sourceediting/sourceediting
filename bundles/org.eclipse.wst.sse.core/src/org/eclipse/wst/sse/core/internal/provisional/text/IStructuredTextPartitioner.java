@@ -22,7 +22,7 @@ import org.eclipse.wst.sse.core.internal.text.rules.IStructuredTypedRegion;
  * 
  * ISSUE: need to investigate necessity of these methods
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 
 public interface IStructuredTextPartitioner extends IDocumentPartitioner {

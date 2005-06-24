@@ -25,7 +25,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 
 /**
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class JSPUseBeanContentAssistProcessor extends JSPDummyContentAssistProcessor {
 

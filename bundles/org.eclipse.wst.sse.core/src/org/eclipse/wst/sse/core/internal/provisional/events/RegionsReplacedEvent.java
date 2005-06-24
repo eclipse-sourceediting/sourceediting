@@ -22,7 +22,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
  * region, that may still have changed. Also, its assumed/required that all
  * the regions are replaced (even those that may not have changed).
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class RegionsReplacedEvent extends StructuredDocumentEvent {
 	private ITextRegionList fNewRegions;

@@ -18,7 +18,7 @@ import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
 /**
  * Common editor preference keys used by the Structured Text Editor.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class CommonEditorPreferenceNames {
 	private CommonEditorPreferenceNames() {

@@ -15,7 +15,7 @@ package org.eclipse.wst.html.ui.internal.text;
 /**
  * Definition of Java partitioning and its partitions.
  * 
- * @since 3.1
+ * @see Eclipse 3.1
  */
 interface IJavaPartitions {
 

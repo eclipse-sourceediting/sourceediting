@@ -17,7 +17,7 @@ import org.eclipse.osgi.util.NLS;
 /**
  * Strings used by JSP UI
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class JSPUIMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.jst.jsp.ui.internal.JSPUIPluginResources";//$NON-NLS-1$

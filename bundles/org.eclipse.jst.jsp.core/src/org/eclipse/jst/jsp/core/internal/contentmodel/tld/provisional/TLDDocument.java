@@ -20,7 +20,7 @@ public interface TLDDocument extends CMDocument {
 	String JSP_TLD = "JSP Tag Library Descriptor"; //$NON-NLS-1$
 
 	/**
-	 * @since JSP 2.0
+	 * @see  JSP 2.0
 	 * 
 	 * @return
 	 */
@@ -28,78 +28,78 @@ public interface TLDDocument extends CMDocument {
 	
 	/**
 	 * @return String - The contents of the "description" element of a JSP 1.2 tag library descriptor; a simple string describing the "use" of this taglib, should be user discernable.
-	 * @since JSP 1.2
+	 * @see  JSP 1.2
 	 */
 	String getDescription();
 
 	/**
 	 * @return String - The contents of the "display-name" element of a JSP 1.2 tag library descriptor; it is a short name that is intended to be displayed by tools
-	 * @since JSP 1.2
+	 * @see  JSP 1.2
 	 */
 	String getDisplayName();
 
 	/**
 	 * @return List - A list of extension elements describing the tag library
-	 * @since JSP 2.0
+	 * @see  JSP 2.0
 	 */
 	List getExtensions();
 	
 	/**
 	 * @return List - A list of TLDFunctions describing the declared functions
-	 * @since JSP 2.0
+	 * @see  JSP 2.0
 	 */
 	List getFunctions();
 	
 	/**
 	 * @return String - The contents of the "info" element of a JSP 1.1 tag library descriptor; a simple string describing the "use" of this taglib, should be user discernable.
-	 * @since JSP 1.1
+	 * @see  JSP 1.1
 	 */
 	String getInfo();
 
 	/**
 	 * @return String - The version of JSP the tag library depends upon
-	 * @since JSP 1.1
+	 * @see  JSP 1.1
 	 */
 	String getJspversion();
 
 	/**
 	 * @return String - The contents of the "large-icon" element of a JSP 1.2 tag library descriptor; optional large-icon that can be used by tools
-	 * @since JSP 1.2
+	 * @see  JSP 1.2
 	 */
 	String getLargeIcon();
 
 	/**
-	 * @since JSP 1.2
+	 * @see  JSP 1.2
 	 * @return List - a List of TLDListeners
 	 */
 	List getListeners();
 
 	/**
 	 * @return String - A simple default short name that could be used by a JSP authoring tool to create names with a mnemonic value; for example, it may be used as the preferred prefix value in taglib directives
-	 * @since JSP 1.1
+	 * @see  JSP 1.1
 	 */
 	String getShortname();
 
 	/**
 	 * @return String - The contents of the "small-icon" element of a JSP 1.2 tag library descriptor; optional small-icon that can be used by tools
-	 * @since JSP 1.2
+	 * @see  JSP 1.2
 	 */
 	String getSmallIcon();
 
 	/**
 	 * @return String - The version of the tag library (it's implementation)
-	 * @since JSP 1.1
+	 * @see  JSP 1.1
 	 */
 	String getTlibversion();
 
 	/**
 	 * @return String - the URI declared within the descriptor
-	 * @since JSP 1.1
+	 * @see  JSP 1.1
 	 */
 	String getUri();
 
 	/**
-	 * @since JSP 1.2
+	 * @see  JSP 1.2
 	 */
 	TLDValidator getValidator();
 }

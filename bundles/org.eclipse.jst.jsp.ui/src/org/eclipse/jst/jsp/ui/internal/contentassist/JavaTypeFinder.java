@@ -33,7 +33,7 @@ import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.sse.ui.internal.contentassist.IRelevanceConstants;
 
 /**
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class JavaTypeFinder {
 

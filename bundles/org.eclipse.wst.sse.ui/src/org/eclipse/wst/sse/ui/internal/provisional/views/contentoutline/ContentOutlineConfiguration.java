@@ -34,7 +34,7 @@ import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
 /**
  * Configuration class for Outline Pages.  Not finalized.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  *  
  */
 public class ContentOutlineConfiguration implements IExtendedConfiguration, IAdaptable {

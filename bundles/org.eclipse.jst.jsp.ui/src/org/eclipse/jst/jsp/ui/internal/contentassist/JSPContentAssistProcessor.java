@@ -106,7 +106,7 @@ import org.w3c.dom.NodeList;
  * Adds proposals not normally covered by the generic behavior with the
  * content model
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class JSPContentAssistProcessor extends AbstractContentAssistProcessor implements IResourceDependentProcessor {
 

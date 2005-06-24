@@ -16,7 +16,7 @@ package org.eclipse.wst.sse.core.internal.provisional.text;
  * ITextRegionCollection, as its name implies, is a collection of
  * ITextRegions.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface ITextRegionCollection extends ITextRegion {
 

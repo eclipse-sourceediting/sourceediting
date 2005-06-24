@@ -19,7 +19,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
  * analagous to its corresponding jface DocumentEvent and is provided simply
  * to allow clients to distinguish the source of the event.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class AboutToBeChangedEvent extends StructuredDocumentEvent {
 

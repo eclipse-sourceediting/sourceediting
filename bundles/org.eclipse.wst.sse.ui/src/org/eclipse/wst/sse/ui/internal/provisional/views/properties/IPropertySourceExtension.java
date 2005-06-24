@@ -16,7 +16,7 @@ package org.eclipse.wst.sse.ui.internal.provisional.views.properties;
  * Declares that this IPropertySource might support outright removal of a
  * property
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IPropertySourceExtension {
 

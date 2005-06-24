@@ -36,7 +36,7 @@ import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
  * This reconcile step has a Java source document as input model and maintains
  * a Java working copy as its model.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class ReconcileStepForJava extends StructuredReconcileStep {
 

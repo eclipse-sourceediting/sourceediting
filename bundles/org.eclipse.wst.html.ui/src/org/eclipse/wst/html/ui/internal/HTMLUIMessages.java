@@ -17,7 +17,7 @@ import org.eclipse.osgi.util.NLS;
 /**
  * Strings used by HTML UI
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class HTMLUIMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.wst.html.ui.internal.HTMLUIPluginResources";//$NON-NLS-1$

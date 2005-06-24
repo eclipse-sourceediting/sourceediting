@@ -39,7 +39,7 @@ import org.eclipse.wst.sse.ui.internal.util.Assert;
 /**
  * A StructuredContentOutlineConfiguration for DTD models
  * 
- * @since 1.0
+ * @plannedfor 1.0
  * 
  */
 public class DTDContentOutlineConfiguration extends StructuredContentOutlineConfiguration {

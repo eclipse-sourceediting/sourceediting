@@ -40,7 +40,7 @@ import org.w3c.dom.Node;
 /**
  * This class is a "null" version of AbstractContentAssistProcessor
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class JSPDummyContentAssistProcessor extends AbstractContentAssistProcessor implements IResourceDependentProcessor {
 

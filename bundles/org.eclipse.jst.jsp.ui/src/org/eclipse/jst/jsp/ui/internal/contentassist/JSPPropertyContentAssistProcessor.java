@@ -34,7 +34,7 @@ import org.w3c.dom.NodeList;
 
 /**
  * This class computes attribute value completion proposals for &lt;jsp:[gs]etProperty&gt; tags.
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class JSPPropertyContentAssistProcessor extends JSPDummyContentAssistProcessor {
 

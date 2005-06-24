@@ -14,7 +14,7 @@ import org.eclipse.osgi.util.NLS;
 /**
  * Strings used by SSE Core
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public class SSECoreMessages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.wst.sse.core.internal.SSECorePluginResources";//$NON-NLS-1$

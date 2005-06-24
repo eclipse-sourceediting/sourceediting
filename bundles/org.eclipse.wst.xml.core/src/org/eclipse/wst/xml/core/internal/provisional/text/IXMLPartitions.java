@@ -7,7 +7,7 @@ package org.eclipse.wst.xml.core.internal.provisional.text;
  * It defines the partition types for XML.
  * Clients should reference the partition type Strings defined here directly.
  * 
- * @since 1.0
+ * @plannedfor 1.0
  */
 public interface IXMLPartitions {
 	
