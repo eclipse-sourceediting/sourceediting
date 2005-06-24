@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<!DOCTYPE root [
+ <!ENTITY text PUBLIC "-//A//XML CATALOG IDENTIFIER//EN" 
+  "urn:publicid:-:A:XML+CATALOG+IDENTIFIER:EN">
+]>
+<root>&text;</root>

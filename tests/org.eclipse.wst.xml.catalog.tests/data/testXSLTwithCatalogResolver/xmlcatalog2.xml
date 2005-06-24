@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<fragment>
+  <para>
+    <Ref file="xmlcatalog1.xml"/>
+  </para>
+</fragment>

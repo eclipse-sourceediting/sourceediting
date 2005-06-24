@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<po:purchaseOrder orderDate="2001-01-01" xmlns:po="http://www.ibm.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.ibm.com PurchaseOrder.xsd">
+  <shipTo country="US">
+    <name>Alice Smith</name>
+    <street>125 Maple Street</street>
+    <city>Mill Valley</city>
+    <state>CA</state>
+    <zip>90952</zip>
+  </shipTo>
+  <billTo country="US">
+    <name>Robert Smith</name>
+    <street>8 Oak Avenue</street>
+    <city>Old Town</city>
+    <state>PA</state>
+    <zip>95819</zip>
+  </billTo>
+  <po:comment>Hurry, my lawn is going wild!</po:comment>
+  <items>
+    <item partNum="872-AA">
+      <productName>Lawnmower</productName>
+      <quantity>1</quantity>
+      <USPrice>148.95</USPrice>
+      <po:comment>Confirm this is electric</po:comment>
+    </item>
+    <item partNum="926-AA">
+      <productName>Baby Monitor</productName>
+      <quantity>1</quantity>
+      <USPrice>39.98</USPrice>
+      <shipDate>2001-07-21</shipDate>
+    </item>
+  </items>
+</po:purchaseOrder>

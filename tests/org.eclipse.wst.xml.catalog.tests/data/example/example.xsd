@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://apache.org/xml/xcatalog/example"
+           targetNamespace="http://apache.org/xml/xcatalog/example">
+ <xs:element name="root" type="xs:anyURI"/>
+</xs:schema>

@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<XMLCatalogSettings>
+  <UserEntries>
+    <UserEntry TYPE="PUBLIC" ID="InvoiceId" 
+URI="platform:/resource/XMLExamples/Invoice2/Invoice.dtd"/>
+  </UserEntries>
+</XMLCatalogSettings>

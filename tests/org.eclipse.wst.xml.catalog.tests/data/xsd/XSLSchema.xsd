@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/1999/XSL/Transform">
+	<!-- xsd:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd" /-->
+
+	<xsd:element name="stylesheet" type="wrapper" />
+	<xsd:element name="transform" type="wrapper" />
+
+	<xsd:complexType name="wrapper">
+		<xsd:group ref="topLevelElements" minOccurs="0" maxOccurs="unbounded" />
+		<xsd:attribute name="extension-element-prefixes" type="xsd:string" use="optional" />
+		<xsd:attribute name="exclude-result-prefixes" type="xsd:string" use="optional" />
+		<xsd:attribute name="id" type="xsd:ID" use="optional" />
+		<xsd:attribute name="version" type="xsd:NMTOKEN" use="optional" />
+		<!--  xsd:attribute ref="xml:space" /-->
+	</xsd:complexType>
+
+	<xsd:element name="import">
+		<xsd:complexType>
+			<xsd:attribute name="href" type="xsd:anyURI" use="required" />
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="include">
+		<xsd:complexType>
+			<xsd:attribute name="href" type="xsd:anyURI" use="required" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="strip-space">
+		<xsd:complexType>
+			<xsd:attribute name="elements" type="xsd:string" use="required" />
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="preserve-space">
+		<xsd:complexType>
+			<xsd:attribute name="elements" type="xsd:string" use="required" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="output">
+		<xsd:complexType>
+			<xsd:attribute name="method" use="optional">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:enumeration value="xml" />
+						<xsd:enumeration value="html" />
+						<xsd:enumeration value="text" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+			<xsd:attribute name="version" type="xsd:NMTOKEN" use="optional" />
+			<xsd:attribute name="encoding" type="xsd:NMTOKEN" use="optional" />
+			<xsd:attribute name="omit-xml-declaration" use="optional" type="YesNoType" />
+			<xsd:attribute name="standalone" use="optional" type="YesNoType" />
+			<xsd:attribute name="doctype-public" type="xsd:string" use="optional" />
+			<xsd:attribute name="doctype-system" type="xsd:string" use="optional" />
+			<xsd:attribute name="cdata-section-elements" type="xsd:NMTOKENS" use="optional" />
+			<xsd:attribute name="indent" use="optional" type="YesNoType" />
+			<xsd:attribute name="media-type" type="xsd:string" use="optional" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="key">
+		<xsd:complexType>
+			<xsd:attribute name="name" type="xsd:NMTOKEN" use="required" />
+			<xsd:attribute name="match" type="pattern" use="required" />
+			<xsd:attribute name="use" type="expression" use="required" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="decimal-format">
+		<xsd:complexType>
+			<xsd:attribute name="name" type="xsd:NMTOKEN" use="optional" />
+			<xsd:attribute default="." name="decimal-separator" type="xsd:string" />
+			<xsd:attribute default="," name="grouping-separator" type="xsd:string" />
+			<xsd:attribute default="Infinity" name="infinity" type="xsd:string" />
+			<xsd:attribute default="-" name="minus-sign" type="xsd:string" />
+			<xsd:attribute default="NaN" name="NaN" type="xsd:string" />
+			<xsd:attribute default="%" name="percent" type="xsd:string" />
+			<xsd:attribute default="‰" name="per-mille" type="xsd:string" />
+			<xsd:attribute default="0" name="zero-digit" type="xsd:string" />
+			<xsd:attribute default="#" name="digit" type="xsd:string" />
+			<xsd:attribute default=";" name="pattern-separator" type="xsd:string" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="namespace-alias">
+		<xsd:complexType>
+			<xsd:attribute name="stylesheet-prefix" type="xsd:string" use="required" />
+			<xsd:attribute name="result-prefix" type="xsd:string" use="required" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="template">
+		<xsd:complexType mixed="true">
+			<xsd:sequence>
+				<xsd:element ref="param" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:choice minOccurs="0" maxOccurs="unbounded">
+					<xsd:group ref="char-instructions"></xsd:group>
+					<xsd:any namespace="##other" processContents="skip" />
+				</xsd:choice>
+			</xsd:sequence>
+			<xsd:attribute name="match" type="pattern" use="optional" />
+			<xsd:attribute name="name" type="xsd:NMTOKEN" use="optional" />
+			<xsd:attribute name="priority" type="xsd:NMTOKEN" use="optional" />
+			<xsd:attribute name="mode" type="xsd:NMTOKEN" use="optional" />
+			<!--  xsd:attribute ref="xml:space" /-->
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="value-of">
+		<xsd:complexType>
+			<xsd:attributeGroup ref="select-required" />
+			<xsd:attributeGroup ref="disable-output-escaping" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="copy-of">
+		<xsd:complexType>
+			<xsd:attributeGroup ref="select-required" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="number">
+		<xsd:complexType>
+			<xsd:attribute default="single" name="level">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:enumeration value="single" />
+						<xsd:enumeration value="multiple" />
+						<xsd:enumeration value="any" />
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:attribute>
+	        <xsd:attribute name="count" type="pattern" use="optional"/>
+		    <xsd:attribute name="from" type="pattern" use="optional"/>
+		    <xsd:attribute name="value" type="expression" use="optional"/>
+			<xsd:attribute default="1" name="format" type="xsd:string" />
+			<xsd:attribute name="lang" type="xsd:string" use="optional" />
+			<xsd:attribute name="letter-value" type="xsd:string" use="optional" />
+			<xsd:attribute name="grouping-separator" type="xsd:string" use="optional" />
+			<xsd:attribute name="grouping-size" type="xsd:string" use="optional" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="apply-templates">
+		<xsd:complexType>
+			<xsd:choice maxOccurs="unbounded" minOccurs="0">
+				<xsd:element ref="sort" />
+				<xsd:element ref="with-param" />
+			</xsd:choice>
+			<xsd:attribute default="node()" name="select" type="expression" />
+			<xsd:attribute name="mode" type="xsd:NMTOKEN" use="optional" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="apply-imports">
+		<xsd:complexType />
+	</xsd:element>
+
+	<xsd:element name="for-each">
+		<xsd:complexType mixed="true">
+			<xsd:sequence>
+				<xsd:element ref="sort" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:choice minOccurs="0" maxOccurs="unbounded">
+					<xsd:group ref="char-instructions"></xsd:group>
+					<xsd:any namespace="##other" processContents="skip" />
+				</xsd:choice>
+			</xsd:sequence>
+			<xsd:attributeGroup ref="select-required" />
+			<!--  xsd:attribute ref="xml:space" /-->
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="sort">
+		<xsd:complexType>
+			<xsd:attribute default="." name="select" type="expression" />
+			<xsd:attribute name="lang" type="xsd:string" use="optional" />
+			<xsd:attribute default="text" name="data-type" type="xsd:string" />
+			<xsd:attribute default="ascending" name="order" type="xsd:string" />
+			<xsd:attribute name="case-order" type="xsd:string" use="optional" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="if">
+		<xsd:complexType mixed="true">
+			<xsd:group ref="instructions" minOccurs="0" maxOccurs="unbounded"></xsd:group>
+			<xsd:attribute name="test" type="expression" use="required" />
+			<!--  xsd:attribute ref="xml:space" /-->
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="choose">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="when" minOccurs="1" maxOccurs="unbounded" />
+				<xsd:element ref="otherwise" minOccurs="0" />
+			</xsd:sequence>
+			<!--  xsd:attribute ref="xml:space" /-->
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="when">
+		<xsd:complexType mixed="true">
+			<xsd:group ref="instructions" minOccurs="0" maxOccurs="unbounded" />
+			<xsd:attribute name="test" type="expression" use="required" />
+			<!--  xsd:attribute ref="xml:space" /-->
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="otherwise">
+		<xsd:complexType mixed="true">
+			<xsd:group ref="instructions" minOccurs="0" maxOccurs="unbounded" />
+			<!--  xsd:attribute ref="xml:space" /-->
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="attribute-set">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element  ref="attribute"  minOccurs="0" maxOccurs="unbounded" />
+			</xsd:sequence>
+			<xsd:attribute name="name" type="xsd:NMTOKEN" use="required" />
+			<xsd:attribute name="use-attribute-sets" type="xsd:NMTOKENS" use="optional" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="call-template">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="with-param" minOccurs="0"  maxOccurs="unbounded"  />
+			</xsd:sequence>
+			<xsd:attribute name="name" type="xsd:NMTOKEN" use="required" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="with-param" type="NamedAndSelectable" />
+	
+	<xsd:element name="variable" type="NamedAndSelectable" />
+	
+	<xsd:element name="param" type="NamedAndSelectable" />
+	
+	<xsd:element name="text">
+		<xsd:complexType>
+			<xsd:simpleContent>
+				<xsd:extension base="xsd:string">
+					<xsd:attributeGroup ref="disable-output-escaping" />
+				</xsd:extension>
+			</xsd:simpleContent>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="processing-instruction">
+		<xsd:complexType mixed="true">
+			<xsd:group ref="char-instructions"></xsd:group>
+			<xsd:attribute name="name" type="xsd:string" use="required" />
+			<!--  xsd:attribute ref="xml:space" /-->
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="element">
+		<xsd:complexType mixed="true">
+			<xsd:group ref="instructions"></xsd:group>
+			<xsd:attribute name="name" type="xsd:string" use="required" />
+			<xsd:attribute name="namespace" type="xsd:string" use="optional" />
+			<xsd:attributeGroup ref="use-attribute-sets" />
+			<!--  xsd:attribute ref="xml:space" /-->
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="attribute">
+		<xsd:complexType mixed="true">
+			<xsd:group ref="char-instructions"/>
+			<xsd:attribute name="name" type="xsd:string" use="required" />
+			<xsd:attribute name="namespace" type="xsd:string" use="optional" />
+			<!--  xsd:attribute ref="xml:space" /-->
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="comment">
+		<xsd:complexType mixed="true">
+			<xsd:group ref="char-instructions"/>
+			<!--  xsd:attribute ref="xml:space" /-->
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="copy">
+		<xsd:complexType mixed="true">
+			<xsd:group ref="instructions"/>
+			<!--  xsd:attribute ref="xml:space" /-->
+			<xsd:attributeGroup ref="use-attribute-sets" />
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="message">
+		<xsd:complexType mixed="true">
+			<xsd:group ref="char-instructions"/>
+			<xsd:attribute default="no" name="terminate" type="YesNoType" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="fallback">
+		<xsd:complexType mixed="true">
+			<xsd:choice maxOccurs="unbounded" minOccurs="0">
+				<xsd:group ref="instructions"></xsd:group>
+			</xsd:choice>
+			<!--  xsd:attribute ref="xml:space" /-->
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:group name="instructions">
+		<xsd:choice>
+			<xsd:group ref="char-instructions"></xsd:group>
+			<xsd:element ref="processing-instruction" />
+			<xsd:element ref="comment" />
+			<xsd:element ref="element" />
+			<xsd:element ref="attribute" />
+		</xsd:choice>
+	</xsd:group>
+
+	<xsd:group name="char-instructions">
+		<xsd:choice>
+			<xsd:element ref="apply-templates" />
+			<xsd:element ref="call-template" />
+			<xsd:element ref="apply-imports" />
+			<xsd:element ref="for-each" />
+			<xsd:element ref="value-of" />
+			<xsd:element ref="copy-of" />
+			<xsd:element ref="number" />
+			<xsd:element ref="choose" />
+			<xsd:element ref="if" />
+			<xsd:element ref="text" />
+			<xsd:element ref="copy" />
+			<xsd:element ref="variable" />
+			<xsd:element ref="message" />
+			<xsd:element ref="fallback" />
+		</xsd:choice>
+	</xsd:group>
+
+	<xsd:group name="topLevelElements">
+		<xsd:choice>
+			<xsd:element ref="import" />
+			<xsd:element ref="include" />
+			<xsd:element ref="strip-space" />
+			<xsd:element ref="preserve-space" />
+			<xsd:element ref="key" />
+			<xsd:element ref="decimal-format" />
+			<xsd:element ref="attribute-set" />
+			<xsd:element ref="namespace-alias" />
+			<xsd:element ref="param" />
+			<xsd:element ref="variable" />
+			<xsd:element ref="output" />
+			<xsd:element ref="template" />
+		</xsd:choice>
+	</xsd:group>
+
+	<xsd:simpleType name="YesNoType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="yes" />
+			<xsd:enumeration value="no" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:complexType name="NamedAndSelectable" mixed="true">
+		<xsd:group ref="instructions" minOccurs="0" maxOccurs="unbounded" />
+		<xsd:attribute name="name" type="xsd:NMTOKEN" use="required" />
+		<xsd:attributeGroup ref="select-optional" />
+	</xsd:complexType>
+
+
+	<xsd:simpleType name="expression">
+		<xsd:restriction base="xsd:string"></xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="pattern">
+		<xsd:restriction base="xsd:string"></xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:attributeGroup name="select-optional">
+		<xsd:attribute name="select" type="expression" />
+	</xsd:attributeGroup>
+	<xsd:attributeGroup name="select-required">
+		<xsd:attribute name="select" type="expression" use="required" />
+	</xsd:attributeGroup>
+	<xsd:attributeGroup name="disable-output-escaping">
+		<xsd:attribute name="disable-output-escaping" type="YesNoType" default="no" />
+	</xsd:attributeGroup>
+	<xsd:attributeGroup name="use-attribute-sets">
+		<xsd:attribute name="use-attribute-sets" type="xsd:NMTOKENS" use="optional"/>
+	</xsd:attributeGroup>
+
+</xsd:schema>

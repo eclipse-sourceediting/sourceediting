@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+ targetNamespace="http://www.ibm.com"
+ xmlns:po="http://www.ibm.com">
+    <annotation>
+        <documentation xml:lang="en">
+            Purchase order schema example from XML Schema Part 0: Primer
+        
+            Copyright 2001, IBM Corp. All rights reserved
+            Copyright 2001, World Wide Web Consortium, 
+            (Massachusetts Institute of Technology, Institut National de Recherche en Informatiqueet en Automatique, Keio University).
+            All Rights Reserved.
+        </documentation>
+    </annotation>
+
+    <element name="purchaseOrder" type="po:PurchaseOrderType"/>
+
+    <element name="comment" type="string"/>
+
+    <complexType name="PurchaseOrderType">
+        <sequence>
+            <element name="shipTo" type="po:USAddress"/>
+            <element name="billTo" type="po:USAddress"/>
+            <element ref="po:comment" minOccurs="0"/>
+            <element name="items" type="po:Items"/>
+        </sequence>
+        <attribute name="orderDate" type="date"/>
+    </complexType>
+
+    <complexType name="USAddress">
+        <sequence>
+            <element name="name" type="string"/>
+            <element name="street" type="string"/>
+            <element name="city" type="string"/>
+            <element name="state" type="po:USState"/>
+            <element name="zip" type="decimal"/>
+        </sequence>
+        <attribute name="country" type="NMTOKEN" fixed="US"/>
+    </complexType>
+
+    <complexType name="Items">
+        <sequence>
+            <element name="item" minOccurs="0" maxOccurs="unbounded">
+                <complexType>
+                    <sequence>
+                        <element name="productName" type="string"/>
+                        <element name="quantity">
+                            <simpleType>
+                                <restriction base="positiveInteger">
+                                    <maxExclusive value="100"/>
+                                </restriction>
+                            </simpleType>
+                        </element>
+                        <element name="USPrice" type="decimal"/>
+                        <element ref="po:comment" minOccurs="0"/>
+                        <element name="shipDate" type="date" minOccurs="0"/>
+                    </sequence>
+                    <attribute name="partNum" type="po:SKU" use="required"/>
+                </complexType>
+            </element>
+        </sequence>
+    </complexType>
+
+    <simpleType name="SKU">
+        <restriction base="string">
+            <pattern value="\d{3}-[A-Z]{2}"/>
+        </restriction>
+    </simpleType>
+    
+    <simpleType name="USState">
+        <restriction base="string">
+            <enumeration value="CA"></enumeration>
+            <enumeration value="PA"></enumeration>
+            <enumeration value="AR"></enumeration>
+        </restriction>
+    </simpleType>
+</schema>
