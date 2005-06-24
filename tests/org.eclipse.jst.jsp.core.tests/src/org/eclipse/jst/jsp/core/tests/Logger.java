@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
+import org.osgi.framework.Bundle;
 
 /**
  * Small convenience class to log messages to plugin's log file and also, if desired,
@@ -24,7 +25,8 @@ import org.eclipse.core.runtime.Status;
  */
 public class Logger {
 	private static Plugin fPlugin = JSPCoreTestsPlugin.getDefault();
-	private static final String fPluginId = fPlugin.getDescriptor().getUniqueIdentifier();
+	private static Bundle fBundle = fPlugin.getBundle();
+	private static final String fPluginId = fBundle.getSymbolicName();
 
 	private static final String TRACEFILTER_LOCATION = "/debug/tracefilter"; //$NON-NLS-1$
 
