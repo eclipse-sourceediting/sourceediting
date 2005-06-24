@@ -36,8 +36,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 
 public class DTDFile implements IndexedRegion {
-	// private NodeList attlistList = new NodeList(this,
-	// DTDRegionTypes.ATTLIST_TAG);
+	 private NodeList attlistList = new NodeList(this, DTDRegionTypes.ATTLIST_TAG);
 	private NodeList commentList = new NodeList(this, DTDRegionTypes.COMMENT_START);
 
 	boolean creatingNewModel = false;
@@ -350,9 +349,8 @@ public class DTDFile implements IndexedRegion {
 			folderList.add(notationList);
 			folderList.add(entityList);
 			folderList.add(elementList);
-			// http://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=4200
-			// folderList.add(attlistList);
-			// folderList.add(commentList);
+			folderList.add(attlistList);
+			folderList.add(commentList);
 			folderList.add(unrecognizedList);
 		}
 		return folderList;
