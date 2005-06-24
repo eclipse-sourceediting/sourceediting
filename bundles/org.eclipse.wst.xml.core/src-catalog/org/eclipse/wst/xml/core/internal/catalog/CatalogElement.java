@@ -47,7 +47,7 @@ public class CatalogElement implements ICatalogElement
 	{
 		Collection c = attributes.values();
 		String[] result = new String[c.size()];
-		attributes.values().toArray(result);
+		attributes.keySet().toArray(result);
 		return result;
 	}
 
