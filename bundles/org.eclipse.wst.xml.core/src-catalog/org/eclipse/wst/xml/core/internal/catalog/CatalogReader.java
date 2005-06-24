@@ -121,6 +121,10 @@ public final class CatalogReader
         catalog.addCatalogElement(delegate);
         return;
       }
+      else{
+    	  // do not handle other entries
+    	  return;
+      }
       if (key == null || key.equals(""))
       {
         Logger.log(Logger.ERROR, XMLCoreMessages.Catalog_entry_key_not_set);
