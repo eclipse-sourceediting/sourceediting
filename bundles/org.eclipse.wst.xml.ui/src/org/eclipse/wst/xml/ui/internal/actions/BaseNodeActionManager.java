@@ -68,11 +68,11 @@ public abstract class BaseNodeActionManager {
 	}
 
 	protected MenuBuilder menuBuilder = new MenuBuilder();
-	protected IStructuredModel model;
+	protected IStructuredModel fModel;
 	protected ModelQuery modelQuery;
 
 	protected BaseNodeActionManager(IStructuredModel model, ModelQuery modelQuery) {
-		this.model = model;
+		this.fModel = model;
 		this.modelQuery = modelQuery;
 	}
 
@@ -144,7 +144,7 @@ public abstract class BaseNodeActionManager {
 		}
 
 		if (selection.size() == 0) {
-			Document document = ((IDOMModel) model).getDocument();
+			Document document = ((IDOMModel) fModel).getDocument();
 			contributeAddDocumentChildActions(menu, document, ic, vc);
 			contributeEditGrammarInformationActions(menu, document);
 		}

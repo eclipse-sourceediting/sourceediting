@@ -48,7 +48,7 @@ class XMLHyperlinkDetector implements IHyperlinkDetector {
 	// org.eclipse.wst.xml.ui.internal.hyperlink
 	// org.eclipse.wst.html.ui.internal.hyperlink
 	// org.eclipse.jst.jsp.ui.internal.hyperlink
-	
+
 	private final String NO_NAMESPACE_SCHEMA_LOCATION = "noNamespaceSchemaLocation"; //$NON-NLS-1$
 	private final String SCHEMA_LOCATION = "schemaLocation"; //$NON-NLS-1$
 	private final String XMLNS = "xmlns"; //$NON-NLS-1$
@@ -351,9 +351,11 @@ class XMLHyperlinkDetector implements IHyperlinkDetector {
 		IStructuredModel sModel = null;
 		try {
 			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
-			inode = sModel.getIndexedRegion(offset);
-			if (inode == null)
-				inode = sModel.getIndexedRegion(offset - 1);
+			if (sModel != null) {
+				inode = sModel.getIndexedRegion(offset);
+				if (inode == null)
+					inode = sModel.getIndexedRegion(offset - 1);
+			}
 		}
 		finally {
 			if (sModel != null)
@@ -383,7 +385,7 @@ class XMLHyperlinkDetector implements IHyperlinkDetector {
 				}
 				else {
 					IPath basePath = new Path(sModel.getBaseLocation());
-					if(basePath.segmentCount() > 1)
+					if (basePath.segmentCount() > 1)
 						baseLoc = ResourcesPlugin.getWorkspace().getRoot().getFile(basePath).getLocation().toString();
 					else
 						baseLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(basePath).toString();

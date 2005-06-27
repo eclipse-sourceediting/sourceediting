@@ -63,7 +63,8 @@ public class SourceEditorTreeViewer extends TreeViewer {
 				oldListeners.add(listener);
 				newListeners = (ISelectionListener[]) oldListeners.toArray(new ISelectionListener[0]);
 			}
-		} else {
+		}
+		else {
 			newListeners = new ISelectionListener[]{listener};
 		}
 		fInvalidSelectionListeners = newListeners;
@@ -83,13 +84,15 @@ public class SourceEditorTreeViewer extends TreeViewer {
 
 	protected void handleInvalidSelection(ISelection invalidSelection, ISelection newSelection) {
 		IStructuredModel model = (IStructuredModel) getInput();
-		Object selectedNode = model.getIndexedRegion(fCaretPosition);
-		if (selectedNode != null)
-			newSelection = new StructuredSelection(selectedNode);
-		// notify listeners that the TreeViewer has received an invalid
-		// selection
-		fireInvalidSelection(newSelection);
-		setSelectionToWidget(newSelection, true);
+		if (model != null) {
+			Object selectedNode = model.getIndexedRegion(fCaretPosition);
+			if (selectedNode != null)
+				newSelection = new StructuredSelection(selectedNode);
+			// notify listeners that the TreeViewer has received an invalid
+			// selection
+			fireInvalidSelection(newSelection);
+			setSelectionToWidget(newSelection, true);
+		}
 		super.handleInvalidSelection(invalidSelection, newSelection);
 	}
 
@@ -119,14 +122,14 @@ public class SourceEditorTreeViewer extends TreeViewer {
 		// The following logic commented out for 178731.
 		//
 		// Skip refresh if new selection equals old selection.
-		//org.eclipse.jface.viewers.ISelection selection = getSelection();
-		//if (selection instanceof
+		// org.eclipse.jface.viewers.ISelection selection = getSelection();
+		// if (selection instanceof
 		// org.eclipse.jface.viewers.IStructuredSelection)
-		//	if (((org.eclipse.jface.viewers.IStructuredSelection)
+		// if (((org.eclipse.jface.viewers.IStructuredSelection)
 		// selection).size() == 1)
-		//		if (((org.eclipse.jface.viewers.IStructuredSelection)
+		// if (((org.eclipse.jface.viewers.IStructuredSelection)
 		// selection).getFirstElement().equals(element))
-		//			return;
+		// return;
 
 		Widget item = findItem(element);
 		if (item != null) {
@@ -149,7 +152,7 @@ public class SourceEditorTreeViewer extends TreeViewer {
 	 */
 	private void internalRefresh(Widget widget, Object element, boolean doStruct) {
 		// To avoid flashing, set repaint off while updating the tree.
-		//getControl().setRedraw(false);
+		// getControl().setRedraw(false);
 
 		if (widget instanceof Item) {
 			if (doStruct) {
@@ -178,9 +181,9 @@ public class SourceEditorTreeViewer extends TreeViewer {
 		// Expanding/collapsing the tree for the user is a little confusing.
 		// Also, with new improvements to cut down unnesessary
 		// notifications to the tree, this may not be needed.
-		//expandToLevel(element, 1);
+		// expandToLevel(element, 1);
 
-		//getControl().setRedraw(true);
+		// getControl().setRedraw(true);
 	}
 
 	public synchronized void removeInvalidSelectionListener(ISelectionListener listener) {

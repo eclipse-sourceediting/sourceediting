@@ -31,7 +31,7 @@ import org.w3c.dom.Text;
 public class XSDPropertySheetPage extends PropertySheetPage implements ISelectionChangedListener, INodeSelectionListener
 {
   /**
-   * @param model
+   * @param fModel
    */
 
   IEditorPart editorPart;

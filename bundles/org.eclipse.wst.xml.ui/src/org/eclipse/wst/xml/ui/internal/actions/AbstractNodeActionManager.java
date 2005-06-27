@@ -403,16 +403,16 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 	}
 
 	protected ImageDescriptorCache imageDescriptorCache = new ImageDescriptorCache();
-	protected Viewer viewer;
+	protected Viewer fViewer;
 
 	public AbstractNodeActionManager(IStructuredModel model, ModelQuery modelQuery, Viewer viewer) {
 		super(model, modelQuery);
-		this.viewer = viewer;
+		this.fViewer = viewer;
 	}
 
 
 	public void beginNodeAction(NodeAction action) {
-		model.beginRecording(action, action.getUndoDescription());
+		fModel.beginRecording(action, action.getUndoDescription());
 	}
 
 
@@ -438,7 +438,7 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 
 
 	protected Action createAddDoctypeAction(Document document, int index) {
-		return new EditDoctypeAction(model, document, model.getBaseLocation(), XMLUIMessages._UI_MENU_ADD_DTD_INFORMATION); //$NON-NLS-1$
+		return new EditDoctypeAction(fModel, document, fModel.getBaseLocation(), XMLUIMessages._UI_MENU_ADD_DTD_INFORMATION); //$NON-NLS-1$
 	}
 
 
@@ -473,7 +473,7 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 
 
 	protected Action createAddSchemaInfoAction(Element element) {
-		return new EditSchemaInfoAction(this, element.getOwnerDocument(), model.getBaseLocation(), XMLUIMessages._UI_MENU_ADD_SCHEMA_INFORMATION); //$NON-NLS-1$
+		return new EditSchemaInfoAction(this, element.getOwnerDocument(), fModel.getBaseLocation(), XMLUIMessages._UI_MENU_ADD_SCHEMA_INFORMATION); //$NON-NLS-1$
 	}
 
 
@@ -496,7 +496,7 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 
 
 	protected Action createEditDoctypeAction(DocumentType doctype) {
-		return new EditDoctypeAction(model, doctype, model.getBaseLocation(), XMLUIMessages._UI_MENU_EDIT_DOCTYPE); //$NON-NLS-1$
+		return new EditDoctypeAction(fModel, doctype, fModel.getBaseLocation(), XMLUIMessages._UI_MENU_EDIT_DOCTYPE); //$NON-NLS-1$
 	}
 
 
@@ -506,7 +506,7 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 
 
 	protected Action createEditSchemaInfoAction(Element element) {
-		return new EditSchemaInfoAction(this, element.getOwnerDocument(), model.getBaseLocation(), XMLUIMessages._UI_MENU_EDIT_NAMESPACES); //$NON-NLS-1$
+		return new EditSchemaInfoAction(this, element.getOwnerDocument(), fModel.getBaseLocation(), XMLUIMessages._UI_MENU_EDIT_NAMESPACES); //$NON-NLS-1$
 	}
 
 
@@ -524,7 +524,7 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 	}
 
 	public void endNodeAction(NodeAction action) {
-		model.endRecording(action);
+		fModel.endRecording(action);
 	}
 
 
@@ -566,7 +566,7 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 
 
 	public IStructuredModel getModel() {
-		return model;
+		return fModel;
 	}
 
 
@@ -653,15 +653,15 @@ public abstract class AbstractNodeActionManager extends BaseNodeActionManager {
 
 
 	public void setViewerSelection(List list) {
-		if (viewer != null) {
-			viewer.setSelection(new StructuredSelection(list), true);
+		if (fViewer != null) {
+			fViewer.setSelection(new StructuredSelection(list), true);
 		}
 	}
 
 
 	public void setViewerSelection(Node node) {
-		if (viewer != null) {
-			viewer.setSelection(new StructuredSelection(node), true);
+		if (fViewer != null) {
+			fViewer.setSelection(new StructuredSelection(node), true);
 		}
 	}
 }

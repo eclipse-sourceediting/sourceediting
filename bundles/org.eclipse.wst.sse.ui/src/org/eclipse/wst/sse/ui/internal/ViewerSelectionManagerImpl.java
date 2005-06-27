@@ -546,7 +546,9 @@ public class ViewerSelectionManagerImpl implements ViewerSelectionManager {
 
 			// add this viewer selection manager to the new model's list of
 			// model state listeners
-			fModel.addModelStateListener(internalModelStateListener);
+			if (fModel != null) {
+				fModel.addModelStateListener(internalModelStateListener);
+			}
 		}
 	}
 

@@ -44,7 +44,12 @@ public class HTMLNodeActionManager extends XMLNodeActionManager {
 	 */
 	public DOMContentBuilder createDOMContentBuilder(Document document) {
 		DOMContentBuilder builder = null;
-		if (model.getModelHandler().getAssociatedContentTypeId().equals(ContentTypeIdForHTML.ContentTypeID_HTML))
+		String one = fModel.getModelHandler().getAssociatedContentTypeId();
+		String modelContentTypeId = fModel.getContentTypeIdentifier();
+		if (one != modelContentTypeId) {
+			System.out.println("not equal");
+		}
+		if (modelContentTypeId.equals(ContentTypeIdForHTML.ContentTypeID_HTML))
 			builder = new HTMLContentBuilder(document);
 		else
 			builder = super.createDOMContentBuilder(document);
@@ -64,7 +69,7 @@ public class HTMLNodeActionManager extends XMLNodeActionManager {
 	 */
 	public String getLabel(Node parent, CMNode cmnode) {
 		String result = null;
-		//CMNode cmnode = action.getCMNode();
+		// CMNode cmnode = action.getCMNode();
 		// don't change the case unless we're certain it is meaningless
 		if (shouldIgnoreCase(cmnode)) {
 			String name = cmnode.getNodeName();
@@ -92,23 +97,25 @@ public class HTMLNodeActionManager extends XMLNodeActionManager {
 	}
 
 	/**
-	 * Another HTML specific detail. 
+	 * Another HTML specific detail.
 	 */
 	protected void updateCase() {
-		if (model.getModelHandler().getAssociatedContentTypeId().equals(ContentTypeIdForHTML.ContentTypeID_HTML)) {
-			Preferences prefs = HTMLCorePlugin.getDefault().getPluginPreferences(); //$NON-NLS-1$
-			fTagCase = prefs.getInt(HTMLCorePreferenceNames.TAG_NAME_CASE);
-			fAttrCase = prefs.getInt(HTMLCorePreferenceNames.ATTR_NAME_CASE);
-			//		Element caseSettings = HTMLPreferenceManager.getHTMLInstance().getElement(PreferenceNames.PREFERRED_CASE);
-			//		fTagCase = caseSettings.getAttribute(PreferenceNames.TAGNAME);
-			//		fAttrCase = caseSettings.getAttribute(PreferenceNames.ATTRIBUTENAME);
+		if (fModel != null) {
+			String modelContentTypeId = fModel.getContentTypeIdentifier();
+			if (modelContentTypeId != null) {
+				if (modelContentTypeId.equals(ContentTypeIdForHTML.ContentTypeID_HTML)) {
+					Preferences prefs = HTMLCorePlugin.getDefault().getPluginPreferences(); //$NON-NLS-1$
+					fTagCase = prefs.getInt(HTMLCorePreferenceNames.TAG_NAME_CASE);
+					fAttrCase = prefs.getInt(HTMLCorePreferenceNames.ATTR_NAME_CASE);
+				}
+			}
 		}
 	}
 
 	public void reformat(Node newElement, boolean deep) {
 		try {
 			// tell the model that we are about to make a big model change
-			model.aboutToChangeModel();
+			fModel.aboutToChangeModel();
 
 			// format selected node
 			IStructuredFormatProcessor formatProcessor = new HTMLFormatProcessorImpl();
@@ -116,7 +123,7 @@ public class HTMLNodeActionManager extends XMLNodeActionManager {
 		}
 		finally {
 			// tell the model that we are done with the big model change
-			model.changedModel();
+			fModel.changedModel();
 		}
 	}
 }

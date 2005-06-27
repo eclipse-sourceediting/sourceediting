@@ -30,19 +30,19 @@ public class XMLNodeActionManager extends AbstractNodeActionManager {
 	public void reformat(Node newElement, boolean deep) {
 		try {
 			// tell the model that we are about to make a big model change
-			model.aboutToChangeModel();
+			fModel.aboutToChangeModel();
 
 			// format selected node
 			IStructuredFormatProcessor formatProcessor = new FormatProcessorXML();
 			formatProcessor.formatNode(newElement);
 		} finally {
 			// tell the model that we are done with the big model change
-			model.changedModel();
+			fModel.changedModel();
 		}
 	}
 
 	public void setModel(IStructuredModel newModel) {
-		model = newModel;
+		fModel = newModel;
 		setModelQuery(ModelQueryUtil.getModelQuery(newModel));
 	}
 
