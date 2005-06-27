@@ -77,7 +77,7 @@ public class TestViewerConfigurationJSP extends TestCase {
 		}
 		else {
 			fDisplayExists = false;
-			Logger.log(Logger.INFO, "TestViewerConfigurationJSP tests cannot run because there is no DISPLAY available");
+			Logger.log(Logger.INFO, "Remember, viewer configuration tests are not run because workbench is not open (normal on build machine)");
 		}
 	}
     
