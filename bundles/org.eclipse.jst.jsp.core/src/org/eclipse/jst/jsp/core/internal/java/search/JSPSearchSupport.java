@@ -541,7 +541,7 @@ public class JSPSearchSupport {
      * @return
      */
     public synchronized final void setCanceled(boolean cancel) {
-
+    	//System.out.println("search support monitor" + fMonitor);
         fMonitor.setCanceled(cancel);
     }
 

@@ -73,11 +73,13 @@ public class JSPCorePlugin extends Plugin {
 	public void stop(BundleContext context) throws Exception {
 		// stop listening
 		ResourcesPlugin.getWorkspace().removeResourceChangeListener(JSPIndexManager.getInstance());
-		// stop any searching/indexing
+		// stop any searching
 		JSPSearchSupport.getInstance().setCanceled(true);
-		 
+		// stop any indexing
+		JSPIndexManager.getInstance().shutdown();
+		// stop taglib controller
 		TaglibController.shutdown();
-		
+
 		super.stop(context);
 	}
 }
