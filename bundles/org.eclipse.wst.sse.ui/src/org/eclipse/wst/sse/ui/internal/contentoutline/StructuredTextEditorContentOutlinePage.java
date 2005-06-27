@@ -42,13 +42,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.IShowInTarget;
 import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.ui.texteditor.IUpdate;
@@ -57,7 +55,6 @@ import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.ViewerSelectionManager;
-import org.eclipse.wst.sse.ui.internal.actions.ActiveEditorActionHandler;
 import org.eclipse.wst.sse.ui.internal.provisional.views.contentoutline.ContentOutlineConfiguration;
 import org.eclipse.wst.sse.ui.internal.view.events.INodeSelectionListener;
 import org.eclipse.wst.sse.ui.internal.view.events.ITextSelectionListener;
@@ -345,12 +342,6 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 		if (!fSelection.equals(event.getSelection())) {
 			super.selectionChanged(event);
 		}
-	}
-
-	public void setActionBars(IActionBars actionBars) {
-		super.setActionBars(actionBars);
-		getSite().getActionBars().setGlobalActionHandler(ActionFactory.UNDO.getId(), new ActiveEditorActionHandler(getSite(), ActionFactory.UNDO.getId()));
-		getSite().getActionBars().setGlobalActionHandler(ActionFactory.REDO.getId(), new ActiveEditorActionHandler(getSite(), ActionFactory.REDO.getId()));
 	}
 
 	/**

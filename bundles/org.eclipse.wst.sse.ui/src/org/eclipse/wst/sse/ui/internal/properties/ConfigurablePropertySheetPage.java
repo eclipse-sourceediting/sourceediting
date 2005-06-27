@@ -23,9 +23,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
 import org.eclipse.ui.views.properties.IPropertySource;
@@ -33,7 +31,6 @@ import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.ViewerSelectionManager;
-import org.eclipse.wst.sse.ui.internal.actions.ActiveEditorActionHandler;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapterFactory;
 import org.eclipse.wst.sse.ui.internal.provisional.views.properties.IPropertySourceExtension;
@@ -209,12 +206,6 @@ public class ConfigurablePropertySheetPage extends PropertySheetPage implements 
 	 */
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		super.selectionChanged(part, getConfiguration().getSelection(part, selection));
-	}
-
-	public void setActionBars(IActionBars actionBars) {
-		super.setActionBars(actionBars);
-		getSite().getActionBars().setGlobalActionHandler(ActionFactory.UNDO.getId(), new ActiveEditorActionHandler(getSite(), ActionFactory.UNDO.getId()));
-		getSite().getActionBars().setGlobalActionHandler(ActionFactory.REDO.getId(), new ActiveEditorActionHandler(getSite(), ActionFactory.REDO.getId()));
 	}
 
 	/**

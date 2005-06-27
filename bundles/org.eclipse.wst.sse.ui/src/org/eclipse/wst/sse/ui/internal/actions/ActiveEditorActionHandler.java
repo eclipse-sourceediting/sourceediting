@@ -22,6 +22,10 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.texteditor.ITextEditor;
 
+/**
+ * @deprecated actions are not properly activated with this handler so do not
+ *             use
+ */
 public class ActiveEditorActionHandler implements IAction {
 
 	private String fActionId;
@@ -273,12 +277,10 @@ public class ActiveEditorActionHandler implements IAction {
 				editor = (ITextEditor) (part != null ? part.getAdapter(ITextEditor.class) : null);
 			if (editor != null) {
 				fTargetAction = editor.getAction(fActionId);
-			}
-			else {
+			} else {
 				fTargetAction = null;
 			}
-		}
-		else
+		} else
 			fTargetAction = null;
 	}
 }
