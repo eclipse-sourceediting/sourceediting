@@ -90,6 +90,7 @@ public class TaskScanningScheduler {
 	 */
 	public static void shutdown() {
 		if (scheduler != null) {
+			scheduler.fJob.cancel();
 			ResourcesPlugin.getWorkspace().removeResourceChangeListener(scheduler.visitor);
 		}
 	}

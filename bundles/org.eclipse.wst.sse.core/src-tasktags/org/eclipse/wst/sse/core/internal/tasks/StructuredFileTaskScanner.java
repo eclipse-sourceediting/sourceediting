@@ -254,8 +254,8 @@ public abstract class StructuredFileTaskScanner implements IFileTaskScanner {
 		catch (CharacterCodingException e) {
 			Logger.log(Logger.INFO, "StructuredFileTaskScanner encountered CharacterCodingException reading " + file.getLocation()); //$NON-NLS-1$
 		}
-		catch (IOException e) {
-			Logger.logException(e);
+		catch (Exception e) {
+			Logger.logException("Exception with " + file.getFullPath().toString(), e); //$NON-NLS-1$
 		}
 	}
 

@@ -398,6 +398,8 @@ class WorkspaceTaskScanner {
 				monitor.worked(1);
 			}
 		}
+		if (monitor.isCanceled())
+			return;
 		if (markerAttributes != null) {
 			replaceMarkers(file, (Map[]) markerAttributes.toArray(new Map[markerAttributes.size()]), monitor);
 		}
