@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jst.jsp.core.internal.Logger;
 
 /**
  * A simple cache for TaglibHelpers to avoid excessive creation of TaglibClassLoaders
@@ -17,7 +18,7 @@ class TaglibHelperCache {
 
     private static final boolean DEBUG;
     static {
-        String value = Platform.getDebugOption("com.ibm.sse.model.jsp/debug/taglibvars"); //$NON-NLS-1$
+        String value = Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/taglibvars"); //$NON-NLS-1$
         DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
     }
 
@@ -84,7 +85,7 @@ class TaglibHelperCache {
                     fHelpers.remove(entry);
 	                fHelpers.add(1, entry);
 	                if(DEBUG) {
-	                    System.out.println("(->) TaglibHelperCache moved: " + entry + " to the front of the list");
+	                    Logger.log(Logger.INFO, "(->) TaglibHelperCache moved: " + entry + " to the front of the list");
 	                    printCacheContents();
 	                }
                 }
@@ -112,14 +113,14 @@ class TaglibHelperCache {
         Entry newEntry = new Entry(projectPath, helper);
         fHelpers.add(0, newEntry);
         if(DEBUG) {
-            System.out.println("(+) TaglibHelperCache added: " + newEntry);
+        	Logger.log(Logger.INFO, "(+) TaglibHelperCache added: " + newEntry);
             printCacheContents();
         }
         if(fHelpers.size() > MAX_SIZE) {
             // one too many, remove last
             Object removed = fHelpers.remove(fHelpers.size()-1);
             if(DEBUG) {
-                System.out.println("(-) TaglibHelperCache removed: " + removed);
+            	Logger.log(Logger.INFO, "(-) TaglibHelperCache removed: " + removed);
                 printCacheContents();
             }
         }
@@ -134,7 +135,7 @@ class TaglibHelperCache {
             if(entry.getProjectPath().equals(projectPath)) {
                 fHelpers.remove(entry);
                 if(DEBUG) { 
-                    System.out.println("(-) TaglibHelperCache removed: " + entry);
+                    Logger.log(Logger.INFO, "(-) TaglibHelperCache removed: " + entry);
                     printCacheContents();
                 }
                 break;
@@ -143,11 +144,12 @@ class TaglibHelperCache {
     }
     
     private void printCacheContents() {
-        
-        System.out.println("-----------------------------------------------------------");
-        System.out.println("cache contents:");
+        StringBuffer debugString = new StringBuffer();
+        debugString.append("\n-----------------------------------------------------------");
+        debugString.append("\ncache contents:");
         for (int i=0; i<fHelpers.size(); i++)	
-            System.out.println(" -" + i + "- " + fHelpers.get(i));
-        System.out.println("-----------------------------------------------------------");
+        	debugString.append("\n -" + i + "- " + fHelpers.get(i));
+        debugString.append("\n-----------------------------------------------------------");
+        Logger.log(Logger.INFO, debugString.toString());
     }
 }

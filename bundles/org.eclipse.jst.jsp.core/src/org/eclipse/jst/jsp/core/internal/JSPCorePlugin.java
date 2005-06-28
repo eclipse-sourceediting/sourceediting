@@ -14,10 +14,12 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibIndex;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPIndexManager;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchSupport;
+import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelperManager;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -60,6 +62,9 @@ public class JSPCorePlugin extends Plugin {
 		// should be started first
 		TaglibController.startup();
 		
+		// listen for classpath changes
+		JavaCore.addElementChangedListener(TaglibHelperManager.getInstance());
+		
 		// add JSPIndexManager to keep JSP Index up to date
 		// listening for IResourceChangeEvent.PRE_DELETE and IResourceChangeEvent.POST_CHANGE
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(JSPIndexManager.getInstance(), IResourceChangeEvent.POST_CHANGE);
@@ -79,6 +84,10 @@ public class JSPCorePlugin extends Plugin {
 		JSPSearchSupport.getInstance().setCanceled(true);
 		// stop any indexing
 		JSPIndexManager.getInstance().shutdown();
+		
+		// stop listening for classpath changes
+		JavaCore.removeElementChangedListener(TaglibHelperManager.getInstance());
+		
 		// stop taglib controller
 		TaglibController.shutdown();
 		TaglibIndex.shutdown();
