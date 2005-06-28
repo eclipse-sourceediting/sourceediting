@@ -61,6 +61,8 @@ public class TaglibIndex {
 		List projectsIndexed = new ArrayList(1);
 
 		public void elementChanged(ElementChangedEvent event) {
+			if (!isIndexAvailable())
+				return;
 			classpathStack.clear();
 			projectsIndexed.clear();
 			elementChanged(event.getDelta());
@@ -116,6 +118,8 @@ public class TaglibIndex {
 
 	class ResourceChangeListener implements IResourceChangeListener {
 		public void resourceChanged(IResourceChangeEvent event) {
+			if (!isIndexAvailable())
+				return;
 			switch (event.getType()) {
 				case IResourceChangeEvent.PRE_CLOSE :
 				case IResourceChangeEvent.PRE_DELETE : {
@@ -240,18 +244,18 @@ public class TaglibIndex {
 	}
 
 	static final boolean _debugChangeListener = false;
-	static boolean _debugIndexCreation = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/indexcreation")); //$NON-NLS-1$ //$NON-NLS-2$
-	static boolean _debugEvents = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/events")); //$NON-NLS-1$ //$NON-NLS-2$
-	static final boolean _debugResolution = "true".equals(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/resolve")); //$NON-NLS-1$ //$NON-NLS-2$
 
+	static boolean _debugEvents = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/events")); //$NON-NLS-1$ //$NON-NLS-2$
+	static boolean _debugIndexCreation = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/indexcreation")); //$NON-NLS-1$ //$NON-NLS-2$
+	static final boolean _debugResolution = "true".equals(Platform.getDebugOption("org.eclipse.jst.jsp.core/taglib/resolve")); //$NON-NLS-1$ //$NON-NLS-2$
 	static TaglibIndex _instance;
 
-	static {
-		_instance = new TaglibIndex();
+	public static void addTaglibIndexListener(ITaglibIndexListener listener) {
+		_instance.internalAddTaglibIndexListener(listener);
 	}
 
 	static void fireTaglibRecordEvent(ITaglibRecordEvent event) {
-		if(_debugEvents) {
+		if (_debugEvents) {
 			System.out.println("TaglibIndex fired event:" + event); //$NON-NLS-1$
 		}
 		ITaglibIndexListener[] listeners = _instance.fTaglibIndexListeners;
@@ -329,13 +333,22 @@ public class TaglibIndex {
 		return result;
 	}
 
+	public static synchronized void shutdown() {
+		if (_instance != null) {
+			_instance.stop();
+		}
+		_instance = null;
+	}
+
+	public static synchronized void startup() {
+		_instance = new TaglibIndex();
+	}
+
 	private ClasspathChangeListener fClasspathChangeListener = null;
 
-	Map fProjectDescriptions;
+	private Map fProjectDescriptions;
 	private ResourceChangeListener fResourceChangeListener;
-
 	private ITaglibIndexListener[] fTaglibIndexListeners = null;
-
 	private TaglibIndex() {
 		super();
 		fResourceChangeListener = new ResourceChangeListener();
@@ -343,10 +356,6 @@ public class TaglibIndex {
 		fClasspathChangeListener = new ClasspathChangeListener();
 		JavaCore.addElementChangedListener(fClasspathChangeListener);
 		fProjectDescriptions = new HashMap();
-	}
-
-	public static void addTaglibIndexListener(ITaglibIndexListener listener) {
-		_instance.internalAddTaglibIndexListener(listener);
 	}
 
 	/**
@@ -438,5 +447,15 @@ public class TaglibIndex {
 			}
 		}
 		return resolved;
+	}
+
+	boolean isIndexAvailable() {
+		return _instance != null;
+	}
+
+	private void stop() {
+		ResourcesPlugin.getWorkspace().removeResourceChangeListener(fResourceChangeListener);
+		JavaCore.removeElementChangedListener(fClasspathChangeListener);
+		fProjectDescriptions.clear();
 	}
 }

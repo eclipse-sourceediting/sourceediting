@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
+import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibIndex;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPIndexManager;
 import org.eclipse.jst.jsp.core.internal.java.search.JSPSearchSupport;
 import org.osgi.framework.BundleContext;
@@ -54,6 +55,7 @@ public class JSPCorePlugin extends Plugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		
+		TaglibIndex.startup();
 		// JSPIndexManager depends on TaglibController, so TaglibController
 		// should be started first
 		TaglibController.startup();
@@ -79,6 +81,7 @@ public class JSPCorePlugin extends Plugin {
 		JSPIndexManager.getInstance().shutdown();
 		// stop taglib controller
 		TaglibController.shutdown();
+		TaglibIndex.shutdown();
 
 		super.stop(context);
 	}
