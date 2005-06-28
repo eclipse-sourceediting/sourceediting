@@ -63,7 +63,15 @@ public class JobStatusLineHelper extends JobChangeAdapter {
 	}
 
 	private Display getDisplay() {
-		return PlatformUI.getWorkbench().getDisplay();
+		Display display = null;
+		IWorkbench workbench = null;
+		if (PlatformUI.isWorkbenchRunning()) {
+			workbench = PlatformUI.getWorkbench();
+		}
+		if (workbench != null && !workbench.isClosing()) {
+			display = workbench.getDisplay();
+		}
+		return display;
 	}
 
 	private void setStatusLine(final String message) {
@@ -96,8 +104,10 @@ public class JobStatusLineHelper extends JobChangeAdapter {
 					}
 				}
 			};
-			Display workbenchDefault = PlatformUI.getWorkbench().getDisplay();
-			workbenchDefault.asyncExec(runnable);
+			Display workbenchDefault = getDisplay();
+			if (workbenchDefault != null) {
+				workbenchDefault.asyncExec(runnable);
+			}
 		}
 	}
 }

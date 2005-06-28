@@ -58,6 +58,9 @@ public class JSPIndexManager implements IResourceChangeListener {
 
 	private static final String PKEY_INDEX_STATE = "jspIndexState"; //$NON-NLS-1$
 
+	final IndexWorkspaceJob indexingJob = new IndexWorkspaceJob();
+
+
 
 	// set to S_UPDATING once a resource change comes in
 	// set to S_STABLE if:
@@ -219,7 +222,7 @@ public class JSPIndexManager implements IResourceChangeListener {
 		}
 
 		protected IStatus run(IProgressMonitor monitor) {
-			//System.out.println("indexer monitor" + monitor);
+			// System.out.println("indexer monitor" + monitor);
 			if (isCanceled(monitor) || frameworkIsShuttingDown()) {
 				setCanceledState();
 				return Status.CANCEL_STATUS;
@@ -473,8 +476,6 @@ public class JSPIndexManager implements IResourceChangeListener {
 		if (DEBUG)
 			System.out.println("*** JSP Index unstable, requesting re-indexing"); //$NON-NLS-1$
 
-		final IndexWorkspaceJob indexingJob = new IndexWorkspaceJob();
-
 		indexingJob.addJobChangeListener(new JobChangeAdapter() {
 			public void aboutToRun(IJobChangeEvent event) {
 				super.aboutToRun(event);
@@ -574,14 +575,28 @@ public class JSPIndexManager implements IResourceChangeListener {
 
 
 	public void shutdown() {
+		int maxwait = 5000;
 		if (processFilesJob != null) {
 			processFilesJob.cancel();
 		}
-		// attempt to make sure this indexing job is litterally 
+		// attempt to make sure this indexing job is litterally
 		// done before continuing, since we are shutting down
-		while (processFilesJob.getState() == Job.RUNNING) {
+		waitTillNotRunning(maxwait, processFilesJob);
+		
+		if (indexingJob != null) {
+			indexingJob.cancel();
+		}
+		waitTillNotRunning(maxwait, processFilesJob);
+	}
+
+	private void waitTillNotRunning(int maxSeconds, Job job) {
+		int pauseTime = 10;
+		int maxtries = maxSeconds / pauseTime;
+		int count = 0;
+		while (count++ < maxtries && job.getState() == Job.RUNNING) {
 			try {
-				Thread.sleep(50);
+				Thread.sleep(pauseTime);
+				//System.out.println("count: " + count + " max: " + maxtries);
 			}
 			catch (InterruptedException e) {
 				Logger.logException(e);
