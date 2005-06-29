@@ -11,6 +11,7 @@
 package org.eclipse.wst.xsd.ui.internal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.ui.parts.AbstractEditPartViewer;
@@ -129,6 +130,9 @@ public class XSDMenuListener implements IMenuListener
       {
         return;
       }
+
+      Vector visited = new Vector();
+      
       while (flag)
       {
         List list = xsdSchema.getReferencingDirectives();
@@ -138,8 +142,14 @@ public class XSDMenuListener implements IMenuListener
           XSDSchemaDirective xsdSchemaDirective = (XSDSchemaDirective)list.get(0);
           XSDSchema refSchema = xsdSchemaDirective.getSchema(); 
           // check if included schema is the same as the current - don't want cycle
-          if (refSchema != null && refSchema != xsdSchema)
+          
+          if (visited.contains(refSchema))
           {
+            flag = false;
+          }
+          else if (refSchema != null && refSchema != xsdSchema)
+          {
+            visited.add(refSchema);
             xsdSchema = xsdSchemaDirective.getSchema();
           }
           else
