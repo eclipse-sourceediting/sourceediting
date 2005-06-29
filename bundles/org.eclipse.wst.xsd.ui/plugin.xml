@@ -161,7 +161,7 @@
 			class="org.eclipse.wst.xsd.ui.internal.validation.DelegatingSourceValidatorForXSD"
 			id="org.eclipse.wst.xsd.ui.internal.validation.DelegatingSourceValidatorForXSD">
 			<contentTypeIdentifier
-				id="org.eclipse.wst.xsd.contentmodel.xsdsource">
+				id="org.eclipse.wst.xsd.core.xsdsource">
 				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT">
 				</partitionType>
 			</contentTypeIdentifier>
@@ -212,7 +212,7 @@
 	<extension point="org.eclipse.wst.xml.core.modelQueryExtensions">
 		<modelQueryExtension
 			class="org.eclipse.wst.xsd.ui.internal.text.XSDModelQueryExtension"
-			contentType="org.eclipse.wst.xsd.contentmodel.xsdsource">
+			contentType="org.eclipse.wst.xsd.core.xsdsource">
 		</modelQueryExtension>
 	</extension>
 
