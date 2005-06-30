@@ -120,7 +120,9 @@ public class DTDParser extends DefaultHandler implements ContentHandler, DTDHand
 			String document = "<!DOCTYPE root SYSTEM \"" + uri + "\"><root/>"; //$NON-NLS-1$ //$NON-NLS-2$
 			entityDepth = 0;
 			currentDTD = new DTD(uri);
-			reader.parse(new InputSource(new StringReader(document)));
+			InputSource inputSource = new InputSource(new StringReader(document));
+			inputSource.setSystemId(uri + ".xml"); //$NON-NLS-1$
+			reader.parse(inputSource);
 		}
 		catch (SAXParseException se) {
 			if (currentDTD != null)
