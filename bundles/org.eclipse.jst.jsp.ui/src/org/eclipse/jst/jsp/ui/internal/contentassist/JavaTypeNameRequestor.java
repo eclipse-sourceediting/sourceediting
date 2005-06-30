@@ -65,6 +65,11 @@ public class JavaTypeNameRequestor extends TypeNameRequestor {
 	private Image calculateImage(int modifiers) {
 		CompletionProposal p = CompletionProposal.create(CompletionProposal.TYPE_REF, getJSPOffset());
 		p.setFlags(modifiers);
+		
+		//https://bugs.eclipse.org/bugs/show_bug.cgi?id=102206
+		char[] sig = new char[]{Signature.C_UNRESOLVED};
+		p.setSignature(sig);
+		
 		ImageDescriptor descriptor = fLabelProvider.createImageDescriptor(p);
 		Image image = JSPEditorPluginImageHelper.getInstance().getImage(descriptor);
 		return image;
