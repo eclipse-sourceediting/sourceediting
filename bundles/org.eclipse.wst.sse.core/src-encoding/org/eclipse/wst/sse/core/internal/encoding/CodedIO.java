@@ -175,7 +175,7 @@ public abstract class CodedIO {
 		// we don't allow null argument (or risk NPE or
 		// IllegalArgumentException later at several
 		// points.
-		Assert.isNotNull(detectedCharsetName);
+		Assert.isNotNull(detectedCharsetName, "illegal charset argument. it can not be null");
 		String result = detectedCharsetName;
 		// 1. Check explicit mapping overrides from
 		// property file

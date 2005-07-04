@@ -513,8 +513,8 @@ public class CodedReaderCreator extends CodedIO {
 	}
 
 	public void set(IFile iFile) throws CoreException, IOException {
+		Assert.isNotNull(iFile, "illegal argument");
 		resetAll();
-		Assert.isNotNull(iFile);
 		fIFile = iFile;
 	}
 

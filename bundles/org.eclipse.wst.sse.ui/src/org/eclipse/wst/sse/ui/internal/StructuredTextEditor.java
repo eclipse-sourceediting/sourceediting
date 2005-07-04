@@ -1989,7 +1989,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * @deprecated - can eventually be eliminated
 	 */
 	private void setModel(IStructuredModel newModel) {
-		Assert.isNotNull(getDocumentProvider());
+		Assert.isNotNull(getDocumentProvider(), "document provider can not be null when setting model");
 		if (fStructuredModel != null) {
 			if (fStructuredModel.getStructuredDocument() != null) {
 				fStructuredModel.getStructuredDocument().removeDocumentListener(getInternalDocumentListener());

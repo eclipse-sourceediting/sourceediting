@@ -92,7 +92,6 @@ public final class Assert {
 	 */
 	public static void isNotNull(Object object, String message) {
 		if (object == null) {
-			Logger.log(Logger.ERROR, "null_argument: " + message); //$NON-NLS-1$
 			throw new Assert().new AssertionFailedException(message);
 		}
 	}
@@ -111,7 +110,6 @@ public final class Assert {
 	 */
 	public static boolean isTrue(boolean expression, String message) {
 		if (!expression) {
-			Logger.log(Logger.ERROR, "assertion failed: " + message); //$NON-NLS-1$
 			throw new Assert().new AssertionFailedException(message);
 		}
 		return expression;

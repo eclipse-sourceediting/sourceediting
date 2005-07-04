@@ -379,7 +379,7 @@ public class CodedStreamCreator extends CodedIO {
 			analyze();
 		}
 		// post condition
-		Assert.isNotNull(fCurrentEncodingMemento);
+		Assert.isNotNull(fCurrentEncodingMemento, "illegal post condition state");
 		// be sure to carry over appropriate encoding
 		// "state" that may be
 		// relevent.

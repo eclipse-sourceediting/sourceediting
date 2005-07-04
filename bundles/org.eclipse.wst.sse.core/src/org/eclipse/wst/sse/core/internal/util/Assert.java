@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.util;
 
-import org.eclipse.wst.sse.core.internal.Logger;
 
 /**
  * <code>Assert</code> is useful for for embedding runtime sanity checks in
@@ -121,7 +120,7 @@ public final class Assert {
 	 */
 	public static void isNotNull(Object object, String message) {
 		if (object == null) {
-			Logger.log(Logger.ERROR, "null_argument: " + message); //$NON-NLS-1$
+			//Logger.log(Logger.ERROR, "null_argument: " + message); //$NON-NLS-1$
 			throw new Assert().new AssertionFailedException();
 		}
 	}
@@ -153,7 +152,6 @@ public final class Assert {
 	 */
 	public static boolean isTrue(boolean expression, String message) {
 		if (!expression) {
-			Logger.log(Logger.ERROR, "assertion failed: " + message); //$NON-NLS-1$
 			throw new Assert().new AssertionFailedException();
 		}
 		return expression;

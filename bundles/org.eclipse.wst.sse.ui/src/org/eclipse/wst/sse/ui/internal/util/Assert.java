@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.util;
 
-import org.eclipse.wst.sse.ui.internal.Logger;
 
 /**
  * <code>Assert</code> is useful for for embedding runtime sanity checks in
@@ -60,24 +59,6 @@ public final class Assert {
 	/**
 	 * Asserts that an argument is legal. If the given boolean is not
 	 * <code>true</code>, an <code>IllegalArgumentException</code> is
-	 * thrown.
-	 * 
-	 * @deprecated - use the method that expresses a message as well
-	 * 
-	 * @param expression
-	 *            the outcode of the check
-	 * @return <code>true</code> if the check passes (does not return if the
-	 *         check fails)
-	 * @exception IllegalArgumentException
-	 *                if the legality test failed
-	 */
-	public static boolean isLegal(boolean expression) {
-		return isLegal(expression, ""); //$NON-NLS-1$
-	}
-
-	/**
-	 * Asserts that an argument is legal. If the given boolean is not
-	 * <code>true</code>, an <code>IllegalArgumentException</code> is
 	 * thrown. The given message is included in that exception, to aid
 	 * debugging.
 	 * 
@@ -98,21 +79,6 @@ public final class Assert {
 
 	/**
 	 * Asserts that the given object is not <code>null</code>. If this is
-	 * not the case, some kind of unchecked exception is thrown.
-	 * 
-	 * @deprecated - use the method that expresses a message as well
-	 * 
-	 * @param object
-	 *            the value to test
-	 * @exception IllegalArgumentException
-	 *                if the object is <code>null</code>
-	 */
-	public static void isNotNull(Object object) {
-		isNotNull(object, ""); //$NON-NLS-1$
-	}
-
-	/**
-	 * Asserts that the given object is not <code>null</code>. If this is
 	 * not the case, some kind of unchecked exception is thrown. The given
 	 * message is included in that exception, to aid debugging.
 	 * 
@@ -125,24 +91,8 @@ public final class Assert {
 	 */
 	public static void isNotNull(Object object, String message) {
 		if (object == null) {
-			Logger.log(Logger.ERROR, "null_argument: " + message); //$NON-NLS-1$
 			throw new Assert().new AssertionFailedException(message);
 		}
-	}
-
-	/**
-	 * Asserts that the given boolean is <code>true</code>. If this is not
-	 * the case, some kind of unchecked exception is thrown.
-	 * 
-	 * @deprecated - use the method that expresses a message as well
-	 * 
-	 * @param expression
-	 *            the outcode of the check
-	 * @return <code>true</code> if the check passes (does not return if the
-	 *         check fails)
-	 */
-	public static boolean isTrue(boolean expression) {
-		return isTrue(expression, ""); //$NON-NLS-1$
 	}
 
 	/**
@@ -159,7 +109,6 @@ public final class Assert {
 	 */
 	public static boolean isTrue(boolean expression, String message) {
 		if (!expression) {
-			Logger.log(Logger.ERROR, "assertion failed: " + message); //$NON-NLS-1$
 			throw new Assert().new AssertionFailedException(message);
 		}
 		return expression;
