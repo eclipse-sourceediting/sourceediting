@@ -23,6 +23,7 @@ import java.io.IOException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.sse.core.internal.document.DocumentReader;
 import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
+import org.eclipse.wst.xml.core.internal.contenttype.XMLResourceEncodingDetector;
 import org.eclipse.wst.xml.core.internal.encoding.XMLDocumentCharsetDetector;
 
 
@@ -47,7 +48,7 @@ public final class DTDDocumentCharsetDetector extends AbstractResourceEncodingDe
 	protected void parseInput() throws IOException {
 		IDocumentCharsetDetector documentEncodingDetector = new XMLDocumentCharsetDetector();
 		documentEncodingDetector.set(fReader);
-		fEncodingMemento = documentEncodingDetector.getEncodingMemento();
+		fEncodingMemento = ((XMLResourceEncodingDetector)documentEncodingDetector).getEncodingMemento();
 
 	}
 

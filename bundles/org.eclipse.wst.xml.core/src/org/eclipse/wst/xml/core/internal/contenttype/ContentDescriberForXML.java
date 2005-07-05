@@ -153,7 +153,7 @@ public final class ContentDescriberForXML implements ITextContentDescriber {
 	 */
 	private int handleCalculations(int result, IContentDescription description, IResourceCharsetDetector detector) throws IOException {
 		int returnResult = result;
-		EncodingMemento encodingMemento = detector.getEncodingMemento();
+		EncodingMemento encodingMemento = ((XMLResourceEncodingDetector)detector).getEncodingMemento();
 		if (description != null) {
 			// TODO: I need to verify to see if this BOM work is always done
 			// by text type.

@@ -39,74 +39,66 @@ import org.eclipse.wst.common.encoding.contentspecific.xml.XMLHeadTokenizerConst
 	}
 
 	  public void reset (Reader in) {
-	  	/* the input device */
-	  	yy_reader = in;
+                /* the input device */
+                zzReader = in;
 
-  		/* the current state of the DFA */
-  		yy_state = 0;
+                /* the current state of the DFA */
+                zzState = 0;
 
-  		/* the current lexical state */
-  		yy_lexical_state = YYINITIAL;
+                /* the current lexical state */
+                zzLexicalState = YYINITIAL;
 
-  		/* this buffer contains the current text to be matched and is
-  		 the source of the yytext() string */
-  		java.util.Arrays.fill(yy_buffer, (char)0);
+                /* this buffer contains the current text to be matched and is
+                 the source of the yytext() string */
+                java.util.Arrays.fill(zzBuffer, (char)0);
 
-  		/* the textposition at the last accepting state */
-  		yy_markedPos = 0;
+                /* the textposition at the last accepting state */
+                zzMarkedPos = 0;
 
-  		/* the textposition at the last state to be included in yytext */
-  		yy_pushbackPos = 0;
+                /* the textposition at the last state to be included in yytext */
+                zzPushbackPos = 0;
 
-  		/* the current text position in the buffer */
-  		yy_currentPos = 0;
+                /* the current text position in the buffer */
+                zzCurrentPos = 0;
 
-  		/* startRead marks the beginning of the yytext() string in the buffer */
-  		yy_startRead = 0;
+                /* startRead marks the beginning of the yytext() string in the buffer */
+                zzStartRead = 0;
 
-  		/** 
-  		 * endRead marks the last character in the buffer, that has been read
-  		 * from input 
-  		 */
-  		yy_endRead = 0;
+                /**
+                 * endRead marks the last character in the buffer, that has been read
+                 * from input
+                 */
+                zzEndRead = 0;
 
-  		/* number of newlines encountered up to the start of the matched text */
-  		yyline = 0;
+                /* number of newlines encountered up to the start of the matched text */
+                yyline = 0;
 
-  		/* the number of characters up to the start of the matched text */
-  		yychar = 0;
+                /* the number of characters up to the start of the matched text */
+                yychar = 0;
 
-  		/**
-  		 * the number of characters from the last newline up to the start
-  		 * of the matched text
-  		 */
-  		yycolumn = 0; 
+                /**
+                 * the number of characters from the last newline up to the start
+                 * of the matched text
+                 */
+                yycolumn = 0;
 
-  		/** 
-  		 * yy_atBOL == true <=> the scanner is currently at the beginning 
-  		 * of a line
-  		 */
-  		yy_atBOL = false;
+                /**
+                 * yy_atBOL == true <=> the scanner is currently at the beginning
+                 * of a line
+                 */
+                zzAtBOL = true;
 
-  		/* yy_atEOF == true <=> the scanner has returned a value for EOF */
-  		yy_atEOF = false;
+                /* yy_atEOF == true <=> the scanner has returned a value for EOF */
+                zzAtEOF = false;
 
-  		/* denotes if the user-EOF-code has already been executed */
-  		yy_eof_done = false;
+                /* denotes if the user-EOF-code has already been executed */
+                zzEOFDone = false;
 
 
-  		fStateStack.clear();
+                fStateStack.clear();
+
+                hasMore = true;
   		
-  		hasMore = true;
-  		
-  		// its a little wasteful to "throw away" first char array generated
-  		// by class init (via auto generated code), but we really do want 
-  		// a small buffer for our head parsers. 
-  		if (yy_buffer.length != MAX_TO_SCAN) {
-  			yy_buffer = new char[MAX_TO_SCAN];
-  		}
-
-
   	}
 
 
@@ -152,8 +144,9 @@ import org.eclipse.wst.common.encoding.contentspecific.xml.XMLHeadTokenizerConst
 %char
 %unicode
 %ignorecase 
-%debug
+//%debug
 %switch
+%buffer 8192
 
 UTF16BE = \xFE\xFF
 UTF16LE = \xFF\xFE
@@ -192,8 +185,7 @@ LineTerminator = \r|\n
 	
 <ST_XMLDecl> 
 {
-//      commented out 'version' since we don't really use, but could add back in here if needed
-//	"version" {BeginAttribeValue} {pushCurrentState(); yybegin(QuotedAttributeValue); return XMLHeadTokenizerConstants.XMLDeclVersion;}
+	"version" {BeginAttribeValue} {pushCurrentState(); yybegin(QuotedAttributeValue); return XMLHeadTokenizerConstants.XMLDeclVersion;}
 	"encoding" {BeginAttribeValue} {pushCurrentState(); yybegin(QuotedAttributeValue); return XMLHeadTokenizerConstants.XMLDelEncoding;}
 	// note the "forced end" (via 'hasMore=false') once the end of XML Declaration found
 	// This is since non-ascii chars may follow and may cause IOExceptions which would not occur once stream is 

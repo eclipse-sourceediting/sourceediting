@@ -19,8 +19,6 @@ import java.io.Reader;
 public interface IStreamCharsetDetector {
 	String getEncoding() throws IOException;
 
-	EncodingMemento getEncodingMemento() throws IOException;
-
 	String getSpecDefaultEncoding();
 
 	void set(InputStream inputStream);

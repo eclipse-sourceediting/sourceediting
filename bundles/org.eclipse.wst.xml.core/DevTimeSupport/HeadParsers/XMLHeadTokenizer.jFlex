@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
+ * Copyright (c) 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,23 +9,17 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 /*nlsXXX*/
-package org.eclipse.wst.sse.core.jsp.contenttype;
+package org.eclipse.wst.xml.core.internal.contenttype;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.eclipse.wst.common.encoding.EncodingParserConstants;
-import org.eclipse.wst.common.encoding.HeadParserToken;
-import org.eclipse.wst.common.encoding.IntStack;
-import org.eclipse.wst.sse.core.xml.contenttype.XMLHeadTokenizerConstants;
-
-
-
+import org.eclipse.wst.xml.core.internal.contenttype.EncodingParserConstants;
+import org.eclipse.wst.xml.core.internal.contenttype.XMLHeadTokenizerConstants;
 
 
 %%
 
 %{
-
 
 
 	private boolean hasMore = true;
@@ -36,79 +30,71 @@ import org.eclipse.wst.sse.core.xml.contenttype.XMLHeadTokenizerConstants;
 	private String valueText = null;
 
 
-	public JSPHeadTokenizer() {
+	public XMLHeadTokenizer() {
 		super();
 	}
 
 	  public void reset (Reader in) {
-	  	/* the input device */
-	  	yy_reader = in;
+                /* the input device */
+                zzReader = in;
 
-  		/* the current state of the DFA */
-  		yy_state = 0;
+                /* the current state of the DFA */
+                zzState = 0;
 
-  		/* the current lexical state */
-  		yy_lexical_state = YYINITIAL;
+                /* the current lexical state */
+                zzLexicalState = YYINITIAL;
 
-  		/* this buffer contains the current text to be matched and is
-  		 the source of the yytext() string */
-  		java.util.Arrays.fill(yy_buffer, (char)0);
+                /* this buffer contains the current text to be matched and is
+                 the source of the yytext() string */
+                java.util.Arrays.fill(zzBuffer, (char)0);
 
-  		/* the textposition at the last accepting state */
-  		yy_markedPos = 0;
+                /* the textposition at the last accepting state */
+                zzMarkedPos = 0;
 
-  		/* the textposition at the last state to be included in yytext */
-  		yy_pushbackPos = 0;
+                /* the textposition at the last state to be included in yytext */
+                zzPushbackPos = 0;
 
-  		/* the current text position in the buffer */
-  		yy_currentPos = 0;
+                /* the current text position in the buffer */
+                zzCurrentPos = 0;
 
-  		/* startRead marks the beginning of the yytext() string in the buffer */
-  		yy_startRead = 0;
+                /* startRead marks the beginning of the yytext() string in the buffer */
+                zzStartRead = 0;
 
-  		/**
-  		 * endRead marks the last character in the buffer, that has been read
-  		 * from input
-  		 */
-  		yy_endRead = 0;
+                /**
+                 * endRead marks the last character in the buffer, that has been read
+                 * from input
+                 */
+                zzEndRead = 0;
 
-  		/* number of newlines encountered up to the start of the matched text */
-  		yyline = 0;
+                /* number of newlines encountered up to the start of the matched text */
+                yyline = 0;
 
-  		/* the number of characters up to the start of the matched text */
-  		yychar = 0;
+                /* the number of characters up to the start of the matched text */
+                yychar = 0;
 
-  		/**
-  		 * the number of characters from the last newline up to the start
-  		 * of the matched text
-  		 */
-  		yycolumn = 0;
+                /**
+                 * the number of characters from the last newline up to the start
+                 * of the matched text
+                 */
+                yycolumn = 0;
 
-  		/**
-  		 * yy_atBOL == true <=> the scanner is currently at the beginning
-  		 * of a line
-  		 */
-  		yy_atBOL = false;
+                /**
+                 * yy_atBOL == true <=> the scanner is currently at the beginning
+                 * of a line
+                 */
+                zzAtBOL = true;
 
-  		/* yy_atEOF == true <=> the scanner has returned a value for EOF */
-  		yy_atEOF = false;
+                /* yy_atEOF == true <=> the scanner has returned a value for EOF */
+                zzAtEOF = false;
 
-  		/* denotes if the user-EOF-code has already been executed */
-  		yy_eof_done = false;
-
-
-  		fStateStack.clear();
-
-  		hasMore = true;
-
-		// its a little wasteful to "throw away" first char array generated
-		// by class init (via auto generated code), but we really do want
-		// a small buffer for our head parsers.
-		if (yy_buffer.length != MAX_TO_SCAN) {
-			yy_buffer = new char[MAX_TO_SCAN];
-		}
+                /* denotes if the user-EOF-code has already been executed */
+                zzEOFDone = false;
 
 
+                fStateStack.clear();
+
+                hasMore = true;
+  		
   	}
 
 
@@ -136,10 +122,10 @@ import org.eclipse.wst.sse.core.xml.contenttype.XMLHeadTokenizerConstants;
 	private void popState() {
 		yybegin(fStateStack.pop());
 	}
+	
 	private HeadParserToken createToken(String context, int start, String text) {
 		return new HeadParserToken(context, start, text);
-	}
-
+	}	
 
 %}
 
@@ -148,22 +134,21 @@ import org.eclipse.wst.sse.core.xml.contenttype.XMLHeadTokenizerConstants;
 %eof}
 
 %public
-%class JSPHeadTokenizer
+%class XMLHeadTokenizer
 %function primGetNextToken
 %type String
 %char
 %unicode
-%ignorecase
-%debug
+%ignorecase 
+//%debug
 %switch
-
+%buffer 8192
 
 UTF16BE = \xFE\xFF
 UTF16LE = \xFF\xFE
 UTF83ByteBOM = \xEF\xBB\xBF
 
-SpaceChar = [\x20\x09]
-
+//SpaceChar = [\x20\x09]
 
 // [3] S ::= (0x20 | 0x9 | 0xD | 0xA)+
 S = [\x20\x09\x0D\x0A]
@@ -174,7 +159,6 @@ LineTerminator = \r|\n
 
 
 %state ST_XMLDecl
-%state ST_PAGE_DIRECTIVE
 %state QuotedAttributeValue
 %state DQ_STRING
 %state SQ_STRING
@@ -183,49 +167,29 @@ LineTerminator = \r|\n
 %%
 
 
-<YYINITIAL>
+<YYINITIAL>  
 {
-	{UTF16BE}   		{hasMore = false; return EncodingParserConstants.UTF16BE;}
-	{UTF16LE}   		{hasMore = false; return EncodingParserConstants.UTF16LE;}
-	{UTF83ByteBOM}   	{hasMore = false; return EncodingParserConstants.UTF83ByteBOM;}
-
-
+	// force to start at beginning of line (^) and at beginning of file (yychar == 0)
+	^{UTF16BE}   		{if (yychar == 0 ) {hasMore = false; return EncodingParserConstants.UTF16BE;}}
+	^{UTF16LE}   		{if (yychar == 0 ) {hasMore = false; return EncodingParserConstants.UTF16LE;}}
+	^{UTF83ByteBOM}   	{if (yychar == 0 ) {hasMore = false; return EncodingParserConstants.UTF83ByteBOM;}}
+	
 	// force to be started on first line, but we do allow preceeding spaces
 	^ {S}* "<\?xml" {S}+ {if (yychar == 0 ) {yybegin(ST_XMLDecl); return XMLHeadTokenizerConstants.XMLDeclStart;}}
-
-	"<%" {S}* "@" {S}* "page" {S}+   {yybegin(ST_PAGE_DIRECTIVE); return JSPHeadTokenizerConstants.PageDirectiveStart;}
-	"<jsp:directive.page" {S}+           {yybegin(ST_PAGE_DIRECTIVE); return JSPHeadTokenizerConstants.PageDirectiveStart;}
-
-
-}
-
-<ST_XMLDecl>
+	
+}	
+	
+<ST_XMLDecl> 
 {
-//      commented out 'version' since we don't really use, but could add back in here if needed
-//	"version" {BeginAttribeValue} {pushCurrentState(); yybegin(QuotedAttributeValue); return XMLHeadTokenizerConstants.XMLDeclVersion;}
+	"version" {BeginAttribeValue} {pushCurrentState(); yybegin(QuotedAttributeValue); return XMLHeadTokenizerConstants.XMLDeclVersion;}
 	"encoding" {BeginAttribeValue} {pushCurrentState(); yybegin(QuotedAttributeValue); return XMLHeadTokenizerConstants.XMLDelEncoding;}
 	// note the "forced end" (via 'hasMore=false') once the end of XML Declaration found
-	// This is since non-ascii chars may follow and may cause IOExceptions which would not occur once stream is
-	// read with incorrect encoding (such as if platform encoding is in effect until true encoding detected).
+	// This is since non-ascii chars may follow and may cause IOExceptions which would not occur once stream is 
+	// read with incorrect encoding (such as if platform encoding is in effect until true encoding detected). 
 	"\?>"    {yybegin(YYINITIAL); hasMore = false; return XMLHeadTokenizerConstants.XMLDeclEnd;}
-}
+}	
 
-<ST_PAGE_DIRECTIVE>
-{
-//  removed 'language' since it really can be handled seperately from encoding, but may add it back later for simple re-use.
-	"language"     {BeginAttribeValue} {pushCurrentState(); yybegin(QuotedAttributeValue); return JSPHeadTokenizerConstants.PageLanguage;}
-	"contentType" {BeginAttribeValue}  {pushCurrentState(); yybegin(QuotedAttributeValue); return JSPHeadTokenizerConstants.PageContentType;}
-	"pageEncoding" {BeginAttribeValue} {pushCurrentState(); yybegin(QuotedAttributeValue); return JSPHeadTokenizerConstants.PageEncoding;}
-	// note the "forced end" (via 'hasMore=false') once the end of XML Declaration found
-	// This is since non-ascii chars may follow and may cause IOExceptions which would not occur once stream is
-	// read in correct encoding.
-
-	// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=4205 demonstrates how we need to keep parsing,
-	// even if come to end of one page directive, so hasMore=false was removed from these rules.
-	"%>"    { yybegin(YYINITIAL);  return JSPHeadTokenizerConstants.PageDirectiveEnd;}
-	"\/>"    { yybegin(YYINITIAL); return JSPHeadTokenizerConstants.PageDirectiveEnd;}
-}
-
+	
 
 <QuotedAttributeValue>
 {
@@ -234,7 +198,7 @@ LineTerminator = \r|\n
 	// in this state, anything other than a space character can start an undelimited string
 	{S}*.           { yypushback(1); yybegin(UnDelimitedString); string.setLength(0);}
 
-}
+}	
 
 
 <DQ_STRING>
@@ -245,8 +209,6 @@ LineTerminator = \r|\n
 	"\?>"			{ yypushback(2); popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
 	'<'			{ yypushback(1);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
 	.			{ string.append( yytext() ); }
-
-	"%>"			{ yypushback(2);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
 
 
 }
@@ -259,7 +221,6 @@ LineTerminator = \r|\n
 	"%>"			{ yypushback(2);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
 	'<'			{ yypushback(1);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
 	.			{ string.append( yytext() ); }
-	"%>"			{ yypushback(2);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
 
 
 }
@@ -267,23 +228,23 @@ LineTerminator = \r|\n
 <UnDelimitedString>
 {
 
-
 	{S}                     { yypushback(1);popState(); valueText = string.toString(); return EncodingParserConstants.UnDelimitedStringValue; }
   	{LineTerminator}        { yypushback(1);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
 	"\?>"			{ yypushback(2);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
-	'<'			{ yypushback(1);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
+	'<'	
+	{ yypushback(1);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
 	// these are a bit special, since we started an undelimit string, but found a quote ... probably indicates a missing beginning quote
 	\'			{ yypushback(1);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTermintatedUnDelimitedStringValue;}
+	
 	\"			{ yypushback(1);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTermintatedUnDelimitedStringValue;}
-
+	
 	.			{ string.append( yytext() ); }
-	"%>"			{ yypushback(2);popState(); valueText = string.toString(); return EncodingParserConstants.InvalidTerminatedStringValue;}
 
 }
 
 // The "match anything" rule should always be in effect except for when looking for end of string
 // (That is, remember to update state list if/when new states added)
-<YYINITIAL, ST_XMLDecl, QuotedAttributeValue, ST_PAGE_DIRECTIVE>
+<YYINITIAL, ST_XMLDecl, QuotedAttributeValue>
 {
 // this is the fallback (match "anything") rule  (for this scanner, input is ignored, and position advanced, if not recognized)
 .|\n              {if (yychar > MAX_TO_SCAN) {hasMore=false; return EncodingParserConstants.MAX_CHARS_REACHED;}}
@@ -292,3 +253,4 @@ LineTerminator = \r|\n
 // this rule always in effect
 <<EOF>>         {hasMore = false; return EncodingParserConstants.EOF;}
 
+	

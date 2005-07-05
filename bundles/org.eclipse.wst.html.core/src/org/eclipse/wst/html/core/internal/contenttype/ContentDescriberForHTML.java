@@ -92,7 +92,7 @@ public final class ContentDescriberForHTML implements ITextContentDescriber {
 		// mulitiple times (one for each, say) that we don't waste time
 		// processing same
 		// content again.
-		EncodingMemento encodingMemento = detector.getEncodingMemento();
+		EncodingMemento encodingMemento = ((HTMLResourceEncodingDetector)detector).getEncodingMemento();
 		// TODO: I need to verify to see if this BOM work is always done
 		// by text type.
 		Object detectedByteOrderMark = encodingMemento.getUnicodeBOM();

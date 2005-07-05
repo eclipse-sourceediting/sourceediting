@@ -20,5 +20,5 @@ public interface XMLHeadTokenizerConstants extends EncodingParserConstants {
 	final String XMLDeclEnd = "XMLDeclEnd"; //$NON-NLS-1$
 	final String XMLDeclStart = "XMLDeclStart"; //$NON-NLS-1$
 	final String XMLDelEncoding = "XMLDelEncoding"; //$NON-NLS-1$
-	//	final String XMLDeclVersion = "XMLDeclVersion";
+	final String XMLDeclVersion = "XMLDeclVersion"; //$NON-NLS-1$
 }

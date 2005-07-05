@@ -33,11 +33,25 @@ public final class ContentDescriberForJSP implements ITextContentDescriber {
 	 *      org.eclipse.core.runtime.content.IContentDescription)
 	 */
 	public int describe(InputStream contents, IContentDescription description) throws IOException {
-		int result = IContentDescriber.INDETERMINATE;
+		int result = IContentDescriber.INVALID;
 
-		calculateSupportedOptions(contents, description);
+		// if discription is null, we are just being asked to
+		// assess contents validity
+		if (description != null) {
+			result = calculateSupportedOptions(contents, description);
+		}
+		else {
+			result = determineValidity(contents);
+		}
 
 		return result;
+	}
+
+	private int determineValidity(InputStream contents) {
+		// There's little to prove, via contents, that
+		// a file is JSP, so always return interminant, and
+		// let filetypes decide.
+		return IContentDescriber.INDETERMINATE;
 	}
 
 	/*
@@ -47,23 +61,40 @@ public final class ContentDescriberForJSP implements ITextContentDescriber {
 	 *      org.eclipse.core.runtime.content.IContentDescription)
 	 */
 	public int describe(Reader contents, IContentDescription description) throws IOException {
-		int result = IContentDescriber.INDETERMINATE;
+		int result = IContentDescriber.INVALID;
 
-		calculateSupportedOptions(contents, description);
+		// if discription is null, we are just being asked to
+		// assess contents validity
+		if (description != null) {
+			result = calculateSupportedOptions(contents, description);
+		}
+		else {
+			result = determineValidity(contents);
+		}
 
 		return result;
+	}
+
+	private int determineValidity(Reader contents) {
+		// There's little to prove, via contents, that
+		// a file is JSP, so always return interminant, and
+		// let filetypes decide.
+		return IContentDescriber.INDETERMINATE;
 	}
 
 	public QualifiedName[] getSupportedOptions() {
 		return SUPPORTED_OPTIONS;
 	}
 
-	private void calculateSupportedOptions(InputStream contents, IContentDescription description) throws IOException {
+	private int calculateSupportedOptions(InputStream contents, IContentDescription description) throws IOException {
+		int result = IContentDescriber.INDETERMINATE;
 		if (isRelevent(description)) {
 			IResourceCharsetDetector detector = getDetector();
 			detector.set(contents);
 			handleCalculations(description, detector);
+			result = IContentDescriber.VALID;
 		}
+		return result;
 	}
 
 	/**
@@ -71,12 +102,15 @@ public final class ContentDescriberForJSP implements ITextContentDescriber {
 	 * @param description
 	 * @throws IOException
 	 */
-	private void calculateSupportedOptions(Reader contents, IContentDescription description) throws IOException {
+	private int calculateSupportedOptions(Reader contents, IContentDescription description) throws IOException {
+		int result = IContentDescriber.INDETERMINATE;
 		if (isRelevent(description)) {
 			IResourceCharsetDetector detector = getDetector();
 			detector.set(contents);
 			handleCalculations(description, detector);
+			result = IContentDescriber.VALID;
 		}
+		return result;
 	}
 
 	private IResourceCharsetDetector getDetector() {
@@ -103,17 +137,7 @@ public final class ContentDescriberForJSP implements ITextContentDescriber {
 	}
 
 	private void handleDetectedSpecialCase(IContentDescription description, Object detectedCharset, Object javaCharset) {
-		// since equal, we don't need to add, but if our detected version is
-		// different than
-		// javaCharset, then we should add it. This will happen, for example,
-		// if there's
-		// differences in case, or differences due to override properties
 		if (detectedCharset != null) {
-			// if (!detectedCharset.equals(javaCharset)) {
-			// description.setProperty(IContentDescriptionExtended.DETECTED_CHARSET,
-			// detectedCharset);
-			// }
-
 			// Once we detected a charset, we should set the property even
 			// though it's the same as javaCharset
 			// because there are clients that rely on this property to
@@ -133,7 +157,7 @@ public final class ContentDescriberForJSP implements ITextContentDescriber {
 		// mulitiple times (one for each, say) that we don't waste time
 		// processing same
 		// content again.
-		EncodingMemento encodingMemento = detector.getEncodingMemento();
+		EncodingMemento encodingMemento = ((JSPResourceEncodingDetector) detector).getEncodingMemento();
 		// TODO: I need to verify to see if this BOM work is always done
 		// by text type.
 		Object detectedByteOrderMark = encodingMemento.getUnicodeBOM();
@@ -170,8 +194,8 @@ public final class ContentDescriberForJSP implements ITextContentDescriber {
 			}
 			else {
 				// we may need to add what we found, but only need to add
-				// if different from default.the
-				Object defaultCharset = getDetector().getSpecDefaultEncoding();
+				// if different from the default.
+				Object defaultCharset = detector.getSpecDefaultEncoding();
 				if (defaultCharset != null) {
 					if (!defaultCharset.equals(javaCharset)) {
 						description.setProperty(IContentDescription.CHARSET, javaCharset);
@@ -185,10 +209,6 @@ public final class ContentDescriberForJSP implements ITextContentDescriber {
 			}
 		}
 
-		// avoid adding anything if not absolutly needed, since always
-		// "cached" per session
-		// description.setProperty(IContentDescriptionExtended.ENCODING_MEMENTO,
-		// encodingMemento);
 	}
 
 	/**
@@ -208,6 +228,10 @@ public final class ContentDescriberForJSP implements ITextContentDescriber {
 		else if (description.isRequested(IContentDescriptionExtended.DETECTED_CHARSET))
 			result = true;
 		else if (description.isRequested(IContentDescriptionExtended.UNSUPPORTED_CHARSET))
+			result = true;
+		else if (description.isRequested(IContentDescriptionForJSP.CONTENT_TYPE_ATTRIBUTE))
+			result = true;
+		else if (description.isRequested(IContentDescriptionForJSP.LANGUAGE_ATTRIBUTE))
 			result = true;
 		return result;
 	}

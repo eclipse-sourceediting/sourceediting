@@ -331,6 +331,12 @@ public class JSPResourceEncodingDetector implements IResourceCharsetDetector {
 		return result;
 	}
 
+
+	/**
+	 * This method should be exactly the same as what is in 
+	 * JSPHeadTokenizerTester
+	 * @param contentType
+	 */
 	private void parseContentTypeValue(String contentType) {
 		Pattern pattern = Pattern.compile(";\\s*charset\\s*=\\s*"); //$NON-NLS-1$
 		String[] parts = pattern.split(contentType);
@@ -340,13 +346,16 @@ public class JSPResourceEncodingDetector implements IResourceCharsetDetector {
 			if (parts.length == 1) {
 				if (parts[0].length() > 6) {
 					String checkForCharset = parts[0].substring(0, 7);
-					if (checkForCharset.equalsIgnoreCase("charset")) { //$NON-NLS-1$
+					if (checkForCharset.equalsIgnoreCase("charset")) {
 						int eqpos = parts[0].indexOf('=');
 						eqpos = eqpos + 1;
 						if (eqpos < parts[0].length()) {
 							fCharset = parts[0].substring(eqpos);
 							fCharset = fCharset.trim();
 						}
+					}
+					else {
+						fContentType = parts[0];
 					}
 				}
 			}
@@ -358,6 +367,7 @@ public class JSPResourceEncodingDetector implements IResourceCharsetDetector {
 			fCharset = parts[1];
 		}
 	}
+
 
 	/**
 	 * Looks for what ever encoding properties the tokenizer returns. Its the

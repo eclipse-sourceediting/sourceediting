@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 
+import org.eclipse.wst.sse.core.internal.encoding.CodedIO;
+
 /**
  * This is an "adapter" class, simply to get in input stream to act like a
  * reader. We could not use InputStreamReader directly because its internal
@@ -30,8 +32,8 @@ import java.io.Reader;
 
 public class ByteReader extends Reader {
 
-	/** Default byte buffer size (2048). */
-	public static final int DEFAULT_BUFFER_SIZE = 2048;
+	
+	public static final int DEFAULT_BUFFER_SIZE = CodedIO.MAX_BUF_SIZE;
 
 	protected byte[] fBuffer;
 

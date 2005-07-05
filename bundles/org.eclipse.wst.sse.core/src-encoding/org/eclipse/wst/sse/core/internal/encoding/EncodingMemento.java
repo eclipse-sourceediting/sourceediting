@@ -74,6 +74,10 @@ public class EncodingMemento implements Cloneable {
 	private boolean fUnicodeStream;
 	private boolean fUTF83ByteBOMUsed;
 
+	public EncodingMemento() {
+		super();
+	}
+
 	/**
 	 * Returns a clone of this object.
 	 */
