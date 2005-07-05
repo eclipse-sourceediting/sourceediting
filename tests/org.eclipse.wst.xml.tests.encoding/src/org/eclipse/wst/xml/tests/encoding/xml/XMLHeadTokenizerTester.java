@@ -194,7 +194,7 @@ public class XMLHeadTokenizerTester extends TestCase {
 	 */
 	public void testIllFormed() {
 		String filename = fileLocation + "testIllFormed.xml";
-		doTestFile(filename, "UTF-8");
+		doTestFile(filename, null);
 	}
 
 	/**

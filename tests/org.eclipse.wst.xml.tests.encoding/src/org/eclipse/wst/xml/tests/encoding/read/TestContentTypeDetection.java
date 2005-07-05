@@ -110,7 +110,7 @@ public class TestContentTypeDetection extends TestCase {
 
 	}
 
-	private IContentDescription doGetContentTypeBasedOnStream(IFile file) throws CoreException, IOException {
+	protected IContentDescription doGetContentTypeBasedOnStream(IFile file) throws CoreException, IOException {
 		IContentDescription streamContentDescription = null;
 		InputStream inputStream = null;
 		try {
@@ -126,7 +126,7 @@ public class TestContentTypeDetection extends TestCase {
 		return streamContentDescription;
 	}
 
-	private IContentDescription doGetContentTypeBasedOnFile(IFile file) throws CoreException {
+	protected IContentDescription doGetContentTypeBasedOnFile(IFile file) throws CoreException {
 		IContentDescription fileContentDescription = file.getContentDescription();
 		assertNotNull("file content description was null", fileContentDescription);
 		return fileContentDescription;
@@ -202,5 +202,9 @@ public class TestContentTypeDetection extends TestCase {
 //				});
 			}
 		}
+	}
+
+	protected static IProject getTestProject() {
+		return fTestProject;
 	}
 }

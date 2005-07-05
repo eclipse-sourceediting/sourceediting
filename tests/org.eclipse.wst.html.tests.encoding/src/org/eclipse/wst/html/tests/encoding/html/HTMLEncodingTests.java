@@ -27,7 +27,6 @@ import org.eclipse.wst.html.core.internal.contenttype.HTMLResourceEncodingDetect
 import org.eclipse.wst.html.tests.encoding.HTMLEncodingTestsPlugin;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
-import org.eclipse.wst.xml.core.internal.contenttype.XMLResourceEncodingDetector;
 
 public class HTMLEncodingTests extends TestCase {
 
@@ -61,7 +60,7 @@ public class HTMLEncodingTests extends TestCase {
 		InputStream istream = getMarkSupportedStream(inputStream);
 		try {
 			detector.set(istream);
-			EncodingMemento encodingMemento = detector.getEncodingMemento();
+			EncodingMemento encodingMemento = ((HTMLResourceEncodingDetector)detector).getEncodingMemento();
 			String foundIANAEncoding = null;
 			if (encodingMemento != null) {
 				foundIANAEncoding = encodingMemento.getJavaCharsetName();
@@ -139,7 +138,7 @@ public class HTMLEncodingTests extends TestCase {
 	public void testIllformedNormalNonDefault() throws IOException {
 		String filename = fileLocation + "IllformedNormalNonDefault.html";
 		String ianaInFile = "UTF-8";
-		doTestFileStream(filename, ianaInFile, new XMLResourceEncodingDetector());
+		doTestFileStream(filename, ianaInFile, new HTMLResourceEncodingDetector());
 	}
 
 	public void testMultiNonDefault() throws IOException {

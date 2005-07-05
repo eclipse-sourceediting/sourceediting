@@ -59,7 +59,7 @@ public class JSPEncodingTests extends TestCase {
 		InputStream istream = getMarkSupportedStream(inputStream);
 		try {
 			detector.set(istream);
-			EncodingMemento encodingMemento = detector.getEncodingMemento();
+			EncodingMemento encodingMemento = ((JSPResourceEncodingDetector)detector).getEncodingMemento();
 			String foundIANAEncoding = encodingMemento.getJavaCharsetName();
 			// I changed many "equals" to "equalsIgnoreCase" on 11/4/2002,
 			// since

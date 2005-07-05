@@ -217,6 +217,7 @@ public class TestCodedReader extends TestCase {
 		reader = codedReaderCreator.getCodedReader();
 
 		String javaCharsetName = file.getCharset();
+		IContentDescription description = file.getContentDescription();
 		javaCharsetName = massageCharset(javaCharsetName);
 		// codedReaderCreator.getEncodingMemento().getJavaCharsetName();
 		if (expectedJavaCharset.equals("expectPlatformCharset")) {
@@ -226,7 +227,6 @@ public class TestCodedReader extends TestCase {
 			boolean asExpected = javaCharsetName.equals(expectedJavaCharset);
 			assertTrue(javaCharsetName + " did not equal the expected " + expectedJavaCharset + " (this is a VM dependent test)", asExpected);
 		}
-		IContentDescription description = file.getContentDescription();
 		String javaCharsetNameProperty = (String) description.getProperty(IContentDescription.CHARSET);
 		String detectedCharsetNameProperty = getDetectedCharsetName(description);
 		detectedCharsetNameProperty = massageCharset(detectedCharsetNameProperty);
@@ -343,7 +343,7 @@ public class TestCodedReader extends TestCase {
 	}
 
 	public void testFile66() throws CoreException, IOException {
-		doTest("ISO-8859-8", "ISO-8859-8", "testfiles/jsp/IllformedNormalNonDefault.jsp", null);
+		doTest("ISO-8859-8", null, "testfiles/jsp/IllformedNormalNonDefault.jsp", null);
 	}
 
 	public void testFile67() throws CoreException, IOException {
@@ -387,7 +387,7 @@ public class TestCodedReader extends TestCase {
 	}
 
 	public void testFile77() throws CoreException, IOException {
-		doTest("ISO-8859-8", "ISO-8859-8", "testfiles/jsp/NormalNonDefault.jsp", null);
+		doTest("ISO-8859-8", null, "testfiles/jsp/NormalNonDefault.jsp", null);
 	}
 
 	public void testFile78() throws CoreException, IOException {
@@ -423,7 +423,7 @@ public class TestCodedReader extends TestCase {
 	}
 
 	public void testFile86() throws CoreException, IOException {
-		doTest("UTF-8", "UTF-8", "testfiles/jsp/testIllFormed.jsp", null);
+		doTest("ISO-8859-1", null, "testfiles/jsp/testIllFormed.jsp", null);
 	}
 
 	public void testFile87() throws CoreException, IOException {

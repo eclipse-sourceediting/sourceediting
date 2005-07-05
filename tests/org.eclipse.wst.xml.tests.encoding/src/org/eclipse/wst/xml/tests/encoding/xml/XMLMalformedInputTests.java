@@ -59,7 +59,7 @@ public class XMLMalformedInputTests extends TestCase {
 		detector.set(istream);
 		// IEncodedDocument doc =
 		// detector.createNewStructuredDocument(filename, istream);
-		EncodingMemento encodingMemento = detector.getEncodingMemento();
+		EncodingMemento encodingMemento = ((XMLResourceEncodingDetector)detector).getEncodingMemento();
 		String foundIANAEncoding = encodingMemento.getJavaCharsetName();
 
 		Charset charset = Charset.forName(foundIANAEncoding);

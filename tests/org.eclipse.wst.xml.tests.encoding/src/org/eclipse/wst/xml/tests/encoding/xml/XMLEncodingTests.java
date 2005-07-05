@@ -49,7 +49,7 @@ public class XMLEncodingTests extends TestCase {
 		InputStream istream = getMarkSupportedStream(inputStream);
 		try {
 			detector.set(istream);
-			EncodingMemento encodingMemento = detector.getEncodingMemento();
+			EncodingMemento encodingMemento = ((XMLResourceEncodingDetector)detector).getEncodingMemento();
 			String foundIANAEncoding = encodingMemento.getJavaCharsetName();
 			// I changed many "equals" to "equalsIgnoreCase" on 11/4/2002,
 			// since

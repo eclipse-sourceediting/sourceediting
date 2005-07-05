@@ -57,7 +57,7 @@ public class CSSEncodingTester extends TestCase {
 		InputStream istream = getMarkSupportedStream(inputStream);
 		try {
 			detector.set(istream);
-			EncodingMemento encodingMemento = encodingMemento = detector.getEncodingMemento();
+			EncodingMemento encodingMemento = encodingMemento = ((CSSResourceEncodingDetector)detector).getEncodingMemento();
 
 			String foundIANAEncoding = null;
 

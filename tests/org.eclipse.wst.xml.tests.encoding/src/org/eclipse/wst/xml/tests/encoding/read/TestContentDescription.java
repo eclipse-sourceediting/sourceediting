@@ -12,7 +12,6 @@ package org.eclipse.wst.xml.tests.encoding.read;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 
 import junit.framework.TestCase;
 
@@ -172,12 +171,6 @@ public class TestContentDescription extends TestCase {
 		}
 		else {
 			boolean asExpected = foundCharset.equals(expectedJavaCharset);
-			if (!asExpected) {
-				InputStream contents = file.getContents(true);
-				byte[] rawContents = new byte[1000];
-				contents.read(rawContents);
-				System.out.println(rawContents);
-			}
 			assertTrue(foundCharset + " did not equal the expected " + expectedJavaCharset + " (this is a VM dependent test)", asExpected);
 		}
 
@@ -353,7 +346,7 @@ public class TestContentDescription extends TestCase {
 	}
 
 	public void testFile86() throws CoreException, IOException {
-		doTest("UTF-8", "testfiles/jsp/testIllFormed.jsp", null);
+		doTest("ISO-8859-1", "testfiles/jsp/testIllFormed.jsp", null);
 	}
 
 	public void testFile87() throws CoreException, IOException {
