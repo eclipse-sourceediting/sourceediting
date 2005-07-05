@@ -41,7 +41,6 @@ public CenterLayout(int spacing){ this.spacing = spacing; }
  *
  * @param figure  Container figure for which preferred size is required.
  * @return  The preferred size of the input figure.
- * @since 2.0
  */
 protected Dimension calculatePreferredSize(IFigure figure, int w, int h){
 	Dimension d = calculatePreferredClientAreaSize(figure);

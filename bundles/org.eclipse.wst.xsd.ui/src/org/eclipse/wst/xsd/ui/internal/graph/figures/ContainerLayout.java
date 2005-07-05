@@ -57,7 +57,6 @@ public class ContainerLayout extends AbstractLayout implements PostLayoutManager
    * 
    * @param figure  Figure whose preferred size is required.
    * @return  The preferred size of the passed Figure.
-   * @since 2.0
    */
   protected Dimension calculatePreferredSize(IFigure parent, int w, int h)
   { 

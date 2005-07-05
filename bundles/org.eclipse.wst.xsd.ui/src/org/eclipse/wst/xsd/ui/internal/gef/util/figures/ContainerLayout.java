@@ -61,7 +61,6 @@ public class ContainerLayout extends AbstractLayout
    * 
    * @param figure  Figure whose preferred size is required.
    * @return  The preferred size of the passed Figure.
-   * @since 2.0
    */
   protected Dimension calculatePreferredSizeHelper(IFigure parent)
   { 

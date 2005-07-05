@@ -52,7 +52,6 @@ public void setHorizontal(boolean isHorizontal)
  *
  * @param figure  Container figure for which preferred size is required.
  * @return  The preferred size of the input figure.
- * @since 2.0
  */
 protected Dimension calculatePreferredSize(IFigure figure, int w, int h)
 {	                 
