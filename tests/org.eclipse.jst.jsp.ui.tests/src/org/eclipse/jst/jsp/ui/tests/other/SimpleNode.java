@@ -89,7 +89,7 @@ public class SimpleNode implements Node {
 	 * method, such as <code>createElement</code> from the
 	 * <code>Document</code> interface, this is always <code>null</code>.
 	 * 
-	 * @since DOM Level 2
+	 * @ link DOM Level 2
 	 */
 	public String getLocalName() {
 		return null;
@@ -109,7 +109,7 @@ public class SimpleNode implements Node {
 	 * namespace from the element it is attached to. If an attribute is not
 	 * explicitly given a namespace, it simply has no namespace.
 	 * 
-	 * @since DOM Level 2
+	 * @ link DOM Level 2
 	 */
 	public String getNamespaceURI() {
 		return null;
@@ -191,7 +191,7 @@ public class SimpleNode implements Node {
 	 *                is different from " http://www.w3.org/2000/xmlns/", or
 	 *                if this node is an attribute and the
 	 *                <code>qualifiedName</code> of this node is "xmlns" .
-	 * @since DOM Level 2
+	 * @ link DOM Level 2
 	 */
 	public String getPrefix() {
 		return null;
@@ -209,7 +209,7 @@ public class SimpleNode implements Node {
 	 * 
 	 * @return <code>true</code> if this node has any attributes,
 	 *         <code>false</code> otherwise.
-	 * @since DOM Level 2
+	 * @ link DOM Level 2
 	 */
 	public boolean hasAttributes() {
 		return false;
@@ -244,7 +244,7 @@ public class SimpleNode implements Node {
 	 *            the method to return <code>true</code>.
 	 * @return Returns <code>true</code> if the specified feature is
 	 *         supported on this node, <code>false</code> otherwise.
-	 * @since DOM Level 2
+	 * @ link DOM Level 2
 	 */
 	public boolean isSupported(String feature, String version) {
 		return false;

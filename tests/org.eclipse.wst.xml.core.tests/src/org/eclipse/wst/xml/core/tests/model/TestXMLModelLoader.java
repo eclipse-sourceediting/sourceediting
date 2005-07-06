@@ -20,7 +20,7 @@ import org.eclipse.wst.xml.core.tests.util.ProjectUnzipUtility;
 
 /**
  *
- * @since 1.0
+ * 
  */
 public class TestXMLModelLoader extends TestCase {
 	
