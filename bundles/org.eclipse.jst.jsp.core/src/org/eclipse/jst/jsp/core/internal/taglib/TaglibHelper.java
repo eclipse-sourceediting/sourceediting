@@ -18,6 +18,7 @@ import javax.servlet.jsp.tagext.VariableInfo;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IClasspathContainer;
@@ -338,16 +339,24 @@ public class TaglibHelper {
     
        // add things on classpath that we are interested in
         if (p != null) {
-            IJavaProject project = JavaCore.create(p);
-            IPath wkspaceRoot = ResourcesPlugin.getWorkspace().getRoot().getLocation();
-
-            try {
-                IClasspathEntry[] entries = project.getRawClasspath();
-                addDefaultDirEntry(loader, project, wkspaceRoot);
-                addClasspathEntries(loader, project, wkspaceRoot, entries);        
-            } catch (JavaModelException e) {
-                e.printStackTrace();
-            }
+        	try {
+	        	if(p.hasNature(JavaCore.NATURE_ID)) {
+	        		
+		            IJavaProject project = JavaCore.create(p);
+		            IPath wkspaceRoot = ResourcesPlugin.getWorkspace().getRoot().getLocation();
+		
+		            try {
+		                IClasspathEntry[] entries = project.getRawClasspath();
+		                addDefaultDirEntry(loader, project, wkspaceRoot);
+		                addClasspathEntries(loader, project, wkspaceRoot, entries);        
+		            } catch (JavaModelException e) {
+		            	Logger.logException(e);
+		            }
+	        	}
+        	}
+        	catch(CoreException e) {
+        		Logger.logException(e);
+        	}
         }
     }
 
