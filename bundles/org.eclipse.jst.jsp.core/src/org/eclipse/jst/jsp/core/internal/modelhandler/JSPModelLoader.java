@@ -16,7 +16,15 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.filebuffers.FileBuffers;
+import org.eclipse.core.filebuffers.ITextFileBuffer;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.content.IContentDescription;
+import org.eclipse.core.runtime.content.IContentType;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentPartitioner;
+import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapter;
 import org.eclipse.jst.jsp.core.internal.document.PageDirectiveAdapterFactory;
 import org.eclipse.jst.jsp.core.internal.document.PageDirectiveWatcherFactory;
@@ -27,6 +35,8 @@ import org.eclipse.jst.jsp.core.internal.encoding.JSPDocumentLoader;
 import org.eclipse.jst.jsp.core.internal.modelquery.ModelQueryAdapterFactoryForJSP;
 import org.eclipse.jst.jsp.core.internal.parser.JSPReParser;
 import org.eclipse.jst.jsp.core.internal.parser.JSPSourceParser;
+import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
+import org.eclipse.jst.jsp.core.internal.provisional.contenttype.IContentDescriptionForJSP;
 import org.eclipse.jst.jsp.core.internal.text.StructuredTextPartitionerForJSP;
 import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
@@ -47,6 +57,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 import org.eclipse.wst.sse.core.internal.util.Assert;
 import org.eclipse.wst.sse.core.internal.util.Debug;
+import org.eclipse.wst.sse.core.internal.util.DocumentInputStream;
 import org.eclipse.wst.xml.core.internal.DebugAdapterFactory;
 import org.eclipse.wst.xml.core.internal.document.DOMModelImpl;
 import org.eclipse.wst.xml.core.internal.propagate.PropagatingAdapterFactoryImpl;
@@ -110,17 +121,6 @@ public class JSPModelLoader extends AbstractModelLoader {
 		return DEFAULT_MIME_TYPE;
 	}
 
-	/**
-	 * This method should retrieve the model from the file system (or what
-	 * ever the loader is prepared to do). If the resource can not be found
-	 * (and therefore a model can not be created), then it should return null.
-	 */
-	// public void load(Reader reader, IStructuredModel model, EncodingRule
-	// encodingRule) throws java.io.IOException {
-	// initializeEmbeddedTypeFromStream(reader, model);
-	// setLanguageInPageDirective(model);
-	// super.load(reader, model, encodingRule);
-	// }
 	/**
 	 * This method must return a new instance of IStructuredDocument, that has
 	 * been initialized with appropriate parser. For many loaders, the
@@ -197,8 +197,6 @@ public class JSPModelLoader extends AbstractModelLoader {
 		factory = new PageDirectiveAdapterFactory();
 		result.add(factory);
 
-
-
 		return result;
 	}
 
@@ -207,106 +205,65 @@ public class JSPModelLoader extends AbstractModelLoader {
 		return new JSPDocumentHeadContentDetector();
 	}
 
-	/**
-	 * This init method is for the case where we are getting the embedded type
-	 * from the input stream specifically.
-	 */
-	// private void initializeEmbeddedTypeFromStream(Reader reader,
-	// IStructuredModel model) throws IOException {
-	// IFile file = ResourceUtil.getFileFor(model);
-	// JSPDocumentLoader jspDocumentLoader =(JSPDocumentLoader)
-	// getDocumentLoader();
-	// EmbeddedTypeHandler inputEmbeddedContentType =
-	// jspDocumentLoader.getEmbeddedType(file);
-	// EmbeddedTypeHandler existingEmbeddedType = getEmbeddedType(model);
-	// // we don't expect the existing type to be null, but if it is, then
-	// // this is a simply init case, not re-init
-	// if (existingEmbeddedType == null) {
-	// initializeEmbeddedType(model, inputEmbeddedContentType);
-	// }
-	// else {
-	// if (existingEmbeddedType != inputEmbeddedContentType) {
-	// // only need to reinitialize if truely different
-	// reInitializeEmbeddedType(model, existingEmbeddedType,
-	// inputEmbeddedContentType);
-	// }
-	// }
-	// }
-	/**
-	 * This init method is for the case where we are creating an empty model,
-	 * which we always do.
-	 */
-	private void initializeEmbeddedTypeFromDefaultPre(IStructuredModel model) {
-		EmbeddedTypeHandler embeddedContentType = getJSPDefaultEmbeddedType();
-		initializeEmbeddedTypePre(model, embeddedContentType);
+	private IContentDescription getContentDescription(IDocument doc) {
+		if(doc == null)
+			return null;
+		DocumentInputStream in = new DocumentInputStream(doc);
+		return getContentDescription(in);
 	}
-	private void initializeEmbeddedTypeFromDefaultPost(IStructuredModel model) {
-		EmbeddedTypeHandler embeddedContentType = getJSPDefaultEmbeddedType();
-		initializeEmbeddedTypePost(model, embeddedContentType);
-	}
+	
 	/**
-	 * This is "initialize" since is always assumes it hasn't been initalized
-	 * yet.
+	 * 
+	 * @param filePath
+	 * @return the content description, or null if there's no buffer for the filepath
 	 */
-	private void initializeEmbeddedTypePre(IStructuredModel model, EmbeddedTypeHandler embeddedContentType) {
-		// check program logic
-		Assert.isNotNull(embeddedContentType, "Program error: invalid call during model initialization"); //$NON-NLS-1$
-		// once we know the embedded content type, we need to set it in the
-		// PageDirectiveAdapter ... the order of initialization is
-		// critical here, the doc must have been created, but its contents not
-		// set yet,
-		// and all factories must have been set up also.
-		IDOMModel domModel = (IDOMModel) model;
-		IDOMDocument document = domModel.getDocument();
-		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) document.getAdapterFor(PageDirectiveAdapter.class);
-		pageDirectiveAdapter.setEmbeddedType(embeddedContentType);
-		embeddedContentType.initializeFactoryRegistry(model.getFactoryRegistry());
-		
-		
-//		IStructuredDocument structuredDocument = model.getStructuredDocument();
-//		embeddedContentType.initializeParser((JSPCapableParser) structuredDocument.getParser());
-		// adding language here, in this convienent central
-		// location, but some obvious renaming or refactoring
-		// wouldn't hurt, in future.
-		// I needed to add this language setting for JSP Fragment support
-		// Note: I don't think this attempted init counts for much.
-		// I think its always executed when model is very first
-		// being initialized, and doesn't even have content
-		// or an ID yet. I thought I'd leave, since it wouldn't
-		// hurt, in case its called in other circumstances.
-		// String language = getLanguage(model);
-		// pageDirectiveAdapter.setLanguage(language);
-	}
-	private void initializeEmbeddedTypePost(IStructuredModel model, EmbeddedTypeHandler embeddedContentType) {
-		// check program logic
-		Assert.isNotNull(embeddedContentType, "Program error: invalid call during model initialization"); //$NON-NLS-1$
-		// once we know the embedded content type, we need to set it in the
-		// PageDirectiveAdapter ... the order of initialization is
-		// critical here, the doc must have been created, but its contents not
-		// set yet,
-		// and all factories must have been set up also.
-//		IDOMModel domModel = (IDOMModel) model;
-//		IDOMDocument document = domModel.getDocument();
-//		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) document.getAdapterFor(PageDirectiveAdapter.class);
-//		pageDirectiveAdapter.setEmbeddedType(embeddedContentType);
-//		embeddedContentType.initializeFactoryRegistry(model.getFactoryRegistry());
-		
-		
-		IStructuredDocument structuredDocument = model.getStructuredDocument();
-		embeddedContentType.initializeParser((JSPCapableParser) structuredDocument.getParser());
-		// adding language here, in this convienent central
-		// location, but some obvious renaming or refactoring
-		// wouldn't hurt, in future.
-		// I needed to add this language setting for JSP Fragment support
-		// Note: I don't think this attempted init counts for much.
-		// I think its always executed when model is very first
-		// being initialized, and doesn't even have content
-		// or an ID yet. I thought I'd leave, since it wouldn't
-		// hurt, in case its called in other circumstances.
-		// String language = getLanguage(model);
-		// pageDirectiveAdapter.setLanguage(language);
+	private IContentDescription getContentDescription(String filePath) {
+		if(filePath == null)
+			return null;
+
+		IDocument doc = null;
+		ITextFileBuffer buf =  FileBuffers.getTextFileBufferManager().getTextFileBuffer(new Path(filePath));
+		if(buf != null) {
+			doc = buf.getDocument();
+		}
+		return (doc != null) ? getContentDescription(doc) : null;
 	}
 
+	/**
+	 * Returns content description for an input stream
+	 * Assumes it's JSP content.
+	 * Closes the input stream when finished.
+	 * 
+	 * @param in
+	 * @return the IContentDescription for in, or null if in is null
+	 */
+	private IContentDescription getContentDescription(InputStream in) {
+		
+		if(in == null)
+			return null;
+		
+		IContentDescription desc = null;
+		try {
+			
+			IContentType contentTypeJSP = Platform.getContentTypeManager().getContentType(ContentTypeIdForJSP.ContentTypeID_JSP);
+			desc = contentTypeJSP.getDescriptionFor(in, IContentDescription.ALL);
+		}
+		catch (IOException e) {
+			Logger.logException(e);
+		}
+		finally {
+			if(in != null) {
+				try {
+					in.close();
+				}
+				catch (IOException e) {
+					Logger.logException(e);
+				}
+			}
+		}
+		return desc;
+	}
+	
 	/**
 	 * Method getLanguage.
 	 * 
@@ -496,15 +453,42 @@ public class JSPModelLoader extends AbstractModelLoader {
 		return embeddedHandler;
 	}
 
-	/**
-	 * Method initEmbeddedType.
-	 */
 	protected void initEmbeddedTypePre(IStructuredModel model) {
-		initializeEmbeddedTypeFromDefaultPre(model);
+		
+		// note: this will currently only work for models backed by files
+		EmbeddedTypeHandler embeddedContentType = null;
+		IDOMModel domModel = (IDOMModel) model;
+		
+		String possibleFileBaseLocation = model.getBaseLocation();
+		IContentDescription desc = getContentDescription(possibleFileBaseLocation);
+		if(desc != null) {
+			Object prop = null;
+			prop = desc.getProperty(IContentDescriptionForJSP.CONTENT_TYPE_ATTRIBUTE);
+			if(prop != null) {
+				embeddedContentType = EmbeddedTypeRegistryImpl.getInstance().getTypeFor((String)prop);
+			}
+		}
+		
+		IDOMDocument document = domModel.getDocument();
+		PageDirectiveAdapter pageDirectiveAdapter = (PageDirectiveAdapter) document.getAdapterFor(PageDirectiveAdapter.class);
+		
+		if(embeddedContentType != null) {
+			pageDirectiveAdapter.setEmbeddedType(embeddedContentType);
+			embeddedContentType.initializeFactoryRegistry(model.getFactoryRegistry());
+		}
+		else {
+			// use default embeddedType if it couldn't determine one
+			embeddedContentType = getJSPDefaultEmbeddedType();
+			pageDirectiveAdapter.setEmbeddedType(embeddedContentType);
+			embeddedContentType.initializeFactoryRegistry(model.getFactoryRegistry());
+		}
 	}
+	
 	protected void initEmbeddedTypePost(IStructuredModel model) {
-		initializeEmbeddedTypeFromDefaultPost(model);
+		// should already be initialized (from initEmbeddedTypePre)
+		// via IContentDescription
 	}
+	
 	/**
 	 * Method initEmbeddedType.
 	 */
