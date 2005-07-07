@@ -139,7 +139,7 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 	}
 
 	/**
-	 * Removed multiple "total-scope" regions (and leaves one)
+	 * Removes multiple "total-scope" regions (and leaves one)
 	 * for a each partitionType.  This improves performance
 	 * by preventing unnecessary full document validations.
 	 * 
@@ -151,22 +151,37 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 		// ensure there is only one typed region in the list
 		// for regions handled by "total scope" strategies
 		HashMap totalScopeRegions = new HashMap();
+		HashMap partialScopeRegions = new HashMap();
 		List allRegions = new ArrayList();
 		for (int i = 0; i < unfiltered.length; i++) {
+			
 			String partitionType = unfiltered[i].getType();
+			
+			// short circuit loop
+			if(totalScopeRegions.containsKey(partitionType) || partialScopeRegions.containsKey(partitionType))
+				continue;
+			
 			s = getReconcilingStrategy(partitionType);
+			
+			// might be the validator strategy
+			if(s == null) {
+				if(getValidatorStrategy().canValidatePartition(partitionType))
+					s = getValidatorStrategy();
+			}
+			
 			if(s instanceof AbstractStructuredTextReconcilingStrategy) {
 				// only allow one dirty region for a strategy
 				// that has "total scope"
 				if(((AbstractStructuredTextReconcilingStrategy)s).isTotalScope())
 					totalScopeRegions.put(partitionType, unfiltered[i]);
 				else
-					allRegions.add(unfiltered[i]);
+					partialScopeRegions.put(partitionType, unfiltered[i]);
 			}
 			else
-				allRegions.add(unfiltered[i]);
+				partialScopeRegions.put(partitionType, unfiltered[i]);
 		}
 		allRegions.addAll(totalScopeRegions.values());
+		allRegions.addAll(partialScopeRegions.values());
 		ITypedRegion[] filtered = (ITypedRegion[])allRegions.toArray(new ITypedRegion[allRegions.size()]);
 		
 		if(DEBUG)

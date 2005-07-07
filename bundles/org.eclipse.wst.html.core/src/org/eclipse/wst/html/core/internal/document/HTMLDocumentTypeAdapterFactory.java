@@ -12,8 +12,7 @@ package org.eclipse.wst.html.core.internal.document;
 
 
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
@@ -33,14 +32,14 @@ public class HTMLDocumentTypeAdapterFactory implements INodeAdapterFactory, Pref
 	private Preferences preferences = null;
 
 	// for removal later on release()
-	private ArrayList fAdapters = new ArrayList();
+	private HashMap fDoc2AdapterMap = new HashMap();
+	
 	/**
 	 */
 	public HTMLDocumentTypeAdapterFactory() {
 		super();
 		this.preferences = HTMLCorePlugin.getDefault().getPluginPreferences();
-		// this.store =
-		// CommonPreferencesPlugin.getDefault().getPreferenceStore(ContentTypeRegistry.HTML_ID);
+
 		if (this.preferences != null) {
 			updateCases(); // initialize
 			this.preferences.addPropertyChangeListener(this);
@@ -71,11 +70,17 @@ public class HTMLDocumentTypeAdapterFactory implements INodeAdapterFactory, Pref
 				result = oldAdapter;
 			}
 			else {
+				
+				// if there already was an adapter
+				//if(fAdapter != null) 
+				//	fAdapter.release();
+				
 				// note, the factory is included in this case to have a central place
 				// to come back to for case preferences.
 				result = new HTMLDocumentTypeAdapter((IDOMDocument) notifier, this);
 				notifier.addAdapter(result);
-				fAdapters.add(result);
+				
+				fDoc2AdapterMap.put(notifier, result);
 			}
 		}
 		return result;
@@ -133,15 +138,17 @@ public class HTMLDocumentTypeAdapterFactory implements INodeAdapterFactory, Pref
 	/**
 	 */
 	public void release() {
-		// when this factory released, release all the 
-		// adapters its tracking.
-		Iterator iterator = fAdapters.iterator();
-		while (iterator.hasNext()) {
-			HTMLDocumentTypeAdapter adapterToRelease = (HTMLDocumentTypeAdapter) iterator.next();
-			adapterToRelease.release();
-			iterator.remove();
-		}
 		
+		if(!fDoc2AdapterMap.isEmpty()) {
+			Object[] docs = fDoc2AdapterMap.keySet().toArray();
+			DocumentTypeAdapter adapter = null;
+			for (int i = 0; i < docs.length; i++) {
+				adapter = (DocumentTypeAdapter)fDoc2AdapterMap.get(docs[i]);
+				adapter.release();
+				((IDOMDocument)docs[i]).removeAdapter(adapter);
+			}
+			fDoc2AdapterMap.clear();
+		}
 		
 		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=95960
 		if (this.preferences != null) {

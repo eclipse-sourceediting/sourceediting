@@ -56,14 +56,6 @@ public abstract class StructuredReconcileStep extends AbstractReconcileStep impl
 		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
 
-	// these limits are safetys for "runaway" validation cases
-	// should be used to safeguard potentially dangerous loops or potentially
-	// long annotations
-	// (since the painter seems to affect performance when painting long
-	// annotations)
-	public static final int ANNOTATION_LENGTH_LIMIT = 100;
-	public static final int ELEMENT_ERROR_LIMIT = 100;
-
 	protected final IReconcileResult[] EMPTY_RECONCILE_RESULT_SET = new IReconcileResult[0];
 
 	private StructuredReconcileStep fNextStructuredStep = null;

@@ -141,7 +141,10 @@ public class ValidatorStrategy extends AbstractStructuredTextReconcilingStrategy
 	}
 
 	public void reconcile(ITypedRegion tr, DirtyRegion dr) {
-
+		
+		if(isCanceled())
+			return;
+		
 		// for external files, this can be null
 		if (getFile() != null) {
 
@@ -154,7 +157,7 @@ public class ValidatorStrategy extends AbstractStructuredTextReconcilingStrategy
 				ArrayList annotationsToAdd = new ArrayList();
                 // loop all of the relevant validator meta data
                 // to find new annotations
-				for (int i = 0; i < fMetaData.size(); i++) {
+				for (int i = 0; i < fMetaData.size() && !isCanceled(); i++) {
 					vmd = (ValidatorMetaData) fMetaData.get(i);
 					if (vmd.canHandleParitionType(getContentTypeIds(), partitionType)) {
 						// get step for partition type
@@ -196,5 +199,9 @@ public class ValidatorStrategy extends AbstractStructuredTextReconcilingStrategy
 			step = (IReconcileStep) it.next();
 			step.setInputModel(new DocumentAdapter(document));
 		}
+	}
+	
+	public boolean isTotalScope() {
+		return true;
 	}
 }

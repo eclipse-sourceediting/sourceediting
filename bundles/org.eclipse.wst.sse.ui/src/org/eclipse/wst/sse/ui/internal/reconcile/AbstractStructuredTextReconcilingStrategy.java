@@ -63,6 +63,14 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
         DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
     }
     
+	// these limits are safetys for "runaway" validation cases
+	// should be used to safeguard potentially dangerous loops or potentially
+	// long annotations
+	// (since the painter seems to affect performance when painting long
+	// annotations)
+	public static final int ANNOTATION_LENGTH_LIMIT = 25;
+	public static final int ELEMENT_ERROR_LIMIT = 25;
+    
 	protected IDocument fDocument = null;
 	protected IReconcileStep fFirstStep = null;
 	protected IProgressMonitor fProgressMonitor = null;
@@ -342,7 +350,8 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 		if (results == null)
 			return;
 
-		for (int i = 0; i < results.length; i++) {
+		for (int i = 0; i<results.length && i<ELEMENT_ERROR_LIMIT && !isCanceled(); i++) {
+
 			if (isCanceled()) {
                 if(DEBUG)
 				    System.out.println("[trace reconciler] >** PROCESS (adding) WAS CANCELLED **"); //$NON-NLS-1$
