@@ -14,8 +14,7 @@
 			id="org.eclipse.wst.xml.core.ui.XMLCatalogPreferencePage">
 		</page>
 	</extension>
-	<extension
-		point="org.eclipse.wst.xml.ui.catalogFileType">
+	<extension point="org.eclipse.wst.xml.ui.catalogFileType">
 		<fileType
 			extensions="dtd, ent, mod"
 			description="DTD Files"
@@ -74,6 +73,54 @@
 			value="org.eclipse.wst.sse.ui.preferences.xml.colors"
 			target="org.eclipse.core.runtime.xml" />
 	</extension>
+
+	<!--  this xmlsource content type is just to handle some special cases of ill-formed xml in a reasonable manner, 
+		and should not be emulated by clients. Use org.eclipse.core.runtime.xml instead. -->
+	<extension point="org.eclipse.wst.sse.ui.extendedconfiguration">
+		<configuration
+			type="textviewerconfiguration"
+			class="org.eclipse.wst.xml.ui.internal.provisional.StructuredTextViewerConfigurationXML"
+			target="org.eclipse.wst.xml.core.xmlsource" />
+		<configuration
+			type="contentoutlineconfiguration"
+			class="org.eclipse.wst.xml.ui.internal.views.contentoutline.XMLContentOutlineConfiguration"
+			target="org.eclipse.wst.xml.core.xmlsource" />
+		<configuration
+			type="propertysheetconfiguration"
+			class="org.eclipse.wst.xml.ui.internal.views.properties.XMLPropertySheetConfiguration"
+			target="org.eclipse.wst.xml.core.xmlsource" />
+		<configuration
+			type="sourceeditingtexttools"
+			class="org.eclipse.wst.xml.ui.internal.provisional.XMLSourceEditingTextTools"
+			target="org.eclipse.wst.xml.core.xmlsource" />
+		<configuration
+			type="characterpairmatcher"
+			class="org.eclipse.wst.xml.ui.internal.text.XMLDocumentRegionEdgeMatcher"
+			target="org.eclipse.wst.xml.core.xmlsource" />
+		<configuration
+			type="structuredtextfoldingprovider"
+			class="org.eclipse.wst.xml.ui.internal.projection.StructuredTextFoldingProviderXML"
+			target="org.eclipse.wst.xml.core.xmlsource" />
+		<definition
+			type="preferencepages"
+			value="org.eclipse.wst.sse.ui.preferences.xml"
+			target="org.eclipse.wst.xml.core.xmlsource" />
+		<definition
+			type="preferencepages"
+			value="org.eclipse.wst.sse.ui.preferences.xml.source"
+			target="org.eclipse.wst.xml.core.xmlsource" />
+		<definition
+			type="preferencepages"
+			value="org.eclipse.wst.sse.ui.preferences.xml.templates"
+			target="org.eclipse.wst.xml.core.xmlsource" />
+		<definition
+			type="preferencepages"
+			value="org.eclipse.wst.sse.ui.preferences.xml.colors"
+			target="org.eclipse.wst.xml.core.xmlsource" />
+	</extension>
+
+
+
 	<extension
 		point="org.eclipse.core.filebuffers.annotationModelCreation">
 		<factory
@@ -171,18 +218,18 @@
 		<editor
 			name="%XML_Editor.name"
 			icon="icons/xmldoc.gif"
-            default="true"
+			default="true"
 			contributorClass="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorActionBarContributor"
 			class="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"
 			id="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart">
 			<contentTypeBinding
 				contentTypeId="org.eclipse.core.runtime.xml" />
-            <contentTypeBinding
-                contentTypeId="org.eclipse.wst.xml.core.xmlsource" />
-				
+			<contentTypeBinding
+				contentTypeId="org.eclipse.wst.xml.core.xmlsource" />
+
 		</editor>
 	</extension>
-	
+
 	<!-- Editor actionsets -->
 	<extension point="org.eclipse.ui.actionSetPartAssociations">
 		<actionSetPartAssociation
@@ -365,7 +412,7 @@
 			</action>
 		</viewerContribution>
 	</extension>
-	
+
 	<!-- ====================================================== -->
 	<!-- Define Assign Validate action on .xml file             -->
 	<!-- ====================================================== -->
@@ -410,7 +457,7 @@
 			</action>
 		</objectContribution>
 	</extension>
-	
+
 
 	<!-- ====================================================== -->
 	<!-- An extension for creating nested validation messages.  -->
@@ -437,7 +484,7 @@
 			</action>
 		</objectContribution>
 	</extension>
-	
+
 	<!-- ====================================================== -->
 	<!-- Register the XML validator with the validation 		-->
 	<!-- framework. 										    -->
@@ -485,6 +532,6 @@
 			</run>
 		</validator>
 	</extension>
-	
-	
+
+
 </plugin>

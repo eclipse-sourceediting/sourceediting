@@ -115,6 +115,23 @@ public class XMLResourceEncodingDetector extends AbstractResourceEncodingDetecto
 	}
 
 	public boolean isDeclDetected() {
+		if (!fHeaderParsed) {
+			try {
+				parseInput();
+			}
+			catch (IOException e) {
+				fDeclDetected = false;
+			}
+			// we keep track of if header's already been
+			// parse, so can make
+			// multiple 'get' calls, without causing
+			// reparsing.
+			fHeaderParsed = true;
+			// Note: there is a "hidden assumption" here
+			// that an empty
+			// string in content should be treated same as
+			// not present.
+		}
 		return fDeclDetected;
 	}
 

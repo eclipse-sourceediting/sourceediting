@@ -28,15 +28,19 @@ import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
 public final class ContentDescriberForXML implements ITextContentDescriber {
 	private final static QualifiedName[] SUPPORTED_OPTIONS = {IContentDescription.CHARSET, IContentDescription.BYTE_ORDER_MARK, IContentDescriptionExtended.DETECTED_CHARSET, IContentDescriptionExtended.UNSUPPORTED_CHARSET, IContentDescriptionExtended.APPROPRIATE_DEFAULT};
 	/**
-	 * <code>restrictedMode</code> is used just for testing/experiments. 
+	 * <code>restrictedMode</code> is used just for testing/experiments.
 	 * 
-	 *  If in restrictedMode, our "custom" contentType is seen as valid only in cases
-	 *  that the platform's standard one does not cover. 
+	 * If in restrictedMode, our "custom" contentType is seen as valid only in
+	 * cases that the platform's standard one does not cover.
 	 */
 	private boolean restrictedMode = true;
+	private XMLResourceEncodingDetector fResourceEncodingDetector;
 
 	private IResourceCharsetDetector getDetector() {
-		return new XMLResourceEncodingDetector();
+		if (fResourceEncodingDetector == null) {
+			fResourceEncodingDetector = new XMLResourceEncodingDetector();
+		}
+		return fResourceEncodingDetector;
 	}
 
 	/*
@@ -46,10 +50,17 @@ public final class ContentDescriberForXML implements ITextContentDescriber {
 	 *      org.eclipse.core.runtime.content.IContentDescription)
 	 */
 	public int describe(InputStream contents, IContentDescription description) throws IOException {
-		int result = IContentDescriber.INDETERMINATE;
+		// for this special case, always assume invalid, unless
+		// our special circumstances are met.
+		int result = IContentDescriber.INVALID;
 
-		result = calculateSupportedOptions(result, contents, description);
-
+		if (description == null) {
+			// purely request for validty
+			result = determineValidity(result, contents);
+		}
+		else {
+			result = calculateSupportedOptions(result, contents, description);
+		}
 		return result;
 	}
 
@@ -60,10 +71,17 @@ public final class ContentDescriberForXML implements ITextContentDescriber {
 	 *      org.eclipse.core.runtime.content.IContentDescription)
 	 */
 	public int describe(Reader contents, IContentDescription description) throws IOException {
-		int result = IContentDescriber.INDETERMINATE;
+		// for this special case, always assume invalid, unless
+		// our special circumstances are met.
+		int result = IContentDescriber.INVALID;
 
-		result = calculateSupportedOptions(result, contents, description);
-
+		if (description == null) {
+			// purely request for validty
+			result = determineValidity(result, contents);
+		}
+		else {
+			result = calculateSupportedOptions(result, contents, description);
+		}
 		return result;
 	}
 
@@ -87,6 +105,20 @@ public final class ContentDescriberForXML implements ITextContentDescriber {
 		return returnResult;
 	}
 
+	private int determineValidity(int result, InputStream contents) throws IOException {
+		int returnResult = result;
+		IResourceCharsetDetector detector = getDetector();
+		detector.set(contents);
+		returnResult = determineValidity(detector, returnResult);
+		return returnResult;
+	}
+	private int determineValidity(int result, Reader contents) throws IOException {
+		int returnResult = result;
+		IResourceCharsetDetector detector = getDetector();
+		detector.set(contents);
+		returnResult = determineValidity(detector, returnResult);
+		return returnResult;
+	}
 	/**
 	 * @param contents
 	 * @param description
@@ -129,7 +161,7 @@ public final class ContentDescriberForXML implements ITextContentDescriber {
 	private boolean isRelevent(IContentDescription description) {
 		boolean result = false;
 		if (description == null)
-			result = true;
+			result = false;
 		else if (description.isRequested(IContentDescription.BYTE_ORDER_MARK))
 			result = true;
 		else if (description.isRequested(IContentDescription.CHARSET))
@@ -140,9 +172,6 @@ public final class ContentDescriberForXML implements ITextContentDescriber {
 			result = true;
 		else if (description.isRequested(IContentDescriptionExtended.UNSUPPORTED_CHARSET))
 			result = true;
-		// else if
-		// (description.isRequested(IContentDescriptionExtended.ENCODING_MEMENTO))
-		// result = true;
 		return result;
 	}
 
@@ -153,7 +182,7 @@ public final class ContentDescriberForXML implements ITextContentDescriber {
 	 */
 	private int handleCalculations(int result, IContentDescription description, IResourceCharsetDetector detector) throws IOException {
 		int returnResult = result;
-		EncodingMemento encodingMemento = ((XMLResourceEncodingDetector)detector).getEncodingMemento();
+		EncodingMemento encodingMemento = ((XMLResourceEncodingDetector) detector).getEncodingMemento();
 		if (description != null) {
 			// TODO: I need to verify to see if this BOM work is always done
 			// by text type.
@@ -219,7 +248,7 @@ public final class ContentDescriberForXML implements ITextContentDescriber {
 		if (detector instanceof XMLResourceEncodingDetector) {
 			XMLResourceEncodingDetector xmlResourceDetector = (XMLResourceEncodingDetector) detector;
 			if (xmlResourceDetector.isDeclDetected()) {
-				if (restrictedMode ) {
+				if (restrictedMode) {
 					// if there is no initial whitespace, then platform's
 					// default one will do.
 					if (xmlResourceDetector.hasInitialWhiteSpace()) {

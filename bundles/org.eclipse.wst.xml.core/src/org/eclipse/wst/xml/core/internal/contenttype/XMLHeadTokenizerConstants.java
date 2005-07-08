@@ -12,9 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.core.internal.contenttype;
 
-
-;
-
 public interface XMLHeadTokenizerConstants extends EncodingParserConstants {
 
 	final String XMLDeclEnd = "XMLDeclEnd"; //$NON-NLS-1$
