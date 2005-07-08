@@ -175,7 +175,7 @@
 		</contextType>
 		<include
 			file="templates/cssdefault-templates.xml"
-			translations="templates/cssdefault-templates.properties">
+			translations="$nl$/templates/cssdefault-templates.properties">
 		</include>
 	</extension>
 </plugin>

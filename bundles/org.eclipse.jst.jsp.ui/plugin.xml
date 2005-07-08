@@ -358,7 +358,7 @@
 
 		<include
 			file="templates/jspdefault-templates.xml"
-			translations="templates/jspdefault-templates.properties" />
+			translations="$nl$/templates/jspdefault-templates.properties" />
 
 	</extension>
 

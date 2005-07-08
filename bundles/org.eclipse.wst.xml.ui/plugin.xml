@@ -210,7 +210,7 @@
 		</contextType>
 		<include
 			file="templates/xmldefault-templates.xml"
-			translations="templates/xmldefault-templates.properties">
+			translations="$nl$/templates/xmldefault-templates.properties">
 		</include>
 	</extension>
 

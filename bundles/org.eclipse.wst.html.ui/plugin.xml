@@ -241,7 +241,7 @@
 		</contextType>
 		<include
 			file="templates/htmldefault-templates.xml"
-			translations="templates/htmldefault-templates.properties">
+			translations="$nl$/templates/htmldefault-templates.properties">
 		</include>
 	</extension>
 	<!-- initialize html ui preferences -->
