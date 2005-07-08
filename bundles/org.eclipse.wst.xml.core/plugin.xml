@@ -108,7 +108,7 @@
 
 	<extension point="org.eclipse.core.runtime.contentTypes">
 		<content-type
-			file-extensions="xml,xsl,xslt,wsdl,xsd,exsd"
+			file-extensions="xml,xsl,xslt,wsdl,xsd,exsd,xmi"
 			priority="low"
 			name="%XML_Content_Type_Extension_Element.name"
 			id="xmlsource"
@@ -127,6 +127,17 @@
 			id="xslsource"
 			base-type="org.eclipse.core.runtime.xml"
 			default-charset="UTF-8">
+		</content-type>
+	</extension>
+
+	<!--  https://bugs.eclipse.org/bugs/show_bug.cgi?id=103083 -->
+	<extension point="org.eclipse.core.runtime.contentTypes">
+		<content-type
+			file-extensions="xmi"
+			priority="low"
+			name="XMI Content Type"
+			id="xmisource"
+			base-type="org.eclipse.core.runtime.xml">
 		</content-type>
 	</extension>
 
