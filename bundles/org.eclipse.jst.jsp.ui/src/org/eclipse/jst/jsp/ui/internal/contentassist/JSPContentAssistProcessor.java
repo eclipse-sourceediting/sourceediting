@@ -208,10 +208,13 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 	protected void addAttributeNameProposals(ContentAssistRequest contentAssistRequest) {
 		addTemplates(contentAssistRequest, TemplateContextTypeIdsJSP.ATTRIBUTE);
 
-		// specific fix for CMVC 274033
 		// no attribute proposals for <jsp:useBean />
 		String nodeName = contentAssistRequest.getNode().getNodeName();
-		if (nodeName.indexOf(':') != -1) { //$NON-NLS-1$
+		
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=85296
+		// if it IS -1, that means it's custom tag
+		// so don't re-add attribute name proposals
+		if (nodeName.indexOf(':') == -1) { //$NON-NLS-1$
 			super.addAttributeNameProposals(contentAssistRequest);
 		}
 	}
