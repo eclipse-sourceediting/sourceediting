@@ -21,13 +21,14 @@ import java.nio.charset.UnsupportedCharsetException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Properties;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.wst.sse.core.internal.encoding.util.CharsetResourceHandler;
+import org.eclipse.wst.sse.core.internal.encoding.util.Logger;
 import org.osgi.framework.Bundle;
-
 
 /**
  * CommonCharsets is a utility class to provide a central place to map some
@@ -81,7 +82,8 @@ public final class CommonCharsetNames {
 			try {
 				propertiesInputStream = location.openStream();
 				defaultIANAmappings.load(propertiesInputStream);
-			} catch (IOException e) {
+			}
+			catch (IOException e) {
 				// if can't read, just assume there's no
 				// default IANA mappings
 				// and repeated attempts will not occur,
@@ -113,7 +115,8 @@ public final class CommonCharsetNames {
 			try {
 				Charset charset = Charset.forName(charsetName);
 				result = charset.displayName();
-			} catch (UnsupportedCharsetException e) {
+			}
+			catch (UnsupportedCharsetException e) {
 				// if not supported, the display name is
 				// the least of clients concerns :)
 			}
@@ -139,9 +142,11 @@ public final class CommonCharsetNames {
 			if (charset.name() != null) {
 				preferredName = charset.name();
 			}
-		} catch (IllegalCharsetNameException e) {
+		}
+		catch (IllegalCharsetNameException e) {
 			// just return input if illegal
-		} catch (UnsupportedCharsetException e) {
+		}
+		catch (UnsupportedCharsetException e) {
 			// just return input if illegal
 		}
 		return preferredName;
@@ -160,9 +165,11 @@ public final class CommonCharsetNames {
 		String guessedName = charsetName;
 		try {
 			guessedName = CodedIO.getAppropriateJavaCharset(charsetName);
-		} catch (IllegalCharsetNameException e) {
+		}
+		catch (IllegalCharsetNameException e) {
 			// just ignore if illegal
-		} catch (UnsupportedCharsetException e) {
+		}
+		catch (UnsupportedCharsetException e) {
 			// just ignore if illegal
 		}
 		if (getEncodings().contains(guessedName))
@@ -190,23 +197,44 @@ public final class CommonCharsetNames {
 			supportedEncodingDisplayNames = new Hashtable();
 			encodings = new ArrayList();
 
-			String totalNumString = CharsetResourceHandler.getString("totalnumber");//$NON-NLS-1$
-			int totalNum = 0;
-			if (totalNumString.length() != 0) {
-				try {
-					totalNum = Integer.valueOf(totalNumString).intValue();
+			ResourceBundle bundle = null;
+			InputStream bundleStream = null;
+			try {
+				URL bundleURL = Platform.find(Platform.getBundle(ICodedResourcePlugin.ID), Path.fromOSString("$nl$/config/charset.properties")); //$NON-NLS-1$
+				if (bundleURL != null) {
+					bundleStream = bundleURL.openStream();
+					bundle = new PropertyResourceBundle(bundleStream);
 				}
-				catch (NumberFormatException e) {
-					totalNum = 0;
+
+				String totalNumString = bundle.getString("totalnumber");//$NON-NLS-1$
+				int totalNum = 0;
+				if (totalNumString.length() != 0) {
+					try {
+						totalNum = Integer.valueOf(totalNumString).intValue();
+					}
+					catch (NumberFormatException e) {
+						totalNum = 0;
+					}
+				}
+
+				for (int i = 0; i < totalNum; i++) {
+					String iana = bundle.getString("codeset." + i + ".iana");//$NON-NLS-2$//$NON-NLS-1$
+					String displayName = bundle.getString("codeset." + i + ".label");//$NON-NLS-2$//$NON-NLS-1$
+
+					encodings.add(iana);
+					supportedEncodingDisplayNames.put(iana, displayName);
 				}
 			}
-
-			for (int i = 0; i < totalNum; i++) {
-				String iana = CharsetResourceHandler.getString("codeset." + i + ".iana");//$NON-NLS-2$//$NON-NLS-1$
-				String displayName = CharsetResourceHandler.getString("codeset." + i + ".label");//$NON-NLS-2$//$NON-NLS-1$
-
-				encodings.add(iana);
-				supportedEncodingDisplayNames.put(iana, displayName);
+			catch (IOException e) {
+				Logger.logException("invalid install or configuration", e); //$NON-NLS-1$
+			}
+			finally {
+				try {
+					if (bundleStream != null)
+						bundleStream.close();
+				}
+				catch (IOException x) {
+				}
 			}
 		}
 	}

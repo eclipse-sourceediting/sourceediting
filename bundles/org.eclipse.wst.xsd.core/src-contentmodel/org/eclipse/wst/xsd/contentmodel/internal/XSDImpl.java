@@ -172,7 +172,9 @@ public class XSDImpl
     if (xsdSchema != null)
     {
       cmDocument = (CMDocument) getAdapter(xsdSchema);
-      CMDocumentEncodingHelper.setEncodingInfo(cmDocument, uri);
+    // This and related methods were doing nothing, so removed.
+    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=102070
+    //  CMDocumentEncodingHelper.setEncodingInfo(cmDocument, uri);
     }
     return cmDocument;
   }

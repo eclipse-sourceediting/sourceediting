@@ -78,7 +78,10 @@ public class DTDImpl {
 	public static CMDocument buildCMDocument(String uri) {
 		DTDFile dtdFile = buildDTDModel(uri);
 		CMDocument cmDocument = (CMDocument) getAdapter(dtdFile);
-		CMDocumentEncodingHelper.setEncodingInfo(cmDocument, uri);
+		
+		// This method was accomplishing nothing, so removed. 
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=102070
+		//CMDocumentEncodingHelper.setEncodingInfo(cmDocument, uri);
 		return cmDocument;
 	}
 
