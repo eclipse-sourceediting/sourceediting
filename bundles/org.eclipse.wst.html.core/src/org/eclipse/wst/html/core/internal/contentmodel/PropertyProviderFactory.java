@@ -12,6 +12,7 @@ package org.eclipse.wst.html.core.internal.contentmodel;
 
 import java.util.Hashtable;
 
+import org.eclipse.wst.html.core.internal.HTMLCorePlugin;
 import org.eclipse.wst.html.core.internal.provisional.HTMLCMProperties;
 import org.eclipse.wst.xml.core.internal.contentmodel.annotation.AnnotationMap;
 
@@ -62,7 +63,7 @@ final class PropertyProviderFactory {
 	 * gets documentation for the element
 	 */
 	class PPTagInfo extends AbstractElementPropertyProvider {
-		private final static String htmlAnnotationLoc = "platform:/plugin/org.eclipse.wst.html.core/data/htmref.xml"; //$NON-NLS-1$
+		private final static String htmlAnnotationLoc = "data/htmref.xml"; //$NON-NLS-1$
 		protected AnnotationMap fAnnotationMap = null;
 
 		public PPTagInfo() {
@@ -77,7 +78,7 @@ final class PropertyProviderFactory {
 			if (fAnnotationMap == null) {
 				fAnnotationMap = new AnnotationMap();
 				try {
-					fAnnotationMap.load(htmlAnnotationLoc);
+					fAnnotationMap.load(htmlAnnotationLoc, HTMLCorePlugin.getDefault().getBundle().getSymbolicName());
 				}
 				catch (Exception e) {
 					// no annotation available

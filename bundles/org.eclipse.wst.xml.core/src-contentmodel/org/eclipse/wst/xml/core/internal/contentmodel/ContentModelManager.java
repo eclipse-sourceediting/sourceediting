@@ -66,10 +66,9 @@ public class ContentModelManager extends Plugin {
 	}
 
 
-	public List getAnnotationFiles(String publicId) {
-		return getAnnotationFileRegistry().getAnnotationFiles(publicId);
+	public List getAnnotationFilesInfos(String publicId) {
+		return getAnnotationFileRegistry().getAnnotationFilesInfos(publicId);
 	}
-
 
 	private AnnotationFileRegistry getAnnotationFileRegistry() {
 		if (annotationFileRegistry == null) {

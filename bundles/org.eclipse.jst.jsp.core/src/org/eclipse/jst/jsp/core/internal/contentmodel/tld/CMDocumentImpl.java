@@ -27,6 +27,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMNamespace;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.ContentModelManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.annotation.AnnotationMap;
+import org.eclipse.wst.xml.core.internal.contentmodel.internal.annotation.AnnotationFileInfo;
 import org.eclipse.wst.xml.core.internal.contentmodel.internal.annotation.AnnotationFileParser;
 
 public class CMDocumentImpl implements TLDDocument {
@@ -107,12 +108,12 @@ public class CMDocumentImpl implements TLDDocument {
 		if (fAnnotationMap == null) {
 			fAnnotationMap = new AnnotationMap();
 			
-		    List annotationFiles = ContentModelManager.getInstance().getAnnotationFiles(getUri());
+			List annotationFiles = ContentModelManager.getInstance().getAnnotationFilesInfos(getUri());
 		    for (Iterator i = annotationFiles.iterator(); i.hasNext();) {
 		    	try {
-		    		String annotationFileURI = (String) i.next();
+		    		AnnotationFileInfo fileInfo = (AnnotationFileInfo) i.next();
 		    		AnnotationFileParser parser = new AnnotationFileParser();
-		    		parser.parse(fAnnotationMap, annotationFileURI);
+		    		parser.parse(fAnnotationMap, fileInfo);
 		        } catch (Exception e) {
 		        	Logger.log(Logger.WARNING_DEBUG, "Exception thrown in CMDocumentImpl#getAnnotationMap", e); //$NON-NLS-1$
 		        }
