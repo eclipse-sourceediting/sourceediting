@@ -7,10 +7,12 @@
 			name="%_UI_EDITOR_NAME"
 			default="true"
 			icon="icons/XSDFile.gif"
-			extensions="xsd"
 			contributorClass="org.eclipse.wst.xsd.ui.internal.XSDActionBarContributor"
 			class="org.eclipse.wst.xsd.ui.internal.XSDEditor"
 			id="org.eclipse.wst.xsd.ui.XSDEditor">
+            <contentTypeBinding
+                contentTypeId="org.eclipse.wst.xsd.core.xsdsource" />
+                
 		</editor>
 	</extension>
 	<!-- drop targets for XSDTextEditor-->
