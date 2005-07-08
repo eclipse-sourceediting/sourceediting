@@ -14,6 +14,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.eclipse.wst.html.core.tests.misc.HTMLCorePreferencesTest;
+import org.eclipse.wst.html.core.tests.misc.HTMLTagInfoTest;
 
 
 
@@ -32,5 +33,6 @@ public class HTMLCoreTestSuite extends TestSuite {
 
 		addTest(ModelParserTests.suite());
 		addTest(new TestSuite(HTMLCorePreferencesTest.class));
+		addTest(new TestSuite(HTMLTagInfoTest.class));
 	}
 }
