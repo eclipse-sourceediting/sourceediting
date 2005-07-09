@@ -99,7 +99,7 @@ public class XMLValidator
    * @return The newly created XML reader or null if unsuccessful.
    * @throws Exception
    */
-  protected XMLReader createXMLReader(final XMLValidationInfo valinfo, String schemaLocationString, XMLEntityResolver entityResolver) throws Exception
+  protected XMLReader createXMLReader(final XMLValidationInfo valinfo, XMLEntityResolver entityResolver) throws Exception
   {     
     XMLReader reader = null;
     // move to Xerces-2... add the contextClassLoader stuff
@@ -128,12 +128,7 @@ public class XMLValidator
       {  
         reader.setProperty("http://apache.org/xml/properties/internal/entity-resolver", entityResolver);
       }  
-      reader.setProperty("http://xml.org/sax/properties/declaration-handler", new MyDeclHandler());
-      
-      if (schemaLocationString.length() > 0)
-      {   
-        reader.setProperty("http://apache.org/xml/properties/schema/external-schemaLocation", schemaLocationString);
-      }
+      reader.setProperty("http://xml.org/sax/properties/declaration-handler", new MyDeclHandler());     
     } 
     catch(Exception e)
     { 
@@ -210,7 +205,7 @@ public class XMLValidator
         valinfo.setElementDeclarationCount(helper.numDTDElements);
         valinfo.setNamespaceEncountered(helper.isNamespaceEncountered);
         valinfo.setGrammarEncountered(helper.isGrammarEncountered);
-        XMLReader reader = createXMLReader(valinfo, helper.schemaLocationString, entityResolver);
+        XMLReader reader = createXMLReader(valinfo, entityResolver);
         XMLErrorHandler errorhandler = new XMLErrorHandler(valinfo);
         reader.setErrorHandler(errorhandler);
         

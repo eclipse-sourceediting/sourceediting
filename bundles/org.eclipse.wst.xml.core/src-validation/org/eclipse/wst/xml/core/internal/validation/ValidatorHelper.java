@@ -12,11 +12,10 @@
 package org.eclipse.wst.xml.core.internal.validation;
 
 import java.io.Reader;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
-
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -34,7 +33,6 @@ public class ValidatorHelper
 {                           
   public static final String copyright = "(c) Copyright IBM Corporation 2002.";
   public List namespaceURIList = new Vector();
-  public String schemaInstancePrefix = null;
   public boolean isGrammarEncountered = false;    
   public boolean isDTDEncountered = false;
   public boolean isNamespaceEncountered = false;
@@ -146,7 +144,6 @@ public class ValidatorHelper
       InputSource inputSource = new InputSource(uri);
       inputSource.setCharacterStream(characterStream);
       reader.parse(inputSource);
-      computeSchemaLocationString(uriResolver);
     }
     catch (Exception e)
     {     
@@ -164,6 +161,8 @@ public class ValidatorHelper
     /* (non-Javadoc)
      * @see org.xml.sax.ErrorHandler#error(org.xml.sax.SAXParseException)
      */
+    boolean isRootElement = true;
+    
     public void error(SAXParseException e) throws SAXException
     {
     }
@@ -199,42 +198,59 @@ public class ValidatorHelper
       }
       return name;
     }
+    
+    public String getPrefixedName(String prefix, String localName)
+    {
+      return prefix != null && prefix.length() > 0 ? prefix + ":" + localName : localName;     
+    }
 
     public void startElement(String namespaceURI, String localName, String rawName, Attributes atts)
     {      
       //String explicitLocation = null;
-      int nAtts = atts.getLength();  
-
-      for (int i =0; i < nAtts; i++)
-      {              
-        String attributeName = atts.getQName(i);       
-        if (attributeName.equals("xmlns") || attributeName.startsWith("xmlns:"))
-        {                                         
-          isNamespaceEncountered = true;    
-          String value = atts.getValue(i);        
-          namespaceURIList.add(value);            
-          if (value.startsWith("http://www.w3.org/") && value.endsWith("/XMLSchema-instance"))
+      if (isRootElement)
+      {  
+        
+        isRootElement = false;  
+        int nAtts = atts.getLength();    
+        String schemaInstancePrefix = null;
+        for (int i =0; i < nAtts; i++)
+        {              
+          String attributeName = atts.getQName(i);       
+          if (attributeName.equals("xmlns") || attributeName.startsWith("xmlns:"))
+          {                                         
+            isNamespaceEncountered = true;    
+            String value = atts.getValue(i);                 
+            if (value.startsWith("http://www.w3.org/") && value.endsWith("/XMLSchema-instance"))
+            {
+              schemaInstancePrefix = attributeName.equals("xmlns") ? "" : getUnprefixedName(attributeName);
+            }                   
+          }                 
+        }
+        
+        String prefix = getPrefix(rawName);
+        String rootElementNamespaceDeclarationName = (prefix != null && prefix.length() > 0) ? "xmlns:" + prefix : "xmlns";
+        String rootElementNamespace = rootElementNamespaceDeclarationName != null ? atts.getValue(rootElementNamespaceDeclarationName) : null;        
+        
+        String location = null;
+        
+        // first we use any 'xsi:schemaLocation' or 'xsi:noNamespaceSchemaLocation' attribute
+        // to determine a location
+        if (schemaInstancePrefix != null)
+        {                     
+          location = atts.getValue(getPrefixedName(schemaInstancePrefix, "noNamespaceSchemaLocation"));
+          if (location == null)
           {
-            schemaInstancePrefix = attributeName.equals("xmlns") ? "" : getUnprefixedName(attributeName);
-          }                   
-        }                 
-      }
-            
-      for (int i =0; i < nAtts; i++)
-      {               
-        String attributeName = atts.getQName(i);                       
-        if (isNamespaceEncountered && schemaInstancePrefix != null)
-        {          
-          String unprefixedName = getUnprefixedName(attributeName);
-          if (unprefixedName.equals("schemaLocation") || unprefixedName.equals("noNamespaceSchemaLocation"))
-          {
-            String prefix = getPrefix(attributeName);             
-            if (prefix == null && schemaInstancePrefix.length() == 0 || prefix.equals(schemaInstancePrefix))
-            {  
-              // here we detect xsi:schemaLocation or xsi:noNamespaceSchemaLocation attributes
-              isGrammarEncountered = true; 
-            }
+            location = atts.getValue(getPrefixedName(schemaInstancePrefix, "schemaLocation"));  
           }
+        }  
+        if (location == null && rootElementNamespace != null)
+        {
+          location = URIResolverPlugin.createResolver().resolve(null, rootElementNamespace, null);                                          
+        }           
+        
+        if (location != null)
+        {  
+          isGrammarEncountered = true;
         }        
       }
     }     
@@ -247,39 +263,6 @@ public class ValidatorHelper
     }
   }   
        
-  /**
-   * Compute a schema location string to be used in validation.
-   * 
-   * @param uriResolver Used to resolve URIs for the location string.
-   * @return The schema location string.
-   */
-  protected String computeSchemaLocationString(URIResolver uriResolver)
-  {
-    schemaLocationString = "";
-    if (namespaceURIList.size() > 0 && uriResolver != null)
-    {
-      for (Iterator i = namespaceURIList.iterator(); i.hasNext(); )
-      {
-        String namespaceURI = (String)i.next();
-        String location = uriResolver.resolve(null, namespaceURI, null);
-        if (location != null)
-        {                                     
-          location = replace(location, " ", "%20");
-          if (IS_LINUX)
-          {
-            if (location.startsWith("/"))
-            {
-              location = "file://" + location;
-            }
-          }
-          schemaLocationString += namespaceURI + " " + location + " ";
-          isGrammarEncountered = true; 
-        }
-      }   
-    }     
-    return schemaLocationString;
-  }  
-  
   
   /**
    * Replace all instances in the string of the old pattern with the new pattern.
