@@ -57,10 +57,9 @@ public class TestContentTypeDetectionForXML extends TestContentTypeDetection {
 		doTest(expectedXSLContentType, "testfiles/xml/MalformedNoEncoding.xsl", null);
 	}
 
-	// TODO: fix to use "illformed" xsl
-//	public void testFile107P() throws CoreException, IOException {
-//		doTestForParent(expectedXMLContentType, "testfiles/xml/MalformedNoEncoding.xsl", null);
-//	}
+	public void testFile107P() throws CoreException, IOException {
+		doTestForParent(expectedXMLContentType, "testfiles/xml/MalformedNoEncoding.xsl", null);
+	}
 
 	public void testFile108() throws CoreException, IOException {
 		doTest(expectedXMLContentType, "testfiles/xml/NoEncoding.xml", null);
@@ -130,26 +129,26 @@ public class TestContentTypeDetectionForXML extends TestContentTypeDetection {
 		doTest(expectedCustomXMLContentType, "testfiles/xml/testWSBeforeXMLDecl3.xml", null);
 	}
 
-//	public void testFile120P() throws CoreException, IOException {
-//		doTestForParent(expectedXMLContentType, "testfiles/xml/testNoXMLDecl.xml", null);
-//	}
+	public void testFile120P() throws CoreException, IOException {
+		doTestForParent(expectedXMLContentType, "testfiles/xml/testNoXMLDecl.xml", null);
+	}
 
 	public void testFile121() throws CoreException, IOException {
 		// tag (not just white space) before xml declaration.
 		doTest(expectedXMLContentType, "testfiles/xml/testNoXMLDeclAtFirst.xml", null);
 	}
 
-//	public void testFile121P() throws CoreException, IOException {
-//		doTestForParent(expectedXMLContentType, "testfiles/xml/testNoXMLDeclAtFirst.xml", null);
-//	}
+	public void testFile121P() throws CoreException, IOException {
+		doTestForParent(expectedXMLContentType, "testfiles/xml/testNoXMLDeclAtFirst.xml", null);
+	}
 
 	public void testFile122() throws CoreException, IOException {
 		doTest(expectedXMLContentType, "testfiles/xml/testNoXMLDeclInLargeFile.xml", null);
 	}
 
-//	public void testFile122P() throws CoreException, IOException {
-//		doTestForParent(expectedXMLContentType, "testfiles/xml/testNoXMLDeclInLargeFile.xml", null);
-//	}
+	public void testFile122P() throws CoreException, IOException {
+		doTestForParent(expectedXMLContentType, "testfiles/xml/testNoXMLDeclInLargeFile.xml", null);
+	}
 
 	public void testFile123() throws CoreException, IOException {
 		doTest(expectedXMLContentType, "testfiles/xml/testUTF16.xml", null);
@@ -160,18 +159,18 @@ public class TestContentTypeDetectionForXML extends TestContentTypeDetection {
 		doTest(expectedXMLContentType, "testfiles/xml/UTF16LEAtStartOfLargeFile.xml", null);
 	}
 
-//	public void testFile124P() throws CoreException, IOException {
-//		doTestForParent(expectedXMLContentType, "testfiles/xml/UTF16LEAtStartOfLargeFile.xml", null);
-//	}
+	public void testFile124P() throws CoreException, IOException {
+		doTestForParent(expectedXMLContentType, "testfiles/xml/UTF16LEAtStartOfLargeFile.xml", null);
+	}
 
 	public void testFile125() throws CoreException, IOException {
 		// illformed, is in utf16, but not in header, not in encoding= spec.
 		doTest(expectedXMLContentType, "testfiles/xml/utf16UnicodeStreamWithNoEncodingInHeader2.xml", null);
 	}
 
-//	public void testFile125P() throws CoreException, IOException {
-//		doTestForParent(expectedXMLContentType, "testfiles/xml/utf16UnicodeStreamWithNoEncodingInHeader2.xml", null);
-//	}
+	public void testFile125P() throws CoreException, IOException {
+		doTestForParent(expectedXMLContentType, "testfiles/xml/utf16UnicodeStreamWithNoEncodingInHeader2.xml", null);
+	}
 
 	public void testFile126() throws CoreException, IOException {
 		doTest(expectedXMLContentType, "testfiles/xml/utf16UnicodeStreamWithNoEncodingInHeaderBE.xml", null);
