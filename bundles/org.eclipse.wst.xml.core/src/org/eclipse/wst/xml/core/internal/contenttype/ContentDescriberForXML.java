@@ -99,6 +99,7 @@ public final class ContentDescriberForXML implements ITextContentDescriber {
 		int returnResult = result;
 		if (isRelevent(description)) {
 			IResourceCharsetDetector detector = getDetector();
+			contents.reset();
 			detector.set(contents);
 			returnResult = handleCalculations(result, description, detector);
 		}
@@ -108,6 +109,7 @@ public final class ContentDescriberForXML implements ITextContentDescriber {
 	private int determineValidity(int result, InputStream contents) throws IOException {
 		int returnResult = result;
 		IResourceCharsetDetector detector = getDetector();
+		contents.reset();
 		detector.set(contents);
 		returnResult = determineValidity(detector, returnResult);
 		return returnResult;
@@ -115,6 +117,7 @@ public final class ContentDescriberForXML implements ITextContentDescriber {
 	private int determineValidity(int result, Reader contents) throws IOException {
 		int returnResult = result;
 		IResourceCharsetDetector detector = getDetector();
+		contents.reset();
 		detector.set(contents);
 		returnResult = determineValidity(detector, returnResult);
 		return returnResult;

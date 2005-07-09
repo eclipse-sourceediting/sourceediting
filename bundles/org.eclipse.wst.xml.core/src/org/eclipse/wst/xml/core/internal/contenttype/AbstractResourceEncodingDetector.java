@@ -199,7 +199,7 @@ public abstract class AbstractResourceEncodingDetector implements IResourceChars
 	/**
 	 *  
 	 */
-	private void resetAll() {
+	protected void resetAll() {
 		fReader = null;
 		fHeaderParsed = false;
 		fEncodingMemento = null;

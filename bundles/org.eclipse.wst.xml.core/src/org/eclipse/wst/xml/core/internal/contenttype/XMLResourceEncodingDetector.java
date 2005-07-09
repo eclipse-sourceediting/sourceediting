@@ -127,11 +127,8 @@ public class XMLResourceEncodingDetector extends AbstractResourceEncodingDetecto
 			// multiple 'get' calls, without causing
 			// reparsing.
 			fHeaderParsed = true;
-			// Note: there is a "hidden assumption" here
-			// that an empty
-			// string in content should be treated same as
-			// not present.
 		}
+		// fDeclDetected is set as part of parsing.
 		return fDeclDetected;
 	}
 
@@ -139,4 +136,9 @@ public class XMLResourceEncodingDetector extends AbstractResourceEncodingDetecto
 		return fInitialWhiteSpace;
 	}
 
+	protected void resetAll() {
+	    super.resetAll();
+		fDeclDetected = false;
+		fInitialWhiteSpace = false;
+	}
 }
