@@ -14,14 +14,12 @@ package org.eclipse.wst.xml.core.internal.catalog;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverExtension;
 import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.XMLCoreMessages;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
-
 
 /**
  * This class is used to inject the XMLCatalog resolution behaviour into the
@@ -66,23 +64,36 @@ public class XMLCatalogURIResolverExtension implements URIResolverExtension
     {
       if (publicId != null)
       {
-        try
+        // CS : this is a temporary workaround for bug 96772
+        //
+        // For schemas we always use locations where available and only use
+        // namespace when no location is specified.  For XML entities (such as DOCTYPE) 
+        // default always utilize the public catalog entry.
+        //
+        // This lame test below roughly discriminate between schema and XML entities.
+        // TODO (bug 103243) remove this lame test once we move to the new URIResolver API
+        // since the new API is explicit about namespace and publicId
+        // 
+        if (!(systemId != null && systemId.endsWith(".xsd")))
         {
-          resolved = catalog.resolvePublic(publicId, systemId);
-          if (resolved == null)
+          try
           {
-            resolved = catalog.resolveURI(publicId);
+            resolved = catalog.resolvePublic(publicId, systemId);
+            if (resolved == null)
+            {
+              resolved = catalog.resolveURI(publicId);
+            }
           }
-        }
-        catch (MalformedURLException me)
-        {
-          Logger.log(Logger.ERROR_DEBUG, XMLCoreMessages.Catalog_resolution_malformed_url);
-          resolved = null;
-        }
-        catch (IOException ie)
-        {
-          Logger.log(Logger.ERROR_DEBUG, XMLCoreMessages.Catalog_resolution_io_exception);
-          resolved = null;
+          catch (MalformedURLException me)
+          {
+            Logger.log(Logger.ERROR_DEBUG, XMLCoreMessages.Catalog_resolution_malformed_url);
+            resolved = null;
+          }
+          catch (IOException ie)
+          {
+            Logger.log(Logger.ERROR_DEBUG, XMLCoreMessages.Catalog_resolution_io_exception);
+            resolved = null;
+          }
         }
       }
     }
