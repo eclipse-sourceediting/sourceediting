@@ -25,7 +25,6 @@ import org.eclipse.wst.sse.core.internal.encoding.CodedIO;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
 import org.eclipse.wst.sse.core.internal.encoding.NonContentBasedEncodingRules;
-import org.eclipse.wst.sse.core.internal.encoding.util.ByteReader;
 import org.eclipse.wst.xml.core.internal.contenttype.EncodingParserConstants;
 
 

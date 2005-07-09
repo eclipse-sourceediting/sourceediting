@@ -59,4 +59,4 @@ Require-Bundle: org.apache.xerces;visibility:=reexport,
  org.eclipse.text,
  org.eclipse.wst.common.uriresolver,
  org.eclipse.wst.validation
-Eclipse-AutoStart: true
+Eclipse-AutoStart: true; exceptions="org.eclipse.wst.xml.core.internal.contenttype"

@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.sse.core.internal.encoding.CodedIO;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
-import org.eclipse.wst.sse.core.internal.encoding.util.ByteReader;
 
 
 public abstract class AbstractResourceEncodingDetector implements IResourceCharsetDetector {
@@ -38,7 +37,7 @@ public abstract class AbstractResourceEncodingDetector implements IResourceChars
 	protected Reader fReader;
 
 	/**
-	 *  
+	 * 
 	 */
 	public AbstractResourceEncodingDetector() {
 		super();
@@ -98,14 +97,16 @@ public abstract class AbstractResourceEncodingDetector implements IResourceChars
 		Charset javaCharset = null;
 		try {
 			javaCharset = Charset.forName(detectedCharsetName);
-		} catch (UnsupportedCharsetException e) {
+		}
+		catch (UnsupportedCharsetException e) {
 			// only set invalid, if result is same as detected -- they won't
 			// be equal if
 			// overridden
 			if (result != null && result.equals(detectedCharsetName)) {
 				fEncodingMemento.setInvalidEncoding(detectedCharsetName);
 			}
-		} catch (IllegalCharsetNameException e) {
+		}
+		catch (IllegalCharsetNameException e) {
 			// only set invalid, if result is same as detected -- they won't
 			// be equal if
 			// overridden
@@ -179,7 +180,7 @@ public abstract class AbstractResourceEncodingDetector implements IResourceChars
 		String encodingName;
 		encodingName = getSpecDefaultEncoding();
 		if (encodingName != null) {
-			//createEncodingMemento(encodingName,
+			// createEncodingMemento(encodingName,
 			// EncodingMemento.USED_CONTENT_TYPE_DEFAULT);
 			fEncodingMemento = new EncodingMemento();
 			fEncodingMemento.setJavaCharsetName(encodingName);
@@ -197,7 +198,7 @@ public abstract class AbstractResourceEncodingDetector implements IResourceChars
 	abstract protected void parseInput() throws IOException;
 
 	/**
-	 *  
+	 * 
 	 */
 	private void resetAll() {
 		fReader = null;
@@ -206,14 +207,15 @@ public abstract class AbstractResourceEncodingDetector implements IResourceChars
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	public void set(InputStream inputStream) {
 		resetAll();
 		fReader = new ByteReader(inputStream);
 		try {
 			fReader.mark(CodedIO.MAX_MARK_SIZE);
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			// impossible, since we know ByteReader
 			// supports marking
 			throw new Error(e);
@@ -221,7 +223,7 @@ public abstract class AbstractResourceEncodingDetector implements IResourceChars
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	public void set(IStorage iStorage) throws CoreException {
 		resetAll();
@@ -250,7 +252,8 @@ public abstract class AbstractResourceEncodingDetector implements IResourceChars
 		}
 		try {
 			fReader.mark(CodedIO.MAX_MARK_SIZE);
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			// impossble, since we just checked if markable
 			throw new Error(e);
 		}

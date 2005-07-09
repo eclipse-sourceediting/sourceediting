@@ -23,10 +23,10 @@ import java.nio.charset.UnsupportedCharsetException;
 
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
+
 import org.eclipse.wst.sse.core.internal.encoding.CodedIO;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
-import org.eclipse.wst.sse.core.internal.encoding.util.ByteReader;
 
 
 public abstract class AbstractResourceEncodingDetector implements IResourceCharsetDetector {

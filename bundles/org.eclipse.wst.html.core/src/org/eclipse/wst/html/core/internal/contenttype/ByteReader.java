@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *     
  *******************************************************************************/
-package org.eclipse.wst.xml.core.internal.contenttype;
+package org.eclipse.wst.html.core.internal.contenttype;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,6 +32,7 @@ import org.eclipse.wst.sse.core.internal.encoding.CodedIO;
 
 public class ByteReader extends Reader {
 
+	
 	public static final int DEFAULT_BUFFER_SIZE = CodedIO.MAX_BUF_SIZE;
 
 	protected byte[] fBuffer;
@@ -50,20 +51,20 @@ public class ByteReader extends Reader {
 	}
 
 	public ByteReader(InputStream inputStream, int size) {
-		fInputStream = inputStream;
+		this.fInputStream = inputStream;
 		if (!inputStream.markSupported()) {
 			throw new IllegalArgumentException("ByteReader is required to have a resettable stream"); //$NON-NLS-1$
 		}
-		fBuffer = new byte[size];
+		this.fBuffer = new byte[size];
 
 	}
 
 	public void close() throws IOException {
-		fInputStream.close();
+		this.fInputStream.close();
 	}
 
-	public void mark(int readAheadLimit) throws IOException {
-		fInputStream.mark(readAheadLimit);
+	public void mark(int readAheadLimit) {
+		this.fInputStream.mark(readAheadLimit);
 	}
 
 	public boolean markSupported() {
@@ -71,19 +72,19 @@ public class ByteReader extends Reader {
 	}
 
 	public int read() throws IOException {
-		int b0 = fInputStream.read();
+		int b0 = this.fInputStream.read();
 		return (b0 & 0x00FF);
 	}
 
 	public int read(char ch[], int offset, int length) throws IOException {
-		if (length > fBuffer.length) {
-			length = fBuffer.length;
+		if (length > this.fBuffer.length) {
+			length = this.fBuffer.length;
 		}
 
-		int count = fInputStream.read(fBuffer, 0, length);
+		int count = this.fInputStream.read(this.fBuffer, 0, length);
 
 		for (int i = 0; i < count; i++) {
-			int b0 = fBuffer[i];
+			int b0 = this.fBuffer[i];
 			// the 0x00FF is to "lose" the negative bits filled in the byte to
 			// int conversion
 			// (and which would be there if cast directly from byte to char).
@@ -94,15 +95,15 @@ public class ByteReader extends Reader {
 	}
 
 	public boolean ready() throws IOException {
-		return fInputStream.available() > 0;
+		return this.fInputStream.available() > 0;
 	}
 
 	public void reset() throws IOException {
-		fInputStream.reset();
+		this.fInputStream.reset();
 	}
 
 	public long skip(long n) throws IOException {
-		return fInputStream.skip(n);
+		return this.fInputStream.skip(n);
 	}
 
 }

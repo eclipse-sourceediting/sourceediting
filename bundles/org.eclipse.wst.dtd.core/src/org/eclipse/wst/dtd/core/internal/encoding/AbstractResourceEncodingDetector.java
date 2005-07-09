@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.sse.core.internal.encoding.CodedIO;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
-import org.eclipse.wst.sse.core.internal.encoding.util.ByteReader;
 
 
 public abstract class AbstractResourceEncodingDetector implements IResourceCharsetDetector {
