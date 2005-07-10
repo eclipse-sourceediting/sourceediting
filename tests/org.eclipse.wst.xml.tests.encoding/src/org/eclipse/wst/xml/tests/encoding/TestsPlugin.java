@@ -10,7 +10,9 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.tests.encoding;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -24,6 +26,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.wst.xml.core.internal.contenttype.ByteReader;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -133,6 +136,14 @@ public class TestsPlugin extends Plugin {
 		String path = installURL.getPath();
 		String location = path + filepath;
 		Reader result = new FileReader(location);
+		return result;
+	}
+	public static Reader getByteReader(String filepath) throws FileNotFoundException {
+		URL installURL = getInstallLocation();
+		//String scheme = installURL.getProtocol();
+		String path = installURL.getPath();
+		String location = path + filepath;
+		Reader result = new ByteReader(new BufferedInputStream(new FileInputStream(location)));
 		return result;
 	}
 
