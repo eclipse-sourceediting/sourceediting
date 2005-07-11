@@ -83,7 +83,8 @@ public class JSPFindOccurrencesAction extends BasicFindOccurrencesAction impleme
 				ISelection s = editor.getSelectionProvider().getSelection();
 				if (s instanceof ITextSelection) {
 					ITextSelection selection = (ITextSelection) s;
-					elements = translation.getElementsFromJspRange(selection.getOffset(), selection.getLength());
+					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=102211
+					elements = translation.getElementsFromJspRange(selection.getOffset(), selection.getOffset()+selection.getLength());
 				}
 			}
 		}
