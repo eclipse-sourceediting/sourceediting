@@ -14,3 +14,4 @@ Require-Bundle: org.eclipse.core.resources,
  org.eclipse.wst.xsd.core,
  org.eclipse.wst.xsd.ui
 Eclipse-AutoStart: true
+Export-Package: org.eclipse.wst.xsd.validation.tests.internal
