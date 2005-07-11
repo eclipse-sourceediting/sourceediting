@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jface.text.Position;
 import org.eclipse.jst.jsp.core.internal.domdocument.DOMModelForJSP;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
@@ -36,7 +37,6 @@ import org.eclipse.osgi.service.datalocation.Location;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 /**
@@ -50,14 +50,13 @@ public class JSPTranslationTest extends TestCase {
 
 	private ProjectUnzipUtility fProjUtil = null;
 	private boolean isSetup = false;
+	
+	private HashMap fXMLJSPPositions;
 
 	public JSPTranslationTest(String name) {
 		super(name);
 	}
 
-	/* (non-Javadoc)
-	 * @see junit.framework.TestCase#setUp()
-	 */
 	protected void setUp() throws Exception {
 		super.setUp();
 		if (!this.isSetup) {
@@ -77,14 +76,7 @@ public class JSPTranslationTest extends TestCase {
 		fProjUtil.initJavaProject("INCLUDES_TESTS");
 	}
 
-	public void testAll() {
-		getTranslationAdapterTest();
-		translationAdapterTest();
-		translationTextTest();
-		translationPositionsTest();
-	}
-
-	private void translationPositionsTest() {
+	public void testTranslatePositions() {
 
 		IDOMModel model = getIncludeTestModelForRead();
 		JSPTranslationAdapter adapter = (JSPTranslationAdapter) model.getDocument().getAdapterFor(IJSPTranslation.class);
@@ -120,26 +112,8 @@ public class JSPTranslationTest extends TestCase {
 		}
 	}
 
-	private static String loadChars(InputStream input) {
 
-		StringBuffer s = new StringBuffer();
-		try {
-			int c = -1;
-			while ((c = (char) input.read()) >= 0) {
-				if (c > 255)
-					break;
-				s.append((char) c);
-			}
-			input.close();
-		}
-		catch (IOException e) {
-			System.out.println("An I/O error occured while loading :");
-			System.out.println(e);
-		}
-		return s.toString();
-	}
-
-	private void translationTextTest() {
+	public void testJSPTranslationText() {
 
 		IDOMModel model = getIncludeTestModelForRead();
 		ScannerUnitTests.verifyLengths(model, model.getStructuredDocument().get());
@@ -167,10 +141,7 @@ public class JSPTranslationTest extends TestCase {
 		}
 	}
 
-	/**
-	 * 
-	 */
-	private void translationAdapterTest() {
+	public void testJSPTranslationAdapter() {
 		IDOMModel model = getIncludeTestModelForRead();
 		JSPTranslationAdapter adapter = (JSPTranslationAdapter) model.getDocument().getAdapterFor(IJSPTranslation.class);
 		JSPTranslation translation = adapter.getJSPTranslation();
@@ -181,25 +152,6 @@ public class JSPTranslationTest extends TestCase {
 
 			translation = adapter.getJSPTranslation();
 			assertNotNull("couldn't get translation:", translation);
-		}
-		finally {
-			if (model != null)
-				model.releaseFromRead();
-		}
-	}
-
-	private void getTranslationAdapterTest() {
-		IDOMModel model = getIncludeTestModelForRead();
-		JSPTranslationAdapter adapter = (JSPTranslationAdapter) model.getDocument().getAdapterFor(IJSPTranslation.class);
-
-		try {
-			assertNotNull("XMLModel null:", model);
-
-			setupAdapterFactory(model);
-
-			IDOMDocument doc = model.getDocument();
-			adapter = (JSPTranslationAdapter) doc.getAdapterFor(IJSPTranslation.class);
-			assertNotNull("couldn't get JSPTranslationAdapter:", adapter);
 		}
 		finally {
 			if (model != null)
@@ -230,6 +182,114 @@ public class JSPTranslationTest extends TestCase {
 			if(sModel != null)
 				sModel.releaseFromRead();
 		}
+	}
+	
+	/**
+	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=86382
+	 */
+	public void testXMLJSPTranslationText() {
+		IFile f = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path("INCLUDES_TESTS/xml-jsp/most-tags-xml-jsp.jsp"));
+		DOMModelForJSP sModel = (DOMModelForJSP)getStructuredModelForRead(f);
+		try {
+			setupAdapterFactory(sModel);
+			JSPTranslationAdapter adapter = (JSPTranslationAdapter) sModel.getDocument().getAdapterFor(IJSPTranslation.class);
+			JSPTranslation translation = adapter.getJSPTranslation();
+			
+			String javaText = translation.getJavaText();
+			
+			// named as .bin so no line conversion occurs (\n is in use)
+			InputStream in = getClass().getResourceAsStream("translated_xml_jsp.bin");
+			String knownTranslationText = loadChars(in);
+			
+			assertEquals(knownTranslationText, javaText);
+		}
+		finally {
+			if(sModel != null)
+				sModel.releaseFromRead();
+		}
+	}
+	
+	public void testXMLJSPMapping() {
+		IFile f = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path("INCLUDES_TESTS/xml-jsp/most-tags-xml-jsp.jsp"));
+		DOMModelForJSP sModel = (DOMModelForJSP)getStructuredModelForRead(f);
+		try {
+			setupAdapterFactory(sModel);
+			JSPTranslationAdapter adapter = (JSPTranslationAdapter) sModel.getDocument().getAdapterFor(IJSPTranslation.class);
+			JSPTranslation translation = adapter.getJSPTranslation();
+			
+			HashMap jsp2java = translation.getJsp2JavaMap();
+			Object[] jspRanges = jsp2java.keySet().toArray();
+			Position jspPos = null;
+			Position javaPos = null;
+			for (int i = 0; i < jspRanges.length; i++) {
+				jspPos = (Position)jspRanges[i];
+				javaPos = (Position)jsp2java.get(jspPos);
+				checkPosition(jspPos, javaPos);
+			}
+		}
+		finally {
+			if(sModel != null)
+				sModel.releaseFromRead();
+		}
+	}
+	
+	private void checkPosition(Position jspPos, Position javaPos) {
+		
+		HashMap expected = getXMLJSPPositions();
+		Object[] keys =expected.keySet().toArray();
+		Position expectedJspPos= null;
+		Position expectedJavaPos = null;
+		boolean found = false;
+		for (int i = 0; i < keys.length; i++) {
+			expectedJspPos = (Position)keys[i];
+			if(jspPos.equals(expectedJspPos)) {
+				expectedJavaPos = (Position)expected.get(expectedJspPos);
+				found = true;
+			}
+		}
+		assertTrue("expected JSP position missing: " + jspPos, found);
+		assertNotNull("no expected java position for jspPos: " + printPos(jspPos), expectedJavaPos);
+		assertEquals("unexpected java position was:" + printPos(javaPos) + " but expected:" + printPos(expectedJavaPos), javaPos, expectedJavaPos);
+	}
+	private String printPos(Position pos) {
+		return pos != null ? "[" + pos.offset +":"+ pos.length + "]" : "null";
+	}
+	private HashMap getXMLJSPPositions() {
+		if(fXMLJSPPositions == null) {
+			fXMLJSPPositions = new HashMap();
+			fXMLJSPPositions.put(new Position(961,7), new Position(870,7));
+			fXMLJSPPositions.put(new Position(882,52), new Position(838,31));
+			fXMLJSPPositions.put(new Position(1018,14), new Position(7,14));
+			fXMLJSPPositions.put(new Position(640,2), new Position(806,2));
+			fXMLJSPPositions.put(new Position(406,24), new Position(677,24));
+			fXMLJSPPositions.put(new Position(685,19), new Position(815,19));
+			fXMLJSPPositions.put(new Position(650,26), new Position(779,26));
+			fXMLJSPPositions.put(new Position(563,9), new Position(766,9));
+			fXMLJSPPositions.put(new Position(461,23), new Position(702,23));
+			fXMLJSPPositions.put(new Position(522,8), new Position(740,8));
+			fXMLJSPPositions.put(new Position(245,43), new Position(147,44));
+			fXMLJSPPositions.put(new Position(323,44), new Position(192,45));
+		}
+		return fXMLJSPPositions;
+	}
+	
+	private static String loadChars(InputStream input) {
+
+		StringBuffer s = new StringBuffer();
+		try {
+			int c = -1;
+			while ((c = (char) input.read()) >= 0) {
+				if (c > 255)
+					break;
+				s.append((char) c);
+			}
+			input.close();
+		}
+		catch (IOException e) {
+			System.out.println("An I/O error occured while loading :");
+			System.out.println(e);
+		}
+		return s.toString();
 	}
 	
 	/**
