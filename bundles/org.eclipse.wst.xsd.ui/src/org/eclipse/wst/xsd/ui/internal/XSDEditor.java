@@ -297,6 +297,17 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
     
     getSite().getPage().removePartListener(partListener);
 
+    textEditor = null;
+    resourceFile = null;
+    xsdSelectionManager = null;
+    schemalNodeAdapter = null;
+    result = null;
+    partListener = null;
+    commandStackListener = null;
+    preferenceStoreListener = null;
+    openOnSelectionHelper = null;
+    graphViewer = null;
+
     super.dispose();
   }
 
