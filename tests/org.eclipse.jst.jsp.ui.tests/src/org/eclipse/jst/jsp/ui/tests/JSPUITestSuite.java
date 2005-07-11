@@ -16,6 +16,7 @@ import junit.framework.TestSuite;
 import org.eclipse.jst.jsp.ui.tests.contentassist.BeanInfoProviderTest;
 import org.eclipse.jst.jsp.ui.tests.contentassist.JSPJavaTranslatorTest;
 import org.eclipse.jst.jsp.ui.tests.contentassist.JSPTranslationTest;
+import org.eclipse.jst.jsp.ui.tests.contentdescription.TestContentDescription;
 import org.eclipse.jst.jsp.ui.tests.document.FileBufferDocumentTester;
 import org.eclipse.jst.jsp.ui.tests.model.TestModelsFromFiles;
 import org.eclipse.jst.jsp.ui.tests.modelquery.ModelQueryTester;
@@ -57,7 +58,7 @@ public class JSPUITestSuite extends TestSuite {
 		addTest(new TestSuite(TestModelsFromFiles.class, "TestModelsFromFiles"));
 		addTest(new TestSuite(TestModelEmbeddedContentType.class, "TestModelEmbeddedContentType"));
 
-		
+		addTest(new TestSuite(TestContentDescription.class, "Content Description Tests"));
 		// pa_TODO fix this test
 		//addTest(new TestSuite(JSPSearchTests.class));
 	}

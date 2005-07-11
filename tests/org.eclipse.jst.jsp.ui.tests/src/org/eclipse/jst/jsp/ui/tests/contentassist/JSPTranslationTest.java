@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jst.jsp.core.internal.domdocument.DOMModelForJSP;
 import org.eclipse.jst.jsp.core.internal.java.IJSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationAdapter;
@@ -206,6 +207,31 @@ public class JSPTranslationTest extends TestCase {
 		}
 	}
 
+	/**
+	 * Makes sure both beans are translated even though they are
+	 * right next to each other with no space.
+	 * 
+	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=103004
+	 */
+	public void testUseBeanNoSpace() {
+		IFile f = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path("INCLUDES_TESTS/useBean_tester.jsp"));
+		DOMModelForJSP sModel = (DOMModelForJSP)getStructuredModelForRead(f);
+		try {
+			setupAdapterFactory(sModel);
+			JSPTranslationAdapter adapter = (JSPTranslationAdapter) sModel.getDocument().getAdapterFor(IJSPTranslation.class);
+			JSPTranslation translation = adapter.getJSPTranslation();
+			String javaText = translation.getJavaText();
+			boolean bean1 = javaText.indexOf("javax.swing.JButton x = null;") != -1;
+			boolean bean2 = javaText.indexOf("javax.swing.JButton y = null;") != -1;
+			assertTrue(bean1);
+			assertTrue(bean2);
+		}
+		finally {
+			if(sModel != null)
+				sModel.releaseFromRead();
+		}
+	}
+	
 	/**
 	 * add the factory for JSPTranslationAdapter here
 	 * @param sm
