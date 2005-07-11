@@ -27,7 +27,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
  */
 public class HTMLDocumentTypeAdapterFactory implements INodeAdapterFactory, Preferences.IPropertyChangeListener {
 
-	private int tagNameCase = DocumentTypeAdapter.UPPER_CASE;
+	private int tagNameCase = DocumentTypeAdapter.LOWER_CASE;
 	private int attrNameCase = DocumentTypeAdapter.LOWER_CASE;
 	private Preferences preferences = null;
 
@@ -121,18 +121,23 @@ public class HTMLDocumentTypeAdapterFactory implements INodeAdapterFactory, Pref
 	/**
 	 */
 	private void updateCases() {
-		this.tagNameCase = DocumentTypeAdapter.UPPER_CASE;
+		this.tagNameCase = DocumentTypeAdapter.LOWER_CASE;
 		this.attrNameCase = DocumentTypeAdapter.LOWER_CASE;
 
 		if (this.preferences == null)
 			return;
 
-		if (this.preferences.getInt(HTMLCorePreferenceNames.TAG_NAME_CASE) == HTMLCorePreferenceNames.LOWER) {
+		int tagCase = this.preferences.getInt(HTMLCorePreferenceNames.TAG_NAME_CASE);
+		if (tagCase == HTMLCorePreferenceNames.LOWER)
 			this.tagNameCase = DocumentTypeAdapter.LOWER_CASE;
-		}
-		if (this.preferences.getInt(HTMLCorePreferenceNames.ATTR_NAME_CASE) == HTMLCorePreferenceNames.UPPER) {
-			this.attrNameCase = DocumentTypeAdapter.UPPER_CASE;
-		}
+		else if (tagCase == HTMLCorePreferenceNames.UPPER)
+			this.tagNameCase = DocumentTypeAdapter.UPPER_CASE;
+		
+		int attCase = this.preferences.getInt(HTMLCorePreferenceNames.ATTR_NAME_CASE);
+		if (attCase == HTMLCorePreferenceNames.LOWER)
+			this.attrNameCase = DocumentTypeAdapter.LOWER_CASE;
+		else if (attCase == HTMLCorePreferenceNames.UPPER)
+			this.tagNameCase = DocumentTypeAdapter.UPPER_CASE;
 	}
 
 	/**
