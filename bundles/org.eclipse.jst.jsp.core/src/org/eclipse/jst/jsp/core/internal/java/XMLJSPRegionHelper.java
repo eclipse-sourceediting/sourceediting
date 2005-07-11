@@ -126,10 +126,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 	 * determines which type of region the cursor is in, and adjusts cursor offset accordingly 
 	 */
 	public void nodeParsed(IStructuredDocumentRegion sdRegion) {
-		//				System.out.println("tagname > " + fTagname);
-		//				System.out.println("sdRegion > " + sdRegion.getType());
-		//				System.out.println("sdRegion text is >> " + fTextToParse.substring(sdRegion.getStartOffset(), sdRegion.getEndOffset()));
-		//				System.out.println("+++=======================");
+
 		try {
 			if (isJSPStartRegion(sdRegion)) {
 				String nameStr = getRegionName(sdRegion);
@@ -138,7 +135,7 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 				else
 					fTagname = null;
 			}
-			else if (sdRegion.getFirstRegion().getType() == DOMJSPRegionContexts.JSP_CONTENT) {
+			else if (sdRegion.getFirstRegion().getType() == DOMJSPRegionContexts.JSP_CONTENT || sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_CONTENT) {
 				if (fTagname != null) {
 					// assign contents to one of the tables
 					if (isScriptlet(fTagname)) {
@@ -151,16 +148,19 @@ class XMLJSPRegionHelper implements StructuredDocumentRegionHandler {
 						processDeclaration(sdRegion);
 					}
 					else {
-						processOtherRegions(sdRegion);
+						if (fTagname != null) {
+							processUseBean(sdRegion);
+							processOtherRegions(sdRegion);
+						}
 					}
 				}
 			}
-			else if (sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_CONTENT) {
-				if (fTagname != null) {
-					processUseBean(sdRegion);
-					processOtherRegions(sdRegion);
-				}
-			}
+//			else if (sdRegion.getFirstRegion().getType() == DOMRegionContext.XML_CONTENT) {
+//				if (fTagname != null) {
+//					processUseBean(sdRegion);
+//					processOtherRegions(sdRegion);
+//				}
+//			}
 			else {
 				fTagname = null;
 			}

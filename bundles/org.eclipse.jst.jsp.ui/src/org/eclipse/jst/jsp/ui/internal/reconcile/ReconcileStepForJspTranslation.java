@@ -222,14 +222,14 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 			r = regions.get(i);
 			if (r.getType() == DOMJSPRegionContexts.JSP_DIRECTIVE_NAME || r.getType() == DOMRegionContext.XML_TAG_NAME) {
 				tagName = sdRegion.getText(r).trim();
-				if (tagName.equals("include")) { //$NON-NLS-1$
+				if (tagName.equals("include") || tagName.equals("jsp:directive.include")) { //$NON-NLS-1$ //$NON-NLS-2$
 					adjustForInclude(annotation, pos, sdRegion, regions, i);
 				}
-				else if (tagName.equals("page")) { //$NON-NLS-1$
+				else if (tagName.equals("page") || tagName.equals("jsp:directive.page")) { //$NON-NLS-1$  //$NON-NLS-2$
 					adjustForPage(annotation, pos, sdRegion, regions, i);
 				}
 				else if (tagName.equals("jsp:useBean")) { //$NON-NLS-1$
-					//adjustForUseBean(pos, sdRegion, regions, i);
+					adjustForUseBean(pos, sdRegion, regions, i);
 					// do nothing for usebean for now...
 					break;
 				}
@@ -290,6 +290,27 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 		}
 	}
 
+	private void adjustForUseBean(Position pos, IStructuredDocumentRegion sdRegion, ITextRegionList regions, int startingRegionNumber) {
+		ITextRegion r;
+		String value;
+		int size = regions.size();
+
+		for (int j = startingRegionNumber; j < size; j++) {
+			r = regions.get(j);
+			if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME && sdRegion.getText(r).trim().equals("id")) { //$NON-NLS-1$
+				if (size > j + 2) {
+					r = regions.get(j + 2);
+					if (r.getType() == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+						value = sdRegion.getText(r);
+						pos.offset = sdRegion.getStartOffset(r);
+						pos.length = value.trim().length();
+						break;
+					}
+				}
+			}
+		}
+	}
+	
 	public void release() {
 		if (fTranslationAdapter != null) {
 			if(DEBUG) {

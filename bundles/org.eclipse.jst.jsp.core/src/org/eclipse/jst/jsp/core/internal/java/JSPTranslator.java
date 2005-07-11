@@ -566,7 +566,7 @@ public class JSPTranslator {
 
 	/**
 	 * Only valid after a configure(...), translate(...) or
-	 * translateFromFile(...) call
+	 * translateFromFile(...) call	
 	 * 
 	 * @return the current result (java translation) buffer
 	 */
@@ -664,8 +664,8 @@ public class JSPTranslator {
 			if (getCurrentNode().getType() == DOMRegionContext.XML_COMMENT_TEXT || getCurrentNode().getType() == DOMRegionContext.XML_CDATA_TEXT || getCurrentNode().getType() == DOMRegionContext.UNDEFINED) {
 				translateXMLCommentNode(getCurrentNode());
 			}
-			else // iterate through each region in the flat node
-			{
+			else {
+				// iterate through each region in the flat node
 				translateRegionContainer(getCurrentNode(), STANDARD_JSP);
 			}
 			if (getCurrentNode() != null)
@@ -890,8 +890,7 @@ public class JSPTranslator {
 								else if (directiveName.equals("include")) { //$NON-NLS-1$
 
 									String fileLocation = ""; //$NON-NLS-1$
-									String attrValue = ""; //$NON-NLS-1$
-
+									
 									// skip to required "file" attribute,
 									// should be safe because
 									// "file" is the only attribute for the
@@ -899,8 +898,8 @@ public class JSPTranslator {
 									while (r != null && regions.hasNext() && !r.getType().equals(DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
 										r = (ITextRegion) regions.next();
 									}
-									attrValue = getAttributeValue(r, regions);
-									if (attrValue != null)
+									fileLocation = getAttributeValue(r, regions);
+									if (fileLocation != null)
 										handleIncludeFile(fileLocation);
 								}
 								else if (directiveName.equals("page")) { //$NON-NLS-1$
@@ -993,19 +992,19 @@ public class JSPTranslator {
 			sdr = sdr.getNext();
 		}
 		
+		advanceNextNode();
+		
 		switch(type) {
 			case SCRIPTLET:
-				translateScriptletString(content.toString(), getCurrentNode(), start, end);
+				translateScriptletString(content.toString(), getCurrentNode(), start, end-start);
 				break;
 			case EXPRESSION:
-				translateExpressionString(content.toString(), getCurrentNode(), start, end);
+				translateExpressionString(content.toString(), getCurrentNode(), start, end-start);
 				break;
 			case DECLARATION:
-				translateDeclarationString(content.toString(), getCurrentNode(), start, end);
+				translateDeclarationString(content.toString(), getCurrentNode(), start, end-start);
 				break;
 		}
-		
-		advanceNextNode();
 	}
 
 	/**
@@ -1993,8 +1992,8 @@ public class JSPTranslator {
 			String suffix = "null;" + ENDL; //$NON-NLS-1$
 			if (className != null)
 				suffix = "new " + className + "();" + ENDL; //$NON-NLS-1$ //$NON-NLS-2$
-			IStructuredDocumentRegion referenceRegion = fCurrentNode.getPrevious() != null ? fCurrentNode.getPrevious() : fCurrentNode;
-			appendToBuffer(prefix + suffix, fUserCode, true, referenceRegion);
+
+			appendToBuffer(prefix + suffix, fUserCode, true, fCurrentNode);
 		}
 	}
 
