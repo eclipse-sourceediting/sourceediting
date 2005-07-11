@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import org.eclipse.core.filebuffers.FileBuffers;
@@ -88,6 +89,10 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 			}
 		}
 
+		protected void addTaglibTracker(String prefix, String uri, IStructuredDocumentRegion anchorStructuredDocumentRegion, CMDocument tldCMDocument) {
+			getTaglibTrackers().add(new TaglibTracker(uri, prefix, tldCMDocument, anchorStructuredDocumentRegion));
+		}
+
 		/**
 		 * Enables a TLD owning the given prefix loaded from the given URI at
 		 * the anchorStructuredDocumentRegion. The list of
@@ -113,37 +118,10 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 				}
 				return;
 			}
-			CMNamedNodeMap elements = tld.getElements();
-			// Go through the CMDocument for any tags that must be marked as
-			// block tags
-			// starting at the anchoring IStructuredDocumentRegion. As the
-			// document is edited and the
-			// IStructuredDocumentRegion moved around, the block tag
-			// enablement will automatically follow
-			// it.
-			for (int i = 0; i < elements.getLength(); i++) {
-				TLDElementDeclaration ed = (TLDElementDeclaration) elements.item(i);
-				if (ed.getBodycontent() == JSP12TLDNames.CONTENT_TAGDEPENDENT)
-					addBlockTag(prefix + ":" + ed.getNodeName(), anchorStructuredDocumentRegion); //$NON-NLS-1$
-			}
-			// Since modifications to StructuredDocumentRegions adjacent to a
-			// taglib directive can cause
-			// that IStructuredDocumentRegion to be reported, filter out any
-			// duplicated URIs. When the
-			// taglib is actually modified, a full rebuild will occur and no
-			// duplicates
-			// will/should be found.
-			List trackers = getTaglibTrackers();
-			for (int i = 0; i < trackers.size(); i++) {
-				TaglibTracker tracker = (TaglibTracker) trackers.get(i);
-				if (tracker.getPrefix().equals(prefix) && tracker.getURI().equals(uri)) {
-					return;
-				}
-			}
+			registerTaglib(prefix, uri, anchorStructuredDocumentRegion, tld);
 			if (_debug) {
 				System.out.println("TLDCMDocumentManager registered a tracker for " + uri + " with prefix " + prefix); //$NON-NLS-2$//$NON-NLS-1$
 			}
-			getTaglibTrackers().add(new TaglibTracker(uri, prefix, tld, anchorStructuredDocumentRegion));
 		}
 
 		/**
@@ -168,39 +146,16 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 			}
 			// Try to load the CMDocument for this URI
 			CMDocument tld = getImplicitCMDocument(tagdir);
-			if (tld == null || !(tld instanceof TLDDocument))
-				return;
-			CMNamedNodeMap elements = tld.getElements();
-			// Go through the CMDocument for any tags that must be marked as
-			// block tags
-			// starting at the anchoring IStructuredDocumentRegion. As the
-			// document is edited and the
-			// IStructuredDocumentRegion moved around, the block tag
-			// enablement will automatically follow
-			// it.
-			for (int i = 0; i < elements.getLength(); i++) {
-				TLDElementDeclaration ed = (TLDElementDeclaration) elements.item(i);
-				if (ed.getBodycontent() == JSP12TLDNames.CONTENT_TAGDEPENDENT)
-					addBlockTag(prefix + ":" + ed.getNodeName(), taglibStructuredDocumentRegion); //$NON-NLS-1$
-			}
-			// Since modifications to StructuredDocumentRegions adjacent to a
-			// taglib directive can cause
-			// that IStructuredDocumentRegion to be reported, filter out any
-			// duplicated URIs. When the
-			// taglib is actually modified, a full rebuild will occur and no
-			// duplicates
-			// will/should be found.
-			List trackers = getTaglibTrackers();
-			for (int i = 0; i < trackers.size(); i++) {
-				TaglibTracker tracker = (TaglibTracker) trackers.get(i);
-				if (tracker.getPrefix().equals(prefix) && tracker.getURI().equals(tagdir)) {
-					return;
+			if (tld == null || !(tld instanceof TLDDocument)) {
+				if (_debug) {
+					System.out.println("TLDCMDocumentManager failed to create a CMDocument for director " + tagdir); //$NON-NLS-1$
 				}
+				return;
 			}
+			registerTaglib(prefix, tagdir, taglibStructuredDocumentRegion, tld);
 			if (_debug) {
 				System.out.println("TLDCMDocumentManager registered a tracker for directory" + tagdir + " with prefix " + prefix); //$NON-NLS-2$//$NON-NLS-1$
 			}
-			getTaglibTrackers().add(new TaglibTracker(tagdir, prefix, tld, taglibStructuredDocumentRegion));
 		}
 
 		public void nodeParsed(IStructuredDocumentRegion aCoreStructuredDocumentRegion) {
@@ -298,17 +253,34 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 				IPath fileLocation = new Path(URIHelper.normalize(StringUtils.strip(includedFile).trim(), getCurrentBaseLocation().toString(), root.toString()));
 				// check for "loops"
 				if (!getIncludes().contains(fileLocation) && fileLocation != null && !fileLocation.equals(getCurrentBaseLocation())) {
-
-					// prevent slow performance when editing scriptlet part of
-					// the JSP
-					// only process includes if they've been modified
+					/*
+					 * Prevent slow performance when editing scriptlet part of
+					 * the JSP only process includes if they've been modified.
+					 * The IncludeHelper remembers any CMDocuments created
+					 * from the files it parses. Caching the URI and
+					 * prefix/tagdir allows us to just enable the CMDocument
+					 * when the previously parsed files.
+					 */
 					if (hasAnyIncludeBeenModified(fileLocation.toString())) {
 						getIncludes().push(fileLocation);
-						if (getParser() != null)
-							new IncludeHelper(anchorStructuredDocumentRegion, getParser()).parse(fileLocation.toString());
+						if (getParser() != null) {
+							IncludeHelper includeHelper = new IncludeHelper(anchorStructuredDocumentRegion, getParser());
+							includeHelper.parse(fileLocation.toString());
+							List references = includeHelper.taglibReferences;
+							fTLDCMReferencesMap.put(fileLocation.toString(), references);
+						}
 						else
 							Logger.log(Logger.WARNING, "Warning: parser text was requested by " + getClass().getName() + " but none was available; taglib support disabled"); //$NON-NLS-1$ //$NON-NLS-2$
 						getIncludes().pop();
+					}
+					else {
+						// Add from that saved list of uris/prefixes/documents
+						List references = (List) fTLDCMReferencesMap.get(fileLocation.toString());
+						for (int i = 0; references != null && i < references.size(); i++) {
+							TLDCMDocumentReference reference = (TLDCMDocumentReference) references.get(i);
+							enableTaglibFromURI(reference.prefix, reference.uri, includeStructuredDocumentRegion);
+
+						}
 					}
 				}
 				else {
@@ -431,6 +403,40 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 			}
 		}
 
+		private void registerTaglib(String prefix, String uri, IStructuredDocumentRegion anchorStructuredDocumentRegion, CMDocument tld) {
+			CMNamedNodeMap elements = tld.getElements();
+			/*
+			 * Go through the CMDocument for any tags that must be marked as
+			 * block tags starting at the anchoring IStructuredDocumentRegion.
+			 * As the document is edited and the IStructuredDocumentRegion
+			 * moved around, the block tag enablement will automatically
+			 * follow it.
+			 */
+			for (int i = 0; i < elements.getLength(); i++) {
+				TLDElementDeclaration ed = (TLDElementDeclaration) elements.item(i);
+				if (ed.getBodycontent() == JSP12TLDNames.CONTENT_TAGDEPENDENT)
+					addBlockTag(prefix + ":" + ed.getNodeName(), anchorStructuredDocumentRegion); //$NON-NLS-1$
+			}
+			/*
+			 * Since modifications to StructuredDocumentRegions adjacent to a
+			 * taglib directive can cause that IStructuredDocumentRegion to be
+			 * reported, filter out any duplicated URIs. When the taglib is
+			 * actually modified, a full rebuild will occur and no duplicates
+			 * will/should be found.
+			 */
+			boolean doTrack = true;
+			List trackers = getTaglibTrackers();
+			for (int i = 0; i < trackers.size(); i++) {
+				TaglibTracker tracker = (TaglibTracker) trackers.get(i);
+				if (tracker.getPrefix().equals(prefix) && tracker.getURI().equals(uri)) {
+					doTrack = false;
+				}
+			}
+			if (doTrack) {
+				addTaglibTracker(prefix, uri, anchorStructuredDocumentRegion, tld);
+			}
+		}
+
 		private void resetBlockTags() {
 			if (getParser() == null)
 				return;
@@ -468,11 +474,21 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		protected IStructuredDocumentRegion fAnchor = null;
 		protected JSPSourceParser fLocalParser = null;
 		protected JSPSourceParser fParentParser = null;
+		List taglibReferences = null;
 
 		public IncludeHelper(IStructuredDocumentRegion anchor, JSPSourceParser rootParser) {
 			super();
 			fAnchor = anchor;
 			fParentParser = rootParser;
+			taglibReferences = new ArrayList(0);
+		}
+
+		protected void addTaglibTracker(String prefix, String uri, IStructuredDocumentRegion anchorStructuredDocumentRegion, CMDocument tldCMDocument) {
+			super.addTaglibTracker(prefix, uri, anchorStructuredDocumentRegion, tldCMDocument);
+			TLDCMDocumentReference reference = new TLDCMDocumentReference();
+			reference.prefix = prefix;
+			reference.uri = uri;
+			taglibReferences.add(reference);
 		}
 
 		private String detectCharset(IFile file) {
@@ -645,8 +661,13 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		}
 
 		public void resetNodes() {
+			// no-op, should never be called
 		}
+	}
 
+	private class TLDCMDocumentReference {
+		String prefix;
+		String uri;
 	}
 
 	static final boolean _debug = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/tldcmdocument/manager")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -654,9 +675,9 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	// will hold the prefixes banned by the specification; taglibs may not use
 	// them
 	protected static List bannedPrefixes = null;
+
 	static final String XMLNS = "xmlns:"; //$NON-NLS-1$ 
 	static final int XMLNS_LENGTH = XMLNS.length();
-
 	static {
 		bannedPrefixes = new ArrayList(7);
 		bannedPrefixes.add("jsp"); //$NON-NLS-1$
@@ -669,8 +690,13 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 	}
 
 	private CMDocumentFactoryTLD fCMDocumentBuilder = null;
+
 	private DirectiveStructuredDocumentRegionHandler fDirectiveHandler = null;
 	private Hashtable fDocuments = null;
+	// timestamp cache to prevent excessive reparsing
+	// of included files
+	// String (filepath) > Long (modification stamp)
+	HashMap fInclude2TimestampMap = new HashMap();
 	private Stack fIncludes = null;
 
 	private JSPSourceParser fParser = null;
@@ -680,10 +706,7 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 
 	private List fTaglibTrackers = null;
 
-	// timestamp cache to prevent excessive reparsing
-	// of included files
-	// String (filepath) > Long (modification stamp)
-	HashMap fInclude2TimestampMap = new HashMap();
+	private Map fTLDCMReferencesMap = new HashMap();
 
 	public TLDCMDocumentManager() {
 		super();
@@ -865,6 +888,65 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		return fTaglibTrackers;
 	}
 
+	/**
+	 * @param fileLocation
+	 *            the "root" file
+	 */
+	boolean hasAnyIncludeBeenModified(String fileLocation) {
+
+		boolean result = false;
+		// check the top level
+		if (hasBeenModified(fileLocation)) {
+			result = true;
+		}
+		else {
+			// check all includees
+			Iterator iter = fInclude2TimestampMap.keySet().iterator();
+			while (iter.hasNext()) {
+				if (hasBeenModified((String) iter.next())) {
+					result = true;
+					break;
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * @param filename
+	 * @return
+	 */
+	boolean hasBeenModified(String filename) {
+
+		boolean result = false;
+		// quick filename/timestamp cache check here...
+		IPath filePath = new Path(filename);
+		IFile f = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(filePath);
+		if (f == null && filePath.segmentCount() > 1) {
+			f = ResourcesPlugin.getWorkspace().getRoot().getFile(filePath);
+		}
+		if (f != null && f.exists()) {
+			Long currentStamp = new Long(f.getModificationStamp());
+			Object o = fInclude2TimestampMap.get(filename);
+			if (o != null) {
+				Long previousStamp = (Long) o;
+				// stamps don't match, file changed
+				if (currentStamp.longValue() != previousStamp.longValue()) {
+					result = true;
+					// store for next time
+					fInclude2TimestampMap.put(filename, currentStamp);
+				}
+			}
+			else {
+				// return true, since we've not encountered this file yet.
+				result = true;
+				// store for next time
+				fInclude2TimestampMap.put(filename, currentStamp);
+			}
+		}
+		return result;
+	}
+
 	public void indexChanged(ITaglibRecordEvent event) {
 	}
 
@@ -928,64 +1010,5 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 		fParser = parser;
 		if (fParser != null)
 			fParser.addStructuredDocumentRegionHandler(getStructuredDocumentRegionHandler());
-	}
-
-	/**
-	 * @param fileLocation
-	 *            the "root" file
-	 */
-	boolean hasAnyIncludeBeenModified(String fileLocation) {
-
-		boolean result = false;
-		// check the top level
-		if (hasBeenModified(fileLocation)) {
-			result = true;
-		}
-		else {
-			// check all includees
-			Iterator iter = fInclude2TimestampMap.keySet().iterator();
-			while (iter.hasNext()) {
-				if (hasBeenModified((String) iter.next())) {
-					result = true;
-					break;
-				}
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * @param filename
-	 * @return
-	 */
-	boolean hasBeenModified(String filename) {
-
-		boolean result = false;
-		// quick filename/timestamp cache check here...
-		IPath filePath = new Path(filename);
-		IFile f = ResourcesPlugin.getWorkspace().getRoot().getFileForLocation(filePath);
-		if (f == null && filePath.segmentCount() > 1) {
-			f = ResourcesPlugin.getWorkspace().getRoot().getFile(filePath);
-		}
-		if (f != null && f.exists()) {
-			Long currentStamp = new Long(f.getModificationStamp());
-			Object o = fInclude2TimestampMap.get(filename);
-			if (o != null) {
-				Long previousStamp = (Long) o;
-				// stamps don't match, file changed
-				if (currentStamp.longValue() != previousStamp.longValue()) {
-					result = true;
-					// store for next time
-					fInclude2TimestampMap.put(filename, currentStamp);
-				}
-			}
-			else {
-				// return true, since we've not encountered this file yet.
-				result = true;
-				// store for next time
-				fInclude2TimestampMap.put(filename, currentStamp);
-			}
-		}
-		return result;
 	}
 }
