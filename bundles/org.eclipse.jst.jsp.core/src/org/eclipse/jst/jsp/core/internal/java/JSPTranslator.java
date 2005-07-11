@@ -573,27 +573,29 @@ public class JSPTranslator {
 	public final StringBuffer getTranslation() {
 
 		if (DEBUG) {	
+			StringBuffer debugString = new StringBuffer();
 			try {
 				Iterator it = fJava2JspRanges.keySet().iterator();
 				while (it.hasNext()) {
-					System.out.println("--------------------------------------------------------------"); //$NON-NLS-1$
+					debugString.append("--------------------------------------------------------------\n"); //$NON-NLS-1$
 					Position java = (Position) it.next();
-					System.out.println("Java range:[" + java.offset + ":" + java.length + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					System.out.println("[" + fResult.toString().substring(java.offset, java.offset + java.length) + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-					System.out.println("--------------------------------------------------------------"); //$NON-NLS-1$
-					System.out.println("|maps to...|"); //$NON-NLS-1$
-					System.out.println("=============================================================="); //$NON-NLS-1$
+					debugString.append("Java range:[" + java.offset + ":" + java.length + "]\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					debugString.append("[" + fResult.toString().substring(java.offset, java.offset + java.length) + "]\n"); //$NON-NLS-1$ //$NON-NLS-2$
+					debugString.append("--------------------------------------------------------------\n"); //$NON-NLS-1$
+					debugString.append("|maps to...|\n"); //$NON-NLS-1$
+					debugString.append("==============================================================\n"); //$NON-NLS-1$
 					Position jsp = (Position) fJava2JspRanges.get(java);
-					System.out.println("JSP range:[" + jsp.offset + ":" + jsp.length + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					System.out.println("[" + fJspTextBuffer.toString().substring(jsp.offset, jsp.offset + jsp.length) + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-					System.out.println("=============================================================="); //$NON-NLS-1$
-					System.out.println(""); //$NON-NLS-1$
-					System.out.println(""); //$NON-NLS-1$
+					debugString.append("JSP range:[" + jsp.offset + ":" + jsp.length + "]\n"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					debugString.append("[" + fJspTextBuffer.toString().substring(jsp.offset, jsp.offset + jsp.length) + "]\n"); //$NON-NLS-1$ //$NON-NLS-2$
+					debugString.append("==============================================================\n"); //$NON-NLS-1$
+					debugString.append("\n"); //$NON-NLS-1$
+					debugString.append("\n"); //$NON-NLS-1$
 				}
 			}
 			catch(Exception e) {
-				e.printStackTrace();
+				Logger.logException("JSPTranslation error", e);
 			}
+			Logger.log(Logger.INFO_DEBUG, debugString.toString());
 		}
 
 		return fResult;
@@ -859,13 +861,10 @@ public class JSPTranslator {
 						String jspTagName = st.nextToken();
 						if (jspTagName.equals("useBean")) //$NON-NLS-1$
 						{
-							advanceNextNode(); // get the content
+							// https://bugs.eclipse.org/bugs/show_bug.cgi?id=103004
+							//advanceNextNode(); // get the content
 							if (getCurrentNode() != null) {
 								translateUseBean(container); // 'regions'
-								// should be
-								// all the
-								// useBean
-								// attributes
 							}
 						}
 						else if (jspTagName.equals("scriptlet")) //$NON-NLS-1$
@@ -963,9 +962,6 @@ public class JSPTranslator {
 								// (not content)
 								if (type == DOMJSPRegionContexts.JSP_EXPRESSION_OPEN || type == DOMJSPRegionContexts.JSP_SCRIPTLET_OPEN || type == DOMJSPRegionContexts.JSP_DECLARATION_OPEN || type == DOMJSPRegionContexts.JSP_DIRECTIVE_OPEN || type == DOMJSPRegionContexts.JSP_EL_OPEN) {
 									// now call jsptranslate
-									// System.out.println("embedded jsp OPEN
-									// >>>> " +
-									// ((ITextRegionContainer)embedded).getText(attrChunk));
 									translateEmbeddedJSPInAttribute((ITextRegionContainer) embedded);
 								}
 							}
