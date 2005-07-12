@@ -65,6 +65,7 @@ import org.eclipse.jface.text.source.projection.ProjectionSupport;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.events.DisposeEvent;
@@ -1528,6 +1529,11 @@ public class StructuredTextEditor extends TextEditor {
 			}
 		}
 		return fStructuredModel;
+	}
+	
+	public int getOrientation() {
+		//https://bugs.eclipse.org/bugs/show_bug.cgi?id=88714
+		return SWT.LEFT_TO_RIGHT;
 	}
 
 	private IStatusLineManager getStatusLineManager() {
