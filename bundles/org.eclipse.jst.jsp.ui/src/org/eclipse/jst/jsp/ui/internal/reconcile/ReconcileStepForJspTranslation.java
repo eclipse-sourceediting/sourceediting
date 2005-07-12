@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.reconcile;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -57,7 +58,6 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 	private IReconcileResult[] EMPTY_RECONCILE_RESULT_SET = new IReconcileResult[0];
 	private JSPTranslationAdapter fTranslationAdapter = null;
 	private JSPTranslationExtension fJSPTranslation = null;
-	private static final boolean DEBUG = false;
 	
 	public ReconcileStepForJspTranslation(IReconcileStep step) {
 		super(step);
@@ -147,8 +147,12 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 	protected IReconcileResult[] convertToInputModel(IReconcileResult[] inputResults) {
 
 		if (inputResults == null)
-			return null;
+			return EMPTY_RECONCILE_RESULT_SET;
 
+		// we filter out unmapped errors here
+		// so they don't show up in the problems view.
+		List filtered = new ArrayList();
+		
 		HashMap java2jspRanges = fJSPTranslation.getJava2JspMap();
 		for (int i = 0; i < inputResults.length; i++) {
 			if (isCanceled())
@@ -157,9 +161,11 @@ public class ReconcileStepForJspTranslation extends StructuredReconcileStep {
 				continue;
 			TemporaryAnnotation result = (TemporaryAnnotation) inputResults[i];
 			adaptJava2JspPosition(result, java2jspRanges);
+			
+			if(result.getPosition().offset != -1)
+				filtered.add(result);
 		}
-
-		return inputResults;
+		return (IReconcileResult[])filtered.toArray(new IReconcileResult[filtered.size()]);
 	}
 
 	/**

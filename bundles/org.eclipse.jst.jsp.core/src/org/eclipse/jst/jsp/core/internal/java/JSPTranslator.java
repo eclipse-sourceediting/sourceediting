@@ -83,7 +83,11 @@ public class JSPTranslator {
 
 	private String fClassHeader = "public class _JSPServlet extends "; //$NON-NLS-1$
 	private String fClassname = "_JSPServlet"; //$NON-NLS-1$
-
+    
+	private String fImplicitImports = "import javax.servlet.*;" + ENDL + //$NON-NLS-1$
+										"import javax.servlet.http.*;" + ENDL +  //$NON-NLS-1$
+										"import javax.servlet.jsp.*;" + ENDL + ENDL; //$NON-NLS-1$
+    
 	private String fServiceHeader = "public void _jspService(javax.servlet.http.HttpServletRequest request," + //$NON-NLS-1$
 				" javax.servlet.http.HttpServletResponse response)" + ENDL + //$NON-NLS-1$
 				"\t\tthrows java.io.IOException, javax.servlet.ServletException {" + ENDL + //$NON-NLS-1$
@@ -402,6 +406,7 @@ public class JSPTranslator {
 	private final void buildResult() {
 		// to build the java document this is the order:
 		// 
+		// + default imports
 		// + user imports
 		// + class header
 		// [+ error page]
@@ -411,18 +416,22 @@ public class JSPTranslator {
 		// + user code
 		// + try/catch end
 		// + service method footer
-		fResult = new StringBuffer(fUserImports.length() + fClassHeader.length() + fUserDeclarations.length() + fServiceHeader.length() + fTryCatchStart.length() // try/catch
+		fResult = new StringBuffer(fImplicitImports.length() + fUserImports.length() + fClassHeader.length() + fUserDeclarations.length() + fServiceHeader.length() + fTryCatchStart.length() // try/catch
 					// start
 					+ fUserCode.length() + fTryCatchEnd.length() // try/catch
 					// end
 					+ fFooter.length());
+		
 		int javaOffset = 0;
-
+		
+		fResult.append(fImplicitImports);
+		javaOffset += fImplicitImports.length();
+		
 		// updateRanges(fIndirectImports, javaOffset);
+		updateRanges(fImportRanges, javaOffset);
 		// user imports
 		append(fUserImports);
 		javaOffset += fUserImports.length();
-		// updateRanges(fImportRanges, javaOffset);
 
 		// class header
 		fResult.append(fClassHeader); //$NON-NLS-1$
