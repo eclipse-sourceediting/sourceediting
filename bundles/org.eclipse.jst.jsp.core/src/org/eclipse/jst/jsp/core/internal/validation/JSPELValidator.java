@@ -3,6 +3,7 @@ package org.eclipse.jst.jsp.core.internal.validation;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
@@ -28,6 +29,18 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 public class JSPELValidator implements org.eclipse.wst.validation.internal.provisional.core.IValidator {
 	
+	static boolean shouldValidate(IFile file) {
+		IResource resource = file;
+		do {
+			if (resource.isDerived() || resource.isTeamPrivateMember() || !resource.isAccessible() || resource.getName().charAt(0) == '.') {
+				return false;
+			}
+			resource = resource.getParent();
+		}
+		while ((resource.getType() & IResource.PROJECT) == 0);
+		return true;
+	}
+
 	protected void validateRegionContainer(ITextRegionCollection container, IReporter reporter, IFile file) {
 		
 		ITextRegionCollection containerRegion = container;
@@ -77,6 +90,9 @@ public class JSPELValidator implements org.eclipse.wst.validation.internal.provi
 		if (uris != null) {
 			for (int i = 0; i < uris.length && !reporter.isCancelled(); i++) {
 				IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(uris[i]));
+				if(!shouldValidate(file)) {
+					continue;
+				}
 				IStructuredModel model = null;
 				try {
 					model = StructuredModelManager.getModelManager().getModelForRead(file);
