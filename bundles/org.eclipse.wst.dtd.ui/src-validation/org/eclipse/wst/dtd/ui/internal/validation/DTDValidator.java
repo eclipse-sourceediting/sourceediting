@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.wst.validation.internal.core.ValidationException;
 import org.eclipse.wst.validation.internal.operations.IRuleGroup;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
@@ -27,6 +28,18 @@ public class DTDValidator implements IValidator {
 	private final String GET_FILE = "getFile"; //$NON-NLS-1$
 	public final String GET_PROJECT_FILES = "getAllFiles"; //$NON-NLS-1$
 
+	static boolean shouldValidate(IFile file) {
+		IResource resource = file;
+		do {
+			if (resource.isDerived() || resource.isTeamPrivateMember() || !resource.isAccessible() || resource.getName().charAt(0) == '.') {
+				return false;
+			}
+			resource = resource.getParent();
+		}
+		while ((resource.getType() & IResource.PROJECT) == 0);
+		return true;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -45,8 +58,6 @@ public class DTDValidator implements IValidator {
 		ValidateDTDAction validateAction = new ValidateDTDAction(file, false);
 		validateAction.setValidator(this);
 		validateAction.run();
-
-
 	}
 
 	/**
@@ -77,7 +88,7 @@ public class DTDValidator implements IValidator {
 					Object[] parms = {changedFileName};
 
 					IFile file = (IFile) context.loadModel(GET_FILE, parms);
-					if (file != null) {
+					if (file != null && shouldValidate(file)) {
 						validateIfNeeded(file, context, reporter);
 					}
 				}
@@ -89,7 +100,9 @@ public class DTDValidator implements IValidator {
 			Iterator iter = files.iterator();
 			while (iter.hasNext()) {
 				IFile file = (IFile) iter.next();
-				validateIfNeeded(file, context, reporter);
+				if(shouldValidate(file)) {
+					validateIfNeeded(file, context, reporter);
+				}
 			}
 		}
 	}
