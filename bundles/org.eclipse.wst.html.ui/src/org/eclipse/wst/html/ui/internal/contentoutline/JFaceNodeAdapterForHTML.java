@@ -14,12 +14,10 @@ package org.eclipse.wst.html.ui.internal.contentoutline;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.wst.html.core.internal.provisional.HTML40Namespace;
 import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImageHelper;
 import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImages;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeAdapter;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
@@ -33,18 +31,20 @@ public class JFaceNodeAdapterForHTML extends JFaceNodeAdapter {
 			return imageDescriptor.createImage();
 		return null;
 	}
-	
+
 	/**
 	 * Constructor for JFaceNodeAdapterForHTML.
+	 * 
 	 * @param adapterFactory
 	 */
 	public JFaceNodeAdapterForHTML(INodeAdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
-	protected Image createImage(Node node) {
+	protected Image createImage(Object object) {
 		Image image = null;
 
+		Node node = (Node) object;
 		if (node.getNodeType() == Node.ELEMENT_NODE) {
 			if (node.getNodeName().equalsIgnoreCase("table")) //$NON-NLS-1$
 				image = createHTMLImage(HTMLEditorPluginImages.IMG_OBJ_TABLE);
@@ -73,42 +73,5 @@ public class JFaceNodeAdapterForHTML extends JFaceNodeAdapter {
 			image = super.createImage(node);
 		}
 		return image;
-	}
-
-	/*
-	 * @see IJFaceNodeAdapter#getLabelText(Node)
-	 */
-	public String getLabelText(Node node) {
-		// TODO (pa) eventually showing ID, NAME, etc..might be a preference 
-		// - like in the package explorer for java.. (along w/ being able to customize delimiters)
-		// - possibly for all (or filtered list of) elements
-		String text = null;
-		if (node.getNodeType() == Node.ELEMENT_NODE) {
-			if (node.getNodeName().equalsIgnoreCase("table")) { //$NON-NLS-1$
-				// won't update properly as-is
-				// it will only update if you change the attr name, 
-				// delete a ", or add a new element to the tree
-				text = node.getNodeName();
-
-				// get attr values
-				String tableID = null;
-				tableID = ((Element) node).getAttribute(HTML40Namespace.ATTR_NAME_ID);
-				String tableName = null;
-				tableName = ((Element) node).getAttribute(HTML40Namespace.ATTR_NAME_NAME);
-
-				// if there's ID or NAME, add a ">"
-				if ((tableID != null && tableID.length() > 0) || (tableName != null && tableName.length() > 0)) {
-					text += " > "; //$NON-NLS-1$
-				}
-
-				if (tableID != null && tableID.length() > 0)
-					text += " ID:[" + tableID + "]"; //$NON-NLS-1$ //$NON-NLS-2$
-				if (tableName != null && tableName.length() > 0)
-					text += " NAME:[" + tableName + "]"; //$NON-NLS-1$ //$NON-NLS-2$
-			}
-		}
-		if (text == null)
-			text = super.getLabelText(node);
-		return text;
 	}
 }

@@ -15,6 +15,7 @@ package org.eclipse.wst.xml.ui.internal.views.contentoutline;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -31,9 +32,13 @@ import org.eclipse.wst.common.ui.internal.dnd.ViewerDragAdapter;
 import org.eclipse.wst.common.ui.internal.dnd.ViewerDropAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
+import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateAction;
+import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateActionContributionItem;
 import org.eclipse.wst.sse.ui.internal.provisional.views.contentoutline.StructuredContentOutlineConfiguration;
 import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
+import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
+import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeAdapterFactory;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
 import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
@@ -44,6 +49,10 @@ import org.w3c.dom.Node;
 public class XMLContentOutlineConfiguration extends StructuredContentOutlineConfiguration {
 	private IContentProvider fContentProvider = null;
 	private ILabelProvider fLabelProvider = null;
+	/*
+	 * Preference key for Show Attributes
+	 */
+	private final String OUTLINE_SHOW_ATTRIBUTE_PREF = "outline-show-attribute-editor"; //$NON-NLS-1$
 
 	private class ActionManagerMenuListener implements IMenuListener, IReleasable {
 		private XMLNodeActionManager fActionManager;
@@ -65,6 +74,29 @@ public class XMLContentOutlineConfiguration extends StructuredContentOutlineConf
 		}
 	}
 
+	/**
+	 * Toggle action for whether or not to display element's first attribute
+	 */
+	private class ToggleShowAttributeAction extends PropertyChangeUpdateAction {
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88444
+		private TreeViewer fTreeViewer;
+
+		public ToggleShowAttributeAction(IPreferenceStore store, String preference, TreeViewer treeViewer) {
+			super(XMLUIMessages.XMLContentOutlineConfiguration_0, store, preference, false);
+			setToolTipText(getText());
+			// images needed
+			// setDisabledImageDescriptor(SYNCED_D);
+			// setImageDescriptor(SYNCED_E);
+			fTreeViewer = treeViewer;
+			update();
+		}
+
+		public void update() {
+			super.update();
+			updateForShowAttributes(isChecked(), fTreeViewer);
+		}
+	}
+
 	protected ActionManagerMenuListener fContextMenuFiller = null;
 
 	private TransferDragSourceListener[] fTransferDragSourceListeners;
@@ -72,6 +104,23 @@ public class XMLContentOutlineConfiguration extends StructuredContentOutlineConf
 
 	public XMLContentOutlineConfiguration() {
 		super();
+	}
+
+	protected IContributionItem[] createMenuContributions(TreeViewer viewer) {
+		IContributionItem[] items;
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88444
+		IContributionItem showAttributeItem = new PropertyChangeUpdateActionContributionItem(new ToggleShowAttributeAction(getPreferenceStore(), OUTLINE_SHOW_ATTRIBUTE_PREF, viewer));
+		items = super.createMenuContributions(viewer);
+		if (items == null) {
+			items = new IContributionItem[]{showAttributeItem};
+		}
+		else {
+			IContributionItem[] combinedItems = new IContributionItem[items.length + 1];
+			System.arraycopy(items, 0, combinedItems, 0, items.length);
+			combinedItems[items.length] = showAttributeItem;
+			items = combinedItems;
+		}
+		return items;
 	}
 
 	protected XMLNodeActionManager createNodeActionManager(TreeViewer treeViewer) {
@@ -82,7 +131,8 @@ public class XMLContentOutlineConfiguration extends StructuredContentOutlineConf
 		if (fContentProvider == null) {
 			if (getFactory() != null) {
 				fContentProvider = new JFaceNodeContentProvider((INodeAdapterFactory) getFactory());
-			} else {
+			}
+			else {
 				fContentProvider = super.getContentProvider(viewer);
 			}
 		}
@@ -96,7 +146,8 @@ public class XMLContentOutlineConfiguration extends StructuredContentOutlineConf
 		if (fLabelProvider == null) {
 			if (getFactory() != null) {
 				fLabelProvider = new JFaceNodeLabelProvider((INodeAdapterFactory) getFactory());
-			} else {
+			}
+			else {
 				fLabelProvider = super.getLabelProvider(viewer);
 			}
 		}
@@ -230,10 +281,27 @@ public class XMLContentOutlineConfiguration extends StructuredContentOutlineConf
 		// TODO: Add DnD support
 		// XMLDragAndDropManager.addDragAndDropSupport(fTreeViewer);
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration#getPreferenceStore()
 	 */
 	protected IPreferenceStore getPreferenceStore() {
 		return XMLUIPlugin.getDefault().getPreferenceStore();
+	}
+
+	/**
+	 * Updates show attributes flag in JFaceNodeAdapter to indicate whether or
+	 * not to show attributes in outline view. Also refreshes tree view due to
+	 * label updates.
+	 * 
+	 * @param showAttr
+	 * @param viewer
+	 */
+	void updateForShowAttributes(boolean showAttr, TreeViewer viewer) {
+		((JFaceNodeAdapterFactory) getFactory()).setShowAttribute(showAttr);
+		// refresh the outline view
+		viewer.refresh();
 	}
 }

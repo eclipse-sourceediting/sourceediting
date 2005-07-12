@@ -28,16 +28,24 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.properties.PropertySheetPage;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapterFactory;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMDataType;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
+import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManager;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.CMDocumentManagerListener;
+import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
+import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.editor.CMImageUtil;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImageHelper;
 import org.eclipse.wst.xml.ui.internal.editor.XMLEditorPluginImages;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 /**
@@ -118,6 +126,7 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 	 * debug .option
 	 */
 	private static final boolean DEBUG = getDebugValue();
+
 	private static boolean getDebugValue() {
 		String value = Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/outline"); //$NON-NLS-1$
 		boolean result = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
@@ -266,12 +275,70 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 	}
 
 	private String getNodeName(Object object) {
-
+		StringBuffer nodeName = new StringBuffer();
 		Node node = (Node) object;
-		String nodeName = node.getNodeName();
-		if (node.getNodeType() == Node.DOCUMENT_TYPE_NODE)
-			nodeName = "DOCTYPE:" + nodeName; //$NON-NLS-1$
-		return nodeName;
+		nodeName.append(node.getNodeName());
+
+		if (node.getNodeType() == Node.DOCUMENT_TYPE_NODE) {
+			nodeName.insert(0, "DOCTYPE:"); //$NON-NLS-1$
+		}
+		else if (node.getNodeType() == Node.ELEMENT_NODE && getShowAttribute()) {
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88444
+			if (node.hasAttributes()) {
+				Element element = (Element) node;
+				NamedNodeMap attributes = element.getAttributes();
+				Node attribute = null;
+				Node attribute2 = null;
+
+				// try to get content model element declaration
+				CMElementDeclaration elementDecl = null;
+				ModelQuery mq = ModelQueryUtil.getModelQuery(element.getOwnerDocument());
+				if (mq != null) {
+					elementDecl = mq.getCMElementDeclaration(element);
+				}
+				// find an attribute of type ID
+				if (elementDecl != null) {
+					int i = 0;
+					while (i < attributes.getLength() && attribute == null) {
+						Node attr = attributes.item(i);
+						String attrName = attr.getNodeName();
+						CMAttributeDeclaration attrDecl = (CMAttributeDeclaration) elementDecl.getAttributes().getNamedItem(attrName);
+						if (attrDecl != null) {
+							if ((attrDecl.getAttrType() != null) && (CMDataType.ID.equals(attrDecl.getAttrType().getDataTypeName()))) {
+								attribute = attr;
+							}
+							else if (attrDecl.getUsage() == CMAttributeDeclaration.REQUIRED) {
+								// as a backup, keep tabs on any required
+								// attributes
+								attribute2 = attr;
+							}
+						}
+						++i;
+					}
+				}
+
+				// if no suitable attribute found, try using a required
+				// attribute, if none, then just use first attribute
+				if (attribute == null) {
+					if (attribute2 != null) {
+						attribute = attribute2;
+					}
+					else
+						attribute = attributes.item(0);
+				}
+
+				// display the attribute
+				String attributeName = attribute.getNodeName();
+				if (attributeName != null && attributeName.length() > 0) {
+					nodeName.append(" " + attributeName); //$NON-NLS-1$
+					String attributeValue = attribute.getNodeValue();
+					if (attributeValue != null && attributeValue.length() > 0) {
+						nodeName.append("=" + StringUtils.strip(attributeValue)); //$NON-NLS-1$
+					}
+				}
+			}
+		}
+		return nodeName.toString();
 	}
 
 	private BufferedOutlineUpdater getOutlineUpdater() {
@@ -328,7 +395,12 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 
 		while (iterator.hasNext()) {
 			Object listener = iterator.next();
-			if (notifier instanceof Node && (listener instanceof StructuredViewer) && (eventType == INodeNotifier.STRUCTURE_CHANGED || (eventType == INodeNotifier.CHANGE && changedFeature == null))) {
+			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=90637
+			// if (notifier instanceof Node && (listener instanceof
+			// StructuredViewer) && (eventType ==
+			// INodeNotifier.STRUCTURE_CHANGED || (eventType ==
+			// INodeNotifier.CHANGE && changedFeature == null))) {
+			if (notifier instanceof Node && (listener instanceof StructuredViewer) && (eventType == INodeNotifier.STRUCTURE_CHANGED || (eventType == INodeNotifier.CHANGE))) {
 
 				if (DEBUG) {
 					System.out.println("JFaceNodeAdapter notified on event type > " + eventType); //$NON-NLS-1$
@@ -337,8 +409,9 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 				// refresh on structural and "unknown" changes
 				StructuredViewer structuredViewer = (StructuredViewer) listener;
 				// https://w3.opensource.ibm.com/bugzilla/show_bug.cgi?id=5230
-				if (structuredViewer.getControl() != null)
+				if (structuredViewer.getControl() != null) {
 					getOutlineUpdater().processNode(structuredViewer, (Node) notifier);
+				}
 			}
 			else if ((listener instanceof PropertySheetPage) && ((eventType == INodeNotifier.CHANGE) || (eventType == INodeNotifier.STRUCTURE_CHANGED))) {
 				PropertySheetPage propertySheetPage = (PropertySheetPage) listener;
@@ -348,5 +421,16 @@ public class JFaceNodeAdapter implements IJFaceNodeAdapter {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Retrieves info from JFaceNodeAdapterFactory on whether or not to show
+	 * attributes when getLabelText is called
+	 * 
+	 * @return boolean
+	 */
+	private boolean getShowAttribute() {
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88444
+		return ((JFaceNodeAdapterFactory) fAdapterFactory).getShowAttribute();
 	}
 }

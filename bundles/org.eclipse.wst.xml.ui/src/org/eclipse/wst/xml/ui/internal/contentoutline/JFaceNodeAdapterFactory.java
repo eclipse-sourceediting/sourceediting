@@ -40,6 +40,10 @@ public class JFaceNodeAdapterFactory extends AbstractAdapterFactory implements I
 	protected ArrayList fListeners = new ArrayList();
 
 	protected INodeAdapter singletonAdapter;
+	/**
+	 * True if want to show attributes in label
+	 */
+	private boolean fShowAttribute = false;
 
 	public JFaceNodeAdapterFactory() {
 		this(IJFaceNodeAdapter.class, true);
@@ -100,5 +104,25 @@ public class JFaceNodeAdapterFactory extends AbstractAdapterFactory implements I
 
 	public synchronized void removeListener(Object listener) {
 		fListeners.remove(listener);
+	}
+
+	/**
+	 * Set whether or not to show attributes when getLabelText is called
+	 * 
+	 * @param showAttr
+	 */
+	public void setShowAttribute(boolean showAttr) {
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88444
+		fShowAttribute = showAttr;
+	}
+
+	/**
+	 * Used by JFaceNodeAdapter in getLabelText
+	 * 
+	 * @return true if want to show attribute when getLabelText is called
+	 */
+	boolean getShowAttribute() {
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88444
+		return fShowAttribute;
 	}
 }

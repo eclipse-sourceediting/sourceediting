@@ -269,6 +269,7 @@ public class XMLUIMessages extends NLS {
 	public static String OpenFileFromSource_label; // Resource bundle
 	public static String OpenFileFromSource_tooltip; // Resource bundle
 	public static String OpenFileFromSource_description; // Resource bundle
+	public static String XMLContentOutlineConfiguration_0;
 
 	static {
 		// load message values from bundle file
