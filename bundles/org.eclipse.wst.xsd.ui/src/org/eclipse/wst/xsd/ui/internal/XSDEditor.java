@@ -383,19 +383,9 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
     sourcePageIndex = addPage(textEditor, getEditorInput());
     setPageText(sourcePageIndex, XSDEditorPlugin.getXSDString("_UI_TAB_SOURCE"));
 
-    // defect 223043 ... do textEditor.setModel() here instead of in createSourcePage()
-		// the update's critical, to get viewer selection manager and highlighting to work
-    IEditorInput editorInput = getEditorInput();
-    if (editorInput instanceof IFileEditorInput)
-    {
-      textEditor.setModel((IFileEditorInput)getEditorInput());
-    }
-    else
-    {
-//      textEditor.setModel(editorInput);
-    }
+	// the update's critical, to get viewer selection manager and highlighting to work
     textEditor.update();
-		firePropertyChange(PROP_TITLE);
+	firePropertyChange(PROP_TITLE);
   }                       
 
   int graphPageIndex = -1;            
