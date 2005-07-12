@@ -132,9 +132,8 @@
 		name="%EL_Syntax_Validator.name"
 		point="org.eclipse.wst.validation.validator">
 		<validator>
-			<projectNature
-				id="org.eclipse.wst.common.modulecore.ModuleCoreNature">
-			</projectNature>
+			<projectNature id="org.eclipse.wst.common.modulecore.ModuleCoreNature" />
+			<projectNature id="org.eclipse.jdt.core.javanature" />
 			<filter
 				objectClass="org.eclipse.core.resources.IFile"
 				nameFilter="*.jsp">
@@ -173,13 +172,8 @@
 		name="%JSP_Syntax_Validator.name"
 		point="org.eclipse.wst.validation.validator">
 		<validator>
-			<projectNature
-				id="org.eclipse.wst.common.modulecore.ModuleCoreNature">
-			</projectNature>
-			<projectNature id="org.eclipse.jdt.core.javanature">
-			</projectNature>
-			<projectNature id="org.eclipse.wst.web.StaticWebNature">
-			</projectNature>
+			<projectNature id="org.eclipse.wst.common.modulecore.ModuleCoreNature" />
+			<projectNature id="org.eclipse.jdt.core.javanature" />
 
 			<filter
 				objectClass="org.eclipse.core.resources.IFile"
