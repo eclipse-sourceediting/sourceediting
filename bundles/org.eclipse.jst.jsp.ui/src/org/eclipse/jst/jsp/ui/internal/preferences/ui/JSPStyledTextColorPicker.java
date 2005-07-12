@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.preferences.ui;
 
 import org.eclipse.jst.jsp.ui.internal.style.IStyleConstantsJSP;
@@ -19,18 +29,14 @@ public class JSPStyledTextColorPicker extends StyledTextColorPicker {
 	 * Overridden to disable foreground color, bold.
 	 */
 	protected void activate(String namedStyle) {
-		if(namedStyle != null && namedStyle == IStyleConstantsJSP.JSP_CONTENT) {
+		super.activate(namedStyle);
+		
+		if(namedStyle == IStyleConstantsJSP.JSP_CONTENT) {
 			fForeground.setEnabled(false);
-			fBackground.setEnabled(true);
-			fClearStyle.setEnabled(true);
 			fBold.setEnabled(false);
 			if (showItalic)
 				fItalic.setEnabled(false);
-			fForegroundLabel.setEnabled(false);
-			fBackgroundLabel.setEnabled(false);
-		}
-		else {
-			super.activate(namedStyle);
+			fForegroundLabel.setEnabled(false);	
 		}
 	}
 }
