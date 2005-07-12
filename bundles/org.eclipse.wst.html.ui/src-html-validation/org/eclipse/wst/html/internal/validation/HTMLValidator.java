@@ -43,8 +43,18 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 public class HTMLValidator implements IValidator {
-	/**
-	 */
+	static boolean shouldValidate(IFile file) {
+		IResource resource = file;
+		do {
+			if (resource.isDerived() || resource.isTeamPrivateMember() || !resource.isAccessible() || (resource.getName().charAt(0) == '.' && resource.getType() == IResource.FOLDER)) {
+				return false;
+			}
+			resource = resource.getParent();
+		}
+		while ((resource.getType() & IResource.PROJECT) == 0);
+		return true;
+	}
+
 	public HTMLValidator() {
 		super();
 	}
@@ -251,6 +261,9 @@ public class HTMLValidator implements IValidator {
 	private void validateFile(IValidationContext helper, IReporter reporter, IFile file) {
 		if ((reporter != null) && (reporter.isCancelled() == true)) {
 			throw new OperationCanceledException();
+		}
+		if (!shouldValidate(file)) {
+			return;
 		}
 		IDOMModel model = getModel(file.getProject(), file);
 		if (model == null)
