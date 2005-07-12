@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.wst.validation.internal.core.ValidationException;
 import org.eclipse.wst.validation.internal.operations.IRuleGroup;
 import org.eclipse.wst.validation.internal.operations.ValidatorManager;
@@ -62,7 +63,7 @@ public class Validator implements IValidator
           Object []parms = {fileName};
 
           IFile file = (IFile) helper.loadModel(GET_FILE, parms);
-          if (file != null) 
+          if (file != null && shouldValidate(file)) 
           {            
             //the helper might not have the file stored in it. could have an InputStream          
             if (helper.loadModel("inputStream") instanceof InputStream)
@@ -90,7 +91,10 @@ public class Validator implements IValidator
       while (iter.hasNext()) 
       {
         IFile file = (IFile) iter.next();
-        validateIfNeeded(file, helper, reporter);
+        if(shouldValidate(file))
+        {
+          validateIfNeeded(file, helper, reporter);
+        }
       }
     }
   }
@@ -152,5 +156,17 @@ public class Validator implements IValidator
    */
   public void cleanup(IReporter reporter)
   {
+  }
+
+  boolean shouldValidate(IFile file) {
+    IResource resource = file;
+    do {
+      if (resource.isDerived() || resource.isTeamPrivateMember() || !resource.isAccessible() || resource.getName().charAt(0) == '.') {
+        return false;
+      }
+      resource = resource.getParent();
+    }
+	while ((resource.getType() & IResource.PROJECT) == 0 && (resource.getType() & IResource.ROOT) == 0);
+	return true;
   }
 }
