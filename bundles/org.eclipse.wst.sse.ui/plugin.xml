@@ -269,12 +269,6 @@
 			configuration="org.eclipse.ui.defaultAcceleratorConfiguration">
 		</keyBinding>
 		<keyBinding
-			string="Ctrl+Shift+L"
-			scope="org.eclipse.wst.sse.ui.structuredTextEditorScope"
-			command="org.eclipse.wst.sse.ui.cleanup.document"
-			configuration="org.eclipse.ui.defaultAcceleratorConfiguration">
-		</keyBinding>
-		<keyBinding
 			string="Ctrl+Shift+F"
 			scope="org.eclipse.wst.sse.ui.structuredTextEditorScope"
 			command="org.eclipse.wst.sse.ui.format.document"
