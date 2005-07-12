@@ -19,7 +19,6 @@ import org.eclipse.jst.jsp.core.internal.java.JSPTranslator;
 import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 /**
@@ -40,9 +39,6 @@ public class JSPJavaTranslatorTest extends TestCase {
 	public void testJSPInJavascript(String filename) {
 		IStructuredModel sm = getStructuredModelForRead(filename);
 		if (sm != null) {
-			IStructuredDocument structuredDocument = sm.getStructuredDocument();
-			String text = structuredDocument.getText();
-
 			IDOMNode xmlNode = (IDOMNode) sm.getIndexedRegion(0);
 
 			if (xmlNode != null) {
@@ -57,7 +53,7 @@ public class JSPJavaTranslatorTest extends TestCase {
 				//assertEquals("incorrect cursor position >" + translatedCursorPosition, 519, translatedCursorPosition);
 				//assertEquals("translation was incorrect", "testJspString", translation.substring(519, 532));
 				int cursorStart = translation.indexOf("out.print(\"\"+\n testJspString") + 14;
-				assertEquals("incorrect cursor position >" + cursorStart, 585, cursorStart);
+				assertEquals("incorrect cursor position >" + cursorStart, 667, cursorStart);
 			}
 			sm.releaseFromRead();
 		}
