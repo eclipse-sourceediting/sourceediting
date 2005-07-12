@@ -34,6 +34,18 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 public class JSPValidator implements IValidator {
 	
+	static boolean shouldValidate(IFile file) {
+		IResource resource = file;
+		do {
+			if (resource.isDerived() || resource.isTeamPrivateMember() || !resource.isAccessible() || resource.getName().charAt(0) == '.') {
+				return false;
+			}
+			resource = resource.getParent();
+		}
+		while ((resource.getType() & IResource.PROJECT) == 0);
+		return true;
+	}
+	
 	// for debugging
 	private static final boolean DEBUG;
 	static {
@@ -131,6 +143,9 @@ public class JSPValidator implements IValidator {
 	 * @param reporter
 	 */
 	private void validateFile(IFile f, IReporter reporter) {
+		if(!shouldValidate(f)) {
+			return;
+		}
 		
 		IDOMModel model = null;
 		try {
