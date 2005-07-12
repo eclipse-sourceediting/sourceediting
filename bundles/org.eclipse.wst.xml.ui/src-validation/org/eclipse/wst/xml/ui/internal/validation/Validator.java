@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.wst.validation.internal.core.ValidationException;
 import org.eclipse.wst.validation.internal.operations.IRuleGroup;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
@@ -33,6 +34,18 @@ public class Validator implements IValidator
 {
   private final String GET_FILE = "getFile";
   public final String GET_PROJECT_FILES = "getAllFiles";
+
+	static boolean shouldValidate(IFile file) {
+		IResource resource = file;
+		do {
+			if (resource.isDerived() || resource.isTeamPrivateMember() || !resource.isAccessible() || resource.getName().charAt(0) == '.') {
+				return false;
+			}
+			resource = resource.getParent();
+		}
+		while ((resource.getType() & IResource.PROJECT) == 0);
+		return true;
+	}
 
   /**
    * Validate the given file.
@@ -72,8 +85,8 @@ public class Validator implements IValidator
           Object []parms = {fileName};
 
           IFile file = (IFile) helper.loadModel(GET_FILE, parms);
-          if (file != null) 
-          { //the helper might not have the file stored in it. could have an InputStream          
+          if (file != null && shouldValidate(file)) 
+          { //the helper might not have the file stored in it. could have an InputStream
             if (helper.loadModel("inputStream") instanceof InputStream)
             {
               validate(file, (InputStream)helper.loadModel("inputStream"), reporter); //do we need the fileName?  what is int ruleGroup?
