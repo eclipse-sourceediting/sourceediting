@@ -269,14 +269,6 @@
 		name="%HTML_Syntax_Validator.name"
 		point="org.eclipse.wst.validation.validator">
 		<validator>
-			<projectNature
-				id="org.eclipse.wst.common.modulecore.ModuleCoreNature">
-			</projectNature>
-			<projectNature id="org.eclipse.jdt.core.javanature">
-			</projectNature>
-			<projectNature id="org.eclipse.wst.web.StaticWebNature">
-			</projectNature>
-
 			<filter
 				objectClass="org.eclipse.core.resources.IFile"
 				nameFilter="*.html">
