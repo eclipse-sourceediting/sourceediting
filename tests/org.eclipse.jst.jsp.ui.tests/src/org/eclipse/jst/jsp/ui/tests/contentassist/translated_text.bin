@@ -1,4 +1,8 @@
-public class  extends javax.servlet.http.HttpServlet{
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.jsp.*;
+
+public class __2F_INCLUDES_TESTS_2F_jsp_include_test_2E_jsp extends javax.servlet.http.HttpServlet{
  String argh = "argh"; 
 
  protected String with_space = "withspace";

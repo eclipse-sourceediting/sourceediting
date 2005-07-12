@@ -97,7 +97,7 @@ public class JSPTranslationTest extends TestCase {
 			
 			int jspTestPosition = translation.getJspText().indexOf("<%= ") + 4;
 			int javaOffset = translation.getJavaOffset(jspTestPosition) - classnameLength;
-			assertEquals("JSPTranslation java offset:", 890, javaOffset);
+			assertEquals("JSPTranslation java offset:", 972, javaOffset);
 			
 			// (<%= | %>)
 			int javaTestPostition = translation.getJavaText().indexOf("out.print(\"\"+\n   \n);") + 14;
@@ -127,13 +127,8 @@ public class JSPTranslationTest extends TestCase {
 			// for different types of translations (includes, xml-jsp in script, attributes, etc...)
 			String text = translation.getJavaText();
 			
-			int splitStart = text.indexOf(translation.getClassname());
-			int splitEnd = splitStart + translation.getClassname().length();
-			String newText  = text.substring(0, splitStart) + text.substring(splitEnd);
-			
-			assertNotNull("JSP translation text:", newText);
-			assertEquals("JSP translation text does not match expected", knownTranslationText, newText);
-			assertEquals("translation length:", 935, newText.length());
+			assertNotNull("JSP translation text:", text);
+			assertEquals("JSP translation text does not match expected", knownTranslationText, text);
 		}
 		finally {
 			if (model != null)
@@ -224,6 +219,7 @@ public class JSPTranslationTest extends TestCase {
 			for (int i = 0; i < jspRanges.length; i++) {
 				jspPos = (Position)jspRanges[i];
 				javaPos = (Position)jsp2java.get(jspPos);
+				//System.out.println("jsp:" + printPos(jspPos) + " >> java:" + printPos(javaPos));
 				checkPosition(jspPos, javaPos);
 			}
 		}
@@ -257,18 +253,18 @@ public class JSPTranslationTest extends TestCase {
 	private HashMap getXMLJSPPositions() {
 		if(fXMLJSPPositions == null) {
 			fXMLJSPPositions = new HashMap();
-			fXMLJSPPositions.put(new Position(961,7), new Position(870,7));
-			fXMLJSPPositions.put(new Position(882,52), new Position(838,31));
-			fXMLJSPPositions.put(new Position(1018,14), new Position(7,14));
-			fXMLJSPPositions.put(new Position(640,2), new Position(806,2));
-			fXMLJSPPositions.put(new Position(406,24), new Position(677,24));
-			fXMLJSPPositions.put(new Position(685,19), new Position(815,19));
-			fXMLJSPPositions.put(new Position(650,26), new Position(779,26));
-			fXMLJSPPositions.put(new Position(563,9), new Position(766,9));
-			fXMLJSPPositions.put(new Position(461,23), new Position(702,23));
-			fXMLJSPPositions.put(new Position(522,8), new Position(740,8));
-			fXMLJSPPositions.put(new Position(245,43), new Position(147,44));
-			fXMLJSPPositions.put(new Position(323,44), new Position(192,45));
+			fXMLJSPPositions.put(new Position(882,52), new Position(920,31));
+			fXMLJSPPositions.put(new Position(961,7), new Position(952,7));
+			fXMLJSPPositions.put(new Position(1018,14), new Position(89,14));
+			fXMLJSPPositions.put(new Position(640,2), new Position(888,2));
+			fXMLJSPPositions.put(new Position(406,24), new Position(759,24));
+			fXMLJSPPositions.put(new Position(685,19), new Position(897,19));
+			fXMLJSPPositions.put(new Position(650,26), new Position(861,26));
+			fXMLJSPPositions.put(new Position(563,9), new Position(848,9));
+			fXMLJSPPositions.put(new Position(461,23), new Position(784,23));
+			fXMLJSPPositions.put(new Position(522,8), new Position(822,8));
+			fXMLJSPPositions.put(new Position(323,44), new Position(274,45));
+			fXMLJSPPositions.put(new Position(245,43), new Position(229,44));
 		}
 		return fXMLJSPPositions;
 	}
