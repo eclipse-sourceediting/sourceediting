@@ -499,6 +499,7 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 		if (isInstalled()) {
 			
 			getLocalProgressMonitor().setCanceled(true);
+			cancel();
 			
 			// removes model listeners
 			unhookModelLifecycleListener(getDocument());
