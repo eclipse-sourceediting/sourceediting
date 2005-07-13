@@ -121,8 +121,24 @@ public class Catalog implements ICatalog
 			String uri = entry.getURI();
 			try
 			{
-				URL entryURL = new URL(entry.getAbsolutePath(uri));
-				return Platform.resolve(entryURL).toString();
+                // TODO CS : do we really want to resolve these here?
+                // I'm guessing we should return the 'platform:' form of the URI
+                // to the caller.
+                if (uri.startsWith("platform:"))
+                {  
+				  URL entryURL = new URL(entry.getAbsolutePath(uri));                
+				  uri = Platform.resolve(entryURL).toString();
+                  
+                  // we need to ensure URI's are of form "file:///D:/XXX" and NOT  
+                  // "file:D:/XXX".  Otherwise the EMF URI class gets confused
+                  // (see bug 103607) 
+                  String FILE_SCHEME = "file:";
+                  if (uri.startsWith(FILE_SCHEME) && !uri.startsWith(FILE_SCHEME + "/"))
+                  {
+                   // uri = FILE_SCHEME + "///" + uri.substring(FILE_SCHEME.length());
+                  }  
+                }  
+                return uri; 
 			} catch (IOException e)
 			{
 				return null;
