@@ -96,9 +96,6 @@ public class XMLExamplesTest extends BaseTestCase
    */
   public void testWeb()
   {
-	//https://bugs.eclipse.org/bugs/show_bug.cgi?id=103614  
-	assertTrue("this testWeb test removed since blocking rest of tests", false);
-	  
 	  
   	String testname = "web";
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + XMLExamples_DIR + "j2ee/" + testname + ".xml";
