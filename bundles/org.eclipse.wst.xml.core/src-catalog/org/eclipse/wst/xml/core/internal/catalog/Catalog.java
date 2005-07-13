@@ -135,7 +135,7 @@ public class Catalog implements ICatalog
                   String FILE_SCHEME = "file:";
                   if (uri.startsWith(FILE_SCHEME) && !uri.startsWith(FILE_SCHEME + "/"))
                   {
-                   // uri = FILE_SCHEME + "///" + uri.substring(FILE_SCHEME.length());
+                    uri = FILE_SCHEME + "///" + uri.substring(FILE_SCHEME.length());
                   }  
                 }  
                 return uri; 
