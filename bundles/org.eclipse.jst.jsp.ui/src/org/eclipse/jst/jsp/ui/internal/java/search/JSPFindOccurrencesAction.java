@@ -55,14 +55,17 @@ public class JSPFindOccurrencesAction extends BasicFindOccurrencesAction impleme
 	public void update() {
 
 		super.update();
-
-		if (isEnabled()) {
-			// do java element check here...
-			// should already be in a jsp/java partition
-			IJavaElement[] elements = getJavaElementsForCurrentSelection();
-			// we can only find occurrences of one element
-			setEnabled(elements.length == 1);
-		}
+// temporary, workaround to disable function, since using the function 
+// can easily cause deadlock to occur.
+//		 See https://bugs.eclipse.org/bugs/show_bug.cgi?id=103662		
+		setEnabled(false);
+//		if (isEnabled()) {
+//			// do java element check here...
+//			// should already be in a jsp/java partition
+//			IJavaElement[] elements = getJavaElementsForCurrentSelection();
+//			// we can only find occurrences of one element
+//			setEnabled(elements.length == 1);
+//		}
 	}
 
 	/**
