@@ -791,7 +791,7 @@ public class DOMModelImpl extends AbstractStructuredModel implements IStructured
 	public void releaseFromEdit() {
 		if (!isShared()) {
 			// this.document.releaseStyleSheets();
-			//this.document.releaseDocumentType();
+			// this.document.releaseDocumentType();
 		}
 		super.releaseFromEdit();
 	}
@@ -801,7 +801,7 @@ public class DOMModelImpl extends AbstractStructuredModel implements IStructured
 	public void releaseFromRead() {
 		if (!isShared()) {
 			// this.document.releaseStyleSheets();
-			//this.document.releaseDocumentType();
+			// this.document.releaseDocumentType();
 		}
 		super.releaseFromRead();
 	}
@@ -858,11 +858,12 @@ public class DOMModelImpl extends AbstractStructuredModel implements IStructured
 		if (oldStructuredDocument != null)
 			oldStructuredDocument.removeDocumentChangingListener(this);
 		super.setStructuredDocument(structuredDocument);
-		if (structuredDocument.getLength() > 0) {
-			newModel(new NewDocumentEvent(structuredDocument, this));
-		}
-		if (structuredDocument != null)
+		if (structuredDocument != null) {
+			if (structuredDocument.getLength() > 0) {
+				newModel(new NewDocumentEvent(structuredDocument, this));
+			}
 			structuredDocument.addDocumentChangingListener(this);
+		}
 	}
 
 	/**

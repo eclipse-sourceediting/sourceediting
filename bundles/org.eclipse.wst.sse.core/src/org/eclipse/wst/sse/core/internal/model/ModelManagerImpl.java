@@ -1399,10 +1399,18 @@ public class ModelManagerImpl implements IModelManager {
 		if (sharedObject != null) {
 			sharedObject.referenceCountForEdit--;
 			if ((sharedObject.referenceCountForRead == 0) && (sharedObject.referenceCountForEdit == 0)) {
-				fManagedObjects.remove(id);
-				FileBufferModelManager.getInstance().releaseModel(sharedObject.theSharedModel.getStructuredDocument());
+				discardModel(id, sharedObject);
 			}
 		}
+	}
+
+	private void discardModel(Object id, SharedObject sharedObject) {
+		fManagedObjects.remove(id);
+		FileBufferModelManager.getInstance().releaseModel(sharedObject.theSharedModel.getStructuredDocument());
+		// setting the document to null is required since some subclasses 
+		// of model might have "cleanup" of listners, etc., to remove, 
+		// which were initialized during the intial setStructuredDocument
+		sharedObject.theSharedModel.setStructuredDocument(null);
 	}
 
 	/**
@@ -1418,8 +1426,7 @@ public class ModelManagerImpl implements IModelManager {
 		if (sharedObject != null) {
 			sharedObject.referenceCountForRead--;
 			if ((sharedObject.referenceCountForRead == 0) && (sharedObject.referenceCountForEdit == 0)) {
-				fManagedObjects.remove(id);
-				FileBufferModelManager.getInstance().releaseModel(sharedObject.theSharedModel.getStructuredDocument());
+				discardModel(id, sharedObject);
 			}
 		}
 	}

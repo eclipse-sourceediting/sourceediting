@@ -231,9 +231,9 @@ public class CSSModelImpl extends AbstractStructuredModel implements ICSSModel, 
 		if (ownerNode == null) {
 			// this case is external CSS file
 			doc = (CSSStyleSheetImpl) DOMCSSImpl.createCSSStyleSheet(null, null); // parameters
-																					// are
-																					// for
-																					// STYLE-tag
+			// are
+			// for
+			// STYLE-tag
 			parserMode = CSSSourceParser.MODE_STYLESHEET;
 		}
 		else if (ownerNode instanceof org.w3c.dom.Element && ((Element) ownerNode).getTagName().toUpperCase().equals("STYLE")) {//$NON-NLS-1$
@@ -544,11 +544,13 @@ public class CSSModelImpl extends AbstractStructuredModel implements ICSSModel, 
 		if (oldStructuredDocument != null)
 			oldStructuredDocument.removeDocumentChangingListener(this);
 		super.setStructuredDocument(newStructuredDocument);
-		if (newStructuredDocument.getLength() > 0) {
-			newModel(new NewDocumentEvent(newStructuredDocument, this));
-		}
-		if (newStructuredDocument != null)
+
+		if (newStructuredDocument != null) {
+			if (newStructuredDocument.getLength() > 0) {
+				newModel(new NewDocumentEvent(newStructuredDocument, this));
+			}
 			newStructuredDocument.addDocumentChangingListener(this);
+		}
 	}
 
 	/**
