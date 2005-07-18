@@ -60,7 +60,7 @@ public class DOMContentBuilderImpl extends CMVisitor implements DOMContentBuilde
   protected Element rootElement; // this is used only teporarily via createDefaultRootContent
   protected ExternalCMDocumentSupport externalCMDocumentSupport;
 
-  public boolean uglyTempHack;
+  public boolean supressCreationOfDoctypeAndXMLDeclaration;
 
   protected CMDataTypeValueHelper valueHelper = new CMDataTypeValueHelper();
   
@@ -161,7 +161,7 @@ public class DOMContentBuilderImpl extends CMVisitor implements DOMContentBuilde
   public void createDefaultRootContent(CMDocument cmDocument, CMElementDeclaration rootCMElementDeclaration) throws Exception
   {
     String grammarFileName = cmDocument.getNodeName();
-    if (!uglyTempHack)
+    if (!supressCreationOfDoctypeAndXMLDeclaration)
     {                                 
       // TODO cs... investigate to see if this code path is ever used, doesn't seem to be
       // for now I'm setting the encoding to UTF-8 just incase this code path is used somewhere
@@ -638,7 +638,7 @@ public class DOMContentBuilderImpl extends CMVisitor implements DOMContentBuilde
       CMElementDeclaration element = (CMElementDeclaration)elementMap.getNamedItem(rootElementName);
 
       DOMContentBuilderImpl contentBuilder = new DOMContentBuilderImpl(document);
-      contentBuilder.uglyTempHack = hack;
+      contentBuilder.supressCreationOfDoctypeAndXMLDeclaration = hack;
       contentBuilder.createDefaultRootContent(cmDocument, element);
 
       System.out.println();
