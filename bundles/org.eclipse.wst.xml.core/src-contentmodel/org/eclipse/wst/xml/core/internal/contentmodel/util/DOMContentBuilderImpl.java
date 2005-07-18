@@ -162,14 +162,13 @@ public class DOMContentBuilderImpl extends CMVisitor implements DOMContentBuilde
   {
     String grammarFileName = cmDocument.getNodeName();
     if (!uglyTempHack)
-    {                                                                     
+    {                                 
+      // TODO cs... investigate to see if this code path is ever used, doesn't seem to be
+      // for now I'm setting the encoding to UTF-8 just incase this code path is used somewhere
+      //
       String piValue = "version=\"1.0\""; //$NON-NLS-1$
-      String[] encodingInfo = (String[])cmDocument.getProperty("encodingInfo"); //$NON-NLS-1$
-      String encoding = encodingInfo != null ? encodingInfo[1] : null;           
-      if (encoding != null)
-      {
-        piValue += " encoding=\"" + encoding + "\""; //$NON-NLS-1$ //$NON-NLS-2$
-      }
+      String encoding = "UTF-8";           
+      piValue += " encoding=\"" + encoding + "\""; //$NON-NLS-1$ //$NON-NLS-2$      
       ProcessingInstruction pi = document.createProcessingInstruction("xml", piValue); //$NON-NLS-1$
       document.appendChild(pi);
 
