@@ -112,14 +112,12 @@ public class XSDImpl
    * properties common to all CMDocument nodes: PROPERTY_TARGET_NAMESPACE_URI
    * PROPERTY_IMPORTED_NAMESPACE_INFO PROPERTY_NAMESPACE_INFO
    * PROPERTY_ELEMENT_FORM_DEFAULT PROPERTY_ANNOTATION_MAP
-   * PROPERTY_ENCODING_INFO
    */
   public static final String PROPERTY_TARGET_NAMESPACE_URI = "http://org.eclipse.wst/cm/properties/targetNamespaceURI";
   public static final String PROPERTY_IMPORTED_NAMESPACE_INFO = "http://org.eclipse.wst/cm/properties/importedNamespaceInfo";
   public static final String PROPERTY_NAMESPACE_INFO = "http://org.eclipse.wst/cm/properties/namespaceInfo";
   public static final String PROPERTY_ELEMENT_FORM_DEFAULT = "http://org.eclipse.wst/cm/properties/elementFormDefault";
   public static final String PROPERTY_ANNOTATION_MAP = "annotationMap";
-  public static final String PROPERTY_ENCODING_INFO = "encodingInfo";
   /*
    * properties common to all CMElementDeclaration nodes: PROPERTY_XSITYPES
    * PROPERTY_DERIVED_ELEMENT_DECLARATION PROPERTY_SUBSTITUTION_GROUP
@@ -172,9 +170,6 @@ public class XSDImpl
     if (xsdSchema != null)
     {
       cmDocument = (CMDocument) getAdapter(xsdSchema);
-    // This and related methods were doing nothing, so removed.
-    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=102070
-    //  CMDocumentEncodingHelper.setEncodingInfo(cmDocument, uri);
     }
     return cmDocument;
   }
@@ -769,7 +764,6 @@ public class XSDImpl
     protected XSDSchema xsdSchema;
     protected CMNamedNodeMapImpl namedNodeMap;
     protected CMNamedNodeMapImpl entityNodeMap;
-    protected String[] encodingInfo = new String[2];
     protected AnnotationMap annotationMap = new AnnotationMap();
     protected Hashtable substitutionGroupTable;
 
@@ -816,7 +810,7 @@ public class XSDImpl
     public boolean supports(String propertyName)
     {
       return propertyName.equals(PROPERTY_TARGET_NAMESPACE_URI) || propertyName.equals(PROPERTY_IMPORTED_NAMESPACE_INFO) || propertyName.equals(PROPERTY_NAMESPACE_INFO)
-          || propertyName.equals(PROPERTY_ELEMENT_FORM_DEFAULT) || propertyName.equals(PROPERTY_ANNOTATION_MAP) || propertyName.equals(PROPERTY_ENCODING_INFO) || super.supports(propertyName);
+          || propertyName.equals(PROPERTY_ELEMENT_FORM_DEFAULT) || propertyName.equals(PROPERTY_ANNOTATION_MAP) || super.supports(propertyName);
     }
 
     /**
@@ -875,10 +869,6 @@ public class XSDImpl
       else if (propertyName.equals(PROPERTY_ANNOTATION_MAP))
       {
         result = annotationMap;
-      }
-      else if (propertyName.equals(PROPERTY_ENCODING_INFO))
-      {
-        result = encodingInfo;
       }
       else if (propertyName.equals("allElements"))
       {

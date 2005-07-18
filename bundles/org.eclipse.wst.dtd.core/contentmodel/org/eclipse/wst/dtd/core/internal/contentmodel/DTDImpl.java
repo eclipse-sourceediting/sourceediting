@@ -79,9 +79,6 @@ public class DTDImpl {
 		DTDFile dtdFile = buildDTDModel(uri);
 		CMDocument cmDocument = (CMDocument) getAdapter(dtdFile);
 		
-		// This method was accomplishing nothing, so removed. 
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=102070
-		//CMDocumentEncodingHelper.setEncodingInfo(cmDocument, uri);
 		return cmDocument;
 	}
 
@@ -641,7 +638,6 @@ public class DTDImpl {
 		protected CMNamedNodeMapImpl namedNodeMap;
 		protected CMNamedNodeMapImpl entityNodeMap;
 
-		protected String[] encodingInfo = new String[2];
 		protected AnnotationMap annotationMap = new AnnotationMap();
 		protected Map globalPropertyMap = new HashMap();
 
@@ -717,9 +713,6 @@ public class DTDImpl {
 			}
 			else if (propertyName.equals("annotationMap")) { //$NON-NLS-1$
 				result = annotationMap;
-			}
-			else if (propertyName.equals("encodingInfo")) { //$NON-NLS-1$
-				result = encodingInfo;
 			}
 			else if (propertyName.equals("globalPropertyMap")) { //$NON-NLS-1$
 				result = globalPropertyMap;
