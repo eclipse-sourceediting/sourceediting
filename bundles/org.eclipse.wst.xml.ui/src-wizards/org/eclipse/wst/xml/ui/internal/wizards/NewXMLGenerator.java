@@ -23,14 +23,15 @@ import java.util.Vector;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.util.Assert;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.common.uriresolver.internal.util.URIHelper;
 import org.eclipse.wst.sse.core.internal.encoding.CommonEncodingPreferenceNames;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
-import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalog;
 import org.eclipse.wst.xml.core.internal.catalog.provisional.ICatalogEntry;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
@@ -61,6 +62,7 @@ public class NewXMLGenerator {
 	public List namespaceInfoList;
 
 	public NewXMLGenerator() {
+		super();
 	}
 
 	public NewXMLGenerator(String grammarURI, CMDocument cmDocument) {
@@ -115,8 +117,7 @@ public class NewXMLGenerator {
 
 	public void createEmptyXMLDocument(IFile newFile) throws Exception {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		Preferences preference = XMLCorePlugin.getDefault().getPluginPreferences();
-		String charSet = preference.getString(CommonEncodingPreferenceNames.OUTPUT_CODESET);
+		String charSet = getUserPreferredCharset();
 
 		PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, charSet));
 		writer.println("<?xml version=\"1.0\" encoding=\"" + charSet + "\"?>"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -128,8 +129,19 @@ public class NewXMLGenerator {
 		inputStream.close();
 	}
 
+	private String getUserPreferredCharset() {
+		Preferences preference = XMLCorePlugin.getDefault().getPluginPreferences();
+		String charSet = preference.getString(CommonEncodingPreferenceNames.OUTPUT_CODESET);
+		return charSet;
+	}
+
 	public void createXMLDocument(String xmlFileName) throws Exception {
-		ByteArrayOutputStream outputStream = createXMLDocument(xmlFileName, false);
+		IContentType contentType = Platform.getContentTypeManager().findContentTypeFor(xmlFileName);
+		String charset = null;
+		if (contentType != null) {
+			charset = contentType.getDefaultCharset();
+		}
+		ByteArrayOutputStream outputStream = createXMLDocument(xmlFileName, charset);
 
 		File file = new File(xmlFileName);
 		FileOutputStream fos = new FileOutputStream(file);
@@ -139,7 +151,8 @@ public class NewXMLGenerator {
 
 
 	public void createXMLDocument(IFile newFile, String xmlFileName) throws Exception {
-		ByteArrayOutputStream outputStream = createXMLDocument(xmlFileName, false);
+		String charset = newFile.getCharset();
+		ByteArrayOutputStream outputStream = createXMLDocument(xmlFileName, charset);
 
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
 		newFile.setContents(inputStream, true, true, null);
@@ -147,7 +160,13 @@ public class NewXMLGenerator {
 	}
 
 
-	public ByteArrayOutputStream createXMLDocument(String xmlFileName, boolean junk) throws Exception {
+	public ByteArrayOutputStream createXMLDocument(String xmlFileName, String charset) throws Exception {
+		if (charset == null) {
+			charset = getUserPreferredCharset();
+			if (charset == null) {
+				charset = "UTF-8";
+			}
+		}
 		CMDocument cmDocument = getCMDocument();
 
 		Assert.isNotNull(cmDocument);
@@ -159,30 +178,25 @@ public class NewXMLGenerator {
 
 		Document xmlDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 		DOMContentBuilderImpl contentBuilder = new DOMContentBuilderImpl(xmlDocument);
-
+        
+        // this 'uglyTempHack' flag is required in order to supress the creation a default encoding 
+        // we'll handle this later in the domWriter.print() method used below
+        //
+        contentBuilder.supressCreationOfDoctypeAndXMLDeclaration = true;
 		contentBuilder.setBuildPolicy(buildPolicy);
 		contentBuilder.setExternalCMDocumentSupport(new MyExternalCMDocumentSupport(namespaceInfoList, xmlFileName));
-		contentBuilder.uglyTempHack = true; // todo... this line should be
-											// removed when 169191 is fixed
 		contentBuilder.createDefaultRootContent(cmDocument, cmElementDeclaration, namespaceInfoList);
 
-		String[] encodingInfo = (String[]) cmDocument.getProperty("encodingInfo"); //$NON-NLS-1$
-		if (encodingInfo == null) {
-			encodingInfo = new String[2];
-		}
-
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		OutputStreamWriter outputStreamWriter = encodingInfo[0] != null ? new OutputStreamWriter(outputStream, encodingInfo[1]) : new OutputStreamWriter(outputStream);
-
+		OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream, charset);
+            
 		DOMWriter domWriter = new DOMWriter(outputStreamWriter);
-		domWriter.print(xmlDocument, encodingInfo[1], cmDocument.getNodeName(), getNonWhitespaceString(getPublicId()), getNonWhitespaceString(getSystemId())); // todo...
-																																								// replace
-																																								// with
-																																								// domWriter.print(xmlDocument);
-																																								// when
-																																								// 169191
-																																								// is
-																																								// fixed
+        
+        // TODO... instead of relying on file extensions, we need to keep track of the grammar type
+        // better yet we should reate an SSE document so that we can format it nicely before saving
+        // then we won't need the DOMWriter at all
+        //
+		domWriter.print(xmlDocument, charset, cmDocument.getNodeName(), getNonWhitespaceString(getPublicId()), getNonWhitespaceString(getSystemId())); 
 		outputStream.flush();
 		outputStream.close();
 
@@ -192,8 +206,7 @@ public class NewXMLGenerator {
 
 	public void createNamespaceInfoList() {
 		List result = new Vector();
-		ICatalog xmlCatalog = XMLCorePlugin.getDefault().getDefaultXMLCatalog();
-		if (cmDocument != null) {
+	    if (cmDocument != null) {
 			result = (List) cmDocument.getProperty("http://org.eclipse.wst/cm/properties/namespaceInfo"); //$NON-NLS-1$
 			if (result != null) {
 				int size = result.size();
@@ -322,12 +335,12 @@ public class NewXMLGenerator {
 
 
 	protected class MyExternalCMDocumentSupport implements DOMContentBuilderImpl.ExternalCMDocumentSupport {
-		protected List namespaceInfoList;
+		protected List namespaceInfoList1;
 		protected URIResolver idResolver;
 		protected String resourceLocation;
 
-		protected MyExternalCMDocumentSupport(List namespaceInfoList, String resourceLocation) {
-			this.namespaceInfoList = namespaceInfoList;
+		protected MyExternalCMDocumentSupport(List namespaceInfoListParam, String resourceLocation) {
+			this.namespaceInfoList1 = namespaceInfoListParam;
 			this.resourceLocation = resourceLocation;
 			idResolver = URIResolverPlugin.createResolver();
 		}
@@ -336,7 +349,7 @@ public class NewXMLGenerator {
 			CMDocument result = null;
 			if (namespaceURI != null && namespaceURI.trim().length() > 0) {
 				String locationHint = null;
-				for (Iterator i = namespaceInfoList.iterator(); i.hasNext();) {
+				for (Iterator i = namespaceInfoList1.iterator(); i.hasNext();) {
 					NamespaceInfo info = (NamespaceInfo) i.next();
 					if (namespaceURI.equals(info.uri)) {
 						locationHint = info.locationHint;
