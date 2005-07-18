@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.eclipse.wst.xml.core.internal.Logger;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAnyElement;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
@@ -33,7 +34,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.util.CMVisitor;
 
 public class CMPrinter extends CMVisitor
 {
-  protected StringBuffer sb = new StringBuffer();
+  protected StringBuffer fStringBuffer = new StringBuffer();
   protected Vector visitedElements = new Vector(); 
     
   /******   formatting    ******/
@@ -57,58 +58,60 @@ public class CMPrinter extends CMVisitor
     {
       FileOutputStream fileStream = new FileOutputStream(filename);
       OutputStreamWriter writer = new OutputStreamWriter(fileStream);
-      writer.write(sb.toString());
+      writer.write(fStringBuffer.toString());
       writer.flush();
       fileStream.close();
     }
-    catch (IOException e) {}  
+    catch (IOException e) {
+    	Logger.logException("PMPrinter Debug: ", e);
+    }  
   }
 
   public void visitCMAnyElement(CMAnyElement anyElement)
   {
-    sb.append(indent + "<CMAnyElement"); //$NON-NLS-1$
-    printAttributes(sb, anyElement);
-    sb.append(">/n"); //$NON-NLS-1$
+    fStringBuffer.append(indent + "<CMAnyElement"); //$NON-NLS-1$
+    printAttributes(fStringBuffer, anyElement);
+    fStringBuffer.append(">/n"); //$NON-NLS-1$
     incrementIndent();
-    printProperties(sb, anyElement);
+    printProperties(fStringBuffer, anyElement);
     decrementIndent();
-    sb.append(indent + "</CMAnyElement>/n"); //$NON-NLS-1$
+    fStringBuffer.append(indent + "</CMAnyElement>/n"); //$NON-NLS-1$
   }
 
   public void visitCMAttributeDeclaration(CMAttributeDeclaration ad)
   {
-    sb.append(indent + "<CMAttributeDeclaration"); //$NON-NLS-1$
-    printAttributes(sb, ad);
-    sb.append(">\n"); //$NON-NLS-1$
+    fStringBuffer.append(indent + "<CMAttributeDeclaration"); //$NON-NLS-1$
+    printAttributes(fStringBuffer, ad);
+    fStringBuffer.append(">\n"); //$NON-NLS-1$
     incrementIndent();
-    printProperties(sb, ad);
+    printProperties(fStringBuffer, ad);
     decrementIndent();
     visitCMNode(ad.getAttrType());
-    sb.append(indent + "</CMAttributeDeclaration>\n"); //$NON-NLS-1$
+    fStringBuffer.append(indent + "</CMAttributeDeclaration>\n"); //$NON-NLS-1$
   }
 
   public void visitCMDataType(CMDataType dataType)
   {
-    sb.append(indent + "<CMDataType"); //$NON-NLS-1$
-    printAttributes(sb, dataType);
-    sb.append(">\n"); //$NON-NLS-1$
+    fStringBuffer.append(indent + "<CMDataType"); //$NON-NLS-1$
+    printAttributes(fStringBuffer, dataType);
+    fStringBuffer.append(">\n"); //$NON-NLS-1$
     incrementIndent();
-    sb.append(indent + "<ImpliedValue kind=\"" + dataType.getImpliedValueKind() + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
-    sb.append(dataType.getImpliedValue() + "</ImpliedValue>\n"); //$NON-NLS-1$
-    printEnumeration(sb, dataType.getEnumeratedValues());
+    fStringBuffer.append(indent + "<ImpliedValue kind=\"" + dataType.getImpliedValueKind() + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
+    fStringBuffer.append(dataType.getImpliedValue() + "</ImpliedValue>\n"); //$NON-NLS-1$
+    printEnumeration(fStringBuffer, dataType.getEnumeratedValues());
     decrementIndent();
-    sb.append(indent + "</CMDataType>\n"); //$NON-NLS-1$
+    fStringBuffer.append(indent + "</CMDataType>\n"); //$NON-NLS-1$
   }
 
   public void visitCMDocument(CMDocument document)
   {
-    sb.append(indent + "<CMDocument"); //$NON-NLS-1$
-    printAttributes(sb, document);
-    sb.append(">\n"); //$NON-NLS-1$
+    fStringBuffer.append(indent + "<CMDocument"); //$NON-NLS-1$
+    printAttributes(fStringBuffer, document);
+    fStringBuffer.append(">\n"); //$NON-NLS-1$
     incrementIndent();
 
     //    printEntities(sb, document.getEntities()); 
-    printProperties(sb, document);
+    printProperties(fStringBuffer, document);
 
     CMNamedNodeMap map = document.getElements();
     int size = map.getLength();
@@ -118,14 +121,14 @@ public class CMPrinter extends CMVisitor
     }
 
     decrementIndent();
-    sb.append(indent + "</CMDocument>\n"); //$NON-NLS-1$
+    fStringBuffer.append(indent + "</CMDocument>\n"); //$NON-NLS-1$
   }
 
   public void visitCMGroup(CMGroup group)
   {
-    sb.append(indent + "<CMGroup"); //$NON-NLS-1$
-    printAttributes(sb, group);
-    sb.append(">\n"); //$NON-NLS-1$
+    fStringBuffer.append(indent + "<CMGroup"); //$NON-NLS-1$
+    printAttributes(fStringBuffer, group);
+    fStringBuffer.append(">\n"); //$NON-NLS-1$
     incrementIndent();
 
     CMNodeList nodeList = group.getChildNodes();
@@ -136,7 +139,7 @@ public class CMPrinter extends CMVisitor
     }
 
     decrementIndent();
-    sb.append(indent + "</CMGroup>\n"); //$NON-NLS-1$
+    fStringBuffer.append(indent + "</CMGroup>\n"); //$NON-NLS-1$
   }
 
   public void visitCMElementDeclaration(CMElementDeclaration ed)
@@ -144,11 +147,11 @@ public class CMPrinter extends CMVisitor
     if (!visitedElements.contains(ed))
     {
       visitedElements.add(ed);
-      sb.append(indent + "<CMElementDeclaration"); //$NON-NLS-1$
-      printAttributes(sb, ed);
-      sb.append(">\n"); //$NON-NLS-1$
+      fStringBuffer.append(indent + "<CMElementDeclaration"); //$NON-NLS-1$
+      printAttributes(fStringBuffer, ed);
+      fStringBuffer.append(">\n"); //$NON-NLS-1$
       incrementIndent();
-      printProperties(sb, ed);
+      printProperties(fStringBuffer, ed);
 
       CMNamedNodeMap nodeMap = ed.getAttributes();
       int size = nodeMap.getLength();
@@ -164,7 +167,7 @@ public class CMPrinter extends CMVisitor
         visitCMNode(dataType);
 
       decrementIndent();
-      sb.append(indent + "</CMElementDeclaration>\n"); //$NON-NLS-1$
+      fStringBuffer.append(indent + "</CMElementDeclaration>\n"); //$NON-NLS-1$
     }
   }
 
@@ -312,13 +315,7 @@ public class CMPrinter extends CMVisitor
         properties.add("http://org.eclipse.wst/cm/properties/namespaceInfo"); //$NON-NLS-1$
         properties.add("http://org.eclipse.wst/cm/properties/elementFormDefault"); //$NON-NLS-1$
         properties.add("annotationMap"); //$NON-NLS-1$
-        properties.add("encodingInfo"); //$NON-NLS-1$
       }
-      // properties defines but not used
-      // properties.add("documentationSource");
-      // properties.add("documentationLanguage");
-      // properties.add("isValidEmptyValue");
-      // properties.add("http://org.eclipse.wst/cm/properties/defaultRootName");
     }
     return properties;
   }
