@@ -117,11 +117,11 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 			return;
 
 		ITypedRegion[] unfiltered = computePartitioning(dirtyRegion);
-		
+
 		// remove duplicate typed regions
 		// that are handled by the same "total scope" strategy
 		ITypedRegion[] filtered = filterTotalScopeRegions(unfiltered);
-		
+
 		IReconcilingStrategy s;
 		DirtyRegion dirty = null;
 		for (int i = 0; i < filtered.length; i++) {
@@ -139,9 +139,9 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 	}
 
 	/**
-	 * Removes multiple "total-scope" regions (and leaves one)
-	 * for a each partitionType.  This improves performance
-	 * by preventing unnecessary full document validations.
+	 * Removes multiple "total-scope" regions (and leaves one) for a each
+	 * partitionType. This improves performance by preventing unnecessary full
+	 * document validations.
 	 * 
 	 * @param unfiltered
 	 * @return
@@ -154,25 +154,28 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 		HashMap partialScopeRegions = new HashMap();
 		List allRegions = new ArrayList();
 		for (int i = 0; i < unfiltered.length; i++) {
-			
+
 			String partitionType = unfiltered[i].getType();
-			
+
 			// short circuit loop
-			if(totalScopeRegions.containsKey(partitionType) || partialScopeRegions.containsKey(partitionType))
+			if (totalScopeRegions.containsKey(partitionType) || partialScopeRegions.containsKey(partitionType))
 				continue;
-			
+
 			s = getReconcilingStrategy(partitionType);
-			
+
 			// might be the validator strategy
-			if(s == null) {
-				if(getValidatorStrategy().canValidatePartition(partitionType))
-					s = getValidatorStrategy();
+			if (s == null) {
+				ValidatorStrategy validatorStrategy = getValidatorStrategy();
+				if (validatorStrategy != null) {
+					if (validatorStrategy.canValidatePartition(partitionType))
+						s = validatorStrategy;
+				}
 			}
-			
-			if(s instanceof AbstractStructuredTextReconcilingStrategy) {
+
+			if (s instanceof AbstractStructuredTextReconcilingStrategy) {
 				// only allow one dirty region for a strategy
 				// that has "total scope"
-				if(((AbstractStructuredTextReconcilingStrategy)s).isTotalScope())
+				if (((AbstractStructuredTextReconcilingStrategy) s).isTotalScope())
 					totalScopeRegions.put(partitionType, unfiltered[i]);
 				else
 					partialScopeRegions.put(partitionType, unfiltered[i]);
@@ -182,11 +185,11 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 		}
 		allRegions.addAll(totalScopeRegions.values());
 		allRegions.addAll(partialScopeRegions.values());
-		ITypedRegion[] filtered = (ITypedRegion[])allRegions.toArray(new ITypedRegion[allRegions.size()]);
-		
-		if(DEBUG)
+		ITypedRegion[] filtered = (ITypedRegion[]) allRegions.toArray(new ITypedRegion[allRegions.size()]);
+
+		if (DEBUG)
 			System.out.println("filtered out this many 'total-scope' regions: " + (unfiltered.length - filtered.length)); //$NON-NLS-1$
-		
+
 		return filtered;
 	}
 
@@ -432,7 +435,7 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 		// unhook old lifecycle listner
 		unhookModelLifecycleListener(currentDoc);
 		// add new lifecycle listener
-		if(newDocument != null)
+		if (newDocument != null)
 			hookUpModelLifecycleListener(newDocument);
 
 		// unhook old document listener
@@ -497,20 +500,20 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 	 */
 	public void uninstall() {
 		if (isInstalled()) {
-			
+
 			getLocalProgressMonitor().setCanceled(true);
 			cancel();
-			
+
 			// removes model listeners
 			unhookModelLifecycleListener(getDocument());
-			
+
 			// removes document listeners
 			reconcilerDocumentChanged(null);
-			
+
 			// removes widget listener
 			getTextViewer().removeTextInputListener(fTextInputListener);
-			//getTextViewer().getTextWidget().removeDisposeListener(fDisposeListener);
-			
+			// getTextViewer().getTextWidget().removeDisposeListener(fDisposeListener);
+
 			// release all strategies
 			List strategyTypes = getStrategyTypes();
 			if (!strategyTypes.isEmpty()) {
