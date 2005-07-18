@@ -14,7 +14,6 @@ import java.text.Collator;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
@@ -58,7 +57,6 @@ import org.eclipse.wst.xml.core.internal.contentmodel.util.NamespaceInfo;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.dialogs.NamespaceInfoErrorHelper;
 import org.eclipse.wst.xml.ui.internal.dialogs.SelectFileOrXMLCatalogIdPanel;
-import org.eclipse.wst.xml.ui.internal.dialogs.UpdateListener;
 import org.eclipse.wst.xml.ui.internal.nsedit.CommonEditNamespacesDialog;
 
 public class NewXMLWizard extends NewModelWizard
@@ -827,14 +825,6 @@ public class NewXMLWizard extends NewModelWizard
         String tableTitle = XMLWizardsMessages._UI_LABEL_NAMESPACE_INFORMATION;
         editNamespaces = new CommonEditNamespacesDialog(co, new Path(resolvedPath), tableTitle, true, true);
       }
-
-      UpdateListener updateListener = new UpdateListener()
-      {
-        public void updateOccured(Object object, Object arg)
-        { 
-          updateErrorMessage((List)arg);
-        }
-      };
     }
     
     public void setNamespaceInfoList(List list)
