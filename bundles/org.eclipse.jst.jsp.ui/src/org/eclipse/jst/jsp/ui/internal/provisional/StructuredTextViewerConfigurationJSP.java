@@ -172,6 +172,8 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 			// JSP
 			setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, IStructuredPartitionTypes.DEFAULT_PARTITION);
 			setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, IXMLPartitions.XML_DEFAULT);
+			// chances are it's jsp-java, if not you'll just get no proposals
+			setContentAssistProcessor(contentAssistant, jspJavaContentAssistProcessor, IXMLPartitions.XML_CDATA);
 			setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, IHTMLPartitionTypes.HTML_DEFAULT);
 			setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, IHTMLPartitionTypes.HTML_COMMENT);
 			setContentAssistProcessor(contentAssistant, jspContentAssistProcessor, IJSPPartitionTypes.JSP_DEFAULT);

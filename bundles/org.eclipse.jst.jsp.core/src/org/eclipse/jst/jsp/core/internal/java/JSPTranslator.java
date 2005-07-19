@@ -980,38 +980,75 @@ public class JSPTranslator {
 		}
 	}
 
+	/* 
+	 * example:
+	 * 
+	 * <jsp:scriptlet>scriptlet
+	 * jsp-java content
+	 * <![CDATA[ 
+	 *   more jsp java
+	 *  ]]>
+	 * jsp-java content...
+	 *   <![CDATA[ 
+	 *      more jsp java
+	 *    ]]>
+	 * </jsp:scriptlet>
+	 *
+	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=93366
+	 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=88590
+	 * translate everything inbetween <scriptlet> tags, which may 
+	 * be more than one region (esp. CDATA)
+	 * 
+	 */
 	private void translateXMLJSPContent(int type) {
-		// <jsp:scriplet> is current StructuredDocumentRegion
 		
-		// <jsp:scriptlet>scriptlet
-		// content...</jsp:scriptlet>
-		
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=93366
-		
-		// should actually be translating everything inbetween, which may 
-		// be more than one region
 		IStructuredDocumentRegion sdr = getCurrentNode().getNext();
-		StringBuffer content = new StringBuffer();
 		int start = sdr.getStartOffset();
 		int end = sdr.getEndOffset();
-		// read until </jsp:scriptlet>
+		String sdrText = "";
+		
+		// read structured document regions until 
+		// </jsp:scriptlet> or EOF
 		while(sdr != null && sdr.getType() != DOMRegionContext.XML_TAG_NAME) {
-			content.append(sdr.getText());
-			end = sdr.getEndOffset();
+			
+			// setup for next region
+			start = sdr.getStartOffset();
+			sdrText = sdr.getText();
+			
+			if(sdr.getType() == DOMRegionContext.XML_CDATA_TEXT){
+				
+				// just to be safe, make sure CDATA start & end are there
+				if(sdrText.startsWith("<![CDATA[") && sdrText.endsWith("]]>")) {
+					
+					start = sdr.getStartOffset() + 9; // <![CDATA[
+					end = sdr.getEndOffset() - 3; // ]]>
+					sdrText = sdrText.substring(9, sdrText.length() - 3);
+					writeToBuffer(type, sdrText, start, end);
+				}
+			}
+			else {
+				
+				// handle entity references
+				sdrText = EscapedTextUtil.getUnescapedText(sdrText);		
+				end = sdr.getEndOffset();
+				writeToBuffer(type, sdrText, start, end);
+			}
 			sdr = sdr.getNext();
 		}
-		
-		advanceNextNode();
-		
+		setCurrentNode(sdr);
+		setSourceReferencePoint();
+	}
+
+	private void writeToBuffer(int type, String content, int jspStart, int jspEnd) {
 		switch(type) {
 			case SCRIPTLET:
-				translateScriptletString(content.toString(), getCurrentNode(), start, end-start);
+				translateScriptletString(content, getCurrentNode(), jspStart, jspEnd-jspStart);
 				break;
 			case EXPRESSION:
-				translateExpressionString(content.toString(), getCurrentNode(), start, end-start);
+				translateExpressionString(content, getCurrentNode(), jspStart, jspEnd-jspStart);
 				break;
 			case DECLARATION:
-				translateDeclarationString(content.toString(), getCurrentNode(), start, end-start);
+				translateDeclarationString(content, getCurrentNode(), jspStart, jspEnd-jspStart);
 				break;
 		}
 	}
