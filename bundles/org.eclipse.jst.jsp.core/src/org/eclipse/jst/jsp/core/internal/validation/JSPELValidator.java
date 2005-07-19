@@ -11,6 +11,7 @@ import org.eclipse.jst.jsp.core.internal.domdocument.DOMModelForJSP;
 import org.eclipse.jst.jsp.core.internal.java.jspel.JSPELParser;
 import org.eclipse.jst.jsp.core.internal.java.jspel.ParseException;
 import org.eclipse.jst.jsp.core.internal.java.jspel.Token;
+import org.eclipse.jst.jsp.core.internal.java.jspel.TokenMgrError;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
@@ -65,6 +66,7 @@ public class JSPELValidator implements org.eclipse.wst.validation.internal.provi
 		String elText = container.getText(region);
 		JSPELParser elParser = JSPELParser.createParser(elText);
 		int contentStart = container.getStartOffset(region);
+		int contentLength = container.getLength();
 		try {
 			elParser.Expression();
 		} catch (ParseException e) {
@@ -73,6 +75,12 @@ public class JSPELValidator implements org.eclipse.wst.validation.internal.provi
 			Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, JSPCoreMessages.JSPEL_Syntax);
 			message.setOffset(problemStartOffset);
 			message.setLength(curTok.endColumn - curTok.beginColumn + 1);
+			message.setTargetObject(file);
+			reporter.addMessage(this, message);
+		} catch (TokenMgrError te) {
+			Message message = new LocalizedMessage(IMessage.LOW_SEVERITY, JSPCoreMessages.JSPEL_Token);
+			message.setOffset(contentStart);
+			message.setLength(contentLength);
 			message.setTargetObject(file);
 			reporter.addMessage(this, message);
 		}

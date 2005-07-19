@@ -1,7 +1,6 @@
 package org.eclipse.jst.jsp.core.internal.java.jspel;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -35,14 +34,20 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	"java.util.Map applicationScope = null;" + ENDL + //$NON-NLS-1$
 	"return \"\"+"; //$NON-NLS-1$
 	
-	private static final String fJspImplicitObjects[] = { 	"pageContext", "param", "paramValues", "header", "headerValues", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-															"cookie", "initParam", "pageScope", "requestScope", "sessionScope",  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-															"applicationScope" }; //$NON-NLS-1$
+	private static final String fJspImplicitObjects[] = { "pageContext" }; //$NON-NLS-1$
 	
-	private static final HashSet fJSPImplicitObjectMap = new HashSet(fJspImplicitObjects.length);
+	private static final String fJspImplicitMaps[] = { 	"param", "paramValues", "header", "headerValues", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+														"cookie", "initParam", "pageScope", "requestScope", "sessionScope",  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+														"applicationScope" }; //$NON-NLS-1$
+	
+	private static final HashMap fJSPImplicitObjectMap = new HashMap(fJspImplicitObjects.length);
 	static {
 		for(int i = 0; i < fJspImplicitObjects.length; i++) {
-			fJSPImplicitObjectMap.add(fJspImplicitObjects[i]);
+			fJSPImplicitObjectMap.put(fJspImplicitObjects[i], new Boolean(true));
+		}
+		
+		for(int i = 0; i < fJspImplicitMaps.length; i++) {
+			fJSPImplicitObjectMap.put(fJspImplicitMaps[i], new Boolean(false));
 		}
 	}
 	
@@ -341,7 +346,7 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 		// This is the primary plae where modification is needed to 
 		// support JSF backing beans.
 		if(null == node.children) {
-			if(isImplicitObject(node.firstToken.image)) {
+			if(isCompletingObject(node.firstToken.image)) {
 				append(node.firstToken);
 			} else {
 				fCanGenerate = false;
@@ -358,8 +363,9 @@ public class ELGeneratorVisitor implements JSPELParserVisitor {
 	 * @param image
 	 * @return
 	 */
-	private boolean isImplicitObject(String image) {
-		return fJSPImplicitObjectMap.contains(image);
+	private boolean isCompletingObject(String image) {
+		Boolean value = (Boolean)fJSPImplicitObjectMap.get(image);
+		return null == value ? false : value.booleanValue();
 	}
 
 	/**

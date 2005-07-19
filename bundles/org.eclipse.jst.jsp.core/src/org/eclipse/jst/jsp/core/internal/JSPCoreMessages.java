@@ -24,6 +24,7 @@ public class JSPCoreMessages extends NLS {
 	public static String JSPIndexManager_2;
 	public static String JSP_Search;
 	public static String JSPEL_Syntax;
+	public static String JSPEL_Token;
 	public static String JSPDocumentLoader_1;
 	
 	private JSPCoreMessages() {

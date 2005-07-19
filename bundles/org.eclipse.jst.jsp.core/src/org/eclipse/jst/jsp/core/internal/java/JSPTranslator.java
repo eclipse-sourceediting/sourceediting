@@ -31,6 +31,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.Position;
+import org.eclipse.jst.jsp.core.internal.JSPCoreMessages;
 import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.TaglibController;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.TLDCMDocumentManager;
@@ -40,6 +41,7 @@ import org.eclipse.jst.jsp.core.internal.java.jspel.ELGenerator;
 import org.eclipse.jst.jsp.core.internal.java.jspel.JSPELParser;
 import org.eclipse.jst.jsp.core.internal.java.jspel.ParseException;
 import org.eclipse.jst.jsp.core.internal.java.jspel.Token;
+import org.eclipse.jst.jsp.core.internal.java.jspel.TokenMgrError;
 import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelper;
 import org.eclipse.jst.jsp.core.internal.taglib.TaglibHelperManager;
@@ -1131,6 +1133,9 @@ public class JSPTranslator {
 			
 			pos = new Position(problemStartOffset, problemEndOffset - problemStartOffset + 1);
 			fELProblems.add(new ELProblem(pos, e.getLocalizedMessage()));
+		} catch (TokenMgrError te) {
+			Position pos = new Position(contentStart, contentLength);
+			fELProblems.add(new ELProblem(pos, JSPCoreMessages.JSPEL_Token));
 		}
 	}
 
