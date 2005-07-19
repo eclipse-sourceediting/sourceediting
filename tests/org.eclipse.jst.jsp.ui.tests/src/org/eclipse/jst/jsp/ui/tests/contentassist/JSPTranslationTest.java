@@ -229,6 +229,28 @@ public class JSPTranslationTest extends TestCase {
 		}
 	}
 	
+	public void testXMLJSPCDATAText() {
+		IFile f = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path("INCLUDES_TESTS/cdata/cdata.jsp"));
+		DOMModelForJSP sModel = (DOMModelForJSP)getStructuredModelForRead(f);
+		try {
+			setupAdapterFactory(sModel);
+			JSPTranslationAdapter adapter = (JSPTranslationAdapter) sModel.getDocument().getAdapterFor(IJSPTranslation.class);
+			JSPTranslation translation = adapter.getJSPTranslation();
+			
+			String transText = translation.getJavaText();
+			
+//			 named as .bin so no line conversion occurs (\n is in use)
+			InputStream in = getClass().getResourceAsStream("translated_xml_jsp_cdata.bin");
+			String knownText = loadChars(in);
+			
+			assertEquals(knownText, transText);
+		}
+		finally {
+			if(sModel != null)
+				sModel.releaseFromRead();
+		}
+	}
+	
 	private void checkPosition(Position jspPos, Position javaPos) {
 		
 		HashMap expected = getXMLJSPPositions();
