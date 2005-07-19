@@ -63,7 +63,8 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 			if (prevObject == object) {
 				objectPendingRefresh = object;
 				getDisplay().timerExec(delta, this);
-			} else {
+			}
+			else {
 				if (objectPendingRefresh != null) {
 					viewer.doRefresh(objectPendingRefresh, false);
 					objectPendingRefresh = null;
@@ -102,7 +103,7 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 
 	class DelayingNodeSelectionListener implements INodeSelectionListener {
 		public void nodeSelectionChanged(NodeSelectionChangedEvent event) {
-			//			if (isNodeSelectionListenerEnabled &&
+			// if (isNodeSelectionListenerEnabled &&
 			// !event.getSource().equals(this)) {
 			if (!event.getSource().equals(XMLTableTreeViewer.this)) {
 				List selectedNodes = event.getSelectedNodes();
@@ -113,7 +114,8 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 				if (selectedNodes.size() < 100) {
 					if (timer.isRefreshPending()) {
 						timer.setSelection(selection);
-					} else {
+					}
+					else {
 						setSelection(selection, true);
 					}
 				}
@@ -222,9 +224,9 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 			// 'delayed' selection occurs.
 			// These delayed selections are caused two ways:
 			//
-			//  - when DelayedRefreshTimer calls doRefresh() ... the
+			// - when DelayedRefreshTimer calls doRefresh() ... the
 			// 'preserveSelection' causes selection to occur
-			//  - when DelayedRefreshTimer performs a 'pending' selection
+			// - when DelayedRefreshTimer performs a 'pending' selection
 			// 
 			// Since we only want to update the selectionManager on an explict
 			// user action
@@ -236,7 +238,8 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 			removeSelectionChangedListener(fViewerSelectionManager);
 			super.fireSelectionChanged(event);
 			addSelectionChangedListener(fViewerSelectionManager);
-		} else {
+		}
+		else {
 			super.fireSelectionChanged(event);
 		}
 	}
@@ -257,41 +260,60 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 		treeExtension.dispose();
 		setModel(null);
 		setViewerSelectionManager(null);
-
-		//		if (fViewerSelectionManager != null) {
-		//			fViewerSelectionManager.removeNodeSelectionListener(getNodeSelectionListener());
-		//		}
-		//
-		//		fOverlayIconManager.setResource(null);
-		//		super.handleDispose(event);
-		//
-		//		if (fModel != null)
-		//			fModel.removeModelStateListener(fInternalModelStateListener);
 	}
 
 	public void refresh() {
 		if (!ignoreRefresh && !getControl().isDisposed()) {
-			treeExtension.resetCachedData();
-			super.refresh();
+			if (Display.getCurrent() != null) {
+				refreshTree();
+			}
+			else {
 
-			//			if (B2BHacks.IS_UNIX) {
-			// this is required to fix defect 193792
-			// this fixes the problem where the 'paintHandler'drawn portions
-			// of tree weren't repainted properly
-			//
-			getTree().redraw(0, 0, getTree().getBounds().width, getTree().getBounds().height, false);
-			getTree().update();
-			//			}
+				final Display display = PlatformUI.getWorkbench().getDisplay();
+
+				display.asyncExec(new Runnable() {
+					public void run() {
+						if (display != null && !display.isDisposed()) {
+							refreshTree();
+						}
+					}
+				});
+			}
 		}
+	}
+
+	void refreshTree() {
+		treeExtension.resetCachedData();
+		super.refresh();
+		getTree().redraw(0, 0, getTree().getBounds().width, getTree().getBounds().height, false);
+		getTree().update();
 	}
 
 	public void refresh(Object o) {
 		if (!ignoreRefresh && !getControl().isDisposed() && timer != null) {
-			if (getTree().isVisible()) {
-				doRefresh(o, false);
-			} else {
-				timer.refresh(o);
+			if (Display.getCurrent() != null) {
+				refreshTree(o);
 			}
+			else {
+				final Object object = o;
+				final Display display = PlatformUI.getWorkbench().getDisplay();
+				display.asyncExec(new Runnable() {
+					public void run() {
+						if (display != null && !display.isDisposed()) {
+							refreshTree(object);
+						}
+					}
+				});
+			}
+		}
+	}
+
+	void refreshTree(Object o) {
+		if (getTree().isVisible()) {
+			doRefresh(o, false);
+		}
+		else {
+			timer.refresh(o);
 		}
 	}
 
