@@ -55,6 +55,7 @@ import org.eclipse.wst.xml.core.internal.preferences.XMLCorePreferenceNames;
 import org.eclipse.wst.xml.core.internal.provisional.format.FormatProcessorXML;
 import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
+import org.eclipse.wst.xml.ui.internal.autoedit.AutoEditStrategyForTabs;
 import org.eclipse.wst.xml.ui.internal.autoedit.StructuredAutoEditStrategyXML;
 import org.eclipse.wst.xml.ui.internal.contentassist.NoRegionContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
@@ -97,12 +98,17 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		for (int i = 0; i < superStrategies.length; i++) {
 			allStrategies.add(superStrategies[i]);
 		}
-
+		
 		if (contentType == IXMLPartitions.XML_DEFAULT) {
 			allStrategies.add(new StructuredAutoEditStrategyXML());
 		}
 
-		return (IAutoEditStrategy[]) allStrategies.toArray(new IAutoEditStrategy[0]);
+		// be sure this is last, so it can modify any results form previous
+		// commands that might on on same partiion type.
+		// add auto edit strategy that handles when tab key is pressed
+		allStrategies.add(new AutoEditStrategyForTabs());
+
+		return (IAutoEditStrategy[]) allStrategies.toArray(new IAutoEditStrategy[allStrategies.size()]);
 	}
 
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {

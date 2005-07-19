@@ -42,6 +42,7 @@ import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.html.core.internal.preferences.HTMLCorePreferenceNames;
 import org.eclipse.wst.html.core.internal.provisional.text.IHTMLPartitionTypes;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
+import org.eclipse.wst.html.ui.internal.autoedit.AutoEditStrategyForTabs;
 import org.eclipse.wst.html.ui.internal.contentassist.HTMLContentAssistProcessor;
 import org.eclipse.wst.html.ui.internal.contentassist.NoRegionContentAssistProcessorForHTML;
 import org.eclipse.wst.html.ui.internal.hyperlink.URIHyperlinkDetector;
@@ -101,12 +102,17 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 		for (int i = 0; i < superStrategies.length; i++) {
 			allStrategies.add(superStrategies[i]);
 		}
-
+		
 		if (contentType == IHTMLPartitionTypes.HTML_DEFAULT || contentType == IHTMLPartitionTypes.HTML_DECLARATION) {
 			allStrategies.add(new StructuredAutoEditStrategyXML());
 		}
+		
+		// be sure this is added last in list, so it has a change to modify 
+		// previous results.
+		// add auto edit strategy that handles when tab key is pressed
+		allStrategies.add(new AutoEditStrategyForTabs());
 
-		return (IAutoEditStrategy[]) allStrategies.toArray(new IAutoEditStrategy[0]);
+		return (IAutoEditStrategy[]) allStrategies.toArray(new IAutoEditStrategy[allStrategies.size()]);
 	}
 
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {

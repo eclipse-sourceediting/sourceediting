@@ -59,6 +59,7 @@ import org.eclipse.wst.css.core.internal.provisional.text.ICSSPartitionTypes;
 import org.eclipse.wst.css.ui.internal.style.LineStyleProviderForEmbeddedCSS;
 import org.eclipse.wst.html.core.internal.format.HTMLFormatProcessorImpl;
 import org.eclipse.wst.html.core.internal.provisional.text.IHTMLPartitionTypes;
+import org.eclipse.wst.html.ui.internal.autoedit.AutoEditStrategyForTabs;
 import org.eclipse.wst.html.ui.internal.provisional.StructuredTextViewerConfigurationHTML;
 import org.eclipse.wst.html.ui.internal.style.LineStyleProviderForHTML;
 import org.eclipse.wst.javascript.ui.internal.common.style.LineStyleProviderForJavaScript;
@@ -108,7 +109,18 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 		if (contentType == IXMLPartitions.XML_DEFAULT) {
 			strategies = getXMLSourceViewerConfiguration().getAutoEditStrategies(sourceViewer, contentType);
 		} else if (contentType == IJSPPartitionTypes.JSP_CONTENT_JAVA) {
-			strategies = getJavaSourceViewerConfiguration().getAutoEditStrategies(sourceViewer, IJavaPartitions.JAVA_PARTITIONING);
+			List allStrategies = new ArrayList(0);
+			
+			IAutoEditStrategy[] javaStrategies = getJavaSourceViewerConfiguration().getAutoEditStrategies(sourceViewer, IJavaPartitions.JAVA_PARTITIONING);
+			for (int i = 0; i < javaStrategies.length; i++) {
+				allStrategies.add(javaStrategies[i]);
+			}
+			// be sure this is added last, after others, so it can modify 
+			// results from earlier steps.
+			// add auto edit strategy that handles when tab key is pressed
+			allStrategies.add(new AutoEditStrategyForTabs());
+			
+			strategies = (IAutoEditStrategy[]) allStrategies.toArray(new IAutoEditStrategy[allStrategies.size()]);
 		} else {
 			List allStrategies = new ArrayList(0);
 	
@@ -116,12 +128,17 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 			for (int i = 0; i < superStrategies.length; i++) {
 				allStrategies.add(superStrategies[i]);
 			}
+			
 	
 			if (contentType == IHTMLPartitionTypes.HTML_DEFAULT || contentType == IHTMLPartitionTypes.HTML_DECLARATION) {
 				allStrategies.add(new StructuredAutoEditStrategyJSP());
 			}
+			// be sure this is added last, after others, so it can modify 
+			// results from earlier steps.
+			// add auto edit strategy that handles when tab key is pressed
+			allStrategies.add(new AutoEditStrategyForTabs());
 			
-			strategies = (IAutoEditStrategy[]) allStrategies.toArray(new IAutoEditStrategy[0]);
+			strategies = (IAutoEditStrategy[]) allStrategies.toArray(new IAutoEditStrategy[allStrategies.size()]);
 		}
 
 		return strategies;
