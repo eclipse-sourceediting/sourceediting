@@ -1,12 +1,12 @@
+/* I know that haing some of these options on one line is rude but 
+ * if we don't do that the line number reported from javacc are off
+ * which, trust me, is far more annoying.  --tcarroll@bea.com
+ */
 options {
   JAVA_UNICODE_ESCAPE = false;
   UNICODE_INPUT = true;
   STATIC = false;
-  OPTIMIZE_TOKEN_MANAGER = true;
-  MULTI = true;
-  VISITOR = true;
-  NODE_PACKAGE = "org.eclipse.jst.jsp.core.internal.java.jspel";
-  NODE_SCOPE_HOOK = true;
+  OPTIMIZE_TOKEN_MANAGER = true; MULTI = true; VISITOR = true; NODE_PACKAGE = "org.eclipse.jst.jsp.core.internal.java.jspel"; NODE_SCOPE_HOOK = true;
 }
 
 PARSER_BEGIN(JSPELParser)
@@ -17,7 +17,7 @@ public class JSPELParser {
   
   void jjtreeOpenNodeScope(Node n)
   {
-  	((SimpleNode)n).setFirstToken(getToken(1));
+          ((SimpleNode)n).setFirstToken(getToken(1));
   }
 
   void jjtreeCloseNodeScope(Node n)
@@ -26,13 +26,13 @@ public class JSPELParser {
   }
   
   public static JSPELParser createParser(java.lang.String input) {
-  	java.io.StringReader reader = new java.io.StringReader(input);
-  	return new JSPELParser(reader);
+          java.io.StringReader reader = new java.io.StringReader(input);
+          return new JSPELParser(reader);
   }
   
   public void ReInit(java.lang.String input) {
-   	java.io.StringReader reader = new java.io.StringReader(input);
-   	ReInit(reader);
+           java.io.StringReader reader = new java.io.StringReader(input);
+           ReInit(reader);
   }
   
 }
@@ -155,84 +155,84 @@ TOKEN :
 
 ASTExpression Expression() : {}
 {
-	(LOOKAHEAD(ChoiceExpression()) ChoiceExpression() | OrExpression()) { return jjtThis; }
+        (LOOKAHEAD("?") ChoiceExpression() | OrExpression()) { return jjtThis; }
 }
 
 void OrExpression() #OrExpression(>1) : 
 {
-	Token t;
+        Token t;
 }
 {
-	AndExpression() ((t = <OR1> | t = <OR2>) { jjtThis.addOperatorToken(t); }
-	AndExpression())*
+        AndExpression() ((t = <OR1> | t = <OR2>) { jjtThis.addOperatorToken(t); }
+        AndExpression())*
 }
 
 void AndExpression() #AndExpression(>1) : 
 {
-	Token t;
+        Token t;
 }
 {
-	EqualityExpression() ((t = <AND1> | t = <AND2>) { jjtThis.addOperatorToken(t); }
-	EqualityExpression())*	
+        EqualityExpression() ((t = <AND1> | t = <AND2>) { jjtThis.addOperatorToken(t); }
+        EqualityExpression())*        
 }
 
 void EqualityExpression() #EqualityExpression(>1) : 
 {
-	Token t;
+        Token t;
 }
 {
-	RelationalExpression() 
-	((t = <EQ1> | t = <EQ2> | t = <NEQ1> | t = <NEQ2>) { jjtThis.addOperatorToken(t); }
-	RelationalExpression())*
+        RelationalExpression() 
+        ((t = <EQ1> | t = <EQ2> | t = <NEQ1> | t = <NEQ2>) { jjtThis.addOperatorToken(t); }
+        RelationalExpression())*
 }
 
 void RelationalExpression() #RelationalExpression(>1) :
 {
-	Token t;
+        Token t;
 }
 {
-	AddExpression() 
-	(
-		(t = <LT1> | t = <LT2> | t = <GT1> | t = <GT2> | t = <GE1> | t = <GE2> | t = <LE1> | t = <LE2>)  { jjtThis.addOperatorToken(t); }
-		AddExpression()
-	)*
+        AddExpression() 
+        (
+                (t = <LT1> | t = <LT2> | t = <GT1> | t = <GT2> | t = <GE1> | t = <GE2> | t = <LE1> | t = <LE2>)  { jjtThis.addOperatorToken(t); }
+                AddExpression()
+        )*
 }
 
 void AddExpression() #AddExpression(>1) : 
 {
-	Token t;
+        Token t;
 }
 {
-	MultiplyExpression() ((t = <PLUS> | t = <MINUS>) { jjtThis.addOperatorToken(t); }
-	MultiplyExpression())*
+        MultiplyExpression() ((t = <PLUS> | t = <MINUS>) { jjtThis.addOperatorToken(t); }
+        MultiplyExpression())*
 }
 
 void MultiplyExpression() #MultiplyExpression(>1) : 
 {
-	Token t;
+        Token t;
 }
 {
-	UnaryExpression() (
-		( t = <MULTIPLY> | t = <DIVIDE1> | t = <DIVIDE2> | t = <MODULUS1> | t = <MODULUS2>) { jjtThis.addOperatorToken(t); }
-		UnaryExpression()	
-	)*
+        UnaryExpression() (
+                ( t = <MULTIPLY> | t = <DIVIDE1> | t = <DIVIDE2> | t = <MODULUS1> | t = <MODULUS2>) { jjtThis.addOperatorToken(t); }
+                UnaryExpression()        
+        )*
 }
 
 void ChoiceExpression() : {}
 {
-	OrExpression() <COND> Expression() <COLON> Expression()
+        OrExpression() <COND> OrExpression() <COLON> OrExpression()
 }
 
 void UnaryExpression() : {}
 {
-	((<NOT1> | <MINUS> | <EMPTY>) UnaryExpression())
-	| Value()
-	
+        ((<NOT1> | <NOT2> | <MINUS> | <EMPTY>) UnaryExpression())
+        | Value()
+        
 }
 
 void Value() : {}
 {
-	ValuePrefix() (ValueSuffix())*
+        ValuePrefix() (ValueSuffix())*
 }
 
 void ValuePrefix() : {}
@@ -242,29 +242,29 @@ void ValuePrefix() : {}
 
 void ValueSuffix() : 
 {
-	Token t = null;
+        Token t = null;
 }
 {
-	(<DOT> (t = <IDENTIFIER>)?) { jjtThis.setPropertyNameToken(t); }
-	| (<LBRACKET> Expression() <RBRACKET>)
+        (<DOT> (t = <IDENTIFIER>)?) { jjtThis.setPropertyNameToken(t); }
+        | (<LBRACKET> Expression() <RBRACKET>)
 }
 
 void FunctionInvocation() : 
 {
-	Token prefix = null, name = null;
+        Token prefix = null, name = null;
 }
 {
     (prefix = <IDENTIFIER> <COLON>) { jjtThis.setFullFunctionName(prefix.image + ":"); }
-	(name = <IDENTIFIER>)? {
-    	if(null != prefix && null != name)
-	    	jjtThis.setFullFunctionName(prefix.image + ":" + (null == name ? "" : name.image));
-	    else if(null != name)
-	    	jjtThis.setFullFunctionName(name.image);
-	}
-	(<LPAREN> Expression() (<COMMA> Expression())* try  { (<RPAREN>) } catch (Exception e) {} )?
+        (name = <IDENTIFIER>)? {
+            if(null != prefix && null != name)
+                    jjtThis.setFullFunctionName(prefix.image + ":" + (null == name ? "" : name.image));
+            else if(null != name)
+                    jjtThis.setFullFunctionName(name.image);
+        }
+        (<LPAREN> Expression() (<COMMA> Expression())* try  { (<RPAREN>) } catch (Exception e) {} )?
 }
 
 void Literal() : {}
 {
-	<TRUE> | <FALSE> | <INTEGER_LITERAL> | <FLOATING_POINT_LITERAL> | <STRING_LITERAL> | <NULL>
+        <TRUE> | <FALSE> | <INTEGER_LITERAL> | <FLOATING_POINT_LITERAL> | <STRING_LITERAL> | <NULL>
 }
