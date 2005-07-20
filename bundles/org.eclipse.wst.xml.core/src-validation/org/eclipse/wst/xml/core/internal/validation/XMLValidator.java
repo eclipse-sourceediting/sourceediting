@@ -291,7 +291,7 @@ public class XMLValidator
      * This prevents Xerces from producing a warning on every line of the
      * XML document.
      */
-    private List reportedExceptions = new ArrayList();
+    private List reportedSchemaReferenceErrors = new ArrayList();
     
     /**
      * Constructor.
@@ -308,39 +308,59 @@ public class XMLValidator
      */
     public XMLInputSource resolveEntity(XMLResourceIdentifier rid) throws XNIException, IOException
     {
-      XMLInputSource result = null;
-
-      if (uriResolver != null)
-      {         
-		String id = rid.getPublicId();
-		if(id == null){
-			id = rid.getNamespace();
-		}
-        String systemId = uriResolver.resolve(rid.getBaseSystemId(), id, rid.getLiteralSystemId());                         
-        result = new XMLInputSource(id, rid.getExpandedSystemId(), rid.getBaseSystemId());   
-		if(systemId != null)
-		{
-		  try
-		  {
-		    result.setByteStream(new URL(systemId).openStream());
-		  }
-		  catch(Exception e)
-		  {
-			  //System.out.println(e);
-        if(!reportedExceptions.contains(rid.getExpandedSystemId()))
-        {
-          reportedExceptions.add(rid.getExpandedSystemId());
-          // Throw an exception to indicate that the document could not be read.
-		  IOException expt = new IOException();
-		  expt.initCause(e);
-		  throw expt;
-        }
-		  }
-		}
+      try
+      {
+        return _internalResolveEntity(uriResolver, rid);
       }
-      return result;
+      catch(IOException e)
+      {
+        e.printStackTrace();   
+      }      
+      return null;
     }
   }
+  
+  // cs : I've refactored the common SAX based resolution code into this method for use by other validators 
+  // (i.e. XML Schema, WSDL etc).   The other approach is maintain a copy for each validator that has
+  // identical code.  In any case we should strive to ensure that the validators perform resolution consistently. 
+  public static XMLInputSource _internalResolveEntity(URIResolver uriResolver, XMLResourceIdentifier rid) throws  IOException
+  {
+    XMLInputSource is = null;
+    
+    if (uriResolver != null)
+    {         
+      String id = rid.getPublicId();
+      if(id == null)
+      {
+        id = rid.getNamespace();
+      }
+      
+      String location = null;
+      if (id != null || rid.getLiteralSystemId() != null)
+      {  
+        location = uriResolver.resolve(rid.getBaseSystemId(), id, rid.getLiteralSystemId());
+      }  
+      
+      if (location != null)
+      {            
+        String physical = uriResolver.resolvePhysicalLocation(rid.getBaseSystemId(), id, location);
+        if (location.equals(physical))
+        {       
+          is = new XMLInputSource(rid.getPublicId(), location, location);
+        }
+        else
+        {          
+          URL url = new URL(location);
+          String logicalLocation = rid.getExpandedSystemId();
+          is = new XMLInputSource(rid.getPublicId(), logicalLocation, logicalLocation);
+          is.setByteStream(url.openStream());
+          // TODO cs: are we creating stream's for URI's we've already parsed?  
+          // This may be a performance problem. 
+        }         
+      }
+    }
+    return is;    
+  }      
   
   /**
    * An error handler to catch errors encountered while parsing the XML document.
@@ -462,6 +482,7 @@ public class XMLValidator
   protected class MyStandardParserConfiguration extends StandardParserConfiguration
   {
   	XMLValidationInfo valinfo = null;
+    List reportedExceptions = new ArrayList(); 
   	
   	/**
   	 * Constructor.
@@ -501,7 +522,21 @@ public class XMLValidator
 		          reportError = false;
 		        }
 		      }
-		                
+		      if ("schema_reference.4".equals(key) && arguments.length > 0)
+              {
+                Object location = arguments[0];  
+                if (location != null)
+                {  
+                  if(reportedExceptions.contains(location))
+                  {
+                    reportError = false;
+                  }
+                  else
+                  {
+                    reportedExceptions.add(location);
+                  }
+                }
+              }          
 		      if (reportError)
 		      {
 		        super.reportError(domain, key, arguments, severity);
