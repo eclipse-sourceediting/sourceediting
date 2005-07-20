@@ -34,14 +34,28 @@ public interface EmbeddedTypeHandler {
 	 * Returns the unique identifier for the content type family this
 	 * ContentTypeDescription belongs to.
 	 */
-	public String getFamilyId();
+	String getFamilyId();
 
 	/**
-	 * Returns a list of mime tyeps (as Strings) this handler is appropriate
+	 * Returns a list of mime types (as Strings) this handler is appropriate
 	 * for
 	 */
 	List getSupportedMimeTypes();
-
+	
+	/**
+	 * If this hander can handle a given mimeType.
+	 * 
+	 * This is a looser check than simply checking if a give mimeType
+	 * in the list of supported types, so it should be used with that
+	 * in mind.  That is, the supported mimeType list should ideally be
+	 * checked first.
+	 * 
+	 * eg. if a mime type ends with "+xml", like voice+xml
+	 *     the EmbeddedXML handler should be able to handle it
+	 *     
+	 * @return true if this handler thinks can handle the given mimeType
+	 */
+	boolean canHandleMimeType(String mimeType);
 	/**
 	 * This method is to give the EmbeddedContentType an opportunity to add
 	 * factories directly to the IStructuredModel's IAdapterFactory registry.
@@ -55,7 +69,7 @@ public interface EmbeddedTypeHandler {
 
 	boolean isDefault();
 
-	public EmbeddedTypeHandler newInstance();
+	EmbeddedTypeHandler newInstance();
 
 	void uninitializeFactoryRegistry(FactoryRegistry registry);
 

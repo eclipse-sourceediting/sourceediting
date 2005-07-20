@@ -86,4 +86,12 @@ public class EmbeddedXML implements EmbeddedTypeHandler {
 	public void uninitializeParser(JSPCapableParser parser) {
 		// need to undo anything we did in initialize
 	}
+
+	public boolean canHandleMimeType(String mimeType) {
+		boolean canHandle = getSupportedMimeTypes().contains(mimeType);
+		if(!canHandle) {
+			canHandle = mimeType.endsWith("+xml");
+		}
+		return canHandle;
+	}
 }

@@ -160,4 +160,8 @@ public class EmbeddedHTML implements EmbeddedTypeHandler {
 	public boolean isDefault() {
 		return true;
 	}
+
+	public boolean canHandleMimeType(String mimeType) {
+		return getSupportedMimeTypes().contains(mimeType);
+	}
 }

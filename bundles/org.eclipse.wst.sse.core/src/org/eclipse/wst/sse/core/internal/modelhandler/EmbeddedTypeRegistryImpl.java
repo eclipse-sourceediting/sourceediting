@@ -110,7 +110,19 @@ public class EmbeddedTypeRegistryImpl implements EmbeddedTypeRegistry {
 					break;
 				}
 			}
+			// if no exact match, do the "looser" check
+			if(found == null) {
+				it = hashSet.iterator();
+				while ((found == null) && (it.hasNext())) { 
+					EmbeddedTypeHandler item = (EmbeddedTypeHandler) it.next();
+					if ((item != null) && (item.canHandleMimeType(mimeType))) {
+						found = item;
+						break;
+					}
+				}
+			}
 		}
+		// no matches, use default
 		if (found == null) {
 			found = getRegistryDefault();
 		}
