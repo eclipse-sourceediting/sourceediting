@@ -207,16 +207,6 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 
 	protected void addAttributeNameProposals(ContentAssistRequest contentAssistRequest) {
 		addTemplates(contentAssistRequest, TemplateContextTypeIdsJSP.ATTRIBUTE);
-
-		// no attribute proposals for <jsp:useBean />
-		String nodeName = contentAssistRequest.getNode().getNodeName();
-		
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=85296
-		// if it IS -1, that means it's custom tag
-		// so don't re-add attribute name proposals
-		if (nodeName.indexOf(':') == -1) { //$NON-NLS-1$
-			super.addAttributeNameProposals(contentAssistRequest);
-		}
 	}
 
 	/**
@@ -612,7 +602,6 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		// ////////////////////////////////////////////////////////////////////////////
 		// ANOTHER WORKAROUND UNTIL PARTITIONING TAKES CARE OF THIS
 		// check for xml-jsp tags...
-		// CMVC 243657
 		if (partitionType == IJSPPartitionTypes.JSP_DIRECTIVE && fn != null) {
 			IStructuredDocumentRegion possibleXMLJSP = ((fn.getType() == DOMRegionContext.XML_CONTENT) && fn.getPrevious() != null) ? fn.getPrevious() : fn;
 			ITextRegionList regions = possibleXMLJSP.getRegions();
@@ -636,7 +625,6 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 
 		// ////////////////////////////////////////////////////////////////////////////
 		// ** THIS IS A TEMP FIX UNTIL PARTITIONING TAKES CARE OF THIS...
-		// CMVC 241882
 		// check for XML-JSP in a <script> region
 		if (partitionType == IJSPPartitionTypes.JSP_CONTENT_JAVASCRIPT || partitionType == IHTMLPartitionTypes.SCRIPT) {
 			// fn should be block text
@@ -671,7 +659,6 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 			}
 		}
 		// /////////////////////////////////////////////////////////////////////////
-
 		// check special JSP delimiter cases
 		if (fn != null && partitionType == IJSPPartitionTypes.JSP_CONTENT_DELIMITER) {
 			IStructuredDocumentRegion fnDelim = fn;
@@ -849,7 +836,8 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 			// the partition type is probably not mapped
 		}
 
-		// fix for CMVC 253000
+		// fix for:
+		// HTML content assist give JSP tags in between empty script tags
 		if (!(p instanceof JavaScriptContentAssistProcessor || p instanceof CSSContentAssistProcessor)) {
 			fTemplateContexts.clear();
 			jspResults = super.computeCompletionProposals(viewer, documentPosition);
@@ -874,7 +862,7 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 			jspResults = EMPTY_PROPOSAL_SET;
 		setErrorMessage(jspResults.length == 0 ? UNKNOWN_CONTEXT : null);
 
-		// CMVC 269718
+		// fix for:
 		// check for |<%-- --%> first position of jsp comment
 		if (partitionType == IJSPPartitionTypes.JSP_COMMENT) {
 			if (sdRegion.getStartOffset() == documentPosition) {
