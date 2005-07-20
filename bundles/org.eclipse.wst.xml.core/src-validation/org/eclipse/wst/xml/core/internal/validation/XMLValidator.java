@@ -347,6 +347,12 @@ public class XMLValidator
         if (location.equals(physical))
         {       
           is = new XMLInputSource(rid.getPublicId(), location, location);
+          
+          // TODO cs : It's strange, if we uncomment these 2 lines, the 'ImportInvalidLocation.xsd' test case
+          // produces a differently worded 'Failed to read schema' message.  I'm leaving this in for now
+          // so that the test case doesn't fail.  Need to revisit soon.
+          URL url = new URL(location);
+          is.setByteStream(url.openStream());          
         }
         else
         {          
