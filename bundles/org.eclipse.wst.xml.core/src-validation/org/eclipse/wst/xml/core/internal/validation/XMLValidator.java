@@ -342,7 +342,7 @@ public class XMLValidator
       }  
       
       if (location != null)
-      {            
+      {                     
         String physical = uriResolver.resolvePhysicalLocation(rid.getBaseSystemId(), id, location);
         if (location.equals(physical))
         {       
@@ -351,8 +351,7 @@ public class XMLValidator
         else
         {          
           URL url = new URL(location);
-          String logicalLocation = rid.getExpandedSystemId();
-          is = new XMLInputSource(rid.getPublicId(), logicalLocation, logicalLocation);
+          is = new XMLInputSource(rid.getPublicId(), location, location);
           is.setByteStream(url.openStream());
           // TODO cs: are we creating stream's for URI's we've already parsed?  
           // This may be a performance problem. 
