@@ -1751,8 +1751,12 @@ public class XSDImpl
      * @return the cmdocument corresponding to this cmnode.
      */
     public CMDocument getCMDocument()
-    {
-      return (CMDocument) getAdapter(getResolvedXSDElementDeclaration().getSchema());
+    {      
+      XSDSchema schema = getResolvedXSDElementDeclaration().getSchema();
+      if (schema == null)
+        return null;
+      else  
+        return (CMDocument) getAdapter(schema);
     }
 
     /**

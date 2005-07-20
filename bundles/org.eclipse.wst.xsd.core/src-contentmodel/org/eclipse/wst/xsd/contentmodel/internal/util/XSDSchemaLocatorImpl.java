@@ -49,7 +49,8 @@ public class XSDSchemaLocatorImpl extends AdapterImpl implements XSDSchemaLocato
         }
         else        
         {  
-          InputStream inputStream = resourceSet.getURIConverter().createInputStream(uri);
+          String physicalLocation = URIResolverPlugin.createResolver().resolvePhysicalLocation(baseLocation, namespaceURI, resolvedURI);     
+          InputStream inputStream = resourceSet.getURIConverter().createInputStream(URI.createURI(physicalLocation));
           resolvedResource = (XSDResourceImpl)resourceSet.createResource(URI.createURI("*.xsd"));
           resolvedResource.setURI(uri);
           resolvedResource.load(inputStream, null);           
