@@ -18,13 +18,13 @@ import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-
 import org.apache.xerces.parsers.SAXParser;
 import org.apache.xerces.xni.XMLResourceIdentifier;
 import org.apache.xerces.xni.XNIException;
 import org.apache.xerces.xni.parser.XMLEntityResolver;
 import org.apache.xerces.xni.parser.XMLInputSource;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
+import org.eclipse.wst.xml.core.internal.validation.XMLValidator;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationInfo;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 import org.xml.sax.EntityResolver;
@@ -316,7 +316,8 @@ public class XSDValidator
       }
       return is;
     }
-
+   
+    
     /* (non-Javadoc)
      * @see org.apache.xerces.xni.parser.XMLEntityResolver#resolveEntity(org.apache.xerces.xni.XMLResourceIdentifier)
      */
@@ -333,37 +334,12 @@ public class XSDValidator
       }
       else
       {
-        String publicId = resourceIdentifier.getPublicId();
-        if (publicId == null || publicId.equals(""))
-        {
-          publicId = resourceIdentifier.getNamespace();
-        }
-        String baseSystemId = resourceIdentifier.getBaseSystemId();
-        if (baseSystemId == null)
-        {
-          baseSystemId = baselocation;
-        }
-
-        String location = uriresolver.resolve(baseSystemId, publicId, resourceIdentifier.getLiteralSystemId());
-        XMLInputSource is = null;
-        if (location != null && !location.equals(""))
-        {
-          try
-          {
-            // Xerces only produces file import messages if an IOException
-            // is thrown when resolving a resource. A stream is opened for
-            // the resolved location to allow for these messages by handling
-            // the case where the resource cannot be opened for reading.
-            URL url = new URL(location);
-            is = new XMLInputSource(resourceIdentifier.getPublicId(), location, location);
-            is.setByteStream(url.openStream());
-          } catch (Exception e)
-          {
-            throw new IOException(e.getMessage());
-          }
-        }
-        return is;
+        // TODO cs: In revision 1.1 we explicitly opened a stream to ensure
+        // file I/O problems produced messages. I've remove this fudge for now
+        // since I can't seem to reproduce the problem it was intended to fix.
+        // I'm hoping the newer Xerces code base has fixed this problem and the fudge is defunct.
+        return XMLValidator._internalResolveEntity(uriresolver, resourceIdentifier);
       }
     }
-  }
+  }   
 }
