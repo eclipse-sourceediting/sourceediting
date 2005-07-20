@@ -314,7 +314,7 @@ public class XMLValidator
       }
       catch(IOException e)
       {
-        e.printStackTrace();   
+        //e.printStackTrace();   
       }      
       return null;
     }
