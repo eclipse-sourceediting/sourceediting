@@ -41,6 +41,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -202,10 +203,14 @@ class MainTab implements IPreferenceTab {
 		composite.setLayout(new GridLayout(2, false));
 		fControl = composite;
 
-		Text description = new Text(composite, SWT.READ_ONLY | SWT.WRAP);
+		Text description = new Text(composite, SWT.READ_ONLY | SWT.SINGLE);
 		description.setText(SSEUIMessages.TaskTagPreferenceTab_33); //$NON-NLS-1$
 		description.setBackground(composite.getBackground());
-		description.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL, GridData.VERTICAL_ALIGN_FILL, false, false, 2, 1));
+		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=104403
+		Point sizeHint = description.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+		gd.widthHint = sizeHint.x;
+		description.setLayoutData(gd);
 
 		valueTable = new TableViewer(composite, SWT.BORDER | SWT.SINGLE | SWT.FULL_SELECTION | SWT.H_SCROLL | SWT.V_SCROLL);
 		valueTable.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
