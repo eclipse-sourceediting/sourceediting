@@ -28,6 +28,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
+import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationInfo;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 import org.xml.sax.ContentHandler;
@@ -67,6 +68,14 @@ public class Validator {
 		 */
 		public DTDEntityResolver(URIResolver uriresolver, String baselocation) {
 			this.fURIResolver = uriresolver;
+            
+            // TODO cs: we never seem to set a URIResolver
+            // I create one here up front just incase
+            //
+            if (fURIResolver == null)
+            {
+              fURIResolver = URIResolverPlugin.createResolver();              
+            }  
 			this.fBaseLocation = baselocation;
 		}
 
@@ -78,6 +87,8 @@ public class Validator {
 		 */
 		public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
 			String location = null;
+            
+            
 			if (fBaseLocation.equals(systemId)) {
 				location = systemId;
 			}
@@ -87,8 +98,10 @@ public class Validator {
 			InputSource is = null;
 			if (location != null && !location.equals("")) //$NON-NLS-1$
 			{
-				try {
-					URI uri = URI.create(location);
+                try {
+                String physical = fURIResolver.resolvePhysicalLocation(fBaseLocation, publicId, location);
+
+					URI uri = URI.create(physical);
 					URL url = uri.toURL();
 					is = new InputSource(location);
 					is.setByteStream(url.openStream());
@@ -96,6 +109,9 @@ public class Validator {
 				catch (MalformedURLException e) {
 					throw new IOException(e.getMessage());
 				}
+                catch (Exception e)
+                {
+                }
 			}
 			return is;
 		}
