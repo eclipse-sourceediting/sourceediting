@@ -3,7 +3,7 @@
 <plugin>
 
      <!-- static web project wizard -->
-   <extension
+   <!-- <extension
          point="org.eclipse.wst.common.frameworks.ui.extendableWizard">
       <extendableWizard
             id="org.eclipse.wst.web.ui.internal.wizards.SimpleWebModuleCreationWizard">
@@ -29,7 +29,7 @@
                class="org.eclipse.core.resources.IResource">
          </selection>
       </wizard>
-   </extension>
+   </extension> -->
    <!-- add in the features page 
    	<extension
    		id="corg.eclipse.wst.web.ui.internal.wizards.WebProjectFeaturesWizardPage"
