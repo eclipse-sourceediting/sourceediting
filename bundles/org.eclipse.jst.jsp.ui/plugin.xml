@@ -208,7 +208,7 @@
 			-->
 			<provider
 				contentTypes="org.eclipse.jst.jsp.core.jspsource"
-				class="org.eclipse.jst.jsp.ui.internal.breakpointproviders.JavaStratumBreakpointProvider:*jsp"
+				class="org.eclipse.jst.jsp.ui.internal.breakpointproviders.JavaStratumBreakpointProvider:*jsp,jsp_servlet.__*"
 				id="org.eclipse.jst.jsp.ui.internal.breakpointproviders.JavaStratumBreakpointProvider" />
 		</breakpointContribution>
 	</extension>
