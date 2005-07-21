@@ -260,8 +260,9 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 			String ext = BreakpointRulerAction.getFileExtension((IEditorInput) element);
 			IResource res = BreakpointProviderBuilder.getInstance().getResource(input, contentType, ext);
 			String id = input.getName();
-			if (input.getStorage() != null)
+			if (input.getStorage() != null && input.getStorage().getFullPath() != null) {
 				id = input.getStorage().getFullPath().toString();
+			}
 			// we can only create a resource marker annotationmodel off of a
 			// valid resource
 			if (res != null)
