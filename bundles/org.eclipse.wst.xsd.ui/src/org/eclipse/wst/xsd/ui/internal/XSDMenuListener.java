@@ -189,6 +189,7 @@ public class XSDMenuListener implements IMenuListener
     updateXSDSchema();
     if (xsdSchema == null)
     {
+      manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
       return;
     }
     

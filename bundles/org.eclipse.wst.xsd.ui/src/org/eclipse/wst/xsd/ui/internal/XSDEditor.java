@@ -137,10 +137,11 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
     try
     {
       Document document  = ((IDOMModel)getModel()).getDocument();
-      if (document.getChildNodes().getLength() == 0)
+      
+      boolean schemaNodeExists = document.getElementsByTagNameNS(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "schema").getLength() == 1;
+      
+      if (document.getChildNodes().getLength() == 0 || !schemaNodeExists)
       {
-        // this is an empty document.  Create a default schema tag now
-        //TODO cs :oops I need to add this method back
         createDefaultSchemaNode(document);
       }
 
@@ -150,7 +151,7 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
         schemalNodeAdapter = (XSDModelAdapter)notifier.getAdapterFor(XSDModelAdapter.class);
         if (schemalNodeAdapter == null)
         {
-          schemalNodeAdapter = new XSDModelAdapter();       
+          schemalNodeAdapter = new XSDModelAdapter();
           notifier.addAdapter(schemalNodeAdapter);        
           schemalNodeAdapter.createSchema(document.getDocumentElement()); 
         }    
@@ -407,7 +408,10 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
     
     // this forces the editor to initially select the top level schema object
     //
-    getSelectionManager().setSelection(new StructuredSelection(textEditor.getXSDSchema()));    
+    if (textEditor.getXSDSchema() != null)
+    {
+      getSelectionManager().setSelection(new StructuredSelection(textEditor.getXSDSchema()));    
+    }
   }
 
   /*
