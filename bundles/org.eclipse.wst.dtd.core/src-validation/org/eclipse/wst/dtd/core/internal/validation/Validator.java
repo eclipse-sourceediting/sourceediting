@@ -14,18 +14,15 @@ package org.eclipse.wst.dtd.core.internal.validation;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.StringTokenizer;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolverPlugin;
@@ -99,10 +96,8 @@ public class Validator {
 			if (location != null && !location.equals("")) //$NON-NLS-1$
 			{
                 try {
-                String physical = fURIResolver.resolvePhysicalLocation(fBaseLocation, publicId, location);
-
-					URI uri = URI.create(physical);
-					URL url = uri.toURL();
+                    String physical = fURIResolver.resolvePhysicalLocation(fBaseLocation, publicId, location); 
+					URL url = new URL(physical);		
 					is = new InputSource(location);
 					is.setByteStream(url.openStream());
 				}
