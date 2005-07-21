@@ -17,17 +17,17 @@
 	<extension point="org.eclipse.wst.xml.ui.catalogFileType">
 		<fileType
 			extensions="dtd, ent, mod"
-			description="DTD Files"
+			description="%_UI_PREF_DTD_FILES"
 			id="org.eclipse.wst.xml.core.ui.catalogFileType.dtd">
 		</fileType>
 		<fileType
 			extensions="xsd"
-			description="XSD Files"
+			description="%_UI_PREF_XSD_FILES"
 			id="org.eclipse.wst.xml.core.ui.catalogFileType.xsd">
 		</fileType>
 		<fileType
 			extensions="tld"
-			description="Taglib Definition Files"
+			description="%_UI_PREF_TAGLIB_DEF_FILES"
 			id="org.eclipse.wst.xml.core.ui.catalogFileType.tld">
 		</fileType>
 	</extension>

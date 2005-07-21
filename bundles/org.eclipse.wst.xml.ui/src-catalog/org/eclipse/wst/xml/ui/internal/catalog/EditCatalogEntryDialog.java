@@ -551,7 +551,7 @@ public class EditCatalogEntryDialog extends Dialog
 			filterControl.setText(XMLCatalogMessages.
 					UI_TEXT_SELECT_FILE_FILTER_CONTROL);
 
-			filterControl.add("All Supported Files");
+			filterControl.add(XMLCatalogMessages.UI_TEXT_SELECT_FILE_FILTER_CONTROL);
 
 			for (Iterator i = XMLUIPlugin.getXMLCatalogFileTypes()
 					.iterator(); i.hasNext();)
