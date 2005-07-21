@@ -158,7 +158,8 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 				case 0 :
 					try {
 						if (element instanceof FileStorageEditorInput) {
-							text = ((FileStorageEditorInput) element).getStorage().getFullPath().toString();
+							IPath fullpath = ((FileStorageEditorInput) element).getStorage().getFullPath();
+							text = fullpath != null ? fullpath.toString() : ((FileStorageEditorInput) element).getName();
 							if (((FileStorageEditorInput) element).isDirty()) {
 								text = "*" + text;
 							}
@@ -197,6 +198,7 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 
 		}
 	}
+
 
 	class FileBackedStorage implements IStorage {
 		File fFile = null;
@@ -253,7 +255,10 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 		 * @see org.eclipse.core.resources.IStorage#getFullPath()
 		 */
 		public IPath getFullPath() {
-			return new Path(fFile.getAbsolutePath());
+			if (provideIStorageFullPath) {
+				return new Path(fFile.getAbsolutePath());
+			}
+			return null;
 		}
 
 		/*
@@ -388,7 +393,7 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 		 * @see org.eclipse.ui.IEditorInput#getToolTipText()
 		 */
 		public String getToolTipText() {
-			return fStorage.getFullPath().toString();
+			return fStorage.getFullPath() != null ? fStorage.getFullPath().toString() : fStorage.getName();
 		}
 
 		boolean isDirty() {
@@ -527,7 +532,6 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 		}
 	}
 
-
 	class ReuseEditorAction extends Action implements IUpdate {
 		public ReuseEditorAction() {
 			super("Reuse Editor");
@@ -558,6 +562,9 @@ public class ExtendedStorageEditorInputView extends ViewPart {
 			setEnabled(enable);
 		}
 	}
+
+
+	public static final boolean provideIStorageFullPath = true;
 
 	/**
 	 * Open an error style dialog for PartInitException by including any extra
