@@ -38,6 +38,8 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.FontMetrics;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -119,7 +121,7 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 2;
 		hoverComposite.setLayout(layout);
-		GridData gd = new GridData(GridData.FILL_BOTH);
+		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		hoverComposite.setLayoutData(gd);
 
 		// commented out until these preferences are actually handled in some
@@ -139,9 +141,8 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 
 		Label label = new Label(hoverComposite, SWT.NONE);
 		label.setText(SSEUIMessages.TextHoverPreferenceTab_hoverPreferences); //$NON-NLS-1$
-		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
 		gd.horizontalAlignment = GridData.BEGINNING;
-		gd.horizontalSpan = 2;
 		label.setLayoutData(gd);
 
 		fHoverTableViewer = CheckboxTableViewer.newCheckList(hoverComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.BORDER | SWT.FULL_SELECTION);
@@ -150,8 +151,15 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 		fHoverTable.setHeaderVisible(true);
 		fHoverTable.setLinesVisible(true);
 
-		gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.horizontalSpan = 2;
+		gd = new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1);
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=104507
+	    GC gc = new GC(fHoverTable);
+	    gc.setFont(fHoverTable.getFont());
+	    FontMetrics fontMetrics = gc.getFontMetrics();
+	    gc.dispose();
+		int heightHint = Dialog.convertHeightInCharsToPixels(fontMetrics, 7);
+		gd.heightHint = heightHint;
+		
 		fHoverTable.setLayoutData(gd);
 
 		TableLayout tableLayout = new TableLayout();
@@ -272,7 +280,7 @@ public class TextHoverPreferenceTab extends AbstractPreferenceTab {
 		gd.horizontalSpan = 2;
 		descriptionLabel.setLayoutData(gd);
 		fDescription = new Text(hoverComposite, SWT.LEFT | SWT.WRAP | SWT.MULTI | SWT.READ_ONLY | SWT.BORDER);
-		gd = new GridData(GridData.FILL_BOTH);
+		gd = new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1);
 		gd.horizontalSpan = 2;
 		fDescription.setLayoutData(gd);
 
