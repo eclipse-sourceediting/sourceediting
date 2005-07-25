@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- /*******************************************************************************
+ * Copyright (c) 2000, 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/ -->
+<toc label="DTD editor reference files" topic="topics/rrefint.html">
+   <topic label="Referential integrity in the DTD editor" href="topics/rrefint.html"/>
+   <topic label="Icons used in the DTD editor" href="topics/rdtdicons.html"/>
+</toc>
