@@ -44,7 +44,7 @@ public class XSDModelAdapter implements INodeAdapter
     {
       IDOMNode domNode = (IDOMNode)element;
       String baseLocation = domNode.getModel().getBaseLocation();
-      System.out.println("XSDSchemalNodeAdapter.baseLocation=" + baseLocation);
+//      System.out.println("XSDSchemalNodeAdapter.baseLocation=" + baseLocation);
            
       schema = XSDFactory.eINSTANCE.createXSDSchema();
       
