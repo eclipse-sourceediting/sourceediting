@@ -105,4 +105,34 @@ public class BugFixesTest extends BaseTestCase
 
 	runTest(testfile, keys, numErrors, numWarnings);
   }
+  
+  /**
+   * Test /bugfixes/CannotLocateDTD/InvalidHost.xml.
+   */
+  public void testInvalidHost()
+  {
+  	String testname = "InvalidHost";
+    String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "CannotLocateDTD/" + testname + ".xml";
+	List keys = new ArrayList();
+	keys.add("FILE_NOT_FOUND");
+	int numErrors = 0;
+	int numWarnings = 1;
+
+	runTest(testfile, keys, numErrors, numWarnings);
+  }
+  
+  /**
+   * Test /bugfixes/CannotLocateDTD/InvalidLocation.xml.
+   */
+  public void testInvalidLocation()
+  {
+  	String testname = "InvalidLocation";
+    String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + BUGFIXES_DIR + "CannotLocateDTD/" + testname + ".xml";
+	List keys = new ArrayList();
+	keys.add("FILE_NOT_FOUND");
+	int numErrors = 0;
+	int numWarnings = 1;
+
+	runTest(testfile, keys, numErrors, numWarnings);
+  }
 }

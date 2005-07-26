@@ -56,8 +56,8 @@ public class XMLExamplesTest extends BaseTestCase
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + XMLExamples_DIR + "InvoiceInvalid/" + testname + ".xml";
 	List keys = new ArrayList();
 	keys.add("FILE_NOT_FOUND");
-	int numErrors = 1;
-	int numWarnings = 0;
+	int numErrors = 0;
+	int numWarnings = 1;
     
 	runTest(testfile, keys, numErrors, numWarnings);
   }
@@ -85,8 +85,8 @@ public class XMLExamplesTest extends BaseTestCase
     String testfile = FILE_PROTOCOL + PLUGIN_ABSOLUTE_PATH + SAMPLES_DIR + XMLExamples_DIR + "PublicationCatalogueInvalid/" + testname + ".xml";
 	List keys = new ArrayList();
 	keys.add("FILE_NOT_FOUND");
-	int numErrors = 1;
-	int numWarnings = 0;
+	int numErrors = 0;
+	int numWarnings = 1;
     
 	runTest(testfile, keys, numErrors, numWarnings);
   }
