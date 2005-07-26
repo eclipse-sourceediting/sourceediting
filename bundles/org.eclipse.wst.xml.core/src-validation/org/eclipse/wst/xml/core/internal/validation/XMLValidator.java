@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.net.ConnectException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.text.MessageFormat;
@@ -65,6 +66,7 @@ public class XMLValidator
   
   private static final String _UI_PROBLEMS_VALIDATING_FILE_NOT_FOUND = "_UI_PROBLEMS_VALIDATING_FILE_NOT_FOUND";
   private static final String _UI_PROBLEMS_VALIDATING_UNKNOWN_HOST = "_UI_PROBLEMS_VALIDATING_UNKNOWN_HOST";
+  private static final String _UI_PROBLEMS_CONNECTION_REFUSED = "_UI_PROBLEMS_CONNECTION_REFUSED";
   
   private static final String FILE_NOT_FOUND_KEY = "FILE_NOT_FOUND";
 
@@ -240,26 +242,37 @@ public class XMLValidator
    */
   protected void addValidationMessage(XMLValidationInfo valinfo, IOException exception)
   { 
-    String messageStr = exception.getMessage();
-	Throwable cause = exception.getCause();
-	while(messageStr == null && cause != null){
-		cause = exception.getCause();
-		if(cause != null){
-			messageStr = cause.getMessage();
-		}
+    String validationMessageStr = exception.getMessage();
+	Throwable cause = exception.getCause() != null ? exception.getCause() : exception;
+	while(validationMessageStr == null && cause != null){
+		String localizedMessage = cause.getLocalizedMessage();
+	    cause = cause.getCause();
+	    if(cause == null && localizedMessage != null )
+	    {
+	      validationMessageStr = localizedMessage;
+	    }
 	}
-    if (messageStr != null)
+	
+	if (validationMessageStr != null)
     {
-      if (exception instanceof FileNotFoundException)
+      if (cause instanceof FileNotFoundException)
       {
-        messageStr = MessageFormat.format(resourceBundle.getString(_UI_PROBLEMS_VALIDATING_FILE_NOT_FOUND), new Object [] { messageStr });
+        validationMessageStr = MessageFormat.format(resourceBundle.getString(_UI_PROBLEMS_VALIDATING_FILE_NOT_FOUND), new Object [] { validationMessageStr });
       }
-      else if (exception instanceof UnknownHostException)
+      else if (cause instanceof UnknownHostException)
       {
-    	messageStr = MessageFormat.format(resourceBundle.getString(_UI_PROBLEMS_VALIDATING_UNKNOWN_HOST), new Object [] { messageStr });
+    	validationMessageStr = MessageFormat.format(resourceBundle.getString(_UI_PROBLEMS_VALIDATING_UNKNOWN_HOST), new Object [] { validationMessageStr });
       }
+      else if(cause instanceof ConnectException)
+      {
+    	validationMessageStr = resourceBundle.getString(_UI_PROBLEMS_CONNECTION_REFUSED);
+      }
+    }
+
+    if (validationMessageStr != null)
+    {
       XMLLocator locator = valinfo.getXMLLocator();
-      valinfo.addError(messageStr, locator != null ? locator.getLineNumber() : 1, locator != null ? locator.getColumnNumber() : 0, valinfo.getFileURI(), FILE_NOT_FOUND_KEY, null);
+      valinfo.addWarning(validationMessageStr, locator != null ? locator.getLineNumber() : 1, locator != null ? locator.getColumnNumber() : 0, valinfo.getFileURI(), FILE_NOT_FOUND_KEY, null);
     }
   }
                                                                     

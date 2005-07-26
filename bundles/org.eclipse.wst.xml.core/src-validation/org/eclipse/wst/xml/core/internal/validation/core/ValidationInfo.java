@@ -1,10 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
+ * Copyright (c) 2001, 2005 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
@@ -111,7 +111,23 @@ public class ValidationInfo implements ValidationReport
    */
   public void addWarning(String message, int line, int column, String uri)
   {
-    addMessage(message, line, column, uri, SEV_WARNING, null, null);
+    addWarning(message, line, column, uri, null, null);
+  }
+  
+  /**
+   * 
+   * Add an error message.
+   * 
+   * @param message The message to add.
+   * @param line The line location of the message.
+   * @param column The column location of the message.
+   * @param uri The URI of the file that contains the message.
+   * @param key The key for the message.
+   * @param messageArguments more information about the error
+   */
+  public void addWarning(String message, int line, int column, String uri, String key, Object[] messageArguments)
+  {    
+    addMessage(message, line, column, uri, SEV_WARNING, key, messageArguments);
   }
   
   /**
