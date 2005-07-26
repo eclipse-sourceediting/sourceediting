@@ -30,30 +30,7 @@ public class CMDocumentFactoryXSD implements CMDocumentFactory
 
  
   public CMDocument createCMDocument(String uri)
-  {               
-    // work around a bug in our parsers
-    // todo... revist this
-    //
-    String fileProtocol = "file:";
-    if (uri.startsWith(fileProtocol))
-    {
-      uri = uri.substring(fileProtocol.length());
-    }
-
-    // work around a VAJava bug
-    // todo... revist this
-    //
-    String valoaderProtocol = "valoader:/";
-    if (uri.startsWith(valoaderProtocol))
-    {
-      uri = uri.substring(valoaderProtocol.length());
-    }
-
-	// TODO... separate DTD/XSD into separate factories
-	// remove this resourceType variable
-	String resourceType = null;
-	
-	
+  {                  	
     CMDocument result = null;
     try
     {                                
