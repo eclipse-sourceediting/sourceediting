@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="../../com.ibm.help.doc/swg_info_common.css" />
+<title>Editing XML schema editor preferences</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=,top=' );
+      popup.focus();
+    }
+</script><script language="JavaScript" src="help/liveHelp.js"></script></head>
+<body id="tedtpref"><a name="tedtpref"><!-- --></a>
+
+<h1 class="topictitle1">Editing XML schema editor preferences</h1>
+<div><p>You can set various preferences for the XML schema editor such
+as the formatter indentation style and default target namespace.</p><div class="skipspace"><p>To define XML schema preferences, follow these steps:</p>
+</div>
+<ol><li class="skipspace"><span>Select  <span class="menucascade"><span class="uicontrol">Window &gt; Preferences &gt; Web and
+XML &gt; XML Schema Files</span></span>.</span></li>
+<li class="skipspace"><span>Select the <span class="uicontrol">Qualify XML schema language constructs </span>check
+box if you want a prefix applied to all XML Schema language constructs in
+your XML schema.</span></li>
+<li class="skipspace"><span>In the <span class="uicontrol">XML schema language constructs prefix</span> field,
+type the prefix you want applied to XML Schema language constructs in your
+XML schema.</span>  The prefix <span class="uicontrol">xsd</span> is
+used by convention to denote the XML Schema namespace, but any prefix can
+be used. The purpose of the association is to identify the elements and simple
+types as belonging to the vocabulary of the XML Schema language rather than
+the vocabulary of the schema author.  <div class="note"><span class="notetitle">Note: </span>This prefix will not appear in
+any schemas that currently exist - it will only appear in new schemas you
+create after you type the prefix and click <span class="uicontrol">Apply</span>. Any
+schemas that already exist will have the prefix specified in the schema applied
+to the XML schema language constructs.</div>
+</li>
+<li class="skipspace"><span>You can change the <span class="uicontrol">Default Target Namespace</span> value.</span> The value specified in this field will be the default target namespace
+for any new XML schema files created.</li>
+<li class="skipspace"><span>Click <span class="uicontrol">OK</span>.</span></li>
+</ol>
+<div class="skipspace"></div>
+</div>
+<p>
+		(C) Copyright IBM Corporation 2000, 2005. All Rights Reserved.
+</p>
+</body>
+</html>

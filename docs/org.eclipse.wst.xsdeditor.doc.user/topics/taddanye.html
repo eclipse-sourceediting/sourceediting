@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="../../com.ibm.help.doc/swg_info_common.css" />
+<title>Adding an any element</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=,top=' );
+      popup.focus();
+    }
+</script><script language="JavaScript" src="help/liveHelp.js"></script></head>
+<body id="taddanye"><a name="taddanye"><!-- --></a>
+
+<h1 class="topictitle1">Adding an any element</h1>
+<div><p>You can use the <samp class="codeph">any</samp> element to provide something
+similar to a DTD's ANY content model, however, it must be done in conjunction
+with namespaces. This enables you to include any well-formed XML content,
+such as an HTML Web page that conforms to XHTML 1.0 syntax.</p><div class="skipspace"><p>For example:</p>
+<div class="p"><pre>&lt;element name = "MyWebPage"&gt;
+&lt;complexType&gt;
+&lt;any namespace ="http://www.w3.org/1999/xhtml&gt;
+ &lt; minOccurs="1" maxOccurs="unbounded" processContents="skip"/&gt; 
+&lt;/complexType&gt;
+&lt;/element&gt;</pre>
+</div>
+<p>The above schema fragment allows a <var class="varname">&lt;MyWebPage&gt;</var> element
+to contain any well-formed XHTML data that appears in the specified namespace.</p>
+<p>The
+following instructions were written for the Resource perspective, but they
+will also work in many other perspectives. </p>
+<p>To add an <samp class="codeph">any</samp> element,
+follow these steps:</p>
+</div>
+<ol><li class="skipspace"><span>In the Outline view, right-click the content model that you want
+to work with and click <span class="uicontrol">Add Any</span>. </span></li>
+<li class="skipspace"><span>Select the new <samp class="codeph">any</samp> element.</span></li>
+<li class="skipspace"><span>In the Properties view of the schema editor, for a <b>namespace</b> value,
+you can select <b>##any</b> (this allows any well-formed XML from any namespace), <b>##local </b> (this
+allows any well-formed XML that is not declared to be in a namespace), <b>##other </b> (this
+allows any well-formed XML that is not from the target namespace of the type
+being defined) or <b>##targetNamespace </b> (which is shorthand for the target
+namespace of the type being defined). </span></li>
+<li class="skipspace"><span>For a <span class="uicontrol">processContents</span> value, you can select <b>skip</b> (the
+XML processor will not validate the attribute content at all), <b>lax</b>(the
+XML processor will validate the attribute content as much as it can), or <b>strict </b> (the
+XML processor will validate all the attribute content).</span></li>
+<li class="skipspace"><span>The <span class="uicontrol">minOccurs</span> value is the number of times
+the <samp class="codeph">any</samp> element must appear. You can select <span class="uicontrol">0</span> if
+you want the element to be optional; otherwise, select <span class="uicontrol">1</span>. </span></li>
+<li class="skipspace"><span>The <span class="uicontrol">maxOccurs</span>value is the maximum number
+of times an <samp class="codeph">any</samp> element may appear. You can select <span class="uicontrol">0</span>, <span class="uicontrol">1</span>,
+or, to indicate there is no maximum number of occurrences, <span class="uicontrol">unbounded</span>.</span></li>
+<li class="skipspace"><span>Click the <span class="uicontrol">Documentation</span> tab if you want
+to provide any information about this element.</span> The <span class="uicontrol">Documentation</span> page
+is used for human readable material, such as a description, and the <span class="uicontrol">App
+Info</span> page can be used to provide information for applications. </li>
+</ol>
+<div class="skipspace"><p>(c) Copyright 2001, World Wide Web (Massachusetts Institute of
+Technology, Institut National de Recherche en Informatique et en Automatique,
+Keio University).</p>
+</div>
+</div>
+<p>
+		(C) Copyright IBM Corporation 2000, 2005. All Rights Reserved.
+</p>
+</body>
+</html>
