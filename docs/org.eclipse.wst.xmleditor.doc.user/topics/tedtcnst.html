@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+
+<link rel="stylesheet" type="text/css" href="../../com.ibm.help.doc/swg_info_common.css" />
+<title>Editing with DTD or XML schema constraints</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=,top=' );
+      popup.focus();
+    }
+</script><script language="JavaScript" src="help/liveHelp.js"></script></head>
+<body id="tedtcnst"><a name="tedtcnst"><!-- --></a>
+
+<h1 class="topictitle1">Editing with DTD or XML schema constraints</h1>
+<div><p>In the Design view, when you edit an XML file that has a set of
+constraints (that is, a set of rules) defined by a DTD or an XML schema, you
+can turn the constraints on and off to provide flexibility in the way you
+edit, but still maintain the validity of the document periodically.</p><div class="skipspace"><p> When the constraints are turned on, and you are working in the
+Design view, the XML editor prevents you from inserting elements, attributes,
+or attribute values not permitted by the rules of the XML schema or DTD, and
+from removing necessary or predefined sets of tags and values. In this mode,
+an element's content must be valid to use the XML editor's guided editing
+options.</p>
+<p>You may want to turn the constraints off for an XML file if
+you need more flexibility. For example, you want to try working with elements
+or attributes not permitted by the associated DTD or XML schema, without actually
+removing the association with the DTD or XML schema.</p>
+<p>To turn the constraints
+for an XML file off, click <span class="uicontrol">XML &gt; Turn Grammar Constraints Off</span>.
+After you have turned the constraints off for a file, you can insert or delete
+any element or attribute regardless of the DTD or XML schema rules. You can
+create new elements or attributes that are not in the DTD or schema - these
+Design view prompts will only appear when you have turned constraints off.
+The file may not be valid, however, if you do this. </p>
+<p>The following instructions
+were written for the Resource perspective, but they will also work in many
+other perspectives.</p>
+<p>The following is an example of what you can do if
+you turn the constraints of a DTD off:</p>
+</div>
+<ol><li class="skipspace"><span>Open the XML file in the XML editor (right-click the file in the
+Navigator view and click <span class="uicontrol">Open With &gt; XML Editor</span>). </span></li>
+<li class="skipspace"><span>For example, you have a DTD that specifies that an element requires
+at least one of a specific child element:  </span> <pre>&lt;!ELEMENT parentElement (childElement+)&gt;</pre>
+</li>
+<li class="skipspace"><span>If, in an XML file associated with your DTD, you attempt to remove
+the final child element of the element with the DTD constraints turned on,
+the editor will not allow you to do this, as it will make the document invalid.</span> You can confirm this by using the element's pop-up menu to verify that
+the<span class="uicontrol">Remove</span> option is grayed out.</li>
+<li class="skipspace"><span>To turn the DTD constraints off, click <span class="uicontrol">XML &gt; Turn Grammar
+Constraints Off</span>. </span></li>
+<li class="skipspace"><span>If you attempt to remove the same child element with constraints
+off, the editor will allow you to.</span></li>
+<li class="skipspace"><span>To correct the invalid document, you will have to re-add the necessary
+element, or remove the invalid tagging or value.</span></li>
+</ol>
+<div class="skipspace">If you introduce errors into your files, you must save and validate
+the file in order to see a list of the errors you have introduced. They will
+be listed in the Problems view. After you fix the errors, you must save and
+validate your file again to see if the file is now valid.</div>
+</div>
+
+<div>
+
+<p><b class="relconceptshd">Related concepts</b><br />
+<a href="../topics/cxmlcat.html" title="There are two different ways to associate XML files with DTDs or XML schemas.">XML file associations with DTDs and XML schemas</a><br />
+</p>
+<p><b class="reltaskshd">Related tasks</b><br />
+<a href="../topics/tedtdoc.html" title="The DOCTYPE declaration in an XML file is used at the beginning of it to associate it with a DTD file. You can edit your DOCTYPE declaration to change the DTD file your XML file is associated with.">Editing your DOCTYPE declaration</a><br />
+<a href="../topics/txmlcat.html" title="Adding an entry to the XML Catalog"></a><br />
+<a href="../topics/tedtgram.html" title="If you make changes to a DTD file or XML schema associated with an XML file (that is currently open), click XML &gt; Reload Dependencies to update the XML file with these changes.">Updating XML files with changes made to DTDs and schemas</a><br />
+<a href="../topics/tedtsch.html" title="Your namespace information is used to provide various information about the XML file, such as the XML schema it is associated with. ">Editing your namespace information</a><br />
+</p>
+</div><p>
+		(C) Copyright IBM Corporation 2000, 2005. All Rights Reserved.
+</p>
+</body>
+</html>

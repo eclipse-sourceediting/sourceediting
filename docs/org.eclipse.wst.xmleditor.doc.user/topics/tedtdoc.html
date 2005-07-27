@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="../../com.ibm.help.doc/swg_info_common.css" />
+<title>Editing your DOCTYPE declaration</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=,top=' );
+      popup.focus();
+    }
+</script><script language="JavaScript" src="help/liveHelp.js"></script></head>
+<body id="tedtdoc">
+
+<h1 class="topictitle1">Editing your DOCTYPE declaration</h1>
+<div><p>The DOCTYPE declaration in an XML file is used at the beginning
+of it to associate it with a DTD file. You can edit your DOCTYPE declaration
+to change the DTD file your XML file is associated with.</p><div class="skipspace"><p>The following instructions were written for the Resource perspective,
+but they will also work in many other perspectives.</p>
+<p>To edit your DOCTYPE
+declaration, follow these steps:</p>
+</div>
+<ol><li class="skipspace"><span>In the Design view of the XML editor, right-click <span class="uicontrol">DOCTYPE</span> and
+click <span class="uicontrol">Edit DOCTYPE</span>.</span></li>
+<li class="skipspace"><span>The value in the <span class="uicontrol">Root element mame</span> field
+should match the root element of your XML file exactly.</span> You should
+only edit the value in this field if your root element changes.</li>
+<li class="skipspace"><span>You can select a Public ID for any existing XML Catalog entries
+by clicking <span class="uicontrol">Browse</span>. </span> The value in the <span class="uicontrol">Public
+ID</span> field is the Public Identifier. It is used to associate the
+XML file (using an XML Catalog entry) with a DTD file. For more information
+on XML Catalog entries, refer to the related tasks below.</li>
+<li class="skipspace"><span>The value in the <span class="uicontrol">System ID</span> field is the
+DTD the XML file is associated with. Type the path of the DTD file you want
+the XML file associated with in this field. </span>   <b>Note</b>: When
+the XML file is processed by the XML processor, it will first try to use the
+Public ID to locate the DTD, and if this fails, it will use the System ID
+to find it.</li>
+<li class="skipspace"><span>Click  <span class="uicontrol">OK</span>.</span></li>
+</ol>
+</div>
+
+<div>
+
+<p><b class="relconceptshd">Related concepts</b><br />
+<a href="../topics/cxmlcat.html" title="There are two different ways to associate XML files with DTDs or XML schemas.">XML file associations with DTDs and XML schemas</a><br />
+</p>
+<p><b class="reltaskshd">Related tasks</b><br />
+<a href="../topics/tedtcnst.html" title="In the Design view, when you edit an XML file that has a set of constraints (that is, a set of rules) defined by a DTD or an XML schema, you can turn the constraints on and off to provide flexibility in the way you edit, but still maintain the validity of the document periodically.">Editing with DTD or XML schema constraints</a><br />
+<a href="../topics/txmlcat.html" title="Adding an entry to the XML Catalog"></a><br />
+<a href="../topics/tedtgram.html" title="If you make changes to a DTD file or XML schema associated with an XML file (that is currently open), click XML &gt; Reload Dependencies to update the XML file with these changes.">Updating XML files with changes made to DTDs and schemas</a><br />
+</p>
+</div><p>
+		(C) Copyright IBM Corporation 2000, 2005. All Rights Reserved.
+</p>
+</body>
+</html>

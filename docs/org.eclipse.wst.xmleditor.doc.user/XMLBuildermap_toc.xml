@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- /*******************************************************************************
+ * Copyright (c) 2000, 2005 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/ -->
+<toc label="Developing XML files" topic="topics/tcretxml.html">
+   <topic label="Working with XML files">
+      <topic label="Creating XML files">
+         <topic label="Creating an XML file from scratch" href="topics/tcretxml.html"/>
+         <topic label="Generating an XML file from a DTD " href="topics/tcrexdtd.html"/>
+         <topic label="Generating an XML file from an XML schema" href="topics/tcrexxsd.html"/>
+      </topic>
+      <topic label="Editing XML files" href="topics/txedttag.html">
+         <topic label="XML editor" href="topics/cwxmledt.html">
+            <topic label="XML editor integration with the workbench" href="topics/cwwedtvw.html"/>
+            <topic label="Defining XML editor preferences" href="topics/txprefs.html">
+               <topic label="Setting source highlighting styles" href="topics/ttaghilt.html"/>
+               <topic label="Working with XML templates" href="topics/twmacro.html"/>
+               <topic label="Specifying line delimiters" href="topics/tedtenc.html">
+                  <topic label="Specifying XML and HTML encodings" href="topics/cxmlenc.html"/>
+               </topic>
+            </topic>
+         </topic>
+         <topic label="Editing in the Design view" href="topics/txedtdes.html">
+            <topic label="Editing your DOCTYPE declaration" href="topics/tedtdoc.html"/>
+            <topic label="Editing your namespace information" href="topics/tedtsch.html"/>
+            <topic label="Editing your XML processing instructions" href="topics/tedtproc.html"/>
+         </topic>
+         <topic label="Editing in the Source view" href="topics/txedtsrc.html">
+            <topic label="Using XML content assist" href="topics/twcdast.html"/>
+         </topic>
+         <topic label="Editing with DTD or XML schema constraints" href="topics/tedtcnst.html"/>
+         <topic label="Using xsi:type" href="topics/txsityp.html"/>
+         <topic label="Extending the content model of an XML document" href="topics/rextctn.html"/>
+      </topic>
+      <topic label="Validating XML files" href="topics/twxvalid.html"/>
+      <topic label="XML file associations with DTDs and XML schemas" href="topics/cxmlcat.html">
+         <topic label="Adding an entry to the XML Catalog" href="topics/txmlcat.html"/>
+         <topic label="Updating XML files with changes made to DTDs and schemas" href="topics/tedtgram.html"/>
+      </topic>
+      <!-- <topic label="Icons used in the XML editor" href="topics/rxmlbicons.html"/>-->
+   </topic>
+</toc>
