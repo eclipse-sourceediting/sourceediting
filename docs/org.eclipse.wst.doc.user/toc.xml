@@ -33,7 +33,7 @@
 	<link toc="../org.eclipse.wst.webservice.doc.user/webservice_toc.xml"/>
 	</topic>
 	<topic label="Using data tools">
-	<link toc="org.eclipse.wst.datatools.connection.ui.doc.user/connection_ui_toc.xml"/>
+	<link toc="../org.eclipse.wst.datatools.connection.ui.doc.user/connection_ui_toc.xml"/>
 	<!--<link toc="org.eclipse.wst.datatools.fe.ui.doc.user/fe_ui_toc.xml"/>-->
 	<!--<link toc="org.eclipse.wst.datatools.server.ui.doc.user/server_ui_toc.xml"/>-->
 	</topic>
