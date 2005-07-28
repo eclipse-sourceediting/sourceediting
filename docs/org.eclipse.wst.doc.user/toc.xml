@@ -43,6 +43,5 @@
 	<link toc="../org.eclipse.wst.server.ui.doc.user/build_toc.xml"/>
 	<link toc="../org.eclipse.jst.server.ui.doc.user/build_toc.xml"/>
 	</topic>
-	</topic>
 	<topic label="Legal" href="notices.html"/>
 </toc>
