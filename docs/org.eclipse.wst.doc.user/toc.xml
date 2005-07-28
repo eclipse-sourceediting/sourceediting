@@ -37,10 +37,12 @@
 	<!--<link toc="org.eclipse.wst.datatools.fe.ui.doc.user/fe_ui_toc.xml"/>-->
 	<!--<link toc="org.eclipse.wst.datatools.server.ui.doc.user/server_ui_toc.xml"/>-->
 	</topic>
-	<topic label="Selecting a server" href="topics/SelectServer.html">
+	<topic label="Using the server tools">
+	<topic label="Selecting a server" href="topics/SelectServer.html"/>
 	<anchor id="server_install" />
 	<link toc="../org.eclipse.wst.server.ui.doc.user/build_toc.xml"/>
 	<link toc="../org.eclipse.jst.server.ui.doc.user/build_toc.xml"/>
+	</topic>
 	</topic>
 	<topic label="Legal" href="notices.html"/>
 </toc>
