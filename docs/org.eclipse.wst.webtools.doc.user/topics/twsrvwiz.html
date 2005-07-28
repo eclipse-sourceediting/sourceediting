@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="../../com.ibm.help.doc/swg_info_common.css" />
+<title>Creating servlets</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=,top=' );
+      popup.focus();
+    }
+</script><script language="JavaScript" src="help/liveHelp.js"></script></head>
+<body id="twsrvwiz"><a name="twsrvwiz"><!-- --></a>
+
+<h1 class="topictitle1">Creating servlets</h1>
+<div><div class="skipspace"> <p>The servlet wizard helps you create Java™ servlets by walking you through the
+
+creation process and by providing you with output files that you can use or that you can modify for use with your Web application. The servlets
+
+can run on J2EE-compliant Web
+
+servers.</p>
+<p>To create a servlet using the Servlet wizard, complete the
+
+following steps: </p>
+</div>
+<ol><li class="skipspace"><span>From the Web perspective, expand your  <a href="../../org.eclipse.wst.webtoolscore.doc.user/topics/ccwebprj.html">dynamic project</a> in the Project Explorer view, and expand
+
+the Deployment Descriptor.</span></li>
+<li class="skipspace"><span>Right click on the <b>Servlet</b> icon, and select <span class="menucascade"><span class="uicontrol">New</span> &gt; <span class="uicontrol">Servlet</span></span> from
+
+the pop-up menu.</span>  The <span class="uicontrol">Create Servlet</span> wizard
+
+appears.</li>
+<li class="skipspace"><span>In the <span class="uicontrol">Create a Servlet</span> page, supply the
+
+following: </span><ol type="a"><li class="skipspace"><span>Type the name and description of the servlet.</span> Notice
+
+that the name that you type in the name field is used as the default URL mapping.</li>
+<li class="skipspace"><span>Optionally add or remove initialization parameters and URL mappings.</span></li>
+<li class="skipspace"><span>Optionally choose an existing servlet class. To do this, select
+
+the <b>Use existing servlet class</b> check box, and then select the <b>Browse</b> button. A window
+
+appears in which you can choose an existing servlet or a JSP.</span></li>
+<li class="skipspace"><span>Optionally choose whether you want to generate an annotated
+
+servlet class.</span></li>
+<li class="skipspace"><span>If you selected an existing servlet class, click <b>Finish</b>;
+
+otherwise, select <b>Next.</b></span></li>
+</ol>
+</li>
+<li class="skipspace"><span>Supply the following information:</span><ol type="a"><li class="skipspace"><span>Specify the folder where the servlet class will be placed, the
+
+package that the class will belong to (it is added into a default package
+
+if you do not specify one), and the class name of the servlet. </span></li>
+<li class="skipspace"><span>Specify a superclass for the servlet class.</span> A servlet
+
+created by this wizard can have HttpServlet, or any class that has HttpServlet
+
+in its hierarchy as its superclass. Click <b>Browse</b> to choose from the
+
+available superclasses.</li>
+<li class="skipspace"><span>Click <b>Finish</b> or click <b>Next</b> for more options.</span></li>
+</ol>
+</li>
+<li class="skipspace"><span>Select a modifier to specify whether your servlet class is public,
+
+abstract, or final.</span> (Classes cannot be both abstract and final.)<ol type="a"><li class="skipspace"><span> The javax.servlet.Servlet is provided as the default <span class="uicontrol">Interface</span>.
+
+You can also add additional interfaces to implement. Click <span class="uicontrol">Add</span> to
+
+open the <span><span class="uicontrol">Interface Selection</span></span> dialog.</span> <p>In this dialog, as you type the name of the interface that you are
+
+interested in adding in the <span><span class="uicontrol">Choose interfaces</span></span> field,
+
+the list of available interfaces listed in the <span><span class="uicontrol">Matching types</span></span> list
+
+box updates dynamically to display only the interfaces that match the pattern.
+
+Choose an interface to see the <span class="uicontrol">Qualifier</span>, and then
+
+click <span class="uicontrol">Add</span>. Click <span class="uicontrol">OK</span> when you
+
+are finished.</p>
+</li>
+<li class="skipspace"><span>Select any appropriate method stubs to be created in the servlet
+
+file. The stubs created by using the <span class="uicontrol">Inherited abstract methods</span> option
+
+must be implemented if you do not intend to create an abstract servlet. This
+
+is not true for <span class="uicontrol">Constructors from superclass</span>.</span></li>
+<li class="skipspace"><span>Click <span class="uicontrol">Finish</span>.</span> The servlet
+
+is generated.</li>
+</ol>
+</li>
+</ol>
+</div>
+<div><p><b class="relconceptshd">Related concepts</b><br />
+<a href="../../org.eclipse.wst.webtoolscore.doc.user/topics/cwservbn.html">Servlets</a><br />
+<a href="ccwebxml.html" title="">The Web deployment descriptor editor</a><br />
+<!-- <a href="../../com.ibm.etools.wrd.annotation.doc/topics/coverview.html">Annotation-based programming overview</a><br />-->
+</p>
+<p><b class="reltaskshd">Related tasks</b><br />
+<a href="twedtwbx.html" title="">Configuring Web applications using the Web deployment descriptor editor</a><br />
+<!-- <a href="../../com.ibm.etools.wrd.annotation.doc/topics/tadding_web_tag.html">Adding Web annotation tags</a><br />-->
+</p>
+</div><p>
+		(C) Copyright IBM Corporation 2000, 2005. All Rights Reserved. 
+</p>
+</body>
+</html>

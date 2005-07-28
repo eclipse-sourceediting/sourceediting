@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="../../org.eclipse.platform.doc.user/book.css" />
+<title>Project Explorer view and Web development</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=,top=' );
+      popup.focus();
+    }
+</script><script language="JavaScript" src="help/liveHelp.js"></script></head>
+<body id="ccwebvw"><a name="ccwebvw"><!-- --></a>
+
+<h1 class="topictitle1">Project Explorer view and Web development</h1>
+<div><div class="skipspace"><div class="p">The Project Explorer view is the default view in the Web perspective.
+
+This view provides the following notable features: <ul><li>VCM (version control management) information can be toggled on and off
+
+from the Preferences page (<span class="menucascade"><span class="uicontrol">Window</span> &gt; <span class="uicontrol">Preferences</span> &gt; <span class="uicontrol">Workbench</span> &gt; <span class="uicontrol">Label decorations</span></span>)</li>
+<li><img src="../images/nwin.gif" alt="For Windows" /> You
+
+can drag and drop files from Windows<sup>®</sup> Explorer or the desktop into the
+
+Navigator view.</li>
+<li>View filtering is supported by selecting <span><span class="uicontrol">Filters</span></span> from
+
+the Navigator view <span><span class="uicontrol">Menu</span></span> button. Resources
+
+can be filtered by name, project type or working set. Files beginning with
+
+a period are filtered out by default.</li>
+<li>The status line shows the full path of the selected resource.</li>
+<li>Dragging a .java file from the Navigator view into a JSP file will insert
+
+a usebean tag, the same behavior that is exhibited when a .class file is dragged
+
+into a JSP file.</li>
+<li>Errors and warnings on resources (including Java™, HTML/JSP, and Links Builder errors
+
+and warnings) are indicated with a red error <img src="../images/nshowerr.gif" alt="Error icon" /> or yellow warning <img src="../images/nwarning.gif" alt="Warning icon" /> next to the resource with the error,
+
+as well as the parent containers up to the project. This applies for all project
+
+types, not only Web projects.</li>
+<li>Items available from the <span><span class="uicontrol">New</span></span> cascading
+
+menu in the project pop-up menu are context sensitive.  All menus will have <span><span class="uicontrol">Project</span></span> and <span><span class="uicontrol">Other</span></span> options.</li>
+<li>All projects are automatically grouped by type. To see this
+
+view of your projects, click on the <b>Group Project by Type</b> icon <img src="../images/grptype.gif" alt="Group Project by Type Icon" />. </li>
+</ul>
+</div>
+</div>
+<div class="skipspace"><h4 class="sectiontitle">Organization of the Project Explorer view</h4><p>The Project
+
+Explorer view shows a custom view of a dynamic Web project. By default, dynamic
+
+web projects appear under a top-level category called Dynamic Web Projects.
+
+The following are some of the notable top-level objects that appear beneath
+
+the project node (based on default folder names).</p>
+
+<p><b>Web Diagram</b> - A Web
+
+application diagram, is a file that helps you visualize and change
+
+the flow of a Web application.
+
+This file and associated wizard enables you to construct a diagram of a Web
+
+application by clicking on objects in a palette.</p>
+<p><b>Web Deployment Descriptor</b> -
+
+This file corresponds to the WebContent/WEB-INF/web.xml file, which is used
+
+to specify deployment information for modules created in the Web development
+
+environment. You can edit this file using the <a href="ccwebxml.html">Web
+
+deployment descriptor editor</a>, or you can select <span><span class="uicontrol">Open
+
+With</span></span> from its pop-up menu to open the file with a different
+
+editor. </p>
+<p>Underneath the Deployment Descriptor are placeholders object
+
+that are reserved for the creation of Servlets, Servlet Mappings, Filters,
+
+Filter Mappings, References, Security (constraints and roles) and Listeners.
+
+You can create instances of these objects by right clicking on an object and
+
+selecting <b>New</b> from the pop-up menu.</p>
+<div class="p"><b>JavaSource</b> - This
+
+node displays Java resources within the project. If the project contains
+
+a single Java source folder, the packages and classes (for example,
+
+servlets, beans) within the source folder will be shown directly beneath the
+
+JavaSource folder node. If the project contains multiple source folders, each
+
+source folder will appear beneath the JavaSource folder and can be expanded
+
+to show their packages and classes. <div class="note"><span class="notetitle">Note: </span>Though the default name given
+
+to the folder is JavaSource, you can change the name in the Preferences page
+
+by selecting <span class="menucascade"><span class="uicontrol">Window</span> &gt; <span class="uicontrol">Preferences</span> &gt; <span class="uicontrol">Web Tools</span> &gt; <span class="uicontrol">New J2EE Project</span></span>.</div>
+<ul><li><b>Libraries</b> - This folder contains the library JAR files defined
+
+in the project properties. Three types of JAR files are shown: <ol><li>JAR files included in the project's WebContent/WEB-INF/lib directory</li>
+<li>JAR files external to the project, such as j2ee.jar and rt.jar</li>
+<li>Project libraries, which are special references to a Java project</li>
+</ol>
+<p>When a Web project is exported, a JAR file is automatically created
+
+from the Java project to be used by the Web application during
+
+runtime. Libraries are shown in classpath order. By default, only the JAR
+
+files contained within the project are shown. You can also display external
+
+JARs and project libraries by selecting <span><span class="uicontrol">Show Referenced Libraries</span></span> from
+
+the Navigator view's <span><span class="uicontrol">Menu</span></span> button <img src="../images/menubutton.gif" alt="Menu button" />.</p>
+</li>
+<li><b>imported_classes folder</b> - This folder can be created during a WAR
+
+import, and contains class files that do not have accompanying source.  The <span class="uicontrol">imported_classes</span> folder
+
+is a Java classes
+
+folder; Java classes folders can also be created using the
+
+Web project <span><span class="uicontrol">Java Build Path</span></span> properties page.<p><img src="../images/nwin.gif" alt="For Windows" /> You can drag
+
+and drop class files from the Windows Explorer or desktop to the <span class="uicontrol">imported_classes</span> folder
+
+in the Navigator view.</p>
+</li>
+</ul>
+</div>
+<div class="p"><b>Web content folder</b> - This folder contains items to be published
+
+to the server. By default, this folder will be named <b>WebContent</b> for
+
+newly created static and dynamic Web projects. <div class="note"><span class="notetitle">Note: </span>You can change the name
+
+in the Web page of the project's Properties dialog. In a dynamic Web project,
+
+changing the folder name will update the Java build output directory. You can change
+
+the preference for the default folder name to be applied when creating new
+
+Web projects by selecting <span class="menucascade"><span class="uicontrol">Window</span> &gt; <span class="uicontrol">Preferences</span> &gt; <span class="uicontrol">Web Tools</span> &gt; <span class="uicontrol">New J2EE Project</span></span>. </div>
+<ul><li><b>META-INF</b> - This directory contains the <span class="filepath">MANIFEST.MF</span> file,
+
+which is used to map class paths for dependent JAR files that exist in other
+
+projects in the same Enterprise Application project. An entry in this file
+
+will update the run-time project class path and Java build settings to include the referenced
+
+JAR files.</li>
+</ul>
+<ul><li><b>Theme</b> - The suggested directory for cascading style sheets and
+
+other style-related objects.</li>
+<li><b>WEB-INF</b> - The directory where supporting Web resources for a Web
+
+application are kept (for example: .xmi files, .xml files, and web.xml.) Note
+
+that double-clicking on the web.xml file has the same effect as double-clicking
+
+on the Deployment Descriptor: it opens the Web Deployment Descriptor editor.</li>
+</ul>
+ </div>
+ </div>
+</div>
+<p>
+		(C) Copyright IBM Corporation 2000, 2005. All Rights Reserved.
+</p>
+</body>
+</html>

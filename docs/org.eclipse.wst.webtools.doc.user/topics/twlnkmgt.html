@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="../../com.ibm.help.doc/swg_info_common.css" />
+<title> Managing links - overview</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=,top=' );
+      popup.focus();
+    }
+</script><script language="JavaScript" src="help/liveHelp.js"></script></head>
+<body id="twlnkmgt"><a name="twlnkmgt"><!-- --></a>
+
+<h1 class="topictitle1"> Managing links - overview</h1>
+<div><div class="skipspace"> <div class="p">There are several ways to manage links within and between Web
+
+projects and external files. You can manage the links manually or you can
+
+set preferences to control how links are managed when you edit, test, or publish
+
+a project. You can specify <ul><li> how default link paths are set</li>
+<li> how links to external files are handled when they are inserted</li>
+<li> how links are handled when you save a file</li>
+<li> how links to a file are handled when the file is renamed.</li>
+</ul>
+ </div>
+<p>To specify the default settings for all Web projects, select <span class="menucascade"><span class="uicontrol">Window</span> &gt; <span class="uicontrol">Preferences</span> &gt; <span class="uicontrol">Web
+
+Tools</span> &gt; <span class="uicontrol">Links</span></span></p>
+<div class="p">The initial
+
+default settings are as follows: <ul><li>When you save a file containing link paths beginning with file://, the
+
+path is set relative to the document's local directory. <p>You can change
+
+the default preference so that link paths are relative to the linked document's
+
+root directory. The document root directory (or context root) is the top-level
+
+directory of the Web site when it is deployed to a server.</p>
+</li>
+<li>When you insert links to inaccessible files outside of your project (such
+
+as those in a project that are not in the same EAR), other than HTML or JSP
+
+files, you can specify how you want those linked files to be handled so that
+
+all of the files are available when you publish your project. You can choose
+
+to have the files copied to the project, or change links to the files to a
+
+default relative link path. <p>You can also turn off either or both of these
+
+preferences.</p>
+</li>
+<li>When you save a file, externally linked files (other than HTML and JSPs)
+
+are copied into the current project.  <p>You can change the default so that
+
+instead of having the files copied locally when you save your project, a broken
+
+links dialog is displayed.</p>
+</li>
+<li>When you move or rename a file, links to the file are automatically updated
+
+to reflect the change, and a confirmation window is displayed before any automatic
+
+changes are made. In addition, any links within a file that are moved are
+
+also updated.   <p>You can turn off either or both of these preferences. </p>
+</li>
+</ul>
+ </div>
+  <p> <b>Important:</b> Files <u>must</u> be in the WebContent folder
+
+for link validation to work correctly; links between files that are not in
+
+the WebContent folder will be deemed external or broken. </p>
+ <p> Broken links
+
+are displayed in the Problems list and are indicated by the <img src="../images/nwlnktsk.gif" alt="Task list problem" /> icon in the first column. </p>
+ <p>When
+
+you select a preference that automatically copies files to your directory
+
+or displays the Broken links dialog, files that cannot contain links are copied
+
+or listed in the Broken links dialog. (One exception is CSS files, which can
+
+contain links to HTML and JSP files.)</p>
+<p>HTML and JSP files
+
+are not automatically copied because they are likely to contain links to other
+
+external files. Copying them to a local directory likely would create more
+
+broken links.</p>
+<p>If you need to link to other HTML files or JSP file outside
+
+of your project, you can reference them by mapping a drive to the system and
+
+directory where they are stored. Then set your Default Link Path preference
+
+to <span class="uicontrol">Relative to the Document Root Directory</span>. This way
+
+you can reference files that are already on your Web server without having
+
+the files locally. </p>
+</div>
+</div>
+<div><p><b class="relconceptshd">Related concepts</b><br />
+<a href="cwlnkvew.html" title="">Links view</a><br />
+</p>
+<p><b class="reltaskshd">Related tasks</b><br />
+
+<a href="tjlnkrfr.html" title="">Refreshing the Links view</a><br />
+<a href="twlnkfix.html" title="">Fixing broken links using the Fixup link references wizard</a><br />
+</p>
+</div><p>
+		(C) Copyright IBM Corporation 2000, 2005. All Rights Reserved.
+</p>
+</body>
+</html>

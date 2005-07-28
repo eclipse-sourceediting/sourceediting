@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="../../com.ibm.help.doc/swg_info_common.css" />
+<title>Adding Web library projects</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=,top=' );
+      popup.focus();
+    }
+</script><script language="JavaScript" src="help/liveHelp.js"></script></head>
+<body id="twplib"><a name="twplib"><!-- --></a>
+
+<h1 class="topictitle1">Adding Web library projects</h1>
+<div><div class="skipspace"> <p>Web library projects allow you to associate Java™ projects
+
+with "virtual" JAR files in a Web project's WEB-INF/lib directory. You can
+
+reference JAR files that exist elsewhere in the Enterprise Application project
+
+that contains your Web project, if they are in the Web project's build path,
+
+and avoid the need to explicitly copy these JAR files into the project's lib
+
+folder before you publish the Web application to a server.</p>
+<p>Currently,
+
+Web Library projects are supported only when testing in the WebSphere test
+
+environment or remotely publishing to a WebSphere<sup>®</sup> Application Server. After these
+
+associations are made, you must restart and republish the server for the changes
+
+to take effect.</p>
+<p>To set up these associations, open the Web perspective
+
+and in the Project Explorer view, complete the following steps: </p>
+ </div>
+<ol><li class="skipspace"><span>Expand your project and double-click on the Deployment Descriptor.</span> The Web Deployment Descriptor editor appears.</li>
+<li class="skipspace"><span>In the Overview tab, in the <span><span class="uicontrol">Web Library Projects</span></span> section,
+
+select an existing Java project JAR mapping, or click <span><span class="uicontrol">Add</span></span> to
+
+define a new mapping.</span></li>
+<li class="skipspace"><span>In the <span><span class="uicontrol">Add a Library Project</span></span> dialog,
+
+supply the JAR name that you want to associate with the current project, and
+
+use the <span><span class="uicontrol">Browse</span></span> button to locate and select
+
+the project that contains the JAR file.</span></li>
+<li class="skipspace"><span>Click <span><span class="uicontrol">Finish</span></span></span></li>
+</ol>
+<div class="skipspace"><p>A virtual version of the associated JAR file will appear in the
+
+Libraries folder.</p>
+</div>
+</div>
+<p>
+		(C) Copyright IBM Corporation 2000, 2005. All Rights Reserved.
+</p>
+</body>
+</html>
