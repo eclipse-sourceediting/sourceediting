@@ -10,8 +10,12 @@
  * 
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *******************************************************************************/ --> <!-- ================================================= --> <!-- This is the plugin for declaring the help         --> <!-- contributions for the Web tooling component       --> <!-- ================================================= -->  <plugin
-   id="org.eclipse.wst.webtools.doc.user"
+ *******************************************************************************/ -->
+   <plugin id="org.eclipse.wst.webtools.doc.user"
    name="Web tools documentation"
    version="0.7.0"
-   provider-name="Eclipse.org">     <extension point="org.eclipse.help.toc">  	<toc file="webtools_toc.xml" />    </extension>  </plugin>
+   provider-name="Eclipse.org"> 
+       <extension point="org.eclipse.help.toc">
+         	<toc file="webtools_toc.xml" /> 
+         	   </extension>  
+         	   </plugin>
