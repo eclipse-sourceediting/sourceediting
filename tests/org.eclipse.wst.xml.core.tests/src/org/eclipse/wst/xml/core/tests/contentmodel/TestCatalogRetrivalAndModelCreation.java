@@ -38,7 +38,7 @@ public class TestCatalogRetrivalAndModelCreation extends TestCase {
 		assertNull("expected no match for " + JUNK_STRING, resolved);
 	}
 
-	public void testWAPFORUM() throws MalformedURLException, IOException {
+	public void removedtestWAPFORUM() throws MalformedURLException, IOException {
 		doTest("-//WAPFORUM//DTD WML 1.1//EN");
 	}
 
@@ -82,11 +82,11 @@ public class TestCatalogRetrivalAndModelCreation extends TestCase {
 	public void testCMXHTML11() throws MalformedURLException, IOException {
 		doCMTest("-//W3C//DTD XHTML 1.1//EN");
 	}
-	public void testXHTML10M() throws MalformedURLException, IOException {
+	public void removedtestXHTML10M() throws MalformedURLException, IOException {
 		doTest("-//WAPFORUM//DTD XHTML Mobile 1.0//EN");
 	}
 
-	public void testWAP13() throws MalformedURLException, IOException {
+	public void removedtestWAP13() throws MalformedURLException, IOException {
 		doTest("-//WAPFORUM//DTD WML 1.3//EN");
 	}
 
