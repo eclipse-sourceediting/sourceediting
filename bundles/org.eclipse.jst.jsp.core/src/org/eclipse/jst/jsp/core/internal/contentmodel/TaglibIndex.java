@@ -56,6 +56,8 @@ import org.eclipse.wst.sse.core.internal.util.StringUtils;
  */
 public class TaglibIndex {
 
+	static boolean ENABLED = true;
+
 	class ClasspathChangeListener implements IElementChangedListener {
 		Stack classpathStack = new Stack();
 		List projectsIndexed = new ArrayList(1);
@@ -283,6 +285,11 @@ public class TaglibIndex {
 		return records;
 	}
 
+	/**
+	 * @deprecated - is not correct in flexible projects
+	 * @param path
+	 * @return
+	 */
 	public static IPath getContextRoot(IPath path) {
 		return _instance.internalGetContextRoot(path);
 	}
@@ -341,6 +348,7 @@ public class TaglibIndex {
 	}
 
 	public static synchronized void startup() {
+		ENABLED = !"false".equalsIgnoreCase(System.getProperty(TaglibIndex.class.getName()));
 		_instance = new TaglibIndex();
 	}
 
@@ -349,12 +357,15 @@ public class TaglibIndex {
 	private Map fProjectDescriptions;
 	private ResourceChangeListener fResourceChangeListener;
 	private ITaglibIndexListener[] fTaglibIndexListeners = null;
+
 	private TaglibIndex() {
 		super();
 		fResourceChangeListener = new ResourceChangeListener();
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(fResourceChangeListener, IResourceChangeEvent.POST_CHANGE);
 		fClasspathChangeListener = new ClasspathChangeListener();
-		JavaCore.addElementChangedListener(fClasspathChangeListener);
+		if (ENABLED) {
+			ResourcesPlugin.getWorkspace().addResourceChangeListener(fResourceChangeListener, IResourceChangeEvent.POST_CHANGE);
+			JavaCore.addElementChangedListener(fClasspathChangeListener);
+		}
 		fProjectDescriptions = new HashMap();
 	}
 
@@ -362,12 +373,14 @@ public class TaglibIndex {
 	 * @param project
 	 * @return
 	 */
-	ProjectDescription createDescription(IProject project) {
+	synchronized ProjectDescription createDescription(IProject project) {
 		ProjectDescription description = (ProjectDescription) fProjectDescriptions.get(project);
 		if (description == null) {
 			description = new ProjectDescription(project);
-			description.index();
-			description.indexClasspath();
+			if (ENABLED) {
+				description.index();
+				description.indexClasspath();
+			}
 			fProjectDescriptions.put(project, description);
 		}
 		return description;
