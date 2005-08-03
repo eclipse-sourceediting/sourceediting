@@ -14,8 +14,11 @@ package org.eclipse.wst.sse.ui.internal.ui;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
@@ -25,6 +28,7 @@ import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TextUtilities;
+import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -58,7 +62,14 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.ui.texteditor.MarkerAnnotation;
+import org.eclipse.ui.texteditor.MarkerUtilities;
 import org.eclipse.ui.texteditor.StatusLineContributionItem;
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
+import org.eclipse.ui.views.properties.IPropertySource;
+import org.eclipse.ui.views.properties.IPropertySourceProvider;
+import org.eclipse.ui.views.properties.PropertySheetPage;
+import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -79,11 +90,114 @@ import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 public class OffsetStatusLineContributionItem extends StatusLineContributionItem {
 
 	class InformationDialog extends Dialog {
+
 		IDocument fDocument = fTextEditor.getDocumentProvider().getDocument(fTextEditor.getEditorInput());
 
 		public InformationDialog(Shell parentShell) {
 			super(parentShell);
 			setShellStyle(getShellStyle() | SWT.RESIZE);
+		}
+
+		private void createAnnotationContents(Composite annotationsTabComposite) {
+			annotationsTabComposite.setLayout(new GridLayout());
+			annotationsTabComposite.setLayoutData(new GridData());
+
+			Composite annotationsComposite = new Composite(annotationsTabComposite, SWT.NONE);
+			annotationsComposite.setLayout(new GridLayout(2, false));
+			annotationsComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+			final TableViewer annotationsTable = new TableViewer(annotationsComposite, SWT.FULL_SELECTION);
+			GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+			gd.horizontalSpan = 2;
+			annotationsTable.getControl().setLayoutData(gd);
+			annotationsTable.setContentProvider(new ArrayContentProvider());
+			annotationsTable.getTable().setHeaderVisible(true);
+			annotationsTable.getTable().setLinesVisible(true);
+			String[] columns = new String[]{"Line", "Owner", "Type", "Message"};
+			annotationsTable.setLabelProvider(new ITableLabelProvider() {
+				public void addListener(ILabelProviderListener listener) {
+				}
+
+				public void dispose() {
+				}
+
+				public Image getColumnImage(Object element, int columnIndex) {
+					return null;
+				}
+
+				public String getColumnText(Object element, int columnIndex) {
+					Annotation annotation = (Annotation) element;
+					String text = null;
+					switch (columnIndex) {
+						case 0 :
+							text = (annotation instanceof MarkerAnnotation) ? Integer.toString(MarkerUtilities.getLineNumber(((MarkerAnnotation) annotation).getMarker())) : "-1";
+							break;
+						case 1 :
+							text = (annotation instanceof MarkerAnnotation) ? ((MarkerAnnotation) annotation).getMarker().getAttribute("owner", "n/a") : "?";
+							break;
+						case 2 :
+							text = (annotation instanceof MarkerAnnotation) ? MarkerUtilities.getMarkerType(((MarkerAnnotation) annotation).getMarker()) : "?";
+							break;
+						case 3 :
+							text = annotation.getText();
+							break;
+					}
+					if (text == null)
+						text = ""; //$NON-NLS-1$
+					return text;
+				}
+
+				public boolean isLabelProperty(Object element, String property) {
+					return false;
+				}
+
+				public void removeListener(ILabelProviderListener listener) {
+				}
+			});
+
+			TableLayout tlayout = new TableLayout();
+			CellEditor[] cellEditors = new CellEditor[columns.length];
+			int columnWidths[] = new int[]{Display.getCurrent().getBounds().width / 14, Display.getCurrent().getBounds().width / 7, Display.getCurrent().getBounds().width / 7, Display.getCurrent().getBounds().width / 7};
+			for (int i = 0; i < columns.length; i++) {
+				tlayout.addColumnData(new ColumnWeightData(1));
+				TableColumn tc = new TableColumn(annotationsTable.getTable(), SWT.NONE);
+				tc.setText(columns[i]);
+				tc.setResizable(true);
+				tc.setWidth(columnWidths[i]);
+			}
+			annotationsTable.setCellEditors(cellEditors);
+			annotationsTable.setColumnProperties(columns);
+			// textSelection.getOffset(), textSelection.getLength()
+			List matchingAnnotations = new ArrayList(0);
+			Iterator iterator = fTextEditor.getDocumentProvider().getAnnotationModel(fTextEditor.getEditorInput()).getAnnotationIterator();
+			while (iterator.hasNext()) {
+				Annotation element = (Annotation) iterator.next();
+				if (true) {
+					matchingAnnotations.add(element);
+				}
+			}
+			annotationsTable.setInput(matchingAnnotations);
+
+			final PropertySheetPage propertySheet = new PropertySheetPage();
+			propertySheet.createControl(annotationsComposite);
+			gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+			gd.horizontalSpan = 2;
+			propertySheet.getControl().setLayoutData(gd);
+			propertySheet.setPropertySourceProvider(new IPropertySourceProvider() {
+				public IPropertySource getPropertySource(Object object) {
+					if (object instanceof MarkerAnnotation) {
+						IPropertySource markerAnnotationPropertySource = new MarkerAnnotationPropertySource(((MarkerAnnotation) object));
+						return markerAnnotationPropertySource;
+					}
+					return null;
+				}
+			});
+
+			annotationsTable.addSelectionChangedListener(new ISelectionChangedListener() {
+				public void selectionChanged(SelectionChangedEvent event) {
+					propertySheet.selectionChanged(null, event.getSelection());
+				}
+			});
 		}
 
 		/*
@@ -115,6 +229,12 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 				regionTab.setControl(regions);
 				createRegionsContents(regions);
 			}
+
+			TabItem annotationsTab = new TabItem(tabfolder, SWT.BORDER);
+			annotationsTab.setText("Annotations"); //$NON-NLS-1$
+			Composite annotations = new Composite(tabfolder, SWT.NONE);
+			annotationsTab.setControl(annotations);
+			createAnnotationContents(annotations);
 
 			return composite;
 		}
@@ -409,6 +529,64 @@ public class OffsetStatusLineContributionItem extends StatusLineContributionItem
 			});
 			sashForm.setWeights(new int[]{3, 2});
 			return sashForm;
+		}
+	}
+
+	class MarkerAnnotationPropertySource implements IPropertySource {
+		MarkerAnnotation fMarkerAnnotation = null;
+		IPropertyDescriptor[] fDescriptors = null;
+
+		public MarkerAnnotationPropertySource(MarkerAnnotation markerAnnotation) {
+			super();
+			fMarkerAnnotation = markerAnnotation;
+		}
+
+		public Object getEditableValue() {
+			return null;
+		}
+
+		public IPropertyDescriptor[] getPropertyDescriptors() {
+			if (fDescriptors == null) {
+				try {
+					Map attrs = fMarkerAnnotation.getMarker().getAttributes();
+					Object[] keys = attrs.keySet().toArray();
+					fDescriptors = new IPropertyDescriptor[keys.length];
+					for (int i = 0; i < keys.length; i++) {
+						TextPropertyDescriptor descriptor = new TextPropertyDescriptor(keys[i].toString(), keys[i].toString());
+						fDescriptors[i] = descriptor;
+					}
+				}
+				catch (CoreException e) {
+					e.printStackTrace();
+				}
+			}
+			return fDescriptors;
+		}
+
+		public Object getPropertyValue(Object id) {
+			return fMarkerAnnotation.getMarker().getAttribute(id.toString(), "");
+		}
+
+		public boolean isPropertySet(Object id) {
+			return fMarkerAnnotation.getMarker().getAttribute(id.toString(), null) != null;
+		}
+
+		public void resetPropertyValue(Object id) {
+			try {
+				fMarkerAnnotation.getMarker().getAttributes().remove(id);
+			}
+			catch (CoreException e) {
+				e.printStackTrace();
+			}
+		}
+
+		public void setPropertyValue(Object id, Object value) {
+			try {
+				fMarkerAnnotation.getMarker().setAttribute(id.toString(), value);
+			}
+			catch (CoreException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
