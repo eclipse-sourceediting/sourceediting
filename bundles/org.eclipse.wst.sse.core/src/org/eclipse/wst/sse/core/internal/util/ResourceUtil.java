@@ -12,35 +12,45 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.core.internal.util;
 
-
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 
 
 /**
- * @deprecated - incorrect and not updated for M3 changes
+ * @deprecated - makes assumptions on behalf of the requester
  */
 public class ResourceUtil {
 
 	/**
-	 * Obtain IFile from IStructuredModel
+	 * Obtains the IFile for a model
+	 * 
+	 * @param model
+	 *            the model to use
+	 * @return the IFile used to create the model, if it came from an IFile,
+	 *         null otherwise
 	 */
 	public static IFile getFileFor(IStructuredModel model) {
 		if (model == null)
 			return null;
-		String path = model.getBaseLocation();
-		if (path == null || path.length() == 0) {
-			Object id = model.getId();
-			if (id == null)
-				return null;
-			path = id.toString();
-		}
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IFile file = root.getFileForLocation(new Path(path));
+		IFile file = null;
+		IPath location = new Path(model.getBaseLocation());
+		// if the path is not a path in the file system and there are at least
+		// 2 segments, it might be in the workspace
+		if (!location.toFile().exists() && location.segmentCount() > 1) {
+			// remember, this IFile isn't guaranteed to exist
+			file = root.getFile(location);
+		}
+		else {
+			IFile[] files = root.findFilesForLocation(location);
+			if (files.length > 0) {
+				file = files[0];
+			}
+		}
 		return file;
 	}
 
@@ -51,18 +61,20 @@ public class ResourceUtil {
 	 *         none
 	 */
 	public static IFile[] getFilesFor(IStructuredModel model) {
-		IFile[] files = new IFile[0];
+		if (model == null)
+			return null;
 
-		if (model != null) {
-			String path = model.getBaseLocation();
-			if (path == null || path.length() == 0) {
-				Object id = model.getId();
-				if (id == null)
-					return files;
-				path = id.toString();
-			}
-			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-			files = root.findFilesForLocation(new Path(path));
+		IFile[] files = null;
+		IPath location = new Path(model.getBaseLocation());
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		// if the path is not a path in the file system and there are at least
+		// 2 segments, it might be in the workspace
+		if (!location.toFile().exists() && location.segmentCount() > 1) {
+			// remember, this IFile isn't guaranteed to exist
+			files = new IFile[]{root.getFile(location)};
+		}
+		else {
+			files = root.findFilesForLocation(location);
 		}
 		return files;
 	}
