@@ -45,7 +45,7 @@ import org.eclipse.wst.sse.core.internal.util.StringUtils;
  * Dispatcher for scanning based on deltas and requested projects
  */
 class WorkspaceTaskScanner {
-	private static final boolean _debug = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks")); //$NON-NLS-1$ //$NON-NLS-2$
+	static final boolean _debug = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks")); //$NON-NLS-1$ //$NON-NLS-2$
 	private static final boolean _debugContentTypeDetection = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks/detection")); //$NON-NLS-1$ //$NON-NLS-2$
 	private static final boolean _debugOverallPerf = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks/overalltime")); //$NON-NLS-1$ //$NON-NLS-2$
 	private static final boolean _debugPreferences = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks/preferences")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -59,13 +59,14 @@ class WorkspaceTaskScanner {
 		return _instance;
 	}
 
+	final String DEFAULT_MARKER_TYPE = IFileTaskScanner.TASK_MARKER_ID;
 	private List fActiveScanners = null;
 	private IContentType[] fCurrentIgnoreContentTypes = null;
 	private TaskTag[] fCurrentTaskTags = null;
+
 	private FileTaskScannerRegistryReader registry = null;
 
 	private long time0;
-
 
 	/**
 	 * 
@@ -270,8 +271,11 @@ class WorkspaceTaskScanner {
 				IWorkspaceRunnable r = new IWorkspaceRunnable() {
 					public void run(IProgressMonitor progressMonitor) throws CoreException {
 						try {
-							// Delete old Task markers
-							file.deleteMarkers(IMarker.TASK, true, IResource.DEPTH_ZERO);
+							/*
+							 * Delete old Task markers (don't delete regular
+							 * Tasks since that includes user-defined ones
+							 */
+							file.deleteMarkers(DEFAULT_MARKER_TYPE, true, IResource.DEPTH_ZERO);
 						}
 						catch (CoreException e) {
 							Logger.logException("exception deleting old tasks", e); //$NON-NLS-1$ 
@@ -281,8 +285,8 @@ class WorkspaceTaskScanner {
 								System.out.println("" + markerAttributes.length + " tasks for " + file.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$
 							}
 							for (int i = 0; i < markerAttributes.length; i++) {
-								String markerType = (String) markerAttributes[i].get(IMarker.TASK);
-								IMarker marker = finalFile.createMarker(markerType != null ? markerType : IMarker.TASK);
+								String specifiedMarkerType = (String) markerAttributes[i].get(IMarker.TASK);
+								IMarker marker = finalFile.createMarker(specifiedMarkerType != null ? specifiedMarkerType : DEFAULT_MARKER_TYPE);
 								marker.setAttributes(markerAttributes[i]);
 							}
 						}
