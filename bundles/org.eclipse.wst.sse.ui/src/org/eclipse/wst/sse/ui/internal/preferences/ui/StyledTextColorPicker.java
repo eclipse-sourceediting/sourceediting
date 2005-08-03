@@ -332,6 +332,8 @@ public class StyledTextColorPicker extends Composite {
 		ColorDialog colorDlg = new ColorDialog(getShell());
 		if (startValue != null)
 			colorDlg.setRGB(startValue);
+		if(colorDlg.getText() == null || colorDlg.getText().length() == 0)
+			colorDlg.setText("Pick a color");
 		colorDlg.open();
 		RGB newRGB = colorDlg.getRGB();
 		if (newRGB != null)
