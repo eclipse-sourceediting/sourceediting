@@ -44,7 +44,7 @@ import org.eclipse.jst.jsp.ui.internal.contentassist.NoRegionContentAssistProces
 import org.eclipse.jst.jsp.ui.internal.format.FormattingStrategyJSPJava;
 import org.eclipse.jst.jsp.ui.internal.hyperlink.JSPJavaHyperlinkDetector;
 import org.eclipse.jst.jsp.ui.internal.hyperlink.TaglibHyperlinkDetector;
-import org.eclipse.jst.jsp.ui.internal.hyperlink.URIHyperlinkDetector;
+import org.eclipse.jst.jsp.ui.internal.hyperlink.XMLHyperlinkDetector;
 import org.eclipse.jst.jsp.ui.internal.reconcile.StructuredTextReconcilingStrategyForJSP;
 import org.eclipse.jst.jsp.ui.internal.style.LineStyleProviderForJSP;
 import org.eclipse.jst.jsp.ui.internal.style.java.LineStyleProviderForJava;
@@ -480,7 +480,7 @@ public class StructuredTextViewerConfigurationJSP extends StructuredTextViewerCo
 		List allDetectors = new ArrayList(0);
 		allDetectors.add(new JSPJavaHyperlinkDetector());
 		allDetectors.add(new TaglibHyperlinkDetector());
-		allDetectors.add(new URIHyperlinkDetector());
+		allDetectors.add(new XMLHyperlinkDetector());
 
 		IHyperlinkDetector[] superDetectors = super.getHyperlinkDetectors(sourceViewer);
 		for (int m = 0; m < superDetectors.length; m++) {

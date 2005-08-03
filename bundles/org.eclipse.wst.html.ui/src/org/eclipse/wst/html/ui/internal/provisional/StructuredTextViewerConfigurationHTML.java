@@ -45,7 +45,7 @@ import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.html.ui.internal.autoedit.AutoEditStrategyForTabs;
 import org.eclipse.wst.html.ui.internal.contentassist.HTMLContentAssistProcessor;
 import org.eclipse.wst.html.ui.internal.contentassist.NoRegionContentAssistProcessorForHTML;
-import org.eclipse.wst.html.ui.internal.hyperlink.URIHyperlinkDetector;
+import org.eclipse.wst.html.ui.internal.hyperlink.XMLHyperlinkDetector;
 import org.eclipse.wst.html.ui.internal.style.LineStyleProviderForHTML;
 import org.eclipse.wst.html.ui.internal.taginfo.HTMLBestMatchHoverProcessor;
 import org.eclipse.wst.html.ui.internal.taginfo.HTMLInformationProvider;
@@ -228,7 +228,7 @@ public class StructuredTextViewerConfigurationHTML extends StructuredTextViewerC
 			return null;
 
 		List allDetectors = new ArrayList(0);
-		allDetectors.add(new URIHyperlinkDetector());
+		allDetectors.add(new XMLHyperlinkDetector());
 
 		IHyperlinkDetector[] superDetectors = super.getHyperlinkDetectors(sourceViewer);
 		for (int m = 0; m < superDetectors.length; m++) {

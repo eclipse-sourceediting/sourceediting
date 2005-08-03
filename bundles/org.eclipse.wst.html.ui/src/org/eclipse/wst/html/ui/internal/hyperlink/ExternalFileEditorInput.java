@@ -6,7 +6,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.editors.text.ILocationProvider;
 import org.eclipse.ui.model.IWorkbenchAdapter;
@@ -15,7 +15,7 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
  * EditorInput for external files. Copied from
  * org.eclipse.ui.internal.editors.text.JavaFileEditorInput
  */
-class ExternalFileEditorInput implements IEditorInput, ILocationProvider {
+class ExternalFileEditorInput implements IPathEditorInput, ILocationProvider {
 	// copies of this class exist in:
 	// org.eclipse.wst.xml.ui.internal.hyperlink
 	// org.eclipse.wst.html.ui.internal.hyperlink
@@ -121,6 +121,14 @@ class ExternalFileEditorInput implements IEditorInput, ILocationProvider {
 		}
 		return null;
 	}
+	
+    /*
+     * @see org.eclipse.ui.IPathEditorInput#getPath()
+     * @since 3.1
+     */
+    public IPath getPath() {
+        return Path.fromOSString(fFile.getAbsolutePath());
+    }
 
 	/*
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -133,6 +141,11 @@ class ExternalFileEditorInput implements IEditorInput, ILocationProvider {
 			ExternalFileEditorInput input = (ExternalFileEditorInput) o;
 			return fFile.equals(input.fFile);
 		}
+		
+        if (o instanceof IPathEditorInput) {
+            IPathEditorInput input= (IPathEditorInput)o;
+            return getPath().equals(input.getPath());
+        }
 
 		return false;
 	}

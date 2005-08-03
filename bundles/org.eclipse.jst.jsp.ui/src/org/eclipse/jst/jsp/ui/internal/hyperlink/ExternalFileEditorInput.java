@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IPathEditorInput;
 import org.eclipse.ui.IPersistableElement;
 import org.eclipse.ui.editors.text.ILocationProvider;
 import org.eclipse.ui.model.IWorkbenchAdapter;
@@ -24,6 +25,7 @@ class ExternalFileEditorInput implements IEditorInput, ILocationProvider {
 	/**
 	 * The workbench adapter which simply provides the label.
 	 * 
+	 * @see  Eclipse 3.1
 	 */
 	private class WorkbenchAdapter implements IWorkbenchAdapter {
 		/*
@@ -120,6 +122,14 @@ class ExternalFileEditorInput implements IEditorInput, ILocationProvider {
 		}
 		return null;
 	}
+	
+    /*
+     * @see org.eclipse.ui.IPathEditorInput#getPath()
+     * @since 3.1
+     */
+    public IPath getPath() {
+        return Path.fromOSString(fFile.getAbsolutePath());
+    }
 
 	/*
 	 * @see java.lang.Object#equals(java.lang.Object)
@@ -132,6 +142,11 @@ class ExternalFileEditorInput implements IEditorInput, ILocationProvider {
 			ExternalFileEditorInput input = (ExternalFileEditorInput) o;
 			return fFile.equals(input.fFile);
 		}
+		
+        if (o instanceof IPathEditorInput) {
+            IPathEditorInput input= (IPathEditorInput)o;
+            return getPath().equals(input.getPath());
+        }
 
 		return false;
 	}

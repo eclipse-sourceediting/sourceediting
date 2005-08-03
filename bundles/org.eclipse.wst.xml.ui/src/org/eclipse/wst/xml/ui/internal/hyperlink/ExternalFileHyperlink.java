@@ -33,23 +33,11 @@ class ExternalFileHyperlink implements IHyperlink {
 		return fHyperlinkRegion;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getTypeLabel()
-	 */
 	public String getTypeLabel() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.text.hyperlink.IHyperlink#getHyperlinkText()
-	 */
 	public String getHyperlinkText() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -58,7 +46,7 @@ class ExternalFileHyperlink implements IHyperlink {
 			IEditorInput input = new ExternalFileEditorInput(fHyperlinkFile);
 			IEditorDescriptor descriptor;
 			try {
-				descriptor = IDE.getEditorDescriptor(input.getName());
+				descriptor = IDE.getEditorDescriptor(input.getName(), true);
 				if (descriptor != null) {
 					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 					IDE.openEditor(page, input, descriptor.getId(), true);

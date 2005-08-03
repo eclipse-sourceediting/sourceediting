@@ -2,7 +2,6 @@ package org.eclipse.wst.html.ui.internal.hyperlink;
 
 import java.io.File;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -43,17 +42,49 @@ import org.w3c.dom.Node;
  * Resolver.
  * 
  */
-class XMLHyperlinkDetector implements IHyperlinkDetector {
+public class XMLHyperlinkDetector implements IHyperlinkDetector {
 	// copies of this class exist in:
 	// org.eclipse.wst.xml.ui.internal.hyperlink
 	// org.eclipse.wst.html.ui.internal.hyperlink
 	// org.eclipse.jst.jsp.ui.internal.hyperlink
-	
+
+	private final String HTTP_PROTOCOL = "http://";//$NON-NLS-1$
 	private final String NO_NAMESPACE_SCHEMA_LOCATION = "noNamespaceSchemaLocation"; //$NON-NLS-1$
 	private final String SCHEMA_LOCATION = "schemaLocation"; //$NON-NLS-1$
 	private final String XMLNS = "xmlns"; //$NON-NLS-1$
 	private final String XSI_NAMESPACE_URI = "http://www.w3.org/2001/XMLSchema-instance"; //$NON-NLS-1$
-	private final String HTTP_PROTOCOL = "http://";//$NON-NLS-1$
+
+	/**
+	 * Create the appropriate hyperlink
+	 * 
+	 * @param uriString
+	 * @param hyperlinkRegion
+	 * @return IHyperlink
+	 */
+	private IHyperlink createHyperlink(String uriString, IRegion hyperlinkRegion, IDocument document, Node node) {
+		IHyperlink link = null;
+
+		if (isHttp(uriString)) {
+			link = new URLHyperlink(hyperlinkRegion, uriString);
+		} else {
+			// try to locate the file in the workspace
+			File systemFile = getFileFromUriString(uriString);
+			if (systemFile != null) {
+				String systemPath = systemFile.getPath();
+				IFile file = getFile(systemPath);
+				if (file != null && file.exists()) {
+					// this is a WorkspaceFileHyperlink since file exists in
+					// workspace
+					link = new WorkspaceFileHyperlink(hyperlinkRegion, file);
+				} else {
+					// this is an ExternalFileHyperlink since file does not
+					// exist in workspace
+					link = new ExternalFileHyperlink(hyperlinkRegion, systemFile);
+				}
+			}
+		}
+		return link;
+	}
 
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
 		// for now, only capable of creating 1 hyperlink
@@ -67,8 +98,7 @@ class XMLHyperlinkDetector implements IHyperlinkDetector {
 				if (currentNode.getNodeType() == Node.DOCUMENT_TYPE_NODE) {
 					// doctype nodes
 					uriString = getURIString(currentNode, document);
-				}
-				else if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
+				} else if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
 					// element nodes
 					Attr currentAttr = getCurrentAttrNode(currentNode, region.getOffset());
 					if (currentAttr != null) {
@@ -105,196 +135,32 @@ class XMLHyperlinkDetector implements IHyperlinkDetector {
 	}
 
 	/**
-	 * Create the appropriate hyperlink
-	 * 
-	 * @param uriString
-	 * @param hyperlinkRegion
-	 * @return IHyperlink
+	 * Get the base location from the current model (local file system)
 	 */
-	private IHyperlink createHyperlink(String uriString, IRegion hyperlinkRegion, IDocument document, Node node) {
-		IHyperlink link = null;
-
-		if (uriString != null) {
-			String temp = uriString.toLowerCase();
-			if (temp.startsWith(HTTP_PROTOCOL)) {
-				// this is a URLHyperlink since this is a web address
-				link = new URLHyperlink(hyperlinkRegion, uriString);
-			}
-			else {
-				// try to locate the file in the workspace
-				IFile file = getFile(uriString);
-				if (file != null && file.exists()) {
-					// this is a WorkspaceFileHyperlink since file exists in
-					// workspace
-					link = new WorkspaceFileHyperlink(hyperlinkRegion, file);
-				}
-				else {
-					// this is an ExternalFileHyperlink since file does not
-					// exist
-					// in workspace
-					File externalFile = new File(uriString);
-					link = new ExternalFileHyperlink(hyperlinkRegion, externalFile);
-				}
-			}
-		}
-
-		return link;
-	}
-
-	private IRegion getHyperlinkRegion(Node node) {
-		IRegion hyperRegion = null;
-
-		if (node != null) {
-			short nodeType = node.getNodeType();
-			if (nodeType == Node.DOCUMENT_TYPE_NODE) {
-				// handle doc type node
-				IDOMNode docNode = (IDOMNode) node;
-				hyperRegion = new Region(docNode.getStartOffset(), docNode.getEndOffset() - docNode.getStartOffset());
-			}
-			else if (nodeType == Node.ATTRIBUTE_NODE) {
-				// handle attribute nodes
-				IDOMAttr att = (IDOMAttr) node;
-				// do not include quotes in attribute value region
-				int regOffset = att.getValueRegionStartOffset();
-				int regLength = att.getValueRegion().getTextLength();
-				String attValue = att.getValueRegionText();
-				if (StringUtils.isQuoted(attValue)) {
-					regOffset = ++regOffset;
-					regLength = regLength - 2;
-				}
-				hyperRegion = new Region(regOffset, regLength);
-			}
-		}
-		return hyperRegion;
-	}
-
-	/**
-	 * Returns the URI string
-	 * 
-	 * @param node -
-	 *            assumes not null
-	 */
-	protected String getURIString(Node node, IDocument document) {
-		String resolvedURI = null;
-		// need the base location, publicId, and systemId for URIResolver
+	private String getBaseLocation(IDocument document) {
 		String baseLoc = null;
-		String publicId = null;
-		String systemId = null;
 
-		short nodeType = node.getNodeType();
-		// handle doc type node
-		if (nodeType == Node.DOCUMENT_TYPE_NODE) {
-			baseLoc = getBaseLocation(document);
-			publicId = ((DocumentType) node).getPublicId();
-			systemId = ((DocumentType) node).getSystemId();
-		}
-		else if (nodeType == Node.ATTRIBUTE_NODE) {
-			// handle attribute node
-			Attr attrNode = (Attr) node;
-			baseLoc = getBaseLocation(document);
-			String attrName = attrNode.getName();
-			String attrValue = attrNode.getValue();
-			attrValue = StringUtils.strip(attrValue);
-
-			// handle schemaLocation attribute
-			String prefix = DOMNamespaceHelper.getPrefix(attrName);
-			String unprefixedName = DOMNamespaceHelper.getUnprefixedName(attrName);
-			if ((XMLNS.equals(prefix)) || (XMLNS.equals(unprefixedName))) {
-				publicId = attrValue;
-				systemId = getLocationHint(attrNode.getOwnerElement(), publicId);
+		// get the base location from the current model
+		IStructuredModel sModel = null;
+		try {
+			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+			if (sModel != null) {
+				IPath location = new Path(sModel.getBaseLocation());
+				if (location.toFile().exists()) {
+					baseLoc = location.toString();
+				} else {
+					if (location.segmentCount() > 1)
+						baseLoc = ResourcesPlugin.getWorkspace().getRoot().getFile(location).getLocation().toString();
+					else
+						baseLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(location).toString();
+				}
 			}
-			else if ((XSI_NAMESPACE_URI.equals(DOMNamespaceHelper.getNamespaceURI(attrNode))) && (SCHEMA_LOCATION.equals(unprefixedName))) {
-				// for now just use the first pair
-				// need to look into being more precise
-				StringTokenizer st = new StringTokenizer(attrValue);
-				publicId = st.hasMoreTokens() ? st.nextToken() : null;
-				systemId = st.hasMoreTokens() ? st.nextToken() : null;
-				// else check if xmlns publicId = value
-			}
-			else {
-				systemId = attrValue;
+		} finally {
+			if (sModel != null) {
+				sModel.releaseFromRead();
 			}
 		}
-
-		resolvedURI = resolveURI(baseLoc, publicId, systemId);
-		return resolvedURI;
-	}
-
-	/**
-	 * Returns an IFile from the given uri if possible, null if cannot find
-	 * file from uri.
-	 * 
-	 * @param fileString
-	 *            file system path
-	 * @return returns IFile if fileString exists in the workspace
-	 */
-	private IFile getFile(String fileString) {
-		IFile file = null;
-
-		if (fileString != null) {
-			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(fileString));
-			for (int i = 0; i < files.length && file == null; i++)
-				if (files[i].exists())
-					file = files[i];
-		}
-
-		return file;
-	}
-
-	/**
-	 * Checks to see if the given attribute is openable. Attribute is openable
-	 * if it is a namespace declaration attribute or if the attribute value is
-	 * of type URI.
-	 * 
-	 * @param attr
-	 *            cannot be null
-	 * @param cmElement
-	 *            CMElementDeclaration associated with the attribute (can be
-	 *            null)
-	 * @return true if this attribute is "openOn-able" false otherwise
-	 */
-	private boolean isLinkableAttr(Attr attr, CMElementDeclaration cmElement) {
-		String attrName = attr.getName();
-		String prefix = DOMNamespaceHelper.getPrefix(attrName);
-		String unprefixedName = DOMNamespaceHelper.getUnprefixedName(attrName);
-		// determine if attribute is namespace declaration
-		if ((XMLNS.equals(prefix)) || (XMLNS.equals(unprefixedName)))
-			return true;
-
-		// determine if attribute contains schema location
-		if ((XSI_NAMESPACE_URI.equals(DOMNamespaceHelper.getNamespaceURI(attr))) && ((SCHEMA_LOCATION.equals(unprefixedName)) || (NO_NAMESPACE_SCHEMA_LOCATION.equals(unprefixedName))))
-			return true;
-
-		// determine if attribute value is of type URI
-		if (cmElement != null) {
-			CMAttributeDeclaration attrDecl = (CMAttributeDeclaration) cmElement.getAttributes().getNamedItem(attrName);
-			if ((attrDecl != null) && (attrDecl.getAttrType() != null) && (CMDataType.URI.equals(attrDecl.getAttrType().getDataTypeName()))) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Attempts to find an attribute within element that is openable.
-	 * 
-	 * @param element -
-	 *            cannot be null
-	 * @return Attr attribute that can be used for open on, null if no
-	 *         attribute could be found
-	 */
-	private Attr getLinkableAttr(Element element) {
-		CMElementDeclaration ed = getCMElementDeclaration(element);
-		// get the list of attributes for this node
-		NamedNodeMap attrs = element.getAttributes();
-		for (int i = 0; i < attrs.getLength(); ++i) {
-			// check if this attribute is "openOn-able"
-			Attr att = (Attr) attrs.item(i);
-			if (isLinkableAttr(att, ed)) {
-				return att;
-			}
-		}
-		return null;
+		return baseLoc;
 	}
 
 	/**
@@ -354,8 +220,7 @@ class XMLHyperlinkDetector implements IHyperlinkDetector {
 			inode = sModel.getIndexedRegion(offset);
 			if (inode == null)
 				inode = sModel.getIndexedRegion(offset - 1);
-		}
-		finally {
+		} finally {
 			if (sModel != null)
 				sModel.releaseFromRead();
 		}
@@ -367,83 +232,96 @@ class XMLHyperlinkDetector implements IHyperlinkDetector {
 	}
 
 	/**
-	 * Get the base location from the current model (local file system)
+	 * Returns an IFile from the given uri if possible, null if cannot find
+	 * file from uri.
+	 * 
+	 * @param fileString
+	 *            file system path
+	 * @return returns IFile if fileString exists in the workspace
 	 */
-	private String getBaseLocation(IDocument document) {
-		String baseLoc = null;
+	private IFile getFile(String fileString) {
+		IFile file = null;
 
-		// get the base location from the current model
-		IStructuredModel sModel = null;
+		if (fileString != null) {
+			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(fileString));
+			for (int i = 0; i < files.length && file == null; i++)
+				if (files[i].exists())
+					file = files[i];
+		}
+
+		return file;
+	}
+
+	/**
+	 * Create a file from the given uri string
+	 * 
+	 * @param uriString -
+	 *            assumes uriString is not http://
+	 * @return File created from uriString if possible, null otherwise
+	 */
+	private File getFileFromUriString(String uriString) {
+		File file = null;
 		try {
-			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(document);
-			if (sModel != null) {
-				IPath location = new Path(sModel.getBaseLocation());
-				if (location.toFile().exists()) {
-					baseLoc = location.toString();
+			// first just try to create a file directly from uriString as
+			// default in case create file from uri does not work
+			file = new File(uriString);
+
+			// try to create file from uri
+			URI uri = new URI(uriString);
+			file = new File(uri);
+		} catch (Exception e) {
+			// if exception is thrown while trying to create File just ignore
+			// and file will be null
+		}
+		return file;
+	}
+
+	private IRegion getHyperlinkRegion(Node node) {
+		IRegion hyperRegion = null;
+
+		if (node != null) {
+			short nodeType = node.getNodeType();
+			if (nodeType == Node.DOCUMENT_TYPE_NODE) {
+				// handle doc type node
+				IDOMNode docNode = (IDOMNode) node;
+				hyperRegion = new Region(docNode.getStartOffset(), docNode.getEndOffset() - docNode.getStartOffset());
+			} else if (nodeType == Node.ATTRIBUTE_NODE) {
+				// handle attribute nodes
+				IDOMAttr att = (IDOMAttr) node;
+				// do not include quotes in attribute value region
+				int regOffset = att.getValueRegionStartOffset();
+				int regLength = att.getValueRegion().getTextLength();
+				String attValue = att.getValueRegionText();
+				if (StringUtils.isQuoted(attValue)) {
+					regOffset = ++regOffset;
+					regLength = regLength - 2;
 				}
-				else {
-					IPath basePath = new Path(sModel.getBaseLocation());
-					if(basePath.segmentCount() > 1)
-						baseLoc = ResourcesPlugin.getWorkspace().getRoot().getFile(basePath).getLocation().toString();
-					else
-						baseLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(basePath).toString();
-				}
+				hyperRegion = new Region(regOffset, regLength);
 			}
 		}
-		finally {
-			if (sModel != null) {
-				sModel.releaseFromRead();
-			}
-		}
-		return baseLoc;
+		return hyperRegion;
 	}
 
 	/**
-	 * Checks whether the given uriString is really pointing to a file
+	 * Attempts to find an attribute within element that is openable.
 	 * 
-	 * @param uriString
-	 * @return boolean
+	 * @param element -
+	 *            cannot be null
+	 * @return Attr attribute that can be used for open on, null if no
+	 *         attribute could be found
 	 */
-	private boolean isValidURI(String uriString) {
-		boolean isValid = false;
-
-		if (uriString != null) {
-			// first do a quick check to see if this is some sort of http://
-			String tempString = uriString.toLowerCase();
-			if (tempString.startsWith(HTTP_PROTOCOL))
-				isValid = true;
-			else {
-				File file = new File(uriString);
-				try {
-					URI uri = new URI(uriString);
-					file = new File(uri);
-				}
-				catch (URISyntaxException e) {
-					// it is okay that a uri could not be created out of
-					// uriString
-				}
-				catch (IllegalArgumentException e) {
-					// it is okay that file could not be created out of uri
-				}
-				isValid = file.exists();
+	private Attr getLinkableAttr(Element element) {
+		CMElementDeclaration ed = getCMElementDeclaration(element);
+		// get the list of attributes for this node
+		NamedNodeMap attrs = element.getAttributes();
+		for (int i = 0; i < attrs.getLength(); ++i) {
+			// check if this attribute is "openOn-able"
+			Attr att = (Attr) attrs.item(i);
+			if (isLinkableAttr(att, ed)) {
+				return att;
 			}
 		}
-		return isValid;
-	}
-
-	/**
-	 * Resolves the given URI information
-	 * 
-	 * @param baseLocation
-	 * @param publicId
-	 * @param systemId
-	 * @return String resolved uri.
-	 */
-	private String resolveURI(String baseLocation, String publicId, String systemId) {
-		// dont resolve if there's nothing to resolve
-		if ((baseLocation == null) && (publicId == null) && (systemId == null))
-			return null;
-		return URIResolverPlugin.createResolver().resolve(baseLocation, publicId, systemId);
+		return null;
 	}
 
 	/**
@@ -468,5 +346,138 @@ class XMLHyperlinkDetector implements IHyperlinkDetector {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Returns the URI string
+	 * 
+	 * @param node -
+	 *            assumes not null
+	 */
+	private String getURIString(Node node, IDocument document) {
+		String resolvedURI = null;
+		// need the base location, publicId, and systemId for URIResolver
+		String baseLoc = null;
+		String publicId = null;
+		String systemId = null;
+
+		short nodeType = node.getNodeType();
+		// handle doc type node
+		if (nodeType == Node.DOCUMENT_TYPE_NODE) {
+			baseLoc = getBaseLocation(document);
+			publicId = ((DocumentType) node).getPublicId();
+			systemId = ((DocumentType) node).getSystemId();
+		} else if (nodeType == Node.ATTRIBUTE_NODE) {
+			// handle attribute node
+			Attr attrNode = (Attr) node;
+			baseLoc = getBaseLocation(document);
+			String attrName = attrNode.getName();
+			String attrValue = attrNode.getValue();
+			attrValue = StringUtils.strip(attrValue);
+
+			// handle schemaLocation attribute
+			String prefix = DOMNamespaceHelper.getPrefix(attrName);
+			String unprefixedName = DOMNamespaceHelper.getUnprefixedName(attrName);
+			if ((XMLNS.equals(prefix)) || (XMLNS.equals(unprefixedName))) {
+				publicId = attrValue;
+				systemId = getLocationHint(attrNode.getOwnerElement(), publicId);
+			} else if ((XSI_NAMESPACE_URI.equals(DOMNamespaceHelper.getNamespaceURI(attrNode))) && (SCHEMA_LOCATION.equals(unprefixedName))) {
+				// for now just use the first pair
+				// need to look into being more precise
+				StringTokenizer st = new StringTokenizer(attrValue);
+				publicId = st.hasMoreTokens() ? st.nextToken() : null;
+				systemId = st.hasMoreTokens() ? st.nextToken() : null;
+				// else check if xmlns publicId = value
+			} else {
+				systemId = attrValue;
+			}
+		}
+
+		resolvedURI = resolveURI(baseLoc, publicId, systemId);
+		return resolvedURI;
+	}
+
+	/**
+	 * Returns true if this uriString is an http string
+	 * 
+	 * @param uriString
+	 * @return true if uriString is http string, false otherwise
+	 */
+	private boolean isHttp(String uriString) {
+		boolean isHttp = false;
+		if (uriString != null) {
+			String tempString = uriString.toLowerCase();
+			if (tempString.startsWith(HTTP_PROTOCOL))
+				isHttp = true;
+		}
+		return isHttp;
+	}
+
+	/**
+	 * Checks to see if the given attribute is openable. Attribute is openable
+	 * if it is a namespace declaration attribute or if the attribute value is
+	 * of type URI.
+	 * 
+	 * @param attr
+	 *            cannot be null
+	 * @param cmElement
+	 *            CMElementDeclaration associated with the attribute (can be
+	 *            null)
+	 * @return true if this attribute is "openOn-able" false otherwise
+	 */
+	private boolean isLinkableAttr(Attr attr, CMElementDeclaration cmElement) {
+		String attrName = attr.getName();
+		String prefix = DOMNamespaceHelper.getPrefix(attrName);
+		String unprefixedName = DOMNamespaceHelper.getUnprefixedName(attrName);
+		// determine if attribute is namespace declaration
+		if ((XMLNS.equals(prefix)) || (XMLNS.equals(unprefixedName)))
+			return true;
+
+		// determine if attribute contains schema location
+		if ((XSI_NAMESPACE_URI.equals(DOMNamespaceHelper.getNamespaceURI(attr))) && ((SCHEMA_LOCATION.equals(unprefixedName)) || (NO_NAMESPACE_SCHEMA_LOCATION.equals(unprefixedName))))
+			return true;
+
+		// determine if attribute value is of type URI
+		if (cmElement != null) {
+			CMAttributeDeclaration attrDecl = (CMAttributeDeclaration) cmElement.getAttributes().getNamedItem(attrName);
+			if ((attrDecl != null) && (attrDecl.getAttrType() != null) && (CMDataType.URI.equals(attrDecl.getAttrType().getDataTypeName()))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Checks whether the given uriString is really pointing to a file
+	 * 
+	 * @param uriString
+	 * @return boolean
+	 */
+	private boolean isValidURI(String uriString) {
+		boolean isValid = false;
+
+		if (isHttp(uriString))
+			isValid = true;
+		else {
+			File file = getFileFromUriString(uriString);
+			if (file != null)
+				isValid = file.exists();
+		}
+		return isValid;
+	}
+
+	/**
+	 * Resolves the given URI information
+	 * 
+	 * @param baseLocation
+	 * @param publicId
+	 * @param systemId
+	 * @return String resolved uri.
+	 */
+	private String resolveURI(String baseLocation, String publicId, String systemId) {
+		// dont resolve if there's nothing to resolve
+		if ((baseLocation == null) && (publicId == null) && (systemId == null))
+			return null;
+		return URIResolverPlugin.createResolver().resolve(baseLocation, publicId, systemId);
 	}
 }
