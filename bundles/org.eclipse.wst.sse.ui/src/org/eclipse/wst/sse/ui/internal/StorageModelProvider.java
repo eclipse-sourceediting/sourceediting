@@ -36,7 +36,6 @@ import org.eclipse.ui.texteditor.IElementStateListener;
 import org.eclipse.wst.sse.core.internal.encoding.CodedReaderCreator;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.util.Utilities;
 import org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction;
@@ -194,6 +193,40 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 		fInternalListener = new InternalElementStateListener();
 	}
 
+	String calculateBaseLocation(IStorageEditorInput input) {
+		String location = null;
+		try {
+			IStorage storage = input.getStorage();
+			if (storage != null) {
+				IPath storagePath = storage.getFullPath();
+				String name = storage.getName();
+				if (storagePath != null) {
+					// If they are different, the IStorage contract is not
+					// being honored
+					// (https://bugs.eclipse.org/bugs/show_bug.cgi?id=73098).
+					// Favor the name.
+					if (!storagePath.lastSegment().equals(name)) {
+						IPath workingPath = storagePath.addTrailingSeparator();
+						location = workingPath.append(name).toString();
+					}
+					else {
+						location = storagePath.makeAbsolute().toString();
+					}
+				}
+				if (location == null)
+					location = name;
+			}
+		}
+		catch (CoreException e) {
+			Logger.logException(e);
+		}
+		finally {
+			if (location == null)
+				location = input.getName();
+		}
+		return location;
+	}
+
 	String calculateID(IStorageEditorInput input) {
 		/**
 		 * Typically CVS will return a path of "filename.ext" and the input's
@@ -298,7 +331,7 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 			// the contents of the resource
 			ModelInfo info = getModelInfoFor((IEditorInput) element);
 			if (info == null) {
-				throw new SourceEditingRuntimeException(new IllegalArgumentException("no corresponding model info found")); //$NON-NLS-1$
+				throw new IllegalArgumentException("no corresponding model info found"); //$NON-NLS-1$
 			}
 			IStructuredModel model = info.fStructuredModel;
 			if (model != null) {
@@ -327,7 +360,6 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 						// innerdocument.startSequentialRewrite(true);
 						// innerdocument.replaceText(this, 0,
 						// innerdocument.getLength(), "");
-
 						StringBuffer stringBuffer = new StringBuffer();
 						int bufferSize = 2048;
 						char[] buffer = new char[bufferSize];
@@ -616,7 +648,7 @@ public class StorageModelProvider extends StorageDocumentProvider implements IMo
 		try {
 			// first parameter must be unique
 			model = StructuredModelManager.getModelManager().getModelForEdit(id, contents, null);
-			model.setBaseLocation(input.getName());
+			model.setBaseLocation(calculateBaseLocation(input));
 		}
 		catch (IOException e) {
 			if (logExceptions)
