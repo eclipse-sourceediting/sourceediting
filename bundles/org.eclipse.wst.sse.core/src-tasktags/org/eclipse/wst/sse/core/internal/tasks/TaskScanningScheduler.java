@@ -25,7 +25,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.SSECorePlugin;
-import org.eclipse.wst.sse.core.internal.provisional.tasks.IFileTaskScanner;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
 
 public class TaskScanningScheduler {
@@ -122,20 +121,10 @@ public class TaskScanningScheduler {
 	}
 
 	void enqueue(IProject project) {
-		try {
-			project.deleteMarkers(IFileTaskScanner.TASK_MARKER_ID, true, IResource.DEPTH_INFINITE);
-		}
-		catch (CoreException e) {
-		}
 		fJob.addProject(project);
 	}
 
 	void enqueue(IWorkspaceRoot root) {
-		try {
-			root.deleteMarkers(IFileTaskScanner.TASK_MARKER_ID, true, IResource.DEPTH_INFINITE);
-		}
-		catch (CoreException e) {
-		}
 		IProject[] allProjects = root.getProjects();
 		for (int i = 0; i < allProjects.length; i++) {
 			fJob.addProject(allProjects[i]);
