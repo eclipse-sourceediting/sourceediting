@@ -198,7 +198,7 @@ class WorkspaceTaskScanner {
 			return;
 		try {
 			String name = resource.getName();
-			if (!resource.isDerived() && !resource.isPhantom() && !resource.isTeamPrivateMember() && name.length() != 0 && name.charAt(0) != '.') {
+			if (resource.isAccessible() && !resource.isDerived() && !resource.isPhantom() && !resource.isTeamPrivateMember() && name.length() != 0 && name.charAt(0) != '.') {
 				if ((resource.getType() & IResource.FOLDER) > 0 || (resource.getType() & IResource.PROJECT) > 0) {
 					SubProgressMonitor childMonitor = new SubProgressMonitor(scanMonitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
 					IResource[] children = ((IContainer) resource).members();
@@ -263,7 +263,7 @@ class WorkspaceTaskScanner {
 		}
 	}
 
-	private void replaceMarkers(final IFile file, final Map markerAttributes[], IProgressMonitor monitor) {
+	private void replaceTaskMarkers(final IFile file, final Map markerAttributes[], IProgressMonitor monitor) {
 		final IFile finalFile = file;
 		if (file.isAccessible()) {
 			try {
@@ -302,6 +302,13 @@ class WorkspaceTaskScanner {
 		if (_debug) {
 			System.out.println(getClass().getName() + " scanning project " + project.getName()); //$NON-NLS-1$
 		}
+		if (!project.isAccessible()) {
+			if (_debug) {
+				System.out.println(getClass().getName() + " skipping inaccessible project " + project.getName()); //$NON-NLS-1$
+			}
+			return;
+		}
+
 		if (_debugOverallPerf) {
 			time0 = System.currentTimeMillis();
 		}
@@ -346,8 +353,8 @@ class WorkspaceTaskScanner {
 		SubProgressMonitor scannerMonitor = new SubProgressMonitor(monitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK);
 		List markerAttributes = null;
 		IContentType[] types = detectContentTypes(file);
+		IFileTaskScanner[] fileScanners = null;
 		if (types != null) {
-			IFileTaskScanner[] fileScanners = null;
 			if (fCurrentIgnoreContentTypes.length == 0) {
 				fileScanners = registry.getFileTaskScanners(types);
 			}
@@ -400,17 +407,17 @@ class WorkspaceTaskScanner {
 		}
 		if (monitor.isCanceled())
 			return;
-		if (markerAttributes != null) {
-			replaceMarkers(file, (Map[]) markerAttributes.toArray(new Map[markerAttributes.size()]), monitor);
-		}
-		else {
-			replaceMarkers(file, null, monitor);
+		// only update markers if we ran a scanner on this file
+		if (fileScanners != null && fileScanners.length > 0) {
+			if (markerAttributes != null) {
+				replaceTaskMarkers(file, (Map[]) markerAttributes.toArray(new Map[markerAttributes.size()]), monitor);
+			}
+			else {
+				replaceTaskMarkers(file, null, monitor);
+			}
 		}
 	}
 
-	/**
-	 * 
-	 */
 	private void shutdownDelegates(IProject project) {
 		for (int j = 0; j < fActiveScanners.size(); j++) {
 			try {
