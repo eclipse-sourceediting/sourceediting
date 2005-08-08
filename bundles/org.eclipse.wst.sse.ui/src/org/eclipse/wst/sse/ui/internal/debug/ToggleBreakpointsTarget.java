@@ -58,16 +58,18 @@ public class ToggleBreakpointsTarget implements IToggleBreakpointsTarget {
 		if (selection instanceof ITextSelection) {
 			ITextSelection textSelection = (ITextSelection) selection;
 			IDocument document = editor.getDocumentProvider().getDocument(editor.getEditorInput());
-			int lineNumber = -1;
-			try {
-				lineNumber = document.getLineOfOffset(textSelection.getOffset());
-			}
-			catch (BadLocationException e) {
-			}
-			if (lineNumber >= 0) {
-				ToggleBreakpointAction toggler = new ToggleBreakpointAction(editor, null);
-				toggler.update();
-				return toggler.isEnabled();
+			if (document != null && textSelection.getOffset() > -1) {
+				int lineNumber = -1;
+				try {
+					lineNumber = document.getLineOfOffset(textSelection.getOffset());
+				}
+				catch (BadLocationException e) {
+				}
+				if (lineNumber >= 0) {
+					ToggleBreakpointAction toggler = new ToggleBreakpointAction(editor, null);
+					toggler.update();
+					return toggler.isEnabled();
+				}
 			}
 		}
 		return false;
