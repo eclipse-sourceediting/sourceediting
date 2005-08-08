@@ -1480,8 +1480,12 @@ public class StructuredTextEditor extends TextEditor {
 	}
 
 	/**
-	 * @deprecated - may be made protected in M4 This value is set in
-	 *             initialize from input
+	 * @deprecated - This method allowed for uncontrolled access to the model
+	 *             instance and will be removed in the future. It is
+	 *             recommended that the current document provider be asked for
+	 *             the current document and the IModelManager then asked for
+	 *             the corresponding model with
+	 *             getExistingModelFor*(IDocument).
 	 */
 	public IStructuredModel getModel() {
 		if (getDocumentProvider() == null) {
