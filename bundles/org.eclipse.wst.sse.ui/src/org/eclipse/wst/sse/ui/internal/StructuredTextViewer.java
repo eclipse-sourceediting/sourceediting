@@ -507,7 +507,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 				}
 				break;
 			case QUICK_FIX :
-				if (isEditable()) {
+				if (isEditable() && fCorrectionAssistant != null && fCorrectionAssistantInstalled) {
 					String msg = fCorrectionAssistant.showPossibleCompletions();
 					setErrorMessage(msg);
 				}
