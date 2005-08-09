@@ -554,12 +554,12 @@ public class XSDMenuListener implements IMenuListener
       MenuManager setTypeCascadeMenu = new MenuManager(XSDEditorPlugin.getXSDString("_UI_LABEL_SET_TYPE"));
       manager.add(setTypeCascadeMenu);
 
-      SetTypeAction setNewComplexTypeAction = new SetTypeAction("New Complex Type", ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDComplexType.gif"), concreteComponent);
+      SetTypeAction setNewComplexTypeAction = new SetTypeAction(XSDEditorPlugin.getXSDString("_UI_LABEL_NEW_COMPLEX_TYPE"), ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDComplexType.gif"), concreteComponent);
       setNewComplexTypeAction.setTypeKind(XSDConstants.COMPLEXTYPE_ELEMENT);
       setNewComplexTypeAction.setEnabled(!isReadOnly);
       setTypeCascadeMenu.add(setNewComplexTypeAction);
 
-      SetTypeAction setNewSimpleTypeAction = new SetTypeAction("New Simple Type", ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDSimpleType.gif"), concreteComponent);
+      SetTypeAction setNewSimpleTypeAction = new SetTypeAction(XSDEditorPlugin.getXSDString("_UI_LABEL_NEW_SIMPLE_TYPE"), ImageDescriptor.createFromFile(XSDEditorPlugin.class, "icons/XSDSimpleType.gif"), concreteComponent);
       setNewSimpleTypeAction.setTypeKind(XSDConstants.SIMPLETYPE_ELEMENT);
       setNewSimpleTypeAction.setEnabled(!isReadOnly);
       setTypeCascadeMenu.add(setNewSimpleTypeAction);
