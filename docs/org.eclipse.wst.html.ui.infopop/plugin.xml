@@ -14,11 +14,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/ -->
-<plugin
-   id="org.eclipse.wst.html.ui.infopop"
-   name="HTML editor infopops"
-   version="0.7.0"
-   provider-name="Eclipse.org">
+<plugin>
 
 <extension point="org.eclipse.help.contexts">
        <contexts file="EditorHtmlContexts.xml" plugin ="org.eclipse.wst.html.ui"/>

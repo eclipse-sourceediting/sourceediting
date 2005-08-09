@@ -14,11 +14,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/ -->
-<plugin
-   id="org.eclipse.wst.dtd.ui.infopop"
-   name="DTD infopops"
-   version="0.7.0"
-   provider-name="Eclipse.org">
+<plugin>
 
 <extension point="org.eclipse.help.contexts">
        <contexts file="EditorDtdContexts.xml" plugin ="org.eclipse.wst.dtd.ui"/>

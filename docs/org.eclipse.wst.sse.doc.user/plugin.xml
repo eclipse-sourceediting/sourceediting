@@ -16,16 +16,9 @@
 <!-- for the structured text editors (source editors).     -->
 <!-- ===================================================== -->
 
-<plugin
-   id="org.eclipse.wst.sse.doc.user"
-   name="Structured text editor and snippets documentation"
-   version="0.7.0"
-   vendor-name = "Eclipse.org">
+<plugin>
 
-   <runtime>
-   </runtime>
-
-   <extension point="org.eclipse.help.toc">
+    <extension point="org.eclipse.help.toc">
       <toc file="sse_toc.xml">
       </toc>
    </extension>
