@@ -185,118 +185,62 @@ public class XSDModelAdapterFactoryImpl extends XSDAdapterFactory
     return adapter;
   }
 
-/* create adapters */
+  /* create adapters */
   
-  protected XSDAnnotationAdapter xsdAnnotationAdapter;
   public Adapter createXSDAnnotationAdapter()
   {
-    if (xsdAnnotationAdapter == null)
-    {
-      xsdAnnotationAdapter = new XSDAnnotationAdapter(this);
-    }
-    return xsdAnnotationAdapter;
+    return new XSDAnnotationAdapter(this);
   }
 
-  protected XSDAttributeDeclarationAdapter xsdAttributeDeclarationAdapter;
   public Adapter createXSDAttributeDeclarationAdapter()
   {
-    if (xsdAttributeDeclarationAdapter == null)
-    {
-      xsdAttributeDeclarationAdapter = new XSDAttributeDeclarationAdapter(this);
-    }
-    return xsdAttributeDeclarationAdapter;
+    return new XSDAttributeDeclarationAdapter(this);
   }
 
-  protected XSDAttributeGroupDefinitionAdapter xsdAttributeGroupDefinitionAdapter;
   public Adapter createXSDAttributeGroupDefinitionAdapter()
   {
-    if (xsdAttributeGroupDefinitionAdapter == null)
-    {
-      xsdAttributeGroupDefinitionAdapter = new XSDAttributeGroupDefinitionAdapter(this);
-    }
-    return xsdAttributeGroupDefinitionAdapter;
+    return new XSDAttributeGroupDefinitionAdapter(this);
   }
 
-  protected XSDAttributeUseAdapter xsdAttributeUseAdapter;
   public Adapter createXSDAttributeUseAdapter()
   {
-    if (xsdAttributeUseAdapter == null)
-    {
-      xsdAttributeUseAdapter = new XSDAttributeUseAdapter(this);
-    }
-
-    return xsdAttributeUseAdapter;
+    return new XSDAttributeUseAdapter(this);
   }
 
-  
-  XSDComplexTypeDefinitionAdapter xsdComplexTypeDefinitionAdapter;
   public Adapter createXSDComplexTypeDefinitionAdapter()
   {
-    if (xsdComplexTypeDefinitionAdapter == null)
-    {
-      xsdComplexTypeDefinitionAdapter = new XSDComplexTypeDefinitionAdapter(this);
-    }
-    return xsdComplexTypeDefinitionAdapter;
+	return new XSDComplexTypeDefinitionAdapter(this); 
   }
 
-  XSDElementDeclarationAdapter xsdElementDeclarationAdapter;
   public Adapter createXSDElementDeclarationAdapter()
   {
-    if (xsdElementDeclarationAdapter == null)
-    {
-      xsdElementDeclarationAdapter = new XSDElementDeclarationAdapter(this);
-    }
-    return xsdElementDeclarationAdapter;
+    return new XSDElementDeclarationAdapter(this);
   }
 
-  XSDModelGroupAdapter xsdModelGroupAdapter;
   public Adapter createXSDModelGroupAdapter()
   {
-    if (xsdModelGroupAdapter == null)
-    {
-      xsdModelGroupAdapter = new XSDModelGroupAdapter(this);
-    }
-    return xsdModelGroupAdapter;
+    return new XSDModelGroupAdapter(this);
   }
 
-  XSDModelGroupDefinitionAdapter xsdModelGroupDefinitionAdapter;
+
   public Adapter createXSDModelGroupDefinitionAdapter()
   {
-    if (xsdModelGroupDefinitionAdapter == null)
-    {
-      xsdModelGroupDefinitionAdapter = new XSDModelGroupDefinitionAdapter(this);
-    }
-    return xsdModelGroupDefinitionAdapter;
+    return new XSDModelGroupDefinitionAdapter(this);
   }
 
-  XSDNotationDeclarationAdapter xsdNotationDeclarationAdapter;
   public Adapter createXSDNotationDeclarationAdapter()
   {
-    if (xsdNotationDeclarationAdapter == null)
-    {
-      xsdNotationDeclarationAdapter = new XSDNotationDeclarationAdapter(this);
-    }
-    return xsdNotationDeclarationAdapter;
+    return new XSDNotationDeclarationAdapter(this);
   }
 
-  XSDWildcardAdapter xsdWildcardAdapter;
   public Adapter createXSDWildcardAdapter()
   {
-    if (xsdWildcardAdapter == null)
-    {
-      xsdWildcardAdapter = new XSDWildcardAdapter(this);
-    }
-    return xsdWildcardAdapter;
+    return new XSDWildcardAdapter(this);
   }
   
-  protected XSDParticleAdapter xsdParticleAdapter;
   public Adapter createXSDParticleAdapter()
   {
-    if (xsdParticleAdapter == null)
-    {
-      xsdParticleAdapter = new XSDParticleAdapter(this);
-    }
-    return xsdParticleAdapter;
+    return new XSDParticleAdapter(this);
   }
 //
 //  protected XSDParticleContentAdapter xsdParticleContentAdapter;
@@ -309,43 +253,25 @@ public class XSDModelAdapterFactoryImpl extends XSDAdapterFactory
 //    return xsdParticleContentAdapter;
 //  }
 
-  protected XSDSchemaAdapter xsdSchemaAdapter;
   public Adapter createXSDSchemaAdapter()
   {
-    if (xsdSchemaAdapter == null)
-    {
-      xsdSchemaAdapter = new XSDSchemaAdapter(this);
-    }
-
-    return xsdSchemaAdapter;
+    return new XSDSchemaAdapter(this);
   }
   
-  protected XSDSchemaDirectiveAdapter xsdSchemaDirectiveAdapter;
   public Adapter createXSDSchemaDirectiveAdapter()
   {
-    if (xsdSchemaDirectiveAdapter == null)
-    {
-      xsdSchemaDirectiveAdapter = new XSDSchemaDirectiveAdapter(this);
-    }
-
-    return xsdSchemaDirectiveAdapter;
+    return new XSDSchemaDirectiveAdapter(this);
   }
 
-  XSDSimpleTypeDefinitionAdapter xsdSimpleTypeDefinitionAdapter;
   public Adapter createXSDSimpleTypeDefinitionAdapter()
   {
-    if (xsdSimpleTypeDefinitionAdapter == null)
-    {
-      xsdSimpleTypeDefinitionAdapter = new XSDSimpleTypeDefinitionAdapter(this);
-    }
-    return xsdSimpleTypeDefinitionAdapter;
+    return new XSDSimpleTypeDefinitionAdapter(this);
   }
 
   public Adapter createEObjectAdapter()
   {
     return null;
   }
-
 
   public boolean isFactoryForType(Object type)
   {
@@ -426,6 +352,8 @@ public class XSDModelAdapterFactoryImpl extends XSDAdapterFactory
 
   public void dispose()
   {
+	  this.instance = null;
+	  //xsdSchemaAdapter = null;
     disposable.dispose();
   }
 

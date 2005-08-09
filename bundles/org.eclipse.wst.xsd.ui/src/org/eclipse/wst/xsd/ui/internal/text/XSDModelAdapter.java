@@ -27,7 +27,12 @@ public class XSDModelAdapter implements INodeAdapter
   {
     this.schema = schema;
   }
-
+  
+  public void clear()
+  {
+    schema = null;
+    resourceSet = null;
+  }
 
   public boolean isAdapterForType(Object type)
   {

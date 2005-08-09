@@ -78,6 +78,8 @@ public class XSDTextEditor extends StructuredTextEditorXML implements INodeSelec
   {
     super.dispose();
     xsdSelectionManager.removeSelectionChangedListener(this);
+    adapterFactoryLabelProvider = null;
+    xsdModelAdapterFactory = null;
   }
   
   public XSDModelAdapterFactoryImpl getXSDModelAdapterFactory()

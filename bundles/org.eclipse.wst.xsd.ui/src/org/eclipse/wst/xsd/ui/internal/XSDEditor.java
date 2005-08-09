@@ -41,6 +41,7 @@ import org.eclipse.wst.common.ui.properties.internal.provisional.ITabbedProperty
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
+import org.eclipse.wst.sse.core.internal.provisional.events.IStructuredDocumentListener;
 import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
@@ -298,6 +299,11 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
     
     getSite().getPage().removePartListener(partListener);
 
+    // KB: Temporary solution for bug 99468
+    IStructuredModel myModel = textEditor.getModel();
+    if (myModel != null && myModel instanceof IStructuredDocumentListener)
+    	myModel.getStructuredDocument().removeDocumentChangingListener((IStructuredDocumentListener)myModel);
+
     textEditor = null;
     resourceFile = null;
     xsdSelectionManager = null;
@@ -310,6 +316,10 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
     graphViewer = null;
 
     super.dispose();
+    
+    // release the schema model
+    //
+    schemalNodeAdapter.clear();
   }
 
   protected boolean loadFile()

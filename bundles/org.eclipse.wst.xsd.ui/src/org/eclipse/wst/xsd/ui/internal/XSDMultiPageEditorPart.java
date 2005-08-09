@@ -262,6 +262,7 @@ public class XSDMultiPageEditorPart extends MultiPageEditorPart implements IProp
     if (fTextEditor != null) {
       fTextEditor.removePropertyListener(this);
     }
+    fTextEditor = null;
 
     // moved to last when added window ... seems like
     // we'd be in danger of losing some data, like site,
