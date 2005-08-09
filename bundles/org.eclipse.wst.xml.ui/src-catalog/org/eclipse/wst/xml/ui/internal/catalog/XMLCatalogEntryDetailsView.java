@@ -42,7 +42,7 @@ public class XMLCatalogEntryDetailsView
 	detailsText.setLayoutData(data);
 
     verticalScroll = detailsText.getVerticalBar();
-    verticalScroll.setVisible(false);
+    //verticalScroll.setVisible(false);
     horizontalScroll = detailsText.getHorizontalBar();
     detailsText.setEditable(false);
     detailsText.setBackground(color);
