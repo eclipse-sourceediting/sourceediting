@@ -16,6 +16,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.widgets.Button;
@@ -84,8 +85,15 @@ public class ComplexTypeSection extends AbstractSection
 		composite =	getWidgetFactory().createFlatFormComposite(parent);
 		FormData data;
 
+		String textBaseType = XSDEditorPlugin.getXSDString("_UI_LABEL_BASE_TYPE_WITH_COLON");
+		String textDerivedType = XSDEditorPlugin.getXSDString("_UI_LABEL_DERIVED_BY");
+		GC gc = new GC(parent);
+		int xoffset = Math.max(100, gc.textExtent(textBaseType).x + 20); // adds 20 due to borders
+		xoffset = Math.max(xoffset, gc.textExtent(textDerivedType).x + 20); // adds 20 due to borders
+		gc.dispose();
+
 		baseTypeCombo = getWidgetFactory().createText(composite, ""); //$NON-NLS-1$
-		CLabel baseTypeLabel = getWidgetFactory().createCLabel(composite, XSDEditorPlugin.getXSDString("_UI_LABEL_BASE_TYPE_WITH_COLON")); //$NON-NLS-1$ 
+		CLabel baseTypeLabel = getWidgetFactory().createCLabel(composite, textBaseType); //$NON-NLS-1$ 
 
     button = getWidgetFactory().createButton(composite, "", SWT.PUSH);
     button.setImage(XSDEditorPlugin.getXSDImage("icons/browsebutton.gif")); //$NON-NLS-1$
@@ -93,7 +101,7 @@ public class ComplexTypeSection extends AbstractSection
     baseTypeCombo.addListener(SWT.Modify, this);
 
 		data = new FormData();
-		data.left = new FormAttachment(0, 100);
+		data.left = new FormAttachment(0, xoffset);
     data.right = new FormAttachment(button, 0);
 		baseTypeCombo.setLayoutData(data);
 
@@ -112,14 +120,14 @@ public class ComplexTypeSection extends AbstractSection
 		
 		derivedByCombo = getWidgetFactory().createCCombo(composite, SWT.FLAT);
 		data = new FormData();
-		data.left = new FormAttachment(0, 100);
+		data.left = new FormAttachment(0, xoffset);
 		data.right = new FormAttachment(100, -rightMarginSpace - ITabbedPropertyConstants.HSPACE);
 		data.top = new FormAttachment(baseTypeCombo, +ITabbedPropertyConstants.VSPACE);
 		derivedByCombo.setLayoutData(data);
 		derivedByCombo.setItems(derivedByChoicesComboValues);
 		derivedByCombo.addSelectionListener(this);
 
-		CLabel derivedByLabel = getWidgetFactory().createCLabel(composite, XSDEditorPlugin.getXSDString("_UI_LABEL_DERIVED_BY")); //$NON-NLS-1$
+		CLabel derivedByLabel = getWidgetFactory().createCLabel(composite, textDerivedType); //$NON-NLS-1$
 		data = new FormData();
 		data.left = new FormAttachment(0, 0);
 		data.right = new FormAttachment(derivedByCombo, -ITabbedPropertyConstants.HSPACE);
