@@ -393,7 +393,7 @@ public class AnnotationSection extends AbstractSection
     public DocumentationWorkbookPage(XSDWorkbook workbook)
     {
       super(workbook);
-      this.getTabItem().setText("Documentation"); 
+      this.getTabItem().setText(XSDEditorPlugin.getXSDString("_UI_LABEL_DOCUMENTATION")); 
     }
 
     public void setText(String value)
@@ -498,7 +498,7 @@ public class AnnotationSection extends AbstractSection
     public AppInfoWorkbookPage(XSDWorkbook workbook)
     {
       super(workbook);
-      this.getTabItem().setText("App Info");
+      this.getTabItem().setText(XSDEditorPlugin.getXSDString("_UI_LABEL_APP_INFO"));
     }
     
     public void setText(String value)
