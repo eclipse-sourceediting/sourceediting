@@ -41,15 +41,13 @@ public class ResourceUtil {
 		IPath location = new Path(model.getBaseLocation());
 		// if the path is not a path in the file system and there are at least
 		// 2 segments, it might be in the workspace
-		if (!location.toFile().exists() && location.segmentCount() > 1) {
+		IFile[] files = root.findFilesForLocation(location);
+		if (files.length > 0) {
+			file = files[0];
+		}
+		else if (location.segmentCount() > 1) {
 			// remember, this IFile isn't guaranteed to exist
 			file = root.getFile(location);
-		}
-		else {
-			IFile[] files = root.findFilesForLocation(location);
-			if (files.length > 0) {
-				file = files[0];
-			}
 		}
 		return file;
 	}
