@@ -192,7 +192,7 @@ public class FixedOrDefaultTextPropertyDescriptor extends PropertyDescriptor
     public Control createDialogArea(Composite parent)
     {
       Composite client = (Composite)super.createDialogArea(parent);
-      getShell().setText("Fixed/Default Value");
+      getShell().setText(XSDEditorPlugin.getXSDString("_UI_LABEL_FIXEDORDEFAULT_VALUE"));
 
       GridLayout gl = new GridLayout(1, true);
 //      gl.marginHeight = 0;
