@@ -357,6 +357,7 @@
 
 	<!-- Add new HTML wizard to J2EE Project Navigator -->
 	<extension
+		id="org.eclipse.wst.html.commonWizard.newHTML"
 		point="org.eclipse.wst.common.navigator.workbench.commonWizard">
 		<commonWizard
 			type="new"

@@ -405,7 +405,7 @@
 
 	<!-- Add new JSP wizard to J2EE Project Navigator -->
 	<extension
-		id="org.eclipse.jst.jsp.ui.commonWizard.JSP"
+		id="org.eclipse.jst.jsp.commonWizard.newJSP"
 		point="org.eclipse.wst.common.navigator.workbench.commonWizard">
 		<commonWizard
 			type="new"
