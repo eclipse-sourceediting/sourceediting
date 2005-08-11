@@ -38,6 +38,8 @@ abstract class AbstractNodeCleanupHandler implements IStructuredCleanupHandler {
 	
 			Preferences preferences = getModelPreferences();
 			if (preferences != null) {
+				fCleanupPreferences.setTagNameCase(preferences.getInt(HTMLCorePreferenceNames.CLEANUP_TAG_NAME_CASE));
+				fCleanupPreferences.setAttrNameCase(preferences.getInt(HTMLCorePreferenceNames.CLEANUP_ATTR_NAME_CASE));
 				fCleanupPreferences.setCompressEmptyElementTags(preferences.getBoolean(HTMLCorePreferenceNames.COMPRESS_EMPTY_ELEMENT_TAGS));
 				fCleanupPreferences.setInsertRequiredAttrs(preferences.getBoolean(HTMLCorePreferenceNames.INSERT_REQUIRED_ATTRS));
 				fCleanupPreferences.setInsertMissingTags(preferences.getBoolean(HTMLCorePreferenceNames.INSERT_MISSING_TAGS));

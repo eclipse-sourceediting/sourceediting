@@ -13,11 +13,16 @@ package org.eclipse.wst.html.ui.internal.edit.ui;
 import java.util.ResourceBundle;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.html.core.internal.cleanup.HTMLCleanupProcessorImpl;
 import org.eclipse.wst.sse.core.internal.cleanup.IStructuredCleanupProcessor;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.actions.CleanupAction;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 public class CleanupActionHTML extends CleanupAction {
 	protected IStructuredCleanupProcessor fCleanupProcessor;
@@ -27,9 +32,11 @@ public class CleanupActionHTML extends CleanupAction {
 	}
 
 	protected Dialog getCleanupDialog(Shell shell) {
-		if (fCleanupDialog == null)
+		if (fCleanupDialog == null) {
 			fCleanupDialog = new CleanupDialogHTML(shell);
-
+		}
+		
+		((CleanupDialogHTML)fCleanupDialog).setisXHTMLType(isXHTML());
 		return fCleanupDialog;
 	}
 
@@ -38,5 +45,27 @@ public class CleanupActionHTML extends CleanupAction {
 			fCleanupProcessor = new HTMLCleanupProcessorImpl();
 
 		return fCleanupProcessor;
+	}
+	
+	private boolean isXHTML() {
+		boolean isxhtml = false;
+		ITextEditor textEditor = getTextEditor();
+		if (textEditor != null) {
+			IDocument document = textEditor.getDocumentProvider().getDocument(textEditor.getEditorInput());
+			IStructuredModel model = null;
+			try {
+				model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+				if (model instanceof IDOMModel) {
+					IDOMDocument domDocument = ((IDOMModel)model).getDocument();
+					if (domDocument != null)
+						isxhtml = domDocument.isXMLType();
+				}
+			} finally {
+				if (model != null) {
+					model.releaseFromRead();
+				}
+			}
+		}
+		return isxhtml;
 	}
 }

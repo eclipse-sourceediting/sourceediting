@@ -70,7 +70,8 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 		IDOMNode renamedNode = (IDOMNode) cleanupChildren(node);
 
 		// call quoteAttrValue() first so it will close any unclosed attr
-		// quoteAttrValue() will return the new start tag if there is a structure change
+		// quoteAttrValue() will return the new start tag if there is a
+		// structure change
 		renamedNode = quoteAttrValue(renamedNode);
 
 		// insert tag close if missing
@@ -80,14 +81,16 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 			IDOMModel structuredModel = renamedNode.getModel();
 
 			// save start offset before insertTagClose()
-			// or else renamedNode.getStartOffset() will be zero if renamedNode replaced by insertTagClose()
+			// or else renamedNode.getStartOffset() will be zero if
+			// renamedNode replaced by insertTagClose()
 			int startTagStartOffset = renamedNode.getStartOffset();
 
 			// for start tag
 			IStructuredDocumentRegion startTagStructuredDocumentRegion = renamedNode.getStartStructuredDocumentRegion();
 			insertTagClose(structuredModel, startTagStructuredDocumentRegion);
 
-			// update renamedNode and startTagStructuredDocumentRegion after insertTagClose()
+			// update renamedNode and startTagStructuredDocumentRegion after
+			// insertTagClose()
 			renamedNode = (IDOMNode) structuredModel.getIndexedRegion(startTagStartOffset);
 			startTagStructuredDocumentRegion = renamedNode.getStartStructuredDocumentRegion();
 
@@ -97,10 +100,13 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 				insertTagClose(structuredModel, endTagStructuredDocumentRegion);
 		}
 
-		// call insertMissingTags() next, it will generate implicit tags if there are any
-		// insertMissingTags() will return the new missing start tag if one is missing
+		// call insertMissingTags() next, it will generate implicit tags if
+		// there are any
+		// insertMissingTags() will return the new missing start tag if one is
+		// missing
 		// applyTagNameCase() will return the renamed node.
-		// The renamed/new node will be saved and returned to caller when all cleanup is done.
+		// The renamed/new node will be saved and returned to caller when all
+		// cleanup is done.
 		renamedNode = insertMissingTags(renamedNode);
 		renamedNode = insertRequiredAttrs(renamedNode);
 		renamedNode = applyTagNameCase(renamedNode);
@@ -110,22 +116,39 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 		return renamedNode;
 	}
 
-	private boolean shouldIgnoreCase(IDOMElement element) {
+	/**
+	 * Checks if cleanup should modify case. Returns true case should be
+	 * preserved, false otherwise.
+	 * 
+	 * @param element
+	 * @return true if element is case sensitive, false otherwise
+	 */
+	private boolean shouldPreserveCase(IDOMElement element) {
 		// case option can be applied to no namespace tags
-		return element.isGlobalTag();
+		return !element.isGlobalTag();
 		/*
-		 ModelQueryAdapter mqadapter = (ModelQueryAdapter) element.getAdapterFor(ModelQueryAdapter.class);
-		 ModelQuery mq = null;
-		 CMNode nodedecl = null;
-		 if (mqadapter != null)
-		 mq = mqadapter.getModelQuery();
-		 if (mq != null)
-		 nodedecl = mq.getCMNode(node);
-		 // if a Node isn't recognized as HTML or is and cares about case, do not alter it
-		 //	if (nodedecl == null || (nodedecl instanceof HTMLCMNode && ((HTMLCMNode) nodedecl).shouldIgnoreCase()))
-		 if (! nodedecl.supports(HTMLCMProperties.SHOULD_IGNORE_CASE)) return false;
-		 return ((Boolean)cmnode.getProperty(HTMLCMProperties.SHOULD_IGNORE_CASE)).booleanValue();
+		 * ModelQueryAdapter mqadapter = (ModelQueryAdapter)
+		 * element.getAdapterFor(ModelQueryAdapter.class); ModelQuery mq =
+		 * null; CMNode nodedecl = null; if (mqadapter != null) mq =
+		 * mqadapter.getModelQuery(); if (mq != null) nodedecl =
+		 * mq.getCMNode(node); // if a Node isn't recognized as HTML or is and
+		 * cares about case, do not alter it // if (nodedecl == null ||
+		 * (nodedecl instanceof HTMLCMNode && ((HTMLCMNode)
+		 * nodedecl).shouldIgnoreCase())) if (!
+		 * nodedecl.supports(HTMLCMProperties.SHOULD_IGNORE_CASE)) return
+		 * false; return
+		 * ((Boolean)cmnode.getProperty(HTMLCMProperties.SHOULD_IGNORE_CASE)).booleanValue();
 		 */
+	}
+
+	/**
+	 * Checks if cleanup should force modifying element name to all lowercase.
+	 * 
+	 * @param element
+	 * @return true if cleanup should lowercase element name, false otherwise
+	 */
+	private boolean isXMLTag(IDOMElement element) {
+		return element.isXMLTag();
 	}
 
 	protected void applyAttrNameCase(IDOMNode node) {
@@ -134,9 +157,12 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 			return; // do nothing
 
 		int attrNameCase = HTMLCorePreferenceNames.ASIS;
-
-		if (shouldIgnoreCase(element))
-			attrNameCase = getCleanupPreferences().getAttrNameCase();
+		if (!shouldPreserveCase(element)) {
+			if (isXMLTag(element))
+				attrNameCase = HTMLCorePreferenceNames.LOWER;
+			else
+				attrNameCase = getCleanupPreferences().getAttrNameCase();
+		}
 
 		NamedNodeMap attributes = node.getAttributes();
 		int attributesLength = attributes.getLength();
@@ -148,7 +174,7 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 			// 254961 - all HTML tag names and attribute names should be in English
 			//          even for HTML files in other languages like Japanese or Turkish.
 			//          English locale should be used to convert between uppercase and lowercase
-			//          (otherwise "link" would be converted to "LÝNK" in Turkish, where '?' in "LÝNK"
+			//          (otherwise "link" would be converted to "Lï¿½NK" in Turkish, where '?' in "Lï¿½NK"
 			//          is the "I Overdot Capital" in Turkish).
 			if (attrNameCase == HTMLCorePreferenceNames.LOWER)
 				newAttrName = oldAttrName.toLowerCase(Locale.US);
@@ -173,8 +199,12 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 
 		int tagNameCase = HTMLCorePreferenceNames.ASIS;
 
-		if (shouldIgnoreCase(element))
-			tagNameCase = getCleanupPreferences().getTagNameCase();
+		if (!shouldPreserveCase(element)) {
+			if (isXMLTag(element))
+				tagNameCase = HTMLCorePreferenceNames.LOWER;
+			else
+				tagNameCase = getCleanupPreferences().getTagNameCase();
+		}
 
 		String oldTagName = node.getNodeName();
 		String newTagName = oldTagName;
@@ -183,7 +213,7 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 		// 254961 - all HTML tag names and attribute names should be in English
 		//          even for HTML files in other languages like Japanese or Turkish.
 		//          English locale should be used to convert between uppercase and lowercase
-		//          (otherwise "link" would be converted to "LÝNK" in Turkish, where '?' in "LÝNK"
+		//          (otherwise "link" would be converted to "Lï¿½NK" in Turkish, where '?' in "Lï¿½NK"
 		//          is the "I Overdot Capital" in Turkish).
 		if (tagNameCase == HTMLCorePreferenceNames.LOWER)
 			newTagName = oldTagName.toLowerCase(Locale.US);
@@ -202,7 +232,9 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 				int startTagNameLength = startTagStructuredDocumentRegion.getTextEndOffset(startTagNameRegion) - startTagNameStartOffset;
 
 				replaceSource(structuredModel, structuredDocument, startTagNameStartOffset, startTagNameLength, newTagName);
-				newNode = (IDOMNode) structuredModel.getIndexedRegion(startTagNameStartOffset); // save new node
+				newNode = (IDOMNode) structuredModel.getIndexedRegion(startTagNameStartOffset); // save
+				// new
+				// node
 			}
 		}
 
@@ -330,8 +362,7 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 
 		if (element.isCommentTag()) {
 			// do nothing
-		}
-		else if (isEmptyElement(element)) {
+		} else if (isEmptyElement(element)) {
 			IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
 			IStructuredDocumentRegion startStructuredDocumentRegion = node.getStartStructuredDocumentRegion();
 			ITextRegionList regions = startStructuredDocumentRegion.getRegions();
@@ -341,29 +372,33 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 			if (regions.size() > 1) {
 				ITextRegion regionBeforeTagClose = regions.get(regions.size() - 1 - 1);
 
-				// insert a space separator before tag close if the previous region does not have extra spaces
+				// insert a space separator before tag close if the previous
+				// region does not have extra spaces
 				if (regionBeforeTagClose.getTextLength() == regionBeforeTagClose.getLength())
 					replaceSource(structuredModel, structuredDocument, startStructuredDocumentRegion.getStartOffset(lastRegion), 0, " "); //$NON-NLS-1$
 			}
-		}
-		else {
+		} else {
 			String tagName = node.getNodeName();
 			String endTag = END_TAG_OPEN.concat(tagName).concat(TAG_CLOSE);
 
 			IDOMNode lastChild = (IDOMNode) node.getLastChild();
 			int endTagStartOffset = 0;
 			if (lastChild != null)
-				// if this node has children, insert the end tag after the last child
+				// if this node has children, insert the end tag after the
+				// last child
 				endTagStartOffset = lastChild.getEndOffset();
 			else
-				// if this node does not has children, insert the end tag after the start tag
+				// if this node does not has children, insert the end tag
+				// after the start tag
 				endTagStartOffset = node.getEndOffset();
 
 			IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
 			replaceSource(structuredModel, structuredDocument, endTagStartOffset, 0, endTag);
 		}
 
-		newNode = (IDOMNode) structuredModel.getIndexedRegion(startTagStartOffset); // save new node
+		newNode = (IDOMNode) structuredModel.getIndexedRegion(startTagStartOffset); // save
+		// new
+		// node
 
 		return newNode;
 	}
@@ -385,14 +420,12 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 			ITextRegionList regionList = startTagStructuredDocumentRegion.getRegions();
 			if (startTagStructuredDocumentRegion != null && regionList != null && regionList.get(regionList.size() - 1).getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE) {
 
-			}
-			else {
+			} else {
 				if (startTagStructuredDocumentRegion == null) {
 					// start tag missing
 					if (isStartTagRequired(newNode))
 						newNode = insertStartTag(newNode);
-				}
-				else if (endTagStructuredDocumentRegion == null) {
+				} else if (endTagStructuredDocumentRegion == null) {
 					// end tag missing
 					if (isEndTagRequired(newNode))
 						newNode = insertEndTag(newNode);
@@ -417,7 +450,9 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 		IDOMModel structuredModel = node.getModel();
 		IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
 		replaceSource(structuredModel, structuredDocument, startTagStartOffset, 0, startTag);
-		newNode = (IDOMNode) structuredModel.getIndexedRegion(startTagStartOffset); // save new node
+		newNode = (IDOMNode) structuredModel.getIndexedRegion(startTagStartOffset); // save
+		// new
+		// node
 
 		return newNode;
 	}
@@ -432,7 +467,8 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 					IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
 
 					// insert ">" after lastRegion of flatNode
-					// as in "<a</a>" if flatNode is for start tag, or in "<a></a" if flatNode is for end tag
+					// as in "<a</a>" if flatNode is for start tag, or in
+					// "<a></a" if flatNode is for end tag
 					replaceSource(structuredModel, structuredDocument, flatNode.getTextEndOffset(lastRegion), 0, ">"); //$NON-NLS-1$
 				}
 			}
@@ -446,9 +482,9 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 	}
 
 	/**
-	 * The end tags of HTML EMPTY content type, such as IMG,
-	 * and HTML undefined tags are parsed separately from the start tags.
-	 * So inserting the missing start tag is useless and even harmful.
+	 * The end tags of HTML EMPTY content type, such as IMG, and HTML
+	 * undefined tags are parsed separately from the start tags. So inserting
+	 * the missing start tag is useless and even harmful.
 	 */
 	protected boolean isStartTagRequired(IDOMNode node) {
 		if (node == null)
@@ -486,25 +522,29 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 				attributes = newNode.getAttributes();
 				attributesLength = attributes.getLength();
 				IDOMAttr eachAttr = (IDOMAttr) attributes.item(i);
-				//ITextRegion oldAttrValueRegion = eachAttr.getValueRegion();
+				// ITextRegion oldAttrValueRegion = eachAttr.getValueRegion();
 				String oldAttrValue = eachAttr.getValueRegionText();
 				if (oldAttrValue == null) {
 					IDOMModel structuredModel = node.getModel();
 					if (isXMLType(structuredModel)) {
-						// TODO: Kit, please check. Is there any way to not rely on getting regions from attributes?
+						// TODO: Kit, please check. Is there any way to not
+						// rely on getting regions from attributes?
 						String newAttrValue = "=\"" + eachAttr.getNameRegionText() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
 
 						IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
 						replaceSource(structuredModel, structuredDocument, eachAttr.getNameRegionEndOffset(), 0, newAttrValue);
-						newNode = (IDOMNode) structuredModel.getIndexedRegion(node.getStartOffset()); // save new node
+						newNode = (IDOMNode) structuredModel.getIndexedRegion(node.getStartOffset()); // save
+						// new
+						// node
 					}
-				}
-				else {
+				} else {
 
 					char quote = StringUtils.isQuoted(oldAttrValue) ? oldAttrValue.charAt(0) : DOUBLE_QUOTE;
 					String newAttrValue = generator.generateAttrValue(eachAttr, quote);
 
-					// There is a problem in StructuredDocumentRegionUtil.getAttrValue(ITextRegion) when the region is instanceof ContextRegion.
+					// There is a problem in
+					// StructuredDocumentRegionUtil.getAttrValue(ITextRegion)
+					// when the region is instanceof ContextRegion.
 					// Workaround for now...
 					if (oldAttrValue.length() == 1) {
 						char firstChar = oldAttrValue.charAt(0);
@@ -523,7 +563,9 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 							IDOMModel structuredModel = node.getModel();
 							IStructuredDocument structuredDocument = structuredModel.getStructuredDocument();
 							replaceSource(structuredModel, structuredDocument, attrValueStartOffset, attrValueLength, newAttrValue);
-							newNode = (IDOMNode) structuredModel.getIndexedRegion(startTagStartOffset); // save new node
+							newNode = (IDOMNode) structuredModel.getIndexedRegion(startTagStartOffset); // save
+							// new
+							// node
 						}
 					}
 				}
@@ -562,12 +604,11 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 				if (insertAttrs.size() > 0) {
 					IStructuredDocumentRegion startStructuredDocumentRegion = newNode.getStartStructuredDocumentRegion();
 					int index = startStructuredDocumentRegion.getEndOffset();
-					ITextRegion lastRegion = startStructuredDocumentRegion.getLastRegion(); 
+					ITextRegion lastRegion = startStructuredDocumentRegion.getLastRegion();
 					if (lastRegion.getType() == DOMRegionContext.XML_TAG_CLOSE) {
 						index--;
 						lastRegion = startStructuredDocumentRegion.getRegionAtCharacterOffset(index - 1);
-					}
-					else if (lastRegion.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE) {
+					} else if (lastRegion.getType() == DOMRegionContext.XML_EMPTY_TAG_CLOSE) {
 						index = index - 2;
 						lastRegion = startStructuredDocumentRegion.getRegionAtCharacterOffset(index - 1);
 					}
@@ -584,14 +625,16 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 								nameAndDefaultValue = ""; //$NON-NLS-1$
 							nameAndDefaultValue += requiredAttributeName + "=\"" + defaultValue + "\""; //$NON-NLS-1$ //$NON-NLS-2$
 							multiTextEdit.addChild(new InsertEdit(index, nameAndDefaultValue));
-							// BUG3381: MultiTextEdit applies all child TextEdit's basing on offsets
-							//          in the document before the first TextEdit, not after each
-							//          child TextEdit. Therefore, do not need to advance the index.
-							//index += nameAndDefaultValue.length();
+							// BUG3381: MultiTextEdit applies all child
+							// TextEdit's basing on offsets
+							// in the document before the first TextEdit, not
+							// after each
+							// child TextEdit. Therefore, do not need to
+							// advance the index.
+							// index += nameAndDefaultValue.length();
 						}
 						multiTextEdit.apply(newNode.getStructuredDocument());
-					}
-					catch (BadLocationException e) {
+					} catch (BadLocationException e) {
 						throw new SourceEditingRuntimeException(e);
 					}
 				}
@@ -605,8 +648,7 @@ public class ElementNodeCleanupHandler extends AbstractNodeCleanupHandler {
 	protected ModelQuery getModelQuery(Node node) {
 		if (node.getNodeType() == Node.DOCUMENT_NODE) {
 			return ModelQueryUtil.getModelQuery((Document) node);
-		}
-		else {
+		} else {
 			return ModelQueryUtil.getModelQuery(node.getOwnerDocument());
 		}
 	}
