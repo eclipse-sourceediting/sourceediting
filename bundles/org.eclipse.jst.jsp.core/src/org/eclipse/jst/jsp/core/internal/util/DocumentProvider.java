@@ -17,7 +17,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
@@ -66,6 +65,15 @@ public class DocumentProvider {
 		super();
 	}
 
+	private String _getFileName() {
+		if (inputStream != null)
+			return null;
+		else if (isJAR()) {
+			return getJarFileName();
+		}
+		return getFileName();
+	}
+
 	private Document _getParsedDocumentDOM2() {
 		Document result = null;
 
@@ -89,13 +97,13 @@ public class DocumentProvider {
 		catch (SAXException e) {
 			result = null;
 			// parsing exception, notify the user?
-			Logger.log(Logger.WARNING, "SAXException while reading descriptor: " + e); //$NON-NLS-1$
+			Logger.log(Logger.WARNING, "SAXException while reading descriptor " + _getFileName() + " " + e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		catch (FileNotFoundException e) {
 			// NOT an "exceptional case"; do not Log
 		}
 		catch (IOException e) {
-			Logger.log(Logger.WARNING, "IOException while reading descriptor" + e); //$NON-NLS-1$
+			Logger.log(Logger.WARNING, "IOException while reading descriptor " + _getFileName() + " " + e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		finally {
 			if (is != null) {
@@ -403,10 +411,6 @@ public class DocumentProvider {
 		}
 	}
 
-	private void saveDocument(Document odocument, OutputStream stream) throws IOException {
-		CommonXML.serialize(odocument, stream);
-	}
-
 	/**
 	 * @param string
 	 */
@@ -429,8 +433,8 @@ public class DocumentProvider {
 	 * @param inputStream
 	 *            The inputStream to set
 	 */
-	public void setInputStream(InputStream inputStream) {
-		this.inputStream = inputStream;
+	public void setInputStream(InputStream iStream) {
+		this.inputStream = iStream;
 	}
 
 	/**
