@@ -1,3 +1,14 @@
+/*
+ * Copyright (c) 2000 World Wide Web Consortium,
+ * (Massachusetts Institute of Technology, Institut National de
+ * Recherche en Informatique et en Automatique, Keio University). All
+ * Rights Reserved. This program is distributed under the W3C's Software
+ * Intellectual Property License. This program is distributed in the
+ * hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * PURPOSE.
+ * See W3C License http://www.w3.org/Consortium/Legal/ for more details.
+ */
 
 package org.w3c.dom.ranges;
 
@@ -7,15 +18,17 @@ package org.w3c.dom.ranges;
  * <p>
  * See also the <a
  * href='http://www.w3.org/TR/2000/REC-DOM-Level-2-Traversal-Range-20001113'>Document
- * Object Model (DOM) Level 2 Traversal and Range Specification </a>.
+ * Object Model (DOM) Level 2 Traversal and Range Specification</a>.
  * 
- * @see DOM Level 2
+ * @since DOM Level 2
  */
 public class RangeException extends RuntimeException {
-	/**
-	 * Default <code>serialVersionUID</code>
-	 */
-	private static final long serialVersionUID = 1L;
+	public RangeException(short code, String message) {
+		super(message);
+		this.code = code;
+	}
+
+	public short code;
 	// RangeExceptionCode
 	/**
 	 * If the boundary-points of a Range do not meet specific requirements.
@@ -27,12 +40,5 @@ public class RangeException extends RuntimeException {
 	 * type.
 	 */
 	public static final short INVALID_NODE_TYPE_ERR = 2;
-
-	public short code;
-
-	public RangeException(short code, String message) {
-		super(message);
-		this.code = code;
-	}
 
 }
