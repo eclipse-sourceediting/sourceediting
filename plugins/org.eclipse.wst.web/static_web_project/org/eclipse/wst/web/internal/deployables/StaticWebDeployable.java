@@ -70,7 +70,7 @@ public class StaticWebDeployable extends ProjectModule implements IStaticWeb {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.ibm.wtp.server.core.util.ProjectModule#getRootFolder()
+	 * @see org.eclipse.wst.server.core.util.ProjectModule#getRootFolder()
 	 */
 	public IPath getRootFolder() {
 		// TODO Auto-generated method stub
