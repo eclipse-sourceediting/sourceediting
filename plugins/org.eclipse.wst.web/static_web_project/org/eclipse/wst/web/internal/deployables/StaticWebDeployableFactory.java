@@ -19,7 +19,7 @@ import org.eclipse.wst.web.internal.ISimpleWebNatureConstants;
 import org.eclipse.wst.web.internal.operation.IBaseWebNature;
 
 public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
-	private static final String ID = "org.eclipse.jst.j2ee.internal.web.deployables.static"; //$NON-NLS-1$
+	private static final String ID = "org.eclipse.wst.web.internal.deployables.static"; //$NON-NLS-1$
 	protected ArrayList moduleDelegates = new ArrayList();
 
 	/*
@@ -110,8 +110,9 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 	 * @see org.eclipse.wst.server.core.util.ProjectModuleFactoryDelegate#createModules(org.eclipse.core.resources.IProject)
 	 */
 	protected IModule[] createModules(IProject project) {
-
 		IModule mod = createModule(project);
-		return (mod == null) ? null : new IModule[] {mod};
+		if (mod == null)
+			return new IModule[0];
+		return new IModule[] {mod};
 	}
 }
