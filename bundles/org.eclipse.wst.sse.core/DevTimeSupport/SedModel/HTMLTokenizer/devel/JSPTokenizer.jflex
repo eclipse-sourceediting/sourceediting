@@ -18,16 +18,16 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jst.jsp.core.internal.Logger;
-import org.eclipse.wst.sse.core.parser.BlockMarker;
-import org.eclipse.wst.sse.core.parser.BlockTokenizer;
-import org.eclipse.wst.sse.core.parser.TagMarker;
-import org.eclipse.wst.sse.core.text.ITextRegion;
-import org.eclipse.wst.sse.core.text.ITextRegionList;
-import org.eclipse.wst.sse.core.util.Debug;
-import org.eclipse.wst.sse.core.util.StringUtils;
+import org.eclipse.jst.jsp.core.internal.regions.DOMJSPRegionContexts;
+import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
+import org.eclipse.wst.sse.core.internal.ltk.parser.BlockTokenizer;
+import org.eclipse.wst.sse.core.internal.ltk.parser.TagMarker;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
+import org.eclipse.wst.sse.core.internal.util.Debug;
+import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.xml.core.internal.parser.ContextRegionContainer;
 import org.eclipse.wst.xml.core.internal.parser.IntStack;
-import org.eclipse.wst.xml.core.jsp.model.parser.temp.XMLJSPRegionContexts;
 
 %%
 
@@ -862,7 +862,7 @@ private final String doBlockTagScan() throws IOException {
 
 %public
 %class JSPTokenizer
-%implements BlockTokenizer, XMLJSPRegionContexts
+%implements BlockTokenizer, DOMJSPRegionContexts
 %function primGetNextToken
 %type String
 %char
