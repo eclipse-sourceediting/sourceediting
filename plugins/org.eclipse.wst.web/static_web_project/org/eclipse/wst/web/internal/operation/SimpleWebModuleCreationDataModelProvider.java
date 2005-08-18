@@ -12,7 +12,6 @@ package org.eclipse.wst.web.internal.operation;
 
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelOperation;
 import org.eclipse.wst.common.frameworks.internal.operations.ProjectCreationDataModelProvider;
-import org.eclipse.wst.web.internal.ISimpleWebNatureConstants;
 
 public class SimpleWebModuleCreationDataModelProvider extends ProjectCreationDataModelProvider {
 
@@ -22,7 +21,6 @@ public class SimpleWebModuleCreationDataModelProvider extends ProjectCreationDat
 
     public void init() {
         super.init();
-        addStaticWebNature();
     }
 
     public String[] getPropertyNames() {
@@ -33,19 +31,4 @@ public class SimpleWebModuleCreationDataModelProvider extends ProjectCreationDat
         return new SimpleWebModuleCreationOperation(getDataModel());
     }
 
-    protected final void addStaticWebNature() {
-        String[] natures = (String[]) getProperty(PROJECT_NATURES);
-        String[] newNatures;
-
-        if (natures == null) {
-            newNatures = new String[1];
-            newNatures[0] = ISimpleWebNatureConstants.STATIC_NATURE_ID;
-        } else {
-            newNatures = new String[natures.length + 1];
-            System.arraycopy(natures, 0, newNatures, 0, natures.length);
-            newNatures[natures.length] = ISimpleWebNatureConstants.STATIC_NATURE_ID;
-        }
-
-        model.setProperty(PROJECT_NATURES, newNatures);
-    }
 }

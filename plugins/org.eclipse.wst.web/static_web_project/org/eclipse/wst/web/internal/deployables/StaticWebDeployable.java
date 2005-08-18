@@ -16,23 +16,12 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.util.IStaticWeb;
 import org.eclipse.wst.server.core.util.ProjectModule;
-import org.eclipse.wst.web.internal.ISimpleWebNatureConstants;
-import org.eclipse.wst.web.internal.SimpleWebNatureRuntimeUtilities;
-import org.eclipse.wst.web.internal.operation.IStaticWebNature;
 
 public class StaticWebDeployable extends ProjectModule implements IStaticWeb {
 
 	public StaticWebDeployable(IProject project) {
 		super(project);
-		setWebNature(getStaticWebNature());
-	}
-
-	/**
-	 * TODO Changed setModule to setProject to react to changes in IStaticWebNature. Verify if this change is correct.
-	 * @param staticWebNature
-	 */
-	private void setWebNature(IStaticWebNature nature) {
-		nature.setProject(getProject());
+//		setWebNature(getStaticWebNature());
 	}
 
 	public String getFactoryId() {
@@ -48,22 +37,14 @@ public class StaticWebDeployable extends ProjectModule implements IStaticWeb {
 	public boolean exists() {
 		if (getProject() == null || !getProject().exists())
 			return false;
-		try {
-			return (this.project.hasNature(ISimpleWebNatureConstants.STATIC_NATURE_ID));
-		} catch (Exception e) {
-			//e.printStackTrace();
-		}
-		return false;
-	}
-
-	protected IStaticWebNature getStaticWebNature() {
-		return SimpleWebNatureRuntimeUtilities.getStaticRuntime(this.project);
+		return true;
 	}
 
 	public String getContextRoot() {
-		IStaticWebNature nature = getStaticWebNature();
-		if (nature != null)
-			return nature.getContextRoot();
+		//TODO switch to components API
+//		IStaticWebNature nature = getStaticWebNature();
+//		if (nature != null)
+//			return nature.getContextRoot();
 		return null;
 	}
 
@@ -73,8 +54,9 @@ public class StaticWebDeployable extends ProjectModule implements IStaticWeb {
 	 * @see org.eclipse.wst.server.core.util.ProjectModule#getRootFolder()
 	 */
 	public IPath getRootFolder() {
-		// TODO Auto-generated method stub
-		return getStaticWebNature().getRootPublishableFolder().getProjectRelativePath();
+		// TODO fix up for components
+//		return getStaticWebNature().getRootPublishableFolder().getProjectRelativePath();
+		return null;
 	}
 
 	public String getType() {

@@ -6,41 +6,29 @@
  */
 package org.eclipse.wst.web.internal.deployables;
 
-import java.util.Arrays;
-import java.util.Iterator;
-
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleArtifact;
-import org.eclipse.wst.server.core.ServerUtil;
-import org.eclipse.wst.server.core.util.WebResource;
-import org.eclipse.wst.web.internal.operation.IBaseWebNature;
-import org.eclipse.wst.web.internal.operation.StaticWebNatureRuntime;
 
 public class StaticWebDeployableObjectAdapterUtil {
 
 	private final static String[] extensionsToExclude = new String[]{"sql", "xmi"}; //$NON-NLS-1$ //$NON-NLS-2$
 	static String J2EE_NATURE_ID = "org.eclipse.jst.j2ee.web.WebNature"; //$NON-NLS-1$
 	static String INFO_DIRECTORY = "WEB-INF"; //$NON-NLS-1$
-	public static IBaseWebNature getRuntime(IProject project) {
-		if (project == null)
-			return null;
-		try {
-			IBaseWebNature nature;
-			if (project.hasNature(J2EE_NATURE_ID))
-				nature = (IBaseWebNature) project.getNature(J2EE_NATURE_ID);
-			else
-				nature = (IBaseWebNature) project.getNature("org.eclipse.wst.web.StaticWebNature");
-			return nature;
-		} catch (CoreException e) {
-			return null;
-		}
-	}
+//	public static IBaseWebNature getRuntime(IProject project) {
+//		if (project == null)
+//			return null;
+//		try {
+//			IBaseWebNature nature;
+//			if (project.hasNature(J2EE_NATURE_ID))
+//				nature = (IBaseWebNature) project.getNature(J2EE_NATURE_ID);
+//			else
+//				nature = (IBaseWebNature) project.getNature("org.eclipse.wst.web.StaticWebNature");
+//			return nature;
+//		} catch (CoreException e) {
+//			return null;
+//		}
+//	}
 
 	public static IModuleArtifact getModuleObject(Object obj) {
 		IResource resource = null;
@@ -50,33 +38,34 @@ public class StaticWebDeployableObjectAdapterUtil {
 			resource = (IResource) ((IAdaptable) obj).getAdapter(IResource.class);
 		if (resource == null)
 			return null;
-
+		return null;
+		//TODO use components API
 		// find deployable
-    	IBaseWebNature webNature = getRuntime(resource.getProject());
-		if (webNature == null || !(webNature instanceof StaticWebNatureRuntime))
-			return null;
-
-		if (resource instanceof IProject)
-			return new WebResource(getModule(webNature), new Path("")); //$NON-NLS-1$
-
-		// determine path
-		IPath rootPath = webNature.getRootPublishableFolder().getProjectRelativePath();
-		IPath resourcePath = resource.getProjectRelativePath();
-
-		// Check to make sure the resource is under the webApplication directory
-		if (resourcePath.matchingFirstSegments(rootPath) != rootPath.segmentCount())
-			return null;
-
-		// Do not allow resource under the web-inf directory
-		resourcePath = resourcePath.removeFirstSegments(rootPath.segmentCount());
-		if (resourcePath.segmentCount() > 1 && resourcePath.segment(0).equals(INFO_DIRECTORY))
-			return null;
-
-		if (shouldExclude(resource))
-			return null;
-
-		// return Web resource type
-		return new WebResource(getModule(webNature), resourcePath);
+//    	IBaseWebNature webNature = getRuntime(resource.getProject());
+//		if (webNature == null || !(webNature instanceof StaticWebNatureRuntime))
+//			return null;
+//
+//		if (resource instanceof IProject)
+//			return new WebResource(getModule(webNature), new Path("")); //$NON-NLS-1$
+//
+//		// determine path
+//		IPath rootPath = webNature.getRootPublishableFolder().getProjectRelativePath();
+//		IPath resourcePath = resource.getProjectRelativePath();
+//
+//		// Check to make sure the resource is under the webApplication directory
+//		if (resourcePath.matchingFirstSegments(rootPath) != rootPath.segmentCount())
+//			return null;
+//
+//		// Do not allow resource under the web-inf directory
+//		resourcePath = resourcePath.removeFirstSegments(rootPath.segmentCount());
+//		if (resourcePath.segmentCount() > 1 && resourcePath.segment(0).equals(INFO_DIRECTORY))
+//			return null;
+//
+//		if (shouldExclude(resource))
+//			return null;
+//
+//		// return Web resource type
+//		return new WebResource(getModule(webNature), resourcePath);
 
 	}
 
@@ -98,22 +87,22 @@ public class StaticWebDeployableObjectAdapterUtil {
 		return false;
 	}
 
-	protected static IModule getModule(IBaseWebNature nature) {
-		IModule deployable = nature.getModule();
-		if (deployable != null)
-			return deployable;
-
-		IProject project = nature.getProject();
-		Iterator iterator =  Arrays.asList(ServerUtil.getModules("web.static")).iterator(); //$NON-NLS-1$ //$NON-NLS-2$
-		while (iterator.hasNext()) {
-			deployable = (IModule) iterator.next();
-			if (deployable != null) {
-				if ((deployable).getProject().equals(project))
-					return deployable;
-			}
-		}
-		return null;
-	}
+//	protected static IModule getModule(IBaseWebNature nature) {
+//		IModule deployable = nature.getModule();
+//		if (deployable != null)
+//			return deployable;
+//
+//		IProject project = nature.getProject();
+//		Iterator iterator =  Arrays.asList(ServerUtil.getModules("web.static")).iterator(); //$NON-NLS-1$ //$NON-NLS-2$
+//		while (iterator.hasNext()) {
+//			deployable = (IModule) iterator.next();
+//			if (deployable != null) {
+//				if ((deployable).getProject().equals(project))
+//					return deployable;
+//			}
+//		}
+//		return null;
+//	}
 
 
 }

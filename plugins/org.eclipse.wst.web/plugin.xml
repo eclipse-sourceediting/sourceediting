@@ -2,16 +2,7 @@
 <?eclipse version="3.0"?>
 <plugin>
 
-     <extension
-         id="StaticWebNature"
-         name="Static Web Properties"
-         point="org.eclipse.core.resources.natures">
-      <runtime>
-         <run
-               class="org.eclipse.wst.web.internal.operation.StaticWebNatureRuntime">
-         </run>
-      </runtime>
-  </extension>
+     
    <!--  <extension
          point="org.eclipse.wst.server.core.moduleFactories">
       <moduleFactory

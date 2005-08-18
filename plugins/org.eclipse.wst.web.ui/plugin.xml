@@ -44,7 +44,7 @@
       	</wizardPageGroup>
    	</extension>
    -->
-   <extension
+ <!--    <extension
          point="org.eclipse.ui.propertyPages">
       <page
             objectClass="org.eclipse.core.resources.IProject"
@@ -58,7 +58,7 @@
          </filter>
       </page>
       
- <!--     <page
+    <page
             objectClass="org.eclipse.core.resources.IProject"
             adaptable="true"
             name="%WebProjectFeatures.name"
@@ -68,8 +68,9 @@
                name="nature"
                value="org.eclipse.wst.web.StaticWebNature">
          </filter>
-      </page> -->
-   </extension>
+      </page> 
+   </extension> 
+   -->
    
    <!-- the following 2 are needed to add an image for SWPs into the "Add/Remove Project" dialog -->
 	<extension point="org.eclipse.wst.server.core.moduleTypes">

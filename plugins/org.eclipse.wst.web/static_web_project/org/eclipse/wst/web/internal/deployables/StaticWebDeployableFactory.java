@@ -15,8 +15,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.model.ModuleDelegate;
 import org.eclipse.wst.server.core.util.ProjectModuleFactoryDelegate;
-import org.eclipse.wst.web.internal.ISimpleWebNatureConstants;
-import org.eclipse.wst.web.internal.operation.IBaseWebNature;
 
 public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 	private static final String ID = "org.eclipse.wst.web.internal.deployables.static"; //$NON-NLS-1$
@@ -48,25 +46,26 @@ public class StaticWebDeployableFactory extends ProjectModuleFactoryDelegate {
 	 * @return com.ibm.etools.server.core.model.IDeployableProject
 	 */
 	protected IModule createModule(IProject project) {
-		try {
-			IModule deployable = null;
-			StaticWebDeployable projectModule = null;
-			if (project.hasNature(ISimpleWebNatureConstants.STATIC_NATURE_ID)) {
-				IBaseWebNature nature = (IBaseWebNature) project.getNature(ISimpleWebNatureConstants.STATIC_NATURE_ID);
-				deployable = nature.getModule();
-				if (deployable == null) {
-					projectModule = new StaticWebDeployable(nature.getProject());
-					deployable = createModule(projectModule.getId(), projectModule.getName(), projectModule.getType(), projectModule.getVersion(), projectModule.getProject());
-					nature.setModule(deployable);
-					projectModule.initialize(deployable);
-					//deployable = projectModule.getModule();
-				}
-				moduleDelegates.add(projectModule);
-				return deployable;
-			}
-		} catch (Exception e) {
-			//Ignore
-		}
+		//TODO use components API
+//		try {
+//			IModule deployable = null;
+//			StaticWebDeployable projectModule = null;
+//			if (project.hasNature(ISimpleWebNatureConstants.STATIC_NATURE_ID)) {
+//				IBaseWebNature nature = (IBaseWebNature) project.getNature(ISimpleWebNatureConstants.STATIC_NATURE_ID);
+//				deployable = nature.getModule();
+//				if (deployable == null) {
+//					projectModule = new StaticWebDeployable(nature.getProject());
+//					deployable = createModule(projectModule.getId(), projectModule.getName(), projectModule.getType(), projectModule.getVersion(), projectModule.getProject());
+//					nature.setModule(deployable);
+//					projectModule.initialize(deployable);
+//					//deployable = projectModule.getModule();
+//				}
+//				moduleDelegates.add(projectModule);
+//				return deployable;
+//			}
+//		} catch (Exception e) {
+//			//Ignore
+//		}
 		return null;
 	}
 

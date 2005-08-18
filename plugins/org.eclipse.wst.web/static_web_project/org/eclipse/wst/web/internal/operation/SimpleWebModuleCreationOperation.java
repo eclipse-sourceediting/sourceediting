@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.internal.operations.ProjectCreationOperation;
-import org.eclipse.wst.web.internal.ISimpleWebNatureConstants;
+import org.eclipse.wst.web.internal.ISimpleWebModuleConstants;
 import org.eclipse.wst.web.internal.WSTWebPlugin;
 
 public class SimpleWebModuleCreationOperation extends ProjectCreationOperation implements ISimpleWebModuleCreationDataModelProperties {
@@ -38,7 +38,7 @@ public class SimpleWebModuleCreationOperation extends ProjectCreationOperation i
             if (!webContentFolder.exists())
                 webContentFolder.create(true, true, null);
 
-            IFolder cssFolder = project.getFolder(webContentFolder.getProjectRelativePath().append(ISimpleWebNatureConstants.CSS_DIRECTORY));
+            IFolder cssFolder = project.getFolder(webContentFolder.getProjectRelativePath().append(ISimpleWebModuleConstants.CSS_DIRECTORY));
 
             if (!cssFolder.exists())
                 cssFolder.create(true, true, null);
