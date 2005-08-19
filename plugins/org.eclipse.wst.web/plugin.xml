@@ -47,19 +47,20 @@
          </moduleType>
       </moduleFactory>
    </extension>
-   <extension
+ <!--  <extension
          point="org.eclipse.wst.common.frameworks.ExtendableOperation">
-      <!--<extendableOperation
+      <extendableOperation
             class="com.ibm.wtp.web.operations.RemoveServletOperation"
             id="com.ibm.wtp.web.operations.RemoveServletOperation">
       </extendableOperation>
       <extendableOperation
             class="com.ibm.wtp.web.operations.RemoveWebSecurityRoleOperation"
             id="com.ibm.wtp.web.operations.RemoveWebSecurityRoleOperation">
-      </extendableOperation>-->
+      </extendableOperation>
       <extendableOperation
             class="org.eclipse.jst.j2ee.internal.web.operations.AddServletOperation"
             id="org.eclipse.jst.j2ee.internal.web.operations.AddServletOperation">
-      </extendableOperation>
-   </extension>
+      </extendableOperation> 
+     
+   </extension> -->
 </plugin>

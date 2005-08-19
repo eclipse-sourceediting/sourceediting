@@ -85,14 +85,6 @@
 			icon="icons/full/obj16/web_application.gif"/>
 	</extension>
 	
-	<!-- Static Web project creation operation is now extendable -->
-	<extension point="org.eclipse.wst.common.frameworks.ExtendableOperation"
-			   id="extendableOperation">
-		<extendableOperation
-			class="org.eclipse.wst.staticwebproject.internal.operations.SimpleWebModuleCreationOperation"
-			id="org.eclipse.wst.staticwebproject.internal.operations.SimpleWebModuleCreationOperation">
-		</extendableOperation>
-	</extension>
 	
 	<!-- ====================================================== -->
 <!-- Extension point: org.eclipse.ui.projectNatureImages    -->
