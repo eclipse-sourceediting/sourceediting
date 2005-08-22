@@ -12,7 +12,7 @@ import org.eclipse.wst.server.core.IModuleArtifact;
 
 public class StaticWebDeployableObjectAdapterUtil {
 
-	private final static String[] extensionsToExclude = new String[]{"sql", "xmi"}; //$NON-NLS-1$ //$NON-NLS-2$
+	//private final static String[] extensionsToExclude = new String[]{"sql", "xmi"}; //$NON-NLS-1$ //$NON-NLS-2$
 	static String J2EE_NATURE_ID = "org.eclipse.jst.j2ee.web.WebNature"; //$NON-NLS-1$
 	static String INFO_DIRECTORY = "WEB-INF"; //$NON-NLS-1$
 //	public static IBaseWebNature getRuntime(IProject project) {
@@ -75,17 +75,17 @@ public class StaticWebDeployableObjectAdapterUtil {
 	 * @param resource
 	 * @return boolean
 	 */
-	private static boolean shouldExclude(IResource resource) {
-		String fileExt = resource.getFileExtension();
-
-		// Exclude files of certain extensions
-		for (int i = 0; i < extensionsToExclude.length; i++) {
-			String extension = extensionsToExclude[i];
-			if (extension.equalsIgnoreCase(fileExt))
-				return true;
-		}
-		return false;
-	}
+//	private static boolean shouldExclude(IResource resource) {
+//		String fileExt = resource.getFileExtension();
+//
+//		// Exclude files of certain extensions
+//		for (int i = 0; i < extensionsToExclude.length; i++) {
+//			String extension = extensionsToExclude[i];
+//			if (extension.equalsIgnoreCase(fileExt))
+//				return true;
+//		}
+//		return false;
+//	}
 
 //	protected static IModule getModule(IBaseWebNature nature) {
 //		IModule deployable = nature.getModule();

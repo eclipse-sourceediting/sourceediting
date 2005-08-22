@@ -14,7 +14,10 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.wst.web.internal.ISimpleWebModuleConstants;
 import org.eclipse.wst.web.internal.WSTWebPlugin;
 
-
+/**
+ * @deprecated
+ *
+ */
 public class LibModule implements ILibModule {
 	protected static final IPath LIB_PATH = new Path(ISimpleWebModuleConstants.INFO_DIRECTORY).append(ISimpleWebModuleConstants.LIBRARY_DIRECTORY);
 
