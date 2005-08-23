@@ -27,21 +27,27 @@ import org.eclipse.wst.common.ui.internal.dnd.ViewerDropAdapter;
 import org.w3c.dom.Node;
 
 public class XMLDragAndDropManager implements DragAndDropManager {
+	private TreeViewer fViewer;
+	
 	public static void addDragAndDropSupport(TreeViewer viewer) {
 		int dndOperations = DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK;
 		Transfer[] transfers = new Transfer[]{ObjectTransfer.getInstance()};
 		viewer.addDragSupport(dndOperations, transfers, new ViewerDragAdapter(viewer));
-		viewer.addDropSupport(dndOperations, transfers, new ViewerDropAdapter(viewer, new XMLDragAndDropManager()));
+		viewer.addDropSupport(dndOperations, transfers, new ViewerDropAdapter(viewer, new XMLDragAndDropManager(viewer)));
 	}
 
 	public XMLDragAndDropManager() {
+	}
+	
+	public XMLDragAndDropManager(TreeViewer viewer) {
+		fViewer = viewer;
 	}
 
 	public DragAndDropCommand createCommand(Object target, float location, int operations, int operation, Collection source) {
 		DragAndDropCommand result = null;
 		if (target instanceof Node) {
 			Node node = (Node) target;
-			result = new DragNodeCommand(target, location, operations, operation, source);
+			result = new DragNodeCommand(target, location, operations, operation, source, fViewer);
 		}
 		return result;
 	}

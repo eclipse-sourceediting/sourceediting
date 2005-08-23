@@ -140,6 +140,7 @@ public class XMLUIMessages extends NLS {
 	public static String EncodingSettings_0;
 	public static String EncodingSettings_1;
 	public static String DragNodeCommand_0;
+	public static String DragNodeCommand_1;
 	public static String CommonEditNamespacesDialog_0;
 	public static String JFaceNodeAdapter_1;
 	public static String QuickFixProcessorXML_0;
