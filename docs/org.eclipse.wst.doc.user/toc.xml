@@ -20,7 +20,7 @@
 	<link toc="../org.eclipse.wst.webtools.doc.user/webtools_toc.xml"/>
 	</topic>
 	<topic label="Creating enterprise applications">
-	<link toc="../org.eclipse.jst.ejb.doc.user/ejb_toc.xml"/>
+	<link toc="../../org.eclipse.jst.ejb.doc.user/ejb_toc.xml"/>
 	</topic>
 	<topic label="Editing markup language files" href="../org.eclipse.wst.sse.doc.user/topics/csrcedt004.html">
 	<link toc="../org.eclipse.wst.sse.doc.user/sse_toc.xml"/>
@@ -41,7 +41,7 @@
 	<topic label="Selecting a server" href="topics/SelectServer.html"/>
 	<anchor id="server_install" />
 	<link toc="../org.eclipse.wst.server.ui.doc.user/build_toc.xml"/>
-	<link toc="../org.eclipse.jst.server.ui.doc.user/build_toc.xml"/>
+	<link toc="../../org.eclipse.jst.server.ui.doc.user/build_toc.xml"/>
 	</topic>
 	<topic label="Legal" href="notices.html"/>
 </toc>
