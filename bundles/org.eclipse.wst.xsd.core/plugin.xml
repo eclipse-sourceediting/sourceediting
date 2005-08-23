@@ -5,7 +5,7 @@
 	<extension point="org.eclipse.core.runtime.contentTypes">
 		<content-type
 			priority="high"
-			name="XSD Content Type "
+			name="%XSD_Content_Type"
 			id="xsdsource"
 			base-type="org.eclipse.core.runtime.xml"
 			default-charset="UTF-8"
