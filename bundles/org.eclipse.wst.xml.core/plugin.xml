@@ -137,7 +137,7 @@
 		<content-type
 			file-extensions="xmi"
 			priority="low"
-			name="XMI Content Type"
+			name="%XMI_Content_Type"
 			id="xmisource"
 			base-type="org.eclipse.core.runtime.xml">
 		</content-type>
