@@ -151,6 +151,9 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 
 		label = SSEUIMessages.StructuredTextEditorPreferencePage_30; //$NON-NLS-1$
 		addCheckBox(appearanceComposite, label, CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS, 0);
+		
+		label = SSEUIMessages.StructuredTextEditorPreferencePage_39;
+		addCheckBox(appearanceComposite, label, EditorPreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG, 0);
 
 		if (showFoldingPreference) {
 			label = "Enable folding (work in progress)"; 		//$NON-NLS-1$
@@ -288,7 +291,8 @@ public class StructuredTextEditorPreferencePage extends PreferencePage implement
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, EditorPreferenceNames.MATCHING_BRACKETS));
 		
 		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS));
-
+		overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, EditorPreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG));
+		
 		if (showFoldingPreference)
 			overlayKeys.add(new OverlayPreferenceStore.OverlayKey(OverlayPreferenceStore.BOOLEAN, IStructuredTextFoldingProvider.FOLDING_ENABLED));
 		

@@ -10,8 +10,8 @@ package org.eclipse.wst.xml.ui.internal.tabletree;
 
 
 
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.ViewerSelectionManager;
 
 
@@ -20,7 +20,7 @@ public interface IDesignViewer {
 
 	String getTitle();
 
-	void setModel(IStructuredModel model);
+	void setDocument(IDocument document);
 
 	void setViewerSelectionManager(ViewerSelectionManager viewerSelectionManager);
 }

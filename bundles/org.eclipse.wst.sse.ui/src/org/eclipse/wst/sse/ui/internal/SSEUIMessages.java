@@ -396,6 +396,11 @@ public class SSEUIMessages extends NLS {
 	public static String Editor_ManageTasks_add_dialog_message;
 	public static String Editor_ManageTasks_error_dialog_title;
 	public static String Editor_ManageTasks_error_dialog_message;
+	public static String StructuredTextEditorPreferencePage_39;
+	public static String StructuredTextEditor_0;
+	public static String UnknownContentTypeDialog_0;
+	public static String UnknownContentTypeDialog_1;
+	public static String UnknownContentTypeDialog_2;
 
 	/*
 	 * *****Above are possibly unused strings that may be removed*****

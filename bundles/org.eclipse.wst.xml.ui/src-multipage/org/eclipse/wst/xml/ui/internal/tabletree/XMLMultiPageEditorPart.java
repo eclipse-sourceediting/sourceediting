@@ -32,6 +32,7 @@ import org.eclipse.ui.ide.IGotoMarker;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.part.MultiPageEditorSite;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 import org.eclipse.wst.xml.core.internal.provisional.IXMLPreferenceNames;
@@ -167,7 +168,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 
 		public void inputDocumentChanged(IDocument oldInput, IDocument newInput) {
 			if (fDesignViewer != null && newInput != null)
-				fDesignViewer.setModel(getModel());
+				fDesignViewer.setDocument(newInput);
 		}
 	}
 
@@ -237,7 +238,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	private void connectDesignPage() {
 		if (fDesignViewer != null) {
 			fDesignViewer.setViewerSelectionManager(fTextEditor.getViewerSelectionManager());
-			fDesignViewer.setModel(getModel());
+			fDesignViewer.setDocument(getDocument());
 		}
 	}
 
@@ -278,9 +279,24 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 			addSourcePage();
 			connectDesignPage();
 
-			int activePageIndex = getPreferenceStore().getInt(IXMLPreferenceNames.LAST_ACTIVE_PAGE);
-			if (activePageIndex >= 0 && activePageIndex < getPageCount()) {
-				setActivePage(activePageIndex);
+			IStructuredModel model = null;
+			try {
+				model = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
+				if (model != null) {
+					int activePageIndex = getPreferenceStore().getInt(IXMLPreferenceNames.LAST_ACTIVE_PAGE);
+					if (activePageIndex >= 0 && activePageIndex < getPageCount()) {
+						setActivePage(activePageIndex);
+					}
+					model.releaseFromRead();
+				}
+				else {
+					setActivePage(fSourcePageIndex);
+				}
+			}
+			finally {
+				if (model != null) {
+					model.releaseFromRead();
+				}
 			}
 		}
 		catch (PartInitException e) {
@@ -339,7 +355,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 
 	private void disconnectDesignPage() {
 		if (fDesignViewer != null) {
-			fDesignViewer.setModel(null);
+			fDesignViewer.setDocument(null);
 			fDesignViewer.setViewerSelectionManager(null);
 		}
 	}
@@ -413,12 +429,12 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 		}
 		return result;
 	}
-
-	private IStructuredModel getModel() {
-		IStructuredModel model = null;
+	
+	private IDocument getDocument() {
+		IDocument document = null;
 		if (fTextEditor != null)
-			model = fTextEditor.getModel();
-		return model;
+			document = fTextEditor.getDocumentProvider().getDocument(fTextEditor.getEditorInput());
+		return document;
 	}
 
 	private IPreferenceStore getPreferenceStore() {
@@ -548,7 +564,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 		// TextViewer to set us straight
 		super.setInput(input);
 		if (fDesignViewer != null)
-			fDesignViewer.setModel(getModel());
+			fDesignViewer.setDocument(getDocument());
 		setPartName(input.getName());
 	}
 }

@@ -37,6 +37,7 @@ public class XMLEditorMessages extends NLS {
 	public static String An_error_has_occurred_when1_ERROR_;
 	public static String Resource__does_not_exist;
 	public static String Editor_could_not_be_open;
+	public static String TreeExtension_0;
 
 	static {
 		// load message values from bundle file

@@ -14,6 +14,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -27,6 +28,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.ViewerSelectionManager;
 import org.eclipse.wst.sse.ui.internal.view.events.INodeSelectionListener;
 import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
@@ -152,18 +154,20 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 
 	class NodeActionMenuListener implements IMenuListener {
 		public void menuAboutToShow(IMenuManager menuManager) {
-			// used to disable NodeSelection listening while running
-			// NodeAction
-			XMLNodeActionManager nodeActionManager = new XMLNodeActionManager(fModel, XMLTableTreeViewer.this) {
-				public void beginNodeAction(NodeAction action) {
-					super.beginNodeAction(action);
-				}
-
-				public void endNodeAction(NodeAction action) {
-					super.endNodeAction(action);
-				}
-			};
-			nodeActionManager.fillContextMenu(menuManager, getSelection());
+			if (fModel != null) {
+				// used to disable NodeSelection listening while running
+				// NodeAction
+				XMLNodeActionManager nodeActionManager = new XMLNodeActionManager(fModel, XMLTableTreeViewer.this) {
+					public void beginNodeAction(NodeAction action) {
+						super.beginNodeAction(action);
+					}
+	
+					public void endNodeAction(NodeAction action) {
+						super.endNodeAction(action);
+					}
+				};
+				nodeActionManager.fillContextMenu(menuManager, getSelection());
+			}
 		}
 	}
 
@@ -258,7 +262,7 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 	protected void handleDispose(DisposeEvent event) {
 		super.handleDispose(event);
 		treeExtension.dispose();
-		setModel(null);
+		setDocument(null);
 		setViewerSelectionManager(null);
 	}
 
@@ -317,22 +321,30 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 		}
 	}
 
-	public void setModel(IStructuredModel model) {
+	public void setDocument(IDocument document) {
 		// remove
 		if (fModel != null) {
 			fModel.removeModelStateListener(fInternalModelStateListener);
+			fModel.releaseFromEdit();
 		}
 
-		fModel = model;
-		Document domDoc = null;
+		// get model for read and allow text editor to be the one that getmodelforedit
+		IStructuredModel model = null;
+		model = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
 
-		if (fModel != null && fModel instanceof IDOMModel) {
+		if (model != null && model instanceof IDOMModel) {
+			Document domDoc = null;
 			model.addModelStateListener(fInternalModelStateListener);
 			ModelQuery mq = ModelQueryUtil.getModelQuery(model);
 			treeExtension.setModelQuery(mq);
-			domDoc = ((IDOMModel) fModel).getDocument();
+			domDoc = ((IDOMModel) model).getDocument();
 			setInput(domDoc);
+			treeExtension.setIsUnsupportedInput(false);
+		} else {
+			treeExtension.setIsUnsupportedInput(true);
 		}
+		
+		fModel = model;
 	}
 
 	// the following methods implement the IDesignViewer interface

@@ -33,6 +33,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.ui.actions.IToggleBreakpointsTarget;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.jface.action.Action;
@@ -98,6 +99,7 @@ import org.eclipse.ui.ide.IDEActionFactory;
 import org.eclipse.ui.part.EditorActionBarContributor;
 import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.progress.IWorkbenchSiteProgressService;
+import org.eclipse.ui.progress.UIJob;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.ui.texteditor.DefaultRangeIndicator;
 import org.eclipse.ui.texteditor.IAbstractTextEditorHelpContextIds;
@@ -1142,7 +1144,7 @@ public class StructuredTextEditor extends TextEditor {
 		if (doc instanceof IStructuredDocument) {
 			((IStructuredDocument) doc).getUndoManager().getCommandStack().flush();
 		}
-		
+
 		// update menu text
 		updateMenuText();
 	}
@@ -1534,9 +1536,9 @@ public class StructuredTextEditor extends TextEditor {
 		}
 		return fStructuredModel;
 	}
-	
+
 	public int getOrientation() {
-		//https://bugs.eclipse.org/bugs/show_bug.cgi?id=88714
+		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=88714
 		return SWT.LEFT_TO_RIGHT;
 	}
 
@@ -1802,16 +1804,19 @@ public class StructuredTextEditor extends TextEditor {
 		return (store.getBoolean(IStructuredTextFoldingProvider.FOLDING_ENABLED) && (System.getProperty("org.eclipse.wst.sse.ui.foldingenabled") != null)); //$NON-NLS-1$
 	}
 
-	/*
-	 * @see IEditorPart#isSaveOnCloseNeeded()
-	 */
-	public boolean isSaveOnCloseNeeded() {
-		if (getInternalModel() == null)
-			return false;
-		return getInternalModel().isSaveNeeded();
-	}
-
 	private void logUnexpectedDocumentKind(IEditorInput input) {
+		// display a dialog informing user of uknown content type
+		if (SSEUIPlugin.getDefault().getPreferenceStore().getBoolean(EditorPreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG)) {
+			Job job = new UIJob(SSEUIMessages.StructuredTextEditor_0) {
+				public IStatus runInUIThread(IProgressMonitor monitor) {
+					UnknownContentTypeDialog dialog = new UnknownContentTypeDialog(getSite().getShell(), SSEUIPlugin.getDefault().getPreferenceStore(), EditorPreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG);
+					dialog.open();
+					return Status.OK_STATUS;
+				}
+			};
+			job.schedule();
+		}
+
 		Logger.log(Logger.WARNING, "StructuredTextEditor being used without StructuredDocument"); //$NON-NLS-1$
 		String name = null;
 		if (input != null) {
@@ -1999,7 +2004,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * @deprecated - can eventually be eliminated
 	 */
 	private void setModel(IStructuredModel newModel) {
-		Assert.isNotNull(getDocumentProvider(), "document provider can not be null when setting model");
+		Assert.isNotNull(getDocumentProvider(), "document provider can not be null when setting model"); //$NON-NLS-1$
 		if (fStructuredModel != null) {
 			if (fStructuredModel.getStructuredDocument() != null) {
 				fStructuredModel.getStructuredDocument().removeDocumentListener(getInternalDocumentListener());

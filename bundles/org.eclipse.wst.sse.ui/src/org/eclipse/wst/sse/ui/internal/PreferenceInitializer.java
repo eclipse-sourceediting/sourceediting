@@ -61,6 +61,9 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		
 		// set default enable folding value
 		store.setDefault(IStructuredTextFoldingProvider.FOLDING_ENABLED, false);
+		
+		// set default for show message dialog when unknown content type in editor
+		store.setDefault(EditorPreferenceNames.SHOW_UNKNOWN_CONTENT_TYPE_MSG, true);
 	}
 
 	private void setMatchingBracketsPreferences(IPreferenceStore store) {

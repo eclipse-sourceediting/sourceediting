@@ -56,6 +56,7 @@ public class TreeExtension implements PaintListener {
 	protected Color tableLineColor;
 	protected int controlWidth;
 	protected DelayedDrawTimer delayedDrawTimer;
+	private boolean fisUnsupportedInput = false;
 
 	public TreeExtension(Tree tree) {
 		this.tree = tree;
@@ -204,31 +205,37 @@ public class TreeExtension implements PaintListener {
 		//			}
 		//		}
 		//
-		TreeItem[] items = tree.getItems();
-		if (items.length > 0) {
-			gc.setForeground(tableLineColor);
-			gc.setBackground(bg);
+		if (!fisUnsupportedInput) {
+			TreeItem[] items = tree.getItems();
+			if (items.length > 0) {
+				gc.setForeground(tableLineColor);
+				gc.setBackground(bg);
 
-			gc.fillRectangle(columnPosition, treeBounds.x, treeBounds.width, treeBounds.height);
+				gc.fillRectangle(columnPosition, treeBounds.x, treeBounds.width, treeBounds.height);
 
-			Rectangle itemBounds = items[0].getBounds();
-			int height = computeTreeItemHeight();
+				Rectangle itemBounds = items[0].getBounds();
+				int height = computeTreeItemHeight();
 
-			if (itemBounds != null) {
-				int startY = itemBounds.y < treeBounds.y ? itemBounds.y : treeBounds.y + ((treeBounds.y - itemBounds.y) % height);
+				if (itemBounds != null) {
+					int startY = itemBounds.y < treeBounds.y ? itemBounds.y : treeBounds.y + ((treeBounds.y - itemBounds.y) % height);
 
-				for (int i = startY; i < treeBounds.height; i += height) {
-					if (i >= treeBounds.y) {
-						gc.drawLine(0, i, treeBounds.width, i);
+					for (int i = startY; i < treeBounds.height; i += height) {
+						if (i >= treeBounds.y) {
+							gc.drawLine(0, i, treeBounds.width, i);
+						}
 					}
 				}
-			}
-			gc.drawLine(columnPosition, 0, columnPosition, treeBounds.height);
-		} else {
-			addEmptyTreeMessage(gc);
-		}
+				gc.drawLine(columnPosition, 0, columnPosition, treeBounds.height);
+				paintItems(gc, items, treeBounds);
 
-		paintItems(gc, items, treeBounds);
+			}
+			else {
+				addEmptyTreeMessage(gc);
+			}
+		}
+		else {
+			addUnableToPopulateTreeMessage(gc);
+		}
 	}
 
 	protected int computeTreeItemHeight() {
@@ -262,6 +269,20 @@ public class TreeExtension implements PaintListener {
 	}
 
 	protected void addEmptyTreeMessage(GC gc) {
+	}
+
+	private void addUnableToPopulateTreeMessage(GC gc) {
+		// here we print a message when the document cannot be displayed just
+		// to give the
+		// user a visual cue
+		// so that they know how to proceed to edit the blank view
+		gc.setForeground(tree.getDisplay().getSystemColor(SWT.COLOR_BLACK));
+		gc.setBackground(tree.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+		gc.drawString(XMLEditorMessages.TreeExtension_0, 10, 10);
+	}
+
+	void setIsUnsupportedInput(boolean isUnsupported) {
+		fisUnsupportedInput = isUnsupported;
 	}
 
 	public void paintItems(GC gc, TreeItem[] items, Rectangle treeBounds) {

@@ -22,11 +22,11 @@ public class EditorPreferenceNames {
 	 * </p>
 	 */
 	public static final String EVALUATE_TEMPORARY_PROBLEMS = getEvaluateTemporaryProblemsKey();
-	
+
 	private static String getEvaluateTemporaryProblemsKey() {
 		return "evaluateTemporaryProblems"; //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * A named preference that controls whether bracket matching highlighting
 	 * is turned on or off.
@@ -65,16 +65,22 @@ public class EditorPreferenceNames {
 	private static String getTextHoverModifiersKey() {
 		return "hoverModifiers"; //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * A named preference that defines read only contrast scale.
 	 * <p>
 	 * Value is of type <code>Integer</code>.
-	 * </p> 
+	 * </p>
 	 */
 	public static final String READ_ONLY_FOREGROUND_SCALE = getReadOnlyForegroundScaleKey();
-	
+
 	private static String getReadOnlyForegroundScaleKey() {
 		return "readOnlyForegroundScale"; //$NON-NLS-1$
 	}
+
+	/**
+	 * A named preference that defines whether or not to show a message dialog
+	 * informing user of unknown content type in editor.
+	 */
+	public static final String SHOW_UNKNOWN_CONTENT_TYPE_MSG = "showUnknownContentTypeMsg"; //$NON-NLS-1$
 }
