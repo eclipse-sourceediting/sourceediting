@@ -226,24 +226,33 @@ class CSSStyleDeclItemImpl extends CSSStructuredDocumentRegionContainer implemen
 			}
 			child = next;
 		}
-
-		// use temporary document
-		IDocumentLoader loader = new CSSDocumentLoader();
-		IStructuredDocument structuredDocument = (IStructuredDocument) loader.createNewStructuredDocument();
-		((CSSSourceParser) structuredDocument.getParser()).setParserMode(CSSSourceParser.MODE_DECLARATION_VALUE);
-		structuredDocument.set(value);
-		IStructuredDocumentRegion node = structuredDocument.getFirstStructuredDocumentRegion();
-		if (node == null) {
-			return;
-		}
-		if (node.getNext() != null) {
-			throw new DOMException(DOMException.INVALID_MODIFICATION_ERR, "");//$NON-NLS-1$
-		}
-
-		CSSDeclarationItemParser itemParser = new CSSDeclarationItemParser(getOwnerDocument());
-		itemParser.setStructuredDocumentTemporary(true);
-		itemParser.setupValues(this, node, node.getRegions());
+		setCssValueTextCore(value);
 	}
+	private void setCssValueTextCore(String value) throws DOMException {
+		// use temporary document
+		synchronized(CSSStyleDeclarationImpl.class) {
+			if (sharedStructuredDocument == null) {
+				IDocumentLoader loader = new CSSDocumentLoader();
+				sharedStructuredDocument = (IStructuredDocument) loader.createNewStructuredDocument();
+				((CSSSourceParser) sharedStructuredDocument.getParser()).setParserMode(CSSSourceParser.MODE_DECLARATION_VALUE);
+				
+			}
+			sharedStructuredDocument.set(value);
+			IStructuredDocumentRegion node = sharedStructuredDocument.getFirstStructuredDocumentRegion();
+			
+			if (node == null) {
+				return;
+			}
+			if (node.getNext() != null) {
+				throw new DOMException(DOMException.INVALID_MODIFICATION_ERR, "");//$NON-NLS-1$
+			}
+			
+			CSSDeclarationItemParser itemParser = new CSSDeclarationItemParser(getOwnerDocument());
+			itemParser.setStructuredDocumentTemporary(true);
+			itemParser.setupValues(this, node, node.getRegions());
+		}
+	}
+	private static IStructuredDocument sharedStructuredDocument; 
 
 	/**
 	 * @param newPriority
