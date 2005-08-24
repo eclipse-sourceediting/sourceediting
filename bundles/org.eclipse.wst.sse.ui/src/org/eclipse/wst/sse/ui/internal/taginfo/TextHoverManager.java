@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.preferences.EditorPreferenceNames;
@@ -163,7 +164,15 @@ public class TextHoverManager {
 				if (modifierString.equals(NO_MODIFIER))
 					modifierString = ""; //$NON-NLS-1$
 
-				TextHoverDescriptor descriptor = new TextHoverDescriptor(id, SSEUIMessages.getResourceBundle().getString(id + LABEL_KEY), SSEUIMessages.getResourceBundle().getString(id + DESCRIPTION_KEY), enabled, modifierString);
+				String label = null;
+				String description = null;
+				try {
+					label = SSEUIMessages.getResourceBundle().getString(id + LABEL_KEY);
+					description = SSEUIMessages.getResourceBundle().getString(id + DESCRIPTION_KEY);
+				} catch (Exception e) {
+					Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
+				}
+				TextHoverDescriptor descriptor = new TextHoverDescriptor(id, label, description, enabled, modifierString);
 				// should check to see if ids appear more than once
 				idToModifier.put(id, descriptor);
 			}
@@ -176,7 +185,15 @@ public class TextHoverManager {
 			if (desc != null) {
 				descriptors[i] = desc;
 			} else {
-				descriptors[i] = new TextHoverDescriptor(TEXT_HOVER_IDS[i], SSEUIMessages.getResourceBundle().getString(TEXT_HOVER_IDS[i] + LABEL_KEY), SSEUIMessages.getResourceBundle().getString(TEXT_HOVER_IDS + DESCRIPTION_KEY));
+				String label = null;
+				String description = null;
+				try {
+					label = SSEUIMessages.getResourceBundle().getString(TEXT_HOVER_IDS[i] + LABEL_KEY);
+					description = SSEUIMessages.getResourceBundle().getString(TEXT_HOVER_IDS[i] + DESCRIPTION_KEY);
+				} catch (Exception e) {
+					Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
+				}
+				descriptors[i] = new TextHoverDescriptor(TEXT_HOVER_IDS[i], label, description);
 			}
 		}
 		return descriptors;
