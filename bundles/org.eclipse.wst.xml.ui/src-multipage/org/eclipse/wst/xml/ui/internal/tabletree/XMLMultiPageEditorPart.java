@@ -287,7 +287,6 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 					if (activePageIndex >= 0 && activePageIndex < getPageCount()) {
 						setActivePage(activePageIndex);
 					}
-					model.releaseFromRead();
 				}
 				else {
 					setActivePage(fSourcePageIndex);
