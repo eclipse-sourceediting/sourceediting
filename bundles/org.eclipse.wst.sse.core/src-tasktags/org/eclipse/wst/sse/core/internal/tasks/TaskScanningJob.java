@@ -35,6 +35,8 @@ import org.osgi.framework.Bundle;
  */
 class TaskScanningJob extends Job {
 	public static final boolean _debugJob = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.core/tasks/job")); //$NON-NLS-1$ //$NON-NLS-2$
+	static final int JOB_DELAY_DELTA = 500;
+	private static final int JOB_DELAY_PROJECT = 1000;
 	static final String TASK_TAG_PROJECTS_ALREADY_SCANNED = "task-tag-projects-already-scanned"; //$NON-NLS-1$
 	private List fQueue = null;
 
@@ -73,7 +75,7 @@ class TaskScanningJob extends Job {
 			}
 			System.out.println("Adding delta " + delta.getFullPath() + kind); //$NON-NLS-1$
 		}
-		schedule(100);
+		schedule(JOB_DELAY_DELTA);
 	}
 
 	synchronized void addProject(IProject project) {
@@ -82,7 +84,7 @@ class TaskScanningJob extends Job {
 			if (_debugJob) {
 				System.out.println("Adding project " + project.getName()); //$NON-NLS-1$
 			}
-			schedule(600);
+			schedule(JOB_DELAY_PROJECT);
 		}
 	}
 
