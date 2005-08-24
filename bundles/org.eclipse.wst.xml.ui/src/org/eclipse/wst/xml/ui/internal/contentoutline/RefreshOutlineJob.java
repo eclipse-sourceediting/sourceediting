@@ -42,7 +42,7 @@ public class RefreshOutlineJob extends Job {
 	/** List of refresh requests (Nodes)*/
 	private final List fRequests;
 	/** the tree viewer */
-	private final StructuredViewer fViewer;
+	final StructuredViewer fViewer;
 	/** debug flag */
 	private static final boolean DEBUG;
 	static {
@@ -174,14 +174,18 @@ public class RefreshOutlineJob extends Job {
 		final Display display = PlatformUI.getWorkbench().getDisplay();
 		display.asyncExec(new Runnable() {
 			public void run() {
-			    
-			    if(DEBUG)
-			        System.out.println("refresh on: [" +node.getNodeName()+ "]"); //$NON-NLS-1$ //$NON-NLS-2$
-			        
-			    if(node instanceof Document)
-			        fViewer.refresh();
-			    else
-			        fViewer.refresh(node);
+
+				if (DEBUG)
+					System.out.println("refresh on: [" + node.getNodeName() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
+
+				if (!fViewer.getControl().isDisposed()) {
+					if (node instanceof Document) {
+						fViewer.refresh();
+					}
+					else {
+						fViewer.refresh(node);
+					}
+				}
 			}
 		});
 	}
