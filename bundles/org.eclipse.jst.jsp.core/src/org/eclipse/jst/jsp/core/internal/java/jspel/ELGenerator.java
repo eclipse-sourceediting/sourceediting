@@ -1,18 +1,14 @@
-/**
- * B E A   S Y S T E M S
- *
- * Copyright (c) 2004  BEA Systems, Inc.
- *
- * All Rights Reserved. Unpublished rights reserved under the copyright laws
- * of the United States. The software contained on this media is proprietary
- * to and embodies the confidential technology of BEA Systems, Inc. The
- * possession or receipt of this information does not convey any right to
- * disclose its contents, reproduce it, or use,  or license the use, for
- * manufacture or sale, the information or anything described therein. Any
- * use, disclosure, or reproduction without BEA System's prior written
- * permission is strictly prohibited.
- *
- */
+/*******************************************************************************
+ * Copyright (c) 2005 BEA Systems and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     BEA Systems - initial implementation
+ *     
+ *******************************************************************************/
 
 package org.eclipse.jst.jsp.core.internal.java.jspel;
 
