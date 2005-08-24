@@ -292,7 +292,9 @@ class WorkspaceTaskScanner {
 						}
 					}
 				};
-				finalFile.getWorkspace().run(r, file, IWorkspace.AVOID_UPDATE, monitor);
+				if(file.isAccessible()) {
+					finalFile.getWorkspace().run(r, file, IWorkspace.AVOID_UPDATE, monitor);
+				}
 			}
 			catch (CoreException e1) {
 				Logger.logException(e1);
