@@ -12,7 +12,6 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.util;
 
-import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.custom.VerifyKeyListener;
 import org.eclipse.swt.events.FocusAdapter;
@@ -27,8 +26,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 
 
 /**
@@ -106,27 +103,17 @@ public class PlatformStatusLineUtil {
 	 */
 	public static void addOneTimeClearListener() {
 		IEditorPart editor = getActiveEditor();
+		boolean added = false;
 		if (editor != null) {
-			if (editor instanceof StructuredTextEditor) {
-				addOneTimeClearListener((StructuredTextEditor) editor);
-			}
-			else {
-				ITextEditor textEditor = (ITextEditor) editor.getAdapter(ITextEditor.class);
-				if (textEditor != null) {
-					Control control = (Control) textEditor.getAdapter(Control.class);
-					if (control instanceof StyledText) {
-						addOneTimeClearListener(((StyledText) control));
-					}
-				}
+			Control control = (Control) editor.getAdapter(Control.class);
+			if (control instanceof StyledText) {
+				addOneTimeClearListener(((StyledText) control));
+				added = true;
 			}
 		}
-	}
-
-	private static void addOneTimeClearListener(StructuredTextEditor editor) {
-		if (editor != null) {
-			ITextViewer viewer = editor.getTextViewer();
-			if (viewer != null)
-				addOneTimeClearListener(viewer.getTextWidget());
+		if (!added) {
+			// clear the error message immediately
+			displayMessage(null);
 		}
 	}
 
@@ -147,7 +134,6 @@ public class PlatformStatusLineUtil {
 	 * @param msg
 	 */
 	public static void displayErrorMessage(String msg) {
-
 		displayMessage(msg);
 		PlatformUI.getWorkbench().getDisplay().beep();
 	}
@@ -159,8 +145,9 @@ public class PlatformStatusLineUtil {
 	 */
 	public static void displayMessage(String msg) {
 		IEditorPart editor = getActiveEditor();
-		if (editor != null)
+		if (editor != null) {
 			editor.getEditorSite().getActionBars().getStatusLineManager().setErrorMessage(msg);
+		}
 
 	}
 
