@@ -368,7 +368,7 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 			IStructuredDocumentRegion newNode = (newNodes.getLength() > 0) ? newNodes.item(0) : null;
 
 			if (oldNode != null && newNode != null)
-				changed = partitioner.getContentType(oldNode.getStartOffset()).equals(partitioner.getContentType(newNode.getStartOffset()));
+				changed = !partitioner.getContentType(oldNode.getStartOffset()).equals(partitioner.getContentType(newNode.getStartOffset()));
 		}
 		return changed;
 	}
