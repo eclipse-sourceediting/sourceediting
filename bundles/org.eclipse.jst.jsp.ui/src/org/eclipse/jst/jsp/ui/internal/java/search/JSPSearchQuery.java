@@ -11,9 +11,6 @@
 package org.eclipse.jst.jsp.ui.internal.java.search;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IWorkspaceRunnable;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaElement;
@@ -32,25 +29,6 @@ import org.eclipse.wst.sse.ui.internal.search.BasicSearchQuery;
  */
 public class JSPSearchQuery extends BasicSearchQuery {
 	
-	private class SingleFileSearch implements IWorkspaceRunnable {
-
-		public void run(IProgressMonitor monitor) throws CoreException {
-
-			if (getFile() != null && getJavaElement() != null) {
-				
-				JSPSearchSupport support = JSPSearchSupport.getInstance();
-				// index the file
-				SearchDocument delegate =  support.addJspFile(getFile());
-				String scopePath = delegate.getPath();
-				JSPSearchScope singleFileScope = new JSPSearchScope(new String[]{getFile().getFullPath().toString(), scopePath});
-				
-				// perform a search
-				// by passing in this jsp search query, requstor can add matches
-				support.searchRunnable(getJavaElement(), singleFileScope, new JSPSingleFileSearchRequestor(getInstance()));
-			}
-		}
-	}
-	
 	/** the IJavaElement we are searching for in the file **/
 	private IJavaElement fElement = null;
 	
@@ -67,10 +45,6 @@ public class JSPSearchQuery extends BasicSearchQuery {
 	public JSPSearchQuery getInstance() {
 		return this;
 	}
-
-	protected IWorkspaceRunnable getRunnable() {
-		return new SingleFileSearch();
-	}
 	
 	protected IStatus doQuery() {
 		
@@ -81,6 +55,7 @@ public class JSPSearchQuery extends BasicSearchQuery {
 			JSPSearchSupport support = JSPSearchSupport.getInstance();
 			// index the file
 			SearchDocument delegate =  support.addJspFile(getFile());
+			
 			String scopePath = delegate.getPath();
 			JSPSearchScope singleFileScope = new JSPSearchScope(new String[]{getFile().getFullPath().toString(), scopePath});
 			
@@ -116,7 +91,7 @@ public class JSPSearchQuery extends BasicSearchQuery {
 	}
 
 	protected String getSearchText() {
-		return this.fElement.getElementName();
+		return fElement.getElementName();
 	}
 	
 	public boolean canRerun() {

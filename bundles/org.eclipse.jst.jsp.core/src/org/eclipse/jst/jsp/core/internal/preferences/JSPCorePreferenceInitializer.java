@@ -25,6 +25,9 @@ public class JSPCorePreferenceInitializer extends AbstractPreferenceInitializer 
 	public void initializeDefaultPreferences() {
 		IEclipsePreferences node = new DefaultScope().getNode(JSPCorePlugin.getDefault().getBundle().getSymbolicName());
 
+		// compiler/validation preferences
+		node.putBoolean(JSPCorePreferenceNames.VALIDATE_FRAGMENTS, true);
+		
 		// code generation preferences
 		node.put(CommonEncodingPreferenceNames.INPUT_CODESET, ""); //$NON-NLS-1$
 		String defaultEnc = "ISO-8859-1";//$NON-NLS-1$

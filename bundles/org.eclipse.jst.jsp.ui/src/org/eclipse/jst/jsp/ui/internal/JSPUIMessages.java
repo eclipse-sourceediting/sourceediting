@@ -75,6 +75,8 @@ public class JSPUIMessages extends NLS {
 	public static String JSPSourcePreferencePage_1;
 	public static String JSPSourcePreferencePage_2;
 	public static String JSPColorPage_jsp_content;
+	public static String JSPFilesPreferencePage_0;
+	public static String JSPFilesPreferencePage_1;
 	
 	static {
 		// load message values from bundle file
