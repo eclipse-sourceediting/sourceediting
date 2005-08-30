@@ -19,12 +19,19 @@ import org.eclipse.core.runtime.IPath;
 
 public class ServletRecord implements ITaglibRecord {
 	IPath location;
+	String prefix;
 	List tldRecords = new ArrayList(0);
-
 	public boolean equals(Object obj) {
 		if (!(obj instanceof ServletRecord))
 			return false;
 		return ((ServletRecord) obj).location.equals(location);
+	}
+
+	/**
+	 * @return Returns the recommended/default prefix if one was given.
+	 */
+	public String getPrefix() {
+		return prefix;
 	}
 
 	public int getRecordType() {
@@ -32,17 +39,17 @@ public class ServletRecord implements ITaglibRecord {
 	}
 
 	/**
-	 * @return Returns the webxml.
-	 */
-	public IPath getWebXML() {
-		return location;
-	}
-
-	/**
 	 * 
 	 */
 	public List getTLDRecords() {
 		return tldRecords;
+	}
+
+	/**
+	 * @return Returns the webxml.
+	 */
+	public IPath getWebXML() {
+		return location;
 	}
 
 	public String toString() {

@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IPath;
 
 public class TLDRecord implements ITaglibRecord {
 	IPath location;
+	String prefix;
 	String uri;
 
 	public boolean equals(Object obj) {
@@ -24,15 +25,22 @@ public class TLDRecord implements ITaglibRecord {
 		return ((TLDRecord) obj).location.equals(location);
 	}
 
-	public int getRecordType() {
-		return ITaglibRecord.TLD;
-	}
-
 	/**
 	 * @return Returns the filesystem location.
 	 */
 	public IPath getLocation() {
 		return location;
+	}
+
+	/**
+	 * @return Returns the recommended/default prefix if one was given.
+	 */
+	public String getPrefix() {
+		return prefix;
+	}
+
+	public int getRecordType() {
+		return ITaglibRecord.TLD;
 	}
 
 	/**

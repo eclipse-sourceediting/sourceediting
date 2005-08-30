@@ -14,9 +14,13 @@ package org.eclipse.jst.jsp.core.internal.contentmodel;
 import java.net.URL;
 
 public class URLRecord implements ITaglibRecord {
-	URL url;
-	String uri;
 	String baseLocation;
+	String prefix;
+	String uri;
+	URL url;
+	public URLRecord() {
+		super();
+	}
 
 	public boolean equals(Object obj) {
 		if (!(obj instanceof URLRecord))
@@ -28,8 +32,11 @@ public class URLRecord implements ITaglibRecord {
 		return baseLocation;
 	}
 
-	public URLRecord() {
-		super();
+	/**
+	 * @return Returns the recommended/default prefix if one was given.
+	 */
+	public String getPrefix() {
+		return prefix;
 	}
 
 	public int getRecordType() {
