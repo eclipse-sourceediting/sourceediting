@@ -13,6 +13,7 @@ package org.eclipse.jst.jsp.core.internal.parser;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.jst.jsp.core.internal.Logger;
 import org.eclipse.jst.jsp.core.internal.contentmodel.tld.provisional.JSP12TLDNames;
 import org.eclipse.jst.jsp.core.internal.parser.internal.JSPTokenizer;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP12Namespace;
@@ -227,6 +228,7 @@ public class JSPSourceParser extends XMLSourceParser implements JSPCapableParser
 		// they are adjusted here to be indexes from the currentNode's start
 		// offset
 		IStructuredDocumentRegion headNode = null;
+		try {
 		IStructuredDocumentRegion lastNode = null;
 		ITextRegion region = null;
 		// DMW: 2/12/03. Made current node local variable, since
@@ -418,6 +420,10 @@ public class JSPSourceParser extends XMLSourceParser implements JSPCapableParser
 			currentNode.setPrevious(lastNode);
 		}
 		primReset();
+		}
+		catch (Exception e) {
+			Logger.log(Logger.ERROR, e.getMessage());
+		}
 		return headNode;
 	}
 
