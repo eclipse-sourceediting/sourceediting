@@ -19,8 +19,8 @@ import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModelProvider;
 import org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizard;
 import org.eclipse.wst.web.internal.ResourceHandler;
-import org.eclipse.wst.web.internal.WSTWebPlugin;
 import org.eclipse.wst.web.internal.operation.SimpleWebModuleCreationDataModelProvider;
+import org.eclipse.wst.web.ui.internal.WSTWebUIPlugin;
 
 public class SimpleWebModuleCreationWizard extends DataModelWizard implements IExecutableExtension, INewWizard {
 
@@ -50,7 +50,7 @@ public class SimpleWebModuleCreationWizard extends DataModelWizard implements IE
 
     public void init(IWorkbench workbench, IStructuredSelection selection) {
         setWindowTitle(ResourceHandler.getString("StaticWebProjectCreationWizard.Wizard_Title")); //$NON-NLS-1$
-        setDefaultPageImageDescriptor(WSTWebPlugin.getDefault().getImageDescriptor("newwprj_wiz")); //$NON-NLS-1$
+        setDefaultPageImageDescriptor(WSTWebUIPlugin.getDefault().getImageDescriptor("newwprj_wiz")); //$NON-NLS-1$
     }
 
 //	protected void postPerformFinish() throws InvocationTargetException {
