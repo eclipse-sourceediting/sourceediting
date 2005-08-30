@@ -306,7 +306,12 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 						}
 						lastNode = currentNode;
 					}
-					fireNodeParsed(currentNode);
+					try {
+						fireNodeParsed(currentNode);
+					}
+					catch (Exception e) {
+						Logger.log(Logger.ERROR, e.getMessage());
+					}
 					currentNode = createStructuredDocumentRegion(type);
 					if (lastNode != null) {
 						lastNode.setNext(currentNode);
@@ -332,7 +337,12 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 					}
 					lastNode = currentNode;
 				}
-				fireNodeParsed(currentNode);
+				try {
+					fireNodeParsed(currentNode);
+				}
+				catch (Exception e) {
+					Logger.log(Logger.ERROR, e.getMessage());
+				}
 				currentNode = createStructuredDocumentRegion(type);
 				if (lastNode != null) {
 					lastNode.setNext(currentNode);
@@ -426,7 +436,12 @@ public class XMLSourceParser implements RegionParser, BlockTagParser, Structured
 			}
 		}
 		if (currentNode != null) {
-			fireNodeParsed(currentNode);
+			try {
+				fireNodeParsed(currentNode);
+			}
+			catch (Exception e) {
+				Logger.log(Logger.ERROR, e.getMessage());
+			}
 			currentNode.setPrevious(lastNode);
 		}
 		//fStringInput = null;
