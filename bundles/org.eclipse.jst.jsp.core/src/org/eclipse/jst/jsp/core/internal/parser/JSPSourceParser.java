@@ -228,7 +228,6 @@ public class JSPSourceParser extends XMLSourceParser implements JSPCapableParser
 		// they are adjusted here to be indexes from the currentNode's start
 		// offset
 		IStructuredDocumentRegion headNode = null;
-		try {
 		IStructuredDocumentRegion lastNode = null;
 		ITextRegion region = null;
 		// DMW: 2/12/03. Made current node local variable, since
@@ -416,14 +415,15 @@ public class JSPSourceParser extends XMLSourceParser implements JSPCapableParser
 			}
 		}
 		if (currentNode != null) {
-			fireNodeParsed(currentNode);
+			try {
+				fireNodeParsed(currentNode);
+			}
+			catch (Exception e) {
+				Logger.log(Logger.ERROR, e.getMessage());
+			}
 			currentNode.setPrevious(lastNode);
 		}
 		primReset();
-		}
-		catch (Exception e) {
-			Logger.log(Logger.ERROR, e.getMessage());
-		}
 		return headNode;
 	}
 
