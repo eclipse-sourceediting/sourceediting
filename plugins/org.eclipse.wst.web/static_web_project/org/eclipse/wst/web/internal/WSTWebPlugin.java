@@ -9,22 +9,15 @@
 
 package org.eclipse.wst.web.internal;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.wst.validation.internal.plugin.ValidationPlugin;
-import org.osgi.framework.Bundle;
 
 /**
  * The main plugin class to be used in the desktop.
  */
-public class WSTWebPlugin extends AbstractUIPlugin
+public class WSTWebPlugin extends Plugin
 {
 	//The shared instance.
 	private static WSTWebPlugin plugin;
@@ -53,36 +46,6 @@ public class WSTWebPlugin extends AbstractUIPlugin
 	public static WSTWebPlugin getDefault()
 	{
 		return plugin;
-	}
-	/**
-	 * This gets a .gif from the icons folder.
-	 */
-	public ImageDescriptor getImageDescriptor(String key) {
-		ImageDescriptor imageDescriptor = null;
-		URL gifImageURL = getImageURL(key, getBundle());
-		if (gifImageURL != null)
-			imageDescriptor = ImageDescriptor.createFromURL(gifImageURL);
-		return imageDescriptor;
-	}
-	/**
-	 * This gets a .gif from the icons folder.
-	 */
-	public static URL getImageURL(String key, Bundle bundle) {
-		String gif = "/" + key + ".gif"; //$NON-NLS-1$ //$NON-NLS-2$
-		IPath path = null;
-		for (int i = 0; i < ICON_DIRS.length; i++) {
-			path = new Path(ICON_DIRS[i]).append(gif);
-			if (bundle.getEntry(path.toString()) == null)
-				continue;
-			try {
-				return new URL(bundle.getEntry("/"), path.toString()); //$NON-NLS-1$
-			} catch (MalformedURLException exception) {
-				org.eclipse.jem.util.logger.proxy.Logger.getLogger().logWarning("Load_Image_Error_"); //$NON-NLS-1$
-				exception.printStackTrace();
-				continue;
-			}
-		}
-		return null;
 	}
 
 	public static IWorkspace getWorkspace() {
