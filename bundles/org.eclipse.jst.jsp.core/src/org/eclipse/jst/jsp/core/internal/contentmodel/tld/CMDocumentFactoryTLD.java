@@ -647,11 +647,9 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 			case (ITaglibRecord.URL) : {
 				URLRecord record = (URLRecord) reference;
 				InputStream urlContents = null;
-				boolean doCache = false;
 				URLConnection connection = null;
 				try {
 					connection = record.getURL().openConnection();
-					doCache = connection.getUseCaches();
 					connection.setUseCaches(false);
 					urlContents = connection.getInputStream();
 					document = (CMDocumentImpl) buildCMDocument(record.getBaseLocation(), urlContents);
@@ -663,7 +661,6 @@ public class CMDocumentFactoryTLD implements CMDocumentFactory {
 						String iconPath = URIHelper.normalize(((TLDDocument) document).getLargeIcon(), record.getURL().toString(), "/"); //$NON-NLS-1$
 						document.setProperty(JSP12TLDNames.LARGE_ICON, iconPath);
 					}
-					connection.setUseCaches(doCache);
 				}
 				catch (IOException e) {
 					// not uncommon given invalid URLs
