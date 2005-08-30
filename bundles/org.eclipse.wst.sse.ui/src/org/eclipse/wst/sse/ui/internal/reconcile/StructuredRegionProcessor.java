@@ -17,11 +17,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.ITextInputListener;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.ITypedRegion;
+import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
@@ -359,16 +360,21 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 	private boolean partitionChanged(StructuredDocumentRegionsReplacedEvent structuredDocumentEvent) {
 		boolean changed = false;
 
-		IDocumentPartitioner partitioner = structuredDocumentEvent.getStructuredDocument().getDocumentPartitioner();
-		if (partitioner != null) {
-			IStructuredDocumentRegionList oldNodes = structuredDocumentEvent.getOldStructuredDocumentRegions();
-			IStructuredDocumentRegionList newNodes = structuredDocumentEvent.getNewStructuredDocumentRegions();
+		IStructuredDocumentRegionList oldNodes = structuredDocumentEvent.getOldStructuredDocumentRegions();
+		IStructuredDocumentRegionList newNodes = structuredDocumentEvent.getNewStructuredDocumentRegions();
 
-			IStructuredDocumentRegion oldNode = (oldNodes.getLength() > 0) ? oldNode = oldNodes.item(0) : null;
-			IStructuredDocumentRegion newNode = (newNodes.getLength() > 0) ? newNodes.item(0) : null;
+		IStructuredDocumentRegion oldNode = (oldNodes.getLength() > 0) ? oldNode = oldNodes.item(0) : null;
+		IStructuredDocumentRegion newNode = (newNodes.getLength() > 0) ? newNodes.item(0) : null;
 
-			if (oldNode != null && newNode != null)
-				changed = !partitioner.getContentType(oldNode.getStartOffset()).equals(partitioner.getContentType(newNode.getStartOffset()));
+		if (oldNode != null && newNode != null) {
+			try {
+				Object oldType = TextUtilities.getContentType(structuredDocumentEvent.getDocument(), getDocumentPartitioning(), oldNode.getStartOffset(), false);
+				Object newType = TextUtilities.getContentType(structuredDocumentEvent.getDocument(), getDocumentPartitioning(), newNode.getStartOffset(), false);
+				changed = !oldType.equals(newType);
+			}
+			catch (BadLocationException e) {
+				changed = true;
+			}
 		}
 		return changed;
 	}
