@@ -18,16 +18,14 @@ import org.eclipse.core.runtime.IPath;
 
 public class JarRecord implements ITaglibRecord {
 	IPath location;
+	String prefix;
 	List urlRecords;
-
+	boolean has11TLD;
+	
 	public boolean equals(Object obj) {
 		if (!(obj instanceof JarRecord))
 			return false;
 		return ((JarRecord) obj).location.equals(location);
-	}
-
-	public int getRecordType() {
-		return ITaglibRecord.JAR;
 	}
 
 	/**
@@ -35,6 +33,17 @@ public class JarRecord implements ITaglibRecord {
 	 */
 	public IPath getLocation() {
 		return location;
+	}
+
+	/**
+	 * @return Returns the recommended/default prefix if one was given.
+	 */
+	public String getPrefix() {
+		return prefix;
+	}
+
+	public int getRecordType() {
+		return ITaglibRecord.JAR;
 	}
 
 	/**
