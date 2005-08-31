@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.ui.internal.editor;
 
+import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
 
 /**
@@ -24,7 +25,7 @@ public interface IHelpContextIds {
 	public static final String PREFIX = JSPUIPlugin.ID + "."; //$NON-NLS-1$
 	
 	// JSP Source page editor
-	public static final String JSP_SOURCEVIEW_HELPID = PREFIX + "ejsp0000"; //$NON-NLS-1$
+	public static final String JSP_SOURCEVIEW_HELPID = ContentTypeIdForJSP.ContentTypeID_JSP +"_source_HelpId"; //$NON-NLS-1$
 	
 	// JSP Files Preference page
 	public static final String JSP_PREFWEBX_FILES_HELPID = PREFIX + "webx0050"; //$NON-NLS-1$

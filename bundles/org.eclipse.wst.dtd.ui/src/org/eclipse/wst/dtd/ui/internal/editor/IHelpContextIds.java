@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.dtd.ui.internal.editor;
 
+import org.eclipse.wst.dtd.core.internal.provisional.contenttype.ContentTypeIdForDTD;
 import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 
 /**
@@ -34,5 +35,5 @@ public interface IHelpContextIds {
 	public static final String DTD_PREFWEBX_TEMPLATES_HELPID = PREFIX + "webx0022"; //$NON-NLS-1$
 
 	// DTD Source page editor
-	public static final String DTD_SOURCEVIEW_HELPID = PREFIX + "edtd0000"; //$NON-NLS-1$
+	public static final String DTD_SOURCEVIEW_HELPID = ContentTypeIdForDTD.ContentTypeID_DTD +"_source_HelpId"; //$NON-NLS-1$
 }

@@ -67,6 +67,7 @@ import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.events.DisposeEvent;
@@ -78,6 +79,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IEditorInput;
@@ -430,7 +432,10 @@ public class StructuredTextEditor extends TextEditor {
 	protected final static char[] BRACKETS = {'{', '}', '(', ')', '[', ']'};
 	private static final long BUSY_STATE_DELAY = 1000;
 	protected static final String DOT = "."; //$NON-NLS-1$
-	private static final String EDITOR_CONTEXT_MENU_ID = "org.eclipse.wst.sse.ui.StructuredTextEditor.context"; //$NON-NLS-1$
+	private static final String EDITOR_CONTEXT_MENU_ID = "org.eclipse.wst.sse.ui.StructuredTextEditor.EditorContext"; //$NON-NLS-1$
+	private static final String EDITOR_CONTEXT_MENU_POSTFIX = ".source.EditorContext"; //$NON-NLS-1$
+	private static final String RULER_CONTEXT_MENU_ID = "org.eclipse.wst.sse.ui.StructuredTextEditor.RulerContext"; //$NON-NLS-1$
+	private static final String RULER_CONTEXT_MENU_POSTFIX = ".source.RulerContext"; //$NON-NLS-1$
 	/** Non-NLS strings */
 	private static final String EDITOR_KEYBINDING_SCOPE_ID = "org.eclipse.wst.sse.ui.structuredTextEditorScope"; //$NON-NLS-1$
 
@@ -486,6 +491,14 @@ public class StructuredTextEditor extends TextEditor {
 	String[] fShowInTargetIds = new String[]{IPageLayout.ID_RES_NAV};
 	private IAction fShowPropertiesAction = null;
 	private IStructuredModel fStructuredModel;
+	/** The text context menu to be disposed. */
+	private Menu fTextContextMenu;
+	/** The text context menu manager to be disposed. */
+	private MenuManager fTextContextMenuManager;
+	/** The ruler context menu to be disposed. */
+	private Menu fRulerContextMenu;
+	/** The ruler context menu manager to be disposed. */
+	private MenuManager fRulerContextMenuManager;
 
 	private boolean fUpdateMenuTextPending;
 	int hoverX = -1;
@@ -916,6 +929,14 @@ public class StructuredTextEditor extends TextEditor {
 		// instead of calling setInput twice, use initializeSourceViewer() to
 		// handle source viewer initialization previously handled by setInput
 		initializeSourceViewer();
+
+		// update editor context menu, vertical ruler context menu, infopop
+		if (getInternalModel() != null) {
+			updateEditorControlsForContentType(getInternalModel().getContentTypeIdentifier());
+		}
+		else {
+			updateEditorControlsForContentType(null);
+		}
 	}
 
 	protected PropertySheetConfiguration createPropertySheetConfiguration() {
@@ -1056,6 +1077,24 @@ public class StructuredTextEditor extends TextEditor {
 		if (fMouseTracker != null) {
 			fMouseTracker.stop();
 			fMouseTracker = null;
+		}
+
+		// dispose of menus that were being tracked
+		if (fTextContextMenu != null) {
+			fTextContextMenu.dispose();
+		}
+		if (fRulerContextMenu != null) {
+			fRulerContextMenu.dispose();
+		}
+		if (fTextContextMenuManager != null) {
+			fTextContextMenuManager.removeMenuListener(getContextMenuListener());
+			fTextContextMenuManager.removeAll();
+			fTextContextMenuManager.dispose();
+		}
+		if (fRulerContextMenuManager != null) {
+			fRulerContextMenuManager.removeMenuListener(getContextMenuListener());
+			fRulerContextMenuManager.removeAll();
+			fRulerContextMenuManager.dispose();
 		}
 
 		// added this 2/19/2004 to match the 'add' in
@@ -1213,20 +1252,11 @@ public class StructuredTextEditor extends TextEditor {
 				setModel(model);
 			}
 
-			// currently this only works if createpartcontrol has not been
-			// called yet
 			if (getInternalModel() != null) {
-				String contentType = getInternalModel().getContentTypeIdentifier();
-				setEditorContextMenuId(contentType + ".source.EditorContext"); //$NON-NLS-1$
-				setRulerContextMenuId(contentType + ".source.RulerContext"); //$NON-NLS-1$
-				setHelpContextId(contentType + ".source.HelpId"); //$NON-NLS-1$
-				// allows help to be set at any time (not just on
-				// AbstractTextEditor's
-				// creation)
-				if ((getHelpContextId() != null) && (getSourceViewer() != null) && (getSourceViewer().getTextWidget() != null)) {
-					IWorkbenchHelpSystem helpSystem = SSEUIPlugin.getDefault().getWorkbench().getHelpSystem();
-					helpSystem.setHelp(getSourceViewer().getTextWidget(), getHelpContextId());
-				}
+				updateEditorControlsForContentType(getInternalModel().getContentTypeIdentifier());
+			}
+			else {
+				updateEditorControlsForContentType(null);
 			}
 
 			if (fProjectionModelUpdater != null)
@@ -1692,6 +1722,138 @@ public class StructuredTextEditor extends TextEditor {
 		}
 	}
 
+	/**
+	 * Updates the editor context menu by creating a new context menu with the
+	 * given menu id
+	 * 
+	 * @param contextMenuId
+	 *            Cannot be null
+	 */
+	private void updateEditorContextMenuId(String contextMenuId) {
+		// update editor context menu id if updating to a new id or if context
+		// menu is not already set up
+		if (!contextMenuId.equals(getEditorContextMenuId()) || (fTextContextMenu == null)) {
+			setEditorContextMenuId(contextMenuId);
+
+			if (getSourceViewer() != null) {
+				StyledText styledText = getSourceViewer().getTextWidget();
+				if (styledText != null) {
+					// dispose of previous context menu
+					if (fTextContextMenu != null) {
+						fTextContextMenu.dispose();
+					}
+					if (fTextContextMenuManager != null) {
+						fTextContextMenuManager.removeMenuListener(getContextMenuListener());
+						fTextContextMenuManager.removeAll();
+						fTextContextMenuManager.dispose();
+					}
+
+					fTextContextMenuManager = new MenuManager(getEditorContextMenuId(), getEditorContextMenuId());
+					fTextContextMenuManager.setRemoveAllWhenShown(true);
+					fTextContextMenuManager.addMenuListener(getContextMenuListener());
+
+					fTextContextMenu = fTextContextMenuManager.createContextMenu(styledText);
+					styledText.setMenu(fTextContextMenu);
+
+					getSite().registerContextMenu(getEditorContextMenuId(), fTextContextMenuManager, getSelectionProvider());
+
+					// also register this menu for source page part and
+					// structured text editor ids
+					String partId = getSite().getId();
+					if (partId != null) {
+						getSite().registerContextMenu(partId + EDITOR_CONTEXT_MENU_POSTFIX, fTextContextMenuManager, getSelectionProvider());
+					}
+					getSite().registerContextMenu(EDITOR_CONTEXT_MENU_ID, fTextContextMenuManager, getSelectionProvider());
+				}
+			}
+		}
+	}
+
+	/**
+	 * Updates editor context menu, vertical ruler menu, help context id for
+	 * new content type
+	 * 
+	 * @param contentType
+	 */
+	private void updateEditorControlsForContentType(String contentType) {
+		if (contentType == null) {
+			updateEditorContextMenuId(EDITOR_CONTEXT_MENU_ID);
+			updateRulerContextMenuId(RULER_CONTEXT_MENU_ID);
+			updateHelpContextId(ITextEditorHelpContextIds.TEXT_EDITOR);
+		}
+		else {
+			updateEditorContextMenuId(contentType + EDITOR_CONTEXT_MENU_POSTFIX);
+			updateRulerContextMenuId(contentType + RULER_CONTEXT_MENU_POSTFIX);
+			updateHelpContextId(contentType + "_source_HelpId"); //$NON-NLS-1$
+		}
+	}
+
+	/**
+	 * Updates the help context of the editor with the given help context id
+	 * 
+	 * @param helpContextId
+	 *            Cannot be null
+	 */
+	private void updateHelpContextId(String helpContextId) {
+		if (!helpContextId.equals(getHelpContextId())) {
+			setHelpContextId(helpContextId);
+
+			if (getSourceViewer() != null) {
+				StyledText styledText = getSourceViewer().getTextWidget();
+				if (styledText != null) {
+					IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
+					helpSystem.setHelp(styledText, getHelpContextId());
+				}
+			}
+		}
+	}
+
+	/**
+	 * Updates the editor vertical ruler menu by creating a new vertical ruler
+	 * context menu with the given menu id
+	 * 
+	 * @param rulerMenuId
+	 *            Cannot be null
+	 */
+	private void updateRulerContextMenuId(String rulerMenuId) {
+		// update ruler context menu id if updating to a new id or if context
+		// menu is not already set up
+		if (!rulerMenuId.equals(getRulerContextMenuId()) || (fRulerContextMenu == null)) {
+			setRulerContextMenuId(rulerMenuId);
+
+			if (getVerticalRuler() != null) {
+				// dispose of previous ruler context menu
+				if (fRulerContextMenu != null) {
+					fRulerContextMenu.dispose();
+				}
+				if (fRulerContextMenuManager != null) {
+					fRulerContextMenuManager.removeMenuListener(getContextMenuListener());
+					fRulerContextMenuManager.removeAll();
+					fRulerContextMenuManager.dispose();
+				}
+
+				fRulerContextMenuManager = new MenuManager(getRulerContextMenuId(), getRulerContextMenuId());
+				fRulerContextMenuManager.setRemoveAllWhenShown(true);
+				fRulerContextMenuManager.addMenuListener(getContextMenuListener());
+
+				Control rulerControl = getVerticalRuler().getControl();
+				fRulerContextMenu = fRulerContextMenuManager.createContextMenu(rulerControl);
+				rulerControl.setMenu(fRulerContextMenu);
+				rulerControl.addMouseListener(getRulerMouseListener());
+
+				getSite().registerContextMenu(getRulerContextMenuId(), fRulerContextMenuManager, getSelectionProvider());
+
+				// also register this menu for source page part and structured
+				// text editor ids
+				String partId = getSite().getId();
+				if (partId != null) {
+					getSite().registerContextMenu(partId + RULER_CONTEXT_MENU_POSTFIX, fRulerContextMenuManager, getSelectionProvider());
+				}
+				getSite().registerContextMenu(RULER_CONTEXT_MENU_ID, fRulerContextMenuManager, getSelectionProvider());
+			}
+		}
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -1968,28 +2130,6 @@ public class StructuredTextEditor extends TextEditor {
 	}
 
 	/**
-	 * @deprecated - Clients should use .getAdapter(Control) to get the text
-	 *             viewer control and set its help context. Will be removed.
-	 * 
-	 * 
-	 * We expose this normally protected method so clients can provide their
-	 * own help.
-	 * 
-	 * @param helpContextId
-	 *            the help context id
-	 */
-	public void setHelpContextId(String helpContextId) {
-		// used by (requested by) WSED
-		super.setHelpContextId(helpContextId);
-		// allows help to be set at any time (not just on AbstractTextEditor's
-		// creation)
-		if ((getHelpContextId() != null) && (getSourceViewer() != null) && (getSourceViewer().getTextWidget() != null)) {
-			IWorkbenchHelpSystem helpSystem = SSEUIPlugin.getDefault().getWorkbench().getHelpSystem();
-			helpSystem.setHelp(getSourceViewer().getTextWidget(), getHelpContextId());
-		}
-	}
-
-	/**
 	 * @deprecated - use setInput as if we were a text editor - may be REMOVED
 	 *             AT ANY TIME
 	 * 
@@ -2086,18 +2226,18 @@ public class StructuredTextEditor extends TextEditor {
 			if (cfg instanceof StructuredContentOutlineConfiguration) {
 				((StructuredContentOutlineConfiguration) cfg).setEditor(this);
 			}
+			((StructuredTextEditorContentOutlinePage) fOutlinePage).setConfiguration(cfg);
 			((StructuredTextEditorContentOutlinePage) fOutlinePage).setModel(getInternalModel());
 			((StructuredTextEditorContentOutlinePage) fOutlinePage).setViewerSelectionManager(getViewerSelectionManager());
-			((StructuredTextEditorContentOutlinePage) fOutlinePage).setConfiguration(cfg);
 		}
 		if (fPropertySheetPage != null && fPropertySheetPage instanceof ConfigurablePropertySheetPage) {
 			PropertySheetConfiguration cfg = createPropertySheetConfiguration();
 			if (cfg instanceof StructuredPropertySheetConfiguration) {
 				((StructuredPropertySheetConfiguration) cfg).setEditor(this);
 			}
+			((ConfigurablePropertySheetPage) fPropertySheetPage).setConfiguration(cfg);
 			((ConfigurablePropertySheetPage) fPropertySheetPage).setModel(getInternalModel());
 			((ConfigurablePropertySheetPage) fPropertySheetPage).setViewerSelectionManager(getViewerSelectionManager());
-			((ConfigurablePropertySheetPage) fPropertySheetPage).setConfiguration(cfg);
 		}
 		if (getViewerSelectionManager() != null)
 			getViewerSelectionManager().setModel(getInternalModel());

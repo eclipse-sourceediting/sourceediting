@@ -151,13 +151,17 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 		}
 	}
 
+	private static final String OUTLINE_CONTEXT_MENU_ID = "org.eclipse.wst.sse.ui.StructuredTextEditor.OutlineContext"; //$NON-NLS-1$
+	private static final String OUTLINE_CONTEXT_MENU_POSTFIX = ".source.OutlineContext"; //$NON-NLS-1$
+	
 	protected static ContentOutlineConfiguration NULL_CONFIGURATION = new ContentOutlineConfiguration();
 	private TransferDragSourceListener[] fActiveDragListeners;
 	private TransferDropTargetListener[] fActiveDropListeners;
 	private ContentOutlineConfiguration fConfiguration;
 
+	private String fContextMenuId;
 	private MenuManager fContextMenuManager;
-	private boolean fContextMenuRegistered = false;
+	private Menu fContextMenu;
 	private DelegatingDragAdapter fDragAdapter;
 	private DragSource fDragSource;
 	private DelegatingDropAdapter fDropAdapter;
@@ -181,11 +185,6 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 	 */
 	public void createControl(Composite parent) {
 		fTreeViewer = new SourceEditorTreeViewer(new Tree(parent, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL));
-		// create the context menu
-		fContextMenuManager = new MenuManager("#popup"); //$NON-NLS-1$
-		fContextMenuManager.setRemoveAllWhenShown(true);
-		Menu menu = fContextMenuManager.createContextMenu(fTreeViewer.getControl());
-		fTreeViewer.getControl().setMenu(menu);
 		fDragAdapter = new DelegatingDragAdapter();
 		fDragSource = new DragSource(fTreeViewer.getControl(), DND.DROP_COPY | DND.DROP_MOVE | DND.DROP_LINK);
 		fDropAdapter = new DelegatingDropAdapter();
@@ -216,6 +215,13 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 			}
 		});
 		fTreeViewer.addPostSelectionChangedListener(this);
+		
+		// update outline view's context menu control
+		if (fModel != null) {
+			updateContextMenuId(fModel.getContentTypeIdentifier());
+		} else {
+			updateContextMenuId(OUTLINE_CONTEXT_MENU_ID);
+		}
 	}
 
 	public void dispose() {
@@ -227,6 +233,18 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 		IJFaceNodeAdapterFactory adapterFactory = getViewerRefreshFactory();
 		if (adapterFactory != null) {
 			adapterFactory.removeListener(fTreeViewer);
+		}
+		// dispose menu controls
+		if (fContextMenu != null) {
+			fContextMenu.dispose();
+		}
+		if (fContextMenuManager != null) {
+			IMenuListener listener = getConfiguration().getMenuListener(fTreeViewer);
+			if (listener != null)
+				fContextMenuManager.removeMenuListener(listener);
+			fContextMenuManager.removeMenuListener(fGroupAdder);
+			fContextMenuManager.removeAll();
+			fContextMenuManager.dispose();
 		}
 		setConfiguration(NULL_CONFIGURATION);
 	}
@@ -317,18 +335,58 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 		}
 	}
 
-	void registerContextMenu() {
-		if (!fContextMenuRegistered && getTreeViewer() != null && getTreeViewer().getControl() != null) {
-			IWorkbenchPage page = getSite().getWorkbenchWindow().getActivePage();
-			if (page != null) {
-				IEditorPart ownerEditor = page.getActiveEditor();
-				if (ownerEditor != null) {
-					fContextMenuRegistered = true;
-					if (getModel() != null)
-						getSite().registerContextMenu(getModel().getContentTypeIdentifier()+".source.OutlineContext", fContextMenuManager, this);	//$NON-NLS-1$
-					else
-						getSite().registerContextMenu(ownerEditor.getSite().getId()+".OutlineContext", fContextMenuManager, this);	//$NON-NLS-1$
+	/**
+	 * Updates the outline page's context menu by creating a new context menu with the
+	 * given menu id
+	 * 
+	 * @param contextMenuId
+	 *            Cannot be null
+	 */
+	private void updateContextMenuId(String contextMenuId) {
+		// update outline context menu id if updating to a new id or if context
+		// menu is not already set up
+		if (!contextMenuId.equals(fContextMenuId) || (fContextMenu == null)) {
+			fContextMenuId = contextMenuId;
+
+			if (getTreeViewer() != null && getTreeViewer().getControl() != null) {
+				// dispose of previous context menu
+				if (fContextMenu != null) {
+					fContextMenu.dispose();
 				}
+				if (fContextMenuManager != null) {
+					IMenuListener listener = getConfiguration().getMenuListener(fTreeViewer);
+					if (listener != null)
+						fContextMenuManager.removeMenuListener(listener);
+					fContextMenuManager.removeMenuListener(fGroupAdder);
+					fContextMenuManager.removeAll();
+					fContextMenuManager.dispose();
+				}
+				
+				fContextMenuManager = new MenuManager(fContextMenuId, fContextMenuId);
+				fContextMenuManager.setRemoveAllWhenShown(true);
+				IMenuListener listener = getConfiguration().getMenuListener(fTreeViewer);
+				if (listener != null)
+					fContextMenuManager.addMenuListener(listener);
+				fContextMenuManager.addMenuListener(fGroupAdder);
+				
+				fContextMenu = fContextMenuManager.createContextMenu(getTreeViewer().getControl());
+				getTreeViewer().getControl().setMenu(fContextMenu);
+
+				getSite().registerContextMenu(fContextMenuId, fContextMenuManager, this);
+
+				// also register this menu for source page part and structured text outline view ids
+				String partId = null;
+				// get editor this page belongs to
+				IWorkbenchPage page = getSite().getWorkbenchWindow().getActivePage();
+				if (page != null) {
+					IEditorPart ownerEditor = page.getActiveEditor();
+					if (ownerEditor != null)
+						partId = ownerEditor.getSite().getId();
+				}
+				if (partId != null) {
+					getSite().registerContextMenu(partId+OUTLINE_CONTEXT_MENU_POSTFIX, fContextMenuManager, this);
+				}
+				getSite().registerContextMenu(OUTLINE_CONTEXT_MENU_ID, fContextMenuManager, this);
 			}
 		}
 	}
@@ -420,10 +478,12 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 
 		if (fTreeViewer != null && fTreeViewer.getControl() != null && !fTreeViewer.getControl().isDisposed()) {
 			// add a menu listener if one is provided
-			IMenuListener listener = getConfiguration().getMenuListener(fTreeViewer);
-			if (listener != null)
-				fContextMenuManager.addMenuListener(listener);
-			fContextMenuManager.addMenuListener(fGroupAdder);
+			if (fContextMenuManager != null) {
+				IMenuListener listener = getConfiguration().getMenuListener(fTreeViewer);
+				if (listener != null)
+					fContextMenuManager.addMenuListener(listener);
+				fContextMenuManager.addMenuListener(fGroupAdder);
+			}
 			// (re)set the providers
 			fTreeViewer.setLabelProvider(getConfiguration().getLabelProvider(fTreeViewer));
 			fTreeViewer.setContentProvider(getConfiguration().getContentProvider(fTreeViewer));
@@ -479,7 +539,6 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 				fTreeViewer.getControl().addKeyListener(listeners[i]);
 			}
 		}
-		registerContextMenu();
 	}
 
 	/**
@@ -511,6 +570,13 @@ public class StructuredTextEditorContentOutlinePage extends ContentOutlinePage i
 			adapterFactory = getViewerRefreshFactory();
 			if (adapterFactory != null) {
 				adapterFactory.addListener(fTreeViewer);
+			}
+			
+			// update outline view's context menu controls
+			if (fModel != null) {
+				updateContextMenuId(fModel.getContentTypeIdentifier());
+			} else {
+				updateContextMenuId(OUTLINE_CONTEXT_MENU_ID);
 			}
 		}
 	}

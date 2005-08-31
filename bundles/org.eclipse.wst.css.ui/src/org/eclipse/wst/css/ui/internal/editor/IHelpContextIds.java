@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.css.ui.internal.editor;
 
+import org.eclipse.wst.css.core.internal.provisional.contenttype.ContentTypeIdForCSS;
 import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
 
 /**
@@ -25,7 +26,7 @@ public interface IHelpContextIds {
 	public static final String PREFIX = CSSUIPlugin.ID + "."; //$NON-NLS-1$
 
 	// CSS Source page editor
-	public static final String CSS_SOURCEVIEW_HELPID = PREFIX + "ecss0000"; //$NON-NLS-1$
+	public static final String CSS_SOURCEVIEW_HELPID = ContentTypeIdForCSS.ContentTypeID_CSS +"_source_HelpId"; //$NON-NLS-1$
 
 	// CSS Files Preference page
 	public static final String CSS_PREFWEBX_FILES_HELPID = PREFIX + "webx0010"; //$NON-NLS-1$
