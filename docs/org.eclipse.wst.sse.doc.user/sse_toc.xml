@@ -19,7 +19,6 @@
             <topic label="Making content assist work for JSP files" href="topics/tsrcedt023.html"/>
          </topic>
          <topic label="Searching or finding text within a file" href="topics/tsrcedt007.html"/>
-         <!-- <topic label="Checking spelling" href="topics/tsrcedt010.html"/>-->
          <topic label="Adding and removing markup language templates - overview" href="topics/tsrcedt027.html">
             <topic label="Adding and removing HTML templates" href="topics/tsrcedt024.html"/>
             <topic label="Adding and removing JSP templates" href="topics/tsrcedt028.html"/>
