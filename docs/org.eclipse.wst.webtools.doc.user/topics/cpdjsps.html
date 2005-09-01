@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+
+<link rel="stylesheet" type="text/css" href="../../com.ibm.help.doc/swg_info_common.css" />
+<title>JavaServer Pages (JSP) technology</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=,top=' );
+      popup.focus();
+    }
+</script><script language="JavaScript" src="help/liveHelp.js"></script></head>
+<body id="cpdjsps"><a name="cpdjsps"><!-- --></a>
+
+<h1 class="topictitle1">JavaServer Pages (JSP) technology</h1>
+<div><p>The JavaServer Pages technology enables you to generate dynamic web content,
+
+such as HTML, DHTML, XHTML, and XML files, to include in a Web application.
+
+JSP files are one way to implement server-side dynamic
+
+page content. JSP files allow a Web server, such as WebSphere<sup>®</sup> Application
+
+Server or Apache Tomcat, to add content dynamically to your HTML pages before
+
+they are sent to a requesting browser.</p>
+<p>When you deploy a JSP file to a Web server that provides a servlet engine,
+
+it is preprocessed into a servlet that runs on the Web server. This is in
+
+contrast with client-side JavaScript™ (within <samp class="codeph">&lt;SCRIPT&gt;</samp> tags),
+
+which is run in a browser. A JSP page is ideal for tasks that are better suited
+
+to execution on the server, such as accessing databases or calling Enterprise Java™ beans.</p>
+<p>You can create and edit a JSP file in the HTML editor
+
+by adding your own text and images using HTML, JSP tagging, or JavaScript,
+
+including Java source code inside of scriptlet tags. Typically,
+
+JSP files have the file extension .jsp. Additionally, the JSP specification
+
+suggests that JSP fragment files should have file extension .jspf. If this
+
+convention is not followed, the JSP validator will treat JSP fragments as
+
+regular standalone JSP files, and compilation errors might be reported.</p>
+<p>The <cite>Sun Microsystems JSP 1.2 Specification</cite> provides the ability
+
+to create custom JSP tags. Custom tags simplify complex actions and 
+
+provide developers with greater control over page content. Custom tags are
+
+collected into a library (taglib). A tag library descriptor file (taglib.tld)
+
+is an XML document that provides information about the tag library, including
+
+the taglib short name, library description, and tag descriptions. Refer to
+
+the <cite>Sun Microsystems JSP 1.2 Specification</cite> for more details.</p>
+<p>To use JSP 1.2 custom taglibs, you can import the tag library .tld and
+
+.jar files into your project to use them, or associate them as Web Library
+
+projects. You can also reference a TLD file by using a URI.</p>
+</div>
+<div>
+<p><b class="reltaskshd">Related tasks</b><br />
+<a href="../../org.eclipse.wst.etools.webtools.doc.user/topics/tjcrejsp.html">Creating JSP files</a><br />
+</p>
+<p>
+		(C) Copyright IBM Corporation 2000, 2005. All Rights Reserved.
+		</p>
+</div>
+</body>
+</html>
