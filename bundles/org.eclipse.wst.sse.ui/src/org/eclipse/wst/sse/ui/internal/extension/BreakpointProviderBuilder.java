@@ -362,14 +362,16 @@ public class BreakpointProviderBuilder extends RegistryReader {
 	 * Returns an array of breakpoint providers for a specified content type
 	 * handler
 	 * 
-	 * @param handler
-	 *            a content type handler
+	 * @param contentType
+	 *            a content type ID or null
 	 * @param ext
-	 *            file extension
+	 *            a filename extension or null
 	 * @return boolean
 	 */
 	public boolean isAvailable(String contentType, String ext) {
-		boolean available = findElements(ext).length > 0;
+		boolean available = false;
+		if (ext != null)
+			available = findElements(ext).length > 0;
 		if (!available && contentType != null)
 			available = findElements(contentType).length > 0;
 		return available;
