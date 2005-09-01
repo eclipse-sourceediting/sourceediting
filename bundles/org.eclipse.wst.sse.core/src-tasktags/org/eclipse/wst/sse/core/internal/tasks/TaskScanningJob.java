@@ -99,7 +99,7 @@ class TaskScanningJob extends Job {
 		// set the state of the System Bundle to STOPPING.
 		// this must be done first according to section 4.19.2 from the OSGi
 		// R3 spec.
-		boolean shuttingDown = Platform.getBundle(OSGI_FRAMEWORK_ID).getState() == Bundle.STOPPING;
+		boolean shuttingDown = !Platform.isRunning() || Platform.getBundle(OSGI_FRAMEWORK_ID).getState() == Bundle.STOPPING;
 		if (_debugJob && shuttingDown) {
 			System.out.println("TaskScanningJob: system is shutting down!"); //$NON-NLS-1$
 		}
@@ -128,6 +128,9 @@ class TaskScanningJob extends Job {
 	}
 
 	protected IStatus run(IProgressMonitor monitor) {
+		if (frameworkIsShuttingDown())
+			return Status.OK_STATUS;
+
 		validateRememberedProjectList(TASK_TAG_PROJECTS_ALREADY_SCANNED);
 
 		IStatus status = null;
