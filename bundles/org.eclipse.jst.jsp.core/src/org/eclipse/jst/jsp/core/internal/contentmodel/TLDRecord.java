@@ -14,6 +14,9 @@ package org.eclipse.jst.jsp.core.internal.contentmodel;
 import org.eclipse.core.runtime.IPath;
 
 
+/**
+ * TaglibRecord for a standalone .tld file
+ */
 public class TLDRecord implements ITaglibRecord {
 	IPath location;
 	String prefix;

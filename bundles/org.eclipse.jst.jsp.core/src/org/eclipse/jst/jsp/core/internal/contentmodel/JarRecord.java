@@ -15,13 +15,17 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
 
+/**
+ * TaglibRecord for a JAR file, also includes the records for any .tld files
+ * contained within it.
+ */
 
 public class JarRecord implements ITaglibRecord {
 	IPath location;
 	String prefix;
 	List urlRecords;
 	boolean has11TLD;
-	
+
 	public boolean equals(Object obj) {
 		if (!(obj instanceof JarRecord))
 			return false;

@@ -16,7 +16,9 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
 
-
+/**
+ * TaglibRecord for a directory tag/tagx files
+ */
 public class TagDirRecord implements ITaglibRecord {
 	IPath location;
 	String shortName;

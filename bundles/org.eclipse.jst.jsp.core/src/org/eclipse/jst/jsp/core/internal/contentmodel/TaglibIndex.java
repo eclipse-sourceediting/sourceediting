@@ -304,8 +304,11 @@ public class TaglibIndex {
 	 * @param basePath -
 	 *            the workspace-relative path for IResources, full filesystem
 	 *            path otherwise
-	 * @param reference
-	 * @param crossProjects
+	 * @param reference -
+	 *            the URI to lookup, usually the uri value from a taglib
+	 *            directive
+	 * @param crossProjects -
+	 *            whether to search across projects (currently ignored)
 	 * @return
 	 */
 	public static ITaglibRecord resolve(String basePath, String reference, boolean crossProjects) {

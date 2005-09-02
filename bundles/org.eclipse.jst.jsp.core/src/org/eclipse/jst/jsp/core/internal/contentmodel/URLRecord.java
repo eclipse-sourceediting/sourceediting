@@ -13,11 +13,16 @@ package org.eclipse.jst.jsp.core.internal.contentmodel;
 
 import java.net.URL;
 
+/**
+ * TaglibRecord for a descriptor only locatable using a URL (such as one
+ * buried within a .jar file)
+ */
 public class URLRecord implements ITaglibRecord {
 	String baseLocation;
 	String prefix;
 	String uri;
 	URL url;
+
 	public URLRecord() {
 		super();
 	}

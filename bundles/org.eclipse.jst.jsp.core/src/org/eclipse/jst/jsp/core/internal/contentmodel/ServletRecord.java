@@ -16,11 +16,15 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
 
+/**
+ * TaglibRecord for a taglib mapping from a web.xml file
+ */
 
 public class ServletRecord implements ITaglibRecord {
 	IPath location;
 	String prefix;
 	List tldRecords = new ArrayList(0);
+
 	public boolean equals(Object obj) {
 		if (!(obj instanceof ServletRecord))
 			return false;
