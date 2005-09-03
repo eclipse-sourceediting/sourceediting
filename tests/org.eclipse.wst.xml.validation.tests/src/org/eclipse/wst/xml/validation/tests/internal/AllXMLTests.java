@@ -34,8 +34,7 @@ public class AllXMLTests extends junit.framework.TestSuite
   public AllXMLTests()
   {
     super("XMLTestsTestSuite");
-    // removed as candidate for hang on linux
-    //addTest(XMLExamplesTest.suite());
+    addTest(XMLExamplesTest.suite());
     addTest(BugFixesTest.suite());
     addTest(PathsTest.suite());
   }
