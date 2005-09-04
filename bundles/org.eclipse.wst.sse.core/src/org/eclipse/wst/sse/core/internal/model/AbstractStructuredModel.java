@@ -54,6 +54,8 @@ import org.eclipse.wst.sse.core.internal.util.Utilities;
 
 public abstract class AbstractStructuredModel implements IStructuredModel {
 
+	private static final String MODEL_MANAGER_NULL = "Warning: AbstractStructuredModel::close:  model manager was null during a close of a model (which should be impossible)";
+
 	class DirtyStateWatcher implements IStructuredDocumentListener {
 
 		public void newModel(NewDocumentEvent structuredDocumentEvent) {
@@ -226,6 +228,9 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 
 	private void _commonRelease() {
 
+		// TODO_future: I suspect ALL this type of logic should be 	
+		// on manager side. 
+		
 		if (factoryRegistry != null) {
 			factoryRegistry.release();
 		}
@@ -242,6 +247,11 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 			fStructuredDocument.removeDocumentAboutToChangeListener(fDocumentToModelNotifier);
 			fStructuredDocument.removeDocumentChangedListener(fDocumentToModelNotifier);
 		}
+		
+		// we set document to null, mostly so 
+		// any initiatilation done there can be undone. 
+		// (likely needs some restructured to not need?)
+		setStructuredDocument(null);
 	}
 
 	/**
@@ -1010,7 +1020,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 
 
 		if (getModelManager() == null) {
-			throw new SourceEditingRuntimeException("Warning: AbstractStructuredModel::close:  model manager was null during a close of a model (which should be impossible)"); //$NON-NLS-1$
+			throw new IllegalStateException(MODEL_MANAGER_NULL); //$NON-NLS-1$
 		}
 		else {
 			// be sure to check the shared state before releasing. (Since
@@ -1025,7 +1035,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 
 			_getModelManager().releaseFromEdit(getId());
 			// if no one else is using us, free up
-			// an resources
+			// our resources
 			if (!isShared) {
 				_commonRelease();
 				signalPostLifeCycleListenerRelease(this);
@@ -1041,7 +1051,7 @@ public abstract class AbstractStructuredModel implements IStructuredModel {
 
 
 		if (getModelManager() == null) {
-			throw new SourceEditingRuntimeException("Warning: AbstractStructuredModel::close:  model manager was null during a close of a model (which should be impossible)"); //$NON-NLS-1$
+			throw new IllegalStateException(MODEL_MANAGER_NULL); //$NON-NLS-1$
 		}
 		else {
 			// be sure to check the shared state before

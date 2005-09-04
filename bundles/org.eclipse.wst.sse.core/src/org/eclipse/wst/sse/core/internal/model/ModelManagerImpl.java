@@ -869,22 +869,6 @@ public class ModelManagerImpl implements IModelManager {
 		return result;
 	}
 
-	void dump(IStructuredModel model, OutputStream outputStream, EncodingRule encodingRule, IFile iFile) throws UnsupportedEncodingException, IOException, CoreException {
-		IStructuredDocument structuredDocument = model.getStructuredDocument();
-		CodedStreamCreator codedStreamCreator = new CodedStreamCreator();
-		Reader reader = new DocumentReader(structuredDocument);
-		codedStreamCreator.set(iFile, reader);
-		codedStreamCreator.setPreviousEncodingMemento(structuredDocument.getEncodingMemento());
-		ByteArrayOutputStream codedByteStream = codedStreamCreator.getCodedByteArrayOutputStream(EncodingRule.CONTENT_BASED);
-		InputStream codedStream = new ByteArrayInputStream(codedByteStream.toByteArray());
-		iFile.setContents(codedStream, true, true, null);
-
-		// getDocumentDumper().dump(outputStream, structuredDocument,
-		// encodingRule, use3ByteBOM, file);
-		model.setDirtyState(false);
-		model.setNewState(false);
-	}
-
 	private EnumeratedModelIds getEnumeratedModelIds() {
 		// return new instance each time so will "act like" proper enumeration
 		// to client
@@ -1391,24 +1375,42 @@ public class ModelManagerImpl implements IModelManager {
 	 * 
 	 */
 	synchronized void releaseFromEdit(Object id) {
+		// ISSUE: many of these asserts should be changed to "logs"
+		// and continue to limp along?
+
 		Assert.isNotNull(id, "id parameter can not be null"); //$NON-NLS-1$
 		SharedObject sharedObject = null;
 
-		sharedObject = (SharedObject) fManagedObjects.get(id);
-		Assert.isNotNull(sharedObject);
-		if (sharedObject != null) {
-			sharedObject.referenceCountForEdit--;
-			if ((sharedObject.referenceCountForRead == 0) && (sharedObject.referenceCountForEdit == 0)) {
-				discardModel(id, sharedObject);
+		// ISSUE: here we need better "spec" what to do with
+		// unmanaged or duplicated models. Release still needs
+		// to be called on them, for now, but the model manager
+		// doesn't need to do anything.
+		if (id.equals(UNMANAGED_MODEL) || id.equals(DUPLICATED_MODEL)) {
+			// do nothing related to model managment.
+		}
+		else {
+			sharedObject = (SharedObject) fManagedObjects.get(id);
+			Assert.isNotNull(sharedObject, "release was requested on a model that was not being managed");
+
+
+			if (sharedObject != null) {
+				sharedObject.referenceCountForEdit--;
+				if ((sharedObject.referenceCountForRead == 0) && (sharedObject.referenceCountForEdit == 0)) {
+					discardModel(id, sharedObject);
+				}
+				// ISSUE: if edit goes to zero, but still open for read,
+				// then we should reload here, so we are in synch with
+				// contents on disk.
 			}
 		}
 	}
 
 	private void discardModel(Object id, SharedObject sharedObject) {
 		fManagedObjects.remove(id);
-		FileBufferModelManager.getInstance().releaseModel(sharedObject.theSharedModel.getStructuredDocument());
-		// setting the document to null is required since some subclasses 
-		// of model might have "cleanup" of listners, etc., to remove, 
+		IStructuredDocument structuredDocument = sharedObject.theSharedModel.getStructuredDocument();
+		FileBufferModelManager.getInstance().releaseModel(structuredDocument);
+		// setting the document to null is required since some subclasses
+		// of model might have "cleanup" of listners, etc., to remove,
 		// which were initialized during the intial setStructuredDocument
 		sharedObject.theSharedModel.setStructuredDocument(null);
 	}
@@ -1421,13 +1423,23 @@ public class ModelManagerImpl implements IModelManager {
 		Assert.isNotNull(id, "id parameter can not be null"); //$NON-NLS-1$
 		SharedObject sharedObject = null;
 
-		sharedObject = (SharedObject) fManagedObjects.get(id);
-		Assert.isNotNull(sharedObject);
+		if (id.equals(UNMANAGED_MODEL) || id.equals(DUPLICATED_MODEL)) {
+			// do nothing related to model managment.
+		}
+		else {
+
+			sharedObject = (SharedObject) fManagedObjects.get(id);
+			Assert.isNotNull(sharedObject, "release was requested on a model that was not being managed");
+		}
+
 		if (sharedObject != null) {
 			sharedObject.referenceCountForRead--;
 			if ((sharedObject.referenceCountForRead == 0) && (sharedObject.referenceCountForEdit == 0)) {
 				discardModel(id, sharedObject);
 			}
+			// ISSUE: if edit goes to zero, but still open for read,
+			// then we should reload here, so we are in synch with
+			// contents on disk.
 		}
 	}
 
