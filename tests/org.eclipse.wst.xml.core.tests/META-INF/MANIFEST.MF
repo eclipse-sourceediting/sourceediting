@@ -10,7 +10,6 @@ Bundle-Localization: plugin
 Export-Package: org.eclipse.wst.xml.core.tests,
  org.eclipse.wst.xml.core.tests.document,
  org.eclipse.wst.xml.core.tests.dom,
- org.eclipse.wst.xml.core.tests.hacks,
  org.eclipse.wst.xml.core.tests.model,
  org.eclipse.wst.xml.core.tests.text,
  org.eclipse.wst.xml.core.tests.text.testfiles.xml,
