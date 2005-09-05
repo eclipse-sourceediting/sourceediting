@@ -106,18 +106,6 @@ public class ModelQueryTester extends TestCase {
 		initVars();
 	}
 
-	/**
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	protected void setUp() throws Exception {
-		super.setUp();
-
-		// This method was emptied when a test case required a different model
-		// type than HTML. At that point, we needed separate methods to create
-		// each type
-		// and had to call them from the test cases directly, like in
-		// ScannerUnitTests
-	}
 
 	/**
 	 * Initialize local fields for this test
@@ -326,12 +314,7 @@ public class ModelQueryTester extends TestCase {
 //		}
 	}
 
-	/**
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
-	}
+
 
 	public static IStructuredModel createModel(String contentTypeID) {
 		// create an empty model with its default factories

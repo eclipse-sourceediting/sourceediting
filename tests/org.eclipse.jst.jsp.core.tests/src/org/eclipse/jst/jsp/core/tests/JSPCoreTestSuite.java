@@ -27,8 +27,8 @@ public class JSPCoreTestSuite extends TestSuite {
 	public JSPCoreTestSuite() {
 		super("SSEModelTestSuiteForJSP");
 
-		addTest(CleanupFormatTests.suite());
-		addTest(ModelCloneTests.suite());
+		addTest(TestCeanupFormat.suite());
+		addTest(ModelCloneSuite.suite());
 		addTest(new TestSuite(TestModelHandlers.class, "TestModelHandlers"));
 		addTest(new TestSuite(TestContentTypeHandlers.class, "TestContentTypeHandlers"));
 		addTest(new TestSuite(TestModelManager.class, "TestModelManager"));

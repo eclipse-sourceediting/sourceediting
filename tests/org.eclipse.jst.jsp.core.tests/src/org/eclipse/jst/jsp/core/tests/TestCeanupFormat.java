@@ -13,14 +13,19 @@ package org.eclipse.jst.jsp.core.tests;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-public class ModelCloneTests extends TestSuite {
+import org.eclipse.jst.jsp.core.tests.cleanupformat.CleanupTester;
+import org.eclipse.jst.jsp.core.tests.cleanupformat.FormatTester;
+
+
+public class TestCeanupFormat extends TestSuite {
 	public static Test suite() {
-		return new ModelCloneTests();
+		return new TestCeanupFormat();
 	}
 
-	public ModelCloneTests() {
-		super("ModelCloneTests");
+	public TestCeanupFormat() {
+		super("TestCeanupFormat");
 
-		addTest(new TestSuite(TestStructuredDocumentClone.class, "TestStructuredDocumentClone"));
+		addTest(new TestSuite(CleanupTester.class, "CleanupTester"));
+		addTest(new TestSuite(FormatTester.class, "FormatTester"));
 	}
 }
