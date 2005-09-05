@@ -506,6 +506,7 @@ public class StructuredTextEditor extends TextEditor {
 	private InternalElementStateListener internalElementStateListener = new InternalElementStateListener();
 	private boolean shouldClose = false;
 	private long startPerfTime;
+	private boolean fisReleased;
 
 	public StructuredTextEditor() {
 
@@ -1155,8 +1156,9 @@ public class StructuredTextEditor extends TextEditor {
 	 * @see org.eclipse.ui.texteditor.AbstractDecoratedTextEditor#disposeDocumentProvider()
 	 */
 	protected void disposeDocumentProvider() {
-		if (fStructuredModel != null && !(getDocumentProvider() instanceof IModelProvider)) {
+		if (fStructuredModel != null && !fisReleased && !(getDocumentProvider() instanceof IModelProvider)) {
 			fStructuredModel.releaseFromEdit();
+			fisReleased=true;
 		}
 		super.disposeDocumentProvider();
 	}
@@ -1532,6 +1534,7 @@ public class StructuredTextEditor extends TextEditor {
 			// CODE PATH
 			if (getDocumentProvider() instanceof IModelProvider) {
 				fStructuredModel = ((IModelProvider) getDocumentProvider()).getModel(getEditorInput());
+				fisReleased = false;
 			}
 			else {
 				IDocument doc = getDocumentProvider().getDocument(getEditorInput());
@@ -1541,6 +1544,7 @@ public class StructuredTextEditor extends TextEditor {
 						model = StructuredModelManager.getModelManager().getModelForEdit((IStructuredDocument) doc);
 					}
 					fStructuredModel = model;
+					fisReleased = false;
 				}
 			}
 			// factories will not be re-added if already exists
