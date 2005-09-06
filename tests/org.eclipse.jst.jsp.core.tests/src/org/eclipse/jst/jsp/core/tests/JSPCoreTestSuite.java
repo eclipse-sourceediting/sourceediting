@@ -16,6 +16,8 @@ import junit.framework.TestSuite;
 import org.eclipse.jst.jsp.core.tests.cleanupformat.FormatTester;
 import org.eclipse.jst.jsp.core.tests.contenttypeidentifier.contentspecific.TestContentTypeHandlers;
 import org.eclipse.jst.jsp.core.tests.contenttypeidentifier.contentspecific.TestModelHandlers;
+import org.eclipse.jst.jsp.core.tests.model.TestModelRelease;
+import org.eclipse.jst.jsp.core.tests.model.TestModelWithNoFile;
 
 
 
@@ -33,5 +35,7 @@ public class JSPCoreTestSuite extends TestSuite {
 		addTest(new TestSuite(TestContentTypeHandlers.class, "TestContentTypeHandlers"));
 		addTest(new TestSuite(TestModelManager.class, "TestModelManager"));
 		addTest(new TestSuite(FormatTester.class, "FormatTester"));
+		addTest(new TestSuite(TestModelRelease.class, "JSP Model Tests"));
+		addTest(new TestSuite(TestModelWithNoFile.class, "JSP Model Tests"));
 	}
 }

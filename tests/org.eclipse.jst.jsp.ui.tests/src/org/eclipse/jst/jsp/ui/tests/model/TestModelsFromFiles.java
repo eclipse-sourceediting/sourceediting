@@ -42,12 +42,20 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 		doTestNonExistentDocument("testfiles/xml/testnonexistent.xml", BasicStructuredDocument.class, StructuredTextPartitionerForXML.class);
 	}
 
+	public void testNonExistentXMLModel() throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
+		doTestCreateModelWithNonExistIFile("testfiles/xml/testnonexistent.xml", BasicStructuredDocument.class, StructuredTextPartitionerForXML.class);
+	}
+
 	public void testNonExistentJSP() throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
 		doTestCreate("testfiles/jsp/testnonexistent.jsp", BasicStructuredDocument.class, StructuredTextPartitionerForJSP.class);
 	}
 
 	public void testNonExistentJSPDocument() throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
 		doTestNonExistentDocument("testfiles/jsp/testnonexistent.jsp", BasicStructuredDocument.class, StructuredTextPartitionerForJSP.class);
+	}
+
+	public void testNonExistentJSPModel() throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
+		doTestCreateModelWithNonExistIFile("testfiles/jsp/testnonexistent.jsp", BasicStructuredDocument.class, StructuredTextPartitionerForJSP.class);
 	}
 
 	public void testSimpleCase() throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
@@ -69,44 +77,48 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 	public void testReload() throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
 		doTestReload("testfiles/regressionTestFiles/defect223365/SelColBeanRow12ResultsForm.jsp", BasicStructuredDocument.class, StructuredTextPartitionerForJSP.class);
 	}
-	
+
 	public void testJSPWithXMLOutput() throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
 		doTestReload("testfiles/jsp/jsp-xml-output.jsp", BasicStructuredDocument.class, StructuredTextPartitionerForJSP.class);
 	}
-	
+
 	public void testXHTMLTransitional1() throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
 		doTestCreate("testfiles/xhtml/testx.html", BasicStructuredDocument.class, StructuredTextPartitionerForHTML.class);
 	}
-	
+
 	public void testXHTMLTransitional2() throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
 		doTestCreate("testfiles/xhtml/testx.jsp", BasicStructuredDocument.class, StructuredTextPartitionerForJSP.class);
 	}
-	
+
 	public void testXHTMLTransitional3() throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
 		doTestCreate("testfiles/xhtml/testx.xhtml", BasicStructuredDocument.class, StructuredTextPartitionerForHTML.class);
 	}
-	
+
 	public void testHTMLTransitional1() throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
 		doTestCreate("testfiles/html/testh.html", BasicStructuredDocument.class, StructuredTextPartitionerForHTML.class);
 	}
-	
+
 	public void testHTMLTransitional2() throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
 		doTestCreate("testfiles/html/testh.jsp", BasicStructuredDocument.class, StructuredTextPartitionerForJSP.class);
 	}
-/*  
- * TODO: these test files are missing, for some reason when running on build machine ... need to re-construct
-	public void testNearEmptyJSP() throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
-		doTestNotEmpty("testfiles/jsp/nearEmpty.jsp", BasicStructuredDocument.class, StructuredTextPartitionerForJSP.class);
-	}
 
-	public void testNearEmptyXML() throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
-		doTestNotEmpty("testfiles/xml/nearEmpty.xml", BasicStructuredDocument.class, StructuredTextPartitionerForXML.class);
-	}
-
-	public void testNearEmptyHTML() throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
-		doTestNotEmpty("testfiles/html/nearEmpty.html", BasicStructuredDocument.class, StructuredTextPartitionerForHTML.class);
-	}
-*/
+	/*
+	 * TODO: these test files are missing, for some reason when running on
+	 * build machine ... need to re-construct public void testNearEmptyJSP()
+	 * throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
+	 * doTestNotEmpty("testfiles/jsp/nearEmpty.jsp",
+	 * BasicStructuredDocument.class, StructuredTextPartitionerForJSP.class); }
+	 * 
+	 * public void testNearEmptyXML() throws ResourceAlreadyExists,
+	 * ResourceInUse, IOException, CoreException {
+	 * doTestNotEmpty("testfiles/xml/nearEmpty.xml",
+	 * BasicStructuredDocument.class, StructuredTextPartitionerForXML.class); }
+	 * 
+	 * public void testNearEmptyHTML() throws ResourceAlreadyExists,
+	 * ResourceInUse, IOException, CoreException {
+	 * doTestNotEmpty("testfiles/html/nearEmpty.html",
+	 * BasicStructuredDocument.class, StructuredTextPartitionerForHTML.class); }
+	 */
 	private void doTestNotEmpty(String filePath, Class expectedDocumentClass, Class expectedPartioner) throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
 		String contents = doTestCreate(filePath, expectedDocumentClass, expectedPartioner);
 		assertNotNull("contents were null", contents);
@@ -158,7 +170,8 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 		IStructuredDocument document = null;
 		try {
 			document = modelManager.createStructuredDocumentFor(file);
-		} catch (FileNotFoundException e) {
+		}
+		catch (FileNotFoundException e) {
 			expectedExceptionCaught = true;
 		}
 
@@ -177,7 +190,8 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 			contents = document.get();
 			assertNotNull("contents were null", contents);
 			assertTrue("contents were *not* empty as expected", contents.length() == 0);
-		} else {
+		}
+		else {
 			assertTrue("FileNotFound exception was *not* thrown as expected", false);
 		}
 
@@ -225,12 +239,14 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 				// fixed to work with different document.
 				// assertFalse(document == documentReloaded);
 				assertTrue(document == documentReloaded);
-			} finally {
+			}
+			finally {
 				if (inStream != null) {
 					inStream.close();
 				}
 			}
-		} finally {
+		}
+		finally {
 			if (model != null)
 				model.releaseFromEdit();
 		}
@@ -268,7 +284,48 @@ public class TestModelsFromFiles extends UnzippedProjectTester {
 				setupPartitioner = document.getDocumentPartitioner();
 			}
 			assertTrue("wrong partitioner in document.", expectedPartioner.isInstance(setupPartitioner));
-		} finally {
+		}
+		finally {
+			if (model != null)
+				model.releaseFromEdit();
+		}
+		return contents;
+	}
+
+	/**
+	 * @param string
+	 * @param class1
+	 * @param class2
+	 * @throws CoreException
+	 * @throws IOException
+	 * @throws ResourceInUse
+	 * @throws ResourceAlreadyExists
+	 */
+	private String doTestCreateModelWithNonExistIFile(String filePath, Class expectedDocumentClass, Class expectedPartioner) throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
+		String contents = null;
+		IModelManager modelManager = StructuredModelManager.getModelManager();
+		IFile file = (IFile) fTestProject.findMember(filePath);
+		// file will be null if the resource does not exist
+		if (file == null) {
+			file = fTestProject.getFile(filePath);
+		}
+		IStructuredModel model = modelManager.getNewModelForEdit(file, false);
+		try {
+			assertNotNull(model);
+			IStructuredDocument document = model.getStructuredDocument();
+			assertNotNull(document);
+			contents = document.get();
+			assertTrue("wrong class of document", expectedDocumentClass.isInstance(document));
+			IDocumentPartitioner setupPartitioner = null;
+			if (Utilities.contains(expectedDocumentClass.getInterfaces(), IDocumentExtension3.class)) {
+				setupPartitioner = ((IDocumentExtension3) document).getDocumentPartitioner(IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING);
+			}
+			else {
+				setupPartitioner = document.getDocumentPartitioner();
+			}
+			assertTrue("wrong partitioner in document.", expectedPartioner.isInstance(setupPartitioner));
+		}
+		finally {
 			if (model != null)
 				model.releaseFromEdit();
 		}
