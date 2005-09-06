@@ -343,63 +343,35 @@ public class ModelManagerImpl implements IModelManager {
 	}
 
 	private SharedObject _commonNewModel(IFile iFile, boolean force) throws ResourceAlreadyExists, ResourceInUse, IOException, CoreException {
-		// let's check to see if resource already exists, either in our cache,
-		// or on the system
+		IStructuredModel aSharedModel = null;
+		// First, check if resource already exists on file system.
+		// if is does, then throw Resource in Use iff force==false
+
+		if (iFile.exists() && !force) {
+			throw new ResourceAlreadyExists();
+		}
+
 		String id = calculateId(iFile);
 		SharedObject sharedObject = (SharedObject) fManagedObjects.get(id);
-		IStructuredModel aSharedModel = null;
-		// if shared object is null, then we do not have it already, which is
-		// as normally expected.
-		if (sharedObject == null) {
-			// if not in cache, see if we can retrieve it
-			aSharedModel = FileBufferModelManager.getInstance().getModel(iFile);
+
+		if (sharedObject != null && !force) {
+			// if in cache already, and force is not true, then this is an
+			// error
+			// in call
+			throw new ResourceInUse();
 		}
-		else {
-			// if sharedObject is not null, then
-			// someone has asked us to create a new model for a given id, but
-			// it in fact
-			// is already in our cache with that id. In this case we will
-			// throw
-			// an "in use" exception,
-			// (unless force is set to true). Because, to do otherwise we will
-			// basically be
-			// over writing a model that another client is already using. Not
-			// nice.
-			if (!force) {
-				throw new ResourceInUse();
-			}
-		}
-		// if we get here, and result (and shared object) are still null,
-		// then all is ok, and we can create it,
-		if (aSharedModel == null) {
-			aSharedModel = FileBufferModelManager.getInstance().getModel(iFile);
-			// rembember, don't set 'true' in model init, since that's always
-			// used,
-			// even when not new. 'new' is intended to mean "there is not yet
-			// a
-			// file" for the model.
-			aSharedModel.setNewState(true);
-			sharedObject = addToCache(id, aSharedModel);
-			// when resource is provided, we can set
-			// synchronization stamp ... otherwise client should
-			// Note: one client which does this is FileModelProvider.
-			aSharedModel.resetSynchronizationStamp(iFile);
-		}
-		else {
-			// if result is not null, then we have to check
-			// if 'force' was false before deciding to
-			// throw an already exists exception.
-			if (force) {
-				sharedObject = addToCache(id, aSharedModel);
-				// when resource is provided, we can set
-				// synchronization stamp ... otherwise client should
-				// Note: one client which does this is FileModelProvider.
-				aSharedModel.resetSynchronizationStamp(iFile);
-			}
-			else {
-				throw new ResourceAlreadyExists();
-			}
-		}
+
+		// if we get to hear without above exceptions, then all is ok 
+		// to get model like normal, but set 'new' attribute (where the 
+		// 'new' attribute means this is a model without a corresponding 
+		// underlying resource. 
+		aSharedModel = FileBufferModelManager.getInstance().getModel(iFile);
+		aSharedModel.setNewState(true);
+		sharedObject = addToCache(id, aSharedModel);
+		// when resource is provided, we can set
+		// synchronization stamp ... otherwise client should
+		// Note: one client which does this is FileModelProvider.
+		aSharedModel.resetSynchronizationStamp(iFile);
 		return sharedObject;
 	}
 
@@ -481,19 +453,6 @@ public class ModelManagerImpl implements IModelManager {
 	 */
 	public String calculateId(IFile file) {
 		return FileBufferModelManager.getInstance().calculateId(file);
-	}
-
-	/**
-	 * CalculateId provides a common way to determine the id from the provided
-	 * filename.
-	 */
-	public String calculateId(String filename) {
-		// providing common method for consistency.
-		// May eventually need to "clean up"
-		// any initial "file://" protocols, etc., but currently don't
-		// know of anyone doing that.
-		String id = filename;
-		return id;
 	}
 
 	private IModelHandler calculateType(IFile iFile) throws CoreException {
