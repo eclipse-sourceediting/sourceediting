@@ -319,7 +319,11 @@ public class XSDEditor extends XSDMultiPageEditorPart implements ITabbedProperty
     
     // release the schema model
     //
-    schemalNodeAdapter.clear();
+    if (schemalNodeAdapter != null)
+    {
+      schemalNodeAdapter.clear();
+      schemalNodeAdapter = null;
+    }
   }
 
   protected boolean loadFile()
