@@ -250,14 +250,22 @@ public class TLDCMDocumentManager implements ITaglibIndexListener {
 			}
 			if (includedFile != null) {
 				IPath root = TaglibIndex.getContextRoot(getCurrentBaseLocation());
-				IPath fileLocation = new Path(URIHelper.normalize(StringUtils.strip(includedFile).trim(), getCurrentBaseLocation().toString(), root.toString()));
+				// strip any extraneous quotes and white space
+				includedFile = StringUtils.strip(includedFile).trim();
+				IPath fileLocation = null;
+				if (includedFile.startsWith("/")) { //$NON-NLS-1$
+					fileLocation = root.append(includedFile);
+				}
+				else {
+					fileLocation = new Path(URIHelper.normalize(includedFile, getCurrentBaseLocation().toString(), root.toString()));
+				}
 				// check for "loops"
 				if (!getIncludes().contains(fileLocation) && fileLocation != null && !fileLocation.equals(getCurrentBaseLocation())) {
 					/*
 					 * Prevent slow performance when editing scriptlet part of
-					 * the JSP only process includes if they've been modified.
-					 * The IncludeHelper remembers any CMDocuments created
-					 * from the files it parses. Caching the URI and
+					 * the JSP by only processing includes if they've been
+					 * modified. The IncludeHelper remembers any CMDocuments
+					 * created from the files it parses. Caching the URI and
 					 * prefix/tagdir allows us to just enable the CMDocument
 					 * when the previously parsed files.
 					 */
