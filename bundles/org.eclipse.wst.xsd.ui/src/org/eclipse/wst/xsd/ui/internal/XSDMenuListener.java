@@ -11,7 +11,6 @@
 package org.eclipse.wst.xsd.ui.internal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.ui.parts.AbstractEditPartViewer;
@@ -25,6 +24,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.wst.xsd.ui.internal.actions.AddEnumsAction;
 import org.eclipse.wst.xsd.ui.internal.actions.AddModelGroupAction;
@@ -61,7 +61,6 @@ import org.eclipse.xsd.XSDModelGroupDefinition;
 import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDSchema;
-import org.eclipse.xsd.XSDSchemaDirective;
 import org.eclipse.xsd.util.XSDConstants;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -71,9 +70,7 @@ import org.w3c.dom.NodeList;
 public class XSDMenuListener implements IMenuListener
 {
   protected ISelectionProvider selectionProvider;
-  //protected XSDTextEditor textEditor;
   protected DeleteAction deleteAction;
-//  protected IAction undoAction, redoAction;
   protected CreateElementAction addComplexTypeAction;
   protected XSDSchema xsdSchema;
   protected boolean isReadOnly;
@@ -118,68 +115,37 @@ public class XSDMenuListener implements IMenuListener
     return ((IStructuredSelection) selection).getFirstElement();
   }
   
+  protected XSDSchema getCurrentSchemaInEditor()
+  {
+    return ((XSDEditor)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor()).getXSDSchema();
+  }
+  
   protected void updateXSDSchema()
   {
+    isReadOnly = false;
+
     Object object = getSelectedElement();
     if (object instanceof XSDConcreteComponent)
     {
-      xsdSchema = ((XSDConcreteComponent)object).getSchema();
-      boolean flag = true;
-      isReadOnly = false;
-      if (xsdSchema == null)
-      {
-        return;
-      }
-
-      Vector visited = new Vector();
+      xsdSchema = ((XSDConcreteComponent) object).getSchema();
       
-      while (flag)
+      if (getCurrentSchemaInEditor() != xsdSchema)
       {
-        List list = xsdSchema.getReferencingDirectives();
-        if (list.size() > 0)
-        {
-          isReadOnly = true;
-          XSDSchemaDirective xsdSchemaDirective = (XSDSchemaDirective)list.get(0);
-          XSDSchema refSchema = xsdSchemaDirective.getSchema(); 
-          // check if included schema is the same as the current - don't want cycle
-          
-          if (visited.contains(refSchema))
-          {
-            flag = false;
-          }
-          else if (refSchema != null && refSchema != xsdSchema)
-          {
-            visited.add(refSchema);
-            xsdSchema = xsdSchemaDirective.getSchema();
-          }
-          else
-          {
-            if (refSchema == xsdSchema)
-            {
-              // if it includes itself, then we should still be able to edit it
-              isReadOnly = false;
-            }
-            flag = false;
-          }
-        }
-        else
-        {
-          flag = false;
-        }
+        isReadOnly = true;
       }
     }
     else if (object instanceof Category)
     {
-      Category cg = (Category)object;
+      Category cg = (Category) object;
       xsdSchema = cg.getXSDSchema();
     }
     else if (object instanceof CategoryAdapter)
     {
-      CategoryAdapter category = (CategoryAdapter)object;
+      CategoryAdapter category = (CategoryAdapter) object;
       xsdSchema = category.getXSDSchema();
     }
   }
-
+  
   /*
    * @see IMenuListener#menuAboutToShow(IMenuManager)
    */
@@ -197,7 +163,7 @@ public class XSDMenuListener implements IMenuListener
     deleteAction.setEnabled(!isReadOnly);
     
     BackAction backAction = new BackAction(XSDEditorPlugin.getXSDString("_UI_ACTION_BACK_TO_SCHEMA_VIEW")); //$NON-NLS-1$
-    backAction.setXSDSchema(getXSDSchema());
+    backAction.setXSDSchema(getCurrentSchemaInEditor());
     backAction.setSelectionProvider(selectionProvider);
     
     Object selectedElementObj = getSelectedElement();
@@ -354,33 +320,9 @@ public class XSDMenuListener implements IMenuListener
     }
     if (selectedElement != null)
     {
-      // Add context menu items for selected element
       addContextItems(manager, selectedElement, null);
       manager.add(new Separator());
-      //else
-//      if (textEditor != null)
-//      {
-//        Document document = getXSDSchema().getDocument();
-//        if (document != null)
-//        {
-//          Element docElement = getXSDSchema().getDocument().getDocumentElement();
-//          if (!XSDDOMHelper.inputEquals(docElement, XSDConstants.SCHEMA_ELEMENT_TAG, false))
-//          //        if (list.getLength() == 0)
-//          {
-//            // no schema tag. Enable the Add Schema action
-//            AddSchemaNodeAction action = new AddSchemaNodeAction(XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_SCHEMA_NODE"));
-//            action.setEditor((XSDEditor) textEditor.getEditorPart());
-//            manager.add(action);
-//          }
-//        }
-//      }
     }
-//    manager.add(new Separator());
-//    if (undoAction != null)
-//    {
-//      manager.add(undoAction);
-//      manager.add(redoAction);
-//    }
     
     manager.add(new Separator());
     if (deleteAction != null)
@@ -479,30 +421,11 @@ public class XSDMenuListener implements IMenuListener
         Node annotationNode = getFirstChildNodeIfExists(parent, XSDConstants.ANNOTATION_ELEMENT_TAG, false);
         if (!(simpleTypeExists || complexTypeExists) && annotationNode != null)
         {
-          //addCreateLocalSimpleTypeActionIfNotExist(manager,
-          // XSDConstants.SIMPLETYPE_ELEMENT_TAG,
-          // XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_LOCAL_SIMPLE_TYPE"),
-          // attributes, parent, annotationNode.getNextSibling());
-          //addCreateLocalComplexTypeActionIfNotExist(manager,
-          // XSDConstants.COMPLEXTYPE_ELEMENT_TAG, "Add Local Complex Type",
-          // attributes, parent, annotationNode.getNextSibling());
           manager.add(new Separator());
         }
       }
       else
       {
-        // Should still be able to add the content models if the anonymous type
-        // exists,
-        // ie. with attributes
-        //        if (!(simpleTypeExists || complexTypeExists))
-        //        {
-        //addCreateLocalSimpleTypeActionIfNotExist(manager,
-        // XSDConstants.SIMPLETYPE_ELEMENT_TAG,
-        // XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_LOCAL_SIMPLE_TYPE"),
-        // attributes, parent, parent.getFirstChild());
-        //addCreateLocalComplexTypeActionIfNotExist(manager,
-        // XSDConstants.COMPLEXTYPE_ELEMENT_TAG, "Add Local Complex Type",
-        // attributes, parent, parent.getFirstChild());
         if (concreteComponent != null)
         {
           AddModelGroupAction addModelGroupAction = new AddModelGroupAction(concreteComponent, XSDCompositor.SEQUENCE_LITERAL);
@@ -519,17 +442,7 @@ public class XSDMenuListener implements IMenuListener
           
           manager.add(new Separator());
         }
-        //        }
       }
-//      attributes = new ArrayList();
-//      attributes.add(new DOMAttribute(XSDConstants.NAME_ATTRIBUTE, "New_Unique"));
-//      addCreateIdentityConstraintsAction(manager, XSDConstants.UNIQUE_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_UNIQUE"), attributes, parent, null);
-//      attributes = new ArrayList();
-//      attributes.add(new DOMAttribute(XSDConstants.NAME_ATTRIBUTE, "New_Key"));
-//      addCreateIdentityConstraintsAction(manager, XSDConstants.KEY_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_KEY"), attributes, parent, null);
-//      attributes = new ArrayList();
-//      attributes.add(new DOMAttribute(XSDConstants.NAME_ATTRIBUTE, "New_KeyRef"));
-//      addCreateIdentityConstraintsAction(manager, XSDConstants.KEYREF_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_KEY_REF"), attributes, parent, null);
       XSDDOMHelper domHelper = new XSDDOMHelper();
       Element anonymousType = (Element) domHelper.getChildNode(parent, XSDConstants.COMPLEXTYPE_ELEMENT_TAG);
       if (anonymousType != null)
@@ -732,10 +645,6 @@ public class XSDMenuListener implements IMenuListener
       {
         if (!contentExists)
         {
-          // Add content model
-          // addCreateElementAction(manager, XSDConstants.SEQUENCE_ELEMENT_TAG,
-          // XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_CONTENT_MODEL"),
-          // attributes, parent, annotationNode.getNextSibling());
           if (concreteComponent != null)
           {
             AddModelGroupAction addModelGroupAction = new AddModelGroupAction(concreteComponent, XSDCompositor.SEQUENCE_LITERAL);
@@ -751,18 +660,6 @@ public class XSDMenuListener implements IMenuListener
             manager.add(addModelGroupAction);
 
           }
-          // Temporarily remove this until we provide a graphical rep of these
-          // components
-          //          addCreateSimpleContentAction(manager,
-          // XSDConstants.SIMPLECONTENT_ELEMENT_TAG,
-          // XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_SIMPLE_CONTENT"),
-          // attributes,
-          // parent, annotationNode.getNextSibling());
-          //          addCreateSimpleContentAction(manager,
-          // XSDConstants.COMPLEXCONTENT_ELEMENT_TAG,
-          // XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_COMPLEX_CONTENT"),
-          // attributes,
-          // parent, annotationNode.getNextSibling());
           addCreateElementRefAction(manager, XSDConstants.GROUP_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ADD_GROUP_REF"), parent, annotationNode.getNextSibling());
           attributes = null;
         }
@@ -771,10 +668,6 @@ public class XSDMenuListener implements IMenuListener
       {
         if (!contentExists)
         {
-          // Add content model
-          // addCreateElementAction(manager, XSDConstants.SEQUENCE_ELEMENT_TAG,
-          // XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_CONTENT_MODEL"),
-          // attributes, parent, parent.getFirstChild());
           if (concreteComponent != null)
           {
             AddModelGroupAction addModelGroupAction = new AddModelGroupAction(concreteComponent, XSDCompositor.SEQUENCE_LITERAL);
@@ -790,61 +683,11 @@ public class XSDMenuListener implements IMenuListener
             manager.add(addModelGroupAction);
 
           }
-          // Temporarily remove this until we provide a graphical rep of these
-          // components
-          //          addCreateSimpleContentAction(manager,
-          // XSDConstants.SIMPLECONTENT_ELEMENT_TAG,
-          // XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_SIMPLE_CONTENT"),
-          // attributes,
-          // parent, parent.getFirstChild());
-          //          addCreateSimpleContentAction(manager,
-          // XSDConstants.COMPLEXCONTENT_ELEMENT_TAG,
-          // XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_COMPLEX_CONTENT"),
-          // attributes,
-          // parent, parent.getFirstChild());
           addCreateElementRefAction(manager, XSDConstants.GROUP_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ADD_GROUP_REF"), parent, parent.getFirstChild());
           attributes = null;
         }
       }
       manager.add(new Separator());
-      if (anyAttributeExists)
-      {
-        if (!complexOrSimpleContentExists)
-        {
-//          attributes = new ArrayList();
-//          attributes.add(new DOMAttribute(XSDConstants.NAME_ATTRIBUTE, getNewName(parent, XSDConstants.ATTRIBUTE_ELEMENT_TAG, "Attribute", false)));
-//          attributes.add(new DOMAttribute(XSDConstants.TYPE_ATTRIBUTE, getBuiltInStringQName()));
-//          addCreateElementAction(manager, XSDConstants.ATTRIBUTE_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ATTRIBUTE"), attributes, parent, anyAttributeNode);
-//          attributes = null;
-//          // ARE ATTRIBUTE GROUPS ALLOWED ?
-//          //          addCreateElementAction(manager,
-//          // XSDConstants.ATTRIBUTEGROUP_ELEMENT_TAG,
-//          // "_UI_ACTION_ADD_ATTRIBUTE_GROUP", attributes, parent,
-//          // anyAttributeNode);
-//          addCreateElementRefAction(manager, XSDConstants.ATTRIBUTE_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ATTRIBUTE_REFERENCE"), parent, anyAttributeNode);
-//          addCreateElementRefAction(manager, XSDConstants.ATTRIBUTEGROUP_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ATTRIBUTE_GROUP_REF"), parent, anyAttributeNode);
-        }
-      }
-      else
-      {
-        if (!complexOrSimpleContentExists)
-        {
-//          attributes = new ArrayList();
-//          attributes.add(new DOMAttribute(XSDConstants.NAME_ATTRIBUTE, getNewName(parent, XSDConstants.ATTRIBUTE_ELEMENT_TAG, "Attribute", false)));
-//          attributes.add(new DOMAttribute(XSDConstants.TYPE_ATTRIBUTE, getBuiltInStringQName()));
-//          addCreateElementAction(manager, XSDConstants.ATTRIBUTE_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ATTRIBUTE"), attributes, parent, parent.getLastChild());
-//          attributes = null;
-//          // ARE ATTRIBUTE GROUPS ALLOWED ?
-//          //          addCreateElementAction(manager,
-//          // XSDConstants.ATTRIBUTEGROUP_ELEMENT_TAG,
-//          // "_UI_ACTION_ADD_ATTRIBUTE_GROUP", attributes, parent,
-//          // parent.getLastChild());
-//          addCreateElementRefAction(manager, XSDConstants.ATTRIBUTE_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ATTRIBUTE_REFERENCE"), parent, parent.getLastChild());
-//          addCreateElementRefAction(manager, XSDConstants.ATTRIBUTEGROUP_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ATTRIBUTE_GROUP_REF"), parent, parent.getLastChild());
-//          attributes = null;
-//          addCreateElementActionIfNotExist(manager, XSDConstants.ANYATTRIBUTE_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANY_ATTRIBUTE"), attributes, parent, parent.getLastChild());
-        }
-      }
       if (XSDDOMHelper.inputEquals(parent.getParentNode(), XSDConstants.ELEMENT_ELEMENT_TAG, false))
       {
         manager.add(new Separator());
@@ -899,64 +742,6 @@ public class XSDMenuListener implements IMenuListener
         addCreateElementActionIfNotExist(manager, XSDConstants.RESTRICTION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_RESTRICTION"), attributes, parent, null);
         addCreateElementActionIfNotExist(manager, XSDConstants.EXTENSION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_EXTENSION"), attributes, parent, null);
       }
-      /*
-       * for combined SimpleContent and derivedBy nodes (but without
-       * restrictions) XSDDOMHelper xsdDOMHelper = new XSDDOMHelper(); Element
-       * derivedByNode = xsdDOMHelper.getDerivedByElement(parent); String
-       * derivedByName = xsdDOMHelper.getDerivedByName(parent);
-       * 
-       * if (derivedByNode != null) { if (derivedByName.equals("restriction")) {
-       * addCreateElementActionIfNotExist(manager,
-       * XSDConstants.SIMPLETYPE_ELEMENT_TAG, "_UI_ACTION_ADD_SIMPLE_TYPE",
-       * attributes, derivedByNode, relativeNode); }
-       * addCreateElementActionIfNotExist(manager,
-       * XSDConstants.ANNOTATION_ELEMENT_TAG, "_UI_ACTION_ADD_ANNOTATION",
-       * attributes, derivedByNode, relativeNode);
-       * addCreateElementAction(manager, XSDConstants.ATTRIBUTE_ELEMENT_TAG,
-       * "_UI_ACTION_ADD_ATTRIBUTE", attributes, derivedByNode, relativeNode);
-       * attributes = new ArrayList(); attributes.add(new
-       * DOMAttribute(XSDConstants.REF_ATTRIBUTE, ""));
-       * addCreateElementAction(manager,
-       * XSDConstants.ATTRIBUTEGROUP_ELEMENT_TAG,
-       * "_UI_ACTION_ADD_ATTRIBUTE_GROUP_REF", attributes, derivedByNode,
-       * relativeNode); attributes = new ArrayList();
-       * addCreateElementActionIfNotExist(manager,
-       * XSDConstants.ANYATTRIBUTE_ELEMENT_TAG, "_UI_ACTION_ADD_ANY_ATTRIBUTE",
-       * attributes, derivedByNode, relativeNode); } else { TypesHelper
-       * typesHelper = new TypesHelper(getXSDSchema()); String firstType =
-       * (String)(typesHelper.getBuiltInTypeNamesList()).get(0); attributes =
-       * new ArrayList(); attributes.add(new
-       * DOMAttribute(XSDConstants.BASE_ATTRIBUTE, firstType));
-       * 
-       * addCreateElementActionIfNotExist(manager,
-       * XSDConstants.ANNOTATION_ELEMENT_TAG, "_UI_ACTION_ADD_ANNOTATION",
-       * attributes, parent, relativeNode);
-       * addCreateElementActionIfNotExist(manager,
-       * XSDConstants.RESTRICTION_ELEMENT_TAG, "_UI_ACTION_ADD_RESTRICTION",
-       * attributes, parent, relativeNode);
-       * addCreateElementActionIfNotExist(manager,
-       * XSDConstants.EXTENSION_ELEMENT_TAG, "_UI_ACTION_ADD_EXTENSION",
-       * attributes, parent, relativeNode); }
-       */
-      //      addCreateElementActionIfNotExist(manager,
-      // XSDConstants.SEQUENCE_ELEMENT_TAG,
-      // "_UI_ACTION_ADD_CONTENT_MODEL", attributes, parent, relativeNode);
-      //      attributes = new ArrayList();
-      //      attributes.add(new DOMAttribute(XSDConstants.REF_ATTRIBUTE, ""));
-      //      addCreateElementActionIfNotExist(manager,
-      // XSDConstants.GROUP_ELEMENT_TAG,
-      // "_UI_ADD_GROUP_REF", attributes, parent, relativeNode);
-      //      addCreateElementAction(manager, XSDConstants.ATTRIBUTE_ELEMENT_TAG,
-      // "_UI_ACTION_ADD_ATTRIBUTE", attributes, parent, relativeNode);
-      //      attributes = new ArrayList();
-      //      attributes.add(new DOMAttribute(XSDConstants.REF_ATTRIBUTE, ""));
-      //      addCreateElementAction(manager,
-      // XSDConstants.ATTRIBUTEGROUP_ELEMENT_TAG,
-      // "_UI_ACTION_ADD_ATTRIBUTE_GROUP_REF", attributes, parent,
-      // relativeNode);
-      //      addCreateElementActionIfNotExist(manager,
-      // XSDConstants.ANYATTRIBUTE_ELEMENT_TAG, "_UI_ACTION_ADD_ANY_ATTRIBUTE",
-      // attributes, parent, relativeNode);
     }
     else if (XSDDOMHelper.inputEquals(parent, XSDConstants.RESTRICTION_ELEMENT_TAG, false))
     {
@@ -975,31 +760,8 @@ public class XSDMenuListener implements IMenuListener
         if (annotationExists)
         {
           Node annotationNode = getFirstChildNodeIfExists(parent, XSDConstants.ANNOTATION_ELEMENT_TAG, false);
-          //addCreateLocalSimpleTypeActionIfNotExist(manager,
-          // XSDConstants.SIMPLETYPE_ELEMENT_TAG,
-          // XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_LOCAL_SIMPLE_TYPE"),
-          // attributes, parent, annotationNode.getNextSibling());
         }
-        else
-        {
-          //addCreateLocalSimpleTypeActionIfNotExist(manager,
-          // XSDConstants.SIMPLETYPE_ELEMENT_TAG,
-          // XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_LOCAL_SIMPLE_TYPE"),
-          // attributes, parent, parent.getFirstChild());
-        }
-        /*
-         * addCreateElementAction(manager, XSDConstants.ATTRIBUTE_ELEMENT_TAG,
-         * "_UI_ACTION_ADD_ATTRIBUTE", attributes, parent, relativeNode);
-         * attributes = new ArrayList(); attributes.add(new
-         * DOMAttribute(XSDConstants.REF_ATTRIBUTE, ""));
-         * addCreateElementAction(manager,
-         * XSDConstants.ATTRIBUTEGROUP_ELEMENT_TAG,
-         * "_UI_ACTION_ADD_ATTRIBUTE_GROUP_REF", attributes, parent,
-         * relativeNode); attributes = new ArrayList();
-         * addCreateElementActionIfNotExist(manager,
-         * XSDConstants.ANYATTRIBUTE_ELEMENT_TAG,
-         * "_UI_ACTION_ADD_ANY_ATTRIBUTE", attributes, parent, relativeNode);
-         */
+
         manager.add(new Separator());
         if (anyAttributeExists)
         {
@@ -1073,9 +835,6 @@ public class XSDMenuListener implements IMenuListener
             Node annotationNode = getFirstChildNodeIfExists(parent, XSDConstants.ANNOTATION_ELEMENT_TAG, false);
             addCreateElementActionIfNotExist(manager, XSDConstants.SEQUENCE_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_CONTENT_MODEL"), attributes, parent, annotationNode
                 .getNextSibling());
-            //            addCreateGroupAction(manager, XSDConstants.GROUP_ELEMENT_TAG,
-            // "_UI_ACTION_ADD_GROUP", attributes, parent,
-            // annotationNode.getNextSibling());
             addCreateElementRefAction(manager, XSDConstants.GROUP_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ADD_GROUP_REF"), parent, annotationNode.getNextSibling());
           }
         }
@@ -1084,9 +843,6 @@ public class XSDMenuListener implements IMenuListener
           if (!(sequenceExists || choiceExists || allExists || groupExists))
           {
             addCreateElementActionIfNotExist(manager, XSDConstants.SEQUENCE_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_CONTENT_MODEL"), attributes, parent, parent.getFirstChild());
-            //            addCreateGroupAction(manager, XSDConstants.GROUP_ELEMENT_TAG,
-            // "_UI_ACTION_ADD_GROUP", attributes, parent,
-            // parent.getFirstChild());
             addCreateElementRefAction(manager, XSDConstants.GROUP_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ADD_GROUP_REF"), parent, parent.getFirstChild());
           }
         }
@@ -1117,7 +873,7 @@ public class XSDMenuListener implements IMenuListener
       }
     }
     else if (XSDDOMHelper.inputEquals(parent, XSDConstants.EXTENSION_ELEMENT_TAG, false))
-    { //
+    {
       Element parentNode = (Element) parent.getParentNode();
       // <simpleContent>
       //    <extension>
@@ -1178,10 +934,6 @@ public class XSDMenuListener implements IMenuListener
             Node annotationNode = getFirstChildNodeIfExists(parent, XSDConstants.ANNOTATION_ELEMENT_TAG, false);
             addCreateElementActionIfNotExist(manager, XSDConstants.SEQUENCE_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_CONTENT_MODEL"), attributes, parent, annotationNode
                 .getNextSibling());
-            //            addCreateGroupAction(manager, XSDConstants.GROUP_ELEMENT_TAG,
-            // XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_GROUP"), attributes,
-            // parent,
-            // annotationNode.getNextSibling());
             addCreateElementRefAction(manager, XSDConstants.GROUP_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ADD_GROUP_REF"), parent, annotationNode.getNextSibling());
           }
         }
@@ -1190,10 +942,6 @@ public class XSDMenuListener implements IMenuListener
           if (!(sequenceExists || choiceExists || allExists || groupExists))
           {
             addCreateElementActionIfNotExist(manager, XSDConstants.SEQUENCE_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_CONTENT_MODEL"), attributes, parent, parent.getFirstChild());
-            //            addCreateGroupAction(manager, XSDConstants.GROUP_ELEMENT_TAG,
-            // XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_GROUP"), attributes,
-            // parent,
-            // parent.getFirstChild());
             addCreateElementRefAction(manager, XSDConstants.GROUP_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ADD_GROUP_REF"), parent, parent.getFirstChild());
           }
         }
@@ -1234,21 +982,21 @@ public class XSDMenuListener implements IMenuListener
       addOpenSchemaAction(manager, XSDEditorPlugin.getXSDString("_UI_ACTION_OPEN_SCHEMA"), parent);
     }
     else if (XSDDOMHelper.inputEquals(parent, XSDConstants.LIST_ELEMENT_TAG, false))
-    { //
+    {
       boolean annotationExists = addCreateAnnotationActionIfNotExist(manager, XSDConstants.ANNOTATION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANNOTATION"), attributes, parent,
           parent.getFirstChild());
       manager.add(new Separator());
       addCreateLocalSimpleTypeActionIfNotExist(manager, XSDConstants.SIMPLETYPE_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_LOCAL_SIMPLE_TYPE"), attributes, parent, null);
     }
     else if (XSDDOMHelper.inputEquals(parent, XSDConstants.UNION_ELEMENT_TAG, false))
-    { //
+    {
       boolean annotationExists = addCreateAnnotationActionIfNotExist(manager, XSDConstants.ANNOTATION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANNOTATION"), attributes, parent,
           parent.getFirstChild());
       manager.add(new Separator());
       addCreateLocalSimpleTypeAction(manager, XSDConstants.SIMPLETYPE_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_LOCAL_SIMPLE_TYPE"), attributes, parent, null);
     }
     else if (XSDDOMHelper.inputEquals(parent, XSDConstants.UNIQUE_ELEMENT_TAG, false))
-    { //
+    {
       boolean annotationExists = addCreateAnnotationActionIfNotExist(manager, XSDConstants.ANNOTATION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANNOTATION"), attributes, parent,
           parent.getFirstChild());
       manager.add(new Separator());
@@ -1268,7 +1016,7 @@ public class XSDMenuListener implements IMenuListener
       addCreateElementAction(manager, XSDConstants.FIELD_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_FIELD"), attributes, parent, null);
     }
     else if (XSDDOMHelper.inputEquals(parent, XSDConstants.KEYREF_ELEMENT_TAG, false))
-    { //
+    {
       boolean annotationExists = addCreateAnnotationActionIfNotExist(manager, XSDConstants.ANNOTATION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANNOTATION"), attributes, parent,
           parent.getFirstChild());
       manager.add(new Separator());
@@ -1288,7 +1036,7 @@ public class XSDMenuListener implements IMenuListener
       addCreateElementAction(manager, XSDConstants.FIELD_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_FIELD"), attributes, parent, null);
     }
     else if (XSDDOMHelper.inputEquals(parent, XSDConstants.KEY_ELEMENT_TAG, false))
-    { //
+    {
       boolean annotationExists = addCreateAnnotationActionIfNotExist(manager, XSDConstants.ANNOTATION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANNOTATION"), attributes, parent,
           parent.getFirstChild());
       manager.add(new Separator());
@@ -1333,7 +1081,6 @@ public class XSDMenuListener implements IMenuListener
       addCreateElementActionIfNotExist(manager, XSDConstants.ANNOTATION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANNOTATION"), attributes, parent, parent.getFirstChild());
       // need to add adapters for the ANY element.  I'd rather not provide this menu
       // and let users see that the graph view doesn't update
-//      addMultiplicityMenu(concreteComponent, manager);
     }
     else if (XSDDOMHelper.inputEquals(parent, XSDConstants.ANYATTRIBUTE_ELEMENT_TAG, false))
     {
@@ -1403,8 +1150,6 @@ public class XSDMenuListener implements IMenuListener
     }
     else if (XSDDOMHelper.inputEquals(parent, XSDConstants.ELEMENT_ELEMENT_TAG, true))
     {
-      // TODO common this up with the non-ref case
-//      addCreateAnnotationActionIfNotExist(manager, XSDConstants.ANNOTATION_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_ANNOTATION"), attributes, parent, parent.getFirstChild());
       XSDConcreteComponent xsdConcreteComponent = (XSDConcreteComponent)getXSDSchema().getCorrespondingComponent(parent);
       if (xsdConcreteComponent instanceof XSDElementDeclaration)
       {
@@ -1431,30 +1176,11 @@ public class XSDMenuListener implements IMenuListener
             Node annotationNode = getFirstChildNodeIfExists(parent, XSDConstants.ANNOTATION_ELEMENT_TAG, false);
             if (!(simpleTypeExists || complexTypeExists) && annotationNode != null)
             {
-              //addCreateLocalSimpleTypeActionIfNotExist(manager,
-              // XSDConstants.SIMPLETYPE_ELEMENT_TAG,
-              // XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_LOCAL_SIMPLE_TYPE"),
-              // attributes, parent, annotationNode.getNextSibling());
-              //addCreateLocalComplexTypeActionIfNotExist(manager,
-              // XSDConstants.COMPLEXTYPE_ELEMENT_TAG, "Add Local Complex Type",
-              // attributes, parent, annotationNode.getNextSibling());
               manager.add(new Separator());
             }
           }
           else
           {
-            // Should still be able to add the content models if the anonymous type
-            // exists,
-            // ie. with attributes
-            //        if (!(simpleTypeExists || complexTypeExists))
-            //        {
-            //addCreateLocalSimpleTypeActionIfNotExist(manager,
-            // XSDConstants.SIMPLETYPE_ELEMENT_TAG,
-            // XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_LOCAL_SIMPLE_TYPE"),
-            // attributes, parent, parent.getFirstChild());
-            //addCreateLocalComplexTypeActionIfNotExist(manager,
-            // XSDConstants.COMPLEXTYPE_ELEMENT_TAG, "Add Local Complex Type",
-            // attributes, parent, parent.getFirstChild());
             XSDConcreteComponent concreteComponent = getXSDSchema().getCorrespondingComponent(parent);
             if (concreteComponent != null)
             {
@@ -1472,17 +1198,7 @@ public class XSDMenuListener implements IMenuListener
               
               manager.add(new Separator());
             }
-            //        }
           }
-    //      attributes = new ArrayList();
-    //      attributes.add(new DOMAttribute(XSDConstants.NAME_ATTRIBUTE, "New_Unique"));
-    //      addCreateIdentityConstraintsAction(manager, XSDConstants.UNIQUE_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_UNIQUE"), attributes, parent, null);
-    //      attributes = new ArrayList();
-    //      attributes.add(new DOMAttribute(XSDConstants.NAME_ATTRIBUTE, "New_Key"));
-    //      addCreateIdentityConstraintsAction(manager, XSDConstants.KEY_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_KEY"), attributes, parent, null);
-    //      attributes = new ArrayList();
-    //      attributes.add(new DOMAttribute(XSDConstants.NAME_ATTRIBUTE, "New_KeyRef"));
-    //      addCreateIdentityConstraintsAction(manager, XSDConstants.KEYREF_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_KEY_REF"), attributes, parent, null);
           XSDDOMHelper domHelper = new XSDDOMHelper();
           Element anonymousType = (Element) domHelper.getChildNode(parent, XSDConstants.COMPLEXTYPE_ELEMENT_TAG);
           if (anonymousType != null)
@@ -1506,13 +1222,7 @@ public class XSDMenuListener implements IMenuListener
         addMultiplicityMenu(xsdConcreteComponent, manager);
       }
     }
-    /*
-     * These have none else if (XSDDOMHelper.inputEquals(parent,
-     * XSDConstants.DOCUMENTATION_ELEMENT_TAG, false)) { } else if
-     * (XSDDOMHelper.inputEquals(parent, XSDConstants.APPINFO_ELEMENT_TAG,
-     * false)) { }
-     */
-    
+   
     XSDConcreteComponent concreteComponent = getXSDSchema().getCorrespondingComponent(parent);
     if (concreteComponent instanceof XSDNamedComponent)
     {
@@ -1560,13 +1270,6 @@ public class XSDMenuListener implements IMenuListener
             {
               canEdit = false;
             }
-            //if (canEdit)
-            {
-//              GraphRenameAction graphRenameAction = new GraphRenameAction((XSDNamedComponent)concreteComponent, (GraphicalEditPart)obj);
- //             manager.add(graphRenameAction);
-            	
-            	
-            }
           }
         }
       }
@@ -1596,13 +1299,6 @@ public class XSDMenuListener implements IMenuListener
       {
         addSchemaElementItems(manager, parent, relativeNode);
       }
-      //      else if (XSDDOMHelper.inputEquals(parent,
-      // XSDConstants.LIST_ELEMENT_TAG,
-      // false))
-      //      {
-      //        addCreateElementAction(manager, XSDConstants.SIMPLETYPE_ELEMENT_TAG,
-      // "_UI_ACTION_ADD_SIMPLE_TYPE", attributes, parent, relativeNode);
-      //      }
       else if (XSDDOMHelper.inputEquals(parent, XSDConstants.UNION_ELEMENT_TAG, false))
       {
         addCreateLocalSimpleTypeAction(manager, XSDConstants.SIMPLETYPE_ELEMENT_TAG, XSDEditorPlugin.getXSDString("_UI_ACTION_ADD_LOCAL_SIMPLE_TYPE"), attributes, parent, relativeNode);
@@ -1784,7 +1480,6 @@ public class XSDMenuListener implements IMenuListener
       String name = null;
       if (list != null)
       {
-        // Performance issue perhaps?
         for (int i = 0; i < list.getLength(); i++)
         {
           if (list.item(i) instanceof Element)
@@ -1824,7 +1519,6 @@ public class XSDMenuListener implements IMenuListener
   {
     ArrayList attributes = null;
     // Add Edit Namespaces menu action
-    //////////////// Externalize String below!!!!!
     XSDEditNamespacesAction nsAction = new XSDEditNamespacesAction(XSDEditorPlugin.getXSDString("_UI_ACTION_EDIT_NAMESPACES"), parent, relativeNode, getXSDSchema());
     manager.add(nsAction);
     manager.add(new Separator());
@@ -1867,11 +1561,6 @@ public class XSDMenuListener implements IMenuListener
   // returns whether element exists already
   protected boolean addCreateElementActionIfNotExist(IMenuManager manager, String elementTag, String label, List attributes, Element parent, Node relativeNode)
   {
-    //    if
-    // (!(parent.getElementsByTagNameNS(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001,
-    // elementTag).getLength() > 0))
-    //    XSDDOMHelper helper = new XSDDOMHelper();
-    //    if (helper.getChildNode(parent, elementTag) == null)
     if (getFirstChildNodeIfExists(parent, elementTag, false) == null)
     {
       addCreateElementAction(manager, elementTag, label, attributes, parent, relativeNode);
@@ -1912,9 +1601,6 @@ public class XSDMenuListener implements IMenuListener
 
   protected void addCreateSimpleContentAction(IMenuManager manager, String elementTag, String label, List attributes, Element parent, Node relativeNode)
   {
-    //    if
-    // (!(parent.getElementsByTagNameNS(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001,
-    // elementTag).getLength() > 0))
     if (getFirstChildNodeIfExists(parent, elementTag, false) == null)
     {
       CreateSimpleContentAction action = new CreateSimpleContentAction(label, getXSDSchema());
@@ -1984,11 +1670,6 @@ public class XSDMenuListener implements IMenuListener
 
   protected boolean addCreateLocalSimpleTypeActionIfNotExist(IMenuManager manager, String elementTag, String label, List attributes, Element parent, Node relativeNode)
   {
-    //    if
-    // (!(parent.getElementsByTagNameNS(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001,
-    // elementTag).getLength() > 0))
-    //    XSDDOMHelper helper = new XSDDOMHelper();
-    //    if (helper.getChildNode(parent, elementTag) == null)
     if (getFirstChildNodeIfExists(parent, elementTag, false) == null)
     {
       addCreateLocalSimpleTypeAction(manager, elementTag, label, attributes, parent, relativeNode);
@@ -2045,19 +1726,6 @@ public class XSDMenuListener implements IMenuListener
 
   protected boolean addCreateAnnotationActionIfNotExist(IMenuManager manager, String elementTag, String label, List attributes, Element parent, Node relativeNode)
   {
-    //    if
-    // (!(parent.getElementsByTagNameNS(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001,
-    // elementTag).getLength() > 0))
-    //    XSDDOMHelper helper = new XSDDOMHelper();
-    //    if (helper.getChildNode(parent, elementTag) == null)
-    // CS... I comment the
-    //
-    //if (getFirstChildNodeIfExists(parent, elementTag, false) == null)
-    //{
-    //  addCreateAnnotationAction(manager,elementTag,label,attributes,parent,relativeNode);
-    //  return false;
-    //}
-    //return true;
     return false;
   }
 
