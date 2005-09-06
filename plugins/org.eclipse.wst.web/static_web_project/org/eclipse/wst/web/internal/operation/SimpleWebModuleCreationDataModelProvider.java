@@ -23,10 +23,6 @@ public class SimpleWebModuleCreationDataModelProvider extends ProjectCreationDat
         super.init();
     }
 
-    public String[] getPropertyNames() {
-        return super.getPropertyNames();
-    }
-
     public IDataModelOperation getDefaultOperation() {
         return new SimpleWebModuleCreationOperation(getDataModel());
     }
