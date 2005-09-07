@@ -24,9 +24,7 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.IAnnotationModel;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 
@@ -36,11 +34,8 @@ public class StructuredCorrectionProcessor implements IContentAssistProcessor {
 	protected IQuickAssistProcessor fQuickAssistProcessor;
 	protected IQuickFixProcessor fQuickFixProcessor;
 
-	public StructuredCorrectionProcessor(ITextEditor editor) {
-		IEditorInput input = ((IEditorPart) editor).getEditorInput();
-		IAnnotationModel annotationModel = editor.getDocumentProvider().getAnnotationModel(input);
-
-		fAnnotationModel = annotationModel;
+	public StructuredCorrectionProcessor(ISourceViewer sourceViewer) {
+		fAnnotationModel = sourceViewer.getAnnotationModel();
 	}
 
 	protected void addQuickAssistProposals(StructuredTextViewer viewer, ArrayList proposals, int documentOffset) {

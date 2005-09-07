@@ -20,7 +20,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -34,9 +33,7 @@ import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
 import org.eclipse.jface.text.source.IAnnotationModel;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
@@ -74,7 +71,7 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	protected IDocument fDocument = null;
 	protected IReconcileStep fFirstStep = null;
 	protected IProgressMonitor fProgressMonitor = null;
-	protected ITextEditor fTextEditor = null;
+	protected ISourceViewer fSourceViewer = null;
     private Comparator fComparator;
 
 	// list of "validator" annotations
@@ -87,8 +84,8 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 	 * 
 	 * @param editor
 	 */
-	public AbstractStructuredTextReconcilingStrategy(ITextEditor editor) {
-		fTextEditor = editor;
+	public AbstractStructuredTextReconcilingStrategy(ISourceViewer sourceViewer) {
+		fSourceViewer = sourceViewer;
 		init();
 	}
 
@@ -167,8 +164,8 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
 
 	protected IAnnotationModel getAnnotationModel() {
 		IAnnotationModel model = null;
-		if (fTextEditor != null && fTextEditor.getEditorInput() != null) {
-			model = fTextEditor.getDocumentProvider().getAnnotationModel(fTextEditor.getEditorInput());
+		if (fSourceViewer != null) {
+			model = fSourceViewer.getAnnotationModel();
 		}
 		return model;
 	}
@@ -236,21 +233,6 @@ public abstract class AbstractStructuredTextReconcilingStrategy implements IReco
         }
         return indexedRegion;
     }
-
-	/**
-	 * The IFile that this strategy is operating on (the file input for the
-	 * TextEditor)
-	 * 
-	 * @return the IFile that this strategy is operating on
-	 */
-	protected IFile getFile() {
-		if (fTextEditor == null)
-			return null;
-		IEditorInput input = fTextEditor.getEditorInput();
-		if (!(input instanceof IFileEditorInput))
-			return null;
-		return ((IFileEditorInput) input).getFile();
-	}
 
 	/**
 	 * Gets partition types from all steps in this strategy.

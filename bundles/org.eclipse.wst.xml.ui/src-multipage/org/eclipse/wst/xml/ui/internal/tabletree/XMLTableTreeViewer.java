@@ -161,7 +161,7 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 					public void beginNodeAction(NodeAction action) {
 						super.beginNodeAction(action);
 					}
-	
+
 					public void endNodeAction(NodeAction action) {
 						super.endNodeAction(action);
 					}
@@ -328,22 +328,26 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 			fModel.releaseFromEdit();
 		}
 
-		// get model for read and allow text editor to be the one that getmodelforedit
+		// get model for read and allow text editor to be the one that
+		// getModelForEdit
 		IStructuredModel model = null;
-		model = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
+		if (document != null) {
+			model = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
 
-		if (model != null && model instanceof IDOMModel) {
-			Document domDoc = null;
-			model.addModelStateListener(fInternalModelStateListener);
-			ModelQuery mq = ModelQueryUtil.getModelQuery(model);
-			treeExtension.setModelQuery(mq);
-			domDoc = ((IDOMModel) model).getDocument();
-			setInput(domDoc);
-			treeExtension.setIsUnsupportedInput(false);
-		} else {
-			treeExtension.setIsUnsupportedInput(true);
+			if (model != null && model instanceof IDOMModel) {
+				Document domDoc = null;
+				model.addModelStateListener(fInternalModelStateListener);
+				ModelQuery mq = ModelQueryUtil.getModelQuery(model);
+				treeExtension.setModelQuery(mq);
+				domDoc = ((IDOMModel) model).getDocument();
+				setInput(domDoc);
+				treeExtension.setIsUnsupportedInput(false);
+			}
+			else {
+				treeExtension.setIsUnsupportedInput(true);
+			}
 		}
-		
+
 		fModel = model;
 	}
 

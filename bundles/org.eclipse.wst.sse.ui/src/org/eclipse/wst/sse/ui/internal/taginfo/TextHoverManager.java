@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.ITextHover;
 import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
@@ -143,6 +144,17 @@ public class TextHoverManager {
 	}
 
 	/**
+	 * Create a best match hover with the give text hover as the documentation
+	 * hover
+	 * 
+	 * @param infoHover
+	 * @return ITextHover
+	 */
+	public ITextHover createBestMatchHover(ITextHover infoHover) {
+		return new BestMatchHover(infoHover);
+	}
+
+	/**
 	 * Generate a list of text hover descriptors from the given delimited
 	 * string
 	 * 
@@ -169,7 +181,8 @@ public class TextHoverManager {
 				try {
 					label = SSEUIMessages.getResourceBundle().getString(id + LABEL_KEY);
 					description = SSEUIMessages.getResourceBundle().getString(id + DESCRIPTION_KEY);
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 				}
 				TextHoverDescriptor descriptor = new TextHoverDescriptor(id, label, description, enabled, modifierString);
@@ -184,13 +197,15 @@ public class TextHoverManager {
 			TextHoverDescriptor desc = (TextHoverDescriptor) idToModifier.get(TEXT_HOVER_IDS[i]);
 			if (desc != null) {
 				descriptors[i] = desc;
-			} else {
+			}
+			else {
 				String label = null;
 				String description = null;
 				try {
 					label = SSEUIMessages.getResourceBundle().getString(TEXT_HOVER_IDS[i] + LABEL_KEY);
 					description = SSEUIMessages.getResourceBundle().getString(TEXT_HOVER_IDS[i] + DESCRIPTION_KEY);
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 				}
 				descriptors[i] = new TextHoverDescriptor(TEXT_HOVER_IDS[i], label, description);

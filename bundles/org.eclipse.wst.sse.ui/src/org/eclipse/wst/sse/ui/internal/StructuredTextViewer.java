@@ -64,7 +64,8 @@ import org.eclipse.wst.sse.core.internal.undo.IDocumentSelectionMediator;
 import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.core.internal.undo.UndoDocumentEvent;
 import org.eclipse.wst.sse.ui.internal.provisional.StructuredTextViewerConfiguration;
-import org.eclipse.wst.sse.ui.internal.provisional.style.IHighlighter;
+import org.eclipse.wst.sse.ui.internal.provisional.style.Highlighter;
+import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
 import org.eclipse.wst.sse.ui.internal.util.PlatformStatusLineUtil;
 import org.eclipse.wst.sse.ui.internal.view.events.INodeSelectionListener;
@@ -148,7 +149,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 	 */
 	/** The most recent widget modification as document command */
 	private StructuredDocumentCommand fDocumentCommand = new StructuredDocumentCommand();
-	private IHighlighter fHighlighter;
+	private Highlighter fHighlighter;
 	// TODO: never read locally
 	boolean fRememberedStateContentAssistInstalled;
 
@@ -227,12 +228,10 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 
 		setDocumentPartitioning(configuration.getConfiguredDocumentPartitioning(this));
 
-		if (configuration instanceof StructuredTextViewerConfiguration) {
-			if (fHighlighter != null) {
-				fHighlighter.uninstall();
-			}
-			fHighlighter = ((StructuredTextViewerConfiguration) configuration).getHighlighter(this);
-			fHighlighter.install(this);
+		// always uninstall highlighter and null it out on new configuration
+		if (fHighlighter != null) {
+			fHighlighter.uninstall();
+			fHighlighter = null;
 		}
 
 		// install content type independent plugins
@@ -304,16 +303,20 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			fUndoManager.disconnect();
 		}
 		setUndoManager(configuration.getUndoManager(this));
-
-		// TODO: compare with ?new? V2 configure re:
-		// getTextWidget().setTabs(configuration.getTabWidth(this));
-		// see if it can replace following
-		// Set tab width to configuration setting first.
-		// Then override if model type is XML or HTML.
-		getTextWidget().setTabs(configuration.getTabWidth(this));
+		
+		// release old annotation hover before setting new one
+		if (fAnnotationHover instanceof StructuredTextAnnotationHover) {
+			((StructuredTextAnnotationHover)fAnnotationHover).release();
+		}
 		setAnnotationHover(configuration.getAnnotationHover(this));
-		setOverviewRulerAnnotationHover(configuration.getOverviewRulerAnnotationHover(this));
-		// added for V2
+		
+		// release old annotation hover before setting new one
+		if (fOverviewRulerAnnotationHover instanceof StructuredTextAnnotationHover) {
+			((StructuredTextAnnotationHover)fOverviewRulerAnnotationHover).release();
+		}
+		setOverviewRulerAnnotationHover(configuration.getAnnotationHover(this));
+
+		getTextWidget().setTabs(configuration.getTabWidth(this));
 		setHoverControlCreator(configuration.getInformationControlCreator(this));
 
 		// if hyperlink manager has already been created, uninstall it
@@ -352,7 +355,29 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			prefixes = configuration.getDefaultPrefixes(this, t);
 			if (prefixes != null && prefixes.length > 0)
 				setDefaultPrefixes(prefixes, t);
+
+			// add highlighter/linestyleprovider
+			if (configuration instanceof StructuredTextViewerConfiguration) {
+				LineStyleProvider[] providers = ((StructuredTextViewerConfiguration) configuration).getLineStyleProviders(this, t);
+				if (providers != null) {
+					for (int j = 0; j < providers.length; ++j) {
+						// delay creation of highlighter till
+						// linestyleprovider needs to be added
+						if (fHighlighter == null)
+							fHighlighter = new Highlighter();
+						fHighlighter.addProvider(t, providers[j]);
+					}
+				}
+			}
 		}
+
+		// initialize highlighter after linestyleproviders were added
+		if (fHighlighter != null) {
+			fHighlighter.setDocumentPartitioning(configuration.getConfiguredDocumentPartitioning(this));
+			fHighlighter.install(this);
+			fHighlighter.setDocument((IStructuredDocument) getDocument());
+		}
+
 		activatePlugins();
 
 		fConfiguration = configuration;
@@ -691,7 +716,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			// only one node can be double-clicked at a time
 			// so, we get the first one
 			Object o = selectedNodes.get(0);
-			if(o instanceof IndexedRegion) {
+			if (o instanceof IndexedRegion) {
 				doubleClickedNode = (IndexedRegion) o;
 				selectionStart = doubleClickedNode.getStartOffset();
 				selectionEnd = doubleClickedNode.getEndOffset();
@@ -1073,6 +1098,17 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		Logger.trace("Source Editor", "StructuredTextViewer::unconfigure entry"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (fHighlighter != null) {
 			fHighlighter.uninstall();
+		}
+		if (fCorrectionAssistant != null) {
+			fCorrectionAssistant.uninstall();
+		}
+		
+		if (fAnnotationHover instanceof StructuredTextAnnotationHover) {
+			((StructuredTextAnnotationHover)fAnnotationHover).release();
+		}
+
+		if (fOverviewRulerAnnotationHover instanceof StructuredTextAnnotationHover) {
+			((StructuredTextAnnotationHover)fOverviewRulerAnnotationHover).release();
 		}
 
 		// doesn't seem to be handled elsewhere, so we'll be sure error

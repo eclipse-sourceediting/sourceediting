@@ -24,11 +24,6 @@ import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 public class LineStyleProviderForXML extends AbstractLineStyleProvider implements LineStyleProvider {
 	public LineStyleProviderForXML() {
 		super();
-		loadColors();
-	}
-
-	protected void clearColors() {
-		getTextAttributes().clear();
 	}
 
 	protected TextAttribute getAttributeFor(ITextRegion region) {
@@ -149,9 +144,11 @@ public class LineStyleProviderForXML extends AbstractLineStyleProvider implement
 		}
 	}
 
+	/**
+	 * Loads text attributes into map. Make sure map is cleared before calling
+	 * this.
+	 */
 	protected void loadColors() {
-		clearColors();
-
 		addTextAttribute(IStyleConstantsXML.TAG_NAME);
 		addTextAttribute(IStyleConstantsXML.TAG_BORDER);
 		addTextAttribute(IStyleConstantsXML.TAG_ATTRIBUTE_NAME);

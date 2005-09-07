@@ -26,6 +26,7 @@ import org.eclipse.jface.text.TextUtilities;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
+import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.sse.core.internal.model.ModelLifecycleEvent;
 import org.eclipse.wst.sse.core.internal.provisional.IModelLifecycleListener;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -41,6 +42,8 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegionList;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
+import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorBuilder;
+import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorMetaData;
 import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorStrategy;
 
 /**
@@ -85,6 +88,8 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 	 * extension point
 	 */
 	private ValidatorStrategy fValidatorStrategy;
+	
+	private final String SSE_EDITOR_ID = "org.eclipse.wst.sse.ui"; //$NON-NLS-1$
 
 	/**
 	 * @return Returns the fDefaultStrategy.
@@ -107,6 +112,38 @@ public class StructuredRegionProcessor extends DirtyRegionProcessor implements I
 	 * @return Returns the fValidatorStrategy.
 	 */
 	public ValidatorStrategy getValidatorStrategy() {
+		if (fValidatorStrategy == null) {
+			ValidatorStrategy validatorStrategy = null;
+			
+			if (getTextViewer() instanceof ISourceViewer) {
+				ISourceViewer viewer = (ISourceViewer)getTextViewer();
+				String contentTypeId = null;
+				
+				IDocument doc = viewer.getDocument();
+				IStructuredModel sModel = null;
+				try {
+					sModel = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
+					if (sModel != null) {
+						contentTypeId = sModel.getContentTypeIdentifier();
+					}
+				} finally {
+					if (sModel != null)
+						sModel.releaseFromRead();
+				}
+				
+				if (contentTypeId != null) {
+					validatorStrategy = new ValidatorStrategy(viewer, contentTypeId);
+				
+					ValidatorBuilder vBuilder = new ValidatorBuilder();
+					ValidatorMetaData[] vmds = vBuilder.getValidatorMetaData(SSE_EDITOR_ID);
+					for (int i = 0; i < vmds.length; i++) {
+						if (vmds[i].canHandleContentType(contentTypeId))
+							validatorStrategy.addValidatorMetaData(vmds[i]);
+					}
+				}
+			}
+			fValidatorStrategy = validatorStrategy;
+		}
 		return fValidatorStrategy;
 	}
 

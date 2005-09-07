@@ -14,7 +14,6 @@ import java.util.Vector;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.jface.text.IAutoEditStrategy;
-import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
@@ -28,29 +27,30 @@ import org.eclipse.wst.css.core.internal.provisional.text.ICSSPartitionTypes;
 import org.eclipse.wst.css.ui.internal.autoedit.StructuredAutoEditStrategyCSS;
 import org.eclipse.wst.css.ui.internal.contentassist.CSSContentAssistProcessor;
 import org.eclipse.wst.css.ui.internal.style.LineStyleProviderForCSS;
-import org.eclipse.wst.css.ui.internal.taginfo.CSSBestMatchHoverProcessor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTypes;
 import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.provisional.StructuredTextViewerConfiguration;
-import org.eclipse.wst.sse.ui.internal.provisional.style.IHighlighter;
-import org.eclipse.wst.sse.ui.internal.taginfo.AnnotationHoverProcessor;
-import org.eclipse.wst.sse.ui.internal.taginfo.ProblemAnnotationHoverProcessor;
-import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
-import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
+import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 
 public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerConfiguration {
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getAutoEditStrategies(org.eclipse.jface.text.source.ISourceViewer, java.lang.String)
+	/*
+	 * One instance per configuration because not sourceviewer-specific and
+	 * it's a String array
 	 */
+	private String[] fConfiguredContentTypes;
+	/*
+	 * One instance per configuration
+	 */
+	private LineStyleProvider fLineStyleProviderForCSS;
+
 	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
 		List allStrategies = new ArrayList(0);
-		
+
 		IAutoEditStrategy[] superStrategies = super.getAutoEditStrategies(sourceViewer, contentType);
 		for (int i = 0; i < superStrategies.length; i++) {
 			allStrategies.add(superStrategies[i]);
 		}
-		
+
 		if (contentType == ICSSPartitionTypes.STYLE) {
 			allStrategies.add(new StructuredAutoEditStrategyCSS());
 		}
@@ -59,28 +59,34 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 	}
 
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
-		if (configuredContentTypes == null) {
-			configuredContentTypes = new String[]{ICSSPartitionTypes.STYLE, IStructuredPartitionTypes.DEFAULT_PARTITION, IStructuredPartitionTypes.UNKNOWN_PARTITION};
+		if (fConfiguredContentTypes == null) {
+			fConfiguredContentTypes = new String[]{ICSSPartitionTypes.STYLE, IStructuredPartitionTypes.DEFAULT_PARTITION, IStructuredPartitionTypes.UNKNOWN_PARTITION};
 		}
-		return configuredContentTypes;
+		return fConfiguredContentTypes;
 	}
 
 	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
-		IContentAssistant contentAssistant = super.getContentAssistant(sourceViewer);
+		ContentAssistant assistant = (ContentAssistant)super.getContentAssistant(sourceViewer);
+		
+		// create content assist processors to be used
+		IContentAssistProcessor cssProcessor = new CSSContentAssistProcessor();
 
-		if (contentAssistant != null && contentAssistant instanceof ContentAssistant) {
-			//((ContentAssistant)
-			// contentAssistant).setContentAssistProcessor(new
-			// CSSContentAssistProcessor(),
-			// ICSSPartitions.STYLE);
-			IContentAssistProcessor cssProcessor = new CSSContentAssistProcessor();
-			setContentAssistProcessor((ContentAssistant) contentAssistant, cssProcessor, ICSSPartitionTypes.STYLE);
-			setContentAssistProcessor((ContentAssistant) contentAssistant, cssProcessor, IStructuredPartitionTypes.UNKNOWN_PARTITION);
-		}
+		// add processors to content assistant
+		assistant.setContentAssistProcessor(cssProcessor, ICSSPartitionTypes.STYLE);
+		assistant.setContentAssistProcessor(cssProcessor, IStructuredPartitionTypes.UNKNOWN_PARTITION);
 
-		return contentAssistant;
+		return assistant;
 	}
 
+	/**
+	 * Returns the content formatter ready to be used with the given source
+	 * viewer.
+	 * 
+	 * @param sourceViewer
+	 *            the source viewer to be configured by this configuration
+	 * @return a content formatter or <code>null</code> if formatting should
+	 *         not be supported
+	 */
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
 		final MultiPassContentFormatter formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), ICSSPartitionTypes.STYLE);
 
@@ -89,42 +95,6 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 		return formatter;
 	}
 
-	public IHighlighter getHighlighter(ISourceViewer sourceViewer) {
-		IHighlighter highlighter = super.getHighlighter(sourceViewer);
-
-		if (highlighter != null) {
-			highlighter.addProvider(ICSSPartitionTypes.STYLE, new LineStyleProviderForCSS());
-		}
-
-		return highlighter;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getTextHover(org.eclipse.jface.text.source.ISourceViewer,
-	 *      java.lang.String, int)
-	 */
-	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {
-		// content type does not really matter since only combo, problem,
-		// annotation hover is available
-		TextHoverManager.TextHoverDescriptor[] hoverDescs = getTextHovers();
-		int i = 0;
-		while (i < hoverDescs.length) {
-			if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {
-				String hoverType = hoverDescs[i].getId();
-				if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType))
-					return new CSSBestMatchHoverProcessor();
-				else if (TextHoverManager.PROBLEM_HOVER.equalsIgnoreCase(hoverType))
-					return new ProblemAnnotationHoverProcessor();
-				else if (TextHoverManager.ANNOTATION_HOVER.equalsIgnoreCase(hoverType))
-					return new AnnotationHoverProcessor();
-			}
-			i++;
-		}
-		return super.getTextHover(sourceViewer, contentType, stateMask);
-	}
-	
 	public String[] getIndentPrefixes(ISourceViewer sourceViewer, String contentType) {
 		Vector vector = new Vector();
 
@@ -165,5 +135,22 @@ public class StructuredTextViewerConfigurationCSS extends StructuredTextViewerCo
 		vector.add(""); //$NON-NLS-1$
 
 		return (String[]) vector.toArray(new String[vector.size()]);
+	}
+
+	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
+		LineStyleProvider[] providers = null;
+
+		if (partitionType == ICSSPartitionTypes.STYLE) {
+			providers = new LineStyleProvider[]{getLineStyleProviderForCSS()};
+		}
+
+		return providers;
+	}
+
+	private LineStyleProvider getLineStyleProviderForCSS() {
+		if (fLineStyleProviderForCSS == null) {
+			fLineStyleProviderForCSS = new LineStyleProviderForCSS();
+		}
+		return fLineStyleProviderForCSS;
 	}
 }

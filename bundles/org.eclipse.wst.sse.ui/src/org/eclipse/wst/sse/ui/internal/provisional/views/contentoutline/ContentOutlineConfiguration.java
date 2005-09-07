@@ -14,7 +14,10 @@ package org.eclipse.wst.sse.ui.internal.provisional.views.contentoutline;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.util.TransferDragSourceListener;
@@ -28,7 +31,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.wst.sse.ui.internal.IExtendedConfiguration;
 import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
 
 /**
@@ -37,18 +39,13 @@ import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
  * @plannedfor 1.0
  *  
  */
-public class ContentOutlineConfiguration implements IExtendedConfiguration, IAdaptable {
-
-	public final static String ID = "contentoutlineconfiguration"; //$NON-NLS-1$
-
+public class ContentOutlineConfiguration implements IExecutableExtension, IAdaptable {
 	private IContentProvider fContentProvider;
-	private String fDeclaringID = null;
 	private KeyListener[] fKeyListeners;
 	private ILabelProvider fLabelProvider;
 
 	public ContentOutlineConfiguration() {
 		super();
-		fDeclaringID = getClass().getName();
 	}
 
 	private IContentProvider createTreeContentProvider() {
@@ -96,15 +93,6 @@ public class ContentOutlineConfiguration implements IExtendedConfiguration, IAda
 		if (fContentProvider == null)
 			fContentProvider = createTreeContentProvider();
 		return fContentProvider;
-	}
-
-	/**
-	 * @return Returns the declaringID, useful for remembering settings.
-	 */
-	public String getDeclaringID() {
-		if (fDeclaringID == null)
-			return "???"; //$NON-NLS-1$
-		return fDeclaringID;
 	}
 
 	/**
@@ -223,14 +211,14 @@ public class ContentOutlineConfiguration implements IExtendedConfiguration, IAda
 		return false;
 	}
 
-	/**
-	 * @param declaringID
-	 *            The declaringID to set.
-	 */
-	public void setDeclaringID(String declaringID) {
-		fDeclaringID = declaringID;
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
+		/*
+		 * Currently no need for initialization data but is good practice to
+		 * implement IExecutableExtension since is a class that can be created
+		 * by executable extension
+		 */
 	}
-
+	
 	/**
 	 * General hook for resource releasing and listener removal when
 	 * configurations change or the viewer is disposed of

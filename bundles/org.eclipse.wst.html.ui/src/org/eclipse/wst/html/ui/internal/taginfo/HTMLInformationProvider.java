@@ -13,9 +13,11 @@ package org.eclipse.wst.html.ui.internal.taginfo;
 
 
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 /**
  * Provides context information for HTML tags (Shows tooltip description)
@@ -24,10 +26,10 @@ import org.eclipse.jface.text.information.IInformationProviderExtension;
  */
 public class HTMLInformationProvider implements IInformationProvider, IInformationProviderExtension {
 
-	private HTMLBestMatchHoverProcessor fTextHover = null;
+	private ITextHover fTextHover = null;
 
 	public HTMLInformationProvider() {
-		fTextHover = new HTMLBestMatchHoverProcessor();
+		fTextHover = SSEUIPlugin.getDefault().getTextHoverManager().createBestMatchHover(new HTMLTagInfoHoverProcessor());
 	}
 
 	/* (non-Javadoc)

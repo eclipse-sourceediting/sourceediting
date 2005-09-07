@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -65,7 +64,6 @@ public class HTMLContentAssistProcessor extends AbstractContentAssistProcessor i
 	private INodeAdapterFactory factoryForCSS = null;
 	protected IPreferenceStore fPreferenceStore = null;
 	protected boolean isXHTML = false;
-	protected IResource fResource = null;
 	private HTMLTemplateCompletionProcessor fTemplateProcessor = null;
 	private List fTemplateContexts = new ArrayList();
 

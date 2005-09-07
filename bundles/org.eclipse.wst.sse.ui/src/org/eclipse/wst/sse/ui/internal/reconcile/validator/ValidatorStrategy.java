@@ -28,7 +28,7 @@ import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcileResult;
 import org.eclipse.jface.text.reconciler.IReconcileStep;
-import org.eclipse.ui.texteditor.ITextEditor;
+import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcilingStrategy;
 import org.eclipse.wst.sse.ui.internal.reconcile.DocumentAdapter;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
@@ -49,8 +49,8 @@ public class ValidatorStrategy extends AbstractStructuredTextReconcilingStrategy
 	private HashMap fVidToVStepMap = null;
 	private List fMetaData = null;
 
-	public ValidatorStrategy(ITextEditor editor, String contentType) {
-		super(editor);
+	public ValidatorStrategy(ISourceViewer sourceViewer, String contentType) {
+		super(sourceViewer);
 		fMetaData = new ArrayList();
 		fContentTypeIds = calculateParentContentTypeIds(contentType);
 		fVidToVStepMap = new HashMap();
@@ -146,7 +146,7 @@ public class ValidatorStrategy extends AbstractStructuredTextReconcilingStrategy
 			return;
 		
 		// for external files, this can be null
-		if (getFile() != null) {
+		if (fDocument != null) {
 
 			String partitionType = tr.getType();
 			if (canValidatePartition(partitionType)) {

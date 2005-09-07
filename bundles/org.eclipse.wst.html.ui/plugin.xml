@@ -19,46 +19,31 @@
 				contentTypeId="org.eclipse.wst.html.core.htmlsource" />
 		</editor>
 	</extension>
-	<extension point="org.eclipse.wst.sse.ui.extendedconfiguration">
-		<configuration
-			type="textviewerconfiguration"
+	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
+		<sourceViewerConfiguration
 			class="org.eclipse.wst.html.ui.internal.provisional.StructuredTextViewerConfigurationHTML"
 			target="org.eclipse.wst.html.core.htmlsource" />
-		<configuration
-			type="contentoutlineconfiguration"
+		<contentOutlineConfiguration
 			class="org.eclipse.wst.html.ui.internal.views.contentoutline.HTMLContentOutlineConfiguration"
 			target="org.eclipse.wst.html.core.htmlsource" />
-		<configuration
-			type="propertysheetconfiguration"
+		<propertySheetConfiguration
 			class="org.eclipse.wst.xml.ui.internal.views.properties.XMLPropertySheetConfiguration"
 			target="org.eclipse.wst.html.core.htmlsource" />
-		<configuration
+		<provisionalConfiguration
 			type="sourceeditingtexttools"
 			class="org.eclipse.wst.xml.ui.internal.provisional.XMLSourceEditingTextTools"
 			target="org.eclipse.wst.html.core.htmlsource" />
-		<configuration
+		<provisionalConfiguration
 			type="characterpairmatcher"
 			class="org.eclipse.wst.html.ui.internal.text.HTMLDocumentRegionEdgeMatcher"
 			target="org.eclipse.wst.html.core.htmlsource" />
-		<configuration
+		<provisionalConfiguration
 			type="structuredtextfoldingprovider"
 			class="org.eclipse.wst.html.ui.internal.projection.StructuredTextFoldingProviderHTML"
 			target="org.eclipse.wst.html.core.htmlsource" />
-		<definition
+		<provisionalDefinition
 			type="preferencepages"
-			value="org.eclipse.wst.html.ui.preferences"
-			target="org.eclipse.wst.html.core.htmlsource" />
-		<definition
-			type="preferencepages"
-			value="org.eclipse.wst.html.ui.preferences.source"
-			target="org.eclipse.wst.html.core.htmlsource" />
-		<definition
-			type="preferencepages"
-			value="org.eclipse.wst.html.ui.preferences.templates"
-			target="org.eclipse.wst.html.core.htmlsource" />
-		<definition
-			type="preferencepages"
-			value="org.eclipse.wst.html.ui.preferences.styles"
+			value="org.eclipse.wst.html.ui.preferences, org.eclipse.wst.html.ui.preferences.source, org.eclipse.wst.html.ui.preferences.templates, org.eclipse.wst.html.ui.preferences.styles"
 			target="org.eclipse.wst.html.core.htmlsource" />
 	</extension>
 	<extension

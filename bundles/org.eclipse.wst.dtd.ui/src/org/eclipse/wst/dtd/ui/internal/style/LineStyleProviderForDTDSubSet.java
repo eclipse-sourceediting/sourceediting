@@ -21,6 +21,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.TextUtilities;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.wst.dtd.core.internal.provisional.contenttype.ContentTypeIdForDTD;
@@ -33,10 +34,13 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
-import org.eclipse.wst.sse.ui.internal.provisional.style.AbstractLineStyleProvider;
+import org.eclipse.wst.sse.ui.internal.provisional.style.Highlighter;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
+import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 
-public class LineStyleProviderForDTDSubSet extends AbstractLineStyleProvider implements LineStyleProvider {
+public class LineStyleProviderForDTDSubSet implements LineStyleProvider {
+	private IStructuredDocument fDocument = null;
+	private Highlighter fHighlighter = null;
 	private IStructuredModel fInternalModel = null;
 	private LineStyleProviderForDTD fInternalProvider = null;
 	private StyleRange[] fInternalRanges;
@@ -81,6 +85,10 @@ public class LineStyleProviderForDTDSubSet extends AbstractLineStyleProvider imp
 		}
 	}
 
+	private TextAttribute createTextAttribute(RGB foreground, RGB background, boolean bold) {
+		return new TextAttribute((foreground != null) ? EditorUtility.getColor(foreground) : null, (background != null) ? EditorUtility.getColor(background) : null, bold ? SWT.BOLD : SWT.NORMAL);
+	}
+	
 	protected TextAttribute getAttributeFor(ITextRegion region) {
 		TextAttribute ta = null;
 
@@ -109,6 +117,11 @@ public class LineStyleProviderForDTDSubSet extends AbstractLineStyleProvider imp
 		return fInternalModel.getStructuredDocument();
 	}
 
+	public void init(IStructuredDocument document, Highlighter highlighter) {
+		fDocument = document;
+		fHighlighter = highlighter;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -119,7 +132,7 @@ public class LineStyleProviderForDTDSubSet extends AbstractLineStyleProvider imp
 		if (!IDTDPartitionTypes.DTD_DEFAULT.equals(typedRegion.getType())) {
 			// compute an internal DTD model and return linestyles for it
 			ITextRegion dtdContentRegion = null;
-			IStructuredDocumentRegion doctype = getDocument().getRegionAtCharacterOffset(typedRegion.getOffset());
+			IStructuredDocumentRegion doctype = fDocument.getRegionAtCharacterOffset(typedRegion.getOffset());
 			if (doctype != null)
 				dtdContentRegion = doctype.getRegionAtCharacterOffset(typedRegion.getOffset());
 			String contents = dtdContentRegion != null ? doctype.getFullText(dtdContentRegion) : null;
@@ -139,7 +152,6 @@ public class LineStyleProviderForDTDSubSet extends AbstractLineStyleProvider imp
 		if (fInternalProvider != null) {
 			fInternalProvider.release();
 		}
-		super.release();
 	}
 
 	private void updateStyleRanges(IStructuredDocument document, String contents) {
@@ -148,7 +160,7 @@ public class LineStyleProviderForDTDSubSet extends AbstractLineStyleProvider imp
 			try {
 				ITypedRegion regions[] = TextUtilities.computePartitioning(getInternalDocument(), fPartitioning, 0, document.getLength(), false);
 				List ranges = new ArrayList();
-				fInternalProvider.init(getInternalDocument(), getHighlighter());
+				fInternalProvider.init(getInternalDocument(), fHighlighter);
 				for (int i = 0; i < regions.length; i++) {
 					fInternalProvider.prepareRegions(regions[i], regions[i].getOffset(), regions[i].getLength(), ranges);
 				}

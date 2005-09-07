@@ -31,9 +31,8 @@ import org.osgi.framework.Bundle;
  * plugin.xml section:
  * 
  * &lt;extension
- * point=&quot;org.eclipse.wst.sse.ui.extendedconfiguration&quot;&gt;configuration
- * type=&quot;contentoutlineconfiguration&quot;
- * target=&quot;org.eclipse.wst.sse.ui.dtd.StructuredTextEditorDTD&quot;
+ * point=&quot;org.eclipse.wst.sse.ui.editorConfiguration&quot;&gt;contentoutlineconfiguration
+ * target=&quot;org.eclipse.wst.sse.dtd.core.dtdsource&quot;
  * class=&quot;org.eclipse.wst.sse.ui.dtd.views.contentoutline.DTDContentOutlineConfiguration&quot;/&gt;
  * &lt;/extension&gt;
  * 
@@ -42,14 +41,30 @@ import org.osgi.framework.Bundle;
  * 
  */
 public class ExtendedConfigurationBuilder extends RegistryReader {
+	/**
+	 * Extension type to pass into getConfigurations to get content outline
+	 * configuration
+	 */
+	public static final String CONTENTOUTLINECONFIGURATION = "contentOutlineConfiguration"; //$NON-NLS-1$
+	/**
+	 * Extension type to pass into getConfigurations to get property sheet
+	 * configuration
+	 */
+	public static final String PROPERTYSHEETCONFIGURATION = "propertySheetConfiguration"; //$NON-NLS-1$
+	/**
+	 * Extension type to pass into getConfigurations to get source viewer
+	 * configuration
+	 */
+	public static final String SOURCEVIEWERCONFIGURATION = "sourceViewerConfiguration"; //$NON-NLS-1$
+
 	private static final String ATT_CLASS = "class"; //$NON-NLS-1$
 	private static final String ATT_TARGET = "target"; //$NON-NLS-1$
 	private static final String ATT_TYPE = "type"; //$NON-NLS-1$
-	private static final String CONFIGURATION = "configuration"; //$NON-NLS-1$
+	private static final String CONFIGURATION = "provisionalConfiguration"; //$NON-NLS-1$
 	private static Map configurationMap = null;
 	private final static boolean debugTime = "true".equalsIgnoreCase(Platform.getDebugOption("org.eclipse.wst.sse.ui/extendedconfigurationbuilder/time")); //$NON-NLS-1$  //$NON-NLS-2$
-	private static final String DEFINITION = "definition"; //$NON-NLS-1$
-	private static final String EP_EXTENDEDCONFIGURATION = "extendedconfiguration"; //$NON-NLS-1$
+	private static final String DEFINITION = "provisionalDefinition"; //$NON-NLS-1$
+	private static final String EP_EXTENDEDCONFIGURATION = "editorConfiguration"; //$NON-NLS-1$
 	private static ExtendedConfigurationBuilder instance = null;
 	public static final String VALUE = "value"; //$NON-NLS-1$
 
@@ -91,9 +106,6 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 				}
 			});
 		}
-		if (result[0] != null && result[0] instanceof IExtendedConfiguration) {
-			((IExtendedConfiguration) result[0]).setDeclaringID(targetID);
-		}
 		return result[0];
 	}
 
@@ -118,7 +130,7 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 			if ((element.getName().equals(extensionType) || (element.getName().equals(CONFIGURATION) && extensionType.equals(element.getAttribute(ATT_TYPE))))) {
 				String[] targets = StringUtils.unpack(element.getAttribute(ATT_TARGET));
 				for (int j = 0; j < targets.length; j++) {
-					if (targetID.equals(targets[j])) {
+					if (targetID.equals(targets[j].trim())) {
 						Object o = createExtension(element, ATT_CLASS, targetID);
 						if (o != null) {
 							result.add(o);
@@ -136,8 +148,13 @@ public class ExtendedConfigurationBuilder extends RegistryReader {
 		List result = new ArrayList(1);
 		for (int i = 0; i < configurations.size(); i++) {
 			IConfigurationElement element = (IConfigurationElement) configurations.get(i);
-			if ((element.getName().equals(extensionType) || (element.getName().equals(DEFINITION) && extensionType.equals(element.getAttribute(ATT_TYPE)))) && element.getAttribute(ATT_TARGET).equals(targetID)) {
-				result.add(element);
+			if ((element.getName().equals(extensionType) || (element.getName().equals(DEFINITION) && extensionType.equals(element.getAttribute(ATT_TYPE))))) {
+				String[] targets = StringUtils.unpack(element.getAttribute(ATT_TARGET));
+				for (int j = 0; j < targets.length; j++) {
+					if (targetID.equals(targets[j].trim())) {
+						result.add(element);
+					}
+				}
 			}
 		}
 		return (IConfigurationElement[]) result.toArray(new IConfigurationElement[0]);

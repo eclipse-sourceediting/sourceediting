@@ -116,8 +116,7 @@ public class Highlighter implements IHighlighter {
 			double gammaNormalized(double colorComponent) {
 				if (colorComponent < 0.018) {
 					return colorComponent * 0.45;
-				}
-				else {
+				} else {
 					return 1.099 * Math.pow(colorComponent, 0.45) - 0.099;
 				}
 			}
@@ -176,8 +175,7 @@ public class Highlighter implements IHighlighter {
 			double inverseGammaNormalized(double colorComponent) {
 				if (colorComponent < 0.018) {
 					return colorComponent * .222;
-				}
-				else {
+				} else {
 					return Math.pow(((.9099 * colorComponent + 0.09)), 2.22);
 				}
 			}
@@ -201,8 +199,7 @@ public class Highlighter implements IHighlighter {
 			if (y < target) {
 				// is "dark" make lighter
 				y = y + ((target - y) * scaleFactor);
-			}
-			else {
+			} else {
 				// is "light" make darker
 				y = y - ((y - target) * scaleFactor);
 			}
@@ -227,8 +224,7 @@ public class Highlighter implements IHighlighter {
 			if (target < mid) {
 				// is "dark" make lighter
 				y = target + scaleFactor;
-			}
-			else {
+			} else {
 				// is "light" make darker
 				y = target - scaleFactor;
 			}
@@ -291,6 +287,17 @@ public class Highlighter implements IHighlighter {
 		holdResults.add(result);
 	}
 
+	/**
+	 * Registers a given line style provider for a particular partition type.
+	 * If there is already a line style provider registered for this type, the
+	 * new line style provider is registered instead of the old one.
+	 * 
+	 * @param partitionType
+	 *            the partition type under which to register
+	 * @param the
+	 *            line style provider to register, or <code>null</code> to
+	 *            remove an existing one
+	 */
 	public void addProvider(String partitionType, LineStyleProvider provider) {
 		getTableOfProviders().put(partitionType, provider);
 	}
@@ -319,8 +326,7 @@ public class Highlighter implements IHighlighter {
 					ranges[i].start = region.getOffset();
 					ranges[i].length = region.getLength();
 				} // else what happens if region is not found?!
-			}
-			else {
+			} else {
 				// just adjust the range using the given adjustment
 				ranges[i].start += adjustment;
 			}
@@ -362,8 +368,7 @@ public class Highlighter implements IHighlighter {
 			// oldRGB = getTextWidget().getForeground().getRGB();
 			oldColor = getTextWidget().getBackground();
 			oldRGB = oldColor.getRGB();
-		}
-		else {
+		} else {
 			oldRGB = oldColor.getRGB();
 		}
 		Color newColor = getCachedColorFor(oldRGB);
@@ -468,8 +473,7 @@ public class Highlighter implements IHighlighter {
 			// viewer
 			ITextViewerExtension5 extension = (ITextViewerExtension5) viewer;
 			styleRegion = extension.widgetRange2ModelRange(new Region(offset, length));
-		}
-		else {
+		} else {
 			// get document range, taking into account viewer visible region
 			// get visible region in viewer
 			IRegion vr = null;
@@ -515,8 +519,7 @@ public class Highlighter implements IHighlighter {
 						provider.init(getDocument(), this);
 					}
 					result = provider;
-				}
-				else {
+				} else {
 					result = (LineStyleProvider) getExtendedProviders().get(type);
 				}
 			}
@@ -557,6 +560,12 @@ public class Highlighter implements IHighlighter {
 		return textWidget;
 	}
 
+	/**
+	 * Installs highlighter support on the given text viewer.
+	 * 
+	 * @param textViewer
+	 *            the text viewer on which content assist will work
+	 */
 	public void install(ITextViewer newTextViewer) {
 		this.textViewer = newTextViewer;
 
@@ -592,8 +601,7 @@ public class Highlighter implements IHighlighter {
 				// document
 				// it has no length, and there is no node for it!
 				eventStyles = EMPTY_STYLE_RANGE;
-			}
-			else {
+			} else {
 				/*
 				 * LineStyleProviders work using absolute document offsets. To
 				 * support visible regions, adjust the requested range up to
@@ -625,8 +633,7 @@ public class Highlighter implements IHighlighter {
 								if (offset > 0)
 									adjust(eventStyles, -offset);
 							}
-						}
-						else {
+						} else {
 							if (getTextViewer() instanceof ProjectionViewer) {
 								if (((ProjectionViewer) getTextViewer()).isProjectionMode())
 									adjust(eventStyles, -offset);
@@ -645,8 +652,7 @@ public class Highlighter implements IHighlighter {
 
 			}
 
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			// if ANY exception occurs during highlighting,
 			// just return "no highlighting"
 			eventStyles = EMPTY_STYLE_RANGE;
@@ -678,8 +684,7 @@ public class Highlighter implements IHighlighter {
 		 */
 		if (offset == fSavedOffset && length == fSavedLength && fSavedRanges != null) {
 			event.styles = fSavedRanges;
-		}
-		else {
+		} else {
 			// need to assign this array here, or else the field won't get
 			// updated
 			event.styles = lineGetStyle(offset, length);
@@ -702,8 +707,7 @@ public class Highlighter implements IHighlighter {
 
 		if (fHoldStyleResults == null) {
 			fHoldStyleResults = new ArrayList(partitions.length);
-		}
-		else {
+		} else {
 			fHoldStyleResults.clear();
 		}
 
@@ -724,8 +728,7 @@ public class Highlighter implements IHighlighter {
 		int resultSize = fHoldStyleResults.size();
 		if (resultSize > 0) {
 			result = (StyleRange[]) fHoldStyleResults.toArray(new StyleRange[fHoldStyleResults.size()]);
-		}
-		else {
+		} else {
 			result = EMPTY_STYLE_RANGE;
 		}
 		result = convertReadOnlyRegions(result, start, length);
@@ -755,12 +758,15 @@ public class Highlighter implements IHighlighter {
 	public void setDocumentPartitioning(String partitioning) {
 		if (partitioning != null) {
 			fPartitioning = partitioning;
-		}
-		else {
+		} else {
 			fPartitioning = IDocumentExtension3.DEFAULT_PARTITIONING;
 		}
 	}
 
+	/**
+	 * Uninstalls highlighter support from the text viewer it has previously
+	 * be installed on.
+	 */
 	public void uninstall() {
 		if (textWidget != null && !textWidget.isDisposed()) {
 			textWidget.removeLineStyleListener(this);
@@ -813,19 +819,16 @@ public class Highlighter implements IHighlighter {
 				StyleRange last = eventStyles[eventStyles.length - 1];
 				if (startOffset > first.start) {
 					result = false;
-				}
-				else {
+				} else {
 					int lineEndOffset = startOffset + lineLength;
 					int lastOffset = last.start + last.length;
 					if (lastOffset > lineEndOffset) {
 						result = false;
-					}
-					else {
+					} else {
 						result = true;
 					}
 				}
-			}
-			else {
+			} else {
 				// a zero length array is ok
 				result = true;
 			}

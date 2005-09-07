@@ -1,15 +1,15 @@
-/*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+/*
+ * Copyright (c) 2005 IBM Corporation and others.
+ * All rights reserved.   This program and the accompanying materials
+ * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/cpl-v10.html
  * 
  * Contributors:
- *     IBM Corporation - initial API and implementation
- *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
- *******************************************************************************/
+ *   IBM - Initial API and implementation
+ *   Jens Lukowski/Innoopract - initial renaming/restructuring
+ * 
+ */
 package org.eclipse.wst.sse.ui.internal.taginfo;
 
 import java.util.ArrayList;
@@ -21,16 +21,20 @@ import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.wst.sse.ui.internal.Logger;
 
-
 /**
  * Provides the best hover help documentation (by using other hover help
  * processors) Priority of hover help processors is: ProblemHoverProcessor,
  * TagInfoProcessor, AnnotationHoverProcessor
  */
-public abstract class AbstractBestMatchHoverProcessor implements ITextHover {
+public class BestMatchHover implements ITextHover {
 	private ITextHover fBestMatchHover; // current best match text hover
+	private ITextHover fTagInfoHover; // documentation/information hover
+	private List fTextHovers; // list of text hovers to consider in best
+								// match
 
-	private List fTextHovers; // list of text hovers to consider in best match
+	public BestMatchHover(ITextHover infotaghover) {
+		fTagInfoHover = infotaghover;
+	}
 
 	/**
 	 * Create a list of text hovers applicable to this best match hover
@@ -38,7 +42,7 @@ public abstract class AbstractBestMatchHoverProcessor implements ITextHover {
 	 * 
 	 * @return List of ITextHover - in abstract class this is empty list
 	 */
-	protected List createTextHoversList() {
+	private List createTextHoversList() {
 		List hoverList = new ArrayList();
 		// if currently debugging, then add the debug hover to the list of
 		// best match
@@ -47,9 +51,8 @@ public abstract class AbstractBestMatchHoverProcessor implements ITextHover {
 		}
 
 		hoverList.add(new ProblemAnnotationHoverProcessor());
-		ITextHover taginfo = getTagInfoHover();
-		if (taginfo != null) {
-			hoverList.add(taginfo);
+		if (fTagInfoHover != null) {
+			hoverList.add(fTagInfoHover);
 		}
 		hoverList.add(new AnnotationHoverProcessor());
 		return hoverList;
@@ -106,12 +109,7 @@ public abstract class AbstractBestMatchHoverProcessor implements ITextHover {
 		return hoverRegion;
 	}
 
-	/**
-	 * @return the appropriate tag info hover help processor
-	 */
-	protected abstract ITextHover getTagInfoHover();
-
-	protected List getTextHovers() {
+	private List getTextHovers() {
 		if (fTextHovers == null) {
 			fTextHovers = createTextHoversList();
 		}

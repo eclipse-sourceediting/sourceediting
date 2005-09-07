@@ -33,8 +33,6 @@ public class LineStyleProviderForCSS extends AbstractLineStyleProvider implement
 	 */
 	public LineStyleProviderForCSS() {
 		super();
-		initAttributes();
-		loadColors();
 	}
 
 	protected TextAttribute getAttributeFor(ITextRegion region) {
@@ -171,12 +169,14 @@ public class LineStyleProviderForCSS extends AbstractLineStyleProvider implement
 	public void release() {
 		if (fColorTypes != null) {
 			fColorTypes.clear();
+			fColorTypes = null;
 		}
 		super.release();
 	}
 
 	public void loadColors() {
-		clearColors();
+		initAttributes();
+		
 		addTextAttribute(IStyleConstantsCSS.ATMARK_RULE);
 		addTextAttribute(IStyleConstantsCSS.COLON);
 		addTextAttribute(IStyleConstantsCSS.COMMENT);
@@ -190,10 +190,6 @@ public class LineStyleProviderForCSS extends AbstractLineStyleProvider implement
 		addTextAttribute(IStyleConstantsCSS.SEMI_COLON);
 		addTextAttribute(IStyleConstantsCSS.STRING);
 		addTextAttribute(IStyleConstantsCSS.URI);
-	}
-
-	protected void clearColors() {
-		getTextAttributes().clear();
 	}
 
 	protected IPreferenceStore getColorPreferences() {

@@ -17,9 +17,10 @@ import java.util.List;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IAutoEditStrategy;
-import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.IInformationControl;
+import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
@@ -34,20 +35,16 @@ import org.eclipse.jface.text.information.InformationPresenter;
 import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.source.ISourceViewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
-import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTypes;
-import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.format.StructuredFormattingStrategy;
 import org.eclipse.wst.sse.ui.internal.provisional.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.provisional.preferences.CommonEditorPreferenceNames;
-import org.eclipse.wst.sse.ui.internal.provisional.style.IHighlighter;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
-import org.eclipse.wst.sse.ui.internal.taginfo.AnnotationHoverProcessor;
-import org.eclipse.wst.sse.ui.internal.taginfo.ProblemAnnotationHoverProcessor;
 import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.eclipse.wst.xml.core.internal.XMLCorePlugin;
@@ -60,37 +57,40 @@ import org.eclipse.wst.xml.ui.internal.autoedit.StructuredAutoEditStrategyXML;
 import org.eclipse.wst.xml.ui.internal.contentassist.NoRegionContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLContentAssistProcessor;
 import org.eclipse.wst.xml.ui.internal.correction.CorrectionProcessorXML;
+import org.eclipse.wst.xml.ui.internal.derived.HTMLTextPresenter;
 import org.eclipse.wst.xml.ui.internal.doubleclick.XMLDoubleClickStrategy;
 import org.eclipse.wst.xml.ui.internal.hyperlink.XMLHyperlinkDetector;
 import org.eclipse.wst.xml.ui.internal.style.LineStyleProviderForXML;
-import org.eclipse.wst.xml.ui.internal.taginfo.XMLBestMatchHoverProcessor;
 import org.eclipse.wst.xml.ui.internal.taginfo.XMLInformationProvider;
 import org.eclipse.wst.xml.ui.internal.taginfo.XMLTagInfoHoverProcessor;
 import org.eclipse.wst.xml.ui.internal.validation.StructuredTextReconcilingStrategyForMarkup;
 
 /**
- * This class provides
+ * This class provides a SourceViewerConfiguration for editing XML content
+ * type. Not intended to be subclassed.
  * 
  * @plannedfor 1.0
  */
 public class StructuredTextViewerConfigurationXML extends StructuredTextViewerConfiguration {
-
-	InformationPresenter fInformationPresenter = null;
-
-	public StructuredTextViewerConfigurationXML() {
-		super();
-	}
-
-	public StructuredTextViewerConfigurationXML(IPreferenceStore store) {
-		super(store);
-	}
-
 	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getAutoEditStrategies(org.eclipse.jface.text.source.ISourceViewer,
-	 *      java.lang.String)
+	 * One instance per configuration because not sourceviewer-specific and
+	 * it's a String array
 	 */
+	private String[] fConfiguredContentTypes;
+	/*
+	 * One instance per configuration because not sourceviewer-specific and
+	 * requires special uninstall
+	 */
+	private IContentAssistant fCorrectionAssistant;
+	/*
+	 * One instance per configuration
+	 */
+	private LineStyleProvider fLineStyleProviderForXML;
+	/*
+	 * One instance per configuration
+	 */
+	private IReconciler fReconciler;
+
 	public IAutoEditStrategy[] getAutoEditStrategies(ISourceViewer sourceViewer, String contentType) {
 		List allStrategies = new ArrayList(0);
 
@@ -98,7 +98,7 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		for (int i = 0; i < superStrategies.length; i++) {
 			allStrategies.add(superStrategies[i]);
 		}
-		
+
 		if (contentType == IXMLPartitions.XML_DEFAULT) {
 			allStrategies.add(new StructuredAutoEditStrategyXML());
 		}
@@ -113,31 +113,41 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 
 	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
 
-		if (configuredContentTypes == null) {
+		if (fConfiguredContentTypes == null) {
 			String[] xmlTypes = StructuredTextPartitionerForXML.getConfiguredContentTypes();
-			configuredContentTypes = new String[xmlTypes.length + 2];
-			configuredContentTypes[0] = IStructuredPartitionTypes.DEFAULT_PARTITION;
-			configuredContentTypes[1] = IStructuredPartitionTypes.UNKNOWN_PARTITION;
+			fConfiguredContentTypes = new String[xmlTypes.length + 2];
+			fConfiguredContentTypes[0] = IStructuredPartitionTypes.DEFAULT_PARTITION;
+			fConfiguredContentTypes[1] = IStructuredPartitionTypes.UNKNOWN_PARTITION;
 			int index = 0;
-			System.arraycopy(xmlTypes, 0, configuredContentTypes, index += 2, xmlTypes.length);
+			System.arraycopy(xmlTypes, 0, fConfiguredContentTypes, index += 2, xmlTypes.length);
 		}
-		return configuredContentTypes;
+		return fConfiguredContentTypes;
 	}
 
 	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
+		ContentAssistant assistant = (ContentAssistant)super.getContentAssistant(sourceViewer);
 
-		IContentAssistant ca = super.getContentAssistant(sourceViewer);
-		if (ca != null && ca instanceof ContentAssistant) {
-			ContentAssistant contentAssistant = (ContentAssistant) ca;
-			IContentAssistProcessor xmlContentAssistProcessor = new XMLContentAssistProcessor();
-			IContentAssistProcessor noRegionProcessor = new NoRegionContentAssistProcessor();
-			setContentAssistProcessor(contentAssistant, xmlContentAssistProcessor, IStructuredPartitionTypes.DEFAULT_PARTITION);
-			setContentAssistProcessor(contentAssistant, xmlContentAssistProcessor, IXMLPartitions.XML_DEFAULT);
-			setContentAssistProcessor(contentAssistant, noRegionProcessor, IStructuredPartitionTypes.UNKNOWN_PARTITION);
-		}
-		return ca;
+		// create content assist processors to be used
+		IContentAssistProcessor xmlContentAssistProcessor = new XMLContentAssistProcessor();
+		IContentAssistProcessor noRegionProcessor = new NoRegionContentAssistProcessor();
+
+		// add processors to content assistant
+		assistant.setContentAssistProcessor(xmlContentAssistProcessor, IStructuredPartitionTypes.DEFAULT_PARTITION);
+		assistant.setContentAssistProcessor(xmlContentAssistProcessor, IXMLPartitions.XML_DEFAULT);
+		assistant.setContentAssistProcessor(noRegionProcessor, IStructuredPartitionTypes.UNKNOWN_PARTITION);
+
+		return assistant;
 	}
 
+	/**
+	 * Returns the content formatter ready to be used with the given source
+	 * viewer.
+	 * 
+	 * @param sourceViewer
+	 *            the source viewer to be configured by this configuration
+	 * @return a content formatter or <code>null</code> if formatting should
+	 *         not be supported
+	 */
 	public IContentFormatter getContentFormatter(ISourceViewer sourceViewer) {
 		final MultiPassContentFormatter formatter = new MultiPassContentFormatter(getConfiguredDocumentPartitioning(sourceViewer), IXMLPartitions.XML_DEFAULT);
 
@@ -147,22 +157,38 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 	}
 
 	public IContentAssistant getCorrectionAssistant(ISourceViewer sourceViewer) {
-		IContentAssistant ca = super.getCorrectionAssistant(sourceViewer);
+		/*
+		 * Ensure that only one assistant is ever returned. Creating a second
+		 * assistant that is added to a viewer can cause odd key-eating by the
+		 * wrong one. Also do not create correction assistant if sourceviewer
+		 * is null.
+		 */
+		if (fCorrectionAssistant == null && sourceViewer != null) {
+			ContentAssistant assistant;
 
-		if (ca != null && ca instanceof ContentAssistant) {
-			ContentAssistant correctionAssistant = (ContentAssistant) ca;
-			ITextEditor editor = getTextEditor();
-			if (editor != null) {
-				IContentAssistProcessor correctionProcessor = new CorrectionProcessorXML(editor);
-				correctionAssistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.XML_DEFAULT);
-				correctionAssistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.XML_CDATA);
-				correctionAssistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.XML_COMMENT);
-				correctionAssistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.XML_DECLARATION);
-				correctionAssistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.XML_PI);
-				correctionAssistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.DTD_SUBSET);
+			IContentAssistant ca = super.getCorrectionAssistant(sourceViewer);
+			if (!(ca instanceof ContentAssistant)) {
+				assistant = new ContentAssistant();
+
+				// content assistant configurations
+				assistant.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
 			}
+			else {
+				assistant = (ContentAssistant) ca;
+			}
+			if (sourceViewer != null) {
+				IContentAssistProcessor correctionProcessor = new CorrectionProcessorXML(sourceViewer);
+				assistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.XML_DEFAULT);
+				assistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.XML_CDATA);
+				assistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.XML_COMMENT);
+				assistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.XML_DECLARATION);
+				assistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.XML_PI);
+				assistant.setContentAssistProcessor(correctionProcessor, IXMLPartitions.DTD_SUBSET);
+			}
+			fCorrectionAssistant = assistant;
 		}
-		return ca;
+
+		return fCorrectionAssistant;
 	}
 
 	public ITextDoubleClickStrategy getDoubleClickStrategy(ISourceViewer sourceViewer, String contentType) {
@@ -173,119 +199,6 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		else
 			doubleClickStrategy = super.getDoubleClickStrategy(sourceViewer, contentType);
 		return doubleClickStrategy;
-	}
-
-	public IHighlighter getHighlighter(ISourceViewer sourceViewer) {
-
-		IHighlighter highlighter = super.getHighlighter(sourceViewer);
-		if (highlighter != null) {
-			LineStyleProvider xmlProvider = new LineStyleProviderForXML();
-			highlighter.addProvider(IXMLPartitions.XML_DEFAULT, xmlProvider);
-			highlighter.addProvider(IXMLPartitions.XML_CDATA, xmlProvider);
-			highlighter.addProvider(IXMLPartitions.XML_COMMENT, xmlProvider);
-			highlighter.addProvider(IXMLPartitions.XML_DECLARATION, xmlProvider);
-			highlighter.addProvider(IXMLPartitions.XML_PI, xmlProvider);
-		}
-		return highlighter;
-	}
-
-	public IInformationPresenter getInformationPresenter(ISourceViewer sourceViewer) {
-
-		if (fInformationPresenter == null) {
-			fInformationPresenter = new InformationPresenter(getInformationPresenterControlCreator(sourceViewer));
-			IInformationProvider xmlInformationProvider = new XMLInformationProvider();
-			fInformationPresenter.setInformationProvider(xmlInformationProvider, IStructuredPartitionTypes.DEFAULT_PARTITION);
-			fInformationPresenter.setInformationProvider(xmlInformationProvider, IXMLPartitions.XML_DEFAULT);
-			fInformationPresenter.setSizeConstraints(60, 10, true, true);
-			fInformationPresenter.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
-		}
-		return fInformationPresenter;
-	}
-
-	public IReconciler getReconciler(ISourceViewer sourceViewer) {
-
-		if (fReconciler != null) {
-			// a reconciler should always be installed or disposed of
-			if (!fReconciler.isInstalled()) {
-				fReconciler = null;
-			}
-		}
-
-		if (fReconciler == null) {
-			fReconciler = new StructuredRegionProcessor();
-			fReconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
-		}
-
-		boolean reconcilingEnabled = fPreferenceStore.getBoolean(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
-
-		if (!reconcilingEnabled)
-			return fReconciler;
-
-		// the second time through, the strategies are set
-		if (fReconciler != null) {
-
-			IDocument doc = ((StructuredTextEditor) editorPart).getDocumentProvider().getDocument(editorPart.getEditorInput());
-			IStructuredModel sModel = StructuredModelManager.getModelManager().getExistingModelForRead(doc);
-
-			try {
-
-				if (sModel != null) {
-
-					IReconcilingStrategy markupStrategy = new StructuredTextReconcilingStrategyForMarkup((ITextEditor) editorPart);
-					fReconciler.setReconcilingStrategy(markupStrategy, IXMLPartitions.XML_DEFAULT);
-					fReconciler.setDefaultStrategy(markupStrategy);
-
-					String contentTypeId = sModel.getContentTypeIdentifier();
-					if (contentTypeId != null)
-						fReconciler.setValidatorStrategy(createValidatorStrategy(contentTypeId));
-				}
-			} finally {
-				if (sModel != null)
-					sModel.releaseFromRead();
-			}
-		}
-		return fReconciler;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getTextHover(org.eclipse.jface.text.source.ISourceViewer,
-	 *      java.lang.String, int)
-	 */
-	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {
-		// look for appropriate text hover processor to return based on
-		// content type and state mask
-		if ((contentType == IStructuredPartitionTypes.DEFAULT_PARTITION) || (contentType == IXMLPartitions.XML_DEFAULT)) {
-			// check which of xml's text hover is handling stateMask
-			TextHoverManager.TextHoverDescriptor[] hoverDescs = getTextHovers();
-			int i = 0;
-			while (i < hoverDescs.length) {
-				if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {
-					String hoverType = hoverDescs[i].getId();
-					if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType))
-						return new XMLBestMatchHoverProcessor();
-					else if (TextHoverManager.PROBLEM_HOVER.equalsIgnoreCase(hoverType))
-						return new ProblemAnnotationHoverProcessor();
-					else if (TextHoverManager.ANNOTATION_HOVER.equalsIgnoreCase(hoverType))
-						return new AnnotationHoverProcessor();
-					else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType))
-						return new XMLTagInfoHoverProcessor();
-				}
-				i++;
-			}
-		}
-		return super.getTextHover(sourceViewer, contentType, stateMask);
-	}
-
-	public void unConfigure(ISourceViewer viewer) {
-
-		super.unConfigure(viewer);
-
-		// InformationPresenters
-		if (fInformationPresenter != null) {
-			fInformationPresenter.uninstall();
-		}
 	}
 
 	/*
@@ -329,7 +242,8 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 
 				if (i != 0)
 					appendTab = true;
-			} else {
+			}
+			else {
 				for (int j = 0; j < i; j++)
 					prefix.append(' ');
 
@@ -350,5 +264,131 @@ public class StructuredTextViewerConfigurationXML extends StructuredTextViewerCo
 		vector.add(""); //$NON-NLS-1$
 
 		return (String[]) vector.toArray(new String[vector.size()]);
+	}
+
+	/**
+	 * Returns the information control creator. The creator is a factory
+	 * creating information controls for the given source viewer.
+	 * 
+	 * @param sourceViewer
+	 *            the source viewer to be configured by this configuration
+	 * @return the information control creator or <code>null</code> if no
+	 *         information support should be installed
+	 * @since 2.0
+	 */
+	public IInformationControlCreator getInformationControlCreator(ISourceViewer sourceViewer) {
+		// used by hover help
+		return new IInformationControlCreator() {
+			public IInformationControl createInformationControl(Shell parent) {
+				return new DefaultInformationControl(parent, SWT.NONE, new HTMLTextPresenter(false));
+			}
+		};
+	}
+
+	public IInformationPresenter getInformationPresenter(ISourceViewer sourceViewer) {
+		InformationPresenter presenter = new InformationPresenter(getInformationPresenterControlCreator(sourceViewer));
+
+		// information presenter configurations
+		presenter.setSizeConstraints(60, 10, true, true);
+		presenter.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
+
+		// information providers to be used
+		IInformationProvider xmlInformationProvider = new XMLInformationProvider();
+
+		// add information providers to information presenter
+		presenter.setInformationProvider(xmlInformationProvider, IStructuredPartitionTypes.DEFAULT_PARTITION);
+		presenter.setInformationProvider(xmlInformationProvider, IXMLPartitions.XML_DEFAULT);
+
+		return presenter;
+	}
+
+	/**
+	 * Returns the information presenter control creator. The creator is a
+	 * factory creating the presenter controls for the given source viewer.
+	 * 
+	 * @param sourceViewer
+	 *            the source viewer to be configured by this configuration
+	 * @return an information control creator
+	 */
+	private IInformationControlCreator getInformationPresenterControlCreator(ISourceViewer sourceViewer) {
+		return new IInformationControlCreator() {
+			public IInformationControl createInformationControl(Shell parent) {
+				int shellStyle = SWT.RESIZE | SWT.TOOL;
+				int style = SWT.V_SCROLL | SWT.H_SCROLL;
+				return new DefaultInformationControl(parent, shellStyle, style, new HTMLTextPresenter(false));
+			}
+		};
+	}
+
+	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
+		LineStyleProvider[] providers = null;
+
+		if (partitionType == IXMLPartitions.XML_DEFAULT || partitionType == IXMLPartitions.XML_CDATA || partitionType == IXMLPartitions.XML_COMMENT || partitionType == IXMLPartitions.XML_DECLARATION || partitionType == IXMLPartitions.XML_PI) {
+			providers = new LineStyleProvider[]{getLineStyleProviderForXML()};
+		}
+
+		return providers;
+	}
+
+	private LineStyleProvider getLineStyleProviderForXML() {
+		if (fLineStyleProviderForXML == null)
+			fLineStyleProviderForXML = new LineStyleProviderForXML();
+		return fLineStyleProviderForXML;
+	}
+
+
+	public IReconciler getReconciler(ISourceViewer sourceViewer) {
+		boolean reconcilingEnabled = fPreferenceStore.getBoolean(CommonEditorPreferenceNames.EVALUATE_TEMPORARY_PROBLEMS);
+		if (sourceViewer == null || !reconcilingEnabled)
+			return null;
+
+		/*
+		 * Only create reconciler if sourceviewer is present
+		 */
+		if (fReconciler == null && sourceViewer != null) {
+			StructuredRegionProcessor reconciler = new StructuredRegionProcessor();
+
+			// reconciler configurations
+			reconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
+
+			// reconciling strategies for reconciler
+			IReconcilingStrategy markupStrategy = new StructuredTextReconcilingStrategyForMarkup(sourceViewer);
+
+			// add reconciling strategies
+			reconciler.setReconcilingStrategy(markupStrategy, IXMLPartitions.XML_DEFAULT);
+			reconciler.setDefaultStrategy(markupStrategy);
+
+			fReconciler = reconciler;
+		}
+		return fReconciler;
+	}
+
+	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {
+		ITextHover textHover = null;
+
+		// look for appropriate text hover processor to return based on
+		// content type and state mask
+		if ((contentType == IStructuredPartitionTypes.DEFAULT_PARTITION) || (contentType == IXMLPartitions.XML_DEFAULT)) {
+			// check which of xml's text hover is handling stateMask
+			TextHoverManager manager = SSEUIPlugin.getDefault().getTextHoverManager();
+			TextHoverManager.TextHoverDescriptor[] hoverDescs = manager.getTextHovers();
+			int i = 0;
+			while (i < hoverDescs.length && textHover == null) {
+				if (hoverDescs[i].isEnabled() && EditorUtility.computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {
+					String hoverType = hoverDescs[i].getId();
+					if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType))
+						textHover = manager.createBestMatchHover(new XMLTagInfoHoverProcessor());
+					else if (TextHoverManager.DOCUMENTATION_HOVER.equalsIgnoreCase(hoverType))
+						textHover = new XMLTagInfoHoverProcessor();
+				}
+				i++;
+			}
+		}
+
+		// no appropriate text hovers found, try super
+		if (textHover == null)
+			textHover = super.getTextHover(sourceViewer, contentType, stateMask);
+
+		return textHover;
 	}
 }

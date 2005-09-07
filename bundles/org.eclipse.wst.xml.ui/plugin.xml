@@ -31,95 +31,39 @@
 			id="org.eclipse.wst.xml.core.ui.catalogFileType.tld">
 		</fileType>
 	</extension>
-	<extension point="org.eclipse.wst.sse.ui.extendedconfiguration">
-		<configuration
-			type="textviewerconfiguration"
+	
+	<!--The org.eclipse.wst.xml.core.xmlsource content type is only for
+		handling some special cases of ill-formed xml in a reasonable
+		manner, and should not be emulated by clients. The two content
+		types are often used interchangeably by the XML component, but
+		please use org.eclipse.core.runtime.xml instead. -->
+	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
+		<sourceViewerConfiguration
 			class="org.eclipse.wst.xml.ui.internal.provisional.StructuredTextViewerConfigurationXML"
-			target="org.eclipse.core.runtime.xml" />
-		<configuration
-			type="contentoutlineconfiguration"
+			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
+		<contentOutlineConfiguration
 			class="org.eclipse.wst.xml.ui.internal.views.contentoutline.XMLContentOutlineConfiguration"
-			target="org.eclipse.core.runtime.xml" />
-		<configuration
-			type="propertysheetconfiguration"
+			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
+		<propertySheetConfiguration
 			class="org.eclipse.wst.xml.ui.internal.views.properties.XMLPropertySheetConfiguration"
-			target="org.eclipse.core.runtime.xml" />
-		<configuration
+			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
+		<provisionalConfiguration
 			type="sourceeditingtexttools"
 			class="org.eclipse.wst.xml.ui.internal.provisional.XMLSourceEditingTextTools"
-			target="org.eclipse.core.runtime.xml" />
-		<configuration
+			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
+		<provisionalConfiguration
 			type="characterpairmatcher"
 			class="org.eclipse.wst.xml.ui.internal.text.XMLDocumentRegionEdgeMatcher"
-			target="org.eclipse.core.runtime.xml" />
-		<configuration
-			type="structuredtextfoldingprovider"
+			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
+		<provisionalConfiguration
+			type="structuredtextfoldingprovider, org.eclipse.wst.xml.core.xmlsource"
 			class="org.eclipse.wst.xml.ui.internal.projection.StructuredTextFoldingProviderXML"
-			target="org.eclipse.core.runtime.xml" />
-		<definition
+			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
+		<provisionalDefinition
 			type="preferencepages"
-			value="org.eclipse.wst.sse.ui.preferences.xml"
-			target="org.eclipse.core.runtime.xml" />
-		<definition
-			type="preferencepages"
-			value="org.eclipse.wst.sse.ui.preferences.xml.source"
-			target="org.eclipse.core.runtime.xml" />
-		<definition
-			type="preferencepages"
-			value="org.eclipse.wst.sse.ui.preferences.xml.templates"
-			target="org.eclipse.core.runtime.xml" />
-		<definition
-			type="preferencepages"
-			value="org.eclipse.wst.sse.ui.preferences.xml.colors"
-			target="org.eclipse.core.runtime.xml" />
+			value="org.eclipse.wst.sse.ui.preferences.xml, org.eclipse.wst.sse.ui.preferences.xml.source, org.eclipse.wst.sse.ui.preferences.xml.templates, org.eclipse.wst.sse.ui.preferences.xml.colors"
+			target="org.eclipse.core.runtime.xml, org.eclipse.wst.xml.core.xmlsource" />
 	</extension>
-
-	<!--  this xmlsource content type is just to handle some special cases of ill-formed xml in a reasonable manner, 
-		and should not be emulated by clients. Use org.eclipse.core.runtime.xml instead. -->
-	<extension point="org.eclipse.wst.sse.ui.extendedconfiguration">
-		<configuration
-			type="textviewerconfiguration"
-			class="org.eclipse.wst.xml.ui.internal.provisional.StructuredTextViewerConfigurationXML"
-			target="org.eclipse.wst.xml.core.xmlsource" />
-		<configuration
-			type="contentoutlineconfiguration"
-			class="org.eclipse.wst.xml.ui.internal.views.contentoutline.XMLContentOutlineConfiguration"
-			target="org.eclipse.wst.xml.core.xmlsource" />
-		<configuration
-			type="propertysheetconfiguration"
-			class="org.eclipse.wst.xml.ui.internal.views.properties.XMLPropertySheetConfiguration"
-			target="org.eclipse.wst.xml.core.xmlsource" />
-		<configuration
-			type="sourceeditingtexttools"
-			class="org.eclipse.wst.xml.ui.internal.provisional.XMLSourceEditingTextTools"
-			target="org.eclipse.wst.xml.core.xmlsource" />
-		<configuration
-			type="characterpairmatcher"
-			class="org.eclipse.wst.xml.ui.internal.text.XMLDocumentRegionEdgeMatcher"
-			target="org.eclipse.wst.xml.core.xmlsource" />
-		<configuration
-			type="structuredtextfoldingprovider"
-			class="org.eclipse.wst.xml.ui.internal.projection.StructuredTextFoldingProviderXML"
-			target="org.eclipse.wst.xml.core.xmlsource" />
-		<definition
-			type="preferencepages"
-			value="org.eclipse.wst.sse.ui.preferences.xml"
-			target="org.eclipse.wst.xml.core.xmlsource" />
-		<definition
-			type="preferencepages"
-			value="org.eclipse.wst.sse.ui.preferences.xml.source"
-			target="org.eclipse.wst.xml.core.xmlsource" />
-		<definition
-			type="preferencepages"
-			value="org.eclipse.wst.sse.ui.preferences.xml.templates"
-			target="org.eclipse.wst.xml.core.xmlsource" />
-		<definition
-			type="preferencepages"
-			value="org.eclipse.wst.sse.ui.preferences.xml.colors"
-			target="org.eclipse.wst.xml.core.xmlsource" />
-	</extension>
-
-
 
 	<extension
 		point="org.eclipse.core.filebuffers.annotationModelCreation">

@@ -1,18 +1,16 @@
-/*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+/*
+ * Copyright (c) 2005 IBM Corporation and others.
+ * All rights reserved.   This program and the accompanying materials
+ * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/cpl-v10.html
  * 
  * Contributors:
- *     IBM Corporation - initial API and implementation
- *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
- *******************************************************************************/
-package org.eclipse.wst.sse.ui.internal.editor;
-
-
+ *   IBM - Initial API and implementation
+ *   Jens Lukowski/Innoopract - initial renaming/restructuring
+ * 
+ */
+package org.eclipse.wst.html.ui.internal.derived;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,8 +20,8 @@ import java.text.BreakIterator;
 import org.eclipse.swt.graphics.GC;
 
 /**
- * Copied from org.eclipse.jdt.internal.ui.text.LineBreakingReader No
- * modifications were made
+ * Copied from org.eclipse.jdt.internal.ui.text.LineBreakingReader.
+ * Modifications were made to fix warnings.
  */
 /*
  * Not a real reader. Could change if requested
@@ -70,9 +68,8 @@ public class LineBreakingReader {
 			if (nextWidth > fMaxWidth) {
 				if (currWidth > 0) {
 					return currOffset;
-				} else {
-					return nextOffset;
 				}
+				return nextOffset;
 			}
 			currWidth = nextWidth;
 			currOffset = nextOffset;

@@ -17,7 +17,6 @@ package org.eclipse.wst.xml.ui.internal.contentassist;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
@@ -30,7 +29,6 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
-import org.eclipse.wst.sse.ui.internal.contentassist.IResourceDependentProcessor;
 import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
@@ -42,7 +40,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
  * 
  * @author pavery
  */
-public class NoRegionContentAssistProcessor implements IContentAssistProcessor, IResourceDependentProcessor, IReleasable {
+public class NoRegionContentAssistProcessor implements IContentAssistProcessor, IReleasable {
 
 	protected char completionProposalAutoActivationCharacters[] = null;
 	protected char contextInformationAutoActivationCharacters[] = null;
@@ -51,7 +49,6 @@ public class NoRegionContentAssistProcessor implements IContentAssistProcessor, 
 	protected String fErrorMessage = null;
 	private HashMap fNameToProcessorMap = null;
 	private HashMap fPartitionToProcessorMap = null;
-	protected IResource fResource = null;
 
 	public NoRegionContentAssistProcessor() {
 		super();
@@ -215,17 +212,6 @@ public class NoRegionContentAssistProcessor implements IContentAssistProcessor, 
 	}
 
 	/**
-	 * Necessary for certain content assist processors (such as
-	 * JSPJavaContentAssistProcessor). This gets set in
-	 * StructuredTextViewerConfiguration.
-	 *  
-	 */
-	public void initialize(IResource resource) {
-		fResource = resource;
-		setResourceOnProcessors(resource);
-	}
-
-	/**
 	 * Inits map for extra ContentAssistProcessors (useBean, get/setProperty)
 	 */
 	protected void initNameToProcessorMap() {
@@ -267,25 +253,4 @@ public class NoRegionContentAssistProcessor implements IContentAssistProcessor, 
 	protected void releasePartitionToProcessorMap() {
 		releaseMap(fPartitionToProcessorMap);
 	}
-
-	private void setResourceOnMap(IResource resource, HashMap map) {
-		if (!map.isEmpty()) {
-			Iterator keys = map.keySet().iterator();
-			Object o = null;
-			while (keys.hasNext()) {
-				o = fPartitionToProcessorMap.get(keys.next());
-				if (o instanceof IResourceDependentProcessor)
-					((IResourceDependentProcessor) o).initialize(resource);
-			}
-		}
-	}
-
-	/**
-	 * @param resource
-	 */
-	private void setResourceOnProcessors(IResource resource) {
-		setResourceOnMap(resource, fPartitionToProcessorMap);
-		setResourceOnMap(resource, fNameToProcessorMap);
-	}
-
 }

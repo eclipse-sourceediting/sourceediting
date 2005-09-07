@@ -12,116 +12,70 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.provisional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.DefaultInformationControl;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IInformationControl;
-import org.eclipse.jface.text.IInformationControlCreator;
+import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.IUndoManager;
-import org.eclipse.jface.text.contentassist.ContentAssistant;
-import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.hyperlink.IHyperlinkPresenter;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.jface.text.source.ISourceViewer;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.editors.text.EditorsUI;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
-import org.eclipse.ui.texteditor.ITextEditor;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.ui.texteditor.ChainedPreferenceStore;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
-import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
-import org.eclipse.wst.sse.ui.internal.IExtendedConfiguration;
-import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.StructuredTextAnnotationHover;
-import org.eclipse.wst.sse.ui.internal.contentassist.IResourceDependentProcessor;
-import org.eclipse.wst.sse.ui.internal.editor.HTMLTextPresenter;
+import org.eclipse.wst.sse.ui.internal.contentassist.StructuredContentAssistant;
 import org.eclipse.wst.sse.ui.internal.hyperlink.HighlighterHyperlinkPresenter;
-import org.eclipse.wst.sse.ui.internal.provisional.style.Highlighter;
-import org.eclipse.wst.sse.ui.internal.provisional.style.IHighlighter;
-import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
-import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorBuilder;
-import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorMetaData;
-import org.eclipse.wst.sse.ui.internal.reconcile.validator.ValidatorStrategy;
+import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
+import org.eclipse.wst.sse.ui.internal.taginfo.AnnotationHoverProcessor;
+import org.eclipse.wst.sse.ui.internal.taginfo.BestMatchHover;
+import org.eclipse.wst.sse.ui.internal.taginfo.ProblemAnnotationHoverProcessor;
 import org.eclipse.wst.sse.ui.internal.taginfo.TextHoverManager;
-import org.eclipse.wst.sse.ui.internal.util.Assert;
-import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 
 
 /**
- * Configuration for a SourceViewer that shows an IStructuredDocument
+ * Configuration for the source viewer used by StructuredTextEditor.<br />
+ * Note: While ISourceViewer is passed in for each get configuration, clients
+ * should create a new viewer configuration instance for each instance of
+ * source viewer as some methods return the same instance of an object,
+ * regardless of the sourceviewer.
+ * <p>
+ * Clients should subclass and override just those methods which must be
+ * specific to their needs.
+ * </p>
+ * 
+ * @see org.eclipse.wst.sse.ui.internal.StructuredTextEditor
+ * @see org.eclipse.wst.sse.ui.internal.StructuredTextViewer
  */
-public class StructuredTextViewerConfiguration extends TextSourceViewerConfiguration implements IExtendedConfiguration {
-
-	private static final String CONTENT_ASSIST_PROCESSOR_EXTENDED_ID = "contentassistprocessor"; //$NON-NLS-1$
-	public static final String ID = "textviewerconfiguration"; //$NON-NLS-1$
-	protected String[] configuredContentTypes;
-	protected IEditorPart editorPart;
-	private IAnnotationHover fAnnotationHover = null;
-	protected IContentAssistant fContentAssistant;
-	private List fContentAssistProcessors = null;
-	protected IContentAssistant fCorrectionAssistant;
-	private String fDeclaringID;
-	protected IHighlighter fHighlighter;
-
-	protected StructuredRegionProcessor fReconciler;
-	protected IResource fResource = null;
-	protected final String SSE_EDITOR_ID = "org.eclipse.wst.sse.ui"; //$NON-NLS-1$
-	protected final String SSE_MODEL_ID = "org.eclipse.wst.sse.core"; //$NON-NLS-1$
-
-	/**
-	 * This is intended for unit testing only.
-	 * 
-	 * This preference store will be overwritten when configured with a
-	 * StructuredTextEditor
-	 * 
-	 * @param store
+public class StructuredTextViewerConfiguration extends TextSourceViewerConfiguration implements IExecutableExtension {
+	/*
+	 * One instance per configuration because creating a second assistant that
+	 * is added to a viewer can cause odd key-eating by the wrong one.
 	 */
-	public StructuredTextViewerConfiguration(IPreferenceStore store) {
-		super(store);
-		fContentAssistProcessors = new ArrayList();
-	}
+	private StructuredContentAssistant fContentAssistant = null;
 
-	/**
-	 * Default constructor.
-	 */
 	public StructuredTextViewerConfiguration() {
 		super();
-		fContentAssistProcessors = new ArrayList();
+		// initialize fPreferenceStore with same preference store used in
+		// StructuredTextEditor
+		fPreferenceStore = createCombinedPreferenceStore();
 	}
 
 	/**
-	 * use this constructor to have reconciler
+	 * Create a preference store that combines the source editor preferences
+	 * with the base editor's preferences.
+	 * 
+	 * @return IPreferenceStore
 	 */
-	public StructuredTextViewerConfiguration(IEditorPart textEditor) {
-		this();
-		editorPart = textEditor;
-	}
-
-	public void configureOn(IResource resource) {
-		fResource = resource;
-		updateForResource();
-	}
-
-	protected ValidatorStrategy createValidatorStrategy(String contentTypeId) {
-		ValidatorStrategy validatorStrategy = new ValidatorStrategy(getTextEditor(), contentTypeId);
-		ValidatorBuilder vBuilder = new ValidatorBuilder();
-		ValidatorMetaData[] vmds = vBuilder.getValidatorMetaData("org.eclipse.wst.sse.ui"); //$NON-NLS-1$
-		for (int i = 0; i < vmds.length; i++) {
-			if (vmds[i].canHandleContentType(contentTypeId))
-				validatorStrategy.addValidatorMetaData(vmds[i]);
-		}
-		return validatorStrategy;
+	private IPreferenceStore createCombinedPreferenceStore() {
+		IPreferenceStore sseEditorPrefs = SSEUIPlugin.getDefault().getPreferenceStore();
+		IPreferenceStore baseEditorPrefs = EditorsUI.getPreferenceStore();
+		return new ChainedPreferenceStore(new IPreferenceStore[]{sseEditorPrefs, baseEditorPrefs});
 	}
 
 	/**
@@ -135,35 +89,43 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	 *         should be installed
 	 */
 	public IAnnotationHover getAnnotationHover(ISourceViewer sourceViewer) {
-		if (fAnnotationHover == null) {
-			fAnnotationHover = new StructuredTextAnnotationHover();
-		}
-		return fAnnotationHover;
+		/*
+		 * This implmentation returns an annotation hover that works with
+		 * StructuredTextViewer and breakpoints. Important! must remember to
+		 * release it when done with it (during viewer.unconfigure)
+		 */
+		return new StructuredTextAnnotationHover();
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Returns the configured partitioning for the given source viewer. The
+	 * partitioning is used when the querying content types from the source
+	 * viewer's input document.
 	 * 
-	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getConfiguredDocumentPartitioning(org.eclipse.jface.text.source.ISourceViewer)
+	 * @param sourceViewer
+	 *            the source viewer to be configured by this configuration
+	 * @return the configured partitioning
+	 * @see #getConfiguredContentTypes(ISourceViewer)
 	 */
 	public String getConfiguredDocumentPartitioning(ISourceViewer sourceViewer) {
+		/*
+		 * This implementation returns default structured text partitioning
+		 */
 		return IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING;
 	}
 
-	/*
-	 * @see SourceViewerConfiguration#getConfiguredTextHoverStateMasks(ISourceViewer,
-	 *      String)
-	 * @see 2.1
-	 */
 	public int[] getConfiguredTextHoverStateMasks(ISourceViewer sourceViewer, String contentType) {
-		// content type does not matter when getting hover state mask
+		/*
+		 * This implementation returns configured text hover state masks for
+		 * StructuredTextViewers
+		 */
 		TextHoverManager.TextHoverDescriptor[] hoverDescs = SSEUIPlugin.getDefault().getTextHoverManager().getTextHovers();
 		int stateMasks[] = new int[hoverDescs.length];
 		int stateMasksLength = 0;
 		for (int i = 0; i < hoverDescs.length; i++) {
 			if (hoverDescs[i].isEnabled()) {
 				int j = 0;
-				int stateMask = EditorUtility.computeStateMask(hoverDescs[i].getModifierString());
+				int stateMask = computeStateMask(hoverDescs[i].getModifierString());
 				while (j < stateMasksLength) {
 					if (stateMasks[j] == stateMask)
 						break;
@@ -182,282 +144,69 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	}
 
 	/**
-	 * @see ISourceViewerConfiguration#getContentAssistant
-	 */
-	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
-		if (fContentAssistant == null) {
-			/**
-			 * Ensure that only one assistant is ever returned. Creating a
-			 * second assistant that is added to a viewer can cause odd
-			 * key-eating by the wrong one.
-			 */
-			ContentAssistant assistant = new ContentAssistant() {
-				private Map fExtendedProcessors = new HashMap(0);
-
-				public IContentAssistProcessor getContentAssistProcessor(String contentType) {
-					IContentAssistProcessor processor = super.getContentAssistProcessor(contentType);
-					// NOT YET FINALIZED - DO NOT CONSIDER AS API
-					if (processor == null && !fExtendedProcessors.containsKey(contentType)) {
-						processor = (IContentAssistProcessor) ExtendedConfigurationBuilder.getInstance().getConfiguration(CONTENT_ASSIST_PROCESSOR_EXTENDED_ID, contentType);
-						fExtendedProcessors.put(contentType, processor);
-						/*
-						 * Copied from setContentAssistProcessor to avoid
-						 * calling getContentAssistProcessor() from within
-						 * getContentAssistProcessor()
-						 */
-						fContentAssistProcessors.add(processor);
-						if (processor instanceof IResourceDependentProcessor)
-							((IResourceDependentProcessor) processor).initialize(fResource);
-						setContentAssistProcessor(processor, contentType);
-					}
-					return processor;
-				}
-			};
-
-			// content assistant configurations
-			assistant.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
-			assistant.enableAutoActivation(true);
-			assistant.setAutoActivationDelay(500);
-			assistant.setProposalPopupOrientation(IContentAssistant.PROPOSAL_OVERLAY);
-			assistant.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_ABOVE);
-			assistant.setInformationControlCreator(getInformationControlCreator(sourceViewer));
-			fContentAssistant = assistant;
-		}
-		updateForResource();
-		return fContentAssistant;
-	}
-
-	public IContentAssistant getCorrectionAssistant(ISourceViewer sourceViewer) {
-		if (fCorrectionAssistant == null) {
-			/**
-			 * Ensure that only one assistant is ever returned. Creating a
-			 * second assistant that is added to a viewer can cause odd
-			 * key-eating by the wrong one.
-			 */
-			ContentAssistant assistant = new ContentAssistant();
-			assistant.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
-			fCorrectionAssistant = assistant;
-		}
-		updateForResource();
-		return fCorrectionAssistant;
-	}
-
-	/**
-	 * @return Returns the declaringID.
-	 */
-	public String getDeclaringID() {
-		return fDeclaringID;
-	}
-
-	/**
-	 * @return Returns the editorPart.
-	 */
-	protected IEditorPart getEditorPart() {
-		return editorPart;
-	}
-
-	public IHighlighter getHighlighter(ISourceViewer viewer) {
-		/*
-		 * Assuming for now that only one highlighter is needed per
-		 * configuration, and that its just configured for lots of different
-		 * content types. In the future, this may change, if its tied closer
-		 * to the actual content type (for example, made specifc for HTML vs.
-		 * XML). I think it would be little impact to create a new instance
-		 * each time.
-		 */
-		if (fHighlighter != null) {
-			fHighlighter.uninstall();
-		}
-		else {
-			Highlighter highlighter = new Highlighter();
-			highlighter.setDocumentPartitioning(getConfiguredDocumentPartitioning(viewer));
-			fHighlighter = highlighter;
-		}
-		// Allow viewer to be null for easier unit testing, but during normal
-		// use, would not be null
-		if (viewer != null) {
-			IDocument doc = viewer.getDocument();
-			if (doc instanceof IStructuredDocument) {
-				IStructuredDocument structuredDocument = (IStructuredDocument) doc;
-				fHighlighter.setDocument(structuredDocument);
-			}
-		}
-		return fHighlighter;
-	}
-
-	/*
-	 * @see SourceViewerConfiguration#getHoverControlCreator(ISourceViewer)
-	 */
-	public IInformationControlCreator getInformationControlCreator(ISourceViewer sourceViewer) {
-		return new IInformationControlCreator() {
-			public IInformationControl createInformationControl(Shell parent) {
-				// int style= cutDown ? SWT.NONE : (SWT.V_SCROLL |
-				// SWT.H_SCROLL);
-				int style = SWT.NONE;
-				return new DefaultInformationControl(parent, style, new HTMLTextPresenter(false));
-			}
-		};
-	}
-
-	/**
-	 * Returns the information presenter control creator. The creator is a
-	 * factory creating the presenter controls for the given source viewer.
-	 * This implementation always returns a creator for
-	 * <code>DefaultInformationControl</code> instances. (Copied from
-	 * JavaSourceViewerConfiguration)
+	 * Returns the content assistant ready to be used with the given source
+	 * viewer.<br />
+	 * Note: The same instance of IContentAssistant is returned regardless of
+	 * the source viewer passed in.
+	 * <p>
+	 * Clients overriding this method to add their own processors should call
+	 * <code>super.getContentAssist()</code> to get the right content
+	 * assistant and then call
+	 * <code>((ContentAssistant)assistant).setContentAssistProcessor()</code>.
+	 * </p>
 	 * 
 	 * @param sourceViewer
 	 *            the source viewer to be configured by this configuration
-	 * @return an information control creator
+	 * @return a content assistant or <code>null</code> if content assist
+	 *         should not be supported
 	 */
-	protected IInformationControlCreator getInformationPresenterControlCreator(ISourceViewer sourceViewer) {
-		return new IInformationControlCreator() {
-			public IInformationControl createInformationControl(Shell parent) {
-				int shellStyle = SWT.RESIZE;
-				int style = SWT.V_SCROLL | SWT.H_SCROLL;
-				return new DefaultInformationControl(parent, shellStyle, style, new HTMLTextPresenter(false));
-			}
-		};
+	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
+		/*
+		 * Note: need to install content assistant so that content assist
+		 * processors contributed via extension point will be picked up
+		 */
+		if (fContentAssistant == null) {
+			fContentAssistant = new StructuredContentAssistant();
+
+			// content assistant configurations
+			fContentAssistant.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
+			fContentAssistant.enableAutoActivation(true);
+			fContentAssistant.setAutoActivationDelay(500);
+			fContentAssistant.setProposalPopupOrientation(IContentAssistant.PROPOSAL_OVERLAY);
+			fContentAssistant.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_ABOVE);
+			fContentAssistant.setInformationControlCreator(getInformationControlCreator(sourceViewer));
+		}
+		return fContentAssistant;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Returns correction assistant that will be used by QuickFix/QuickAssist
+	 * operation in the given source viewer.<br />
+	 * TODO: ISSUE: This method may be removed from API in near future if base
+	 * adds support.
 	 * 
-	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getOverviewRulerAnnotationHover(org.eclipse.jface.text.source.ISourceViewer)
+	 * @param sourceViewer
+	 *            the source viewer to be configured by this configuration
+	 * @return IContentAssistant or null if correction should not be supported
 	 */
-	public IAnnotationHover getOverviewRulerAnnotationHover(ISourceViewer arg0) {
-		return new StructuredTextAnnotationHover();
-	}
-
-	public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
+	public IContentAssistant getCorrectionAssistant(ISourceViewer sourceViewer) {
 		return null;
 	}
 
-	protected ITextEditor getTextEditor() {
-		ITextEditor editor = null;
-		if (editorPart instanceof ITextEditor)
-			editor = (ITextEditor) editorPart;
-		if (editor == null && editorPart != null)
-			editor = (ITextEditor) editorPart.getAdapter(ITextEditor.class);
-		return editor;
-	}
-
 	/**
-	 * Returns the text hovers available in StructuredTextEditors
+	 * Returns the hyperlink presenter for the given source viewer.
 	 * 
-	 * @return TextHoverManager.TextHoverDescriptor[]
-	 */
-	protected TextHoverManager.TextHoverDescriptor[] getTextHovers() {
-		return SSEUIPlugin.getDefault().getTextHoverManager().getTextHovers();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.text.source.SourceViewerConfiguration#getUndoManager(org.eclipse.jface.text.source.ISourceViewer)
-	 */
-	public IUndoManager getUndoManager(ISourceViewer sourceViewer) {
-		return new StructuredTextViewerUndoManager();
-	}
-
-	/**
-	 * Sets the given IContentAssistProcessor into the given ContentAssistant
-	 * for the partitionType, handling certain extra initialization steps.
-	 * 
-	 * @param ca
-	 * @param newProcessor
-	 * @param partitionType
-	 */
-	protected void setContentAssistProcessor(ContentAssistant ca, IContentAssistProcessor newProcessor, String partitionType) {
-		// save for reinit and release
-		IContentAssistProcessor previousProcessor = ca.getContentAssistProcessor(partitionType);
-		if (previousProcessor != null) {
-			if(previousProcessor instanceof IReleasable)
-				((IReleasable)previousProcessor).release();
-			fContentAssistProcessors.remove(previousProcessor);
-		}
-		fContentAssistProcessors.add(newProcessor);
-		if (newProcessor instanceof IResourceDependentProcessor)
-			((IResourceDependentProcessor) newProcessor).initialize(fResource);
-		ca.setContentAssistProcessor(newProcessor, partitionType);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.ui.extension.IExtendedConfiguration#setDeclaringID(java.lang.String)
-	 */
-	public void setDeclaringID(String targetID) {
-		fDeclaringID = targetID;
-	}
-
-	/**
-	 * @param editorPart
-	 *            The editorPart to set.
-	 */
-	public void setEditorPart(IEditorPart editorPart) {
-		this.editorPart = editorPart;
-	}
-
-	/**
-	 * This method is allow any cleanup to take place that is not otherwise
-	 * done in the viewer's unConfigure method. In some cases, things may be
-	 * done "twice" ... so uninstall, release, etc., should be prepared.
-	 */
-	public void unConfigure(ISourceViewer viewer) {
-		editorPart = null;
-		// If there're any processors we're hanging on to, be sure they have a
-		// chance to clean themselves up.
-		if (fHighlighter != null) {
-			fHighlighter.uninstall();
-		}
-		if (fContentAssistant != null) {
-			fContentAssistant.uninstall();
-		}
-		if (fReconciler != null) {
-			fReconciler.uninstall();
-		}
-		if (fContentAssistant != null) {
-			unconfigureContentAssistProcessors();
-		}
-		if (fAnnotationHover != null && fAnnotationHover instanceof IReleasable) {
-			((IReleasable) fAnnotationHover).release();
-		}
-	}
-
-	/**
-	 * 
-	 */
-	private void unconfigureContentAssistProcessors() {
-		if (!fContentAssistProcessors.isEmpty()) {
-			Iterator it = fContentAssistProcessors.iterator();
-			IContentAssistProcessor p = null;
-			while (it.hasNext()) {
-				p = (IContentAssistProcessor) it.next();
-				if (p instanceof IReleasable)
-					((IReleasable) p).release();
-			}
-		}
-	}
-
-	protected void updateForResource() {
-		if (!fContentAssistProcessors.isEmpty()) {
-			Iterator it = fContentAssistProcessors.iterator();
-			IContentAssistProcessor p = null;
-			while (it.hasNext()) {
-				p = (IContentAssistProcessor) it.next();
-				if (p instanceof IResourceDependentProcessor)
-					((IResourceDependentProcessor) p).initialize(fResource);
-			}
-		}
-	}
-
-
-	/**
-	 * Use a special hyperlink presenter that is aware of how Highlighter
-	 * works instead of PresentationReconciler.
+	 * @param sourceViewer
+	 *            the source viewer to be configured by this configuration
+	 * @return the hyperlink presenter or <code>null</code> if no hyperlink
+	 *         support should be installed
+	 * @since 3.1
 	 */
 	public IHyperlinkPresenter getHyperlinkPresenter(ISourceViewer sourceViewer) {
+		/*
+		 * This implementation returns a hyperlink presenter that uses
+		 * Highlither instead of PresentationReconciler
+		 */
 		if (fPreferenceStore == null) {
 			return super.getHyperlinkPresenter(sourceViewer);
 		}
@@ -465,16 +214,73 @@ public class StructuredTextViewerConfiguration extends TextSourceViewerConfigura
 	}
 
 	/**
-	 * Set the preference store used to initialize this configuration. This
-	 * method should only be called once or always with the same value. If a
-	 * preference store was passed in via a constructor, it is an error to
-	 * call this method with a different preference store.
+	 * Returns the line style providers that will be used for syntax
+	 * highlighting in the given source viewer.
 	 * 
-	 * @param store
-	 *            the preference store to use
+	 * @param sourceViewer
+	 *            the source viewer to be configured by this configuration
+	 * @param partitionType
+	 *            the partition type for which the lineStyleProviders are
+	 *            applicable
+	 * @return LineStyleProvders or null if should not be supported
 	 */
-	public void setPreferenceStore(IPreferenceStore store) {
-		Assert.isLegal(fPreferenceStore == null || fPreferenceStore == store, "TextSourceViewerConfiguration's preference store may only be set once"); //$NON-NLS-1$
-		fPreferenceStore = store;
+	public LineStyleProvider[] getLineStyleProviders(ISourceViewer sourceViewer, String partitionType) {
+		return null;
+	}
+	
+	public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
+		/*
+		 * This implementation returns null because StructuredTextViewer does
+		 * not use presentation reconciler
+		 */
+		return null;
+	}
+	
+	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType, int stateMask) {
+		ITextHover textHover = null;
+
+		/*
+		 * Returns a default problem, annotation, and best match hover
+		 * depending on stateMask
+		 */
+		TextHoverManager.TextHoverDescriptor[] hoverDescs = SSEUIPlugin.getDefault().getTextHoverManager().getTextHovers();
+		int i = 0;
+		while (i < hoverDescs.length && textHover == null) {
+			if (hoverDescs[i].isEnabled() && computeStateMask(hoverDescs[i].getModifierString()) == stateMask) {
+				String hoverType = hoverDescs[i].getId();
+				if (TextHoverManager.PROBLEM_HOVER.equalsIgnoreCase(hoverType))
+					textHover = new ProblemAnnotationHoverProcessor();
+				else if (TextHoverManager.ANNOTATION_HOVER.equalsIgnoreCase(hoverType))
+					textHover = new AnnotationHoverProcessor();
+				else if (TextHoverManager.COMBINATION_HOVER.equalsIgnoreCase(hoverType))
+					textHover = new BestMatchHover(null);
+			}
+			i++;
+		}
+		return textHover;
+	}
+
+	/**
+	 * Returns the undo manager for the given source viewer.
+	 * 
+	 * @param sourceViewer
+	 *            the source viewer to be configured by this configuration
+	 * @return an undo manager or <code>null</code> if no undo/redo should
+	 *         not be supported
+	 */
+	public IUndoManager getUndoManager(ISourceViewer sourceViewer) {
+		/*
+		 * This implementation returns an UndoManager that is used exclusively
+		 * in StructuredTextViewer
+		 */
+		return new StructuredTextViewerUndoManager();
+	}
+
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
+		/*
+		 * Currently no need for initialization data but is good practice to
+		 * implement IExecutableExtension since is a class that can be created
+		 * by executable extension
+		 */
 	}
 }

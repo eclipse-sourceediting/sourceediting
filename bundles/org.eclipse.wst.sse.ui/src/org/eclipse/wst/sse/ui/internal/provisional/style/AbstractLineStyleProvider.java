@@ -46,7 +46,7 @@ public abstract class AbstractLineStyleProvider {
 		}
 	}
 
-	//protected IStructuredDocumentRegion currentStructuredDocumentRegion;
+	// protected IStructuredDocumentRegion currentStructuredDocumentRegion;
 	// Note: the var=x.class contructs were put into this method
 	// as a workaround for slow VAJava class lookups. They compiler
 	// assigns them to a variable in the JDK, but Class.forName("x")
@@ -54,10 +54,6 @@ public abstract class AbstractLineStyleProvider {
 	// be simplified in future.
 	static Class LineStyleProviderClass = LineStyleProvider.class;
 
-	// had to make this not final, or got in to infinite recursion during
-	// class loading in VAJava!
-	// (must be a VAJava thing)
-	private LineStyleProvider fDefaultAttributeProvider = null;
 	private IStructuredDocument fDocument;
 	private Highlighter fHighlighter;
 	private boolean fInitialized;
@@ -72,17 +68,10 @@ public abstract class AbstractLineStyleProvider {
 	// It's only written in the case of a program error, but there's no use
 	// adding
 	// salt to the wound.
-	//private boolean wroteOneLogMessage;
+	// private boolean wroteOneLogMessage;
 	/**
 	 */
 	protected AbstractLineStyleProvider() {
-	}
-
-	protected void addEmptyRange(int start, int length, Collection holdResults) {
-		StyleRange result = new StyleRange();
-		result.start = start;
-		result.length = length;
-		holdResults.add(result);
 	}
 
 	/**
@@ -93,7 +82,7 @@ public abstract class AbstractLineStyleProvider {
 	 */
 	protected void addTextAttribute(String colorKey) {
 		if (getColorPreferences() != null) {
-			String prefString = getColorPreferences().getString(getPreferenceKey(colorKey));
+			String prefString = getColorPreferences().getString(colorKey);
 			String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
 			if (stylePrefs != null) {
 				RGB foreground = ColorHelper.toRGB(stylePrefs[0]);
@@ -113,8 +102,7 @@ public abstract class AbstractLineStyleProvider {
 	/**
 	 * this version does "trim" regions to match request
 	 */
-	protected StyleRange createStyleRange(ITextRegionCollection flatNode, ITextRegion region, TextAttribute attr, int startOffset, int length) {
-
+	private StyleRange createStyleRange(ITextRegionCollection flatNode, ITextRegion region, TextAttribute attr, int startOffset, int length) {
 		int start = flatNode.getStartOffset(region);
 		if (start < startOffset)
 			start = startOffset;
@@ -132,26 +120,9 @@ public abstract class AbstractLineStyleProvider {
 		return new TextAttribute((foreground != null) ? EditorUtility.getColor(foreground) : null, (background != null) ? EditorUtility.getColor(background) : null, bold ? SWT.BOLD : SWT.NORMAL);
 	}
 
-	protected TextAttribute getAttributeFor(ITextRegion region) {
-		// should be "abstract" method
-		return null;
-	}
+	abstract protected TextAttribute getAttributeFor(ITextRegion region);
 
-	// this should actually be an abstract method to replace getColorManager
-	// but returning null to avoid API changes
-	protected IPreferenceStore getColorPreferences() {
-		return null;
-	}
-
-	/**
-	 * See also Highligher::getTextAttributeProvider
-	 */
-	protected LineStyleProvider getDefaultLineStyleProvider() {
-		if (fDefaultAttributeProvider == null) {
-			fDefaultAttributeProvider = new LineStyleProviderForNoOp();
-		}
-		return fDefaultAttributeProvider;
-	}
+	abstract protected IPreferenceStore getColorPreferences();
 
 	protected IStructuredDocument getDocument() {
 		return fDocument;
@@ -164,18 +135,6 @@ public abstract class AbstractLineStyleProvider {
 	}
 
 	/**
-	 * Transforms the key in any way to use in preference store (ex:
-	 * PreferenceKeyGenerator)
-	 * 
-	 * @deprecated PrefernceKeyGenerator should no longer be needed
-	 * @param key
-	 * @return
-	 */
-	protected String getPreferenceKey(String key) {
-		return key;
-	}
-
-	/**
 	 * Returns the hashtable containing all the text attributes for this line
 	 * style provider. Lazily creates a hashtable if one has not already been
 	 * created.
@@ -185,6 +144,7 @@ public abstract class AbstractLineStyleProvider {
 	protected HashMap getTextAttributes() {
 		if (fTextAttributes == null) {
 			fTextAttributes = new HashMap();
+			loadColors();
 		}
 		return fTextAttributes;
 	}
@@ -222,6 +182,8 @@ public abstract class AbstractLineStyleProvider {
 	public boolean isInitialized() {
 		return fInitialized;
 	}
+	
+	abstract protected void loadColors();
 
 	public boolean prepareRegions(ITypedRegion typedRegion, int lineRequestStart, int lineRequestLength, Collection holdResults) {
 		final int partitionStartOffset = typedRegion.getOffset();
@@ -352,7 +314,7 @@ public abstract class AbstractLineStyleProvider {
 		return handled;
 	}
 
-	protected void registerPreferenceManager() {
+	private void registerPreferenceManager() {
 		IPreferenceStore pref = getColorPreferences();
 		if (pref != null) {
 			pref.addPropertyChangeListener(fPreferenceListener);
@@ -361,7 +323,10 @@ public abstract class AbstractLineStyleProvider {
 
 	public void release() {
 		unRegisterPreferenceManager();
-		getTextAttributes().clear();
+		if (fTextAttributes != null) {
+			fTextAttributes.clear();
+			fTextAttributes = null;
+		}
 	}
 
 	/**
@@ -370,11 +335,11 @@ public abstract class AbstractLineStyleProvider {
 	 * @param initialized
 	 *            The initialized to set
 	 */
-	public void setInitialized(boolean initialized) {
+	private void setInitialized(boolean initialized) {
 		this.fInitialized = initialized;
 	}
 
-	protected void unRegisterPreferenceManager() {
+	private void unRegisterPreferenceManager() {
 		IPreferenceStore pref = getColorPreferences();
 		if (pref != null) {
 			pref.removePropertyChangeListener(fPreferenceListener);

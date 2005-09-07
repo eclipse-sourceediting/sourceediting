@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.texteditor.MarkerAnnotation;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
 
-public class StructuredTextAnnotationHover implements IAnnotationHover, IReleasable {
+public class StructuredTextAnnotationHover implements IAnnotationHover {
 
 	/**
 	 * Provides a set of convenience methods for creating HTML pages. Taken

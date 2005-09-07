@@ -1,26 +1,24 @@
-/*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+/*
+ * Copyright (c) 2005 IBM Corporation and others.
+ * All rights reserved.   This program and the accompanying materials
+ * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/cpl-v10.html
  * 
  * Contributors:
- *     IBM Corporation - initial API and implementation
- *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
- *******************************************************************************/
-package org.eclipse.wst.sse.ui.internal.editor;
-
-
+ *   IBM - Initial API and implementation
+ *   Jens Lukowski/Innoopract - initial renaming/restructuring
+ * 
+ */
+package org.eclipse.wst.xml.ui.internal.derived;
 
 import java.io.IOException;
 import java.io.Reader;
 
-/**
- * Copied from org.eclipse.jdt.internal.ui.text.SubstitutionTextReader
- * Also copied in org.eclipse.wst.javascript.common.ui.contentassist.javadoc.SubstitutionTextReader
- * Modifications were made to read() to allow whitespaces
+/*
+ * Copied from org.eclipse.jdt.internal.ui.text.SubstitutionTextReader.
+ * Modifications were made to read() to allow whitespaces and fixed statement
+ * unnecessarily nested within else clause warning in nextChar()
  */
 /**
  * Reads the text contents from a reader and computes for each character a
@@ -30,19 +28,19 @@ import java.io.Reader;
 public abstract class SubstitutionTextReader extends SingleCharReader {
 
 	protected static final String LINE_DELIM = System.getProperty("line.separator", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
-	private StringBuffer fBuffer;
-	private int fCharAfterWhiteSpace;
-	private int fIndex;
 
 	private Reader fReader;
-
-	private boolean fReadFromBuffer;
+	protected boolean fWasWhiteSpace;
+	private int fCharAfterWhiteSpace;
 
 	/**
 	 * Tells whether white space characters are skipped.
 	 */
 	private boolean fSkipWhiteSpace = true;
-	private boolean fWasWhiteSpace;
+
+	private boolean fReadFromBuffer;
+	private StringBuffer fBuffer;
+	private int fIndex;
 
 
 	protected SubstitutionTextReader(Reader reader) {
@@ -52,13 +50,6 @@ public abstract class SubstitutionTextReader extends SingleCharReader {
 		fReadFromBuffer = false;
 		fCharAfterWhiteSpace = -1;
 		fWasWhiteSpace = true;
-	}
-
-	/**
-	 * @see Reader#close()
-	 */
-	public void close() throws IOException {
-		fReader.close();
 	}
 
 	/**
@@ -75,10 +66,6 @@ public abstract class SubstitutionTextReader extends SingleCharReader {
 		return fReader;
 	}
 
-	protected final boolean isSkippingWhitespace() {
-		return fSkipWhiteSpace;
-	}
-
 	/**
 	 * Returns the next character.
 	 */
@@ -91,24 +78,23 @@ public abstract class SubstitutionTextReader extends SingleCharReader {
 				fIndex = 0;
 			}
 			return ch;
-		} else {
-			int ch = fCharAfterWhiteSpace;
-			if (ch == -1) {
-				ch = fReader.read();
-			}
-			if (fSkipWhiteSpace && Character.isWhitespace((char) ch)) {
-				do {
-					ch = fReader.read();
-				} while (Character.isWhitespace((char) ch));
-				if (ch != -1) {
-					fCharAfterWhiteSpace = ch;
-					return ' ';
-				}
-			} else {
-				fCharAfterWhiteSpace = -1;
-			}
-			return ch;
 		}
+		int ch = fCharAfterWhiteSpace;
+		if (ch == -1) {
+			ch = fReader.read();
+		}
+		if (fSkipWhiteSpace && Character.isWhitespace((char) ch)) {
+			do {
+				ch = fReader.read();
+			} while (Character.isWhitespace((char) ch));
+			if (ch != -1) {
+				fCharAfterWhiteSpace = ch;
+				return ' ';
+			}
+		} else {
+			fCharAfterWhiteSpace = -1;
+		}
+		return ch;
 	}
 
 	/**
@@ -128,28 +114,12 @@ public abstract class SubstitutionTextReader extends SingleCharReader {
 				c = nextChar();
 			}
 
-		} while (fSkipWhiteSpace && fWasWhiteSpace && ((c == ' ') && !fReadFromBuffer)); // AFW
-		// - if
-		// whitespace
-		// is
-		// from
-		// buffer,
-		// then
-		// it
-		// should
-		// be
-		// read
-		fWasWhiteSpace = ((c == ' ' && !fReadFromBuffer) || c == '\r' || c == '\n'); // AFW
-		// - if
-		// whitespace
-		// is
-		// from
-		// buffer,
-		// then
-		// it
-		// should
-		// be
-		// read
+		} while (fSkipWhiteSpace && fWasWhiteSpace && ((c == ' ') && !fReadFromBuffer));
+		/*
+		 * SSE: For above and below check, if whitespace is read from buffer,
+		 * do not skip
+		 */
+		fWasWhiteSpace = ((c == ' ' && !fReadFromBuffer) || c == '\r' || c == '\n');
 		return c;
 	}
 
@@ -158,6 +128,13 @@ public abstract class SubstitutionTextReader extends SingleCharReader {
 	 */
 	public boolean ready() throws IOException {
 		return fReader.ready();
+	}
+
+	/**
+	 * @see Reader#close()
+	 */
+	public void close() throws IOException {
+		fReader.close();
 	}
 
 	/**
@@ -173,5 +150,9 @@ public abstract class SubstitutionTextReader extends SingleCharReader {
 
 	protected final void setSkipWhitespace(boolean state) {
 		fSkipWhiteSpace = state;
+	}
+
+	protected final boolean isSkippingWhitespace() {
+		return fSkipWhiteSpace;
 	}
 }

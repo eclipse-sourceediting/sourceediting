@@ -15,9 +15,11 @@ package org.eclipse.wst.xml.ui.internal.taginfo;
 
 
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.information.IInformationProvider;
 import org.eclipse.jface.text.information.IInformationProviderExtension;
+import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 
 /**
  * Provides context information for XML tags (Shows tooltip description)
@@ -26,10 +28,10 @@ import org.eclipse.jface.text.information.IInformationProviderExtension;
  */
 public class XMLInformationProvider implements IInformationProvider, IInformationProviderExtension {
 
-	private XMLBestMatchHoverProcessor fTextHover = null;
+	private ITextHover fTextHover = null;
 
 	public XMLInformationProvider() {
-		fTextHover = new XMLBestMatchHoverProcessor();
+		fTextHover = SSEUIPlugin.getDefault().getTextHoverManager().createBestMatchHover(new XMLTagInfoHoverProcessor());
 	}
 
 	/*

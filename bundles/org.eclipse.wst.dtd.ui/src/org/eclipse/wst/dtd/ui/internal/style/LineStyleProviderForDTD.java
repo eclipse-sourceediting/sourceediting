@@ -24,11 +24,6 @@ import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 public class LineStyleProviderForDTD extends AbstractLineStyleProvider implements LineStyleProvider {
 	public LineStyleProviderForDTD() {
 		super();
-		loadColors();
-	}
-
-	protected void clearColors() {
-		getTextAttributes().clear();
 	}
 
 	protected TextAttribute getAttributeFor(ITextRegion region) {
@@ -126,8 +121,6 @@ public class LineStyleProviderForDTD extends AbstractLineStyleProvider implement
 	}
 
 	protected void loadColors() {
-		clearColors();
-
 		addTextAttribute(IStyleConstantsDTD.DTD_DEFAULT);
 		addTextAttribute(IStyleConstantsDTD.DTD_TAG);
 		addTextAttribute(IStyleConstantsDTD.DTD_TAGNAME);

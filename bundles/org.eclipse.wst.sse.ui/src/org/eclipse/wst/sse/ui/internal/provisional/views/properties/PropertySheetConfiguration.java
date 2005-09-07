@@ -12,6 +12,9 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.provisional.views.properties;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExecutableExtension;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -21,7 +24,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
-import org.eclipse.wst.sse.ui.internal.IExtendedConfiguration;
 
 
 /**
@@ -29,7 +31,7 @@ import org.eclipse.wst.sse.ui.internal.IExtendedConfiguration;
  * @plannedfor 1.0
  */
 
-public class PropertySheetConfiguration implements IExtendedConfiguration {
+public class PropertySheetConfiguration implements IExecutableExtension {
 
 	private class NullPropertySource implements IPropertySource {
 		private final IPropertyDescriptor[] descriptors = new IPropertyDescriptor[0];
@@ -105,10 +107,6 @@ public class PropertySheetConfiguration implements IExtendedConfiguration {
 		}
 	}
 
-	public static final String ID = "propertysheetconfiguration"; //$NON-NLS-1$
-
-	private String fDeclaringID;
-
 	private IEditorPart fEditor;
 	protected IPropertySourceProvider fPropertySourceProvider = null;
 
@@ -125,13 +123,6 @@ public class PropertySheetConfiguration implements IExtendedConfiguration {
 	 */
 	protected IPropertySourceProvider createPropertySourceProvider() {
 		return new NullPropertySourceProvider();
-	}
-
-	/**
-	 * @return Returns the declaringID.
-	 */
-	public String getDeclaringID() {
-		return fDeclaringID;
 	}
 
 	/**
@@ -166,21 +157,20 @@ public class PropertySheetConfiguration implements IExtendedConfiguration {
 		// do nothing
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.ui.extension.IExtendedConfiguration#setDeclaringID(java.lang.String)
-	 */
-	public void setDeclaringID(String declaringID) {
-		fDeclaringID = declaringID;
-	}
-
 	/**
 	 * @param editor
 	 *            The editor to set.
 	 */
 	public void setEditor(IEditorPart editor) {
 		fEditor = editor;
+	}
+	
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
+		/*
+		 * Currently no need for initialization data but is good practice to
+		 * implement IExecutableExtension since is a class that can be created
+		 * by executable extension
+		 */
 	}
 
 	public void unconfigure() {

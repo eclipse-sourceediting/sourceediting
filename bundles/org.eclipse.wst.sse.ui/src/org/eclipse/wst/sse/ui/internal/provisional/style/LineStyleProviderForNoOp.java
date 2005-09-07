@@ -17,6 +17,7 @@ package org.eclipse.wst.sse.ui.internal.provisional.style;
 import java.util.Collection;
 
 import org.eclipse.jface.text.ITypedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 
 /**
  * This class can be used by default, if no attribute provider is found for a
@@ -26,8 +27,12 @@ import org.eclipse.jface.text.ITypedRegion;
  * 
  * Not to be subclassed.
  */
-final public class LineStyleProviderForNoOp extends AbstractLineStyleProvider implements LineStyleProvider {
+final public class LineStyleProviderForNoOp implements LineStyleProvider {
 
+	public void init(IStructuredDocument document, Highlighter highlighter) {
+		// nothing to do
+	}
+	
 	/**
 	 * @see org.eclipse.wst.sse.ui.internal.provisional.style.AbstractLineStyleProvider#prepareRegions(org.eclipse.jface.text.ITypedRegion,
 	 *      int, int, java.util.Collection)
@@ -37,4 +42,7 @@ final public class LineStyleProviderForNoOp extends AbstractLineStyleProvider im
 		return true;
 	}
 
+	public void release() {
+		// nothing to do
+	}
 }

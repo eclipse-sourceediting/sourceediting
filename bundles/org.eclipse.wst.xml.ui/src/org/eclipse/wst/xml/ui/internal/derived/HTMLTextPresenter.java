@@ -1,18 +1,16 @@
-/*******************************************************************************
- * Copyright (c) 2001, 2004 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+/*
+ * Copyright (c) 2005 IBM Corporation and others.
+ * All rights reserved.   This program and the accompanying materials
+ * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/cpl-v10.html
  * 
  * Contributors:
- *     IBM Corporation - initial API and implementation
- *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *     
- *******************************************************************************/
-package org.eclipse.wst.sse.ui.internal.editor;
-
-
+ *   IBM - Initial API and implementation
+ *   Jens Lukowski/Innoopract - initial renaming/restructuring
+ * 
+ */
+package org.eclipse.wst.xml.ui.internal.derived;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -25,29 +23,31 @@ import org.eclipse.jface.text.TextPresentation;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.wst.sse.ui.internal.Logger;
+import org.eclipse.wst.xml.ui.internal.Logger;
 
-
-/**
+/*
  * Copied from org.eclipse.jdt.internal.ui.text.HTMLTextPresenter
- * Modifications were made to use sed Logger to log exception, and the
+ * Modifications were made to use own Logger to log exception, and the
  * ellipses constant
  */
 public class HTMLTextPresenter implements DefaultInformationControl.IInformationPresenter {
 	private static final String ELLIPSES = "..."; //$NON-NLS-1$
-
 	private static final String LINE_DELIM = System.getProperty("line.separator", "\n"); //$NON-NLS-1$ //$NON-NLS-2$
 
 	private int fCounter;
 	private boolean fEnforceUpperLineLimit;
 
+	public HTMLTextPresenter(boolean enforceUpperLineLimit) {
+		super();
+		fEnforceUpperLineLimit = enforceUpperLineLimit;
+	}
+
 	public HTMLTextPresenter() {
 		this(true);
 	}
 
-	public HTMLTextPresenter(boolean enforceUpperLineLimit) {
-		super();
-		fEnforceUpperLineLimit = enforceUpperLineLimit;
+	protected Reader createReader(String hoverInfo, TextPresentation presentation) {
+		return new HTML2TextReader(new StringReader(hoverInfo), presentation);
 	}
 
 	protected void adaptTextPresentation(TextPresentation presentation, int offset, int insertLength) {
@@ -86,10 +86,6 @@ public class HTMLTextPresenter implements DefaultInformationControl.IInformation
 		fCounter += length;
 	}
 
-	protected Reader createReader(String hoverInfo, TextPresentation presentation) {
-		return new HTML2TextReader(new StringReader(hoverInfo), presentation);
-	}
-
 	private String getIndent(String line) {
 		int length = line.length();
 
@@ -98,31 +94,6 @@ public class HTMLTextPresenter implements DefaultInformationControl.IInformation
 			++i;
 
 		return (i == length ? line : line.substring(0, i)) + " "; //$NON-NLS-1$
-	}
-
-	private String trim(StringBuffer buffer, TextPresentation presentation) {
-
-		int length = buffer.length();
-
-		int end = length - 1;
-		while (end >= 0 && Character.isWhitespace(buffer.charAt(end)))
-			--end;
-
-		if (end == -1)
-			return ""; //$NON-NLS-1$
-
-		if (end < length - 1)
-			buffer.delete(end + 1, length);
-		else
-			end = length;
-
-		int start = 0;
-		while (start < end && Character.isWhitespace(buffer.charAt(start)))
-			++start;
-
-		buffer.delete(0, start);
-		presentation.setResultWindow(new Region(start, buffer.length()));
-		return buffer.toString();
 	}
 
 	/*
@@ -180,19 +151,44 @@ public class HTMLTextPresenter implements DefaultInformationControl.IInformation
 				maxNumberOfLines--;
 			}
 
-			if (line != null) {
+			if (line != null && buffer.length() > 0) {
 				append(buffer, LINE_DELIM, lineFormatted ? presentation : null);
-				append(buffer, ELLIPSES, presentation); //$NON-NLS-1$
+				append(buffer, ELLIPSES, presentation);
 			}
 
 			return trim(buffer, presentation);
 
 		} catch (IOException e) {
-			Logger.logException(e); // log exception
+			Logger.log(Logger.WARNING_DEBUG, e.getMessage(), e);
 			return null;
 
 		} finally {
 			gc.dispose();
 		}
+	}
+
+	private String trim(StringBuffer buffer, TextPresentation presentation) {
+
+		int length = buffer.length();
+
+		int end = length - 1;
+		while (end >= 0 && Character.isWhitespace(buffer.charAt(end)))
+			--end;
+
+		if (end == -1)
+			return ""; //$NON-NLS-1$
+
+		if (end < length - 1)
+			buffer.delete(end + 1, length);
+		else
+			end = length;
+
+		int start = 0;
+		while (start < end && Character.isWhitespace(buffer.charAt(start)))
+			++start;
+
+		buffer.delete(0, start);
+		presentation.setResultWindow(new Region(start, buffer.length()));
+		return buffer.toString();
 	}
 }

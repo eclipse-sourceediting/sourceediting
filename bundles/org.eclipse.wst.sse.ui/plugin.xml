@@ -15,9 +15,9 @@
 		id="dropTargetTransfers"
 		name="%Drop_Target_Transfers_Extension.name" />
 	<extension-point
-		id="extendedconfiguration"
+		id="editorConfiguration"
 		name="%Extended_Editor_Configuration_Extension.name"
-		schema="schema/extendedconfiguration.exsd" />
+		schema="schema/editorconfiguration.exsd" />
 
 
 	<!-- Make sure default preference values are set at runtime -->
@@ -28,20 +28,17 @@
 
 
 	<!-- reusable extensions -->
-	<extension point="org.eclipse.wst.sse.ui.extendedconfiguration">
-		<configuration
-			type="contentoutlineconfiguration"
+	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
+		<contentOutlineConfiguration
 			class="org.eclipse.wst.sse.ui.internal.provisional.views.contentoutline.StructuredContentOutlineConfiguration"
 			target="org.eclipse.wst.sse.ui.internal.StructuredTextEditor" />
-		<configuration
-			type="propertysheetconfiguration"
+		<propertySheetConfiguration
 			class="org.eclipse.wst.sse.ui.internal.provisional.views.properties.StructuredPropertySheetConfiguration"
 			target="org.eclipse.wst.sse.ui.internal.StructuredTextEditor" />
-		<configuration
-			type="textviewerconfiguration"
+		<sourceViewerConfiguration
 			class="org.eclipse.wst.sse.ui.internal.provisional.StructuredTextViewerConfiguration"
 			target="org.eclipse.wst.sse.ui.internal.StructuredTextEditor" />
-		<definition
+		<provisionalDefinition
 			type="preferencepages"
 			value="org.eclipse.wst.sse.ui.preferences.editor"
 			target="org.eclipse.wst.sse.ui.internal.StructuredTextEditor" />

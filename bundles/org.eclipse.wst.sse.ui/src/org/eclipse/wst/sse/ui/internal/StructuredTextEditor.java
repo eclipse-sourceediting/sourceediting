@@ -22,7 +22,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -256,10 +255,6 @@ public class StructuredTextEditor extends TextEditor {
 			if (getTextViewer() != null) {
 				// getTextViewer().setRedraw(false);
 				getTextViewer().unconfigure();
-				SourceViewerConfiguration config = getSourceViewerConfiguration();
-				if (config instanceof StructuredTextViewerConfiguration) {
-					((StructuredTextViewerConfiguration) config).unConfigure(getSourceViewer());
-				}
 			}
 		}
 
@@ -292,9 +287,6 @@ public class StructuredTextEditor extends TextEditor {
 			try {
 				if (getSourceViewer() != null) {
 					SourceViewerConfiguration cfg = getSourceViewerConfiguration();
-					if (cfg != null && cfg instanceof StructuredTextViewerConfiguration) {
-						initializeSourceViewerConfiguration(((StructuredTextViewerConfiguration) cfg));
-					}
 					getSourceViewer().configure(cfg);
 				}
 			}
@@ -426,7 +418,24 @@ public class StructuredTextEditor extends TextEditor {
 				}
 			});
 		}
+	}
 
+	private class ConfigurationAndTarget {
+		private String fTargetId;
+		private StructuredTextViewerConfiguration fViewerConfig;
+
+		public ConfigurationAndTarget(String targetId, StructuredTextViewerConfiguration config) {
+			fTargetId = targetId;
+			fViewerConfig = config;
+		}
+
+		public String getTargetId() {
+			return fTargetId;
+		}
+
+		public StructuredTextViewerConfiguration getViewerConfiguration() {
+			return fViewerConfig;
+		}
 	}
 
 	protected final static char[] BRACKETS = {'{', '}', '(', ')', '[', ']'};
@@ -499,6 +508,7 @@ public class StructuredTextEditor extends TextEditor {
 	private Menu fRulerContextMenu;
 	/** The ruler context menu manager to be disposed. */
 	private MenuManager fRulerContextMenuManager;
+	private String fViewerConfigurationTargetId;
 
 	private boolean fUpdateMenuTextPending;
 	int hoverX = -1;
@@ -721,8 +731,12 @@ public class StructuredTextEditor extends TextEditor {
 			// mapping, but since it relies on the IEditorSite ID, it can't be
 			// relied on for MultiPageEditorParts. Instead, force the action
 			// registration manually.
-//			setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, new MarkerRulerAction(SSEUIMessages.getResourceBundle(), "Editor_ManageBookmarks_", this, getVerticalRuler(), IMarker.BOOKMARK, true)); //$NON-NLS-1$
-			// add bookmark action is already registered in AbstractDecoratedTextEditor, so just get it
+			// setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, new
+			// MarkerRulerAction(SSEUIMessages.getResourceBundle(),
+			// "Editor_ManageBookmarks_", this, getVerticalRuler(),
+			// IMarker.BOOKMARK, true)); //$NON-NLS-1$
+			// add bookmark action is already registered in
+			// AbstractDecoratedTextEditor, so just get it
 			setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, getAction(IDEActionFactory.BOOKMARK.getId()));
 		}
 	}
@@ -904,7 +918,7 @@ public class StructuredTextEditor extends TextEditor {
 		ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
 		String[] ids = getConfigurationPoints();
 		for (int i = 0; cfg == null && i < ids.length; i++) {
-			cfg = (ContentOutlineConfiguration) builder.getConfiguration(ContentOutlineConfiguration.ID, ids[i]);
+			cfg = (ContentOutlineConfiguration) builder.getConfiguration(ExtendedConfigurationBuilder.CONTENTOUTLINECONFIGURATION, ids[i]);
 		}
 		return cfg;
 	}
@@ -921,7 +935,9 @@ public class StructuredTextEditor extends TextEditor {
 	 */
 	public void createPartControl(Composite parent) {
 		if (getSourceViewerConfiguration() == null) {
-			StructuredTextViewerConfiguration newViewerConfiguration = createSourceViewerConfiguration();
+			ConfigurationAndTarget cat = createSourceViewerConfiguration();
+			fViewerConfigurationTargetId = cat.getTargetId();
+			StructuredTextViewerConfiguration newViewerConfiguration = cat.getViewerConfiguration();
 			setSourceViewerConfiguration(newViewerConfiguration);
 		}
 
@@ -945,7 +961,7 @@ public class StructuredTextEditor extends TextEditor {
 		ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
 		String[] ids = getConfigurationPoints();
 		for (int i = 0; cfg == null && i < ids.length; i++) {
-			cfg = (PropertySheetConfiguration) builder.getConfiguration(PropertySheetConfiguration.ID, ids[i]);
+			cfg = (PropertySheetConfiguration) builder.getConfiguration(ExtendedConfigurationBuilder.PROPERTYSHEETCONFIGURATION, ids[i]);
 		}
 		return cfg;
 	}
@@ -1032,19 +1048,21 @@ public class StructuredTextEditor extends TextEditor {
 		return sourceViewer;
 	}
 
-	private StructuredTextViewerConfiguration createSourceViewerConfiguration() {
+	private ConfigurationAndTarget createSourceViewerConfiguration() {
+		ConfigurationAndTarget cat = null;
 		StructuredTextViewerConfiguration cfg = null;
 		ExtendedConfigurationBuilder builder = ExtendedConfigurationBuilder.getInstance();
 		String[] ids = getConfigurationPoints();
 		for (int i = 0; cfg == null && i < ids.length; i++) {
-			cfg = (StructuredTextViewerConfiguration) builder.getConfiguration(StructuredTextViewerConfiguration.ID, ids[i]);
+			cfg = (StructuredTextViewerConfiguration) builder.getConfiguration(ExtendedConfigurationBuilder.SOURCEVIEWERCONFIGURATION, ids[i]);
+			cat = new ConfigurationAndTarget(ids[i], cfg);
 		}
 		if (cfg == null) {
 			cfg = new StructuredTextViewerConfiguration();
-			cfg.setDeclaringID(getClass().getName() + "#default"); //$NON-NLS-1$
+			String targetid = getClass().getName() + "#default"; //$NON-NLS-1$
+			cat = new ConfigurationAndTarget(targetid, cfg);
 		}
-		initializeSourceViewerConfiguration(cfg);
-		return cfg;
+		return cat;
 	}
 
 	protected StructuredTextViewer createStructedTextViewer(Composite parent, IVerticalRuler verticalRuler, int styles) {
@@ -1126,12 +1144,6 @@ public class StructuredTextEditor extends TextEditor {
 
 		fEditorDisposed = true;
 		disposeModelDependentFields();
-		// some things in the configuration need to clean
-		// up after themselves
-		SourceViewerConfiguration config = getSourceViewerConfiguration();
-		if (config instanceof StructuredTextViewerConfiguration) {
-			((StructuredTextViewerConfiguration) config).unConfigure(getSourceViewer());
-		}
 
 		if (fDropTarget != null)
 			fDropTarget.dispose();
@@ -1158,7 +1170,7 @@ public class StructuredTextEditor extends TextEditor {
 	protected void disposeDocumentProvider() {
 		if (fStructuredModel != null && !fisReleased && !(getDocumentProvider() instanceof IModelProvider)) {
 			fStructuredModel.releaseFromEdit();
-			fisReleased=true;
+			fisReleased = true;
 		}
 		super.disposeDocumentProvider();
 	}
@@ -1893,24 +1905,6 @@ public class StructuredTextEditor extends TextEditor {
 		}
 	}
 
-	/**
-	 * Performs any necessary setup for a new or unconfigured
-	 * StructuredTextViewerConfiguration
-	 * 
-	 * @param configuration
-	 */
-	void initializeSourceViewerConfiguration(StructuredTextViewerConfiguration configuration) {
-		configuration.setEditorPart(this);
-		configuration.setPreferenceStore(getPreferenceStore());
-
-		IResource resource = null;
-		IFile file = (IFile) getEditorInput().getAdapter(IFile.class);
-		if (file != null) {
-			resource = file.getProject();
-		}
-		configuration.configureOn(resource);
-	}
-
 	protected void initSourceViewer(StructuredTextViewer sourceViewer) {
 		// ensure decoration support is configured
 		getSourceViewerDecorationSupport(sourceViewer);
@@ -2419,33 +2413,35 @@ public class StructuredTextEditor extends TextEditor {
 		if (configuration == null) {
 			return;
 		}
+		// do not configure source viewer configuration twice
+		boolean configured = false;
 
 		// structuredtextviewer only works with
 		// structuredtextviewerconfiguration
 		if (!(configuration instanceof StructuredTextViewerConfiguration)) {
-			configuration = createSourceViewerConfiguration();
+			ConfigurationAndTarget cat = createSourceViewerConfiguration();
+			fViewerConfigurationTargetId = cat.getTargetId();
+			configuration = cat.getViewerConfiguration();
 			setSourceViewerConfiguration(configuration);
+			configured = true;
 		}
 		else {
-			StructuredTextViewerConfiguration newViewerConfiguration = createSourceViewerConfiguration();
-			if (!((StructuredTextViewerConfiguration) configuration).getDeclaringID().equals(newViewerConfiguration.getDeclaringID())) {
+			ConfigurationAndTarget cat = createSourceViewerConfiguration();
+			StructuredTextViewerConfiguration newViewerConfiguration = cat.getViewerConfiguration();
+			if (!(cat.getTargetId().equals(fViewerConfigurationTargetId))) {
 				// d282894 use newViewerConfiguration
+				fViewerConfigurationTargetId = cat.getTargetId();
 				configuration = newViewerConfiguration;
 				setSourceViewerConfiguration(configuration);
-			}
-
-			// update the configuration's resource
-			IResource resource = null;
-			if (getEditorInput() instanceof IFileEditorInput) {
-				resource = ((IFileEditorInput) getEditorInput()).getFile();
-				if (resource.getType() != IResource.PROJECT)
-					resource = resource.getProject();
-				((StructuredTextViewerConfiguration) configuration).configureOn(resource);
+				configured = true;
 			}
 		}
 
 		if (getSourceViewer() != null) {
-			getSourceViewer().configure(configuration);
+			// not sure if really need to reconfigure when input changes
+			// (maybe only need to reset viewerconfig's document)
+			if (!configured)
+				getSourceViewer().configure(configuration);
 			IAction contentAssistAction = getAction(StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_PROPOSALS);
 			if (contentAssistAction instanceof IUpdate) {
 				((IUpdate) contentAssistAction).update();
@@ -2455,37 +2451,6 @@ public class StructuredTextEditor extends TextEditor {
 				((OpenHyperlinkAction) openHyperlinkAction).setHyperlinkDetectors(getSourceViewerConfiguration().getHyperlinkDetectors(getSourceViewer()));
 			}
 		}
-		// eventually will replace above with something
-		// like what follows
-		// it, but some of our "processors" require too
-		// much initialization
-		// during configuration.
-		// SourceViewerConfiguration configuration =
-		// getSourceViewerConfiguration();
-		//
-		// // should always be an instance of our special
-		// configuration, but
-		// just in case
-		// // not, we'll do nothing if it isn't.
-		// if (configuration!= null && configuration
-		// instanceof
-		// StructuredTextViewerConfiguration) {
-		//
-		// IResource resource = null;
-		// if (getEditorInput() instanceof
-		// IFileEditorInput) {
-		// resource = ((IFileEditorInput)
-		// getEditorInput()).getFile();
-		// if (resource.getType() != IResource.PROJECT)
-		// resource = resource.getProject();
-		// // note: configureOn is responsible for updating
-		// what ever
-		// // in our configuration is sensitive to resource
-		// ((StructuredTextViewerConfiguration)
-		// configuration).configureOn(resource);
-		// }
-		//
-		// }
 	}
 
 	protected void updateStatusField(String category) {
