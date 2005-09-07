@@ -51,7 +51,7 @@
 
 	<extension point="org.eclipse.ui.popupMenus">
 		<viewerContribution
-			targetID="org.eclipse.wst.sse.ui.StructuredTextEditor.context"
+			targetID="org.eclipse.wst.sse.ui.StructuredTextEditor.EditorContext"
 			id="org.eclipse.wst.sse.ui.tests.test">
 			<action
 				label="org.eclipse.ui.popupMenus Test Action"
