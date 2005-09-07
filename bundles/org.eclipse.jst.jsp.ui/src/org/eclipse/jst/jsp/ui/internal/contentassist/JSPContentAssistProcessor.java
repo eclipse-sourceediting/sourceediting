@@ -18,7 +18,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -71,7 +70,6 @@ import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.sse.ui.internal.contentassist.IRelevanceCompletionProposal;
 import org.eclipse.wst.sse.ui.internal.contentassist.IRelevanceConstants;
-import org.eclipse.wst.sse.ui.internal.contentassist.IResourceDependentProcessor;
 import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryProvider;
 import org.eclipse.wst.sse.ui.internal.provisional.registry.AdapterFactoryRegistry;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMDocument;
@@ -108,7 +106,7 @@ import org.w3c.dom.NodeList;
  * 
  * @plannedfor 1.0
  */
-public class JSPContentAssistProcessor extends AbstractContentAssistProcessor implements IResourceDependentProcessor {
+public class JSPContentAssistProcessor extends AbstractContentAssistProcessor {
 
 	protected int depthCount = 0;
 	protected ITextViewer fViewer = null;
@@ -117,7 +115,6 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 	protected HashMap fNameToProcessorMap = null;
 	protected HashMap fPartitionToProcessorMap = null;
 	private final ICompletionProposal[] EMPTY_PROPOSAL_SET = new ICompletionProposal[0];
-	protected IResource fResource = null;
 	private JSPTemplateCompletionProcessor fTemplateProcessor = null;
 	private List fTemplateContexts = new ArrayList();
 
@@ -225,7 +222,6 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 		// (look up processor in a map based on node name)
 		JSPDummyContentAssistProcessor extraProcessor = (JSPDummyContentAssistProcessor) fNameToProcessorMap.get(node.getNodeName());
 		if (extraProcessor != null && contentAssistRequest != null) {
-			extraProcessor.initialize(fResource);
 			extraProcessor.addAttributeValueProposals(contentAssistRequest);
 		}
 
@@ -958,7 +954,6 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 	 */
 	protected ICompletionProposal[] getJSPJavaCompletionProposals(ITextViewer viewer, int documentPosition) {
 		JSPJavaContentAssistProcessor p = (JSPJavaContentAssistProcessor) fPartitionToProcessorMap.get(IJSPPartitionTypes.JSP_DEFAULT);
-		p.initialize(fResource);
 		return p.computeCompletionProposals(viewer, documentPosition);
 	}
 
@@ -1021,28 +1016,6 @@ public class JSPContentAssistProcessor extends AbstractContentAssistProcessor im
 	 */
 	public IContextInformationValidator getContextInformationValidator() {
 		return super.getContextInformationValidator();
-	}
-
-	/*
-	 * @see ContentAssistAdapter#initialize(IResource)
-	 */
-	public void initialize(IResource resourceToInit) {
-		fResource = resourceToInit;
-		if (fNameToProcessorMap != null) {
-
-			if (fNameToProcessorMap.isEmpty())
-				initNameToProcessorMap();
-
-			// init some embedded processors
-			JSPUseBeanContentAssistProcessor useBeanProcessor = (JSPUseBeanContentAssistProcessor) fNameToProcessorMap.get(JSP11Namespace.ElementName.USEBEAN);
-			JSPPropertyContentAssistProcessor propProcessor = (JSPPropertyContentAssistProcessor) fNameToProcessorMap.get(JSP11Namespace.ElementName.SETPROPERTY);
-			useBeanProcessor.initialize(resourceToInit);
-			propProcessor.initialize(resourceToInit);
-		}
-		if (fPartitionToProcessorMap != null) {
-			if (fPartitionToProcessorMap.isEmpty())
-				initPartitionToProcessorMap();
-		}
 	}
 
 	protected boolean isXMLFormat(Document doc) {

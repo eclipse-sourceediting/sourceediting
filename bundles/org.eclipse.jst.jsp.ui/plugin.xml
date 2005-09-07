@@ -16,48 +16,33 @@
 		</editor>
 	</extension>
 
-	<extension point="org.eclipse.wst.sse.ui.extendedconfiguration">
-		<configuration
-			type="textviewerconfiguration"
+	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
+		<sourceViewerConfiguration
 			class="org.eclipse.jst.jsp.ui.internal.provisional.StructuredTextViewerConfigurationJSP"
 			target="org.eclipse.jst.jsp.core.jspsource" />
-		<configuration
-			type="contentoutlineconfiguration"
+		<contentOutlineConfiguration
 			class="org.eclipse.jst.jsp.ui.internal.views.contentoutline.JSPContentOutlineConfiguration"
 			target="org.eclipse.jst.jsp.core.jspsource" />
-		<configuration
-			type="propertysheetconfiguration"
+		<propertySheetConfiguration
 			class="org.eclipse.wst.xml.ui.internal.views.properties.XMLPropertySheetConfiguration"
 			target="org.eclipse.jst.jsp.core.jspsource" />
-		<configuration
+		<provisionalConfiguration
 			type="sourceeditingtexttools"
 			class="org.eclipse.jst.jsp.ui.internal.editor.JSPSourceEditingTextTools"
 			target="org.eclipse.jst.jsp.core.jspsource" />
-		<configuration
+		<provisionalConfiguration
 			type="characterpairmatcher"
 			class="org.eclipse.jst.jsp.ui.internal.text.JSPDocumentRegionEdgeMatcher"
 			target="org.eclipse.jst.jsp.core.jspsource" />
-		<configuration
+		<provisionalConfiguration
 			type="structuredtextfoldingprovider"
 			class="org.eclipse.jst.jsp.ui.internal.projection.StructuredTextFoldingProviderJSP"
 			target="org.eclipse.jst.jsp.core.jspsource" />
-		<definition
+		<provisionalDefinition
 			type="preferencepages"
-			value="org.eclipse.wst.sse.ui.preferences.jsp"
+			value="org.eclipse.wst.sse.ui.preferences.jsp, org.eclipse.wst.sse.ui.preferences.jsp.source, org.eclipse.wst.sse.ui.preferences.jsp.templates, org.eclipse.wst.sse.ui.preferences.jsp.styles"
 			target="org.eclipse.jst.jsp.core.jspsource" />
-		<definition
-			type="preferencepages"
-			value="org.eclipse.wst.sse.ui.preferences.jsp.source"
-			target="org.eclipse.jst.jsp.core.jspsource" />
-		<definition
-			type="preferencepages"
-			value="org.eclipse.wst.sse.ui.preferences.jsp.templates"
-			target="org.eclipse.jst.jsp.core.jspsource" />
-		<definition
-			type="preferencepages"
-			value="org.eclipse.wst.sse.ui.preferences.jsp.styles"
-			target="org.eclipse.jst.jsp.core.jspsource" />
-		<definition
+		<provisionalDefinition
 			type="showintarget"
 			value="org.eclipse.jdt.ui.PackageExplorer"
 			target="org.eclipse.jst.jsp.core.jspsource" />

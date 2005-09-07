@@ -15,7 +15,6 @@ package org.eclipse.jst.jsp.ui.internal.style.java;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.rules.EndOfLineRule;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
@@ -23,13 +22,16 @@ import org.eclipse.jface.text.rules.MultiLineRule;
 import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.rules.WordRule;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 
 /**
  * A Java code scanner.
  */
-public class JavaCodeScanner extends org.eclipse.jface.text.rules.RuleBasedScanner {
+class JavaCodeScanner extends org.eclipse.jface.text.rules.RuleBasedScanner {
+	private IToken fKeywordToken;
+	private IToken fTypeToken;
+	private IToken fStringToken;
+	private IToken fSingleLineCommentToken;
+	private IToken fDefaultToken;
 
 	private static String[] fgKeywords = {"abstract", //$NON-NLS-1$
 				"break", //$NON-NLS-1$
@@ -54,45 +56,51 @@ public class JavaCodeScanner extends org.eclipse.jface.text.rules.RuleBasedScann
 	 * Creates a Java code scanner
 	 */
 	public JavaCodeScanner() {
-		// if we use null here, system default will be used
-		
-		Color background = null; //provider.getColor(JavaColorProvider.EDITOR_BACKGROUND);
-		JavaColorProvider.getInstance().loadJavaColors();
-		IToken keyword = new Token(new TextAttribute(EditorUtility.getColor(JavaColorProvider.KEYWORD), background, JavaColorProvider.KEYWORD_BOLD));
-		IToken type = new Token(new TextAttribute(EditorUtility.getColor(JavaColorProvider.TYPE), background, JavaColorProvider.TYPE_BOLD));
-		IToken string = new Token(new TextAttribute(EditorUtility.getColor(JavaColorProvider.STRING), background, JavaColorProvider.STRING_BOLD));
-		IToken comment = new Token(new TextAttribute(EditorUtility.getColor(JavaColorProvider.SINGLE_LINE_COMMENT), background, JavaColorProvider.SINGLE_LINE_COMMENT_BOLD));
-		IToken other = new Token(new TextAttribute(EditorUtility.getColor(JavaColorProvider.DEFAULT), background, JavaColorProvider.DEFAULT_BOLD));
-
-
+		super();
+	}
+	
+	public void initializeRules() {
 		List rules = new ArrayList();
 
 		// Add rule for multiple line comments.
-		rules.add(new MultiLineRule("/*", "*/", comment));//$NON-NLS-1$ //$NON-NLS-2$
+		rules.add(new MultiLineRule("/*", "*/", fSingleLineCommentToken));//$NON-NLS-1$ //$NON-NLS-2$
 
 		// Add rule for single line comments.
-		rules.add(new EndOfLineRule("//", comment));//$NON-NLS-1$
+		rules.add(new EndOfLineRule("//", fSingleLineCommentToken));//$NON-NLS-1$
 
 		// Add rule for strings and character constants.
-		rules.add(new SingleLineRule("\"", "\"", string, '\\'));//$NON-NLS-2$//$NON-NLS-1$
-		rules.add(new SingleLineRule("'", "'", string, '\\'));//$NON-NLS-2$//$NON-NLS-1$
+		rules.add(new SingleLineRule("\"", "\"", fStringToken, '\\'));//$NON-NLS-2$//$NON-NLS-1$
+		rules.add(new SingleLineRule("'", "'", fStringToken, '\\'));//$NON-NLS-2$//$NON-NLS-1$
 
 		// Add generic whitespace rule.
 		//rules.add(new WhitespaceRule(new JavaWhitespaceDetector()));
 
 		// Add word rule for keywords, types, and constants.
-		WordRule wordRule = new WordRule(new JavaWordDetector(), other);
+		WordRule wordRule = new WordRule(new JavaWordDetector(), fDefaultToken);
 		for (int i = 0; i < fgKeywords.length; i++)
-			wordRule.addWord(fgKeywords[i], keyword);
+			wordRule.addWord(fgKeywords[i], fKeywordToken);
 		for (int i = 0; i < fgTypes.length; i++)
-			wordRule.addWord(fgTypes[i], type);
+			wordRule.addWord(fgTypes[i], fTypeToken);
 		for (int i = 0; i < fgConstants.length; i++)
-			wordRule.addWord(fgConstants[i], type);
+			wordRule.addWord(fgConstants[i], fTypeToken);
 		rules.add(wordRule);
 
 
 		IRule[] result = new IRule[rules.size()];
 		rules.toArray(result);
 		setRules(result);
+	}
+	
+	public void setTokenData(String tokenKey, Object data) {
+		if (tokenKey == IStyleConstantsJSPJava.JAVA_KEYWORD) {
+			fKeywordToken = new Token(data);
+			fTypeToken = new Token(data);
+		} else if (tokenKey == IStyleConstantsJSPJava.JAVA_STRING) {
+			fStringToken = new Token(data);
+		} else if (tokenKey == IStyleConstantsJSPJava.JAVA_SINGLE_LINE_COMMENT) {
+			fSingleLineCommentToken = new Token(data);
+		} else if (tokenKey == IStyleConstantsJSPJava.JAVA_DEFAULT) {
+			fDefaultToken = new Token(data);
+		}
 	}
 }

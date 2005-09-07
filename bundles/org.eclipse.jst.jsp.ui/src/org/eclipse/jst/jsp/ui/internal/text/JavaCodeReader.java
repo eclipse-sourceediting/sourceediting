@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jst.jsp.ui.internal.derived.SingleCharReader;
 
 
 /**

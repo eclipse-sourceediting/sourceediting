@@ -15,20 +15,20 @@ package org.eclipse.jst.jsp.ui.internal.style.jspel;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordRule;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 
 /**
  * A Java code scanner.
  */
 public class JSPELCodeScanner extends org.eclipse.jface.text.rules.RuleBasedScanner {
-
+	private IToken fKeywordToken;
+	private IToken fTypeToken;
+	private IToken fDefaultToken;
+	
 	private static String[] fgKeywords = {
 				"and", //$NON-NLS-1$
 				"did", //$NON-NLS-1$
@@ -50,32 +50,34 @@ public class JSPELCodeScanner extends org.eclipse.jface.text.rules.RuleBasedScan
 	 * Creates a Java code scanner
 	 */
 	public JSPELCodeScanner() {
-		// if we use null here, system default will be used
-		Color background = null; //provider.getColor(JavaColorProvider.EDITOR_BACKGROUND);
-		
-		JSPELColorProvider.getInstance().loadJavaColors();
-		IToken keyword = new Token(new TextAttribute(EditorUtility.getColor(JSPELColorProvider.KEYWORD), background, JSPELColorProvider.KEYWORD_BOLD));
-		IToken type = new Token(new TextAttribute(EditorUtility.getColor(JSPELColorProvider.TYPE), background, JSPELColorProvider.TYPE_BOLD));
-		IToken string = new Token(new TextAttribute(EditorUtility.getColor(JSPELColorProvider.STRING), background, JSPELColorProvider.STRING_BOLD));
-		IToken comment = new Token(new TextAttribute(EditorUtility.getColor(JSPELColorProvider.SINGLE_LINE_COMMENT), background, JSPELColorProvider.SINGLE_LINE_COMMENT_BOLD));
-		IToken other = new Token(new TextAttribute(EditorUtility.getColor(JSPELColorProvider.DEFAULT), background, JSPELColorProvider.DEFAULT_BOLD));
-
-
+		super();
+	}
+	
+	public void initializeRules() {
 		List rules = new ArrayList();
 
 		// Add generic whitespace rule.
 		rules.add(new WhitespaceRule(new JSPELWhitespaceDetector()));
 
 		// Add word rule for keywords, types, and constants.
-		WordRule wordRule = new WordRule(new JSPELWordDetector(), other);
+		WordRule wordRule = new WordRule(new JSPELWordDetector(), fDefaultToken);
 		for (int i = 0; i < fgKeywords.length; i++)
-			wordRule.addWord(fgKeywords[i], keyword);
+			wordRule.addWord(fgKeywords[i], fKeywordToken);
 		for (int i = 0; i < fgConstants.length; i++)
-			wordRule.addWord(fgConstants[i], type);
+			wordRule.addWord(fgConstants[i], fTypeToken);
 		rules.add(wordRule);
 
 		IRule[] result = new IRule[rules.size()];
 		rules.toArray(result);
 		setRules(result);
+	}
+	
+	public void setTokenData(String tokenKey, Object data) {
+		if (tokenKey == IStyleConstantsJSPEL.EL_KEYWORD) {
+			fKeywordToken = new Token(data);
+			fTypeToken = new Token(data);
+		} else if (tokenKey == IStyleConstantsJSPEL.EL_DEFAULT) {
+			fDefaultToken = new Token(data);
+		}
 	}
 }

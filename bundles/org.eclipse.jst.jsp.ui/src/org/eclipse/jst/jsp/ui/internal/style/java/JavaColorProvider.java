@@ -44,19 +44,6 @@ public class JavaColorProvider {
 	public static int JAVADOC_LINK_BOLD = SWT.NORMAL;
 	public static int JAVADOC_DEFAULT_BOLD = SWT.NORMAL;
 	
-	/**
-	 * @deprecated all editors use same
-	 */
-	public static RGB EDITOR_BACKGROUND = new RGB(255, 255, 255);
-	/**
-	 * @deprecated all editors use same
-	 */
-	public static boolean EDITOR_CURRENT_LINE = true;
-	/**
-	 * @deprecated all editors use same
-	 */
-	public static RGB EDITOR_CURRENT_LINE_COLOR = new RGB(128, 128, 128);
-	
 	private static JavaColorProvider fInstance = null;
 	
 	public static JavaColorProvider getInstance() {
@@ -70,7 +57,6 @@ public class JavaColorProvider {
 	 * Use colors from JDT plugin
 	 */
 	public void loadJavaColors() {
-		
 		IPreferenceStore jdtStore = PreferenceConstants.getPreferenceStore();
 		MULTI_LINE_COMMENT = PreferenceConverter.getColor(jdtStore, PreferenceConstants.EDITOR_MULTI_LINE_COMMENT_COLOR);
 		SINGLE_LINE_COMMENT = PreferenceConverter.getColor(jdtStore, PreferenceConstants.EDITOR_SINGLE_LINE_COMMENT_COLOR);
@@ -92,11 +78,5 @@ public class JavaColorProvider {
 		JAVADOC_TAG_BOLD = jdtStore.getBoolean(PreferenceConstants.EDITOR_JAVADOC_TAG_BOLD) ? SWT.BOLD : SWT.NORMAL;
 		JAVADOC_LINK_BOLD = jdtStore.getBoolean(PreferenceConstants.EDITOR_JAVADOC_LINKS_BOLD) ? SWT.BOLD : SWT.NORMAL;
 		JAVADOC_DEFAULT_BOLD = jdtStore.getBoolean(PreferenceConstants.EDITOR_JAVADOC_DEFAULT_BOLD) ? SWT.BOLD : SWT.NORMAL;
-		
-//		EDITOR_BACKGROUND = new RGB(255, 255, 255);
-		
-//		IPreferenceStore sseStore = SSEUIPlugin.getDefault().getPreferenceStore();
-//		EDITOR_CURRENT_LINE = sseStore.getBoolean(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE);
-//		EDITOR_CURRENT_LINE_COLOR = PreferenceConverter.getColor(sseStore, AbstractDecoratedTextEditorPreferenceConstants.EDITOR_CURRENT_LINE_COLOR);
 	}
 }

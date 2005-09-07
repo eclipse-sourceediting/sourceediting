@@ -11,79 +11,162 @@
 package org.eclipse.jst.jsp.ui.internal.style.jspel;
 
 import java.util.Collection;
+import java.util.HashMap;
 
+import org.eclipse.jdt.ui.PreferenceConstants;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.rules.IToken;
-import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.jface.text.rules.Token;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jst.jsp.ui.internal.JSPUIPlugin;
+import org.eclipse.jst.jsp.ui.internal.style.IStyleConstantsJSP;
+import org.eclipse.jst.jsp.ui.internal.style.java.IStyleConstantsJSPJava;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.wst.html.ui.internal.style.IStyleConstantsHTML;
-import org.eclipse.wst.sse.ui.internal.provisional.style.AbstractLineStyleProvider;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
+import org.eclipse.wst.sse.ui.internal.provisional.style.Highlighter;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
 import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
-import org.w3c.dom.Node;
 
-// Note: many of the methods in this class were based on (or copied from) those
+// Note: many of the methods in this class were based on (or copied from)
+// those
 // found in the example Java Editor
-public class LineStyleProviderForJSPEL extends AbstractLineStyleProvider implements LineStyleProvider{
+public class LineStyleProviderForJSPEL implements LineStyleProvider {
+	private class PropertyChangeListener implements IPropertyChangeListener {
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
+		 */
+		public void propertyChange(PropertyChangeEvent event) {
+			// have to do it this way so others can override the method
+			handlePropertyChange(event);
+		}
+	}
 
 	private IDocument fDocument;
+	private Highlighter fHighlighter;
+	private boolean fIsInitialized = false;
+	private PropertyChangeListener fPreferenceListener = new PropertyChangeListener();
 	/** The scanner it uses */
-	protected RuleBasedScanner fScanner;
-	/** The default text attribute if non is returned as data by the current token */
-	protected TextAttribute fDefaultTextAttribute;
-	protected Node targetNode;
+	private JSPELCodeScanner fScanner;
+	/** Contains all text attributes pretaining to this line style provider */
+	private HashMap fTextAttributes = null;
 
 	public LineStyleProviderForJSPEL() {
 		super();
-		loadColors();
 		fScanner = new JSPELCodeScanner();
-		fDefaultTextAttribute = new TextAttribute(EditorUtility.getColor(JSPELColorProvider.DEFAULT));
 	}
 
 	/**
 	 * Adds style information to the given text presentation.
-	 *
-	 * @param presentation the text presentation to be extended
-	 * @param offset the offset of the range to be styled
-	 * @param length the length of the range to be styled
-	 * @param attr the attribute describing the style of the range to be styled
+	 * 
+	 * @param presentation
+	 *            the text presentation to be extended
+	 * @param offset
+	 *            the offset of the range to be styled
+	 * @param length
+	 *            the length of the range to be styled
+	 * @param attr
+	 *            the attribute describing the style of the range to be styled
 	 */
-	protected void addRange(Collection presentation, int offset, int length, TextAttribute attr) {
-		
-		Point range = getHighlighter().getTextViewer().getSelectedRange();
-		int caret = range.x;
-		int selection = range.y;
-		IDocument doc = getDocument();
-		Color bg = attr.getBackground();
-		// all editors use same background color
-//		// if current line highlight on, use line highlight color for background
-//		if(JavaColorProvider.EDITOR_CURRENT_LINE && selection == 1) {
-//			try {
-//				IRegion lineRegion = doc.getLineInformation(doc.getLineOfOffset(caret));
-//				if(lineRegion.getOffset()<=offset && offset<=lineRegion.getOffset()+lineRegion.getLength())
-//					bg = EditorUtility.getColor(JavaColorProvider.EDITOR_CURRENT_LINE_COLOR);
-//						
-//			} catch (BadLocationException e) {
-//				Logger.logException(e);
-//			}
-//		}
-		
-		presentation.add(new StyleRange(offset, length, attr.getForeground(), bg, attr.getStyle()));
+	private void addRange(Collection presentation, int offset, int length, TextAttribute attr) {
+		// support for user defined backgroud for JSP scriptlet regions
+		String styleString = JSPUIPlugin.getDefault().getPreferenceStore().getString(IStyleConstantsJSP.JSP_CONTENT);
+		String[] prefs = ColorHelper.unpackStylePreferences(styleString);
+		Color bgColor = (prefs != null && prefs.length == 3 && prefs[1].startsWith("#") && Display.getCurrent() != null) //$NON-NLS-1$
+					? new Color(Display.getCurrent(), ColorHelper.toRGB(prefs[1])) : attr.getBackground();
+
+		presentation.add(new StyleRange(offset, length, attr.getForeground(), bgColor, attr.getStyle()));
 	}
 
-	protected void clearColors() {
-		getTextAttributes().clear();
+	/**
+	 * Looks up the colorKey in the preference store and adds the style
+	 * information to list of TextAttributes
+	 * 
+	 * @param colorKey
+	 */
+	private void addTextAttribute(String colorKey) {
+		if (getColorPreferences() != null) {
+			String prefString = getColorPreferences().getString(colorKey);
+			String[] stylePrefs = ColorHelper.unpackStylePreferences(prefString);
+			if (stylePrefs != null) {
+				RGB foreground = ColorHelper.toRGB(stylePrefs[0]);
+				RGB background = ColorHelper.toRGB(stylePrefs[1]);
+				boolean bold = Boolean.valueOf(stylePrefs[2]).booleanValue();
+				getTextAttributes().put(colorKey, createTextAttribute(foreground, background, bold));
+			}
+		}
+	}
+
+	/**
+	 * Looks up the colorKey in the preference store and adds the style
+	 * information to list of TextAttributes
+	 * 
+	 * @param colorKey
+	 */
+	private void addJavaTextAttribute(String colorKey) {
+		IPreferenceStore store = getJavaColorPreferences();
+		if (store != null && colorKey != null) {
+			TextAttribute ta = null;
+			if (colorKey == IStyleConstantsJSPEL.EL_KEYWORD) {
+				// keyword
+				RGB foreground = PreferenceConverter.getColor(store, PreferenceConstants.EDITOR_JAVA_KEYWORD_COLOR);
+				boolean bold = store.getBoolean(PreferenceConstants.EDITOR_JAVA_KEYWORD_BOLD);
+				boolean italics = store.getBoolean(PreferenceConstants.EDITOR_JAVA_KEYWORD_ITALIC);
+				ta = createTextAttribute(foreground, null, bold, italics);
+			} else if (colorKey == IStyleConstantsJSPEL.EL_DEFAULT) {
+				// default
+				RGB foreground = PreferenceConverter.getColor(store, PreferenceConstants.EDITOR_JAVA_DEFAULT_COLOR);
+				boolean bold = store.getBoolean(PreferenceConstants.EDITOR_JAVA_DEFAULT_BOLD);
+				boolean italics = store.getBoolean(PreferenceConstants.EDITOR_JAVA_DEFAULT_ITALIC);
+				ta = createTextAttribute(foreground, null, bold, italics);
+			}
+			if (ta != null) {
+				getTextAttributes().put(colorKey, ta);
+				fScanner.setTokenData(colorKey, ta);
+			}
+		}
+	}
+
+	private TextAttribute createTextAttribute(RGB foreground, RGB background, boolean bold) {
+		return new TextAttribute((foreground != null) ? EditorUtility.getColor(foreground) : null, (background != null) ? EditorUtility.getColor(background) : null, bold ? SWT.BOLD : SWT.NORMAL);
+	}
+
+	private TextAttribute createTextAttribute(RGB foreground, RGB background, boolean bold, boolean italics) {
+		int style = bold ? SWT.BOLD : SWT.NORMAL;
+		if (italics)
+			style |= SWT.ITALIC;
+
+		return new TextAttribute((foreground != null) ? EditorUtility.getColor(foreground) : null, (background != null) ? EditorUtility.getColor(background) : null, style);
+	}
+
+	/**
+	 * Returns the hashtable containing all the text attributes for this line
+	 * style provider. Lazily creates a hashtable if one has not already been
+	 * created.
+	 * 
+	 * @return
+	 */
+	private HashMap getTextAttributes() {
+		if (fTextAttributes == null) {
+			fTextAttributes = new HashMap();
+			loadColors();
+		}
+		return fTextAttributes;
 	}
 
 	/**
@@ -91,66 +174,97 @@ public class LineStyleProviderForJSPEL extends AbstractLineStyleProvider impleme
 	 * data is not <code>null</code> and a text attribute it is assumed that
 	 * it is the encoded text attribute. It returns the default text attribute
 	 * if there is no encoded text attribute found.
-	 *
-	 * @param token the token whose text attribute is to be determined
+	 * 
+	 * @param token
+	 *            the token whose text attribute is to be determined
 	 * @return the token's text attribute
 	 */
-	protected TextAttribute getTokenTextAttribute(IToken token) {
+	private TextAttribute getTokenTextAttribute(IToken token) {
+		TextAttribute ta = null;
+
 		Object data = token.getData();
 		if (data instanceof TextAttribute)
-			return (TextAttribute) data;
-		return fDefaultTextAttribute;
+			ta = (TextAttribute) data;
+		else {
+			ta = (TextAttribute) getTextAttributes().get(IStyleConstantsJSPJava.JAVA_DEFAULT);
+		}
+		return ta;
 	}
 
-	protected void loadColors() {
-		clearColors();
-		
+	public void init(IStructuredDocument document, Highlighter highlighter) {
+		fDocument = document;
+		fHighlighter = highlighter;
+
+		if (fIsInitialized)
+			return;
+
+		registerPreferenceListener();
+
+		fIsInitialized = true;
+	}
+
+	private void loadColors() {
 		addTextAttribute(IStyleConstantsHTML.SCRIPT_AREA_BORDER);
 		addTextAttribute(IStyleConstantsXML.TAG_ATTRIBUTE_NAME);
 		addTextAttribute(IStyleConstantsXML.TAG_ATTRIBUTE_VALUE);
+
+		addJavaTextAttribute(IStyleConstantsJSPJava.JAVA_KEYWORD);
+		addJavaTextAttribute(IStyleConstantsJSPJava.JAVA_DEFAULT);
+
+		fScanner.initializeRules();
 	}
 
 	protected void handlePropertyChange(PropertyChangeEvent event) {
 		String styleKey = null;
+		String javaStyleKey = null;
 
 		if (event != null) {
 			String prefKey = event.getProperty();
 			// check if preference changed is a style preference
 			if (IStyleConstantsHTML.SCRIPT_AREA_BORDER.equals(prefKey)) {
 				styleKey = IStyleConstantsHTML.SCRIPT_AREA_BORDER;
-			}
-			else if (IStyleConstantsXML.TAG_ATTRIBUTE_NAME.equals(prefKey)) {
+			} else if (IStyleConstantsXML.TAG_ATTRIBUTE_NAME.equals(prefKey)) {
 				styleKey = IStyleConstantsXML.TAG_ATTRIBUTE_NAME;
-			}
-			else if (IStyleConstantsXML.TAG_ATTRIBUTE_VALUE.equals(prefKey)) {
+			} else if (IStyleConstantsXML.TAG_ATTRIBUTE_VALUE.equals(prefKey)) {
 				styleKey = IStyleConstantsXML.TAG_ATTRIBUTE_VALUE;
+			} else if (PreferenceConstants.EDITOR_JAVA_KEYWORD_COLOR.equals(prefKey) || (PreferenceConstants.EDITOR_JAVA_KEYWORD_BOLD.equals(prefKey)) || (PreferenceConstants.EDITOR_JAVA_KEYWORD_ITALIC.equals(prefKey))) {
+				javaStyleKey = IStyleConstantsJSPEL.EL_KEYWORD;
+			} else if (PreferenceConstants.EDITOR_JAVA_DEFAULT_COLOR.equals(prefKey) || (PreferenceConstants.EDITOR_JAVA_DEFAULT_BOLD.equals(prefKey)) || (PreferenceConstants.EDITOR_JAVA_DEFAULT_ITALIC.equals(prefKey))) {
+				javaStyleKey = IStyleConstantsJSPEL.EL_DEFAULT;
 			}
 		}
 
 		if (styleKey != null) {
 			// overwrite style preference with new value
 			addTextAttribute(styleKey);
-			super.handlePropertyChange(event);
+		}
+		if (javaStyleKey != null) {
+			// overwrite style preference with new value
+			addJavaTextAttribute(javaStyleKey);
+			fScanner.initializeRules();
+		}
+		if (styleKey != null || javaStyleKey != null) {
+			// force a full update of the text viewer
+			fHighlighter.refreshDisplay();
 		}
 	}
 
 	public boolean prepareRegions(ITypedRegion typedRegion, int ssssrequestedStart, int ssssrequestedLength, Collection holdResults) {
 		boolean result = true;
 		try {
-			// ideally, eventually, we'll have a "virtualDocument" we can 
+			// ideally, eventually, we'll have a "virtualDocument" we can
 			// refer to, but for now ... we'll simple rescan the one region.
 			// use simple adjustment (since "sub-content" starts at 0
 			int offsetAdjustment = typedRegion.getOffset();
-			String content = super.getDocument().get(typedRegion.getOffset(), typedRegion.getLength());
+			String content = fDocument.get(typedRegion.getOffset(), typedRegion.getLength());
 			IDocument document = new Document(content);
-			this.setDocument(document);
 
 			int lastStart = 0;
 			int length = 0;
 			IToken lastToken = Token.UNDEFINED;
 
 			int remainingLength = typedRegion.getLength();
-			fScanner.setRange(fDocument, lastStart, remainingLength);
+			fScanner.setRange(document, lastStart, remainingLength);
 
 			while (true) {
 
@@ -183,23 +297,37 @@ public class LineStyleProviderForJSPEL extends AbstractLineStyleProvider impleme
 
 				length += fScanner.getTokenLength();
 			}
-		}
-		catch (BadLocationException e) {
-			// shouldn't happen, but we don't want it to stop other highlighting, if it does.
+		} catch (BadLocationException e) {
+			// shouldn't happen, but we don't want it to stop other
+			// highlighting, if it does.
 			result = false;
 		}
 		return result;
 	}
 	
-	protected IPreferenceStore getColorPreferences() {
+	private void registerPreferenceListener() {
+		getColorPreferences().addPropertyChangeListener(fPreferenceListener);
+		getJavaColorPreferences().addPropertyChangeListener(fPreferenceListener);
+	}
+	
+	public void release() {
+		unRegisterPreferenceManager();
+		if (fTextAttributes != null) {
+			fTextAttributes.clear();
+			fTextAttributes = null;
+		}
+	}
+
+	private void unRegisterPreferenceManager() {
+		getColorPreferences().removePropertyChangeListener(fPreferenceListener);
+		getJavaColorPreferences().removePropertyChangeListener(fPreferenceListener);
+	}
+
+	private IPreferenceStore getColorPreferences() {
 		return JSPUIPlugin.getDefault().getPreferenceStore();
 	}
 	
-	protected void setDocument(IDocument document) {
-		fDocument = document;
-	}
-
-	public void setTargetNode(org.w3c.dom.Node newTargetNode) {
-		targetNode = newTargetNode;
+	private IPreferenceStore getJavaColorPreferences() {
+		return PreferenceConstants.getPreferenceStore();
 	}
 }

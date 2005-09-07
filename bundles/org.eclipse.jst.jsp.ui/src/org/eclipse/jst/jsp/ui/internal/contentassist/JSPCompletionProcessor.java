@@ -13,13 +13,9 @@ package org.eclipse.jst.jsp.ui.internal.contentassist;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -32,7 +28,6 @@ import org.eclipse.jst.jsp.ui.internal.Logger;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
-import org.eclipse.wst.sse.ui.internal.contentassist.IResourceDependentProcessor;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.osgi.framework.Bundle;
@@ -42,7 +37,7 @@ import org.osgi.framework.BundleException;
 /**
  * @plannedfor 1.0
  */
-public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasable, IResourceDependentProcessor {
+public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasable {
 	// for debugging
 	private static final boolean DEBUG;
 	static {
@@ -53,14 +48,9 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 	private static final String JDT_CORE_PLUGIN_ID = "org.eclipse.jdt.core"; //$NON-NLS-1$
 
 	protected int fJspSourcePosition, fJavaPosition;
-	protected IResource fResource;
 	protected String fErrorMessage = null;
 	protected StructuredTextViewer fViewer = null;
 	private JSPTranslationAdapter fTranslationAdapter = null;
-
-	public JSPCompletionProcessor(IResource resource) {
-		fResource = resource;
-	}
 
 	/**
 	 * Returns a list of completion proposals based on the specified location
@@ -255,17 +245,6 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 	}
 
 	/**
-	 * Return the Java project for the to create completions within
-	 */
-	protected IJavaProject getJavaProject() {
-		if (fResource == null)
-			return null;
-		IProject proj = (fResource.getType() == IResource.PROJECT) ? (IProject) fResource : fResource.getProject();
-		IJavaProject javaProj = JavaCore.create(proj);
-		return javaProj;
-	}
-
-	/**
 	 * Initialize the code assist processor.
 	 */
 	protected void initialize(int pos) {
@@ -290,9 +269,5 @@ public class JSPCompletionProcessor implements IContentAssistProcessor, IReleasa
 
 	public void release() {
 		fTranslationAdapter = null;
-	}
-
-	public void initialize(IResource resource) {
-		fResource = resource;
 	}
 }

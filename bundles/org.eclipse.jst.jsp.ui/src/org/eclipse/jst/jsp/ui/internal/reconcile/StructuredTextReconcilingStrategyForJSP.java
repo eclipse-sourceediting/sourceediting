@@ -25,10 +25,10 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcileStep;
+import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jst.jsp.core.internal.JSPCorePlugin;
 import org.eclipse.jst.jsp.core.internal.preferences.JSPCorePreferenceNames;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
-import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcilingStrategy;
@@ -39,9 +39,10 @@ import org.eclipse.wst.sse.ui.internal.reconcile.AbstractStructuredTextReconcili
  */
 public class StructuredTextReconcilingStrategyForJSP extends AbstractStructuredTextReconcilingStrategy {
 	private boolean fShouldReconcile = true;
+	private boolean fStepsCreated = false;
 
-	public StructuredTextReconcilingStrategyForJSP(ITextEditor editor) {
-		super(editor);
+	public StructuredTextReconcilingStrategyForJSP(ISourceViewer viewer) {
+		super(viewer);
 	}
 
 	public void createReconcileSteps() {
@@ -49,9 +50,10 @@ public class StructuredTextReconcilingStrategyForJSP extends AbstractStructuredT
 		// the order is:
 		// 1. translation step
 		// 2. java step
-		if (getFile() != null) {
-			IReconcileStep javaStep = new ReconcileStepForJava(getFile());
+		if (fDocument != null) {
+			IReconcileStep javaStep = new ReconcileStepForJava();
 			fFirstStep = new ReconcileStepForJspTranslation(javaStep);
+			fStepsCreated = true;
 		}
 	}
 
@@ -148,6 +150,9 @@ public class StructuredTextReconcilingStrategyForJSP extends AbstractStructuredT
 	}
 
 	public void setDocument(IDocument document) {
+		if (!fStepsCreated)
+			createReconcileSteps();
+		
 		super.setDocument(document);
 
 		if (document != null) {

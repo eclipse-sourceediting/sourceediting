@@ -36,11 +36,6 @@ public class LineStyleProviderForJSP extends AbstractLineStyleProvider implement
 
 	public LineStyleProviderForJSP() {
 		super();
-		loadColorsForJSPTags();
-	}
-
-	protected void clearColors() {
-		getTextAttributes().clear();
 	}
 
 	protected TextAttribute getAttributeFor(ITextRegion region) {
@@ -118,9 +113,7 @@ public class LineStyleProviderForJSP extends AbstractLineStyleProvider implement
 		return JSPUIPlugin.getDefault().getPreferenceStore();
 	}
 
-	protected void loadColorsForJSPTags() {
-		clearColors();
-
+	protected void loadColors() {
 		addTextAttribute(IStyleConstantsXML.TAG_NAME);
 		addTextAttribute(IStyleConstantsXML.TAG_BORDER);
 		addTextAttribute(IStyleConstantsXML.TAG_ATTRIBUTE_NAME);

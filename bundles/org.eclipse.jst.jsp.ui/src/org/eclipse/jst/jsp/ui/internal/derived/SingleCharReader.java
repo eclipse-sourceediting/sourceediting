@@ -1,30 +1,29 @@
-/*******************************************************************************
- * Copyright (c) 2004 IBM Corporation and others.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
+/*
+ * Copyright (c) 2005 IBM Corporation and others.
+ * All rights reserved.   This program and the accompanying materials
+ * are made available under the terms of the Common Public License v1.0
  * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/cpl-v10.html
  * 
  * Contributors:
- *     IBM Corporation - initial API and implementation
- *******************************************************************************/
-package org.eclipse.jst.jsp.ui.internal.text;
-
-
-
-//package org.eclipse.jdt.internal.corext.javadoc;
-// todo: this class is copied from the above package until it is made non-internal.  Until that time, check that class occassionally for bugfixes.
-
-
+ *   IBM - Initial API and implementation
+ *   Jens Lukowski/Innoopract - initial renaming/restructuring
+ * 
+ */
+package org.eclipse.jst.jsp.ui.internal.derived;
 
 import java.io.IOException;
 import java.io.Reader;
 
-abstract class SingleCharReader extends Reader {
-
+/*
+ * Copied from org.eclipse.jdt.internal.corext.javadoc.SingleCharReader.
+ * Modification was made to fix statement unnecessarily nested within else
+ * clause warning in read(..).
+ */
+public abstract class SingleCharReader extends Reader {
 
 	/**
-	 * @see Reader#read(char)
+	 * @see Reader#read()
 	 */
 	public abstract int read() throws IOException;
 
@@ -39,9 +38,7 @@ abstract class SingleCharReader extends Reader {
 				if (i == off) {
 					return -1;
 				}
-				else {
-					return i - off;
-				}
+				return i - off;
 			}
 			cbuf[i] = (char) ch;
 		}

@@ -13,7 +13,6 @@ package org.eclipse.jst.jsp.ui.internal.contentassist;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
@@ -32,7 +31,6 @@ import org.eclipse.wst.sse.ui.internal.IReleasable;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
-import org.eclipse.wst.sse.ui.internal.contentassist.IResourceDependentProcessor;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
@@ -41,8 +39,7 @@ import org.eclipse.wst.xml.ui.internal.util.SharedXMLEditorPluginImageHelper;
 /**
  * @plannedfor 1.0
  */
-public class JSPJavaContentAssistProcessor implements IContentAssistProcessor, IResourceDependentProcessor, IReleasable {
-	protected IResource fResource;
+public class JSPJavaContentAssistProcessor implements IContentAssistProcessor, IReleasable {
 	protected char completionProposalAutoActivationCharacters[] = new char[]{'.'};
 	protected char contextInformationAutoActivationCharacters[] = null;
 	protected static final String UNKNOWN_CONTEXT = JSPUIMessages.Content_Assist_not_availab_UI_;
@@ -51,11 +48,6 @@ public class JSPJavaContentAssistProcessor implements IContentAssistProcessor, I
 
 	public JSPJavaContentAssistProcessor() {
 		super();
-	}
-
-	public JSPJavaContentAssistProcessor(IResource file) {
-		super();
-		fResource = file;
 	}
 
 	/**
@@ -191,15 +183,6 @@ public class JSPJavaContentAssistProcessor implements IContentAssistProcessor, I
 			fJspCompletionProcessor.release();
 			fJspCompletionProcessor = null;
 		}
-		fResource = null;
-	}
-
-	/**
-	 * @see ContentAssistAdapter#initialize(IResource)
-	 */
-	public void initialize(IResource resource) {
-		fResource = resource;
-		getJspCompletionProcessor().initialize(resource);
 	}
 
 	/**
@@ -207,8 +190,7 @@ public class JSPJavaContentAssistProcessor implements IContentAssistProcessor, I
 	 */
 	protected JSPCompletionProcessor getJspCompletionProcessor() {
 		if (fJspCompletionProcessor == null) {
-			fJspCompletionProcessor = new JSPCompletionProcessor(fResource);
-			fJspCompletionProcessor.initialize(fResource);
+			fJspCompletionProcessor = new JSPCompletionProcessor();
 		}
 		return fJspCompletionProcessor;
 	}

@@ -12,10 +12,10 @@ package org.eclipse.jst.jsp.ui.internal.reconcile;
 
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jface.text.Assert;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.reconciler.DirtyRegion;
@@ -25,9 +25,8 @@ import org.eclipse.jface.text.reconciler.IReconcileStep;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslation;
 import org.eclipse.jst.jsp.core.internal.java.JSPTranslationExtension;
 import org.eclipse.jst.jsp.core.internal.provisional.text.IJSPPartitionTypes;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.ui.internal.reconcile.DocumentAdapter;
 import org.eclipse.wst.sse.ui.internal.reconcile.ReconcileAnnotationKey;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredReconcileStep;
 import org.eclipse.wst.sse.ui.internal.reconcile.TemporaryAnnotation;
@@ -59,45 +58,22 @@ public class ReconcileStepForJava extends StructuredReconcileStep {
 
 	private JSPTranslation fJspTranslation;
 	private CompilationUnitAdapter fModel;
-	private IStructuredDocument fStructuredDocument = null;
 
 	/**
 	 * Creates the last reconcile step of the pipe.
 	 */
-	public ReconcileStepForJava(IFile jspFile) {
-		// should handle more gracefully
-		Assert.isNotNull(jspFile);
-		initStructuredDocument(jspFile);
+	public ReconcileStepForJava() {
+		super();
 	}
 
 	/**
 	 * Creates an intermediate reconcile step which adds the given step to the
 	 * pipe.
 	 */
-	public ReconcileStepForJava(IReconcileStep step, IFile jspFile) {
+	public ReconcileStepForJava(IReconcileStep step) {
 		super(step);
-		Assert.isNotNull(jspFile);
-		initStructuredDocument(jspFile);
 	}
-
-	/**
-	 * Structured Document used to create annotation removal keys
-	 * 
-	 * @param jspFile
-	 */
-	private void initStructuredDocument(IFile jspFile) {
-		IStructuredModel sModel = null;
-		try {
-			sModel = StructuredModelManager.getModelManager().getExistingModelForRead(jspFile);
-			if (sModel != null)
-				fStructuredDocument = sModel.getStructuredDocument();
-		}
-		finally {
-			if (sModel != null)
-				sModel.releaseFromRead();
-		}
-	}
-
+	
 	/*
 	 * @see AbstractReconcileStep#reconcileModel(DirtyRegion, IRegion)
 	 */
@@ -159,8 +135,9 @@ public class ReconcileStepForJava extends StructuredReconcileStep {
 		int jspOffset = translation.getJspOffset(pos.offset);
 
 		ReconcileAnnotationKey key = null;
-		if (jspOffset != -1 && fStructuredDocument != null) {
-			key = createKey(fStructuredDocument.getRegionAtCharacterOffset(jspOffset), ReconcileAnnotationKey.TOTAL);
+		IStructuredDocument document = getInputStructuredDocument();
+		if (jspOffset != -1 && document != null) {
+			key = createKey(document.getRegionAtCharacterOffset(jspOffset), ReconcileAnnotationKey.TOTAL);
 		}
 		else {
 			key = createKey(IJSPPartitionTypes.JSP_DEFAULT, ReconcileAnnotationKey.TOTAL);
@@ -169,6 +146,18 @@ public class ReconcileStepForJava extends StructuredReconcileStep {
 		annotation.setAdditionalFixInfo(problem);
 
 		return annotation;
+	}
+	
+	private IStructuredDocument getInputStructuredDocument() {
+		IStructuredDocument structuredDocument = null;
+		
+		IReconcilableModel inputModel = getInputModel();
+		IDocument document = null;
+		if (inputModel instanceof DocumentAdapter)
+			document = ((DocumentAdapter)inputModel).getDocument();
+		if (document instanceof IStructuredDocument)
+			structuredDocument = (IStructuredDocument)document;
+		return structuredDocument;
 	}
 
 	/*

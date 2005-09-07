@@ -34,8 +34,7 @@ public class JSPELContentAssistProcessor extends JSPJavaContentAssistProcessor {
 
 	protected JSPCompletionProcessor getJspCompletionProcessor() {
 		if (fJspCompletionProcessor == null) {
-			fJspCompletionProcessor = new JSPELCompletionProcessor(fResource);
-			fJspCompletionProcessor.initialize(fResource);
+			fJspCompletionProcessor = new JSPELCompletionProcessor();
 		}
 		return fJspCompletionProcessor;
 	}

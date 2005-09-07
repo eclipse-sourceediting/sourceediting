@@ -16,14 +16,12 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
-import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
-import org.eclipse.wst.sse.ui.internal.contentassist.IResourceDependentProcessor;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMContent;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
@@ -42,11 +40,7 @@ import org.w3c.dom.Node;
  * 
  * @plannedfor 1.0
  */
-public class JSPDummyContentAssistProcessor extends AbstractContentAssistProcessor implements IResourceDependentProcessor {
-
-	IResource fResource = null;
-
-
+public class JSPDummyContentAssistProcessor extends AbstractContentAssistProcessor {
 	protected void addAttributeNameProposals(ContentAssistRequest contentAssistRequest) {
 		super.addAttributeNameProposals(contentAssistRequest);
 	}
@@ -282,10 +276,6 @@ public class JSPDummyContentAssistProcessor extends AbstractContentAssistProcess
 		super.init();
 	}
 
-	public void initialize(IResource iResource) {
-		fResource = iResource;
-	}
-
 	protected boolean isCloseRegion(ITextRegion region) {
 		return super.isCloseRegion(region);
 	}
@@ -300,11 +290,6 @@ public class JSPDummyContentAssistProcessor extends AbstractContentAssistProcess
 
 	protected Properties mapToProperties(CMNamedNodeMap map) {
 		return super.mapToProperties(map);
-	}
-
-
-	public void release() {
-		super.release();
 	}
 
 	protected void setErrorMessage(String errorMessage, String prepend, String append) {

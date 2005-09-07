@@ -12,11 +12,19 @@ package org.eclipse.jst.jsp.ui.internal.contentassist;
 
 
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jst.jsp.core.internal.provisional.JSP11Namespace;
 import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImageHelper;
 import org.eclipse.jst.jsp.ui.internal.editor.JSPEditorPluginImages;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
+import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionContainer;
@@ -37,9 +45,6 @@ import org.w3c.dom.NodeList;
  * @plannedfor 1.0
  */
 public class JSPPropertyContentAssistProcessor extends JSPDummyContentAssistProcessor {
-
-	protected IResource resource = null;
-
 	public JSPPropertyContentAssistProcessor() {
 		super();
 	}
@@ -131,6 +136,7 @@ public class JSPPropertyContentAssistProcessor extends JSPDummyContentAssistProc
 				if (typeName != null && typeName.length() > 0) {
 					// find the class/type/beanName definition and obtain the list of properties
 					IBeanInfoProvider provider = new BeanInfoProvider();
+					IResource resource = getResource(contentAssistRequest);
 					IJavaPropertyDescriptor[] descriptors = provider.getRuntimeProperties(resource, typeName);
 					CustomCompletionProposal proposal = null;
 					String displayString = ""; //$NON-NLS-1$
@@ -207,13 +213,47 @@ public class JSPPropertyContentAssistProcessor extends JSPDummyContentAssistProc
 			}
 		}
 	}
-
-	public void release() {
-		resource = null;
-	}
 	
-	public void initialize(IResource iResource) {
-		this.resource = iResource;
-	}
+	/**
+	 * Returns project request is in
+	 * 
+	 * @param request
+	 * @return
+	 */
+	private IResource getResource(ContentAssistRequest request) {
+		IResource resource = null;
+		String baselocation = null;
 
+		if (request != null) {
+			IStructuredDocumentRegion region = request.getDocumentRegion();
+			if (region != null) {
+				IDocument document = region.getParentDocument();
+				IStructuredModel model = null;
+				try {
+					model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
+					if (model != null) {
+						baselocation = model.getBaseLocation();
+					}
+				} finally {
+					if (model != null)
+						model.releaseFromRead();
+				}
+			}
+		}
+
+		if (baselocation != null) {
+			// copied from JSPTranslationAdapter#getJavaProject
+			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+			IPath filePath = new Path(baselocation);
+			IFile file = null;
+
+			if (filePath.segmentCount() > 1) {
+				file = root.getFile(filePath);
+			}
+			if (file != null) {
+				resource = file.getProject();
+			}
+		}
+		return resource;
+	}
 }
