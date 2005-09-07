@@ -2,8 +2,8 @@
 
 import junit.framework.TestCase;
 
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IAutoEditStrategy;
+import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
@@ -17,12 +17,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTypes;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
-import org.eclipse.wst.sse.ui.internal.provisional.style.IHighlighter;
+import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
-import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.provisional.StructuredTextViewerConfigurationXML;
 import org.eclipse.wst.xml.ui.tests.Logger;
 
@@ -31,10 +29,9 @@ import org.eclipse.wst.xml.ui.tests.Logger;
  */
 public class TestViewerConfigurationXML extends TestCase {
     
-	private StructuredTextViewer fViewer = null;
 	private StructuredTextViewerConfigurationXML fConfig = null;
-	private IPreferenceStore fPreferenceStore = null;
 	private boolean fDisplayExists = true;
+	private StructuredTextViewer fViewer = null;
 	private boolean isSetup = false;
 	
     public TestViewerConfigurationXML() {
@@ -44,16 +41,10 @@ public class TestViewerConfigurationXML extends TestCase {
 		
     	super.setUp();
 		if(!this.isSetup){
-			setUpPreferences();
 			setUpViewerConfiguration();
 			this.isSetup = true;
 		}
     }
-	
-    private void setUpPreferences() {
-		fPreferenceStore = XMLUIPlugin.getDefault().getPreferenceStore();
-		fPreferenceStore.setValue(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED, true);
-	}
 	
 	private void setUpViewerConfiguration() {
 		
@@ -73,7 +64,7 @@ public class TestViewerConfigurationXML extends TestCase {
 			
 			// dummy viewer
 			fViewer = new StructuredTextViewer(parent, null, null, false, SWT.NONE);
-			fConfig = new StructuredTextViewerConfigurationXML(fPreferenceStore);
+			fConfig = new StructuredTextViewerConfigurationXML();
 		}
 		else {
 			fDisplayExists = false;
@@ -81,6 +72,19 @@ public class TestViewerConfigurationXML extends TestCase {
 		}
 	}
     
+	/**
+	 * Not necessary
+	 */
+	public void testGetAnnotationHover() {
+		
+		// probably no display
+		if(!fDisplayExists)
+			return;
+		
+		IAnnotationHover hover = fConfig.getAnnotationHover(fViewer);
+		assertNotNull("AnnotationHover is null", hover);
+    }
+	
 	public void testGetAutoEditStrategies() {
 		
 		// probably no display
@@ -114,16 +118,6 @@ public class TestViewerConfigurationXML extends TestCase {
 		assertNotNull("there is no content assistant", ca);
 	}
 	
-	public void testGetCorrectionAssistant() {
-		
-		// probably no display
-		if(!fDisplayExists)
-			return;
-		
-		IContentAssistant ca = fConfig.getCorrectionAssistant(fViewer);
-		assertNotNull("there is no correction assistant", ca);
-	}
-	
 	public void testGetContentFormatter() {
 		
 		// probably no display
@@ -132,6 +126,16 @@ public class TestViewerConfigurationXML extends TestCase {
 		
 		IContentFormatter cf = fConfig.getContentFormatter(fViewer);
 		assertNotNull("there is no content formatter", cf);
+	}
+	
+	public void testGetCorrectionAssistant() {
+		
+		// probably no display
+		if(!fDisplayExists)
+			return;
+		
+		IContentAssistant ca = fConfig.getCorrectionAssistant(fViewer);
+		assertNotNull("there is no correction assistant", ca);
 	}
 	
 	public void testGetDoubleClickStrategy() {
@@ -150,15 +154,40 @@ public class TestViewerConfigurationXML extends TestCase {
 		assertTrue("there are no configured double click strategies", false);
 	}
 	
-	public void testGetHighlighter() {
+	public void testGetHyperlinkDetectors() {
 		
 		// probably no display
 		if(!fDisplayExists)
 			return;
 		
-		IHighlighter highlighter = fConfig.getHighlighter(fViewer);
-		assertNotNull("Highlighter is null", highlighter);
+		IHyperlinkDetector[] detectors = fConfig.getHyperlinkDetectors(fViewer);
+		assertNotNull(detectors);
+		assertTrue("there are no hyperlink detectors", detectors.length > 0);
 	}
+	
+    public void testGetIndentPrefixes() {
+		// probably no display
+		if(!fDisplayExists)
+			return;
+		
+		String[] contentTypes = fConfig.getConfiguredContentTypes(fViewer);
+		for (int i = 0; i < contentTypes.length; i++) {
+			String prefixes[] = fConfig.getIndentPrefixes(fViewer, contentTypes[i]);
+			if(prefixes != null) {
+				return;
+			}
+		}
+		assertTrue("there are no configured indent prefixes", false);
+	}
+    
+    public void testGetInformationControlCreator() {
+		// probably no display
+		if(!fDisplayExists)
+			return;
+		
+		IInformationControlCreator infoCreator = fConfig.getInformationControlCreator(fViewer);
+		assertNotNull("InformationControlCreator is null", infoCreator);
+    }
 	
 	public void testGetInformationPresenter() {
 		
@@ -170,29 +199,19 @@ public class TestViewerConfigurationXML extends TestCase {
 		assertNotNull("InformationPresenter is null", presenter);
 	}
 	
-    public void testGetAnnotationHover() {
-		
+	public void testGetLineStyleProviders() {
 		// probably no display
 		if(!fDisplayExists)
 			return;
 		
-		IAnnotationHover hover = fConfig.getAnnotationHover(fViewer);
-		assertNotNull("AnnotationHover is null", hover);
-    }
-	
-	public void testUnconfigure() {
-		
-		// probably no display
-		if(!fDisplayExists)
-			return;
-		
-		
-		fConfig.unConfigure(fViewer);
-		// need a good test here to make sure thing are really unconfigured
-		
-		// need to re-set up since it's likely
-		// more tests are called after this one
-		setUpViewerConfiguration();
+		String[] contentTypes = fConfig.getConfiguredContentTypes(fViewer);
+		for (int i = 0; i < contentTypes.length; i++) {
+			LineStyleProvider providers[] = fConfig.getLineStyleProviders(fViewer, contentTypes[i]);
+			if(providers != null) {
+				return;
+			}
+		}
+		assertTrue("there are no configured line style providers", false);
 	}
 	
 	public void testGetReconciler() {
@@ -203,17 +222,6 @@ public class TestViewerConfigurationXML extends TestCase {
 		
 		IReconciler r = fConfig.getReconciler(fViewer);
 		assertNotNull("Reconciler is null", r);
-	}
-	
-	public void testGetHyperlinkDetectors() {
-		
-		// probably no display
-		if(!fDisplayExists)
-			return;
-		
-		IHyperlinkDetector[] detectors = fConfig.getHyperlinkDetectors(fViewer);
-		assertNotNull(detectors);
-		assertTrue("there are no hyperlink detectors", detectors.length > 0);
 	}
 	
 	public void testGetTextHover() {
@@ -228,20 +236,5 @@ public class TestViewerConfigurationXML extends TestCase {
 			ITextHover hover = fConfig.getTextHover(fViewer, hoverPartitions[i], SWT.NONE);
 			assertNotNull("hover was null for partition: " + hoverPartitions[i], hover);
 		}
-	}
-	
-	public void testGetIndentPrefixes() {
-		// probably no display
-		if(!fDisplayExists)
-			return;
-		
-		String[] contentTypes = fConfig.getConfiguredContentTypes(fViewer);
-		for (int i = 0; i < contentTypes.length; i++) {
-			String prefixes[] = fConfig.getIndentPrefixes(fViewer, contentTypes[i]);
-			if(prefixes != null) {
-				return;
-			}
-		}
-		assertTrue("there are no configured indent prefixes", false);
 	}
 }

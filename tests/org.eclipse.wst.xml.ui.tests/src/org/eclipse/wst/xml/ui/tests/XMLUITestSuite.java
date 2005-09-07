@@ -27,5 +27,6 @@ public class XMLUITestSuite extends TestSuite {
 		addTest(new TestSuite(VerifyEditorPlugin.class));
 		addTest(new TestSuite(XMLUIPreferencesTest.class));
 		addTest(new TestSuite(TestViewerConfigurationXML.class));
+		addTest(new TestSuite(TestEditorConfigurationXML.class));
 	}
 }

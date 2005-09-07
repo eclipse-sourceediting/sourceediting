@@ -2,29 +2,26 @@ package org.eclipse.wst.dtd.ui.tests.viewer;
 
 import junit.framework.TestCase;
 
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IAutoEditStrategy;
 import org.eclipse.jface.text.ITextDoubleClickStrategy;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
+import org.eclipse.jface.text.reconciler.IReconciler;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.texteditor.AbstractDecoratedTextEditorPreferenceConstants;
 import org.eclipse.wst.dtd.core.internal.provisional.text.IDTDPartitionTypes;
-import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.dtd.ui.internal.provisional.StructuredTextViewerConfigurationDTD;
 import org.eclipse.wst.dtd.ui.tests.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
-import org.eclipse.wst.sse.ui.internal.provisional.style.IHighlighter;
+import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 
 public class TestViewerConfigurationDTD extends TestCase {
 
-	private StructuredTextViewer fViewer = null;
 	private StructuredTextViewerConfigurationDTD fConfig = null;
-	private IPreferenceStore fPreferenceStore = null;
 	private boolean fDisplayExists = true;
+	private StructuredTextViewer fViewer = null;
 	private boolean isSetup = false;
 
 	public TestViewerConfigurationDTD() {
@@ -35,15 +32,9 @@ public class TestViewerConfigurationDTD extends TestCase {
 
 		super.setUp();
 		if (!this.isSetup) {
-			setUpPreferences();
 			setUpViewerConfiguration();
 			this.isSetup = true;
 		}
-	}
-
-	private void setUpPreferences() {
-		fPreferenceStore = DTDUIPlugin.getDefault().getPreferenceStore();
-		fPreferenceStore.setValue(AbstractDecoratedTextEditorPreferenceConstants.EDITOR_HYPERLINKS_ENABLED, true);
 	}
 
 	private void setUpViewerConfiguration() {
@@ -63,7 +54,7 @@ public class TestViewerConfigurationDTD extends TestCase {
 
 			// dummy viewer
 			fViewer = new StructuredTextViewer(parent, null, null, false, SWT.NONE);
-			fConfig = new StructuredTextViewerConfigurationDTD(fPreferenceStore);
+			fConfig = new StructuredTextViewerConfigurationDTD();
 		}
 		else {
 			fDisplayExists = false;
@@ -71,6 +62,9 @@ public class TestViewerConfigurationDTD extends TestCase {
 		}
 	}
 
+	/**
+	 * Not necessary
+	 */
 	public void testGetAutoEditStrategies() {
 
 		// probably no display
@@ -93,6 +87,9 @@ public class TestViewerConfigurationDTD extends TestCase {
 		assertTrue("there are no configured content types", configuredContentTypes.length > 1);
 	}
 
+	/**
+	 * Not necessary
+	 */
 	public void testGetContentAssistant() {
 
 		// probably no display
@@ -103,6 +100,9 @@ public class TestViewerConfigurationDTD extends TestCase {
 		assertNotNull("there is no content assistant", ca);
 	}
 
+	/**
+	 * Not necessary
+	 */
 	public void testGetCorrectionAssistant() {
 
 		// probably no display
@@ -110,19 +110,13 @@ public class TestViewerConfigurationDTD extends TestCase {
 			return;
 
 		IContentAssistant ca = fConfig.getCorrectionAssistant(fViewer);
-		assertNotNull("there is no correction assistant", ca);
+		// there should be none
+		assertNull("unexpected correction assistant", ca);
 	}
 
-//	public void testGetContentFormatter() {
-//
-//		// probably no display
-//		if (!fDisplayExists)
-//			return;
-//
-//		IContentFormatter cf = fConfig.getContentFormatter(fViewer);
-//		assertNotNull("there is no content formatter", cf);
-//	}
-
+	/**
+	 * Not necessary
+	 */
 	public void testGetDoubleClickStrategy() {
 
 		// probably no display
@@ -139,68 +133,29 @@ public class TestViewerConfigurationDTD extends TestCase {
 		assertTrue("there are no configured double click strategies", false);
 	}
 
-	public void testGetHighlighter() {
+	public void testGetLineStyleProviders() {
+		// probably no display
+		if(!fDisplayExists)
+			return;
+		
+		String[] contentTypes = fConfig.getConfiguredContentTypes(fViewer);
+		for (int i = 0; i < contentTypes.length; i++) {
+			LineStyleProvider providers[] = fConfig.getLineStyleProviders(fViewer, contentTypes[i]);
+			if(providers != null) {
+				return;
+			}
+		}
+		assertTrue("there are no configured line style providers", false);
+	}
+
+
+	public void testGetReconciler() {
 
 		// probably no display
 		if (!fDisplayExists)
 			return;
 
-		IHighlighter highlighter = fConfig.getHighlighter(fViewer);
-		assertNotNull("Highlighter is null", highlighter);
+		IReconciler r = fConfig.getReconciler(fViewer);
+		assertNotNull("Reconciler is null", r);
 	}
-
-//	public void testGetInformationPresenter() {
-//
-//		// probably no display
-//		if (!fDisplayExists)
-//			return;
-//
-//		IInformationPresenter presenter = fConfig.getInformationPresenter(fViewer);
-//		assertNotNull("InformationPresenter is null", presenter);
-//	}
-
-//	public void testGetAnnotationHover() {
-//
-//		// probably no display
-//		if (!fDisplayExists)
-//			return;
-//
-//		IAnnotationHover hover = fConfig.getAnnotationHover(fViewer);
-//		assertNotNull("AnnotationHover is null", hover);
-//	}
-
-	public void testUnconfigure() {
-
-		// probably no display
-		if (!fDisplayExists)
-			return;
-
-		fConfig.unConfigure(fViewer);
-		// need a good test here to make sure thing are really unconfigured
-
-		// need to re-set up since it's likely
-		// more tests are called after this one
-		setUpViewerConfiguration();
-	}
-
-//	public void testGetReconciler() {
-//
-//		// probably no display
-//		if (!fDisplayExists)
-//			return;
-//
-//		IReconciler r = fConfig.getReconciler(fViewer);
-//		assertNotNull("Reconciler is null", r);
-//	}
-//
-//	public void testGetHyperlinkDetectors() {
-//
-//		// probably no display
-//		if (!fDisplayExists)
-//			return;
-//
-//		IHyperlinkDetector[] detectors = fConfig.getHyperlinkDetectors(fViewer);
-//		assertNotNull(detectors);
-//		assertTrue("there are no hyperlink detectors", detectors.length > 1);
-//	}
 }

@@ -27,5 +27,6 @@ public class DTDUITestSuite extends TestSuite {
 		addTest(new TestSuite(VerifyUIPlugin.class));
 		addTest(new TestSuite(DTDUIPreferencesTest.class));
 		addTest(new TestSuite(TestViewerConfigurationDTD.class));
+		addTest(new TestSuite(TestEditorConfigurationDTD.class));
 	}
 }

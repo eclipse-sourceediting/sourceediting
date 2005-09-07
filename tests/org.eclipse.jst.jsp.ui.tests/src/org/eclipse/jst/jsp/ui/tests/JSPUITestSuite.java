@@ -49,6 +49,7 @@ public class JSPUITestSuite extends TestSuite {
 		addTest(new TestSuite(AdapterFactoryRegistryTest.class, "AdapterFactoryRegistryText"));
 		addTest(new TestSuite(JSPUIPreferencesTest.class));
 		addTest(new TestSuite(TestViewerConfigurationJSP.class));
+		addTest(new TestSuite(TestEditorConfigurationJSP.class));
 		
 		// moved from jsp core tests because they require UI
 		addTest(new TestSuite(TestPageDirective.class));
