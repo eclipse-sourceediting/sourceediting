@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jst.jsp.core.internal.java;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -36,14 +35,14 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
  * @author pavery
  */
 public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
-	
+
 	// for debugging
 	private static final boolean DEBUG;
 	static {
-		String value= Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jsptranslation"); //$NON-NLS-1$
-		DEBUG= value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
+		String value = Platform.getDebugOption("org.eclipse.jst.jsp.core/debug/jsptranslation"); //$NON-NLS-1$
+		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
-	
+
 	private IDocument fJspDocument = null;
 	private IDocument fJavaDocument = null;
 	private JSPTranslationExtension fJSPTranslation = null;
@@ -102,18 +101,18 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 	}
 
 	public void release() {
-		
-		if(fJspDocument != null)
+
+		if (fJspDocument != null)
 			fJspDocument.removeDocumentListener(this);
-		
-		if(fTranslationMonitor != null)
+
+		if (fTranslationMonitor != null)
 			fTranslationMonitor.setCanceled(true);
-		
-		if(fJSPTranslation != null) {
-			
-			if(DEBUG)
+
+		if (fJSPTranslation != null) {
+
+			if (DEBUG)
 				System.out.println("JSPTranslationAdapter releasing:" + fJSPTranslation); //$NON-NLS-1$
-			
+
 			fJSPTranslation.release();
 		}
 	}
@@ -124,7 +123,7 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 	 * @return a JSPTranslationExtension
 	 */
 	public synchronized JSPTranslationExtension getJSPTranslation() {
-		
+
 		if (fJSPTranslation == null || fDocumentIsDirty) {
 			JSPTranslator translator = null;
 			if (getXMLModel() != null && getXMLModel().getIndexedRegion(0) != null) {
@@ -132,7 +131,7 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 				translator.translate();
 				StringBuffer javaContents = translator.getTranslation();
 				fJavaDocument = new Document(javaContents.toString());
-				
+
 			}
 			else {
 				// empty document case
@@ -141,8 +140,8 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 				fJavaDocument = new Document(emptyContents.toString());
 			}
 			// it's going to be rebuilt, so we release it here
-			if(fJSPTranslation != null) {
-				if(DEBUG)
+			if (fJSPTranslation != null) {
+				if (DEBUG)
 					System.out.println("JSPTranslationAdapter releasing:" + fJSPTranslation); //$NON-NLS-1$
 				fJSPTranslation.release();
 			}
@@ -186,13 +185,13 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 	/**
 	 * @return the XMLModel for this adapter.
 	 */
-	public IDOMModel getXMLModel() {
+	private IDOMModel getXMLModel() {
 		return fXMLModel;
 	}
 
 	/**
 	 * Gets (or creates via JavaCore) a JavaProject based on the location of
-	 * this adapter's XMLModel.  Returns null for non IFile based models.
+	 * this adapter's XMLModel. Returns null for non IFile based models.
 	 * 
 	 * @return the java project where
 	 */
@@ -201,18 +200,14 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 		IJavaProject javaProject = null;
 		try {
 			String baseLocation = getXMLModel().getBaseLocation();
-			// 20041129 (pa) the base location changed for xml model 
+			// 20041129 (pa) the base location changed for XML model
 			// because of FileBuffers, so this code had to be updated
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=79686
 			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 			IPath filePath = new Path(baseLocation);
-			IFile file = null;
 			IProject project = null;
-			if (filePath.segmentCount() > 1) {
-				file = root.getFile(filePath);
-			}
-			if (file != null) {
-				project = file.getProject();
+			if (filePath.segmentCount() > 0) {
+				project = root.getProject(filePath.segment(0));
 			}
 //			IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocation(new Path(baseLocation));
 //			for (int i = 0; project == null && i < files.length; i++) {
@@ -221,7 +216,7 @@ public class JSPTranslationAdapter implements INodeAdapter, IDocumentListener {
 //					break;
 //				}
 //			}
-			if(project != null) {
+			if (project != null) {
 				javaProject = JavaCore.create(project);
 			}
 		}
