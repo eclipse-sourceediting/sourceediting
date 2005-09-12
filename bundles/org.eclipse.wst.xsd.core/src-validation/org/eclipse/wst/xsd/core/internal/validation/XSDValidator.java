@@ -18,6 +18,7 @@ import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+
 import org.apache.xerces.parsers.SAXParser;
 import org.apache.xerces.xni.XMLResourceIdentifier;
 import org.apache.xerces.xni.XNIException;
@@ -25,6 +26,7 @@ import org.apache.xerces.xni.parser.XMLEntityResolver;
 import org.apache.xerces.xni.parser.XMLInputSource;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.xml.core.internal.validation.XMLValidator;
+import org.eclipse.wst.xml.core.internal.validation.core.LazyURLInputStream;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationInfo;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 import org.xml.sax.EntityResolver;
@@ -46,7 +48,7 @@ public class XSDValidator
   private final String XML_INSTANCE_DOC_TOP = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "<root \n" 
   + "  xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n";
 
-  private final String XML_INSTANCE_DOC_MID = "  xsi:noNamespaceSchemaLocation=\"";
+  private final String XML_INSTANCE_DOC_MID = " xsi:noNamespaceSchemaLocation=\"";
 
   private final String XML_INSTANCE_DOC_BOT = "\">\n" + "</root>\n";
 
@@ -80,10 +82,10 @@ public class XSDValidator
 
         if (bufreader != null)
         {
-          String source = "";
+          StringBuffer source = new StringBuffer();
           while (bufreader.ready())
           {
-            source += bufreader.readLine();
+            source.append(bufreader.readLine());
           }
           bufreader.close();
           int tn = source.indexOf("targetNamespace");
@@ -100,24 +102,24 @@ public class XSDValidator
       XSDErrorHandler errorHandler = new XSDErrorHandler(valinfo);
       try
       {
-        String instanceDoc = XML_INSTANCE_DOC_TOP;
+        StringBuffer instanceDoc = new StringBuffer(XML_INSTANCE_DOC_TOP);
         if (ns != null && !ns.equals(""))
         {
-          instanceDoc += " xmlns=\"" + ns + "\"\n";
-          instanceDoc += " xsi:schemaLocation=\"";
-          instanceDoc += ns;
-          instanceDoc += " ";
+          instanceDoc.append(" xmlns=\"").append(ns).append("\"\n");
+          instanceDoc.append(" xsi:schemaLocation=\"");
+          instanceDoc.append(ns);
+          instanceDoc.append(" ");
         } else
         {
-          instanceDoc += " xsi:noNamespaceSchemaLocation=\"";
+          instanceDoc.append(XML_INSTANCE_DOC_MID);
         }
-        instanceDoc += uri.replaceAll(" ", "%20");
+        instanceDoc.append(uri.replaceAll(" ", "%20"));
         if (!schemaLocationString.equals(""))
         {
-          instanceDoc += " " + schemaLocationString;
+          instanceDoc.append(" ").append(schemaLocationString);
         }
-        instanceDoc += XML_INSTANCE_DOC_BOT;
-        InputSource is = new InputSource(new StringReader(instanceDoc));
+        instanceDoc.append(XML_INSTANCE_DOC_BOT);
+        InputSource is = new InputSource(new StringReader(instanceDoc.toString()));
         is.setSystemId(DUMMY_URI);
 
         String soapFile = "platform:/plugin/org.eclipse.wst.wsdl.validation./xsd/xml-soap.xsd";
@@ -147,7 +149,7 @@ public class XSDValidator
             }
             catch (Exception e)
             {
-              reader.setEntityResolver(resolver);
+              // TODO: log failure to register the entity resolver.
             }
           }
 
@@ -259,14 +261,11 @@ public class XSDValidator
   /**
    * The XSDEntityResolver wraps an idresolver to provide entity resolution to
    * the XSD validator.
-   * 
-   * @author Lawrence Mandel, IBM
    */
-  protected class XSDEntityResolver implements EntityResolver, XMLEntityResolver
+  protected class XSDEntityResolver implements XMLEntityResolver
   {
     private URIResolver uriresolver = null;
 
-    private String baselocation = null;
     private InputStream inputStream;
 
     /**
@@ -279,44 +278,8 @@ public class XSDValidator
     public XSDEntityResolver(URIResolver uriresolver, String baselocation, InputStream inputStream)
     {
       this.uriresolver = uriresolver;
-      this.baselocation = baselocation;
       this.inputStream = inputStream;
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.xml.sax.EntityResolver#resolveEntity(java.lang.String,
-     *      java.lang.String)
-     */
-    public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException
-    {
-      String location = null;
-      if (baselocation.equals(systemId))
-      {
-        location = systemId;
-      }
-      else
-      {
-        location = uriresolver.resolve(baselocation, publicId, systemId);
-      }
-      InputSource is = null;
-      if (location != null && !location.equals(""))
-      {
-        try
-        {
-          URI uri = URI.create(location);
-          URL url = uri.toURL();
-          is = new InputSource(location);
-          is.setByteStream(url.openStream());
-        } catch (MalformedURLException e)
-        {
-          throw new IOException(e.getMessage());
-        }
-      }
-      return is;
-    }
-   
     
     /* (non-Javadoc)
      * @see org.apache.xerces.xni.parser.XMLEntityResolver#resolveEntity(org.apache.xerces.xni.XMLResourceIdentifier)
