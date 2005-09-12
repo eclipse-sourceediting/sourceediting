@@ -19,7 +19,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.ConnectException;
-import java.net.URL;
 import java.net.UnknownHostException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -36,6 +35,7 @@ import org.apache.xerces.xni.XNIException;
 import org.apache.xerces.xni.parser.XMLEntityResolver;
 import org.apache.xerces.xni.parser.XMLInputSource;
 import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
+import org.eclipse.wst.xml.core.internal.validation.core.LazyURLInputStream;
 import org.eclipse.wst.xml.core.internal.validation.core.logging.LoggerFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -357,24 +357,8 @@ public class XMLValidator
       if (location != null)
       {                     
         String physical = uriResolver.resolvePhysicalLocation(rid.getBaseSystemId(), id, location);
-        if (location.equals(physical))
-        {       
-          is = new XMLInputSource(rid.getPublicId(), location, location);
-          
-          // TODO cs : It's strange, if we uncomment these 2 lines, the 'ImportInvalidLocation.xsd' test case
-          // produces a differently worded 'Failed to read schema' message.  I'm leaving this in for now
-          // so that the test case doesn't fail.  Need to revisit soon.
-          URL url = new URL(location);
-          is.setByteStream(url.openStream());          
-        }
-        else
-        {          
-          URL url = new URL(location);
-          is = new XMLInputSource(rid.getPublicId(), location, location);
-          is.setByteStream(url.openStream());
-          // TODO cs: are we creating stream's for URI's we've already parsed?  
-          // This may be a performance problem. 
-        }         
+        is = new XMLInputSource(rid.getPublicId(), location, location);
+        is.setByteStream(new LazyURLInputStream(physical));      
       }
     }
     return is;    
