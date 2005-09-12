@@ -4,5 +4,5 @@ number of warnings    : 1
 ------------error list-------------------------------------------
 (none)
 ------------warning list-----------------------------------------
-schema_reference.4: Failed to read schema document 'subdir/importing.xsda', because 1) could not find the document; 2) the document could not be read; 3) the root element of the document is not <xsd:schema>. [3, 98]
+schema_reference.4: Failed to read schema document 'testresources/samples/BugFixes/ImportInvalidLocation/subdir/importing.xsda', because 1) could not find the document; 2) the document could not be read; 3) the root element of the document is not <xsd:schema>. [3, 98]
 -----------------------------------------------------------------
