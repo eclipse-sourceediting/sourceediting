@@ -18,11 +18,14 @@ import java.io.UnsupportedEncodingException;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.IDocumentProviderExtension;
+import org.eclipse.ui.texteditor.IDocumentProviderExtension4;
 import org.eclipse.ui.texteditor.IElementStateListener;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 
@@ -30,7 +33,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 /**
  * @author nitin
  */
-public class StructuredModelDocumentProvider implements IDocumentProvider, IDocumentProviderExtension {
+public class StructuredModelDocumentProvider implements IDocumentProvider, IDocumentProviderExtension, IDocumentProviderExtension4 {
 	private static StructuredModelDocumentProvider _instance = null;
 
 	/**
@@ -212,9 +215,12 @@ public class StructuredModelDocumentProvider implements IDocumentProvider, IDocu
 	public void saveDocument(IProgressMonitor monitor, Object element, IDocument document, boolean overwrite) throws CoreException {
 		try {
 			((IStructuredModel) element).save();
-		} catch (UnsupportedEncodingException e) {
-		} catch (IOException e) {
-		} catch (CoreException e) {
+		}
+		catch (UnsupportedEncodingException e) {
+		}
+		catch (IOException e) {
+		}
+		catch (CoreException e) {
 		}
 	}
 
@@ -249,5 +255,9 @@ public class StructuredModelDocumentProvider implements IDocumentProvider, IDocu
 	 *      java.lang.Object)
 	 */
 	public void validateState(Object element, Object computationContext) throws CoreException {
+	}
+
+	public IContentType getContentType(Object element) throws CoreException {
+		return Platform.getContentTypeManager().getContentType(((IStructuredModel) element).getContentTypeIdentifier());
 	}
 }
