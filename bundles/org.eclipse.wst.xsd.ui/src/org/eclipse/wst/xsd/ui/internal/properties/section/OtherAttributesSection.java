@@ -23,7 +23,6 @@ import org.eclipse.xsd.XSDElementDeclaration;
 public class OtherAttributesSection extends AbstractSection
 {
   PropertySheetPage propertySheetPage;
-  IWorkbenchPart part;
   
   /**
    * 
@@ -45,32 +44,13 @@ public class OtherAttributesSection extends AbstractSection
     data.right = new FormAttachment(100, 0);
 		data.top = new FormAttachment(0, 0);
 		data.bottom = new FormAttachment(100, 0);
-    
-//    composite = new Composite(parent, SWT.FLAT);
-//    GridLayout gl = new GridLayout(1, true);
-//    composite.setLayout(gl);
-//    GridData data = new GridData();
-//    data.grabExcessHorizontalSpace = true;
-//    data.grabExcessVerticalSpace = true; 
-//    composite.setLayoutData(data);
-    
+
     propertySheetPage = new PropertySheetPage();
 		propertySheetPage.createControl(composite);
     propertySheetPage.setPropertySourceProvider(new XSDPropertySourceProvider());
     propertySheetPage.getControl().setLayoutData(data);
 	}
 	
-	public void selectionChanged(IWorkbenchPart part, ISelection selection)
-	{
-	  this.part = part;
-	  this.selection = selection;
-	  if (propertySheetPage == null)
-	  {
-	    propertySheetPage = new PropertySheetPage();
-	  }
-	  propertySheetPage.selectionChanged(part, selection);
-	}
-  
 	/*
 	 * @see org.eclipse.wst.common.ui.properties.internal.provisional.view.ITabbedPropertySection#refresh()
 	 */
@@ -86,17 +66,15 @@ public class OtherAttributesSection extends AbstractSection
       {
         composite.setEnabled(true);
       }
-
-	    Object input = getInput();
-      if (!propertySheetPage.getControl().isDisposed())
-  	    propertySheetPage.selectionChanged(part, selection);
     }
+    propertySheetPage.refresh();
 	}
 
   public void dispose()
   {
-//    propertySheetPage.dispose();
-//    propertySheetPage = null;
+    super.dispose();
+    propertySheetPage.dispose();
+    propertySheetPage = null;
   }
 
   /* (non-Javadoc)
@@ -120,6 +98,8 @@ public class OtherAttributesSection extends AbstractSection
         isReadOnly = (!(elementDeclaration.getResolvedElementDeclaration().getRootContainer() == xsdSchema));
       }
     }
+    // update property sheet because of new input change
+    propertySheetPage.selectionChanged(part, selection);
   }
 
 }

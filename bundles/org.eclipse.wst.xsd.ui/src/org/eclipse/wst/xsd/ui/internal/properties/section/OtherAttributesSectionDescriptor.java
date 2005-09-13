@@ -35,14 +35,12 @@ import org.eclipse.xsd.XSDWildcard;
 
 public class OtherAttributesSectionDescriptor extends AbstractSectionDescriptor
 {
-  OtherAttributesSection otherAttributesSection;
   /**
    * 
    */
   public OtherAttributesSectionDescriptor()
   {
     super();
-    otherAttributesSection = new OtherAttributesSection();
   }
 
   /* (non-Javadoc)
@@ -68,7 +66,7 @@ public class OtherAttributesSectionDescriptor extends AbstractSectionDescriptor
    */
   public ISection getSectionClass()
   {
-    return otherAttributesSection;
+    return new OtherAttributesSection();
   }
 
   /* (non-Javadoc)
