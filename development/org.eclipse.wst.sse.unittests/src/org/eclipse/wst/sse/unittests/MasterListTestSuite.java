@@ -47,6 +47,8 @@ public class MasterListTestSuite extends TestSuite {
 
 	public MasterListTestSuite() {
 		super("All Tests");
+		
+		System.setProperty("wtp.autotest.noninteractive", "true");
 
 		addTest(SSEModelTestSuite.suite());
 		addTest(SSEModelXMLTestSuite.suite());
