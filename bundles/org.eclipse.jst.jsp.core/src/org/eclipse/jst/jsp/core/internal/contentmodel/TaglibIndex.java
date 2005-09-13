@@ -274,7 +274,7 @@ public class TaglibIndex {
 	}
 
 	/**
-	 * Returns all of the visible ITaglibRecords for the given filepath in the
+	 * Returns all of the visible ITaglibRecords for the given path in the
 	 * workspace.
 	 * 
 	 * @param workspacePath
@@ -400,17 +400,13 @@ public class TaglibIndex {
 		}
 	}
 
-	private ITaglibRecord[] internalGetAvailableTaglibRecords(IPath location) {
-		ITaglibRecord[] records = null;
-		IFile baseResource = ResourcesPlugin.getWorkspace().getRoot().getFile(location);
-		if (baseResource != null) {
-			IProject project = baseResource.getProject();
+	private ITaglibRecord[] internalGetAvailableTaglibRecords(IPath path) {
+		ITaglibRecord[] records = new ITaglibRecord[0];
+		if (path.segmentCount() > 0) {
+			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(path.segment(0));
 			ProjectDescription description = createDescription(project);
-			List availableRecords = description.getAvailableTaglibRecords(location);
+			List availableRecords = description.getAvailableTaglibRecords(path);
 			records = (ITaglibRecord[]) availableRecords.toArray(records);
-		}
-		else {
-			records = new ITaglibRecord[0];
 		}
 		return records;
 	}
