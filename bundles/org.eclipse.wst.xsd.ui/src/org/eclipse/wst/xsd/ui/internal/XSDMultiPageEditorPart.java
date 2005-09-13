@@ -43,8 +43,8 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IGotoMarker;
-import org.eclipse.ui.part.MultiPageEditorPart;
-import org.eclipse.ui.part.MultiPageEditorSite;
+import org.eclipse.wst.common.ui.provisional.editors.PostMultiPageEditorSite;
+import org.eclipse.wst.common.ui.provisional.editors.PostSelectionMultiPageEditorPart;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
@@ -56,7 +56,7 @@ import org.eclipse.wst.xml.ui.internal.provisional.StructuredTextEditorXML;
 import org.eclipse.wst.xml.ui.internal.tabletree.XMLEditorMessages;
 import org.w3c.dom.Document;
 
-public class XSDMultiPageEditorPart extends MultiPageEditorPart implements IPropertyListener
+public class XSDMultiPageEditorPart extends PostSelectionMultiPageEditorPart implements IPropertyListener
 {
 
   /**
@@ -207,20 +207,14 @@ public class XSDMultiPageEditorPart extends MultiPageEditorPart implements IProp
   protected IEditorSite createSite(IEditorPart editor) {
     IEditorSite site = null;
     if (editor == fTextEditor) {
-      site = new MultiPageEditorSite(this, editor) {
-        /**
-         * @see org.eclipse.ui.part.MultiPageEditorSite#getActionBarContributor()
-         */
-        public IEditorActionBarContributor getActionBarContributor() {
-          IEditorActionBarContributor contributor = super.getActionBarContributor();
-          IEditorActionBarContributor multiContributor = XSDMultiPageEditorPart.this.getEditorSite().getActionBarContributor();
-//          if (multiContributor instanceof XMLMultiPageEditorActionBarContributor) {
-//            contributor = ((XMLMultiPageEditorActionBarContributor) multiContributor).sourceViewerActionContributor;
-//          }
-          return contributor;
-        }
-      };
-    }
+			site = new PostMultiPageEditorSite(this, editor) {
+				public IEditorActionBarContributor getActionBarContributor() {
+					IEditorActionBarContributor contributor = super.getActionBarContributor();
+					IEditorActionBarContributor multiContributor = XSDMultiPageEditorPart.this.getEditorSite().getActionBarContributor();
+					return contributor;
+				}
+			};
+		}
     else {
       site = super.createSite(editor);
     }
