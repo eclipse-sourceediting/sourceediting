@@ -73,8 +73,11 @@ public class OtherAttributesSection extends AbstractSection
   public void dispose()
   {
     super.dispose();
-    propertySheetPage.dispose();
-    propertySheetPage = null;
+    if (propertySheetPage != null)
+    {
+      propertySheetPage.dispose();
+      propertySheetPage = null;
+    }
   }
 
   /* (non-Javadoc)

@@ -78,7 +78,8 @@ public class XSDTextEditor extends StructuredTextEditorXML implements INodeSelec
   {
     super.dispose();
     xsdSelectionManager.removeSelectionChangedListener(this);
-    adapterFactoryLabelProvider = null;
+    // Why is this static?  TODO Make it non-static...
+    //    adapterFactoryLabelProvider = null;
     xsdModelAdapterFactory = null;
   }
   
