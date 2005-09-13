@@ -29,22 +29,38 @@ public final class ContentDescriberForHTML implements ITextContentDescriber {
 	private IResourceCharsetDetector resourceCharsetDetector;
 
 	public int describe(InputStream contents, IContentDescription description) throws IOException {
-		int result = IContentDescriber.VALID;
+		int result = IContentDescriber.INDETERMINATE;
 
-		calculateSupportedOptions(contents, description);
+		if (description == null) {
+			result = computeValidity(contents);
+		}
+		else {
+			calculateSupportedOptions(contents, description);
+			// assummming we should return same 'validity' value we did
+			// when called before. (technically, could be a performance issue
+			// in future, so might want to check if any 'ol value would
+			// be ok here.
+			result = computeValidity(contents);
+		}
 
-		// assume if we're called at all that we are valid (few types could be
-		// disproved, maybe XML -- or, maybe if exception occurs above?)
 		return result;
 	}
 
 	public int describe(Reader contents, IContentDescription description) throws IOException {
-		int result = IContentDescriber.VALID;
+		int result = IContentDescriber.INDETERMINATE;
 
-		calculateSupportedOptions(contents, description);
+		if (description == null) {
+			result = computeValidity(contents);
+		}
+		else {
+			calculateSupportedOptions(contents, description);
+			// assummming we should return same 'validity' value we did
+			// when called before. (technically, could be a performance issue
+			// in future, so might want to check if hard coded 'valid' would
+			// be ok here.
+			result = computeValidity(contents);
+		}
 
-		// assume if we're called at all that we are valid (few types could be
-		// disproved, maybe XML -- or, maybe if exception occurs above?)
 		return result;
 	}
 
@@ -74,6 +90,18 @@ public final class ContentDescriberForHTML implements ITextContentDescriber {
 		}
 	}
 
+	private int computeValidity(InputStream inputStream) {
+		// currently no contents specific check for valid HTML contents
+		// (this may change once we add XHTML content type)
+		return IContentDescriber.INDETERMINATE;
+	}
+
+	private int computeValidity(Reader reader) {
+		// currently no contents specific check for valid HTML contents
+		// (this may change once we add XHTML content type)
+		return IContentDescriber.INDETERMINATE;
+	}
+
 	private IResourceCharsetDetector getDetector() {
 		if (resourceCharsetDetector == null) {
 			resourceCharsetDetector = new HTMLResourceEncodingDetector();
@@ -92,7 +120,7 @@ public final class ContentDescriberForHTML implements ITextContentDescriber {
 		// mulitiple times (one for each, say) that we don't waste time
 		// processing same
 		// content again.
-		EncodingMemento encodingMemento = ((HTMLResourceEncodingDetector)detector).getEncodingMemento();
+		EncodingMemento encodingMemento = ((HTMLResourceEncodingDetector) detector).getEncodingMemento();
 		// TODO: I need to verify to see if this BOM work is always done
 		// by text type.
 		Object detectedByteOrderMark = encodingMemento.getUnicodeBOM();
