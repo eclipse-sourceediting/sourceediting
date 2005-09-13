@@ -32,6 +32,7 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.IResourceProxy;
 import org.eclipse.core.resources.IResourceProxyVisitor;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -325,8 +326,8 @@ class ProjectDescription {
 		return info;
 	}
 
-	synchronized List getAvailableTaglibRecords(IPath location) {
-		Collection implicitReferences = getImplicitReferences(location.toString()).values();
+	synchronized List getAvailableTaglibRecords(IPath path) {
+		Collection implicitReferences = getImplicitReferences(path.toString()).values();
 		List records = new ArrayList(fTLDReferences.size() + fTagDirReferences.size() + fJARReferences.size() + fServletReferences.size());
 		records.addAll(fTLDReferences.values());
 		records.addAll(fTagDirReferences.values());
@@ -365,8 +366,8 @@ class ProjectDescription {
 	/**
 	 * @return Returns the implicitReferences for the given path
 	 */
-	Hashtable getImplicitReferences(String location) {
-		String localRoot = getLocalRoot(location);
+	Hashtable getImplicitReferences(String path) {
+		String localRoot = getLocalRoot(path);
 		Hashtable implicitReferences = (Hashtable) fImplicitReferences.get(localRoot);
 		if (implicitReferences == null) {
 			implicitReferences = new Hashtable(1);
@@ -376,11 +377,38 @@ class ProjectDescription {
 	}
 
 	/**
-	 * @param baseLocation
+	 * @param basePath
 	 * @return the applicable Web context root path, if one exists
 	 */
-	IPath getLocalRoot(IPath baseLocation) {
-		IResource file = FileBuffers.getWorkspaceFileAtLocation(baseLocation);
+	IPath getLocalRoot(IPath basePath) {
+		IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+
+		// existing workspace resources - this is the 93% case
+		IResource file = null;
+
+		IFile[] files = workspaceRoot.findFilesForLocation(basePath.makeAbsolute());
+		for (int i = 0; file == null && i < files.length; i++) {
+			IPath normalizedPath = null;
+			/*
+			 * existing workspace resources referenced by their file system
+			 * path files that do not exist (including non-accessible files)
+			 * do not pass
+			 */
+			if (files[i].exists()) {
+				normalizedPath = files[i].getFullPath();
+
+				if (normalizedPath.segmentCount() > 1 && normalizedPath.segment(0).equals(fProject.getFullPath().segment(0))) {
+					// @see IContainer#getFile for the required number of
+					// segments
+					file = workspaceRoot.getFile(normalizedPath);
+				}
+			}
+		}
+
+		if (file == null) {
+			file = FileBuffers.getWorkspaceFileAtLocation(basePath);
+		}
+
 		while (file != null) {
 			/**
 			 * Treat any parent folder with a WEB-INF subfolder as a web-app
@@ -407,11 +435,11 @@ class ProjectDescription {
 	}
 
 	/**
-	 * @param baseLocation
+	 * @param basePath
 	 * @return
 	 */
-	private String getLocalRoot(String baseLocation) {
-		return getLocalRoot(new Path(baseLocation)).toString();
+	private String getLocalRoot(String basePath) {
+		return getLocalRoot(new Path(basePath)).toString();
 	}
 
 	/**
@@ -553,7 +581,7 @@ class ProjectDescription {
 		if (record != null) {
 			URLRecord[] records = (URLRecord[]) record.getURLRecords().toArray(new URLRecord[0]);
 			for (int i = 0; i < records.length; i++) {
-				getImplicitReferences(jar.getLocation().toString()).remove(records[i].getURI());
+				getImplicitReferences(jar.getFullPath().toString()).remove(records[i].getURI());
 			}
 			TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.REMOVED));
 		}
@@ -568,7 +596,7 @@ class ProjectDescription {
 			for (int i = 0; i < records.length; i++) {
 				if (_debugIndexCreation)
 					System.out.println("removed record for " + records[i].uri + "@" + records[i].location); //$NON-NLS-1$ //$NON-NLS-2$
-				getImplicitReferences(webxml.getLocation().toString()).remove(records[i].getURI());
+				getImplicitReferences(webxml.getFullPath().toString()).remove(records[i].getURI());
 			}
 			TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.REMOVED));
 		}
@@ -586,7 +614,7 @@ class ProjectDescription {
 		TLDRecord record = (TLDRecord) fTLDReferences.remove(tld.getFullPath());
 		if (record != null) {
 			if (record.uri != null) {
-				getImplicitReferences(tld.getLocation().toString()).remove(record.uri);
+				getImplicitReferences(tld.getFullPath().toString()).remove(record.uri);
 			}
 			TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, ITaglibRecordEvent.REMOVED));
 		}
@@ -599,37 +627,37 @@ class ProjectDescription {
 	 */
 	ITaglibRecord resolve(String basePath, String reference) {
 		ITaglibRecord record = null;
-		String location = null;
+		String path = null;
 
 		/**
 		 * Workaround for problem in URIHelper; uris starting with '/' are
 		 * returned as-is.
 		 */
 		if (reference.startsWith("/")) { //$NON-NLS-1$
-			location = getLocalRoot(basePath) + reference;
+			path = getLocalRoot(basePath) + reference;
 		}
 		else {
-			location = URIHelper.normalize(reference, basePath, getLocalRoot(basePath));
+			path = URIHelper.normalize(reference, basePath, getLocalRoot(basePath));
 		}
 		// order dictated by JSP spec 2.0 section 7.2.3
 		if (record == null) {
-			record = (ITaglibRecord) fServletReferences.get(location);
+			record = (ITaglibRecord) fServletReferences.get(path);
 		}
 		if (record == null) {
-			record = (ITaglibRecord) fJARReferences.get(location);
+			record = (ITaglibRecord) fJARReferences.get(path);
 			// only if 1.1 TLD was found
 			if (record instanceof JarRecord && !((JarRecord) record).has11TLD) {
 				record = null;
 			}
 		}
 		if (record == null) {
-			record = (ITaglibRecord) fTLDReferences.get(location);
+			record = (ITaglibRecord) fTLDReferences.get(path);
 		}
 		if (record == null) {
 			record = (ITaglibRecord) getImplicitReferences(basePath).get(reference);
 		}
 		if (record == null) {
-			record = (ITaglibRecord) fTagDirReferences.get(location);
+			record = (ITaglibRecord) fTagDirReferences.get(path);
 		}
 		if (record == null) {
 			record = (ITaglibRecord) fClasspathReferences.get(reference);
@@ -687,8 +715,8 @@ class ProjectDescription {
 		fJARReferences.put(jar.getFullPath().toString(), jarRecord);
 		for (int i = 0; i < entries.length; i++) {
 			if (entries[i].endsWith(".tld")) { //$NON-NLS-1$
+				jarRecord.has11TLD = true;
 				if (entries[i].equals(JarUtilities.JSP11_TAGLIB)) {
-					jarRecord.has11TLD = true;
 				}
 				InputStream contents = JarUtilities.getInputStream(jar, entries[i]);
 				if (contents != null) {
@@ -702,7 +730,7 @@ class ProjectDescription {
 						try {
 							record.url = new URL("jar:file:" + jarLocationString + "!/" + entries[i]); //$NON-NLS-1$ //$NON-NLS-2$
 							jarRecord.urlRecords.add(record);
-							getImplicitReferences(jarLocationString).put(record.uri, record);
+							getImplicitReferences(jar.getFullPath().toString()).put(record.uri, record);
 							if (_debugIndexCreation)
 								System.out.println("created record for " + record.uri + "@" + record.getURL()); //$NON-NLS-1$ //$NON-NLS-2$
 						}
@@ -753,7 +781,7 @@ class ProjectDescription {
 			System.out.println("creating records for " + webxml.getFullPath()); //$NON-NLS-1$
 
 		ServletRecord servletRecord = new ServletRecord();
-		servletRecord.location = webxml.getLocation();
+		servletRecord.location = webxml.getFullPath();
 		fServletReferences.put(servletRecord.getWebXML().toString(), servletRecord);
 		NodeList taglibs = document.getElementsByTagName(JSP12TLDNames.TAGLIB);
 		for (int i = 0; i < taglibs.getLength(); i++) {
@@ -763,13 +791,13 @@ class ProjectDescription {
 			TLDRecord record = new TLDRecord();
 			record.uri = uri;
 			if (location.startsWith("/")) { //$NON-NLS-1$
-				record.location = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(getLocalRoot(webxml.getLocation().toString()) + location);
+				record.location = new Path(getLocalRoot(webxml.getFullPath().toString()) + location);
 			}
 			else {
-				record.location = new Path(URIHelper.normalize(location, webxml.getLocation().toString(), getLocalRoot(webxml.getLocation().toString())));
+				record.location = new Path(URIHelper.normalize(location, webxml.getFullPath().toString(), getLocalRoot(webxml.getLocation().toString())));
 			}
 			servletRecord.tldRecords.add(record);
-			getImplicitReferences(webxml.getLocation().toString()).put(uri, record);
+			getImplicitReferences(webxml.getFullPath().toString()).put(uri, record);
 			if (_debugIndexCreation)
 				System.out.println("created record for " + uri + "@" + record.location); //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -797,7 +825,7 @@ class ProjectDescription {
 		TLDRecord record = createTLDRecord(tld);
 		fTLDReferences.put(tld.getFullPath().toString(), record);
 		if (record.uri != null) {
-			getImplicitReferences(tld.getLocation().toString()).put(record.uri, record);
+			getImplicitReferences(tld.getFullPath().toString()).put(record.uri, record);
 		}
 		TaglibIndex.fireTaglibRecordEvent(new TaglibRecordEvent(record, deltaKind));
 	}
