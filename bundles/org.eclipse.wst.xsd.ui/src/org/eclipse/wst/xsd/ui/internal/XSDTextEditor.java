@@ -27,7 +27,6 @@ import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.texteditor.ITextEditor;
@@ -294,15 +293,6 @@ public class XSDTextEditor extends StructuredTextEditorXML implements INodeSelec
 
 		return sourceViewer;
 	}
-
-  /*
-   * @see StructuredTextEditor#setModel(IFileEditorInput)
-   */
-  public void setModel(IFileEditorInput input)
-  {                     
-    super.setModel(input);   
-    file = input.getFile();
-  }
 
   protected IFile file;
 
