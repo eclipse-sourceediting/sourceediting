@@ -16,7 +16,9 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -40,30 +42,20 @@ import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
-import org.eclipse.wst.sse.ui.internal.contentoutline.StructuredTextEditorContentOutlinePage;
 import org.eclipse.wst.sse.ui.internal.provisional.StructuredTextViewerConfiguration;
-import org.eclipse.wst.sse.ui.internal.view.events.INodeSelectionListener;
-import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
 import org.w3c.dom.Attr;
 
 public class ViewerTestDTD extends ViewPart {
-	private final String SSE_EDITOR_FONT = "org.eclipse.wst.sse.ui.textfont";
-	private final String DEFAULT_VIEWER_CONTENTS = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n<HTML>\n	<HEAD>\n		<META http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">\n		<TITLE>place title here</TITLE>\n	</HEAD>\n	<BODY>\n		place content here	\n<script>\n\"text\";\n</SCRIPT>\n</BODY>\n</HTML>";
-
-	private StructuredTextViewer fSourceViewer = null;
-	private StructuredTextViewerConfiguration fConfig = null;
-	private IContentOutlinePage fContentOutlinePage = null;
-	private INodeSelectionListener fHighlightRangeListener = null;
-
 	/**
 	 * Sets the viewer's highlighting text range to the text range indicated
 	 * by the selected Nodes.
 	 */
-	protected class NodeRangeSelectionListener implements INodeSelectionListener {
-		public void nodeSelectionChanged(NodeSelectionChangedEvent event) {
-			if (!event.getSelectedNodes().isEmpty()) {
-				IndexedRegion startNode = (IndexedRegion) event.getSelectedNodes().get(0);
-				IndexedRegion endNode = (IndexedRegion) event.getSelectedNodes().get(event.getSelectedNodes().size() - 1);
+	protected class NodeRangeSelectionListener implements ISelectionChangedListener {
+		public void selectionChanged(SelectionChangedEvent event) {
+			if (!event.getSelection().isEmpty() && event.getSelection() instanceof IStructuredSelection) {
+				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+				IndexedRegion startNode = (IndexedRegion) selection.getFirstElement();
+				IndexedRegion endNode = (IndexedRegion) selection.toArray()[selection.size() - 1];
 
 				if (startNode instanceof Attr)
 					startNode = (IndexedRegion) ((Attr) startNode).getOwnerElement();
@@ -84,14 +76,15 @@ public class ViewerTestDTD extends ViewPart {
 	}
 
 	protected class NumberInputDialog extends Dialog {
+		public Text length;
+
+		int lengthValue;
+		public Text start;
+		int startValue;
+
 		public NumberInputDialog(Shell shell) {
 			super(shell);
 		}
-
-		public Text start;
-		int startValue;
-		public Text length;
-		int lengthValue;
 
 		protected Control createDialogArea(Composite parent) {
 			Composite composite = (Composite) super.createDialogArea(parent);
@@ -167,6 +160,16 @@ public class ViewerTestDTD extends ViewPart {
 			super.okPressed();
 		}
 	}
+
+	private final String DEFAULT_VIEWER_CONTENTS = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n<HTML>\n	<HEAD>\n		<META http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">\n		<TITLE>place title here</TITLE>\n	</HEAD>\n	<BODY>\n		place content here	\n<script>\n\"text\";\n</SCRIPT>\n</BODY>\n</HTML>";
+	private StructuredTextViewerConfiguration fConfig = null;
+	private IContentOutlinePage fContentOutlinePage = null;
+	private ISelectionChangedListener fHighlightRangeListener = null;
+
+	private StructuredTextViewer fSourceViewer = null;
+
+
+	private final String SSE_EDITOR_FONT = "org.eclipse.wst.sse.ui.textfont";
 
 	protected void addActions(IContributionManager mgr) {
 		if (mgr != null) {
@@ -330,41 +333,34 @@ public class ViewerTestDTD extends ViewPart {
 	}
 
 	/**
-	 * @see org.eclipse.ui.IWorkbenchPart#setFocus()
+	 * Hooks up the viewer to follow the selection made in the active editor
 	 */
-	public void setFocus() {
-		if (fSourceViewer.getControl() != null && !fSourceViewer.getControl().isDisposed())
-			fSourceViewer.getControl().setFocus();
-	}
+	private void followSelection() {
+		ITextEditor editor = getActiveEditor();
+		if (editor != null) {
+			setupViewerForEditor(editor);
+			if (fHighlightRangeListener == null)
+				fHighlightRangeListener = new NodeRangeSelectionListener();
 
-	/**
-	 * @see org.eclipse.ui.IViewPart#init(IViewSite, IMemento)
-	 */
-	public void init(IViewSite site, IMemento memento) throws PartInitException {
-		super.init(site, memento);
-	}
+			fContentOutlinePage = ((IContentOutlinePage) editor.getAdapter(IContentOutlinePage.class));
+			if (fContentOutlinePage != null) {
+				fContentOutlinePage.addSelectionChangedListener(fHighlightRangeListener);
 
-	/**
-	 * Set up source viewer with any additional preferences it should have Ex:
-	 * font, tab width
-	 */
-	private void setupViewerPreferences() {
-		fSourceViewer.getTextWidget().setFont(JFaceResources.getFont(SSE_EDITOR_FONT));
-	}
+				if (!fContentOutlinePage.getSelection().isEmpty() && fContentOutlinePage.getSelection() instanceof IStructuredSelection) {
+					fSourceViewer.resetVisibleRegion();
 
-	/**
-	 * Set up source viewer with a new document & configure it
-	 */
-	private void setupViewerForNew() {
-		stopFollowSelection(); // if was following selection, stop
+					Object[] nodes = ((IStructuredSelection) fContentOutlinePage.getSelection()).toArray();
+					IndexedRegion startNode = (IndexedRegion) nodes[0];
+					IndexedRegion endNode = (IndexedRegion) nodes[nodes.length - 1];
 
-		IModelManager modelManager = StructuredModelManager.getModelManager();
-		IDocument doc = modelManager.createStructuredDocumentFor(ContentTypeIdForDTD.ContentTypeID_DTD);
-		doc.set(DEFAULT_VIEWER_CONTENTS);
+					int start = startNode.getStartOffset();
+					int end = endNode.getEndOffset();
 
-		fSourceViewer.setDocument(doc);
-		// need to reconfigure after set document just so highlighter works
-		fSourceViewer.configure(fConfig);
+					fSourceViewer.setVisibleRegion(start, end - start);
+					fSourceViewer.setSelectedRange(start, 0);
+				}
+			}
+		}
 	}
 
 	/**
@@ -383,6 +379,21 @@ public class ViewerTestDTD extends ViewPart {
 	}
 
 	/**
+	 * @see org.eclipse.ui.IViewPart#init(IViewSite, IMemento)
+	 */
+	public void init(IViewSite site, IMemento memento) throws PartInitException {
+		super.init(site, memento);
+	}
+
+	/**
+	 * @see org.eclipse.ui.IWorkbenchPart#setFocus()
+	 */
+	public void setFocus() {
+		if (fSourceViewer.getControl() != null && !fSourceViewer.getControl().isDisposed())
+			fSourceViewer.getControl().setFocus();
+	}
+
+	/**
 	 * Sets up the viewer with the same document/input as the given editor
 	 * 
 	 * @param ITextEditor
@@ -398,47 +409,34 @@ public class ViewerTestDTD extends ViewPart {
 	}
 
 	/**
-	 * Hooks up the viewer to follow the selection made in the active editor
+	 * Set up source viewer with a new document & configure it
 	 */
-	private void followSelection() {
-		ITextEditor editor = getActiveEditor();
-		if (editor != null) {
-			setupViewerForEditor(editor);
-			if (fHighlightRangeListener == null)
-				fHighlightRangeListener = new NodeRangeSelectionListener();
+	private void setupViewerForNew() {
+		stopFollowSelection(); // if was following selection, stop
 
-			fContentOutlinePage = ((IContentOutlinePage) editor.getAdapter(IContentOutlinePage.class));
-			if (fContentOutlinePage != null && fContentOutlinePage instanceof StructuredTextEditorContentOutlinePage) {
-				((StructuredTextEditorContentOutlinePage) fContentOutlinePage).getViewerSelectionManager().addNodeSelectionListener(fHighlightRangeListener);
+		IModelManager modelManager = StructuredModelManager.getModelManager();
+		IDocument doc = modelManager.createStructuredDocumentFor(ContentTypeIdForDTD.ContentTypeID_DTD);
+		doc.set(DEFAULT_VIEWER_CONTENTS);
 
-				if (!fContentOutlinePage.getSelection().isEmpty() && fContentOutlinePage.getSelection() instanceof IStructuredSelection) {
-					fSourceViewer.resetVisibleRegion();
+		fSourceViewer.setDocument(doc);
+		// need to reconfigure after set document just so highlighter works
+		fSourceViewer.configure(fConfig);
+	}
 
-					Object[] nodes = ((IStructuredSelection) fContentOutlinePage.getSelection()).toArray();
-					IndexedRegion startNode = (IndexedRegion) nodes[0];
-					IndexedRegion endNode = (IndexedRegion) nodes[nodes.length - 1];
-
-					if (startNode instanceof Attr)
-						startNode = (IndexedRegion) ((Attr) startNode).getOwnerElement();
-					if (endNode instanceof Attr)
-						endNode = (IndexedRegion) ((Attr) endNode).getOwnerElement();
-
-					int start = startNode.getStartOffset();
-					int end = endNode.getEndOffset();
-
-					fSourceViewer.setVisibleRegion(start, end - start);
-					fSourceViewer.setSelectedRange(start, 0);
-				}
-			}
-		}
+	/**
+	 * Set up source viewer with any additional preferences it should have Ex:
+	 * font, tab width
+	 */
+	private void setupViewerPreferences() {
+		fSourceViewer.getTextWidget().setFont(JFaceResources.getFont(SSE_EDITOR_FONT));
 	}
 
 	/**
 	 * Cease following the selection made in the editor
 	 */
 	private void stopFollowSelection() {
-		if (fContentOutlinePage != null && fContentOutlinePage instanceof StructuredTextEditorContentOutlinePage) {
-			((StructuredTextEditorContentOutlinePage) fContentOutlinePage).getViewerSelectionManager().removeNodeSelectionListener(fHighlightRangeListener);
+		if (fContentOutlinePage != null) {
+			fContentOutlinePage.removeSelectionChangedListener(fHighlightRangeListener);
 			fSourceViewer.resetVisibleRegion();
 			fContentOutlinePage = null;
 		}

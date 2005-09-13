@@ -16,7 +16,9 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.ui.internal.provisional.StructuredTextViewerConfigurationJSP;
@@ -40,30 +42,28 @@ import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
-import org.eclipse.wst.sse.ui.internal.contentoutline.StructuredTextEditorContentOutlinePage;
 import org.eclipse.wst.sse.ui.internal.provisional.StructuredTextViewerConfiguration;
-import org.eclipse.wst.sse.ui.internal.view.events.INodeSelectionListener;
-import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
 import org.w3c.dom.Attr;
 
 public class ViewerTestJSP extends ViewPart {
 	private final String SSE_EDITOR_FONT = "org.eclipse.wst.sse.ui.textfont";
 	private final String DEFAULT_VIEWER_CONTENTS = "<%@ page contentType=\"text/html; charset=ISO-8859-1\" %>\n";
 
-	private StructuredTextViewer fSourceViewer = null;
+	StructuredTextViewer fSourceViewer = null;
 	private StructuredTextViewerConfiguration fConfig = null;
 	private IContentOutlinePage fContentOutlinePage = null;
-	private INodeSelectionListener fHighlightRangeListener = null;
-	
+	private ISelectionChangedListener fHighlightRangeListener = null;
+
 	/**
-	 * Sets the viewer's highlighting text range to the text range indicated by the
-	 * selected Nodes.
+	 * Sets the viewer's highlighting text range to the text range indicated
+	 * by the selected Nodes.
 	 */
-	protected class NodeRangeSelectionListener implements INodeSelectionListener {
-		public void nodeSelectionChanged(NodeSelectionChangedEvent event) {
-			if (!event.getSelectedNodes().isEmpty()) {
-				IndexedRegion startNode = (IndexedRegion) event.getSelectedNodes().get(0);
-				IndexedRegion endNode = (IndexedRegion) event.getSelectedNodes().get(event.getSelectedNodes().size() - 1);
+	protected class NodeRangeSelectionListener implements ISelectionChangedListener {
+		public void selectionChanged(SelectionChangedEvent event) {
+			if (!event.getSelection().isEmpty() && event.getSelection() instanceof IStructuredSelection) {
+				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+				IndexedRegion startNode = (IndexedRegion) selection.getFirstElement();
+				IndexedRegion endNode = (IndexedRegion) selection.toArray()[selection.size() - 1];
 
 				if (startNode instanceof Attr)
 					startNode = (IndexedRegion) ((Attr) startNode).getOwnerElement();
@@ -118,46 +118,50 @@ public class ViewerTestJSP extends ViewPart {
 			length.setText("" + lengthValue);
 			length.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-//			start.addModifyListener(new ModifyListener() {
-//				public void modifyText(ModifyEvent e) {
-//					if (e.widget == start) {
-//						try {
-//							startValue = Integer.decode(start.getText()).intValue();
-//						}
-//						catch (NumberFormatException e2) {
-//							startValue = 0;
-//						}
-//					}
-//				}
-//			});
-//			length.addModifyListener(new ModifyListener() {
-//				public void modifyText(ModifyEvent e) {
-//					if (e.widget == length) {
-//						try {
-//							lengthValue = Integer.decode(length.getText()).intValue();
-//						}
-//						catch (NumberFormatException e2) {
-//							lengthValue = 0;
-//						}
-//					}
-//				}
-//			});
+			// start.addModifyListener(new ModifyListener() {
+			// public void modifyText(ModifyEvent e) {
+			// if (e.widget == start) {
+			// try {
+			// startValue = Integer.decode(start.getText()).intValue();
+			// }
+			// catch (NumberFormatException e2) {
+			// startValue = 0;
+			// }
+			// }
+			// }
+			// });
+			// length.addModifyListener(new ModifyListener() {
+			// public void modifyText(ModifyEvent e) {
+			// if (e.widget == length) {
+			// try {
+			// lengthValue = Integer.decode(length.getText()).intValue();
+			// }
+			// catch (NumberFormatException e2) {
+			// lengthValue = 0;
+			// }
+			// }
+			// }
+			// });
 
 			return composite;
 		}
-		
-		/* (non-Javadoc)
+
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see org.eclipse.jface.dialogs.Dialog#okPressed()
 		 */
 		protected void okPressed() {
 			try {
 				startValue = Integer.decode(start.getText()).intValue();
-			} catch (NumberFormatException e2) {
+			}
+			catch (NumberFormatException e2) {
 				startValue = 0;
 			}
 			try {
 				lengthValue = Integer.decode(length.getText()).intValue();
-			} catch (NumberFormatException e2) {
+			}
+			catch (NumberFormatException e2) {
 				lengthValue = 0;
 			}
 			super.okPressed();
@@ -221,19 +225,19 @@ public class ViewerTestJSP extends ViewPart {
 			});
 			mgr.add(new Separator());
 			// no longer able to set input to NULL
-			//			mgr.add(new Action() {
-			//				public String getText() {
-			//					return getToolTipText();
-			//				}
+			// mgr.add(new Action() {
+			// public String getText() {
+			// return getToolTipText();
+			// }
 			//
-			//				public String getToolTipText() {
-			//					return "Set Input to NULL";
-			//				}
-			//				public void run() {
-			//					super.run();
-			//					viewer.setInput(null);
-			//				}
-			//			});
+			// public String getToolTipText() {
+			// return "Set Input to NULL";
+			// }
+			// public void run() {
+			// super.run();
+			// viewer.setInput(null);
+			// }
+			// });
 			mgr.add(new Action() {
 				public String getText() {
 					return getToolTipText();
@@ -306,13 +310,14 @@ public class ViewerTestJSP extends ViewPart {
 		IContributionManager mgr = getViewSite().getActionBars().getMenuManager();
 		addActions(mgr);
 
-		// create source viewer & its content type-specific viewer configuration
+		// create source viewer & its content type-specific viewer
+		// configuration
 		fSourceViewer = new StructuredTextViewer(parent, null, null, false, SWT.NONE);
 		fConfig = new StructuredTextViewerConfigurationJSP();
-		
+
 		// set up the viewer with a document & viewer config
 		setupViewerForNew();
-		
+
 		setupViewerPreferences();
 	}
 
@@ -338,33 +343,34 @@ public class ViewerTestJSP extends ViewPart {
 	public void init(IViewSite site, IMemento memento) throws PartInitException {
 		super.init(site, memento);
 	}
-	
+
 	/**
-	 * Set up source viewer with any additional preferences it should have
-	 * Ex: font, tab width
+	 * Set up source viewer with any additional preferences it should have Ex:
+	 * font, tab width
 	 */
 	private void setupViewerPreferences() {
 		fSourceViewer.getTextWidget().setFont(JFaceResources.getFont(SSE_EDITOR_FONT));
 	}
-	
+
 	/**
 	 * Set up source viewer with a new document & configure it
 	 */
 	private void setupViewerForNew() {
-		stopFollowSelection();	// if was following selection, stop
-		
+		stopFollowSelection(); // if was following selection, stop
+
 		IModelManager modelManager = StructuredModelManager.getModelManager();
 
 		IDocument doc = modelManager.createStructuredDocumentFor(ContentTypeIdForJSP.ContentTypeID_JSP);
 		doc.set(DEFAULT_VIEWER_CONTENTS);
-		
+
 		fSourceViewer.setDocument(doc);
 		// need to reconfigure after set document just so highlighter works
 		fSourceViewer.configure(fConfig);
 	}
-	
+
 	/**
 	 * Returns the current active text editor if possible
+	 * 
 	 * @return ITextEditor
 	 */
 	private ITextEditor getActiveEditor() {
@@ -376,62 +382,64 @@ public class ViewerTestJSP extends ViewPart {
 			editor = (ITextEditor) editorPart.getAdapter(ITextEditor.class);
 		return editor;
 	}
-	
+
 	/**
 	 * Sets up the viewer with the same document/input as the given editor
-	 * @param ITextEditor editor - the editor to use *cannot to be null*
+	 * 
+	 * @param ITextEditor
+	 *            editor - the editor to use *cannot to be null*
 	 */
 	private void setupViewerForEditor(ITextEditor editor) {
-		stopFollowSelection();	// if was following selection, stop
+		stopFollowSelection(); // if was following selection, stop
 		IDocument doc = editor.getDocumentProvider().getDocument(editor.getEditorInput());
 		fSourceViewer.setDocument(doc);
-		
+
 		// need to reconfigure after set document just so highlighter works
 		fSourceViewer.configure(new StructuredTextViewerConfigurationJSP());
 	}
-	
+
 	/**
 	 * Hooks up the viewer to follow the selection made in the active editor
 	 */
-	private void followSelection () {
+	private void followSelection() {
 		ITextEditor editor = getActiveEditor();
 		if (editor != null) {
 			setupViewerForEditor(editor);
 			if (fHighlightRangeListener == null)
 				fHighlightRangeListener = new NodeRangeSelectionListener();
-	
+
 			fContentOutlinePage = ((IContentOutlinePage) editor.getAdapter(IContentOutlinePage.class));
-			if (fContentOutlinePage != null && fContentOutlinePage instanceof StructuredTextEditorContentOutlinePage) {
-				((StructuredTextEditorContentOutlinePage) fContentOutlinePage).getViewerSelectionManager().addNodeSelectionListener(fHighlightRangeListener);
-	
+			if (fContentOutlinePage != null) {
+				fContentOutlinePage.addSelectionChangedListener(fHighlightRangeListener);
+
 				if (!fContentOutlinePage.getSelection().isEmpty() && fContentOutlinePage.getSelection() instanceof IStructuredSelection) {
 					fSourceViewer.resetVisibleRegion();
-	
+
 					Object[] nodes = ((IStructuredSelection) fContentOutlinePage.getSelection()).toArray();
 					IndexedRegion startNode = (IndexedRegion) nodes[0];
 					IndexedRegion endNode = (IndexedRegion) nodes[nodes.length - 1];
-	
+
 					if (startNode instanceof Attr)
 						startNode = (IndexedRegion) ((Attr) startNode).getOwnerElement();
 					if (endNode instanceof Attr)
 						endNode = (IndexedRegion) ((Attr) endNode).getOwnerElement();
-	
+
 					int start = startNode.getStartOffset();
 					int end = endNode.getEndOffset();
-					
+
 					fSourceViewer.setVisibleRegion(start, end - start);
 					fSourceViewer.setSelectedRange(start, 0);
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Cease following the selection made in the editor
 	 */
 	private void stopFollowSelection() {
-		if (fContentOutlinePage != null && fContentOutlinePage instanceof StructuredTextEditorContentOutlinePage) {
-			((StructuredTextEditorContentOutlinePage) fContentOutlinePage).getViewerSelectionManager().removeNodeSelectionListener(fHighlightRangeListener);
+		if (fContentOutlinePage != null) {
+			fContentOutlinePage.removeSelectionChangedListener(fHighlightRangeListener);
 			fSourceViewer.resetVisibleRegion();
 			fContentOutlinePage = null;
 		}

@@ -16,7 +16,9 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
@@ -40,10 +42,7 @@ import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
-import org.eclipse.wst.sse.ui.internal.contentoutline.StructuredTextEditorContentOutlinePage;
 import org.eclipse.wst.sse.ui.internal.provisional.StructuredTextViewerConfiguration;
-import org.eclipse.wst.sse.ui.internal.view.events.INodeSelectionListener;
-import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
 import org.w3c.dom.Attr;
 
 public class ViewerTestHTML extends ViewPart {
@@ -53,17 +52,18 @@ public class ViewerTestHTML extends ViewPart {
 	private StructuredTextViewer fSourceViewer = null;
 	private StructuredTextViewerConfiguration fConfig = null;
 	private IContentOutlinePage fContentOutlinePage = null;
-	private INodeSelectionListener fHighlightRangeListener = null;
+	private ISelectionChangedListener fHighlightRangeListener = null;
 
 	/**
 	 * Sets the viewer's highlighting text range to the text range indicated
 	 * by the selected Nodes.
 	 */
-	protected class NodeRangeSelectionListener implements INodeSelectionListener {
-		public void nodeSelectionChanged(NodeSelectionChangedEvent event) {
-			if (!event.getSelectedNodes().isEmpty()) {
-				IndexedRegion startNode = (IndexedRegion) event.getSelectedNodes().get(0);
-				IndexedRegion endNode = (IndexedRegion) event.getSelectedNodes().get(event.getSelectedNodes().size() - 1);
+	protected class NodeRangeSelectionListener implements ISelectionChangedListener {
+		public void selectionChanged(SelectionChangedEvent event) {
+			if (!event.getSelection().isEmpty() && event.getSelection() instanceof IStructuredSelection) {
+				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+				IndexedRegion startNode = (IndexedRegion) selection.getFirstElement();
+				IndexedRegion endNode = (IndexedRegion) selection.toArray()[selection.size() - 1];
 
 				if (startNode instanceof Attr)
 					startNode = (IndexedRegion) ((Attr) startNode).getOwnerElement();
@@ -408,8 +408,8 @@ public class ViewerTestHTML extends ViewPart {
 				fHighlightRangeListener = new NodeRangeSelectionListener();
 
 			fContentOutlinePage = ((IContentOutlinePage) editor.getAdapter(IContentOutlinePage.class));
-			if (fContentOutlinePage != null && fContentOutlinePage instanceof StructuredTextEditorContentOutlinePage) {
-				((StructuredTextEditorContentOutlinePage) fContentOutlinePage).getViewerSelectionManager().addNodeSelectionListener(fHighlightRangeListener);
+			if (fContentOutlinePage != null) {
+				fContentOutlinePage.addSelectionChangedListener(fHighlightRangeListener);
 
 				if (!fContentOutlinePage.getSelection().isEmpty() && fContentOutlinePage.getSelection() instanceof IStructuredSelection) {
 					fSourceViewer.resetVisibleRegion();
@@ -437,8 +437,8 @@ public class ViewerTestHTML extends ViewPart {
 	 * Cease following the selection made in the editor
 	 */
 	private void stopFollowSelection() {
-		if (fContentOutlinePage != null && fContentOutlinePage instanceof StructuredTextEditorContentOutlinePage) {
-			((StructuredTextEditorContentOutlinePage) fContentOutlinePage).getViewerSelectionManager().removeNodeSelectionListener(fHighlightRangeListener);
+		if (fContentOutlinePage != null) {
+			fContentOutlinePage.removeSelectionChangedListener(fHighlightRangeListener);
 			fSourceViewer.resetVisibleRegion();
 			fContentOutlinePage = null;
 		}
