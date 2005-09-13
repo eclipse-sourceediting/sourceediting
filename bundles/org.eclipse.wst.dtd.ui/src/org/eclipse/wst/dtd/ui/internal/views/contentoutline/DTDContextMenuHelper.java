@@ -14,6 +14,7 @@
 
 package org.eclipse.wst.dtd.ui.internal.views.contentoutline;
 
+/*
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -23,6 +24,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.dtd.core.internal.AttributeList;
@@ -48,21 +50,16 @@ import org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions.AddGroupToCo
 import org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions.AddNotationAction;
 import org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions.AddParameterEntityReferenceAction;
 import org.eclipse.wst.dtd.ui.internal.views.contentoutline.actions.DeleteAction;
-import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
-
+*/
 
 /**
  * Menu helper for Content Outline page.  This should not be used elsewhere.
  */
 public class DTDContextMenuHelper // extends FocusAdapter
 {
+/*
 
 	class DTDMenuListener implements IMenuListener {
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see org.eclipse.jface.action.IMenuListener#menuAboutToShow(org.eclipse.jface.action.IMenuManager)
-		 */
 		public void menuAboutToShow(IMenuManager manager) {
 			updateActions();
 			Object node = null;
@@ -92,7 +89,7 @@ public class DTDContextMenuHelper // extends FocusAdapter
 	private DeleteAction deleteAction;
 
 	// default access, for inner class
-	StructuredTextEditor fEditor;
+	IEditorPart fEditor;
 
 	private IMenuListener fMenuListener;
 	private IAction redoAction;
@@ -104,7 +101,7 @@ public class DTDContextMenuHelper // extends FocusAdapter
 
 	// private List viewerList = new Vector();
 
-	public DTDContextMenuHelper(StructuredTextEditor editor) {
+	public DTDContextMenuHelper(IEditorPart editor) {
 		this.fEditor = editor;
 		fMenuListener = new DTDMenuListener();
 		addNotationAction = new AddNotationAction(editor, DTDUIMessages._UI_ACTION_ADD_DTD_NOTATION); //$NON-NLS-1$
@@ -278,9 +275,6 @@ public class DTDContextMenuHelper // extends FocusAdapter
 		return deleteAction;
 	}
 
-	/**
-	 * @return Returns the menuListener.
-	 */
 	public IMenuListener getMenuListener() {
 		return fMenuListener;
 	}
@@ -324,4 +318,5 @@ public class DTDContextMenuHelper // extends FocusAdapter
 		// redoAction);
 		// }
 	}
+*/
 }

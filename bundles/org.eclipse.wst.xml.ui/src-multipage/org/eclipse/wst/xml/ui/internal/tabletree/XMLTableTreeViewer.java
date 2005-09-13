@@ -8,32 +8,21 @@
  ****************************************************************************/
 package org.eclipse.wst.xml.ui.internal.tabletree;
 
-import java.util.List;
-
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
-import org.eclipse.wst.sse.ui.internal.ViewerSelectionManager;
-import org.eclipse.wst.sse.ui.internal.view.events.INodeSelectionListener;
-import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
-import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
-import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.ui.internal.actions.NodeAction;
 import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
@@ -42,132 +31,20 @@ import org.w3c.dom.Document;
 
 public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 
-	/**
-	 * This class is used to improve source editing performance by coalescing
-	 * multiple notifications for an element change into a single refresh
-	 */
-	class DelayedRefreshTimer implements Runnable {
-		private final int delta = 2000;
-		protected Object objectPendingRefresh;
-		protected ISelection pendingSelection;
-		protected Object prevObject;
-		protected XMLTableTreeViewer viewer;
-
-		public DelayedRefreshTimer(XMLTableTreeViewer treeViewer) {
-			this.viewer = treeViewer;
-		}
-
-		public boolean isRefreshPending() {
-			return objectPendingRefresh != null;
-		}
-
-		public void refresh(Object object) {
-			if (prevObject == object) {
-				objectPendingRefresh = object;
-				getDisplay().timerExec(delta, this);
-			}
-			else {
-				if (objectPendingRefresh != null) {
-					viewer.doRefresh(objectPendingRefresh, false);
-					objectPendingRefresh = null;
-				}
-				viewer.doRefresh(object, false);
-			}
-			prevObject = object;
-		}
-
-		private Display getDisplay() {
-
-			return PlatformUI.getWorkbench().getDisplay();
-		}
-
-		public void run() {
-			// defect 239677 ensure that the viewer's control is not disposed
-			//
-			if (objectPendingRefresh != null && !viewer.getTree().isDisposed()) {
-				viewer.doRefresh(objectPendingRefresh, true);
-				if (pendingSelection != null) {
-					// see fireSelectionChanged comment about jumping cursor
-					// problem
-					//
-					viewer.setSelection(pendingSelection, true);
-					pendingSelection = null;
-				}
-				objectPendingRefresh = null;
-				prevObject = null;
-			}
-		}
-
-		public void setSelection(ISelection selection) {
-			pendingSelection = selection;
-		}
-	}
-
-	class DelayingNodeSelectionListener implements INodeSelectionListener {
-		public void nodeSelectionChanged(NodeSelectionChangedEvent event) {
-			// if (isNodeSelectionListenerEnabled &&
-			// !event.getSource().equals(this)) {
-			if (!event.getSource().equals(XMLTableTreeViewer.this)) {
-				List selectedNodes = event.getSelectedNodes();
-				ISelection selection = new StructuredSelection(selectedNodes);
-
-				// for performance purposes avoid large multi-selections
-				// 
-				if (selectedNodes.size() < 100) {
-					if (timer.isRefreshPending()) {
-						timer.setSelection(selection);
-					}
-					else {
-						setSelection(selection, true);
-					}
-				}
-			}
-		}
-	}
-
-	class InternalModelStateListener implements IModelStateListener {
-
-		public void modelAboutToBeChanged(IStructuredModel model) {
-			ignoreRefresh = true;
-		}
-
-		public void modelChanged(IStructuredModel model) {
-			ignoreRefresh = false;
-			refresh();
-		}
-
-		public void modelDirtyStateChanged(IStructuredModel model, boolean isDirty) {
-		}
-
-		public void modelResourceDeleted(IStructuredModel model) {
-		}
-
-		public void modelResourceMoved(IStructuredModel originalmodel, IStructuredModel movedmodel) {
-		}
-
-		public void modelAboutToBeReinitialized(IStructuredModel structuredModel) {
-		}
-
-		public void modelReinitialized(IStructuredModel structuredModel) {
-		}
-	}
-
 	class NodeActionMenuListener implements IMenuListener {
 		public void menuAboutToShow(IMenuManager menuManager) {
-			if (fModel != null) {
-				// used to disable NodeSelection listening while running
-				// NodeAction
-				XMLNodeActionManager nodeActionManager = new XMLNodeActionManager(fModel, XMLTableTreeViewer.this) {
-					public void beginNodeAction(NodeAction action) {
-						super.beginNodeAction(action);
-					}
+			// used to disable NodeSelection listening while running
+			// NodeAction
+			XMLNodeActionManager nodeActionManager = new XMLNodeActionManager(((IDOMDocument) getInput()).getModel(), XMLTableTreeViewer.this) {
+				public void beginNodeAction(NodeAction action) {
+					super.beginNodeAction(action);
+				}
 
-					public void endNodeAction(NodeAction action) {
-						super.endNodeAction(action);
-					}
-				};
-				nodeActionManager.fillContextMenu(menuManager, getSelection());
-			}
+				public void endNodeAction(NodeAction action) {
+					super.endNodeAction(action);
+				}
+			};
+			nodeActionManager.fillContextMenu(menuManager, getSelection());
 		}
 	}
 
@@ -175,15 +52,6 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 
 	int count = 0;
 
-	protected IModelStateListener fInternalModelStateListener = new InternalModelStateListener();
-	protected IStructuredModel fModel = null;
-	protected INodeSelectionListener fNodeSelectionListener;
-
-	protected ViewerSelectionManager fViewerSelectionManager;
-
-	protected boolean ignoreRefresh;
-
-	protected DelayedRefreshTimer timer;
 	protected XMLTreeExtension treeExtension;
 
 	public XMLTableTreeViewer(Composite parent) {
@@ -200,7 +68,6 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 		createContextMenu();
 
 		XMLDragAndDropManager.addDragAndDropSupport(this);
-		timer = new DelayedRefreshTimer(this);
 	}
 
 	/**
@@ -221,38 +88,8 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 		super.refresh(o);
 	}
 
-	protected void fireSelectionChanged(SelectionChangedEvent event) {
-		if (!getTree().isDisposed() && !getTree().isFocusControl()) {
-			// defect 246094
-			// Various jumping cursor problems are caused when a selection
-			// 'delayed' selection occurs.
-			// These delayed selections are caused two ways:
-			//
-			// - when DelayedRefreshTimer calls doRefresh() ... the
-			// 'preserveSelection' causes selection to occur
-			// - when DelayedRefreshTimer performs a 'pending' selection
-			// 
-			// Since we only want to update the selectionManager on an explict
-			// user action
-			// (and not some selection that is merely a resonse to the
-			// selection manager)
-			// we ensure that the tree has focus control before firing events
-			// to the selectionManager.
-			// 
-			removeSelectionChangedListener(fViewerSelectionManager);
-			super.fireSelectionChanged(event);
-			addSelectionChangedListener(fViewerSelectionManager);
-		}
-		else {
-			super.fireSelectionChanged(event);
-		}
-	}
-
-
-	public INodeSelectionListener getNodeSelectionListener() {
-		if (fNodeSelectionListener == null)
-			fNodeSelectionListener = new DelayingNodeSelectionListener();
-		return fNodeSelectionListener;
+	public ISelectionProvider getSelectionProvider() {
+		return this;
 	}
 
 	public String getTitle() {
@@ -263,82 +100,28 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 		super.handleDispose(event);
 		treeExtension.dispose();
 		setDocument(null);
-		setViewerSelectionManager(null);
 	}
 
 	public void refresh() {
-		if (!ignoreRefresh && !getControl().isDisposed()) {
-			if (Display.getCurrent() != null) {
-				refreshTree();
-			}
-			else {
-
-				final Display display = PlatformUI.getWorkbench().getDisplay();
-
-				display.asyncExec(new Runnable() {
-					public void run() {
-						if (display != null && !display.isDisposed()) {
-							refreshTree();
-						}
-					}
-				});
-			}
-		}
-	}
-
-	void refreshTree() {
 		treeExtension.resetCachedData();
 		super.refresh();
-		getTree().redraw(0, 0, getTree().getBounds().width, getTree().getBounds().height, false);
-		getTree().update();
 	}
 
 	public void refresh(Object o) {
-		if (!ignoreRefresh && !getControl().isDisposed() && timer != null) {
-			if (Display.getCurrent() != null) {
-				refreshTree(o);
-			}
-			else {
-				final Object object = o;
-				final Display display = PlatformUI.getWorkbench().getDisplay();
-				display.asyncExec(new Runnable() {
-					public void run() {
-						if (display != null && !display.isDisposed()) {
-							refreshTree(object);
-						}
-					}
-				});
-			}
-		}
-	}
-
-	void refreshTree(Object o) {
-		if (getTree().isVisible()) {
-			doRefresh(o, false);
-		}
-		else {
-			timer.refresh(o);
-		}
+		treeExtension.resetCachedData();
+		super.refresh(o);
 	}
 
 	public void setDocument(IDocument document) {
-		// remove
-		if (fModel != null) {
-			fModel.removeModelStateListener(fInternalModelStateListener);
-			fModel.releaseFromEdit();
-		}
-
-		// get model for read and allow text editor to be the one that
-		// getModelForEdit
+		/*
+		 * let the text editor to be the one that manages the model's lifetime
+		 */
 		IStructuredModel model = null;
-		if (document != null) {
-			model = StructuredModelManager.getModelManager().getExistingModelForEdit(document);
+		try {
+			model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 
 			if (model != null && model instanceof IDOMModel) {
 				Document domDoc = null;
-				model.addModelStateListener(fInternalModelStateListener);
-				ModelQuery mq = ModelQueryUtil.getModelQuery(model);
-				treeExtension.setModelQuery(mq);
 				domDoc = ((IDOMModel) model).getDocument();
 				setInput(domDoc);
 				treeExtension.setIsUnsupportedInput(false);
@@ -347,27 +130,12 @@ public class XMLTableTreeViewer extends TreeViewer implements IDesignViewer {
 				treeExtension.setIsUnsupportedInput(true);
 			}
 		}
-
-		fModel = model;
-	}
-
-	// the following methods implement the IDesignViewer interface
-	// - getControl() is implemented via AdvancedTableTreeViewer
-	//
-	public void setViewerSelectionManager(ViewerSelectionManager viewerSelectionManager) {
-		// disconnect from old one
-		if (fViewerSelectionManager != null) {
-			fViewerSelectionManager.removeNodeSelectionListener(getNodeSelectionListener());
-			removeSelectionChangedListener(fViewerSelectionManager);
+		finally {
+			if (model != null) {
+				model.releaseFromRead();
+			}
 		}
 
-		fViewerSelectionManager = viewerSelectionManager;
-
-		// connect to new one
-		if (fViewerSelectionManager != null) {
-			fViewerSelectionManager.addNodeSelectionListener(getNodeSelectionListener());
-			addSelectionChangedListener(fViewerSelectionManager);
-		}
 	}
 
 }

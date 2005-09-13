@@ -8,12 +8,9 @@
  ****************************************************************************/
 package org.eclipse.wst.xml.ui.internal.tabletree;
 
-
-
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.wst.sse.ui.internal.ViewerSelectionManager;
-
 
 public interface IDesignViewer {
 	public Control getControl();
@@ -21,6 +18,6 @@ public interface IDesignViewer {
 	String getTitle();
 
 	void setDocument(IDocument document);
-
-	void setViewerSelectionManager(ViewerSelectionManager viewerSelectionManager);
+	
+	ISelectionProvider getSelectionProvider();
 }

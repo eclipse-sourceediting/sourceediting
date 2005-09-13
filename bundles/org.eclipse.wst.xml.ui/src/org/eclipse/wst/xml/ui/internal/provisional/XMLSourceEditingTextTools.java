@@ -12,23 +12,15 @@
  *******************************************************************************/
 package org.eclipse.wst.xml.ui.internal.provisional;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
-import org.eclipse.jface.text.TextSelection;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
-import org.eclipse.wst.sse.ui.internal.ViewerSelectionManager;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.ISourceEditingTextTools;
 import org.eclipse.wst.sse.ui.internal.provisional.extensions.breakpoint.NodeLocation;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
@@ -74,46 +66,14 @@ public class XMLSourceEditingTextTools implements IDOMSourceEditingTextTools, IN
 		}
 	}
 
-	class StructuredTextSelection extends TextSelection implements IStructuredSelection {
-		List selectedNodes = null;
-
-		public StructuredTextSelection(ITextSelection selection) {
-			super(fTextEditor.getDocumentProvider().getDocument(fTextEditor.getEditorInput()), selection.getOffset(), selection.getLength());
-			selectedNodes = ((ViewerSelectionManager) fTextEditor.getAdapter(ViewerSelectionManager.class)).getSelectedNodes();
-		}
-
-		public Object getFirstElement() {
-			return selectedNodes.size() > 0 ? selectedNodes.get(0) : null;
-		}
-
-		public Iterator iterator() {
-			return selectedNodes.iterator();
-		}
-
-		public int size() {
-			return selectedNodes.size();
-		}
-
-		public Object[] toArray() {
-			return selectedNodes.toArray();
-		}
-
-		public List toList() {
-			return new ArrayList(selectedNodes);
-		}
-	}
-
 	StructuredTextEditor fTextEditor = null;
 
 	public int getCaretOffset() {
-		ViewerSelectionManager vsm = (ViewerSelectionManager) fTextEditor.getAdapter(ViewerSelectionManager.class);
-		if (vsm == null)
-			return -1;
 		StructuredTextViewer stv = fTextEditor.getTextViewer();
-		if (stv != null && stv.getControl() != null && !stv.getControl().isDisposed()) {
-			return stv.widgetOffset2ModelOffset(vsm.getCaretPosition());
+		if (stv != null && stv.getTextWidget() != null && !stv.getTextWidget().isDisposed()) {
+			return stv.widgetOffset2ModelOffset(stv.getTextWidget().getCaretOffset());
 		}
-		return vsm.getCaretPosition();
+		return 0;
 	}
 
 	public IDocument getDocument() {
@@ -174,12 +134,7 @@ public class XMLSourceEditingTextTools implements IDOMSourceEditingTextTools, IN
 	}
 
 	public ITextSelection getSelection() {
-		ISelection selection = fTextEditor.getSelectionProvider().getSelection();
-		if (selection instanceof ITextSelection) {
-			ITextSelection structuredTextSelection = new StructuredTextSelection((ITextSelection) selection);
-			return structuredTextSelection;
-		}
-		return TextSelection.emptySelection();
+		return (ITextSelection) fTextEditor.getSelectionProvider().getSelection();
 	}
 
 	/**

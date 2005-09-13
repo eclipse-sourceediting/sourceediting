@@ -31,7 +31,6 @@ import org.eclipse.wst.common.ui.internal.dnd.ViewerDragAdapter;
 import org.eclipse.wst.common.ui.internal.dnd.ViewerDropAdapter;
 import org.eclipse.wst.dtd.ui.internal.DTDUIPlugin;
 import org.eclipse.wst.dtd.ui.internal.dnd.DTDDragAndDropManager;
-import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateActionContributionItem;
 import org.eclipse.wst.sse.ui.internal.provisional.views.contentoutline.StructuredContentOutlineConfiguration;
 import org.eclipse.wst.sse.ui.internal.util.Assert;
@@ -96,7 +95,7 @@ public class DTDContentOutlineConfiguration extends StructuredContentOutlineConf
 		if (fContentProvider == null) {
 			fContentProvider = new DTDTreeContentProvider();
 		}
-		//return super.getContentProvider(viewer);
+		// return super.getContentProvider(viewer);
 		return fContentProvider;
 	}
 
@@ -109,7 +108,7 @@ public class DTDContentOutlineConfiguration extends StructuredContentOutlineConf
 		if (fLabelProvider == null) {
 			fLabelProvider = new DTDLabelProvider();
 		}
-		//return super.getLabelProvider(viewer);
+		// return super.getLabelProvider(viewer);
 		return fLabelProvider;
 	}
 
@@ -119,8 +118,13 @@ public class DTDContentOutlineConfiguration extends StructuredContentOutlineConf
 	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getMenuListener(org.eclipse.jface.viewers.TreeViewer)
 	 */
 	public IMenuListener getMenuListener(TreeViewer viewer) {
-		fMenuHelper.createMenuListenersFor(viewer);
-		return fMenuHelper.getMenuListener();
+		if (fMenuHelper == null) {
+//			fMenuHelper = new DTDContextMenuHelper(getEditor());
+			System.out.println("DTDContextMenuHelper not implemented");
+		}
+//		fMenuHelper.createMenuListenersFor(viewer);
+//		return fMenuHelper.getMenuListener();
+		return null;
 	}
 
 	/*
@@ -212,23 +216,13 @@ public class DTDContentOutlineConfiguration extends StructuredContentOutlineConf
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration#setEditor(org.eclipse.wst.sse.ui.StructuredTextEditor)
-	 */
-	public void setEditor(StructuredTextEditor editor) {
-		super.setEditor(editor);
-		fMenuHelper = new DTDContextMenuHelper(editor);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#unconfigure(org.eclipse.jface.viewers.TreeViewer)
 	 */
 	public void unconfigure(TreeViewer viewer) {
 		super.unconfigure(viewer);
 		fViewerContributions.remove(viewer);
 		if (fMenuHelper != null) {
-			fMenuHelper.removeMenuListenersFor(viewer);
+//			fMenuHelper.removeMenuListenersFor(viewer);
 		}
 	}
 }

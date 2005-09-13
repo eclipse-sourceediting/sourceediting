@@ -15,6 +15,7 @@ package org.eclipse.wst.css.ui.internal.views.contentoutline;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSDocument;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSModel;
@@ -22,56 +23,18 @@ import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSPrimitiveValue;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclaration;
-import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
-import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
-import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.stylesheets.MediaList;
 
 
 /**
  * A Content provider for a JFace viewer used to display DOM nodes. This
- * content provider takes an adapter factory to create JFace adapters for the
- * nodes in the tree.
+ * content provider does not use adapters.
  */
-class JFaceNodeContentProviderCSS extends JFaceNodeContentProvider {
-	protected INodeAdapterFactory adapterFactory;
+class JFaceNodeContentProviderCSS implements ITreeContentProvider {
 
-	//protected DomainNotifier domainNotifier;
-	/**
-	 */
-	public JFaceNodeContentProviderCSS(INodeAdapterFactory adapterFactory) {
-		super(adapterFactory);
-		this.adapterFactory = adapterFactory;
-	}
-
-	/**
-	 */
-	protected void adaptElements(Object element) {
-
-		ICSSNode node;
-
-		if (element instanceof ICSSModel) {
-			ICSSDocument doc = ((ICSSModel) element).getDocument();
-			adapterFactory.adapt((INodeNotifier) doc);
-			node = doc.getFirstChild();
-		} else if (element instanceof ICSSNode) {
-			node = ((ICSSNode) element).getFirstChild();
-		} else {
-			return;
-		}
-
-		while (node != null) {
-			//		if (node instanceof CSSRule) {
-			adapterFactory.adapt((INodeNotifier) node);
-			adaptElements(node);
-			//		}
-			//		else{
-			//			adapterFactory.adapt((INodeNotifier) node);
-			//		}
-
-			node = node.getNextSibling();
-		}
+	public JFaceNodeContentProviderCSS() {
+		super();
 	}
 
 	/**
@@ -83,8 +46,6 @@ class JFaceNodeContentProviderCSS extends JFaceNodeContentProvider {
 		if (element instanceof ICSSModel) {
 			ICSSModel model = (ICSSModel) element;
 			ICSSDocument doc = model.getDocument();
-			//      addAdapter((INodeNotifier) doc);
-			adapterFactory.adapt((INodeNotifier) doc);
 			node = doc.getFirstChild();
 		} else if (element instanceof ICSSNode) {
 			node = ((ICSSNode) element).getFirstChild();
@@ -152,7 +113,6 @@ class JFaceNodeContentProviderCSS extends JFaceNodeContentProvider {
 			ArrayList v = new ArrayList();
 			//		internalGetElements(object, v);
 			addElements(object, v);
-			adaptElements(object);
 			return v.toArray();
 		}
 		return new Object[0];

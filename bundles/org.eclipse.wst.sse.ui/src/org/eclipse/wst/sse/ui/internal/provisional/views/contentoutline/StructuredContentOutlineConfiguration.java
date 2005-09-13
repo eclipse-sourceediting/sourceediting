@@ -13,35 +13,29 @@
 package org.eclipse.wst.sse.ui.internal.provisional.views.contentoutline;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.IShowInSource;
 import org.eclipse.ui.part.IShowInTargetList;
 import org.eclipse.ui.part.ShowInContext;
-import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
-import org.eclipse.wst.sse.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
 import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
-import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
-import org.eclipse.wst.sse.ui.internal.ViewerSelectionManager;
-import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
-import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapterFactory;
 import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateAction;
 import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateActionContributionItem;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImageHelper;
 import org.eclipse.wst.sse.ui.internal.editor.EditorPluginImages;
-import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
 
 public class StructuredContentOutlineConfiguration extends ContentOutlineConfiguration {
+
 	/**
 	 * Structured source files tend to have large/long tree structures. Add a
 	 * collapse action to help with navigation.
@@ -79,18 +73,18 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 	}
 
 	protected ImageDescriptor COLLAPSE_D = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_DLCL_COLLAPSEALL);
-	protected ImageDescriptor COLLAPSE_E = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_ELCL_COLLAPSEALL);
 
-	private StructuredTextEditor fEditor = null;
+	protected ImageDescriptor COLLAPSE_E = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_ELCL_COLLAPSEALL);
+	private String fContentTypeIdentifier = null;
+
+	private IEditorPart fEditor = null;
 
 	private boolean fIsLinkWithEditor = false;
 	private Map fMenuContributions = null;
-
 	private Map fToolbarContributions = null;
-
 	private final String OUTLINE_LINK_PREF = "outline-link-editor"; //$NON-NLS-1$
-
 	ImageDescriptor SYNCED_D = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_DLCL_SYNCED);
+
 	ImageDescriptor SYNCED_E = EditorPluginImageHelper.getInstance().getImageDescriptor(EditorPluginImages.IMG_ELCL_SYNCED);
 
 	public StructuredContentOutlineConfiguration() {
@@ -116,6 +110,7 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 		}
 		return items;
 	}
+
 
 	protected IContributionItem[] createToolbarContributions(TreeViewer viewer) {
 		IContributionItem[] items;
@@ -144,39 +139,31 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 		if (key.equals(IShowInSource.class)) {
 			adapter = new IShowInSource() {
 				public ShowInContext getShowInContext() {
-					return new ShowInContext(getEditor().getEditorInput(), getEditor().getSelectionProvider().getSelection());
+					return new ShowInContext(getEditor().getEditorInput(), getEditor().getEditorSite().getSelectionProvider().getSelection());
 				}
 			};
 		}
 		else if (key.equals(IShowInTargetList.class)) {
 			adapter = getEditor().getAdapter(key);
 		}
-		else
+		else {
 			adapter = super.getAdapter(key);
+		}
 		return adapter;
 	}
 
-	/**
-	 * @see org.eclipse.wst.sse.ui.internal.provisional.views.contentoutline.ContentOutlineConfiguration#getDoubleClickListener(org.eclipse.jface.viewers.TreeViewer)
-	 */
-	public IDoubleClickListener getDoubleClickListener(TreeViewer viewer) {
-		return (ViewerSelectionManager) getEditor().getAdapter(ViewerSelectionManager.class);
+	public String getContentTypeID(TreeViewer treeViewer) {
+		if (fContentTypeIdentifier != null) {
+			return fContentTypeIdentifier;
+		}
+		return super.getContentTypeID(treeViewer);
 	}
 
 	/**
 	 * @return
 	 */
-	public StructuredTextEditor getEditor() {
+	protected IEditorPart getEditor() {
 		return fEditor;
-	}
-
-	protected IJFaceNodeAdapterFactory getFactory() {
-		FactoryRegistry factoryRegistry = getEditor().getModel().getFactoryRegistry();
-		IJFaceNodeAdapterFactory adapterFactory = (IJFaceNodeAdapterFactory) factoryRegistry.getFactoryFor(IJFaceNodeAdapter.class);
-		if (adapterFactory == null) {
-			Logger.log(Logger.ERROR, "model has no JFace adapter factory"); //$NON-NLS-1$
-		}
-		return adapterFactory;
 	}
 
 	/*
@@ -197,23 +184,8 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 		return items;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.wst.sse.ui.views.contentoutline.ContentOutlineConfiguration#getSelectedNodes(org.eclipse.wst.sse.ui.view.events.NodeSelectionChangedEvent)
-	 */
-	public List getSelectedNodes(NodeSelectionChangedEvent event) {
-		if (isLinkedWithEditor())
-			return super.getSelectedNodes(event);
-		else
-			return null;
-	}
-
-	/**
-	 * @see org.eclipse.wst.sse.ui.internal.provisional.views.contentoutline.ContentOutlineConfiguration#getSelectionChangedListener(org.eclipse.jface.viewers.TreeViewer)
-	 */
-	public ISelectionChangedListener getSelectionChangedListener(TreeViewer viewer) {
-		return (ViewerSelectionManager) getEditor().getAdapter(ViewerSelectionManager.class);
+	protected IPreferenceStore getPreferenceStore() {
+		return SSEUIPlugin.getInstance().getPreferenceStore();
 	}
 
 	/*
@@ -250,8 +222,19 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 	/**
 	 * @param editor
 	 */
-	public void setEditor(StructuredTextEditor editor) {
+	public void setEditor(IEditorPart editor) {
 		fEditor = editor;
+	}
+
+	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
+		super.setInitializationData(config, propertyName, data);
+
+		fContentTypeIdentifier = config.getAttribute("contentTypeId"); //$NON-NLS-1$
+		if (data != null) {
+			if (data instanceof String && data.toString().length() > 0) {
+				fContentTypeIdentifier = (String) data;
+			}
+		}
 	}
 
 	/**
@@ -288,7 +271,4 @@ public class StructuredContentOutlineConfiguration extends ContentOutlineConfigu
 		}
 	}
 
-	protected IPreferenceStore getPreferenceStore() {
-		return SSEUIPlugin.getInstance().getPreferenceStore();
-	}
 }

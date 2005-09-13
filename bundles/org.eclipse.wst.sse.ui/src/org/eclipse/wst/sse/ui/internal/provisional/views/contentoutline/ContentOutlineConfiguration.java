@@ -12,32 +12,30 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.provisional.views.contentoutline;
 
-import java.util.List;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExecutableExtension;
+import org.eclipse.core.runtime.content.IContentTypeManager;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.util.TransferDragSourceListener;
 import org.eclipse.jface.util.TransferDropTargetListener;
 import org.eclipse.jface.viewers.IContentProvider;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
 
 /**
- * Configuration class for Outline Pages.  Not finalized.
+ * Configuration class for Outline Pages. Not finalized.
  * 
  * @plannedfor 1.0
- *  
+ * 
  */
 public class ContentOutlineConfiguration implements IExecutableExtension, IAdaptable {
 	private IContentProvider fContentProvider;
@@ -95,13 +93,8 @@ public class ContentOutlineConfiguration implements IExecutableExtension, IAdapt
 		return fContentProvider;
 	}
 
-	/**
-	 * @param viewer
-	 * @return the IDoubleClickListener to be notified when the viewer
-	 *         receives a double click event
-	 */
-	public IDoubleClickListener getDoubleClickListener(TreeViewer viewer) {
-		return null;
+	public String getContentTypeID(TreeViewer treeViewer) {
+		return IContentTypeManager.CT_TEXT;
 	}
 
 	/**
@@ -146,23 +139,23 @@ public class ContentOutlineConfiguration implements IExecutableExtension, IAdapt
 	}
 
 	/**
-	 * @param nodes
-	 * @return The list of nodes from this List that should be seen in the
-	 *         Outline. Possible uses include programmatic selection setting.
+	 * @param viewer
+	 * @return the ISelectionChangedListener to notify when the viewer's
+	 *         selection changes
 	 */
-	public List getNodes(List nodes) {
-		return nodes;
+	public ISelectionChangedListener getPostSelectionChangedListener(TreeViewer viewer) {
+		return null;
 	}
 
 	/**
 	 * @param event
-	 * @return The (filtered) list of selected nodes from this event. Uses
-	 *         include mapping model selection onto elements provided by the
-	 *         content provider. Should only return elements that will be
-	 *         shown in the Tree Control.
+	 * @return The (filtered) selection from this event. Uses include mapping
+	 *         model selection onto elements provided by the content provider.
+	 *         Should only return elements that will be shown in the Tree
+	 *         Control.
 	 */
-	public List getSelectedNodes(NodeSelectionChangedEvent event) {
-		return event.getSelectedNodes();
+	public ISelection getSelection(TreeViewer viewer, ISelection selection) {
+		return selection;
 	}
 
 	/**
@@ -214,7 +207,7 @@ public class ContentOutlineConfiguration implements IExecutableExtension, IAdapt
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
 		/*
 		 * Currently no need for initialization data but is good practice to
-		 * implement IExecutableExtension since is a class that can be created
+		 * implement IExecutableExtension since in a class that can be created
 		 * by executable extension
 		 */
 	}

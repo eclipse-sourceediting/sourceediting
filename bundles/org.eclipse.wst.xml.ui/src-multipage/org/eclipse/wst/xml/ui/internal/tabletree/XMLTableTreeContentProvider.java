@@ -45,7 +45,7 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 
 	protected ViewerNotifyingAdapterFactory viewerNotifyingAdapterFactory = new ViewerNotifyingAdapterFactory();
 	protected XMLTableTreePropertyDescriptorFactory propertyDescriptorFactory;
-	//	protected ImageFactory imageFactory =
+	// protected ImageFactory imageFactory =
 	// XMLCommonUIPlugin.getInstance().getImageFactory();
 	protected List viewerList = new Vector();
 	protected TreeContentHelper treeContentHelper = new TreeContentHelper();
@@ -81,7 +81,8 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 			Node node = (Node) o;
 			if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
 				result = ((Attr) node).getOwnerElement();
-			} else {
+			}
+			else {
 				result = node.getParentNode();
 			}
 		}
@@ -117,7 +118,7 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 			ModelQuery mq = ModelQueryUtil.getModelQuery(domDoc);
 
 			if (mq != null) {
-				propertyDescriptorFactory = new XMLTableTreePropertyDescriptorFactory(mq);
+				propertyDescriptorFactory = new XMLTableTreePropertyDescriptorFactory();
 				documentManager = mq.getCMDocumentManager();
 				if (documentManager != null) {
 					documentManager.setPropertyEnabled(CMDocumentManager.PROPERTY_ASYNC_LOAD, true);
@@ -193,14 +194,14 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 				}
 			}
 
-			//			if (image != null) {
-			//				Image markerOverlayImage =
+			// if (image != null) {
+			// Image markerOverlayImage =
 			// overlayIconManager.getOverlayImageForObject(node);
-			//				if (markerOverlayImage != null) {
-			//					image = imageFactory.createCompositeImage(image,
+			// if (markerOverlayImage != null) {
+			// image = imageFactory.createCompositeImage(image,
 			// markerOverlayImage, ImageFactory.BOTTOM_LEFT);
-			//				}
-			//			}
+			// }
+			// }
 		}
 		return image;
 	}
@@ -240,7 +241,8 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 		String result = null;
 		if (column == 0) {
 			result = getText(object);
-		} else if (column == 1 && object instanceof Node) {
+		}
+		else if (column == 1 && object instanceof Node) {
 			result = treeContentHelper.getNodeValue((Node) object);
 		}
 		return result != null ? result : ""; //$NON-NLS-1$
@@ -284,8 +286,8 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 
 		public void notifyChanged(INodeNotifier notifier, int eventType, Object changedFeature, Object oldValue, Object newValue, int pos) {
 			switch (eventType) {
-				//case INodeNotifier.ADD: // ignore
-				//case INodeNotifier.REMOVE: // ignore
+				// case INodeNotifier.ADD: // ignore
+				// case INodeNotifier.REMOVE: // ignore
 				case INodeNotifier.CHANGE :
 				case INodeNotifier.STRUCTURE_CHANGED :
 				case INodeNotifier.CONTENT_CHANGED : {
@@ -296,7 +298,8 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 
 							if (viewer instanceof StructuredViewer) {
 								((StructuredViewer) viewer).refresh(node);
-							} else {
+							}
+							else {
 								// todo... consider doing a time delayed
 								// refresh here!!
 								viewer.refresh();
@@ -319,7 +322,8 @@ public class XMLTableTreeContentProvider implements ITreeContentProvider, ITable
 				String data = ((Text) node).getData();
 				result = (data == null || data.trim().length() == 0);
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			Logger.logException(e);
 		}
 		return result;

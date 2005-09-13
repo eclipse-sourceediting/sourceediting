@@ -8,28 +8,25 @@
  ****************************************************************************/
 package org.eclipse.wst.css.ui.internal.views.contentoutline;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSValue;
 import org.eclipse.wst.css.ui.internal.CSSUIPlugin;
-import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.ui.internal.contentoutline.PropertyChangeUpdateActionContributionItem;
 import org.eclipse.wst.sse.ui.internal.provisional.views.contentoutline.StructuredContentOutlineConfiguration;
-import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
 
 public class CSSContentOutlineConfiguration extends StructuredContentOutlineConfiguration {
-	private final String OUTLINE_SORT_PREF = "outline-sort"; //$NON-NLS-1$
 	private IContentProvider fContentProvider = null;
 	private ILabelProvider fLabelProvider = null;
+	private final String OUTLINE_SORT_PREF = "outline-sort"; //$NON-NLS-1$
 
 	public CSSContentOutlineConfiguration() {
 		super();
@@ -44,7 +41,8 @@ public class CSSContentOutlineConfiguration extends StructuredContentOutlineConf
 		if (items == null) {
 			items = new IContributionItem[1];
 			items[0] = sortItem;
-		} else {
+		}
+		else {
 			IContributionItem[] combinedItems = new IContributionItem[items.length + 1];
 			combinedItems[0] = sortItem;
 			System.arraycopy(items, 0, combinedItems, 1, items.length);
@@ -54,61 +52,67 @@ public class CSSContentOutlineConfiguration extends StructuredContentOutlineConf
 	}
 
 	public IContentProvider getContentProvider(TreeViewer viewer) {
-		if (fContentProvider == null && getFactory() != null)
-			fContentProvider = new JFaceNodeContentProviderCSS((INodeAdapterFactory) getFactory());
+		if (fContentProvider == null)
+			fContentProvider = new JFaceNodeContentProviderCSS();
 		return fContentProvider;
 	}
 
+	private Object getFilteredNode(Object o) {
+		ICSSNode node = null;
+		if (o instanceof ICSSNode) {
+			node = (ICSSNode) o;
+			short nodeType = node.getNodeType();
+			if (node instanceof ICSSValue) {
+				while (node != null && !(node instanceof ICSSStyleDeclItem)) {
+					node = node.getParentNode();
+				}
+			}
+			else if (nodeType == ICSSNode.STYLEDECLARATION_NODE) {
+				node = node.getParentNode();
+			}
+			else if (nodeType == ICSSNode.MEDIALIST_NODE) {
+				node = node.getParentNode();
+			}
+		}
+		return node;
+	}
+
+	private Object[] getFilteredNodes(Object[] objects) {
+		Object[] filtered = new Object[objects.length];
+		for (int i = 0; i < filtered.length; i++) {
+			filtered[i] = getFilteredNode(objects[i]);
+		}
+		return filtered;
+	}
+
 	public ILabelProvider getLabelProvider(TreeViewer viewer) {
-		if (fLabelProvider == null && getFactory() != null)
-			fLabelProvider = new JFaceNodeLabelProviderCSS((INodeAdapterFactory) getFactory());
+		if (fLabelProvider == null)
+			fLabelProvider = new JFaceNodeLabelProviderCSS();
 		return fLabelProvider;
 	}
 
-	public List getNodes(List nodes) {
-		List filteredNodes = new ArrayList(nodes);
-
-		List targetNodes = new ArrayList();
-		Iterator i = filteredNodes.iterator();
-		while (i.hasNext()) {
-			Object obj = i.next();
-			if (obj instanceof ICSSNode) {
-				ICSSNode node = (ICSSNode) obj;
-				short nodeType = node.getNodeType();
-				if (node instanceof ICSSValue) {
-					while (node != null && !(node instanceof ICSSStyleDeclItem)) {
-						node = node.getParentNode();
-					}
-				} else if (nodeType == ICSSNode.STYLEDECLARATION_NODE) {
-					node = node.getParentNode();
-				} else if (nodeType == ICSSNode.MEDIALIST_NODE) {
-					node = node.getParentNode();
-				}
-				if (node != null) {
-					obj = node;
-				}
-			}
-			targetNodes.add(obj);
-		}
-
-		return targetNodes;
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration#getPreferenceStore()
+	 */
+	protected IPreferenceStore getPreferenceStore() {
+		return CSSUIPlugin.getDefault().getPreferenceStore();
 	}
 
-	public List getSelectedNodes(NodeSelectionChangedEvent event) {
-		return getNodes(event.getSelectedNodes());
+	public ISelection getSelection(TreeViewer viewer, ISelection selection) {
+		ISelection filteredSelection = selection;
+		if (selection instanceof IStructuredSelection) {
+			Object[] filteredNodes = getFilteredNodes(((IStructuredSelection) selection).toArray());
+			filteredSelection = new StructuredSelection(filteredNodes);
+		}
+		return filteredSelection;
 	}
 
 	/**
 	 * @deprecated use key directly (no need for generator)
 	 */
 	public String getSortPreferenceKey() {
-//		return PreferenceKeyGenerator.generateKey(OUTLINE_SORT_PREF, getDeclaringID());
 		return OUTLINE_SORT_PREF;
-	}
-	/* (non-Javadoc)
-	 * @see org.eclipse.wst.sse.ui.views.contentoutline.StructuredContentOutlineConfiguration#getPreferenceStore()
-	 */
-	protected IPreferenceStore getPreferenceStore() {
-		return CSSUIPlugin.getDefault().getPreferenceStore();
 	}
 }

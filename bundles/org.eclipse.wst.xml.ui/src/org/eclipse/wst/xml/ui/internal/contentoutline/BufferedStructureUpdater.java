@@ -18,15 +18,15 @@ import org.w3c.dom.Node;
 
 /**
  * Can handle multiple subsequent calls to processNode(..) by buffering them
- * w/ a RefreshOutlineJob. Only one refresh is performed (on the UI Thread) on
+ * w/ a RefreshStructureJob. Only one refresh is performed (on the UI Thread) on
  * the minimal affected area of the tree at the end of the batch of updates
  * (after the last update is processed).
  * 
  * @author pavery
  */
-public class BufferedOutlineUpdater {
+class BufferedStructureUpdater {
 
-	private RefreshOutlineJob fRefreshJob = null;
+	private RefreshStructureJob fRefreshJob = null;
 	private StructuredViewer fViewer = null;
 
 	/**
@@ -36,7 +36,6 @@ public class BufferedOutlineUpdater {
 	 *            the specific node that changed
 	 */
 	public void processNode(final StructuredViewer structuredViewer, Node node) {
-
 		// refresh on structural and "unknown" changes
 		// it would be nice to not refresh the viewer if it's not visible
 		// but only refresh when it's brought back to the front
@@ -48,9 +47,9 @@ public class BufferedOutlineUpdater {
 		}
 	}
 
-	private RefreshOutlineJob getRefreshJob() {
+	private RefreshStructureJob getRefreshJob() {
 		if (fRefreshJob == null)
-			fRefreshJob = new RefreshOutlineJob(getViewer());
+			fRefreshJob = new RefreshStructureJob(getViewer());
 		return fRefreshJob;
 	}
 

@@ -10,54 +10,129 @@ package org.eclipse.wst.xml.ui.internal.tabletree;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextInputListener;
-import org.eclipse.swt.events.ShellAdapter;
-import org.eclipse.swt.events.ShellEvent;
-import org.eclipse.swt.widgets.Display;
+import org.eclipse.jface.viewers.IPostSelectionProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IEditorActionBarContributor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IPartService;
 import org.eclipse.ui.IPropertyListener;
-import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.IGotoMarker;
-import org.eclipse.ui.part.MultiPageEditorPart;
-import org.eclipse.ui.part.MultiPageEditorSite;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.exceptions.SourceEditingRuntimeException;
+import org.eclipse.ui.part.MultiPageSelectionProvider;
+import org.eclipse.ui.progress.UIJob;
+import org.eclipse.wst.common.ui.provisional.editors.PostMultiPageEditorSite;
+import org.eclipse.wst.common.ui.provisional.editors.PostMultiPageSelectionProvider;
+import org.eclipse.wst.common.ui.provisional.editors.PostSelectionMultiPageEditorPart;
 import org.eclipse.wst.sse.ui.internal.StructuredTextEditor;
 import org.eclipse.wst.xml.core.internal.provisional.IXMLPreferenceNames;
 import org.eclipse.wst.xml.ui.internal.Logger;
 import org.eclipse.wst.xml.ui.internal.XMLUIPlugin;
 import org.eclipse.wst.xml.ui.internal.provisional.StructuredTextEditorXML;
 
-public class XMLMultiPageEditorPart extends MultiPageEditorPart {
+public class XMLMultiPageEditorPart extends PostSelectionMultiPageEditorPart {
 
 	/**
-	 * Internal part activation listener
+	 * Internal part activation listener, copied from AbstractTextEditor
 	 */
-	class PartListener extends ShellAdapter implements IPartListener {
+	class ActivationListener implements IPartListener, IWindowListener {
+
+		/** Cache of the active workbench part. */
 		private IWorkbenchPart fActivePart;
+		/** Indicates whether activation handling is currently be done. */
 		private boolean fIsHandlingActivation = false;
+		/**
+		 * The part service.
+		 * 
+		 * @since 3.1
+		 */
+		private IPartService fPartService;
 
+		/**
+		 * Creates this activation listener.
+		 * 
+		 * @param partService
+		 *            the part service on which to add the part listener
+		 * @since 3.1
+		 */
+		public ActivationListener(IPartService partService) {
+			fPartService = partService;
+			fPartService.addPartListener(this);
+			PlatformUI.getWorkbench().addWindowListener(this);
+		}
+
+		/**
+		 * Disposes this activation listener.
+		 * 
+		 * @since 3.1
+		 */
+		public void dispose() {
+			fPartService.removePartListener(this);
+			PlatformUI.getWorkbench().removeWindowListener(this);
+			fPartService = null;
+		}
+
+		/*
+		 * @see IPartListener#partActivated(org.eclipse.ui.IWorkbenchPart)
+		 */
+		public void partActivated(IWorkbenchPart part) {
+			fActivePart = part;
+			handleActivation();
+		}
+
+		/*
+		 * @see IPartListener#partBroughtToTop(org.eclipse.ui.IWorkbenchPart)
+		 */
+		public void partBroughtToTop(IWorkbenchPart part) {
+		}
+
+		/*
+		 * @see IPartListener#partClosed(org.eclipse.ui.IWorkbenchPart)
+		 */
+		public void partClosed(IWorkbenchPart part) {
+		}
+
+		/*
+		 * @see IPartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
+		 */
+		public void partDeactivated(IWorkbenchPart part) {
+			fActivePart = null;
+		}
+
+		/*
+		 * @see IPartListener#partOpened(org.eclipse.ui.IWorkbenchPart)
+		 */
+		public void partOpened(IWorkbenchPart part) {
+		}
+
+		/**
+		 * Handles the activation triggering a element state check in the
+		 * editor.
+		 */
 		private void handleActivation() {
-
 			if (fIsHandlingActivation)
 				return;
 
 			if (fActivePart == XMLMultiPageEditorPart.this) {
 				fIsHandlingActivation = true;
 				try {
-					safelySanityCheckState();
+					getTextEditor().safelySanityCheckState(getEditorInput());
 				}
 				finally {
 					fIsHandlingActivation = false;
@@ -65,44 +140,77 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 			}
 		}
 
-		/**
-		 * @see IPartListener#partActivated(IWorkbenchPart)
+		/*
+		 * @see org.eclipse.ui.IWindowListener#windowActivated(org.eclipse.ui.IWorkbenchWindow)
+		 * @since 3.1
 		 */
-		public void partActivated(IWorkbenchPart part) {
-			fActivePart = part;
-			handleActivation();
-		}
-
-		/**
-		 * @see IPartListener#partBroughtToTop(IWorkbenchPart)
-		 */
-		public void partBroughtToTop(IWorkbenchPart part) {
-		}
-
-		/**
-		 * @see IPartListener#partClosed(IWorkbenchPart)
-		 */
-		public void partClosed(IWorkbenchPart part) {
-		}
-
-		/**
-		 * @see IPartListener#partDeactivated(IWorkbenchPart)
-		 */
-		public void partDeactivated(IWorkbenchPart part) {
-			fActivePart = null;
-		}
-
-		/**
-		 * @see IPartListener#partOpened(IWorkbenchPart)
-		 */
-		public void partOpened(IWorkbenchPart part) {
+		public void windowActivated(IWorkbenchWindow window) {
+			if (window == getEditorSite().getWorkbenchWindow()) {
+				/*
+				 * Workaround for problem described in
+				 * http://dev.eclipse.org/bugs/show_bug.cgi?id=11731 Will be
+				 * removed when SWT has solved the problem.
+				 */
+				window.getShell().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						handleActivation();
+					}
+				});
+			}
 		}
 
 		/*
-		 * @see ShellListener#shellActivated(ShellEvent)
+		 * @see org.eclipse.ui.IWindowListener#windowDeactivated(org.eclipse.ui.IWorkbenchWindow)
+		 * @since 3.1
 		 */
-		public void shellActivated(ShellEvent e) {
-			handleActivation();
+		public void windowDeactivated(IWorkbenchWindow window) {
+		}
+
+		/*
+		 * @see org.eclipse.ui.IWindowListener#windowClosed(org.eclipse.ui.IWorkbenchWindow)
+		 * @since 3.1
+		 */
+		public void windowClosed(IWorkbenchWindow window) {
+		}
+
+		/*
+		 * @see org.eclipse.ui.IWindowListener#windowOpened(org.eclipse.ui.IWorkbenchWindow)
+		 * @since 3.1
+		 */
+		public void windowOpened(IWorkbenchWindow window) {
+		}
+	}
+
+	/**
+	 * Listens for selection from the source page, applying it to the design
+	 * viewer.
+	 */
+	private class TextEditorPostSelectionAdapter extends UIJob implements ISelectionChangedListener {
+		boolean forcePostSelection = false;
+		ISelection selection = null;
+
+		public TextEditorPostSelectionAdapter() {
+			super(getTitle());
+			setUser(true);
+		}
+
+		public IStatus runInUIThread(IProgressMonitor monitor) {
+			if (selection != null) {
+				fDesignViewer.getSelectionProvider().setSelection(selection);
+			}
+			return Status.OK_STATUS;
+		}
+
+		public void selectionChanged(SelectionChangedEvent event) {
+			if (fDesignViewer != null && !fDesignViewer.getControl().isFocusControl()) {
+				if (forcePostSelection) {
+					selection = event.getSelection();
+					schedule(200);
+				}
+				else {
+					fDesignViewer.getSelectionProvider().setSelection(event.getSelection());
+				}
+			}
 		}
 	}
 
@@ -136,7 +244,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 							 * dirty property to get updated after other
 							 * things on the queue are executed.
 							 */
-							postOnDisplayQue(runnable);
+							((Control) getTextEditor().getAdapter(Control.class)).getDisplay().asyncExec(runnable);
 						}
 					}
 					break;
@@ -176,9 +284,9 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	private int fDesignPageIndex;
 
 	/** The design viewer */
-	private IDesignViewer fDesignViewer;
+	IDesignViewer fDesignViewer;
 
-	private PartListener fPartListener;
+	private ActivationListener fActivationListener;
 
 	IPropertyListener fPropertyListener = null;
 
@@ -188,6 +296,8 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	/** The text editor. */
 	private StructuredTextEditor fTextEditor;
 
+	private TextEditorPostSelectionAdapter fTextEditorSelectionListener;
+
 	/**
 	 * StructuredTextMultiPageEditorPart constructor comment.
 	 */
@@ -196,7 +306,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	}
 
 	/*
-	 * This method is just to make firePropertyChanged accessbible from some
+	 * This method is just to make firePropertyChanged accessible from some
 	 * (anonomous) inner classes.
 	 */
 	void _firePropertyChange(int property) {
@@ -207,26 +317,18 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	 * Adds the source page of the multi-page editor.
 	 */
 	private void addSourcePage() throws PartInitException {
-		try {
-			fSourcePageIndex = addPage(fTextEditor, getEditorInput());
-			setPageText(fSourcePageIndex, XMLEditorMessages.XMLMultiPageEditorPart_0);
-			// the update's critical, to get viewer selection manager and
-			// highlighting to work
-			fTextEditor.update();
+		fSourcePageIndex = addPage(fTextEditor, getEditorInput());
+		setPageText(fSourcePageIndex, XMLEditorMessages.XMLMultiPageEditorPart_0);
+		// the update's critical, to get viewer selection manager and
+		// highlighting to work
+		fTextEditor.update();
 
-			firePropertyChange(PROP_TITLE);
+		firePropertyChange(PROP_TITLE);
 
-			// Changes to the Text Viewer's document instance should also
-			// force an
-			// input refresh
-			fTextEditor.getTextViewer().addTextInputListener(new TextInputListener());
-		}
-		catch (PartInitException exception) {
-			// dispose editor
-			dispose();
-			Logger.logException(exception);
-			throw new SourceEditingRuntimeException(exception, XMLEditorMessages.An_error_has_occurred_when1_ERROR_);
-		}
+		// Changes to the Text Viewer's document instance should also
+		// force an
+		// input refresh
+		fTextEditor.getTextViewer().addTextInputListener(new TextInputListener());
 	}
 
 	/**
@@ -237,8 +339,61 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	 */
 	private void connectDesignPage() {
 		if (fDesignViewer != null) {
-			fDesignViewer.setViewerSelectionManager(fTextEditor.getViewerSelectionManager());
 			fDesignViewer.setDocument(getDocument());
+		}
+
+		/*
+		 * Connect selection from the design viewer to the selection provider
+		 * for the XMLMultiPageEditorPart so that selection in the design
+		 * viewer will propogate across the workbench.
+		 */
+		if (fDesignViewer.getSelectionProvider() instanceof IPostSelectionProvider) {
+			((IPostSelectionProvider) fDesignViewer.getSelectionProvider()).addPostSelectionChangedListener(new ISelectionChangedListener() {
+				public void selectionChanged(SelectionChangedEvent event) {
+					((PostMultiPageSelectionProvider) getSite().getSelectionProvider()).firePostSelectionChanged(event);
+				}
+			});
+		}
+		fDesignViewer.getSelectionProvider().addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				((MultiPageSelectionProvider) getSite().getSelectionProvider()).fireSelectionChanged(event);
+			}
+		});
+
+		/*
+		 * Connect selection from the design viewer to the selection provider
+		 * of the source page so that selection in the design viewer will be
+		 * applied to the source page. Prefer post selection.
+		 */
+		if (fDesignViewer.getSelectionProvider() instanceof IPostSelectionProvider) {
+			((IPostSelectionProvider) fDesignViewer.getSelectionProvider()).addPostSelectionChangedListener(new ISelectionChangedListener() {
+				public void selectionChanged(SelectionChangedEvent event) {
+					getTextEditor().getSelectionProvider().setSelection(event.getSelection());
+				}
+			});
+		}
+		else {
+			fDesignViewer.getSelectionProvider().addSelectionChangedListener(new ISelectionChangedListener() {
+				public void selectionChanged(SelectionChangedEvent event) {
+					getTextEditor().getSelectionProvider().setSelection(event.getSelection());
+				}
+			});
+		}
+
+		/**
+		 * Drive the design viewer from selection in the source page
+		 */
+		ISelectionProvider provider = getTextEditor().getSelectionProvider();
+		if (fTextEditorSelectionListener == null) {
+			fTextEditorSelectionListener = new TextEditorPostSelectionAdapter();
+		}
+		if (provider instanceof IPostSelectionProvider) {
+			fTextEditorSelectionListener.forcePostSelection = false;
+			((IPostSelectionProvider) provider).addPostSelectionChangedListener(fTextEditorSelectionListener);
+		}
+		else {
+			fTextEditorSelectionListener.forcePostSelection = true;
+			provider.addSelectionChangedListener(fTextEditorSelectionListener);
 		}
 	}
 
@@ -247,14 +402,14 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	 * 
 	 */
 	private void createAndAddDesignPage() {
-		IDesignViewer tableTreeViewer = createDesignPage();
+		IDesignViewer designViewer = createDesignPage();
 
-		fDesignViewer = tableTreeViewer;
+		fDesignViewer = designViewer;
 		// note: By adding the design page as a Control instead of an
 		// IEditorPart, page switches will indicate
 		// a "null" active editor when the design page is made active
-		fDesignPageIndex = addPage(tableTreeViewer.getControl());
-		setPageText(fDesignPageIndex, tableTreeViewer.getTitle());
+		fDesignPageIndex = addPage(designViewer.getControl());
+		setPageText(fDesignPageIndex, designViewer.getTitle());
 	}
 
 	protected IDesignViewer createDesignPage() {
@@ -275,27 +430,17 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 		try {
 			// source page MUST be created before design page, now
 			createSourcePage();
+
 			createAndAddDesignPage();
 			addSourcePage();
 			connectDesignPage();
 
-			IStructuredModel model = null;
-			try {
-				model = StructuredModelManager.getModelManager().getExistingModelForRead(getDocument());
-				if (model != null) {
-					int activePageIndex = getPreferenceStore().getInt(IXMLPreferenceNames.LAST_ACTIVE_PAGE);
-					if (activePageIndex >= 0 && activePageIndex < getPageCount()) {
-						setActivePage(activePageIndex);
-					}
-				}
-				else {
-					setActivePage(fSourcePageIndex);
-				}
+			int activePageIndex = getPreferenceStore().getInt(IXMLPreferenceNames.LAST_ACTIVE_PAGE);
+			if (activePageIndex >= 0 && activePageIndex < getPageCount()) {
+				setActivePage(activePageIndex);
 			}
-			finally {
-				if (model != null) {
-					model.releaseFromRead();
-				}
+			else {
+				setActivePage(fSourcePageIndex);
 			}
 		}
 		catch (PartInitException e) {
@@ -310,7 +455,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	protected IEditorSite createSite(IEditorPart editor) {
 		IEditorSite site = null;
 		if (editor == fTextEditor) {
-			site = new MultiPageEditorSite(this, editor) {
+			site = new PostMultiPageEditorSite(this, editor) {
 				/**
 				 * @see org.eclipse.ui.part.MultiPageEditorSite#getActionBarContributor()
 				 */
@@ -355,18 +500,19 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	private void disconnectDesignPage() {
 		if (fDesignViewer != null) {
 			fDesignViewer.setDocument(null);
-			fDesignViewer.setViewerSelectionManager(null);
 		}
 	}
 
 	public void dispose() {
-		Logger.trace("Source Editor", "StructuredTextMultiPageEditorPart::dispose entry"); //$NON-NLS-1$ //$NON-NLS-2$
+		Logger.trace("Source Editor", "XMLMultiPageEditorPart::dispose entry"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		disconnectDesignPage();
 
-		IWorkbenchWindow window = getSite().getWorkbenchWindow();
-		window.getPartService().removePartListener(fPartListener);
-		window.getShell().removeShellListener(fPartListener);
+		if (fActivationListener != null) {
+			fActivationListener.dispose();
+			fActivationListener = null;
+		}
+
 		if (fTextEditor != null && fPropertyListener != null) {
 			fTextEditor.removePropertyListener(fPropertyListener);
 		}
@@ -428,7 +574,7 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 		}
 		return result;
 	}
-	
+
 	private IDocument getDocument() {
 		IDocument document = null;
 		if (fTextEditor != null)
@@ -479,13 +625,9 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 		try {
 			super.init(site, input);
-			if (fPartListener == null) {
-				fPartListener = new PartListener();
-			}
+			site.setSelectionProvider(new PostMultiPageSelectionProvider(this));
 			// we want to listen for our own activation
-			IWorkbenchWindow window = getSite().getWorkbenchWindow();
-			window.getPartService().addPartListener(fPartListener);
-			window.getShell().addShellListener(fPartListener);
+			fActivationListener = new ActivationListener(site.getWorkbenchWindow().getPartService());
 		}
 		catch (Exception e) {
 			Logger.logException("exception initializing " + getClass().getName(), e);
@@ -522,22 +664,17 @@ public class XMLMultiPageEditorPart extends MultiPageEditorPart {
 	protected void pageChange(int newPageIndex) {
 		super.pageChange(newPageIndex);
 		saveLastActivePageIndex(newPageIndex);
-	}
 
-	/**
-	 * Posts the update code "behind" the running operation.
-	 */
-	void postOnDisplayQue(Runnable runnable) {
-		IWorkbench workbench = PlatformUI.getWorkbench();
-		IWorkbenchWindow[] windows = workbench.getWorkbenchWindows();
-		if (windows != null && windows.length > 0) {
-			Display display = windows[0].getShell().getDisplay();
-			display.asyncExec(runnable);
+		IEditorPart newlyActiveEditor = getEditor(newPageIndex);
+		if (newPageIndex == fDesignPageIndex) {
+			ISelectionProvider selectionProvider = fDesignViewer.getSelectionProvider();
+			if (selectionProvider != null) {
+				SelectionChangedEvent event = new SelectionChangedEvent(selectionProvider, selectionProvider.getSelection());
+				((MultiPageSelectionProvider) getSite().getSelectionProvider()).fireSelectionChanged(event);
+				((PostMultiPageSelectionProvider) getSite().getSelectionProvider()).firePostSelectionChanged(event);
+			}
 		}
-		else
-			runnable.run();
 	}
-
 
 	void safelySanityCheckState() {
 		// If we're called before editor is created, simply ignore since we

@@ -18,6 +18,7 @@ import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMNode;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.ui.internal.properties.EnumeratedStringPropertyDescriptor;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -29,16 +30,23 @@ public class XMLTableTreePropertyDescriptorFactory extends DOMPropertyDescriptor
 
 	protected TreeContentHelper treeContentHelper = new TreeContentHelper();
 
-	public XMLTableTreePropertyDescriptorFactory(ModelQuery modelQuery) {
-		super(modelQuery);
+	public XMLTableTreePropertyDescriptorFactory() {
+		super();
 	}
 
 	protected IPropertyDescriptor createPropertyDescriptorHelper(String name, Element element, CMNode cmNode) {
 		IPropertyDescriptor result = null;
 
-		String[] valuesArray = getModelQuery().getPossibleDataTypeValues(element, cmNode);
+		ModelQuery mq = ModelQueryUtil.getModelQuery(element.getOwnerDocument());
+		String[] valuesArray = null;
+		if (mq != null) {
+			valuesArray = mq.getPossibleDataTypeValues(element, cmNode);
+		}
 		if (valuesArray != null && valuesArray.length > 0) {
 			result = new EnumeratedStringPropertyDescriptor(name, name, valuesArray);
+		}
+		else {
+			result = createDefaultPropertyDescriptor(name);
 		}
 
 		return result;
@@ -49,9 +57,16 @@ public class XMLTableTreePropertyDescriptorFactory extends DOMPropertyDescriptor
 		Node parentNode = text.getParentNode();
 		if (parentNode != null && parentNode.getNodeType() == Node.ELEMENT_NODE) {
 			Element parentElement = (Element) parentNode;
-			CMElementDeclaration ed = getModelQuery().getCMElementDeclaration(parentElement);
+			ModelQuery mq = ModelQueryUtil.getModelQuery(text.getOwnerDocument());
+			CMElementDeclaration ed = null;
+			if (mq != null) {
+				ed = mq.getCMElementDeclaration(parentElement);
+			}
 			if (ed != null) {
 				result = createPropertyDescriptorHelper(HACK, parentElement, ed);
+			}
+			else {
+				result = createDefaultPropertyDescriptor(parentElement.getNodeName());
 			}
 		}
 
@@ -66,8 +81,12 @@ public class XMLTableTreePropertyDescriptorFactory extends DOMPropertyDescriptor
 		IPropertyDescriptor result = null;
 
 		String attributeName = attr.getName();
+		ModelQuery mq = ModelQueryUtil.getModelQuery(attr.getOwnerDocument());
 
-		CMAttributeDeclaration ad = getModelQuery().getCMAttributeDeclaration(attr);
+		CMAttributeDeclaration ad = null;
+		if (mq != null) {
+			ad = mq.getCMAttributeDeclaration(attr);
+		}
 		if (ad != null) {
 			result = createPropertyDescriptorHelper(attributeName, attr.getOwnerElement(), ad);
 		}

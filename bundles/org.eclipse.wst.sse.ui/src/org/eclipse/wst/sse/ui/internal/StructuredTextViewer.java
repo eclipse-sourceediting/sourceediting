@@ -15,7 +15,6 @@ package org.eclipse.wst.sse.ui.internal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jface.text.BadLocationException;
@@ -40,25 +39,17 @@ import org.eclipse.jface.text.source.IOverviewRuler;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
-import org.eclipse.jface.viewers.ContentViewer;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.IEditorStatusLine;
-import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.wst.sse.core.internal.cleanup.StructuredContentCleanupHandler;
-import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.undo.IDocumentSelectionMediator;
 import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
@@ -68,10 +59,6 @@ import org.eclipse.wst.sse.ui.internal.provisional.style.Highlighter;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.internal.reconcile.StructuredRegionProcessor;
 import org.eclipse.wst.sse.ui.internal.util.PlatformStatusLineUtil;
-import org.eclipse.wst.sse.ui.internal.view.events.INodeSelectionListener;
-import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Node;
 
 public class StructuredTextViewer extends ProjectionViewer implements IDocumentSelectionMediator {
 
@@ -108,50 +95,30 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		}
 	}
 
-	/**
-	 * A private delegate class to move INodeSelectionListener and
-	 * IDoubleClickListener off of the viewer's APIs
-	 */
-	private class InternalSelectionListener implements INodeSelectionListener, IDoubleClickListener {
-		public void doubleClick(DoubleClickEvent event) {
-			handleDoubleClick(event);
-		}
-
-		public void nodeSelectionChanged(NodeSelectionChangedEvent event) {
-			handleNodeSelectionChanged(event);
-		}
-	}
-
 	/** Text operation codes */
 	private static final int BASE = ProjectionViewer.EXPAND_ALL; // see
 	// ProjectionViewer.EXPAND_ALL
-	public static final int CLEANUP_DOCUMENT = BASE + 1;
-	public static final int FORMAT_ACTIVE_ELEMENTS = BASE + 3;
+	private static final int CLEANUP_DOCUMENT = BASE + 1;
+	protected static final int FORMAT_ACTIVE_ELEMENTS = BASE + 3;
 
 	private static final String FORMAT_ACTIVE_ELEMENTS_TEXT = SSEUIMessages.Format_Active_Elements_UI_; //$NON-NLS-1$
 	public static final int FORMAT_DOCUMENT = BASE + 2;
 	private static final String FORMAT_DOCUMENT_TEXT = SSEUIMessages.Format_Document_UI_; //$NON-NLS-1$
-	public static final int QUICK_FIX = BASE + 4;
+	protected static final int QUICK_FIX = BASE + 4;
 	private static final String TEXT_CUT = SSEUIMessages.Text_Cut_UI_; //$NON-NLS-1$
 	private static final String TEXT_PASTE = SSEUIMessages.Text_Paste_UI_; //$NON-NLS-1$
 	private static final String TEXT_SHIFT_LEFT = SSEUIMessages.Text_Shift_Left_UI_; //$NON-NLS-1$ = "Text Shift Left"
 	private static final String TEXT_SHIFT_RIGHT = SSEUIMessages.Text_Shift_Right_UI_; //$NON-NLS-1$ = "Text Shift Right"
+
 	private boolean fBackgroundupdateInProgress;
-	protected StructuredContentCleanupHandler fContentCleanupHandler = null;
-	protected IContentAssistant fCorrectionAssistant;
-	protected boolean fCorrectionAssistantInstalled;
+	private StructuredContentCleanupHandler fContentCleanupHandler = null;
+	private IContentAssistant fCorrectionAssistant;
+	private boolean fCorrectionAssistantInstalled;
 	private IDocumentAdapter fDocAdapter;
 
-	private InternalSelectionListener fSelectionListener = null;
-
-	/**
-	 * TODO Temporary workaround for BUG44665
-	 */
 	/** The most recent widget modification as document command */
 	private StructuredDocumentCommand fDocumentCommand = new StructuredDocumentCommand();
 	private Highlighter fHighlighter;
-	// TODO: never read locally
-	boolean fRememberedStateContentAssistInstalled;
 
 	/**
 	 * TODO Temporary workaround for BUG44665
@@ -159,7 +126,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 	/** Verify listener */
 	private TextVerifyListener fVerifyListener = new TextVerifyListener();
 
-	private ViewerSelectionManager fViewerSelectionManager;
+	// private ViewerSelectionManager fViewerSelectionManager;
 	private SourceViewerConfiguration fConfiguration;
 
 	/**
@@ -168,7 +135,6 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 	 */
 	public StructuredTextViewer(Composite parent, IVerticalRuler verticalRuler, IOverviewRuler overviewRuler, boolean showAnnotationsOverview, int styles) {
 		super(parent, verticalRuler, overviewRuler, showAnnotationsOverview, styles);
-		fSelectionListener = new InternalSelectionListener();
 	}
 
 	/**
@@ -265,7 +231,8 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		if (fContentAssistant != null) {
 			fContentAssistant.install(this);
 			fContentAssistantInstalled = true;
-		} else {
+		}
+		else {
 			// 248036
 			// disable the content assist operation if no content assistant
 			enableOperation(CONTENTASSIST_PROPOSALS, false);
@@ -279,7 +246,8 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			if (fCorrectionAssistant != null) {
 				fCorrectionAssistant.install(this);
 				fCorrectionAssistantInstalled = true;
-			} else {
+			}
+			else {
 				// disable the correction assist operation if no correction
 				// assistant
 				enableOperation(QUICK_FIX, false);
@@ -303,16 +271,16 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			fUndoManager.disconnect();
 		}
 		setUndoManager(configuration.getUndoManager(this));
-		
+
 		// release old annotation hover before setting new one
 		if (fAnnotationHover instanceof StructuredTextAnnotationHover) {
-			((StructuredTextAnnotationHover)fAnnotationHover).release();
+			((StructuredTextAnnotationHover) fAnnotationHover).release();
 		}
 		setAnnotationHover(configuration.getAnnotationHover(this));
-		
+
 		// release old annotation hover before setting new one
 		if (fOverviewRulerAnnotationHover instanceof StructuredTextAnnotationHover) {
-			((StructuredTextAnnotationHover)fOverviewRulerAnnotationHover).release();
+			((StructuredTextAnnotationHover) fOverviewRulerAnnotationHover).release();
 		}
 		setOverviewRulerAnnotationHover(configuration.getAnnotationHover(this));
 
@@ -344,7 +312,8 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 					int stateMask = stateMasks[j];
 					setTextHover(configuration.getTextHover(this, t, stateMask), t, stateMask);
 				}
-			} else {
+			}
+			else {
 				setTextHover(configuration.getTextHover(this, t), t, ITextViewerExtension2.DEFAULT_HOVER_STATE_MASK);
 			}
 
@@ -396,7 +365,8 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		IStructuredDocument structuredDocument = null;
 		if (document instanceof IStructuredDocument) {
 			structuredDocument = (IStructuredDocument) document;
-		} else {
+		}
+		else {
 			if (document instanceof ProjectionDocument) {
 				IDocument doc = ((ProjectionDocument) document).getMasterDocument();
 				if (doc instanceof IStructuredDocument) {
@@ -409,7 +379,8 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		}
 		if (structuredDocument == null) {
 			return false;
-		} else {
+		}
+		else {
 			int length = end - start;
 			return structuredDocument.containsReadOnly(start, length);
 		}
@@ -472,7 +443,8 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 					IStatus status = editor.validateEdit(getControl().getShell());
 					if (status != null && status.isOK())
 						undo();
-				} else
+				}
+				else
 					undo();
 				break;
 			}
@@ -482,7 +454,8 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 					IStatus status = editor.validateEdit(getControl().getShell());
 					if (status != null && status.isOK())
 						redo();
-				} else
+				}
+				else
 					redo();
 				break;
 			}
@@ -517,7 +490,8 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 							PlatformStatusLineUtil.displayErrorMessage(err);
 						}
 						PlatformStatusLineUtil.addOneTimeClearListener();
-					} else
+					}
+					else
 						beep();
 				}
 				break;
@@ -568,10 +542,12 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 						context.setProperty(FormattingContextProperties.CONTEXT_DOCUMENT, Boolean.TRUE);
 						context.setProperty(FormattingContextProperties.CONTEXT_REGION, region);
 						extension.format(getDocument(), context);
-					} else {
+					}
+					else {
 						fContentFormatter.format(getDocument(), region);
 					}
-				} finally {
+				}
+				finally {
 					// end recording
 					selection = getTextWidget().getSelection();
 					cursorPosition = selection.x;
@@ -588,7 +564,8 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 					Point s = getSelectedRange();
 					IRegion region = new Region(s.x, s.y);
 					fContentFormatter.format(getDocument(), region);
-				} finally {
+				}
+				finally {
 					// end recording
 					selection = getTextWidget().getSelection();
 					cursorPosition = selection.x;
@@ -607,7 +584,8 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			IStructuredDocument structuredDocument = (IStructuredDocument) doc;
 			IStructuredTextUndoManager undoManager = structuredDocument.getUndoManager();
 			undoManager.endRecording(this, cursorPosition, selectionLength);
-		} else {
+		}
+		else {
 			// TODO: how to handle other document types?
 		}
 	}
@@ -618,7 +596,8 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			IStructuredDocument structuredDocument = (IStructuredDocument) doc;
 			IStructuredTextUndoManager undoManager = structuredDocument.getUndoManager();
 			undoManager.beginRecording(this, label, description, cursorPosition, selectionLength);
-		} else {
+		}
+		else {
 			// TODO: how to handle other document types?
 		}
 	}
@@ -628,25 +607,7 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		enabledRedrawing();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.jface.text.TextViewer#findAndSelect(int,
-	 *      java.lang.String, boolean, boolean, boolean, boolean)
-	 */
-	protected int findAndSelect(int startPosition, String findString, boolean forwardSearch, boolean caseSensitive, boolean wholeWord, boolean regExSearch) {
-		int result = super.findAndSelect(startPosition, findString, forwardSearch, caseSensitive, wholeWord, regExSearch);
-
-		// findAndSelect calls fTextWidget.setSelectionRange(widgetPos,
-		// length) to set selection,
-		// which does not fire text widget selection event.
-		// Need to notify ViewerSelectionManager here.
-		notifyViewerSelectionManager(getSelectedRange().x, getSelectedRange().y);
-
-		return result;
-	}
-
-	protected IExtendedSimpleEditor getActiveExtendedSimpleEditor() {
+	private IExtendedSimpleEditor getActiveExtendedSimpleEditor() {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window != null) {
 			IWorkbenchPage page = window.getActivePage();
@@ -660,25 +621,6 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		return null;
 	}
 
-
-	protected ViewerSelectionManager getDefaultViewerSelectionManager() {
-		return new ViewerSelectionManagerImpl(this);
-	}
-
-	/**
-	 * @deprecated
-	 * @return the current ViewerSelectionManager
-	 */
-	public ViewerSelectionManager getViewerSelectionManager() {
-		if (fViewerSelectionManager == null) {
-			ViewerSelectionManager viewerSelectionManager = getDefaultViewerSelectionManager();
-			// use setter instead of field directly, so it get initialized
-			// properly
-			setViewerSelectionManager(viewerSelectionManager);
-		}
-		return fViewerSelectionManager;
-	}
-
 	protected void handleDispose() {
 		Logger.trace("Source Editor", "StructuredTextViewer::handleDispose entry"); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -690,111 +632,12 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		// leaks very hard.
 		setSelection(TextSelection.emptySelection());
 
-		if (fViewerSelectionManager != null) {
-			fViewerSelectionManager.removeNodeDoubleClickListener(fSelectionListener);
-			fViewerSelectionManager.removeNodeSelectionListener(fSelectionListener);
-			fViewerSelectionManager.release();
-		}
-
 		if (fHighlighter != null) {
 			fHighlighter.uninstall();
 		}
 		super.handleDispose();
 
 		Logger.trace("Source Editor", "StructuredTextViewer::handleDispose exit"); //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
-	void handleDoubleClick(DoubleClickEvent event) {
-		IStructuredSelection selection = (IStructuredSelection) event.getSelection();
-		int selectionSize = selection.size();
-		List selectedNodes = selection.toList();
-		IndexedRegion doubleClickedNode = null;
-		int selectionStart = 0;
-		int selectionEnd = 0;
-		if (selectionSize > 0) {
-			// something selected
-			// only one node can be double-clicked at a time
-			// so, we get the first one
-			Object o = selectedNodes.get(0);
-			if (o instanceof IndexedRegion) {
-				doubleClickedNode = (IndexedRegion) o;
-				selectionStart = doubleClickedNode.getStartOffset();
-				selectionEnd = doubleClickedNode.getEndOffset();
-				// set new selection
-				setSelectedRange(selectionStart, selectionEnd - selectionStart);
-			}
-		}
-	}
-
-	void handleNodeSelectionChanged(NodeSelectionChangedEvent event) {
-
-		// Skip NodeSelectionChanged processing if this is the source of the
-		// event.
-		if (event.getSource().equals(this))
-			return;
-		List selectedNodes = new Vector(event.getSelectedNodes());
-		boolean attrOrTextNodeSelected = false;
-		int attrOrTextNodeStartOffset = 0;
-		for (int i = 0; i < selectedNodes.size(); i++) {
-			Object eachNode = selectedNodes.get(i);
-			// replace attribute node with its parent
-			if (eachNode instanceof Attr) {
-				attrOrTextNodeSelected = true;
-				attrOrTextNodeStartOffset = ((IndexedRegion) eachNode).getStartOffset();
-				selectedNodes.set(i, ((Attr) eachNode).getOwnerElement());
-			}
-			// replace TextNode with its parent
-			if ((eachNode instanceof Node) && (((Node) eachNode).getNodeType() == Node.TEXT_NODE)) {
-				attrOrTextNodeSelected = true;
-				attrOrTextNodeStartOffset = ((IndexedRegion) eachNode).getStartOffset();
-				selectedNodes.set(i, ((Node) eachNode).getParentNode());
-			}
-		}
-		if (nothingToSelect(selectedNodes)) {
-			removeRangeIndication();
-		} else {
-			IndexedRegion startNode = (IndexedRegion) selectedNodes.get(0);
-			IndexedRegion endNode = (IndexedRegion) selectedNodes.get(selectedNodes.size() - 1);
-			int startOffset = startNode.getStartOffset();
-			int endOffset = endNode.getEndOffset();
-			// if end node is a child node of start node
-			if (startNode.getEndOffset() > endNode.getEndOffset()) {
-				endOffset = startNode.getEndOffset();
-			}
-			int length = endOffset - startOffset;
-			// Move cursor only if the original source really came from
-			// a ContentViewer (for example, the SourceEditorTreeViewer or the
-			// XMLTableTreeViewer)
-			// or a ContentOutlinePage (for example, the XSDTreeViewer).
-			// Do not move the cursor if the source is a textWidget (which
-			// means the selection came from the text viewer) or
-			// if the source is the ViewerSelectionManager (which means the
-			// selection was set programmatically).
-			boolean moveCursor = (event.getSource() instanceof ContentViewer) || (event.getSource() instanceof IContentOutlinePage);
-			// 20031012 (pa)
-			// Changed moveCursor to "false" because it was causing the cursor
-			// to jump to the beginning of the parent node in the case that a
-			// child of the parent is deleted.
-			// We really only want to set the range indicator on the left to
-			// the range of the parent, but not move the cursor
-			// setRangeIndication(startOffset, length, false);
-			// 20040714 (nsd) Chnaged back to tru given that selection
-			// problems
-			// caused by the Outline view appear fixed.
-			setRangeIndication(startOffset, length, moveCursor);
-			if ((moveCursor) && (attrOrTextNodeSelected)) {
-				setSelectedRange(attrOrTextNodeStartOffset, 0);
-				revealRange(attrOrTextNodeStartOffset, 0);
-			}
-			// if(moveCursor) {
-			// System.out.print("moving");
-			// }
-			// else {
-			// System.out.print("not moving");
-			// }
-			// System.out.println(" on NodeSelectionEvent: " +
-			// event.getSource());
-		}
 	}
 
 	/**
@@ -845,10 +688,12 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 					try {
 						getSlaveDocumentManager().setAutoExpandMode(visible, true);
 						fDocumentCommand.executeStructuredDocumentCommand(getDocument());
-					} finally {
+					}
+					finally {
 						getSlaveDocumentManager().setAutoExpandMode(visible, false);
 					}
-				} else {
+				}
+				else {
 					fDocumentCommand.executeStructuredDocumentCommand(getDocument());
 				}
 
@@ -870,12 +715,14 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 					}
 
 				}
-			} catch (BadLocationException x) {
+			}
+			catch (BadLocationException x) {
 
 				if (TRACE_ERRORS)
 					System.out.println("TextViewer.error.bad_location.verifyText"); //$NON-NLS-1$
 
-			} finally {
+			}
+			finally {
 
 				if (compoundChange && fUndoManager != null)
 					fUndoManager.endCompoundChange();
@@ -910,7 +757,8 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 						if ((modelLineRegion.getOffset() < region.getOffset()) || (modelEnd > regionEnd))
 							return -1;
 					}
-				} catch (BadLocationException e) {
+				}
+				catch (BadLocationException e) {
 					// returns -1 if modelLine is invalid
 					return -1;
 				}
@@ -963,46 +811,6 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 	 * e.start, e.end)) { e.doit = false; beep(); } }
 	 */
 
-	/**
-	 * @param selectedNodes
-	 * @return whether the IndexedNodes within the list should form a
-	 *         selectionrange
-	 */
-	private boolean nothingToSelect(List selectedNodes) {
-		if (selectedNodes == null || selectedNodes.isEmpty() || selectedNodes.get(0) == null) // empty
-			// selections
-			return true;
-		if (getDocument() == null) // viewer shutdown
-			return true;
-		// if the range would be the entire document's length, there's nothing
-		// to show
-		Object o = selectedNodes.get(0);
-		if (o instanceof IndexedRegion) {
-			IndexedRegion firstIndexedNode = (IndexedRegion) o;
-			return firstIndexedNode.getEndOffset() - firstIndexedNode.getStartOffset() >= getDocument().getLength();
-		}
-		return true;
-	}
-
-	/**
-	 * Notify the ViewerSelectionManager when text is selected
-	 * programmatically, for example, by double-click processing or an editor
-	 * action like Edit->SelectAll
-	 */
-	protected void notifyViewerSelectionManager(int offset, int length) {
-		if (fViewerSelectionManager != null) {
-			Event event = new Event();
-			event.widget = getTextWidget();
-			// sometimes null while closing
-			if (event.widget != null) {
-				SelectionEvent selectionEvent = new SelectionEvent(event);
-				selectionEvent.x = offset;
-				selectionEvent.y = offset + length;
-				fViewerSelectionManager.widgetSelected(selectionEvent);
-			}
-		}
-	}
-
 	private void redo() {
 		ignoreAutoEditStrategies(true);
 		fUndoManager.redo();
@@ -1045,7 +853,8 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 			}
 			// CaretEvent is not sent to ViewerSelectionManager after Save As.
 			// Need to notify ViewerSelectionManager here.
-			notifyViewerSelectionManager(getSelectedRange().x, getSelectedRange().y);
+			// notifyViewerSelectionManager(getSelectedRange().x,
+			// getSelectedRange().y);
 		}
 	}
 
@@ -1069,28 +878,6 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		}
 	}
 
-	public void setViewerSelectionManager(ViewerSelectionManager viewerSelectionManager) {
-		// disconnect from old one
-		if (fViewerSelectionManager != null) {
-			fViewerSelectionManager.removeNodeDoubleClickListener(fSelectionListener);
-			fViewerSelectionManager.removeNodeSelectionListener(fSelectionListener);
-			fViewerSelectionManager.release();
-			// No need to removeSelectionChangedListener here. Done when
-			// editor
-			// calls "new ViewerSelectionManagerImpl(ITextViewer)".
-			// removeSelectionChangedListener(fViewerSelectionManager);
-		}
-		fViewerSelectionManager = viewerSelectionManager;
-		// connect to new one
-		if (fViewerSelectionManager != null) {
-			fViewerSelectionManager.addNodeDoubleClickListener(fSelectionListener);
-			fViewerSelectionManager.addNodeSelectionListener(fSelectionListener);
-			// No need to addSelectionChangedListener here. Done when editor
-			// calls "new ViewerSelectionManagerImpl(ITextViewer)".
-			// addSelectionChangedListener(fViewerSelectionManager);
-		}
-	}
-
 	/**
 	 * Uninstalls anything that was installed by configure
 	 */
@@ -1102,13 +889,13 @@ public class StructuredTextViewer extends ProjectionViewer implements IDocumentS
 		if (fCorrectionAssistant != null) {
 			fCorrectionAssistant.uninstall();
 		}
-		
+
 		if (fAnnotationHover instanceof StructuredTextAnnotationHover) {
-			((StructuredTextAnnotationHover)fAnnotationHover).release();
+			((StructuredTextAnnotationHover) fAnnotationHover).release();
 		}
 
 		if (fOverviewRulerAnnotationHover instanceof StructuredTextAnnotationHover) {
-			((StructuredTextAnnotationHover)fOverviewRulerAnnotationHover).release();
+			((StructuredTextAnnotationHover) fOverviewRulerAnnotationHover).release();
 		}
 
 		// doesn't seem to be handled elsewhere, so we'll be sure error

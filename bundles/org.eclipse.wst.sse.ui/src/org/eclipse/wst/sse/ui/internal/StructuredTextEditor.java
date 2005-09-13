@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Timer;
@@ -32,6 +34,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.ui.actions.IToggleBreakpointsTarget;
 import org.eclipse.emf.common.command.Command;
@@ -51,11 +54,14 @@ import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ISelectionValidator;
 import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextOperationTarget;
+import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.ITextViewerExtension;
 import org.eclipse.jface.text.ITextViewerExtension2;
+import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.source.ICharacterPairMatcher;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
@@ -63,7 +69,17 @@ import org.eclipse.jface.text.source.LineChangeHover;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 import org.eclipse.jface.text.source.projection.ProjectionSupport;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
+import org.eclipse.jface.util.ListenerList;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.jface.util.SafeRunnable;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IPostSelectionProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -106,7 +122,7 @@ import org.eclipse.ui.texteditor.DefaultRangeIndicator;
 import org.eclipse.ui.texteditor.IAbstractTextEditorHelpContextIds;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.IDocumentProviderExtension;
-import org.eclipse.ui.texteditor.IElementStateListener;
+import org.eclipse.ui.texteditor.IDocumentProviderExtension4;
 import org.eclipse.ui.texteditor.IStatusField;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.ui.texteditor.ITextEditorActionConstants;
@@ -121,14 +137,16 @@ import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.internal.provisional.IModelStateListener;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
+import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.text.IExecutionDelegatable;
 import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.core.internal.util.StringUtils;
 import org.eclipse.wst.sse.ui.internal.actions.ActionDefinitionIds;
 import org.eclipse.wst.sse.ui.internal.actions.StructuredTextEditorActionConstants;
-import org.eclipse.wst.sse.ui.internal.contentoutline.StructuredTextEditorContentOutlinePage;
+import org.eclipse.wst.sse.ui.internal.contentoutline.ConfigurableContentOutlinePage;
 import org.eclipse.wst.sse.ui.internal.debug.BreakpointRulerAction;
 import org.eclipse.wst.sse.ui.internal.debug.EditBreakpointAction;
 import org.eclipse.wst.sse.ui.internal.debug.ManageBreakpointAction;
@@ -161,7 +179,6 @@ import org.eclipse.wst.sse.ui.internal.text.DocumentRegionEdgeMatcher;
 import org.eclipse.wst.sse.ui.internal.util.Assert;
 
 public class StructuredTextEditor extends TextEditor {
-
 	class InternalDocumentListener implements IDocumentListener {
 		// This is for the IDocumentListener interface
 		public void documentAboutToBeChanged(DocumentEvent event) {
@@ -221,30 +238,7 @@ public class StructuredTextEditor extends TextEditor {
 		}
 	}
 
-	class InternalElementStateListener implements IElementStateListener {
-
-		public void elementContentAboutToBeReplaced(Object element) {
-			// nothing to do
-		}
-
-		public void elementContentReplaced(Object element) {
-			// nothing to do
-		}
-
-		public void elementDeleted(Object element) {
-			// nothing to do
-		}
-
-		public void elementDirtyStateChanged(Object element, boolean isDirty) {
-			// nothing to do
-		}
-
-		public void elementMoved(Object originalElement, Object movedElement) {
-			// nothing to do
-		}
-	}
-
-	class InternalModelStateListener implements IModelStateListener {
+	private class InternalModelStateListener implements IModelStateListener {
 		public void modelAboutToBeChanged(IStructuredModel model) {
 			if (getTextViewer() != null) {
 				// getTextViewer().setRedraw(false);
@@ -394,7 +388,97 @@ public class StructuredTextEditor extends TextEditor {
 		}
 	}
 
-	class ShowInTargetListAdapter implements IShowInTargetList {
+	/**
+	 * Listens to double-click and selection from the outline page
+	 */
+	private class OutlinePageListener implements IDoubleClickListener, ISelectionChangedListener {
+		public void doubleClick(DoubleClickEvent event) {
+			if (event.getSelection().isEmpty())
+				return;
+
+			int start = -1;
+			int length = 0;
+			if (event.getSelection() instanceof IStructuredSelection) {
+				ISelection currentSelection = getSelectionProvider().getSelection();
+				if (currentSelection instanceof IStructuredSelection) {
+					Object current = ((IStructuredSelection) currentSelection).toArray();
+					Object newSelection = ((IStructuredSelection) event.getSelection()).toArray();
+					if (!current.equals(newSelection)) {
+						IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+						Object o = selection.getFirstElement();
+						Object o2 = null;
+						if (selection.size() > 1) {
+							o2 = selection.toArray()[selection.size() - 1];
+						}
+						else {
+							o2 = o;
+						}
+						if (o instanceof IndexedRegion) {
+							start = ((IndexedRegion) o).getStartOffset();
+							length = ((IndexedRegion) o2).getEndOffset() - start;
+						}
+						else if (o instanceof ITextRegion) {
+							start = ((ITextRegion) o).getStart();
+							length = ((ITextRegion) o2).getEnd() - start;
+						}
+					}
+				}
+			}
+			else if (event.getSelection() instanceof ITextSelection) {
+				start = ((ITextSelection) event.getSelection()).getOffset();
+				length = ((ITextSelection) event.getSelection()).getLength();
+			}
+			if (start > -1) {
+				getSourceViewer().setRangeIndication(start, length, false);
+				selectAndReveal(start, length);
+			}
+		}
+
+		public void selectionChanged(SelectionChangedEvent event) {
+			/*
+			 * Do not allow selection from other parts to affect selection in
+			 * the text widget if it has focus, or if we're still firing a
+			 * change of selection. Selection events "bouncing" off of other
+			 * parts are all that we can receive if we have focus (since we
+			 * forwarded our selection to the service just a moment ago), and
+			 * only the user should affect selection if we have focus.
+			 */
+
+			/* The isFiringSelection check only works if a selection listener */
+			if (event.getSelection().isEmpty() || fStructuredSelectionProvider.isFiringSelection())
+				return;
+
+			if (getSourceViewer() != null && getSourceViewer().getTextWidget() != null && !getSourceViewer().getTextWidget().isDisposed() && !getSourceViewer().getTextWidget().isFocusControl()) {
+				int start = -1;
+				if (event.getSelection() instanceof IStructuredSelection) {
+					ISelection current = getSelectionProvider().getSelection();
+					if (current instanceof IStructuredSelection) {
+						Object[] currentSelection = ((IStructuredSelection) current).toArray();
+						Object[] newSelection = ((IStructuredSelection) event.getSelection()).toArray();
+						if (!Arrays.equals(currentSelection, newSelection)) {
+							IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+							Object o = selection.getFirstElement();
+							if (o instanceof IndexedRegion) {
+								start = ((IndexedRegion) o).getStartOffset();
+							}
+							else if (o instanceof ITextRegion) {
+								start = ((ITextRegion) o).getStart();
+							}
+						}
+					}
+				}
+				else if (event.getSelection() instanceof ITextSelection) {
+					start = ((ITextSelection) event.getSelection()).getOffset();
+				}
+				if (start > -1) {
+					updateRangeIndication(event.getSelection());
+					selectAndReveal(start, 0);
+				}
+			}
+		}
+	}
+
+	private class ShowInTargetListAdapter implements IShowInTargetList {
 		/**
 		 * Array of ID Strings that define the default show in targets for
 		 * this editor.
@@ -408,8 +492,222 @@ public class StructuredTextEditor extends TextEditor {
 		}
 	}
 
-	class TimeOutExpired extends TimerTask {
+	/**
+	 * A post selection provider that wraps the provider implemented in
+	 * AbstractTextEditor to provide a StructuredTextSelection to post
+	 * selection listeners. Listens to selection changes from the source
+	 * viewer.
+	 */
+	private class StructuredSelectionProvider implements IPostSelectionProvider, ISelectionValidator {
+		/**
+		 * A "hybrid" text and structured selection class. Converts the source
+		 * viewer text selection to a generic "getIndexedRegion"-derived
+		 * structured selection, allowing selection changed listeners to
+		 * possibly not need to reference the model directly.
+		 */
+		private class StructuredTextSelection extends TextSelection implements IStructuredSelection {
+			private Object[] selectedStructures = null;
 
+			public StructuredTextSelection(ITextSelection selection) {
+				super(getSourceViewer().getDocument(), selection.getOffset(), selection.getLength());
+				selectedStructures = getSelectedObjects(selection);
+			}
+
+			public StructuredTextSelection(ITextSelection selection, Object[] selectedObjects) {
+				super(getSourceViewer().getDocument(), selection.getOffset(), selection.getLength());
+				selectedStructures = selectedObjects;
+			}
+
+			public Object getFirstElement() {
+				return selectedStructures.length > 0 ? selectedStructures[0] : null;
+			}
+
+			private Object[] getSelectedObjects(ITextSelection selection) {
+				IStructuredModel model = getInternalModel();
+				if (model != null) {
+					IndexedRegion region = model.getIndexedRegion(selection.getOffset());
+					int end = selection.getOffset() + selection.getLength();
+					if (region != null && end <= region.getEndOffset()) {
+						// single selection
+						selectedStructures = new Object[1];
+						selectedStructures[0] = region;
+					}
+					else {
+						// multiple selection
+						int maxLength = getSourceViewer().getDocument().getLength();
+						List structures = new ArrayList(2);
+						while (region != null && region.getEndOffset() <= end && region.getEndOffset() < maxLength) {
+							structures.add(region);
+							region = model.getIndexedRegion(region.getEndOffset() + 1);
+						}
+						selectedStructures = structures.toArray();
+					}
+				}
+				else {
+					selectedStructures = new Object[0];
+				}
+				return selectedStructures;
+			}
+
+			public boolean isEmpty() {
+				return super.isEmpty() && selectedStructures.length > 0;
+			}
+
+			public Iterator iterator() {
+				return toList().iterator();
+			}
+
+			public int size() {
+				return selectedStructures.length;
+			}
+
+			public Object[] toArray() {
+				return selectedStructures;
+			}
+
+			public List toList() {
+				return Arrays.asList(selectedStructures);
+			}
+
+			public String toString() {
+				return getOffset() + ":" + getLength() + "@" + selectedStructures;
+			}
+		}
+
+		ISelectionProvider fParentProvider = null;
+		private boolean isFiringSelection = false;
+		private ListenerList listeners = new ListenerList();
+		private ListenerList postListeners = new ListenerList();
+
+		StructuredSelectionProvider(ISelectionProvider parentProvider) {
+			fParentProvider = parentProvider;
+			fParentProvider.addSelectionChangedListener(new ISelectionChangedListener() {
+				public void selectionChanged(SelectionChangedEvent event) {
+					handleSelectionChanged(event);
+				}
+			});
+			if (fParentProvider instanceof IPostSelectionProvider) {
+				((IPostSelectionProvider) fParentProvider).addPostSelectionChangedListener(new ISelectionChangedListener() {
+					public void selectionChanged(SelectionChangedEvent event) {
+						handlePostSelectionChanged(event);
+					}
+				});
+			}
+		}
+
+		public void addPostSelectionChangedListener(ISelectionChangedListener listener) {
+			postListeners.add(listener);
+		}
+
+		public void addSelectionChangedListener(ISelectionChangedListener listener) {
+			listeners.add(listener);
+		}
+
+		private void fireSelectionChanged(final SelectionChangedEvent event, ListenerList listenerList) {
+			Object[] listeners = listenerList.getListeners();
+			isFiringSelection = true;
+			for (int i = 0; i < listeners.length; ++i) {
+				final ISelectionChangedListener l = (ISelectionChangedListener) listeners[i];
+				Platform.run(new SafeRunnable() {
+					public void run() {
+						l.selectionChanged(event);
+					}
+				});
+			}
+			isFiringSelection = false;
+		}
+
+		private ISelectionProvider getParentProvider() {
+			return fParentProvider;
+		}
+
+		public ISelection getSelection() {
+			/*
+			 * When a client explicitly asks for selection, provide the hybrid
+			 * result.
+			 */
+			ISelection selection = getParentProvider().getSelection();
+			if (!(selection instanceof IStructuredSelection) && selection instanceof ITextSelection) {
+				selection = new StructuredTextSelection((ITextSelection) selection);
+			}
+			return selection;
+		}
+
+		void handlePostSelectionChanged(SelectionChangedEvent event) {
+			SelectionChangedEvent structuredEvent = updateEvent(event);
+			// only update the range indicator on post selection
+			updateRangeIndication(structuredEvent.getSelection());
+			fireSelectionChanged(structuredEvent, postListeners);
+		}
+
+		void handleSelectionChanged(SelectionChangedEvent event) {
+			SelectionChangedEvent structuredEvent = updateEvent(event);
+			fireSelectionChanged(structuredEvent, listeners);
+		}
+
+		boolean isFiringSelection() {
+			return isFiringSelection;
+		}
+
+		public boolean isValid(ISelection selection) {
+			if (getParentProvider() instanceof ISelectionValidator) {
+				return ((ISelectionValidator) getParentProvider()).isValid(selection);
+			}
+			return true;
+		}
+
+		public void removePostSelectionChangedListener(ISelectionChangedListener listener) {
+			postListeners.remove(listener);
+		}
+
+		public void removeSelectionChangedListener(ISelectionChangedListener listener) {
+			listeners.remove(listener);
+		}
+
+		public void setSelection(ISelection selection) {
+			if (isFiringSelection()) {
+				return;
+			}
+			ISelection textSelection = updateSelection(selection);
+			getParentProvider().setSelection(textSelection);
+			updateRangeIndication(textSelection);
+		}
+
+		/**
+		 * Create a corresponding event that contains a
+		 * StructuredTextselection
+		 * 
+		 * @param event
+		 * @return
+		 */
+		private SelectionChangedEvent updateEvent(SelectionChangedEvent event) {
+			ISelection selection = event.getSelection();
+			if (selection instanceof ITextSelection && !(selection instanceof IStructuredSelection)) {
+				selection = new StructuredTextSelection((ITextSelection) event.getSelection());
+			}
+			SelectionChangedEvent newEvent = new SelectionChangedEvent(event.getSelectionProvider(), selection);
+			return newEvent;
+		}
+
+		/**
+		 * Create a corresponding StructuredTextselection
+		 * 
+		 * @param selection
+		 * @return
+		 */
+		private ISelection updateSelection(ISelection selection) {
+			ISelection updated = selection;
+			if (selection instanceof IStructuredSelection && !(selection instanceof ITextSelection) && !selection.isEmpty()) {
+				Object[] selectedObjects = ((IStructuredSelection) selection).toArray();
+				int start = ((IndexedRegion) selectedObjects[0]).getStartOffset();
+
+				updated = new StructuredTextSelection(new TextSelection(getSourceViewer().getDocument(), start, 0), selectedObjects);
+			}
+			return updated;
+		};
+	}
+
+	class TimeOutExpired extends TimerTask {
 		public void run() {
 			getDisplay().syncExec(new Runnable() {
 				public void run() {
@@ -418,6 +716,7 @@ public class StructuredTextEditor extends TextEditor {
 				}
 			});
 		}
+
 	}
 
 	private class ConfigurationAndTarget {
@@ -439,22 +738,23 @@ public class StructuredTextEditor extends TextEditor {
 	}
 
 	protected final static char[] BRACKETS = {'{', '}', '(', ')', '[', ']'};
+
 	private static final long BUSY_STATE_DELAY = 1000;
 	protected static final String DOT = "."; //$NON-NLS-1$
 	private static final String EDITOR_CONTEXT_MENU_ID = "org.eclipse.wst.sse.ui.StructuredTextEditor.EditorContext"; //$NON-NLS-1$
 	private static final String EDITOR_CONTEXT_MENU_POSTFIX = ".source.EditorContext"; //$NON-NLS-1$
-	private static final String RULER_CONTEXT_MENU_ID = "org.eclipse.wst.sse.ui.StructuredTextEditor.RulerContext"; //$NON-NLS-1$
-	private static final String RULER_CONTEXT_MENU_POSTFIX = ".source.RulerContext"; //$NON-NLS-1$
 	/** Non-NLS strings */
 	private static final String EDITOR_KEYBINDING_SCOPE_ID = "org.eclipse.wst.sse.ui.structuredTextEditorScope"; //$NON-NLS-1$
-
 	public static final String GROUP_NAME_ADDITIONS = "additions"; //$NON-NLS-1$
 	public static final String GROUP_NAME_FORMAT = "Format"; //$NON-NLS-1$
 	public static final String GROUP_NAME_FORMAT_EXT = "Format.ext"; //$NON-NLS-1$
+
 	private static final String REDO_ACTION_DESC = SSEUIMessages.Redo___0___UI_; //$NON-NLS-1$ = "Redo: {0}."
 	private static final String REDO_ACTION_DESC_DEFAULT = SSEUIMessages.Redo_Text_Change__UI_; //$NON-NLS-1$ = "Redo Text Change."
 	private static final String REDO_ACTION_TEXT = SSEUIMessages._Redo__0___Ctrl_Y_UI_; //$NON-NLS-1$ = "&Redo {0} @Ctrl+Y"
 	private static final String REDO_ACTION_TEXT_DEFAULT = SSEUIMessages._Redo_Text_Change__Ctrl_Y_UI_; //$NON-NLS-1$ = "&Redo Text Change @Ctrl+Y"
+	private static final String RULER_CONTEXT_MENU_ID = "org.eclipse.wst.sse.ui.StructuredTextEditor.RulerContext"; //$NON-NLS-1$
+	private static final String RULER_CONTEXT_MENU_POSTFIX = ".source.RulerContext"; //$NON-NLS-1$
 	protected static final String SSE_MODEL_ID = "org.eclipse.wst.sse.core"; //$NON-NLS-1$
 	/**
 	 * Constant for representing an error status. This is considered a value
@@ -467,15 +767,15 @@ public class StructuredTextEditor extends TextEditor {
 	 */
 	static final protected IStatus STATUS_OK = new Status(IStatus.OK, SSEUIPlugin.ID, IStatus.OK, "OK", null); //$NON-NLS-1$
 	private final static String UNDERSCORE = "_"; //$NON-NLS-1$
-
 	/** Translatable strings */
 	private static final String UNDO_ACTION_DESC = SSEUIMessages.Undo___0___UI_; //$NON-NLS-1$ = "Undo: {0}."
+
 	private static final String UNDO_ACTION_DESC_DEFAULT = SSEUIMessages.Undo_Text_Change__UI_; //$NON-NLS-1$ = "Undo Text Change."
 	private static final String UNDO_ACTION_TEXT = SSEUIMessages._Undo__0___Ctrl_Z_UI_; //$NON-NLS-1$ = "&Undo {0} @Ctrl+Z"
 	private static final String UNDO_ACTION_TEXT_DEFAULT = SSEUIMessages._Undo_Text_Change__Ctrl_Z_UI_; //$NON-NLS-1$ = "&Undo Text Change @Ctrl+Z"
-
 	// development time/debug variables only
 	private int adapterRequests;
+
 	private long adapterTime;
 	private boolean fBackgroundJobEnded;
 	private boolean fBusyState;
@@ -488,38 +788,43 @@ public class StructuredTextEditor extends TextEditor {
 	private IEditorPart fEditorPart;
 	private IDocumentListener fInternalDocumentListener;
 	private InternalModelStateListener fInternalModelStateListener;
-
 	private MouseTracker fMouseTracker;
 	protected IContentOutlinePage fOutlinePage;
+
+	private OutlinePageListener fOutlinePageListener = null;
 	/** This editor's projection model updater */
 	private IStructuredTextFoldingProvider fProjectionModelUpdater;
 	/** This editor's projection support */
 	private ProjectionSupport fProjectionSupport;
 	protected IPropertySheetPage fPropertySheetPage;
 	private String fRememberTitle;
-	String[] fShowInTargetIds = new String[]{IPageLayout.ID_RES_NAV};
-	private IAction fShowPropertiesAction = null;
-	private IStructuredModel fStructuredModel;
-	/** The text context menu to be disposed. */
-	private Menu fTextContextMenu;
-	/** The text context menu manager to be disposed. */
-	private MenuManager fTextContextMenuManager;
 	/** The ruler context menu to be disposed. */
 	private Menu fRulerContextMenu;
 	/** The ruler context menu manager to be disposed. */
 	private MenuManager fRulerContextMenuManager;
+
+	String[] fShowInTargetIds = new String[]{IPageLayout.ID_RES_NAV};
+
+	private IAction fShowPropertiesAction = null;
+	private IStructuredModel fStructuredModel;
+	StructuredSelectionProvider fStructuredSelectionProvider = null;
+	/** The text context menu to be disposed. */
+	private Menu fTextContextMenu;
+	/** The text context menu manager to be disposed. */
+	private MenuManager fTextContextMenuManager;
 	private String fViewerConfigurationTargetId;
 
 	private boolean fUpdateMenuTextPending;
 	int hoverX = -1;
 	int hoverY = -1;
-	private InternalElementStateListener internalElementStateListener = new InternalElementStateListener();
+
 	private boolean shouldClose = false;
 	private long startPerfTime;
 	private boolean fisReleased;
 
-	public StructuredTextEditor() {
+	private ViewerSelectionManager fViewerSelectionManager;
 
+	public StructuredTextEditor() {
 		super();
 		initializeDocumentProvider(null);
 	}
@@ -597,11 +902,11 @@ public class StructuredTextEditor extends TextEditor {
 		}
 	}
 
-
-
 	protected void addExtendedRulerContextMenuActions(IMenuManager menu) {
 		// none at this level
 	}
+
+
 
 	/**
 	 * 
@@ -615,17 +920,6 @@ public class StructuredTextEditor extends TextEditor {
 			beginBusyStateInternal();
 		}
 	}
-
-	// private void addFindOccurrencesAction(String matchType, String
-	// matchText, IMenuManager menu) {
-	//
-	// AbstractFindOccurrencesAction action = new
-	// AbstractFindOccurrencesAction(getFileInEditor(), new
-	// SearchUIConfiguration(), (IStructuredDocument) getDocument(),
-	// matchType, matchText, getProgressMonitor());
-	// action.setText("Occurrences of \"" + matchText + "\" in File");
-	// menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT, action);
-	// }
 
 	/**
 	 * 
@@ -642,6 +936,17 @@ public class StructuredTextEditor extends TextEditor {
 		}
 		showBusy(true);
 	}
+
+	// private void addFindOccurrencesAction(String matchType, String
+	// matchText, IMenuManager menu) {
+	//
+	// AbstractFindOccurrencesAction action = new
+	// AbstractFindOccurrencesAction(getFileInEditor(), new
+	// SearchUIConfiguration(), (IStructuredDocument) getDocument(),
+	// matchType, matchText, getProgressMonitor());
+	// action.setText("Occurrences of \"" + matchText + "\" in File");
+	// menu.appendToGroup(ITextEditorActionConstants.GROUP_EDIT, action);
+	// }
 
 	/**
 	 * Instead of us closing directly, we have to close with our containing
@@ -717,13 +1022,12 @@ public class StructuredTextEditor extends TextEditor {
 	 * Compute and set double-click action for the source editor, depending on
 	 * the input.
 	 */
-	private void computeAndSetDoubleClickAction(IStructuredModel model) {
-		if (model == null)
-			return;
+	private void computeAndSetDoubleClickAction() {
 		// If we're editing a breakpoint-supported input, make double-clicking
 		// on the ruler toggle a breakpoint instead of toggling a bookmark.
-		String ext = BreakpointRulerAction.getFileExtension(getEditorInput());
-		if (BreakpointProviderBuilder.getInstance().isAvailable(model.getContentTypeIdentifier(), ext)) {
+		String contentTypeIdentifier = getInputContentIdentifier(getEditorInput());
+		String filenameExtension = BreakpointRulerAction.getFileExtension(getEditorInput());
+		if (BreakpointProviderBuilder.getInstance().isAvailable(contentTypeIdentifier, filenameExtension)) {
 			setAction(ITextEditorActionConstants.RULER_DOUBLE_CLICK, getAction(ActionDefinitionIds.TOGGLE_BREAKPOINTS));
 		}
 		else {
@@ -1116,11 +1420,6 @@ public class StructuredTextEditor extends TextEditor {
 			fRulerContextMenuManager.dispose();
 		}
 
-		// added this 2/19/2004 to match the 'add' in
-		// intializeDocumentProvider.
-		if (getDocumentProvider() != null)
-			getDocumentProvider().removeElementStateListener(internalElementStateListener);
-
 		// added this 2/20/2004 based on probe results --
 		// seems should be handled by setModel(null), but
 		// that's a more radical change.
@@ -1139,6 +1438,17 @@ public class StructuredTextEditor extends TextEditor {
 			doc.removeDocumentListener(getInternalDocumentListener());
 			if (doc instanceof IExecutionDelegatable) {
 				((IExecutionDelegatable) doc).setExecutionDelegate(null);
+			}
+		}
+
+		// some things in the configuration need to clean
+		// up after themselves
+		if (fOutlinePage != null) {
+			if (fOutlinePage instanceof ConfigurableContentOutlinePage && fOutlinePageListener != null) {
+				((ConfigurableContentOutlinePage) fOutlinePage).removeDoubleClickListener(fOutlinePageListener);
+			}
+			if (fOutlinePageListener != null) {
+				fOutlinePage.removeSelectionChangedListener(fOutlinePageListener);
 			}
 		}
 
@@ -1376,15 +1686,19 @@ public class StructuredTextEditor extends TextEditor {
 				ContentOutlineConfiguration cfg = createContentOutlineConfiguration();
 				if (cfg != null) {
 					if (cfg instanceof StructuredContentOutlineConfiguration) {
-						((StructuredContentOutlineConfiguration) cfg).setEditor(this);
+						((StructuredContentOutlineConfiguration) cfg).setEditor(getEditorPart());
 					}
-					StructuredTextEditorContentOutlinePage outlinePage = new StructuredTextEditorContentOutlinePage();
+					ConfigurableContentOutlinePage outlinePage = new ConfigurableContentOutlinePage();
 					outlinePage.setConfiguration(cfg);
-					outlinePage.setViewerSelectionManager(getViewerSelectionManager());
-					// note: model might be null at this point, but
-					// if so, once model is set in editor,
-					// update will be called and set it
-					outlinePage.setModel(getInternalModel());
+					outlinePage.setInput(getInternalModel());
+
+					if (fOutlinePageListener == null) {
+						fOutlinePageListener = new OutlinePageListener();
+					}
+
+					outlinePage.addSelectionChangedListener(fOutlinePageListener);
+					outlinePage.addDoubleClickListener(fOutlinePageListener);
+
 					fOutlinePage = outlinePage;
 				}
 			}
@@ -1396,22 +1710,14 @@ public class StructuredTextEditor extends TextEditor {
 				PropertySheetConfiguration cfg = createPropertySheetConfiguration();
 				if (cfg != null) {
 					if (cfg instanceof StructuredPropertySheetConfiguration) {
-						((StructuredPropertySheetConfiguration) cfg).setEditor(this);
+						((StructuredPropertySheetConfiguration) cfg).setEditor(getEditorPart());
 					}
 					ConfigurablePropertySheetPage propertySheetPage = new ConfigurablePropertySheetPage();
 					propertySheetPage.setConfiguration(cfg);
-					propertySheetPage.setViewerSelectionManager(getViewerSelectionManager());
-					// note: model might be null at this point, but
-					// if so, once model is set in editor,
-					// update will be called and set it
-					propertySheetPage.setModel(getInternalModel());
 					fPropertySheetPage = propertySheetPage;
 				}
 			}
 			result = fPropertySheetPage;
-		}
-		else if (ViewerSelectionManager.class.equals(required)) {
-			result = getViewerSelectionManager();
 		}
 		else if (IDocument.class.equals(required)) {
 			result = getDocumentProvider().getDocument(getEditorInput());
@@ -1426,17 +1732,8 @@ public class StructuredTextEditor extends TextEditor {
 			return new ShowInTargetListAdapter();
 		}
 		else {
-			// Document document = getDOMDocument();
-			// if (document != null && document instanceof INodeNotifier) {
-			// result = ((INodeNotifier) document).getAdapterFor(required);
-			// }
-			if (result == null) {
-				if (getInternalModel() != null) {
-					result = getInternalModel().getAdapter(required);
-				}
-				else {
-					result = super.getAdapter(required);
-				}
+			if (result == null && getInternalModel() != null) {
+				result = getInternalModel().getAdapter(required);
 			}
 			// others
 			if (result == null)
@@ -1455,11 +1752,11 @@ public class StructuredTextEditor extends TextEditor {
 		return result;
 	}
 
-
 	private String[] getConfigurationPoints() {
 		String contentTypeIdentifierID = null;
-		if (getInternalModel() != null)
+		if (getInternalModel() != null) {
 			contentTypeIdentifierID = getInternalModel().getContentTypeIdentifier();
+		}
 		return ConfigurationPointCalculator.getConfigurationPoints(this, contentTypeIdentifierID, ConfigurationPointCalculator.SOURCE, StructuredTextEditor.class);
 	}
 
@@ -1483,6 +1780,7 @@ public class StructuredTextEditor extends TextEditor {
 		return result;
 	}
 
+
 	Display getDisplay() {
 		return PlatformUI.getWorkbench().getDisplay();
 	}
@@ -1505,6 +1803,25 @@ public class StructuredTextEditor extends TextEditor {
 			result = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(model.getBaseLocation()));
 		}
 		return result;
+	}
+
+	private String getInputContentIdentifier(Object element) {
+		String id = null;
+		if (getInternalModel() != null) {
+			id = getInternalModel().getContentTypeIdentifier();
+		}
+		else if (getDocumentProvider() != null && getDocumentProvider() instanceof IDocumentProviderExtension4) {
+			IContentType type;
+			try {
+				type = ((IDocumentProviderExtension4) getDocumentProvider()).getContentType(element);
+				if (type != null) {
+					id = type.getId();
+				}
+			}
+			catch (CoreException e) {
+			}
+		}
+		return id;
 	}
 
 	private IDocumentListener getInternalDocumentListener() {
@@ -1588,6 +1905,19 @@ public class StructuredTextEditor extends TextEditor {
 		return SWT.LEFT_TO_RIGHT;
 	}
 
+	public ISelectionProvider getSelectionProvider() {
+		if (fStructuredSelectionProvider == null) {
+			ISelectionProvider parentProvider = super.getSelectionProvider();
+			if (parentProvider != null) {
+				fStructuredSelectionProvider = new StructuredSelectionProvider(parentProvider);
+			}
+		}
+		if (fStructuredSelectionProvider == null) {
+			return super.getSelectionProvider();
+		}
+		return fStructuredSelectionProvider;
+	}
+
 	private IStatusLineManager getStatusLineManager() {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
 		if (window == null)
@@ -1616,16 +1946,15 @@ public class StructuredTextEditor extends TextEditor {
 	}
 
 	/**
-	 * @deprecated
-	 * 
-	 * will be made protected or removed in M4
+	 * @deprecated - use normal selection with our ISelectionProvider
 	 * 
 	 * @return
 	 */
 	public ViewerSelectionManager getViewerSelectionManager() {
-		if (getTextViewer() != null)
-			return getTextViewer().getViewerSelectionManager();
-		return null;
+		if (fViewerSelectionManager == null) {
+			fViewerSelectionManager = new ViewerSelectionManagerImpl(getSourceViewer());
+		}
+		return fViewerSelectionManager;
 	}
 
 	protected void handleCursorPositionChanged() {
@@ -1683,13 +2012,9 @@ public class StructuredTextEditor extends TextEditor {
 	}
 
 	public void initializeDocumentProvider(IDocumentProvider documentProvider) {
-		if (getDocumentProvider() != null)
-			getDocumentProvider().removeElementStateListener(internalElementStateListener);
 		if (documentProvider != null) {
 			setDocumentProvider(documentProvider);
 		}
-		if (documentProvider != null)
-			documentProvider.addElementStateListener(internalElementStateListener);
 	}
 
 	protected void initializeDrop(ITextViewer textViewer) {
@@ -1738,138 +2063,6 @@ public class StructuredTextEditor extends TextEditor {
 		}
 	}
 
-	/**
-	 * Updates the editor context menu by creating a new context menu with the
-	 * given menu id
-	 * 
-	 * @param contextMenuId
-	 *            Cannot be null
-	 */
-	private void updateEditorContextMenuId(String contextMenuId) {
-		// update editor context menu id if updating to a new id or if context
-		// menu is not already set up
-		if (!contextMenuId.equals(getEditorContextMenuId()) || (fTextContextMenu == null)) {
-			setEditorContextMenuId(contextMenuId);
-
-			if (getSourceViewer() != null) {
-				StyledText styledText = getSourceViewer().getTextWidget();
-				if (styledText != null) {
-					// dispose of previous context menu
-					if (fTextContextMenu != null) {
-						fTextContextMenu.dispose();
-					}
-					if (fTextContextMenuManager != null) {
-						fTextContextMenuManager.removeMenuListener(getContextMenuListener());
-						fTextContextMenuManager.removeAll();
-						fTextContextMenuManager.dispose();
-					}
-
-					fTextContextMenuManager = new MenuManager(getEditorContextMenuId(), getEditorContextMenuId());
-					fTextContextMenuManager.setRemoveAllWhenShown(true);
-					fTextContextMenuManager.addMenuListener(getContextMenuListener());
-
-					fTextContextMenu = fTextContextMenuManager.createContextMenu(styledText);
-					styledText.setMenu(fTextContextMenu);
-
-					getSite().registerContextMenu(getEditorContextMenuId(), fTextContextMenuManager, getSelectionProvider());
-
-					// also register this menu for source page part and
-					// structured text editor ids
-					String partId = getSite().getId();
-					if (partId != null) {
-						getSite().registerContextMenu(partId + EDITOR_CONTEXT_MENU_POSTFIX, fTextContextMenuManager, getSelectionProvider());
-					}
-					getSite().registerContextMenu(EDITOR_CONTEXT_MENU_ID, fTextContextMenuManager, getSelectionProvider());
-				}
-			}
-		}
-	}
-
-	/**
-	 * Updates editor context menu, vertical ruler menu, help context id for
-	 * new content type
-	 * 
-	 * @param contentType
-	 */
-	private void updateEditorControlsForContentType(String contentType) {
-		if (contentType == null) {
-			updateEditorContextMenuId(EDITOR_CONTEXT_MENU_ID);
-			updateRulerContextMenuId(RULER_CONTEXT_MENU_ID);
-			updateHelpContextId(ITextEditorHelpContextIds.TEXT_EDITOR);
-		}
-		else {
-			updateEditorContextMenuId(contentType + EDITOR_CONTEXT_MENU_POSTFIX);
-			updateRulerContextMenuId(contentType + RULER_CONTEXT_MENU_POSTFIX);
-			updateHelpContextId(contentType + "_source_HelpId"); //$NON-NLS-1$
-		}
-	}
-
-	/**
-	 * Updates the help context of the editor with the given help context id
-	 * 
-	 * @param helpContextId
-	 *            Cannot be null
-	 */
-	private void updateHelpContextId(String helpContextId) {
-		if (!helpContextId.equals(getHelpContextId())) {
-			setHelpContextId(helpContextId);
-
-			if (getSourceViewer() != null) {
-				StyledText styledText = getSourceViewer().getTextWidget();
-				if (styledText != null) {
-					IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
-					helpSystem.setHelp(styledText, getHelpContextId());
-				}
-			}
-		}
-	}
-
-	/**
-	 * Updates the editor vertical ruler menu by creating a new vertical ruler
-	 * context menu with the given menu id
-	 * 
-	 * @param rulerMenuId
-	 *            Cannot be null
-	 */
-	private void updateRulerContextMenuId(String rulerMenuId) {
-		// update ruler context menu id if updating to a new id or if context
-		// menu is not already set up
-		if (!rulerMenuId.equals(getRulerContextMenuId()) || (fRulerContextMenu == null)) {
-			setRulerContextMenuId(rulerMenuId);
-
-			if (getVerticalRuler() != null) {
-				// dispose of previous ruler context menu
-				if (fRulerContextMenu != null) {
-					fRulerContextMenu.dispose();
-				}
-				if (fRulerContextMenuManager != null) {
-					fRulerContextMenuManager.removeMenuListener(getContextMenuListener());
-					fRulerContextMenuManager.removeAll();
-					fRulerContextMenuManager.dispose();
-				}
-
-				fRulerContextMenuManager = new MenuManager(getRulerContextMenuId(), getRulerContextMenuId());
-				fRulerContextMenuManager.setRemoveAllWhenShown(true);
-				fRulerContextMenuManager.addMenuListener(getContextMenuListener());
-
-				Control rulerControl = getVerticalRuler().getControl();
-				fRulerContextMenu = fRulerContextMenuManager.createContextMenu(rulerControl);
-				rulerControl.setMenu(fRulerContextMenu);
-				rulerControl.addMouseListener(getRulerMouseListener());
-
-				getSite().registerContextMenu(getRulerContextMenuId(), fRulerContextMenuManager, getSelectionProvider());
-
-				// also register this menu for source page part and structured
-				// text editor ids
-				String partId = getSite().getId();
-				if (partId != null) {
-					getSite().registerContextMenu(partId + RULER_CONTEXT_MENU_POSTFIX, fRulerContextMenuManager, getSelectionProvider());
-				}
-				getSite().registerContextMenu(RULER_CONTEXT_MENU_ID, fRulerContextMenuManager, getSelectionProvider());
-			}
-		}
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -1884,10 +2077,7 @@ public class StructuredTextEditor extends TextEditor {
 	 * viewer-dependent.
 	 */
 	private void initializeSourceViewer() {
-		if (getViewerSelectionManager() != null)
-			getViewerSelectionManager().setModel(getInternalModel());
-
-		computeAndSetDoubleClickAction(getInternalModel());
+		computeAndSetDoubleClickAction();
 
 		IAction contentAssistAction = getAction(StructuredTextEditorActionConstants.ACTION_NAME_CONTENTASSIST_PROPOSALS);
 		if (contentAssistAction instanceof IUpdate) {
@@ -1950,7 +2140,6 @@ public class StructuredTextEditor extends TextEditor {
 		if (isFoldingEnabled())
 			projectionViewer.doOperation(ProjectionViewer.TOGGLE);
 	}
-
 
 	/**
 	 * Return whether document folding should be enabled according to the
@@ -2036,6 +2225,7 @@ public class StructuredTextEditor extends TextEditor {
 		super.rememberSelection();
 	}
 
+
 	/**
 	 * both starts and resets the busy state timer
 	 */
@@ -2091,17 +2281,6 @@ public class StructuredTextEditor extends TextEditor {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.texteditor.AbstractTextEditor#selectAndReveal(int,
-	 *      int, int, int)
-	 */
-	protected void selectAndReveal(int selectionStart, int selectionLength, int revealStart, int revealLength) {
-		super.selectAndReveal(selectionStart, selectionLength, revealStart, revealLength);
-		getTextViewer().notifyViewerSelectionManager(selectionStart, selectionLength);
-	}
-
 	/**
 	 * Ensure that the correct IDocumentProvider is used. For direct models, a
 	 * special provider is used. For StorageEditorInputs, use a custom
@@ -2125,15 +2304,6 @@ public class StructuredTextEditor extends TextEditor {
 
 	public void setEditorPart(IEditorPart editorPart) {
 		fEditorPart = editorPart;
-	}
-
-	/**
-	 * @deprecated - use setInput as if we were a text editor - may be REMOVED
-	 *             AT ANY TIME
-	 * 
-	 */
-	public void setModel(IFileEditorInput input) {
-		setInput(input);
 	}
 
 	/**
@@ -2194,12 +2364,11 @@ public class StructuredTextEditor extends TextEditor {
 	}
 
 	private void startBusyTimer() {
-		// TODO: we need a resetable timer, so not so
-		// many created
+		// TODO: we need a resettable timer, so not so
+		// many are created
 		fBusyTimer = new Timer(true);
 		fBusyTimer.schedule(new TimeOutExpired(), BUSY_STATE_DELAY);
 	}
-
 
 	private void statusError(IStatus status) {
 		statusError(status.getMessage());
@@ -2219,14 +2388,13 @@ public class StructuredTextEditor extends TextEditor {
 	 * swapped)
 	 */
 	public void update() {
-		if (fOutlinePage != null && fOutlinePage instanceof StructuredTextEditorContentOutlinePage) {
+		if (fOutlinePage != null && fOutlinePage instanceof ConfigurableContentOutlinePage) {
 			ContentOutlineConfiguration cfg = createContentOutlineConfiguration();
 			if (cfg instanceof StructuredContentOutlineConfiguration) {
 				((StructuredContentOutlineConfiguration) cfg).setEditor(this);
 			}
-			((StructuredTextEditorContentOutlinePage) fOutlinePage).setConfiguration(cfg);
-			((StructuredTextEditorContentOutlinePage) fOutlinePage).setModel(getInternalModel());
-			((StructuredTextEditorContentOutlinePage) fOutlinePage).setViewerSelectionManager(getViewerSelectionManager());
+			((ConfigurableContentOutlinePage) fOutlinePage).setConfiguration(cfg);
+			((ConfigurableContentOutlinePage) fOutlinePage).setInput(getInternalModel());
 		}
 		if (fPropertySheetPage != null && fPropertySheetPage instanceof ConfigurablePropertySheetPage) {
 			PropertySheetConfiguration cfg = createPropertySheetConfiguration();
@@ -2234,20 +2402,15 @@ public class StructuredTextEditor extends TextEditor {
 				((StructuredPropertySheetConfiguration) cfg).setEditor(this);
 			}
 			((ConfigurablePropertySheetPage) fPropertySheetPage).setConfiguration(cfg);
-			((ConfigurablePropertySheetPage) fPropertySheetPage).setModel(getInternalModel());
-			((ConfigurablePropertySheetPage) fPropertySheetPage).setViewerSelectionManager(getViewerSelectionManager());
 		}
-		if (getViewerSelectionManager() != null)
-			getViewerSelectionManager().setModel(getInternalModel());
 		disposeModelDependentFields();
 
 		fShowInTargetIds = createShowInTargetIds();
 
-
 		updateSourceViewerConfiguration();
 
 		createModelDependentFields();
-		computeAndSetDoubleClickAction(getInternalModel());
+		computeAndSetDoubleClickAction();
 	}
 
 	/**
@@ -2265,6 +2428,73 @@ public class StructuredTextEditor extends TextEditor {
 		// They needed to be updated.
 		if (!fEditorDisposed)
 			updateMenuText();
+	}
+
+
+	/**
+	 * Updates the editor context menu by creating a new context menu with the
+	 * given menu id
+	 * 
+	 * @param contextMenuId
+	 *            Cannot be null
+	 */
+	private void updateEditorContextMenuId(String contextMenuId) {
+		// update editor context menu id if updating to a new id or if context
+		// menu is not already set up
+		if (!contextMenuId.equals(getEditorContextMenuId()) || (fTextContextMenu == null)) {
+			setEditorContextMenuId(contextMenuId);
+
+			if (getSourceViewer() != null) {
+				StyledText styledText = getSourceViewer().getTextWidget();
+				if (styledText != null) {
+					// dispose of previous context menu
+					if (fTextContextMenu != null) {
+						fTextContextMenu.dispose();
+					}
+					if (fTextContextMenuManager != null) {
+						fTextContextMenuManager.removeMenuListener(getContextMenuListener());
+						fTextContextMenuManager.removeAll();
+						fTextContextMenuManager.dispose();
+					}
+
+					fTextContextMenuManager = new MenuManager(getEditorContextMenuId(), getEditorContextMenuId());
+					fTextContextMenuManager.setRemoveAllWhenShown(true);
+					fTextContextMenuManager.addMenuListener(getContextMenuListener());
+
+					fTextContextMenu = fTextContextMenuManager.createContextMenu(styledText);
+					styledText.setMenu(fTextContextMenu);
+
+					getSite().registerContextMenu(getEditorContextMenuId(), fTextContextMenuManager, getSelectionProvider());
+
+					// also register this menu for source page part and
+					// structured text editor ids
+					String partId = getSite().getId();
+					if (partId != null) {
+						getSite().registerContextMenu(partId + EDITOR_CONTEXT_MENU_POSTFIX, fTextContextMenuManager, getSelectionProvider());
+					}
+					getSite().registerContextMenu(EDITOR_CONTEXT_MENU_ID, fTextContextMenuManager, getSelectionProvider());
+				}
+			}
+		}
+	}
+
+	/**
+	 * Updates editor context menu, vertical ruler menu, help context id for
+	 * new content type
+	 * 
+	 * @param contentType
+	 */
+	private void updateEditorControlsForContentType(String contentType) {
+		if (contentType == null) {
+			updateEditorContextMenuId(EDITOR_CONTEXT_MENU_ID);
+			updateRulerContextMenuId(RULER_CONTEXT_MENU_ID);
+			updateHelpContextId(ITextEditorHelpContextIds.TEXT_EDITOR);
+		}
+		else {
+			updateEditorContextMenuId(contentType + EDITOR_CONTEXT_MENU_POSTFIX);
+			updateRulerContextMenuId(contentType + RULER_CONTEXT_MENU_POSTFIX);
+			updateHelpContextId(contentType + "_source_HelpId"); //$NON-NLS-1$
+		}
 	}
 
 	private void updateEncodingMemento() {
@@ -2290,6 +2520,26 @@ public class StructuredTextEditor extends TextEditor {
 			// *document*
 			if (!failed) {
 				doc.setEncodingMemento(memento);
+			}
+		}
+	}
+
+	/**
+	 * Updates the help context of the editor with the given help context id
+	 * 
+	 * @param helpContextId
+	 *            Cannot be null
+	 */
+	private void updateHelpContextId(String helpContextId) {
+		if (!helpContextId.equals(getHelpContextId())) {
+			setHelpContextId(helpContextId);
+
+			if (getSourceViewer() != null) {
+				StyledText styledText = getSourceViewer().getTextWidget();
+				if (styledText != null) {
+					IWorkbenchHelpSystem helpSystem = PlatformUI.getWorkbench().getHelpSystem();
+					helpSystem.setHelp(styledText, getHelpContextId());
+				}
 			}
 		}
 	}
@@ -2328,7 +2578,6 @@ public class StructuredTextEditor extends TextEditor {
 				sourceViewer.setTextHover(configuration.getTextHover(sourceViewer, t), t);
 		}
 	}
-
 
 	protected void updateMenuText() {
 		if (fStructuredModel != null && !fStructuredModel.isModelStateChanging() && getTextViewer().getTextWidget() != null) {
@@ -2402,6 +2651,65 @@ public class StructuredTextEditor extends TextEditor {
 				else if (getEditorPart() != null && getEditorPart().getEditorSite().getActionBars() != null) {
 					getEditorPart().getEditorSite().getActionBars().updateActionBars();
 				}
+			}
+		}
+	}
+
+	void updateRangeIndication(ISelection selection) {
+		if (selection instanceof IStructuredSelection && !((IStructuredSelection) selection).isEmpty()) {
+			Object[] objects = ((IStructuredSelection) selection).toArray();
+			int start = ((IndexedRegion) objects[0]).getStartOffset();
+			int end = ((IndexedRegion) objects[objects.length - 1]).getEndOffset();
+			getSourceViewer().setRangeIndication(start, end - start, false);
+		}
+		else {
+			getSourceViewer().removeRangeIndication();
+		}
+	}
+
+
+	/**
+	 * Updates the editor vertical ruler menu by creating a new vertical ruler
+	 * context menu with the given menu id
+	 * 
+	 * @param rulerMenuId
+	 *            Cannot be null
+	 */
+	private void updateRulerContextMenuId(String rulerMenuId) {
+		// update ruler context menu id if updating to a new id or if context
+		// menu is not already set up
+		if (!rulerMenuId.equals(getRulerContextMenuId()) || (fRulerContextMenu == null)) {
+			setRulerContextMenuId(rulerMenuId);
+
+			if (getVerticalRuler() != null) {
+				// dispose of previous ruler context menu
+				if (fRulerContextMenu != null) {
+					fRulerContextMenu.dispose();
+				}
+				if (fRulerContextMenuManager != null) {
+					fRulerContextMenuManager.removeMenuListener(getContextMenuListener());
+					fRulerContextMenuManager.removeAll();
+					fRulerContextMenuManager.dispose();
+				}
+
+				fRulerContextMenuManager = new MenuManager(getRulerContextMenuId(), getRulerContextMenuId());
+				fRulerContextMenuManager.setRemoveAllWhenShown(true);
+				fRulerContextMenuManager.addMenuListener(getContextMenuListener());
+
+				Control rulerControl = getVerticalRuler().getControl();
+				fRulerContextMenu = fRulerContextMenuManager.createContextMenu(rulerControl);
+				rulerControl.setMenu(fRulerContextMenu);
+				rulerControl.addMouseListener(getRulerMouseListener());
+
+				getSite().registerContextMenu(getRulerContextMenuId(), fRulerContextMenuManager, getSelectionProvider());
+
+				// also register this menu for source page part and structured
+				// text editor ids
+				String partId = getSite().getId();
+				if (partId != null) {
+					getSite().registerContextMenu(partId + RULER_CONTEXT_MENU_POSTFIX, fRulerContextMenuManager, getSelectionProvider());
+				}
+				getSite().registerContextMenu(RULER_CONTEXT_MENU_ID, fRulerContextMenuManager, getSelectionProvider());
 			}
 		}
 	}

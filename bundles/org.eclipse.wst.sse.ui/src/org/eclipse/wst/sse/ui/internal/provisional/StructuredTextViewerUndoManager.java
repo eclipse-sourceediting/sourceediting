@@ -13,13 +13,14 @@
 package org.eclipse.wst.sse.ui.internal.provisional;
 
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.IUndoManager;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.undo.IStructuredTextUndoManager;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
-import org.eclipse.wst.sse.ui.internal.view.events.ITextSelectionListener;
-import org.eclipse.wst.sse.ui.internal.view.events.TextSelectionChangedEvent;
 
 
 /**
@@ -28,11 +29,12 @@ import org.eclipse.wst.sse.ui.internal.view.events.TextSelectionChangedEvent;
  * handles communication between IUndoManager and IStructuredTextUndoManager.
  */
 class StructuredTextViewerUndoManager implements IUndoManager {
-	class UndoNotifier implements ITextSelectionListener {
-
-		public void textSelectionChanged(TextSelectionChangedEvent event) {
+	class UndoNotifier implements ISelectionChangedListener {
+		public void selectionChanged(SelectionChangedEvent event) {
 			if ((fUndoManager != null) && (event != null)) {
-				fUndoManager.forceEndOfPendingCommand(this, event.getTextSelectionStart(), event.getTextSelectionEnd() - event.getTextSelectionStart());
+				if (event.getSelection() instanceof ITextSelection) {
+					fUndoManager.forceEndOfPendingCommand(this, ((ITextSelection) event.getSelection()).getOffset(), ((ITextSelection) event.getSelection()).getLength());
+				}
 			}
 		}
 
@@ -40,7 +42,7 @@ class StructuredTextViewerUndoManager implements IUndoManager {
 
 	private StructuredTextViewer fTextViewer = null;
 	private IStructuredTextUndoManager fUndoManager = null;
-	private ITextSelectionListener fUndoNotifier = new UndoNotifier();
+	private ISelectionChangedListener fUndoNotifier = new UndoNotifier();
 
 	/*
 	 * (non-Javadoc)
@@ -84,7 +86,7 @@ class StructuredTextViewerUndoManager implements IUndoManager {
 	public void disconnect() {
 		// disconnect the viewer from the undo manager
 		if (fUndoManager != null) {
-			fTextViewer.getViewerSelectionManager().removeTextSelectionListener(fUndoNotifier);
+			fTextViewer.removeSelectionChangedListener(fUndoNotifier);
 			fUndoManager.disconnect(fTextViewer);
 		}
 
@@ -149,14 +151,14 @@ class StructuredTextViewerUndoManager implements IUndoManager {
 	 */
 	public void setDocument(IStructuredDocument document) {
 		if (fUndoManager != null) {
-			fTextViewer.getViewerSelectionManager().removeTextSelectionListener(fUndoNotifier);
+			fTextViewer.removeSelectionChangedListener(fUndoNotifier);
 			fUndoManager.disconnect(fTextViewer);
 		}
 
 		fUndoManager = document.getUndoManager();
 		if (fUndoManager != null) {
 			fUndoManager.connect(fTextViewer);
-			fTextViewer.getViewerSelectionManager().addTextSelectionListener(fUndoNotifier);
+			fTextViewer.addSelectionChangedListener(fUndoNotifier);
 		}
 	}
 

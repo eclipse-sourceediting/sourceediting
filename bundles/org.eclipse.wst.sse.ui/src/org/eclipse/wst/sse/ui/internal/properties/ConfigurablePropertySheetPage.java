@@ -12,6 +12,7 @@
  *******************************************************************************/
 package org.eclipse.wst.sse.ui.internal.properties;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.action.IMenuManager;
@@ -24,19 +25,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.part.PageBook;
+import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.views.properties.IPropertySheetEntry;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.PropertySheetPage;
-import org.eclipse.wst.sse.core.internal.model.FactoryRegistry;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.ui.internal.ViewerSelectionManager;
-import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
-import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapterFactory;
 import org.eclipse.wst.sse.ui.internal.provisional.views.properties.IPropertySourceExtension;
 import org.eclipse.wst.sse.ui.internal.provisional.views.properties.PropertySheetConfiguration;
-import org.eclipse.wst.sse.ui.internal.view.events.INodeSelectionListener;
-import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
 
 
 /**
@@ -44,99 +38,58 @@ import org.eclipse.wst.sse.ui.internal.view.events.NodeSelectionChangedEvent;
  * not expose its viewer field.
  */
 
-public class ConfigurablePropertySheetPage extends PropertySheetPage implements INodeSelectionListener {
+public class ConfigurablePropertySheetPage extends PropertySheetPage {
+	private static final boolean _DEBUG_ENTRY_SELECTION = false;
+	private static final boolean _DEBUG_SELECTION = false;
+	private long _DEBUG_TIME = 0;
 
 	private PropertySheetConfiguration fConfiguration;
-	// has the widget been created?
-	private boolean fIsRealized = false;
+
 	private IMenuManager fMenuManager;
-
-	protected PageBook fParentPageBook = null;
-	// are we refreshing the contents?
-	protected boolean fRefreshing = false;
-
-	protected RemoveAction fRemoveAction;
+	private RemoveAction fRemoveAction;
 	private IStatusLineManager fStatusLineManager;
 
-	protected IStructuredModel fStructuredModel = null;
 	private IToolBarManager fToolBarManager;
 
-	private ViewerSelectionManager fViewerSelectionManager;
-
 	private final PropertySheetConfiguration NULL_CONFIGURATION = new PropertySheetConfiguration();
+
+	private Object selectedEntry = null;
 
 	public ConfigurablePropertySheetPage() {
 		super();
 	}
 
 	public void createControl(Composite parent) {
-		setPropertySourceProvider(getConfiguration().getPropertySourceProvider());
+		setPropertySourceProvider(getConfiguration().getPropertySourceProvider(this));
 		super.createControl(parent);
-		if (parent instanceof PageBook)
-			fParentPageBook = (PageBook) parent;
 	}
 
 	public void dispose() {
-		// disconnect from the ViewerSelectionManager
-		if (getViewerSelectionManager() != null) {
-			getViewerSelectionManager().removeNodeSelectionListener(this);
-		}
-		setModel(null);
 		setConfiguration(null);
+		getSite().getWorkbenchWindow().getSelectionService().removePostSelectionListener(this);
 		super.dispose();
 	}
 
-	/**
-	 * @return
-	 */
 	public PropertySheetConfiguration getConfiguration() {
 		if (fConfiguration == null)
 			fConfiguration = NULL_CONFIGURATION;
 		return fConfiguration;
 	}
 
-	public IStructuredModel getModel() {
-		return fStructuredModel;
-	}
-
-	protected IJFaceNodeAdapterFactory getViewerRefreshFactory() {
-		if (getModel() == null)
-			return null;
-		FactoryRegistry factoryRegistry = getModel().getFactoryRegistry();
-		IJFaceNodeAdapterFactory adapterFactory = (IJFaceNodeAdapterFactory) factoryRegistry.getFactoryFor(IJFaceNodeAdapter.class);
-		return adapterFactory;
-	}
-
-	/**
-	 * @return Returns the viewerSelectionManager.
-	 */
-	public ViewerSelectionManager getViewerSelectionManager() {
-		return fViewerSelectionManager;
-	}
-
-	/*
-	 * @see PropertySheetPage#handleEntrySelection(ISelection)
-	 */
 	public void handleEntrySelection(ISelection selection) {
-		// Useful for enabling/disabling actions based on the
-		// selection (or lack thereof). Also, ensure that the
-		// control exists before sending selection to it.
-		if (fIsRealized && selection != null) {
+		if (_DEBUG_ENTRY_SELECTION) {
+			System.out.println("(P:entry " + selection);
+		}
+		selectedEntry = selection;
+		if (getControl() != null && !getControl().isDisposed() && selection != null) {
 			super.handleEntrySelection(selection);
 			fRemoveAction.setEnabled(!selection.isEmpty());
-			//			if (selection != null && !selection.isEmpty() && selection
-			// instanceof IStructuredSelection) {
-			//				IPropertySheetEntry entry = (IPropertySheetEntry)
-			// ((IStructuredSelection) selection).getFirstElement();
-			//			}
 		}
 	}
 
-	/**
-	 * @return Returns the isRealized.
-	 */
-	public boolean isRealized() {
-		return fIsRealized;
+	public void init(IPageSite pageSite) {
+		super.init(pageSite);
+		pageSite.getWorkbenchWindow().getSelectionService().addPostSelectionListener(this);
 	}
 
 	public void makeContributions(IMenuManager menuManager, IToolBarManager toolBarManager, IStatusLineManager statusLineManager) {
@@ -151,44 +104,19 @@ public class ConfigurablePropertySheetPage extends PropertySheetPage implements 
 		getConfiguration().addContributions(menuManager, toolBarManager, statusLineManager);
 
 		menuManager.update(true);
-		fIsRealized = true;
 	}
 
-	public void nodeSelectionChanged(NodeSelectionChangedEvent event) {
-		selectionChanged(null, new StructuredSelection(event.getSelectedNodes()));
-	}
-
-	/**
-	 * @see org.eclipse.ui.views.properties.PropertySheetPage#refresh()
-	 */
-	public void refresh() {
-		/**
-		 * Avoid refreshing the property sheet if it is already doing so. A
-		 * refresh can prompt an active cell editor to close, applying the
-		 * value and altering the selected node. In that case, a loop could
-		 * occur.
-		 */
-
-		if (!fRefreshing) {
-			fRefreshing = true;
-			super.refresh();
-			fRefreshing = false;
-		} else {
-			// detected a loop in the property sheet (shouldn't happen)
-		}
-	}
-
-	public void remove() {
+	void remove() {
 		if (getControl() instanceof Tree) {
 			TreeItem[] items = ((Tree) getControl()).getSelection();
-			List selectedNodes = getViewerSelectionManager().getSelectedNodes();
+			List selectedNodes = new ArrayList(0);
 			if (items != null && items.length == 1 && selectedNodes != null) {
 				Object data = items[0].getData();
 				if (data instanceof IPropertySheetEntry) {
 					IPropertySheetEntry entry = (IPropertySheetEntry) data;
 					ISelection selection = getConfiguration().getSelection(null, new StructuredSelection(selectedNodes));
 					if (selection != null && !selection.isEmpty() && selection instanceof IStructuredSelection) {
-						IPropertySource source = getConfiguration().getPropertySourceProvider().getPropertySource(((IStructuredSelection) selection).getFirstElement());
+						IPropertySource source = getConfiguration().getPropertySourceProvider(this).getPropertySource(((IStructuredSelection) selection).getFirstElement());
 						if (source != null && source instanceof IPropertySourceExtension) {
 							((IPropertySourceExtension) source).removeProperty(entry.getDisplayName());
 						}
@@ -199,13 +127,24 @@ public class ConfigurablePropertySheetPage extends PropertySheetPage implements 
 	}
 
 	/*
-	 * (non-Javadoc)
+	 * Filter the selection through the current Configuration. Not every
+	 * selection received is a Structured selection nor are the Structured
+	 * selection's elements all to be displayed.
 	 * 
 	 * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart,
 	 *      org.eclipse.jface.viewers.ISelection)
 	 */
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-		super.selectionChanged(part, getConfiguration().getSelection(part, selection));
+		_DEBUG_TIME = System.currentTimeMillis();
+		if (getControl() != null && getControl().isVisible() && selection != selectedEntry && !getControl().isFocusControl()) {
+			super.selectionChanged(part, getConfiguration().getSelection(part, selection));
+			if (_DEBUG_SELECTION) {
+				System.out.println("(P:service " + (System.currentTimeMillis() - _DEBUG_TIME) + "ms) " + part + " : " + selection);
+			}
+		}
+		else if (_DEBUG_SELECTION) {
+			System.out.println("[skipped] (P:" + (System.currentTimeMillis() - _DEBUG_TIME) + "ms) " + part + " : " + selection);
+		}
 	}
 
 	/**
@@ -213,7 +152,7 @@ public class ConfigurablePropertySheetPage extends PropertySheetPage implements 
 	 *            The configuration to set.
 	 */
 	public void setConfiguration(PropertySheetConfiguration configuration) {
-		if (fConfiguration != null && isRealized()) {
+		if (fConfiguration != null) {
 			fConfiguration.removeContributions(fMenuManager, fToolBarManager, fStatusLineManager);
 			fConfiguration.unconfigure();
 		}
@@ -221,50 +160,8 @@ public class ConfigurablePropertySheetPage extends PropertySheetPage implements 
 		fConfiguration = configuration;
 
 		if (fConfiguration != null) {
-			setPropertySourceProvider(fConfiguration.getPropertySourceProvider());
-			if (isRealized())
-				fConfiguration.addContributions(fMenuManager, fToolBarManager, fStatusLineManager);
-		}
-	}
-
-	/**
-	 * Asks this page to take focus within its pagebook view.
-	 */
-	public void setFocus() {
-		super.setFocus();
-		if (fParentPageBook != null)
-			fParentPageBook.showPage(getControl());
-	}
-
-	/**
-	 * Sets the model.
-	 * 
-	 * @param model
-	 *            The model to set
-	 */
-	public void setModel(IStructuredModel model) {
-		if (model != fStructuredModel) {
-			IJFaceNodeAdapterFactory refresher = getViewerRefreshFactory();
-			if (refresher != null)
-				refresher.removeListener(this);
-			fStructuredModel = model;
-			refresher = getViewerRefreshFactory();
-			if (refresher != null)
-				refresher.addListener(this);
-		}
-	}
-
-	public void setViewerSelectionManager(ViewerSelectionManager viewerSelectionManager) {
-		// disconnect from old one
-		if (fViewerSelectionManager != null) {
-			fViewerSelectionManager.removeNodeSelectionListener(this);
-		}
-
-		fViewerSelectionManager = viewerSelectionManager;
-
-		// connect to new one
-		if (fViewerSelectionManager != null) {
-			fViewerSelectionManager.addNodeSelectionListener(this);
+			setPropertySourceProvider(fConfiguration.getPropertySourceProvider(this));
+			fConfiguration.addContributions(fMenuManager, fToolBarManager, fStatusLineManager);
 		}
 	}
 }

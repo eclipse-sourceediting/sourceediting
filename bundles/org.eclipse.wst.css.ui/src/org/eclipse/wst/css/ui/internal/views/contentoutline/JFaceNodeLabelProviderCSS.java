@@ -10,11 +10,7 @@
  *******************************************************************************/
 package org.eclipse.wst.css.ui.internal.views.contentoutline;
 
-
-
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ILabelProviderListener;
-import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSMediaRule;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSNode;
@@ -24,53 +20,17 @@ import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleDeclItem;
 import org.eclipse.wst.css.core.internal.provisional.document.ICSSStyleRule;
 import org.eclipse.wst.css.ui.internal.image.CSSImageHelper;
 import org.eclipse.wst.css.ui.internal.image.CSSImageType;
-import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
-import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
-import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
 import org.w3c.dom.css.CSSImportRule;
 import org.w3c.dom.css.CSSRule;
 import org.w3c.dom.stylesheets.MediaList;
 
-
-/**
- * A class that uses a JFaceNodeAdapterFactory to provide adapters to provide
- * the labels and images for DOM nodes.
- */
-class JFaceNodeLabelProviderCSS implements ILabelProvider {
-	protected INodeAdapterFactory fAdapterFactory;
+class JFaceNodeLabelProviderCSS extends LabelProvider {
 
 	/**
 	 * JFaceNodeLabelProvider constructor comment.
 	 */
-	public JFaceNodeLabelProviderCSS(INodeAdapterFactory adapterFactory) {
+	public JFaceNodeLabelProviderCSS() {
 		super();
-		this.fAdapterFactory = adapterFactory;
-	}
-
-	/**
-	 * Adds a listener to the label provider. A label provider should inform
-	 * its listener about state changes that enforces rendering of the visual
-	 * part that uses this label provider.
-	 */
-	public void addListener(ILabelProviderListener listener) {
-		// The label provider state never changes so we do not have
-		// to implement this method.
-	}
-
-	/**
-	 * The visual part that is using this label provider is about to be
-	 * disposed. Deallocate all allocated SWT resources.
-	 */
-	public void dispose() {
-		// Nothing to dispose
-	}
-
-	/**
-	 * Returns the JFace adapter for the specified object.
-	 * 
-	 */
-	protected IJFaceNodeAdapter getAdapter(Object adaptable) {
-		return (IJFaceNodeAdapter) fAdapterFactory.adapt((INodeNotifier) adaptable);
 	}
 
 	/**
@@ -85,24 +45,16 @@ class JFaceNodeLabelProviderCSS implements ILabelProvider {
 	 *            to the viewer.
 	 */
 	public Image getImage(Object element) {
-		//  return getAdapter(element).getLabelImage((Node) element);
 
 
 		if (element instanceof ICSSNode) {
 			CSSImageHelper helper = CSSImageHelper.getInstance();
 			return helper.getImage(CSSImageType.getImageType((ICSSNode) element));
-			//		Image image = getCSSNodeImage(element);
-			//		return image;
-			//      return getAdapter(element).getLabelImage((ICSSNode) element);
+			// Image image = getCSSNodeImage(element);
+			// return image;
+			// return getAdapter(element).getLabelImage((ICSSNode) element);
 		}
 		return null;
-	}
-
-	/**
-	 * Insert the method's description here.
-	 */
-	public String getLabelText(Viewer viewer, Object element) {
-		return ""; //$NON-NLS-1$
 	}
 
 	/**
@@ -168,10 +120,10 @@ class JFaceNodeLabelProviderCSS implements ILabelProvider {
 			}
 		}
 
-		//  if (element instanceof ICSSNode) {
-		//      ICSSNode node = ((ICSSNode)element);
-		//      result = getAdapter(element).getLabelText((ICSSNode) element);
-		//  }
+		// if (element instanceof ICSSNode) {
+		// ICSSNode node = ((ICSSNode)element);
+		// result = getAdapter(element).getLabelText((ICSSNode) element);
+		// }
 		return result;
 	}
 
@@ -192,8 +144,8 @@ class JFaceNodeLabelProviderCSS implements ILabelProvider {
 	 * Checks whether this label provider is affected by the given domain
 	 * event.
 	 */
-	public boolean isAffected(Object dummy) {//DomainEvent event) {
-		//return event.isModifier(DomainEvent.NON_STRUCTURE_CHANGE);
+	public boolean isAffected(Object dummy) {// DomainEvent event) {
+		// return event.isModifier(DomainEvent.NON_STRUCTURE_CHANGE);
 		return true;
 
 	}
@@ -213,13 +165,5 @@ class JFaceNodeLabelProviderCSS implements ILabelProvider {
 	 */
 	public boolean isLabelProperty(Object element, String property) {
 		return false;
-	}
-
-	/**
-	 * Removes a listener from the label provider.
-	 */
-	public void removeListener(ILabelProviderListener listener) {
-		// The label provider state never changes so we do not have
-		// to implement this method.
 	}
 }

@@ -30,6 +30,9 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.StructuredTextSelectionChangedEvent;
 
+/**
+ * @deprecated
+ */
 
 public class SourceEditorTreeViewer extends TreeViewer {
 	private int fCaretPosition;

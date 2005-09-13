@@ -22,6 +22,7 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMElementDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDescriptionBuilder;
+import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -38,7 +39,6 @@ public class XMLTreeExtension extends TreeExtension {
 
 	protected Color f1, f2, b1, b2;
 	protected boolean cachedDataIsValid = true;
-	private ModelQuery fModelQuery;
 
 	public XMLTreeExtension(Tree tree) {
 		super(tree);
@@ -58,6 +58,8 @@ public class XMLTreeExtension extends TreeExtension {
 		f2 = new Color(tree.getDisplay(), r, g, b);
 		b1 = tree.getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION);
 		b2 = background;
+
+		propertyDescriptorFactory = new XMLTableTreePropertyDescriptorFactory();
 	}
 
 	public void dispose() {
@@ -115,8 +117,9 @@ public class XMLTreeExtension extends TreeExtension {
 	public String getElementValueHelper(Element element) {
 		String result = null;
 
-		if (result == null && getModelQuery() != null) {
-			CMElementDeclaration ed = getModelQuery().getCMElementDeclaration(element);
+		ModelQuery mq = ModelQueryUtil.getModelQuery(element.getOwnerDocument());
+		if (result == null && mq != null) {
+			CMElementDeclaration ed = mq.getCMElementDeclaration(element);
 			if (ed != null && !Boolean.TRUE.equals(ed.getProperty("isInferred"))) { //$NON-NLS-1$
 				result = decriptionBuilder.buildDescription(ed);
 			}
@@ -125,7 +128,7 @@ public class XMLTreeExtension extends TreeExtension {
 	}
 
 	/**
-	 *  
+	 * 
 	 */
 	public class MyCellModifier implements ICellModifier, TreeExtension.ICellEditorProvider {
 		public boolean canModify(Object element, String property) {
@@ -146,14 +149,14 @@ public class XMLTreeExtension extends TreeExtension {
 		}
 
 		public void modify(Object element, String property, Object value) {
-			//enableNodeSelectionListener(false);
+			// enableNodeSelectionListener(false);
 			Item item = (Item) element;
 			String oldValue = treeContentHelper.getNodeValue((Node) item.getData());
 			String newValue = value.toString();
 			if (newValue != null && !newValue.equals(oldValue)) {
 				treeContentHelper.setNodeValue((Node) item.getData(), value.toString());
 			}
-			//enableNodeSelectionListener(true);
+			// enableNodeSelectionListener(true);
 		}
 
 		public CellEditor getCellEditor(Object o, int col) {
@@ -161,18 +164,4 @@ public class XMLTreeExtension extends TreeExtension {
 			return pd != null ? pd.createPropertyEditor(control) : null;
 		}
 	}
-
-
-	public ModelQuery getModelQuery() {
-		return fModelQuery;
-	}
-
-	/**
-	 * @param query
-	 */
-	public void setModelQuery(ModelQuery query) {
-		fModelQuery = query;
-		propertyDescriptorFactory = new XMLTableTreePropertyDescriptorFactory(query);
-	}
-
 }

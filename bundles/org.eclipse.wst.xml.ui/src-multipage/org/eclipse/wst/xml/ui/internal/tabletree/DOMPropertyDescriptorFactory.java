@@ -12,6 +12,7 @@ import org.eclipse.ui.views.properties.IPropertyDescriptor;
 import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 import org.eclipse.wst.xml.core.internal.contentmodel.CMAttributeDeclaration;
 import org.eclipse.wst.xml.core.internal.contentmodel.modelquery.ModelQuery;
+import org.eclipse.wst.xml.core.internal.modelquery.ModelQueryUtil;
 import org.eclipse.wst.xml.ui.internal.properties.EnumeratedStringPropertyDescriptor;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
@@ -27,10 +28,8 @@ import org.w3c.dom.Text;
 public class DOMPropertyDescriptorFactory {
 
 	protected static final String HACK = "hack"; //$NON-NLS-1$
-	private ModelQuery fModelQuery = null;
 
-	public DOMPropertyDescriptorFactory(ModelQuery modelQuery) {
-		fModelQuery = modelQuery;
+	public DOMPropertyDescriptorFactory() {
 	}
 
 	public IPropertyDescriptor createAttributePropertyDescriptor(Attr attr) {
@@ -38,11 +37,15 @@ public class DOMPropertyDescriptorFactory {
 
 		String attributeName = attr.getName();
 
-		CMAttributeDeclaration ad = fModelQuery.getCMAttributeDeclaration(attr);
-		if (ad != null) {
-			String[] valuesArray = fModelQuery.getPossibleDataTypeValues(attr.getOwnerElement(), ad);
-			if (valuesArray != null && valuesArray.length > 0) {
-				result = new EnumeratedStringPropertyDescriptor(attributeName, attributeName, valuesArray);
+		ModelQuery mq = ModelQueryUtil.getModelQuery(attr.getOwnerDocument());
+
+		if (mq != null) {
+			CMAttributeDeclaration ad = mq.getCMAttributeDeclaration(attr);
+			if (ad != null) {
+				String[] valuesArray = mq.getPossibleDataTypeValues(attr.getOwnerElement(), ad);
+				if (valuesArray != null && valuesArray.length > 0) {
+					result = new EnumeratedStringPropertyDescriptor(attributeName, attributeName, valuesArray);
+				}
 			}
 		}
 
@@ -66,7 +69,7 @@ public class DOMPropertyDescriptorFactory {
 	}
 
 	public IPropertyDescriptor createDocumentTypePropertyDescriptor(DocumentType documentType) {
-		return null; //new TextPropertyDescriptor(HACK, HACK);
+		return null; // new TextPropertyDescriptor(HACK, HACK);
 	}
 
 	public IPropertyDescriptor createElementPropertyDescriptor(Element element) {
@@ -127,10 +130,4 @@ public class DOMPropertyDescriptorFactory {
 	public IPropertyDescriptor createTextPropertyDescriptor(Text text) {
 		return createDefaultPropertyDescriptor(HACK);
 	}
-
-
-	public ModelQuery getModelQuery() {
-		return fModelQuery;
-	}
-
 }

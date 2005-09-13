@@ -22,15 +22,16 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.views.properties.IPropertyDescriptor;
+import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.eclipse.ui.views.properties.IPropertySourceProvider;
 
 
 /**
  * Configuration class for Property Sheet Pages. Not finalized.
+ * 
  * @plannedfor 1.0
  */
-
 public class PropertySheetConfiguration implements IExecutableExtension {
 
 	private class NullPropertySource implements IPropertySource {
@@ -121,7 +122,7 @@ public class PropertySheetConfiguration implements IExecutableExtension {
 	/**
 	 * @return
 	 */
-	protected IPropertySourceProvider createPropertySourceProvider() {
+	protected IPropertySourceProvider createPropertySourceProvider(IPropertySheetPage page) {
 		return new NullPropertySourceProvider();
 	}
 
@@ -135,9 +136,9 @@ public class PropertySheetConfiguration implements IExecutableExtension {
 	/**
 	 * Returns the correct IPropertySourceProvider
 	 */
-	public IPropertySourceProvider getPropertySourceProvider() {
+	public IPropertySourceProvider getPropertySourceProvider(IPropertySheetPage page) {
 		if (fPropertySourceProvider == null)
-			fPropertySourceProvider = createPropertySourceProvider();
+			fPropertySourceProvider = createPropertySourceProvider(page);
 		return fPropertySourceProvider;
 	}
 
@@ -164,7 +165,7 @@ public class PropertySheetConfiguration implements IExecutableExtension {
 	public void setEditor(IEditorPart editor) {
 		fEditor = editor;
 	}
-	
+
 	public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
 		/*
 		 * Currently no need for initialization data but is good practice to

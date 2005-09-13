@@ -30,27 +30,27 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 /**
- * This job holds a queue of updates (affected nodes) for the outline.
- * When a new request comes in, the current run is canceled, the new 
+ * This job holds a queue of updates (affected nodes) for a structure viewer.
+ * When a new request comes in, the current run is cancelled, the new 
  * request is added to the queue, then the job is re-scheduled.
  * 
  * @author pavery
  */
-public class RefreshOutlineJob extends Job {
+class RefreshStructureJob extends Job {
 
-	private static final long UPDATE_DELAY = 200;
-	/** List of refresh requests (Nodes)*/
-	private final List fRequests;
-	/** the tree viewer */
-	final StructuredViewer fViewer;
 	/** debug flag */
 	private static final boolean DEBUG;
+	private static final long UPDATE_DELAY = 200;
 	static {
 		String value = Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/outline"); //$NON-NLS-1$
 		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
+	/** List of refresh requests (Nodes)*/
+	private final List fRequests;
+	/** the tree viewer */
+	final StructuredViewer fViewer;
 	
-	public RefreshOutlineJob(StructuredViewer viewer) {
+	public RefreshStructureJob(StructuredViewer viewer) {
 		super(XMLUIMessages.refreshoutline_0); //$NON-NLS-1$
 		setPriority(Job.LONG);
 		setSystem(true);
@@ -75,36 +75,10 @@ public class RefreshOutlineJob extends Job {
 		fRequests.add(node);
 	}
 	/**
-	 * This method also synchronized because it accesses the fRequests queue
-	 * @return an array of the currently requested Nodes to refresh
-	 */
-	private synchronized Node[] getRequests() {
-		
-		Node[] toRefresh = (Node[]) fRequests.toArray(new Node[fRequests.size()]);
-		fRequests.clear();
-		return toRefresh;
-	}
-	
-	/**
-	 * Invoke a refresh on the viewer on the given node.
-	 * @param node
-	 */
-	public void refresh(Node node) {
-		
-		if (node == null)
-			return;
-		
-		cancel();
-		addRequest(node);	
-		schedule(UPDATE_DELAY);
-	}
-	
-	/**
 	 * @return if the root is parent of possible, return true, otherwise
 	 *         return false
 	 */
 	private boolean contains(Node root, Node possible) {
-
 		if (DEBUG) {
 			System.out.println("=============================================================================================================="); //$NON-NLS-1$
 			System.out.println("recursive call w/ root: " + root.getNodeName() + " and possible: " + possible); //$NON-NLS-1$ //$NON-NLS-2$
@@ -150,22 +124,6 @@ public class RefreshOutlineJob extends Job {
 		return false;
 	}
 	
-	protected IStatus run(IProgressMonitor monitor) {
-		IStatus status = Status.OK_STATUS;
-		try {
-			Node[] toRefresh = getRequests();
-			for (int i = 0; i < toRefresh.length; i++) {
-				if (monitor.isCanceled())
-					throw new OperationCanceledException();
-				doRefresh(toRefresh[i]);
-			}
-		}
-		finally {
-			monitor.done();
-		}
-		return status;
-	}
-	
 	/**
 	 * Refresh must be on UI thread because it's on a SWT widget.
 	 * @param node
@@ -188,6 +146,45 @@ public class RefreshOutlineJob extends Job {
 				}
 			}
 		});
+	}
+	
+	/**
+	 * This method also synchronized because it accesses the fRequests queue
+	 * @return an array of the currently requested Nodes to refresh
+	 */
+	private synchronized Node[] getRequests() {		
+		Node[] toRefresh = (Node[]) fRequests.toArray(new Node[fRequests.size()]);
+		fRequests.clear();
+		return toRefresh;
+	}
+	
+	/**
+	 * Invoke a refresh on the viewer on the given node.
+	 * @param node
+	 */
+	public void refresh(Node node) {
+		if (node == null)
+			return;
+		
+		cancel();
+		addRequest(node);	
+		schedule(UPDATE_DELAY);
+	}
+	
+	protected IStatus run(IProgressMonitor monitor) {
+		IStatus status = Status.OK_STATUS;
+		try {
+			Node[] toRefresh = getRequests();
+			for (int i = 0; i < toRefresh.length; i++) {
+				if (monitor.isCanceled())
+					throw new OperationCanceledException();
+				doRefresh(toRefresh[i]);
+			}
+		}
+		finally {
+			monitor.done();
+		}
+		return status;
 	}
 
 }

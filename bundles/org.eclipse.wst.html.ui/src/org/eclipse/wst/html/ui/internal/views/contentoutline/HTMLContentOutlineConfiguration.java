@@ -14,6 +14,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.contentoutline.HTMLNodeActionManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.ui.internal.contentoutline.XMLNodeActionManager;
 import org.eclipse.wst.xml.ui.internal.views.contentoutline.XMLContentOutlineConfiguration;
 
@@ -27,8 +28,9 @@ public class HTMLContentOutlineConfiguration extends XMLContentOutlineConfigurat
 	}
 
 	protected XMLNodeActionManager createNodeActionManager(TreeViewer treeViewer) {
-		return new HTMLNodeActionManager(getEditor().getModel(), treeViewer);
+		return new HTMLNodeActionManager((IStructuredModel) treeViewer.getInput(), treeViewer);
 	}
+
 	protected IPreferenceStore getPreferenceStore() {
 		return HTMLUIPlugin.getDefault().getPreferenceStore();
 	}

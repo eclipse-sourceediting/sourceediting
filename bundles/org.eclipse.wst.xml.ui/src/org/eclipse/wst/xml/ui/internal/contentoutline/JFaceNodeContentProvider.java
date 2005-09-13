@@ -15,9 +15,10 @@ package org.eclipse.wst.xml.ui.internal.contentoutline;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.wst.sse.core.internal.provisional.INodeAdapter;
-import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.sse.core.internal.provisional.INodeNotifier;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapter;
+import org.eclipse.wst.sse.ui.internal.contentoutline.IJFaceNodeAdapterFactory;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
 
@@ -27,11 +28,9 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
  * nodes in the tree.
  */
 public class JFaceNodeContentProvider implements ITreeContentProvider {
-	protected INodeAdapterFactory adapterFactory;
 
-	public JFaceNodeContentProvider(INodeAdapterFactory jfaceAdapterFactory) {
+	public JFaceNodeContentProvider() {
 		super();
-		this.adapterFactory = jfaceAdapterFactory;
 	}
 
 	/**
@@ -49,7 +48,7 @@ public class JFaceNodeContentProvider implements ITreeContentProvider {
 	 */
 	protected IJFaceNodeAdapter getAdapter(Object adaptable) {
 		if (adaptable instanceof INodeNotifier) {
-			INodeAdapter adapter = adapterFactory.adapt((INodeNotifier) adaptable);
+			INodeAdapter adapter = ((INodeNotifier) adaptable).getAdapterFor(IJFaceNodeAdapter.class);
 			if (adapter instanceof IJFaceNodeAdapter)
 				return (IJFaceNodeAdapter) adapter;
 		}
@@ -99,5 +98,17 @@ public class JFaceNodeContentProvider implements ITreeContentProvider {
 	}
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		if (oldInput != null && oldInput instanceof IStructuredModel) {
+			IJFaceNodeAdapterFactory factory = (IJFaceNodeAdapterFactory) ((IStructuredModel) oldInput).getFactoryRegistry().getFactoryFor(IJFaceNodeAdapter.class);
+			if (factory != null) {
+				factory.removeListener(viewer);
+			}
+		}
+		if (newInput != null && newInput instanceof IStructuredModel) {
+			IJFaceNodeAdapterFactory factory = (IJFaceNodeAdapterFactory) ((IStructuredModel) newInput).getFactoryRegistry().getFactoryFor(IJFaceNodeAdapter.class);
+			if (factory != null) {
+				factory.addListener(viewer);
+			}
+		}
 	}
 }

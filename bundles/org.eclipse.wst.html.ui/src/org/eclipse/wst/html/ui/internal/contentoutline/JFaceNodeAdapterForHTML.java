@@ -16,8 +16,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImageHelper;
 import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImages;
-import org.eclipse.wst.sse.core.internal.provisional.INodeAdapterFactory;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeAdapter;
+import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeAdapterFactory;
 import org.w3c.dom.Node;
 
 /**
@@ -37,7 +37,7 @@ public class JFaceNodeAdapterForHTML extends JFaceNodeAdapter {
 	 * 
 	 * @param adapterFactory
 	 */
-	public JFaceNodeAdapterForHTML(INodeAdapterFactory adapterFactory) {
+	public JFaceNodeAdapterForHTML(JFaceNodeAdapterFactory adapterFactory) {
 		super(adapterFactory);
 	}
 
