@@ -207,16 +207,12 @@ public abstract class AbstractDocumentLoader implements IDocumentLoader {
 	}
 
 	/**
-	 * Method getDefaultDocumentPartitioner.
+	 * Creates the partitioner to be used with the
+	 * IStructuredPartitioning.DEFAULT_STRUCTURED_PARTITIONING partitioning
 	 * 
 	 * @return IDocumentPartitioner
 	 */
-	public IDocumentPartitioner getDefaultDocumentPartitioner() {
-		// be default, we'll provide XML (though could be NOOP?
-		// 7/2003 .... changed during re-org ... to be Null instead of XML,
-		// so there would be no minor dependancies from higher plugins.
-		return new NullStructuredDocumentPartitioner();
-	}
+	public abstract IDocumentPartitioner getDefaultDocumentPartitioner();
 
 	/**
 	 * Returns the encodingMemento.

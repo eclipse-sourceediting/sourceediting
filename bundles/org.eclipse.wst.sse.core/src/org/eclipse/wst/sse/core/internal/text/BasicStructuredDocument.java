@@ -33,6 +33,7 @@ import org.eclipse.jface.text.IDocumentExtension;
 import org.eclipse.jface.text.IDocumentExtension3;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.text.IDocumentPartitioner;
+import org.eclipse.jface.text.IDocumentPartitionerExtension;
 import org.eclipse.jface.text.IDocumentPartitionerExtension2;
 import org.eclipse.jface.text.IDocumentPartitioningListener;
 import org.eclipse.jface.text.IDocumentPartitioningListenerExtension;
@@ -462,7 +463,12 @@ public class BasicStructuredDocument implements IStructuredDocument, IDocumentEx
 				IDocumentPartitioner p = (IDocumentPartitioner) e.next();
 				// safeguard from listeners that throw exceptions
 				try {
-					p.documentChanged(documentEvent);
+					if (p instanceof IDocumentPartitionerExtension) {
+						IRegion changedPartion = ((IDocumentPartitionerExtension)p).documentChanged2(documentEvent);
+					}
+					else {
+						p.documentChanged(documentEvent);
+					}
 				}
 				catch (Exception exception) {
 					Logger.logException(exception);
