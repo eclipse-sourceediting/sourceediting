@@ -2660,9 +2660,14 @@ public class StructuredTextEditor extends TextEditor {
 	void updateRangeIndication(ISelection selection) {
 		if (selection instanceof IStructuredSelection && !((IStructuredSelection) selection).isEmpty()) {
 			Object[] objects = ((IStructuredSelection) selection).toArray();
-			int start = ((IndexedRegion) objects[0]).getStartOffset();
-			int end = ((IndexedRegion) objects[objects.length - 1]).getEndOffset();
-			getSourceViewer().setRangeIndication(start, end - start, false);
+			if (objects.length > 0) {
+				int start = ((IndexedRegion) objects[0]).getStartOffset();
+				int end = ((IndexedRegion) objects[objects.length - 1]).getEndOffset();
+				getSourceViewer().setRangeIndication(start, end - start, false);
+			}
+			else {
+				getSourceViewer().removeRangeIndication();
+			}
 		}
 		else {
 			getSourceViewer().removeRangeIndication();
