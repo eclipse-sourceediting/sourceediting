@@ -52,7 +52,7 @@ public class StructuredTextPartitionerForXML extends StructuredTextPartitioner i
 			 * extract the target processor name and create a partition type
 			 * dynamically.
 			 */
-			IStructuredDocumentRegion docRegion = structuredDocument.getRegionAtCharacterOffset(offset);
+			IStructuredDocumentRegion docRegion = fStructuredDocument.getRegionAtCharacterOffset(offset);
 			ITextRegion name = docRegion.getRegionAtCharacterOffset(docRegion.getStartOffset() + region.getStart() - 1);
 			result = IXMLPartitions.PROCESSING_INSTRUCTION_PREFIX + docRegion.getText(name).toUpperCase(Locale.ENGLISH);
 		}

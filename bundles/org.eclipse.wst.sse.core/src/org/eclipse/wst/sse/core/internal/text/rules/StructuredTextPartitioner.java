@@ -54,12 +54,10 @@ public class StructuredTextPartitioner implements IDocumentPartitioner {
 		}
 	}
 
-	//public final static String ST_DEFAULT_PARTITION = IStructuredPartitions.ST_DEFAULT_PARTITION; //$NON-NLS-1$
-	//public final static String ST_UNKNOWN_PARTITION = IStructuredPartitions.ST_UNKNOWN_PARTITION; //$NON-NLS-1$
 	private CachedComputedPartitions cachedPartitions = new CachedComputedPartitions(-1, -1, null);
 	protected String[] fSupportedTypes = null;
 	protected IStructuredTypedRegion internalReusedTempInstance = new SimpleStructuredTypedRegion(0, 0, IStructuredPartitionTypes.DEFAULT_PARTITION);
-	protected IStructuredDocument structuredDocument;
+	protected IStructuredDocument fStructuredDocument;
 
 	/**
 	 * StructuredTextPartitioner constructor comment.
@@ -85,7 +83,7 @@ public class StructuredTextPartitioner implements IDocumentPartitioner {
 	 * @return the partitioning of the range
 	 */
 	public ITypedRegion[] computePartitioning(int offset, int length) {
-		if (structuredDocument == null) {
+		if (fStructuredDocument == null) {
 			throw new IllegalStateException("document partitioner is not connected"); //$NON-NLS-1$
 		}
 		ITypedRegion[] results = null;
@@ -101,7 +99,7 @@ public class StructuredTextPartitioner implements IDocumentPartitioner {
 			} else {
 				List list = new ArrayList();
 				int endPos = offset + length;
-				if (endPos > structuredDocument.getLength()) {
+				if (endPos > fStructuredDocument.getLength()) {
 					// This can occur if the model instance is being
 					// changed
 					// and everyone's not yet up to date
@@ -158,7 +156,7 @@ public class StructuredTextPartitioner implements IDocumentPartitioner {
 	public synchronized void connect(IDocument document) {
 		if (document instanceof IStructuredDocument) {
 			cachedPartitions.isInValid = true;
-			this.structuredDocument = (IStructuredDocument) document;
+			this.fStructuredDocument = (IStructuredDocument) document;
 		} else {
 			throw new IllegalArgumentException("This class and API are for Structured Documents only"); //$NON-NLS-1$
 		}
@@ -214,7 +212,7 @@ public class StructuredTextPartitioner implements IDocumentPartitioner {
 	 */
 	public synchronized void disconnect() {
 		cachedPartitions.isInValid = true;
-		this.structuredDocument = null;
+		this.fStructuredDocument = null;
 	}
 
 	/**
@@ -492,17 +490,17 @@ public class StructuredTextPartitioner implements IDocumentPartitioner {
 	 * start and end tag will return a zero-length region.
 	 */
 	private void internalGetPartition(int offset, boolean checkBetween) {
-		if (structuredDocument == null) {
+		if (fStructuredDocument == null) {
 			throw new IllegalStateException("document partitioner is not connected"); //$NON-NLS-1$
 		}
 
 		boolean partitionFound = false;
-		int docLength = structuredDocument.getLength();
+		int docLength = fStructuredDocument.getLength();
 		// get document region type and map to partition type :
 		// Note: a partion can be smaller than a flatnode, if that flatnode
 		// contains a region container.
 		// That's why we need to get "relevent region".
-		IStructuredDocumentRegion structuredDocumentRegion = structuredDocument.getRegionAtCharacterOffset(offset);
+		IStructuredDocumentRegion structuredDocumentRegion = fStructuredDocument.getRegionAtCharacterOffset(offset);
 		// flatNode is null if empty document
 		// this is king of a "normal case" for empty document
 		if (structuredDocumentRegion == null && docLength == 0) {

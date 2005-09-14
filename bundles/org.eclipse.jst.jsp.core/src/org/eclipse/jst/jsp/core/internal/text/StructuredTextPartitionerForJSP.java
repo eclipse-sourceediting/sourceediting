@@ -54,7 +54,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 		}
 
 		private JSPSourceParser getTextSource() {
-			return (JSPSourceParser) structuredDocument.getParser();
+			return (JSPSourceParser) fStructuredDocument.getParser();
 		}
 
 		public void nodeParsed(IStructuredDocumentRegion sdRegion) {
@@ -139,7 +139,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 
 		public void setStructuredDocument(IStructuredDocument newDocument) {
 			resetNodes();
-			((StructuredDocumentRegionParser) structuredDocument.getParser()).removeStructuredDocumentRegionHandler(this);
+			((StructuredDocumentRegionParser) fStructuredDocument.getParser()).removeStructuredDocumentRegionHandler(this);
 			if(newDocument != null) {
 				((StructuredDocumentRegionParser) newDocument.getParser()).addStructuredDocumentRegionHandler(this);
 			}
@@ -225,8 +225,8 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 		fSupportedTypes = null;
 
 		// be extra paranoid
-		if (fEnableJSPActionPartitions && structuredDocument.getParser() instanceof JSPSourceParser) {
-			StructuredDocumentRegionParser parser = (StructuredDocumentRegionParser) structuredDocument.getParser();
+		if (fEnableJSPActionPartitions && fStructuredDocument.getParser() instanceof JSPSourceParser) {
+			StructuredDocumentRegionParser parser = (StructuredDocumentRegionParser) fStructuredDocument.getParser();
 			parser.removeStructuredDocumentRegionHandler(fPrefixParseListener);
 			fPrefixParseListener = new PrefixListener();
 			parser.addStructuredDocumentRegionHandler(fPrefixParseListener);
@@ -234,7 +234,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 	}
 
 	private IStructuredTextPartitioner createStructuredTextPartitioner(IStructuredDocument structuredDocument) {
-		IStructuredTextPartitioner result = new NullStructuredDocumentPartitioner();
+		IStructuredTextPartitioner result = null;
 		JSPDocumentHeadContentDetector jspHeadContentDetector = new JSPDocumentHeadContentDetector();
 		jspHeadContentDetector.set(structuredDocument);
 		String contentType;
@@ -272,8 +272,8 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 	public void disconnect() {
 		// we'll check for null document, just for bullet proofing (incase
 		// disconnnect is called without corresponding connect.
-		if (structuredDocument != null) {
-			StructuredDocumentRegionParser parser = (StructuredDocumentRegionParser) structuredDocument.getParser();
+		if (fStructuredDocument != null) {
+			StructuredDocumentRegionParser parser = (StructuredDocumentRegionParser) fStructuredDocument.getParser();
 			if (fPrefixParseListener != null)
 				parser.removeStructuredDocumentRegionHandler(fPrefixParseListener);
 			fPrefixParseListener = null;
@@ -303,8 +303,8 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 	 */
 	public IStructuredTextPartitioner getEmbeddedPartitioner() {
 		if (fEmbeddedPartitioner == null) {
-			fEmbeddedPartitioner = createStructuredTextPartitioner(structuredDocument);
-			fEmbeddedPartitioner.connect(structuredDocument);
+			fEmbeddedPartitioner = createStructuredTextPartitioner(fStructuredDocument);
+			fEmbeddedPartitioner.connect(fStructuredDocument);
 		}
 
 		return fEmbeddedPartitioner;
@@ -370,7 +370,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 		else if (region_type == DOMRegionContext.XML_CONTENT) {
 			// possibly between <jsp:scriptlet>, <jsp:expression>,
 			// <jsp:declaration>
-			IStructuredDocumentRegion sdRegion = this.structuredDocument.getRegionAtCharacterOffset(offset);
+			IStructuredDocumentRegion sdRegion = this.fStructuredDocument.getRegionAtCharacterOffset(offset);
 			if (isJspJavaActionName(getParentName(sdRegion)))
 				result = getPartitionTypeForDocumentLanguage();
 			else
@@ -462,7 +462,7 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 
 	public IDocumentPartitioner newInstance() {
 		StructuredTextPartitionerForJSP instance = new StructuredTextPartitionerForJSP();
-		instance.setEmbeddedPartitioner(createStructuredTextPartitioner(structuredDocument));
+		instance.setEmbeddedPartitioner(createStructuredTextPartitioner(fStructuredDocument));
 		instance.setLanguage(fLanguage);
 		return instance;
 	}
@@ -478,14 +478,14 @@ public class StructuredTextPartitionerForJSP extends StructuredTextPartitioner {
 		/**
 		 * manage connected state of embedded partitioner
 		 */
-		if(fEmbeddedPartitioner != null && structuredDocument != null) {
+		if(fEmbeddedPartitioner != null && fStructuredDocument != null) {
 			fEmbeddedPartitioner.disconnect();
 		}
 		
 		this.fEmbeddedPartitioner = embeddedPartitioner;
 		
-		if(fEmbeddedPartitioner != null && structuredDocument != null) {
-			fEmbeddedPartitioner.connect(structuredDocument);
+		if(fEmbeddedPartitioner != null && fStructuredDocument != null) {
+			fEmbeddedPartitioner.connect(fStructuredDocument);
 		}
 	}
 

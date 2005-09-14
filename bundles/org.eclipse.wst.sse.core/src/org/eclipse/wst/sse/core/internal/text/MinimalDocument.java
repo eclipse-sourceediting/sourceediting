@@ -24,7 +24,6 @@ import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.TypedRegion;
 import org.eclipse.wst.sse.core.internal.Logger;
 import org.eclipse.wst.sse.core.internal.NotImplementedException;
-import org.eclipse.wst.sse.core.internal.document.NullStructuredDocumentPartitioner;
 import org.eclipse.wst.sse.core.internal.encoding.EncodingMemento;
 import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.provisional.events.IModelAboutToBeChangedListener;
@@ -162,7 +161,7 @@ public class MinimalDocument implements IStructuredDocument {
 
 	public IDocumentPartitioner getDocumentPartitioner() {
 		// temp fix
-		return new NullStructuredDocumentPartitioner();
+		return null;
 		//		throw new NotImplementedException("intentionally not implemented");
 	}
 

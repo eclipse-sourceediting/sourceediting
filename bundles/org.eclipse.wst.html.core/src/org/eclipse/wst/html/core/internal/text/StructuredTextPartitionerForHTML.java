@@ -45,7 +45,7 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 
 	public IStructuredTypedRegion createPartition(int offset, int length, String type) {
 		if (type == IHTMLPartitionTypes.SCRIPT) {
-			IStructuredDocumentRegion node = structuredDocument.getRegionAtCharacterOffset(offset);
+			IStructuredDocumentRegion node = fStructuredDocument.getRegionAtCharacterOffset(offset);
 			if (node != null) {
 				String stype = getScriptingPartitionType(node);
 				return super.createPartition(offset, length, stype);
@@ -57,7 +57,7 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 	protected void setInternalPartition(int offset, int length, String type) {
 		String localType = type;
 		if (type == IHTMLPartitionTypes.SCRIPT) {
-			IStructuredDocumentRegion node = structuredDocument.getRegionAtCharacterOffset(offset);
+			IStructuredDocumentRegion node = fStructuredDocument.getRegionAtCharacterOffset(offset);
 			if (node != null) {
 				localType = getScriptingPartitionType(node);
 			}
@@ -165,7 +165,7 @@ public class StructuredTextPartitionerForHTML extends StructuredTextPartitionerF
 		String name2 = nextNode.getText(nextEndTagNameRegion);
 		if (name1.equalsIgnoreCase(HTML40Namespace.ElementName.SCRIPT) && name2.equalsIgnoreCase(HTML40Namespace.ElementName.SCRIPT))
 			//			return ST_SCRIPT;
-			return getScriptingPartitionType(structuredDocument.getRegionAtCharacterOffset(previousNode.getStartOffset(previousStartTagNameRegion)));
+			return getScriptingPartitionType(fStructuredDocument.getRegionAtCharacterOffset(previousNode.getStartOffset(previousStartTagNameRegion)));
 		else if (name1.equalsIgnoreCase(HTML40Namespace.ElementName.STYLE) && name2.equalsIgnoreCase(HTML40Namespace.ElementName.STYLE))
 			return ICSSPartitionTypes.STYLE;
 		return super.getPartitionTypeBetween(previousNode, nextNode);
