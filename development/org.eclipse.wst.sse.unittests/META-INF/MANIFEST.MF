@@ -34,4 +34,5 @@ Require-Bundle: org.junit,
  org.eclipse.wst.javascript.ui,
  org.eclipse.wst.xsd.validation.tests,
  org.eclipse.wst.wsi.tests,
- org.eclipse.wst.wsdl.tests
+ org.eclipse.wst.wsdl.tests,
+ org.eclipse.wst.css.ui.tests

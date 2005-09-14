@@ -19,6 +19,7 @@ import org.eclipse.jst.jsp.tests.encoding.JSPEncodingTestSuite;
 import org.eclipse.jst.jsp.ui.tests.JSPUITestSuite;
 import org.eclipse.wst.css.core.tests.CSSCoreTestSuite;
 import org.eclipse.wst.css.tests.encoding.CSSEncodingTestSuite;
+import org.eclipse.wst.css.ui.tests.CSSUITestSuite;
 import org.eclipse.wst.dtd.ui.tests.DTDUITestSuite;
 import org.eclipse.wst.html.core.tests.HTMLCoreTestSuite;
 import org.eclipse.wst.html.tests.encoding.HTMLEncodingTestSuite;
@@ -63,6 +64,7 @@ public class MasterListTestSuite extends TestSuite {
 		addTest(HTMLEncodingTestSuite.suite());
 		addTest(JSPEncodingTestSuite.suite());
 
+		addTest(CSSUITestSuite.suite());
 		addTest(HTMLUITestSuite.suite());
 		addTest(SSEUITestSuite.suite());
 		addTest(XMLUITestSuite.suite());
