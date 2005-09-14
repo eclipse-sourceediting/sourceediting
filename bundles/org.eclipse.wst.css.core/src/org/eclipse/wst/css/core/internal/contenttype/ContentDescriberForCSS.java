@@ -29,16 +29,26 @@ public final class ContentDescriberForCSS implements ITextContentDescriber {
 	public int describe(InputStream contents, IContentDescription description) throws IOException {
 		int result = IContentDescriber.INDETERMINATE;
 
-		calculateSupportedOptions(contents, description);
-
+		if (description == null) {
+			result = computeValidity(contents);
+		}
+		else {
+			calculateSupportedOptions(contents, description);
+			result = computeValidity(contents);
+		}
 		return result;
 	}
 
 	public int describe(Reader contents, IContentDescription description) throws IOException {
 		int result = IContentDescriber.INDETERMINATE;
 
-		calculateSupportedOptions(contents, description);
-
+		if (description == null) {
+			result = computeValidity(contents);
+		}
+		else {
+			calculateSupportedOptions(contents, description);
+			result = computeValidity(contents);
+		}
 		return result;
 	}
 
@@ -68,6 +78,18 @@ public final class ContentDescriberForCSS implements ITextContentDescriber {
 		}
 	}
 
+	private int computeValidity(InputStream inputStream) {
+		// currently no specific check for validilty
+		// based on contents.
+		return IContentDescriber.INDETERMINATE;
+	}
+
+	private int computeValidity(Reader reader) {
+		// currently no specific check for validilty
+		// based on contents.
+		return IContentDescriber.INDETERMINATE;
+	}
+
 	private IResourceCharsetDetector getDetector() {
 		return new CSSResourceEncodingDetector();
 	}
@@ -83,7 +105,7 @@ public final class ContentDescriberForCSS implements ITextContentDescriber {
 		// mulitiple times (one for each, say) that we don't waste time
 		// processing same
 		// content again.
-		EncodingMemento encodingMemento = ((CSSResourceEncodingDetector)detector).getEncodingMemento();
+		EncodingMemento encodingMemento = ((CSSResourceEncodingDetector) detector).getEncodingMemento();
 		// TODO: I need to verify to see if this BOM work is always done
 		// by text type.
 		Object detectedByteOrderMark = encodingMemento.getUnicodeBOM();
@@ -175,5 +197,4 @@ public final class ContentDescriberForCSS implements ITextContentDescriber {
 		// result = true;
 		return result;
 	}
-
 }

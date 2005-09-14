@@ -34,16 +34,26 @@ public final class ContentDescriberForDTD implements ITextContentDescriber {
 	public int describe(InputStream contents, IContentDescription description) throws IOException {
 		int result = IContentDescriber.INDETERMINATE;
 
-		calculateSupportedOptions(contents, description);
-
+		if (description == null) {
+			result = computeValidity(contents);
+		}
+		else {
+			calculateSupportedOptions(contents, description);
+			result = computeValidity(contents);
+		}
 		return result;
 	}
 
 	public int describe(Reader contents, IContentDescription description) throws IOException {
 		int result = IContentDescriber.INDETERMINATE;
 
-		calculateSupportedOptions(contents, description);
-
+		if (description == null) {
+			result = computeValidity(contents);
+		}
+		else {
+			calculateSupportedOptions(contents, description);
+			result = computeValidity(contents);
+		}
 		return result;
 	}
 
@@ -73,6 +83,18 @@ public final class ContentDescriberForDTD implements ITextContentDescriber {
 		}
 	}
 
+	private int computeValidity(InputStream inputStream) {
+		// currently no specific check for validilty
+		// based on contents.
+		return IContentDescriber.INDETERMINATE;
+	}
+
+	private int computeValidity(Reader reader) {
+		// currently no specific check for validilty
+		// based on contents.
+		return IContentDescriber.INDETERMINATE;
+	}
+
 	// same rules as for XML
 	private IResourceCharsetDetector getDetector() {
 		if (resourceCharsetDetector == null) {
@@ -92,7 +114,7 @@ public final class ContentDescriberForDTD implements ITextContentDescriber {
 		// mulitiple times (one for each, say) that we don't waste time
 		// processing same
 		// content again.
-		EncodingMemento encodingMemento = ((XMLResourceEncodingDetector)detector).getEncodingMemento();
+		EncodingMemento encodingMemento = ((XMLResourceEncodingDetector) detector).getEncodingMemento();
 		// TODO: I need to verify to see if this BOM work is always done
 		// by text type.
 		Object detectedByteOrderMark = encodingMemento.getUnicodeBOM();
@@ -186,5 +208,4 @@ public final class ContentDescriberForDTD implements ITextContentDescriber {
 			result = true;
 		return result;
 	}
-
 }
