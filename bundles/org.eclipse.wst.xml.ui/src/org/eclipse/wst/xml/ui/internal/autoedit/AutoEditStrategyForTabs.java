@@ -117,7 +117,7 @@ public class AutoEditStrategyForTabs implements IAutoEditStrategy {
 				offsetInLine = lineOffset + index;
 			}
 		}
-		if (offsetInLine > -1) {
+		if (offsetInLine > -1 && indentationWidth > 0) {
 			int remainder = offsetInLine % indentationWidth;
 			indentSize = indentationWidth - remainder;
 		}
