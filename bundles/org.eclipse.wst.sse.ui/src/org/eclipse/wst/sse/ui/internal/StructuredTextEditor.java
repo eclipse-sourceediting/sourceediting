@@ -527,23 +527,25 @@ public class StructuredTextEditor extends TextEditor {
 				if (model != null) {
 					IndexedRegion region = model.getIndexedRegion(selection.getOffset());
 					int end = selection.getOffset() + selection.getLength();
-					if (region != null && end <= region.getEndOffset()) {
-						// single selection
-						selectedStructures = new Object[1];
-						selectedStructures[0] = region;
-					}
-					else {
-						// multiple selection
-						int maxLength = getSourceViewer().getDocument().getLength();
-						List structures = new ArrayList(2);
-						while (region != null && region.getEndOffset() <= end && region.getEndOffset() < maxLength) {
-							structures.add(region);
-							region = model.getIndexedRegion(region.getEndOffset() + 1);
+					if (region != null) {
+						if (end <= region.getEndOffset()) {
+							// single selection
+							selectedStructures = new Object[1];
+							selectedStructures[0] = region;
 						}
-						selectedStructures = structures.toArray();
+						else {
+							// multiple selection
+							int maxLength = model.getStructuredDocument().getLength();
+							List structures = new ArrayList(2);
+							while (region != null && region.getEndOffset() <= end && region.getEndOffset() < maxLength) {
+								structures.add(region);
+								region = model.getIndexedRegion(region.getEndOffset() + 1);
+							}
+							selectedStructures = structures.toArray();
+						}
 					}
 				}
-				else {
+				if (selectedStructures == null) {
 					selectedStructures = new Object[0];
 				}
 				return selectedStructures;
