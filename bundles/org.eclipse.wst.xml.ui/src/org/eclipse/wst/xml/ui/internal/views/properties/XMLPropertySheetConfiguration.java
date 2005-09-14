@@ -148,9 +148,12 @@ public class XMLPropertySheetConfiguration extends StructuredPropertySheetConfig
 					// replace Attribute Node with its owner
 					if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
 						inputList.set(i, ((Attr) node).getOwnerElement());
-						ModelQuery q = ModelQueryUtil.getModelQuery(((Attr) node).getOwnerElement().getOwnerDocument());
-						if (q != null) {
-							managers.add(q.getCMDocumentManager());
+						ModelQuery query = ModelQueryUtil.getModelQuery(((Attr) node).getOwnerElement().getOwnerDocument());
+						if (query != null) {
+							Object o = query.getCMDocumentManager();
+							if (o != null) {
+								managers.add(o);
+							}
 						}
 					}
 					// replace Text Node with its parent
@@ -158,7 +161,10 @@ public class XMLPropertySheetConfiguration extends StructuredPropertySheetConfig
 						inputList.set(i, node.getParentNode());
 						ModelQuery query = ModelQueryUtil.getModelQuery(node.getParentNode().getOwnerDocument());
 						if (query != null) {
-							managers.add(query.getCMDocumentManager());
+							Object o = query.getCMDocumentManager();
+							if (o != null) {
+								managers.add(o);
+							}
 						}
 					}
 				}
