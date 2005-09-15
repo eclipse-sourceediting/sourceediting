@@ -332,8 +332,8 @@ public class TaglibHelper {
      */
     private void addClasspathEntriesForProject(IProject p, TaglibClassLoader loader) {
        
-        // avoid infinite recursion
-        if(fProjectEntries.contains(p.getFullPath().toString()))
+        // avoid infinite recursion and closed project
+        if(!p.isAccessible() || fProjectEntries.contains(p.getFullPath().toString()))
             return;
         fProjectEntries.add(p.getFullPath().toString());
     
