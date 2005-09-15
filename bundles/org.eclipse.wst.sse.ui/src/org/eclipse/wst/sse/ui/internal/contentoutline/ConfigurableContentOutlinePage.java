@@ -36,7 +36,6 @@ import org.eclipse.jface.viewers.IPostSelectionProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSource;
 import org.eclipse.swt.dnd.DropTarget;
@@ -119,64 +118,14 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	}
 
 	/**
-	 * Forwards post-selection from the tree viewer to the listeners while
-	 * acting as this page's selection provider.
-	 */
-	private class PostOnlySelectionProvider implements IPostSelectionProvider, ISelectionChangedListener {
-		private ListenerList listeners = new ListenerList();
-		private ListenerList postListeners = new ListenerList();
-
-		public void addPostSelectionChangedListener(ISelectionChangedListener listener) {
-			listeners.add(listener);
-		}
-
-		public void addSelectionChangedListener(ISelectionChangedListener listener) {
-			listeners.add(listener);
-		}
-
-		public void fireSelectionChanged(final SelectionChangedEvent event, ListenerList listenerList) {
-			Object[] listeners = listenerList.getListeners();
-			for (int i = 0; i < listeners.length; ++i) {
-				final ISelectionChangedListener l = (ISelectionChangedListener) listeners[i];
-				Platform.run(new SafeRunnable() {
-					public void run() {
-						l.selectionChanged(event);
-					}
-				});
-			}
-		}
-
-		public ISelection getSelection() {
-			return getTreeViewer().getSelection();
-		}
-
-		public void removePostSelectionChangedListener(ISelectionChangedListener listener) {
-			listeners.remove(listener);
-		}
-
-		public void removeSelectionChangedListener(ISelectionChangedListener listener) {
-			listeners.remove(listener);
-		}
-
-		public void selectionChanged(SelectionChangedEvent event) {
-			fireSelectionChanged(event, listeners);
-			fireSelectionChanged(event, postListeners);
-		}
-
-		public void setSelection(ISelection selection) {
-			getTreeViewer().setSelection(selection);
-		};
-	}
-
-	/**
 	 * Listens to post selection from the selection service, applying it to
 	 * the tree viewer.
 	 */
-	private class PostSelectionListener implements ISelectionListener {
+	private class PostSelectionServiceListener implements ISelectionListener {
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 			// from selection service
 			_DEBUG_TIME = System.currentTimeMillis();
-			if (getControl() != null && !getControl().isDisposed() && !getControl().isFocusControl()) {
+			if (getControl() != null && !getControl().isDisposed() && !getControl().isFocusControl() && !fSelectionProvider.isFiringSelection()) {
 				/*
 				 * Do not allow selection from other parts to affect selection
 				 * in the tree widget if it has focus. Selection events
@@ -198,6 +147,86 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		}
 	}
 
+	/**
+	 * Forwards post-selection from the tree viewer to the listeners while
+	 * acting as this page's selection provider.
+	 */
+	private class SelectionProvider implements IPostSelectionProvider {
+		private class PostSelectionChangedListener implements ISelectionChangedListener {
+			public void selectionChanged(SelectionChangedEvent event) {
+				if (!isFiringSelection()) {
+					fireSelectionChanged(event, postListeners);
+				}
+			}
+		}
+
+		private class SelectionChangedListener implements ISelectionChangedListener {
+			public void selectionChanged(SelectionChangedEvent event) {
+				if (!isFiringSelection()) {
+					fireSelectionChanged(event, listeners);
+				}
+			}
+		}
+
+		private boolean isFiringSelection = false;
+		private ListenerList listeners = new ListenerList();
+		private ListenerList postListeners = new ListenerList();
+		private ISelectionChangedListener postSelectionChangedListener = new PostSelectionChangedListener();
+		private ISelectionChangedListener selectionChangedListener = new SelectionChangedListener();
+
+		public void addPostSelectionChangedListener(ISelectionChangedListener listener) {
+			postListeners.add(listener);
+		}
+
+		public void addSelectionChangedListener(ISelectionChangedListener listener) {
+			listeners.add(listener);
+		}
+
+		public void fireSelectionChanged(final SelectionChangedEvent event, ListenerList listenerList) {
+			isFiringSelection = true;
+			Object[] listeners = listenerList.getListeners();
+			for (int i = 0; i < listeners.length; ++i) {
+				final ISelectionChangedListener l = (ISelectionChangedListener) listeners[i];
+				Platform.run(new SafeRunnable() {
+					public void run() {
+						l.selectionChanged(event);
+					}
+				});
+			}
+			isFiringSelection = false;
+		}
+
+		public ISelectionChangedListener getPostSelectionChangedListener() {
+			return postSelectionChangedListener;
+		}
+
+		public ISelection getSelection() {
+			return getTreeViewer().getSelection();
+		}
+
+		public ISelectionChangedListener getSelectionChangedListener() {
+			return selectionChangedListener;
+		}
+
+		public boolean isFiringSelection() {
+			return isFiringSelection;
+		}
+
+		public void removePostSelectionChangedListener(ISelectionChangedListener listener) {
+			postListeners.remove(listener);
+		}
+
+		public void removeSelectionChangedListener(ISelectionChangedListener listener) {
+			listeners.remove(listener);
+		};
+
+		public void setSelection(ISelection selection) {
+			if (isFiringSelection) {
+				getTreeViewer().setSelection(selection);
+			}
+		};
+	}
+
 	private class ShowInTarget implements IShowInTarget {
 		/*
 		 * @see org.eclipse.ui.part.IShowInTarget#show(org.eclipse.ui.part.ShowInContext)
@@ -211,29 +240,31 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	protected static ContentOutlineConfiguration NULL_CONFIGURATION = new ContentOutlineConfiguration();
 
 	private static final String OUTLINE_CONTEXT_MENU_ID = "org.eclipse.wst.sse.ui.StructuredTextEditor.OutlineContext"; //$NON-NLS-1$
-	private static final String OUTLINE_CONTEXT_MENU_POSTFIX = ".source.OutlineContext"; //$NON-NLS-1$
 
+	private static final String OUTLINE_CONTEXT_MENU_POSTFIX = ".source.OutlineContext"; //$NON-NLS-1$
 	private final boolean _DEBUG_SELECTION = false;
+
 	private long _DEBUG_TIME = 0;
 	private TransferDragSourceListener[] fActiveDragListeners;
 	private TransferDropTargetListener[] fActiveDropListeners;
-
 	private ContentOutlineConfiguration fConfiguration;
+
 	private Menu fContextMenu;
-
 	private String fContextMenuId;
-	private MenuManager fContextMenuManager;
 
+	private MenuManager fContextMenuManager;
 	private DoubleClickProvider fDoubleClickProvider = null;
+
 	private DelegatingDragAdapter fDragAdapter;
 	private DragSource fDragSource;
 	private DelegatingDropAdapter fDropAdapter;
 	private DropTarget fDropTarget;
 	private IMenuListener fGroupAdder = null;
 	private Object fInput = null;
-
 	private IEditorPart fOwnerEditor;
+
 	private ISelectionListener fSelectionListener = null;
+	SelectionProvider fSelectionProvider = null;
 
 	public ConfigurableContentOutlinePage() {
 		super();
@@ -278,13 +309,14 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 		 * post selection from the tree viewer and forward only post selection
 		 * to the selection service.
 		 */
-		PostOnlySelectionProvider provider = new PostOnlySelectionProvider();
-		getTreeViewer().addPostSelectionChangedListener(provider);
+		fSelectionProvider = new SelectionProvider();
+		getTreeViewer().addPostSelectionChangedListener(fSelectionProvider.getPostSelectionChangedListener());
+		getTreeViewer().addSelectionChangedListener(fSelectionProvider.getSelectionChangedListener());
 		if (fDoubleClickProvider == null) {
 			fDoubleClickProvider = new DoubleClickProvider();
 		}
 		getTreeViewer().addDoubleClickListener(fDoubleClickProvider);
-		getSite().setSelectionProvider(provider);
+		getSite().setSelectionProvider(fSelectionProvider);
 	}
 
 	public void dispose() {
@@ -334,14 +366,14 @@ public class ConfigurableContentOutlinePage extends ContentOutlinePage implement
 	}
 
 	public ISelection getSelection() {
-		if (getTreeViewer() == null)
-			return StructuredSelection.EMPTY;
-		return getTreeViewer().getSelection();
+		if (fSelectionProvider == null)
+			return super.getSelection();
+		return fSelectionProvider.getSelection();
 	}
 
 	private ISelectionListener getSelectionListener() {
 		if (fSelectionListener == null) {
-			fSelectionListener = new PostSelectionListener();
+			fSelectionListener = new PostSelectionServiceListener();
 		}
 		return fSelectionListener;
 	}
