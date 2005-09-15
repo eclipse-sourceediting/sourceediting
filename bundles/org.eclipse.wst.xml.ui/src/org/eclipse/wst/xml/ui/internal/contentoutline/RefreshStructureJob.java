@@ -30,9 +30,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 /**
- * This job holds a queue of updates (affected nodes) for a structure viewer.
- * When a new request comes in, the current run is cancelled, the new 
- * request is added to the queue, then the job is re-scheduled.
+ * This job holds a queue of updates (affected nodes) for multiple structured
+ * viewers. When a new request comes in, the current run is cancelled, the new
+ * request is added to the queue, then the job is re-scheduled. Support for
+ * multiple structured viewers is required because refresh updates are usually
+ * triggered by model changes, and the model may be visible in more than one
+ * viewer.
  * 
  * @author pavery
  */
@@ -45,35 +48,41 @@ class RefreshStructureJob extends Job {
 		String value = Platform.getDebugOption("org.eclipse.wst.sse.ui/debug/outline"); //$NON-NLS-1$
 		DEBUG = value != null && value.equalsIgnoreCase("true"); //$NON-NLS-1$
 	}
-	/** List of refresh requests (Nodes)*/
+	/** List of refresh requests (Nodes) */
 	private final List fRequests;
-	/** the tree viewer */
-	final StructuredViewer fViewer;
-	
-	public RefreshStructureJob(StructuredViewer viewer) {
+	/** the structured viewers */
+	List fViewers = new ArrayList(3);
+
+	public RefreshStructureJob() {
 		super(XMLUIMessages.refreshoutline_0); //$NON-NLS-1$
 		setPriority(Job.LONG);
 		setSystem(true);
 		fRequests = new ArrayList(1);
-		fViewer = viewer;
 	}
+
 	private synchronized void addRequest(Node node) {
-		
 		// if we already have a request which contains the new request,
 		// discare the new request
 		int size = fRequests.size();
-		for (int i=0; i<size; i++) {
-			if(contains((Node)fRequests.get(i), node))
+		for (int i = 0; i < size; i++) {
+			if (contains((Node) fRequests.get(i), node))
 				return;
 		}
 		// if new request is contains any existing requests,
 		// remove those
 		for (Iterator it = fRequests.iterator(); it.hasNext();) {
-			if(contains(node, (Node)it.next()))
+			if (contains(node, (Node) it.next()))
 				it.remove();
 		}
 		fRequests.add(node);
 	}
+
+	private synchronized void addViewer(StructuredViewer viewer) {
+		if (!fViewers.contains(viewer)) {
+			fViewers.add(viewer);
+		}
+	}
+
 	/**
 	 * @return if the root is parent of possible, return true, otherwise
 	 *         return false
@@ -84,34 +93,39 @@ class RefreshStructureJob extends Job {
 			System.out.println("recursive call w/ root: " + root.getNodeName() + " and possible: " + possible); //$NON-NLS-1$ //$NON-NLS-2$
 			System.out.println("--------------------------------------------------------------------------------------------------------------"); //$NON-NLS-1$
 		}
-		
+
 		// the following checks are important
 		// #document node will break the algorithm otherwise
-		
+
 		// can't contain the parent if it's null
 		if (root == null) {
-		    if (DEBUG) System.out.println("returning false: root is null"); //$NON-NLS-1$
+			if (DEBUG)
+				System.out.println("returning false: root is null"); //$NON-NLS-1$
 			return false;
 		}
 		// nothing can be parent of Document node
 		if (possible instanceof Document) {
-		    if (DEBUG) System.out.println("returning false: possible is Document node"); //$NON-NLS-1$
-		    return false;
+			if (DEBUG)
+				System.out.println("returning false: possible is Document node"); //$NON-NLS-1$
+			return false;
 		}
 		// document contains everything
-		if(root instanceof Document) {
-		    if (DEBUG) System.out.println("returning true: root is Document node"); //$NON-NLS-1$
-		    return true;
+		if (root instanceof Document) {
+			if (DEBUG)
+				System.out.println("returning true: root is Document node"); //$NON-NLS-1$
+			return true;
 		}
-		
+
 		// depth first
 		Node current = root;
 		// loop siblings
 		while (current != null) {
-			if (DEBUG) System.out.println("   -> iterating sibling (" + current.getNodeName() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+			if (DEBUG)
+				System.out.println("   -> iterating sibling (" + current.getNodeName() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 			// found it
-			if (possible.equals(current)) {		    
-				if (DEBUG) System.out.println("   !!! found: " + possible.getNodeName() + " in subtree for: " + root.getNodeName()); //$NON-NLS-1$ //$NON-NLS-2$
+			if (possible.equals(current)) {
+				if (DEBUG)
+					System.out.println("   !!! found: " + possible.getNodeName() + " in subtree for: " + root.getNodeName()); //$NON-NLS-1$ //$NON-NLS-2$
 				return true;
 			}
 			// drop one level deeper if necessary
@@ -123,9 +137,10 @@ class RefreshStructureJob extends Job {
 		// never found it
 		return false;
 	}
-	
+
 	/**
 	 * Refresh must be on UI thread because it's on a SWT widget.
+	 * 
 	 * @param node
 	 */
 	private void doRefresh(final Node node) {
@@ -136,41 +151,49 @@ class RefreshStructureJob extends Job {
 				if (DEBUG)
 					System.out.println("refresh on: [" + node.getNodeName() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
 
-				if (!fViewer.getControl().isDisposed()) {
-					if (node instanceof Document) {
-						fViewer.refresh();
-					}
-					else {
-						fViewer.refresh(node);
+				StructuredViewer[] viewers = (StructuredViewer[]) fViewers.toArray(new StructuredViewer[0]);
+				fViewers.clear();
+
+				for (int i = 0; i < viewers.length; i++) {
+					if (!viewers[i].getControl().isDisposed()) {
+						if (node instanceof Document) {
+							viewers[i].refresh(true);
+						}
+						else {
+							viewers[i].refresh(node, true);
+						}
 					}
 				}
 			}
 		});
 	}
-	
+
 	/**
 	 * This method also synchronized because it accesses the fRequests queue
+	 * 
 	 * @return an array of the currently requested Nodes to refresh
 	 */
-	private synchronized Node[] getRequests() {		
+	private synchronized Node[] getRequests() {
 		Node[] toRefresh = (Node[]) fRequests.toArray(new Node[fRequests.size()]);
 		fRequests.clear();
 		return toRefresh;
 	}
-	
+
 	/**
 	 * Invoke a refresh on the viewer on the given node.
+	 * 
 	 * @param node
 	 */
-	public void refresh(Node node) {
+	public void refresh(StructuredViewer viewer, Node node) {
 		if (node == null)
 			return;
-		
+
 		cancel();
-		addRequest(node);	
+		addRequest(node);
+		addViewer(viewer);
 		schedule(UPDATE_DELAY);
 	}
-	
+
 	protected IStatus run(IProgressMonitor monitor) {
 		IStatus status = Status.OK_STATUS;
 		try {

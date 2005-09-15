@@ -18,8 +18,8 @@ import org.w3c.dom.Node;
 
 /**
  * Can handle multiple subsequent calls to processNode(..) by buffering them
- * w/ a RefreshStructureJob. Only one refresh is performed (on the UI Thread) on
- * the minimal affected area of the tree at the end of the batch of updates
+ * w/ a RefreshStructureJob. Only one refresh is performed (on the UI Thread)
+ * on the minimal affected area of the tree at the end of the batch of updates
  * (after the last update is processed).
  * 
  * @author pavery
@@ -27,7 +27,6 @@ import org.w3c.dom.Node;
 class BufferedStructureUpdater {
 
 	private RefreshStructureJob fRefreshJob = null;
-	private StructuredViewer fViewer = null;
 
 	/**
 	 * @param structuredViewer
@@ -35,29 +34,18 @@ class BufferedStructureUpdater {
 	 * @param node
 	 *            the specific node that changed
 	 */
-	public void processNode(final StructuredViewer structuredViewer, Node node) {
+	public synchronized void processNode(StructuredViewer structuredViewer, Node node) {
 		// refresh on structural and "unknown" changes
 		// it would be nice to not refresh the viewer if it's not visible
 		// but only refresh when it's brought back to the front
 		if (structuredViewer.getControl() != null) {
-			if (getViewer() == null) {
-				setViewer(structuredViewer);
-			}
-			getRefreshJob().refresh(node);
+			getRefreshJob().refresh(structuredViewer, node);
 		}
 	}
 
-	private RefreshStructureJob getRefreshJob() {
+	private synchronized RefreshStructureJob getRefreshJob() {
 		if (fRefreshJob == null)
-			fRefreshJob = new RefreshStructureJob(getViewer());
+			fRefreshJob = new RefreshStructureJob();
 		return fRefreshJob;
-	}
-
-	private StructuredViewer getViewer() {
-		return fViewer;
-	}
-
-	private void setViewer(StructuredViewer viewer) {
-		fViewer = viewer;
 	}
 }
