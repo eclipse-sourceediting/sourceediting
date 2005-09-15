@@ -103,20 +103,6 @@ public class TestViewerConfigurationDTD extends TestCase {
 	/**
 	 * Not necessary
 	 */
-	public void testGetCorrectionAssistant() {
-
-		// probably no display
-		if (!fDisplayExists)
-			return;
-
-		IContentAssistant ca = fConfig.getCorrectionAssistant(fViewer);
-		// there should be none
-		assertNull("unexpected correction assistant", ca);
-	}
-
-	/**
-	 * Not necessary
-	 */
 	public void testGetDoubleClickStrategy() {
 
 		// probably no display

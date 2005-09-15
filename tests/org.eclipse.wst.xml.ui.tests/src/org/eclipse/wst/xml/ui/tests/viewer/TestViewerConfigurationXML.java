@@ -21,7 +21,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTy
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.xml.core.internal.provisional.text.IXMLPartitions;
-import org.eclipse.wst.xml.ui.internal.provisional.StructuredTextViewerConfigurationXML;
+import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
 import org.eclipse.wst.xml.ui.tests.Logger;
 
 /**
@@ -128,16 +128,6 @@ public class TestViewerConfigurationXML extends TestCase {
 		assertNotNull("there is no content formatter", cf);
 	}
 	
-	public void testGetCorrectionAssistant() {
-		
-		// probably no display
-		if(!fDisplayExists)
-			return;
-		
-		IContentAssistant ca = fConfig.getCorrectionAssistant(fViewer);
-		assertNotNull("there is no correction assistant", ca);
-	}
-	
 	public void testGetDoubleClickStrategy() {
 		
 		// probably no display
@@ -161,7 +151,7 @@ public class TestViewerConfigurationXML extends TestCase {
 			return;
 		
 		IHyperlinkDetector[] detectors = fConfig.getHyperlinkDetectors(fViewer);
-		assertNotNull(detectors);
+		assertNotNull("there are no hyperlink detectors", detectors);
 		assertTrue("there are no hyperlink detectors", detectors.length > 0);
 	}
 	

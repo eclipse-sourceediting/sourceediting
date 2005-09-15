@@ -8,7 +8,7 @@
 			name="Generic Structured Text Editor"
 			extensions="project, classpath, websettings, serverPreference"
 			icon="icons/sourceEditor.gif"
-			class="org.eclipse.wst.sse.ui.internal.StructuredTextEditor"
+			class="org.eclipse.wst.sse.ui.StructuredTextEditor"
 			contributorClass="org.eclipse.wst.sse.ui.internal.actions.ActionContributor"
 			id="org.eclipse.wst.sse.ui.StructuredTextEditor.test">
 		</editor>

@@ -16,9 +16,9 @@ import junit.framework.TestCase;
 
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
 import org.eclipse.wst.xml.core.internal.provisional.contenttype.ContentTypeIdForXML;
-import org.eclipse.wst.xml.ui.internal.provisional.StructuredTextViewerConfigurationXML;
-import org.eclipse.wst.xml.ui.internal.views.contentoutline.XMLContentOutlineConfiguration;
-import org.eclipse.wst.xml.ui.internal.views.properties.XMLPropertySheetConfiguration;
+import org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML;
+import org.eclipse.wst.xml.ui.views.contentoutline.XMLContentOutlineConfiguration;
+import org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration;
 
 /**
  * Tests retrieving editor contributions for xml content type

@@ -18,7 +18,7 @@ import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdFo
 import org.eclipse.jst.jsp.ui.internal.provisional.StructuredTextViewerConfigurationJSP;
 import org.eclipse.jst.jsp.ui.internal.views.contentoutline.JSPContentOutlineConfiguration;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
-import org.eclipse.wst.xml.ui.internal.views.properties.XMLPropertySheetConfiguration;
+import org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration;
 
 /**
  * Tests retrieving editor contributions for jsp content type

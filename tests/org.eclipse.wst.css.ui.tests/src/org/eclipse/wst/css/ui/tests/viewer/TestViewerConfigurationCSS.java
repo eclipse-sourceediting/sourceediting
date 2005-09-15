@@ -1,4 +1,4 @@
-package org.eclipse.wst.html.ui.tests.viewer;
+package org.eclipse.wst.css.ui.tests.viewer;
 
 import junit.framework.TestCase;
 
@@ -11,30 +11,26 @@ import org.eclipse.jface.text.formatter.IContentFormatter;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.information.IInformationPresenter;
 import org.eclipse.jface.text.reconciler.IReconciler;
-import org.eclipse.jface.text.source.IAnnotationHover;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.html.core.internal.provisional.text.IHTMLPartitionTypes;
-import org.eclipse.wst.html.ui.internal.provisional.StructuredTextViewerConfigurationHTML;
-import org.eclipse.wst.html.ui.tests.Logger;
+import org.eclipse.wst.css.core.internal.provisional.text.ICSSPartitionTypes;
+import org.eclipse.wst.css.ui.StructuredTextViewerConfigurationCSS;
+import org.eclipse.wst.css.ui.internal.Logger;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 
-/**
- * @author pavery
- */
-public class TestViewerConfigurationHTML extends TestCase {
+public class TestViewerConfigurationCSS extends TestCase {
     
-	private StructuredTextViewerConfigurationHTML fConfig = null;
+	private StructuredTextViewerConfigurationCSS fConfig = null;
 	private boolean fDisplayExists = true;
 	private StructuredTextViewer fViewer = null;
 	private boolean isSetup = false;
 	
-    public TestViewerConfigurationHTML() {
-        super("TestViewerConfigurationHTML");
+    public TestViewerConfigurationCSS() {
+        super("TestViewerConfigurationCSS");
     }
     protected void setUp() throws Exception {
 		
@@ -62,26 +58,13 @@ public class TestViewerConfigurationHTML extends TestCase {
 			
 			// dummy viewer
 			fViewer = new StructuredTextViewer(parent, null, null, false, SWT.NONE);
-			fConfig = new StructuredTextViewerConfigurationHTML();
+			fConfig = new StructuredTextViewerConfigurationCSS();
 		}
 		else {
 			fDisplayExists = false;
 			Logger.log(Logger.INFO, "Remember, viewer configuration tests are not run because workbench is not open (normal on build machine)");
 		}
 	}
-    
-	/**
-	 * Not necessary
-	 */
-	public void testGetAnnotationHover() {
-		
-		// probably no display
-		if(!fDisplayExists)
-			return;
-		
-		IAnnotationHover hover = fConfig.getAnnotationHover(fViewer);
-		assertNotNull("AnnotationHover is null", hover);
-    }
 	
 	public void testGetAutoEditStrategies() {
 		
@@ -89,7 +72,7 @@ public class TestViewerConfigurationHTML extends TestCase {
 		if(!fDisplayExists)
 			return;
 		
-		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, IHTMLPartitionTypes.HTML_DEFAULT);
+		IAutoEditStrategy[] strategies = fConfig.getAutoEditStrategies(fViewer, ICSSPartitionTypes.STYLE);
 		assertNotNull(strategies);
 		assertTrue("there are no auto edit strategies", strategies.length>0);
 	}
@@ -125,6 +108,9 @@ public class TestViewerConfigurationHTML extends TestCase {
 		assertNotNull("there is no content formatter", cf);
 	}
 	
+	/*
+	 * not necessary
+	 */
 	public void testGetDoubleClickStrategy() {
 		
 		// probably no display
@@ -141,6 +127,9 @@ public class TestViewerConfigurationHTML extends TestCase {
 		assertTrue("there are no configured double click strategies", false);
 	}
 	
+	/*
+	 * not necessary
+	 */
 	public void testGetHyperlinkDetectors() {
 		
 		// probably no display
@@ -149,7 +138,7 @@ public class TestViewerConfigurationHTML extends TestCase {
 		
 		IHyperlinkDetector[] detectors = fConfig.getHyperlinkDetectors(fViewer);
 		assertNotNull("there are no hyperlink detectors", detectors);
-		assertTrue("there are no hyperlink detectors", detectors.length > 1);
+		assertTrue("there are no hyperlink detectors", detectors.length > 0);
 	}
 	
     public void testGetIndentPrefixes() {
@@ -167,6 +156,9 @@ public class TestViewerConfigurationHTML extends TestCase {
 		assertTrue("there are no configured indent prefixes", false);
 	}
     
+	/*
+	 * not necessary
+	 */
     public void testGetInformationControlCreator() {
 		// probably no display
 		if(!fDisplayExists)
@@ -176,6 +168,9 @@ public class TestViewerConfigurationHTML extends TestCase {
 		assertNotNull("InformationControlCreator is null", infoCreator);
     }
 	
+	/*
+	 * not necessary
+	 */
 	public void testGetInformationPresenter() {
 		
 		// probably no display
@@ -183,7 +178,7 @@ public class TestViewerConfigurationHTML extends TestCase {
 			return;
 		
 		IInformationPresenter presenter = fConfig.getInformationPresenter(fViewer);
-		assertNotNull("InformationPresenter is null", presenter);
+		assertNull("InformationPresenter is not null", presenter);
 	}
 	
 	public void testGetLineStyleProviders() {
@@ -201,6 +196,9 @@ public class TestViewerConfigurationHTML extends TestCase {
 		assertTrue("there are no configured line style providers", false);
 	}
 	
+	/*
+	 * not necessary
+	 */
 	public void testGetReconciler() {
 		
 		// probably no display
@@ -208,16 +206,19 @@ public class TestViewerConfigurationHTML extends TestCase {
 			return;
 		
 		IReconciler r = fConfig.getReconciler(fViewer);
-		assertNotNull("Reconciler is null", r);
+		assertNull("Reconciler is not null", r);
 	}
 	
+	/*
+	 * not necessary
+	 */
 	public void testGetTextHover() {
 		
 		// probably no display
 		if(!fDisplayExists)
 			return;
 
-		String[] hoverPartitions = new String[]{IHTMLPartitionTypes.HTML_DEFAULT, IHTMLPartitionTypes.SCRIPT};
+		String[] hoverPartitions = new String[]{ICSSPartitionTypes.STYLE};
 		for (int i = 0; i < hoverPartitions.length; i++) {
 			ITextHover hover = fConfig.getTextHover(fViewer, hoverPartitions[i], SWT.NONE);
 			assertNotNull("hover was null for partition: " + hoverPartitions[i], hover);

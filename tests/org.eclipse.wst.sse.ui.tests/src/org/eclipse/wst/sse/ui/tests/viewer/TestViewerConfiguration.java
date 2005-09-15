@@ -22,8 +22,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitionTypes;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredPartitioning;
+import org.eclipse.wst.sse.ui.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
-import org.eclipse.wst.sse.ui.internal.provisional.StructuredTextViewerConfiguration;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 import org.eclipse.wst.sse.ui.tests.Logger;
 
@@ -151,18 +151,7 @@ public class TestViewerConfiguration extends TestCase {
 		IContentFormatter cf = fConfig.getContentFormatter(fViewer);
 		assertNull("there is a content formatter", cf);
 	}
-
-	public void testGetCorrectionAssistant() {
-
-		// probably no display
-		if (!fDisplayExists)
-			return;
-
-		IContentAssistant ca = fConfig.getCorrectionAssistant(fViewer);
-		// there should be none
-		assertNull("unexpected correction assistant", ca);
-	}
-
+	
 	/**
 	 * Not necessary
 	 */
@@ -192,8 +181,8 @@ public class TestViewerConfiguration extends TestCase {
 			return;
 
 		IHyperlinkDetector[] detectors = fConfig.getHyperlinkDetectors(fViewer);
-		assertNotNull(detectors);
-		assertTrue(detectors.length == 1);
+		assertNotNull("there are no hyperlink detectors", detectors);
+		assertTrue("there are no hyperlink detectors", detectors.length > 0);
 	}
 
 	public void testGetHyperlinkPresenter() {

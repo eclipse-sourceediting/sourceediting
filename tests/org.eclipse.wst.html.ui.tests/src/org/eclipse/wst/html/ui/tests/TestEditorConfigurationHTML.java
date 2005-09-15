@@ -16,9 +16,9 @@ import junit.framework.TestCase;
 
 import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.ui.internal.provisional.StructuredTextViewerConfigurationHTML;
-import org.eclipse.wst.html.ui.internal.views.contentoutline.HTMLContentOutlineConfiguration;
+import org.eclipse.wst.html.ui.views.contentoutline.HTMLContentOutlineConfiguration;
 import org.eclipse.wst.sse.ui.internal.ExtendedConfigurationBuilder;
-import org.eclipse.wst.xml.ui.internal.views.properties.XMLPropertySheetConfiguration;
+import org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration;
 
 /**
  * Tests retrieving editor contributions for html content type
